@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Units, Scales and Estimates</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a tab bar over the stage, which holds the scale ladder (canvas) or a tool panel; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root { --tick: #2b60b5; --hl: #b0452f; --ok: #1f8a5a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --tick: #69a0ff; --hl: #ff8a70; --ok: #4cd08f; } }
+:root[data-theme="dark"] { --tick: #69a0ff; --hl: #ff8a70; --ok: #4cd08f; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.tabs { display: flex; flex-wrap: wrap; gap: 6px; }
+.tabs button { font: inherit; font-size: 0.9rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 12px; cursor: pointer; }
+.tabs button[aria-selected="true"] { color: var(--canvas); background: var(--ink); border-color: var(--ink); }
+.panel { position: absolute; inset: 0; overflow: auto; padding: 18px; display: flex; flex-direction: column; gap: 14px; }
+.panel h3 { margin: 0; font-size: 1.05rem; }
+.panel p { margin: 0; max-width: 70ch; }
+.row { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.row label { font-size: 0.9rem; }
+.panel input[type="text"], .panel input[type="number"], .panel select { font: inherit; font-family: var(--font-mono); font-size: 0.95rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 8px; }
+.panel input[type="text"] { width: 9em; }
+.chain { font-family: var(--font-mono); font-size: 1rem; line-height: 2; overflow-wrap: anywhere; }
+.big { font-family: var(--font-mono); font-size: 1.3rem; font-weight: 700; }
+.ok { color: var(--ok); } .bad { color: var(--hl); }
+table.grid { border-collapse: collapse; font-size: 0.9rem; }
+table.grid th, table.grid td { border: 1px solid var(--line); padding: 4px 8px; text-align: left; }
+table.grid th { color: var(--muted); font-weight: 700; }
+.exps { display: grid; grid-template-columns: max-content 1fr max-content; gap: 6px 10px; align-items: center; max-width: 520px; }
+.exps output { font-family: var(--font-mono); min-width: 3em; text-align: right; }
+.fermi { display: grid; grid-template-columns: 1fr max-content; gap: 6px 12px; align-items: center; max-width: 620px; }
+@media (max-width: 820px) { .tabs button { min-height: 36px; } .panel { position: static; } .stage.tools { height: auto; min-height: 0; max-height: none; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Units, Scales and Estimates</h1>
+      <p>The toolkit for the first week of physics: how big things are, converting units with exact factors, checking and finding formulas by dimensions, carrying the right number of significant figures, and making Fermi estimates.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/units.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 37 37" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/units.html" shape-rendering="crispEdges"><rect width="37" height="37" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM12 2h1v1h-1zM14 2h2v1h-2zM18 2h4v1h-4zM25 2h1v1h-1zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM14 3h1v1h-1zM16 3h2v1h-2zM19 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM13 4h2v1h-2zM18 4h1v1h-1zM20 4h5v1h-5zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h5v1h-5zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h3v1h-3zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM15 6h1v1h-1zM18 6h6v1h-6zM25 6h2v1h-2zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h1v1h-1zM17 7h3v1h-3zM22 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM10 9h2v1h-2zM13 9h2v1h-2zM16 9h3v1h-3zM20 9h1v1h-1zM22 9h5v1h-5zM2 10h1v1h-1zM4 10h5v1h-5zM12 10h2v1h-2zM15 10h2v1h-2zM19 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h5v1h-5zM2 11h1v1h-1zM4 11h1v1h-1zM6 11h2v1h-2zM9 11h1v1h-1zM13 11h1v1h-1zM15 11h1v1h-1zM19 11h7v1h-7zM28 11h2v1h-2zM31 11h2v1h-2zM34 11h1v1h-1zM2 12h4v1h-4zM7 12h2v1h-2zM10 12h1v1h-1zM15 12h3v1h-3zM20 12h1v1h-1zM22 12h3v1h-3zM27 12h2v1h-2zM30 12h1v1h-1zM32 12h2v1h-2zM2 13h2v1h-2zM5 13h2v1h-2zM10 13h4v1h-4zM15 13h1v1h-1zM22 13h2v1h-2zM25 13h2v1h-2zM30 13h3v1h-3zM34 13h1v1h-1zM2 14h2v1h-2zM5 14h6v1h-6zM12 14h3v1h-3zM16 14h2v1h-2zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h1v1h-1zM27 14h1v1h-1zM29 14h3v1h-3zM33 14h1v1h-1zM5 15h2v1h-2zM10 15h6v1h-6zM18 15h1v1h-1zM21 15h3v1h-3zM25 15h1v1h-1zM33 15h2v1h-2zM3 16h3v1h-3zM7 16h4v1h-4zM12 16h3v1h-3zM16 16h2v1h-2zM19 16h1v1h-1zM22 16h1v1h-1zM27 16h2v1h-2zM31 16h3v1h-3zM3 17h1v1h-1zM7 17h1v1h-1zM12 17h1v1h-1zM14 17h1v1h-1zM17 17h2v1h-2zM21 17h5v1h-5zM27 17h3v1h-3zM31 17h2v1h-2zM3 18h4v1h-4zM8 18h1v1h-1zM11 18h2v1h-2zM15 18h1v1h-1zM17 18h1v1h-1zM19 18h1v1h-1zM21 18h1v1h-1zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h3v1h-3zM34 18h1v1h-1zM3 19h1v1h-1zM6 19h2v1h-2zM10 19h1v1h-1zM12 19h1v1h-1zM18 19h1v1h-1zM20 19h6v1h-6zM27 19h3v1h-3zM31 19h3v1h-3zM3 20h2v1h-2zM8 20h3v1h-3zM14 20h1v1h-1zM16 20h3v1h-3zM23 20h2v1h-2zM27 20h1v1h-1zM29 20h2v1h-2zM32 20h2v1h-2zM2 21h3v1h-3zM6 21h2v1h-2zM9 21h1v1h-1zM14 21h1v1h-1zM17 21h2v1h-2zM20 21h5v1h-5zM26 21h1v1h-1zM29 21h6v1h-6zM3 22h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM10 22h1v1h-1zM12 22h2v1h-2zM15 22h1v1h-1zM17 22h3v1h-3zM24 22h4v1h-4zM29 22h3v1h-3zM33 22h2v1h-2zM2 23h3v1h-3zM10 23h3v1h-3zM14 23h1v1h-1zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM32 23h1v1h-1zM34 23h1v1h-1zM2 24h1v1h-1zM4 24h1v1h-1zM6 24h1v1h-1zM8 24h1v1h-1zM10 24h3v1h-3zM14 24h2v1h-2zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM33 24h1v1h-1zM2 25h1v1h-1zM4 25h3v1h-3zM10 25h1v1h-1zM16 25h2v1h-2zM21 25h1v1h-1zM23 25h2v1h-2zM31 25h3v1h-3zM2 26h1v1h-1zM4 26h1v1h-1zM7 26h2v1h-2zM10 26h2v1h-2zM13 26h1v1h-1zM16 26h1v1h-1zM18 26h2v1h-2zM22 26h1v1h-1zM24 26h8v1h-8zM33 26h2v1h-2zM10 27h1v1h-1zM12 27h3v1h-3zM16 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM24 27h3v1h-3zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM2 28h7v1h-7zM11 28h1v1h-1zM13 28h2v1h-2zM16 28h2v1h-2zM19 28h2v1h-2zM22 28h5v1h-5zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h1v1h-1zM13 29h5v1h-5zM22 29h5v1h-5zM30 29h5v1h-5zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM10 30h1v1h-1zM14 30h2v1h-2zM19 30h2v1h-2zM22 30h1v1h-1zM24 30h1v1h-1zM26 30h6v1h-6zM33 30h2v1h-2zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM10 31h1v1h-1zM12 31h2v1h-2zM16 31h1v1h-1zM18 31h1v1h-1zM20 31h4v1h-4zM26 31h2v1h-2zM30 31h5v1h-5zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h2v1h-2zM15 32h3v1h-3zM22 32h3v1h-3zM28 32h2v1h-2zM32 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h4v1h-4zM16 33h1v1h-1zM18 33h1v1h-1zM20 33h4v1h-4zM27 33h1v1h-1zM30 33h3v1h-3zM2 34h7v1h-7zM10 34h1v1h-1zM15 34h1v1h-1zM19 34h1v1h-1zM21 34h1v1h-1zM24 34h4v1h-4zM29 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+  <div class="tabs" role="tablist" aria-label="Tools" id="tabs">
+    <button type="button" role="tab" data-t="scale" aria-selected="true">Scale of things</button>
+    <button type="button" role="tab" data-t="convert" aria-selected="false">Convert units</button>
+    <button type="button" role="tab" data-t="dims" aria-selected="false">Dimensional analysis</button>
+    <button type="button" role="tab" data-t="sig" aria-selected="false">Significant figures</button>
+    <button type="button" role="tab" data-t="fermi" aria-selected="false">Fermi estimates</button>
+  </div>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="Zoom through the scales of the universe, from the observable universe to a proton, with a model of each thing at its true size; or a logarithmic ruler of the same sizes. Scroll, drag up and down, or use the arrow keys to zoom, with objects marked."></canvas>
+      <div class="viewbar" id="zoomBar"><div class="seg" role="group" aria-label="Scale view" id="scaleView"><button type="button" data-v="zoom" aria-pressed="true">Zoom through</button><button type="button" data-v="ruler" aria-pressed="false">Ruler</button></div>
+        <button type="button" class="spin attn" id="flyIn">Fly in</button><button type="button" class="spin" id="flyOut">Fly out</button></div>
+      <div class="panel" id="pConvert" hidden>
+        <h3>Convert with a chain of exact factors</h3>
+        <p>Each factor equals 1 (top and bottom are the same amount), so multiplying by it changes the units, not the quantity. Units that appear on top and bottom cancel.</p>
+        <div class="row"><label for="cVal">Value</label><input type="text" id="cVal" value="65">
+          <label for="cFrom">from</label><select id="cFrom"></select><label for="cTo">to</label><select id="cTo"></select></div>
+        <div class="row"><span class="lab">Quantity</span><div class="seg" role="group" aria-label="Quantity" id="cKind"></div></div>
+        <div class="chain" id="cChain"></div>
+        <div class="big" id="cOut"></div>
+      </div>
+      <div class="panel" id="pDims" hidden>
+        <h3>Find a formula from its dimensions</h3>
+        <p>Guess that the answer is a product of powers of the quantities it could depend on. Choose the powers so the dimensions match the answer's. A pure number in front (like 2π) cannot be found this way.</p>
+        <div class="row"><span class="lab">Question</span><div class="seg" role="group" aria-label="Question" id="dQ"></div></div>
+        <p id="dText"></p>
+        <div class="exps" id="dExps"></div>
+        <div class="row"><button type="button" class="btn" id="dSolve">Show the answer</button></div>
+        <div class="chain" id="dOut"></div>
+      </div>
+      <div class="panel" id="pSig" hidden>
+        <h3>Combine measurements with the right number of figures</h3>
+        <p>Multiplying or dividing: keep as many significant figures as the least precise factor. Adding or subtracting: keep as many decimal places as the least precise term.</p>
+        <div class="row"><input type="text" id="sA" value="12.07" aria-label="First measurement"><select id="sOp" aria-label="Operation"><option value="*">×</option><option value="/">÷</option><option value="+">+</option><option value="-">−</option></select><input type="text" id="sB" value="0.0350" aria-label="Second measurement"></div>
+        <table class="grid" id="sTbl"></table>
+        <div class="big" id="sOut"></div>
+      </div>
+      <div class="panel" id="pFermi" hidden>
+        <h3>Fermi estimate: multiply rough factors</h3>
+        <p>Break the question into factors you can estimate, give each a low and a high value, and multiply. The answer is an order of magnitude, with a range.</p>
+        <div class="row"><span class="lab">Question</span><div class="seg" role="group" aria-label="Question" id="fQ"></div></div>
+        <div class="fermi" id="fRows"></div>
+        <div class="big" id="fOut"></div>
+      </div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section id="zoomCtl">
+        <h2>Zoom</h2>
+        <div><div class="slider-head"><label for="sZoom">Width of the view</label><output id="oZoom" for="sZoom"></output></div><input type="range" id="sZoom" min="-15.3" max="27" step="0.01"></div>
+        <p class="hint">Each object is drawn at its true size, centred where you are standing: zooming in heads into your hand, zooming out heads up through the sky. Scroll or pinch on the picture, drag up and down, or use the arrow keys.</p>
+      </section>
+      <section>
+        <h2>About this tool</h2>
+        <p class="hint" id="aboutHint"></p>
+      </section>
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides the results (the converted value, the dimension check, the rounded answer, the estimate and the object names on the ruler and in the zoom) so students can work first.</p>
+        <p class="hint">Sizes on the ruler are typical or approximate values; ranges in nature are wide (a human hair is 20 to 180 μm). Conversion factors are the exact legal definitions (1 in = 2.54 cm, 1 lb = 0.45359237 kg, 1 cal = 4.184 J), except where marked.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  const UN_VERSION = 'units@2026-10-22';
+  // typical sizes (m)
+  const SIZES = [['proton (diameter)', 1.7e-15], ['hydrogen atom (diameter)', 1.06e-10], ['DNA double helix (width)', 2e-9], ['typical virus', 1e-7], ['red blood cell', 8e-6], ['human hair (width)', 7e-5], ['grain of sand', 5e-4], ['person (height)', 1.7], ['football field', 1.0e2], ['Mount Everest (height)', 8.849e3], ['Earth (diameter)', 1.2742e7], ['Earth to Moon', 3.844e8], ['Earth to Sun (1 au)', 1.495978707e11], ['one light year', 9.4607e15], ['nearest star, Proxima Centauri', 4.0e16], ['Milky Way disk (diameter)', 9.5e20], ['observable universe (diameter)', 8.8e26]];
+  // units in SI per unit; exact unless noted
+  const UNITS = {
+    length: { m: 1, km: 1e3, cm: 1e-2, mm: 1e-3, in: 0.0254, ft: 0.3048, yd: 0.9144, mi: 1609.344, 'light year': 9.4607304725808e15 },
+    speed: { 'm/s': 1, 'km/h': 1000 / 3600, 'mi/h': 1609.344 / 3600, 'ft/s': 0.3048 },
+    mass: { kg: 1, g: 1e-3, lb: 0.45359237, oz: 0.028349523125, 'metric ton': 1000 },
+    energy: { J: 1, kJ: 1e3, cal: 4.184, kcal: 4184, kWh: 3.6e6, eV: 1.602176634e-19, BTU: 1055.05585262 },
+    time: { s: 1, min: 60, h: 3600, day: 86400, year: 31557600 }
+  };
+  // a conversion as a chain of factors through SI: value × (SI per from) ÷ (SI per to)
+  function convert(v, kind, from, to) { const U = UNITS[kind]; return v * U[from] / U[to]; }
+  // dimensions as [M, L, T] exponents
+  const DIM = { L: [0, 1, 0], m: [1, 0, 0], g: [0, 1, -2], T: [1, 1, -2], mu: [1, -1, 0], h: [0, 1, 0], GM: [0, 3, -2], r: [0, 1, 0], k: [1, 0, -2], rho: [1, -3, 0], v: [0, 1, -1], P: [1, -1, -2] };
+  const QUESTIONS = {
+    pendulum: { text: 'Period t of a pendulum. It might depend on its length L, the bob\'s mass m and g.', target: [0, 0, 1], vars: ['L', 'm', 'g'], ans: 't = C √(L/g), and C = 2π: the mass drops out.' },
+    spring: { text: 'Period t of a mass m on a spring of stiffness k (units N/m). Could the amplitude A (a length) matter?', target: [0, 0, 1], vars: ['m', 'k', 'A'], ans: 't = C √(m/k), and C = 2π: the amplitude drops out.' },
+    wave: { text: 'Speed v of a wave on a string with tension T (a force) and mass per length μ.', target: [0, 1, -1], vars: ['T', 'mu'], ans: 'v = C √(T/μ), and C = 1.' },
+    orbit: { text: 'Period t of a circular orbit of radius r around a planet with GM (units m³/s²).', target: [0, 0, 1], vars: ['r', 'GM'], ans: 't = C √(r³/GM), and C = 2π (Kepler\'s third law).' },
+    fall: { text: 'Time t to fall a height h from rest. It might depend on h, g and the mass m.', target: [0, 0, 1], vars: ['h', 'g', 'm'], ans: 't = C √(h/g), and C = √2: the mass drops out (no air drag).' }
+  };
+  DIM.A = [0, 1, 0];
+  const dimsOf = (vars, ex) => [0, 1, 2].map((i) => vars.reduce((q, v, j) => q + ex[j] * DIM[v][i], 0));
+  // solve for the exponents by least squares on the dimension equations (exact when unique; a variable that cannot appear gets 0)
+  function solveDims(vars, target) {
+    const n = vars.length, A = [0, 1, 2].map((i) => vars.map((v) => DIM[v][i]));
+    // normal equations with a tiny ridge so an absent variable is set to 0
+    const M = Array.from({ length: n }, (_, a) => Array.from({ length: n }, (_, b) => A.reduce((q, row) => q + row[a] * row[b], 0) + (a === b ? 1e-12 : 0)));
+    const y = Array.from({ length: n }, (_, a) => A.reduce((q, row, i) => q + row[a] * target[i], 0));
+    for (let c = 0; c < n; c++) { let p = c; for (let r = c + 1; r < n; r++) if (Math.abs(M[r][c]) > Math.abs(M[p][c])) p = r; [M[c], M[p]] = [M[p], M[c]]; [y[c], y[p]] = [y[p], y[c]];
+      for (let r = 0; r < n; r++) if (r !== c) { const k = M[r][c] / M[c][c]; for (let q = c; q < n; q++) M[r][q] -= k * M[c][q]; y[r] -= k * y[c]; } }
+    return y.map((v, i) => Math.round(v / M[i][i] * 1e6) / 1e6 + 0);
+  }
+  // significant figures of a measurement written as text
+  function sigInfo(s) {
+    const t = String(s).trim().replace('−', '-').toLowerCase(); const m = t.match(/^([+-]?)(\d*)(?:\.(\d*))?(?:e([+-]?\d+))?$/); if (!m || (m[2] === '' && (m[3] == null || m[3] === ''))) return null;
+    const int = m[2] || '', frac = m[3] == null ? null : m[3], exp = m[4] ? +m[4] : 0, digits = (int + (frac || '')).replace(/^0+/, '');
+    let sig, ambiguous = false;
+    if (frac != null) sig = digits.length || (frac.length ? 1 : 0);   // a decimal point makes trailing zeros count; "0.0" counts as 1
+    else { const core = int.replace(/^0+/, ''), tz = core.length - core.replace(/0+$/, '').length; sig = core.length - tz || 1; ambiguous = tz > 0; }
+    const decimals = (frac == null ? 0 : frac.length) - exp;   // decimal places in plain notation
+    return { value: parseFloat(t), sig, decimals, ambiguous };
+  }
+  function roundSig(x, n) { if (x === 0) return 0; const e = Math.floor(Math.log10(Math.abs(x))); const f = 10 ** (n - 1 - e); return Math.round(x * f) / f; }
+  function combine(a, b, op) {
+    const A = sigInfo(a), B = sigInfo(b); if (!A || !B) return null;
+    const raw = op === '*' ? A.value * B.value : op === '/' ? A.value / B.value : op === '+' ? A.value + B.value : A.value - B.value;
+    if (op === '*' || op === '/') { const n = Math.min(A.sig, B.sig); return { A, B, raw, rule: 'sig', keep: n, rounded: roundSig(raw, n) }; }
+    const d = Math.min(A.decimals, B.decimals); return { A, B, raw, rule: 'dec', keep: d, rounded: Math.round(raw * 10 ** d) / 10 ** d };
+  }
+  function formatKeep(x, r) {
+    if (r.rule === 'dec') return r.keep >= 0 ? x.toFixed(r.keep) : String(Math.round(x));
+    const e = x === 0 ? 0 : Math.floor(Math.log10(Math.abs(x))); if (e >= 6 || e <= -4 || e >= r.keep) return x.toExponential(r.keep - 1).replace('e+', ' × 10^').replace('e-', ' × 10^−');   // 470 with 2 figures is written 4.7 × 10^2
+    return x.toFixed(Math.max(0, r.keep - 1 - e));
+  }
+  // Fermi: product of factors, low and high
+  const FERMI = {
+    beats: { q: 'How many times does a heart beat in a lifetime?', f: [['heartbeats per minute', 60, 100], ['minutes per day (exact)', 1440, 1440], ['days per year', 365.25, 365.25], ['years in a lifetime', 70, 90]] },
+    walk: { q: 'How many days would it take to walk around the equator (40,075 km)?', f: [['distance, km (Earth\'s equator)', 40075, 40075], ['÷ walking speed, km/h', 1 / 6, 1 / 4], ['÷ hours walked per day', 1 / 10, 1 / 6]] },
+    breaths: { q: 'How many litres of air do you breathe in a day?', f: [['breaths per minute at rest', 12, 20], ['litres per breath', 0.4, 0.6], ['minutes per day (exact)', 1440, 1440]] }
+  };
+  const fermi = (rows) => rows.reduce((q, r) => [q[0] * r[1], q[1] * r[2]], [1, 1]);
+
+  // the zoom: objects at true size, in metres, positioned around the viewer (origin at a hand held in front of a standing person)
+  const RE_ = 6.371e6, AU = 1.495978707e11, LY = 9.4607304725808e15;
+  const ZOOM = [
+    { id: 'proton', name: 'proton', size: 1.7e-15, x: 0, y: 0 },
+    { id: 'atom', name: 'hydrogen atom', size: 1.06e-10, x: 0, y: 0 },
+    { id: 'dna', name: 'DNA double helix', size: 2e-9, x: 0, y: 0 },
+    { id: 'virus', name: 'virus', size: 1e-7, x: 0, y: 0 },
+    { id: 'cell', name: 'red blood cell', size: 8e-6, x: 0, y: 0 },
+    { id: 'hair', name: 'human hair (width)', size: 7e-5, x: 0, y: 0 },
+    { id: 'sand', name: 'grain of sand', size: 5e-4, x: 0, y: 0 },
+    { id: 'person', name: 'person', size: 1.7, x: -0.25, y: -0.1 },
+    { id: 'everest', name: 'Mount Everest (height)', size: 8849, x: 2500, y: -1.0 + 8849 / 2 },
+    { id: 'earth', name: 'Earth (diameter)', size: 2 * RE_, x: 0, y: -1.0 - RE_ },
+    { id: 'moon', name: 'Moon\'s orbit (diameter)', size: 2 * 3.844e8, x: 0, y: -1.0 - RE_ },
+    { id: 'solar', name: 'Earth\'s orbit (diameter)', size: 2 * AU, x: -AU, y: 0 },
+    { id: 'stars', name: 'nearest stars (Proxima Centauri 4.24 ly)', size: 2 * 4.24 * LY, x: -AU, y: 0 },
+    { id: 'galaxy', name: 'Milky Way (disk)', size: 1e5 * LY, x: -AU - 2.6e4 * LY, y: 0 },
+    { id: 'local', name: 'Local Group of galaxies (about 10 million ly)', size: 1e7 * LY, x: -AU - 2.6e4 * LY + 1.25e6 * LY, y: 0 },
+    { id: 'universe', name: 'observable universe', size: 8.8e26, x: 0, y: 0 },
+    // background for each stage: drawn and faded the same way, but never labelled or followed by the camera
+    { id: 'bgAtoms', bg: true, region: true, size: 1.6e-9, x: 0, y: 0 }, { id: 'bgWater', bg: true, region: true, size: 7e-9, x: 0, y: 0 },
+    { id: 'bgMembrane', bg: true, region: true, size: 1.2e-6, x: 0, y: 0 }, { id: 'bgBlood', bg: true, region: true, size: 3e-5, x: 0, y: 0 },
+    { id: 'bgSkin', bg: true, region: true, size: 6e-3, x: 0, y: 0 }, { id: 'bgPark', bg: true, region: true, size: 14, x: 0, y: 0 },
+    { id: 'bgPeaks', bg: true, region: true, size: 4.5e4, x: 0, y: 0 }, { id: 'bgAir', bg: true, out: true, size: 2 * (RE_ + 1e5), x: 0, y: -1.0 - RE_ },
+    { id: 'bgSats', bg: true, out: true, size: 2 * 4.2164e7, x: 0, y: -1.0 - RE_ }, { id: 'bgPlanets', bg: true, out: true, size: 2 * 50 * AU, x: -AU, y: 0 },
+    { id: 'bgOort', bg: true, out: true, size: 2 * 1e5 * AU, x: -AU, y: 0 }, { id: 'bgClouds', bg: true, out: true, size: 5e5 * LY, x: -AU, y: 0 }
+  ];
+  // planets' orbits (semi-major axes, au) for the solar system background
+  const PLANETS = [['Mercury', 0.387], ['Venus', 0.723], ['Earth', 1], ['Mars', 1.524], ['Jupiter', 5.203], ['Saturn', 9.537], ['Uranus', 19.19], ['Neptune', 30.07]];
+  // visibility of an object of pixel size P on a screen W pixels wide: fades in from 4 to 24 px, out from 1.5 to 6 screen widths
+  const smooth = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+  const zoomAlpha = (P, W) => smooth(4, 24, P) * (1 - smooth(1.5 * W, 6 * W, P));
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const ABOUT = { scale: 'Zoom through: fly from the observable universe down to a proton; every object is drawn at its true size, and each power of ten takes the same scroll. Ruler: each tick on the ruler is ten times the one before. A person is about 10⁰ m; the ruler runs over about 42 powers of ten. Drag along it (or use the arrow keys) to read off a size.',
+    convert: 'Choose a quantity and units. The chain shows each exact factor, so students can see which units cancel. Try 65 mi/h to m/s, or 2000 kcal to kWh.',
+    dims: 'Choose exponents with the sliders until the dimensions [M L T] on the left match the answer\'s. Then press Show the answer. Variables that do not appear in the answer get exponent 0.',
+    sig: 'Type two measurements as you would write them. A decimal point makes trailing zeros significant; 1500 with no decimal point is ambiguous (taken as 2 figures here).',
+    fermi: 'Adjust the low and high values to your own estimates. The answer is the product, shown as a range and to the nearest power of ten.' };
+  const S = { tab: 'scale', kind: 'speed', from: 'mi/h', to: 'm/s', q: 'pendulum', ex: [0, 0, 0], fq: 'beats', fr: null, blind: false, cursor: 0, view: 'zoom', zoom: 0.4, fly: 0 };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'), tick: g('--tick'), hl: g('--hl'), ok: g('--ok'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const SUP = { '-': '⁻', '.': '·', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  const sup = (n) => String(n).split('').map((c) => SUP[c] || c).join('');
+  function sci(v, n = 3) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); if (e >= -2 && e < 5) return String(+v.toPrecision(n)); return `${(v / 10 ** e).toFixed(n - 1).replace('-', '−')} × 10${sup(e)}`; }
+  function setTab(t) {
+    S.tab = t; for (const b of document.querySelectorAll('#tabs button')) b.setAttribute('aria-selected', String(b.dataset.t === t));
+    can.hidden = t !== 'scale'; $('pConvert').hidden = t !== 'convert'; $('pDims').hidden = t !== 'dims'; $('pSig').hidden = t !== 'sig'; $('pFermi').hidden = t !== 'fermi'; stage.classList.toggle('tools', t !== 'scale');
+    $('aboutHint').textContent = ABOUT[t]; $('zoomBar').hidden = t !== 'scale'; $('zoomCtl').hidden = t !== 'scale' || S.view !== 'zoom'; render(); if (t === 'scale') requestAnimationFrame(resize);
+  }
+  $('tabs').addEventListener('click', (e) => { const b = e.target.closest('[data-t]'); if (b) setTab(b.dataset.t); });
+  // ----- convert -----
+  function convUI() {
+    $('cKind').innerHTML = Object.keys(UNITS).map((k) => `<button type="button" data-k="${k}" aria-pressed="${k === S.kind}">${k}</button>`).join('');
+    const opts = Object.keys(UNITS[S.kind]).map((u) => `<option>${u}</option>`).join(''); $('cFrom').innerHTML = opts; $('cTo').innerHTML = opts; $('cFrom').value = S.from; $('cTo').value = S.to;
+  }
+  $('cKind').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (!b) return; S.kind = b.dataset.k; const u = Object.keys(UNITS[S.kind]); S.from = u[1] || u[0]; S.to = u[0]; convUI(); render(); });
+  $('cFrom').addEventListener('change', (e) => { S.from = e.target.value; render(); }); $('cTo').addEventListener('change', (e) => { S.to = e.target.value; render(); }); $('cVal').addEventListener('input', render);
+  function renderConvert() {
+    const v = parseFloat($('cVal').value.replace('−', '-')), U = UNITS[S.kind], si = Object.keys(U).find((u) => U[u] === 1);
+    const fac = (u) => (U[u] === 1 ? '' : U[u] >= 1 ? `(${sci(U[u], 10)} ${si} / 1 ${u})` : `(1 ${si} / ${sci(1 / U[u], 10)} ${u})`);
+    const parts = [`${isFinite(v) ? v : '?'} ${S.from}`]; if (S.from !== si) parts.push(`× (${sci(U[S.from], 10)} ${si} / 1 ${S.from})`); if (S.to !== si) parts.push(`× (1 ${S.to} / ${sci(U[S.to], 10)} ${si})`);
+    $('cChain').textContent = parts.join('  ') + (S.kind === 'energy' && (S.from === 'BTU' || S.to === 'BTU') ? '   (BTU: the international table value)' : '') + (S.kind === 'time' && (S.from === 'year' || S.to === 'year') ? '   (year: Julian, 365.25 days)' : '') + (S.kind === 'energy' && (S.from === 'eV' || S.to === 'eV') ? '   (eV: exact since 2019)' : '');
+    $('cOut').textContent = S.blind ? '= ? (hidden in Blind)' : isFinite(v) ? `= ${sci(convert(v, S.kind, S.from, S.to), 6)} ${S.to}` : 'Enter a number.';
+  }
+  // ----- dims -----
+  function dimStr(d) { const n = ['M', 'L', 'T'], s = d.map((e, i) => (Math.abs(e) < 1e-9 ? '' : `${n[i]}${Math.abs(e - 1) < 1e-9 ? '' : sup(+e.toFixed(2))}`)).filter(Boolean).join(' '); return s || '1 (dimensionless)'; }
+  const VNAME = { L: 'L (length)', m: 'm (mass)', g: 'g (acceleration)', T: 'T (force)', mu: 'μ (mass per length)', h: 'h (height)', GM: 'GM (m³/s²)', r: 'r (radius)', k: 'k (N/m)', A: 'A (amplitude)' };
+  function dimsUI() {
+    $('dQ').innerHTML = Object.keys(QUESTIONS).map((k) => `<button type="button" data-q="${k}" aria-pressed="${k === S.q}">${{ pendulum: 'Pendulum', spring: 'Mass on a spring', wave: 'Wave on a string', orbit: 'Orbit', fall: 'Falling time' }[k]}</button>`).join('');
+    const Q = QUESTIONS[S.q]; S.ex = Q.vars.map(() => 0); $('dText').textContent = Q.text;
+    $('dExps').innerHTML = Q.vars.map((v, j) => `<label for="dx${j}">power of ${VNAME[v]}</label><input type="range" id="dx${j}" min="-2" max="3" step="0.5" value="0"><output id="dxo${j}">0</output>`).join('');
+    Q.vars.forEach((v, j) => $(`dx${j}`).addEventListener('input', (e) => { S.ex[j] = +e.target.value; $(`dxo${j}`).textContent = String(S.ex[j]).replace('-', '−'); render(); }));
+    $('dOut').dataset.shown = '';
+  }
+  $('dQ').addEventListener('click', (e) => { const b = e.target.closest('[data-q]'); if (b) { S.q = b.dataset.q; dimsUI(); render(); } });
+  $('dSolve').addEventListener('click', () => { $('dOut').dataset.shown = '1'; render(); });
+  function renderDims() {
+    const Q = QUESTIONS[S.q], d = dimsOf(Q.vars, S.ex), match = d.every((x, i) => Math.abs(x - Q.target[i]) < 1e-9);
+    let h = `Your guess: ${Q.vars.map((v, j) => `${v === 'mu' ? 'μ' : v}${sup(S.ex[j])}`).join(' ')} has dimensions ${S.blind ? '?' : dimStr(d)}. The answer needs ${dimStr(Q.target)}.`;
+    if (!S.blind) h += match ? ' <span class="ok">They match.</span>' : ' <span class="bad">Not yet.</span>';
+    if ($('dOut').dataset.shown) { const ex = solveDims(Q.vars, Q.target); h += `<br>Powers: ${Q.vars.map((v, j) => `${v === 'mu' ? 'μ' : v}: ${String(ex[j]).replace('-', '−')}`).join(', ')}. ${Q.ans}`; }
+    $('dOut').innerHTML = h;
+  }
+  // ----- sig figs -----
+  ['sA', 'sB'].forEach((id) => $(id).addEventListener('input', render)); $('sOp').addEventListener('change', render);
+  function renderSig() {
+    const r = combine($('sA').value, $('sB').value, $('sOp').value);
+    if (!r) { $('sTbl').innerHTML = ''; $('sOut').textContent = 'Type two numbers, like 12.07 or 3.50e-2.'; return; }
+    const row = (lab, q) => `<tr><td>${lab}</td><td>${q.sig}${q.ambiguous ? ' (ambiguous)' : ''}</td><td>${q.decimals}</td></tr>`;
+    $('sTbl').innerHTML = `<tr><th></th><th>significant figures</th><th>decimal places</th></tr>${row($('sA').value, r.A)}${row($('sB').value, r.B)}`;
+    const rule = r.rule === 'sig' ? `keep ${r.keep} significant figure${r.keep === 1 ? '' : 's'}` : `keep ${r.keep} decimal place${r.keep === 1 ? '' : 's'}`;
+    $('sOut').innerHTML = S.blind ? `Calculator: ${+r.raw.toPrecision(12)}. Rule: ? (hidden in Blind)` : `Calculator: ${+r.raw.toPrecision(12)} → ${rule} → <span class="ok">${formatKeep(r.rounded, r)}</span>`;
+  }
+  // ----- fermi -----
+  function fermiUI() {
+    $('fQ').innerHTML = Object.keys(FERMI).map((k) => `<button type="button" data-f="${k}" aria-pressed="${k === S.fq}">${{ beats: 'Heartbeats', walk: 'Walk the equator', breaths: 'Air per day' }[k]}</button>`).join('');
+    S.fr = FERMI[S.fq].f.map((r) => [...r]);
+    $('fRows').innerHTML = `<div style="grid-column:1/-1">${FERMI[S.fq].q}</div>` + S.fr.map((r, i) => `<label for="fl${i}">${r[0]}</label><span><input type="number" id="fl${i}" value="${+r[1].toPrecision(6)}" step="any" aria-label="${r[0]}, low"> to <input type="number" id="fh${i}" value="${+r[2].toPrecision(6)}" step="any" aria-label="${r[0]}, high"></span>`).join('');
+    S.fr.forEach((r, i) => { $(`fl${i}`).addEventListener('input', (e) => { r[1] = +e.target.value; render(); }); $(`fh${i}`).addEventListener('input', (e) => { r[2] = +e.target.value; render(); }); });
+  }
+  $('fQ').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (b) { S.fq = b.dataset.f; fermiUI(); render(); } });
+  function renderFermi() { const [lo, hi] = fermi(S.fr), mid = Math.sqrt(lo * hi); $('fOut').textContent = S.blind ? 'Estimate: hidden in Blind' : `Between ${sci(lo)} and ${sci(hi)}: about 10${sup(Math.round(Math.log10(mid)))} (geometric middle ${sci(mid, 2)})`; }
+  // ----- scale ruler -----
+  can.addEventListener('pointermove', (e) => { if (S.view !== 'ruler') return; if (e.buttons !== 1 && e.pointerType === 'mouse') return; const r = can.getBoundingClientRect(); S.cursor = posToExp(e.clientX - r.left, e.clientY - r.top); draw(); });
+  can.addEventListener('pointerdown', (e) => { if (S.view !== 'ruler') return; const r = can.getBoundingClientRect(); S.cursor = posToExp(e.clientX - r.left, e.clientY - r.top); draw(); });
+  can.addEventListener('keydown', (e) => { if (S.view !== 'ruler') return; const d = { ArrowLeft: -0.25, ArrowRight: 0.25, ArrowUp: 0.25, ArrowDown: -0.25 }[e.key]; if (d) { S.cursor = Math.max(-15, Math.min(27, S.cursor + d)); draw(); e.preventDefault(); } });
+  let geom = null;
+  function posToExp(x, y) { if (!geom) return 0; const t = geom.vert ? (geom.y1 - y) / (geom.y1 - geom.y0) : (x - geom.x0) / (geom.x1 - geom.x0); return Math.max(-15, Math.min(27, -15 + 42 * t)); }
+  function draw() {
+    if (!T || !W || S.tab !== 'scale') return;
+    if (S.view === 'zoom') { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawZoom(); return; }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh); const p = ps(), vert = W < 640;
+    const x0 = vert ? 40 * p : 30 * p, x1 = vert ? x0 : W - 130 * p, y0 = vert ? 40 * p : Hh * 0.5, y1 = vert ? Hh - 30 * p : y0; geom = { vert, x0, x1, y0, y1 };
+    const P = (e) => vert ? [x0, y1 - (y1 - y0) * (e + 15) / 42] : [x0 + (x1 - x0) * (e + 15) / 42, y0];
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(...P(-15)); ctx.lineTo(...P(27)); ctx.stroke();
+    ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.muted;
+    for (let e = -15; e <= 27; e++) { const [x, y] = P(e), L = (e % 5 === 0 ? 10 : 5) * p; ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); vert ? (ctx.moveTo(x - L, y), ctx.lineTo(x + L, y)) : (ctx.moveTo(x, y - L), ctx.lineTo(x, y + L)); ctx.stroke();
+      if (e % 3 === 0) { ctx.textAlign = vert ? 'right' : 'center'; ctx.textBaseline = vert ? 'middle' : 'top'; ctx.fillText(`10${sup(e)}`, vert ? x - 12 * p : x, vert ? y : y + 12 * p); } }
+    ctx.textBaseline = 'middle'; ctx.font = `${11 * p}px ${T.ui}`;
+    SIZES.forEach(([name, s], i) => { const e = Math.log10(s), [x, y] = P(e); ctx.fillStyle = T.tick; ctx.beginPath(); ctx.arc(x, y, 4 * p, 0, 7); ctx.fill();
+      ctx.fillStyle = T.ink; if (vert) { ctx.textAlign = 'left'; ctx.fillText(S.blind ? '?' : `${name}: ${sci(s, 2)} m`, x + 14 * p, y); }
+      else { ctx.save(); ctx.translate(x, y - 10 * p); ctx.rotate(-Math.PI / 3); ctx.textAlign = 'left'; ctx.fillText(S.blind ? '?' : `${name}`, 0, 0); ctx.restore(); } });
+    const [cx, cy] = P(S.cursor); ctx.strokeStyle = T.hl; ctx.lineWidth = 2 * p; ctx.beginPath(); vert ? (ctx.moveTo(cx - 18 * p, cy), ctx.lineTo(cx + 18 * p, cy)) : (ctx.moveTo(cx, cy - 18 * p), ctx.lineTo(cx, cy + 18 * p)); ctx.stroke();
+    const val = 10 ** S.cursor, near = SIZES.reduce((b, s) => (Math.abs(Math.log10(s[1]) - S.cursor) < Math.abs(Math.log10(b[1]) - S.cursor) ? s : b));
+    ctx.fillStyle = T.hl; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(`cursor: ${sci(val, 2)} m${S.blind ? '' : `   nearest: ${near[0]}`}`, 14 * p, 14 * p);
+    if (!vert) { ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('one tick per power of ten; drag to read a size', 14 * p, 34 * p); }
+  }
+
+  // ---------- 3D zoom ----------
+  const rng = (seed) => () => { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
+  const PTS = (() => { const r = rng(7), gal = [], web = [], stars = [];
+    for (let i = 0; i < 1400; i++) { const arm = i % 2, t = r() * 3.2, rad = 0.06 + t / 3.4, a = t * 1.9 + arm * Math.PI + (r() - 0.5) * 0.5; gal.push([rad * Math.cos(a) * 0.5, rad * Math.sin(a) * 0.5 * 0.92, r()]); }
+    for (let i = 0; i < 160; i++) gal.push([(r() - 0.5) * 0.12, (r() - 0.5) * 0.1, 1]);
+    const nodes = Array.from({ length: 40 }, () => [r() - 0.5, r() - 0.5]);
+    for (let i = 0; i < 1600; i++) { const a = nodes[Math.floor(r() * 40)], b = nodes[Math.floor(r() * 40)], t = r(); if (Math.hypot(a[0] - b[0], a[1] - b[1]) > 0.3) { i--; continue; } web.push([a[0] + (b[0] - a[0]) * t + (r() - 0.5) * 0.02, a[1] + (b[1] - a[1]) * t + (r() - 0.5) * 0.02]); }
+    for (let i = 0; i < 70; i++) { const a = r() * 7, d = Math.sqrt(r()) * 0.5; stars.push([d * Math.cos(a), d * Math.sin(a), 0.3 + r() * 0.7]); }
+    const sand = Array.from({ length: 9 }, (_, i) => { const a = i / 9 * 2 * Math.PI; return [Math.cos(a) * (0.75 + r() * 0.3), Math.sin(a) * (0.7 + r() * 0.3)]; });
+    const R = (n, f) => Array.from({ length: n }, () => f());
+    const atoms = R(140, () => [r() - 0.5, r() - 0.5, r()]), water = R(420, () => [r() - 0.5, r() - 0.5, r() * 6.3]), prot = R(40, () => [r() - 0.5, r() - 0.5, 0.3 + r() * 0.7, r() * 6.3]);
+    const blood = [...Array.from({ length: 8 }, (_, i) => { const t = i / 8 * 6.283 + r() * 0.4, d = (8.4 + r() * 1.2) / 30; return [d * Math.cos(t), d * Math.sin(t), 0.93 + r() * 0.1, r() * 3.1, 0.35 + r() * 0.65]; }), ...Array.from({ length: 14 }, (_, i) => { const t = i / 14 * 6.283 + r() * 0.3, d = (16 + r() * 2) / 30; return [d * Math.cos(t), d * Math.sin(t), 0.93 + r() * 0.1, r() * 3.1, 0.35 + r() * 0.65]; })] /* packed around the centre cell, as in blood */, plate = R(14, () => [r() - 0.5, r() - 0.5]);
+    const grains = R(16, () => [r() - 0.5, r() - 0.5, 0.2e-3 + r() * 0.6e-3, r() * 6.3, r()]), cloudsE = R(18, () => [r() * 6.3, 0.2 + r() * 0.6, r()]);
+    const oort = R(500, () => { const a = r() * 6.3, d = 0.03 + Math.sqrt(r()) * 0.47; return [d * Math.cos(a), d * Math.sin(a)]; }), belt = R(300, () => [r() * 6.3, 2.2 + r() * 1.1]), kuiper = R(300, () => [r() * 6.3, 30 + r() * 20]);
+    const dwarfs = R(40, () => [r() - 0.5, r() - 0.5]), far = R(90, () => [r() - 0.5, r() - 0.5, r()]);
+    return { gal, web, stars, sand, atoms, water, prot, blood, plate, grains, cloudsE, oort, belt, kuiper, dwarfs, far }; })();
+  function ball(x, y, r, c0, c1, a) { const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r); g.addColorStop(0, c0); g.addColorStop(1, c1); ctx.globalAlpha = a; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); ctx.globalAlpha = 1; }
+  const labOK = (r) => !S.blind && 2 * r > 0.5 * W && 2 * r < 40 * W;   // a background's own labels only at its own stage
+  const DRAW = {
+    proton(x, y, r, a) { ball(x, y, r, '#ffb3a3', '#a8321e', a);
+      ctx.globalAlpha = a * 0.8; ctx.strokeStyle = '#ffe9a8'; ctx.lineWidth = Math.max(1, r * 0.03); const Q = [[-0.35, -0.2], [0.35, -0.15], [0, 0.35]];   // gluons: wavy strands binding the quarks
+      for (let i = 0; i < 3; i++) { const [u1, v1] = Q[i], [u2, v2] = Q[(i + 1) % 3], dx = u2 - u1, dy = v2 - v1, L = Math.hypot(dx, dy); ctx.beginPath(); for (let t = 0; t <= 1.0001; t += 0.02) { const w = Math.sin(t * 2 * Math.PI * 5) * 0.04; const px = x + r * (u1 + dx * t - dy / L * w), py = y + r * (v1 + dy * t + dx / L * w); t ? ctx.lineTo(px, py) : ctx.moveTo(px, py); } ctx.stroke(); } ctx.globalAlpha = a; [['#ff4d4d', -0.35, -0.2], ['#3dbf6e', 0.35, -0.15], ['#4d7dff', 0, 0.35]].forEach(([c, dx, dy]) => { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(x + dx * r, y + dy * r, r * 0.16, 0, 7); ctx.fill(); }); ctx.globalAlpha = 1; },
+    atom(x, y, r, a) { const g = ctx.createRadialGradient(x, y, 0, x, y, r * 1.6); g.addColorStop(0, 'rgba(90,140,255,0.55)'); g.addColorStop(0.45, 'rgba(90,140,255,0.22)'); g.addColorStop(1, 'rgba(90,140,255,0)'); ctx.globalAlpha = a; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 1.6, 0, 7); ctx.fill(); ctx.fillStyle = '#c0392b'; ctx.beginPath(); ctx.arc(x, y, Math.max(1, r * 1.6e-5), 0, 7); ctx.fill(); ctx.globalAlpha = 1; },
+    dna(x, y, r, a) {   // r is half the 2 nm width; one turn per 3.4 nm along x, shown over ±12 nm
+      const L = r * 12, pitch = r * 3.4; ctx.globalAlpha = a; ctx.lineWidth = Math.max(1, r * 0.22);
+      for (let k = -L; k < L; k += pitch / 6) { const ph = 2 * Math.PI * k / pitch, y1 = y + r * Math.sin(ph), y2 = y + r * Math.sin(ph + 2.4); ctx.strokeStyle = 'rgba(150,160,175,0.7)'; ctx.beginPath(); ctx.moveTo(x + k, y1); ctx.lineTo(x + k, y2); ctx.stroke(); }
+      for (const [off, col] of [[0, '#2b60b5'], [2.4, '#b0452f']]) { ctx.strokeStyle = col; ctx.lineWidth = Math.max(1.5, r * 0.3); ctx.beginPath(); for (let k = -L; k <= L; k += pitch / 40) { const yy = y + r * Math.sin(2 * Math.PI * k / pitch + off); k === -L ? ctx.moveTo(x + k, yy) : ctx.lineTo(x + k, yy); } ctx.stroke(); }
+      ctx.globalAlpha = 1; },
+    virus(x, y, r, a) { ctx.globalAlpha = a; ctx.strokeStyle = '#7a3e9d'; ctx.lineWidth = Math.max(1, r * 0.06); for (let i = 0; i < 24; i++) { const t = i / 24 * 2 * Math.PI; ctx.beginPath(); ctx.moveTo(x + r * 0.8 * Math.cos(t), y + r * 0.8 * Math.sin(t)); ctx.lineTo(x + r * 1.15 * Math.cos(t), y + r * 1.15 * Math.sin(t)); ctx.stroke(); ctx.fillStyle = '#b07cd0'; ctx.beginPath(); ctx.arc(x + r * 1.15 * Math.cos(t), y + r * 1.15 * Math.sin(t), r * 0.07, 0, 7); ctx.fill(); } ctx.globalAlpha = 1; ball(x, y, r * 0.85, '#d9b8ee', '#7a3e9d', a); },
+    cell(x, y, r, a) { ball(x, y, r, '#f08a7a', '#9e2a1c', a); ctx.globalAlpha = a * 0.55; const g = ctx.createRadialGradient(x, y, 0, x, y, r * 0.55); g.addColorStop(0, '#7d1d12'); g.addColorStop(1, 'rgba(125,29,18,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 0.55, 0, 7); ctx.fill(); ctx.globalAlpha = 1; },
+    hair(x, y, r, a) { ctx.globalAlpha = a; const g = ctx.createLinearGradient(0, y - r, 0, y + r); g.addColorStop(0, '#3b2a1e'); g.addColorStop(0.4, '#8a6a4f'); g.addColorStop(1, '#2a1d14'); ctx.fillStyle = g; ctx.fillRect(0, y - r, W, 2 * r); ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; for (let k = (x % (r * 0.8)) - r; k < W; k += r * 0.8) { ctx.beginPath(); ctx.moveTo(k, y - r); ctx.quadraticCurveTo(k + r * 0.3, y, k, y + r); ctx.stroke(); } ctx.globalAlpha = 1; },
+    sand(x, y, r, a) { ctx.globalAlpha = a; const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.1, x, y, r); g.addColorStop(0, '#f1dca6'); g.addColorStop(1, '#a8834a'); ctx.fillStyle = g; ctx.beginPath(); PTS.sand.forEach(([u, v], i) => (i ? ctx.lineTo(x + u * r, y + v * r) : ctx.moveTo(x + u * r, y + v * r))); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; },
+    person(x, y, r, a) {   // r = half the height; feet at y + r
+      ctx.globalAlpha = a; ctx.fillStyle = T.ink; const h = 2 * r, top = y - r;
+      ctx.beginPath(); ctx.arc(x, top + h * 0.065, h * 0.065, 0, 7); ctx.fill();
+      ctx.fillRect(x - h * 0.08, top + h * 0.14, h * 0.16, h * 0.38); ctx.fillRect(x - h * 0.075, top + h * 0.5, h * 0.06, h * 0.5); ctx.fillRect(x + h * 0.015, top + h * 0.5, h * 0.06, h * 0.5);
+      ctx.save(); ctx.translate(x + h * 0.07, top + h * 0.17); ctx.rotate(1.35); ctx.fillRect(0, -h * 0.025, h * 0.36, h * 0.05); ctx.restore(); ctx.fillRect(x - h * 0.13, top + h * 0.16, h * 0.05, h * 0.33); ctx.globalAlpha = 1; },
+    everest(x, y, r, a) {   // r = half the 8849 m height; base at y + r
+      const base = y + r, h = 2 * r; ctx.globalAlpha = a; const g = ctx.createLinearGradient(0, base - h, 0, base); g.addColorStop(0, '#9aa6b6'); g.addColorStop(1, '#5c6675'); ctx.fillStyle = g;
+      ctx.beginPath(); ctx.moveTo(x - h * 1.8, base); ctx.lineTo(x - h * 0.6, base - h * 0.55); ctx.lineTo(x - h * 0.25, base - h * 0.75); ctx.lineTo(x, base - h); ctx.lineTo(x + h * 0.35, base - h * 0.7); ctx.lineTo(x + h * 0.9, base - h * 0.5); ctx.lineTo(x + h * 2, base); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#f4f7fb'; ctx.beginPath(); ctx.moveTo(x - h * 0.25, base - h * 0.75); ctx.lineTo(x, base - h); ctx.lineTo(x + h * 0.35, base - h * 0.7); ctx.lineTo(x + h * 0.1, base - h * 0.8); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; },
+    earth(x, y, r, a) { ball(x, y, r, '#8fc1ef', '#1d4f87', a); ctx.globalAlpha = a * 0.75; ctx.fillStyle = '#4f8a4a'; ctx.beginPath(); ctx.ellipse(x - r * 0.25, y - r * 0.1, r * 0.3, r * 0.45, 0.4, 0, 7); ctx.fill(); ctx.beginPath(); ctx.ellipse(x + r * 0.35, y + r * 0.2, r * 0.22, r * 0.3, -0.3, 0, 7); ctx.fill(); ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.ellipse(x, y - r * 0.88, r * 0.35, r * 0.1, 0, 0, 7); ctx.fill(); ctx.globalAlpha = 1; },
+    moon(x, y, r, a) { ctx.globalAlpha = a; ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; ball(x + r * Math.cos(0.7), y - r * Math.sin(0.7), Math.max(2, r * 1737 / 384400), '#e6e6e6', '#777', a); ball(x, y, Math.max(2.5, r * 6371 / 384400), '#8fc1ef', '#1d4f87', a); },
+    solar(x, y, r, a) { ctx.globalAlpha = a; ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; ball(x, y, Math.max(4, r * 6.957e8 / AU), '#fff3b0', '#e08a1e', a); ball(x + r, y, 3, '#8fc1ef', '#1d4f87', a); },
+    stars(x, y, r, a) { ctx.globalAlpha = a; for (const [u, v, b] of PTS.stars) { ctx.fillStyle = `rgba(${255},${200 + 55 * b | 0},${150 + 100 * b | 0},${b})`; ctx.beginPath(); ctx.arc(x + u * 2 * r, y + v * 2 * r, 1.5 + b * 1.5, 0, 7); ctx.fill(); } ctx.fillStyle = '#ffe08a'; ctx.beginPath(); ctx.arc(x, y, 3.5, 0, 7); ctx.fill(); ctx.fillStyle = '#ff8a70'; ctx.beginPath(); ctx.arc(x + r * 0.62, y - r * 0.78, 3, 0, 7); ctx.fill(); ctx.globalAlpha = 1; },
+    galaxy(x, y, r, a) { ctx.globalAlpha = a; const g = ctx.createRadialGradient(x, y, 0, x, y, r * 0.3); g.addColorStop(0, 'rgba(255,236,190,0.9)'); g.addColorStop(1, 'rgba(255,236,190,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r * 0.3, 0, 7); ctx.fill();
+      for (const [u, v, b] of PTS.gal) { ctx.fillStyle = b > 0.66 ? 'rgba(170,200,255,0.8)' : 'rgba(255,240,210,0.7)'; ctx.fillRect(x + u * 2 * r, y + v * 2 * r, 1.6, 1.6); } ctx.globalAlpha = 1; },
+    bgAtoms(x, y, r, a) { ctx.globalAlpha = a * 0.55; for (const [u, v, b] of PTS.atoms) { if (Math.hypot(u, v) < 0.09) continue; const px = x + u * 2 * r, py = y + v * 2 * r, rr = r * 2 * (0.05 + 0.03 * b); const g = ctx.createRadialGradient(px, py, 0, px, py, rr); g.addColorStop(0, b > 0.6 ? 'rgba(220,90,80,0.7)' : b > 0.3 ? 'rgba(90,90,100,0.6)' : 'rgba(90,140,255,0.5)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(px, py, rr, 0, 7); ctx.fill(); } ctx.globalAlpha = 1; },
+    bgWater(x, y, r, a) {   // water molecules at true size: O–H 0.096 nm, 104.5°
+      const s = r * 2 / 7e-9, oh = 0.096e-9 * s; if (oh < 0.6) return; ctx.globalAlpha = a * 0.7;
+      for (const [u, v, t] of PTS.water) { if (Math.abs(v) < 0.16) continue; /* leave the helix clear */ const px = x + u * 2 * r, py = y + v * 2 * r; ctx.fillStyle = '#d24b3a'; ctx.beginPath(); ctx.arc(px, py, Math.max(0.8, 0.076e-9 * s), 0, 7); ctx.fill(); ctx.fillStyle = '#e6eaf0';
+        for (const d of [-0.912, 0.912]) { ctx.beginPath(); ctx.arc(px + oh * Math.cos(t + d), py + oh * Math.sin(t + d), Math.max(0.6, 0.05e-9 * s), 0, 7); ctx.fill(); } }
+      ctx.globalAlpha = 1; },
+    bgMembrane(x, y, r, a) {   // a cell membrane (5 nm bilayer) below, proteins drifting around
+      const s = r * 2 / 1.2e-6, by = y + 0.7e-7 * s, th = Math.max(2, 5e-9 * s); ctx.globalAlpha = a * 0.8;
+      ctx.fillStyle = '#e7d3a1'; ctx.fillRect(0, by, W, th); ctx.fillStyle = '#c9a75e'; for (let px = 0; px < W; px += Math.max(3, 1e-9 * s)) { ctx.fillRect(px, by, Math.max(1, 0.5e-9 * s), Math.max(1, th * 0.18)); ctx.fillRect(px, by + th * 0.82, Math.max(1, 0.5e-9 * s), Math.max(1, th * 0.18)); }
+      for (const [u, v, b, t] of PTS.prot) { const px = x + u * 2 * r, py = y + v * 2 * r; if (Math.hypot(px - x, py - y) < 0.16e-6 * s) continue; ctx.fillStyle = `rgba(${120 + 80 * b | 0},${150},${190 - 60 * b | 0},0.7)`; ctx.beginPath(); ctx.ellipse(px, py, (4 + 6 * b) * 1e-9 * s, (3 + 4 * b) * 1e-9 * s, t, 0, 7); ctx.fill(); }
+      ctx.globalAlpha = 1; },
+    bgBlood(x, y, r, a) {   // more red blood cells (7.5 to 8.5 μm) and platelets (2 to 3 μm) in plasma
+      const s = r * 2 / 3e-5; ctx.globalAlpha = a * 0.35; ctx.fillStyle = '#f4d7a0'; ctx.fillRect(0, 0, W, Hh); ctx.globalAlpha = a;
+      for (const [u, v, f, t, tilt] of PTS.blood) { const px = x + u * 2 * r, py = y + v * 2 * r; const rr = 4e-6 * f * s; ctx.save(); ctx.translate(px, py); ctx.rotate(t); ctx.scale(1, tilt); ball(0, 0, rr, '#f08a7a', '#9e2a1c', a * 0.9); ctx.restore(); }
+      ctx.fillStyle = '#d9b26a'; for (const [u, v] of PTS.plate) { ctx.beginPath(); ctx.ellipse(x + u * 2 * r, y + v * 2 * r, 1.4e-6 * s, 0.8e-6 * s, u * 9, 0, 7); ctx.fill(); }
+      ctx.globalAlpha = 1; },
+    bgSkin(x, y, r, a) {   // fingertip ridges (about 0.5 mm apart) with other grains of sand
+      const s = r * 2 / 6e-3; ctx.globalAlpha = a; ctx.fillStyle = '#e9c3a6'; ctx.fillRect(0, 0, W, Hh); ctx.strokeStyle = 'rgba(160,100,80,0.45)'; ctx.lineWidth = Math.max(1, 0.15e-3 * s);
+      for (let i = -12; i <= 12; i++) { ctx.beginPath(); ctx.ellipse(x + 0.6e-3 * s, y + 2.5e-3 * s, (2.8e-3 + i * 0.5e-3 + 6e-3) * s, (2.8e-3 + i * 0.5e-3 + 6e-3) * s * 0.7, 0, 0, 7); ctx.stroke(); }
+      for (const [u, v, d, t, b] of PTS.grains) { const px = x + u * 2 * r, py = y + v * 2 * r; if (Math.hypot(px - x, py - y) < 0.7e-3 * s) continue; ctx.save(); ctx.translate(px, py); ctx.rotate(t); ctx.fillStyle = b > 0.7 ? '#bfb6a8' : b > 0.4 ? '#d9c08a' : '#a77d4c'; ctx.beginPath(); PTS.sand.forEach(([q, w], i) => (i ? ctx.lineTo(q * d / 2 * s, w * d / 2 * s) : ctx.moveTo(q * d / 2 * s, w * d / 2 * s))); ctx.closePath(); ctx.fill(); ctx.restore(); }
+      ctx.globalAlpha = 1; },
+    bgPark(x, y, r, a, t) {   // sky, a house 8 m wide, trees 6 to 12 m tall, all standing on the ground at y = −1 m
+      ctx.globalAlpha = a; const sky = ctx.createLinearGradient(0, 0, 0, t.Y(-1)); sky.addColorStop(0, '#a9cdf0'); sky.addColorStop(1, '#e4f0fa'); ctx.fillStyle = sky; ctx.fillRect(0, 0, W, Math.max(0, t.Y(-1)));
+      const gy = t.Y(-1), m = t.k;
+      ctx.fillStyle = '#c9a27a'; ctx.fillRect(t.X(-11), gy - 5 * m, 8 * m, 5 * m); ctx.fillStyle = '#8c4a3a'; ctx.beginPath(); ctx.moveTo(t.X(-11.6), gy - 5 * m); ctx.lineTo(t.X(-7), gy - 8 * m); ctx.lineTo(t.X(-2.4), gy - 5 * m); ctx.closePath(); ctx.fill(); ctx.fillStyle = '#5b4a3a'; ctx.fillRect(t.X(-7.6), gy - 2.2 * m, 1.1 * m, 2.2 * m); ctx.fillStyle = '#e8f1fb'; ctx.fillRect(t.X(-10), gy - 4 * m, 1.4 * m, 1.2 * m); ctx.fillRect(t.X(-5.4), gy - 4 * m, 1.4 * m, 1.2 * m);
+      for (const [tx, th] of [[3.5, 7], [7.5, 10], [13, 6], [-16, 9]]) { ctx.fillStyle = '#6b4a2e'; ctx.fillRect(t.X(tx) - 0.2 * m, gy - th * 0.45 * m, 0.4 * m, th * 0.45 * m); ctx.fillStyle = '#4f8a4a'; ctx.beginPath(); ctx.ellipse(t.X(tx), gy - th * 0.68 * m, th * 0.28 * m, th * 0.36 * m, 0, 0, 7); ctx.fill(); }
+      ctx.globalAlpha = 1; },
+    bgPeaks(x, y, r, a, t) {   // Lhotse (8516 m) 3 km south of Everest, Nuptse, clouds, and an airliner at 11 km
+      ctx.globalAlpha = a; const sky = ctx.createLinearGradient(0, 0, 0, t.Y(-1)); sky.addColorStop(0, '#6f9fd6'); sky.addColorStop(1, '#d3e5f6'); ctx.fillStyle = sky; ctx.fillRect(0, 0, W, Math.max(0, t.Y(-1)));
+      const peak = (px, h, w, col) => { ctx.fillStyle = col; ctx.beginPath(); ctx.moveTo(t.X(px - w), t.Y(-1)); ctx.lineTo(t.X(px), t.Y(h)); ctx.lineTo(t.X(px + w), t.Y(-1)); ctx.closePath(); ctx.fill(); ctx.fillStyle = '#f4f7fb'; ctx.beginPath(); ctx.moveTo(t.X(px - w * 0.18), t.Y(h * 0.82)); ctx.lineTo(t.X(px), t.Y(h)); ctx.lineTo(t.X(px + w * 0.18), t.Y(h * 0.82)); ctx.closePath(); ctx.fill(); };
+      peak(5500, 8516, 9000, '#7c8696'); peak(-1500, 7861, 7000, '#8a94a3'); peak(-9000, 6500, 7000, '#949eab'); peak(14000, 7000, 8000, '#8a94a3');
+      ctx.fillStyle = 'rgba(255,255,255,0.85)'; for (const [cx2, h] of [[-12000, 5200], [-4000, 6100], [11000, 5600]]) { ctx.beginPath(); ctx.ellipse(t.X(cx2), t.Y(h), 1800 * t.k, 380 * t.k, 0, 0, 7); ctx.fill(); }
+      const ax = t.X(-6000), ay = t.Y(11000), L = Math.max(6, 70 * t.k); ctx.fillStyle = '#3a4250'; ctx.fillRect(ax - L / 2, ay - L * 0.06, L, L * 0.12); ctx.beginPath(); ctx.moveTo(ax - L * 0.1, ay); ctx.lineTo(ax + L * 0.05, ay - L * 0.4); ctx.lineTo(ax + L * 0.15, ay); ctx.closePath(); ctx.fill();
+      if (labOK(r)) { ctx.font = `${11 * ps()}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#17202b'; ctx.fillText('airliner, 11 km', ax + L * 0.7, ay); ctx.fillText('Lhotse, 8516 m', t.X(5500) + 8, t.Y(8516) - 2); }
+      ctx.globalAlpha = 1; },
+    bgAir(x, y, r, a) {   // the atmosphere (a glow about 100 km thick) and the space station 400 km up
+      const s = r * 2 / (2 * (RE_ + 1e5)), g = ctx.createRadialGradient(x, y, RE_ * s, x, y, (RE_ + 1e5) * s); g.addColorStop(0, 'rgba(120,180,255,0.65)'); g.addColorStop(1, 'rgba(120,180,255,0)'); ctx.globalAlpha = a; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, (RE_ + 1e5) * s, 0, 7); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.8)'; for (const [t, h, b] of PTS.cloudsE) { ctx.beginPath(); ctx.ellipse(x + Math.cos(t) * RE_ * s * 0.9 * h, y - Math.sin(t) * RE_ * s * 0.9 * h, RE_ * s * 0.08 * (0.5 + b), RE_ * s * 0.03, t, 0, 7); ctx.fill(); }
+      const ix = x + (RE_ + 4e5) * s * Math.cos(2.2), iy = y - (RE_ + 4e5) * s * Math.sin(2.2); ctx.fillStyle = '#ffd34d'; ctx.fillRect(ix - 3, iy - 1.5, 6, 3);
+      if (labOK(r) && a > 0.4) { ctx.font = `${11 * ps()}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillStyle = '#e7ecf3'; ctx.fillText('space station, 400 km up', ix - 8, iy); }
+      ctx.globalAlpha = 1; },
+    bgSats(x, y, r, a) {   // GPS (r = 26,560 km) and geostationary (42,164 km) orbits
+      const s = r / 4.2164e7; ctx.globalAlpha = a * 0.8; ctx.lineWidth = 1; ctx.setLineDash([3, 5]);
+      for (const [rr, lab, col] of [[2.656e7, 'GPS', '#4cd08f'], [4.2164e7, 'geostationary', '#e2b350']]) { ctx.strokeStyle = col; ctx.beginPath(); ctx.arc(x, y, rr * s, 0, 7); ctx.stroke(); if (labOK(r)) { ctx.fillStyle = col; ctx.font = `${11 * ps()}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(lab, x + rr * s * 0.72, y - rr * s * 0.7); } }
+      ctx.setLineDash([]); ctx.globalAlpha = 1; },
+    bgPlanets(x, y, r, a) {   // the eight planets' orbits (circles at their semi-major axes), the asteroid and Kuiper belts
+      const s = r / (50 * AU); ctx.globalAlpha = a; ctx.lineWidth = 1;
+      PLANETS.forEach(([n, au], i) => { const rr = au * AU * s; if (rr < 2) return; ctx.strokeStyle = 'rgba(200,210,230,0.45)'; ctx.beginPath(); ctx.arc(x, y, rr, 0, 7); ctx.stroke(); const t = 0.6 + i * 0.83, px = x + rr * Math.cos(t), py = y - rr * Math.sin(t); ctx.fillStyle = ['#b0b0b0', '#e8c98a', '#6fa8ff', '#d2694a', '#d9b48a', '#e8d29a', '#9fe0e8', '#5f7fff'][i]; ctx.beginPath(); ctx.arc(px, py, 2.5, 0, 7); ctx.fill();
+        if (labOK(r) && rr > 18) { ctx.font = `${10 * ps()}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(n, px + 5, py); } });
+      ctx.fillStyle = 'rgba(200,190,170,0.6)'; for (const [t, d] of PTS.belt) ctx.fillRect(x + d * AU * s * Math.cos(t), y - d * AU * s * Math.sin(t), 1.2, 1.2);
+      ctx.fillStyle = 'rgba(170,200,230,0.5)'; for (const [t, d] of PTS.kuiper) ctx.fillRect(x + d * AU * s * Math.cos(t), y - d * AU * s * Math.sin(t), 1.2, 1.2);
+      ctx.globalAlpha = 1; },
+    bgOort(x, y, r, a) { ctx.globalAlpha = a * 0.6; ctx.fillStyle = 'rgba(170,200,230,0.6)'; for (const [u, v] of PTS.oort) ctx.fillRect(x + u * 2 * r, y + v * 2 * r, 1.3, 1.3);
+      if (labOK(r) && a > 0.4) { ctx.fillStyle = '#9fb4d0'; ctx.font = `${11 * ps()}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('Oort cloud of comets, thought to reach about 100,000 au', x, y + r * 0.85); } ctx.globalAlpha = 1; },
+    bgClouds(x, y, r, a) {   // the Large and Small Magellanic Clouds, about 160,000 and 200,000 ly away
+      const s = r * 2 / (5e5 * LY), gx = x - 2.6e4 * LY * s; ctx.globalAlpha = a;
+      for (const [d, ang, size, lab] of [[1.6e5, -1.0, 1.4e4, 'Large Magellanic Cloud'], [2.0e5, -1.25, 7e3, 'Small Magellanic Cloud']]) { const px = x + d * LY * s * Math.cos(ang), py = y - d * LY * s * Math.sin(ang), rr = Math.max(3, size / 2 * LY * s); const g = ctx.createRadialGradient(px, py, 0, px, py, rr); g.addColorStop(0, 'rgba(230,225,255,0.85)'); g.addColorStop(1, 'rgba(230,225,255,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(px, py, rr * 1.4, rr, 0.3, 0, 7); ctx.fill();
+        if (labOK(r)) { ctx.fillStyle = '#c9d2ea'; ctx.font = `${11 * ps()}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(lab, px + rr * 1.5 + 4, py); } }
+      ctx.globalAlpha = 1; },
+    local(x, y, r, a) {   // Milky Way and Andromeda 2.5 million ly apart, Triangulum, dwarf galaxies
+      const s = r * 2 / (1e7 * LY), mw = [x - 1.25e6 * LY * s, y], an = [x + 1.25e6 * LY * s, y], tri = [x + 1.0e6 * LY * s, y - 0.75e6 * LY * s];
+      ctx.globalAlpha = a; const gal = (cx, cy, d, tilt, col) => { const rr = Math.max(3, d / 2 * LY * s); const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, rr); g.addColorStop(0, col); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(cx, cy, rr, rr * tilt, 0.6, 0, 7); ctx.fill(); };
+      gal(mw[0], mw[1], 1e5, 0.9, 'rgba(255,240,210,0.9)'); gal(an[0], an[1], 2.2e5, 0.35, 'rgba(255,240,210,0.9)'); gal(tri[0], tri[1], 6e4, 0.7, 'rgba(210,225,255,0.8)');
+      ctx.fillStyle = 'rgba(200,210,240,0.6)'; for (const [u, v] of PTS.dwarfs) { const near = u < 0 ? mw : an; ctx.beginPath(); ctx.arc(near[0] + v * 0.9e6 * LY * s, near[1] + (u + 0.25) * 0.9e6 * LY * s, 1.6, 0, 7); ctx.fill(); }
+      if (labOK(r)) { ctx.fillStyle = '#e7ecf3'; ctx.font = `${11 * ps()}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('Milky Way', mw[0], mw[1] + 14); ctx.fillText('Andromeda, 2.5 million ly away', an[0], an[1] + 14); ctx.fillText('Triangulum', tri[0], tri[1] + 10); }
+      ctx.globalAlpha = 1; },
+    universe(x, y, r, a) {
+      const g = ctx.createRadialGradient(x, y, r * 0.88, x, y, r); g.addColorStop(0, 'rgba(255,150,90,0)'); g.addColorStop(0.7, 'rgba(255,150,90,0.35)'); g.addColorStop(1, 'rgba(255,150,90,0)'); ctx.globalAlpha = a; ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+      if (!S.blind && a > 0.4) { ctx.fillStyle = '#ffb08a'; ctx.font = `${11 * ps()}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('the edge we see: the cosmic microwave background', x, y + r * 0.9 + 6); } ctx.globalAlpha = 1;
+    ctx.globalAlpha = a; ctx.fillStyle = 'rgba(160,180,255,0.75)'; for (const [u, v] of PTS.web) ctx.fillRect(x + u * 2 * r, y + v * 2 * r, 1.8, 1.8); ctx.globalAlpha = 1; }
+  };
+  function drawZoom() {
+    const p = ps(), view = 10 ** S.zoom, k = W / view, cx = W / 2, cy = Hh / 2 + 10 * p;
+    // the camera drifts to centre whichever object about fills the view (weights smooth in the zoom, so it glides)
+    let sw = 0, mx = 0, my = 0; for (const o of ZOOM) { if (o.bg) continue; const P = o.size * k, w = zoomAlpha(P, W) * Math.exp(-((Math.log10(P / (0.6 * W))) ** 2) / 0.18); sw += w; mx += w * o.x; my += w * o.y; }
+    const camX = sw > 1e-12 ? mx / sw : 0, camY = sw > 1e-12 ? my / sw : 0, X = (x) => cx + (x - camX) * k, Y = (y) => cy - (y - camY) * k;
+    const dark = S.zoom > 7.6;   // beyond Earth, space is black
+    ctx.fillStyle = dark ? '#05070d' : T.canvas; ctx.fillRect(0, 0, W, Hh);
+    // the ground: Earth's surface when Earth is much bigger than the view
+    const Ez = ZOOM.find((o) => o.id === 'earth'), Ep = Ez.size * k;
+    if (Ep > 6 * W) {
+      if (Ep < 2e5 * W) { const ex = X(Ez.x), ey = Y(Ez.y); ctx.fillStyle = T.grid; ctx.beginPath(); ctx.arc(ex, ey, Ep / 2, 0, 7); ctx.fill(); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.stroke(); }   // curved horizon
+      else { const gy = Y(-1.0); if (gy < Hh) { ctx.fillStyle = T.grid; ctx.fillRect(0, Math.max(0, gy), W, Hh); ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); } }
+    }
+    // between the planets and the stars: the Sun is a lone point
+    if (S.zoom > 13 && S.zoom < 16.6) { const a = smooth(13, 13.6, S.zoom) * (1 - smooth(16, 16.6, S.zoom)), sx = X(-AU), sy = Y(0); ctx.globalAlpha = a; ctx.fillStyle = '#ffe08a'; ctx.beginPath(); ctx.arc(sx, sy, 3.5 * p, 0, 7); ctx.fill();
+      if (!S.blind) { ctx.fillStyle = '#e7ecf3'; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('the Sun: no other star within 4.2 light years', sx, sy - 10 * p); } ctx.globalAlpha = 1; }
+    const labels = [];
+    for (const o of [...ZOOM].sort((u, v) => v.size - u.size)) {   // largest first, so smaller things are drawn on top
+      // backgrounds stay until they are 30 to 120 screen widths across; a region background shows only once it spans the view
+      const P = o.size * k, a = (o.bg ? smooth(4, 24, P) * (1 - smooth(30 * W, 120 * W, P)) : zoomAlpha(P, W)) * (o.region ? smooth(0.15 * W, 0.6 * W, P) : 1); if (a < 0.01) continue;
+      DRAW[o.id](X(o.x), Y(o.y), P / 2, a, { X, Y, k });
+      if (a > 0.45 && !S.blind && !o.bg) labels.push([o, X(o.x), Y(o.y) - P / 2, a]);
+    }
+    ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    for (const [o, x, y, a] of labels) { const half = ctx.measureText(`${o.name}: ${sci(o.size, 2)} m`).width / 2 + 8 * p, lx = Math.max(half, Math.min(W - half, x)), ly = Math.max(66 * p, Math.min(Hh - 50 * p, y - 6 * p)); ctx.globalAlpha = a; ctx.fillStyle = dark ? '#e7ecf3' : T.ink; ctx.fillText(`${o.name}: ${sci(o.size, 2)} m`, lx, ly); ctx.globalAlpha = 1; }
+    // scale bar: the largest 1, 2 or 5 × 10ⁿ m that fits in a quarter of the width
+    const raw = view / 4, e = Math.floor(Math.log10(raw)), m = raw / 10 ** e, step = (m >= 5 ? 5 : m >= 2 ? 2 : 1) * 10 ** e, bw = step * k;
+    ctx.strokeStyle = dark ? '#e7ecf3' : T.ink; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 2 * p; const bx = 16 * p, by = Hh - 20 * p;
+    ctx.beginPath(); ctx.moveTo(bx, by - 6 * p); ctx.lineTo(bx, by); ctx.lineTo(bx + bw, by); ctx.lineTo(bx + bw, by - 6 * p); ctx.stroke();
+    ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(sci(step, 1) + ' m', bx, by - 8 * p);
+    ctx.textAlign = 'right'; ctx.fillText(`width of view: ${sci(view, 2)} m (10${sup(S.zoom.toFixed(1))})`, W - 14 * p, Hh - 12 * p);
+    $('oZoom').textContent = `${sci(view, 2)} m`; $('sZoom').value = S.zoom;
+  }
+  function setView(v) { S.view = v; S.fly = 0; for (const b of document.querySelectorAll('#scaleView button')) b.setAttribute('aria-pressed', String(b.dataset.v === v)); $('flyIn').hidden = $('flyOut').hidden = v !== 'zoom'; $('zoomCtl').hidden = v !== 'zoom' || S.tab !== 'scale'; draw(); }
+  $('scaleView').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b) setView(b.dataset.v); });
+  const zoomTo = (z) => { S.zoom = Math.max(-15.3, Math.min(27, z)); draw(); };
+  $('sZoom').addEventListener('input', (e) => { S.fly = 0; zoomTo(+e.target.value); });
+  can.addEventListener('wheel', (e) => { if (S.view !== 'zoom' || S.tab !== 'scale') return; e.preventDefault(); S.fly = 0; zoomTo(S.zoom + Math.sign(e.deltaY) * 0.08 * Math.min(4, Math.abs(e.deltaY) / 40 + 0.5)); }, { passive: false });
+  let dragY = null, pinch = null; const touches = new Map();
+  can.addEventListener('pointerdown', (e) => { if (S.view !== 'zoom') return; touches.set(e.pointerId, e.clientY + 0 * e.clientX); dragY = e.clientY; S.fly = 0; can.setPointerCapture(e.pointerId); });
+  can.addEventListener('pointermove', (e) => { if (S.view !== 'zoom' || dragY == null) return; zoomTo(S.zoom + (e.clientY - dragY) * 0.02); dragY = e.clientY; });
+  can.addEventListener('pointerup', (e) => { touches.delete(e.pointerId); dragY = null; });
+  can.addEventListener('keydown', (e) => { if (S.view !== 'zoom') return; const d = { ArrowUp: -0.1, ArrowRight: -0.1, ArrowDown: 0.1, ArrowLeft: 0.1 }[e.key]; if (d) { S.fly = 0; zoomTo(S.zoom + d); e.preventDefault(); e.stopImmediatePropagation(); } }, true);
+  $('flyIn').addEventListener('click', () => { if (reduce) { zoomTo(Math.round(S.zoom - 3)); return; } if (S.zoom < -15) S.zoom = 27; S.fly = S.fly === -1 ? 0 : -1; });
+  $('flyOut').addEventListener('click', () => { if (reduce) { zoomTo(Math.round(S.zoom + 3)); return; } if (S.zoom > 26.9) S.zoom = -15.3; S.fly = S.fly === 1 ? 0 : 1; });
+  function tick(dt) { if (S.fly && S.tab === 'scale' && S.view === 'zoom') { zoomTo(S.zoom + S.fly * dt * 0.8); $('flyIn').textContent = S.fly === -1 ? 'Pause' : 'Fly in'; $('flyOut').textContent = S.fly === 1 ? 'Pause' : 'Fly out'; if (S.zoom <= -15.3 || S.zoom >= 27) { S.fly = 0; } } else { $('flyIn').textContent = 'Fly in'; $('flyOut').textContent = 'Fly out'; } }
+  function render() { if (S.tab === 'scale') draw(); else if (S.tab === 'convert') renderConvert(); else if (S.tab === 'dims') renderDims(); else if (S.tab === 'sig') renderSig(); else renderFermi(); }
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; render(); });
+  function init() { convUI(); dimsUI(); fermiUI(); setTab('scale'); }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; render(); }
+  const retheme = () => { tokens(); render(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
+  tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  let last = performance.now();
+  (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();
+})();
+</script>
+</body>
+</html>

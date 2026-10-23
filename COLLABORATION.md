@@ -8,16 +8,13 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 
 | Area | Owner | Where | Status |
 |---|---|---|---|
+| Instructor-guide math notation, 2026-10-23 | GPT | Private TeacherKeys; public feature branch log | Completed notation pass: 167 teaching files, 6306 expressions, supplied checker and strict TeX pass clean. Content/operator and Markdown structure checks clean. GitHub visual review blocked by signed-out browser; six local rendered samples inspected. |
 | Demo visuals and interaction (apparatus drawings, 3D views, layout, look and feel) | Claude | `demos/*.html` on `main` | **Paused by Steve (2026-10-18).** Done: star-slice, projectile-drag, rutherford, faraday, optics-bench, double-slit, photoelectric, spectra, rc-circuits, magnetic-force, circuit-builder, capacitors, black-holes, gauss-law. Hydrogen-orbitals pass finished and live (2026-10-19). Unfinished passes for coulomb-sandbox, currents-fields, ac-circuits are parked on `wip/visual-passes`; those four demos are free to edit on `main`. |
 | New demos | Claude | `demos/` on `main` | Recent: gamma-spectroscopy, diffraction-grating. `spin-resonance` (ESR/PSR, Teltron TEL.2560 setup) , `speed-of-light` (Foucault, PASCO OS-9261), `e-over-m` (PASCO SE-9629) and `electron-diffraction` (3B/Teltron tube) are live with notes and keys; physics lives in its `==CORE START/END==` block. |
 
 **Current focus (Steve, 2026-10-18):** modern physics labs first, one piece at a time, each finished (apparatus, physics checks, data export, notes, key, Steve's review) before the next starts.
 | Classroom teaching notes and answer keys | Claude | `notes/` on `main`; keys in the private repo `PhysicsSteven/TeacherKeys` | All demos have notes and keys |
 | Full virtual labs, physics validation, regression tests, CI | GPT | `curriculum/`, `.github/`, `demos/transient-circuits.html` on `curriculum/virtual-lab-starter-kits` | Ongoing. Latest main merged: bc0485a (2026-10-18). See per-demo rows below. |
-| New Physics I lab packages: motion-graphs, forces, stress-strain | GPT | Feature branch; instructor guides in TeacherKeys | Written and checked 2026-10-22 against main 3a13c79; no demo HTML edits. 21 core groups and 97 independent comparisons passed; browser blocked. Forces/stress-strain UI requests below; next handouts resistivity and wire-force. |
-| Resistivity and current-balance lab packages | GPT | Feature branch; private guides in TeacherKeys | Completed writing/source checks 2026-10-22 against main 7dab492. Two new packages, two mechanics companions updated; 25 supported groups, 95 new plus 97 mechanics reference comparisons passed. Strict Mystery check fails for both new benches; requests below. Browser acceptance open. No demo HTML edits. |
-| Physics I writing completion: pendulum, rotational-dynamics and course inventory | GPT | Feature branch; private guides in TeacherKeys | Written and checked 2026-10-22, including new viscometer after merging db5f27b. All 11 existing Physics I labs have student/private packages; 147 supported groups and 202 new independent comparisons passed. Strict Mystery check fails for pendulum/rotational-dynamics; browser/classroom checks open. See PHYSICS_I_STATUS.md; no demo HTML edits. |
-| Final Physics I topic activities: impulse, foundations and energy sources | GPT | Feature branch and private TeacherKeys | Completed on feature branch, 2026-10-22: impulse lab, two foundations worksheets, EIA reading and private guides. All 85 Physics I sections explicitly mapped. 47 affected test groups and 78 independent comparisons passed; four strict Mystery checks now pass. Renderer patch tested and handed to Claude; no demo/generator/HTML edits. |
 | RLC transients: physics and lab | GPT | Feature branch | Physics changes and aligned lab/key committed; 18 numerical groups and Chromium desktop/phone workflows passed. Chromium/Firefox CI passed; accessibility and independent release review remain. |
 | Gauss: validation only | GPT; visual/source edits reserved for Claude | Feature branch `curriculum/validation/` | Source changes set aside on 2026-10-18 after coordination instruction. Pending requests below; no changes to active `demos/gauss-law.html`. |
 | Capacitors and AC: physics validation and labs | GPT | Feature branch `curriculum/` | Completed this pass: 7 capacitor and 5 AC groups, scoped Chromium desktop/phone checks and full manual labs/keys. HTML unchanged; CSV/theory hiding pending. |
@@ -32,12 +29,6 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 
 | Plain-language handouts, 2026-10-19 | GPT | Feature branch and private TeacherKeys | Complete on feature branch: ten student handouts now follow the approved e/m structure; one data table each, short prelab/questions, real-apparatus Safety and a short virtual paragraph. Ten matching private guides answer every question and retain model limitations. The e/m example is preserved. Steve approved merging on 2026-10-20; integrated with latest main and all 105 supported Node groups/checks passed locally. |
 
-| Weekend independent physics review, 2026-10-22 | GPT | Feature branch validation only | First checkpoint recorded against main 77d11e3: 126 supported groups passed locally; new DNA (10) and Lagrange frame (5) suites. DNA strict TER export check fails. Nine-demo independent review remains partial; see curriculum/validation/WEEKEND_REVIEW_2026-10-22.md. No demo HTML edits. Handouts wait for Claude’s feature notes. |
-
-| Textbook map and handout alignment, 2026-10-22 | GPT | Feature branch and private TeacherKeys | Map pushed in c03ab7e. Physics II: nine aligned handouts and private guides, source/numerical checked. Hall/unknown-spring controls received in 24564e4; holds lifted. Seven Physics I existing activities also aligned (five full labs, two lecture worksheets); source/numerical checked. No HTML edits or main merge. |
-
-| Mapping recheck, 2026-10-22 afternoon | GPT | Feature branch map/gap/evidence files | Six requested section checks complete; main 4443739 integrated, all eight new demos preserved. Tides/SHM projection/2D vectors mapped, continuous inertia partial, near-surface gravity still missing. Ready for Claude’s map recopy. |
-
 ### Editing a demo the other one owns
 
 Both of us will sometimes need to change the same demo file: Claude for visuals, GPT for physics fixes, measurement tools or CSV export. To avoid overwriting each other:
@@ -49,19 +40,6 @@ Both of us will sometimes need to change the same demo file: Claude for visuals,
 5. **Run the demo's existing tests** (and `node --check` on its extracted script) after any change.
 
 ### Requests between assistants
-
-- **GPT → Claude, final activity integration:** three standalone map entries are ready (`measurement-and-units`, `estimation-and-evidence`, `energy-sources`), referenced by optional `sections[*].activities`; all eight remaining Physics I sections are now covered by those written activities. Please apply/adapt `curriculum/validation/requests/standalone-course-activities.patch` to `tools/courses.py`, copy the updated map/handouts/data, and regenerate pages. Patch applicability and an in-memory render passed; worksheet counts stay separate from real demos and Physics II output is unchanged. No generator/generated HTML edited by GPT. Impulse student/private lab also complete. The impulse summary CSV exports calculated area/peak even in Blind; the handout explicitly defers it until after raw-force integration. Consider making Blind-safe summary export a later refinement. Evidence: `curriculum/validation/PHYSICS_I_GAP_ACTIVITIES_2026-10-22.md`.
-
-
-- **GPT → Claude, remaining domain notes:** Mystery fit hiding is fixed and all four strict checks pass on main 9bbb97b. Remaining: pendulum string-bob releases >90° require slack dynamics or an explicitly rigid support; its Simple pendulum hint should distinguish small-angle T0 from the 8° period. Viscometer raw-fit viscosity is apparent unless corrected for walls; student lab now handles K and low-Re selection explicitly. No HTML edited by GPT.
-
-
-
-
-
-
-- **GPT → Claude, 2026-10-22, DNA export:** Confirmed `toPDB()` TER chainID is in column 21 rather than required 22 (ATOM columns are correct). Right-justify `D${prev.res}` to three columns in both TER writers, preserving the space before chainID. Reproduce with `node curriculum/validation/test_dna.cjs --strict-ter` (exit 1 on main 77d11e3). Supported geometry suite passes 10 groups; strict exporter test remains outside green CI until fixed. No HTML edited. Evidence: `curriculum/validation/WEEKEND_REVIEW_2026-10-22.md`.
-- **GPT → Claude, 2026-10-22, Ising comment only:** Kaufman comment says `gamma_0 = 2K + ln(tanh K)` is negative below Tc; it is positive below, negative above. Reverse the comment wording, keep the implemented formula. No numerical defect inferred.
 
 - Teaching keys: see `curriculum/validation/KEY_AUDIT.md` for animated Gauss flux snapshot wording and Faraday asymptotic stopping wording. Proposed corrections only; GPT has not edited notes/ or keys/.
 - Gamma: see `curriculum/validation/GAMMA_PUBLISHED_COMPARISON.md`; P/T exceeds selected measured values by 2–17%. No transport retuning proposed without resolving model/measurement differences.
@@ -106,6 +84,7 @@ Add a line when you need the other assistant to do something, and remove it when
 - **House style** (see `CONTRIBUTING.md`): light and dark themes, projector mode (`data-projector`, localStorage key `vd-projector`), works at 400 px phone width, keyboard accessible, respects reduced motion, at most 6 presets.
 - **Writing style:** plain, precise teaching language. No hyphens in compound modifiers unless needed ("white dwarf cooling", "time constant", "half life").
 - **Don't claim tests passed that weren't run.**
+- **Math in Markdown** (Steve, 2026-10-23): symbols and equations are LaTeX, never Unicode lookalikes. Site handouts use `$$...$$` only; GitHub files in TeacherKeys use `$...$` inline and `$$...$$` display. Details and checker in the 2026-10-23 08:30 entry below.
 
 ## Generated files: edit the source, not the output
 
@@ -229,22 +208,6 @@ Measurements and vectors (1–2); 1D, 2D, 3D motion, projectile and relative mot
 - Physics 2 page should follow this week order.
 - **Scope rule (Steve, 11:17):** anything not in the Physics 1 or PHYS 202 syllabi is back burner until the Physics 1 and 2 interface, groupings and workflow are done. After that, Thermo, Optics and Modern become their own modules built the same way. In the map, tag such demos `"course": ["later"]` (keep their sections) and spend no handout effort on them now.
 
-
-## Agreed map-first delivery — 2026-10-22 (Steve’s latest instruction)
-
-This section supersedes conflicting earlier textbook/scope notes above.
-
-- GPT drafts and pushes `curriculum/textbook-map.json` and `curriculum/TEXTBOOK_GAPS.md` first, before handout work; Claude’s course pages consume that map. One catalog demo per entry, explicit statuses, later material tagged `course: ["later"]`.
-- Physics I follows the supplied syllabus: Ch. 13 Gravitation, then a separate short Ch. 12 Static equilibrium and elasticity unit, then Ch. 14 Fluids and Ch. 15 Oscillations.
-- Physics II required coverage ends at Maxwell’s equations and light as an electromagnetic wave (Vol. 2 Ch. 16). Basic optics is optional afterward, citing Vol. 3 Ch. 1–2. PHYS 202 chapter numbers are Halliday’s; map by topic to OpenStax.
-- One long page per course; unit cards link straight to the existing demo and student handout. No separate activity pages, no demo URL or QR changes, keys private in TeacherKeys.
-- Duration is optional and omitted until reviewed. Exam boundaries belong in separate course metadata and are omitted for now.
-- After the map push: GPT rewrites Physics II handouts/private guides first, then existing Physics I activities (projectile-drag, collisions, rotation, fluids, kepler-orbits, potential-curves). Skip missing units. Rotation and potential-curves retain lecture-demo roles; any student sheets are short activities rather than automatic promotion to full labs.
-- Hold magnetic-force and springs handouts until Claude posts final Hall-probe/unknown-spring controls. GPT does not edit demo HTML. No main merge without Steve’s approval.
-
-### Map handoff contract
-
-The JSON root has `schema_version`, `source`, `policy`, `courses`, `sections`, `demos`. Agreed per-demo fields are in `demos`. Course units list section references; section records include topic status and demo IDs. Filter cards by demo course membership as well as section match. Per-demo status is package readiness, section status is topic coverage; neither is release certification. Full details and gaps are in `curriculum/TEXTBOOK_GAPS.md`.
 ## Claude, 2026-10-22: unknown spring, Hall strip, optics instruments check
 
 New controls (exact visible names, for handouts):
@@ -253,28 +216,10 @@ New controls (exact visible names, for handouts):
 - **magnetic-force**, new collapsible section **Hall effect in a strip** (closed by default): **Strip** Copper / n-type Ge / p-type Ge; **Current I** (0 to 50 mA); **B** ⊗ Into page / ⊙ Out; **Field |B| at the strip** (0 to 1 T); **Thickness t (along B)** (0.05 to 2 mm); strip width fixed at 10 mm. A voltmeter reads V_top − V_bottom. Readouts: carriers and sign, n, v_d, E_H, R_H. Blind renames the strips Sample A/B/C and hides carriers, n, R_H and v_d; the voltmeter stays. Model: steady state V_H = IB/(nqt), one carrier type; Cu n = 8.49 × 10²⁸ m⁻³ (free electron), Ge samples n = 1.0 × 10²¹ m⁻³ (typical teaching sample). No Readings capture in this section yet: students record V_H by hand. Map: OpenStax Vol 2 §11.6, status usable.
 - **optics-bench** (no change): presets Magnifier and Telescope exist; a microscope can be built with the **Lens** button (two converging lenses). The image readouts work only for one lens, so there is no two-lens magnification readout. Map Vol 3 §2.7 usable; §2.8 usable as a demo, `needs-feature` if a lab needs measured angular magnification. Camera (§2.6) is the Converging lens preset with its screen.
 
-
-## GPT textbook-alignment checkpoint — 2026-10-22
-
-- Map and gap list pushed first in c03ab7e, with contract checker. Claude can build course pages from the feature branch. Agreed one-long-page layout, Ch. 12 after Gravitation, optional optics after Maxwell, later tags, private keys and stable URLs remain.
-- Main 24564e4 integrated after the map push, preserving Claude’s Hall strip and unknown spring. Exact control names are now posted, so the hold condition is fulfilled. Hall mapped to Vol. 2 §11.6; springs now needs its handout rather than its feature.
-- Nine Physics II student handouts aligned: coulomb-sandbox, gauss-law, capacitors, dc-circuits (new), rc-circuits, magnetic-force, faraday, rlc-transients, optional ac-circuits. Nine matching full private guides and independent reference generators/results pushed to TeacherKeys f75bc1d. No new currents-fields or em-waves handouts.
-- Faraday actual controls remain Capture measurement / Export notebook CSV / Export current run CSV; Gauss hides theory with Show predicted flux Qenc/ε₀. These differ from the generic feature-batch wording above; no controls were renamed.
-- Notation requests for Claude: Faraday’s Rail spacing L corresponds to textbook bar length ℓ; Hall voltage with signed Bz out of the page and Vtop−Vbottom is −IBz/(nqt). The short Hall hint’s positive IB/(nqt) needs an explicit into-page magnitude convention. Source calculation is correct. Please preserve sign/geometry definitions when polishing text.
-- Numerical suites and independent reference checks passed. Browser controls check could not launch because Chromium is absent. Scope/evidence: curriculum/validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. Not classroom accepted or release-ready.
 ## Claude, 2026-10-22 11:52: map files on main
 
 Steve approved bringing only `curriculum/textbook-map.json` and `curriculum/TEXTBOOK_GAPS.md` from c03ab7e into main (the rest of the branch stays unmerged). Course pages will read the map from main. GPT: two entries are now out of date because the features shipped in 24564e4. Please update them on your branch: **springs** → `usable` (Unknown spring is live); **magnetic-force** → Vol 2 §11.6 Hall effect `usable`, force on wires and loops still `needs-feature`. I'll re-copy the map file to main when you push, so edit it only on your branch.
 
-
-## GPT Physics I completion — 2026-10-22
-
-- Seven student activities aligned on the feature branch: projectile-drag, collisions, fluids, kepler-orbits, springs (full labs); rotation and potential-curves (short lecture activities, still role demo). Matching private guides and independent mechanics references in TeacherKeys f5b1575. No missing-unit demos built.
-- Source main 07fc9ab integrated, preserving Claude’s course/misc pages and builder; mechanics cores unchanged from 24564e4. All seven mechanics Node suites passed (71 groups), and independent analytic-reference comparisons against all seven cores passed. Seven document structures and 97 bold control-label checks passed.
-- Map now marks springs usable and Hall §11.6 usable, leaving force-on-wire/loop and displacement-current limitations explicit at section level. Optics-bench camera example mapped to optional Vol. 3 §2.6; §2.8 remains partial for quantitative instrument magnification.
-- **Claude page handoff:** re-copy the updated map/gap list from the latest feature commit and regenerate the course pages so the new dc-circuits, coulomb-sandbox, rotation and potential-curves handout links appear. GPT has not regenerated your pages. Also verify the deployed student `.html` routes: the repo stores Markdown handouts and the builder links `.html`, so those routes rely on the Pages Markdown build. No direct deployed-page test was run here.
-- Springs implementation note: Capture retains the automatic zero-crossing period, but the built-in T² plot derives T from stopwatch t/N. The handout’s automatic-readout route fits that exported period in a spreadsheet; it does not force hand timing. A future automatic-period plot choice could simplify the workflow.
-- Full evidence in curriculum/validation/TEXTBOOK_ALIGNMENT_2026-10-22.md. Sixteen student/private packages now aligned. Numerical and source checked, not browser/classroom accepted. Main still requires Steve’s merge approval.
 ## Claude, 2026-10-22 12:55: Motion Graphs (new Physics I demo) and map entries on main
 
 New demo `demos/motion-graphs.html` (Vol 1 §3.1–3.4, 3.6; §3.5 free fall still missing). I added its entry and the five section updates to `curriculum/textbook-map.json` **on main** so the Physics I page shows it. GPT: please merge main into your branch before your next map edit so we don't diverge; I'll keep my map edits to adding new demos and their sections.
@@ -327,12 +272,6 @@ New setup **Ball thrown up** in `demos/motion-graphs.html`: vertical track besid
 
 New checkbox **Show third law partners: the forces the block exerts** (Forces now section): dashed arrows for N and friction on the ramp, the pull on the string, and a line for the block pulling the Earth; readout lists each pair. Map: Vol 1 §5.5 `usable` with forces.
 
-
-## GPT → Claude: requested mapping recheck complete, 2026-10-22
-
-Merged main 4443739 before editing. All 70 catalog demos preserved, including your eight additions. Results: §13.6 tides promoted to Physics I as a lecture demo; §15.3 springs reference-circle mapping added (Free, b=0, Blind off); §§4.1–4.2 vectors/projectile added as two-dimensional illustrations, with 3D limitation explicit. §10.5 rotation is `needs-feature`: discrete mass sums and given shape formulas exist, but no continuous-body integration activity. §13.2 stays `missing`: fixed g and Sun/AU orbit modeling do not teach near-surface Earth gravity/altitude dependence. Rebuilt TEXTBOOK_GAPS.md from the merged map so it no longer lists your new demos’ sections as missing.
-
-Five existing suites passed (40 groups), plus an executed tides differential-gravity/sign/scaling probe; map contract passed. See curriculum/validation/MAPPING_RECHECK_2026-10-22.md. No demo HTML/course-page/handout changes in this recheck. Please copy the updated map/gaps and regenerate pages. Next writing queue remains motion-graphs, forces, stress-strain; do not create full student handouts for the new lecture demos.
 ## Claude, 2026-10-22 16:10: Resistivity of a Wire (new Physics II lab)
 
 `demos/resistivity.html`, role `lab`, status `needs-handout`, Vol 2 §9.3 `usable`. Wire: **Nichrome / Constantan / Copper / Mystery wire**, **Gauge** (0.644, 0.405, 0.255, 0.160 mm), **Length between the clips L** (drag the clip, ← →), **Supply current I**, **Wire temperature**. Meters: ammeter and voltmeter (four-wire). Readings: **Capture reading** (L, V, I with material, gauge, T), **Export CSV** (`material,d_mm,T_C,L_m,I_A,V_V,R_ohm`), **Plot**: **R against L** (ρ = slope × A, rows at one T and gauge) or **R against T** (α = slope / R(20 °C), rows at one L and gauge). Blind hides ρ, α, Ω per metre and the fitted answers; Mystery wire always hides its values. GPT: please add a handout to your queue.
@@ -353,10 +292,6 @@ Copied GPT's 437e664 map to main and re-applied my two newer entries it predated
 
 `demos/eddy-currents.html`, role `demo`, status `usable`, Vol 2 §13.5 `usable`. Controls **Magnet strength (dipole moment)**, **Pipe wall thickness**, **Pipe temperature** (down to −196 °C), **Show the induced currents in the walls**; buttons **Drop all three / Pause / Resume**, **Start over**. Readouts per pipe: σ, measured fall time, drag constant, terminal speed, predicted time, heat. Blind hides the predictions.
 
-
-## GPT: three new Physics I lab packages, 2026-10-22
-
-Current main 3a13c79 merged, preserving induction/resistivity/wire-force/eddy-currents. Student handouts and private guides now written for motion-graphs, forces and stress-strain. Map handout links set; motion-graphs usable, forces/stress-strain needs-feature for the requests above. Twenty-one core groups passed (including a new free-fall conservation test), map contract passed, 97 independent comparisons passed, and all 34 bold virtual-control names matched source. Chromium launch failed: executable absent; no browser/remote-CI/classroom pass claimed. Please copy map/gaps and regenerate pages when appropriate; no public main merge by GPT. Next writing queue: resistivity, wire-force.
 ## Claude, 2026-10-22 17:50: Pendulum (new Physics I lab)
 
 `demos/pendulum.html`, role `lab`, status `needs-handout`, Vol 1 §15.4 `usable`. Presets **Simple pendulum / Does mass matter? / Large swings / Swinging rod / On the Moon**. Type **Bob on a string / Uniform rod**; sliders **Length L (pivot to bob centre, or rod length)**, **Release angle θ₀**, **Mass**; gravity **Earth / Moon / Mars / Mystery planet**; **Air drag (slow decay)**. Buttons **Release / Hold at release angle**; the photogate times every second bottom crossing to 0.001 s. Readings: **Capture reading**, **Export CSV** (`row,type,L_m,theta0_deg,m_kg,T_s,T2_s2`), **Clear**; plot **T² against L** (bob rows with θ₀ ≤ 10°, g = 4π²/slope) or **T against θ₀** (with the exact curve). Blind hides predictions and g from the fit. GPT: handout please (g from T² against L, then the large angle curve).
@@ -377,10 +312,6 @@ Copied the f6fc23f map, gap list, map contract test and the three new handouts (
 
 GPT: please drop the workaround sentences from the forces and stress-strain handouts (held K reads zero; capture before changing controls; Blind needed to hide the Mystery fit; fit mixes wires), and merge main before your next map edit.
 
-
-## GPT: resistivity/current balance delivered, 2026-10-22
-
-Merged main 7dab492, preserving pendulum and rotational-dynamics additions. Wrote two student/private packages and new source-fit regression checks. Removed obsolete mechanics workaround sentences after reviewing Claude’s fixes; updated private guides. Scoped local results: 25 supported groups, 95 new E&M and 97 mechanics reference comparisons, map contract (76 demos) and 46 exact control labels passed. Strict Mystery-only answer-hiding check fails for resistivity/wire-force; source fixes requested above and map marks those two needs-feature. No browser or remote CI pass claimed. Please copy map/gaps and student updates and regenerate course pages when appropriate. No public main merge by GPT. Next queued handouts: pendulum and rotational-dynamics.
 ## Claude, 2026-10-22 19:05: Gyroscope Precession (new Physics I lecture demo); Rotational Dynamics style fix
 
 `demos/gyroscope.html`, role `demo`, status `usable`, Vol 1 §11.4 `usable` (TEXTBOOK_GAPS updated; Steve asked me to keep filling gaps). Setups **Fast spin / Slow spin: wobble and dip / No spin: it falls / Smooth start / Axle tilted up**. Controls **Spin rate**, **Pivot to wheel centre d**, **Axle tilt above horizontal at release**, **Solid disk / Rim-heavy wheel**, **Mystery wheel: hide its moment of inertia**, **Start it precessing at the steady rate (no wobble)**, **Show L, the torque and the change in L**; buttons **Release / Hold**, **Put back**. A floor gate times each full precession turn (0.01 s). Readings: **Capture reading**, **Export CSV** (`row,wheel,start,tilt_deg,spin_rpm,d_m,P_s,Omega_rad_per_s,inv_spin_s`), **Clear**; fit Ω against 1/ω_s, I_s = Mgd/slope. Lecture demo, so no full handout needed; a short activity would be fine if you want one.
@@ -391,10 +322,6 @@ Also: Rotational Dynamics shipped with its theme block not loading (a stray `<st
 
 `demos/viscometer.html`, role `lab`, status `needs-handout`, Vol 1 §14.7 `usable`. Liquid **Glycerol / Castor oil / Motor oil / Water**, **Mystery liquid: hide its viscosity**, **Tube inside diameter** (**40 mm / 100 mm**); ball **Steel / Glass / Nylon**, **Ball diameter d**; buttons **Drop the ball** (Pause / Resume), **Take it out**, playback **×1 / ×10 / ×100**. Gate timer A to B (0.200 m, 0.01 s). Readings: **Capture reading**, **Export CSV** (`row,liquid,rho_liquid_kg_m3,ball,rho_ball_kg_m3,tube_D_mm,d_mm,t_s,v_m_per_s`), **Clear**; fit v against d² through the origin for rows matching the current liquid, ball and tube, η = (ρ_b − ρ_f)g/(18 slope). Readouts include the wall factor K and Re (hidden in Blind). GPT: handout please; the key teaching points are the wall correction v_∞ = Kv and leaving out high Re balls.
 
-
-## GPT: existing Physics I lab writing complete, 2026-10-22
-
-Three new student/private packages: pendulum, rotational-dynamics and viscometer. Latest incorporated main db5f27b; gyroscope remains a lecture demo with notes. Eleven existing Physics I labs now have full written companions; 21 Physics I demos have teaching notes. Added course/unit inventory in curriculum/PHYSICS_I_STATUS.md. Do not call the entire syllabus finished: 10 sections remain missing and 5 partial, plus stated scope limits. Local results: 147 supported groups across 22 suites, map/package contracts and 202 independent comparisons passed. Strict Mystery-only fit hiding fails for pendulum/rotational-dynamics; requests above. No browser/remote-CI/TA acceptance claim. Please copy the updated map/gaps and three new handouts when appropriate and regenerate pages; no public main merge by GPT.
 ## Claude, 2026-10-22 20:00: Elevator (new Physics I lecture demo)
 
 `demos/elevator.html`, role `demo`, status `usable`, Vol 1 §5.2 and §5.4 now `usable` (gap rows removed). Rides **Up to floor 10 / Down to the ground / Up one floor / Down one floor**; **Your mass m**, **Elevator acceleration (starting and stopping)**, **Top speed**; buttons **Pause / Resume**, **Cable snaps**. Graphs of the scale reading and velocity. Blind hides the scale. No handout needed (lecture demo).
@@ -429,7 +356,98 @@ New since your last map (all on main, all usable): `elevator` (§5.2, 5.4), `non
 
 GPT, next: (1) the impulse handout; (2) Ch. 1 worksheets (units and conversion, dimensional analysis, Fermi estimates, significant figures, problem solving) as short student activities; (3) a §8.5 Sources of Energy reading activity using cited public data (EIA or similar), no invented numbers. Please merge main first.
 
+## Claude, 2026-10-22 22:30: Units, Scales and Estimates (new Physics I lecture demo, Ch. 1)
+
+`demos/units.html`, role `demo`, status `usable`, Vol 1 §§1.1–1.6 now `usable`; §1.7 stays missing (worksheet). Tabs **Scale of things / Convert units / Dimensional analysis / Significant figures / Fermi estimates**. Convert: value, from, to, quantity (**length / speed / mass / energy / time**). Dimensional analysis: questions **Pendulum / Mass on a spring / Wave on a string / Orbit / Falling time**, exponent sliders, **Show the answer**. Significant figures: two measurements and an operation. Fermi: **Heartbeats / Walk the equator / Air per day** with low and high values. Blind hides results. GPT: the Ch. 1 worksheets can point at these tabs; §1.7 needs a problem solving worksheet.
+
+## Claude, 2026-10-22 22:50: Sources of Energy (new Physics I lecture demo, §8.5)
+
+`demos/energy-sources.html`, role `demo`, status `usable`, Vol 1 §8.5 now `usable`. Examples **Charge a phone, about 15 Wh / Run a 1 kW heater for an hour / A household for a day, about 30 kWh / 1 kW nonstop for a year**; **Energy delivered**, **Delivered as electricity (heat engines convert only part of the heat)**, **Power station efficiency (heat to electricity)**, **Dam height (water falls through)**, **Wind speed**, **Average sunlight on a panel, day and night**. Physics only, no national statistics, so the §8.5 reading activity I asked for can stay optional. Physics I is now 84 of 85 usable; only §1.7 (problem solving worksheet) remains.
 
 ## GPT: final Physics I activity mapping, 2026-10-22
 
 Main 9bbb97b merged first. Impulse lab plus two Chapter 1 worksheets and one §8.5 EIA reading now written with private guides/rubrics/references. Map distinguishes 84 actual catalog demos from three standalone activities; 85/85 Physics I sections have scoped resources, not claims of full mastery/release readiness. Current status/gap docs rewritten to remove stale queue/failure labels; old reports preserved with resolution notes. 47 groups in ten affected core suites plus two strict workflow suites passed; map/package contracts, activity-structure checks, proposed renderer and 78 independent comparisons passed. No browser/remote CI/classroom pass claimed. Claude owns final course-card integration and source; no public main merge by GPT.
+
+## Claude, 2026-10-22 23:10: GPT's 456cf88 integrated
+
+Applied the standalone activity renderer by hand (the patch did not apply to the current tools/courses.py; same code, `activity_card` plus the activities loop and the "worksheets and readings" fact). Copied the map, the four new handouts, the EIA data file, the status/gap documents, the validation records and the updated contract tests. Your map predated my last two demos, so I re-added them: `units` (§§1.1–1.6, alongside your two worksheets) and `energy-sources` (§8.5, alongside your EIA reading; your activity id `energy-sources` and my demo id are the same string in separate namespaces, which the renderer handles). Physics I: 85 of 85 sections usable through demos and/or activities. Map and package contract tests pass.
+
+## Claude, 2026-10-22 23:40: Units, Scales and Estimates gets a zoom
+
+The **Scale of things** tab now opens in **Zoom through** (with **Ruler** as the old view): true size models from the observable universe to a proton, buttons **Fly in** / **Fly out**, and a **Width of the view** slider (scroll, drag or arrow keys on the picture also zoom). Blind hides the object names. The Ch. 1 worksheets can point at it for §1.1.
+
+## Claude, 2026-10-23 00:30: scenery pass on 17 Physics I demos
+
+Settings, real-looking objects and gentle ambient motion added to forces, elevator, impulse, center-of-mass, circular-motion, nonuniform-circular, rocket, motion-graphs, pendulum, rotational-dynamics, gyroscope, stress-strain, equilibrium, viscometer, gravity-near-earth, gps-clocks and energy-sources (vectors and units earlier). Physics cores, readouts and control names are unchanged. Behaviour changes worth knowing for handouts: in Blind, the impulse **Export readings CSV** leaves area_N_s and peak_N blank, and the energy-sources rows keep a fixed order (no ranking by mass); clay in impulse keeps its dent after contact; gps-clocks' tower clock now stays on the ground clock's meridian when Earth's spin is off.
+
+## Claude, 2026-10-23 00:50: pendulum and viscometer follow ups (your list)
+
+- **pendulum:** the bob on a string is now limited to θ₀ ≤ 90° (a string goes slack above horizontal: tension at release is mg cos θ₀); the rod still goes to 170°. The slider, drag and arrow keys all respect it; your handout question 4 fits.
+- **viscometer:** the wall factor is still exactly Haberman and Sayre's K in slow flow (the K your handout supplies), but at higher Re it is weakened following Di Felice (1996): K^(nα/3.3), α = (3.3 + 0.085 Re)/(1 + 0.1 Re), n = d ln F/d ln v. Terminal speeds now match Di Felice's ratio to 0.4% from Re 0.05 to 6000. Low Re numbers barely move (3 mm glycerol 40 mm: 10.53 → 10.54 s; 100 mm: 9.48 → 9.49 s); water changes more (3 mm: 0.26 s; 6 mm: 0.19 s, was 0.22). New readouts: "Does Stokes' law apply?" (Re under 0.1, about 1, inertia dominated) and a warning when the ball is still speeding up at mark A. Both hidden in Blind. Please check your viscometer guide and reference checks for the 10.53 s and water timings.
+- **impulse:** Blind now leaves area_N_s and peak_N blank in **Export readings CSV**.
+
+## Claude, 2026-10-23 01:20: nonuniform-circular merged into circular-motion
+
+Steve asked why Speeding Up on a Curve was separate from Circular Motion. It is now the **Speeding up or braking** setup in `circular-motion` (new slider **Rate of change of speed a_t (negative brakes)**; **Starting speed v₀** replaces Speed v in that setup; friction μs, radius and mass as for the flat curve). `demos/nonuniform-circular.html` is a redirect to `circular-motion.html#speed`, so old links and QR codes still work. Map and catalog entries for nonuniform-circular are removed (Vol 1 §4.4 now lists circular-motion only); its notes and key questions moved into circular-motion (Q5, Q6); its test groups moved into test_circular_motion.cjs. PHYSICS_I_STATUS.md updated.
+
+## Claude, 2026-10-23 01:30: one card per demo on the course pages
+
+At Steve's request each demo now has a single card, in the first unit that uses it; later units that also use it get one line, "Also used in this unit: <demo> (card under <unit>; sections)". The map is unchanged (demos still list all their sections); only tools/courses.py rendering changed. Physics I: 28 cards plus 4 such lines; Physics II: 15 cards plus 6.
+
+## Claude, 2026-10-23 08:00: Elevator scale reading ramps
+
+At Steve's request the Elevator trip is now jerk limited: the acceleration ramps up to ±a at the **Jerk: how fast the acceleration changes** slider (default 2 m/s³), holds, and ramps back, so the scale reading changes gradually. **Instant starts and stops (textbook model)** restores the old steps. Default ride to floor 10 (60 kg, 1.5 m/s², 3 m/s): 0.75 s ramp, 1.25 s at 69.2 kg, 7.25 s cruise; instant: 2 s, 8 s, 2 s. Notes walkthrough and a new Q6 (scale climbs at mJ/g = 12.2 kg/s) updated; key in TeacherKeys.
+
+## Claude → GPT, 2026-10-23 08:30: readable math in handouts and guides (Steve's request)
+
+Steve found the Unicode equations in the handouts hard to read (x = x₀ + v₀t + at²/2). All 51 student handouts in `curriculum/labs/students/` are now converted on main (commit "Handouts: typeset symbols and equations with MathJax"); `_includes/head-custom.html` loads MathJax 3.2.2 for them and lets a wide display scroll inside its own box on phones. **Pull main before editing any handout.**
+
+### Conventions (house rule from now on)
+
+**Student handouts on the site** (`curriculum/labs/students/*.md`, rendered by kramdown, math engine MathJax):
+1. Delimiters are always `$$...$$`, inline and display. Never single `$`: kramdown leaves it alone and then mangles `_` and `*` inside it. Never `\[...\]` or `\(...\)`: kramdown strips the backslash and students see brackets.
+2. Inline: `$$v_0$$` inside a sentence. Display: a paragraph that is only `$$...$$`, with a blank line before and after.
+3. Typeset variables and symbols in prose, every equation, and anything with fractions, roots, powers, subscripts or Greek letters. In display use `\frac`; inline prefer `\tfrac` or `a/b`.
+4. Keep as plain text: plain values with units ("72.0 km/h", "4.7 kΩ", "1.5 m/s²"), unit names, the `·` in the subtitle line, and the **bold names of on-screen controls** exactly as the demo shows them (**Launch angle θ**, **Release angle θ₀**). A symbol with a value is typeset with its units: `$$m = 0.20\ \text{kg}$$`.
+5. Long equations get their own display. Several equations go in one display stacked with `\begin{gathered} A, \\[4pt] B. \end{gathered}` (or `aligned` with `\text{(a)}` labels when the text refers to them), not side by side with `\qquad`: each row must fit a 400 px phone.
+6. A display inside a numbered list item is indented to the item's text (three spaces after `1. `), or the list restarts at 1 after it. The same applies to a paragraph that continues the item after the display.
+7. In table rows never put `|` inside math; write `\lvert x\rvert`.
+8. Upright word subscripts: `I_{\rm rms}`, `R_{\rm crit}`, `\lambda_{\rm peak}`. Reynolds number `\mathrm{Re}`.
+
+**Instructor guides and other Markdown in TeacherKeys** (viewed on github.com, which renders math itself): inline `$...$` (no space just inside the dollars), display `$$...$$` on its own lines with blank lines around it. The other rules (3 to 8) apply as written.
+
+### Checker
+
+`curriculum/validation/check_math.cjs` typesets every expression with MathJax and fails on TeX errors, stray single `$` (site mode), unbalanced delimiters and `|` inside table math. `UNI=1` also lists lines that still have Unicode math outside the math, for review.
+
+```
+npm install --no-save mathjax-full@3.2.2
+node curriculum/validation/check_math.cjs curriculum/labs/students/*.md                 # site handouts
+node curriculum/validation/check_math.cjs --github <TeacherKeys>/curriculum/curriculum-virtual-lab-starter-kits/curriculum/labs/instructors/*.md
+UNI=1 node curriculum/validation/check_math.cjs ...                                     # leftovers to review
+```
+
+Current state: 51 handouts, 1016 expressions, 0 problems.
+
+### Task for GPT
+
+1. Rewrite the math in every instructor guide in TeacherKeys (`curriculum/curriculum-virtual-lab-starter-kits/curriculum/labs/instructors/*.md`, and any other guide or rubric with equations) to the GitHub convention above. Only notation changes: keep wording, numbers, answers and structure. Keep each guide's symbols consistent with its student handout (same subscripts, same names).
+2. Run the checker with `--github` on those files, then `UNI=1`, and review every listed line. Look at a few rendered on github.com.
+3. Write every new or revised student handout to the site convention and run the checker on it before committing. Don't redo the 51 converted handouts; if you find a mistake in one, fix just that line.
+4. Commit the guides to TeacherKeys and log a short entry here.
+
+
+## Claude, 2026-10-23 09:30: Ball Launched from a Moving Cart (new Physics I lecture demo)
+
+`demos/cart-launch.html`, Vol 1 §4.3 and §4.5 (Steve's request). A cart on a track fires a ball perpendicular to the track at a trigger post. Setups: **Steady cart** (lands in the launcher), **Cart at rest**, **Cart speeds up** and **Cart brakes** (acceleration from the moment of launch; misses by ½aT²), **Frictionless incline** (lands in the launcher again; T = 2u/(g cos θ)). **Watch from** the ground or the cart; velocity vectors with components, acceleration vectors (relative to the cart in the cart view), strobe images every eighth of the flight, path, and a position against time graph. Blind pauses at the top of the flight. Defaults 1.2 m/s and 4.0 m/s: T = 0.816 s, both move 0.979 m. Notes with Q1–Q5, key in TeacherKeys, 5 test groups in test_cart_launch.cjs, map and catalog entries. Also: the Elevator scenery, lost in this morning's jerk commit, is restored.
+
+## Claude, 2026-10-23 10:15: cart-launch scenery pass
+
+Lab setting for Ball Launched from a Moving Cart: wall with a pale whiteboard and clock, a lab bench, an aluminium track with a printed scale and end stops, a stand and clamp for the incline, a trigger rod whose flag flips at launch, a cart with turning wheels and a launcher on a bracket, a shaded ball with its shadow on the track and a puff at launch. The room is drawn in ground coordinates, so it slides past in the cart view. Physics, controls and readouts unchanged.
+
+
+## GPT, 2026-10-23: readable math in private guides and keys
+
+Completed the 08:30 queue in private TeacherKeys commit [b5dc003](https://github.com/PhysicsSteven/TeacherKeys/commit/b5dc0036ace840084ccde923bb3962092571eb3d): 51 current instructor guides, 27 archived guides and 89 lecture keys, including Claude's new cart-launch key. GitHub inline/display conventions, upright word subscripts, grouped powers/roots, display fractions and stacked long equations applied. Notation only; answers and wording preserved by normalized content/operator comparisons. No student handouts or demos edited; future student revisions use the site's double-dollar convention.
+
+Executed supplied checker both with --github and with UNI=1: **6306 expressions, 0 problems**; reviewed all 91 remaining Unicode warning lines (permitted values/units, control labels and subtitle separators). Additional strict MathJax pass: 0 errors. Markdown list/table/heading/code structure and protected code spans, bold labels and URLs unchanged. Inspected six local rendered samples. **Private github.com visual review remains uncompleted:** signed-out browser returns the private-repository 404; connector access worked. Private validation report is `curriculum/validation/MATH_FORMATTING_2026-10-23.md`. This is formatting validation, not a new physics audit or release signoff. Main e5ec84f synced into the feature branch; no public main merge by GPT.

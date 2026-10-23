@@ -1,0 +1,52 @@
+---
+title: Units, Scales and Estimates
+level: PHYS 201
+time: 15 to 40 minutes, a tab at a time
+---
+## What students should come away with
+
+- Physics spans about 42 powers of ten in length alone; a logarithmic scale is the only way to see it at once.
+- A unit conversion multiplies by factors equal to 1; with exact definitions (1 in = 2.54 cm, 1 mi = 1609.344 m, 1 lb = 0.45359237 kg) there is no rounding until the end.
+- Dimensions check any formula, and often find it: the period of a pendulum must be √(L/g) times a pure number, and its mass cannot appear.
+- A result should carry the precision of the least precise measurement: significant figures for products and quotients, decimal places for sums and differences.
+- A Fermi estimate breaks a question into factors you can guess, and gives an order of magnitude with a range.
+
+## Before class
+
+No prerequisites. Each tab stands alone, so use them across the first week. **Blind** hides the results (and the object names on the ruler) for predictions.
+
+## Running it in class
+
+1. **Scale of things.** Start in **Zoom through** at the person and press **Fly out**: Everest, Earth's curve, Earth, the Moon's orbit, the Sun alone in the dark, the nearest stars, the Milky Way, the cosmic web. Then **Fly in** to a proton through a hair, a red blood cell, a virus, DNA and a hydrogen atom (whose nucleus is too small to show). Each power of ten takes the same time. With Blind on, ask what comes next before it appears. **Ruler** shows the same sizes on one logarithmic line; a person sits near 10⁰ m and the hydrogen atom is as far below us (10 powers) as the Earth–Sun distance is above.
+2. **Convert units.** 65 mi/h = 29.0576 m/s exactly. Point at the chain: mi cancels mi, h cancels h. Then 2000 kcal (a day's food) = 2.32 kWh.
+3. **Dimensional analysis.** Pendulum: students move the sliders until the dimensions read T. The mass exponent must be 0. Show the answer: t = C√(L/g), C = 2π. Then the orbit: t ∝ √(r³/GM), Kepler's third law.
+4. **Significant figures.** 12.07 × 0.0350 = 0.42245 on the calculator, written 0.422. 100.0 − 2.351 = 97.6. Then 1500 ÷ 3.2: is 1500 two figures or four? Writing 1.5 × 10³ or 1500. removes the doubt.
+5. **Fermi.** Heartbeats in a lifetime: 2.2 × 10⁹ to 4.7 × 10⁹, about 3 billion.
+
+## Questions
+
+**Q1.** Convert 65 mi/h to m/s with a chain of exact factors.
+
+**Q2.** Use dimensions to show that the speed of a wave on a string is v = C√(T/μ).
+
+**Q3.** Why can't dimensional analysis find the 2π in the pendulum's period? Can it tell you that the mass does not matter?
+
+**Q4.** Give the results with the right precision: 12.07 × 0.0350; 100.0 − 2.351; 3.50 × 10⁻² × 1.2 × 10³.
+
+**Q5.** Estimate how many days it would take to walk around the equator. State your factors.
+
+## Common misconceptions
+
+- **"More digits means more accurate."** A result cannot be more precise than the measurements behind it.
+- **"Unit conversion changes the quantity."** Each factor equals 1; only the units change.
+- **"Dimensional analysis gives the whole formula."** It gives the powers, not dimensionless constants like 2π or √2, and fails if the answer depends on a dimensionless ratio of the inputs.
+- **"An estimate is a guess."** A Fermi estimate is a reasoned product of factors, with a range.
+
+## Physics behind the demo
+
+- Zoom backgrounds, at true scale where it matters: gluon strands in the proton; neighbouring atoms; water molecules (O–H 0.096 nm, 104.5°) around the DNA; a 5 nm cell membrane under the virus; packed red blood cells and platelets in plasma; fingerprint ridges about 0.5 mm apart with other sand grains; a house, trees and sky; Lhotse (8516 m, 3 km from Everest), clouds and an airliner at 11 km; the atmosphere and the space station at 400 km; GPS and geostationary orbits; the eight planets' orbits with the asteroid belt (2.2 to 3.3 au) and Kuiper belt (30 to 50 au); the Oort cloud (thought to reach about 100,000 au); the Magellanic Clouds; the Local Group with Andromeda 2.5 million ly away and Triangulum; and the cosmic microwave background at the edge of the observable universe. Planet positions on their orbits are illustrative, not for a date.
+- Zoom: every object is drawn at its true size about where you stand (the hair, cell, virus, DNA and atom in your hand; Earth below your feet; the Sun 1 au away; the Galactic Centre about 26,000 light years away), and the view glides to centre whichever object fills it. The shapes are simplified models: the proton shows three quarks as coloured dots, the atom's electron cloud is a fuzzy ball, and the cosmic web and galaxy are drawn from random points. Objects fade in at a few pixels across and out at a few screen widths.
+- Ruler and zoom sizes are typical or approximate (proton charge diameter 1.7 fm; hydrogen atom 2a₀ = 0.106 nm; human hair about 70 μm, ranging 20 to 180 μm; 1 au = 149,597,870,700 m exactly; light year from c and the Julian year; Milky Way disk about 100,000 ly; observable universe about 93 billion ly across).
+- Conversion factors are the exact definitions, except the BTU (international table value) and the year (Julian, 365.25 days). The eV is exact since the 2019 SI.
+- Dimensional analysis solves the exponent equations for [M, L, T]; a variable that cannot appear gets exponent 0.
+- Significant figures: a decimal point makes trailing zeros significant; trailing zeros in a whole number without one are ambiguous and counted as not significant. Products keep the fewest significant figures, sums the fewest decimal places; halves round up.

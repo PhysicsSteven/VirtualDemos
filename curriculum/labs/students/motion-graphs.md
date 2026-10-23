@@ -15,12 +15,12 @@ A motion detector records position, not force. Velocity is the slope of position
 
 $$x=x_0+v_0t+\frac12at^2,\qquad v=v_0+at.$$
 
-The signed area under a velocity graph is displacement. Distance traveled adds the magnitudes of the forward and backward displacements. For a freely moving ball, choose upward as positive and replace x by y; acceleration is −g while the ball is in flight, including at its highest point. Air resistance is neglected here.
+The signed area under a velocity graph is displacement. Distance traveled adds the magnitudes of the forward and backward displacements. For a freely moving ball, choose upward as positive and replace $$x$$ by $$y$$; acceleration is $$-g$$ while the ball is in flight, including at its highest point. Air resistance is neglected here.
 
 ## Before the lab
 
 1. Sketch position and velocity graphs for an object moving forward, stopping briefly and returning. Can its acceleration remain negative throughout?
-2. What does each coefficient in x = c₀ + c₁t + c₂t² tell you?
+2. What does each coefficient in $$x = c_0 + c_1 t + c_2 t^2$$ tell you?
 3. How can an object have zero velocity and nonzero acceleration at the same instant?
 
 ## Safety
@@ -33,7 +33,7 @@ With a real detector, clear the walking area and protect the cart from leaving t
 
 **Several stages.** Make a run that speeds up, cruises and slows to rest. Before revealing the velocity graph, sketch it from the position graph. Measure the displacement in each stage. Compare their sum with the signed area under velocity. Do not fit one parabola across all three stages.
 
-**Free fall.** Toss a ball vertically, or use the virtual setup. Capture at least eight points from launch to just before landing, with points on both sides of the highest point. Fit height against time. Infer g, initial upward speed, time to the highest point and maximum height. Treat the motion after landing separately.
+**Free fall.** Toss a ball vertically, or use the virtual setup. Capture at least eight points from launch to just before landing, with points on both sides of the highest point. Fit height against time. Infer $$g$$, initial upward speed, time to the highest point and maximum height. Treat the motion after landing separately.
 
 **Graph matching.** Walk in front of a real detector, or move the virtual cart, to match a target position graph. Describe the required direction and speed before starting. Repeat the same target once; then try a velocity target. Explain the difference between matching a height on a position graph and matching a height on a velocity graph.
 
@@ -41,7 +41,7 @@ With a real detector, clear the walking area and protect the cart from leaving t
 
 ## Data
 
-| Run/stage | t (s) | x or y (m) | Estimated slope (m/s) | Target/score or observation |
+| Run/stage | $$t$$ (s) | $$x$$ or $$y$$ (m) | Estimated slope (m/s) | Target/score or observation |
 |---|---|---|---|---|
 | | | | | |
 | | | | | |
@@ -54,12 +54,12 @@ Copy this table as needed. Save each CSV with its setup and settings. For graph 
 1. Fit the turning run to a quadratic. Find initial velocity, acceleration, turning time and turning position. Compare fit residuals with position rounding.
 2. Determine both displacement and total distance for that run. Explain their difference using the velocity graph.
 3. For the three stages, compare measured displacements with areas under velocity and changes in velocity with areas under acceleration.
-4. Fit free fall and report g with units and uncertainty. Compare the acceleration on the way up and down. Explain why fitting across landing would fail.
+4. Fit free fall and report $$g$$ with units and uncertainty. Compare the acceleration on the way up and down. Explain why fitting across landing would fail.
 5. Interpret the two graph-matching trials. Discuss whether the score improved and what part of the motion remained difficult. Do not compare scores from different targets or different graph types as if they measured identical tasks.
 
 ## Uncertainty
 
-Captured time and position are rounded to 0.01 s and 0.01 m. Estimate how those steps affect slopes, especially over short intervals. Use residuals and the spread from reasonable point selections; a small fit error does not include every source of error. Real measurements also involve detector calibration, sampling and drag. Repeating exact simulated points does not create independent random trials. Graph-matching scores describe tracking performance, not uncertainty in g.
+Captured time and position are rounded to 0.01 s and 0.01 m. Estimate how those steps affect slopes, especially over short intervals. Use residuals and the spread from reasonable point selections; a small fit error does not include every source of error. Real measurements also involve detector calibration, sampling and drag. Repeating exact simulated points does not create independent random trials. Graph-matching scores describe tracking performance, not uncertainty in $$g$$.
 
 ## Questions
 

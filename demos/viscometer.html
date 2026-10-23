@@ -61,8 +61,12 @@ body { margin: 0; }
 }
 
 :root { --fluid: #e9c46a; --glass: #9aa6b6; --ball: #4a5563; --mark: #b0452f; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fluid: #8a6d1f; --glass: #56606e; --ball: #c3cad4; --mark: #ff8a70; } }
-:root[data-theme="dark"] { --fluid: #8a6d1f; --glass: #56606e; --ball: #c3cad4; --mark: #ff8a70; }
+:root { --bench: #cdb89a; --bench-edge: #a8916f; --grain: rgba(90, 60, 30, 0.12); --stand: #8b95a3; --stand-dark: #5d6774; --glass-fill: rgba(170, 190, 210, 0.16); --glass-hi: rgba(255, 255, 255, 0.75);
+  --liq-glycerol: #dfe8ea; --liq-castor: #f3e3a0; --liq-oil: #d9a441; --liq-water: #cfe4f5; --ball-hi: #ffffff; --ball-glass: #a9c9cf; --ball-nylon: #e8e2d4; --wall: #eef2f6; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fluid: #8a6d1f; --glass: #56606e; --ball: #c3cad4; --mark: #ff8a70; --bench: #3b3226; --bench-edge: #2a231a; --grain: rgba(255, 220, 170, 0.06); --stand: #6c7684; --stand-dark: #4a525e; --glass-fill: rgba(150, 175, 205, 0.10); --glass-hi: rgba(220, 235, 255, 0.16);
+  --liq-glycerol: #3a4a50; --liq-castor: #6e6127; --liq-oil: #8a5a18; --liq-water: #24425e; --ball-hi: #ffffff; --ball-glass: #5f8c94; --ball-nylon: #b8b0a0; --wall: #121922; } }
+:root[data-theme="dark"] { --fluid: #8a6d1f; --glass: #56606e; --ball: #c3cad4; --mark: #ff8a70; --bench: #3b3226; --bench-edge: #2a231a; --grain: rgba(255, 220, 170, 0.06); --stand: #6c7684; --stand-dark: #4a525e; --glass-fill: rgba(150, 175, 205, 0.10); --glass-hi: rgba(220, 235, 255, 0.16);
+  --liq-glycerol: #3a4a50; --liq-castor: #6e6127; --liq-oil: #8a5a18; --liq-water: #24425e; --ball-hi: #ffffff; --ball-glass: #5f8c94; --ball-nylon: #b8b0a0; --wall: #121922; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -206,7 +210,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <p class="hint">Blind hides η, the Stokes prediction, the Reynolds number and the fitted η, leaving the timer and the densities. The Mystery liquid always hides its η.</p>
-        <p class="hint">Model: drag F = 6πηrv × K(d/D) × C_D Re/24, with the standard drag curve of Clift, Grace and Weber (Oseen's 1 + 3Re/16 below Re = 0.01) and Haberman and Sayre's wall factor K for a sphere on the axis of a tube. The wall factor is a slow flow result and is applied at all Re as an approximation. The ball's motion includes buoyancy and the added mass ½ρ_f V. Densities in kg/m³: steel 7800, glass 2500, nylon 1140. Liquids at 20 °C: glycerol 1261 and η = 1.41 Pa·s; castor oil 961 and 0.986 Pa·s; motor oil (typical SAE 30) 875 and 0.29 Pa·s; water 998 and 1.00 mPa·s.</p>
+        <p class="hint">Model: drag F = 6πηrv × K(d/D) × C_D Re/24, with the standard drag curve of Clift, Grace and Weber (Oseen's 1 + 3Re/16 below Re = 0.01) and Haberman and Sayre's wall factor K for a sphere on the axis of a tube in slow flow (the K you apply). At higher Re the walls matter less: the factor is weakened following Di Felice (1996), whose fit covers Re up to about 200. The ball's motion includes buoyancy and the added mass ½ρ_f V. Densities in kg/m³: steel 7800, glass 2500, nylon 1140. Liquids at 20 °C: glycerol 1261 and η = 1.41 Pa·s; castor oil 961 and 0.986 Pa·s; motor oil (typical SAE 30) 875 and 0.29 Pa·s; water 998 and 1.00 mPa·s.</p>
       </section>
     </aside>
   </main>
@@ -230,10 +234,17 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     return 10 ** lcd * Re / 24;
   }
   const reynolds = (rhoF, v, d, eta) => rhoF * Math.abs(v) * d / eta;
+  // The wall effect weakens as inertia grows. Di Felice (1996) gives the terminal speed in a tube as ((1 − λ)/(1 − 0.33λ))^α of the unbounded one, with
+  // α = (3.3 + 0.085 Re)/(1 + 0.1 Re): 3.3 in slow flow, about 0.85 at high Re. We keep Haberman and Sayre's exact slow flow factor and give it Di Felice's
+  // Re dependence: K = K_HS^(n α/3.3), where n = d ln F/d ln v of the unbounded drag (1 in slow flow, near 2 at high Re), so that the terminal speed is
+  // scaled by K^(−1/n) as Di Felice describes. In slow flow this is exactly K_HS (the factor students apply); Di Felice's fit was made for Re up to about 200.
+  const feliceAlpha = (Re) => (3.3 + 0.085 * Re) / (1 + 0.1 * Re);
+  const dragSlope = (Re) => 1 + Math.log(dragCorr(Re * 1.1) / dragCorr(Re / 1.1)) / Math.log(1.21);
+  const wallFactor = (lam, Re) => wallK(lam) ** (dragSlope(Re) * feliceAlpha(Re) / 3.3);
   // drag magnitude at speed |v| (opposes the motion)
   function drag(v, d, fl, D) {
     const u = Math.abs(v); if (u === 0) return 0;
-    const Re = reynolds(fl.rho, u, d, fl.eta), K = wallK(d / D), stokes = 3 * Math.PI * fl.eta * d * u;
+    const Re = reynolds(fl.rho, u, d, fl.eta), K = wallFactor(d / D, Re), stokes = 3 * Math.PI * fl.eta * d * u;
     return stokes * K * dragCorr(Re);
   }
   const stokesV = (d, rhoB, fl) => (rhoB - fl.rho) * G * d * d / (18 * fl.eta);
@@ -283,7 +294,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
   function readingsCSV(rows, meta) {
     const L = ['# Falling Ball Viscometer virtual apparatus: captured readings (simulated data)', `# demo version,${meta.version}`, `# mark_spacing_m,${MARK2 - MARK1}`, `# g_m_per_s2,${G}`, '# temperature_C,20',
-      '# model,"Stokes drag times the Clift-Grace-Weber standard drag curve and the Haberman-Sayre wall factor; buoyancy and added mass included"',
+      '# model,"Stokes drag times the Clift-Grace-Weber standard drag curve and the Haberman-Sayre wall factor, weakened at higher Re following Di Felice (1996); buoyancy and added mass included"',
       '# rounding,"t to 0.01 s between the marks; v computed from the row"', '# noise,none',
       'row,liquid,rho_liquid_kg_m3,ball,rho_ball_kg_m3,tube_D_mm,d_mm,t_s,v_m_per_s'];
     rows.forEach((r, i) => { const t = cellNum(r.t); L.push([i + 1, r.liquid, r.rhoF, r.ball, r.rhoB, r.D, r.d, r.t, t > 0 ? +((MARK2 - MARK1) / t).toPrecision(6) : ''].map(csvCell).join(',')); });
@@ -300,7 +311,8 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      fluid: g('--fluid'), glass: g('--glass'), ball: g('--ball'), mark: g('--mark'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      fluid: g('--fluid'), glass: g('--glass'), ball: g('--ball'), mark: g('--mark'), bench: g('--bench'), benchEdge: g('--bench-edge'), grain: g('--grain'), stand: g('--stand'), standDark: g('--stand-dark'), glassFill: g('--glass-fill'), glassHi: g('--glass-hi'),
+      liq: { glycerol: g('--liq-glycerol'), castor: g('--liq-castor'), oil: g('--liq-oil'), water: g('--liq-water') }, ballHi: g('--ball-hi'), ballGlass: g('--ball-glass'), ballNylon: g('--ball-nylon'), wall: g('--wall'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
   const FL = () => (S.myst ? { name: 'Mystery liquid', ...S.myst } : FLUIDS[S.fluid]), rhoB = () => BALLS[S.ball].rho, dm = () => S.d / 1000;
@@ -311,22 +323,74 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function reset() { S.run = false; S.done = false; S.t = 0; S.s = { x: 0, v: 0 }; S.gate = gateTimes(dm(), rhoB(), FL(), S.D); S.t1 = null; setRun(false); draw(); readouts(); }
   // ---------- drawing ----------
   function depth() { return up() ? LTUBE - dm() / 2 + S.s.x : S.s.x; }   // x is positive down; a floating ball starts on the bottom and x goes negative
+  // seeded decoration, made once: wood grain on the bench
+  const rng = ((seed) => () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; })(7);
+  const GRAIN = Array.from({ length: 22 }, () => [rng(), rng(), 0.08 + rng() * 0.25]);
+  // bench, wall, lab stand with two clamps, a beaker on wide screens: all behind the tube
+  function scenery(p, top, cx, tw, yOf) {
+    const benchY = Hh - 14 * p;
+    ctx.fillStyle = T.wall; ctx.fillRect(0, 0, W, benchY);
+    ctx.fillStyle = T.bench; ctx.fillRect(0, benchY, W, Hh - benchY);
+    ctx.fillStyle = T.benchEdge; ctx.fillRect(0, benchY, W, 2 * p);
+    ctx.strokeStyle = T.grain; ctx.lineWidth = 1;
+    for (const [fy, fx, fl] of GRAIN) { const y = benchY + 4 * p + fy * (Hh - benchY - 5 * p); ctx.beginPath(); ctx.moveTo(fx * W, y); ctx.lineTo((fx + fl) * W, y); ctx.stroke(); }
+    // stand: base plate, rod, boss heads and arms reaching the tube
+    const rx = cx - tw / 2 - 78 * p, baseY = benchY - 7 * p;
+    ctx.fillStyle = T.standDark; ctx.beginPath(); ctx.roundRect(rx - 44 * p, baseY, 70 * p, 7 * p, 2 * p); ctx.fill();
+    const rg = ctx.createLinearGradient(rx - 3 * p, 0, rx + 3 * p, 0); rg.addColorStop(0, T.standDark); rg.addColorStop(0.45, T.stand); rg.addColorStop(1, T.standDark);
+    ctx.fillStyle = rg; ctx.fillRect(rx - 3 * p, top + 20 * p, 6 * p, baseY - top - 20 * p);
+    ctx.fillStyle = T.standDark; ctx.beginPath(); ctx.arc(rx, top + 20 * p, 3 * p, Math.PI, 0); ctx.fill();
+    for (const z of [0.04, 0.42]) {
+      const y = yOf(z), xl = cx - tw / 2 - 2 * p;
+      ctx.fillStyle = T.stand; ctx.fillRect(rx, y - 2 * p, xl - rx - 6 * p, 4 * p);
+      ctx.fillStyle = T.standDark; ctx.fillRect(rx - 6 * p, y - 6 * p, 12 * p, 12 * p);
+      ctx.fillRect(rx + 6 * p, y - 1.5 * p, 5 * p, 3 * p);   // the boss screw
+      ctx.beginPath(); ctx.roundRect(xl - 7 * p, y - 7 * p, 7 * p, 14 * p, 2 * p); ctx.fill();
+    }
+    // a spare beaker of the liquid on the bench, when there is room
+    if (W >= 640) {
+      const bx = Math.min(W - 70 * p, cx + tw / 2 + 150 * p), bw = 44 * p, bh = 54 * p, by = benchY - bh;
+      ctx.fillStyle = S.myst ? T.fluid : T.liq[S.fluid]; ctx.globalAlpha = 0.7; ctx.fillRect(bx + 2 * p, by + bh * 0.4, bw - 4 * p, bh * 0.6 - 2 * p); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.glassFill; ctx.fillRect(bx, by, bw, bh);
+      ctx.strokeStyle = T.glass; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(bx - 3 * p, by); ctx.lineTo(bx, by + 2 * p); ctx.lineTo(bx, by + bh); ctx.lineTo(bx + bw, by + bh); ctx.lineTo(bx + bw, by); ctx.stroke();
+      ctx.strokeStyle = T.glassHi; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(bx + 6 * p, by + 6 * p); ctx.lineTo(bx + 6 * p, by + bh - 6 * p); ctx.stroke();
+    }
+  }
+  function ballFill(x, y, r) {
+    const base = S.ball === 'glass' ? T.ballGlass : S.ball === 'nylon' ? T.ballNylon : T.ball;
+    const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.08, x, y, r); g.addColorStop(0, T.ballHi); g.addColorStop(0.35, base); g.addColorStop(1, T.standDark);
+    return g;
+  }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
-    const p = ps(), top = 70 * p, bot = Hh - 30 * p, sc = (bot - top) / (LTUBE + 0.03), tw = Math.max(46 * p, Math.min(W * 0.32, S.D * sc)), cx = W * 0.42;
+    const p = ps(), top = (W < 560 ? 104 : 70) * p, bot = Hh - 30 * p, sc = (bot - top) / (LTUBE + 0.03), tw = Math.max(46 * p, Math.min(W * 0.32, S.D * sc)), cx = W * 0.42;
     const yOf = (z) => top + 0.03 * sc + z * sc;
-    ctx.fillStyle = T.fluid; ctx.globalAlpha = 0.75; ctx.fillRect(cx - tw / 2, yOf(0), tw, LTUBE * sc); ctx.globalAlpha = 1;
-    ctx.strokeStyle = T.glass; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(cx - tw / 2, top); ctx.lineTo(cx - tw / 2, yOf(LTUBE)); ctx.lineTo(cx + tw / 2, yOf(LTUBE)); ctx.lineTo(cx + tw / 2, top); ctx.stroke();
+    scenery(p, top, cx, tw, yOf);
+    // glass body, then the liquid with a concave meniscus, darker toward the walls
+    const xL = cx - tw / 2, xR = cx + tw / 2, y0 = yOf(0), yB = yOf(LTUBE), mh = Math.min(5 * p, tw * 0.08);
+    ctx.fillStyle = T.glassFill; ctx.fillRect(xL, top, tw, yB - top);
+    const lc = S.myst ? T.fluid : T.liq[S.fluid], lg = ctx.createLinearGradient(xL, 0, xR, 0);
+    lg.addColorStop(0, T.standDark); lg.addColorStop(0.12, lc); lg.addColorStop(0.88, lc); lg.addColorStop(1, T.standDark);
+    ctx.fillStyle = lc; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.moveTo(xL, y0 - mh); ctx.quadraticCurveTo(cx, y0 + mh, xR, y0 - mh); ctx.lineTo(xR, yB); ctx.lineTo(xL, yB); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = lg; ctx.globalAlpha = 0.25; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(xL, y0 - mh); ctx.quadraticCurveTo(cx, y0 + mh, xR, y0 - mh); ctx.stroke();
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(xL, top); ctx.lineTo(xL, yB); ctx.lineTo(xR, yB); ctx.lineTo(xR, top); ctx.stroke();
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xL - 3 * p, top); ctx.lineTo(xL + 1 * p, top); ctx.moveTo(xR - 1 * p, top); ctx.lineTo(xR + 3 * p, top); ctx.stroke();   // lip
+    ctx.strokeStyle = T.glassHi; ctx.lineWidth = Math.max(2, tw * 0.06); ctx.beginPath(); ctx.moveTo(xL + tw * 0.2, top + 8 * p); ctx.lineTo(xL + tw * 0.2, yB - 8 * p); ctx.stroke();
     // ruler
     ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     for (let k = 0; k <= 45; k++) { const y = yOf(k / 100), L = k % 10 === 0 ? 10 : k % 5 === 0 ? 7 : 4; ctx.beginPath(); ctx.moveTo(cx + tw / 2 + 4, y); ctx.lineTo(cx + tw / 2 + 4 + L * p, y); ctx.stroke(); if (k % 10 === 0) ctx.fillText(`${k} cm`, cx + tw / 2 + 16 * p, y); }
     // marks
     ctx.strokeStyle = T.mark; ctx.lineWidth = 2 * p; ctx.fillStyle = T.mark; ctx.textAlign = 'right';
-    for (const [z, lab] of [[MARK1, 'mark A'], [MARK2, 'mark B']]) { const y = yOf(z); ctx.beginPath(); ctx.moveTo(cx - tw / 2 - 10 * p, y); ctx.lineTo(cx + tw / 2, y); ctx.stroke(); ctx.fillText(lab, cx - tw / 2 - 14 * p, y); }
+    for (const [z, lab] of [[MARK1, 'mark A'], [MARK2, 'mark B']]) {
+      const y = yOf(z); ctx.beginPath(); ctx.moveTo(cx - tw / 2 - 10 * p, y); ctx.lineTo(cx + tw / 2, y); ctx.stroke(); ctx.fillText(lab, cx - tw / 2 - 14 * p, y);
+      // light gate: a bracket clipped round the tube at the mark
+      ctx.save(); ctx.strokeStyle = T.standDark; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx - tw / 2 - 2 * p, y - 6 * p); ctx.lineTo(cx - tw / 2 - 7 * p, y - 6 * p); ctx.lineTo(cx - tw / 2 - 7 * p, y + 6 * p); ctx.lineTo(cx - tw / 2 - 2 * p, y + 6 * p); ctx.stroke(); ctx.restore();
+    }
     // ball, drawn at least 6 px across
     const r = Math.max(3 * p, dm() / 2 * sc), y = yOf(Math.max(0, Math.min(LTUBE, depth())));
-    ctx.fillStyle = T.ball; ctx.beginPath(); ctx.arc(cx, y, r, 0, 7); ctx.fill();
+    ctx.fillStyle = ballFill(cx, y, r); ctx.beginPath(); ctx.arc(cx, y, r, 0, 7); ctx.fill();
     ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`tube ${S.D * 1000} mm wide, to scale`, cx, yOf(LTUBE) + 6 * p);
     // timer
     ctx.fillStyle = T.ink; ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
@@ -344,7 +408,12 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       const vs = stokesV(d, rhoB(), fl), Re = reynolds(fl.rho, vt, d, fl.eta);
       h += dd('Viscosity η', fl.eta >= 0.1 ? `${f(fl.eta, 3)} Pa·s` : `${f(fl.eta * 1000, 2)} mPa·s`) + dd('Reynolds number at v_t', g3(Re));
       h += dd('Terminal speed v_t', `${g3(Math.abs(vt) * 1000)} mm/s`) + dd('Stokes\' law alone', `${g3(Math.abs(vs) * 1000)} mm/s`);
-      h += dd('Wall factor K(d/D)', f(wallK(d / S.D), 3)) + dd('Reaches v_t in about', `${g3(5 * respTime(d, rhoB(), fl, S.D) * 1000)} ms`);
+      h += dd('Wall factor on the drag at v_t', f(wallFactor(d / S.D, reynolds(fl.rho, vt, d, fl.eta)), 3)) + dd('Reaches v_t in about', `${g3(5 * respTime(d, rhoB(), fl, S.D) * 1000)} ms`);
+      // where the method breaks down: inertia (Re), the end of the drag curve, and a ball still speeding up at mark A
+      const ReT = reynolds(fl.rho, vt, d, fl.eta), gt = S.gate, lag = gt && isFinite(gt.dt) ? gt.dt * Math.abs(vt) / 0.2 - 1 : 0;
+      const verdict = ReT < 0.1 ? 'yes: inertia changes the drag by under 2%' : ReT < 1 ? `roughly: inertia adds about ${f(100 * (dragCorr(ReT) - 1), 0)}% to the drag` : ReT <= 1.2e4 ? `no: inertia dominates (drag ${g3(dragCorr(ReT))} times Stokes')` : 'no, and beyond the drag curve used here (held at its Re = 12,000 value)';
+      h += dd('Does Stokes\' law apply?', `<span style="font-family:var(--font-ui);font-size:0.85rem">${verdict}</span>`, true);
+      if (lag > 0.002) h += dd('Terminal speed by mark A?', `<span style="font-family:var(--font-ui);font-size:0.85rem">not quite: the timed speed is ${f(100 * lag / (1 + lag), 1)}% below v_t</span>`, true);
     }
     $('out').innerHTML = h;
   }

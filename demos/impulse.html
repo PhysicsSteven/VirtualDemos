@@ -61,8 +61,9 @@ body { margin: 0; }
 }
 
 :root { --cart: #2b60b5; --track: #9aa6b6; --sensor: #4a5563; --force: #b0452f; --vel: #1f8a5a; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cart: #69a0ff; --track: #56606e; --sensor: #c3cad4; --force: #ff8a70; --vel: #4cd08f; } }
-:root[data-theme="dark"] { --cart: #69a0ff; --track: #56606e; --sensor: #c3cad4; --force: #ff8a70; --vel: #4cd08f; }
+:root { --bench: #eee8de; --bench-edge: #ddd3c3; --wall-dot: #e7ebf0; --metal: #b9c1cc; --metal-dark: #6b7686; --clay: #c98a5a; --logger: #3a4553; --lcd: #b5cfa4; --led: #2fae57; --cart-top: #1f4a8f; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cart: #69a0ff; --track: #56606e; --sensor: #c3cad4; --force: #ff8a70; --vel: #4cd08f; --bench: #191f27; --bench-edge: #232b35; --wall-dot: #161d26; --metal: #4d5866; --metal-dark: #a3aebb; --clay: #a8714a; --logger: #2a333f; --lcd: #3f5c3e; --led: #4cd08f; --cart-top: #9cc0ff; } }
+:root[data-theme="dark"] { --cart: #69a0ff; --track: #56606e; --sensor: #c3cad4; --force: #ff8a70; --vel: #4cd08f; --bench: #191f27; --bench-edge: #232b35; --wall-dot: #161d26; --metal: #4d5866; --metal-dark: #a3aebb; --clay: #a8714a; --logger: #2a333f; --lcd: #3f5c3e; --led: #4cd08f; --cart-top: #9cc0ff; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -257,8 +258,11 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      cart: g('--cart'), track: g('--track'), sensor: g('--sensor'), force: g('--force'), vel: g('--vel'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      cart: g('--cart'), track: g('--track'), sensor: g('--sensor'), force: g('--force'), vel: g('--vel'), bench: g('--bench'), benchEdge: g('--bench-edge'), wallDot: g('--wall-dot'), metal: g('--metal'), metalDark: g('--metal-dark'), clay: g('--clay'), logger: g('--logger'), lcd: g('--lcd'), led: g('--led'), cartTop: g('--cart-top'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  // scenery: speckles on the clay, made once from a seeded generator (fractions of the lump's size)
+  function seeded(q) { return () => { q |= 0; q = (q + 0x6D2B79F5) | 0; let t = Math.imul(q ^ (q >>> 15), 1 | q); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  const rnd = seeded(4242), SPECK = Array.from({ length: 12 }, () => [rnd(), rnd(), 0.6 + rnd() * 0.8]);
   const f = (v, d = 3) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
   const B = () => BUMPERS[S.bump], C = () => contact(S.m, S.v0, B()), tHit = () => GAP / S.v0, tEnd = () => tHit() + C().tc + Math.min(1.2, 0.3 / Math.max(0.05, B().e * S.v0));
   function reset() { S.t = 0; S.done = false; S.run = false; S.pts = samples(S.m, S.v0, B(), S.rate); setRun(false); draw(); readouts(); }
@@ -307,14 +311,59 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     const p = ps(), cs = cartState(S.m, S.v0, B(), S.t), c = C();
     // track: 0.40 m shown, bumper face at x = 0
     const ty = 150 * p, x1 = W - 60 * p, sc = (x1 - 40 * p) / 0.42, X = (x) => x1 - 40 * p + x * sc;
-    ctx.strokeStyle = T.track; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(20 * p, ty); ctx.lineTo(x1 + 30 * p, ty); ctx.stroke();
+    // lab bench under the track, a faint pegboard wall behind
+    ctx.fillStyle = T.wallDot; for (let yy = 56 * p; yy < ty - 20 * p; yy += 16 * p) for (let xx = 16 * p; xx < W - 8 * p; xx += 16 * p) { ctx.fillRect(xx, yy, 2 * p, 2 * p); }
+    ctx.fillStyle = T.bench; ctx.fillRect(0, ty + 10 * p, W, 36 * p); ctx.fillStyle = T.benchEdge; ctx.fillRect(0, ty + 10 * p, W, 3 * p);
+    // aluminium track with a ruler along its face (1 cm marks, longer every 5 cm, measured from the bumper's resting face) and an end stop at the left
+    ctx.fillStyle = T.track; ctx.fillRect(16 * p, ty, x1 + 34 * p - 16 * p, 10 * p);
+    ctx.fillStyle = T.metal; ctx.fillRect(16 * p, ty + 2 * p, x1 + 34 * p - 16 * p, 2 * p);
+    ctx.strokeStyle = T.canvas; ctx.lineWidth = 1; ctx.globalAlpha = 0.8; ctx.beginPath();
+    for (let k = 0; ; k++) { const xx = X(-k / 100); if (xx < 22 * p) break; const len = k % 10 === 0 ? 5 * p : k % 5 === 0 ? 4 * p : 2.5 * p; if (sc / 100 < 3 * p && k % 5) continue; ctx.moveTo(xx + 0.5, ty + 10 * p); ctx.lineTo(xx + 0.5, ty + 10 * p - len); }
+    ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.metalDark; ctx.fillRect(16 * p, ty - 16 * p, 7 * p, 16 * p); ctx.fillStyle = T.metal; ctx.fillRect(23 * p, ty - 12 * p, 3 * p, 8 * p);
+    // force sensor clamped to the track, its cable running to a data logger on the bench
+    const lx = x1 - 84 * p, ly = ty + 18 * p, lw = 92 * p, lh = 24 * p;
+    ctx.strokeStyle = T.metalDark; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x1 + 28 * p, ty - 26 * p); ctx.bezierCurveTo(x1 + 52 * p, ty - 20 * p, x1 + 48 * p, ly + lh * 0.5, lx + lw, ly + lh * 0.5); ctx.stroke();
+    ctx.fillStyle = T.logger; ctx.fillRect(lx, ly, lw, lh); ctx.fillStyle = T.lcd; ctx.fillRect(lx + 5 * p, ly + 5 * p, lw * 0.5, lh - 10 * p);
+    ctx.strokeStyle = T.logger; ctx.lineWidth = 1; ctx.beginPath(); for (let i = 0; i <= 12; i++) { const xx = lx + 7 * p + (lw * 0.5 - 4 * p) * i / 12, yy = ly + lh - 8 * p - (i > 5 && i < 9 ? (i === 7 ? 6 : 3) * p : 0); i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); } ctx.stroke();
+    const ledOn = S.run && (reduce || Math.floor(performance.now() / 400) % 2 === 0); ctx.fillStyle = ledOn ? T.led : T.metalDark; ctx.beginPath(); ctx.arc(lx + lw * 0.68, ly + lh / 2, 2.5 * p, 0, 7); ctx.fill();
+    ctx.fillStyle = T.metal; for (let i = 0; i < 2; i++) { ctx.fillRect(lx + lw * 0.78 + i * 8 * p, ly + lh / 2 - 3 * p, 5 * p, 6 * p); }
+    ctx.fillStyle = T.metalDark; ctx.fillRect(x1 + 2 * p, ty - 8 * p, 30 * p, 8 * p);
     ctx.fillStyle = T.sensor; ctx.fillRect(x1 + 6 * p, ty - 46 * p, 22 * p, 46 * p);
-    const comp = Math.max(0, cs.x), face = X(0) + comp * sc, bw = 20 * p;
-    ctx.strokeStyle = S.bump === 'clay' ? T.force : T.ink; ctx.lineWidth = 2 * p;
-    if (S.bump === 'clay') { ctx.fillStyle = T.force; ctx.globalAlpha = 0.6; ctx.fillRect(face, ty - 30 * p, x1 + 6 * p - face, 24 * p); ctx.globalAlpha = 1; }
-    else { ctx.beginPath(); const n = 8, L = x1 + 6 * p - face; for (let i = 0; i <= n; i++) { const xx = face + L * i / n, yy = ty - 18 * p + (i % 2 ? -8 : 8) * p; i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); } ctx.stroke(); }
-    const cw = 70 * p, ch = 30 * p, cxr = X(cs.x); ctx.fillStyle = T.cart; ctx.fillRect(cxr - cw, ty - ch - 8 * p, cw, ch);
-    ctx.fillStyle = T.ink; for (const wx of [cxr - cw + 12 * p, cxr - 12 * p]) { ctx.beginPath(); ctx.arc(wx, ty - 6 * p, 6 * p, 0, 7); ctx.fill(); }
+    ctx.fillStyle = T.metal; ctx.fillRect(x1 + 2 * p, ty - 24 * p, 4 * p, 12 * p);
+    ctx.fillStyle = T.lcd; ctx.beginPath(); ctx.arc(x1 + 17 * p, ty - 38 * p, 2 * p, 0, 7); ctx.fill();
+    // the bumper: its face sits where the model puts it (pushed in by x while the cart touches it)
+    const xp = c.xmax * (1 - B().e * B().e), after = S.t > tHit() + c.tc;
+    const comp = S.bump === 'clay' && after ? xp : Math.max(0, cs.x), face = X(0) + comp * sc, bw = 20 * p, sx0 = x1 + 2 * p;
+    if (S.bump === 'clay') {
+      // the clay keeps its area as it is squashed: it bulges up and down; after the hit it keeps its dent (the model's x where the force reached zero)
+      const L0 = sx0 - X(0), Lc = Math.max(4 * p, sx0 - face), h0 = 20 * p, hc = Math.min(h0 * L0 / Lc, 34 * p), cyc = ty - 18 * p;
+      ctx.fillStyle = T.clay; ctx.beginPath(); ctx.moveTo(sx0, cyc - hc / 2); ctx.lineTo(face + 4 * p, cyc - hc / 2); ctx.quadraticCurveTo(face - 2 * p, cyc, face + 4 * p, cyc + hc / 2); ctx.lineTo(sx0, cyc + hc / 2); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = T.force; ctx.lineWidth = 1.5 * p; ctx.stroke();
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.35; for (const [u, v, r] of SPECK) { ctx.beginPath(); ctx.arc(face + 4 * p + u * (Lc - 6 * p), cyc - hc / 2 + 3 * p + v * (hc - 6 * p), r * p, 0, 7); ctx.fill(); } ctx.globalAlpha = 1;
+    } else {
+      // a coil spring between the sensor and an end cap; the turns crowd together as it is compressed
+      const n = S.bump === 'soft' ? 9 : 6, L = sx0 - face - 3 * p, R2 = (S.bump === 'soft' ? 9 : 8) * p, cyc = ty - 18 * p;
+      ctx.lineWidth = (S.bump === 'soft' ? 1.5 : 2.4) * p;
+      for (const back of [true, false]) {
+        ctx.strokeStyle = back ? T.muted : T.ink; ctx.globalAlpha = back ? 0.5 : 1; ctx.beginPath();
+        for (let i = 0; i < n; i++) { const xa = face + 3 * p + L * i / n, xb = face + 3 * p + L * (i + 0.5) / n, xc = face + 3 * p + L * (i + 1) / n;
+          if (back) { ctx.moveTo(xb, cyc + R2); ctx.lineTo(xc, cyc - R2); } else { ctx.moveTo(xa, cyc - R2); ctx.lineTo(xb, cyc + R2); } }
+        ctx.stroke();
+      }
+      ctx.globalAlpha = 1; ctx.fillStyle = T.metalDark; ctx.fillRect(face, cyc - R2 - 3 * p, 3 * p, 2 * R2 + 6 * p);
+    }
+    // the cart: body with a darker top rail and a mass label; wheels with hubs and spokes that turn as it rolls
+    const cw = 70 * p, ch = 30 * p, cxr = X(cs.x), rW = 6 * p;
+    ctx.fillStyle = T.cart; ctx.beginPath(); ctx.moveTo(cxr - cw + 4 * p, ty - ch - 8 * p); ctx.lineTo(cxr - 4 * p, ty - ch - 8 * p); ctx.quadraticCurveTo(cxr, ty - ch - 8 * p, cxr, ty - ch - 4 * p); ctx.lineTo(cxr, ty - 8 * p); ctx.lineTo(cxr - cw, ty - 8 * p); ctx.lineTo(cxr - cw, ty - ch - 4 * p); ctx.quadraticCurveTo(cxr - cw, ty - ch - 8 * p, cxr - cw + 4 * p, ty - ch - 8 * p); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = T.cartTop; ctx.globalAlpha = 0.5; ctx.fillRect(cxr - cw + 3 * p, ty - ch - 6 * p, cw - 6 * p, 4 * p); ctx.fillRect(cxr - cw + 3 * p, ty - 12 * p, cw - 6 * p, 2 * p); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.metalDark; ctx.fillRect(cxr - 1 * p, ty - ch * 0.75 - 8 * p, 2 * p, ch * 0.5);
+    for (const wx of [cxr - cw + 12 * p, cxr - 12 * p]) {
+      ctx.save(); ctx.translate(wx, ty - rW); ctx.rotate((cxr - X(-GAP)) / rW);
+      ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(0, 0, rW, 0, 7); ctx.fill(); ctx.fillStyle = T.metal; ctx.beginPath(); ctx.arc(0, 0, rW * 0.6, 0, 7); ctx.fill();
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.beginPath(); for (let i = 0; i < 3; i++) { const a = i * Math.PI / 3; ctx.moveTo(-Math.cos(a) * rW * 0.6, -Math.sin(a) * rW * 0.6); ctx.lineTo(Math.cos(a) * rW * 0.6, Math.sin(a) * rW * 0.6); } ctx.stroke();
+      ctx.restore();
+    }
     ctx.fillStyle = T.canvas; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${S.m.toFixed(2)} kg`, cxr - cw / 2, ty - ch / 2 - 8 * p);
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('force sensor', x1 + 17 * p, ty - 56 * p);
     // velocity arrow
@@ -342,7 +391,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   });
   $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
   function download(txt, name) { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} }
-  $('exportCsv').addEventListener('click', () => { if (!S.rows.length) { capStatus('No readings to export.'); return; } download(readingsCSV(S.rows, { version: IM_VERSION }), 'impulse-readings.csv'); capStatus('CSV exported.'); });
+  $('exportCsv').addEventListener('click', () => { if (!S.rows.length) { capStatus('No readings to export.'); return; } download(readingsCSV(S.blind ? S.rows.map((r) => ({ ...r, area: '', peak: '' })) : S.rows, { version: IM_VERSION }), 'impulse-readings.csv'); capStatus(S.blind ? 'CSV exported without the area and peak force (Blind is on).' : 'CSV exported.'); });
   $('exportRun').addEventListener('click', () => { if (!S.done) { capStatus('Launch the cart and let it bounce off first.'); return; } const st = stats(); download(runCSV(S.pts, { version: IM_VERSION, bumper: B().name, m: S.m.toFixed(2), v1: st.v1.toFixed(3), v2: st.v2.toFixed(3), rate: S.rate }), 'impulse-run.csv'); capStatus('Run exported: t_s, F_N.'); });
   function renderRows() {
     const tb = $('rowsTbl').querySelector('tbody');

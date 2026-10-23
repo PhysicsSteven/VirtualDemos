@@ -2,7 +2,7 @@
 
 [Open demonstration](https://physicssteven.github.io/VirtualDemos/demos/compton.html)
 
-**Objective:** Test Delta lambda=(h/m_e c)(1-cos theta).
+**Objective:** Test $$\Delta\lambda = \tfrac{h}{m_e c}(1-\cos\theta)$$.
 
 ## Procedure
 1. Identify the appropriate demonstration mode and the quantities to measure.

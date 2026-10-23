@@ -19,7 +19,7 @@ Gauss's law relates net outward flux to enclosed charge (§6.2):
 
 $$\Phi_E=\frac{Q_{\rm enc}}{\epsilon_0}.$$
 
-It holds for every closed surface. Extracting E from the integral requires sufficient symmetry (§6.3). A drawing's field-line count is a visual aid, not a measurement of the continuous integral.
+It holds for every closed surface. Extracting $$E$$ from the integral requires sufficient symmetry (§6.3). A drawing's field-line count is a visual aid, not a measurement of the continuous integral.
 
 ## Before the lab
 
@@ -39,26 +39,26 @@ For a real electrostatics bench, follow the instructor's high voltage and discha
 
 **Approach to a boundary.** Keep a charge fixed and change the surface size to approach it from either side. Record five or more separations where the numerical integral is available. Compare numerical error and field-evaluation count as the separation shrinks.
 
-**Symmetry.** Compare a uniformly charged ball and a conducting sphere with the same Q and R. Record E at several radii inside and outside. Use the conductor's one-sided surface limits rather than assigning one field value to the ideal charged surface (§6.4).
+**Symmetry.** Compare a uniformly charged ball and a conducting sphere with the same $$Q$$ and $$R$$. Record $$E$$ at several radii inside and outside. Use the conductor's one-sided surface limits rather than assigning one field value to the ideal charged surface (§6.4).
 
-**Using the virtual apparatus.** Choose **Any surface**, then **Charge inside** and **Pause**. Select the charge, set **Selected charge q**, and enter its x/y coordinates. Use **Sphere**, **Box** and **Cylinder**. Clear **Show predicted flux Qenc/ε₀** while measuring. Press **Capture reading** and **Export CSV**; the export includes geometry and numerical status. Use **Dipole inside** for the charge combinations. Keep the charge at least 0.03 cm from the surface: this is a numerical exclusion zone. Flag rows marked **Quadrature tolerance not met** rather than treating them as reliable measurements. For the last part choose **Symmetry**, **Sphere**, then **Ball** or **Conductor**.
+**Using the virtual apparatus.** Choose **Any surface**, then **Charge inside** and **Pause**. Select the charge, set **Selected charge q**, and enter its $$x$$/$$y$$ coordinates. Use **Sphere**, **Box** and **Cylinder**. Clear **Show predicted flux Qenc/ε₀** while measuring. Press **Capture reading** and **Export CSV**; the export includes geometry and numerical status. Use **Dipole inside** for the charge combinations. Keep the charge at least 0.03 cm from the surface: this is a numerical exclusion zone. Flag rows marked **Quadrature tolerance not met** rather than treating them as reliable measurements. For the last part choose **Symmetry**, **Sphere**, then **Ball** or **Conductor**.
 
 ## Data
 
-| Geometry/distribution | Charge positions or r (m) | Q_enc (C) | Numerical flux (N m²/C) | Predicted flux (N m²/C) | E (N/C), if used | Numerical status/evaluations |
+| Geometry/distribution | Charge positions or $$r$$ (m) | $$Q_{\rm enc}$$ (C) | Numerical flux (N m²/C) | Predicted flux (N m²/C) | $$E$$ (N/C), if used | Numerical status/evaluations |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 | | | | | | | |
 | | | | | | | |
 
-Record all shape dimensions and Q, R above the relevant table. Keep separate copies for each investigation.
+Record all shape dimensions and $$Q$$, $$R$$ above the relevant table. Keep separate copies for each investigation.
 
 ## Analysis
 
-1. Calculate Q_enc/ε0 independently for every flux row. Compare shapes and charge positions.
-2. Use a nonzero scale such as |q|/ε0 to normalize errors when predicted net flux is zero.
+1. Calculate $$Q_{\rm enc}/\epsilon_0$$ independently for every flux row. Compare shapes and charge positions.
+2. Use a nonzero scale such as $$\lvert q \rvert/\epsilon_0$$ to normalize errors when predicted net flux is zero.
 3. Plot flux error and evaluation count against the closest charge-to-surface separation. Distinguish boundary sensitivity from a controlled quadrature-tolerance study.
-4. Derive E(r) inside/outside a uniform ball and a conductor using symmetry. Compare with the radial measurements and discuss continuity or a jump at R.
+4. Derive $$E(r)$$ inside/outside a uniform ball and a conductor using symmetry. Compare with the radial measurements and discuss continuity or a jump at $$R$$.
 
 ## Uncertainty
 
@@ -68,7 +68,7 @@ Include coordinate and surface-size resolution when deciding whether a charge is
 
 1. Does zero net flux imply zero electric field on the surface?
 2. Why can changing shape alter outward and inward contributions while leaving their sum unchanged?
-3. When can E be taken outside the flux integral?
+3. When can $$E$$ be taken outside the flux integral?
 4. Why is the field zero inside a conductor in electrostatic equilibrium but not generally inside a uniformly charged insulating ball?
 
 ## What to hand in

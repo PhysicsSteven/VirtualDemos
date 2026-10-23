@@ -17,7 +17,7 @@ time: 15 to 30 minutes
 2. **Adding.** (5, 1) + (−2, 4) = (3, 5), |R| = 5.83 against |A| + |B| = 9.57. Switch Draw B between Head to tail and From the origin.
 3. **Subtracting.** (5, 2) − (2, 4) = (3, −2). Point out the faint copy of A − B from B's head to A's head.
 4. **Dot and cross products.** (5, 1)·(2, 4) = 14 and (A × B)_z = 18, with φ = 52.1°. Make them perpendicular (dot product 0) and parallel (cross product 0).
-5. **River crossing.** Boat 2.5 m/s straight across a 60 m river flowing at 1.5 m/s: 24 s, 36 m downstream. **Aim to land straight across**: 36.9° upstream, 30 s.
+5. **River crossing.** Boat 2.5 m/s straight across a 60 m river flowing at 1.5 m/s: 24 s, 36 m downstream. **Aim to land straight across**: 36.9° upstream, 30 s. Then tick **Slower near the banks**: the current is zero at each bank and 1.5 m/s mid river (average 1.0 m/s). Heading straight across now lands 24 m downstream along a curved path, and aiming 23.6° upstream lands straight across, swinging upstream near the banks and downstream mid river.
 
 ## Questions
 
@@ -38,4 +38,4 @@ time: 15 to 30 minutes
 ## Physics behind the demo
 
 - Exact vector algebra on a grid (tips snap to whole units, or tenths with Shift and the arrow keys). Angles are from +x, counterclockwise, 0 to 360°.
-- River: uniform current everywhere (a real river is slower near its banks); the boat keeps its speed and heading relative to the water. Arrows at the boat show 8 s of motion at each velocity.
+- River: the current is uniform, or (Slower near the banks) u(y) = 4u y(W − y)/W², zero at the banks with average 2u/3. The boat keeps its speed and heading relative to the water, so the crossing time is W/(v_b cos θ) either way and the drift is (average current − v_b sin θ) × time; the curved path x(t) is the exact integral. Ripples and leaves drift at the local current; the arrows at the left show the profile (4 m/s = 120 px). Arrows at the boat show 8 s of motion, using the current where the boat is.

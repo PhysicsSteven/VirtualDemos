@@ -15,11 +15,11 @@ Choose one positive direction for both carts. With negligible external impulse (
 
 $$m_1u_1+m_2u_2=m_1v_1+m_2v_2.$$
 
-Here u denotes velocity before the collision and v after it. Kinetic energy is conserved only in an elastic collision (§9.4). The coefficient of restitution compares separation speed with approach speed:
+Here $$u$$ denotes velocity before the collision and $$v$$ after it. Kinetic energy is conserved only in an elastic collision (§9.4). The coefficient of restitution compares separation speed with approach speed:
 
 $$e=\frac{v_2-v_1}{u_1-u_2}.$$
 
-For a one-dimensional collision, reduced mass μ = m1m2/(m1+m2) gives
+For a one-dimensional collision, reduced mass $$\mu = m_1m_2/(m_1+m_2)$$ gives
 
 $$K_i-K_f=\frac12\mu(1-e^2)(u_1-u_2)^2.$$
 
@@ -45,7 +45,7 @@ Keep fingers out of real cart bumpers and catch carts before they leave the trac
 
 ## Data
 
-| Run/bumper | m1 (kg) | m2 (kg) | u1 (m/s) | u2 (m/s) | v1 (m/s) | v2 (m/s) |
+| Run/bumper | $$m_1$$ (kg) | $$m_2$$ (kg) | $$u_1$$ (m/s) | $$u_2$$ (m/s) | $$v_1$$ (m/s) | $$v_2$$ (m/s) |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 | | | | | | | |
@@ -56,8 +56,8 @@ Keep masses and signed velocities as raw data. Calculate momentum, energy and re
 ## Analysis
 
 1. Plot final total momentum against initial total momentum. Compare the fitted slope/intercept with conservation.
-2. For each bumper, plot separation speed against approach speed. Infer e from the slope.
-3. Plot kinetic energy lost against ½μ(u1−u2)² for one bumper. Compare its slope with 1−e².
+2. For each bumper, plot separation speed against approach speed. Infer $$e$$ from the slope.
+3. Plot kinetic energy lost against $$\tfrac12\mu(u_1-u_2)^2$$ for one bumper. Compare its slope with $$1-e^2$$.
 4. Calculate the center-of-mass velocity and separate the system's overall translation from relative motion.
 
 ## Uncertainty
@@ -67,9 +67,9 @@ Propagate mass and gate-time resolution into momentum and energy. Gate times are
 ## Questions
 
 1. Why does equal-and-opposite contact force conserve total momentum?
-2. Why is e a speed ratio rather than a ratio of total kinetic energies?
+2. Why is $$e$$ a speed ratio rather than a ratio of total kinetic energies?
 3. What external effects could spoil a real track experiment?
-4. Why is kinetic energy loss nonnegative for 0 ≤ e ≤ 1?
+4. Why is kinetic energy loss nonnegative for $$0 \le e \le 1$$?
 
 ## What to hand in
 

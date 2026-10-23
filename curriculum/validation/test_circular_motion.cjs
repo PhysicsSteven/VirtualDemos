@@ -2,7 +2,7 @@
 // Circular Motion: centripetal force supplied by a string, friction, a banked road, or the track and gravity.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('circular-motion', 'G,accel,tension,flatMax,bank,loop,loopMin');
+const c = core('circular-motion', 'G,accel,tension,flatMax,bank,loop,loopMin,speedState,slipTime');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -22,5 +22,11 @@ group('vertical loop: energy sets the speed; N = m(v²/r + g cos φ); √(5gr) j
   const b = c.loop(0.5, 9, r, 0); near(b.N, 0.5 * (81 / r + 9.81), 1e-12);
   const side = c.loop(0.5, 9, r, 90); near(side.v * side.v, 81 - 2 * 9.81 * r, 1e-9); near(side.N, 0.5 * side.v * side.v / r, 1e-12);
   assert(c.loop(0.5, 3, r, 120).stalls);
+});
+group('speeding up or braking: v = v0 + a_t t, a_c = v²/r, |a| = √(a_t² + a_c²); slip when |a| reaches μs g', () => {
+  const q = c.speedState(0, 2, 60, 5); near(q.v, 10, 1e-12); near(q.ac, 100 / 60, 1e-12); near(q.a, Math.hypot(2, 100 / 60), 1e-12); near(q.th, 25 / 60, 1e-12);
+  const ts = c.slipTime(0, 2, 60, 0.7); near(c.speedState(0, 2, 60, ts).a, 0.7 * 9.81, 1e-9); near(ts, 9.9267, 1e-4);
+  assert.equal(c.slipTime(0, 7, 60, 0.7), 0); assert.equal(c.slipTime(10, -2, 60, 0.7), null); assert.equal(c.slipTime(20.3, -2, 60, 0.7), 0);
+  const b = c.speedState(20, -4, 60, 6); near(b.v, 0, 1e-12); near(b.a, 0, 1e-12); near(b.s, 50, 1e-12);
 });
 console.log(`${n} circular-motion test groups passed`);

@@ -2,7 +2,7 @@
 
 [Open simulation](https://physicssteven.github.io/VirtualDemos/demos/quantum-waves.html)
 
-**Research goal:** Test the relationship integral |psi|² dx=1.
+**Research goal:** Test the relationship $$\int \lvert\psi\rvert^2\,dx = 1$$.
 
 ## Procedure
 1. Identify the mode, controls, observable and fixed parameters; write a prediction.

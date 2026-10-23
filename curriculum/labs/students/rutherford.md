@@ -2,7 +2,9 @@
 
 [Open simulation](https://physicssteven.github.io/VirtualDemos/demos/rutherford.html)
 
-**Research goal:** Test the relationship b=(k Z z e²/(2E))cot(theta/2).
+**Research goal:** Test the relationship
+
+$$b = \frac{k Z z e^2}{2E}\cot\frac{\theta}{2}.$$
 
 ## Procedure
 1. Identify the mode, controls, observable and fixed parameters; write a prediction.

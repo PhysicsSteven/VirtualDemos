@@ -15,7 +15,7 @@ For a cart of fixed mass,
 
 $$J_{\rm cart}=\int F_{\rm cart}\,dt=m(v_{\rm after}-v_{\rm before}).$$
 
-Choose positive velocity toward the bumper. A rebounding cart has negative final velocity. The virtual force sensor reports the positive force exerted on the sensor, opposite to the force on the cart. Its positive area A therefore corresponds to Jcart = −A. For sampled data, calculate area using
+Choose positive velocity toward the bumper. A rebounding cart has negative final velocity. The virtual force sensor reports the positive force exerted on the sensor, opposite to the force on the cart. Its positive area $$A$$ therefore corresponds to $$J_{\rm cart}=-A$$. For sampled data, calculate area using
 
 $$A\approx\sum_i\frac{F_i+F_{i+1}}{2}(t_{i+1}-t_i).$$
 
@@ -33,7 +33,7 @@ On a real cart track, secure the sensor and bumper, catch the returning cart and
 
 ## Procedure
 
-**Force-area comparison.** Measure cart mass and velocities immediately before and after contact. Record the force pulse at the highest available sample rate, including a baseline before and after the collision. Integrate the pulse numerically and compare signed cart impulse with momentum change. For the virtual main trial use m = 0.50 kg and approach speed 0.60 m/s.
+**Force-area comparison.** Measure cart mass and velocities immediately before and after contact. Record the force pulse at the highest available sample rate, including a baseline before and after the collision. Integrate the pulse numerically and compare signed cart impulse with momentum change. For the virtual main trial use $$m = 0.50\ \text{kg}$$ and approach speed 0.60 m/s.
 
 **Bumper comparison.** Repeat with a soft spring at the same mass and approach speed. Compare area, peak force and contact duration. Then use clay and compare the rebound speed, momentum change and kinetic-energy loss. Do not assume clay has the same restitution as either spring.
 
@@ -43,7 +43,7 @@ On a real cart track, secure the sensor and bumper, catch the returning cart and
 
 ## Data
 
-| Bumper | m (kg) | v before (m/s) | v after (m/s) | Rate (Hz) | Area A (N s) | Δp (kg m/s) | Peak (N) | Contact time (s) |
+| Bumper | $$m$$ (kg) | $$v_{\rm before}$$ (m/s) | $$v_{\rm after}$$ (m/s) | Rate (Hz) | Area $$A$$ (N s) | $$\Delta p$$ (kg m/s) | Peak (N) | Contact time (s) |
 |---|---|---|---|---|---|---|---|---|
 | | | | | | | | | |
 | | | | | | | | | |
@@ -53,8 +53,8 @@ Save every force file, its settings and your integration method. Contact time is
 
 ## Analysis
 
-1. Plot Fsensor against time and integrate by the trapezoid rule. Show at least one interval calculation and your spreadsheet/code formula.
-2. Compare −A with m(vafter−vbefore), including signs, units and a fractional residual based on |Δp|.
+1. Plot $$F_{\rm sensor}$$ against time and integrate by the trapezoid rule. Show at least one interval calculation and your spreadsheet/code formula.
+2. Compare $$-A$$ with $$m(v_{\rm after}-v_{\rm before})$$, including signs, units and a fractional residual based on $$\lvert\Delta p\rvert$$.
 3. Compare stiff and soft pulse widths and peaks at matched velocities. Explain why equal areas need not mean equal peak forces.
 4. For clay, calculate initial and final kinetic energies and compare energy loss with impulse. Explain why these are different quantities.
 5. Quantify sample-rate effects and discuss baseline, rounding and unresolved-peak errors.

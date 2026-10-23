@@ -11,9 +11,9 @@
 ## Background
 The reference model is **the physical model described in the simulation**.
 
-\[lambda_peak*T = 2.897771955e6 nm K\]
+$$\lambda_{\rm peak}T = 2.897771955\times10^{6}\ \text{nm K}$$
 
-**Important limitation:** The peak of B_lambda is not the same as the peak of B_nu; state which spectral variable is used.
+**Important limitation:** The peak of $$B_\lambda$$ is not the same as the peak of $$B_\nu$$; state which spectral variable is used.
 
 ## Apparatus and setup
 Open the linked simulation. Record the model/preset, initial settings, units, and any toggles. Identify which controls adjust **Temperature T in kelvin** and which displays permit measuring **Peak wavelength in nm**. If a requested setting or measurement is not directly supported, document the limitation; do not invent data. Disable overlays that reveal the expected answer during measurement when possible.
@@ -28,7 +28,7 @@ Open the linked simulation. Record the model/preset, initial settings, units, an
 7. Enable theory overlays only after your first analysis and compare with the expected relationship.
 
 ## Data sheet
-| Trial | Temperature T in kelvin | Peak wavelength in nm | Measurement method / uncertainty |
+| Trial | Temperature $$T$$ in kelvin | Peak wavelength in nm | Measurement method / uncertainty |
 |---|---|---|---|
 | 1 | | | |
 | 2 | | | |
@@ -37,7 +37,7 @@ Open the linked simulation. Record the model/preset, initial settings, units, an
 | 5 | | | |
 
 ## Analysis
-**Recommended graph/fit:** Plot lambda_peak against 1/T; the slope is Wien's displacement constant in nm K.
+**Recommended graph/fit:** Plot $$\lambda_{\rm peak}$$ against $$1/T$$; the slope is Wien's displacement constant in nm K.
 
 Calculate the physical quantity implied by the slope or fit parameters. Show units and at least one worked calculation. If the simulation is deterministic, estimate uncertainty from display resolution, cursor placement, or model sensitivity rather than inventing random error.
 
@@ -49,7 +49,7 @@ Calculate the physical quantity implied by the slope or fit parameters. Show uni
 5. What result would falsify your prediction?
 
 ## Extension
-Integrate the spectral curve numerically and test the Stefan–Boltzmann T^4 scaling.
+Integrate the spectral curve numerically and test the Stefan–Boltzmann $$T^4$$ scaling.
 
 ## Submission
 Submit the completed data sheet, labeled graph, parameter estimate with units, comparison to theory, and a 150–250-word conclusion. Cite the simulation version/commit if provided.

@@ -74,7 +74,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Adding.</strong> (5, 1) + (−2, 4) = (3, 5), |R| = 5.83 against |A| + |B| = 9.57. Switch Draw B between Head to tail and From the origin.</li>
 <li><strong>Subtracting.</strong> (5, 2) − (2, 4) = (3, −2). Point out the faint copy of A − B from B's head to A's head.</li>
 <li><strong>Dot and cross products.</strong> (5, 1)·(2, 4) = 14 and (A × B)_z = 18, with φ = 52.1°. Make them perpendicular (dot product 0) and parallel (cross product 0).</li>
-<li><strong>River crossing.</strong> Boat 2.5 m/s straight across a 60 m river flowing at 1.5 m/s: 24 s, 36 m downstream. <strong>Aim to land straight across</strong>: 36.9° upstream, 30 s.</li>
+<li><strong>River crossing.</strong> Boat 2.5 m/s straight across a 60 m river flowing at 1.5 m/s: 24 s, 36 m downstream. <strong>Aim to land straight across</strong>: 36.9° upstream, 30 s. Then tick <strong>Slower near the banks</strong>: the current is zero at each bank and 1.5 m/s mid river (average 1.0 m/s). Heading straight across now lands 24 m downstream along a curved path, and aiming 23.6° upstream lands straight across, swinging upstream near the banks and downstream mid river.</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> A = (−3, 4). Find |A| and its angle from +x. Which quadrant, and why does tan⁻¹(A_y/A_x) alone give the wrong angle?</p></div>
@@ -93,7 +93,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <h2>Physics behind the demo</h2>
 <ul>
 <li>Exact vector algebra on a grid (tips snap to whole units, or tenths with Shift and the arrow keys). Angles are from +x, counterclockwise, 0 to 360°.</li>
-<li>River: uniform current everywhere (a real river is slower near its banks); the boat keeps its speed and heading relative to the water. Arrows at the boat show 8 s of motion at each velocity.</li>
+<li>River: the current is uniform, or (Slower near the banks) u(y) = 4u y(W − y)/W², zero at the banks with average 2u/3. The boat keeps its speed and heading relative to the water, so the crossing time is W/(v_b cos θ) either way and the drift is (average current − v_b sin θ) × time; the curved path x(t) is the exact integral. Ripples and leaves drift at the local current; the arrows at the left show the profile (4 m/s = 120 px). Arrows at the boat show 8 s of motion, using the current where the boat is.</li>
 </ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
 </main>
 </body>

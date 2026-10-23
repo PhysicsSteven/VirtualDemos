@@ -5,14 +5,15 @@
 **Research question:** Compare simulated engine efficiency with the Carnot upper bound.
 
 ## Model
-η=W_net/Q_in ≤ 1-T_c/T_h
+
+$$\eta=\frac{W_{\rm net}}{Q_{\rm in}} \le 1-\frac{T_c}{T_h}$$
 
 ## Procedure (50–75 minutes)
 1. State a prediction and identify independent, dependent and controlled variables.
 2. Choose the mode matching the equation; record every fixed parameter.
 3. Collect five or more independent measurements, recording values, units and measurement method.
 4. Where the model is stochastic, repeat each setting and report variability.
-5. Plot the measurements with labeled axes. Plot efficiency against temperature ratio T_c/T_h.
+5. Plot the measurements with labeled axes. Plot efficiency against temperature ratio $$T_c/T_h$$.
 6. Compute the inferred physical parameter, check dimensions and compare with theory.
 7. Describe systematic limitations and explain any discrepancies.
 

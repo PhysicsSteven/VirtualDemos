@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Speeding Up on a Curve: teaching notes</title>
+<title>Sources of Energy: teaching notes</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
@@ -60,39 +60,46 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 </head>
 <body>
 <main>
-<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Speeding Up on a Curve</h1><ul class="meta"><li><a href="../demos/nonuniform-circular.html">Open the demo</a></li><li>PHYS 201</li><li>10 to 15 minutes</li></ul></header><h2>What students should come away with</h2>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Sources of Energy</h1><ul class="meta"><li><a href="../demos/energy-sources.html">Open the demo</a></li><li>PHYS 201</li><li>10 to 20 minutes</li></ul></header><h2>What students should come away with</h2>
 <ul>
-<li>On a circle at changing speed the acceleration has two perpendicular parts: tangential a_t = dv/dt along the path and centripetal a_c = v²/r toward the centre. The total, √(a_t² + a_c²), points inside the circle but not at the centre.</li>
-<li>Speeding up from rest the acceleration first points along the path, then swings toward the centre as v²/r grows.</li>
-<li>On a flat road friction supplies the whole acceleration, so speeding up or braking in a curve uses up grip: the car slips when √(a_t² + a_c²) exceeds μs g, at a lower speed than when cruising.</li>
+<li>Energy per kilogram spans about eight powers of ten: lithium ion batteries 0.7 MJ, chemical fuels 15 to 55 MJ, uranium 235 about 8 × 10⁷ MJ. Nuclear energy per kilogram is millions of times chemical because nuclear binding energies are MeV, chemical bonds eV.</li>
+<li>Making electricity from heat loses most of it: a power station converts roughly a third of the heat.</li>
+<li>Renewables move huge masses for modest energy: water falling 100 m gives under a kilojoule per kilogram, so hydro and wind need enormous flows.</li>
+<li>Food is a fuel: fat carries more energy per kilogram than TNT (TNT's advantage is how fast it releases it).</li>
 </ul>
 <h2>Before class</h2>
-<p>Students need uniform circular motion (the Circular Motion demo). The car goes anticlockwise from the bottom of the circle. Arrows: v (green), a_t, a_c and the total a. The graph shows the three accelerations against time with the μs g line. <strong>Blind</strong> hides the accelerations and the slip prediction.</p>
+<p>Students need units of energy (J, kWh) and the idea of efficiency. The chart is logarithmic: each grid line is ten times the last. <strong>Blind</strong> hides the bars and numbers so the class can rank the sources first.</p>
 <h2>Running it in class</h2>
 <ol>
-<li><strong>Speeding up from rest,</strong> 2.0 m/s² on a 60 m curve, μs = 0.70. At first a points along the path (angle 90° from the centre). At 6 s (12 m/s) a_c = 2.41 m/s² and the angle is 40°.</li>
-<li><strong>Slip.</strong> It slides off at 9.93 s at 19.9 m/s, below the 20.3 m/s it could hold at steady speed. Straight line, not outward.</li>
-<li><strong>Braking.</strong> From 18 m/s at 2.0 m/s²: the total starts at 5.76 m/s², inside the grip limit, and shrinks as it slows. From 20 m/s it slips almost at once (cruising at 20 m/s it would just hold).</li>
-<li><strong>Gentle vs hard.</strong> Raise a_t to 5 m/s² with μs = 0.5: a_t alone is more than μs g and it slips immediately.</li>
+<li><strong>Rank first.</strong> Blind on, a household's 30 kWh for a day as electricity: ask for a ranking of the sources by mass needed. Reveal: 3.8 mg of uranium, 6.7 kg of gasoline, 150 kg of batteries, 120 tonnes of water through a 100 m dam, 3600 tonnes of air at 10 m/s.</li>
+<li><strong>Heat vs electricity.</strong> Uncheck "Delivered as electricity": every fuel mass drops by the factor 1/0.35. The battery and the renewables do not change.</li>
+<li><strong>TNT vs food.</strong> TNT 74 kg, food fat 8.2 kg for the same energy (as electricity). Discuss power: energy per second, not per kilogram.</li>
+<li><strong>Wind speed.</strong> Double the wind speed and the air needed drops by 4 (½v² per kg); per second through a rotor it delivers 8 times the power (more air arrives too).</li>
+<li><strong>Solar.</strong> 31 m² of 20% panels collect 30 kWh in a day at an average 200 W/m², which depends strongly on place and season.</li>
 </ol>
 <h2>Questions</h2>
-<div class="q"><p><strong>Q1.</strong> At 6.0 s in step 1, find v, a_c, the total acceleration and its angle from the direction to the centre.</p></div>
+<div class="q"><p><strong>Q1.</strong> Show that fissioning 1 kg of U-235 at 200 MeV per fission releases 8.2 × 10¹³ J.</p></div>
 
-<div class="q"><p><strong>Q2.</strong> Why does the car slip at a lower speed when it is speeding up than when it cruises?</p></div>
+<div class="q"><p><strong>Q2.</strong> How much gasoline does it take to provide 1 kWh of electricity at 35% efficiency? How much heat?</p></div>
 
-<div class="q"><p><strong>Q3.</strong> Show that the slip speed satisfies (v²/r)² + a_t² = (μs g)², and find it for step 1.</p></div>
+<div class="q"><p><strong>Q3.</strong> Why is so much water needed for hydroelectric power? Find the mass of water falling 100 m for 30 kWh at 90% efficiency.</p></div>
 
-<div class="q"><p><strong>Q4.</strong> A car brakes in a curve. Explain why easing off the brakes can keep it on the road.</p></div>
+<div class="q"><p><strong>Q4.</strong> Why does doubling the wind speed increase a turbine's power by eight times?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Fat has about nine times the energy per kilogram of TNT. Why is TNT an explosive and fat is not?</p></div>
 <h2>Common misconceptions</h2>
 <ul>
-<li><strong>"Circular motion means acceleration toward the centre."</strong> Only at constant speed.</li>
-<li><strong>"Braking in a curve is always safer."</strong> Braking needs friction too, and the grip is shared with the turn.</li>
-<li><strong>"When it slips the car flies outward."</strong> It continues along its velocity, a tangent line.</li>
+<li><strong>"Energy is used up."</strong> It is converted; a power station's "lost" two thirds goes into the cooling water and air as heat.</li>
+<li><strong>"Batteries are an energy source."</strong> They store energy made elsewhere, and hold far less per kilogram than fuels.</li>
+<li><strong>"Explosives contain the most energy."</strong> They release it fastest; per kilogram they hold less than fuels and food.</li>
 </ul>
 <h2>Physics behind the demo</h2>
 <ul>
-<li>A point car on a flat circular road with a constant rate of change of speed; braking stops at v₀/|a_t|. Static friction supplies the whole horizontal force, up to μs mg in any direction (a friction circle); the car slips the first time the needed acceleration reaches μs g, found exactly from (v²/r)² + a_t² = (μs g)².</li>
-<li>After slipping the car moves in a straight line at the speed it had (kinetic friction on the slide is not modelled). Real tyres have different limits along and across the tread.</li>
+<li>Energy per kilogram: typical higher heating values (natural gas 55, gasoline 46, coal 27, dry wood 18 MJ/kg; samples vary). Food from the Atwater factors 9 and 4 kcal/g. TNT 4.184 MJ/kg by definition. Lithium ion cells about 200 Wh/kg.</li>
+<li>Uranium: 200 MeV per fission (thermal fission of U-235 releases about 200 MeV in total, some of it to neutrinos), 1 kg = (1000/235) mol of nuclei, all fissioned. Real fuel is a few percent U-235 and is not fully burned.</li>
+<li>Fuels delivering electricity are divided by the power station efficiency; batteries deliver electricity directly.</li>
+<li>Hydro: gh per kilogram at 90% turbine efficiency. Wind: the kinetic energy ½v² per kilogram of air passing through the rotor times the Betz limit 16/27. Solar: 20% panels at the average irradiance set on the slider, including nights.</li>
+<li>No national energy statistics are used.</li>
 </ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
 </main>
 </body>

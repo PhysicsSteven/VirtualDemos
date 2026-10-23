@@ -220,6 +220,9 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: auto !important; padding-top: 8px; font-size: 0.88rem; }
 .links a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; min-height: 28px; display: inline-flex; align-items: center; }
 .links a.go { color: var(--canvas); background: var(--accent); border-radius: 7px; padding: 4px 12px; text-decoration: none; min-height: 36px; }
+.also { grid-column: 1 / -1; color: var(--muted); font-size: 0.92rem; padding: 4px 2px; }
+.also a { font-weight: 700; }
+.also .where, .also .where a { font-weight: 400; }
 .none { color: var(--muted); padding: 18px; border: 1px dashed var(--line); border-radius: 12px; }
 .gaps { margin-top: 12px; font-size: 0.9rem; }
 .gaps summary { cursor: pointer; color: var(--muted); font-weight: 700; min-height: 32px; display: flex; align-items: center; gap: 8px; }
@@ -248,7 +251,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <p class="eyebrow"><a href="index.html">Virtual Physics Demos</a> · <b>Mechanics and oscillations</b></p>
     <h1>Physics I</h1>
     <p class="lede">Measurement and vectors through oscillations, in the order of the course schedule. OpenStax University Physics Volume 1.</p>
-    <ul class="facts"><li><span><strong>10</strong> units</span></li><li><span><strong>27</strong> demos and labs</span></li><li><span>Free textbook: <a href="https://openstax.org/details/books/university-physics-volume-1">University Physics Volume 1</a></span></li></ul>
+    <ul class="facts"><li><span><strong>10</strong> units</span></li><li><span><strong>29</strong> demos and labs</span></li><li><span>Free textbook: <a href="https://openstax.org/details/books/university-physics-volume-1">University Physics Volume 1</a></span></li><li><span><strong>3</strong> worksheets and readings</span></li></ul>
   </div>
 </header>
 <nav class="tools" aria-label="Sections">
@@ -259,8 +262,18 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
   <section class="unit" id="measurements-vectors" aria-labelledby="measurements-vectors-h">
     
     <h2 id="measurements-vectors-h">Measurements and vectors</h2>
-    <p class="meta"><span>Vol 1 · Ch. 1–2</span><span>4 of 11 sections with an activity</span></p>
+    <p class="meta"><span>Vol 1 · Ch. 1–2</span><span>11 of 11 sections with an activity</span></p>
     <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/units.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/units-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/units-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/units.html">Units, Scales and Estimates</a></h3>
+          <p>The first week toolkit: zoom through 42 powers of ten from the observable universe to a proton, exact unit conversions, dimensional analysis, significant figures and Fermi estimates.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:1.1</span> The Scope and Scale of Physics</li><li><span class="sec">1:1.2</span> Units and Standards</li><li><span class="sec">1:1.3</span> Unit Conversion</li><li><span class="sec">1:1.4</span> Dimensional Analysis</li><li><span class="sec">1:1.5</span> Estimates and Fermi Calculations</li><li><span class="sec">1:1.6</span> Significant Figures</li></ul>
+          <p class="links"><a class="go" href="demos/units.html">Open demo</a> <a href="notes/units.html">Notes</a></p>
+        </div>
+      </li>
       <li class="item">
         <a class="pic" href="demos/vectors.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/vectors-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/vectors-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
@@ -271,11 +284,25 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="links"><a class="go" href="demos/vectors.html">Open demo</a> <a href="notes/vectors.html">Notes</a></p>
         </div>
       </li>
+      <li class="item">
+        <div class="body" style="grid-column: 1 / -1">
+          <p class="kind"><span class="role">Worksheet</span></p>
+          <h3><a href="curriculum/labs/students/measurement-and-units.html">Measuring, Converting and Checking Units</a></h3>
+          <p>Measurements, unit conversions and dimensional checks using a ruler and supplied exercises.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:1.1</span> The Scope and Scale of Physics</li><li><span class="sec">1:1.2</span> Units and Standards</li><li><span class="sec">1:1.3</span> Unit Conversion</li><li><span class="sec">1:1.4</span> Dimensional Analysis</li></ul>
+          <p class="links"><a class="go" href="curriculum/labs/students/measurement-and-units.html">Open student activity</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <div class="body" style="grid-column: 1 / -1">
+          <p class="kind"><span class="role">Worksheet</span></p>
+          <h3><a href="curriculum/labs/students/estimation-and-evidence.html">Estimating and Reporting a Physical Result</a></h3>
+          <p>Fermi estimates, uncertainty versus rounding, and a structured mechanics solution.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:1.5</span> Estimates and Fermi Calculations</li><li><span class="sec">1:1.6</span> Significant Figures</li><li><span class="sec">1:1.7</span> Solving Problems in Physics</li></ul>
+          <p class="links"><a class="go" href="curriculum/labs/students/estimation-and-evidence.html">Open student activity</a></p>
+        </div>
+      </li>
     </ul>
-    <details class="gaps">
-      <summary>Sections without a full activity <span class="n">7</span></summary>
-      <ul><li><span class="sec">1:1.1</span> The Scope and Scale of Physics<span class="st st-missing">no activity yet</span></li><li><span class="sec">1:1.2</span> Units and Standards<span class="st st-missing">no activity yet</span></li><li><span class="sec">1:1.3</span> Unit Conversion<span class="st st-missing">no activity yet</span></li><li><span class="sec">1:1.4</span> Dimensional Analysis<span class="st st-missing">no activity yet</span></li><li><span class="sec">1:1.5</span> Estimates and Fermi Calculations<span class="st st-missing">no activity yet</span></li><li><span class="sec">1:1.6</span> Significant Figures<span class="st st-missing">no activity yet</span></li><li><span class="sec">1:1.7</span> Solving Problems in Physics<span class="st st-missing">no activity yet</span></li></ul>
-    </details>
   </section>
   <section class="unit" id="kinematics" aria-labelledby="kinematics-h">
     
@@ -303,13 +330,13 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
         </div>
       </li>
       <li class="item">
-        <a class="pic" href="demos/vectors.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/vectors-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/vectors-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <a class="pic" href="demos/cart-launch.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/cart-launch-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/cart-launch-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
-          <h3><a href="demos/vectors.html">Vectors and Relative Motion</a></h3>
-          <p>Drag arrow tips to see components, sums, differences, and dot and cross products, then steer a boat across a river where its velocity adds to the current's.</p>
-          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:4.1</span> Displacement and Velocity Vectors</li><li><span class="sec">1:4.2</span> Acceleration Vector</li><li><span class="sec">1:4.5</span> Relative Motion in One and Two Dimensions</li></ul>
-          <p class="links"><a class="go" href="demos/vectors.html">Open demo</a> <a href="notes/vectors.html">Notes</a></p>
+          <h3><a href="demos/cart-launch.html">Ball Launched from a Moving Cart</a></h3>
+          <p>A cart fires a ball straight up. At constant speed the ball lands back in the launcher; make the cart speed up or brake and it misses. Watch from the ground or from the cart, with velocity vectors and strobe images.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:4.3</span> Projectile Motion</li><li><span class="sec">1:4.5</span> Relative Motion in One and Two Dimensions</li></ul>
+          <p class="links"><a class="go" href="demos/cart-launch.html">Open demo</a> <a href="notes/cart-launch.html">Notes</a></p>
         </div>
       </li>
       <li class="item">
@@ -317,21 +344,12 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
           <h3><a href="demos/circular-motion.html">Circular Motion</a></h3>
-          <p>What supplies mv²/r? Whirl a ball on a string and cut it, take a car round a flat or banked curve until it slides, and send a ball round a vertical loop, with the free body diagram for each.</p>
+          <p>What supplies mv²/r? Whirl a ball on a string and cut it, take a car round a flat or banked curve until it slides, speed up or brake on the curve, and send a ball round a vertical loop, with the free body diagram for each.</p>
           <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:4.4</span> Uniform and Nonuniform Circular Motion</li></ul>
           <p class="links"><a class="go" href="demos/circular-motion.html">Open demo</a> <a href="notes/circular-motion.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
-        <a class="pic" href="demos/nonuniform-circular.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/nonuniform-circular-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/nonuniform-circular-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
-        <div class="body">
-          <p class="kind"><span class="role role-demo">Demo</span></p>
-          <h3><a href="demos/nonuniform-circular.html">Speeding Up on a Curve</a></h3>
-          <p>A car speeds up or brakes on a curve: the acceleration has parts along the path and toward the centre, and the road's grip must supply both.</p>
-          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:4.4</span> Uniform and Nonuniform Circular Motion</li></ul>
-          <p class="links"><a class="go" href="demos/nonuniform-circular.html">Open demo</a> <a href="notes/nonuniform-circular.html">Notes</a></p>
-        </div>
-      </li>
+      <li class="also">Also used in this unit: <a href="demos/vectors.html">Vectors and Relative Motion</a> <span class="where">(card under <a href="#measurements-vectors">Measurements and vectors</a>; 1:4.1, 1:4.2, 1:4.5)</span></li>
     </ul>
   </section>
   <section class="unit" id="forces" aria-labelledby="forces-h">
@@ -359,32 +377,13 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="links"><a class="go" href="demos/elevator.html">Open demo</a> <a href="notes/elevator.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
-        <a class="pic" href="demos/circular-motion.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/circular-motion-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/circular-motion-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
-        <div class="body">
-          <p class="kind"><span class="role role-demo">Demo</span></p>
-          <h3><a href="demos/circular-motion.html">Circular Motion</a></h3>
-          <p>What supplies mv²/r? Whirl a ball on a string and cut it, take a car round a flat or banked curve until it slides, and send a ball round a vertical loop, with the free body diagram for each.</p>
-          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:6.3</span> Centripetal Force</li></ul>
-          <p class="links"><a class="go" href="demos/circular-motion.html">Open demo</a> <a href="notes/circular-motion.html">Notes</a></p>
-        </div>
-      </li>
-      <li class="item">
-        <a class="pic" href="demos/projectile-drag.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/projectile-drag-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/projectile-drag-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
-        <div class="body">
-          <p class="kind"><span class="role role-lab">Lab</span></p>
-          <h3><a href="demos/projectile-drag.html">Projectile Range</a></h3>
-          <p>Fire baseballs, ping pong balls, cannonballs and more with and without air resistance, stack up to eight shots of different mass, size, drag or air density, and compare their paths and x, y and speed graphs side by side.</p>
-          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:6.4</span> Drag Force and Terminal Speed</li></ul>
-          <p class="links"><a class="go" href="demos/projectile-drag.html">Open demo</a> <a href="curriculum/labs/students/projectile-drag.html">Student handout</a> <a href="notes/projectile-drag.html">Notes</a></p>
-        </div>
-      </li>
+      <li class="also">Also used in this unit: <a href="demos/circular-motion.html">Circular Motion</a> <span class="where">(card under <a href="#kinematics">Kinematics</a>; 1:6.3)</span> · <a href="demos/projectile-drag.html">Projectile Range</a> <span class="where">(card under <a href="#kinematics">Kinematics</a>; 1:6.4)</span></li>
     </ul>
   </section>
   <section class="unit" id="energy" aria-labelledby="energy-h">
     
     <h2 id="energy-h">Work and energy</h2>
-    <p class="meta"><span>Vol 1 · Ch. 7–8</span><span>8 of 9 sections with an activity</span></p>
+    <p class="meta"><span>Vol 1 · Ch. 7–8</span><span>9 of 9 sections with an activity</span></p>
     <ul class="list">
       <li class="item">
         <a class="pic" href="demos/potential-curves.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/potential-curves-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/potential-curves-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
@@ -397,20 +396,26 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
         </div>
       </li>
       <li class="item">
-        <a class="pic" href="demos/forces.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/forces-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/forces-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <a class="pic" href="demos/energy-sources.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/energy-sources-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/energy-sources-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
-          <p class="kind"><span class="role role-lab">Lab</span></p>
-          <h3><a href="demos/forces.html">Forces and Friction</a></h3>
-          <p>A block on a ramp you can tilt, push at an angle and tie to a hanging mass, with its free body diagram drawn to scale. Find where it slips, then time it to measure kinetic friction.</p>
-          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:7.1</span> Work</li><li><span class="sec">1:7.2</span> Kinetic Energy</li><li><span class="sec">1:7.3</span> Work-Energy Theorem</li><li><span class="sec">1:7.4</span> Power</li><li><span class="sec">1:8.2</span> Conservative and Non-Conservative Forces</li></ul>
-          <p class="links"><a class="go" href="demos/forces.html">Open demo</a> <a href="curriculum/labs/students/forces.html">Student handout</a> <a href="notes/forces.html">Notes</a></p>
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/energy-sources.html">Sources of Energy</a></h3>
+          <p>How much uranium, gas, coal, food, battery, falling water or wind it takes to supply a given amount of energy: energy per kilogram across eight powers of ten.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:8.5</span> Sources of Energy</li></ul>
+          <p class="links"><a class="go" href="demos/energy-sources.html">Open demo</a> <a href="notes/energy-sources.html">Notes</a></p>
         </div>
       </li>
+      <li class="item">
+        <div class="body" style="grid-column: 1 / -1">
+          <p class="kind"><span class="role">Reading and data activity</span></p>
+          <h3><a href="curriculum/labs/students/energy-sources.html">Where Does Electrical Energy Come From?</a></h3>
+          <p>Energy-conversion pathways, power and efficiency using a dated EIA electricity-generation snapshot.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:8.5</span> Sources of Energy</li></ul>
+          <p class="links"><a class="go" href="curriculum/labs/students/energy-sources.html">Open student activity</a></p>
+        </div>
+      </li>
+      <li class="also">Also used in this unit: <a href="demos/forces.html">Forces and Friction</a> <span class="where">(card under <a href="#forces">Forces</a>; 1:7.1, 1:7.2, 1:7.3, 1:7.4, 1:8.2)</span></li>
     </ul>
-    <details class="gaps">
-      <summary>Sections without a full activity <span class="n">1</span></summary>
-      <ul><li><span class="sec">1:8.5</span> Sources of Energy<span class="st st-missing">no activity yet</span></li></ul>
-    </details>
   </section>
   <section class="unit" id="momentum" aria-labelledby="momentum-h">
     
@@ -430,11 +435,11 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
       <li class="item">
         <a class="pic" href="demos/impulse.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/impulse-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/impulse-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
-          <p class="kind"><span class="role role-lab">Lab</span><span class="flag">Student handout being revised</span></p>
+          <p class="kind"><span class="role role-lab">Lab</span></p>
           <h3><a href="demos/impulse.html">Impulse and Momentum</a></h3>
           <p>Bounce a cart off a force sensor and show that the area under the force against time graph equals its change of momentum. Soft and stiff bumpers give the same impulse with very different forces.</p>
           <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:9.2</span> Impulse and Collisions</li></ul>
-          <p class="links"><a class="go" href="demos/impulse.html">Open demo</a> <a href="notes/impulse.html">Notes</a></p>
+          <p class="links"><a class="go" href="demos/impulse.html">Open demo</a> <a href="curriculum/labs/students/impulse.html">Student handout</a> <a href="notes/impulse.html">Notes</a></p>
         </div>
       </li>
       <li class="item">
@@ -549,16 +554,6 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <p class="meta"><span>Vol 1 · Ch. 12</span><span>4 of 4 sections with an activity</span></p>
     <ul class="list">
       <li class="item">
-        <a class="pic" href="demos/rotation.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/rotation-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/rotation-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
-        <div class="body">
-          <p class="kind"><span class="role role-demo">Demo</span></p>
-          <h3><a href="demos/rotation.html">Rotation and Torque</a></h3>
-          <p>Push a door near the hinge and at the handle, race a hoop, disk and sphere down a ramp, spin a skater who pulls her arms in, and balance a seesaw.</p>
-          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:12.1</span> Conditions for Static Equilibrium</li><li><span class="sec">1:12.2</span> Examples of Static Equilibrium</li></ul>
-          <p class="links"><a class="go" href="demos/rotation.html">Open demo</a> <a href="curriculum/labs/students/rotation.html">Student handout</a> <a href="notes/rotation.html">Notes</a></p>
-        </div>
-      </li>
-      <li class="item">
         <a class="pic" href="demos/catenary.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/catenary-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/catenary-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
@@ -588,6 +583,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="links"><a class="go" href="demos/stress-strain.html">Open demo</a> <a href="curriculum/labs/students/stress-strain.html">Student handout</a> <a href="notes/stress-strain.html">Notes</a></p>
         </div>
       </li>
+      <li class="also">Also used in this unit: <a href="demos/rotation.html">Rotation and Torque</a> <span class="where">(card under <a href="#rotation">Rotation and angular momentum</a>; 1:12.1, 1:12.2)</span></li>
     </ul>
   </section>
   <section class="unit" id="fluids" aria-labelledby="fluids-h">

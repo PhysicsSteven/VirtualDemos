@@ -15,14 +15,14 @@ For a mass on a linear spring (§15.1),
 
 $$m\ddot x=-kx,\qquad T=2\pi\sqrt{\frac{m}{k}}.$$
 
-Therefore a graph of T² against m is a line with slope 4π²/k. The displacement x is measured from equilibrium. Energy alternates between kinetic and spring potential energy (§15.2):
+Therefore a graph of $$T^2$$ against $$m$$ is a line with slope $$4\pi^2/k$$. The displacement $$x$$ is measured from equilibrium. Energy alternates between kinetic and spring potential energy (§15.2):
 
 $$E=\frac12mv^2+\frac12kx^2.$$
 
 ## Before the lab
 
-1. Predict the change in T when m doubles.
-2. What are the units of the T²-versus-m slope, and how do they give k in N/m?
+1. Predict the change in $$T$$ when $$m$$ doubles.
+2. What are the units of the $$T^2$$-versus-$$m$$ slope, and how do they give $$k$$ in N/m?
 3. Does the ideal period depend on release amplitude?
 
 ## Safety
@@ -37,11 +37,11 @@ Secure a real spring support and keep clear of falling masses. Do not stretch th
 
 **Optional damping.** After the undamped scan, introduce modest damping and compare the oscillation period and amplitude decay. Keep these points out of the undamped spring-constant fit.
 
-**Using the virtual apparatus.** Choose **Simple harmonic motion**, **Free** and **Horizontal track**. Set **Damping constant b** to zero, then enable **Unknown spring: hide k**. It selects one hidden spring; do not press **New unknown spring** during a mass scan. Change **Mass m**, release the block and read the measured period after several crossings. **Capture reading** and **Export CSV** retain the automatic measured period while k stays unknown. Use that period column for a spreadsheet T²-versus-m fit. Hand timing is optional: **Stopwatch**, **Oscillations counted, N** and **Reset stopwatch** provide a separate t/N estimate. The built-in **T² against m** plot uses those stopwatch cells, so use it only for timed readings. Reveal the spring constant by switching the unknown option off after completing your inference.
+**Using the virtual apparatus.** Choose **Simple harmonic motion**, **Free** and **Horizontal track**. Set **Damping constant b** to zero, then enable **Unknown spring: hide k**. It selects one hidden spring; do not press **New unknown spring** during a mass scan. Change **Mass m**, release the block and read the measured period after several crossings. **Capture reading** and **Export CSV** retain the automatic measured period while $$k$$ stays unknown. Use that period column for a spreadsheet $$T^2$$-versus-$$m$$ fit. Hand timing is optional: **Stopwatch**, **Oscillations counted, N** and **Reset stopwatch** provide a separate $$t/N$$ estimate. The built-in **T² against m** plot uses those stopwatch cells, so use it only for timed readings. Reveal the spring constant by switching the unknown option off after completing your inference.
 
 ## Data
 
-| Run | m (kg) | Release amplitude (m) | Automatic measured T (s) | N, if timed | Stopwatch t (s), if timed | T² (s²) |
+| Run | $$m$$ (kg) | Release amplitude (m) | Automatic measured $$T$$ (s) | $$N$$, if timed | Stopwatch $$t$$ (s), if timed | $$T^2$$ (s²) |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 | | | | | | | |
@@ -51,10 +51,10 @@ Use the same period method throughout the main fit. State whether the data came 
 
 ## Analysis
 
-1. Fit T² = a + sm and infer k = 4π²/s. Inspect the intercept and residuals.
-2. Compare the inferred k with the revealed value. Include slope uncertainty and any mass uncertainty.
+1. Fit $$T^2 = a + s m$$ and infer $$k = 4\pi^2/s$$. Inspect the intercept and residuals.
+2. Compare the inferred $$k$$ with the revealed value. Include slope uncertainty and any mass uncertainty.
 3. Compare the amplitude runs. Explain why the ideal linear-spring model predicts the same period.
-4. If you timed oscillations, compare t/N with the automatic readout; explain the different reading resolutions.
+4. If you timed oscillations, compare $$t/N$$ with the automatic readout; explain the different reading resolutions.
 
 ## Uncertainty
 
@@ -64,9 +64,9 @@ For automatic periods use the displayed/CSV resolution and the stability of succ
 
 1. Why does increasing mass lengthen the period?
 2. At which points are kinetic and spring potential energy greatest?
-3. Why is a straight-line fit useful compared with calculating k from one mass?
+3. Why is a straight-line fit useful compared with calculating $$k$$ from one mass?
 4. Why should damped runs be excluded from the undamped period fit?
 
 ## What to hand in
 
-Prelab answers, settings and CSV, the T²-versus-m graph and residuals, k with uncertainty, the amplitude comparison and answers to the questions. Identify simulated data.
+Prelab answers, settings and CSV, the $$T^2$$-versus-$$m$$ graph and residuals, $$k$$ with uncertainty, the amplitude comparison and answers to the questions. Identify simulated data.

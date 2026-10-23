@@ -880,9 +880,11 @@
       ],
       "requirement": "required",
       "status": "usable",
-      "demos": [],
+      "demos": [
+        "units"
+      ],
       "unit": "measurements-vectors",
-      "note": "Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Scale of things: a logarithmic ruler from a proton to the observable universe. Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
       "activities": [
         "measurement-and-units"
       ]
@@ -898,9 +900,11 @@
       ],
       "requirement": "required",
       "status": "usable",
-      "demos": [],
+      "demos": [
+        "units"
+      ],
       "unit": "measurements-vectors",
-      "note": "Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Convert units: SI and customary units with their exact definitions. Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
       "activities": [
         "measurement-and-units"
       ]
@@ -916,9 +920,11 @@
       ],
       "requirement": "required",
       "status": "usable",
-      "demos": [],
+      "demos": [
+        "units"
+      ],
       "unit": "measurements-vectors",
-      "note": "Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Convert units: factor label chains with exact factors. Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
       "activities": [
         "measurement-and-units"
       ]
@@ -934,9 +940,11 @@
       ],
       "requirement": "required",
       "status": "usable",
-      "demos": [],
+      "demos": [
+        "units"
+      ],
       "unit": "measurements-vectors",
-      "note": "Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Dimensional analysis: find exponents for five formulas; dimensionless constants are stated. Covered by the standalone worksheet measurement-and-units; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
       "activities": [
         "measurement-and-units"
       ]
@@ -952,9 +960,11 @@
       ],
       "requirement": "required",
       "status": "usable",
-      "demos": [],
+      "demos": [
+        "units"
+      ],
       "unit": "measurements-vectors",
-      "note": "Covered by the standalone worksheet estimation-and-evidence; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Fermi estimates: three guided estimates with low/high factors. Covered by the standalone worksheet estimation-and-evidence; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
       "activities": [
         "estimation-and-evidence"
       ]
@@ -970,9 +980,11 @@
       ],
       "requirement": "required",
       "status": "usable",
-      "demos": [],
+      "demos": [
+        "units"
+      ],
       "unit": "measurements-vectors",
-      "note": "Covered by the standalone worksheet estimation-and-evidence; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "note": "Units, Scales and Estimates (2026-10-22, Claude). Significant figures: sig figs, decimal places and the combination rules. Covered by the standalone worksheet estimation-and-evidence; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
       "activities": [
         "estimation-and-evidence"
       ]
@@ -1214,7 +1226,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "projectile-drag"
+        "projectile-drag",
+        "cart-launch"
       ],
       "unit": "kinematics"
     },
@@ -1230,11 +1243,10 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "circular-motion",
-        "nonuniform-circular"
+        "circular-motion"
       ],
       "unit": "kinematics",
-      "note": "Circular Motion covers uniform circular motion; Speeding Up on a Curve (2026-10-22, Claude) covers nonuniform motion: tangential and centripetal parts, total acceleration and its angle, slip when √(a_t² + a_c²) > μs g."
+      "note": "Circular Motion covers uniform circular motion (string, flat and banked curves, loop) and nonuniform motion in its Speeding up or braking setup: tangential and centripetal parts, total acceleration and its angle, slip when √(a_t² + a_c²) > μs g."
     },
     {
       "vol": 1,
@@ -1248,7 +1260,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "vectors"
+        "vectors",
+        "cart-launch"
       ],
       "unit": "kinematics",
       "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
@@ -1588,9 +1601,11 @@
       ],
       "requirement": "required",
       "status": "usable",
-      "demos": [],
+      "demos": [
+        "energy-sources"
+      ],
       "unit": "energy",
-      "note": "Covered by the standalone reading energy-sources; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
+      "note": "Sources of Energy (2026-10-22, Claude): energy per kilogram of fuels, food, TNT, batteries and uranium (from 200 MeV per fission); hydro, wind (Betz) and solar from their physics; heat engine efficiency. No national consumption statistics. Covered by the standalone reading energy-sources; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
       "activities": [
         "energy-sources"
       ]
@@ -4256,6 +4271,51 @@
   ],
   "demos": [
     {
+      "demo": "units",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "1.1",
+          "title": "The Scope and Scale of Physics"
+        },
+        {
+          "vol": 1,
+          "sec": "1.2",
+          "title": "Units and Standards"
+        },
+        {
+          "vol": 1,
+          "sec": "1.3",
+          "title": "Unit Conversion"
+        },
+        {
+          "vol": 1,
+          "sec": "1.4",
+          "title": "Dimensional Analysis"
+        },
+        {
+          "vol": 1,
+          "sec": "1.5",
+          "title": "Estimates and Fermi Calculations"
+        },
+        {
+          "vol": 1,
+          "sec": "1.6",
+          "title": "Significant Figures"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Tabs: Scale of things (Zoom through: true size models from the observable universe to a proton, Fly in / Fly out; or a log ruler), Convert units (exact factor chains), Dimensional analysis (exponent sliders for five formulas, Show the answer), Significant figures (two measurements and an operation), Fermi estimates (three questions with low/high factors); Blind hides the results.",
+      "handouts": [],
+      "title": "Units, Scales and Estimates",
+      "url": "demos/units.html"
+    },
+    {
       "demo": "vectors",
       "course": [
         "physics-1"
@@ -4304,6 +4364,31 @@
       "handouts": [],
       "title": "Vectors and Relative Motion",
       "url": "demos/vectors.html"
+    },
+    {
+      "demo": "cart-launch",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "4.3",
+          "title": "Projectile Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "4.5",
+          "title": "Relative Motion in One and Two Dimensions"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-23 (Claude). Cart on a track fires a ball perpendicular to the track: lands in the launcher at constant cart speed and on a frictionless incline, misses when the cart speeds up or brakes after launch. Ground or cart frame, velocity and acceleration vectors with components, strobe images, position graph; Blind pauses at the top for predictions.",
+      "handouts": [],
+      "title": "Ball Launched from a Moving Cart",
+      "url": "demos/cart-launch.html"
     },
     {
       "demo": "motion-graphs",
@@ -4414,30 +4499,10 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Lecture demo: ball on a string (cut it: straight line), car on a flat curve (top speed √(μs g r)), banked curve (ideal speed, allowed range), vertical loop (energy, N, leaves the track below √(gr) at the top); FBD to scale; Blind. Cars and loop shown slowed down.",
+      "note": "New 2026-10-22 (Claude). Lecture demo: ball on a string (cut it: straight line), car on a flat curve (top speed √(μs g r)), banked curve (ideal speed, allowed range), vertical loop (energy, N, leaves the track below √(gr) at the top); FBD to scale; Blind. Cars and loop shown slowed down. 2026-10-22: setup Speeding up or braking (formerly the separate Speeding Up on a Curve demo; its URL redirects here): tangential and centripetal acceleration, total acceleration, slip when √(a_t² + (v²/r)²) > μs g.",
       "handouts": [],
       "title": "Circular Motion",
       "url": "demos/circular-motion.html"
-    },
-    {
-      "demo": "nonuniform-circular",
-      "course": [
-        "physics-1"
-      ],
-      "sections": [
-        {
-          "vol": 1,
-          "sec": "4.4",
-          "title": "Uniform and Nonuniform Circular Motion"
-        }
-      ],
-      "role": "demo",
-      "beyond_book": false,
-      "status": "usable",
-      "note": "New 2026-10-22 (Claude). Car on a flat circular road speeding up from rest or braking to a stop at constant |a_t|; radius, braking start speed, μs; v, a_t, a_c and total a arrows; accelerations against time with the μs g line; slides off when grip runs out; Blind.",
-      "handouts": [],
-      "title": "Speeding Up on a Curve",
-      "url": "demos/nonuniform-circular.html"
     },
     {
       "demo": "forces",
@@ -4597,6 +4662,26 @@
       "handouts": [
         "potential-curves"
       ]
+    },
+    {
+      "demo": "energy-sources",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "8.5",
+          "title": "Sources of Energy"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-22 (Claude). Energy needed (examples and a log slider), electricity or heat with power station efficiency; mass of each source on a log bar chart; dam height, wind speed, average sunlight; gasoline and water volumes, solar panel area; Blind.",
+      "handouts": [],
+      "title": "Sources of Energy",
+      "url": "demos/energy-sources.html"
     },
     {
       "demo": "impulse",

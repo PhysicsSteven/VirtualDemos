@@ -5,14 +5,15 @@
 **Research question:** Test Malus's law and the effect of crossed polarizers.
 
 ## Model
-I=I₀cos²θ
+
+$$I=I_0\cos^2\theta$$
 
 ## Procedure (50–75 minutes)
 1. State a prediction and identify independent, dependent and controlled variables.
 2. Choose the mode matching the equation; record every fixed parameter.
 3. Collect five or more independent measurements, recording values, units and measurement method.
 4. Where the model is stochastic, repeat each setting and report variability.
-5. Plot the measurements with labeled axes. Plot I/I₀ against cos²θ.
+5. Plot the measurements with labeled axes. Plot $$I/I_0$$ against $$\cos^2\theta$$.
 6. Compute the inferred physical parameter, check dimensions and compare with theory.
 7. Describe systematic limitations and explain any discrepancies.
 

@@ -59,9 +59,9 @@ body { margin: 0; }
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
 }
-:root { --acol: #2b60b5; --bcol: #b0452f; --rcol: #2f7d4f; --water: #cfe3f3; --bank: #d9cfb8; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --acol: #69a0ff; --bcol: #ff8a70; --rcol: #5fcf8a; --water: #15324a; --bank: #3b3527; } }
-:root[data-theme="dark"] { --acol: #69a0ff; --bcol: #ff8a70; --rcol: #5fcf8a; --water: #15324a; --bank: #3b3527; }
+:root { --acol: #2b60b5; --bcol: #b0452f; --rcol: #2f7d4f; --water: #cfe3f3; --bank: #d9cfb8; --water-deep: #b3d2ec; --ripple: rgba(255,255,255,0.85); --leaf: #6f9a3e; --grass: #7d9a4e; --dock: #a5835c; --hull: #e9e4d6; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --acol: #69a0ff; --bcol: #ff8a70; --rcol: #5fcf8a; --water: #15324a; --bank: #3b3527; --water-deep: #0f2638; --ripple: rgba(190,220,255,0.45); --leaf: #7fae4a; --grass: #6f8a44; --dock: #7d6346; --hull: #c9c3b4; } }
+:root[data-theme="dark"] { --acol: #69a0ff; --bcol: #ff8a70; --rcol: #5fcf8a; --water: #15324a; --bank: #3b3527; --water-deep: #0f2638; --ripple: rgba(190,220,255,0.45); --leaf: #7fae4a; --grass: #6f8a44; --dock: #7d6346; --hull: #c9c3b4; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -176,10 +176,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div><div class="slider-head"><label for="sU">Water speed (relative to the shore)</label><output id="oU" for="sU"></output></div><input type="range" id="sU" min="0" max="4" step="0.1" value="1.5"></div>
         <div><div class="slider-head"><label for="sVb">Boat speed (relative to the water)</label><output id="oVb" for="sVb"></output></div><input type="range" id="sVb" min="0.5" max="5" step="0.1" value="2.5"></div>
         <div><div class="slider-head"><label for="sTh">Heading, from straight across (+ upstream)</label><output id="oTh" for="sTh"></output></div><input type="range" id="sTh" min="-80" max="80" step="0.5" value="0"></div>
+        <label class="check"><input type="checkbox" id="banks"><span>Slower near the banks (zero at the banks, the water speed at mid river)</span></label>
         <button type="button" class="btn" id="aim">Aim to land straight across</button>
         <dl class="readout" id="riverOut"></dl>
         <p class="formula">v<sub>boat,shore</sub> = v<sub>boat,water</sub> + v<sub>water,shore</sub></p>
-        <p class="hint">The river is 60 m wide and the current is the same everywhere (a real river is slower near its banks). The boat keeps its heading and speed relative to the water.</p>
+        <p class="hint">The river is 60 m wide. The current is the same everywhere, or (Slower near the banks) zero at each bank and fastest mid river, u(y) = 4u y(W − y)/W², averaging 2u/3; a real river's profile is roughly like this. The boat keeps its heading and speed relative to the water, so its path curves when the current varies. The arrows at the left show the current across the river.</p>
       </section>
 
       <section>
@@ -206,12 +207,22 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const between = (a, b) => { const m = mag(a) * mag(b); return m ? Math.acos(Math.max(-1, Math.min(1, dot(a, b) / m))) * 180 / Math.PI : NaN; };
   const projection = (a, b) => { const m = mag(b); return m ? dot(a, b) / m : NaN; };   // scalar component of a along b
   // River: current u along +x, boat speed vb relative to the water, heading th (degrees) from straight across (+y), positive upstream (toward −x).
-  function river(u, vb, thDeg, width) {
+  // profile 'banks': the current is u at mid river and falls to zero at the banks, u(y) = 4u y(W − y)/W² (average 2u/3); 'uniform': u everywhere.
+  const currentAt = (u, y, width, profile) => (profile === 'banks' ? 4 * u * y * (width - y) / (width * width) : u);
+  const meanCurrent = (u, profile) => (profile === 'banks' ? 2 * u / 3 : u);
+  function river(u, vb, thDeg, width, profile) {
     const th = thDeg * Math.PI / 180, vbw = [-vb * Math.sin(th), vb * Math.cos(th)], vws = [u, 0], vbs = add(vbw, vws);
-    const t = vbs[1] > 1e-9 ? width / vbs[1] : Infinity;   // heading along the bank never crosses
-    return { vbw, vws, vbs, t, drift: vbs[0] * t, speed: mag(vbs) };
+    const t = vbw[1] > 1e-9 ? width / vbw[1] : Infinity;   // the current is along the bank, so v_y is the boat's own; heading along the bank never crosses
+    const ub = meanCurrent(u, profile), drift = (vbw[0] + ub) * t;   // the time average of the current over the crossing is its average across the river
+    return { vbw, vws, vbs, t, drift, speed: mag(vbs) };
   }
-  const straightAcross = (u, vb) => (u <= vb ? Math.asin(u / vb) * 180 / Math.PI : NaN);   // heading that cancels the current
+  // position t seconds after leaving the near bank: y = v_y t and x = v_x,boat t + ∫ u(y) dt, exactly
+  function riverPos(u, vb, thDeg, width, profile, t) {
+    const r = river(u, vb, thDeg, width, profile), tt = Math.min(t, r.t), vy = r.vbw[1];
+    const ux = profile === 'banks' ? 4 * u / (width * width) * (width * vy * tt * tt / 2 - vy * vy * tt ** 3 / 3) : u * tt;
+    return [r.vbw[0] * tt + ux, vy * tt];
+  }
+  const straightAcross = (u, vb, profile) => { const ub = meanCurrent(u, profile); return ub <= vb ? Math.asin(ub / vb) * 180 / Math.PI : NaN; };   // heading whose upstream part cancels the average current
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -226,14 +237,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     river: { hint: 'The boat aims across, but the water carries it downstream. Its velocity relative to the shore is the vector sum. Aim upstream to land straight across; the crossing then takes longer.' }
   };
   const S = { preset: 'comp', A: [4, 3], B: null, h2t: true, snap: true, comp: true, sel: 'A', blind: false,
-    river: { u: 1.5, vb: 2.5, th: 0, run: false, t: 0, trail: [] } };
+    river: { u: 1.5, vb: 2.5, th: 0, run: false, t: 0, trail: [], profile: 'uniform', clock: 0 } };
   const WIDTH = 60;
+  const drng = (() => { let sd = 11; return () => { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; }; })();
+  const RIPPLES = Array.from({ length: 70 }, () => [-60 + drng() * 180, 2 + drng() * (WIDTH - 4), 2 + drng() * 3]);
+  const LEAVES = Array.from({ length: 7 }, () => [-60 + drng() * 180, 4 + drng() * (WIDTH - 8), drng() * 6]);
+  const GRASS = Array.from({ length: 90 }, () => [-55 + drng() * 170, drng(), drng() < 0.5]);
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null, view = null;
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      A: g('--acol'), B: g('--bcol'), R: g('--rcol'), water: g('--water'), bank: g('--bank'), equi: g('--equi'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+      A: g('--acol'), B: g('--bcol'), R: g('--rcol'), water: g('--water'), bank: g('--bank'), waterDeep: g('--water-deep'), ripple: g('--ripple'), leaf: g('--leaf'), grass: g('--grass'), dock: g('--dock'), hull: g('--hull'), equi: g('--equi'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
   }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
   const f = (v, d = 2) => (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−');
@@ -327,39 +342,54 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
   }
   function drawRiver() {
-    const p = ps(), R = S.river, bl = S.blind, res = river(R.u, R.vb, R.th, WIDTH);
+    const p = ps(), R = S.river, bl = S.blind, res = river(R.u, R.vb, R.th, WIDTH, R.profile);
+    // banks with grass, the water, ripples and leaves drifting at the local current, the current profile at the left
     ctx.fillStyle = T.bank; ctx.fillRect(0, Y(0), W, H - Y(0)); ctx.fillRect(0, 0, W, Y(WIDTH));
-    ctx.fillStyle = T.water; ctx.fillRect(0, Y(WIDTH), W, Y(0) - Y(WIDTH));
-    // current streaks, moving with the water
-    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5 * p; const off = (R.t * R.u) % 20;
-    if (R.u > 0) for (let y = 8; y < WIDTH; y += 12) for (let x = -60 + off; x < 130; x += 20) { ctx.beginPath(); ctx.moveTo(X(x), Y(y)); ctx.lineTo(X(x + 5), Y(y)); ctx.stroke(); }
+    ctx.strokeStyle = T.grass; ctx.lineWidth = 1.5 * p; for (const [gx, gy, side] of GRASS) { const yb = side ? Y(WIDTH) - gy * 6 * p : Y(0) + gy * 6 * p; const x = X(gx); ctx.beginPath(); ctx.moveTo(x, yb); ctx.lineTo(x - 2 * p, yb - (side ? -1 : 1) * 0 - 5 * p); ctx.moveTo(x, yb); ctx.lineTo(x + 2 * p, yb - 5 * p); ctx.stroke(); }
+    const wg = ctx.createLinearGradient(0, Y(WIDTH), 0, Y(0)); wg.addColorStop(0, T.water); wg.addColorStop(0.5, T.waterDeep); wg.addColorStop(1, T.water); ctx.fillStyle = wg; ctx.fillRect(0, Y(WIDTH), W, Y(0) - Y(WIDTH));
+    const span = 180, xL = -60;
+    ctx.strokeStyle = T.ripple; ctx.lineWidth = 1.2 * p;
+    for (const [x0, y, len] of RIPPLES) { const u = currentAt(R.u, y, WIDTH, R.profile); let x = ((x0 + u * R.clock - xL) % span + span) % span + xL; ctx.beginPath(); ctx.moveTo(X(x), Y(y)); ctx.quadraticCurveTo(X(x + len / 2), Y(y) - 2.5 * p, X(x + len), Y(y)); ctx.stroke(); }
+    for (const [x0, y, rot] of LEAVES) { const u = currentAt(R.u, y, WIDTH, R.profile); const x = ((x0 + u * R.clock - xL) % span + span) % span + xL; ctx.save(); ctx.translate(X(x), Y(y)); ctx.rotate(rot + R.clock * 0.05); ctx.fillStyle = T.leaf; ctx.beginPath(); ctx.ellipse(0, 0, 4 * p, 2 * p, 0, 0, 7); ctx.fill(); ctx.restore(); }
+    // current profile arrows at the left
+    const px0 = X(-46), umax = Math.max(R.u, 0.01), al = 120 * p;   // 4 m/s, the slider's top, is 120 px
+    for (let y = 6; y < WIDTH; y += 8) { const u = currentAt(R.u, y, WIDTH, R.profile); if (u < 0.02) continue; const L = al * u / 4; ctx.strokeStyle = T.B; ctx.fillStyle = T.B; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(px0, Y(y)); ctx.lineTo(px0 + L, Y(y)); ctx.stroke(); ctx.beginPath(); ctx.moveTo(px0 + L + 5 * p, Y(y)); ctx.lineTo(px0 + L, Y(y) - 3 * p); ctx.lineTo(px0 + L, Y(y) + 3 * p); ctx.closePath(); ctx.fill(); }
+    if (R.profile === 'banks') { ctx.strokeStyle = T.B; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.beginPath(); for (let y = 0; y <= WIDTH; y += 1) { const L = al * currentAt(R.u, y, WIDTH, 'banks') / 4; y ? ctx.lineTo(px0 + L, Y(y)) : ctx.moveTo(px0 + L, Y(y)); } ctx.stroke(); ctx.globalAlpha = 1; }
     ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     for (let x = -40; x <= 100; x += 20) { ctx.fillRect(X(x) - 0.5, Y(0), 1, 6 * p); ctx.fillText(`${x} m`.replace('-', '−'), X(x) + 3 * p, Y(0) + 12 * p); }
-    ctx.fillText('river 60 m wide · current →', X(-48), Y(WIDTH) - 12 * p);
+    ctx.textAlign = 'right'; ctx.fillText(W < 640 ? 'current →' : `river 60 m wide · current → ${R.profile === 'banks' ? '(slower near the banks)' : '(the same everywhere)'}`, X(108), Y(WIDTH) - 12 * p); ctx.textAlign = 'left';
+    // dock on the near bank, flag straight across
+    ctx.fillStyle = T.dock; ctx.fillRect(X(-4), Y(0), X(4) - X(-4), 7 * p); ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; for (let x = -4; x <= 4; x += 1.6) { ctx.beginPath(); ctx.moveTo(X(x), Y(0)); ctx.lineTo(X(x), Y(0) + 7 * p); ctx.stroke(); }
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(X(0), Y(WIDTH)); ctx.lineTo(X(0), Y(WIDTH) - 18 * p); ctx.stroke(); ctx.fillStyle = T.B; ctx.beginPath(); ctx.moveTo(X(0), Y(WIDTH) - 18 * p); ctx.lineTo(X(0) + 11 * p, Y(WIDTH) - 14 * p); ctx.lineTo(X(0), Y(WIDTH) - 10 * p); ctx.closePath(); ctx.fill();
     // target point straight across and the start
     ctx.strokeStyle = T.ink; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(0), Y(WIDTH)); ctx.stroke(); ctx.setLineDash([]);
     // predicted track
-    if (!bl && isFinite(res.t)) { ctx.strokeStyle = T.R; ctx.globalAlpha = 0.4; ctx.setLineDash([6 * p, 5 * p]); ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(res.drift), Y(WIDTH)); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    if (!bl && isFinite(res.t)) { ctx.strokeStyle = T.R; ctx.globalAlpha = 0.4; ctx.setLineDash([6 * p, 5 * p]); ctx.lineWidth = 2 * p; ctx.beginPath(); for (let i = 0; i <= 60; i++) { const q = riverPos(R.u, R.vb, R.th, WIDTH, R.profile, res.t * i / 60); i ? ctx.lineTo(X(q[0]), Y(q[1])) : ctx.moveTo(X(q[0]), Y(q[1])); } ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
     // trail and boat
     if (R.trail.length > 1) { ctx.strokeStyle = T.R; ctx.lineWidth = 2.5 * p; ctx.beginPath(); R.trail.forEach(([x, y], i) => (i ? ctx.lineTo(X(x), Y(y)) : ctx.moveTo(X(x), Y(y)))); ctx.stroke(); }
     const pos = boatPos(), hd = Math.atan2(res.vbw[1], res.vbw[0]);
     ctx.save(); ctx.translate(X(pos[0]), Y(pos[1])); ctx.rotate(-hd);
-    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.moveTo(14 * p, 0); ctx.lineTo(-8 * p, 6 * p); ctx.lineTo(-8 * p, -6 * p); ctx.closePath(); ctx.fill(); ctx.restore();
+    const bl2 = 18 * p, bw2 = 8 * p, moving = R.run || (R.t > 0 && !R.landed);
+    if (moving) { ctx.strokeStyle = T.ripple; ctx.lineWidth = 1.5 * p; for (const sgn of [1, -1]) { ctx.beginPath(); ctx.moveTo(-bl2 * 0.6, sgn * bw2 * 0.8); ctx.lineTo(-bl2 * 2.6, sgn * bw2 * 2.6); ctx.stroke(); } }   // wake behind the stern
+    ctx.fillStyle = T.hull; ctx.beginPath(); ctx.moveTo(bl2 * 1.15, 0); ctx.quadraticCurveTo(bl2 * 0.5, bw2, -bl2 * 0.8, bw2); ctx.lineTo(-bl2, bw2 * 0.7); ctx.lineTo(-bl2, -bw2 * 0.7); ctx.lineTo(-bl2 * 0.8, -bw2); ctx.quadraticCurveTo(bl2 * 0.5, -bw2, bl2 * 1.15, 0); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.stroke(); ctx.fillStyle = T.canvas; ctx.fillRect(-bl2 * 0.45, -bw2 * 0.5, bl2 * 0.6, bw2); ctx.strokeRect(-bl2 * 0.45, -bw2 * 0.5, bl2 * 0.6, bw2);
+    ctx.restore();
     // velocity triangle at the boat, 6 s of motion per arrow for scale
     const k = 8, b0 = pos;
     vec(b0, scale(k, res.vbw), T.A, '', 3 * p);
-    vec(add(b0, scale(k, res.vbw)), scale(k, res.vws), T.B, '', 3 * p);
-    if (!bl) vec(b0, scale(k, res.vbs), T.R, '', 3.5 * p);
+    const uHere = [currentAt(R.u, pos[1], WIDTH, R.profile), 0];
+    vec(add(b0, scale(k, res.vbw)), scale(k, uHere), T.B, '', 3 * p);
+    if (!bl) vec(b0, scale(k, add(res.vbw, uHere)), T.R, '', 3.5 * p);
     // key, top right
     const keys = [[T.A, 'boat relative to the water'], [T.B, 'water relative to the shore']].concat(bl ? [] : [[T.R, 'boat relative to the shore (the sum)']]);
     ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
     const kw = Math.max(...keys.map((q) => ctx.measureText(q[1]).width)) + 40 * p, kx = W - kw - 10 * p;
-    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; ctx.fillRect(kx - 6 * p, 8 * p, kw + 6 * p, keys.length * 19 * p + 22 * p); ctx.globalAlpha = 1;
-    keys.forEach(([c, t], i) => { const y = 18 * p + i * 19 * p; ctx.strokeStyle = c; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(kx, y); ctx.lineTo(kx + 26 * p, y); ctx.stroke(); ctx.fillStyle = T.ink; ctx.fillText(t, kx + 34 * p, y); });
-    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('Arrows at the boat show 8 s of motion', kx, 18 * p + keys.length * 19 * p);
+    const ky = W < 640 ? 54 * p : 8 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; ctx.fillRect(kx - 6 * p, ky, kw + 6 * p, keys.length * 19 * p + 22 * p); ctx.globalAlpha = 1;
+    keys.forEach(([c, t], i) => { const y = ky + 10 * p + i * 19 * p; ctx.strokeStyle = c; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(kx, y); ctx.lineTo(kx + 26 * p, y); ctx.stroke(); ctx.fillStyle = T.ink; ctx.fillText(t, kx + 34 * p, y); });
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('Arrows at the boat show 8 s of motion', kx, ky + 10 * p + keys.length * 19 * p);
     if (R.landed && !bl) label(`landed ${f(res.drift, 1)} m ${res.drift >= 0 ? 'downstream' : 'upstream'} after ${f(res.t, 1)} s`, X(res.drift), Y(WIDTH) - 18 * p, T.ink);
   }
-  function boatPos() { const R = S.river, r = river(R.u, R.vb, R.th, WIDTH), t = Math.min(R.t, r.t); return [r.vbs[0] * t, r.vbs[1] * t]; }
+  function boatPos() { const R = S.river; return riverPos(R.u, R.vb, R.th, WIDTH, R.profile, R.t); }
 
   // ---------- readouts ----------
   function readouts() {
@@ -367,11 +397,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const A = S.A, B = S.B, v2 = (v) => `(${f(v[0], 1)}, ${f(v[1], 1)})`;
     let h = '', fm = '';
     if (S.preset === 'river') {
-      const R = S.river, r = river(R.u, R.vb, R.th, WIDTH), sa = straightAcross(R.u, R.vb);
-      h = dd('Boat rel. water', `${f(R.vb, 1)} m/s at ${f(R.th, 0)}°`) + dd('Water rel. shore', `${f(R.u, 1)} m/s`);
+      const R = S.river, r = river(R.u, R.vb, R.th, WIDTH, R.profile), sa = straightAcross(R.u, R.vb, R.profile);
+      h = dd('Boat rel. water', `${f(R.vb, 1)} m/s at ${f(R.th, 0)}°`) + dd(R.profile === 'banks' ? 'Water rel. shore, mid river (average)' : 'Water rel. shore', R.profile === 'banks' ? `${f(R.u, 1)} (${f(2 * R.u / 3, 2)}) m/s` : `${f(R.u, 1)} m/s`);
       if (bl) h += hid('Boat rel. shore, crossing time, landing point');
       else {
-        h += dd('Boat rel. shore', `${f(r.speed, 2)} m/s`) + dd('Its angle from straight across', `${f(Math.atan2(r.vbs[0], r.vbs[1]) * 180 / Math.PI, 1)}° ${r.vbs[0] >= 0 ? 'downstream' : 'upstream'}`);
+        if (R.profile === 'banks') { const q = boatPos(), ul = currentAt(R.u, q[1], WIDTH, 'banks'), vs = add(r.vbw, [ul, 0]); h += dd('Boat rel. shore, here', `${f(mag(vs), 2)} m/s`) + dd('Current here', `${f(ul, 2)} m/s`); }
+        else h += dd('Boat rel. shore', `${f(r.speed, 2)} m/s`) + dd('Its angle from straight across', `${f(Math.atan2(r.vbs[0], r.vbs[1]) * 180 / Math.PI, 1)}° ${r.vbs[0] >= 0 ? 'downstream' : 'upstream'}`);
         h += dd('Time to cross = 60 m / v_y', isFinite(r.t) ? `${f(r.t, 1)} s` : 'never') + dd('Lands downstream by', isFinite(r.t) ? `${f(r.drift, 1)} m` : '—');
         h += dd('Heading to land straight across', isFinite(sa) ? `${f(sa, 1)}° upstream` : 'impossible: the current is faster than the boat', true);
       }
@@ -414,18 +445,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('showComp').addEventListener('change', (e) => { S.comp = e.target.checked; draw(); });
 
   // ---------- river ----------
-  function syncRiver() { const R = S.river; $('oU').textContent = `${f(R.u, 1)} m/s`; $('oVb').textContent = `${f(R.vb, 1)} m/s`; $("oTh").textContent = `${f(R.th, 1)}°`; $('sU').value = R.u; $('sVb').value = R.vb; $('sTh').value = R.th; }
+  function syncRiver() { const R = S.river; $('oU').textContent = `${f(R.u, 1)} m/s`; $('oVb').textContent = `${f(R.vb, 1)} m/s`; $("oTh").textContent = `${f(R.th, 1)}°`; $('sU').value = R.u; $('sVb').value = R.vb; $('sTh').value = R.th; $('banks').checked = R.profile === 'banks'; }
   function resetBoat() { const R = S.river; R.run = false; R.t = 0; R.trail = [[0, 0]]; R.landed = false; $('go').textContent = 'Launch boat'; syncRiver(); }
   for (const [id, k] of [['sU', 'u'], ['sVb', 'vb'], ['sTh', 'th']]) $(id).addEventListener('input', (e) => { S.river[k] = +e.target.value; resetBoat(); draw(); readouts(); });
-  $('aim').addEventListener('click', () => { const R = S.river, a = straightAcross(R.u, R.vb); if (isFinite(a)) { R.th = a; resetBoat(); draw(); readouts(); } else $('riverOut').insertAdjacentHTML('afterbegin', '<div class="wide"><dt>Aim</dt><dd class="ok">No heading works: the current is faster than the boat.</dd></div>'); });
+  $('banks').addEventListener('change', (e) => { S.river.profile = e.target.checked ? 'banks' : 'uniform'; resetBoat(); draw(); readouts(); });
+  $('aim').addEventListener('click', () => { const R = S.river, a = straightAcross(R.u, R.vb, R.profile); if (isFinite(a)) { R.th = a; resetBoat(); draw(); readouts(); } else $('riverOut').insertAdjacentHTML('afterbegin', '<div class="wide"><dt>Aim</dt><dd class="ok">No heading works: the current is faster than the boat.</dd></div>'); });
   $('go').addEventListener('click', () => { const R = S.river; if (R.landed) resetBoat(); R.run = !R.run; $('go').textContent = R.run ? 'Pause' : 'Launch boat'; });
   $('again').addEventListener('click', () => { resetBoat(); draw(); readouts(); });
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     const R = S.river;
+    if (S.preset === 'river' && !reduce && !R.run) { R.clock += dt * 4; draw(); }   // the water keeps flowing while the boat waits
     if (S.preset === 'river' && R.run) {
-      const r = river(R.u, R.vb, R.th, WIDTH), speedup = reduce ? 1 : 4;   // 4× real time so a crossing takes a few seconds
+      R.clock += dt * (reduce ? 1 : 4);
+      const r = river(R.u, R.vb, R.th, WIDTH, R.profile), speedup = reduce ? 1 : 4;   // 4× real time so a crossing takes a few seconds
       R.t += dt * speedup; if (!isFinite(r.t) && R.t > 60) R.t = 60;
       if (R.t >= r.t) { R.t = r.t; R.run = false; R.landed = true; $('go').textContent = 'Launch again'; }
       const q = boatPos(); R.trail.push(q); draw();

@@ -2,7 +2,7 @@
 
 [Open simulation](https://physicssteven.github.io/VirtualDemos/demos/standing-waves.html)
 
-**Research goal:** Test the relationship f_n=n v/(2L).
+**Research goal:** Test the relationship $$f_n = \tfrac{n v}{2L}$$.
 
 ## Procedure
 1. Identify the mode, controls, observable and fixed parameters; write a prediction.

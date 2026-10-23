@@ -2,7 +2,7 @@
 // Vectors and Relative Motion: vector algebra identities and the river crossing.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('vectors', 'add,sub,scale,dot,crossZ,mag,angleDeg,fromPolar,between,projection,river,straightAcross');
+const c = core('vectors', 'add,sub,scale,dot,crossZ,mag,angleDeg,fromPolar,between,projection,river,straightAcross,currentAt,meanCurrent,riverPos');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -27,5 +27,15 @@ group('river: v_boat,shore = v_boat,water + v_water,shore; crossing time, drift,
   const a = c.straightAcross(1.5, 2.5); near(a, Math.asin(0.6) * 180 / Math.PI, 1e-12);
   const q = c.river(1.5, 2.5, a, 60); near(q.drift, 0, 1e-9); near(q.t, 60 / 2, 1e-9, 'v_y = √(2.5² − 1.5²) = 2');
   assert(Number.isNaN(c.straightAcross(3, 2))); assert.equal(c.river(1, 2, 90, 60).t, Infinity);
+});
+group('slower near the banks: u(y) = 4u y(W − y)/W², drift uses the 2u/3 average, the path is exact', () => {
+  near(c.currentAt(1.5, 30, 60, 'banks'), 1.5, 1e-15); near(c.currentAt(1.5, 0, 60, 'banks'), 0, 0); near(c.meanCurrent(1.5, 'banks'), 1, 1e-15);
+  const r = c.river(1.5, 2.5, 0, 60, 'banks'); near(r.t, 24, 1e-12); near(r.drift, 24, 1e-12);
+  // numerical integration of dx/dt = v_bx + u(y(t)) agrees with the closed form at every time
+  const th = 20, R2 = c.river(1.5, 2.5, th, 60, 'banks'), vy = R2.vbw[1], N = 200000, h = R2.t / N; let x = 0;
+  for (let i = 0; i < N; i++) { const ym = vy * (i + 0.5) * h; x += (R2.vbw[0] + c.currentAt(1.5, ym, 60, 'banks')) * h; }
+  near(x, R2.drift, 1e-6); const q = c.riverPos(1.5, 2.5, th, 60, 'banks', R2.t); near(q[0], R2.drift, 1e-9); near(q[1], 60, 1e-9);
+  const a = c.straightAcross(1.5, 2.5, 'banks'); near(a, Math.asin(1 / 2.5) * 180 / Math.PI, 1e-12); near(c.river(1.5, 2.5, a, 60, 'banks').drift, 0, 1e-9);
+  near(c.riverPos(1.5, 2.5, 0, 60, 'uniform', 10)[0], 15, 1e-12);
 });
 console.log(`${n} vectors test groups passed`);

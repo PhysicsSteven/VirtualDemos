@@ -11,7 +11,9 @@
 ## Background
 The reference model is **the physical model described in the simulation**.
 
-\[delta approximately (Rp/Rs)^2 for an unobscured, uniform stellar disk\]
+$$\delta \approx (R_p/R_s)^2$$
+
+for an unobscured, uniform stellar disk.
 
 **Important limitation:** Choose a central transit and disable limb darkening if the controls permit; otherwise describe model-dependent differences.
 
@@ -28,7 +30,7 @@ Open the linked simulation. Record the model/preset, initial settings, units, an
 7. Enable theory overlays only after your first analysis and compare with the expected relationship.
 
 ## Data sheet
-| Trial | Planet-to-star radius ratio Rp/Rs | Transit depth as fractional flux decrease | Measurement method / uncertainty |
+| Trial | Planet-to-star radius ratio $$R_p/R_s$$ | Transit depth as fractional flux decrease | Measurement method / uncertainty |
 |---|---|---|---|
 | 1 | | | |
 | 2 | | | |
@@ -37,7 +39,7 @@ Open the linked simulation. Record the model/preset, initial settings, units, an
 | 5 | | | |
 
 ## Analysis
-**Recommended graph/fit:** Plot transit depth against (Rp/Rs)^2; fit a straight line and compare slope with unity.
+**Recommended graph/fit:** Plot transit depth against $$(R_p/R_s)^2$$; fit a straight line and compare slope with unity.
 
 Calculate the physical quantity implied by the slope or fit parameters. Show units and at least one worked calculation. If the simulation is deterministic, estimate uncertainty from display resolution, cursor placement, or model sensitivity rather than inventing random error.
 

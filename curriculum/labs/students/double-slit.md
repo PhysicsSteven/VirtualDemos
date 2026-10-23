@@ -2,7 +2,7 @@
 
 [Open simulation](https://physicssteven.github.io/VirtualDemos/demos/double-slit.html)
 
-**Research goal:** Test the relationship fringe spacing=lambda L/d.
+**Research goal:** Test the relationship $$\text{fringe spacing} = \lambda L/d$$.
 
 ## Procedure
 1. Identify the mode, controls, observable and fixed parameters; write a prediction.

@@ -1,0 +1,558 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Ball Launched from a Moving Cart</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the track, cart and ball fill the stage with a position graph along the bottom; the rail on the right. */
+/* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root { --cart: #2f6fb0; --cartTop: #d7dee7; --ball: #e07a1f; --track: #8a95a3; --trackHi: #c9d0d8; --bench: #4a525c; --benchDark: #2f353d; --board: #f6f8fa; --boardFrame: #c3cbd4; --wall: #eef2f6; --floor: #d9dfe6; --vx: #2b60b5; --vy: #1f8a5b; --v: #7b3fb8; --g: #c23f2c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cart: #4f8fd0; --cartTop: #3a4554; --ball: #ff9a40; --track: #7d8898; --trackHi: #a3adba; --bench: #2c343e; --benchDark: #1c222a; --board: #171e28; --boardFrame: #2c3644; --wall: #131a23; --floor: #1b232e; --vx: #69a0ff; --vy: #4cc98e; --v: #b98af0; --g: #ff7660; } }
+:root[data-theme="dark"] { --cart: #4f8fd0; --cartTop: #3a4554; --ball: #ff9a40; --track: #7d8898; --trackHi: #a3adba; --bench: #2c343e; --benchDark: #1c222a; --board: #171e28; --boardFrame: #2c3644; --wall: #131a23; --floor: #1b232e; --vx: #69a0ff; --vy: #4cc98e; --v: #b98af0; --g: #ff7660; }
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.predict { position: absolute; left: 50%; top: 52px; transform: translateX(-50%); z-index: 3; background: var(--accent); color: var(--canvas); font-weight: 700; font-size: 0.9rem; padding: 6px 12px; border-radius: 8px; max-width: calc(100% - 24px); text-align: center; }
+@media (max-width: 820px) { .chips button { min-height: 36px; } .predict { top: 76px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Ball Launched from a Moving Cart</h1>
+      <p>A cart rolls along a track and fires a ball straight up. The ball keeps the cart's forward velocity, so while both move steadily it lands back in the launcher. Make the cart speed up or brake after the launch and the ball misses; tilt the track and it lands in the cart again.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units · g = 9.81 m/s² · no air resistance</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/cart-launch.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/cart-launch.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM13 2h3v1h-3zM17 2h4v1h-4zM22 2h2v1h-2zM26 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h2v1h-2zM16 3h3v1h-3zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h3v1h-3zM15 4h1v1h-1zM17 4h1v1h-1zM21 4h3v1h-3zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM13 5h1v1h-1zM15 5h1v1h-1zM18 5h2v1h-2zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM16 6h3v1h-3zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM17 7h1v1h-1zM20 7h1v1h-1zM24 7h1v1h-1zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM13 9h5v1h-5zM21 9h2v1h-2zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h2v1h-2zM20 10h1v1h-1zM22 10h8v1h-8zM32 10h5v1h-5zM3 11h4v1h-4zM10 11h2v1h-2zM13 11h1v1h-1zM17 11h2v1h-2zM25 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h3v1h-3zM8 12h1v1h-1zM10 12h1v1h-1zM13 12h1v1h-1zM15 12h2v1h-2zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM4 13h2v1h-2zM9 13h1v1h-1zM11 13h1v1h-1zM13 13h1v1h-1zM15 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h7v1h-7zM11 14h1v1h-1zM13 14h1v1h-1zM15 14h2v1h-2zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h5v1h-5zM30 14h9v1h-9zM2 15h2v1h-2zM6 15h2v1h-2zM9 15h1v1h-1zM12 15h2v1h-2zM16 15h1v1h-1zM18 15h2v1h-2zM22 15h4v1h-4zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM5 16h1v1h-1zM7 16h2v1h-2zM11 16h1v1h-1zM13 16h1v1h-1zM15 16h5v1h-5zM22 16h2v1h-2zM27 16h4v1h-4zM32 16h4v1h-4zM38 16h1v1h-1zM10 17h4v1h-4zM15 17h1v1h-1zM17 17h9v1h-9zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h4v1h-4zM8 18h4v1h-4zM13 18h6v1h-6zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM3 19h1v1h-1zM9 19h2v1h-2zM12 19h4v1h-4zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h4v1h-4zM30 19h1v1h-1zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h3v1h-3zM8 20h3v1h-3zM14 20h2v1h-2zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM4 21h2v1h-2zM7 21h1v1h-1zM12 21h2v1h-2zM17 21h1v1h-1zM20 21h5v1h-5zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM5 22h1v1h-1zM7 22h4v1h-4zM12 22h3v1h-3zM16 22h2v1h-2zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h3v1h-3zM31 22h2v1h-2zM34 22h3v1h-3zM3 23h2v1h-2zM6 23h2v1h-2zM9 23h4v1h-4zM16 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h2v1h-2zM8 24h2v1h-2zM11 24h1v1h-1zM13 24h2v1h-2zM16 24h2v1h-2zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h2v1h-2zM29 24h2v1h-2zM32 24h4v1h-4zM37 24h2v1h-2zM3 25h1v1h-1zM6 25h2v1h-2zM10 25h1v1h-1zM13 25h1v1h-1zM16 25h3v1h-3zM21 25h2v1h-2zM25 25h1v1h-1zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM6 26h5v1h-5zM12 26h3v1h-3zM17 26h1v1h-1zM20 26h6v1h-6zM27 26h2v1h-2zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h4v1h-4zM12 27h7v1h-7zM23 27h1v1h-1zM25 27h1v1h-1zM31 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM8 28h2v1h-2zM12 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM26 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM13 29h3v1h-3zM18 29h1v1h-1zM23 29h1v1h-1zM26 29h1v1h-1zM29 29h6v1h-6zM37 29h1v1h-1zM2 30h1v1h-1zM5 30h2v1h-2zM8 30h1v1h-1zM11 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM25 30h12v1h-12zM38 30h1v1h-1zM10 31h14v1h-14zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h2v1h-2zM15 32h1v1h-1zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM13 33h1v1h-1zM16 33h5v1h-5zM23 33h3v1h-3zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h2v1h-2zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h3v1h-3zM29 34h6v1h-6zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM14 35h2v1h-2zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h5v1h-5zM16 36h3v1h-3zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h3v1h-3zM16 37h2v1h-2zM21 37h3v1h-3zM25 37h1v1h-1zM28 37h1v1h-1zM30 37h1v1h-1zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="A cart on a track fires a ball straight up; the ball's path, optional velocity and acceleration arrows, strobe images, and a graph of position along the track against time for the cart and the ball."></canvas>
+      <div class="viewbar"><button type="button" class="spin attn" id="go">Launch</button><button type="button" class="spin" id="pause">Pause</button><button type="button" class="spin" id="reset">Reset</button></div>
+      <div class="predict" id="predict" hidden>Predict: where will the ball land? Then press Resume.</div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setup</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="steady">Steady cart</button>
+          <button type="button" data-p="rest">Cart at rest</button>
+          <button type="button" data-p="push">Cart speeds up</button>
+          <button type="button" data-p="brake">Cart brakes</button>
+          <button type="button" data-p="incline">Frictionless incline</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Settings</h2>
+        <div><div class="slider-head"><label for="sV">Cart speed at launch</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="0" max="3" step="0.1"></div>
+        <div><div class="slider-head"><label for="sU">Launch speed (relative to the cart)</label><output id="oU" for="sU"></output></div><input type="range" id="sU" min="2" max="6" step="0.1"></div>
+        <div id="rowA"><div class="slider-head"><label for="sA">Cart acceleration after launch (negative brakes)</label><output id="oA" for="sA"></output></div><input type="range" id="sA" min="-3" max="3" step="0.1"></div>
+        <div id="rowPhi" hidden><div class="slider-head"><label for="sPhi">Incline angle</label><output id="oPhi" for="sPhi"></output></div><input type="range" id="sPhi" min="5" max="30" step="1"></div>
+        <div><div class="slider-head"><label>Playback</label></div><div class="seg" id="speed"><button type="button" data-k="1" aria-pressed="true">×1</button><button type="button" data-k="0.5" aria-pressed="false">×½</button><button type="button" data-k="0.25" aria-pressed="false">×¼</button></div></div>
+      </section>
+
+      <section>
+        <h2>Show</h2>
+        <div><div class="slider-head"><label>Watch from</label></div><div class="seg" id="frame"><button type="button" data-f="ground" aria-pressed="true">The ground</button><button type="button" data-f="cart" aria-pressed="false">The cart</button></div></div>
+        <label class="check"><input type="checkbox" id="cbV" checked><span>Velocity vectors</span></label>
+        <label class="check"><input type="checkbox" id="cbC" checked><span>Split the ball's velocity into components</span></label>
+        <label class="check"><input type="checkbox" id="cbG"><span>Acceleration vectors</span></label>
+        <label class="check"><input type="checkbox" id="cbS" checked><span>Strobe images every eighth of the flight</span></label>
+        <label class="check"><input type="checkbox" id="cbP" checked><span>Ball's path</span></label>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="formula">ball in the air: aₓ = 0, a_y = −g · its vₓ stays the cart's launch speed</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind pauses each launch at the top of the flight and hides where the ball lands until you resume, so the class can predict first.</p>
+        <p class="hint">Model: no air resistance and a point ball. The launcher fires perpendicular to the track, so the launch pushes the cart into the track, not along it, and the cart's speed is unchanged. On the level track the cart moves at constant speed, or with the set acceleration after the launch (a motor push or a brake; a braking cart stops and stays stopped). On the incline the cart rolls without friction, so its acceleration along the track is g sin θ, the same as the ball's. Seen from the cart, the ball's velocity and acceleration are relative to the cart; when the cart speeds up or brakes, the ball's acceleration relative to it is g minus the cart's acceleration, so it drifts backward or forward. The ball counts as caught if it comes down within 2 cm of the launcher's centre. Sizes are to scale.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  const G = 9.81, CATCH = 0.02, MOUTH = 0.16, TOPN = -0.05, HALF = 0.16, CL_VERSION = 'cart-launch@2026-10-23';
+  // Coordinates along the track: s (downhill or forward +) and n (perpendicular to the track, away from it), with the launcher's mouth
+  // at n = 0 and the track surface at n = -MOUTH; the cart's top is at n = TOPN, its half length is HALF. Launch at t = 0 at s = 0.
+  // P = { v: cart speed at launch, u: launch speed relative to the cart, phi: track angle (rad), ac: extra cart acceleration after launch }
+  const cartAccel = (P) => G * Math.sin(P.phi) + P.ac;
+  // before launch the cart rolls with g sin(phi) only (constant speed on the level); after it, with g sin(phi) + ac, stopping if it brakes to rest
+  function cartAt(P, t) {
+    const a = t < 0 ? G * Math.sin(P.phi) : cartAccel(P);
+    if (t > 0 && a < 0 && P.v + a * t < 0) { const ts = -P.v / a; return { s: P.v * ts + 0.5 * a * ts * ts, v: 0, a: 0 }; }
+    return { s: P.v * t + 0.5 * a * t * t, v: P.v + a * t, a };
+  }
+  // the ball after launch: starts at the mouth with the cart's velocity plus u perpendicular to the track; gravity has components
+  // g sin(phi) along the track and -g cos(phi) perpendicular to it
+  function ballFree(P, t) {
+    const as = G * Math.sin(P.phi), an = -G * Math.cos(P.phi);
+    return { s: P.v * t + 0.5 * as * t * t, n: P.u * t + 0.5 * an * t * t, vs: P.v + as * t, vn: P.u + an * t, as, an };
+  }
+  // time after launch at which the ball comes back down to level n (n <= 0)
+  const downTo = (P, n) => { const gn = G * Math.cos(P.phi); return (P.u + Math.sqrt(P.u * P.u - 2 * gn * n)) / gn; };
+  const flightTime = (P) => downTo(P, 0);
+  // where it lands: in the launcher, on the cart's top, or on the track
+  function landing(P) {
+    const T = flightTime(P), miss = ballFree(P, T).s - cartAt(P, T).s;
+    if (Math.abs(miss) <= CATCH) return { kind: 'caught', t: T, miss, n: 0 };
+    const tTop = downTo(P, TOPN), mTop = ballFree(P, tTop).s - cartAt(P, tTop).s;
+    if (Math.abs(mTop) <= HALF) return { kind: 'cart', t: tTop, miss: mTop, n: TOPN, T };
+    const tTr = downTo(P, -MOUTH);
+    return { kind: 'track', t: tTr, miss: ballFree(P, tTr).s - cartAt(P, tTr).s, n: -MOUTH, s: ballFree(P, tTr).s, T };
+  }
+  // the ball at any time: in the launcher before launch, free after it, then resting where it landed (in or on the cart, or on the track)
+  function ballAt(P, t) {
+    const c = cartAt(P, t);
+    if (t <= 0) return { s: c.s, n: 0, vs: c.v, vn: 0, as: c.a, an: 0, free: false };
+    const L = landing(P);
+    if (t < L.t) return { ...ballFree(P, t), free: true };
+    if (L.kind === 'track') return { s: L.s, n: L.n, vs: 0, vn: 0, as: 0, an: 0, free: false };
+    return { s: c.s + L.miss, n: L.n, vs: c.v, vn: 0, as: c.a, an: 0, free: false };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const PRESETS = {
+    steady: { v: 1.2, u: 4, ac: 0, phi: 0, hint: 'The cart rolls at constant speed. Watch the ball land back in the launcher.' },
+    rest: { v: 0, u: 4, ac: 0, phi: 0, hint: 'The cart is at rest: the ball goes straight up and straight down. Compare with Steady cart in the cart’s view.' },
+    push: { v: 1.2, u: 4, ac: 1.5, phi: 0, hint: 'A motor pushes the cart forward from the moment of launch. Nothing pushes the ball forward.' },
+    brake: { v: 1.2, u: 4, ac: -1.5, phi: 0, hint: 'The cart brakes from the moment of launch. The ball keeps going forward.' },
+    incline: { v: 0.5, u: 4, ac: 0, phi: 15, hint: 'The cart rolls freely down the incline and speeds up, and the launcher points perpendicular to the track. Does the ball still land in the cart?' },
+  };
+  const S = { preset: 'steady', v: 1.2, u: 4, ac: 0, phiDeg: 15, t: 0, tPre: 0.8, running: false, paused: false, k: 1, frame: 'ground', blind: false, heldAtTop: false, hist: [] };
+  const P = () => ({ v: S.v, u: S.u, ac: S.preset === 'incline' ? 0 : S.ac, phi: S.preset === 'incline' ? S.phiDeg * Math.PI / 180 : 0 });
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      cart: g('--cart'), cartTop: g('--cartTop'), ball: g('--ball'), track: g('--track'), trackHi: g('--trackHi'), bench: g('--bench'), benchDark: g('--benchDark'), board: g('--board'), boardFrame: g('--boardFrame'), wall: g('--wall'), floor: g('--floor'), vx: g('--vx'), vy: g('--vy'), v: g('--v'), g: g('--g'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
+  const tPre = () => { const p = P(); return p.phi > 0 ? Math.min(0.5, p.v / (G * Math.sin(p.phi))) : 0.5; };
+  const tEnd = () => landing(P()).t + 0.4;
+
+  function setPreset(name) {
+    const q = PRESETS[name]; S.preset = name; S.v = q.v; S.u = q.u; S.ac = q.ac; if (q.phi) S.phiDeg = q.phi; reset(); sync();
+    $('presetHint').textContent = q.hint;
+  }
+  function reset() { S.tPre = tPre(); S.t = -S.tPre; S.running = false; S.paused = false; S.heldAtTop = false; S.hist = []; $('predict').hidden = true; draw(); readouts(); syncBtns(); }
+  function launch() {
+    reset(); S.running = true;
+    if (reduce) { S.t = tEnd(); recordAll(); S.running = false; }
+    draw(); readouts(); syncBtns();
+  }
+  function recordAll() { S.hist = []; const p = P(), a = 0, b = tEnd(); for (let i = 0; i <= 400; i++) { const t = a + (b - a) * i / 400; S.hist.push([t, cartAt(p, t).s, ballAt(p, t).s]); } }
+  function syncBtns() {
+    $('go').textContent = S.running ? 'Launching…' : 'Launch'; $('go').disabled = S.running && !S.paused;
+    $('pause').textContent = S.paused ? 'Resume' : 'Pause'; $('pause').disabled = !S.running;
+  }
+  function sync() {
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    const inc = S.preset === 'incline'; $('rowA').hidden = inc; $('rowPhi').hidden = !inc;
+    $('sV').value = S.v; $('oV').textContent = `${S.v.toFixed(1)} m/s`; $('sU').value = S.u; $('oU').textContent = `${S.u.toFixed(1)} m/s`;
+    $('sA').value = S.ac; $('oA').textContent = `${f(S.ac, 1)} m/s²`; $('sPhi').value = S.phiDeg; $('oPhi').textContent = `${S.phiDeg}°`;
+  }
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) setPreset(b.dataset.p); });
+  for (const [id, key] of [['sV', 'v'], ['sU', 'u'], ['sA', 'ac'], ['sPhi', 'phiDeg']]) $(id).addEventListener('input', (e) => { S[key] = +e.target.value; sync(); reset(); });
+  $('go').addEventListener('click', launch);
+  $('pause').addEventListener('click', () => { if (!S.running) return; S.paused = !S.paused; if (!S.paused) $('predict').hidden = true; syncBtns(); readouts(); });
+  $('reset').addEventListener('click', reset);
+  $('speed').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (!b) return; S.k = +b.dataset.k; for (const x of $('speed').children) x.setAttribute('aria-pressed', String(x === b)); });
+  $('frame').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (!b) return; S.frame = b.dataset.f; for (const x of $('frame').children) x.setAttribute('aria-pressed', String(x === b)); draw(); readouts(); });
+  for (const id of ['cbV', 'cbC', 'cbG', 'cbS', 'cbP']) $(id).addEventListener('change', draw);
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; if (!S.blind) $('predict').hidden = true; draw(); readouts(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { (S.running ? $('pause') : $('go')).click(); e.preventDefault(); } });
+
+  function tick(dt) {
+    if (!S.running || S.paused) return;
+    const p = P(), top = flightTime(p) / 2, end = tEnd(); let t1 = S.t + dt * S.k;
+    if (S.blind && !S.heldAtTop && S.t < top && t1 >= top) { t1 = top; S.heldAtTop = true; S.paused = true; $('predict').hidden = false; }
+    const steps = Math.max(1, Math.ceil((t1 - S.t) / 0.005));
+    for (let i = 1; i <= steps; i++) { const t = S.t + (t1 - S.t) * i / steps; if (t >= 0) S.hist.push([t, cartAt(p, t).s, ballAt(p, t).s]); }
+    S.t = Math.min(t1, end); if (S.t >= end) S.running = false;
+    syncBtns(); draw(); readouts();
+  }
+  const hidden = () => S.blind && S.t < landing(P()).t;
+  function readouts() {
+    const p = P(), L = landing(p), Tf = flightTime(p), b = ballAt(p, Math.max(S.t, 0)), c = cartAt(p, S.t), dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`;
+    const vg = Math.hypot(p.v, p.u), ang = Math.atan2(p.u, p.v) * 180 / Math.PI, inc = p.phi > 0;
+    const W1 = inc ? { vel: 'velocity along the track', move: 'along the track', perp: 'velocity perpendicular to the track', ref: 'the track' } : { vel: 'horizontal velocity', move: 'horizontally', perp: 'vertical velocity', ref: 'the horizontal' };
+    let h = dd('Time since launch', S.t < 0 ? 'not launched yet' : `${f(S.t, 2)} s`, true);
+    h += dd('Ball velocity relative to the ground at launch', `${f(vg, 2)} m/s at ${f(ang, 1)}° to ${W1.ref}`, true);
+    h += dd(`Ball’s ${W1.vel}`, `${f(b.vs, 2)} m/s`) + dd(`Cart’s ${W1.vel}`, `${f(c.v, 2)} m/s`);
+    h += dd(`Ball’s ${W1.perp}`, `${f(b.free ? b.vn : 0, 2)} m/s`) + dd('Highest point above the launcher', `${f(p.u * p.u / (2 * G * Math.cos(p.phi)), 2)} m`);
+    if (hidden()) h += '<div class="wide"><dt>Time in the air and where it lands</dt><dd class="ok">hidden in Blind until it lands</dd></div>';
+    else {
+      h += dd('Time in the air (to the launcher’s height)', `${f(Tf, 3)} s`) + dd(`Ball moves ${W1.move}`, `${f(ballFree(p, Tf).s, 3)} m`);
+      h += dd(`Cart moves ${W1.move}`, `${f(cartAt(p, Tf).s, 3)} m`) + dd('Ball relative to the launcher when it comes down', `${f(100 * (ballFree(p, Tf).s - cartAt(p, Tf).s), 1)} cm`);
+      const word = L.kind === 'caught' ? 'back in the launcher' : L.kind === 'cart' ? `on the cart’s top, ${f(Math.abs(100 * L.miss), 0)} cm ${L.miss > 0 ? 'ahead of' : 'behind'} the launcher` : `on the track, ${f(Math.abs(100 * L.miss), 0)} cm ${L.miss > 0 ? 'ahead of' : 'behind'} the cart’s launcher`;
+      h += dd('The ball lands', `<span style="font-family:var(--font-ui)">${word}</span>`, true);
+    }
+    $('out').innerHTML = h;
+  }
+
+  // ---- drawing ----
+  function arrow(x0, y0, dx, dy, col, lab, opt = {}) {
+    const p = ps(), L = Math.hypot(dx, dy); if (L < 3 * p) return;
+    const ux = dx / L, uy = dy / L, h = Math.min(9 * p, L * 0.45), x1 = x0 + dx, y1 = y0 + dy;
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = (opt.w || 2.6) * p; if (opt.dash) ctx.setLineDash([5 * p, 4 * p]);
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - ux * h, y1 - uy * h); ctx.stroke(); ctx.setLineDash([]);
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - ux * h - uy * h * 0.5, y1 - uy * h + ux * h * 0.5); ctx.lineTo(x1 - ux * h + uy * h * 0.5, y1 - uy * h - ux * h * 0.5); ctx.closePath(); ctx.fill();
+    if (lab) { const d = (opt.lo || 12) * p; label(lab, x1 + ux * d, y1 + uy * d, col); }
+  }
+  // a label like "v|x" is drawn as v with a subscript x, centred on (x, y)
+  function label(txt, x, y, col) {
+    const p = ps(), [a, b] = txt.split('|'), fa = `700 ${12 * p}px ${T.ui}`, fb = `700 ${9 * p}px ${T.ui}`;
+    ctx.font = fa; const wa = ctx.measureText(a).width; ctx.font = fb; const wb = b ? ctx.measureText(b).width + 1 : 0, x0 = x - (wa + wb) / 2;
+    ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.font = fa; ctx.fillText(a, x0, y); if (b) { ctx.font = fb; ctx.fillText(b, x0 + wa + 1, y + 4 * p); }
+  }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const p = ps(), pp = P(), L = landing(pp), wide = W > 620, plotH = Math.max(120 * p, Hh * 0.24), sceneTop = (wide ? 48 : 84) * p, sceneBot = Hh - plotH - 26 * p;
+    const ph = pp.phi, cs = Math.cos(ph), sn = Math.sin(ph), cam = S.frame === 'cart';
+    const t = S.t, cNow = cartAt(pp, t), bNow = ballAt(pp, Math.max(t, 0)), bPos = t <= 0 ? { s: cNow.s, n: 0 } : bNow;
+    // fit the run (ground view) or a window around the cart (cart view)
+    const t0 = -S.tPre, t1 = tEnd(), apex = pp.u * pp.u / (2 * G * cs);
+    let sMin, sMax;
+    if (cam) { const span = Math.max(0.9, ...[0, 0.25, 0.5, 0.75, 1].map((q) => Math.abs(ballAt(pp, L.t * q).s - cartAt(pp, L.t * q).s))) + 0.35; sMin = -span; sMax = span; }
+    else { sMin = Math.min(cartAt(pp, t0).s, ballAt(pp, t1).s, cartAt(pp, t1).s) - 0.25; sMax = Math.max(cartAt(pp, t1).s, ballAt(pp, t1).s, ballFree(pp, L.t).s) + 0.25; }
+    const nMin = -MOUTH - 0.12, nMax = apex + 0.12;
+    // world coordinates (x right, y up) of a track point (s, n), relative to the camera origin
+    const off = cam ? cNow.s : 0, wx = (s, n) => (s - off) * cs + n * sn, wy = (s, n) => -(s - off) * sn + n * cs;
+    const corners = [[sMin, nMin], [sMax, nMin], [sMin, nMax], [sMax, nMax]].map(([s, n]) => [wx(s + (cam ? off : 0), n), wy(s + (cam ? off : 0), n)]);
+    const xs = corners.map((q) => q[0]), ys = corners.map((q) => q[1]), bw = Math.max(...xs) - Math.min(...xs), bh = Math.max(...ys) - Math.min(...ys);
+    const availW = W - 32 * p, availH = sceneBot - sceneTop, sc = Math.min(availW / bw, availH / bh, 420 * p);
+    const X0 = 16 * p + (availW - bw * sc) / 2 - Math.min(...xs) * sc, Y0 = sceneTop + (availH - bh * sc) / 2 + Math.max(...ys) * sc;
+    const SX = (s, n) => X0 + wx(s, n) * sc, SY = (s, n) => Y0 - wy(s, n) * sc;
+    // ---- the room, drawn in ground coordinates so it slides past in the cart view ----
+    // absolute ground coordinates (x right, y up, metres; the launch point's mouth is the origin) to the screen
+    const offX = cam ? off * cs : 0, offY = cam ? -off * sn : 0, GX = (x) => X0 + (x - offX) * sc, GY = (y) => Y0 - (y - offY) * sc;
+    const ax = (s, n) => s * cs + n * sn, ay = (s, n) => -s * sn + n * cs;   // track point (absolute s) to ground x, y
+    const RAIL = 0.025, trA = cartAt(pp, -S.tPre).s - HALF - 0.3, trB = Math.max(cartAt(pp, tEnd()).s, ballAt(pp, tEnd()).s) + HALF + 0.3;
+    const benchY = Math.min(ay(trA, -MOUTH - RAIL), ay(trB, -MOUTH - RAIL)) - (ph > 0 ? 0.03 : 0), floorYm = benchY - 0.9;
+    const bxA = Math.min(ax(trA, -MOUTH), ax(trB, -MOUTH)) - 0.35, bxB = Math.max(ax(trA, -MOUTH), ax(trB, -MOUTH)) + 0.35;
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, sceneBot + 10 * p); ctx.clip();
+    ctx.fillStyle = T.wall; ctx.fillRect(0, 0, W, sceneBot + 10 * p);
+    // wall panels, a whiteboard behind the bench and a clock
+    const xL = offX + (0 - X0) / sc, xR = offX + (W - X0) / sc;
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
+    for (let x = Math.floor(xL / 1.2) * 1.2; x <= xR; x += 1.2) { ctx.beginPath(); ctx.moveTo(GX(x), 0); ctx.lineTo(GX(x), GY(floorYm)); ctx.stroke(); }
+    // a faint whiteboard and a clock on the wall, repeating every 4.8 m (kept pale so the ball's path stands out)
+    for (let k = Math.floor(xL / 4.8) - 1; k <= Math.ceil(xR / 4.8) + 1; k++) {
+      const x0 = k * 4.8 - 0.5, x1 = x0 + 1.4, y0 = benchY + 0.45, y1 = benchY + 1.25;
+      ctx.globalAlpha = 0.55;
+      ctx.fillStyle = T.boardFrame; ctx.fillRect(GX(x0) - 2 * p, GY(y1) - 2 * p, GX(x1) - GX(x0) + 4 * p, GY(y0) - GY(y1) + 4 * p);
+      ctx.fillStyle = T.board; ctx.fillRect(GX(x0), GY(y1), GX(x1) - GX(x0), GY(y0) - GY(y1));
+      ctx.fillStyle = T.boardFrame; ctx.fillRect(GX(x0 + 0.15), GY(y0) + 2 * p, GX(x0 + 0.5) - GX(x0 + 0.15), 3 * p);
+      ctx.globalAlpha = 1; const cx = x1 + 0.5, cy = benchY + 1.0, cr = 0.1;
+      ctx.fillStyle = T.board; ctx.strokeStyle = T.boardFrame; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(GX(cx), GY(cy), cr * sc, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(GX(cx), GY(cy)); ctx.lineTo(GX(cx), GY(cy + cr * 0.7)); ctx.moveTo(GX(cx), GY(cy)); ctx.lineTo(GX(cx + cr * 0.5), GY(cy - cr * 0.1)); ctx.stroke(); ctx.globalAlpha = 1;
+    }
+    // floor and baseboard
+    ctx.fillStyle = T.floor; ctx.fillRect(0, GY(floorYm), W, Math.max(0, sceneBot + 10 * p - GY(floorYm)));
+    ctx.fillStyle = T.gridStrong; ctx.fillRect(0, GY(floorYm) - 4 * p, W, 4 * p);
+    // the lab bench: top slab, apron and legs
+    const slab = 0.04;
+    ctx.fillStyle = T.benchDark; for (const lx of [bxA + 0.08, bxB - 0.12]) ctx.fillRect(GX(lx), GY(benchY - slab), 0.04 * sc, GY(floorYm) - GY(benchY - slab));
+    ctx.fillStyle = T.benchDark; ctx.fillRect(GX(bxA + 0.04), GY(benchY - slab), GX(bxB - 0.04) - GX(bxA + 0.04), 0.06 * sc);
+    ctx.fillStyle = T.bench; ctx.fillRect(GX(bxA), GY(benchY), GX(bxB) - GX(bxA), slab * sc);
+    ctx.fillStyle = T.trackHi; ctx.globalAlpha = 0.35; ctx.fillRect(GX(bxA), GY(benchY), GX(bxB) - GX(bxA), Math.max(1, 0.006 * sc)); ctx.globalAlpha = 1;
+    // supports: on the level the track sits on two low feet; on the incline the high end stands on a rod with a clamp
+    ctx.fillStyle = T.track;
+    for (const sF of [trA + 0.12, trB - 0.12]) { const x = ax(sF, -MOUTH - RAIL), y = ay(sF, -MOUTH - RAIL); ctx.fillRect(GX(x) - 3 * p, GY(y), 6 * p, Math.max(2 * p, GY(benchY) - GY(y))); }
+    if (ph > 0) {
+      const xh = ax(trA + 0.12, -MOUTH - RAIL), yh = ay(trA + 0.12, -MOUTH - RAIL);
+      ctx.fillStyle = T.benchDark; ctx.fillRect(GX(xh) - 14 * p, GY(benchY) - 5 * p, 28 * p, 5 * p);   // stand base
+      ctx.fillStyle = T.ink; ctx.fillRect(GX(xh) - 6 * p, GY(yh) - 2 * p, 12 * p, 7 * p);              // clamp
+      ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      ctx.fillText(`incline ${S.phiDeg}°, no friction`, GX(xh) + 18 * p, Math.min(GY(benchY) - 8 * p, sceneBot));
+    }
+    // the track: aluminium beam with a printed scale on its side, rubber end stops
+    const tp = (sv, n) => [SX(sv, n), SY(sv, n)];
+    const quad = (a, b, n0, n1, col) => { ctx.fillStyle = col; ctx.beginPath(); for (const [sv, n] of [[a, n0], [b, n0], [b, n1], [a, n1]]) { const [x, y] = tp(sv, n); ctx.lineTo(x, y); } ctx.closePath(); ctx.fill(); };
+    quad(trA, trB, -MOUTH, -MOUTH - RAIL, T.track);
+    quad(trA, trB, -MOUTH, -MOUTH - Math.max(0.005, 1.5 * p / sc), T.trackHi);
+    for (const [a, b] of [[trA - 0.03, trA], [trB, trB + 0.03]]) quad(a, b, -MOUTH + 0.035, -MOUTH - RAIL, T.ink);
+    ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 1; ctx.font = `${8.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const tick = sc > 300 * p ? 0.05 : 0.1;
+    for (let k = Math.ceil(trA / tick); k * tick <= trB; k++) {
+      const sv = k * tick, big = Math.abs(sv / 0.5 - Math.round(sv / 0.5)) < 1e-6, [x0, y0] = tp(sv, -MOUTH - 0.004), [x1, y1] = tp(sv, -MOUTH - (big ? 0.016 : 0.009));
+      ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke(); ctx.globalAlpha = 1;
+      if (big) { const [xl, yl] = tp(sv, -MOUTH - RAIL - 0.012); ctx.save(); ctx.translate(xl + sn * 4 * p, yl + cs * 4 * p); ctx.rotate(ph); ctx.fillStyle = T.muted; ctx.fillText(`${f(sv, 1)} m`, 0, 0); ctx.restore(); }
+    }
+    // the trigger: a rod clamped to the track at s = 0 with a flag the cart's lever hits
+    { const [x, y] = tp(0, -MOUTH - RAIL / 2); ctx.save(); ctx.translate(x, y); ctx.rotate(ph);
+      ctx.fillStyle = T.ink; ctx.fillRect(-4 * p, -3 * p, 8 * p, 7 * p); ctx.fillStyle = T.muted; const hR = 0.07 * sc; ctx.fillRect(-1.2 * p, -hR, 2.4 * p, hR);
+      const fired = t >= 0; ctx.fillStyle = T.g; ctx.beginPath(); ctx.moveTo(0, -hR); ctx.lineTo(fired ? 6 * p : -9 * p, -hR + (fired ? -5 * p : 3 * p)); ctx.lineTo(0, -hR + 6 * p); ctx.closePath(); ctx.fill(); ctx.restore(); }
+    ctx.restore();
+    // path of the ball (relative to the chosen frame)
+    const showP = $('cbP').checked && t > 0, showS = $('cbS').checked && t > 0;
+    if (showP) {
+      ctx.strokeStyle = T.ball; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.6 * p; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath();
+      const tmax = Math.min(t, L.t), n = 120;
+      for (let i = 0; i <= n; i++) { const tt = tmax * i / n, b = ballAt(pp, tt), o = cam ? cartAt(pp, tt).s - cNow.s : 0; const x = SX(b.s - o, b.n), y = SY(b.s - o, b.n); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    }
+    // strobe images: the ball and the cart at equal intervals, with a thin line from each ball image to its launcher
+    if (showS) {
+      const dt = flightTime(pp) / 8;
+      for (let k = 0; k * dt <= Math.min(t, L.t) + 1e-9; k++) {
+        const tt = k * dt, b = ballAt(pp, tt), c = cartAt(pp, tt), o = cam ? c.s - cNow.s : 0;
+        ctx.globalAlpha = 0.28; drawCart(SX(c.s - o, -MOUTH), SY(c.s - o, -MOUTH), sc, ph, true);
+        ctx.globalAlpha = 0.45; ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([2 * p, 3 * p]);
+        ctx.beginPath(); ctx.moveTo(SX(c.s - o, 0), SY(c.s - o, 0)); ctx.lineTo(SX(b.s - o, b.n), SY(b.s - o, b.n)); ctx.stroke(); ctx.setLineDash([]);
+        ctx.fillStyle = T.ball; ctx.beginPath(); ctx.arc(SX(b.s - o, b.n), SY(b.s - o, b.n), Math.max(4 * p, 0.019 * sc), 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+      }
+    }
+    // the cart and the ball now
+    drawCart(SX(cNow.s, -MOUTH), SY(cNow.s, -MOUTH), sc, ph, false, cNow.s);
+    const bx = SX(bPos.s, bPos.n), by = SY(bPos.s, bPos.n), br = Math.max(5 * p, 0.019 * sc);
+    if (t > 0 && bNow.free) {   // shadow straight below the ball on the track (light from above the track): it stays on the launcher
+      const [sx0, sy0] = [SX(bPos.s, -MOUTH), SY(bPos.s, -MOUTH)], hgt = Math.max(0, bPos.n + MOUTH), al = Math.max(0.08, 0.35 - 0.25 * hgt);
+      ctx.save(); ctx.translate(sx0, sy0); ctx.rotate(ph); ctx.globalAlpha = al; ctx.fillStyle = T.ink; ctx.beginPath(); ctx.ellipse(0, -1, br * (1 + hgt), br * 0.35, 0, 0, 7); ctx.fill(); ctx.restore();
+    }
+    if (t >= 0 && t < 0.18 && !reduce) {   // a puff at the mouth as the launcher fires
+      const [mx, my] = [SX(cNow.s, 0), SY(cNow.s, 0)], q = t / 0.18; ctx.save(); ctx.translate(mx, my); ctx.rotate(ph); ctx.globalAlpha = 1 - q; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * p;
+      for (const a of [-0.9, -0.45, 0.45, 0.9]) { ctx.beginPath(); ctx.moveTo(Math.sin(a) * (6 + 10 * q) * p, -Math.cos(a) * (6 + 10 * q) * p); ctx.lineTo(Math.sin(a) * (12 + 14 * q) * p, -Math.cos(a) * (12 + 14 * q) * p); ctx.stroke(); }
+      ctx.restore();
+    }
+    const grd = ctx.createRadialGradient(bx - br * 0.35, by - br * 0.35, br * 0.1, bx, by, br);
+    grd.addColorStop(0, '#fff3e0'); grd.addColorStop(0.35, T.ball); grd.addColorStop(1, T.ball);
+    ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(bx, by, br, 0, 7); ctx.fill(); ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.6; ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1;
+    // vectors (screen px per m/s and per m/s²); in the cart view velocities are relative to the cart
+    const kv = 26 * p, ka = 6 * p, dirS = [cs, sn], dirN = [sn, -cs];   // screen directions of +s and +n
+    const vec = (x, y, a, b, col, lab, o) => arrow(x, y, (a * dirS[0] + b * dirN[0]), (a * dirS[1] + b * dirN[1]), col, lab, o);
+    if ($('cbV').checked) {
+      const cv = cam ? 0 : cNow.v, mid = (TOPN - MOUTH) / 2 + 0.01, cx = SX(cNow.s + HALF, mid), cy = SY(cNow.s + HALF, mid);
+      if (Math.abs(cv) > 0.005) vec(cx, cy, cv * kv, 0, T.vx, 'v|cart', { lo: 20 });
+      else if (cam) { ctx.fillStyle = T.vx; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('cart at rest in this view', cx + 8 * p, cy); }
+      if (t > 0 && bNow.free) {
+        const vs = bNow.vs - (cam ? cNow.v : 0), vn = bNow.vn;
+        if ($('cbC').checked && Math.abs(vs) > 0.05 && Math.abs(vn) > 0.05) { vec(bx, by, vs * kv, 0, T.vx, Math.abs(vs) > 0.02 ? (ph ? 'v|along' : 'v|x') : '', { dash: true, w: 2.2 }); vec(bx, by, 0, vn * kv, T.vy, Math.abs(vn) > 0.05 ? (ph ? 'v|perp' : 'v|y') : '', { dash: true, w: 2.2 }); }
+        vec(bx, by, vs * kv, vn * kv, T.v, 'v', {});
+      }
+    }
+    if ($('cbG').checked && t > 0 && bNow.free) {
+      const as = bNow.as - (cam ? cNow.a : 0), an = bNow.an;
+      vec(bx, by, as * ka, an * ka, T.g, cam && Math.abs(cNow.a) > 1e-9 ? 'a|rel. to cart' : 'g', { lo: 16 });
+      if (Math.abs(cNow.a) > 1e-9 && !cam) vec(SX(cNow.s - HALF, (TOPN - MOUTH) / 2), SY(cNow.s - HALF, (TOPN - MOUTH) / 2), cNow.a * ka, 0, T.g, 'a|cart', { w: 2 });
+    }
+    // caption
+    const capX = wide ? W - 12 * p : 12 * p, capY = wide ? 12 * p : 52 * p;
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = wide ? 'right' : 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(cam ? 'seen from the cart: velocities relative to the cart' : 'seen from the ground', capX, capY);
+    if (t > 0 && !hidden() && t >= L.t) { ctx.fillStyle = L.kind === 'caught' ? T.vy : T.g; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.fillText(L.kind === 'caught' ? 'Back in the launcher' : L.kind === 'cart' ? 'Missed the launcher' : 'Missed the cart', capX, capY + 16 * p); }
+    plot(48 * p, sceneBot + 32 * p, W - 64 * p, plotH - 40 * p);
+  }
+  // cart drawn at track point (x, y) on the screen: body, wheels that turn as it rolls, a launcher tube on a bracket, and the trip lever;
+  // sc is px per metre, pos the cart's position (for the wheel angle)
+  function drawCart(x, y, sc, ph, ghost, pos = 0) {
+    const p = ps(); ctx.save(); ctx.translate(x, y); ctx.rotate(ph);
+    const m = (v) => v * sc, hl = m(HALF), wr = Math.max(3.5 * p, m(0.028)), yb = -m(MOUTH + TOPN), yBot = -2 * wr + Math.max(1, m(0.008));
+    const tw = Math.max(6 * p, m(0.032)), ym = -m(MOUTH), rr = Math.min(6 * p, (yBot - yb) * 0.3);
+    const rrect = (x0, y0, w, h, r) => { ctx.beginPath(); ctx.moveTo(x0 + r, y0); ctx.arcTo(x0 + w, y0, x0 + w, y0 + h, r); ctx.arcTo(x0 + w, y0 + h, x0, y0 + h, r); ctx.arcTo(x0, y0 + h, x0, y0, r); ctx.arcTo(x0, y0, x0 + w, y0, r); ctx.closePath(); };
+    if (ghost) {
+      ctx.strokeStyle = T.cart; ctx.lineWidth = 1.2 * p; rrect(-hl, yb, 2 * hl, yBot - yb, rr); ctx.stroke();
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1; for (const wx of [-hl * 0.62, hl * 0.62]) { ctx.beginPath(); ctx.arc(wx, -wr, wr, 0, 7); ctx.stroke(); }
+      ctx.strokeRect(-tw / 2, ym, tw, yb - ym); ctx.restore(); return;
+    }
+    // wheels with hubs and spokes; angle = distance / radius (true radius 0.028 m)
+    for (const wx of [-hl * 0.62, hl * 0.62]) {
+      ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(wx, -wr, wr, 0, 7); ctx.fill();
+      ctx.fillStyle = T.trackHi; ctx.beginPath(); ctx.arc(wx, -wr, wr * 0.55, 0, 7); ctx.fill();
+      ctx.strokeStyle = T.ink; ctx.lineWidth = Math.max(1, wr * 0.15); const a0 = pos / 0.028;
+      for (let k = 0; k < 3; k++) { const a = a0 + k * 2.094; ctx.beginPath(); ctx.moveTo(wx, -wr); ctx.lineTo(wx + Math.cos(a) * wr * 0.55, -wr + Math.sin(a) * wr * 0.55); ctx.stroke(); }
+    }
+    // body: rounded, with a lighter top edge and a label plate
+    ctx.fillStyle = T.cart; rrect(-hl, yb, 2 * hl, yBot - yb, rr); ctx.fill();
+    ctx.fillStyle = T.trackHi; ctx.globalAlpha = 0.45; ctx.fillRect(-hl + rr, yb + 1, 2 * hl - 2 * rr, Math.max(1.5, (yBot - yb) * 0.12)); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.cartTop; ctx.globalAlpha = 0.9; rrect(-hl * 0.75, yb + (yBot - yb) * 0.35, hl * 0.6, (yBot - yb) * 0.4, 2); ctx.fill(); ctx.globalAlpha = 1;
+    // trip lever under the body at the back, which meets the trigger flag
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(-hl * 0.2, yBot); ctx.lineTo(-hl * 0.05, yBot + Math.max(3 * p, m(0.012))); ctx.stroke();
+    // launcher: bracket, tube and darker rim at the mouth
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.moveTo(-tw * 1.1, yb); ctx.lineTo(tw * 1.1, yb); ctx.lineTo(tw * 0.6, yb - Math.max(3 * p, m(0.012))); ctx.lineTo(-tw * 0.6, yb - Math.max(3 * p, m(0.012))); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = T.cartTop; ctx.fillRect(-tw / 2, ym, tw, yb - ym); ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.strokeRect(-tw / 2, ym, tw, yb - ym);
+    ctx.fillStyle = T.trackHi; ctx.globalAlpha = 0.6; ctx.fillRect(-tw / 2 + 1, ym + 1, tw * 0.25, yb - ym - 2); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.ink; ctx.fillRect(-tw / 2 - 1.5 * p, ym - 1.5 * p, tw + 3 * p, 3 * p);
+    ctx.restore();
+  }
+  function plot(x0, y0, w, h) {
+    const p = ps(), pp = P(), tE = tEnd(), hist = S.hist;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(x0, y0, w, h);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(W > 520 ? 'position along the track (m) against time after launch: cart solid, ball dashed' : 'position (m) vs time: cart solid, ball dashed', x0, y0 - 3);
+    const all = [0, cartAt(pp, tE).s, ballAt(pp, tE).s, ballFree(pp, landing(pp).t).s], lo = Math.min(...all), hi = Math.max(...all, lo + 0.1);
+    const X = (t) => x0 + w * t / tE, Y = (v) => y0 + h - h * (v - lo) / (hi - lo);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(f(hi, 2), x0 - 3, Y(hi)); ctx.fillText(f(lo, 2), x0 - 3, Y(lo));
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(`${f(tE, 2)} s`, x0 + w, y0 + h + 2);
+    if (!hist.length || hidden()) return;
+    for (const [key, col, dash] of [[1, T.cart, false], [2, T.ball, true]]) {
+      ctx.strokeStyle = col; ctx.lineWidth = 2 * p; if (dash) ctx.setLineDash([6 * p, 5 * p]); ctx.beginPath();
+      hist.forEach((q, i) => (i ? ctx.lineTo(X(q[0]), Y(q[key])) : ctx.moveTo(X(q[0]), Y(q[key])))); ctx.stroke(); ctx.setLineDash([]);
+    }
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
+  tokens(); new ResizeObserver(resize).observe(stage);
+  const hp = (location.hash || '').slice(1); setPreset(PRESETS[hp] ? hp : 'steady'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  let last = performance.now();
+  (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();
+})();
+</script>
+</body>
+</html>

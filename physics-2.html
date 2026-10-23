@@ -220,6 +220,9 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
 .links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: auto !important; padding-top: 8px; font-size: 0.88rem; }
 .links a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; min-height: 28px; display: inline-flex; align-items: center; }
 .links a.go { color: var(--canvas); background: var(--accent); border-radius: 7px; padding: 4px 12px; text-decoration: none; min-height: 36px; }
+.also { grid-column: 1 / -1; color: var(--muted); font-size: 0.92rem; padding: 4px 2px; }
+.also a { font-weight: 700; }
+.also .where, .also .where a { font-weight: 400; }
 .none { color: var(--muted); padding: 18px; border: 1px dashed var(--line); border-radius: 12px; }
 .gaps { margin-top: 12px; font-size: 0.9rem; }
 .gaps summary { cursor: pointer; color: var(--muted); font-weight: 700; min-height: 32px; display: flex; align-items: center; gap: 8px; }
@@ -302,16 +305,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="links"><a class="go" href="demos/gauss-law.html">Open demo</a> <a href="curriculum/labs/students/gauss-law.html">Student handout</a> <a href="notes/gauss-law.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
-        <a class="pic" href="demos/induction.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/induction-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/induction-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
-        <div class="body">
-          <p class="kind"><span class="role role-demo">Demo</span></p>
-          <h3><a href="demos/induction.html">Charging by Induction</a></h3>
-          <p>Charge two metal spheres without touching them: bring a charged rod near, separate the spheres or ground one, then take the rod away. Every mark on the spheres comes from an exact electrostatics solution.</p>
-          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:6.4</span> Conductors in Electrostatic Equilibrium</li></ul>
-          <p class="links"><a class="go" href="demos/induction.html">Open demo</a> <a href="notes/induction.html">Notes</a></p>
-        </div>
-      </li>
+      <li class="also">Also used in this unit: <a href="demos/induction.html">Charging by Induction</a> <span class="where">(card under <a href="#charge-fields">Charge and electric fields</a>; 2:6.4)</span></li>
     </ul>
     <details class="gaps">
       <summary>Sections without a full activity <span class="n">1</span></summary>
@@ -323,16 +317,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <h2 id="potential-h">Electric potential</h2>
     <p class="meta"><span>Vol 2 · Ch. 7</span><span>5 of 6 sections with an activity</span></p>
     <ul class="list">
-      <li class="item">
-        <a class="pic" href="demos/coulomb-sandbox.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/coulomb-sandbox-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/coulomb-sandbox-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
-        <div class="body">
-          <p class="kind"><span class="role role-lab">Lab</span></p>
-          <h3><a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a></h3>
-          <p>Drag point charges and watch the field lines, equipotentials and potential update live, as a 2D map or a rotatable 3D landscape.</p>
-          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:7.1</span> Electric Potential Energy</li><li><span class="sec">2:7.2</span> Electric Potential and Potential Difference</li><li><span class="sec">2:7.3</span> Calculations of Electric Potential</li><li><span class="sec">2:7.4</span> Determining Field from Potential</li><li><span class="sec">2:7.5</span> Equipotential Surfaces and Conductors</li></ul>
-          <p class="links"><a class="go" href="demos/coulomb-sandbox.html">Open demo</a> <a href="curriculum/labs/students/coulomb-sandbox.html">Student handout</a> <a href="notes/coulomb-sandbox.html">Notes</a></p>
-        </div>
-      </li>
+      <li class="also">Also used in this unit: <a href="demos/coulomb-sandbox.html">Coulomb Sandbox</a> <span class="where">(card under <a href="#charge-fields">Charge and electric fields</a>; 2:7.1, 2:7.2, 2:7.3, 2:7.4, 2:7.5)</span></li>
     </ul>
     <details class="gaps">
       <summary>Sections without a full activity <span class="n">1</span></summary>
@@ -396,16 +381,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <h2 id="dc-circuits-h">DC circuits</h2>
     <p class="meta"><span>Vol 2 · Ch. 10</span><span>5 of 6 sections with an activity</span></p>
     <ul class="list">
-      <li class="item">
-        <a class="pic" href="demos/circuits.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/circuits-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/circuits-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
-        <div class="body">
-          <p class="kind"><span class="role role-lab">Lab</span></p>
-          <h3><a href="demos/circuits.html">Circuits</a></h3>
-          <p>Everything in one place: build DC circuits with batteries, bulbs and meters, charge a capacitor through a resistor, drive an RLC circuit to resonance, and watch circuits ring down on their own.</p>
-          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:10.1</span> Electromotive Force</li><li><span class="sec">2:10.2</span> Resistors in Series and Parallel</li><li><span class="sec">2:10.3</span> Kirchhoff&#x27;s Rules</li><li><span class="sec">2:10.4</span> Electrical Measuring Instruments</li><li><span class="sec">2:10.5</span> RC Circuits</li></ul>
-          <p class="links"><a class="go" href="demos/circuits.html">Open demo</a> <a href="curriculum/labs/students/dc-circuits.html">Student handout</a> <a href="curriculum/labs/students/rc-circuits.html">Student handout</a> <a href="curriculum/labs/students/rlc-transients.html">Student handout</a> <a href="curriculum/labs/students/ac-circuits.html">Student handout</a> <a href="notes/circuits.html">Notes</a></p>
-        </div>
-      </li>
+      <li class="also">Also used in this unit: <a href="demos/circuits.html">Circuits</a> <span class="where">(card under <a href="#current-resistance">Current and resistance</a>; 2:10.1, 2:10.2, 2:10.3, 2:10.4, 2:10.5)</span></li>
     </ul>
     <details class="gaps">
       <summary>Sections without a full activity <span class="n">1</span></summary>
@@ -459,16 +435,6 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
     <p class="meta"><span>Vol 2 · Ch. 12</span><span>6 of 7 sections with an activity</span></p>
     <ul class="list">
       <li class="item">
-        <a class="pic" href="demos/currents-fields.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/currents-fields-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/currents-fields-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
-        <div class="body">
-          <p class="kind"><span class="role role-demo">Demo</span></p>
-          <h3><a href="demos/currents-fields.html">Magnetic Fields of Currents</a></h3>
-          <p>Drag wires and watch their fields add and the forces between them, test Ampère's law on any loop with a numerical integral, and bend the current into a loop or a solenoid computed exactly from Biot–Savart.</p>
-          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:12.1</span> The Biot-Savart Law</li><li><span class="sec">2:12.2</span> Magnetic Field Due to a Thin Straight Wire</li><li><span class="sec">2:12.3</span> Magnetic Force between Two Parallel Currents</li><li><span class="sec">2:12.4</span> Magnetic Field of a Current Loop</li><li><span class="sec">2:12.5</span> Ampère’s Law</li><li><span class="sec">2:12.6</span> Solenoids and Toroids</li></ul>
-          <p class="links"><a class="go" href="demos/currents-fields.html">Open demo</a> <a href="notes/currents-fields.html">Notes</a></p>
-        </div>
-      </li>
-      <li class="item">
         <a class="pic" href="demos/displacement-current.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/displacement-current-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/displacement-current-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
         <div class="body">
           <p class="kind"><span class="role role-demo">Demo</span></p>
@@ -478,6 +444,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="links"><a class="go" href="demos/displacement-current.html">Open demo</a> <a href="notes/displacement-current.html">Notes</a></p>
         </div>
       </li>
+      <li class="also">Also used in this unit: <a href="demos/currents-fields.html">Magnetic Fields of Currents</a> <span class="where">(card under <a href="#magnetic-forces">Magnetic forces and fields</a>; 2:12.1, 2:12.2, 2:12.3, 2:12.4, 2:12.5, 2:12.6)</span></li>
     </ul>
     <details class="gaps">
       <summary>Sections without a full activity <span class="n">1</span></summary>
@@ -509,16 +476,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="links"><a class="go" href="demos/eddy-currents.html">Open demo</a> <a href="notes/eddy-currents.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
-        <a class="pic" href="demos/circuits.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/circuits-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/circuits-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
-        <div class="body">
-          <p class="kind"><span class="role role-lab">Lab</span></p>
-          <h3><a href="demos/circuits.html">Circuits</a></h3>
-          <p>Everything in one place: build DC circuits with batteries, bulbs and meters, charge a capacitor through a resistor, drive an RLC circuit to resonance, and watch circuits ring down on their own.</p>
-          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:14.2</span> Self-Inductance and Inductors</li><li><span class="sec">2:14.3</span> Energy in a Magnetic Field</li><li><span class="sec">2:14.4</span> RL Circuits</li><li><span class="sec">2:14.5</span> Oscillations in an LC Circuit</li><li><span class="sec">2:14.6</span> RLC Series Circuits</li></ul>
-          <p class="links"><a class="go" href="demos/circuits.html">Open demo</a> <a href="curriculum/labs/students/dc-circuits.html">Student handout</a> <a href="curriculum/labs/students/rc-circuits.html">Student handout</a> <a href="curriculum/labs/students/rlc-transients.html">Student handout</a> <a href="curriculum/labs/students/ac-circuits.html">Student handout</a> <a href="notes/circuits.html">Notes</a></p>
-        </div>
-      </li>
+      <li class="also">Also used in this unit: <a href="demos/circuits.html">Circuits</a> <span class="where">(card under <a href="#current-resistance">Current and resistance</a>; 2:14.2, 2:14.3, 2:14.4, 2:14.5, 2:14.6)</span></li>
     </ul>
     <details class="gaps">
       <summary>Sections without a full activity <span class="n">3</span></summary>
@@ -540,16 +498,7 @@ footer a { color: var(--accent); text-underline-offset: 3px; }
           <p class="links"><a class="go" href="demos/em-waves.html">Open demo</a> <a href="notes/em-waves.html">Notes</a></p>
         </div>
       </li>
-      <li class="item">
-        <a class="pic" href="demos/displacement-current.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/displacement-current-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/displacement-current-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
-        <div class="body">
-          <p class="kind"><span class="role role-demo">Demo</span></p>
-          <h3><a href="demos/displacement-current.html">Displacement Current</a></h3>
-          <p>Charge a capacitor and move an Amperian loop along the wire and into the gap. Stretch its surface between the plates and see why Maxwell added ε₀ dΦE/dt to Ampère's law.</p>
-          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:16.1</span> Maxwell’s Equations and Electromagnetic Waves</li></ul>
-          <p class="links"><a class="go" href="demos/displacement-current.html">Open demo</a> <a href="notes/displacement-current.html">Notes</a></p>
-        </div>
-      </li>
+      <li class="also">Also used in this unit: <a href="demos/displacement-current.html">Displacement Current</a> <span class="where">(card under <a href="#magnetic-sources">Sources of magnetic fields</a>; 2:16.1)</span></li>
     </ul>
     <details class="gaps">
       <summary>Sections without a full activity <span class="n">4</span></summary>
