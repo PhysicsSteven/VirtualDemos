@@ -105,6 +105,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
 .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
 .check input { accent-color: var(--accent); margin: 0; }
+.sigplot { width: 100%; height: 170px; display: block; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
 @media (max-width: 820px) {
   html, body { height: auto; } .app { height: auto; }
@@ -124,7 +125,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <p>Bring a charged rod near two metal spheres without touching them. Free electrons in the metal move, so the near side and the far side get opposite charges. Separate the spheres, or ground one, before taking the rod away, and the charge stays.</p>
     </div>
     <div class="bar-right">
-      <div class="units mono">spheres 5 cm radius · exact image charge solution</div>
+      <div class="units mono" id="units">spheres 5 cm radius · exact image charge solution</div>
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
       <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/induction.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/induction.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h4v1h-4zM17 2h1v1h-1zM19 2h3v1h-3zM24 2h1v1h-1zM26 2h5v1h-5zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h2v1h-2zM15 3h2v1h-2zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h2v1h-2zM16 4h1v1h-1zM19 4h7v1h-7zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h3v1h-3zM17 5h2v1h-2zM20 5h2v1h-2zM25 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM16 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM18 7h1v1h-1zM20 7h5v1h-5zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM13 9h1v1h-1zM19 9h4v1h-4zM24 9h2v1h-2zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM15 10h1v1h-1zM20 10h2v1h-2zM24 10h3v1h-3zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h2v1h-2zM5 11h2v1h-2zM9 11h3v1h-3zM15 11h1v1h-1zM18 11h1v1h-1zM21 11h3v1h-3zM27 11h4v1h-4zM34 11h4v1h-4zM3 12h1v1h-1zM6 12h4v1h-4zM11 12h1v1h-1zM13 12h2v1h-2zM16 12h1v1h-1zM18 12h1v1h-1zM22 12h3v1h-3zM28 12h4v1h-4zM33 12h2v1h-2zM2 13h1v1h-1zM4 13h2v1h-2zM11 13h1v1h-1zM15 13h2v1h-2zM19 13h1v1h-1zM23 13h2v1h-2zM26 13h1v1h-1zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h2v1h-2zM5 14h2v1h-2zM8 14h1v1h-1zM10 14h1v1h-1zM13 14h5v1h-5zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM4 15h4v1h-4zM9 15h1v1h-1zM11 15h1v1h-1zM14 15h1v1h-1zM16 15h4v1h-4zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM5 16h6v1h-6zM13 16h1v1h-1zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h8v1h-8zM31 16h7v1h-7zM2 17h1v1h-1zM4 17h1v1h-1zM6 17h2v1h-2zM9 17h2v1h-2zM12 17h1v1h-1zM15 17h1v1h-1zM17 17h1v1h-1zM21 17h3v1h-3zM26 17h1v1h-1zM30 17h1v1h-1zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h1v1h-1zM8 18h1v1h-1zM11 18h1v1h-1zM13 18h4v1h-4zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM28 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM5 19h2v1h-2zM9 19h1v1h-1zM11 19h1v1h-1zM13 19h2v1h-2zM20 19h2v1h-2zM24 19h1v1h-1zM26 19h5v1h-5zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h2v1h-2zM5 20h1v1h-1zM7 20h3v1h-3zM11 20h2v1h-2zM16 20h2v1h-2zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h6v1h-6zM3 21h2v1h-2zM6 21h2v1h-2zM10 21h1v1h-1zM12 21h3v1h-3zM16 21h4v1h-4zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h1v1h-1zM30 21h2v1h-2zM36 21h2v1h-2zM2 22h2v1h-2zM6 22h4v1h-4zM12 22h1v1h-1zM19 22h1v1h-1zM22 22h5v1h-5zM31 22h3v1h-3zM36 22h1v1h-1zM9 23h1v1h-1zM13 23h1v1h-1zM15 23h4v1h-4zM22 23h2v1h-2zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h8v1h-8zM11 24h2v1h-2zM14 24h1v1h-1zM16 24h4v1h-4zM22 24h1v1h-1zM25 24h1v1h-1zM27 24h3v1h-3zM32 24h5v1h-5zM2 25h1v1h-1zM6 25h1v1h-1zM12 25h6v1h-6zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h6v1h-6zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h2v1h-2zM6 26h1v1h-1zM8 26h5v1h-5zM16 26h1v1h-1zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h2v1h-2zM5 27h1v1h-1zM7 27h1v1h-1zM9 27h1v1h-1zM12 27h2v1h-2zM15 27h2v1h-2zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM4 28h1v1h-1zM7 28h3v1h-3zM11 28h4v1h-4zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM6 29h2v1h-2zM9 29h1v1h-1zM13 29h2v1h-2zM19 29h2v1h-2zM23 29h4v1h-4zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h3v1h-3zM7 30h2v1h-2zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h1v1h-1zM13 31h2v1h-2zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h9v1h-9zM20 32h1v1h-1zM22 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM16 33h2v1h-2zM23 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h1v1h-1zM15 34h1v1h-1zM17 34h2v1h-2zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM14 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h2v1h-2zM15 36h3v1h-3zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM14 37h1v1h-1zM17 37h10v1h-10zM28 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM32 38h2v1h-2zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
     </div>
@@ -144,11 +145,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="induce" aria-pressed="true">Charging two spheres by induction</button>
           <button type="button" data-p="ground" aria-pressed="false">Charging one sphere by grounding</button>
           <button type="button" data-p="contact" aria-pressed="false">Sharing charge by contact</button>
+          <button type="button" data-p="shapes" aria-pressed="false">Conductor shapes in a field (2D)</button>
         </div>
         <p class="hint" id="presetHint"></p>
       </section>
 
-      <section>
+      <section id="appSec">
         <h2>Apparatus</h2>
         <label class="check"><input type="checkbox" id="rodOn"><span>Charged rod present</span></label>
         <div><div class="slider-head"><label for="sQ">Rod charge</label><output id="oQ" for="sQ"></output></div><input type="range" id="sQ" min="-20" max="20" step="1"></div>
@@ -160,6 +162,24 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <label class="check"><input type="checkbox" id="gB"><span>Ground sphere B</span></label>
       </section>
 
+      <section id="shapeSec" hidden>
+        <h2>Conductor (cross-section)</h2>
+        <div class="chips" id="shapeChips" role="group" aria-label="Conductor shape">
+          <button type="button" data-s="circle" aria-pressed="true">Circle</button>
+          <button type="button" data-s="ellipse" aria-pressed="false">Ellipse</button>
+          <button type="button" data-s="teardrop" aria-pressed="false">Teardrop (sharp point)</button>
+          <button type="button" data-s="ring" aria-pressed="false">Hollow ring</button>
+          <button type="button" data-s="box" aria-pressed="false">Hollow box (Faraday cage)</button>
+        </div>
+        <div><div class="slider-head"><label for="sE0">External field E₀ (along +x)</label><output id="oE0" for="sE0"></output></div><input type="range" id="sE0" min="0" max="2000" step="50"></div>
+        <div><div class="slider-head"><label for="sLam">Line charge λ</label><output id="oLam" for="sLam"></output></div><input type="range" id="sLam" min="-10" max="10" step="0.5"></div>
+        <div><div class="slider-head"><label for="sLd">Line charge distance from the conductor</label><output id="oLd" for="sLd"></output></div><input type="range" id="sLd" min="0.5" max="4" step="0.1"></div>
+        <div><div class="slider-head"><label for="sLc">Net charge on the conductor</label><output id="oLc" for="sLc"></output></div><input type="range" id="sLc" min="-10" max="10" step="0.5"></div>
+        <p class="hint">Drag on the picture, or focus it and use the arrow keys (Shift for bigger steps), to move the probe.</p>
+        <canvas class="sigplot" id="sigPlot" role="img" aria-label="Graph of the surface charge density along the surface against the angle around the centre"></canvas>
+        <p class="hint" id="plotHint"></p>
+      </section>
+
       <section>
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
@@ -168,8 +188,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
-        <p class="hint">Blind hides the net charges and potentials; the marks on the spheres stay, as an electroscope or a charge probe would show.</p>
-        <p class="hint">Model: two perfectly conducting spheres on ideal insulating stands and the rod's tip as a point charge, solved exactly with Kelvin image charges (a thin wire or contact makes the spheres one conductor; ground holds a sphere at zero potential). The marks are drawn from the surface charge density in the plane of the drawing: their darkness is in proportion to the density, and their sign is its sign. Real charge sits as a tiny excess or shortage of electrons; only electrons move.</p>
+        <p class="hint">Blind hides the net charges and potentials; the marks on the spheres stay, as an electroscope or a charge probe would show. In Conductor shapes, Blind hides the summary readouts, the E = 0 labels and the exact curve; the field lines, marks, graph and probe stay.</p>
+        <p class="hint" id="modelSph">Model: two perfectly conducting spheres on ideal insulating stands and the rod's tip as a point charge, solved exactly with Kelvin image charges (a thin wire or contact makes the spheres one conductor; ground holds a sphere at zero potential). The marks are drawn from the surface charge density in the plane of the drawing: their darkness is in proportion to the density, and their sign is its sign. Real charge sits as a tiny excess or shortage of electrons; only electrons move.</p>
+        <p class="hint" id="modelShape" hidden>Model (Conductor shapes): a 2D cross-section. Each conductor is very long along the line of sight, so every field lies in the plane of the picture; the point charge becomes a line charge λ (charge per length, seen end on) and the conductor's net charge is per length too. The conductor is a perfect conductor, isolated, with the net charge per length you set (zero: neutral); its potential comes out of the solution. Solved by a boundary element method: the surface is cut into straight panels (the readout gives how many), each with a uniform σ; the potential is set equal at every panel's midpoint and the total charge is fixed, and one dense linear solve gives every σ. The field anywhere is then the exact field of those panel charges plus E₀ and λ, so E = 0 inside the metal and the cavity is not imposed: it comes out of the solution, and the readouts report what is left (the numerical error). Convergence, checked in the test file: doubling the panels changes the largest σ by less than 0.1 %, and the circle matches the exact σ = 2ε₀E₀ cos θ to better than 0.01 % of 2ε₀E₀. The teardrop's point is rounded to 1.5 mm and the box's corners to 3 mm (outside) and 1 mm (cavity): at a perfectly sharp point σ grows without limit. Field lines are traced from positive charges and from where the field enters the picture, one line per equal amount of flux. The probe compares σ on the nearest panel with ε₀E⊥ just outside it; with uniform σ on each panel they agree to within about 1 % of the largest σ.</p>
       </section>
     </aside>
   </main>
@@ -227,6 +248,234 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return EPS0 * (ex * Math.cos(th) + ey * Math.sin(th));
   }
   function potentialAt(charges, x, y) { let v = 0; for (const c of charges) v += K * c.q / Math.hypot(x - c.x, y); return v; }
+
+  // ---- Conductor shapes in a plane (2D cross-sections of long conductors), solved with a boundary element method ----
+  // The surface is cut into straight panels, each with a uniform surface charge density σ. The unknowns are the σ of every panel and the
+  // conductor's potential V; the equations are: potential = V at every panel midpoint, and the total charge per length = the chosen net charge.
+  // Lengths in metres; fields from a long strip (panel) are exact closed forms, so the field is exact for the panel charges.
+  const TPE0 = 2 * Math.PI * EPS0;
+  const SHAPES = ['circle', 'ellipse', 'teardrop', 'ring', 'box'], TIP_R = 0.0015;
+  // dense closed curves for each shape, in metres: outer boundary counterclockwise, cavity boundary clockwise
+  function shapeCurves(name) {
+    const cm = 0.01, N = 2400;
+    const arc = (cx, cy, r, a0, a1, n, out) => { for (let i = 0; i < n; i++) { const a = a0 + (a1 - a0) * i / n; out.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]); } return out; };
+    const line = (p, q, n, out) => { for (let i = 0; i < n; i++) out.push([p[0] + (q[0] - p[0]) * i / n, p[1] + (q[1] - p[1]) * i / n]); return out; };
+    function roundRect(h, rc, ccw) {
+      const out = [], k = h - rc, n = 300, m = 400;
+      arc(k, k, rc, 0, Math.PI / 2, n, out); line([k, h], [-k, h], m, out);
+      arc(-k, k, rc, Math.PI / 2, Math.PI, n, out); line([-h, k], [-h, -k], m, out);
+      arc(-k, -k, rc, Math.PI, 1.5 * Math.PI, n, out); line([-k, -h], [k, -h], m, out);
+      arc(k, -k, rc, 1.5 * Math.PI, 2 * Math.PI, n, out); line([h, -k], [h, k], m, out);
+      return ccw ? out : out.reverse();
+    }
+    if (name === 'circle') return [{ pts: arc(0, 0, 2 * cm, 0, 2 * Math.PI, N, []), cavity: false }];
+    if (name === 'ellipse') { const out = []; for (let i = 0; i < N; i++) { const t = 2 * Math.PI * i / N; out.push([3 * cm * Math.cos(t), 1.2 * cm * Math.sin(t)]); } return [{ pts: out, cavity: false }]; }
+    if (name === 'teardrop') {
+      /* convex hull of a round end (radius R at c1) and a small tip circle (radius r at c2): the tip is rounded to radius r */
+      const R = 1.5 * cm, r = TIP_R, c1 = -0.8 * cm, c2 = 2.2 * cm, b = Math.asin((R - r) / (c2 - c1)), a = Math.PI / 2 - b, out = [];
+      arc(c2, 0, r, -a, a, 600, out);
+      line([c2 + r * Math.cos(a), r * Math.sin(a)], [c1 + R * Math.cos(a), R * Math.sin(a)], 800, out);
+      arc(c1, 0, R, a, 2 * Math.PI - a, 1400, out);
+      line([c1 + R * Math.cos(a), -R * Math.sin(a)], [c2 + r * Math.cos(a), -r * Math.sin(a)], 800, out);
+      return [{ pts: out, cavity: false }];
+    }
+    if (name === 'ring') return [{ pts: arc(0, 0, 2.5 * cm, 0, 2 * Math.PI, N, []), cavity: false }, { pts: arc(0, 0, 1.9 * cm, 0, 2 * Math.PI, N, []).reverse(), cavity: true }];
+    if (name === 'box') return [{ pts: roundRect(2.5 * cm, 0.3 * cm, true), cavity: false }, { pts: roundRect(1.9 * cm, 0.1 * cm, false), cavity: true }];
+    throw Error('unknown shape ' + name);
+  }
+  // cut a dense closed curve into n panels: half of them spread evenly by length, half by how much the curve turns (more where it bends sharply)
+  function panelize(pts, n) {
+    const m = pts.length, len = new Float64Array(m), turn = new Float64Array(m);
+    for (let i = 0; i < m; i++) { const p = pts[i], q = pts[(i + 1) % m]; len[i] = Math.hypot(q[0] - p[0], q[1] - p[1]); }
+    let P = 0, Tt = 0;
+    for (let i = 0; i < m; i++) {
+      const a = pts[(i + m - 1) % m], p = pts[i], q = pts[(i + 1) % m];
+      const t1 = Math.atan2(p[1] - a[1], p[0] - a[0]), t2 = Math.atan2(q[1] - p[1], q[0] - p[0]);
+      let d = t2 - t1; while (d > Math.PI) d -= 2 * Math.PI; while (d < -Math.PI) d += 2 * Math.PI;
+      turn[i] = Math.abs(d); P += len[i]; Tt += turn[i];
+    }
+    /* weight of segment i: half its share of the length, half its share of the turning (turning split over the two segments at each vertex);
+       then the local panel length (1/density) may grow by at most 20 % of the distance along the curve, so neighbouring panels never differ much in size */
+    const hl = new Float64Array(m);
+    for (let i = 0; i < m; i++) hl[i] = len[i] / (0.5 * len[i] / P + 0.25 * (turn[i] + turn[(i + 1) % m]) / Tt);
+    /* hl / n is the panel length; limit it going round the curve both ways (twice, as the curve is closed) */
+    for (let i = 0; i < 2 * m; i++) { const a = i % m, b = (i + 1) % m; hl[b] = Math.min(hl[b], hl[a] + 0.2 * n * len[b]); }
+    for (let i = 2 * m; i > 0; i--) { const a = i % m, b = (i - 1) % m; hl[b] = Math.min(hl[b], hl[a] + 0.2 * n * len[b]); }
+    const wgt = new Float64Array(m); let Wt = 0;
+    for (let i = 0; i < m; i++) { wgt[i] = len[i] / hl[i]; Wt += wgt[i]; }
+    const ends = []; let acc = 0, k = 0;
+    for (let i = 0; i < m && k < n; i++) {
+      const p = pts[i], q = pts[(i + 1) % m];
+      while (k < n && acc + wgt[i] >= Wt * k / n - 1e-15) { const f = Math.min(1, Math.max(0, (Wt * k / n - acc) / wgt[i])); ends.push([p[0] + f * (q[0] - p[0]), p[1] + f * (q[1] - p[1])]); k++; }
+      acc += wgt[i];
+    }
+    while (ends.length < n) ends.push(pts[0]);
+    return ends;
+  }
+  // LU factorisation with partial pivoting (row major, in place)
+  function luFactor(A, n) {
+    const piv = new Int32Array(n);
+    for (let k = 0; k < n; k++) {
+      let p = k, best = Math.abs(A[k * n + k]);
+      for (let i = k + 1; i < n; i++) { const v = Math.abs(A[i * n + k]); if (v > best) { best = v; p = i; } }
+      piv[k] = p;
+      if (p !== k) for (let j = 0; j < n; j++) { const t = A[k * n + j]; A[k * n + j] = A[p * n + j]; A[p * n + j] = t; }
+      const d = A[k * n + k];
+      for (let i = k + 1; i < n; i++) {
+        const f = (A[i * n + k] /= d); if (f === 0) continue;
+        const ri = i * n, rk = k * n; for (let j = k + 1; j < n; j++) A[ri + j] -= f * A[rk + j];
+      }
+    }
+    return piv;
+  }
+  function luSolve(A, piv, n, rhs) {
+    const b = Float64Array.from(rhs);
+    for (let k = 0; k < n; k++) { const p = piv[k]; if (p !== k) { const t = b[k]; b[k] = b[p]; b[p] = t; } }
+    for (let i = 0; i < n; i++) { let s = b[i]; for (let j = 0; j < i; j++) s -= A[i * n + j] * b[j]; b[i] = s; }
+    for (let i = n - 1; i >= 0; i--) { let s = b[i]; for (let j = i + 1; j < n; j++) s -= A[i * n + j] * b[j]; b[i] = s / A[i * n + i]; }
+    return b;
+  }
+  // a uniform strip (panel) of half width a, centre (mx, my), unit tangent (tx, ty), in local coordinates u along it and w along the normal (ty, −tx):
+  //   φ = −(σ/2πε0) ∫ ln r ds; this returns −∫ ln r ds, so φ = (σ/2πε0) × stripPot (cPanelField has the matching field)
+  function stripPot(a, u, w) {
+    const F = (t) => { const r2 = t * t + w * w; return (r2 > 0 ? 0.5 * t * Math.log(r2) : 0) - t; };
+    const th = Math.atan2(w * 2 * a, u * u + w * w - a * a);
+    return -(F(u + a) - F(u - a) + w * th);
+  }
+  // build the panels and factor the matrix for a shape; scale multiplies the number of panels (1: the page's resolution)
+  function cBuild(name, scale = 1) {
+    const curves = shapeCurves(name), BASE = 240;
+    const per = curves.map((c) => { let P = 0; const m = c.pts.length; for (let i = 0; i < m; i++) { const p = c.pts[i], q = c.pts[(i + 1) % m]; P += Math.hypot(q[0] - p[0], q[1] - p[1]); } return P; });
+    const out = { name, curves: [], N: 0 };
+    const mx = [], my = [], tx = [], ty = [], ha = [], cid = [];
+    curves.forEach((c, ci) => {
+      const n = Math.round(BASE * scale * Math.max(0.6, per[ci] / per[0])), ends = panelize(c.pts, n), first = mx.length;
+      for (let i = 0; i < n; i++) {
+        const p = ends[i], q = ends[(i + 1) % n], L = Math.hypot(q[0] - p[0], q[1] - p[1]);
+        mx.push((p[0] + q[0]) / 2); my.push((p[1] + q[1]) / 2); tx.push((q[0] - p[0]) / L); ty.push((q[1] - p[1]) / L); ha.push(L / 2); cid.push(ci);
+      }
+      out.curves.push({ cavity: c.cavity, poly: ends, first, n, perimeter: per[ci] });
+    });
+    const N = mx.length; Object.assign(out, { N, mx: Float64Array.from(mx), my: Float64Array.from(my), tx: Float64Array.from(tx), ty: Float64Array.from(ty), ha: Float64Array.from(ha), cid: Int32Array.from(cid) });
+    const n1 = N + 1, A = new Float64Array(n1 * n1);
+    const MX = out.mx, MY = out.my, TX = out.tx, TY = out.ty, HA = out.ha;
+    for (let i = 0; i < N; i++) {
+      for (let j = 0; j < N; j++) {
+        const dx = MX[i] - MX[j], dy = MY[i] - MY[j], a = HA[j];
+        if (dx * dx + dy * dy > 64 * a * a) {
+          /* far panel: two point Gauss rule, −∫ ln r ds ≈ −a (ln r₁ + ln r₂) */
+          const g = a / Math.sqrt(3), x1 = dx - g * TX[j], y1 = dy - g * TY[j], x2 = dx + g * TX[j], y2 = dy + g * TY[j];
+          A[i * n1 + j] = -0.5 * a * Math.log((x1 * x1 + y1 * y1) * (x2 * x2 + y2 * y2));
+        } else A[i * n1 + j] = stripPot(a, dx * TX[j] + dy * TY[j], dx * TY[j] - dy * TX[j]);
+      }
+      A[i * n1 + N] = -1;
+      A[N * n1 + i] = 2 * HA[i];
+    }
+    out.LU = A; out.piv = luFactor(A, n1);
+    /* the two sources that do not move: a uniform field of 1 N/C along +x, and a net charge of 1 nC/m on the conductor */
+    const rE = new Float64Array(n1), rC = new Float64Array(n1);
+    for (let i = 0; i < N; i++) rE[i] = out.mx[i];
+    rC[N] = 1e-9 / TPE0;
+    out.xE = luSolve(A, out.piv, n1, rE); out.xC = luSolve(A, out.piv, n1, rC);
+    out.qCache = null;
+    return out;
+  }
+  // panel coefficients (σ/2πε0) for a line charge of 1 nC/m at (xq, yq)
+  function cLineBasis(sys, xq, yq) {
+    if (sys.qCache && sys.qCache.xq === xq && sys.qCache.yq === yq) return sys.qCache.x;
+    const N = sys.N, r = new Float64Array(N + 1);
+    for (let i = 0; i < N; i++) r[i] = (1e-9 / TPE0) * Math.log(Math.hypot(sys.mx[i] - xq, sys.my[i] - yq));
+    const x = luSolve(sys.LU, sys.piv, N + 1, r); sys.qCache = { xq, yq, x }; return x;
+  }
+  // the solution for given sources: E0 (N/C, along +x), a line charge lam (nC/m) at (xq, yq), and net charge lamC (nC/m) on the conductor
+  function cSolve(sys, src) {
+    const N = sys.N, x = new Float64Array(N + 1), useQ = src.lam && src.xq != null, xQ = useQ ? cLineBasis(sys, src.xq, src.yq) : null;
+    for (let i = 0; i <= N; i++) x[i] = (src.E0 || 0) * sys.xE[i] + (src.lamC || 0) * sys.xC[i] + (useQ ? src.lam * xQ[i] : 0);
+    const sig = new Float64Array(N); for (let i = 0; i < N; i++) sig[i] = TPE0 * x[i];
+    return { x, sig, V: x[N], src: { E0: src.E0 || 0, lam: useQ ? src.lam : 0, xq: src.xq, yq: src.yq, lamC: src.lamC || 0 } };
+  }
+  // field of the panel charges alone (coefficients x = σ/2πε0) at (px, py)
+  function cPanelField(sys, x, px, py) {
+    let ex = 0, ey = 0; const N = sys.N, MX = sys.mx, MY = sys.my, TX = sys.tx, TY = sys.ty, HA = sys.ha, R3 = 1 / Math.sqrt(3);
+    for (let j = 0; j < N; j++) {
+      const c = x[j]; if (c === 0) continue;
+      const dx = px - MX[j], dy = py - MY[j], t1 = TX[j], t2 = TY[j], a = HA[j], d2 = dx * dx + dy * dy;
+      if (d2 > 64 * a * a) {
+        /* far from the panel (more than 8 half widths): two point Gauss rule on the strip, relative error below about (a/r)⁴ */
+        const g = a * R3, x1 = dx - g * t1, y1 = dy - g * t2, x2 = dx + g * t1, y2 = dy + g * t2, r1 = x1 * x1 + y1 * y1, r2 = x2 * x2 + y2 * y2;
+        ex += c * a * (x1 / r1 + x2 / r2); ey += c * a * (y1 / r1 + y2 / r2); continue;
+      }
+      const u = dx * t1 + dy * t2, w = dx * t2 - dy * t1;
+      const up = u + a, um = u - a, w2 = w * w;
+      const eu = 0.5 * Math.log((up * up + w2) / (um * um + w2)), ew = Math.atan2(w * 2 * a, u * u + w2 - a * a);
+      ex += c * (eu * t1 + ew * t2); ey += c * (eu * t2 - ew * t1);
+    }
+    return [ex, ey];
+  }
+  // total field at (px, py): uniform field, line charge, and the induced surface charge
+  function cField(sys, sol, px, py) {
+    const s = sol.src, f = cPanelField(sys, sol.x, px, py); let ex = f[0] + s.E0, ey = f[1];
+    if (s.lam) { const dx = px - s.xq, dy = py - s.yq, r2 = dx * dx + dy * dy, k = s.lam * 1e-9 / (TPE0 * r2); ex += k * dx; ey += k * dy; }
+    return [ex, ey];
+  }
+  // total potential at (px, py), relative to an arbitrary zero (in 2D a line charge's potential has no zero at infinity)
+  function cPotential(sys, sol, px, py) {
+    const s = sol.src, N = sys.N; let v = -s.E0 * px;
+    for (let j = 0; j < N; j++) { const dx = px - sys.mx[j], dy = py - sys.my[j]; v += sol.x[j] * stripPot(sys.ha[j], dx * sys.tx[j] + dy * sys.ty[j], dx * sys.ty[j] - dy * sys.tx[j]); }
+    if (s.lam) v -= s.lam * 1e-9 / TPE0 * Math.log(Math.hypot(px - s.xq, py - s.yq));
+    return v;
+  }
+  function inPoly(poly, x, y) {
+    let c = false;
+    for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) { const a = poly[i], b = poly[j]; if ((a[1] > y) !== (b[1] > y) && x < (b[0] - a[0]) * (y - a[1]) / (b[1] - a[1]) + a[0]) c = !c; }
+    return c;
+  }
+  // 0: outside, 1: in the metal, 2: in the empty cavity
+  function cRegion(sys, x, y) {
+    let inOuter = false;
+    for (const c of sys.curves) if (!c.cavity && inPoly(c.poly, x, y)) inOuter = true;
+    if (!inOuter) return 0;
+    for (const c of sys.curves) if (c.cavity && inPoly(c.poly, x, y)) return 2;
+    return 1;
+  }
+  // distance from (x, y) to the nearest panel, and that panel's index
+  function cNearest(sys, x, y) {
+    let best = Infinity, bj = -1;
+    for (let j = 0; j < sys.N; j++) {
+      const dx = x - sys.mx[j], dy = y - sys.my[j], u = Math.max(-sys.ha[j], Math.min(sys.ha[j], dx * sys.tx[j] + dy * sys.ty[j]));
+      const d = Math.hypot(dx - u * sys.tx[j], dy - u * sys.ty[j]); if (d < best) { best = d; bj = j; }
+    }
+    return { d: best, j: bj };
+  }
+  // total charge per length on each surface (C/m), outer surfaces and cavity surfaces separately
+  function cSurfaceCharge(sys, sol) {
+    let outer = 0, inner = 0;
+    for (let j = 0; j < sys.N; j++) { const q = sol.sig[j] * 2 * sys.ha[j]; if (sys.curves[sys.cid[j]].cavity) inner += q; else outer += q; }
+    return { outer, inner };
+  }
+  // points on a 1 mm grid inside the metal and inside the cavity, at least gap (m) from every surface: where E = 0 is checked
+  function cSamples(sys, gap) {
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    for (const c of sys.curves) for (const p of c.poly) { x0 = Math.min(x0, p[0]); x1 = Math.max(x1, p[0]); y0 = Math.min(y0, p[1]); y1 = Math.max(y1, p[1]); }
+    const metal = [], cavity = [], h = 0.001;
+    for (let x = Math.ceil(x0 / h) * h; x < x1; x += h) for (let y = Math.ceil(y0 / h) * h; y < y1; y += h) {
+      const r = cRegion(sys, x, y); if (!r || cNearest(sys, x, y).d < gap) continue;
+      (r === 1 ? metal : cavity).push([x, y]);
+    }
+    return { metal, cavity };
+  }
+  // exact σ on a conducting circular cylinder of radius a (centre at the origin, isolated, net charge lamC per length) in a uniform field E0 along +x
+  // with a line charge lam at (xq, 0), xq < −a: images −lam at −a²/|xq| and lam + lamC at the centre; σ = ε0 E_r at the surface
+  function cylSigma(a, th, src) {
+    const px = a * Math.cos(th), py = a * Math.sin(th);
+    let er = 2 * (src.E0 || 0) * Math.cos(th) + (src.lamC || 0) * 1e-9 / (TPE0 * a);
+    if (src.lam) {
+      const d = -src.xq, k = src.lam * 1e-9 / TPE0, b = -a * a / d;
+      const rad = (qx, s) => { const dx = px - qx, dy = py, r2 = dx * dx + dy * dy; return s * (dx * Math.cos(th) + dy * Math.sin(th)) / r2; };
+      er += k * (rad(src.xq, 1) + rad(b, -1) + 1 / a);
+    }
+    return EPS0 * er;
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') return;
@@ -234,7 +483,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const $ = (id) => document.getElementById(id);
   const CM = 0.01, NC = 1e-9;
   // the state of the apparatus; charges QA, QB carry over whenever the connections change
-  const S = { preset: 'induce', step: 0, rod: false, q: 10, d: 5, gap: 0.05, rB: 5, wire: true, gA: false, gB: false, QA: 0, QB: 0, blind: false, sol: null };
+  const S = { preset: 'induce', step: 0, rod: false, q: 10, d: 5, gap: 0.05, rB: 5, wire: true, gA: false, gB: false, QA: 0, QB: 0, blind: false, sol: null,
+    /* Conductor shapes (2D): shape, E0 in N/C, line charge lam in nC/m at distance ld (cm) left of the conductor, net charge lamC in nC/m, probe in metres */
+    shape: 'circle', E0: 1000, lam: 0, ld: 2, lamC: 0, probe: [0.025, 0], sys: null, ssol: null, chk: null, lines: null, lineKey: '' };
   const STEPS = {
     induce: [
       ['Two neutral metal spheres touch, so they are one conductor. No net charge anywhere.', (s) => Object.assign(s, { rod: false, gap: 0.05, wire: true, gA: false, gB: false, QA: 0, QB: 0, rB: 5 })],
@@ -253,23 +504,270 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ['Sphere A carries +10 nC; B is neutral and smaller (3 cm). They are apart.', (s) => Object.assign(s, { rod: false, gap: 15, wire: false, gA: false, gB: false, QA: 10 * NC, QB: 0, rB: 3 })],
       ['Touch them together. They become one conductor at one potential, and the charge redistributes: the bigger sphere takes more.', (s) => Object.assign(s, { gap: 0.05, wire: true })],
       ['Separate them. Each keeps its share. Joined by a long wire far apart, the shares would go as the radii (5 : 3), since V = kQ/R must match; touching, each sphere crowds the other\'s charge, and the smaller one ends up with less than that.', (s) => Object.assign(s, { wire: false, gap: 15 })]
+    ],
+    shapes: [
+      ['A long metal cylinder, seen end on, in a uniform field E₀. Free electrons shift until E = 0 inside; the field lines bend to meet the surface at right angles, and σ = 2ε₀E₀ cos θ (the dashed curve in the graph).', (s) => Object.assign(s, { shape: 'circle', E0: 1000, lam: 0, ld: 2, lamC: 0, probe: [0.025, 0] })],
+      ['Stretch it into an ellipse. The induced charge crowds onto the ends, where the surface curves most sharply.', (s) => Object.assign(s, { shape: 'ellipse', probe: [0.032, 0] })],
+      ['A teardrop. The sharp point carries the largest σ, so the field just outside it is the strongest: this is why lightning rods are pointed and why sparks start at points.', (s) => Object.assign(s, { shape: 'teardrop', probe: [0.0245, 0] })],
+      ['Turn the field off and give the teardrop a net charge. The excess charge spreads over the surface, and again most of it per area sits at the point.', (s) => Object.assign(s, { E0: 0, lamC: 5 })],
+      ['A hollow metal box (a Faraday cage) in the field. All the induced charge sits on the outer surface; the cavity walls carry none, and E = 0 everywhere in the empty cavity.', (s) => Object.assign(s, { shape: 'box', E0: 1000, lamC: 0, lam: 0, probe: [0, 0] })],
+      ['Bring a line charge near the box. The field outside and the charge on the outer surface change a lot; the cavity stays free of field.', (s) => Object.assign(s, { lam: 2, ld: 1.5 })]
     ]
   };
-  const HINT = { induce: 'The classic demonstration with two spheres on insulating stands. Step through it, or use the controls.', ground: 'Grounding lets charge flow to or from the Earth. The order of the last two steps matters: try removing the rod before the ground.', contact: 'Charging by contact: charge is shared until both spheres are at the same potential.' };
+  const HINT = { induce: 'The classic demonstration with two spheres on insulating stands. Step through it, or use the controls.', ground: 'Grounding lets charge flow to or from the Earth. The order of the last two steps matters: try removing the rod before the ground.', contact: 'Charging by contact: charge is shared until both spheres are at the same potential.', shapes: 'OpenStax §6.4: a conductor in electrostatic equilibrium. A 2D cross-section of long conductors, solved numerically. Pick a shape, set the sources, and probe the field.' };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      pos: g('--pos'), neg: g('--neg'), metal: g('--metal'), metalHi: g('--metal-hi'), rod: g('--rod'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      pos: g('--pos'), neg: g('--neg'), field: g('--field'), equi: g('--equi'), onCharge: g('--on-charge'), metal: g('--metal'), metalHi: g('--metal-hi'), rod: g('--rod'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const f = (v, d = 2) => (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−');
   function geomSI() { const A = { c: 0, r: 0.05 }, B = { c: 0.05 + S.gap * CM + S.rB * CM, r: S.rB * CM }; return { A, B, x0: S.rod ? -0.05 - S.d * CM : null }; }
+  // ---- Conductor shapes (2D) ----
+  const sysCache = {};
+  /* induced field of a set of panel coefficients at a list of points, as a flat array [ex0, ey0, ex1, ...] */
+  const fieldsAt = (sys, x, pts) => { const out = new Float64Array(2 * pts.length); pts.forEach((q, i) => { const e = cPanelField(sys, x, q[0], q[1]); out[2 * i] = e[0]; out[2 * i + 1] = e[1]; }); return out; };
+  function sysFor(name) {
+    if (!sysCache[name]) {
+      const sys = cBuild(name); sys.left = Math.min(...sys.curves[0].poly.map((p) => p[0]));
+      /* where E = 0 is checked; the induced field there for each fixed source is stored, as everything is linear in the sources */
+      const sm = cSamples(sys, 0.0015); sys.samples = sm; sys.spts = sm.metal.concat(sm.cavity); sys.nMetal = sm.metal.length;
+      sys.sE = fieldsAt(sys, sys.xE, sys.spts); sys.sC = fieldsAt(sys, sys.xC, sys.spts); sys.sQ = null;
+      sysCache[name] = sys;
+    }
+    return sysCache[name];
+  }
+  const lineX = () => S.sys.left - S.ld * CM;
+  /* the induced field per unit source on a fixed 1.5 mm grid (x from −11 to 7 cm, y from −8 to 8 cm), used only to draw field lines quickly;
+     exact evaluation is used in cells next to the metal and outside the grid */
+  function fieldGrid() {
+    const sys = S.sys;
+    let G = sys.grid;
+    if (!G) {
+      /* every node is filled only when a field line first needs it */
+      const h = 0.0015, nx = 121, ny = 108, n = nx * ny;
+      G = sys.grid = { h, x0: -0.11, y0: -0.08, nx, ny, reg: new Int8Array(n).fill(-1), near: new Int8Array(n).fill(-1), E: new Float64Array(2 * n), C: new Float64Array(2 * n),
+        Q: new Float64Array(2 * n), done: new Uint8Array(n), qDone: new Uint8Array(n), tDone: new Uint8Array(n), tot: new Float64Array(2 * n), qx: null, totKey: '', xQ: null };
+    }
+    const xq = S.lam ? lineX() : null;
+    if (xq != null && G.qx !== xq) { G.xQ = cLineBasis(sys, xq, 0); G.qx = xq; G.qDone.fill(0); G.tDone.fill(0); }
+    const tk = [S.E0, S.lamC, S.lam, xq].join(',');
+    if (G.totKey !== tk) { G.tDone.fill(0); G.totKey = tk; }
+    return G;
+  }
+  const gReg = (G, k) => (G.reg[k] >= 0 ? G.reg[k] : (G.reg[k] = cRegion(S.sys, G.x0 + (k % G.nx) * G.h, G.y0 + Math.floor(k / G.nx) * G.h)));
+  /* a node is near the metal if it or any of its 8 neighbours is in the metal */
+  function gNear(G, k) {
+    if (G.near[k] >= 0) return G.near[k];
+    const i = k % G.nx, j = Math.floor(k / G.nx); let m = 0;
+    for (let b = Math.max(0, j - 1); b <= Math.min(G.ny - 1, j + 1) && !m; b++) for (let a = Math.max(0, i - 1); a <= Math.min(G.nx - 1, i + 1); a++) if (gReg(G, b * G.nx + a) === 1) { m = 1; break; }
+    return (G.near[k] = m);
+  }
+  function gTot(G, k) {
+    if (G.tDone[k]) return;
+    const sys = S.sys, x = G.x0 + (k % G.nx) * G.h, y = G.y0 + Math.floor(k / G.nx) * G.h;
+    if (!G.done[k]) { const e = cPanelField(sys, sys.xE, x, y), c = cPanelField(sys, sys.xC, x, y); G.E[2 * k] = e[0]; G.E[2 * k + 1] = e[1]; G.C[2 * k] = c[0]; G.C[2 * k + 1] = c[1]; G.done[k] = 1; }
+    if (S.lam && !G.qDone[k]) { const q = cPanelField(sys, G.xQ, x, y); G.Q[2 * k] = q[0]; G.Q[2 * k + 1] = q[1]; G.qDone[k] = 1; }
+    for (const c of [0, 1]) G.tot[2 * k + c] = S.E0 * G.E[2 * k + c] + S.lamC * G.C[2 * k + c] + (S.lam ? S.lam * G.Q[2 * k + c] : 0);
+    G.tDone[k] = 1;
+  }
+  /* the total field for drawing: bilinear in the grid away from the metal, exact next to it (then flagged near) */
+  function fastField(G, x, y) {
+    const fx = (x - G.x0) / G.h, fy = (y - G.y0) / G.h, i = Math.floor(fx), j = Math.floor(fy), nx = G.nx;
+    if (i < 0 || j < 0 || i >= nx - 1 || j >= G.ny - 1) { const e = cField(S.sys, S.ssol, x, y); e.near = true; return e; }
+    const k = j * nx + i;
+    if (gNear(G, k) | gNear(G, k + 1) | gNear(G, k + nx) | gNear(G, k + nx + 1)) { const e = cField(S.sys, S.ssol, x, y); e.near = true; return e; }
+    gTot(G, k); gTot(G, k + 1); gTot(G, k + nx); gTot(G, k + nx + 1);
+    const u = fx - i, w = fy - j, T2 = G.tot, a = (1 - u) * (1 - w), b = u * (1 - w), c = (1 - u) * w, d = u * w;
+    let ex = a * T2[2 * k] + b * T2[2 * k + 2] + c * T2[2 * (k + nx)] + d * T2[2 * (k + nx) + 2] + S.E0;
+    let ey = a * T2[2 * k + 1] + b * T2[2 * k + 3] + c * T2[2 * (k + nx) + 1] + d * T2[2 * (k + nx) + 3];
+    if (S.lam) { const dx = x - lineX(), r2 = dx * dx + y * y, q = S.lam * 1e-9 / (TPE0 * r2); ex += q * dx; ey += q * y; }
+    return [ex, ey];
+  }
+  function computeShapes() {
+    const sys = sysFor(S.shape); S.sys = sys;
+    const xq = lineX(), sol = cSolve(sys, { E0: S.E0, lam: S.lam, xq, yq: 0, lamC: S.lamC }); S.ssol = sol; S.lines = null;
+    if (S.lam && (!sys.sQ || sys.sQx !== xq)) { sys.sQ = fieldsAt(sys, cLineBasis(sys, xq, 0), sys.spts); sys.sQx = xq; }
+    let em = 0, ec = 0;
+    for (let i = 0; i < sys.spts.length; i++) {
+      const [x, y] = sys.spts[i]; let ex = S.E0 + S.E0 * sys.sE[2 * i] + S.lamC * sys.sC[2 * i], ey = S.E0 * sys.sE[2 * i + 1] + S.lamC * sys.sC[2 * i + 1];
+      if (S.lam) { const dx = x - xq, r2 = dx * dx + y * y, q = S.lam * 1e-9 / (TPE0 * r2); ex += S.lam * sys.sQ[2 * i] + q * dx; ey += S.lam * sys.sQ[2 * i + 1] + q * y; }
+      const m = Math.hypot(ex, ey); if (i < sys.nMetal) em = Math.max(em, m); else ec = Math.max(ec, m);
+    }
+    let smax = -Infinity, smin = Infinity, jmax = 0;
+    for (let j = 0; j < sys.N; j++) { if (sol.sig[j] > smax) { smax = sol.sig[j]; jmax = j; } smin = Math.min(smin, sol.sig[j]); }
+    S.chk = { em, ec, sc: cSurfaceCharge(sys, sol), smax, smin, jmax };
+  }
   function compute() {
+    if (S.preset === 'shapes') { computeShapes(); return; }
     const g = geomSI(), sol = solve({ q0: S.q * NC, x0: g.x0, A: g.A, B: g.B, QA: S.QA, QB: S.QB, wire: S.wire, gA: S.gA, gB: S.gB });
     S.sol = sol; S.QA = sol.QA; S.QB = sol.QB;   // the charge each sphere now holds carries into the next change of connections
   }
 
+  // the visible window in metres and the map to the canvas (above the step bar)
+  function shapeView() {
+    const p = ps(), sb = document.querySelector('.stepbar'), Hu = Math.max(120, (sb ? sb.offsetTop : H) - 6 * p);
+    const rx0 = Math.min(-0.04, S.lam ? S.sys.left - 0.05 : 0), rx1 = 0.04, ry = 0.032, pad = 14 * p;
+    const sc = Math.min((W - 2 * pad) / (rx1 - rx0), (Hu - 2 * pad - 22 * p) / (2 * ry));
+    const cx = (rx0 + rx1) / 2, ox = W / 2, oy = 22 * p + (Hu - 22 * p) / 2;
+    return { sc, X: (x) => ox + (x - cx) * sc, Y: (y) => oy - y * sc, x0: cx - ox / sc, x1: cx + (W - ox) / sc, y0: -(Hu - oy) / sc, y1: oy / sc, inv: (px, py) => [cx + (px - ox) / sc, (oy - py) / sc], Hu };
+  }
+  // field lines: one line per flux Φ, started at positive charges (line charge, positive σ panels) and where the field enters the window
+  function traceLines(v) {
+    const sys = S.sys, sol = S.ssol, lines = [], wv = v.x1 - v.x0, hv = v.y1 - v.y0, ds = Math.max(wv, hv) / 320;
+    const qn = (S.lam > 0 ? 1 : 0) * S.lam * 1e-9 / EPS0, Fq = (Math.abs(S.lam) + Math.abs(S.lamC)) * 1e-9 / EPS0;
+    const Phi = Math.max(S.E0 * hv / 16, Fq / 40, 1e-9);
+    if (S.E0 === 0 && Fq === 0) return lines;
+    const xq = lineX(), Eref = Math.max(S.E0, Fq / (2 * Math.PI * 0.03), 1);
+    const inWin = (x, y) => x > v.x0 - 0.02 * wv && x < v.x1 + 0.02 * wv && y > v.y0 - 0.02 * hv && y < v.y1 + 0.02 * hv;
+    const G = fieldGrid();
+    function trace(x, y, first) {
+      const pts = first ? [first, [x, y]] : [[x, y]];
+      for (let k = 0; k < 1600; k++) {
+        const e1 = fastField(G, x, y), m1 = Math.hypot(e1[0], e1[1]); if (m1 < 1e-5 * Eref) break;
+        const xm = x + 0.5 * ds * e1[0] / m1, ym = y + 0.5 * ds * e1[1] / m1, e2 = fastField(G, xm, ym), m2 = Math.hypot(e2[0], e2[1]); if (m2 < 1e-5 * Eref) break;
+        const nx = x + ds * e2[0] / m2, ny = y + ds * e2[1] / m2;
+        /* at a point where E = 0 (a stagnation point) the direction flips back and forth: end the line there */
+        if (e1[0] * e2[0] + e1[1] * e2[1] < 0) break;
+        if ((e1.near || e2.near) && cRegion(sys, nx, ny)) {
+          /* reached the metal: find the surface by bisection */
+          let a = 0, b = 1; for (let i = 0; i < 8; i++) { const m = (a + b) / 2; if (cRegion(sys, x + m * (nx - x), y + m * (ny - y))) b = m; else a = m; }
+          pts.push([x + b * (nx - x), y + b * (ny - y)]); break;
+        }
+        x = nx; y = ny; pts.push([x, y]);
+        if (S.lam && Math.hypot(x - xq, y) < 0.0012) { pts.push([xq, 0]); break; }
+        if (!inWin(x, y)) break;
+      }
+      if (pts.length > 2) lines.push(pts);
+    }
+    /* the line charge */
+    if (qn > 0) { const n = Math.min(48, Math.round(qn / Phi)); for (let i = 0; i < n; i++) { const a = 2 * Math.PI * (i + 0.5) / n; trace(xq + 0.0012 * Math.cos(a), 0.0012 * Math.sin(a), [xq, 0]); } }
+    /* positive surface charge: walk each surface, one line each time the enclosed flux σL/ε0 passes another Φ */
+    for (const c of sys.curves) {
+      let need = 0.5 * Phi;
+      for (let j = c.first; j < c.first + c.n; j++) {
+        const fl = Math.max(0, sol.sig[j]) * 2 * sys.ha[j] / EPS0; let pos = 0;
+        while (fl > 0 && need <= fl - pos) {
+          /* the point along panel j where the running flux reaches the next multiple of Φ */
+          pos += need; need = Phi;
+          const s0 = (pos / fl - 0.5) * 2 * sys.ha[j], px = sys.mx[j] + s0 * sys.tx[j], py = sys.my[j] + s0 * sys.ty[j];
+          trace(px + 2e-5 * sys.ty[j], py - 2e-5 * sys.tx[j], [px, py]);
+          if (lines.length > 400) return lines;
+        }
+        need -= fl - pos;
+      }
+    }
+    /* field entering through the window's edges */
+    const edges = [[[v.x0, v.y1], [v.x0, v.y0], [1, 0]], [[v.x0, v.y0], [v.x1, v.y0], [0, 1]], [[v.x1, v.y0], [v.x1, v.y1], [-1, 0]], [[v.x1, v.y1], [v.x0, v.y1], [0, -1]]];
+    let acc = 0.5 * Phi;
+    for (const [a, b, n] of edges) {
+      const L = Math.hypot(b[0] - a[0], b[1] - a[1]), M = 240;
+      for (let i = 0; i < M; i++) {
+        const t = (i + 0.5) / M, x = a[0] + t * (b[0] - a[0]), y = a[1] + t * (b[1] - a[1]);
+        const e = fastField(G, x, y); if (e.near && cRegion(sys, x, y)) continue;
+        const fl = Math.max(0, e[0] * n[0] + e[1] * n[1]) * L / M;
+        acc -= fl;
+        while (acc <= 0) { trace(x, y); acc += Phi; if (lines.length > 400) return lines; }
+      }
+    }
+    return lines;
+  }
+  function drawShapes() {
+    const p = ps(), v = shapeView(), sys = S.sys, sol = S.ssol, X = v.X, Y = v.Y;
+    const key = [S.shape, S.E0, S.lam, S.ld, S.lamC, W, H, p].join('|');
+    if (!S.lines || S.lineKey !== key) { S.lines = traceLines(v); S.lineKey = key; }
+    /* field lines with an arrowhead half way along each */
+    ctx.strokeStyle = T.field; ctx.fillStyle = T.field; ctx.lineWidth = 1.2 * p; ctx.globalAlpha = 0.7;
+    for (const L of S.lines) {
+      ctx.beginPath(); ctx.moveTo(X(L[0][0]), Y(L[0][1])); for (let i = 1; i < L.length; i++) ctx.lineTo(X(L[i][0]), Y(L[i][1])); ctx.stroke();
+      const k = Math.floor(L.length / 2); if (L.length < 6) continue;
+      const ax = X(L[k][0]), ay = Y(L[k][1]), dx = X(L[k + 1][0]) - X(L[k - 1][0]), dy = Y(L[k + 1][1]) - Y(L[k - 1][1]), m = Math.hypot(dx, dy) || 1, ux = dx / m, uy = dy / m, s = 5 * p;
+      ctx.beginPath(); ctx.moveTo(ax + ux * s, ay + uy * s); ctx.lineTo(ax - ux * s - uy * s * 0.8, ay - uy * s + ux * s * 0.8); ctx.lineTo(ax - ux * s + uy * s * 0.8, ay - uy * s - ux * s * 0.8); ctx.closePath(); ctx.fill();
+    }
+    ctx.globalAlpha = 1;
+    /* the conductor: metal between the outer surface and any cavity */
+    const path = new Path2D(); for (const c of sys.curves) { c.poly.forEach((q, i) => (i ? path.lineTo(X(q[0]), Y(q[1])) : path.moveTo(X(q[0]), Y(q[1])))); path.closePath(); }
+    const grd = ctx.createLinearGradient(X(-0.02), Y(0.02), X(0.02), Y(-0.02)); grd.addColorStop(0, T.metalHi); grd.addColorStop(1, T.metal);
+    ctx.fillStyle = grd; ctx.fill(path, 'evenodd'); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.stroke(path);
+    /* surface charge marks, inside the metal next to the surface: darkness in proportion to |σ| */
+    const smax = Math.max(Math.abs(S.chk.smax), Math.abs(S.chk.smin));
+    ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (const c of sys.curves) {
+      let run = 6 * p;
+      for (let j = c.first; j < c.first + c.n; j++) {
+        run += 2 * sys.ha[j] * v.sc; if (run < 12 * p) continue; run = 0;
+        const sg = sol.sig[j], a = smax > 0 ? Math.abs(sg) / smax : 0; if (a < 0.04) continue;
+        ctx.globalAlpha = 0.15 + 0.85 * a; ctx.fillStyle = sg > 0 ? T.pos : T.neg;
+        ctx.fillText(sg > 0 ? '+' : '−', X(sys.mx[j]) - 7 * p * sys.ty[j], Y(sys.my[j]) - 7 * p * sys.tx[j]);
+      }
+    }
+    ctx.globalAlpha = 1;
+    /* labels */
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'center';
+    const cav = sys.curves.some((c) => c.cavity), mid = S.shape === 'teardrop' ? -0.008 : 0;
+    if (cav) ctx.fillText(S.blind ? 'empty cavity' : 'empty cavity: E = 0', X(0), Y(-0.009));
+    else if (!S.blind) { ctx.fillStyle = T.ink; ctx.fillText('metal: E = 0', X(mid), Y(0)); }
+    /* line charge, seen end on */
+    if (S.lam) {
+      const lx = X(lineX()), ly = Y(0); ctx.fillStyle = S.lam > 0 ? T.pos : T.neg; ctx.beginPath(); ctx.arc(lx, ly, 8 * p, 0, 7); ctx.fill();
+      ctx.fillStyle = T.onCharge; ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.fillText(S.lam > 0 ? '+' : '−', lx, ly + 0.5);
+      ctx.font = `600 ${11 * p}px ${T.ui}`; const lt = `λ = ${f(S.lam, 1)} nC/m`, lw = ctx.measureText(lt).width, lcx = Math.max(lx, 6 * p + lw / 2);
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(lcx - lw / 2 - 3 * p, ly - 24 * p, lw + 6 * p, 15 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.ink; ctx.fillText(lt, lcx, ly - 16 * p);
+    }
+    /* caption: what the picture is, and the external field */
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.font = `${11 * p}px ${T.ui}`;
+    const cap = '2D cross-section of long conductors · fields in the plane'; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(6 * p, 5 * p, ctx.measureText(cap).width + 8 * p, S.E0 > 0 ? 34 * p : 18 * p); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.muted; ctx.fillText(cap, 10 * p, 8 * p);
+    if (S.E0 > 0) {
+      ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; const t = `E₀ = ${S.E0} N/C`, tw = ctx.measureText(t).width;
+      ctx.fillText(t, 10 * p, 24 * p); ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; const y = 30 * p, x0 = 16 * p + tw, x1 = x0 + 30 * p;
+      ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.moveTo(x1 - 5 * p, y - 4 * p); ctx.lineTo(x1, y); ctx.lineTo(x1 - 5 * p, y + 4 * p); ctx.stroke();
+    }
+    /* probe: a ring and an arrow along E */
+    const [qx, qy] = S.probe, e = cField(sys, sol, qx, qy), em = Math.hypot(e[0], e[1]), px = X(qx), py = Y(qy);
+    const Eref = Math.max(S.E0, 1), len = em > 1e-3 * Eref ? Math.min(60, 26 * em / Eref) * p : 0;
+    ctx.strokeStyle = T.accent; ctx.fillStyle = T.accent; ctx.lineWidth = 2 * p;
+    ctx.beginPath(); ctx.arc(px, py, 6 * p, 0, 7); ctx.stroke();
+    if (len > 8 * p) {
+      const ux = e[0] / em, uy = -e[1] / em, tx = px + ux * (6 * p + len), ty = py + uy * (6 * p + len);
+      ctx.beginPath(); ctx.moveTo(px + ux * 6 * p, py + uy * 6 * p); ctx.lineTo(tx, ty); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(tx + ux * 3 * p, ty + uy * 3 * p); ctx.lineTo(tx - ux * 7 * p - uy * 5 * p, ty - uy * 7 * p + ux * 5 * p); ctx.lineTo(tx - ux * 7 * p + uy * 5 * p, ty - uy * 7 * p - ux * 5 * p); ctx.closePath(); ctx.fill();
+    }
+    drawPlot();
+  }
+  // σ along each surface against the angle θ around the centre (measured from +x)
+  function drawPlot() {
+    const pc = $('sigPlot'), r = pc.getBoundingClientRect(); if (!r.width) return;
+    const p = ps(), w = r.width, h = r.height; pc.width = Math.round(w * dpr); pc.height = Math.round(h * dpr);
+    const g = pc.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0); g.fillStyle = T.canvas; g.fillRect(0, 0, w, h);
+    const sys = S.sys, sol = S.ssol, NCM = 1e-9;
+    const ser = sys.curves.map((c) => { const a = []; for (let j = c.first; j < c.first + c.n; j++) a.push([Math.atan2(sys.my[j], sys.mx[j]) * 180 / Math.PI, sol.sig[j] / NCM]); a.sort((u, q) => u[0] - q[0]); return { cav: c.cavity, a }; });
+    const exactR = S.shape === 'circle' ? 0.02 : S.shape === 'ring' ? 0.025 : 0, src = { E0: S.E0, lam: S.lam, xq: lineX(), lamC: S.lamC };
+    let lo = 0, hi = 0; for (const s of ser) for (const q of s.a) { lo = Math.min(lo, q[1]); hi = Math.max(hi, q[1]); }
+    if (hi - lo < 1e-6) { hi = 1; lo = -1; }
+    const dlo = lo, dhi = hi, mg = 0.08 * (hi - lo); lo -= mg; hi += mg;
+    const padL = 40 * p, padR = 10 * p, padT = 6 * p, padB = 26 * p, PX = (t) => padL + (t + 180) / 360 * (w - padL - padR), PY = (s) => padT + (hi - s) / (hi - lo) * (h - padT - padB);
+    g.strokeStyle = T.grid; g.lineWidth = 1; g.font = `${9.5 * p}px ${T.mono}`; g.fillStyle = T.muted; g.textAlign = 'center'; g.textBaseline = 'top';
+    for (const t of [-180, -90, 0, 90, 180]) { g.beginPath(); g.moveTo(PX(t), padT); g.lineTo(PX(t), h - padB); g.stroke(); g.textAlign = t === -180 ? 'left' : t === 180 ? 'right' : 'center'; g.fillText(`${t}°`.replace('-', '−'), PX(t), h - padB + 3 * p); }
+    g.textAlign = 'right'; g.textBaseline = 'middle';
+    const ticks = [0]; if (dhi > 0.15 * (hi - lo)) ticks.push(dhi); if (dlo < -0.15 * (hi - lo)) ticks.push(dlo);
+    for (const s of ticks) { g.strokeStyle = s === 0 ? T.gridStrong : T.grid; g.beginPath(); g.moveTo(padL, PY(s)); g.lineTo(w - padR, PY(s)); g.stroke(); g.fillText(f(s, Math.abs(s) < 10 ? 1 : 0), padL - 4 * p, PY(s)); }
+    g.save(); g.translate(9 * p, (padT + h - padB) / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.fillText('σ (nC/m²)', 0, 0); g.restore();
+    g.textAlign = 'center'; g.textBaseline = 'bottom'; g.fillText('θ around the centre', (padL + w) / 2, h - 1);
+    for (const s of ser) {
+      g.strokeStyle = s.cav ? T.equi : T.accent; g.lineWidth = 2 * p; g.beginPath();
+      s.a.forEach((q, i) => (i ? g.lineTo(PX(q[0]), PY(q[1])) : g.moveTo(PX(q[0]), PY(q[1])))); g.stroke();
+    }
+    if (exactR && !S.blind) {
+      g.strokeStyle = T.ink; g.setLineDash([4 * p, 3 * p]); g.lineWidth = 1.5 * p; g.beginPath();
+      for (let i = 0; i <= 360; i++) { const t = -180 + i, sg = cylSigma(exactR, t * Math.PI / 180, src) / NCM; i ? g.lineTo(PX(t), PY(sg)) : g.moveTo(PX(t), PY(sg)); }
+      g.stroke(); g.setLineDash([]);
+    }
+    const cav = sys.curves.some((c) => c.cavity);
+    $('plotHint').textContent = 'Solid blue line: outer surface' + (cav ? '; gold line: cavity walls' : '') + (exactR && !S.blind ? `; dashed: exact result for a cylinder of radius ${f(exactR / CM, 1)} cm` : '') + '. θ = 0 is the +x side' + (S.shape === 'teardrop' ? ' (the point)' : '') + '.';
+  }
   function draw() {
+    if (S.preset === 'shapes') { if (!T || !W || !S.ssol) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); drawShapes(); return; }
     if (!T || !W || !S.sol) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const p = ps(), g = geomSI(), sol = S.sol;
@@ -308,7 +806,37 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.fillStyle = T.ink; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.fillText(`rod ${S.q > 0 ? '+' : ''}${S.q} nC`.replace('-', '−'), Math.max(50 * p, tx - 40 * p), cy + 24 * p);
     }
   }
+  const REG = ['outside the conductor', 'inside the metal', 'in the empty cavity'];
+  // a small number in plain scientific notation, e.g. 3.1 × 10⁻⁴
+  function sci(v, unit) {
+    if (v === 0) return `0 ${unit}`;
+    if (v >= 0.1) return `${f(v, v < 10 ? 2 : v < 1000 ? 1 : 0)} ${unit}`;
+    const e = Math.floor(Math.log10(v)), m = v / 10 ** e, sup = String(e).replace('-', '⁻').replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]);
+    return `${m.toFixed(1)} × 10${sup} ${unit}`;
+  }
+  function readoutsShapes() {
+    const sys = S.sys, sol = S.ssol, c = S.chk, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, NCM = 1e-9;
+    const [x, y] = S.probe, e = cField(sys, sol, x, y), em = Math.hypot(e[0], e[1]), nr = cNearest(sys, x, y), j = nr.j;
+    /* the field just outside the nearest panel's midpoint, along its outward normal: compare ε0 E⊥ with σ there */
+    const d = 1e-4 * sys.ha[j], eo = cField(sys, sol, sys.mx[j] + d * sys.ty[j], sys.my[j] - d * sys.tx[j]), en = eo[0] * sys.ty[j] - eo[1] * sys.tx[j];
+    if (S.lam && Math.hypot(x - lineX(), y) < 0.0008) { $('out').innerHTML = dd('Probe', 'on the line charge: E is not defined there. Move the probe.', true); return; }
+    let h = dd('Probe', `(${f(x / CM, 2)}, ${f(y / CM, 2)}) cm, ${REG[cRegion(sys, x, y)]}`, true)
+      + dd('|E| at the probe', sci(em, 'N/C')) + dd('Direction of E', em > 1e-6 * Math.max(S.E0, 1) ? `${f(Math.atan2(e[1], e[0]) * 180 / Math.PI, 0)}°` : '—')
+      + dd('σ at the nearest surface', `${f(sol.sig[j] / NCM, 2)} nC/m²`) + dd('ε₀E⊥ just outside it', `${f(EPS0 * en / NCM, 2)} nC/m²`);
+    if (S.blind) h += '<div class="wide"><dt>Summary readouts</dt><dd class="ok">hidden in Blind: use the probe</dd></div>';
+    else {
+      const cav = sys.curves.some((q) => q.cavity);
+      h += dd('Largest σ', `${f(c.smax / NCM, 2)} nC/m²`) + dd('Smallest σ', `${f(c.smin / NCM, 2)} nC/m²`)
+        + dd('Largest field at the surface, σ/ε₀', `${f(Math.max(c.smax, -c.smin) / EPS0, 0)} N/C` + (S.E0 > 0 ? ` = ${f(Math.max(c.smax, -c.smin) / EPS0 / S.E0, 2)} E₀` : ''), true)
+        + dd('Charge on the outer surface', `${f(c.sc.outer / NCM, 3)} nC/m`) + dd('Charge on the cavity walls', cav ? `${f(c.sc.inner / NCM, 3)} nC/m` : 'no cavity')
+        + dd('Largest |E| sampled in the metal', sci(c.em, 'N/C')) + dd('Largest |E| sampled in the cavity', cav ? sci(c.ec, 'N/C') : 'no cavity')
+        + (c.smax > c.smin ? dd('Largest sampled |E| inside ÷ largest surface field', `${sci(100 * Math.max(c.em, c.ec) / (Math.max(c.smax, -c.smin) / EPS0), '%')}`, true) : '')
+        + `<div class="wide"><dt>Solver</dt><dd class="ok">${sys.N} panels (smallest ${f(2 * Math.min(...sys.ha) * 1000, 2)} mm); E sampled on a 1 mm grid at least 1.5 mm from the surface</dd></div>`;
+    }
+    $('out').innerHTML = h;
+  }
   function readouts() {
+    if (S.preset === 'shapes') { readoutsShapes(); return; }
     const sol = S.sol, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
     let h;
     if (S.blind) h = '<div class="wide"><dt>Net charges and potentials</dt><dd class="ok">hidden in Blind: read the marks</dd></div>';
@@ -319,6 +847,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('rodOn').checked = S.rod; $('sQ').value = S.q; $('oQ').textContent = `${S.q > 0 ? '+' : ''}${S.q} nC`.replace('-', '−'); $('sD').value = S.d; $('oD').textContent = `${f(S.d, 1)} cm`;
     $('sG').value = S.gap; $('oG').textContent = S.gap < 0.1 ? 'touching' : `${f(S.gap, 1)} cm`; $('sRB').value = S.rB; $('oRB').textContent = `${f(S.rB, 1)} cm`;
     $('wire').checked = S.wire; $('gA').checked = S.gA; $('gB').checked = S.gB;
+    const sh = S.preset === 'shapes';
+    $('appSec').hidden = sh; $('shapeSec').hidden = !sh; $('modelSph').hidden = sh; $('modelShape').hidden = !sh;
+    $('units').textContent = sh ? '2D cross-section · numerical boundary element solution' : 'spheres 5 cm radius · exact image charge solution';
+    can.setAttribute('aria-label', sh ? 'A cross-section of a long metal conductor in an electric field, with field lines meeting its surface at right angles. Plus and minus marks inside its surface show the surface charge density; darker marks mean more charge per area. A ring marks the probe; use the arrow keys to move it.' : 'Two metal spheres on insulating stands, a charged rod on the left and a ground connection. The plus and minus marks around each sphere show its surface charge density: darker marks mean more charge per area.');
+    for (const b of document.querySelectorAll('#shapeChips button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.shape));
+    $('sE0').value = S.E0; $('oE0').textContent = `${S.E0} N/C`; $('sLam').value = S.lam; $('oLam').textContent = S.lam ? `${f(S.lam, 1)} nC/m` : 'off';
+    $('sLd').value = S.ld; $('oLd').textContent = `${f(S.ld, 1)} cm`; $('sLd').disabled = !S.lam; $('sLc').value = S.lamC; $('oLc').textContent = `${f(S.lamC, 1)} nC/m`;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     const st = STEPS[S.preset]; $('stepText').textContent = S.step >= 0 ? `Step ${S.step + 1} of ${st.length}: ${st[S.step][0]}` : 'Your own arrangement. Press Start over for the steps.';
     $('next').disabled = S.step < 0 || S.step >= st.length - 1; $('next').classList.toggle('attn', !$('next').disabled);
@@ -339,6 +874,25 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('gA').addEventListener('change', (e) => { S.gA = e.target.checked; own(); update(); });
   $('gB').addEventListener('change', (e) => { S.gB = e.target.checked; own(); update(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
+  for (const b of document.querySelectorAll('#shapeChips button')) b.addEventListener('click', () => { S.shape = b.dataset.s; own(); update(); });
+  $('sE0').addEventListener('input', (e) => { S.E0 = +e.target.value; own(); update(); });
+  $('sLam').addEventListener('input', (e) => { S.lam = +e.target.value; own(); update(); });
+  $('sLd').addEventListener('input', (e) => { S.ld = +e.target.value; own(); update(); });
+  $('sLc').addEventListener('input', (e) => { S.lamC = +e.target.value; own(); update(); });
+  /* the probe: drag on the picture, or arrow keys when the picture has focus */
+  function setProbe(x, y) {
+    const v = shapeView(); S.probe = [Math.min(v.x1, Math.max(v.x0, x)), Math.min(v.y1, Math.max(v.y0, y))]; draw(); readouts();
+  }
+  let dragging = false;
+  can.addEventListener('pointerdown', (e) => { if (S.preset !== 'shapes') return; dragging = true; try { can.setPointerCapture(e.pointerId); } catch (_) {} const r = can.getBoundingClientRect(); setProbe(...shapeView().inv(e.clientX - r.left, e.clientY - r.top)); });
+  can.addEventListener('pointermove', (e) => { if (!dragging || S.preset !== 'shapes') return; const r = can.getBoundingClientRect(); setProbe(...shapeView().inv(e.clientX - r.left, e.clientY - r.top)); });
+  const stopDrag = () => { dragging = false; };
+  can.addEventListener('pointerup', stopDrag); can.addEventListener('pointercancel', stopDrag);
+  can.addEventListener('keydown', (e) => {
+    if (S.preset !== 'shapes') return;
+    const k = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key]; if (!k) return;
+    e.preventDefault(); const st = (e.shiftKey ? 5 : 1) * 0.001; setProbe(S.probe[0] + k[0] * st, S.probe[1] + k[1] * st);
+  });
   function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); }
   const retheme = () => { tokens(); draw(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
