@@ -307,7 +307,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <h2>Readings</h2>
         <div class="btnrow">
           <button type="button" class="btn primary" id="capture">Capture reading</button>
-          <button type="button" class="btn" id="exportCsv">Export CSV</button>
+          <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
@@ -1878,11 +1878,40 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     } catch (_) {}
   }
   $('capture').addEventListener('click', capture);
+  /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
+     them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. Clear starts
+     a new series, so the worksheet puts the next export in a new copy of its table. */
+  let wsSeries = Date.now();
+  function toWorksheet(txt, fallback, opt = {}) {
+    const ws = opt.ws || 'coulomb-sandbox', st = document.getElementById(opt.st || 'capStatus');
+    const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
+    const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {}, heads = [];
+    lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); heads.push(c); if (c.length > 1 && !(c[0] in meta)) meta[c[0]] = c[1]; });
+    const hand = { v: 1, demo: 'coulomb-sandbox', series: opt.series || wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
+      note: 'Simulated data from the Coulomb Sandbox demo.', csv: txt, csvName: opt.csvName || 'coulomb-sandbox-readings.csv' };
+    if (opt.shape) opt.shape(hand, heads);
+    const say = (t) => { st.hidden = false; st.textContent = t; };
+    try { localStorage.setItem('vd-handoff:' + ws, JSON.stringify(hand)); }
+    catch (_) { fallback(); say('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    const n = hand.rows.length;
+    say(`${n} reading${n === 1 ? '' : 's'} sent to ${opt.wsName ? 'the ' + opt.wsName + ' worksheet' : 'the worksheet'}. `);
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/' + ws + '.html'; a.target = ws + '-worksheet'; a.textContent = 'Open the worksheet';
+    a.style.color = 'var(--accent)'; st.appendChild(a);
+  }
+  /* The charges of each configuration, from the CSV's header lines, for the worksheet's Configuration and q column. */
+  function wsCharges(hand, heads) {
+    for (const c of heads) {
+      const m = /^config (\d+) (charge|body) \d+$/.exec(c[0]); if (!m) continue;
+      const kv = {}, kind = m[2] === 'body' ? c[1] : 'charge'; for (let i = m[2] === 'body' ? 2 : 1; i + 1 < c.length; i += 2) kv[c[i]] = c[i + 1];
+      const k = `config ${m[1]} charges`, q = kv.q_C != null ? `q = ${kv.q_C} C` : `Q = ${kv.Q_C} C`;
+      hand.meta[k] = (hand.meta[k] ? hand.meta[k] + '; ' : '') + `${kind === 'charge' ? '' : kind + ' '}${q} at (${kv.x_m}, ${kv.y_m}) m`;
+    }
+  }
   $('exportCsv').addEventListener('click', () => {
     if (!rows.length) { status('Capture a reading first.'); return; }
-    download('coulomb-sandbox-readings.csv', readingsCsv(rows, configs)); status(`Exported ${rows.length} row${rows.length === 1 ? '' : 's'}.`);
+    const txt = readingsCsv(rows, configs); toWorksheet(txt, () => download('coulomb-sandbox-readings.csv', txt), { shape: wsCharges });
   });
-  $('clearRows').addEventListener('click', () => { rows = []; configs = []; renderRows(); status('Readings cleared.'); });
+  $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); rows = []; configs = []; renderRows(); status('Readings cleared.'); });
 
   // ---------- field map data table (a text version of the 2D map) ----------
   const mapBtn = $('mapTblBtn'), mapWrap = $('mapWrap'), mapBody = $('mapTbl').querySelector('tbody');

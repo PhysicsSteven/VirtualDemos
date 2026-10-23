@@ -342,7 +342,7 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
         <h2>Readings</h2>
         <div class="btnrow">
           <button type="button" class="btn primary" id="capture">Capture reading</button>
-          <button type="button" class="btn" id="expTab">Export CSV</button>
+          <button type="button" class="btn" id="expTab">Export to worksheet</button>
           <button type="button" class="btn" id="clearTab">Clear</button>
         </div>
         <label class="check"><input type="checkbox" id="tPred" checked><span>Show predicted flux Q<sub>enc</sub>/ε₀</span></label>
@@ -1924,8 +1924,28 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
     try { const b = new Blob([text], { type: 'text/csv' }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800); } catch (_) {}
   }
   $('capture').addEventListener('click', capture);
-  $('expTab').addEventListener('click', () => { if (!rows.length) { capStatus('Capture a reading first.'); return; } download('gauss-law-flux.csv', csvRows()); });
-  $('clearTab').addEventListener('click', () => { rows.length = 0; renderRows(); capStatus('Readings cleared.'); });
+  /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
+     them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. Clear starts
+     a new series, so the worksheet puts the next export in a new copy of its table. */
+  let wsSeries = Date.now();
+  function toWorksheet(txt, fallback, opt = {}) {
+    const ws = opt.ws || 'gauss-law', st = document.getElementById(opt.st || 'capMsg');
+    const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
+    const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {}, heads = [];
+    lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); heads.push(c); if (c.length > 1 && !(c[0] in meta)) meta[c[0]] = c[1]; });
+    const hand = { v: 1, demo: 'gauss-law', series: opt.series || wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
+      note: 'Simulated data from the Gauss\'s Law demo.', csv: txt, csvName: opt.csvName || 'gauss-law-flux.csv' };
+    if (opt.shape) opt.shape(hand, heads);
+    const say = (t) => { st.hidden = false; st.textContent = t; };
+    try { localStorage.setItem('vd-handoff:' + ws, JSON.stringify(hand)); }
+    catch (_) { fallback(); say('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    const n = hand.rows.length;
+    say(`${n} reading${n === 1 ? '' : 's'} sent to ${opt.wsName ? 'the ' + opt.wsName + ' worksheet' : 'the worksheet'}. `);
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/' + ws + '.html'; a.target = ws + '-worksheet'; a.textContent = 'Open the worksheet';
+    a.style.color = 'var(--accent)'; st.appendChild(a);
+  }
+  $('expTab').addEventListener('click', () => { if (!rows.length) { capStatus('Capture a reading first.'); return; } const txt = csvRows(); toWorksheet(txt, () => download('gauss-law-flux.csv', txt)); });
+  $('clearTab').addEventListener('click', () => { wsSeries = Date.now(); rows.length = 0; renderRows(); capStatus('Readings cleared.'); });
   $('tPred').addEventListener('change', () => { renderRows(); updateReadouts(); });
   renderRows();
 

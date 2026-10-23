@@ -23,7 +23,7 @@ Students should know V = IR and Q = CV; the AC part needs sines and phasors. Swi
 5. **RL rise and decay**, **LC oscillation**, **RLC damping** (Q6, Q7). Change R2 with its value grip and watch ζ under Natural response.
 6. **AC: Capacitor only**, **Inductor only** (Q8): the rotating phasors beside the scope project onto the traces. **Below resonance** shows the voltage phasors tip to tail (Q9).
 7. **At resonance**, **High Q vs low Q**, **Sweep**. Then press **In time**: the same circuit is switched on at t = 0 and its current builds up over several cycles (Q10).
-8. **For a lab.** Tick **Blind: hide predictions and answers** under **Lab**: it hides f₀, Δf, Q, τ, ζ and the like, so students measure them. In time, **Step forward** moves on by the chosen **Step Δt**; click or drag on the scope to place the time cursor, which reads every channel at that instant. **Capture reading** fills a table in each mode, and **Export CSV** saves it with the circuit in the header.
+8. **For a lab.** Tick **Blind: hide predictions and answers** under **Lab**: it hides f₀, Δf, Q, τ, ζ and the like, so students measure them. In time, **Step forward** moves on by the chosen **Step Δt**; click or drag on the scope to place the time cursor, which reads every channel at that instant. **Capture reading** fills a table in each mode, and **Export to worksheet** sends it to the matching student worksheet, with the circuit in the CSV header.
 
 ## Questions
 

@@ -47,7 +47,7 @@ For a real levitator, follow the department's drive and exposure limits. Keep fi
 
 **Compare geometry.** Use one emitter and a reflector if available. Compare its trap spacing and required drive with the two bowls. Check whether changing source phase moves its standing wave pattern.
 
-**Using the virtual apparatus.** Use **Slice**, **Pressure |p|**, **Potential U** and the trap table to read positions. After choosing each setup, set **Bead radius a** to 0.30 mm. Use **Stack of beads** for spacing and **Move with phase** for manual phase settings: press **Stop the sweep**, then set **Top bowl phase Δφ**. For materials use **Hold a bead**, **Water droplet** and **Too heavy: steel falls**. Record **Largest upward push Fmax**, weight and $$F_{\rm max}/W$$ from the readouts. **Single emitter and reflector** supplies the last comparison. There is no Capture or CSV export, so save a manual table and screenshots.
+**Using the virtual apparatus.** Use **Slice**, **Pressure \|p\|**, **Potential U** and the trap table to read positions. After choosing each setup, set **Bead radius a** to 0.30 mm. Use **Stack of beads** for spacing and **Move with phase** for manual phase settings: press **Stop the sweep**, then set **Top bowl phase Δφ**. For materials use **Hold a bead**, **Water droplet** and **Too heavy: steel falls**. Record **Largest upward push Fmax**, weight and $$F_{\rm max}/W$$ from the readouts. **Single emitter and reflector** supplies the last comparison. There is no Capture or CSV export, so save a manual table and screenshots.
 
 ## Data
 

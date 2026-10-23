@@ -41,7 +41,7 @@ For a real electrostatics bench, follow the instructor's high voltage and discha
 
 **Symmetry.** Compare a uniformly charged ball and a conducting sphere with the same $$Q$$ and $$R$$. Record $$E$$ at several radii inside and outside. Use the conductor's one-sided surface limits rather than assigning one field value to the ideal charged surface (§6.4).
 
-**Using the virtual apparatus.** Choose **Any surface**, then **Charge inside** and **Pause**. Select the charge, set **Selected charge q**, and enter its $$x$$/$$y$$ coordinates. Use **Sphere**, **Box** and **Cylinder**. Clear **Show predicted flux Qenc/ε₀** while measuring. Press **Capture reading** and **Export CSV**; the export includes geometry and numerical status. Use **Dipole inside** for the charge combinations. Keep the charge at least 0.03 cm from the surface: this is a numerical exclusion zone. Flag rows marked **Quadrature tolerance not met** rather than treating them as reliable measurements. For the last part choose **Symmetry**, **Sphere**, then **Ball** or **Conductor**.
+**Using the virtual apparatus.** Choose **Any surface**, then **Charge inside** and **Pause**. Select the charge, set **Selected charge q**, and enter its $$x$$/$$y$$ coordinates. Use **Sphere**, **Box** and **Cylinder**. Clear **Show predicted flux Qenc/ε₀** while measuring. Press **Capture reading** and **Export to worksheet**; the export includes geometry and numerical status. Use **Dipole inside** for the charge combinations. Keep the charge at least 0.03 cm from the surface: this is a numerical exclusion zone. Flag rows marked **Quadrature tolerance not met** rather than treating them as reliable measurements. For the last part choose **Symmetry**, **Sphere**, then **Ball** or **Conductor**.
 
 ## Data
 

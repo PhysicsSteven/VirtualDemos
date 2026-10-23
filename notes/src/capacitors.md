@@ -13,7 +13,7 @@ time: 20 to 30 minutes
 
 ## Before class
 
-Students should know E = σ/ε₀ for a charged sheet, potential difference and work. Each setup starts a slow automatic sweep; press **Pause** to drag the plate grip or use the sliders yourself. **Mark start** zeroes the "Since the start" table and the energy bars (hand, battery, heat, ΔU): press it before each move you discuss. For a lab, **Capture reading** stores the settings and the displayed values (d, x/s, C, Q, V, E, U and the energies since Mark start), **Export CSV** saves them in SI units, and the plot under the table fits a least squares line to C vs 1/d, C vs x/s or V vs d with slope ± standard error and residuals. **Blind: hide predictions and answers** (in Lab) hides the model curves, ε₀, κ, the forces and the energy check, leaving the meters. **Reduce motion** (in Display) stops the automatic sweep.
+Students should know E = σ/ε₀ for a charged sheet, potential difference and work. Each setup starts a slow automatic sweep; press **Pause** to drag the plate grip or use the sliders yourself. **Mark start** zeroes the "Since the start" table and the energy bars (hand, battery, heat, ΔU): press it before each move you discuss. For a lab, **Capture reading** stores the settings and the displayed values (d, x/s, C, Q, V, E, U and the energies since Mark start), **Export to worksheet** sends them to the student worksheet in SI units, and the plot under the table fits a least squares line to C vs 1/d, C vs x/s or V vs d with slope ± standard error and residuals. **Blind: hide predictions and answers** (in Lab) hides the model curves, ε₀, κ, the forces and the energy check, leaving the meters. **Reduce motion** (in Display) stops the automatic sweep.
 
 ## Running it in class
 

@@ -225,7 +225,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <h2>Readings</h2>
         <div class="btnrow">
           <button type="button" class="btn primary" id="capture">Capture reading</button>
-          <button type="button" class="btn" id="exportCsv">Export CSV</button>
+          <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
@@ -623,12 +623,31 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   // ---------- readings and fits ----------
   function capStatus(m) { $('capStatus').textContent = m; }
   $('capture').addEventListener('click', () => { S.rows.push({ mat: M().name, key: S.mat, d: d().toFixed(3), T: String(S.T), L: S.L.toFixed(3), I: sig(S.I, 3), V: vShown() }); renderRows(); capStatus(`Row ${S.rows.length} captured.`); });
-  $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
+     them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. Clear starts
+     a new series, so the worksheet puts the next export in a new copy of its table. */
+  let wsSeries = Date.now();
+  function toWorksheet(txt, fallback, opt = {}) {
+    const ws = opt.ws || 'resistivity', st = document.getElementById(opt.st || 'capStatus');
+    const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
+    const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {}, heads = [];
+    lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); heads.push(c); if (c.length > 1 && !(c[0] in meta)) meta[c[0]] = c[1]; });
+    const hand = { v: 1, demo: 'resistivity', series: opt.series || wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
+      note: 'Simulated data from the Resistivity of a Wire demo' + (meta.materials ? ', ' + meta.materials : '') + '.', csv: txt, csvName: opt.csvName || 'resistivity-readings.csv' };
+    if (opt.shape) opt.shape(hand, heads);
+    const say = (t) => { st.hidden = false; st.textContent = t; };
+    try { localStorage.setItem('vd-handoff:' + ws, JSON.stringify(hand)); }
+    catch (_) { fallback(); say('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    const n = hand.rows.length;
+    say(`${n} reading${n === 1 ? '' : 's'} sent to ${opt.wsName ? 'the ' + opt.wsName + ' worksheet' : 'the worksheet'}. `);
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/' + ws + '.html'; a.target = ws + '-worksheet'; a.textContent = 'Open the worksheet';
+    a.style.color = 'var(--accent)'; st.appendChild(a);
+  }
   $('exportCsv').addEventListener('click', () => {
     if (!S.rows.length) { capStatus('No readings to export.'); return; }
     const txt = readingsCSV(S.rows, { version: RS_VERSION, material: [...new Set(S.rows.map((r) => r.mat))].join('; ') });
-    try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'resistivity-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
-    capStatus('CSV exported.');
+    toWorksheet(txt, () => { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'resistivity-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} });
   });
   function renderRows() {
     const tb = $('rowsTbl').querySelector('tbody');

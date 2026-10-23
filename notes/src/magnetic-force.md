@@ -21,7 +21,7 @@ Students need the cross product, F = qv × B and centripetal acceleration. ⊗ i
 4. **Velocity selector.** 400 V across plates 2 cm apart with 0.10 T: only protons near E/B = 2.0×10⁵ m/s get through. Press **Fire 20**; slow ones curve down, fast ones up.
 5. **Mass spectrometer.** Neon ions through 1000 V in 0.20 T land 20.36 cm (²⁰Ne⁺) and 21.35 cm (²²Ne⁺) from the slit. **Equal numbers** shows the rare ²¹Ne⁺.
 6. **Cyclotron.** A proton gains 100 keV per gap crossing at a fixed f_c = 15.25 MHz. Move **f / f_c** off 1 to show it falling out of step.
-7. **Measuring r and T.** In a free setup, tick **Show ruler** and drag its ends A and B across the circle (**Ruler reads** Diameter or Radius). Use **Start timer** and **Stop timer** over a few turns and set **Turns timed**. **Capture reading** stores what was read; **Export CSV** saves the rows; the plot fits **r against v**, **r against m/|q|** or **T against v**. Tick **Blind: hide predictions and answers** in **Lab** so the r and T readouts, the r label, the circle's center and the dashed path ahead are hidden while students measure.
+7. **Measuring r and T.** In a free setup, tick **Show ruler** and drag its ends A and B across the circle (**Ruler reads** Diameter or Radius). Use **Start timer** and **Stop timer** over a few turns and set **Turns timed**. **Capture reading** stores what was read; **Export to worksheet** sends the rows to the student worksheet; the plot fits **r against v**, **r against m/|q|** or **T against v**. Tick **Blind: hide predictions and answers** in **Lab** so the r and T readouts, the r label, the circle's center and the dashed path ahead are hidden while students measure.
 
 ## Questions
 

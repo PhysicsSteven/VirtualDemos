@@ -375,7 +375,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         <h2>Readings</h2>
         <button type="button" class="btn primary" id="captureD">Capture reading</button>
         <div class="row2">
-          <button type="button" class="btn" id="expD">Export CSV</button>
+          <button type="button" class="btn" id="expD">Export to worksheet</button>
           <button type="button" class="btn" id="clearD">Clear</button>
         </div>
         <div class="twrap"><table class="rows" id="tblD"><thead></thead><tbody></tbody></table></div>
@@ -417,7 +417,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         <h2>Readings</h2>
         <button type="button" class="btn primary" id="captureT">Capture reading</button>
         <div class="row2">
-          <button type="button" class="btn" id="expT">Export CSV</button>
+          <button type="button" class="btn" id="expT">Export to worksheet</button>
           <button type="button" class="btn" id="clearT">Clear</button>
         </div>
         <div class="twrap"><table class="rows" id="tblT"><thead></thead><tbody></tbody></table></div>
@@ -456,9 +456,10 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         <h2>Frequency response readings</h2>
         <button type="button" class="btn primary" id="capture">Capture reading</button>
         <div class="row2">
-          <button type="button" class="btn" id="expTab">Export CSV</button>
+          <button type="button" class="btn" id="expTab">Export to worksheet</button>
           <button type="button" class="btn" id="clearTab">Clear</button>
         </div>
+        <p class="hint" aria-live="polite" id="statTab" hidden></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>f (Hz)</th><th>I<sub>rms</sub> (mA)</th><th>φ (°)</th><th>P (W)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <p class="hint" id="tblHint">Capture stores the readings at the current frequency, rounded as the panel above shows them. The table shows four; the CSV also has V<sub>0</sub>, |Z|, the part values and the rms voltage across each part. Rows can be edited or deleted.</p>
       </section>
@@ -1628,6 +1629,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     return 10 * p;
   }
   const live = (msg) => { $('live').textContent = msg; };
+  /* the setup in the link the page was opened with (a worksheet links #dc, #rc, #transients or #ac), before the page sets its own */
+  const WS_OPENED = location.hash.slice(1).toLowerCase();
   const label = (e) => (e.name ? `${TYPE[e.type].toLowerCase()} ${e.name}` : TYPE[e.type].toLowerCase());
   const RATES = [];
   for (let d = -5; d <= 2; d++) for (const m of [1, 2, 5]) RATES.push(+(m * Math.pow(10, d)).toPrecision(2));
@@ -4519,10 +4522,23 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   }
   $('captureT').addEventListener('click', captureTime);
   $('captureD').addEventListener('click', captureDC);
-  $('expT').addEventListener('click', () => { if (!readT.length) { stat('statT', 'No readings to export yet.'); return; } downloadText('circuits-time-readings.csv', timeCSV()); stat('statT', 'Readings exported as CSV.'); });
-  $('expD').addEventListener('click', () => { if (!readD.length) { stat('statD', 'No readings to export yet.'); return; } downloadText('circuits-dc-readings.csv', dcCSV()); stat('statD', 'Readings exported as CSV.'); });
-  $('clearT').addEventListener('click', () => { readT = []; renderT(); stat('statT', 'Readings cleared.'); });
-  $('clearD').addEventListener('click', () => { readD = []; renderD(); stat('statD', 'Readings cleared.'); });
+  /* Export to worksheet, In time mode: to the worksheet whose link opened the page (RC Time Constant or RLC Oscillations), otherwise
+     the one the current setup belongs to. DC mode: one worksheet row for each meter of each reading. */
+  const wsSer = { T: Date.now(), D: Date.now(), A: Date.now() };
+  function wsTime() {
+    const h = WS_OPENED === 'rc' || WS_OPENED === 'transients' ? WS_OPENED : location.hash.slice(1).toLowerCase();
+    return h === 'rc' ? { ws: 'rc-circuits', wsName: 'RC Time Constant' } : { ws: 'rlc-transients', wsName: 'RLC Oscillations' };
+  }
+  function wsMeters(hand) {
+    const cols = hand.columns, meters = cols.filter((k) => /^[IV]_.+_[AV]$/.test(k)), rest = cols.filter((k) => k !== 'row' && k !== 'setup' && !meters.includes(k)), out = [];
+    hand.rows.forEach((r) => { const o = {}; cols.forEach((k, i) => { o[k] = r[i]; });
+      meters.forEach((k) => { if (o[k] === '' || o[k] == null) return; const m = /^([IV])_(.+)_[AV]$/.exec(k); out.push([o.row, o.setup, m[2], m[1] === 'I' ? o[k] : '', m[1] === 'V' ? o[k] : '', ...rest.map((c) => o[c])]); }); });
+    hand.columns = ['reading', 'setup', 'meter', 'I_A', 'V_V', ...rest]; hand.rows = out;
+  }
+  $('expT').addEventListener('click', () => { if (!readT.length) { stat('statT', 'No readings to export yet.'); return; } const txt = timeCSV(); toWorksheet(txt, () => downloadText('circuits-time-readings.csv', txt), { ...wsTime(), st: 'statT', series: wsSer.T, csvName: 'circuits-time-readings.csv' }); });
+  $('expD').addEventListener('click', () => { if (!readD.length) { stat('statD', 'No readings to export yet.'); return; } const txt = dcCSV(); toWorksheet(txt, () => downloadText('circuits-dc-readings.csv', txt), { ws: 'dc-circuits', wsName: "Kirchhoff's Rules", st: 'statD', series: wsSer.D, csvName: 'circuits-dc-readings.csv', shape: wsMeters }); });
+  $('clearT').addEventListener('click', () => { wsSer.T = Date.now(); readT = []; renderT(); stat('statT', 'Readings cleared.'); });
+  $('clearD').addEventListener('click', () => { wsSer.D = Date.now(); readD = []; renderD(); stat('statD', 'Readings cleared.'); });
   $('stepBtn').addEventListener('click', () => {
     if (!run || !run.sys || !run.sys.ok) return;
     const dt = +$('stepDt').value; if (!(dt > 0)) return;
@@ -4693,8 +4709,28 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     try { const url = URL.createObjectURL(new Blob([text], { type: 'text/csv' })), a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); } catch (_) {}
   }
   $('capture').addEventListener('click', captureReading);
-  $('expTab').addEventListener('click', () => { if (!readings.length) { live('No readings to export yet.'); return; } downloadText('circuits-ac-readings.csv', readingsCSV()); live('Readings exported as CSV.'); });
-  $('clearTab').addEventListener('click', () => { readings = []; renderRows(); live('Readings cleared.'); });
+  /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
+     them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. Clear starts
+     a new series, so the worksheet puts the next export in a new copy of its table. */
+  let wsSeries = Date.now();
+  function toWorksheet(txt, fallback, opt = {}) {
+    const ws = opt.ws || 'ac-circuits', st = document.getElementById(opt.st || 'statTab');
+    const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
+    const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {}, heads = [];
+    lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); heads.push(c); if (c.length > 1 && !(c[0] in meta)) meta[c[0]] = c[1]; });
+    const hand = { v: 1, demo: 'circuits', series: opt.series || wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
+      note: 'Simulated data from the Circuits demo' + (meta.setup ? ', ' + meta.setup : '') + (meta['circuit at export'] ? ': ' + meta['circuit at export'] : '') + '.', csv: txt, csvName: opt.csvName || 'circuits-ac-readings.csv' };
+    if (opt.shape) opt.shape(hand, heads);
+    const say = (t) => { st.hidden = false; st.textContent = t; };
+    try { localStorage.setItem('vd-handoff:' + ws, JSON.stringify(hand)); }
+    catch (_) { fallback(); say('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    const n = hand.rows.length;
+    say(`${n} reading${n === 1 ? '' : 's'} sent to ${opt.wsName ? 'the ' + opt.wsName + ' worksheet' : 'the worksheet'}. `);
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/' + ws + '.html'; a.target = ws + '-worksheet'; a.textContent = 'Open the worksheet';
+    a.style.color = 'var(--accent)'; st.appendChild(a);
+  }
+  $('expTab').addEventListener('click', () => { if (!readings.length) { live('No readings to export yet.'); return; } const txt = readingsCSV(); toWorksheet(txt, () => downloadText('circuits-ac-readings.csv', txt), { wsName: 'AC Resonance', series: wsSer.A }); });
+  $('clearTab').addEventListener('click', () => { wsSer.A = Date.now(); readings = []; renderRows(); live('Readings cleared.'); });
   renderRows(); renderT(); renderD();
   const toggle = (id, key) => $(id).addEventListener('change', (ev) => { S.layers[key] = ev.target.checked; if (key === 'elec') dotKey(); updateRail(); });
   toggle('tElec', 'elec'); toggle('tIlab', 'ilabels'); toggle('tVcol', 'vcolor'); toggle('tVlab', 'vlabels'); toggle('tPlab', 'plabels'); toggle('tField', 'field');

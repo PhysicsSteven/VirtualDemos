@@ -43,7 +43,7 @@ Switch off a real supply before rewiring. Begin with its current limit set low. 
 
 **A multiloop circuit.** Choose a bridge circuit. Label the nodes and current arrows. Use measured currents to test two independent junctions and measured voltage changes to test two loops. Change one resistance and repeat. Include a drawing that defines every sign.
 
-**Using the virtual apparatus.** Choose **DC** and turn on **Blind: hide predictions and answers**. Use **Series bulbs**, **Parallel bulbs**, **Voltage divider** and **Wheatstone bridge**. The simulated bulbs are fixed resistors for this activity. Click a part to edit it under **Selected**. Use the A and V tools to place meters in the correct connections; keep a copy of the schematic. Press **Capture reading** under **Readings** after each change and **Export CSV** before changing setup. Rows retain meter readings and part settings. Compare your own sums first, then use **Junction rule** and **Loop rule** to check them.
+**Using the virtual apparatus.** Choose **DC** and turn on **Blind: hide predictions and answers**. Use **Series bulbs**, **Parallel bulbs**, **Voltage divider** and **Wheatstone bridge**. The simulated bulbs are fixed resistors for this activity. Click a part to edit it under **Selected**. Use the A and V tools to place meters in the correct connections; keep a copy of the schematic. Press **Capture reading** under **Readings** after each change and **Export to worksheet** before changing setup. Each meter of each reading becomes a row of the Data table, with the part settings. Compare your own sums first, then use **Junction rule** and **Loop rule** to check them.
 
 ## Data
 

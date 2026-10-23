@@ -277,7 +277,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <button class="btn" id="labStep">Step 1 ms</button>
         <label for="labDuration">Advance by (s)</label><input id="labDuration" type="number" min="0.001" max="10" step="0.001" value="0.1">
         <button class="btn" id="labAdvance">Advance and pause</button>
-        <button class="btn" id="labCapture">Capture measurement</button><button class="btn" id="labExport">Export notebook CSV</button><button class="btn" id="labTrace">Export current run CSV</button><button class="btn" id="labClear">Clear notebook</button>
+        <button class="btn" id="labCapture">Capture measurement</button><button class="btn" id="labExport">Export to worksheet</button><button class="btn" id="labTrace">Export current run CSV</button><button class="btn" id="labClear">Clear notebook</button>
         <p id="labStatus" role="status" aria-live="polite"></p>
         <div class="twrap"><table class="dtab"><caption>Measurement notebook</caption><thead><tr><th>Mode</th><th>t (s)</th><th>Φ (Wb)</th><th>EMF (V)</th><th>I (A)</th></tr></thead><tbody id="labRows"></tbody></table></div>
       </section>
@@ -1429,6 +1429,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const MODEL_ONLY = ['phiM', 'Wm'];
   function labDownload(data,name,kind){
     if(!data.length){$('labStatus').textContent='No samples yet. Advance or capture first.';return;}
+    const csv=labCSV(data,kind);
+    const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    $('labStatus').textContent=`Exported ${data.length} samples; interval quantities belong at the interval midpoint. Runs retain at most 60001 samples.`;
+  }
+  function labCSV(data,kind){
     const B=blind();
     let keys=['version','run','mode','t','dt','mid','N','R','phi','phiBefore','emf','I','Q','heat','phi0','start','position','theta','ke','settings','V1','I1','I2','emf2','phiM','F','Wm','Esrc','Q1','switch'];
     let cols='version,run,mode,t_s,interval_s,interval_midpoint_s,N,R_ohm,flux_Wb,previous_flux_Wb,interval_EMF_V,interval_I_A,charge_since_start_C,heat_since_start_J,initial_flux_Wb,move_start_s,position_m,angle_rad,kinetic_energy_J,settings_SI_json,source_V1_V,primary_I1_A,secondary_I2_A,secondary_EMF2_V,flux_from_primary_Wb,force_on_secondary_N,magnetic_energy_J,source_energy_since_start_J,primary_heat_since_start_J,switch'.split(',');
@@ -1442,9 +1447,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         ...(modes.length>1||modes[0]!==S.mode?[`rows include apparatus: ${modes.join(' ')}; the parameters above are the setup at export`]:[]),
         ...(modes.includes('self')?['self-inductance rows: interval_I_A is the source current at t_s; interval_EMF_V is the back EMF averaged over the interval; source_V1_V is the source voltage -EMF; magnetic_energy_J is L I^2/2; source_energy_since_start_J is the work done by the source']:[]),
         ...(B?['Blind was on at export: flux_from_primary_Wb, magnetic_energy_J and M_H, k, L_H in settings_SI_json are left out']:[])]});
-    const csv=[...head,cols.join(','),...data.map(r=>keys.map(k=>cell(r,k)).join(','))].join('\n')+'\n';
-    const url=URL.createObjectURL(new Blob([csv],{type:'text/csv'})),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
-    $('labStatus').textContent=`Exported ${data.length} samples; interval quantities belong at the interval midpoint. Runs retain at most 60001 samples.`;
+    return [...head,cols.join(','),...data.map(r=>keys.map(k=>cell(r,k)).join(','))].join('\n')+'\n';
   }
   // Blind: hide every prediction and answer the labs ask for, on the rail and on the plots
   function applyBlind() {
@@ -1503,9 +1506,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('labRows').innerHTML=labRows.map(r=>`<tr><td>${r.mode}</td><td>${r.t.toFixed(3)}</td><td>${r.phi.toPrecision(6)}</td><td>${r.emf.toPrecision(6)}</td><td>${r.I.toPrecision(6)}</td></tr>`).join('');
     $('labStatus').textContent=`Captured ${labRows.length} measurements.`;
   });
-  $('labExport').addEventListener('click',()=>labDownload(labRows,'faraday-notebook.csv','notebook'));
+  /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
+     them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. Clear starts
+     a new series, so the worksheet puts the next export in a new copy of its table. */
+  let wsSeries = Date.now();
+  function toWorksheet(txt, fallback, opt = {}) {
+    const ws = opt.ws || 'faraday', st = document.getElementById(opt.st || 'labStatus');
+    const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
+    const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {}, heads = [];
+    lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); heads.push(c); if (c.length > 1 && !(c[0] in meta)) meta[c[0]] = c[1]; });
+    const hand = { v: 1, demo: 'faraday', series: opt.series || wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
+      note: 'Simulated data from the Faraday\'s Law demo. Values to 6 significant figures; EMF and current are averages over the interval ending at t' + (meta.setup ? '. Setup at export: ' + meta.setup.replace(/ at export$/, '') : '') + '.', csv: txt, csvName: opt.csvName || 'faraday-notebook.csv' };
+    if (opt.shape) opt.shape(hand, heads);
+    const say = (t) => { st.hidden = false; st.textContent = t; };
+    try { localStorage.setItem('vd-handoff:' + ws, JSON.stringify(hand)); }
+    catch (_) { fallback(); say('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    const n = hand.rows.length;
+    say(`${n} reading${n === 1 ? '' : 's'} sent to ${opt.wsName ? 'the ' + opt.wsName + ' worksheet' : 'the worksheet'}. `);
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/' + ws + '.html'; a.target = ws + '-worksheet'; a.textContent = 'Open the worksheet';
+    a.style.color = 'var(--accent)'; st.appendChild(a);
+  }
+  $('labExport').addEventListener('click',()=>{if(!labRows.length){$('labStatus').textContent='No samples yet. Advance or capture first.';return;}const txt=labCSV(labRows,'notebook');toWorksheet(txt,()=>labDownload(labRows,'faraday-notebook.csv','notebook'));});
   $('labTrace').addEventListener('click',()=>{setRunning(false);labDownload(labTrace.slice(-60001),'faraday-run.csv','run');});
-  $('labClear').addEventListener('click',()=>{labRows.length=0;$('labRows').textContent='';$('labStatus').textContent='Notebook cleared.';});
+  $('labClear').addEventListener('click',()=>{wsSeries=Date.now();labRows.length=0;$('labRows').textContent='';$('labStatus').textContent='Notebook cleared.';});
 
   // ---------- canvases ----------
   let T = null, dpr = 1;

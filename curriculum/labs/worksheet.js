@@ -36,10 +36,49 @@
     'stress-strain': { demo: 'Stress and Strain', cols: ['row', 'd_mm', '#wire_length_m', 'm_kg', 'dL_mm', null, null] },
     viscometer: { demo: 'Falling Ball Viscometer', cols: ['row', (r) => [r.liquid, r.ball].filter(Boolean).join(' / '), (r) => [r.rho_liquid_kg_m3, r.rho_ball_kg_m3].filter(Boolean).join(' / '), 'tube_D_mm', 'd_mm', 't_s', 'v_m_per_s', null, null, null] },
   };
+  /* ==PHYSICS II START== Physics II worksheets (physics-2.html) and their demo column maps, kept in one block. */
+  const PHYSICS_II = ['ac-circuits', 'capacitors', 'coulomb-sandbox', 'dc-circuits', 'faraday', 'gauss-law', 'magnetic-force', 'rc-circuits',
+    'resistivity', 'rlc-transients', 'wire-force'];
+  ENABLED.push(...PHYSICS_II);
+  /* Helpers for the Physics II maps. parts: the part values a Circuits row carries (R1_ohm, C1_F, L1_H, B1_emf_V, B1_r_ohm, S1_state),
+     optionally only those whose column matches a pattern. pick: the first column matching a pattern that has a value in this row
+     (the Circuits channel columns are named after the parts, V_C1_V, I_L1_A, ...). Faraday values are rounded to 6 significant
+     figures, as the demo's notebook shows them; everything else is the demo's text as exported. */
+  const PART_UNIT = { ohm: 'Ω', F: 'F', H: 'H', emf_V: 'V' };
+  const parts = (r, only) => Object.keys(r).map((k) => /^([A-Za-z]+\d+)_(r_ohm|emf_V|ohm|F|H|state)$/.exec(k))
+    .filter((x) => x && r[x[0]] !== '' && r[x[0]] != null && (!only || only.test(x[0])))
+    .map(([k, n, u]) => (u === 'state' ? `${n} ${r[k]}` : u === 'r_ohm' ? `${n} r = ${r[k]} Ω` : `${n} = ${r[k]} ${PART_UNIT[u]}`)).join(', ');
+  const pick = (re) => (r) => { const k = Object.keys(r).find((c) => re.test(c) && r[c] !== '' && r[c] != null); return k ? r[k] : ''; };
+  const json = (t) => { try { return JSON.parse(t) || {}; } catch (_) { return {}; } };
+  const FD_MODE = { magnet: 'magnet and coil', gen: 'generator', coils: 'two coils', rails: 'sliding bar', self: 'self inductance' };
+  Object.assign(FROM_DEMO, {
+    'dc-circuits': { demo: 'Circuits', cols: [(r) => [r.reading, r.setup, parts(r)].filter(Boolean).join(', '), 'meter', 'I_A', 'V_V', null, null] },
+    'rc-circuits': { demo: 'Circuits', cols: ['t_s', pick(/^V_C\d+_V$/), pick(/^I_.+_A$/), 'W_sources_J', 'U_C_J', 'heat_J'] },
+    'rlc-transients': { demo: 'Circuits', cols: [(r) => [r.row, r.setup, parts(r, /_ohm$/)].filter(Boolean).join(', '), 't_s', pick(/^V_C\d+_V$/), pick(/^I_L\d+_A$/), 'U_C_J', 'U_L_J', 'heat_J'] },
+    'ac-circuits': { demo: 'Circuits', cols: [(r) => [r.row, parts(r)].filter(Boolean).join(', '), 'f_Hz', 'V0_peak_V', 'Irms_A', 'phase_deg', 'P_avg_W'] },
+    capacitors: { demo: 'Capacitors and Dielectrics', cols: [both('row', 'preset'), 'd_m', 'A_m2', 'insertion_fraction', 'C_F', 'Q_C', 'V_volts', 'U_J'] },
+    'coulomb-sandbox': { demo: 'Coulomb Sandbox', cols: [(r, h) => [r.row, h['config ' + r.config], h['config ' + r.config + ' charges']].filter(Boolean).join(', '),
+      'x_m', 'y_m', null, 'V_volts', 'E_V_per_m', 'E_direction_deg'] },
+    faraday: { demo: "Faraday's Law", cols: [(r) => [r.run ? 'run ' + r.run : '', FD_MODE[r.mode] || r.mode, r.N ? 'N = ' + r.N : '', r.R_ohm ? `R = ${sig(r.R_ohm)} Ω` : ''].filter(Boolean).join(', '),
+      (r) => sig(r.t_s), (r) => sig(r.flux_Wb), (r) => sig(r.interval_EMF_V), (r) => sig(r.interval_I_A), (r) => sig(r.primary_I1_A),
+      (r) => { const o = json(r.settings_SI_json); return o.speed_m_s != null ? `v = ${o.speed_m_s} m/s` : o.omega_rad_s != null ? `ω = ${sig(o.omega_rad_s)} rad/s` : o.f_Hz != null ? `f = ${sig(o.f_Hz)} Hz` : ''; }] },
+    'gauss-law': { demo: "Gauss's Law", cols: [
+      (r) => [r.row, r.surface, r.radius_m && `R = ${r.radius_m} m`, r.width_x_m && `width ${r.width_x_m} m`, r.height_y_m && `height ${r.height_y_m} m`,
+        r.depth_z_m && `depth ${r.depth_z_m} m`, `centre (${r.center_x_m}, ${r.center_y_m}) m`].filter(Boolean).join(', '),
+      (r) => String(r.charges_q_C_x_m_y_m || '').split(';').map((c) => c.trim().split(/\s+/)).filter((c) => c.length === 3).map(([q, x, y]) => `q = ${q} C at (${x}, ${y}) m`).join('; '),
+      'Q_enc_C', 'flux_numerical_N_m2_per_C', 'flux_predicted_Q_enc_over_eps0_N_m2_per_C', null,
+      (r) => `${r.tolerance_met === 'yes' ? 'tolerance met' : 'tolerance not met'}, ${r.field_evaluations} evaluations`] },
+    'magnetic-force': { demo: 'Charges in Magnetic Fields', cols: [both('row', 'particle'), 'v_perp_m_per_s', (r) => (r.B_tesla !== '' && r.B_tesla != null ? `${r.B_tesla} T${r.B_direction ? ', ' + r.B_direction : ''}` : ''),
+      'r_measured_m', 'turns_timed', 'timer_s', 'T_measured_s'] },
+    resistivity: { demo: 'Resistivity of a Wire', cols: ['row', 'material', 'd_mm', 'T_C', 'L_m', 'I_A', 'V_V', 'R_ohm'] },
+    'wire-force': { demo: 'Force on a Current', cols: ['row', 'I_A', 'L_cm', 'theta_deg', 'dm_g', 'F_N', null] },
+  });
+  /* ==PHYSICS II END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
+  GRAPHS.push(...PHYSICS_II); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
   const pretty = (h) => String(h || '').replace(/\^([23])/g, (m, d) => SUP[d]).replace(/_(\d)/g, (m, d) => SUB[d]);
