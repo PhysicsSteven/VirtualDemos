@@ -1,0 +1,603 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Two Speaker Interference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the apparatus on the left, the rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+@media (max-width: 820px) { .chips button { min-height: 36px; } }
+.readout dd.warn { color: var(--pos); }
+:root { --wood: #d8bf98; --wood-line: #c3a77c; --metal: #9aa4b0; --metal-hi: #c9d0d9; --string: #b4532a; --env: rgba(180, 83, 42, 0.18); --brass: #b98f2e; --box: #3b4656; --rule: #f1e3b5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; } }
+:root[data-theme="dark"] { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; }
+.fine { display: flex; gap: 6px; flex-wrap: wrap; }
+.fine .btn { padding: 3px 9px; font-family: var(--font-mono); font-size: 0.82rem; }
+.readout dd .ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.masslist { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); margin: 0; overflow-wrap: anywhere; }
+/* In scene controls: the function generator and the tray of slotted masses sit on a shelf over the bottom left of the picture,
+   the vibrator is dragged along the table, masses are dragged onto the hanger. On phones the shelf drops below the picture. */
+.scene { position: absolute; inset: 0; }
+.shelf { position: absolute; left: 12px; bottom: 12px; right: 190px; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; pointer-events: none; }
+.shelf > * { pointer-events: auto; }
+.gen { background: var(--box); color: #e3e8ef; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
+.gen-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.gen-title { font-size: 0.78rem; font-weight: 700; color: #c9d0d9; }
+.gen-lcd { font-family: var(--font-mono); font-weight: 600; font-size: 1.35rem; color: #7ee0a0; background: #0b1a12; border-radius: 5px; padding: 2px 10px; min-width: 7.2ch; text-align: right; font-variant-numeric: tabular-nums; }
+.gen-knobs { display: flex; align-items: center; gap: 12px; }
+.knobwrap { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.72rem; color: #c9d0d9; }
+.knob { position: relative; width: 52px; height: 52px; border-radius: 50%; cursor: grab; touch-action: none;
+  background: radial-gradient(circle at 38% 32%, #8b96a4, #4a5462 62%, #39414d); box-shadow: 0 0 0 3px #232a34, 0 2px 4px rgba(0, 0, 0, 0.5); }
+.knob:active { cursor: grabbing; }
+.knob-mark { position: absolute; left: 50%; top: 5px; width: 3px; height: 15px; margin-left: -1.5px; border-radius: 2px; background: #f1f4f8; transform-origin: 50% 21px; }
+.knob:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.gen .fine { display: grid; grid-template-columns: auto auto; gap: 4px; }
+.gen .fine .btn { background: #39414d; color: #e3e8ef; border-color: #4a5462; }
+.tray { background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; flex: 1 1 300px; max-width: 600px; }
+.tray-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.pieces { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px; }
+.pieces button { --w: 40px; --h: 14px; position: relative; width: var(--w); height: var(--h); min-height: 0; padding: 0; border: 0; border-radius: 3px; cursor: grab; touch-action: none;
+  font: 700 0.7rem/1 var(--font-mono); color: #17202b; background: linear-gradient(#c9d0d9, #9aa4b0); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18); }
+.pieces button.brass { background: linear-gradient(#e2c26a, #b98f2e); }
+.pieces button span { position: relative; z-index: 1; }
+.tray-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.tray-foot .masslist { flex: 1 1 100%; }
+.vhandle { position: absolute; z-index: 2; border-radius: 6px; cursor: ew-resize; touch-action: none; display: flex; align-items: flex-end; justify-content: center; }
+.vhandle .grip { font-size: 0.8rem; color: #c9d0d9; line-height: 1; padding-bottom: 4px; pointer-events: none; }
+.vhandle:hover, .vhandle.drag { box-shadow: 0 0 0 2px var(--accent); }
+.vhandle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ghost { position: fixed; z-index: 50; pointer-events: none; transform: translate(-50%, -50%); opacity: 0.85; }
+.droptag { position: absolute; z-index: 2; transform: translate(-50%, 0); font-size: 0.75rem; font-weight: 700; color: var(--canvas); background: var(--accent); border-radius: 5px; padding: 2px 7px; pointer-events: none; }
+@media (max-width: 820px) {
+  .stage { height: auto; max-height: none; display: flex; flex-direction: column; }
+  .scene { position: relative; inset: auto; height: 330px; max-height: 60vh; }
+  .shelf { position: static; padding: 0 10px 10px; gap: 10px; }
+  .gen, .tray { flex: 1 1 100%; }
+  .gen-knobs { flex-wrap: wrap; }
+  .gen .fine .btn { min-height: 36px; }
+  .tray-foot .btn { min-height: 36px; }
+}
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+/* Two speakers: the room seen from above. The Set up card fades while the microphone walks (as in the pendulum demo);
+   the function generator stays, since the frequency is changed while listening. */
+.card { position: absolute; z-index: 2; left: 12px; top: 52px; width: min(320px, calc(100% - 24px)); display: flex; flex-direction: column; gap: 6px;
+  padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 10px; transition: opacity 0.35s ease, visibility 0.35s; }
+.card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.card .seg button, .card .chips button { font-size: 0.8rem; padding: 3px 8px; }
+.card .slider-head label, .card .slider-head output { font-size: 0.8rem; }
+.card .check { font-size: 0.82rem; }
+.card.away { opacity: 0; visibility: hidden; }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+.gen .gen-sl { display: grid; grid-template-columns: auto minmax(110px, 1fr); align-items: center; gap: 4px 8px; font-size: 0.74rem; color: #c9d0d9; }
+.gen .gen-sl input { accent-color: #7ee0a0; }
+.gen-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.meter { background: var(--box); color: #e3e8ef; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
+.meter .gen-lcd { min-width: 8ch; }
+.meter dl { margin: 0; display: grid; grid-template-columns: auto auto; gap: 2px 10px; font-size: 0.74rem; color: #c9d0d9; }
+.meter dd { margin: 0; font-family: var(--font-mono); color: #e3e8ef; text-align: right; }
+.mic { position: absolute; z-index: 2; width: 30px; height: 30px; margin: -15px 0 0 -15px; border-radius: 50%; cursor: grab; touch-action: none; border: 0; padding: 0; background: none; }
+.mic:active { cursor: grabbing; }
+.mic:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.shelf { right: 12px; }
+.plotbox.tall { height: 190px; }
+@media (max-width: 820px) {
+  .card { position: static; width: auto; margin: 0 10px 10px; }
+  .card.away { opacity: 1; visibility: visible; }
+  .meter { flex: 1 1 100%; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Two Speaker Interference</h1>
+      <p>Two speakers play the same tone. Walk a microphone across the room and listen: it is loud where the sound from one speaker arrives a whole number of wavelengths after the other, and quiet halfway between. The quiet lines give the wavelength, and the wavelength the speed of sound.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">loud: r₂ − r₁ = mλ · quiet: (m + ½)λ</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/two-speaker.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/two-speaker.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM15 2h1v1h-1zM17 2h1v1h-1zM19 2h2v1h-2zM22 2h2v1h-2zM26 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM14 3h1v1h-1zM16 3h3v1h-3zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h4v1h-4zM15 4h1v1h-1zM18 4h1v1h-1zM21 4h3v1h-3zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM15 5h1v1h-1zM18 5h2v1h-2zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM16 6h3v1h-3zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM15 7h1v1h-1zM17 7h1v1h-1zM20 7h1v1h-1zM24 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM13 9h2v1h-2zM17 9h1v1h-1zM21 9h2v1h-2zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM12 10h1v1h-1zM14 10h2v1h-2zM17 10h1v1h-1zM20 10h1v1h-1zM22 10h8v1h-8zM32 10h5v1h-5zM3 11h4v1h-4zM9 11h1v1h-1zM11 11h4v1h-4zM16 11h3v1h-3zM25 11h1v1h-1zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h3v1h-3zM8 12h2v1h-2zM13 12h4v1h-4zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM4 13h1v1h-1zM9 13h3v1h-3zM13 13h1v1h-1zM15 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM29 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h7v1h-7zM11 14h1v1h-1zM15 14h2v1h-2zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h15v1h-15zM3 15h1v1h-1zM7 15h1v1h-1zM9 15h1v1h-1zM12 15h2v1h-2zM16 15h1v1h-1zM18 15h2v1h-2zM22 15h4v1h-4zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM5 16h1v1h-1zM8 16h1v1h-1zM12 16h2v1h-2zM17 16h3v1h-3zM22 16h2v1h-2zM27 16h1v1h-1zM29 16h7v1h-7zM38 16h1v1h-1zM2 17h2v1h-2zM6 17h2v1h-2zM10 17h1v1h-1zM12 17h2v1h-2zM17 17h9v1h-9zM28 17h1v1h-1zM32 17h3v1h-3zM37 17h1v1h-1zM2 18h1v1h-1zM4 18h1v1h-1zM6 18h4v1h-4zM13 18h6v1h-6zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h7v1h-7zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM3 19h3v1h-3zM7 19h1v1h-1zM12 19h6v1h-6zM20 19h1v1h-1zM22 19h4v1h-4zM30 19h2v1h-2zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h3v1h-3zM8 20h3v1h-3zM13 20h1v1h-1zM15 20h1v1h-1zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM4 21h1v1h-1zM7 21h1v1h-1zM10 21h1v1h-1zM12 21h1v1h-1zM14 21h1v1h-1zM17 21h1v1h-1zM20 21h5v1h-5zM28 21h1v1h-1zM32 21h1v1h-1zM38 21h1v1h-1zM4 22h2v1h-2zM7 22h2v1h-2zM10 22h1v1h-1zM12 22h3v1h-3zM16 22h2v1h-2zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h3v1h-3zM6 23h2v1h-2zM9 23h2v1h-2zM12 23h1v1h-1zM15 23h2v1h-2zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM5 24h5v1h-5zM12 24h3v1h-3zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h1v1h-1zM28 24h8v1h-8zM37 24h2v1h-2zM3 25h1v1h-1zM6 25h2v1h-2zM10 25h1v1h-1zM12 25h2v1h-2zM15 25h4v1h-4zM21 25h2v1h-2zM25 25h1v1h-1zM28 25h2v1h-2zM31 25h1v1h-1zM33 25h2v1h-2zM37 25h1v1h-1zM2 26h2v1h-2zM5 26h2v1h-2zM8 26h2v1h-2zM11 26h4v1h-4zM17 26h1v1h-1zM20 26h6v1h-6zM27 26h2v1h-2zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h1v1h-1zM4 27h2v1h-2zM7 27h1v1h-1zM9 27h1v1h-1zM12 27h2v1h-2zM15 27h4v1h-4zM23 27h1v1h-1zM25 27h1v1h-1zM28 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h2v1h-2zM8 28h1v1h-1zM12 28h2v1h-2zM16 28h1v1h-1zM22 28h1v1h-1zM26 28h5v1h-5zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h3v1h-3zM9 29h2v1h-2zM14 29h2v1h-2zM18 29h1v1h-1zM23 29h1v1h-1zM26 29h1v1h-1zM29 29h6v1h-6zM37 29h1v1h-1zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h2v1h-2zM11 30h1v1h-1zM13 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM25 30h4v1h-4zM30 30h7v1h-7zM38 30h1v1h-1zM10 31h1v1h-1zM12 31h12v1h-12zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h2v1h-2zM15 32h3v1h-3zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM13 33h1v1h-1zM15 33h1v1h-1zM17 33h4v1h-4zM23 33h3v1h-3zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h1v1h-1zM15 34h2v1h-2zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h3v1h-3zM29 34h6v1h-6zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h3v1h-3zM14 35h4v1h-4zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h3v1h-3zM14 36h1v1h-1zM16 36h3v1h-3zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h3v1h-3zM16 37h2v1h-2zM21 37h3v1h-3zM25 37h1v1h-1zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h6v1h-6zM31 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="A room seen from above, with two speakers on the left wall and a microphone that you drag around the floor. The sound waves from both speakers spread across the floor. On the picture, arrow keys move the microphone 5 cm (with Shift, 50 cm); space starts or stops the walk."></canvas>
+        <div class="viewbar"><button type="button" class="spin attn" id="walk">Walk the microphone</button></div>
+        <button type="button" class="mic" id="mic" aria-label="Microphone: drag it, or use the arrow keys to move it 5 cm (Shift, 50 cm)"></button>
+        <span class="blindtag" id="blindTag" hidden>Blind</span>
+      </div>
+      <div class="card" id="card" role="group" aria-labelledby="cardTitle">
+        <span class="card-title" id="cardTitle">Set up (fades while the microphone walks)</span>
+        <div><div class="slider-head"><label for="sD">Speaker separation d</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0.2" max="3" step="0.01"></div>
+        <div class="seg" role="group" aria-label="How speaker 2 is wired" id="phaseSeg"><button type="button" data-ph="0" aria-pressed="true">In phase</button><button type="button" data-ph="1" aria-pressed="false">Speaker 2 wired backwards</button></div>
+        <label class="check"><input type="checkbox" id="spk2" checked><span>Speaker 2 on</span></label>
+        <div><div class="slider-head"><label for="sX">Walk line, distance from the speakers</label><output id="oX" for="sX"></output></div><input type="range" id="sX" min="1" max="9" step="0.1"></div>
+        <div><div class="slider-head"><label for="sT">Air temperature</label><output id="oT" for="sT"></output></div><input type="range" id="sT" min="0" max="40" step="1"></div>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="gen" role="group" aria-labelledby="genTitle">
+          <div class="gen-top"><span class="gen-title" id="genTitle">Function generator, to both speakers</span></div>
+          <div class="gen-row">
+            <output class="gen-lcd" id="oF" aria-live="off"></output>
+            <div class="knobwrap"><div class="knob" id="knobC" role="slider" tabindex="0" aria-label="Frequency f, coarse knob, 10 Hz a click" aria-valuemin="100" aria-valuemax="2000"><span class="knob-mark"></span></div><span>Coarse</span></div>
+            <div class="knobwrap"><div class="knob" id="knobF" role="slider" tabindex="0" aria-label="Frequency f, fine knob, 1 Hz a click" aria-valuemin="100" aria-valuemax="2000"><span class="knob-mark"></span></div><span>Fine</span></div>
+          </div>
+          <div class="gen-sl"><label for="sF">Frequency f</label><input type="range" id="sF" min="100" max="2000" step="1"></div>
+        </div>
+        <div class="meter" role="group" aria-labelledby="meterTitle">
+          <span class="gen-title" id="meterTitle">Sound level meter and tape</span>
+          <output class="gen-lcd" id="oLevel" aria-live="off"></output>
+          <dl id="tape"></dl>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="basic" aria-pressed="true">Walk across, 686 Hz</button>
+          <button type="button" data-p="close" aria-pressed="false">Speakers close together</button>
+          <button type="button" data-p="reverse" aria-pressed="false">Speaker 2 wired backwards</button>
+          <button type="button" data-p="speed" aria-pressed="false">Measure the speed of sound</button>
+          <button type="button" data-p="mystery" aria-pressed="false">Mystery frequency</button>
+        </div>
+        <button type="button" class="btn" id="newMystery" hidden>New mystery frequency</button>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Walk</h2>
+        <div class="plotbox tall"><canvas id="walkCan" role="img" aria-label="Sound level against the microphone's sideways position along the walk line."></canvas></div>
+        <div class="btnrow"><button type="button" class="btn" id="clearWalk">Clear the trace</button></div>
+        <p class="hint">Each walk draws the level against the sideways position y along the walk line. Dips are the quiet lines; stop the walk, put the microphone in a dip and record it.</p>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="record">Record this reading</button>
+          <button type="button" class="btn" id="exportWs">Export to worksheet</button>
+          <button type="button" class="btn" id="clearRows">Clear the readings</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Recorded readings</caption><thead><tr><th>#</th><th>x (m)</th><th>y (m)</th><th>r₁ (m)</th><th>r₂ (m)</th><th>L (dB)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">Record stores the frequency, the separation, the microphone's place (x from the speakers' wall, y sideways from the middle), the tape distances r₁ and r₂ from each speaker, and the sound level.</p>
+      </section>
+
+      <section>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
+          <div class="seg" role="group" aria-label="What the floor shows" id="viewSeg"><button type="button" data-v="waves" aria-pressed="true">Waves</button><button type="button" data-v="loud" aria-pressed="false">Loudness map</button><button type="button" data-v="none" aria-pressed="false">Nothing</button></div>
+          <label class="check"><input type="checkbox" id="showLines"><span>Show the quiet lines</span></label>
+          <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        </div></details>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the wavelength and the quiet lines</span></label>
+        <details class="more"><summary>More about this</summary><p class="hint" id="modelHint"></p></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  const PI = Math.PI, TAU = 2 * Math.PI;
+  const TS_VERSION = 'two-speaker@2026-10-23';
+  const P_REF = 20e-6;           /* Pa, reference rms pressure for the sound level (0 dB) */
+  const L1M = 80;                /* dB, level of one speaker 1 m away (chosen) */
+  const ROOM_X = 10, ROOM_Y = 8; /* m, floor of the room (the microphone stays on it); speakers on the wall at x = 0, either side of y = 0 */
+  /* OpenStax University Physics Vol 1 §17.2: speed of sound in air v = 331 m/s √(T/273 K) */
+  const soundSpeed = (tC) => 331 * Math.sqrt((tC + 273.15) / 273);
+  const wavelength = (f, tC) => soundSpeed(tC) / f;
+  /* each speaker is a point source in free field: complex pressure amplitude a e^{−ikr}/r, with a set so one speaker gives L1M at 1 m */
+  const AMP = P_REF * Math.SQRT2 * 10 ** (L1M / 20);   /* Pa·m, peak pressure amplitude times distance */
+  const dist = (x, y, sy) => Math.hypot(x, y - sy);
+  /* speaker 1 at (0, +d/2), speaker 2 at (0, −d/2); phase2 = 0 in phase or π wired backwards; on2 = false silences speaker 2 */
+  function pressure(x, y, f, d, tC, phase2, on2) {
+    const k = TAU * f / soundSpeed(tC), r1 = dist(x, y, d / 2), r2 = dist(x, y, -d / 2);
+    let re = AMP * Math.cos(k * r1) / r1, im = -AMP * Math.sin(k * r1) / r1;
+    if (on2) { re += AMP * Math.cos(k * r2 + phase2) / r2; im -= AMP * Math.sin(k * r2 + phase2) / r2; }
+    return { re, im, r1, r2 };
+  }
+  /* sound level: 20 log10(p_rms/20 μPa), p_rms = |p|/√2 */
+  const level = (p) => 20 * Math.log10(Math.max(1e-30, Math.hypot(p.re, p.im) / Math.SQRT2 / P_REF));
+  /* quiet (and loud) lines are hyperbolas r2 − r1 = Δ; on the line at distance x from the wall, y where r2 − r1 = Δ (|Δ| < d) */
+  function yForPathDiff(x, d, D) {
+    if (Math.abs(D) >= d) return NaN;
+    /* r2 − r1 = D with r1 = |(x, y − d/2)|, r2 = |(x, y + d/2)|: bisection on y, since r2 − r1 rises with y */
+    let lo = -1e4, hi = 1e4; for (let i = 0; i < 200; i++) { const m = (lo + hi) / 2; if (dist(x, m, -d / 2) - dist(x, m, d / 2) < D) lo = m; else hi = m; }
+    return (lo + hi) / 2;
+  }
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  function readingsCSV(rows, meta) {
+    const L = ['# Two speaker interference virtual apparatus: recorded readings (simulated data)', `# demo version,${meta.version}`,
+      '# model,"two point sources in free field (no walls, floor or air absorption), pressure a e^(-ikr)/r each; one speaker gives 80 dB at 1 m; speed of sound 331 m/s sqrt(T/273 K)"',
+      '# positions,"x from the wall the speakers are on, y sideways from the point midway between them, speaker 1 at y = +d/2"',
+      '# rounding,"positions and distances to 1 mm, level to 0.1 dB"', '# noise,none',
+      'row,f_Hz,d_m,speaker2,temp_C,x_m,y_m,r1_m,r2_m,level_dB'];
+    rows.forEach((r, i) => L.push([i + 1, r.f, r.d, r.s2, r.t, r.x, r.y, r.r1, r.r2, r.L].map(csvCell).join(',')));
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const newMystery = () => 300 + Math.floor(Math.random() * 901);   /* Hz, 300 to 1200 */
+  const S = { f: 686, d: 1.0, ph: 0, on2: true, tC: 20, X: 4, mx: 4, my: 0, mystery: 0, view: 'waves', lines: false, blind: false, walking: false, phase: 0, preset: 'basic', rows: [], series: 0, trace: [], traceKey: '' };
+  const PRESETS = {
+    basic: { f: 686, d: 1.0, ph: 0, on2: true, tC: 20, X: 4, hint: '686 Hz at 20 °C: λ = 0.500 m. The speakers are 1.00 m apart. Walk along the line 4 m out and find the quiet spots; at each, r₂ − r₁ should be an odd number of half wavelengths. Then turn speaker 2 off: the dips disappear.' },
+    close: { f: 686, d: 0.4, ph: 0, on2: true, tC: 20, X: 4, hint: 'Speakers 0.40 m apart, less than a wavelength: r₂ − r₁ can never reach λ, so there is only one quiet line on each side, at r₂ − r₁ = ±λ/2. Move the speakers apart and count the lines appear.' },
+    reverse: { f: 686, d: 1.0, ph: 1, on2: true, tC: 20, X: 4, hint: 'Speaker 2 is wired backwards, so it pushes when speaker 1 pulls. Straight ahead, where r₁ = r₂, is now quiet: loud and quiet lines have swapped. This is why the two wires of a speaker must not be swapped.' },
+    speed: { f: 500, d: 1.5, ph: 0, on2: true, tC: 20, X: 3, hint: 'Find the quiet spots along the walk line at several frequencies. For each, work out λ from r₂ − r₁ = (m + ½)λ and plot λ against 1/f: the slope is the speed of sound. Try another air temperature.' },
+    mystery: { f: 686, d: 1.2, ph: 0, on2: true, tC: 20, X: 4, mystery: true, hint: 'The generator display is covered. Find the quiet spots, work out the wavelength, and with the speed of sound at 20 °C find the frequency. New mystery frequency picks another.' }
+  };
+  $('modelHint').textContent = 'Model: each speaker is a point source that sends sound equally in every direction, and the room is free field: no walls, floor or ceiling reflect, as outdoors or in an anechoic room, and the air absorbs nothing. The pressure from each speaker falls as 1/r, so at a quiet spot the two do not cancel exactly unless r₁ = r₂: the farther speaker is a little weaker. One speaker gives 80 dB at 1 m (chosen). The speed of sound is 331 m/s √(T/273 K) (OpenStax University Physics Vol 1, §17.2), with T in kelvin. Positions are measured from the wall the speakers are on (x) and sideways from the point midway between them (y); speaker 1 is at y = +d/2. The microphone reads the steady sound level instantly and exactly. The waves on the floor are slowed down about a thousand times so you can see them move. Simulated data, no noise.';
+  const fNow = () => (S.mystery ? S.mystery : S.f);
+  const P = (x, y) => pressure(x, y, fNow(), S.d, S.tC, S.ph * PI, S.on2);
+
+  function applyPreset(name) { const c = PRESETS[name]; S.preset = name; S.f = c.f; S.d = c.d; S.ph = c.ph; S.on2 = c.on2; S.tC = c.tC; S.X = c.X; S.mystery = c.mystery ? newMystery() : 0; S.mx = c.X; S.my = 0; upd(); }
+  const can = $('can'), ctx = can.getContext('2d'), scene = $('scene'), shelf = $('shelf'), card = $('card'), mic = $('mic'), GEO = {};
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'accent', 'pos', 'neg', 'surface', 'relief', 'metal', 'metal-hi', 'box', 'equi', 'wood']) T[k.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + k);
+    T.mono = g('--font-mono'); T.ui = g('--font-ui'); }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const rgb = (h) => { const m = /^#([0-9a-f]{6})$/i.exec(h || ''); if (!m) return [128, 128, 128]; const n = parseInt(m[1], 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+
+  // ---------- controls ----------
+  const KNOB_DEG = 12, KNOBS = [{ id: 'knobC', per: 10 }, { id: 'knobF', per: 1 }];
+  function sync() {
+    $('sD').value = S.d; $('oD').textContent = `${S.d.toFixed(2)} m`; $('sX').value = S.X; $('oX').textContent = `x = ${S.X.toFixed(1)} m`; $('sT').value = S.tC; $('oT').textContent = `${S.tC} °C`;
+    $('sF').value = S.f; $('sF').disabled = !!S.mystery; $('sF').setAttribute('aria-valuetext', S.mystery ? 'covered' : `${S.f} Hz`);
+    $('oF').textContent = S.mystery ? '— covered —' : `${S.f} Hz`; $('spk2').checked = S.on2; $('newMystery').hidden = !S.mystery;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#phaseSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.ph === S.ph));
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    for (const k of KNOBS) { const el = $(k.id); el.setAttribute('aria-valuenow', String(S.f)); el.setAttribute('aria-valuetext', S.mystery ? 'covered' : `${S.f} Hz`); el.firstChild.style.transform = `rotate(${(S.f / k.per * KNOB_DEG) % 360}deg)`; }
+    $('presetHint').textContent = S.preset ? PRESETS[S.preset].hint : '';
+    meter();
+  }
+  const changed = () => { S.preset = S.preset === 'mystery' && S.mystery ? 'mystery' : ''; upd(); };
+  function upd() { sync(); GEO.field = null; draw(); drawWalk(); }
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
+  $('newMystery').addEventListener('click', () => { const was = S.mystery; S.mystery = newMystery(); capStatus(`The last mystery frequency was ${was} Hz. A new one is playing.`); upd(); });
+  $('sD').addEventListener('input', (e) => { S.d = +e.target.value; changed(); });
+  $('sX').addEventListener('input', (e) => { S.X = +e.target.value; changed(); });
+  $('sT').addEventListener('input', (e) => { S.tC = +e.target.value; changed(); });
+  $('phaseSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-ph]'); if (b) { S.ph = +b.dataset.ph; changed(); } });
+  $('spk2').addEventListener('change', (e) => { S.on2 = e.target.checked; changed(); });
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b) { S.view = b.dataset.v; sync(); draw(); } });
+  $('showLines').addEventListener('change', (e) => { S.lines = e.target.checked; draw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; upd(); });
+  const setF = (v) => { if (S.mystery) return; const f = Math.min(2000, Math.max(100, Math.round(v))); if (f !== S.f) { S.f = f; changed(); } };
+  $('sF').addEventListener('input', (e) => setF(+e.target.value));
+  for (const kd of KNOBS) {
+    const k = $(kd.id); let last = null, acc = 0;
+    const ang = (e) => { const r = k.getBoundingClientRect(); return Math.atan2(e.clientY - r.top - r.height / 2, e.clientX - r.left - r.width / 2) * 180 / PI; };
+    k.addEventListener('pointerdown', (e) => { k.setPointerCapture(e.pointerId); last = ang(e); acc = 0; k.focus(); e.preventDefault(); });
+    k.addEventListener('pointermove', (e) => { if (last === null) return; const a = ang(e); let d = a - last; d -= 360 * Math.round(d / 360); last = a; acc += d;
+      const n = Math.trunc(acc / KNOB_DEG); if (n) { acc -= n * KNOB_DEG; setF(S.f + n * kd.per); } });
+    const end = () => { last = null; }; k.addEventListener('pointerup', end); k.addEventListener('pointercancel', end);
+    k.addEventListener('wheel', (e) => { e.preventDefault(); setF(S.f + (e.deltaY < 0 ? kd.per : -kd.per)); }, { passive: false });
+    k.addEventListener('keydown', (e) => { const step = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 10, PageDown: -10 }[e.key];
+      if (step) setF(S.f + step * kd.per); else if (e.key === 'Home') setF(100); else if (e.key === 'End') setF(2000); else return; e.preventDefault(); });
+  }
+  /* the microphone: drag it on the floor, or arrow keys */
+  const clampMic = () => { S.mx = Math.min(ROOM_X - 0.05, Math.max(0.3, Math.round(S.mx * 1000) / 1000)); S.my = Math.min(ROOM_Y / 2 - 0.05, Math.max(-ROOM_Y / 2 + 0.05, Math.round(S.my * 1000) / 1000)); };
+  const moveMic = (x, y) => { S.mx = x; S.my = y; clampMic(); meter(); draw(); };
+  mic.addEventListener('pointerdown', (e) => { if (S.walking) setWalk(false); mic.setPointerCapture(e.pointerId); mic.dataset.drag = '1'; mic.focus(); e.preventDefault(); });
+  mic.addEventListener('pointermove', (e) => { if (!mic.dataset.drag || !GEO.ppm) return; const r = can.getBoundingClientRect(); moveMic((e.clientX - r.left - GEO.x0) / GEO.ppm, (GEO.yc - (e.clientY - r.top)) / GEO.ppm); });
+  const micEnd = () => { delete mic.dataset.drag; }; mic.addEventListener('pointerup', micEnd); mic.addEventListener('pointercancel', micEnd);
+  function micKeys(e) { const s = e.shiftKey ? 0.5 : 0.05, d = { ArrowRight: [s, 0], ArrowLeft: [-s, 0], ArrowUp: [0, s], ArrowDown: [0, -s] }[e.key];
+    if (d) { if (S.walking) setWalk(false); moveMic(S.mx + d[0], S.my + d[1]); } else if (e.key === ' ') $('walk').click(); else return; e.preventDefault(); }
+  mic.addEventListener('keydown', micKeys); can.addEventListener('keydown', micKeys);
+  /* click the floor to put the microphone there */
+  can.addEventListener('click', (e) => { if (!GEO.ppm) return; const r = can.getBoundingClientRect(), x = (e.clientX - r.left - GEO.x0) / GEO.ppm, y = (GEO.yc - (e.clientY - r.top)) / GEO.ppm; if (x > 0.1 && x < ROOM_X && Math.abs(y) < ROOM_Y / 2) { if (S.walking) setWalk(false); moveMic(x, y); } });
+
+  /* the walk: the microphone moves along the walk line from one side to the other at 0.5 m/s; the card fades meanwhile */
+  const traceKey = () => [fNow(), S.d, S.ph, S.on2, S.tC, S.X].join('|');
+  function setWalk(on) { S.walking = on; const over = getComputedStyle(card).position === 'absolute'; card.classList.toggle('away', on && over); card.inert = on && over;
+    if (on) { const k = traceKey(); if (k !== S.traceKey) { S.trace = []; S.traceKey = k; } /* a walk starts at the far side, or carries on if the microphone was stopped part way along the walk line */ if (Math.abs(S.mx - S.X) > 1e-6 || S.my > ROOM_Y / 2 - 0.2 || !S.trace.length) S.my = -ROOM_Y / 2 + 0.05; S.mx = S.X; }
+    $('walk').textContent = on ? 'Stop the walk' : 'Walk the microphone'; $('walk').classList.toggle('attn', !on); meter(); draw(); }
+  $('walk').addEventListener('click', () => setWalk(!S.walking));
+  function stepWalk(dt) {
+    const y0 = S.my; S.my = Math.min(ROOM_Y / 2 - 0.05, S.my + 0.5 * dt); clampMic();
+    for (let y = y0; y <= S.my + 1e-9; y += 0.004) S.trace.push([y, level(P(S.X, y))]);
+    if (S.my >= ROOM_Y / 2 - 0.05) setWalk(false);
+    meter(); drawWalk();
+  }
+  $('clearWalk').addEventListener('click', () => { S.trace = []; drawWalk(); });
+
+  function meter() {
+    const p = P(S.mx, S.my), L = level(p), dd = (a, v) => `<dt>${a}</dt><dd>${v}</dd>`;
+    $('oLevel').textContent = `${L.toFixed(1)} dB`;
+    let h = dd('x, from the wall', `${S.mx.toFixed(3)} m`) + dd('y, sideways', `${S.my.toFixed(3)} m`) + dd('r₁, to speaker 1', `${p.r1.toFixed(3)} m`) + dd('r₂, to speaker 2', `${p.r2.toFixed(3)} m`);
+    h += dd('wavelength λ', S.blind || S.mystery ? 'hidden' : `${wavelength(fNow(), S.tC).toFixed(3)} m`);
+    $('tape').innerHTML = h;
+    mic.setAttribute('aria-valuetext', `x ${S.mx.toFixed(2)} m, y ${S.my.toFixed(2)} m, ${L.toFixed(1)} dB`);
+    if (GEO.ppm) { mic.style.left = `${GEO.x0 + S.mx * GEO.ppm}px`; mic.style.top = `${GEO.yc - S.my * GEO.ppm}px`; }
+  }
+
+  // ---------- readings ----------
+  function capStatus(m) { $('capStatus').textContent = m; }
+  $('record').addEventListener('click', () => {
+    const p = P(S.mx, S.my);
+    S.rows.push({ f: S.mystery ? 'mystery' : String(S.f), d: S.d.toFixed(2), s2: !S.on2 ? 'off' : S.ph ? 'wired backwards' : 'in phase', t: String(S.tC), x: S.mx.toFixed(3), y: S.my.toFixed(3), r1: p.r1.toFixed(3), r2: p.r2.toFixed(3), L: level(p).toFixed(1) });
+    renderRows(); capStatus(`Row ${S.rows.length} recorded.`);
+  });
+  $('clearRows').addEventListener('click', () => { S.rows = []; S.series = Date.now(); renderRows(); capStatus('Readings cleared.'); });
+  const WORKSHEET = '../curriculum/labs/students/two-speaker.html';
+  function downloadCsv(txt) { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'two-speaker-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} }
+  function toWorksheet(txt, meta, note) {
+    const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => l.split(',');
+    if (!S.series) S.series = Date.now();
+    const hand = { v: 1, demo: 'two-speaker', series: S.series, sent: new Date().toISOString(), columns: split(lines[0]), rows: lines.slice(1).map(split), meta, note, csv: txt, csvName: 'two-speaker-readings.csv' };
+    localStorage.setItem('vd-handoff:two-speaker', JSON.stringify(hand));
+  }
+  $('exportWs').addEventListener('click', () => {
+    if (!S.rows.length) { capStatus('No readings to export.'); return; }
+    const txt = readingsCSV(S.rows, { version: TS_VERSION });
+    try { toWorksheet(txt, { temp_C: S.tC }, 'Simulated data from the Two Speaker Interference demo (free field, point sources).'); }
+    catch (_) { downloadCsv(txt); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    capStatus(`${S.rows.length} reading${S.rows.length === 1 ? '' : 's'} sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = WORKSHEET; a.target = 'two-speaker-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+    fetch(WORKSHEET, { method: 'HEAD' }).then((r) => { if (!r.ok) throw 0; }).catch(() => { a.remove(); const b = document.createElement('a'); b.href = '#'; b.textContent = 'The worksheet is not posted yet: download the CSV'; b.style.color = 'var(--accent)'; b.addEventListener('click', (e) => { e.preventDefault(); downloadCsv(txt); }); $('capStatus').appendChild(b); });
+  });
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr title="f ${r.f} Hz, d ${r.d} m, speaker 2 ${r.s2}, ${r.t} °C"><td>${i + 1}</td><td>${r.x}</td><td>${r.y}</td><td>${r.r1}</td><td>${r.r2}</td><td>${r.L}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="7">No readings yet. Put the microphone somewhere, then record.</td></tr>';
+  }
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+
+  const walkCan = $('walkCan'), wctx = walkCan.getContext('2d');
+  function drawWalk() {
+    const r = walkCan.getBoundingClientRect(), w = r.width, h = r.height; if (!w || !T) return;
+    walkCan.width = Math.round(w * dpr); walkCan.height = Math.round(h * dpr); wctx.setTransform(dpr, 0, 0, dpr, 0, 0); wctx.fillStyle = T.canvas; wctx.fillRect(0, 0, w, h);
+    const L = 40, R = w - 8, top = 8, B = h - 28, yl = -ROOM_Y / 2, yh = ROOM_Y / 2, dbl = 40, dbh = 90;
+    const PX = (y) => L + (R - L) * (y - yl) / (yh - yl), PY = (v) => B - (B - top) * (Math.max(dbl, Math.min(dbh, v)) - dbl) / (dbh - dbl);
+    wctx.strokeStyle = T.line; wctx.strokeRect(L + 0.5, top + 0.5, R - L, B - top);
+    wctx.fillStyle = T.muted; wctx.font = `10px ${T.mono}`; wctx.textAlign = 'center'; wctx.textBaseline = 'top';
+    for (const y of [-4, -2, 0, 2, 4]) wctx.fillText(String(y), PX(y), B + 2);
+    wctx.fillText(`y along the walk line at x = ${S.X.toFixed(1)} m (m)`, (L + R) / 2, B + 14);
+    wctx.textAlign = 'right'; wctx.textBaseline = 'middle'; for (const v of [40, 60, 80]) { wctx.fillText(String(v), L - 3, PY(v)); wctx.strokeStyle = T.grid; wctx.beginPath(); wctx.moveTo(L, PY(v)); wctx.lineTo(R, PY(v)); wctx.stroke(); }
+    wctx.save(); wctx.translate(9, (top + B) / 2); wctx.rotate(-PI / 2); wctx.textAlign = 'center'; wctx.fillText('level (dB)', 0, 0); wctx.restore();
+    if (S.trace.length) { wctx.strokeStyle = T.accent; wctx.lineWidth = 1.4; wctx.beginPath(); S.trace.forEach(([y, v], i) => (i ? wctx.lineTo(PX(y), PY(v)) : wctx.moveTo(PX(y), PY(v)))); wctx.stroke(); }
+    else { wctx.textAlign = 'center'; wctx.fillText('press Walk the microphone', (L + R) / 2, (top + B) / 2); }
+    if (Math.abs(S.mx - S.X) < 1e-6) { wctx.strokeStyle = T.pos; wctx.setLineDash([3, 3]); wctx.beginPath(); wctx.moveTo(PX(S.my), top); wctx.lineTo(PX(S.my), B); wctx.stroke(); wctx.setLineDash([]); }
+  }
+
+  // ---------- drawing ----------
+  function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
+  const off = document.createElement('canvas'), octx = off.getContext('2d');
+  /* the floor's field on a coarse grid: r₁ and r₂ at each cell, kept until the setup or the size changes */
+  function fieldGrid(gw, gh) {
+    if (GEO.field && GEO.field.gw === gw && GEO.field.gh === gh) return GEO.field;
+    const n = gw * gh, a1 = new Float32Array(n), a2 = new Float32Array(n), k1 = new Float32Array(n), k2 = new Float32Array(n), lv = new Float32Array(n), k = TAU * fNow() / soundSpeed(S.tC);
+    for (let j = 0; j < gh; j++) for (let i = 0; i < gw; i++) { const x = (i + 0.5) / gw * ROOM_X, y = ROOM_Y / 2 - (j + 0.5) / gh * ROOM_Y, r1 = dist(x, y, S.d / 2), r2 = dist(x, y, -S.d / 2), m = j * gw + i;
+      a1[m] = 1 / r1; a2[m] = S.on2 ? 1 / r2 : 0; k1[m] = k * r1; k2[m] = k * r2 + S.ph * PI; lv[m] = level(P(x, y)); }
+    off.width = gw; off.height = gh;
+    return (GEO.field = { gw, gh, a1, a2, k1, k2, lv, img: octx.createImageData(gw, gh) });
+  }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const p = ps();
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const overlay = getComputedStyle(shelf).position === 'absolute', shelfTop = overlay ? shelf.getBoundingClientRect().top - can.getBoundingClientRect().top : Hh;
+    /* the floor fills the picture above the shelf, keeping the room's shape; the speakers' wall on the left */
+    const padL = 46 * p, padT = 50 * p, availW = W - padL - 14 * p, availH = Math.max(120, shelfTop - padT - 24 * p), ppm = Math.min(availW / ROOM_X, availH / ROOM_Y);
+    const x0 = padL, yc = padT + ROOM_Y / 2 * ppm; Object.assign(GEO, { ppm, x0, yc });
+    const fw = ROOM_X * ppm, fh = ROOM_Y * ppm, fy = yc - fh / 2;
+    /* the Set up card sits in the room left over to the right of the floor when there is room for it, otherwise over the floor's top left */
+    if (getComputedStyle(card).position === 'absolute') { const spare = W - (x0 + fw) - 24 * p; card.style.left = spare >= 300 ? `${x0 + fw + 16 * p}px` : '12px'; card.style.width = spare >= 300 ? `${Math.min(360, spare)}px` : ''; }
+    ctx.fillStyle = T.surface; ctx.fillRect(x0, fy, fw, fh);
+    if (S.view !== 'none') {
+      const gw = Math.max(40, Math.min(260, Math.round(fw / 3))), gh = Math.round(gw * ROOM_Y / ROOM_X), F = fieldGrid(gw, gh), d = F.img.data;
+      const cP = rgb(T.pos), cN = rgb(T.accent), cB = rgb(T.surface), ph = reduce ? 0 : S.phase, ref = 1 / 3;   /* colour saturates at the pressure one speaker gives 3 m away */
+      for (let m = 0; m < gw * gh; m++) {
+        let t, c;
+        if (S.view === 'waves') { const v = (F.a1[m] * Math.cos(ph - F.k1[m]) + F.a2[m] * Math.cos(ph - F.k2[m])) / ref; t = Math.min(1, Math.abs(v)) * 0.6; c = v > 0 ? cP : cN; }
+        else { t = Math.min(1, Math.max(0, (F.lv[m] - 50) / 35)) * 0.8; c = cN; }
+        d[4 * m] = cB[0] + (c[0] - cB[0]) * t; d[4 * m + 1] = cB[1] + (c[1] - cB[1]) * t; d[4 * m + 2] = cB[2] + (c[2] - cB[2]) * t; d[4 * m + 3] = 255;
+      }
+      octx.putImageData(F.img, 0, 0); ctx.imageSmoothingEnabled = true; ctx.drawImage(off, x0, fy, fw, fh);
+    }
+    /* metre grid on the floor */
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.globalAlpha = 0.6;
+    for (let i = 0; i <= ROOM_X; i++) { ctx.beginPath(); ctx.moveTo(x0 + i * ppm + 0.5, fy); ctx.lineTo(x0 + i * ppm + 0.5, fy + fh); ctx.stroke(); }
+    for (let j = 0; j <= ROOM_Y; j++) { ctx.beginPath(); ctx.moveTo(x0, fy + j * ppm + 0.5); ctx.lineTo(x0 + fw, fy + j * ppm + 0.5); ctx.stroke(); }
+    ctx.globalAlpha = 1; ctx.strokeStyle = T.gridStrong; ctx.strokeRect(x0 + 0.5, fy + 0.5, fw, fh);
+    for (let i = 0; i <= ROOM_X; i += 2) txt(`${i} m`, x0 + i * ppm, fy + fh + 10 * p, { a: 'center', s: 9, c: T.muted, m: 1 });
+    for (const y of [-4, -2, 0, 2, 4]) txt(String(y), x0 - 12 * p, yc - y * ppm, { a: 'right', s: 9, c: T.muted, m: 1 });
+    txt('y (m)', x0 - 12 * p, fy - 9 * p, { a: 'right', s: 9, c: T.muted });
+    /* quiet lines: hyperbolas r₂ − r₁ = (m + ½)λ (in phase) or mλ (wired backwards) */
+    if (S.lines && !S.blind && !S.mystery && S.on2) {
+      const lam = wavelength(fNow(), S.tC); ctx.strokeStyle = T.ink; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.2;
+      for (let m = -40; m <= 40; m++) { const D = (S.ph ? m : m + 0.5) * lam; if (Math.abs(D) >= S.d) continue;
+        ctx.beginPath(); for (let x = 0.05; x <= ROOM_X; x += 0.05) { const y = yForPathDiff(x, S.d, D); if (Math.abs(y) > ROOM_Y / 2) break; ctx.lineTo(x0 + x * ppm, yc - y * ppm); } ctx.stroke(); }
+      ctx.setLineDash([]);
+    }
+    /* walk line */
+    const wx = x0 + S.X * ppm; ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * p; ctx.setLineDash([8 * p, 5 * p]); ctx.beginPath(); ctx.moveTo(wx, fy); ctx.lineTo(wx, fy + fh); ctx.stroke(); ctx.setLineDash([]);
+    txt('walk line', wx + 5 * p, fy + fh - 8 * p, { s: 9, c: T.equi, b: 1 });
+    /* the wall and the speakers on it */
+    ctx.fillStyle = T.box; ctx.fillRect(x0 - 8 * p, fy, 8 * p, fh);
+    for (const [s, on, name] of [[1, true, '1'], [-1, S.on2, '2']]) { const sy = yc - s * S.d / 2 * ppm, bw = 14 * p, bh = 22 * p;
+      ctx.fillStyle = on ? T.ink : T.muted; ctx.beginPath(); ctx.roundRect(x0 - 4 * p, sy - bh / 2, bw, bh, 3 * p); ctx.fill();
+      ctx.fillStyle = T.metalHi; ctx.beginPath(); ctx.arc(x0 + 5 * p, sy, 5 * p, 0, 7); ctx.fill();
+      txt(name, x0 + 14 * p, sy - s * 12 * p, { s: 10, b: 1 }); }
+    txt(`d = ${S.d.toFixed(2)} m`, x0 + 14 * p, yc, { s: 10, c: T.muted });
+    /* tape lines from each speaker to the microphone, and the microphone */
+    const mx = x0 + S.mx * ppm, my = yc - S.my * ppm;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([2 * p, 3 * p]);
+    for (const s of [1, -1]) { if (s < 0 && !S.on2) continue; ctx.beginPath(); ctx.moveTo(x0 + 6 * p, yc - s * S.d / 2 * ppm); ctx.lineTo(mx, my); ctx.stroke(); }
+    ctx.setLineDash([]);
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(mx, my, 9 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.metalHi; ctx.beginPath(); ctx.arc(mx, my, 5 * p, 0, 7); ctx.fill();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(mx + 8 * p, my + 4 * p); ctx.quadraticCurveTo(mx + 30 * p, my + 10 * p, mx + 26 * p, my + 34 * p); ctx.stroke();
+    txt(`${level(P(S.mx, S.my)).toFixed(1)} dB`, mx + 14 * p, my - 12 * p, { s: 11, b: 1, m: 1 });
+    if (S.view === 'waves' && !reduce) txt('waves slowed about 1000 times', x0 + fw, fy - 9 * p, { a: 'right', s: 9, c: T.muted });
+    if (S.view === 'loud') txt('loudness map: darker is louder (50 to 85 dB)', x0 + fw, fy - 9 * p, { a: 'right', s: 9, c: T.muted });
+    mic.style.left = `${mx}px`; mic.style.top = `${my}px`;
+  }
+
+  function tick(dt) { if (S.walking) stepWalk(dt); if (!reduce && S.view === 'waves') S.phase = (S.phase + dt * TAU * 0.6) % TAU; if (S.walking || (!reduce && S.view === 'waves')) draw(); }
+  function resize() { dpr = window.devicePixelRatio || 1; const rc = scene.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; GEO.field = null; setWalk(S.walking); drawWalk(); }
+  const retheme = () => { tokens(); draw(); drawWalk(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
+  tokens(); new ResizeObserver(resize).observe(scene); new ResizeObserver(() => draw()).observe(shelf);
+  const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'basic'); renderRows(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  let last = performance.now(), acc = 0;
+  (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
+})();
+</script>
+</body>
+</html>

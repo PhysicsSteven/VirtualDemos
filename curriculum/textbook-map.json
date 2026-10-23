@@ -3837,9 +3837,11 @@
         "acoustics"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "status": "usable",
+      "demos": [
+        "wave-power"
+      ],
+      "note": "Energy and Power of a Wave (2026-10-23, Claude): P = ½ μ A² ω² v measured on a string ending in a matched absorber.",
       "unit": "waves"
     },
     {
@@ -3854,7 +3856,8 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "standing-waves"
+        "standing-waves",
+        "two-speaker"
       ],
       "unit": "waves"
     },
@@ -3911,7 +3914,8 @@
       "demos": [
         "resonators",
         "sound-waves",
-        "kundts-tube"
+        "kundts-tube",
+        "ultrasound"
       ],
       "unit": "sound"
     },
@@ -3925,9 +3929,11 @@
         "acoustics"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "status": "usable",
+      "demos": [
+        "two-speaker"
+      ],
+      "note": "Two Speaker Interference (2026-10-23, Claude): the sound level meter reads in dB, and one speaker alone falls 6 dB per doubling of distance.",
       "unit": "sound"
     },
     {
@@ -3992,7 +3998,8 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "doppler"
+        "doppler",
+        "ultrasound"
       ],
       "unit": "sound"
     },
@@ -6818,6 +6825,73 @@
       "note": "Acoustics module (2026-10-23): dust at the nodes gives c in a gas, the rod's own resonance gives c in a metal rod.",
       "title": "Kundt's Tube",
       "url": "demos/kundts-tube.html"
+    },
+    {
+      "demo": "wave-power",
+      "course": [
+        "acoustics"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "16.4",
+          "title": "Energy and Power of a Wave"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Acoustics module (2026-10-23): the Linear Density of a String apparatus with a dashpot absorber and a power meter; P against A, f and T.",
+      "title": "Energy and Power of a Wave",
+      "url": "demos/wave-power.html"
+    },
+    {
+      "demo": "two-speaker",
+      "course": [
+        "acoustics"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "16.5",
+          "title": "Interference of Waves"
+        },
+        {
+          "vol": 1,
+          "sec": "17.3",
+          "title": "Sound Intensity"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Acoustics module (2026-10-23): two point sources in free field and a microphone walked across the room; λ and c from the quiet lines, levels in dB.",
+      "title": "Two Speaker Interference",
+      "url": "demos/two-speaker.html"
+    },
+    {
+      "demo": "ultrasound",
+      "course": [
+        "acoustics"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "17.2",
+          "title": "Speed of Sound"
+        },
+        {
+          "vol": 1,
+          "sec": "17.7",
+          "title": "The Doppler Effect"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Acoustics module (2026-10-23): pulse echo ranging and Doppler blood flow; media from OpenStax College Physics 17.7; links to the Doppler demo.",
+      "title": "Ultrasound: Echoes and Blood Flow",
+      "url": "demos/ultrasound.html"
     },
     {
       "demo": "rotation-curves",

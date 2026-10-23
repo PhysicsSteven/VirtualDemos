@@ -82,7 +82,8 @@
   /* ==ACOUSTICS START== Acoustics worksheets (acoustics.html) and their demo column maps. */
   const ACOUSTICS = ['resonators', 'timbre', 'acoustic-levitation', 'chladni', 'doppler',
     'sound-waves', 'kundts-tube' /* handouts (GPT) still to be written: the maps below assume the first data table's columns
-      sound-waves: Trial, Gas, T (°C), d (m), Δt (ms), Observation; kundts-tube: Heap j, x (cm), Rod, L_rod (m), Mode n, f (Hz), Gas, T (°C) */];
+      sound-waves: Trial, Gas, T (°C), d (m), Δt (ms), Observation; kundts-tube: Heap j, x (cm), Rod, L_rod (m), Mode n, f (Hz), Gas, T (°C) */,
+    'wave-power', 'two-speaker', 'ultrasound' /* handouts (GPT) still to be written too; their first tables' assumed columns are above each map */];
   ENABLED.push(...ACOUSTICS);
   Object.assign(FROM_DEMO, {
     resonators: { demo: 'Resonators', cols: ['f_Hz', 'k', null, null, 'L_read_cm', 'spacing_cm'] },
@@ -90,6 +91,12 @@
     'acoustic-levitation': { demo: 'Acoustic Levitation', cols: ['setup_material', 'radius_mm', 'drive_Vpp', 'phase_deg', 'tracked_trap_z_mm', 'Fmax_over_W', 'notes'] },
     'sound-waves': { demo: 'Sound Waves and the Speed of Sound', cols: ['row', 'gas', 'T_C', 'd_m', 'dt_ms', null] },
     'kundts-tube': { demo: "Kundt's Tube", cols: ['pile', 'x_cm', 'rod', 'L_rod_m', 'n', 'f_Hz', 'gas', 'T_C'] },
+    /* Trial | f (Hz) | A (mm) | T (N) | P (mW) | A² (mm²) | f² (Hz²) | Observation */
+    'wave-power': { demo: 'Energy and Power of a Wave', cols: ['row', 'f_Hz', 'A_mm', 'T_N', 'P_mW', 'A2_mm2', 'f2_Hz2', null] },
+    /* Trial | x (m) | y (m) | r₁ (m) | r₂ (m) | Level (dB) | Loud or quiet */
+    'two-speaker': { demo: 'Two Speaker Interference', cols: [(r) => `${r.row}, ${r.f_Hz} Hz, d = ${r.d_m} m${r.speaker2 === 'in phase' ? '' : ', speaker 2 ' + r.speaker2}`, 'x_m', 'y_m', 'r1_m', 'r2_m', 'level_dB', null] },
+    /* Trial | Setup | Known depth (cm) | Echo time t (μs) | Angle θ (°) | Doppler shift Δf (Hz) | Notes */
+    ultrasound: { demo: 'Ultrasound: Echoes and Blood Flow', cols: ['row', (r) => `${r.setup}, ${r.f0_MHz} MHz${r.profile ? ', ' + r.profile : ''}`, 'known_depth_cm', 'cursor_time_us', 'angle_deg', 'cursor_shift_Hz', null] },
   });
   /* ==ACOUSTICS END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

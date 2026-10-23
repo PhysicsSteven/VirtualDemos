@@ -1018,6 +1018,39 @@
       "nodal lines",
       "sound"
      ]
+    },
+    {
+     "demo": "wave-power",
+     "title": "Energy and Power of a Wave",
+     "desc": "Send waves along a string into an absorber and read the power meter as you change the amplitude, the frequency and the tension, then find how the power a wave carries depends on each.",
+     "tags": [
+      "wave power",
+      "P ∝ A²f²",
+      "impedance",
+      "absorber"
+     ]
+    },
+    {
+     "demo": "two-speaker",
+     "title": "Two Speaker Interference",
+     "desc": "Walk a microphone across a room with two speakers playing the same tone, find the loud and quiet lines from the path difference, and get the wavelength and the speed of sound.",
+     "tags": [
+      "interference",
+      "path difference",
+      "sound level",
+      "speed of sound"
+     ]
+    },
+    {
+     "demo": "ultrasound",
+     "title": "Ultrasound: Echoes and Blood Flow",
+     "desc": "Time the echoes of an ultrasound pulse from the boundaries between fat, muscle and bone to find their depths, then point the beam at an artery and get the blood speed from the Doppler shift.",
+     "tags": [
+      "ultrasound",
+      "echo ranging",
+      "acoustic impedance",
+      "Doppler flow"
+     ]
     }
    ]
   },

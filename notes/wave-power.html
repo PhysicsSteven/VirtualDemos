@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Energy and Power of a Wave: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Energy and Power of a Wave</h1><ul class="meta"><li><a href="../demos/wave-power.html">Open the demo</a></li><li>Acoustics module (OpenStax University Physics Vol 1, §16.4)</li><li>25 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A wave carries energy along the string without carrying the string with it. The average power of a sinusoidal wave is P = ½ μ A² ω² v.</li>
+<li>Power goes as the square of the amplitude and the square of the frequency: double either and the power is four times as much.</li>
+<li>The string sets how fast the energy moves, v = √(T/μ). At the same A and f, more tension or a heavier string carries more power: P = ½ ω² A² √(Tμ).</li>
+<li>The energy per metre, ½ μ A² ω², is half kinetic and half potential, and P = (energy per metre) × v.</li>
+<li>An absorber matched to the string (b = √(Tμ)) takes every wave that reaches it, so the string acts as if it were endless. A mismatched end sends part of each wave back and the power depends on the length.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need the traveling wave y = A sin(kx − ωt), ω = 2πf and v = √(T/μ) (OpenStax §16.3). The <strong>Linear Density of a String</strong> demo uses the same apparatus with a fixed end; this one replaces the fixed end with an absorber. <strong>Blind</strong> hides μ, v, λ, the predicted power and the energy per metre; the <strong>Unknown string</strong> hides μ for good (choosing another string shows it in the status line).</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Power against amplitude.</strong> String B, 200 g, 20 Hz. Start the vibrator and record the meter at A = 0.5, 1.0, 1.5, 2.0, 2.5 and 3.0 mm: 0.09573, 0.3829, 0.8616, 1.532, 2.393 and 3.446 mW. Plot P against A (a curve) and against A² (a line through the origin).</li>
+<li><strong>Power against frequency.</strong> Keep A = 1.00 mm and change f from 10 to 60 Hz. P against f² is a line through the origin. Point out that the wavelength changes too: count the waves on the string.</li>
+<li><strong>Power against tension.</strong> Add masses at 20 Hz and 1.00 mm: four times the load gives twice the power.</li>
+<li><strong>Mismatched absorber.</strong> Too soft: change L by a few centimetres and the meter swings between about a third and three times the matched power. Switch back to Matched and L stops mattering. This is why the lab needs a matched end.</li>
+<li><strong>Unknown string.</strong> Students get μ from the slope of P against A²: slope = ½ ω² √(Tμ).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> String B (μ = 1.20 g/m) carries 200 g, and the vibrator runs at 20.0 Hz with A = 1.00 mm. Find the tension, the wave speed and the power the wave carries. Use g = 9.80 m/s².</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Starting from Q1, by what factor does the power change if (a) A is doubled, (b) f is doubled, (c) the hanging mass is made four times as large? Explain each from P = ½ μ A² ω² v.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> At 20.0 Hz with 200 g on String B, a student records 0.09573, 0.3829, 0.8616, 1.532, 2.393 and 3.446 mW at A = 0.5 to 3.0 mm in 0.5 mm steps. Plot P against A² and find μ from the slope.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> For the wave of Q1, find the average energy per metre of string and the energy in one wavelength. Show that the energy in one wavelength times f gives the power.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> With a matched absorber the meter reading does not change when L changes. With the "too soft" absorber it does. Explain both.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> String A (0.40 g/m) and String C (3.60 g/m) are run with the same tension, frequency and amplitude. Which carries more power, and by what factor?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A bigger wave moves faster, so it carries more power for that reason."</strong> The speed is set by T and μ, not by A. The power grows with A² because each bit of string moves farther and faster.</li>
+<li><strong>"The string itself travels to the absorber."</strong> Each bit of string only moves up and down; energy travels, not string.</li>
+<li><strong>"Higher frequency means a faster wave."</strong> f changes λ, not v. Power grows with f² because the string moves faster at the same amplitude.</li>
+<li><strong>"The absorber's power depends on how long the string is."</strong> Only when the end reflects. With a matched end no wave comes back and L does not matter.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>The string obeys μ y_tt = T y_xx with no losses along it. The vibrator end moves as A cos ωt. The far end is a massless end held by a dashpot: T y_x + b y_t = 0. The steady state is Y(x) = P e^{−ikx} + Q e^{ikx} with Q = P r e^{−2ikL}, r = (Z − b)/(Z + b) and Z = √(Tμ), solved exactly.</li>
+<li>The meter reads the dashpot's average power ½ b ω² |Y(L)|², which equals the power ½ Re[(−T Y′) conj(iωY)] carried across every point (checked in the tests). With b = Z this is ½ Z ω² A² = ½ μ A² ω² v exactly.</li>
+<li>Too soft and too stiff are b = Z/3 and b = 3Z, so |r| = 0.5 and a quarter of the power is sent back each time. Because the vibrator fixes the displacement of its end, the wave heading for the absorber has an amplitude between A/1.5 and A/0.5, and the absorber takes between P/3 and 3P, depending on L and f.</li>
+<li>T = mg with g = 9.80 m/s²; the pulley has no friction, the mass is at rest, and the short piece of string from the absorber to the pulley, its stretch and its sag are left out. Strings A, B and C have μ = 0.40, 1.20 and 3.60 g/m (chosen).</li>
+<li>The linear wave equation needs small slopes. The readout warns when the largest slope kA passes 0.2 (it can on String C with the hanger alone near 100 Hz and 5 mm). The steady state is shown at once. Simulated data with no noise.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

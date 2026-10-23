@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Ultrasound: Echoes and Blood Flow</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the apparatus on the left, the rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+@media (max-width: 820px) { .chips button { min-height: 36px; } }
+.readout dd.warn { color: var(--pos); }
+:root { --wood: #d8bf98; --wood-line: #c3a77c; --metal: #9aa4b0; --metal-hi: #c9d0d9; --string: #b4532a; --env: rgba(180, 83, 42, 0.18); --brass: #b98f2e; --box: #3b4656; --rule: #f1e3b5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; } }
+:root[data-theme="dark"] { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; }
+.fine { display: flex; gap: 6px; flex-wrap: wrap; }
+.fine .btn { padding: 3px 9px; font-family: var(--font-mono); font-size: 0.82rem; }
+.readout dd .ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.masslist { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); margin: 0; overflow-wrap: anywhere; }
+/* In scene controls: the function generator and the tray of slotted masses sit on a shelf over the bottom left of the picture,
+   the vibrator is dragged along the table, masses are dragged onto the hanger. On phones the shelf drops below the picture. */
+.scene { position: absolute; inset: 0; }
+.shelf { position: absolute; left: 12px; bottom: 12px; right: 190px; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; pointer-events: none; }
+.shelf > * { pointer-events: auto; }
+.gen { background: var(--box); color: #e3e8ef; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
+.gen-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.gen-title { font-size: 0.78rem; font-weight: 700; color: #c9d0d9; }
+.gen-lcd { font-family: var(--font-mono); font-weight: 600; font-size: 1.35rem; color: #7ee0a0; background: #0b1a12; border-radius: 5px; padding: 2px 10px; min-width: 7.2ch; text-align: right; font-variant-numeric: tabular-nums; }
+.gen-knobs { display: flex; align-items: center; gap: 12px; }
+.knobwrap { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.72rem; color: #c9d0d9; }
+.knob { position: relative; width: 52px; height: 52px; border-radius: 50%; cursor: grab; touch-action: none;
+  background: radial-gradient(circle at 38% 32%, #8b96a4, #4a5462 62%, #39414d); box-shadow: 0 0 0 3px #232a34, 0 2px 4px rgba(0, 0, 0, 0.5); }
+.knob:active { cursor: grabbing; }
+.knob-mark { position: absolute; left: 50%; top: 5px; width: 3px; height: 15px; margin-left: -1.5px; border-radius: 2px; background: #f1f4f8; transform-origin: 50% 21px; }
+.knob:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.gen .fine { display: grid; grid-template-columns: auto auto; gap: 4px; }
+.gen .fine .btn { background: #39414d; color: #e3e8ef; border-color: #4a5462; }
+.tray { background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; flex: 1 1 300px; max-width: 600px; }
+.tray-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.pieces { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 6px; }
+.pieces button { --w: 40px; --h: 14px; position: relative; width: var(--w); height: var(--h); min-height: 0; padding: 0; border: 0; border-radius: 3px; cursor: grab; touch-action: none;
+  font: 700 0.7rem/1 var(--font-mono); color: #17202b; background: linear-gradient(#c9d0d9, #9aa4b0); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18); }
+.pieces button.brass { background: linear-gradient(#e2c26a, #b98f2e); }
+.pieces button span { position: relative; z-index: 1; }
+.tray-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; }
+.tray-foot .masslist { flex: 1 1 100%; }
+.vhandle { position: absolute; z-index: 2; border-radius: 6px; cursor: ew-resize; touch-action: none; display: flex; align-items: flex-end; justify-content: center; }
+.vhandle .grip { font-size: 0.8rem; color: #c9d0d9; line-height: 1; padding-bottom: 4px; pointer-events: none; }
+.vhandle:hover, .vhandle.drag { box-shadow: 0 0 0 2px var(--accent); }
+.vhandle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ghost { position: fixed; z-index: 50; pointer-events: none; transform: translate(-50%, -50%); opacity: 0.85; }
+.droptag { position: absolute; z-index: 2; transform: translate(-50%, 0); font-size: 0.75rem; font-weight: 700; color: var(--canvas); background: var(--accent); border-radius: 5px; padding: 2px 7px; pointer-events: none; }
+@media (max-width: 820px) {
+  .stage { height: auto; max-height: none; display: flex; flex-direction: column; }
+  .scene { position: relative; inset: auto; height: 330px; max-height: 60vh; }
+  .shelf { position: static; padding: 0 10px 10px; gap: 10px; }
+  .gen, .tray { flex: 1 1 100%; }
+  .gen-knobs { flex-wrap: wrap; }
+  .gen .fine .btn { min-height: 36px; }
+  .tray-foot .btn { min-height: 36px; }
+}
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+:root { --fat: #f0d98a; --muscle: #d99a8c; --bone: #ece6d6; --water: #b9d6ee; --blood: #b0413e; --air: #f4f6f8; --scope: #0b1a12; --trace: #7ee0a0; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fat: #6b5d2c; --muscle: #6e3f37; --bone: #8d8778; --water: #2c4a63; --blood: #c2504c; --air: #1b232d; } }
+:root[data-theme="dark"] { --fat: #6b5d2c; --muscle: #6e3f37; --bone: #8d8778; --water: #2c4a63; --blood: #c2504c; --air: #1b232d; }
+/* Ultrasound: the body (or tank) on the left of the picture, the scanner's screen on the right. The Set up card fades while the
+   scanner runs; the screen's controls (time base, gain, cursor) stay on the shelf, since they are used while it runs. */
+.card { position: absolute; z-index: 2; left: 12px; top: 52px; width: min(330px, calc(100% - 24px)); display: flex; flex-direction: column; gap: 6px;
+  padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 10px; transition: opacity 0.35s ease, visibility 0.35s; }
+.card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.card .chips button, .card .seg button { font-size: 0.8rem; padding: 3px 8px; }
+.card .slider-head label, .card .slider-head output { font-size: 0.8rem; }
+.card .btn { font-size: 0.78rem; padding: 3px 8px; }
+.card.away { opacity: 0; visibility: hidden; }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+.gen .gen-sl { display: grid; grid-template-columns: auto minmax(110px, 1fr); align-items: center; gap: 4px 8px; font-size: 0.74rem; color: #c9d0d9; }
+.gen .gen-sl input { accent-color: #7ee0a0; }
+.gen-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.gen .seg { background: #2c3542; border-color: #4a5462; }
+.gen .seg button { color: #c9d0d9; font-size: 0.78rem; }
+.gen .seg button[aria-pressed="true"] { background: #e3e8ef; color: #17202b; }
+.shelf { right: 12px; }
+@media (max-width: 820px) {
+  .scene { height: 520px; }
+  .card { position: static; width: auto; margin: 0 10px 10px; }
+  .card.away { opacity: 1; visibility: visible; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Ultrasound: Echoes and Blood Flow</h1>
+      <p>A transducer sends a short pulse of ultrasound into the body and listens for echoes from each boundary between tissues. The time an echo takes gives the depth of the boundary. Pointed at a blood vessel, the echo from moving blood comes back Doppler shifted, and the shift gives the speed of the blood.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">d = ct/2 · Δf ≈ 2f₀v cos θ / c</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/ultrasound.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/ultrasound.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h4v1h-4zM15 2h2v1h-2zM19 2h1v1h-1zM21 2h2v1h-2zM27 2h1v1h-1zM29 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h2v1h-2zM17 3h1v1h-1zM20 3h2v1h-2zM24 3h3v1h-3zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h2v1h-2zM15 4h1v1h-1zM17 4h1v1h-1zM19 4h2v1h-2zM23 4h2v1h-2zM26 4h1v1h-1zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM14 5h1v1h-1zM17 5h1v1h-1zM20 5h1v1h-1zM26 5h3v1h-3zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM15 6h2v1h-2zM19 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h3v1h-3zM14 7h1v1h-1zM16 7h1v1h-1zM18 7h2v1h-2zM21 7h2v1h-2zM27 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM18 9h1v1h-1zM21 9h3v1h-3zM25 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM14 10h1v1h-1zM16 10h3v1h-3zM21 10h2v1h-2zM25 10h2v1h-2zM31 10h5v1h-5zM38 10h1v1h-1zM3 11h4v1h-4zM9 11h1v1h-1zM11 11h1v1h-1zM14 11h1v1h-1zM16 11h1v1h-1zM20 11h2v1h-2zM23 11h2v1h-2zM26 11h6v1h-6zM34 11h4v1h-4zM4 12h1v1h-1zM6 12h3v1h-3zM10 12h2v1h-2zM13 12h1v1h-1zM15 12h3v1h-3zM21 12h1v1h-1zM23 12h3v1h-3zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h1v1h-1zM4 13h2v1h-2zM7 13h1v1h-1zM11 13h1v1h-1zM15 13h5v1h-5zM21 13h6v1h-6zM30 13h2v1h-2zM33 13h2v1h-2zM36 13h2v1h-2zM8 14h2v1h-2zM11 14h4v1h-4zM16 14h1v1h-1zM19 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM6 15h2v1h-2zM9 15h1v1h-1zM12 15h2v1h-2zM16 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h3v1h-3zM8 16h3v1h-3zM14 16h1v1h-1zM17 16h1v1h-1zM19 16h1v1h-1zM22 16h1v1h-1zM25 16h5v1h-5zM33 16h5v1h-5zM3 17h1v1h-1zM5 17h3v1h-3zM10 17h2v1h-2zM13 17h2v1h-2zM16 17h2v1h-2zM19 17h4v1h-4zM24 17h1v1h-1zM26 17h1v1h-1zM30 17h1v1h-1zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM3 18h3v1h-3zM7 18h2v1h-2zM10 18h1v1h-1zM12 18h1v1h-1zM14 18h1v1h-1zM16 18h1v1h-1zM20 18h1v1h-1zM24 18h1v1h-1zM26 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM4 19h1v1h-1zM6 19h2v1h-2zM9 19h1v1h-1zM13 19h3v1h-3zM18 19h1v1h-1zM21 19h2v1h-2zM25 19h1v1h-1zM27 19h4v1h-4zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h1v1h-1zM8 20h3v1h-3zM12 20h2v1h-2zM18 20h3v1h-3zM22 20h2v1h-2zM25 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM2 21h5v1h-5zM9 21h2v1h-2zM12 21h1v1h-1zM14 21h1v1h-1zM16 21h1v1h-1zM19 21h1v1h-1zM23 21h1v1h-1zM25 21h2v1h-2zM28 21h4v1h-4zM36 21h2v1h-2zM3 22h1v1h-1zM6 22h1v1h-1zM8 22h3v1h-3zM16 22h2v1h-2zM19 22h1v1h-1zM21 22h6v1h-6zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h3v1h-3zM6 23h1v1h-1zM11 23h1v1h-1zM13 23h7v1h-7zM22 23h1v1h-1zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM5 24h2v1h-2zM8 24h2v1h-2zM14 24h2v1h-2zM17 24h2v1h-2zM20 24h1v1h-1zM22 24h4v1h-4zM28 24h2v1h-2zM32 24h5v1h-5zM3 25h1v1h-1zM5 25h2v1h-2zM9 25h1v1h-1zM11 25h1v1h-1zM17 25h1v1h-1zM21 25h3v1h-3zM26 25h1v1h-1zM29 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h4v1h-4zM7 26h2v1h-2zM11 26h1v1h-1zM14 26h2v1h-2zM18 26h1v1h-1zM22 26h1v1h-1zM25 26h2v1h-2zM28 26h2v1h-2zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h2v1h-2zM9 27h1v1h-1zM20 27h2v1h-2zM24 27h2v1h-2zM27 27h5v1h-5zM34 27h2v1h-2zM5 28h5v1h-5zM11 28h2v1h-2zM17 28h1v1h-1zM19 28h3v1h-3zM24 28h2v1h-2zM27 28h8v1h-8zM36 28h1v1h-1zM4 29h1v1h-1zM10 29h1v1h-1zM13 29h3v1h-3zM17 29h10v1h-10zM30 29h1v1h-1zM33 29h2v1h-2zM36 29h3v1h-3zM2 30h4v1h-4zM7 30h3v1h-3zM11 30h3v1h-3zM15 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM26 30h1v1h-1zM30 30h5v1h-5zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h3v1h-3zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h3v1h-3zM17 32h3v1h-3zM22 32h1v1h-1zM25 32h1v1h-1zM27 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM13 33h2v1h-2zM16 33h2v1h-2zM19 33h2v1h-2zM24 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h2v1h-2zM17 34h1v1h-1zM20 34h1v1h-1zM24 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM13 35h2v1h-2zM18 35h1v1h-1zM21 35h3v1h-3zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM13 36h2v1h-2zM16 36h1v1h-1zM18 36h2v1h-2zM22 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h4v1h-4zM19 37h2v1h-2zM23 37h3v1h-3zM28 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h1v1h-1zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h6v1h-6zM29 38h1v1h-1zM32 38h2v1h-2zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="On the left, a transducer on the skin above layers of tissue, or above a blood vessel; on the right, the scanner's screen: echo amplitude against time, or the Doppler spectrum. Drag on the screen to move the cursor; on the picture, left and right arrows move the cursor (with Shift, ten times as far); space starts or stops the scanner."></canvas>
+        <div class="viewbar"><button type="button" class="spin attn" id="run">Start the scanner</button></div>
+        <span class="blindtag" id="blindTag" hidden>Blind</span>
+      </div>
+      <div class="card" id="card" role="group" aria-labelledby="cardTitle">
+        <span class="card-title" id="cardTitle">Set up (fades while the scanner runs)</span>
+        <span class="card-title">Transducer frequency f₀</span>
+        <div class="chips" id="f0s" role="group" aria-label="Transducer frequency">
+          <button type="button" data-f0="2" aria-pressed="false">2 MHz</button>
+          <button type="button" data-f0="3.5" aria-pressed="true">3.5 MHz</button>
+          <button type="button" data-f0="5" aria-pressed="false">5 MHz</button>
+          <button type="button" data-f0="7.5" aria-pressed="false">7.5 MHz</button>
+        </div>
+        <div id="echoSet">
+          <div class="slider-head"><label for="sW">Water depth, transducer to the air pocket</label><output id="oW" for="sW"></output></div><input type="range" id="sW" min="2" max="15" step="0.1">
+          <div class="btnrow" style="margin-top:6px"><button type="button" class="btn" id="Wm">−1 mm</button><button type="button" class="btn" id="Wp">+1 mm</button><button type="button" class="btn" id="newCyst">New hidden cyst</button></div>
+        </div>
+        <div id="flowSet">
+          <div class="slider-head"><label for="sTh">Angle θ between the beam and the flow</label><output id="oTh" for="sTh"></output></div><input type="range" id="sTh" min="20" max="85" step="1">
+          <div class="btnrow" style="margin:6px 0"><button type="button" class="btn" id="Thm">θ −1°</button><button type="button" class="btn" id="Thp">θ +1°</button></div>
+          <div class="slider-head"><label for="sV">Blood speed v (largest, at the vessel's centre)</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="0.05" max="1.5" step="0.01">
+          <div class="seg" role="group" aria-label="Flow profile" id="profSeg" style="margin-top:6px"><button type="button" data-pr="plug" aria-pressed="true">All blood at one speed</button><button type="button" data-pr="lam" aria-pressed="false">Smooth (laminar) flow</button></div>
+          <div class="btnrow" style="margin-top:6px"><button type="button" class="btn" id="newFlow">New mystery flow</button></div>
+        </div>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="gen" role="group" aria-labelledby="scopeTitle">
+          <div class="gen-top"><span class="gen-title" id="scopeTitle">Scanner screen</span><output class="gen-lcd" id="oCur" aria-live="off"></output></div>
+          <div class="gen-row" id="echoScope">
+            <div class="seg" role="group" aria-label="Time base" id="tbSeg"><button type="button" data-tb="full" aria-pressed="true">0 to 200 μs</button><button type="button" data-tb="zoom" aria-pressed="false">Zoom: 20 μs around the cursor</button></div>
+            <div class="seg" role="group" aria-label="Gain" id="gainSeg"><button type="button" data-g="1" aria-pressed="true">Gain ×1</button><button type="button" data-g="3" aria-pressed="false">×3</button><button type="button" data-g="10" aria-pressed="false">×10</button></div>
+          </div>
+          <div class="gen-row" id="flowScope"><div class="seg" role="group" aria-label="Spectrum range" id="rangeSeg"><button type="button" data-r="2000" aria-pressed="false">0 to 2 kHz</button><button type="button" data-r="5000" aria-pressed="true">5 kHz</button><button type="button" data-r="10000" aria-pressed="false">10 kHz</button><button type="button" data-r="20000" aria-pressed="false">20 kHz</button></div><button type="button" class="btn" id="listen" aria-pressed="false">Listen to the shift</button></div>
+          <div class="gen-sl">
+            <label for="sCur" id="curLab">Cursor</label><input type="range" id="sCur">
+          </div>
+          <div class="fine" id="curSteps" role="group" aria-label="Cursor steps"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="layers" aria-pressed="true">Fat, muscle and bone</button>
+          <button type="button" data-p="water" aria-pressed="false">Speed of sound in water</button>
+          <button type="button" data-p="cyst" aria-pressed="false">Find the hidden cyst</button>
+          <button type="button" data-p="thin" aria-pressed="false">Resolve a thin layer</button>
+          <button type="button" data-p="flow" aria-pressed="false">Doppler: blood flow</button>
+          <button type="button" data-p="mystery" aria-pressed="false">Doppler: mystery flow</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="record">Record this reading</button>
+          <button type="button" class="btn" id="exportWs">Export to worksheet</button>
+          <button type="button" class="btn" id="clearRows">Clear the readings</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Recorded readings</caption><thead><tr><th>#</th><th>Setup</th><th>Cursor</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">Record stores the setup and the cursor: an echo time in μs, or a Doppler shift in Hz. Put the cursor on the start of an echo, or on the peak (or the top edge) of the spectrum.</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the depths, speeds and predictions</span></label>
+        <label class="check"><input type="checkbox" id="depthScale"><span>Show the scanner's depth for the cursor (it assumes c = 1540 m/s)</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">The Doppler shift here is the same effect as in the <a href="doppler.html">Doppler Effect demo</a>, applied twice: the moving blood hears a shifted frequency, then sends it back as a moving source.</p>
+        <details class="more"><summary>More about this</summary><p class="hint" id="modelHint"></p></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  const PI = Math.PI, TAU = 2 * Math.PI;
+  const US_VERSION = 'ultrasound@2026-10-23';
+  /* OpenStax College Physics §17.7 Ultrasound, table of the ultrasound properties of various media: speed (m/s) and acoustic
+     impedance Z (kg/(m²·s)). Bone varies from 5.7 to 7.8 × 10⁶; 7.8 × 10⁶ is chosen. */
+  const MEDIA = { air: { name: 'air', c: 330, Z: 429 }, water: { name: 'water', c: 1500, Z: 1.5e6 }, blood: { name: 'blood', c: 1570, Z: 1.66e6 },
+    fat: { name: 'fat', c: 1450, Z: 1.34e6 }, muscle: { name: 'muscle', c: 1590, Z: 1.70e6 }, bone: { name: 'bone', c: 4080, Z: 7.8e6 } };
+  const C_SCANNER = 1540;        /* m/s, the speed a scanner assumes in tissue (the same section: "about 1540 m/s") */
+  const CYCLES = 3;              /* cycles in each pulse, full width at half maximum of the envelope (chosen) */
+  const WINDOW_S = 0.020;        /* s, length of the stretch of echo the Doppler spectrum is taken over (chosen) */
+  /* pressure amplitude reflection going from Z1 into Z2: r = (Z2 − Z1)/(Z2 + Z1); the intensity reflection r² is the book's a */
+  const reflect = (Z1, Z2) => (Z2 - Z1) / (Z2 + Z1);
+  /* layers [{ m: medium, d: thickness in m }] from the transducer down (gel couples the transducer to the first layer with no echo):
+     one echo from each boundary, at t = Σ 2d/c over the layers above, with amplitude r Π(1 − r²) over the boundaries crossed twice */
+  function echoes(layers) {
+    const out = []; let t = 0, through = 1;
+    for (let i = 0; i + 1 < layers.length; i++) {
+      t += 2 * layers[i].d / MEDIA[layers[i].m].c;
+      const r = reflect(MEDIA[layers[i].m].Z, MEDIA[layers[i + 1].m].Z);
+      out.push({ t, a: r * through, r, depth: layers.slice(0, i + 1).reduce((s, l) => s + l.d, 0), from: layers[i].m, to: layers[i + 1].m });
+      through *= 1 - r * r;
+    }
+    return out;
+  }
+  /* the received signal as a complex (analytic) sum of Gaussian pulses at f0 (Hz); envelope |s|, the radio frequency trace Re s */
+  const sigmaFor = (f0) => CYCLES / f0 / (2 * Math.sqrt(2 * Math.LN2));
+  function signal(ech, f0, t) {
+    const sg = sigmaFor(f0); let re = 0, im = 0;
+    for (const e of ech) { const u = t - e.t; if (Math.abs(u) > 6 * sg) continue; const g = e.a * Math.exp(-u * u / (2 * sg * sg)); re += g * Math.cos(TAU * f0 * u); im += g * Math.sin(TAU * f0 * u); }
+    return [re, im];
+  }
+  /* Doppler: blood moving with speed u toward the transducer (u = v cos θ) first hears f0 (c + u)/c, then sends that back as a
+     moving source, received at f0 (c + u)/(c − u); the shift is 2f0u/(c − u), close to 2f0u/c when u ≪ c */
+  const dopplerShift = (f0, v, thetaDeg, c) => { const u = v * Math.cos(thetaDeg * PI / 180); return f0 * 2 * u / (c - u); };
+  const dopplerShiftApprox = (f0, v, thetaDeg, c) => 2 * f0 * v * Math.cos(thetaDeg * PI / 180) / c;
+  /* the spectrum the scanner shows, from a window WINDOW_S long: each speed gives a line broadened to sinc²; plug flow is one speed,
+     laminar (Poiseuille) flow v(r) = vmax(1 − r²/R²) has equal amounts of blood at every speed from 0 to vmax (equal areas in r²) */
+  const sinc2 = (x) => (Math.abs(x) < 1e-9 ? 1 : (Math.sin(PI * x) / (PI * x)) ** 2);
+  function spectrum(f, f0, vmax, thetaDeg, c, laminar) {
+    if (!laminar) return sinc2((f - dopplerShift(f0, vmax, thetaDeg, c)) * WINDOW_S);
+    const K = 400; let s = 0; for (let i = 0; i < K; i++) s += sinc2((f - dopplerShift(f0, vmax * (i + 0.5) / K, thetaDeg, c)) * WINDOW_S);
+    return s / K;
+  }
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  function readingsCSV(rows, meta) {
+    const L = ['# Ultrasound virtual apparatus: recorded readings (simulated data)', `# demo version,${meta.version}`,
+      '# media,"speeds and impedances from OpenStax College Physics 17.7 (bone Z chosen as 7.8e6 kg/(m2 s)); scanner assumes 1540 m/s"',
+      '# model,"plane wave pulses, one echo per boundary (no multiple echoes), no absorption or beam spreading; Doppler spectrum over a 20 ms window"',
+      '# cursor,"echo rows: the cursor time in microseconds; Doppler rows: the cursor frequency shift in Hz"', '# noise,none',
+      'row,mode,setup,f0_MHz,known_depth_cm,cursor_time_us,angle_deg,cursor_shift_Hz,profile'];
+    rows.forEach((r, i) => L.push([i + 1, r.mode, r.setup, r.f0, r.known, r.t, r.th, r.df, r.prof].map(csvCell).join(',')));
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const cm = (x) => x / 100;
+  const newCystDepth = () => (30 + Math.floor(Math.random() * 61)) / 10;   /* cm, 3.0 to 9.0, top of the cyst */
+  const newFlowSpeed = () => (20 + Math.floor(Math.random() * 101)) / 100; /* m/s, 0.20 to 1.20 */
+  const S = { preset: 'layers', mode: 'echo', f0: 3.5, water: 8, cyst: newCystDepth(), theta: 60, v: 0.5, prof: 'plug', mysteryV: 0, tb: 'full', gain: 1, range: 5000, curT: 20, curF: 1000,
+    running: false, blind: false, depth: false, phase: 0, rows: [], series: 0, listen: false };
+  const PRESETS = {
+    layers: { mode: 'echo', f0: 3.5, hint: 'Under the gel: 1.5 cm of fat, 3.0 cm of muscle, 1.0 cm of bone and muscle again. Start the scanner and put the cursor on the start of each echo. Which boundary sends back the most, and why? Which echo comes back upside down (zoom in)?' },
+    water: { mode: 'echo', f0: 3.5, water: 8, hint: 'A tank of water above a pocket of air, which sends back almost everything. Measure the echo time at six or more water depths from 2 to 15 cm. The slope of t against depth is 2/c: work out the speed of sound in water.' },
+    cyst: { mode: 'echo', f0: 3.5, hint: 'Fat, then muscle with a fluid filled cyst (taken as water) somewhere in it. Find the two weak echoes from the cyst, and use the scanner’s 1540 m/s to find how deep it is and how thick. New hidden cyst moves it.' },
+    thin: { mode: 'echo', f0: 2, hint: 'A layer of fat 1.0 mm thick lies 3 cm down in muscle. At 2 MHz its two echoes run together; zoom in and step up the transducer frequency until they separate. A shorter pulse resolves finer detail, but in real tissue it is also absorbed faster.' },
+    flow: { mode: 'flow', f0: 5, theta: 60, v: 0.5, prof: 'plug', hint: 'An artery 3 cm down, with the beam at 60° to the flow and the blood moving at 0.50 m/s. Start the scanner, put the cursor on the peak of the spectrum and work out the speed from the shift. Then change θ: the shift changes, the speed does not. Try smooth flow: the spectrum spreads from 0 to the shift of the fastest blood.' },
+    mystery: { mode: 'flow', f0: 5, theta: 60, prof: 'plug', mystery: true, hint: 'The blood speed is hidden. Measure the shift at three or more angles and work out the speed from each; they should agree. New mystery flow picks another.' }
+  };
+  $('modelHint').textContent = 'Model: speeds and acoustic impedances of air, water, blood, fat, muscle and bone are from OpenStax College Physics §17.7 (Ultrasound); bone varies from 5.7 to 7.8 × 10⁶ kg/(m²·s) and 7.8 × 10⁶ is chosen. A fluid filled cyst is taken as water. Each pulse is three cycles long at half height (chosen). Each boundary sends back a part r = (Z₂ − Z₁)/(Z₂ + Z₁) of the pressure (a negative r turns the echo upside down), and on the way down and back the pulse loses 1 − r² at each boundary above. Left out: echoes that bounce more than once, absorption in the tissue (in a real body deep echoes are much weaker, and scanners turn up the gain with depth), and the spreading of the beam. Gel couples the transducer to the skin with no echo. Doppler: the blood hears the shifted frequency f₀(c + u)/c and sends it back as a moving source, so the scanner receives f₀(c + u)/(c − u), with u = v cos θ and c = 1570 m/s in blood; the spectrum is taken over 20 ms of echo (chosen), which gives each line a width of about 50 Hz. The cells drawn in the vessel are slowed down; the sound you hear is the shift itself, as a scanner plays it. Simulated data, no noise.';
+
+  /* the layers for each echo setup, from the transducer down */
+  function layers() {
+    if (S.preset === 'water') return [{ m: 'water', d: cm(S.water) }, { m: 'air', d: cm(4) }];
+    if (S.preset === 'cyst') return [{ m: 'fat', d: cm(1.0) }, { m: 'muscle', d: cm(S.cyst - 1.0) }, { m: 'water', d: cm(1.5) }, { m: 'muscle', d: cm(12) }];
+    if (S.preset === 'thin') return [{ m: 'muscle', d: cm(3.0) }, { m: 'fat', d: cm(0.1) }, { m: 'muscle', d: cm(12) }];
+    return [{ m: 'fat', d: cm(1.5) }, { m: 'muscle', d: cm(3.0) }, { m: 'bone', d: cm(1.0) }, { m: 'muscle', d: cm(10) }];
+  }
+  const vNow = () => (S.mysteryV || S.v);
+  const shiftNow = () => dopplerShift(S.f0 * 1e6, vNow(), S.theta, MEDIA.blood.c);
+
+  function applyPreset(name) { const c = PRESETS[name]; S.preset = name; S.mode = c.mode; S.f0 = c.f0; if (c.water) S.water = c.water; if (c.theta) S.theta = c.theta; if (c.v) S.v = c.v; if (c.prof) S.prof = c.prof;
+    S.mysteryV = c.mystery ? newFlowSpeed() : 0; if (name === 'cyst') S.cyst = newCystDepth(); S.tb = 'full'; S.range = 5000; S.curT = 20; S.curF = 1000; upd(); }
+  const can = $('can'), ctx = can.getContext('2d'), scene = $('scene'), shelf = $('shelf'), card = $('card'), GEO = {};
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'accent', 'pos', 'surface', 'metal', 'metal-hi', 'box', 'equi', 'fat', 'muscle', 'bone', 'water', 'blood', 'air', 'scope', 'trace']) T[k.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + k);
+    T.mono = g('--font-mono'); T.ui = g('--font-ui'); }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const sig = (v, n = 3) => (isFinite(v) ? String(+v.toPrecision(n)) : '—');
+
+  // ---------- controls ----------
+  function curSetup() {
+    const echo = S.mode === 'echo', sl = $('sCur');
+    if (echo) { sl.min = 0; sl.max = 200; sl.step = 0.01; sl.value = S.curT; $('curLab').textContent = 'Cursor time'; }
+    else { sl.min = 0; sl.max = S.range; sl.step = 1; sl.value = S.curF; $('curLab').textContent = 'Cursor shift'; }
+    const steps = echo ? [-1, 1, -0.1, 0.1, -0.01, 0.01] : [-100, 100, -10, 10, -1, 1], u = echo ? 'μs' : 'Hz';
+    const key = steps.join(); if ($('curSteps').dataset.k !== key) { $('curSteps').dataset.k = key; $('curSteps').innerHTML = steps.map((s) => `<button type="button" class="btn" data-dc="${s}">${s < 0 ? '−' : '+'}${Math.abs(s)} ${u}</button>`).join(''); }
+  }
+  function sync() {
+    const echo = S.mode === 'echo';
+    $('echoSet').hidden = !echo || S.preset !== 'water'; $('newCyst').hidden = S.preset !== 'cyst'; $('echoSet').hidden = !echo || (S.preset !== 'water' && S.preset !== 'cyst');
+    $('sW').parentElement.querySelectorAll('#sW, #Wm, #Wp, label[for=sW], #oW').forEach((e) => { e.hidden = S.preset !== 'water'; });
+    $('flowSet').hidden = echo; $('echoScope').hidden = !echo; $('flowScope').hidden = echo; $('newFlow').hidden = !S.mysteryV;
+    $('sV').disabled = !!S.mysteryV;
+    $('sW').value = S.water; $('oW').textContent = `${S.water.toFixed(1)} cm`; $('sTh').value = S.theta; $('oTh').textContent = `${S.theta}°`; $('sV').value = S.v; $('oV').textContent = S.mysteryV ? 'hidden' : `${S.v.toFixed(2)} m/s`;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#f0s button')) b.setAttribute('aria-pressed', String(+b.dataset.f0 === S.f0));
+    for (const b of document.querySelectorAll('#profSeg button')) b.setAttribute('aria-pressed', String(b.dataset.pr === S.prof));
+    for (const b of document.querySelectorAll('#tbSeg button')) b.setAttribute('aria-pressed', String(b.dataset.tb === S.tb));
+    for (const b of document.querySelectorAll('#rangeSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.r === S.range));
+    for (const b of document.querySelectorAll('#gainSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.g === S.gain));
+    $('presetHint').textContent = S.preset ? PRESETS[S.preset].hint : '';
+    curSetup(); $('oCur').textContent = echo ? `${S.curT.toFixed(2)} μs` : `${Math.round(S.curF)} Hz`;
+    $('sCur').setAttribute('aria-valuetext', $('oCur').textContent);
+  }
+  const changed = () => { upd(); };
+  function upd() { sync(); readouts(); draw(); tone(); }
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) { setRun(false); applyPreset(b.dataset.p); } });
+  $('f0s').addEventListener('click', (e) => { const b = e.target.closest('[data-f0]'); if (b) { S.f0 = +b.dataset.f0; changed(); } });
+  const setW = (v) => { S.water = Math.min(15, Math.max(2, Math.round(v * 10) / 10)); changed(); };
+  $('sW').addEventListener('input', (e) => setW(+e.target.value)); $('Wm').addEventListener('click', () => setW(S.water - 0.1)); $('Wp').addEventListener('click', () => setW(S.water + 0.1));
+  $('newCyst').addEventListener('click', () => { const was = S.cyst; S.cyst = newCystDepth(); capStatus(`The last cyst's top was ${was.toFixed(1)} cm down. A new one is hidden.`); changed(); });
+  const setTh = (v) => { S.theta = Math.min(85, Math.max(20, Math.round(v))); changed(); };
+  $('sTh').addEventListener('input', (e) => setTh(+e.target.value)); $('Thm').addEventListener('click', () => setTh(S.theta - 1)); $('Thp').addEventListener('click', () => setTh(S.theta + 1));
+  $('sV').addEventListener('input', (e) => { S.v = +e.target.value; changed(); });
+  $('profSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-pr]'); if (b) { S.prof = b.dataset.pr; changed(); } });
+  $('newFlow').addEventListener('click', () => { const was = S.mysteryV; S.mysteryV = newFlowSpeed(); capStatus(`The last mystery flow was ${was.toFixed(2)} m/s. A new one is running.`); changed(); });
+  $('tbSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-tb]'); if (b) { S.tb = b.dataset.tb; sync(); draw(); } });
+  $('rangeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-r]'); if (b) { S.range = +b.dataset.r; S.curF = Math.min(S.curF, S.range); sync(); draw(); } });
+  $('gainSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (b) { S.gain = +b.dataset.g; sync(); draw(); } });
+  const setCur = (v) => { if (S.mode === 'echo') S.curT = Math.min(200, Math.max(0, Math.round(v * 100) / 100)); else S.curF = Math.min(S.range, Math.max(0, Math.round(v))); sync(); readouts(); draw(); };
+  $('sCur').addEventListener('input', (e) => setCur(+e.target.value));
+  $('curSteps').addEventListener('click', (e) => { const b = e.target.closest('[data-dc]'); if (b) setCur((S.mode === 'echo' ? S.curT : S.curF) + +b.dataset.dc); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; upd(); });
+  $('depthScale').addEventListener('change', (e) => { S.depth = e.target.checked; readouts(); draw(); });
+  /* drag on the screen to move the cursor */
+  let curDrag = false;
+  const screenVal = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, g = GEO.scr; if (!g) return null; const fx = (x - g.x) / g.w; return g.lo + Math.min(1, Math.max(0, fx)) * (g.hi - g.lo); };
+  const inScreen = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, g = GEO.scr; return g && x >= g.x && x <= g.x + g.w && y >= g.y && y <= g.y + g.h; };
+  can.addEventListener('pointerdown', (e) => { if (!inScreen(e) || (S.mode === 'echo' && S.tb === 'zoom' && false)) return; curDrag = true; can.setPointerCapture(e.pointerId); const v = screenVal(e); if (v != null) setCur(v); });
+  can.addEventListener('pointermove', (e) => { can.style.cursor = inScreen(e) ? 'ew-resize' : ''; if (curDrag) { const v = screenVal(e); if (v != null) setCur(v); } });
+  const cEnd = () => { curDrag = false; }; can.addEventListener('pointerup', cEnd); can.addEventListener('pointercancel', cEnd);
+  can.addEventListener('keydown', (e) => { const big = e.shiftKey ? 10 : 1, st = S.mode === 'echo' ? 0.1 : 10;
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') setCur((S.mode === 'echo' ? S.curT : S.curF) + (e.key === 'ArrowRight' ? 1 : -1) * st * big);
+    else if (e.key === ' ') $('run').click(); else return; e.preventDefault(); });
+  function setRun(on) { S.running = on; const over = getComputedStyle(card).position === 'absolute'; card.classList.toggle('away', on && over); card.inert = on && over;
+    $('run').textContent = on ? 'Stop the scanner' : 'Start the scanner'; $('run').classList.toggle('attn', !on); readouts(); draw(); tone(); }
+  $('run').addEventListener('click', () => setRun(!S.running));
+
+  /* Listen: the shift is in the audible range, as on a Doppler scanner; laminar flow plays a spread of tones up to the largest */
+  let AC = null, oscs = [];
+  function tone() {
+    oscs.forEach((o) => { try { o.stop(); } catch (_) {} }); oscs = [];
+    if (!S.listen || !S.running || S.mode !== 'flow') return;
+    try { AC = AC || new (window.AudioContext || window.webkitAudioContext)(); const fd = shiftNow(), fs = S.prof === 'lam' ? [0.2, 0.4, 0.6, 0.8, 1].map((k) => k * fd) : [fd], g = AC.createGain(); g.gain.value = 0.15 / fs.length; g.connect(AC.destination);
+      for (const f of fs) { const o = AC.createOscillator(); o.frequency.value = f; o.connect(g); o.start(); oscs.push(o); } } catch (_) {}
+  }
+  $('listen').addEventListener('click', () => { S.listen = !S.listen; $('listen').setAttribute('aria-pressed', String(S.listen)); $('listen').textContent = S.listen ? 'Stop the sound' : 'Listen to the shift'; tone(); });
+
+  function readouts() {
+    const dd = (a, val, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${val}</dd></div>`, HID = '<span class="ok">hidden</span>';
+    let h = dd('Transducer frequency f₀', `${S.f0} MHz`);
+    if (S.mode === 'echo') {
+      const ech = echoes(layers()), hide = S.blind || S.preset === 'cyst';
+      h += dd('Pulse length (half height)', `${(CYCLES / S.f0).toFixed(2)} μs`) + dd('Cursor', `${S.curT.toFixed(2)} μs`);
+      if (S.depth) h += dd('Scanner depth for the cursor, c t/2 with 1540 m/s', S.blind ? HID : `${(C_SCANNER * S.curT * 1e-6 / 2 * 100).toFixed(2)} cm`, true);
+      if (S.preset === 'water') h += dd('Water depth (ruler)', `${S.water.toFixed(1)} cm`);
+      h += dd('Echoes: boundary, true depth, time, part of the pressure sent back', hide ? HID : ech.map((e) => `${MEDIA[e.from].name} to ${MEDIA[e.to].name}: ${(e.depth * 100).toFixed(2)} cm, ${(e.t * 1e6).toFixed(2)} μs, r = ${e.r.toFixed(3)}`).join('<br>'), true);
+    } else {
+      const fd = shiftNow();
+      h += dd('Angle θ', `${S.theta}°`) + dd('Cursor', `${Math.round(S.curF)} Hz`);
+      h += dd('Blood speed v', S.mysteryV || S.blind ? HID : `${S.v.toFixed(2)} m/s`) + dd('Speed of sound in blood', `${MEDIA.blood.c} m/s`);
+      h += dd(S.prof === 'lam' ? 'Shift of the fastest blood' : 'Doppler shift', S.mysteryV || S.blind ? HID : `${fd.toFixed(1)} Hz (2f₀v cos θ / c gives ${dopplerShiftApprox(S.f0 * 1e6, vNow(), S.theta, MEDIA.blood.c).toFixed(1)} Hz)`, true);
+    }
+    $('out').innerHTML = h;
+  }
+
+  // ---------- readings ----------
+  function capStatus(m) { $('capStatus').textContent = m; }
+  const SETUP_NAME = { layers: 'fat, muscle and bone', water: 'water tank', cyst: 'hidden cyst', thin: 'thin layer', flow: 'blood flow', mystery: 'mystery flow' };
+  $('record').addEventListener('click', () => {
+    if (!S.running) { capStatus('Start the scanner first.'); return; }
+    const echo = S.mode === 'echo';
+    S.rows.push({ mode: echo ? 'echo' : 'Doppler', setup: SETUP_NAME[S.preset], f0: String(S.f0), known: S.preset === 'water' ? S.water.toFixed(1) : '', t: echo ? S.curT.toFixed(2) : '', th: echo ? '' : String(S.theta), df: echo ? '' : String(Math.round(S.curF)), prof: echo ? '' : S.prof === 'lam' ? 'laminar' : 'one speed' });
+    renderRows(); capStatus(`Row ${S.rows.length} recorded.`);
+  });
+  $('clearRows').addEventListener('click', () => { S.rows = []; S.series = Date.now(); renderRows(); capStatus('Readings cleared.'); });
+  const WORKSHEET = '../curriculum/labs/students/ultrasound.html';
+  function downloadCsv(txt) { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'ultrasound-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} }
+  function toWorksheet(txt, meta, note) {
+    const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => l.split(',');
+    if (!S.series) S.series = Date.now();
+    const hand = { v: 1, demo: 'ultrasound', series: S.series, sent: new Date().toISOString(), columns: split(lines[0]), rows: lines.slice(1).map(split), meta, note, csv: txt, csvName: 'ultrasound-readings.csv' };
+    localStorage.setItem('vd-handoff:ultrasound', JSON.stringify(hand));
+  }
+  $('exportWs').addEventListener('click', () => {
+    if (!S.rows.length) { capStatus('No readings to export.'); return; }
+    const txt = readingsCSV(S.rows, { version: US_VERSION });
+    try { toWorksheet(txt, { scanner_c_m_per_s: C_SCANNER }, 'Simulated data from the Ultrasound: Echoes and Blood Flow demo.'); }
+    catch (_) { downloadCsv(txt); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    capStatus(`${S.rows.length} reading${S.rows.length === 1 ? '' : 's'} sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = WORKSHEET; a.target = 'ultrasound-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+    fetch(WORKSHEET, { method: 'HEAD' }).then((r) => { if (!r.ok) throw 0; }).catch(() => { a.remove(); const b = document.createElement('a'); b.href = '#'; b.textContent = 'The worksheet is not posted yet: download the CSV'; b.style.color = 'var(--accent)'; b.addEventListener('click', (e) => { e.preventDefault(); downloadCsv(txt); }); $('capStatus').appendChild(b); });
+  });
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr><td>${i + 1}</td><td>${r.setup}${r.known ? `, ${r.known} cm` : ''}${r.th ? `, θ ${r.th}°` : ''}, ${r.f0} MHz</td><td>${r.mode === 'echo' ? `${r.t} μs` : `${r.df} Hz`}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="4">No readings yet. Start the scanner, place the cursor, then record.</td></tr>';
+  }
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+
+  // ---------- drawing ----------
+  function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
+  const DEPTH_MAX = 0.15;   /* m shown in the body panel */
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const p = ps(), narrow = W < 620;
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const overlay = getComputedStyle(shelf).position === 'absolute', bottom = overlay ? shelf.getBoundingClientRect().top - can.getBoundingClientRect().top - 12 * p : Hh - 12 * p;
+    /* body panel on the left (on top on phones), screen on the right (below) */
+    let bx, by, bw, bh, sx, sy, sw, sh;
+    const top = 52 * p;
+    if (!narrow) { bx = 14 * p; by = top; bw = Math.min(360 * p, W * 0.36); bh = Math.max(160, bottom - by); sx = bx + bw + 30 * p; sy = top + 10 * p; sw = W - sx - 16 * p; sh = Math.max(140, bottom - sy - 22 * p); }
+    else { bx = 14 * p; by = top; bw = W - 28 * p; bh = (bottom - top) * 0.5; sx = 44 * p; sy = by + bh + 26 * p; sw = W - sx - 14 * p; sh = bottom - sy - 22 * p; }
+    if (S.mode === 'echo') drawBody(bx, by, bw, bh, p); else drawVessel(bx, by, bw, bh, p);
+    drawScreen(sx, sy, sw, sh, p);
+    /* the Set up card sits over the screen's empty top right when the body panel is on the left, so the body stays in view */
+    if (getComputedStyle(card).position === 'absolute') { card.style.left = narrow ? '12px' : `${Math.max(12, sx + sw - 340 * p)}px`; }
+  }
+  function drawBody(x, y, w, h, p) {
+    const ppm = h / DEPTH_MAX, L = layers(), tx = x + w * 0.5;
+    let d = 0; for (const l of L) { const y0 = y + d * ppm, y1 = Math.min(y + h, y + (d + l.d) * ppm); if (y0 >= y + h) break;
+      ctx.fillStyle = T[l.m] || T.surface; ctx.fillRect(x, y0, w, y1 - y0);
+      const hide = (S.preset === 'cyst' && l.m !== 'fat') || S.blind;
+      if (!hide && y1 - y0 > 12 * p) txt(MEDIA[l.m].name, x + 48 * p, (y0 + y1) / 2, { s: 10, c: T.ink });
+      d += l.d; }
+    if (S.preset === 'cyst' && !S.blind) txt('muscle (a cyst is somewhere in it)', x + 48 * p, y + cm(1.0) * ppm + 12 * p, { s: 10 });
+    if (S.preset === 'cyst') { /* the cyst is hidden: muscle colour drawn over it */ const y0 = y + cm(S.cyst) * ppm; ctx.fillStyle = T.muscle; ctx.fillRect(x, y0 - 1, w, cm(1.5) * ppm + 2); }
+    ctx.strokeStyle = T.line; ctx.strokeRect(x + 0.5, y + 0.5, w, h);
+    /* depth scale on the left edge */
+    for (let c = 0; c <= 15; c++) { const yy = y + cm(c) * ppm; ctx.strokeStyle = T.ink; ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + (c % 5 ? 4 : 8) * p, yy); ctx.stroke(); if (c % 5 === 0 && c) txt(`${c} cm`, x + 10 * p, yy, { s: 9, c: T.ink, m: 1 }); }
+    /* transducer and the pulse travelling down and back */
+    ctx.fillStyle = T.box; ctx.beginPath(); ctx.roundRect(tx - 16 * p, y - 30 * p, 32 * p, 30 * p, 4 * p); ctx.fill(); txt(`${S.f0} MHz`, tx, y - 15 * p, { a: 'center', s: 9, c: T.metalHi });
+    ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.35; ctx.lineWidth = 10 * p; ctx.beginPath(); ctx.moveTo(tx, y); ctx.lineTo(tx, y + h); ctx.stroke(); ctx.globalAlpha = 1;
+    if (S.running && !reduce) { /* a marker for the pulse, slowed: its depth for a time on the screen's scale */ const tt = S.phase / TAU * 200e-6; let dd = 0, t = 0, back = false;
+      for (const l of L) { const dt = l.d / MEDIA[l.m].c; if (t + dt >= tt) { dd += (tt - t) * MEDIA[l.m].c; break; } t += dt; dd += l.d; }
+      if (t < tt && dd >= DEPTH_MAX) back = true;
+      if (!back) { ctx.fillStyle = T.accent; ctx.fillRect(tx - 9 * p, y + Math.min(dd, DEPTH_MAX) * ppm - 2 * p, 18 * p, 4 * p); } }
+    if (S.preset === 'water') txt(`water depth ${S.water.toFixed(1)} cm (ruler)`, x + w - 6 * p, y + cm(S.water) * ppm - 9 * p, { a: 'right', s: 10, b: 1 });
+    txt('gel', tx + 20 * p, y - 6 * p, { s: 9, c: T.muted });
+  }
+  function drawVessel(x, y, w, h, p) {
+    const ppm = h / 0.06, vy = y + cm(3) * ppm, R = cm(0.4) * ppm;   /* 6 cm of depth shown; artery 8 mm across, 3 cm down */
+    ctx.fillStyle = T.fat; ctx.fillRect(x, y, w, cm(1) * ppm); ctx.fillStyle = T.muscle; ctx.fillRect(x, y + cm(1) * ppm, w, h - cm(1) * ppm);
+    txt('fat', x + 6 * p, y + cm(0.5) * ppm, { s: 10 }); txt('muscle', x + 6 * p, y + cm(1.6) * ppm, { s: 10 });
+    ctx.fillStyle = T.blood; ctx.fillRect(x, vy - R, w, 2 * R); txt('artery: blood flows ←', x + w - 6 * p, vy + R + 10 * p, { a: 'right', s: 10, b: 1 });
+    /* moving cells, slowed: plug flow all at v, laminar at vmax(1 − r²/R²) */
+    if (!reduce) { ctx.fillStyle = '#ffd7d2'; for (let i = 0; i < 26; i++) { const fr = ((i * 0.6180339) % 1) * 2 - 1, sp = S.prof === 'lam' ? 1 - fr * fr : 1, xx = x + ((((i * 0.37) - S.phase * 0.08 * sp) % 1) + 1) % 1 * w;
+      ctx.beginPath(); ctx.arc(xx, vy + fr * R * 0.85, 2.2 * p, 0, 7); ctx.fill(); } }
+    /* beam at θ to the flow, hitting the artery under the middle of the panel; the flow is toward the transducer */
+    const th = S.theta * PI / 180, hx = x + w * 0.55, d = vy - y, tx = hx - d / Math.tan(th);
+    ctx.save(); ctx.beginPath(); ctx.rect(x, y - 40 * p, w, h + 40 * p); ctx.clip();
+    ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.45; ctx.lineWidth = 8 * p; ctx.beginPath(); ctx.moveTo(tx, y); ctx.lineTo(hx + (h - d) / Math.tan(th), y + h); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.save(); ctx.translate(tx, y); ctx.rotate(th); ctx.fillStyle = T.box; ctx.fillRect(-26 * p, -12 * p, 26 * p, 24 * p); ctx.restore();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(hx, vy, 26 * p, PI, PI + th); ctx.stroke(); txt(`θ = ${S.theta}°`, hx - 30 * p, vy - 30 * p, { a: 'right', s: 10, b: 1 });
+    ctx.restore();
+    ctx.strokeStyle = T.line; ctx.strokeRect(x + 0.5, y + 0.5, w, h);
+    if (tx < x) txt('transducer off the panel to the left', x + 6 * p, y - 10 * p, { s: 9, c: T.muted });
+  }
+  function drawScreen(x, y, w, h, p) {
+    ctx.fillStyle = T.scope; ctx.beginPath(); ctx.roundRect(x - 4 * p, y - 4 * p, w + 8 * p, h + 8 * p, 6 * p); ctx.fill();
+    const tr = T.trace, grid = 'rgba(126, 224, 160, 0.16)';
+    ctx.strokeStyle = grid; ctx.lineWidth = 1; for (let i = 0; i <= 10; i++) { const xx = x + w * i / 10; ctx.beginPath(); ctx.moveTo(xx, y); ctx.lineTo(xx, y + h); ctx.stroke(); } for (let j = 0; j <= 4; j++) { const yy = y + h * j / 4; ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + w, yy); ctx.stroke(); }
+    if (S.mode === 'echo') {
+      const zoom = S.tb === 'zoom', lo = zoom ? Math.max(0, Math.min(180, S.curT - 10)) : 0, hi = lo + (zoom ? 20 : 200); GEO.scr = { x, y, w, h, lo, hi };
+      for (let i = 0; i <= 10; i += zoom ? 2 : 2) txt(`${sig(lo + (hi - lo) * i / 10, 4)}`, x + w * i / 10, y + h + 10 * p, { a: 'center', s: 9, c: T.muted, m: 1 });
+      txt('time after the pulse is sent (μs)', x + w / 2, y + h + 22 * p, { a: 'center', s: 9, c: T.muted });
+      if (S.running) {
+        const ech = echoes(layers()), f0 = S.f0 * 1e6, n = Math.round(w * (zoom ? 2 : 3)), base = zoom ? y + h / 2 : y + h - 6 * p, amp = (zoom ? h / 2 - 6 * p : h - 14 * p) * S.gain;
+        /* the pulse sent (drawn at t = 0, off the scale) */
+        ctx.strokeStyle = tr; ctx.lineWidth = 1.3 * p; ctx.beginPath(); let clipped = false;
+        for (let i = 0; i <= n; i++) { const t = (lo + (hi - lo) * i / n) * 1e-6, s = signal(ech, f0, t), v = zoom ? s[0] : Math.hypot(s[0], s[1]);
+          const send = Math.exp(-t * t / (2 * sigmaFor(f0) ** 2)) * (zoom ? Math.cos(TAU * f0 * t) : 1), vv = v + send;
+          let yy = base - vv * amp; if (yy < y + 2) { yy = y + 2; clipped = true; } if (yy > y + h - 2) { yy = y + h - 2; clipped = true; }
+          i ? ctx.lineTo(x + w * i / n, yy) : ctx.moveTo(x + w * i / n, yy); }
+        ctx.stroke();
+        txt(zoom ? 'echo pressure (radio frequency trace)' : 'echo amplitude (envelope)', x + 6 * p, y + 10 * p, { s: 9, c: tr });
+        if (clipped && S.gain > 1) txt('off the top: lower the gain', x + w - 6 * p, y + 10 * p, { a: 'right', s: 9, c: tr });
+      } else txt('Start the scanner', x + w / 2, y + h / 2, { a: 'center', s: 12, c: tr, b: 1 });
+      const cx = x + w * (S.curT - lo) / (hi - lo);
+      if (cx >= x && cx <= x + w) { ctx.strokeStyle = '#ffd36b'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(cx, y); ctx.lineTo(cx, y + h); ctx.stroke();
+        txt(`${S.curT.toFixed(2)} μs${S.depth && !S.blind ? `, ${(C_SCANNER * S.curT * 1e-6 / 2 * 100).toFixed(2)} cm` : ''}`, Math.min(cx + 5 * p, x + w - 120 * p), y + 24 * p, { s: 10, c: '#ffd36b', m: 1, b: 1 }); }
+    } else {
+      const lo = 0, hi = S.range; GEO.scr = { x, y, w, h, lo, hi };
+      for (let i = 0; i <= 10; i += 2) txt(`${sig(hi * i / 10 / 1000, 3)}`, x + w * i / 10, y + h + 10 * p, { a: 'center', s: 9, c: T.muted, m: 1 });
+      txt('Doppler shift (kHz)', x + w / 2, y + h + 22 * p, { a: 'center', s: 9, c: T.muted });
+      if (S.running) {
+        const n = Math.round(w * 2), f0 = S.f0 * 1e6, lam = S.prof === 'lam', vals = []; let mx = 0;
+        for (let i = 0; i <= n; i++) { const v = spectrum(hi * i / n, f0, vNow(), S.theta, MEDIA.blood.c, lam); vals.push(v); mx = Math.max(mx, v); }
+        ctx.fillStyle = 'rgba(126, 224, 160, 0.25)'; ctx.strokeStyle = tr; ctx.lineWidth = 1.3 * p; ctx.beginPath(); ctx.moveTo(x, y + h);
+        vals.forEach((v, i) => ctx.lineTo(x + w * i / n, y + h - 4 * p - (h - 20 * p) * v / mx)); ctx.lineTo(x + w, y + h); ctx.closePath(); ctx.fill(); ctx.stroke();
+        txt('Doppler spectrum (power, scaled to its peak)', x + 6 * p, y + 10 * p, { s: 9, c: tr });
+      } else txt('Start the scanner', x + w / 2, y + h / 2, { a: 'center', s: 12, c: tr, b: 1 });
+      const cx = x + w * S.curF / hi; ctx.strokeStyle = '#ffd36b'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(cx, y); ctx.lineTo(cx, y + h); ctx.stroke();
+      txt(`${Math.round(S.curF)} Hz`, Math.min(cx + 5 * p, x + w - 70 * p), y + 24 * p, { s: 10, c: '#ffd36b', m: 1, b: 1 });
+    }
+  }
+
+  function tick(dt) { if (S.running && !reduce) { S.phase = (S.phase + dt * TAU * 0.25) % TAU; draw(); } }
+  function resize() { dpr = window.devicePixelRatio || 1; const rc = scene.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; setRun(S.running); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
+  tokens(); new ResizeObserver(resize).observe(scene); new ResizeObserver(() => draw()).observe(shelf);
+  const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'layers'); renderRows(); resize();
+  if (new URLSearchParams(location.search).get('run') === '1') setRun(true);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  let last = performance.now(), acc = 0;
+  (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
+})();
+</script>
+</body>
+</html>

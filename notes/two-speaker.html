@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two Speaker Interference: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Two Speaker Interference</h1><ul class="meta"><li><a href="../demos/two-speaker.html">Open the demo</a></li><li>Acoustics module (OpenStax University Physics Vol 1, §16.5, §17.2, §17.3)</li><li>25 to 45 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Sound from two speakers playing the same tone adds. Where one wave arrives a whole number of wavelengths after the other (r₂ − r₁ = mλ) the two add up and it is loud; halfway between, (m + ½)λ, they cancel and it is quiet.</li>
+<li>The quiet and loud places lie on curves (hyperbolas) spreading out from between the speakers. Far away they run along straight lines at sin θ = Δr/d.</li>
+<li>Only path differences smaller than d are possible, so the number of quiet lines is set by d/λ.</li>
+<li>Wiring one speaker backwards swaps loud and quiet: straight ahead becomes quiet.</li>
+<li>The quiet spots give λ, and with v = fλ the speed of sound, which depends on the air temperature.</li>
+<li>Sound level in dB: one speaker drops 6 dB for each doubling of distance; two in phase give 6 dB more than one, where they add.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need v = fλ, superposition (§16.5) and the decibel scale (§17.3). <strong>Blind</strong> hides the wavelength in the meter and the quiet lines on the floor; the <strong>Mystery frequency</strong> covers the generator display (choosing another shows the last one in the status line).</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Walk across, 686 Hz.</strong> λ = 0.500 m at 20 °C, d = 1.00 m, walk line at x = 4 m. Press <strong>Walk</strong> and watch the trace: dips near y = ±1.04 m (Δr = λ/2) and ±4.55 m (3λ/2, at the edge of the room). Put the microphone in each dip and record; students check r₂ − r₁ against (m + ½)λ.</li>
+<li><strong>Speaker 2 off.</strong> The dips vanish: one speaker gives a smooth level falling with distance.</li>
+<li><strong>Speakers close together.</strong> d = 0.40 m &lt; λ: one quiet line on each side only.</li>
+<li><strong>Wired backwards.</strong> The centre is quiet; the quiet lines are now at Δr = mλ.</li>
+<li><strong>Speed of sound.</strong> At several frequencies, λ from the dips; λ against 1/f has slope v. Change the temperature and repeat.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> The speakers play 686 Hz on a 20 °C day. Find the speed of sound from v = 331 m/s √(T/273 K) and the wavelength.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> With d = 1.00 m, where on the line x = 4.00 m is the first quiet spot from the centre? Find it two ways: exactly from r₂ − r₁ = λ/2, and from the far field rule sin θ = Δr/d with y = x tan θ.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> How many quiet lines are there on each side of the centre for d = 1.00 m at 686 Hz? For d = 0.40 m?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Straight ahead at x = 4 m the meter reads 73.9 dB with both speakers, and at the first quiet spot 43.2 dB. One speaker alone gives 80 dB at 1 m. Explain the 73.9 dB, and why the quiet spot is not silent.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Speaker 2 is wired backwards. Where are the quiet lines now?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> In the Mystery frequency setup (d = 1.20 m, 20 °C) a student finds the first quiet spot on the line x = 4.00 m at y = 1.20 m. Find the frequency.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Two speakers are always twice as loud."</strong> Only where the waves arrive in step. Elsewhere they cancel, and on average over the room the power adds (3 dB more than one, not 6).</li>
+<li><strong>"Quiet spots mean the sound energy is destroyed."</strong> It is moved: the loud places are louder than two speakers' worth of separate power.</li>
+<li><strong>"The quiet lines are evenly spaced across the room."</strong> Only in the small angle region far away; near the speakers and at large angles they bend (hyperbolas).</li>
+<li><strong>"A higher note gives fewer quiet lines."</strong> Shorter λ means more path differences fit below d, so more lines.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Each speaker is a point source in free field: complex pressure amplitude a e^{−ikr}/r, with a set so that one speaker gives 80 dB (re 20 μPa rms) at 1 m (chosen). Speaker 2 can have phase π (wired backwards) or be off. The level is 20 log₁₀(|p|/√2 ÷ 20 μPa). This is exact for monopoles.</li>
+<li>Left out: reflections from walls, floor and ceiling (as outdoors or in an anechoic room), the speakers' directivity, and absorption in air. The speed of sound is 331 m/s √(T/273 K) with T in kelvin (§17.2).</li>
+<li>A quiet spot is not silent: the residual pressure is a(1/r₁ − 1/r₂), since the farther speaker is weaker (checked in the tests). On the centre line, wired backwards, the cancellation is exact.</li>
+<li>The walk moves the microphone along the walk line at 0.5 m/s and plots the level every 4 mm. The waves on the floor are slowed about a thousand times. Simulated data with no noise.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
