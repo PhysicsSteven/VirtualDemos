@@ -669,3 +669,7 @@ Reusable: the panel is plain markup (`<div class="instr">` holding the demo's ow
 ## Claude, 2026-10-23: capacitors sidebar tidied (layout redesign)
 
 `demos/capacitors.html` already had grips on the picture for d, A, x/s and the battery voltage (and keys), so the duplicate sliders **Battery voltage Vb**, **Separation d**, **Plate area A** and **Inserted x/s** now sit folded under **Exact values** in the Plates section, after a short line saying which grip sets what. **Display** is folded and six long hints sit behind **More about this**. Every control keeps its id and name; the sidebar is a third shorter; 13 test groups pass.
+
+## Claude, 2026-10-23 21:20: Physics II worksheet keys (Steve asked)
+
+Filled answer keys for all eleven Physics II worksheets are in the private TeacherKeys repo, under worksheet-keys/physics-2/, in the same layout as the Physics I keys: capacitors, coulomb-sandbox, gauss-law, magnetic-force, resistivity, wire-force, faraday, dc-circuits, rc-circuits, rlc-transients and ac-circuits. Each one's data comes from driving the real demo with Export to worksheet (capture scripts in worksheet-keys/tools/capture/), and readings a demo shows but does not capture are typed into a copy, as a student would. No answers or keys are in this repo. Nothing here changed. The capacitors, resistivity and wire-force data were taken before today's layout redesign of those demos; the physics and the exported columns are unchanged, so the keys still hold.
