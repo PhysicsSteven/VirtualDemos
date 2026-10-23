@@ -278,7 +278,6 @@ def page_shell(title, sub, lede, facts, jump, body, how):
 </main>
 <footer>
   <div class="wrap">
-    <p>Steven Anderson · Louisiana Tech University</p>
     <p>© 2026 Steven Anderson. All rights reserved. Free to use for teaching and learning; see the <a href="LICENSE.html">terms of use</a>.</p>
     <p><a href="https://github.com/PhysicsSteven/VirtualDemos">Source on GitHub</a></p>
   </div>

@@ -847,3 +847,4 @@ Steve asked for a license. It is all rights reserved (a side project of Steve's,
 - `LICENSE.md` (renders on Pages as `LICENSE.html`, the footers link there) and `THIRD_PARTY_NOTICES.md`. Anything new from outside (a library, data set, figure or code) gets an entry in the notices, and its own license notice stays in the file. `demos/dna.html` carries the NAB fd_helix.c BSD notice: keep it.
 - Footer line added on the home and course pages (`tools/courses.py` template too) and on every notes page (`tools/notes.py`). Each demo has a copyright comment on its second line, right after the doctype; new demos copy it.
 - TeacherKeys got its own confidential `LICENSE.md`.
+- Later the same day (Steve): Louisiana Tech removed from the footers and the home page eyebrow; the site is Steve's own project, not the university's. Don't add the university back.
