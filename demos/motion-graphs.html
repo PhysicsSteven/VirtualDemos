@@ -438,6 +438,10 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     ctx.lineTo(x1 - Math.cos(ang - 0.5) * head, y1 - Math.sin(ang - 0.5) * head); ctx.lineTo(x1 - Math.cos(ang + 0.5) * head, y1 - Math.sin(ang + 0.5) * head); ctx.fill();
   }
   function drawShaft(L, xr, blind) {
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, L.left - 56 * L.p, H); ctx.clip();   /* keep the shaft clear of the graphs' axis labels */
+    drawShaftInner(L, xr, blind); ctx.restore();
+  }
+  function drawShaftInner(L, xr, blind) {
     const p = L.p, top = L.panes[0].y0, bot = L.panes[L.panes.length - 1].y0 + L.panes[L.panes.length - 1].h, sx = 62 * p;
     const Yh = (y) => bot - (bot - top) * (y - xr.lo) / (xr.hi - xr.lo);
     tossScene(p, top, bot, sx, Yh(0));
@@ -549,7 +553,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     }
     // time axis
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    const ts = niceStep(tm / 8); for (let t = 0; t <= tm + 1e-9; t += ts) ctx.fillText(fx(t, ts < 1 ? 1 : 0), tX(t), L.axisY - 6 * p);
+    const ts = niceStep(tm / Math.max(2, Math.min(8, Math.floor((L.right - L.left) / (34 * p)))));   /* about one label per 34 px */ for (let t = 0; t <= tm + 1e-9; t += ts) ctx.fillText(fx(t, ts < 1 ? 1 : 0), tX(t), L.axisY - 6 * p);
     ctx.textAlign = 'right'; ctx.fillText('t (s)', L.right, L.axisY + 6 * p);
     if (blind) { ctx.textAlign = 'left'; ctx.fillText('Velocity and acceleration graphs hidden in Blind', L.left, L.axisY + 6 * p); }
     $('clock').textContent = `t = ${S.t.toFixed(2)} s`;
