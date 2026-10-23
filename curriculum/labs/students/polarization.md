@@ -9,13 +9,13 @@
 $$I=I_0\cos^2\theta$$
 
 ## Procedure (50–75 minutes)
-1. State a prediction and identify independent, dependent and controlled variables.
-2. Choose the mode matching the equation; record every fixed parameter.
-3. Collect five or more independent measurements, recording values, units and measurement method.
-4. Where the model is stochastic, repeat each setting and report variability.
-5. Plot the measurements with labeled axes. Plot $$I/I_0$$ against $$\cos^2\theta$$.
-6. Compute the inferred physical parameter, check dimensions and compare with theory.
-7. Describe systematic limitations and explain any discrepancies.
+1. Begin with linearly polarized light of fixed intensity and two ideal polarizers. Record the reference transmitted intensity when their axes are aligned.
+2. Measure transmitted intensity at relative axis angles of 0°, 15°, 30°, 45°, 60°, 75° and 90°, without changing the incident light.
+3. Calculate $$\cos^2\theta$$ for each angle and plot transmitted intensity divided by the aligned reference intensity against $$\cos^2\theta$$.
+4. Check the aligned and crossed limits and compare the data with Malus's law. Keep the light source and all other optical elements unchanged.
+5. As a separate comparison, begin with unpolarized light and examine the intensity after the first ideal polarizer. Distinguish this initial factor of one half from the transmission law for the relative angle.
+6. If assigned, add a third polarizer between two crossed polarizers, vary its orientation and explain why the transmitted intensity can increase.
+7. Record instrument precision and discuss departures from the ideal polarizer model; do not invent repeated random trials for deterministic model readings.
 
 ## Raw data
 | Trial | Controlled setting (units) | Measured response (units) | Uncertainty / notes |

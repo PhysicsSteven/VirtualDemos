@@ -6247,7 +6247,10 @@
       "status": "usable",
       "note": "Optional optics only; current handout remains outside the rewrite queue.",
       "title": "Polarization",
-      "url": "demos/polarization.html"
+      "url": "demos/polarization.html",
+      "handouts": [
+        "polarization"
+      ]
     },
     {
       "demo": "acoustic-levitation",
@@ -6340,7 +6343,10 @@
       "status": "usable",
       "note": "Acoustics module, Beyond the textbook unit (2026-10-23): no direct Volume 1 section.",
       "title": "Chladni Plates",
-      "url": "demos/chladni.html"
+      "url": "demos/chladni.html",
+      "handouts": [
+        "chladni"
+      ]
     },
     {
       "demo": "compton",
@@ -6416,7 +6422,10 @@
       "status": "usable",
       "note": "Acoustics module (2026-10-23).",
       "title": "Doppler Effect and Shock Waves",
-      "url": "demos/doppler.html"
+      "url": "demos/doppler.html",
+      "handouts": [
+        "doppler"
+      ]
     },
     {
       "demo": "double-slit",
@@ -6892,7 +6901,10 @@
       "status": "usable",
       "note": "Acoustics module (2026-10-23).",
       "title": "Standing Waves",
-      "url": "demos/standing-waves.html"
+      "url": "demos/standing-waves.html",
+      "handouts": [
+        "standing-waves"
+      ]
     },
     {
       "demo": "string-density",
@@ -6913,10 +6925,13 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
+      "status": "usable",
       "note": "New 2026-10-23 (Claude), Steve's first PHYS 202 lab. A string from a vibrator over a pulley to a hanging mass (T = mg, g = 9.80 m/s²): Sweep frequency, fixed mass (f against n) or Add masses, fixed frequency (T against 1/n²); Strings A, B, C and an Unknown string; Record, fit with residuals, Export to worksheet. Exact steady state of the damped wave equation with a displacement driven end; resonances 0.60 Hz wide (chosen). Student handout pending (GPT).",
       "title": "Linear Density of a String",
-      "url": "demos/string-density.html"
+      "url": "demos/string-density.html",
+      "handouts": [
+        "string-density"
+      ]
     },
     {
       "demo": "star-slice",

@@ -42,7 +42,7 @@
   /* ==PHYSICS II START== Physics II worksheets (physics-2.html) and their demo column maps, kept in one block. */
   const PHYSICS_II = ['ac-circuits', 'capacitors', 'coulomb-sandbox', 'dc-circuits', 'faraday', 'gauss-law', 'magnetic-force', 'rc-circuits',
     'resistivity', 'rlc-transients', 'wire-force',
-    'string-density' /* first PHYS 202 lab; its handout (GPT) is still to be written: the map below assumes Trial, L, m, T, f, n, 1/n², Observation */];
+    'string-density' /* first PHYS 202 lab */, 'polarization', 'standing-waves'];
   ENABLED.push(...PHYSICS_II);
   /* Helpers for the Physics II maps. parts: the part values a Circuits row carries (R1_ohm, C1_F, L1_H, B1_emf_V, B1_r_ohm, S1_state),
      optionally only those whose column matches a pattern. pick: the first column matching a pattern that has a value in this row
@@ -76,11 +76,11 @@
       'r_measured_m', 'turns_timed', 'timer_s', 'T_measured_s'] },
     resistivity: { demo: 'Resistivity of a Wire', cols: ['row', 'material', 'd_mm', 'T_C', 'L_m', 'I_A', 'V_V', 'R_ohm'] },
     'wire-force': { demo: 'Force on a Current', cols: ['row', 'I_A', 'L_cm', 'theta_deg', 'dm_g', 'F_N', null] },
-    'string-density': { demo: 'Linear Density of a String', cols: ['row', 'L_m', 'm_kg', 'T_N', 'f_Hz', 'n', 'inv_n2', null] },
+    'string-density': { demo: 'Linear Density of a String', cols: ['row', '#string', 'L_m', 'm_kg', 'T_N', 'n', 'inv_n2', 'f_Hz'] },
   });
   /* ==PHYSICS II END== */
   /* ==ACOUSTICS START== Acoustics worksheets (acoustics.html) and their demo column maps. */
-  const ACOUSTICS = ['resonators', 'timbre', 'acoustic-levitation'];
+  const ACOUSTICS = ['resonators', 'timbre', 'acoustic-levitation', 'chladni', 'doppler'];
   ENABLED.push(...ACOUSTICS);
   Object.assign(FROM_DEMO, {
     resonators: { demo: 'Resonators', cols: ['f_Hz', 'k', null, null, 'L_read_cm', 'spacing_cm'] },
