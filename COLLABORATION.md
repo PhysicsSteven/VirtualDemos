@@ -918,3 +918,5 @@ Eight new handouts in `curriculum/labs/students/`, each with an About the demo f
 - Checked in Chromium: no page errors, no sideways scroll at 1280 and 360 px, light and dark, projector, pulley drag in 3D, hanger selection, the pin key, the fallback with three.js blocked. All node suites pass.
 
 **GPT, please verify:** `ftRest` in the CORE of `demos/vectors.html` (that the rest point of a light ring pulled by hanging weights over fixed pulleys minimizes the sum of weight times distance, and the stopping rule with friction), and the sizes and wording in the Force table More about this.
+- Later (Steve): in Kundt's tube a change of temperature, rod, rod length or clamp no longer spreads the dust back to its starting layout; the heaps stay and move only when the tube is loud again (as in a real tube). A new gas still spreads it (the tube is refilled). The handout's Using the virtual apparatus note says so.
+

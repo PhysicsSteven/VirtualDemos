@@ -57,7 +57,7 @@ On a real Kundt's tube, stroke the rod with a cloth or chamois dusted with rosin
 
 **Part 4: unknown rod.** With an unknown rod 1.00 m long, clamped at its middle, in air at 20 °C, find the heap spacing and the frequency.
 
-**Using the virtual apparatus.** Changing the rod, the clamp, the gas or the temperature spreads the dust out again, and the counter shows $$f$$ only while the rod rings. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** Changing the gas spreads the dust out again; after a change of rod, clamp or temperature the old heaps stay where they are until the tube is loud again (spread the dust yourself before you tune), and the counter shows $$f$$ only while the rod rings. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
 ## Data
 

@@ -591,15 +591,16 @@ window.VDGear = (function () {
     fade();
   }
   function fade() { card.classList.toggle('away', !reduce && ringing()); }
-  /* a change to the rod or the gas changes the sound, so the heaps are spread again */
-  const changedSetup = () => { S.preset = ''; spreadDust(); upd(); };
+  /* a new rod, rod length, clamp or temperature leaves the dust where it lies: it moves only when the tube is loud again.
+     Filling the tube with another gas spreads it again. */
+  const changedSetup = (spread) => { S.preset = ''; if (spread) spreadDust(); upd(); };
   function upd() { sync(); readouts(); draw(); fit(); }
   $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
   $('rods').addEventListener('click', (e) => { const b = e.target.closest('[data-r]'); if (!b) return; const was = S.rod; S.rod = b.dataset.r;
     if (was === 'unknown' && S.rod !== 'unknown') capStatus(`The unknown rod had v = ${S.unknown.v} m/s.`);
     changedSetup(); });
   $('newUnknown').addEventListener('click', () => { S.unknown = newUnknown(); S.rod = 'unknown'; capStatus('A new unknown rod is in the clamp.'); changedSetup(); });
-  $('gases').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (b) { S.gas = b.dataset.g; changedSetup(); } });
+  $('gases').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (b && b.dataset.g !== S.gas) { S.gas = b.dataset.g; changedSetup(true); } });
   $('clampSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (b) { S.n = +b.dataset.c; changedSetup(); } });
   const setRodL = (v) => { S.L = Math.min(1.5, Math.max(0.5, Math.round(v * 100) / 100)); changedSetup(); };
   $('sL').addEventListener('input', (e) => setRodL(+e.target.value));
