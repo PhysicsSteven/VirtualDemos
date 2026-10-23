@@ -213,6 +213,178 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   .card.away { opacity: 1; visibility: visible; }
 }
 </style>
+<style id="vd-look">
+/* vd-look */
+/* Shared module look (Acoustics visual pass, 2026-10-23): depth, quieter text and one instrument finish.
+   Only presentation: no sizes that the layout or the canvases depend on. Each demo may override after this block. */
+:root {
+  --look-radius: 12px;
+  --look-shadow: 0 1px 2px rgba(20, 30, 45, 0.06), 0 6px 20px rgba(20, 30, 45, 0.07);
+  --look-lift: 0 1px 2px rgba(20, 30, 45, 0.10), 0 10px 28px rgba(20, 30, 45, 0.14);
+  --look-edge: color-mix(in srgb, var(--line) 75%, transparent);
+  --look-quiet: color-mix(in srgb, var(--muted) 82%, var(--surface));
+  --look-glass: color-mix(in srgb, var(--surface) 84%, transparent);
+  --inst-top: #4a5665; --inst-bot: #333c48; --inst-rim: #1f262f; --inst-ink: #e6ebf1; --inst-quiet: #b9c3cf;
+  --look-lcd-bg: #0a1810; --look-lcd-ink: #8ef0b0;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --look-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 26px rgba(0, 0, 0, 0.32);
+    --look-lift: 0 1px 2px rgba(0, 0, 0, 0.55), 0 12px 32px rgba(0, 0, 0, 0.45);
+    --inst-top: #36414f; --inst-bot: #252d38; --inst-rim: #0d1218;
+  }
+}
+:root[data-theme="dark"] {
+  --look-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 26px rgba(0, 0, 0, 0.32);
+  --look-lift: 0 1px 2px rgba(0, 0, 0, 0.55), 0 12px 32px rgba(0, 0, 0, 0.45);
+  --inst-top: #36414f; --inst-bot: #252d38; --inst-rim: #0d1218;
+}
+body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, var(--accent) 6%, var(--bg)), var(--bg) 65%) var(--bg); background-attachment: fixed; }
+.bar h1 { letter-spacing: -0.015em; }
+.bar p { color: var(--look-quiet); }
+.units { color: var(--look-quiet); opacity: 0.85; }
+.stage, .rail { border-color: var(--look-edge); border-radius: var(--look-radius); box-shadow: var(--look-shadow); }
+.rail h2, .rail details.fold > summary { color: var(--look-quiet); letter-spacing: 0.1em; }
+.rail section + section, .rail > details + section, .rail > section + details { border-top-color: color-mix(in srgb, var(--line) 70%, transparent); }
+.hint { color: var(--look-quiet); line-height: 1.45; }
+.readout dt { color: var(--look-quiet); }
+/* the Set up card: frosted glass over the picture */
+.card, .rack { background: var(--look-glass); border-color: var(--look-edge); border-radius: 12px; box-shadow: var(--look-lift);
+  -webkit-backdrop-filter: blur(10px) saturate(1.15); backdrop-filter: blur(10px) saturate(1.15); }
+.card-title, .rack-title { letter-spacing: 0.02em; }
+@media (max-width: 820px) { .card, .rack { box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; } }
+/* buttons: a hairline of depth, a quiet hover */
+.btn, .chips button, .spin, .proj { transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s; box-shadow: 0 1px 0 rgba(20, 30, 45, 0.05); }
+.btn:hover:not(:disabled), .chips button:hover:not([aria-pressed="true"]), .spin:hover, .proj:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+.seg { box-shadow: inset 0 1px 2px rgba(20, 30, 45, 0.06); }
+@media (prefers-reduced-motion: reduce) { .btn, .chips button, .spin, .proj { transition: none; } }
+/* instruments (function generators, meters): one anodized finish across the module */
+.gen { background: linear-gradient(180deg, var(--inst-top), var(--inst-bot)); border: 1px solid var(--inst-rim); color: var(--inst-ink);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 1px 0 rgba(0, 0, 0, 0.3), 0 6px 16px rgba(10, 15, 22, 0.25); }
+.gen-lcd { background: var(--look-lcd-bg); color: var(--look-lcd-ink); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08); text-shadow: 0 0 6px color-mix(in srgb, var(--look-lcd-ink) 45%, transparent); }
+.knob { background: radial-gradient(circle at 36% 30%, #a3adb9, #5a6573 55%, #3a434f 80%, #2b323c);
+  box-shadow: 0 0 0 3px #1c222b, 0 0 0 4px rgba(255, 255, 255, 0.06), 0 3px 6px rgba(0, 0, 0, 0.55); }
+.shelf { background: color-mix(in srgb, var(--surface) 92%, var(--bg)); }
+/* /vd-look */
+</style>
+<script id="vd-gear">
+/* vd-gear: shared canvas drawing for lab equipment (Acoustics visual pass, 2026-10-23). Pictures only: no physics here.
+   Light comes from the top left. Every helper takes the 2D context first; sizes are in CSS pixels. */
+window.VDGear = (function () {
+  const dark = () => { const t = document.documentElement.getAttribute('data-theme');
+    return t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches); };
+  const mix = (a, b, t) => { const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b);
+    return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, '0')).join(''); };
+  /* the room behind the apparatus: a wall that darkens a little towards the top and a soft floor glow */
+  function backdrop(ctx, w, h, o = {}) {
+    const d = dark(), g = ctx.createLinearGradient(0, 0, 0, h);
+    g.addColorStop(0, d ? '#0f151d' : '#eef1f5'); g.addColorStop(o.horizon || 0.7, d ? '#141b25' : '#f8f9fb'); g.addColorStop(1, d ? '#10161e' : '#eceff3');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
+    const r = ctx.createRadialGradient(w * 0.45, h * 0.35, 0, w * 0.45, h * 0.35, Math.max(w, h) * 0.75);
+    r.addColorStop(0, d ? 'rgba(120,150,190,0.06)' : 'rgba(255,255,255,0.55)'); r.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = r; ctx.fillRect(0, 0, w, h);
+  }
+  /* a lab bench top seen slightly from above: top face, front edge with grain, and a shadow under the lip */
+  function bench(ctx, x, y, w, depth, edge, o = {}) {
+    const d = dark(), top = o.top || (d ? '#3a3229' : '#d9c3a0'), front = o.front || (d ? '#2a241d' : '#b99a6e');
+    let g = ctx.createLinearGradient(0, y - depth, 0, y); g.addColorStop(0, mix(top, d ? '#000000' : '#ffffff', 0.12)); g.addColorStop(1, top);
+    ctx.fillStyle = g; ctx.fillRect(x, y - depth, w, depth);
+    g = ctx.createLinearGradient(0, y, 0, y + edge); g.addColorStop(0, front); g.addColorStop(1, mix(front, '#000000', 0.25));
+    ctx.fillStyle = g; ctx.fillRect(x, y, w, edge);
+    ctx.save(); ctx.globalAlpha = d ? 0.12 : 0.16; ctx.strokeStyle = mix(front, '#000000', 0.4); ctx.lineWidth = 1;
+    for (let i = 1; i < 4; i++) { const yy = y + edge * i / 4; ctx.beginPath(); ctx.moveTo(x, yy); for (let xx = x; xx <= x + w; xx += 40) ctx.lineTo(xx, yy + Math.sin(xx * 0.013 + i * 1.7) * 1.2); ctx.stroke(); }
+    ctx.restore();
+    ctx.fillStyle = d ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.45)'; ctx.fillRect(x, y, w, 1);
+    g = ctx.createLinearGradient(0, y + edge, 0, y + edge + 14); g.addColorStop(0, d ? 'rgba(0,0,0,0.45)' : 'rgba(30,25,15,0.18)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g; ctx.fillRect(x, y + edge, w, 14);
+  }
+  /* soft contact shadow: an ellipse under an object resting at y */
+  function shadow(ctx, cx, y, rx, ry, a = 1) {
+    const d = dark(); ctx.save(); ctx.translate(cx, y); ctx.scale(1, ry / rx);
+    const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rx); g.addColorStop(0, `rgba(0,0,0,${(d ? 0.5 : 0.22) * a})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, rx, 0, 7); ctx.fill(); ctx.restore();
+  }
+  /* metal: a cylinder between two points (rod, post, axle), shaded across its width */
+  function rod(ctx, x1, y1, x2, y2, r, o = {}) {
+    const base = o.color || '#9aa4b0', L = Math.hypot(x2 - x1, y2 - y1) || 1, nx = -(y2 - y1) / L, ny = (x2 - x1) / L;
+    const g = ctx.createLinearGradient(x1 - nx * r, y1 - ny * r, x1 + nx * r, y1 + ny * r);
+    g.addColorStop(0, mix(base, '#000000', 0.35)); g.addColorStop(0.35, mix(base, '#ffffff', 0.45)); g.addColorStop(0.55, base); g.addColorStop(1, mix(base, '#000000', 0.45));
+    ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(x1 + nx * r, y1 + ny * r); ctx.lineTo(x2 + nx * r, y2 + ny * r); ctx.lineTo(x2 - nx * r, y2 - ny * r); ctx.lineTo(x1 - nx * r, y1 - ny * r); ctx.closePath(); ctx.fill();
+  }
+  /* a box (instrument case, driver housing): vertical gradient, bevel highlight, dark rim */
+  function box(ctx, x, y, w, h, o = {}) {
+    const d = dark(), base = o.color || (d ? '#3a4552' : '#3f4a58'), r = o.r == null ? Math.min(8, w / 6, h / 6) : o.r;
+    if (o.shadow !== false) shadow(ctx, x + w / 2, y + h, w * 0.6, Math.max(3, w * 0.06), 0.9);
+    const g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, mix(base, '#ffffff', 0.16)); g.addColorStop(1, mix(base, '#000000', 0.22));
+    ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(x, y, w, h, r); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.14)'; ctx.beginPath(); ctx.roundRect(x + 1, y + 1, w - 2, h - 2, Math.max(0, r - 1)); ctx.stroke();
+  }
+  function screw(ctx, x, y, r) {
+    const g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, 0, x, y, r); g.addColorStop(0, '#e9edf2'); g.addColorStop(1, '#7c8794');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = Math.max(0.8, r * 0.3); ctx.beginPath(); ctx.moveTo(x - r * 0.6, y + r * 0.2); ctx.lineTo(x + r * 0.6, y - r * 0.2); ctx.stroke();
+  }
+  /* an LCD window with glowing digits */
+  function lcd(ctx, x, y, w, h, text, o = {}) {
+    ctx.fillStyle = '#081109'; ctx.beginPath(); ctx.roundRect(x, y, w, h, 3); ctx.fill();
+    const g = ctx.createLinearGradient(0, y, 0, y + h); g.addColorStop(0, 'rgba(255,255,255,0.06)'); g.addColorStop(0.5, 'rgba(255,255,255,0)'); ctx.fillStyle = g; ctx.fill();
+    ctx.save(); ctx.font = o.font || `600 ${Math.round(h * 0.62)}px "JetBrains Mono", ui-monospace, monospace`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(142,240,176,0.55)'; ctx.shadowBlur = h * 0.35; ctx.fillStyle = o.color || '#8ef0b0'; ctx.fillText(text, x + w - h * 0.3, y + h / 2 + 1); ctx.restore();
+  }
+  /* a pulley wheel with spokes, on its axle */
+  function pulley(ctx, x, y, r, o = {}) {
+    const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, r * 0.1, x, y, r); g.addColorStop(0, '#dfe4ea'); g.addColorStop(0.7, '#9ba5b1'); g.addColorStop(1, '#5c6674');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = Math.max(1, r * 0.12); ctx.beginPath(); ctx.arc(x, y, r * 0.82, 0, 7); ctx.stroke();
+    ctx.lineWidth = Math.max(1, r * 0.08); for (let i = 0; i < 4; i++) { const a = (o.angle || 0) + i * Math.PI / 4; ctx.beginPath(); ctx.moveTo(x - Math.cos(a) * r * 0.7, y - Math.sin(a) * r * 0.7); ctx.lineTo(x + Math.cos(a) * r * 0.7, y + Math.sin(a) * r * 0.7); ctx.stroke(); }
+    screw(ctx, x, y, r * 0.22);
+  }
+  /* a C clamp holding something to the bench edge at (x, y): jaw on the top, screw under the lip */
+  function clamp(ctx, x, y, w, edge, o = {}) {
+    const c = o.color || '#5b6e8c';
+    box(ctx, x - w / 2, y - 6, w, 8, { color: c, r: 2, shadow: false });
+    box(ctx, x + w / 2 - 6, y - 6, 6, edge + 16, { color: c, r: 2, shadow: false });
+    box(ctx, x - w / 2, y + edge, w, 6, { color: c, r: 2, shadow: false });
+    rod(ctx, x - w / 4, y + edge + 6, x - w / 4, y + edge + 18, 2.2, { color: '#b8c0ca' });
+  }
+  /* a slotted mass seen from the side: a flat disc with a bevel, brass or steel */
+  function slotted(ctx, cx, y, w, t, o = {}) {
+    const base = o.brass ? '#c9a24a' : '#a9b2bd', g = ctx.createLinearGradient(cx - w / 2, 0, cx + w / 2, 0);
+    g.addColorStop(0, mix(base, '#000000', 0.35)); g.addColorStop(0.3, mix(base, '#ffffff', 0.35)); g.addColorStop(0.6, base); g.addColorStop(1, mix(base, '#000000', 0.4));
+    ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(cx - w / 2, y, w, t, Math.min(2, t / 3)); ctx.fill();
+    ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.fillRect(cx - w / 2, y + t - 0.8, w, 0.8);
+  }
+  /* a loudspeaker cabinet facing right (or left with o.flip): box, cone and dust cap */
+  function speaker(ctx, x, y, w, h, o = {}) {
+    box(ctx, x, y, w, h, { color: o.color || '#2e353f', r: Math.min(6, w / 8) });
+    const r = Math.min(w, h) * 0.36, cx = x + w / 2, cy = y + h / 2;
+    let g = ctx.createRadialGradient(cx - r * 0.2, cy - r * 0.25, r * 0.1, cx, cy, r);
+    g.addColorStop(0, '#5b6370'); g.addColorStop(0.6, '#262b33'); g.addColorStop(1, '#14181d'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#4b535f'; ctx.lineWidth = Math.max(1, r * 0.08); ctx.beginPath(); ctx.arc(cx, cy, r * 0.95, 0, 7); ctx.stroke();
+    g = ctx.createRadialGradient(cx - r * 0.1, cy - r * 0.12, 0, cx, cy, r * 0.3); g.addColorStop(0, '#8a929e'); g.addColorStop(1, '#2b3139'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, r * 0.3, 0, 7); ctx.fill();
+  }
+  /* quiet annotation: small, muted, never bold; o.c overrides the colour */
+  function label(ctx, s, x, y, o = {}) {
+    const cs = getComputedStyle(document.documentElement), muted = o.c || cs.getPropertyValue('--muted').trim() || '#5a6575';
+    ctx.save(); ctx.fillStyle = muted; ctx.globalAlpha = o.alpha == null ? 0.9 : o.alpha;
+    ctx.font = `${o.w || 400} ${o.s || 10.5}px ${o.m ? cs.getPropertyValue('--font-mono') : cs.getPropertyValue('--font-ui')}`;
+    ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); ctx.restore();
+  }
+  /* a small engraved name plate on an instrument */
+  function plate(ctx, s, cx, cy, o = {}) {
+    ctx.save(); ctx.font = `700 ${o.s || 8}px ${getComputedStyle(document.documentElement).getPropertyValue('--font-ui')}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = 'rgba(0,0,0,0.35)'; ctx.fillText(s.toUpperCase(), cx, cy + 0.8); ctx.fillStyle = o.c || 'rgba(230,236,243,0.78)'; ctx.fillText(s.toUpperCase(), cx, cy); ctx.restore();
+  }
+  /* a cable from (x1, y1) to (x2, y2), sagging */
+  function cable(ctx, x1, y1, x2, y2, sag, o = {}) {
+    ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = o.color || '#20262e'; ctx.lineWidth = o.w || 3;
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.bezierCurveTo(x1 + (o.dx1 || 0), y1 + sag, x2 + (o.dx2 || 0), y2 + sag, x2, y2); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.12)'; ctx.lineWidth = Math.max(1, (o.w || 3) * 0.3); ctx.stroke(); ctx.restore();
+  }
+  return { dark, mix, backdrop, bench, shadow, rod, box, screw, lcd, pulley, clamp, slotted, speaker, label, plate, cable };
+})();
+</script>
 </head>
 <body>
 <div class="app">
@@ -584,25 +756,33 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const p = ps(), narrow = W < 620;
     const shelfR = shelf.getBoundingClientRect(), overlay = getComputedStyle(shelf).position === 'absolute', sceneTop = can.getBoundingClientRect().top;
     const q = overlay ? p * Math.min(1.7, Math.max(1, Math.min(W / 1000, Hh / 520))) : p;
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const Gr = window.VDGear; Gr.backdrop(ctx, W, Hh);
     /* the pulley at the table's edge on the right, the absorber a little to its left, the vibrator L to the absorber's left */
-    const top = (narrow ? 52 : 64) * p, pr = 14 * q, px = W - (narrow ? 50 : 96) * q, ax = px - (narrow ? 34 : 54) * q, ppm = (ax - (narrow ? 36 : 70) * p) / 2.0, vx = ax - S.L * ppm;
+    const top = (narrow ? 52 : 64) * p, pr = 15 * q, px = W - (narrow ? 50 : 96) * q, ax = px - (narrow ? 34 : 54) * q, ppm = (ax - (narrow ? 36 : 70) * p) / 2.0, vx = ax - S.L * ppm;
     const tableY = overlay ? Math.max(top + 170 * q, Math.min(Hh * 0.62, shelfR.top - sceneTop - 46 * p)) : Math.max(top + 120 * p, Hh * 0.5) + 60 * p;
     /* the string runs halfway between the energy lane at the top and the rule, so the waves have room both ways */
     const sy = tableY - Math.max(74 * q, (tableY - 30 * q - top - 96 * p) / 2 + 30 * q);
-    ctx.fillStyle = T.wood; ctx.fillRect(0, tableY, px + pr * 0.4, 18 * q); ctx.fillStyle = T.woodLine; ctx.fillRect(0, tableY + 18 * q, px + pr * 0.4, 3 * q);
-    /* metre rule under the string, zero at the vibrator */
-    const ry = tableY - 22 * q; ctx.fillStyle = T.rule; ctx.fillRect(vx, ry, S.L * ppm, 14 * q); ctx.strokeStyle = T.woodLine; ctx.lineWidth = 1; ctx.strokeRect(vx + 0.5, ry + 0.5, S.L * ppm, 14 * q);
-    ctx.strokeStyle = T.ink; for (let i = 0; i <= Math.round(S.L * 100); i++) { const x = vx + i / 100 * ppm, big = i % 10 === 0; if (!big && ppm < 250) continue; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + (big ? 7 : 3) * q); ctx.stroke(); if (big && (!narrow || i % 20 === 0) && i < Math.round(S.L * 100) - 4) txt(String(i / 100), x, ry + 10.5 * q, { s: 8 * Math.sqrt(q / p), a: 'center', m: 1 }); }
-    txt(`L = ${S.L.toFixed(2)} m`, (vx + ax) / 2, tableY + 21 * q + 13 * p, { a: 'center', s: 11, b: 1 });
-    /* pulley on its clamp */
-    ctx.fillStyle = T.metal; ctx.fillRect(px - 4 * q, sy, 8 * q, tableY - sy); ctx.beginPath(); ctx.arc(px, sy + pr, pr, 0, 7); ctx.fill(); ctx.fillStyle = T.metalHi; ctx.beginPath(); ctx.arc(px, sy + pr, pr * 0.45, 0, 7); ctx.fill();
-    /* vibrator */
-    const bw = 46 * q, bh = 58 * q;
+    const edge = 20 * q, deck = 26 * q;
+    Gr.bench(ctx, 0, tableY, px + pr * 0.6, deck, edge);
+    /* metre stick lying on the bench under the string, zero at the vibrator */
+    const ry = tableY - 17 * q, rh = 12 * q;
+    Gr.shadow(ctx, vx + S.L * ppm / 2, ry + rh + 1, S.L * ppm * 0.52, 3 * q, 0.7);
+    let gr = ctx.createLinearGradient(0, ry, 0, ry + rh); gr.addColorStop(0, Gr.mix(T.rule.startsWith('#') ? T.rule : '#f1e3b5', '#ffffff', 0.25)); gr.addColorStop(1, T.rule);
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.roundRect(vx, ry, S.L * ppm, rh, 1.5 * q); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 0.8; for (let i = 0; i <= Math.round(S.L * 100); i++) { const x = vx + i / 100 * ppm, big = i % 10 === 0, mid = i % 5 === 0; if (!big && ppm < 250) continue; ctx.globalAlpha = big ? 0.85 : 0.5; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + (big ? 6 : mid ? 4 : 2.5) * q); ctx.stroke(); ctx.globalAlpha = 1; if (big && (!narrow || i % 20 === 0) && i < Math.round(S.L * 100) - 4) txt(String(i / 100), x + 2 * q, ry + 9 * q, { s: 7.5 * Math.sqrt(q / p), m: 1, c: T.muted }); }
+    Gr.label(ctx, `L = ${S.L.toFixed(2)} m`, (vx + ax) / 2, tableY + edge + 16 * p, { a: 'center', s: 11 * p, w: 600, c: T.ink });
+    /* pulley on a rod clamped to the bench edge */
+    const bx = px - 2 * q;
+    Gr.rod(ctx, bx, sy + pr, bx, tableY + 4 * q, 3.2 * q);
+    Gr.clamp(ctx, bx + 2 * q, tableY, 22 * q, edge);
+    /* vibrator: a mechanical wave driver on the bench, its cable from the function generator */
+    const bw = 50 * q, bh = 60 * q;
     if (overlay) { const g = shelf.querySelector('.gen').getBoundingClientRect(), cx = g.left - can.getBoundingClientRect().left + g.width * 0.75, cy = g.top - sceneTop;
-      ctx.strokeStyle = T.box; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.bezierCurveTo(cx, cy - 40 * p, vx - bw / 2 - 30 * p, tableY + 40 * p, vx - bw / 2, tableY - 12 * p); ctx.stroke(); }
-    ctx.fillStyle = T.box; ctx.beginPath(); ctx.roundRect(vx - bw / 2, tableY - bh, bw, bh, 5 * p); ctx.fill();
-    txt('vibrator', vx, tableY - bh / 2, { a: 'center', s: 8 * q / p, c: T.metalHi });
+      Gr.cable(ctx, cx, cy, vx - bw / 2 + 4 * q, tableY - 14 * q, -30 * p, { w: 3.2 * p, dx1: 0, dx2: -40 * p }); }
+    Gr.box(ctx, vx - bw / 2, tableY - bh, bw, bh, { r: 6 * q });
+    ctx.fillStyle = 'rgba(0,0,0,0.35)'; for (let i = 0; i < 5; i++) ctx.fillRect(vx - bw / 2 + 8 * q, tableY - bh * 0.42 + i * 4 * q, bw - 16 * q, 1.6 * q);
+    Gr.plate(ctx, 'wave driver', vx, tableY - bh + 12 * q, { s: 6.5 * q });
+    Gr.screw(ctx, vx - bw / 2 + 6 * q, tableY - 7 * q, 2 * q); Gr.screw(ctx, vx + bw / 2 - 6 * q, tableY - 7 * q, 2 * q);
     /* string: the steady state seen through a slow strobe, and the blur band a real eye sees */
     const mu = muNow(), Tn = Tnow(), F = Fnow(), on = S.running;
     const N = Math.max(160, Math.round(S.L * ppm / 2)), clip = Math.max(20 * p, Math.min(sy - top - 96 * p, tableY - 30 * q - sy)), yScale = clip * 0.9 / 0.005;   /* 5 mm, the largest A, fills 90% of the room */
@@ -610,28 +790,40 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     const sx = (i) => vx + S.L * ppm * i / N, cl = (d) => Math.max(-clip, Math.min(clip, d));
     ctx.fillStyle = T.env; ctx.beginPath(); for (let i = 0; i <= N; i++) ctx.lineTo(sx(i), sy - cl(Math.hypot(ys[i][0], ys[i][1]) * yScale)); for (let i = N; i >= 0; i--) ctx.lineTo(sx(i), sy + cl(Math.hypot(ys[i][0], ys[i][1]) * yScale)); ctx.closePath(); ctx.fill();
     const c = Math.cos(S.phase), s = Math.sin(S.phase), yAt = (i) => (reduce ? 0 : ys[i][0] * c - ys[i][1] * s);
-    ctx.strokeStyle = T.string; ctx.lineWidth = 2 * Math.sqrt(p * q); ctx.lineJoin = 'round'; ctx.beginPath(); for (let i = 0; i <= N; i++) ctx.lineTo(sx(i), sy - cl(yAt(i) * yScale)); ctx.stroke();
-    /* blade of the vibrator */
-    ctx.fillStyle = T.metalHi; const by = sy - cl(on && !reduce ? S.A / 1000 * c * yScale : 0); ctx.fillRect(vx - 3 * q, by - 3 * q, 6 * q, tableY - bh - by + 3 * q);
+    ctx.save(); ctx.strokeStyle = T.string; ctx.lineWidth = 2.2 * Math.sqrt(p * q); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    ctx.shadowColor = Gr.dark() ? 'rgba(0,0,0,0.6)' : 'rgba(60,30,10,0.25)'; ctx.shadowBlur = 3 * q; ctx.shadowOffsetY = 2 * q;
+    ctx.beginPath(); for (let i = 0; i <= N; i++) ctx.lineTo(sx(i), sy - cl(yAt(i) * yScale)); ctx.stroke(); ctx.restore();
+    /* blade of the vibrator, with the string's clip on its tip */
+    const by = sy - cl(on && !reduce ? S.A / 1000 * c * yScale : 0); Gr.rod(ctx, vx, by, vx, tableY - bh + 1, 3.2 * q, { color: '#b9c1cb' });
+    ctx.fillStyle = '#d2a64a'; ctx.beginPath(); ctx.roundRect(vx - 5 * q, by - 4 * q, 10 * q, 7 * q, 2 * q); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1; ctx.stroke();
     /* the absorber: a dashpot under the string's end, its piston rod tied to the string; then the string runs on to the pulley */
     const yEnd = sy - cl(yAt(N) * yScale), dw = 30 * q, dBot = tableY, dTop = Math.max(sy + 22 * q, dBot - 70 * q);
-    ctx.fillStyle = T.box; ctx.beginPath(); ctx.roundRect(ax - dw / 2, dTop, dw, dBot - dTop, 4 * p); ctx.fill();
-    ctx.fillStyle = T.metal; ctx.fillRect(ax - 2 * q, yEnd, 4 * q, dTop + 8 * q - yEnd); ctx.fillRect(ax - dw / 2 + 4 * q, Math.min(dBot - 6 * q, dTop + 8 * q + (yEnd - sy) * 0.3), dw - 8 * q, 4 * q);
-    ctx.strokeStyle = T.string; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(ax, yEnd); ctx.lineTo(px, sy); ctx.arc(px, sy + pr, pr, -PI / 2, 0);
-    const hx = px + pr, hy0 = sy + pr, hang = overlay ? Math.max(hy0 + 70 * q, tableY + 40 * q) : Math.max(hy0 + 70 * p, tableY + 30 * p); ctx.lineTo(hx, hang); ctx.stroke();
-    txt('absorber', ax, dBot - 8 * q, { a: 'center', s: 7.5 * q / p, c: T.metalHi });
+    const pistonY = Math.min(dBot - 8 * q, dTop + 10 * q + (yEnd - sy) * 0.3);
+    Gr.rod(ctx, ax, yEnd, ax, pistonY, 2 * q, { color: '#c3cad3' });
+    /* the cylinder: clear plastic over the oil, so the piston shows */
+    Gr.shadow(ctx, ax, dBot, dw * 0.8, 4 * q);
+    gr = ctx.createLinearGradient(ax - dw / 2, 0, ax + dw / 2, 0); gr.addColorStop(0, 'rgba(120,140,160,0.55)'); gr.addColorStop(0.3, 'rgba(235,242,250,0.55)'); gr.addColorStop(1, 'rgba(90,105,125,0.6)');
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.roundRect(ax - dw / 2, dTop, dw, dBot - dTop, 3 * q); ctx.fill();
+    ctx.fillStyle = 'rgba(200,150,40,0.35)'; ctx.fillRect(ax - dw / 2 + 2 * q, dTop + (dBot - dTop) * 0.35, dw - 4 * q, (dBot - dTop) * 0.65 - 6 * q);
+    Gr.slotted(ctx, ax, pistonY, dw - 6 * q, 4 * q);
+    ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(ax - dw / 2, dTop, dw, dBot - dTop, 3 * q); ctx.stroke();
+    Gr.box(ctx, ax - dw / 2 - 3 * q, dTop - 4 * q, dw + 6 * q, 6 * q, { r: 2 * q, shadow: false }); Gr.box(ctx, ax - dw / 2 - 4 * q, dBot - 6 * q, dw + 8 * q, 6 * q, { r: 2 * q, shadow: false });
+    Gr.label(ctx, 'absorber', ax, dBot + edge + 4 * p, { a: 'center', s: 9 * p });
+    ctx.strokeStyle = T.string; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(ax, yEnd); ctx.lineTo(px, sy); ctx.stroke();
+    const hx = px + pr, hy0 = sy + pr, hang = overlay ? Math.max(hy0 + 70 * q, tableY + 40 * q) : Math.max(hy0 + 70 * p, tableY + 30 * p);
+    Gr.pulley(ctx, px, sy + pr, pr, { angle: on && !reduce ? S.phase * 0.02 : 0 });
+    ctx.strokeStyle = T.string; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(px, sy + pr, pr, -PI / 2, 0); ctx.lineTo(hx, hang); ctx.stroke();
     /* power meter on the absorber */
-    const mw = 112 * p, mh = 40 * p, mx = Math.min(W - mw - 6 * p, ax - mw / 2), my = Math.max(top + 50 * p, sy - clip - mh - 10 * p);
-    ctx.fillStyle = T.box; ctx.beginPath(); ctx.roundRect(mx, my, mw, mh, 6 * p); ctx.fill();
-    ctx.strokeStyle = T.box; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(ax + 18 * q, my + mh); ctx.bezierCurveTo(ax + 30 * q, my + mh + 30 * p, ax + dw / 2 + 12 * q, dTop + 10 * q, ax + dw / 2, dTop + 14 * q); ctx.stroke();
-    txt('power meter', mx + mw / 2, my + 10 * p, { a: 'center', s: 8, c: T.metalHi });
-    ctx.fillStyle = '#0b1a12'; ctx.fillRect(mx + 6 * p, my + 18 * p, mw - 12 * p, 17 * p);
-    txt(on ? `${fmtP(meterW())} mW` : '0 mW', mx + mw - 10 * p, my + 27 * p, { a: 'right', s: 11, m: 1, b: 1, c: '#7ee0a0' });
+    const mw = 116 * p, mh = 44 * p, mx = Math.min(W - mw - 6 * p, ax - mw / 2), my = Math.max(top + 50 * p, sy - clip - mh - 10 * p);
+    Gr.cable(ctx, ax + 18 * q, my + mh, ax + dw / 2, dTop + 14 * q, 26 * p, { w: 2.4 * p, dx1: 12 * q, dx2: 12 * q });
+    Gr.box(ctx, mx, my, mw, mh, { r: 7 * p });
+    Gr.plate(ctx, 'power meter', mx + mw / 2, my + 9 * p, { s: 7 * p });
+    Gr.lcd(ctx, mx + 7 * p, my + 17 * p, mw - 14 * p, 20 * p, on ? `${fmtP(meterW())} mW` : '0 mW');
     /* hanger and slotted masses */
-    const stackTop = hang; let y = hang; ctx.strokeStyle = T.metal; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(hx, y); ctx.lineTo(hx, y + 10 * q); ctx.stroke(); y += 10 * q;
+    const stackTop = hang; let y = hang; Gr.rod(ctx, hx, y, hx, y + 10 * q, 1.2 * p); y += 10 * q;
     const stack = [...S.masses].reverse(), mwid = (narrow ? 30 : 40) * q, maxH = Hh - y - 40 * p, raw = stack.map((g) => 2.5 + 3 * Math.log10(g)), sum = raw.reduce((a, b) => a + b, 0) * q + 6 * q, shrink = sum > maxH ? maxH / sum : 1;
-    for (let i = 0; i < stack.length; i++) { const t = raw[i] * q * shrink; ctx.fillStyle = i % 2 ? T.brass : T.metal; ctx.fillRect(hx - mwid / 2, y, mwid, Math.max(1, t - 0.6)); y += t; }
-    ctx.fillStyle = T.box; ctx.fillRect(hx - mwid / 2 - 2 * q, y, mwid + 4 * q, 6 * q); y += 6 * q;
+    for (let i = 0; i < stack.length; i++) { const t = raw[i] * q * shrink; Gr.slotted(ctx, hx, y, mwid, Math.max(1, t - 0.6), { brass: i % 2 === 1 }); y += t; }
+    Gr.box(ctx, hx - mwid / 2 - 2 * q, y, mwid + 4 * q, 6 * q, { r: 1.5 * q, shadow: false }); y += 6 * q;
     GEO.stack = { x0: hx - mwid / 2 - 6 * p, x1: hx + mwid / 2 + 6 * p, y0: stackTop + 8 * p, y1: y };
     GEO.drop = { x0: hx - mwid / 2 - 50 * p, x1: Math.min(W, hx + mwid / 2 + 50 * p), y0: hy0, y1: Math.min(Hh, y + 40 * p) };
     if (GEO.dropOn) { ctx.strokeStyle = T.accent; ctx.lineWidth = (GEO.dropOn === 2 ? 3 : 1.5) * p; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.roundRect(GEO.stack.x0 - 8 * p, stackTop, GEO.stack.x1 - GEO.stack.x0 + 16 * p, y - stackTop + 6 * p, 6 * p); ctx.stroke(); ctx.setLineDash([]); }
@@ -649,7 +841,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         txt(S.abs === 'matched' ? 'energy per metre, ½μy_t² + ½Ty_x² (dashed: its average)' : 'energy per metre, ½μy_t² + ½Ty_x²', sx(0), laneT - 6 * p, { s: 9, c: T.muted });
       }
     }
-    txt(`sideways motion drawn ×${Math.round(yScale / ppm)}, slowed as by a strobe`, W - 10 * p, Hh - 10 * p, { a: 'right', s: 9, c: T.muted });
+    Gr.label(ctx, `sideways motion drawn ×${Math.round(yScale / ppm)}, slowed as by a strobe`, W - 10 * p, Hh - 10 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
   }
 
   function tick(dt) { if (S.running && !reduce) { S.phase = (S.phase + dt * TAU * 0.5) % TAU; draw(); } }

@@ -1,0 +1,50 @@
+/* Shared module look (Acoustics visual pass, 2026-10-23): depth, quieter text and one instrument finish.
+   Only presentation: no sizes that the layout or the canvases depend on. Each demo may override after this block. */
+:root {
+  --look-radius: 12px;
+  --look-shadow: 0 1px 2px rgba(20, 30, 45, 0.06), 0 6px 20px rgba(20, 30, 45, 0.07);
+  --look-lift: 0 1px 2px rgba(20, 30, 45, 0.10), 0 10px 28px rgba(20, 30, 45, 0.14);
+  --look-edge: color-mix(in srgb, var(--line) 75%, transparent);
+  --look-quiet: color-mix(in srgb, var(--muted) 82%, var(--surface));
+  --look-glass: color-mix(in srgb, var(--surface) 84%, transparent);
+  --inst-top: #4a5665; --inst-bot: #333c48; --inst-rim: #1f262f; --inst-ink: #e6ebf1; --inst-quiet: #b9c3cf;
+  --look-lcd-bg: #0a1810; --look-lcd-ink: #8ef0b0;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --look-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 26px rgba(0, 0, 0, 0.32);
+    --look-lift: 0 1px 2px rgba(0, 0, 0, 0.55), 0 12px 32px rgba(0, 0, 0, 0.45);
+    --inst-top: #36414f; --inst-bot: #252d38; --inst-rim: #0d1218;
+  }
+}
+:root[data-theme="dark"] {
+  --look-shadow: 0 1px 2px rgba(0, 0, 0, 0.45), 0 8px 26px rgba(0, 0, 0, 0.32);
+  --look-lift: 0 1px 2px rgba(0, 0, 0, 0.55), 0 12px 32px rgba(0, 0, 0, 0.45);
+  --inst-top: #36414f; --inst-bot: #252d38; --inst-rim: #0d1218;
+}
+body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, var(--accent) 6%, var(--bg)), var(--bg) 65%) var(--bg); background-attachment: fixed; }
+.bar h1 { letter-spacing: -0.015em; }
+.bar p { color: var(--look-quiet); }
+.units { color: var(--look-quiet); opacity: 0.85; }
+.stage, .rail { border-color: var(--look-edge); border-radius: var(--look-radius); box-shadow: var(--look-shadow); }
+.rail h2, .rail details.fold > summary { color: var(--look-quiet); letter-spacing: 0.1em; }
+.rail section + section, .rail > details + section, .rail > section + details { border-top-color: color-mix(in srgb, var(--line) 70%, transparent); }
+.hint { color: var(--look-quiet); line-height: 1.45; }
+.readout dt { color: var(--look-quiet); }
+/* the Set up card: frosted glass over the picture */
+.card, .rack { background: var(--look-glass); border-color: var(--look-edge); border-radius: 12px; box-shadow: var(--look-lift);
+  -webkit-backdrop-filter: blur(10px) saturate(1.15); backdrop-filter: blur(10px) saturate(1.15); }
+.card-title, .rack-title { letter-spacing: 0.02em; }
+@media (max-width: 820px) { .card, .rack { box-shadow: none; -webkit-backdrop-filter: none; backdrop-filter: none; } }
+/* buttons: a hairline of depth, a quiet hover */
+.btn, .chips button, .spin, .proj { transition: border-color 0.15s, background-color 0.15s, box-shadow 0.15s; box-shadow: 0 1px 0 rgba(20, 30, 45, 0.05); }
+.btn:hover:not(:disabled), .chips button:hover:not([aria-pressed="true"]), .spin:hover, .proj:hover { border-color: color-mix(in srgb, var(--accent) 50%, var(--line)); }
+.seg { box-shadow: inset 0 1px 2px rgba(20, 30, 45, 0.06); }
+@media (prefers-reduced-motion: reduce) { .btn, .chips button, .spin, .proj { transition: none; } }
+/* instruments (function generators, meters): one anodized finish across the module */
+.gen { background: linear-gradient(180deg, var(--inst-top), var(--inst-bot)); border: 1px solid var(--inst-rim); color: var(--inst-ink);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.10), 0 1px 0 rgba(0, 0, 0, 0.3), 0 6px 16px rgba(10, 15, 22, 0.25); }
+.gen-lcd { background: var(--look-lcd-bg); color: var(--look-lcd-ink); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08); text-shadow: 0 0 6px color-mix(in srgb, var(--look-lcd-ink) 45%, transparent); }
+.knob { background: radial-gradient(circle at 36% 30%, #a3adb9, #5a6573 55%, #3a434f 80%, #2b323c);
+  box-shadow: 0 0 0 3px #1c222b, 0 0 0 4px rgba(255, 255, 255, 0.06), 0 3px 6px rgba(0, 0, 0, 0.55); }
+.shelf { background: color-mix(in srgb, var(--surface) 92%, var(--bg)); }
