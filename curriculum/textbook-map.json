@@ -2898,12 +2898,13 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "magnetic-force"
+        "magnetic-force",
+        "currents-fields"
       ],
       "unit": "magnetic-forces",
-      "note": "Uniform imposed field; field-line exploration is limited."
+      "note": "Magnetic Force: uniform field with ⊗/⊙ direction and particle paths; Currents and Fields: field lines of straight wires, a loop and a solenoid (field lines never cross, denser where B is larger). Reviewed by Claude 2026-10-23."
     },
     {
       "vol": 2,
@@ -2915,11 +2916,13 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "magnetic-force"
+        "magnetic-force",
+        "e-over-m"
       ],
-      "unit": "magnetic-forces"
+      "unit": "magnetic-forces",
+      "note": "Magnetic Force: circular motion with r = mv/(qB) and period, oblique launch with helix and pitch (3D), E × B drift, velocity selector, mass spectrometer and cyclotron; e/m apparatus for a real beam. Reviewed by Claude 2026-10-23."
     },
     {
       "vol": 2,
@@ -3342,11 +3345,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "em-waves"
       ],
-      "unit": "maxwell-waves"
+      "unit": "maxwell-waves",
+      "note": "EM Waves: plane wave with E and B in phase, perpendicular to each other and to the direction of travel, E = cB; polarization states. Reviewed by Claude 2026-10-23."
     },
     {
       "vol": 2,
@@ -3358,11 +3362,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "em-waves"
       ],
-      "unit": "maxwell-waves"
+      "unit": "maxwell-waves",
+      "note": "EM Waves: intensity and energy density readouts; Sunlight at Earth preset. Reviewed by Claude 2026-10-23."
     },
     {
       "vol": 2,
@@ -3374,11 +3379,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "em-waves"
       ],
-      "unit": "maxwell-waves"
+      "unit": "maxwell-waves",
+      "note": "EM Waves: radiation pressure for absorbed (I/c) and reflected (2I/c) light, Sunlight at Earth preset. Reviewed by Claude 2026-10-23."
     },
     {
       "vol": 2,
@@ -3390,11 +3396,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "em-waves"
       ],
-      "unit": "maxwell-waves"
+      "unit": "maxwell-waves",
+      "note": "EM Waves: draggable spectrum strip from radio to gamma rays, with wavelength and frequency; Visible light and Radio presets. Reviewed by Claude 2026-10-23."
     },
     {
       "vol": 3,
@@ -5633,6 +5640,11 @@
         "physics-2"
       ],
       "sections": [
+        {
+          "vol": 2,
+          "sec": "11.2",
+          "title": "Magnetic Fields and Lines"
+        },
         {
           "vol": 2,
           "sec": "11.4",
