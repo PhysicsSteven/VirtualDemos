@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Induced Electric Fields: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Induced Electric Fields</h1><ul class="meta"><li><a href="../demos/induced-electric-field.html">Open the demo</a></li><li>PHYS 202</li><li>15 to 20 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A changing magnetic flux makes an electric field, whether or not a wire is there. The EMF in a loop is the work per charge this field does around it: ε = ∮E·dl = −dΦ/dt (OpenStax Eq. 13.12).</li>
+<li>Around a long solenoid the induced field circles the axis. It grows as r inside, E = (r/2)|dB/dt|, and falls as 1/r outside, E = (R²/2r)|dB/dt|, even though B = 0 outside (OpenStax Example 13.8).</li>
+<li>The induced field is not conservative: ∮E·dl is not zero around a path that encloses changing flux, so it has no electric potential. Around a path that encloses no flux, ∮E·dl = 0 even though E is not zero on it.</li>
+<li>What matters is the rate of change: a steady current gives no induced field at all, however large B is.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need Faraday's law with flux and Lenz's law. <strong>Blind</strong> hides the field arrows, the E graph, E on the path and ∮E·dl.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Example 13.8, path outside.</strong> Pause at t = 0. B is out of the page and falling at 1.01 T/s. Ask: is there an electric field on the path, where B = 0? Turn Blind off: E = 3.35 mV/m counterclockwise, and ∮E·dl = 1.26 mV = −dΦ/dt.</li>
+<li><strong>Make the path a copper ring.</strong> The same field now drives charges around the ring. Lenz: the induced current is counterclockwise, the same way as the solenoid's own (falling) current.</li>
+<li><strong>Path inside.</strong> E is smaller nearer the axis. Drag the path's radius through R and watch the E graph: a peak at R.</li>
+<li><strong>Path off to the side.</strong> E on the path is clearly not zero, yet ∮E·dl = 0: no flux is enclosed.</li>
+<li><strong>Path around part of it.</strong> ∮E·dl still matches −dΦ/dt for the enclosed flux. Drag the path around.</li>
+<li><strong>Steady current, then alternating current.</strong> No E at all for steady current. With 60 Hz, E is largest when I passes through zero.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A long solenoid of radius 2.0 cm with 2000 turns per metre carries I = (2.0 A)e^(−αt) with α = 200 s⁻¹. Find dB/dt inside at t = 0 and the induced field at 1.0 cm, 2.0 cm and 6.0 cm from the axis. Which way does it circle if B points out of the page?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> For the same solenoid at t = 0, find the EMF around a circle of radius 6.0 cm and around a circle of radius 9.0 cm, both centred on the axis. Why are they equal, when E is smaller at 9.0 cm?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A circle of radius 2.0 cm lies entirely outside the solenoid. What is ∮E·dl around it? Is E zero on the circle? Reconcile your two answers.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Explain why no electric potential V can be defined for the induced field around the solenoid. (Hint: what would V be after one trip around a circle enclosing the solenoid?)</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The solenoid now carries a 60 Hz current with amplitude 2.0 A. Find the largest induced field 6.0 cm from the axis. At what instants in a cycle is it largest, and at what instants is it zero?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"There is no field outside a solenoid, so nothing happens there."</strong> B is zero outside; the induced E is not.</li>
+<li><strong>"The EMF needs a wire."</strong> The wire only lets the field push charges around; the field is there anyway.</li>
+<li><strong>"Induced E is like the field of charges."</strong> It has no charges as sources, its lines close on themselves, and ∮E·dl ≠ 0.</li>
+<li><strong>"Big B means big induced E."</strong> Only the rate of change of flux matters.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Ideal long solenoid: B = μ₀nI inside, zero outside, uniform inside at each instant (the current changes slowly enough that the solenoid's own radiation and retardation can be ignored).</li>
+<li>E_φ = −(r/2) dB/dt for r &lt; R and −(R²/2r) dB/dt for r &gt; R, counterclockwise positive with B out of the page.</li>
+<li>∮E·dl is added up numerically in 720 pieces around the path; Φ is B times the exact overlap area of the path and the solenoid. They agree to better than 1 part in 10⁵ in the tests.</li>
+<li>The field of current induced in the ring and the ring's resistance are left out.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

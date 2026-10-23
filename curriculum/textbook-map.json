@@ -3180,10 +3180,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "induced-electric-field"
+      ],
       "unit": "induction",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Induced Electric Fields (2026-10-23, Claude): E around a solenoid inside and outside (Example 13.8), circulation of E against −dΦ/dt for any path, nonconservative field, steady and alternating currents."
     },
     {
       "vol": 2,
@@ -5869,6 +5871,26 @@
       ],
       "title": "Faraday's and Lenz's Laws",
       "url": "demos/faraday.html"
+    },
+    {
+      "demo": "induced-electric-field",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "13.4",
+          "title": "Induced Electric Fields"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-23 (Claude). Lecture demo: field induced around a long solenoid (decaying, ramped, alternating or steady current), E against r (Example 13.8), a draggable closed path with the circulation of E added up and compared with −dΦ/dt, copper ring option; Blind.",
+      "handouts": [],
+      "title": "Induced Electric Fields",
+      "url": "demos/induced-electric-field.html"
     },
     {
       "demo": "eddy-currents",
