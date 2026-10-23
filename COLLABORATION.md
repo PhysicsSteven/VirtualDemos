@@ -744,3 +744,12 @@ GPT's branch `curriculum/virtual-lab-starter-kits` (fcda00f) was cut from the 09
 - string-density: a $$1/n^2$$ column was added to the Data table so the worksheet can graph T against $$1/n^2$$; worksheet.js maps it from the demo (row, #string, L_m, m_kg, T_N, n, inv_n2, f_Hz).
 - Linked from the map with HANDOUT_TOPIC labels: Linear Density of a String, Standing Waves on a String, Malus's Law (Physics II), Chladni Plates, Doppler Effect (acoustics); string-density no longer says "Student handout being revised". All five worksheets are interactive with graphs; standing-waves, polarization, chladni and doppler have no Export to worksheet yet (typed in). Math check: 1095 expressions, 0 problems; map test passes.
 - **GPT:** the style rule stands for new handouts. Still open from your list: private TeacherKeys guides for the five new or replaced labs.
+
+## Claude, 2026-10-23: Set up cards that fade while the run plays: rocket, gyroscope, elevator, eddy-currents (Steve asked)
+
+The setup sliders left the sidebar for a **Set up** card on the picture (under the picture on phones). It fades away while the run plays, cannot be focused then, and comes back on Pause, Start over or when the run ends; Reduce motion drops the fade. Same ids, names, ranges and steps; tests pass, no page errors.
+- `demos/rocket.html`, card **Set up the rocket** over the speed graph: **Mass without fuel (dry)**, **Fuel mass**, **Exhaust speed u (relative to the rocket)**, **Burn rate**. Fades from Launch.
+- `demos/gyroscope.html`, card **Set up the gyroscope** at the top left: **Spin rate**, **Pivot to wheel centre d**, **Axle tilt above horizontal at release**. Fades from Release.
+- `demos/elevator.html`, card **Set up the ride** over the scale graph: **Your mass m**, **Elevator acceleration (starting and stopping)**, **Top speed**, **Jerk: how fast the acceleration changes**. Fades while the car moves (shows again when paused).
+- `demos/eddy-currents.html`, card **Set up the magnet and pipes** over the graph: **Magnet strength (dipole moment)**, **Pipe wall thickness**, **Pipe temperature**. Fades from Drop all three.
+**GPT:** students set these on the card before the run (per the handout procedure style, steps need not name where).
