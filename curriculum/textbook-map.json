@@ -465,6 +465,21 @@
       "metadata": {},
       "units": [
         {
+          "id": "string-waves",
+          "title": "First lab: waves on a string",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "16.3"
+            },
+            {
+              "vol": 1,
+              "sec": "16.6"
+            }
+          ]
+        },
+        {
           "id": "charge-fields",
           "title": "Charge and electric fields",
           "requirement": "required",
@@ -3706,13 +3721,16 @@
       "chapter": 16,
       "chapter_title": "Waves",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "required",
       "status": "usable",
       "demos": [
-        "standing-waves"
-      ]
+        "standing-waves",
+        "string-density"
+      ],
+      "unit": "string-waves",
+      "note": "First PHYS 202 lab (Steve, 2026-10-23): Linear Density of a String, μ from resonances by sweeping f at one mass or adding masses at one f. Standing Waves stays the conceptual demo."
     },
     {
       "vol": 1,
@@ -3750,13 +3768,16 @@
       "chapter": 16,
       "chapter_title": "Waves",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "required",
       "status": "usable",
       "demos": [
-        "standing-waves"
-      ]
+        "standing-waves",
+        "string-density"
+      ],
+      "unit": "string-waves",
+      "note": "First PHYS 202 lab (Steve, 2026-10-23): Linear Density of a String, μ from resonances by sweeping f at one mass or adding masses at one f. Standing Waves stays the conceptual demo."
     },
     {
       "vol": 1,
@@ -6716,7 +6737,8 @@
     {
       "demo": "standing-waves",
       "course": [
-        "later"
+        "later",
+        "physics-2"
       ],
       "sections": [
         {
@@ -6751,6 +6773,30 @@
       "note": "Waves not in the supplied syllabi.",
       "title": "Standing Waves",
       "url": "demos/standing-waves.html"
+    },
+    {
+      "demo": "string-density",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "16.3",
+          "title": "Wave Speed on a Stretched String"
+        },
+        {
+          "vol": 1,
+          "sec": "16.6",
+          "title": "Standing Waves and Resonance"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "New 2026-10-23 (Claude), Steve's first PHYS 202 lab. A string from a vibrator over a pulley to a hanging mass (T = mg, g = 9.80 m/s²): Sweep frequency, fixed mass (f against n) or Add masses, fixed frequency (T against 1/n²); Strings A, B, C and an Unknown string; Record, fit with residuals, Export to worksheet. Exact steady state of the damped wave equation with a displacement driven end; resonances 0.60 Hz wide (chosen). Student handout pending (GPT).",
+      "title": "Linear Density of a String",
+      "url": "demos/string-density.html"
     },
     {
       "demo": "star-slice",

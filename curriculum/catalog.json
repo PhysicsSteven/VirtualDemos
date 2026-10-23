@@ -935,6 +935,17 @@
      ]
     },
     {
+     "demo": "string-density",
+     "title": "Linear Density of a String",
+     "desc": "Hang masses on a string driven by a vibrator, or sweep the driving frequency with a fixed mass, find the resonances and count the loops, then get the string's mass per metre from the slope of f against n or T against 1/n².",
+     "tags": [
+      "linear density",
+      "T = mg",
+      "standing waves",
+      "resonance"
+     ]
+    },
+    {
      "demo": "doppler",
      "title": "Doppler Effect and Shock Waves",
      "desc": "Drag a source and an observer through the wavefronts: hear an ambulance's pitch fall as it passes, break the sound barrier into a Mach cone and a sonic boom, then switch to light for redshift, blueshift and the transverse Doppler effect.",
