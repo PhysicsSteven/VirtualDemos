@@ -56,6 +56,26 @@ img { max-width: 100%; }
 .rail details.fold[open] > summary::after { content: "−"; }
 .rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+/* vd-handout: the handout and worksheet button at the top of the sidebar (tools/handout_button.py) */
+.handout, .handout-menu > summary { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; padding: 12px 14px; font-weight: 700; font-size: 0.98rem; color: var(--canvas); background: var(--accent); border-radius: 9px 9px 0 0; text-decoration: none; cursor: pointer; }
+.handout-menu { position: sticky; top: 0; z-index: 2; }
+.handout-menu > summary { position: static; list-style: none; }
+.handout-menu > summary::-webkit-details-marker { display: none; }
+.handout-menu > summary::after { content: "▾"; font-size: 0.9rem; }
+.handout-menu[open] > summary::after { content: "▴"; }
+.handout-menu ul { list-style: none; margin: 0; padding: 6px; display: flex; flex-direction: column; gap: 2px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.handout-menu li a { display: block; padding: 8px 10px; border-radius: 6px; color: var(--accent); font-weight: 600; text-decoration: none; }
+.handout-menu li a:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.handout:hover, .handout-menu > summary:hover { filter: brightness(1.08); }
+.handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
+.handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
+/* /vd-handout */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Standing Waves</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -252,7 +272,6 @@ body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, 
 .gen-lcd { background: var(--look-lcd-bg); color: var(--look-lcd-ink); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08); text-shadow: 0 0 6px color-mix(in srgb, var(--look-lcd-ink) 45%, transparent); }
 .knob { background: radial-gradient(circle at 36% 30%, #a3adb9, #5a6573 55%, #3a434f 80%, #2b323c);
   box-shadow: 0 0 0 3px #1c222b, 0 0 0 4px rgba(255, 255, 255, 0.06), 0 3px 6px rgba(0, 0, 0, 0.55); }
-.shelf { background: color-mix(in srgb, var(--surface) 92%, var(--bg)); }
 /* /vd-look */
 </style>
 <script id="vd-gear">
@@ -423,6 +442,7 @@ window.VDGear = (function () {
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/standing-waves.html" target="standing-waves-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -433,7 +453,7 @@ window.VDGear = (function () {
           <button type="button" data-p="closed" aria-pressed="false">Closed pipe: odd harmonics only</button>
           <button type="button" data-p="beats" aria-pressed="false">Beats</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <!-- two traveling waves -->
@@ -467,7 +487,9 @@ window.VDGear = (function () {
           <label><input type="checkbox" id="wEnv" checked>Envelope</label>
           <label><input type="checkbox" id="wMarks" checked>Nodes N, antinodes A</label>
         </div>
-        <p class="hint">y₁ = A₁ sin(k₁x − ω₁t), y₂ = A₂ sin(k₂x + ω₂t), both at v = 2 m/s. With A₁ ≠ A₂ the sum is a standing wave of amplitude 2·min(A) plus a traveling wave of amplitude |A₁ − A₂|. The standing wave ratio is the largest over the smallest amplitude along x, (A₁ + A₂)/|A₁ − A₂|.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">y₁ = A₁ sin(k₁x − ω₁t), y₂ = A₂ sin(k₂x + ω₂t), both at v = 2 m/s. With A₁ ≠ A₂ the sum is a standing wave of amplitude 2·min(A) plus a traveling wave of amplitude |A₁ − A₂|. The standing wave ratio is the largest over the smallest amplitude along x, (A₁ + A₂)/|A₁ − A₂|.</p>
+        </details>
       </section>
 
       <!-- string -->
@@ -502,14 +524,16 @@ window.VDGear = (function () {
             <div class="slider-head"><label for="pH">Pluck height h</label><output id="pHOut" class="mono" for="pH"></output></div>
             <input type="range" id="pH" min="-10" max="10" step="0.1" value="6">
           </div>
-          <p class="hint">Drag the string anywhere to pull it into a triangle, then let go. bₙ = 2hL² sin(nπd/L) / (n²π² d(L − d)).</p>
         </div>
         <div id="driveBlock" hidden>
           <div>
             <div class="slider-head"><label for="dQ">Quality factor Q of mode 1</label><output id="dQOut" class="mono" for="dQ"></output></div>
             <input type="range" id="dQ" min="10" max="300" step="1" value="30">
           </div>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag the string anywhere to pull it into a triangle, then let go. bₙ = 2hL² sin(nπd/L) / (n²π² d(L − d)).</p>
           <p class="hint">A driver at x = L/20 pushes with F₀ cos(2πft), F₀ = 0.25 N. Set the drive frequency f with the Coarse and Fine knobs of the function generator under the picture or its slider (0.1 Hz steps), or drag the red marker on the plot to sweep it.</p>
+        </details>
         </div>
         <dl class="readout">
           <div><dt>Wave speed v = √(T/μ)</dt><dd id="rsV">—</dd></div>
@@ -547,7 +571,9 @@ window.VDGear = (function () {
           <div><dt id="raLamLab">Wavelength</dt><dd id="raLam">—</dd></div>
         </dl>
         <table class="ftab" id="aTab"></table>
-        <p class="hint">v = 331.3 √(1 + T/273.15) m/s, 343 m/s at 20 °C. An open end is a pressure node (the air there stays at room pressure) and a displacement antinode; a closed end is a displacement node and a pressure antinode.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">v = 331.3 √(1 + T/273.15) m/s, 343 m/s at 20 °C. An open end is a pressure node (the air there stays at room pressure) and a displacement antinode; a closed end is a displacement node and a pressure antinode.</p>
+        </details>
       </section>
 
       <!-- beats -->
@@ -571,7 +597,9 @@ window.VDGear = (function () {
           <div class="big"><dt>Beat frequency |f₁ − f₂|</dt><dd id="rbFb">—</dd></div>
           <div class="big"><dt>Beat period</dt><dd id="rbTb">—</dd></div>
         </dl>
-        <p class="hint">y = A₁ cos(2πf₁t) + A₂ cos(2πf₂t). The loudness envelope is √(A₁² + A₂² + 2A₁A₂ cos 2π(f₂ − f₁)t), which repeats every 1/|f₁ − f₂|. The top two strips zoom in on the moment at the playhead.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">y = A₁ cos(2πf₁t) + A₂ cos(2πf₂t). The loudness envelope is √(A₁² + A₂² + 2A₁A₂ cos 2π(f₂ − f₁)t), which repeats every 1/|f₁ − f₂|. The top two strips zoom in on the moment at the playhead.</p>
+        </details>
       </section>
 
       <!-- acoustic levitation -->
@@ -622,9 +650,11 @@ window.VDGear = (function () {
           <div><dt>Beads held / fallen</dt><dd id="rlCount">—</dd></div>
         </dl>
         <p class="hint warn" id="lWarn" hidden></p>
-        <p class="hint">Click or tap in the gap to drop a bead; drag before letting go to place it. Drag the reflector (it snaps to resonance) and the pressure grip at the bottom of the amplitude plot.</p>
         <h3>Why the pressure nodes, if pressure pushes?</h3>
-        <p class="hint">The pressure swings up and down 40 000 times a second, so its push averages to zero. What is left is a small steady force that grows as the wave amplitude squared. A bead much stiffer than air is pushed away from where the pressure swings most, the pressure antinodes. A bead much denser than air is drawn to where the air rushes back and forth fastest, since fast flow lowers the mean pressure around it (a Bernoulli effect). In a standing wave the air moves fastest at the pressure nodes, so both effects push the bead there. Gravity then pulls it a little below the node, until the restoring force balances its weight.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Click or tap in the gap to drop a bead; drag before letting go to place it. Drag the reflector (it snaps to resonance) and the pressure grip at the bottom of the amplitude plot.</p>
+          <p class="hint">The pressure swings up and down 40 000 times a second, so its push averages to zero. What is left is a small steady force that grows as the wave amplitude squared. A bead much stiffer than air is pushed away from where the pressure swings most, the pressure antinodes. A bead much denser than air is drawn to where the air rushes back and forth fastest, since fast flow lowers the mean pressure around it (a Bernoulli effect). In a standing wave the air moves fastest at the pressure nodes, so both effects push the bead there. Gravity then pulls it a little below the node, until the restoring force balances its weight.</p>
+        </details>
         <p class="hint" id="lTheory"></p>
       </section>
 

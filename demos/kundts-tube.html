@@ -21,6 +21,12 @@ body { margin: 0; }
 .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
 .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
 /* /vd-qr */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Kundt's Tube</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -220,7 +226,6 @@ body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, 
 .gen-lcd { background: var(--look-lcd-bg); color: var(--look-lcd-ink); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08); text-shadow: 0 0 6px color-mix(in srgb, var(--look-lcd-ink) 45%, transparent); }
 .knob { background: radial-gradient(circle at 36% 30%, #a3adb9, #5a6573 55%, #3a434f 80%, #2b323c);
   box-shadow: 0 0 0 3px #1c222b, 0 0 0 4px rgba(255, 255, 255, 0.06), 0 3px 6px rgba(0, 0, 0, 0.55); }
-.shelf { background: color-mix(in srgb, var(--surface) 92%, var(--bg)); }
 /* /vd-look */
 </style>
 <script id="vd-gear">
@@ -408,8 +413,10 @@ window.VDGear = (function () {
           <button type="button" data-p="brass" aria-pressed="false">Brass rod, air</button>
           <button type="button" data-p="unknown" aria-pressed="false">Unknown rod</button>
         </div>
-        <p class="hint" id="presetHint"></p>
-        <p class="hint">The Set up card fades while the rod rings (point at it or tab into it to bring it back). Tune the plunger while the rod rings, for the loudest sound and the sharpest heaps.</p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The Set up card fades while the rod rings (point at it or tab into it to bring it back). Tune the plunger while the rod rings, for the loudest sound and the sharpest heaps.</p>
+        </details>
       </section>
 
       <section>
@@ -436,7 +443,9 @@ window.VDGear = (function () {
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Recorded heaps</caption><thead><tr><th>#</th><th>heap j</th><th>x (cm)</th><th>f (Hz)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Heap position x against heap number j, with a least squares line and its residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
-        <p class="hint">Put the pointer on the middle of a heap and record it; the heaps are numbered from the disc (you can correct j in the table). x against j is a straight line with slope d = λ/2 in the gas, so v_gas = 2 d f. The rod rings with a half wavelength L/n (n = 1 clamped at the middle, 2 at L/4), so v_rod = 2L f/n.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Put the pointer on the middle of a heap and record it; the heaps are numbered from the disc (you can correct j in the table). x against j is a straight line with slope d = λ/2 in the gas, so v_gas = 2 d f. The rod rings with a half wavelength L/n (n = 1 clamped at the middle, 2 at L/4), so v_rod = 2L f/n.</p>
+        </details>
       </section>
 
       <section>

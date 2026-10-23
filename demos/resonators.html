@@ -30,6 +30,26 @@ img { max-width: 100%; }
 .rail details.fold[open] > summary::after { content: "−"; }
 .rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+/* vd-handout: the handout and worksheet button at the top of the sidebar (tools/handout_button.py) */
+.handout, .handout-menu > summary { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; padding: 12px 14px; font-weight: 700; font-size: 0.98rem; color: var(--canvas); background: var(--accent); border-radius: 9px 9px 0 0; text-decoration: none; cursor: pointer; }
+.handout-menu { position: sticky; top: 0; z-index: 2; }
+.handout-menu > summary { position: static; list-style: none; }
+.handout-menu > summary::-webkit-details-marker { display: none; }
+.handout-menu > summary::after { content: "▾"; font-size: 0.9rem; }
+.handout-menu[open] > summary::after { content: "▴"; }
+.handout-menu ul { list-style: none; margin: 0; padding: 6px; display: flex; flex-direction: column; gap: 2px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.handout-menu li a { display: block; padding: 8px 10px; border-radius: 6px; color: var(--accent); font-weight: 600; text-decoration: none; }
+.handout-menu li a:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.handout:hover, .handout-menu > summary:hover { filter: brightness(1.08); }
+.handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
+.handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
+/* /vd-handout */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Resonators</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -256,7 +276,6 @@ body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, 
 .gen-lcd { background: var(--look-lcd-bg); color: var(--look-lcd-ink); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08); text-shadow: 0 0 6px color-mix(in srgb, var(--look-lcd-ink) 45%, transparent); }
 .knob { background: radial-gradient(circle at 36% 30%, #a3adb9, #5a6573 55%, #3a434f 80%, #2b323c);
   box-shadow: 0 0 0 3px #1c222b, 0 0 0 4px rgba(255, 255, 255, 0.06), 0 3px 6px rgba(0, 0, 0, 0.55); }
-.shelf { background: color-mix(in srgb, var(--surface) 92%, var(--bg)); }
 /* /vd-look */
 </style>
 <script id="vd-gear">
@@ -420,6 +439,7 @@ window.VDGear = (function () {
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/resonators.html" target="resonators-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Presets</h2>
         <div class="chips" id="presets">
@@ -430,7 +450,7 @@ window.VDGear = (function () {
           <button type="button" data-p="bottle" aria-pressed="false">Bottle, blow across it</button>
           <button type="button" data-p="fill" aria-pressed="false">Fill the bottle</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section data-show="pipe bottle">
@@ -443,7 +463,9 @@ window.VDGear = (function () {
           <div><dt>Speed of sound c</dt><dd id="rC">—</dd></div>
           <div><dt>Wavelength at the note</dt><dd id="rLam">—</dd></div>
         </dl>
-        <p class="hint">c = 331.3 m/s × √(1 + t/273.15 °C), the ideal gas result c = √(γRT/M) for dry air (γ = 1.400, M = 28.96 g/mol), which gives 331.3 m/s at 0 °C. Humidity raises c slightly and is left out.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">c = 331.3 m/s × √(1 + t/273.15 °C), the ideal gas result c = √(γRT/M) for dry air (γ = 1.400, M = 28.96 g/mol), which gives 331.3 m/s at 0 °C. Humidity raises c slightly and is left out.</p>
+        </details>
       </section>
 
       <!-- resonance tube -->
@@ -474,7 +496,9 @@ window.VDGear = (function () {
           <div><dt>End correction 0.61a</dt><dd id="rEnd">—</dd></div>
           <div id="rHalfBox"><dt>Spacing λ/2</dt><dd id="rHalf">—</dd></div>
         </dl>
-        <p class="hint">Slide the water down slowly from the top and listen: the sound swells each time the air column plus its end correction is an odd number of quarter wavelengths, L + ΔL = λ/4, 3λ/4, 5λ/4. Successive resonances are λ/2 apart.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Slide the water down slowly from the top and listen: the sound swells each time the air column plus its end correction is an odd number of quarter wavelengths, L + ΔL = λ/4, 3λ/4, 5λ/4. Successive resonances are λ/2 apart.</p>
+        </details>
       </section>
 
       <section data-show="tube">
@@ -487,7 +511,9 @@ window.VDGear = (function () {
         </div>
         <p class="hint" id="capStatus" role="status"></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>f Hz</th><th>k</th><th>L read</th><th>Δ to k−1</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Capture stores the water position you chose, as read on the scale, never the true resonance. Reading the meniscus adds a small simulated scatter (σ = 1.5 mm, fixed by the seed). k counts the resonances from the top at each frequency; edit it if you skipped one. You can edit L too.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Capture stores the water position you chose, as read on the scale, never the true resonance. Reading the meniscus adds a small simulated scatter (σ = 1.5 mm, fixed by the seed). k counts the resonances from the top at each frequency; edit it if you skipped one. You can edit L too.</p>
+        </details>
         <div class="plotbox"><canvas id="plot" role="img" aria-label="Plot of the resonance positions L against (2k − 1)/4f, with a least squares line: its slope is c and its intercept is minus the end correction."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <div class="key">
@@ -504,7 +530,9 @@ window.VDGear = (function () {
         <div class="toggles">
           <label><input type="checkbox" id="blind"> Blind: hide the computed response, the true resonances and the expected values</label>
         </div>
-        <p class="hint">The reading scatter is simulated and fixed by the seed, so a class sharing a seed gets the same numbers for the same positions. The trace on the level plot is what you have swept so far.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The reading scatter is simulated and fixed by the seed, so a class sharing a seed gets the same numbers for the same positions. The trace on the level plot is what you have swept so far.</p>
+        </details>
       </section>
 
       <!-- open and closed pipes -->
@@ -535,7 +563,9 @@ window.VDGear = (function () {
           <div class="wide"><dt>Open at both ends: f = n c / 2(L + 2ΔL)</dt><dd id="rPopen">—</dd></div>
           <div class="wide"><dt>Closed at one end: f = n c / 4(L + ΔL), n odd</dt><dd id="rPclosed">—</dd></div>
         </dl>
-        <p class="hint">An open end is a pressure node, placed ΔL ≈ 0.61a beyond the pipe (a = inner radius); a closed end is a displacement node. All modes plays modes 1 to 8 with amplitude 1/n: every harmonic for the open pipe, only odd ones for the closed pipe.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">An open end is a pressure node, placed ΔL ≈ 0.61a beyond the pipe (a = inner radius); a closed end is a displacement node. All modes plays modes 1 to 8 with amplitude 1/n: every harmonic for the open pipe, only odd ones for the closed pipe.</p>
+        </details>
       </section>
 
       <!-- strings -->
@@ -567,7 +597,9 @@ window.VDGear = (function () {
           <div><dt>f₁ = (1/2L)√(T/μ)</dt><dd id="rSf1">—</dd></div>
           <div><dt>Wave speed √(T/μ)</dt><dd id="rSv">—</dd></div>
         </dl>
-        <p class="hint">Typical values: guitar strings on a 648 mm scale at E4 and E2, a violin A on 328 mm, a cello C on 690 mm. Real strings vary by maker and gauge.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Typical values: guitar strings on a 648 mm scale at E4 and E2, a violin A on 328 mm, a cello C on 690 mm. Real strings vary by maker and gauge.</p>
+        </details>
       </section>
 
       <section data-show="string">
@@ -631,7 +663,9 @@ window.VDGear = (function () {
           <div><dt>L_eff = L + 1.43a</dt><dd id="rBL">—</dd></div>
           <div class="wide"><dt>A closed pipe as tall as the air space</dt><dd id="rBp">—</dd></div>
         </dl>
-        <p class="hint">The air in the neck is a mass and the air in the body is a spring: blowing across the mouth sets the neck air bouncing on it. Less air in the body makes a stiffer spring and a higher note. The pitch depends on the volume, not on how tall the air space is, so the pipe formula gets a bottle wrong.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The air in the neck is a mass and the air in the body is a spring: blowing across the mouth sets the neck air bouncing on it. Less air in the body makes a stiffer spring and a higher note. The pitch depends on the volume, not on how tall the air space is, so the pipe formula gets a bottle wrong.</p>
+        </details>
       </section>
 
       <section>

@@ -271,7 +271,6 @@ body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, 
 .gen-lcd { background: var(--look-lcd-bg); color: var(--look-lcd-ink); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08); text-shadow: 0 0 6px color-mix(in srgb, var(--look-lcd-ink) 45%, transparent); }
 .knob { background: radial-gradient(circle at 36% 30%, #a3adb9, #5a6573 55%, #3a434f 80%, #2b323c);
   box-shadow: 0 0 0 3px #1c222b, 0 0 0 4px rgba(255, 255, 255, 0.06), 0 3px 6px rgba(0, 0, 0, 0.55); }
-.shelf { background: color-mix(in srgb, var(--surface) 92%, var(--bg)); }
 /* /vd-look */
 </style>
 <script id="vd-gear">
@@ -462,7 +461,7 @@ window.VDGear = (function () {
           <button type="button" data-p="flow" aria-pressed="false">Doppler: blood flow</button>
           <button type="button" data-p="mystery" aria-pressed="false">Doppler: mystery flow</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -479,7 +478,9 @@ window.VDGear = (function () {
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Recorded readings</caption><thead><tr><th>#</th><th>Setup</th><th>Cursor</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Record stores the setup and the cursor: an echo time in μs, or a Doppler shift in Hz. Put the cursor on the start of an echo, or on the peak (or the top edge) of the spectrum.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Record stores the setup and the cursor: an echo time in μs, or a Doppler shift in Hz. Put the cursor on the start of an echo, or on the peak (or the top edge) of the spectrum.</p>
+        </details>
       </section>
 
       <section>
@@ -487,7 +488,9 @@ window.VDGear = (function () {
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the depths, speeds and predictions</span></label>
         <label class="check"><input type="checkbox" id="depthScale"><span>Show the scanner's depth for the cursor (it assumes c = 1540 m/s)</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">The Doppler shift here is the same effect as in the <a href="doppler.html">Doppler Effect demo</a>, applied twice: the moving blood hears a shifted frequency, then sends it back as a moving source.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The Doppler shift here is the same effect as in the <a href="doppler.html">Doppler Effect demo</a>, applied twice: the moving blood hears a shifted frequency, then sends it back as a moving source.</p>
+        </details>
         <details class="more"><summary>More about this</summary><p class="hint" id="modelHint"></p></details>
       </section>
     </aside>

@@ -213,7 +213,6 @@ body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, 
 .gen-lcd { background: var(--look-lcd-bg); color: var(--look-lcd-ink); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08); text-shadow: 0 0 6px color-mix(in srgb, var(--look-lcd-ink) 45%, transparent); }
 .knob { background: radial-gradient(circle at 36% 30%, #a3adb9, #5a6573 55%, #3a434f 80%, #2b323c);
   box-shadow: 0 0 0 3px #1c222b, 0 0 0 4px rgba(255, 255, 255, 0.06), 0 3px 6px rgba(0, 0, 0, 0.55); }
-.shelf { background: color-mix(in srgb, var(--surface) 92%, var(--bg)); }
 /* /vd-look */
 </style>
 <script id="vd-gear">
@@ -379,13 +378,15 @@ window.VDGear = (function () {
           <button type="button" data-p="background" aria-pressed="false">Background noise</button>
           <button type="button" data-p="mystery" aria-pressed="false">Mystery source</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
         <h2>Sound level meter</h2>
         <dl class="readout" id="out"></dl>
-        <p class="formula">I = P/(4πr²) · β = 10 log(I/I₀) · I = Δp²/(2ρv)</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">I = P/(4πr²) · β = 10 log(I/I₀) · I = Δp²/(2ρv)</p>
+        </details>
       </section>
 
       <section>
@@ -399,14 +400,18 @@ window.VDGear = (function () {
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Recorded readings</caption><thead><tr><th>#</th><th>r (m)</th><th>Sources</th><th>β (dB)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="The recorded levels against distance, with r doubling at each grid line, a least squares line and its residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
-        <p class="hint">Each reading stores r, the sources and the meter's level. The graph puts r on a doubling scale (log₂ r), so the inverse square law is a straight line; its slope is the change in level per doubling. It uses the readings taken with the sources as they are set now.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Each reading stores r, the sources and the meter's level. The graph puts r on a doubling scale (log₂ r), so the inverse square law is a straight line; its slope is the change in level per doubling. It uses the readings taken with the sources as they are set now.</p>
+        </details>
       </section>
 
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the intensities, each source's own level and the pressure amplitude; the meter stays. The Mystery source always hides its power.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Blind hides the intensities, each source's own level and the pressure amplitude; the meter stays. The Mystery source always hides its power.</p>
+        </details>
         <details class="fold">
           <summary>Model</summary>
           <div class="foldbody">
@@ -480,18 +485,30 @@ window.VDGear = (function () {
     if (!T || !W) return;
     const p = ps(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     const gy = H - 70 * p, sky = ctx.createLinearGradient(0, 0, 0, gy); sky.addColorStop(0, T.sky); sky.addColorStop(1, T.sky2); ctx.fillStyle = sky; ctx.fillRect(0, 0, W, gy);
-    ctx.fillStyle = T.grass; ctx.fillRect(0, gy, W, H - gy); ctx.fillStyle = T.grassDark; ctx.fillRect(0, gy, W, 2 * p);
+    const Gr = window.VDGear, dk = Gr.dark();
+    /* distant tree line and the field, lighter towards the horizon */
+    ctx.fillStyle = dk ? '#16211a' : '#c9d9c2'; ctx.beginPath(); ctx.moveTo(0, gy); for (let x = 0; x <= W + 20; x += 18 * p) ctx.lineTo(x, gy - (10 + 7 * Math.sin(x * 0.021) + 5 * Math.sin(x * 0.057 + 1)) * p); ctx.lineTo(W, gy); ctx.closePath(); ctx.fill();
+    let gg = ctx.createLinearGradient(0, gy, 0, H); gg.addColorStop(0, Gr.mix(T.grass, dk ? '#000000' : '#ffffff', 0.18)); gg.addColorStop(1, Gr.mix(T.grass, '#000000', 0.12));
+    ctx.fillStyle = gg; ctx.fillRect(0, gy, W, H - gy); ctx.fillStyle = T.grassDark; ctx.fillRect(0, gy, W, 1.5 * p);
+    ctx.save(); ctx.globalAlpha = dk ? 0.18 : 0.22; ctx.strokeStyle = T.grassDark; ctx.lineWidth = 1;
+    for (let x = 3; x < W; x += 7 * p) { const h = (2 + ((x * 7.13) % 4)) * p, y = gy + 4 * p + ((x * 13.7) % (H - gy - 8 * p)); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + 1 * p, y - h); ctx.stroke(); }
+    ctx.restore();
     /* the tape: 0 at the speaker, out to the chosen length */
     const x0 = 70 * p, x1 = W - 40 * p, sc = (x1 - x0) / S.view, X = (r) => x0 + r * sc, ty = gy + 14 * p;
     geo = { X, sc, x0, gy };
-    ctx.fillStyle = T.tape; ctx.fillRect(x0, ty, x1 - x0, 16 * p); ctx.strokeStyle = T.tapeEdge; ctx.lineWidth = 1; ctx.strokeRect(x0 + 0.5, ty + 0.5, x1 - x0, 16 * p);
+    Gr.shadow(ctx, (x0 + x1) / 2, ty + 17 * p, (x1 - x0) * 0.5, 3 * p, 0.6);
+    let tg = ctx.createLinearGradient(0, ty, 0, ty + 16 * p); tg.addColorStop(0, Gr.mix(T.tape, '#ffffff', 0.25)); tg.addColorStop(1, T.tape);
+    ctx.fillStyle = tg; ctx.fillRect(x0, ty, x1 - x0, 16 * p); ctx.strokeStyle = T.tapeEdge; ctx.lineWidth = 1; ctx.strokeRect(x0 + 0.5, ty + 0.5, x1 - x0, 16 * p);
+    /* the tape's case at the zero end */
+    Gr.box(ctx, x0 - 26 * p, ty - 6 * p, 28 * p, 28 * p, { r: 8 * p, color: '#c23f2c', shadow: false }); Gr.screw(ctx, x0 - 12 * p, ty + 8 * p, 3 * p);
     const minor = S.view <= 4 ? 0.1 : 1, major = S.view <= 4 ? 0.5 : 4;
     ctx.fillStyle = T.lcdInk; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (let i = 0; i <= Math.round(S.view / minor); i++) { const r = i * minor, x = X(r), big = Math.abs(r / major - Math.round(r / major)) < 1e-9;
       ctx.strokeStyle = T.tapeEdge; ctx.beginPath(); ctx.moveTo(x, ty); ctx.lineTo(x, ty + (big ? 9 : 4) * p); ctx.stroke(); if (big) ctx.fillText(`${+r.toFixed(1)}`, x, ty + 22 * p); }
     ctx.fillText('m', x1 + 14 * p, ty + 22 * p);
     /* wavefronts: arcs spreading from the speaker, fading as the energy spreads over a bigger sphere (decoration; spacing not to scale) */
-    const sx = X(0), sy = gy - 120 * p, gap = 46 * p, ph = reduce ? 0 : (S.t * 40 * p) % gap;
+    const z = p * Math.max(1, Math.min(1.9, (gy - 40 * p) / (260 * p)));   /* the speakers and meter grow to fill a tall picture */
+    const sx = X(0), sy = gy - 120 * z, gap = 46 * p, ph = reduce ? 0 : (S.t * 40 * p) % gap;
     ctx.save(); ctx.beginPath(); ctx.rect(sx, 0, W - sx, gy); ctx.clip(); ctx.strokeStyle = T.wave; ctx.lineWidth = 2 * p;
     for (let k = 0; k < 40; k++) { const rad = 14 * p + k * gap + ph, a = Math.min(0.55, 0.55 * (40 * p / rad) ** 2) * (S.mystery ? 1 : Math.max(0.35, Math.min(1.2, (Math.log10(pA()) + 6) / 5)));
       if (a < 0.02) break; ctx.globalAlpha = a; ctx.beginPath(); ctx.arc(sx, sy, rad, -Math.PI / 2, Math.PI / 2); ctx.stroke(); }
@@ -501,26 +518,40 @@ window.VDGear = (function () {
     if (ly > 60 * p) { ctx.fillStyle = T.fit; ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`sphere area 4πr² = ${f(4 * Math.PI * S.r * S.r, S.r < 3 ? 2 : 0)} m²`, Math.min(lx + 6 * p, W - 230 * p), ly - 4 * p); }
     ctx.restore(); ctx.globalAlpha = 1;
     /* speaker A on its stand, and B beside it (drawn behind) */
-    const spk = (x, y, col, lab) => { ctx.fillStyle = T.meter; ctx.fillRect(x - 2 * p, y + 26 * p, 4 * p, gy - y - 26 * p); ctx.fillRect(x - 16 * p, gy - 3 * p, 32 * p, 3 * p);
-      ctx.fillStyle = col; ctx.fillRect(x - 22 * p, y - 26 * p, 20 * p, 52 * p); ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(x - 12 * p, y - 10 * p, 6 * p, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(x - 12 * p, y + 10 * p, 8 * p, 0, 7); ctx.fill();
-      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x - 12 * p, y + 10 * p, 4 * p, 0, 7); ctx.fill(); ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(lab, x - 12 * p, y - 30 * p); };
-    if (S.bOn) spk(sx - 26 * p, sy + 4 * p, T.spkB, 'B');
+    /* a loudspeaker on a tripod stand: pole, three legs, a cabinet with a tweeter over a woofer, facing the meter */
+    const spk = (x, y, col, lab) => {
+      Gr.shadow(ctx, x, gy, 22 * z, 4 * z, 0.8);
+      ctx.strokeStyle = dk ? '#7d8793' : '#2b323b'; ctx.lineWidth = 2.2 * z; ctx.lineCap = 'round';
+      for (const dx of [-18, 0, 18]) { ctx.beginPath(); ctx.moveTo(x - 12 * z, gy - 24 * z); ctx.lineTo(x - 12 * z + dx * z, gy); ctx.stroke(); }
+      Gr.rod(ctx, x - 12 * z, y + 26 * z, x - 12 * z, gy - 20 * z, 2.2 * z, { color: dk ? '#8a949f' : '#5a6370' });
+      const cw = 24 * z, ch = 54 * z, cx = x - 24 * z, cy = y - 27 * z;
+      Gr.box(ctx, cx, cy, cw, ch, { r: 3 * z, color: col, shadow: false });
+      const cone = (yy, r) => { const g = ctx.createRadialGradient(cx + cw / 2 - r * 0.2, yy - r * 0.25, r * 0.1, cx + cw / 2, yy, r); g.addColorStop(0, '#6a7280'); g.addColorStop(0.6, '#262b33'); g.addColorStop(1, '#101317');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx + cw / 2, yy, r, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(255,255,255,0.15)'; ctx.lineWidth = 1; ctx.stroke(); };
+      cone(y - 12 * z, 5 * z); cone(y + 10 * z, 9 * z);
+      Gr.label(ctx, lab, cx + cw / 2, cy - 9 * z, { a: 'center', s: 11 * p, w: 700, c: T.ink, alpha: 0.85 }); };
+    if (S.bOn) spk(sx - 26 * z, sy + 4 * z, T.spkB, 'B');
     spk(sx, sy, T.spk, S.mystery ? 'A ?' : 'A');
     /* the meter on its tripod at r */
     const mx = X(S.r), my = sy;
-    ctx.strokeStyle = T.meter; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(mx, my + 40 * p); ctx.lineTo(mx - 14 * p, gy); ctx.moveTo(mx, my + 40 * p); ctx.lineTo(mx + 14 * p, gy); ctx.moveTo(mx, my + 40 * p); ctx.lineTo(mx, gy); ctx.stroke();
-    ctx.fillStyle = T.meter; ctx.fillRect(mx - 2 * p, my - 4 * p, 4 * p, 44 * p); ctx.beginPath(); ctx.arc(mx, my - 6 * p, 6 * p, 0, 7); ctx.fill();   /* microphone tip at the height of the speakers */
-    const bw = 104 * p, bx = Math.min(W - bw - 6 * p, Math.max(6 * p, mx - bw / 2)), by = my - (bx < sx + 6 * p ? 112 : 78) * p;   /* lifted clear of the speakers when the meter is close to them */
-    ctx.fillStyle = T.meter; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, bw, 54 * p, 6 * p) : ctx.rect(bx, by, bw, 54 * p); ctx.fill();
-    ctx.fillStyle = T.lcd; ctx.fillRect(bx + 6 * p, by + 6 * p, bw - 12 * p, 30 * p);
-    ctx.fillStyle = T.lcdInk; ctx.font = `700 ${18 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(`${f(reading(), 1)}`, bx + bw - 30 * p, by + 21 * p);
-    ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.fillText('dB', bx + bw - 27 * p, by + 23 * p);
-    ctx.fillStyle = T.lcd; ctx.font = `${9 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('SOUND LEVEL METER', bx + bw / 2, by + 45 * p);
+    Gr.shadow(ctx, mx, gy, 20 * z, 4 * z, 0.8);
+    ctx.strokeStyle = dk ? '#7d8793' : '#2b323b'; ctx.lineWidth = 2 * z; ctx.lineCap = 'round';
+    for (const dx of [-15, 0, 15]) { ctx.beginPath(); ctx.moveTo(mx, my + 40 * z); ctx.lineTo(mx + dx * z, gy); ctx.stroke(); }
+    Gr.rod(ctx, mx, my + 2 * z, mx, my + 42 * z, 2.2 * z, { color: dk ? '#8a949f' : '#5a6370' });
+    /* the meter's body with its microphone on top, the windscreen at the height of the speakers */
+    Gr.box(ctx, mx - 7 * z, my - 2 * z, 14 * z, 22 * z, { r: 3 * z, color: '#39424e', shadow: false });
+    let wg = ctx.createRadialGradient(mx - 2 * z, my - 9 * z, 1 * z, mx, my - 7 * z, 7 * z); wg.addColorStop(0, dk ? '#5d6773' : '#5a6574'); wg.addColorStop(1, dk ? '#262c34' : '#20262e');
+    ctx.fillStyle = wg; ctx.beginPath(); ctx.arc(mx, my - 7 * z, 7 * z, 0, 7); ctx.fill();
+    const bw = 108 * z, bh = 58 * z, bx = Math.min(W - bw - 6 * z, Math.max(6 * z, mx - bw / 2)), by = my - (bx < sx + 6 * z ? 118 : 84) * z;   /* lifted clear of the speakers when the meter is close to them */
+    ctx.strokeStyle = dk ? 'rgba(200,210,220,0.25)' : 'rgba(40,50,60,0.25)'; ctx.lineWidth = 1; ctx.setLineDash([2 * z, 3 * z]); ctx.beginPath(); ctx.moveTo(mx, my - 14 * z); ctx.lineTo(mx, by + bh); ctx.stroke(); ctx.setLineDash([]);
+    Gr.box(ctx, bx, by, bw, bh, { r: 7 * z, color: '#34404c' });
+    Gr.lcd(ctx, bx + 7 * z, by + 7 * z, bw - 14 * z, 30 * z, `${f(reading(), 1)} dB`);
+    Gr.plate(ctx, 'sound level meter', bx + bw / 2, by + 48 * z, { s: 7.5 * p });
     /* r marker on the tape */
     ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(mx, gy + 2 * p); ctx.lineTo(mx, ty + 16 * p); ctx.stroke();
     ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(`r = ${f(S.r, 1)} m`, 14 * p, 14 * p);
-    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.fillText(`A: ${S.mystery ? 'mystery' : pw(pA())}${S.bOn ? `   B: ${pw(pB())}` : ''}${S.bg ? `   background ${S.bg} dB` : ''}`, 14 * p, 32 * p);
+    ctx.fillStyle = T.muted; ctx.globalAlpha = 0.85; ctx.font = `${11 * p}px ${T.mono}`; ctx.fillText(`A: ${S.mystery ? 'mystery' : pw(pA())}${S.bOn ? `   B: ${pw(pB())}` : ''}${S.bg ? `   background ${S.bg} dB` : ''}`, 14 * p, 32 * p); ctx.globalAlpha = 1;
   }
   function readouts() {
     const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, L = reading();

@@ -21,6 +21,12 @@ body { margin: 0; }
 .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
 .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
 /* /vd-qr */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Sound Waves and the Speed of Sound</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -220,7 +226,6 @@ body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, 
 .gen-lcd { background: var(--look-lcd-bg); color: var(--look-lcd-ink); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08); text-shadow: 0 0 6px color-mix(in srgb, var(--look-lcd-ink) 45%, transparent); }
 .knob { background: radial-gradient(circle at 36% 30%, #a3adb9, #5a6573 55%, #3a434f 80%, #2b323c);
   box-shadow: 0 0 0 3px #1c222b, 0 0 0 4px rgba(255, 255, 255, 0.06), 0 3px 6px rgba(0, 0, 0, 0.55); }
-.shelf { background: color-mix(in srgb, var(--surface) 92%, var(--bg)); }
 /* /vd-look */
 </style>
 <script id="vd-gear">
@@ -413,8 +418,10 @@ window.VDGear = (function () {
           <button type="button" data-p="cold" aria-pressed="false">A cold day, −10 °C</button>
           <button type="button" data-p="unknown" aria-pressed="false">Unknown gas</button>
         </div>
-        <p class="hint" id="presetHint"></p>
-        <p class="hint">In the time of flight view the Set up card fades while the clap travels and comes back when it has been timed (point at it or tab into it to bring it back sooner). You can also drag the microphones along the bench.</p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">In the time of flight view the Set up card fades while the clap travels and comes back when it has been timed (point at it or tab into it to bring it back sooner). You can also drag the microphones along the bench.</p>
+        </details>
       </section>
 
       <section>
@@ -699,8 +706,9 @@ window.VDGear = (function () {
     /* displacement drawn so the largest swing is 0.6 of λ/2π on screen (so the dots never cross), but at most 6% of the tube; the scale X is shown */
     const lamPx = Wv.lambda * ppm, aPx = Math.min(0.6 * lamPx / TAU, 0.06 * (x1 - x0)), X = aPx / (S.s * 1e-6 * ppm);
     /* tube */
-    ctx.fillStyle = T.relief; ctx.fillRect(x0 - 6 * p, ty - 6 * p, x1 - x0 + 12 * p, tubeH + 12 * p);
-    ctx.fillStyle = T.canvas; ctx.fillRect(x0, ty, x1 - x0, tubeH);
+    const Gr = window.VDGear, dk = Gr.dark();
+    Gr.shadow(ctx, (x0 + x1) / 2, ty + tubeH + 8 * p, (x1 - x0) * 0.55, 6 * p, 0.7);
+    ctx.fillStyle = dk ? '#121820' : '#fbfcfd'; ctx.beginPath(); ctx.roundRect(x0, ty, x1 - x0, tubeH, 4 * p); ctx.fill();
     /* pressure shading: darker where the air is squeezed */
     const N = Math.max(60, Math.round((x1 - x0) / 3));
     for (let i = 0; i < N; i++) { const xm = SPAN * (i + 0.5) / N, q = pressure(Wv, xm, t) / Wv.dpMax; ctx.fillStyle = q > 0 ? T.pos : T.neg; ctx.globalAlpha = 0.16 * Math.abs(q); ctx.fillRect(x0 + (x1 - x0) * i / N, ty, (x1 - x0) / N + 1, tubeH); }
@@ -712,16 +720,22 @@ window.VDGear = (function () {
     for (const xr of [0.25, 0.75, 1.25, 1.75]) { const xs = x0 + xr * ppm + displacement(Wv, S.s * 1e-6, xr, t) * X * ppm, yy = ty + tubeH / 2;
       ctx.strokeStyle = T.muted; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(x0 + xr * ppm, ty); ctx.lineTo(x0 + xr * ppm, ty + tubeH); ctx.stroke(); ctx.setLineDash([]);
       ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(xs, yy, 4.5 * p, 0, 7); ctx.fill(); }
-    /* source: a speaker at the left end */
-    ctx.fillStyle = T.box; ctx.fillRect(x0 - 22 * p, ty + tubeH * 0.2, 16 * p, tubeH * 0.6);
+    /* the tube's glass: a highlight along the top, shade along the bottom, a rim at each end */
+    let gl = ctx.createLinearGradient(0, ty, 0, ty + tubeH);
+    gl.addColorStop(0, dk ? 'rgba(200,220,240,0.20)' : 'rgba(255,255,255,0.85)'); gl.addColorStop(0.12, 'rgba(255,255,255,0)'); gl.addColorStop(0.8, 'rgba(0,0,0,0)'); gl.addColorStop(1, dk ? 'rgba(0,0,0,0.45)' : 'rgba(40,60,80,0.16)');
+    ctx.fillStyle = gl; ctx.fillRect(x0, ty, x1 - x0, tubeH);
+    ctx.strokeStyle = dk ? 'rgba(170,190,210,0.45)' : 'rgba(70,90,110,0.45)'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.roundRect(x0, ty, x1 - x0, tubeH, 4 * p); ctx.stroke();
+    ctx.fillStyle = dk ? 'rgba(220,235,250,0.10)' : 'rgba(255,255,255,0.7)'; ctx.fillRect(x0 + 6 * p, ty + 3 * p, x1 - x0 - 12 * p, 2 * p);
+    /* source: a speaker driver clamped to the left end */
+    Gr.speaker(ctx, x0 - 30 * p, ty + tubeH * 0.1, 26 * p, tubeH * 0.8, { color: '#2e353f' });
     /* scale under the tube, 0 to 2 m */
-    const ry = ty + tubeH + 10 * p; ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, ry); ctx.lineTo(x1, ry); ctx.stroke();
-    for (let i = 0; i <= 20; i++) { const x = x0 + i / 10 * ppm; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + (i % 5 ? 4 : 8) * p); ctx.stroke(); if (i % 5 === 0) txt(`${i / 10} m`, x, ry + 15 * p, { a: i === 20 ? 'right' : 'center', s: 9, m: 1, c: T.muted }); }
-    txt(`displacement drawn ×${sig(X, 2)}, motion slowed to one cycle in 2 s`, x1, narrow ? Hh - 26 * p : Hh - 12 * p, { a: 'right', s: 9, c: T.muted });
+    const ry = ty + tubeH + 12 * p; ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, ry); ctx.lineTo(x1, ry); ctx.stroke();
+    for (let i = 0; i <= 20; i++) { const x = x0 + i / 10 * ppm; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + (i % 5 ? 4 : 8) * p); ctx.stroke(); if (i % 5 === 0) txt(`${i / 10} m`, x, ry + 15 * p, { a: i === 20 ? 'right' : 'center', s: 9, m: 1, c: T.muted }); } ctx.globalAlpha = 1;
+    Gr.label(ctx, `displacement drawn ×${sig(X, 2)}, motion slowed to one cycle in 2 s`, x1, narrow ? Hh - 26 * p : Hh - 12 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
     /* graphs of s and Δp along the tube at this instant */
     const gTop = ry + 30 * p, gH = Math.max(50 * p, (Hh - gTop - (narrow ? 48 : 34) * p) / 2 - 10 * p);
     const graph = (y0, label, unit, fn, col) => {
-      const mid = y0 + gH / 2; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(x0 + 0.5, y0 + 0.5, x1 - x0, gH);
+      const mid = y0 + gH / 2; ctx.fillStyle = dk ? 'rgba(255,255,255,0.02)' : 'rgba(255,255,255,0.7)'; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x0 + 0.5, y0 + 0.5, x1 - x0, gH, 6 * p); ctx.fill(); ctx.stroke();
       ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(x0, mid); ctx.lineTo(x1, mid); ctx.stroke();
       ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let i = 0; i <= N; i++) { const xm = SPAN * i / N, y = mid - fn(xm) * gH * 0.42; i ? ctx.lineTo(x0 + xm * ppm, y) : ctx.moveTo(x0 + xm * ppm, y); } ctx.stroke();
       txt(label, x0 + 6 * p, y0 + 10 * p, { s: 10, b: 1, c: col }); txt(unit, x1 - 6 * p, y0 + 10 * p, { s: 9, a: 'right', m: 1, c: T.muted });
@@ -730,31 +744,41 @@ window.VDGear = (function () {
     graph(gTop + gH + 16 * p, 'pressure change Δp', S.gas === 'unknown' ? '' : `±${sig(Wv.dpMax, 3)} Pa`, (xm) => pressure(Wv, xm, t) / Wv.dpMax, T.pos);
     /* mark one compression on both graphs: Δp largest, s zero there */
     const kx = (ph + PI / 2) / Wv.k; for (let xm = ((kx % Wv.lambda) + Wv.lambda) % Wv.lambda; xm < SPAN; xm += Wv.lambda) { const x = x0 + xm * ppm; ctx.strokeStyle = T.pos; ctx.globalAlpha = 0.5; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(x, ty); ctx.lineTo(x, gTop + 2 * gH + 16 * p); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
-    txt('dashed: compressions, where Δp is largest and s = 0', x0, Hh - 12 * p, { s: 9, c: T.muted });
+    Gr.label(ctx, 'dashed: compressions, where Δp is largest and s = 0', x0, Hh - 12 * p, { s: 9 * p, alpha: 0.75 });
   }
   function drawTof() {
     const p = ps(), g = gasNow(), v = soundSpeed(g, S.tC), c = S.clap || S.last;
     const x0 = 46 * p, x1 = W - 20 * p, ppm = (x1 - x0) / 4.0, benchY = Math.max(150 * p, Hh * 0.34);
     const xA = x0 + S.xA * ppm, xB = xA + S.d * ppm; Object.assign(GEO, { x0, ppm, xA, xB });
     /* bench and its scale, 0 at the clap */
-    ctx.fillStyle = T.wood; ctx.fillRect(x0 - 30 * p, benchY, x1 - x0 + 40 * p, 14 * p); ctx.fillStyle = T.woodLine; ctx.fillRect(x0 - 30 * p, benchY + 14 * p, x1 - x0 + 40 * p, 3 * p);
+    const Gr = window.VDGear, dk = Gr.dark();
+    Gr.bench(ctx, x0 - 30 * p, benchY, x1 - x0 + 40 * p, 18 * p, 16 * p);
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1; for (let i = 0; i <= 40; i++) { const x = x0 + i / 10 * ppm; ctx.beginPath(); ctx.moveTo(x, benchY + 20 * p); ctx.lineTo(x, benchY + (i % 5 ? 24 : 28) * p); ctx.stroke(); if (i % 5 === 0 && (W > 620 || i % 10 === 0)) txt(`${i / 10} m`, x, benchY + 36 * p, { a: 'center', s: 9, m: 1, c: T.muted }); }
     /* the clap: two hands at x = 0 */
-    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.ellipse(x0 - 6 * p, benchY - 40 * p, 6 * p, 16 * p, -0.25, 0, 7); ctx.fill(); ctx.beginPath(); ctx.ellipse(x0 + 6 * p, benchY - 40 * p, 6 * p, 16 * p, 0.25, 0, 7); ctx.fill();
-    txt('clap', x0, benchY - 66 * p, { a: 'center', s: 10, b: 1 });
+    for (const sd of [-1, 1]) { const hx = x0 + sd * 6 * p, hy = benchY - 40 * p, hg = ctx.createLinearGradient(hx - 6 * p, 0, hx + 6 * p, 0);
+      hg.addColorStop(0, '#b98a68'); hg.addColorStop(0.5, '#e3b998'); hg.addColorStop(1, '#a87a59'); ctx.fillStyle = hg; ctx.beginPath(); ctx.ellipse(hx, hy, 6 * p, 16 * p, sd * 0.25, 0, 7); ctx.fill();
+      ctx.strokeStyle = 'rgba(80,45,25,0.35)'; ctx.lineWidth = 1; ctx.stroke(); }
+    Gr.label(ctx, 'clap', x0, benchY - 66 * p, { a: 'center', s: 10 * p, w: 700, c: T.ink, alpha: 0.8 });
     /* the sound front, slowed */
     if (S.clap) { const r = S.clap.t * S.clap.v * ppm; ctx.strokeStyle = T.pos; ctx.lineWidth = 2.5 * p; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.arc(x0, benchY - 40 * p, Math.max(1, r), -1.2, 1.2); ctx.stroke(); ctx.globalAlpha = 1; }
     /* microphones on stands */
-    for (const [x, name] of [[xA, 'A'], [xB, 'B']]) { ctx.fillStyle = T.metal; ctx.fillRect(x - 1.5 * p, benchY - 34 * p, 3 * p, 34 * p); ctx.fillStyle = T.box; ctx.beginPath(); ctx.roundRect(x - 7 * p, benchY - 52 * p, 14 * p, 22 * p, 6 * p); ctx.fill(); txt(name, x, benchY - 62 * p, { a: 'center', s: 11, b: 1 }); }
+    for (const [x, name] of [[xA, 'A'], [xB, 'B']]) {
+      Gr.shadow(ctx, x, benchY - 9 * p, 14 * p, 3 * p); Gr.box(ctx, x - 11 * p, benchY - 13 * p, 22 * p, 5 * p, { r: 2 * p, color: '#39424e', shadow: false });
+      Gr.rod(ctx, x, benchY - 32 * p, x, benchY - 12 * p, 1.6 * p);
+      const mg = ctx.createLinearGradient(x - 6 * p, 0, x + 6 * p, 0); mg.addColorStop(0, '#2a3038'); mg.addColorStop(0.4, '#6c7582'); mg.addColorStop(1, '#1d2228');
+      ctx.fillStyle = mg; ctx.beginPath(); ctx.roundRect(x - 6 * p, benchY - 54 * p, 12 * p, 24 * p, 6 * p); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.lineWidth = 1; for (let k = 0; k < 4; k++) { ctx.beginPath(); ctx.moveTo(x - 4 * p, benchY - 50 * p + k * 3 * p); ctx.lineTo(x + 4 * p, benchY - 50 * p + k * 3 * p); ctx.stroke(); }
+      Gr.label(ctx, name, x, benchY - 64 * p, { a: 'center', s: 11 * p, w: 700, c: T.ink, alpha: 0.85 }); }
     for (const [id, x] of [['micA', xA], ['micB', xB]]) Object.assign($(id).style, { left: `${x}px`, top: `${benchY - 56 * p}px`, height: `${56 * p}px` });
     const yy = benchY - 74 * p; ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(xA, yy); ctx.lineTo(xB, yy); ctx.stroke(); for (const x of [xA, xB]) { ctx.beginPath(); ctx.moveTo(x, yy - 4 * p); ctx.lineTo(x, yy + 4 * p); ctx.stroke(); }
     txt(`d = ${S.d.toFixed(2)} m`, (xA + xB) / 2, yy - 9 * p, { a: 'center', s: 10, b: 1, c: T.accent });
-    if (S.clap) txt(`sound front slowed ×${Math.round(1 / SLOWNESS())}`, x1, 64 * p, { a: 'right', s: 9, c: T.muted });
+    if (S.clap) Gr.label(ctx, `sound front slowed ×${Math.round(1 / SLOWNESS())}`, x1, 64 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
     /* the recorder: both channels from the clap to just after B, filled in up to the time reached */
     const sy = benchY + 56 * p, sh = Hh - sy - 16 * p, chH = (sh - 30 * p) / 2;
-    ctx.fillStyle = T.box; ctx.beginPath(); ctx.roundRect(x0 - 30 * p, sy, x1 - x0 + 40 * p, sh, 8 * p); ctx.fill();
+    Gr.box(ctx, x0 - 30 * p, sy, x1 - x0 + 40 * p, sh, { r: 9 * p, color: '#323c48' });
+    ctx.fillStyle = '#081109'; ctx.beginPath(); ctx.roundRect(x0 - 22 * p, sy + 22 * p, x1 - x0 + 24 * p, sh - 30 * p, 4 * p); ctx.fill();
     const sx0 = x0 - 18 * p, sx1 = x1 + 2 * p;
-    txt(`Recorder, ${FS / 1000} kHz`, sx0, sy + 12 * p, { s: 10, b: 1, c: '#c9d0d9' });
+    Gr.plate(ctx, `Recorder, ${FS / 1000} kHz`, sx0 + 52 * p, sy + 12 * p, { s: 8 * p });
     if (!c) { txt('Clap to record both microphones', (sx0 + sx1) / 2, sy + sh / 2, { a: 'center', s: 12, c: '#c9d0d9' }); return; }
     const tEnd = c.tEnd, tNow = c.t, PX = (tt) => sx0 + (sx1 - sx0) * tt / tEnd;
     for (const [k, r, n, lab] of [[0, c.xA, c.R.nA, 'A'], [1, c.xA + c.d, c.R.nB, 'B']]) {
@@ -775,7 +799,7 @@ window.VDGear = (function () {
   const SLOWNESS = () => { const c = S.clap || S.last, v = c ? c.v : soundSpeed(gasNow(), S.tC), xB = c ? c.xA + c.d : S.xA + S.d; return (xB + 0.1) / v / 2; };
   function draw() {
     if (!T || !W) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); window.VDGear.backdrop(ctx, W, Hh);
     if (S.view === 'wave') drawWave(); else drawTof();
   }
 

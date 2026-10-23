@@ -33,6 +33,26 @@ img { max-width: 100%; }
 .rail details.fold[open] > summary::after { content: "−"; }
 .rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+/* vd-handout: the handout and worksheet button at the top of the sidebar (tools/handout_button.py) */
+.handout, .handout-menu > summary { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; padding: 12px 14px; font-weight: 700; font-size: 0.98rem; color: var(--canvas); background: var(--accent); border-radius: 9px 9px 0 0; text-decoration: none; cursor: pointer; }
+.handout-menu { position: sticky; top: 0; z-index: 2; }
+.handout-menu > summary { position: static; list-style: none; }
+.handout-menu > summary::-webkit-details-marker { display: none; }
+.handout-menu > summary::after { content: "▾"; font-size: 0.9rem; }
+.handout-menu[open] > summary::after { content: "▴"; }
+.handout-menu ul { list-style: none; margin: 0; padding: 6px; display: flex; flex-direction: column; gap: 2px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.handout-menu li a { display: block; padding: 8px 10px; border-radius: 6px; color: var(--accent); font-weight: 600; text-decoration: none; }
+.handout-menu li a:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.handout:hover, .handout-menu > summary:hover { filter: brightness(1.08); }
+.handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
+.handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
+/* /vd-handout */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Doppler Effect and Shock Waves</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -221,7 +241,6 @@ body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, 
 .gen-lcd { background: var(--look-lcd-bg); color: var(--look-lcd-ink); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08); text-shadow: 0 0 6px color-mix(in srgb, var(--look-lcd-ink) 45%, transparent); }
 .knob { background: radial-gradient(circle at 36% 30%, #a3adb9, #5a6573 55%, #3a434f 80%, #2b323c);
   box-shadow: 0 0 0 3px #1c222b, 0 0 0 4px rgba(255, 255, 255, 0.06), 0 3px 6px rgba(0, 0, 0, 0.55); }
-.shelf { background: color-mix(in srgb, var(--surface) 92%, var(--bg)); }
 /* /vd-look */
 </style>
 <script id="vd-gear">
@@ -375,6 +394,7 @@ window.VDGear = (function () {
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/doppler.html" target="doppler-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -385,7 +405,7 @@ window.VDGear = (function () {
           <button type="button" data-p="redshift" aria-pressed="false">Redshift and blueshift</button>
           <button type="button" data-p="transverse" aria-pressed="false">Transverse Doppler</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -424,7 +444,9 @@ window.VDGear = (function () {
           <div class="slider-head"><label for="odir">Direction</label><output id="odirOut" class="mono" for="odir"></output></div>
           <input type="range" id="odir" min="0" max="359" step="1" value="0">
         </div>
-        <p class="hint">The air is at rest. Only for sound does it matter which one moves: the medium picks out a frame.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The air is at rest. Only for sound does it matter which one moves: the medium picks out a frame.</p>
+        </details>
       </section>
 
       <section id="recSound">
@@ -437,7 +459,9 @@ window.VDGear = (function () {
           <div class="wide" id="coneRow"><dt>Mach cone half angle, sin θ<sub>c</sub> = v/v<sub>s</sub></dt><dd id="rCone">—</dd></div>
         </dl>
         <p class="formula" id="rForm"></p>
-        <p class="hint">f′ = f (v − v<sub>o</sub>·n̂)/(v − v<sub>s</sub>·n̂), where n̂ points from where the source was when it emitted this sound to where the observer is now. For an observer at rest this is f′ = f/(1 − (v<sub>s</sub>/v) cos θ). The dashed line on the drawing is that path.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">f′ = f (v − v<sub>o</sub>·n̂)/(v − v<sub>s</sub>·n̂), where n̂ points from where the source was when it emitted this sound to where the observer is now. For an observer at rest this is f′ = f/(1 − (v<sub>s</sub>/v) cos θ). The dashed line on the drawing is that path.</p>
+        </details>
       </section>
 
       <section id="recLight" hidden>
@@ -453,8 +477,10 @@ window.VDGear = (function () {
           <div class="wide"><dt>If this were a galaxy: d ≈ cz/H<sub>0</sub>, H<sub>0</sub> = 70 km/s/Mpc</dt><dd id="lHub" class="list">—</dd></div>
         </dl>
         <p class="formula" id="lForm"></p>
-        <p class="hint">f′ = f/(γ(1 − β cos θ)), θ measured in the observer's frame between the velocity and the line to the observer. Head on this is √((1 + β)/(1 − β)); across the line of sight (θ = 90°) it is 1/γ, a redshift from time dilation alone. For small speeds z ≈ v<sub>r</sub>/c: a star receding at 30 km/s shifts H-alpha by only 0.066 nm.</p>
-        <p class="hint">Hubble's law v = H<sub>0</sub>d, with v = cz, holds only for z ≪ 1 (roughly z below 0.1). Larger galaxy redshifts come from the expansion of space and need a cosmological model, not this formula.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">f′ = f/(γ(1 − β cos θ)), θ measured in the observer's frame between the velocity and the line to the observer. Head on this is √((1 + β)/(1 − β)); across the line of sight (θ = 90°) it is 1/γ, a redshift from time dilation alone. For small speeds z ≈ v<sub>r</sub>/c: a star receding at 30 km/s shifts H-alpha by only 0.066 nm.</p>
+          <p class="hint">Hubble's law v = H<sub>0</sub>d, with v = cz, holds only for z ≪ 1 (roughly z below 0.1). Larger galaxy redshifts come from the expansion of space and need a cosmological model, not this formula.</p>
+        </details>
       </section>
 
       <section>

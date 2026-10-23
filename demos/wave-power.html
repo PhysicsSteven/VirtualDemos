@@ -265,7 +265,6 @@ body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, 
 .gen-lcd { background: var(--look-lcd-bg); color: var(--look-lcd-ink); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08); text-shadow: 0 0 6px color-mix(in srgb, var(--look-lcd-ink) 45%, transparent); }
 .knob { background: radial-gradient(circle at 36% 30%, #a3adb9, #5a6573 55%, #3a434f 80%, #2b323c);
   box-shadow: 0 0 0 3px #1c222b, 0 0 0 4px rgba(255, 255, 255, 0.06), 0 3px 6px rgba(0, 0, 0, 0.55); }
-.shelf { background: color-mix(in srgb, var(--surface) 92%, var(--bg)); }
 /* /vd-look */
 </style>
 <script id="vd-gear">
@@ -471,7 +470,7 @@ window.VDGear = (function () {
           <button type="button" data-p="mismatch" aria-pressed="false">Mismatched absorber</button>
           <button type="button" data-p="unknown" aria-pressed="false">Unknown string</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -491,7 +490,9 @@ window.VDGear = (function () {
         <div class="inline"><span class="lab">Plot P against</span>
           <div class="seg" role="group" aria-label="What to plot the power against" id="plotSeg"><button type="button" data-plot="A" aria-pressed="true">A</button><button type="button" data-plot="A2" aria-pressed="false">A²</button><button type="button" data-plot="f" aria-pressed="false">f</button><button type="button" data-plot="f2" aria-pressed="false">f²</button><button type="button" data-plot="T" aria-pressed="false">T</button></div></div>
         <div class="plotbox tall"><canvas id="plotCan" role="img" aria-label="The recorded power readings against the quantity chosen."></canvas></div>
-        <p class="hint">The plot shows your points only: which choice of axis gives a straight line through the origin? Fit the line on the worksheet.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The plot shows your points only: which choice of axis gives a straight line through the origin? Fit the line on the worksheet.</p>
+        </details>
       </section>
 
       <section>

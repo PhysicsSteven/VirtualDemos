@@ -273,7 +273,6 @@ body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, 
 .gen-lcd { background: var(--look-lcd-bg); color: var(--look-lcd-ink); box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.6), 0 1px 0 rgba(255, 255, 255, 0.08); text-shadow: 0 0 6px color-mix(in srgb, var(--look-lcd-ink) 45%, transparent); }
 .knob { background: radial-gradient(circle at 36% 30%, #a3adb9, #5a6573 55%, #3a434f 80%, #2b323c);
   box-shadow: 0 0 0 3px #1c222b, 0 0 0 4px rgba(255, 255, 255, 0.06), 0 3px 6px rgba(0, 0, 0, 0.55); }
-.shelf { background: color-mix(in srgb, var(--surface) 92%, var(--bg)); }
 /* /vd-look */
 </style>
 <script id="vd-gear">
@@ -454,14 +453,16 @@ window.VDGear = (function () {
           <button type="button" data-p="mystery" aria-pressed="false">Mystery frequency</button>
         </div>
         <button type="button" class="btn" id="newMystery" hidden>New mystery frequency</button>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
         <h2>Walk</h2>
         <div class="plotbox tall"><canvas id="walkCan" role="img" aria-label="Sound level against the microphone's sideways position along the walk line."></canvas></div>
         <div class="btnrow"><button type="button" class="btn" id="clearWalk">Clear the trace</button></div>
-        <p class="hint">Each walk draws the level against the sideways position y along the walk line. Dips are the quiet lines; stop the walk, put the microphone in a dip and record it.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Each walk draws the level against the sideways position y along the walk line. Dips are the quiet lines; stop the walk, put the microphone in a dip and record it.</p>
+        </details>
       </section>
 
       <section>
@@ -473,7 +474,9 @@ window.VDGear = (function () {
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Recorded readings</caption><thead><tr><th>#</th><th>x (m)</th><th>y (m)</th><th>r₁ (m)</th><th>r₂ (m)</th><th>L (dB)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Record stores the frequency, the separation, the microphone's place (x from the speakers' wall, y sideways from the middle), the tape distances r₁ and r₂ from each speaker, and the sound level.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Record stores the frequency, the separation, the microphone's place (x from the speakers' wall, y sideways from the middle), the tape distances r₁ and r₂ from each speaker, and the sound level.</p>
+        </details>
       </section>
 
       <section>
@@ -697,7 +700,7 @@ window.VDGear = (function () {
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const p = ps();
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const Gr = window.VDGear; Gr.backdrop(ctx, W, Hh);
     const overlay = getComputedStyle(shelf).position === 'absolute', shelfTop = overlay ? shelf.getBoundingClientRect().top - can.getBoundingClientRect().top : Hh;
     /* the floor fills the picture above the shelf, keeping the room's shape; the speakers' wall on the left */
     const padL = 46 * p, padT = 50 * p, availW = W - padL - 14 * p, availH = Math.max(120, shelfTop - padT - 24 * p), ppm = Math.min(availW / ROOM_X, availH / ROOM_Y);
@@ -705,7 +708,9 @@ window.VDGear = (function () {
     const fw = ROOM_X * ppm, fh = ROOM_Y * ppm, fy = yc - fh / 2;
     /* the Set up card sits in the room left over to the right of the floor when there is room for it, otherwise over the floor's top left */
     if (getComputedStyle(card).position === 'absolute') { const spare = W - (x0 + fw) - 24 * p; card.style.left = spare >= 300 ? `${x0 + fw + 16 * p}px` : '12px'; card.style.width = spare >= 300 ? `${Math.min(360, spare)}px` : ''; }
-    ctx.fillStyle = T.surface; ctx.fillRect(x0, fy, fw, fh);
+    /* the floor, lifted off the page by a soft shadow */
+    ctx.save(); ctx.shadowColor = Gr.dark() ? 'rgba(0,0,0,0.55)' : 'rgba(20,30,45,0.18)'; ctx.shadowBlur = 18 * p; ctx.shadowOffsetY = 6 * p;
+    ctx.fillStyle = T.surface; ctx.fillRect(x0, fy, fw, fh); ctx.restore();
     if (S.view !== 'none') {
       const gw = Math.max(40, Math.min(260, Math.round(fw / 3))), gh = Math.round(gw * ROOM_Y / ROOM_X), F = fieldGrid(gw, gh), d = F.img.data;
       const cP = rgb(T.pos), cN = rgb(T.accent), cB = rgb(T.surface), ph = reduce ? 0 : S.phase, ref = 1 / 3;   /* colour saturates at the pressure one speaker gives 3 m away */
@@ -722,9 +727,9 @@ window.VDGear = (function () {
     for (let i = 0; i <= ROOM_X; i++) { ctx.beginPath(); ctx.moveTo(x0 + i * ppm + 0.5, fy); ctx.lineTo(x0 + i * ppm + 0.5, fy + fh); ctx.stroke(); }
     for (let j = 0; j <= ROOM_Y; j++) { ctx.beginPath(); ctx.moveTo(x0, fy + j * ppm + 0.5); ctx.lineTo(x0 + fw, fy + j * ppm + 0.5); ctx.stroke(); }
     ctx.globalAlpha = 1; ctx.strokeStyle = T.gridStrong; ctx.strokeRect(x0 + 0.5, fy + 0.5, fw, fh);
-    for (let i = 0; i <= ROOM_X; i += 2) txt(`${i} m`, x0 + i * ppm, fy + fh + 10 * p, { a: 'center', s: 9, c: T.muted, m: 1 });
-    for (const y of [-4, -2, 0, 2, 4]) txt(String(y), x0 - 12 * p, yc - y * ppm, { a: 'right', s: 9, c: T.muted, m: 1 });
-    txt('y (m)', x0 - 12 * p, fy - 9 * p, { a: 'right', s: 9, c: T.muted });
+    for (let i = 0; i <= ROOM_X; i += 2) Gr.label(ctx, `${i} m`, x0 + i * ppm, fy + fh + 11 * p, { a: 'center', s: 9 * p, m: 1 });
+    for (const y of [-4, -2, 0, 2, 4]) Gr.label(ctx, String(y), x0 - 16 * p, yc - y * ppm, { a: 'right', s: 9 * p, m: 1 });
+    Gr.label(ctx, 'y (m)', x0 - 16 * p, fy - 9 * p, { a: 'right', s: 9 * p });
     /* quiet lines: hyperbolas r₂ − r₁ = (m + ½)λ (in phase) or mλ (wired backwards) */
     if (S.lines && !S.blind && !S.mystery && S.on2) {
       const lam = wavelength(fNow(), S.tC); ctx.strokeStyle = T.ink; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.2;
@@ -734,24 +739,35 @@ window.VDGear = (function () {
     }
     /* walk line */
     const wx = x0 + S.X * ppm; ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * p; ctx.setLineDash([8 * p, 5 * p]); ctx.beginPath(); ctx.moveTo(wx, fy); ctx.lineTo(wx, fy + fh); ctx.stroke(); ctx.setLineDash([]);
-    txt('walk line', wx + 5 * p, fy + fh - 8 * p, { s: 9, c: T.equi, b: 1 });
-    /* the wall and the speakers on it */
-    ctx.fillStyle = T.box; ctx.fillRect(x0 - 8 * p, fy, 8 * p, fh);
-    for (const [s, on, name] of [[1, true, '1'], [-1, S.on2, '2']]) { const sy = yc - s * S.d / 2 * ppm, bw = 14 * p, bh = 22 * p;
-      ctx.fillStyle = on ? T.ink : T.muted; ctx.beginPath(); ctx.roundRect(x0 - 4 * p, sy - bh / 2, bw, bh, 3 * p); ctx.fill();
-      ctx.fillStyle = T.metalHi; ctx.beginPath(); ctx.arc(x0 + 5 * p, sy, 5 * p, 0, 7); ctx.fill();
-      txt(name, x0 + 14 * p, sy - s * 12 * p, { s: 10, b: 1 }); }
-    txt(`d = ${S.d.toFixed(2)} m`, x0 + 14 * p, yc, { s: 10, c: T.muted });
-    /* tape lines from each speaker to the microphone, and the microphone */
+    Gr.label(ctx, 'walk line', wx + 5 * p, fy + fh - 8 * p, { s: 9 * p, c: T.equi, w: 700, alpha: 1 });
+    /* the wall: a slab seen from above, and the two speaker cabinets on it facing into the room */
+    let gw2 = ctx.createLinearGradient(x0 - 12 * p, 0, x0, 0); gw2.addColorStop(0, Gr.dark() ? '#20262e' : '#8d96a1'); gw2.addColorStop(1, Gr.dark() ? '#39424d' : '#c3c9d0');
+    ctx.fillStyle = gw2; ctx.fillRect(x0 - 12 * p, fy - 4 * p, 12 * p, fh + 8 * p);
+    /* tapes from each speaker to the microphone: a yellow measuring tape pulled straight */
     const mx = x0 + S.mx * ppm, my = yc - S.my * ppm;
-    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([2 * p, 3 * p]);
-    for (const s of [1, -1]) { if (s < 0 && !S.on2) continue; ctx.beginPath(); ctx.moveTo(x0 + 6 * p, yc - s * S.d / 2 * ppm); ctx.lineTo(mx, my); ctx.stroke(); }
-    ctx.setLineDash([]);
-    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(mx, my, 9 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.metalHi; ctx.beginPath(); ctx.arc(mx, my, 5 * p, 0, 7); ctx.fill();
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(mx + 8 * p, my + 4 * p); ctx.quadraticCurveTo(mx + 30 * p, my + 10 * p, mx + 26 * p, my + 34 * p); ctx.stroke();
-    txt(`${level(P(S.mx, S.my)).toFixed(1)} dB`, mx + 14 * p, my - 12 * p, { s: 11, b: 1, m: 1 });
-    if (S.view === 'waves' && !reduce) txt('waves slowed about 1000 times', x0 + fw, fy - 9 * p, { a: 'right', s: 9, c: T.muted });
-    if (S.view === 'loud') txt('loudness map: darker is louder (50 to 85 dB)', x0 + fw, fy - 9 * p, { a: 'right', s: 9, c: T.muted });
+    for (const s of [1, -1]) { if (s < 0 && !S.on2) continue; const ax = x0 + 18 * p, ay = yc - s * S.d / 2 * ppm;
+      ctx.save(); ctx.lineCap = 'butt'; ctx.strokeStyle = 'rgba(0,0,0,0.22)'; ctx.lineWidth = 4.2 * p; ctx.beginPath(); ctx.moveTo(ax, ay + 1.2 * p); ctx.lineTo(mx, my + 1.2 * p); ctx.stroke();
+      ctx.strokeStyle = Gr.dark() ? '#b89a3c' : '#f0cc4a'; ctx.lineWidth = 3.4 * p; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(mx, my); ctx.stroke(); ctx.restore(); }
+    for (const [s, on, name] of [[1, true, '1'], [-1, S.on2, '2']]) { const sy = yc - s * S.d / 2 * ppm, bw = 20 * p, bh = 28 * p;
+      ctx.save(); if (!on) ctx.globalAlpha = 0.45;
+      Gr.box(ctx, x0 - 3 * p, sy - bh / 2, bw, bh, { r: 3 * p, color: '#2e353f' });
+      /* the cone seen edge on from above: a curved lip at the front of the cabinet */
+      ctx.fillStyle = '#14181d'; ctx.beginPath(); ctx.ellipse(x0 + bw - 3 * p, sy, 3 * p, bh * 0.38, 0, -PI / 2, PI / 2); ctx.fill();
+      ctx.restore();
+      Gr.label(ctx, name, x0 + bw + 6 * p, sy - s * 15 * p, { s: 10 * p, w: 700, c: T.ink, alpha: 0.85 }); }
+    Gr.label(ctx, `d = ${S.d.toFixed(2)} m`, x0 + 24 * p, yc, { s: 10 * p });
+    /* the microphone on its stand, from above: three legs, the boom and the capsule */
+    Gr.shadow(ctx, mx + 3 * p, my + 4 * p, 18 * p, 14 * p, 0.8);
+    ctx.strokeStyle = Gr.dark() ? '#9aa4b0' : '#3a434f'; ctx.lineWidth = 2 * p; ctx.lineCap = 'round';
+    for (let i = 0; i < 3; i++) { const a = PI / 2 + i * 2 * PI / 3; ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(mx + Math.cos(a) * 15 * p, my + Math.sin(a) * 15 * p); ctx.stroke(); }
+    let gm = ctx.createRadialGradient(mx - 2.5 * p, my - 2.5 * p, 0.5 * p, mx, my, 8 * p); gm.addColorStop(0, '#f2f4f7'); gm.addColorStop(0.5, '#a7b0bb'); gm.addColorStop(1, '#4a5360');
+    ctx.fillStyle = gm; ctx.beginPath(); ctx.arc(mx, my, 7.5 * p, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.strokeStyle = 'rgba(0,0,0,0.25)'; for (let i = -1; i <= 1; i++) { ctx.beginPath(); ctx.moveTo(mx - 5 * p, my + i * 2.6 * p); ctx.lineTo(mx + 5 * p, my + i * 2.6 * p); ctx.stroke(); }
+    const lbl = `${level(P(S.mx, S.my)).toFixed(1)} dB`; ctx.font = `600 ${11 * p}px ${T.mono}`; const lw = ctx.measureText(lbl).width + 10 * p;
+    ctx.fillStyle = Gr.dark() ? 'rgba(13,18,24,0.82)' : 'rgba(255,255,255,0.86)'; ctx.beginPath(); ctx.roundRect(mx + 12 * p, my - 22 * p, lw, 18 * p, 4 * p); ctx.fill();
+    txt(lbl, mx + 17 * p, my - 13 * p, { s: 11, b: 1, m: 1 });
+    if (S.view === 'waves' && !reduce) Gr.label(ctx, 'waves slowed about 1000 times', x0 + fw, fy - 10 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
+    if (S.view === 'loud') Gr.label(ctx, 'loudness map: darker is louder (50 to 85 dB)', x0 + fw, fy - 10 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
     mic.style.left = `${mx}px`; mic.style.top = `${my}px`;
   }
 

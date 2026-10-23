@@ -848,3 +848,10 @@ Steve asked for a license. It is all rights reserved (a side project of Steve's,
 - Footer line added on the home and course pages (`tools/courses.py` template too) and on every notes page (`tools/notes.py`). Each demo has a copyright comment on its second line, right after the doctype; new demos copy it.
 - TeacherKeys got its own confidential `LICENSE.md`.
 - Later the same day (Steve): Louisiana Tech removed from the footers and the home page eyebrow; the site is Steve's own project, not the university's. Don't add the university back.
+## Claude, 2026-10-23 21:20: Acoustics visual pass, part 2
+
+- **Two Speaker Interference**: the floor lifts off the page with a soft shadow; a wall slab with two speaker cabinets facing into the room; the tapes r₁ and r₂ drawn as yellow measuring tape; the microphone as a tripod stand from above with its level on a small tag. Quieter axis labels.
+- **Sound Intensity**: tree line and grass on the field, the tape's case at zero, loudspeakers on tripod stands (tweeter and woofer), the sound level meter on its tripod with a lit display. The speakers and meter grow with the height of the picture.
+- **Sound Waves**: the tube drawn as glass with a speaker driver at its end, graphs on soft panels; in Time of flight a wooden bench, microphones on stands and a recorder with a dark screen.
+- All 13 acoustics demos: `tools/rail_trim.py` folds the fixed sidebar text (About this setup, More about this, The model and its formulas); `tools/handout_button.py` puts the Handout and worksheet button on the six with handouts (standing-waves, resonators, timbre, doppler, chladni, acoustic-levitation). The other seven get theirs when their handouts are added (the handouts thread runs the tool).
+No control moved; ids, names, ranges and physics unchanged. Tests pass; no page errors or sideways scroll at 360, 400 and 1440 px in either theme.
