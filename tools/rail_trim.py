@@ -58,7 +58,7 @@ def trim(demo):
     rail = re.sub(r'(?<!<summary>About this setup</summary>)(<p class="hint" id="presetHint"[^>]*>.*?</p>)',
                   r'<details class="more"><summary>About this setup</summary>\1</details>', rail, count=1, flags=re.S)
     s = s[:a] + rail + s[b:]
-    if '/* vd-trim:' not in s and 'details.more > summary' not in s:
+    if '/* vd-trim:' not in s and 'details.more > summary' not in s and 'lib/vd.css' not in s:  # vd.css has it
         i = s.index('</style>'); s = s[:i] + CSS + s[i:]
     p.write_text(s)
 

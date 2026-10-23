@@ -23,7 +23,11 @@ the two assistants share context. Log what you change there when you finish.
 - Commits end with the attribution lines the session gives you. Commit and push when a piece of work is finished and checked.
 
 ## Demos
-- One self-contained HTML file each. Only library: three.js r128 from cdnjs (only where already used). Fonts from Google Fonts.
+- One HTML file each, plus the shared library in `demos/lib/` (`vd.css`, `vd.js`; read `demos/lib/README.md`). Demos are being
+  moved onto it in batches (Steve, 2026-10-23); the README lists which. A moved demo links the library and keeps only its physics,
+  drawing and what it does differently. Shared styles and behaviour go in the library, never pasted into each file again; moving a
+  demo must change nothing visible, which `tools/vdcheck.cjs` checks. Other libraries: three.js r128 from cdnjs (only where already
+  used). Fonts from Google Fonts.
 - **Edit `demos/<name>.html` directly.** Do not rebuild a demo from an older copy elsewhere: that once wiped a finished scenery pass.
 - Physics lives between `// ==CORE START==` and `// ==CORE END==` and must run in Node. Never put a `//` comment mid line before code
   (use `/* */`). Tests: `curriculum/validation/test_<demo>.cjs` using `core('<demo>', 'fn,...')` from `demo_source.cjs`.

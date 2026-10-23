@@ -71,7 +71,7 @@ def qr_svg(url):
             f'<rect width="{n}" height="{n}" fill="#fff"/><path fill="#000" d="{"".join(d)}"/></svg>')
 
 
-def block(name):
+def block(name, lib=False):
     url = BASE + name + ".html"
     # click shows it large for the back row; click again or Esc closes
     # The code is only shown on the hosted copy it points to: opened from a file,
@@ -87,7 +87,7 @@ def block(name):
           "(document.currentScript.previousElementSibling);")
     return (f'\n      <!-- vd-qr --><button type="button" class="vd-qr" data-url="{url}" '
             f'title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones">'
-            f'{qr_svg(url)}</button><script>{js}</script><!-- /vd-qr -->')
+            f'{qr_svg(url)}</button>{"" if lib else f"<script>{js}</script>"}<!-- /vd-qr -->')
 
 
 def apply(path, name):
@@ -97,9 +97,11 @@ def apply(path, name):
     m = re.search(r'<button[^>]*id="proj"[^>]*>.*?</button>', t, re.S)
     if not m:
         raise RuntimeError("no Projector button")
-    t = t[:m.end()] + block(name) + t[m.end():]
-    end = t.index("</style>")
-    t = t[:end].rstrip("\n") + "\n" + CSS + "\n" + t[end:]
+    lib = "lib/vd.js" in t  # a demo on the shared library: vd.js runs the button and vd.css styles it
+    t = t[:m.end()] + block(name, lib) + t[m.end():]
+    if not lib:
+        end = t.index("</style>")
+        t = t[:end].rstrip("\n") + "\n" + CSS + "\n" + t[end:]
     path.write_text(t, encoding="utf-8")
 
 
@@ -126,7 +128,7 @@ def main():
         src = TEMPLATES.get(d.stem, d)
         if a.check:
             t = src.read_text(encoding="utf-8")
-            if block(d.stem).strip() not in t:
+            if block(d.stem, "lib/vd.js" in t).strip() not in t:
                 bad.append(d.stem)
             continue
         apply(src, d.stem)

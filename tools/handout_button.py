@@ -57,8 +57,9 @@ def apply(demo, hs):
         if not m:
             raise SystemExit(f'{demo}: no <aside class="rail">')
         s = s[:m.end()] + f'\n      <!-- vd-handout -->{markup(hs)}<!-- /vd-handout -->' + s[m.end():]
-        i = s.index('</style>')
-        s = s[:i] + CSS + s[i:]
+        if 'lib/vd.css' not in s:  # a demo on the shared library gets this CSS from vd.css
+            i = s.index('</style>')
+            s = s[:i] + CSS + s[i:]
     p.write_text(s)
     return hs
 

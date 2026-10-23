@@ -1,0 +1,139 @@
+/* VirtualDemos shared styles (demos/lib/vd.css). © 2026 Steven Anderson. All rights reserved.
+   Every rule here is one that most demos already had, copied word for word. A demo links this file before its own
+   <style>, drops its own copies of these rules, and overrides anything else in its own <style>.
+   Rules that not every demo had carry a name (the comment before them) and are switched off for a demo that never had
+   them by listing the name in <html data-vd-off="...">; tools/vdlib.py writes that list when it moves a demo, so the
+   demo looks exactly as before. Shortening a demo's list is a visible change (it adopts the shared rule): do it on purpose.
+   Never change or remove a rule here: moved demos rely on it. A new rule needs a name, and every moved demo that should
+   not get it lists that name. After any edit, run tools/vdcheck.cjs on every moved demo. See demos/lib/README.md. */
+/* root */ :where(:root:not([data-vd-off~="root"])) *, :where(:root:not([data-vd-off~="root"])) *::before, :where(:root:not([data-vd-off~="root"])) *::after { box-sizing: border-box; }
+/* root-2 */ :root:where(:not([data-vd-off~="root-2"])) { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+/* body */ :where(:root:not([data-vd-off~="body"])) body { margin: 0; }
+/* root-3 */ :where(:root:not([data-vd-off~="root-3"])) [hidden] { display: none !important; }
+/* vd-qr */ :where(:root:not([data-vd-off~="vd-qr"])) .vd-qr { display: none; }
+@media (min-width: 821px) {
+  /* wide-proj-vd-qr */ :root:where(:not([data-vd-off~="wide-proj-vd-qr"]))[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+/* vd-qr-svg */ :where(:root:not([data-vd-off~="vd-qr-svg"])) .vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+/* vd-qr-2 */ :where(:root:not([data-vd-off~="vd-qr-2"])) .vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+/* vd-qr-big */ :where(:root:not([data-vd-off~="vd-qr-big"])) .vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+/* vd-qr-big-svg */ :where(:root:not([data-vd-off~="vd-qr-big-svg"])) .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+/* vd-qr-big-small */ :where(:root:not([data-vd-off~="vd-qr-big-small"])) .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* rail-details-more-summary */ :where(:root:not([data-vd-off~="rail-details-more-summary"])) .rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+/* rail-details-more-summary-focusvisible */ :where(:root:not([data-vd-off~="rail-details-more-summary-focusvisible"])) .rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* rail-details-more-summary-2 */ :where(:root:not([data-vd-off~="rail-details-more-summary-2"])) .rail details.more[open] > summary { margin-bottom: 4px; }
+/* handout */ :where(:root:not([data-vd-off~="handout"])) .handout, :where(:root:not([data-vd-off~="handout"])) .handout-menu > summary { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; padding: 12px 14px; font-weight: 700; font-size: 0.98rem; color: var(--canvas); background: var(--accent); border-radius: 9px 9px 0 0; text-decoration: none; cursor: pointer; }
+/* handout-menu */ :where(:root:not([data-vd-off~="handout-menu"])) .handout-menu { position: sticky; top: 0; z-index: 2; }
+/* handout-menu-summary */ :where(:root:not([data-vd-off~="handout-menu-summary"])) .handout-menu > summary { position: static; list-style: none; }
+/* handout-menu-summary-webkitdetailsmarker */ :where(:root:not([data-vd-off~="handout-menu-summary-webkitdetailsmarker"])) .handout-menu > summary::-webkit-details-marker { display: none; }
+/* handout-menu-summary-after */ :where(:root:not([data-vd-off~="handout-menu-summary-after"])) .handout-menu > summary::after { content: "▾"; font-size: 0.9rem; }
+/* handout-menu-summary-after-2 */ :where(:root:not([data-vd-off~="handout-menu-summary-after-2"])) .handout-menu[open] > summary::after { content: "▴"; }
+/* handout-menu-ul */ :where(:root:not([data-vd-off~="handout-menu-ul"])) .handout-menu ul { list-style: none; margin: 0; padding: 6px; display: flex; flex-direction: column; gap: 2px; background: var(--surface); border-bottom: 1px solid var(--line); }
+/* handout-menu-li-a */ :where(:root:not([data-vd-off~="handout-menu-li-a"])) .handout-menu li a { display: block; padding: 8px 10px; border-radius: 6px; color: var(--accent); font-weight: 600; text-decoration: none; }
+/* handout-menu-li-a-hover */ :where(:root:not([data-vd-off~="handout-menu-li-a-hover"])) .handout-menu li a:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+/* handout-hover */ :where(:root:not([data-vd-off~="handout-hover"])) .handout:hover, :where(:root:not([data-vd-off~="handout-hover"])) .handout-menu > summary:hover { filter: brightness(1.08); }
+/* handout-focusvisible */ :where(:root:not([data-vd-off~="handout-focusvisible"])) .handout:focus-visible, :where(:root:not([data-vd-off~="handout-focusvisible"])) .handout-menu > summary:focus-visible, :where(:root:not([data-vd-off~="handout-focusvisible"])) .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
+/* handout-svg */ :where(:root:not([data-vd-off~="handout-svg"])) .handout svg, :where(:root:not([data-vd-off~="handout-svg"])) .handout-menu svg { width: 18px; height: 18px; flex: none; }
+/* rail-details-fold-summary */ :where(:root:not([data-vd-off~="rail-details-fold-summary"])) .rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+/* rail-details-fold-summary-webkitdetailsmarker */ :where(:root:not([data-vd-off~="rail-details-fold-summary-webkitdetailsmarker"])) .rail details.fold > summary::-webkit-details-marker { display: none; }
+/* rail-details-fold-summary-after */ :where(:root:not([data-vd-off~="rail-details-fold-summary-after"])) .rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+/* rail-details-fold-summary-after-2 */ :where(:root:not([data-vd-off~="rail-details-fold-summary-after-2"])) .rail details.fold[open] > summary::after { content: "−"; }
+/* rail-details-fold-summary-focusvisible */ :where(:root:not([data-vd-off~="rail-details-fold-summary-focusvisible"])) .rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* rail-details-fold-foldbody */ :where(:root:not([data-vd-off~="rail-details-fold-foldbody"])) .rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.vd-reset { white-space: nowrap; }
+/* root-4 */ :root:where(:not([data-vd-off~="root-4"])) { --bg: #e9edf2; --surface: #f8fafc; --canvas: #fcfdfe; --relief: #dfe5ec; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2; --grid: #e6ebf1; --grid-strong: #cfd7e1; --pos: #c23f2c; --neg: #2b60b5; --field: #1d2836; --equi: #a7740b; --accent: #2b60b5; --on-charge: #ffffff; --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif; --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace; }
+@media (prefers-color-scheme: dark) {
+  /* auto-dark */ :root:where(:not([data-vd-off~="auto-dark"])):not([data-theme="light"]) { --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2; --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff; --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark; }
+}
+/* dark */ :root:where(:not([data-vd-off~="dark"]))[data-theme="dark"] { --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2; --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff; --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark; }
+/* proj */ :root:where(:not([data-vd-off~="proj"]))[data-projector="on"] { font-size: 125%; }
+/* html */ html:where(:not([data-vd-off~="html"])), :where(:root:not([data-vd-off~="html"])) body { height: 100%; }
+/* body-2 */ :where(:root:not([data-vd-off~="body-2"])) body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+/* proj-body */ :root:where(:not([data-vd-off~="proj-body"]))[data-projector="on"] body { font-size: 1.25rem; }
+/* app */ :where(:root:not([data-vd-off~="app"])) .app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+/* bar */ :where(:root:not([data-vd-off~="bar"])) .bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+/* bar-div-firstchild */ :where(:root:not([data-vd-off~="bar-div-firstchild"])) .bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+/* bar-p */ :where(:root:not([data-vd-off~="bar-p"])) .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+/* bar-right */ :where(:root:not([data-vd-off~="bar-right"])) .bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+/* units */ :where(:root:not([data-vd-off~="units"])) .units { color: var(--muted); font-size: 0.8rem; }
+/* proj-2 */ :where(:root:not([data-vd-off~="proj-2"])) .proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+/* proj-on */ :where(:root:not([data-vd-off~="proj-on"])) .proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+/* stage-canvas-focusvisible */ :where(:root:not([data-vd-off~="stage-canvas-focusvisible"])) .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+/* spin */ :where(:root:not([data-vd-off~="spin"])) .spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+/* spin-attn */ :where(:root:not([data-vd-off~="spin-attn"])) .spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+/* rail */ :where(:root:not([data-vd-off~="rail"])) .rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+/* rail-section */ :where(:root:not([data-vd-off~="rail-section"])) .rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+/* rail-section-section */ :where(:root:not([data-vd-off~="rail-section-section"])) .rail section + section { border-top: 1px solid var(--line); }
+/* rail-h2 */ :where(:root:not([data-vd-off~="rail-h2"])) .rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+/* hint */ :where(:root:not([data-vd-off~="hint"])) .hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+/* formula */ :where(:root:not([data-vd-off~="formula"])) .formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+/* chips */ :where(:root:not([data-vd-off~="chips"])) .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+/* chips-button */ :where(:root:not([data-vd-off~="chips-button"])) .chips button, :where(:root:not([data-vd-off~="chips-button"])) .btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+/* chips-button-on */ :where(:root:not([data-vd-off~="chips-button-on"])) .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+/* btnrow */ :where(:root:not([data-vd-off~="btnrow"])) .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+/* seg */ :where(:root:not([data-vd-off~="seg"])) .seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+/* seg-button */ :where(:root:not([data-vd-off~="seg-button"])) .seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+/* seg-button-on */ :where(:root:not([data-vd-off~="seg-button-on"])) .seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+/* inline */ :where(:root:not([data-vd-off~="inline"])) .inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+/* button-focusvisible */ :where(:root:not([data-vd-off~="button-focusvisible"])) button:focus-visible, :where(:root:not([data-vd-off~="button-focusvisible"])) input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+/* input */ :where(:root:not([data-vd-off~="input"])) input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+/* slider-head */ :where(:root:not([data-vd-off~="slider-head"])) .slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+/* slider-head-label */ :where(:root:not([data-vd-off~="slider-head-label"])) .slider-head label { font-size: 0.88rem; }
+/* readout */ :where(:root:not([data-vd-off~="readout"])) .readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+/* readout-div */ :where(:root:not([data-vd-off~="readout-div"])) .readout div { min-width: 0; }
+/* readout-wide */ :where(:root:not([data-vd-off~="readout-wide"])) .readout .wide { grid-column: 1 / -1; }
+/* readout-dt */ :where(:root:not([data-vd-off~="readout-dt"])) .readout dt { font-size: 0.78rem; color: var(--muted); }
+/* readout-dd-ok */ :where(:root:not([data-vd-off~="readout-dd-ok"])) .readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+/* check */ :where(:root:not([data-vd-off~="check"])) .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+/* check-input */ :where(:root:not([data-vd-off~="check-input"])) .check input { accent-color: var(--accent); margin: 0; }
+/* status */ :where(:root:not([data-vd-off~="status"])) .status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+/* table-rows */ :where(:root:not([data-vd-off~="table-rows"])) table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+/* table-rows-th */ :where(:root:not([data-vd-off~="table-rows-th"])) table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+/* table-rows-td */ :where(:root:not([data-vd-off~="table-rows-td"])) table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+/* table-rows-input-focus */ :where(:root:not([data-vd-off~="table-rows-input-focus"])) table.rows input:focus { border-color: var(--accent); }
+/* table-rows-button */ :where(:root:not([data-vd-off~="table-rows-button"])) table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+/* empty */ :where(:root:not([data-vd-off~="empty"])) .empty { color: var(--muted); padding: 8px !important; }
+/* plotbox-canvas */ :where(:root:not([data-vd-off~="plotbox-canvas"])) .plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+/* sr */ :where(:root:not([data-vd-off~="sr"])) .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) {
+  /* wide-proj-bench */ :root:where(:not([data-vd-off~="wide-proj-bench"]))[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; }
+}
+@media (max-width: 820px) {
+  /* phone-html */ html:where(:not([data-vd-off~="phone-html"])), :where(:root:not([data-vd-off~="phone-html"])) body { height: auto; }
+  /* phone-app */ :where(:root:not([data-vd-off~="phone-app"])) .app { height: auto; }
+  /* phone-bench */ :where(:root:not([data-vd-off~="phone-bench"])) .bench { grid-template-columns: minmax(0, 1fr); }
+  /* phone-rail */ :where(:root:not([data-vd-off~="phone-rail"])) .rail { overflow: visible; }
+  /* phone-input */ :where(:root:not([data-vd-off~="phone-input"])) input[type="range"] { min-height: 28px; }
+}
+@media (min-width: 821px) {
+  /* wide-proj-stage */ :root:where(:not([data-vd-off~="wide-proj-stage"]))[data-projector="on"] .stage { min-height: 440px; }
+}
+/* img */ :where(:root:not([data-vd-off~="img"])) img { max-width: 100%; }
+@media (min-width: 821px) and (max-height: 820px) {
+  /* projshort-proj-bar-units */ :root:where(:not([data-vd-off~="projshort-proj-bar-units"]))[data-projector="on"] .bar .units { display: none; }
+  /* projshort-proj-bar-p */ :root:where(:not([data-vd-off~="projshort-proj-bar-p"]))[data-projector="on"] .bar p { font-size: 1rem; max-width: none; }
+}
+/* mono */ :where(:root:not([data-vd-off~="mono"])) .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+/* bar-h1 */ :where(:root:not([data-vd-off~="bar-h1"])) .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
+/* bench */ :where(:root:not([data-vd-off~="bench"])) .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+/* pane */ :where(:root:not([data-vd-off~="pane"])) .pane { position: relative; min-height: 0; }
+/* chips-button-hover */ :where(:root:not([data-vd-off~="chips-button-hover"])) .chips button:hover, :where(:root:not([data-vd-off~="chips-button-hover"])) .btn:hover { border-color: var(--muted); }
+/* btn */ :where(:root:not([data-vd-off~="btn"])) .btn { font-weight: 700; }
+/* btn-primary */ :where(:root:not([data-vd-off~="btn-primary"])) .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+/* btn-disabled */ :where(:root:not([data-vd-off~="btn-disabled"])) .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+/* slider-head-output */ :where(:root:not([data-vd-off~="slider-head-output"])) .slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
+/* readout-dd */ :where(:root:not([data-vd-off~="readout-dd"])) .readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
+/* toggles */ :where(:root:not([data-vd-off~="toggles"])) .toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
+/* toggles-label */ :where(:root:not([data-vd-off~="toggles-label"])) .toggles label, :where(:root:not([data-vd-off~="toggles-label"])) .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+/* toggles-input */ :where(:root:not([data-vd-off~="toggles-input"])) .toggles input, :where(:root:not([data-vd-off~="toggles-input"])) .check input { accent-color: var(--accent); margin: 0; }
+/* key */ :where(:root:not([data-vd-off~="key"])) .key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
+/* key-span */ :where(:root:not([data-vd-off~="key-span"])) .key span { display: flex; align-items: center; gap: 8px; }
+/* readout-big-dd */ :where(:root:not([data-vd-off~="readout-big-dd"])) .readout .big dd { font-size: 1.2rem; }
+/* swatch */ :where(:root:not([data-vd-off~="swatch"])) .swatch { flex: none; width: 22px; height: 0; border-top: 2px solid; }
+@media (min-width: 821px) and (max-height: 820px) {
+  /* projshort-proj-stage */ :root:where(:not([data-vd-off~="projshort-proj-stage"]))[data-projector="on"] .stage { min-height: 440px; }
+}
+@media (max-width: 820px) {
+  /* phone-chips-button */ :where(:root:not([data-vd-off~="phone-chips-button"])) .chips button, :where(:root:not([data-vd-off~="phone-chips-button"])) .btn, :where(:root:not([data-vd-off~="phone-chips-button"])) .seg button, :where(:root:not([data-vd-off~="phone-chips-button"])) .proj { min-height: 36px; }
+}
+/* pane-canvas */ :where(:root:not([data-vd-off~="pane-canvas"])) .pane canvas { position: absolute; inset: 0; display: block; }

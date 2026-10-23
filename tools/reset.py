@@ -67,27 +67,29 @@ HTML_RE = re.compile(r"\n?\s*<!-- vd-reset -->.*?<!-- /vd-reset -->", re.S)
 CSS_RE = re.compile(r"\n?/\* vd-reset \*/.*?/\* /vd-reset \*/", re.S)
 
 
-def block(cls, sep=""):
+def block(cls, sep="", lib=False):
     return (f'<!-- vd-reset -->{sep}<button type="button" class="{cls}" id="vdReset" title="{TITLE}">Reset all</button>'
-            f'<script>{JS}</script><!-- /vd-reset -->')
+            f'{"" if lib else f"<script>{JS}</script>"}<!-- /vd-reset -->')
 
 
 def apply(path):
     t = path.read_text(encoding="utf-8")
     t = HTML_RE.sub("", t)
     t = CSS_RE.sub("", t)
+    lib = "lib/vd.js" in t  # a demo on the shared library: vd.js runs the button and vd.css styles it
     m = re.search(r'<button[^>]*id="proj"[^>]*>', t)
     if m:
         line = t.rfind("\n", 0, m.start()) + 1
         indent = t[line:m.start()]
-        t = t[:m.start()] + block("proj vd-reset") + "\n" + indent + t[m.start():]
+        t = t[:m.start()] + block("proj vd-reset", lib=lib) + "\n" + indent + t[m.start():]
     else:
         m = re.search(r"</nav></header>", t)  # transient-circuits: no Projector button, links in the header
         if not m:
             raise RuntimeError("no Projector button and no header nav")
-        t = t[:m.start()] + block("vd-reset", " · ") + t[m.start():]
-    end = t.index("</style>")
-    t = t[:end].rstrip("\n") + "\n" + CSS + "\n" + t[end:]
+        t = t[:m.start()] + block("vd-reset", " · ", lib) + t[m.start():]
+    if not lib:
+        end = t.index("</style>")
+        t = t[:end].rstrip("\n") + "\n" + CSS + "\n" + t[end:]
     path.write_text(t, encoding="utf-8")
 
 
@@ -103,7 +105,8 @@ def main():
     for d in demos:
         src = TEMPLATES.get(d.stem, d)
         if a.check:
-            if JS not in src.read_text(encoding="utf-8"):
+            t = src.read_text(encoding="utf-8")
+            if JS not in t and not ("lib/vd.js" in t and 'id="vdReset"' in t):
                 bad.append(d.stem)
             continue
         apply(src)
