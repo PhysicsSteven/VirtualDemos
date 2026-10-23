@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Huygens&#x27;s Principle: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Huygens&#x27;s Principle</h1><ul class="meta"><li><a href="../demos/huygens.html">Open the demo</a></li><li>PHYS 202</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Light travels more slowly in matter: v = c/n (OpenStax Eq. 1.2), with n from Table 1.1. Through 1 m of diamond light takes 2.419 times as long as through 1 m of vacuum.</li>
+<li>Huygens's principle: every point on a wavefront is a source of wavelets moving at the wave's speed, and the new front is the line tangent to them.</li>
+<li>Reflection: the wavelets from the part of the mirror reached first have grown the most, and their tangent leaves at the angle of incidence.</li>
+<li>Refraction: wavelets in the slower medium grow less, so the front turns. The geometry gives sin θ₁/v₁ = sin θ₂/v₂, which is Snell's law n₁ sin θ₁ = n₂ sin θ₂ (OpenStax Example 1.6).</li>
+<li>Diffraction: behind an opening the wavelets spread; the narrower the opening compared with λ, the more the wave spreads. Sound through a door spreads; light through the same door does not.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need the idea of a wavefront and wavelength, and the definitions of the angles from the normal. <strong>Blind</strong> hides the race times, the new fronts and θ₂ but keeps the wavelets, so students can draw the tangent themselves.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Light in matter: a race.</strong> Ask for the order before playing. Vacuum crosses 1.0 m in 3.34 ns, diamond in 8.07 ns. Air lags vacuum by less than a picosecond. Example 1.1: in zircon v = 1.56 × 10⁸ m/s.</li>
+<li><strong>Huygens's construction.</strong> Change the number of wavelets: the tangent line is the same. Switch to a curved front.</li>
+<li><strong>Reflection.</strong> Change θ₁ with the slider or the arrow keys. With Blind on, have students sketch the tangent to the wavelets before showing the reflected front.</li>
+<li><strong>Refraction into glass.</strong> At θ₁ = 40° from air into crown glass, θ₂ = 25.0°. Point out the shorter spacing of the fronts in the glass: λ₂ = λ₁/1.52, the frequency is the same.</li>
+<li><strong>From glass into air.</strong> At 30°, θ₂ = 49.4°. Raise θ₁ through 41.2°: the wavelets in air have no common tangent and there is no refracted front.</li>
+<li><strong>Sound through a doorway.</strong> a = 3 λ: the wave spreads widely. Widen the opening: a beam with sharper edges. Narrow it below λ: an almost circular wave.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Light crosses 1.00 m of fresh water and 1.00 m of vacuum side by side. How much later does it arrive through the water? By what percentage do the speeds of light in ethanol and water differ (OpenStax Check Your Understanding 1.1)?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Using the wavelets in the Refraction view, explain in words why the front turns toward the normal when light enters glass. Then find θ₂ for θ₁ = 40° from air (n = 1.000293) into crown glass (n = 1.52).</p></div>
+
+<div class="q"><p><strong>Q3.</strong> For light going from crown glass into air, the demo shows no refracted front above 41.2°. Use the wavelets to explain why, and check the angle from sin θ_c = n₂/n₁.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> When light goes from air into glass, what happens to its speed, its wavelength and its frequency? Use the spacing of the fronts in the demo.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Sound at 1000 Hz (λ = 0.33 m) and yellow light (λ = 589 nm) both pass through a 1.0 m doorway. Find a/λ for each and explain why you hear around a corner but cannot see around it. For the sound, where is the first dark (quiet) direction, sin θ = λ/a?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Light always travels at c."</strong> Only in vacuum; in matter v = c/n.</li>
+<li><strong>"Light bends because the boundary pulls on it."</strong> The front turns because one part of it slows down before the rest does.</li>
+<li><strong>"The frequency changes in glass."</strong> The frequency is set by the source; the wavelength shortens.</li>
+<li><strong>"Wavelets are real little waves you could detect."</strong> They are a construction for finding the next front; only their envelope (or, with Fresnel, their sum) is the wave.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>n from OpenStax Table 1.1 at 589 nm; c = 2.99792458 × 10⁸ m/s; t = nL/c.</li>
+<li>Boundary: incident front p·k₁ = D; wavelets of radius (v₂/v₁)(D − x sin θ₁) and D − x sin θ₁ from each surface point; their tangents p·k₂ = (v₂/v₁)D and p·k_r = D are drawn exactly, which is Snell's law and the law of reflection.</li>
+<li>Opening: 2D scalar waves; the field is a sum of circular wavelets of amplitude 1/√(kr + 1) from points across the opening. In the far field the sum is the single slit pattern (tested); within about a wavelength of the edges the simple sum is not exact.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

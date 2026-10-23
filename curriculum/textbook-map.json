@@ -3432,10 +3432,12 @@
         "physics-2"
       ],
       "requirement": "optional",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "huygens"
+      ],
       "unit": "optional-optics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Huygens's Principle (2026-10-23, Claude): the race view gives v = c/n and transit times for Table 1.1 materials, with Example 1.1 and Check Your Understanding 1.1. Foucault's rotating mirror method is the speed-of-light bench (course: later)."
     },
     {
       "vol": 3,
@@ -3510,10 +3512,12 @@
         "physics-2"
       ],
       "requirement": "optional",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "huygens"
+      ],
       "unit": "optional-optics",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Huygens's Principle (2026-10-23, Claude): wavelet construction, reflection, refraction and Snell's law (Example 1.6), total internal reflection, and spreading through an opening (sound through a doorway)."
     },
     {
       "vol": 3,
@@ -5972,6 +5976,31 @@
       "note": "Plane-wave E/B, energy and radiation-pressure examples exist. Maxwell/displacement-current coverage is partial: no charging-capacitor displacement-current apparatus. Required endpoint is Maxwell and light as an EM wave; no full lab requested.",
       "title": "Electromagnetic Waves",
       "url": "demos/em-waves.html"
+    },
+    {
+      "demo": "huygens",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "1.1",
+          "title": "The Propagation of Light"
+        },
+        {
+          "vol": 3,
+          "sec": "1.6",
+          "title": "Huygens’s Principle"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-23 (Claude). Lecture demo: light racing through Table 1.1 materials (t = nL/c), Huygens's construction, reflection and refraction by wavelets with exact tangent fronts and total internal reflection, and a Huygens and Fresnel sum behind an opening; Blind.",
+      "handouts": [],
+      "title": "Huygens's Principle",
+      "url": "demos/huygens.html"
     },
     {
       "demo": "optics-bench",

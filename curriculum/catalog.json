@@ -993,6 +993,17 @@
    "title": "Optics",
    "demos": [
     {
+     "demo": "huygens",
+     "title": "Huygens's Principle",
+     "desc": "Race light through water, glass and diamond to see v = c/n, then build new wavefronts from wavelets to explain reflection, refraction and Snell's law, total internal reflection, and the spreading of a wave through an opening.",
+     "tags": [
+      "index of refraction",
+      "wavefront",
+      "Snell's law",
+      "diffraction"
+     ]
+    },
+    {
      "demo": "optics-bench",
      "title": "Optics Bench",
      "desc": "Drag lenses, mirrors, prisms and light sources. Rays bend and bounce live, and images form where they cross.",
