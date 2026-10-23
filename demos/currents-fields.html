@@ -249,7 +249,7 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
           <button type="button" data-p="loop" aria-pressed="false">Current loop</button>
           <button type="button" data-p="sol" aria-pressed="false">Solenoid</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <!-- straight wires -->
@@ -288,7 +288,9 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
           <button type="button" class="btn" id="delW">Remove wire</button>
         </div>
         <ul class="qlist" id="wList" aria-label="Wires: current, position and the force per meter on each"></ul>
-        <p class="hint">Positive current comes out of the page (<svg class="wi out" style="margin:0" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><circle class="f" cx="8" cy="8" r="1.9"/></svg>), negative goes into it (<svg class="wi in" style="margin:0" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><path d="M4.6 4.6 11.4 11.4 M11.4 4.6 4.6 11.4"/></svg>). Drag a wire to move it; double click it to reverse its current.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Positive current comes out of the page (<svg class="wi out" style="margin:0" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><circle class="f" cx="8" cy="8" r="1.9"/></svg>), negative goes into it (<svg class="wi in" style="margin:0" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.4"/><path d="M4.6 4.6 11.4 11.4 M11.4 4.6 4.6 11.4"/></svg>). Drag a wire to move it; double click it to reverse its current.</p>
+        </details>
       </section>
 
       <section data-scene="wires" id="secForce">

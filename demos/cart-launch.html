@@ -24,6 +24,12 @@ body { margin: 0; }
 #instr { transition: opacity 0.35s ease, visibility 0.35s; }
 #instr.away { opacity: 0; visibility: hidden; }
 @media (prefers-reduced-motion: reduce) { #instr { transition: none; } }
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Ball Launched from a Moving Cart</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -203,7 +209,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <button type="button" data-p="brake">Cart brakes</button>
           <button type="button" data-p="incline">Frictionless incline</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -228,15 +234,19 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <section>
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
-        <p class="formula">ball in the air: aₓ = 0, a_y = −g · its vₓ stays the cart's launch speed</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">ball in the air: aₓ = 0, a_y = −g · its vₓ stays the cart's launch speed</p>
+        </details>
       </section>
 
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind pauses each launch at the top of the flight and hides where the ball lands until you resume, so the class can predict first.</p>
-        <p class="hint">Model: no air resistance and a point ball. The launcher fires perpendicular to the track, so the launch pushes the cart into the track, not along it, and the cart's speed is unchanged. On the level track the cart moves at constant speed, or with the set acceleration after the launch (a motor push or a brake; a braking cart stops and stays stopped). On the incline the cart rolls without friction, so its acceleration along the track is g sin θ, the same as the ball's. Seen from the cart, the ball's velocity and acceleration are relative to the cart; when the cart speeds up or brakes, the ball's acceleration relative to it is g minus the cart's acceleration, so it drifts backward or forward. The ball counts as caught if it comes down within 2 cm of the launcher's centre. Sizes are to scale.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">Blind pauses each launch at the top of the flight and hides where the ball lands until you resume, so the class can predict first.</p>
+          <p class="hint">Model: no air resistance and a point ball. The launcher fires perpendicular to the track, so the launch pushes the cart into the track, not along it, and the cart's speed is unchanged. On the level track the cart moves at constant speed, or with the set acceleration after the launch (a motor push or a brake; a braking cart stops and stays stopped). On the incline the cart rolls without friction, so its acceleration along the track is g sin θ, the same as the ball's. Seen from the cart, the ball's velocity and acceleration are relative to the cart; when the cart speeds up or brakes, the ball's acceleration relative to it is g minus the cart's acceleration, so it drifts backward or forward. The ball counts as caught if it comes down within 2 cm of the launcher's centre. Sizes are to scale.</p>
+        </details>
       </section>
     </aside>
   </main>

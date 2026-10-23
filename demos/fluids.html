@@ -38,6 +38,12 @@ img { max-width: 100%; }
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Fluids: Pressure, Buoyancy and Flow</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -275,7 +281,7 @@ table.rows button:hover { color: var(--pos); }
           <button type="button" data-p="venturi" aria-pressed="false">Venturi tube</button>
           <button type="button" data-p="torr" aria-pressed="false">Torricelli's tank</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section id="liqSec">

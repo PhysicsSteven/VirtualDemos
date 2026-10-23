@@ -34,6 +34,12 @@ body { margin: 0; }
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Stress and Strain</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -207,10 +213,12 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 
       <section>
         <h2>Load</h2>
-        <p class="hint">Hang slotted masses from the tray under the wire; up and down arrows on the picture add or take off 0.1 kg (Shift: 1 kg).</p>
         <dl class="readout" id="out"></dl>
         <label class="check"><input type="checkbox" id="zoom"><span>Graph: zoom in on the elastic part</span></label>
-        <p class="formula">stress σ = F/A · strain ε = ΔL/L · Y = σ/ε (elastic)</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">Hang slotted masses from the tray under the wire; up and down arrows on the picture add or take off 0.1 kg (Shift: 1 kg).</p>
+          <p class="formula">stress σ = F/A · strain ε = ΔL/L · Y = σ/ε (elastic)</p>
+        </details>
       </section>
 
       <section>
@@ -222,7 +230,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>m (kg)</th><th>ΔL (mm)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Capture stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire's diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Capture stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire's diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).</p>
+        </details>
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Load against extension for the captured rows, with a least squares line and residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
@@ -232,8 +242,10 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
-        <p class="hint">Blind hides Young's modulus, the yield and breaking stresses, the stress and strain readouts, the material curve and Y from the fit, leaving the load, the diameter and the dial gauge. The Mystery metal is always blind about its own properties.</p>
-        <p class="hint">Model: an idealized stress against strain curve: straight to the yield stress, then hardening up to the tensile strength, breaking at the fracture strain; unloading follows a line parallel to the elastic one, leaving a permanent stretch. Values are typical for each metal; real samples vary. Necking, creep and the wire's own weight are ignored.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">Blind hides Young's modulus, the yield and breaking stresses, the stress and strain readouts, the material curve and Y from the fit, leaving the load, the diameter and the dial gauge. The Mystery metal is always blind about its own properties.</p>
+          <p class="hint">Model: an idealized stress against strain curve: straight to the yield stress, then hardening up to the tensile strength, breaking at the fracture strain; unloading follows a line parallel to the elastic one, leaving a permanent stretch. Values are typical for each metal; real samples vary. Necking, creep and the wire's own weight are ignored.</p>
+        </details>
       </section>
     </aside>
   </main>

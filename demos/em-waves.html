@@ -209,7 +209,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="radio" aria-pressed="false">Radio</button>
           <button type="button" data-p="antenna" aria-pressed="false">Antenna</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -242,7 +242,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="slider-head"><label for="sdel">Phase difference δ</label><output id="delOut" class="mono" for="sdel"></output></div>
           <input type="range" id="sdel" min="-180" max="180" step="1" value="0">
         </div>
-        <p class="formula">E<sub>x</sub> = E₀ cos ψ cos(kz − ωt)<br>E<sub>y</sub> = E₀ sin ψ cos(kz − ωt + δ)</p>
         <dl class="readout">
           <div class="wide"><dt>State</dt><dd id="rPol" class="list">—</dd></div>
           <div><dt>Axis ratio b/a</dt><dd id="rRatio">—</dd></div>
@@ -255,7 +254,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <dl class="readout" style="margin-top:10px">
             <div class="wide big"><dt>Transmitted I/I₀</dt><dd id="rMalus">—</dd></div>
           </dl>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">E<sub>x</sub> = E₀ cos ψ cos(kz − ωt)<br>E<sub>y</sub> = E₀ sin ψ cos(kz − ωt + δ)</p>
           <p class="hint" style="margin-top:8px">An ideal polarizer passes only the component of E along its axis. For linear light at angle θ that gives Malus's law, I = I₀ cos²(θ − φ); circular light always passes half.</p>
+        </details>
         </div>
         <details class="more"><summary>More about this</summary><p class="hint">Handedness uses the optics convention: right circular light turns clockwise as you face the oncoming wave (δ = −90°). Engineers (IEEE) call the same wave left handed, so check which convention a book uses.</p></details>
       </section>
@@ -289,7 +291,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>Near field edge λ/2π</dt><dd id="rNear">—</dd></div>
           <div><dt>Wavelength λ</dt><dd id="rLam2">—</dd></div>
         </dl>
-        <p class="formula">P = p₀²ω⁴ / (12π ε₀ c³)</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">P = p₀²ω⁴ / (12π ε₀ c³)</p>
+        </details>
         <details class="more"><summary>More about this</summary><p class="hint">The dipole p = p₀ cos ωt points along the vertical axis. It sends nothing along its own axis and most at right angles to it; half power at 45°. Radiated power grows as ω⁴, so doubling f with the same p₀ gives 16 times the power.</p></details>
         <details class="more"><summary>More about this</summary><p class="hint">Close in (r ≪ λ/2π) the field is nearly the dipole's own field, falling as 1/r³. Beyond about a wavelength the 1/r terms win: loops of E break off and move outward at c, with E, B and the direction of travel at right angles, a wave like the one on the Plane wave view.</p></details>
       </section>

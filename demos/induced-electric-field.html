@@ -173,7 +173,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <button type="button" data-p="steady" aria-pressed="false">Steady current</button>
           <button type="button" data-p="ac" aria-pressed="false">Alternating current</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -196,7 +196,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <h2>Closed path</h2>
         <div><div class="slider-head"><label for="sPa">Path radius</label><output id="oPa" for="sPa"></output></div><input type="range" id="sPa" min="0.5" max="9" step="0.1"></div>
         <div><div class="slider-head"><label for="sPd">Path centre, distance from the axis</label><output id="oPd" for="sPd"></output></div><input type="range" id="sPd" min="0" max="9" step="0.1"></div>
-        <p class="hint">Or drag the path, or focus the picture and use the arrow keys. The path is followed counterclockwise; B out of the page counts as positive.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Or drag the path, or focus the picture and use the arrow keys. The path is followed counterclockwise; B out of the page counts as positive.</p>
+        </details>
         <label class="check"><input type="checkbox" id="ring"><span>Make the path a copper ring</span></label>
       </section>
 

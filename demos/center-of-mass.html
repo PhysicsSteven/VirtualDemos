@@ -176,7 +176,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <h2>Masses</h2>
         <div class="btnrow"><button type="button" class="btn" id="addM">Add a mass</button><button type="button" class="btn" id="delM">Remove the selected mass</button></div>
         <div><div class="slider-head"><label for="sMass">Selected mass</label><output id="oMass" for="sMass"></output></div><input type="range" id="sMass" min="0.1" max="5" step="0.1"></div>
-        <p class="hint">Drag a mass to move it (keyboard: Tab to the plate, then 1 to 4 to select, arrows to move).</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag a mass to move it (keyboard: Tab to the plate, then 1 to 4 to select, arrows to move).</p>
+        </details>
       </section>
 
       <section id="fireCtl" hidden>
@@ -195,14 +197,18 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <section>
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
-        <p class="formula">x_cm = Σmᵢxᵢ / Σmᵢ · M a_cm = F_external</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">x_cm = Σmᵢxᵢ / Σmᵢ · M a_cm = F_external</p>
+        </details>
       </section>
 
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the centre of mass marker, its coordinates and the predicted boat shift.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Blind hides the centre of mass marker, its coordinates and the predicted boat shift.</p>
+        </details>
         <details class="more"><summary>More about this</summary><p class="hint">Model: point masses on a massless plate; the firework is a point mass launched at 20 m/s and 60° that splits in two at the top of its flight, with no air drag; the boat floats on water with no drag, and the person walks from one end to the other at 1 m/s relative to the boat (boat 4.0 m long).</p></details>
       </section>
     </aside>

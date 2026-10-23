@@ -34,6 +34,12 @@ body { margin: 0; }
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Force on a Current</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -201,12 +207,14 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <button type="button" data-p="loop" aria-pressed="false">Loop: torque</button>
           <button type="button" data-p="motor" aria-pressed="false">DC motor</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
         <h2>Settings</h2>
-        <p class="hint">Turn the knobs on the panel in the picture (or focus one and use the arrow keys).</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Turn the knobs on the panel in the picture (or focus one and use the arrow keys).</p>
+        </details>
         <label class="check"><input type="checkbox" id="mystery"><span>Mystery magnet: hide B</span></label>
         <label class="check" id="rowComm"><input type="checkbox" id="comm"><span>Commutator (reverse the current every half turn)</span></label>
       </section>
@@ -226,7 +234,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>I (A)</th><th>Δm (g)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">The balance was zeroed with no current, so it reads the magnet's apparent change in mass Δm = F/g (to 0.01 g). Capture stores I, L and the reading; the fit is F = Δm g against I, |slope| = BL sin θ.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The balance was zeroed with no current, so it reads the magnet's apparent change in mass Δm = F/g (to 0.01 g). Capture stores I, L and the reading; the fit is F = Δm g against I, |slope| = BL sin θ.</p>
+        </details>
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Force against current for the captured rows, with a least squares line and residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
       </section>
@@ -235,8 +245,10 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the predicted force, torque and B from the fit, and draws arrows equal length. The balance reading, the meters and the settings stay.</p>
-        <p class="hint">Model: uniform field between the poles and zero outside (no fringing); the balance sees the reaction force on the magnet, which equals the force on the wire (Newton's third law). The loop is rectangular, 4 cm by 4 cm, mass 20 g, with a little friction at its axle; the supply holds the current fixed, so back emf is ignored (a real motor's speed is limited mainly by back emf). The loop is shown 4 times slower than real, the motor about 30 times slower; the rotation rate readout is real.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">Blind hides the predicted force, torque and B from the fit, and draws arrows equal length. The balance reading, the meters and the settings stay.</p>
+          <p class="hint">Model: uniform field between the poles and zero outside (no fringing); the balance sees the reaction force on the magnet, which equals the force on the wire (Newton's third law). The loop is rectangular, 4 cm by 4 cm, mass 20 g, with a little friction at its axle; the supply holds the current fixed, so back emf is ignored (a real motor's speed is limited mainly by back emf). The loop is shown 4 times slower than real, the motor about 30 times slower; the rotation rate readout is real.</p>
+        </details>
       </section>
     </aside>
   </main>

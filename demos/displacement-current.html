@@ -159,7 +159,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="gap" aria-pressed="false">Loop in the gap</button>
           <button type="button" data-p="inside" aria-pressed="false">Small loop inside the plates</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -173,7 +173,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </div>
         <div><div class="slider-head"><label for="sR">Loop radius r</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="0.5" max="9" step="0.1"></div>
         <dl class="readout" id="loopOut"></dl>
-        <p class="formula">∮B·dl = μ₀(I<sub>c</sub> + I<sub>d</sub>), I<sub>d</sub> = ε₀ dΦ<sub>E</sub>/dt</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">∮B·dl = μ₀(I<sub>c</sub> + I<sub>d</sub>), I<sub>d</sub> = ε₀ dΦ<sub>E</sub>/dt</p>
+        </details>
       </section>
 
       <section>
@@ -188,7 +190,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides B, the displacement current, the enclosed currents and the B(r) curve, leaving the circuit current, the field between the plates and the loop's size and place.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Blind hides B, the displacement current, the enclosed currents and the B(r) curve, leaving the circuit current, the field between the plates and the loop's size and place.</p>
+        </details>
       </section>
     </aside>
   </main>

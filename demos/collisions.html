@@ -38,6 +38,12 @@ img { max-width: 100%; }
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Collisions and Momentum</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -279,7 +285,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-p="glance" aria-pressed="false">Glancing 2D collision: 90°</button>
           <button type="button" data-p="impulse" aria-pressed="false">Impulse: soft vs stiff</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -320,7 +326,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <button type="button" class="btn" id="placeGates">Place gates for this run</button>
         <p class="status" id="gateStatus" aria-live="polite"></p>
         <ul class="gates" id="gateList" aria-live="off"></ul>
-        <p class="hint">Each cart carries a 5.0 cm flag. A gate times how long the flag blocks its beam, to 0.1 ms, and shows the speed as flag length ÷ Δt. The timer cannot tell direction: the arrow is the way the cart was seen moving. A cart at rest never reaches a gate and reads 0. Place gates for this run sets them as you would after one trial run: gate A between cart 1's start and where it meets cart 2, gate B the same for cart 2 (or 20 cm beyond a cart that starts at rest). When both carts move the same way, one gate goes where both pass before they meet and the other beyond the collision.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Each cart carries a 5.0 cm flag. A gate times how long the flag blocks its beam, to 0.1 ms, and shows the speed as flag length ÷ Δt. The timer cannot tell direction: the arrow is the way the cart was seen moving. A cart at rest never reaches a gate and reads 0. Place gates for this run sets them as you would after one trial run: gate A between cart 1's start and where it meets cart 2, gate B the same for cart 2 (or 20 cm beyond a cart that starts at rest). When both carts move the same way, one gate goes where both pass before they meet and the other beyond the collision.</p>
+        </details>
       </section>
 
       <section>
@@ -332,7 +340,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings: the velocities before (u) and after (v′) from the photogates, in m/s; the masses are in each row's tooltip</caption><thead><tr><th scope="col">#</th><th scope="col">u₁</th><th scope="col">u₂</th><th scope="col">v₁′</th><th scope="col">v₂′</th><th scope="col"><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Capture stores one finished run: the masses as displayed (in the capture message, the row's tooltip and the CSV) and each cart's velocity before (u) and after (v′) the collision from the gate readings, in m/s, signed +x to the right. Cells can be edited; rows stay through setup changes until Clear. Press C on the drawing to capture.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Capture stores one finished run: the masses as displayed (in the capture message, the row's tooltip and the CSV) and each cart's velocity before (u) and after (v′) the collision from the gate readings, in m/s, signed +x to the right. Cells can be edited; rows stay through setup changes until Clear. Press C on the drawing to capture.</p>
+        </details>
         <div class="seg full" role="group" aria-label="Plot of the readings" id="fitSeg">
           <button type="button" data-k="p" aria-pressed="true">p′ vs p</button>
           <button type="button" data-k="e" aria-pressed="false">Separation vs approach</button>

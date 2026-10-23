@@ -226,7 +226,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="surface" aria-pressed="false">Refracting surface</button>
           <button type="button" data-p="depth" aria-pressed="false">Apparent depth</button>
         </div>
-        <p class="hint" id="presetHint">For a diverging lens, click the lens and choose Diverging.</p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint">For a diverging lens, click the lens and choose Diverging.</p></details>
       </section>
 
       <section>
@@ -314,7 +314,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>Angle inside, at exit face</dt><dd id="rInc">—</dd></div>
           <div><dt>Result</dt><dd id="rRes">—</dd></div>
         </dl>
-        <p class="hint">θ<sub>c</sub> = arcsin(1/n). Past it, light inside the glass cannot get out: total internal reflection. The angle shown is for the middle ray of the beam.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">θ<sub>c</sub> = arcsin(1/n). Past it, light inside the glass cannot get out: total internal reflection. The angle shown is for the middle ray of the beam.</p>
+        </details>
       </section>
 
       <section>

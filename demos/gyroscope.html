@@ -183,7 +183,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <button type="button" data-p="smooth" aria-pressed="false">Smooth start</button>
           <button type="button" data-p="tilt" aria-pressed="false">Axle tilted up</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -197,7 +197,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <section>
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
-        <p class="formula">τ = r × Mg · dL/dt = τ · Ω = Mgd/(I_s ω_s)</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">τ = r × Mg · dL/dt = τ · Ω = Mgd/(I_s ω_s)</p>
+        </details>
       </section>
 
       <section>
@@ -218,7 +220,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the moments of inertia, L, the predicted precession rate and the fitted I_s, leaving the gate timer, the tilt and the settings.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Blind hides the moments of inertia, L, the predicted precession rate and the fitted I_s, leaving the gate timer, the tilt and the settings.</p>
+        </details>
         <details class="more"><summary>More about this</summary><p class="hint">Model: a rigid symmetric wheel on a massless axle, a frictionless pivot, the spin about the axle held constant (no friction in the wheel's bearing). The motion is computed from the exact equations for a heavy symmetric top (RK4, 0.2 ms steps), so the wobble (nutation) and the dip at release are real, not added. Solid disk I_s = ½MR²; rim-heavy wheel 0.905MR²; the wheel's moment about its diameter is I_s/2.</p></details>
       </section>
     </aside>

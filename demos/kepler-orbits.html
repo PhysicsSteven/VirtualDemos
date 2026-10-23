@@ -276,7 +276,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="circle" aria-pressed="false">Circular orbit</button>
           <button type="button" data-p="escape" aria-pressed="false">Escape</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -295,7 +295,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-k="pan" aria-pressed="false">View</button>
           <button type="button" data-k="ruler" aria-pressed="false">Ruler point</button>
         </div>
-        <p class="hint">Focus the orbit view, then use the arrow keys (<kbd>Shift</kbd> for small steps). <kbd>M</kbd> switches what they move, <kbd>+</kbd> and <kbd>−</kbd> zoom, <kbd>1</kbd> and <kbd>2</kbd> pick a ruler point, <kbd>F</kbd> fits the view, <kbd>Space</kbd> plays or pauses.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Focus the orbit view, then use the arrow keys (<kbd>Shift</kbd> for small steps). <kbd>M</kbd> switches what they move, <kbd>+</kbd> and <kbd>−</kbd> zoom, <kbd>1</kbd> and <kbd>2</kbd> pick a ruler point, <kbd>F</kbd> fits the view, <kbd>Space</kbd> plays or pauses.</p>
+        </details>
       </section>
 
       <section>
@@ -391,7 +393,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div><dt>½·h·Δt</dt><dd id="wTheory">—</dd></div>
           <div class="wide"><dt>Spread of measured areas</dt><dd id="wSpread">—</dd></div>
         </dl>
-        <p class="hint">Each wedge is swept in the same time Δt. Areas (AU²) are summed from the integrated path, not from a formula; compare them with ½·h·Δt, where h = |r × v|.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Each wedge is swept in the same time Δt. Areas (AU²) are summed from the integrated path, not from a formula; compare them with ½·h·Δt, where h = |r × v|.</p>
+        </details>
       </section>
 
       <section>

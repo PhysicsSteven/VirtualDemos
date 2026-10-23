@@ -175,13 +175,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="heavy" aria-pressed="false">Too heavy at first</button>
           <button type="button" data-p="slow" aria-pressed="false">Same fuel, burned slowly</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
         <h2>Rocket</h2>
         <label class="check"><input type="checkbox" id="grav"><span>Gravity (launch from the ground)</span></label>
-        <p class="formula">thrust = u × (burn rate) · m dv/dt = thrust − mg</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">thrust = u × (burn rate) · m dv/dt = thrust − mg</p>
+        </details>
       </section>
 
       <section>

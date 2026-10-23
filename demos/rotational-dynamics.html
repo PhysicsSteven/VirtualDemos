@@ -38,6 +38,12 @@ body { margin: 0; }
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Rotational Dynamics</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -216,7 +222,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 
       <section>
         <h2>Drive</h2>
-        <p class="hint">Set the <b>Hanging mass m</b> with the slotted masses beside the pulley (on the picture, the up arrow hangs 5 g and the down arrow takes off the last mass).</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Set the <b>Hanging mass m</b> with the slotted masses beside the pulley (on the picture, the up arrow hangs 5 g and the down arrow takes off the last mass).</p>
+        </details>
         <div class="inline"><span class="lab">Spool radius r</span>
           <div class="seg" role="group" aria-label="Spool radius" id="rSeg"><button type="button" data-r="0.01" aria-pressed="false">1.0 cm</button><button type="button" data-r="0.02" aria-pressed="true">2.0 cm</button><button type="button" data-r="0.03" aria-pressed="false">3.0 cm</button></div></div>
         <label class="check"><input type="checkbox" id="fric"><span>Bearing friction</span></label>
@@ -225,7 +233,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <section>
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
-        <p class="formula">mg − T = ma · Tr − τ_f = Iα · a = αr</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">mg − T = ma · Tr − τ_f = Iα · a = αr</p>
+        </details>
       </section>
 
       <section>
@@ -239,15 +249,19 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>m (kg)</th><th>r (m)</th><th>t (s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="String torque against angular acceleration for the captured rows, with a least squares line and residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
-        <p class="hint">Capture stores m, r, what is on the table and the timer reading for the 0.500 m drop (0.001 s). From each row: a = 2h/t², α = a/r, and the string's torque τ = m(g − a)r. Plotting τ against α for one load gives a line: slope I, intercept the friction torque.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Capture stores m, r, what is on the table and the timer reading for the 0.500 m drop (0.001 s). From each row: a = 2h/t², α = a/r, and the string's torque τ = m(g − a)r. Plotting τ against α for one load gives a line: slope I, intercept the friction torque.</p>
+        </details>
       </section>
 
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides moments of inertia, the predicted motion, the energies and I from the fit, leaving the timer, the masses and the settings. The Mystery object always hides its I.</p>
-        <p class="hint">Model: a rigid turntable on its axle, a massless string that does not slip on the spool, a massless frictionless pulley, and (optionally) a constant friction torque at the bearing. Turntable I₀ = 2.00 × 10⁻³ kg·m². Disk 1.00 kg, radius 10.0 cm; ring 1.00 kg, radii 9.0 and 10.0 cm; two 0.200 kg masses (small cylinders, 1.5 cm radius).</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">Blind hides moments of inertia, the predicted motion, the energies and I from the fit, leaving the timer, the masses and the settings. The Mystery object always hides its I.</p>
+          <p class="hint">Model: a rigid turntable on its axle, a massless string that does not slip on the spool, a massless frictionless pulley, and (optionally) a constant friction torque at the bearing. Turntable I₀ = 2.00 × 10⁻³ kg·m². Disk 1.00 kg, radius 10.0 cm; ring 1.00 kg, radii 9.0 and 10.0 cm; two 0.200 kg masses (small cylinders, 1.5 cm radius).</p>
+        </details>
       </section>
     </aside>
   </main>

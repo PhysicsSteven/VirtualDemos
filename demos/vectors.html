@@ -173,7 +173,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="river" aria-pressed="false">River crossing</button>
           <button type="button" data-p="table" aria-pressed="false">Force table</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section id="secVec">
@@ -199,7 +199,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <label class="check"><input type="checkbox" id="banks"><span>Slower near the banks (zero at the banks, the water speed at mid river)</span></label>
         <button type="button" class="btn" id="aim">Aim to land straight across</button>
         <dl class="readout" id="riverOut"></dl>
-        <p class="formula">v<sub>boat,shore</sub> = v<sub>boat,water</sub> + v<sub>water,shore</sub></p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">v<sub>boat,shore</sub> = v<sub>boat,water</sub> + v<sub>water,shore</sub></p>
+        </details>
         <details class="more"><summary>More about this</summary><p class="hint">The river is 60 m wide. The current is the same everywhere, or (Slower near the banks) zero at each bank and fastest mid river, u(y) = 4u y(W − y)/W², averaging 2u/3; a real river's profile is roughly like this. The boat keeps its heading and speed relative to the water, so its path curves when the current varies. The arrows at the left show the current across the river.</p></details>
       </section>
 

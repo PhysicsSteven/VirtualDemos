@@ -20,6 +20,12 @@ body { margin: 0; }
 .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
 .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
 /* /vd-qr */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Induction at Work</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -197,7 +203,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <button type="button" data-p="card" aria-pressed="false">Card reader</button>
           <button type="button" data-p="uneven" aria-pressed="false">Card, uneven swipe</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section id="secFlash">
@@ -216,7 +222,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 
       <section id="secTablet" hidden>
         <h2>Graphics tablet</h2>
-        <p class="hint">Drag on the tablet to move the pen, or focus the picture and use the arrow keys.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag on the tablet to move the pen, or focus the picture and use the arrow keys.</p>
+        </details>
         <div class="btnrow"><button type="button" class="btn primary" id="circleBtn">Draw a circle</button><button type="button" class="btn" id="clearBtn">Clear the drawing</button></div>
         <label class="check"><input type="checkbox" id="showTrue" checked><span>Show the pen's true path</span></label>
       </section>
@@ -238,7 +246,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the EMF plots, the light's glow and the readouts that answer the question for each device: the capacitor voltage, the tablet's estimate of where the pen is, and the decoded number. Predict first: what happens to the EMF when you shake twice as fast, when the pen stops, when the card goes through slowly?</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Blind hides the EMF plots, the light's glow and the readouts that answer the question for each device: the capacitor voltage, the tablet's estimate of where the pen is, and the decoded number. Predict first: what happens to the EMF when you shake twice as fast, when the pen stops, when the card goes through slowly?</p>
+        </details>
         <p class="hint" id="modelFlash">Flashlight model: a NdFeB magnet (remanence 1.3 T, a typical value; 10 mm across and 20 mm long) treated as a point dipole, m = B_r V/μ₀ = 1.63 A·m², moving through a coil of 1000 turns of radius 12 mm spread over 10 mm. The dipole approximation is good when the magnet is outside the coil and gives the right size, not the exact shape, when it is inside. The coil's resistance comes from its wire: 75 m of 0.20 mm copper, 40.3 Ω. The magnet moves as x = A sin 2πft, driven by your hand whatever the coil does. A bridge rectifier (two diodes conduct, 0.30 V each) charges the capacitor whenever |ε| exceeds V_C + 0.60 V; the light is a white LED taken as 2.6 V in series with 20 Ω. The magnet size, turns, diode drop and LED values are chosen; the energy readouts add up to within 0.01 %, the error of the 0.2 ms time step.</p>
         <p class="hint" id="modelTablet" hidden>Tablet model: the pen tip holds a small NdFeB magnet (1.3 T, 2 mm across, 5 mm long, m = 0.0163 A·m²) pointing down, 5 mm above wires 5 mm apart. Each wire's circuit closes far away, so the flux it encloses is that through a half plane, Φ = −μ₀m u/(2π(u² + h²)) for a pen a distance u from the wire, and the EMF is −dΦ/dt. The tablet finds the pen by fitting this shape to the five strongest wires; it ignores signals below 0.5 µV (a chosen detection threshold, with no electrical noise added). Real passive tablets work differently in one way: the pen's field is made to alternate, so a pen held still is still seen.</p>
         <p class="hint" id="modelCard" hidden>Card model: track 2 of a magnetic stripe, 75 bits per inch (ISO/IEC 7811), recorded in F2F: the magnetization flips at every bit boundary and once more in the middle of a 1. Digits are 4 bits, least significant first, with odd parity, between the start sentinel ; and end sentinel ? (the check character after it is left out). Each flip passing the head gives a pulse of EMF ∝ v g²/((x − x_k)² + g²) with g = 0.04 mm (a chosen head resolution); EMF is shown relative to a single pulse at 1 m/s. The decoder keeps time from the pulses themselves, which is why an uneven swipe still reads.</p>

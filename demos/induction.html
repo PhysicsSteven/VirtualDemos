@@ -150,7 +150,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="contact" aria-pressed="false">Sharing charge by contact</button>
           <button type="button" data-p="shapes" aria-pressed="false">Conductor shapes in a field (2D)</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section id="appSec">
@@ -178,7 +178,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div><div class="slider-head"><label for="sLam">Line charge λ</label><output id="oLam" for="sLam"></output></div><input type="range" id="sLam" min="-10" max="10" step="0.5"></div>
         <div><div class="slider-head"><label for="sLd">Line charge distance from the conductor</label><output id="oLd" for="sLd"></output></div><input type="range" id="sLd" min="0.5" max="4" step="0.1"></div>
         <div><div class="slider-head"><label for="sLc">Net charge on the conductor</label><output id="oLc" for="sLc"></output></div><input type="range" id="sLc" min="-10" max="10" step="0.5"></div>
-        <p class="hint">Drag on the picture, or focus it and use the arrow keys (Shift for bigger steps), to move the probe.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag on the picture, or focus it and use the arrow keys (Shift for bigger steps), to move the probe.</p>
+        </details>
         <canvas class="sigplot" id="sigPlot" role="img" aria-label="Graph of the surface charge density along the surface against the angle around the centre"></canvas>
         <p class="hint" id="plotHint"></p>
       </section>

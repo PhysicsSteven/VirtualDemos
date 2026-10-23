@@ -38,6 +38,12 @@ body { margin: 0; }
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Falling Ball Viscometer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -226,7 +232,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <section>
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
-        <p class="formula">Stokes: F = 6πηrv · v_t = 2(ρ_b − ρ_f)g r²/(9η)</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">Stokes: F = 6πηrv · v_t = 2(ρ_b − ρ_f)g r²/(9η)</p>
+        </details>
       </section>
 
       <section>
@@ -240,15 +248,19 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>d (mm)</th><th>t (s)</th><th>v (mm/s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Terminal speed against diameter squared for the captured rows, with a least squares line through the smallest balls and residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
-        <p class="hint">Capture stores the liquid, ball, tube and the gate time between the marks (0.01 s); v = 0.200 m / t. Stokes' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / (18 × slope). The fit uses the rows that match the current settings.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Capture stores the liquid, ball, tube and the gate time between the marks (0.01 s); v = 0.200 m / t. Stokes' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / (18 × slope). The fit uses the rows that match the current settings.</p>
+        </details>
       </section>
 
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides η, the Stokes prediction, the Reynolds number and the fitted η, leaving the timer and the densities. The Mystery liquid always hides its η.</p>
-        <p class="hint">Model: drag F = 6πηrv × K(d/D) × C_D Re/24, with the standard drag curve of Clift, Grace and Weber (Oseen's 1 + 3Re/16 below Re = 0.01) and Haberman and Sayre's wall factor K for a sphere on the axis of a tube in slow flow (the K you apply). At higher Re the walls matter less: the factor is weakened following Di Felice (1996), whose fit covers Re up to about 200. The ball's motion includes buoyancy and the added mass ½ρ_f V. Densities in kg/m³: steel 7800, glass 2500, nylon 1140. Liquids at 20 °C: glycerol 1261 and η = 1.41 Pa·s; castor oil 961 and 0.986 Pa·s; motor oil (typical SAE 30) 875 and 0.29 Pa·s; water 998 and 1.00 mPa·s.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">Blind hides η, the Stokes prediction, the Reynolds number and the fitted η, leaving the timer and the densities. The Mystery liquid always hides its η.</p>
+          <p class="hint">Model: drag F = 6πηrv × K(d/D) × C_D Re/24, with the standard drag curve of Clift, Grace and Weber (Oseen's 1 + 3Re/16 below Re = 0.01) and Haberman and Sayre's wall factor K for a sphere on the axis of a tube in slow flow (the K you apply). At higher Re the walls matter less: the factor is weakened following Di Felice (1996), whose fit covers Re up to about 200. The ball's motion includes buoyancy and the added mass ½ρ_f V. Densities in kg/m³: steel 7800, glass 2500, nylon 1140. Liquids at 20 °C: glycerol 1261 and η = 1.41 Pa·s; castor oil 961 and 0.986 Pa·s; motor oil (typical SAE 30) 875 and 0.29 Pa·s; water 998 and 1.00 mPa·s.</p>
+        </details>
       </section>
     </aside>
   </main>

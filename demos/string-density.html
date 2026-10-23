@@ -34,6 +34,12 @@ body { margin: 0; }
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Linear Density of a String</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -268,7 +274,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <button type="button" data-p="unknownf" aria-pressed="false">Unknown string, sweep</button>
           <button type="button" data-p="unknownm" aria-pressed="false">Unknown string, add masses</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -289,7 +295,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <button type="button" data-s="U" aria-pressed="false">Unknown string</button>
         </div>
         <div class="btnrow"><button type="button" class="btn" id="newUnknown">New unknown string</button></div>
-        <p class="hint">Drag the vibrator along the table to set the length L (or focus it and use the arrow keys), or use the slider and step buttons for an exact value.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag the vibrator along the table to set the length L (or focus it and use the arrow keys), or use the slider and step buttons for an exact value.</p>
+        </details>
         <div><div class="slider-head"><label for="sL">Length L, vibrator to pulley</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0.5" max="2" step="0.01"></div>
         <div class="btnrow"><button type="button" class="btn" id="Lm">L −1 cm</button><button type="button" class="btn" id="Lp">L +1 cm</button></div>
       </section>
@@ -319,7 +327,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <div class="seg" role="group" aria-label="What to plot" id="plotSeg"><button type="button" data-plot="fn" aria-pressed="true">f against n</button><button type="button" data-plot="Tn" aria-pressed="false">T against 1/n²</button></div></div>
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="The recorded readings with a least squares line and its residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
-        <p class="hint">Record stores L, m, T, f and the number of loops n (you can correct n in the table). f against n at one mass: slope v/2L, so μ = T/(4L² · slope²). T against 1/n² at one frequency: slope 4L²f²μ, so μ = slope/(4L²f²). Both lines should pass close to the origin.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Record stores L, m, T, f and the number of loops n (you can correct n in the table). f against n at one mass: slope v/2L, so μ = T/(4L² · slope²). T against 1/n² at one frequency: slope 4L²f²μ, so μ = slope/(4L²f²). Both lines should pass close to the origin.</p>
+        </details>
       </section>
 
       <section>

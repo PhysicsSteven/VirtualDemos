@@ -20,6 +20,12 @@ body { margin: 0; }
 .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
 .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
 /* /vd-qr */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Magnetism in Matter</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -169,7 +175,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <button type="button" data-p="iron" aria-pressed="false">Iron, Example 12.10</button>
           <button type="button" data-p="loop" aria-pressed="false">Iron hysteresis loop</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -207,10 +213,12 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the field with the core</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides B, B − B₀ and the plot, and covers the core. Predict first: with the current set, will B be larger or smaller than B₀, and by how much?</p>
-        <p class="hint">Model: the solenoid is long, so inside it B₀ = μ₀nI and the core fills it, B = (1 + χ)B₀ (OpenStax Eq. 12.36 and 12.37). The susceptibilities are OpenStax Table 12.2 (room temperature unless noted). Densities for the floating readout are from the CRC Handbook at 20 °C: water 998.2 kg/m³, copper 8960 kg/m³, bismuth 9780 kg/m³. A small piece of a linear material feels a force per volume (χ/μ₀) B dB/dz along the axis of a field that changes with height z, so above a magnet, where the field falls with height, a diamagnet floats where |B dB/dz| = μ₀ρg/|χ|, with g = 9.81 m/s².</p>
-        <p class="hint">Iron is not linear, so it uses the Jiles and Atherton model of hysteresis (J. Magn. Magn. Mater. 61, 48, 1986). The saturation magnetization is that of iron, M_s = 1.707 × 10⁶ A/m (Kittel, Introduction to Solid State Physics). The other four values, a = 80 A/m, k = 300 A/m, α = 2.0 × 10⁻⁴ and c = 0.4, are chosen so the first magnetization curve passes near the two points read from OpenStax Figure 12.25 (marked on the plot): the model gives 0.56 T where the figure gives 0.60 T, and 1.51 T where it gives 1.5 T. At the 0.20 A of Example 12.10 it gives 1.41 T; the book reads 1.4 T. This is a model of a soft iron, not measured data for one sample; real irons differ a great deal with purity and heat treatment. In the long coil, H = nI = B₀/μ₀ exactly.</p>
-        <p class="hint">The drawing inside the core is a cartoon. Paramagnetic atoms are drawn with their alignment exaggerated (the true alignment is tiny, since μB is far below kT), and diamagnetic atoms with their induced moments exaggerated. Iron is drawn as domains: the fraction pointing along the field is (1 + M/M_s)/2, which is the right average but not the real shapes of domains, which also rotate.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">Blind hides B, B − B₀ and the plot, and covers the core. Predict first: with the current set, will B be larger or smaller than B₀, and by how much?</p>
+          <p class="hint">Model: the solenoid is long, so inside it B₀ = μ₀nI and the core fills it, B = (1 + χ)B₀ (OpenStax Eq. 12.36 and 12.37). The susceptibilities are OpenStax Table 12.2 (room temperature unless noted). Densities for the floating readout are from the CRC Handbook at 20 °C: water 998.2 kg/m³, copper 8960 kg/m³, bismuth 9780 kg/m³. A small piece of a linear material feels a force per volume (χ/μ₀) B dB/dz along the axis of a field that changes with height z, so above a magnet, where the field falls with height, a diamagnet floats where |B dB/dz| = μ₀ρg/|χ|, with g = 9.81 m/s².</p>
+          <p class="hint">Iron is not linear, so it uses the Jiles and Atherton model of hysteresis (J. Magn. Magn. Mater. 61, 48, 1986). The saturation magnetization is that of iron, M_s = 1.707 × 10⁶ A/m (Kittel, Introduction to Solid State Physics). The other four values, a = 80 A/m, k = 300 A/m, α = 2.0 × 10⁻⁴ and c = 0.4, are chosen so the first magnetization curve passes near the two points read from OpenStax Figure 12.25 (marked on the plot): the model gives 0.56 T where the figure gives 0.60 T, and 1.51 T where it gives 1.5 T. At the 0.20 A of Example 12.10 it gives 1.41 T; the book reads 1.4 T. This is a model of a soft iron, not measured data for one sample; real irons differ a great deal with purity and heat treatment. In the long coil, H = nI = B₀/μ₀ exactly.</p>
+          <p class="hint">The drawing inside the core is a cartoon. Paramagnetic atoms are drawn with their alignment exaggerated (the true alignment is tiny, since μB is far below kT), and diamagnetic atoms with their induced moments exaggerated. Iron is drawn as domains: the fraction pointing along the field is (1 + M/M_s)/2, which is the right average but not the real shapes of domains, which also rotate.</p>
+        </details>
       </section>
     </aside>
   </main>

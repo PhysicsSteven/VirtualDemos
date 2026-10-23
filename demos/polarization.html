@@ -241,7 +241,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="hwp" aria-pressed="false">Half wave plate rotates polarization</button>
           <button type="button" data-p="brewster" aria-pressed="false">Brewster's angle and glare</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <!-- bench view -->
@@ -269,7 +269,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Elements, in order along the beam</h2>
         <div class="els" id="els"></div>
         <button type="button" class="btn" id="addEl">Add an element</button>
-        <p class="hint">The angle is the transmission axis for a polarizer and the fast axis for a wave plate. Drag a disk on the drawing to turn it; click a disk or its number to plot it.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The angle is the transmission axis for a polarizer and the fast axis for a wave plate. Drag a disk on the drawing to turn it; click a disk or its number to plot it.</p>
+        </details>
       </section>
 
       <section class="vb">
@@ -346,7 +348,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="wide big"><dt>Glare: reflected fraction of the incoming light</dt><dd id="rGlare">—</dd></div>
           <div class="wide"><dt>Reflected light that is s polarized</dt><dd id="rDop">—</dd></div>
         </dl>
-        <p class="formula">r<sub>s</sub> = (n₁cos θ<sub>i</sub> − n₂cos θ<sub>t</sub>)/(n₁cos θ<sub>i</sub> + n₂cos θ<sub>t</sub>)<br>r<sub>p</sub> = (n₂cos θ<sub>i</sub> − n₁cos θ<sub>t</sub>)/(n₂cos θ<sub>i</sub> + n₁cos θ<sub>t</sub>)<br>R = |r|², T = 1 − R, tan θ<sub>B</sub> = n₂/n₁</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">r<sub>s</sub> = (n₁cos θ<sub>i</sub> − n₂cos θ<sub>t</sub>)/(n₁cos θ<sub>i</sub> + n₂cos θ<sub>t</sub>)<br>r<sub>p</sub> = (n₂cos θ<sub>i</sub> − n₁cos θ<sub>t</sub>)/(n₂cos θ<sub>i</sub> + n₁cos θ<sub>t</sub>)<br>R = |r|², T = 1 − R, tan θ<sub>B</sub> = n₂/n₁</p>
+        </details>
         <div class="key">
           <span><i class="swatch rs"></i>s: E out of the page (dots)</span>
           <span><i class="swatch rp"></i>p: E in the plane of incidence (arrows)</span>

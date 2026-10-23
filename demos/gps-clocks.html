@@ -181,14 +181,18 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <section>
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
-        <p class="formula">dτ/dt = √(1 − 2GM/(rc²) − v²/c²)</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">dτ/dt = √(1 − 2GM/(rc²) − v²/c²)</p>
+        </details>
       </section>
 
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the rates and the gain per day, leaving r, v and the clocks' accumulated difference.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Blind hides the rates and the gain per day, leaving r, v and the clocks' accumulated difference.</p>
+        </details>
         <details class="more"><summary>More about this</summary><p class="hint">Model: Earth is a non-rotating spherical mass (Schwarzschild field); each clock's rate relative to coordinate time is √(1 − 2GM/(rc²) − v²/c²), with v its speed in the non-rotating frame. The ground clock sits on a sphere of radius 6371 km, at rest or carried round at the equator once per sidereal day. Earth's flattening and the Sun and Moon are left out. The clocks run 1 simulated hour per second.</p></details>
       </section>
     </aside>

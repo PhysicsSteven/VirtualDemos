@@ -38,6 +38,12 @@ img { max-width: 100%; }
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Rotation and Torque</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -271,7 +277,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="skater" aria-pressed="false">Skater</button>
           <button type="button" data-p="seesaw" aria-pressed="false">Seesaw</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <!-- ===== torque ===== -->
@@ -301,7 +307,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
             <button type="button" data-m="room" aria-pressed="false">its direction</button>
           </div>
         </div>
-        <p class="hint">Drag the push point along the door and drag the arrow tip to aim and size the force. Keys: <kbd>←</kbd> <kbd>→</kbd> move the push point, <kbd>↑</kbd> <kbd>↓</kbd> turn the force, <kbd>+</kbd> <kbd>−</kbd> change its size, <kbd>Enter</kbd> pushes.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag the push point along the door and drag the arrow tip to aim and size the force. Keys: <kbd>←</kbd> <kbd>→</kbd> move the push point, <kbd>↑</kbd> <kbd>↓</kbd> turn the force, <kbd>+</kbd> <kbd>−</kbd> change its size, <kbd>Enter</kbd> pushes.</p>
+        </details>
       </section>
       <section data-scene="torque">
         <h2>Door</h2>
@@ -341,7 +349,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="slider-head"><label for="rD">Ramp length D</label><output id="rDOut" class="mono" for="rD"></output></div>
           <input type="range" id="rD" min="0.5" max="4" step="0.1" value="2">
         </div>
-        <p class="hint">Drag the round grip at the top of the lowest board to tilt the ramp. Keys: <kbd>↑</kbd> <kbd>↓</kbd> tilt, <kbd>1</kbd>–<kbd>5</kbd> select a lane, <kbd>Enter</kbd> races.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag the round grip at the top of the lowest board to tilt the ramp. Keys: <kbd>↑</kbd> <kbd>↓</kbd> tilt, <kbd>1</kbd>–<kbd>5</kbd> select a lane, <kbd>Enter</kbd> races.</p>
+        </details>
       </section>
       <section data-scene="roll" hidden>
         <h2 id="selTitle">Selected lane</h2>
@@ -360,7 +370,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="slider-head"><label for="rR">Radius R</label><output id="rROut" class="mono" for="rR"></output></div>
           <input type="range" id="rR" min="2" max="15" step="0.5" value="10">
         </div>
-        <p class="hint">Click an object to select it. Change its mass and radius, even mid race: the motion does not change, only the energies in joules and the size.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Click an object to select it. Change its mass and radius, even mid race: the motion does not change, only the energies in joules and the size.</p>
+        </details>
         <dl class="readout">
           <div><dt>I / mR²</dt><dd id="oK">—</dd></div>
           <div class="big"><dt>a = g sin β / (1 + I/mR²)</dt><dd id="oA">—</dd></div>
@@ -373,8 +385,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       <section data-scene="roll" hidden>
         <h2>Race results</h2>
         <table class="tbl" id="raceTbl"></table>
-        <p class="hint">Every object that rolls without slipping loses the same potential energy mgh, but part of it goes into spinning. The larger I/mR², the bigger that share, and the slower it goes down. The frictionless block puts it all into sliding, so it wins.</p>
-        <p class="hint">Assumes enough static friction to roll without slipping, no rolling resistance and no air drag; static friction does no work on a rolling object. Objects are drawn larger than scale.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Every object that rolls without slipping loses the same potential energy mgh, but part of it goes into spinning. The larger I/mR², the bigger that share, and the slower it goes down. The frictionless block puts it all into sliding, so it wins.</p>
+          <p class="hint">Assumes enough static friction to roll without slipping, no rolling resistance and no air drag; static friction does no work on a rolling object. Objects are drawn larger than scale.</p>
+        </details>
       </section>
 
       <!-- ===== spin ===== -->
@@ -406,7 +420,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="slider-head"><label for="sI0">Body or platform I₀</label><output id="sI0Out" class="mono" for="sI0"></output></div>
           <input type="range" id="sI0" min="0.2" max="12" step="0.1" value="0.8">
         </div>
-        <p class="hint">Drag a mass in or out. Keys: <kbd>↑</kbd> <kbd>↓</kbd> move the masses out and in, <kbd>Space</kbd> plays or pauses. Moving the masses only pulls along the radius, so there is no torque and L stays the same. The spin rate slider and the mass sliders reset the system, as if someone outside gave it a twist.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag a mass in or out. Keys: <kbd>↑</kbd> <kbd>↓</kbd> move the masses out and in, <kbd>Space</kbd> plays or pauses. Moving the masses only pulls along the radius, so there is no torque and L stays the same. The spin rate slider and the mass sliders reset the system, as if someone outside gave it a twist.</p>
+        </details>
       </section>
       <section data-scene="spin" hidden>
         <h2>Angular momentum</h2>
@@ -419,7 +435,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div><dt>KE now / KE at start</dt><dd id="sKr">—</dd></div>
           <div><dt>I at start / I now</dt><dd id="sIrat">—</dd></div>
         </dl>
-        <p class="hint">With L fixed, KE = L²/2I, so the kinetic energy grows by the same factor that I shrinks. ω grows by that factor too, which is why the ω and KE lines on the chart lie on top of each other. The extra energy is work done by your arms: they pull each mass toward the axis, and the masses move inward along that pull.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">With L fixed, KE = L²/2I, so the kinetic energy grows by the same factor that I shrinks. ω grows by that factor too, which is why the ω and KE lines on the chart lie on top of each other. The extra energy is work done by your arms: they pull each mass toward the axis, and the masses move inward along that pull.</p>
+        </details>
         <p class="hint" id="spinModel"></p>
       </section>
 
@@ -451,7 +469,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <input type="range" id="eXC" min="-2" max="2" step="0.05" value="0.5">
         </div>
         <button type="button" class="btn" id="balB">Move B to the balance point</button>
-        <p class="hint">Drag the blocks along the beam. Keys: <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> pick a block, <kbd>←</kbd> <kbd>→</kbd> move it, <kbd>Enter</kbd> releases or holds the beam.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag the blocks along the beam. Keys: <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> pick a block, <kbd>←</kbd> <kbd>→</kbd> move it, <kbd>Enter</kbd> releases or holds the beam.</p>
+        </details>
       </section>
       <section data-scene="seesaw" hidden>
         <h2>Torques about the pivot</h2>
@@ -466,7 +486,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div><dt>Time to touch down</dt><dd id="eTl">—</dd></div>
         </dl>
         <p class="hint" id="seeState"></p>
-        <p class="hint">A block on the left (x &lt; 0) twists the beam counterclockwise, one on the right clockwise. Balanced means m₁x₁ + m₂x₂ + m₃x₃ = 0: a heavy block close in matches a light block far out. Uniform 4 m beam of 10 kg pivoted at its center, so its own weight has no torque. Blocks are treated as point masses fixed on the beam's center line.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">A block on the left (x &lt; 0) twists the beam counterclockwise, one on the right clockwise. Balanced means m₁x₁ + m₂x₂ + m₃x₃ = 0: a heavy block close in matches a light block far out. Uniform 4 m beam of 10 kg pivoted at its center, so its own weight has no torque. Blocks are treated as point masses fixed on the beam's center line.</p>
+        </details>
       </section>
 
       <section>
@@ -481,7 +503,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       <section>
         <h2>Plot data</h2>
         <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
-        <p class="hint">Tables of the values drawn in the charts for this scene, for readers who cannot see the plots.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Tables of the values drawn in the charts for this scene, for readers who cannot see the plots.</p>
+        </details>
         <div id="dataWrap" hidden>
           <p class="hint dcap" id="dAcap"></p><div class="twrap"><table class="dtab" aria-labelledby="dAcap"><thead id="dAhead"></thead><tbody id="dAbody"></tbody></table></div>
           <div id="dBwrap"><p class="hint dcap" id="dBcap"></p><div class="twrap"><table class="dtab" aria-labelledby="dBcap"><thead id="dBhead"></thead><tbody id="dBbody"></tbody></table></div></div>

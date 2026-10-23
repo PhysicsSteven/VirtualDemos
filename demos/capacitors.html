@@ -352,7 +352,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 
       <section data-view="single">
         <h2>Plates</h2>
-        <p class="hint">Drag the grips on the picture: the top plate's grip for the <b>Separation d</b>, the side grip for the <b>Plate area A</b>, the slab for <b>Inserted x/s</b>, and the battery up or down for the <b>Battery voltage V<sub>b</sub></b>; click the battery's switch to connect or isolate it. Keys on the picture: ↑ ↓ d, ← → x/s, Page Up/Down A, + − V<sub>b</sub>, M connect.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag the grips on the picture: the top plate's grip for the <b>Separation d</b>, the side grip for the <b>Plate area A</b>, the slab for <b>Inserted x/s</b>, and the battery up or down for the <b>Battery voltage V<sub>b</sub></b>; click the battery's switch to connect or isolate it. Keys on the picture: ↑ ↓ d, ← → x/s, Page Up/Down A, + − V<sub>b</sub>, M connect.</p>
+        </details>
         <details class="fold"><summary>Exact values</summary><div class="foldbody">
         <div class="ctl">
           <div class="slider-head"><label for="sV">Battery voltage V<sub>b</sub></label><output id="oV" class="mono" for="sV"></output></div>
@@ -440,7 +442,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <h2>Energy in the field</h2>
         <dl class="readout" id="fieldE"></dl>
         <p class="formula mono" id="fieldEq"></p>
-        <p class="hint">The energy density is u = ½κε₀E² (or ½E·D). In the ideal model the field is uniform in each region, so u times the volume of each region, summed, gives exactly ½CV².</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The energy density is u = ½κε₀E² (or ½E·D). In the ideal model the field is uniform in each region, so u times the volume of each region, summed, gives exactly ½CV².</p>
+        </details>
       </section>
 
       <section data-view="combo" hidden>

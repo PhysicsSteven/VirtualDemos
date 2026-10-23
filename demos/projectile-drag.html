@@ -38,6 +38,12 @@ img { max-width: 100%; }
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Projectile Range</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -289,7 +295,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
           <button type="button" data-p="soccer" aria-pressed="false">Soccer ball</button>
           <button type="button" data-p="heavy" aria-pressed="false">Heavy vs light, same size</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -307,7 +313,9 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
       <section>
         <div class="shots-head"><h2>Shots</h2><span id="shotCount" class="mono"></span></div>
         <ol class="shots" id="shotList" aria-label="Shots on screen"></ol>
-        <p class="hint">R range, H highest point, T flight time. Settings that differ between shots are in bold. Click a shot to load its settings into the controls. Up to 8 shots; the oldest drops off.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">R range, H highest point, T flight time. Settings that differ between shots are in bold. Click a shot to load its settings into the controls. Up to 8 shots; the oldest drops off.</p>
+        </details>
       </section>
 
       <section>
@@ -324,7 +332,9 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
           <div class="slider-head"><label for="height">Launch height</label><output id="heightOut" class="mono" for="height"></output></div>
           <input type="range" id="height" min="0" max="10" step="0.1" value="0">
         </div>
-        <p class="hint">Drag in the view to aim, drag the arrow tip to change the speed too, and drag the hub up to raise the launcher. On the view, arrow keys change the angle, <kbd>Page Up</kbd> and <kbd>Page Down</kbd> the height, <kbd>Enter</kbd> launches.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag in the view to aim, drag the arrow tip to change the speed too, and drag the hub up to raise the launcher. On the view, arrow keys change the angle, <kbd>Page Up</kbd> and <kbd>Page Down</kbd> the height, <kbd>Enter</kbd> launches.</p>
+        </details>
       </section>
 
       <section id="secMeasure">
@@ -349,7 +359,9 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
           <button type="button" class="btn" id="dotNext">Later dot</button>
           <button type="button" class="btn" id="dotHide">Hide cursor</button>
         </div>
-        <p class="hint">The time cursor sits on a dot of the selected shot: t is a whole number of dot intervals after launch. Click a time graph to place it, or use the buttons, or <kbd>,</kbd> and <kbd>.</kbd> on the view (<kbd>Home</kbd>, <kbd>End</kbd> jump to launch and the last dot). x and y read to 1 cm from the launcher's foot; R is where the ball lands, to 1 cm.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The time cursor sits on a dot of the selected shot: t is a whole number of dot intervals after launch. Click a time graph to place it, or use the buttons, or <kbd>,</kbd> and <kbd>.</kbd> on the view (<kbd>Home</kbd>, <kbd>End</kbd> jump to launch and the last dot). x and y read to 1 cm from the launcher's foot; R is where the ball lands, to 1 cm.</p>
+        </details>
       </section>
 
       <section id="secReadings">
@@ -361,7 +373,9 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
         </div>
         <p class="hint status" id="labStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="tbl"><caption class="sr-only">Captured readings: launch angle, cursor time, height and range</caption><thead><tr><th>#</th><th>θ (°)</th><th>t (s)</th><th>y (m)</th><th>R (m)</th><th><span class="sr-only">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Capture stores what you read for the selected shot: its settings as displayed, the cursor's t, x and y, and its range R. Cells can be edited; rows stay through preset changes until Clear. The CSV also has x and every setting.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Capture stores what you read for the selected shot: its settings as displayed, the cursor's t, x and y, and its range R. Cells can be edited; rows stay through preset changes until Clear. The CSV also has x and every setting.</p>
+        </details>
         <div class="seg" id="plotSeg" role="group" aria-label="What to plot">
           <button type="button" data-plot="yt" aria-pressed="true">y against t</button>
           <button type="button" data-plot="rs" aria-pressed="false">R against sin 2θ</button>
@@ -405,7 +419,9 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
           <div class="slider-head"><label for="rho">Air density ρ</label><output id="rhoOut" class="mono" for="rho"></output></div>
           <input type="range" id="rho" min="0" max="1.4" step="0.005" value="1.225">
         </div>
-        <p class="hint">Turning air resistance off keeps you on Earth with the same ball and the same air; only the drag force is switched off. Moon removes the air itself but keeps Earth's g<span id="airG"> = 9.81 m/s²</span>. A drag coefficient of 0 does the same thing gradually. Sea level is the standard atmosphere, 1.225 kg/m³ (101.3 kPa, 15 °C); Denver is 1.0 kg/m³, the standard pressure at 1609 m (83.4 kPa) at about 17 °C.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Turning air resistance off keeps you on Earth with the same ball and the same air; only the drag force is switched off. Moon removes the air itself but keeps Earth's g<span id="airG"> = 9.81 m/s²</span>. A drag coefficient of 0 does the same thing gradually. Sea level is the standard atmosphere, 1.225 kg/m³ (101.3 kPa, 15 °C); Denver is 1.0 kg/m³, the standard pressure at 1609 m (83.4 kPa) at about 17 °C.</p>
+        </details>
       </section>
 
       <section id="secPred">
@@ -420,7 +436,9 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
           <div><dt>Best angle, drag</dt><dd id="rOpt">—</dd></div>
           <div><dt>Best angle, vacuum</dt><dd id="rOptV">—</dd></div>
         </dl>
-        <p class="hint">What the next shot will do. Each shot in the list keeps its own numbers.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">What the next shot will do. Each shot in the list keeps its own numbers.</p>
+        </details>
       </section>
 
       <section id="secVt">
@@ -430,7 +448,9 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
           <div class="big"><dt>v₀ / v<sub>t</sub></dt><dd id="rRatio">—</dd></div>
         </dl>
         <p class="hint" id="dragHint"></p>
-        <p class="hint">Drag matters when the launch speed is comparable to or larger than v<sub>t</sub>.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag matters when the launch speed is comparable to or larger than v<sub>t</sub>.</p>
+        </details>
       </section>
 
       <section>
@@ -450,7 +470,9 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides g, the vacuum path, the next shot preview, the predicted range, height, time and best angles, the terminal speed, the model curves on the range graph and the drag graph. The flight of each shot, the dots, the cursor reading and the range of each shot stay, as a real camera and tape would give them. Reduce motion shows each shot already landed instead of flying.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Blind hides g, the vacuum path, the next shot preview, the predicted range, height, time and best angles, the terminal speed, the model curves on the range graph and the drag graph. The flight of each shot, the dots, the cursor reading and the range of each shot stay, as a real camera and tape would give them. Reduce motion shows each shot already landed instead of flying.</p>
+        </details>
       </section>
 
       <section>
@@ -462,8 +484,10 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
           <span><i class="swatch opt"></i>Best angle on the range graph</span>
           <span><i class="swatch cur"></i>Launch arrow and current angle</span>
         </div>
-        <p class="hint">From ground level in vacuum the best angle is 45°. Drag lowers it. So does launching from above the ground, even with no air.</p>
-        <p class="hint">Model: drag F = ½ρC<sub>d</sub>Av² against the velocity with constant C<sub>d</sub>, no spin, no wind, flat ground, g and ρ constant with height. Fourth order Runge–Kutta with steps of at most 1 ms; the landing point is interpolated within the last step. The balls are drawn larger than scale.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">From ground level in vacuum the best angle is 45°. Drag lowers it. So does launching from above the ground, even with no air.</p>
+          <p class="hint">Model: drag F = ½ρC<sub>d</sub>Av² against the velocity with constant C<sub>d</sub>, no spin, no wind, flat ground, g and ρ constant with height. Fourth order Runge–Kutta with steps of at most 1 ms; the landing point is interpolated within the last step. The balls are drawn larger than scale.</p>
+        </details>
       </section>
     </aside>
   </main>

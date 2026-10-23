@@ -34,6 +34,12 @@ body { margin: 0; }
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Forces and Friction</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -217,19 +223,23 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <button type="button" data-p="table" aria-pressed="false">Hanging mass on a table</button>
           <button type="button" data-p="rampm" aria-pressed="false">Ramp and hanging mass</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
         <h2>Ramp and block</h2>
-        <p class="hint">Turn the knobs on the panel in the picture (or focus one and use the arrow keys).</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Turn the knobs on the panel in the picture (or focus one and use the arrow keys).</p>
+        </details>
         <label class="check"><input type="checkbox" id="mystery"><span>Mystery surface: hide μs and μk</span></label>
         <button type="button" class="btn" id="newMystery" hidden>New mystery surface</button>
       </section>
 
       <section>
         <h2>Pulls on the block</h2>
-        <p class="hint">F points up the ramp, tilted above the surface by its angle (below for a negative angle, pressing into the ramp). The string over the pulley runs parallel to the ramp. The string and pulley are massless and frictionless.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">F points up the ramp, tilted above the surface by its angle (below for a negative angle, pressing into the ramp). The string over the pulley runs parallel to the ramp. The string and pulley are massless and frictionless.</p>
+        </details>
       </section>
 
       <section>
@@ -243,7 +253,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <section>
         <h2>Work and energy since release</h2>
         <dl class="readout" id="workOut"></dl>
-        <p class="hint">Work by each force on the block, W = F·Δs, added up as it moves. Their sum equals the change in the block's kinetic energy (the work energy theorem). The normal force does no work. Friction's work is negative: that energy becomes thermal energy of the block and ramp. Power is the rate of work now, P = F·v.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Work by each force on the block, W = F·Δs, added up as it moves. Their sum equals the change in the block's kinetic energy (the work energy theorem). The normal force does no work. Friction's work is negative: that energy becomes thermal energy of the block and ramp. Power is the rate of work now, P = F·v.</p>
+        </details>
       </section>
 
       <section>
@@ -255,19 +267,23 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>θ (°)</th><th>t (s)</th><th>a (m/s²)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Use <b>Release at the top mark</b>: the timer reads the time for the block to slide 1.000 m from rest (to 0.001 s). Capture stores θ, m, m₂, F and that time; a = 2d/t² is worked out from your time.</p>
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="a / cos θ against tan θ for the captured rows, with a least squares line and residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
         <div class="twrap" id="fitWrap" hidden><table class="rows" id="fitTbl"><caption class="sr">Plotted points</caption><thead><tr><th>tan θ</th><th>a/cos θ</th><th>fit</th><th>resid.</th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Sliding down with no push or hanging mass, a = g sin θ − μk g cos θ, so a/cos θ = g tan θ − μk g: a straight line with slope g and intercept −μk g. The fit uses only rows with F = 0 and m₂ = 0.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Use <b>Release at the top mark</b>: the timer reads the time for the block to slide 1.000 m from rest (to 0.001 s). Capture stores θ, m, m₂, F and that time; a = 2d/t² is worked out from your time.</p>
+          <p class="hint">Sliding down with no push or hanging mass, a = g sin θ − μk g cos θ, so a/cos θ = g tan θ − μk g: a straight line with slope g and intercept −μk g. The fit uses only rows with F = 0 and m₂ = 0.</p>
+        </details>
       </section>
 
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides every force size, the acceleration, the friction type, the slip angle, the arrows' lengths (all drawn the same size) and μk from the fit. The timer, the settings and the force directions stay.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Blind hides every force size, the acceleration, the friction type, the slip angle, the arrows' lengths (all drawn the same size) and μk from the fit. The timer, the settings and the force directions stay.</p>
+        </details>
       </section>
     </aside>
   </main>

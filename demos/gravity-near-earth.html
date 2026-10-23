@@ -183,14 +183,18 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <section>
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
-        <p class="formula">g = GM/(R + h)² ≈ g₀(1 − 2h/R) for h ≪ R</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">g = GM/(R + h)² ≈ g₀(1 − 2h/R) for h ≪ R</p>
+        </details>
       </section>
 
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides g, the scale reading and the percentages, leaving the height, latitude and the planet's GM and R.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Blind hides g, the scale reading and the percentages, leaving the height, latitude and the planet's GM and R.</p>
+        </details>
         <details class="more"><summary>More about this</summary><p class="hint">Model: a uniform sphere (GM and mean radius) turning once per sidereal day. The scale is at rest relative to the ground, so it reads the vector sum of gravity and the centrifugal term ω² r cos(latitude) outward from the axis; the plumb line tilts by the angle shown. The real Earth is also flattened, which the sphere misses: the comparison line uses the standard sea level formula (WGS 84). Heights on the slider run on a square root scale.</p></details>
       </section>
     </aside>

@@ -38,6 +38,12 @@ body { margin: 0; }
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+/* vd-trim: folded sidebar text (tools/rail_trim.py) */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+/* /vd-trim */
 </style>
 <title>Impulse and Momentum</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -222,7 +228,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <section>
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
-        <p class="formula">J = ∫F dt = Δp = m(v_after − v_before)</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">J = ∫F dt = Δp = m(v_after − v_before)</p>
+        </details>
       </section>
 
       <section>
@@ -235,15 +243,19 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>bumper</th><th>m (kg)</th><th>v₁ (m/s)</th><th>v₂ (m/s)</th><th>area (N·s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">The motion detector gives the velocity before (v₁) and after (v₂) the bounce, to 0.001 m/s, positive toward the sensor. The area is the trapezoid sum of the sampled sensor readings. Capture stores one row per run; export a run's F(t) to integrate it yourself.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The motion detector gives the velocity before (v₁) and after (v₂) the bounce, to 0.001 m/s, positive toward the sensor. The area is the trapezoid sum of the sampled sensor readings. Capture stores one row per run; export a run's F(t) to integrate it yourself.</p>
+        </details>
       </section>
 
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the area, the momentum change and the peak force, leaving the graph, the velocities and the settings.</p>
-        <p class="hint">Model: a frictionless cart; the bumper pushes with F = kx while it is compressed, then unloads along a steeper line so the cart leaves with e times its speed (e is the coefficient of restitution). Each phase is simple harmonic, so F(t) is exact. Stiff spring k = 4000 N/m, e = 0.90; soft spring k = 400 N/m, e = 0.90; clay k = 1500 N/m, e = 0.10. The sensor reads the force to 0.01 N at the chosen sample rate.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">Blind hides the area, the momentum change and the peak force, leaving the graph, the velocities and the settings.</p>
+          <p class="hint">Model: a frictionless cart; the bumper pushes with F = kx while it is compressed, then unloads along a steeper line so the cart leaves with e times its speed (e is the coefficient of restitution). Each phase is simple harmonic, so F(t) is exact. Stiff spring k = 4000 N/m, e = 0.90; soft spring k = 400 N/m, e = 0.90; clay k = 1500 N/m, e = 0.10. The sensor reads the force to 0.01 N at the chosen sample rate.</p>
+        </details>
       </section>
     </aside>
   </main>

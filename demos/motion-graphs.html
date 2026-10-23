@@ -192,7 +192,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <button type="button" data-p="toss" aria-pressed="false">Ball thrown up</button>
           <button type="button" data-p="walk" aria-pressed="false">Walk the graph</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section id="secMotion">
@@ -200,7 +200,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <div><div class="slider-head"><label for="sx0">Start position x₀</label><output id="ox0" for="sx0"></output></div><input type="range" id="sx0" min="-8" max="8" step="0.5"></div>
         <div><div class="slider-head"><label for="sv0">Start velocity v₀</label><output id="ov0" for="sv0"></output></div><input type="range" id="sv0" min="-15" max="15" step="0.5"></div>
         <div id="segs"></div>
-        <p class="hint">Three stages, each with a constant acceleration for a set time. Set a stage's time to 0 to skip it.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Three stages, each with a constant acceleration for a set time. Set a stage's time to 0 to skip it.</p>
+        </details>
       </section>
 
       <section id="secWalk" hidden>
@@ -233,12 +235,14 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>t (s)</th><th>x (m)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Capture stores the time and position shown at the marker (t to 0.01 s, x to 0.01 m). Cells can be edited.</p>
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Captured x against t with a least squares parabola and a strip of residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
         <div class="twrap" id="fitWrap" hidden><table class="rows" id="fitTbl"><caption class="sr">Plotted readings with fitted values</caption><thead><tr><th>t (s)</th><th>x (m)</th><th>fit (m)</th><th>residual (m)</th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">The fit is x = x₀ + v₀t + ½at² by least squares over your rows, for one stage of constant acceleration. Capture rows from one stage only.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Capture stores the time and position shown at the marker (t to 0.01 s, x to 0.01 m). Cells can be edited.</p>
+          <p class="hint">The fit is x = x₀ + v₀t + ½at² by least squares over your rows, for one stage of constant acceleration. Capture rows from one stage only.</p>
+        </details>
       </section>
 
       <section>

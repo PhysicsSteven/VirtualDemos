@@ -145,7 +145,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="sign" aria-pressed="false">Sign on a strut and cable</button>
           <button type="button" data-p="ladder" aria-pressed="false">Ladder against a wall</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -156,7 +156,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section>
         <h2>Forces and torques</h2>
         <dl class="readout" id="out"></dl>
-        <p class="formula">ΣF<sub>x</sub> = 0 · ΣF<sub>y</sub> = 0 · Στ = 0 about any point</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">ΣF<sub>x</sub> = 0 · ΣF<sub>y</sub> = 0 · Στ = 0 about any point</p>
+        </details>
       </section>
 
       <section>

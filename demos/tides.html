@@ -229,7 +229,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="closer" aria-pressed="false">Moon closer (1/d³)</button>
           <button type="button" data-p="sunmoon" aria-pressed="false">Sun vs Moon</button>
         </div>
-        <p class="hint" id="presetHint">Pick a setup, or switch between the two views below and drag the Moon.</p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint">Pick a setup, or switch between the two views below and drag the Moon.</p></details>
       </section>
 
       <section>
@@ -300,8 +300,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div><dt>Next high tide</dt><dd id="rNext">—</dd></div>
           <div><dt>Lunar day</dt><dd id="rLday">24 h 50 min</dd></div>
         </dl>
-        <p class="formula">h = A (3cos²θ − 1)/2, A = (M/M<sub>E</sub>)(R<sub>E</sub>/d)³ R<sub>E</sub></p>
-        <p class="hint">θ is the angle from the point under the Moon (or Sun). Highs of +A under the body and opposite it, lows of −A/2 at 90°. The daily range is 1.5 A for one body.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">h = A (3cos²θ − 1)/2, A = (M/M<sub>E</sub>)(R<sub>E</sub>/d)³ R<sub>E</sub></p>
+          <p class="hint">θ is the angle from the point under the Moon (or Sun). Highs of +A under the body and opposite it, lows of −A/2 at 90°. The daily range is 1.5 A for one body.</p>
+        </details>
         <details class="more"><summary>More about this</summary><p class="hint"><strong>Why 24 h 50 min?</strong> While Earth turns once, the Moon moves about 12° along its orbit in the same direction (360° in 29.53 days). Earth has to turn a little more to bring the city back under the Moon, about 50 minutes more. So each high tide comes about 25 minutes later than half a day after the one before.</p></details>
       </section>
 
