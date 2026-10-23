@@ -64,4 +64,4 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 
 ## Being moved
 
-Nothing at the moment.
+Batch 1 (Physics I with Export to worksheet), from 2026-10-23 22:35: collisions, fluids, forces, kepler-orbits, motion-graphs, projectile-drag, rotational-dynamics, springs, stress-strain, vectors, viscometer.
