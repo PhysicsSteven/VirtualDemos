@@ -52,7 +52,7 @@ Air resistance (§6.4) opposes the velocity. Its effect depends on speed, shape,
 
 ## Safety
 
-On a real projectile bench, keep the landing area clear and follow the instructor's launcher and eye-protection procedures. Do not aim toward people.
+On a real projectile bench, keep the landing area clear and follow the instructor's launcher and eye protection procedures. Do not aim toward people.
 
 ## Procedure
 
@@ -78,17 +78,17 @@ Keep separate trajectory and range scans. Record ball mass, diameter, drag coeff
 
 1. Fit $$x$$ against $$t$$ and $$y$$ against $$t$$. Infer horizontal velocity and $$g$$; compare the fitted initial vertical velocity with $$v_0 \sin\theta$$.
 2. Fit $$R$$ against $$\sin(2\theta)$$ in vacuum. Infer $$g = v_0^2/\text{slope}$$ and compare with the trajectory result.
-3. Compare complementary-angle pairs and inspect residuals from the vacuum fit.
+3. Compare complementary angle pairs and inspect residuals from the vacuum fit.
 4. Quantify the range reduction with drag. Explain why equal size does not imply equal drag acceleration for different masses.
 
 ## Uncertainty
 
-Use position/time-dot resolution and range rounding. Include launch-speed uncertainty when inferring $$g$$ from a range slope; speed is squared. In a real bench, include angle and height alignment. Deterministic simulation points do not acquire random uncertainty merely by repeating them. State whether errors come from reading, numerical approximation or an unsuitable model.
+Use position/time-dot resolution and range rounding. Include launch speed uncertainty when inferring $$g$$ from a range slope; speed is squared. In a real bench, include angle and height alignment. Deterministic simulation points do not acquire random uncertainty merely by repeating them. State whether errors come from reading, numerical approximation or an unsuitable model.
 
 ## Questions
 
 1. Why can horizontal motion be uniform while vertical motion accelerates?
-2. Why does a drag-free equal-height range peak at 45°?
+2. Why does a drag free equal height range peak at 45°?
 3. Why does the vacuum fit generally fail when drag is on?
 4. Is a shorter observed range enough to prove that $$g$$ is larger?
 

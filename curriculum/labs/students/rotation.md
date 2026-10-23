@@ -27,11 +27,11 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§10.4, 10.6–10.7 and 11.1�
 
 ## Goal
 
-Predict rotational behavior, then use the demonstration to check torque, rolling acceleration and angular-momentum conservation.
+Predict rotational behavior, then use the demonstration to check torque, rolling acceleration and angular momentum conservation.
 
 ## Background
 
-Torque and fixed-axis dynamics are (§§10.6–10.7)
+Torque and fixed axis dynamics are (§§10.6–10.7)
 
 $$\tau=rF\sin\theta,\qquad \sum\tau=I\alpha.$$
 
@@ -48,7 +48,7 @@ Keep fingers clear of real hinges and rolling objects. Secure rotating masses be
 
 ## Procedure
 
-Predict each result before reading the demonstration. Compare torque at two force application radii and two angles. Compare at least three rolling shapes on the same ramp. Finally, compare a spinner before and after its masses move inward. This is a short guided activity, not an instrument-calibration lab.
+Predict each result before reading the demonstration. Compare torque at two force application radii and two angles. Compare at least three rolling shapes on the same ramp. Finally, compare a spinner before and after its masses move inward. This is a short guided activity, not an instrument calibration lab.
 
 **Using the virtual apparatus.** Choose **Torque** and vary **Force F**, **Push point r, from the pivot** and **Angle θ between r and F**. Use **Rolling race** for shape comparisons, recording **Incline angle β** and **Ramp length D**. Choose **Skater**, then **Pull in** or **Push out**, and compare angular momentum with kinetic energy. **Show data table** exposes plotted values; record the relevant readouts manually.
 

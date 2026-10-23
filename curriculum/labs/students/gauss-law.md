@@ -36,7 +36,7 @@ Gauss's law relates net outward flux to enclosed charge (§6.2):
 
 $$\Phi_E=\frac{Q_{\rm enc}}{\epsilon_0}.$$
 
-It holds for every closed surface. Extracting $$E$$ from the integral requires sufficient symmetry (§6.3). A drawing's field-line count is a visual aid, not a measurement of the continuous integral.
+It holds for every closed surface. Extracting $$E$$ from the integral requires sufficient symmetry (§6.3). A drawing's field line count is a visual aid, not a measurement of the continuous integral.
 
 ## Before the lab
 
@@ -52,11 +52,11 @@ For a real electrostatics bench, follow the instructor's high voltage and discha
 
 **Shape and position.** Place one +1 nC charge inside a closed surface. Record numerical flux for a sphere, box and cylinder, keeping the charge clearly inside. Repeat with the charge displaced from the center. Predict flux before consulting a theoretical readout.
 
-**Superposition.** Put +2 nC and −1 nC inside the same surface. Record flux. Move only the negative charge outside and repeat. Then compare equal-and-opposite charges both inside with both outside. Record enough information to reconstruct the charge positions.
+**Superposition.** Put +2 nC and −1 nC inside the same surface. Record flux. Move only the negative charge outside and repeat. Then compare equal and opposite charges both inside with both outside. Record enough information to reconstruct the charge positions.
 
-**Approach to a boundary.** Keep a charge fixed and change the surface size to approach it from either side. Record five or more separations where the numerical integral is available. Compare numerical error and field-evaluation count as the separation shrinks.
+**Approach to a boundary.** Keep a charge fixed and change the surface size to approach it from either side. Record five or more separations where the numerical integral is available. Compare numerical error and field evaluation count as the separation shrinks.
 
-**Symmetry.** Compare a uniformly charged ball and a conducting sphere with the same $$Q$$ and $$R$$. Record $$E$$ at several radii inside and outside. Use the conductor's one-sided surface limits rather than assigning one field value to the ideal charged surface (§6.4).
+**Symmetry.** Compare a uniformly charged ball and a conducting sphere with the same $$Q$$ and $$R$$. Record $$E$$ at several radii inside and outside. Use the conductor's one sided surface limits rather than assigning one field value to the ideal charged surface (§6.4).
 
 **Using the virtual apparatus.** Choose **Any surface**, then **Charge inside** and **Pause**. Select the charge, set **Selected charge q**, and enter its $$x$$/$$y$$ coordinates. Use **Sphere**, **Box** and **Cylinder**. Clear **Show predicted flux Qenc/ε₀** while measuring. Press **Capture reading** and **Export to worksheet**; the export includes geometry and numerical status. Use **Dipole inside** for the charge combinations. Keep the charge at least 0.03 cm from the surface: this is a numerical exclusion zone. Flag rows marked **Quadrature tolerance not met** rather than treating them as reliable measurements. For the last part choose **Symmetry**, **Sphere**, then **Ball** or **Conductor**.
 
@@ -74,12 +74,12 @@ Record all shape dimensions and $$Q$$, $$R$$ above the relevant table. Keep sepa
 
 1. Calculate $$Q_{\rm enc}/\epsilon_0$$ independently for every flux row. Compare shapes and charge positions.
 2. Use a nonzero scale such as $$\lvert q \rvert/\epsilon_0$$ to normalize errors when predicted net flux is zero.
-3. Plot flux error and evaluation count against the closest charge-to-surface separation. Distinguish boundary sensitivity from a controlled quadrature-tolerance study.
+3. Plot flux error and evaluation count against the closest charge to surface separation. Distinguish boundary sensitivity from a controlled quadrature tolerance study.
 4. Derive $$E(r)$$ inside/outside a uniform ball and a conductor using symmetry. Compare with the radial measurements and discuss continuity or a jump at $$R$$.
 
 ## Uncertainty
 
-Include coordinate and surface-size resolution when deciding whether a charge is inside. Omit positions whose classification is uncertain. Numerical quadrature error is different from measurement rounding. Near a charge, the field changes rapidly and cancellation can be difficult; an integration warning is not a physical violation of Gauss's law. Only an exact point charge on the surface creates the mathematical singularity.
+Include coordinate and surface size resolution when deciding whether a charge is inside. Omit positions whose classification is uncertain. Numerical quadrature error is different from measurement rounding. Near a charge, the field changes rapidly and cancellation can be difficult; an integration warning is not a physical violation of Gauss's law. Only an exact point charge on the surface creates the mathematical singularity.
 
 ## Questions
 
@@ -90,4 +90,4 @@ Include coordinate and surface-size resolution when deciding whether a charge is
 
 ## What to hand in
 
-Prelab answers, configurations and CSV, calculated fluxes, the boundary-error graph, radial-field comparison, uncertainty and answers to the questions. Identify simulated data.
+Prelab answers, configurations and CSV, calculated fluxes, the boundary error graph, radial field comparison, uncertainty and answers to the questions. Identify simulated data.

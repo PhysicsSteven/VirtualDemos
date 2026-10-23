@@ -48,9 +48,9 @@ Keep water away from electrical equipment. Secure real pressure tubing and hangi
 
 **Buoyancy.** Measure the weight of a fully submerged supported block at several volumes, or immerse one block in several liquids. Record its weight in air and apparent weight in the liquid. Exclude contact with the bottom.
 
-**Flow.** Use a horizontal Venturi tube. Hold inlet diameter and inlet speed fixed; vary throat diameter through at least five settings. Record the two diameters, flow rate and pressure-head readings. Avoid settings where cavitation or an empty standpipe prevents the required pressure measurement.
+**Flow.** Use a horizontal Venturi tube. Hold inlet diameter and inlet speed fixed; vary throat diameter through at least five settings. Record the two diameters, flow rate and pressure head readings. Avoid settings where cavitation or an empty standpipe prevents the required pressure measurement.
 
-**Using the virtual apparatus.** Turn on **Blind: hide predictions and answers**. Use **Pressure grows with depth** and vary **Probe depth**, reading the depth ruler and pressure gauge. Compare **Gauge** and **Absolute**. For buoyancy choose **Weighing in water (Archimedes)** and **Spring scale**; wait for a settled reading before capture. For flow choose **Venturi tube** and vary **Throat diameter D₂**, keeping **Pipe diameter D₁** and **Inlet speed v₁** fixed. Read **Flow meter Q**, **Standpipe h₁** and **Standpipe h₂**. Press **Capture reading** and **Export to worksheet** for each investigation; **Your readings** shows the measured-data plot.
+**Using the virtual apparatus.** Turn on **Blind: hide predictions and answers**. Use **Pressure grows with depth** and vary **Probe depth**, reading the depth ruler and pressure gauge. Compare **Gauge** and **Absolute**. For buoyancy choose **Weighing in water (Archimedes)** and **Spring scale**; wait for a settled reading before capture. For flow choose **Venturi tube** and vary **Throat diameter D₂**, keeping **Pipe diameter D₁** and **Inlet speed v₁** fixed. Read **Flow meter Q**, **Standpipe h₁** and **Standpipe h₂**. Press **Capture reading** and **Export to worksheet** for each investigation; **Your readings** shows the measured data plot.
 
 ## Data
 
@@ -65,13 +65,13 @@ Keep a separate copy for each part and label unused columns. Convert kPa, cm and
 ## Analysis
 
 1. Fit gauge pressure against depth and infer $$\rho$$ from $$\text{slope}/g$$.
-2. Calculate $$F_B = W_\text{air} - T$$. Compare with displaced-liquid weight and, for a floating block, the displaced fraction with $$\rho_\text{block}/\rho_\text{liquid}$$.
+2. Calculate $$F_B = W_\text{air} - T$$. Compare with displaced liquid weight and, for a floating block, the displaced fraction with $$\rho_\text{block}/\rho_\text{liquid}$$.
 3. Infer $$v_1$$ and $$v_2$$ from $$Q/A$$. Calculate the pressure difference from Bernoulli and compare with $$\rho g(h_1 - h_2)$$.
 4. Explain which assumptions would fail for viscous flow, strong turbulence or cavitation.
 
 ## Uncertainty
 
-Propagate depth, diameter and scale resolution. Areas depend on diameter squared, and the dynamic-pressure term depends on speed squared. Small differences between large pressure heads can be poorly resolved. Distinguish measurement resolution from the ideal model's omission of viscous losses. Do not treat a cavitation warning as another ordinary steady-flow data point.
+Propagate depth, diameter and scale resolution. Areas depend on diameter squared, and the dynamic pressure term depends on speed squared. Small differences between large pressure heads can be poorly resolved. Distinguish measurement resolution from the ideal model's omission of viscous losses. Do not treat a cavitation warning as another ordinary steady flow data point.
 
 ## Questions
 

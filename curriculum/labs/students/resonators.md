@@ -45,7 +45,7 @@ With real equipment, secure the glass tube and adjust the water slowly. Keep wat
 4. Repeat the placements, typing the mode number $$k$$ for each repeated reading, then use a second source frequency without changing temperature or tube diameter.
 5. If time allows, repeat selected resonances at a different temperature or compare how the peak width changes with damping.
 
-**Using the virtual apparatus.** Choose **Resonance tube, find c**, set 20 °C, diameter 3.2 cm and 512 Hz, record the **Reading seed** and select **Blind**. Clear the readings. Move **Water surface below the top** to each maximum and press **Capture reading**. Correct the editable $$k$$ column if needed. Repeat at 640 Hz using **Source frequency f**, then **Export CSV**. The captured length includes a small simulated meniscus reading error. Use the swept level trace as a visual guide if sound is unavailable.
+**Using the virtual apparatus.** Choose **Resonance tube, find c**, set 20 °C, diameter 3.2 cm and 512 Hz, record the **Reading seed** and select **Blind**. Clear the readings. Move **Water surface below the top** to each maximum and press **Capture reading**. Correct the editable $$k$$ column if needed. Send the 512 Hz readings to the worksheet before clearing, then repeat at 640 Hz using **Source frequency f** and send those, so each frequency gets its own copy of the Data table. The captured length includes a small simulated meniscus reading error. Use the swept level trace as a visual guide if sound is unavailable.
 
 ## Data
 

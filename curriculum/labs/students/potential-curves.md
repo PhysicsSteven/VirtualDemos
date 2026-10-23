@@ -19,11 +19,11 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§7.1, 8.1–8.4. Access for 
 
 ## Goal
 
-Use a potential-energy curve to predict force, speed, turning points and equilibrium stability.
+Use a potential energy curve to predict force, speed, turning points and equilibrium stability.
 
 ## Background
 
-For one-dimensional conservative motion (§§8.2–8.4),
+For one dimensional conservative motion (§§8.2–8.4),
 
 $$F_x=-\frac{dU}{dx},\qquad E=\frac12mv^2+U(x).$$
 
@@ -36,7 +36,7 @@ A turning point has $$E = U$$ and $$v = 0$$. An equilibrium has $$dU/dx = 0$$; a
 
 ## Safety
 
-For a real rolling-track comparison, secure the track and catch the object safely. No physical apparatus is required for this screen activity.
+For a real rolling track comparison, secure the track and catch the object safely. No physical apparatus is required for this screen activity.
 
 ## Procedure
 
@@ -56,7 +56,7 @@ Sketch the potential and choose three total energies. Predict turning points and
 
 1. Estimate $$-dU/dx$$ from nearby table points and compare with the force readout.
 2. Calculate $$v = \sqrt{2(E-U)/m}$$ at three allowed positions. At turning points discuss acceleration as well as speed.
-3. Classify equilibria from the local curve shape. Compare turning-point patterns below and above a double-well barrier.
+3. Classify equilibria from the local curve shape. Compare turning point patterns below and above a double well barrier.
 
 ## Uncertainty
 

@@ -47,7 +47,7 @@ where $$t$$ is thickness along $$B$$. The voltage sign depends on carrier sign, 
 
 ## Safety
 
-Follow the real apparatus limits for magnet current and Hall-sample current. Switch off before rewiring, keep magnetic materials away from the pole gap, and do not touch an energized electron-beam tube.
+Follow the real apparatus limits for magnet current and Hall sample current. Switch off before rewiring, keep magnetic materials away from the pole gap, and do not touch an energized electron beam tube.
 
 ## Procedure
 
@@ -76,7 +76,7 @@ Keep separate copies for the orbit and Hall measurements. Label the last column 
 
 ## Uncertainty
 
-Estimate radius uncertainty from the ruler's screen resolution and placement. Timing several turns reduces the fractional error from starting and stopping; use simulation time rather than wall-clock time. Include current, field, thickness and voltage resolution in the Hall-density estimate. Record whether the data are simulated; repeated deterministic readings are not independent noisy experiments.
+Estimate radius uncertainty from the ruler's screen resolution and placement. Timing several turns reduces the fractional error from starting and stopping; use simulation time rather than wall clock time. Include current, field, thickness and voltage resolution in the Hall density estimate. Record whether the data are simulated; repeated deterministic readings are not independent noisy experiments.
 
 ## Questions
 

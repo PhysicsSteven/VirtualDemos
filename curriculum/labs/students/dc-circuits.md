@@ -50,7 +50,7 @@ Switch off a real supply before rewiring. Begin with its current limit set low. 
 
 ## Procedure
 
-**Series and parallel.** Use a 6 V supply and two 10 Ω resistive loads, or instructor-assigned values. Measure current through each load and voltage across each. Repeat in parallel, including total source current. Change one load to 20 Ω and repeat both configurations.
+**Series and parallel.** Use a 6 V supply and two 10 Ω resistive loads, or instructor assigned values. Measure current through each load and voltage across each. Repeat in parallel, including total source current. Change one load to 20 Ω and repeat both configurations.
 
 **Voltage divider.** Use a 12 V source with $$R_2 = 1.0\ \text{k}\Omega$$. Take five $$R_1$$ settings from approximately 1.0 to 4.7 kΩ. Measure $$V_{\rm out}$$ across $$R_2$$ and the current. Keep the output unloaded.
 

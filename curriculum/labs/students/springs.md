@@ -53,7 +53,7 @@ Secure a real spring support and keep clear of falling masses. Do not stretch th
 
 **Amplitude check.** At one mass, repeat with three release amplitudes. Compare periods and explain any difference within resolution.
 
-**Optional damping.** After the undamped scan, introduce modest damping and compare the oscillation period and amplitude decay. Keep these points out of the undamped spring-constant fit.
+**Optional damping.** After the undamped scan, introduce modest damping and compare the oscillation period and amplitude decay. Keep these points out of the undamped spring constant fit.
 
 **Using the virtual apparatus.** Investigate one unknown spring in free horizontal motion with no damping. Measure the period for masses 0.20, 0.40, 0.60, 0.80 and 1.00 kg after several oscillations. Keep the same unknown spring throughout: choosing a new one changes the hidden spring constant. Use the automatically measured periods for the main $$T^2$$ against $$m$$ fit; the demo's own graph instead uses separately timed stopwatch readings. If you use hand timing, count complete oscillations and keep those results distinct. Compare three release amplitudes at one mass, then investigate damping separately. Send each series to the worksheet before clearing, so each gets its own copy of the Data table. Reveal the spring constant only after completing your estimate.
 
@@ -71,7 +71,7 @@ Use the same period method throughout the main fit. State whether the data came 
 
 1. Fit $$T^2 = a + s m$$ and infer $$k = 4\pi^2/s$$. Inspect the intercept and residuals.
 2. Compare the inferred $$k$$ with the revealed value. Include slope uncertainty and any mass uncertainty.
-3. Compare the amplitude runs. Explain why the ideal linear-spring model predicts the same period.
+3. Compare the amplitude runs. Explain why the ideal linear spring model predicts the same period.
 4. If you timed oscillations, compare $$t/N$$ with the automatic readout; explain the different reading resolutions.
 
 ## Uncertainty
@@ -82,7 +82,7 @@ For automatic periods use the displayed/CSV resolution and the stability of succ
 
 1. Why does increasing mass lengthen the period?
 2. At which points are kinetic and spring potential energy greatest?
-3. Why is a straight-line fit useful compared with calculating $$k$$ from one mass?
+3. Why is a straight line fit useful compared with calculating $$k$$ from one mass?
 4. Why should damped runs be excluded from the undamped period fit?
 
 ## What to hand in

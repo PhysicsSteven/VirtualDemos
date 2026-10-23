@@ -49,7 +49,7 @@ On a real bench, catch the block safely without placing fingers in its path. Sec
 
 ## Procedure
 
-**Static friction.** Place the block at rest on the ramp with no push and no hanging mass. Increase the angle slowly until it starts to slide. Bracket the threshold between the last angle that held and the first that slipped. Reset the block for each trial rather than treating a moving block as a static-friction test. Repeat at least three times and test a second block mass.
+**Static friction.** Place the block at rest on the ramp with no push and no hanging mass. Increase the angle slowly until it starts to slide. Bracket the threshold between the last angle that held and the first that slipped. Reset the block for each trial rather than treating a moving block as a static friction test. Repeat at least three times and test a second block mass.
 
 **Kinetic friction.** Keep the same surface. Choose at least six angles above the slip threshold, spread over a useful range. Release from rest and time a slide over 1.000 m at each angle. Record the actual distance for a real bench. Fit the transformed data to determine $$g$$ and $$\mu_k$$. Do not include a run that was pushed, stalled or started with a nonzero speed.
 
@@ -65,18 +65,18 @@ On a real bench, catch the block safely without placing fingers in its path. Sec
 | | | | | | | | |
 | | | | | | | | |
 
-Keep separate threshold and timing runs. Record the surface identifier, angle bracket, push and hanging mass settings, and work-comparison position/time.
+Keep separate threshold and timing runs. Record the surface identifier, angle bracket, push and hanging mass settings, and work comparison position/time.
 
 ## Analysis
 
 1. Convert each threshold bracket to a bracket for $$\mu_s$$. Compare masses and repeated trials without claiming more precision than the angle step supports.
 2. Plot $$a/\cos\theta$$ against $$\tan\theta$$, fit a line, and report $$g$$ and $$\mu_k$$ with units and uncertainty. Inspect residuals and compare $$\mu_s$$ with $$\mu_k$$.
-3. For the chosen 1.000 m run, compare total work with $$\tfrac12 mv^2$$. Account for the positive thermal-energy increase without adding it as positive work on the block.
+3. For the chosen 1.000 m run, compare total work with $$\tfrac12 mv^2$$. Account for the positive thermal energy increase without adding it as positive work on the block.
 4. Compare your calculations with the live readouts at the same displacement. Explain the energy transfer when the block reaches the stop.
 
 ## Uncertainty
 
-The virtual angle step is 0.5° and the timer rounds to 0.001 s. Use the threshold bracket directly. Since $$a = 2d/t^2$$, its fractional uncertainty depends on distance uncertainty and twice the fractional timing uncertainty. Angle errors affect both transformed axes; an ordinary line-fit error alone understates that contribution. Real friction varies with surface condition, vibration and speed. Repeating an unchanged deterministic simulation does not measure that variability.
+The virtual angle step is 0.5° and the timer rounds to 0.001 s. Use the threshold bracket directly. Since $$a = 2d/t^2$$, its fractional uncertainty depends on distance uncertainty and twice the fractional timing uncertainty. Angle errors affect both transformed axes; an ordinary line fit error alone understates that contribution. Real friction varies with surface condition, vibration and speed. Repeating an unchanged deterministic simulation does not measure that variability.
 
 ## Questions
 

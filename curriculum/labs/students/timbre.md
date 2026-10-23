@@ -45,7 +45,7 @@ Use a comfortable listening level with real speakers or headphones. High volume 
 
 **Detune a partial.** In the Inharmonic partials section, set **Detune harmonic** to 3 and **by Δf** to +1.5 Hz, and watch the shape drift. Then select **Back to exact harmonics** and compare stiffness $$B = 0$$, 0.005, 0.010 and 0.020. Record the first, third and fifth partial frequencies.
 
-**Using the virtual apparatus.** Adjust amplitudes with the harmonic bars and phases with the dials. Read frequencies and relative levels in **Strongest partials**, which lists the six strongest harmonics. Use **Waveform repeats every**, **RMS (bar units)** and **Peak / RMS** for the comparisons. Record values by hand and save screenshots; this demo has no Capture or CSV export. Keep $$f_1$$, $$B$$ and $$\Delta f$$ written beside each run.
+**Using the virtual apparatus.** Adjust amplitudes with the harmonic bars and phases with the dials. Read frequencies and relative levels in **Strongest partials**, which lists the six strongest harmonics. Use **Waveform repeats every**, **RMS (bar units)** and **Peak / RMS** for the comparisons. **Record harmonics 1 to 6** records the six harmonics of the tone on screen as six rows. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Keep $$f_1$$, $$B$$ and $$\Delta f$$ written beside each run. **Detune harmonic** and **Stiffness B** are in the folded Inharmonic partials section.
 
 ## Data
 

@@ -35,7 +35,7 @@ Here $$a$$ is the semimajor axis, not the instantaneous distance from the star. 
 
 $$\frac{E}{m}=-\frac{GM}{2a},\qquad v^2=GM\left(\frac{2}{r}-\frac1a\right).$$
 
-Angular-momentum conservation gives equal swept areas in equal times and faster motion near periapsis.
+Angular momentum conservation gives equal swept areas in equal times and faster motion near periapsis.
 
 ## Before the lab
 
@@ -49,11 +49,11 @@ For an analogous real rotating apparatus, follow the instructor's speed limits a
 
 ## Procedure
 
-**Third-law scan.** Make five distinct bound orbits around the same central mass. For each, measure the full major-axis length and time one complete revolution between passages of the same reference point in the same direction. Divide the measured major axis by two to obtain $$a$$.
+**Third law scan.** Make five distinct bound orbits around the same central mass. For each, measure the full major axis length and time one complete revolution between passages of the same reference point in the same direction. Divide the measured major axis by two to obtain $$a$$.
 
 **Eccentric orbit.** Choose one clear ellipse. Compare distances and speeds at periapsis and apoapsis, and compare areas swept in equal time intervals.
 
-**Central mass.** Repeat a shorter size-period scan at a different $$M$$. Compare the fitted slopes and inferred mass ratio.
+**Central mass.** Repeat a shorter size period scan at a different $$M$$. Compare the fitted slopes and inferred mass ratio.
 
 **Using the virtual apparatus.** Enable **Blind: hide predictions and answers**. Begin with **Earth**, **Mars**, **Mercury** and **Circular orbit**, then drag the launch point or velocity arrow to obtain additional distinct bound orbits. Use **Reset** between runs. Enable **Ruler**, placing its endpoints at opposite ends of the major axis; **Ruler point** lets the arrow keys move a selected endpoint. Use **Zero timer**, **Start timer** and **Stop timer** for one complete revolution. Press **Capture reading** and **Export to worksheet**. Its $$a$$ value is half your ruler distance, not a theoretical orbital element. Use **Third law** and **Your readings** for the comparison. Change **Star mass M** only between scans, recording whether **Keep the orbit's shape when M changes** is selected. Reveal **Foci and axis** and **Sweep wedges** after making your own measurements.
 
@@ -65,18 +65,18 @@ For an analogous real rotating apparatus, follow the instructor's speed limits a
 | | | | | | | |
 | | | | | | | |
 
-Add all orbits and keep the two central-mass scans separate. Record your reference crossing and timing method.
+Add all orbits and keep the two central mass scans separate. Record your reference crossing and timing method.
 
 ## Analysis
 
-1. Fit $$T^2$$ against $$a^3$$. In the simulation's AU, year and solar-mass units, infer $$M = 1/\text{slope}$$.
-2. Inspect intercept and residuals for timing or ruler-placement bias. Compare results using near-circular and eccentric orbits.
+1. Fit $$T^2$$ against $$a^3$$. In the simulation's AU, year and solar mass units, infer $$M = 1/\text{slope}$$.
+2. Inspect intercept and residuals for timing or ruler placement bias. Compare results using near circular and eccentric orbits.
 3. For the eccentric orbit, test $$r_p v_p = r_a v_a$$ and compare with the energy relation.
 4. Compare fitted slopes at the two central masses. Explain why escape trajectories do not belong on this period plot.
 
 ## Uncertainty
 
-Use ruler placement and time-crossing resolution. The fractional errors in $$a^3$$ and $$T^2$$ are approximately $$3\,\delta a/a$$ and $$2\,\delta T/T$$. Eccentric orbits make major-axis placement and timing near periapsis harder. Do not use the star-to-planet separation as a substitute for $$a$$, and do not count several revolutions as one.
+Use ruler placement and time crossing resolution. The fractional errors in $$a^3$$ and $$T^2$$ are approximately $$3\,\delta a/a$$ and $$2\,\delta T/T$$. Eccentric orbits make major axis placement and timing near periapsis harder. Do not use the star to planet separation as a substitute for $$a$$, and do not count several revolutions as one.
 
 ## Questions
 
@@ -87,4 +87,4 @@ Use ruler placement and time-crossing resolution. The fractional errors in $$a^3
 
 ## What to hand in
 
-Prelab answers, settings and CSV, both third-law fits, inferred masses with uncertainty, the eccentric-orbit comparison and answers to the questions. Identify simulated data.
+Prelab answers, settings and CSV, both third law fits, inferred masses with uncertainty, the eccentric orbit comparison and answers to the questions. Identify simulated data.

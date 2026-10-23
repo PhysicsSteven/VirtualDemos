@@ -27,7 +27,7 @@ The standing wave has $$n$$ antinodes. A graph of $$f_n$$ against $$n$$ should b
 
 ## Safety
 
-On a real vibrating-string bench, secure the string and hanging masses, keep hands away from the moving driver, and avoid overloading the string. Switch off the driver before changing the load.
+On a real vibrating string bench, secure the string and hanging masses, keep hands away from the moving driver, and avoid overloading the string. Switch off the driver before changing the load.
 
 ## Procedure
 
@@ -66,7 +66,7 @@ Record the smallest available frequency adjustment and how sharply the peak can 
 1. Why are the resonance frequencies approximately equally spaced?
 2. How does increasing linear density change the resonances at fixed tension?
 3. What would change if one end were not effectively fixed?
-4. Why does a large driven amplitude challenge the small-displacement model?
+4. Why does a large driven amplitude challenge the small displacement model?
 
 ## What to hand in
 

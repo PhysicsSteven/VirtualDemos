@@ -67,7 +67,7 @@ Keep the two scan types separate and state whether the string density was known 
 
 ## Uncertainty
 
-Record the frequency adjustment and mass increments. The simulation's set values are prescribed, not independent noisy measurements. For real equipment include the vibrating-length measurement, mass calibration, pulley friction and uncertainty in locating resonance peaks. Do not turn adjustment increments into random error bars without justification.
+Record the frequency adjustment and mass increments. The simulation's set values are prescribed, not independent noisy measurements. For real equipment include the vibrating length measurement, mass calibration, pulley friction and uncertainty in locating resonance peaks. Do not turn adjustment increments into random error bars without justification.
 
 ## Questions
 

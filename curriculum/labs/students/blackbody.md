@@ -1,6 +1,6 @@
 # Blackbody Radiation — Student Virtual Laboratory
 **Simulation:** [Open Blackbody Radiation](../../demos/blackbody.html)  
-**Duration:** 50–75 minutes · **Level:** introductory calculus-based physics  
+**Duration:** 50–75 minutes · **Level:** introductory calculus based physics  
 **Research question:** Can a thermal spectrum be used to determine temperature?
 
 ## Learning objectives

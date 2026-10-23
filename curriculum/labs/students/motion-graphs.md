@@ -44,7 +44,7 @@ With a real detector, clear the walking area and protect the cart from leaving t
 
 ## Procedure
 
-**Constant acceleration.** On a real track, measure at least eight positions and times during a single interval of uniform acceleration. Include points on both sides of a turning point if the cart reverses. In the simulation, use the assigned turning-motion setup. Keep a record of your settings before hiding predictions. Fit position against time and use your fit to predict the turning time and position.
+**Constant acceleration.** On a real track, measure at least eight positions and times during a single interval of uniform acceleration. Include points on both sides of a turning point if the cart reverses. In the simulation, use the assigned turning motion setup. Keep a record of your settings before hiding predictions. Fit position against time and use your fit to predict the turning time and position.
 
 **Several stages.** Make a run that speeds up, cruises and slows to rest. Before revealing the velocity graph, sketch it from the position graph. Measure the displacement in each stage. Compare their sum with the signed area under velocity. Do not fit one parabola across all three stages.
 
@@ -70,11 +70,11 @@ Add a copy of this table for each run (pressing **Clear** in the demo before the
 2. Determine both displacement and total distance for that run. Explain their difference using the velocity graph.
 3. For the three stages, compare measured displacements with areas under velocity and changes in velocity with areas under acceleration.
 4. Fit free fall and report $$g$$ with units and uncertainty. Compare the acceleration on the way up and down. Explain why fitting across landing would fail.
-5. Interpret the two graph-matching trials. Discuss whether the score improved and what part of the motion remained difficult. Do not compare scores from different targets or different graph types as if they measured identical tasks.
+5. Interpret the two graph matching trials. Discuss whether the score improved and what part of the motion remained difficult. Do not compare scores from different targets or different graph types as if they measured identical tasks.
 
 ## Uncertainty
 
-Captured time and position are rounded to 0.01 s and 0.01 m. Estimate how those steps affect slopes, especially over short intervals. Use residuals and the spread from reasonable point selections; a small fit error does not include every source of error. Real measurements also involve detector calibration, sampling and drag. Repeating exact simulated points does not create independent random trials. Graph-matching scores describe tracking performance, not uncertainty in $$g$$.
+Captured time and position are rounded to 0.01 s and 0.01 m. Estimate how those steps affect slopes, especially over short intervals. Use residuals and the spread from reasonable point selections; a small fit error does not include every source of error. Real measurements also involve detector calibration, sampling and drag. Repeating exact simulated points does not create independent random trials. Graph matching scores describe tracking performance, not uncertainty in $$g$$.
 
 ## Questions
 
@@ -85,4 +85,4 @@ Captured time and position are rounded to 0.01 s and 0.01 m. Estimate how those 
 
 ## What to hand in
 
-Prelab answers, labeled data and CSV files, fits and residuals, turning-point and free-fall results with uncertainty, stage-area calculations, graph-matching sketches and scores, and answers to the questions. Identify simulated data.
+Prelab answers, labeled data and CSV files, fits and residuals, turning point and free fall results with uncertainty, stage area calculations, graph matching sketches and scores, and answers to the questions. Identify simulated data.

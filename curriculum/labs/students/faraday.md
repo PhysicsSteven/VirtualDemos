@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§13.1–13.3, 13.6 and 14.1�
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Push the magnet in; Pass it through; Flip the magnet; Generator; Sliding bar; Two coils; Self-inductance.
+**Setups in the demo:** Push the magnet in; Pass it through; Flip the magnet; Generator; Sliding bar; Two coils; Self inductance.
 
 </details>
 
@@ -42,11 +42,11 @@ Keep real magnets away from sensitive electronics. Switch off supplies before re
 
 ## Procedure
 
-**Generator.** Use $$N = 100$$, $$B = 0.20\ \text{T}$$, $$A = 100\ \text{cm}^2$$ and $$R = 100\ \Omega$$ in the simulation, or assigned real-apparatus values. Measure flux and emf over two cycles at angular speeds near 3.0, 6.3 and 12.0 rad/s. Take enough points to locate both signs and the peaks. Repeat one run with twice as many turns.
+**Generator.** Use $$N = 100$$, $$B = 0.20\ \text{T}$$, $$A = 100\ \text{cm}^2$$ and $$R = 100\ \Omega$$ in the simulation, or assigned real apparatus values. Measure flux and emf over two cycles at angular speeds near 3.0, 6.3 and 12.0 rad/s. Take enough points to locate both signs and the peaks. Repeat one run with twice as many turns.
 
-**Mutual induction.** Use two coaxial coils with the secondary open. Keep their turns, radii and separation fixed. Measure primary-current and secondary-emf amplitudes at three frequencies. Infer $$M$$ for each run. Then change separation and repeat. Close the secondary for one setting and compare its current and the primary current after the transient has settled.
+**Mutual induction.** Use two coaxial coils with the secondary open. Keep their turns, radii and separation fixed. Measure primary current and secondary emf amplitudes at three frequencies. Infer $$M$$ for each run. Then change separation and repeat. Close the secondary for one setting and compare its current and the primary current after the transient has settled.
 
-**Motional emf.** Move a conducting bar across a perpendicular magnetic field. At three speeds, measure emf and current. Infer $$B$$ from the emf-speed slope and compare electrical heating with the mechanical power needed to maintain motion.
+**Motional emf.** Move a conducting bar across a perpendicular magnetic field. At three speeds, measure emf and current. Infer $$B$$ from the emf speed slope and compare electrical heating with the mechanical power needed to maintain motion.
 
 **Magnet check.** Move a magnet into the coil at two speeds with matched starting and ending positions. Compare peak emf and the time integral of emf. Reverse the motion and explain the sign change.
 
@@ -60,19 +60,19 @@ Keep real magnets away from sensitive electronics. Switch off supplies before re
 | | | | | | | |
 | | | | | | | |
 
-Use a separate copy for each run and state which current is recorded. Keep both endpoint time and interval-midpoint time from the CSV when present.
+Use a separate copy for each run and state which current is recorded. Keep both endpoint time and interval midpoint time from the CSV when present.
 
 ## Analysis
 
 1. Plot flux and emf against time. Compare period, relative phase and sign with Faraday's law. Plot generator emf amplitude against $$\omega$$ and infer $$NBA$$.
 2. Estimate $$-N\,\Delta\Phi_B/\Delta t$$ from nearby flux readings. Compare with emf averaged over that same interval, not a different endpoint value.
-3. For the open secondary, calculate $$M = \text{emf}_\text{peak}/(2\pi f I_{1,\text{peak}})$$. Compare frequency scans and separations. Explain why the air-core pair need not obey an ideal transformer's turns ratio.
-4. For the sliding bar, infer $$B$$ from the emf-speed slope. Compare $$\lvert F\rvert v$$, $$\lvert \text{emf}\, I\rvert$$ and $$I^2 R$$ during steady motion.
+3. For the open secondary, calculate $$M = \text{emf}_\text{peak}/(2\pi f I_{1,\text{peak}})$$. Compare frequency scans and separations. Explain why the air core pair need not obey an ideal transformer's turns ratio.
+4. For the sliding bar, infer $$B$$ from the emf speed slope. Compare $$\lvert F\rvert v$$, $$\lvert \text{emf}\, I\rvert$$ and $$I^2 R$$ during steady motion.
 5. Compare the magnet runs using $$\int \text{emf}\,dt = -N\,\Delta\Phi_B$$. Distinguish this integral check from an independent measurement of the magnetic field.
 
 ## Uncertainty
 
-Use time spacing, peak bracketing and readout rounding to estimate amplitude and period uncertainty. Avoid fitting only one sampled peak. For $$M$$, include uncertainties in emf amplitude, primary-current amplitude and frequency. The generator/rails/magnet emf and current are interval averages; the flux is an endpoint value. State your sampling interval and check whether reducing it changes the result.
+Use time spacing, peak bracketing and readout rounding to estimate amplitude and period uncertainty. Avoid fitting only one sampled peak. For $$M$$, include uncertainties in emf amplitude, primary current amplitude and frequency. The generator/rails/magnet emf and current are interval averages; the flux is an endpoint value. State your sampling interval and check whether reducing it changes the result.
 
 ## Questions
 
@@ -83,4 +83,4 @@ Use time spacing, peak bracketing and readout rounding to estimate amplitude and
 
 ## What to hand in
 
-Prelab answers, settings and CSV, flux/emf plots, generator scaling, mutual-inductance estimates, motional-emf and energy calculations, uncertainty and answers to the questions. Identify simulated data.
+Prelab answers, settings and CSV, flux/emf plots, generator scaling, mutual inductance estimates, motional emf and energy calculations, uncertainty and answers to the questions. Identify simulated data.

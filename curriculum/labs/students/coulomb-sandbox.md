@@ -54,7 +54,7 @@ For a real electrostatics apparatus, follow the instructor's charging and discha
 
 **Potential gradient.** Choose a point away from either charge. Measure $$V$$ at equal small distances to its left and right. Use the central difference to estimate $$E_x$$. Repeat with a smaller separation, then compare with the measured field component.
 
-**Using the virtual apparatus.** Choose **2D map**, enable **1 cm grid**, and turn on **Blind: hide predictions and answers**. Start from **Dipole**, select one charge and press **Remove** for the single-charge scan; set the remaining charge to +1 nC with **Selected charge**. Place it at the grid origin and record its actual position. Press P to activate the probe; drag it or use the arrow keys and record the actual displayed coordinates. Stay at least 0.5 cm from a charge. Use **Capture reading** at every point and **Export to worksheet** after each configuration, then **Clear**. Use **Dipole** and **Like pair** for the two-charge scans. Inspect the saved charge positions/settings in each export rather than assuming a preset survived your edits. Turn **Equipotentials** on for the final comparison.
+**Using the virtual apparatus.** Choose **2D map**, enable **1 cm grid**, and turn on **Blind: hide predictions and answers**. Start from **Dipole**, select one charge and press **Remove** for the single charge scan; set the remaining charge to +1 nC with **Selected charge**. Place it at the grid origin and record its actual position. Press P to activate the probe; drag it or use the arrow keys and record the actual displayed coordinates. Stay at least 0.5 cm from a charge. Use **Capture reading** at every point and **Export to worksheet** after each configuration, then **Clear**. Use **Dipole** and **Like pair** for the two charge scans. Inspect the saved charge positions/settings in each export rather than assuming a preset survived your edits. Turn **Equipotentials** on for the final comparison.
 
 ## Data
 
@@ -69,7 +69,7 @@ Add rows for all measurements. For two charges, record both charge positions abo
 ## Analysis
 
 1. Plot $$V$$ against $$1/r$$ and $$E$$ against $$1/r^2$$ for the single charge. Infer $$q$$ from each slope and compare the results.
-2. Calculate the vector field and signed potential for the two-charge measurements. Compare both components of the predicted field with $$E\cos\theta$$ and $$E\sin\theta$$.
+2. Calculate the vector field and signed potential for the two charge measurements. Compare both components of the predicted field with $$E\cos\theta$$ and $$E\sin\theta$$.
 3. Estimate $$E_x = -[V(x+h)-V(x-h)]/(2h)$$. Explain how the result changes when $$h$$ is reduced.
 4. Compare field direction with the equipotential curves. Identify one point where cancellation of potential differs from cancellation of field.
 
@@ -80,10 +80,10 @@ Use coordinate and readout resolution to estimate uncertainty. Distance errors m
 ## Questions
 
 1. Why do the field and potential follow different powers of $$r$$?
-2. Why is the field nonzero at the midpoint of an equal-and-opposite pair?
+2. Why is the field nonzero at the midpoint of an equal and opposite pair?
 3. Why is the field zero at the midpoint of an equal positive pair, although the potential is not?
 4. Does a negative potential imply that the electric field points in the negative $$x$$ direction?
 
 ## What to hand in
 
-Prelab answers, configuration sketches, raw data and CSV, both distance-law graphs, inferred charge with uncertainty, the gradient comparison and answers to the questions. Identify simulated data.
+Prelab answers, configuration sketches, raw data and CSV, both distance law graphs, inferred charge with uncertainty, the gradient comparison and answers to the questions. Identify simulated data.

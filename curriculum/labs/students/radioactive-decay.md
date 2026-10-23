@@ -1,6 +1,6 @@
 # Radioactive Decay — Student Virtual Laboratory
 **Simulation:** [Open Radioactive Decay](../../demos/radioactive-decay.html)  
-**Duration:** 50–75 minutes · **Level:** introductory calculus-based physics  
+**Duration:** 50–75 minutes · **Level:** introductory calculus based physics  
 **Research question:** How can half-life be estimated from a stochastic decay process?
 
 ## Learning objectives

@@ -51,9 +51,9 @@ On a real bench, secure the added object and keep hands, hair and clothing away 
 
 **Empty table.** Measure spool radius and drop height. Start the table and load from rest. With bearing friction enabled, time a 0.500 m drop for six hanging masses: 0.020, 0.040, 0.060, 0.080, 0.100 and 0.120 kg. Keep $$r = 0.020\ \text{m}$$. Compute $$\alpha$$ and string torque from each timing. Fit $$\tau$$ against $$\alpha$$ to find the empty table's inertia and friction torque.
 
-**Added object.** Attach the disk or an unknown object, leaving the spool and bearing condition unchanged. Repeat the mass series. Subtract the empty-table inertia from the total to find the object's inertia. For a real disk, compare with $$\tfrac12 MR^2$$ using measured mass and radius. For an unknown, report inertia without assuming its shape.
+**Added object.** Attach the disk or an unknown object, leaving the spool and bearing condition unchanged. Repeat the mass series. Subtract the empty table inertia from the total to find the object's inertia. For a real disk, compare with $$\tfrac12 MR^2$$ using measured mass and radius. For an unknown, report inertia without assuming its shape.
 
-**Spool check.** Repeat two or more runs with a second spool radius while keeping the same rotating object and bearing condition. Test whether the points agree with the original torque-versus-acceleration line. Do not assume angular acceleration itself stays constant when the spool changes.
+**Spool check.** Repeat two or more runs with a second spool radius while keeping the same rotating object and bearing condition. Test whether the points agree with the original torque versus acceleration line. Do not assume angular acceleration itself stays constant when the spool changes.
 
 **Energy.** Choose a completed run. Infer endpoint $$v = 2h/t$$, angular speed $$\omega = v/r$$ and angular displacement $$\Delta\varphi = h/r$$. Compare $$mgh$$ with
 
@@ -76,13 +76,13 @@ Record the object dimensions, bearing setting and run identifier. Keep empty and
 ## Analysis
 
 1. Calculate $$a$$, $$\alpha$$ and $$\tau$$ from each timed drop. Fit $$\tau$$ against $$\alpha$$ for each load, with a free intercept, and inspect residuals.
-2. Find the added inertia by subtracting slopes. Compare the two fitted friction torques and explain whether a common-bearing model is supported.
-3. Compare a known disk with its shape formula, or report the unknown inertia with uncertainty. Test whether the second-spool points follow the same line.
+2. Find the added inertia by subtracting slopes. Compare the two fitted friction torques and explain whether a common bearing model is supported.
+3. Compare a known disk with its shape formula, or report the unknown inertia with uncertainty. Test whether the second spool points follow the same line.
 4. Complete the energy account. Explain the role of friction work and why neither the falling mass's translational energy nor the table's own inertia may be omitted.
 
 ## Uncertainty
 
-The virtual timer rounds to 0.001 s. Its mass and spool settings are exact model inputs; their adjustment steps are not random errors. For a real bench include spool-radius measurement, effective string radius, drop height, mass and timing uncertainty. Both plot axes contain the same measured acceleration, so their errors are correlated; an ordinary line-fit error is an approximation. Estimate sensitivity by perturbing raw timings and dimensions and repeating the fit. Propagate both slope uncertainties into the difference in inertia, including shared systematic errors where appropriate. Repeating identical simulated runs cannot replace that analysis.
+The virtual timer rounds to 0.001 s. Its mass and spool settings are exact model inputs; their adjustment steps are not random errors. For a real bench include spool radius measurement, effective string radius, drop height, mass and timing uncertainty. Both plot axes contain the same measured acceleration, so their errors are correlated; an ordinary line fit error is an approximation. Estimate sensitivity by perturbing raw timings and dimensions and repeating the fit. Propagate both slope uncertainties into the difference in inertia, including shared systematic errors where appropriate. Repeating identical simulated runs cannot replace that analysis.
 
 ## Questions
 
@@ -93,4 +93,4 @@ The virtual timer rounds to 0.001 s. Its mass and spool settings are exact model
 
 ## What to hand in
 
-Prelab answers, settings and a copy of the data table for each series, empty/loaded fits with residuals, added inertia and friction estimates with uncertainty, spool-radius and energy checks, and answers to the questions. Identify simulated data.
+Prelab answers, settings and a copy of the data table for each series, empty/loaded fits with residuals, added inertia and friction estimates with uncertainty, spool radius and energy checks, and answers to the questions. Identify simulated data.

@@ -1,6 +1,6 @@
 # Finding Exoplanets — Student Virtual Laboratory
 **Simulation:** [Open Finding Exoplanets](../../demos/exoplanets.html)  
-**Duration:** 50–75 minutes · **Level:** introductory calculus-based physics  
+**Duration:** 50–75 minutes · **Level:** introductory calculus based physics  
 **Research question:** Can transit photometry determine a planet's radius?
 
 ## Learning objectives
@@ -15,7 +15,7 @@ $$\delta \approx (R_p/R_s)^2$$
 
 for an unobscured, uniform stellar disk.
 
-**Important limitation:** Choose a central transit and disable limb darkening if the controls permit; otherwise describe model-dependent differences.
+**Important limitation:** Choose a central transit and disable limb darkening if the controls permit; otherwise describe model dependent differences.
 
 ## Apparatus and setup
 Open the linked simulation. Record the model/preset, initial settings, units, and any toggles. Identify which controls adjust **Planet-to-star radius ratio Rp/Rs** and which displays permit measuring **Transit depth as fractional flux decrease**. If a requested setting or measurement is not directly supported, document the limitation; do not invent data. Disable overlays that reveal the expected answer during measurement when possible.
@@ -51,7 +51,7 @@ Calculate the physical quantity implied by the slope or fit parameters. Show uni
 5. What result would falsify your prediction?
 
 ## Extension
-Combine the transit radius estimate with the radial-velocity curve to discuss density.
+Combine the transit radius estimate with the radial velocity curve to discuss density.
 
 ## Submission
 Submit the completed data sheet, labeled graph, parameter estimate with units, comparison to theory, and a 150–250-word conclusion. Cite the simulation version/commit if provided.

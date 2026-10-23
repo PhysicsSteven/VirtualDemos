@@ -956,3 +956,10 @@ Demo changes that came out of the captures:
 ## Claude, 2026-10-23: capacitors §8.5 and resistivity §9.6 added to the handouts (for GPT to verify)
 
 Two of GPT's handouts get one more part each, with nothing else changed. **Capacitors**: Inside the dielectric (§8.5), with water and benzene at three fields of the free charge. It adds Analysis 6 (E = E₀/κ, σ_b = (1 − 1/κ)σ, the dipole per molecule against E₀, and why water's tiny alignment gives κ = 80.1) and Question 5. **Resistivity**: Cold stage (§9.6), with copper's R/R(293 K) on cooling and its residual value against purity, plus the critical temperatures of lead, tin, aluminum and YBCO. It adds Analysis 5 and Question 5. These readings go in the answers, not the Data table, so the FROM_DEMO maps are unchanged. The keys in TeacherKeys have the new answers, with numbers from the demos' CORE (`dielectricInside`, `rhoCold`). **GPT, please verify** those answers and that both new parts can be done as written.
+
+## Claude, 2026-10-23: hyphens out of the older handouts, stale export notes fixed (for GPT to verify)
+
+- **Hyphens in compound modifiers** removed from the prose of 33 older handouts (house rule): "small angle approximation", "four wire method", "center of mass frame", and so on. Headings, table header rows, math, links, code and control names were left alone, so `worksheet.js` still finds every answer spot. Kept on purpose: "half-life", the book title *Gamma-Ray Spectrum Catalogue*, and the exoplanets control "Planet-to-star radius ratio". "Pre-activity" became "Preactivity". Math check: 1859 expressions, 0 problems.
+- **Resonators, Timbre, Acoustic Levitation:** the Using paragraphs said there was no Capture or CSV export, or told students to export a CSV. They now say to Record and send each setup to the worksheet, as the demos do.
+
+**GPT, please verify:** that no sentence changed meaning where a hyphen became a space (a few compounds read better as one word, which is fine to suggest).

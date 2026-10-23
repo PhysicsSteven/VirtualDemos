@@ -22,7 +22,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§9.3–9.4 and §9.6. Access
 - I = nqAv_d · J = I/A = nqv_d · transit time = L/v_d
 - Model: free electrons in a metal (OpenStax 9.2). The drift speed v_d = I/(nqA) uses the free electron density n above; n does not change with temperature here (thermal expansion changes it by under 0.3%). The random speed is the Fermi speed v_F = ħ(3π²n)^⅓/m of the free electron model, and the mean time between collisions is τ = m/(ne²ρ), so it follows ρ(T). Electrons move in a 3D random direction and are drawn projected onto the page; ions are drawn on a square grid at the mean atomic spacing (copper's real lattice is face centred cubic). The region repeats at its edges, standing for a piece deep inside the wire. The counter counts electrons carried across the dashed plane by the drift; random motion carries electrons across both ways equally on average and is left out of the count. The electrons sit at random positions, so the count scatters about n v_d t × (2 nm × 0.3 nm) like any count; after the drift has carried the electrons one full region width (4 nm), every one has crossed exactly once.
 - Model: normal metals follow Matthiessen's rule, ρ(T) = ρ₀ + ρ_ph(T). The lattice part ρ_ph uses the Bloch–Grüneisen formula with the Debye temperature Θ (Kittel, Table 5.1: Cu 343 K, Al 428 K, Sn 200 K, Pb 105 K), scaled so that ρ(293 K) is the handbook value (Cu 1.68, Al 2.65, Sn 11.5, Pb 20.8 × 10⁻⁸ Ω·m); real curves differ from this one formula by up to tens of percent between about 10 K and 100 K. The residual part ρ₀ = ρ(293 K)/RRR comes from impurities and defects and depends on the sample. Below the critical temperature (OpenStax Table 9.3: Al 1.20 K, Sn 3.72 K, Pb 7.19 K, YBa₂Cu₃O₇ 92 K) the resistance is exactly zero; the step is drawn sharp, while real transitions are from a millikelvin to about a kelvin wide. Copper does not become superconducting at any temperature reached so far. YBCO's normal state is drawn as ρ = 2.5 × 10⁻⁶ Ω·m × T/300 K, a typical value along its copper oxide planes; it varies from sample to sample. Thermal contraction is left out. The points are simulated readings, noise free.
-- Model: R = ρL/A with ρ linear in temperature; the voltmeter is ideal (four-wire, so the clips and leads add nothing) and the current is set by a constant current supply. Resistivities are handbook values at 20 °C; real alloys vary by a few percent.
+- Model: R = ρL/A with ρ linear in temperature; the voltmeter is ideal (four wire, so the clips and leads add nothing) and the current is set by a constant current supply. Resistivities are handbook values at 20 °C; real alloys vary by a few percent.
 
 </details>
 
@@ -54,11 +54,11 @@ For a real wire bench, use the assigned current limit, switch off before moving 
 
 ## Procedure
 
-**Length scan.** Measure wire diameter and temperature. Use separate voltage-sensing contacts inside the current contacts when the real apparatus permits. At fixed temperature and current, measure $$V$$ and $$I$$ at six lengths from 0.10 to 1.00 m. Keep the same wire and diameter. Repeat one length at a second current to test whether $$V/I$$ is unchanged.
+**Length scan.** Measure wire diameter and temperature. Use separate voltage sensing contacts inside the current contacts when the real apparatus permits. At fixed temperature and current, measure $$V$$ and $$I$$ at six lengths from 0.10 to 1.00 m. Keep the same wire and diameter. Repeat one length at a second current to test whether $$V/I$$ is unchanged.
 
 **Diameter comparison.** At the same temperature, repeat the length scan with a second diameter of the same material. Compare the slopes before calculating both resistivities. A change in resistance alone does not establish a change in material.
 
-**Temperature scan.** Use one diameter and a fixed length. On a real bench, wait for thermal equilibrium before each reading. Record at least six temperatures over the instructor-approved range, including a reading at 20 °C. Fit $$R$$ against $$T$$ and infer $$\alpha$$. In the virtual apparatus, use 0, 20, 40, 60, 80 and 100 °C. This is a prescribed linear model, not a test of whether an actual alloy remains linear over every temperature range.
+**Temperature scan.** Use one diameter and a fixed length. On a real bench, wait for thermal equilibrium before each reading. Record at least six temperatures over the instructor approved range, including a reading at 20 °C. Fit $$R$$ against $$T$$ and infer $$\alpha$$. In the virtual apparatus, use 0, 20, 40, 60, 80 and 100 °C. This is a prescribed linear model, not a test of whether an actual alloy remains linear over every temperature range.
 
 **Cold stage (§9.6).** Choose Cold stage. Cool a copper sample from room temperature and note $$R/R(293\ \mathrm{K})$$ as it passes about 200, 77, 20 and 4.2 K, and the value it levels off at. Repeat at a lower and a higher sample purity. Then cool lead, tin, aluminum and YBCO, and find the temperature at which each one's resistance drops to zero. These readings are not part of the Data table; record them in your answer to Analysis 5.
 
@@ -77,9 +77,9 @@ Copy this table for each scan. Record real meter ranges/resolutions and diameter
 ## Analysis
 
 1. Fit $$R$$ against $$L$$ for each diameter. Report slope, intercept and residuals; use the measured diameter to find $$\rho$$ at 20 °C.
-2. Compare the slope ratio with the inverse squared diameter ratio. Compare the two inferred resistivities and the repeated-current check.
+2. Compare the slope ratio with the inverse squared diameter ratio. Compare the two inferred resistivities and the repeated current check.
 3. Fit $$R$$ against $$T$$. Calculate $$R_{20}$$ from the fitted line, then $$\alpha$$. Compare fitted $$R_{20}$$ with the direct 20 °C reading.
-4. Explain what a nonzero length-fit intercept could mean on a real bench. Distinguish a possible lead/contact effect from random reading scatter.
+4. Explain what a nonzero length fit intercept could mean on a real bench. Distinguish a possible lead/contact effect from random reading scatter.
 5. For the cold stage, describe how copper's resistance changes as it cools and what sets the value it levels off at; compare that value with the purity setting. Give the critical temperature of lead, tin, aluminum and YBCO, and say which can be reached with liquid nitrogen (77 K) and which need liquid helium (4.2 K) or colder.
 
 ## Uncertainty
@@ -90,8 +90,8 @@ The virtual voltmeter records four significant figures; current is the set value
 
 1. How can two wires have different resistances but the same resistivity?
 2. Why can a real wire's resistance change when supply current is raised, even if the material is locally ohmic?
-3. Why is four-wire sensing useful for a low-resistance specimen?
-4. Can a near-zero $$\alpha$$ prove that a material is a perfect conductor?
+3. Why is four wire sensing useful for a low resistance specimen?
+4. Can a near zero $$\alpha$$ prove that a material is a perfect conductor?
 5. Why can the current in a superconducting magnet keep flowing for years with no power supply connected?
 
 ## What to hand in

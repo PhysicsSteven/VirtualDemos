@@ -27,7 +27,7 @@ Measure only objects or indoor distances you can reach safely. Do not climb, blo
 
 **Ask a measurable question.** Choose a desk or another accessible object. Write one testable question about its size and one statement that is a preference rather than a physical measurement. Describe the system, quantity and measuring method.
 
-**Measure a scale.** Estimate the object's length before measuring. Measure length and width in centimetres using a ruler or tape; record the tool markings and how you read the endpoints. Repeat one length from the opposite end. Calculate area in cm², then convert both lengths to metres and calculate area again. Check agreement after converting area to m². Sketch where this object fits relative to a millimetre and a kilometre on a powers-of-ten scale.
+**Measure a scale.** Estimate the object's length before measuring. Measure length and width in centimetres using a ruler or tape; record the tool markings and how you read the endpoints. Repeat one length from the opposite end. Calculate area in cm², then convert both lengths to metres and calculate area again. Check agreement after converting area to m². Sketch where this object fits relative to a millimetre and a kilometre on a powers of ten scale.
 
 **Practice conversions.** Convert the supplied practice values 72.0 km/h to m/s, 250.0 cm² to m² and 2.50 in to metres. Show factors and cancellation. These are exercise inputs, not measurements of your object.
 
@@ -69,4 +69,4 @@ Record the ruler's smallest marking, endpoint alignment and variation between re
 
 ## What to hand in
 
-Pre-activity answers, your measurable question and scale sketch, recorded observations with units, conversion work, dimensional checks, uncertainty discussion and question answers. Clearly distinguish supplied inputs from observations.
+Preactivity answers, your measurable question and scale sketch, recorded observations with units, conversion work, dimensional checks, uncertainty discussion and question answers. Clearly distinguish supplied inputs from observations.

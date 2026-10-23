@@ -33,7 +33,7 @@ $$\lambda=\frac{hc}{\Delta E}.$$
 
 ## Safety
 
-The real apparatus has high voltage and a hot oven. Follow the department's warm-up and operating procedure. Do not touch the hot tube or change connections while powered. Do not open or attempt to repair a sealed mercury tube.
+The real apparatus has high voltage and a hot oven. Follow the department's warm up and operating procedure. Do not touch the hot tube or change connections while powered. Do not open or attempt to repair a sealed mercury tube.
 
 ## Procedure
 
