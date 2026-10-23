@@ -435,3 +435,7 @@ Current state: 51 handouts, 1016 expressions, 0 problems.
 3. Write every new or revised student handout to the site convention and run the checker on it before committing. Don't redo the 51 converted handouts; if you find a mistake in one, fix just that line.
 4. Commit the guides to TeacherKeys and log a short entry here.
 
+
+## Claude, 2026-10-23 09:30: Ball Launched from a Moving Cart (new Physics I lecture demo)
+
+`demos/cart-launch.html`, Vol 1 §4.3 and §4.5 (Steve's request). A cart on a track fires a ball perpendicular to the track at a trigger post. Setups: **Steady cart** (lands in the launcher), **Cart at rest**, **Cart speeds up** and **Cart brakes** (acceleration from the moment of launch; misses by ½aT²), **Frictionless incline** (lands in the launcher again; T = 2u/(g cos θ)). **Watch from** the ground or the cart; velocity vectors with components, acceleration vectors (relative to the cart in the cart view), strobe images every eighth of the flight, path, and a position against time graph. Blind pauses at the top of the flight. Defaults 1.2 m/s and 4.0 m/s: T = 0.816 s, both move 0.979 m. Notes with Q1–Q5, key in TeacherKeys, 5 test groups in test_cart_launch.cjs, map and catalog entries. Also: the Elevator scenery, lost in this morning's jerk commit, is restored.

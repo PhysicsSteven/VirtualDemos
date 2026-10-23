@@ -1226,7 +1226,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "projectile-drag"
+        "projectile-drag",
+        "cart-launch"
       ],
       "unit": "kinematics"
     },
@@ -1259,7 +1260,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "vectors"
+        "vectors",
+        "cart-launch"
       ],
       "unit": "kinematics",
       "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
@@ -4362,6 +4364,31 @@
       "handouts": [],
       "title": "Vectors and Relative Motion",
       "url": "demos/vectors.html"
+    },
+    {
+      "demo": "cart-launch",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "4.3",
+          "title": "Projectile Motion"
+        },
+        {
+          "vol": 1,
+          "sec": "4.5",
+          "title": "Relative Motion in One and Two Dimensions"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-23 (Claude). Cart on a track fires a ball perpendicular to the track: lands in the launcher at constant cart speed and on a frictionless incline, misses when the cart speeds up or brakes after launch. Ground or cart frame, velocity and acceleration vectors with components, strobe images, position graph; Blind pauses at the top for predictions.",
+      "handouts": [],
+      "title": "Ball Launched from a Moving Cart",
+      "url": "demos/cart-launch.html"
     },
     {
       "demo": "motion-graphs",

@@ -445,6 +445,17 @@
      ]
     },
     {
+     "demo": "cart-launch",
+     "title": "Ball Launched from a Moving Cart",
+     "desc": "A cart fires a ball straight up. At constant speed the ball lands back in the launcher; make the cart speed up or brake and it misses. Watch from the ground or from the cart, with velocity vectors and strobe images.",
+     "tags": [
+      "projectile motion",
+      "independence of motion",
+      "relative motion",
+      "frames of reference"
+     ]
+    },
+    {
      "demo": "springs",
      "title": "Springs and Oscillations",
      "desc": "Pull a mass on a spring and let go: simple harmonic motion, a period that ignores the amplitude, three kinds of damping, a driven oscillator sweeping through resonance, and two coupled masses trading energy in beats.",

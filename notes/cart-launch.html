@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ball Launched from a Moving Cart: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Ball Launched from a Moving Cart</h1><ul class="meta"><li><a href="../demos/cart-launch.html">Open the demo</a></li><li>PHYS 201</li><li>10 to 15 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>The horizontal and vertical motions of a projectile are independent. Gravity changes only the vertical velocity.</li>
+<li>A ball fired straight up from a moving cart keeps the cart's horizontal velocity, so it stays directly above the launcher and lands back in it, as long as the cart's velocity does not change.</li>
+<li>If the cart speeds up or brakes after the launch, nothing does the same to the ball, and it misses by ½ a T².</li>
+<li>Seen from a steadily moving cart the ball goes straight up and down: the same motion as from a cart at rest (relative motion, §4.5).</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need projectile motion with x and y treated separately. The demo shows the classic launcher cart: a cart rolls along a track, a trigger post at 0 m fires the ball perpendicular to the track, and the ball either lands back in the launcher or misses. Sizes are to scale. <strong>Velocity vectors</strong> puts the cart's velocity on the cart and the ball's velocity on the ball, split into components; <strong>Strobe images</strong> shows the ball and the cart every eighth of the flight with a thin line from each ball image down to its launcher; the graph shows position along the track against time for both. <strong>Watch from: The cart</strong> redraws everything relative to the cart. <strong>Blind</strong> pauses each launch at the top of the flight and hides where it lands.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Predict first.</strong> Turn on Blind and choose <strong>Steady cart</strong> (1.2 m/s, launch speed 4.0 m/s). Ask: does the ball land in front of the cart, behind it, or in it? Press <strong>Launch</strong>; it pauses at the top for votes, then <strong>Resume</strong>.</li>
+<li><strong>Steady cart.</strong> The ball lands back in the launcher. It is in the air 0.816 s and both the ball and the cart move 0.979 m. Turn on <strong>Velocity vectors</strong>: the ball's vₓ arrow stays the same length as the cart's arrow the whole time, while v_y shrinks, reverses and grows. The strobe lines are all vertical, and the two lines on the graph lie on top of each other.</li>
+<li><strong>Watch from the cart.</strong> Switch to <strong>The cart</strong>: the ball goes straight up and down, exactly as with <strong>Cart at rest</strong>.</li>
+<li><strong>Cart speeds up</strong> (1.5 m/s² from the moment of launch): the cart moves 1.477 m while the ball moves 0.979 m, so the ball comes down 0.50 m behind the launcher and lands on the track. <strong>Cart brakes</strong> (−1.5 m/s²): the cart stops after 0.48 m and the ball lands ahead. In the cart's view with <strong>Acceleration vectors</strong> on, the ball's acceleration relative to the cart tilts backward or forward.</li>
+<li><strong>Frictionless incline</strong> (15°, launched perpendicular to the track): the cart speeds up down the slope, yet the ball lands in the launcher again. Discuss why with Q4.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A cart moves at 1.2 m/s and fires a ball straight up at 4.0 m/s relative to the cart. How long is the ball in the air, how high does it rise, and how far do the ball and the cart each travel in that time?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> What is the ball's velocity relative to the ground just after launch (magnitude and angle above the horizontal)?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The cart speeds up at 1.5 m/s² from the moment of launch. How far behind the launcher does the ball come down to the launcher's height? Why does nothing push the ball forward too?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> On the frictionless 15° incline the cart speeds up, yet the ball lands in the launcher. Use components along and perpendicular to the track to explain why. How long is the flight for a launch speed of 4.0 m/s?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> A passenger on a train moving at constant velocity tosses a coin straight up. Where does it land, and what does a person on the platform see?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The ball is left behind because the cart moves on."</strong> The ball already has the cart's horizontal velocity when it leaves, and nothing in the air changes it.</li>
+<li><strong>"The ball needs a forward force to keep up."</strong> No horizontal force acts on it (no air resistance); constant horizontal velocity needs no force.</li>
+<li><strong>"Fired straight up means it moves straight up."</strong> Only relative to the cart. Relative to the ground the launch velocity is tilted forward and the path is a parabola.</li>
+<li><strong>"On a slope it must miss because the cart speeds up."</strong> Gravity speeds up the ball along the track by exactly the same g sin θ.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>The ball after launch: velocity = cart velocity + launch velocity (perpendicular to the track); acceleration g, no air resistance, point ball.</li>
+<li>Track coordinates: along the track the ball's acceleration is g sin θ, perpendicular to it −g cos θ. The flight back to the launcher's height lasts T = 2u/(g cos θ) and the highest point is u²/(2g cos θ) above the launcher.</li>
+<li>The cart: constant speed on the level, or the set acceleration from the moment of launch (a braking cart stops and stays stopped); on the incline it rolls without friction at g sin θ. The launch pushes the cart into the track, not along it, so its speed is unchanged.</li>
+<li>The ball counts as caught within 2 cm of the launcher's centre; otherwise it lands on the cart's top or on the track. The miss when only the cart accelerates is −½ a T² at the launcher's height.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

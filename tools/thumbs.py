@@ -49,6 +49,7 @@ OVERRIDES = {
     "rotational-dynamics": {"wait": 1800, "js": "document.querySelector('#objSeg [data-o=pair]').click(); document.getElementById('go').click();"},
     "gyroscope": {"wait": 1500, "js": "document.getElementById('go').click();"},
     "viscometer": {"wait": 1500, "js": "document.querySelector('#speedSeg [data-s=\"10\"]').click(); document.getElementById('go').click();"},
+    "cart-launch": {"wait": 1500, "js": "document.getElementById('go').click();"},
     "elevator": {"wait": 1200, "js": "document.querySelector('#trips [data-to=\"10\"]').click();"},
     "gravity-near-earth": {"wait": 600, "js": "const s = document.getElementById('sL'); s.value = 40; s.dispatchEvent(new Event('input'));"},
     "gps-clocks": {"wait": 1500, "js": "document.getElementById('go').click();"},
