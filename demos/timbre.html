@@ -21,6 +21,14 @@ img { max-width: 100%; }
 .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
 .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
 /* /vd-qr */
+/* folded rail sections: secondary options behind their heading (layout redesign, as in springs) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 <title>Timbre and Harmonics</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -308,7 +316,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Inharmonic partials</h2>
+        <h2>Readings</h2>
+        <div class="chips">
+          <button type="button" class="btn" id="recTone">Record harmonics 1 to 6</button>
+          <button type="button" class="btn" id="toWs">Export to worksheet</button>
+          <button type="button" class="btn" id="clearRec">Clear</button>
+        </div>
+        <p class="hint" id="capStatus" role="status">Each record adds six rows, harmonics 1 to 6 of the tone as it is now: frequency, amplitude relative to the strongest partial, level in dB and phase, with the RMS and the repetition period on the first row.</p>
+      </section>
+      <section>
+        <details class="fold"><summary>Inharmonic partials</summary><div class="foldbody">
         <div>
           <div class="slider-head"><label for="detN">Detune harmonic</label><output id="detNOut" class="mono" for="detN"></output></div>
           <input type="range" id="detN" min="1" max="16" step="1" value="3">
@@ -327,10 +344,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </dl>
         <p class="hint">Detune one harmonic and the waveform stops repeating: its shape drifts through a full cycle every 1/|Δf|, and you hear a slow, regular change at |Δf| per second. Mistuned by more than a few percent, the harmonic starts to stand out as a separate tone. Stiffness stretches every partial upward, fₙ = n f₁ √((1 + Bn²)/(1 + B)), as in a stiff string; piano strings have a small B, one reason pianos are tuned with slightly wide octaves. A large B gives a clangy, bell-like tone without one clear pitch. Real bells have their own particular partials; this only shows what inharmonic partials do.</p>
         <button type="button" class="btn" id="harmonicAgain">Back to exact harmonics</button>
+        </div></details>
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="showEach">Each harmonic</label>
           <label><input type="checkbox" id="showIdeal" checked>Ideal shape</label>
@@ -343,6 +361,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
             <button type="button" data-n="6" aria-pressed="false">6</button>
           </div>
         </div>
+        </div></details>
       </section>
 
       <section>
@@ -351,9 +370,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Key</h2>
+        <details class="fold"><summary>Key</summary><div class="foldbody">
         <div class="key" id="key"></div>
         <p class="hint" id="modelHint"></p>
+        </div></details>
       </section>
     </aside>
   </main>
@@ -1137,6 +1157,38 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('mute2').addEventListener('change', (e) => { S.mute2 = e.target.checked; recompute(); readouts(); soundDirty = true; });
   $('pure').addEventListener('click', () => { clearAll(); S.a[1] = 1; S.mute1 = false; S.mute2 = false; syncControls(); edited(); });
   $('allOn').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.a[n] = 0.5; edited(); });
+  /* Readings for the worksheet: each record is harmonics 1 to 6 of the current tone, every value as the demo computes it (D, fOf).
+     Export to worksheet hands them to the worksheet through localStorage, as in the Physics I demos; after Clear a new series
+     starts a new copy of the worksheet's table. */
+  let recRows = [], recRuns = 0, wsSeries = Date.now();
+  const capStatus = (m) => { $('capStatus').textContent = m; };
+  const recCSV = () => ['# Timbre and Harmonics demo (computed values: the tone is synthesized, not recorded)',
+    'run,preset,n,f_Hz,rel_amplitude,level_dB,phase_deg,notes', ...recRows.map((r) => [r.run, r.preset, r.n, r.f, r.rel, r.db, r.ph, r.notes].join(','))].join('\n') + '\n';
+  $('recTone').addEventListener('click', () => {
+    const top = Math.max(0, ...D.ns.map((n) => D.a[n])), pb = document.querySelector('#presets [aria-pressed="true"]');
+    const name = (pb ? pb.textContent : morph !== null ? $('morphOut').textContent : 'Custom').replace(/[,;]/g, ' ').trim();
+    const I = D.info, rep = I.kind === 'periodic' ? `repeats every ${fmtMs(I.T)}` : I.kind === 'silent' ? 'silent' : 'never repeats exactly';
+    const notes = [`RMS ${D.rms.toFixed(3)} bar units`, `peak/RMS ${$('rCrest').textContent}`, rep, `f1 ${f1().toFixed(2)} Hz`, S.B ? `B ${S.B.toFixed(4)}` : '', S.df ? `harmonic ${S.detN} detuned ${S.df.toFixed(1)} Hz` : '',
+      S.mute1 ? 'harmonic 1 removed' : '', S.mute2 ? 'harmonic 2 removed' : ''].filter(Boolean).join('; ');
+    recRuns++;
+    for (let n = 1; n <= 6; n++) { const a = D.a[n], rel = top > 0 ? a / top : 0, deg = ((S.ph[n] * 180 / PI) % 360 + 360) % 360;
+      recRows.push({ run: recRuns, preset: name, n, f: fOf(n).toFixed(2), rel: rel.toFixed(4), db: rel > 0 ? toDb(rel).toFixed(1) : 'off', ph: deg.toFixed(0), notes: n === 1 ? notes : '' }); }
+    capStatus(`Run ${recRuns} recorded (${name}): ${recRows.length} rows so far.`);
+  });
+  $('clearRec').addEventListener('click', () => { recRows = []; recRuns = 0; wsSeries = Date.now(); capStatus('Readings cleared.'); });
+  $('toWs').addEventListener('click', () => {
+    if (!recRows.length) { capStatus('Nothing recorded yet. Press Record harmonics 1 to 6 first.'); return; }
+    const txt = recCSV(), data = txt.trim().split('\n').filter((l) => l[0] !== '#');
+    const hand = { v: 1, demo: 'timbre', series: wsSeries, sent: new Date().toISOString(), columns: data[0].split(','), rows: data.slice(1).map((l) => l.split(',')), meta: {},
+      note: 'Computed values from the Timbre and Harmonics demo; levels are relative to the strongest partial (0 dB).', csv: txt, csvName: 'timbre-readings.csv' };
+    try { localStorage.setItem('vd-handoff:timbre', JSON.stringify(hand)); }
+    catch (_) {
+      try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = hand.csvName; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+      capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return;
+    }
+    capStatus(`${hand.rows.length} rows sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/timbre.html'; a.target = 'timbre-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+  });
   $('randPh').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.ph[n] = Math.round(Math.random() * 72) * PI / 36; edited(false); });
   $('zeroPh').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.ph[n] = 0; edited(false); });
   $('showDials').addEventListener('change', (e) => { S.showDials = e.target.checked; dirty = true; });

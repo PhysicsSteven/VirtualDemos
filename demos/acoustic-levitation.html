@@ -24,6 +24,14 @@ img { max-width: 100%; }
 .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
 .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
 /* /vd-qr */
+/* folded rail sections: secondary options behind their heading (layout redesign, as in springs) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 <title>Acoustic Levitation</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -263,7 +271,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
       </section>
 
       <section id="sec3d">
-        <h2>3D field</h2>
+        <details class="fold"><summary>3D field</summary><div class="foldbody">
         <div id="opBox">
           <div class="slider-head"><label for="op">Opacity</label><output id="opOut" class="mono" for="op"></output></div>
           <input type="range" id="op" min="0.1" max="1" step="0.05" value="0.5">
@@ -274,6 +282,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
         </div>
         <div class="chips"><button type="button" class="btn" id="cut" aria-pressed="true">Cut away the near half</button></div>
         <p class="hint" id="hint3d"></p>
+        </div></details>
       </section>
 
       <section>
@@ -319,9 +328,18 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
         </table>
         <p class="hint">A trap is a minimum of U + Wz along the axis; its depth is the energy needed to lift the bead over the lower of the two barriers beside it. Gravity pulls each trap below its pressure node (trap − node negative), by about asin(W/F<sub>max</sub>)/2k for a plane wave, so more for a denser bead. Away from the centre the converging beams also shift the traps by tens of µm either way.</p>
       </section>
+      <section>
+        <h2>Readings</h2>
+        <div class="chips">
+          <button type="button" class="btn" id="recSetup">Record this setup</button>
+          <button type="button" class="btn" id="toWs">Export to worksheet</button>
+          <button type="button" class="btn" id="clearRec">Clear the readings</button>
+        </div>
+        <p class="hint" id="capStatus" role="status">Each record is one row: setup and material, bead radius, drive, phase (left blank for one emitter, which has no phase control), the tracked trap, F<sub>max</sub>/W and whether the bead holds. The tracked trap is the one nearest the centre on the first record, then the one nearest the last recorded position, so it follows one trap as the phase moves it.</p>
+      </section>
 
       <section>
-        <h2>Sound (a stand in)</h2>
+        <details class="fold"><summary>Sound (a stand in)</summary><div class="foldbody">
         <div>
           <div class="slider-head"><label for="vol">Volume</label><output id="volOut" class="mono" for="vol"></output></div>
           <input type="range" id="vol" min="0" max="1" step="0.01" value="0.5">
@@ -332,10 +350,11 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
         </dl>
         <p class="hint"><b>Drag the microphone through nodes and antinodes; with Sound on you hear |p| here.</b></p>
         <p class="hint" id="sndHint">40 kHz is ultrasound, far above the roughly 20 kHz limit of human hearing. The Sound button plays a 400 Hz tone instead, the real frequency divided by 100, whose loudness follows the pressure amplitude |p| at the gold microphone. Drag the microphone through nodes and antinodes, or sweep the phase and listen to the pattern pass it.</p>
+        </div></details>
       </section>
 
       <section>
-        <h2>Model</h2>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
         <p class="hint">The levitator follows TinyLev (A. Marzo, A. Barnes and B. W. Drinkwater, Rev. Sci. Instrum. 88, 085105, 2017): 72 transducers of 10 mm diameter at 40 kHz, 36 in each of two bowls in rings of 6, 12 and 18 on a sphere of radius 60 mm, with the centre position left open. The ring angles (10.5°, 21° and 31.5° from the axis) and the bowls sharing one centre are this page's choices. Because the waves meet the axis at angles θ, the phase along the axis advances at k⟨cos θ⟩ near the centre, so the traps there are λ/(2⟨cos θ⟩) = 4.76 mm apart rather than λ/2, closing toward λ/2 away from the centre.</p>
         <p class="hint">Each transducer is a piston of radius 5 mm in its far field: p = P₀V D(θ) e<sup>i(kd + φ)</sup>/d with D = 2J₁(ka sin θ)/(ka sin θ). The field is the sum over all 72, in free space: the bowls do not reflect or scatter sound, and there is no nonlinear acoustics. Within about 9 mm of a transducer face (its near field) this model fails, so that region is left blank. In the single emitter setup the flat reflector is rigid and infinite, replaced by the emitter's mirror image; sound reflected back off the emitter is left out, so there is no resonance build up.</p>
         <p class="hint">Calibration, illustrative: P₀ = 0.30 Pa·m per volt peak to peak, from the Murata MA40S4S data sheet rating of 120 dB SPL at 30 cm for 10 V rms. Real arrays fall short of this (spread between transducers, square wave drive, heating), so a real levitator needs more drive than shown here.</p>
@@ -348,6 +367,7 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
           <span><i class="swatch curve"></i>U + Wz along the axis</span>
           <span><i class="swatch grav"></i>Gravity alone, Wz</span>
         </div>
+        </div></details>
       </section>
     </aside>
   </main>
@@ -1450,6 +1470,38 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
     S.sweep = on; $('sweep').setAttribute('aria-pressed', String(on)); $('sweep').textContent = on ? 'Stop the sweep' : 'Sweep the phase';
     if (on) { const s = Math.max(-1, Math.min(1, S.ph / SWEEP_A)); S.sweepT = Math.asin(s) * SWEEP_T / TAU; }
   }
+  /* Readings for the worksheet: one row per record, every value as the demo computes it (PH, the trap list). Export to worksheet hands
+     them to the worksheet through localStorage, as in the Physics I demos; after Clear the next export starts a new copy of the table. */
+  let recRows = [], lastZ = null, lastCfg = null, wsSeries = Date.now();
+  const capStatus = (m) => { $('capStatus').textContent = m; };
+  $('recSetup').addEventListener('click', () => {
+    physics(); if (!PH) return;   /* the readings of the setup as it is now, not of the last drawn frame */
+    const traps = PH.traps.filter((t) => t.z >= C.win[0] && t.z <= C.win[1]), ref = lastCfg === C.name && lastZ !== null ? lastZ : 0;
+    const tr = traps.length ? traps.reduce((b, t) => (Math.abs(t.z - ref) < Math.abs(b.z - ref) ? t : b)) : null;
+    const near = traps.slice().sort((p, q) => Math.abs(p.z) - Math.abs(q.z)).slice(0, 5).map((t) => t.z).sort((p, q) => p - q);
+    const holds = PH.traps.length > 0;
+    recRows.push({ setup: `${C.name === 'lev' ? 'two bowls' : 'single emitter and reflector'} / ${MATS[S.mat].name}`, a: S.a.toFixed(2), V: S.V.toFixed(1), ph: C.name === 'lev' ? String(S.ph) : '',
+      z: tr ? (tr.z * 1000).toFixed(2) : '', ratio: PH.Vpa === 0 ? '0' : String(+PH.ratio.toPrecision(4)),
+      notes: [holds ? 'holds' : 'falls', near.length ? `traps near the centre at ${near.map((z) => (z * 1000).toFixed(2)).join(' ')} mm` : ''].filter(Boolean).join('; ') });
+    lastZ = tr ? tr.z : lastZ; lastCfg = C.name;
+    capStatus(`Row ${recRows.length} recorded${tr ? `: tracked trap at ${(tr.z * 1000).toFixed(2)} mm` : ': no trap, the bead falls'}.`);
+  });
+  $('clearRec').addEventListener('click', () => { recRows = []; lastZ = null; wsSeries = Date.now(); capStatus('Readings cleared.'); });
+  $('toWs').addEventListener('click', () => {
+    if (!recRows.length) { capStatus('Nothing recorded yet. Press Record this setup first.'); return; }
+    const txt = ['# Acoustic Levitation demo (computed values from the model on the page)', 'row,setup_material,radius_mm,drive_Vpp,phase_deg,tracked_trap_z_mm,Fmax_over_W,notes',
+      ...recRows.map((r, i) => [i + 1, r.setup, r.a, r.V, r.ph, r.z, r.ratio, r.notes].join(','))].join('\n') + '\n';
+    const data = txt.trim().split('\n').filter((l) => l[0] !== '#');
+    const hand = { v: 1, demo: 'acoustic-levitation', series: wsSeries, sent: new Date().toISOString(), columns: data[0].split(','), rows: data.slice(1).map((l) => l.split(',')), meta: {},
+      note: 'Computed values from the Acoustic Levitation demo (40 kHz, 20 °C).', csv: txt, csvName: 'levitation-readings.csv' };
+    try { localStorage.setItem('vd-handoff:acoustic-levitation', JSON.stringify(hand)); }
+    catch (_) {
+      try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = hand.csvName; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+      capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return;
+    }
+    capStatus(`${hand.rows.length} row${hand.rows.length === 1 ? '' : 's'} sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/acoustic-levitation.html'; a.target = 'levitation-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+  });
   const HINTS = {
     hold: 'One foam bead sits just below a pressure node near the centre. Lower the drive slowly: it sinks a little in its trap and then drops at about 1 V.',
     stack: 'Every pressure node of the standing wave is a trap, so the beads stack like rungs of a ladder, 4.76 mm apart at the centre. That is a bit more than λ/2 = 4.29 mm, because the sound from each bowl meets the axis at an angle. Open Trap pockets to see the wells in 3D, or the Slice colored by Potential U.',

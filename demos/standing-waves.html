@@ -24,6 +24,37 @@ img { max-width: 100%; }
 .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
 .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
 /* /vd-qr */
+/* Function generator on an instrument shelf under the picture (the string-density pieces: knob with role slider, 12° a click,
+   the mark angle derived from the value). The knobs turn the demo's own range inputs, shown under them for exact steps (Steve). */
+.shelf { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.gen { --box: #3b4656; background: var(--box); color: #e3e8ef; border-radius: 10px; padding: 10px 12px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
+:root[data-theme="dark"] .gen { --box: #2c3542; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .gen { --box: #2c3542; } }
+.gen-top { display: flex; flex-direction: column; gap: 4px; }
+.gen-title { font-size: 0.78rem; font-weight: 700; color: #c9d0d9; }
+.gen-lcd { font-family: var(--font-mono); font-weight: 600; font-size: 1.35rem; color: #7ee0a0; background: #0b1a12; border-radius: 5px; padding: 2px 10px; min-width: 8ch; text-align: right; font-variant-numeric: tabular-nums; }
+.gen-knobs { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.knobwrap { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 0.72rem; color: #c9d0d9; }
+.knobwrap output { font-family: var(--font-mono); font-size: 0.72rem; color: #c9d0d9; }
+.knob { position: relative; width: 52px; height: 52px; border-radius: 50%; cursor: grab; touch-action: none;
+  background: radial-gradient(circle at 38% 32%, #8b96a4, #4a5462 62%, #39414d); box-shadow: 0 0 0 3px #232a34, 0 2px 4px rgba(0, 0, 0, 0.5); }
+.knob:active { cursor: grabbing; }
+.knob-mark { position: absolute; left: 50%; top: 5px; width: 3px; height: 15px; margin-left: -1.5px; border-radius: 2px; background: #f1f4f8; transform-origin: 50% 21px; }
+.knob:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.gen-sliders { flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.gen-slider { flex: 1 1 220px; display: flex; flex-direction: column; gap: 2px; font-size: 0.72rem; color: #c9d0d9; }
+.gen-slider input[type="range"] { width: 100%; accent-color: #7ee0a0; }
+.gen .gen-btns { display: grid; grid-template-columns: auto auto; gap: 4px; }
+.gen .gen-btns .btn { background: #39414d; color: #e3e8ef; border-color: #4a5462; padding: 4px 10px; font-size: 0.82rem; }
+@media (max-width: 820px) { .gen { flex: 1 1 100%; } .gen .gen-btns .btn { min-height: 36px; } }
+/* folded rail sections: secondary options behind their heading (layout redesign, as in springs) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 <title>Standing Waves</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -83,7 +114,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
 
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
-.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.88rem; font-weight: 600; white-space: nowrap; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
@@ -206,6 +237,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <div class="pane" id="pane">
         <canvas id="can" tabindex="0" aria-label="Wave drawing. Space plays or pauses. Two waves view: up and down arrows change A₁, left and right change A₂. String and air column views: digits 1 to 8 pick a harmonic and left and right arrows step through them; with a pluck the arrows move the pluck point and height, with the driver they change the drive frequency. Beats view: left and right change f₂ − f₁, up and down change A₂. Levitation view: up and down change the drive amplitude, left and right move the reflector, Enter drops a bead, Delete clears them. Drag the grips to change amplitudes, lengths and frequencies."></canvas>
       </div>
+      <div class="shelf" id="shelf" hidden>
+        <div class="gen" role="group" aria-labelledby="genTitle">
+          <div class="gen-top"><span class="gen-title" id="genTitle">Function generator, drive frequency f</span><output id="dFOut" class="gen-lcd" for="dF"></output></div>
+          <div class="gen-knobs">
+            <div class="knobwrap"><div class="knob" data-for="dF" data-per="1" data-out="dFOut" role="slider" tabindex="0" aria-label="Drive frequency f, coarse knob, 1 Hz a click"><span class="knob-mark"></span></div><span>Coarse</span></div>
+            <div class="knobwrap"><div class="knob" data-for="dF" data-per="0.1" data-out="dFOut" role="slider" tabindex="0" aria-label="Drive frequency f, fine knob, 0.1 Hz a click"><span class="knob-mark"></span></div><span>Fine</span></div>
+          </div>
+          <div class="gen-sliders"><label class="gen-slider">Drive frequency f <input type="range" id="dF" min="20" max="720" step="0.1" value="60"></label></div>
+        </div>
+      </div>
     </div>
 
     <aside class="rail">
@@ -292,14 +333,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </div>
         <div id="driveBlock" hidden>
           <div>
-            <div class="slider-head"><label for="dF">Drive frequency f</label><output id="dFOut" class="mono" for="dF"></output></div>
-            <input type="range" id="dF" min="20" max="720" step="0.1" value="60">
-          </div>
-          <div>
             <div class="slider-head"><label for="dQ">Quality factor Q of mode 1</label><output id="dQOut" class="mono" for="dQ"></output></div>
             <input type="range" id="dQ" min="10" max="300" step="1" value="30">
           </div>
-          <p class="hint">A driver at x = L/20 pushes with F₀ cos(2πft), F₀ = 0.25 N. Drag the red marker on the plot to sweep the frequency.</p>
+          <p class="hint">A driver at x = L/20 pushes with F₀ cos(2πft), F₀ = 0.25 N. Set the drive frequency f with the Coarse and Fine knobs of the function generator under the picture or its slider (0.1 Hz steps), or drag the red marker on the plot to sweep it.</p>
         </div>
         <dl class="readout">
           <div><dt>Wave speed v = √(T/μ)</dt><dd id="rsV">—</dd></div>
@@ -428,9 +465,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Key</h2>
+        <details class="fold"><summary>Key</summary><div class="foldbody">
         <div class="key" id="key"></div>
         <p class="hint" id="modelHint"></p>
+        </div></details>
       </section>
     </aside>
   </main>
@@ -1568,7 +1606,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function setView(v) {
     S.view = v;
     for (const b of $('viewSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
-    $('secWaves').hidden = v !== 'waves'; $('secString').hidden = v !== 'string'; $('secPipe').hidden = v !== 'pipe'; $('secBeats').hidden = v !== 'beats'; $('secLev').hidden = v !== 'lev';
+    $('secWaves').hidden = v !== 'waves'; $('secString').hidden = v !== 'string'; $('shelf').hidden = v !== 'string' || $('driveBlock').hidden; $('secPipe').hidden = v !== 'pipe'; $('secBeats').hidden = v !== 'beats'; $('secLev').hidden = v !== 'lev';
     $('modelHint').textContent = MODEL[v];
     buildKey(); updateReadouts(); soundRebuild();
     t = 0; holdSpan = null;
@@ -1582,6 +1620,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     S.s.mode = m;
     for (const b of $('strMode').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
     $('harmBlock').hidden = m !== 'harm'; $('pluckBlock').hidden = m !== 'pluck'; $('driveBlock').hidden = m !== 'drive';
+    $('shelf').hidden = $('secString').hidden || m !== 'drive';
     t = 0;
     if (m === 'drive') { if (D) restDriven(D); }
     buildKey(); updateReadouts(); buildTables(); soundRebuild();
@@ -1931,6 +1970,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   rebuildPluck();
   rebuildDriven(false);
   buildHarmChips();
+  /* Function generator knobs (shared with string-density): one click every 12° of turn steps the demo's own range input by
+     data-per; drag to turn, or arrows, Page Up/Down (10 clicks), Home/End, mouse wheel. The mark angle comes from the value. */
+  (function () {
+    const KNOB_DEG = 12;
+    for (const k of document.querySelectorAll('.knob[data-for]')) {
+      const inp = document.getElementById(k.dataset.for), per = +k.dataset.per, out = document.getElementById(k.dataset.out);
+      const sync = () => { const v = +inp.value; k.setAttribute('aria-valuemin', inp.min); k.setAttribute('aria-valuemax', inp.max); k.setAttribute('aria-valuenow', inp.value);
+        if (out) k.setAttribute('aria-valuetext', out.textContent); k.firstChild.style.transform = `rotate(${((v / per) * KNOB_DEG) % 360}deg)`; };
+      const set = (v) => { const was = inp.value; inp.value = String(Math.min(+inp.max, Math.max(+inp.min, v))); if (inp.value !== was) inp.dispatchEvent(new Event('input', { bubbles: true })); sync(); };
+      let last = null, acc = 0;
+      const ang = (e) => { const r = k.getBoundingClientRect(); return Math.atan2(e.clientY - r.top - r.height / 2, e.clientX - r.left - r.width / 2) * 180 / Math.PI; };
+      k.addEventListener('pointerdown', (e) => { k.setPointerCapture(e.pointerId); last = ang(e); acc = 0; k.focus(); e.preventDefault(); });
+      k.addEventListener('pointermove', (e) => { if (last === null) return; const a = ang(e); let d = a - last; d -= 360 * Math.round(d / 360); last = a; acc += d;
+        const n = Math.trunc(acc / KNOB_DEG); if (n) { acc -= n * KNOB_DEG; set(+inp.value + n * per); } });
+      const end = () => { last = null; }; k.addEventListener('pointerup', end); k.addEventListener('pointercancel', end);
+      k.addEventListener('wheel', (e) => { e.preventDefault(); set(+inp.value + (e.deltaY < 0 ? per : -per)); }, { passive: false });
+      k.addEventListener('keydown', (e) => { const n = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 10, PageDown: -10 }[e.key];
+        if (n) set(+inp.value + n * per); else if (e.key === 'Home') set(+inp.min); else if (e.key === 'End') set(+inp.max); else return; e.preventDefault(); });
+      /* the demo also changes the value itself (presets, sweeps, dragging on the plot): follow its readout */
+      if (out) new MutationObserver(sync).observe(out, { childList: true, characterData: true, subtree: true });
+      sync();
+    }
+  })();
   const ro = new ResizeObserver(resize);
   ro.observe(pane);
   applyPreset('standing');

@@ -24,6 +24,14 @@ img { max-width: 100%; }
 .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
 .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
 /* /vd-qr */
+/* folded rail sections: secondary options behind their heading (layout redesign, as in springs) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 <title>Doppler Effect and Shock Waves</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -277,16 +285,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Time</h2>
+        <details class="fold"><summary>Time</summary><div class="foldbody">
         <div>
           <div class="slider-head"><label for="tsp">Playback speed</label><output id="tspOut" class="mono" for="tsp"></output></div>
           <input type="range" id="tsp" min="0" max="7" step="1" value="5">
         </div>
         <p class="hint" id="ringHint"></p>
+        </div></details>
       </section>
 
       <section>
-        <h2>Model</h2>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
         <p class="hint" id="modelSound">Point source in still, uniform air (v = 343 m/s at 20 °C). Each drawn circle is one crest, centered where the source was when it emitted it. The received frequency comes from that geometry: the program finds the emission time whose crest is reaching the observer now. Loudness falls off as 1/r in the audio but is not drawn. A real aircraft is not a point: its nose and tail shocks give two booms close together.</p>
         <p class="hint" id="modelLight" hidden>Special relativity, in the observer's frame. Light needs no medium and travels at c in every frame. The source's clock runs slow by γ, so it emits crests γ times less often than it would at rest; the rest is the same crowding as for sound. Colors are approximate screen colors; outside 380 to 750 nm the light is drawn gray.</p>
         <div class="key" id="keySound">
@@ -304,6 +313,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch cls"></i>Classical moving source, 1/(1 ∓ β)</span>
           <span><i class="swatch tr"></i>Transverse, 1/γ</span>
         </div>
+        </div></details>
       </section>
     </aside>
   </main>

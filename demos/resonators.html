@@ -21,6 +21,14 @@ img { max-width: 100%; }
 .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
 .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
 /* /vd-qr */
+/* folded rail sections: secondary options behind their heading (layout redesign, as in springs) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 <title>Resonators</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -300,9 +308,11 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
         <h2>Readings</h2>
         <div class="btnrow">
           <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="toWs">Export to worksheet</button>
           <button type="button" class="btn" id="expTab">Export CSV</button>
           <button type="button" class="btn" id="clearTab">Clear</button>
         </div>
+        <p class="hint" id="capStatus" role="status"></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>f Hz</th><th>k</th><th>L read</th><th>Δ to k−1</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
         <p class="hint">Capture stores the water position you chose, as read on the scale, never the true resonance. Reading the meniscus adds a small simulated scatter (σ = 1.5 mm, fixed by the seed). k counts the resonances from the top at each frequency; edit it if you skipped one. You can edit L too.</p>
         <div class="plotbox"><canvas id="plot" role="img" aria-label="Plot of the resonance positions L against (2k − 1)/4f, with a least squares line: its slope is c and its intercept is minus the end correction."></canvas></div>
@@ -457,14 +467,16 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
       </section>
 
       <section>
-        <h2>Key</h2>
+        <details class="fold"><summary>Key</summary><div class="foldbody">
         <div class="key" id="key"></div>
+        </div></details>
       </section>
 
       <section>
-        <h2>Model</h2>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
         <p class="hint" id="modelHint"></p>
         <p class="hint">Animations are slowed so the lowest mode is drawn at 0.5 Hz; the sound plays at the true frequencies.</p>
+        </div></details>
       </section>
     </aside>
   </main>
@@ -1373,12 +1385,14 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
     S.rows.push({ f: S.fork, Lcm: (L * 100).toFixed(1), k: '', tc: S.tc, dia: S.tdia, seed: S.seed, idx: i });
     renderTable();
   }
+  /* the spacing to the reading with the next lower k at the same frequency, in cm, as the table shows it ('' when there is none) */
+  function spacingCm(R, r) { const prev = R.filter((q) => q.f === r.f && q.k === r.k - 1 && isFinite(q.L)); return prev.length && isFinite(r.L) ? ((r.L - prev[0].L) * 100).toFixed(1) : ''; }
   function renderTable() {
     const tb = $('tbl').querySelector('tbody'); tb.textContent = '';
     const R = rowsSI();
     R.forEach((r) => {
       const prev = R.filter((q) => q.f === r.f && q.k === r.k - 1 && isFinite(q.L));
-      const sp = prev.length && isFinite(r.L) ? `${((r.L - prev[0].L) * 100).toFixed(1)}` : '—';
+      const sp = spacingCm(R, r) || '—';
       const tr = document.createElement('tr');
       tr.innerHTML = `<td class="n">${r.i + 1}</td><td>${r.f}</td>` +
         `<td><input class="k" aria-label="Resonance number k, row ${r.i + 1}" data-i="${r.i}" data-f="k" value="${S.rows[r.i].k}" placeholder="${r.k}"></td>` +
@@ -1391,7 +1405,7 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
   $('tbl').addEventListener('change', (e) => { const t = e.target; if (t.dataset && t.dataset.f) { S.rows[+t.dataset.i][t.dataset.f] = t.value.trim(); renderTable(); } });
   $('tbl').addEventListener('click', (e) => { const b = e.target.closest('button[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderTable(); } });
   $('capture').addEventListener('click', capture);
-  $('clearTab').addEventListener('click', () => { S.rows = []; renderTable(); });
+  $('clearTab').addEventListener('click', () => { S.rows = []; wsSeries = Date.now(); renderTable(); capStatus('Readings cleared.'); });
   function fitNow() { const R = rowsSI().filter((r) => isFinite(r.L) && r.k >= 1); return { R, fit: tubeFit(R), sp: spacingSpeeds(R) }; }
   function fitOut() {
     const { R, fit, sp } = fitNow(), dl = $('fitOut'); let html = '';
@@ -1408,14 +1422,33 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
   }
   function csvTable() {
     const L = ['# Resonators: resonance tube (simulated readings; scatter fixed by the seed)', `# reading seed,${S.seed}`, `# reading scatter sigma_mm,${(READ_SIGMA * 1000).toFixed(1)}`,
-      'row,f_Hz,k,L_read_cm,x_(2k-1)/4f_ms,temperature_C,tube_diameter_cm'];
-    for (const r of rowsSI()) L.push([r.i + 1, r.f, r.k, S.rows[r.i].Lcm, isFinite(r.L) ? (tubeX(r.f, r.k) * 1000).toFixed(5) : '', S.rows[r.i].tc, (S.rows[r.i].dia * 100).toFixed(1)].join(','));
+      'row,f_Hz,k,L_read_cm,x_(2k-1)/4f_ms,temperature_C,tube_diameter_cm,spacing_cm'];
+    const R = rowsSI();
+    for (const r of R) L.push([r.i + 1, r.f, r.k, S.rows[r.i].Lcm, isFinite(r.L) ? (tubeX(r.f, r.k) * 1000).toFixed(5) : '', S.rows[r.i].tc, (S.rows[r.i].dia * 100).toFixed(1), spacingCm(R, r)].join(','));
     return L.join('\n') + '\n';
   }
   function download(name, text) {
     try { const b = new Blob([text], { type: 'text/csv' }), a = document.createElement('a'); a.href = URL.createObjectURL(b); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 800); } catch (_) {}
   }
   $('expTab').addEventListener('click', () => download(`resonance-tube-seed${S.seed}.csv`, csvTable()));
+  /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), as in the Physics I demos;
+     after Clear the next export starts a new copy of the worksheet's table. If storage is blocked the CSV is downloaded instead. */
+  let wsSeries = Date.now();
+  const capStatus = (m) => { $('capStatus').textContent = m; };
+  $('toWs').addEventListener('click', () => {
+    if (!S.rows.length) { capStatus('No readings to export yet. Find a resonance and press Capture reading.'); return; }
+    const txt = csvTable(), lines = txt.trim().split('\n'), data = lines.filter((l) => l[0] !== '#'), meta = {};
+    lines.filter((l) => l[0] === '#').forEach((l) => { const c = l.replace(/^#\s*/, '').split(','); if (c.length > 1) meta[c[0]] = c[1]; });
+    const r0 = S.rows[0], same = S.rows.every((r) => r.tc === r0.tc && r.dia === r0.dia);
+    const hand = { v: 1, demo: 'resonators', series: wsSeries, sent: new Date().toISOString(), columns: data[0].split(','), rows: data.slice(1).map((l) => l.split(',')), meta,
+      note: `Simulated readings from the Resonators demo (reading seed ${S.seed}${same ? `, ${r0.tc.toFixed(1)} °C, tube inner diameter ${(r0.dia * 100).toFixed(1)} cm` : ''}).`,
+      csv: txt, csvName: `resonance-tube-seed${S.seed}.csv` };
+    try { localStorage.setItem('vd-handoff:resonators', JSON.stringify(hand)); }
+    catch (_) { download(hand.csvName, txt); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    capStatus(`${hand.rows.length} reading${hand.rows.length === 1 ? '' : 's'} sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/resonators.html'; a.target = 'resonators-worksheet'; a.textContent = 'Open the worksheet';
+    a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+  });
   $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; fitOut(); readouts(); dirty = true; plotDirty = true; });
   function setSeed(n) { n = clamp(Math.round(n) || 1, 1, 99999); S.seed = n; $('seed').value = n; }
   $('seed').addEventListener('change', (e) => setSeed(+e.target.value));
