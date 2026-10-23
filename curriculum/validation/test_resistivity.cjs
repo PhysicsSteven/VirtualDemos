@@ -2,7 +2,7 @@
 // Resistivity of a Wire: R = ρL/A, ρ(T), the fits for ρ and α, the CSV.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('resistivity', 'RS_VERSION,MATS,GAUGES,rhoAt,area,resistance,sig,fitLine,readingsCSV,QE,ME,FREE,nFromAlloy,driftSpeed,currentDensity,fermiSpeed,collisionTime,transitTime,electronRate,netCrossings,BOX,slabCount,DRIFT_SLOW,RANDOM_SLOW');
+const c = core('resistivity', 'RS_VERSION,MATS,GAUGES,rhoAt,area,resistance,sig,fitLine,readingsCSV,QE,ME,FREE,nFromAlloy,driftSpeed,currentDensity,fermiSpeed,collisionTime,transitTime,electronRate,netCrossings,BOX,slabCount,DRIFT_SLOW,RANDOM_SLOW,bgJ5,bgShape,COLD,T_MIN,T_ROOM,rhoCold');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -78,5 +78,16 @@ group('plane counter: net crossings equal n v_d t × (area of the region), and I
   const I = 0.2, A = c.area(0.405), vd = c.driftSpeed(I, c.FREE.copper.n, A), t = 1e-5, count = c.FREE.copper.n * vd * t * c.BOX.h * c.BOX.depth;
   near(count / t * A / (c.BOX.h * c.BOX.depth), c.electronRate(I), 1e-12);
   assert.equal(c.DRIFT_SLOW, 1e6); assert.equal(c.RANDOM_SLOW, 1e15);
+});
+group('cold stage (9.6): Bloch–Grüneisen, Matthiessen, critical temperatures', () => {
+  near(c.bgJ5(1e4), 120 * 1.0369277551433699, 1e-7, 'J5(∞) = 5! ζ(5)');
+  near(c.bgJ5(0.01), 0.01 ** 4 / 4, 1e-3, 'small z: ∫x³ = z⁴/4');
+  near(c.bgShape(1000, 100) / c.bgShape(500, 100), 2, 2e-3, 'high T: linear in T');
+  near(c.bgShape(2, 300) / c.bgShape(1, 300), 32, 1e-4, 'low T: T⁵');
+  for (const k of ['copper', 'aluminum', 'tin', 'lead']) { near(c.rhoCold(k, 293, 100), c.COLD[k].rho293, 1e-12, `${k} at 293 K`); near(c.rhoCold(k, k === 'copper' ? 1 : c.COLD[k].tc + 1e-6, 100), c.COLD[k].rho293 / 100, 0.05, `${k} residual`); }
+  near(c.rhoCold('copper', 77, 1e9) / 1.68e-8, 0.111, 0.03, 'copper at 77 K: about a ninth of room temperature');
+  assert.equal(c.rhoCold('lead', 7.18, 100), 0); assert(c.rhoCold('lead', 7.20, 100) > 0); assert.equal(c.rhoCold('ybco', 91.9, 1), 0); near(c.rhoCold('ybco', 300, 1), 2.5e-6, 1e-12);
+  assert(c.rhoCold('copper', c.T_MIN, 30) > 0, 'copper never superconducts');
+  assert.equal(c.COLD.lead.tc, 7.19); assert.equal(c.COLD.tin.tc, 3.72); assert.equal(c.COLD.aluminum.tc, 1.20);
 });
 console.log(`${n} resistivity test groups passed`);

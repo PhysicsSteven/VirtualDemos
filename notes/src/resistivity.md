@@ -37,6 +37,8 @@ Students should know R = V/I. The wire runs along a 1.000 m rule. A constant cur
 
 **Q6.** Copper (n = 8.47 × 10²⁸ m⁻³), 0.405 mm diameter, 0.2 A. Find J and the drift speed v_d. How long does an electron take to drift the 0.500 m between the clips? In **Inside the wire**, run until a few dozen electrons have crossed the plane, then use the count, the real time and the 2 nm × 0.3 nm area of the region to estimate how many electrons per second pass through the whole wire. Compare with I/e. What changes if you use the 0.160 mm gauge?
 
+**Q7.** In **Cold stage**, cool the Lead sample (0.500 m, 0.405 mm, 0.2 A, residual resistance ratio 100). Read R at 293 K, at 77 K and just above 7.19 K. Why does R level off instead of heading to zero as the temperature falls, and what sets the level? What happens below 7.19 K? Repeat with a purity of 1000: which readings change and which do not? Finally cool YBCO: why did a superconductor above 77 K matter so much in 1986?
+
 ## Common misconceptions
 
 - **"A thicker wire has more resistance because there is more metal."** More area means more paths side by side: less resistance.
@@ -45,6 +47,8 @@ Students should know R = V/I. The wire runs along a 1.000 m rule. A constant cur
 - **"Electrons race through the wire at nearly the speed of light."** Their random speed is about 1.6 × 10⁶ m/s, but they go nowhere on average; the drift is about 0.1 mm/s. The signal is the change in field, which travels at a large fraction of c.
 
 ## Physics behind the demo
+
+- Cold stage (OpenStax 9.6): Matthiessen's rule ρ = ρ₀ + ρ_ph(T), with ρ_ph from the Bloch–Grüneisen formula (Debye temperatures from Kittel) scaled to the handbook ρ at 293 K, and ρ₀ = ρ(293 K)/RRR. R = 0 below T_c (OpenStax Table 9.3), drawn as a sharp step. YBCO's normal state is a typical linear ρ = 2.5 × 10⁻⁶ Ω·m × T/300 K.
 
 - R = ρL/A with A = πd²/4, ρ(T) linear in T from handbook values at 20 °C: nichrome 1.10 × 10⁻⁶ Ω·m (α 0.0004 /K), constantan 4.9 × 10⁻⁷ Ω·m (α 0.00001 /K), copper 1.68 × 10⁻⁸ Ω·m (α 0.00393 /K). Real alloys vary by a few percent.
 - Diameters are AWG 22, 26, 30 and 34 (0.644, 0.405, 0.255, 0.160 mm).

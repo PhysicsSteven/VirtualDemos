@@ -120,7 +120,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 .empty { color: var(--muted); padding: 8px !important; }
 .plotbox { position: relative; height: 190px; }
 .plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-@media (max-width: 820px) { .stage[data-view="inside"] { height: 520px; max-height: none; } }
+@media (max-width: 820px) { .stage[data-view="inside"] { height: 520px; max-height: none; } .stage[data-view="cold"] { height: 600px; max-height: none; } }
 .viewseg { position: absolute; top: 8px; right: 8px; z-index: 3; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 420px; } }
@@ -155,6 +155,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <div class="seg viewseg" role="group" aria-label="View" id="views">
         <button type="button" data-view="bench" aria-pressed="true">Bench</button>
         <button type="button" data-view="inside" aria-pressed="false">Inside the wire</button>
+        <button type="button" data-view="cold" aria-pressed="false">Cold stage</button>
       </div>
     </div>
 
@@ -197,6 +198,27 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <p class="formula">I = nqAv_d · J = I/A = nqv_d · transit time = L/v_d</p>
         <p class="hint" id="nHint"></p>
         <p class="hint">Model: free electrons in a metal (OpenStax 9.2). The drift speed v_d = I/(nqA) uses the free electron density n above; n does not change with temperature here (thermal expansion changes it by under 0.3%). The random speed is the Fermi speed v_F = ħ(3π²n)^⅓/m of the free electron model, and the mean time between collisions is τ = m/(ne²ρ), so it follows ρ(T). Electrons move in a 3D random direction and are drawn projected onto the page; ions are drawn on a square grid at the mean atomic spacing (copper's real lattice is face centred cubic). The region repeats at its edges, standing for a piece deep inside the wire. The counter counts electrons carried across the dashed plane by the drift; random motion carries electrons across both ways equally on average and is left out of the count. The electrons sit at random positions, so the count scatters about n v_d t × (2 nm × 0.3 nm) like any count; after the drift has carried the electrons one full region width (4 nm), every one has crossed exactly once.</p>
+      </section>
+
+      <section id="coldSec">
+        <h2>Cold stage</h2>
+        <p class="hint">Choose <b>Cold stage</b> above the picture: a sample wire in a liquid helium cryostat, cooled from room temperature to 1 K while the four wire meters read it. The length and gauge are the ones set above; the current is the supply current.</p>
+        <div class="chips" id="coldMats">
+          <button type="button" data-c="copper" aria-pressed="false">Copper</button>
+          <button type="button" data-c="aluminum" aria-pressed="false">Aluminum</button>
+          <button type="button" data-c="tin" aria-pressed="false">Tin</button>
+          <button type="button" data-c="lead" aria-pressed="true">Lead</button>
+          <button type="button" data-c="ybco" aria-pressed="false">YBCO ceramic</button>
+        </div>
+        <div><div class="slider-head"><label for="sRRR">Sample purity: residual resistance ratio R(293 K)/R(0)</label><output id="oRRR" for="sRRR"></output></div><input type="range" id="sRRR" min="1" max="3" step="0.05"></div>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="coolBtn">Cool down</button>
+          <button type="button" class="btn" id="warmBtn">Warm up</button>
+          <button type="button" class="btn" id="coldClear">Clear the points</button>
+        </div>
+        <dl class="readout" id="coldOut"></dl>
+        <p class="hint" id="coldHint"></p>
+        <p class="hint">Model: normal metals follow Matthiessen's rule, ρ(T) = ρ₀ + ρ_ph(T). The lattice part ρ_ph uses the Bloch–Grüneisen formula with the Debye temperature Θ (Kittel, Table 5.1: Cu 343 K, Al 428 K, Sn 200 K, Pb 105 K), scaled so that ρ(293 K) is the handbook value (Cu 1.68, Al 2.65, Sn 11.5, Pb 20.8 × 10⁻⁸ Ω·m); real curves differ from this one formula by up to tens of percent between about 10 K and 100 K. The residual part ρ₀ = ρ(293 K)/RRR comes from impurities and defects and depends on the sample. Below the critical temperature (OpenStax Table 9.3: Al 1.20 K, Sn 3.72 K, Pb 7.19 K, YBa₂Cu₃O₇ 92 K) the resistance is exactly zero; the step is drawn sharp, while real transitions are from a millikelvin to about a kelvin wide. Copper does not become superconducting at any temperature reached so far. YBCO's normal state is drawn as ρ = 2.5 × 10⁻⁶ Ω·m × T/300 K, a typical value along its copper oxide planes; it varies from sample to sample. Thermal contraction is left out. The points are simulated readings, noise free.</p>
       </section>
 
       <section>
@@ -288,6 +310,27 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   const BOX = { w: 4e-9, h: 2e-9, depth: 0.3e-9 };   /* the magnified region, m */
   const slabCount = (n) => Math.round(n * BOX.w * BOX.h * BOX.depth);
   const DRIFT_SLOW = 1e6, RANDOM_SLOW = 1e15;   /* screen time per real time for the drift and for the random motion */
+  /* ---- Cold stage: resistance down to 1 K and superconductors (OpenStax Vol 2, 9.6) ---- */
+  /* Bloch–Grüneisen integral J5(z) = ∫₀^z x⁵ /((eˣ − 1)(1 − e⁻ˣ)) dx, Simpson's rule; the integrand is below 10⁻¹⁷ past x = 60 */
+  function bgJ5(z) {
+    const zz = Math.min(z, 60), n = 600, h = zz / n, f = (x) => (x < 1e-6 ? x * x * x : x ** 5 / ((Math.exp(x) - 1) * (1 - Math.exp(-x))));
+    let sum = f(0) + f(zz); for (let i = 1; i < n; i++) sum += f(i * h) * (i % 2 ? 4 : 2); return sum * h / 3;
+  }
+  const bgShape = (T, theta) => (T / theta) ** 5 * bgJ5(theta / T);   /* lattice resistivity, up to a constant */
+  const COLD = {
+    copper: { name: 'Copper', rho293: 1.68e-8, theta: 343, tc: 0 },
+    aluminum: { name: 'Aluminum', rho293: 2.65e-8, theta: 428, tc: 1.20 },
+    tin: { name: 'Tin', rho293: 1.15e-7, theta: 200, tc: 3.72 },
+    lead: { name: 'Lead', rho293: 2.08e-7, theta: 105, tc: 7.19 },
+    ybco: { name: 'YBCO ceramic', rhoLin: 2.5e-6 / 300, tc: 92 }   /* normal state linear in T (typical, along the CuO₂ planes) */
+  };
+  const T_MIN = 1.0, T_ROOM = 293;   /* pumped liquid helium reaches about 1 K */
+  function rhoCold(key, Tk, rrr) {
+    const m = COLD[key]; if (m.tc && Tk < m.tc) return 0;
+    if (m.rhoLin) return m.rhoLin * Tk;
+    const rho0 = m.rho293 / rrr, A = (m.rho293 - rho0) / bgShape(T_ROOM, m.theta);
+    return rho0 + A * bgShape(Tk, m.theta);
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -312,6 +355,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     if (S.view === 'inside') { drawInside(); return; }
+    if (S.view === 'cold') { drawCold(); return; }
     const p = ps(), x0 = 40 * p, x1 = W - 40 * p, X = (l) => x0 + (x1 - x0) * l, y = H * 0.62;
     geo = { X, x0, x1, y };
     // metre rule
@@ -450,7 +494,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     if (hidden()) h += '<div class="wide"><dt>ρ, α and R per metre</dt><dd class="ok">hidden: work them out</dd></div>';
     else h += dd('Resistivity ρ at this temperature', `${sci(rhoAt(M(), S.T), 4)} Ω·m`) + dd('α', `${sci(M().alpha, 3)} /K`) + dd('Resistance per metre', `${sig(resistance(M(), 1, d(), S.T), 4)} Ω/m`, true);
     $('out').innerHTML = h;
-    insideReadouts();
+    insideReadouts(); coldReadouts();
   }
 
   // ---------- controls ----------
@@ -467,10 +511,10 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   $('gauges').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (b) { S.g = +b.dataset.g; resetCount(); upd(); fit(); } });
   $('sL').addEventListener('input', (e) => { S.L = +e.target.value; upd(); });
   $('sI').addEventListener('input', (e) => { S.I = +e.target.value; resetCount(); upd(); });
-  const CAN_LABEL = { bench: can.getAttribute('aria-label'), inside: 'A magnified region inside the wire: free electrons move at random among the ions and drift slowly against the current. A dashed plane counts the electrons the drift carries across it. Use the Inside the wire section of the panel to pause, step or reset the count.' };
+  const CAN_LABEL = { cold: 'A cryostat holding the sample wire, its thermometer reading, and two graphs of the wire resistance against temperature: from room temperature down to 1 K, and a close view of the lowest temperatures.', bench: can.getAttribute('aria-label'), inside: 'A magnified region inside the wire: free electrons move at random among the ions and drift slowly against the current. A dashed plane counts the electrons the drift carries across it. Use the Inside the wire section of the panel to pause, step or reset the count.' };
   function setView(v) {
     S.view = v; stage.dataset.view = v; for (const b of document.querySelectorAll('[data-view]')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
-    can.setAttribute('aria-label', CAN_LABEL[v]); draw(); if (v === 'inside') runLoop();
+    can.setAttribute('aria-label', CAN_LABEL[v]); draw(); if (v === 'inside') runLoop(); if (v === 'cold') coldLoop();
   }
   for (const b of document.querySelectorAll('[data-view]')) b.addEventListener('click', () => setView(b.dataset.view));
   $('inPlay').addEventListener('click', () => setPlaying(!EL.playing));
@@ -494,6 +538,87 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   can.addEventListener('pointermove', (e) => { if (drag) setL(local(e)); });
   can.addEventListener('pointerup', () => { drag = false; }); can.addEventListener('pointercancel', () => { drag = false; });
   can.addEventListener('keydown', (e) => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault(); S.L = Math.max(0.05, Math.min(1, +(S.L + (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 0.05 : 0.005)).toFixed(3))); upd(); });
+
+  // ---------- cold stage ----------
+  const CS = { key: 'lead', lgR: 2, Tk: T_ROOM, dir: 0, pts: [], raf: 0, last: 0, acc: 0 };
+  const rrr = () => 10 ** CS.lgR;
+  const coldR = (Tk) => rhoCold(CS.key, Tk, rrr()) * S.L / area(d());
+  const COLD_HINT = { copper: 'Copper: the resistance falls with temperature and levels off at the residual value set by impurities. No superconducting step.',
+    aluminum: 'Aluminum: a good normal metal that becomes superconducting just above 1 K, at 1.20 K.', tin: 'Tin: superconducting below 3.72 K.',
+    lead: 'Lead: superconducting below 7.19 K, within reach of liquid helium at 4.2 K.', ybco: 'YBCO (yttrium barium copper oxide), the 1986 ceramic: superconducting below 92 K, above the 77 K of liquid nitrogen.' };
+  function coldSync() {
+    for (const b of document.querySelectorAll('#coldMats button')) b.setAttribute('aria-pressed', String(b.dataset.c === CS.key));
+    $('sRRR').value = CS.lgR; $('oRRR').textContent = CS.key === 'ybco' ? 'not used' : `${sig(rrr(), 3)}`; $('sRRR').disabled = CS.key === 'ybco';
+    $('coldHint').textContent = COLD_HINT[CS.key];
+    $('coolBtn').textContent = CS.dir < 0 ? 'Stop cooling' : 'Cool down'; $('warmBtn').textContent = CS.dir > 0 ? 'Stop warming' : 'Warm up';
+  }
+  function coldReadouts() {
+    const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, m = COLD[CS.key], R = coldR(CS.Tk), b = S.blind, hid = '<span class="ok">hidden: work it out</span>';
+    let h = dd('Temperature T', `${CS.Tk >= 20 ? CS.Tk.toFixed(1) : CS.Tk.toFixed(2)} K`) + dd('Voltage V (voltmeter)', `${R === 0 ? '0.000' : sci(S.I * R, 4)} V`);
+    h += dd('R = V/I', R === 0 ? '0 Ω' : `${sci(R, 4)} Ω`) + dd('R/R(293 K)', sig(R / coldR(T_ROOM), 4));
+    h += dd('Resistivity ρ', b ? hid : (R === 0 ? '0' : `${sci(rhoCold(CS.key, CS.Tk, rrr()), 3)} Ω·m`)) + dd('Critical temperature T<sub>c</sub>', b ? hid : (m.tc ? `${m.tc} K` : 'none found'));
+    h += dd('State', R === 0 ? 'superconducting: R = 0' : 'normal', true);
+    $('coldOut').innerHTML = h;
+  }
+  function coldStep(dt) {
+    if (!CS.dir) return;
+    const rate = Math.max(0.3, 0.22 * CS.Tk);   /* K per second of screen time: fast when warm, slow near the bottom */
+    CS.Tk = Math.min(T_ROOM, Math.max(T_MIN, CS.Tk + CS.dir * rate * dt));
+    CS.acc += dt; if (CS.acc > 0.08) { CS.acc = 0; CS.pts.push([CS.Tk, coldR(CS.Tk)]); }
+    if ((CS.dir < 0 && CS.Tk <= T_MIN) || (CS.dir > 0 && CS.Tk >= T_ROOM)) { CS.pts.push([CS.Tk, coldR(CS.Tk)]); CS.dir = 0; coldSync(); }
+  }
+  function coldFrame(ts) {
+    CS.raf = 0; if (S.view !== 'cold') return;
+    const dt = CS.last ? Math.min(0.1, (ts - CS.last) / 1000) : 0; CS.last = ts;
+    coldStep($('rmotion').checked && CS.dir ? 0 : dt);
+    if ($('rmotion').checked && CS.dir) { for (let i = 0; i < 4000 && CS.dir; i++) coldStep(0.02); }   /* Reduce motion: jump straight to the end of the sweep */
+    draw(); coldReadouts(); if (CS.dir) CS.raf = requestAnimationFrame(coldFrame);
+  }
+  function coldLoop() { if (S.view === 'cold' && !CS.raf) { CS.last = 0; CS.raf = requestAnimationFrame(coldFrame); } }
+  const coldReset = () => { CS.pts = []; draw(); coldReadouts(); };
+  $('coldMats').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (b) { CS.key = b.dataset.c; coldReset(); coldSync(); } });
+  $('sRRR').addEventListener('input', (e) => { CS.lgR = +e.target.value; coldReset(); coldSync(); });
+  $('coolBtn').addEventListener('click', () => { CS.dir = CS.dir < 0 ? 0 : -1; coldSync(); if (S.view !== 'cold') setView('cold'); coldLoop(); });
+  $('warmBtn').addEventListener('click', () => { CS.dir = CS.dir > 0 ? 0 : 1; coldSync(); if (S.view !== 'cold') setView('cold'); coldLoop(); });
+  $('coldClear').addEventListener('click', coldReset);
+  function drawCold() {
+    const p = ps(), narrow = W < 600, m = COLD[CS.key], Rroom = coldR(T_ROOM), b = S.blind;
+    /* cryostat: a silvered dewar with the sample on a cold finger */
+    const dw = narrow ? 120 * p : 150 * p, dh = narrow ? 170 * p : Math.min(260 * p, H * 0.5), dx = 16 * p, dy = narrow ? 58 * p : 16 * p;
+    ctx.fillStyle = T.grid; ctx.beginPath(); ctx.roundRect(dx, dy, dw, dh, 12 * p); ctx.fill(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * p; ctx.stroke();
+    ctx.beginPath(); ctx.roundRect(dx + 8 * p, dy + 8 * p, dw - 16 * p, dh - 16 * p, 9 * p); ctx.stroke();
+    const fill = CS.Tk < 4.25 ? 0.55 : CS.Tk < 77.4 ? 0.4 : 0.15, liq = CS.Tk < 4.25 ? 'liquid helium' : CS.Tk < 77.4 ? 'helium gas, cooling' : 'cold gas';
+    ctx.fillStyle = T.accent; ctx.globalAlpha = 0.18; ctx.fillRect(dx + 10 * p, dy + dh - 10 * p - (dh - 20 * p) * fill, dw - 20 * p, (dh - 20 * p) * fill); ctx.globalAlpha = 1;
+    const sx = dx + dw / 2, sy = dy + dh * 0.6; ctx.strokeStyle = T.muted; ctx.beginPath(); ctx.moveTo(sx, dy); ctx.lineTo(sx, sy - 20 * p); ctx.stroke();
+    ctx.strokeStyle = coldR(CS.Tk) === 0 ? T.accent : T.wire; ctx.lineWidth = 3 * p; ctx.beginPath(); for (let i = 0; i <= 40; i++) { const t = i / 40, x = sx - 30 * p + 60 * p * t, y = sy + Math.sin(t * Math.PI * 6) * 8 * p; if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y); } ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('sample wire', sx, sy + 14 * p); ctx.fillText(liq, sx, dy + dh - 24 * p);
+    /* thermometer and state */
+    const tx = dx + dw + 16 * p; ctx.textAlign = 'left'; ctx.fillStyle = T.ink; ctx.font = `700 ${22 * p}px ${T.mono}`; ctx.fillText(`${CS.Tk >= 20 ? CS.Tk.toFixed(1) : CS.Tk.toFixed(2)} K`, tx, dy + 4 * p);
+    ctx.font = `${12 * p}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.fillText(`${m.name}${CS.dir < 0 ? ', cooling' : CS.dir > 0 ? ', warming' : ''}`, tx, dy + 34 * p);
+    ctx.fillStyle = coldR(CS.Tk) === 0 ? T.accent : T.ink; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.fillText(coldR(CS.Tk) === 0 ? 'R = 0: superconducting' : `R = ${sci(coldR(CS.Tk), 3)} Ω`, tx, dy + 54 * p);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('simulated readings', tx, dy + 74 * p);
+    /* plots: full range and a close view of the low end */
+    const top = dy + dh + 14 * p, ph = H - top - 12 * p, gw = narrow ? W - 32 * p : (W - 44 * p) / 2;
+    const tz = m.tc ? Math.max(12, Math.ceil(m.tc * 1.6 / 2) * 2) : 30, zMax = Math.max(...[1, 2, 4, 6, 8, 10, 12, 15, 20, 30, 40].map((t) => coldR(t)).filter((_, i, a) => [1, 2, 4, 6, 8, 10, 12, 15, 20, 30, 40][i] <= tz)) || Rroom;
+    const panels = narrow ? [{ x: 16 * p, y: top, w: gw, h: ph / 2 - 6 * p, t1: T_ROOM + 7, rmax: Rroom * 1.1, title: 'R against T, 0 to 300 K' }, { x: 16 * p, y: top + ph / 2 + 6 * p, w: gw, h: ph / 2 - 6 * p, t1: tz, rmax: Math.max(zMax, coldR(tz)) * 1.15 || Rroom * 0.1, title: `Close view, 0 to ${tz} K` }]
+      : [{ x: 16 * p, y: top, w: gw, h: ph, t1: T_ROOM + 7, rmax: Rroom * 1.1, title: 'R against T, 0 to 300 K' }, { x: 28 * p + gw, y: top, w: gw, h: ph, t1: tz, rmax: Math.max(zMax, coldR(tz)) * 1.15 || Rroom * 0.1, title: `Close view, 0 to ${tz} K` }];
+    for (const P of panels) {
+      ctx.fillStyle = T.canvas; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(P.x + 0.5, P.y + 0.5, P.w - 1, P.h - 1);
+      ctx.fillStyle = T.ink; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(P.title, P.x + 8 * p, P.y + 6 * p);
+      const ix0 = P.x + 58 * p, ix1 = P.x + P.w - 10 * p, iy0 = P.y + P.h - 22 * p, iy1 = P.y + 26 * p, X = (t) => ix0 + t / P.t1 * (ix1 - ix0), Y = (r) => iy0 - r / P.rmax * (iy0 - iy1);
+      ctx.strokeStyle = T.grid; ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.mono}`;
+      const step = P.t1 > 100 ? 50 : P.t1 > 40 ? 10 : P.t1 > 16 ? 4 : 2;
+      for (let t = 0; t <= P.t1; t += step) { ctx.beginPath(); ctx.moveTo(X(t), iy0); ctx.lineTo(X(t), iy1); ctx.stroke(); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`${t}`, X(t), iy0 + 4 * p); }
+      ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; for (const f of [0, 0.5, 1]) { const r = P.rmax / 1.1 * f; ctx.beginPath(); ctx.moveTo(ix0, Y(r)); ctx.lineTo(ix1, Y(r)); ctx.stroke(); ctx.fillText(sci(r, 2), ix0 - 4 * p, Y(r)); }
+      ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('T (K)', ix1, iy0 - 2 * p); ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('R (Ω)', ix0 + 4 * p, iy1);
+      if (!b && m.tc && m.tc <= P.t1) { ctx.strokeStyle = T.pos; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(X(m.tc), iy0); ctx.lineTo(X(m.tc), iy1); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = T.pos; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(`T_c = ${m.tc} K`, X(m.tc) + 4 * p, iy1 + 26 * p); }
+      if (!b) { ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.beginPath(); for (let i = 0; i <= 300; i++) { const t = Math.max(T_MIN, P.t1 * i / 300), r = Math.min(coldR(t), P.rmax); if (i) ctx.lineTo(X(t), Y(r)); else ctx.moveTo(X(t), Y(r)); } ctx.stroke(); ctx.globalAlpha = 1; }
+      ctx.fillStyle = T.accent; ctx.save(); ctx.beginPath(); ctx.rect(ix0, iy1, ix1 - ix0, iy0 - iy1); ctx.clip();
+      for (const [t, r] of CS.pts) if (t <= P.t1) { ctx.beginPath(); ctx.arc(X(t), Y(r), 2.2 * p, 0, 7); ctx.fill(); }
+      ctx.restore();
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; if (CS.Tk <= P.t1) { ctx.beginPath(); ctx.moveTo(X(CS.Tk), iy0); ctx.lineTo(X(CS.Tk), iy0 - 6 * p); ctx.stroke(); }
+    }
+  }
 
   // ---------- readings and fits ----------
   function capStatus(m) { $('capStatus').textContent = m; }
@@ -560,7 +685,8 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   $('rmotion').checked = reducePref(); EL.playing = !$('rmotion').checked; setPlaying(EL.playing);
   document.addEventListener('visibilitychange', () => { if (!document.hidden) runLoop(); });
   resetElectrons();
-  tokens(); new ResizeObserver(resize).observe(stage); upd(); renderRows(); resize();
+  tokens(); new ResizeObserver(resize).observe(stage); coldSync(); upd(); renderRows(); resize();
+  { const v0 = new URLSearchParams(location.search).get('view'); if (v0 === 'cold' || v0 === 'inside') setView(v0); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
 })();
 </script>

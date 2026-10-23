@@ -2713,10 +2713,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "resistivity"
+      ],
       "unit": "current-resistance",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Resistivity of a Wire, Inside the wire (reviewed 2026-10-23, Claude): v_d = I/(nqA), J = I/A = nqv_d, electrons per second, transit time, Fermi speed and Drude collision time. Covers the section's drift velocity and current density. The demo's gauges are thin lab wires (up to 1 A), so OpenStax Example 9.3 (12 gauge, 20 A) is a calculation, not a setting; copper n = 8.47e28 m^-3 (Ashcroft and Mermin) versus the book's 8.34e28."
     },
     {
       "vol": 2,
@@ -2778,10 +2780,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "resistivity"
+      ],
       "unit": "current-resistance",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Resistivity of a Wire, Cold stage (2026-10-23, Claude): Cu, Al, Sn, Pb, YBCO cooled to 1 K; Bloch-Gruneisen plus residual resistivity (RRR slider), R = 0 below Tc from OpenStax Table 9.3; R against T full range and close view. BCS theory and applications are not modelled."
     },
     {
       "vol": 2,
@@ -5471,6 +5475,11 @@
         },
         {
           "vol": 2,
+          "sec": "9.2",
+          "title": "Model of Conduction in Metals"
+        },
+        {
+          "vol": 2,
           "sec": "9.3",
           "title": "Resistivity and Resistance"
         },
@@ -5478,6 +5487,11 @@
           "vol": 2,
           "sec": "9.4",
           "title": "Ohm's Law"
+        },
+        {
+          "vol": 2,
+          "sec": "9.6",
+          "title": "Superconductors"
         }
       ],
       "role": "lab",
