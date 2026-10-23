@@ -191,7 +191,11 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <h2>Pendulum</h2>
         <div class="inline"><span class="lab">Type</span>
           <div class="seg" role="group" aria-label="Pendulum type"><button type="button" id="tSimple" aria-pressed="true">Bob on a string</button><button type="button" id="tRod" aria-pressed="false">Uniform rod</button></div></div>
-        <p class="hint">Drag the bob to set the <b>Release angle θ₀</b> and the <b>Length L (pivot to bob centre, or rod length)</b>; pick the <b>Mass</b> from the rack of bobs. Keys on the picture: ← → θ₀, ↑ ↓ L.</p>
+        <p class="hint">Drag the bob sideways to set the <b>Release angle θ₀</b>, or up and down along the string to set the <b>Length L (pivot to bob centre, or rod length)</b>; pick the <b>Mass</b> from the rack of bobs. Keys on the picture: ← → θ₀, ↑ ↓ L. The sliders and step buttons below set exact values.</p>
+        <div><div class="slider-head"><label for="sL">Length L (pivot to bob centre, or rod length)</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0.1" max="2" step="0.01"></div>
+        <div class="btnrow"><button type="button" class="btn" data-step="L" data-d="-0.01">L −1 cm</button><button type="button" class="btn" data-step="L" data-d="0.01">L +1 cm</button></div>
+        <div><div class="slider-head"><label for="sA">Release angle θ₀</label><output id="oA" for="sA"></output></div><input type="range" id="sA" min="1" max="170" step="1"></div>
+        <div class="btnrow"><button type="button" class="btn" data-step="A" data-d="-1">θ₀ −1°</button><button type="button" class="btn" data-step="A" data-d="1">θ₀ +1°</button></div>
         <div class="inline"><span class="lab">Gravity</span>
           <div class="seg" role="group" aria-label="Where" id="gSeg"><button type="button" data-g="9.81" aria-pressed="true">Earth</button><button type="button" data-g="1.62" aria-pressed="false">Moon</button><button type="button" data-g="3.71" aria-pressed="false">Mars</button><button type="button" data-g="mystery" aria-pressed="false">Mystery planet</button></div></div>
         <label class="check"><input type="checkbox" id="damp"><span>Air drag (slow decay)</span></label>
@@ -379,7 +383,8 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   // a string goes slack above horizontal (tension at release is mg cos θ₀), so the bob on a string is limited to 90°; the rigid rod can start higher
   const maxA = () => (S.rod ? 170 : 90);
   function sync() {
-    S.A = Math.min(S.A, maxA());
+    S.A = Math.min(S.A, maxA()); $('sA').max = maxA();
+    $('sL').value = S.L; $('oL').textContent = `${f(S.L, 2)} m`; $('sA').value = S.A; $('oA').textContent = `${S.A}°`;
     for (const b of document.querySelectorAll('#massRack button')) b.setAttribute('aria-pressed', String(Math.abs(+b.dataset.m - S.m) < 1e-9));
     $('tSimple').setAttribute('aria-pressed', String(!S.rod)); $('tRod').setAttribute('aria-pressed', String(S.rod)); $('damp').checked = S.damp;
     for (const b of document.querySelectorAll('#gSeg button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.gKey));
@@ -421,13 +426,21 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   // drag the bob to set the release angle
   let drag = false;
   const local = (e) => { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-  /* the angle from the direction of the pointer, the length from its distance to the pivot (less where it grabbed the bob), in the new scale */
-  let grab = 0;
+  /* the first few pixels of a drag decide what it sets: along the string (up and down) the length, from the pointer's distance to the
+     pivot less where it grabbed the bob; across the string (sideways) the angle, from the pointer's direction. The other stays put */
+  let grab = 0, mode = null, x0 = 0, y0 = 0;
   function setAngle(x, y) { const a = Math.round(Math.atan2(x - geo.px, y - geo.py) * 180 / Math.PI); S.A = Math.max(1, Math.min(maxA(), Math.abs(a)));
-    if (drag) S.L = Math.max(0.1, Math.min(2, Math.round((Math.hypot(x - geo.px, y - geo.py) - grab) / scaleFor(S.A) * 100) / 100));
     changed(); S.st.th = Math.sign(a || 1) * S.A * Math.PI / 180; draw(); }
-  can.addEventListener('pointerdown', (e) => { if (!geo) return; const [x, y] = local(e); const L = S.L * geo.sc, bx = geo.px + L * Math.sin(S.st.th), by = geo.py + L * Math.cos(S.st.th); if (Math.hypot(x - bx, y - by) < 40 * ps()) { grab = Math.hypot(x - geo.px, y - geo.py) - L; drag = true; can.setPointerCapture(e.pointerId); setAngle(x, y); } });
-  can.addEventListener('pointermove', (e) => { if (drag) { const [x, y] = local(e); setAngle(x, y); } });
+  function setLength(x, y) { const th = S.st.th; S.L = Math.max(0.1, Math.min(2, Math.round((Math.hypot(x - geo.px, y - geo.py) - grab) / scaleFor(S.A) * 100) / 100));
+    changed(); S.st.th = th; draw(); }
+  can.addEventListener('pointerdown', (e) => { if (!geo) return; const [x, y] = local(e); const L = S.L * geo.sc, bx = geo.px + L * Math.sin(S.st.th), by = geo.py + L * Math.cos(S.st.th); if (Math.hypot(x - bx, y - by) < 40 * ps()) { grab = Math.hypot(x - geo.px, y - geo.py) - L; drag = true; mode = null; x0 = x; y0 = y; can.setPointerCapture(e.pointerId); } });
+  can.addEventListener('pointermove', (e) => { if (!drag) return; const [x, y] = local(e);
+    if (!mode) { const dx = x - x0, dy = y - y0; if (Math.hypot(dx, dy) < 6 * ps()) return; const th = S.st.th; mode = Math.abs(dx * Math.sin(th) + dy * Math.cos(th)) > Math.abs(dx * Math.cos(th) - dy * Math.sin(th)) ? 'L' : 'A'; }
+    mode === 'L' ? setLength(x, y) : setAngle(x, y); });
+  $('sL').addEventListener('input', (e) => { S.L = +e.target.value; changed(); });
+  $('sA').addEventListener('input', (e) => { S.A = +e.target.value; changed(); });
+  for (const b of document.querySelectorAll('[data-step]')) b.addEventListener('click', () => { const d = +b.dataset.d;
+    if (b.dataset.step === 'L') S.L = Math.max(0.1, Math.min(2, Math.round((S.L + d) * 100) / 100)); else S.A = Math.max(1, Math.min(maxA(), S.A + d)); changed(); });
   can.addEventListener('pointerup', () => { drag = false; }); can.addEventListener('pointercancel', () => { drag = false; });
   can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.A = Math.max(1, Math.min(maxA(), S.A + (e.key === 'ArrowRight' ? 1 : -1))); changed(); }
     else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { S.L = Math.max(0.1, Math.min(2, Math.round((S.L + (e.key === 'ArrowDown' ? 1 : -1) * (e.shiftKey ? 0.1 : 0.01)) * 100) / 100)); changed(); } else return; e.preventDefault(); });
