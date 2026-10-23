@@ -1,6 +1,6 @@
 'use strict';
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),path=require('node:path');
-const f=require('./demo_source.cjs').core('faraday','MU0,MAG,ellipKE,ringFlux,ringField,cylFluxUnit,cylFieldUnit,coilFlux,dipoleFlux,magMoment,tiltFluxUnit,flipSeries,seriesEval,circuitStep,makeCircuit,runMove,magnetForce,genPhi,genEmf,railsPhi,coast,gaussLegendre,RHO_CU,WIRE_D,R_SRC,windC,wireR,selfL,diskRule,bundleM,minSep,coilSystem,coilPhasor,coilExp,coilStepper,coilOut,coilStep,coilOpen,FD_VERSION,csvHeader,tableRows');let count=0;
+const f=require('./demo_source.cjs').core('faraday','MU0,MAG,ellipKE,ringFlux,ringField,cylFluxUnit,cylFieldUnit,coilFlux,dipoleFlux,magMoment,tiltFluxUnit,flipSeries,seriesEval,circuitStep,makeCircuit,runMove,magnetForce,genPhi,genEmf,railsPhi,coast,gaussLegendre,RHO_CU,WIRE_D,R_SRC,windC,wireR,selfL,diskRule,bundleM,minSep,coilSystem,coilPhasor,coilExp,coilStepper,coilOut,coilStep,coilOpen,solenoidL,toroidL,nagaokaK,selfSystem,selfFieldEnergy,selfWave,rampAt,selfCirc,selfStep,selfStart,FD_VERSION,csvHeader,tableRows');let count=0;
 const close=(a,b,rel=1e-8,abs=1e-12)=>assert(Math.abs(a-b)<=abs+rel*Math.abs(b),`expected ${b}, got ${a}`);
 const test=(name,fn)=>{try{fn();count++;console.log('PASS',name);}catch(e){process.exitCode=1;console.error('FAIL',name,e.message);}};
 test('ring field agrees with independent on-axis Biot-Savart formula',()=>{
@@ -162,6 +162,84 @@ test('average force: the closed secondary is repelled, and opening the switch ke
  const s=sysOf({}),ph=f.coilPhasor(s,2*Math.PI*200,5,true);assert(s.dM<0);assert(ph.Favg>0);
  const st={t:0,I1:.7,I2:-.4,th:0},l1=s.L1*st.I1+s.M*st.I2;f.coilOpen(s,st);close(s.L1*st.I1,l1,1e-14);assert.equal(st.I2,0);
  assert.throws(()=>f.coilSystem({N1:300,N2:300,a1:.04,a2:.04,d:.01,RL:1}),/overlap/);
+});
+// ---------- self inductance (OpenStax University Physics Vol 2, §14.2) ----------
+test('solenoid L = μ0 N² A/ℓ: value, scaling with N², A, 1/ℓ and μr',()=>{
+ close(f.solenoidL(500,.2,.02,1),f.MU0*500*500*Math.PI*.0004/.2,1e-14);
+ close(f.solenoidL(500,.2,.02,1),1.97392088e-3,1e-8);   // μ0 × 250000 × π(0.02)² / 0.2
+ const L0=f.solenoidL(300,.15,.01,1);
+ close(f.solenoidL(600,.15,.01,1),4*L0,1e-14);close(f.solenoidL(300,.3,.01,1),L0/2,1e-14);close(f.solenoidL(300,.15,.02,1),4*L0,1e-14);close(f.solenoidL(300,.15,.01,200),200*L0,1e-14);
+ const s=f.selfSystem({shape:'sol',N:300,l:.15,r:.01,mur:1});close(s.L,L0,1e-14);close(s.L,s.mu*s.N*s.N*s.A/s.l,1e-14);
+ assert.throws(()=>f.selfSystem({shape:'sol',N:300,l:0,r:.01,mur:1}),/Invalid/);assert.throws(()=>f.selfSystem({shape:'tor',N:3,a:.05,b:.04,h:.01,mur:1}),/Invalid/);
+});
+test('Nagaoka coefficient: tabulated values, the long coil limit, and a direct current sheet integral',()=>{
+ // Grover (1946) Table 36: 2r/ℓ = 1 gives K = 0.6884; 2r/ℓ = 0.1 gives 0.9588; 2r/ℓ = 2 gives 0.5255
+ close(f.nagaokaK(.5,1),.6884,1e-4);close(f.nagaokaK(.05,1),.9588,1e-4);close(f.nagaokaK(1,1),.5255,2e-4);
+ // long coil: K = 1 − 4k/(3π) + O(k²) with k = 2r/√(4r²+ℓ²)
+ for(const l of [50,200]){const k=2/Math.hypot(2,l);assert(Math.abs(f.nagaokaK(1,l)-(1-4*k/(3*Math.PI)))<k*k);}
+ assert(f.nagaokaK(.01,.2)<1&&f.nagaokaK(.01,.2)>f.nagaokaK(.02,.2));
+ // independent: L of a uniform current sheet = (N/ℓ)² ∫∫ M_ring(z1 − z2) dz1 dz2 = 2(N/ℓ)² ∫₀^ℓ (ℓ − u) M(u) du,
+ // M(u) from Maxwell's ring formula; graded composite Gauss-Legendre for the log singularity at u = 0
+ const G=f.gaussLegendre(16);
+ for(const [r,l] of [[.02,.2],[.05,.1],[.01,.5]]){
+  let sum=0;const P=60;
+  for(let p=0;p<P;p++){const lo=l*Math.pow(p/P,4),hi=l*Math.pow((p+1)/P,4);for(let i=0;i<16;i++){const u=lo+(hi-lo)*(G.x[i]+1)/2;sum+=G.w[i]/2*(hi-lo)*(l-u)*f.ringFlux(r,r,u);}}
+  const Lsheet=2*sum/(l*l),Kn=Lsheet/(f.MU0*Math.PI*r*r/l);
+  console.log('   Nagaoka 2r/l',(2*r/l).toFixed(2),'closed form',f.nagaokaK(r,l).toFixed(8),'integral',Kn.toFixed(8));
+  close(f.nagaokaK(r,l),Kn,2e-6);
+ }
+});
+test('flux linkage NΦ_B = LI for the solenoid and the toroid (toroid flux by direct radial integral)',()=>{
+ const s=f.selfSystem({shape:'sol',N:500,l:.2,r:.02,mur:50}),c=f.selfCirc(s.N,s.L,0);
+ for(const I of [.3,-1.7,2.5]){f.selfStep(c,I,1e-3);close(s.N*c.phi,s.L*I,1e-14);close(c.link,s.L*I,1e-14);close(c.phi,s.Bin*I*s.A,1e-12);}
+ const t=f.selfSystem({shape:'tor',N:400,a:.04,b:.06,h:.02,mur:1});
+ close(t.L,f.MU0*400*400*.02*Math.log(1.5)/(2*Math.PI),1e-14);close(t.L,f.toroidL(400,.04,.06,.02,1),1e-14);
+ // Φ per turn = ∫_a^b B(ρ) h dρ with B = μ0 N I/(2πρ), midpoint rule with many slices
+ const I=1.3,n=200000;let phi=0;for(let j=0;j<n;j++){const rho=.04+.02*(j+.5)/n;phi+=f.MU0*400*I/(2*Math.PI*rho)*.02*.02/n;}
+ close(t.phiA*I,phi,1e-9);close(400*phi,t.L*I,1e-9);
+ // a thin toroid is a solenoid bent round: ℓ = 2πR, A = h(b − a)
+ const thin=f.selfSystem({shape:'tor',N:400,a:.099,b:.101,h:.02,mur:1});close(thin.L,f.MU0*400*400*.02*.002/(2*Math.PI*.1),1e-4);
+});
+test('back EMF ε = −L dI/dt is exact for linear ramps, with the sign set by the change, not the current',()=>{
+ const s=f.selfSystem({shape:'sol',N:500,l:.2,r:.02,mur:1}),L=s.L,dt=1e-3;
+ for(const kind of ['trap','tri']){
+  const I0=2,T=.5,c=f.selfCirc(s.N,L,0);
+  for(let i=1;i<=4000;i++){
+   const t=i*dt,I=f.selfWave(kind,I0,T,t);f.selfStep(c,I,dt);
+   const u=((t-dt/2)%2+2)%2;   // phase of the step midpoint in the 4T = 2 s period; no corner lies inside a 1 ms step here
+   const slope=kind==='trap'?(u<T?I0/T:u<2*T?0:u<3*T?-I0/T:0):(u<T||u>3*T?I0/T:-I0/T);
+   close(c.emf,-L*slope,1e-9,1e-15);
+  }
+ }
+ // triangle: while I > 0 and falling, ε > 0 (pushes along I); while I < 0 and falling, ε > 0 too: ε follows −dI/dt, not −I
+ const c=f.selfCirc(s.N,L,0);let sawPosIfalling=false,sawNegIfalling=false;
+ for(let i=1;i<=2000;i++){const t=i*dt;f.selfStep(c,f.selfWave('tri',2,.5,t),dt);if(t>.6&&t<.9){assert(c.I>0&&c.emf>0);sawPosIfalling=true;}if(t>1.1&&t<1.4){assert(c.I<0&&c.emf>0);sawNegIfalling=true;}}
+ assert(sawPosIfalling&&sawNegIfalling);
+ // sine: the step average is −LωI0 cos(ω t_mid) × sin(ω dt/2)/(ω dt/2)
+ const w=2*Math.PI/2,cs=f.selfCirc(s.N,L,0);for(let i=1;i<=900;i++){const t=i*dt;f.selfStep(cs,f.selfWave('sine',2,.5,t),dt);close(cs.emf,-L*w*2*Math.cos(w*(t-dt/2))*Math.sin(w*dt/2)/(w*dt/2),1e-9,1e-15);}
+ // by hand: a 5 ms switch from 0 to 2 A gives ε = −L × 400 A/s for exactly five steps
+ const rp={I1:0,I2:2,t0:0,dur:.005},ch=f.selfCirc(s.N,L,0);const e=[];for(let i=1;i<=8;i++){f.selfStep(ch,f.rampAt(rp,i*dt),dt);e.push(ch.emf);}
+ for(let i=0;i<5;i++)close(e[i],-L*400,1e-9);for(let i=5;i<8;i++)close(e[i],0,0,1e-18);
+ // waves are continuous and periodic
+ for(const k of ['trap','tri','sine'])for(const t of [.5,1,1.5,2]){close(f.selfWave(k,2,.5,t+1e-9),f.selfWave(k,2,.5,t-1e-9),1e-6,1e-7);close(f.selfWave(k,2,.5,t+.3),f.selfWave(k,2,.5,t+2.3),1e-9,1e-12);}
+});
+test('∫ε dt = −NΔΦ_B = −LΔI, and the source work equals Δ(½LI²) exactly',()=>{
+ const s=f.selfSystem({shape:'tor',N:400,a:.04,b:.06,h:.02,mur:200}),c=f.selfStart(f.selfCirc(s.N,s.L,.4)),dt=1e-3;
+ for(let i=1;i<=1733;i++)f.selfStep(c,.4+f.selfWave('sine',1.5,.37,i*dt),dt);
+ close(c.intEmf,-s.N*(c.phi-c.phi0),1e-9,1e-15);close(c.intEmf,-s.L*(c.I-.4),1e-9,1e-15);
+ close(c.Wsrc,c.U-c.U0,1e-9,1e-18);close(c.U,.5*s.L*c.I*c.I,1e-14);
+ // ramp up then all the way down: the source gets back every joule it put in
+ const d=f.selfStart(f.selfCirc(s.N,s.L,0));for(let i=1;i<=2000;i++)f.selfStep(d,f.selfWave('trap',2,.5,i*dt),dt);
+ close(d.I,0,0,1e-12);assert(Math.abs(d.Wsrc)<1e-15);
+});
+test('energy density: ∫B²/(2μ) dV = ½LI² for the solenoid and the toroid',()=>{
+ for(const p of [{shape:'sol',N:500,l:.2,r:.02,mur:1},{shape:'sol',N:1000,l:.05,r:.05,mur:1000},{shape:'tor',N:400,a:.04,b:.06,h:.02,mur:1},{shape:'tor',N:900,a:.01,b:.12,h:.05,mur:20}]){
+  const s=f.selfSystem(p),I=1.7;close(f.selfFieldEnergy(s,I),.5*s.L*I*I,1e-12);
+  if(p.shape==='tor'){   // independent: midpoint rule over the radius
+   let U=0;const n=100000;for(let j=0;j<n;j++){const rho=p.a+(p.b-p.a)*(j+.5)/n,B=s.mu*p.N*I/(2*Math.PI*rho);U+=B*B/(2*s.mu)*p.h*2*Math.PI*rho*(p.b-p.a)/n;}
+   close(U,.5*s.L*I*I,1e-8);
+  }
+ }
 });
 // ---------- lab data helpers ----------
 test('CSV header: every line a comment, version line, SI parameters exact, no stray line breaks',()=>{

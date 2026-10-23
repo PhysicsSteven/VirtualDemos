@@ -10,6 +10,7 @@ time: 20 to 30 minutes
 - The charge that flows depends only on the change in flux, Q = −NΔΦ_B/R, not on how fast.
 - A turning coil gives EMF = NBAω sin ωt, largest when the flux is zero; a sliding bar gives BLv and is braked by ILB.
 - Mutual induction: an alternating current in one coil induces an EMF in a neighbouring coil, EMF₂ = −M dI₁/dt when the second coil is open. Closed, its current opposes the change, pushes the coils apart and changes the current the source has to supply.
+- Self inductance: a coil's own flux linkage is NΦ_B = LI, so a changing current induces a back EMF ε = −L dI/dt in the coil itself. It opposes the change in I, not I itself, and the coil stores energy ½LI² in its field. For a long solenoid L = μ₀N²A/ℓ.
 
 ## Before class
 
@@ -24,6 +25,7 @@ Students need Φ_B = BA cos θ, the field of a bar magnet and the right hand rul
 5. **Generator.** Pause at an EMF peak: the coil is edge on to the field. Then turn the **Motor** off.
 6. **Sliding bar.** **Pull at v**: the readouts show your power Fv equal to I²R. Then **Push and let go** to see the bar braked to rest.
 7. **Two coils.** Time runs 100 times slower. For lecture, untick **Blind: hide predictions and answers** first: Blind hides the dashed model curves, the phasor dial, k and the steady state readouts. Ask Q7(a) first, then **Open switch**: Φ₂ follows I₁ and EMF₂ is largest where I₁ crosses zero. Close it again: the dashed flux (from I₁ alone) is much bigger than the actual Φ₂, because I₂ runs nearly opposite to I₁ and cancels much of it; the force arrow shows the secondary pushed away. Compare I₁ with the gray dashed curve (the open switch steady state), then drag the secondary away and watch k fall.
+8. **Self-inductance.** Ask Q8 first. The current ramps up, holds, ramps down and rests: ε is a constant −7.90 mV on the way up, zero while I is steady (even at 2 A), and +7.90 mV on the way down; the + and − marks on the coil show the voltage the source must supply. The U = ½LI² plot rises and falls back to zero, and the rail shows the source's work equal to Δ(½LI²). Then pick **By hand**: **Ramp up**, then **Switch off** (5 ms): the spike is 100 times larger. Pick **Triangle** to show that ε follows the slope of I, not its sign. Try **Toroid** and a core μ_r; untick Blind to compare L with the formula and the end corrected (Nagaoka) value.
 
 ## Questions
 
@@ -41,12 +43,16 @@ Students need Φ_B = BA cos θ, the field of a bar magnet and the right hand rul
 
 **Q7.** In **Two coils** (N₁ = N₂ = 200, f = 200 Hz, V₀ = 5.0 V, d = 2.5 cm, R_L = 0.47 Ω) the readouts give L₁ = L₂ = 3.94 mH, M = 1.44 mH, R₁ = 1.58 Ω and R₂ = 1.55 Ω. (a) With the switch open, find the amplitudes of I₁ and of EMF₂. The ideal transformer ratio is N₂/N₁ = 1; why is |EMF₂|/V₀ so much smaller? (b) Closing the switch raises the primary current amplitude to 1.06 A. Use the reflected impedance ω²M²/(R₂ + iωL₂) to explain why. At 50 Hz closing the switch lowers it slightly instead, from 2.49 A to 2.46 A: why the difference?
 
+**Q8.** In **Self-inductance** the air core solenoid has N = 500 turns, ℓ = 20 cm and r = 2.0 cm, and the current ramps from 0 to 2.0 A in 0.50 s. (a) Find L, the field inside and the flux linkage at 2.0 A. (b) Find the back EMF during the ramp up, while the current is held, and during the ramp down; which way does it point each time? (c) How much energy is stored at 2.0 A? Check it with the energy density B²/(2μ₀). (d) **Switch off** takes the current from 2.0 A to zero in 5 ms. What is ε, and why does a real switch spark?
+
 ## Common misconceptions
 
 - **"A strong magnet inside a coil makes a current."** Only a changing flux does.
 - **"The induced field always points opposite to the magnet's field."** It opposes the change: pulling the magnet out, the induced field points along it.
 - **"Moving the magnet faster sends more charge around."** The EMF is larger but briefer; Q is the same.
 - **"A generator's EMF peaks when the flux peaks."** The flux is then steady for an instant.
+- **"The back EMF opposes the current."** It opposes the change in current: when I falls, ε points along I and tries to keep it flowing.
+- **"A large current in an inductor means a large voltage across it."** Only a changing current does; a steady current needs no voltage across an ideal inductor.
 - **"Two coils with the same number of turns make a 1 : 1 transformer."** Only if all the flux of one passes through the other (k = 1, as on a shared iron core). Air coils a few centimetres apart have k well below 1.
 
 ## Physics behind the demo
@@ -54,3 +60,4 @@ Students need Φ_B = BA cos θ, the field of a bar magnet and the right hand rul
 - The magnet is a uniformly magnetized cylinder (6 cm × 2 cm); its field and flux are computed exactly. The coil is short and its self inductance is neglected. The magnet moves as you move it: the induced force is shown but does not slow it. Field lines are 45 µWb apart.
 - Generator: uniform field, ω fixed by the motor. Sliding bar: frictionless rails, R is the whole circuit; let go, v = v₀e^(−t/τ), τ = mR/(B²L²).
 - Two coils: coaxial air coils of 1.0 mm copper wire. M is Maxwell's exact formula for coaxial rings averaged over both winding cross sections; L is Maxwell's formula for a coil of circular cross section, L = μ₀N²a[(1 + c²/8a²) ln(8a/c) − 7/4 + c²/24a²] (Rosa and Grover; Grover 1946). The coupled circuit equations are solved exactly (matrix exponential for the transient plus the phasor steady state). The EMF from moving the coil, I dM/dt, is left out.
+- Self-inductance: the solenoid is an ideal long solenoid, L = μ_rμ₀N²A/ℓ, end effects ignored; the rail also gives the air core value with the ends included, K μ₀N²A/ℓ, with Nagaoka's coefficient K (uniform current sheet; Lorenz's closed form as in Rosa and Grover 1912 and Grover 1946). The toroid has a rectangular section, L = μ_rμ₀N²h ln(b/a)/(2π). Any core is linear and fills the coil; for an open solenoid that overstates a real core, which the closed toroid does not. An ideal current source drives a coil with no resistance; each 1 ms step gives ε = −LΔI/Δt, exact for linear ramps, and the source's work equals Δ(½LI²) exactly. A switch takes 5 ms.
