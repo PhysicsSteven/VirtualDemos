@@ -32,7 +32,7 @@ Node v24.19.0, from repo root:
 | Core suite under curriculum/validation/ | Groups passed |
 |---|---:|
 | test_impulse.cjs | 4 |
-| test_elevator.cjs | 3 |
+| test_elevator.cjs | 4 |
 | test_nonuniform-circular.cjs | 3 |
 | test_center-of-mass.cjs | 3 |
 | test_gravity-near-earth.cjs | 5 |
