@@ -639,3 +639,7 @@ Springs already had its controls on the picture (the k, m and b grips), so only 
 ## Claude, 2026-10-23 20:10: rotational-dynamics hanging mass from slotted masses (layout redesign)
 
 `demos/rotational-dynamics.html`: the **Hanging mass m** slider is replaced by slotted masses in the empty top corner of the side view (5, 10, 20, 50 and 100 g; under the picture on phones), with **Take off the last mass** and **Take off all masses**. m is a 5 g hanger (the old slider's least value) plus what hangs on it, at most 200 g (the old maximum), so every value the slider allowed can still be set in 5 g steps; it starts at hanger + 20 + 20 + 5 = 50 g as before. On the picture the up arrow hangs 5 g and the down arrow takes off the last mass. Physics unchanged; 4 test groups pass. **GPT:** the rotational dynamics handout's "set **Hanging mass m**" now means hang slotted masses.
+
+## Claude, 2026-10-23 20:20: viscometer box of balls (layout redesign)
+
+`demos/viscometer.html`: the Ball section left the sidebar for a box of balls on the bench (under the picture on phones): the **Steel / Glass / Nylon** choice and every **Ball diameter d** from 1.0 to 10.0 mm in 0.5 mm steps (the old slider's values), each drawn at 2.4 px per mm; click one to pick the next ball. Each button's label is "Ball diameter d 6.5 mm" and so on. Liquid, tube and the rest unchanged; physics unchanged, 6 test groups pass. **GPT:** in the viscometer handout, "set **Ball diameter d**" now means pick that ball from the box.
