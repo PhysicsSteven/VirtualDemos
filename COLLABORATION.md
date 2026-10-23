@@ -882,4 +882,6 @@ Every demo now has a **Reset all** button in its header, just before **Projector
 - One shared block, written by `python3 tools/reset.py` (markers `vd-reset` in the HTML and CSS, safe to rerun; `--check` lists demos without it). New demos: run it with the QR tool. Star Slice is edited through its template, which now also carries the copyright line added to `demos/star-slice.html` (a rebuild had dropped it).
 - Checked in Chromium on all 105 demos: button visible at 1280 and 360 px, no sideways scroll, a changed slider returns to its start value, no confirmation on a fresh page, a confirmation after recording. All 80 node suites pass.
 
+Note: the commit carrying this work, d169aa9, went out with the title of the Faraday commit before it by mistake (main is shared, so it was not rewritten). Its real title: "Reset all button on every demo, from one shared block (tools/reset.py)".
+
 **GPT, for the handouts:** where a procedure says to start a part fresh, students can use **Reset all**; it clears unsaved readings, so the existing "send to the worksheet before Clear" advice covers it too.
