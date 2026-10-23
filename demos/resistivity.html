@@ -53,6 +53,7 @@ body { margin: 0; }
 .rail details.plotfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rail details.plotfold[open] > summary { margin-bottom: 8px; }
 .rail details.plotfold > .foldbody { display: flex; flex-direction: column; gap: 10px; }
+.rail section[hidden] { display: none; }
 </style>
 <title>Resistivity of a Wire</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -236,7 +237,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         </details>
       </section>
 
-      <section id="insideSec">
+      <section id="insideSec" hidden>
         <h2>Inside the wire</h2>
         <div class="btnrow" role="group" aria-label="Supply current I">
           <button type="button" class="btn" id="inIdown">Current −0.05 A</button>
@@ -260,8 +261,8 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         </details>
       </section>
 
-      <section id="coldSec">
-        <details class="fold"><summary>Cold stage</summary><div class="foldbody">
+      <section id="coldSec" hidden>
+        <h2>Cold stage</h2>
         <div class="chips" id="coldMats">
           <button type="button" data-c="copper" aria-pressed="false">Copper</button>
           <button type="button" data-c="aluminum" aria-pressed="false">Aluminum</button>
@@ -281,7 +282,6 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <p class="hint">Choose <b>Cold stage</b> above the picture: a sample wire in a liquid helium cryostat, cooled from room temperature to 1 K while the four wire meters read it. The length and gauge are the ones set above; the current is the supply current.</p>
           <p class="hint">Model: normal metals follow Matthiessen's rule, ρ(T) = ρ₀ + ρ_ph(T). The lattice part ρ_ph uses the Bloch–Grüneisen formula with the Debye temperature Θ (Kittel, Table 5.1: Cu 343 K, Al 428 K, Sn 200 K, Pb 105 K), scaled so that ρ(293 K) is the handbook value (Cu 1.68, Al 2.65, Sn 11.5, Pb 20.8 × 10⁻⁸ Ω·m); real curves differ from this one formula by up to tens of percent between about 10 K and 100 K. The residual part ρ₀ = ρ(293 K)/RRR comes from impurities and defects and depends on the sample. Below the critical temperature (OpenStax Table 9.3: Al 1.20 K, Sn 3.72 K, Pb 7.19 K, YBa₂Cu₃O₇ 92 K) the resistance is exactly zero; the step is drawn sharp, while real transitions are from a millikelvin to about a kelvin wide. Copper does not become superconducting at any temperature reached so far. YBCO's normal state is drawn as ρ = 2.5 × 10⁻⁶ Ω·m × T/300 K, a typical value along its copper oxide planes; it varies from sample to sample. Thermal contraction is left out. The points are simulated readings, noise free.</p>
         </details>
-        </div></details>
       </section>
 
       <section>
@@ -600,7 +600,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   knob('knobT', (n) => { const t = Math.max(0, Math.min(200, S.T + 5 * n)); if (t !== S.T) { S.T = t; upd(); } });
   const CAN_LABEL = { cold: 'A cryostat holding the sample wire, its thermometer reading, and two graphs of the wire resistance against temperature: from room temperature down to 1 K, and a close view of the lowest temperatures.', bench: can.getAttribute('aria-label'), inside: 'A magnified region inside the wire: free electrons move at random among the ions and drift slowly against the current. A dashed plane counts the electrons the drift carries across it. Use the Inside the wire section of the panel to pause, step or reset the count.' };
   function setView(v) {
-    S.view = v; stage.dataset.view = v; for (const b of document.querySelectorAll('[data-view]')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    S.view = v; stage.dataset.view = v; $('insideSec').hidden = v !== 'inside'; $('coldSec').hidden = v !== 'cold'; for (const b of document.querySelectorAll('[data-view]')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
     can.setAttribute('aria-label', CAN_LABEL[v]); draw(); if (v === 'inside') runLoop(); if (v === 'cold') coldLoop();
   }
   for (const b of document.querySelectorAll('[data-view]')) b.addEventListener('click', () => setView(b.dataset.view));
