@@ -207,7 +207,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <h2>Readings</h2>
         <div class="btnrow">
           <button type="button" class="btn primary" id="capture">Capture reading</button>
-          <button type="button" class="btn" id="exportCsv">Export CSV</button>
+          <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
@@ -560,12 +560,28 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     S.rows.push({ th: S.p.th.toFixed(1), m: S.p.m.toFixed(1), m2: S.p.m2.toFixed(1), F: S.p.F.toFixed(0), phi: S.p.phi.toFixed(0), t: S.lastGate.toFixed(3) });
     renderRows(); capStatus(`Row ${S.rows.length} captured.`);
   });
-  $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
+     them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. Clear starts
+     a new series, so the worksheet puts the next export in a new copy of its table. */
+  let wsSeries = Date.now();
+  function toWorksheet(txt, fallback) {
+    const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
+    const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {};
+    lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); if (c.length > 1) meta[c[0]] = c[1]; });
+    const hand = { v: 1, demo: 'forces', series: wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
+      note: 'Simulated data from the Forces and Friction demo.', csv: txt, csvName: 'forces-readings.csv' };
+    try { localStorage.setItem('vd-handoff:forces', JSON.stringify(hand)); }
+    catch (_) { fallback(); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    const n = hand.rows.length;
+    capStatus(`${n} reading${n === 1 ? '' : 's'} sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/forces.html'; a.target = 'forces-worksheet'; a.textContent = 'Open the worksheet';
+    a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+  }
   $('exportCsv').addEventListener('click', () => {
     if (!S.rows.length) { capStatus('No readings to export.'); return; }
     const txt = readingsCSV(S.rows, { version: FF_VERSION, setup: document.querySelector(`#presets button[data-p="${S.preset}"]`)?.textContent || 'Your own setup', surface: S.mystery ? 'mystery surface (coefficients hidden)' : `mu_s ${S.p.ms}, mu_k ${S.p.mk} at export` });
-    try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'forces-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
-    capStatus('CSV exported.');
+    toWorksheet(txt, () => { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'forces-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} });
   });
   function renderRows() {
     const tb = $('rowsTbl').querySelector('tbody');

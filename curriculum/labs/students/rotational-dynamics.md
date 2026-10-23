@@ -45,7 +45,7 @@ $$\frac12 mv^2 + \frac12 I\omega^2 + \tau_f\,\Delta\varphi.$$
 
 Use the measured total rotating inertia, not just the added object's inertia. The comparison is an internal consistency check because both the fit and energy calculation use the same timings.
 
-**Using the virtual apparatus.** Select **Nothing**, enable **Bearing friction** and **Blind: hide predictions and answers**, and choose **2.0 cm** under **Spool radius r**. Set **Hanging mass m**, press **Wind it back up**, then **Release** and wait for the full drop before **Capture reading**. Save with **Export CSV** before **Clear** between series. Choose **Disk** or **Mystery object** for the loaded series, keeping Blind on for your estimate. Mystery also hides the fitted inertia. For the spool check select **1.0 cm** or **3.0 cm** and make a fresh drop. The fit groups rows by object, two-mass spacing where relevant, and friction setting. Keep those settings fixed within a series; its fit can combine radii deliberately. Record your result before turning Blind off to compare energy readouts. Those readouts show the state at the current drop position; use the completed drop for the endpoint calculation.
+**Using the virtual apparatus.** Select **Nothing**, enable **Bearing friction** and **Blind: hide predictions and answers**, and choose **2.0 cm** under **Spool radius r**. Set **Hanging mass m**, press **Wind it back up**, then **Release** and wait for the full drop before **Capture reading**. Send each series with **Export to worksheet** before **Clear**; each series gets its own copy of the Data table. Choose **Disk** or **Mystery object** for the loaded series, keeping Blind on for your estimate. Mystery also hides the fitted inertia. For the spool check select **1.0 cm** or **3.0 cm** and make a fresh drop. The fit groups rows by object, two-mass spacing where relevant, and friction setting. Keep those settings fixed within a series; its fit can combine radii deliberately. Record your result before turning Blind off to compare energy readouts. Those readouts show the state at the current drop position; use the completed drop for the endpoint calculation.
 
 ## Data
 
@@ -77,4 +77,4 @@ The virtual timer rounds to 0.001 s. Its mass and spool settings are exact model
 
 ## What to hand in
 
-Prelab answers, settings and separate CSV files, empty/loaded fits with residuals, added inertia and friction estimates with uncertainty, spool-radius and energy checks, and answers to the questions. Identify simulated data.
+Prelab answers, settings and a copy of the data table for each series, empty/loaded fits with residuals, added inertia and friction estimates with uncertainty, spool-radius and energy checks, and answers to the questions. Identify simulated data.

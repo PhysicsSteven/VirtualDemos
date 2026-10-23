@@ -37,7 +37,7 @@ With a real detector, clear the walking area and protect the cart from leaving t
 
 **Graph matching.** Walk in front of a real detector, or move the virtual cart, to match a target position graph. Describe the required direction and speed before starting. Repeat the same target once; then try a velocity target. Explain the difference between matching a height on a position graph and matching a height on a velocity graph.
 
-**Using the virtual apparatus.** Choose **Slowing down and turning around**, record settings, then enable **Blind: hide predictions and answers**. Drag on a graph or use the arrow keys to move the time marker; use **Capture reading** and **Export CSV**. Export each run before **Clear**, since readings can otherwise mix runs. Use **Stop and go** for the stages and **Ball thrown up** for free fall; select each setup before hiding its predictions. The vertical run exports its height in the CSV column `x_m`. After your predictions, turn Blind off to inspect **Tangent lines (slope)** and **Shade the area from 0 to t**. For **Walk the graph**, press **Start run** and drag the cart or hold the arrow keys; keep the target unchanged for the repeat. Record the score and its units. Use **Match a velocity graph instead** for the final trial. Graph matching is an interpretation task; the parabola fit is intended for constant acceleration, not an arbitrary walk.
+**Using the virtual apparatus.** Choose **Slowing down and turning around**, record settings, then enable **Blind: hide predictions and answers**. Drag on a graph or use the arrow keys to move the time marker; use **Capture reading** and **Export to worksheet**. Export each run before **Clear**, since readings can otherwise mix runs. Use **Stop and go** for the stages and **Ball thrown up** for free fall; select each setup before hiding its predictions. The vertical run exports its height in the CSV column `x_m`. After your predictions, turn Blind off to inspect **Tangent lines (slope)** and **Shade the area from 0 to t**. For **Walk the graph**, press **Start run** and drag the cart or hold the arrow keys; keep the target unchanged for the repeat. Record the score and its units. Use **Match a velocity graph instead** for the final trial. Graph matching is an interpretation task; the parabola fit is intended for constant acceleration, not an arbitrary walk.
 
 ## Data
 
@@ -47,7 +47,7 @@ With a real detector, clear the walking area and protect the cart from leaving t
 | | | | | |
 | | | | | |
 
-Copy this table as needed. Save each CSV with its setup and settings. For graph matching, keep the target sketch and both trial scores.
+Add a copy of this table for each run (pressing **Clear** in the demo before the next run does this when you export), and note its setup and settings. For graph matching, keep the target sketch and both trial scores.
 
 ## Analysis
 

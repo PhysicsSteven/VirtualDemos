@@ -43,7 +43,7 @@ Keep water away from electrical equipment. Secure real pressure tubing and hangi
 
 **Flow.** Use a horizontal Venturi tube. Hold inlet diameter and inlet speed fixed; vary throat diameter through at least five settings. Record the two diameters, flow rate and pressure-head readings. Avoid settings where cavitation or an empty standpipe prevents the required pressure measurement.
 
-**Using the virtual apparatus.** Turn on **Blind: hide predictions and answers**. Use **Pressure grows with depth** and vary **Probe depth**, reading the depth ruler and pressure gauge. Compare **Gauge** and **Absolute**. For buoyancy choose **Weighing in water (Archimedes)** and **Spring scale**; wait for a settled reading before capture. For flow choose **Venturi tube** and vary **Throat diameter D₂**, keeping **Pipe diameter D₁** and **Inlet speed v₁** fixed. Read **Flow meter Q**, **Standpipe h₁** and **Standpipe h₂**. Press **Capture reading** and **Export CSV** for each investigation; **Your readings** shows the measured-data plot.
+**Using the virtual apparatus.** Turn on **Blind: hide predictions and answers**. Use **Pressure grows with depth** and vary **Probe depth**, reading the depth ruler and pressure gauge. Compare **Gauge** and **Absolute**. For buoyancy choose **Weighing in water (Archimedes)** and **Spring scale**; wait for a settled reading before capture. For flow choose **Venturi tube** and vary **Throat diameter D₂**, keeping **Pipe diameter D₁** and **Inlet speed v₁** fixed. Read **Flow meter Q**, **Standpipe h₁** and **Standpipe h₂**. Press **Capture reading** and **Export to worksheet** for each investigation; **Your readings** shows the measured-data plot.
 
 ## Data
 

@@ -14,9 +14,26 @@
     'measurement-and-units', 'motion-graphs', 'pendulum', 'potential-curves', 'projectile-drag', 'rotation', 'rotational-dynamics',
     'springs', 'stress-strain', 'viscometer'];
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
-     the demo's name and, for each column of the worksheet's first data table, the demo column that fills it (null: left alone). */
+     the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
+     a value from the CSV's header lines, a function of the row (r, keyed by CSV column) and those values (h), or null (left alone).
+     Every value is the demo's own, in the units of the worksheet's column; nothing is converted except where a function says so. */
+  const both = (...ks) => (r) => ks.map((k) => r[k]).filter((v) => v !== '' && v != null).join(', ');
+  const sig = (v) => (isFinite(v) && v !== '' ? String(+(+v).toPrecision(6)) : '');
   const FROM_DEMO = {
     pendulum: { demo: 'Pendulum', cols: ['row', 'type', 'L_m', 'theta0_deg', 'm_kg', 'T_s', 'T2_s2', null] },
+    collisions: { demo: 'Collisions', cols: [both('row', 'bumper'), 'm1_kg', 'm2_kg', 'u1_m_per_s', 'u2_m_per_s', 'v1_after_m_per_s', 'v2_after_m_per_s'] },
+    fluids: { demo: 'Fluids', cols: [(r) => [r.scene, r.liquid].concat(r.depth_d_m ? [`d = ${r.depth_d_m} m`] : []).filter(Boolean).join(', '),
+      both('depth_h_m', 'D1_m', 'D2_m'), both('P_Pa', 'h1_m', 'h2_m'),
+      (r) => (r.block_edge_L_m !== '' && r.block_edge_L_m != null ? sig(Math.pow(+r.block_edge_L_m, 3)) : ''), /* block volume L³ from its edge */
+      'scale_in_air_W_N', 'scale_T_N', 'Q_m3_s'] },
+    forces: { demo: 'Forces and Friction', cols: ['row', 'm_kg', 'theta_deg', null, (r, h) => (r.t_gate_s ? h.gate_distance_m || '' : ''), 't_gate_s', 'a_m_per_s2', null] },
+    'kepler-orbits': { demo: 'Kepler Orbits', cols: [both('row', 'preset'), 'M_Msun', 'ruler_d12_AU', 'a_AU', 'timer_T_yr', 'a3_AU3', 'T2_yr2'] },
+    'motion-graphs': { demo: 'Motion Graphs', cols: ['row', 't_s', 'x_m', null, null] },
+    'projectile-drag': { demo: 'Projectile Range', cols: ['shot', 'v0_m_per_s', 'launch_angle_deg', 'launch_height_m', 'air_resistance', 't_s', 'x_m', 'y_m', 'range_m'] },
+    'rotational-dynamics': { demo: 'Rotational Dynamics', cols: ['load', 'm_kg', 'r_m', '#drop_height_m', 't_s', 'a_m_per_s2', 'alpha_rad_per_s2', 'tau_N_m'] },
+    springs: { demo: 'Springs', cols: ['row', 'm_kg', 'A_m', 'T_zero_crossings_s', 'N_oscillations', 't_stopwatch_s', 'T_squared_s2'] },
+    'stress-strain': { demo: 'Stress and Strain', cols: ['row', 'd_mm', '#wire_length_m', 'm_kg', 'dL_mm', null, null] },
+    viscometer: { demo: 'Falling Ball Viscometer', cols: ['row', (r) => [r.liquid, r.ball].filter(Boolean).join(' / '), (r) => [r.rho_liquid_kg_m3, r.rho_ball_kg_m3].filter(Boolean).join(' / '), 'tube_D_mm', 'd_mm', 't_s', 'v_m_per_s', null, null, null] },
   };
   const ANSWER_LISTS = /^(before-the-lab|before-the-activity|analysis|questions)$/, ONE_BOX = /^uncertainty$/;
   const m = location.pathname.match(/\/curriculum\/labs\/students\/([a-z0-9-]+?)(?:\.html)?$/);
@@ -414,8 +431,9 @@
      replaces the earlier one in the same table instead of adding duplicates, and a new series goes into a new copy of the table. */
   function takeHand(h) {
     const src = h.demo + ':' + (h.series || '');
-    const idx = MAP.cols.map((name) => (name == null ? -1 : h.columns.indexOf(name)));
-    const filled = (R) => R.source || R.rows.some((r) => idx.some((k, c) => k >= 0 && r.cells[c] && r.cells[c].value)); /* the demo's columns already used */
+    const meta = h.meta || {};
+    const get = MAP.cols.map((m) => (m == null ? null : typeof m === 'function' ? m : m[0] === '#' ? () => meta[m.slice(1)] : (r) => r[m]));
+    const filled = (R) => R.source || R.rows.some((r) => get.some((g, c) => g && r.cells[c] && r.cells[c].value)); /* the demo's columns already used */
     let R = dT.runs.find((x) => x.source === src);
     if (!R) {
       R = filled(dT.runs[0]) ? addRun(dT) : dT.runs[0];
@@ -424,10 +442,11 @@
       if (R.wrap) typeset(R.wrap);
     }
     h.rows.forEach((vals, i) => {
-      const row = R.rows[i] || newRow(dT, R);
-      idx.forEach((k, c) => { if (k >= 0 && row.cells[c]) row.cells[c].wsSet(vals[k] == null ? '' : vals[k]); });
+      const row = R.rows[i] || newRow(dT, R), rec = {};
+      h.columns.forEach((name, k) => { rec[name] = vals[k] == null ? '' : vals[k]; });
+      get.forEach((g, c) => { if (g && row.cells[c]) { let v; try { v = g(rec, meta); } catch (_) { v = ''; } row.cells[c].wsSet(v == null ? '' : v); } });
     });
-    for (let i = h.rows.length; i < R.rows.length; i++) idx.forEach((k, c) => { if (k >= 0 && R.rows[i].cells[c]) R.rows[i].cells[c].wsSet(''); });
+    for (let i = h.rows.length; i < R.rows.length; i++) get.forEach((g, c) => { if (g && R.rows[i].cells[c]) R.rows[i].cells[c].wsSet(''); });
     if (h.note && R.notes.value.indexOf(h.note) < 0) R.notes.wsSet(R.notes.value ? R.notes.value + '\n' + h.note : h.note);
     received = h.sent; handBox.hidden = true; save();
     setStatus(`${h.rows.length} readings from the ${MAP.demo} demo are in your table.`);
