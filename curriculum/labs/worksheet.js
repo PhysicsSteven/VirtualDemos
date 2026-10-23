@@ -520,14 +520,23 @@
     const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
     let sxx = 0, sxy = 0; xs.forEach((x, i) => { sxx += (x - mx) * (x - mx); sxy += (x - mx) * (ys[i] - my); });
     if (!(sxx > 0)) return null;
-    const b = sxy / sxx, a = my - b * mx, res = xs.map((x, i) => ys[i] - a - b * x), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > 2 ? ss / (n - 2) : NaN;
-    return { b, a, res, n, seB: Math.sqrt(s2 / sxx), seA: Math.sqrt(s2 * (1 / n + mx * mx / sxx)) };
+    const b = sxy / sxx, res = xs.map((x, i) => ys[i] - (my - b * mx) - b * x), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > 2 ? ss / (n - 2) : NaN;
+    const ymax = Math.max(...ys.map(Math.abs)), exact = n > 2 && ss <= 1e-24 * n * ymax * ymax;    /* on the line to rounding error */
+    let a = my - b * mx; if (exact && Math.abs(a) < 1e-9 * ymax) a = 0;
+    return { b, a, res, n, exact, seB: Math.sqrt(s2 / sxx), seA: Math.sqrt(s2 * (1 / n + mx * mx / sxx)) };
   }
-  /* value ± uncertainty: the uncertainty to 2 significant figures and the value to the same decimal place */
-  function pm(v, e, unit) {
-    if (!isFinite(e) || !(e > 0)) return `${+v.toPrecision(4)}${unit ? ' ' + unit : ''} (uncertainty needs at least 3 points)`;
-    const p = Math.floor(Math.log10(e)) - 1, d = Math.max(0, -p), r = (x) => (Math.round(x / Math.pow(10, p)) * Math.pow(10, p)).toFixed(d);
-    return `(${r(v)} ± ${r(e)})${unit ? ' ' + unit : ''}`;
+  /* value ± uncertainty: the uncertainty to 2 significant figures and the value to the same decimal place; powers of ten below
+     0.001 and from 100000 up. exact: the points lie on the line to rounding error, so the standard error is zero */
+  const SUPD = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+  const sup = (k) => (k < 0 ? '⁻' : '') + String(Math.abs(k)).split('').map((c) => SUPD[+c]).join('');
+  function pm(v, e, unit, n, exact) {
+    const u = unit ? ' ' + unit : '', ok = n >= 3 && !exact && e > 0 && isFinite(e);
+    const p = ok ? Math.floor(Math.log10(e)) - 1 : 0, vr = ok ? Math.round(v / Math.pow(10, p)) * Math.pow(10, p) : +v.toPrecision(exact ? 6 : 4);
+    const big = Math.max(Math.abs(vr), ok ? e : 0);
+    const k = big > 0 && (big < 1e-3 || big >= 1e5) ? +big.toExponential(3).split('e')[1] : 0, sc = Math.pow(10, k), tail = k ? ` × 10${sup(k)}` : '';
+    if (!ok) return `${+(vr / sc).toPrecision(exact ? 6 : 4)}${tail}${u} ${exact ? '± 0 (the points lie exactly on the line)' : '(uncertainty needs at least 3 points)'}`;
+    const d = Math.max(0, k - p), r = (x) => (x / sc).toFixed(d);
+    return `(${r(vr)} ± ${r(Math.round(e / Math.pow(10, p)) * Math.pow(10, p))})${tail}${u}`;
   }
   function ticks(lo, hi, n) {
     const span = hi - lo || Math.abs(hi) || 1, step0 = span / n, mag = Math.pow(10, Math.floor(Math.log10(step0))), f = step0 / mag;
@@ -551,7 +560,8 @@
   const pad = (lo, hi, inc0) => { if (inc0) { lo = Math.min(lo, 0); hi = Math.max(hi, 0); } const d = (hi - lo) || Math.abs(hi) || 1; return [lo - 0.08 * d, hi + 0.08 * d]; };
   function drawPlot(T, R) {
     const box = R.graph; box.innerHTML = '';
-    if (R.axes.x === '' || R.axes.y === '') { box.appendChild(el('p', { class: 'ws-pnote ws-noprint', text: 'Choose a column for each axis to draw a graph of your data.' })); return; }
+    if (box.parentNode) box.parentNode.classList.toggle('ws-noprint', R.axes.x === '' || R.axes.y === '');   /* no axes chosen: nothing to print */
+    if (R.axes.x === '' || R.axes.y === '') { box.appendChild(el('p', { class: 'ws-pnote', text: 'Choose a column for each axis to draw a graph of your data.' })); return; }
     const cx = +R.axes.x, cy = +R.axes.y, [xName, xUnit] = nameUnit(T.cols[cx]), [yName, yUnit] = nameUnit(T.cols[cy]);
     const P = { xName, xUnit, yName, yUnit, title: `${yName} against ${xName}` };
     const pts = [];
@@ -582,7 +592,7 @@
     const su = P.yUnit && P.xUnit ? `${wrap(P.yUnit)}/${wrap(P.xUnit)}` : P.yUnit || (P.xUnit ? `1/${wrap(P.xUnit)}` : '');
     const lines = [['slope', f.b, f.seB, su], ['intercept', f.a, f.seA, P.yUnit]];
     const res = el('p', { class: 'ws-res' });
-    lines.forEach(([name, v, e, u], i) => { if (i) res.appendChild(el('br')); res.appendChild(el('b', { text: name + ': ' })); res.appendChild(document.createTextNode(pm(v, e, u))); });
+    lines.forEach(([name, v, e, u], i) => { if (i) res.appendChild(el('br')); res.appendChild(el('b', { text: name + ': ' })); res.appendChild(document.createTextNode(pm(v, e, u, f.n, f.exact))); });
     box.appendChild(res);
     box.appendChild(el('p', { class: 'ws-pnote', text: `${f.n} points. Least squares line with a free intercept and equal weights; uncertainties are standard errors from the scatter about the line (n − 2 degrees of freedom). What the slope tells you is for you to work out.` }));
   }

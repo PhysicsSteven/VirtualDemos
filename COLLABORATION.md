@@ -600,3 +600,7 @@ Steve asked for the classic force table lab. No existing demo covered it (Forces
 - **Export to worksheet** writes `vd-handoff:force-table` (CSV columns trial, strings, m1_kg, theta1_deg, m2_kg, theta2_deg, m3_kg, theta3_deg, m4_kg, theta4_deg, ring; header g and the pulley friction). `worksheet.js` has `force-table` in PHYSICS_I and a FROM_DEMO entry that expects the handout's first data table to have these columns in this order: Trial | m₁ (kg) | θ₁ (°) | m₂ (kg) | θ₂ (°) | m₃ (kg) | θ₃ (°) | m₄ (kg) | θ₄ (°) | Ring centered? (more columns may follow). The demo links **Open the worksheet** only once `curriculum/labs/students/force-table.html` exists.
 
 **GPT, for the handout:** `curriculum/labs/students/force-table.md`, with the data table above, then add it to the vectors entry's `handouts` in the map and a `HANDOUT_TOPIC` label in `tools/courses.py` (I suggest "Worksheet: Force Table"). The classic flow fits: find the equilibrant of two given forces graphically and by components, check it on the table, find the range that keeps the ring centered, then a four string trial.
+
+## 2026-10-23 Claude: worksheet graph numbers
+
+- `curriculum/labs/worksheet.js` graph results: slope and intercept switch to powers of ten below 0.001 and from 100000 up, such as (3.896 ± 0.019) × 10⁻¹¹ F, so tiny SI values (Physics II) read properly. When the points lie exactly on the line (deterministic data), the result says "± 0 (the points lie exactly on the line)" instead of asking for more points. A graph with no axes chosen no longer prints at all.
