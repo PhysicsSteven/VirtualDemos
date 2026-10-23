@@ -1,0 +1,391 @@
+/* Interactive worksheets (Claude, tools side; the handouts themselves are GPT's Markdown and are not edited).
+   Loaded by _includes/head-custom.html on every Markdown page, before MathJax, so it runs on the parsed page before any math is
+   typeset. It does nothing unless the page is a student worksheet listed in ENABLED. On those pages it:
+   - turns every empty cell of the data tables into a text field, with Add a row and Add another copy of the table;
+   - puts an answer box under each numbered item in Before the lab / Before the activity, Analysis and Questions, and one under
+     Uncertainty;
+   - saves everything in this browser (localStorage) as the student types;
+   - exports: Print or save as PDF, the data tables as CSV, and a save file (JSON) that can be opened again on another computer.
+   Nothing on the page is changed except what is added here. The demos are not touched. */
+(function () {
+  'use strict';
+  /* Physics I worksheets (physics-1.html). Add a worksheet's file name here to make it interactive. */
+  const ENABLED = ['collisions', 'energy-sources', 'estimation-and-evidence', 'fluids', 'forces', 'impulse', 'kepler-orbits',
+    'measurement-and-units', 'motion-graphs', 'pendulum', 'potential-curves', 'projectile-drag', 'rotation', 'rotational-dynamics',
+    'springs', 'stress-strain', 'viscometer'];
+  const ANSWER_LISTS = /^(before-the-lab|before-the-activity|analysis|questions)$/, ONE_BOX = /^uncertainty$/;
+  const m = location.pathname.match(/\/curriculum\/labs\/students\/([a-z0-9-]+?)(?:\.html)?$/);
+  if (!m || ENABLED.indexOf(m[1]) < 0) return;
+  const SLUG = m[1], KEY = 'vd-worksheet:' + SLUG, VERSION = 1;
+  const body = document.querySelector('.markdown-body') || document.body;
+  const h1 = body.querySelector('h1[id]') || body.querySelector('h1');
+  const TITLE = h1 ? h1.textContent.trim() : SLUG;
+
+  /* ---------- small helpers ---------- */
+  const el = (tag, attrs, kids) => {
+    const e = document.createElement(tag);
+    for (const k in attrs || {}) {
+      if (k === 'text') e.textContent = attrs[k];
+      else if (k === 'on') for (const ev in attrs.on) e.addEventListener(ev, attrs.on[ev]);
+      else if (attrs[k] != null && attrs[k] !== false) e.setAttribute(k, attrs[k] === true ? '' : attrs[k]);
+    }
+    (kids || []).forEach((c) => c != null && e.appendChild(typeof c === 'string' ? document.createTextNode(c) : c));
+    return e;
+  };
+  const blank = (s) => !String(s || '').replace(/[\s ]/g, '');
+  const GREEK = { alpha: 'α', beta: 'β', gamma: 'γ', Gamma: 'Γ', delta: 'δ', Delta: 'Δ', epsilon: 'ε', varepsilon: 'ε', eta: 'η',
+    theta: 'θ', Theta: 'Θ', kappa: 'κ', lambda: 'λ', Lambda: 'Λ', mu: 'μ', nu: 'ν', pi: 'π', rho: 'ρ', sigma: 'σ', Sigma: 'Σ',
+    tau: 'τ', phi: 'φ', varphi: 'φ', Phi: 'Φ', omega: 'ω', Omega: 'Ω', times: '×', cdot: '·', circ: '°', pm: '±', le: '≤', leq: '≤',
+    ge: '≥', geq: '≥', approx: '≈', propto: '∝', infty: '∞', to: '→', ell: 'ℓ', sqrt: '√', degree: '°' };
+  /* Plain text for CSV column names and answer keys: TeX between \( \) or \[ \] becomes readable Unicode. */
+  const plainTeX = (t) => t.replace(/\\(?:mathrm|text|rm|mathbf|operatorname)\s*\{([^{}]*)\}/g, '$1')
+    .replace(/\\t?frac\s*\{([^{}]*)\}\s*\{([^{}]*)\}/g, '($1)/($2)').replace(/\\tfrac\s*(\d)(\d)/g, '$1/$2')
+    .replace(/\\([A-Za-z]+)/g, (s, w) => GREEK[w] != null ? GREEK[w] : (w === 'rm' || w === 'left' || w === 'right' ? '' : w))
+    .replace(/\\[ ,;!]/g, ' ').replace(/[{}]/g, '').replace(/\s+/g, ' ').trim();
+  const plain = (node) => plainTeX(String(node.textContent || '').replace(/\\[()[\]]/g, ''));
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n\r]/.test(s) ? '"' + s.replace(/"/g, '""') + '"' : s; };
+  const download = (name, text, type) => {
+    try {
+      const u = URL.createObjectURL(new Blob([text], { type })), a = el('a', { href: u, download: name });
+      document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000);
+    } catch (_) { alert('This browser would not save the file.'); }
+  };
+  const grow = (ta) => { ta.style.height = 'auto'; ta.style.height = (ta.scrollHeight + 2) + 'px'; };
+  const typeset = (node) => { try { if (window.MathJax && MathJax.typesetPromise && MathJax.startup && MathJax.startup.document) MathJax.typesetPromise([node]); } catch (_) {} };
+
+  /* ---------- styles (the page uses the GitHub Pages Primer theme, light only) ---------- */
+  document.head.appendChild(el('style', { text: `
+.ws-panel { border: 1px solid #d0d7de; border-radius: 8px; background: #f6f8fa; padding: 12px 14px; margin: 18px 0 22px; }
+.ws-panel h2 { margin: 0 0 8px; padding: 0; border: 0; font-size: 1.1em; }
+.ws-who { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px 12px; margin-bottom: 10px; }
+.ws-who label { display: flex; flex-direction: column; font-size: 0.85em; font-weight: 600; color: #24292f; gap: 3px; }
+.ws input.ws-f, .ws-panel input, .ws textarea.ws-f { font: inherit; font-size: 15px; color: #1f2328; background: #fff; border: 1px solid #8c959f;
+  border-radius: 5px; padding: 5px 7px; box-sizing: border-box; width: 100%; }
+.ws input.ws-f:focus, .ws-panel input:focus, .ws textarea.ws-f:focus { outline: 2px solid #0969da; outline-offset: 0; border-color: #0969da; }
+.ws-btns { display: flex; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.ws-btn { font: inherit; font-size: 14px; padding: 5px 11px; border-radius: 6px; border: 1px solid #8c959f; background: #fff; color: #1f2328; cursor: pointer; }
+.ws-btn:hover { background: #eef1f4; } .ws-btn:focus-visible { outline: 2px solid #0969da; outline-offset: 1px; }
+.ws-btn.ws-main { background: #1f6feb; border-color: #1f6feb; color: #fff; } .ws-btn.ws-main:hover { background: #1a5fd0; }
+.ws-btn.ws-quiet { border-color: #d0d7de; color: #57606a; }
+.ws-status { font-size: 0.85em; color: #57606a; margin: 4px 0 0; } .ws-status.ws-warn { color: #9a6700; font-weight: 600; }
+.ws-note { font-size: 0.85em; color: #57606a; margin: 6px 0 0; }
+.markdown-body table.ws-table td { padding: 3px 4px; vertical-align: top; } .markdown-body table.ws-table td.ws-fixed { padding: 6px 10px; }
+.markdown-body table.ws-table input.ws-f { min-width: 6.5em; border-color: #c4ccd5; padding: 4px 6px; }
+.ws-tablebox { margin: 0 0 16px; } .ws-tablebox .ws-copyhead { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0 6px; font-weight: 600; }
+.ws-tablebox .ws-copyhead input { max-width: 26em; font-weight: 400; }
+.ws-notes { margin: 4px 0 6px; } .ws-notes label { font-size: 0.85em; font-weight: 600; color: #24292f; display: block; margin-bottom: 3px; }
+.ws textarea.ws-f { min-height: 3.4em; resize: vertical; line-height: 1.45; display: block; margin: 6px 0 4px; overflow: hidden; }
+.ws-answer-one { margin: 6px 0 14px; } .ws-answer-one label { font-size: 0.85em; font-weight: 600; color: #24292f; }
+.ws-print { display: none; }
+.ws-left { border: 1px solid #d4a72c; background: #fff8c5; border-radius: 8px; padding: 10px 14px; margin: 18px 0; }
+.ws-left h2 { margin-top: 0; border: 0; font-size: 1.05em; } .ws-left p { margin: 4px 0; white-space: pre-wrap; }
+@media (max-width: 480px) { .ws-btn { font-size: 13px; padding: 5px 9px; } }
+@media print {
+  .ws-btns, .ws-btn, .ws-status, .ws-note, .ws-noprint { display: none !important; }
+  .ws-panel { border: 0; background: none; padding: 0; margin: 8px 0 14px; }
+  .ws-panel h2 { display: none; }
+  .ws-who label { flex-direction: row; gap: 6px; font-size: 0.95em; }
+  .ws input.ws-f, .ws textarea.ws-f, .ws-panel input { display: none !important; }
+  .ws-print { display: block; white-space: pre-wrap; min-height: 1.2em; }
+  td .ws-print, .ws-who .ws-print, .ws-copyhead .ws-print { display: inline; font-weight: 400; }
+  .ws-answer .ws-print { border-left: 3px solid #8c959f; padding: 2px 0 2px 8px; margin: 4px 0 8px; }
+  .ws-answer .ws-print:empty::before { content: "(no answer)"; color: #8c959f; }
+  .ws-tablebox, .ws-answer { break-inside: avoid; }
+  .markdown-body table.ws-table { display: table; } .markdown-body > h1:first-child { display: none; }
+}` }));
+
+  /* ---------- a field that saves and prints ---------- */
+  let saveTimer = 0;
+  const changed = () => { clearTimeout(saveTimer); saveTimer = setTimeout(save, 300); setStatus('Saving…'); };
+  function field(kind, label, cls) {
+    const f = kind === 'area' ? el('textarea', { class: 'ws-f ' + (cls || ''), rows: 2, 'aria-label': label, spellcheck: 'true' })
+      : el('input', { class: 'ws-f ' + (cls || ''), type: 'text', 'aria-label': label, autocomplete: 'off' });
+    const p = el('span', { class: 'ws-print tex2jax_ignore', 'aria-hidden': 'true' });
+    f.addEventListener('input', () => { p.textContent = f.value; if (kind === 'area') grow(f); changed(); });
+    f.wsSet = (v) => { f.value = v == null ? '' : String(v); p.textContent = f.value; if (kind === 'area') requestAnimationFrame(() => grow(f)); };
+    f.wsPrint = p;
+    return f;
+  }
+  const withPrint = (f) => { const s = document.createDocumentFragment(); s.appendChild(f); s.appendChild(f.wsPrint); return s; };
+
+  /* ---------- the student panel ---------- */
+  const who = {}, statusEls = [];
+  const WHO = [['name', 'Name'], ['partners', 'Lab partners'], ['section', 'Section'], ['date', 'Date']];
+  function setStatus(t, warn) { statusEls.forEach((s) => { s.textContent = t; s.classList.toggle('ws-warn', !!warn); }); }
+  function buttons(where) {
+    const fileIn = el('input', { type: 'file', accept: '.json,application/json', hidden: true, on: { change: (e) => openFile(e.target) } });
+    const box = el('div', { class: 'ws-btns' }, [
+      el('button', { type: 'button', class: 'ws-btn ws-main', text: 'Print or save as PDF', on: { click: () => { save(); window.print(); } } }),
+      el('button', { type: 'button', class: 'ws-btn', text: 'Download data tables (CSV)', on: { click: exportCSV } }),
+      el('button', { type: 'button', class: 'ws-btn', text: 'Save to a file', on: { click: exportJSON } }),
+      el('button', { type: 'button', class: 'ws-btn', text: 'Open a saved file', on: { click: () => fileIn.click() } }),
+      el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Clear my answers', on: { click: clearAll } }),
+      fileIn]);
+    const st = el('p', { class: 'ws-status', role: where === 'top' ? 'status' : null });
+    statusEls.push(st);
+    return [box, st];
+  }
+  const panel = el('section', { class: 'ws ws-panel tex2jax_ignore', 'aria-labelledby': 'ws-panel-h' }, [el('h2', { id: 'ws-panel-h', text: 'Your worksheet' })]);
+  const whoBox = el('div', { class: 'ws-who' });
+  WHO.forEach(([k, label]) => { const f = field('input', label); who[k] = f; whoBox.appendChild(el('label', {}, [label, withPrint(f)])); });
+  panel.appendChild(whoBox);
+  buttons('top').forEach((x) => panel.appendChild(x));
+  panel.appendChild(el('p', { class: 'ws-note', text: 'Type your data into the tables and your answers under each question. Everything is saved in this browser on this computer as you type. Before you move to another computer, use Save to a file, then Open a saved file there. Hand in the PDF and the CSV.' }));
+
+  /* ---------- sections: walk the h2 headings ---------- */
+  const sections = [];
+  body.querySelectorAll('h2').forEach((h) => {
+    const nodes = [];
+    for (let n = h.nextElementSibling; n && n.tagName !== 'H2'; n = n.nextElementSibling) nodes.push(n);
+    sections.push({ id: h.id || '', h, nodes });
+  });
+  const firstH2 = sections.length ? sections[0].h : null;
+  if (firstH2) firstH2.parentNode.insertBefore(panel, firstH2); else body.appendChild(panel);
+
+  /* ---------- data tables ---------- */
+  const tables = [];
+  body.querySelectorAll('table').forEach((t, ti) => {
+    if (t.closest('.ws')) return;
+    const head = t.tHead && t.tHead.rows[0];
+    const cols = head ? [...head.cells].map((c) => plain(c)) : [];
+    const sec = sections.find((s) => s.nodes.indexOf(t) >= 0);
+    const tpl = [...(t.tBodies[0] ? t.tBodies[0].rows : [])].map((r) => [...r.cells].map((c) => (blank(c.textContent) ? null : { html: c.innerHTML, text: plain(c) })));
+    const ncol = Math.max(cols.length, ...tpl.map((r) => r.length), 1);
+    const T = { index: ti, cols, ncol, tpl, heading: sec ? plain(sec.h) : 'Data', headHTML: t.tHead ? t.tHead.innerHTML : '', runs: [] };
+    const box = el('div', { class: 'ws ws-tablebox' });
+    t.parentNode.insertBefore(box, t.nextSibling);
+    T.box = box; T.first = t;
+    T.copies = el('div');
+    T.tools = el('div', { class: 'ws-btns' }, [
+      el('button', { type: 'button', class: 'ws-btn', text: 'Add another copy of this table', on: { click: () => { const r = addRun(T); r.label.focus(); changed(); } } })]);
+    box.appendChild(T.copies); box.appendChild(T.tools);
+    tables.push(T);
+    addRun(T, t);
+  });
+
+  /* A run is one copy of a table: the original on the page, or a copy added below it. */
+  function addRun(T, existing) {
+    const n = T.runs.length + 1;
+    const R = { rows: [], extra: 0 };
+    let t = existing;
+    if (!t) {
+      t = el('table');
+      if (T.headHTML) { const th = el('thead'); th.innerHTML = T.headHTML; t.appendChild(th); }
+      t.appendChild(el('tbody'));
+      T.tpl.forEach((r) => { const tr = el('tr'); r.forEach((c) => { const td = el('td'); if (c) td.innerHTML = c.html; tr.appendChild(td); }); for (let i = r.length; i < T.ncol; i++) tr.appendChild(el('td')); t.tBodies[0].appendChild(tr); });
+      R.label = field('input', `Label for copy ${n} of the ${T.heading} table`);
+      const rm = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Remove this copy', on: { click: () => removeRun(T, R) } });
+      R.wrap = el('div', {}, [el('div', { class: 'ws-copyhead' }, [`Copy ${n}:`, withPrint(R.label), rm]), t]);
+      T.copies.appendChild(R.wrap);
+      R.wrap.dataset.copy = n;
+      typeset(t.tHead || t);
+    } else {
+      R.label = null;
+    }
+    t.classList.add('ws', 'ws-table');
+    R.table = t;
+    [...t.tBodies[0].rows].forEach((tr, i) => R.rows.push(wireRow(T, R, tr, T.tpl[i] || [])));
+    R.notes = field('area', `Settings and notes for ${R.label ? 'copy ' + n + ' of ' : ''}the ${T.heading} table`);
+    const addRow = el('button', { type: 'button', class: 'ws-btn', text: 'Add a row', on: { click: () => { const row = newRow(T, R); row.cells[0] && row.cells[0].focus(); changed(); } } });
+    R.removeRow = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Remove the last added row', hidden: true, on: { click: () => { dropRow(R); changed(); } } });
+    const after = el('div', { class: 'ws tex2jax_ignore' }, [el('div', { class: 'ws-btns' }, [addRow, R.removeRow]),
+      el('div', { class: 'ws-notes' }, [el('label', { text: R.label ? 'Settings and notes for this copy' : 'Settings and notes for this table' }), withPrint(R.notes)])]);
+    if (existing) T.box.insertBefore(after, T.copies); else R.wrap.appendChild(after);
+    T.runs.push(R);
+    return R;
+  }
+  function wireRow(T, R, tr, tplRow) {
+    const row = { tr, cells: [], added: false };
+    for (let c = tr.cells.length; c < T.ncol; c++) tr.appendChild(el('td'));
+    [...tr.cells].forEach((td, c) => {
+      if (tplRow[c]) { td.classList.add('ws-fixed'); row.cells.push(null); return; }
+      td.textContent = '';
+      const f = field('input', `${T.cols[c] || 'Column ' + (c + 1)}, row ${R.rows.length + 1}`);
+      f.size = 6; /* a small intrinsic width, so the columns share the page instead of each taking 20 characters */
+      f.addEventListener('keydown', (e) => moveKey(e, R, row, c));
+      td.appendChild(withPrint(f)); row.cells.push(f);
+    });
+    return row;
+  }
+  function newRow(T, R) {
+    const tr = el('tr'); for (let c = 0; c < T.ncol; c++) tr.appendChild(el('td'));
+    R.table.tBodies[0].appendChild(tr);
+    const row = wireRow(T, R, tr, []); row.added = true; R.rows.push(row); R.extra++; R.removeRow.hidden = false;
+    return row;
+  }
+  function dropRow(R) {
+    if (!R.extra) return;
+    const row = R.rows[R.rows.length - 1];
+    if (row.cells.some((f) => f && f.value) && !confirm('That row has entries. Remove it anyway?')) return;
+    R.rows.pop(); row.tr.remove(); R.extra--; R.removeRow.hidden = !R.extra;
+  }
+  function removeRun(T, R) {
+    const filled = R.rows.some((r) => r.cells.some((f) => f && f.value)) || R.notes.value || R.label.value;
+    if (filled && !confirm('Remove this copy of the table and everything typed in it?')) return;
+    R.wrap.remove(); T.runs.splice(T.runs.indexOf(R), 1); changed();
+  }
+  /* Enter moves down a row; arrow keys move between cells when the caret is at the edge of the text. */
+  function moveKey(e, R, row, c) {
+    const i = R.rows.indexOf(row), f = e.target;
+    let to = null;
+    if (e.key === 'Enter' || (e.key === 'ArrowDown' && !e.shiftKey)) to = R.rows[i + 1] && R.rows[i + 1].cells[c];
+    else if (e.key === 'ArrowUp') to = R.rows[i - 1] && R.rows[i - 1].cells[c];
+    else if (e.key === 'ArrowRight' && f.selectionStart === f.value.length && f.selectionEnd === f.value.length) to = row.cells.slice(c + 1).find(Boolean);
+    else if (e.key === 'ArrowLeft' && f.selectionStart === 0 && f.selectionEnd === 0) to = row.cells.slice(0, c).reverse().find(Boolean);
+    if (e.key === 'Enter') e.preventDefault();
+    if (to) { e.preventDefault(); to.focus(); to.select(); }
+  }
+
+  /* ---------- answer boxes ---------- */
+  const answers = [];
+  sections.forEach((s) => {
+    if (ANSWER_LISTS.test(s.id)) {
+      s.nodes.filter((n) => n.tagName === 'OL').forEach((ol) => {
+        const start = parseInt(ol.getAttribute('start') || '1', 10);
+        [...ol.children].filter((li) => li.tagName === 'LI').forEach((li, i) => {
+          const num = start + i, label = `Answer to ${plain(s.h)} ${num}`;
+          const f = field('area', label);
+          li.appendChild(el('div', { class: 'ws ws-answer tex2jax_ignore' }, [withPrint(f)]));
+          answers.push({ key: `${s.id}-${num}`, q: plain(li).slice(0, 90), f, where: `${plain(s.h)} ${num}` });
+        });
+      });
+    } else if (ONE_BOX.test(s.id)) {
+      const f = field('area', `Your ${plain(s.h).toLowerCase()} analysis`);
+      const last = s.nodes[s.nodes.length - 1] || s.h;
+      const box = el('div', { class: 'ws ws-answer ws-answer-one tex2jax_ignore' }, [el('label', { text: 'Your ' + plain(s.h).toLowerCase() + ' analysis' }), withPrint(f)]);
+      last.parentNode.insertBefore(box, last.nextSibling);
+      answers.push({ key: s.id, q: plain(s.h), f, where: plain(s.h) });
+    }
+  });
+
+  /* Export buttons again at the end of the worksheet. */
+  const lastSec = sections[sections.length - 1];
+  const endBox = el('section', { class: 'ws ws-panel ws-noprint tex2jax_ignore', 'aria-label': 'Save and export' }, [el('h2', { text: 'Save and export' })]);
+  buttons('end').forEach((x) => endBox.appendChild(x));
+  if (lastSec) { const ln = lastSec.nodes[lastSec.nodes.length - 1] || lastSec.h; ln.parentNode.insertBefore(endBox, ln.nextSibling); } else body.appendChild(endBox);
+  const leftBox = el('section', { class: 'ws ws-left tex2jax_ignore', hidden: true });
+  endBox.parentNode.insertBefore(leftBox, endBox);
+
+  /* ---------- state ---------- */
+  function collect() {
+    const S = { worksheet: SLUG, title: TITLE, version: VERSION, saved: new Date().toISOString(), student: {}, tables: [], answers: {}, unplaced: leftovers };
+    WHO.forEach(([k]) => { S.student[k] = who[k].value; });
+    tables.forEach((T) => S.tables.push({ columns: T.cols, runs: T.runs.map((R) => ({ label: R.label ? R.label.value : null, notes: R.notes.value,
+      rows: R.rows.map((r) => r.cells.map((f) => (f ? f.value : null))) })) }));
+    answers.forEach((a) => { if (a.f.value) S.answers[a.key] = { q: a.q, text: a.f.value }; });
+    return S;
+  }
+  let leftovers = [], storageOK = true;
+  function save() {
+    clearTimeout(saveTimer);
+    const S = collect();
+    try { localStorage.setItem(KEY, JSON.stringify(S)); storageOK = true; }
+    catch (_) { storageOK = false; }
+    const t = new Date(S.saved).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    if (storageOK) setStatus(`Saved in this browser at ${t}.`);
+    else setStatus('Not saved: this browser is blocking storage (a private window?). Use Save to a file before you leave.', true);
+  }
+  function apply(S) {
+    if (!S || typeof S !== 'object') return;
+    WHO.forEach(([k]) => who[k].wsSet((S.student || {})[k] || ''));
+    const warn = [];
+    (S.tables || []).forEach((st, ti) => {
+      const T = tables[ti];
+      if (!T) { (st.runs || []).forEach((r, ri) => leftTable(`Table ${ti + 1}, copy ${ri + 1}`, st.columns, r)); return; }
+      if ((st.columns || []).join('|') !== T.cols.join('|')) warn.push(T.heading);
+      (st.runs || []).forEach((sr, ri) => {
+        const R = T.runs[ri] || addRun(T);
+        if (R.label) R.label.wsSet(sr.label || '');
+        R.notes.wsSet(sr.notes || '');
+        (sr.rows || []).forEach((cells, i) => {
+          const row = R.rows[i] || newRow(T, R);
+          (cells || []).forEach((v, c) => { if (v != null && v !== '') { if (row.cells[c]) row.cells[c].wsSet(v); else warn.push(T.heading); } });
+        });
+      });
+    });
+    /* Answers: same place and same question first, then the same question moved, then the same place. */
+    const saved = Object.entries(S.answers || {}).map(([key, a]) => ({ key, q: (a && a.q) || '', text: (a && a.text) || '' })).filter((a) => a.text);
+    const free = new Set(answers);
+    const place = (test) => saved.filter((a) => !a.done).forEach((a) => {
+      const box = answers.find((b) => free.has(b) && test(a, b));
+      if (box) { box.f.wsSet(a.text); free.delete(box); a.done = true; }
+    });
+    answers.forEach((b) => b.f.wsSet(''));
+    place((a, b) => a.key === b.key && a.q === b.q);
+    place((a, b) => a.q && a.q === b.q);
+    place((a, b) => a.key === b.key);
+    leftovers = (S.unplaced || []).concat(saved.filter((a) => !a.done).map((a) => ({ q: a.q, text: a.text })));
+    showLeftovers(warn);
+  }
+  function leftTable(name, cols, r) {
+    const lines = (r.rows || []).filter((row) => row.some((v) => v)).map((row) => row.map((v) => v || '').join(' | '));
+    if (lines.length || r.notes) leftovers.push({ q: `${name} (${(cols || []).join(' | ')})`, text: lines.concat(r.notes ? ['Notes: ' + r.notes] : []).join('\n') });
+  }
+  function showLeftovers(warn) {
+    leftBox.innerHTML = '';
+    const uniq = [...new Set(warn || [])];
+    if (!leftovers.length && !uniq.length) { leftBox.hidden = true; return; }
+    leftBox.hidden = false;
+    leftBox.appendChild(el('h2', { text: 'This worksheet changed since you saved' }));
+    if (uniq.length) leftBox.appendChild(el('p', { text: `The columns of the ${uniq.join(' and ')} table changed. Your entries were put back by position: check that each is in the right column.` }));
+    if (leftovers.length) {
+      leftBox.appendChild(el('p', { text: 'These answers no longer match a question on the page. They are kept here (and in your save file and PDF) so nothing is lost; copy them where they belong.' }));
+      leftovers.forEach((a) => leftBox.appendChild(el('p', {}, [el('strong', { text: a.q + ': ' }), a.text])));
+      leftBox.appendChild(el('div', { class: 'ws-btns' }, [el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Dismiss these', on: { click: () => { if (confirm('Delete these unplaced answers?')) { leftovers = []; showLeftovers(); save(); } } } })]));
+    }
+  }
+
+  /* ---------- export ---------- */
+  const stamp = () => { const d = new Date(), p = (x) => String(x).padStart(2, '0'); return `${d.getFullYear()}-${p(d.getMonth() + 1)}-${p(d.getDate())}`; };
+  const fileBase = () => { const n = (who.name.value || '').trim().replace(/[^A-Za-z0-9]+/g, '-').replace(/^-|-$/g, ''); return SLUG + (n ? '-' + n : ''); };
+  function exportCSV() {
+    save();
+    const L = [`# ${TITLE}: worksheet data tables`];
+    WHO.forEach(([k, label]) => L.push(['# ' + label, who[k].value].map(csvCell).join(',')));
+    L.push(`# exported,${new Date().toISOString()}`);
+    tables.forEach((T, ti) => T.runs.forEach((R, ri) => {
+      L.push('');
+      const name = `${T.heading}${tables.length > 1 ? ' table ' + (ti + 1) : ''}, copy ${ri + 1}${R.label && R.label.value ? ': ' + R.label.value : ''}`;
+      L.push('# ' + name.replace(/[\r\n]+/g, ' '));
+      if (R.notes.value) L.push(['# notes', R.notes.value].map(csvCell).join(','));
+      L.push(Array.from({ length: T.ncol }, (_, c) => csvCell(T.cols[c] || 'Column ' + (c + 1))).join(','));
+      R.rows.forEach((r, i) => {
+        const vals = r.cells.map((f, c) => (f ? f.value : (T.tpl[i] && T.tpl[i][c] ? T.tpl[i][c].text : '')));
+        if (r.cells.some((f) => f && f.value)) L.push(vals.map(csvCell).join(','));
+      });
+    }));
+    download(fileBase() + '-data.csv', L.join('\r\n') + '\r\n', 'text/csv');
+  }
+  function exportJSON() { save(); download(fileBase() + '-' + stamp() + '.json', JSON.stringify(collect(), null, 1), 'application/json'); setStatus('Save file downloaded. Open it with Open a saved file on any computer.'); }
+  function openFile(input) {
+    const file = input.files && input.files[0]; input.value = '';
+    if (!file) return;
+    file.text().then((txt) => {
+      let S; try { S = JSON.parse(txt); } catch (_) { alert('That file is not a worksheet save file.'); return; }
+      if (!S || !S.worksheet) { alert('That file is not a worksheet save file.'); return; }
+      if (S.worksheet !== SLUG && !confirm(`That file is for a different worksheet ("${S.title || S.worksheet}"). Open it here anyway?`)) return;
+      if (!confirm('Replace what is on this page with the saved file?')) return;
+      reset(); apply(S); save(); setStatus(`Opened ${file.name}.`);
+    }, () => alert('The file could not be read.'));
+  }
+  function reset() {
+    tables.forEach((T) => { T.runs.slice(1).forEach((R) => R.wrap.remove()); T.runs.length = 1; const R = T.runs[0]; while (R.extra) { R.rows.pop().tr.remove(); R.extra--; } R.removeRow.hidden = true; });
+    leftovers = [];
+  }
+  function clearAll() {
+    if (!confirm('Clear your name, data and answers from this worksheet? Save to a file first if you might need them.')) return;
+    reset(); apply({ student: {}, tables: tables.map(() => ({ runs: [] })), answers: {} });
+    tables.forEach((T) => T.runs.forEach((R) => { R.rows.forEach((r) => r.cells.forEach((f) => f && f.wsSet(''))); R.notes.wsSet(''); }));
+    try { localStorage.removeItem(KEY); } catch (_) {}
+    setStatus('Cleared.');
+  }
+
+  /* ---------- start ---------- */
+  let stored = null;
+  try { stored = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (_) { storageOK = false; }
+  if (stored) { apply(stored); setStatus(`Your work from ${new Date(stored.saved).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })} is back.`); }
+  else if (!storageOK) setStatus('This browser is blocking storage (a private window?), so nothing is saved as you type. Use Save to a file.', true);
+  else setStatus('Nothing typed yet. Your work saves in this browser as you type.');
+  window.addEventListener('pagehide', () => { if (saveTimer) save(); });
+  window.addEventListener('beforeprint', () => document.querySelectorAll('.ws textarea.ws-f').forEach((t) => { t.wsPrint.textContent = t.value; }));
+})();
