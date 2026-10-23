@@ -604,3 +604,4 @@ Steve asked for the classic force table lab. No existing demo covered it (Forces
 ## 2026-10-23 Claude: worksheet graph numbers
 
 - `curriculum/labs/worksheet.js` graph results: slope and intercept switch to powers of ten below 0.001 and from 100000 up, such as (3.896 ± 0.019) × 10⁻¹¹ F, so tiny SI values (Physics II) read properly. When the points lie exactly on the line (deterministic data), the result says "± 0 (the points lie exactly on the line)" instead of asking for more points. A graph with no axes chosen no longer prints at all.
+- Graph units: a table heading that names two quantities with different units, such as "Pressure (Pa) or head (m)" in fluids, now gives no unit on the axis or slope instead of borrowing the last one (it printed "m/m" for pressure against depth).

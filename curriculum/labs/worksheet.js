@@ -87,7 +87,11 @@
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
   const pretty = (h) => String(h || '').replace(/\^([23])/g, (m, d) => SUP[d]).replace(/_(\d)/g, (m, d) => SUB[d]);
-  const nameUnit = (h) => { const m = pretty(h).match(/^(.*?)\s*\(([^()]*)\)\s*$/); return m ? [m[1] || h, m[2]] : [String(h || ''), '']; };
+  /* a heading such as "Pressure (Pa) or head (m)" names two quantities with different units: keep it whole, with no unit (null) */
+  const nameUnit = (h) => {
+    const t = pretty(h), m = t.match(/^(.*?)\s*\(([^()]*)\)\s*$/), us = new Set((t.match(/\(([^()]*)\)/g) || []));
+    return !m ? [String(h || ''), ''] : us.size > 1 ? [t, null] : [m[1] || h, m[2]];
+  };
   const ANSWER_LISTS = /^(before-the-lab|before-the-activity|analysis|questions)$/, ONE_BOX = /^uncertainty$/;
   const m = location.pathname.match(/\/curriculum\/labs\/students\/([a-z0-9-]+?)(?:\.html)?$/);
   if (!m || ENABLED.indexOf(m[1]) < 0) return;
@@ -589,7 +593,7 @@
     if (sameX) { box.appendChild(el('p', { class: 'ws-warn2', text: `Every point has the same ${P.xName} (${xs[0]}${P.xUnit ? ' ' + P.xUnit : ''}), so there is no slope to fit. Use rows where ${P.xName} changes, or choose another column.` })); return; }
     if (!f) return;
     const wrap = (u) => (/[\/\s]/.test(u) ? `(${u})` : u); /* (m/s)/kg, AU/(solar masses) */
-    const su = P.yUnit && P.xUnit ? `${wrap(P.yUnit)}/${wrap(P.xUnit)}` : P.yUnit || (P.xUnit ? `1/${wrap(P.xUnit)}` : '');
+    const su = P.yUnit === null || P.xUnit === null ? '' : P.yUnit && P.xUnit ? `${wrap(P.yUnit)}/${wrap(P.xUnit)}` : P.yUnit || (P.xUnit ? `1/${wrap(P.xUnit)}` : '');
     const lines = [['slope', f.b, f.seB, su], ['intercept', f.a, f.seA, P.yUnit]];
     const res = el('p', { class: 'ws-res' });
     lines.forEach(([name, v, e, u], i) => { if (i) res.appendChild(el('br')); res.appendChild(el('b', { text: name + ': ' })); res.appendChild(document.createTextNode(pm(v, e, u, f.n, f.exact))); });
