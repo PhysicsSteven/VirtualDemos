@@ -2894,10 +2894,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "currents-fields"
+      ],
       "unit": "magnetic-forces",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Magnetic Fields of Currents, Magnets and Oersted's compass (2026-10-23, Claude): two bar magnets (attract, repel, cut in half) with compass needles, and Oersted's compass under a north-south wire with Earth's horizontal field, tan theta = B_wire/B_E. History (Ampere, Arago, Davy, Faraday, GMR) is in the notes only."
     },
     {
       "vol": 2,
@@ -5711,6 +5713,11 @@
         "physics-2"
       ],
       "sections": [
+        {
+          "vol": 2,
+          "sec": "11.1",
+          "title": "Magnetism and Its Historical Discoveries"
+        },
         {
           "vol": 2,
           "sec": "11.2",

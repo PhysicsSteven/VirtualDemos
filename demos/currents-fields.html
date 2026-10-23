@@ -134,6 +134,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .readout dt { font-size: 0.78rem; color: var(--muted); }
 .readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
 .readout .wide { grid-column: 1 / -1; }
+details.mag > summary { font-weight: 700; cursor: pointer; min-height: 36px; display: flex; align-items: center; }
+details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
+.magbox { position: relative; height: 260px; }
+.magbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .readout .big dd { font-size: 1.15rem; }
 .ok { color: var(--muted); font-weight: 400; font-size: 0.8rem; }
 .readout dd.note { font-family: var(--font-ui); font-weight: 400; font-size: 0.85rem; color: var(--muted); }
@@ -304,6 +308,33 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </div>
         <dl class="readout" id="sRead"></dl>
         <p class="hint" id="sideHint"></p>
+      </section>
+
+      <section>
+        <details class="mag" id="magDet">
+          <summary>Magnets and Oersted's compass</summary>
+          <div class="seg full" role="group" aria-label="Experiment" id="magMode">
+            <button type="button" data-mm="bar" aria-pressed="true">Two bar magnets</button>
+            <button type="button" data-mm="oer" aria-pressed="false">Oersted's compass</button>
+          </div>
+          <div class="magbox"><canvas id="magCan" role="img" aria-label="Two bar magnets with compass needles around them showing the field direction."></canvas></div>
+          <div data-mm-for="bar" class="ctl">
+            <div class="slider-head"><label for="sGap">Gap between the magnets</label><output id="oGap" class="mono" for="sGap"></output></div>
+            <input type="range" id="sGap" min="1" max="8" step="0.5">
+            <div class="btnrow"><button type="button" class="btn" id="flipB">Turn magnet B around</button><button type="button" class="btn" id="cutB">Cut magnet B in half</button></div>
+          </div>
+          <div data-mm-for="oer" class="ctl" hidden>
+            <div class="slider-head"><label for="sOI">Current in the wire (+ flows north)</label><output id="oOI" class="mono" for="sOI"></output></div>
+            <input type="range" id="sOI" min="-10" max="10" step="0.5">
+            <div class="slider-head"><label for="sOh">Height of the wire above the needle h</label><output id="oOh" class="mono" for="sOh"></output></div>
+            <input type="range" id="sOh" min="1" max="10" step="0.5">
+            <div class="slider-head"><label for="sBE">Earth's horizontal field B<sub>E</sub></label><output id="oBE" class="mono" for="sBE"></output></div>
+            <input type="range" id="sBE" min="10" max="40" step="1">
+            <label class="check"><input type="checkbox" id="magHide"> Predict first: hide B and the angle</label>
+          </div>
+          <dl class="readout" id="magOut"></dl>
+          <p class="hint" id="magHint"></p>
+        </details>
       </section>
 
       <section>
@@ -521,11 +552,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const a = sol.R, d2 = sol.L / 2 - z, d1 = -sol.L / 2 - z;
     return idealSol(sol) / 2 * (d2 / Math.hypot(d2, a) - d1 / Math.hypot(d1, a));
   }
+  /* ---- magnets (OpenStax 11.1). A bar magnet is drawn as two magnetic poles (Gilbert's model): a pole of strength q gives
+     B = μ₀q r̂/(4πr²) and two poles push each other with F = μ₀q₁q₂/(4πr²). Good outside thin magnets; only directions and ratios are shown. */
+  function poleB(poles, x, y) { let bx = 0, by = 0; for (const [px, py, q] of poles) { const dx = x - px, dy = y - py, r2 = dx * dx + dy * dy, r3 = r2 * Math.sqrt(r2); if (r3 < 1e-12) continue; bx += q * dx / r3; by += q * dy / r3; } return [bx * MU0 / (4 * Math.PI), by * MU0 / (4 * Math.PI)]; }
+  /* net force along x on the poles of group b from the poles of group a (same units: μ₀q²/(4π) per m⁻²) */
+  function poleForceX(a, b) { let f = 0; for (const [x1, y1, q1] of a) for (const [x2, y2, q2] of b) { const dx = x2 - x1, dy = y2 - y1, r = Math.hypot(dx, dy); f += q1 * q2 * dx / (r * r * r); } return f * MU0 / (4 * Math.PI); }
+  /* Oersted: a long straight wire at height h (m) above a compass, carrying I (A) toward magnetic north; Earth's horizontal field BE (T).
+     The wire's field at the needle is horizontal and points west for a northward current; the needle turns from north by θ = atan(B_w/B_E). */
+  const oerstedB = (I, h) => MU0 * I / (2 * Math.PI * h);
+  const oerstedAngle = (I, h, BE) => Math.atan2(oerstedB(I, h), BE);   /* radians, positive toward the west */
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.CF = { MU0, CM, wireB, wirePsi, wireForce, pairForce, integrate, breaks, loopPieces, circulation, insideLoop, loopDist, enclosedI,
-      ellipKE, ringField, solTurns, solField, axisExact, loopCenter, turnsPerM, idealSol, sheetAxis };
+      ellipKE, ringField, solTurns, solField, axisExact, loopCenter, turnsPerM, idealSol, sheetAxis, poleB, poleForceX, oerstedB, oerstedAngle };
     return;
   }
 
@@ -1660,6 +1700,95 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     get amp() { return ampere(); }, get needlesMoving() { return needlesMoving; }, get layerFine() { return layerFine; },
     handles: () => handles().map((h) => h.id), X, Y, applyPreset, time(n) { const t = performance.now(); for (let i = 0; i < n; i++) { layerKey = ''; drawAll(); } return (performance.now() - t) / n; }
   };
+
+  // ---------- magnets and Oersted's compass ----------
+  const MG = { mode: 'bar', gap: 2, flipB: false, cut: false, I: 3, h: 3, BE: 20, hide: false, th: 0, om: 0 };
+  const magCan = $('magCan'), mctx = magCan.getContext('2d');
+  /* magnets 6 cm long on the x axis (cm), pole strength 1 (arbitrary units); magnet A has S on the left and N facing B */
+  function magnetPoles() {
+    const g = MG.gap, a = [[-g / 2 - 6, 0, -1], [-g / 2, 0, 1]], sB = MG.flipB ? -1 : 1, b = [];
+    const pieces = MG.cut ? [[g / 2, g / 2 + 2.85], [g / 2 + 3.15, g / 2 + 6]] : [[g / 2, g / 2 + 6]];
+    for (const [x0, x1] of pieces) b.push([x0, 0, -sB], [x1, 0, sB]);   /* unflipped: S faces A's N, so they attract */
+    return { a, b };
+  }
+  function magUpdate() {
+    for (const b of document.querySelectorAll('#magMode button')) b.setAttribute('aria-pressed', String(b.dataset.mm === MG.mode));
+    for (const el of document.querySelectorAll('[data-mm-for]')) el.hidden = el.dataset.mmFor !== MG.mode;
+    $('sGap').value = MG.gap; $('oGap').textContent = `${MG.gap.toFixed(1)} cm`; $('cutB').textContent = MG.cut ? 'Join magnet B again' : 'Cut magnet B in half';
+    $('sOI').value = MG.I; $('oOI').textContent = `${MG.I.toFixed(1)} A`; $('sOh').value = MG.h; $('oOh').textContent = `${MG.h.toFixed(1)} cm`; $('sBE').value = MG.BE; $('oBE').textContent = `${MG.BE} µT`; $('magHide').checked = MG.hide;
+    const dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`;
+    let h = '';
+    if (MG.mode === 'bar') {
+      const { a, b } = magnetPoles(), F = poleForceX(a, b), ref = poleForceX([[-0.5 - 6, 0, -1], [-0.5, 0, 1]], [[0.5, 0, -1], [6.5, 0, 1]]);
+      h += dd('Force on magnet B', F < 0 ? 'attraction, toward A' : 'repulsion, away from A') + dd('Size, compared with a 1 cm gap', `${(Math.abs(F) / Math.abs(ref)).toPrecision(3)}`);
+      h += dd('Facing poles', `${'N'} of A and ${MG.flipB ? 'N' : 'S'} of B`, true);
+      $('magHint').textContent = 'Like poles repel and unlike poles attract. The red end of each compass needle is its north pole, which points along B: away from a north pole, toward a south pole. Cut magnet B and each half has both poles: there is no lone north pole. Model: each magnet is two point poles at its ends (Gilbert\'s model), good outside long thin magnets; only the field direction and the force ratio are shown, and Earth\'s field is left out. Ampère\'s idea that magnets are made of tiny current loops: compare the Solenoid setup above with a bar magnet.';
+    } else {
+      const Bw = oerstedB(MG.I, MG.h / 100), th = oerstedAngle(MG.I, MG.h / 100, MG.BE * 1e-6), hd = MG.hide;
+      h += dd('Wire field at the needle μ₀I/(2πh)', hd ? '<span class="ok">hidden</span>' : `${(Bw * 1e6).toPrecision(3)} µT`) + dd('Needle angle from north', hd ? '<span class="ok">hidden: read the compass</span>' : `${Math.abs(th * 180 / Math.PI).toFixed(1)}° ${th > 0 ? 'west' : th < 0 ? 'east' : ''}`);
+      h += dd('tan θ = B<sub>wire</sub>/B<sub>E</sub>', hd ? '<span class="ok">hidden</span>' : (Bw / (MG.BE * 1e-6)).toPrecision(3), true);
+      $('magHint').textContent = 'Oersted, 1819: a compass needle moves whenever current flows in a nearby wire. With the wire running north and south above the needle, the wire\'s field is east or west and the needle settles along the sum of it and Earth\'s field: tan θ = B_wire/B_E. Reverse the current and it swings the other way. Model: a long straight wire and a needle much smaller than h; Earth\'s horizontal field is set by you (it is roughly 15 to 35 µT across the United States). The needle swings with light damping on the way to that angle.';
+    }
+    $('magOut').innerHTML = h; magDraw();
+  }
+  function magDraw() {
+    if (!T || !$('magDet').open) return;
+    const r = magCan.getBoundingClientRect(), dp = window.devicePixelRatio || 1; if (!r.width) return;
+    if (Math.round(r.width * dp) !== magCan.width || Math.round(r.height * dp) !== magCan.height) { magCan.width = Math.round(r.width * dp); magCan.height = Math.round(r.height * dp); }
+    const W2 = r.width, H2 = r.height, c = mctx; c.setTransform(dp, 0, 0, dp, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, W2, H2);
+    const needle = (x, y, ang, len) => { const ux = Math.cos(ang), uy = Math.sin(ang); c.lineWidth = 2.6; c.lineCap = 'round'; c.strokeStyle = T.pos; c.beginPath(); c.moveTo(x, y); c.lineTo(x + ux * len, y + uy * len); c.stroke(); c.strokeStyle = T.muted; c.beginPath(); c.moveTo(x, y); c.lineTo(x - ux * len, y - uy * len); c.stroke(); };
+    if (MG.mode === 'bar') {
+      const { a, b } = magnetPoles(), span = MG.gap + 14, sc = (W2 - 20) / span, cx = W2 / 2 - ((a[0][0] + b[b.length - 1][0]) / 2) * sc, cy = H2 / 2, X = (x) => cx + x * sc;
+      /* compass needles on a grid, pointing along B (screen y is down, so flip By) */
+      for (let j = 0; j < 7; j++) for (let i = 0; i < 11; i++) {
+        const px = 12 + (W2 - 24) * (i + 0.5) / 11, py = 12 + (H2 - 24) * (j + 0.5) / 7, xx = (px - cx) / sc, yy = (cy - py) / sc;
+        if (Math.abs(yy) < 1.0 && xx > a[0][0] - 0.3 && xx < b[b.length - 1][0] + 0.3) continue;
+        const [bx, by] = poleB([...a, ...b], xx, yy); needle(px, py, Math.atan2(-by, bx), 8);
+      }
+      const bar = (x0, x1, nRight) => { const y0 = cy - 0.9 * sc, hgt = 1.8 * sc, xm = (X(x0) + X(x1)) / 2;
+        c.fillStyle = nRight ? T.neg : T.pos; c.fillRect(X(x0), y0, xm - X(x0), hgt); c.fillStyle = nRight ? T.pos : T.neg; c.fillRect(xm, y0, X(x1) - xm, hgt);
+        c.fillStyle = T.canvas; c.font = `700 ${Math.min(14, hgt * 0.6)}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(nRight ? 'S' : 'N', (X(x0) + xm) / 2, cy); c.fillText(nRight ? 'N' : 'S', (xm + X(x1)) / 2, cy); };
+      bar(a[0][0], a[1][0], true);
+      for (let k = 0; k < b.length; k += 2) bar(b[k][0], b[k + 1][0], !MG.flipB);
+      c.fillStyle = T.muted; c.font = `11px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('A', (X(a[0][0]) + X(a[1][0])) / 2, cy + 1.1 * sc); c.fillText('B', (X(b[0][0]) + X(b[b.length - 1][0])) / 2, cy + 1.1 * sc);
+      const F = poleForceX(a, b); c.strokeStyle = T.ink; c.fillStyle = T.ink; c.lineWidth = 2; const ax0 = X(b[b.length - 1][0]) + 6, dir = F < 0 ? -1 : 1, ay = cy - 1.5 * sc;
+      c.beginPath(); c.moveTo((X(b[0][0]) + X(b[b.length - 1][0])) / 2, ay); c.lineTo((X(b[0][0]) + X(b[b.length - 1][0])) / 2 + dir * 26, ay); c.stroke(); c.beginPath(); const tx = (X(b[0][0]) + X(b[b.length - 1][0])) / 2 + dir * 32; c.moveTo(tx, ay); c.lineTo(tx - dir * 8, ay - 5); c.lineTo(tx - dir * 8, ay + 5); c.fill();
+      c.font = `10px ${T.ui}`; c.textBaseline = 'bottom'; c.fillText(F < 0 ? 'pulled toward A' : 'pushed away', (X(b[0][0]) + X(b[b.length - 1][0])) / 2, ay - 6);
+    } else {
+      /* top view: north up the page; the wire runs north and south over the compass */
+      const cx = W2 / 2, cy = H2 / 2 + 6, R = Math.min(W2, H2) * 0.34;
+      c.fillStyle = T.surface; c.strokeStyle = T.line; c.lineWidth = 1.5; c.beginPath(); c.arc(cx, cy, R, 0, 7); c.fill(); c.stroke();
+      c.strokeStyle = T.muted; c.lineWidth = 1; for (let d = 0; d < 360; d += 10) { const a = d * Math.PI / 180, l = d % 90 ? 5 : 10; c.beginPath(); c.moveTo(cx + Math.sin(a) * R, cy - Math.cos(a) * R); c.lineTo(cx + Math.sin(a) * (R - l), cy - Math.cos(a) * (R - l)); c.stroke(); }
+      c.fillStyle = T.ink; c.font = `700 12px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('N', cx, cy - R - 10); c.fillText('S', cx, cy + R + 10); c.fillText('E', cx + R + 10, cy); c.fillText('W', cx - R - 10, cy);
+      needle(cx, cy, -Math.PI / 2 - MG.th, R * 0.82);
+      c.fillStyle = T.ink; c.beginPath(); c.arc(cx, cy, 3, 0, 7); c.fill();
+      /* the wire passes over the compass */
+      c.strokeStyle = T.equi; c.lineWidth = 5; c.globalAlpha = 0.85; c.beginPath(); c.moveTo(cx, 6); c.lineTo(cx, H2 - 6); c.stroke(); c.globalAlpha = 1;
+      if (MG.I !== 0) { c.fillStyle = T.equi; const up = MG.I > 0, ty = up ? 14 : H2 - 14; c.beginPath(); c.moveTo(cx, ty + (up ? -8 : 8)); c.lineTo(cx - 7, ty + (up ? 4 : -4)); c.lineTo(cx + 7, ty + (up ? 4 : -4)); c.fill(); c.font = `700 11px ${T.ui}`; c.textAlign = 'left'; c.fillText(`I = ${Math.abs(MG.I)} A`, cx + 10, up ? 18 : H2 - 18); }
+      c.fillStyle = T.muted; c.font = `10px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText('top view, wire above the needle', 6, 4);
+    }
+  }
+  $('magMode').addEventListener('click', (e) => { const b = e.target.closest('[data-mm]'); if (b) { MG.mode = b.dataset.mm; magCan.setAttribute('aria-label', MG.mode === 'bar' ? 'Two bar magnets with compass needles around them showing the field direction.' : 'Top view of a compass under a wire that runs north and south; the needle turns when current flows.'); magUpdate(); } });
+  $('sGap').addEventListener('input', (e) => { MG.gap = +e.target.value; magUpdate(); });
+  $('flipB').addEventListener('click', () => { MG.flipB = !MG.flipB; magUpdate(); });
+  $('cutB').addEventListener('click', () => { MG.cut = !MG.cut; magUpdate(); });
+  $('sOI').addEventListener('input', (e) => { MG.I = +e.target.value; magUpdate(); });
+  $('sOh').addEventListener('input', (e) => { MG.h = +e.target.value; magUpdate(); });
+  $('sBE').addEventListener('input', (e) => { MG.BE = +e.target.value; magUpdate(); });
+  $('magHide').addEventListener('change', (e) => { MG.hide = e.target.checked; magUpdate(); });
+  $('magDet').addEventListener('toggle', magUpdate);
+  new MutationObserver(() => requestAnimationFrame(magDraw)).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => requestAnimationFrame(magDraw)); } catch (_) {}
+  let magLast = performance.now();
+  (function magLoop(now) {
+    const dt = Math.min(0.05, (now - magLast) / 1000); magLast = now;
+    if ($('magDet').open && MG.mode === 'oer') {
+      const target = oerstedAngle(MG.I, MG.h / 100, MG.BE * 1e-6);
+      if (reduce) { if (MG.th !== target) { MG.th = target; MG.om = 0; magDraw(); } }
+      else if (Math.abs(MG.th - target) > 1e-4 || Math.abs(MG.om) > 1e-4) { const k = 40, g = 3; MG.om += (-k * Math.sin(MG.th - target) - g * MG.om) * dt; MG.th += MG.om * dt; magDraw(); }   /* a lightly damped needle */
+    }
+    requestAnimationFrame(magLoop);
+  })(magLast);
 
   tokens();
   new ResizeObserver(() => resize()).observe(pane);

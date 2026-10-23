@@ -90,6 +90,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q5.</strong> In the Ampère's law setup, what is ∮B·dl (a) as set, (b) with the loop direction set to Clockwise, (c) after the loop is moved or resized so that it also encloses wire 3 (+4.0 A)? Give numbers in µT·m.</p></div>
 
 <div class="q"><p><strong>Q6.</strong> The Solenoid preset has N = 30 turns, L = 24 cm, R = 3.0 cm and I = 5.0 A. Find the ideal long solenoid field μ₀nI. The demo's exact value at the center is about 3% lower, and at an end it is about half. Explain both, and predict what happens to the 3% difference if L is doubled.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Open <strong>Magnets and Oersted's compass</strong>. (a) With two bar magnets, predict what happens when magnet B is turned around, then check. Cut magnet B in half: how many poles does each half have? (b) Switch to Oersted's compass: a wire 3.0 cm above the needle carries 3.0 A toward the north, and Earth's horizontal field is 20 µT. Find the wire's field at the needle and the angle the needle turns. Which way does it turn? Turn on <strong>Predict first</strong>, set a current, read the angle off the compass and work out B_E.</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"Magnetic field lines point from the wire outward, like electric field lines from a charge."</strong> Around a straight current they are closed circles; they have no start or end.</li>
@@ -99,7 +101,12 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 </ul>
 <h2>Physics behind the demo</h2>
 <ul>
-<li>Straight wires: infinitely long, thin and straight, perpendicular to the page, in vacuum. Each gives B = μ₀I/(2πr), and the field shown is the vector sum. Field lines are contours of the vector potential A_z at equal steps, so their spacing is exact. A real wire has a thickness, and inside it B falls to zero at the center; the thin wire model leaves that out.</li>
+<li>
+<p>Magnets and Oersted's compass (OpenStax 11.1): each bar magnet is two point poles (Gilbert's model), so only field directions and force ratios are shown. Oersted's needle settles at tan θ = (μ₀I/2πh)/B_E for a long straight wire running north and south above it; Earth's horizontal field is a setting.</p>
+</li>
+<li>
+<p>Straight wires: infinitely long, thin and straight, perpendicular to the page, in vacuum. Each gives B = μ₀I/(2πr), and the field shown is the vector sum. Field lines are contours of the vector potential A_z at equal steps, so their spacing is exact. A real wire has a thickness, and inside it B falls to zero at the center; the thin wire model leaves that out.</p>
+</li>
 <li>The force on a wire is per meter of length and comes only from the other wires.</li>
 <li>∮B·dl is integrated numerically along the loop (adaptive Gauss–Kronrod quadrature, tolerance 10⁻¹⁰ of μ₀Σ|I|). It never uses Ampère's law, so the agreement with μ₀I_enc is a real check. Compass needles line up with B; their swing is for show.</li>
 <li>Loop and solenoid: each turn is an exact circle, coaxial and evenly spaced; its field comes from the full 3D Biot–Savart law in closed form (complete elliptic integrals). A real winding is a helix that also carries I once along the coil; that part is left out. The dashed gold curve on the axis plot is the continuous current sheet, B = μ₀nI(cos θ₁ − cos θ₂)/2.</li>

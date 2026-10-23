@@ -37,6 +37,8 @@ Students should know the force on a current, F = IL × B. The demo has two scene
 
 **Q6.** The Solenoid preset has N = 30 turns, L = 24 cm, R = 3.0 cm and I = 5.0 A. Find the ideal long solenoid field μ₀nI. The demo's exact value at the center is about 3% lower, and at an end it is about half. Explain both, and predict what happens to the 3% difference if L is doubled.
 
+**Q7.** Open **Magnets and Oersted's compass**. (a) With two bar magnets, predict what happens when magnet B is turned around, then check. Cut magnet B in half: how many poles does each half have? (b) Switch to Oersted's compass: a wire 3.0 cm above the needle carries 3.0 A toward the north, and Earth's horizontal field is 20 µT. Find the wire's field at the needle and the angle the needle turns. Which way does it turn? Turn on **Predict first**, set a current, read the angle off the compass and work out B_E.
+
 ## Common misconceptions
 
 - **"Magnetic field lines point from the wire outward, like electric field lines from a charge."** Around a straight current they are closed circles; they have no start or end.
@@ -45,6 +47,8 @@ Students should know the force on a current, F = IL × B. The demo has two scene
 - **"Like currents repel, as like charges do."** For currents it is the other way round: parallel currents attract.
 
 ## Physics behind the demo
+
+- Magnets and Oersted's compass (OpenStax 11.1): each bar magnet is two point poles (Gilbert's model), so only field directions and force ratios are shown. Oersted's needle settles at tan θ = (μ₀I/2πh)/B_E for a long straight wire running north and south above it; Earth's horizontal field is a setting.
 
 - Straight wires: infinitely long, thin and straight, perpendicular to the page, in vacuum. Each gives B = μ₀I/(2πr), and the field shown is the vector sum. Field lines are contours of the vector potential A_z at equal steps, so their spacing is exact. A real wire has a thickness, and inside it B falls to zero at the center; the thin wire model leaves that out.
 - The force on a wire is per meter of length and comes only from the other wires.
