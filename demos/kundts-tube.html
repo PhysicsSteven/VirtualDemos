@@ -491,7 +491,10 @@ window.VDGear = (function () {
     copper: { name: 'Copper', E: 117e9, rho: 8960 }, glass: { name: 'Glass', E: 72e9, rho: 2500 } };
   const UNKNOWN_V = [2500, 5500];   /* m/s, range of the unknown rod's speed, in 1 m/s steps */
   const ALPHA = 0.10;               /* 1/m, amplitude loss of the sound along the tube (chosen) */
-  const LIFT = 4;                   /* the dust moves only when the loudest air motion in the tube is over 4 times the disc's (chosen) */
+  /* the dust (a picture, numbers chosen): a grain at rest is shaken loose where the air there moves more than LIFT times the disc
+     does at a full stroke; once loose it slides until the air under it moves less than KEEP times the disc (sliding friction is
+     much less than the grip of a grain at rest) */
+  const LIFT = 1.5, KEEP = 0.4;
 
   const gasSpeed = (gas, tC) => Math.sqrt(gas.gamma * R_GAS * (tC + T0K) / gas.M);
   /* a thin rod: longitudinal waves at v = √(E/ρ). Free ends are displacement antinodes; a clamp holds a node. Clamped at the middle
@@ -522,6 +525,22 @@ window.VDGear = (function () {
   function resonantL(m, f, v) { const p = TAU * f / v; let lo = (m - 0.5) * PI / p, hi = (m + 0.5) * PI / p;
     for (let i = 0; i < 80; i++) { const s1 = hi - (hi - lo) * 0.618034, s2 = lo + (hi - lo) * 0.618034; if (sinAbs(p, ALPHA, s1) > sinAbs(p, ALPHA, s2)) lo = s1; else hi = s2; } return (lo + hi) / 2; }
 
+  /* one step of the dust. dust: grain positions from the disc (m); act: per grain, 0 at rest or the local air motion (in units of
+     the disc's) while it slides. e is the ring envelope (1 = a full stroke). A loose grain slides down the slope of |S|², toward
+     the nearest node, at a speed that grows as the square of the motion: λ/2 per second where the slope is that of a tube 10 times
+     as loud as the disc, at most 1.5 times that (chosen for the picture). Returns how many grains moved. */
+  function dustStep(dust, act, f, v, l, e, dt) {
+    const lam = v / f, p = TAU * f / v, h = 1e-4, k = (lam / 2) / (100 * p) * e * e, cap = 0.75 * lam * dt, u2 = (x) => ampRatio(x, f, v, l) ** 2;
+    let n = 0;
+    for (let i = 0; i < dust.length; i++) {
+      const x = dust[i]; if (!(x > 0 && x < l)) { act[i] = 0; continue; }
+      const A = e * ampRatio(x, f, v, l);
+      if (act[i] ? A < KEEP : A <= LIFT) { act[i] = 0; continue; }
+      act[i] = A; const g = (u2(x + h) - u2(x - h)) / (2 * h), dx = Math.max(-cap, Math.min(cap, -k * g * dt));
+      dust[i] = Math.min(l - 1e-4, Math.max(1e-4, x + dx)); n++;
+    }
+    return n;
+  }
   function fitLine(xs, ys) {
     const n = xs.length; if (n < 2) return null;
     const mx = xs.reduce((s, v) => s + v, 0) / n, my = ys.reduce((s, v) => s + v, 0) / n;
@@ -547,7 +566,7 @@ window.VDGear = (function () {
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const newUnknown = () => ({ name: 'Unknown rod', v: Math.round(UNKNOWN_V[0] + Math.random() * (UNKNOWN_V[1] - UNKNOWN_V[0])) });
   const RING_TAU = 1.5;    /* s, how fast a stroked rod dies away (chosen) */
-  const S = { rod: 'steel', unknown: newUnknown(), L: 1.0, n: 1, gas: 'air', tC: 20, l: 1.0, x: 0.5, env: 0, keep: false, blind: false, preset: 'steel', rows: [], series: 0, dust: [] };
+  const S = { rod: 'steel', unknown: newUnknown(), L: 1.0, n: 1, gas: 'air', tC: 20, l: 1.0, x: 0.5, env: 0, keep: false, blind: false, preset: 'steel', rows: [], series: 0, dust: [], act: new Float32Array(1500) };
   const rodNow = () => (S.rod === 'unknown' ? S.unknown : RODS[S.rod]);
   const fNow = () => rodFreq(S.n, S.L, rodSpeed(rodNow()));
   const vGas = () => gasSpeed(GASES[S.gas], S.tC);
@@ -555,15 +574,15 @@ window.VDGear = (function () {
   /* a preset puts the plunger 1 cm short of the resonance nearest 1.00 m, to the mm: the student tunes the last centimetre */
   const nearRes = () => { const f = fNow(), v = vGas(), half = v / f / 2, m = Math.max(1, Math.round(1.0 / half)); return Math.round((resonantL(m, f, v) - 0.01) * 1000) / 1000; };
   const PRESETS = {
-    steel: { rod: 'steel', L: 1.0, n: 1, gas: 'air', tC: 20, hint: 'A 1.00 m steel rod clamped at its middle rings at f = v/2L = 2524 Hz (v = √(E/ρ) = 5048 m/s). In air at 20 °C λ = 13.6 cm, so the heaps should be 6.80 cm apart. The plunger starts 1 cm short of a resonance: keep the rod ringing and slide it until the dust jumps.' },
+    steel: { rod: 'steel', L: 1.0, n: 1, gas: 'air', tC: 20, hint: 'A 1.00 m steel rod clamped at its middle rings at f = v/2L = 2524 Hz (v = √(E/ρ) = 5048 m/s). In air at 20 °C λ = 13.6 cm, so the heaps should be 6.80 cm apart. The plunger starts 1 cm short of a resonance, where a stroke only makes the dust dance a little: keep the rod ringing and slide it until the heaps form.' },
     helium: { rod: 'steel', L: 1.0, n: 1, gas: 'helium', tC: 20, hint: 'The same rod with helium in the tube: v = 1007 m/s, so λ = 39.9 cm and the heaps are 19.96 cm apart, almost three times farther than in air at the same frequency.' },
     quarter: { rod: 'steel', L: 1.0, n: 2, gas: 'air', tC: 20, hint: 'Clamped L/4 from its end the rod cannot ring in its lowest mode (that needs a node at the middle). It rings with two half wavelengths in it, at 5048 Hz, and the heaps in air close up to 3.40 cm.' },
     brass: { rod: 'brass', L: 1.0, n: 1, gas: 'air', tC: 20, hint: 'Brass is denser and less stiff than steel: v = √(E/ρ) = 3430 m/s, f = 1715 Hz, and the heaps in air are 10.0 cm apart.' },
     unknown: { rod: 'unknown', L: 1.0, n: 1, gas: 'air', tC: 20, hint: 'An unknown rod in air at 20 °C, where v = 343.2 m/s. Find the heap spacing, then the speed of sound in the rod two ways: from v_rod/v_air = (L/n)/d, and from the counter, v_rod = 2Lf/n. New unknown rod picks another.' }
   };
-  $('modelHint').textContent = "Model: the rod is thin (its width is much less than a wavelength), so its longitudinal waves travel at v = √(E/ρ), with typical handbook E and ρ (chosen): steel 200 GPa and 7850 kg/m³, aluminum 69 GPa and 2700, brass 100 GPa and 8500, copper 117 GPa and 8960, glass 72 GPa and 2500. Its ends are free, the clamp holds a node, and it rings in the lowest mode that allows that, n = 1 at the middle and n = 2 at L/4; the disc's mass and the clamp's width are left out. The counter shows f to 1 Hz. The gas is ideal at 101325 Pa, v = √(γRT/M) (air γ = 1.400, M = 28.96 g/mol; helium and argon γ = 5/3, 4.003 and 39.95 g/mol). The disc drives the gas as a piston and the plunger is rigid; a small loss, 0.10 per metre in amplitude (chosen), sets how sharp the resonance is. Shown is the steady state. The dust is a picture: it drifts from the loud places toward the nodes while the air motion somewhere in the tube is over 4 times the disc's (chosen); real dust also forms fine ridges, which are left out. The rod dies away in about 1.5 s (chosen). Simulated data with no noise.";
+  $('modelHint').textContent = "Model: the rod is thin (its width is much less than a wavelength), so its longitudinal waves travel at v = √(E/ρ), with typical handbook E and ρ (chosen): steel 200 GPa and 7850 kg/m³, aluminum 69 GPa and 2700, brass 100 GPa and 8500, copper 117 GPa and 8960, glass 72 GPa and 2500. Its ends are free, the clamp holds a node, and it rings in the lowest mode that allows that, n = 1 at the middle and n = 2 at L/4; the disc's mass and the clamp's width are left out. The counter shows f to 1 Hz. The gas is ideal at 101325 Pa, v = √(γRT/M) (air γ = 1.400, M = 28.96 g/mol; helium and argon γ = 5/3, 4.003 and 39.95 g/mol). The disc drives the gas as a piston and the plunger is rigid; a small loss, 0.10 per metre in amplitude (chosen), sets how sharp the resonance is. Shown is the steady state. The dust is a picture (numbers chosen): a grain at rest is shaken loose where the air there moves more than 1.5 times the disc does at a full stroke, and then slides toward the nearest node, faster where the motion is larger, until the air under it moves less than 0.4 times the disc's. Off resonance the tube is quieter, so only the dust in its loudest places dances and shifts a little; at resonance all of it gathers in sharp heaps at the nodes. Real dust also forms fine ridges, which are left out. The rod dies away in about 1.5 s (chosen). Simulated data with no noise.";
 
-  function spreadDust() { S.dust = []; let seed = 11; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647); for (let i = 0; i < 1500; i++) S.dust.push(rnd() * 1.4); }
+  function spreadDust() { S.dust = []; let seed = 11; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647); for (let i = 0; i < 1500; i++) S.dust.push(rnd() * 1.4); S.act = new Float32Array(1500); }
   function applyPreset(name) { const c = PRESETS[name]; S.preset = name; if (c.rod === 'unknown' && S.rod !== 'unknown') S.unknown = newUnknown(); S.rod = c.rod; S.L = c.L; S.n = c.n; S.gas = c.gas; S.tC = c.tC;
     S.l = nearRes(); S.x = Math.min(S.x, S.l); spreadDust(); upd(); }
   const can = $('can'), ctx = can.getContext('2d'), scene = $('scene'), card = $('card'), GEO = {};
@@ -714,15 +733,10 @@ window.VDGear = (function () {
   }
 
   // ---------- dust ----------
-  /* the dust drifts down the slope of the squared air motion, toward the nodes, while the tube is loud enough to lift it.
-     The rate is chosen for the picture: it grows as the square of the air motion, up to λ/2 per second when the motion is
-     10 times the disc's (capped at 1.5 times that), so one stroke at resonance gathers clear heaps and a stroke at the edge of
-     the resonance only stirs them. */
+  /* the dust (dustStep in the CORE): loose grains slide toward the nodes wherever the tube is loud enough, so a tube off
+     resonance still clears the dust from its loudest places, and only at resonance does it gather all of it into sharp heaps */
   function stepDust(dt) {
-    const f = fNow(), v = vGas(), G = gain(f, v, S.l), e = S.keep ? 1 : S.env; if (G * e < LIFT) return false;
-    const lam = v / f, p = TAU / lam, h = 1e-4, u2 = (x) => ampRatio(x, f, v, S.l) ** 2, k = (lam / 2) * Math.min(1.5, (G * e / 10) ** 2) / (G * G * p);
-    for (let i = 0; i < S.dust.length; i++) { const x = S.dust[i]; if (x <= 0 || x >= S.l) continue; const g = (u2(x + h) - u2(x - h)) / (2 * h); S.dust[i] = Math.min(S.l - 1e-4, Math.max(1e-4, x - k * g * dt)); }
-    return true;
+    return dustStep(S.dust, S.act, fNow(), vGas(), S.l, S.keep ? 1 : S.env, dt) > 0;
   }
 
   // ---------- drawing ----------
@@ -730,10 +744,14 @@ window.VDGear = (function () {
   /* dust heaps: grains counted in bins and drawn as a heap profile on the tube floor */
   function drawDust(xd, ppm, floor, x0m, x1m, binM, hScale, clipL, clipR) {
     const nb = Math.ceil((x1m - x0m) / binM), bins = new Array(nb).fill(0);
-    for (const x of S.dust) { if (x < x0m || x >= x1m || x > S.l) continue; bins[Math.floor((x - x0m) / binM)]++; }
+    const hops = [];
+    for (let i = 0; i < S.dust.length; i++) { const x = S.dust[i]; if (x < x0m || x >= x1m || x > S.l) continue; if (S.act[i] > 0 && !reduce) hops.push(i); else bins[Math.floor((x - x0m) / binM)]++; }
     const per = 1500 / 1.4 * binM; ctx.fillStyle = T.brass; ctx.beginPath(); ctx.moveTo(Math.max(clipL, xd + x0m * ppm), floor);
     for (let i = 0; i < nb; i++) { const xa = xd + (x0m + i * binM) * ppm, xb = xa + binM * ppm, hgt = Math.min(hScale * 6, hScale * bins[i] / per); if (xb < clipL || xa > clipR) continue; ctx.lineTo(Math.max(clipL, xa), floor - hgt); ctx.lineTo(Math.min(clipR, xb), floor - hgt); }
     ctx.lineTo(Math.min(clipR, xd + x1m * ppm), floor); ctx.closePath(); ctx.fill();
+    /* loose grains dance: drawn above the floor, higher where the air moves more (a picture) */
+    const r = Math.max(0.8, hScale * 0.55);
+    for (const i of hops) { const X = xd + S.dust[i] * ppm; if (X < clipL || X > clipR) continue; ctx.fillRect(X - r / 2, floor - r - Math.random() * hScale * 4 * Math.min(1, S.act[i] / 6), r, r); }
   }
   function draw() {
     if (!T || !W) return;
@@ -812,7 +830,7 @@ window.VDGear = (function () {
 
   function tick(dt) {
     let moved = false;
-    if (S.env > 0 && !S.keep) { S.env *= Math.exp(-dt / RING_TAU); if (S.env < 0.2) { S.env = 0; fade(); readouts(); draw(); } }
+    if (S.env > 0 && !S.keep) { S.env *= Math.exp(-dt / RING_TAU); if (S.env < 0.2) { S.env = 0; S.act.fill(0); fade(); readouts(); draw(); } }
     if (ringing()) moved = stepDust(reduce ? dt * 4 : dt);
     if (moved || ringing()) draw();
   }

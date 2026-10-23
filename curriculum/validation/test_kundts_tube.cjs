@@ -3,7 +3,7 @@
 // λ/2 apart; v_gas = 2 d f and v_rod/v_gas = (L/n)/d (OpenStax Vol 1 §17.2, §17.4).
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('kundts-tube', 'GASES,RODS,ALPHA,LIFT,gasSpeed,rodSpeed,rodFreq,ampRatio,gain,nodes,resonantL,fitLine,readingsCSV');
+const c = core('kundts-tube', 'GASES,RODS,ALPHA,LIFT,KEEP,dustStep,gasSpeed,rodSpeed,rodFreq,ampRatio,gain,nodes,resonantL,fitLine,readingsCSV');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -21,12 +21,12 @@ group('gas column: S = a at the disc, 0 at the plunger, and |S| matches a sin(κ
   const p = 2 * Math.PI * f / air, cs = (re, im) => [Math.sin(re) * Math.cosh(im), Math.cos(re) * Math.sinh(im)];
   for (const x of [0.1, 0.33, 0.6]) { const a = cs(p * (l - x), -c.ALPHA * (l - x)), b = cs(p * l, -c.ALPHA * l); near(c.ampRatio(x, f, air, l), Math.hypot(...a) / Math.hypot(...b), 1e-12); }
 });
-group('resonance: the plunger resonates just under ℓ = mλ/2, gain about 1/sinh(αℓ), and 1 cm off it the dust stays put', () => {
+group('resonance: the plunger resonates just under ℓ = mλ/2, gain about 1/sinh(αℓ), and 2 cm off it the dust stays put', () => {
   const f = c.rodFreq(1, 1, vS), half = air / f / 2;
   for (const m of [5, 10, 15, 20]) {
     const l = c.resonantL(m, f, air); assert(l <= m * half && m * half - l < 1e-5, `m = ${m}`);
     const G = c.gain(f, air, l); near(G, Math.cosh(c.ALPHA * l) / Math.sinh(c.ALPHA * l), 2e-3, `gain at m = ${m}`);
-    assert(c.gain(f, air, l + 0.01) < c.LIFT && c.gain(f, air, l - 0.01) < c.LIFT, `1 cm off at m = ${m}`);
+    assert(c.gain(f, air, l + 0.02) < c.LIFT && c.gain(f, air, l - 0.02) < c.LIFT, `2 cm off at m = ${m}`);
   }
   /* gain agrees with a dense scan */
   for (const l of [0.5, 0.7777, 1.02]) { let m = 0; for (let i = 0; i <= 20000; i++) m = Math.max(m, c.ampRatio(l * i / 20000, f, air, l)); near(c.gain(f, air, l), m, 1e-6, `gain at ${l}`); }
@@ -39,6 +39,18 @@ group('nodes are λ/2 apart: steel in air 6.80 cm, in helium 19.96 cm; v_gas = 2
     near(v / f / 2, d0, 2e-3, `${gas} λ/2`);
     const F = c.fitLine(ns.map((_, i) => i + 1), ns); near(2 * F.b * f, v, 1e-4); near(vS / v, 1 / F.b, 1e-4);
   }
+});
+group('dust: one stroke at resonance heaps it at the nodes; a few mm off it is only partly gathered; far off it stays put', () => {
+  const f = c.rodFreq(1, 1, vS), lr = Math.round(c.resonantL(15, f, air) * 1000) / 1000, lam = air / f;
+  function stroke(l) { const d = Array.from({ length: 1500 }, (_, i) => (i + 0.5) / 1500 * 1.4), a = new Float32Array(1500), d0 = d.slice(); let e = 1, moved = 0, near = 0, n = 0;
+    for (let t = 0; t < 5; t += 1 / 60) { e *= Math.exp(-1 / 60 / 1.5); if (e < 0.2) break; c.dustStep(d, a, f, air, l, e, 1 / 60); }
+    d.forEach((x, i) => { if (x >= l) return; n++; if (Math.abs(x - d0[i]) > 0.002) moved++; const s = (l - x) % (lam / 2); if (Math.min(s, lam / 2 - s) < lam / 40) near++; });
+    return { moved: moved / n, near: near / n }; }
+  const on = stroke(lr), off6 = stroke(lr - 0.006), off20 = stroke(lr - 0.02);
+  assert(on.near > 0.85, `on resonance ${on.near}`); assert(off6.moved > 0.3 && off6.near < 0.5, `6 mm off ${JSON.stringify(off6)}`); assert(off20.moved === 0, '2 cm off');
+  /* a grain sitting on a node never starts; a loose grain keeps sliding below LIFT down to KEEP */
+  assert(c.KEEP < c.LIFT);
+  const nd = c.nodes(f, air, lr)[3], d = [nd], a = new Float32Array(1); c.dustStep(d, a, f, air, lr, 1, 1 / 60); near(d[0], nd, 0); assert(a[0] === 0);
 });
 group('CSV columns', () => {
   const csv = c.readingsCSV([{ j: '1', x: '6.8', rod: 'Steel', L: '1.00', n: '1', f: '2524', gas: 'Air (dry)', T: '20', l: '1.020' }], { version: 'x' }).split('\n');
