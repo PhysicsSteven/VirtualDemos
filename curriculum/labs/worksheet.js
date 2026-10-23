@@ -35,6 +35,14 @@
     'stress-strain': { demo: 'Stress and Strain', cols: ['row', 'd_mm', '#wire_length_m', 'm_kg', 'dL_mm', null, null] },
     viscometer: { demo: 'Falling Ball Viscometer', cols: ['row', (r) => [r.liquid, r.ball].filter(Boolean).join(' / '), (r) => [r.rho_liquid_kg_m3, r.rho_ball_kg_m3].filter(Boolean).join(' / '), 'tube_D_mm', 'd_mm', 't_s', 'v_m_per_s', null, null, null] },
   };
+  /* A live graph under a worksheet's data table, drawn from the student's own cells: y against x with a least squares line (free
+     intercept, equal weights), its residuals, and a result computed from the slope. x and y name a column by its position in the
+     first data table; y may fall back to another column squared. Nothing is plotted from the demo directly. */
+  const PLOTS = {
+    pendulum: { x: 2, y: 6, yFrom: { col: 5, square: true }, xName: 'L', xUnit: 'm', yName: 'T²', yUnit: 's²', title: 'T² against L',
+      note: 'Each row with a number for L and for T² (or T, squared here) is a point. Use the rows of one length scan.',
+      result: (f) => { const g = 4 * Math.PI * Math.PI / f.b, sg = g * f.seB / Math.abs(f.b); return [['g = 4π²/slope', g, sg, 'm/s²']]; } },
+  };
   const ANSWER_LISTS = /^(before-the-lab|before-the-activity|analysis|questions)$/, ONE_BOX = /^uncertainty$/;
   const m = location.pathname.match(/\/curriculum\/labs\/students\/([a-z0-9-]+?)(?:\.html)?$/);
   if (!m || ENABLED.indexOf(m[1]) < 0) return;
@@ -99,6 +107,9 @@
 .ws textarea.ws-f { min-height: 3.4em; resize: vertical; line-height: 1.45; display: block; margin: 6px 0 4px; overflow: hidden; }
 .ws-answer-one { margin: 6px 0 14px; } .ws-answer-one label { font-size: 0.85em; font-weight: 600; color: #24292f; }
 .ws-print { display: none; }
+.ws-plot { margin: 10px 0 4px; } .ws-plot h3 { font-size: 1em; margin: 0 0 4px; } .ws-plot svg { width: 100%; height: auto; display: block; max-width: 640px; }
+.ws-plot .ws-res { font-size: 0.95em; margin: 6px 0 2px; } .ws-plot .ws-res b { font-weight: 600; }
+.ws-plot .ws-warn2 { color: #9a6700; font-weight: 600; font-size: 0.9em; margin: 4px 0; } .ws-plot .ws-pnote { font-size: 0.85em; color: #57606a; margin: 2px 0; }
 .ws-hand { border: 1px solid #54aeff; background: #ddf4ff; border-radius: 8px; padding: 8px 12px; margin: 0 0 12px; } .ws-hand p { margin: 2px 0; }
 .ws-left { border: 1px solid #d4a72c; background: #fff8c5; border-radius: 8px; padding: 10px 14px; margin: 18px 0; }
 .ws-left h2 { margin-top: 0; border: 0; font-size: 1.05em; } .ws-left p { margin: 4px 0; white-space: pre-wrap; }
@@ -118,8 +129,8 @@
 }` }));
 
   /* ---------- a field that saves and prints ---------- */
-  let saveTimer = 0;
-  const changed = () => { clearTimeout(saveTimer); saveTimer = setTimeout(save, 300); setStatus('Saving…'); };
+  let saveTimer = 0, plotFrame = 0;
+  const changed = () => { clearTimeout(saveTimer); saveTimer = setTimeout(save, 300); setStatus('Saving…'); replot(); };
   function field(kind, label, cls) {
     const f = kind === 'area' ? el('textarea', { class: 'ws-f ' + (cls || ''), rows: 2, 'aria-label': label, spellcheck: 'true' })
       : el('input', { class: 'ws-f ' + (cls || ''), type: 'text', 'aria-label': label, autocomplete: 'off' });
@@ -213,8 +224,10 @@
     R.removeRow = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Remove the last added row', hidden: true, on: { click: () => { dropRow(R); changed(); } } });
     const after = el('div', { class: 'ws tex2jax_ignore' }, [el('div', { class: 'ws-btns' }, [addRow, R.removeRow]),
       el('div', { class: 'ws-notes' }, [el('label', { text: R.label ? 'Settings and notes for this copy' : 'Settings and notes for this table' }), withPrint(R.notes)])]);
+    if (PLOTS[SLUG] && T.index === 0) { R.plot = el('div', { class: 'ws-plot' }); after.appendChild(R.plot); }
     if (existing) T.box.insertBefore(after, T.copies); else R.wrap.appendChild(after);
     T.runs.push(R);
+    replot();
     return R;
   }
   function wireRow(T, R, tr, tplRow) {
@@ -390,7 +403,7 @@
       if (!S || !S.worksheet) { alert('That file is not a worksheet save file.'); return; }
       if (S.worksheet !== SLUG && !confirm(`That file is for a different worksheet ("${S.title || S.worksheet}"). Open it here anyway?`)) return;
       if (!confirm('Replace what is on this page with the saved file?')) return;
-      reset(); apply(S); save(); setStatus(`Opened ${file.name}.`);
+      reset(); apply(S); save(); replot(); setStatus(`Opened ${file.name}.`);
     }, () => alert('The file could not be read.'));
   }
   function reset() {
@@ -403,7 +416,78 @@
     tables.forEach((T) => T.runs.forEach((R) => { R.source = null; }));
     tables.forEach((T) => T.runs.forEach((R) => { R.rows.forEach((r) => r.cells.forEach((f) => f && f.wsSet(''))); R.notes.wsSet(''); }));
     try { localStorage.removeItem(KEY); } catch (_) {}
-    setStatus('Cleared.'); checkHand();
+    setStatus('Cleared.'); checkHand(); replot();
+  }
+
+  /* ---------- graphs ---------- */
+  addEventListener('resize', () => replot());
+  function replot() { if (!PLOTS[SLUG] || plotFrame) return; plotFrame = requestAnimationFrame(() => { plotFrame = 0; tables[0] && tables[0].runs.forEach((R) => R.plot && drawPlot(PLOTS[SLUG], R)); }); }
+  const numOf = (f) => { if (!f) return NaN; const t = String(f.value).trim().replace('−', '-').replace(/,/g, ''); return t && /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(t) ? +t : NaN; };
+  function fitLine(xs, ys) {
+    const n = xs.length; if (n < 2) return null;
+    const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
+    let sxx = 0, sxy = 0; xs.forEach((x, i) => { sxx += (x - mx) * (x - mx); sxy += (x - mx) * (ys[i] - my); });
+    if (!(sxx > 0)) return null;
+    const b = sxy / sxx, a = my - b * mx, res = xs.map((x, i) => ys[i] - a - b * x), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { b, a, res, n, seB: Math.sqrt(s2 / sxx), seA: Math.sqrt(s2 * (1 / n + mx * mx / sxx)) };
+  }
+  /* value ± uncertainty: the uncertainty to 2 significant figures and the value to the same decimal place */
+  function pm(v, e, unit) {
+    if (!isFinite(e) || !(e > 0)) return `${+v.toPrecision(4)}${unit ? ' ' + unit : ''} (uncertainty needs at least 3 points)`;
+    const p = Math.floor(Math.log10(e)) - 1, d = Math.max(0, -p), r = (x) => (Math.round(x / Math.pow(10, p)) * Math.pow(10, p)).toFixed(d);
+    return `(${r(v)} ± ${r(e)})${unit ? ' ' + unit : ''}`;
+  }
+  function ticks(lo, hi, n) {
+    const span = hi - lo || Math.abs(hi) || 1, step0 = span / n, mag = Math.pow(10, Math.floor(Math.log10(step0))), f = step0 / mag;
+    const step = (f >= 5 ? 10 : f >= 2 ? 5 : f >= 1 ? 2 : 1) * mag, out = [];
+    for (let v = Math.ceil(lo / step) * step; v <= hi + step * 1e-9; v += step) out.push(+v.toPrecision(12));
+    return out;
+  }
+  const NS = 'http://www.w3.org/2000/svg';
+  const sv = (tag, a, txt) => { const e = document.createElementNS(NS, tag); for (const k in a) e.setAttribute(k, a[k]); if (txt != null) e.textContent = txt; return e; };
+  function axes(svg, box, xr, yr, xl, yl, nTy) {
+    const X = (v) => box.x + (v - xr[0]) / (xr[1] - xr[0]) * box.w, Y = (v) => box.y + box.h - (v - yr[0]) / (yr[1] - yr[0]) * box.h;
+    svg.appendChild(sv('rect', { x: box.x, y: box.y, width: box.w, height: box.h, fill: '#fff', stroke: '#8c959f' }));
+    ticks(xr[0], xr[1], 6).forEach((v) => { svg.appendChild(sv('line', { x1: X(v), x2: X(v), y1: box.y, y2: box.y + box.h, stroke: '#eaeef2' }));
+      svg.appendChild(sv('text', { x: X(v), y: box.y + box.h + 14, 'text-anchor': 'middle', 'font-size': 11, fill: '#57606a' }, String(v))); });
+    ticks(yr[0], yr[1], nTy).forEach((v) => { svg.appendChild(sv('line', { x1: box.x, x2: box.x + box.w, y1: Y(v), y2: Y(v), stroke: '#eaeef2' }));
+      svg.appendChild(sv('text', { x: box.x - 5, y: Y(v) + 4, 'text-anchor': 'end', 'font-size': 11, fill: '#57606a' }, String(v))); });
+    if (xl) svg.appendChild(sv('text', { x: box.x + box.w / 2, y: box.y + box.h + 30, 'text-anchor': 'middle', 'font-size': 12, fill: '#1f2328' }, xl));
+    svg.appendChild(sv('text', { x: 12, y: box.y + box.h / 2, 'text-anchor': 'middle', 'font-size': 12, fill: '#1f2328', transform: `rotate(-90 12 ${box.y + box.h / 2})` }, yl));
+    return { X, Y };
+  }
+  const pad = (lo, hi, inc0) => { if (inc0) { lo = Math.min(lo, 0); hi = Math.max(hi, 0); } const d = (hi - lo) || Math.abs(hi) || 1; return [lo - 0.08 * d, hi + 0.08 * d]; };
+  function drawPlot(P, R) {
+    const pts = [];
+    R.rows.forEach((r) => {
+      const x = numOf(r.cells[P.x]); let y = numOf(r.cells[P.y]);
+      if (!isFinite(y) && P.yFrom) { const v = numOf(r.cells[P.yFrom.col]); y = P.yFrom.square ? v * v : v; }
+      if (isFinite(x) && isFinite(y)) pts.push([x, y]);
+    });
+    const box = R.plot; box.innerHTML = '';
+    box.appendChild(el('h3', { text: `Graph: ${P.title}${R.label && R.label.value ? ' (' + R.label.value + ')' : ''}` }));
+    if (!pts.length) { box.appendChild(el('p', { class: 'ws-pnote', text: `${P.note} The graph appears here as you fill the table.` })); return; }
+    const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+    const sameX = xs.every((x) => x === xs[0]);
+    const f = sameX ? null : fitLine(xs, ys);
+    const W = Math.round(Math.min(640, Math.max(330, box.clientWidth || 640))), H = f ? 380 : 270, /* drawn at the page's width so the labels stay readable on a phone */ svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${P.title}, ${pts.length} points` });
+    const xr = pad(Math.min(...xs), Math.max(...xs), true), yr = pad(Math.min(...ys), Math.max(...ys), true);
+    const A = axes(svg, { x: 62, y: 10, w: W - 80, h: 210 }, xr, yr, f ? '' : `${P.xName} (${P.xUnit})`, `${P.yName} (${P.yUnit})`, 5);
+    if (f) svg.appendChild(sv('line', { x1: A.X(xr[0]), y1: A.Y(f.a + f.b * xr[0]), x2: A.X(xr[1]), y2: A.Y(f.a + f.b * xr[1]), stroke: '#1f6feb', 'stroke-width': 2 }));
+    pts.forEach(([x, y]) => svg.appendChild(sv('circle', { cx: A.X(x), cy: A.Y(y), r: 4.5, fill: '#cf222e', stroke: '#fff', 'stroke-width': 1 })));
+    if (f) {
+      const m = Math.max(...f.res.map(Math.abs)) || 1, B = axes(svg, { x: 62, y: 250, w: W - 80, h: 90 }, xr, [-1.25 * m, 1.25 * m], `${P.xName} (${P.xUnit})`, `residual (${P.yUnit})`, 4);
+      svg.appendChild(sv('line', { x1: B.X(xr[0]), x2: B.X(xr[1]), y1: B.Y(0), y2: B.Y(0), stroke: '#1f6feb', 'stroke-width': 1.5 }));
+      xs.forEach((x, i) => svg.appendChild(sv('circle', { cx: B.X(x), cy: B.Y(f.res[i]), r: 3.5, fill: '#cf222e' })));
+    }
+    box.appendChild(svg);
+    if (sameX) { box.appendChild(el('p', { class: 'ws-warn2', text: `Every point has the same ${P.xName} (${xs[0]} ${P.xUnit}), so there is no slope to fit. Use rows where ${P.xName} changes.` })); return; }
+    if (!f) return;
+    const lines = [['slope', f.b, f.seB, `${P.yUnit}/${P.xUnit}`], ['intercept', f.a, f.seA, P.yUnit]].concat(P.result ? P.result(f) : []);
+    const res = el('p', { class: 'ws-res' });
+    lines.forEach(([name, v, e, u], i) => { if (i) res.appendChild(el('br')); res.appendChild(el('b', { text: name + ': ' })); res.appendChild(document.createTextNode(pm(v, e, u))); });
+    box.appendChild(res);
+    box.appendChild(el('p', { class: 'ws-pnote', text: `${f.n} points. Least squares line with a free intercept and equal weights; uncertainties are standard errors from the scatter about the line (n − 2 degrees of freedom), and the uncertainty in the result follows from the slope's. ${P.note}` }));
   }
 
   /* ---------- readings from the demo ---------- */
@@ -448,7 +532,7 @@
     });
     for (let i = h.rows.length; i < R.rows.length; i++) get.forEach((g, c) => { if (g && R.rows[i].cells[c]) R.rows[i].cells[c].wsSet(''); });
     if (h.note && R.notes.value.indexOf(h.note) < 0) R.notes.wsSet(R.notes.value ? R.notes.value + '\n' + h.note : h.note);
-    received = h.sent; handBox.hidden = true; save();
+    received = h.sent; handBox.hidden = true; save(); replot();
     setStatus(`${h.rows.length} readings from the ${MAP.demo} demo are in your table.`);
     (R.wrap || R.table).scrollIntoView({ block: 'nearest' });
   }
@@ -460,7 +544,7 @@
   if (stored) { apply(stored); setStatus(`Your work from ${new Date(stored.saved).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })} is back.`); }
   else if (!storageOK) setStatus('This browser is blocking storage (a private window?), so nothing is saved as you type. Use Save to a file.', true);
   else setStatus('Nothing typed yet. Your work saves in this browser as you type.');
-  checkHand();
+  checkHand(); replot();
   window.addEventListener('pagehide', () => { if (saveTimer) save(); });
   window.addEventListener('beforeprint', () => document.querySelectorAll('.ws textarea.ws-f').forEach((t) => { t.wsPrint.textContent = t.value; }));
 })();

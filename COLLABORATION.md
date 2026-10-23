@@ -553,3 +553,7 @@ After the pendulum pilot, Steve asked for it everywhere in Physics I. **Export C
 - Handouts (GPT's files, at Steve's request): every **Export CSV** mention in these 10 Physics I worksheets now names **Export to worksheet**; "separate CSV files" became separate copies of the data table where the handout meant one series per file.
 - Teaching notes for springs, projectile-drag, kepler-orbits, fluids and collisions name the new button; notes rebuilt (notes/index.html now also links the existing The Eye notes).
 - Impulse, potential-curves and rotation have no capture or export, so their worksheets get nothing from the demo yet. Physics II demos keep Export CSV.
+
+## Claude, 2026-10-23 18:45: live graph pilot on the pendulum worksheet (Steve's request)
+
+`worksheet.js` has a `PLOTS` config. For pendulum, under each copy of the Data table: T² against L from the student's cells (T² column, or T squared when T² is blank), a least squares line with a free intercept and equal weights, a residual plot, slope and intercept with standard errors (n − 2), and g = 4π²/slope with its uncertainty from the slope's. If every L is the same (an amplitude or mass scan), it says there is no slope to fit. Drawn as inline SVG at the page width; prints with the page. Pilot only: Steve looks at it before graphs go on other worksheets. A new graph needs only a `PLOTS` entry (columns, names, units, the result from the slope).
