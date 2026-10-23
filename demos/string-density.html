@@ -274,7 +274,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <button type="button" data-s="U" aria-pressed="false">Unknown string</button>
         </div>
         <div class="btnrow"><button type="button" class="btn" id="newUnknown">New unknown string</button></div>
-        <p class="hint">Drag the vibrator along the table to set the length L (or focus it and use the arrow keys).</p>
+        <p class="hint">Drag the vibrator along the table to set the length L (or focus it and use the arrow keys), or use the slider and step buttons for an exact value.</p>
+        <div><div class="slider-head"><label for="sL">Length L, vibrator to pulley</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0.5" max="2" step="0.01"></div>
+        <div class="btnrow"><button type="button" class="btn" id="Lm">L −1 cm</button><button type="button" class="btn" id="Lp">L +1 cm</button></div>
       </section>
 
       <section>
@@ -416,6 +418,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 
   // ---------- controls ----------
   function sync() {
+    $('sL').value = S.L; $('oL').textContent = `${S.L.toFixed(2)} m`;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     for (const b of document.querySelectorAll('#method button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.method));
     for (const b of document.querySelectorAll('#strings button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.str));
@@ -438,6 +441,8 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     changed(); });
   $('newUnknown').addEventListener('click', () => { S.unknownMu = newUnknownMu(); S.str = 'U'; capStatus('A new unknown string is on the apparatus.'); changed(); });
   const setL = (v) => { const L = Math.min(2, Math.max(0.5, Math.round(v * 100) / 100)); if (L !== S.L) { S.L = L; changed(); } };
+  $('sL').addEventListener('input', (e) => setL(+e.target.value));
+  $('Lm').addEventListener('click', () => setL(S.L - 0.01)); $('Lp').addEventListener('click', () => setL(S.L + 0.01));
   const setF = (v) => { const f = Math.min(200, Math.max(5, Math.round(v * 10) / 10)); if (f !== S.f) { S.f = f; changed(); } };
   /* the function generator's knobs: one click every KNOB_DEG of turn, 1 Hz (coarse) or 0.1 Hz (fine); the mark shows f */
   const KNOB_DEG = 12;

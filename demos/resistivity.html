@@ -186,7 +186,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         </div>
         <div class="inline"><span class="lab">Gauge</span>
           <div class="seg" role="group" aria-label="Wire diameter" id="gauges"></div></div>
-        <p class="hint">On the bench: drag the sliding clip to set the <b>Length between the clips L</b> (left and right arrows, 5 mm; Shift 5 cm), and turn the supply's knobs for the <b>Supply current I</b> (0.05 A a click) and the <b>Wire temperature</b> (5 °C a click).</p>
+        <p class="hint">On the bench: drag the sliding clip to set the <b>Length between the clips L</b> (left and right arrows, 5 mm; Shift 5 cm), and turn the supply's knobs for the <b>Supply current I</b> (0.05 A a click) and the <b>Wire temperature</b> (5 °C a click). The slider and step buttons below set L exactly.</p>
+        <div><div class="slider-head"><label for="sL">Length between the clips L</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0.05" max="1" step="0.005"></div>
+        <div class="btnrow"><button type="button" class="btn" id="Lm">L −5 mm</button><button type="button" class="btn" id="Lp">L +5 mm</button></div>
         <p class="hint" id="matHint"></p>
       </section>
 
@@ -517,6 +519,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   // ---------- controls ----------
   $('gauges').innerHTML = GAUGES.map(([g, dm], i) => `<button type="button" data-g="${i}" aria-pressed="${i === S.g}">${dm.toFixed(3)} mm</button>`).join('');
   function sync() {
+    $('sL').value = S.L; $('oL').textContent = `${S.L.toFixed(3)} m`;
     $('oI').textContent = `${sig(S.I, 3)} A`; $('oT').textContent = `${S.T} °C`; knobShow('knobI', S.I / 0.05, `${sig(S.I, 3)} A`, S.I); knobShow('knobT', S.T / 5, `${S.T} °C`, S.T);
     for (const b of document.querySelectorAll('#gauges button')) b.setAttribute('aria-pressed', String(+b.dataset.g === S.g));
     for (const b of document.querySelectorAll('#mats button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mat));
@@ -524,6 +527,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     $('matHint').textContent = HINT[S.mat];
   }
   const upd = () => { sync(); draw(); readouts(); };
+  const stepL = (d) => { S.L = Math.max(0.05, Math.min(1, +(S.L + d).toFixed(3))); upd(); };
+  $('sL').addEventListener('input', (e) => { S.L = +e.target.value; upd(); });
+  $('Lm').addEventListener('click', () => stepL(-0.005)); $('Lp').addEventListener('click', () => stepL(0.005));
   for (const b of document.querySelectorAll('#mats button')) b.addEventListener('click', () => { S.mat = b.dataset.m; resetElectrons(); upd(); fit(); });
   $('gauges').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (b) { S.g = +b.dataset.g; resetCount(); upd(); fit(); } });
   /* knobs: one click every KNOB_DEG of turn; the mark's angle is the value in clicks, so it always shows the setting */
