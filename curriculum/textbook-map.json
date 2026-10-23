@@ -5585,7 +5585,11 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-23 (Claude). Lecture demo: Van de Graaff (dome radius, belt current, V(t), E(r), spark at 3.0 MV/m, V_max = E_b R), ink jet (drop charge, plate voltage, diameter, speed; gutter; Print PHYS), precipitator (Pauthenier charge, Cunningham, Deutsch efficiency against diameter, counters); Blind.",
-      "handouts": [],
+      "handouts": [
+        "van-de-graaff",
+        "ink-jet-printer",
+        "precipitator"
+      ],
       "title": "Electrostatics at Work",
       "url": "demos/electrostatics-at-work.html"
     },
@@ -5936,7 +5940,10 @@
       "status": "usable",
       "note": "Lecture demonstration only. Parallel-current force and dipole torque support selected magnetic-force topics; no new handout requested.",
       "title": "Magnetic Fields of Currents",
-      "url": "demos/currents-fields.html"
+      "url": "demos/currents-fields.html",
+      "handouts": [
+        "magnets-oersted"
+      ]
     },
     {
       "demo": "magnetism-in-matter",
@@ -5954,7 +5961,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-23 (Claude). Lecture demo: long solenoid with a core from OpenStax Table 12.2 (B = (1 + χ)B0), field needed to float a diamagnet, iron by a Jiles and Atherton model fitted to Figure 12.25 with hysteresis loop, remanence, coercive current and demagnetizing; Blind.",
-      "handouts": [],
+      "handouts": [
+        "magnetism-in-matter"
+      ],
       "title": "Magnetism in Matter",
       "url": "demos/magnetism-in-matter.html"
     },
@@ -6051,7 +6060,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-23 (Claude). Lecture demo: field induced around a long solenoid (decaying, ramped, alternating or steady current), E against r (Example 13.8), a draggable closed path with the circulation of E added up and compared with −dΦ/dt, copper ring option; Blind.",
-      "handouts": [],
+      "handouts": [
+        "induced-electric-field"
+      ],
       "title": "Induced Electric Fields",
       "url": "demos/induced-electric-field.html"
     },
@@ -6071,7 +6082,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-23 (Claude). Lecture demo: shake flashlight (dipole magnet through a coil, bridge rectifier, capacitor, LED, full energy accounting), graphics tablet (magnetic pen over a wire grid, least squares location), card reader (track 2 F2F stripe, pulses decoded, uneven swipe); Blind.",
-      "handouts": [],
+      "handouts": [
+        "induction-at-work"
+      ],
       "title": "Induction at Work",
       "url": "demos/induction-at-work.html"
     },
@@ -6155,7 +6168,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-23 (Claude). Lecture demo: light racing through Table 1.1 materials (t = nL/c), Huygens's construction, reflection and refraction by wavelets with exact tangent fronts and total internal reflection, and a Huygens and Fresnel sum behind an opening; Blind.",
-      "handouts": [],
+      "handouts": [
+        "huygens"
+      ],
       "title": "Huygens's Principle",
       "url": "demos/huygens.html"
     },
@@ -6175,7 +6190,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-23 (Claude). Lecture demo: a simplified eye (thin lens, retina 1.80 cm behind it) accommodating within its range of power; near and far points of normal, nearsighted, farsighted and older eyes; glasses 1.50 cm in front of the eye and the prescriptions of Examples 2.8 and 2.9; blur spot on the retina; Blind.",
-      "handouts": [],
+      "handouts": [
+        "the-eye"
+      ],
       "title": "The Eye",
       "url": "demos/the-eye.html"
     },
@@ -6246,7 +6263,10 @@
       "status": "usable",
       "note": "Optional after required E&M endpoint. Verify each optical-instrument setup before treating the section as complete.",
       "title": "Optics Bench",
-      "url": "demos/optics-bench.html"
+      "url": "demos/optics-bench.html",
+      "handouts": [
+        "dispersion"
+      ]
     },
     {
       "demo": "polarization",

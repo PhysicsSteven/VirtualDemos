@@ -25,6 +25,20 @@ img { max-width: 100%; }
 /* vd-reset */
 .vd-reset { white-space: nowrap; }
 /* /vd-reset */
+/* vd-handout: the handout and worksheet button at the top of the sidebar (tools/handout_button.py) */
+.handout, .handout-menu > summary { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; padding: 12px 14px; font-weight: 700; font-size: 0.98rem; color: var(--canvas); background: var(--accent); border-radius: 9px 9px 0 0; text-decoration: none; cursor: pointer; }
+.handout-menu { position: sticky; top: 0; z-index: 2; }
+.handout-menu > summary { position: static; list-style: none; }
+.handout-menu > summary::-webkit-details-marker { display: none; }
+.handout-menu > summary::after { content: "▾"; font-size: 0.9rem; }
+.handout-menu[open] > summary::after { content: "▴"; }
+.handout-menu ul { list-style: none; margin: 0; padding: 6px; display: flex; flex-direction: column; gap: 2px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.handout-menu li a { display: block; padding: 8px 10px; border-radius: 6px; color: var(--accent); font-weight: 600; text-decoration: none; }
+.handout-menu li a:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.handout:hover, .handout-menu > summary:hover { filter: brightness(1.08); }
+.handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
+.handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
+/* /vd-handout */
 </style>
 <title>Magnetic Fields of Currents</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -113,6 +127,11 @@ button:focus-visible, input:focus-visible, li:focus-visible { outline: 2px solid
 .btn { font-weight: 700; }
 .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
 .btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
@@ -244,6 +263,7 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/magnets-oersted.html" target="magnets-oersted-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -355,6 +375,27 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
         </details>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="magnets-oersted" data-title="Magnetic Fields of Currents" data-demo="currents-fields">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <h2>Probe</h2>
         <dl class="readout">
@@ -1798,6 +1839,20 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
   $('sBE').addEventListener('input', (e) => { MG.BE = +e.target.value; magUpdate(); });
   $('magHide').addEventListener('change', (e) => { MG.hide = e.target.checked; magUpdate(); });
   $('magDet').addEventListener('toggle', magUpdate);
+  /* a reading for the Readings section (tools/readings_panel.py), from Magnets and Oersted's compass; what Predict first hides is
+     left blank. The needle angle is where the needle settles, positive toward the west. */
+  window.vdShowCols = [['experiment', 'Experiment'], ['gap_cm', 'Gap (cm)'], ['I_A', 'I (A)'], ['angle_deg', 'Angle (°)']];
+  window.vdReadingRow = () => {
+    if (!$('magDet').open) return 'Open Magnets and Oersted\'s compass to record a reading.';
+    if (MG.mode === 'bar') {
+      const { a, b } = magnetPoles(), F = poleForceX(a, b), ref = poleForceX([[-0.5 - 6, 0, -1], [-0.5, 0, 1]], [[0.5, 0, -1], [6.5, 0, 1]]);
+      return { experiment: MG.cut ? 'bar magnets, B cut in half' : 'bar magnets', gap_cm: MG.gap, facing: `N of A, ${MG.flipB ? 'N' : 'S'} of B`, force: F < 0 ? 'attraction' : 'repulsion',
+        F_rel: +(Math.abs(F) / Math.abs(ref)).toPrecision(3), I_A: '', h_cm: '', BE_uT: '', Bw_uT: '', angle_deg: '', tan: '' };
+    }
+    const Bw = oerstedB(MG.I, MG.h / 100), th = oerstedAngle(MG.I, MG.h / 100, MG.BE * 1e-6), hd = MG.hide;
+    return { experiment: 'Oersted', gap_cm: '', facing: '', force: '', F_rel: '', I_A: MG.I, h_cm: MG.h, BE_uT: MG.BE,
+      Bw_uT: hd ? '' : +(Bw * 1e6).toPrecision(3), angle_deg: hd ? '' : +(th * 180 / Math.PI).toFixed(1), tan: hd ? '' : +(Bw / (MG.BE * 1e-6)).toPrecision(3) };
+  };
   new MutationObserver(() => requestAnimationFrame(magDraw)).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => requestAnimationFrame(magDraw)); } catch (_) {}
   let magLast = performance.now();

@@ -930,3 +930,25 @@ Steve approved moving the demos onto one shared library, gradually, with nothing
 - `tools/qr.py`, `reset.py`, `handout_button.py` and `rail_trim.py` insert only markup in a moved demo. CLAUDE.md updated: shared pieces go in the library, not into each file.
 
 **GPT (verifier):** a moved demo is no longer self contained by design; it links `lib/vd.css` and `lib/vd.js`. Nothing to verify in the handouts. `demos/lib/README.md` lists the moved demos and the rules.
+
+## Claude, 2026-10-23: Physics II and optics handouts (batch 3, for GPT to verify)
+
+Ten new handouts in `curriculum/labs/students/`, each with an About the demo fold, task first procedure steps, Record and Export to worksheet (Steve chose to add it to the new demos), and a key from a real demo run in TeacherKeys `worksheet-keys/physics-2/` (capture scripts in `tools/capture/`). Map `handouts`, course labels, physics-2.html and the Handout and worksheet buttons updated. Math check: 0 problems in all ten.
+- **Electrostatics at Work** gives three worksheets: **Van de Graaff Generator** (`van-de-graaff`: dome radius, belt current, sparks counted over 20 s), **Ink Jet Printer** (`ink-jet-printer`: charge, plate voltage, drop speed, three unknown charges read from the ruler with Blind on), **Electrostatic Precipitator** (`precipitator`: particle size, plate length, gas speed, insulating dust). A reading goes to the worksheet of the machine on screen.
+- **Magnetism in Matter** (`magnetism-in-matter`): χ for six cores at 1.00 A (B recorded to nine figures), bismuth against current, iron's first magnetization curve and hysteresis loop.
+- **Induced Electric Field** (`induced-electric-field`): E against path radius at t = 0, off centre paths (circulation against −dΦ/dt), E against the decay constant.
+- **Induction at Work** (`induction-at-work`): largest EMF against shakes per second and stroke, charging 0.10 F and 0.47 F with the full energy account, the light alone and with shaking at 3 and 6 per second. Tablet and card reader are described, not recorded.
+- **Magnets and Oersted's Compass** (`magnets-oersted`, in currents-fields): force ratio against gap, turning and cutting magnet B, needle angle against current and height (μ₀ from the slope of tan θ), two predictions read from the compass.
+- **Huygens's Principle** (`huygens`): the race (one reading records all seven lanes), refraction into crown glass, water and diamond, glass into air through the critical angle, the mirror, the first dark direction against opening width.
+- **Dispersion** (`dispersion`, optics-bench Prism setup): n at eight wavelengths and the 60° prism's minimum deviation for crown, flint, fused silica, water and diamond; Cauchy fits.
+- **The Eye** (`the-eye`): power used against 1/d for the normal eye, glasses for the nearsighted, farsighted and older eyes and what each still blurs.
+
+Demo changes that came out of the captures:
+- `tools/readings_panel.py`: a reading may be an array (several rows at once), the section can go before a named sidebar section, and the table header draws after load. Re-injected in all nine demos that use it. The shared library (`demos/lib`) could take this over as its readings helper.
+- **Precipitator count was biased:** a caught particle was counted at once, a passing one only when it left, so early counts favoured catching (up to 3.8 standard uncertainties at 11 m). A caught particle is now counted when it would have left the plates. Checked by repeating the same counting thousands of times in Node: unbiased.
+- **Van de Graaff spark count** lost up to one frame per spark (the dome was emptied to zero, dropping the charge delivered after the spark in that frame). The excess now carries over.
+- **Magnetism in Matter froze the browser with the Empty coil** (the plot's grid loop took 10¹² steps when B − B₀ is zero). Fixed; worth checking on the live site.
+- Induction at Work leaves the largest EMF blank in the first second after emptying.
+- Readings sections added to currents-fields (Magnets and Oersted's compass), huygens, optics-bench (selected glass element) and the-eye; optics-bench and currents-fields got the panel's table styles.
+
+**GPT, please verify:** each Background and Before the lab against the demos' CORE (electrostatics-at-work `qMax`, `inkjet`, `driftSpeed`, `deutsch`; magnetism-in-matter `MATS` and the iron model; induced-electric-field `Ephi`, `circulation`, `overlap`; induction-at-work `FL`, `flashStep`; currents-fields `oerstedB`, `poleForceX`; huygens `MEDIA`, `refractAngle`, `firstDark`; optics-bench `GLASSES`, `sellmeier`, `minDeviation`; the-eye `EYES`, `eyeImage`, `rxFar`, `rxNear`); that every table heading matches its FROM_DEMO map in `worksheet.js`; that each procedure can be done as written; and the numbers in the keys. Two numbers to look at in particular: the precipitator key keeps one real reading 3.3σ from the prediction (u = 3.0 m/s) and says so; the Van de Graaff Question 4 now asks why the generator works poorly on humid days (the old wording had sparks jumping more easily).

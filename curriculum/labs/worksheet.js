@@ -43,7 +43,9 @@
   const PHYSICS_II = ['ac-circuits', 'capacitors', 'coulomb-sandbox', 'dc-circuits', 'faraday', 'gauss-law', 'magnetic-force', 'rc-circuits',
     'resistivity', 'rlc-transients', 'wire-force',
     'string-density' /* first PHYS 202 lab */, 'polarization', 'standing-waves',
-    'household-wiring' /* Physics II demos with the shared Readings section (tools/readings_panel.py) */];
+    /* Physics II demos with the shared Readings section (tools/readings_panel.py) */
+    'household-wiring', 'van-de-graaff', 'ink-jet-printer', 'precipitator' /* the last three: Electrostatics at Work */,
+    'magnetism-in-matter', 'induced-electric-field', 'induction-at-work', 'magnets-oersted', 'huygens', 'dispersion', 'the-eye'];
   ENABLED.push(...PHYSICS_II);
   /* Helpers for the Physics II maps. parts: the part values a Circuits row carries (R1_ohm, C1_F, L1_H, B1_emf_V, B1_r_ohm, S1_state),
      optionally only those whose column matches a pattern. pick: the first column matching a pattern that has a value in this row
@@ -80,6 +82,21 @@
     'string-density': { demo: 'Linear Density of a String', cols: ['row', '#string', 'L_m', 'm_kg', 'T_N', 'n', 'inv_n2', 'f_Hz'] },
     /* Trial | Setup | Hot current (A) | Neutral current (A) | Ground current (A) | Current through the person (mA) | Outlet voltage (V) | Power (W) | Wire heat (W/m) | Protection */
     'household-wiring': { demo: 'Household Wiring', cols: ['row', 'setup', 'I_hot_A', 'I_neutral_A', 'I_ground_A', 'I_body_mA', 'V_outlet_V', 'P_W', 'heat_W_per_m', 'protection'] },
+    /* Trial | Dome radius R (cm) | Belt current I (μA) | Capacitance C (pF) | Highest voltage (kV) | Time to spark (s) | Spark energy (J) | Sparks counted | Running time (s) */
+    'van-de-graaff': { demo: 'Electrostatics at Work', cols: ['row', 'R_cm', 'I_uA', 'C_pF', 'Vmax_kV', 't_spark_s', 'E_spark_J', 'sparks', 'run_s'] },
+    /* Trial | Drop diameter (μm) | Drop speed v (m/s) | Charge q (pC) | Plate voltage V (V) | Drop mass (ng) | Height on the paper y (mm) | Gravity's part (μm) */
+    'ink-jet-printer': { demo: 'Electrostatics at Work', cols: ['row', 'd_um', 'v_m_s', 'q_pC', 'V_plates_V', 'm_ng', 'y_paper_mm', 'y_grav_um'] },
+    /* Trial | Particle diameter (μm) | Particles | Field (kV/cm) | Gas speed u (m/s) | Plate length L (m) | Drift speed w (cm/s) | Predicted efficiency (%) | Caught | Through | Measured efficiency (%) */
+    precipitator: { demo: 'Electrostatics at Work', cols: ['row', 'dp_um', 'particles', 'E_kV_cm', 'u_m_s', 'L_m', 'w_cm_s', 'eff_pred_pct', 'caught', 'through', 'eff_meas_pct'] },
+    /* Trial | Core | Turns per cm | Current I (A) | B₀ (T) | B (T) | B − B₀ (T) | Notes */
+    'magnetism-in-matter': { demo: 'Magnetism in Matter', cols: ['row', 'material', 'n_per_cm', 'I_A', 'B0_T', 'B_T', 'Bm_T', 'notes'] },
+    /* Trial | Current | Time t (ms) | dB/dt (T/s) | Path radius (cm) | Centre from the axis (cm) | Flux Φ (Wb) | −dΦ/dt (V) | ∮E·dl (V) | E on the path (V/m) */
+    'induced-electric-field': { demo: 'Induced Electric Field', cols: ['row', 'current', 't_ms', 'dBdt_T_s', 'path_r_cm', 'path_d_cm', 'Phi_Wb', 'emf_V', 'circ_V', 'E_V_per_m'] },
+    'induction-at-work': { demo: 'Induction at Work', cols: ['row', 'f_Hz', 'stroke_cm', 'C_F', 'light', 't_s', 'emf_peak_V', 'Vc_V', 'E_hand_J', 'E_cap_J', 'E_heat_J', 'E_diode_J', 'E_led_J'] },
+    'magnets-oersted': { demo: 'Magnetic Fields of Currents', cols: ['row', 'experiment', 'gap_cm', 'facing', 'force', 'F_rel', 'I_A', 'h_cm', 'BE_uT', 'Bw_uT', 'angle_deg', 'tan'] },
+    'huygens': { demo: "Huygens's Principle", cols: ['row', 'view', 'medium1', 'n1', 'medium2', 'n2', 'L_m', 't_ns', 'th1_deg', 'th2_deg', 's1v1', 's2v2', 'a_lambda', 'dark_deg'] },
+    dispersion: { demo: 'Optics Bench', cols: ['row', 'element', 'material', 'lam_nm', 'n', 'dev_deg'] },
+    'the-eye': { demo: 'The Eye', cols: ['row', 'eye', 'glasses_D', 'd_cm', 'seen', 'blur_mm', 'NP_cm', 'FP_cm', 'P_D', 'di_cm', 'rx_far_D', 'rx_near_D'] },
   });
   /* ==PHYSICS II END== */
   /* ==ACOUSTICS START== Acoustics worksheets (acoustics.html) and their demo column maps. */

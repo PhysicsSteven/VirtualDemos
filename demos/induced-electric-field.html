@@ -24,6 +24,20 @@ body { margin: 0; }
 /* vd-reset */
 .vd-reset { white-space: nowrap; }
 /* /vd-reset */
+/* vd-handout: the handout and worksheet button at the top of the sidebar (tools/handout_button.py) */
+.handout, .handout-menu > summary { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; padding: 12px 14px; font-weight: 700; font-size: 0.98rem; color: var(--canvas); background: var(--accent); border-radius: 9px 9px 0 0; text-decoration: none; cursor: pointer; }
+.handout-menu { position: sticky; top: 0; z-index: 2; }
+.handout-menu > summary { position: static; list-style: none; }
+.handout-menu > summary::-webkit-details-marker { display: none; }
+.handout-menu > summary::after { content: "▾"; font-size: 0.9rem; }
+.handout-menu[open] > summary::after { content: "▴"; }
+.handout-menu ul { list-style: none; margin: 0; padding: 6px; display: flex; flex-direction: column; gap: 2px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.handout-menu li a { display: block; padding: 8px 10px; border-radius: 6px; color: var(--accent); font-weight: 600; text-decoration: none; }
+.handout-menu li a:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.handout:hover, .handout-menu > summary:hover { filter: brightness(1.08); }
+.handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
+.handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
+/* /vd-handout */
 </style>
 <title>Induced Electric Fields</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -176,6 +190,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/induced-electric-field.html" target="induced-electric-field-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -220,6 +235,27 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <dl class="readout" id="out"></dl>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="induced-electric-field" data-title="Induced Electric Field" data-demo="induced-electric-field">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the electric field</span></label>
@@ -330,6 +366,16 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   can.addEventListener('pointermove', (e) => { if (!drag) return; const r = can.getBoundingClientRect(), x = e.clientX - r.left - drag.dx, y = e.clientY - r.top - drag.dy; S.cx = clampC((x - V.ox) / V.k); S.cy = clampC((V.oy - y) / V.k); changed(); });
   can.addEventListener('pointerup', () => { drag = null; });
 
+  /* a reading for the Readings section (tools/readings_panel.py); what Blind hides is left blank */
+  const g4 = (v) => +(+v).toPrecision(4);
+  window.vdVersion = IE_VERSION;
+  window.vdShowCols = [['path_r_cm', 'Path (cm)'], ['emf_V', '−dΦ/dt (V)'], ['E_V_per_m', 'E (V/m)']];
+  window.vdReadingRow = () => {
+    const f = physics(), d = pathD(), b = S.blind, Eon = Ephi(S.pa, S.R, f.dB);
+    return { current: S.w.kind === 'decay' ? `decaying, α = ${S.w.a} s⁻¹` : S.w.kind === 'ramp' ? `ramp, rate ${S.w.a} s⁻¹` : S.w.kind === 'ac' ? `alternating, ω = ${S.w.a} rad/s` : 'steady',
+      t_ms: +(S.t * 1000).toFixed(3), dBdt_T_s: g4(f.dB), path_r_cm: +(S.pa * 100).toFixed(1), path_d_cm: +(d * 100).toFixed(1), Phi_Wb: g4(f.Phi), emf_V: g4(-f.dPhi),
+      circ_V: b ? '' : g4(f.circ), E_V_per_m: b ? '' : d < 1e-9 ? g4(Math.abs(Eon)) : 'not the same all around' };
+  };
   function readouts() {
     const f = physics(), d = pathD(), dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`, HID = '<span class="ok">hidden in Blind</span>', hide = S.blind;
     let h = dd('Time t', si(S.t, 's')) + dd('Current I', si(f.I, 'A'));

@@ -38,6 +38,20 @@ body { margin: 0; }
 /* vd-reset */
 .vd-reset { white-space: nowrap; }
 /* /vd-reset */
+/* vd-handout: the handout and worksheet button at the top of the sidebar (tools/handout_button.py) */
+.handout, .handout-menu > summary { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: center; gap: 8px; margin: 0; padding: 12px 14px; font-weight: 700; font-size: 0.98rem; color: var(--canvas); background: var(--accent); border-radius: 9px 9px 0 0; text-decoration: none; cursor: pointer; }
+.handout-menu { position: sticky; top: 0; z-index: 2; }
+.handout-menu > summary { position: static; list-style: none; }
+.handout-menu > summary::-webkit-details-marker { display: none; }
+.handout-menu > summary::after { content: "▾"; font-size: 0.9rem; }
+.handout-menu[open] > summary::after { content: "▴"; }
+.handout-menu ul { list-style: none; margin: 0; padding: 6px; display: flex; flex-direction: column; gap: 2px; background: var(--surface); border-bottom: 1px solid var(--line); }
+.handout-menu li a { display: block; padding: 8px 10px; border-radius: 6px; color: var(--accent); font-weight: 600; text-decoration: none; }
+.handout-menu li a:hover { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+.handout:hover, .handout-menu > summary:hover { filter: brightness(1.08); }
+.handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
+.handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
+/* /vd-handout */
 </style>
 <title>Induction at Work</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -206,6 +220,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <div class="kctl" id="kV"><label for="sV">Swipe speed</label><input type="range" id="sV" min="0.1" max="1.5" step="0.05"><output id="oV" for="sV"></output></div>
     </div>
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/induction-at-work.html" target="induction-at-work-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -255,6 +270,27 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <dl class="readout" id="out"></dl>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="induction-at-work" data-title="Induction at Work" data-demo="induction-at-work">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
@@ -361,8 +397,8 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     cd: { digits: '2026', v: 0.5, uneven: false, run: null, last: null }
   };
   const PRESETS = {
-    flash: { m: 'flash', hint: 'Shaking slides the magnet back and forth through the coil. Each pass changes the flux through 1000 turns; the EMF peaks as the magnet enters and leaves the coil and changes sign in between. A rectifier turns those pulses into charge on the capacitor.', set() { Object.assign(S.fl, { st: flashState(), shaking: true, f: 3, A: 0.03, C: 0.1, led: false, ff: false, hist: [] }); } },
-    flashled: { m: 'flash', hint: 'The capacitor starts at 3.0 V and the light is on, with no shaking. The light dims as the capacitor empties. Shake to keep it lit: the energy comes from the work your hand does against the coil’s push on the magnet.', set() { Object.assign(S.fl, { st: { ...flashState(), Vc: 3.0 }, shaking: false, f: 3, A: 0.03, C: 0.1, led: true, ff: false, hist: [] }); S.fl.st.Ecap = 0; } },
+    flash: { m: 'flash', hint: 'Shaking slides the magnet back and forth through the coil. Each pass changes the flux through 1000 turns; the EMF peaks as the magnet enters and leaves the coil and changes sign in between. A rectifier turns those pulses into charge on the capacitor.', set() { Object.assign(S.fl, { st: flashState(), t0: 0, shaking: true, f: 3, A: 0.03, C: 0.1, led: false, ff: false, hist: [] }); } },
+    flashled: { m: 'flash', hint: 'The capacitor starts at 3.0 V and the light is on, with no shaking. The light dims as the capacitor empties. Shake to keep it lit: the energy comes from the work your hand does against the coil’s push on the magnet.', set() { Object.assign(S.fl, { st: { ...flashState(), Vc: 3.0 }, t0: 0, shaking: false, f: 3, A: 0.03, C: 0.1, led: true, ff: false, hist: [] }); S.fl.st.Ecap = 0; } },
     tablet: { m: 'tablet', hint: 'The pen’s tip is a tiny magnet. Moving it changes the flux enclosed by each wire’s circuit, most for the wires right under it, so they carry a small EMF. Comparing neighbouring wires pins down the pen to a fraction of the 5 mm spacing.', set() { Object.assign(S.tb, { x: 0.075, y: 0.05, px: 0.075, py: 0.05, vx: 0, vy: 0, est: [], tru: [], circle: true, ct: 0 }); } },
     still: { m: 'tablet', hint: 'The pen is held still in the middle of the tablet. The field is strong under it, but it is not changing, so every wire reads zero and this tablet cannot tell where the pen is. Drag it and it reappears.', set() { Object.assign(S.tb, { x: 0.05, y: 0.05, px: 0.05, py: 0.05, vx: 0, vy: 0, est: [], tru: [], circle: false, ct: 0 }); } },
     card: { m: 'card', hint: 'The stripe holds tiny magnetized regions. As they pass the head, each flip of magnetization changes the flux in the head’s coil and gives a pulse. Swipe faster and the pulses are taller and closer together.', set() { Object.assign(S.cd, { v: 0.5, uneven: false, run: null, last: null }); startSwipe(); } },
@@ -433,10 +469,10 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   const user = () => { S.preset = ''; };
   $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
   $('shakeBtn').addEventListener('click', () => { user(); S.fl.shaking = !S.fl.shaking; upd(); });
-  $('emptyBtn').addEventListener('click', () => { user(); S.fl.st = { ...flashState(), t: S.fl.st.t, z: S.fl.st.z }; S.fl.hist = []; upd(); });
+  $('emptyBtn').addEventListener('click', () => { user(); S.fl.st = { ...flashState(), t: S.fl.st.t, z: S.fl.st.z }; S.fl.t0 = S.fl.st.t; S.fl.hist = []; upd(); });
   $('sF').addEventListener('input', (e) => { user(); S.fl.f = +e.target.value; upd(); });
   $('sA').addEventListener('input', (e) => { user(); S.fl.A = +e.target.value / 100; upd(); });
-  $('capSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (!b) return; user(); S.fl.C = +b.dataset.c; S.fl.st = { ...flashState(), t: S.fl.st.t, z: S.fl.st.z }; S.fl.hist = []; upd(); });
+  $('capSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (!b) return; user(); S.fl.C = +b.dataset.c; S.fl.st = { ...flashState(), t: S.fl.st.t, z: S.fl.st.z }; S.fl.t0 = S.fl.st.t; S.fl.hist = []; upd(); });
   $('ledOn').addEventListener('change', (e) => { user(); S.fl.led = e.target.checked; upd(); });
   $('ff').addEventListener('change', (e) => { user(); S.fl.ff = e.target.checked; S.fl.hist = []; upd(); });
   $('circleBtn').addEventListener('click', () => { user(); S.tb.circle = !S.tb.circle; S.tb.ct = Math.atan2(S.tb.y - 0.05, S.tb.x - 0.05) / (2 * Math.PI / 2); upd(); });
@@ -455,6 +491,17 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   can.addEventListener('pointerup', () => { dragging = false; });
   can.addEventListener('keydown', (e) => { if (S.machine !== 'tablet') return; const k = { ArrowRight: [1, 0], ArrowLeft: [-1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key]; if (!k) return; e.preventDefault(); S.tb.circle = false; user(); S.tb.x = Math.max(0, Math.min(0.1, S.tb.x + k[0] * 0.002)); S.tb.y = Math.max(0, Math.min(0.1, S.tb.y + k[1] * 0.002)); sync(); });
 
+  /* a reading for the Readings section (tools/readings_panel.py): the flashlight only; what Blind hides is left blank.
+     The time and the energies count from the last time the capacitor was emptied (or the capacitor changed). */
+  const g4 = (v) => +(+v).toPrecision(4);
+  window.vdVersion = IW_VERSION;
+  window.vdShowCols = [['f_Hz', 'Shakes/s'], ['t_s', 'Time (s)'], ['emf_peak_V', 'EMF (V)']];
+  window.vdReadingRow = () => {
+    if (S.machine !== 'flash') return 'Only the flashlight records readings; describe what the tablet and the card reader do in the worksheet.';
+    const F = S.fl, st = F.st, b = S.blind, pk = F.hist.reduce((a, r) => (r[0] > st.t - 1 ? Math.max(a, Math.abs(r[1])) : a), 0), full = F.hist.length && F.hist[0][0] <= st.t - 0.99;   /* a whole second of EMF since the last reset */
+    return { f_Hz: F.shaking ? F.f : 0, stroke_cm: +(F.A * 100).toFixed(1), C_F: F.C, light: F.led ? 'on' : 'off', t_s: +(st.t - (F.t0 || 0)).toFixed(1),
+      emf_peak_V: b || !full ? '' : g4(pk), Vc_V: b ? '' : +st.Vc.toFixed(3), E_hand_J: g4(st.Ehand), E_cap_J: g4(st.Ecap), E_heat_J: g4(st.Eheat), E_diode_J: g4(st.Ediode), E_led_J: g4(st.Eled) };
+  };
   function readouts() {
     const dd = (a, v, w, c) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd${c ? ` class="${c}"` : ''}>${v}</dd></div>`, HID = '<span class="ok">hidden in Blind</span>', hide = S.blind;
     let h = '';
