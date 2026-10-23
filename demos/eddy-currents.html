@@ -234,10 +234,11 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
   $('drop').addEventListener('click', () => { if (!S.run && S.t >= Math.max(...tFall())) S.t = 0; S.run = !S.run; $('drop').textContent = S.run ? 'Pause' : S.t > 0 ? 'Resume' : 'Drop all three'; });
   $('again').addEventListener('click', restart);
   can.addEventListener('keydown', (e) => { if (e.key === ' ') $('drop').click(); else if (e.key === 'r' || e.key === 'R') restart(); else return; e.preventDefault(); });
+  const card = VD.setupCard($('setupCard'), { within: '#stage' });
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
-    { const away = S.run; $('setupCard').classList.toggle('away', away); $('setupCard').inert = away; }
+    card.away(S.run);
     if (S.run) { S.t += dt; const end = Math.max(...tFall()); if (S.t >= end) { S.t = end; S.run = false; $('drop').textContent = 'Drop all three'; } draw(); readouts(); }
     requestAnimationFrame(frame);
   }

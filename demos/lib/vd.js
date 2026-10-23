@@ -65,21 +65,23 @@
     return set;
   };
 
-  /* The Set up card: controls on the picture that are set before a run. VD.setupCard(card, { grip }) returns
+  /* The Set up card: controls on the picture that are set before a run. VD.setupCard(card, { grip, within }) returns
      { away(on), ghost(on) }:
        away(true)   the card fades away and goes inert while the apparatus runs; away(false) brings it back (call it on Pause)
        ghost(true)  the card turns see through and lets the pointer pass while something under it is dragged
      Where the card floats over the picture (position absolute), its grip (default: its first child) drags it anywhere over
      the picture, the arrow keys on the grip move it 10 px (Shift: 40 px), and a double click puts it back. The move is a
-     CSS translate on top of wherever the demo places the card, and it stays inside the picture. On phones, where the
+     CSS translate on top of wherever the demo places the card, and it stays inside the picture: the card's offsetParent,
+     or the element (or selector) given as within, for a card placed on the bench over a stage beside the sidebar. On phones, where the
      card sits under the picture, it does not move. */
   VD.setupCard = function (card, o) {
     o = o || {};
     var grip = typeof o.grip === 'string' ? card.querySelector(o.grip) : o.grip || card.firstElementChild, dx = 0, dy = 0;
+    var box = function () { return (typeof o.within === 'string' ? document.querySelector(o.within) : o.within) || card.offsetParent || card.parentElement; };
     var floating = function () { return getComputedStyle(card).position === 'absolute'; };
     function place(x, y) {
       card.style.translate = '';
-      var p = (card.offsetParent || card.parentElement).getBoundingClientRect(), r = card.getBoundingClientRect();
+      var p = box().getBoundingClientRect(), r = card.getBoundingClientRect();
       x = Math.max(p.left - r.left, Math.min(p.right - r.right, x)); y = Math.max(p.top - r.top, Math.min(p.bottom - r.bottom, y));
       dx = Math.round(x); dy = Math.round(y); card.style.translate = dx || dy ? dx + 'px ' + dy + 'px' : '';
     }

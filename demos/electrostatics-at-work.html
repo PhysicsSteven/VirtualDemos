@@ -263,9 +263,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('setups').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) setSetup(b.dataset.s); });
 
   // ---------- controls ----------
+  const card = VD.setupCard($('setupCard'), { within: '#stage' });
   function sync() {
     $('sR').value = S.R; $('oR').textContent = `${S.R} cm`; $('sI').value = S.I; $('oI').textContent = `${S.I.toFixed(1)} µA`;
-    $('motor').textContent = S.motor ? 'Stop motor' : 'Start motor'; $('setupCard').classList.toggle('away', S.motor); $('setupCard').inert = S.motor;
+    $('motor').textContent = S.motor ? 'Stop motor' : 'Start motor'; card.away(S.motor);
     $('sQ').value = S.q; $('oQ').textContent = S.blind ? 'hidden' : `${S.q.toFixed(2)} pC`;
     $('sPV').value = S.PV; $('oPV').textContent = `${S.PV} V`; $('sD').value = S.d; $('oD').textContent = `${S.d} µm`; $('sV').value = S.v; $('oV').textContent = `${S.v} m/s`;
     const dp = 10 ** S.lgDp; $('sDp').value = S.lgDp; $('oDp').textContent = `${+dp.toPrecision(2)} µm`;
