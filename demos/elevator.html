@@ -61,8 +61,9 @@ body { margin: 0; }
 }
 
 :root { --car: #c9d1db; --person: #4a5563; --N: #2b60b5; --W: #b0452f; --cable: #6b7787; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --car: #3b4554; --person: #c3cad4; --N: #69a0ff; --W: #ff8a70; --cable: #9aa6b6; } }
-:root[data-theme="dark"] { --car: #3b4554; --person: #c3cad4; --N: #69a0ff; --W: #ff8a70; --cable: #9aa6b6; }
+:root { --building: #e8ecf1; --slab: #c5cdd7; --shaft: #dbe1e8; --rail: #bcc5d0; --window: #f1d58c; --window-off: #d3dae3; --door: #b3bcc8; --lamp: #e39a2d; --cw: #848e9b; --car-wall: #dfe5ec; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --car: #3b4554; --person: #c3cad4; --N: #69a0ff; --W: #ff8a70; --cable: #9aa6b6; --building: #151c25; --slab: #2c3644; --shaft: #0c1117; --rail: #2b3542; --window: #6d5a2b; --window-off: #1d2530; --door: #3a4554; --lamp: #f0b552; --cw: #5a6574; --car-wall: #2f3946; } }
+:root[data-theme="dark"] { --car: #3b4554; --person: #c3cad4; --N: #69a0ff; --W: #ff8a70; --cable: #9aa6b6; --building: #151c25; --slab: #2c3644; --shaft: #0c1117; --rail: #2b3542; --window: #6d5a2b; --window-off: #1d2530; --door: #3a4554; --lamp: #f0b552; --cw: #5a6574; --car-wall: #2f3946; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -233,8 +234,11 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      car: g('--car'), person: g('--person'), N: g('--N'), Wc: g('--W'), cable: g('--cable'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      car: g('--car'), person: g('--person'), N: g('--N'), Wc: g('--W'), cable: g('--cable'), building: g('--building'), slab: g('--slab'), shaft: g('--shaft'), rail: g('--rail'), window: g('--window'), windowOff: g('--window-off'), door: g('--door'), lamp: g('--lamp'), cw: g('--cw'), carWall: g('--car-wall'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  // scenery: which windows are lit on each floor, chosen once from a seeded generator
+  function seeded(q) { return () => { q |= 0; q = (q + 0x6D2B79F5) | 0; let t = Math.imul(q ^ (q >>> 15), 1 | q); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  const rnd = seeded(31337), LIT = Array.from({ length: 11 }, () => [rnd() < 0.6, rnd() < 0.5]);
   const f = (v, d = 2) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
   const now = () => stateAt(S.segs, S.y0, S.v0, S.t);
   const moving = () => S.segs.length && !now().done;
@@ -300,17 +304,54 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     const p = ps(), wide = W > 620, st = now(), top = 56 * p, bot = Hh - 16 * p;
     const shaftW = wide ? Math.min(W * 0.36, 260 * p) : W - 32 * p, shaftH = wide ? bot - top : (Hh - top) * 0.55, sx = 16 * p, sc = shaftH / (TOP * FLOOR + FLOOR + 1);
     const yS = (y) => top + shaftH - (y + 0.5) * sc;
-    // shaft and floors
-    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-    for (let k = 0; k <= TOP; k++) { const y = yS(k * FLOOR); ctx.beginPath(); ctx.moveTo(sx, y); ctx.lineTo(sx + shaftW * 0.18, y); ctx.stroke(); if (k % (sc * FLOOR < 22 * p ? 2 : 1) === 0) ctx.fillText(String(k), sx, y - 1); }
-    const cw = shaftW * 0.72, cx = sx + shaftW * 0.24, ch = Math.max(FLOOR * sc, 70 * p), cy = yS(st.y) - ch;
+    const cw = shaftW * 0.6, cx = sx + shaftW * 0.24, ch = Math.max(FLOOR * sc, 70 * p), cy = yS(st.y) - ch;
+    // building cross section: the floors and landings at the left, the shaft with its rails and counterweight lane at the right
+    const shL = cx - 5 * p, shR = sx + shaftW, gY = yS(0), roof = yS(TOP * FLOOR + FLOOR), sBot = top + shaftH;
+    ctx.fillStyle = T.building; ctx.fillRect(sx - 8 * p, roof, shL - sx + 8 * p, gY - roof);
+    ctx.fillStyle = T.shaft; ctx.fillRect(shL, top - 22 * p, shR - shL, sBot - top + 22 * p);
+    ctx.fillStyle = T.slab; ctx.fillRect(sx - 8 * p, gY, shL - sx + 8 * p, sBot - gY); ctx.fillRect(shR, top - 22 * p, Math.max(0, Math.min(5 * p, W - shR)), sBot - top + 22 * p);
+    ctx.fillRect(sx - 8 * p, roof - 3 * p, shL - sx + 8 * p, 3 * p);
+    ctx.strokeStyle = T.rail; ctx.lineWidth = 2 * p; ctx.beginPath(); for (const xr of [cx - 2 * p, cx + cw + 2 * p]) { ctx.moveTo(xr, top - 14 * p); ctx.lineTo(xr, sBot); } ctx.stroke();
+    const fh = FLOOR * sc, dW = Math.max(6 * p, 0.9 * sc), dH = Math.min(2.1 * sc, fh - 3 * p), wS0 = Math.min(1.2 * sc, fh * 0.4);
+    for (let k = 0; k <= TOP; k++) {
+      const y = yS(k * FLOOR);
+      ctx.fillStyle = T.slab; ctx.fillRect(sx - 8 * p, y, shL - sx + 8 * p, Math.max(2, 0.25 * sc));
+      const dx = shL - dW - 3 * p; ctx.fillStyle = T.door; ctx.fillRect(dx, y - dH, dW, dH); ctx.strokeStyle = T.slab; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(dx + dW / 2, y - dH); ctx.lineTo(dx + dW / 2, y); ctx.stroke();
+      const here = Math.abs(st.y - k * FLOOR) < 0.25; ctx.fillStyle = here ? T.lamp : T.windowOff; ctx.beginPath(); ctx.arc(dx + dW / 2, y - dH - Math.min(3.5 * p, fh * 0.12), Math.min(2.2 * p, fh * 0.07), 0, 7); ctx.fill();
+      const room = dx - (sx + 16 * p) - 4 * p, wS = Math.min(wS0, room - 2 * p);
+      if (wS >= 7 * p) { const nwin = room > 2 * wS + 10 * p ? 2 : 1; for (let j = 0; j < nwin; j++) { const wx = dx - 6 * p - (j + 1) * wS - j * 5 * p, wy = y - fh * 0.62; ctx.fillStyle = LIT[k][j] ? T.window : T.windowOff; ctx.fillRect(wx, wy, wS, wS); ctx.strokeStyle = T.slab; ctx.lineWidth = 1; ctx.strokeRect(wx, wy, wS, wS); ctx.beginPath(); ctx.moveTo(wx + wS / 2, wy); ctx.lineTo(wx + wS / 2, wy + wS); ctx.stroke(); } }
+    }
+    ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    for (let k = 0; k <= TOP; k++) { const y = yS(k * FLOOR); if (k % (sc * FLOOR < 22 * p ? 2 : 1) === 0) ctx.fillText(String(k), sx, y - 1); }
+    // pit buffer under the car
+    ctx.fillStyle = T.rail; ctx.fillRect(cx + cw / 2 - 5 * p, gY + 1, 10 * p, Math.max(0, sBot - gY - 1));
+    // counterweight: the rope over the machine sheave makes it move opposite to the car (it rises 1 m when the car drops 1 m).
+    // After the cable snaps it is shown held by its own safety brake at the height it had then.
+    const yc = S.snapped ? S.y0 : st.y, cwX = (cx + cw + 4 * p + shR) / 2, cwW = Math.min(shR - cx - cw - 10 * p, 22 * p), cwH = Math.min(ch * 0.8, 3.2 * sc), cwBot = yS(TOP * FLOOR - yc);
+    const ropeTop = top - 12 * p, rS = 5 * p, carRopeX = cx + cw / 2;
+    if (cwW > 4) {
+      ctx.strokeStyle = T.cable; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(cwX, ropeTop); ctx.lineTo(cwX, cwBot - cwH); ctx.stroke();
+      ctx.fillStyle = T.cw; ctx.fillRect(cwX - cwW / 2, cwBot - cwH, cwW, cwH); ctx.strokeStyle = T.slab; ctx.lineWidth = 1; ctx.beginPath(); for (let i = 1; i < 5; i++) { ctx.moveTo(cwX - cwW / 2, cwBot - cwH * i / 5); ctx.lineTo(cwX + cwW / 2, cwBot - cwH * i / 5); } ctx.stroke(); ctx.strokeRect(cwX - cwW / 2, cwBot - cwH, cwW, cwH);
+    }
+    // machine beam with the drive sheave over the car and a second sheave over the counterweight; they turn as the rope moves
+    ctx.fillStyle = T.slab; ctx.fillRect(shL, ropeTop - rS - 6 * p, shR - shL, 4 * p);
+    ctx.strokeStyle = T.cable; ctx.lineWidth = 1.5 * p; if (!S.snapped && cwW > 4) { ctx.beginPath(); ctx.moveTo(carRopeX, ropeTop - rS); ctx.lineTo(cwX, ropeTop - rS); ctx.stroke(); }
+    for (const xs of cwW > 4 ? [carRopeX, cwX] : [carRopeX]) { ctx.save(); ctx.translate(xs, ropeTop); ctx.rotate(-yc * sc / rS); ctx.fillStyle = T.door; ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(0, 0, rS, 0, 7); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-rS, 0); ctx.lineTo(rS, 0); ctx.moveTo(0, -rS); ctx.lineTo(0, rS); ctx.stroke(); ctx.restore(); }
     // cable
-    if (!S.snapped) { ctx.strokeStyle = T.cable; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx + cw / 2, top - 10 * p); ctx.lineTo(cx + cw / 2, cy); ctx.stroke(); }
-    else { ctx.strokeStyle = T.cable; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx + cw / 2, top - 10 * p); ctx.lineTo(cx + cw / 2 + 6 * p, top + 20 * p); ctx.stroke(); }
-    ctx.fillStyle = T.car; ctx.fillRect(cx, cy, cw, ch); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5; ctx.strokeRect(cx, cy, cw, ch);
+    if (!S.snapped) { ctx.strokeStyle = T.cable; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(carRopeX, ropeTop); ctx.lineTo(carRopeX, cy); ctx.stroke(); }
+    else { ctx.strokeStyle = T.cable; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(carRopeX, ropeTop); ctx.lineTo(carRopeX + 6 * p, top + 20 * p); ctx.stroke(); }
+    // the car: frame, back wall panels, ceiling light, handrail, doors on the landing side
+    ctx.fillStyle = T.carWall; ctx.fillRect(cx, cy, cw, ch);
+    ctx.strokeStyle = T.car; ctx.lineWidth = 1; ctx.beginPath(); for (let i = 1; i < 4; i++) { ctx.moveTo(cx + cw * i / 4, cy + 6 * p); ctx.lineTo(cx + cw * i / 4, cy + ch - 4 * p); } ctx.stroke();
+    ctx.fillStyle = T.window; ctx.fillRect(cx + cw * 0.3, cy + 4 * p, cw * 0.4, 2 * p);
+    ctx.strokeStyle = T.rail; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx + 8 * p, cy + ch * 0.55); ctx.lineTo(cx + cw - 8 * p, cy + ch * 0.55); ctx.stroke();
+    ctx.fillStyle = T.door; ctx.fillRect(cx, cy + 4 * p, 4 * p, ch - 8 * p);
+    ctx.fillStyle = T.car; ctx.fillRect(cx, cy, cw, 4 * p); ctx.fillRect(cx, cy + ch - 4 * p, cw, 4 * p); ctx.fillRect(carRopeX - 8 * p, cy - 4 * p, 16 * p, 4 * p);
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5; ctx.strokeRect(cx, cy, cw, ch);
     // person on a scale
     const px = cx + cw * 0.35, floorY = cy + ch - 4 * p, sh = 6 * p, ph = Math.min(ch * 0.7, 60 * p);
-    ctx.fillStyle = T.ink; ctx.fillRect(px - 14 * p, floorY - sh, 28 * p, sh);
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.moveTo(px - 15 * p, floorY); ctx.lineTo(px - 13 * p, floorY - sh); ctx.lineTo(px + 13 * p, floorY - sh); ctx.lineTo(px + 15 * p, floorY); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = T.canvas; ctx.fillRect(px + 4 * p, floorY - sh + 1.5 * p, 7 * p, sh - 3 * p);
     ctx.strokeStyle = T.person; ctx.fillStyle = T.person; ctx.lineWidth = 3 * p; ctx.lineCap = 'round';
     const feet = floorY - sh, hip = feet - ph * 0.45, neck = feet - ph * 0.82;
     ctx.beginPath(); ctx.moveTo(px - 6 * p, feet); ctx.lineTo(px, hip); ctx.lineTo(px + 6 * p, feet); ctx.moveTo(px, hip); ctx.lineTo(px, neck); ctx.moveTo(px - 9 * p, neck + 10 * p); ctx.lineTo(px, neck + 3 * p); ctx.lineTo(px + 9 * p, neck + 10 * p); ctx.stroke();

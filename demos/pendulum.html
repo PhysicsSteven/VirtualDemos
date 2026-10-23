@@ -59,9 +59,9 @@ body { margin: 0; }
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
 }
-:root { --bob: #2b60b5; --rod: #6b7787; --gate: #a7740b; --beam: #b0452f; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bob: #69a0ff; --rod: #9aa6b6; --gate: #e2b350; --beam: #ff8a70; } }
-:root[data-theme="dark"] { --bob: #69a0ff; --rod: #9aa6b6; --gate: #e2b350; --beam: #ff8a70; }
+:root { --bob: #2b60b5; --rod: #6b7787; --gate: #a7740b; --beam: #b0452f; --wall: #f1f4f7; --wall-line: #e4e9ef; --bench: #cfae84; --bench-edge: #9c7a52; --grain: rgba(110,75,35,0.18); --metal: #a3acb6; --metal-dark: #5f6873; --metal-hi: #eef1f4; --wood: #c0925a; --wood-dark: #8a6236; --gate-body: #36414e; --bob-dark: #173a72; --shadow: rgba(30,40,55,0.18); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bob: #69a0ff; --rod: #9aa6b6; --gate: #e2b350; --beam: #ff8a70; --wall: #131b24; --wall-line: #19222d; --bench: #4d3d2a; --bench-edge: #34291c; --grain: rgba(0,0,0,0.25); --metal: #6c7784; --metal-dark: #3a434e; --metal-hi: #c9d1db; --wood: #8f6d45; --wood-dark: #5e4528; --gate-body: #4c5866; --bob-dark: #2a5296; --shadow: rgba(0,0,0,0.45); } }
+:root[data-theme="dark"] { --bob: #69a0ff; --rod: #9aa6b6; --gate: #e2b350; --beam: #ff8a70; --wall: #131b24; --wall-line: #19222d; --bench: #4d3d2a; --bench-edge: #34291c; --grain: rgba(0,0,0,0.25); --metal: #6c7784; --metal-dark: #3a434e; --metal-hi: #c9d1db; --wood: #8f6d45; --wood-dark: #5e4528; --gate-body: #4c5866; --bob-dark: #2a5296; --shadow: rgba(0,0,0,0.45); }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -264,7 +264,8 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   let W = 0, H = 0, dpr = 1, T = null, geo = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      bob: g('--bob'), rod: g('--rod'), gate: g('--gate'), beam: g('--beam'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      bob: g('--bob'), rod: g('--rod'), gate: g('--gate'), beam: g('--beam'),
+      wall: g('--wall'), wallLine: g('--wall-line'), bench: g('--bench'), benchEdge: g('--bench-edge'), grain: g('--grain'), metal: g('--metal'), metalDark: g('--metal-dark'), metalHi: g('--metal-hi'), wood: g('--wood'), woodDark: g('--wood-dark'), gateBody: g('--gate-body'), bobDark: g('--bob-dark'), shadow: g('--shadow'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
   const gNow = () => (S.mystery ? S.mystery : S.g), hideG = () => S.blind || !!S.mystery;
@@ -278,22 +279,39 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     const p = ps(), wide = W > 640, sw = wide ? W * 0.55 : W, sh = wide ? H : H * 0.62;
     const px = sw / 2, py = 96 * p, Lmax = 2, sc = Math.min((sh - py - 60 * p) / Lmax, (sw - 40 * p) / (2 * Lmax * Math.max(0.3, Math.sin(Math.min(S.A, 90) * Math.PI / 180)))), Lpx = S.L * sc;
     geo = { px, py, sc };
-    ctx.fillStyle = T.gridStrong; ctx.fillRect(px - 40 * p, py - 8 * p, 80 * p, 8 * p);
-    // photogate at the bottom
-    const gy = py + Lpx; ctx.fillStyle = T.gate; ctx.fillRect(px - 26 * p, gy + 12 * p, 8 * p, 30 * p); ctx.fillRect(px + 18 * p, gy + 12 * p, 8 * p, 30 * p);
-    const th = S.st.th, bx = px + Lpx * Math.sin(th), by = py + Lpx * Math.cos(th);
-    const inBeam = Math.abs(bx - px) < 10 * p; ctx.strokeStyle = T.beam; ctx.globalAlpha = inBeam ? 1 : 0.35; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(px - 18 * p, gy + 27 * p); ctx.lineTo(px + 18 * p, gy + 27 * p); ctx.stroke(); ctx.globalAlpha = 1;
+    const gy = py + Lpx, th = S.st.th, bx = px + Lpx * Math.sin(th), by = py + Lpx * Math.cos(th);
+    scenery(p, wide, sw, sh, px, py, gy, bx);
+    // photogate at the bottom: a U-shaped gate whose beam lights up while the bob is in it
+    const inBeam = Math.abs(bx - px) < 10 * p;
+    ctx.fillStyle = T.gateBody; ctx.fillRect(px - 26 * p, gy + 12 * p, 8 * p, 36 * p); ctx.fillRect(px + 18 * p, gy + 12 * p, 8 * p, 36 * p); ctx.fillRect(px - 26 * p, gy + 42 * p, 52 * p, 6 * p);
+    ctx.fillStyle = inBeam ? T.beam : T.metalDark; ctx.beginPath(); ctx.arc(px - 22 * p, gy + 16 * p, 1.8 * p, 0, 7); ctx.fill();   // indicator LED on top of the arm
+    ctx.fillStyle = T.beam; ctx.fillRect(px - 19 * p, gy + 25 * p, 2 * p, 4 * p); ctx.fillStyle = T.metalHi; ctx.fillRect(px + 17 * p, gy + 25 * p, 2 * p, 4 * p);   // emitter and receiver
+    ctx.strokeStyle = T.beam; ctx.globalAlpha = inBeam ? 1 : 0.35; ctx.lineWidth = 1.5 * p;
+    if (inBeam) { ctx.shadowColor = T.beam; ctx.shadowBlur = 8 * p; }
+    ctx.beginPath(); ctx.moveTo(px - 18 * p, gy + 27 * p); ctx.lineTo(px + 18 * p, gy + 27 * p); ctx.stroke(); ctx.globalAlpha = 1; ctx.shadowBlur = 0;
     // release angle guide
     ctx.strokeStyle = T.grid; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + Lpx + 50 * p); ctx.stroke(); ctx.setLineDash([]);
-    if (S.rod) { ctx.strokeStyle = T.rod; ctx.lineWidth = 10 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke(); ctx.lineCap = 'butt'; }
+    if (S.rod) {
+      // a wooden bar, pivoted through a hole near its top end
+      const hw = 5 * p; ctx.save(); ctx.translate(px, py); ctx.rotate(-th);
+      const wg = ctx.createLinearGradient(-hw, 0, hw, 0); wg.addColorStop(0, T.woodDark); wg.addColorStop(0.45, T.wood); wg.addColorStop(1, T.woodDark);
+      ctx.fillStyle = wg; ctx.beginPath(); ctx.moveTo(-hw, 0); ctx.lineTo(-hw, Lpx); ctx.arc(0, Lpx, hw, Math.PI, 0, true); ctx.lineTo(hw, 0); ctx.arc(0, 0, hw, 0, Math.PI, true); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = T.grain; ctx.lineWidth = 1; for (const [gx, a, b] of ROD_GRAIN) { ctx.beginPath(); ctx.moveTo(gx * hw, a * Lpx); ctx.lineTo(gx * hw, b * Lpx); ctx.stroke(); }
+      ctx.restore();
+    }
     else { ctx.strokeStyle = T.rod; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke();
-      const r = (8 + 6 * Math.cbrt(S.m)) * p; ctx.fillStyle = T.bob; ctx.beginPath(); ctx.arc(bx, by, r, 0, 7); ctx.fill(); }
+      // a shaded metal bob with a small hook where the string ties on
+      const r = (8 + 6 * Math.cbrt(S.m)) * p, ux = (bx - px) / (Lpx || 1), uy = (by - py) / (Lpx || 1);
+      ctx.strokeStyle = T.metalDark; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(bx - ux * (r + 3 * p), by - uy * (r + 3 * p)); ctx.lineTo(bx - ux * r * 0.8, by - uy * r * 0.8); ctx.stroke();
+      const bg = ctx.createRadialGradient(bx - r * 0.35, by - r * 0.4, r * 0.08, bx, by, r); bg.addColorStop(0, T.metalHi); bg.addColorStop(0.4, T.bob); bg.addColorStop(1, T.bobDark);
+      ctx.fillStyle = bg; ctx.beginPath(); ctx.arc(bx, by, r, 0, 7); ctx.fill(); }
     ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(px, py, 4 * p, 0, 7); ctx.fill();
     ctx.fillStyle = T.ink; ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(S.lastT ? `photogate: T = ${S.lastT.toFixed(3)} s` : 'photogate: —', 14 * p, 48 * p);
     ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.fillText(`θ = ${f(th * 180 / Math.PI, 1)}°   t = ${f(S.t, 2)} s`, 14 * p, 70 * p);
     // angle trace
     const tx0 = wide ? sw + 30 * p : 40 * p, tx1 = W - 14 * p, ty0 = wide ? 70 * p : sh + 10 * p, ty1 = wide ? H - 40 * p : H - 24 * p, mid = (ty0 + ty1) / 2, span = 10;
+    ctx.fillStyle = T.canvas; ctx.fillRect(tx0, ty0, tx1 - tx0, ty1 - ty0);   // the trace sits on a plain panel in front of the wall
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(tx0 + 0.5, ty0 + 0.5, tx1 - tx0, ty1 - ty0);
     ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(tx0, mid); ctx.lineTo(tx1, mid); ctx.stroke();
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; const am = Math.max(S.A, 5);
@@ -302,6 +320,33 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     const t0 = Math.max(0, S.t - span); ctx.strokeStyle = T.bob; ctx.lineWidth = 2 * p; ctx.beginPath(); let first = true;
     for (const [t, a] of S.trace) { if (t < t0) continue; const x = tx0 + (tx1 - tx0) * (t - t0) / span, y = mid - (ty1 - ty0) / 2 * 0.95 * (a * 180 / Math.PI) / am; first ? ctx.moveTo(x, y) : ctx.lineTo(x, y); first = false; }
     ctx.stroke();
+  }
+  // ---------- scenery (decoration only; nothing here feeds the physics) ----------
+  const rng = ((a) => () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; })(20261022);
+  const ROD_GRAIN = Array.from({ length: 5 }, () => { const a = rng() * 0.6; return [-0.7 + rng() * 1.4, a, a + 0.25 + rng() * 0.4]; });
+  const BENCH_GRAIN = Array.from({ length: 14 }, () => [rng(), rng(), 0.08 + rng() * 0.2]);
+  function scenery(p, wide, sw, sh, px, py, gy, bx) {
+    // a tiled lab wall, a wooden benchtop, a retort stand whose boss clamp holds the pivot, and a post under the photogate
+    const ww = wide ? W : sw, bt = sh - 14 * p;
+    ctx.fillStyle = T.wall; ctx.fillRect(0, 0, ww, bt);
+    ctx.strokeStyle = T.wallLine; ctx.lineWidth = 1; const tw = 64 * p, th = 32 * p;
+    for (let r = 0, y = bt - th; y > -th; y -= th, r++) { ctx.beginPath(); ctx.moveTo(0, Math.round(y) + 0.5); ctx.lineTo(ww, Math.round(y) + 0.5); for (let x = (r % 2) * tw / 2; x < ww; x += tw) { ctx.moveTo(Math.round(x) + 0.5, y); ctx.lineTo(Math.round(x) + 0.5, y + th); } ctx.stroke(); }
+    ctx.fillStyle = T.bench; ctx.fillRect(0, bt, ww, sh - bt);
+    ctx.strokeStyle = T.grain; for (const [gx, gy0, len] of BENCH_GRAIN) { const y = bt + 4 * p + gy0 * (sh - bt - 6 * p); ctx.beginPath(); ctx.moveTo(gx * ww, y); ctx.lineTo((gx + len) * ww, y); ctx.stroke(); }
+    ctx.fillStyle = T.benchEdge; ctx.fillRect(0, bt, ww, 2 * p);
+    // soft shadow of the bob on the bench
+    ctx.fillStyle = T.shadow; ctx.beginPath(); ctx.ellipse(bx, bt + 5 * p, 16 * p, 3 * p, 0, 0, 7); ctx.fill();
+    // post and foot under the photogate
+    ctx.fillStyle = T.metal; ctx.fillRect(px - 2 * p, gy + 48 * p, 4 * p, Math.max(0, bt - gy - 48 * p)); ctx.fillStyle = T.metalDark; ctx.fillRect(px - 14 * p, bt - 4 * p, 28 * p, 4 * p);
+    // retort stand at the right of the pendulum: base, upright, boss clamp, crossbar to the pivot block
+    const sx = sw - 30 * p, top = py - 40 * p, cy = py - 14 * p;
+    ctx.fillStyle = T.metalDark; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(sx - 26 * p, bt - 7 * p, 42 * p, 7 * p, 2 * p) : ctx.rect(sx - 26 * p, bt - 7 * p, 42 * p, 7 * p); ctx.fill();
+    const ug = ctx.createLinearGradient(sx - 3 * p, 0, sx + 3 * p, 0); ug.addColorStop(0, T.metalDark); ug.addColorStop(0.4, T.metalHi); ug.addColorStop(1, T.metal);
+    ctx.fillStyle = ug; ctx.fillRect(sx - 3 * p, top, 6 * p, bt - 7 * p - top);
+    const cg = ctx.createLinearGradient(0, cy - 2.5 * p, 0, cy + 2.5 * p); cg.addColorStop(0, T.metalHi); cg.addColorStop(1, T.metal);
+    ctx.fillStyle = cg; ctx.fillRect(px, cy - 2.5 * p, sx - px, 5 * p);
+    ctx.fillStyle = T.metalDark; ctx.fillRect(sx - 7 * p, cy - 8 * p, 14 * p, 16 * p); ctx.beginPath(); ctx.arc(sx + 10 * p, cy, 3.5 * p, 0, 7); ctx.fill(); ctx.fillRect(sx + 6 * p, cy - 1 * p, 4 * p, 2 * p);
+    ctx.fillRect(px - 8 * p, py - 22 * p, 16 * p, 26 * p);   // pivot block; the axle is drawn on top later
   }
   function readouts() {
     const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, g = gNow(), th0 = S.A * Math.PI / 180;

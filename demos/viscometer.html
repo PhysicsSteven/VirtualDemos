@@ -61,8 +61,12 @@ body { margin: 0; }
 }
 
 :root { --fluid: #e9c46a; --glass: #9aa6b6; --ball: #4a5563; --mark: #b0452f; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fluid: #8a6d1f; --glass: #56606e; --ball: #c3cad4; --mark: #ff8a70; } }
-:root[data-theme="dark"] { --fluid: #8a6d1f; --glass: #56606e; --ball: #c3cad4; --mark: #ff8a70; }
+:root { --bench: #cdb89a; --bench-edge: #a8916f; --grain: rgba(90, 60, 30, 0.12); --stand: #8b95a3; --stand-dark: #5d6774; --glass-fill: rgba(170, 190, 210, 0.16); --glass-hi: rgba(255, 255, 255, 0.75);
+  --liq-glycerol: #dfe8ea; --liq-castor: #f3e3a0; --liq-oil: #d9a441; --liq-water: #cfe4f5; --ball-hi: #ffffff; --ball-glass: #a9c9cf; --ball-nylon: #e8e2d4; --wall: #eef2f6; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --fluid: #8a6d1f; --glass: #56606e; --ball: #c3cad4; --mark: #ff8a70; --bench: #3b3226; --bench-edge: #2a231a; --grain: rgba(255, 220, 170, 0.06); --stand: #6c7684; --stand-dark: #4a525e; --glass-fill: rgba(150, 175, 205, 0.10); --glass-hi: rgba(220, 235, 255, 0.16);
+  --liq-glycerol: #3a4a50; --liq-castor: #6e6127; --liq-oil: #8a5a18; --liq-water: #24425e; --ball-hi: #ffffff; --ball-glass: #5f8c94; --ball-nylon: #b8b0a0; --wall: #121922; } }
+:root[data-theme="dark"] { --fluid: #8a6d1f; --glass: #56606e; --ball: #c3cad4; --mark: #ff8a70; --bench: #3b3226; --bench-edge: #2a231a; --grain: rgba(255, 220, 170, 0.06); --stand: #6c7684; --stand-dark: #4a525e; --glass-fill: rgba(150, 175, 205, 0.10); --glass-hi: rgba(220, 235, 255, 0.16);
+  --liq-glycerol: #3a4a50; --liq-castor: #6e6127; --liq-oil: #8a5a18; --liq-water: #24425e; --ball-hi: #ffffff; --ball-glass: #5f8c94; --ball-nylon: #b8b0a0; --wall: #121922; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -300,7 +304,8 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      fluid: g('--fluid'), glass: g('--glass'), ball: g('--ball'), mark: g('--mark'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      fluid: g('--fluid'), glass: g('--glass'), ball: g('--ball'), mark: g('--mark'), bench: g('--bench'), benchEdge: g('--bench-edge'), grain: g('--grain'), stand: g('--stand'), standDark: g('--stand-dark'), glassFill: g('--glass-fill'), glassHi: g('--glass-hi'),
+      liq: { glycerol: g('--liq-glycerol'), castor: g('--liq-castor'), oil: g('--liq-oil'), water: g('--liq-water') }, ballHi: g('--ball-hi'), ballGlass: g('--ball-glass'), ballNylon: g('--ball-nylon'), wall: g('--wall'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
   const FL = () => (S.myst ? { name: 'Mystery liquid', ...S.myst } : FLUIDS[S.fluid]), rhoB = () => BALLS[S.ball].rho, dm = () => S.d / 1000;
@@ -311,22 +316,74 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function reset() { S.run = false; S.done = false; S.t = 0; S.s = { x: 0, v: 0 }; S.gate = gateTimes(dm(), rhoB(), FL(), S.D); S.t1 = null; setRun(false); draw(); readouts(); }
   // ---------- drawing ----------
   function depth() { return up() ? LTUBE - dm() / 2 + S.s.x : S.s.x; }   // x is positive down; a floating ball starts on the bottom and x goes negative
+  // seeded decoration, made once: wood grain on the bench
+  const rng = ((seed) => () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; })(7);
+  const GRAIN = Array.from({ length: 22 }, () => [rng(), rng(), 0.08 + rng() * 0.25]);
+  // bench, wall, lab stand with two clamps, a beaker on wide screens: all behind the tube
+  function scenery(p, top, cx, tw, yOf) {
+    const benchY = Hh - 14 * p;
+    ctx.fillStyle = T.wall; ctx.fillRect(0, 0, W, benchY);
+    ctx.fillStyle = T.bench; ctx.fillRect(0, benchY, W, Hh - benchY);
+    ctx.fillStyle = T.benchEdge; ctx.fillRect(0, benchY, W, 2 * p);
+    ctx.strokeStyle = T.grain; ctx.lineWidth = 1;
+    for (const [fy, fx, fl] of GRAIN) { const y = benchY + 4 * p + fy * (Hh - benchY - 5 * p); ctx.beginPath(); ctx.moveTo(fx * W, y); ctx.lineTo((fx + fl) * W, y); ctx.stroke(); }
+    // stand: base plate, rod, boss heads and arms reaching the tube
+    const rx = cx - tw / 2 - 78 * p, baseY = benchY - 7 * p;
+    ctx.fillStyle = T.standDark; ctx.beginPath(); ctx.roundRect(rx - 44 * p, baseY, 70 * p, 7 * p, 2 * p); ctx.fill();
+    const rg = ctx.createLinearGradient(rx - 3 * p, 0, rx + 3 * p, 0); rg.addColorStop(0, T.standDark); rg.addColorStop(0.45, T.stand); rg.addColorStop(1, T.standDark);
+    ctx.fillStyle = rg; ctx.fillRect(rx - 3 * p, top + 20 * p, 6 * p, baseY - top - 20 * p);
+    ctx.fillStyle = T.standDark; ctx.beginPath(); ctx.arc(rx, top + 20 * p, 3 * p, Math.PI, 0); ctx.fill();
+    for (const z of [0.04, 0.42]) {
+      const y = yOf(z), xl = cx - tw / 2 - 2 * p;
+      ctx.fillStyle = T.stand; ctx.fillRect(rx, y - 2 * p, xl - rx - 6 * p, 4 * p);
+      ctx.fillStyle = T.standDark; ctx.fillRect(rx - 6 * p, y - 6 * p, 12 * p, 12 * p);
+      ctx.fillRect(rx + 6 * p, y - 1.5 * p, 5 * p, 3 * p);   // the boss screw
+      ctx.beginPath(); ctx.roundRect(xl - 7 * p, y - 7 * p, 7 * p, 14 * p, 2 * p); ctx.fill();
+    }
+    // a spare beaker of the liquid on the bench, when there is room
+    if (W >= 640) {
+      const bx = Math.min(W - 70 * p, cx + tw / 2 + 150 * p), bw = 44 * p, bh = 54 * p, by = benchY - bh;
+      ctx.fillStyle = S.myst ? T.fluid : T.liq[S.fluid]; ctx.globalAlpha = 0.7; ctx.fillRect(bx + 2 * p, by + bh * 0.4, bw - 4 * p, bh * 0.6 - 2 * p); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.glassFill; ctx.fillRect(bx, by, bw, bh);
+      ctx.strokeStyle = T.glass; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(bx - 3 * p, by); ctx.lineTo(bx, by + 2 * p); ctx.lineTo(bx, by + bh); ctx.lineTo(bx + bw, by + bh); ctx.lineTo(bx + bw, by); ctx.stroke();
+      ctx.strokeStyle = T.glassHi; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(bx + 6 * p, by + 6 * p); ctx.lineTo(bx + 6 * p, by + bh - 6 * p); ctx.stroke();
+    }
+  }
+  function ballFill(x, y, r) {
+    const base = S.ball === 'glass' ? T.ballGlass : S.ball === 'nylon' ? T.ballNylon : T.ball;
+    const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.4, r * 0.08, x, y, r); g.addColorStop(0, T.ballHi); g.addColorStop(0.35, base); g.addColorStop(1, T.standDark);
+    return g;
+  }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     const p = ps(), top = (W < 560 ? 104 : 70) * p, bot = Hh - 30 * p, sc = (bot - top) / (LTUBE + 0.03), tw = Math.max(46 * p, Math.min(W * 0.32, S.D * sc)), cx = W * 0.42;
     const yOf = (z) => top + 0.03 * sc + z * sc;
-    ctx.fillStyle = T.fluid; ctx.globalAlpha = 0.75; ctx.fillRect(cx - tw / 2, yOf(0), tw, LTUBE * sc); ctx.globalAlpha = 1;
-    ctx.strokeStyle = T.glass; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(cx - tw / 2, top); ctx.lineTo(cx - tw / 2, yOf(LTUBE)); ctx.lineTo(cx + tw / 2, yOf(LTUBE)); ctx.lineTo(cx + tw / 2, top); ctx.stroke();
+    scenery(p, top, cx, tw, yOf);
+    // glass body, then the liquid with a concave meniscus, darker toward the walls
+    const xL = cx - tw / 2, xR = cx + tw / 2, y0 = yOf(0), yB = yOf(LTUBE), mh = Math.min(5 * p, tw * 0.08);
+    ctx.fillStyle = T.glassFill; ctx.fillRect(xL, top, tw, yB - top);
+    const lc = S.myst ? T.fluid : T.liq[S.fluid], lg = ctx.createLinearGradient(xL, 0, xR, 0);
+    lg.addColorStop(0, T.standDark); lg.addColorStop(0.12, lc); lg.addColorStop(0.88, lc); lg.addColorStop(1, T.standDark);
+    ctx.fillStyle = lc; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.moveTo(xL, y0 - mh); ctx.quadraticCurveTo(cx, y0 + mh, xR, y0 - mh); ctx.lineTo(xR, yB); ctx.lineTo(xL, yB); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = lg; ctx.globalAlpha = 0.25; ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(xL, y0 - mh); ctx.quadraticCurveTo(cx, y0 + mh, xR, y0 - mh); ctx.stroke();
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(xL, top); ctx.lineTo(xL, yB); ctx.lineTo(xR, yB); ctx.lineTo(xR, top); ctx.stroke();
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xL - 3 * p, top); ctx.lineTo(xL + 1 * p, top); ctx.moveTo(xR - 1 * p, top); ctx.lineTo(xR + 3 * p, top); ctx.stroke();   // lip
+    ctx.strokeStyle = T.glassHi; ctx.lineWidth = Math.max(2, tw * 0.06); ctx.beginPath(); ctx.moveTo(xL + tw * 0.2, top + 8 * p); ctx.lineTo(xL + tw * 0.2, yB - 8 * p); ctx.stroke();
     // ruler
     ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     for (let k = 0; k <= 45; k++) { const y = yOf(k / 100), L = k % 10 === 0 ? 10 : k % 5 === 0 ? 7 : 4; ctx.beginPath(); ctx.moveTo(cx + tw / 2 + 4, y); ctx.lineTo(cx + tw / 2 + 4 + L * p, y); ctx.stroke(); if (k % 10 === 0) ctx.fillText(`${k} cm`, cx + tw / 2 + 16 * p, y); }
     // marks
     ctx.strokeStyle = T.mark; ctx.lineWidth = 2 * p; ctx.fillStyle = T.mark; ctx.textAlign = 'right';
-    for (const [z, lab] of [[MARK1, 'mark A'], [MARK2, 'mark B']]) { const y = yOf(z); ctx.beginPath(); ctx.moveTo(cx - tw / 2 - 10 * p, y); ctx.lineTo(cx + tw / 2, y); ctx.stroke(); ctx.fillText(lab, cx - tw / 2 - 14 * p, y); }
+    for (const [z, lab] of [[MARK1, 'mark A'], [MARK2, 'mark B']]) {
+      const y = yOf(z); ctx.beginPath(); ctx.moveTo(cx - tw / 2 - 10 * p, y); ctx.lineTo(cx + tw / 2, y); ctx.stroke(); ctx.fillText(lab, cx - tw / 2 - 14 * p, y);
+      // light gate: a bracket clipped round the tube at the mark
+      ctx.save(); ctx.strokeStyle = T.standDark; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx - tw / 2 - 2 * p, y - 6 * p); ctx.lineTo(cx - tw / 2 - 7 * p, y - 6 * p); ctx.lineTo(cx - tw / 2 - 7 * p, y + 6 * p); ctx.lineTo(cx - tw / 2 - 2 * p, y + 6 * p); ctx.stroke(); ctx.restore();
+    }
     // ball, drawn at least 6 px across
     const r = Math.max(3 * p, dm() / 2 * sc), y = yOf(Math.max(0, Math.min(LTUBE, depth())));
-    ctx.fillStyle = T.ball; ctx.beginPath(); ctx.arc(cx, y, r, 0, 7); ctx.fill();
+    ctx.fillStyle = ballFill(cx, y, r); ctx.beginPath(); ctx.arc(cx, y, r, 0, 7); ctx.fill();
     ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`tube ${S.D * 1000} mm wide, to scale`, cx, yOf(LTUBE) + 6 * p);
     // timer
     ctx.fillStyle = T.ink; ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';

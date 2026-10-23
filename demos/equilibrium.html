@@ -59,9 +59,9 @@ body { margin: 0; }
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
 }
-:root { --w: #5a6575; --sup: #2b60b5; --tn: #a7740b; --fr: #b0452f; --beam: #c9a77a; --load: #6b7787; --ok: #2f7d4f; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #b4bfcc; --sup: #69a0ff; --tn: #e2b350; --fr: #ff8a70; --beam: #8d6c45; --load: #9aa6b6; --ok: #5fcf8a; } }
-:root[data-theme="dark"] { --w: #b4bfcc; --sup: #69a0ff; --tn: #e2b350; --fr: #ff8a70; --beam: #8d6c45; --load: #9aa6b6; --ok: #5fcf8a; }
+:root { --w: #5a6575; --sup: #2b60b5; --tn: #a7740b; --fr: #b0452f; --beam: #c9a77a; --load: #6b7787; --ok: #2f7d4f; --sky: #e6f0f8; --sky-low: #f7fafc; --hill: #dcebcc; --grass: #c3dba6; --grass-dark: #94b66f; --brick: #e6cabc; --brick-alt: #dfc0b0; --mortar: #f3e9e3; --floor: #dde1e6; --floor-line: #c9cfd7; --siding: #f0f3f6; --siding-line: #e2e7ed; --metal: #8d97a3; --metal-dark: #5f6873; --wood-dark: #a5835c; --grain: rgba(90,60,25,0.2); --panel: rgba(252,253,254,0.85); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w: #b4bfcc; --sup: #69a0ff; --tn: #e2b350; --fr: #ff8a70; --beam: #8d6c45; --load: #9aa6b6; --ok: #5fcf8a; --sky: #13202e; --sky-low: #10161e; --hill: #172419; --grass: #1f2d1b; --grass-dark: #3b5230; --brick: #3a2824; --brick-alt: #33231f; --mortar: #231a18; --floor: #1b232d; --floor-line: #26303c; --siding: #141b24; --siding-line: #1b242f; --metal: #6c7784; --metal-dark: #3a434e; --wood-dark: #5e4528; --grain: rgba(0,0,0,0.28); --panel: rgba(16,22,30,0.85); } }
+:root[data-theme="dark"] { --w: #b4bfcc; --sup: #69a0ff; --tn: #e2b350; --fr: #ff8a70; --beam: #8d6c45; --load: #9aa6b6; --ok: #5fcf8a; --sky: #13202e; --sky-low: #10161e; --hill: #172419; --grass: #1f2d1b; --grass-dark: #3b5230; --brick: #3a2824; --brick-alt: #33231f; --mortar: #231a18; --floor: #1b232d; --floor-line: #26303c; --siding: #141b24; --siding-line: #1b242f; --metal: #6c7784; --metal-dark: #3a434e; --wood-dark: #5e4528; --grain: rgba(0,0,0,0.28); --panel: rgba(16,22,30,0.85); }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -206,7 +206,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   let W = 0, H = 0, dpr = 1, T = null, geo = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      w: g('--w'), sup: g('--sup'), tn: g('--tn'), fr: g('--fr'), beam: g('--beam'), load: g('--load'), ok: g('--ok'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      w: g('--w'), sup: g('--sup'), tn: g('--tn'), fr: g('--fr'), beam: g('--beam'), load: g('--load'), ok: g('--ok'),
+      sky: g('--sky'), skyLow: g('--sky-low'), hill: g('--hill'), grass: g('--grass'), grassDark: g('--grass-dark'), brick: g('--brick'), brickAlt: g('--brick-alt'), mortar: g('--mortar'), floor: g('--floor'), floorLine: g('--floor-line'), siding: g('--siding'), sidingLine: g('--siding-line'), metal: g('--metal'), metalDark: g('--metal-dark'), woodDark: g('--wood-dark'), grain: g('--grain'), panel: g('--panel'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const f = (v, d = 1) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−'));
 
@@ -242,8 +243,41 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function forceScale(list) { const big = Math.max(...list.map((q) => Math.abs(q)), 1e-9); return Math.min(W, H) * 0.22 / big; }
   const lbl = (name, F) => (S.blind ? name : `${name} = ${f(F, 0)} N`);
-  function box(x, y, m, sel) { const p = ps(), s = (14 + Math.sqrt(m) * 2.2) * p; ctx.fillStyle = T.load; ctx.fillRect(x - s / 2, y - s, s, s); if (sel) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.strokeRect(x - s / 2 - 2, y - s - 2, s + 4, s + 4); }
-    ctx.fillStyle = T.canvas; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${f(m, 0)} kg`, x, y - s / 2); return s; }
+  // a generic standing figure whose size follows the mass as the old box did; its mass is written above the head
+  function box(x, y, m, sel) { const p = ps(), s = (14 + Math.sqrt(m) * 2.2) * p;
+    ctx.strokeStyle = T.load; ctx.lineWidth = 0.17 * s; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(x - 0.13 * s, y - 0.35 * s); ctx.lineTo(x - 0.15 * s, y - 0.06 * s); ctx.moveTo(x + 0.13 * s, y - 0.35 * s); ctx.lineTo(x + 0.15 * s, y - 0.06 * s); ctx.stroke(); ctx.lineCap = 'butt';
+    ctx.fillStyle = T.load; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x - 0.3 * s, y - 0.98 * s, 0.6 * s, 0.68 * s, 0.18 * s) : ctx.rect(x - 0.3 * s, y - 0.98 * s, 0.6 * s, 0.68 * s); ctx.fill();
+    ctx.beginPath(); ctx.arc(x, y - 1.2 * s, 0.19 * s, 0, 7); ctx.fill();
+    if (sel) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.strokeRect(x - 0.42 * s, y - 1.44 * s, 0.84 * s, 1.46 * s); }
+    ctx.fillStyle = T.ink; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(`${f(m, 0)} kg`, x, y - 1.47 * s); return s; }
+  // ---------- scenery (decoration only; nothing here feeds the physics) ----------
+  const rng = ((a) => () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; })(20261024);
+  const GRASS = Array.from({ length: 140 }, () => [rng(), 0.4 + rng() * 0.6, (rng() - 0.5) * 0.8]);
+  const TUFTS = Array.from({ length: 26 }, () => [rng(), rng()]);
+  const BRICK_ALT = Array.from({ length: 97 }, () => rng() < 0.4);
+  const PLANK_GRAIN = Array.from({ length: 6 }, () => { const a = rng() * 0.7; return [0.2 + rng() * 0.6, a, a + 0.15 + rng() * 0.3]; });
+  function verdict(msg) { const p = ps(); ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.panel; ctx.fillRect(8 * p, 8 * p, Math.min(W - 16 * p, ctx.measureText(msg).width + 12 * p), 26 * p); ctx.fillStyle = T.ink; ctx.fillText(msg, 14 * p, 14 * p); }
+  function sky(y1) { const g = ctx.createLinearGradient(0, 0, 0, y1); g.addColorStop(0, T.sky); g.addColorStop(1, T.skyLow); ctx.fillStyle = g; ctx.fillRect(0, 0, W, y1); }
+  function grass(y0) {
+    const p = ps(); ctx.fillStyle = T.grass; ctx.fillRect(0, y0, W, H - y0);
+    ctx.strokeStyle = T.grassDark; ctx.lineWidth = 1.2 * p; ctx.beginPath();
+    for (const [gx, h, lean] of GRASS) { const x = gx * W; ctx.moveTo(x, y0 + 2 * p); ctx.lineTo(x + lean * 4 * p, y0 + 2 * p - h * 8 * p); }
+    for (const [tx, ty] of TUFTS) { const x = tx * W, y = y0 + 14 * p + ty * (H - y0 - 18 * p); ctx.moveTo(x - 3 * p, y); ctx.lineTo(x - 4 * p, y - 5 * p); ctx.moveTo(x, y); ctx.lineTo(x, y - 6 * p); ctx.moveTo(x + 3 * p, y); ctx.lineTo(x + 4 * p, y - 5 * p); }
+    ctx.stroke();
+  }
+  function bricks(x0, y0, x1, y1) {
+    const p = ps(), bw = 34 * p, bh = 13 * p, gap = 2 * p;
+    ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, x1 - x0, y1 - y0); ctx.clip();
+    ctx.fillStyle = T.mortar; ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+    for (let r = 0, y = y1 - bh; y > y0 - bh; y -= bh, r++) for (let c = -1, x = x0 - (r % 2) * bw / 2; x < x1; x += bw, c++) {
+      ctx.fillStyle = BRICK_ALT[((r * 31 + c * 17) % 97 + 97) % 97] ? T.brickAlt : T.brick; ctx.fillRect(x + gap / 2, y + gap / 2, bw - gap, bh - gap); }
+    ctx.restore();
+  }
+  function woodPlank(x, y, w, h) {
+    ctx.fillStyle = T.beam; ctx.fillRect(x, y, w, h);
+    ctx.strokeStyle = T.grain; ctx.lineWidth = 1; ctx.beginPath(); for (const [gy, a, b] of PLANK_GRAIN) { ctx.moveTo(x + a * w, y + gy * h); ctx.lineTo(x + b * w, y + gy * h); } ctx.stroke();
+    ctx.fillStyle = T.woodDark; ctx.fillRect(x, y + h - 1.5 * ps(), w, 1.5 * ps()); ctx.fillRect(x, y, 2 * ps(), h); ctx.fillRect(x + w - 2 * ps(), y, 2 * ps(), h);
+  }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
@@ -253,10 +287,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const r = seesaw(v.mb, [{ m: v.m1, x: v.x1 }, { m: v.m2, x: v.x2 }]), sc = (W - 80 * p) / 6, cx = W / 2, cy = H * 0.55;
       const tilt = bl || r.balanced ? 0 : Math.sign(r.tau) * Math.min(0.16, Math.abs(r.tau) / 400 * 0.16 + 0.04);
       geo = { kind: 'seesaw', cx, cy, sc, tilt };
-      ctx.fillText(bl ? 'Is it balanced?' : r.balanced ? 'Balanced: the torques cancel.' : `Not balanced: it tips ${r.tau > 0 ? 'left side down' : 'right side down'}.`, 14 * p, 14 * p);
-      ctx.fillStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx - 18 * p, cy + 46 * p); ctx.lineTo(cx + 18 * p, cy + 46 * p); ctx.closePath(); ctx.fill();
+      // a playground: sky, a low hill, grass; the seesaw stands on a metal A-frame
+      const gy = cy + 46 * p; sky(gy);
+      ctx.fillStyle = T.hill; ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(0, gy - 34 * p); ctx.quadraticCurveTo(W * 0.3, gy - 70 * p, W * 0.62, gy - 30 * p); ctx.quadraticCurveTo(W * 0.85, gy - 8 * p, W, gy - 22 * p); ctx.lineTo(W, gy); ctx.closePath(); ctx.fill();
+      grass(gy);
+      verdict(bl ? 'Is it balanced?' : r.balanced ? 'Balanced: the torques cancel.' : `Not balanced: it tips ${r.tau > 0 ? 'left side down' : 'right side down'}.`);
+      ctx.strokeStyle = T.metal; ctx.lineWidth = 5 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(cx - 20 * p, gy); ctx.lineTo(cx, cy + 4 * p); ctx.lineTo(cx + 20 * p, gy); ctx.moveTo(cx - 11 * p, cy + 26 * p); ctx.lineTo(cx + 11 * p, cy + 26 * p); ctx.stroke(); ctx.lineCap = 'butt';
+      ctx.fillStyle = T.metalDark; ctx.beginPath(); ctx.arc(cx, cy + 3 * p, 6 * p, 0, 7); ctx.fill();
       ctx.save(); ctx.translate(cx, cy); ctx.rotate(-tilt);
-      ctx.fillStyle = T.beam; ctx.fillRect(-2.5 * sc, -8 * p, 5 * sc, 8 * p);
+      woodPlank(-2.5 * sc, -8 * p, 5 * sc, 8 * p);
       ctx.fillStyle = T.muted; ctx.font = `${9.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; for (let x = -2.5; x <= 2.5; x += 0.5) { ctx.fillRect(x * sc - 0.5, -8 * p, 1, 4 * p); if (Math.abs(x % 1) < 1e-9) ctx.fillText(`${f(x, 0)}`, x * sc, 4 * p); }
       const s1 = box(v.x1 * sc, -8 * p, v.m1, S.sel === 1), s2 = box(v.x2 * sc, -8 * p, v.m2, S.sel === 2);
       const k = forceScale([v.m1 * G, v.m2 * G, r.P, v.mb * G]), L = (F) => (bl ? 50 * p : F * k);
@@ -271,10 +310,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const r = plank(v.L, v.mb, v.a, v.b, [{ m: v.m1, x: v.x1 }]), sc = (W - 80 * p) / v.L, x0 = 40 * p, y = H * 0.55, X = (x) => x0 + x * sc;
       geo = { kind: 'plank', X, sc, y };
       const tipAng = bl || !r.tips ? 0 : 0.12;
-      ctx.fillText(bl ? 'Will the plank stay?' : r.tips ? `It tips about the ${r.tips === 'right' ? 'right' : 'left'} support: the other one would have to pull down.` : 'In equilibrium: both supports push up.', 14 * p, 14 * p);
-      for (const s of [v.a, v.b]) { ctx.fillStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(X(s), y); ctx.lineTo(X(s) - 14 * p, y + 40 * p); ctx.lineTo(X(s) + 14 * p, y + 40 * p); ctx.closePath(); ctx.fill(); }
+      // a house wall with siding behind, a concrete floor, and two sawhorses as the supports
+      const fy = y + 40 * p; ctx.fillStyle = T.siding; ctx.fillRect(0, 0, W, fy);
+      ctx.strokeStyle = T.sidingLine; ctx.lineWidth = 1; ctx.beginPath(); for (let yy = fy - 16 * p; yy > 0; yy -= 16 * p) { ctx.moveTo(0, Math.round(yy) + 0.5); ctx.lineTo(W, Math.round(yy) + 0.5); } ctx.stroke();
+      ctx.fillStyle = T.floor; ctx.fillRect(0, fy, W, H - fy); ctx.strokeStyle = T.floorLine; ctx.beginPath(); ctx.moveTo(0, fy + 0.5); ctx.lineTo(W, fy + 0.5); for (let xx = 30 * p; xx < W; xx += 90 * p) { ctx.moveTo(xx, fy); ctx.lineTo(xx - 20 * p, H); } ctx.stroke();
+      verdict(bl ? 'Will the plank stay?' : r.tips ? `It tips about the ${r.tips === 'right' ? 'right' : 'left'} support: the other one would have to pull down.` : 'In equilibrium: both supports push up.');
+      for (const s of [v.a, v.b]) { ctx.strokeStyle = T.woodDark; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(X(s) - 6 * p, y + 4 * p); ctx.lineTo(X(s) - 15 * p, fy); ctx.moveTo(X(s) + 6 * p, y + 4 * p); ctx.lineTo(X(s) + 15 * p, fy); ctx.stroke();
+        ctx.fillStyle = T.woodDark; ctx.fillRect(X(s) - 17 * p, y, 34 * p, 5 * p); }
       ctx.save(); const piv = r.tips === 'right' ? X(v.b) : X(v.a); ctx.translate(piv, y); ctx.rotate(r.tips === 'right' ? tipAng : -tipAng); ctx.translate(-piv, -y);
-      ctx.fillStyle = T.beam; ctx.fillRect(X(0), y - 10 * p, v.L * sc, 10 * p);
+      woodPlank(X(0), y - 10 * p, v.L * sc, 10 * p);
       const s1 = box(X(v.x1), y - 10 * p, v.m1, true);
       const k = forceScale([r.F1, r.F2, v.m1 * G, v.mb * G]), L = (F) => (bl ? 50 * p : F * k);
       arrow(X(v.x1), y - 10 * p - s1 / 2, 0, L(v.m1 * G), T.w, 3 * p, lbl('painter', v.m1 * G));
@@ -286,12 +330,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (S.preset === 'sign') {
       const r = sign(v.L, v.ms, v.m1, v.x1, v.h), sc = Math.min((W - 220 * p) / v.L, (H - 200 * p) / (v.h + 1.2)), wx = 70 * p, y = 90 * p + v.h * sc, X = (x) => wx + x * sc;
       geo = { kind: 'sign', X, sc, y };
-      ctx.fillText(bl ? 'Find the cable tension and the hinge force.' : `Cable at θ = ${f(r.th * 180 / Math.PI, 1)}° to the strut`, 14 * p, 14 * p);
-      ctx.fillStyle = T.gridStrong; ctx.fillRect(wx - 16 * p, 40 * p, 16 * p, H - 60 * p);
+      // a brick wall with two bracket plates, open sky beyond it, a pavement below
+      const pv = H - 16 * p; sky(pv); bricks(0, 0, wx, pv);
+      ctx.fillStyle = T.floor; ctx.fillRect(0, pv, W, H - pv); ctx.strokeStyle = T.floorLine; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, pv + 0.5); ctx.lineTo(W, pv + 0.5); ctx.stroke();
+      ctx.fillStyle = T.metalDark; ctx.fillRect(wx, y - 16 * p, 5 * p, 22 * p); ctx.fillRect(wx, y - v.h * sc - 9 * p, 5 * p, 18 * p);
+      verdict(bl ? 'Find the cable tension and the hinge force.' : `Cable at θ = ${f(r.th * 180 / Math.PI, 1)}° to the strut`);
       ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(X(v.L), y - 4 * p); ctx.lineTo(wx, y - v.h * sc); ctx.stroke();
       ctx.fillStyle = T.beam; ctx.fillRect(wx, y - 8 * p, v.L * sc, 8 * p);
-      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(X(v.x1), y); ctx.lineTo(X(v.x1), y + 26 * p); ctx.stroke();
-      ctx.fillStyle = T.load; ctx.fillRect(X(v.x1) - 32 * p, y + 26 * p, 64 * p, 30 * p); ctx.fillStyle = T.canvas; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${f(v.m1, 0)} kg`, X(v.x1), y + 41 * p);
+      // the sign hangs from one hook at x₁; two short chains splay from the hook to the board's corners
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(X(v.x1), y); ctx.lineTo(X(v.x1), y + 10 * p); ctx.lineTo(X(v.x1) - 26 * p, y + 26 * p); ctx.moveTo(X(v.x1), y + 10 * p); ctx.lineTo(X(v.x1) + 26 * p, y + 26 * p); ctx.stroke();
+      ctx.fillStyle = T.woodDark; ctx.fillRect(X(v.x1) - 32 * p, y + 26 * p, 64 * p, 30 * p); ctx.fillStyle = T.load; ctx.fillRect(X(v.x1) - 29 * p, y + 29 * p, 58 * p, 24 * p); ctx.fillStyle = T.canvas; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${f(v.m1, 0)} kg`, X(v.x1), y + 41 * p);
       const k = forceScale([r.T, Math.hypot(r.Hx, r.Hy), v.m1 * G]), L = (F) => (bl ? 50 * p : F * k);
       const ux = -Math.cos(r.th), uy = -Math.sin(r.th);
       arrow(X(v.L), y - 4 * p, ux * L(r.T), uy * L(r.T), T.tn, 3.5 * p, lbl('T', r.T));
@@ -306,10 +354,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const r = ladder(v.L, v.mb, v.m1, v.f, v.th, v.mu), th = v.th * Math.PI / 180, sc = Math.min((W - 160 * p) / (v.L * Math.cos(th) + 0.5), (H - 120 * p) / (v.L * Math.sin(th) + 0.3));
     const wallX = W - 70 * p, floorY = H - 50 * p, footX = wallX - v.L * Math.cos(th) * sc, topY = floorY - v.L * Math.sin(th) * sc, P = (s) => [footX + (wallX - footX) * s, floorY + (topY - floorY) * s];
     geo = { kind: 'ladder', P, footX, wallX, floorY, topY };
-    ctx.fillText(bl ? 'Will the ladder slip?' : r.slips ? `It slips: it needs ${f(r.fs, 0)} N of friction but the floor can give only ${f(r.fmax, 0)} N.` : 'It holds: static friction is enough.', 14 * p, 14 * p);
-    ctx.fillStyle = T.gridStrong; ctx.fillRect(wallX, 30 * p, 14 * p, floorY - 30 * p); ctx.fillRect(10 * p, floorY, W - 20 * p, 8 * p);
-    ctx.strokeStyle = T.beam; ctx.lineWidth = 8 * p; ctx.beginPath(); ctx.moveTo(footX, floorY); ctx.lineTo(wallX, topY); ctx.stroke();
-    const pp = P(v.f); ctx.fillStyle = T.load; ctx.beginPath(); ctx.arc(pp[0], pp[1] - 14 * p, 10 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.stroke();
+    // a brick wall on the right, a tiled floor; the ladder has two rails and rungs every 0.3 m
+    ctx.fillStyle = T.siding; ctx.fillRect(0, 0, wallX, floorY); bricks(wallX, 0, W, floorY);
+    ctx.fillStyle = T.floor; ctx.fillRect(0, floorY, W, H - floorY); ctx.strokeStyle = T.floorLine; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, floorY + 0.5); ctx.lineTo(W, floorY + 0.5); for (let xx = 20 * p; xx < W; xx += 60 * p) { ctx.moveTo(xx, floorY); ctx.lineTo(xx - 14 * p, H); } ctx.stroke();
+    verdict(bl ? 'Will the ladder slip?' : r.slips ? `It slips: it needs ${f(r.fs, 0)} N of friction but the floor can give only ${f(r.fmax, 0)} N.` : 'It holds: static friction is enough.');
+    { const dx = wallX - footX, dy = topY - floorY, ln = Math.hypot(dx, dy), nx = dy / ln * 9 * p, ny = -dx / ln * 9 * p;   // the near rail is the contact line; the far rail sits just above it
+      ctx.strokeStyle = T.beam; ctx.globalAlpha = 0.6; ctx.lineWidth = 3.5 * p; ctx.beginPath(); ctx.moveTo(footX + nx, floorY + ny); ctx.lineTo(wallX + nx, topY + ny); ctx.stroke(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = T.woodDark; ctx.lineWidth = 2.5 * p; ctx.beginPath(); for (let sr = 0.3 / v.L; sr < 1; sr += 0.3 / v.L) { const q = P(sr); ctx.moveTo(q[0], q[1]); ctx.lineTo(q[0] + nx, q[1] + ny); } ctx.stroke();
+      ctx.strokeStyle = T.beam; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(footX, floorY); ctx.lineTo(wallX, topY); ctx.stroke(); }
+    const pp = P(v.f); box(pp[0], pp[1], v.m1, true);
     const k = forceScale([r.N, r.Nw, v.m1 * G, v.mb * G]), L = (F) => (bl ? 50 * p : F * k);
     arrow(footX, floorY, 0, -L(r.N), T.sup, 3.5 * p, lbl('N', r.N));
     arrow(footX, floorY - 4 * p, L(Math.min(r.fs, r.fmax)), 0, T.fr, 3.5 * p, lbl(r.slips && !bl ? 'f (at its limit)' : 'f', Math.min(r.fs, r.fmax)));

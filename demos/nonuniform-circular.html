@@ -63,6 +63,13 @@ body { margin: 0; }
 :root { --road: #c9d1db; --car: #4a5563; --at: #a7740b; --ac: #2b60b5; --atot: #b0452f; --vel: #1f8a5a; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --road: #3b4554; --car: #c3cad4; --at: #e2b350; --ac: #69a0ff; --atot: #ff8a70; --vel: #4cd08f; } }
 :root[data-theme="dark"] { --road: #3b4554; --car: #c3cad4; --at: #e2b350; --ac: #69a0ff; --atot: #ff8a70; --vel: #4cd08f; }
+/* scenery: grass, kerbs, lane markings, trees, the car's details */
+:root { --grass: #e3ecd9; --tuft: #c2d4ae; --tree: #b5cfa6; --tree-dark: #8db27e; --kerb: #ebb2a9; --kerb2: #ffffff; --lane: #ffffff; --skid: #3b414a;
+  --glass: #c4d8ec; --tyre: #2b2f36; --shine: rgba(255, 255, 255, 0.55); --shadow: rgba(20, 30, 40, 0.16); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --grass: #142019; --tuft: #1f3122; --tree: #1d3123; --tree-dark: #284430; --kerb: #7a3d36; --kerb2: #b9c0ca; --lane: #737e8c; --skid: #05070a;
+  --glass: #4d6580; --tyre: #05070a; --shine: rgba(255, 255, 255, 0.35); --shadow: rgba(0, 0, 0, 0.4); } }
+:root[data-theme="dark"] { --grass: #142019; --tuft: #1f3122; --tree: #1d3123; --tree-dark: #284430; --kerb: #7a3d36; --kerb2: #b9c0ca; --lane: #737e8c; --skid: #05070a;
+  --glass: #4d6580; --tyre: #05070a; --shine: rgba(255, 255, 255, 0.35); --shadow: rgba(0, 0, 0, 0.4); }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -209,7 +216,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      road: g('--road'), car: g('--car'), at: g('--at'), ac: g('--ac'), atot: g('--atot'), vel: g('--vel'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      road: g('--road'), car: g('--car'), at: g('--at'), ac: g('--ac'), atot: g('--atot'), vel: g('--vel'),
+      grass: g('--grass'), tuft: g('--tuft'), tree: g('--tree'), treeDark: g('--tree-dark'), kerb: g('--kerb'), kerb2: g('--kerb2'), lane: g('--lane'), skid: g('--skid'),
+      glass: g('--glass'), tyre: g('--tyre'), shine: g('--shine'), shadow: g('--shadow'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const f = (v, d = 2) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
   const v0 = () => (S.mode === 'up' ? 0 : S.v0b), atS = () => (S.mode === 'up' ? S.at : -S.at), tSlip = () => slipTime(v0(), atS(), S.r, S.mu);
@@ -253,18 +262,20 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     const p = ps(), wide = W > 700, pw = wide ? W * 0.55 : W, ph = wide ? Hh : Hh * 0.6, cx = pw / 2, cy = ph / 2 + 20 * p, R = Math.min(pw, ph) * 0.34;
-    ctx.strokeStyle = T.road; ctx.lineWidth = 22 * p; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke(); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 3 * p, 0, 7); ctx.fill();
+    track(cx, cy, R, pw, ph, p); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 3 * p, 0, 7); ctx.fill();
     // the car goes anticlockwise from the bottom
     let px, py, q;
     if (S.slid) { const th = S.slid.th, bx = cx + R * Math.sin(th), by = cy + R * Math.cos(th), d = S.slid.v * (S.t - S.slid.t) * R / S.r; px = bx + d * Math.cos(th); py = by - d * Math.sin(th); q = null; }
     else { q = stateAt(v0(), atS(), S.r, S.t); px = cx + R * Math.sin(q.th); py = cy + R * Math.cos(q.th); }
-    ctx.fillStyle = T.car; ctx.beginPath(); ctx.arc(px, py, 8 * p, 0, 7); ctx.fill();
+    // tyre marks from the slip point, then the car seen from above, nose along its velocity (anticlockwise: heading −θ)
+    if (S.slid) skid(cx + R * Math.sin(S.slid.th), cy + R * Math.cos(S.slid.th), px, py, p);
+    car(px, py, -(S.slid ? S.slid.th : q.th), p);
     if (q && !S.blind) {
       const th = q.th, tx = Math.cos(th), ty = -Math.sin(th), nx = (cx - px) / R, ny = (cy - py) / R, k = Math.min(40 * p, R * 1.2 / Math.max(1, S.mu * G));   // arrows: 1 m/s² = k px; at the slip point the total is 1.2 R long
       arrow(px, py, tx * Math.min(q.v * 3 * p, R * 0.6), ty * Math.min(q.v * 3 * p, R * 0.6), T.vel, 'v');
       arrow(px, py, tx * q.at * k, ty * q.at * k, T.at, 'a_t'); arrow(px, py, nx * q.ac * k, ny * q.ac * k, T.ac, 'a_c'); arrow(px, py, tx * q.at * k + nx * q.ac * k, ty * q.at * k + ny * q.ac * k, T.atot, 'a');
     }
-    if (S.slid) { ctx.fillStyle = T.atot; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Slipped: friction cannot supply the whole acceleration', 14 * p, 54 * p); }
+    if (S.slid) { ctx.fillStyle = T.atot; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; const sm = W < 560 ? 'Slipped: not enough grip' : 'Slipped: friction cannot supply the whole acceleration'; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(10 * p, 50 * p, ctx.measureText(sm).width + 8 * p, 20 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.atot; ctx.fillText(sm, 14 * p, 54 * p); }
     // grip circle: radius μs g, with the needed acceleration vector inside it
     const gx = wide ? pw + 30 * p : 30 * p, gw = wide ? W - gx - 20 * p : W - 50 * p, gy0 = wide ? 70 * p : ph + 20 * p, gh = wide ? Hh - gy0 - 50 * p : Hh - gy0 - 40 * p;
     const tmax = tEnd(), amax = Math.max(S.mu * G, ...S.hist.map((h) => h[3])) * 1.1, X = (t) => gx + gw * t / tmax, Y = (a) => gy0 + gh - gh * a / amax;
@@ -273,6 +284,49 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(f(amax, 1), gx - 3, Y(amax)); ctx.fillText('0', gx - 3, Y(0)); ctx.textBaseline = 'top'; ctx.fillText(`${f(tmax, 1)} s`, gx + gw, gy0 + gh + 3);
     ctx.strokeStyle = T.gridStrong; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(gx, Y(S.mu * G)); ctx.lineTo(gx + gw, Y(S.mu * G)); ctx.stroke(); ctx.setLineDash([]); ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillStyle = T.muted; ctx.fillText('μs g: the most friction can give', gx + 4 * p, Y(S.mu * G) - 2);
     if (!S.blind) for (const [k, col] of [[1, T.at], [2, T.ac], [3, T.atot]]) { ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); S.hist.forEach((h, i) => (i ? ctx.lineTo(X(h[0]), Y(h[k])) : ctx.moveTo(X(h[0]), Y(h[k])))); ctx.stroke(); if (S.hist.length) { const h = S.hist[S.hist.length - 1]; ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(['', 'a_t', 'a_c', '|a|'][k], Math.min(X(h[0]) + 5 * p, gx + gw - 26 * p), Y(h[k]) + (k === 1 ? 8 : -8) * p); } }
+  }
+  // ---------- scenery (decoration only; random layout precomputed once from a seeded generator) ----------
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  const DECO = (() => { const r = rng(4417), n = (k, fn) => Array.from({ length: k }, fn); return { trees: n(60, () => [r() * 6.2832, r(), 0.7 + r() * 0.6]), tufts: n(90, () => [r(), r()]) }; })();
+  function rr(x, y, w, h, r) { ctx.beginPath(); ctx.moveTo(x + r, y); ctx.arcTo(x + w, y, x + w, y + h, r); ctx.arcTo(x + w, y + h, x, y + h, r); ctx.arcTo(x, y + h, x, y, r); ctx.arcTo(x, y, x + w, y, r); ctx.closePath(); }
+  function track(cx, cy, R, rw, rh, p) {   // grass, a two lane track (the car follows the outer lane at radius r), kerbs, start line, trees
+    const m = 8 * p, ri = R - 30 * p, ro = R + 12 * p;
+    ctx.save(); rr(m, m, rw - 2 * m, rh - 2 * m, 10 * p); ctx.fillStyle = T.grass; ctx.fill(); ctx.clip();
+    ctx.strokeStyle = T.tuft; ctx.lineWidth = 1.3 * p; ctx.beginPath();
+    for (const [fx, fy] of DECO.tufts) { const x = fx * rw, y = 70 * p + fy * (rh - 70 * p), d = Math.hypot(x - cx, y - cy); if (d > ri - 8 * p && d < ro + 8 * p) continue; ctx.moveTo(x - 2.5 * p, y - 5 * p); ctx.lineTo(x, y); ctx.lineTo(x + 2.5 * p, y - 5 * p); }
+    ctx.stroke();
+    ctx.fillStyle = T.road; ctx.beginPath(); ctx.arc(cx, cy, ro, 0, 7); ctx.arc(cx, cy, ri, 7, 0, true); ctx.fill();
+    for (const rk of [ri, ro]) { const n = Math.max(12, 2 * Math.round(Math.PI * rk / (14 * p))); ctx.lineWidth = 4 * p;
+      for (let i = 0; i < n; i++) { ctx.strokeStyle = i % 2 ? T.kerb2 : T.kerb; ctx.beginPath(); ctx.arc(cx, cy, rk, i * 2 * Math.PI / n, (i + 1) * 2 * Math.PI / n + 0.002); ctx.stroke(); } }
+    ctx.strokeStyle = T.lane; ctx.lineWidth = 2 * p; ctx.setLineDash([10 * p, 10 * p]); ctx.beginPath(); ctx.arc(cx, cy, R - 9 * p, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    const sq = 5 * p; for (let i = 0; ri + 2 * p + i * sq < ro - 2 * p; i++) for (let j = 0; j < 2; j++) { ctx.fillStyle = (i + j) % 2 ? T.tyre : T.kerb2; ctx.fillRect(cx - sq + j * sq, cy + ri + 2 * p + i * sq, sq, Math.min(sq, ro - 2 * p - (ri + 2 * p + i * sq))); }   // start line where the car begins
+    const reach = Math.max(rw, rh) * 0.6, placed = [];
+    for (const [a, fr, sz] of DECO.trees) {
+      const rad = 11 * p * sz, d = ro + 14 * p + rad + fr * reach, x = cx + d * Math.cos(a), y = cy + d * Math.sin(a);
+      if (x < m + rad || x > rw - m - rad || y < 70 * p + rad || y > rh - m - rad || placed.some(([u, v, k]) => Math.hypot(u - x, v - y) < (k + rad) * 0.9)) continue;
+      placed.push([x, y, rad]);
+      ctx.fillStyle = T.shadow; ctx.beginPath(); ctx.arc(x + 3 * p, y + 3 * p, rad, 0, 7); ctx.fill();
+      ctx.fillStyle = T.treeDark; ctx.beginPath(); ctx.arc(x, y, rad, 0, 7); ctx.fill();
+      ctx.fillStyle = T.tree; ctx.beginPath(); ctx.arc(x - rad * 0.25, y - rad * 0.25, rad * 0.65, 0, 7); ctx.fill();
+      if (placed.length >= 12) break;
+    }
+    ctx.restore();
+  }
+  function car(x, y, ang, p) {   // seen from above, nose along +x after rotation
+    const L = 14 * p, Wd = 7 * p; ctx.save(); ctx.translate(x, y); ctx.rotate(ang);
+    ctx.fillStyle = T.shadow; rr(-L + 2 * p, -Wd + 2 * p, 2 * L, 2 * Wd, 4 * p); ctx.fill();
+    ctx.fillStyle = T.tyre; for (const sx of [-0.58 * L, 0.55 * L]) for (const sy of [-1, 1]) ctx.fillRect(sx - 3.5 * p, sy * Wd - 2 * p, 7 * p, 4 * p);
+    ctx.fillStyle = T.car; rr(-L, -Wd, 2 * L, 2 * Wd, 4 * p); ctx.fill(); ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = T.glass; ctx.beginPath(); ctx.moveTo(0.12 * L, -Wd * 0.72); ctx.lineTo(0.45 * L, -Wd * 0.58); ctx.lineTo(0.45 * L, Wd * 0.58); ctx.lineTo(0.12 * L, Wd * 0.72); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(-0.55 * L, -Wd * 0.65); ctx.lineTo(-0.75 * L, -Wd * 0.55); ctx.lineTo(-0.75 * L, Wd * 0.55); ctx.lineTo(-0.55 * L, Wd * 0.65); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = T.shine; ctx.fillRect(-0.5 * L, -Wd * 0.45, 0.58 * L, Wd * 0.3);
+    ctx.restore();
+  }
+  function skid(x0, y0, x1, y1, p) {   // tyre marks along the straight line the sliding car takes
+    const L = Math.hypot(x1 - x0, y1 - y0); if (L < 1) return; const nx = -(y1 - y0) / L * 5 * p, ny = (x1 - x0) / L * 5 * p;
+    ctx.strokeStyle = T.skid; ctx.globalAlpha = 0.4; ctx.lineWidth = 3 * p; ctx.beginPath();
+    for (const sg of [1, -1]) { ctx.moveTo(x0 + sg * nx, y0 + sg * ny); ctx.lineTo(x1 + sg * nx, y1 + sg * ny); }
+    ctx.stroke(); ctx.globalAlpha = 1;
   }
   function init() { sync(); readouts(); }
   function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }

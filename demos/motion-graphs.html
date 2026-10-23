@@ -61,6 +61,13 @@ body { margin: 0; }
 :root { --xcol: #2b60b5; --vcol: #b0452f; --acol: #6f4bb3; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --xcol: #69a0ff; --vcol: #ff8a70; --acol: #b49bff; } }
 :root[data-theme="dark"] { --xcol: #69a0ff; --vcol: #ff8a70; --acol: #b49bff; }
+/* scenery: hallway wall and floor, the motion sensor, sky and building for the toss */
+:root { --wall: #eef0f3; --wall-trim: #d6dbe2; --door: #e2e6ec; --floor: #f0e9de; --floor-seam: #e1d6c4; --sensor: #3d4654; --grille: #8a95a3; --ping: #8a95a3;
+  --sky-top: #cfe3f5; --sky-bot: #eef5fb; --cloud: #ffffff; --grass: #d5e3c8; --building: #dde1e7; --window: #c7d6e6; --shine: rgba(255, 255, 255, 0.5); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wall: #151c25; --wall-trim: #262f3c; --door: #1b232e; --floor: #221e19; --floor-seam: #2e2821; --sensor: #a9b4c2; --grille: #4c5664; --ping: #7d8a9a;
+  --sky-top: #0c1626; --sky-bot: #172235; --cloud: #253043; --grass: #18241a; --building: #1d2530; --window: #2e3d52; --shine: rgba(255, 255, 255, 0.25); } }
+:root[data-theme="dark"] { --wall: #151c25; --wall-trim: #262f3c; --door: #1b232e; --floor: #221e19; --floor-seam: #2e2821; --sensor: #a9b4c2; --grille: #4c5664; --ping: #7d8a9a;
+  --sky-top: #0c1626; --sky-bot: #172235; --cloud: #253043; --grass: #18241a; --building: #1d2530; --window: #2e3d52; --shine: rgba(255, 255, 255, 0.25); }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -314,7 +321,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'),
-      accent: g('--accent'), x: g('--xcol'), v: g('--vcol'), a: g('--acol'), equi: g('--equi'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+      accent: g('--accent'), x: g('--xcol'), v: g('--vcol'), a: g('--acol'), equi: g('--equi'),
+      wall: g('--wall'), wallTrim: g('--wall-trim'), door: g('--door'), floor: g('--floor'), floorSeam: g('--floor-seam'), sensor: g('--sensor'), grille: g('--grille'), ping: g('--ping'),
+      skyTop: g('--sky-top'), skyBot: g('--sky-bot'), cloud: g('--cloud'), grass: g('--grass'), building: g('--building'), window: g('--window'), shine: g('--shine'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
   }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
   const fx = (v, d) => { const s = (Math.abs(v) < 0.5 * Math.pow(10, -d) ? 0 : v).toFixed(d); return s.replace('-', '−'); };
@@ -431,6 +440,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function drawShaft(L, xr, blind) {
     const p = L.p, top = L.panes[0].y0, bot = L.panes[L.panes.length - 1].y0 + L.panes[L.panes.length - 1].h, sx = 62 * p;
     const Yh = (y) => bot - (bot - top) * (y - xr.lo) / (xr.hi - xr.lo);
+    tossScene(p, top, bot, sx, Yh(0));
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx, top); ctx.lineTo(sx, bot); ctx.stroke();
     ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     for (let y = xr.lo; y <= xr.hi + 1e-9; y += xr.step) { ctx.fillRect(sx - 4 * p, Yh(y) - 0.5, 8 * p, 1); ctx.fillText(fx(y, xr.step < 1 ? 1 : 0), sx - 8 * p, Yh(y)); }
@@ -438,6 +448,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     if (S.dots) { for (let t = 0; t <= run.T + 1e-9; t += 0.25) { ctx.fillStyle = T.x; ctx.globalAlpha = 0.3; ctx.beginPath(); ctx.arc(sx + 16 * p, Yh(stateAt(run, t).x), 3.5 * p, 0, 7); ctx.fill(); } ctx.globalAlpha = 1; }
     const q = stateAt(run, S.t), by = Yh(q.x);
     ctx.fillStyle = T.x; ctx.beginPath(); ctx.arc(sx, by, 8 * p, 0, 7); ctx.fill();
+    ctx.fillStyle = T.shine; ctx.beginPath(); ctx.arc(sx - 2.5 * p, by - 2.5 * p, 3.5 * p, 0, 7); ctx.fill();
     if (!blind) {
       const k = 3.2 * p;
       if (Math.abs(q.v) > 0.01) arrow(sx + 24 * p, by, sx + 24 * p, by - q.v * k, T.v, 2.5 * p, 8 * p);
@@ -455,6 +466,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     if (S.vert) drawShaft(L, R.x, blind);
     else {
     const xr = R.x, ty = L.trackH * 0.62, tx0 = L.left, tx1 = L.right, X = (x) => tx0 + (tx1 - tx0) * (x - xr.lo) / (xr.hi - xr.lo);
+    hallScene(p, L.trackH, ty, tx0, tx1);
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(tx0, ty + 12 * p); ctx.lineTo(tx1, ty + 12 * p); ctx.stroke();
     ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     for (let x = xr.lo; x <= xr.hi + 1e-9; x += xr.step) { const px = X(x); ctx.fillRect(px - 0.5, ty + 12 * p, 1, 6 * p); ctx.fillText(fx(x, xr.step < 1 ? 1 : 0), px, ty + 20 * p); }
@@ -464,9 +476,13 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       ctx.globalAlpha = 1;
     }
     const s = st(S.t), cx = X(Math.max(xr.lo, Math.min(xr.hi, walk && S.walk.run ? S.walk.x : s.x)));
-    ctx.fillStyle = T.x; const cw = 34 * p, ch = 16 * p;
-    ctx.beginPath(); ctx.roundRect(cx - cw / 2, ty - ch + 4 * p, cw, ch, 4 * p); ctx.fill();
-    ctx.fillStyle = T.ink; for (const dx of [-cw / 3, cw / 3]) { ctx.beginPath(); ctx.arc(cx + dx, ty + 6 * p, 4.5 * p, 0, 7); ctx.fill(); }
+    const cw = 34 * p, ch = 16 * p;
+    sensorPings(p, tx0, ty, cx - cw / 2 - 3 * p);
+    // the cart: body, a reflector card facing the sensor, wheels with hubs
+    ctx.fillStyle = T.ink; ctx.fillRect(cx - cw / 2 - 3 * p, ty - ch, 2 * p, ch - 2 * p);
+    ctx.fillStyle = T.x; ctx.beginPath(); ctx.roundRect(cx - cw / 2, ty - ch + 4 * p, cw, ch, 4 * p); ctx.fill();
+    ctx.fillStyle = T.shine; ctx.fillRect(cx - cw / 2 + 4 * p, ty - ch + 6 * p, cw - 8 * p, 3 * p);
+    ctx.fillStyle = T.ink; for (const dx of [-cw / 3, cw / 3]) { ctx.beginPath(); ctx.arc(cx + dx, ty + 6 * p, 4.5 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.grille; ctx.beginPath(); ctx.arc(cx + dx, ty + 6 * p, 1.6 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.ink; }
     if (!blind) {
       const vs = 14 * p, as = 14 * p;
       if (Math.abs(s.v) > 0.01) { arrow(cx, ty - ch - 6 * p, cx + s.v * vs, ty - ch - 6 * p, T.v, 2.5 * p, 8 * p); }
@@ -539,6 +555,49 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     $('clock').textContent = `t = ${S.t.toFixed(2)} s`;
   }
 
+  // ---------- scenery (decoration only; random layout precomputed once from a seeded generator) ----------
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  const DECO = (() => { const r = rng(2026), n = (k, fn) => Array.from({ length: k }, fn);
+    return { seams: n(18, () => r()), doors: [0.3 + r() * 0.08, 0.72 + r() * 0.08], clouds: n(3, () => [r(), r(), 0.7 + r() * 0.5]), windows: n(40, () => r() < 0.35) }; })();
+  let amb = 0;   // ambient clock for the sensor pings and drifting clouds; it advances only while playing with motion allowed
+  function hallScene(p, trackH, ty, tx0, tx1) {
+    // a hallway: wall with doors and a skirting board, a wooden floor under the track
+    const x0 = 4 * p, x1 = W - 4 * p, y0 = 4 * p, fy = ty + 12 * p, y1 = trackH + 2 * p;
+    ctx.save(); ctx.beginPath(); ctx.roundRect(x0, y0, x1 - x0, y1 - y0, 8 * p); ctx.clip();
+    ctx.fillStyle = T.wall; ctx.fillRect(x0, y0, x1 - x0, fy - y0);
+    ctx.strokeStyle = T.wallTrim; ctx.lineWidth = 1.5 * p;
+    for (const fd of DECO.doors) { const dx = tx0 + fd * (tx1 - tx0), dw = Math.min(46 * p, (tx1 - tx0) * 0.09), dh = Math.min(fy - y0 - 6 * p, 92 * p);
+      ctx.fillStyle = T.door; ctx.fillRect(dx - dw / 2, fy - dh, dw, dh); ctx.strokeRect(dx - dw / 2, fy - dh, dw, dh); ctx.fillStyle = T.wallTrim; ctx.beginPath(); ctx.arc(dx + dw * 0.32, fy - dh * 0.45, 2 * p, 0, 7); ctx.fill(); }
+    ctx.fillStyle = T.wallTrim; ctx.fillRect(x0, fy - 5 * p, x1 - x0, 5 * p);
+    ctx.fillStyle = T.floor; ctx.fillRect(x0, fy, x1 - x0, y1 - fy);
+    ctx.strokeStyle = T.floorSeam; ctx.lineWidth = 1; ctx.beginPath();
+    for (let y = fy + 7 * p, row = 0; y < y1; y += 7 * p, row++) { ctx.moveTo(x0, y); ctx.lineTo(x1, y); for (let i = row % 3; i < DECO.seams.length; i += 3) { const x = x0 + DECO.seams[i] * (x1 - x0); ctx.moveTo(x, y - 7 * p); ctx.lineTo(x, y); } }
+    ctx.stroke(); ctx.restore();
+    // the motion sensor at the left end, facing the cart: a small box with a round speaker grille
+    const bw = 20 * p, bh = 22 * p, bx = tx0 - bw - 6 * p, by = ty + 12 * p - bh;
+    ctx.fillStyle = T.sensor; ctx.beginPath(); ctx.roundRect(bx, by, bw, bh, 3 * p); ctx.fill();
+    ctx.fillStyle = T.grille; ctx.beginPath(); ctx.ellipse(bx + bw, by + bh / 2, 3 * p, 8 * p, 0, -Math.PI / 2, Math.PI / 2); ctx.fill();
+    ctx.strokeStyle = T.grille; ctx.lineWidth = 1; ctx.beginPath(); for (let i = -2; i <= 2; i++) { ctx.moveTo(bx + 4 * p, by + bh / 2 + i * 3 * p); ctx.lineTo(bx + bw - 4 * p, by + bh / 2 + i * 3 * p); } ctx.stroke();
+  }
+  function sensorPings(p, tx0, ty, xTarget) {   // faint sound pulses travelling from the sensor to the cart while it runs
+    if (reduce || !playing) return;
+    const sx = tx0 - 6 * p + 3 * p, sy = ty + 1 * p, d = xTarget - sx; if (d < 16 * p) return;
+    ctx.strokeStyle = T.ping; ctx.lineWidth = 1.2 * p;
+    for (let k = 0; k < 3; k++) { const f = ((amb * 1.6 + k / 3) % 1), r = f * d; ctx.globalAlpha = 0.5 * (1 - f); const sp = Math.min(0.6, 9 * p / Math.max(r, 1)); ctx.beginPath(); ctx.arc(sx, sy, r, -sp, sp); ctx.stroke(); }
+    ctx.globalAlpha = 1;
+  }
+  function tossScene(p, top, bot, sx, gy) {
+    // outdoors beside a building: sky, a few clouds, the ground at the launch height
+    const x0 = 4 * p, x1 = sx + 34 * p, y0 = top - 4 * p, y1 = bot + 4 * p;
+    ctx.save(); ctx.beginPath(); ctx.roundRect(x0, y0, x1 - x0, y1 - y0, 8 * p); ctx.clip();
+    const g = ctx.createLinearGradient(0, y0, 0, gy); g.addColorStop(0, T.skyTop); g.addColorStop(1, T.skyBot); ctx.fillStyle = g; ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+    ctx.fillStyle = T.cloud; for (const [fx, fy, sz] of DECO.clouds) { const span = x1 - x0 + 60 * p, x = x0 - 30 * p + ((fx * span + amb * 5 * p) % span), y = y0 + 20 * p + fy * (gy - y0) * 0.6, k = 8 * p * sz; ctx.beginPath(); ctx.arc(x, y, k, 0, 7); ctx.arc(x + k, y + 2 * p, k * 0.7, 0, 7); ctx.arc(x - k, y + 2 * p, k * 0.6, 0, 7); ctx.fill(); }
+    const bx1 = x0 + 18 * p; ctx.fillStyle = T.building; ctx.fillRect(x0, y0 + 30 * p, bx1 - x0, y1 - y0);
+    let i = 0; for (let y = y0 + 36 * p; y < gy - 8 * p; y += 14 * p) for (const wx of [x0 + 3 * p, x0 + 10 * p]) { ctx.fillStyle = DECO.windows[i++ % DECO.windows.length] ? T.window : T.wallTrim; ctx.fillRect(wx, y, 5 * p, 8 * p); }
+    ctx.fillStyle = T.grass; ctx.fillRect(x0, gy + 9 * p, x1 - x0, y1 - gy);
+    ctx.restore();
+  }
+
   // ---------- readouts ----------
   function readouts() {
     const walk = S.preset === 'walk', blind = S.blind && !walk, q = st(S.t), dd = (a, b, c) => `<div${c ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
@@ -575,6 +634,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (playing && !reduce) amb += dt;
     if (playing) {
       if (S.preset === 'walk' && S.walk.run) {
         const W = S.walk; W.x = Math.max(-X_LIM, Math.min(X_LIM, W.x + W.key * (W.fast ? 2 : 1) * dt));

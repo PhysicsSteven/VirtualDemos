@@ -62,6 +62,13 @@ body { margin: 0; }
 :root { --vcol: #b0452f; --mcol: #2b60b5; --ycol: #2f7d4f; --flame: #e08a2c; --body: #c9d1db; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --vcol: #ff8a70; --mcol: #69a0ff; --ycol: #5fcf8a; --flame: #f0a050; --body: #6b7787; } }
 :root[data-theme="dark"] { --vcol: #ff8a70; --mcol: #69a0ff; --ycol: #5fcf8a; --flame: #f0a050; --body: #6b7787; }
+/* scenery: sky that darkens toward space, stars, clouds, ground, pad, tower, rocket details */
+:root { --sky-low: #d4e8f7; --space: #bcc5d9; --star: #ffffff; --cloud: #ffffff; --ground: #d5e3c8; --pad: #b4bcc6; --steel: #8d99a8; --smoke: #e4e7eb;
+  --flame-core: #fff1b8; --nose: #c8574a; --fin: #8a96a6; --shadow: rgba(20, 30, 40, 0.16); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sky-low: #1f3a57; --space: #04070c; --star: #dfe6ef; --cloud: #33445a; --ground: #18241a; --pad: #3a4452; --steel: #5b6878; --smoke: #4a5463;
+  --flame-core: #ffe7a0; --nose: #c0574a; --fin: #8996a8; --shadow: rgba(0, 0, 0, 0.4); } }
+:root[data-theme="dark"] { --sky-low: #1f3a57; --space: #04070c; --star: #dfe6ef; --cloud: #33445a; --ground: #18241a; --pad: #3a4452; --steel: #5b6878; --smoke: #4a5463;
+  --flame-core: #ffe7a0; --nose: #c0574a; --fin: #8996a8; --shadow: rgba(0, 0, 0, 0.4); }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -221,7 +228,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   let W = 0, H = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      v: g('--vcol'), m: g('--mcol'), y: g('--ycol'), flame: g('--flame'), body: g('--body'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      v: g('--vcol'), m: g('--mcol'), y: g('--ycol'), flame: g('--flame'), body: g('--body'),
+      skyLow: g('--sky-low'), space: g('--space'), star: g('--star'), cloud: g('--cloud'), ground: g('--ground'), pad: g('--pad'), steel: g('--steel'), smoke: g('--smoke'),
+      flameCore: g('--flame-core'), nose: g('--nose'), fin: g('--fin'), shadow: g('--shadow'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const n0 = (v, d = 0) => (!isFinite(v) ? '∞' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toLocaleString('en-US', { maximumFractionDigits: d, minimumFractionDigits: d })).replace('-', '−');
   const P = () => ({ md: S.p.md, mf: S.p.mf, u: S.p.u, b: S.p.b, g: S.p.g ? G : 0 });
@@ -234,20 +243,30 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const colW = wide ? Math.min(240 * p, W * 0.32) : W * 0.5, top = 96 * p, bot = H - 30 * p;
     // altitude column: scale to the highest point reached (or the burnout height in space)
     const yMax = Math.max(100, isFinite(F.yTop) ? F.yTop : F.yBurnout * 1.05), Yp = (y) => bot - (bot - top) * Math.min(1, y / yMax);
+    const rx = colW * 0.62, ry = Yp(q.y), rw = 18 * p, rh = 58 * p, fuelFrac = Math.max(0, (q.m - S.p.md) / Math.max(1, S.p.mf));
+    scene(p, colW, top, bot, rx, ry, rw, rh, q, F);
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(74 * p, top); ctx.lineTo(74 * p, bot); ctx.stroke();
     ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     const ys = niceStep(yMax / 5); for (let y = 0; y <= yMax + 1e-9; y += ys) { ctx.fillRect(70 * p, Yp(y) - 0.5, 8 * p, 1); ctx.fillText(y >= 1000 ? `${n0(y / 1000, ys < 1000 ? 1 : 0)} km` : `${n0(y)} m`, 66 * p, Yp(y)); }
-    if (S.p.g) { ctx.fillStyle = T.gridStrong; ctx.fillRect(0, bot, colW, 3 * p); }
-    // rocket
-    const rx = colW * 0.62, ry = Yp(q.y), rw = 18 * p, rh = 58 * p, fuelFrac = Math.max(0, (q.m - S.p.md) / Math.max(1, S.p.mf));
+    if (S.p.g) { ctx.fillStyle = T.gridStrong; ctx.fillRect(0, bot, 78 * p, 3 * p); }
+    // rocket: exhaust plume whose size follows the thrust u × (burn rate), only while the engine burns
     if (q.burning && !(q.onPad && S.t === 0 && !S.run)) {
-      ctx.fillStyle = T.flame; const fl = (16 + 14 * Math.random()) * p * (S.run ? 1 : 0.6);
-      ctx.beginPath(); ctx.moveTo(rx - rw * 0.4, ry); ctx.lineTo(rx, ry + fl); ctx.lineTo(rx + rw * 0.4, ry); ctx.closePath(); ctx.fill();
+      const k = Math.sqrt(F.thrust / 2.25e6), fk = !reduce && S.run ? 1 + 0.07 * Math.sin(amb * 41) + 0.05 * Math.sin(amb * 67 + 1) : 1;   // 2.25 MN is the largest thrust the sliders allow
+      const fl = (14 + 50 * k) * p * fk, fw = rw * (0.32 + 0.25 * k);
+      ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, H - 6 * p); ctx.clip();
+      ctx.fillStyle = T.flame; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(rx - fw, ry); ctx.quadraticCurveTo(rx - fw * 1.1, ry + fl * 0.45, rx, ry + fl); ctx.quadraticCurveTo(rx + fw * 1.1, ry + fl * 0.45, rx + fw, ry); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.flameCore; ctx.beginPath(); ctx.moveTo(rx - fw * 0.5, ry); ctx.quadraticCurveTo(rx - fw * 0.5, ry + fl * 0.3, rx, ry + fl * 0.55); ctx.quadraticCurveTo(rx + fw * 0.5, ry + fl * 0.3, rx + fw * 0.5, ry); ctx.closePath(); ctx.fill(); ctx.restore();
     }
-    ctx.fillStyle = T.body; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5;
-    ctx.beginPath(); ctx.moveTo(rx - rw / 2, ry); ctx.lineTo(rx - rw / 2, ry - rh + 14 * p); ctx.lineTo(rx, ry - rh); ctx.lineTo(rx + rw / 2, ry - rh + 14 * p); ctx.lineTo(rx + rw / 2, ry); ctx.closePath(); ctx.fill(); ctx.stroke();
+    // body with fins, engine bell and nose cone; the orange fill shows the fuel left
+    const by = ry - 4 * p, bodyTop = ry - rh + 14 * p;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5;
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.moveTo(rx - rw * 0.22, by); ctx.lineTo(rx - rw * 0.32, ry); ctx.lineTo(rx + rw * 0.32, ry); ctx.lineTo(rx + rw * 0.22, by); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = T.fin; for (const sg of [-1, 1]) { ctx.beginPath(); ctx.moveTo(rx + sg * rw / 2, by - 16 * p); ctx.lineTo(rx + sg * rw * 0.95, ry); ctx.lineTo(rx + sg * rw / 2, by); ctx.closePath(); ctx.fill(); ctx.stroke(); }
+    ctx.fillStyle = T.body; ctx.beginPath(); ctx.rect(rx - rw / 2, bodyTop, rw, by - bodyTop); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = T.nose; ctx.beginPath(); ctx.moveTo(rx - rw / 2, bodyTop); ctx.quadraticCurveTo(rx - rw / 2, ry - rh + 4 * p, rx, ry - rh); ctx.quadraticCurveTo(rx + rw / 2, ry - rh + 4 * p, rx + rw / 2, bodyTop); ctx.closePath(); ctx.fill(); ctx.stroke();
     ctx.fillStyle = T.flame; ctx.globalAlpha = 0.55; ctx.fillRect(rx - rw / 2 + 3 * p, ry - 3 * p - (rh - 20 * p) * fuelFrac, rw - 6 * p, (rh - 20 * p) * fuelFrac); ctx.globalAlpha = 1;
-    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('fuel', rx, ry + 4 * p + (q.burning ? 30 * p : 0));
+    ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; const fx = rx + rw + 3 * p, fy = ry - rh * 0.45, fw2 = ctx.measureText('fuel').width;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.8; ctx.fillRect(fx - 2 * p, fy - 7 * p, fw2 + 4 * p, 14 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.muted; ctx.fillText('fuel', fx, fy);
     // status
     ctx.fillStyle = T.ink; ctx.font = `600 ${12.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     const st = !F.lifts && S.p.g ? 'Thrust never beats the weight: it never leaves the pad.' : q.landed ? 'Back on the ground.' : q.onPad && S.t > 0 && q.burning ? 'Burning on the pad: thrust is less than the weight.' : q.burning ? 'Engine on' : S.t > 0 ? 'Engine off: coasting' : 'Ready';
@@ -282,6 +301,43 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.textAlign = 'right'; ctx.fillText('t (s) · dashed vertical line: burnout', gx1, bot - 4 * p);
   }
 
+  // ---------- scenery (decoration only; random layout precomputed once from a seeded generator) ----------
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  const DECO = (() => { const r = rng(1957), n = (k, fn) => Array.from({ length: k }, fn);
+    return { stars: n(70, () => [r(), r(), 0.5 + r() * 1.1, r() * 6.28]), clouds: n(6, () => [r(), 0.6 + r() * 0.7]), puffs: n(10, () => [r() * 2 - 1, 0.5 + r() * 0.6, r() * 6.28]) }; })();
+  let amb = 0;   // ambient clock: flame flicker, twinkling, drifting clouds; it advances only while running with motion allowed
+  function mix(a, b, s) { const h = (c) => (/^#[0-9a-f]{6}$/i.test(c) ? [1, 3, 5].map((i) => parseInt(c.slice(i, i + 2), 16)) : null), A = h(a), B = h(b); if (!A || !B) return s < 0.5 ? a : b; return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * s)).join(',')})`; }
+  function scene(p, colW, top, bot, rx, ry, rw, rh, q, F) {
+    const x0 = 80 * p, x1 = colW - 4 * p, y0 = top - 18 * p, y1 = H - 6 * p; if (x1 - x0 < 40 * p) return;
+    // the sky around the rocket darkens as it climbs out of the air (scale height about 15 km); deep space is dark throughout
+    const sk = S.p.g ? 1 - Math.exp(-q.y / 15000) : 1;
+    ctx.save(); ctx.beginPath(); ctx.moveTo(x0 + 8 * p, y0); ctx.arcTo(x1, y0, x1, y1, 8 * p); ctx.arcTo(x1, y1, x0, y1, 8 * p); ctx.arcTo(x0, y1, x0, y0, 8 * p); ctx.arcTo(x0, y0, x1, y0, 8 * p); ctx.closePath(); ctx.clip();
+    const gr = ctx.createLinearGradient(0, y0, 0, bot); gr.addColorStop(0, mix(T.skyLow, T.space, Math.min(1, sk + 0.25 * (S.p.g ? 1 : 0)))); gr.addColorStop(1, mix(T.skyLow, T.space, sk)); ctx.fillStyle = gr; ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+    // stars show once the sky is dark
+    if (sk > 0.3) { ctx.fillStyle = T.star;
+      for (const [fx, fy, sz, ph] of DECO.stars) { const x = x0 + fx * (x1 - x0), y = y0 + fy * (bot - y0 - 10 * p); ctx.globalAlpha = Math.min(1, (sk - 0.3) / 0.5) * (reduce ? 0.8 : 0.6 + 0.4 * Math.sin(amb * 2.3 + ph)); ctx.fillRect(x - sz * p / 2, y - sz * p / 2, sz * p, sz * p); }
+      ctx.globalAlpha = 1; }
+    if (S.p.g) {
+      // low clouds drifting along the horizon: the air is a thin layer at this scale
+      const span = x1 - x0 + 80 * p; ctx.fillStyle = T.cloud; ctx.globalAlpha = 0.8;
+      for (const [fx, sz] of DECO.clouds) { const x = x0 - 40 * p + ((fx * span + amb * 8 * p * sz) % span), y = bot - 7 * p, k = 7 * p * sz; ctx.beginPath(); ctx.arc(x, y, k, 0, 7); ctx.arc(x + k, y + 2 * p, k * 0.75, 0, 7); ctx.arc(x - k, y + 2 * p, k * 0.65, 0, 7); ctx.fill(); }
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = T.ground; ctx.fillRect(x0, bot, x1 - x0, y1 - bot);
+      // launch tower beside the pad, with two service arms
+      const tx = rx - rw - 16 * p, tw = 9 * p, tt = bot - rh - 12 * p;
+      ctx.strokeStyle = T.steel; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(tx, bot); ctx.lineTo(tx, tt); ctx.moveTo(tx + tw, bot); ctx.lineTo(tx + tw, tt); ctx.lineTo(tx, tt);
+      for (let y = bot, i = 0; y > tt + 2 * p; y -= 10 * p, i++) { ctx.moveTo(tx + (i % 2 ? tw : 0), y); ctx.lineTo(tx + (i % 2 ? 0 : tw), Math.max(tt, y - 10 * p)); }
+      for (const h of [0.45, 0.8]) { const y = bot - rh * h; ctx.moveTo(tx + tw, y); ctx.lineTo(rx - rw * 0.55, y); }
+      ctx.stroke();
+      ctx.fillStyle = T.pad; ctx.fillRect(rx - 30 * p, bot - 1 * p, 60 * p, 6 * p);
+      // exhaust smoke spreading over the pad while the engine fires near the ground
+      if (q.burning && S.t > 0 && ry > bot - 60 * p) { ctx.fillStyle = T.smoke; ctx.globalAlpha = 0.75 * (1 - (bot - ry) / (60 * p));
+        for (const [dx, sz, ph] of DECO.puffs) { const w = reduce ? 0 : Math.sin(amb * 3 + ph) * 2 * p; ctx.beginPath(); ctx.arc(rx + dx * 34 * p + w, bot - 4 * p, (6 + 6 * sz) * p, 0, 7); ctx.fill(); }
+        ctx.globalAlpha = 1; }
+    }
+    ctx.restore();
+  }
+
   function readouts() {
     const F = flight(P()), q = F.at(S.t), bl = S.blind, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
     let h = dd('Thrust u × burn rate', `${n0(F.thrust / 1000, 0)} kN`) + dd('Weight at launch m₀g', S.p.g ? `${n0(F.m0 * G / 1000, 0)} kN` : '0 (no gravity)') + dd('Burn time', `${n0(F.tb, 1)} s`) + dd('Mass now', `${n0(q.m)} kg`);
@@ -310,6 +366,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run && !reduce) amb += dt;
     if (S.run) { const F = flight(P()), speed = Math.max(1, endTime(F) / 25); S.t = Math.min(endTime(F), S.t + dt * speed); if (S.t >= endTime(F)) setRun(false); draw(); readouts(); }
     requestAnimationFrame(frame);
   }

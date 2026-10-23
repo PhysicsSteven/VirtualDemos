@@ -61,8 +61,9 @@ body { margin: 0; }
 }
 
 :root { --earth: #6b8fb8; --sat: #4a5563; --grav: #2b60b5; --speed: #b0452f; --net: #1f8a5a; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --earth: #3d5a7a; --sat: #c3cad4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; } }
-:root[data-theme="dark"] { --earth: #3d5a7a; --sat: #c3cad4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; }
+:root { --star: rgba(70, 90, 125, 0.45); --land: #7fa36a; --ocean-deep: #4a6f99; --ice: #eef3f8; --atmo: rgba(120, 175, 235, 0.45); --atmo-clear: rgba(120, 175, 235, 0); --panel: #2f5d9e; --panel-line: rgba(255, 255, 255, 0.35); --dial: #ffffff; --shade: rgba(10, 20, 40, 0.3); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --earth: #3d5a7a; --sat: #c3cad4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; --star: rgba(225, 235, 255, 0.85); --land: #4f6e44; --ocean-deep: #263c56; --ice: #c9d3de; --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --panel: #3d6fb8; --panel-line: rgba(255, 255, 255, 0.25); --dial: #1b2430; --shade: rgba(0, 0, 0, 0.45); } }
+:root[data-theme="dark"] { --earth: #3d5a7a; --sat: #c3cad4; --grav: #69a0ff; --speed: #ff8a70; --net: #4cd08f; --star: rgba(225, 235, 255, 0.85); --land: #4f6e44; --ocean-deep: #263c56; --ice: #c9d3de; --atmo: rgba(110, 170, 255, 0.40); --atmo-clear: rgba(110, 170, 255, 0); --panel: #3d6fb8; --panel-line: rgba(255, 255, 255, 0.25); --dial: #1b2430; --shade: rgba(0, 0, 0, 0.45); }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -222,7 +223,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      earth: g('--earth'), sat: g('--sat'), grav: g('--grav'), speed: g('--speed'), net: g('--net'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      earth: g('--earth'), sat: g('--sat'), grav: g('--grav'), speed: g('--speed'), net: g('--net'), star: g('--star'), land: g('--land'), oceanDeep: g('--ocean-deep'), ice: g('--ice'), atmo: g('--atmo'), atmoClear: g('--atmo-clear'), panel: g('--panel'), panelLine: g('--panel-line'), dial: g('--dial'), shade: g('--shade'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const f = (v, d = 2) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
   function sci(v, n = 3) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
@@ -242,7 +243,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
   $('go').addEventListener('click', () => { S.run = !S.run; $('go').textContent = S.run ? 'Pause' : 'Run the clocks'; $('go').classList.toggle('attn', !S.run); if (reduce && S.run) { S.t += DAY; S.run = false; $('go').textContent = 'Run the clocks'; $('go').classList.add('attn'); draw(); readouts(); } });
   $('reset').addEventListener('click', () => { S.t = 0; draw(); readouts(); });
-  function tick(dt) { if (S.run) { S.t += dt * 3600; draw(); readouts(); } }
+  function tick(dt) { if (S.run) { S.t += dt * 3600; draw(); readouts(); } else if (!reduce) { tw += dt; twAcc += dt; if (twAcc > 0.08) { twAcc = 0; draw(); } } if (S.run && !reduce) tw += dt; }   // stars twinkle unless Reduce motion is on
   function readouts() {
     const K = clocks(S.r, S.mode, S.spin), dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`;
     let h = dd('Second clock speed', `${f(K.v2 / 1000, 3)} km/s`) + dd('Ground clock speed', `${f(K.vG, 0)} m/s`);
@@ -257,21 +258,76 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     h += dd('Schwarzschild radius 2GM/c²: Earth', `${f(schwarzschild(GM) * 1000, 2)} mm`) + dd('Sun', `${f(schwarzschild(1.32712440018e20) / 1000, 2)} km`);
     $('out').innerHTML = h;
   }
+  // ---------- scenery, precomputed once: stars, continents seen from above the North Pole ----------
+  const rng = ((seed) => () => { seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; })(23);
+  const STARS = Array.from({ length: 150 }, () => [rng(), rng(), 0.5 + rng() * 1.1, rng() * 6.28, 0.6 + rng() * 1.6]);
+  // rough outlines (longitude, latitude in degrees); the southern parts fold onto the equator, which is the edge of this view
+  const LAND_LL = [
+    [[-166, 68], [-165, 62], [-152, 58], [-140, 60], [-133, 56], [-124, 48], [-124, 40], [-117, 33], [-110, 23], [-105, 20], [-95, 16], [-88, 14], [-83, 9], [-78, 8], [-83, 15], [-88, 18], [-90, 21], [-97, 22], [-97, 28], [-90, 29], [-84, 30], [-81, 25], [-80, 31], [-76, 35], [-70, 42], [-66, 45], [-60, 47], [-56, 52], [-62, 58], [-78, 62], [-88, 66], [-95, 70], [-110, 68], [-125, 70], [-140, 70], [-156, 71]],
+    [[-55, 60], [-44, 60], [-22, 70], [-18, 78], [-30, 83], [-60, 82], [-70, 77], [-55, 68]],
+    [[-80, 9], [-75, 11], [-62, 10], [-50, 1], [-50, -5], [-81, -5]],
+    [[-17, 21], [-10, 30], [-6, 36], [10, 37], [32, 31], [34, 28], [39, 22], [43, 12], [51, 12], [42, -5], [9, -5], [9, 4], [-8, 5], [-17, 14]],
+    [[-10, 36], [-9, 44], [-1, 46], [-4, 48], [2, 51], [8, 54], [10, 57], [5, 62], [15, 69], [28, 71], [40, 68], [60, 70], [80, 73], [100, 77], [120, 73], [140, 72], [160, 70], [180, 68], [170, 60], [160, 55], [142, 52], [140, 46], [130, 42], [127, 35], [122, 30], [120, 23], [110, 20], [108, 12], [104, 9], [100, 13], [98, 8], [100, 3], [103, 1], [98, 16], [92, 22], [88, 22], [80, 15], [77, 8], [73, 20], [67, 25], [57, 25], [58, 20], [52, 15], [43, 13], [35, 30], [28, 41], [20, 40], [15, 38], [12, 44], [3, 43], [-1, 37]],
+    [[-5, 50], [1, 51], [-2, 56], [-5, 58], [-6, 55]]];
+  // the ground clock stands on the equator at longitude 78° W (Ecuador); a point at longitude λ sits (λ + 78°) east of it, so its angle on screen is gth + λ + 78°
+  const CLOCK_LON = -78;
+  const LAND = LAND_LL.map((poly) => poly.map(([lo, la]) => [(lo - CLOCK_LON) * Math.PI / 180, Math.cos(Math.max(0, la) * Math.PI / 180)]));
+  let tw = 0, twAcc = 0;
+  function stars(x0, y0, w, h) {
+    const p = ps(); ctx.fillStyle = T.star;
+    for (const [fx, fy, sz, ph, sp] of STARS) { ctx.globalAlpha = reduce ? 0.8 : 0.55 + 0.45 * Math.sin(tw * sp + ph); ctx.fillRect(x0 + fx * w, y0 + fy * h, sz * p, sz * p); }
+    ctx.globalAlpha = 1;
+  }
+  // Earth from above the North Pole, turned by rot (radians, counterclockwise as seen from the north)
+  function earth(cx, cy, Rp, rot) {
+    const p = ps(), rim = Math.max(5 * p, Rp * 0.07), ag = ctx.createRadialGradient(cx, cy, Rp * 0.98, cx, cy, Rp + rim); ag.addColorStop(0, T.atmo); ag.addColorStop(1, T.atmoClear);
+    ctx.fillStyle = ag; ctx.beginPath(); ctx.arc(cx, cy, Rp + rim, 0, 7); ctx.fill();
+    const bg = ctx.createRadialGradient(cx, cy, Rp * 0.1, cx, cy, Rp); bg.addColorStop(0, T.earth); bg.addColorStop(1, T.oceanDeep);
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, Rp, 0, 7); ctx.fillStyle = bg; ctx.fill(); ctx.clip();
+    ctx.fillStyle = T.land;
+    for (const poly of LAND) { ctx.beginPath(); poly.forEach(([a, c], i) => { const x = cx + Rp * c * Math.cos(rot + a), y = cy - Rp * c * Math.sin(rot + a); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.closePath(); ctx.fill(); }
+    ctx.fillStyle = T.ice; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.arc(cx, cy, Rp * Math.cos(80 * Math.PI / 180), 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+    const sh = ctx.createRadialGradient(cx, cy, Rp * 0.6, cx, cy, Rp * 1.02); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, T.shade); ctx.fillStyle = sh; ctx.fillRect(cx - Rp, cy - Rp, 2 * Rp, 2 * Rp);
+    ctx.restore();
+  }
+  // a satellite with its solar panels along its direction of travel, tangent to the orbit
+  function satellite(x, y, th) {
+    const p = ps(); ctx.save(); ctx.translate(x, y); ctx.rotate(-th);
+    ctx.strokeStyle = T.sat; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(0, -12 * p); ctx.lineTo(0, 12 * p); ctx.stroke();
+    for (const sg of [-1, 1]) { const y0 = sg > 0 ? 6 * p : -18 * p; ctx.fillStyle = T.panel; ctx.fillRect(-4 * p, y0, 8 * p, 12 * p); ctx.strokeStyle = T.panelLine; ctx.lineWidth = 0.8 * p; ctx.beginPath(); for (let k = 1; k < 4; k++) { ctx.moveTo(-4 * p, y0 + k * 3 * p); ctx.lineTo(4 * p, y0 + k * 3 * p); } ctx.stroke(); }
+    ctx.fillStyle = T.sat; ctx.fillRect(-5 * p, -5 * p, 10 * p, 10 * p); ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.5; ctx.fillRect(-5 * p, -5 * p, 3 * p, 10 * p); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.sat; ctx.beginPath(); ctx.moveTo(-5 * p, -2 * p); ctx.lineTo(-9 * p, 0); ctx.lineTo(-5 * p, 2 * p); ctx.fill();   // antenna dish facing Earth
+    ctx.restore();
+  }
+  // a small analogue dial for simulated time t (s)
+  function dial(x, y, r, t) {
+    const p = ps(); ctx.fillStyle = T.dial; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.lineWidth = 1 * p; for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; ctx.beginPath(); ctx.moveTo(x + Math.sin(a) * r * 0.78, y - Math.cos(a) * r * 0.78); ctx.lineTo(x + Math.sin(a) * r * 0.92, y - Math.cos(a) * r * 0.92); ctx.stroke(); }
+    const hA = (t / 43200) * 2 * Math.PI, mA = (t / 3600) * 2 * Math.PI;
+    ctx.lineCap = 'round'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.sin(hA) * r * 0.5, y - Math.cos(hA) * r * 0.5); ctx.stroke();
+    ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.sin(mA) * r * 0.8, y - Math.cos(mA) * r * 0.8); ctx.stroke(); ctx.lineCap = 'butt';
+  }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     const p = ps(), wide = W > 640, K = clocks(S.r, S.mode, S.spin);
     const pw = wide ? W * 0.5 : W, ph = wide ? Hh : Hh * 0.55, cx = pw / 2, cy = ph / 2 + (wide ? 20 : 40) * p, rMax = Math.min(pw, ph) / 2 - 40 * p, sc = rMax / Math.max(S.r, 1.6 * RE);
-    ctx.fillStyle = T.earth; ctx.beginPath(); ctx.arc(cx, cy, RE * sc, 0, 7); ctx.fill();
-    ctx.strokeStyle = T.gridStrong; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.arc(cx, cy, S.r * sc, 0, 7); ctx.stroke(); ctx.setLineDash([]);
-    const omega = S.mode === 'orbit' ? K.v2 / S.r : WE, th = omega * S.t, sx = cx + S.r * sc * Math.cos(th), sy = cy - S.r * sc * Math.sin(th);
     const gth = (S.spin ? WE : 0) * S.t, gx = cx + RE * sc * Math.cos(gth), gy = cy - RE * sc * Math.sin(gth);
-    ctx.fillStyle = T.sat; ctx.fillRect(sx - 5 * p, sy - 5 * p, 10 * p, 10 * p); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(gx, gy, 4 * p, 0, 7); ctx.fill();
+    stars(0, 0, pw, wide ? Hh : ph);
+    earth(cx, cy, RE * sc, gth);   // Earth turns with the ground clock, and stands still when the ground clock does
+    ctx.strokeStyle = T.gridStrong; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.arc(cx, cy, S.r * sc, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    // in orbit the second clock goes round at v/r; on a tower it is carried with the ground, so it sits above the ground clock
+    const th = S.mode === 'orbit' ? K.v2 / S.r * S.t : gth, sx = cx + S.r * sc * Math.cos(th), sy = cy - S.r * sc * Math.sin(th);
+    if (S.mode === 'orbit') satellite(sx, sy, th);
+    else { const rt = Math.max(S.r * sc, RE * sc + 14 * p), tx = cx + rt * Math.cos(th), ty = cy - rt * Math.sin(th); ctx.strokeStyle = T.sat; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(tx, ty); ctx.stroke(); ctx.fillStyle = T.sat; ctx.fillRect(tx - 4 * p, ty - 4 * p, 8 * p, 8 * p); }
+    ctx.fillStyle = T.ink; ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(gx, gy, 4 * p, 0, 7); ctx.fill(); ctx.stroke();
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('view from above the North Pole', cx, ph - 20 * p);
     // clocks
     ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink;
-    ctx.fillText(`ground clock:  ${f(S.t / 3600, 3)} h`, 14 * p, 54 * p);
-    ctx.fillText(`second clock:  ${f(S.t / 3600, 3)} h ${K.total >= 0 ? '+' : '−'} ${us(Math.abs(K.total * S.t) * 1e6)}`, 14 * p, 74 * p);
+    dial(24 * p, 61 * p, 10 * p, S.t); dial(24 * p, 85 * p, 10 * p, S.t * (1 + K.total));
+    ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(`ground clock:  ${f(S.t / 3600, 3)} h`, 40 * p, 54 * p);
+    ctx.fillText(`second clock:  ${f(S.t / 3600, 3)} h ${K.total >= 0 ? '+' : '−'} ${us(Math.abs(K.total * S.t) * 1e6)}`, 40 * p, 78 * p);
     // graph: gain per day against r
     const gx0 = wide ? pw + 50 * p : 60 * p, gw = wide ? W - gx0 - 20 * p : W - 80 * p, gy0 = wide ? 110 * p : ph + 30 * p, gh = wide ? Hh - gy0 - 60 * p : Hh - gy0 - 40 * p;
     const rLo = RE, rHi = RMAX, X = (r) => gx0 + gw * (r - rLo) / (rHi - rLo);
@@ -297,7 +353,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
-  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now();
