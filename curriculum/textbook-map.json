@@ -39,7 +39,8 @@
     "later_mapping": "beyond_book means no direct Volume 1/2 activity home, not that the demo is physically incorrect. Later entries are not promoted into courses merely because a section is related.",
     "optional_duration": "duration_minutes may be added after review; absent until estimated.",
     "exam_metadata": "Course metadata may later hold exam_boundaries; omitted for now.",
-    "activities": "Optional activities array contains standalone worksheet/reading resources, distinct from the real-demo catalog. Sections reference activities by id; render both section.demos and section.activities, filtering course membership and deduplicating within a unit."
+    "activities": "Optional activities array contains standalone worksheet/reading resources, distinct from the real-demo catalog. Sections reference activities by id; render both section.demos and section.activities, filtering course membership and deduplicating within a unit.",
+    "acoustics": "Acoustics (2026-10-23, Steve) is a module, not a syllabus course: Vol 1 ch 16 and 17 plus a Beyond the textbook unit that lists demos directly (unit.demos). Its units use requirement module. A section shared with another course keeps its unit there and names its acoustics unit in unit_in."
   },
   "courses": [
     {
@@ -878,6 +879,93 @@
               "vol": 3,
               "sec": "2.8"
             }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "acoustics",
+      "title": "Acoustics",
+      "metadata": {},
+      "units": [
+        {
+          "id": "waves",
+          "title": "Waves",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "16.1"
+            },
+            {
+              "vol": 1,
+              "sec": "16.2"
+            },
+            {
+              "vol": 1,
+              "sec": "16.3"
+            },
+            {
+              "vol": 1,
+              "sec": "16.4"
+            },
+            {
+              "vol": 1,
+              "sec": "16.5"
+            },
+            {
+              "vol": 1,
+              "sec": "16.6"
+            }
+          ]
+        },
+        {
+          "id": "sound",
+          "title": "Sound",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "17.1"
+            },
+            {
+              "vol": 1,
+              "sec": "17.2"
+            },
+            {
+              "vol": 1,
+              "sec": "17.3"
+            },
+            {
+              "vol": 1,
+              "sec": "17.4"
+            },
+            {
+              "vol": 1,
+              "sec": "17.5"
+            },
+            {
+              "vol": 1,
+              "sec": "17.6"
+            },
+            {
+              "vol": 1,
+              "sec": "17.7"
+            },
+            {
+              "vol": 1,
+              "sec": "17.8"
+            }
+          ]
+        },
+        {
+          "id": "beyond-book",
+          "title": "Beyond the textbook",
+          "requirement": "module",
+          "sections": [],
+          "demos": [
+            "chladni",
+            "acoustic-levitation"
           ]
         }
       ]
@@ -3692,13 +3780,14 @@
       "chapter": 16,
       "chapter_title": "Waves",
       "course": [
-        "later"
+        "acoustics"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "standing-waves"
-      ]
+      ],
+      "unit": "waves"
     },
     {
       "vol": 1,
@@ -3707,13 +3796,14 @@
       "chapter": 16,
       "chapter_title": "Waves",
       "course": [
-        "later"
+        "acoustics"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "standing-waves"
-      ]
+      ],
+      "unit": "waves"
     },
     {
       "vol": 1,
@@ -3722,7 +3812,8 @@
       "chapter": 16,
       "chapter_title": "Waves",
       "course": [
-        "physics-2"
+        "physics-2",
+        "acoustics"
       ],
       "requirement": "required",
       "status": "usable",
@@ -3731,7 +3822,10 @@
         "string-density"
       ],
       "unit": "string-waves",
-      "note": "First PHYS 202 lab (Steve, 2026-10-23): Linear Density of a String, μ from resonances by sweeping f at one mass or adding masses at one f. Standing Waves stays the conceptual demo."
+      "note": "First PHYS 202 lab (Steve, 2026-10-23): Linear Density of a String, μ from resonances by sweeping f at one mass or adding masses at one f. Standing Waves stays the conceptual demo.",
+      "unit_in": {
+        "acoustics": "waves"
+      }
     },
     {
       "vol": 1,
@@ -3740,12 +3834,13 @@
       "chapter": 16,
       "chapter_title": "Waves",
       "course": [
-        "later"
+        "acoustics"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "unit": "waves"
     },
     {
       "vol": 1,
@@ -3754,13 +3849,14 @@
       "chapter": 16,
       "chapter_title": "Waves",
       "course": [
-        "later"
+        "acoustics"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "standing-waves"
-      ]
+      ],
+      "unit": "waves"
     },
     {
       "vol": 1,
@@ -3769,7 +3865,8 @@
       "chapter": 16,
       "chapter_title": "Waves",
       "course": [
-        "physics-2"
+        "physics-2",
+        "acoustics"
       ],
       "requirement": "required",
       "status": "usable",
@@ -3778,7 +3875,10 @@
         "string-density"
       ],
       "unit": "string-waves",
-      "note": "First PHYS 202 lab (Steve, 2026-10-23): Linear Density of a String, μ from resonances by sweeping f at one mass or adding masses at one f. Standing Waves stays the conceptual demo."
+      "note": "First PHYS 202 lab (Steve, 2026-10-23): Linear Density of a String, μ from resonances by sweeping f at one mass or adding masses at one f. Standing Waves stays the conceptual demo.",
+      "unit_in": {
+        "acoustics": "waves"
+      }
     },
     {
       "vol": 1,
@@ -3787,12 +3887,13 @@
       "chapter": 17,
       "chapter_title": "Sound",
       "course": [
-        "later"
+        "acoustics"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "unit": "sound"
     },
     {
       "vol": 1,
@@ -3801,13 +3902,14 @@
       "chapter": 17,
       "chapter_title": "Sound",
       "course": [
-        "later"
+        "acoustics"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "resonators"
-      ]
+      ],
+      "unit": "sound"
     },
     {
       "vol": 1,
@@ -3816,12 +3918,13 @@
       "chapter": 17,
       "chapter_title": "Sound",
       "course": [
-        "later"
+        "acoustics"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "unit": "sound"
     },
     {
       "vol": 1,
@@ -3830,14 +3933,15 @@
       "chapter": 17,
       "chapter_title": "Sound",
       "course": [
-        "later"
+        "acoustics"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "timbre",
         "resonators"
-      ]
+      ],
+      "unit": "sound"
     },
     {
       "vol": 1,
@@ -3846,13 +3950,14 @@
       "chapter": 17,
       "chapter_title": "Sound",
       "course": [
-        "later"
+        "acoustics"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "timbre"
-      ]
+      ],
+      "unit": "sound"
     },
     {
       "vol": 1,
@@ -3861,13 +3966,14 @@
       "chapter": 17,
       "chapter_title": "Sound",
       "course": [
-        "later"
+        "acoustics"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "timbre"
-      ]
+      ],
+      "unit": "sound"
     },
     {
       "vol": 1,
@@ -3876,13 +3982,14 @@
       "chapter": 17,
       "chapter_title": "Sound",
       "course": [
-        "later"
+        "acoustics"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "doppler"
-      ]
+      ],
+      "unit": "sound"
     },
     {
       "vol": 1,
@@ -3891,13 +3998,14 @@
       "chapter": 17,
       "chapter_title": "Sound",
       "course": [
-        "later"
+        "acoustics"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "doppler"
-      ]
+      ],
+      "unit": "sound"
     },
     {
       "vol": 2,
@@ -6144,15 +6252,18 @@
     {
       "demo": "acoustic-levitation",
       "course": [
-        "later"
+        "acoustics"
       ],
       "sections": [],
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Acoustics module, Beyond the textbook unit (2026-10-23): no direct Volume 1 section.",
       "title": "Acoustic Levitation",
-      "url": "demos/acoustic-levitation.html"
+      "url": "demos/acoustic-levitation.html",
+      "handouts": [
+        "acoustic-levitation"
+      ]
     },
     {
       "demo": "binding-energy",
@@ -6221,13 +6332,13 @@
     {
       "demo": "chladni",
       "course": [
-        "later"
+        "acoustics"
       ],
       "sections": [],
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Acoustics module, Beyond the textbook unit (2026-10-23): no direct Volume 1 section.",
       "title": "Chladni Plates",
       "url": "demos/chladni.html"
     },
@@ -6286,7 +6397,7 @@
     {
       "demo": "doppler",
       "course": [
-        "later"
+        "acoustics"
       ],
       "sections": [
         {
@@ -6303,7 +6414,7 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Sound not in the supplied syllabi.",
+      "note": "Acoustics module (2026-10-23).",
       "title": "Doppler Effect and Shock Waves",
       "url": "demos/doppler.html"
     },
@@ -6622,7 +6733,7 @@
     {
       "demo": "resonators",
       "course": [
-        "later"
+        "acoustics"
       ],
       "sections": [
         {
@@ -6639,9 +6750,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Acoustics deferred.",
+      "note": "Acoustics module (2026-10-23).",
       "title": "Resonators",
-      "url": "demos/resonators.html"
+      "url": "demos/resonators.html",
+      "handouts": [
+        "resonators"
+      ]
     },
     {
       "demo": "rotation-curves",
@@ -6743,8 +6857,8 @@
     {
       "demo": "standing-waves",
       "course": [
-        "later",
-        "physics-2"
+        "physics-2",
+        "acoustics"
       ],
       "sections": [
         {
@@ -6776,7 +6890,7 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Waves not in the supplied syllabi.",
+      "note": "Acoustics module (2026-10-23).",
       "title": "Standing Waves",
       "url": "demos/standing-waves.html"
     },
@@ -6833,7 +6947,7 @@
     {
       "demo": "timbre",
       "course": [
-        "later"
+        "acoustics"
       ],
       "sections": [
         {
@@ -6855,9 +6969,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Acoustics deferred.",
+      "note": "Acoustics module (2026-10-23).",
       "title": "Timbre and Harmonics",
-      "url": "demos/timbre.html"
+      "url": "demos/timbre.html",
+      "handouts": [
+        "timbre"
+      ]
     },
     {
       "demo": "white-dwarf-cooling",

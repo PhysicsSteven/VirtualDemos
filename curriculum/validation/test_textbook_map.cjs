@@ -9,7 +9,7 @@ const activities = new Map((map.activities || []).map(a => [a.id, a]));
 assert.equal(activities.size, (map.activities || []).length, 'duplicate standalone activity');
 for (const a of activities.values()) {
  assert(status.has(a.status)); assert(['worksheet', 'reading'].includes(a.kind));
- assert(a.course.length && a.course.every(c => ['physics-1', 'physics-2', 'later'].includes(c)));
+ assert(a.course.length && a.course.every(c => ['physics-1', 'physics-2', 'acoustics', 'later'].includes(c)));
  assert.equal(a.url, `curriculum/labs/students/${a.id}.md`); assert(fs.existsSync(path.join(root, a.url)));
  assert(a.handouts.includes(a.id));
  for (const r of a.sections) { assert(sections.has(key(r))); assert.equal(r.title, sections.get(key(r)).title); assert((sections.get(key(r)).activities || []).includes(a.id)); }
@@ -23,7 +23,7 @@ assert.deepEqual([...demos.keys()].sort(), catalog.sort());
 assert.equal(sections.size, map.sections.length);
 for (const d of map.demos) {
  assert(status.has(d.status)); assert(['lab', 'demo'].includes(d.role));
- assert(d.course.length && d.course.every(c => ['physics-1', 'physics-2', 'later'].includes(c)));
+ assert(d.course.length && d.course.every(c => ['physics-1', 'physics-2', 'acoustics', 'later'].includes(c)));
  assert.equal(d.url, `demos/${d.demo}.html`); assert(fs.existsSync(path.join(root, d.url)));
  assert.equal(typeof d.beyond_book, 'boolean');
  for (const r of d.sections) { assert(sections.has(key(r))); assert.equal(r.title, sections.get(key(r)).title); }
@@ -35,7 +35,8 @@ for (const s of map.sections) {
 }
 for (const c of map.courses) {
  assert(!('exam_boundaries' in c.metadata));
- for (const u of c.units) for (const r of u.sections) { const s = sections.get(key(r)); assert(s); assert(s.course.includes(c.id)); assert.equal(s.unit, u.id); }
+ for (const u of c.units) for (const r of u.sections) { const s = sections.get(key(r)); assert(s); assert(s.course.includes(c.id)); assert.equal((s.unit_in || {})[c.id] || s.unit, u.id); }
+ for (const u of c.units) for (const name of u.demos || []) { const d = demos.get(name); assert(d); assert(d.course.includes(c.id)); assert.equal(d.sections.length, 0); }
 }
 const p1 = map.courses.find(c => c.id === 'physics-1');
 assert(p1.units.findIndex(u => u.id === 'gravitation') < p1.units.findIndex(u => u.id === 'equilibrium-elasticity'));

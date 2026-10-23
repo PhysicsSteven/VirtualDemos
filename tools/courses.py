@@ -25,6 +25,7 @@ BOOK_URL = {1: 'https://openstax.org/details/books/university-physics-volume-1',
 BLURB = {
     'physics-1': ('Mechanics and oscillations', 'Measurement and vectors through oscillations, in the order of the course schedule. OpenStax University Physics Volume 1.'),
     'physics-2': ('Electricity and magnetism', 'Charges and fields through Maxwell’s equations and electromagnetic waves, with basic optics at the end if time allows. OpenStax University Physics Volume 2, and Volume 3 for optics.'),
+    'acoustics': ('Waves and sound', 'Waves on strings, the speed of sound, resonance, musical tones and the Doppler effect, then two demos beyond the textbook. OpenStax University Physics Volume 1, chapters 16 and 17.'),
 }
 TILE_START, TILE_END = '<!-- COURSES START (tools/courses.py) -->', '<!-- COURSES END -->'
 esc = html.escape
@@ -45,7 +46,7 @@ def CATALOG_DATA():
 
 
 MISC = {'id': 'misc', 'title': 'Misc.', 'sub': 'Everything else',
-        'lede': 'Astronomy, modern physics, thermodynamics, waves and more: every demo that is not part of Physics I or II yet. These will become their own courses later.'}
+        'lede': 'Astronomy, modern physics, thermodynamics, optics and more: every demo that is not part of a course yet. These will become their own courses later.'}
 
 
 def misc_names(m):
@@ -125,6 +126,8 @@ HANDOUT_TOPIC = {
     # standalone activities
     'measurement-and-units': 'Units and Dimensions', 'estimation-and-evidence': 'Estimates and Uncertainty',
     'energy-sources': 'Electricity Sources',
+    # acoustics
+    'resonators': 'Speed of Sound', 'timbre': 'Timbre and Harmonics', 'acoustic-levitation': 'Acoustic Levitation',
 }
 
 
@@ -187,10 +190,9 @@ def course_page(course, m, cards, notes):
         us = [secs[(x['vol'], x['sec'])] for x in u['sections']]
         ukeys = {(s['vol'], s['sec']) for s in us}
         names = []
-        for s in sorted(us, key=sec_key):
-            for d in s['demos']:
-                if d not in names and d in demos and cid in demos[d]['course'] and d in cards:
-                    names.append(d)
+        for d in [d for s in sorted(us, key=sec_key) for d in s['demos']] + u.get('demos', []):   # unit.demos: demos with no textbook section
+            if d not in names and d in demos and cid in demos[d]['course'] and d in cards:
+                names.append(d)
         activity_names = list(dict.fromkeys(a for s in sorted(us, key=sec_key) for a in s.get('activities', [])
                                             if a in activities and cid in activities[a]['course']))
         n_demo.update(names)
@@ -221,7 +223,7 @@ def course_page(course, m, cards, notes):
         units.append(f'''  <section class="unit{" optional" if opt else ""}" id="{u['id']}" aria-labelledby="{u['id']}-h">
     {'<p class="optnote">Optional, after the required sequence</p>' if opt else ''}
     <h2 id="{u['id']}-h">{esc(u['title'])}</h2>
-    <p class="meta"><span>{chapters_of(us)}</span><span>{covered} of {len(us)} sections with an activity</span></p>
+    <p class="meta">{f'<span>{chapters_of(us)}</span><span>{covered} of {len(us)} sections with an activity</span>' if us else '<span>Not in the textbook</span>'}</p>
     <ul class="list">
 {grid}
     </ul>{gap_html}
@@ -233,7 +235,8 @@ def course_page(course, m, cards, notes):
     if n_activity:
         facts += f'<li><span><strong>{len(n_activity)}</strong> worksheets and readings</span></li>'
     return page_shell(title, BLURB[cid][0], lede, facts, ''.join(jump), '\n'.join(units),
-                      'Units follow the course schedule. Section numbers are volume:section in OpenStax University Physics. A demo can appear in more than one unit. Sections with no activity yet are listed under each unit.')
+                      ('Units follow the textbook chapters.' if cid == 'acoustics' else 'Units follow the course schedule.')
+                      + ' Section numbers are volume:section in OpenStax University Physics. A demo can appear in more than one unit. Sections with no activity yet are listed under each unit.')
 
 
 def page_shell(title, sub, lede, facts, jump, body, how):
@@ -365,17 +368,19 @@ TILE_CSS = '''
 
 
 def tiles(m, cards):
-    out = []
+    out, m_demos = [], {d['demo']: d for d in m['demos']}
     for c in m['courses']:
         names = []
         for u in c['units']:
             for x in u['sections']:
                 s = next(s for s in m['sections'] if s['vol'] == x['vol'] and s['sec'] == x['sec'])
                 for d in s['demos']:
-                    if d not in names and d in cards: names.append(d)
+                    if d not in names and d in cards and c['id'] in m_demos[d]['course']: names.append(d)
+            for d in u.get('demos', []):
+                if d not in names and d in cards: names.append(d)
         out.append(tile(c['id'], c['title'], BLURB[c['id']][0], f"{len(c['units'])} units · {len(names)} demos", BLURB[c['id']][1], names))
     mn = misc_names(m)
-    out.append(tile('misc', MISC['title'], MISC['sub'], f'{len(mn)} demos', MISC['lede'], [n for n in ['star-slice', 'hydrogen-orbitals', 'ising', 'chladni'] if n in mn] or mn))
+    out.append(tile('misc', MISC['title'], MISC['sub'], f'{len(mn)} demos', MISC['lede'], [n for n in ['star-slice', 'hydrogen-orbitals', 'ising', 'black-holes'] if n in mn] or mn))
     return f'''{TILE_START}
 <section class="wrap courses" aria-labelledby="courses-h">
   <h2 id="courses-h">Courses</h2>
