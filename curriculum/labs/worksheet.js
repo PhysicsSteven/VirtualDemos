@@ -548,7 +548,7 @@
   const pad = (lo, hi, inc0) => { if (inc0) { lo = Math.min(lo, 0); hi = Math.max(hi, 0); } const d = (hi - lo) || Math.abs(hi) || 1; return [lo - 0.08 * d, hi + 0.08 * d]; };
   function drawPlot(T, R) {
     const box = R.graph; box.innerHTML = '';
-    if (R.axes.x === '' || R.axes.y === '') { box.appendChild(el('p', { class: 'ws-pnote', text: 'Choose a column for each axis to draw a graph of your data.' })); return; }
+    if (R.axes.x === '' || R.axes.y === '') { box.appendChild(el('p', { class: 'ws-pnote ws-noprint', text: 'Choose a column for each axis to draw a graph of your data.' })); return; }
     const cx = +R.axes.x, cy = +R.axes.y, [xName, xUnit] = nameUnit(T.cols[cx]), [yName, yUnit] = nameUnit(T.cols[cy]);
     const P = { xName, xUnit, yName, yUnit, title: `${yName} against ${xName}` };
     const pts = [];
