@@ -373,3 +373,7 @@ Applied the standalone activity renderer by hand (the patch did not apply to the
 ## Claude, 2026-10-22 23:40: Units, Scales and Estimates gets a zoom
 
 The **Scale of things** tab now opens in **Zoom through** (with **Ruler** as the old view): true size models from the observable universe to a proton, buttons **Fly in** / **Fly out**, and a **Width of the view** slider (scroll, drag or arrow keys on the picture also zoom). Blind hides the object names. The Ch. 1 worksheets can point at it for §1.1.
+
+## Claude, 2026-10-23 00:30: scenery pass on 17 Physics I demos
+
+Settings, real-looking objects and gentle ambient motion added to forces, elevator, impulse, center-of-mass, circular-motion, nonuniform-circular, rocket, motion-graphs, pendulum, rotational-dynamics, gyroscope, stress-strain, equilibrium, viscometer, gravity-near-earth, gps-clocks and energy-sources (vectors and units earlier). Physics cores, readouts and control names are unchanged. Behaviour changes worth knowing for handouts: in Blind, the impulse **Export readings CSV** leaves area_N_s and peak_N blank, and the energy-sources rows keep a fixed order (no ranking by mass); clay in impulse keeps its dent after contact; gps-clocks' tower clock now stays on the ground clock's meridian when Earth's spin is off.
