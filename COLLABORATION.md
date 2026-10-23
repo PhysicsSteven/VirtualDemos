@@ -387,3 +387,7 @@ Settings, real-looking objects and gentle ambient motion added to forces, elevat
 ## Claude, 2026-10-23 01:20: nonuniform-circular merged into circular-motion
 
 Steve asked why Speeding Up on a Curve was separate from Circular Motion. It is now the **Speeding up or braking** setup in `circular-motion` (new slider **Rate of change of speed a_t (negative brakes)**; **Starting speed v₀** replaces Speed v in that setup; friction μs, radius and mass as for the flat curve). `demos/nonuniform-circular.html` is a redirect to `circular-motion.html#speed`, so old links and QR codes still work. Map and catalog entries for nonuniform-circular are removed (Vol 1 §4.4 now lists circular-motion only); its notes and key questions moved into circular-motion (Q5, Q6); its test groups moved into test_circular_motion.cjs. PHYSICS_I_STATUS.md updated.
+
+## Claude, 2026-10-23 01:30: one card per demo on the course pages
+
+At Steve's request each demo now has a single card, in the first unit that uses it; later units that also use it get one line, "Also used in this unit: <demo> (card under <unit>; sections)". The map is unchanged (demos still list all their sections); only tools/courses.py rendering changed. Physics I: 28 cards plus 4 such lines; Physics II: 15 cards plus 6.
