@@ -332,7 +332,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       </section>
 
       <section>
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="blind">Blind: hide predictions and answers</label>
         <p class="hint" id="blindHint" hidden>Blind hides a, e, the period P and P measured, the energy, Δt per wedge and ½·h·Δt, the second planet's a and P, the distances on the orbit drawing and the third law chart. The timer, the ruler, the clock and the launch readouts stay.</p>
         <div class="slider-head"><span class="hint" id="chartLab">Chart shows</span></div>
@@ -343,10 +343,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <label class="check"><input type="checkbox" id="tReduce">Reduce motion</label>
         <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
         <div class="twrap tall" id="dataWrap" hidden><table class="rows" id="dataTab"><caption class="cap" id="dataCap"></caption><thead></thead><tbody></tbody></table></div>
+        </div></details>
       </section>
 
       <section>
-        <h2>Time and star</h2>
+        <details class="fold"><summary>Time and star</summary><div class="foldbody">
         <div>
           <div class="slider-head"><label for="spd">Time speed</label><output id="spdOut" class="mono" for="spd">0.03 yr/s</output></div>
           <input type="range" id="spd" min="-2" max="1.7" step="0.01" value="-1.5">
@@ -357,6 +358,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div>
         <label class="check"><input type="checkbox" id="keep" checked>Keep the orbit's shape when M changes</label>
         <p class="hint" id="keepHint">On: speeds rescale by √M so a and e stay put and only the period changes. Off: the planet relaunches with the same velocity into a new orbit.</p>
+        </div></details>
       </section>
 
       <section>
@@ -379,7 +381,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       </section>
 
       <section>
-        <h2>Second law: equal areas</h2>
+        <details class="fold"><summary>Second law: equal areas</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tWedge" checked>Sweep wedges</label>
         </div>
@@ -397,6 +399,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <details class="more"><summary>More about this</summary>
           <p class="hint">Each wedge is swept in the same time Δt. Areas (AU²) are summed from the integrated path, not from a formula; compare them with ½·h·Δt, where h = |r × v|.</p>
         </details>
+        </div></details>
       </section>
 
       <section>
@@ -413,9 +416,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       </section>
 
       <section>
-        <h2>Compare</h2>
+        <details class="fold"><summary>Compare</summary><div class="foldbody">
         <button type="button" class="btn pos" id="second"><span class="dot"></span>Keep as second planet</button>
         <p class="hint" id="secondInfo">Copies the current launch into a second planet. Then change the first one and race them from t = 0.</p>
+        </div></details>
       </section>
 
       <section>

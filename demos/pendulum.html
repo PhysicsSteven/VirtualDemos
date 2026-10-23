@@ -42,6 +42,14 @@ body { margin: 0; }
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 <title>Pendulum</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -249,11 +257,12 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       </section>
 
       <section>
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>The model and its formulas</summary><p class="formula">T₀ = 2π√(L/g) · rod: 2π√(2L/3g) · exact: T = T₀ · (2/π) K(sin(θ₀/2))</p>
         <p class="hint">Model: a point bob on a massless, inextensible string (or a thin uniform rod). A string can only pull, so the bob on a string is released from at most 90° (above horizontal it would go slack and fall); the rod can start from up to 170° about a frictionless pivot, integrated exactly enough (fourth order Runge–Kutta, 1 ms steps) that the photogate's 0.001 s readings are reliable. Air drag, when on, is a small force in proportion to speed. The photogate times every second pass of the bottom.</p></details>
+        </div></details>
       </section>
     </aside>
   </main>

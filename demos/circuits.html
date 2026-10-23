@@ -361,11 +361,12 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       </section>
 
       <section>
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="blind">Blind: hide predictions and answers</label>
         <label class="check"><input type="checkbox" id="rmotion">Reduce motion</label>
         <label class="check" id="dtabLab"><input type="checkbox" id="dtab">Show data table</label>
         <p class="hint" id="labHint"></p>
+        </div></details>
       </section>
 
       <section>
@@ -512,7 +513,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       </section>
 
       <section>
-        <h2>Kirchhoff check</h2>
+        <details class="fold"><summary>Kirchhoff check</summary><div class="foldbody">
         <div class="seg full" role="group" aria-label="Kirchhoff rule" id="kSeg">
           <button type="button" data-k="junction" aria-pressed="false">Junction rule</button>
           <button type="button" data-k="loop" aria-pressed="true">Loop rule</button>
@@ -523,12 +524,14 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
           <button type="button" class="btn" id="kPrev">Previous loop</button>
           <button type="button" class="btn" id="kNext">Next loop</button>
         </div>
+        </div></details>
       </section>
 
       <section data-for="dc">
-        <h2>Whole circuit</h2>
+        <details class="fold"><summary>Whole circuit</summary><div class="foldbody">
         <dl class="readout" id="circRead"></dl>
         <details class="more"><summary>More about this</summary><p class="hint">The equivalent resistance is what the battery sees: the rest of the circuit with every other battery replaced by its internal resistance. Power drawn from the EMFs always equals the power turned into heat and light.</p></details>
+        </div></details>
       </section>
 
       <section>

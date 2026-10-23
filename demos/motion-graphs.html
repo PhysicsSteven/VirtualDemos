@@ -154,6 +154,14 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 .rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
 .rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rail details.more[open] > summary { margin-bottom: 4px; }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -218,13 +226,14 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       </section>
 
       <section>
-        <h2>At the time marker</h2>
+        <details class="fold"><summary>At the time marker</summary><div class="foldbody">
         <dl class="readout" id="readout"></dl>
         <div class="check-list">
           <label class="check"><input type="checkbox" id="tTan" checked><span>Tangent lines (slope)</span></label>
           <label class="check"><input type="checkbox" id="tArea" checked><span>Shade the area from 0 to t</span></label>
           <label class="check"><input type="checkbox" id="tDots"><span>Motion diagram: the cart every 0.5 s</span></label>
         </div>
+        </div></details>
       </section>
 
       <section>
@@ -247,10 +256,11 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       </section>
 
       <section>
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides the velocity and acceleration graphs, their readouts, the tangent lines, the areas, the stage settings and the a and v₀ from your fit, leaving the position graph, as from a motion detector. Work out v and a from it.</p></details>
+        </div></details>
       </section>
     </aside>
   </main>

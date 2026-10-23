@@ -389,8 +389,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       </section>
 
       <section data-view="single">
-        <h2>Measurements</h2>
+        <details class="fold"><summary>Measurements</summary><div class="foldbody">
         <dl class="readout" id="meas"></dl>
+        </div></details>
       </section>
 
       <section>
@@ -416,9 +417,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       </section>
 
       <section>
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind">Blind: hide predictions and answers</label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides the model curves in the C and U plot, the value of ε₀ and the formula in the header, κ on the material buttons and its slider, the plate and slab forces, σ and the fields inside the slab, the energy check, the energy in the field, the setup hints and the constants derived from your fit. The meters stay: C, Q, V, E, U and the energy bars.</p></details>
+        </div></details>
       </section>
 
       <section data-view="single">
@@ -440,12 +442,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       </section>
 
       <section data-view="single" class="bh">
-        <h2>Energy in the field</h2>
+        <details class="fold"><summary>Energy in the field</summary><div class="foldbody">
         <dl class="readout" id="fieldE"></dl>
         <p class="formula mono" id="fieldEq"></p>
         <details class="more"><summary>More about this</summary>
           <p class="hint">The energy density is u = ½κε₀E² (or ½E·D). In the ideal model the field is uniform in each region, so u times the volume of each region, summed, gives exactly ½CV².</p>
         </details>
+        </div></details>
       </section>
 
       <section data-view="combo" hidden>

@@ -258,13 +258,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Free body diagram</h2>
+        <details class="fold"><summary>Free body diagram</summary><div class="foldbody">
         <dl class="readout" id="fbdBox"></dl>
         <details class="more"><summary>More about this</summary><p class="hint">Drag the two markers on the chain to choose a piece. Only three forces act on it: the pulls at its two ends and its weight. Placed tip to tail they close into a triangle, so the piece is in equilibrium.</p></details>
+        </div></details>
       </section>
 
       <section>
-        <h2>Chain vs parabola</h2>
+        <details class="fold"><summary>Chain vs parabola</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tPar">Parabola</label>
           <label id="bridgeWrap"><input type="checkbox" id="tBridge">Suspension bridge</label>
@@ -272,6 +273,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <dl class="readout" id="parBox"></dl>
         <details class="more"><summary>More about this</summary><p class="hint">The parabola goes through both supports and has the same lowest height as the chain. A cable that carries a load spread evenly along the horizontal, like a bridge deck, hangs as a parabola. A chain carries its own weight spread evenly along its length, and that gives the catenary. For a shallow chain the two differ by about d³/(12L²), with d the sag and L the half span.</p></details>
         <p class="hint" id="bridgeHint" hidden>Bridge drawing: the main cable is the parabola, assuming the deck's weight per horizontal meter is much larger than the cable's own weight (the cable's weight is ignored). The faint curve is the bare chain. The force readouts above are for the bare chain.</p>
+        </div></details>
       </section>
 
       <section id="archSec" hidden>

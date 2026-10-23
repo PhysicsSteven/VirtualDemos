@@ -119,6 +119,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
 .rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rail details.more[open] > summary { margin-bottom: 4px; }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -192,11 +200,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides the net charges and potentials; the marks on the spheres stay, as an electroscope or a charge probe would show. In Conductor shapes, Blind hides the summary readouts, the E = 0 labels and the exact curve; the field lines, marks, graph and probe stay.</p></details>
         <p class="hint" id="modelSph">Model: two perfectly conducting spheres on ideal insulating stands and the rod's tip as a point charge, solved exactly with Kelvin image charges (a thin wire or contact makes the spheres one conductor; ground holds a sphere at zero potential). The marks are drawn from the surface charge density in the plane of the drawing: their darkness is in proportion to the density, and their sign is its sign. Real charge sits as a tiny excess or shortage of electrons; only electrons move.</p>
         <p class="hint" id="modelShape" hidden>Model (Conductor shapes): a 2D cross-section. Each conductor is very long along the line of sight, so every field lies in the plane of the picture; the point charge becomes a line charge λ (charge per length, seen end on) and the conductor's net charge is per length too. The conductor is a perfect conductor, isolated, with the net charge per length you set (zero: neutral); its potential comes out of the solution. Solved by a boundary element method: the surface is cut into straight panels (the readout gives how many), each with a uniform σ; the potential is set equal at every panel's midpoint and the total charge is fixed, and one dense linear solve gives every σ. The field anywhere is then the exact field of those panel charges plus E₀ and λ, so E = 0 inside the metal and the cavity is not imposed: it comes out of the solution, and the readouts report what is left (the numerical error). Convergence, checked in the test file: doubling the panels changes the largest σ by less than 0.1 %, and the circle matches the exact σ = 2ε₀E₀ cos θ to better than 0.01 % of 2ε₀E₀. The teardrop's point is rounded to 1.5 mm and the box's corners to 3 mm (outside) and 1 mm (cavity): at a perfectly sharp point σ grows without limit. Field lines are traced from positive charges and from where the field enters the picture, one line per equal amount of flux. The probe compares σ on the nearest panel with ε₀E⊥ just outside it; with uniform σ on each panel they agree to within about 1 % of the largest σ.</p>
+        </div></details>
       </section>
     </aside>
   </main>

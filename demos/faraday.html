@@ -318,13 +318,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Since the start of this move</h2>
+        <details class="fold"><summary>Since the start of this move</summary><div class="foldbody">
         <dl class="readout" id="since"></dl>
         <p class="hint" id="sinceHint"></p>
         <div class="row2" id="keepRow">
           <button type="button" class="btn" id="keep">Keep trace</button>
           <button type="button" class="btn" id="clearG">Clear traces</button>
         </div>
+        </div></details>
       </section>
 
       <section id="steadySec" hidden>
@@ -334,15 +335,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Lenz's law</h2>
+        <details class="fold"><summary>Lenz's law</summary><div class="foldbody">
         <p class="law">The induced current flows in the direction whose own magnetic field <b>opposes the change in flux</b> that produced it.</p>
         <p class="lenz-now" id="lenzNow" aria-live="off"></p>
         <p class="hint" id="rhr"></p>
+        </div></details>
       </section>
 
       <section>
-        <h2>Sign convention</h2>
+        <details class="fold"><summary>Sign convention</summary><div class="foldbody">
         <p class="hint" id="signConv"></p>
+        </div></details>
       </section>
 
       <section>

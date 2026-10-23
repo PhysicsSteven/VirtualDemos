@@ -45,6 +45,14 @@ img { max-width: 100%; }
 .rail details.more[open] > summary { margin-bottom: 4px; }
 .rail details.more > p + p { margin-top: 6px; }
 /* /vd-trim */
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 <title>Rotation and Torque</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -493,16 +501,17 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       </section>
 
       <section>
-        <h2>Key</h2>
+        <details class="fold"><summary>Key</summary><div class="foldbody">
         <div class="key" id="keyBox"></div>
         <div class="toggles">
           <label><input type="checkbox" id="tReduce">Reduce motion</label>
         </div>
         <p class="hint" id="reduceHint">Reduce motion: Push, Race and Release jump straight to the end, and the spinner stops; Play still runs it.</p>
+        </div></details>
       </section>
 
       <section>
-        <h2>Plot data</h2>
+        <details class="fold"><summary>Plot data</summary><div class="foldbody">
         <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Tables of the values drawn in the charts for this scene, for readers who cannot see the plots.</p>
@@ -511,6 +520,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <p class="hint dcap" id="dAcap"></p><div class="twrap"><table class="dtab" aria-labelledby="dAcap"><thead id="dAhead"></thead><tbody id="dAbody"></tbody></table></div>
           <div id="dBwrap"><p class="hint dcap" id="dBcap"></p><div class="twrap"><table class="dtab" aria-labelledby="dBcap"><thead id="dBhead"></thead><tbody id="dBbody"></tbody></table></div></div>
         </div>
+        </div></details>
       </section>
     </aside>
   </main>

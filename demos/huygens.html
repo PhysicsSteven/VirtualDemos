@@ -142,6 +142,14 @@ select { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(-
 .rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
 .rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rail details.more[open] > summary { margin-bottom: 4px; }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -224,11 +232,12 @@ select { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(-
       </section>
 
       <section>
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides the race times, the refracted and reflected fronts (the wavelets stay, so you can find the new front yourself) and θ₂. Predict first: which lane finishes last? Which way does the front turn as it enters glass?</p></details>
         <details class="more"><summary>More about this</summary><p class="hint">Model: v = c/n with the indices of OpenStax Table 1.1 (589 nm; gases at 0 °C and 1 atm, liquids and solids at 20 °C). In the race, light takes t = nL/c to cross a lane of length L; the pulses are drawn slowed down by the factor printed on the picture. At a boundary, each point of the surface starts a wavelet when the incident front reaches it, and the wavelets grow at the speed of light in their medium; the new front is the line tangent to them. Fronts are one wavelength apart and the wavelength is drawn hugely enlarged. For the opening, the waves are drawn in two dimensions: every point of the opening is a source of circular wavelets of amplitude falling as 1/√r, and the picture is their sum at each instant (Huygens and Fresnel). That simple sum is not exact within a wavelength or so of the edges, and the brightness is scaled to fit.</p></details>
+        </div></details>
       </section>
     </aside>
   </main>

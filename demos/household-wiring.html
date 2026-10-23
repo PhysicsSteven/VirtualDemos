@@ -140,6 +140,14 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 .rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
 .rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rail details.more[open] > summary { margin-bottom: 4px; }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -205,7 +213,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       </section>
 
       <section>
-        <h2>Faults and people</h2>
+        <details class="fold"><summary>Faults and people</summary><div class="foldbody">
         <div class="seg" role="group" aria-label="Fault" id="fault">
           <button type="button" data-f="none" aria-pressed="true">No fault</button>
           <button type="button" data-f="short" aria-pressed="false">Hot touches neutral</button>
@@ -218,6 +226,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
             <button type="button" data-k="wet" aria-pressed="false">Wet, 10.0 kΩ</button>
           </div></div>
         <div class="btnrow"><button type="button" class="btn primary" id="resetBtn">Reset the breaker and GFCI</button></div>
+        </div></details>
       </section>
 
       <section>
@@ -226,11 +235,12 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       </section>
 
       <section>
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides the currents, the effect on the person and whether the protection will act, until a device actually trips. Predict first: will the breaker trip? The GFCI? What does the person feel?</p></details>
         <details class="more"><summary>More about this</summary><p class="hint">Model: all four appliances are resistors, R = (120 V)²/P from their ratings (a lamp filament's resistance is lower when cold; that is left out). With only resistors the rms currents follow Ohm's and Kirchhoff's rules exactly, solved for the whole circuit including the copper wires (ρ = 1.68 × 10⁻⁸ Ω·m at 20 °C; 14 gauge is 1.628 mm across, 12 gauge 2.053 mm). The source is an ideal 120 V; the neutral and ground are bonded together at the panel. A fault contact is 0.10 Ω (a chosen value). The person's resistance is hand to feet including the skin, 200 kΩ dry or 10.0 kΩ wet (OpenStax §10.6), and the floor and earth path back to the panel is taken as zero, which makes the shock current as large as it can be. Effects of current (OpenStax §10.6): sensation from 1 mA; apparently harmless below 5 mA; sustained muscle contraction from 5 to 30 mA and above; above 300 mA through the heart, death may occur. The breaker trips at once above 10 times its rating (magnetic trip) and after 2 s of any lesser overload (a chosen delay: real breakers carry a modest overload for seconds to minutes). The GFCI trips when the hot and neutral currents differ by more than 5 mA (OpenStax). Charges in an AC circuit move back and forth; the dots are drawn swinging, slowed down, with a swing that grows with the current.</p></details>
+        </div></details>
       </section>
     </aside>
   </main>

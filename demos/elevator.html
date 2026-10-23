@@ -35,6 +35,14 @@ body { margin: 0; }
 .rail details.more[open] > summary { margin-bottom: 4px; }
 .rail details.more > p + p { margin-top: 6px; }
 /* /vd-trim */
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 <title>Elevator: Apparent Weight</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -210,13 +218,14 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       </section>
 
       <section>
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>The model and its formulas</summary>
           <p class="hint">Blind hides the scale reading, the N arrow and the scale graph, so the class can predict each stage of the ride first.</p>
           <p class="hint">Model: the car's acceleration ramps up to ±a at the chosen jerk (rate of change of acceleration), holds, and ramps back to zero, so the scale reading changes gradually as in a real elevator; tick “Instant starts and stops” for the textbook model, where the acceleration and the scale reading jump. The scale is massless and reads instantly, in kilograms as N/g. Cable snaps: one second of free fall, then the safety brakes stop the car at a constant deceleration of at least g, more if needed to stop above the pit.</p>
         </details>
+        </div></details>
       </section>
     </aside>
   </main>

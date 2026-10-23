@@ -45,6 +45,14 @@ img { max-width: 100%; }
 .rail details.more[open] > summary { margin-bottom: 4px; }
 .rail details.more > p + p { margin-top: 6px; }
 /* /vd-trim */
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 <title>Fluids: Pressure, Buoyancy and Flow</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -325,9 +333,10 @@ table.rows button:hover { color: var(--pos); }
       </section>
 
       <section>
-        <h2>Results</h2>
+        <details class="fold"><summary>Results</summary><div class="foldbody">
         <dl class="readout" id="readBox"></dl>
         <p class="formula mono" id="formula"></p>
+        </div></details>
       </section>
 
       <section id="readSec">
@@ -343,7 +352,7 @@ table.rows button:hover { color: var(--pos); }
       </section>
 
       <section id="labSec">
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="blind">Blind: hide predictions and answers</label>
         <p class="hint" id="blindHint" hidden>Blind hides the model graph, the formula line, the force arrows, the buoyant force, ρgh, the throat speed v₂, the computed pressures and Δh, the jet speed and the worked numbers in the hints. The instruments stay: pressure gauge, depth ruler, spring scale, flow meter, standpipes and the splash mark.</p>
         <div class="inline"><span>Graph shows</span>
@@ -355,10 +364,11 @@ table.rows button:hover { color: var(--pos); }
         <div class="toggles"><label><input type="checkbox" id="tReduce">Reduce motion</label></div>
         <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
         <div class="twrap tall" id="dataWrap" hidden><table class="rows" id="dataTab"><caption class="cap" id="dataCap"></caption><thead></thead><tbody></tbody></table></div>
+        </div></details>
       </section>
 
       <section id="timeSec">
-        <h2>Time</h2>
+        <details class="fold"><summary>Time</summary><div class="foldbody">
         <div class="seg full" role="group" aria-label="Playback rate" id="rateSeg">
           <button type="button" data-r="0.1" aria-pressed="false">0.1×</button>
           <button type="button" data-r="0.25" aria-pressed="false">0.25×</button>
@@ -370,12 +380,14 @@ table.rows button:hover { color: var(--pos); }
           <label id="lGhost"><input type="checkbox" id="tGhost" checked>Starting level</label>
           <label id="lCmp"><input type="checkbox" id="tCmp" checked>Compare holes</label>
         </div>
+        </div></details>
       </section>
 
       <section>
-        <h2>Key and model</h2>
+        <details class="fold"><summary>Key and model</summary><div class="foldbody">
         <div class="key" id="keyBox"></div>
         <p class="hint" id="modelHint"></p>
+        </div></details>
       </section>
     </aside>
   </main>

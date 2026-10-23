@@ -584,18 +584,20 @@ details.hall[open] > summary { margin-bottom: 8px; }
       </section>
 
       <section>
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides the r, T, f, turns, drift and pitch readouts, the r label, the circle's center, the dashed path ahead and the period axis, and in the other setups the predicted speeds, landing points, f<sub>c</sub> and K<sub>max</sub>. In the Hall strip it renames the samples and hides the carriers, n, R<sub>H</sub> and v<sub>d</sub>. The ruler, the timer, the settings, the Hall voltmeter and the speed and energy readouts stay.</p></details>
+        </div></details>
       </section>
 
       <section>
-        <h2>Playback</h2>
+        <details class="fold"><summary>Playback</summary><div class="foldbody">
         <div>
           <div class="slider-head"><label for="pb">Speed</label><output id="pbOut" class="mono" for="pb"></output></div>
           <input type="range" id="pb" min="-4" max="4" step="1" value="0">
         </div>
+        </div></details>
       </section>
 
       <section>

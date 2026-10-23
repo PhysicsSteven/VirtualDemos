@@ -152,6 +152,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
 .rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rail details.more[open] > summary { margin-bottom: 4px; }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 </head>
 <body>
@@ -268,10 +276,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides every computed result (components, magnitudes, angles, sums, products, the resultant arrow, the river predictions, and the force table's forces, net force and equilibrant; the ring still shows whether it is centered) and leaves the vectors you set and the grid, so you can work them out and then check.</p></details>
+        </div></details>
       </section>
     </aside>
   </main>

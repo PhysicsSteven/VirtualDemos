@@ -45,6 +45,14 @@ img { max-width: 100%; }
 .rail details.more[open] > summary { margin-bottom: 4px; }
 .rail details.more > p + p { margin-top: 6px; }
 /* /vd-trim */
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 <title>Projectile Range</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -339,7 +347,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
       </section>
 
       <section id="secMeasure">
-        <h2>Measure</h2>
+        <details class="fold"><summary>Measure</summary><div class="foldbody">
         <div class="slider-head"><span>Dot interval</span></div>
         <div class="seg wrap" id="strobeSeg" role="group" aria-label="Time between dots">
           <button type="button" data-dt="auto" aria-pressed="true">Auto</button>
@@ -363,6 +371,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
         <details class="more"><summary>More about this</summary>
           <p class="hint">The time cursor sits on a dot of the selected shot: t is a whole number of dot intervals after launch. Click a time graph to place it, or use the buttons, or <kbd>,</kbd> and <kbd>.</kbd> on the view (<kbd>Home</kbd>, <kbd>End</kbd> jump to launch and the last dot). x and y read to 1 cm from the launcher's foot; R is where the ball lands, to 1 cm.</p>
         </details>
+        </div></details>
       </section>
 
       <section id="secReadings">
@@ -426,7 +435,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
       </section>
 
       <section id="secPred">
-        <h2>Current settings</h2>
+        <details class="fold"><summary>Current settings</summary><div class="foldbody">
         <dl class="readout">
           <div class="big"><dt>Range, with drag</dt><dd id="rR">—</dd></div>
           <div class="big"><dt>Range, vacuum</dt><dd id="rRv">—</dd></div>
@@ -440,10 +449,11 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
         <details class="more"><summary>More about this</summary>
           <p class="hint">What the next shot will do. Each shot in the list keeps its own numbers.</p>
         </details>
+        </div></details>
       </section>
 
       <section id="secVt">
-        <h2>Terminal speed</h2>
+        <details class="fold"><summary>Terminal speed</summary><div class="foldbody">
         <dl class="readout">
           <div class="big"><dt>v<sub>t</sub> = √(2mg / ρC<sub>d</sub>A)</dt><dd id="rVt">—</dd></div>
           <div class="big"><dt>v₀ / v<sub>t</sub></dt><dd id="rRatio">—</dd></div>
@@ -452,10 +462,11 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
         <details class="more"><summary>More about this</summary>
           <p class="hint">Drag matters when the launch speed is comparable to or larger than v<sub>t</sub>.</p>
         </details>
+        </div></details>
       </section>
 
       <section>
-        <h2>Layers</h2>
+        <details class="fold"><summary>Layers</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tVac" checked>Vacuum path</label>
           <label><input type="checkbox" id="tVel" checked>Velocity vector</label>
@@ -465,19 +476,21 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
         </div>
         <p class="hint" id="layersBlind" hidden>Blind is on: the vacuum path, the next shot and the drag graph are predictions of the model, so they stay hidden.</p>
         <p class="hint" id="dotHint">Dots mark every 0.1 s. They bunch up on the steep way down when drag matters.</p>
+        </div></details>
       </section>
 
       <section>
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Blind hides g, the vacuum path, the next shot preview, the predicted range, height, time and best angles, the terminal speed, the model curves on the range graph and the drag graph. The flight of each shot, the dots, the cursor reading and the range of each shot stay, as a real camera and tape would give them. Reduce motion shows each shot already landed instead of flying.</p>
         </details>
+        </div></details>
       </section>
 
       <section>
-        <h2>Key</h2>
+        <details class="fold"><summary>Key</summary><div class="foldbody">
         <div class="key">
           <span><i class="swatch shots"></i>Shots, numbered, one color each</span>
           <span><i class="swatch next"></i>Next shot with the current settings</span>
@@ -489,6 +502,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
           <p class="hint">From ground level in vacuum the best angle is 45°. Drag lowers it. So does launching from above the ground, even with no air.</p>
           <p class="hint">Model: drag F = ½ρC<sub>d</sub>Av² against the velocity with constant C<sub>d</sub>, no spin, no wind, flat ground, g and ρ constant with height. Fourth order Runge–Kutta with steps of at most 1 ms; the landing point is interpolated within the last step. The balls are drawn larger than scale.</p>
         </details>
+        </div></details>
       </section>
     </aside>
   </main>

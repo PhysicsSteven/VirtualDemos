@@ -292,7 +292,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section class="vb">
-        <h2>Many polarizers</h2>
+        <details class="fold"><summary>Many polarizers</summary><div class="foldbody">
         <div>
           <div class="slider-head"><label for="nn">Steps N</label><output id="nnOut" class="mono" for="nn"></output></div>
           <input type="range" id="nn" min="1" max="30" step="1" value="6">
@@ -302,6 +302,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="wide"><dt>Unpolarized light, one more polarizer first</dt><dd id="rNu">—</dd></div>
         </dl>
         <details class="more"><summary>More about this</summary><p class="hint">Each step passes cos²(90°/N). The loss per step falls as 1/N², faster than the number of steps grows, so the total climbs toward 1: cos²ᴺ(π/2N) ≈ e^(−π²/4N), the dashed curve. N = 1 is crossed polarizers; N = 2 is the three polarizer surprise.</p></details>
+        </div></details>
       </section>
 
       <!-- reflection view -->

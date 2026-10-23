@@ -278,7 +278,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section data-for="double">
-        <h2>Small oscillations</h2>
+        <details class="fold"><summary>Small oscillations</summary><div class="foldbody">
         <div class="ctl">
           <div class="slider-head"><label for="sAmp">Mode amplitude, larger angle</label><output id="oAmp" class="mono" for="sAmp"></output></div>
           <input type="range" id="sAmp" min="1" max="60" step="1">
@@ -290,10 +290,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </div>
         <dl class="readout" id="modeBox"></dl>
         <details class="more"><summary>More about this</summary><p class="hint">For small angles the equations become linear, and every motion is a sum of two normal modes. In mode 1 the rods swing together; in mode 2 they swing opposite. For equal masses and lengths ω² = (g/L)(2 ∓ √2). From rest keeps the present angles and sets both speeds to zero.</p></details>
+        </div></details>
       </section>
 
       <section data-for="double">
-        <h2>Copies and separation</h2>
+        <details class="fold"><summary>Copies and separation</summary><div class="foldbody">
         <div class="ctl">
           <div class="slider-head"><label for="sN">Number of copies</label><output id="oN" class="mono" for="sN"></output></div>
           <input type="range" id="sN" min="1" max="200" step="1">
@@ -304,10 +305,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </div>
         <dl class="readout" id="lyapBox"></dl>
         <details class="more"><summary>More about this</summary><p class="hint">Copy k starts with the upper rod turned k·δ more than copy 0, everything else the same. The separation d is measured in phase space, d² = Δθ₁² + Δθ₂² + (Δω₁² + Δω₂²)L₁/g. The Lyapunov exponent λ is estimated from a nearby orbit that is pulled back to 10⁻⁸ every 0.1 s, averaging ln of the growth; it is a finite time estimate.</p></details>
+        </div></details>
       </section>
 
       <section data-for="double">
-        <h2>Lower right plot</h2>
+        <details class="fold"><summary>Lower right plot</summary><div class="foldbody">
         <div class="seg full" role="group" aria-label="Lower right plot" id="plotSeg">
           <button type="button" data-v="config" aria-pressed="true">Angle path</button>
           <button type="button" data-v="sep" aria-pressed="false">Separation</button>
@@ -324,6 +326,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           </div>
         </div>
         <p class="hint" id="plotHint"></p>
+        </div></details>
       </section>
 
       <section>

@@ -41,6 +41,14 @@ body { margin: 0; }
 .rail details.more[open] > summary { margin-bottom: 4px; }
 .rail details.more > p + p { margin-top: 6px; }
 /* /vd-trim */
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
 </style>
 <title>Resistivity of a Wire</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -249,7 +257,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       </section>
 
       <section id="coldSec">
-        <h2>Cold stage</h2>
+        <details class="fold"><summary>Cold stage</summary><div class="foldbody">
         <div class="chips" id="coldMats">
           <button type="button" data-c="copper" aria-pressed="false">Copper</button>
           <button type="button" data-c="aluminum" aria-pressed="false">Aluminum</button>
@@ -269,6 +277,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <p class="hint">Choose <b>Cold stage</b> above the picture: a sample wire in a liquid helium cryostat, cooled from room temperature to 1 K while the four wire meters read it. The length and gauge are the ones set above; the current is the supply current.</p>
           <p class="hint">Model: normal metals follow Matthiessen's rule, ρ(T) = ρ₀ + ρ_ph(T). The lattice part ρ_ph uses the Bloch–Grüneisen formula with the Debye temperature Θ (Kittel, Table 5.1: Cu 343 K, Al 428 K, Sn 200 K, Pb 105 K), scaled so that ρ(293 K) is the handbook value (Cu 1.68, Al 2.65, Sn 11.5, Pb 20.8 × 10⁻⁸ Ω·m); real curves differ from this one formula by up to tens of percent between about 10 K and 100 K. The residual part ρ₀ = ρ(293 K)/RRR comes from impurities and defects and depends on the sample. Below the critical temperature (OpenStax Table 9.3: Al 1.20 K, Sn 3.72 K, Pb 7.19 K, YBa₂Cu₃O₇ 92 K) the resistance is exactly zero; the step is drawn sharp, while real transitions are from a millikelvin to about a kelvin wide. Copper does not become superconducting at any temperature reached so far. YBCO's normal state is drawn as ρ = 2.5 × 10⁻⁶ Ω·m × T/300 K, a typical value along its copper oxide planes; it varies from sample to sample. Thermal contraction is left out. The points are simulated readings, noise free.</p>
         </details>
+        </div></details>
       </section>
 
       <section>
@@ -295,12 +304,13 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       </section>
 
       <section>
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <details class="more"><summary>The model and its formulas</summary>
           <p class="hint">Blind hides ρ, α, the wire's resistance per metre, and ρ and α from the fits, leaving the meters, the rule and the settings. The Mystery wire always hides its own values. Inside the wire, Blind also hides J, v_d, the transit time, I/e, the expected count and the collision time; the count, the drift so far and the real time stay, so v_d can be measured.</p>
           <p class="hint">Model: R = ρL/A with ρ linear in temperature; the voltmeter is ideal (four-wire, so the clips and leads add nothing) and the current is set by a constant current supply. Resistivities are handbook values at 20 °C; real alloys vary by a few percent.</p>
         </details>
+        </div></details>
       </section>
     </aside>
   </main>

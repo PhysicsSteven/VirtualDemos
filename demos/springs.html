@@ -331,7 +331,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       </section>
 
       <section>
-        <h2>Damping</h2>
+        <details class="fold"><summary>Damping</summary><div class="foldbody">
         <div class="ctl">
           <div class="slider-head"><label for="sB">Damping constant b</label><output id="oB" class="mono" for="sB"></output></div>
           <input type="range" id="sB" min="0" max="120" step="1">
@@ -344,6 +344,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <label class="check" id="cmpWrap"><input type="checkbox" id="tCmp">Compare ζ = 0.2, 1 and 2.5 from the same start</label>
         <dl class="readout" id="dampBox"></dl>
         <details class="more"><summary>More about this</summary><p class="hint">The oil pushes on each block with a force −bv. The damping ratio ζ = b/(2√(km)) sorts the motion: ζ &lt; 1 underdamped, ζ = 1 critically damped, ζ &gt; 1 overdamped. Drag the grip on the oil to change b.</p></details>
+        </div></details>
       </section>
 
       <section id="driveSec" hidden>
@@ -371,7 +372,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       </section>
 
       <section>
-        <h2>Stopwatch and ruler</h2>
+        <details class="fold"><summary>Stopwatch and ruler</summary><div class="foldbody">
         <div class="inline"><label for="nOsc">Oscillations counted, N</label><input type="number" class="num" id="nOsc" min="1" max="200" step="1" value="10"></div>
         <div class="btnrow">
           <button type="button" class="btn" id="swReset">Reset stopwatch</button>
@@ -379,6 +380,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         </div>
         <dl class="readout" id="swBox"></dl>
         <details class="more"><summary>More about this</summary><p class="hint">Press Stopwatch (or W on the drawing) as the block passes a mark you choose, count N full oscillations, and press it again as the block passes the same mark going the same way. The stopwatch runs on simulation time, so slow motion makes timing easier, but your own reaction time still counts. It reads to 0.01 s. The gold ticks on the ruler hold the largest |x| since Reset peak.</p></details>
+        </div></details>
       </section>
 
       <section>
@@ -403,12 +405,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       </section>
 
       <section>
-        <h2>Lab</h2>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind">Blind: hide predictions and answers</label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides the period, ω₀ and f₀ predicted from m and k, the damping ratio, Q, the damped period and decay time, the predicted steady amplitude, phase and peak, the mode frequencies and beat period, the static stretch, the reference circle, the envelope, the ζ comparison traces, the curves on the resonance plot and the k derived from your fit. The stopwatch, the ruler, the clock, the measured period and amplitude, and the settings stay.</p></details>
         <label class="check"><input type="checkbox" id="labUnknown">Unknown spring: hide k</label>
         <button type="button" class="btn" id="newUnknown" hidden>New unknown spring</button>
         <details class="more"><summary>More about this</summary><p class="hint">Unknown spring picks a random k from 5 to 60 N/m and hides it: the k slider, the k labels, the energy values, the wall amplitude and the k column of the CSV. It turns Blind on, and the ζ buttons are off because they would give k away. The measured period stays. Change m, time the period and find k from the slope of T² against m. One block only. Turning it off shows k, so you can check your answer.</p></details>
+        </div></details>
       </section>
 
       <section>
