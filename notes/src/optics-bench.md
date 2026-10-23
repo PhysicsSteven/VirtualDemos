@@ -44,6 +44,8 @@ Students should know the law of reflection and Snell's law. The sign conventions
 
 **Q8.** In **Refracting surface** (n₁ = 1.00, n₂ = 1.50, R = +4.0 cm, object 16.0 cm from the vertex), find d_i and m from n₁/d_o + n₂/d_i = (n₂ − n₁)/R and m = −n₁d_i/(n₂d_o). The traced image is at +21.4 cm. Predict what happens to it as you shrink the aperture from 3 cm to 1 cm, then check, and explain the difference. In **Apparent depth**, a fish is 12.0 cm behind a flat water surface (n = 1.33). How deep does it look from straight on? Where would it have to be to look 6.0 cm deep?
 
+**Q9.** In **Prism**, click the prism and choose **Crown**, then **Flint**, then **Diamond**. For each, note n at 400 nm and 700 nm from the editor. Which material spreads the colors most, and why does a larger change of n with wavelength mean a wider spectrum? For crown glass the editor gives a spread of 1.57° at minimum deviation; check it from n sin(A/2) = sin((A + δ)/2) with A = 60°. Why does a diamond sparkle with color more than glass does?
+
 ## Common misconceptions
 
 - **"Covering half a lens cuts off half the image."** Every part of the lens sends rays from every object point to the image. Shrink a lens's aperture: the image stays whole and only fewer rays form it.
