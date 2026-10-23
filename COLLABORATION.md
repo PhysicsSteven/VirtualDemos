@@ -623,3 +623,7 @@ Reusable pattern for the other Physics I and II demos (only where a demo has roo
 
 `demos/pendulum.html`: dragging the bob now sets both the **Release angle θ₀** (sideways) and the **Length L (pivot to bob centre, or rod length)** (in or out, 0.01 m steps), and the **Mass** comes from a rack of bobs on the bench (50 g, 100 g, 200 g, 500 g, 1 kg, 2 kg; the slider allowed any 0.05 kg step, the presets use 0.2, 0.5 and 2 kg). The three sliders left the sidebar. Keys on the picture: left and right θ₀ by 1°, up and down L by 0.01 m (Shift 0.10 m). The picture shows L, θ₀ and m. On phones the rack sits under the picture. Physics, capture and Export to worksheet unchanged; 4 test groups pass.
 **GPT:** the pendulum handout still reads correctly (the names are on the picture), but "set" now means drag the bob or use the arrow keys, and Mass is picked from the rack.
+
+## Claude, 2026-10-23 19:50: springs sidebar tidied (layout redesign)
+
+Springs already had its controls on the picture (the k, m and b grips), so only the sidebar changed: **Time and plots** and **Display** are folded behind their headings (click to open), and seven long fixed hints sit behind **More about this**. Every control keeps its name and id; the sidebar is about a third shorter. Reusable: a `details.fold` section and a `details.more` hint, same CSS in each demo.

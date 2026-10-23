@@ -207,6 +207,17 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 
 /* projector on a short screen: let the stage shrink to fit under the header */
 @media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -300,7 +311,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" class="btn" data-start="one">One block</button>
         </div>
         <dl class="readout" id="coupBox"></dl>
-        <p class="hint">With k<sub>1</sub> = k<sub>2</sub>, mode 1 has both blocks moving together, so the middle spring never stretches, and mode 2 has them moving opposite, so it adds 2k<sub>c</sub>. With unequal outer springs the modes are lopsided: one block swings more than the other, shown by the amplitude ratio below. Any motion is a sum of the two modes.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">With k<sub>1</sub> = k<sub>2</sub>, mode 1 has both blocks moving together, so the middle spring never stretches, and mode 2 has them moving opposite, so it adds 2k<sub>c</sub>. With unequal outer springs the modes are lopsided: one block swings more than the other, shown by the amplitude ratio below. Any motion is a sum of the two modes.</p></details>
       </section>
 
       <section>
@@ -316,7 +327,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         </div>
         <label class="check" id="cmpWrap"><input type="checkbox" id="tCmp">Compare ζ = 0.2, 1 and 2.5 from the same start</label>
         <dl class="readout" id="dampBox"></dl>
-        <p class="hint">The oil pushes on each block with a force −bv. The damping ratio ζ = b/(2√(km)) sorts the motion: ζ &lt; 1 underdamped, ζ = 1 critically damped, ζ &gt; 1 overdamped. Drag the grip on the oil to change b.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">The oil pushes on each block with a force −bv. The damping ratio ζ = b/(2√(km)) sorts the motion: ζ &lt; 1 underdamped, ζ = 1 critically damped, ζ &gt; 1 overdamped. Drag the grip on the oil to change b.</p></details>
       </section>
 
       <section id="driveSec" hidden>
@@ -334,7 +345,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" class="btn" id="clearSweep">Clear sweep</button>
         </div>
         <dl class="readout" id="driveBox"></dl>
-        <p class="hint">The wall at the end of the spring moves as X<sub>w</sub> cos ωt. That pulls on the block exactly like a force F₀ cos ωt with F₀ = kX<sub>w</sub>. The sweep starts at the steady state for its first ω and raises ω slowly; if b is small the oscillator needs time 2m/b to catch up, so the measured dots fall a little below the peak and ring just after it, more so for a lightly damped spring.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">The wall at the end of the spring moves as X<sub>w</sub> cos ωt. That pulls on the block exactly like a force F₀ cos ωt with F₀ = kX<sub>w</sub>. The sweep starts at the steady state for its first ω and raises ω slowly; if b is small the oscillator needs time 2m/b to catch up, so the measured dots fall a little below the peak and ring just after it, more so for a lightly damped spring.</p></details>
       </section>
 
       <section>
@@ -351,7 +362,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" class="btn" id="peakReset">Reset peak</button>
         </div>
         <dl class="readout" id="swBox"></dl>
-        <p class="hint">Press Stopwatch (or W on the drawing) as the block passes a mark you choose, count N full oscillations, and press it again as the block passes the same mark going the same way. The stopwatch runs on simulation time, so slow motion makes timing easier, but your own reaction time still counts. It reads to 0.01 s. The gold ticks on the ruler hold the largest |x| since Reset peak.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Press Stopwatch (or W on the drawing) as the block passes a mark you choose, count N full oscillations, and press it again as the block passes the same mark going the same way. The stopwatch runs on simulation time, so slow motion makes timing easier, but your own reaction time still counts. It reads to 0.01 s. The gold ticks on the ruler hold the largest |x| since Reset peak.</p></details>
       </section>
 
       <section>
@@ -363,7 +374,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead></thead><tbody></tbody></table></div>
-        <p class="hint">Capture stores what is on screen, rounded as displayed: the stopwatch time, your N, the ruler peak (or, when driven, the amplitude of the last drive cycle) and the settings m, k, b, F₀ and ω. T = t/N. Cells can be edited; rows stay through setup changes until Clear.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Capture stores what is on screen, rounded as displayed: the stopwatch time, your N, the ruler peak (or, when driven, the amplitude of the last drive cycle) and the settings m, k, b, F₀ and ω. T = t/N. Cells can be edited; rows stay through setup changes until Clear.</p></details>
         <div class="seg full" role="group" aria-label="Plot of the readings" id="fitSeg">
           <button type="button" data-k="T2m" aria-pressed="true">T² against m</button>
           <button type="button" data-k="Aw" aria-pressed="false">A against ω</button>
@@ -378,14 +389,14 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind">Blind: hide predictions and answers</label>
-        <p class="hint">Blind hides the period, ω₀ and f₀ predicted from m and k, the damping ratio, Q, the damped period and decay time, the predicted steady amplitude, phase and peak, the mode frequencies and beat period, the static stretch, the reference circle, the envelope, the ζ comparison traces, the curves on the resonance plot and the k derived from your fit. The stopwatch, the ruler, the clock, the measured period and amplitude, and the settings stay.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Blind hides the period, ω₀ and f₀ predicted from m and k, the damping ratio, Q, the damped period and decay time, the predicted steady amplitude, phase and peak, the mode frequencies and beat period, the static stretch, the reference circle, the envelope, the ζ comparison traces, the curves on the resonance plot and the k derived from your fit. The stopwatch, the ruler, the clock, the measured period and amplitude, and the settings stay.</p></details>
         <label class="check"><input type="checkbox" id="labUnknown">Unknown spring: hide k</label>
         <button type="button" class="btn" id="newUnknown" hidden>New unknown spring</button>
-        <p class="hint">Unknown spring picks a random k from 5 to 60 N/m and hides it: the k slider, the k labels, the energy values, the wall amplitude and the k column of the CSV. It turns Blind on, and the ζ buttons are off because they would give k away. The measured period stays. Change m, time the period and find k from the slope of T² against m. One block only. Turning it off shows k, so you can check your answer.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Unknown spring picks a random k from 5 to 60 N/m and hides it: the k slider, the k labels, the energy values, the wall amplitude and the k column of the CSV. It turns Blind on, and the ζ buttons are off because they would give k away. The measured period stays. Change m, time the period and find k from the slope of T² against m. One block only. Turning it off shows k, so you can check your answer.</p></details>
       </section>
 
       <section>
-        <h2>Time and plots</h2>
+        <details class="fold"><summary>Time and plots</summary><div class="foldbody">
         <div class="ctl">
           <div class="slider-head"><label for="sRate">Playback rate</label><output id="oRate" class="mono" for="sRate"></output></div>
           <input type="range" id="sRate" min="0" max="7" step="1">
@@ -401,10 +412,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" class="btn" id="clearG">Clear traces</button>
         </div>
         <p class="hint">Keep a trace, then drag the block farther out and let go: the peaks move apart in height but not in time.</p>
+        </div></details>
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tCircle" checked>Reference circle</label>
           <label><input type="checkbox" id="tArrows" checked>Force and velocity</label>
@@ -419,6 +431,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <span><i class="swatch ghost"></i><span id="ghostTxt">Kept trace</span></span>
         </div>
         <p class="hint" id="modelHint">Model: ideal massless springs that obey Hooke's law, a frictionless track, a damping force −bv on each block, g = 9.80665 m/s². The curves are the exact solution of the linear equation of motion, not a step by step integration; two coupled blocks (equal masses; outer springs k₁ and k₂, middle spring k_c, the same damping b on each) move as the sum of their two normal modes, found exactly from the 2 × 2 stiffness matrix. Positions are drawn to scale; the block's size grows with its mass but is not to scale. The drawing never shows a spring pressed solid, and the model has no such limit.</p>
+        </div></details>
       </section>
     </aside>
   </main>
