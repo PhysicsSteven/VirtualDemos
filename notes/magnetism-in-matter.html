@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Magnetism in Matter: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Magnetism in Matter</h1><ul class="meta"><li><a href="../demos/magnetism-in-matter.html">Open the demo</a></li><li>PHYS 202</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Filling a long solenoid with a material changes the field from B₀ = μ₀nI to B = (1 + χ)B₀ (OpenStax Eq. 12.36 and 12.37). The susceptibility χ says how strongly the material answers.</li>
+<li>Paramagnets (χ &gt; 0, about 10⁻⁵) add a tiny field: their atomic moments line up a little, fighting thermal motion. Diamagnets (χ &lt; 0, about −10⁻⁵) subtract a tiny field: the applied field induces moments that oppose it.</li>
+<li>Para and diamagnetic effects are tiny in B, but a strong field that changes quickly with position can still push on them hard enough to matter: liquid oxygen is pulled into a magnet, and water can be floated.</li>
+<li>Iron is ferromagnetic: B is thousands of times B₀, χ is not a constant, and B depends on the history of the field. At zero current it stays magnetized; a reverse current is needed to bring B back to zero. This is hysteresis.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need B₀ = μ₀nI for a long solenoid and the idea of a magnetic dipole moment from a current loop. <strong>Blind</strong> hides B, B − B₀ and the plot and covers the core, so students can predict first.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Aluminum core.</strong> At 1.000 A and 20 turns per cm, B₀ = 2.51 mT, and the bars for B₀ and B look the same. Ask: did the aluminum do anything? Point to B − B₀ = 55 nT, and the plot: a straight line whose slope is χ.</li>
+<li><strong>Bismuth core.</strong> Now B − B₀ is negative. Flip the current with the arrow keys or the slider: B − B₀ flips too, so it always opposes B₀.</li>
+<li><strong>Liquid oxygen.</strong> The same line, 160 times steeper than aluminum. Mention the classic demo: liquid oxygen poured between magnet poles hangs there.</li>
+<li><strong>Floating water.</strong> Read off B dB/dz = 1352 T²/m. At 16 T the field would need to fall by about 85 T per metre: possible only with research magnets, which is how a frog was once floated.</li>
+<li><strong>Iron, Example 12.10.</strong> At 0.200 A, B₀ = 503 µT and B = 1.41 T: the model reproduces the book's 1.4 T and χ ≈ 2.8 × 10³. Move the current: χ changes, so iron is not a linear material.</li>
+<li><strong>Iron hysteresis loop.</strong> Let the sweep run. Stop at I = 0: B is still about 1.7 T. Ask what current brings B to zero (about −0.10 A). Then <strong>Demagnetize</strong>.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A long solenoid has 20 turns per cm and carries 1.00 A. Find B₀. It is filled with aluminum (χ = 2.2 × 10⁻⁵). By how much does B differ from B₀? Would you notice it on a typical laboratory gaussmeter?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> For atomic hydrogen, μ = 9.3 × 10⁻²⁴ A·m². In a 1.0 T field at 27 °C, compare the energy to flip an aligned moment, 2μB, with kT. What does this say about how well the moments in a paramagnet line up, and why is χ so small?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A small piece of a material with susceptibility χ in a field that changes with height feels a force per volume (χ/μ₀) B dB/dz along z. Above a magnet the field falls with height. Show that water floats where |B dB/dz| = μ₀ρg/|χ| and evaluate it (ρ = 998.2 kg/m³, χ = −9.1 × 10⁻⁶). Could a paramagnet such as aluminum be floated above a magnet the same way?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Use OpenStax Figure 12.25 (or the demo's iron) to find χ at B₀ = 1.0 × 10⁻⁴ T and at B₀ = 6.0 × 10⁻⁴ T. Why is it misleading to quote a single susceptibility for iron?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In the demo's iron loop (20 turns per cm, current swept between ±1.00 A), B is about 1.7 T when the current returns to zero, and B reaches zero at a reverse current of about 0.10 A. What are H and B₀ at that reverse current? Explain, in terms of domains, why B is not zero when I = 0. Why do transformer cores use iron with a narrow loop, and permanent magnets a material with a wide one?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Only iron is magnetic."</strong> Every material responds; most do so a hundred thousand times more weakly than iron.</li>
+<li><strong>"Diamagnets are not magnetic."</strong> They respond, with χ &lt; 0, and are pushed out of strong fields.</li>
+<li><strong>"χ for iron is a constant of the material."</strong> For iron it depends on the field and on its history.</li>
+<li><strong>"Turning the current off unmagnetizes the core."</strong> Hysteresis leaves a remanent field; demagnetizing needs a shrinking alternating field (or heating).</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Long solenoid, core filling it: B₀ = μ₀nI, B = (1 + χ)B₀, μ = (1 + χ)μ₀. Susceptibilities from OpenStax Table 12.2.</li>
+<li>Levitation: force per volume (χ/μ₀) B dB/dz; balance with ρg. Densities at 20 °C from the CRC Handbook (water 998.2, copper 8960, bismuth 9780 kg/m³); g = 9.81 m/s².</li>
+<li>Iron: Jiles and Atherton model (1986) with M_s = 1.707 × 10⁶ A/m (Kittel) and chosen a = 80 A/m, k = 300 A/m, α = 2.0 × 10⁻⁴, c = 0.4, fitted to the two points of OpenStax Figure 12.25 (model 0.56 T and 1.51 T against 0.60 T and 1.5 T). The model gives a remanence of 1.72 T and a coercive field of 204 A/m for a ±2000 A/m loop; these are properties of the chosen parameters, not of a measured sample. The drawings inside the core are cartoons, with exaggeration stated on the page.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

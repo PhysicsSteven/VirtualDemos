@@ -3115,10 +3115,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "magnetism-in-matter"
+      ],
       "unit": "magnetic-sources",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Magnetism in Matter (2026-10-23, Claude): susceptibilities from Table 12.2 in a solenoid core, Example 12.10 and Figure 12.25 for iron, hysteresis, and the field needed to float water."
     },
     {
       "vol": 2,
@@ -5770,6 +5772,26 @@
       "note": "Lecture demonstration only. Parallel-current force and dipole torque support selected magnetic-force topics; no new handout requested.",
       "title": "Magnetic Fields of Currents",
       "url": "demos/currents-fields.html"
+    },
+    {
+      "demo": "magnetism-in-matter",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "12.7",
+          "title": "Magnetism in Matter"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-23 (Claude). Lecture demo: long solenoid with a core from OpenStax Table 12.2 (B = (1 + χ)B0), field needed to float a diamagnet, iron by a Jiles and Atherton model fitted to Figure 12.25 with hysteresis loop, remanence, coercive current and demagnetizing; Blind.",
+      "handouts": [],
+      "title": "Magnetism in Matter",
+      "url": "demos/magnetism-in-matter.html"
     },
     {
       "demo": "displacement-current",

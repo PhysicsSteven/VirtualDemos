@@ -1,0 +1,477 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Magnetism in Matter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the coil, bars and plot on the left, the rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+@media (max-width: 820px) { .chips button { min-height: 36px; } }
+.readout dd.warn { color: var(--pos); }
+:root { --coil: #b8692e; --iron: #9aa3ad; --para: #d6e6f7; --dia: #eadcf3; --water: #cfe6f5; --dom-r: #c23f2c; --dom-l: #2b60b5; --atom: #5a6575; --mark: #a7740b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --coil: #d98a4c; --iron: #59626d; --para: #1d3047; --dia: #33284a; --water: #183449; --dom-r: #ff7660; --dom-l: #69a0ff; --atom: #b4bfcd; --mark: #e2b350; } }
+:root[data-theme="dark"] { --coil: #d98a4c; --iron: #59626d; --para: #1d3047; --dia: #33284a; --water: #183449; --dom-r: #ff7660; --dom-l: #69a0ff; --atom: #b4bfcd; --mark: #e2b350; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Magnetism in Matter</h1>
+      <p>Fill a long solenoid with a material and compare the field with the core, B, to the field of the coil alone, B₀ = μ₀nI. Paramagnets add a tiny bit, diamagnets take a tiny bit away, and iron multiplies the field by thousands and remembers where it has been.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units, B in tesla</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/magnetism-in-matter.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/magnetism-in-matter.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM12 2h1v1h-1zM14 2h4v1h-4zM19 2h2v1h-2zM22 2h4v1h-4zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM13 3h3v1h-3zM17 3h1v1h-1zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM13 4h1v1h-1zM15 4h3v1h-3zM21 4h3v1h-3zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h4v1h-4zM15 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM17 6h2v1h-2zM21 6h3v1h-3zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h3v1h-3zM20 7h1v1h-1zM23 7h2v1h-2zM27 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM13 9h6v1h-6zM21 9h3v1h-3zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h1v1h-1zM13 10h1v1h-1zM15 10h1v1h-1zM20 10h1v1h-1zM24 10h2v1h-2zM27 10h3v1h-3zM32 10h5v1h-5zM5 11h3v1h-3zM13 11h3v1h-3zM17 11h2v1h-2zM25 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM3 12h1v1h-1zM6 12h3v1h-3zM10 12h3v1h-3zM14 12h2v1h-2zM19 12h2v1h-2zM23 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM10 13h2v1h-2zM16 13h1v1h-1zM18 13h1v1h-1zM20 13h1v1h-1zM22 13h2v1h-2zM26 13h1v1h-1zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM3 14h7v1h-7zM14 14h2v1h-2zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h13v1h-13zM2 15h6v1h-6zM9 15h1v1h-1zM13 15h1v1h-1zM16 15h1v1h-1zM18 15h2v1h-2zM22 15h4v1h-4zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM3 16h2v1h-2zM6 16h6v1h-6zM13 16h1v1h-1zM16 16h4v1h-4zM22 16h3v1h-3zM28 16h4v1h-4zM33 16h3v1h-3zM38 16h1v1h-1zM4 17h1v1h-1zM6 17h2v1h-2zM9 17h1v1h-1zM12 17h1v1h-1zM14 17h1v1h-1zM17 17h9v1h-9zM28 17h1v1h-1zM31 17h4v1h-4zM37 17h1v1h-1zM2 18h2v1h-2zM5 18h2v1h-2zM8 18h1v1h-1zM13 18h1v1h-1zM15 18h4v1h-4zM21 18h1v1h-1zM24 18h1v1h-1zM26 18h2v1h-2zM29 18h4v1h-4zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h2v1h-2zM7 19h1v1h-1zM11 19h1v1h-1zM17 19h1v1h-1zM20 19h6v1h-6zM30 19h1v1h-1zM37 19h1v1h-1zM2 20h2v1h-2zM7 20h4v1h-4zM12 20h1v1h-1zM15 20h4v1h-4zM22 20h3v1h-3zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h2v1h-2zM5 21h1v1h-1zM9 21h1v1h-1zM11 21h3v1h-3zM16 21h2v1h-2zM20 21h1v1h-1zM22 21h3v1h-3zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM3 22h4v1h-4zM8 22h1v1h-1zM13 22h2v1h-2zM16 22h2v1h-2zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h1v1h-1zM7 23h1v1h-1zM11 23h5v1h-5zM18 23h1v1h-1zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h3v1h-3zM8 24h1v1h-1zM12 24h2v1h-2zM16 24h2v1h-2zM20 24h1v1h-1zM22 24h1v1h-1zM26 24h1v1h-1zM28 24h3v1h-3zM32 24h4v1h-4zM37 24h2v1h-2zM2 25h2v1h-2zM6 25h1v1h-1zM9 25h2v1h-2zM14 25h1v1h-1zM17 25h2v1h-2zM21 25h3v1h-3zM25 25h1v1h-1zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM5 26h1v1h-1zM8 26h4v1h-4zM14 26h1v1h-1zM16 26h2v1h-2zM20 26h2v1h-2zM25 26h4v1h-4zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h3v1h-3zM6 27h2v1h-2zM9 27h1v1h-1zM11 27h2v1h-2zM14 27h5v1h-5zM21 27h3v1h-3zM25 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM6 28h1v1h-1zM8 28h1v1h-1zM10 28h2v1h-2zM13 28h2v1h-2zM16 28h1v1h-1zM27 28h3v1h-3zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM7 29h1v1h-1zM15 29h1v1h-1zM18 29h1v1h-1zM22 29h2v1h-2zM30 29h5v1h-5zM37 29h1v1h-1zM2 30h1v1h-1zM5 30h2v1h-2zM8 30h1v1h-1zM10 30h1v1h-1zM13 30h2v1h-2zM19 30h1v1h-1zM25 30h4v1h-4zM30 30h7v1h-7zM10 31h1v1h-1zM13 31h2v1h-2zM16 31h7v1h-7zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h1v1h-1zM14 32h2v1h-2zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h3v1h-3zM15 33h1v1h-1zM17 33h4v1h-4zM23 33h1v1h-1zM25 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h1v1h-1zM15 34h2v1h-2zM18 34h1v1h-1zM21 34h2v1h-2zM24 34h11v1h-11zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM13 35h1v1h-1zM17 35h1v1h-1zM20 35h3v1h-3zM25 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM13 36h1v1h-1zM17 36h2v1h-2zM20 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM13 37h3v1h-3zM17 37h1v1h-1zM23 37h1v1h-1zM25 37h1v1h-1zM28 37h5v1h-5zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM31 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="A long solenoid seen from the side with a core of the chosen material inside, two bars comparing the field of the coil alone with the field with the core, and a plot of the field against the coil's field. Arrow keys change the current."></canvas>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="al" aria-pressed="true">Aluminum core</button>
+          <button type="button" data-p="bi" aria-pressed="false">Bismuth core</button>
+          <button type="button" data-p="lox" aria-pressed="false">Liquid oxygen</button>
+          <button type="button" data-p="water" aria-pressed="false">Floating water</button>
+          <button type="button" data-p="iron" aria-pressed="false">Iron, Example 12.10</button>
+          <button type="button" data-p="loop" aria-pressed="false">Iron hysteresis loop</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Core material (OpenStax Table 12.2)</h2>
+        <div class="chips" id="mats">
+          <button type="button" data-m="vacuum" aria-pressed="false">Empty</button>
+          <button type="button" data-m="al" aria-pressed="false">Aluminum</button>
+          <button type="button" data-m="w" aria-pressed="false">Tungsten</button>
+          <button type="button" data-m="lox" aria-pressed="false">Liquid oxygen, 90 K</button>
+          <button type="button" data-m="cu" aria-pressed="false">Copper</button>
+          <button type="button" data-m="water" aria-pressed="false">Water</button>
+          <button type="button" data-m="bi" aria-pressed="false">Bismuth</button>
+          <button type="button" data-m="iron" aria-pressed="false">Iron (model)</button>
+        </div>
+      </section>
+
+      <section>
+        <h2>Coil</h2>
+        <div><div class="slider-head"><label for="sI">Current I</label><output id="oI" for="sI"></output></div><input type="range" id="sI" min="-1" max="1" step="0.005"></div>
+        <div><div class="slider-head"><label for="sN">Turns per centimetre</label><output id="oN" for="sN"></output></div><input type="range" id="sN" min="5" max="40" step="1"></div>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="sweepBtn">Sweep the current</button>
+          <button type="button" class="btn" id="demagBtn">Demagnetize</button>
+          <button type="button" class="btn" id="clearBtn">Clear the trace</button>
+        </div>
+        <p class="status" id="status"></p>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the field with the core</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides B, B − B₀ and the plot, and covers the core. Predict first: with the current set, will B be larger or smaller than B₀, and by how much?</p>
+        <p class="hint">Model: the solenoid is long, so inside it B₀ = μ₀nI and the core fills it, B = (1 + χ)B₀ (OpenStax Eq. 12.36 and 12.37). The susceptibilities are OpenStax Table 12.2 (room temperature unless noted). Densities for the floating readout are from the CRC Handbook at 20 °C: water 998.2 kg/m³, copper 8960 kg/m³, bismuth 9780 kg/m³. A small piece of a linear material feels a force per volume (χ/μ₀) B dB/dz along the axis of a field that changes with height z, so above a magnet, where the field falls with height, a diamagnet floats where |B dB/dz| = μ₀ρg/|χ|, with g = 9.81 m/s².</p>
+        <p class="hint">Iron is not linear, so it uses the Jiles and Atherton model of hysteresis (J. Magn. Magn. Mater. 61, 48, 1986). The saturation magnetization is that of iron, M_s = 1.707 × 10⁶ A/m (Kittel, Introduction to Solid State Physics). The other four values, a = 80 A/m, k = 300 A/m, α = 2.0 × 10⁻⁴ and c = 0.4, are chosen so the first magnetization curve passes near the two points read from OpenStax Figure 12.25 (marked on the plot): the model gives 0.56 T where the figure gives 0.60 T, and 1.51 T where it gives 1.5 T. At the 0.20 A of Example 12.10 it gives 1.41 T; the book reads 1.4 T. This is a model of a soft iron, not measured data for one sample; real irons differ a great deal with purity and heat treatment. In the long coil, H = nI = B₀/μ₀ exactly.</p>
+        <p class="hint">The drawing inside the core is a cartoon. Paramagnetic atoms are drawn with their alignment exaggerated (the true alignment is tiny, since μB is far below kT), and diamagnetic atoms with their induced moments exaggerated. Iron is drawn as domains: the fraction pointing along the field is (1 + M/M_s)/2, which is the right average but not the real shapes of domains, which also rotate.</p>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  const MU0 = 4e-7 * Math.PI, G_ACC = 9.81, MM_VERSION = 'magnetism-in-matter@2026-10-23';
+  /* OpenStax Table 12.2; densities (kg/m³) from the CRC Handbook at 20 °C, only where the floating readout uses them */
+  const MATS = {
+    vacuum: { name: 'Empty coil', chi: 0, kind: 'none' },
+    al: { name: 'Aluminum', chi: 2.2e-5, kind: 'para' },
+    w: { name: 'Tungsten', chi: 6.8e-5, kind: 'para' },
+    lox: { name: 'Liquid oxygen, 90 K', chi: 3.5e-3, kind: 'para' },
+    cu: { name: 'Copper', chi: -9.7e-6, kind: 'dia', rho: 8960 },
+    water: { name: 'Water', chi: -9.1e-6, kind: 'dia', rho: 998.2 },
+    bi: { name: 'Bismuth', chi: -1.7e-5, kind: 'dia', rho: 9780 },
+    iron: { name: 'Iron (model)', chi: null, kind: 'ferro' }
+  };
+  const solenoidB0 = (nPerM, I) => MU0 * nPerM * I;
+  const linearB = (chi, B0) => (1 + chi) * B0;
+  const permeability = (chi) => (1 + chi) * MU0;
+  /* B dB/dz that holds up a small piece of a diamagnet against gravity */
+  const levitationBdB = (rho, chi) => MU0 * rho * G_ACC / Math.abs(chi);
+  /* Jiles and Atherton hysteresis. Ms from Kittel; a, k, alpha, c chosen to match OpenStax Fig. 12.25 (see the page) */
+  const IRON = { Ms: 1.707e6, a: 80, k: 300, alpha: 2e-4, c: 0.4 };
+  const lang = (x) => (Math.abs(x) < 1e-4 ? x / 3 - x ** 3 / 45 : 1 / Math.tanh(x) - 1 / x);
+  const dlang = (x) => (Math.abs(x) < 1e-4 ? 1 / 3 - x * x / 15 : 1 / (x * x) - 1 / Math.sinh(x) ** 2);
+  const ironNew = () => ({ H: 0, M: 0, Br: null, Hc: null });
+  const ironB = (s) => MU0 * (s.H + s.M);
+  /* move H to H1 in steps of at most dHmax (A/m); records the last remanence (B as H crosses 0) and coercive field (|H| as B crosses 0) */
+  function ironTo(s, H1, dHmax = 1, p = IRON) {
+    const n = Math.max(1, Math.ceil(Math.abs(H1 - s.H) / dHmax)), dH = (H1 - s.H) / n, d = Math.sign(dH);
+    if (!dH) return s;
+    for (let i = 0; i < n; i++) {
+      const B0 = ironB(s), He = s.H + p.alpha * s.M, Man = p.Ms * lang(He / p.a), dMan = p.Ms * dlang(He / p.a) / p.a, diff = Man - s.M;
+      const irr = d * diff > 0 ? diff / (d * p.k - p.alpha * diff) : 0;
+      let dMdH = ((1 - p.c) * irr + p.c * dMan) / (1 - p.alpha * p.c * dMan);
+      if (dMdH < 0) dMdH = 0;   /* the model can give a small backwards step just after a reversal; M never moves against H */
+      const Hold = s.H; s.M = Math.max(-p.Ms, Math.min(p.Ms, s.M + dMdH * dH)); s.H = i === n - 1 ? H1 : s.H + dH;
+      const B1 = ironB(s);
+      if (Hold !== 0 && Math.sign(s.H) !== Math.sign(Hold)) s.Br = B0 + (B1 - B0) * (Hold / (Hold - s.H));
+      else if (s.H === 0 && Hold !== 0) s.Br = B1;
+      if (B0 !== 0 && Math.sign(B1) !== Math.sign(B0)) s.Hc = Math.abs(Hold + (s.H - Hold) * (B0 / (B0 - B1)));
+    }
+    return s;
+  }
+  /* initial curve to Hmax, then one full loop: returns the remanence, coercive field and peak B */
+  function ironMajorLoop(Hmax, dHmax = 1) {
+    const s = ironNew(); ironTo(s, Hmax, dHmax); ironTo(s, -Hmax, dHmax); ironTo(s, Hmax, dHmax);
+    return { Br: s.Br, Hc: s.Hc, Bmax: ironB(s) };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const I_MAX = 1;
+  const S = { mat: 'al', n: 20, I: 0, iron: ironNew(), trace: [], sweep: null, blind: false, preset: 'al', t: 0 };
+  const PRESETS = {
+    al: { mat: 'al', I: 1, hint: 'Aluminum is paramagnetic: its atoms carry magnetic moments that line up a little with the field, so B is larger than B₀, but only by χ = 2.2 × 10⁻⁵ of it. Look at B − B₀, not at B.' },
+    bi: { mat: 'bi', I: 1, hint: 'Bismuth is diamagnetic: the field induces moments that oppose it, so B is a little smaller than B₀ (χ = −1.7 × 10⁻⁵). Every material is diamagnetic; in a paramagnet the aligned atomic moments simply win.' },
+    lox: { mat: 'lox', I: 1, hint: 'Liquid oxygen at 90 K has χ = 3.5 × 10⁻³, about 160 times that of aluminum: O₂ molecules carry moments and the cold liquid packs many of them close together. It is pulled into the strong field between magnet poles.' },
+    water: { mat: 'water', I: 1, hint: 'Water is diamagnetic, so it is pushed toward weaker field. In a strong enough field that changes fast enough with height, that push can hold up a drop of water, or a frog, which is mostly water. The readout gives the B dB/dz it takes.' },
+    iron: { mat: 'iron', I: 0.2, hint: 'OpenStax Example 12.10: 20 turns per cm and 0.20 A give B₀ = 5.0 × 10⁻⁴ T; with an iron core the book reads B = 1.4 T from Figure 12.25, so χ = 2.8 × 10³. The model starts from unmagnetized iron and raises the current from zero.' },
+    loop: { mat: 'iron', I: 0, sweep: true, hint: 'The current runs from 0 to +1 A, down to −1 A and back, over and over. The first rise is the initial curve; after that B follows a loop. At I = 0 the iron is still magnetized (a permanent magnet); it takes a reverse current to bring B to zero.' }
+  };
+  function applyPreset(name) {
+    const c = PRESETS[name]; S.preset = name; S.sweep = null; S.n = 20; setMat(c.mat, true); S.I = 0; S.iron = ironNew(); S.trace = []; pushTrace(0);
+    if (c.sweep) startSweep(false); else setI(c.I, true);
+    upd();
+  }
+  function setMat(m, keep) { if (S.mat !== m || !keep) { S.iron = ironNew(); S.trace = []; } S.mat = m; if (m === 'iron') { const I = S.I; S.iron = ironNew(); ironTo(S.iron, S.n * 100 * I); } }
+  /* change the current; iron follows the path in small steps (when ramping from a preset, it ramps from zero) */
+  function setI(I, ramp) {
+    I = Math.max(-I_MAX, Math.min(I_MAX, I));
+    if (S.mat === 'iron') {
+      if (ramp) { const N = 60; for (let i = 1; i <= N; i++) { const Ii = S.I + (I - S.I) * i / N; ironTo(S.iron, S.n * 100 * Ii); pushTrace(Ii); } }
+      else ironTo(S.iron, S.n * 100 * I);
+    }
+    S.I = I; pushTrace(I);
+  }
+  function fields(I = S.I) {
+    const B0 = solenoidB0(S.n * 100, I), m = MATS[S.mat];
+    if (m.kind === 'ferro') { const B = ironB(S.iron); return { B0, B, Bm: B - B0, M: S.iron.M }; }
+    const B = linearB(m.chi, B0); return { B0, B, Bm: B - B0, M: m.chi * B0 / MU0 };
+  }
+  function pushTrace(I) { const f = fields(I); const last = S.trace[S.trace.length - 1]; if (!last || last[0] !== f.B0 || last[1] !== f.B) S.trace.push([f.B0, f.B, f.Bm]); if (S.trace.length > 6000) S.trace.splice(0, 1000); }
+  function startSweep(decay) { S.sweep = { dir: S.I >= I_MAX ? -1 : 1, amp: I_MAX, rate: 0.5, decay: decay ? 0.8 : 0 }; if (decay) S.sweep.dir = S.I > 0 ? -1 : 1; }
+
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'accent', 'pos', 'neg', 'surface', 'relief', 'coil', 'iron', 'para', 'dia', 'water', 'dom-r', 'dom-l', 'atom', 'mark']) T[k.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + k);
+    T.mono = g('--font-mono'); T.ui = g('--font-ui'); }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  const sci = (x, d = 2) => { if (x === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(x))), m = x / 10 ** e; if (e >= -2 && e <= 3) return `${+x.toPrecision(d + 1)}`; return `${m.toFixed(d)} × 10${String(e).split('').map((ch) => SUP[ch]).join('')}`; };
+  function tesla(B, sig = 3) { const a = Math.abs(B); if (a === 0) return '0 T'; if (a >= 0.1) return `${B.toFixed(a >= 1 ? 2 : 3)} T`; if (a >= 1e-3) return `${+(B * 1e3).toPrecision(sig)} mT`; if (a >= 1e-6) return `${+(B * 1e6).toPrecision(sig)} µT`; return `${+(B * 1e9).toPrecision(sig)} nT`; }
+
+  // ---------- controls ----------
+  function sync() {
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#mats button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mat));
+    $('sI').value = S.I; $('oI').textContent = `${S.I.toFixed(3)} A`; $('sN').value = S.n; $('oN').textContent = `${S.n} /cm`;
+    $('presetHint').textContent = S.preset ? PRESETS[S.preset].hint : '';
+    $('sweepBtn').textContent = S.sweep && !S.sweep.decay ? 'Stop the sweep' : 'Sweep the current';
+    $('demagBtn').hidden = S.mat !== 'iron';
+    $('status').textContent = S.sweep ? (S.sweep.decay ? `Demagnetizing: swinging the current with a shrinking amplitude, now ±${S.sweep.amp.toFixed(3)} A` : 'Sweeping between +1 A and −1 A at 0.5 A/s') : '';
+  }
+  function upd() { sync(); readouts(); draw(); }
+  const userChange = () => { S.preset = ''; };
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
+  $('mats').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (!b) return; userChange(); S.sweep = null; setMat(b.dataset.m); pushTrace(S.I); upd(); });
+  $('sI').addEventListener('input', (e) => { userChange(); S.sweep = null; setI(+e.target.value); upd(); });
+  $('sN').addEventListener('input', (e) => { userChange(); const n = +e.target.value; if (n === S.n) return; S.n = n; S.trace = []; if (S.mat === 'iron') ironTo(S.iron, S.n * 100 * S.I); pushTrace(S.I); upd(); });
+  $('sweepBtn').addEventListener('click', () => { userChange(); if (S.sweep && !S.sweep.decay) S.sweep = null; else startSweep(false); upd(); });
+  $('demagBtn').addEventListener('click', () => { userChange(); if (Math.abs(S.I) < I_MAX) setI(S.I >= 0 ? I_MAX : -I_MAX, true); startSweep(true); upd(); });
+  $('clearBtn').addEventListener('click', () => { S.trace = []; pushTrace(S.I); upd(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; upd(); });
+  can.addEventListener('keydown', (e) => {
+    const d = { ArrowRight: 0.01, ArrowUp: 0.01, ArrowLeft: -0.01, ArrowDown: -0.01 }[e.key]; if (d === undefined) return;
+    e.preventDefault(); userChange(); S.sweep = null; setI(Math.round((S.I + d) * 1000) / 1000); upd();
+  });
+
+  function readouts() {
+    const m = MATS[S.mat], f = fields(), dd = (a, v, w, c) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd${c ? ` class="${c}"` : ''}>${v}</dd></div>`, HID = '<span class="ok">hidden in Blind</span>', hide = S.blind;
+    let h = dd('Coil alone, B₀ = μ₀nI', tesla(f.B0)) + dd('With the core, B', hide ? HID : tesla(f.B));
+    h += dd('From the core, B − B₀', hide ? HID : tesla(f.Bm, 2), true);
+    if (m.kind === 'ferro') {
+      h += dd('B/B₀ − 1 (iron has no single χ)', hide ? HID : Math.abs(f.B0) < 1e-12 ? 'undefined at I = 0' : sci(f.B / f.B0 - 1));
+      h += dd('Magnetization M/M_s', hide ? HID : (S.iron.M / IRON.Ms).toFixed(3));
+      h += dd('Field left when I last crossed 0', hide ? HID : S.iron.Br === null ? 'not yet' : tesla(S.iron.Br));
+      h += dd('Reverse current that last brought B to 0', hide ? HID : S.iron.Hc === null ? 'not yet' : `${(S.iron.Hc / (S.n * 100) * 1000).toFixed(0)} mA (H = ${S.iron.Hc.toFixed(0)} A/m)`);
+    } else {
+      h += dd('Susceptibility χ', m.chi === 0 ? '0' : sci(m.chi)) + dd('Permeability μ/μ₀ = 1 + χ', (1 + m.chi).toFixed(m.kind === 'para' && m.chi > 1e-3 ? 4 : 6));
+      if (m.kind === 'para') h += dd('In a field that varies', 'pulled toward the stronger field', true);
+      if (m.kind === 'dia') { h += dd('In a field that varies', 'pushed toward the weaker field', true); h += dd(`To float it: |B dB/dz| = μ₀ρg/|χ| (ρ = ${m.rho} kg/m³)`, `${Math.round(levitationBdB(m.rho, m.chi)).toLocaleString('en-US')} T²/m`, true); h += dd('That is, at B = 16 T, a field that falls by', `${Math.round(levitationBdB(m.rho, m.chi) / 16)} T/m`, true); }
+    }
+    $('out').innerHTML = h;
+  }
+
+  // ---------- drawing ----------
+  function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
+  function arrow(x0, y0, x1, y1, col, w) { const p = ps(), a = Math.atan2(y1 - y0, x1 - x0), h = Math.min(6 * p, Math.hypot(x1 - x0, y1 - y0) * 0.6); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - h * 0.6 * Math.cos(a), y1 - h * 0.6 * Math.sin(a)); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - h * Math.cos(a - 0.45), y1 - h * Math.sin(a - 0.45)); ctx.lineTo(x1 - h * Math.cos(a + 0.45), y1 - h * Math.sin(a + 0.45)); ctx.closePath(); ctx.fill(); }
+  /* fixed pseudo random numbers so the cartoon does not flicker */
+  const RND = (() => { let s = 12345; return Array.from({ length: 4000 }, () => (s = (s * 16807) % 2147483647) / 2147483647); })();
+  const jit = new Float64Array(400);
+  function drawCoil(x0, x1, cy, rh) {
+    const p = ps(), m = MATS[S.mat], f = fields(), narrow = W < 620;
+    const cx0 = x0 + 8 * p, cx1 = x1 - 8 * p, cy0 = cy - rh + 7 * p, cy1 = cy + rh - 7 * p;
+    const turns = Math.round(S.n * (narrow ? 0.45 : 0.8)) + 3, dx = (x1 - x0) / turns, slant = Math.min(dx * 0.45, 8 * p);
+    /* back halves of the turns */
+    ctx.strokeStyle = T.coil; ctx.globalAlpha = 0.45; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let i = 0; i < turns; i++) { const x = x0 + dx * (i + 0.5); ctx.moveTo(x + slant, cy - rh); ctx.lineTo(x, cy + rh); } ctx.stroke(); ctx.globalAlpha = 1;
+    /* core */
+    const fill = { none: null, para: T.para, dia: T.dia, ferro: T.iron }[m.kind];
+    if (fill) { ctx.fillStyle = S.mat === 'water' ? T.water : fill; ctx.beginPath(); ctx.roundRect(cx0, cy0, cx1 - cx0, cy1 - cy0, 6 * p); ctx.fill(); }
+    if (S.blind && m.kind !== 'none') txt('core hidden in Blind', (cx0 + cx1) / 2, cy, { a: 'center', s: 12, b: 1, c: T.muted });
+    else if (m.kind === 'ferro') {
+      const cell = 22 * p, cols = Math.max(1, Math.floor((cx1 - cx0) / cell)), rows = Math.max(1, Math.floor((cy1 - cy0) / cell)), cw = (cx1 - cx0) / cols, chh = (cy1 - cy0) / rows, frac = (1 + S.iron.M / IRON.Ms) / 2;
+      ctx.strokeStyle = T.canvas; ctx.lineWidth = 1; ctx.beginPath(); for (let i = 1; i < cols; i++) { ctx.moveTo(cx0 + i * cw, cy0); ctx.lineTo(cx0 + i * cw, cy1); } for (let j = 1; j < rows; j++) { ctx.moveTo(cx0, cy0 + j * chh); ctx.lineTo(cx1, cy0 + j * chh); } ctx.stroke();
+      for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) { const r = RND[(j * 97 + i) % RND.length], right = r < frac, xm = cx0 + (i + 0.5) * cw, ym = cy0 + (j + 0.5) * chh, L = Math.min(cw, chh) * 0.32;
+        arrow(right ? xm - L : xm + L, ym, right ? xm + L : xm - L, ym, right ? T.domR : T.domL, 1.8); }
+    } else if (m.kind === 'para' || m.kind === 'dia') {
+      const sp = 26 * p, cols = Math.max(1, Math.floor((cx1 - cx0) / sp)), rows = Math.max(1, Math.floor((cy1 - cy0) / sp)), cw = (cx1 - cx0) / cols, chh = (cy1 - cy0) / rows, rel = f.B0 / solenoidB0(S.n * 100, I_MAX);
+      for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
+        const k = j * cols + i, xm = cx0 + (i + 0.5) * cw, ym = cy0 + (j + 0.5) * chh, L = Math.min(cw, chh) * 0.34;
+        if (m.kind === 'para') {
+          /* random direction plus thermal jiggle, pulled toward the field by an exaggerated amount */
+          let th = RND[k % RND.length] * 2 * Math.PI + jit[k % jit.length]; const pull = Math.min(0.75, Math.abs(rel) * (S.mat === 'lox' ? 0.75 : 0.35)), tgt = rel >= 0 ? 0 : Math.PI;
+          let dth = Math.atan2(Math.sin(tgt - th), Math.cos(tgt - th)); th += dth * pull;
+          ctx.fillStyle = T.atom; ctx.beginPath(); ctx.arc(xm, ym, 2.2 * p, 0, 7); ctx.fill(); arrow(xm - L * Math.cos(th), ym + L * Math.sin(th), xm + L * Math.cos(th), ym - L * Math.sin(th), T.atom, 1.4);
+        } else {
+          ctx.strokeStyle = T.atom; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.arc(xm, ym, 5 * p, 0, 7); ctx.stroke();
+          const Li = L * Math.min(1, Math.abs(rel)); if (Li > 1.5 * p) { const s = rel > 0 ? -1 : 1; arrow(xm - s * Li, ym, xm + s * Li, ym, T.neg, 1.4); }
+        }
+      }
+    } else txt('empty: B = B₀', (cx0 + cx1) / 2, cy, { a: 'center', s: 11, c: T.muted });
+    /* front halves, with the current direction */
+    ctx.strokeStyle = T.coil; ctx.lineWidth = 2.6 * p; ctx.beginPath(); for (let i = 0; i < turns; i++) { const x = x0 + dx * (i + 0.5); ctx.moveTo(x, cy - rh); ctx.lineTo(x + slant, cy + rh); } ctx.stroke();
+    if (S.I !== 0) { const x = x0 + dx * 0.5 + slant / 2, d = S.I > 0 ? 1 : -1; arrow(x - 2 * p, cy - d * (rh + 16 * p), x - 2 * p, cy - d * (rh + 2 * p), T.coil, 2); txt(`I = ${Math.abs(S.I).toFixed(3)} A`, x + 8 * p, cy - d * (rh + 12 * p), { s: 10, b: 1, c: T.coil }); }
+    /* direction of B0 at the right end */
+    if (f.B0 !== 0) { const d = f.B0 > 0 ? 1 : -1, xa = x1 + (narrow ? -26 : 4) * p; if (!narrow) { arrow(d > 0 ? xa : xa + 22 * p, cy, d > 0 ? xa + 22 * p : xa, cy, T.ink, 2); txt('B', xa + 11 * p, cy - 12 * p, { a: 'center', s: 11, b: 1 }); } }
+    txt(m.kind === 'none' ? 'Empty coil' : `${m.name}: ${m.kind === 'para' ? 'paramagnetic' : m.kind === 'dia' ? 'diamagnetic' : 'ferromagnetic'}${m.chi ? `, χ = ${sci(m.chi)}` : ''}`, x0, cy - rh - 28 * p, { s: 12, b: 1 });
+    txt(`${S.n} turns per cm (only some drawn)`, x1, cy + rh + 16 * p, { a: 'right', s: 9, c: T.muted });
+  }
+  /* log scale bars: 1 µT to 10 T */
+  function drawBars(x0, x1, y) {
+    const p = ps(), f = fields(), lab = (W < 620 ? 62 : 120) * p, bx = x0 + lab, bw = x1 - bx - (W < 620 ? 70 : 90) * p, lo = -6, hi = 1;
+    const pos = (B) => (Math.abs(B) < 1e-6 ? 0 : (Math.log10(Math.abs(B)) - lo) / (hi - lo)) * bw;
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); for (let e = lo; e <= hi; e++) { const x = bx + (e - lo) / (hi - lo) * bw; ctx.moveTo(x, y - 4 * p); ctx.lineTo(x, y + 46 * p); } ctx.stroke();
+    for (let e = lo; e <= hi; e++) { const x = bx + (e - lo) / (hi - lo) * bw, t = { '-6': '1 µT', '-3': '1 mT', 0: '1 T' }[e]; if (t) txt(t, x, y + 54 * p, { a: 'center', s: 9, c: T.muted }); }
+    const rows = [[W < 620 ? 'coil, B₀' : 'coil alone, B₀', f.B0, T.muted, false], [W < 620 ? 'core, B' : 'with the core, B', f.B, MATS[S.mat].kind === 'ferro' ? T.domR : T.accent, S.blind]];
+    rows.forEach(([name, B, col, hid], i) => { const yy = y + i * 22 * p; txt(name, x0, yy + 8 * p, { s: 10 }); ctx.fillStyle = T.relief; ctx.fillRect(bx, yy, bw, 16 * p);
+      if (hid) { txt('?', bx + 6 * p, yy + 8 * p, { s: 11, b: 1 }); return; }
+      ctx.fillStyle = col; ctx.fillRect(bx, yy, pos(B), 16 * p); txt(`${B < 0 ? '← ' : ''}${tesla(Math.abs(B))}`, bx + bw + 6 * p, yy + 8 * p, { s: 10, m: 1 }); });
+    txt('log scale: each grid line is ten times the last', bx, y + 66 * p, { s: 9, c: T.muted });
+  }
+  function nice(x) { const e = 10 ** Math.floor(Math.log10(x)), m = x / e; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * e; }
+  function drawPlot(x0, y0, x1, y1) {
+    const p = ps(), m = MATS[S.mat], ferro = m.kind === 'ferro', B0max = solenoidB0(S.n * 100, I_MAX);
+    ctx.fillStyle = T.surface; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x0 - 48 * p, y0 - 22 * p, x1 - x0 + 56 * p, y1 - y0 + 50 * p, 8 * p); ctx.fill(); ctx.stroke();
+    /* y quantity: B for iron, B − B0 otherwise */
+    const yUnit = ferro ? ['T', 1] : (() => { const a = Math.abs(m.chi) * B0max || 1e-6; return a >= 1e-3 ? ['mT', 1e3] : a >= 1e-6 ? ['µT', 1e6] : ['nT', 1e9]; })();
+    const yMax = ferro ? 2.2 : Math.max(1e-30, Math.abs(m.chi) * B0max * 1.15) * yUnit[1] || 1, xMax = B0max * 1e3 * 1.06;
+    const X = (b0) => x0 + (b0 * 1e3 / xMax + 1) / 2 * (x1 - x0), Y = (v) => y1 - (v * yUnit[1] / yMax + 1) / 2 * (y1 - y0);
+    txt(ferro ? 'B against B₀ for iron (model)' : m.kind === 'none' ? 'B − B₀ against B₀: zero for an empty coil' : 'B − B₀ against B₀: a straight line of slope χ', x0 - 40 * p, y0 - 10 * p, { s: 11, b: 1 });
+    const xs = nice(xMax / 2.2), ys = nice(yMax / 2.2);
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath();
+    for (let v = -Math.floor(xMax / xs) * xs; v <= xMax + 1e-12; v += xs) { const x = X(v / 1e3); ctx.moveTo(x, y0); ctx.lineTo(x, y1); }
+    for (let v = -Math.floor(yMax / ys) * ys; v <= yMax + 1e-12; v += ys) { const y = Y(v / yUnit[1]); ctx.moveTo(x0, y); ctx.lineTo(x1, y); } ctx.stroke();
+    ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(X(0), y0); ctx.lineTo(X(0), y1); ctx.moveTo(x0, Y(0)); ctx.lineTo(x1, Y(0)); ctx.stroke();
+    for (let v = -Math.floor(xMax / xs) * xs; v <= xMax + 1e-12; v += xs) if (Math.abs(v) > 1e-12) txt(`${+v.toPrecision(3)}`, X(v / 1e3), y1 + 10 * p, { a: 'center', s: 9, c: T.muted });
+    for (let v = -Math.floor(yMax / ys) * ys; v <= yMax + 1e-12; v += ys) txt(`${+v.toPrecision(3)}`, x0 - 4 * p, Y(v / yUnit[1]), { a: 'right', s: 9, c: T.muted });
+    txt('B₀ (mT)', x1, y1 + 22 * p, { a: 'right', s: 9, c: T.muted }); txt(`${ferro ? 'B' : 'B − B₀'} (${yUnit[0]})`, x0 - 40 * p, y0 + 4 * p, { s: 9, c: T.muted, bl: 'top' });
+    if (ferro) { /* OpenStax Figure 12.25 points */
+      ctx.strokeStyle = T.mark; ctx.lineWidth = 1.6 * p; for (const [b0, b] of [[1e-4, 0.60], [6e-4, 1.5]]) if (b0 * 1e3 <= xMax) { ctx.strokeRect(X(b0) - 4 * p, Y(b) - 4 * p, 8 * p, 8 * p); }
+      txt('□ OpenStax Fig. 12.25', x1 - 4 * p, Y(-1.9), { a: 'right', s: 9, c: T.mark });
+    }
+    ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, x1 - x0, y1 - y0); ctx.clip();
+    if (S.blind) { ctx.restore(); txt('hidden in Blind', (x0 + x1) / 2, (y0 + y1) / 2 - 14 * p, { a: 'center', s: 11, c: T.muted }); return; }
+    const yv = (t) => (ferro ? t[1] : t[2]);
+    ctx.strokeStyle = ferro ? T.domR : T.accent; ctx.lineWidth = 2 * p; ctx.lineJoin = 'round'; ctx.beginPath(); S.trace.forEach((t, i) => (i ? ctx.lineTo(X(t[0]), Y(yv(t))) : ctx.moveTo(X(t[0]), Y(yv(t))))); ctx.stroke();
+    const f = fields(); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(X(f.B0), Y(ferro ? f.B : f.Bm), 4.5 * p, 0, 7); ctx.fill();
+    ctx.restore();
+  }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const p = ps(), narrow = W < 620;
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const x0 = (narrow ? 14 : 30) * p, x1 = W - (narrow ? 14 : 44) * p, top = 48 * p, rh = Math.min(58 * p, Hh * 0.09), cy = top + 26 * p + rh;
+    drawCoil(x0, x1, cy, rh);
+    const by = cy + rh + 34 * p; drawBars(x0, W - 14 * p, by);
+    const py0 = by + 100 * p; drawPlot(x0 + 48 * p, py0, W - 20 * p, Hh - 36 * p);
+  }
+
+  function tick(dt) {
+    S.t += dt; let redraw = false;
+    if (S.sweep) { const sw = S.sweep; let I = S.I + sw.dir * sw.rate * dt;
+      if (sw.dir > 0 && I >= sw.amp) { I = sw.amp; sw.dir = -1; if (sw.decay) sw.amp *= sw.decay; }
+      else if (sw.dir < 0 && I <= -sw.amp) { I = -sw.amp; sw.dir = 1; if (sw.decay) sw.amp *= sw.decay; }
+      if (sw.decay && sw.amp < 0.002) { I = 0; setI(I); S.sweep = null; sync(); } else setI(I);
+      readouts(); if (!S.sweep) sync(); redraw = true; }
+    if (!reduce && MATS[S.mat].kind === 'para') { for (let i = 0; i < jit.length; i++) jit[i] = 0.9 * jit[i] + 0.25 * (RND[(i * 31 + Math.floor(S.t * 40)) % RND.length] - 0.5); redraw = true; }
+    if (redraw) { $('sI').value = S.I; $('oI').textContent = `${S.I.toFixed(3)} A`; draw(); }
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const rc = stage.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
+  tokens(); new ResizeObserver(resize).observe(stage);
+  const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'al'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  let last = performance.now(), acc = 0;
+  (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
+})();
+</script>
+</body>
+</html>

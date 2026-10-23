@@ -774,6 +774,17 @@
      ]
     },
     {
+     "demo": "magnetism-in-matter",
+     "title": "Magnetism in Matter",
+     "desc": "Fill a long solenoid with aluminum, bismuth, liquid oxygen, water or iron and compare B with the coil's own field: tiny para and diamagnetic changes, the field needed to float water, and iron's hysteresis loop.",
+     "tags": [
+      "susceptibility",
+      "paramagnetism",
+      "diamagnetism",
+      "hysteresis"
+     ]
+    },
+    {
      "demo": "em-waves",
      "title": "Electromagnetic Waves",
      "desc": "A plane wave in 3D with E, B and the Poynting vector, polarization from linear to circular, the energy and pressure of sunlight and a laser, the full spectrum, and a dipole antenna launching waves with exact field lines.",
