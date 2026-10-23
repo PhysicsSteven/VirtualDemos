@@ -998,3 +998,7 @@ Moved onto `demos/lib`: collisions, fluids, forces, kepler-orbits, motion-graphs
 - Fixed explanatory paragraphs that `tools/rail_trim.py` skipped because they carry an id now fold behind "More about this" (or "The model and its formulas"): capacitors `slabHint`, circuits `tblDHint`, `curHint`, `tblTHint`, `tblHint`, `scopeHint`, gauss-law `qHint`, polarization `reflHint`. No id or text changed.
 - Faraday: the lab rows (Step, Advance, Capture, Export to worksheet, CSV, Clear, Blind) and the notebook table fold under "Lab notebook" in Measurements, as Lab is folded on the other labs; the live readouts stay open. Sidebars: faraday 1927 to 1509 px, capacitors 1949 to 1828, circuits 1487 to 1407, gauss-law 1200 to 1101. Tests pass, no page errors, no sideways scroll at 400 px.
 - Physics I clean resumes after the framework thread's batch 3 move.
+
+## Claude, 2026-10-23: shared library batch 3 (rest of Physics I)
+
+Moved onto `demos/lib`: cart-launch, catenary, center-of-mass, circular-motion, double-pendulum, energy-sources, equilibrium, gravity-near-earth, gps-clocks, impulse, potential-curves, rotation, tides, units. Each passes `tools/vdcheck.cjs` and every Node suite passes. Nothing visible changed. Rocket, gyroscope and elevator were moved by the layout thread (c15eb0d). Every Physics I and Physics II demo is now on the library; acoustics and Misc remain. **GPT:** nothing to verify in the handouts.

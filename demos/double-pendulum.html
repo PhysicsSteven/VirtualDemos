@@ -1,33 +1,13 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas wide-proj-bench wide-proj-stage readout-big-dd swatch projshort-proj-stage" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
 <style>
-*, *::before, *::after { box-sizing: border-box; }
-:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
-body { margin: 0; }
-img { max-width: 100%; }
-[hidden] { display: none !important; }
-
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
-@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
-/* vd-qr */
-.vd-qr { display: none; }
-@media (min-width: 821px) {
-  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
-}
-.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
-.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
-.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
-.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
-.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
-/* /vd-qr */
-/* vd-reset */
-.vd-reset { white-space: nowrap; }
-/* /vd-reset */
 </style>
 <title>Pendulums and Chaos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -70,28 +50,10 @@ img { max-width: 100%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
 :root[data-projector="on"] body { font-size: 1.25rem; }
-.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
-
-.app {
-  height: 100%; display: flex; flex-direction: column; gap: 12px;
-  padding-block: 14px;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-}
-.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
-.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
-.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
-.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
-.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
-.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
-
-.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
 .stage { position: relative; min-height: 640px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
   display: grid; grid-template-columns: minmax(0, 55fr) minmax(0, 45fr); grid-template-rows: minmax(0, 44fr) minmax(0, 56fr); }
-.pane { position: relative; min-height: 0; }
-.pane canvas { position: absolute; inset: 0; display: block; }
 #pPane { grid-column: 1; grid-row: 1 / 3; }
 #aPane { grid-column: 2; grid-row: 1; border-left: 1px solid var(--line); }
 #bPane { grid-column: 2; grid-row: 2; border-left: 1px solid var(--line); border-top: 1px solid var(--line); }
@@ -102,14 +64,6 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage-ctl .btn { padding: 4px 10px; font-size: 0.84rem; }
 .tclock { margin-left: auto; display: flex; flex-direction: column; align-items: flex-end; font-size: 0.86rem; font-weight: 600; color: var(--ink); background: color-mix(in srgb, var(--canvas) 85%, transparent); padding: 2px 6px; border-radius: 6px; white-space: nowrap; line-height: 1.25; }
 .tclock small { font-size: 0.74rem; font-weight: 400; color: var(--muted); }
-
-.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
-.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
-.rail section + section { border-top: 1px solid var(--line); }
-.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
-.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
-
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
 .chips button, .btn {
   font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
   border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
@@ -118,37 +72,20 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
-.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
 .row3 .btn { padding: 5px 4px; font-size: 0.84rem; }
-.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .seg.full { display: flex; }
 .seg.full button { flex: 1; padding: 4px 4px; }
-
-.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-.slider-head label { font-size: 0.88rem; }
-.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .ctl { display: flex; flex-direction: column; gap: 4px; }
-
-.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
-.readout div { min-width: 0; }
-.readout dt { font-size: 0.78rem; color: var(--muted); }
-.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
-.readout .wide { grid-column: 1 / -1; }
 .ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
 .formula { margin: 0; font-size: 0.8rem; color: var(--muted); overflow-wrap: anywhere; }
 .c-1 { color: var(--neg); } .c-2 { color: var(--pos); }
-
-.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
-.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
 .toggles input, .check input { accent-color: var(--accent); margin: 0; }
-.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
-.key span { display: flex; align-items: center; gap: 8px; }
 .swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--accent); }
 .swatch.s1 { border-color: var(--neg); } .swatch.s2 { border-color: var(--pos); }
 .swatch.dash { border-top-style: dashed; border-color: var(--muted); }
@@ -164,7 +101,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 #dataWrap:not([hidden]) { display: flex; flex-direction: column; gap: 6px; }
 .dcap { font-size: 0.8rem; margin-top: 4px; }
 #dBwrap:not([hidden]) { display: flex; flex-direction: column; gap: 6px; }
-.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 @media (max-width: 1060px) {
   .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: 440px 260px 340px; min-height: 0; }
@@ -176,25 +112,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .chips button, .btn, .seg button, .proj { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
-  .app { height: auto; }
-  .bench { grid-template-columns: minmax(0, 1fr); }
   .stage { grid-template-rows: 380px 250px 330px; }
-  .rail { overflow: visible; }
 }
 
 /* projector on a short screen: let the stage shrink to fit under the header */
 @media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
-.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
-  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
-.rail details.fold > summary::-webkit-details-marker { display: none; }
-.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
-.rail details.fold[open] > summary::after { content: "−"; }
-.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
-.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -206,9 +129,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
     <div class="bar-right">
       <div class="units mono">SI units · angles from straight down · g = 9.80665 m/s²</div>
-      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><script>(function(b){var base=new WeakMap(),rec=false;function data(t){var n=0;Array.prototype.forEach.call(t.rows,function(r){if(r.parentNode.tagName==='THEAD'||r.parentNode.tagName==='TFOOT')return;if(r.cells.length>1||(r.cells.length===1&&r.cells[0].colSpan<2))n++;});return n;}function snap(){document.querySelectorAll('table').forEach(function(t){base.set(t,data(t));});}window.addEventListener('load',function(){setTimeout(snap,400);});document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('button');if(!x||x===b)return;var s=x.textContent.trim();if(/^(capture|record|add to table|add point|keep trace|pin this)/i.test(s))rec=true;else if(/^clear/i.test(s))rec=false;},true);function lost(){if(typeof window.vdReadings==='function')return Number(window.vdReadings())||0;var n=0;document.querySelectorAll('table').forEach(function(t){n+=Math.max(0,data(t)-(base.has(t)?base.get(t):0));});return n||(rec?-1:0);}b.vdLost=lost;b.addEventListener('click',function(){var n=lost();if(n&&!window.confirm('Reset all clears '+(n>1?'the '+n+' readings':n===1?'the reading':'the readings')+' you recorded. '+'Export them first if you need them. Reset anyway?'))return;document.querySelectorAll('input,select,textarea,form').forEach(function(e){e.setAttribute('autocomplete','off');});location.reload();});})(document.currentScript.previousElementSibling);</script><!-- /vd-reset -->
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
-      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/double-pendulum.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/double-pendulum.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h3v1h-3zM16 2h1v1h-1zM19 2h2v1h-2zM22 2h2v1h-2zM25 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM13 3h1v1h-1zM15 3h1v1h-1zM17 3h1v1h-1zM19 3h1v1h-1zM21 3h2v1h-2zM24 3h2v1h-2zM27 3h2v1h-2zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM13 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM24 4h5v1h-5zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h4v1h-4zM16 5h4v1h-4zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM11 6h1v1h-1zM14 6h2v1h-2zM17 6h5v1h-5zM23 6h1v1h-1zM26 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h2v1h-2zM14 7h2v1h-2zM17 7h2v1h-2zM21 7h1v1h-1zM24 7h1v1h-1zM26 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM14 9h8v1h-8zM25 9h1v1h-1zM28 9h2v1h-2zM2 10h1v1h-1zM4 10h2v1h-2zM7 10h3v1h-3zM11 10h2v1h-2zM15 10h4v1h-4zM21 10h3v1h-3zM25 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM32 10h1v1h-1zM35 10h1v1h-1zM37 10h2v1h-2zM3 11h5v1h-5zM9 11h1v1h-1zM13 11h2v1h-2zM17 11h2v1h-2zM24 11h3v1h-3zM33 11h1v1h-1zM36 11h2v1h-2zM3 12h8v1h-8zM12 12h1v1h-1zM14 12h1v1h-1zM16 12h2v1h-2zM25 12h2v1h-2zM30 12h2v1h-2zM33 12h1v1h-1zM35 12h2v1h-2zM2 13h1v1h-1zM7 13h1v1h-1zM10 13h2v1h-2zM13 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM21 13h1v1h-1zM24 13h1v1h-1zM26 13h2v1h-2zM34 13h3v1h-3zM2 14h1v1h-1zM6 14h4v1h-4zM12 14h1v1h-1zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h15v1h-15zM2 15h1v1h-1zM6 15h1v1h-1zM9 15h1v1h-1zM13 15h1v1h-1zM15 15h1v1h-1zM17 15h2v1h-2zM20 15h1v1h-1zM24 15h1v1h-1zM26 15h1v1h-1zM28 15h8v1h-8zM37 15h2v1h-2zM2 16h5v1h-5zM8 16h1v1h-1zM10 16h1v1h-1zM12 16h1v1h-1zM15 16h2v1h-2zM19 16h4v1h-4zM26 16h3v1h-3zM31 16h1v1h-1zM34 16h1v1h-1zM36 16h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM11 17h2v1h-2zM17 17h7v1h-7zM25 17h1v1h-1zM28 17h1v1h-1zM32 17h3v1h-3zM37 17h1v1h-1zM3 18h1v1h-1zM5 18h2v1h-2zM8 18h2v1h-2zM11 18h6v1h-6zM18 18h8v1h-8zM27 18h1v1h-1zM35 18h3v1h-3zM5 19h2v1h-2zM11 19h2v1h-2zM15 19h2v1h-2zM18 19h1v1h-1zM21 19h2v1h-2zM24 19h4v1h-4zM29 19h1v1h-1zM32 19h2v1h-2zM35 19h4v1h-4zM3 20h1v1h-1zM8 20h5v1h-5zM16 20h3v1h-3zM21 20h1v1h-1zM23 20h2v1h-2zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM4 21h1v1h-1zM6 21h2v1h-2zM10 21h4v1h-4zM16 21h1v1h-1zM19 21h1v1h-1zM21 21h1v1h-1zM24 21h3v1h-3zM30 21h2v1h-2zM34 21h2v1h-2zM37 21h1v1h-1zM2 22h1v1h-1zM5 22h1v1h-1zM7 22h2v1h-2zM12 22h3v1h-3zM18 22h3v1h-3zM23 22h1v1h-1zM28 22h4v1h-4zM33 22h2v1h-2zM38 22h1v1h-1zM2 23h5v1h-5zM9 23h5v1h-5zM16 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h1v1h-1zM6 24h3v1h-3zM13 24h2v1h-2zM19 24h1v1h-1zM24 24h2v1h-2zM27 24h1v1h-1zM30 24h1v1h-1zM32 24h2v1h-2zM3 25h1v1h-1zM5 25h3v1h-3zM9 25h3v1h-3zM15 25h1v1h-1zM20 25h1v1h-1zM22 25h1v1h-1zM25 25h3v1h-3zM30 25h3v1h-3zM34 25h5v1h-5zM2 26h1v1h-1zM5 26h1v1h-1zM7 26h2v1h-2zM11 26h7v1h-7zM20 26h3v1h-3zM24 26h2v1h-2zM27 26h2v1h-2zM31 26h4v1h-4zM36 26h2v1h-2zM4 27h2v1h-2zM7 27h1v1h-1zM9 27h2v1h-2zM14 27h3v1h-3zM18 27h3v1h-3zM22 27h1v1h-1zM26 27h1v1h-1zM28 27h3v1h-3zM32 27h4v1h-4zM37 27h2v1h-2zM3 28h6v1h-6zM12 28h1v1h-1zM15 28h4v1h-4zM20 28h5v1h-5zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM34 28h4v1h-4zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM10 29h4v1h-4zM15 29h1v1h-1zM18 29h1v1h-1zM23 29h1v1h-1zM31 29h4v1h-4zM37 29h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM10 30h8v1h-8zM20 30h1v1h-1zM22 30h2v1h-2zM27 30h1v1h-1zM30 30h5v1h-5zM36 30h1v1h-1zM10 31h3v1h-3zM19 31h1v1h-1zM22 31h4v1h-4zM27 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h1v1h-1zM38 31h1v1h-1zM2 32h7v1h-7zM10 32h8v1h-8zM19 32h1v1h-1zM22 32h3v1h-3zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM14 33h3v1h-3zM18 33h1v1h-1zM22 33h1v1h-1zM26 33h1v1h-1zM28 33h3v1h-3zM34 33h1v1h-1zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM11 34h1v1h-1zM14 34h2v1h-2zM17 34h1v1h-1zM20 34h1v1h-1zM24 34h2v1h-2zM28 34h1v1h-1zM30 34h6v1h-6zM37 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h1v1h-1zM14 35h2v1h-2zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM25 35h1v1h-1zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM13 36h1v1h-1zM15 36h2v1h-2zM18 36h2v1h-2zM21 36h6v1h-6zM32 36h1v1h-1zM34 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h4v1h-4zM16 37h1v1h-1zM18 37h1v1h-1zM20 37h1v1h-1zM22 37h1v1h-1zM24 37h1v1h-1zM26 37h3v1h-3zM31 37h1v1h-1zM33 37h4v1h-4zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h2v1h-2zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/double-pendulum.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/double-pendulum.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h3v1h-3zM16 2h1v1h-1zM19 2h2v1h-2zM22 2h2v1h-2zM25 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM13 3h1v1h-1zM15 3h1v1h-1zM17 3h1v1h-1zM19 3h1v1h-1zM21 3h2v1h-2zM24 3h2v1h-2zM27 3h2v1h-2zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM13 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM24 4h5v1h-5zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h4v1h-4zM16 5h4v1h-4zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM11 6h1v1h-1zM14 6h2v1h-2zM17 6h5v1h-5zM23 6h1v1h-1zM26 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h2v1h-2zM14 7h2v1h-2zM17 7h2v1h-2zM21 7h1v1h-1zM24 7h1v1h-1zM26 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM14 9h8v1h-8zM25 9h1v1h-1zM28 9h2v1h-2zM2 10h1v1h-1zM4 10h2v1h-2zM7 10h3v1h-3zM11 10h2v1h-2zM15 10h4v1h-4zM21 10h3v1h-3zM25 10h1v1h-1zM28 10h1v1h-1zM30 10h1v1h-1zM32 10h1v1h-1zM35 10h1v1h-1zM37 10h2v1h-2zM3 11h5v1h-5zM9 11h1v1h-1zM13 11h2v1h-2zM17 11h2v1h-2zM24 11h3v1h-3zM33 11h1v1h-1zM36 11h2v1h-2zM3 12h8v1h-8zM12 12h1v1h-1zM14 12h1v1h-1zM16 12h2v1h-2zM25 12h2v1h-2zM30 12h2v1h-2zM33 12h1v1h-1zM35 12h2v1h-2zM2 13h1v1h-1zM7 13h1v1h-1zM10 13h2v1h-2zM13 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM21 13h1v1h-1zM24 13h1v1h-1zM26 13h2v1h-2zM34 13h3v1h-3zM2 14h1v1h-1zM6 14h4v1h-4zM12 14h1v1h-1zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h15v1h-15zM2 15h1v1h-1zM6 15h1v1h-1zM9 15h1v1h-1zM13 15h1v1h-1zM15 15h1v1h-1zM17 15h2v1h-2zM20 15h1v1h-1zM24 15h1v1h-1zM26 15h1v1h-1zM28 15h8v1h-8zM37 15h2v1h-2zM2 16h5v1h-5zM8 16h1v1h-1zM10 16h1v1h-1zM12 16h1v1h-1zM15 16h2v1h-2zM19 16h4v1h-4zM26 16h3v1h-3zM31 16h1v1h-1zM34 16h1v1h-1zM36 16h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM11 17h2v1h-2zM17 17h7v1h-7zM25 17h1v1h-1zM28 17h1v1h-1zM32 17h3v1h-3zM37 17h1v1h-1zM3 18h1v1h-1zM5 18h2v1h-2zM8 18h2v1h-2zM11 18h6v1h-6zM18 18h8v1h-8zM27 18h1v1h-1zM35 18h3v1h-3zM5 19h2v1h-2zM11 19h2v1h-2zM15 19h2v1h-2zM18 19h1v1h-1zM21 19h2v1h-2zM24 19h4v1h-4zM29 19h1v1h-1zM32 19h2v1h-2zM35 19h4v1h-4zM3 20h1v1h-1zM8 20h5v1h-5zM16 20h3v1h-3zM21 20h1v1h-1zM23 20h2v1h-2zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM4 21h1v1h-1zM6 21h2v1h-2zM10 21h4v1h-4zM16 21h1v1h-1zM19 21h1v1h-1zM21 21h1v1h-1zM24 21h3v1h-3zM30 21h2v1h-2zM34 21h2v1h-2zM37 21h1v1h-1zM2 22h1v1h-1zM5 22h1v1h-1zM7 22h2v1h-2zM12 22h3v1h-3zM18 22h3v1h-3zM23 22h1v1h-1zM28 22h4v1h-4zM33 22h2v1h-2zM38 22h1v1h-1zM2 23h5v1h-5zM9 23h5v1h-5zM16 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h1v1h-1zM6 24h3v1h-3zM13 24h2v1h-2zM19 24h1v1h-1zM24 24h2v1h-2zM27 24h1v1h-1zM30 24h1v1h-1zM32 24h2v1h-2zM3 25h1v1h-1zM5 25h3v1h-3zM9 25h3v1h-3zM15 25h1v1h-1zM20 25h1v1h-1zM22 25h1v1h-1zM25 25h3v1h-3zM30 25h3v1h-3zM34 25h5v1h-5zM2 26h1v1h-1zM5 26h1v1h-1zM7 26h2v1h-2zM11 26h7v1h-7zM20 26h3v1h-3zM24 26h2v1h-2zM27 26h2v1h-2zM31 26h4v1h-4zM36 26h2v1h-2zM4 27h2v1h-2zM7 27h1v1h-1zM9 27h2v1h-2zM14 27h3v1h-3zM18 27h3v1h-3zM22 27h1v1h-1zM26 27h1v1h-1zM28 27h3v1h-3zM32 27h4v1h-4zM37 27h2v1h-2zM3 28h6v1h-6zM12 28h1v1h-1zM15 28h4v1h-4zM20 28h5v1h-5zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM34 28h4v1h-4zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM10 29h4v1h-4zM15 29h1v1h-1zM18 29h1v1h-1zM23 29h1v1h-1zM31 29h4v1h-4zM37 29h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM10 30h8v1h-8zM20 30h1v1h-1zM22 30h2v1h-2zM27 30h1v1h-1zM30 30h5v1h-5zM36 30h1v1h-1zM10 31h3v1h-3zM19 31h1v1h-1zM22 31h4v1h-4zM27 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h1v1h-1zM38 31h1v1h-1zM2 32h7v1h-7zM10 32h8v1h-8zM19 32h1v1h-1zM22 32h3v1h-3zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM14 33h3v1h-3zM18 33h1v1h-1zM22 33h1v1h-1zM26 33h1v1h-1zM28 33h3v1h-3zM34 33h1v1h-1zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM11 34h1v1h-1zM14 34h2v1h-2zM17 34h1v1h-1zM20 34h1v1h-1zM24 34h2v1h-2zM28 34h1v1h-1zM30 34h6v1h-6zM37 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h1v1h-1zM14 35h2v1h-2zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM25 35h1v1h-1zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM13 36h1v1h-1zM15 36h2v1h-2zM18 36h2v1h-2zM21 36h6v1h-6zM32 36h1v1h-1zM34 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h4v1h-4zM16 37h1v1h-1zM18 37h1v1h-1zM20 37h1v1h-1zM22 37h1v1h-1zM24 37h1v1h-1zM26 37h3v1h-3zM31 37h1v1h-1zM33 37h4v1h-4zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h2v1h-2zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
     </div>
   </header>
 

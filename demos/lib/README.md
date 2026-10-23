@@ -98,7 +98,21 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 | rocket | 2026-10-23 | layout clean |
 | gyroscope | 2026-10-23 | layout clean |
 | elevator | 2026-10-23 | layout clean |
+| cart-launch | 2026-10-23 | batch 3 |
+| catenary | 2026-10-23 | batch 3 |
+| center-of-mass | 2026-10-23 | batch 3 |
+| circular-motion | 2026-10-23 | batch 3 |
+| double-pendulum | 2026-10-23 | batch 3 |
+| energy-sources | 2026-10-23 | batch 3 |
+| equilibrium | 2026-10-23 | batch 3 |
+| gravity-near-earth | 2026-10-23 | batch 3 |
+| gps-clocks | 2026-10-23 | batch 3 |
+| impulse | 2026-10-23 | batch 3 |
+| potential-curves | 2026-10-23 | batch 3 |
+| rotation | 2026-10-23 | batch 3 |
+| tides | 2026-10-23 | batch 3 |
+| units | 2026-10-23 | batch 3 |
 
 ## Being moved
 
-Batch 3 (rest of Physics I), from 2026-10-23 23:45: cart-launch, catenary, center-of-mass, circular-motion, double-pendulum, elevator, energy-sources, equilibrium, gravity-near-earth, gps-clocks, gyroscope, impulse, potential-curves, rocket, rotation, tides, units.
+Nothing at the moment.
