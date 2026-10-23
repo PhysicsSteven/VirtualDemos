@@ -41,7 +41,7 @@ On a real bench, secure the pivot and keep people and fragile equipment out of t
 
 **Distributed mass.** Compare a uniform rod with a point bob at the same nominal length, small release angle and gravity. Use the rod's full length, not pivot-to-centre distance, in its formula.
 
-**Using the virtual apparatus.** Choose **Simple pendulum**, **Bob on a string**, **Earth**, and set **Release angle θ₀** to 5°. Leave **Air drag (slow decay)** off and enable **Blind: hide predictions and answers**. Set **Length L (pivot to bob centre, or rod length)** and **Mass**. Press **Release**, wait for at least three bottom crossings so a full period appears, then **Capture reading**. Use **Hold at release angle** before each new release; it resets the motion rather than pausing at the current position. Export each scan with **Export CSV** before **Clear**. Choose **T² against L** for the length scan and **T against θ₀** for the amplitude scan. The length fit includes only bob rows at angles no greater than 10°, but it can still mix different small angles; keep 5° throughout. For the rod comparison select **Uniform rod**. If using **Mystery planet** as an extension, keep Blind on and do not reselect it during a scan, since that generates a new gravity value.
+**Using the virtual apparatus.** Choose **Simple pendulum**, **Bob on a string**, **Earth**, and set **Release angle θ₀** to 5°. Leave **Air drag (slow decay)** off and enable **Blind: hide predictions and answers**. Set **Length L (pivot to bob centre, or rod length)** and **Mass**. Press **Release**, wait for at least three bottom crossings so a full period appears, then **Capture reading**. Use **Hold at release angle** before each new release; it resets the motion rather than pausing at the current position. Send each scan with **Export to worksheet** before **Clear**; the worksheet offers to put it in its own copy of the Data table. Choose **T² against L** for the length scan and **T against θ₀** for the amplitude scan. The length fit includes only bob rows at angles no greater than 10°, but it can still mix different small angles; keep 5° throughout. For the rod comparison select **Uniform rod**. If using **Mystery planet** as an extension, keep Blind on and do not reselect it during a scan, since that generates a new gravity value.
 
 ## Data
 
@@ -51,7 +51,7 @@ On a real bench, secure the pivot and keep people and fragile equipment out of t
 | | | | | | | | |
 | | | | | | | | |
 
-Record planet, drag setting and the number of oscillations timed. Keep length, mass, amplitude and rod comparisons in separate files.
+Record planet, drag setting and the number of oscillations timed. Keep length, mass, amplitude and rod comparisons in separate copies of the table.
 
 ## Analysis
 

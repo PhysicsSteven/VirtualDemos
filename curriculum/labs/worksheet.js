@@ -13,6 +13,11 @@
   const ENABLED = ['collisions', 'energy-sources', 'estimation-and-evidence', 'fluids', 'forces', 'impulse', 'kepler-orbits',
     'measurement-and-units', 'motion-graphs', 'pendulum', 'potential-curves', 'projectile-drag', 'rotation', 'rotational-dynamics',
     'springs', 'stress-strain', 'viscometer'];
+  /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
+     the demo's name and, for each column of the worksheet's first data table, the demo column that fills it (null: left alone). */
+  const FROM_DEMO = {
+    pendulum: { demo: 'Pendulum', cols: ['row', 'type', 'L_m', 'theta0_deg', 'm_kg', 'T_s', 'T2_s2', null] },
+  };
   const ANSWER_LISTS = /^(before-the-lab|before-the-activity|analysis|questions)$/, ONE_BOX = /^uncertainty$/;
   const m = location.pathname.match(/\/curriculum\/labs\/students\/([a-z0-9-]+?)(?:\.html)?$/);
   if (!m || ENABLED.indexOf(m[1]) < 0) return;
@@ -77,6 +82,7 @@
 .ws textarea.ws-f { min-height: 3.4em; resize: vertical; line-height: 1.45; display: block; margin: 6px 0 4px; overflow: hidden; }
 .ws-answer-one { margin: 6px 0 14px; } .ws-answer-one label { font-size: 0.85em; font-weight: 600; color: #24292f; }
 .ws-print { display: none; }
+.ws-hand { border: 1px solid #54aeff; background: #ddf4ff; border-radius: 8px; padding: 8px 12px; margin: 0 0 12px; } .ws-hand p { margin: 2px 0; }
 .ws-left { border: 1px solid #d4a72c; background: #fff8c5; border-radius: 8px; padding: 10px 14px; margin: 18px 0; }
 .ws-left h2 { margin-top: 0; border: 0; font-size: 1.05em; } .ws-left p { margin: 4px 0; white-space: pre-wrap; }
 @media (max-width: 480px) { .ws-btn { font-size: 13px; padding: 5px 9px; } }
@@ -268,14 +274,14 @@
 
   /* ---------- state ---------- */
   function collect() {
-    const S = { worksheet: SLUG, title: TITLE, version: VERSION, saved: new Date().toISOString(), student: {}, tables: [], answers: {}, unplaced: leftovers };
+    const S = { worksheet: SLUG, title: TITLE, version: VERSION, saved: new Date().toISOString(), student: {}, tables: [], answers: {}, unplaced: leftovers, received };
     WHO.forEach(([k]) => { S.student[k] = who[k].value; });
-    tables.forEach((T) => S.tables.push({ columns: T.cols, runs: T.runs.map((R) => ({ label: R.label ? R.label.value : null, notes: R.notes.value,
+    tables.forEach((T) => S.tables.push({ columns: T.cols, runs: T.runs.map((R) => ({ label: R.label ? R.label.value : null, notes: R.notes.value, source: R.source || null,
       rows: R.rows.map((r) => r.cells.map((f) => (f ? f.value : null))) })) }));
     answers.forEach((a) => { if (a.f.value) S.answers[a.key] = { q: a.q, text: a.f.value }; });
     return S;
   }
-  let leftovers = [], storageOK = true;
+  let leftovers = [], storageOK = true, received = null;
   function save() {
     clearTimeout(saveTimer);
     const S = collect();
@@ -288,6 +294,7 @@
   function apply(S) {
     if (!S || typeof S !== 'object') return;
     WHO.forEach(([k]) => who[k].wsSet((S.student || {})[k] || ''));
+    received = S.received || null;
     const warn = [];
     (S.tables || []).forEach((st, ti) => {
       const T = tables[ti];
@@ -296,6 +303,7 @@
       (st.runs || []).forEach((sr, ri) => {
         const R = T.runs[ri] || addRun(T);
         if (R.label) R.label.wsSet(sr.label || '');
+        R.source = sr.source || null;
         R.notes.wsSet(sr.notes || '');
         (sr.rows || []).forEach((cells, i) => {
           const row = R.rows[i] || newRow(T, R);
@@ -375,10 +383,57 @@
   function clearAll() {
     if (!confirm('Clear your name, data and answers from this worksheet? Save to a file first if you might need them.')) return;
     reset(); apply({ student: {}, tables: tables.map(() => ({ runs: [] })), answers: {} });
+    tables.forEach((T) => T.runs.forEach((R) => { R.source = null; }));
     tables.forEach((T) => T.runs.forEach((R) => { R.rows.forEach((r) => r.cells.forEach((f) => f && f.wsSet(''))); R.notes.wsSet(''); }));
     try { localStorage.removeItem(KEY); } catch (_) {}
-    setStatus('Cleared.');
+    setStatus('Cleared.'); checkHand();
   }
+
+  /* ---------- readings from the demo ---------- */
+  const HKEY = 'vd-handoff:' + SLUG, MAP = FROM_DEMO[SLUG], dT = MAP && tables[0];
+  const handBox = el('div', { class: 'ws ws-hand ws-noprint tex2jax_ignore', role: 'status', hidden: true });
+  if (dT) dT.first.parentNode.insertBefore(handBox, dT.first);
+  let handHidden = null;
+  function readHand() { try { const h = JSON.parse(localStorage.getItem(HKEY) || 'null'); return h && h.sent && Array.isArray(h.rows) && Array.isArray(h.columns) ? h : null; } catch (_) { return null; } }
+  function checkHand() {
+    if (!dT) return;
+    const h = readHand();
+    if (!h || h.sent === received || h.sent === handHidden) { handBox.hidden = true; return; }
+    const t = new Date(h.sent).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }), n = h.rows.length;
+    const src = h.demo + ':' + (h.series || ''), target = dT.runs.find((R) => R.source === src);
+    handBox.innerHTML = '';
+    handBox.appendChild(el('p', {}, [el('strong', { text: `New readings from the ${MAP.demo} demo: ` }), `${n} row${n === 1 ? '' : 's'}, sent ${t}.`]));
+    handBox.appendChild(el('div', { class: 'ws-btns' }, [
+      el('button', { type: 'button', class: 'ws-btn ws-main', text: target ? 'Update my table with these readings' : 'Put these readings in my table', on: { click: () => takeHand(h) } }),
+      el('button', { type: 'button', class: 'ws-btn', text: 'Download them as CSV', on: { click: () => download(h.csvName || SLUG + '-readings.csv', h.csv || '', 'text/csv') } }),
+      el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Not now', on: { click: () => { handHidden = h.sent; handBox.hidden = true; } } })]));
+    if (target) handBox.appendChild(el('p', { class: 'ws-note', text: `Updating replaces the demo's columns in ${target.label ? 'copy ' + (dT.runs.indexOf(target) + 1) : 'the table'} with these readings; your other columns and notes stay.` }));
+    handBox.hidden = false;
+  }
+  /* The demo sends every reading of its current series (it starts a new series at Clear), so a later export of the same series
+     replaces the earlier one in the same table instead of adding duplicates, and a new series goes into a new copy of the table. */
+  function takeHand(h) {
+    const src = h.demo + ':' + (h.series || '');
+    const idx = MAP.cols.map((name) => (name == null ? -1 : h.columns.indexOf(name)));
+    const filled = (R) => R.source || R.rows.some((r) => idx.some((k, c) => k >= 0 && r.cells[c] && r.cells[c].value)); /* the demo's columns already used */
+    let R = dT.runs.find((x) => x.source === src);
+    if (!R) {
+      R = filled(dT.runs[0]) ? addRun(dT) : dT.runs[0];
+      if (R.label && !R.label.value) R.label.wsSet(`Readings from the ${MAP.demo} demo`);
+      R.source = src;
+      if (R.wrap) typeset(R.wrap);
+    }
+    h.rows.forEach((vals, i) => {
+      const row = R.rows[i] || newRow(dT, R);
+      idx.forEach((k, c) => { if (k >= 0 && row.cells[c]) row.cells[c].wsSet(vals[k] == null ? '' : vals[k]); });
+    });
+    for (let i = h.rows.length; i < R.rows.length; i++) idx.forEach((k, c) => { if (k >= 0 && R.rows[i].cells[c]) R.rows[i].cells[c].wsSet(''); });
+    if (h.note && R.notes.value.indexOf(h.note) < 0) R.notes.wsSet(R.notes.value ? R.notes.value + '\n' + h.note : h.note);
+    received = h.sent; handBox.hidden = true; save();
+    setStatus(`${h.rows.length} readings from the ${MAP.demo} demo are in your table.`);
+    (R.wrap || R.table).scrollIntoView({ block: 'nearest' });
+  }
+  window.addEventListener('storage', (e) => { if (e.key === HKEY) checkHand(); });
 
   /* ---------- start ---------- */
   let stored = null;
@@ -386,6 +441,7 @@
   if (stored) { apply(stored); setStatus(`Your work from ${new Date(stored.saved).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' })} is back.`); }
   else if (!storageOK) setStatus('This browser is blocking storage (a private window?), so nothing is saved as you type. Use Save to a file.', true);
   else setStatus('Nothing typed yet. Your work saves in this browser as you type.');
+  checkHand();
   window.addEventListener('pagehide', () => { if (saveTimer) save(); });
   window.addEventListener('beforeprint', () => document.querySelectorAll('.ws textarea.ws-f').forEach((t) => { t.wsPrint.textContent = t.value; }));
 })();

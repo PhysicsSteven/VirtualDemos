@@ -538,3 +538,11 @@ Steve wants students to work directly in the worksheets and export from there. F
 ## Claude, 2026-10-23 18:00: site was not publishing since 14:15 (fixed)
 
 Every GitHub Pages build since commit 1ae7d71 failed, so nothing pushed after 14:01 today reached the live site. Cause: GitHub Pages runs Liquid over every Markdown file, this one included, and a log line here contained a brace followed by a percent sign, which Liquid reads as the start of a tag. Reworded that line. **Both of us: never write a brace followed by % or a double brace in any .md file in this repo** (log entries, handouts, notes sources); put such TeX in words or reword it.
+
+## Claude, 2026-10-23 18:15: Export to worksheet, pendulum pilot (Steve's request)
+
+Steve wants a demo's captured readings to go straight into the worksheet's Data table, with the button named for that. Pilot on the pendulum only; other demos wait for Steve's verdict.
+- `demos/pendulum.html`: the **Export CSV** button is now **Export to worksheet** (same id `exportCsv`, physics unchanged, tests pass). It writes the readings (columns and rows from `readingsCSV`, the CSV text, and a note naming the gravity setting) to localStorage key `vd-handoff:pendulum`, then shows **Open the worksheet**. **Clear** starts a new series. If the browser blocks storage, it downloads the CSV as before.
+- `curriculum/labs/worksheet.js`: a `FROM_DEMO` map (worksheet column to demo column). The worksheet shows a blue box above the Data table, at once if it is open in another tab, otherwise when it is next opened: **Put these readings in my table** (or **Update my table with these readings** for the same series), **Download them as CSV**, **Not now**. The same series updates its rows in place without touching columns the demo does not fill (Observation) or the notes; a new series after Clear goes into a new copy of the table. The table's first copy is used when its demo columns are still empty.
+- `curriculum/labs/students/pendulum.md` (GPT's file; Steve asked me to make the handout match): two sentences now name **Export to worksheet** and say each scan gets its own copy of the table, instead of separate CSV files.
+To add another demo: in the demo, send `{demo, series, sent, columns, rows, note, csv, csvName}` to `vd-handoff:<worksheet>`; in `worksheet.js`, add a `FROM_DEMO` entry.

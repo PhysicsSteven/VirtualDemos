@@ -191,7 +191,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <h2>Readings</h2>
         <div class="btnrow">
           <button type="button" class="btn primary" id="capture">Capture reading</button>
-          <button type="button" class="btn" id="exportCsv">Export CSV</button>
+          <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
@@ -410,12 +410,24 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function capStatus(m) { $('capStatus').textContent = m; }
   $('capture').addEventListener('click', () => { if (!S.lastT) { capStatus('Release the pendulum and let the photogate time a full swing first.'); return; }
     S.rows.push({ type: S.rod ? 'rod' : 'bob', L: S.L.toFixed(2), A: String(S.A), m: S.m.toFixed(2), T: S.lastT.toFixed(3), gKey: S.gKey }); renderRows(); capStatus(`Row ${S.rows.length} captured.`); });
-  $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('clearRows').addEventListener('click', () => { S.rows = []; S.series = Date.now(); renderRows(); capStatus('Readings cleared.'); });
+  /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
+     them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. */
+  const WORKSHEET = '../curriculum/labs/students/pendulum.html';
   $('exportCsv').addEventListener('click', () => {
     if (!S.rows.length) { capStatus('No readings to export.'); return; }
-    const txt = readingsCSV(S.rows, { version: PD_VERSION, g: S.mystery ? 'mystery planet (hidden)' : `${S.g} m/s2` });
-    try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'pendulum-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
-    capStatus('CSV exported.');
+    const g = S.mystery ? 'mystery planet (hidden)' : `${S.g} m/s2`, txt = readingsCSV(S.rows, { version: PD_VERSION, g });
+    const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => l.split(',');
+    if (!S.series) S.series = Date.now(); /* a new series after each Clear, so the worksheet starts a new copy of its table */
+    const hand = { v: 1, demo: 'pendulum', series: S.series, sent: new Date().toISOString(), columns: split(lines[0]), rows: lines.slice(1).map(split),
+      note: `Simulated data from the Pendulum demo (gravity ${g}).`, csv: txt, csvName: 'pendulum-readings.csv' };
+    try { localStorage.setItem('vd-handoff:pendulum', JSON.stringify(hand)); }
+    catch (_) {
+      try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'pendulum-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+      capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return;
+    }
+    capStatus(`${S.rows.length} reading${S.rows.length === 1 ? '' : 's'} sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = WORKSHEET; a.target = 'pendulum-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
   });
   function renderRows() {
     const tb = $('rowsTbl').querySelector('tbody');
