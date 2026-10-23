@@ -2877,10 +2877,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "household-wiring"
+      ],
       "unit": "dc-circuits",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Household Wiring and Electrical Safety (2026-10-23, Claude): parallel loads, breaker sizing and wire heating, short circuit, grounded and ungrounded case faults, dry and wet skin, GFCI, using the section's own numbers."
     },
     {
       "vol": 2,
@@ -5613,6 +5615,26 @@
       ],
       "title": "Circuits",
       "url": "demos/circuits.html"
+    },
+    {
+      "demo": "household-wiring",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "10.6",
+          "title": "Household Wiring and Electrical Safety"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-23 (Claude). Lecture demo: 120 V branch circuit solved by nodal analysis; appliances, 14 or 12 gauge, 15/20/30 A breaker, run length, GFCI, ground wire, faults (hot to neutral, hot to case), person touching with dry or wet skin; Blind.",
+      "handouts": [],
+      "title": "Household Wiring and Electrical Safety",
+      "url": "demos/household-wiring.html"
     },
     {
       "demo": "magnetic-force",

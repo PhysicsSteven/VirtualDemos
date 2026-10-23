@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Household Wiring and Electrical Safety: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Household Wiring and Electrical Safety</h1><ul class="meta"><li><a href="../demos/household-wiring.html">Open the demo</a></li><li>PHYS 202</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Appliances on a branch circuit are in parallel, so their currents add. A circuit breaker on the hot wire limits that total to protect the wires from overheating (P = I²R in the wire), not to protect people.</li>
+<li>A short circuit is limited only by the wires, so the current is hundreds of amperes and the breaker trips at once.</li>
+<li>The ground wire gives a fault a low resistance path, so a live metal case trips the breaker instead of shocking someone.</li>
+<li>Without a ground, the person is the path. A shock of a few milliamperes is far too small for a breaker, but a GFCI sees the difference between the hot and neutral currents and trips above 5 mA.</li>
+<li>The same 120 V gives 0.6 mA through dry skin and 12 mA through wet skin (OpenStax §10.6): the body's resistance decides the danger.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need Ohm's law, power P = IV = I²R = V²/R, and series and parallel resistors. <strong>Blind</strong> hides the currents and whether a device will trip, so students can predict first.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>A lamp.</strong> 0.83 A, the same in hot and neutral, none in the ground. Add the toaster and the kettle: 21.5 A on a 15 A breaker. Ask: is anything broken? The breaker trips after 2 s. Change to 12 gauge and 20 A: it holds.</li>
+<li><strong>The wrong breaker.</strong> 14 gauge wire on a 30 A breaker with the toaster, kettle and heater: the breaker holds (about 33 A), but the heat in the wire is 8.6 W per metre, nearly five times the 1.8 W/m at 15 A. This is why the breaker is matched to the wire.</li>
+<li><strong>Short circuit.</strong> About 350 A for 15 m of 14 gauge wire. Shorten the run: the current goes up.</li>
+<li><strong>Worn cord, grounded case.</strong> The ground wire carries about 350 A and the breaker trips at once; the person in parallel gets only about 0.2 mA, for an instant.</li>
+<li><strong>No ground, dry hand, then wet hand.</strong> 0.6 mA, then 12 mA, and the breaker does nothing. Turn on the GFCI and repeat.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A toaster (1200 W) and a kettle (1500 W) are plugged into one 120 V outlet. Ignoring the wires, what current do they draw together? Will a 15 A breaker hold? What about a 20 A breaker?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> 14 gauge copper wire is 1.628 mm in diameter. Find its resistance per metre (ρ = 1.68 × 10⁻⁸ Ω·m) and the heat per metre at 15 A and at 25 A. Why must the breaker match the wire, and not the appliances?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The outlet is 15 m of 14 gauge wire from the panel. Hot touches neutral through 0.10 Ω at the outlet. Estimate the current. Why does the breaker trip at once?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A person with wet hands (10.0 kΩ, hand to feet) touches a live toaster case with no ground. Find the current and say what it does. Why does the 15 A breaker not trip? What does a GFCI measure, and why does it trip?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> With the ground wire connected, the same person touches the same faulty toaster. Explain, using parallel resistances, why almost no current goes through the person.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The breaker protects people."</strong> It trips at amperes; a few milliamperes can be dangerous. The GFCI protects people.</li>
+<li><strong>"Voltage kills, so 120 V is always deadly."</strong> The current through the body depends on its resistance: dry skin keeps it below a milliampere.</li>
+<li><strong>"The ground wire normally carries current."</strong> It carries current only during a fault.</li>
+<li><strong>"A bigger breaker is safer because it trips less."</strong> It lets the wires overheat.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Appliances are resistors, R = V²/P at 120 V. The circuit (hot, neutral and ground wires, loads, fault and person) is solved exactly by nodal analysis for rms currents; with only resistors, rms values obey Ohm's and Kirchhoff's rules.</li>
+<li>Copper ρ = 1.68 × 10⁻⁸ Ω·m; 14 gauge 1.628 mm, 12 gauge 2.053 mm. Fault contact 0.10 Ω (chosen). Neutral and ground bonded at the panel; the floor and earth path is taken as zero resistance.</li>
+<li>Body resistance 200 kΩ dry, 10.0 kΩ wet; effects of current and the 5 mA GFCI setting from OpenStax §10.6. Breaker: instant above 10 times its rating, after 2 s for lesser overloads (a chosen delay).</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

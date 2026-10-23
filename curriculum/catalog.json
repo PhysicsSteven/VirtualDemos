@@ -851,6 +851,17 @@
      ]
     },
     {
+     "demo": "household-wiring",
+     "title": "Household Wiring and Electrical Safety",
+     "desc": "A 120 V kitchen branch circuit with hot, neutral and ground wires: overload it, short it, or let a worn cord touch a metal case, and see when the breaker or the GFCI trips and what a person feels.",
+     "tags": [
+      "circuit breaker",
+      "ground wire",
+      "GFCI",
+      "electric shock"
+     ]
+    },
+    {
      "demo": "wire-force",
      "title": "Force on a Current",
      "desc": "Weigh the force on a current-carrying wire with a magnet on a balance and find B, then see the forces on a loop make a torque, and add a commutator to build a DC motor.",

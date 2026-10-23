@@ -57,6 +57,7 @@ OVERRIDES = {
     "center-of-mass": {"wait": 600, "js": ""},
     "units": {"wait": 600, "js": "const s = document.getElementById('sZoom'); s.value = 20.6; s.dispatchEvent(new Event('input'));"},
     "energy-sources": {"wait": 600, "js": ""},
+    "household-wiring": {"wait": 800, "js": "document.querySelector('[data-p=wet]').click()"},
     "electrostatics-at-work": {"wait": 3500, "js": "document.getElementById('motor').click()"},
     "eddy-currents": {"wait": 3500, "js": "document.getElementById('drop').click();"},
     "wire-force": {"wait": 2500, "js": "document.querySelector('#presets button[data-p=\"motor\"]').click(); document.getElementById('spin').click();"},
