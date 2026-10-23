@@ -207,6 +207,17 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   table.rows button { min-height: 32px; min-width: 32px; }
   .rail { overflow: visible; }
 }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -261,7 +272,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div><dt>Circular speed here</dt><dd id="lC">—</dd></div>
           <div><dt>Escape speed here</dt><dd id="lE">—</dd></div>
         </dl>
-        <p class="hint">Drag the arrow tip to set speed and direction. Drag the hollow marker to move the launch point. The tip snaps to the gold circular and red escape circles; hold <kbd>Shift</kbd> to place it freely.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Drag the arrow tip to set speed and direction. Drag the hollow marker to move the launch point. The tip snaps to the gold circular and red escape circles; hold <kbd>Shift</kbd> to place it freely.</p></details>
         <div class="slider-head"><span class="hint" id="keyLab">Arrow keys move</span></div>
         <div class="seg wrap" role="group" aria-labelledby="keyLab" id="keySeg">
           <button type="button" data-k="vel" aria-pressed="true">Arrow tip</button>
@@ -287,7 +298,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div><dt>Point 2 to the star</dt><dd id="ru2">—</dd></div>
           <div class="wide"><dt>Point 1 to point 2</dt><dd id="ru12">—</dd></div>
         </dl>
-        <p class="hint">The timer runs on simulated time, so it stops when the planet is paused. Reset puts the planet back at the launch point at t = 0. With Ruler on, click or drag in the view to place points 1 and 2 (the launch arrow is locked meanwhile). Zoom in for precise placement.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">The timer runs on simulated time, so it stops when the planet is paused. Reset puts the planet back at the launch point at t = 0. With Ruler on, click or drag in the view to place points 1 and 2 (the launch arrow is locked meanwhile). Zoom in for precise placement.</p></details>
       </section>
 
       <section>
@@ -299,7 +310,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div>
         <p class="hint" id="capStat" role="status" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="tbl"><caption class="sr">Captured readings: semi major axis, period from the timer, ruler distance and star mass</caption><thead></thead><tbody></tbody></table></div>
-        <p class="hint">Capture stores the timer and the ruler as displayed, with the star mass and the launch. The a column starts as half the ruler distance, which is the semi major axis when the points sit on perihelion and aphelion; edit it if you measured another way. The fit is T² = slope·a³ through the origin, using the rows with the present star mass.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Capture stores the timer and the ruler as displayed, with the star mass and the launch. The a column starts as half the ruler distance, which is the semi major axis when the points sit on perihelion and aphelion; edit it if you measured another way. The fit is T² = slope·a³ through the origin, using the rows with the present star mass.</p></details>
       </section>
 
       <section>
@@ -369,7 +380,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       </section>
 
       <section>
-        <h2>Layers</h2>
+        <details class="fold"><summary>Layers</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tConic" checked>Orbit path</label>
           <label><input type="checkbox" id="tTrail" checked>Trail</label>
@@ -378,6 +389,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <label><input type="checkbox" id="tVel" checked>Velocity now</label>
           <label><input type="checkbox" id="tGrid" checked>AU grid</label>
         </div>
+        </div></details>
       </section>
 
       <section>
@@ -387,7 +399,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       </section>
 
       <section>
-        <h2>Key and model</h2>
+        <details class="fold"><summary>Key and model</summary><div class="foldbody">
         <div class="key">
           <span><i class="swatch orbit"></i>Orbit path predicted from r and v</span>
           <span><i class="swatch trail"></i>Trail of the integrated planet</span>
@@ -396,7 +408,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <span><i class="swatch second"></i>Second planet</span>
           <span><i class="swatch law"></i>P² = a³/M on the chart</span>
         </div>
-        <p class="hint">The star is held fixed and the planet's mass is neglected, so P² = a³/M exactly (a in AU, P in years, M in solar masses). Two planets do not pull on each other. The motion is integrated with velocity Verlet using a time symmetric step that shrinks near the star. A planet that comes within 0.005 AU (one solar radius) hits the star.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">The star is held fixed and the planet's mass is neglected, so P² = a³/M exactly (a in AU, P in years, M in solar masses). Two planets do not pull on each other. The motion is integrated with velocity Verlet using a time symmetric step that shrinks near the star. A planet that comes within 0.005 AU (one solar radius) hits the star.</p></details>
+        </div></details>
       </section>
     </aside>
   </main>

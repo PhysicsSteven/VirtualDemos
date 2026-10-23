@@ -112,6 +112,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .proj, .spin { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -143,7 +146,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div><div class="slider-head"><label for="sW">Pipe wall thickness</label><output id="oW" for="sW"></output></div><input type="range" id="sW" min="0.5" max="3" step="0.1"></div>
         <div><div class="slider-head"><label for="sT">Pipe temperature</label><output id="oT" for="sT"></output></div><input type="range" id="sT" min="-196" max="100" step="1"></div>
         <label class="check"><input type="checkbox" id="tCur" checked><span>Show the induced currents in the walls</span></label>
-        <p class="hint">The magnet is a neodymium cylinder 12.7 mm across and 12.7 mm long (12.2 g); the pipes have a 9.5 mm inner radius. Cooling copper in liquid nitrogen (−196 °C) raises its conductivity about seven times.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">The magnet is a neodymium cylinder 12.7 mm across and 12.7 mm long (12.2 g); the pipes have a 9.5 mm inner radius. Cooling copper in liquid nitrogen (−196 °C) raises its conductivity about seven times.</p></details>
       </section>
 
       <section>
@@ -156,8 +159,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the drag constant, the terminal speed and the predicted fall times and the heat, leaving the clock and the timer for each pipe. Time how long each magnet takes and work out its steady speed.</p>
-        <p class="hint">Model: the magnet as a point dipole on the pipe's axis and a thin-walled pipe (w much less than a), which gives a drag force in proportion to speed with the constant k above (Levin and coworkers, Am. J. Phys. 2006). A real magnet that nearly fills the pipe falls at the same order of speed but not exactly this one. The magnet does not touch the wall; air drag is ignored.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Blind hides the drag constant, the terminal speed and the predicted fall times and the heat, leaving the clock and the timer for each pipe. Time how long each magnet takes and work out its steady speed.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Model: the magnet as a point dipole on the pipe's axis and a thin-walled pipe (w much less than a), which gives a drag force in proportion to speed with the constant k above (Levin and coworkers, Am. J. Phys. 2006). A real magnet that nearly fills the pipe falls at the same order of speed but not exactly this one. The magnet does not touch the wall; air drag is ignored.</p></details>
       </section>
     </aside>
   </main>

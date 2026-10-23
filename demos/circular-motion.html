@@ -123,6 +123,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .chips button, .proj, .spin { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -182,7 +185,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">The loop runs at half speed and the cars at a quarter of real speed, so the motion is easy to follow; every number is for real time. Blind hides the force sizes (arrows drawn equal length), a = v²/r, the speed limits and the predictions of what happens, leaving the settings and the motion.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">The loop runs at half speed and the cars at a quarter of real speed, so the motion is easy to follow; every number is for real time. Blind hides the force sizes (arrows drawn equal length), a = v²/r, the speed limits and the predictions of what happens, leaving the settings and the motion.</p></details>
       </section>
     </aside>
   </main>

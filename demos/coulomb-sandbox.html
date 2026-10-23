@@ -207,6 +207,17 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   .toggles label, .check { min-height: 32px; }
   table.rows button { min-width: 32px; min-height: 32px; }
 }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -292,7 +303,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <div><dt>Position (cm)</dt><dd id="rPos">—</dd></div>
         </dl>
         <p class="hint core-note" id="coreNote" hidden>The probe is inside a charge's 1.2 mm model ball. A true point charge has no finite V or E here; these values are for a uniformly charged ball.</p>
-        <p class="hint">Hover over the field, tap to place the probe, or press P on the field and use the arrow keys. The probe sits on a 0.1 cm grid. Each charge is modeled as a uniformly charged ball 1.2 mm in radius, inside its drawn disc; outside the ball V and E are exact point charge values.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Hover over the field, tap to place the probe, or press P on the field and use the arrow keys. The probe sits on a 0.1 cm grid. Each charge is modeled as a uniformly charged ball 1.2 mm in radius, inside its drawn disc; outside the ball V and E are exact point charge values.</p></details>
         <p class="hint" id="bodyModel" hidden>Model: a rod, ring or disk carries its charge Q spread uniformly, and V and E are the exact integrals of k dq/r: closed forms for the rod, and complete elliptic integrals for the ring and the disk off their axis (on the axis these reduce to the textbook formulas). Within 1.2 mm of a body its charge is treated as a line or sheet of uniformly charged balls 1.2 mm in radius, integrated numerically to 1 part in 10¹⁰.</p>
       </section>
 
@@ -300,7 +311,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <h2>Textbook formulas</h2>
         <p class="hint" id="limWhat"></p>
         <div class="twrap"><table class="rows lim" id="limTbl"><caption class="sr-only">Field of one object at the probe compared with textbook formulas</caption><thead><tr><th scope="col">Formula</th><th scope="col">|E|</th><th scope="col">vs exact</th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">The field of this object alone (other charges left out), compared with the formulas of OpenStax section 5.5 at the probe. Each formula is exact only where its note says; elsewhere it is a limit. Select another rod, ring or disk to compare it.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">The field of this object alone (other charges left out), compared with the formulas of OpenStax section 5.5 at the probe. Each formula is exact only where its note says; elsewhere it is a limit. Select another rod, ring or disk to compare it.</p></details>
       </section>
 
       <section>
@@ -312,17 +323,17 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap" id="rowsWrap" hidden><table class="rows" id="rowsTbl"><caption class="sr-only">Captured probe readings</caption><thead><tr><th scope="col">#</th><th scope="col">x cm</th><th scope="col">y cm</th><th scope="col">V (V)</th><th scope="col">|E| (V/m)</th><th scope="col" title="E direction, degrees from +x">Dir °</th><th scope="col"><span class="sr-only">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Capture stores the probe position and the values shown above, rounded as displayed, with the charges that produced them (listed in the CSV header). Cells can be edited; rows stay through setup changes until Clear. Press C on the field to capture.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Capture stores the probe position and the values shown above, rounded as displayed, with the charges that produced them (listed in the CSV header). Cells can be edited; rows stay through setup changes until Clear. Press C on the field to capture.</p></details>
       </section>
 
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind" autocomplete="off">Blind: hide predictions and answers</label>
-        <p class="hint">Blind hides the field lines, the equipotentials, the potential shading, the 3D landscape and the field map data table. The charges, the grid and the probe stay, so students map the field from probe readings.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Blind hides the field lines, the equipotentials, the potential shading, the 3D landscape and the field map data table. The charges, the grid and the probe stay, so students map the field from probe readings.</p></details>
       </section>
 
       <section>
-        <h2>Layers</h2>
+        <details class="fold"><summary>Layers</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tShade" checked>Potential shading</label>
           <label><input type="checkbox" id="tEqui" checked>Equipotentials</label>
@@ -342,10 +353,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <div class="slider-head"><label for="relief">3D height scale</label><output id="reliefOut" class="mono" for="relief">1.0×</output></div>
           <input type="range" id="relief" min="0.25" max="2" step="0.05" value="1">
         </div>
+        </div></details>
       </section>
 
       <section>
-        <h2>Key</h2>
+        <details class="fold"><summary>Key</summary><div class="foldbody">
         <div>
           <div class="legend-bar"></div>
           <div class="legend-scale mono"><span>V &lt; 0</span><span>0</span><span>V &gt; 0</span></div>
@@ -358,6 +370,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <p class="hint">In 3D, height is the potential: hills at positive charges, wells at negative ones. Heights are compressed near each charge, where V grows without bound.</p>
         <button type="button" class="btn" id="mapTblBtn" aria-expanded="false" aria-controls="mapWrap">Show data table</button>
         <div class="twrap" id="mapWrap" hidden><table class="rows" id="mapTbl"><caption class="sr-only">Field map values on a 2 cm grid</caption><thead><tr><th scope="col">x cm</th><th scope="col">y cm</th><th scope="col">V (V)</th><th scope="col">|E| (V/m)</th><th scope="col">E dir °</th></tr></thead><tbody></tbody></table></div>
+        </div></details>
       </section>
     </aside>
   </main>

@@ -138,6 +138,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 :root[data-theme="dark"] { --m1: #10161e; --m2: #172636; --front: #69a0ff; --refl: #e2b350; --trans: #ff7660; --wavelet: #7d8899; --mirror: #8a939e; --lane: #18202a; --pulse: #f0b44a; }
 select { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; max-width: 100%; }
 @media (max-width: 820px) { select { min-height: 36px; } }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -223,8 +226,8 @@ select { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(-
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the race times, the refracted and reflected fronts (the wavelets stay, so you can find the new front yourself) and θ₂. Predict first: which lane finishes last? Which way does the front turn as it enters glass?</p>
-        <p class="hint">Model: v = c/n with the indices of OpenStax Table 1.1 (589 nm; gases at 0 °C and 1 atm, liquids and solids at 20 °C). In the race, light takes t = nL/c to cross a lane of length L; the pulses are drawn slowed down by the factor printed on the picture. At a boundary, each point of the surface starts a wavelet when the incident front reaches it, and the wavelets grow at the speed of light in their medium; the new front is the line tangent to them. Fronts are one wavelength apart and the wavelength is drawn hugely enlarged. For the opening, the waves are drawn in two dimensions: every point of the opening is a source of circular wavelets of amplitude falling as 1/√r, and the picture is their sum at each instant (Huygens and Fresnel). That simple sum is not exact within a wavelength or so of the edges, and the brightness is scaled to fit.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Blind hides the race times, the refracted and reflected fronts (the wavelets stay, so you can find the new front yourself) and θ₂. Predict first: which lane finishes last? Which way does the front turn as it enters glass?</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Model: v = c/n with the indices of OpenStax Table 1.1 (589 nm; gases at 0 °C and 1 atm, liquids and solids at 20 °C). In the race, light takes t = nL/c to cross a lane of length L; the pulses are drawn slowed down by the factor printed on the picture. At a boundary, each point of the surface starts a wavelet when the incident front reaches it, and the wavelets grow at the speed of light in their medium; the new front is the line tangent to them. Fronts are one wavelength apart and the wavelength is drawn hugely enlarged. For the opening, the waves are drawn in two dimensions: every point of the opening is a source of circular wavelets of amplitude falling as 1/√r, and the picture is their sum at each instant (Huygens and Fresnel). That simple sum is not exact within a wavelength or so of the edges, and the brightness is scaled to fit.</p></details>
       </section>
     </aside>
   </main>

@@ -181,6 +181,17 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   .chips button, .btn, .seg button, .proj, #proj { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -276,7 +287,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div><dt>Pull vs today</dt><dd id="rPullRel">—</dd></div>
           <div><dt>Tide vs today</dt><dd id="rTideRel">—</dd></div>
         </dl>
-        <p class="hint">Exact values come from GM<sub>Moon</sub>/r² at each point. The near side gets a little more than 2GM<sub>Moon</sub>R<sub>E</sub>/d³ and the far side a little less; the formula is the first term in R<sub>E</sub>/d. Fractions use g = 9.81 m/s².</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Exact values come from GM<sub>Moon</sub>/r² at each point. The near side gets a little more than 2GM<sub>Moon</sub>R<sub>E</sub>/d³ and the far side a little less; the formula is the first term in R<sub>E</sub>/d. Fractions use g = 9.81 m/s².</p></details>
       </section>
 
       <section id="bulgeRead" hidden>
@@ -291,7 +302,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </dl>
         <p class="formula">h = A (3cos²θ − 1)/2, A = (M/M<sub>E</sub>)(R<sub>E</sub>/d)³ R<sub>E</sub></p>
         <p class="hint">θ is the angle from the point under the Moon (or Sun). Highs of +A under the body and opposite it, lows of −A/2 at 90°. The daily range is 1.5 A for one body.</p>
-        <p class="hint"><strong>Why 24 h 50 min?</strong> While Earth turns once, the Moon moves about 12° along its orbit in the same direction (360° in 29.53 days). Earth has to turn a little more to bring the city back under the Moon, about 50 minutes more. So each high tide comes about 25 minutes later than half a day after the one before.</p>
+        <details class="more"><summary>More about this</summary><p class="hint"><strong>Why 24 h 50 min?</strong> While Earth turns once, the Moon moves about 12° along its orbit in the same direction (360° in 29.53 days). Earth has to turn a little more to bring the city back under the Moon, about 50 minutes more. So each high tide comes about 25 minutes later than half a day after the one before.</p></details>
       </section>
 
       <section>
@@ -301,11 +312,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="big"><dt>Sun's tide ÷ Moon's</dt><dd id="rTideRatio">—</dd></div>
         </dl>
         <p class="formula" id="ratioCalc">—</p>
-        <p class="hint">The Sun pulls much harder, but a tide comes from the difference in pull across Earth, and that falls off as 1/d³. The Sun is 389 times farther away than the Moon, so its tide is less than half the Moon's. At new and full moon the two bulges line up (spring tides, range 1 + 0.46); at the quarters they are at right angles (neap tides, range 1 − 0.46).</p>
+        <details class="more"><summary>More about this</summary><p class="hint">The Sun pulls much harder, but a tide comes from the difference in pull across Earth, and that falls off as 1/d³. The Sun is 389 times farther away than the Moon, so its tide is less than half the Moon's. At new and full moon the two bulges line up (spring tides, range 1 + 0.46); at the quarters they are at right angles (neap tides, range 1 − 0.46).</p></details>
       </section>
 
       <section>
-        <h2>Key</h2>
+        <details class="fold"><summary>Key</summary><div class="foldbody">
         <div class="key" id="keyPull">
           <span><i class="swatch total"></i>Moon's total pull at a point</span>
           <span><i class="swatch center"></i>Pull at Earth's center</span>
@@ -317,9 +328,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <span><i class="swatch sunb"></i>Sun's bulge alone</span>
           <span><i class="swatch city"></i>The city, on the equator</span>
         </div>
-        <p class="hint">Model: equilibrium tide on an Earth covered by a deep ocean, ignoring the bulge's own gravity and Earth's elastic response. Moon and Sun in Earth's equatorial plane, circular orbits. Real tides are shaped by ocean basins and coastlines and lag behind the Moon; ranges run from a few centimeters to over 15 m. Sizes and distances are not to scale.</p>
-        <p class="hint"><strong>Tidal friction.</strong> Earth spins faster than the Moon orbits, so friction drags the bulges a little ahead of the Moon. Their pull speeds the Moon along its orbit and it moves away, about 3.8 cm per year, while Earth's spin slows and the day lengthens by about 2 ms per century. The same kind of friction in the Moon long ago locked its rotation to its orbit, so one face always points at Earth.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Model: equilibrium tide on an Earth covered by a deep ocean, ignoring the bulge's own gravity and Earth's elastic response. Moon and Sun in Earth's equatorial plane, circular orbits. Real tides are shaped by ocean basins and coastlines and lag behind the Moon; ranges run from a few centimeters to over 15 m. Sizes and distances are not to scale.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint"><strong>Tidal friction.</strong> Earth spins faster than the Moon orbits, so friction drags the bulges a little ahead of the Moon. Their pull speeds the Moon along its orbit and it moves away, about 3.8 cm per year, while Earth's spin slows and the day lengthens by about 2 ms per century. The same kind of friction in the Moon long ago locked its rotation to its orbit, so one face always points at Earth.</p></details>
         <p class="hint" id="keysHint"><kbd>←</kbd> <kbd>→</kbd> change the Moon's distance, <kbd>Shift</kbd> for finer steps.</p>
+        </div></details>
       </section>
     </aside>
   </main>

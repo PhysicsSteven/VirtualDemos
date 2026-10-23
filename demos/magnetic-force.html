@@ -202,6 +202,17 @@ details.hall[open] > summary { margin-bottom: 8px; }
   .num, table.rows input { min-height: 32px; }
   table.rows button { min-height: 36px; min-width: 32px; }
 }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -306,7 +317,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
           </div>
         </div>
         <label class="check"><input type="checkbox" id="hand"><span>Show right hand (3D view)</span></label>
-        <p class="hint">Drag the arrow tip on the drawing to aim and set the speed, and the ring to move the launch point. Speeds stop at 10⁷ m/s (v/c = 0.033) so the nonrelativistic motion stays accurate.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Drag the arrow tip on the drawing to aim and set the speed, and the ring to move the launch point. Speeds stop at 10⁷ m/s (v/c = 0.033) so the nonrelativistic motion stays accurate.</p></details>
       </section>
 
       <section id="secFields">
@@ -493,7 +504,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
           <button type="button" class="btn" id="timerReset">Reset timer</button>
         </div>
         <div class="inline"><label class="lab" for="turns">Turns timed</label><input type="number" class="num" id="turns" min="1" max="100" step="1" value="1"></div>
-        <p class="hint">Lay the ruler across the track: drag its two ends onto opposite sides of the circle. It reads to one screen pixel, so zoom in (wheel or +) for a finer reading. The timer counts time in the simulation and stops while paused. Start it as the particle passes a mark, such as the launch ring, and stop it after a whole number of turns. Keys on the drawing: M ruler, T timer, S picks what the arrow keys move.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Lay the ruler across the track: drag its two ends onto opposite sides of the circle. It reads to one screen pixel, so zoom in (wheel or +) for a finer reading. The timer counts time in the simulation and stops while paused. Start it as the particle passes a mark, such as the launch ring, and stop it after a whole number of turns. Keys on the drawing: M ruler, T timer, S picks what the arrow keys move.</p></details>
       </section>
 
       <section id="secHall">
@@ -541,7 +552,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
         </div>
         <p class="hint status" id="labStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>Particle</th><th>v⊥ (m/s)</th><th>r (m)</th><th>T (s)</th><th><span class="sr-only">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Capture stores what you read: the particle, the settings as displayed (q, m, v, B, E), your ruler reading and your timer reading divided by the turns timed. It never stores the model's r or T. Cells can be edited; rows stay through setup changes until Clear.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Capture stores what you read: the particle, the settings as displayed (q, m, v, B, E), your ruler reading and your timer reading divided by the turns timed. It never stores the model's r or T. Cells can be edited; rows stay through setup changes until Clear.</p></details>
         <div class="inline">
           <span class="lab">Plot</span>
           <div class="seg" role="group" aria-label="What to plot">
@@ -560,7 +571,7 @@ details.hall[open] > summary { margin-bottom: 8px; }
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the r, T, f, turns, drift and pitch readouts, the r label, the circle's center, the dashed path ahead and the period axis, and in the other setups the predicted speeds, landing points, f<sub>c</sub> and K<sub>max</sub>. In the Hall strip it renames the samples and hides the carriers, n, R<sub>H</sub> and v<sub>d</sub>. The ruler, the timer, the settings, the Hall voltmeter and the speed and energy readouts stay.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Blind hides the r, T, f, turns, drift and pitch readouts, the r label, the circle's center, the dashed path ahead and the period axis, and in the other setups the predicted speeds, landing points, f<sub>c</sub> and K<sub>max</sub>. In the Hall strip it renames the samples and hides the carriers, n, R<sub>H</sub> and v<sub>d</sub>. The ruler, the timer, the settings, the Hall voltmeter and the speed and energy readouts stay.</p></details>
       </section>
 
       <section>
@@ -572,9 +583,10 @@ details.hall[open] > summary { margin-bottom: 8px; }
       </section>
 
       <section>
-        <h2>Model</h2>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
         <p class="hint" id="modelHint"></p>
         <div class="key" id="key"></div>
+        </div></details>
       </section>
     </aside>
   </main>

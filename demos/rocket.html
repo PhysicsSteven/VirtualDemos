@@ -121,6 +121,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .chips button, .proj, .spin { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -178,7 +181,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the rocket equation prediction, the final speed and height and the dashed predicted curves, leaving the clock, the settings, the mass and the thrust. The animation is sped up so a whole flight takes about 25 s; the clock shows real time.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Blind hides the rocket equation prediction, the final speed and height and the dashed predicted curves, leaving the clock, the settings, the mass and the thrust. The animation is sped up so a whole flight takes about 25 s; the clock shows real time.</p></details>
       </section>
     </aside>
   </main>

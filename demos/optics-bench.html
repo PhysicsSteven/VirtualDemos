@@ -180,6 +180,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .chips button, .btn, .seg button, .proj, #proj { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -264,7 +275,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="big"><dt id="sEdgeL">Exact edge ray crosses the axis at</dt><dd id="sEdge">—</dd></div>
           <div class="wide" id="sAppRow"><dt>Apparent depth d<sub>i</sub> = −(n<sub>2</sub>/n<sub>1</sub>)d<sub>o</sub></dt><dd id="sApp">—</dd></div>
         </dl>
-        <p class="hint">n<sub>1</sub>/d<sub>o</sub> + n<sub>2</sub>/d<sub>i</sub> = (n<sub>2</sub> − n<sub>1</sub>)/R and m = −n<sub>1</sub>d<sub>i</sub>/(n<sub>2</sub>d<sub>o</sub>) are paraxial: they hold for rays close to the axis. The drawn rays obey Snell's law exactly at the surface. The edge ray is the ray from the object's base (on the axis) that meets the surface farthest from the axis, at height h; shrink the aperture or the fan and it moves to the paraxial image. R &gt; 0 when the center of curvature C is on the outgoing side (in n<sub>2</sub>).</p>
+        <details class="more"><summary>More about this</summary><p class="hint">n<sub>1</sub>/d<sub>o</sub> + n<sub>2</sub>/d<sub>i</sub> = (n<sub>2</sub> − n<sub>1</sub>)/R and m = −n<sub>1</sub>d<sub>i</sub>/(n<sub>2</sub>d<sub>o</sub>) are paraxial: they hold for rays close to the axis. The drawn rays obey Snell's law exactly at the surface. The edge ray is the ray from the object's base (on the axis) that meets the surface farthest from the axis, at height h; shrink the aperture or the fan and it moves to the paraxial image. R &gt; 0 when the center of curvature C is on the outgoing side (in n<sub>2</sub>).</p></details>
       </section>
 
       <section id="instSec" hidden>
@@ -307,17 +318,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Layers</h2>
+        <details class="fold"><summary>Layers</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tPrincipal" checked>Principal rays</label>
           <label><input type="checkbox" id="tImage" checked>Show image</label>
           <label><input type="checkbox" id="tFaint" checked>Faint reflection</label>
           <label><input type="checkbox" id="tGrid" checked>1 cm grid</label>
         </div>
+        </div></details>
       </section>
 
       <section>
-        <h2>Key</h2>
+        <details class="fold"><summary>Key</summary><div class="foldbody">
         <div class="key">
           <span><i class="swatch ray"></i>Light rays</span>
           <span><i class="swatch faint"></i>Faint reflection at a glass face</span>
@@ -327,7 +339,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch p3"></i>Principal ray: through the focal point F</span>
           <span><i class="spectrum"></i>White light, split from 400 to 700 nm</span>
         </div>
-        <p class="hint">Lenses follow the ideal thin lens rule. Mirrors use the exact spherical surface, so rays far from the axis, or from an object point off the axis, focus slightly differently from the mirror equation. With Adjustable n, dispersion is a few times stronger than in ordinary crown glass so the spectrum is easy to see; the real materials (crown N-BK7, flint F2, fused silica, water, diamond) use their published Sellmeier formulas (Schott; Malitson 1965; Daimon and Masumura 2007; Peter 1923), and with monochrome light they take n at 589 nm. The screen picture is built from rays traced in the plane of the drawing, turned about the lens axis for the rest of the object. A refracting surface bends each ray by Snell's law exactly, with no dispersion; its two media fill the bench on either side (a curved surface is the end of a long rod, its aperture an opaque stop on the face), and other elements are traced as if in air. Microscope and telescope readouts take the eye relaxed (final image at infinity) and the near point at 25 cm.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Lenses follow the ideal thin lens rule. Mirrors use the exact spherical surface, so rays far from the axis, or from an object point off the axis, focus slightly differently from the mirror equation. With Adjustable n, dispersion is a few times stronger than in ordinary crown glass so the spectrum is easy to see; the real materials (crown N-BK7, flint F2, fused silica, water, diamond) use their published Sellmeier formulas (Schott; Malitson 1965; Daimon and Masumura 2007; Peter 1923), and with monochrome light they take n at 589 nm. The screen picture is built from rays traced in the plane of the drawing, turned about the lens axis for the rest of the object. A refracting surface bends each ray by Snell's law exactly, with no dispersion; its two media fill the bench on either side (a curved surface is the end of a long rod, its aperture an opaque stop on the face), and other elements are traced as if in air. Microscope and telescope readouts take the eye relaxed (final image at infinity) and the near point at 25 cm.</p></details>
+        </div></details>
       </section>
     </aside>
   </main>

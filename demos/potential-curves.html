@@ -179,6 +179,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .stage.ph-on { height: 96vh; min-height: 720px; }
   .rail { overflow: visible; }
 }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -274,7 +285,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-v="track" aria-pressed="false">Ball on a track</button>
         </div>
         <p class="hint" id="viewHint"></p>
-        <p class="hint">Drag the dashed energy line, or drag the particle to a new starting point; dropped where U &gt; E, it starts from rest with E = U. Keys on the diagram: <kbd>↑</kbd> <kbd>↓</kbd> energy, <kbd>←</kbd> <kbd>→</kbd> starting point, <kbd>Space</kbd> play or pause, <kbd>R</kbd> reset.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Drag the dashed energy line, or drag the particle to a new starting point; dropped where U &gt; E, it starts from rest with E = U. Keys on the diagram: <kbd>↑</kbd> <kbd>↓</kbd> energy, <kbd>←</kbd> <kbd>→</kbd> starting point, <kbd>Space</kbd> play or pause, <kbd>R</kbd> reset.</p></details>
       </section>
 
       <section>
@@ -307,21 +318,22 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section>
         <h2>Equilibrium points, dU/dx = 0</h2>
         <table class="eq-table" id="eqTable"></table>
-        <p class="hint">At a minimum a push brings the particle back (stable). At a maximum a nudge sends it away (unstable). On a flat stretch it stays wherever it is put (neutral). Near a stable minimum U ≈ U₀ + ½U″(x − x₀)², a spring with k = U″, so ω₀ = √(U″/m).</p>
+        <details class="more"><summary>More about this</summary><p class="hint">At a minimum a push brings the particle back (stable). At a maximum a nudge sends it away (unstable). On a flat stretch it stays wherever it is put (neutral). Near a stable minimum U ≈ U₀ + ½U″(x − x₀)², a spring with k = U″, so ω₀ = √(U″/m).</p></details>
       </section>
 
       <section>
-        <h2>Plot data</h2>
+        <details class="fold"><summary>Plot data</summary><div class="foldbody">
         <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
         <p class="hint" id="mHelp">The tables list the points behind the energy diagram, the phase space plot and the period curve, for readers who cannot see the plots.</p>
         <div id="dataWrap" hidden>
           <p class="hint dcap" id="dataUCap"></p><div class="twrap"><table class="dtab" id="dataU" aria-labelledby="dataUCap"><thead id="dataUHead"></thead><tbody id="dataUBody"></tbody></table></div>
           <p class="hint dcap" id="dataTCap"></p><div class="twrap"><table class="dtab" id="dataT" aria-labelledby="dataTCap"><thead id="dataTHead"></thead><tbody id="dataTBody"></tbody></table></div>
         </div>
+        </div></details>
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tPhase">Phase space</label>
           <label><input type="checkbox" id="tForb" checked>Forbidden regions</label>
@@ -347,6 +359,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <dl class="readout">
           <div class="wide"><dt>Energy check: simulated K + U minus E</dt><dd id="rDrift">—</dd></div>
         </dl>
+        </div></details>
       </section>
     </aside>
   </main>

@@ -132,6 +132,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   .chips button, .btn, .proj, .spin, .seg button { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -196,7 +199,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>spin (rpm)</th><th>d (m)</th><th>P (s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Precession rate against one over the spin rate for the captured rows, with a least squares line and residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
-        <p class="hint">A gate at the front of the post times each full turn of the axle round the post, to 0.01 s. Capture stores the spin, d and the last full turn's period P. Plot Ω = 2π/P against 1/ω_s for one d: the slope is Mgd/I_s.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">A gate at the front of the post times each full turn of the axle round the post, to 0.01 s. Capture stores the spin, d and the last full turn's period P. Plot Ω = 2π/P against 1/ω_s for one d: the slope is Mgd/I_s.</p></details>
       </section>
 
       <section>
@@ -204,7 +207,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <p class="hint">Blind hides the moments of inertia, L, the predicted precession rate and the fitted I_s, leaving the gate timer, the tilt and the settings.</p>
-        <p class="hint">Model: a rigid symmetric wheel on a massless axle, a frictionless pivot, the spin about the axle held constant (no friction in the wheel's bearing). The motion is computed from the exact equations for a heavy symmetric top (RK4, 0.2 ms steps), so the wobble (nutation) and the dip at release are real, not added. Solid disk I_s = ½MR²; rim-heavy wheel 0.905MR²; the wheel's moment about its diameter is I_s/2.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Model: a rigid symmetric wheel on a massless axle, a frictionless pivot, the spin about the axle held constant (no friction in the wheel's bearing). The motion is computed from the exact equations for a heavy symmetric top (RK4, 0.2 ms steps), so the wobble (nutation) and the dip at release are real, not added. Solid disk I_s = ½MR²; rim-heavy wheel 0.905MR²; the wheel's moment about its diameter is I_s/2.</p></details>
       </section>
     </aside>
   </main>

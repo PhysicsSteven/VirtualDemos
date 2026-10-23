@@ -135,6 +135,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 }
 
 .stage canvas { touch-action: none; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -200,7 +203,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <p class="hint">Blind hides the centre of mass marker, its coordinates and the predicted boat shift.</p>
-        <p class="hint">Model: point masses on a massless plate; the firework is a point mass launched at 20 m/s and 60° that splits in two at the top of its flight, with no air drag; the boat floats on water with no drag, and the person walks from one end to the other at 1 m/s relative to the boat (boat 4.0 m long).</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Model: point masses on a massless plate; the firework is a point mass launched at 20 m/s and 60° that splits in two at the top of its flight, with no air drag; the boat floats on water with no drag, and the person walks from one end to the other at 1 m/s relative to the boat (boat 4.0 m long).</p></details>
       </section>
     </aside>
   </main>

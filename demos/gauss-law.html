@@ -214,6 +214,17 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
   .headline { margin-left: 0; text-align: left; white-space: normal; flex-basis: 100%; }
 }
 @media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -348,11 +359,11 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
         <label class="check"><input type="checkbox" id="tPred" checked><span>Show predicted flux Q<sub>enc</sub>/ε₀</span></label>
         <div class="twrap"><table class="rows" id="tbl"><caption class="sr">Captured flux readings: surface, enclosed charge, numerical flux and, when shown, the predicted flux Q_enc/ε₀ in N·m²/C</caption><thead><tr><th>#</th><th>Surface</th><th class="b">Q<sub>enc</sub> nC</th><th class="b">∮E·dA</th><th class="b pred">Q<sub>enc</sub>/ε₀</th></tr></thead><tbody></tbody></table></div>
         <p class="hint" id="capMsg" role="status" hidden></p>
-        <p class="hint">Capture freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Capture freezes the surface, the charges and the numerical flux in a row (flux in N·m²/C). The CSV holds every row in SI units, with the closest charge distance and the quadrature status.</p></details>
       </section>
 
       <section data-mode="flux">
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tLines" checked>Field lines</label>
           <label><input type="checkbox" id="tArrows" checked>E on surface</label>
@@ -373,8 +384,9 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
           <span><i class="swatch grip"></i>Grip: drag to move or resize</span>
           <span><i class="swatch patch"></i>Flux patch (3D): an area element colored by its E·dA</span>
         </div>
-        <p class="hint">3D view: the whole closed surface, with its area elements drawn as tiles. Field lines leave each charge evenly in all directions, three times as many per nC as set above, so lines out minus lines in follows Q<sub>enc</sub>. Drag empty space to turn the view.</p>
-        <p class="hint">Model: point charges in empty space, all in the plane z = 0, which is the slice you see. Their field lines in that plane stay in the plane, so the drawn lines are exact field lines. Lines are drawn in proportion to charge, but in a slice the spacing of lines does not show the field strength the way it does in 3D. The surface color fades where E·n is small. Arrows on the surface show the direction of E; their length grows with E and levels off for strong fields.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">3D view: the whole closed surface, with its area elements drawn as tiles. Field lines leave each charge evenly in all directions, three times as many per nC as set above, so lines out minus lines in follows Q<sub>enc</sub>. Drag empty space to turn the view.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Model: point charges in empty space, all in the plane z = 0, which is the slice you see. Their field lines in that plane stay in the plane, so the drawn lines are exact field lines. Lines are drawn in proportion to charge, but in a slice the spacing of lines does not show the field strength the way it does in 3D. The surface color fades where E·n is small. Arrows on the surface show the direction of E; their length grows with E and levels off for strong fields.</p></details>
+        </div></details>
       </section>
 
       <!-- symmetry mode -->
@@ -423,14 +435,15 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
       </section>
 
       <section data-mode="sym" hidden>
-        <h2>Plot data</h2>
+        <details class="fold"><summary>Plot data</summary><div class="foldbody">
         <button type="button" class="btn" id="eDataBtn" aria-expanded="false" aria-controls="eDataWrap">Show data table</button>
         <p class="hint" id="eDataNote">A table of E against distance, read from the same formula the plot draws, with the Gaussian surface row marked.</p>
         <div class="twrap tall" id="eDataWrap" hidden><table class="rows" id="eDataTab"><caption class="hint" id="eDataCap" style="caption-side: top; text-align: left; padding-bottom: 4px"></caption><thead id="eDataHead"></thead><tbody id="eDataBody"></tbody></table></div>
+        </div></details>
       </section>
 
       <section data-mode="sym" hidden>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="key">
           <span><i class="swatch out"></i>Gaussian surface, flux out</span>
           <span><i class="swatch in"></i>Gaussian surface, flux in</span>
@@ -439,8 +452,9 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
           <span><i class="swatch patch"></i>Flux patch (3D): an area element colored by its E·dA</span>
         </div>
         <div class="toggles"><label><input type="checkbox" id="tPatchY">Flux patches</label><label><input type="checkbox" id="tReduceY">Reduce motion</label></div>
-        <p class="hint">3D view: charge dots inside the Gaussian surface are bright, the rest faint. With flux patches on, the caps of the line's cylinder and the side of the pillbox stay gray: E runs along them, so E·dA = 0.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">3D view: charge dots inside the Gaussian surface are bright, the rest faint. With flux patches on, the caps of the line's cylinder and the side of the pillbox stay gray: E runs along them, so E·dA = 0.</p></details>
         <p class="hint" id="symModel">Model: ideal charge distributions. The line and the plane are infinitely long and wide; the drawing shows only a piece. Arrows on the Gaussian surface have a length proportional to E, capped close to a point or line charge. The ball is an insulator with its charge spread evenly through its volume; its field lines are drawn from the center for simplicity, although in the ball they begin all through the charged volume.</p>
+        </div></details>
       </section>
     </aside>
   </main>

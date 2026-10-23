@@ -196,6 +196,17 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
   .headline { margin-left: 0; text-align: left; white-space: normal; flex-basis: 100%; }
 }
 @media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -260,7 +271,7 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
           <div class="wide"><dt>Difference, relative to μ₀ Σ|I|</dt><dd id="aDiff">—</dd></div>
         </dl>
         <p class="flag" id="onLoop" hidden>A wire sits on the loop.<span>B·dl grows without limit there, so ∮B·dl is not defined. Move the wire or the loop a little.</span></p>
-        <p class="hint">Sign rule: curl the fingers of your right hand along the loop's direction; a current along your thumb counts as positive. For a counterclockwise loop that means out of the page. The loop color shows B·dl: green where B runs along the loop's direction, purple where it runs against it.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Sign rule: curl the fingers of your right hand along the loop's direction; a current along your thumb counts as positive. For a counterclockwise loop that means out of the page. The loop color shows B·dl: green where B runs along the loop's direction, purple where it runs against it.</p></details>
       </section>
       <section data-scene="wires">
         <h2>Wires</h2>
@@ -283,7 +294,7 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
       <section data-scene="wires" id="secForce">
         <h2>Force between currents</h2>
         <dl class="readout" id="fRead"></dl>
-        <p class="hint">Each wire sits in the field of the others and feels F/L = I × B per meter of its length. Parallel currents attract and opposite currents repel, with equal and opposite forces (Newton's third law).</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Each wire sits in the field of the others and feels F/L = I × B per meter of its length. Parallel currents attract and opposite currents repel, with equal and opposite forces (Newton's third law).</p></details>
       </section>
 
 
@@ -348,7 +359,7 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tLines" checked>Field lines</label>
           <label><input type="checkbox" id="tShade" checked>|B| shading</label>
@@ -358,6 +369,7 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
         </div>
         <div class="key" id="key"></div>
         <p class="hint" id="lineHint"></p>
+        </div></details>
       </section>
 
       <section>
@@ -380,12 +392,13 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
           <text x="165" y="108" text-anchor="middle">out of page</text>
           <text x="235" y="108" text-anchor="middle">into page</text>
         </svg>
-        <p class="hint">Point your right thumb along the current; your fingers curl the way B circles the wire. In the drawing: a current out of the page gives counterclockwise circles, into the page gives clockwise ones. For a loop, curl your fingers along the current and your thumb points along B through the middle.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Point your right thumb along the current; your fingers curl the way B circles the wire. In the drawing: a current out of the page gives counterclockwise circles, into the page gives clockwise ones. For a loop, curl your fingers along the current and your thumb points along B through the middle.</p></details>
       </section>
 
       <section>
-        <h2>Model</h2>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
         <p class="hint" id="modelHint"></p>
+        </div></details>
       </section>
     </aside>
   </main>

@@ -171,6 +171,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
 /* projector on a short screen: let the stage shrink to fit under the header */
 @media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -248,7 +259,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section>
         <h2>Free body diagram</h2>
         <dl class="readout" id="fbdBox"></dl>
-        <p class="hint">Drag the two markers on the chain to choose a piece. Only three forces act on it: the pulls at its two ends and its weight. Placed tip to tail they close into a triangle, so the piece is in equilibrium.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Drag the two markers on the chain to choose a piece. Only three forces act on it: the pulls at its two ends and its weight. Placed tip to tail they close into a triangle, so the piece is in equilibrium.</p></details>
       </section>
 
       <section>
@@ -258,7 +269,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <label id="bridgeWrap"><input type="checkbox" id="tBridge">Suspension bridge</label>
         </div>
         <dl class="readout" id="parBox"></dl>
-        <p class="hint">The parabola goes through both supports and has the same lowest height as the chain. A cable that carries a load spread evenly along the horizontal, like a bridge deck, hangs as a parabola. A chain carries its own weight spread evenly along its length, and that gives the catenary. For a shallow chain the two differ by about d³/(12L²), with d the sag and L the half span.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">The parabola goes through both supports and has the same lowest height as the chain. A cable that carries a load spread evenly along the horizontal, like a bridge deck, hangs as a parabola. A chain carries its own weight spread evenly along its length, and that gives the catenary. For a shallow chain the two differ by about d³/(12L²), with d the sag and L the half span.</p></details>
         <p class="hint" id="bridgeHint" hidden>Bridge drawing: the main cable is the parabola, assuming the deck's weight per horizontal meter is much larger than the cable's own weight (the cable's weight is ignored). The faint curve is the bare chain. The force readouts above are for the bare chain.</p>
       </section>
 
@@ -270,13 +281,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </div>
         <button type="button" class="btn" id="gwShape">Gateway proportions</button>
         <dl class="readout" id="archBox"></dl>
-        <p class="hint">Turn a hanging chain upside down and every pull becomes a push of the same size along the curve. An arch of uniform blocks in this shape carries its own weight in pure compression, with no bending: the line of thrust runs along the middle of every block.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Turn a hanging chain upside down and every pull becomes a push of the same size along the curve. An arch of uniform blocks in this shape carries its own weight in pure compression, with no bending: the line of thrust runs along the middle of every block.</p></details>
         <p class="hint" id="gwHint">Gateway Arch, St. Louis: 630 ft tall and 630 ft wide at the outside. Its legs are heavier than its top, so it is a weighted (flattened) catenary. The centroid curve on the original drawings is y = 693.8597 − 68.7672 cosh(0.0100333 x) ft for |x| ≤ 299.2239 ft (R. Osserman, Notices of the AMS 57, 220, 2010). The gold dashed curve is that formula scaled to this arch's span and rise.</p>
         <p class="hint" id="semiHint" hidden>Semicircle (qualitative): blocks in a half circle of the same span, with the dashed chain shape of the same span and rise. Hooke's rule: the arch stands if a hanging chain loaded like the arch fits inside the blocks. The dashed curve is a uniform chain, not the exact thrust line of these blocks, so read the red stretches as where the push wants to leave thin blocks. Heyman found that a semicircular arch needs a thickness of about 0.11 of its radius to stand.</p>
       </section>
 
       <section>
-        <h2>Plot data</h2>
+        <details class="fold"><summary>Plot data</summary><div class="foldbody">
         <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
         <p class="hint">Tables of the chain's shape and tension, the forces on the chosen piece, and the tension against sag curve, for readers who cannot see the drawings.</p>
         <div id="dataWrap" hidden>
@@ -284,10 +295,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <p class="hint dcap" id="dFcap"></p><div class="twrap"><table class="dtab" aria-labelledby="dFcap"><thead id="dFhead"></thead><tbody id="dFbody"></tbody></table></div>
           <p class="hint dcap" id="dGcap"></p><div class="twrap"><table class="dtab" aria-labelledby="dGcap"><thead id="dGhead"></thead><tbody id="dGbody"></tbody></table></div>
         </div>
+        </div></details>
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tReduce">Reduce motion</label>
         </div>
@@ -299,6 +311,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch dir"></i>Directrix</span>
         </div>
         <p class="hint" id="modelHint">Model: a perfectly flexible chain that does not stretch, with uniform mass per length λ, at rest. The curve is the exact catenary y = a cosh((x − x₀)/a) + c through both supports with arc length S. The links are drawn for looks; the chain is treated as continuous. Arch: rigid blocks, uniform weight per length, no friction limit considered. Keys on the drawing: 1 and 2 supports, 3 middle grip, 4 and 5 markers, arrows move, shift moves farther, + and − change S.</p>
+        </div></details>
       </section>
     </aside>
   </main>

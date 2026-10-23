@@ -120,6 +120,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .chips button, .proj, .spin, .seg button { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -178,7 +181,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div><div class="slider-head"><label for="sV">Battery voltage V</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="10" max="200" step="5"></div>
         <div><div class="slider-head"><label for="sRes">Resistance R</label><output id="oRes" for="sRes"></output></div><input type="range" id="sRes" min="0.2" max="5" step="0.1"></div>
         <dl class="readout" id="circOut"></dl>
-        <p class="hint">The capacitor charges as q = CV(1 − e<sup>−t/RC</sup>), so the current I = (V/R)e<sup>−t/RC</sup> dies away. Time runs about 10⁵ times slower than real. Ideal plates: the field between them is uniform and fringing is ignored; the wire is long and straight, 1 mm in radius.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">The capacitor charges as q = CV(1 − e<sup>−t/RC</sup>), so the current I = (V/R)e<sup>−t/RC</sup> dies away. Time runs about 10⁵ times slower than real. Ideal plates: the field between them is uniform and fringing is ignored; the wire is long and straight, 1 mm in radius.</p></details>
       </section>
 
       <section>

@@ -136,6 +136,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   .chips button, .btn, .proj, .spin { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -193,7 +196,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         </div>
         <label class="check"><input type="checkbox" id="walkVel"><span>Match a velocity graph instead</span></label>
         <dl class="readout"><div class="wide"><dt>Average distance from the target, last run</dt><dd id="walkScore">—</dd></div></dl>
-        <p class="hint">Press Start run, then drag the cart (or hold ← and →, with Shift to go faster) so its graph follows the dashed target for 10 s. The velocity and acceleration are worked out from the position samples, the way a motion detector does it, so quick jerks show up as spikes.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Press Start run, then drag the cart (or hold ← and →, with Shift to go faster) so its graph follows the dashed target for 10 s. The velocity and acceleration are worked out from the position samples, the way a motion detector does it, so quick jerks show up as spikes.</p></details>
       </section>
 
       <section>
@@ -227,7 +230,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the velocity and acceleration graphs, their readouts, the tangent lines, the areas, the stage settings and the a and v₀ from your fit, leaving the position graph, as from a motion detector. Work out v and a from it.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Blind hides the velocity and acceleration graphs, their readouts, the tangent lines, the areas, the stage settings and the a and v₀ from your fit, leaving the position graph, as from a motion detector. Work out v and a from it.</p></details>
       </section>
     </aside>
   </main>

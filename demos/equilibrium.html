@@ -111,6 +111,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .chips button, .proj { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -159,7 +162,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
-        <p class="hint">Blind hides the support forces, tension, friction, the torques and whether it will stay, and draws every arrow the same length. The masses and positions stay. Beams and ladders are rigid and uniform; strings and cables are massless; the pivot and hinge are frictionless.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Blind hides the support forces, tension, friction, the torques and whether it will stay, and draws every arrow the same length. The masses and positions stay. Beams and ladders are rigid and uniform; strings and cables are massless; the pivot and hinge are frictionless.</p></details>
       </section>
     </aside>
   </main>

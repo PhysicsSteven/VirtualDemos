@@ -155,6 +155,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .stage { height: 86vh; min-height: 660px; }
   .rail { overflow: visible; }
 }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -213,7 +224,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="wide"><dt>Band</dt><dd id="rBand">—</dd></div>
           <div class="wide"><dt>Check: λ × f</dt><dd id="rLf">—</dd></div>
         </dl>
-        <p class="hint">The slider is logarithmic: each step of 1 is ten times the frequency. Band edges are conventional, not sharp; X-rays and gamma rays overlap and are usually named by their source. Visible colors are approximate.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">The slider is logarithmic: each step of 1 is ten times the frequency. Band edges are conventional, not sharp; X-rays and gamma rays overlap and are usually named by their source. Visible colors are approximate.</p></details>
       </section>
 
       <section id="secPol">
@@ -246,7 +257,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           </dl>
           <p class="hint" style="margin-top:8px">An ideal polarizer passes only the component of E along its axis. For linear light at angle θ that gives Malus's law, I = I₀ cos²(θ − φ); circular light always passes half.</p>
         </div>
-        <p class="hint">Handedness uses the optics convention: right circular light turns clockwise as you face the oncoming wave (δ = −90°). Engineers (IEEE) call the same wave left handed, so check which convention a book uses.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Handedness uses the optics convention: right circular light turns clockwise as you face the oncoming wave (δ = −90°). Engineers (IEEE) call the same wave left handed, so check which convention a book uses.</p></details>
       </section>
 
       <section id="secEnergy">
@@ -264,7 +275,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>Pressure, reflected 2I/c</dt><dd id="rPr">—</dd></div>
         </dl>
         <p class="hint" id="ctx"></p>
-        <p class="hint">E₀ here is √(E<sub>0x</sub>² + E<sub>0y</sub>²), so I = ½cε₀E₀² holds for every polarization; circular light has |E| = E₀/√2 at all times. Pressures are for a surface facing the wave. Half the energy is in the electric field and half in the magnetic field.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">E₀ here is √(E<sub>0x</sub>² + E<sub>0y</sub>²), so I = ½cε₀E₀² holds for every polarization; circular light has |E| = E₀/√2 at all times. Pressures are for a surface facing the wave. Half the energy is in the electric field and half in the magnetic field.</p></details>
       </section>
 
       <section id="secAnt" hidden>
@@ -279,12 +290,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>Wavelength λ</dt><dd id="rLam2">—</dd></div>
         </dl>
         <p class="formula">P = p₀²ω⁴ / (12π ε₀ c³)</p>
-        <p class="hint">The dipole p = p₀ cos ωt points along the vertical axis. It sends nothing along its own axis and most at right angles to it; half power at 45°. Radiated power grows as ω⁴, so doubling f with the same p₀ gives 16 times the power.</p>
-        <p class="hint">Close in (r ≪ λ/2π) the field is nearly the dipole's own field, falling as 1/r³. Beyond about a wavelength the 1/r terms win: loops of E break off and move outward at c, with E, B and the direction of travel at right angles, a wave like the one on the Plane wave view.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">The dipole p = p₀ cos ωt points along the vertical axis. It sends nothing along its own axis and most at right angles to it; half power at 45°. Radiated power grows as ω⁴, so doubling f with the same p₀ gives 16 times the power.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Close in (r ≪ λ/2π) the field is nearly the dipole's own field, falling as 1/r³. Beyond about a wavelength the 1/r terms win: loops of E break off and move outward at c, with E, B and the direction of travel at right angles, a wave like the one on the Plane wave view.</p></details>
       </section>
 
       <section id="secShow">
-        <h2>Show</h2>
+        <details class="fold"><summary>Show</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tE" checked> E field</label>
           <label><input type="checkbox" id="tB" checked> B field (as cB)</label>
@@ -297,10 +308,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch s"></i>Poynting vector S = E × B/μ₀</span>
           <span><i class="swatch pol"></i>Polarizer transmission axis</span>
         </div>
+        </div></details>
       </section>
 
       <section>
-        <h2>Model</h2>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
         <p class="hint" id="modelWave">A plane wave in vacuum, exact: E as in the formula above and B = ẑ × E/c, so B is always at right angles to E, in phase with it, and |B| = |E|/c. In SI units B in tesla is about 3 × 10⁸ times smaller than E in V/m, so it is drawn as cB. The drawing is scaled so E₀ fills it and always shows 2.5 wavelengths; time is slowed so one period takes 2.5 s. S = E × B/μ₀ = |E|²/(μ₀c) along ẑ; its time average is I.</p>
         <p class="hint" id="modelAnt" hidden>Exact fields of an oscillating point dipole (length much less than λ), including the near field terms, in a plane through its axis. Lines are electric field lines, drawn as contours of the stream function sin²θ [sin(kr − ωt) + cos(kr − ωt)/kr]. Shading shows B, which points into or out of the page, multiplied by r so the far field shows evenly. A real half wave antenna has a slightly narrower pattern than sin²θ.</p>
         <div class="key" id="antKey" hidden>
@@ -308,6 +320,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch bin"></i>B into the page</span>
           <span><i class="swatch bout"></i>B out of the page</span>
         </div>
+        </div></details>
       </section>
     </aside>
   </main>
