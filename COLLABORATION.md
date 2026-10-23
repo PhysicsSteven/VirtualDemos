@@ -869,3 +869,7 @@ Every **Lab** section (Blind, Reduce motion) is now folded behind its heading, a
 - Checked: units tests pass; no page errors; no sideways scroll at 360 and 400 px; light and dark; Blind hides captions and names. The atom stage draws its electron clouds at a quarter of the resolution to keep phones smooth.
 
 **GPT, please verify:** the numbers in the Sources and approximations fold and the captions against the CORE block of `demos/units.html` (proton radius 0.84075 fm, carbon 12 charge radius 2.4702 fm, Everest 8,849 m, Lhotse 8,516 m, Nuptse 7,861 m, Makalu 8,485 m, Sun to Galactic Centre 26,670 ly, Voyager 1 about 173 au and Voyager 2 about 144 au in 2026); that the planet longitudes from `planetAt` for JD 2461337 agree with an ephemeris to about a degree; and that the comparison strip sizes are right.
+
+## Claude, 2026-10-23: Readings plots folded (sidebar pass, continued)
+
+Also folded: the plot, its fit and its data table in the Readings section of 15 demos sit behind **Plot and fit** (`details.plotfold`; a small script redraws the plot when it opens). The worksheets now graph the data themselves. Capture, Export to worksheet, Clear and the readings table stay in view. Note for key capture scripts in TeacherKeys: open the fold before clicking a plot control.

@@ -36,6 +36,10 @@ img { max-width: 100%; }
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+.rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
+.rail details.plotfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.plotfold[open] > summary { margin-bottom: 8px; }
+.rail details.plotfold > .foldbody { display: flex; flex-direction: column; gap: 10px; }
 </style>
 <title>Capacitors and Dielectrics</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -409,11 +413,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-k="Cf" aria-pressed="false">C vs x/s</button>
           <button type="button" data-k="Vd" aria-pressed="false">V vs d</button>
         </div>
+        <details class="plotfold"><summary>Plot and fit</summary><div class="foldbody">
         <div class="plotbox"><canvas id="fCan" role="img" aria-label="Plot of the captured readings with a least squares line and, below it, the residuals."></canvas></div>
         <dl class="readout fitout" id="fitOut"></dl>
         <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
         <div class="twrap" id="fitWrap" hidden><table class="rows" id="fitTbl"><caption class="sr">Plotted readings, fitted line and residuals</caption><thead></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary><p class="hint">The fit is a least squares line y = a + bx with equal weights, through your captured rows only. The standard errors come from the scatter of the rows about the line; with ideal simulated values that scatter is only the display rounding.</p></details>
+        </div></details>
       </section>
 
       <section>
@@ -2495,6 +2501,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
 })();
+</script>
+<script>/* vd-plotfold: a plot folded in the sidebar is drawn when it opens (its size is zero while folded) */
+document.querySelectorAll('details.plotfold').forEach((d) => d.addEventListener('toggle', () => { if (!d.open) return; const b = d.querySelector('[data-plot][aria-pressed="true"]'); if (b) b.click(); else window.dispatchEvent(new Event('resize')); }));
 </script>
 </body>
 </html>

@@ -49,6 +49,10 @@ body { margin: 0; }
 .rail details.fold[open] > summary::after { content: "−"; }
 .rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
+.rail details.plotfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.plotfold[open] > summary { margin-bottom: 8px; }
+.rail details.plotfold > .foldbody { display: flex; flex-direction: column; gap: 10px; }
 </style>
 <title>Stress and Strain</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -242,10 +246,12 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <details class="more"><summary>More about this</summary>
           <p class="hint">Capture stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire's diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).</p>
         </details>
+        <details class="plotfold"><summary>Plot and fit</summary><div class="foldbody">
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Load against extension for the captured rows, with a least squares line and residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
         <div class="twrap" id="fitWrap" hidden><table class="rows" id="fitTbl"><caption class="sr">Plotted points</caption><thead><tr><th>ΔL (mm)</th><th>F (N)</th><th>fit (N)</th><th>resid. (N)</th></tr></thead><tbody></tbody></table></div>
+        </div></details>
       </section>
 
       <section>
@@ -550,6 +556,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   tokens(); new ResizeObserver(resize).observe($('scene')); sync(); readouts(); renderRows(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
 })();
+</script>
+<script>/* vd-plotfold: a plot folded in the sidebar is drawn when it opens (its size is zero while folded) */
+document.querySelectorAll('details.plotfold').forEach((d) => d.addEventListener('toggle', () => { if (!d.open) return; const b = d.querySelector('[data-plot][aria-pressed="true"]'); if (b) b.click(); else window.dispatchEvent(new Event('resize')); }));
 </script>
 </body>
 </html>

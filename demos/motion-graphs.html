@@ -35,6 +35,10 @@ body { margin: 0; }
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+.rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
+.rail details.plotfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.plotfold[open] > summary { margin-bottom: 8px; }
+.rail details.plotfold > .foldbody { display: flex; flex-direction: column; gap: 10px; }
 </style>
 <title>Motion Graphs</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -245,6 +249,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>t (s)</th><th>x (m)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <details class="plotfold"><summary>Plot and fit</summary><div class="foldbody">
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Captured x against t with a least squares parabola and a strip of residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
@@ -253,6 +258,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <p class="hint">Capture stores the time and position shown at the marker (t to 0.01 s, x to 0.01 m). Cells can be edited.</p>
           <p class="hint">The fit is x = x₀ + v₀t + ½at² by least squares over your rows, for one stage of constant acceleration. Capture rows from one stage only.</p>
         </details>
+        </div></details>
       </section>
 
       <section>
@@ -818,6 +824,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();
+</script>
+<script>/* vd-plotfold: a plot folded in the sidebar is drawn when it opens (its size is zero while folded) */
+document.querySelectorAll('details.plotfold').forEach((d) => d.addEventListener('toggle', () => { if (!d.open) return; const b = d.querySelector('[data-plot][aria-pressed="true"]'); if (b) b.click(); else window.dispatchEvent(new Event('resize')); }));
 </script>
 </body>
 </html>
