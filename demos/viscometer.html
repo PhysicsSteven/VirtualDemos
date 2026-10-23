@@ -20,6 +20,10 @@ body { margin: 0; }
 .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
 .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
 /* /vd-qr */
+/* in scene setup controls fade away while the run plays and come back on pause or reset */
+#tray { transition: opacity 0.35s ease, visibility 0.35s; }
+#tray.away { opacity: 0; visibility: hidden; }
+@media (prefers-reduced-motion: reduce) { #tray { transition: none; } }
 </style>
 <title>Falling Ball Viscometer</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -458,7 +462,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     else { capStatus(`Mystery liquid off: it was η = ${S.myst.eta.toFixed(3)} Pa·s.`); S.myst = null; }
     edit();
   });
-  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : S.t > 0 && !S.done ? 'Resume' : 'Drop the ball'; $('go').classList.toggle('attn', !on); }
+  function setRun(on) { S.run = on; $('tray').classList.toggle('away', on); $('tray').inert = on; $('go').textContent = on ? 'Pause' : S.t > 0 && !S.done ? 'Resume' : 'Drop the ball'; $('go').classList.toggle('attn', !on); }
   $('go').addEventListener('click', () => {
     if (S.done || (!S.run && S.t === 0)) { reset(); if (reduce) { S.t = S.gate.t2; S.t1 = S.gate.t1; S.done = true; const vt = terminal(dm(), rhoB(), FL(), S.D); S.s = { x: up() ? MARK1 - (LTUBE - dm() / 2) : MARK2, v: vt }; draw(); readouts(); return; } }
     setRun(!S.run);
