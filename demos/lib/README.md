@@ -115,4 +115,4 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 
 ## Being moved
 
-Nothing at the moment.
+Batch 4 (the Acoustics module), from 2026-10-24 00:00: acoustic-levitation, chladni, doppler, kundts-tube, resonators, room-acoustics, sound-intensity, sound-waves, standing-waves, timbre, two-speaker, ultrasound, wave-power. The module look (`tools/look/`) moves into the library as `look.css` and `gear.js`.
