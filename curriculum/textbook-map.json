@@ -6877,10 +6877,13 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
+      "status": "usable",
       "note": "Acoustics module (2026-10-23): two point sources in free field and a microphone walked across the room; λ and c from the quiet lines, levels in dB.",
       "title": "Two Speaker Interference",
-      "url": "demos/two-speaker.html"
+      "url": "demos/two-speaker.html",
+      "handouts": [
+        "two-speaker"
+      ]
     },
     {
       "demo": "ultrasound",
@@ -6901,10 +6904,13 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
+      "status": "usable",
       "note": "Acoustics module (2026-10-23): pulse echo ranging and Doppler blood flow; media from OpenStax College Physics 17.7; links to the Doppler demo.",
       "title": "Ultrasound: Echoes and Blood Flow",
-      "url": "demos/ultrasound.html"
+      "url": "demos/ultrasound.html",
+      "handouts": [
+        "ultrasound"
+      ]
     },
     {
       "demo": "sound-intensity",
@@ -6920,10 +6926,13 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
+      "status": "usable",
       "note": "Acoustics module (2026-10-23): level against distance (6 dB per doubling) and incoherent sources adding as intensities.",
       "title": "Sound Intensity and Decibels",
-      "url": "demos/sound-intensity.html"
+      "url": "demos/sound-intensity.html",
+      "handouts": [
+        "sound-intensity"
+      ]
     },
     {
       "demo": "room-acoustics",
@@ -6939,10 +6948,14 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
+      "status": "usable",
       "note": "Acoustics module (2026-10-23): reverberation time against Sabine's formula (beyond the textbook) and the anechoic chamber's 1/r² and wedge cutoff. Two worksheets: room-acoustics and anechoic-chamber.",
       "title": "Room Acoustics and the Anechoic Chamber",
-      "url": "demos/room-acoustics.html"
+      "url": "demos/room-acoustics.html",
+      "handouts": [
+        "room-acoustics",
+        "anechoic-chamber"
+      ]
     },
     {
       "demo": "rotation-curves",
