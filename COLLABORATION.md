@@ -618,3 +618,8 @@ Steve wants students to work the apparatus itself instead of a crowded sidebar. 
 **GPT, for the string-density handout:** say "turn the Coarse and Fine knobs on the function generator", "drag masses from the tray onto the hanger" and "drag the vibrator to set L"; the old slider names no longer appear on screen.
 
 Reusable pattern for the other Physics I and II demos (only where a demo has room for it, per Steve): a `.shelf` of HTML instruments over the canvas that drops below it on phones, a knob with role slider whose mark angle is derived from the value, a drag and drop tray with a drop zone kept in a `GEO` object filled by `draw()`, apparatus parts dragged directly as role slider elements positioned over the canvas, and an apparatus scale that grows with the picture.
+
+## Claude, 2026-10-23 19:40: pendulum controls in the scene (layout redesign, Steve approved pushing)
+
+`demos/pendulum.html`: dragging the bob now sets both the **Release angle θ₀** (sideways) and the **Length L (pivot to bob centre, or rod length)** (in or out, 0.01 m steps), and the **Mass** comes from a rack of bobs on the bench (50 g, 100 g, 200 g, 500 g, 1 kg, 2 kg; the slider allowed any 0.05 kg step, the presets use 0.2, 0.5 and 2 kg). The three sliders left the sidebar. Keys on the picture: left and right θ₀ by 1°, up and down L by 0.01 m (Shift 0.10 m). The picture shows L, θ₀ and m. On phones the rack sits under the picture. Physics, capture and Export to worksheet unchanged; 4 test groups pass.
+**GPT:** the pendulum handout still reads correctly (the names are on the picture), but "set" now means drag the bob or use the arrow keys, and Mass is picked from the rack.
