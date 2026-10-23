@@ -326,7 +326,9 @@ table.rows input:focus { border-color: var(--accent); }
   $('gSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (!b) return; S.gKey = b.dataset.g; if (S.gKey === 'mystery') S.mystery = Math.round((2 + Math.random() * 20) * 100) / 100; else { S.mystery = null; S.g = +S.gKey; } changed(); fit(); });
   $('damp').addEventListener('change', (e) => { S.damp = e.target.checked; draw(); });
   for (const b of document.querySelectorAll('[data-plot]')) b.addEventListener('click', () => { S.plot = b.dataset.plot; sync(); fit(); });
-  function setRun(on) { S.run = on; { const away = on || S.t > 0; $('rack').classList.toggle('away', away); $('rack').inert = away; } $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Release'; $('go').classList.toggle('attn', !on); }
+  /* the Set up card fades while the pendulum swings and comes back on Pause; its title drags it anywhere over the picture */
+  const card = VD.setupCard($('rack'));
+  function setRun(on) { S.run = on; card.away(on); $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Release'; $('go').classList.toggle('attn', !on); }
   $('go').addEventListener('click', () => setRun(!S.run));
   $('hold').addEventListener('click', () => { release(); setRun(false); draw(); readouts(); });
   let last = performance.now();
@@ -356,7 +358,7 @@ table.rows input:focus { border-color: var(--accent); }
     changed(); S.st.th = Math.sign(a || 1) * S.A * Math.PI / 180; draw(); }
   function setLength(x, y) { const th = S.st.th; S.L = Math.max(0.1, Math.min(2, Math.round((Math.hypot(x - geo.px, y - geo.py) - grab) / scaleFor(S.A) * 100) / 100));
     changed(); S.st.th = th; draw(); }
-  can.addEventListener('pointerdown', (e) => { if (!geo) return; const [x, y] = local(e); const L = S.L * geo.sc, bx = geo.px + L * Math.sin(S.st.th), by = geo.py + L * Math.cos(S.st.th); if (Math.hypot(x - bx, y - by) < 40 * ps()) { grab = Math.hypot(x - geo.px, y - geo.py) - L; drag = true; $('rack').classList.add('ghost'); mode = null; x0 = x; y0 = y; can.setPointerCapture(e.pointerId); } });
+  can.addEventListener('pointerdown', (e) => { if (!geo) return; const [x, y] = local(e); const L = S.L * geo.sc, bx = geo.px + L * Math.sin(S.st.th), by = geo.py + L * Math.cos(S.st.th); if (Math.hypot(x - bx, y - by) < 40 * ps()) { grab = Math.hypot(x - geo.px, y - geo.py) - L; drag = true; card.ghost(true); mode = null; x0 = x; y0 = y; can.setPointerCapture(e.pointerId); } });
   can.addEventListener('pointermove', (e) => { if (!drag) return; const [x, y] = local(e);
     if (!mode) { const dx = x - x0, dy = y - y0; if (Math.hypot(dx, dy) < 6 * ps()) return; const th = S.st.th; mode = Math.abs(dx * Math.sin(th) + dy * Math.cos(th)) > Math.abs(dx * Math.cos(th) - dy * Math.sin(th)) ? 'L' : 'A'; }
     mode === 'L' ? setLength(x, y) : setAngle(x, y); });
@@ -364,7 +366,7 @@ table.rows input:focus { border-color: var(--accent); }
   $('sA').addEventListener('input', (e) => { S.A = +e.target.value; changed(); });
   for (const b of document.querySelectorAll('[data-step]')) b.addEventListener('click', () => { const d = +b.dataset.d;
     if (b.dataset.step === 'L') S.L = Math.max(0.1, Math.min(2, Math.round((S.L + d) * 100) / 100)); else S.A = Math.max(1, Math.min(maxA(), S.A + d)); changed(); });
-  const endDrag = () => { drag = false; $('rack').classList.remove('ghost'); }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  const endDrag = () => { drag = false; card.ghost(false); }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
   can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.A = Math.max(1, Math.min(maxA(), S.A + (e.key === 'ArrowRight' ? 1 : -1))); changed(); }
     else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { S.L = Math.max(0.1, Math.min(2, Math.round((S.L + (e.key === 'ArrowDown' ? 1 : -1) * (e.shiftKey ? 0.1 : 0.01)) * 100) / 100)); changed(); } else return; e.preventDefault(); });
 

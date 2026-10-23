@@ -33,8 +33,9 @@ Called by the demo:
 | Helper | Use |
 |---|---|
 | `VD.projector({ onChange })` | wires `#proj`, restores the saved choice (`vd-projector`), and calls `onChange` on the next frame after each change; returns `set(on)` |
+| `VD.setupCard(card, { grip })` | the Set up card on the picture. Returns `away(on)` (fades it and makes it inert while the apparatus runs: call `away(false)` on Pause so it comes back, as Steve asked), `ghost(on)` (see through while something under it is dragged) and `reset()`. Where the card floats over the picture, its grip (default: its first child, given a ⠿ mark) drags it anywhere inside the picture; arrow keys on the grip move it 10 px (Shift 40 px); a double click puts it back. On phones, where the card sits under the picture, it stays put. The demo still places the card; the drag is a CSS translate on top. |
 
-Phase two helpers (presets, step buttons, readings, Export to worksheet, the setup card) are added when a demo is being edited anyway, each behind the same checks. Planned for the setup card, from Steve: it comes back as soon as the run is paused, and it can be dragged anywhere over the picture.
+Phase two helpers (presets, step buttons, readings, Export to worksheet) are added when a demo is being edited anyway, each behind the same checks. Pendulum uses `VD.setupCard`; other demos with a Set up card switch to it when they are next edited.
 
 ## Rules
 

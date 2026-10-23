@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §15.4, with the rotational dyn
 
 **Using the demo.**
 
-- Drag the bob sideways to set the **Release angle θ₀**, or up and down along the string to set the **Length L (pivot to bob centre, or rod length)**; pick the **Mass** from the rack of bobs. Keys on the picture: ← → θ₀, ↑ ↓ L. The Set up card on the picture has sliders and step buttons for exact values; it fades away while the pendulum swings and comes back when you pause.
+- Drag the bob sideways to set the **Release angle θ₀**, or up and down along the string to set the **Length L (pivot to bob centre, or rod length)**; pick the **Mass** from the rack of bobs. Keys on the picture: ← → θ₀, ↑ ↓ L. The Set up card on the picture has sliders and step buttons for exact values; it fades away while the pendulum swings and comes back when you pause, and you can drag it by its title to anywhere on the picture.
 - Capture stores L, θ₀ and the last full period from the photogate. T² against L uses bob rows with θ₀ ≤ 10°: slope 4π²/g. T against θ₀ shows how far large swings depart from T₀.
 - Blind hides the predicted periods and g from the fit; the photogate, the settings and the trace stay. The Mystery planet always hides its g.
 

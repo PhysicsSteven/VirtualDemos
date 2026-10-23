@@ -5,7 +5,7 @@
      .vd-qr          the QR button: large on click, removes itself when the page is not the hosted copy it points to
      #vdReset        Reset all: reloads the page, asking first when readings would be lost
      details.plotfold  a plot folded in the sidebar is drawn when it opens (its size is zero while folded)
-   Helpers a demo calls itself: VD.projector. See demos/lib/README.md. Never change what an existing helper does:
+   Helpers a demo calls itself: VD.projector, VD.setupCard. See demos/lib/README.md. Never change what an existing helper does:
    add an option or a new helper instead, and rerun tools/vdcheck.cjs on every moved demo after any edit here. */
 (function () {
   'use strict';
@@ -63,6 +63,46 @@
     btn.addEventListener('click', function () { set(btn.getAttribute('aria-pressed') !== 'true'); });
     try { if (localStorage.getItem('vd-projector') === 'on') set(true); } catch (_) {}
     return set;
+  };
+
+  /* The Set up card: controls on the picture that are set before a run. VD.setupCard(card, { grip }) returns
+     { away(on), ghost(on) }:
+       away(true)   the card fades away and goes inert while the apparatus runs; away(false) brings it back (call it on Pause)
+       ghost(true)  the card turns see through and lets the pointer pass while something under it is dragged
+     Where the card floats over the picture (position absolute), its grip (default: its first child) drags it anywhere over
+     the picture, the arrow keys on the grip move it 10 px (Shift: 40 px), and a double click puts it back. The move is a
+     CSS translate on top of wherever the demo places the card, and it stays inside the picture. On phones, where the
+     card sits under the picture, it does not move. */
+  VD.setupCard = function (card, o) {
+    o = o || {};
+    var grip = typeof o.grip === 'string' ? card.querySelector(o.grip) : o.grip || card.firstElementChild, dx = 0, dy = 0;
+    var floating = function () { return getComputedStyle(card).position === 'absolute'; };
+    function place(x, y) {
+      card.style.translate = '';
+      var p = (card.offsetParent || card.parentElement).getBoundingClientRect(), r = card.getBoundingClientRect();
+      x = Math.max(p.left - r.left, Math.min(p.right - r.right, x)); y = Math.max(p.top - r.top, Math.min(p.bottom - r.bottom, y));
+      dx = Math.round(x); dy = Math.round(y); card.style.translate = dx || dy ? dx + 'px ' + dy + 'px' : '';
+    }
+    function mark() { card.classList.toggle('vd-movable', floating()); if (!floating() && (dx || dy)) { dx = dy = 0; card.style.translate = ''; } }
+    if (grip) {
+      grip.classList.add('vd-grip'); grip.setAttribute('tabindex', '0'); grip.setAttribute('role', 'button');
+      grip.setAttribute('aria-label', (grip.textContent.trim() ? grip.textContent.trim() + '. ' : '') + 'Drag, or use the arrow keys, to move this card; double click to put it back');
+      var sx = 0, sy = 0, ox = 0, oy = 0, on = false;
+      grip.addEventListener('pointerdown', function (e) { if (!floating() || e.button) return; on = true; sx = e.clientX; sy = e.clientY; ox = dx; oy = dy; grip.setPointerCapture(e.pointerId); card.classList.add('vd-dragging'); e.preventDefault(); });
+      grip.addEventListener('pointermove', function (e) { if (on) place(ox + e.clientX - sx, oy + e.clientY - sy); });
+      var end = function () { on = false; card.classList.remove('vd-dragging'); };
+      grip.addEventListener('pointerup', end); grip.addEventListener('pointercancel', end);
+      grip.addEventListener('dblclick', function () { place(0, 0); });
+      grip.addEventListener('keydown', function (e) {
+        var k = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, -1], ArrowDown: [0, 1] }[e.key]; if (!k || !floating()) return;
+        var s = e.shiftKey ? 40 : 10; place(dx + k[0] * s, dy + k[1] * s); e.preventDefault(); e.stopPropagation(); });
+      mark(); window.addEventListener('resize', function () { mark(); if (dx || dy) place(dx, dy); });
+    }
+    return {
+      away: function (on) { card.classList.toggle('away', !!on); card.inert = !!on; },
+      ghost: function (on) { card.classList.toggle('ghost', !!on); },
+      reset: function () { place(0, 0); },
+    };
   };
 
   function wire() {
