@@ -619,16 +619,16 @@ Steve wants students to work the apparatus itself instead of a crowded sidebar. 
 
 Reusable pattern for the other Physics I and II demos (only where a demo has room for it, per Steve): a `.shelf` of HTML instruments over the canvas that drops below it on phones, a knob with role slider whose mark angle is derived from the value, a drag and drop tray with a drop zone kept in a `GEO` object filled by `draw()`, apparatus parts dragged directly as role slider elements positioned over the canvas, and an apparatus scale that grows with the picture.
 
-## Claude, 2026-10-23 19:40: pendulum controls in the scene (layout redesign, Steve approved pushing)
+## Claude, 2026-10-23: pendulum controls in the scene (layout redesign, Steve approved pushing)
 
 `demos/pendulum.html`: dragging the bob now sets both the **Release angle θ₀** (sideways) and the **Length L (pivot to bob centre, or rod length)** (in or out, 0.01 m steps), and the **Mass** comes from a rack of bobs on the bench (50 g, 100 g, 200 g, 500 g, 1 kg, 2 kg; the slider allowed any 0.05 kg step, the presets use 0.2, 0.5 and 2 kg). The three sliders left the sidebar. Keys on the picture: left and right θ₀ by 1°, up and down L by 0.01 m (Shift 0.10 m). The picture shows L, θ₀ and m. On phones the rack sits under the picture. Physics, capture and Export to worksheet unchanged; 4 test groups pass.
 **GPT:** the pendulum handout still reads correctly (the names are on the picture), but "set" now means drag the bob or use the arrow keys, and Mass is picked from the rack.
 
-## Claude, 2026-10-23 19:50: springs sidebar tidied (layout redesign)
+## Claude, 2026-10-23: springs sidebar tidied (layout redesign)
 
 Springs already had its controls on the picture (the k, m and b grips), so only the sidebar changed: **Time and plots** and **Display** are folded behind their headings (click to open), and seven long fixed hints sit behind **More about this**. Every control keeps its name and id; the sidebar is about a third shorter. Reusable: a `details.fold` section and a `details.more` hint, same CSS in each demo.
 
-## Claude, 2026-10-23 20:00: stress-strain load from a tray of slotted masses (layout redesign)
+## Claude, 2026-10-23: stress-strain load from a tray of slotted masses (layout redesign)
 
 `demos/stress-strain.html`: the **Hanging mass** slider is replaced by a tray of slotted masses over the bottom of the wire's column (100 g, 200 g, 500 g, 1 kg, 2 kg, 5 kg, 10 kg, 20 kg; under the picture on phones). Click one to hang it; **Take off the last mass** removes the last one hung; **Take all the load off** and **New wire** are unchanged, and up and down arrows on the picture still add or take off 0.1 kg (Shift 1 kg). The most the hanger takes is still 1.15 × the breaking load. Loading still follows the curve in small steps and unloading a straight line, so the physics is unchanged; 6 test groups pass. **GPT:** in the stress-strain handout, "set **Hanging mass**" now means hang masses from the tray.
 
@@ -636,11 +636,11 @@ Springs already had its controls on the picture (the k, m and b grips), so only 
 
 - Filled answer keys for all 17 Physics I worksheets are in the private TeacherKeys repo, `worksheet-keys/` (see its README). Nothing from them is in this repo. Eleven use real demo runs sent with Export to worksheet; the scripts that drive the demos are there too, and the Physics II thread uses the same tools.
 
-## Claude, 2026-10-23 20:10: rotational-dynamics hanging mass from slotted masses (layout redesign)
+## Claude, 2026-10-23: rotational-dynamics hanging mass from slotted masses (layout redesign)
 
 `demos/rotational-dynamics.html`: the **Hanging mass m** slider is replaced by slotted masses in the empty top corner of the side view (5, 10, 20, 50 and 100 g; under the picture on phones), with **Take off the last mass** and **Take off all masses**. m is a 5 g hanger (the old slider's least value) plus what hangs on it, at most 200 g (the old maximum), so every value the slider allowed can still be set in 5 g steps; it starts at hanger + 20 + 20 + 5 = 50 g as before. On the picture the up arrow hangs 5 g and the down arrow takes off the last mass. Physics unchanged; 4 test groups pass. **GPT:** the rotational dynamics handout's "set **Hanging mass m**" now means hang slotted masses.
 
-## Claude, 2026-10-23 20:20: viscometer box of balls (layout redesign)
+## Claude, 2026-10-23: viscometer box of balls (layout redesign)
 
 `demos/viscometer.html`: the Ball section left the sidebar for a box of balls on the bench (under the picture on phones): the **Steel / Glass / Nylon** choice and every **Ball diameter d** from 1.0 to 10.0 mm in 0.5 mm steps (the old slider's values), each drawn at 2.4 px per mm; click one to pick the next ball. Each button's label is "Ball diameter d 6.5 mm" and so on. Liquid, tube and the rest unchanged; physics unchanged, 6 test groups pass. **GPT:** in the viscometer handout, "set **Ball diameter d**" now means pick that ball from the box.
 ## Claude, 2026-10-23 19:45: Acoustics module (Steve asked)
@@ -649,23 +649,23 @@ Springs already had its controls on the picture (the k, m and b grips), so only 
 - Map: a course `acoustics` with units of requirement `module`; ch 16 and 17 sections now have course acoustics. 16.3 and 16.6 keep their Physics II unit and name the acoustics one in a new `unit_in` field; a unit can list demos with no section in `demos`. Policy note added; test_textbook_map.cjs updated for both. The resonators, timbre and acoustic-levitation handouts are now linked from the map (labels Speed of Sound, Timbre and Harmonics, Acoustic Levitation in HANDOUT_TOPIC).
 - The Physics II tile now counts only Physics II demos (24, as its page says; it counted e-over-m, which sits in a Physics II section but is not in the course).
 
-## Claude, 2026-10-23 20:30: resistivity supply knobs (layout redesign)
+## Claude, 2026-10-23: resistivity supply knobs (layout redesign)
 
 `demos/resistivity.html`: the three sliders left the sidebar. **Length between the clips L** is set by dragging the sliding clip (already possible) or the left and right arrows on the picture; **Supply current I** (0.05 A a click, 0.05 to 1 A) and **Wire temperature** (5 °C a click, 0 to 200 °C) are knobs on a supply panel that sits where the supply was drawn on the bench, with green readouts (arrow keys, Page Up/Down, Home/End, mouse wheel). The Inside the wire view hides the panel and gets **Current −0.05 A** / **Current +0.05 A** buttons in its own section; Cold stage is unchanged. Same values as the sliders; physics unchanged, 11 test groups pass. **GPT:** in the resistivity handout, "set **Supply current I**" and "**Wire temperature**" now mean turn the supply's knobs, and L means drag the clip.
 
-## Claude, 2026-10-23 20:40: wire-force knob panel, and a reusable knob helper (layout redesign)
+## Claude, 2026-10-23: wire-force knob panel, and a reusable knob helper (layout redesign)
 
 `demos/wire-force.html`: **Current I**, **Length of wire in the field L**, **Angle between the wire and B**, **Turns N** and **Magnet field B** moved from the sidebar to a knob panel at the bottom of the picture (under it on phones), each with its label and a green readout; the same rows still show and hide with the setup (Turns N only for the loop, B hidden for the mystery magnet). Same ranges and steps; 5 test groups pass.
 Reusable: the panel is plain markup (`<div class="instr">` holding the demo's own `label`, range `input` and `output`), and a small `vd-knobs` block (CSS plus about 20 lines of JS, copied as is) turns every range inside `.instr` into a knob: one step per 15° of turn, arrows, Page Up/Down, Home/End, mouse wheel. The range input stays the source of truth (the knob dispatches its `input` event), so a demo's own code does not change. **GPT:** in the wire-force handout, "set" these five now means turn their knobs.
 
-## Claude, 2026-10-23 20:50: forces knob panel (layout redesign)
+## Claude, 2026-10-23: forces knob panel (layout redesign)
 
 `demos/forces.html`: the seven sliders (**Ramp angle θ**, **Block mass m**, **Static friction μs**, **Kinetic friction μk**, **Applied force F**, **Angle of F above the surface**, **Hanging mass m₂ (0 = none)**) are knobs on a panel over the top of the scene, using the vd-knobs block from wire-force (a `compact` size added); the ramp is drawn below the panel, so nothing hides it even at 60°. The Mystery surface still hides the two friction knobs. Physics unchanged; 8 test groups pass. **GPT:** "set" these in the forces handout now means turn their knobs.
 
-## Claude, 2026-10-23 21:00: polarization sidebar tidied (layout redesign)
+## Claude, 2026-10-23: polarization sidebar tidied (layout redesign)
 
 `demos/polarization.html` already turns each element by dragging its disk on the picture, and the picture is full, so only the sidebar changed: the **Model** section is folded behind its heading and one long hint sits behind **More about this**. No control changed. (There is no validation test for this demo.)
 
-## Claude, 2026-10-23 21:10: capacitors sidebar tidied (layout redesign)
+## Claude, 2026-10-23: capacitors sidebar tidied (layout redesign)
 
 `demos/capacitors.html` already had grips on the picture for d, A, x/s and the battery voltage (and keys), so the duplicate sliders **Battery voltage Vb**, **Separation d**, **Plate area A** and **Inserted x/s** now sit folded under **Exact values** in the Plates section, after a short line saying which grip sets what. **Display** is folded and six long hints sit behind **More about this**. Every control keeps its id and name; the sidebar is a third shorter; 13 test groups pass.
