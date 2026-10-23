@@ -11,11 +11,11 @@ Measure orbital size and period, infer the central mass and test how orbital spe
 
 ## Background
 
-For a light body orbiting central mass M (§13.5),
+For a light body orbiting central mass $$M$$ (§13.5),
 
 $$T^2=\frac{4\pi^2}{GM}a^3.$$
 
-Here a is the semimajor axis, not the instantaneous distance from the star. For a bound orbit (§§13.3–13.4),
+Here $$a$$ is the semimajor axis, not the instantaneous distance from the star. For a bound orbit (§§13.3–13.4),
 
 $$\frac{E}{m}=-\frac{GM}{2a},\qquad v^2=GM\left(\frac{2}{r}-\frac1a\right).$$
 
@@ -23,9 +23,9 @@ Angular-momentum conservation gives equal swept areas in equal times and faster 
 
 ## Before the lab
 
-1. How should the period change if a doubles at fixed M?
+1. How should the period change if $$a$$ doubles at fixed $$M$$?
 2. Why is the star generally at a focus rather than the center of an ellipse?
-3. What is the expected slope of T² against a³, and how does it determine M?
+3. What is the expected slope of $$T^2$$ against $$a^3$$, and how does it determine $$M$$?
 
 ## Safety
 
@@ -33,17 +33,17 @@ For an analogous real rotating apparatus, follow the instructor's speed limits a
 
 ## Procedure
 
-**Third-law scan.** Make five distinct bound orbits around the same central mass. For each, measure the full major-axis length and time one complete revolution between passages of the same reference point in the same direction. Divide the measured major axis by two to obtain a.
+**Third-law scan.** Make five distinct bound orbits around the same central mass. For each, measure the full major-axis length and time one complete revolution between passages of the same reference point in the same direction. Divide the measured major axis by two to obtain $$a$$.
 
 **Eccentric orbit.** Choose one clear ellipse. Compare distances and speeds at periapsis and apoapsis, and compare areas swept in equal time intervals.
 
-**Central mass.** Repeat a shorter size-period scan at a different M. Compare the fitted slopes and inferred mass ratio.
+**Central mass.** Repeat a shorter size-period scan at a different $$M$$. Compare the fitted slopes and inferred mass ratio.
 
-**Using the virtual apparatus.** Enable **Blind: hide predictions and answers**. Begin with **Earth**, **Mars**, **Mercury** and **Circular orbit**, then drag the launch point or velocity arrow to obtain additional distinct bound orbits. Use **Reset** between runs. Enable **Ruler**, placing its endpoints at opposite ends of the major axis; **Ruler point** lets the arrow keys move a selected endpoint. Use **Zero timer**, **Start timer** and **Stop timer** for one complete revolution. Press **Capture reading** and **Export CSV**. Its a value is half your ruler distance, not a theoretical orbital element. Use **Third law** and **Your readings** for the comparison. Change **Star mass M** only between scans, recording whether **Keep the orbit's shape when M changes** is selected. Reveal **Foci and axis** and **Sweep wedges** after making your own measurements.
+**Using the virtual apparatus.** Enable **Blind: hide predictions and answers**. Begin with **Earth**, **Mars**, **Mercury** and **Circular orbit**, then drag the launch point or velocity arrow to obtain additional distinct bound orbits. Use **Reset** between runs. Enable **Ruler**, placing its endpoints at opposite ends of the major axis; **Ruler point** lets the arrow keys move a selected endpoint. Use **Zero timer**, **Start timer** and **Stop timer** for one complete revolution. Press **Capture reading** and **Export CSV**. Its $$a$$ value is half your ruler distance, not a theoretical orbital element. Use **Third law** and **Your readings** for the comparison. Change **Star mass M** only between scans, recording whether **Keep the orbit's shape when M changes** is selected. Reveal **Foci and axis** and **Sweep wedges** after making your own measurements.
 
 ## Data
 
-| Orbit | M (solar masses) | Major-axis ruler distance (AU) | a (AU) | T (yr) | a³ (AU³) | T² (yr²) |
+| Orbit | $$M$$ (solar masses) | Major-axis ruler distance (AU) | $$a$$ (AU) | $$T$$ (yr) | $$a^3$$ (AU³) | $$T^2$$ (yr²) |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 | | | | | | | |
@@ -53,20 +53,20 @@ Add all orbits and keep the two central-mass scans separate. Record your referen
 
 ## Analysis
 
-1. Fit T² against a³. In the simulation's AU, year and solar-mass units, infer M = 1/slope.
+1. Fit $$T^2$$ against $$a^3$$. In the simulation's AU, year and solar-mass units, infer $$M = 1/\text{slope}$$.
 2. Inspect intercept and residuals for timing or ruler-placement bias. Compare results using near-circular and eccentric orbits.
-3. For the eccentric orbit, test r_p v_p = r_a v_a and compare with the energy relation.
+3. For the eccentric orbit, test $$r_p v_p = r_a v_a$$ and compare with the energy relation.
 4. Compare fitted slopes at the two central masses. Explain why escape trajectories do not belong on this period plot.
 
 ## Uncertainty
 
-Use ruler placement and time-crossing resolution. The fractional errors in a³ and T² are approximately 3δa/a and 2δT/T. Eccentric orbits make major-axis placement and timing near periapsis harder. Do not use the star-to-planet separation as a substitute for a, and do not count several revolutions as one.
+Use ruler placement and time-crossing resolution. The fractional errors in $$a^3$$ and $$T^2$$ are approximately $$3\,\delta a/a$$ and $$2\,\delta T/T$$. Eccentric orbits make major-axis placement and timing near periapsis harder. Do not use the star-to-planet separation as a substitute for $$a$$, and do not count several revolutions as one.
 
 ## Questions
 
-1. Why can an ellipse have the same period as a circle with the same a?
+1. Why can an ellipse have the same period as a circle with the same $$a$$?
 2. Why does the body speed up near the star without gaining total mechanical energy?
-3. Why does increasing M shorten the period at fixed a?
+3. Why does increasing $$M$$ shorten the period at fixed $$a$$?
 4. Which part of your measurement is most sensitive to eccentricity?
 
 ## What to hand in

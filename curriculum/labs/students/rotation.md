@@ -15,7 +15,7 @@ Torque and fixed-axis dynamics are (§§10.6–10.7)
 
 $$\tau=rF\sin\theta,\qquad \sum\tau=I\alpha.$$
 
-For rolling without slipping (§11.1), v = Rω and energy includes both translation and rotation. With negligible external torque, angular momentum L = Iω is conserved (§11.3).
+For rolling without slipping (§11.1), $$v = R\omega$$ and energy includes both translation and rotation. With negligible external torque, angular momentum $$L = I\omega$$ is conserved (§11.3).
 
 ## Before the lab
 
@@ -43,8 +43,8 @@ Predict each result before reading the demonstration. Compare torque at two forc
 ## Analysis
 
 1. Calculate torque ratios and compare them with the displayed results.
-2. Derive a = g sin β/[1+I/(mR²)] for rolling without slipping. Compare shape ordering with your prediction.
-3. Test I_initial ω_initial = I_final ω_final. Compare initial and final rotational kinetic energy and identify the work source.
+2. Derive $$a = g\sin\beta/[1 + I/(mR^2)]$$ for rolling without slipping. Compare shape ordering with your prediction.
+3. Test $$I_\text{initial}\,\omega_\text{initial} = I_\text{final}\,\omega_\text{final}$$. Compare initial and final rotational kinetic energy and identify the work source.
 
 ## Uncertainty
 

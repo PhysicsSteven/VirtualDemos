@@ -11,12 +11,12 @@ Determine an unknown wire's Young's modulus from load and extension, then distin
 
 ## Background
 
-A hanging load exerts force F = mg. For a wire of original length L and diameter d,
+A hanging load exerts force $$F = mg$$. For a wire of original length $$L$$ and diameter $$d$$,
 
 $$A=\frac{\pi d^2}{4},\qquad \sigma=\frac{F}{A},\qquad
 \epsilon=\frac{\Delta L}{L}.$$
 
-Below yield, stress is proportional to strain: σ = Yε. Therefore a plot of F against ΔL has slope YA/L, and
+Below yield, stress is proportional to strain: $$\sigma = Y\epsilon$$. Therefore a plot of $$F$$ against $$\Delta L$$ has slope $$YA/L$$, and
 
 $$Y=\text{slope}\,\frac{L}{A}.$$
 
@@ -25,7 +25,7 @@ Use metres for extension when applying that formula. After yielding, unloading c
 ## Before the lab
 
 1. Predict how doubling diameter changes extension at the same load, length and material.
-2. What are the units of the F-versus-ΔL slope and of Young's modulus?
+2. What are the units of the $$F$$-versus-$$\Delta L$$ slope and of Young's modulus?
 3. How would you test whether a measured extension is elastic?
 
 ## Safety
@@ -44,7 +44,7 @@ A real stretched wire can snap. Use eye protection, secure the support, shield t
 
 ## Data
 
-| Specimen/cycle | d (mm) | L (m) | Peak/load mass (kg) | Loaded ΔL (mm) | Unloaded ΔL (mm) | Elastic/set |
+| Specimen/cycle | $$d$$ (mm) | $$L$$ (m) | Peak/load mass (kg) | Loaded $$\Delta L$$ (mm) | Unloaded $$\Delta L$$ (mm) | Elastic/set |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 | | | | | | | |
@@ -54,18 +54,18 @@ Save each elastic series separately. For yield cycles, pair each peak load with 
 
 ## Analysis
 
-1. Convert masses to forces and fit F against ΔL for each elastic series. Report slope, intercept and residuals. Convert extension to metres before calculating Y, or explicitly convert a slope in N/mm to N/m.
-2. Compare the two estimates of Y. Test whether the slope ratio agrees with the squared diameter ratio.
+1. Convert masses to forces and fit $$F$$ against $$\Delta L$$ for each elastic series. Report slope, intercept and residuals. Convert extension to metres before calculating $$Y$$, or explicitly convert a slope in N/mm to N/m.
+2. Compare the two estimates of $$Y$$. Test whether the slope ratio agrees with the squared diameter ratio.
 3. Convert the two peak loads bracketing permanent set to stresses. Report a yield-onset interval rather than an exact material constant from a coarse step.
 4. Explain the difference between total extension under load and residual extension after unloading. Distinguish the operational detection threshold from an exact yield stress.
 
 ## Uncertainty
 
-The virtual dial rounds to 0.001 mm. Diameter controls are specified settings in the ideal model; their 0.05 mm adjustment step is not random measurement error. For a real wire, estimate diameter uncertainty from the measuring tool and variation along the wire. Since A depends on d², its fractional uncertainty is approximately twice that of diameter. Include length and slope uncertainty in Y. A tiny fit error does not eliminate calibration errors. For yielding, use load-step brackets and the smallest detectable residual extension; repeated exact simulation readings do not supply random scatter.
+The virtual dial rounds to 0.001 mm. Diameter controls are specified settings in the ideal model; their 0.05 mm adjustment step is not random measurement error. For a real wire, estimate diameter uncertainty from the measuring tool and variation along the wire. Since $$A$$ depends on $$d^2$$, its fractional uncertainty is approximately twice that of diameter. Include length and slope uncertainty in $$Y$$. A tiny fit error does not eliminate calibration errors. For yielding, use load-step brackets and the smallest detectable residual extension; repeated exact simulation readings do not supply random scatter.
 
 ## Questions
 
-1. Why do thicker wires have steeper F-versus-ΔL graphs but not necessarily larger Young's moduli?
+1. Why do thicker wires have steeper $$F$$-versus-$$\Delta L$$ graphs but not necessarily larger Young's moduli?
 2. Can a material be stiff yet have a low yield stress?
 3. Why can an unloaded yielded wire remain longer even though its stress is zero?
 4. Why should you avoid fitting one straight line through elastic and plastic loading points?

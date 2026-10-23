@@ -5,14 +5,15 @@
 **Research question:** Infer wavelength from diffraction angles.
 
 ## Model
-d sinθ=mλ (normal incidence)
+
+$$d\sin\theta = m\lambda \quad \text{(normal incidence)}$$
 
 ## Procedure (50–75 minutes)
 1. State a prediction and identify independent, dependent and controlled variables.
 2. Choose the mode matching the equation; record every fixed parameter.
 3. Collect five or more independent measurements, recording values, units and measurement method.
 4. Where the model is stochastic, repeat each setting and report variability.
-5. Plot the measurements with labeled axes. Plot sinθ versus order m; slope gives λ/d.
+5. Plot the measurements with labeled axes. Plot $$\sin\theta$$ versus order $$m$$; slope gives $$\lambda/d$$.
 6. Compute the inferred physical parameter, check dimensions and compare with theory.
 7. Describe systematic limitations and explain any discrepancies.
 

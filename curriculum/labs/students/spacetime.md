@@ -2,7 +2,7 @@
 
 [Open simulation](https://physicssteven.github.io/VirtualDemos/demos/spacetime.html)
 
-**Research goal:** Test the relationship ds²=c²dt²-dx².
+**Research goal:** Test the relationship $$ds^2 = c^2 dt^2 - dx^2$$.
 
 ## Procedure
 1. Identify the mode, controls, observable and fixed parameters; write a prediction.

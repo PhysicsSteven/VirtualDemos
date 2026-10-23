@@ -19,7 +19,7 @@ For an initially uncharged capacitor connected to a battery,
 
 $$V_C=\varepsilon\left(1-e^{-t/RC}\right),\qquad I=\frac{\varepsilon}{R}e^{-t/RC}.$$
 
-The time constant is τ = RC (§10.5). After one time constant, the capacitor has reached about 63% of its final voltage. During discharge,
+The time constant is $$\tau = RC$$ (§10.5). After one time constant, the capacitor has reached about 63% of its final voltage. During discharge,
 
 $$V_C=V_{C0}e^{-t/RC}.$$
 
@@ -29,9 +29,9 @@ $$W=U_C+H,\qquad U_C=\frac12 CV_C^2.$$
 
 ## Before the lab
 
-1. If R doubles while C stays fixed, what happens to the time constant?
+1. If $$R$$ doubles while $$C$$ stays fixed, what happens to the time constant?
 2. Why can the capacitor voltage not jump when the switch changes position?
-3. Derive the straight line relation obtained by plotting ln(1 − V_C/ε) against time during charging.
+3. Derive the straight line relation obtained by plotting $$\ln(1 - V_C/\varepsilon)$$ against time during charging.
 
 ## Safety
 
@@ -39,7 +39,7 @@ For a real circuit, turn off the supply before changing connections. Check the c
 
 ## Procedure
 
-**Charging.** Assemble a series battery, resistor and capacitor circuit. Use ε = 10 V and C = 100 µF, or the values assigned for your apparatus.
+**Charging.** Assemble a series battery, resistor and capacitor circuit. Use $$\varepsilon = 10\ \text{V}$$ and $$C = 100\ \mu\text{F}$$, or the values assigned for your apparatus.
 
 1. Start with the capacitor discharged. Connect the battery and record capacitor voltage and current as a function of time.
 2. Take at least six readings from the beginning until the voltage is close to its final value.
@@ -53,21 +53,21 @@ For a real circuit, turn off the supply before changing connections. Check the c
 
 ## Data
 
-| t (s) | V_C (V) | I (A) | W (J) | U_C (J) | H (J) |
+| $$t$$ (s) | $$V_C$$ (V) | $$I$$ (A) | $$W$$ (J) | $$U_C$$ (J) | $$H$$ (J) |
 |---|---|---|---|---|---|
 | | | | | | |
 | | | | | | |
 | | | | | | |
 
-Use a separate copy for each run. Write ε, R, C and the switch time above it. Fill the energy columns for the energy run.
+Use a separate copy for each run. Write $$\varepsilon$$, $$R$$, $$C$$ and the switch time above it. Fill the energy columns for the energy run.
 
 ## Analysis
 
-1. Find τ from the time when V_C reaches 63.2% of ε.
-2. Plot ln(1 − V_C/ε) against t. Find τ from the slope. Leave out points so close to the final voltage that rounding makes the logarithm unusable.
-3. Plot τ against R. Find C from the slope and compare it with the component value.
-4. For discharge, plot ln(V_C/V_C0) against time since switching. Compare its time constant with charging.
-5. Check W − U_C − H at each energy reading. If using CSV, also estimate heat from the area under I²R against time.
+1. Find $$\tau$$ from the time when $$V_C$$ reaches 63.2% of $$\varepsilon$$.
+2. Plot $$\ln(1 - V_C/\varepsilon)$$ against $$t$$. Find $$\tau$$ from the slope. Leave out points so close to the final voltage that rounding makes the logarithm unusable.
+3. Plot $$\tau$$ against $$R$$. Find $$C$$ from the slope and compare it with the component value.
+4. For discharge, plot $$\ln(V_C/V_{C0})$$ against time since switching. Compare its time constant with charging.
+5. Check $$W - U_C - H$$ at each energy reading. If using CSV, also estimate heat from the area under $$I^2 R$$ against time.
 6. In the flash run, calculate the stored energy and initial discharge power from the voltage just before the switch. Do not assume the capacitor has reached the full battery voltage.
 
 ## Uncertainty
@@ -83,4 +83,4 @@ Use the spacing between nearby time samples to estimate uncertainty in the 63.2%
 
 ## What to hand in
 
-Prelab answers, settings and data, CSV if available, the charging and discharge fits, the graph of τ against R, capacitance with uncertainty, the energy check, and answers to the questions. Identify simulated data.
+Prelab answers, settings and data, CSV if available, the charging and discharge fits, the graph of $$\tau$$ against $$R$$, capacitance with uncertainty, the energy check, and answers to the questions. Identify simulated data.

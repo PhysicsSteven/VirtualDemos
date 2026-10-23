@@ -29,7 +29,7 @@ Choose loop directions and current arrows before inserting signs. A voltmeter go
 
 1. For two equal resistors, compare equivalent resistance in series and parallel.
 2. What happens if an ideal ammeter is connected directly across a battery?
-3. Derive the voltage across R2 when R1 and R2 form an unloaded voltage divider.
+3. Derive the voltage across $$R_2$$ when $$R_1$$ and $$R_2$$ form an unloaded voltage divider.
 
 ## Safety
 
@@ -39,7 +39,7 @@ Switch off a real supply before rewiring. Begin with its current limit set low. 
 
 **Series and parallel.** Use a 6 V supply and two 10 Ω resistive loads, or instructor-assigned values. Measure current through each load and voltage across each. Repeat in parallel, including total source current. Change one load to 20 Ω and repeat both configurations.
 
-**Voltage divider.** Use a 12 V source with R2 = 1.0 kΩ. Take five R1 settings from approximately 1.0 to 4.7 kΩ. Measure V_out across R2 and the current. Keep the output unloaded.
+**Voltage divider.** Use a 12 V source with $$R_2 = 1.0\ \text{k}\Omega$$. Take five $$R_1$$ settings from approximately 1.0 to 4.7 kΩ. Measure $$V_{\rm out}$$ across $$R_2$$ and the current. Keep the output unloaded.
 
 **A multiloop circuit.** Choose a bridge circuit. Label the nodes and current arrows. Use measured currents to test two independent junctions and measured voltage changes to test two loops. Change one resistance and repeat. Include a drawing that defines every sign.
 
@@ -47,7 +47,7 @@ Switch off a real supply before rewiring. Begin with its current limit set low. 
 
 ## Data
 
-| Setup and resistor values | Meter/branch | I (A) | Voltage rise/drop (V) | P (W) | Junction/loop label |
+| Setup and resistor values | Meter/branch | $$I$$ (A) | Voltage rise/drop (V) | $$P$$ (W) | Junction/loop label |
 |---|---|---|---|---|---|
 | | | | | | |
 | | | | | | |
@@ -58,7 +58,7 @@ Add rows as needed. Attach a schematic with meter polarity, current arrows and l
 ## Analysis
 
 1. Infer the equivalent resistance from source voltage and total current. Compare with the series/parallel formulas.
-2. Plot V_out against R2/(R1+R2). Infer the source voltage from the slope.
+2. Plot $$V_{\rm out}$$ against $$R_2/(R_1+R_2)$$. Infer the source voltage from the slope.
 3. Calculate the signed current residual at each chosen junction and voltage residual around each loop.
 4. Sum resistor powers and compare with source power. Explain which readings are independent and which are derived from the same model.
 

@@ -11,7 +11,7 @@
 ## Background
 The reference model is **the physical model described in the simulation**.
 
-\[E[N(t)] = N0*2^(-t/t_half)\]
+$$E[N(t)] = N_0 \cdot 2^{-t/t_\text{half}}$$
 
 **Important limitation:** These are expected fractions, not exact results of a finite random sample. Repeat trials and report variability.
 
@@ -37,7 +37,7 @@ Open the linked simulation. Record the model/preset, initial settings, units, an
 | 5 | | | |
 
 ## Analysis
-**Recommended graph/fit:** Plot ln(N/N0) against t; slope equals -ln(2)/t_half.
+**Recommended graph/fit:** Plot $$\ln(N/N_0)$$ against $$t$$; slope equals $$-\ln(2)/t_\text{half}$$.
 
 Calculate the physical quantity implied by the slope or fit parameters. Show units and at least one worked calculation. If the simulation is deterministic, estimate uncertainty from display resolution, cursor placement, or model sensitivity rather than inventing random error.
 
@@ -49,7 +49,7 @@ Calculate the physical quantity implied by the slope or fit parameters. Show uni
 5. What result would falsify your prediction?
 
 ## Extension
-Compare variance across repeated runs with the binomial prediction N0 p(1-p).
+Compare variance across repeated runs with the binomial prediction $$N_0\, p(1-p)$$.
 
 ## Submission
 Submit the completed data sheet, labeled graph, parameter estimate with units, comparison to theory, and a 150–250-word conclusion. Cite the simulation version/commit if provided.

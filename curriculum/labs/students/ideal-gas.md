@@ -5,14 +5,15 @@
 **Research question:** Test the two-dimensional ideal gas equation of state.
 
 ## Model
-p₂D A=N k_B T
+
+$$p_{\rm 2D}\,A=N k_B T$$
 
 ## Procedure (50–75 minutes)
 1. State a prediction and identify independent, dependent and controlled variables.
 2. Choose the mode matching the equation; record every fixed parameter.
 3. Collect five or more independent measurements, recording values, units and measurement method.
 4. Where the model is stochastic, repeat each setting and report variability.
-5. Plot the measurements with labeled axes. Plot normalized p/p₀ against A₀/A.
+5. Plot the measurements with labeled axes. Plot normalized $$p/p_0$$ against $$A_0/A$$.
 6. Compute the inferred physical parameter, check dimensions and compare with theory.
 7. Describe systematic limitations and explain any discrepancies.
 

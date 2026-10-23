@@ -31,7 +31,11 @@ Measure only objects or indoor distances you can reach safely. Do not climb, blo
 
 **Practice conversions.** Convert the supplied practice values 72.0 km/h to m/s, 250.0 cm² to m² and 2.50 in to metres. Show factors and cancellation. These are exercise inputs, not measurements of your object.
 
-**Check an equation.** A cart starts at x₀ with speed v₀ and constant acceleration a. Check each proposed expression: x = x₀ + v₀t + at²/2; x = x₀ + v₀ + at²/2; and x = x₀ + 2v₀t + at². Which can be rejected by dimensions alone? What further physical information is needed for the others?
+**Check an equation.** A cart starts at $$x_0$$ with speed $$v_0$$ and constant acceleration $$a$$. Check each proposed expression:
+
+$$\begin{aligned} &\text{(a)} \quad x = x_0 + v_0 t + \frac{1}{2} a t^2 \\[6pt] &\text{(b)} \quad x = x_0 + v_0 + \frac{1}{2} a t^2 \\[6pt] &\text{(c)} \quad x = x_0 + 2 v_0 t + a t^2 \end{aligned}$$
+
+Which can be rejected by dimensions alone? What further physical information is needed for the others?
 
 No simulation is required. If a measuring tool is unavailable, ask the instructor for a clearly labeled supplied measurement set; do not invent observations and present them as real.
 
@@ -60,7 +64,7 @@ Record the ruler's smallest marking, endpoint alignment and variation between re
 
 1. How does a scientific prediction differ from a preference statement about the object?
 2. Why is 1 cm² not equal to 10⁻² m²?
-3. Can dimensional analysis distinguish v₀t from 2v₀t?
+3. Can dimensional analysis distinguish $$v_0 t$$ from $$2 v_0 t$$?
 4. What information would you need before deciding which of two conflicting rulers is more accurate?
 
 ## What to hand in

@@ -5,7 +5,8 @@
 **Research question:** Calibrate detector channel against photon energy and identify unknown lines.
 
 ## Model
-E=a·channel+b
+
+$$E = a\cdot\text{channel} + b$$
 
 ## Procedure (50–75 minutes)
 1. State a prediction and identify independent, dependent and controlled variables.

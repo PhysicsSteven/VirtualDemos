@@ -11,7 +11,7 @@ Infer liquid density from pressure, test Archimedes' principle and compare conti
 
 ## Background
 
-At depth h in a liquid of density ρ (§14.1), gauge pressure is
+At depth $$h$$ in a liquid of density $$\rho$$ (§14.1), gauge pressure is
 
 $$P-P_{atm}=\rho gh.$$
 
@@ -21,7 +21,7 @@ $$F_B=\rho gV_{displaced}.$$
 
 For steady incompressible flow (§§14.5–14.6),
 
-$$A_1v_1=A_2v_2,\qquad P+\frac12\rho v^2+\rho gy=\text{constant}.$$
+$$\begin{gathered} A_1v_1=A_2v_2, \\[4pt] P+\frac12\rho v^2+\rho gy=\text{constant}. \end{gathered}$$
 
 A horizontal constriction trades pressure for flow speed when energy losses are negligible.
 
@@ -47,7 +47,7 @@ Keep water away from electrical equipment. Secure real pressure tubing and hangi
 
 ## Data
 
-| Investigation/liquid | Depth h (m) or diameters D1,D2 (m) | Pressure (Pa) or head h1,h2 (m) | Block volume (m³) | Air weight (N) | Scale reading (N) | Q (m³/s) |
+| Investigation/liquid | Depth $$h$$ (m) or diameters $$D_1, D_2$$ (m) | Pressure (Pa) or head $$h_1, h_2$$ (m) | Block volume (m³) | Air weight (N) | Scale reading (N) | $$Q$$ (m³/s) |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 | | | | | | | |
@@ -57,9 +57,9 @@ Keep a separate copy for each part and label unused columns. Convert kPa, cm and
 
 ## Analysis
 
-1. Fit gauge pressure against depth and infer ρ from slope/g.
-2. Calculate F_B = W_air − T. Compare with displaced-liquid weight and, for a floating block, the displaced fraction with ρ_block/ρ_liquid.
-3. Infer v1 and v2 from Q/A. Calculate the pressure difference from Bernoulli and compare with ρg(h1−h2).
+1. Fit gauge pressure against depth and infer $$\rho$$ from $$\text{slope}/g$$.
+2. Calculate $$F_B = W_\text{air} - T$$. Compare with displaced-liquid weight and, for a floating block, the displaced fraction with $$\rho_\text{block}/\rho_\text{liquid}$$.
+3. Infer $$v_1$$ and $$v_2$$ from $$Q/A$$. Calculate the pressure difference from Bernoulli and compare with $$\rho g(h_1 - h_2)$$.
 4. Explain which assumptions would fail for viscous flow, strong turbulence or cavitation.
 
 ## Uncertainty

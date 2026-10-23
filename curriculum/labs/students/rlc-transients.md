@@ -13,7 +13,7 @@ Observe how circuits store and lose energy. Measure an oscillation period, find 
 
 A capacitor stores electric energy (§8.3) and an inductor stores magnetic energy (§14.3):
 
-$$U_C=\frac{Q^2}{2C},\qquad U_L=\frac12 LI^2.$$
+$$\begin{gathered} U_C=\frac{Q^2}{2C}, \\[4pt] U_L=\frac12 LI^2. \end{gathered}$$
 
 When a charged capacitor is connected to an inductor, energy moves back and forth between them. Without resistance the natural frequency is
 
@@ -25,7 +25,7 @@ $$L\frac{d^2Q}{dt^2}+R\frac{dQ}{dt}+\frac{Q}{C}=0.$$
 
 For weak damping, the charge oscillates with a shrinking envelope. Its decay rate and damped frequency are
 
-$$\alpha=\frac{R}{2L},\qquad \omega_d=\sqrt{\omega_0^2-\alpha^2}.$$
+$$\begin{gathered} \alpha=\frac{R}{2L}, \\[4pt] \omega_d=\sqrt{\omega_0^2-\alpha^2}. \end{gathered}$$
 
 Oscillations disappear at the critical resistance:
 
@@ -34,8 +34,8 @@ $$R_{\rm crit}=2\sqrt{\frac{L}{C}}.$$
 ## Before the lab
 
 1. At what point in an ideal LC cycle is the magnetic energy largest?
-2. Predict what increasing R does to the oscillation period and amplitude.
-3. Find the critical resistance for L = 0.100 H and C = 10 µF.
+2. Predict what increasing $$R$$ does to the oscillation period and amplitude.
+3. Find the critical resistance for $$L = 0.100\ \text{H}$$ and $$C = 10\ \mu\text{F}$$.
 
 ## Safety
 
@@ -49,7 +49,7 @@ For a real circuit, turn off the supply before rewiring. Discharge capacitors th
 2. Read voltage and current near the beginning, quarter cycle, half cycle and full cycle.
 3. Calculate electric and magnetic energy at those times.
 
-**Damped oscillations.** Add a series resistor. For L = 0.100 H and C = 10 µF, take separate runs at R = 20, 50 and 100 Ω. Record at least three positive voltage maxima when they are large enough to read. Then compare resistances just below, at and just above your predicted critical value. Include one clearly overdamped run.
+**Damped oscillations.** Add a series resistor. For $$L = 0.100\ \text{H}$$ and $$C = 10\ \mu\text{F}$$, take separate runs at $$R = 20,\ 50\ \text{and}\ 100\ \Omega$$. Record at least three positive voltage maxima when they are large enough to read. Then compare resistances just below, at and just above your predicted critical value. Include one clearly overdamped run.
 
 **RC and RL.** Record capacitor voltage during an RC discharge and inductor current during an RL decay. Start the time measurement at the switch event and note the initial voltage or current.
 
@@ -57,28 +57,28 @@ For a real circuit, turn off the supply before rewiring. Discharge capacitors th
 
 ## Data
 
-| Run and R (Ω) | t (s) | V_C (V) | I_L (A) | U_C (J) | U_L (J) | Heat (J) |
+| Run and $$R$$ (Ω) | $$t$$ (s) | $$V_C$$ (V) | $$I_L$$ (A) | $$U_C$$ (J) | $$U_L$$ (J) | Heat (J) |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 | | | | | | | |
 | | | | | | | |
 
-Use a separate copy for each run. Write L, C, initial voltage and switch time above it. For RC or RL, replace unused columns with the quantity you measure.
+Use a separate copy for each run. Write $$L$$, $$C$$, initial voltage and switch time above it. For RC or RL, replace unused columns with the quantity you measure.
 
 ## Analysis
 
-1. Find the LC period and infer L from the known C. Check whether U_C + U_L stays constant.
-2. For each oscillating RLC run, find the damped period Td. Use two successive positive maxima to calculate
+1. Find the LC period and infer $$L$$ from the known $$C$$. Check whether $$U_C + U_L$$ stays constant.
+2. For each oscillating RLC run, find the damped period $$T_d$$. Use two successive positive maxima to calculate
 
-$$\delta=\ln\!\left(\frac{|V_n|}{|V_{n+1}|}\right),\qquad \alpha=\frac{\delta}{T_d},\qquad R_{\rm fit}=2L\alpha.$$
+   $$\begin{gathered} \delta=\ln\!\left(\frac{|V_n|}{|V_{n+1}|}\right), \\[4pt] \alpha=\frac{\delta}{T_d}, \\[4pt] R_{\rm fit}=2L\alpha. \end{gathered}$$
 
 3. Compare the measured period and damping with the predicted values. Check whether stored energy plus heat equals the initial energy.
-4. Compare runs at 0.95, 0.99, 1.00, 1.01 and 1.05 times Rcrit. Explain why a barely visible or absent sign change is not enough by itself to identify critical damping.
-5. Fit the RC and RL decays to find their time constants. Compare them with RC and L/R.
+4. Compare runs at 0.95, 0.99, 1.00, 1.01 and 1.05 times $$R_{\rm crit}$$. Explain why a barely visible or absent sign change is not enough by itself to identify critical damping.
+5. Fit the RC and RL decays to find their time constants. Compare them with $$RC$$ and $$L/R$$.
 
 ## Uncertainty
 
-Bracket peak times using nearby samples and estimate how precisely you can read each peak height. Small late peaks give a poor damping estimate, so state which peaks you used and why. Check the actual CSV timestamps rather than the animation's speed. Compare fits over more than one interval to see how peak choice changes the answer. Include uncertainty in the component values when interpreting an inferred L or R.
+Bracket peak times using nearby samples and estimate how precisely you can read each peak height. Small late peaks give a poor damping estimate, so state which peaks you used and why. Check the actual CSV timestamps rather than the animation's speed. Compare fits over more than one interval to see how peak choice changes the answer. Include uncertainty in the component values when interpreting an inferred $$L$$ or $$R$$.
 
 ## Questions
 

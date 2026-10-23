@@ -15,12 +15,12 @@ For one-dimensional conservative motion (§§8.2–8.4),
 
 $$F_x=-\frac{dU}{dx},\qquad E=\frac12mv^2+U(x).$$
 
-A turning point has E = U and v = 0. An equilibrium has dU/dx = 0; a local minimum is stable against small displacements. Work by the conservative force from x1 to x2 is U(x1)−U(x2) (§7.1).
+A turning point has $$E = U$$ and $$v = 0$$. An equilibrium has $$dU/dx = 0$$; a local minimum is stable against small displacements. Work by the conservative force from $$x_1$$ to $$x_2$$ is $$U(x_1)-U(x_2)$$ (§7.1).
 
 ## Before the lab
 
-1. What force direction follows from a positive slope of U(x)?
-2. Why is motion forbidden where U(x) > E in this classical model?
+1. What force direction follows from a positive slope of $$U(x)$$?
+2. Why is motion forbidden where $$U(x) > E$$ in this classical model?
 
 ## Safety
 
@@ -34,7 +34,7 @@ Sketch the potential and choose three total energies. Predict turning points and
 
 ## Data
 
-| Potential and total E (J) | x (m) | U (J) | Estimated slope dU/dx (N) | Predicted F_x (N) | Predicted speed (m/s) |
+| Potential and total $$E$$ (J) | $$x$$ (m) | $$U$$ (J) | Estimated slope $$dU/dx$$ (N) | Predicted $$F_x$$ (N) | Predicted speed (m/s) |
 |---|---|---|---|---|---|
 | | | | | | |
 | | | | | | |
@@ -42,8 +42,8 @@ Sketch the potential and choose three total energies. Predict turning points and
 
 ## Analysis
 
-1. Estimate −dU/dx from nearby table points and compare with the force readout.
-2. Calculate v = √[2(E−U)/m] at three allowed positions. At turning points discuss acceleration as well as speed.
+1. Estimate $$-dU/dx$$ from nearby table points and compare with the force readout.
+2. Calculate $$v = \sqrt{2(E-U)/m}$$ at three allowed positions. At turning points discuss acceleration as well as speed.
 3. Classify equilibria from the local curve shape. Compare turning-point patterns below and above a double-well barrier.
 
 ## Uncertainty
@@ -53,7 +53,7 @@ State the spacing used to estimate a slope. Small spacing can amplify rounding, 
 ## Questions
 
 1. Must acceleration vanish when speed is zero?
-2. Why is a local maximum of U unstable?
+2. Why is a local maximum of $$U$$ unstable?
 3. Can the same total energy allow two disconnected regions of motion?
 
 ## What to hand in

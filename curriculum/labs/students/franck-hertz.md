@@ -13,11 +13,11 @@ Electrons accelerate through a vapor on their way to a collector. Most of the ti
 
 A small retarding voltage before the collector rejects electrons that arrive with too little energy. The current therefore falls when many electrons have just lost energy. As the accelerating voltage rises, the pattern repeats.
 
-If neighboring peaks are separated by ΔU, the excitation energy is approximately
+If neighboring peaks are separated by $$\Delta U$$, the excitation energy is approximately
 
 $$\Delta E=e\Delta U.$$
 
-The first peak need not occur at ΔE/e. Contact potentials and the electrons' starting energies shift the whole pattern. We allow for an offset by fitting
+The first peak need not occur at $$\Delta E/e$$. Contact potentials and the electrons' starting energies shift the whole pattern. We allow for an offset by fitting
 
 $$U_n=a+n\Delta U.$$
 
@@ -29,7 +29,7 @@ $$\lambda=\frac{hc}{\Delta E}.$$
 
 1. Why is peak spacing more useful than the position of the first peak?
 2. What role does the retarding voltage play?
-3. If ΔU is measured in volts, how do you express ΔE in electron volts and in joules?
+3. If $$\Delta U$$ is measured in volts, how do you express $$\Delta E$$ in electron volts and in joules?
 
 ## Safety
 
@@ -50,7 +50,7 @@ The real apparatus has high voltage and a hot oven. Follow the department's warm
 
 ## Data
 
-| Run and settings | Peak order n | Peak U (V) | Reading uncertainty (V) | Spacing to next peak (V) |
+| Run and settings | Peak order $$n$$ | Peak $$U$$ (V) | Reading uncertainty (V) | Spacing to next peak (V) |
 |---|---|---|---|---|
 | | 1 | | | |
 | | 2 | | | |
@@ -62,14 +62,14 @@ Use at least five rows per mercury run. Keep changed settings in separate runs.
 ## Analysis
 
 1. Calculate the neighboring peak spacings and their mean.
-2. Plot peak voltage against peak order. Fit a line with an intercept. Use its slope to find ΔE and its uncertainty.
+2. Plot peak voltage against peak order. Fit a line with an intercept. Use its slope to find $$\Delta E$$ and its uncertainty.
 3. Repeat the fit without the first peak. Does the result change appreciably?
 4. Calculate the photon wavelength and compare it with the mercury reference after recording your result.
 5. Compare the slopes and intercepts of the different contact potential runs. Then explain the changes caused by retarding voltage and temperature.
 
 ## Uncertainty
 
-Use the peak position intervals, variation between sweeps and the fit uncertainty to judge the precision of ΔU. Check how much the first peak changes the fitted slope. Adjacent spacings share a peak reading, so they are not all independent. The relative wavelength uncertainty is approximately the relative uncertainty in ΔU when h, c and e are treated as known.
+Use the peak position intervals, variation between sweeps and the fit uncertainty to judge the precision of $$\Delta U$$. Check how much the first peak changes the fitted slope. Adjacent spacings share a peak reading, so they are not all independent. The relative wavelength uncertainty is approximately the relative uncertainty in $$\Delta U$$ when $$h$$, $$c$$ and $$e$$ are treated as known.
 
 ## Questions
 
