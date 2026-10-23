@@ -763,6 +763,17 @@
      ]
     },
     {
+     "demo": "induction-at-work",
+     "title": "Induction at Work",
+     "desc": "Three devices that run on Faraday's law: shake a magnet through a coil to charge a flashlight, draw with a magnetic pen on a grid of wires, and swipe a card's magnetic stripe past a reading head.",
+     "tags": [
+      "shake flashlight",
+      "graphics tablet",
+      "magnetic stripe",
+      "Faraday's law"
+     ]
+    },
+    {
      "demo": "gauss-law",
      "title": "Gauss's Law",
      "desc": "Drag charges in and out of a Gaussian surface of any shape and watch the flux: Q<sub>enc</sub>/ε₀ from a real numerical surface integral, zero for charges outside. Then the sphere, line and plane derivations step by step.",

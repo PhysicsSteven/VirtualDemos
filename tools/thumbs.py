@@ -60,6 +60,7 @@ OVERRIDES = {
     "household-wiring": {"wait": 800, "js": "document.querySelector('[data-p=wet]').click()"},
     "magnetism-in-matter": {"wait": 10500, "js": "document.querySelector('[data-p=loop]').click()"},
     "induced-electric-field": {"wait": 700, "js": "document.querySelector('[data-p=outside]').click(); document.getElementById('playBtn').click();"},
+    "induction-at-work": {"wait": 2500, "js": "document.querySelector('[data-p=tablet]').click()"},
     "electrostatics-at-work": {"wait": 3500, "js": "document.getElementById('motor').click()"},
     "eddy-currents": {"wait": 3500, "js": "document.getElementById('drop').click();"},
     "wire-force": {"wait": 2500, "js": "document.querySelector('#presets button[data-p=\"motor\"]').click(); document.getElementById('spin').click();"},

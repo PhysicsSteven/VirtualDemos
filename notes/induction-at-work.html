@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Induction at Work: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Induction at Work</h1><ul class="meta"><li><a href="../demos/induction-at-work.html">Open the demo</a></li><li>PHYS 202</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>In each device a changing flux makes an EMF, ε = −dΦ/dt. The size of the EMF depends on how fast the flux changes, so it grows with the speed of the magnet, the pen or the card.</li>
+<li>The shake flashlight turns the work of your hand into stored electric energy: a magnet moving through a coil, a rectifier, and a capacitor. The energy readouts show where every joule goes.</li>
+<li>A graphics tablet of the kind OpenStax describes finds a magnetic pen from the EMFs in a grid of wires. Because the EMF needs a changing flux, a pen held still is invisible to it.</li>
+<li>A magnetic stripe stores bits as regions of opposite magnetization. Each flip passing the reading head gives a pulse, and the pattern of pulses (F2F) carries its own clock, so the speed of the swipe does not matter.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need Faraday's law with flux, ε = −N dΦ/dt, and P = IV. <strong>Blind</strong> hides the EMF plots, the light's glow, the capacitor voltage, the tablet's estimate and the decoded number.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Shake flashlight.</strong> The EMF is a pair of opposite pulses each time the magnet passes through the coil: the flux rises as it enters and falls as it leaves. Peak EMF 2.84 V at 3 shakes per second; double the rate and it doubles. The capacitor creeps up; turn on Fast forward.</li>
+<li><strong>Flashlight, light on.</strong> The capacitor starts at 3.0 V and the light dims within seconds. Shake with the light on and read the energy column: from your hand, heat in the coil, the diodes, the light, the capacitor.</li>
+<li><strong>Graphics tablet.</strong> Watch which wires light up under the moving pen and the EMF bars: a peak under the pen that changes sign with the direction of motion. The tablet's fit puts the pen within a small fraction of the 5 mm wire spacing.</li>
+<li><strong>Tablet, pen held still.</strong> Nothing. Ask why. Real tablets make the pen's field alternate so that it changes even when the pen does not move.</li>
+<li><strong>Card reader.</strong> 50 bits, 65 flips, 65 pulses, read back as 2026. Change the speed: taller, narrower pulses, the same number.</li>
+<li><strong>Card, uneven swipe.</strong> The pulses bunch and spread, yet the number reads.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> In the shake flashlight the magnet's peak speed is v = 2πfA. For f = 3 Hz and A = 3.0 cm, find v. The largest value of N dΦ/dz for this coil is 5.17 Wb/m, about 7 mm from the coil's centre. Estimate the peak EMF and explain why it is less than (5.17 Wb/m)v_max.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> The capacitor is 0.10 F. How much energy does it hold at 2.6 V, where the light starts to glow? If the bridge rectifier loses 0.60 V and the peak EMF is 2.84 V, what is the highest voltage the capacitor can reach? What could you change to charge it higher?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Explain, with energy, why shaking gets harder when the capacitor is charging than when the coil is disconnected. Where does the work you do go?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> The tablet's pen magnet (m = 0.0163 A·m²) is 5.0 mm above a wire and moves across it at 10 cm/s. The flux through the wire's circuit is Φ = −μ₀m u/(2π(u² + h²)), with u the sideways distance. Find the EMF when the pen is right over the wire. What is it when the pen stops?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Track 2 of a card stores 75 bits per inch. How long is one bit? How long does a 50 bit record take to pass the head at 0.50 m/s? Why does a reader that relies on F2F pulses not need to know the swipe speed?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A strong magnet makes a big EMF."</strong> A strong magnet that does not move makes none. The EMF depends on the rate of change of flux.</li>
+<li><strong>"The flashlight makes energy from the magnet."</strong> The magnet is unchanged; the energy comes from the work done against the coil's magnetic force.</li>
+<li><strong>"The coil's EMF is largest when the magnet is in the middle."</strong> That is where the flux is largest and momentarily not changing as the magnet passes through: the EMF changes sign there.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Flashlight: point dipole magnet m = B_rV/μ₀ (B_r = 1.3 T, typical NdFeB), coil of 1000 turns of radius 12 mm over 10 mm, resistance from 75 m of 0.20 mm copper (40.3 Ω). Bridge with two 0.30 V diodes conducting, LED as 2.6 V plus 20 Ω. Chosen values except the copper's resistivity. Time step 0.2 ms.</li>
+<li>Tablet: dipole pen, wires closed far away, flux through a half plane (closed form), EMF = −dΦ/dt; the pen is found by a least squares fit of the known shape to five wires; detection threshold 0.5 µV (chosen).</li>
+<li>Card: ISO/IEC 7811 track 2 density and character code (the check character is left out); F2F recording; pulse shape g²/((x − x_k)² + g²) with a chosen g = 0.04 mm; decoding by tracking the bit period.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

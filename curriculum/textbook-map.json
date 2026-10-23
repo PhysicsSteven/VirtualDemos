@@ -3230,10 +3230,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "induction-at-work"
+      ],
       "unit": "induction",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Induction at Work (2026-10-23, Claude): shake flashlight, graphics tablet and card stripe reader from the section's list of applications, each with the EMF computed from Faraday's law."
     },
     {
       "vol": 2,
@@ -5891,6 +5893,26 @@
       "handouts": [],
       "title": "Induced Electric Fields",
       "url": "demos/induced-electric-field.html"
+    },
+    {
+      "demo": "induction-at-work",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "13.7",
+          "title": "Applications of Electromagnetic Induction"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-23 (Claude). Lecture demo: shake flashlight (dipole magnet through a coil, bridge rectifier, capacitor, LED, full energy accounting), graphics tablet (magnetic pen over a wire grid, least squares location), card reader (track 2 F2F stripe, pulses decoded, uneven swipe); Blind.",
+      "handouts": [],
+      "title": "Induction at Work",
+      "url": "demos/induction-at-work.html"
     },
     {
       "demo": "eddy-currents",
