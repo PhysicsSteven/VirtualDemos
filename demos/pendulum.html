@@ -208,7 +208,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <p class="hint">Blind hides the predicted periods and g from the fit; the photogate, the settings and the trace stay. The Mystery planet always hides its g.</p>
-        <p class="hint">Model: a point bob on a massless, inextensible string (or a thin uniform rod) about a frictionless pivot, integrated exactly enough (fourth order Runge–Kutta, 1 ms steps) that the photogate's 0.001 s readings are reliable. Air drag, when on, is a small force in proportion to speed. The photogate times every second pass of the bottom.</p>
+        <p class="hint">Model: a point bob on a massless, inextensible string (or a thin uniform rod). A string can only pull, so the bob on a string is released from at most 90° (above horizontal it would go slack and fall); the rod can start from up to 170° about a frictionless pivot, integrated exactly enough (fourth order Runge–Kutta, 1 ms steps) that the photogate's 0.001 s readings are reliable. Air drag, when on, is a small force in proportion to speed. The photogate times every second pass of the bottom.</p>
       </section>
     </aside>
   </main>
@@ -356,14 +356,17 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     $('out').innerHTML = h;
   }
   // ---------- controls ----------
+  // a string goes slack above horizontal (tension at release is mg cos θ₀), so the bob on a string is limited to 90°; the rigid rod can start higher
+  const maxA = () => (S.rod ? 170 : 90);
   function sync() {
+    S.A = Math.min(S.A, maxA()); $('sA').max = maxA();
     $('sL').value = S.L; $('oL').textContent = `${f(S.L, 2)} m`; $('sA').value = S.A; $('oA').textContent = `${S.A}°`; $('sM').value = S.m; $('oM').textContent = `${f(S.m, 2)} kg`;
     $('tSimple').setAttribute('aria-pressed', String(!S.rod)); $('tRod').setAttribute('aria-pressed', String(S.rod)); $('damp').checked = S.damp;
     for (const b of document.querySelectorAll('#gSeg button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.gKey));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     for (const b of document.querySelectorAll('[data-plot]')) b.setAttribute('aria-pressed', String(b.dataset.plot === S.plot));
   }
-  const changed = (keepRun) => { S.preset = 'custom'; release(); if (!keepRun) setRun(false); sync(); draw(); readouts(); };
+  const changed = (keepRun) => { S.preset = 'custom'; S.A = Math.min(S.A, maxA()); release(); if (!keepRun) setRun(false); sync(); draw(); readouts(); };
   function applyPreset(k) { const c = PRESETS[k]; S.preset = k; Object.assign(S, { rod: c.rod, L: c.L, A: c.A, m: c.m, g: c.g, gKey: String(c.g), mystery: null }); $('presetHint').textContent = c.hint; release(); setRun(false); sync(); draw(); readouts(); fit(); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   $('sL').addEventListener('input', (e) => { S.L = +e.target.value; changed(); });
@@ -397,11 +400,11 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   // drag the bob to set the release angle
   let drag = false;
   const local = (e) => { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-  function setAngle(x, y) { const a = Math.round(Math.atan2(x - geo.px, y - geo.py) * 180 / Math.PI); S.A = Math.max(1, Math.min(170, Math.abs(a))); changed(); S.st.th = Math.sign(a || 1) * S.A * Math.PI / 180; draw(); }
+  function setAngle(x, y) { const a = Math.round(Math.atan2(x - geo.px, y - geo.py) * 180 / Math.PI); S.A = Math.max(1, Math.min(maxA(), Math.abs(a))); changed(); S.st.th = Math.sign(a || 1) * S.A * Math.PI / 180; draw(); }
   can.addEventListener('pointerdown', (e) => { if (!geo) return; const [x, y] = local(e); const L = S.L * geo.sc, bx = geo.px + L * Math.sin(S.st.th), by = geo.py + L * Math.cos(S.st.th); if (Math.hypot(x - bx, y - by) < 40 * ps()) { drag = true; can.setPointerCapture(e.pointerId); setAngle(x, y); } });
   can.addEventListener('pointermove', (e) => { if (drag) { const [x, y] = local(e); setAngle(x, y); } });
   can.addEventListener('pointerup', () => { drag = false; }); can.addEventListener('pointercancel', () => { drag = false; });
-  can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.A = Math.max(1, Math.min(170, S.A + (e.key === 'ArrowRight' ? 1 : -1))); changed(); } else return; e.preventDefault(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.A = Math.max(1, Math.min(maxA(), S.A + (e.key === 'ArrowRight' ? 1 : -1))); changed(); } else return; e.preventDefault(); });
 
   // ---------- readings ----------
   function capStatus(m) { $('capStatus').textContent = m; }
