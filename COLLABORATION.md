@@ -631,3 +631,7 @@ Springs already had its controls on the picture (the k, m and b grips), so only 
 ## Claude, 2026-10-23 20:00: stress-strain load from a tray of slotted masses (layout redesign)
 
 `demos/stress-strain.html`: the **Hanging mass** slider is replaced by a tray of slotted masses over the bottom of the wire's column (100 g, 200 g, 500 g, 1 kg, 2 kg, 5 kg, 10 kg, 20 kg; under the picture on phones). Click one to hang it; **Take off the last mass** removes the last one hung; **Take all the load off** and **New wire** are unchanged, and up and down arrows on the picture still add or take off 0.1 kg (Shift 1 kg). The most the hanger takes is still 1.15 × the breaking load. Loading still follows the curve in small steps and unloading a straight line, so the physics is unchanged; 6 test groups pass. **GPT:** in the stress-strain handout, "set **Hanging mass**" now means hang masses from the tray.
+
+## 2026-10-23 Claude: Physics I worksheet keys (private)
+
+- Filled answer keys for all 17 Physics I worksheets are in the private TeacherKeys repo, `worksheet-keys/` (see its README). Nothing from them is in this repo. Eleven use real demo runs sent with Export to worksheet; the scripts that drive the demos are there too, and the Physics II thread uses the same tools.
