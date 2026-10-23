@@ -91,6 +91,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q5.</strong> In Series and parallel, C₁ = 10 pF, C₂ = 22 pF and C₃ = 47 pF are connected in series to 100 V. Find C_eq, the charge on each, and the voltage across each. Which capacitor stores the most energy? Check with the table.</p></div>
 
 <div class="q"><p><strong>Q6.</strong> After the isolated plates have been pulled to d = 2.00 cm in Q2 (now at 200 V), the 100 V battery is connected again. How much charge flows, and in which direction? How much energy becomes heat in the wires? Check the heat bar and the "Since the start" table.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Open <strong>Inside the dielectric (molecular model)</strong>. With E₀ = 1.00 × 10⁵ V/m, find E inside water (κ = 80.1) and the bound charge density σ_b. Water has 3.34 × 10²⁸ molecules per m³, each a permanent dipole of 6.17 × 10⁻³⁰ C·m. Find the average dipole per molecule and the average alignment ⟨cos θ⟩. Why can so small an alignment cut the field by a factor of 80? Then switch to Benzene: how far does the electron cloud shift?</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"Pulling the plates apart always increases the stored energy."</strong> Only when isolated. With the battery connected, U falls, because Q flows back into the battery.</li>
@@ -100,7 +102,12 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 </ul>
 <h2>Physics behind the demo</h2>
 <ul>
-<li>Readouts use the ideal parallel plate model, with a uniform field and no fringing: C = ε₀A/d, U = ½CV², E = V/d, σ = ε₀E, attraction ½V²|dC/dd| = Q²/(2ε₀A).</li>
+<li>
+<p>Inside the dielectric (OpenStax 8.5): E = E₀/κ, E_i = (1/κ − 1)E₀, σ_b = P = (1 − 1/κ)ε₀E₀. P/n is the average dipole per molecule. Water: κ = 80.1, 998.2 kg/m³, p₀ = 1.85 D = 6.17 × 10⁻³⁰ C·m, all of P credited to turning the permanent dipoles (the electron clouds add about 1%). Benzene: κ = 2.28, 876.5 kg/m³, 42 electrons per molecule; the shift is P/n divided by 42e. Alignment and shift are drawn exaggerated, with the factor shown.</p>
+</li>
+<li>
+<p>Readouts use the ideal parallel plate model, with a uniform field and no fringing: C = ε₀A/d, U = ½CV², E = V/d, σ = ε₀E, attraction ½V²|dC/dd| = Q²/(2ε₀A).</p>
+</li>
 <li>A partly inserted slab makes two capacitors in parallel: C(x) = ε₀(s/d)(s − x) + ε₀(s/d_in)x with d_in = (d − t) + t/κ. The force pulling it in is ½V² dC/dx, the same expression whether the battery is connected or not.</li>
 <li>Field lines come from a numerical solution of Laplace's equation for the cross section (plates infinitely deep, inside an insulating box), so they show fringing honestly; a share 1 − 1/κ of them ends on the bound charge. The wires and battery are not part of that solution.</li>
 <li>All changes are slow (quasi static), the battery and wires are ideal, and the slab slides without friction. When a battery is connected at a different voltage, the charge flows at once and ½C(ΔV)² becomes heat.</li>

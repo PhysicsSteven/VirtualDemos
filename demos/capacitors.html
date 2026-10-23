@@ -161,6 +161,11 @@ button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); ou
 .slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .ctl { display: flex; flex-direction: column; gap: 4px; }
+details.mol > summary { font-weight: 700; cursor: pointer; min-height: 36px; display: flex; align-items: center; }
+details.mol[open] > summary { margin-bottom: 8px; }
+details.mol[open] { display: flex; flex-direction: column; gap: 10px; }
+.molbox { position: relative; height: 250px; }
+.molbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 
 .readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
 .readout div { min-width: 0; }
@@ -382,6 +387,24 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind">Blind: hide predictions and answers</label>
         <p class="hint">Blind hides the model curves in the C and U plot, the value of ε₀ and the formula in the header, κ on the material buttons and its slider, the plate and slab forces, σ and the fields inside the slab, the energy check, the energy in the field, the setup hints and the constants derived from your fit. The meters stay: C, Q, V, E, U and the energy bars.</p>
+      </section>
+
+      <section data-view="single">
+        <details class="mol" id="molDet">
+          <summary>Inside the dielectric (molecular model)</summary>
+          <div class="seg full" role="group" aria-label="Dielectric" id="molSeg">
+            <button type="button" data-mol="water" aria-pressed="true">Water: polar</button>
+            <button type="button" data-mol="benzene" aria-pressed="false">Benzene: nonpolar</button>
+          </div>
+          <div class="ctl">
+            <div class="slider-head"><label for="sE0">Field of the free charge E₀</label><output id="oE0" class="mono" for="sE0"></output></div>
+            <input type="range" id="sE0" min="0" max="90" step="1">
+          </div>
+          <p class="hint" id="molDrawn"></p>
+          <div class="molbox"><canvas id="mCan" role="img" aria-label="A close view of the dielectric between two plates: molecules drawn as dipoles or as nuclei with electron clouds, the free charge on the plates, the bound charge on the dielectric's faces, and field lines, fewer inside the dielectric."></canvas></div>
+          <dl class="readout" id="molOut"></dl>
+          <p class="hint" id="molHint"></p>
+        </details>
       </section>
 
       <section data-view="single" class="bh">
@@ -760,11 +783,27 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const dp = se > 0 ? Math.max(0, Math.min(9, 1 - Math.floor(Math.log10(se / sc) + 1e-12))) : 4;
     return e === 0 ? `${mi((v / sc).toFixed(dp))} ± ${(se / sc).toFixed(dp)}${u}` : `(${mi((v / sc).toFixed(dp))} ± ${(se / sc).toFixed(dp)})${ex}${u}`;
   }
+  /* Molecular model of a dielectric (OpenStax 8.5). The free charge alone makes E0; the dielectric's bound charge
+     σb = (1 − 1/κ)ε₀E0 makes the induced field Ei = (1/κ − 1)E0, so E = E0 + Ei = E0/κ. The polarization P equals σb,
+     and P/n is the average dipole moment per molecule. Values at 20 °C: κ (CRC Handbook), density, molar mass;
+     water's permanent dipole 1.85 D = 6.17 × 10⁻³⁰ C·m; benzene has 42 electrons per molecule. */
+  const NA_MOL = 6.02214076e23, QE_MOL = 1.602176634e-19;
+  const MOLS = {
+    water: { name: 'Water', kind: 'polar', k: 80.1, rho: 998.2, M: 18.015e-3, p0: 6.17e-30 },
+    benzene: { name: 'Benzene', kind: 'nonpolar', k: 2.28, rho: 876.5, M: 78.11e-3, electrons: 42 }
+  };
+  function dielectricInside(mol, E0) {
+    const m = MOLS[mol], n = m.rho / m.M * NA_MOL, sigF = EPS0 * E0, sigB = (1 - 1 / m.k) * sigF, P = sigB, p = P / n;
+    const o = { k: m.k, n, E: E0 / m.k, Ei: (1 / m.k - 1) * E0, sigF, sigB, P, p };
+    if (m.p0) o.align = p / m.p0;                          /* mean cos θ, if all of P comes from turning the permanent dipoles */
+    if (m.electrons) o.shift = p / (m.electrons * QE_MOL); /* shift of the whole electron cloud relative to the nuclei */
+    return o;
+  }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
     globalThis.CAP = { EPS0, capOf, stateOf, newLedger, moveStep, batteryStep, connectStep, combo, makeField, setupField, relax, plateSites, eAt, traceLine, fieldLines,
-      fmtSI, fmtE, fmtK, parseSI, scaleStr, readingOf, readingsCSV, CSV_COLS, fitPoints, fitLine, fmtPM };
+      fmtSI, fmtE, fmtK, parseSI, scaleStr, readingOf, readingsCSV, CSV_COLS, fitPoints, fitLine, fmtPM, MOLS, dielectricInside };
     return;
   }
 
@@ -2060,7 +2099,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     S.blind = !!on; $('labBlind').checked = S.blind;
     document.documentElement.setAttribute('data-blind', S.blind ? 'on' : 'off');
     S.gMax = { C: 0, U: 0 };
-    matChips(); updateReadouts(); updateFitOut();
+    matChips(); updateReadouts(); updateFitOut(); molUpdate();
     $('gCan').setAttribute('aria-label', S.blind ? 'The present capacitance and stored energy, marked against the plate separation or the insertion of the slab; the model curves are hidden in Blind mode. The present values are in the table that follows.'
       : 'Capacitance and stored energy plotted against the plate separation or the insertion of the slab, with the present state marked. Sample values are in the table that follows.');
   }
@@ -2301,6 +2340,91 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     lineStats() { const c = {}; for (const l of lines) c[l.end] = (c[l.end] || 0) + 1; return { n: lines.length, ends: c }; }
   };
 
+  // ---------- inside the dielectric (molecular model) ----------
+  const M = { mol: 'water', v: 60, phi: [], W: 0, H: 0 };
+  const mCan = $('mCan'), mCtx = mCan.getContext('2d');
+  const molE0 = () => (M.v === 0 ? 0 : 10 ** (2 + (M.v - 1) / 89 * 4.5));   /* 100 V/m to 3.2 MV/m on a log slider; 0 = no free charge */
+  for (let i = 0; i < 24; i++) M.phi.push(Math.PI * (2 * Math.random() - 1));
+  const supE = (e) => String(e).split('').map((c) => SUP[c]).join('');
+  function sciM(v, nd = 3) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v)) + 1e-12); if (e >= -2 && e < 4) return String(+v.toPrecision(nd)).replace('-', '−'); return `${(v / 10 ** e).toFixed(nd - 1).replace('-', '−')} × 10${supE(e)}`; }
+  /* how strongly the drawing shows the alignment or shift: grows with log E0; the true size is in the readouts */
+  const drawnLevel = () => (M.v === 0 ? 0 : 0.12 + 0.48 * (M.v - 1) / 89);
+  function molUpdate() {
+    for (const b of document.querySelectorAll('#molSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mol === M.mol));
+    const E0 = molE0(), r = dielectricInside(M.mol, E0), b = S.blind, dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`, hid = '<span class="ok">hidden in Blind</span>';
+    $('sE0').value = M.v; $('oE0').textContent = `${sciM(E0)} V/m`;
+    let h = dd('κ', b ? hid : String(r.k)) + dd('E = E₀/κ', b ? hid : `${sciM(r.E)} V/m`);
+    h += dd('Induced field E<sub>i</sub> = (1/κ − 1)E₀', b ? hid : `${sciM(r.Ei)} V/m`) + dd('Free σ = ε₀E₀', `${sciM(r.sigF)} C/m²`);
+    h += dd('Bound σ<sub>b</sub> = P = (1 − 1/κ)σ', b ? hid : `${sciM(r.sigB)} C/m²`) + dd('Molecules per m³, n', sciM(r.n));
+    h += dd('Average dipole per molecule P/n', b ? hid : `${sciM(r.p)} C·m`);
+    if (M.mol === 'water') { h += dd('Average alignment ⟨cos θ⟩ = (P/n)/p₀', b ? hid : sciM(r.align)); $('molDrawn').textContent = M.v === 0 || b ? 'Drawing not to scale.' : `Drawn alignment ${sciM(drawnLevel(), 2)}: ${sciM(drawnLevel() / r.align, 2)} times the real value.`; }
+    else { h += dd('Shift of the electron cloud', b ? hid : `${sciM(r.shift)} m`); $('molDrawn').textContent = M.v === 0 || b ? 'Drawing not to scale.' : `Drawn shift about ${sciM(drawnLevel() * 0.4 * 2e-10 / r.shift, 2)} times the real one, for a molecule drawn 0.2 nm across.`; }
+    $('molOut').innerHTML = h;
+    $('molHint').textContent = M.mol === 'water'
+      ? 'Each water molecule is a permanent dipole (1.85 D, its negative oxygen end drawn blue with a minus sign, the hydrogen side red). Thermal motion keeps turning them; the field only biases them slightly toward lining up along E, so the average alignment is tiny, yet the ends left at the two faces make the bound charge that cuts E by κ = 80.1. All of P is credited to turning the dipoles here; the shift of the electron clouds adds about 1% (water\'s optical κ is 1.78). Drawing: alignment exaggerated as stated above; molecules and spacing not to scale.'
+      : 'Benzene molecules have no permanent dipole. The field pulls each electron cloud (drawn blue) a little against E and pushes the nuclei along it, making an induced dipole. P/n is the average induced dipole; dividing by the 42 electrons\' charge gives how far the whole cloud shifts. It is far smaller than a nucleus, yet the bound charge cuts E by κ = 2.28. Drawing: shift exaggerated as stated above; molecules and spacing not to scale.';
+    molDraw();
+  }
+  function molDraw() {
+    if (!T || !$('molDet').open) return;
+    const r = mCan.getBoundingClientRect(), dp = window.devicePixelRatio || 1;
+    if (Math.round(r.width * dp) !== mCan.width || Math.round(r.height * dp) !== mCan.height) { mCan.width = Math.round(r.width * dp); mCan.height = Math.round(r.height * dp); }
+    const W = r.width, H = r.height, c = mCtx; if (!W || !H) return;
+    c.setTransform(dp, 0, 0, dp, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, W, H);
+    const E0 = molE0(), on = E0 > 0, m = MOLS[M.mol], pt = 8, top = 18, bot = H - 18, sTop = top + pt + 26, sBot = bot - pt - 26, x0 = 10, x1 = W - 10, lvl = drawnLevel();
+    const font = (px, b) => `${b ? '700 ' : ''}${px}px ${T.ui}`, mark = (t, x, y, col) => { c.fillStyle = col; c.font = font(12, 1); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(t, x, y); };
+    /* slab */
+    c.fillStyle = T.diel; c.globalAlpha = 0.35; c.fillRect(x0, sTop, x1 - x0, sBot - sTop); c.globalAlpha = 1; c.strokeStyle = T.line; c.strokeRect(x0 + 0.5, sTop + 0.5, x1 - x0 - 1, sBot - sTop - 1);
+    /* plates */
+    c.fillStyle = T.plate; c.fillRect(x0, top, x1 - x0, pt); c.fillRect(x0, bot - pt, x1 - x0, pt);
+    const N = 8, cols = []; for (let i = 0; i < N; i++) cols.push(x0 + (x1 - x0) * (i + 0.5) / N);
+    const nB = on ? Math.round(N * (1 - 1 / m.k)) : 0, through = N - nB, passSet = new Set();
+    for (let t = 0; t < through; t++) passSet.add(Math.round((t + 0.5) * N / through - 0.5));   /* spread the lines that get through evenly */
+    /* field lines: all N cross the air gaps; only N − nB carry on through the dielectric, the others end on bound charge */
+    if (on) {
+      c.strokeStyle = T.fline; c.lineWidth = 1.4;
+      const arrow = (x, y) => { c.beginPath(); c.moveTo(x - 3, y - 5); c.lineTo(x, y); c.lineTo(x + 3, y - 5); c.stroke(); };
+      cols.forEach((x, i) => { const pass = passSet.has(i);
+        c.beginPath(); c.moveTo(x, top + pt); c.lineTo(x, sTop); c.stroke(); arrow(x, (top + pt + sTop) / 2 + 4);
+        c.beginPath(); c.moveTo(x, sBot); c.lineTo(x, bot - pt); c.stroke(); arrow(x, (sBot + bot - pt) / 2 + 4);
+        if (pass) { c.beginPath(); c.moveTo(x, sTop); c.lineTo(x, sBot); c.stroke(); arrow(x, (sTop + sBot) / 2 + 4); }
+        mark('+', x, top - 8, T.pos); mark('−', x, bot + 8, T.neg); });
+      /* bound charges on the slab faces, one for each line that stops */
+      let k = 0; cols.forEach((x, i) => { const pass = passSet.has(i); if (!pass && k < nB) { mark('−', x, sTop + 7, T.neg); mark('+', x, sBot - 7, T.pos); k++; } });
+    }
+    /* molecules: 6 by 4 grid */
+    const nx = 6, ny = 4, cw = (x1 - x0) / nx, ch = (sBot - sTop - 20) / ny, rad = Math.min(cw, ch) * 0.3;
+    for (let j = 0; j < ny; j++) for (let i = 0; i < nx; i++) {
+      const id = j * nx + i, cx = x0 + cw * (i + 0.5) + (j % 2 ? cw * 0.15 : -cw * 0.15), cy = sTop + 10 + ch * (j + 0.5);
+      if (m.kind === 'polar') {
+        /* field points down the page (top plate positive); the dipole p points from O (−) to the H side (+) and leans toward E */
+        const rr = (1 - lvl) / (1 + lvl), th = 2 * Math.atan(rr * Math.tan(M.phi[id] / 2)), ux = Math.sin(th), uy = Math.cos(th);
+        c.fillStyle = T.pos; c.beginPath(); c.arc(cx + ux * rad * 0.45, cy + uy * rad * 0.45, rad * 0.42, 0, 7); c.fill();   /* H side, + */
+        c.fillStyle = T.neg; c.beginPath(); c.arc(cx - ux * rad * 0.35, cy - uy * rad * 0.35, rad * 0.6, 0, 7); c.fill();    /* O side, − */
+        c.fillStyle = T.canvas; c.font = font(Math.max(8, rad * 0.7), 1); c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('−', cx - ux * rad * 0.35, cy - uy * rad * 0.35);
+      } else {
+        const sh = lvl * 0.4 * rad * 2;   /* cloud pulled up, toward the positive plate */
+        c.fillStyle = T.neg; c.globalAlpha = 0.3; c.beginPath(); c.arc(cx, cy - sh, rad, 0, 7); c.fill(); c.globalAlpha = 1;
+        c.strokeStyle = T.neg; c.lineWidth = 1; c.beginPath(); c.arc(cx, cy - sh, rad, 0, 7); c.stroke();
+        mark('+', cx, cy, T.pos);
+      }
+    }
+    const lab = on ? (S.blind ? 'field lines: E₀ outside, E inside' : `${N} lines in the gaps, ${through} through the ${m.name.toLowerCase()}${m.k > N ? ` (really 1 in ${m.k})` : ''}`) : 'no free charge: no field';
+    c.font = font(10); const lw = c.measureText(lab).width; c.fillStyle = T.canvas; c.globalAlpha = 0.9; c.fillRect(x0, (top + pt + sTop) / 2 - 11, lw + 6, 14); c.globalAlpha = 1;
+    c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(lab, x0 + 3, (top + pt + sTop) / 2 - 4);
+  }
+  $('molSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-mol]'); if (b) { M.mol = b.dataset.mol; molUpdate(); } });
+  $('sE0').addEventListener('input', (e) => { M.v = +e.target.value; molUpdate(); });
+  $('molDet').addEventListener('toggle', molUpdate);
+  new MutationObserver(() => requestAnimationFrame(molDraw)).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => requestAnimationFrame(molDraw)); } catch (_) {}
+  let molAcc = 0, molLast = performance.now();
+  (function molLoop(now) {
+    const dt = Math.min(0.1, (now - molLast) / 1000); molLast = now;
+    if ($('molDet').open && M.mol === 'water' && !reduce) { for (let i = 0; i < M.phi.length; i++) { M.phi[i] += (Math.random() - 0.5) * 6 * dt; if (M.phi[i] > Math.PI) M.phi[i] -= 2 * Math.PI; if (M.phi[i] < -Math.PI) M.phi[i] += 2 * Math.PI; } molAcc += dt; if (molAcc > 0.05) { molAcc = 0; molDraw(); } }
+    requestAnimationFrame(molLoop);
+  })(molLast);
+
   tokens();
   const ro = new ResizeObserver(resize);
   for (const k of ['d', 'e', 'g']) ro.observe(panes[k]);
@@ -2309,6 +2433,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   document.documentElement.setAttribute('data-blind', 'off');
   renderRows();
   applyPreset('apartV');
+  molUpdate();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
 })();

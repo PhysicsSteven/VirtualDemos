@@ -126,5 +126,13 @@ test('fits of simulated readings recover ε0 and κ within the bound set by the 
  P=k.fitPoints([...sl.map((x)=>x.row),{...sl[0].row,C:'x'}],'Cf');assert.equal(P.x.length,5);
  console.log(`   from rounded readings: eps0 ${(k.fitLine(...(()=>{const q=k.fitPoints(s.map((x)=>x.row),'Cd');return[q.x,q.y];})()).b/A).toExponential(4)} F/m, kappa ${(1+f.b/f.a).toFixed(4)}`);
 });
+test('molecular model (8.5): E = E0/κ, σb = (1 − 1/κ)σ, P/n, water alignment and benzene cloud shift',()=>{
+ const w=c.dielectricInside('water',1e5),b=c.dielectricInside('benzene',1e5);
+ close(w.E,1e5/80.1);close(w.E+(-w.Ei),1e5,1e-12);close(w.E,1e5+w.Ei,1e-12);close(w.sigB,(1-1/80.1)*eps*1e5);close(w.sigF-w.sigB,eps*w.E,1e-12);
+ close(w.n,998.2/18.015e-3*6.02214076e23);close(w.n,3.337e28,1e-3);close(w.p,w.P/w.n);close(w.align,w.p/6.17e-30);close(w.align,4.25e-6,2e-3);
+ close(b.n,6.758e27,1e-3);close(b.E,1e5/2.28);close(b.shift,b.p/(42*1.602176634e-19));close(b.shift,1.09e-17,5e-3);
+ assert(b.shift<1e-15,'the cloud shift is far smaller than a nucleus');
+ const z=c.dielectricInside('water',0);assert.equal(z.P,0);
+});
 console.log('Qualitative fringe-field grid is not certified by these ideal-model checks.');
 console.log(`${n} capacitors test groups passed`);

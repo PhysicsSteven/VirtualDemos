@@ -2678,10 +2678,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "capacitors"
+      ],
       "unit": "capacitance",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Capacitors and Dielectrics, Inside the dielectric (2026-10-23, Claude): water (polar) and benzene (nonpolar) at a chosen E0; bound charge, E = E0/kappa, average dipole per molecule, real alignment and cloud shift with the drawing's exaggeration stated."
     },
     {
       "vol": 2,
@@ -5439,6 +5441,11 @@
           "vol": 2,
           "sec": "8.4",
           "title": "Capacitor with a Dielectric"
+        },
+        {
+          "vol": 2,
+          "sec": "8.5",
+          "title": "Molecular Model of a Dielectric"
         }
       ],
       "role": "lab",

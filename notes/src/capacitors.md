@@ -38,6 +38,8 @@ Students should know E = σ/ε₀ for a charged sheet, potential difference and 
 
 **Q6.** After the isolated plates have been pulled to d = 2.00 cm in Q2 (now at 200 V), the 100 V battery is connected again. How much charge flows, and in which direction? How much energy becomes heat in the wires? Check the heat bar and the "Since the start" table.
 
+**Q7.** Open **Inside the dielectric (molecular model)**. With E₀ = 1.00 × 10⁵ V/m, find E inside water (κ = 80.1) and the bound charge density σ_b. Water has 3.34 × 10²⁸ molecules per m³, each a permanent dipole of 6.17 × 10⁻³⁰ C·m. Find the average dipole per molecule and the average alignment ⟨cos θ⟩. Why can so small an alignment cut the field by a factor of 80? Then switch to Benzene: how far does the electron cloud shift?
+
 ## Common misconceptions
 
 - **"Pulling the plates apart always increases the stored energy."** Only when isolated. With the battery connected, U falls, because Q flows back into the battery.
@@ -46,6 +48,8 @@ Students should know E = σ/ε₀ for a charged sheet, potential difference and 
 - **"The battery gives the capacitor exactly the energy it stores."** Charging from a battery, the battery does QV and the capacitor keeps ½QV; the other half becomes heat, whatever the resistance of the wires.
 
 ## Physics behind the demo
+
+- Inside the dielectric (OpenStax 8.5): E = E₀/κ, E_i = (1/κ − 1)E₀, σ_b = P = (1 − 1/κ)ε₀E₀. P/n is the average dipole per molecule. Water: κ = 80.1, 998.2 kg/m³, p₀ = 1.85 D = 6.17 × 10⁻³⁰ C·m, all of P credited to turning the permanent dipoles (the electron clouds add about 1%). Benzene: κ = 2.28, 876.5 kg/m³, 42 electrons per molecule; the shift is P/n divided by 42e. Alignment and shift are drawn exaggerated, with the factor shown.
 
 - Readouts use the ideal parallel plate model, with a uniform field and no fringing: C = ε₀A/d, U = ½CV², E = V/d, σ = ε₀E, attraction ½V²|dC/dd| = Q²/(2ε₀A).
 - A partly inserted slab makes two capacitors in parallel: C(x) = ε₀(s/d)(s − x) + ε₀(s/d_in)x with d_in = (d − t) + t/κ. The force pulling it in is ½V² dC/dx, the same expression whether the battery is connected or not.
