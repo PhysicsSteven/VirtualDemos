@@ -35,6 +35,8 @@ Called by the demo:
 | `VD.projector({ onChange })` | wires `#proj`, restores the saved choice (`vd-projector`), and calls `onChange` on the next frame after each change; returns `set(on)` |
 | `VD.setupCard(card, { grip, within })` | the Set up card on the picture. Returns `away(on)` (fades it and makes it inert while the apparatus runs: call `away(false)` on Pause so it comes back, as Steve asked), `ghost(on)` (see through while something under it is dragged) and `reset()`. Where the card floats over the picture, its grip (default: its first child, given a ⠿ mark) drags it anywhere inside the picture; arrow keys on the grip move it 10 px (Shift 40 px); a double click puts it back. It stays inside the card's offsetParent, or inside `within` (an element or selector) for a card placed on the bench over the stage. On phones, where the card sits under the picture, it stays put. The demo still places the card; the drag is a CSS translate on top. |
 
+The Acoustics module look is in the library too: `look.css` (depth, quieter secondary text, the instrument finish) and `gear.js` (`window.VDGear`, canvas drawing for lab equipment). `tools/look.py` links both into the module's demos, just before `</head>`; edit them here and run `tools/vdcheck.cjs` on the module.
+
 Phase two helpers (presets, step buttons, readings, Export to worksheet) are added when a demo is being edited anyway, each behind the same checks. Pendulum uses `VD.setupCard`; other demos with a Set up card switch to it when they are next edited.
 
 ## Rules
@@ -112,7 +114,20 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 | rotation | 2026-10-23 | batch 3 |
 | tides | 2026-10-23 | batch 3 |
 | units | 2026-10-23 | batch 3 |
+| acoustic-levitation | 2026-10-23 | batch 4 (Acoustics) |
+| chladni | 2026-10-23 | batch 4 (Acoustics) |
+| doppler | 2026-10-23 | batch 4 (Acoustics) |
+| kundts-tube | 2026-10-23 | batch 4 (Acoustics) |
+| resonators | 2026-10-23 | batch 4 (Acoustics) |
+| room-acoustics | 2026-10-23 | batch 4 (Acoustics) |
+| sound-intensity | 2026-10-23 | batch 4 (Acoustics) |
+| sound-waves | 2026-10-23 | batch 4 (Acoustics) |
+| standing-waves | 2026-10-23 | batch 4 (Acoustics) |
+| timbre | 2026-10-23 | batch 4 (Acoustics) |
+| two-speaker | 2026-10-23 | batch 4 (Acoustics) |
+| ultrasound | 2026-10-23 | batch 4 (Acoustics) |
+| wave-power | 2026-10-23 | batch 4 (Acoustics) |
 
 ## Being moved
 
-Batch 4 (the Acoustics module), from 2026-10-24 00:00: acoustic-levitation, chladni, doppler, kundts-tube, resonators, room-acoustics, sound-intensity, sound-waves, standing-waves, timbre, two-speaker, ultrasound, wave-power. The module look (`tools/look/`) moves into the library as `look.css` and `gear.js`.
+Nothing at the moment.

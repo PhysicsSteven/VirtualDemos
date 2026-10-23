@@ -1,27 +1,26 @@
 #!/usr/bin/env python3
-"""Put the shared module look into demos, before </head>: tools/look/look.css as <style id="vd-look"> and
-tools/look/gear.js (window.VDGear, canvas drawing for lab equipment: bench, rods, boxes, LCDs, pulleys, speakers,
-quiet labels) as <script id="vd-gear">.
+"""Link the shared module look into demos, before </head>: demos/lib/look.css as <link id="vd-look"> and
+demos/lib/gear.js (window.VDGear, canvas drawing for lab equipment: bench, rods, boxes, LCDs, pulleys, speakers,
+quiet labels) as <script id="vd-gear">. Until 2026-10-23 this tool pasted both files into each demo; it now links
+them, and replaces a pasted block it finds.
 
 The look adds depth, quieter secondary text and one instrument finish (function generators, knobs, LCDs) without
-touching sizes the layout depends on. Demos keep their own tokens; the block only reads them. Running the tool again
-replaces the block, so edit tools/look/look.css and rerun.
+touching sizes the layout depends on. Demos keep their own tokens; the look only reads them. Edit demos/lib/look.css
+or gear.js, then run tools/vdcheck.cjs on the module's demos.
 
 Usage:
     python3 tools/look.py                # the Acoustics module (the demos linked from acoustics.html)
     python3 tools/look.py doppler chladni
-    python3 tools/look.py --check        # report demos whose block is missing or stale
+    python3 tools/look.py --check        # report demos whose link is missing
 """
 import re
 import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-CSS = (ROOT / "tools" / "look" / "look.css").read_text()
-GEAR = (ROOT / "tools" / "look" / "gear.js").read_text()
-BLOCK = ('<style id="vd-look">\n/* vd-look */\n' + CSS.rstrip() + '\n/* /vd-look */\n</style>\n'
-         '<script id="vd-gear">\n' + GEAR.rstrip() + '\n</script>\n')
-RE = re.compile(r'<style id="vd-look">.*?</style>\n(<script id="vd-gear">.*?</script>\n)?', re.S)
+BLOCK = '<link rel="stylesheet" id="vd-look" href="lib/look.css">\n<script id="vd-gear" src="lib/gear.js"></script>\n'
+RE = re.compile(r'<style id="vd-look">.*?</style>\n(<script id="vd-gear">.*?</script>\n)?'
+                r'|<link rel="stylesheet" id="vd-look"[^>]*>\n(<script id="vd-gear"[^>]*></script>\n)?', re.S)
 
 
 def module_demos():

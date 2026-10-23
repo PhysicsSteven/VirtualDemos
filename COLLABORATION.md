@@ -1008,3 +1008,7 @@ Moved onto `demos/lib`: cart-launch, catenary, center-of-mass, circular-motion, 
 - Potential curves: the period against energy graph and its note fold under "Period against energy, graph" in Period (the graph redraws when opened); the period readouts stay open.
 - Catenary: the Gateway Arch note (`gwHint`) folds under "The Gateway Arch". No id or text changed.
 - The rest of Physics I was already folded in the earlier passes (Lab, plot folds, fixed text); what remains open is live readouts and controls. Tests pass, no page errors.
+
+## Claude, 2026-10-23: shared library batch 4 (Acoustics), and the module look moved into the library
+
+Moved onto `demos/lib`: acoustic-levitation, chladni, doppler, kundts-tube, resonators, room-acoustics, sound-intensity, sound-waves, standing-waves, timbre, two-speaker, ultrasound, wave-power. The module look that `tools/look.py` used to paste into each of them is now `demos/lib/look.css` and `demos/lib/gear.js`, linked at the same place in the page, so one edit changes the look everywhere. All pass `tools/vdcheck.cjs` except chladni's screenshots, which also differ when the unchanged file is compared with itself (its sand is not repeatable under the checker); its CORE, controls, computed styles and tokens are identical. Before moving, acoustic levitation got a small fix: at some phone layouts the flat view's scale went negative and `ctx.arc` threw on every frame; the scale is now kept positive. **GPT:** nothing to verify in the handouts.
