@@ -120,6 +120,8 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 .empty { color: var(--muted); padding: 8px !important; }
 .plotbox { position: relative; height: 190px; }
 .plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+@media (max-width: 820px) { .stage[data-view="inside"] { height: 520px; max-height: none; } }
+.viewseg { position: absolute; top: 8px; right: 8px; z-index: 3; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 420px; } }
 @media (max-width: 820px) {
@@ -150,6 +152,10 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="application" aria-label="A wire stretched along a metre rule with a fixed clip at zero and a sliding clip. An ammeter reads the current and a voltmeter the voltage between the clips. Drag the sliding clip, or use the left and right arrow keys."></canvas>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
+      <div class="seg viewseg" role="group" aria-label="View" id="views">
+        <button type="button" data-view="bench" aria-pressed="true">Bench</button>
+        <button type="button" data-view="inside" aria-pressed="false">Inside the wire</button>
+      </div>
     </div>
 
     <aside class="rail">
@@ -173,6 +179,24 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <h2>Meters</h2>
         <dl class="readout" id="out"></dl>
         <p class="formula">R = V/I · R = ρL/A · ρ(T) = ρ₂₀[1 + α(T − 20 °C)]</p>
+      </section>
+
+      <section id="insideSec">
+        <h2>Inside the wire</h2>
+        <p class="hint">Choose <b>Inside the wire</b> above the picture to see the free electrons in a magnified piece of this wire.</p>
+        <div class="btnrow">
+          <button type="button" class="btn" id="inPlay" aria-pressed="true">Pause</button>
+          <button type="button" class="btn" id="inStep">Step 1 s</button>
+          <button type="button" class="btn" id="inReset">Reset count</button>
+        </div>
+        <label class="check"><input type="checkbox" id="inRandom" checked><span>Show random motion</span></label>
+        <label class="check"><input type="checkbox" id="rmotion"><span>Reduce motion</span></label>
+        <p class="status" id="inLive" aria-live="polite"></p>
+        <dl class="readout" id="inOut"></dl>
+        <dl class="readout" id="inCount"></dl>
+        <p class="formula">I = nqAv_d · J = I/A = nqv_d · transit time = L/v_d</p>
+        <p class="hint" id="nHint"></p>
+        <p class="hint">Model: free electrons in a metal (OpenStax 9.2). The drift speed v_d = I/(nqA) uses the free electron density n above; n does not change with temperature here (thermal expansion changes it by under 0.3%). The random speed is the Fermi speed v_F = ħ(3π²n)^⅓/m of the free electron model, and the mean time between collisions is τ = m/(ne²ρ), so it follows ρ(T). Electrons move in a 3D random direction and are drawn projected onto the page; ions are drawn on a square grid at the mean atomic spacing (copper's real lattice is face centred cubic). The region repeats at its edges, standing for a piece deep inside the wire. The counter counts electrons carried across the dashed plane by the drift; random motion carries electrons across both ways equally on average and is left out of the count. The electrons sit at random positions, so the count scatters about n v_d t × (2 nm × 0.3 nm) like any count; after the drift has carried the electrons one full region width (4 nm), every one has crossed exactly once.</p>
       </section>
 
       <section>
@@ -199,7 +223,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
-        <p class="hint">Blind hides ρ, α, the wire's resistance per metre, and ρ and α from the fits, leaving the meters, the rule and the settings. The Mystery wire always hides its own values.</p>
+        <p class="hint">Blind hides ρ, α, the wire's resistance per metre, and ρ and α from the fits, leaving the meters, the rule and the settings. The Mystery wire always hides its own values. Inside the wire, Blind also hides J, v_d, the transit time, I/e, the expected count and the collision time; the count, the drift so far and the real time stay, so v_d can be measured.</p>
         <p class="hint">Model: R = ρL/A with ρ linear in temperature; the voltmeter is ideal (four-wire, so the clips and leads add nothing) and the current is set by a constant current supply. Resistivities are handbook values at 20 °C; real alloys vary by a few percent.</p>
       </section>
     </aside>
@@ -240,13 +264,37 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     rows.forEach((r, i) => { const v = cellNum(r.V), c = cellNum(r.I); L.push([i + 1, r.mat, r.d, r.T, r.L, r.I, r.V, isFinite(v) && c > 0 ? sig(v / c, 6) : ''].map(csvCell).join(',')); });
     return L.join('\n') + '\n';
   }
+  /* ---- Inside the wire: free electrons, drift speed, current density (OpenStax Vol 2, 9.1 and 9.2) ---- */
+  const QE = 1.602176634e-19, ME = 9.1093837015e-31, HBAR = 1.054571817e-34, NA = 6.02214076e23, C0 = 299792458;
+  const MOLAR = { Cu: 63.546, Ni: 58.693, Cr: 51.996, Mn: 54.938 };   /* g/mol */
+  /* free electrons per m³ from the density (g/cm³), mass fractions and free electrons per atom */
+  function nFromAlloy(dens, frac, perAtom) { let inv = 0; for (const k in frac) inv += frac[k] / MOLAR[k]; return perAtom * (dens * 1e6 / (1 / inv)) * NA; }
+  /* copper: the cited free electron density (one per atom); the alloys: estimated with one free electron per atom */
+  const FREE = {
+    copper: { n: 8.47e28, perAtom: 1, how: 'cited value: one free electron per atom (Ashcroft and Mermin, Table 1.1)' },
+    nichrome: { n: nFromAlloy(8.40, { Ni: 0.8, Cr: 0.2 }, 1), perAtom: 1, how: 'estimate: 80% Ni, 20% Cr by mass, 8.40 g/cm³, one free electron per atom assumed' },
+    constantan: { n: nFromAlloy(8.90, { Cu: 0.55, Ni: 0.45 }, 1), perAtom: 1, how: 'estimate: 55% Cu, 45% Ni by mass, 8.90 g/cm³, one free electron per atom assumed' },
+    mystery: { n: nFromAlloy(8.40, { Cu: 0.86, Mn: 0.12, Ni: 0.02 }, 1), perAtom: 1, how: 'hidden' }
+  };
+  const driftSpeed = (I, n, A, q) => I / (n * (q || QE) * A);   /* v_d = I/(n q A), magnitude */
+  const currentDensity = (I, A) => I / A;                    /* J = I/A = n q v_d */
+  const fermiSpeed = (n) => HBAR * Math.cbrt(3 * Math.PI * Math.PI * n) / ME;   /* free electron model */
+  const collisionTime = (n, rho) => ME / (n * QE * QE * rho);   /* Drude: ρ = m/(n e² τ) */
+  const transitTime = (L, vd) => L / vd;
+  const electronRate = (I) => I / QE;
+  /* net number of crossings of the plane x = xp (in a box of width w, periodic) when each electron at u_i is carried from shift s0 to s1.
+     Positive when electrons move toward −x. */
+  function netCrossings(us, s0, s1, xp, w) { let c = 0; for (const u of us) c += Math.floor((u + s0 - xp) / w) - Math.floor((u + s1 - xp) / w); return c; }
+  const BOX = { w: 4e-9, h: 2e-9, depth: 0.3e-9 };   /* the magnified region, m */
+  const slabCount = (n) => Math.round(n * BOX.w * BOX.h * BOX.depth);
+  const DRIFT_SLOW = 1e6, RANDOM_SLOW = 1e15;   /* screen time per real time for the drift and for the random motion */
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id);
   const HINT = { nichrome: 'Nichrome (nickel and chromium): high resistivity, used in toaster and heater elements. ρ about 1.1 × 10⁻⁶ Ω·m.', constantan: 'Constantan (copper and nickel): its resistivity hardly changes with temperature, which is why it is used for precision resistors.',
     copper: 'Copper: about 65 times lower resistivity than nichrome, so the voltages are tiny. Its resistance rises about 0.4% per kelvin.', mystery: 'An unknown alloy. Find ρ from R against L, then α from R against T. Its values stay hidden.' };
-  const S = { mat: 'nichrome', g: 1, L: 0.5, I: 0.2, T: 20, blind: false, rows: [], plot: 'RL' };
+  const S = { mat: 'nichrome', g: 1, L: 0.5, I: 0.2, T: 20, blind: false, rows: [], plot: 'RL', view: 'bench' };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null, geo = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -263,6 +311,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.view === 'inside') { drawInside(); return; }
     const p = ps(), x0 = 40 * p, x1 = W - 40 * p, X = (l) => x0 + (x1 - x0) * l, y = H * 0.62;
     geo = { X, x0, x1, y };
     // metre rule
@@ -286,12 +335,122 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`supply ${sig(S.I, 3)} A  ·  ${S.T} °C`, W / 2, H - 25 * p);
   }
 
+  // ---------- inside the wire ----------
+  const nFree = () => FREE[S.mat].n, vdNow = () => driftSpeed(S.I, nFree(), area(d()));
+  const EL = { xs: [], ys: [], dx: [], dy: [], s: 0, t: 0, count: 0, trail: [], playing: true, last: 0, raf: 0, N: 0 };
+  const BW = BOX.w * 1e9, BH = BOX.h * 1e9;   /* nm */
+  function isoDir() { const z = 2 * Math.random() - 1, ph = 2 * Math.PI * Math.random(), r = Math.sqrt(1 - z * z); return [r * Math.cos(ph), r * Math.sin(ph)]; }
+  function resetElectrons() {
+    const N = slabCount(nFree()); EL.N = N; EL.xs = []; EL.ys = []; EL.dx = []; EL.dy = [];
+    for (let i = 0; i < N; i++) { EL.xs.push(Math.random() * BW); EL.ys.push(Math.random() * BH); const [a, b] = isoDir(); EL.dx.push(a); EL.dy.push(b); }
+    resetCount();
+  }
+  function resetCount() { EL.s = 0; EL.t = 0; EL.count = 0; EL.trail = []; countOut(); }
+  const wrap = (v, w) => v - w * Math.floor(v / w);
+  function stepInside(dt) {   /* dt: seconds on screen */
+    const ds = -vdNow() * 1e9 * dt / DRIFT_SLOW;   /* nm; electrons move toward −x, against the current */
+    EL.count += netCrossings(EL.xs, EL.s, EL.s + ds, BW / 2, BW); EL.s += ds; EL.t += dt / DRIFT_SLOW;
+    if ($('inRandom').checked) {
+      const dtr = dt / RANDOM_SLOW, step = fermiSpeed(nFree()) * 1e9 * dtr, pc = 1 - Math.exp(-dtr / collisionTime(nFree(), rhoAt(M(), S.T)));
+      for (let i = 0; i < EL.N; i++) {
+        EL.xs[i] = wrap(EL.xs[i] + EL.dx[i] * step, BW); EL.ys[i] = wrap(EL.ys[i] + EL.dy[i] * step, BH);
+        if (Math.random() < pc) { const [a, b] = isoDir(); EL.dx[i] = a; EL.dy[i] = b; }
+      }
+    }
+    const px = wrap(EL.xs[0] + EL.s, BW), py = EL.ys[0], q = EL.trail[EL.trail.length - 1];
+    if (q && (Math.abs(px - q[0]) > BW / 2 || Math.abs(py - q[1]) > BH / 2)) EL.trail.push(null);
+    EL.trail.push([px, py]); if (EL.trail.length > 240) EL.trail.splice(0, EL.trail.length - 240);
+  }
+  function frame(ts) {
+    EL.raf = 0; if (S.view !== 'inside' || !EL.playing) return;
+    const dt = EL.last ? Math.min(0.1, (ts - EL.last) / 1000) : 0; EL.last = ts;
+    if (dt > 0) stepInside(dt); draw(); countOut(); EL.raf = requestAnimationFrame(frame);
+  }
+  function runLoop() { if (S.view === 'inside' && EL.playing && !EL.raf) { EL.last = 0; EL.raf = requestAnimationFrame(frame); } }
+  function setPlaying(on) { EL.playing = on; $('inPlay').textContent = on ? 'Pause' : 'Play'; $('inPlay').setAttribute('aria-pressed', String(on)); if (on) runLoop(); }
+  function fmtTime(t) {
+    if (!isFinite(t)) return '—';
+    const u = [[1e-9, 'ns'], [1e-6, 'μs'], [1e-3, 'ms'], [1, 's']];
+    if (t < 1e-9) return `${sci(t, 3)} s`;
+    if (t < 120) { let k = 0; while (k < 3 && t >= u[k + 1][0]) k++; return `${sig(t / u[k][0], 3)} ${u[k][1]}`; }
+    if (t < 7200) return `${sig(t / 60, 3)} min`; if (t < 172800) return `${sig(t / 3600, 3)} h`; return `${sig(t / 86400, 3)} days`;
+  }
+  function wrapText(str, x, y, maxW, lh, dry) {
+    const words = str.split(' '); let line = '';
+    for (const w of words) { const t = line ? line + ' ' + w : w; if (ctx.measureText(t).width > maxW && line) { if (!dry) ctx.fillText(line, x, y); y += lh; line = w; } else line = t; }
+    if (line) { if (!dry) ctx.fillText(line, x, y); y += lh; } return y;
+  }
+  function arrow(x0, y0, x1, col, p, lab) {
+    const dir = Math.sign(x1 - x0); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - dir * 6 * p, y0); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y0); ctx.lineTo(x1 - dir * 9 * p, y0 - 5 * p); ctx.lineTo(x1 - dir * 9 * p, y0 + 5 * p); ctx.closePath(); ctx.fill();
+    ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textBaseline = 'middle'; ctx.textAlign = dir > 0 ? 'left' : 'right'; ctx.fillText(lab, x1 + dir * 6 * p, y0);
+  }
+  function drawInside() {
+    const p = Math.min(ps(), Math.max(1, W / 560)), pad = 16 * p, mw = W - 2 * pad, lh = 15 * p;   /* projector scale, capped on narrow stages */
+    ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.font = `700 ${13 * p}px ${T.ui}`;
+    let y = wrapText(`Inside the ${M().name.toLowerCase()} wire (${d().toFixed(3)} mm across)`, pad, 58 * p, mw, 17 * p);
+    ctx.font = `${11.5 * p}px ${T.ui}`; ctx.fillStyle = T.muted;
+    y = wrapText(`A region 4 nm long, 2 nm high and 0.3 nm deep (its height is 1/${Math.round(d() * 1e-3 / BOX.h).toLocaleString('en-US')} of the wire's diameter): all ${EL.N} free electrons in it (blue) and the ions (grey).`, pad, y + 2 * p, mw, lh);
+    const notes = [
+      [T.ink, `Net electrons carried across the dashed plane: ${EL.count} in ${fmtTime(EL.t)} of real time. Drift so far: ${sig(-EL.s, 3)} nm to the left.`],
+      [T.muted, `Not to one time scale: the drift is shown 10⁶ times slower than real (1 s on screen is 1 μs), the random motion 10¹⁵ times slower. Compared with the drift, the real random motion is 10⁹ times faster than it looks here.`]];
+    if (!S.blind) notes.push([T.muted, `One electron drifting the ${S.L.toFixed(3)} m between the clips would take ${fmtTime(transitTime(S.L, vdNow()))}; the change in field that starts the current crosses it in about L/c = ${fmtTime(S.L / C0)}.`]);
+    ctx.font = `${11.5 * p}px ${T.ui}`; let bottomText = 50 * p; for (const [, t] of notes) bottomText = wrapText(t, 0, bottomText, mw, lh, true);
+    const availH = Math.max(60, H - y - 10 * p - bottomText), bw = Math.min(mw, 2 * availH), bh = bw / 2, bx = (W - bw) / 2, by = y + 8 * p, sc = bw / BW;
+    ctx.fillStyle = T.grid; ctx.fillRect(bx, by, bw, bh);
+    ctx.save(); ctx.globalAlpha = 0.12; ctx.fillStyle = T.wire; ctx.fillRect(bx, by, bw, bh); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(bx, by, bw, bh); ctx.clip();
+    const a = Math.cbrt(FREE[S.mat].perAtom / nFree()) * 1e9, ri = Math.max(1.5, Math.min(6 * p, 0.05 * sc));
+    ctx.fillStyle = T.muted; ctx.globalAlpha = 0.28; for (let gx = a / 2; gx < BW; gx += a) for (let gy = a / 2; gy < BH; gy += a) { ctx.beginPath(); ctx.arc(bx + gx * sc, by + gy * sc, ri, 0, 7); ctx.fill(); }
+    ctx.globalAlpha = 1;
+    if (EL.trail.length > 1) { ctx.strokeStyle = T.e; ctx.lineWidth = 1.5 * p; ctx.beginPath(); let pen = false; for (const q of EL.trail) { if (!q) { pen = false; continue; } const X = bx + q[0] * sc, Y = by + q[1] * sc; if (pen) ctx.lineTo(X, Y); else ctx.moveTo(X, Y); pen = true; } ctx.stroke(); }
+    ctx.fillStyle = T.neg; const re = 2.6 * p;
+    for (let i = 0; i < EL.N; i++) { ctx.beginPath(); ctx.arc(bx + wrap(EL.xs[i] + EL.s, BW) * sc, by + EL.ys[i] * sc, re, 0, 7); ctx.fill(); }
+    if (EL.N) { ctx.strokeStyle = T.e; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(bx + wrap(EL.xs[0] + EL.s, BW) * sc, by + EL.ys[0] * sc, re + 3 * p, 0, 7); ctx.stroke(); }
+    ctx.restore();
+    ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * p; ctx.setLineDash([6 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(bx + bw / 2, by - 4 * p); ctx.lineTo(bx + bw / 2, by + bh + 4 * p); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(bx + 0.5, by + 0.5, bw - 1, bh - 1);
+    /* scale bar and arrows */
+    let yb = by + bh + 14 * p;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(bx, yb); ctx.lineTo(bx + sc, yb); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('1 nm', bx + sc + 6 * p, yb);
+    const ax = bx + bw - 4 * p, al = Math.min(70 * p, bw * 0.22);
+    arrow(ax - al - 34 * p, yb, ax - 34 * p, T.pos, p, 'I, E');
+    yb += 18 * p; arrow(ax - 34 * p, yb, ax - al - 34 * p, T.neg, p, 'electrons drift');
+    /* notes under the box */
+    ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.font = `${11.5 * p}px ${T.ui}`; ctx.fillStyle = T.ink;
+    let yt = yb + 14 * p;
+    for (const [col, t] of notes) { ctx.fillStyle = col; yt = wrapText(t, pad, yt, mw, lh); }
+  }
+  function countOut() {
+    const el = $('inCount'); if (!el) return;
+    const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    let h = dd('Net crossings of the plane', `${EL.count}`) + dd('Real time elapsed', fmtTime(EL.t)) + dd('Drift so far', `${sig(-EL.s, 3)} nm`) + (S.blind ? '<div><dt>Expected n v_d t × (2 nm × 0.3 nm)</dt><dd class="ok">hidden: work it out</dd></div>' : dd('Expected n v_d t × (2 nm × 0.3 nm)', sig(EL.N * -EL.s / BW, 3)));
+    const rate = EL.t > 0 && EL.count > 0 ? EL.count / EL.t * area(d()) / (BOX.h * BOX.depth) : NaN;
+    h += dd('Electrons per second through the whole wire, from the count × A/(2 nm × 0.3 nm)', isFinite(rate) ? `${sci(rate, 3)} /s` : 'run until some cross', true);
+    el.innerHTML = h;
+  }
+  function insideReadouts() {
+    const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, n = nFree(), A = area(d()), vd = vdNow(), vF = fermiSpeed(n), hid = '<dd class="ok">hidden: work it out</dd>';
+    const dh = (a, b, w, hide) => (hide ? `<div${w ? ' class="wide"' : ''}><dt>${a}</dt>${hid}</div>` : dd(a, b, w));
+    const tau = collisionTime(n, rhoAt(M(), S.T)), rhoHidden = hidden();
+    let h = dd('Free electron density n', `${sci(n, 3)} m⁻³`, true);
+    h += dh('Current density J = I/A', `${sci(currentDensity(S.I, A), 3)} A/m²`, false, S.blind) + dh('Drift speed v_d = I/(nqA)', `${sci(vd, 3)} m/s`, false, S.blind);
+    h += dd('Random speed v_F', `${sci(vF, 3)} m/s`) + dh('v_d / v_F', sci(vd / vF, 2), false, S.blind);
+    h += dh('Time between collisions τ', `${sci(tau, 3)} s`, false, rhoHidden) + dh('Mean free path v_F τ', `${sig(vF * tau * 1e9, 3)} nm`, false, rhoHidden);
+    h += dh('Transit time L/v_d along the clips', fmtTime(transitTime(S.L, vd)), false, S.blind) + dh('Electrons per second I/e', `${sci(electronRate(S.I), 3)} /s`, false, S.blind);
+    $('inOut').innerHTML = h;
+    $('nHint').textContent = `n: ${S.mat === 'mystery' ? 'an estimate for this alloy (its composition stays hidden)' : FREE[S.mat].how}. Copper with one free electron per atom is the textbook case (OpenStax Example 9.3).`;
+  }
+
   function readouts() {
     const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, R = volts() / S.I;
     let h = dd('Current I (ammeter)', `${sig(S.I, 3)} A`) + dd('Voltage V (voltmeter)', `${vShown()} V`) + dd('R = V/I', `${sig(R, 4)} Ω`) + dd('Area A = πd²/4', `${sig(area(d()) * 1e6, 4)} mm²`);
     if (hidden()) h += '<div class="wide"><dt>ρ, α and R per metre</dt><dd class="ok">hidden: work them out</dd></div>';
     else h += dd('Resistivity ρ at this temperature', `${sci(rhoAt(M(), S.T), 4)} Ω·m`) + dd('α', `${sci(M().alpha, 3)} /K`) + dd('Resistance per metre', `${sig(resistance(M(), 1, d(), S.T), 4)} Ω/m`, true);
     $('out').innerHTML = h;
+    insideReadouts();
   }
 
   // ---------- controls ----------
@@ -304,16 +463,34 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     $('matHint').textContent = HINT[S.mat];
   }
   const upd = () => { sync(); draw(); readouts(); };
-  for (const b of document.querySelectorAll('#mats button')) b.addEventListener('click', () => { S.mat = b.dataset.m; upd(); fit(); });
-  $('gauges').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (b) { S.g = +b.dataset.g; upd(); fit(); } });
+  for (const b of document.querySelectorAll('#mats button')) b.addEventListener('click', () => { S.mat = b.dataset.m; resetElectrons(); upd(); fit(); });
+  $('gauges').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (b) { S.g = +b.dataset.g; resetCount(); upd(); fit(); } });
   $('sL').addEventListener('input', (e) => { S.L = +e.target.value; upd(); });
-  $('sI').addEventListener('input', (e) => { S.I = +e.target.value; upd(); });
+  $('sI').addEventListener('input', (e) => { S.I = +e.target.value; resetCount(); upd(); });
+  const CAN_LABEL = { bench: can.getAttribute('aria-label'), inside: 'A magnified region inside the wire: free electrons move at random among the ions and drift slowly against the current. A dashed plane counts the electrons the drift carries across it. Use the Inside the wire section of the panel to pause, step or reset the count.' };
+  function setView(v) {
+    S.view = v; stage.dataset.view = v; for (const b of document.querySelectorAll('[data-view]')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    can.setAttribute('aria-label', CAN_LABEL[v]); draw(); if (v === 'inside') runLoop();
+  }
+  for (const b of document.querySelectorAll('[data-view]')) b.addEventListener('click', () => setView(b.dataset.view));
+  $('inPlay').addEventListener('click', () => setPlaying(!EL.playing));
+  $('inStep').addEventListener('click', () => { for (let k = 0; k < 20; k++) stepInside(0.05); draw(); countOut(); });
+  $('inReset').addEventListener('click', () => { resetCount(); draw(); });
+  $('inRandom').addEventListener('change', () => { EL.trail = []; draw(); });
+  function reducePref() {
+    try { const s = sessionStorage.getItem('vd-resistivity-reduce-motion'); if (s === 'on' || s === 'off') return s === 'on'; } catch (_) {}
+    try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; }
+  }
+  $('rmotion').addEventListener('change', (e) => {
+    const on = e.target.checked; try { sessionStorage.setItem('vd-resistivity-reduce-motion', on ? 'on' : 'off'); } catch (_) {}
+    setPlaying(!on); $('inLive').textContent = on ? 'Reduce motion on: paused. Press Play or Step 1 s to move on.' : 'Reduce motion off.';
+  });
   $('sT').addEventListener('input', (e) => { S.T = +e.target.value; upd(); });
   for (const b of document.querySelectorAll('[data-plot]')) b.addEventListener('click', () => { S.plot = b.dataset.plot; sync(); fit(); });
   let drag = false;
   const local = (e) => { const r = can.getBoundingClientRect(); return e.clientX - r.left; };
   const setL = (px) => { S.L = Math.max(0.05, Math.min(1, Math.round(((px - geo.x0) / (geo.x1 - geo.x0)) * 200) / 200)); upd(); };
-  can.addEventListener('pointerdown', (e) => { if (!geo) return; can.focus(); drag = true; can.setPointerCapture(e.pointerId); setL(local(e)); });
+  can.addEventListener('pointerdown', (e) => { if (!geo || S.view !== 'bench') return; can.focus(); drag = true; can.setPointerCapture(e.pointerId); setL(local(e)); });
   can.addEventListener('pointermove', (e) => { if (drag) setL(local(e)); });
   can.addEventListener('pointerup', () => { drag = false; }); can.addEventListener('pointercancel', () => { drag = false; });
   can.addEventListener('keydown', (e) => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault(); S.L = Math.max(0.05, Math.min(1, +(S.L + (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 0.05 : 0.005)).toFixed(3))); upd(); });
@@ -371,7 +548,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     if (F) { const m = Math.max(...F.res.map(Math.abs), 1e-12), RY = (v) => (resT + resB) / 2 - (resB - resT) / 2 * 0.85 * v / m; fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(L, RY(0)); fctx.lineTo(Rr, RY(0)); fctx.stroke();
       fctx.fillStyle = T.clip; pts.forEach(([x], i) => { fctx.beginPath(); fctx.arc(PX(x), RY(F.res[i]), 2.6, 0, 7); fctx.fill(); }); }
   }
-  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); fit(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); countOut(); fit(); });
   function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); fit(); }
   const retheme = () => { tokens(); draw(); fit(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
@@ -380,6 +557,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmotion').checked = reducePref(); EL.playing = !$('rmotion').checked; setPlaying(EL.playing);
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) runLoop(); });
+  resetElectrons();
   tokens(); new ResizeObserver(resize).observe(stage); upd(); renderRows(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
 })();
