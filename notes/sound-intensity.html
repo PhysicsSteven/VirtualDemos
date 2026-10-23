@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sound Intensity and Decibels: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Sound Intensity and Decibels</h1><ul class="meta"><li><a href="../demos/sound-intensity.html">Open the demo</a></li><li>Intro physics (sound, OpenStax Vol 1 17.3)</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Intensity is power per area. A point source spreads its power P over a sphere, so I = P/(4πr²): double the distance and the intensity falls to a quarter.</li>
+<li>The decibel scale compares intensities by their ratio: β = 10 log(I/I₀) with I₀ = 10⁻¹² W/m². A factor of 4 in intensity is 10 log 4 = 6.0 dB, so every doubling of distance takes 6.0 dB off.</li>
+<li>Levels in decibels do not add. Independent sources add their intensities: two equal sources give 3.0 dB more than one, and a source 10 dB quieter adds only 0.4 dB.</li>
+<li>A steady background sets a floor: far from the source the meter reads the background, and the inverse square law can no longer be seen.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know what intensity is (OpenStax 17.3) and how to use logarithms. The loudspeaker stands at the left end of a measuring tape in an open field; drag the sound level meter along the tape, or use the Set up card's distance slider and its <strong>r ÷ 2</strong> and <strong>r × 2</strong> buttons. The card also sets each source's power, switches on source B (beside A) and adds a background noise. <strong>Record reading</strong> stores r and the meter's level; the graph under the readings puts r on a doubling scale.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Inverse square law.</strong> One 10 mW source. Ask Q1, then record 0.5, 1, 2, 4, 8, 16 and 32 m: 95.0, 89.0, 83.0, 77.0, 70.9, 64.9 and 58.9 dB. The graph's slope is −6.02 dB per doubling (Q2).</li>
+<li><strong>Two equal sources.</strong> At 4 m each source alone gives 77.0 dB and both together 80.0 dB (Q3).</li>
+<li><strong>A loud and a quiet source.</strong> 10 mW and 1 mW: switching the quiet one on raises 77.0 dB to 77.4 dB (Q4).</li>
+<li><strong>Background noise.</strong> A 55 dB background. Up to about 4 m the readings match the first run; at 16 m the meter reads 65.3 dB instead of 64.9 dB, at 32 m 60.4 dB instead of 58.9 dB (Q5).</li>
+<li><strong>Mystery source.</strong> A source of hidden power: measure β at several distances and find P (Q6).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: you walk away from a loudspeaker in an open field until you are twice as far away. Does the sound intensity halve, fall to a quarter, or something else? By how many decibels does the level change?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> A 10 mW source reads 89.0 dB at 1.0 m. Find the intensity there from P/(4πr²) and check the level. Predict the level at 2, 4 and 32 m, then measure. What slope should the graph of β against log₂ r have?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Two identical 10 mW sources stand side by side, 4.0 m from the meter. Each alone gives 77.0 dB. What does the meter read with both on, and why is it not 154 dB? How many such sources would you need to reach 87.0 dB?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A 10 mW and a 1 mW source play together. The quiet one alone gives 67.0 dB at 4.0 m. Find the reading with both on. Why do engineers say a source more than 10 dB quieter than another hardly matters?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> With a steady 55 dB background, at what distance does the source alone give 55 dB? What does the meter read there? Explain why the 6 dB per doubling rule fails far from the source, and how you would correct a reading for the background.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> With the Mystery source, record the level at three or more distances. Find its power P from your graph. Then find the pressure amplitude Δp at 1.0 m, with I = Δp²/(2ρv), ρ = 1.20 kg/m³ and v = 343 m/s.</p></div>
+
+<div class="q"><p><strong>Q7.</strong> A 1.0 W source reads 109.0 dB at 1.0 m. How far away must you stand for it to read 85 dB, a common limit for an 8 hour working day? Is the inverse square law a good model inside a room? (See the Room Acoustics demo.)</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Twice as far, half as loud."</strong> The intensity falls to a quarter (6 dB). How loud it sounds is another matter: listeners judge a 10 dB drop as roughly half as loud.</li>
+<li><strong>"Decibels add like other units."</strong> 80 dB + 80 dB is 83 dB: decibels are logarithms of intensity ratios, so intensities add, not levels.</li>
+<li><strong>"0 dB means no sound."</strong> 0 dB is I₀ = 10⁻¹² W/m², near the threshold of hearing at 1 kHz; negative levels exist.</li>
+<li><strong>"The background just shifts every reading by the same amount."</strong> The background adds intensity, so it matters only where the source's own intensity is comparable.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Each source is a point that radiates its power P equally in all directions in a free field: I = P/(4πr²), exactly, from 0.5 m out. Close to a real loudspeaker (within about its own size) and near the ground, where reflections arrive, the point source picture fails; neither is modelled.</li>
+<li>The sources play independent noise, so intensities add: I = I_A + I_B + I_background, and the meter shows β = 10 log(I/I₀) rounded to 0.1 dB. Two speakers playing the same tone would interfere instead (OpenStax 16.5). Source B is beside A, at the same distance from the meter.</li>
+<li>No energy is lost in the air: absorption at 1 kHz, 20 °C and 50 % humidity is about 5 dB per km (ISO 9613-1), 0.15 dB over 32 m.</li>
+<li>The pressure amplitude uses I = Δp²/(2ρv) with ρ = 1.20 kg/m³ and v = 343 m/s. The source powers run in 1, 2, 5 steps from 10 µW to 1 W; the Mystery source is between 0.5 mW and 50 mW.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>The decibel is named after Alexander Graham Bell; the bel (a factor of 10) was too coarse, so engineers use tenths of it.</li>
+<li>Sound level meters weight frequencies the way the ear does (dB(A)); this demo reads unweighted levels.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

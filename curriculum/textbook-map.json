@@ -3931,9 +3931,11 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "two-speaker"
+        "sound-intensity",
+        "two-speaker",
+        "room-acoustics"
       ],
-      "note": "Two Speaker Interference (2026-10-23, Claude): the sound level meter reads in dB, and one speaker alone falls 6 dB per doubling of distance.",
+      "note": "Sound Intensity and Decibels (2026-10-23): inverse square law and adding levels. Two Speaker Interference (2026-10-23, Claude): the sound level meter reads in dB, and one speaker alone falls 6 dB per doubling of distance. Room Acoustics: 1/r² in an anechoic chamber against a reverberant room.",
       "unit": "sound"
     },
     {
@@ -6892,6 +6894,44 @@
       "note": "Acoustics module (2026-10-23): pulse echo ranging and Doppler blood flow; media from OpenStax College Physics 17.7; links to the Doppler demo.",
       "title": "Ultrasound: Echoes and Blood Flow",
       "url": "demos/ultrasound.html"
+    },
+    {
+      "demo": "sound-intensity",
+      "course": [
+        "acoustics"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "17.3",
+          "title": "Sound Intensity"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Acoustics module (2026-10-23): level against distance (6 dB per doubling) and incoherent sources adding as intensities.",
+      "title": "Sound Intensity and Decibels",
+      "url": "demos/sound-intensity.html"
+    },
+    {
+      "demo": "room-acoustics",
+      "course": [
+        "acoustics"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "17.3",
+          "title": "Sound Intensity"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Acoustics module (2026-10-23): reverberation time against Sabine's formula (beyond the textbook) and the anechoic chamber's 1/r² and wedge cutoff. Two worksheets: room-acoustics and anechoic-chamber.",
+      "title": "Room Acoustics and the Anechoic Chamber",
+      "url": "demos/room-acoustics.html"
     },
     {
       "demo": "rotation-curves",

@@ -1,0 +1,466 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Sound Intensity and Decibels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: an open field with a loudspeaker, a measuring tape and a sound level meter on the left, the Set up card over the sky; the rail on the right. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 500px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; touch-action: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.scene { position: absolute; inset: 0; }
+.rack { position: absolute; z-index: 2; display: flex; flex-direction: column; gap: 4px; padding: 6px 8px; background: color-mix(in srgb, var(--surface) 90%, transparent); border: 1px solid var(--line); border-radius: 8px; }
+.rack-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+/* the Set up card fades away while the demo runs (and turns see through while something on the picture is dragged) */
+.rack { width: min(300px, 100%); transition: opacity 0.35s ease, visibility 0.35s; }
+.rack .slider-head label, .rack .slider-head output { font-size: 0.78rem; }
+.rack .btn { font-size: 0.78rem; padding: 3px 8px; }
+.rack.away { opacity: 0; visibility: hidden; }
+.rack.ghost { opacity: 0.25; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .rack { transition: none; } }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.lab { font-size: 0.88rem; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 460px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 500px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .chips button, .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+:root { --sky: #eaf2fb; --sky2: #f7fafd; --grass: #9cc58a; --grass-dark: #6f9c5d; --tape: #f2d36b; --tape-edge: #b8962e; --spk: #36414e; --spk-b: #7a4fb0; --meter: #26313d; --lcd: #c9e7c1; --lcd-ink: #17202b; --wave: #2b60b5; --fit: #a7740b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sky: #0f1822; --sky2: #131d29; --grass: #2f4a2a; --grass-dark: #223820; --tape: #8a7536; --tape-edge: #5e4f22; --spk: #c9d1db; --spk-b: #b08ae0; --meter: #3a4553; --lcd: #9fd39a; --lcd-ink: #0d1218; --wave: #69a0ff; --fit: #e2b350; } }
+:root[data-theme="dark"] { --sky: #0f1822; --sky2: #131d29; --grass: #2f4a2a; --grass-dark: #223820; --tape: #8a7536; --tape-edge: #5e4f22; --spk: #c9d1db; --spk-b: #b08ae0; --meter: #3a4553; --lcd: #9fd39a; --lcd-ink: #0d1218; --wave: #69a0ff; --fit: #e2b350; }
+.stage { min-height: 640px; }
+.rack { right: 10px; left: auto; top: 10px; }
+.rack .seg button { font-size: 0.76rem; padding: 3px 8px; }
+.rack .inline { gap: 4px 8px; }
+.rack .lab { font-size: 0.78rem; }
+.rack .check { font-size: 0.8rem; }
+@media (max-width: 820px) { main.bench .stage { height: auto; max-height: none; } .scene { position: relative; inset: auto; height: 380px; max-height: 70vh; } .rack { position: static; margin: 8px; width: auto; } }
+/* folded rail sections and long hints (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Sound Intensity and Decibels</h1>
+      <p>A loudspeaker in an open field spreads its power P over a sphere, so the intensity falls as I = P/(4πr²). The sound level meter reads β = 10 log(I/I₀) in decibels: every doubling of the distance takes off 6.0 dB. Add a second source and find out why two 80 dB sources make 83 dB, not 160.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">I₀ = 10⁻¹² W/m², free field</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/sound-intensity.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/sound-intensity.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM16 2h1v1h-1zM18 2h3v1h-3zM22 2h2v1h-2zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM15 3h2v1h-2zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM15 4h3v1h-3zM21 4h3v1h-3zM25 4h1v1h-1zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h4v1h-4zM16 5h4v1h-4zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h2v1h-2zM18 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h3v1h-3zM15 7h2v1h-2zM20 7h1v1h-1zM23 7h1v1h-1zM27 7h4v1h-4zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM18 9h1v1h-1zM21 9h3v1h-3zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h2v1h-2zM15 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h6v1h-6zM32 10h5v1h-5zM3 11h1v1h-1zM5 11h3v1h-3zM13 11h1v1h-1zM17 11h2v1h-2zM24 11h3v1h-3zM28 11h1v1h-1zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h5v1h-5zM8 12h1v1h-1zM11 12h3v1h-3zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h1v1h-1zM5 13h3v1h-3zM10 13h1v1h-1zM12 13h3v1h-3zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM26 13h1v1h-1zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM6 14h4v1h-4zM12 14h1v1h-1zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h5v1h-5zM30 14h9v1h-9zM2 15h1v1h-1zM4 15h4v1h-4zM9 15h3v1h-3zM14 15h3v1h-3zM18 15h2v1h-2zM22 15h4v1h-4zM30 15h1v1h-1zM33 15h1v1h-1zM4 16h1v1h-1zM8 16h5v1h-5zM14 16h1v1h-1zM16 16h4v1h-4zM22 16h3v1h-3zM28 16h3v1h-3zM32 16h4v1h-4zM38 16h1v1h-1zM3 17h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM9 17h1v1h-1zM11 17h2v1h-2zM17 17h7v1h-7zM25 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM4 18h3v1h-3zM8 18h2v1h-2zM12 18h1v1h-1zM15 18h1v1h-1zM17 18h2v1h-2zM21 18h1v1h-1zM24 18h1v1h-1zM27 18h3v1h-3zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h2v1h-2zM5 19h1v1h-1zM7 19h1v1h-1zM9 19h2v1h-2zM14 19h1v1h-1zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM37 19h1v1h-1zM3 20h1v1h-1zM5 20h1v1h-1zM8 20h1v1h-1zM10 20h3v1h-3zM16 20h3v1h-3zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM5 21h2v1h-2zM10 21h1v1h-1zM12 21h1v1h-1zM14 21h1v1h-1zM17 21h1v1h-1zM20 21h5v1h-5zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM3 22h2v1h-2zM6 22h3v1h-3zM11 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h4v1h-4zM9 23h2v1h-2zM12 23h2v1h-2zM15 23h2v1h-2zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h2v1h-2zM8 24h1v1h-1zM10 24h3v1h-3zM16 24h2v1h-2zM20 24h1v1h-1zM22 24h3v1h-3zM26 24h1v1h-1zM28 24h4v1h-4zM33 24h3v1h-3zM37 24h2v1h-2zM2 25h2v1h-2zM6 25h2v1h-2zM10 25h2v1h-2zM14 25h1v1h-1zM16 25h3v1h-3zM21 25h5v1h-5zM28 25h2v1h-2zM31 25h1v1h-1zM33 25h2v1h-2zM37 25h1v1h-1zM2 26h2v1h-2zM5 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM13 26h3v1h-3zM17 26h1v1h-1zM20 26h3v1h-3zM24 26h2v1h-2zM27 26h2v1h-2zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h3v1h-3zM9 27h1v1h-1zM11 27h2v1h-2zM15 27h1v1h-1zM17 27h2v1h-2zM23 27h1v1h-1zM25 27h1v1h-1zM30 27h2v1h-2zM33 27h1v1h-1zM2 28h1v1h-1zM7 28h2v1h-2zM11 28h1v1h-1zM13 28h2v1h-2zM16 28h1v1h-1zM22 28h1v1h-1zM27 28h3v1h-3zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM10 29h4v1h-4zM15 29h1v1h-1zM18 29h1v1h-1zM23 29h1v1h-1zM26 29h1v1h-1zM30 29h5v1h-5zM37 29h1v1h-1zM2 30h1v1h-1zM4 30h5v1h-5zM12 30h2v1h-2zM15 30h1v1h-1zM19 30h1v1h-1zM25 30h4v1h-4zM30 30h9v1h-9zM10 31h1v1h-1zM14 31h2v1h-2zM17 31h6v1h-6zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM13 32h5v1h-5zM19 32h1v1h-1zM22 32h3v1h-3zM26 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h4v1h-4zM15 33h1v1h-1zM17 33h4v1h-4zM23 33h1v1h-1zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM15 34h2v1h-2zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h10v1h-10zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h6v1h-6zM20 35h1v1h-1zM22 35h1v1h-1zM25 35h1v1h-1zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM15 36h1v1h-1zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM14 37h4v1h-4zM21 37h3v1h-3zM25 37h2v1h-2zM28 37h5v1h-5zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h2v1h-2zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="scene" id="scene">
+      <canvas id="can" tabindex="0" role="application" aria-label="A loudspeaker on a stand at the left of an open field and a sound level meter on a tripod over a measuring tape. Drag the meter along the tape to change the distance r. Left and right arrows move it by 0.1 m (with Shift, 1 m); page up and page down double or halve r."></canvas>
+      </div>
+      <div class="rack" id="rack" role="group" aria-label="Set up the sources and the meter">
+        <span class="rack-title">Set up</span>
+        <div><div class="slider-head"><label for="sR">Distance r, speaker to meter</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="0.5" max="32" step="0.1"></div>
+        <div class="btnrow"><button type="button" class="btn" data-step="-0.1">r −0.1 m</button><button type="button" class="btn" data-step="0.1">r +0.1 m</button><button type="button" class="btn" data-step="half">r ÷ 2</button><button type="button" class="btn" data-step="double">r × 2</button></div>
+        <div><div class="slider-head"><label for="sPA">Power of source A</label><output id="oPA" for="sPA"></output></div><input type="range" id="sPA" min="0" max="15" step="1"></div>
+        <label class="check"><input type="checkbox" id="bOn"><span>Source B, beside A</span></label>
+        <div id="bBox"><div class="slider-head"><label for="sPB">Power of source B</label><output id="oPB" for="sPB"></output></div><input type="range" id="sPB" min="0" max="15" step="1"></div>
+        <div class="inline"><span class="lab">Background noise</span>
+          <div class="seg" role="group" aria-label="Background noise" id="bgSeg"><button type="button" data-bg="0" aria-pressed="true">None</button><button type="button" data-bg="35" aria-pressed="false">35 dB</button><button type="button" data-bg="45" aria-pressed="false">45 dB</button><button type="button" data-bg="55" aria-pressed="false">55 dB</button></div></div>
+        <div class="inline"><span class="lab">Tape</span>
+          <div class="seg" role="group" aria-label="Length of tape shown" id="viewSeg"><button type="button" data-v="4" aria-pressed="false">0 to 4 m</button><button type="button" data-v="32" aria-pressed="true">0 to 32 m</button></div></div>
+      </div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="inverse" aria-pressed="true">Inverse square law</button>
+          <button type="button" data-p="two" aria-pressed="false">Two equal sources</button>
+          <button type="button" data-p="unequal" aria-pressed="false">A loud and a quiet source</button>
+          <button type="button" data-p="background" aria-pressed="false">Background noise</button>
+          <button type="button" data-p="mystery" aria-pressed="false">Mystery source</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Sound level meter</h2>
+        <dl class="readout" id="out"></dl>
+        <p class="formula">I = P/(4πr²) · β = 10 log(I/I₀) · I = Δp²/(2ρv)</p>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Record reading</button>
+          <button type="button" class="btn" id="exportWs">Export to worksheet</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Recorded readings</caption><thead><tr><th>#</th><th>r (m)</th><th>Sources</th><th>β (dB)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="plotbox"><canvas id="fitCan" role="img" aria-label="The recorded levels against distance, with r doubling at each grid line, a least squares line and its residuals."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <p class="hint">Each reading stores r, the sources and the meter's level. The graph puts r on a doubling scale (log₂ r), so the inverse square law is a straight line; its slope is the change in level per doubling. It uses the readings taken with the sources as they are set now.</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides the intensities, each source's own level and the pressure amplitude; the meter stays. The Mystery source always hides its power.</p>
+        <details class="fold">
+          <summary>Model</summary>
+          <div class="foldbody">
+            <p class="hint">Each source is a point that sends its power P out equally in all directions, high above an open field with nothing to reflect the sound (a free field), so I = P/(4πr²) exactly and no energy is lost in the air. (Air absorbs about 5 dB per km at 1 kHz, 20 °C and 50 % humidity, by ISO 9613-1: about 0.15 dB over 32 m, left out.) Close to a real loudspeaker, within about its own size, the point source picture fails; the demo starts at 0.5 m. Source B stands beside A, at the same distance from the meter.</p>
+            <p class="hint">The sources play independent noise, so their intensities add: I = I_A + I_B + I_background, and β = 10 log(I/I₀). Two loudspeakers playing the same tone would interfere instead (OpenStax section 16.5, Interference of Waves). The background is a steady noise of the chosen level, the same everywhere. The meter shows the level to 0.1 dB, as a real meter does; the pressure amplitude uses ρ = 1.20 kg/m³ and v = 343 m/s.</p>
+          </div>
+        </details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const SI_VERSION = 'sound-intensity@2026-10-23';
+  const I0 = 1e-12, RHO = 1.20, V_SOUND = 343;
+  /* source powers on the slider: 1, 2, 5 steps from 10 µW to 1 W */
+  const POWERS = [1e-5, 2e-5, 5e-5, 1e-4, 2e-4, 5e-4, 1e-3, 2e-3, 5e-3, 1e-2, 2e-2, 5e-2, 0.1, 0.2, 0.5, 1];
+  const intensity = (P, r) => P / (4 * Math.PI * r * r);
+  const levelOf = (I) => 10 * Math.log10(I / I0);
+  const intensityOf = (L) => I0 * Math.pow(10, L / 10);
+  /* independent (incoherent) sources: intensities add, so levels add as 10 log Σ 10^(L/10) */
+  const addLevels = (...L) => levelOf(L.reduce((s, l) => s + intensityOf(l), 0));
+  const pressureAmp = (I) => Math.sqrt(2 * RHO * V_SOUND * I);   /* I = Δp²/(2ρv) */
+  /* what the meter shows: the total level to 0.1 dB. pB and bg are 0 when off */
+  function meterLevel(pA, pB, bg, r) { const I = intensity(pA, r) + (pB ? intensity(pB, r) : 0) + (bg ? intensityOf(bg) : 0); return Math.round(levelOf(I) * 10) / 10; }
+  function fitLine(xs, ys) {
+    const n = xs.length; if (n < 2) return null;
+    const mx = xs.reduce((a, b) => a + b, 0) / n, my = ys.reduce((a, b) => a + b, 0) / n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (sxx < 1e-30) return null;
+    const b = sxy / sxx, a0 = my - b * mx, res = xs.map((x, i) => ys[i] - a0 - b * x), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { b, a: a0, seB: Math.sqrt(s2 / sxx), res, n };
+  }
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  function readingsCSV(rows, meta) {
+    const L = ['# Sound Intensity virtual apparatus: recorded readings (simulated data)', `# demo version,${meta.version}`,
+      '# model,"point sources in a free field, I = P/(4 pi r^2); independent sources and background add as intensities; no air absorption"',
+      '# rounding,"r to 0.1 m, level to 0.1 dB as the meter shows it"', '# noise,none', 'row,r_m,source_A_W,source_B_W,background_dB,L_dB'];
+    rows.forEach((r, i) => L.push([i + 1, r.r, r.pA, r.pB, r.bg, r.L].map(csvCell).join(',')));
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const PRESETS = {
+    inverse: { iA: 9, bOn: false, iB: 9, bg: 0, r: 1, view: 32, hint: 'One 10 mW source. At 1 m the meter reads 89.0 dB. Record the level at 0.5, 1, 2, 4, 8, 16 and 32 m: each doubling of r spreads the power over four times the area, so the level falls by 10 log 4 = 6.0 dB.' },
+    two: { iA: 9, bOn: true, iB: 9, bg: 0, r: 4, view: 32, hint: 'Two 10 mW sources side by side. Read the level with A alone, B alone and both: two equal independent sources give twice the intensity, which is only 3.0 dB more, at every distance.' },
+    unequal: { iA: 9, bOn: true, iB: 6, bg: 0, r: 4, view: 32, hint: 'A 10 mW source and a 1 mW source, 10 dB quieter. Switch B on and off: it adds only 0.4 dB. A source 10 dB below another hardly changes the level.' },
+    background: { iA: 9, bOn: false, iB: 9, bg: 55, r: 4, view: 32, hint: 'The 10 mW source with a steady 55 dB background. Near the speaker the background does not matter; far away the level falls more slowly toward 55 dB (60.4 dB at 32 m, where the source alone gives 58.9 dB). Find where the 6 dB per doubling rule starts to fail.' },
+    mystery: { iA: 9, bOn: false, iB: 9, bg: 0, r: 2, view: 32, mystery: true, hint: 'A source of hidden power. Measure the level at several distances and work out its power P.' }
+  };
+  const S = { preset: 'inverse', iA: 9, bOn: false, iB: 9, bg: 0, r: 1, view: 32, mystery: null, blind: false, rows: [], series: null, t: 0 };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, geo = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      sky: g('--sky'), sky2: g('--sky2'), grass: g('--grass'), grassDark: g('--grass-dark'), tape: g('--tape'), tapeEdge: g('--tape-edge'), spk: g('--spk'), spkB: g('--spk-b'), meter: g('--meter'), lcd: g('--lcd'), lcdInk: g('--lcd-ink'), wave: g('--wave'), fit: g('--fit'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 1) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const pw = (P) => (P >= 1 ? `${P} W` : P >= 1e-3 ? `${+(P * 1e3).toPrecision(3)} mW` : `${+(P * 1e6).toPrecision(3)} µW`);
+  const sci = (v) => { if (!isFinite(v) || v <= 0) return '—'; const e = Math.floor(Math.log10(v)), m = v / 10 ** e; return `${m.toFixed(2)} × 10${String(e).replace('-', '⁻').replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d])}`; };
+  const pA = () => (S.mystery ? S.mystery : POWERS[S.iA]), pB = () => (S.bOn ? POWERS[S.iB] : 0);
+  const reading = () => meterLevel(pA(), pB(), S.bg, S.r);
+
+  function draw() {
+    if (!T || !W) return;
+    const p = ps(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const gy = H - 70 * p, sky = ctx.createLinearGradient(0, 0, 0, gy); sky.addColorStop(0, T.sky); sky.addColorStop(1, T.sky2); ctx.fillStyle = sky; ctx.fillRect(0, 0, W, gy);
+    ctx.fillStyle = T.grass; ctx.fillRect(0, gy, W, H - gy); ctx.fillStyle = T.grassDark; ctx.fillRect(0, gy, W, 2 * p);
+    /* the tape: 0 at the speaker, out to the chosen length */
+    const x0 = 70 * p, x1 = W - 40 * p, sc = (x1 - x0) / S.view, X = (r) => x0 + r * sc, ty = gy + 14 * p;
+    geo = { X, sc, x0, gy };
+    ctx.fillStyle = T.tape; ctx.fillRect(x0, ty, x1 - x0, 16 * p); ctx.strokeStyle = T.tapeEdge; ctx.lineWidth = 1; ctx.strokeRect(x0 + 0.5, ty + 0.5, x1 - x0, 16 * p);
+    const minor = S.view <= 4 ? 0.1 : 1, major = S.view <= 4 ? 0.5 : 4;
+    ctx.fillStyle = T.lcdInk; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let i = 0; i <= Math.round(S.view / minor); i++) { const r = i * minor, x = X(r), big = Math.abs(r / major - Math.round(r / major)) < 1e-9;
+      ctx.strokeStyle = T.tapeEdge; ctx.beginPath(); ctx.moveTo(x, ty); ctx.lineTo(x, ty + (big ? 9 : 4) * p); ctx.stroke(); if (big) ctx.fillText(`${+r.toFixed(1)}`, x, ty + 22 * p); }
+    ctx.fillText('m', x1 + 14 * p, ty + 22 * p);
+    /* wavefronts: arcs spreading from the speaker, fading as the energy spreads over a bigger sphere (decoration; spacing not to scale) */
+    const sx = X(0), sy = gy - 120 * p, gap = 46 * p, ph = reduce ? 0 : (S.t * 40 * p) % gap;
+    ctx.save(); ctx.beginPath(); ctx.rect(sx, 0, W - sx, gy); ctx.clip(); ctx.strokeStyle = T.wave; ctx.lineWidth = 2 * p;
+    for (let k = 0; k < 40; k++) { const rad = 14 * p + k * gap + ph, a = Math.min(0.55, 0.55 * (40 * p / rad) ** 2) * (S.mystery ? 1 : Math.max(0.35, Math.min(1.2, (Math.log10(pA()) + 6) / 5)));
+      if (a < 0.02) break; ctx.globalAlpha = a; ctx.beginPath(); ctx.arc(sx, sy, rad, -Math.PI / 2, Math.PI / 2); ctx.stroke(); }
+    /* the sphere through the meter: the source's power is spread over its area 4πr² */
+    const rr = S.r * sc; ctx.globalAlpha = 1; ctx.strokeStyle = T.fit; ctx.lineWidth = 1.5 * p; ctx.setLineDash([6 * p, 5 * p]); ctx.beginPath(); ctx.arc(sx, sy, rr, -Math.PI / 2, Math.PI / 2); ctx.stroke(); ctx.setLineDash([]);
+    const la = -Math.PI / 4, lx = sx + rr * Math.cos(la), ly = sy + rr * Math.sin(la);
+    if (ly > 60 * p) { ctx.fillStyle = T.fit; ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`sphere area 4πr² = ${f(4 * Math.PI * S.r * S.r, S.r < 3 ? 2 : 0)} m²`, Math.min(lx + 6 * p, W - 230 * p), ly - 4 * p); }
+    ctx.restore(); ctx.globalAlpha = 1;
+    /* speaker A on its stand, and B beside it (drawn behind) */
+    const spk = (x, y, col, lab) => { ctx.fillStyle = T.meter; ctx.fillRect(x - 2 * p, y + 26 * p, 4 * p, gy - y - 26 * p); ctx.fillRect(x - 16 * p, gy - 3 * p, 32 * p, 3 * p);
+      ctx.fillStyle = col; ctx.fillRect(x - 22 * p, y - 26 * p, 20 * p, 52 * p); ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(x - 12 * p, y - 10 * p, 6 * p, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(x - 12 * p, y + 10 * p, 8 * p, 0, 7); ctx.fill();
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x - 12 * p, y + 10 * p, 4 * p, 0, 7); ctx.fill(); ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(lab, x - 12 * p, y - 30 * p); };
+    if (S.bOn) spk(sx - 26 * p, sy + 4 * p, T.spkB, 'B');
+    spk(sx, sy, T.spk, S.mystery ? 'A ?' : 'A');
+    /* the meter on its tripod at r */
+    const mx = X(S.r), my = sy;
+    ctx.strokeStyle = T.meter; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(mx, my + 40 * p); ctx.lineTo(mx - 14 * p, gy); ctx.moveTo(mx, my + 40 * p); ctx.lineTo(mx + 14 * p, gy); ctx.moveTo(mx, my + 40 * p); ctx.lineTo(mx, gy); ctx.stroke();
+    ctx.fillStyle = T.meter; ctx.fillRect(mx - 2 * p, my - 4 * p, 4 * p, 44 * p); ctx.beginPath(); ctx.arc(mx, my - 6 * p, 6 * p, 0, 7); ctx.fill();   /* microphone tip at the height of the speakers */
+    const bw = 104 * p, bx = Math.min(W - bw - 6 * p, Math.max(6 * p, mx - bw / 2)), by = my - (bx < sx + 6 * p ? 112 : 78) * p;   /* lifted clear of the speakers when the meter is close to them */
+    ctx.fillStyle = T.meter; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, bw, 54 * p, 6 * p) : ctx.rect(bx, by, bw, 54 * p); ctx.fill();
+    ctx.fillStyle = T.lcd; ctx.fillRect(bx + 6 * p, by + 6 * p, bw - 12 * p, 30 * p);
+    ctx.fillStyle = T.lcdInk; ctx.font = `700 ${18 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(`${f(reading(), 1)}`, bx + bw - 30 * p, by + 21 * p);
+    ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.fillText('dB', bx + bw - 27 * p, by + 23 * p);
+    ctx.fillStyle = T.lcd; ctx.font = `${9 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('SOUND LEVEL METER', bx + bw / 2, by + 45 * p);
+    /* r marker on the tape */
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(mx, gy + 2 * p); ctx.lineTo(mx, ty + 16 * p); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(`r = ${f(S.r, 1)} m`, 14 * p, 14 * p);
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.fillText(`A: ${S.mystery ? 'mystery' : pw(pA())}${S.bOn ? `   B: ${pw(pB())}` : ''}${S.bg ? `   background ${S.bg} dB` : ''}`, 14 * p, 32 * p);
+  }
+  function readouts() {
+    const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, L = reading();
+    let h = dd('Level β on the meter', `${f(L, 1)} dB`, true);
+    if (S.blind) h += '<div class="wide"><dt>Intensities and each source\'s level</dt><dd class="ok">hidden in Blind</dd></div>';
+    else {
+      const IA = intensity(pA(), S.r), IB = pB() ? intensity(pB(), S.r) : 0, Ib = S.bg ? intensityOf(S.bg) : 0, I = IA + IB + Ib;
+      h += dd('Total intensity I', `${sci(I)} W/m²`) + dd('Pressure amplitude Δp', `${sci(pressureAmp(I))} Pa`);
+      h += S.mystery ? '<div class="wide"><dt>Source A alone</dt><dd class="ok">hidden: the source is a mystery</dd></div>' : dd('Source A alone', `${sci(IA)} W/m², ${f(levelOf(IA), 2)} dB`, true);
+      if (S.bOn) h += dd('Source B alone', `${sci(IB)} W/m², ${f(levelOf(IB), 2)} dB`, true);
+      if (S.bg) h += dd('Background alone', `${sci(Ib)} W/m², ${S.bg} dB`, true);
+    }
+    $('out').innerHTML = h;
+  }
+  function sync() {
+    $('sR').max = S.view; S.r = Math.min(S.r, S.view);
+    $('sR').value = S.r; $('oR').textContent = `${f(S.r, 1)} m`;
+    $('sPA').value = S.iA; $('oPA').textContent = S.mystery ? 'mystery' : pw(POWERS[S.iA]); $('sPA').disabled = !!S.mystery;
+    $('bOn').checked = S.bOn; $('bBox').hidden = !S.bOn; $('sPB').value = S.iB; $('oPB').textContent = pw(POWERS[S.iB]);
+    for (const b of document.querySelectorAll('#bgSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.bg === S.bg));
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.v === S.view));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  const changed = (keep) => { if (!keep) S.preset = 'custom'; sync(); draw(); readouts(); fit(); };
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; Object.assign(S, { iA: c.iA, bOn: c.bOn, iB: c.iB, bg: c.bg, r: c.r, view: c.view });
+    S.mystery = c.mystery ? +(Math.pow(10, -3.3 + 2 * Math.random())).toPrecision(2) : null; $('presetHint').textContent = c.hint; changed(true); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const setR = (r) => { S.r = Math.max(0.5, Math.min(S.view, Math.round(r * 10) / 10)); changed(true); };
+  $('sR').addEventListener('input', (e) => setR(+e.target.value));
+  for (const b of document.querySelectorAll('[data-step]')) b.addEventListener('click', () => { const s = b.dataset.step; setR(s === 'half' ? S.r / 2 : s === 'double' ? S.r * 2 : S.r + +s); });
+  $('sPA').addEventListener('input', (e) => { S.iA = +e.target.value; changed(); });
+  $('sPB').addEventListener('input', (e) => { S.iB = +e.target.value; changed(); });
+  $('bOn').addEventListener('change', (e) => { S.bOn = e.target.checked; changed(); });
+  $('bgSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-bg]'); if (b) { S.bg = +b.dataset.bg; changed(); } });
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b) { S.view = +b.dataset.v; changed(true); } });
+  /* drag the meter along the tape */
+  let drag = false; const local = (e) => { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  can.addEventListener('pointerdown', (e) => { if (!geo) return; const [x, y] = local(e); if (Math.abs(x - geo.X(S.r)) < 40 * ps() && y > geo.gy - 220 * ps()) { drag = true; $('rack').classList.add('ghost'); can.setPointerCapture(e.pointerId); } });
+  can.addEventListener('pointermove', (e) => { if (drag) { const [x] = local(e); setR((x - geo.x0) / geo.sc); } });
+  const endDrag = () => { drag = false; $('rack').classList.remove('ghost'); }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('keydown', (e) => { if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') setR(S.r + (e.key === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 1 : 0.1));
+    else if (e.key === 'PageUp') setR(S.r * 2); else if (e.key === 'PageDown') setR(S.r / 2); else return; e.preventDefault(); });
+
+  // ---------- readings ----------
+  const capStatus = (m) => { $('capStatus').textContent = m; };
+  const srcKey = () => `${S.mystery ? 'mystery' : POWERS[S.iA]}|${pB()}|${S.bg}`;
+  const srcText = (r) => [r.pA === 'mystery' ? 'A mystery' : `A ${pw(+r.pA)}`, r.pB ? `B ${pw(+r.pB)}` : '', r.bg ? `background ${r.bg} dB` : ''].filter(Boolean).join(', ');
+  $('capture').addEventListener('click', () => { S.rows.push({ r: f(S.r, 1), pA: S.mystery ? 'mystery' : String(POWERS[S.iA]), pB: S.bOn ? String(pB()) : '', bg: S.bg ? String(S.bg) : '', L: f(reading(), 1), key: srcKey() });
+    renderRows(); capStatus(`Row ${S.rows.length} recorded.`); });
+  $('clearRows').addEventListener('click', () => { S.rows = []; S.series = Date.now(); renderRows(); capStatus('Readings cleared.'); });
+  /* Export to worksheet: the readings go to the student worksheet through localStorage (same site); the CSV travels with them, and is
+     downloaded here instead if this browser blocks storage. */
+  const WORKSHEET = '../curriculum/labs/students/sound-intensity.html';
+  $('exportWs').addEventListener('click', () => {
+    if (!S.rows.length) { capStatus('No readings to export.'); return; }
+    const txt = readingsCSV(S.rows, { version: SI_VERSION }), lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => l.split(',');
+    if (!S.series) S.series = Date.now();
+    const hand = { v: 1, demo: 'sound-intensity', series: S.series, sent: new Date().toISOString(), columns: split(lines[0]), rows: lines.slice(1).map(split),
+      note: 'Simulated data from the Sound Intensity and Decibels demo.', csv: txt, csvName: 'sound-intensity-readings.csv' };
+    try { localStorage.setItem('vd-handoff:sound-intensity', JSON.stringify(hand)); }
+    catch (_) {
+      try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'sound-intensity-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+      capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return;
+    }
+    capStatus(`${S.rows.length} reading${S.rows.length === 1 ? '' : 's'} sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = WORKSHEET; a.target = 'sound-intensity-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+  });
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr><td>${i + 1}</td><td>${r.r}</td><td>${srcText(r)}</td><td>${r.L}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="5">No readings yet. Place the meter, then record.</td></tr>';
+    fit();
+  }
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+  const fitCan = $('fitCan'), fctx = fitCan.getContext('2d');
+  function fit() {
+    const pts = S.rows.filter((r) => r.key === srcKey()).map((r) => [Math.log2(+r.r), +r.L]);
+    const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
+    $('fitOut').innerHTML = F ? `<div><dt>Slope (dB per doubling)</dt><dd>${f(F.b, 2)}${isFinite(F.seB) ? ` ± ${f(F.seB, 2)}` : ''}</dd></div><div><dt>Level at 1 m (intercept)</dt><dd>${f(F.a, 1)} dB</dd></div>`
+      : '<div class="wide"><dt>Fit</dt><dd class="ok">Record at least two distances with these sources.</dd></div>';
+    drawFit(pts, F);
+  }
+  function drawFit(pts, F) {
+    const r = fitCan.getBoundingClientRect(), w = r.width, h = r.height; if (!w || !T) return;
+    fitCan.width = Math.round(w * dpr); fitCan.height = Math.round(h * dpr); fctx.setTransform(dpr, 0, 0, dpr, 0, 0); fctx.fillStyle = T.canvas; fctx.fillRect(0, 0, w, h);
+    const L = 44, Rr = w - 8, top = 8, mainB = h - 58, resT = h - 46, resB = h - 18;
+    fctx.strokeStyle = T.line; fctx.strokeRect(L + 0.5, top + 0.5, Rr - L, mainB - top); fctx.strokeRect(L + 0.5, resT + 0.5, Rr - L, resB - resT);
+    fctx.fillStyle = T.muted; fctx.font = `10px ${T.mono}`; fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText('r (m), doubling scale', (L + Rr) / 2, resB + 3);
+    fctx.save(); fctx.translate(10, (top + mainB) / 2); fctx.rotate(-Math.PI / 2); fctx.fillText('β (dB)', 0, 0); fctx.restore();
+    const xl = -1, xh = 5, ys = pts.map((q) => q[1]), yl = ys.length ? Math.floor(Math.min(...ys) / 5) * 5 - 5 : 50, yh = ys.length ? Math.ceil(Math.max(...ys) / 5) * 5 + 5 : 100;
+    const PX = (x) => L + (Rr - L) * (x - xl) / (xh - xl), PY = (y) => mainB - (mainB - top) * (y - yl) / (yh - yl);
+    for (let k = xl; k <= xh; k++) { fctx.strokeStyle = T.grid; fctx.beginPath(); fctx.moveTo(PX(k), top); fctx.lineTo(PX(k), mainB); fctx.stroke(); fctx.fillStyle = T.muted; fctx.textAlign = 'center'; fctx.fillText(String(2 ** k), PX(k), mainB + 2); }
+    fctx.textAlign = 'right'; fctx.textBaseline = 'middle'; fctx.fillText(String(yh), L - 3, PY(yh)); fctx.fillText(String(yl), L - 3, PY(yl));
+    if (F) { fctx.strokeStyle = T.fit; fctx.lineWidth = 1.5; fctx.beginPath(); fctx.moveTo(PX(xl), PY(F.a + F.b * xl)); fctx.lineTo(PX(xh), PY(F.a + F.b * xh)); fctx.stroke(); }
+    fctx.fillStyle = T.wave; for (const [x, y] of pts) { fctx.beginPath(); fctx.arc(PX(x), PY(y), 3.2, 0, 7); fctx.fill(); }
+    if (F) { const m = Math.max(...F.res.map(Math.abs), 0.05), RY = (v) => (resT + resB) / 2 - (resB - resT) / 2 * 0.85 * v / m; fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(L, RY(0)); fctx.lineTo(Rr, RY(0)); fctx.stroke(); fctx.fillStyle = T.wave; pts.forEach(([x], i) => { fctx.beginPath(); fctx.arc(PX(x), RY(F.res[i]), 2.6, 0, 7); fctx.fill(); }); }
+  }
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; readouts(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
+  let last = performance.now();
+  function frame(now) { const dt = Math.min(0.05, (now - last) / 1000); last = now; if (!reduce) { S.t += dt; draw(); } requestAnimationFrame(frame); }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); fit(); }
+  const retheme = () => { tokens(); draw(); fit(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  tokens(); new ResizeObserver(resize).observe($('scene')); applyPreset('inverse'); renderRows(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

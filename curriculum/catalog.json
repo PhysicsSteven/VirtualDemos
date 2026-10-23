@@ -989,6 +989,28 @@
      ]
     },
     {
+     "demo": "sound-intensity",
+     "title": "Sound Intensity and Decibels",
+     "desc": "Walk a sound level meter away from a loudspeaker in an open field: the level drops 6 dB every time the distance doubles, and two equal sources add only 3 dB.",
+     "tags": [
+      "sound",
+      "decibels",
+      "inverse square",
+      "lab"
+     ]
+    },
+    {
+     "demo": "room-acoustics",
+     "title": "Room Acoustics and the Anechoic Chamber",
+     "desc": "Clap in a hard room and time the echoes dying away, add absorbing panels and test Sabine's formula, then line the walls with wedges for an anechoic chamber with a clean 1/r² and a low frequency cutoff.",
+     "tags": [
+      "reverberation",
+      "Sabine",
+      "anechoic chamber",
+      "lab"
+     ]
+    },
+    {
      "demo": "resonators",
      "title": "Resonators",
      "desc": "What sets an instrument's pitch: find the speed of sound with a resonance tube, pluck and bow a string, and blow across a bottle as you fill it, with sound.",

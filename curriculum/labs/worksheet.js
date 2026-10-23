@@ -83,8 +83,16 @@
   const ACOUSTICS = ['resonators', 'timbre', 'acoustic-levitation', 'chladni', 'doppler',
     'sound-waves', 'kundts-tube' /* handouts (GPT) still to be written: the maps below assume the first data table's columns
       sound-waves: Trial, Gas, T (°C), d (m), Δt (ms), Observation; kundts-tube: Heap j, x (cm), Rod, L_rod (m), Mode n, f (Hz), Gas, T (°C) */,
-    'wave-power', 'two-speaker', 'ultrasound' /* handouts (GPT) still to be written too; their first tables' assumed columns are above each map */];
+    'wave-power', 'two-speaker', 'ultrasound' /* handouts (GPT) still to be written too; their first tables' assumed columns are above each map */,
+    'sound-intensity', 'room-acoustics', 'anechoic-chamber' /* handouts (GPT) still to be written; the maps below assume the first data table's columns
+      sound-intensity: Reading, Distance r (m), Sources, Sound level β (dB), log₂ r, Intensity I (W/m²);
+      room-acoustics (Room Acoustics demo, Reverberation time): Reading, Band (Hz), Room L × W × H (m), Walls and floor, Volume V (m³), Surface S (m²),
+        Measured T (s), Absorption A (m²), 1/A (1/m²), Sabine T (s);
+      anechoic-chamber (Room Acoustics demo, Level against distance): Reading, Walls, Band (Hz), Distance r (m), log₂ r, Level L (dB) */];
   ENABLED.push(...ACOUSTICS);
+  /* Room Acoustics rows: the walls (and the floor, unless the room is lined with wedges) in words */
+  const roomWalls = (r) => (r.walls === 'panels' ? `${r.panels_n} ${r.panel_material} panels` : r.walls === 'wedges' ? `wedges ${r.wedge_depth_m} m deep` : 'hard walls')
+    + (r.floor && r.floor !== 'wedges' ? `, ${r.floor} floor` : '');
   Object.assign(FROM_DEMO, {
     resonators: { demo: 'Resonators', cols: ['f_Hz', 'k', null, null, 'L_read_cm', 'spacing_cm'] },
     timbre: { demo: 'Timbre and Harmonics', cols: [(r) => `run ${r.run}, ${r.preset}`, 'n', 'f_Hz', 'rel_amplitude', 'level_dB', 'phase_deg', 'notes'] },
@@ -97,6 +105,10 @@
     'two-speaker': { demo: 'Two Speaker Interference', cols: [(r) => `${r.row}, ${r.f_Hz} Hz, d = ${r.d_m} m${r.speaker2 === 'in phase' ? '' : ', speaker 2 ' + r.speaker2}`, 'x_m', 'y_m', 'r1_m', 'r2_m', 'level_dB', null] },
     /* Trial | Setup | Known depth (cm) | Echo time t (μs) | Angle θ (°) | Doppler shift Δf (Hz) | Notes */
     ultrasound: { demo: 'Ultrasound: Echoes and Blood Flow', cols: ['row', (r) => `${r.setup}, ${r.f0_MHz} MHz${r.profile ? ', ' + r.profile : ''}`, 'known_depth_cm', 'cursor_time_us', 'angle_deg', 'cursor_shift_Hz', null] },
+    'sound-intensity': { demo: 'Sound Intensity and Decibels', cols: ['row', 'r_m', (r) => [r.source_A_W === 'mystery' ? 'A mystery' : r.source_A_W && `A ${r.source_A_W} W`,
+      r.source_B_W && `B ${r.source_B_W} W`, r.background_dB && `background ${r.background_dB} dB`].filter(Boolean).join(', '), 'L_dB', null, null] },
+    'room-acoustics': { demo: 'Room Acoustics', cols: ['row', 'band_Hz', (r) => `${r.room_L_m} × ${r.room_W_m} × ${r.room_H_m}`, roomWalls, 'V_m3', 'S_m2', 'T_measured_s', null, null, null] },
+    'anechoic-chamber': { demo: 'Room Acoustics', cols: ['row', roomWalls, 'band_Hz', 'r_m', null, 'L_dB'] },
   });
   /* ==ACOUSTICS END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

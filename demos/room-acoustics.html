@@ -1,0 +1,759 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Room Acoustics and the Anechoic Chamber</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a plan view of the room over a graph (the decay of a clap, or level against distance) on the left; the rail on the right. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 500px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; touch-action: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.scene { position: absolute; inset: 0; }
+.rack { position: absolute; z-index: 2; display: flex; flex-direction: column; gap: 4px; padding: 6px 8px; background: color-mix(in srgb, var(--surface) 90%, transparent); border: 1px solid var(--line); border-radius: 8px; }
+.rack-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+/* the Set up card fades away while the demo runs (and turns see through while something on the picture is dragged) */
+.rack { width: min(300px, 100%); transition: opacity 0.35s ease, visibility 0.35s; }
+.rack .slider-head label, .rack .slider-head output { font-size: 0.78rem; }
+.rack .btn { font-size: 0.78rem; padding: 3px 8px; }
+.rack.away { opacity: 0; visibility: hidden; }
+.rack.ghost { opacity: 0.25; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .rack { transition: none; } }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button, .btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+.lab { font-size: 0.88rem; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 460px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 500px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .chips button, .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+:root { --wallc: #8e97a3; --brick: #b9846a; --panel: #3f8f6b; --foam: #6d7a8c; --foam-hi: #9aa6b5; --spk: #36414e; --mic: #c23f2c; --ray: #2b60b5; --fit: #a7740b; --floorc: #f3f5f8; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wallc: #6c7784; --brick: #8f5f49; --panel: #5fbf93; --foam: #4c5866; --foam-hi: #74818f; --spk: #c9d1db; --mic: #ff7660; --ray: #69a0ff; --fit: #e2b350; --floorc: #121922; } }
+:root[data-theme="dark"] { --wallc: #6c7784; --brick: #8f5f49; --panel: #5fbf93; --foam: #4c5866; --foam-hi: #74818f; --spk: #c9d1db; --mic: #ff7660; --ray: #69a0ff; --fit: #e2b350; --floorc: #121922; }
+.stage { min-height: 600px; }
+.rack { max-height: calc(100% - 20px); overflow-y: auto; }
+.rack .seg button { font-size: 0.76rem; padding: 3px 8px; }
+.rack .inline { gap: 4px 8px; }
+.rack .lab { font-size: 0.78rem; }
+.viewbar { left: auto; right: 10px; }
+table.mat { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
+table.mat th, table.mat td { text-align: left; padding: 2px 4px; border-bottom: 1px solid var(--grid); }
+table.mat td.num { font-family: var(--font-mono); text-align: right; }
+@media (max-width: 820px) { main.bench .stage { height: auto; max-height: none; } .scene { position: relative; inset: auto; height: 520px; max-height: 85vh; } .rack { position: static; margin: 8px; width: auto; max-height: none; } }
+/* folded rail sections and long hints (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Room Acoustics and the Anechoic Chamber</h1>
+      <p>Clap in a hard room and the sound keeps arriving from the walls long after the clap: the reverberation time T falls as you add absorption, as Sabine's formula T = 0.161 V/A predicts. Line every surface with wedges and the echoes vanish: in an anechoic chamber the level falls as 1/r², down to the wedges' cutoff frequency.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">c = 343 m/s, air at 20 °C</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/room-acoustics.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/room-acoustics.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM13 2h1v1h-1zM16 2h1v1h-1zM18 2h2v1h-2zM21 2h2v1h-2zM24 2h2v1h-2zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM20 3h2v1h-2zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h2v1h-2zM15 4h3v1h-3zM19 4h2v1h-2zM23 4h3v1h-3zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM13 5h5v1h-5zM20 5h1v1h-1zM26 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h3v1h-3zM19 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h6v1h-6zM21 7h2v1h-2zM24 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM14 9h1v1h-1zM16 9h2v1h-2zM21 9h5v1h-5zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM12 10h1v1h-1zM18 10h1v1h-1zM21 10h6v1h-6zM31 10h5v1h-5zM38 10h1v1h-1zM5 11h2v1h-2zM12 11h2v1h-2zM20 11h2v1h-2zM23 11h1v1h-1zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h3v1h-3zM34 11h4v1h-4zM4 12h1v1h-1zM7 12h2v1h-2zM12 12h1v1h-1zM14 12h1v1h-1zM17 12h1v1h-1zM21 12h1v1h-1zM23 12h3v1h-3zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h2v1h-2zM6 13h1v1h-1zM10 13h1v1h-1zM12 13h1v1h-1zM14 13h1v1h-1zM16 13h4v1h-4zM21 13h4v1h-4zM26 13h1v1h-1zM29 13h3v1h-3zM33 13h2v1h-2zM36 13h2v1h-2zM3 14h3v1h-3zM8 14h1v1h-1zM14 14h2v1h-2zM19 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM3 15h3v1h-3zM7 15h1v1h-1zM9 15h2v1h-2zM14 15h1v1h-1zM16 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM3 16h1v1h-1zM5 16h1v1h-1zM8 16h1v1h-1zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM19 16h1v1h-1zM22 16h2v1h-2zM25 16h2v1h-2zM28 16h2v1h-2zM31 16h1v1h-1zM33 16h5v1h-5zM6 17h2v1h-2zM9 17h1v1h-1zM14 17h2v1h-2zM17 17h1v1h-1zM19 17h5v1h-5zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h5v1h-5zM36 17h1v1h-1zM38 17h1v1h-1zM4 18h2v1h-2zM8 18h1v1h-1zM11 18h1v1h-1zM13 18h1v1h-1zM15 18h1v1h-1zM20 18h1v1h-1zM23 18h2v1h-2zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h4v1h-4zM9 19h2v1h-2zM12 19h3v1h-3zM18 19h1v1h-1zM21 19h2v1h-2zM25 19h3v1h-3zM29 19h2v1h-2zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h4v1h-4zM8 20h1v1h-1zM10 20h2v1h-2zM13 20h4v1h-4zM18 20h3v1h-3zM22 20h2v1h-2zM25 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM2 21h2v1h-2zM7 21h1v1h-1zM12 21h1v1h-1zM14 21h1v1h-1zM16 21h1v1h-1zM19 21h1v1h-1zM23 21h1v1h-1zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM4 22h2v1h-2zM8 22h2v1h-2zM11 22h2v1h-2zM14 22h2v1h-2zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h4v1h-4zM26 22h1v1h-1zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h3v1h-3zM7 23h1v1h-1zM11 23h1v1h-1zM14 23h6v1h-6zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h1v1h-1zM5 24h1v1h-1zM8 24h1v1h-1zM10 24h4v1h-4zM15 24h1v1h-1zM17 24h2v1h-2zM20 24h1v1h-1zM22 24h2v1h-2zM25 24h1v1h-1zM27 24h1v1h-1zM29 24h1v1h-1zM32 24h5v1h-5zM2 25h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h1v1h-1zM13 25h3v1h-3zM17 25h1v1h-1zM21 25h4v1h-4zM26 25h1v1h-1zM28 25h3v1h-3zM32 25h3v1h-3zM36 25h1v1h-1zM38 25h1v1h-1zM3 26h2v1h-2zM6 26h1v1h-1zM8 26h3v1h-3zM12 26h1v1h-1zM15 26h2v1h-2zM18 26h1v1h-1zM22 26h1v1h-1zM25 26h1v1h-1zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM5 27h1v1h-1zM9 27h1v1h-1zM11 27h4v1h-4zM20 27h2v1h-2zM25 27h1v1h-1zM27 27h1v1h-1zM29 27h1v1h-1zM34 27h2v1h-2zM4 28h1v1h-1zM6 28h1v1h-1zM8 28h3v1h-3zM13 28h2v1h-2zM17 28h1v1h-1zM19 28h3v1h-3zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM5 29h3v1h-3zM10 29h4v1h-4zM15 29h1v1h-1zM17 29h8v1h-8zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h3v1h-3zM2 30h4v1h-4zM8 30h1v1h-1zM13 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM26 30h1v1h-1zM29 30h6v1h-6zM36 30h3v1h-3zM10 31h2v1h-2zM13 31h3v1h-3zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h2v1h-2zM13 32h1v1h-1zM15 32h5v1h-5zM22 32h1v1h-1zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM13 33h5v1h-5zM19 33h2v1h-2zM24 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h2v1h-2zM16 34h2v1h-2zM20 34h1v1h-1zM24 34h3v1h-3zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM13 35h1v1h-1zM18 35h1v1h-1zM21 35h3v1h-3zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h2v1h-2zM14 36h2v1h-2zM18 36h2v1h-2zM22 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM14 37h1v1h-1zM19 37h2v1h-2zM23 37h3v1h-3zM28 37h2v1h-2zM32 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM14 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h6v1h-6zM29 38h1v1h-1zM31 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="scene" id="scene">
+      <canvas id="can" tabindex="0" role="application" aria-label="Plan view of a room with a loudspeaker and a microphone on its centre line, and under it a graph: the decay of a clap, or the sound level against distance. Drag the microphone to change its distance r from the speaker. Left and right arrows move it by 0.1 m (with Shift, 1 m); C claps."></canvas>
+      <div class="viewbar"><button type="button" class="spin attn" id="go">Clap</button></div>
+      </div>
+      <div class="rack" id="rack" role="group" aria-label="Set up the room">
+        <span class="rack-title">Set up</span>
+        <div><div class="slider-head"><label for="sL">Room length</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="3" max="20" step="0.1"></div>
+        <div><div class="slider-head"><label for="sW">Room width</label><output id="oW" for="sW"></output></div><input type="range" id="sW" min="3" max="15" step="0.1"></div>
+        <div><div class="slider-head"><label for="sH">Room height</label><output id="oH" for="sH"></output></div><input type="range" id="sH" min="2.5" max="8" step="0.1"></div>
+        <div class="inline"><span class="lab">Walls</span>
+          <div class="seg" role="group" aria-label="Walls" id="wallSeg"><button type="button" data-w="hard" aria-pressed="true">Hard</button><button type="button" data-w="panels" aria-pressed="false">Panels</button><button type="button" data-w="wedges" aria-pressed="false">Wedges</button></div></div>
+        <div id="panelBox">
+          <div class="slider-head"><label for="sN">Number of panels</label><output id="oN" for="sN"></output></div><input type="range" id="sN" min="0" max="40" step="1">
+          <div class="btnrow"><button type="button" class="btn" data-step="N" data-d="-1">One panel fewer</button><button type="button" class="btn" data-step="N" data-d="1">One panel more</button></div>
+          <div class="inline"><span class="lab">Panels of</span>
+            <div class="seg" role="group" aria-label="Panel material" id="panelSeg"><button type="button" data-m="foam" aria-pressed="true">Foam</button><button type="button" data-m="rockwool" aria-pressed="false">Rockwool</button><button type="button" data-m="mystery" aria-pressed="false">Mystery</button></div></div>
+        </div>
+        <div id="wedgeBox"><div class="slider-head"><label for="sD">Wedge depth d</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0.1" max="1.5" step="0.05"></div>
+        <div class="inline" id="floorBox"><span class="lab">Floor</span>
+          <div class="seg" role="group" aria-label="Floor" id="floorSeg"><button type="button" data-f="concrete" aria-pressed="true">Concrete</button><button type="button" data-f="carpet" aria-pressed="false">Carpet</button><button type="button" data-f="audience" aria-pressed="false">Audience</button></div></div>
+        <div><div class="slider-head"><label for="sR">Microphone distance r</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="0.5" max="15" step="0.05"></div>
+        <div class="btnrow"><button type="button" class="btn" data-step="R" data-d="-0.1">r −0.1 m</button><button type="button" class="btn" data-step="R" data-d="0.1">r +0.1 m</button></div>
+      </div>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="bare" aria-pressed="true">Bare room</button>
+          <button type="button" data-p="panels" aria-pressed="false">Add absorbing panels</button>
+          <button type="button" data-p="audience" aria-pressed="false">Room with an audience</button>
+          <button type="button" data-p="anechoic" aria-pressed="false">Anechoic chamber</button>
+          <button type="button" data-p="cutoff" aria-pressed="false">Below the cutoff</button>
+          <button type="button" data-p="mystery" aria-pressed="false">Mystery panels</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Measure</h2>
+        <div class="seg" role="group" aria-label="What to measure" id="modeSeg"><button type="button" data-mode="decay" aria-pressed="true">Reverberation time</button><button type="button" data-mode="level" aria-pressed="false">Level against distance</button></div>
+        <div class="inline"><span class="lab">Octave band</span></div>
+        <div class="seg" role="group" aria-label="Octave band (Hz)" id="bandSeg"></div>
+        <p class="hint" id="modeHint"></p>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+
+      <section>
+        <details class="fold" id="matFold">
+          <summary>Absorption coefficients</summary>
+          <div class="foldbody">
+            <table class="mat" id="matTbl"></table>
+            <p class="hint">α is the fraction of the sound energy a surface absorbs, averaged over all angles of incidence (measured in a reverberation chamber, ISO 354). Values from the materials database of the pyroomacoustics library (LCAV, EPFL), whose keys are in brackets. Wedges: see Model.</p>
+          </div>
+        </details>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Record reading</button>
+          <button type="button" class="btn" id="exportWs">Export to worksheet</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+        <p class="hint" id="readHint"></p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides A, Sabine's and Eyring's T, the free field line and the wedge cutoff; the measured T and the level meter stay. Mystery panels always hide their α.</p>
+        <details class="fold">
+          <summary>Model</summary>
+          <div class="foldbody">
+            <p class="hint">Geometrical acoustics: N rays leave the loudspeaker in random directions, each carrying 1/N of the clap's energy (N = 4000 to 64000, more when T is short, so that every measurement collects about as many rays). At a surface a ray keeps (1 − α) of its energy and leaves in a random direction (Lambert's cosine law, a fully diffuse reflection). The microphone is a sphere 0.5 m in radius that adds up the energy of the rays crossing it; the direct sound is added exactly, 1/(4πr²). Energies add, so there is no interference: no room modes or standing waves, which matter in real rooms at low frequency. Air absorption is left out (it shortens T in large rooms above about 2 kHz).</p>
+            <p class="hint">T is measured as in ISO 3382: the decay curve is the backward integral of the clap response (Schroeder's method), and a least squares line from −5 to −25 dB is extended to −60 dB (T20). A measured T scatters by about 1 to 3 % from run to run of the rays (each setup always gives the same run); the level meter by under 0.2 dB.</p>
+            <p class="hint">Sabine: T = 24 ln 10 · V/(cA) = 0.161 V/A, A = Σ Sα. Eyring: T = 0.161 V/(−S ln(1 − ᾱ)), which goes to 0 as ᾱ → 1. Panels are 1.2 m × 0.6 m, spread evenly around the walls; the ceiling is the wall material.</p>
+            <p class="hint">Wedges line all six surfaces (the floor is a wire net), and the room is the free space between their tips. Beranek and Sleeper (J. Acoust. Soc. Am. 18, 140, 1946) define the cutoff as the frequency where the pressure reflection rises to 10 % (α = 0.99) and find it where the wedge length is about a quarter wavelength: f_c = c/(4d). Around f_c this demo uses the stated model R = 0.1 (f_c/f)², at most 0.9, α = 1 − R²; the shape is a model, not measured data. The level meter reads the steady sound of a 10 mW source (sound power level 100 dB), with ρ = 1.204 kg/m³.</p>
+          </div>
+        </details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  const RA_VERSION = 'room-acoustics@2026-10-23';
+  const C_AIR = 343, RHO_AIR = 1.204, P_REF = 20e-6;   /* air at 20 °C */
+  const BANDS = [125, 250, 500, 1000, 2000, 4000];
+  /* Random incidence absorption coefficients in octave bands 125 Hz to 4 kHz, from the materials database of the pyroomacoustics
+     library (LCAV, EPFL), keys in brackets. */
+  const MATERIALS = {
+    brick: { name: 'Smooth brickwork, painted', key: 'smooth_brickwork_flush_pointing', a: [0.01, 0.01, 0.02, 0.02, 0.02, 0.02] },
+    concrete: { name: 'Concrete floor', key: 'concrete_floor', a: [0.01, 0.03, 0.05, 0.02, 0.02, 0.02] },
+    carpet: { name: '9 mm tufted carpet on felt underlay', key: 'carpet_tufted_9m', a: [0.08, 0.08, 0.30, 0.60, 0.75, 0.80] },
+    audience: { name: 'Audience on wooden chairs, 2 per m²', key: 'audience_wooden_chairs_2_m2', a: [0.24, 0.40, 0.78, 0.98, 0.96, 0.87] },
+    foam: { name: 'Melamine foam, wedge shaped tile', key: 'ceiling_melamine_foam', a: [0.12, 0.33, 0.83, 0.97, 0.98, 0.95] },
+    rockwool: { name: 'Rockwool 50 mm, 80 kg/m³', key: 'rockwool_50mm_80kgm3', a: [0.22, 0.60, 0.92, 0.90, 0.88, 0.88] },
+    curtain: { name: 'Curtain fabric, folded, 15 cm from wall', key: 'curtains_fabric_folded', a: [0.12, 0.60, 0.98, 1.00, 1.00, 1.00] },
+    blinds: { name: 'Vertical blinds, half open', key: 'blinds_half_open', a: [0.03, 0.09, 0.24, 0.46, 0.79, 0.76] },
+    wood: { name: 'Wooden lining, 12 mm on a frame', key: 'wooden_lining', a: [0.27, 0.23, 0.22, 0.15, 0.10, 0.07] },
+  };
+  const MYSTERY = ['curtain', 'blinds', 'wood', 'carpet'];
+  const PANEL_W = 1.2, PANEL_H = 0.6;   /* each panel 1.2 m wide, 0.6 m tall: 0.72 m² */
+  /* Anechoic wedges. Beranek and Sleeper (1946) define the cutoff as the frequency where the pressure reflection rises to 10 %
+     (energy absorption 0.99), and find it where the wedge length (tip to the hard wall) is about a quarter wavelength: f_c = c/(4d).
+     The shape of R(f) around f_c is this demo's stated model, R = 0.1 (f_c/f)², at most 0.9; it is not measured data. */
+  const wedgeCutoff = (d, c = C_AIR) => c / (4 * d);
+  const wedgeR = (f, d, c = C_AIR) => Math.min(0.9, 0.1 * (wedgeCutoff(d, c) / f) ** 2);
+  const wedgeAlpha = (f, d, c = C_AIR) => 1 - wedgeR(f, d, c) ** 2;
+  /* Room: a box. walls 'hard' | 'panels' | 'wedges'. With wedges, the free space is the box less the wedge depth on all six surfaces
+     (a wire net floor), and every surface absorbs wedgeAlpha. Panels hang on the four walls, centred 1.5 m up (or mid height). */
+  function roomModel(o) {
+    const bi = BANDS.indexOf(o.band), f = o.band;
+    const wed = o.walls === 'wedges', d = wed ? o.wedge : 0;
+    const L = o.L - 2 * d, W = o.W - 2 * d, H = o.H - 2 * d;
+    const aWall = wed ? wedgeAlpha(f, o.wedge) : MATERIALS.brick.a[bi];
+    const aFloor = wed ? aWall : MATERIALS[o.floor].a[bi];
+    const aPanel = o.walls === 'panels' ? MATERIALS[o.panel].a[bi] : 0;
+    const panels = o.walls === 'panels' ? placePanels(L, W, H, o.nPanels) : [];
+    const V = L * W * H, Sw = 2 * (L + W) * H, Sf = L * W, S = Sw + 2 * Sf, Sp = panels.length * PANEL_W * PANEL_H;
+    const A = (Sw - Sp) * aWall + Sp * aPanel + Sf * aWall + Sf * aFloor;   /* walls, panels, ceiling (as walls), floor */
+    return { L, W, H, V, S, Sp, A, abar: A / S, aWall, aFloor, aPanel, panels, f, bi };
+  }
+  /* panels spread around the walls in proportion to their length, each wholly on one wall: a wall fills one row of panels before it
+     starts another, and its rows are spread evenly up the wall */
+  function placePanels(L, W, H, n) {
+    const out = [];
+    if (!n) return out;
+    const walls = [[0, L], [1, W], [2, L], [3, W]];   /* wall 0: y = 0, along x; 1: x = L; 2: y = W; 3: x = 0 */
+    const rows = Math.max(1, Math.floor((H - 0.2) / (PANEL_H + 0.2))), fit = walls.map(([, len]) => Math.floor(len / (PANEL_W + 0.1)));
+    const cap = fit.reduce((a, b) => a + b, 0) * rows, m = Math.min(n, cap), per = 2 * (L + W);
+    const share = walls.map(([, len], i) => Math.min(fit[i] * rows, Math.floor(m * len / per)));
+    let left = m - share.reduce((a, b) => a + b, 0);
+    const order = walls.map(([, len], i) => [m * len / per - Math.floor(m * len / per), i]).sort((a, b) => b[0] - a[0]);
+    for (let k = 0; left > 0 && k < 400; k++) { const i = order[k % 4][1]; if (share[i] < fit[i] * rows) { share[i]++; left--; } }
+    walls.forEach(([wid, len], i) => {
+      const k = share[i]; if (!k) return; const nr = Math.ceil(k / fit[i]);
+      for (let r = 0; r < nr; r++) { const inRow = r < nr - 1 ? fit[i] : k - fit[i] * (nr - 1), zc = nr === 1 ? Math.min(1.5, H / 2) : H * (r + 0.5) / nr;
+        for (let j = 0; j < inRow; j++) { const c = len * (j + 0.5) / inRow; out.push({ wall: wid, u0: c - PANEL_W / 2, u1: c + PANEL_W / 2, z0: zc - PANEL_H / 2, z1: zc + PANEL_H / 2 }); } }
+    });
+    return out;
+  }
+  const sabineT = (V, A, c = C_AIR) => 24 * Math.log(10) * V / (c * A);
+  const eyringT = (V, S, abar, c = C_AIR) => 24 * Math.log(10) * V / (c * -S * Math.log(1 - Math.min(abar, 0.999999)));
+  /* small seeded generator, so a configuration always gives the same run */
+  function mulberry(a) { return () => { a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  /* the absorption coefficient where a ray meets face (0 y=0, 1 x=L, 2 y=W, 3 x=0, 4 floor z=0, 5 ceiling z=H) at (x, y, z) */
+  function surfaceAlpha(m) {
+    const P = m.panels;
+    return (face, x, y, z) => {
+      if (face === 4) return m.aFloor; if (face === 5) return m.aWall;
+      if (P.length) { const u = face === 0 || face === 2 ? x : y; for (const p of P) if (p.wall === face && u >= p.u0 && u <= p.u1 && z >= p.z0 && z <= p.z1) return m.aPanel; }
+      return m.aWall;
+    };
+  }
+  /* distance along a ray to the box, and which face it meets */
+  function boxExit(m, x, y, z, dx, dy, dz) {
+    let d = Infinity, face = -1, q;
+    if (dx > 0) { q = (m.L - x) / dx; if (q < d) { d = q; face = 1; } } else if (dx < 0) { q = -x / dx; if (q < d) { d = q; face = 3; } }
+    if (dy > 0) { q = (m.W - y) / dy; if (q < d) { d = q; face = 2; } } else if (dy < 0) { q = -y / dy; if (q < d) { d = q; face = 0; } }
+    if (dz > 0) { q = (m.H - z) / dz; if (q < d) { d = q; face = 5; } } else if (dz < 0) { q = -z / dz; if (q < d) { d = q; face = 4; } }
+    return { d, face };
+  }
+  /* a direction leaving face by Lambert's cosine law (cos θ = √u about the inward normal) */
+  function lambert(face, rnd) {
+    const u = rnd(), c = Math.sqrt(u), s = Math.sqrt(1 - u), ph = 2 * Math.PI * rnd(), a = s * Math.cos(ph), b = s * Math.sin(ph);
+    return face === 0 ? [a, c, b] : face === 2 ? [a, -c, b] : face === 3 ? [c, a, b] : face === 1 ? [-c, a, b] : face === 4 ? [a, b, c] : [a, b, -c];
+  }
+  /* Ray tracing (geometrical acoustics). N rays leave the source in random directions, each with 1/N of a 1 J impulse. At every surface
+     a ray keeps (1 − α) of its energy and leaves in a random direction by Lambert's cosine law (diffuse reflection). The receiver is a
+     sphere of radius rr: a ray crossing it adds energy × (chord/c)/V_sphere to the energy density integral of the time bin it crosses
+     in. The direct sound is added exactly, 1/(4πr²c), so the rays count reflections only. Energies add (no interference). */
+  function traceRoom(m, src, rec, opt) {
+    const N = opt.N || 8000, rr = opt.rr || 0.3, dt = opt.dt || 0.005, c = opt.c || C_AIR, rnd = mulberry(opt.seed || 1);
+    const tMax = opt.tMax || 12, nb = Math.ceil(tMax / dt), bins = new Float64Array(nb), Vs = 4 / 3 * Math.PI * rr ** 3, floorE = opt.floorE || 1e-6;
+    const alphaAt = surfaceAlpha(m);
+    let reflections = 0, path = 0;
+    for (let i = 0; i < N; i++) {
+      let e = 1 / N, x = src[0], y = src[1], z = src[2], t = 0;
+      const cz = 2 * rnd() - 1, ph = 2 * Math.PI * rnd(), s = Math.sqrt(1 - cz * cz);
+      let dx = s * Math.cos(ph), dy = s * Math.sin(ph), dz = cz, first = true;
+      while (e > floorE / N && t < tMax) {
+        const hit = boxExit(m, x, y, z, dx, dy, dz), dmin = hit.d;
+        if (!first) {   /* receiver sphere crossing on this segment */
+          const ox = rec[0] - x, oy = rec[1] - y, oz = rec[2] - z, b = ox * dx + oy * dy + oz * dz, d2 = ox * ox + oy * oy + oz * oz - b * b;
+          if (d2 < rr * rr) { const hw = Math.sqrt(rr * rr - d2), a0 = Math.max(0, b - hw), a1 = Math.min(dmin, b + hw);
+            if (a1 > a0) { const k = Math.floor((t + (a0 + a1) / 2 / c) / dt); if (k < nb) bins[k] += e * (a1 - a0) / c / Vs; } }
+        }
+        x += dx * dmin; y += dy * dmin; z += dz * dmin; t += dmin / c; path += dmin; reflections++;
+        e *= 1 - alphaAt(hit.face, x, y, z); first = false;
+        const dir = lambert(hit.face, rnd); dx = dir[0]; dy = dir[1]; dz = dir[2];
+      }
+    }
+    return { bins, dt, mfp: reflections ? path / reflections : NaN, N, rr };
+  }
+  /* more rays when T is short, so a measurement gets about as many receiver crossings in its decay whatever the room */
+  const raysFor = (m) => Math.round(Math.min(64000, Math.max(4000, 32000 / eyringT(m.V, m.S, m.abar))));
+  /* energy density integral (J·s/m³ per J emitted) of the direct sound at distance r */
+  const directDose = (r, c = C_AIR) => 1 / (4 * Math.PI * r * r * c);
+  /* Schroeder backward integration of the response (direct plus reflections), in dB re its total */
+  function schroeder(bins, dt, r, c = C_AIR) {
+    const h = Float64Array.from(bins), k = Math.floor(r / c / dt); if (k < h.length) h[k] += directDose(r, c);
+    const out = new Float64Array(h.length); let s = 0; for (let i = h.length - 1; i >= 0; i--) { s += h[i]; out[i] = s; }
+    const tot = out[0]; return { db: Array.from(out, (v) => (v > 0 ? 10 * Math.log10(v / tot) : -Infinity)), h, total: tot };
+  }
+  /* reverberation time from the decay curve: least squares line from −5 dB to −(5 + span) dB, extrapolated to 60 dB (ISO 3382: T20 for span 20) */
+  function decayT(db, dt, span = 20) {
+    const xs = [], ys = []; for (let i = 0; i < db.length; i++) { const v = db[i]; if (v <= -5 && v >= -5 - span) { xs.push((i + 1) * dt); ys.push(v); } if (v < -5 - span) break; }
+    if (xs.length < 4) return { T: NaN, n: xs.length };
+    const n = xs.length, mx = xs.reduce((a, b) => a + b) / n, my = ys.reduce((a, b) => a + b) / n; let sxx = 0, sxy = 0;
+    for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    const b = sxy / sxx; return { T: -60 / b, slope: b, icpt: my - b * mx, n, t0: xs[0], t1: xs[n - 1] };
+  }
+  /* sound pressure level for an energy density w (J/m³): p_rms² = w ρ c² */
+  const splFromW = (w, c = C_AIR) => 10 * Math.log10(w * RHO_AIR * c * c / P_REF ** 2);
+  /* steady level for a source of power P (W): direct P/(4πr²c) plus P times the reflected energy density integral */
+  const steadyLevel = (P, r, reflDose, c = C_AIR) => splFromW(P * (directDose(r, c) + reflDose), c);
+  /* classical diffuse field prediction, for comparison: L = Lw + 10 log(1/(4πr²) + 4/R), R = Sᾱ/(1 − ᾱ), with Lw re 1 pW */
+  const diffuseLevel = (P, r, S, abar) => 10 * Math.log10(P / 1e-12) + 10 * Math.log10(1 / (4 * Math.PI * r * r) + 4 * (1 - abar) / (S * abar));
+  // ==CORE END==
+  /* readings as CSV: kind 'decay' (reverberation time rows) or 'level' (level against distance rows) */
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  function readingsCSV(kind, rows, meta) {
+    const L = [`# Room Acoustics virtual apparatus: ${kind === 'decay' ? 'reverberation times' : 'sound level against distance'} (simulated data)`, `# demo version,${meta.version}`,
+      '# model,"ray tracing, 4000 to 64000 rays, diffuse (Lambert) reflections, 0.5 m receiver sphere, exact direct sound, energies add; no air absorption"',
+      '# absorption data,"pyroomacoustics materials database; wedges: R = 0.1 (fc/f)^2 at most 0.9, fc = c/(4d) (Beranek and Sleeper 1946)"', '# speed of sound,343 m/s'];
+    if (kind === 'decay') {
+      L.push('# T,"T20 from the Schroeder decay curve, -5 to -25 dB, extended to 60 dB"', 'row,band_Hz,room_L_m,room_W_m,room_H_m,walls,panels_n,panel_material,wedge_depth_m,floor,V_m3,S_m2,T_measured_s');
+      rows.forEach((r, i) => L.push([i + 1, r.band, r.L, r.W, r.H, r.walls, r.n, r.panel, r.wedge, r.floor, r.V, r.S, r.T].map(csvCell).join(',')));
+    } else {
+      L.push('# source,"10 mW sound power (100 dB re 1 pW), omnidirectional"', '# level,"sound pressure level re 20 uPa, 0.1 dB"', 'row,band_Hz,room_L_m,room_W_m,room_H_m,walls,panels_n,panel_material,wedge_depth_m,floor,r_m,L_dB');
+      rows.forEach((r, i) => L.push([i + 1, r.band, r.L, r.W, r.H, r.walls, r.n, r.panel, r.wedge, r.floor, r.r, r.Ldb].map(csvCell).join(',')));
+    }
+    return L.join('\n') + '\n';
+  }
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const P_SRC = 0.01;   /* steady source for the level meter: 10 mW */
+  const PRESETS = {
+    bare: { L: 9, W: 7, H: 3, walls: 'hard', nPanels: 0, panel: 'foam', wedge: 0.5, floor: 'concrete', band: 500, r: 3, mode: 'decay',
+      hint: 'A bare 9 m × 7 m × 3 m room, 189 m³, with painted brick walls and a concrete floor. Clap and watch the sound keep arriving from the walls; the decay below gives T. Then add panels, or change the band.' },
+    panels: { L: 9, W: 7, H: 3, walls: 'panels', nPanels: 20, panel: 'foam', wedge: 0.5, floor: 'concrete', band: 500, r: 3, mode: 'decay',
+      hint: 'The same room with 20 foam panels (14.4 m², 6.5 % of the surface). Record T for 0 to 40 panels and compare with Sabine: T against 1/A should be a straight line through the origin.' },
+    audience: { L: 12, W: 9, H: 4, walls: 'hard', nPanels: 0, panel: 'foam', wedge: 0.5, floor: 'audience', band: 500, r: 4, mode: 'decay',
+      hint: 'A 12 m × 9 m × 4 m hall whose floor is covered by an audience on wooden chairs, 2 people per m². People are good absorbers: compare T with the floor bare (Concrete), and at 125 Hz, where they absorb much less.' },
+    anechoic: { L: 8, W: 6, H: 5, walls: 'wedges', nPanels: 0, panel: 'foam', wedge: 0.3, floor: 'concrete', band: 500, r: 1, mode: 'level',
+      hint: 'An anechoic chamber: wedges 0.3 m deep on every surface, so the free space is 7.4 m × 5.4 m × 4.4 m. Record the level at r = 0.5, 1, 2, 4 m: each doubling of r should lower it by 6.0 dB. Then clap.' },
+    cutoff: { L: 8, W: 6, H: 5, walls: 'wedges', nPanels: 0, panel: 'foam', wedge: 0.3, floor: 'concrete', band: 125, r: 1, mode: 'level',
+      hint: 'The same chamber in the 125 Hz band. A wavelength of 2.74 m is more than four times the 0.3 m wedges (cutoff 286 Hz), so they reflect part of the sound and the level no longer falls a clean 6 dB per doubling. Try deeper wedges.' },
+    mystery: { L: 9, W: 7, H: 3, walls: 'panels', nPanels: 20, panel: 'mystery', wedge: 0.5, floor: 'concrete', band: 500, r: 3, mode: 'decay',
+      hint: 'Twenty panels of a hidden material. Measure T with and without them, in each band, and use Sabine to find their absorption coefficient α.' }
+  };
+  const S = { preset: 'bare', L: 9, W: 7, H: 3, walls: 'hard', nPanels: 0, panel: 'foam', mysteryKey: 'curtain', wedge: 0.5, floor: 'concrete', band: 500, r: 3, mode: 'decay',
+    blind: false, rowsD: [], rowsL: [], seriesD: null, seriesL: null, clapped: false, run: false, res: null, pending: false };
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null, geo = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      wallc: g('--wallc'), brick: g('--brick'), panel: g('--panel'), foam: g('--foam'), foamHi: g('--foam-hi'), spk: g('--spk'), mic: g('--mic'), ray: g('--ray'), fit: g('--fit'), floorc: g('--floorc'),
+      mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const panelKey = () => (S.panel === 'mystery' ? S.mysteryKey : S.panel);
+  const opts = () => ({ L: S.L, W: S.W, H: S.H, band: S.band, walls: S.walls, floor: S.floor, panel: panelKey(), nPanels: S.nPanels, wedge: S.wedge });
+  const model = () => roomModel(opts());
+  /* loudspeaker and microphone on the room's centre line, 1.5 m up (or mid height); the speaker 1.5 m from the end (or a third of the way) */
+  const srcPos = (m) => [Math.min(1.5, m.L / 3), m.W / 2, Math.min(1.5, m.H / 2)];
+  const rMax = (m) => Math.max(0.5, Math.floor((m.L - srcPos(m)[0] - 0.5) * 20) / 20);   /* the receiver sphere stays inside the room */
+  const wedgeMax = () => Math.max(0.1, Math.floor((Math.min(S.L, S.W, S.H) - 2) / 2 * 20) / 20);
+
+  // ---------- the measurement: one ray trace per setup and microphone position, cached ----------
+  const cache = new Map();
+  function hash(s) { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
+  function measure() {
+    const m = model(), key = JSON.stringify(opts()) + '|' + S.r.toFixed(2);
+    if (cache.has(key)) return cache.get(key);
+    const src = srcPos(m), rec = [src[0] + S.r, src[1], src[2]];
+    const tr = traceRoom(m, src, rec, { N: raysFor(m), rr: 0.5, dt: 0.005, seed: hash(key), tMax: 15, floorE: 1e-6 });
+    const sc = schroeder(tr.bins, tr.dt, S.r), dec = decayT(sc.db, tr.dt);
+    let refl = 0; for (const b of tr.bins) refl += b;
+    const res = { m, tr, sc, dec, refl, Ldb: steadyLevel(P_SRC, S.r, refl), key };
+    cache.set(key, res); if (cache.size > 60) cache.delete(cache.keys().next().value);
+    return res;
+  }
+  let timer = 0;
+  function remeasure() {
+    S.pending = true; S.res = null; readouts(); draw();
+    clearTimeout(timer); timer = setTimeout(() => { S.res = measure(); S.pending = false; readouts(); draw(); }, 40);
+  }
+
+  // ---------- drawing ----------
+  function regions() {
+    const p = ps(), rk = $('rack'), abs = getComputedStyle(rk).position === 'absolute';
+    const x0 = abs ? rk.offsetLeft + rk.offsetWidth + 16 * p : 14 * p, x1 = W - 14 * p;
+    const gh = Math.max(150 * p, H * 0.36), planTop = 52 * p, planBot = H - gh - 34 * p;
+    return { p, x0, x1, planTop, planBot, gx0: x0 + 44 * p, gx1: x1 - 6 * p, gy0: H - gh + 4 * p, gy1: H - 30 * p };
+  }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const rk = $('rack'); if (getComputedStyle(rk).position === 'absolute') { rk.style.left = `${10 * ps()}px`; rk.style.top = `${10 * ps()}px`; }
+    const R = regions(), m = model();
+    drawPlan(R, m);
+    if (S.mode === 'decay') drawDecay(R); else drawLevel(R, m);
+  }
+  function drawPlan(R, m) {
+    const p = R.p, d = S.walls === 'wedges' ? S.wedge : 0;
+    const sc = Math.min((R.x1 - R.x0 - 20 * p) / S.L, (R.planBot - R.planTop) / S.W), ox = R.x0 + (R.x1 - R.x0 - S.L * sc) / 2, oy = R.planTop + (R.planBot - R.planTop - S.W * sc) / 2;
+    const X = (x) => ox + (x + d) * sc, Y = (y) => oy + (y + d) * sc;   /* free space coordinates to the picture */
+    geo = { X, Y, sc, m, d };
+    ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    ctx.fillText(`Plan view: ${f(S.L, 1)} m × ${f(S.W, 1)} m, ${f(S.H, 1)} m high`, R.x0, 24 * p);
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`;
+    ctx.fillText(S.walls === 'wedges' ? `free space between the wedge tips ${f(m.L, 2)} × ${f(m.W, 2)} × ${f(m.H, 2)} m` : `floor: ${MATERIALS[S.floor].name.toLowerCase()}`, R.x0, 40 * p);
+    /* floor and walls */
+    ctx.fillStyle = T.floorc; ctx.fillRect(ox, oy, S.L * sc, S.W * sc);
+    ctx.strokeStyle = S.walls === 'wedges' ? T.foam : T.brick; ctx.lineWidth = 6 * p; ctx.strokeRect(ox - 3 * p, oy - 3 * p, S.L * sc + 6 * p, S.W * sc + 6 * p);
+    if (S.walls === 'wedges') {
+      /* a row of wedges along each wall, their tips at depth d */
+      const tooth = Math.max(6 * p, Math.min(d * sc * 0.55, 18 * p)), D = d * sc;
+      ctx.fillStyle = T.foam; ctx.strokeStyle = T.foamHi; ctx.lineWidth = 1;
+      const row = (ax, ay, bx, by, nx, ny) => { const len = Math.hypot(bx - ax, by - ay), n = Math.max(1, Math.round(len / tooth)), ux = (bx - ax) / len, uy = (by - ay) / len;
+        ctx.beginPath(); ctx.moveTo(ax, ay); for (let i = 0; i < n; i++) { const s1 = len * (i + 0.5) / n, s2 = len * (i + 1) / n;
+          ctx.lineTo(ax + ux * s1 + nx * D, ay + uy * s1 + ny * D); ctx.lineTo(ax + ux * s2, ay + uy * s2); }
+        ctx.closePath(); ctx.fill(); ctx.stroke(); };
+      const L = S.L * sc, Wd = S.W * sc;
+      row(ox, oy, ox + L, oy, 0, 1); row(ox + L, oy + Wd, ox, oy + Wd, 0, -1); row(ox, oy + Wd, ox, oy, 1, 0); row(ox + L, oy, ox + L, oy + Wd, -1, 0);
+      ctx.setLineDash([3 * p, 3 * p]); ctx.strokeStyle = T.gridStrong; ctx.strokeRect(X(0), Y(0), m.L * sc, m.W * sc); ctx.setLineDash([]);
+    }
+    for (const q of m.panels) {   /* panels drawn on their wall */
+      ctx.fillStyle = T.panel; const t = 5 * p;
+      if (q.wall === 0) ctx.fillRect(X(q.u0), Y(0), (q.u1 - q.u0) * sc, t); else if (q.wall === 2) ctx.fillRect(X(q.u0), Y(m.W) - t, (q.u1 - q.u0) * sc, t);
+      else if (q.wall === 3) ctx.fillRect(X(0), Y(q.u0), t, (q.u1 - q.u0) * sc); else ctx.fillRect(X(m.L) - t, Y(q.u0), t, (q.u1 - q.u0) * sc);
+    }
+    /* scale bar */
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * p; const sbx = ox, sby = Math.min(R.planBot + 18 * p, oy + S.W * sc + 18 * p);
+    ctx.beginPath(); ctx.moveTo(sbx, sby); ctx.lineTo(sbx + sc, sby); ctx.moveTo(sbx, sby - 3 * p); ctx.lineTo(sbx, sby + 3 * p); ctx.moveTo(sbx + sc, sby - 3 * p); ctx.lineTo(sbx + sc, sby + 3 * p); ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.fillText('1 m', sbx + sc + 5 * p, sby + 3 * p);
+    /* rays during a clap */
+    if (anim) { ctx.fillStyle = T.ray;
+      for (const q of anim.parts) { if (q.e < 1e-4) continue; ctx.globalAlpha = Math.max(0, Math.min(1, 1 + 10 * Math.log10(q.e) / 40)); ctx.fillRect(X(q.x) - 1.5 * p, Y(q.y) - 1.5 * p, 3 * p, 3 * p); }
+      ctx.globalAlpha = 1;
+      const rr = C_AIR * anim.t * sc; if (rr < Math.hypot(m.L, m.W) * sc) { const [sx, sy] = srcPos(m); ctx.save(); ctx.beginPath(); ctx.rect(X(0), Y(0), m.L * sc, m.W * sc); ctx.clip();
+        ctx.strokeStyle = T.ray; ctx.globalAlpha = 0.5; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(X(sx), Y(sy), rr, 0, 7); ctx.stroke(); ctx.restore(); ctx.globalAlpha = 1; }
+      ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillText(`slow motion ×1/${SLOW}, t = ${(anim.t * 1000).toFixed(0)} ms`, ox + S.L * sc, Math.min(R.planBot + 18 * p, oy + S.W * sc + 18 * p) + 3 * p); ctx.textAlign = 'left';
+    }
+    /* loudspeaker, microphone and r */
+    const [sx, sy] = srcPos(m), mx = sx + S.r;
+    ctx.strokeStyle = T.muted; ctx.setLineDash([4 * p, 3 * p]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(sx), Y(sy)); ctx.lineTo(X(mx), Y(sy)); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.fillText(`r = ${f(S.r, 2)} m`, X(sx + S.r / 2), Y(sy) - 8 * p);
+    ctx.fillStyle = T.spk; ctx.fillRect(X(sx) - 9 * p, Y(sy) - 9 * p, 12 * p, 18 * p); ctx.beginPath(); ctx.moveTo(X(sx) + 3 * p, Y(sy) - 5 * p); ctx.lineTo(X(sx) + 11 * p, Y(sy) - 12 * p); ctx.lineTo(X(sx) + 11 * p, Y(sy) + 12 * p); ctx.lineTo(X(sx) + 3 * p, Y(sy) + 5 * p); ctx.fill();
+    ctx.fillStyle = T.mic; ctx.beginPath(); ctx.arc(X(mx), Y(sy), 7 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(X(mx), Y(sy), 3 * p, 0, 7); ctx.stroke();
+    if (S.mode === 'level') { ctx.fillStyle = T.ink; ctx.font = `700 ${14 * p}px ${T.mono}`; ctx.fillText(S.res ? `${f(S.res.Ldb, 1)} dB` : '…', X(mx), Y(sy) + 24 * p); }
+    ctx.textAlign = 'left';
+  }
+  function axes(R, xl, yl) {
+    const p = R.p; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(R.gx0 + 0.5, R.gy0 + 0.5, R.gx1 - R.gx0, R.gy1 - R.gy0);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(xl, (R.gx0 + R.gx1) / 2, R.gy1 + 14 * p);
+    ctx.save(); ctx.translate(R.gx0 - 36 * p, (R.gy0 + R.gy1) / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle'; ctx.fillText(yl, 0, 0); ctx.restore();
+  }
+  function drawDecay(R) {
+    const p = R.p; axes(R, 'time after the clap (s)', 'level (dB)');
+    const res = S.res;
+    if (!S.clapped || !res) { ctx.fillStyle = T.muted; ctx.font = `${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(S.pending ? 'Measuring…' : 'Clap to record the decay at the microphone.', (R.gx0 + R.gx1) / 2, (R.gy0 + R.gy1) / 2); return; }
+    const db = res.sc.db, dt = res.tr.dt; let i40 = db.findIndex((v) => v < -45); if (i40 < 0) i40 = db.length;
+    const tEnd = Math.max(0.05, Math.min(15, (i40 + 1) * dt * 1.15)), yMin = -60;
+    const PX = (t) => R.gx0 + (R.gx1 - R.gx0) * t / tEnd, PY = (v) => R.gy0 + (R.gy1 - R.gy0) * Math.min(1, Math.max(0, v / yMin));
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let v = 0; v >= yMin; v -= 10) { ctx.fillText(String(v).replace('-', '−'), R.gx0 - 4 * p, PY(v)); if (v < 0) { ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(R.gx0, PY(v)); ctx.lineTo(R.gx1, PY(v)); ctx.stroke(); } }
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top'; const step = niceStep(tEnd / 6);
+    for (let t = 0; t <= tEnd + 1e-9; t += step) ctx.fillText(f(t, step < 0.1 ? 2 : 1), PX(t), R.gy1 + 2 * p);
+    /* the energy arriving in each 5 ms, in dB re the loudest bin, and the decay curve */
+    const h = res.sc.h; let mx = 0; for (const v of h) mx = Math.max(mx, v);
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath();
+    for (let i = 0; i * dt < tEnd && i < h.length; i++) { if (h[i] <= 0) continue; const v = 10 * Math.log10(h[i] / mx); if (v < yMin) continue; ctx.moveTo(PX((i + 0.5) * dt), PY(yMin)); ctx.lineTo(PX((i + 0.5) * dt), PY(v)); }
+    ctx.stroke();
+    ctx.strokeStyle = T.ray; ctx.lineWidth = 2 * p; ctx.beginPath(); let first = true;
+    for (let i = 0; i * dt < tEnd && i < db.length; i++) { const v = db[i]; if (!isFinite(v) || v < yMin) break; first ? ctx.moveTo(PX(i * dt), PY(v)) : ctx.lineTo(PX(i * dt), PY(v)); first = false; }
+    ctx.stroke();
+    const dc = res.dec;
+    if (isFinite(dc.T)) { ctx.strokeStyle = T.fit; ctx.setLineDash([6 * p, 4 * p]); ctx.lineWidth = 1.5 * p; const tA = Math.max(0, -dc.icpt / dc.slope), tB = (-60 - dc.icpt) / dc.slope;
+      ctx.beginPath(); ctx.moveTo(PX(tA), PY(0)); ctx.lineTo(PX(Math.min(tB, tEnd)), PY(dc.icpt + dc.slope * Math.min(tB, tEnd))); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(`T = ${f(dc.T, 2)} s (measured, T20)`, R.gx1 - 8 * p, R.gy0 + 8 * p); }
+    else { ctx.fillStyle = T.ink; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('No reverberation: only the direct sound arrives', R.gx1 - 8 * p, R.gy0 + 8 * p); }
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('bars: energy arriving every 5 ms · blue: decay curve (Schroeder) · dashed: fit −5 to −25 dB', R.gx0 + 6 * p, R.gy0 + 6 * p);
+    if (anim) { ctx.strokeStyle = T.mic; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(PX(anim.t), R.gy0); ctx.lineTo(PX(anim.t), R.gy1); ctx.stroke(); }
+  }
+  const niceStep = (s) => { const e = Math.pow(10, Math.floor(Math.log10(s))), q = s / e; return (q < 1.5 ? 1 : q < 3.5 ? 2 : q < 7.5 ? 5 : 10) * e; };
+  function drawLevel(R, m) {
+    const p = R.p; axes(R, 'distance from the speaker r (m), each step a doubling', 'level L (dB)');
+    const rLo = 0.5, rHi = Math.max(2, rMax(m)), lx = (r) => Math.log2(r), PX = (r) => R.gx0 + (R.gx1 - R.gx0) * (lx(r) - lx(rLo)) / (lx(rHi) - lx(rLo));
+    const free = (r) => splFromW(P_SRC * directDose(r));
+    const pts = S.rowsL.map((q) => [+q.r, +q.Ldb]).filter(([a, b]) => isFinite(a) && isFinite(b));
+    const ys = pts.map((q) => q[1]).concat([free(rLo), free(rHi)]); if (S.res) ys.push(S.res.Ldb);
+    const yHi = Math.ceil((Math.max(...ys) + 3) / 5) * 5, yLo = Math.floor((Math.min(...ys) - 3) / 5) * 5, PY = (v) => R.gy1 - (R.gy1 - R.gy0) * (v - yLo) / (yHi - yLo);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let r = rLo; r <= rHi + 1e-9; r *= 2) { ctx.fillText(f(r, r < 1 ? 1 : 0), PX(r), R.gy1 + 2 * p); ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(PX(r), R.gy0); ctx.lineTo(PX(r), R.gy1); ctx.stroke(); }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; for (let v = yLo; v <= yHi; v += 5) ctx.fillText(String(v), R.gx0 - 4 * p, PY(v));
+    if (!S.blind) { ctx.strokeStyle = T.fit; ctx.setLineDash([6 * p, 4 * p]); ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(PX(rLo), PY(free(rLo))); ctx.lineTo(PX(rHi), PY(free(rHi))); ctx.stroke(); ctx.setLineDash([]); }
+    ctx.fillStyle = T.ray; for (const [x, y] of pts) if (x >= rLo && x <= rHi * 1.001) { ctx.beginPath(); ctx.arc(PX(x), PY(y), 3.5 * p, 0, 7); ctx.fill(); }
+    if (S.res) { ctx.strokeStyle = T.mic; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(PX(S.r), PY(S.res.Ldb), 6 * p, 0, 7); ctx.stroke(); }
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(`dots: recorded readings · ring: the microphone now${S.blind ? '' : ' · dashed: free field, −6.0 dB per doubling'}`, R.gx0 + 6 * p, R.gy0 + 6 * p);
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, m = model(), hid = '<dd class="ok">hidden in Blind</dd>';
+    let h = dd('Volume V', `${f(m.V, 1)} m³`) + dd('Surface S', `${f(m.S, 1)} m²`);
+    if (S.mode === 'decay') h += dd('Measured T', !S.clapped ? 'clap first' : S.res ? (isFinite(S.res.dec.T) ? `${f(S.res.dec.T, 2)} s` : 'no decay') : '…', true);
+    else h += dd('Level at the microphone', S.res ? `${f(S.res.Ldb, 1)} dB` : '…', true);
+    const mys = S.walls === 'panels' && S.panel === 'mystery';
+    if (S.blind || mys) h += `<div class="wide"><dt>Absorption and predictions</dt>${S.blind ? hid : '<dd class="ok">hidden: the panels are a mystery</dd>'}</div>`;
+    else {
+      h += dd('Absorption A = ΣSα', `${f(m.A, 2)} m²`) + dd('Mean α (ᾱ = A/S)', f(m.abar, 3));
+      h += dd('Sabine T = 0.161 V/A', `${f(sabineT(m.V, m.A), 2)} s`) + dd('Eyring T', `${f(eyringT(m.V, m.S, m.abar), 2)} s`);
+      if (S.mode === 'level') h += dd('Free field level, 1/r² alone', `${f(splFromW(P_SRC * directDose(S.r)), 1)} dB`) + dd('Critical distance √(A/16π)', `${f(Math.sqrt(m.A / (16 * Math.PI)), 2)} m`);
+      if (S.walls === 'wedges') h += dd('Wedge cutoff f_c = c/4d', `${f(wedgeCutoff(S.wedge), 0)} Hz`) + dd(`Wedge α at ${S.band} Hz`, f(m.aWall, 4));
+    }
+    $('out').innerHTML = h;
+    const row = (s, mat, area, a) => `<tr><td>${s}</td><td>${mat}</td><td class="num">${area}</td><td class="num">${a}</td></tr>`;
+    let t = `<thead><tr><th>Surface</th><th>Material</th><th>Area (m²)</th><th>α, ${S.band} Hz</th></tr></thead><tbody>`;
+    if (S.walls === 'wedges') t += row('All six', `Wedges, d = ${f(S.wedge, 2)} m (model)`, f(m.S, 1), S.blind ? '—' : f(m.aWall, 4));
+    else {
+      t += row('Walls, ceiling', `${MATERIALS.brick.name} [${MATERIALS.brick.key}]`, f(m.S - m.L * m.W - m.Sp, 1), f(m.aWall, 2));
+      t += row('Floor', `${MATERIALS[S.floor].name} [${MATERIALS[S.floor].key}]`, f(m.L * m.W, 1), f(m.aFloor, 2));
+      if (S.walls === 'panels') t += row('Panels', mys ? 'Mystery' : `${MATERIALS[S.panel].name} [${MATERIALS[S.panel].key}]`, f(m.Sp, 2), mys ? '?' : f(m.aPanel, 2));
+    }
+    $('matTbl').innerHTML = t + '</tbody>';
+  }
+
+  // ---------- controls ----------
+  function sync() {
+    S.wedge = Math.min(S.wedge, wedgeMax()); const m = model(); S.r = Math.min(S.r, rMax(m));
+    const set = (id, v, txt) => { $(id).value = v; $('o' + id.slice(1)).textContent = txt; };
+    set('sL', S.L, `${f(S.L, 1)} m`); set('sW', S.W, `${f(S.W, 1)} m`); set('sH', S.H, `${f(S.H, 1)} m`);
+    $('sN').max = 40; set('sN', S.nPanels, `${S.nPanels} (${f(m.Sp, 2)} m²)`);
+    $('sD').max = wedgeMax(); set('sD', S.wedge, `${f(S.wedge, 2)} m`);
+    $('sR').max = rMax(m); set('sR', S.r, `${f(S.r, 2)} m`);
+    $('panelBox').hidden = S.walls !== 'panels'; $('wedgeBox').hidden = S.walls !== 'wedges'; $('floorBox').hidden = S.walls === 'wedges';
+    const press = (sel, attr, val) => { for (const b of document.querySelectorAll(sel)) b.setAttribute('aria-pressed', String(b.dataset[attr] === String(val))); };
+    press('#wallSeg button', 'w', S.walls); press('#panelSeg button', 'm', S.panel); press('#floorSeg button', 'f', S.floor); press('#bandSeg button', 'b', S.band);
+    press('#modeSeg button', 'mode', S.mode); press('#presets button', 'p', S.preset);
+    $('modeHint').textContent = S.mode === 'decay' ? 'Clap, then read T from the decay of the sound at the microphone. Record a reading for each setup.'
+      : 'A steady 10 mW source plays noise in this band. Move the microphone and record the level at each distance.';
+    $('readHint').textContent = S.mode === 'decay' ? 'Each reading stores the band, the room, its walls and floor, V, S and the measured T. Export sends them to the Room Acoustics worksheet.'
+      : 'Each reading stores the band, the walls, r and the level. Export sends them to the Anechoic Chamber worksheet.';
+    $('go').hidden = false;
+  }
+  function changed(keepPreset) { if (!keepPreset) S.preset = 'custom'; stopAnim(); S.clapped = false; sync(); remeasure(); }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; Object.assign(S, { L: c.L, W: c.W, H: c.H, walls: c.walls, nPanels: c.nPanels, panel: c.panel, wedge: c.wedge, floor: c.floor, band: c.band, r: c.r, mode: c.mode });
+    if (c.panel === 'mystery') S.mysteryKey = MYSTERY[Math.floor(Math.random() * MYSTERY.length)];
+    $('presetHint').textContent = c.hint; renderRows(); changed(true); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('bandSeg').innerHTML = BANDS.map((b) => `<button type="button" data-b="${b}" aria-pressed="false">${b < 1000 ? b : b / 1000 + 'k'}</button>`).join('');
+  $('bandSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-b]'); if (b) { S.band = +b.dataset.b; changed(); } });
+  $('modeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-mode]'); if (b) { S.mode = b.dataset.mode; renderRows(); changed(true); } });
+  $('wallSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-w]'); if (b) { S.walls = b.dataset.w; if (S.walls === 'panels' && !S.nPanels) S.nPanels = 10; changed(); } });
+  $('panelSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (!b) return; S.panel = b.dataset.m; if (S.panel === 'mystery') S.mysteryKey = MYSTERY[Math.floor(Math.random() * MYSTERY.length)]; changed(); });
+  $('floorSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (b) { S.floor = b.dataset.f; changed(); } });
+  for (const [id, k] of [['sL', 'L'], ['sW', 'W'], ['sH', 'H'], ['sN', 'nPanels'], ['sD', 'wedge'], ['sR', 'r']]) $(id).addEventListener('input', (e) => { S[k] = +e.target.value; changed(); });
+  for (const b of document.querySelectorAll('[data-step]')) b.addEventListener('click', () => { const d = +b.dataset.d;
+    if (b.dataset.step === 'N') S.nPanels = Math.max(0, Math.min(40, S.nPanels + d)); else S.r = Math.max(0.5, Math.min(rMax(model()), Math.round((S.r + d) * 20) / 20)); changed(); });
+
+  // ---------- the clap, in slow motion: 1500 rays drawn on the plan, by the same rules as the measurement ----------
+  let anim = null; const SLOW = 100, NPART = 1500;
+  function clap() {
+    if (anim) { stopAnim(); return; }
+    S.clapped = true; if (!S.res && !S.pending) remeasure();
+    if (reduce) { readouts(); draw(); return; }
+    const m = model(), [sx, sy, sz] = srcPos(m), rnd = mulberry(Date.now() & 0xffff), parts = [];
+    for (let i = 0; i < NPART; i++) { const cz = 2 * rnd() - 1, ph = 2 * Math.PI * rnd(), s = Math.sqrt(1 - cz * cz); parts.push({ x: sx, y: sy, z: sz, dx: s * Math.cos(ph), dy: s * Math.sin(ph), dz: cz, e: 1 }); }
+    anim = { parts, t: 0, m, rnd, wall: 0 }; $('rack').classList.add('away'); $('rack').inert = true; $('go').textContent = 'Stop'; $('go').classList.remove('attn'); readouts(); draw();
+  }
+  function stopAnim() { if (!anim) return; anim = null; $('rack').classList.remove('away'); $('rack').inert = false; $('go').textContent = 'Clap'; $('go').classList.add('attn'); draw(); }
+  function stepAnim(dtw) {
+    const a = anim, m = a.m, dist = C_AIR * dtw / SLOW, alphaAt = surfaceAlpha(m); a.t += dtw / SLOW; a.wall += dtw; let live = 0;
+    for (const q of a.parts) {
+      if (q.e < 1e-4) continue; let left = dist;
+      for (let k = 0; k < 6 && left > 0; k++) {
+        const hit = boxExit(m, q.x, q.y, q.z, q.dx, q.dy, q.dz);
+        if (hit.d > left) { q.x += q.dx * left; q.y += q.dy * left; q.z += q.dz * left; left = 0; break; }
+        q.x += q.dx * hit.d; q.y += q.dy * hit.d; q.z += q.dz * hit.d; left -= hit.d; q.e *= 1 - alphaAt(hit.face, q.x, q.y, q.z);
+        const dir = lambert(hit.face, a.rnd); q.dx = dir[0]; q.dy = dir[1]; q.dz = dir[2];
+      }
+      if (q.e >= 1e-4) live++;
+    }
+    if (!live || a.wall > 14) stopAnim();
+  }
+  $('go').addEventListener('click', clap);
+  let last = performance.now();
+  function frame(now) { const dt = Math.min(0.05, (now - last) / 1000); last = now; if (anim) { stepAnim(dt); if (anim) draw(); } requestAnimationFrame(frame); }
+
+  // drag the microphone along the centre line
+  let drag = false; const local = (e) => { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  can.addEventListener('pointerdown', (e) => { if (!geo || anim) return; const [x, y] = local(e), [sx, sy] = srcPos(geo.m);
+    if (Math.hypot(x - geo.X(sx + S.r), y - geo.Y(sy)) < 24 * ps()) { drag = true; $('rack').classList.add('ghost'); can.setPointerCapture(e.pointerId); } });
+  can.addEventListener('pointermove', (e) => { if (!drag) return; const [x] = local(e), sx = srcPos(geo.m)[0], X0 = geo.X(0);
+    S.r = Math.max(0.5, Math.min(rMax(geo.m), Math.round(((x - X0) / geo.sc - sx) * 20) / 20)); changed(); });
+  const endDrag = () => { drag = false; $('rack').classList.remove('ghost'); }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('keydown', (e) => { if (e.key === 'c' || e.key === 'C' || e.key === ' ') clap();
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.r = Math.max(0.5, Math.min(rMax(model()), Math.round((S.r + (e.key === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 1 : 0.1)) * 20) / 20)); changed(); }
+    else return; e.preventDefault(); });
+
+  // ---------- readings ----------
+  const capStatus = (m) => { $('capStatus').textContent = m; };
+  const rowsNow = () => (S.mode === 'decay' ? S.rowsD : S.rowsL);
+  function setupRow() { const m = model(); return { band: S.band, L: f(S.L, 1), W: f(S.W, 1), H: f(S.H, 1), walls: S.walls, n: S.walls === 'panels' ? S.nPanels : '', panel: S.walls === 'panels' ? (S.panel === 'mystery' ? 'mystery' : S.panel) : '',
+    wedge: S.walls === 'wedges' ? f(S.wedge, 2) : '', floor: S.walls === 'wedges' ? 'wedges' : S.floor, V: f(m.V, 1), S: f(m.S, 1) }; }
+  const wallsText = (r) => (r.walls === 'panels' ? `${r.n} ${r.panel} panels` : r.walls === 'wedges' ? `wedges ${r.wedge} m` : 'hard') + (r.floor && r.floor !== 'wedges' && r.floor !== 'concrete' ? `, ${r.floor}` : '');
+  $('capture').addEventListener('click', () => {
+    if (!S.res) { capStatus('Still measuring: try again in a moment.'); return; }
+    if (S.mode === 'decay') { if (!S.clapped) { capStatus('Clap first, then record.'); return; }
+      if (!isFinite(S.res.dec.T)) { capStatus('No reverberation to measure here: the sound dies with the direct sound.'); return; }
+      S.rowsD.push(Object.assign(setupRow(), { T: f(S.res.dec.T, 2) })); }
+    else S.rowsL.push(Object.assign(setupRow(), { r: f(S.r, 2), Ldb: f(S.res.Ldb, 1) }));
+    renderRows(); capStatus(`Row ${rowsNow().length} recorded.`); });
+  $('clearRows').addEventListener('click', () => { if (S.mode === 'decay') { S.rowsD = []; S.seriesD = Date.now(); } else { S.rowsL = []; S.seriesL = Date.now(); } renderRows(); draw(); capStatus('Readings cleared.'); });
+  /* Export to worksheet: through localStorage (same site) to the Room Acoustics worksheet (reverberation times) or the Anechoic Chamber
+     worksheet (level against distance); the CSV travels with them, and is downloaded instead if this browser blocks storage. */
+  $('exportWs').addEventListener('click', () => {
+    const rows = rowsNow(); if (!rows.length) { capStatus('No readings to export.'); return; }
+    const kind = S.mode, slug = kind === 'decay' ? 'room-acoustics' : 'anechoic-chamber', txt = readingsCSV(kind, rows, { version: RA_VERSION }), name = `${slug}-readings.csv`;
+    const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => l.split(',');
+    if (kind === 'decay' && !S.seriesD) S.seriesD = Date.now(); if (kind === 'level' && !S.seriesL) S.seriesL = Date.now();
+    const hand = { v: 1, demo: 'room-acoustics', series: kind === 'decay' ? S.seriesD : S.seriesL, sent: new Date().toISOString(), columns: split(lines[0]), rows: lines.slice(1).map(split),
+      note: `Simulated data from the Room Acoustics demo (${kind === 'decay' ? 'reverberation times' : 'level against distance'}).`, csv: txt, csvName: name };
+    try { localStorage.setItem('vd-handoff:' + slug, JSON.stringify(hand)); }
+    catch (_) {
+      try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+      capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return;
+    }
+    capStatus(`${rows.length} reading${rows.length === 1 ? '' : 's'} sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = `../curriculum/labs/students/${slug}.html`; a.target = slug + '-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+  });
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody'), dec = S.mode === 'decay', rows = rowsNow();
+    $('rowsTbl').querySelector('thead').innerHTML = dec ? '<tr><th>#</th><th>Band</th><th>Walls</th><th>T (s)</th><th><span class="sr">Delete</span></th></tr>' : '<tr><th>#</th><th>Band</th><th>Walls</th><th>r (m)</th><th>L (dB)</th><th><span class="sr">Delete</span></th></tr>';
+    tb.innerHTML = rows.length ? rows.map((r, i) => `<tr title="${r.L} × ${r.W} × ${r.H} m"><td>${i + 1}</td><td>${r.band}</td><td>${wallsText(r)}</td>${dec ? `<td>${r.T}</td>` : `<td>${r.r}</td><td>${r.Ldb}</td>`}<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : `<tr><td class="empty" colspan="6">${dec ? 'No readings yet. Clap, then record.' : 'No readings yet. Place the microphone, then record.'}</td></tr>`;
+  }
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { rowsNow().splice(+b.dataset.del, 1); renderRows(); draw(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; readouts(); draw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce) stopAnim(); });
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  tokens(); new ResizeObserver(resize).observe($('scene'));
+  const hashP = location.hash.slice(1); applyPreset(PRESETS[hashP] ? hashP : 'bare'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

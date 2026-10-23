@@ -46,6 +46,8 @@ OVERRIDES = {
                          "setTimeout(() => { const b = [...document.querySelectorAll('#presets button')].find((x) => x.textContent === 'Onion shells'); if (b) b.click(); }, 3500); }, 1500)"},
     "hydrogen-orbitals": {"wait": 2500},
     "sound-waves": {"wait": 1500},
+    "sound-intensity": {"wait": 1200, "js": "document.querySelector('#presets [data-p=two]').click(); const r = document.getElementById('sR'); r.value = 12; r.dispatchEvent(new Event('input')); document.getElementById('rack').style.display = 'none'; window.dispatchEvent(new Event('resize'));"},
+    "room-acoustics": {"wait": 2200, "js": "document.getElementById('rack').style.display = 'none'; setTimeout(() => document.getElementById('go').click(), 600);"},
     "kundts-tube": {"wait": 5000, "js": "const s = document.getElementById('sl'); s.value = 1.02; s.dispatchEvent(new Event('input')); document.getElementById('keep').click();"},
     "wave-power": {"wait": 1500, "js": "const a = document.getElementById('sA'); a.value = 3; a.dispatchEvent(new Event('input')); const f = document.getElementById('sF'); f.value = 50; f.dispatchEvent(new Event('input')); document.getElementById('play').click();"},
     "two-speaker": {"wait": 1200, "js": "document.querySelector('#viewSeg [data-v=waves]').click();"},
