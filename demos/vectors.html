@@ -59,6 +59,9 @@ body { margin: 0; }
   --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
   --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
 }
+:root { --s3col: #7a4bb0; --s4col: #0f7f86; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --s3col: #c39bff; --s4col: #4fd1d9; } }
+:root[data-theme="dark"] { --s3col: #c39bff; --s4col: #4fd1d9; }
 :root { --acol: #2b60b5; --bcol: #b0452f; --rcol: #2f7d4f; --water: #cfe3f3; --bank: #d9cfb8; --water-deep: #b3d2ec; --ripple: rgba(255,255,255,0.85); --leaf: #6f9a3e; --grass: #7d9a4e; --dock: #a5835c; --hull: #e9e4d6; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --acol: #69a0ff; --bcol: #ff8a70; --rcol: #5fcf8a; --water: #15324a; --bank: #3b3527; --water-deep: #0f2638; --ripple: rgba(190,220,255,0.45); --leaf: #7fae4a; --grass: #6f8a44; --dock: #7d6346; --hull: #c9c3b4; } }
 :root[data-theme="dark"] { --acol: #69a0ff; --bcol: #ff8a70; --rcol: #5fcf8a; --water: #15324a; --bank: #3b3527; --water-deep: #0f2638; --ripple: rgba(190,220,255,0.45); --leaf: #7fae4a; --grass: #6f8a44; --dock: #7d6346; --hull: #c9c3b4; }
@@ -109,6 +112,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .check input { accent-color: var(--accent); margin: 0; }
 .inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 .lab { font-size: 0.88rem; }
+.ftstr { display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; border: 1px solid var(--line); border-left: 4px solid var(--sc, var(--accent)); border-radius: 8px; background: var(--canvas); }
+.ftstr h3 { margin: 0; font-size: 0.86rem; }
+.ftstr.sel { box-shadow: 0 0 0 2px var(--sc, var(--accent)); }
+.fttbl { width: 100%; border-collapse: collapse; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.78rem; }
+.fttbl th, .fttbl td { padding: 3px 4px; text-align: right; border-bottom: 1px solid var(--line); }
+.fttbl th:first-child, .fttbl td:first-child { text-align: left; }
+.fttbl th { font-family: var(--font-ui); font-weight: 700; color: var(--muted); }
+.fttbl td.empty { text-align: left; font-family: var(--font-ui); color: var(--muted); }
+.fttbl button { font: inherit; color: var(--muted); background: none; border: 0; cursor: pointer; padding: 0 4px; }
+.btns { display: flex; flex-wrap: wrap; gap: 6px; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.capstatus { margin: 0; font-size: 0.85rem; color: var(--muted); min-height: 1.2em; }
+.scroll { overflow-x: auto; }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 480px; } }
 @media (max-width: 820px) {
   html, body { height: auto; } .app { height: auto; }
@@ -125,7 +141,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <header class="bar">
     <div>
       <h1>Vectors and Relative Motion</h1>
-      <p>Drag the arrow tips. See components, sums, differences, dot and cross products, and how a boat's velocity relative to the water adds to the water's velocity relative to the shore.</p>
+      <p>Drag the arrow tips. See components, sums, differences, dot and cross products, how a boat's velocity relative to the water adds to the water's velocity relative to the shore, and balance hanging masses on a force table.</p>
     </div>
     <div class="bar-right">
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
@@ -135,7 +151,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   <main class="bench">
     <div class="stage" id="stage">
-      <canvas id="can" tabindex="0" role="application" aria-label="A grid with vectors drawn from the origin. Drag a vector's tip to change it. Keys: 1 or 2 picks vector A or B, the arrow keys move its tip by one grid step (with Shift by a tenth). In River crossing, space starts or stops the boat."></canvas>
+      <canvas id="can" tabindex="0" role="application" aria-label="A grid with vectors drawn from the origin. Drag a vector's tip to change it. Keys: 1 or 2 picks vector A or B, the arrow keys move its tip by one grid step (with Shift by a tenth). In River crossing, space starts or stops the boat. On the force table, 1 to 4 picks a string, the left and right arrow keys turn its pulley by one degree (with Shift by ten) and the up and down arrow keys change its mass by one gram (with Shift by ten)."></canvas>
       <div class="viewbar" id="riverBar" hidden>
         <button type="button" class="spin attn" id="go">Launch boat</button>
         <button type="button" class="spin" id="again">Back to the bank</button>
@@ -152,6 +168,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="sub" aria-pressed="false">Subtracting</button>
           <button type="button" data-p="prod" aria-pressed="false">Dot and cross products</button>
           <button type="button" data-p="river" aria-pressed="false">River crossing</button>
+          <button type="button" data-p="table" aria-pressed="false">Force table</button>
         </div>
         <p class="hint" id="presetHint"></p>
       </section>
@@ -183,11 +200,57 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <p class="hint">The river is 60 m wide. The current is the same everywhere, or (Slower near the banks) zero at each bank and fastest mid river, u(y) = 4u y(W − y)/W², averaging 2u/3; a real river's profile is roughly like this. The boat keeps its heading and speed relative to the water, so its path curves when the current varies. The arrows at the left show the current across the river.</p>
       </section>
 
+      <section id="secTable" hidden>
+        <h2>Force table</h2>
+        <div class="inline">
+          <span class="lab">Strings on the table</span>
+          <div class="seg" role="group" aria-label="Number of strings">
+            <button type="button" id="ftN2" aria-pressed="false">2</button>
+            <button type="button" id="ftN3" aria-pressed="true">3</button>
+            <button type="button" id="ftN4" aria-pressed="false">4</button>
+          </div>
+        </div>
+        <div class="ftstr" id="ftRow1" style="--sc: var(--acol)">
+          <h3>String 1</h3>
+          <div><div class="slider-head"><label for="ftM1">Mass on string 1, with its hanger</label><output id="oFtM1" for="ftM1"></output></div><input type="range" id="ftM1" min="10" max="500" step="1" value="150"></div>
+          <div><div class="slider-head"><label for="ftA1">Angle of string 1</label><output id="oFtA1" for="ftA1"></output></div><input type="range" id="ftA1" min="0" max="359" step="1" value="20"></div>
+        </div>
+        <div class="ftstr" id="ftRow2" style="--sc: var(--bcol)">
+          <h3>String 2</h3>
+          <div><div class="slider-head"><label for="ftM2">Mass on string 2, with its hanger</label><output id="oFtM2" for="ftM2"></output></div><input type="range" id="ftM2" min="10" max="500" step="1" value="200"></div>
+          <div><div class="slider-head"><label for="ftA2">Angle of string 2</label><output id="oFtA2" for="ftA2"></output></div><input type="range" id="ftA2" min="0" max="359" step="1" value="110"></div>
+        </div>
+        <div class="ftstr" id="ftRow3" style="--sc: var(--s3col)">
+          <h3>String 3</h3>
+          <div><div class="slider-head"><label for="ftM3">Mass on string 3, with its hanger</label><output id="oFtM3" for="ftM3"></output></div><input type="range" id="ftM3" min="10" max="500" step="1" value="100"></div>
+          <div><div class="slider-head"><label for="ftA3">Angle of string 3</label><output id="oFtA3" for="ftA3"></output></div><input type="range" id="ftA3" min="0" max="359" step="1" value="230"></div>
+        </div>
+        <div class="ftstr" id="ftRow4" style="--sc: var(--s4col)">
+          <h3>String 4</h3>
+          <div><div class="slider-head"><label for="ftM4">Mass on string 4, with its hanger</label><output id="oFtM4" for="ftM4"></output></div><input type="range" id="ftM4" min="10" max="500" step="1" value="100"></div>
+          <div><div class="slider-head"><label for="ftA4">Angle of string 4</label><output id="oFtA4" for="ftA4"></output></div><input type="range" id="ftA4" min="0" max="359" step="1" value="300"></div>
+        </div>
+        <div><div class="slider-head"><label for="ftFric">Pulley friction, up to the weight of</label><output id="oFtFric" for="ftFric"></output></div><input type="range" id="ftFric" min="0" max="5" step="0.5" value="1"></div>
+        <label class="check"><input type="checkbox" id="ftArrows" checked><span>Show the forces as arrows</span></label>
+        <label class="check"><input type="checkbox" id="ftPoly"><span>Show the sum tip to tail</span></label>
+        <button type="button" class="btn" id="ftSolve">Set the last string to the equilibrant</button>
+        <div id="ftOut"></div>
+        <h2>Record</h2>
+        <div class="btns">
+          <button type="button" class="btn" id="capture">Record this setup</button>
+          <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="capstatus" id="capStatus" role="status"></p>
+        <div class="scroll"><table class="fttbl" id="rowsTbl"><thead><tr><th>#</th><th>Strings, mass and angle</th><th>Ring</th><th></th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">Each string pulls the ring with its tension, which for a hanging mass at rest is its weight, F = mg with g = 9.81 m/s². Angles are counterclockwise from the 0° mark. The strings are massless, the ring is light and slides freely on the table, and every string is taken to point at the pin, ignoring the ring's few millimetres of play. Pulley friction lets each string's tension differ from its hanging weight by up to the amount set (given as the weight of that many grams; a chosen value, not a measured one), so the ring centers over a small range of masses and angles, as on a real table. At 0 the pulleys are ideal and the ring centers only when the weights cancel exactly.</p>
+      </section>
+
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides every computed result (components, magnitudes, angles, sums, products, the resultant arrow and the river predictions) and leaves the vectors you set and the grid, so you can work them out and then check.</p>
+        <p class="hint">Blind hides every computed result (components, magnitudes, angles, sums, products, the resultant arrow, the river predictions, and the force table's forces, net force and equilibrant; the ring still shows whether it is centered) and leaves the vectors you set and the grid, so you can work them out and then check.</p>
       </section>
     </aside>
   </main>
@@ -223,6 +286,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return [r.vbw[0] * tt + ux, vy * tt];
   }
   const straightAcross = (u, vb, profile) => { const ub = meanCurrent(u, profile); return ub <= vb ? Math.asin(ub / vb) * 180 / Math.PI : NaN; };   // heading whose upstream part cancels the average current
+  // Force table: each string i pulls the ring with its tension along its angle; at rest a hanging mass m_i gives T_i = m_i g.
+  // strings: [{ m: kg, deg }]. Pulley friction lets each tension be anywhere in m_i g ± fN, so the ring stays centered when some
+  // choice of tensions in those ranges adds to zero: −S must lie in the zonotope {Σ δ_i û_i, |δ_i| ≤ fN}, S the sum of the weights.
+  // A 2D zonotope's edges are parallel to its generators, so testing the normals of the û_i (and the û_i, for the case where all are
+  // parallel) is exact: |S · n| ≤ fN Σ |û_i · n| for each of them.
+  const G_FT = 9.81;
+  const ftForces = (strings, g) => strings.map((q) => fromPolar(q.m * (g || G_FT), q.deg));
+  function ftHolds(strings, fN, g) {
+    const F = ftForces(strings, g), S = F.reduce(add, [0, 0]);
+    if (!(fN > 0)) return mag(S) <= 1e-9;
+    const dirs = strings.map((q) => fromPolar(1, q.deg));
+    for (const u of dirs) for (const n of [[-u[1], u[0]], u]) {
+      const cap = fN * dirs.reduce((t, v) => t + Math.abs(dot(v, n)), 0);
+      if (Math.abs(dot(S, n)) > cap + 1e-12) return false;
+    }
+    return true;
+  }
+  function forceTable(strings, fN, g) {
+    const gg = g || G_FT, F = ftForces(strings, gg), S = F.reduce(add, [0, 0]);
+    const others = F.slice(0, -1).reduce(add, [0, 0]), E = scale(-1, others);   // the equilibrant of every string but the last
+    return { F, S, net: mag(S), netDeg: angleDeg(S), E, Emag: mag(E), Edeg: angleDeg(E), Em: mag(E) / gg, centered: ftHolds(strings, fN, gg) };
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -234,6 +319,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     add: { A: [5, 1], B: [-2, 4], hint: 'Put B\'s tail on A\'s head: A + B runs from A\'s tail to B\'s head. Components add separately, R_x = A_x + B_x and R_y = A_y + B_y; magnitudes do not, unless the vectors point the same way.' },
     sub: { A: [5, 2], B: [2, 4], hint: 'A − B = A + (−B): flip B and add it. Drawn from the same tail, A − B is the arrow from B\'s head to A\'s head. This is how a change in velocity, Δv = v₂ − v₁, is found.' },
     prod: { A: [5, 1], B: [2, 4], hint: 'A · B = |A||B| cos φ = A_x B_x + A_y B_y, a number: how much of A lies along B, times |B|. A × B points out of the page here with size |A||B| sin φ, the area of the parallelogram. Swap the order and the cross product flips.' },
+    table: { hint: 'The ring sits around a pin at the center. Each string runs over a pulley at the rim to a hanging mass, so it pulls the ring outward with a force mg along its angle. The ring is centered when the forces add to zero. Find the mass and angle for the last string that centers the ring: that force is the equilibrant of the others, equal in size and opposite in direction to their resultant. Drag a pulley around the rim to move it.' },
     river: { hint: 'The boat aims across, but the water carries it downstream. Its velocity relative to the shore is the vector sum. Aim upstream to land straight across; the crossing then takes longer.' }
   };
   const S = { preset: 'comp', A: [4, 3], B: null, h2t: true, snap: true, comp: true, sel: 'A', blind: false,
@@ -248,7 +334,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function tokens() {
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      A: g('--acol'), B: g('--bcol'), R: g('--rcol'), water: g('--water'), bank: g('--bank'), waterDeep: g('--water-deep'), ripple: g('--ripple'), leaf: g('--leaf'), grass: g('--grass'), dock: g('--dock'), hull: g('--hull'), equi: g('--equi'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
+      A: g('--acol'), B: g('--bcol'), R: g('--rcol'), water: g('--water'), bank: g('--bank'), waterDeep: g('--water-deep'), ripple: g('--ripple'), leaf: g('--leaf'), grass: g('--grass'), dock: g('--dock'), hull: g('--hull'), equi: g('--equi'), s3: g('--s3col'), s4: g('--s4col'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' };
   }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.35 : 1);
   const f = (v, d = 2) => (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−');
@@ -260,6 +346,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const x0 = -50, x1 = 110, y0 = -14, y1 = WIDTH + 14, s = Math.min((W - 30 * p) / (x1 - x0), (H - 70 * p) / (y1 - y0));
       return { s, cx: W / 2 - s * (x0 + x1) / 2, cy: H / 2 + 10 * p + s * (y0 + y1) / 2 };
     }
+    if (S.preset === 'table') { const r = Math.max(60, Math.min(W / 2 - 52 * p, H / 2 - 44 * p)); return { s: r, cx: W / 2, cy: H / 2 }; }
     const span = 11, s = Math.min(W, H - 40 * p) / (2 * span);
     return { s, cx: W / 2, cy: H / 2 + 14 * p };
   }
@@ -295,6 +382,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     view = makeView();
     if (S.preset === 'river') { drawRiver(); return; }
+    if (S.preset === 'table') { drawTable(); return; }
     const p = ps(), x0 = Math.floor(ux(0)), x1 = Math.ceil(ux(W)), y0 = Math.floor(uy(H)), y1 = Math.ceil(uy(0));
     for (let x = x0; x <= x1; x++) { ctx.strokeStyle = x === 0 ? T.gridStrong : T.grid; ctx.lineWidth = x === 0 ? 1.6 : 1; ctx.beginPath(); ctx.moveTo(X(x), 0); ctx.lineTo(X(x), H); ctx.stroke(); }
     for (let y = y0; y <= y1; y++) { ctx.strokeStyle = y === 0 ? T.gridStrong : T.grid; ctx.lineWidth = y === 0 ? 1.6 : 1; ctx.beginPath(); ctx.moveTo(0, Y(y)); ctx.lineTo(W, Y(y)); ctx.stroke(); }
@@ -389,6 +477,46 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.fillText('Arrows at the boat show 8 s of motion', kx, ky + 10 * p + keys.length * 19 * p);
     if (R.landed && !bl) label(`landed ${f(res.drift, 1)} m ${res.drift >= 0 ? 'downstream' : 'upstream'} after ${f(res.t, 1)} s`, X(res.drift), Y(WIDTH) - 18 * p, T.ink);
   }
+  // ---------- force table ----------
+  const FT = { n: 3, s: [{ g: 150, a: 20 }, { g: 200, a: 110 }, { g: 100, a: 230 }, { g: 100, a: 300 }], fric: 1, arrows: true, poly: false, sel: 0, rows: [], series: 1 };
+  const ftStrings = () => FT.s.slice(0, FT.n).map((q) => ({ m: q.g / 1000, deg: q.a }));
+  const ftFricN = () => FT.fric / 1000 * G_FT;
+  const ftRes = () => forceTable(ftStrings(), ftFricN());
+  const ftCol = (i) => [T.A, T.B, T.s3, T.s4][i];
+  const ARROW_N = 5;   // an arrow as long as the table's radius is 5 N
+  function drawTable() {
+    const p = ps(), r = view.s, cx = view.cx, cy = view.cy, bl = S.blind, res = ftRes();
+    const P = (rad, deg) => [cx + rad * Math.cos(deg * Math.PI / 180), cy - rad * Math.sin(deg * Math.PI / 180)];
+    // the table: disk, degree scale (counterclockwise from 0° at the right), labels every 30°
+    ctx.fillStyle = T.relief; ctx.beginPath(); ctx.arc(cx, cy, r + 4 * p, 0, 7); ctx.fill();
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = T.muted;
+    for (let d = 0; d < 360; d += (r > 150 ? 1 : 5)) { const L = d % 30 === 0 ? 12 : d % 10 === 0 ? 8 : d % 5 === 0 ? 5 : 3, a = P(r, d), b = P(r - L * p, d); ctx.lineWidth = d % 10 === 0 ? 1.2 : 0.7; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); }
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (let d = 0; d < 360; d += 30) { const q = P(r - 24 * p, d); ctx.fillText(`${d}°`, q[0], q[1]); }
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, r * 0.5, 0, 7); ctx.moveTo(cx - r + 30 * p, cy); ctx.lineTo(cx + r - 30 * p, cy); ctx.moveTo(cx, cy - r + 30 * p); ctx.lineTo(cx, cy + r - 30 * p); ctx.stroke();
+    // the ring: centered, or resting against the pin on the side away from the net pull
+    const rr = Math.max(9 * p, r * 0.07), pin = 3 * p, play = rr - pin - 2 * p, off = res.centered ? [0, 0] : [play * Math.cos(res.netDeg * Math.PI / 180), -play * Math.sin(res.netDeg * Math.PI / 180)];
+    const rc = [cx + off[0], cy + off[1]];
+    ftStrings().forEach((q, i) => {
+      const u = [Math.cos(q.deg * Math.PI / 180), -Math.sin(q.deg * Math.PI / 180)], pl = P(r + 9 * p, q.deg), c = ftCol(i);
+      ctx.strokeStyle = c; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(rc[0] + u[0] * rr, rc[1] + u[1] * rr); ctx.lineTo(pl[0] - u[0] * 7 * p, pl[1] - u[1] * 7 * p); ctx.stroke();
+      ctx.fillStyle = T.canvas; ctx.lineWidth = (FT.sel === i ? 3 : 2) * p; ctx.beginPath(); ctx.arc(pl[0], pl[1], (FT.sel === i ? 9 : 7) * p, 0, 7); ctx.fill(); ctx.stroke();
+      const lp = P(r + 32 * p, q.deg); label(`${Math.round(q.m * 1000)} g`, lp[0], lp[1], c, true);
+    });
+    ctx.strokeStyle = res.centered ? T.R : T.ink; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.arc(rc[0], rc[1], rr, 0, 7); ctx.stroke();
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, pin, 0, 7); ctx.fill();
+    // forces to scale from the center, the tip to tail sum, the net force and the equilibrant of all but the last string
+    const k = r / ARROW_N, A = (v) => [cx + k * v[0], cy - k * v[1]];
+    if (FT.arrows) res.F.forEach((F, i) => { const e = A(F); arrow(cx, cy, e[0], e[1], ftCol(i), 2.4 * p); });
+    if (!bl && FT.poly) { let t = [0, 0]; res.F.forEach((F, i) => { const a = A(t), b = A(add(t, F)); ctx.globalAlpha = 0.6; arrow(a[0], a[1], b[0], b[1], ftCol(i), 2 * p, true); ctx.globalAlpha = 1; t = add(t, F); }); }
+    if (!bl && FT.n > 1) { const e = A(res.E); ctx.globalAlpha = 0.8; arrow(cx, cy, e[0], e[1], T.equi, 3 * p, true); ctx.globalAlpha = 1; label(FT.n === 2 ? 'equilibrant of string 1' : `equilibrant of strings 1 to ${FT.n - 1}`, e[0], e[1] + (res.E[1] >= 0 ? -16 : 16) * p, T.equi); }
+    if (!bl && res.net * k > 8 * p) { const e = A(res.S); arrow(cx, cy, e[0], e[1], T.R, 3.2 * p); label('net ΣF', e[0], e[1] + (res.S[1] >= 0 ? -16 : 16) * p, T.R); }
+    // status and scale, top left
+    ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = res.centered ? T.R : T.ink;
+    ctx.fillText(res.centered ? 'Ring centered' : 'Ring off center', 10 * p, 10 * p);
+    ctx.font = `${10.5 * p}px ${T.ui}`; ctx.fillStyle = T.muted; if (FT.arrows || !bl) ctx.fillText(`Arrows: the table's radius is ${ARROW_N} N`, 10 * p, 28 * p);
+  }
   function boatPos() { const R = S.river; return riverPos(R.u, R.vb, R.th, WIDTH, R.profile, R.t); }
 
   // ---------- readouts ----------
@@ -396,6 +524,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const bl = S.blind, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hid = (a) => `<div class="wide"><dt>${a}</dt><dd class="ok">hidden in Blind</dd></div>`;
     const A = S.A, B = S.B, v2 = (v) => `(${f(v[0], 1)}, ${f(v[1], 1)})`;
     let h = '', fm = '';
+    if (S.preset === 'table') { ftReadouts(); return; }
     if (S.preset === 'river') {
       const R = S.river, r = river(R.u, R.vb, R.th, WIDTH, R.profile), sa = straightAcross(R.u, R.vb, R.profile);
       h = dd('Boat rel. water', `${f(R.vb, 1)} m/s at ${f(R.th, 0)}°`) + dd(R.profile === 'banks' ? 'Water rel. shore, mid river (average)' : 'Water rel. shore', R.profile === 'banks' ? `${f(R.u, 1)} (${f(2 * R.u / 3, 2)}) m/s` : `${f(R.u, 1)} m/s`);
@@ -428,13 +557,85 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('vecOut').innerHTML = h; $('vecFormula').textContent = bl ? '' : fm;
   }
 
+  function ftReadouts() {
+    const res = ftRes(), bl = S.blind, st = ftStrings(), n = FT.n;
+    for (let i = 0; i < 4; i++) { $('ftRow' + (i + 1)).hidden = i >= n; $('ftRow' + (i + 1)).classList.toggle('sel', FT.sel === i); $('oFtM' + (i + 1)).textContent = `${f(FT.s[i].g / 1000, 3)} kg`; $('oFtA' + (i + 1)).textContent = `${FT.s[i].a}°`; $('ftM' + (i + 1)).value = FT.s[i].g; $('ftA' + (i + 1)).value = FT.s[i].a; }
+    $('oFtFric').textContent = `${f(FT.fric, 1)} g (${f(ftFricN(), 4)} N)`;
+    for (const k of [2, 3, 4]) $('ftN' + k).setAttribute('aria-pressed', String(k === n));
+    $('ftSolve').disabled = bl || n < 2; $('ftSolve').textContent = n < 2 ? 'Set the last string to the equilibrant' : `Set string ${n} to the equilibrant`;
+    const ring = res.centered ? 'Centered: the strings balance within the pulley friction.' : (bl ? 'Off center.' : `Off center: the net pull is toward the ${f(res.netDeg, 0)}° mark.`);
+    let h = `<dl class="readout"><div class="wide"><dt>Ring</dt><dd class="ok">${ring}</dd></div></dl>`;
+    if (bl) { $('ftOut').innerHTML = h + '<dl class="readout"><div class="wide"><dt>Forces, components, net force, equilibrant</dt><dd class="ok">hidden in Blind</dd></div></dl>'; return; }
+    h += '<div class="scroll"><table class="fttbl"><thead><tr><th></th><th>F = mg (N)</th><th>F_x (N)</th><th>F_y (N)</th></tr></thead><tbody>';
+    res.F.forEach((F, i) => { h += `<tr><td>String ${i + 1}</td><td>${f(mag(F), 3)}</td><td>${f(F[0], 3)}</td><td>${f(F[1], 3)}</td></tr>`; });
+    h += `<tr><td><strong>Net ΣF</strong></td><td>${f(res.net, 3)}</td><td>${f(res.S[0], 3)}</td><td>${f(res.S[1], 3)}</td></tr></tbody></table></div>`;
+    const who = n === 2 ? 'string 1' : `strings 1 to ${n - 1}`;
+    h += '<dl class="readout">' + `<div><dt>Net force on the ring</dt><dd>${f(res.net, 3)} N</dd></div><div><dt>Its direction</dt><dd>${res.net > 1e-9 ? f(res.netDeg, 1) + '°' : '—'}</dd></div>`;
+    h += `<div class="wide"><dt>Equilibrant of ${who}: −(the sum of their forces)</dt><dd>${f(res.Emag, 3)} N at ${f(res.Edeg, 1)}°, the weight of ${f(res.Em, 3)} kg</dd></div></dl>`;
+    $('ftOut').innerHTML = h;
+  }
+  function ftSet() { draw(); readouts(); }
+  for (const k of [2, 3, 4]) $('ftN' + k).addEventListener('click', () => { FT.n = k; if (FT.sel >= k) FT.sel = k - 1; ftSet(); });
+  for (let i = 0; i < 4; i++) {
+    $('ftM' + (i + 1)).addEventListener('input', (e) => { FT.s[i].g = +e.target.value; FT.sel = i; ftSet(); });
+    $('ftA' + (i + 1)).addEventListener('input', (e) => { FT.s[i].a = +e.target.value; FT.sel = i; ftSet(); });
+  }
+  $('ftFric').addEventListener('input', (e) => { FT.fric = +e.target.value; ftSet(); });
+  $('ftArrows').addEventListener('change', (e) => { FT.arrows = e.target.checked; draw(); });
+  $('ftPoly').addEventListener('change', (e) => { FT.poly = e.target.checked; draw(); });
+  $('ftSolve').addEventListener('click', () => {
+    const res = ftRes(), last = FT.s[FT.n - 1], gr = Math.round(res.Em * 1000);
+    if (gr < 10 || gr > 500) { capStatus(`The equilibrant is the weight of ${f(res.Em, 3)} kg, outside the 0.010 to 0.500 kg this string can hold.`); return; }
+    last.g = gr; last.a = Math.round(res.Edeg) % 360; FT.sel = FT.n - 1;
+    capStatus(`String ${FT.n} set to ${f(gr / 1000, 3)} kg at ${last.a}°, rounded to the nearest gram and degree.`); ftSet();
+  });
+  // recorded setups and Export to worksheet (worksheet force-table)
+  const FT_VERSION = 'vectors-force-table@2026-10-23';
+  function capStatus(t) { $('capStatus').textContent = t; }
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = FT.rows.length ? FT.rows.map((r, i) => `<tr><td>${i + 1}</td><td>${r.s.map((q) => `${f(q.g / 1000, 3)} kg at ${q.a}°`).join('; ')}</td><td>${r.centered ? 'centered' : 'off center'}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="4">No setups recorded yet.</td></tr>';
+  }
+  $('capture').addEventListener('click', () => { const res = ftRes(); FT.rows.push({ s: FT.s.slice(0, FT.n).map((q) => ({ g: q.g, a: q.a })), centered: res.centered, fric: FT.fric }); renderRows(); capStatus(`Setup ${FT.rows.length} recorded (ring ${res.centered ? 'centered' : 'off center'}).`); });
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { FT.rows.splice(+b.dataset.del, 1); renderRows(); } });
+  $('clearRows').addEventListener('click', () => { FT.rows = []; FT.series++; renderRows(); capStatus('Cleared. The next export starts a new series.'); });
+  const csvCell = (v) => (/[",\n]/.test(String(v)) ? `"${String(v).replace(/"/g, '""')}"` : String(v));
+  function readingsCSV() {
+    const fr = [...new Set(FT.rows.map((r) => r.fric))];
+    const head = [['version', FT_VERSION], ['setup', 'Force table'], ['g_m_per_s2', G_FT], ['pulley_friction_max_g', fr.join(' / ')], ['pulley_friction_max_N', fr.map((x) => +(x / 1000 * G_FT).toPrecision(6)).join(' / ')], ['note', 'simulated: massless strings, tension = mg, angles counterclockwise from 0 deg']];
+    const cols = ['trial', 'strings', 'm1_kg', 'theta1_deg', 'm2_kg', 'theta2_deg', 'm3_kg', 'theta3_deg', 'm4_kg', 'theta4_deg', 'ring'];
+    const lines = head.map((h) => '# ' + h.map(csvCell).join(',')).concat([cols.join(',')]);
+    FT.rows.forEach((r, i) => { const c = [i + 1, r.s.length]; for (let k = 0; k < 4; k++) c.push(r.s[k] ? (r.s[k].g / 1000).toFixed(3) : '', r.s[k] ? r.s[k].a : ''); c.push(r.centered ? 'centered' : 'off center'); lines.push(c.map(csvCell).join(',')); });
+    return lines.join('\n') + '\n';
+  }
+  function downloadCSV(txt) { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'force-table-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} }
+  function toWorksheet(txt, fallback) {
+    const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
+    const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {};
+    lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); if (c.length > 1) meta[c[0]] = c[1]; });
+    const hand = { v: 1, demo: 'vectors', series: FT.series, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
+      note: `Simulated data from the Force table setup of the Vectors and Relative Motion demo (g = ${G_FT} m/s², pulley friction up to ${meta.pulley_friction_max_g} g of weight).`, csv: txt, csvName: 'force-table-readings.csv' };
+    try { localStorage.setItem('vd-handoff:force-table', JSON.stringify(hand)); }
+    catch (_) { fallback(); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    const n = hand.rows.length, url = '../curriculum/labs/students/force-table.html';
+    capStatus(`${n} setup${n === 1 ? '' : 's'} sent to the worksheet. `);
+    /* the force table worksheet may not be published yet: link it only if it is there */
+    fetch(url, { method: 'HEAD' }).then((r) => {
+      if (r.ok) { const a = document.createElement('a'); a.href = url; a.target = 'force-table-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a); }
+      else $('capStatus').appendChild(document.createTextNode('The force table worksheet is not published yet; the readings wait in this browser until it is.'));
+    }).catch(() => {});
+  }
+  $('exportCsv').addEventListener('click', () => { if (!FT.rows.length) { capStatus('No setups to export. Record one first.'); return; } const txt = readingsCSV(); toWorksheet(txt, () => downloadCSV(txt)); });
+
   // ---------- presets ----------
   function applyPreset(p) {
     S.preset = p; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === p));
     const c = PRESETS[p]; $('presetHint').textContent = c.hint;
-    const rv = p === 'river'; $('secVec').hidden = rv; $('secRiver').hidden = !rv; $('riverBar').hidden = !rv;
+    const rv = p === 'river', tb = p === 'table'; $('secVec').hidden = rv || tb; $('secRiver').hidden = !rv; $('secTable').hidden = !tb; $('riverBar').hidden = !rv;
     $('addStyleRow').hidden = p !== 'add';
-    if (!rv) { S.A = c.A.slice(); S.B = c.B ? c.B.slice() : null; S.sel = 'A'; }
+    if (tb) { /* the table keeps its strings between visits */ }
+    else if (!rv) { S.A = c.A.slice(); S.B = c.B ? c.B.slice() : null; S.sel = 'A'; }
     else resetBoat();
     draw(); readouts();
   }
@@ -476,13 +677,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return out;
   }
   function local(e) { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
+  function ftHit(px, py, touch) {
+    let best = -1, bd = 22 * ps() * (touch ? 1.6 : 1);
+    ftStrings().forEach((q, i) => { const r = view.s + 9 * ps(), x = view.cx + r * Math.cos(q.deg * Math.PI / 180), y = view.cy - r * Math.sin(q.deg * Math.PI / 180), d = Math.hypot(x - px, y - py); if (d < bd) { bd = d; best = i; } });
+    return best;
+  }
+  function ftDrag(px, py) { const d = Math.round(angleDeg([px - view.cx, view.cy - py])) % 360; FT.s[drag.i].a = d; ftSet(); }
   can.addEventListener('pointerdown', (e) => {
+    if (S.preset === 'table') { const [px, py] = local(e); can.focus(); const i = ftHit(px, py, e.pointerType === 'touch'); if (i >= 0) { drag = { i }; FT.sel = i; can.setPointerCapture(e.pointerId); ftDrag(px, py); } return; }
     const [px, py] = local(e); can.focus(); let best = null, bd = 22 * ps() * (e.pointerType === 'touch' ? 1.6 : 1);
     for (const [k, pt] of tips()) { const d = Math.hypot(X(pt[0]) - px, Y(pt[1]) - py); if (d < bd) { bd = d; best = k; } }
     if (best) { drag = best; S.sel = best; can.setPointerCapture(e.pointerId); move(px, py); }
   });
   can.addEventListener('pointermove', (e) => {
     const [px, py] = local(e);
+    if (S.preset === 'table') { if (drag) ftDrag(px, py); else can.style.cursor = ftHit(px, py) >= 0 ? 'grab' : 'default'; return; }
     if (drag) move(px, py);
     else { let hit = false; for (const [, pt] of tips()) if (Math.hypot(X(pt[0]) - px, Y(pt[1]) - py) < 22 * ps()) hit = true; can.style.cursor = hit ? 'grab' : 'default'; }
   });
@@ -498,6 +707,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function move(px, py) { setTip(drag, ux(px), uy(py)); }
   can.addEventListener('keydown', (e) => {
     const k = e.key;
+    if (S.preset === 'table') {
+      if (/^[1-4]$/.test(k) && +k <= FT.n) { FT.sel = +k - 1; ftSet(); return; }
+      const q = FT.s[FT.sel], st = e.shiftKey ? 10 : 1;
+      if (k === 'ArrowLeft' || k === 'ArrowRight') q.a = ((q.a + (k === 'ArrowRight' ? st : -st)) % 360 + 360) % 360;
+      else if (k === 'ArrowUp' || k === 'ArrowDown') q.g = Math.max(10, Math.min(500, q.g + (k === 'ArrowUp' ? st : -st)));
+      else return;
+      e.preventDefault(); ftSet(); return;
+    }
     if (S.preset === 'river') { if (k === ' ') { $('go').click(); e.preventDefault(); } return; }
     if (k === '1' || k === 'a' || k === 'A') { S.sel = 'A'; draw(); return; }
     if ((k === '2' || k === 'b' || k === 'B') && S.B) { S.sel = 'B'; draw(); return; }
@@ -520,7 +737,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
-  tokens(); new ResizeObserver(resize).observe(stage); applyPreset('comp'); resize();
+  tokens(); new ResizeObserver(resize).observe(stage); renderRows();
+  const q0 = (() => { try { return new URLSearchParams(location.search).get('setup'); } catch (_) { return null; } })();
+  applyPreset(PRESETS[q0] ? q0 : 'comp'); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();

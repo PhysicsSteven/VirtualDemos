@@ -380,12 +380,14 @@
     {
      "demo": "vectors",
      "title": "Vectors and Relative Motion",
-     "desc": "Drag arrow tips to see components, sums, differences, and dot and cross products, then steer a boat across a river where its velocity adds to the current's.",
+     "desc": "Drag arrow tips to see components, sums, differences, and dot and cross products, steer a boat across a river where its velocity adds to the current's, and balance hanging masses on a force table.",
      "tags": [
       "vectors",
       "components",
       "dot and cross product",
-      "relative velocity"
+      "relative velocity",
+      "force table",
+      "equilibrant"
      ]
     },
     {

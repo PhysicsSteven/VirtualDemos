@@ -1071,7 +1071,7 @@
         "vectors"
       ],
       "unit": "measurements-vectors",
-      "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity."
+      "note": "Vectors and Relative Motion: components, sums, differences, dot and cross products on a grid; river crossing for relative velocity. Force table setup (2026-10-23): masses on pulleys at chosen angles; find the equilibrant that centers the ring, the classic vector addition lab, with Export to worksheet."
     },
     {
       "vol": 1,
@@ -1293,10 +1293,11 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "forces"
+        "forces",
+        "vectors"
       ],
       "unit": "forces",
-      "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley."
+      "note": "Forces and Friction: free body diagram to scale, Newton's second law on a ramp with static and kinetic friction, applied force at an angle, hanging mass over a pulley. Vectors and Relative Motion, Force table setup: the forces of several strings on a ring add as vectors, and the ring is centered when their sum is zero."
     },
     {
       "vol": 1,
@@ -4410,12 +4411,17 @@
           "vol": 1,
           "sec": "4.5",
           "title": "Relative Motion in One and Two Dimensions"
+        },
+        {
+          "vol": 1,
+          "sec": "5.1",
+          "title": "Forces"
         }
       ],
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Lecture demo: draggable vectors with components, A + B (head to tail or parallelogram), A − B, dot and cross products; river crossing with v_bs = v_bw + v_ws, aim to land straight across. Blind hides results. 3D vectors and unit vector algebra in 3D not covered.",
+      "note": "New 2026-10-22 (Claude). Lecture demo: draggable vectors with components, A + B (head to tail or parallelogram), A − B, dot and cross products; river crossing with v_bs = v_bw + v_ws, aim to land straight across. Blind hides results. 3D vectors and unit vector algebra in 3D not covered. Force table setup (2026-10-23, Claude): 2 to 4 strings, mass (with hanger) and angle each, pulley friction as a chosen tolerance, equilibrant and net force readouts, Record this setup and Export to worksheet (worksheet force-table, handout to come).",
       "handouts": [],
       "title": "Vectors and Relative Motion",
       "url": "demos/vectors.html"

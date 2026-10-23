@@ -67,6 +67,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>A − B is A + (−B); drawn from a common tail it runs from B's head to A's head.</li>
 <li>The dot product is a number, A·B = |A||B| cos φ = A_xB_x + A_yB_y. The cross product's size is the parallelogram's area, |A||B| sin φ, and its direction is out of or into the page; B × A = −A × B.</li>
 <li>Velocities add the same way: v(boat, shore) = v(boat, water) + v(water, shore).</li>
+<li>Forces add the same way. On a force table the ring is centered when the forces on it add to zero; the force that balances a set of forces, their equilibrant, is minus their resultant.</li>
 </ul>
 <h2>Running it in class</h2>
 <ol>
@@ -75,6 +76,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Subtracting.</strong> (5, 2) − (2, 4) = (3, −2). Point out the faint copy of A − B from B's head to A's head.</li>
 <li><strong>Dot and cross products.</strong> (5, 1)·(2, 4) = 14 and (A × B)_z = 18, with φ = 52.1°. Make them perpendicular (dot product 0) and parallel (cross product 0).</li>
 <li><strong>River crossing.</strong> Boat 2.5 m/s straight across a 60 m river flowing at 1.5 m/s: 24 s, 36 m downstream. <strong>Aim to land straight across</strong>: 36.9° upstream, 30 s. Then tick <strong>Slower near the banks</strong>: the current is zero at each bank and 1.5 m/s mid river (average 1.0 m/s). Heading straight across now lands 24 m downstream along a curved path, and aiming 23.6° upstream lands straight across, swinging upstream near the banks and downstream mid river.</li>
+<li><strong>Force table</strong> (the lab; also <code>?setup=table</code>). String 1 holds 0.150 kg at 20°, string 2 holds 0.200 kg at 110°, string 3 starts at 0.100 kg at 230° and the ring is off center. Students find the equilibrant of strings 1 and 2 graphically (tick <strong>Show the sum tip to tail</strong>) and by components, then set string 3 by hand to check. The first two strings are 90° apart, so the answer is a 3, 4, 5 triangle: 0.250 kg at 253.1°. <strong>Set string 3 to the equilibrant</strong> does it for you, rounded to the nearest gram and degree. With <strong>Pulley friction, up to the weight of</strong> 1 g the ring stays centered from 0.249 to 0.251 kg at 253°, but only at 253° itself at 0.250 kg: the angle is the sharper test. Set the friction to 0 and the ring never centers at whole grams and degrees here, which is a good moment to talk about why a real table is tapped and why its result has an uncertainty. <strong>Record this setup</strong> and <strong>Export to worksheet</strong> send the masses, angles and whether the ring was centered to the force table worksheet. Use <strong>Strings on the table</strong> 4 for a second trial with three given forces.</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> A = (−3, 4). Find |A| and its angle from +x. Which quadrant, and why does tan⁻¹(A_y/A_x) alone give the wrong angle?</p></div>
@@ -84,16 +86,23 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q3.</strong> For A = (5, 1) and B = (2, 4), find A·B, the angle between them, and (A × B)_z. Which one is the area of the parallelogram the two vectors make?</p></div>
 
 <div class="q"><p><strong>Q4.</strong> The river is 60 m wide and flows at 1.5 m/s; the boat goes 2.5 m/s relative to the water. (a) Heading straight across, how long does the crossing take and where does it land? (b) Which heading lands it straight across, and how long does that take? (c) What if the current were 3.0 m/s?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> On the force table, string 1 holds 0.150 kg at 20° and string 2 holds 0.200 kg at 110°. Find the mass and angle for string 3 that centers the ring, (a) by components and (b) by noticing the angle between strings 1 and 2. Why is the answer's angle not simply halfway between theirs plus 180°?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> With the pulleys' friction set to the weight of up to 1 g, the ring in Q5 stays centered for string 3 masses from 0.249 to 0.251 kg at 253°, but moving string 3 by one degree pushes it off center. Explain why the angle matters more than the mass here, and what this says about how to state the uncertainty of a force table result.</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"|A + B| = |A| + |B|."</strong> Only for parallel vectors.</li>
 <li><strong>"The x component is always the cosine."</strong> Only when θ is measured from +x.</li>
+<li><strong>"The equilibrant is the resultant."</strong> It is the same size and points the opposite way: it is what has to be added to make the sum zero.</li>
+<li><strong>"Masses add, so 0.150 kg and 0.200 kg need 0.350 kg."</strong> Forces add as vectors; here the two are perpendicular and need only 0.250 kg.</li>
 <li><strong>"Aiming straight across gets you across fastest and lands you opposite."</strong> It is the fastest crossing, but the current carries you downstream.</li>
 </ul>
 <h2>Physics behind the demo</h2>
 <ul>
 <li>Exact vector algebra on a grid (tips snap to whole units, or tenths with Shift and the arrow keys). Angles are from +x, counterclockwise, 0 to 360°.</li>
 <li>River: the current is uniform, or (Slower near the banks) u(y) = 4u y(W − y)/W², zero at the banks with average 2u/3. The boat keeps its speed and heading relative to the water, so the crossing time is W/(v_b cos θ) either way and the drift is (average current − v_b sin θ) × time; the curved path x(t) is the exact integral. Ripples and leaves drift at the local current; the arrows at the left show the profile (4 m/s = 120 px). Arrows at the boat show 8 s of motion, using the current where the boat is.</li>
+<li>Force table: each string pulls the ring with tension mg along its angle (g = 9.81 m/s², massless strings, mass includes the hanger, angles counterclockwise from the 0° mark). Every string is taken to point at the pin; the ring's few millimetres of play are ignored. Pulley friction is modelled as each tension lying anywhere within mg ± f, f a chosen value set on the page (0 to the weight of 5 g); the ring is centered exactly when some choice of tensions in those ranges sums to zero, tested on the edges of the set of reachable sums (a zonotope). Arrows are drawn to scale, the table's radius being 5 N. Exported readings are labelled simulated.</li>
 </ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
 </main>
 </body>

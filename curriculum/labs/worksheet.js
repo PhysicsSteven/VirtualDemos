@@ -12,7 +12,7 @@
   /* Physics I worksheets (physics-1.html). Add a worksheet's file name here to make it interactive. */
   const PHYSICS_I = ['collisions', 'energy-sources', 'estimation-and-evidence', 'fluids', 'forces', 'impulse', 'kepler-orbits',
     'measurement-and-units', 'motion-graphs', 'pendulum', 'potential-curves', 'projectile-drag', 'rotation', 'rotational-dynamics',
-    'springs', 'stress-strain', 'viscometer'];
+    'springs', 'stress-strain', 'viscometer', 'force-table'];   /* force-table: GPT's handout is still to come; nothing happens until it exists */
   const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
@@ -34,6 +34,9 @@
     'rotational-dynamics': { demo: 'Rotational Dynamics', cols: ['load', 'm_kg', 'r_m', '#drop_height_m', 't_s', 'a_m_per_s2', 'alpha_rad_per_s2', 'tau_N_m'] },
     springs: { demo: 'Springs', cols: ['row', 'm_kg', 'A_m', 'T_zero_crossings_s', 'N_oscillations', 't_stopwatch_s', 'T_squared_s2'] },
     'stress-strain': { demo: 'Stress and Strain', cols: ['row', 'd_mm', '#wire_length_m', 'm_kg', 'dL_mm', null, null] },
+    /* Force table setup of the Vectors demo. The handout's first data table is expected to have these columns in this order:
+       Trial | m₁ (kg) | θ₁ (°) | m₂ (kg) | θ₂ (°) | m₃ (kg) | θ₃ (°) | m₄ (kg) | θ₄ (°) | Ring centered?  (more columns may follow). */
+    'force-table': { demo: 'Vectors (Force table)', cols: ['trial', 'm1_kg', 'theta1_deg', 'm2_kg', 'theta2_deg', 'm3_kg', 'theta3_deg', 'm4_kg', 'theta4_deg', 'ring'] },
     viscometer: { demo: 'Falling Ball Viscometer', cols: ['row', (r) => [r.liquid, r.ball].filter(Boolean).join(' / '), (r) => [r.rho_liquid_kg_m3, r.rho_ball_kg_m3].filter(Boolean).join(' / '), 'tube_D_mm', 'd_mm', 't_s', 'v_m_per_s', null, null, null] },
   };
   /* ==PHYSICS II START== Physics II worksheets (physics-2.html) and their demo column maps, kept in one block. */

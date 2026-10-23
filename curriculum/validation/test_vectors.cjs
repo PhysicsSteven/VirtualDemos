@@ -2,7 +2,7 @@
 // Vectors and Relative Motion: vector algebra identities and the river crossing.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('vectors', 'add,sub,scale,dot,crossZ,mag,angleDeg,fromPolar,between,projection,river,straightAcross,currentAt,meanCurrent,riverPos');
+const c = core('vectors', 'add,sub,scale,dot,crossZ,mag,angleDeg,fromPolar,between,projection,river,straightAcross,currentAt,meanCurrent,riverPos,G_FT,ftForces,ftHolds,forceTable');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -37,5 +37,48 @@ group('slower near the banks: u(y) = 4u y(W − y)/W², drift uses the 2u/3 aver
   near(x, R2.drift, 1e-6); const q = c.riverPos(1.5, 2.5, th, 60, 'banks', R2.t); near(q[0], R2.drift, 1e-9); near(q[1], 60, 1e-9);
   const a = c.straightAcross(1.5, 2.5, 'banks'); near(a, Math.asin(1 / 2.5) * 180 / Math.PI, 1e-12); near(c.river(1.5, 2.5, a, 60, 'banks').drift, 0, 1e-9);
   near(c.riverPos(1.5, 2.5, 0, 60, 'uniform', 10)[0], 15, 1e-12);
+});
+group('force table: F = mg along each string; the equilibrant is −(the sum of the others); the ring centers when the forces cancel', () => {
+  const g = c.G_FT; near(g, 9.81, 0);
+  const s = [{ m: 0.150, deg: 20 }, { m: 0.200, deg: 110 }], R = c.add(c.fromPolar(0.150 * g, 20), c.fromPolar(0.200 * g, 110));
+  const t = c.forceTable(s.concat([{ m: 0.1, deg: 0 }]), 0);
+  near(t.Emag, c.mag(R), 1e-12); near(t.Edeg, (c.angleDeg(R) + 180) % 360, 1e-9); near(t.Em, c.mag(R) / g, 1e-12);
+  // perpendicular strings: |R| = g √(m1² + m2²)
+  near(c.forceTable([{ m: 0.3, deg: 0 }, { m: 0.4, deg: 90 }, { m: 0, deg: 0 }], 0).Em, 0.5, 1e-12);
+  // the exact equilibrant balances with ideal pulleys; one gram more on a string does not
+  const ex = s.concat([{ m: t.Em, deg: t.Edeg }]); assert(c.ftHolds(ex, 0)); assert(c.forceTable(ex, 0).net < 1e-12);
+  assert(!c.ftHolds([{ m: 0.151, deg: 20 }, s[1], ex[2]], 0));
+  // three equal masses 120° apart balance; two strings balance only when equal and opposite
+  assert(c.ftHolds([{ m: 0.2, deg: 0 }, { m: 0.2, deg: 120 }, { m: 0.2, deg: 240 }], 0));
+  assert(c.ftHolds([{ m: 0.2, deg: 30 }, { m: 0.2, deg: 210 }], 0)); assert(!c.ftHolds([{ m: 0.2, deg: 30 }, { m: 0.2, deg: 200 }], 0));
+});
+group('force table friction: centered exactly when some tensions within mg ± f add to zero', () => {
+  const g = c.G_FT, f = 0.001 * g;   // up to the weight of 1 g on each pulley
+  const base = [{ m: 0.2, deg: 0 }, { m: 0.2, deg: 120 }, { m: 0.2, deg: 240 }];
+  // strings 120° apart: extra mass δ on string 1 is taken up while δ g ≤ 2f (string 1 by −f, strings 2 and 3 by +f each: f + 2f cos 60° = 2f)
+  const at = (dm) => c.ftHolds([{ m: 0.2 + dm, deg: 0 }, base[1], base[2]], f);
+  assert(at(0.0019) && at(0.002 - 1e-9) && !at(0.0021) && at(-0.0019) && !at(-0.0021));
+  // the same limit sideways: string 1 turned by a small angle is held while its sideways pull is within f(|sin 120°| + |sin 240°|) = √3 f
+  const turn = (d) => c.ftHolds([{ m: 0.2, deg: d }, base[1], base[2]], f), lim = Math.asin(Math.sqrt(3) * 0.001 / 0.2) * 180 / Math.PI;
+  assert(!turn(2 * lim)); assert(turn(0.5 * lim));
+  // brute force: whenever ftHolds says centered, a grid of tension shifts within ± f gets the net force down to the grid's resolution
+  const rnd = (() => { let sd = 7; return () => { sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; }; })();
+  let yes = 0, no = 0;
+  for (let trial = 0; trial < 300; trial++) {
+    const st = [0, 1].map(() => ({ m: 0.05 + rnd() * 0.3, deg: Math.round(rnd() * 360) }));
+    const t = c.forceTable(st.concat([{ m: 0, deg: 0 }]), 0);
+    st.push({ m: t.Em + (rnd() - 0.5) * 0.008, deg: t.Edeg + (rnd() - 0.5) * 4 });
+    const S = c.ftForces(st).reduce(c.add, [0, 0]), u = st.map((q) => c.fromPolar(1, q.deg));
+    let best = Infinity; const N = 120;
+    for (let a = 0; a <= N; a++) for (let b = 0; b <= N; b++) {
+      const P = c.add(S, c.add(c.scale(f * (2 * a / N - 1), u[0]), c.scale(f * (2 * b / N - 1), u[1])));
+      const d3 = Math.max(-f, Math.min(f, -c.dot(P, u[2]))); best = Math.min(best, c.mag(c.add(P, c.scale(d3, u[2]))));
+    }
+    const h = c.ftHolds(st, f);
+    if (h) { yes++; assert(best <= 2 * f / N + 1e-12, `trial ${trial}: centered, but the best residual is ${best}`); }
+    else { no++; assert(best > 1e-6 * f, `trial ${trial}: off center, but a grid balance exists`); }
+  }
+  assert(yes > 20 && no > 20, `both cases sampled (${yes}, ${no})`);
+  assert(!c.ftHolds([{ m: 0.2 + 1e-6, deg: 0 }, base[1], base[2]], 0));
 });
 console.log(`${n} vectors test groups passed`);
