@@ -1,33 +1,13 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled swatch" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
 <style>
-*, *::before, *::after { box-sizing: border-box; }
-:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
-body { margin: 0; }
-img { max-width: 100%; }
-[hidden] { display: none !important; }
-
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
-@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
-/* vd-qr */
-.vd-qr { display: none; }
-@media (min-width: 821px) {
-  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
-}
-.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
-.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
-.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
-.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
-.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
-/* /vd-qr */
-/* vd-reset */
-.vd-reset { white-space: nowrap; }
-/* /vd-reset */
 </style>
 <title>Electromagnetic Waves</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -69,74 +49,25 @@ img { max-width: 100%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
 :root[data-projector="on"] body { font-size: 1.25rem; }
-.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
-
-.app {
-  height: 100%; display: flex; flex-direction: column; gap: 12px;
-  padding-block: 14px;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-}
-.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
-.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
-.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
-.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
-.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
-.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
-
-.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
 .stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.84rem; color: var(--muted); white-space: nowrap; }
-.pane { position: relative; min-height: 0; }
-.pane canvas { position: absolute; inset: 0; display: block; }
 .pane canvas#gl { inset: auto; }
 #can { touch-action: none; outline: none; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-
-.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
-.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
-.rail section + section { border-top: 1px solid var(--line); }
-.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
-.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
-
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chips button, .btn {
-  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
-  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
-}
-.chips button:hover, .btn:hover { border-color: var(--muted); }
-.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
-.btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 .seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
-
-.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-.slider-head label { font-size: 0.88rem; }
-.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
-
-.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
-.readout div { min-width: 0; }
-.readout dt { font-size: 0.78rem; color: var(--muted); }
-.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
-.readout .big dd { font-size: 1.2rem; }
-.readout .wide { grid-column: 1 / -1; }
 .readout .list dd { font-size: 0.88rem; }
 .ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
 .formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
 .colorchip { display: inline-block; width: 0.9em; height: 0.9em; border-radius: 3px; vertical-align: -0.1em; margin-left: 6px; border: 1px solid var(--line); }
-
-.toggles { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; }
-.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
 .toggles input, .check input { accent-color: var(--accent); margin: 0; }
-.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
-.key span { display: flex; align-items: center; gap: 8px; }
 .swatch { flex: none; width: 22px; height: 0; border-top: 3px solid; }
 .swatch.e { border-color: var(--pos); }
 .swatch.b { border-color: var(--bf); }
@@ -154,22 +85,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .chips button, .btn, .seg button, .proj { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
-  .app { height: auto; }
-  .bench { grid-template-columns: minmax(0, 1fr); }
   .stage { height: 86vh; min-height: 660px; }
-  .rail { overflow: visible; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
-.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
-  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
-.rail details.fold > summary::-webkit-details-marker { display: none; }
-.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
-.rail details.fold[open] > summary::after { content: "−"; }
-.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
-.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
-.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -181,9 +99,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
     <div class="bar-right">
       <div class="units mono">SI · c = 1/√(μ₀ε₀) · B₀ = E₀/c · I = ½cε₀E₀²</div>
-      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><script>(function(b){var base=new WeakMap(),rec=false;function data(t){var n=0;Array.prototype.forEach.call(t.rows,function(r){if(r.parentNode.tagName==='THEAD'||r.parentNode.tagName==='TFOOT')return;if(r.cells.length>1||(r.cells.length===1&&r.cells[0].colSpan<2))n++;});return n;}function snap(){document.querySelectorAll('table').forEach(function(t){base.set(t,data(t));});}window.addEventListener('load',function(){setTimeout(snap,400);});document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('button');if(!x||x===b)return;var s=x.textContent.trim();if(/^(capture|record|add to table|add point|keep trace|pin this)/i.test(s))rec=true;else if(/^clear/i.test(s))rec=false;},true);function lost(){if(typeof window.vdReadings==='function')return Number(window.vdReadings())||0;var n=0;document.querySelectorAll('table').forEach(function(t){n+=Math.max(0,data(t)-(base.has(t)?base.get(t):0));});return n||(rec?-1:0);}b.vdLost=lost;b.addEventListener('click',function(){var n=lost();if(n&&!window.confirm('Reset all clears '+(n>1?'the '+n+' readings':n===1?'the reading':'the readings')+' you recorded. '+'Export them first if you need them. Reset anyway?'))return;document.querySelectorAll('input,select,textarea,form').forEach(function(e){e.setAttribute('autocomplete','off');});location.reload();});})(document.currentScript.previousElementSibling);</script><!-- /vd-reset -->
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
-      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/em-waves.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/em-waves.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h3v1h-3zM18 2h2v1h-2zM23 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM15 3h1v1h-1zM17 3h1v1h-1zM20 3h1v1h-1zM22 3h6v1h-6zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM23 4h1v1h-1zM25 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM15 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM16 6h4v1h-4zM21 6h3v1h-3zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM14 7h1v1h-1zM16 7h2v1h-2zM19 7h1v1h-1zM23 7h1v1h-1zM27 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM14 9h2v1h-2zM17 9h8v1h-8zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h1v1h-1zM14 10h3v1h-3zM18 10h1v1h-1zM23 10h1v1h-1zM25 10h1v1h-1zM27 10h1v1h-1zM29 10h1v1h-1zM32 10h5v1h-5zM2 11h1v1h-1zM5 11h3v1h-3zM10 11h3v1h-3zM15 11h1v1h-1zM17 11h1v1h-1zM20 11h1v1h-1zM22 11h1v1h-1zM24 11h1v1h-1zM26 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h1v1h-1zM8 12h3v1h-3zM13 12h1v1h-1zM16 12h6v1h-6zM23 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM4 13h1v1h-1zM7 13h1v1h-1zM11 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM20 13h4v1h-4zM26 13h1v1h-1zM30 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM4 14h1v1h-1zM7 14h2v1h-2zM10 14h1v1h-1zM12 14h2v1h-2zM16 14h2v1h-2zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h13v1h-13zM2 15h6v1h-6zM9 15h1v1h-1zM11 15h1v1h-1zM14 15h1v1h-1zM16 15h1v1h-1zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM3 16h2v1h-2zM6 16h3v1h-3zM12 16h1v1h-1zM14 16h2v1h-2zM17 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM27 16h9v1h-9zM38 16h1v1h-1zM4 17h2v1h-2zM7 17h1v1h-1zM9 17h2v1h-2zM12 17h1v1h-1zM14 17h1v1h-1zM16 17h3v1h-3zM21 17h2v1h-2zM25 17h1v1h-1zM31 17h4v1h-4zM37 17h1v1h-1zM3 18h2v1h-2zM6 18h5v1h-5zM12 18h1v1h-1zM14 18h4v1h-4zM20 18h5v1h-5zM26 18h7v1h-7zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM3 19h1v1h-1zM5 19h1v1h-1zM11 19h2v1h-2zM14 19h1v1h-1zM17 19h2v1h-2zM23 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM2 20h2v1h-2zM5 20h7v1h-7zM14 20h3v1h-3zM22 20h5v1h-5zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM4 21h2v1h-2zM9 21h1v1h-1zM12 21h2v1h-2zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h3v1h-3zM28 21h2v1h-2zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM4 22h2v1h-2zM8 22h2v1h-2zM13 22h2v1h-2zM19 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM7 23h1v1h-1zM10 23h1v1h-1zM12 23h1v1h-1zM14 23h3v1h-3zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h2v1h-2zM8 24h2v1h-2zM12 24h4v1h-4zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h2v1h-2zM26 24h1v1h-1zM29 24h3v1h-3zM33 24h3v1h-3zM37 24h2v1h-2zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h2v1h-2zM14 25h1v1h-1zM17 25h9v1h-9zM29 25h1v1h-1zM31 25h4v1h-4zM37 25h1v1h-1zM2 26h4v1h-4zM8 26h1v1h-1zM12 26h4v1h-4zM17 26h2v1h-2zM21 26h1v1h-1zM23 26h1v1h-1zM25 26h4v1h-4zM32 26h3v1h-3zM36 26h2v1h-2zM2 27h4v1h-4zM7 27h1v1h-1zM9 27h1v1h-1zM14 27h1v1h-1zM17 27h1v1h-1zM20 27h1v1h-1zM22 27h3v1h-3zM26 27h1v1h-1zM28 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h3v1h-3zM8 28h1v1h-1zM10 28h1v1h-1zM12 28h1v1h-1zM17 28h2v1h-2zM21 28h1v1h-1zM26 28h5v1h-5zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM9 29h1v1h-1zM17 29h1v1h-1zM21 29h3v1h-3zM30 29h5v1h-5zM38 29h1v1h-1zM2 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM12 30h1v1h-1zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM25 30h12v1h-12zM38 30h1v1h-1zM10 31h1v1h-1zM14 31h2v1h-2zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM13 32h1v1h-1zM15 32h3v1h-3zM20 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM14 33h5v1h-5zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h3v1h-3zM20 34h15v1h-15zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h2v1h-2zM15 35h1v1h-1zM17 35h2v1h-2zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM15 36h2v1h-2zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h3v1h-3zM15 37h2v1h-2zM18 37h1v1h-1zM23 37h1v1h-1zM28 37h1v1h-1zM30 37h2v1h-2zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h2v1h-2zM16 38h1v1h-1zM19 38h1v1h-1zM24 38h5v1h-5zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/em-waves.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/em-waves.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h3v1h-3zM18 2h2v1h-2zM23 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM15 3h1v1h-1zM17 3h1v1h-1zM20 3h1v1h-1zM22 3h6v1h-6zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM16 4h1v1h-1zM18 4h1v1h-1zM23 4h1v1h-1zM25 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM15 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM16 6h4v1h-4zM21 6h3v1h-3zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM14 7h1v1h-1zM16 7h2v1h-2zM19 7h1v1h-1zM23 7h1v1h-1zM27 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM14 9h2v1h-2zM17 9h8v1h-8zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h1v1h-1zM14 10h3v1h-3zM18 10h1v1h-1zM23 10h1v1h-1zM25 10h1v1h-1zM27 10h1v1h-1zM29 10h1v1h-1zM32 10h5v1h-5zM2 11h1v1h-1zM5 11h3v1h-3zM10 11h3v1h-3zM15 11h1v1h-1zM17 11h1v1h-1zM20 11h1v1h-1zM22 11h1v1h-1zM24 11h1v1h-1zM26 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h1v1h-1zM8 12h3v1h-3zM13 12h1v1h-1zM16 12h6v1h-6zM23 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM4 13h1v1h-1zM7 13h1v1h-1zM11 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM20 13h4v1h-4zM26 13h1v1h-1zM30 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM4 14h1v1h-1zM7 14h2v1h-2zM10 14h1v1h-1zM12 14h2v1h-2zM16 14h2v1h-2zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h13v1h-13zM2 15h6v1h-6zM9 15h1v1h-1zM11 15h1v1h-1zM14 15h1v1h-1zM16 15h1v1h-1zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM3 16h2v1h-2zM6 16h3v1h-3zM12 16h1v1h-1zM14 16h2v1h-2zM17 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM27 16h9v1h-9zM38 16h1v1h-1zM4 17h2v1h-2zM7 17h1v1h-1zM9 17h2v1h-2zM12 17h1v1h-1zM14 17h1v1h-1zM16 17h3v1h-3zM21 17h2v1h-2zM25 17h1v1h-1zM31 17h4v1h-4zM37 17h1v1h-1zM3 18h2v1h-2zM6 18h5v1h-5zM12 18h1v1h-1zM14 18h4v1h-4zM20 18h5v1h-5zM26 18h7v1h-7zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM3 19h1v1h-1zM5 19h1v1h-1zM11 19h2v1h-2zM14 19h1v1h-1zM17 19h2v1h-2zM23 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM2 20h2v1h-2zM5 20h7v1h-7zM14 20h3v1h-3zM22 20h5v1h-5zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM4 21h2v1h-2zM9 21h1v1h-1zM12 21h2v1h-2zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h3v1h-3zM28 21h2v1h-2zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM4 22h2v1h-2zM8 22h2v1h-2zM13 22h2v1h-2zM19 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM7 23h1v1h-1zM10 23h1v1h-1zM12 23h1v1h-1zM14 23h3v1h-3zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h2v1h-2zM8 24h2v1h-2zM12 24h4v1h-4zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h2v1h-2zM26 24h1v1h-1zM29 24h3v1h-3zM33 24h3v1h-3zM37 24h2v1h-2zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h2v1h-2zM14 25h1v1h-1zM17 25h9v1h-9zM29 25h1v1h-1zM31 25h4v1h-4zM37 25h1v1h-1zM2 26h4v1h-4zM8 26h1v1h-1zM12 26h4v1h-4zM17 26h2v1h-2zM21 26h1v1h-1zM23 26h1v1h-1zM25 26h4v1h-4zM32 26h3v1h-3zM36 26h2v1h-2zM2 27h4v1h-4zM7 27h1v1h-1zM9 27h1v1h-1zM14 27h1v1h-1zM17 27h1v1h-1zM20 27h1v1h-1zM22 27h3v1h-3zM26 27h1v1h-1zM28 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h3v1h-3zM8 28h1v1h-1zM10 28h1v1h-1zM12 28h1v1h-1zM17 28h2v1h-2zM21 28h1v1h-1zM26 28h5v1h-5zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM9 29h1v1h-1zM17 29h1v1h-1zM21 29h3v1h-3zM30 29h5v1h-5zM38 29h1v1h-1zM2 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM12 30h1v1h-1zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM25 30h12v1h-12zM38 30h1v1h-1zM10 31h1v1h-1zM14 31h2v1h-2zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM13 32h1v1h-1zM15 32h3v1h-3zM20 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM14 33h5v1h-5zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h3v1h-3zM20 34h15v1h-15zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h2v1h-2zM15 35h1v1h-1zM17 35h2v1h-2zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM15 36h2v1h-2zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h3v1h-3zM15 37h2v1h-2zM18 37h1v1h-1zM23 37h1v1h-1zM28 37h1v1h-1zM30 37h2v1h-2zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h2v1h-2zM16 38h1v1h-1zM19 38h1v1h-1zM24 38h5v1h-5zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
     </div>
   </header>
 

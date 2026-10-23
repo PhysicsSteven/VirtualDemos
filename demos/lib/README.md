@@ -73,7 +73,29 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 | stress-strain | 2026-10-23 | batch 1 |
 | vectors | 2026-10-23 | batch 1 |
 | viscometer | 2026-10-23 | batch 1 |
+| capacitors | 2026-10-23 | batch 2 |
+| circuits | 2026-10-23 | batch 2 |
+| coulomb-sandbox | 2026-10-23 | batch 2 |
+| currents-fields | 2026-10-23 | batch 2 |
+| displacement-current | 2026-10-23 | batch 2 |
+| eddy-currents | 2026-10-23 | batch 2 |
+| electrostatics-at-work | 2026-10-23 | batch 2 |
+| em-waves | 2026-10-23 | batch 2 |
+| faraday | 2026-10-23 | batch 2 |
+| gauss-law | 2026-10-23 | batch 2 |
+| household-wiring | 2026-10-23 | batch 2 |
+| huygens | 2026-10-23 | batch 2 |
+| induced-electric-field | 2026-10-23 | batch 2 |
+| induction-at-work | 2026-10-23 | batch 2 |
+| induction | 2026-10-23 | batch 2 |
+| magnetic-force | 2026-10-23 | batch 2 |
+| magnetism-in-matter | 2026-10-23 | batch 2 |
+| optics-bench | 2026-10-23 | batch 2 |
+| polarization | 2026-10-23 | batch 2 |
+| resistivity | 2026-10-23 | batch 2 |
+| the-eye | 2026-10-23 | batch 2 |
+| wire-force | 2026-10-23 | batch 2 |
 
 ## Being moved
 
-Batch 2 (Physics II), from 2026-10-23 23:10: capacitors, circuits, coulomb-sandbox, currents-fields, displacement-current, eddy-currents, electrostatics-at-work, em-waves, faraday, gauss-law, household-wiring, huygens, induced-electric-field, induction-at-work, induction, magnetic-force, magnetism-in-matter, optics-bench, polarization, resistivity, the-eye, wire-force.
+Nothing at the moment.

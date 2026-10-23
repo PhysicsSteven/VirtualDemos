@@ -36,6 +36,18 @@ the two assistants share context. Log what you change there when you finish.
 - Keep existing control names: handouts refer to them. Add, don't rename.
 - Check visually (Playwright/Chromium is installed) at desktop and phone width, light and dark, and look at the screenshots.
 
+## How to add a demo
+1. Copy `demos/lib/template.html` to `demos/<name>.html` and change its `../lib/` links to `lib/`. It is a small working demo on the
+   shared library: header with Projector, picture with a Set up card (`VD.setupCard`), Setups chips, readouts, Lab fold.
+2. Replace the physics between the CORE markers (it must run in Node) and the drawing; keep the page structure and class names, so
+   the shared styles in `vd.css` apply. Put only what this demo does differently in its own `<style>`; don't copy shared rules in,
+   and don't add `data-vd-off` (that list is only for demos that were moved and never had a rule).
+3. For readings and Export to worksheet, copy the Readings section and its code from `demos/pendulum.html` (the `vd-handoff:<name>`
+   key, `FROM_DEMO` map in worksheet.js) until the library has a readings helper.
+4. Run `python3 tools/reset.py <name>` and `python3 tools/qr.py <name>` (markup only, since the demo links the library), then the
+   new demo checklist below, and check it with `NODE_PATH=/opt/node-tools/node_modules node tools/vdcheck.cjs --only after <name>`
+   (page errors, sideways scroll) and by looking at the screenshots it saves.
+
 ## Handouts
 - Procedure steps state the task (what to measure, at what values), not which control or where; keep specifics only where a student
   would get stuck (non obvious resets, presets that reset other values, Mystery choices that regenerate, send to the worksheet

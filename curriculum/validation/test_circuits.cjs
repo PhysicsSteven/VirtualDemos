@@ -22,11 +22,33 @@ test('circuits DC: every DC preset, balanced bridge and open capacitor',()=>{
  const els=[part(1,'bat',0,1,{emf:12}),part(2,'res',0,2,{R:1000}),part(3,'cap',2,1,{C:.001})],sol=c.solveDC(els);
  close(sol.res.get(2).I,0);close(sol.res.get(3).V,12);
 });
+test('circuits DC: shorted load, open switch, ideal short, loose meter, resistor extremes (from circuit-builder)',()=>{
+ const els=c.buildPreset('internal').els,bat=els.find(e=>e.type==='bat');els.find(e=>e.type==='sw').closed=true;
+ const sh=c.solveDC(els);close(-sh.res.get(bat.id).I,9);close(sh.res.get(bat.id).V,0,0,1e-9);close(c.powerBalance(els,sh).diss,81);
+ const b=c.buildPreset('bridge').els;close(c.eqResistance(b,b.find(e=>e.type==='bat')),1/(1/320+1/480));
+ for(const name of ['series','parallel','compare','divider','bridge','internal']){const e2=c.buildPreset(name).els,s=c.solveDC(e2);let w=0;
+  for(const e of e2){const r=s.res.get(e.id);if(Number.isFinite(r.V)&&Number.isFinite(r.I))w+=r.V*r.I;}close(w,0,0,1e-9);}
+ const B=part(1,'bat',0,1,{emf:6}),open=[B,part(2,'sw',0,1,{closed:false})];
+ close(c.solveDC(open).res.get(1).I,0);assert.equal(c.eqResistance(open,B),Infinity);
+ assert(!c.solveDC([B,part(2,'sw',0,1,{closed:true})]).res.get(1).ok);
+ assert(Number.isNaN(c.solveDC([B,part(3,'vm',8,9)]).res.get(3).V));
+ for(const R of [1,1e6])for(const ri of [.1,100]){const s=c.solveDC([part(1,'bat',0,1,{emf:12,rOn:true,r:ri}),part(2,'res',0,1,{R})]);close(Math.abs(s.res.get(2).I),12/(R+ri));}
+});
 test('circuits AC: complex series impedance and RMS including pure reactances',()=>{
  for(const name of ['acR','acC','acL','below','reso','hiQ']){
   const els=c.buildPreset(name).els,src=els.find(e=>e.type==='ac'),R=els.filter(e=>['res','bulb'].includes(e.type)).reduce((a,e)=>a+e.R,0),L=els.find(e=>e.type==='ind')?.L||0,C=els.find(e=>e.type==='cap')?.C,w=2*Math.PI*src.f,X=w*L-(C?1/(w*C):0),den=R*R+X*X,z=c.zSeen(els,src,src.f),sol=c.solveAC(els,src.f),I=sol.res.get(src.id).I;
   close(z.re,R);close(z.im,X);close(-I[0],src.V0*R/den);close(-I[1],-src.V0*X/den);
   close(c.specRms(c.spectrum(els),src.id,'I'),src.V0/Math.sqrt(2*den));
+ }
+});
+/* moved from test_ac_circuits.cjs when the old AC page became a redirect to circuits.html#ac */
+test('circuits AC: resonance and exact half power bandwidth',()=>{
+ for(const name of ['below','reso','hiQ'])for(const Rset of [10,22,100,1000]){
+  const els=c.buildPreset(name).els.map(e=>['res','bulb'].includes(e.type)?{...e,R:Rset}:e),src=els.find(e=>e.type==='ac'),R=els.filter(e=>['res','bulb'].includes(e.type)).reduce((a,e)=>a+e.R,0),L=els.find(e=>e.type==='ind').L,C=els.find(e=>e.type==='cap').C;
+  const f0=1/(2*Math.PI*Math.sqrt(L*C)),a=R/(2*L),w0=1/Math.sqrt(L*C),f1=(-a+Math.sqrt(a*a+w0*w0))/(2*Math.PI),f2=(a+Math.sqrt(a*a+w0*w0))/(2*Math.PI);
+  const z0=c.zSeen(els,src,f0);close(z0.re,R);close(z0.im,0,1e-8,1e-8*R);
+  for(const f of [f1,f2]){const z=c.zSeen(els,src,f);close(Math.hypot(z.re,z.im),Math.SQRT2*R,1e-8);}
+  close(f2-f1,R/(2*Math.PI*L));close(f1*f2,f0*f0);
  }
 });
 test('circuits time: exact RC/RL solutions, source work and heat integrals',()=>{

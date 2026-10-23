@@ -8,7 +8,8 @@ What it does to demos/<demo>.html:
   - lists, in <html data-vd-off="...">, every named rule in vd.css that the demo never had, so it stays off there;
   - links lib/vd.css and lib/vd.js just before the first <style> (relative links, so file:// and thumbs.py still work);
   - removes from the demo's own <style> blocks every rule that is word for word in vd.css, unless an earlier rule the
-    demo keeps can match the same elements (same selectors once states and attributes are set aside, in any @media), or when vd.css has two such
+    demo keeps can match the same elements (the same element, found by opening the page in Chromium with every fold open, once states and
+    attributes are set aside, in any @media), or when vd.css has two such
     rules in the other order (moving the rule ahead of it could change which one wins);
     an @media block left empty goes too;
   - removes the inline scripts of the QR button, Reset all and the plot fold, which vd.js now runs (markup stays);
@@ -96,8 +97,10 @@ def base_parts(sel):
     return out
 
 
-def strip_css(css, lib, removed, kept_sel, gone):
-    """remove lib rules from one style block; returns the new text"""
+def strip_css(css, lib, removed, kept_sel, gone, match):
+    """remove lib rules from one style block; returns the new text. kept_sel holds the selector sets of the rules kept so
+    far, gone those removed so far with their place in vd.css; match(a, b) says whether two selector sets can hit the
+    same element"""
     cuts = []
     def walk(rs, media_span=None):
         n_kept = 0
@@ -110,11 +113,11 @@ def strip_css(css, lib, removed, kept_sel, gone):
                 continue
             parts = base_parts(sel)
             idx = order.get((ctx, sel, body))
-            if idx is not None and not parts & kept_sel and not any(parts & q and i > idx for q, i in gone):
+            if idx is not None and not any(match(parts, q) for q in kept_sel) and not any(match(parts, q) and i > idx for q, i in gone):
                 gone.append((parts, idx))
                 cuts.append((a, b)); removed.append(f'{ctx} {sel}'.strip())
             else:
-                kept_sel.update(parts); n_kept += 1
+                kept_sel.append(parts); n_kept += 1
         return n_kept
     order = {k: i for i, k in enumerate(lib)}
     walk(rules(css))
@@ -144,17 +147,44 @@ PROJECTOR = re.compile(
     r"\s*try \{ if \(localStorage\.getItem\('vd-projector'\) === 'on'\) setProjector\(true\); \} catch \(_\) \{\}")
 
 
+def matcher(p, s, lib):
+    """match(a, b) for two selector sets: the same selector, or (asked of the page in Chromium, every fold open, at 1280
+    and 400 px) some element matched by both. A selector the browser cannot test counts as matching everything."""
+    import json, subprocess, tempfile
+    sels = set()
+    for m in re.finditer(r'<style[^>]*>(.*?)</style>', s, flags=re.S):
+        def walk(rs):
+            for r in rs:
+                if r[5] == 'media': walk(r[6])
+                else: sels.update(base_parts(r[1]))
+        walk(rules(m.group(1)))
+    for k in lib: sels.update(base_parts(k[1]))
+    with tempfile.NamedTemporaryFile('w', suffix='.json', delete=False) as f: json.dump(sorted(sels), f)
+    env = dict(__import__('os').environ, NODE_PATH='/opt/node-tools/node_modules')
+    hits = json.loads(subprocess.check_output(['node', str(ROOT / 'tools' / 'vdlib_match.cjs'), str(p), f.name], env=env))
+    hit = {k: (None if v is None else set(v)) for k, v in hits.items()}
+    def match(a, b):
+        if a & b: return True
+        for x in a:
+            for y in b:
+                hx, hy = hit.get(x), hit.get(y)
+                if hx is None or hy is None or hx & hy: return True
+        return False
+    return match
+
+
 def move(demo, report=False):
     p = ROOT / 'demos' / f'{demo}.html'
     s = p.read_text()
     if 'lib/vd.css' in s:
         print(f'{demo}: already on the library'); return
-    lib, removed, kept, gone = lib_rules(), [], set(), []
+    lib, removed, kept, gone = lib_rules(), [], [], []
+    match = matcher(p, s, lib)
     mine = demo_rules(s)
     off = [n for r, n in lib.items() if n and r not in mine]
     out, pos = [], 0
     for m in re.finditer(r'(<style[^>]*>)(.*?)(</style>)', s, flags=re.S):
-        out.append(s[pos:m.start(2)]); out.append(strip_css(m.group(2), lib, removed, kept, gone)); pos = m.end(2)
+        out.append(s[pos:m.start(2)]); out.append(strip_css(m.group(2), lib, removed, kept, gone, match)); pos = m.end(2)
     out.append(s[pos:]); t = ''.join(out)
     t = re.sub(r'<style[^>]*>\s*</style>\n?', '', t)
     for rx in SCRIPTS: t = rx.sub('', t)

@@ -3,10 +3,10 @@
 // when set, else the working file. setMaxPanels is a test API that forces the quadrature flag; it is not a student control.
 // PLAYWRIGHT_MODULE=/path/to/playwright node curriculum/validation/test_gauss_law_browser.cjs
 const assert=require('node:assert/strict'),fs=require('node:fs'),http=require('node:http');
-const {readDemo}=require('./demo_source.cjs');
+const {readDemo,readLib}=require('./demo_source.cjs');
 const pw=require(process.env.PLAYWRIGHT_MODULE||'playwright');
 const K=1e-9/8.8541878188e-12;
-const server=http.createServer((req,res)=>{const m=req.url.match(/^\/demos\/([a-z-]+)\.html$/);if(!m){res.writeHead(404).end();return;}try{res.setHeader('Content-Type','text/html');res.end(readDemo(m[1]));}catch(e){res.writeHead(500).end(String(e));}});
+const server=http.createServer((req,res)=>{const l=req.url.match(/^\/demos\/lib\/(vd\.(css|js))$/);if(l){try{res.setHeader('Content-Type',l[2]==='css'?'text/css':'text/javascript');res.end(readLib(l[1]));}catch(e){res.writeHead(404).end();}return;}const m=req.url.match(/^\/demos\/([a-z-]+)\.html$/);if(!m){res.writeHead(404).end();return;}try{res.setHeader('Content-Type','text/html');res.end(readDemo(m[1]));}catch(e){res.writeHead(500).end(String(e));}});
 (async()=>{await new Promise(r=>server.listen(0,'127.0.0.1',r));const browser=await pw[process.env.BROWSER||'chromium'].launch();
 console.log('Source',process.env.DEMO_REF||'working tree','browser',await browser.version());
 try{for(const [width,scheme] of [[1440,'light'],[390,'dark']]){

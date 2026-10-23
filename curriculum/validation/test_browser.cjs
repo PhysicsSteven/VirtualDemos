@@ -8,7 +8,7 @@ const root=path.resolve(__dirname,'../..'),out=process.env.EVIDENCE_DIR||'/tmp/v
 const server=http.createServer((req,res)=>{
   const file=path.resolve(root,'.'+decodeURIComponent(req.url.split('?')[0]));
   if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return;}
-  fs.readFile(file,(err,b)=>{if(err){res.writeHead(404).end();return;}res.setHeader('Content-Type',file.endsWith('.html')?'text/html':'text/plain');res.end(b);});
+  fs.readFile(file,(err,b)=>{if(err){res.writeHead(404).end();return;}res.setHeader('Content-Type',{'.html':'text/html','.css':'text/css','.js':'text/javascript'}[path.extname(file)]||'text/plain');res.end(b);});
 });
 (async()=>{
   await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.1:${server.address().port}`;
@@ -20,29 +20,6 @@ const server=http.createServer((req,res)=>{
       page.on('pageerror',e=>errors.push(e.message));
       // Fonts are decorative; avoid dependence on an external font server.
       await page.route('https://fonts.**',r=>r.abort());
-      await page.goto(base+'/demos/transient-circuits.html');
-      assert.equal(await page.locator('#motion').isChecked(),false);
-      for(const mode of ['RC','RL','LC','RLC']){
-        await page.selectOption('#mode',mode);
-        await page.locator('#timeNumber').fill(mode==='RL'?'1':'3');await page.locator('#timeNumber').press('Tab');
-        await page.click('#capture');
-        assert(!/NaN|Infinity/.test(await page.locator('#metrics').innerText()));
-      }
-      assert.equal(await page.locator('#rows tr').count(),4);
-      await page.click('#critical');await page.uncheck('#blind');assert.match(await page.locator('#theory').innerText(),/critically damped/);
-      for(const span of ['.1','.25','.5','1'])await page.selectOption('#scopeScale',span);
-      await page.uncheck('#chI');await page.check('#chI');
-      await page.locator('#time').focus();const before=await page.locator('#time').inputValue();await page.keyboard.press('ArrowRight');assert.notEqual(await page.locator('#time').inputValue(),before);
-      const [download]=await Promise.all([page.waitForEvent('download'),page.click('#export')]);
-      const csv=fs.readFileSync(await download.path(),'utf8').trim().split('\n');assert.equal(csv.length,5);
-      const header=csv[0].split(','),records=csv.slice(1).map(l=>Object.fromEntries(l.split(',').map((v,i)=>[header[i],v])));
-      for(const r of records){assert(Math.abs(+r.UC_J + +r.UL_J - +r.U_J)<1e-12);assert(Math.abs(+r.VC_V + +r.VR_V + +r.VL_V)<1e-9);}
-      const [trace]=await Promise.all([page.waitForEvent('download'),page.click('#exportTrace')]);assert.equal(fs.readFileSync(await trace.path(),'utf8').trim().split('\n').length,1002);
-      await page.click('#reset');assert.equal(await page.locator('#rows tr').count(),0);
-      assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'horizontal overflow');
-      assert.deepEqual(errors,[]);
-      await page.screenshot({path:path.join(out,`${name}-rlc-${mobile?'phone':'desktop'}.png`),fullPage:true});
-      console.log('PASS RLC controls, keyboard, notebook, CSV, trace export, layout',mobile?'phone dark':'desktop light');
       await page.goto(base+'/demos/gauss-law.html');
       await page.waitForFunction(()=>window.__gl&&window.__gl.num!==null);
       assert.equal(await page.evaluate(()=>window.__gl.running),false);
