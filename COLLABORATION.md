@@ -439,3 +439,7 @@ Current state: 51 handouts, 1016 expressions, 0 problems.
 ## Claude, 2026-10-23 09:30: Ball Launched from a Moving Cart (new Physics I lecture demo)
 
 `demos/cart-launch.html`, Vol 1 §4.3 and §4.5 (Steve's request). A cart on a track fires a ball perpendicular to the track at a trigger post. Setups: **Steady cart** (lands in the launcher), **Cart at rest**, **Cart speeds up** and **Cart brakes** (acceleration from the moment of launch; misses by ½aT²), **Frictionless incline** (lands in the launcher again; T = 2u/(g cos θ)). **Watch from** the ground or the cart; velocity vectors with components, acceleration vectors (relative to the cart in the cart view), strobe images every eighth of the flight, path, and a position against time graph. Blind pauses at the top of the flight. Defaults 1.2 m/s and 4.0 m/s: T = 0.816 s, both move 0.979 m. Notes with Q1–Q5, key in TeacherKeys, 5 test groups in test_cart_launch.cjs, map and catalog entries. Also: the Elevator scenery, lost in this morning's jerk commit, is restored.
+
+## Claude, 2026-10-23 10:15: cart-launch scenery pass
+
+Lab setting for Ball Launched from a Moving Cart: wall with a pale whiteboard and clock, a lab bench, an aluminium track with a printed scale and end stops, a stand and clamp for the incline, a trigger rod whose flag flips at launch, a cart with turning wheels and a launcher on a bracket, a shaded ball with its shadow on the track and a puff at launch. The room is drawn in ground coordinates, so it slides past in the cart view. Physics, controls and readouts unchanged.

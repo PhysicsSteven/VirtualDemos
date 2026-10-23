@@ -60,9 +60,9 @@ body { margin: 0; }
   --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
 }
 
-:root { --cart: #2f6fb0; --cartTop: #d7dee7; --ball: #e07a1f; --track: #8a95a3; --wall: #eef2f6; --floor: #d9dfe6; --vx: #2b60b5; --vy: #1f8a5b; --v: #7b3fb8; --g: #c23f2c; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cart: #4f8fd0; --cartTop: #3a4554; --ball: #ff9a40; --track: #7d8898; --wall: #131a23; --floor: #1b232e; --vx: #69a0ff; --vy: #4cc98e; --v: #b98af0; --g: #ff7660; } }
-:root[data-theme="dark"] { --cart: #4f8fd0; --cartTop: #3a4554; --ball: #ff9a40; --track: #7d8898; --wall: #131a23; --floor: #1b232e; --vx: #69a0ff; --vy: #4cc98e; --v: #b98af0; --g: #ff7660; }
+:root { --cart: #2f6fb0; --cartTop: #d7dee7; --ball: #e07a1f; --track: #8a95a3; --trackHi: #c9d0d8; --bench: #4a525c; --benchDark: #2f353d; --board: #f6f8fa; --boardFrame: #c3cbd4; --wall: #eef2f6; --floor: #d9dfe6; --vx: #2b60b5; --vy: #1f8a5b; --v: #7b3fb8; --g: #c23f2c; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cart: #4f8fd0; --cartTop: #3a4554; --ball: #ff9a40; --track: #7d8898; --trackHi: #a3adba; --bench: #2c343e; --benchDark: #1c222a; --board: #171e28; --boardFrame: #2c3644; --wall: #131a23; --floor: #1b232e; --vx: #69a0ff; --vy: #4cc98e; --v: #b98af0; --g: #ff7660; } }
+:root[data-theme="dark"] { --cart: #4f8fd0; --cartTop: #3a4554; --ball: #ff9a40; --track: #7d8898; --trackHi: #a3adba; --bench: #2c343e; --benchDark: #1c222a; --board: #171e28; --boardFrame: #2c3644; --wall: #131a23; --floor: #1b232e; --vx: #69a0ff; --vy: #4cc98e; --v: #b98af0; --g: #ff7660; }
 :root[data-projector="on"] { font-size: 125%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
@@ -269,7 +269,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      cart: g('--cart'), cartTop: g('--cartTop'), ball: g('--ball'), track: g('--track'), wall: g('--wall'), floor: g('--floor'), vx: g('--vx'), vy: g('--vy'), v: g('--v'), g: g('--g'),
+      cart: g('--cart'), cartTop: g('--cartTop'), ball: g('--ball'), track: g('--track'), trackHi: g('--trackHi'), bench: g('--bench'), benchDark: g('--benchDark'), board: g('--board'), boardFrame: g('--boardFrame'), wall: g('--wall'), floor: g('--floor'), vx: g('--vx'), vy: g('--vy'), v: g('--v'), g: g('--g'),
       mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const f = (v, d = 2) => (!isFinite(v) ? '—' : (Math.abs(v) < 0.5 * 10 ** -d ? 0 : v).toFixed(d).replace('-', '−'));
@@ -370,25 +370,68 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     const availW = W - 32 * p, availH = sceneBot - sceneTop, sc = Math.min(availW / bw, availH / bh, 420 * p);
     const X0 = 16 * p + (availW - bw * sc) / 2 - Math.min(...xs) * sc, Y0 = sceneTop + (availH - bh * sc) / 2 + Math.max(...ys) * sc;
     const SX = (s, n) => X0 + wx(s, n) * sc, SY = (s, n) => Y0 - wy(s, n) * sc;
-    // background: wall and floor
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh); ctx.fillStyle = T.wall; ctx.fillRect(0, 0, W, sceneBot + 10 * p);
-    const floorY = Math.max(SY(sMin, -MOUTH - 0.05), SY(sMax, -MOUTH - 0.05)) + 30 * p;
-    ctx.fillStyle = T.floor; ctx.fillRect(0, Math.min(floorY, sceneBot + 10 * p), W, sceneBot + 10 * p - Math.min(floorY, sceneBot + 10 * p));
-    // metre marks on the wall (move with the ground, so in the cart view they slide past)
-    ctx.strokeStyle = T.gridStrong; ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.mono}`; ctx.lineWidth = 1; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    const step = sc > 160 * p ? 0.25 : 0.5;
-    for (let s = Math.ceil((sMin + (cam ? off : 0)) / step) * step; s <= sMax + (cam ? off : 0) + 1e-9; s += step) {
-      const x = SX(s, -MOUTH - 0.02), y = SY(s, -MOUTH - 0.02);
-      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + sn * 8 * p, y + cs * 8 * p); ctx.stroke();
-      if (Math.abs(s / 0.5 - Math.round(s / 0.5)) < 1e-6) ctx.fillText(`${f(s, 1)} m`, x + sn * 18 * p, y + cs * 10 * p);
+    // ---- the room, drawn in ground coordinates so it slides past in the cart view ----
+    // absolute ground coordinates (x right, y up, metres; the launch point's mouth is the origin) to the screen
+    const offX = cam ? off * cs : 0, offY = cam ? -off * sn : 0, GX = (x) => X0 + (x - offX) * sc, GY = (y) => Y0 - (y - offY) * sc;
+    const ax = (s, n) => s * cs + n * sn, ay = (s, n) => -s * sn + n * cs;   // track point (absolute s) to ground x, y
+    const RAIL = 0.025, trA = cartAt(pp, -S.tPre).s - HALF - 0.3, trB = Math.max(cartAt(pp, tEnd()).s, ballAt(pp, tEnd()).s) + HALF + 0.3;
+    const benchY = Math.min(ay(trA, -MOUTH - RAIL), ay(trB, -MOUTH - RAIL)) - (ph > 0 ? 0.03 : 0), floorYm = benchY - 0.9;
+    const bxA = Math.min(ax(trA, -MOUTH), ax(trB, -MOUTH)) - 0.35, bxB = Math.max(ax(trA, -MOUTH), ax(trB, -MOUTH)) + 0.35;
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, sceneBot + 10 * p); ctx.clip();
+    ctx.fillStyle = T.wall; ctx.fillRect(0, 0, W, sceneBot + 10 * p);
+    // wall panels, a whiteboard behind the bench and a clock
+    const xL = offX + (0 - X0) / sc, xR = offX + (W - X0) / sc;
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
+    for (let x = Math.floor(xL / 1.2) * 1.2; x <= xR; x += 1.2) { ctx.beginPath(); ctx.moveTo(GX(x), 0); ctx.lineTo(GX(x), GY(floorYm)); ctx.stroke(); }
+    // a faint whiteboard and a clock on the wall, repeating every 4.8 m (kept pale so the ball's path stands out)
+    for (let k = Math.floor(xL / 4.8) - 1; k <= Math.ceil(xR / 4.8) + 1; k++) {
+      const x0 = k * 4.8 - 0.5, x1 = x0 + 1.4, y0 = benchY + 0.45, y1 = benchY + 1.25;
+      ctx.globalAlpha = 0.55;
+      ctx.fillStyle = T.boardFrame; ctx.fillRect(GX(x0) - 2 * p, GY(y1) - 2 * p, GX(x1) - GX(x0) + 4 * p, GY(y0) - GY(y1) + 4 * p);
+      ctx.fillStyle = T.board; ctx.fillRect(GX(x0), GY(y1), GX(x1) - GX(x0), GY(y0) - GY(y1));
+      ctx.fillStyle = T.boardFrame; ctx.fillRect(GX(x0 + 0.15), GY(y0) + 2 * p, GX(x0 + 0.5) - GX(x0 + 0.15), 3 * p);
+      ctx.globalAlpha = 1; const cx = x1 + 0.5, cy = benchY + 1.0, cr = 0.1;
+      ctx.fillStyle = T.board; ctx.strokeStyle = T.boardFrame; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(GX(cx), GY(cy), cr * sc, 0, 7); ctx.fill(); ctx.stroke();
+      ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(GX(cx), GY(cy)); ctx.lineTo(GX(cx), GY(cy + cr * 0.7)); ctx.moveTo(GX(cx), GY(cy)); ctx.lineTo(GX(cx + cr * 0.5), GY(cy - cr * 0.1)); ctx.stroke(); ctx.globalAlpha = 1;
     }
-    // track (in the cart view it extends across the whole window)
-    const ta = (cam ? off : 0) + sMin - 2, tb = (cam ? off : 0) + sMax + 2;
-    ctx.strokeStyle = T.track; ctx.lineWidth = 5 * p; ctx.lineCap = 'butt'; ctx.beginPath(); ctx.moveTo(SX(ta, -MOUTH - 0.012), SY(ta, -MOUTH - 0.012)); ctx.lineTo(SX(tb, -MOUTH - 0.012), SY(tb, -MOUTH - 0.012)); ctx.stroke();
-    // incline stand: a post under the high end
-    if (ph > 0) { const sTop = (cam ? off : 0) + sMin + 0.1, x = SX(sTop, -MOUTH - 0.02), y = SY(sTop, -MOUTH - 0.02); ctx.fillStyle = T.track; ctx.fillRect(x - 3 * p, y, 6 * p, Math.max(0, floorY - y)); ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText(`incline ${S.phiDeg}°, no friction`, x + 8 * p, Math.min(floorY, sceneBot) - 6 * p); }
-    // the trigger post at s = 0 that fires the launcher
-    { const x = SX(0, -MOUTH), y = SY(0, -MOUTH); ctx.save(); ctx.translate(x, y); ctx.rotate(ph); ctx.fillStyle = T.muted; ctx.fillRect(-1.5 * p, -14 * p, 3 * p, 14 * p); ctx.fillRect(-1.5 * p, -14 * p, 8 * p, 3 * p); ctx.restore(); }
+    // floor and baseboard
+    ctx.fillStyle = T.floor; ctx.fillRect(0, GY(floorYm), W, Math.max(0, sceneBot + 10 * p - GY(floorYm)));
+    ctx.fillStyle = T.gridStrong; ctx.fillRect(0, GY(floorYm) - 4 * p, W, 4 * p);
+    // the lab bench: top slab, apron and legs
+    const slab = 0.04;
+    ctx.fillStyle = T.benchDark; for (const lx of [bxA + 0.08, bxB - 0.12]) ctx.fillRect(GX(lx), GY(benchY - slab), 0.04 * sc, GY(floorYm) - GY(benchY - slab));
+    ctx.fillStyle = T.benchDark; ctx.fillRect(GX(bxA + 0.04), GY(benchY - slab), GX(bxB - 0.04) - GX(bxA + 0.04), 0.06 * sc);
+    ctx.fillStyle = T.bench; ctx.fillRect(GX(bxA), GY(benchY), GX(bxB) - GX(bxA), slab * sc);
+    ctx.fillStyle = T.trackHi; ctx.globalAlpha = 0.35; ctx.fillRect(GX(bxA), GY(benchY), GX(bxB) - GX(bxA), Math.max(1, 0.006 * sc)); ctx.globalAlpha = 1;
+    // supports: on the level the track sits on two low feet; on the incline the high end stands on a rod with a clamp
+    ctx.fillStyle = T.track;
+    for (const sF of [trA + 0.12, trB - 0.12]) { const x = ax(sF, -MOUTH - RAIL), y = ay(sF, -MOUTH - RAIL); ctx.fillRect(GX(x) - 3 * p, GY(y), 6 * p, Math.max(2 * p, GY(benchY) - GY(y))); }
+    if (ph > 0) {
+      const xh = ax(trA + 0.12, -MOUTH - RAIL), yh = ay(trA + 0.12, -MOUTH - RAIL);
+      ctx.fillStyle = T.benchDark; ctx.fillRect(GX(xh) - 14 * p, GY(benchY) - 5 * p, 28 * p, 5 * p);   // stand base
+      ctx.fillStyle = T.ink; ctx.fillRect(GX(xh) - 6 * p, GY(yh) - 2 * p, 12 * p, 7 * p);              // clamp
+      ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      ctx.fillText(`incline ${S.phiDeg}°, no friction`, GX(xh) + 18 * p, Math.min(GY(benchY) - 8 * p, sceneBot));
+    }
+    // the track: aluminium beam with a printed scale on its side, rubber end stops
+    const tp = (sv, n) => [SX(sv, n), SY(sv, n)];
+    const quad = (a, b, n0, n1, col) => { ctx.fillStyle = col; ctx.beginPath(); for (const [sv, n] of [[a, n0], [b, n0], [b, n1], [a, n1]]) { const [x, y] = tp(sv, n); ctx.lineTo(x, y); } ctx.closePath(); ctx.fill(); };
+    quad(trA, trB, -MOUTH, -MOUTH - RAIL, T.track);
+    quad(trA, trB, -MOUTH, -MOUTH - Math.max(0.005, 1.5 * p / sc), T.trackHi);
+    for (const [a, b] of [[trA - 0.03, trA], [trB, trB + 0.03]]) quad(a, b, -MOUTH + 0.035, -MOUTH - RAIL, T.ink);
+    ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 1; ctx.font = `${8.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const tick = sc > 300 * p ? 0.05 : 0.1;
+    for (let k = Math.ceil(trA / tick); k * tick <= trB; k++) {
+      const sv = k * tick, big = Math.abs(sv / 0.5 - Math.round(sv / 0.5)) < 1e-6, [x0, y0] = tp(sv, -MOUTH - 0.004), [x1, y1] = tp(sv, -MOUTH - (big ? 0.016 : 0.009));
+      ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke(); ctx.globalAlpha = 1;
+      if (big) { const [xl, yl] = tp(sv, -MOUTH - RAIL - 0.012); ctx.save(); ctx.translate(xl + sn * 4 * p, yl + cs * 4 * p); ctx.rotate(ph); ctx.fillStyle = T.muted; ctx.fillText(`${f(sv, 1)} m`, 0, 0); ctx.restore(); }
+    }
+    // the trigger: a rod clamped to the track at s = 0 with a flag the cart's lever hits
+    { const [x, y] = tp(0, -MOUTH - RAIL / 2); ctx.save(); ctx.translate(x, y); ctx.rotate(ph);
+      ctx.fillStyle = T.ink; ctx.fillRect(-4 * p, -3 * p, 8 * p, 7 * p); ctx.fillStyle = T.muted; const hR = 0.07 * sc; ctx.fillRect(-1.2 * p, -hR, 2.4 * p, hR);
+      const fired = t >= 0; ctx.fillStyle = T.g; ctx.beginPath(); ctx.moveTo(0, -hR); ctx.lineTo(fired ? 6 * p : -9 * p, -hR + (fired ? -5 * p : 3 * p)); ctx.lineTo(0, -hR + 6 * p); ctx.closePath(); ctx.fill(); ctx.restore(); }
+    ctx.restore();
     // path of the ball (relative to the chosen frame)
     const showP = $('cbP').checked && t > 0, showS = $('cbS').checked && t > 0;
     if (showP) {
@@ -409,9 +452,20 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       }
     }
     // the cart and the ball now
-    drawCart(SX(cNow.s, -MOUTH), SY(cNow.s, -MOUTH), sc, ph, false);
+    drawCart(SX(cNow.s, -MOUTH), SY(cNow.s, -MOUTH), sc, ph, false, cNow.s);
     const bx = SX(bPos.s, bPos.n), by = SY(bPos.s, bPos.n), br = Math.max(5 * p, 0.019 * sc);
-    ctx.fillStyle = T.ball; ctx.beginPath(); ctx.arc(bx, by, br, 0, 7); ctx.fill(); ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.stroke();
+    if (t > 0 && bNow.free) {   // shadow straight below the ball on the track (light from above the track): it stays on the launcher
+      const [sx0, sy0] = [SX(bPos.s, -MOUTH), SY(bPos.s, -MOUTH)], hgt = Math.max(0, bPos.n + MOUTH), al = Math.max(0.08, 0.35 - 0.25 * hgt);
+      ctx.save(); ctx.translate(sx0, sy0); ctx.rotate(ph); ctx.globalAlpha = al; ctx.fillStyle = T.ink; ctx.beginPath(); ctx.ellipse(0, -1, br * (1 + hgt), br * 0.35, 0, 0, 7); ctx.fill(); ctx.restore();
+    }
+    if (t >= 0 && t < 0.18 && !reduce) {   // a puff at the mouth as the launcher fires
+      const [mx, my] = [SX(cNow.s, 0), SY(cNow.s, 0)], q = t / 0.18; ctx.save(); ctx.translate(mx, my); ctx.rotate(ph); ctx.globalAlpha = 1 - q; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * p;
+      for (const a of [-0.9, -0.45, 0.45, 0.9]) { ctx.beginPath(); ctx.moveTo(Math.sin(a) * (6 + 10 * q) * p, -Math.cos(a) * (6 + 10 * q) * p); ctx.lineTo(Math.sin(a) * (12 + 14 * q) * p, -Math.cos(a) * (12 + 14 * q) * p); ctx.stroke(); }
+      ctx.restore();
+    }
+    const grd = ctx.createRadialGradient(bx - br * 0.35, by - br * 0.35, br * 0.1, bx, by, br);
+    grd.addColorStop(0, '#fff3e0'); grd.addColorStop(0.35, T.ball); grd.addColorStop(1, T.ball);
+    ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(bx, by, br, 0, 7); ctx.fill(); ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.6; ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1;
     // vectors (screen px per m/s and per m/s²); in the cart view velocities are relative to the cart
     const kv = 26 * p, ka = 6 * p, dirS = [cs, sn], dirN = [sn, -cs];   // screen directions of +s and +n
     const vec = (x, y, a, b, col, lab, o) => arrow(x, y, (a * dirS[0] + b * dirN[0]), (a * dirS[1] + b * dirN[1]), col, lab, o);
@@ -437,20 +491,36 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     if (t > 0 && !hidden() && t >= L.t) { ctx.fillStyle = L.kind === 'caught' ? T.vy : T.g; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.fillText(L.kind === 'caught' ? 'Back in the launcher' : L.kind === 'cart' ? 'Missed the launcher' : 'Missed the cart', capX, capY + 16 * p); }
     plot(48 * p, sceneBot + 32 * p, W - 64 * p, plotH - 40 * p);
   }
-  // cart drawn at track point (x, y) on the screen: body, wheels, launcher tube; sc is px per metre
-  function drawCart(x, y, sc, ph, ghost) {
+  // cart drawn at track point (x, y) on the screen: body, wheels that turn as it rolls, a launcher tube on a bracket, and the trip lever;
+  // sc is px per metre, pos the cart's position (for the wheel angle)
+  function drawCart(x, y, sc, ph, ghost, pos = 0) {
     const p = ps(); ctx.save(); ctx.translate(x, y); ctx.rotate(ph);
-    const m = (v) => v * sc, hl = m(HALF), body = m(-TOPN) , wheelR = Math.max(3 * p, m(0.03));
-    // wheels sit on the track (y = 0 here, up is negative)
-    ctx.fillStyle = ghost ? 'transparent' : T.ink; ctx.strokeStyle = T.ink; ctx.lineWidth = 1;
-    for (const wxp of [-hl * 0.6, hl * 0.6]) { ctx.beginPath(); ctx.arc(wxp, -wheelR, wheelR, 0, 7); ghost ? ctx.stroke() : ctx.fill(); }
-    const yb = -m(MOUTH + TOPN);   // top of the cart body
-    ctx.fillStyle = ghost ? 'transparent' : T.cart; ctx.strokeStyle = T.cart; ctx.lineWidth = 1.4 * p;
-    ctx.beginPath(); ctx.rect(-hl, yb, 2 * hl, -yb - 2 * wheelR + 1); ghost ? ctx.stroke() : (ctx.fill(), ctx.stroke());
-    // launcher tube from the body top to the mouth (y = -MOUTH*sc)
-    const tw = Math.max(5 * p, m(0.03)), ym = -m(MOUTH);
-    ctx.fillStyle = ghost ? 'transparent' : T.cartTop; ctx.strokeStyle = T.ink; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.rect(-tw / 2, ym, tw, yb - ym); ghost ? ctx.stroke() : (ctx.fill(), ctx.stroke());
+    const m = (v) => v * sc, hl = m(HALF), wr = Math.max(3.5 * p, m(0.028)), yb = -m(MOUTH + TOPN), yBot = -2 * wr + Math.max(1, m(0.008));
+    const tw = Math.max(6 * p, m(0.032)), ym = -m(MOUTH), rr = Math.min(6 * p, (yBot - yb) * 0.3);
+    const rrect = (x0, y0, w, h, r) => { ctx.beginPath(); ctx.moveTo(x0 + r, y0); ctx.arcTo(x0 + w, y0, x0 + w, y0 + h, r); ctx.arcTo(x0 + w, y0 + h, x0, y0 + h, r); ctx.arcTo(x0, y0 + h, x0, y0, r); ctx.arcTo(x0, y0, x0 + w, y0, r); ctx.closePath(); };
+    if (ghost) {
+      ctx.strokeStyle = T.cart; ctx.lineWidth = 1.2 * p; rrect(-hl, yb, 2 * hl, yBot - yb, rr); ctx.stroke();
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1; for (const wx of [-hl * 0.62, hl * 0.62]) { ctx.beginPath(); ctx.arc(wx, -wr, wr, 0, 7); ctx.stroke(); }
+      ctx.strokeRect(-tw / 2, ym, tw, yb - ym); ctx.restore(); return;
+    }
+    // wheels with hubs and spokes; angle = distance / radius (true radius 0.028 m)
+    for (const wx of [-hl * 0.62, hl * 0.62]) {
+      ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(wx, -wr, wr, 0, 7); ctx.fill();
+      ctx.fillStyle = T.trackHi; ctx.beginPath(); ctx.arc(wx, -wr, wr * 0.55, 0, 7); ctx.fill();
+      ctx.strokeStyle = T.ink; ctx.lineWidth = Math.max(1, wr * 0.15); const a0 = pos / 0.028;
+      for (let k = 0; k < 3; k++) { const a = a0 + k * 2.094; ctx.beginPath(); ctx.moveTo(wx, -wr); ctx.lineTo(wx + Math.cos(a) * wr * 0.55, -wr + Math.sin(a) * wr * 0.55); ctx.stroke(); }
+    }
+    // body: rounded, with a lighter top edge and a label plate
+    ctx.fillStyle = T.cart; rrect(-hl, yb, 2 * hl, yBot - yb, rr); ctx.fill();
+    ctx.fillStyle = T.trackHi; ctx.globalAlpha = 0.45; ctx.fillRect(-hl + rr, yb + 1, 2 * hl - 2 * rr, Math.max(1.5, (yBot - yb) * 0.12)); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.cartTop; ctx.globalAlpha = 0.9; rrect(-hl * 0.75, yb + (yBot - yb) * 0.35, hl * 0.6, (yBot - yb) * 0.4, 2); ctx.fill(); ctx.globalAlpha = 1;
+    // trip lever under the body at the back, which meets the trigger flag
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(-hl * 0.2, yBot); ctx.lineTo(-hl * 0.05, yBot + Math.max(3 * p, m(0.012))); ctx.stroke();
+    // launcher: bracket, tube and darker rim at the mouth
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.moveTo(-tw * 1.1, yb); ctx.lineTo(tw * 1.1, yb); ctx.lineTo(tw * 0.6, yb - Math.max(3 * p, m(0.012))); ctx.lineTo(-tw * 0.6, yb - Math.max(3 * p, m(0.012))); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = T.cartTop; ctx.fillRect(-tw / 2, ym, tw, yb - ym); ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.strokeRect(-tw / 2, ym, tw, yb - ym);
+    ctx.fillStyle = T.trackHi; ctx.globalAlpha = 0.6; ctx.fillRect(-tw / 2 + 1, ym + 1, tw * 0.25, yb - ym - 2); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.ink; ctx.fillRect(-tw / 2 - 1.5 * p, ym - 1.5 * p, tw + 3 * p, 3 * p);
     ctx.restore();
   }
   function plot(x0, y0, w, h) {
