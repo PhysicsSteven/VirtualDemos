@@ -23,6 +23,8 @@ Virtual Physics Demos uses the following material made by others. Each remains u
 - **AME2020 atomic masses** (Nuclear Binding Energy). M. Wang et al., Chinese Physics C 45, 030003 (2021).
 - **pyroomacoustics materials database** (absorption coefficients in Room Acoustics). LCAV, EPFL. MIT License, Copyright © EPFL LCAV. https://github.com/LCAV/pyroomacoustics
 - **MESA** (Modules for Experiments in Stellar Astrophysics). The Star Slice profiles were computed by the author with MESA; MESA itself is not included. https://docs.mesastar.org
+- **NASA Blue Marble and Earth at Night images** (the Earth in the Units, Scales and Estimates zoom, embedded in `demos/units.html` at reduced size). NASA Earth Observatory, public domain (NASA images are not copyrighted). Copies taken from the example images of the three-globe project (vasturiano/three-globe on GitHub). https://earthobservatory.nasa.gov
+- **JPL approximate planetary elements** (E. M. Standish, JPL Solar System Dynamics) for the planet positions in the same zoom. https://ssd.jpl.nasa.gov/planets/approx_pos.html
 - Other constants and measured values are cited where they are used in each demo and its notes.
 
 ## Textbook
