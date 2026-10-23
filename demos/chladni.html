@@ -45,6 +45,19 @@ img { max-width: 100%; }
 .gen .gen-btns { display: grid; grid-template-columns: auto auto; gap: 4px; }
 .gen .gen-btns .btn { background: #39414d; color: #e3e8ef; border-color: #4a5462; padding: 4px 10px; font-size: 0.82rem; }
 @media (max-width: 820px) { .gen { flex: 1 1 100%; } .gen .gen-btns .btn { min-height: 36px; } }
+/* Set up card on the instrument shelf beside the function generator (pendulum style lean sidebar) */
+.setup-card { align-self: stretch; flex: 1 1 420px; max-width: 640px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); align-content: start; gap: 6px 14px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--look-glass, var(--surface)); }
+.setup-card .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.setup-card .slider-head label, .setup-card .slider-head output, .setup-card .lab { font-size: 0.8rem; }
+.setup-card .seg button { font-size: 0.78rem; padding: 3px 8px; }
+.shelf > .gen { flex: 0 1 480px; min-width: 0; }
+.gen-sweep { flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.gen-sweep .btn { background: #39414d; color: #e3e8ef; border-color: #4a5462; padding: 4px 10px; font-size: 0.82rem; }
+.gen-sweep .seg { background: #2a313b; border-color: #4a5462; }
+.gen-sweep .seg button { color: #c9d0d9; font-size: 0.78rem; }
+.gen-sweep .seg button[aria-pressed="true"] { background: #e3e8ef; color: #17202b; }
+@media (max-width: 820px) { .setup-card { flex: 1 1 100%; max-width: none; } }
+@media (max-width: 520px) { .setup-card { grid-template-columns: minmax(0, 1fr); } }
 /* folded rail sections: secondary options behind their heading (layout redesign, as in springs) */
 .rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
   font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
@@ -455,36 +468,35 @@ window.VDGear = (function () {
             </div>
           </div>
           <div class="gen-sliders"><label class="gen-slider">Frequency f <input type="range" id="freq" min="0" max="1000" step="1" value="500"></label><label class="gen-slider">Fine tune <input type="range" id="fine" min="-50" max="50" step="0.1" value="0"></label></div>
-        </div>
-      </div>
-    </div>
-
-    <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/chladni.html" target="chladni-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
-      <section>
-        <h2>Presets</h2>
-        <div class="chips" id="presets">
-          <button type="button" data-p="first" aria-pressed="false">First pattern</button>
-          <button type="button" data-p="cross" aria-pressed="false">A cross</button>
-          <button type="button" data-p="rings" aria-pressed="false">Rings on a circle</button>
-          <button type="button" data-p="sweep" aria-pressed="false">Sweep and listen</button>
-          <button type="button" data-p="star" aria-pressed="false">Square: classic star</button>
-          <button type="button" data-p="high" aria-pressed="false">High mode</button>
-        </div>
-        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
-      </section>
-
-      <section>
-        <h2>Drive</h2>
-        <details class="more"><summary>More about this</summary>
-          <p class="hint">Set f on the function generator under the picture: Coarse and Fine knobs, or its Frequency f and Fine tune sliders for exact steps, and Previous and Next resonance.</p>
-        </details>
-        <div class="inline">
+          <div class="gen-sweep">
+            <div class="inline">
           <button type="button" class="btn" id="sweepBtn" aria-pressed="false">Sweep up</button>
           <div class="seg" role="group" aria-label="Sweep rate" id="rateSeg">
             <button type="button" data-r="1" aria-pressed="false">1 semitone/s</button>
             <button type="button" data-r="4" aria-pressed="true">4 semitones/s</button>
           </div>
+        </div>
+          </div>
+        </div>
+        <div class="setup-card" role="group" aria-labelledby="setupTitle">
+          <span class="card-title" id="setupTitle">Set up the plate and driver</span>
+        <div class="inline">
+          <span class="lab">Shape</span>
+          <div class="seg" role="group" aria-label="Plate shape" id="shapeSeg">
+            <button type="button" data-s="square" aria-pressed="true">Square</button>
+            <button type="button" data-s="circle" aria-pressed="false">Circle</button>
+          </div>
+        </div>
+        <div class="inline">
+          <span class="lab">Metal</span>
+          <div class="seg" role="group" aria-label="Metal" id="matSeg">
+            <button type="button" data-m="steel" aria-pressed="true">Steel</button>
+            <button type="button" data-m="aluminum" aria-pressed="false">Aluminum</button>
+          </div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="thick">Thickness h</label><output id="thickOut" class="mono" for="thick"></output></div>
+          <input type="range" id="thick" min="0.5" max="2" step="0.05" value="1">
         </div>
         <div class="inline">
           <span class="lab">Drive point</span>
@@ -513,6 +525,27 @@ window.VDGear = (function () {
           <div class="slider-head"><label for="qual">Modal Q (damping)</label><output id="qualOut" class="mono" for="qual"></output></div>
           <input type="range" id="qual" min="0" max="100" step="1" value="50">
         </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/chladni.html" target="chladni-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Presets</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="first" aria-pressed="false">First pattern</button>
+          <button type="button" data-p="cross" aria-pressed="false">A cross</button>
+          <button type="button" data-p="rings" aria-pressed="false">Rings on a circle</button>
+          <button type="button" data-p="sweep" aria-pressed="false">Sweep and listen</button>
+          <button type="button" data-p="star" aria-pressed="false">Square: classic star</button>
+          <button type="button" data-p="high" aria-pressed="false">High mode</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+
+      <section>
+        <h2>Drive</h2>
         <dl class="readout">
           <div><dt>Peak |a| on the plate</dt><dd id="rPeak">—</dd></div>
           <div><dt>Grains on the plate</dt><dd id="rGrains">—</dd></div>
@@ -525,24 +558,6 @@ window.VDGear = (function () {
 
       <section>
         <h2>Plate</h2>
-        <div class="inline">
-          <span class="lab">Shape</span>
-          <div class="seg" role="group" aria-label="Plate shape" id="shapeSeg">
-            <button type="button" data-s="square" aria-pressed="true">Square</button>
-            <button type="button" data-s="circle" aria-pressed="false">Circle</button>
-          </div>
-        </div>
-        <div class="inline">
-          <span class="lab">Metal</span>
-          <div class="seg" role="group" aria-label="Metal" id="matSeg">
-            <button type="button" data-m="steel" aria-pressed="true">Steel</button>
-            <button type="button" data-m="aluminum" aria-pressed="false">Aluminum</button>
-          </div>
-        </div>
-        <div>
-          <div class="slider-head"><label for="thick">Thickness h</label><output id="thickOut" class="mono" for="thick"></output></div>
-          <input type="range" id="thick" min="0.5" max="2" step="0.05" value="1">
-        </div>
         <dl class="readout">
           <div><dt>Plate mass M</dt><dd id="rMass">—</dd></div>
           <div><dt>Lowest flexural mode</dt><dd id="rLow">—</dd></div>

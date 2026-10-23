@@ -184,6 +184,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 details.more summary { cursor: pointer; font-size: 0.85rem; color: var(--muted); }
 details.more[open] summary { margin-bottom: 6px; }
 .btn:disabled { opacity: 0.5; cursor: default; }
+.tube-card { left: 12px; right: auto; top: 140px; width: min(270px, calc(100% - 24px)); }
+.tube-card .fine { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px; }
+.tube-card .fine .btn { padding: 3px 4px; font-size: 0.74rem; white-space: nowrap; }
 @media (max-width: 820px) {
   .stage { height: auto; max-height: none; display: flex; flex-direction: column; }
   .scene { position: relative; inset: auto; height: 470px; max-height: 80vh; }
@@ -419,6 +422,13 @@ window.VDGear = (function () {
           <input type="range" id="sT" min="-20" max="40" step="1">
         </div>
       </div>
+      <div class="card tube-card" id="tubeCard" role="group" aria-labelledby="tubeTitle">
+        <span class="card-title" id="tubeTitle">Tube (tune it while the rod rings)</span>
+        <div><div class="slider-head"><label for="sl">Plunger position ℓ (disc to plunger)</label><output id="ol" for="sl"></output></div><input type="range" id="sl" min="0.2" max="1.4" step="0.001"></div>
+        <div class="fine" id="fineL"><button type="button" class="btn" data-dl="-0.01">ℓ −1 cm</button><button type="button" class="btn" data-dl="-0.001">ℓ −1 mm</button><button type="button" class="btn" data-dl="0.001">ℓ +1 mm</button><button type="button" class="btn" data-dl="0.01">ℓ +1 cm</button></div>
+        <div><div class="slider-head"><label for="sx">Pointer x (from the disc)</label><output id="ox" for="sx"></output></div><input type="range" id="sx" min="0" max="1.4" step="0.001"></div>
+        <div class="fine" id="fineX"><button type="button" class="btn" data-dx="-0.01">x −1 cm</button><button type="button" class="btn" data-dx="-0.001">x −1 mm</button><button type="button" class="btn" data-dx="0.001">x +1 mm</button><button type="button" class="btn" data-dx="0.01">x +1 cm</button></div>
+      </div>
     </div>
 
     <aside class="rail">
@@ -436,14 +446,6 @@ window.VDGear = (function () {
         <details class="more"><summary>More about this</summary>
           <p class="hint">The Set up card fades while the rod rings (point at it or tab into it to bring it back). Tune the plunger while the rod rings, for the loudest sound and the sharpest heaps.</p>
         </details>
-      </section>
-
-      <section>
-        <h2>Tube</h2>
-        <div><div class="slider-head"><label for="sl">Plunger position ℓ (disc to plunger)</label><output id="ol" for="sl"></output></div><input type="range" id="sl" min="0.2" max="1.4" step="0.001"></div>
-        <div class="fine" id="fineL"><button type="button" class="btn" data-dl="-0.01">ℓ −1 cm</button><button type="button" class="btn" data-dl="-0.001">ℓ −1 mm</button><button type="button" class="btn" data-dl="0.001">ℓ +1 mm</button><button type="button" class="btn" data-dl="0.01">ℓ +1 cm</button></div>
-        <div><div class="slider-head"><label for="sx">Pointer x (from the disc)</label><output id="ox" for="sx"></output></div><input type="range" id="sx" min="0" max="1.4" step="0.001"></div>
-        <div class="fine" id="fineX"><button type="button" class="btn" data-dx="-0.01">x −1 cm</button><button type="button" class="btn" data-dx="-0.001">x −1 mm</button><button type="button" class="btn" data-dx="0.001">x +1 mm</button><button type="button" class="btn" data-dx="0.01">x +1 cm</button></div>
       </section>
 
       <section>
@@ -732,43 +734,54 @@ window.VDGear = (function () {
   }
   function draw() {
     if (!T || !W) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const Gr = window.VDGear, dk = Gr.dark(); Gr.backdrop(ctx, W, Hh);
     const p = ps(), narrow = W < 620, over = getComputedStyle(card).position === 'absolute', ring = ringing(), f = fNow(), v = vGas();
     const cr = card.getBoundingClientRect(), sceneTop = can.getBoundingClientRect().top;
     /* the apparatus row sits under the card (it stays clear of it); the close up below that */
     const vb = document.querySelector('.viewbar').getBoundingClientRect().bottom - sceneTop, cy = Math.max(52 * p, vb + 8 * p);
-    const rowY = Math.max(cy + 76 * p + 56 * p, over ? Math.max(Hh * 0.42, cr.bottom - sceneTop + 70 * p) : 0);
+    /* the Tube card (plunger and pointer, used while the rod rings) sits under the counter and never fades */
+    const tc = $('tubeCard'); if (over) tc.style.top = `${cy + 84 * p}px`;
+    const tcr = tc.getBoundingClientRect();
+    const rowY = Math.max(cy + 76 * p + 56 * p, over ? Math.max(Hh * 0.42, cr.bottom - sceneTop + 70 * p, tcr.bottom - sceneTop + 64 * p) : 0);
     const ppm = (W - 36 * p) / 2.95, xd = 18 * p + 1.5 * ppm, rodL = xd - S.L * ppm, tubeR = 7 * p * Math.max(1, ppm / 300);
     Object.assign(GEO, { xd, ppm, xl: xd + S.l * ppm, xx: xd + S.x * ppm });
     /* the counter and the loudness meter, top left (beside the card) */
-    const cx = 14 * p, cw = Math.min(250 * p, (over ? cr.left - can.getBoundingClientRect().left : W) - 30 * p);
-    ctx.fillStyle = T.box; ctx.beginPath(); ctx.roundRect(cx, cy, cw, 76 * p, 8 * p); ctx.fill();
-    txt('Frequency counter', cx + 10 * p, cy + 14 * p, { s: 9, b: 1, c: '#c9d0d9' });
-    ctx.fillStyle = '#0b1a12'; ctx.fillRect(cx + 10 * p, cy + 24 * p, cw - 20 * p, 26 * p);
-    txt(ring ? `${Math.round(f)} Hz` : '— Hz', cx + cw - 16 * p, cy + 37 * p, { a: 'right', s: 16, b: 1, m: 1, c: '#7ee0a0' });
+    const cx = 12, cw = Math.min(270, (over ? cr.left - can.getBoundingClientRect().left : W) - 28 * p);
+    Gr.box(ctx, cx, cy, cw, 76 * p, { r: 8 * p });
+    Gr.plate(ctx, 'Frequency counter', cx + 10 * p + 48 * p, cy + 13 * p, { s: 7.5 * p });
+    Gr.lcd(ctx, cx + 10 * p, cy + 23 * p, cw - 20 * p, 27 * p, ring ? `${Math.round(f)} Hz` : '— Hz');
     const G = gain(f, v, S.l), lv = ring ? Math.min(1, Math.max(0, 20 * Math.log10(G) / 40)) : 0;
     txt('loudness in the tube', cx + 10 * p, cy + 63 * p, { s: 8, c: '#c9d0d9' });
     ctx.fillStyle = '#39414d'; ctx.fillRect(cx + 100 * p, cy + 59 * p, cw - 112 * p, 8 * p); ctx.fillStyle = G * (S.keep ? 1 : S.env) >= LIFT && ring ? '#f1c96b' : '#7ee0a0'; ctx.fillRect(cx + 100 * p, cy + 59 * p, (cw - 112 * p) * lv, 8 * p);
     /* the rod, in a clamp stand: n = 1 at the middle, n = 2 at L/4 from the free end */
     const ry = rowY, clampX = rodL + (S.n === 1 ? 0.5 : 0.25) * S.L * ppm;
-    ctx.fillStyle = T.wood; ctx.fillRect(4 * p, ry + 60 * p, W - 8 * p, 12 * p);
-    ctx.fillStyle = T.metal; ctx.fillRect(clampX - 3 * p, ry, 6 * p, 60 * p); ctx.fillRect(clampX - 14 * p, ry + 56 * p, 28 * p, 6 * p);
-    ctx.fillStyle = T.metalHi; ctx.fillRect(rodL, ry - 3 * p, S.L * ppm, 6 * p); ctx.fillStyle = T.box; ctx.fillRect(clampX - 6 * p, ry - 7 * p, 12 * p, 14 * p);
+    Gr.bench(ctx, 0, ry + 62 * p, W, 14 * p, 14 * p);
+    /* clamp stand: a heavy base, a post, a boss head gripping the rod */
+    Gr.box(ctx, clampX - 20 * p, ry + 54 * p, 40 * p, 8 * p, { r: 2 * p, color: '#39424e' });
+    Gr.rod(ctx, clampX, ry, clampX, ry + 55 * p, 3 * p);
+    const ROD_COL = { steel: '#aab3be', aluminum: '#cfd5dc', brass: '#c9a24a', copper: '#c27b4e', glass: '#b9d6df' };
+    Gr.rod(ctx, rodL, ry, rodL + S.L * ppm, ry, 3.4 * p, { color: ROD_COL[S.rod] || '#9da0ab' });
+    Gr.box(ctx, clampX - 7 * p, ry - 8 * p, 14 * p, 16 * p, { r: 2 * p, color: '#5b6e8c', shadow: false }); Gr.screw(ctx, clampX, ry + 11 * p, 2.4 * p);
     if (ring && !reduce) { ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * p; for (const [x, s] of [[rodL, -1], [xd, 1]]) for (let k = 1; k <= 2; k++) { ctx.beginPath(); ctx.arc(x - s * 2 * p, ry, (4 + 5 * k) * p, s > 0 ? -0.6 : PI - 0.6, s > 0 ? 0.6 : PI + 0.6); ctx.stroke(); } }
-    txt(`rod L = ${S.L.toFixed(2)} m`, rodL + S.L * ppm * 0.25, ry - 16 * p, { a: 'center', s: 10, b: 1 });
-    txt(S.n === 1 ? 'clamp at the middle' : 'clamp at L/4', clampX, ry + 82 * p, { a: 'center', s: 9, c: T.muted });
+    Gr.label(ctx, `rod L = ${S.L.toFixed(2)} m`, rodL + S.L * ppm * 0.25, ry - 16 * p, { a: 'center', s: 10 * p, w: 700, c: T.ink, alpha: 0.85 });
+    Gr.label(ctx, S.n === 1 ? 'clamp at the middle' : 'clamp at L/4', clampX, ry + 88 * p, { a: 'center', s: 9 * p });
     /* the microphone for the counter, at the free end */
-    ctx.fillStyle = T.box; ctx.beginPath(); ctx.arc(rodL - 12 * p, ry - 12 * p, 5 * p, 0, 7); ctx.fill();
+    Gr.rod(ctx, rodL - 12 * p, ry - 8 * p, rodL - 12 * p, ry + 55 * p, 1.4 * p); { const mg = ctx.createRadialGradient(rodL - 14 * p, ry - 14 * p, 0.5 * p, rodL - 12 * p, ry - 12 * p, 5.5 * p); mg.addColorStop(0, '#7b8592'); mg.addColorStop(1, '#1f252c'); ctx.fillStyle = mg; ctx.beginPath(); ctx.arc(rodL - 12 * p, ry - 12 * p, 5.5 * p, 0, 7); ctx.fill(); }
     /* the glass tube, the disc and the plunger */
     const tTop = ry - tubeR - 6 * p, tBot = ry + tubeR + 6 * p, xr = xd + 1.42 * ppm;
-    ctx.fillStyle = T.relief; ctx.globalAlpha = 0.5; ctx.fillRect(xd - 4 * p, tTop, xr - xd + 4 * p, tBot - tTop); ctx.globalAlpha = 1;
-    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(xd - 4 * p, tTop); ctx.lineTo(xr, tTop); ctx.moveTo(xd - 4 * p, tBot); ctx.lineTo(xr, tBot); ctx.stroke();
+    /* the glass tube on two cradles */
+    for (const tx of [xd + 0.2 * ppm, xr - 0.2 * ppm]) { Gr.rod(ctx, tx, tBot, tx, ry + 55 * p, 1.8 * p); Gr.box(ctx, tx - 9 * p, ry + 54 * p, 18 * p, 7 * p, { r: 2 * p, color: '#39424e', shadow: false }); }
+    { const gt = ctx.createLinearGradient(0, tTop, 0, tBot); gt.addColorStop(0, dk ? 'rgba(200,225,245,0.28)' : 'rgba(255,255,255,0.95)'); gt.addColorStop(0.25, dk ? 'rgba(120,150,180,0.10)' : 'rgba(215,230,240,0.45)'); gt.addColorStop(1, dk ? 'rgba(0,0,0,0.35)' : 'rgba(120,145,170,0.35)');
+      ctx.fillStyle = gt; ctx.beginPath(); ctx.roundRect(xd - 4 * p, tTop, xr - xd + 4 * p, tBot - tTop, (tBot - tTop) / 2); ctx.fill(); }
+    ctx.strokeStyle = dk ? 'rgba(170,195,220,0.6)' : 'rgba(80,100,120,0.55)'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.roundRect(xd - 4 * p, tTop, xr - xd + 4 * p, tBot - tTop, (tBot - tTop) / 2); ctx.stroke();
     drawDust(xd, ppm, tBot - 1.5 * p, 0, S.l, 0.002, 1.6 * p, xd, GEO.xl);
-    ctx.fillStyle = T.box; ctx.fillRect(xd - 3 * p, tTop + 3 * p, 4 * p, tBot - tTop - 6 * p);
-    ctx.fillStyle = T.metal; ctx.fillRect(GEO.xl, tTop + 2 * p, 6 * p, tBot - tTop - 4 * p); ctx.fillRect(GEO.xl + 6 * p, ry - 2 * p, xr - GEO.xl + 30 * p, 4 * p);
+    Gr.box(ctx, xd - 3 * p, tTop + 3 * p, 4 * p, tBot - tTop - 6 * p, { r: 1, color: '#c9a24a', shadow: false });
+    Gr.rod(ctx, GEO.xl + 6 * p, ry, xr + 30 * p, ry, 2 * p); Gr.box(ctx, GEO.xl, tTop + 2 * p, 6 * p, tBot - tTop - 4 * p, { r: 1.5 * p, color: '#8b5a3c', shadow: false });
+    ctx.fillStyle = dk ? 'rgba(220,235,250,0.18)' : 'rgba(255,255,255,0.75)'; ctx.fillRect(xd + 4 * p, tTop + 2 * p, xr - xd - 12 * p, 1.4 * p);
     Object.assign($('plunger').style, { left: `${GEO.xl - 6 * p}px`, top: `${tTop - 4 * p}px`, width: `${18 * p}px`, height: `${tBot - tTop + 8 * p}px` });
     /* metre rule under the tube, 0 at the disc */
-    const rl = tBot + 22 * p; ctx.fillStyle = T.rule; ctx.fillRect(xd, rl, 1.4 * ppm, 14 * p); ctx.strokeStyle = T.ink; ctx.lineWidth = 1;
+    const rl = tBot + 22 * p; Gr.shadow(ctx, xd + 0.7 * ppm, rl + 15 * p, 0.72 * ppm, 3 * p, 0.6);
+    { const rg = ctx.createLinearGradient(0, rl, 0, rl + 14 * p); rg.addColorStop(0, Gr.mix(T.rule.startsWith('#') ? T.rule : '#f1e3b5', '#ffffff', 0.25)); rg.addColorStop(1, T.rule); ctx.fillStyle = rg; } ctx.fillRect(xd, rl, 1.4 * ppm, 14 * p); ctx.strokeStyle = T.ink; ctx.lineWidth = 1;
     for (let i = 0; i <= 140; i++) { const x = xd + i / 100 * ppm, big = i % 10 === 0; if (!big && ppm < 250) continue; ctx.beginPath(); ctx.moveTo(x, rl); ctx.lineTo(x, rl + (big ? 7 : 3) * p); ctx.stroke(); if (big && (!narrow || i % 20 === 0)) txt(String(i), x, rl + 10.5 * p, { s: 8, a: 'center', m: 1 }); }
     txt('cm', xd + 1.4 * ppm + 4 * p, rl + 7 * p, { s: 8, m: 1, c: T.muted });
     /* the pointer */
@@ -779,7 +792,8 @@ window.VDGear = (function () {
     /* close up of 16 cm of tube around the pointer, with a millimetre scale */
     const zTop = rl + 34 * p, zH = Math.max(70 * p, Math.min(130 * p, Hh - zTop - 16 * p)), zL = 16 * p, zR = W - 16 * p, half = 0.08, zppm = (zR - zL) / (2 * half), zx0 = S.x - half;
     if (zH > 40 * p && zTop + zH < Hh) {
-      ctx.fillStyle = T.surface; ctx.fillRect(zL, zTop, zR - zL, zH); ctx.strokeStyle = T.line; ctx.strokeRect(zL + 0.5, zTop + 0.5, zR - zL, zH);
+      ctx.save(); ctx.shadowColor = dk ? 'rgba(0,0,0,0.5)' : 'rgba(20,30,45,0.14)'; ctx.shadowBlur = 14 * p; ctx.shadowOffsetY = 4 * p;
+      ctx.fillStyle = T.surface; ctx.beginPath(); ctx.roundRect(zL, zTop, zR - zL, zH, 8 * p); ctx.fill(); ctx.restore(); ctx.strokeStyle = T.line; ctx.beginPath(); ctx.roundRect(zL + 0.5, zTop + 0.5, zR - zL, zH, 8 * p); ctx.stroke();
       const zFloor = zTop + zH - 30 * p, zx = (m) => zL + (m - zx0) * zppm;
       ctx.save(); ctx.beginPath(); ctx.rect(zL, zTop, zR - zL, zH); ctx.clip();
       drawDust(zx(0), zppm, zFloor, Math.max(0, zx0), Math.min(S.l, S.x + half), 0.0005, 3.2 * p, zL, Math.min(zR, zx(S.l)));
@@ -789,7 +803,7 @@ window.VDGear = (function () {
       for (let mm = Math.ceil(zx0 * 1000); mm <= (S.x + half) * 1000; mm++) { const x = zx(mm / 1000), big = mm % 10 === 0, mid = mm % 5 === 0; ctx.beginPath(); ctx.moveTo(x, zFloor + 2 * p); ctx.lineTo(x, zFloor + (big ? 12 : mid ? 8 : 5) * p); ctx.stroke(); if (big && mm >= 0) txt(String(mm / 10), x, zFloor + 20 * p, { s: 9, a: 'center', m: 1 }); }
       ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(zx(S.x), zTop); ctx.lineTo(zx(S.x), zFloor + 14 * p); ctx.stroke();
       ctx.restore();
-      txt(`close up: 16 cm of tube around the pointer, x = ${(S.x * 100).toFixed(1)} cm`, zL + 6 * p, zTop + 10 * p, { s: 9, c: T.muted });
+      Gr.label(ctx, `close up: 16 cm of tube around the pointer, x = ${(S.x * 100).toFixed(1)} cm`, zL + 8 * p, zTop + 11 * p, { s: 9 * p, alpha: 0.8 });
     }
   }
 

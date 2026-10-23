@@ -213,6 +213,20 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   .count { white-space: normal; flex-basis: 100%; margin-left: 0; }
 }
 :root[data-projector="on"] .tip3d { display: none; }
+/* Driver and Bead on a shelf under the picture (lean sidebar, as in Chladni and the pendulum's Set up card) */
+.stage { grid-template-rows: auto minmax(0, 1fr) auto; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); }
+.gen.drv { flex: 1 1 300px; max-width: 460px; border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+.gen-title { font-size: 0.78rem; font-weight: 700; color: var(--inst-quiet, #c9d0d9); }
+.gen.drv .slider-head label, .gen.drv .slider-head output { font-size: 0.8rem; color: var(--inst-ink, #e3e8ef); }
+.gen.drv input[type="range"] { accent-color: #8ef0b0; }
+.gen.drv .btn { background: #39414d; color: #e3e8ef; border-color: #4a5462; font-size: 0.8rem; padding: 4px 10px; }
+.gen.drv .hint { color: var(--inst-quiet, #b9c3cf); font-size: 0.78rem; margin: 0; }
+.setup-card { flex: 1 1 300px; display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--look-glass, var(--surface)); }
+.setup-card .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.setup-card .chips button, .setup-card .btn { font-size: 0.78rem; padding: 3px 8px; }
+.setup-card .slider-head label, .setup-card .slider-head output { font-size: 0.8rem; }
+@media (max-width: 820px) { .gen.drv, .setup-card { flex: 1 1 100%; max-width: none; } .shelf .btn, .shelf .chips button { min-height: 36px; } }
 </style>
 <style id="vd-look">
 /* vd-look */
@@ -433,6 +447,42 @@ window.VDGear = (function () {
           <canvas id="plot" tabindex="0" aria-label="The trap potential U plus gravity along the axis, with traps and beads marked. Up and down arrows move the traps."></canvas>
         </div>
       </div>
+      <div class="shelf" id="shelf">
+        <div class="gen drv" role="group" aria-labelledby="drvTitle">
+          <span class="gen-title" id="drvTitle">Ultrasound driver, 40 kHz</span>
+        <div>
+          <div class="slider-head"><label for="drv">Drive voltage (peak to peak)</label><output id="drvOut" class="mono" for="drv"></output></div>
+          <input type="range" id="drv" min="0" max="20" step="0.1" value="10">
+        </div>
+        <div>
+          <div class="slider-head"><label for="ph">Top bowl phase Δφ</label><output id="phOut" class="mono" for="ph"></output></div>
+          <input type="range" id="ph" min="-720" max="720" step="1" value="0">
+        </div>
+        <div class="chips">
+          <button type="button" class="btn" id="sweep" aria-pressed="false">Sweep the phase</button>
+          <button type="button" class="btn" id="ph0">Phase to 0</button>
+        </div>
+        <p class="hint" id="phHint"></p>
+        </div>
+        <div class="setup-card" role="group" aria-labelledby="beadTitle">
+          <span class="card-title" id="beadTitle">Bead</span>
+        <div class="chips" id="mats" role="group" aria-label="Bead material">
+          <button type="button" data-m="eps" aria-pressed="true">Foam polystyrene, 30 kg/m³</button>
+          <button type="button" data-m="water" aria-pressed="false">Water, 998 kg/m³</button>
+          <button type="button" data-m="steel" aria-pressed="false">Steel, 7850 kg/m³</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="rad">Bead radius a</label><output id="radOut" class="mono" for="rad"></output></div>
+          <input type="range" id="rad" min="0.2" max="2.5" step="0.05" value="0.75">
+        </div>
+        <div class="chips">
+          <button type="button" class="btn" id="fill">Fill the traps</button>
+          <button type="button" class="btn" id="add">Add a bead</button>
+          <button type="button" class="btn" id="clr">Clear</button>
+        </div>
+        <p class="flag" id="warn" hidden></p>
+        </div>
+      </div>
     </div>
 
     <aside class="rail">
@@ -448,23 +498,6 @@ window.VDGear = (function () {
           <button type="button" data-p="single" aria-pressed="false">Single emitter and reflector</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
-      </section>
-
-      <section>
-        <h2>Drive</h2>
-        <div>
-          <div class="slider-head"><label for="drv">Drive voltage (peak to peak)</label><output id="drvOut" class="mono" for="drv"></output></div>
-          <input type="range" id="drv" min="0" max="20" step="0.1" value="10">
-        </div>
-        <div>
-          <div class="slider-head"><label for="ph">Top bowl phase Δφ</label><output id="phOut" class="mono" for="ph"></output></div>
-          <input type="range" id="ph" min="-720" max="720" step="1" value="0">
-        </div>
-        <div class="chips">
-          <button type="button" class="btn" id="sweep" aria-pressed="false">Sweep the phase</button>
-          <button type="button" class="btn" id="ph0">Phase to 0</button>
-        </div>
-        <p class="hint" id="phHint"></p>
       </section>
 
       <section id="sec3d">
@@ -483,30 +516,11 @@ window.VDGear = (function () {
       </section>
 
       <section>
-        <h2>Bead</h2>
-        <div class="chips" id="mats" role="group" aria-label="Bead material">
-          <button type="button" data-m="eps" aria-pressed="true">Foam polystyrene, 30 kg/m³</button>
-          <button type="button" data-m="water" aria-pressed="false">Water, 998 kg/m³</button>
-          <button type="button" data-m="steel" aria-pressed="false">Steel, 7850 kg/m³</button>
-        </div>
-        <div>
-          <div class="slider-head"><label for="rad">Bead radius a</label><output id="radOut" class="mono" for="rad"></output></div>
-          <input type="range" id="rad" min="0.2" max="2.5" step="0.05" value="0.75">
-        </div>
-        <div class="chips">
-          <button type="button" class="btn" id="fill">Fill the traps</button>
-          <button type="button" class="btn" id="add">Add a bead</button>
-          <button type="button" class="btn" id="clr">Clear</button>
-        </div>
-        <p class="flag" id="warn" hidden></p>
+        <h2>Trapping</h2>
         <dl class="readout">
           <div><dt>Size ka = 2πa/λ</dt><dd id="rKa">—</dd></div>
           <div><dt>Contrast Φ = f₁/3 + f₂/2</dt><dd id="rPhi">—</dd></div>
         </dl>
-      </section>
-
-      <section>
-        <h2>Trapping</h2>
         <dl class="readout">
           <div><dt>Frequency f</dt><dd id="rF">40.0 kHz</dd></div>
           <div><dt>Wavelength λ = c/f</dt><dd id="rLam">—</dd></div>
