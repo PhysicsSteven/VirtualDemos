@@ -115,7 +115,7 @@ def page(title, body, robots=""):
 <meta name="viewport" content="width=device-width, initial-scale=1">
 {robots}<title>{html.escape(title)}</title>
 {FONTS}
-<style>{CSS}</style>
+{MATHJAX if robots else ""}<style>{CSS}</style>
 </head>
 <body>
 <main>
@@ -152,8 +152,26 @@ def split_q(text):
     return out
 
 
+MATH_DISPLAY = re.compile(r"\$\$.*?\$\$", re.S)
+MATH_INLINE = re.compile(r"(?<![\\$])\$(?![\s$])[^$\n]+?(?<![\s\\])\$(?!\$)")
+
+
 def md(text):
-    return markdown.markdown(text, extensions=["tables", "sane_lists"])
+    """Markdown to HTML. LaTeX in $...$ (inline) and $$...$$ (display), as in the TeacherKeys answers, is kept away from the
+    Markdown converter (which would turn _ and * into emphasis) and typeset by MathJax on the page."""
+    store = []
+
+    def keep(m):
+        store.append(m.group(0))
+        return f"@@MATH{len(store) - 1}@@"
+    text = MATH_INLINE.sub(keep, MATH_DISPLAY.sub(keep, text))
+    out = markdown.markdown(text, extensions=["tables", "sane_lists"])
+    return re.sub(r"@@MATH(\d+)@@", lambda m: html.escape(store[int(m.group(1))], quote=False), out)
+
+
+MATHJAX = ('<script>window.MathJax = { tex: { inlineMath: [["$", "$"]], displayMath: [["$$", "$$"]] } };</script>\n'
+           '<script defer src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js"></script>\n'
+           '<style>mjx-container[display="true"] { overflow-x: auto; overflow-y: hidden; max-width: 100%; }</style>\n')
 
 
 def render_body(text, answers=None):

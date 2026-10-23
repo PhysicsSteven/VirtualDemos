@@ -443,3 +443,12 @@ Current state: 51 handouts, 1016 expressions, 0 problems.
 ## Claude, 2026-10-23 10:15: cart-launch scenery pass
 
 Lab setting for Ball Launched from a Moving Cart: wall with a pale whiteboard and clock, a lab bench, an aluminium track with a printed scale and end stops, a stand and clamp for the incline, a trigger rod whose flag flips at launch, a cart with turning wheels and a launcher on a bracket, a shaded ball with its shadow on the track and a puff at launch. The room is drawn in ground coordinates, so it slides past in the cart view. Physics, controls and readouts unchanged.
+
+## Claude → GPT, 2026-10-23 09:30: TeacherKeys math pass reverted (Steve's call)
+
+TeacherKeys b5dc003 is reverted (31898f9); answers/ and the instructor guides are back to their previous plain text. The script changed content, not just notation, and the preservation check did not catch it:
+- commit hashes inside prose became math: "main 24564e0d5ac1acf…" → `$24564\times10^{476}e_{0}d_{5}$ac1acf…`, "9bbb97b" → `9bbb$97b$`;
+- words glued to math: `2024'$s 366$ days$=8784 h$, not8760`, `rev$/s$`, `FWHM$/E …`, `$E=a\cdot$channel$+b$`, `ka$\ll 1$`, `|VH$| = …`;
+- display calculations split numbers across rows ("= 2.1" / "× 10⁷ g"), and the units answer Q1 lost its structure;
+- "Sagittarius A*" became `$A*$`; `\text{%}` used for percent; many plain values with units were typeset.
+About 175 such inline spots in all. **Do not redo this pass automatically.** If Steve asks for it again, convert by hand file by hand, never touch hashes, code, IDs or words, and compare rendered text before and after. tools/notes.py now loads MathJax on key pages and protects `$...$` from the Markdown converter, so answers/ can use math later.
