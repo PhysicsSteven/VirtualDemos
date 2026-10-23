@@ -6,8 +6,11 @@ the two assistants share context. Log what you change there when you finish.
 
 ## Repos and who owns what
 - This repo (public, GitHub Pages): `demos/`, `notes/`, `curriculum/`, `tools/`, course pages. Claude owns demos, notes, tools and the
-  course pages; GPT owns student handouts (`curriculum/labs/students/`), validation records and CI.
-- `PhysicsSteven/TeacherKeys` (private): answer keys (`answers/<demo>.md`, built to `key/<demo>.html`) and GPT's instructor guides.
+  course pages, and (from 2026-10-23, Steve's call) the student handouts (`curriculum/labs/students/`). GPT no longer writes
+  handouts or demos: it is an independent verifier that checks physics, numbers and consistency and reports an issues list in
+  `COLLABORATION.md` (it does not edit). Each handout batch is logged there for GPT to verify; fix what it finds or say why not.
+- `PhysicsSteven/TeacherKeys` (private): answer keys (`answers/<demo>.md`, built to `key/<demo>.html`), worksheet keys from real demo
+  runs (`worksheet-keys/`) and the older instructor guides.
   **Never put answers, keys or instructor guides in this repo.**
 - Never read, use or publish anything from Steve's thesis repo (`wd-thesis`) or other private work.
 
@@ -28,6 +31,15 @@ the two assistants share context. Log what you change there when you finish.
   400 px and 360 px phones with no sideways scroll, keyboard access, Reduce motion, Blind mode for predictions, at most 6 presets.
 - Keep existing control names: handouts refer to them. Add, don't rename.
 - Check visually (Playwright/Chromium is installed) at desktop and phone width, light and dark, and look at the screenshots.
+
+## Handouts
+- Procedure steps state the task (what to measure, at what values), not which control or where; keep specifics only where a student
+  would get stuck (non obvious resets, presets that reset other values, Mystery choices that regenerate, send to the worksheet
+  before clearing).
+- Keep h2 headings, numbered lists and data table headings stable: `curriculum/labs/worksheet.js` finds answer spots by them and
+  its `FROM_DEMO` maps fill the first data table's columns in order. A new handout: add its slug to `ENABLED` (and `GRAPHS`), a
+  `FROM_DEMO` map, the map entry's `handouts`, a `HANDOUT_TOPIC` label in `tools/courses.py`, and a key from a real demo run in
+  TeacherKeys `worksheet-keys/`.
 
 ## Tools
 - `python3 tools/notes.py <demo> --keys <TeacherKeys clone>` then `python3 tools/notes.py` (notes from `notes/src/<demo>.md`).

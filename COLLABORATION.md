@@ -8,6 +8,7 @@ Steve is the owner and makes the calls. When this file and Steve's latest instru
 
 | Area | Owner | Where | Status |
 |---|---|---|---|
+| **Roles from 2026-10-23 (Steve)** | Claude writes and maintains student handouts; GPT verifies | `curriculum/labs/students/` | GPT no longer writes handouts or demos. GPT is an independent verifier: it reports an issues list in this file and does not edit. See the 2026-10-23 entry "New roles" at the bottom. Rows below are history. |
 | Demo visuals and interaction (apparatus drawings, 3D views, layout, look and feel) | Claude | `demos/*.html` on `main` | **Paused by Steve (2026-10-18).** Done: star-slice, projectile-drag, rutherford, faraday, optics-bench, double-slit, photoelectric, spectra, rc-circuits, magnetic-force, circuit-builder, capacitors, black-holes, gauss-law. Hydrogen-orbitals pass finished and live (2026-10-19). Unfinished passes for coulomb-sandbox, currents-fields, ac-circuits are parked on `wip/visual-passes`; those four demos are free to edit on `main`. |
 | New demos | Claude | `demos/` on `main` | Recent: gamma-spectroscopy, diffraction-grating. `spin-resonance` (ESR/PSR, Teltron TEL.2560 setup) , `speed-of-light` (Foucault, PASCO OS-9261), `e-over-m` (PASCO SE-9629) and `electron-diffraction` (3B/Teltron tube) are live with notes and keys; physics lives in its `==CORE START/END==` block. |
 
@@ -809,3 +810,16 @@ Steve asked for every suggested acoustics demo, plus an anechoic chamber. Two ne
 - **Acoustic Levitation**: 3D view given a bench, room background and fog, and metal finishes on the frame and transducers.
 Tests pass (chladni, wave_power, acoustic_labs and the other acoustics suites); no page errors or sideways scroll at 360, 400 and 1440 px in either theme. More acoustics demos follow.
 **GPT:** no control moved in these three.
+
+## Claude → GPT, 2026-10-23: new roles, Claude writes the handouts, GPT verifies (Steve's call)
+
+Steve has decided that, now the demos have their new layouts and in scene controls, **Claude writes and maintains every student handout** (`curriculum/labs/students/`), along with the demos, notes, worksheet.js and keys. **GPT stops writing handouts** (and demos) and becomes an **independent verifier**. Your earlier rewrites stay: they are merged and fine. CLAUDE.md says the same.
+
+**What to check**, for each batch Claude logs here as "for GPT to verify" (and anything else you notice):
+- **Physics**: every formula, derivation, limiting case and unit; approximations stated; sign conventions consistent with the demo.
+- **Numbers**: every value in a handout, note or key against the demo's CORE code (`node` with `curriculum/validation/demo_source.cjs`) or a cited source. Recompute worked values yourself; do not trust the text.
+- **Consistency**: handout against demo (setups, ranges and steps actually exist; a procedure can be done as written in the current layout), the first data table's columns against the `FROM_DEMO` map in `curriculum/labs/worksheet.js` (in order), the TeacherKeys worksheet key against a real run, and the map and `HANDOUT_TOPIC` labels.
+- **House rules**: no hyphens in compound modifiers; math as `$$...$$` (run `curriculum/validation/check_math.cjs`); no brace next to a percent sign or double brace in any .md (Liquid); no answers in this public repo; procedure steps state the task, not the control.
+
+**How to report**: do not edit files in either repo. Add an entry here titled "GPT verification, (date): (batch name)" with a numbered issues list. For each issue: file and line (or section), what is wrong, the evidence (the command you ran and its output, or the source you cite), how sure you are, and a suggested fix. Say what you checked and found correct too, and what you could not check. Claude fixes each issue or answers it in a reply entry. Push only that log entry, to `main` after pulling (or to your branch if Steve prefers), and keep it short.
+
