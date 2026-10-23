@@ -60,7 +60,7 @@
     'rc-circuits': { demo: 'Circuits', cols: ['t_s', pick(/^V_C\d+_V$/), pick(/^I_.+_A$/), 'W_sources_J', 'U_C_J', 'heat_J'] },
     'rlc-transients': { demo: 'Circuits', cols: [(r) => [r.row, r.setup, parts(r, /_ohm$/)].filter(Boolean).join(', '), 't_s', pick(/^V_C\d+_V$/), pick(/^I_L\d+_A$/), 'U_C_J', 'U_L_J', 'heat_J'] },
     'ac-circuits': { demo: 'Circuits', cols: [(r) => [r.row, parts(r)].filter(Boolean).join(', '), 'f_Hz', 'V0_peak_V', 'Irms_A', 'phase_deg', 'P_avg_W'] },
-    capacitors: { demo: 'Capacitors and Dielectrics', cols: [both('row', 'preset'), 'd_m', 'A_m2', 'insertion_fraction', 'C_F', 'Q_C', 'V_volts', 'U_J'] },
+    capacitors: { demo: 'Capacitors and Dielectrics', cols: [(r) => [r.row, r.preset, r.battery && String(r.preset).indexOf(r.battery) < 0 ? r.battery : ''].filter(Boolean).join(', '), 'd_m', 'A_m2', 'insertion_fraction', 'C_F', 'Q_C', 'V_volts', 'U_J'] },
     'coulomb-sandbox': { demo: 'Coulomb Sandbox', cols: [(r, h) => [r.row, h['config ' + r.config], h['config ' + r.config + ' charges']].filter(Boolean).join(', '),
       'x_m', 'y_m', null, 'V_volts', 'E_V_per_m', 'E_direction_deg'] },
     faraday: { demo: "Faraday's Law", cols: [(r) => [r.run ? 'run ' + r.run : '', FD_MODE[r.mode] || r.mode, r.N ? 'N = ' + r.N : '', r.R_ohm ? `R = ${sig(r.R_ohm)} Ω` : ''].filter(Boolean).join(', '),
