@@ -211,6 +211,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="telescope" aria-pressed="false">Telescope</button>
           <button type="button" data-p="prism" aria-pressed="false">Prism</button>
           <button type="button" data-p="tir" aria-pressed="false">Total internal reflection</button>
+          <button type="button" data-p="microscope" aria-pressed="false">Microscope</button>
+          <button type="button" data-p="surface" aria-pressed="false">Refracting surface</button>
+          <button type="button" data-p="depth" aria-pressed="false">Apparent depth</button>
         </div>
         <p class="hint" id="presetHint">For a diverging lens, click the lens and choose Diverging.</p>
       </section>
@@ -226,7 +229,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="btn" data-add="object"><span class="dot"></span>Object arrow</button>
           <button type="button" class="btn" data-add="beam"><span class="dot"></span>Parallel beam</button>
           <button type="button" class="btn" data-add="point"><span class="dot"></span>Point source</button>
-          <button type="button" class="btn wide" data-add="screen"><span class="dot card"></span>Screen</button>
+          <button type="button" class="btn" data-add="screen"><span class="dot card"></span>Screen</button>
+          <button type="button" class="btn" data-add="surf"><span class="dot glass"></span>Refracting surface</button>
         </div>
         <div class="sel" id="selEditor" hidden>
           <div class="selhead"><span>Selected</span><output id="selName" class="mono"></output></div>
@@ -241,14 +245,54 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <dl class="readout" id="imgDl">
           <div class="big"><dt>Object distance d<sub>o</sub></dt><dd id="rDo">—</dd></div>
           <div class="big"><dt>Image distance d<sub>i</sub> (traced)</dt><dd id="rDi">—</dd></div>
-          <div><dt>d<sub>i</sub> from 1/d<sub>o</sub> + 1/d<sub>i</sub> = 1/f</dt><dd id="rDiEq">—</dd></div>
-          <div><dt>Focal length f</dt><dd id="rF">—</dd></div>
+          <div><dt id="rDiEqL">d<sub>i</sub> from 1/d<sub>o</sub> + 1/d<sub>i</sub> = 1/f</dt><dd id="rDiEq">—</dd></div>
+          <div><dt id="rFL">Focal length f</dt><dd id="rF">—</dd></div>
           <div><dt>Magnification m</dt><dd id="rM">—</dd></div>
-          <div><dt>m = −d<sub>i</sub>/d<sub>o</sub></dt><dd id="rMEq">—</dd></div>
+          <div><dt id="rMEqL">m = −d<sub>i</sub>/d<sub>o</sub></dt><dd id="rMEq">—</dd></div>
           <div class="wide"><dt>Image</dt><dd id="rKind">—</dd></div>
         </dl>
         <p class="hint" id="imgHint">Signs: d<sub>o</sub> &gt; 0 for a real object. d<sub>i</sub> &gt; 0 for a real image (far side of a lens, in front of a mirror) and d<sub>i</sub> &lt; 0 for a virtual one. f &gt; 0 for a converging lens or concave mirror. m &lt; 0 means inverted.</p>
         <p class="hint" id="imgNone" hidden></p>
+      </section>
+
+      <section id="surfSec" hidden>
+        <h2>Refracting surface</h2>
+        <dl class="readout">
+          <div><dt>Indices n<sub>1</sub> → n<sub>2</sub></dt><dd id="sN">—</dd></div>
+          <div><dt>Radius R</dt><dd id="sR">—</dd></div>
+          <div class="big"><dt>Paraxial image (rays near the axis)</dt><dd id="sPar">—</dd></div>
+          <div class="big"><dt id="sEdgeL">Exact edge ray crosses the axis at</dt><dd id="sEdge">—</dd></div>
+          <div class="wide" id="sAppRow"><dt>Apparent depth d<sub>i</sub> = −(n<sub>2</sub>/n<sub>1</sub>)d<sub>o</sub></dt><dd id="sApp">—</dd></div>
+        </dl>
+        <p class="hint">n<sub>1</sub>/d<sub>o</sub> + n<sub>2</sub>/d<sub>i</sub> = (n<sub>2</sub> − n<sub>1</sub>)/R and m = −n<sub>1</sub>d<sub>i</sub>/(n<sub>2</sub>d<sub>o</sub>) are paraxial: they hold for rays close to the axis. The drawn rays obey Snell's law exactly at the surface. The edge ray is the ray from the object's base (on the axis) that meets the surface farthest from the axis, at height h; shrink the aperture or the fan and it moves to the paraxial image. R &gt; 0 when the center of curvature C is on the outgoing side (in n<sub>2</sub>).</p>
+      </section>
+
+      <section id="instSec" hidden>
+        <h2 id="instTitle">Microscope</h2>
+        <dl class="readout" id="micDl">
+          <div><dt>Objective d<sub>o</sub></dt><dd id="mDo">—</dd></div>
+          <div><dt>f<sub>obj</sub>, f<sub>eye</sub></dt><dd id="mF">—</dd></div>
+          <div><dt>Objective image d<sub>i</sub> (traced)</dt><dd id="mDi">—</dd></div>
+          <div><dt>d<sub>i</sub> from the lens equation</dt><dd id="mDiEq">—</dd></div>
+          <div><dt>m<sub>obj</sub> (traced)</dt><dd id="mObj">—</dd></div>
+          <div><dt>m<sub>obj</sub> = −d<sub>i</sub>/d<sub>o</sub></dt><dd id="mObjEq">—</dd></div>
+          <div><dt>M<sub>eye</sub> = 25 cm/f<sub>eye</sub></dt><dd id="mEye">—</dd></div>
+          <div><dt>Tube length L</dt><dd id="mTube">—</dd></div>
+          <div class="big"><dt>M<sub>net</sub> = m<sub>obj</sub> × M<sub>eye</sub></dt><dd id="mNet">—</dd></div>
+          <div class="big"><dt>M traced = θ<sub>image</sub>/θ<sub>object</sub></dt><dd id="mTr">—</dd></div>
+          <div class="wide"><dt>Textbook estimate −(16 cm)(25 cm)/(f<sub>obj</sub> f<sub>eye</sub>)</dt><dd id="m16">—</dd></div>
+          <div class="wide"><dt>Final image</dt><dd id="mStat">—</dd></div>
+        </dl>
+        <p class="hint" id="micHint">M<sub>net</sub> = −(d<sub>i</sub>/d<sub>o</sub>)(25 cm/f<sub>eye</sub>) with the eye relaxed: the objective's image sits at the eyepiece's focal point and the final image is at infinity. θ<sub>object</sub> = h/(25 cm) is the object seen by the unaided eye at the near point; θ<sub>image</sub> is the direction of the rays leaving the eyepiece (angles as tan θ). L is the distance from the objective's image side focal point to the eyepiece's focal point. With L = 16 cm and the final image at infinity the textbook estimate is exact for thin lenses, since m<sub>obj</sub> = −(d<sub>i</sub> − f<sub>obj</sub>)/f<sub>obj</sub> = −L/f<sub>obj</sub>; the textbook reaches it by taking d<sub>i</sub> ≈ L and d<sub>o</sub> ≈ f<sub>obj</sub>, fair when L ≫ f<sub>obj</sub>.</p>
+        <dl class="readout" id="telDl">
+          <div class="big"><dt>M traced = θ<sub>out</sub>/θ<sub>in</sub></dt><dd id="tM">—</dd></div>
+          <div class="big"><dt>M = −f<sub>obj</sub>/f<sub>eye</sub></dt><dd id="tMEq">—</dd></div>
+          <div><dt>f<sub>obj</sub>, f<sub>eye</sub></dt><dd id="tF">—</dd></div>
+          <div><dt>Lens separation (f<sub>obj</sub> + f<sub>eye</sub>)</dt><dd id="tSep">—</dd></div>
+          <div class="wide"><dt>Beam leaving the eyepiece</dt><dd id="tStat">—</dd></div>
+        </dl>
+        <p class="hint" id="telHint">θ<sub>in</sub> and θ<sub>out</sub> are the beam's angles to the axis going into the objective and out of the eyepiece (as tan θ). M &lt; 0: the view is inverted. M = −f<sub>obj</sub>/f<sub>eye</sub> needs the lenses f<sub>obj</sub> + f<sub>eye</sub> apart, so a parallel beam leaves parallel.</p>
+        <p class="hint" id="instNone" hidden></p>
       </section>
 
       <section id="refSec" hidden>
@@ -283,7 +327,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch p3"></i>Principal ray: through the focal point F</span>
           <span><i class="spectrum"></i>White light, split from 400 to 700 nm</span>
         </div>
-        <p class="hint">Lenses follow the ideal thin lens rule. Mirrors use the exact spherical surface, so rays far from the axis, or from an object point off the axis, focus slightly differently from the mirror equation. Dispersion is a few times stronger than in ordinary crown glass so the spectrum is easy to see. The screen picture is built from rays traced in the plane of the drawing, turned about the lens axis for the rest of the object.</p>
+        <p class="hint">Lenses follow the ideal thin lens rule. Mirrors use the exact spherical surface, so rays far from the axis, or from an object point off the axis, focus slightly differently from the mirror equation. Dispersion is a few times stronger than in ordinary crown glass so the spectrum is easy to see. The screen picture is built from rays traced in the plane of the drawing, turned about the lens axis for the rest of the object. A refracting surface bends each ray by Snell's law exactly, with no dispersion; its two media fill the bench on either side (a curved surface is the end of a long rod, its aperture an opaque stop on the face), and other elements are traced as if in air. Microscope and telescope readouts take the eye relaxed (final image at infinity) and the near point at 25 cm.</p>
       </section>
     </aside>
   </main>
@@ -291,6 +335,55 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
 <script>
 (() => {
+  // ==CORE START==
+  /* Closed form optics (OpenStax University Physics Vol 3, sections 2.3, 2.4 and 2.8). Lengths in cm. No DOM: the tests run this in Node. */
+  const NEAR_POINT = 25;                        /* near point of the eye, cm */
+  /* thin lens: 1/do + 1/di = 1/f, m = -di/do */
+  function thinLens(f, dO) {
+    const inv = 1 / f - 1 / dO, dI = Math.abs(inv) < 1e-12 ? Infinity : 1 / inv;
+    return { dI, m: isFinite(dI) ? -dI / dO : Infinity };
+  }
+  /* single spherical refracting surface: n1/do + n2/di = (n2 - n1)/R, m = -(n1 di)/(n2 do).
+     R > 0 when the center of curvature is on the outgoing side; R = Infinity for a flat surface. Paraxial. */
+  function surfaceImage(n1, n2, R, dO) {
+    const P = isFinite(R) ? (n2 - n1) / R : 0, inv = (P - n1 / dO) / n2;
+    const dI = Math.abs(inv) < 1e-12 ? Infinity : 1 / inv;
+    return { dI, m: isFinite(dI) ? -(n1 * dI) / (n2 * dO) : Infinity };
+  }
+  /* flat surface: di = -(n2/n1) do (virtual image, on the object's side) */
+  function apparentDepth(n1, n2, dO) { return -(n2 / n1) * dO; }
+  /* Snell's law n1 sin(theta1) = n2 sin(theta2) in vector form. d: unit direction of travel; N: unit normal pointing back
+     into the incoming medium. Returns the refracted unit direction, or null past the critical angle. */
+  function snell(d, N, n1, n2) {
+    const cosi = -(d[0] * N[0] + d[1] * N[1]), eta = n1 / n2, k = 1 - eta * eta * (1 - cosi * cosi);
+    if (k < 0) return null;
+    const a = eta * cosi - Math.sqrt(k), v = [eta * d[0] + a * N[0], eta * d[1] + a * N[1]], m = Math.hypot(v[0], v[1]);
+    return [v[0] / m, v[1] / m];
+  }
+  /* sag of a sphere of signed radius R at height h: how far the surface sits from the vertex plane */
+  function sagAt(R, h) { return isFinite(R) ? R - Math.sign(R) * Math.sqrt(Math.max(0, R * R - h * h)) : 0; }
+  /* Exact ray (no small angle approximation): from the axial object point a distance dO in front of the vertex to the point of
+     the surface at height h, refracted by Snell's law. Returns where it crosses the axis, measured from the vertex
+     (positive on the outgoing side: a real image; negative: its backward extension, a virtual image). */
+  function surfaceAxisCrossing(n1, n2, R, dO, h) {
+    if (h === 0) return surfaceImage(n1, n2, R, dO).dI;
+    if (isFinite(R) && Math.abs(h) >= Math.abs(R)) return NaN;
+    const z = sagAt(R, h), N = isFinite(R) ? [(z - R) / R, h / R] : [-1, 0];
+    const L = Math.hypot(z + dO, h), t = snell([(z + dO) / L, h / L], N, n1, n2);
+    if (!t) return NaN;
+    return Math.abs(t[1]) < 1e-15 ? Infinity : z - h * t[0] / t[1];
+  }
+  /* compound microscope, eye relaxed (final image at infinity): M_net = m_obj M_eye = -(di/do)(25 cm / f_eye).
+     L = di - f_obj is the tube length (objective's image side focal point to the intermediate image, which sits at the
+     eyepiece's focal point); since m_obj = -(di - f_obj)/f_obj exactly, M_net = -L (25 cm)/(f_obj f_eye). */
+  function microscope(fObj, fEye, dO) {
+    const o = thinLens(fObj, dO), Meye = NEAR_POINT / fEye, L = o.dI - fObj;
+    return { dI: o.dI, mObj: o.m, Meye, M: o.m * Meye, L, Mtube: -L * NEAR_POINT / (fObj * fEye), M16: -16 * NEAR_POINT / (fObj * fEye) };
+  }
+  /* telescope with the lenses f_obj + f_eye apart: M = -f_obj/f_eye */
+  function telescopeM(fObj, fEye) { return -fObj / fEye; }
+  // ==CORE END==
+
   const MAX_ITEMS = 8, MAX_BOUNCES = 30, EPS = 1e-6;
   const LAMBDAS = [400, 450, 500, 550, 600, 650, 700];
   const SPECTRUM = ['#7b3fe4', '#2f6bff', '#13b5c7', '#36b24a', '#f0b400', '#f06a1f', '#d42232'];
@@ -311,10 +404,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     object: () => ({ h: 3, rays: 9, spread: 12, white: false }),
     beam:   () => ({ w: 4, rays: 7, white: false }),
     point:  () => ({ rays: 24, spread: 360, white: false }),
-    screen: () => ({ h: 10 })
+    screen: () => ({ h: 10 }),
+    surf:   () => ({ shape: 'pos', R: 4, n1: 1.0, n2: 1.5, ap: 3 })
   };
   const NAMES = { lens: 'Lens', mirror: 'Mirror', block: 'Glass block', prism: 'Prism', semi: 'Semicircle',
-                  object: 'Object arrow', beam: 'Parallel beam', point: 'Point source', screen: 'Screen' };
+                  object: 'Object arrow', beam: 'Parallel beam', point: 'Point source', screen: 'Screen', surf: 'Refracting surface' };
   const mk = (kind, x, y, props) => Object.assign({ id: nextId++, kind, x, y, rot: 0 }, DEFAULTS[kind](), props || {});
   const isSource = (it) => it.kind === 'object' || it.kind === 'beam' || it.kind === 'point';
   const isGlass = (it) => it.kind === 'block' || it.kind === 'prism' || it.kind === 'semi';
@@ -325,6 +419,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     concave:    () => [mk('object', -16, 0, { h: 3, rays: 9, spread: 7.5, rot: -5.6 }), mk('mirror', 14, 0, { R: 24, ap: 8 })],
     telescope:  () => [mk('beam', -22, 0, { w: 6, rays: 7, rot: 3 }), mk('lens', -14, 0, { f: 16, ap: 10 }), mk('lens', 7, 0, { f: 5, ap: 8 })],
     prism:      () => [mk('beam', -18, -4, { w: 0, rays: 1, rot: 18.6, white: true }), mk('prism', 2, 0, { side: 12 })],
+    microscope: () => [mk('object', -16.25, 0, { h: 0.5, rays: 9, spread: 30, rot: -9 }), mk('lens', -14, 0, { f: 2, ap: 3 }), mk('lens', 9, 0, { f: 5, ap: 12 })],
+    surface:    () => [mk('object', -16, 0, { h: 1, rays: 11, spread: 5, rot: -3.6 }), mk('surf', 0, 0, { shape: 'pos', R: 4, n1: 1.0, n2: 1.5, ap: 3 })],
+    depth:      () => [mk('object', -12, 0, { h: 2, rays: 9, spread: 14, rot: -4 }), mk('surf', 0, 0, { shape: 'flat', R: 10, n1: 1.33, n2: 1.0, ap: 12 })],
     tir:        () => {
       const b = mk('beam', 0, 0, { w: 0.6, rays: 3, rot: 30, pivot: { x: 2, y: 0, dist: 15 } });
       placeOnPivot(b);
@@ -334,7 +431,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   // what each preset should show: [center x, center y, width, height] in cm
   const FRAMES = {
     converging: [1, 0, 54, 22], magnifier: [3, 0, 34, 18], concave: [-2, 0, 41, 18],
-    telescope: [-4, 0, 44, 18], prism: [0, 0, 50, 22], tir: [0, 0, 36, 24]
+    telescope: [-4, 0, 44, 18], prism: [0, 0, 50, 22], tir: [0, 0, 36, 24],
+    microscope: [-2, 0, 40, 17], surface: [3, 0, 50, 14], depth: [-2, 0, 32, 16]
   };
   let frame = FRAMES.converging;
   function placeOnPivot(it) {
@@ -366,6 +464,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function frameOf(it) { const a = rad(it.rot); return { u: [Math.cos(a), Math.sin(a)], w: [-Math.sin(a), Math.cos(a)] }; }
   function local(it, lx, ly) { const { u, w } = frameOf(it); return [it.x + lx * u[0] + ly * w[0], it.y + lx * u[1] + ly * w[1]]; }
   const signedR = (it) => it.shape === 'concave' ? it.R : -it.R;
+  /* refracting surface: signed radius (OpenStax: R > 0 when the center is on the outgoing side, along +u), the half width of
+     the rod it ends (as wide as the sphere allows) and the half height of the opaque stop (aperture) on its face */
+  const surfR = (it) => it.shape === 'flat' ? Infinity : it.shape === 'pos' ? it.R : -it.R;
+  const surfHalf = (it) => 0.97 * it.R;
+  const surfStop = (it) => Math.min(it.ap / 2, surfHalf(it));
   function focal(it) {
     if (it.kind === 'lens') return it.f;
     if (it.kind === 'mirror') return it.shape === 'plane' ? Infinity : signedR(it) / 2;
@@ -406,6 +509,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     } else if (it.kind === 'semi') {
       out.push({ type: 'seg', a: local(it, -it.r, 0), b: local(it, it.r, 0), nOut: [-w[0], -w[1]], el: it, role: 'face' });
       out.push({ type: 'arc', c: [it.x, it.y], r: it.r, a0: Math.atan2(w[1], w[0]), half: Math.PI / 2, el: it, role: 'face' });
+    } else if (it.kind === 'surf') {
+      /* n1 fills the bench on the incoming side (-u). A flat surface is a full plane; a curved one is the end of a rod of n2
+         (width = aperture) that runs off the bench along +u. nIn: unit normal pointing into the n1 side. */
+      const Rs = surfR(it);
+      if (!isFinite(Rs)) {
+        out.push({ type: 'seg', a: local(it, 0, -400), b: local(it, 0, 400), nIn: [-u[0], -u[1]], el: it, role: 'surf', part: 'face' });
+      } else {
+        const a = surfHalf(it), z = sagAt(Rs, a), sg = Math.sign(Rs);
+        out.push({ type: 'arc', c: local(it, Rs, 0), r: it.R, Rs, a0: Math.atan2(-sg * u[1], -sg * u[0]), half: Math.asin(a / it.R),
+                   el: it, role: 'surf', part: 'face' });
+        for (const k of [-1, 1]) {
+          out.push({ type: 'seg', a: local(it, z, k * a), b: local(it, 400, k * a), nIn: [k * w[0], k * w[1]], el: it, role: 'surf', part: 'wall' });
+        }
+      }
     }
     return out;
   }
@@ -475,6 +592,22 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         p = q;
         if (best.role === 'lens') {
           d = lensBend(best.el, q, d); r.hits.push(best.el);
+        } else if (best.role === 'surf') {
+          /* exact Snell's law at the refracting surface (no dispersion there); a ray crossing a rod wall is marked and left out of the image */
+          const el = best.el;
+          if (best.type === 'arc' && Math.abs(dot([q[0] - el.x, q[1] - el.y], frameOf(el).w)) > surfStop(el)) { end = 'absorbed'; break; }   /* the stop */
+          const N1 = best.type === 'arc' ? [(q[0] - best.c[0]) / best.Rs, (q[1] - best.c[1]) / best.Rs] : best.nIn;
+          const fwd = dot(d, N1) < 0, N = fwd ? N1 : [-N1[0], -N1[1]];
+          const t = snell(d, N, fwd ? el.n1 : el.n2, fwd ? el.n2 : el.n1), refl = norm(reflect(d, N));
+          if (best.part === 'wall') r.wall = true; else r.hits.push(el);
+          if (!t) d = refl;
+          else {
+            if (!r.faint && opt.faint && best.part === 'face' && el.n1 !== el.n2) {
+              stack.push({ p: q, d: refl, lam: r.lam, white: r.white, faint: true, central: false, src: r.src, tag: r.tag,
+                           pts: [q], hits: r.hits.slice(), bounces: r.bounces, pending: null, wall: r.wall });
+            }
+            d = t;
+          }
         } else if (best.role === 'mirror') {
           let N, front;
           if (best.type === 'seg') { N = frameOf(best.el).u; front = N; }
@@ -486,7 +619,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           if (r.white && el.n !== 1) {
             for (const lam of LAMBDAS) {
               stack.push({ p: q, d, lam, white: false, faint: r.faint, central: r.central && lam === 550, src: r.src, tag: r.tag,
-                           pts: [q], hits: r.hits.slice(), bounces: r.bounces, pending: best });
+                           pts: [q], hits: r.hits.slice(), bounces: r.bounces, pending: best, wall: r.wall });
             }
             end = 'split'; break;
           }
@@ -502,14 +635,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           else {
             if (!r.faint && opt.faint) {
               stack.push({ p: q, d: refl, lam: r.lam, white: r.white, faint: true, central: false, src: r.src, tag: r.tag,
-                           pts: [q], hits: r.hits.slice(), bounces: r.bounces, pending: null });
+                           pts: [q], hits: r.hits.slice(), bounces: r.bounces, pending: null, wall: r.wall });
             }
             const sk = Math.sqrt(k);
             d = norm([eta * d[0] + (eta * cosi - sk) * N[0], eta * d[1] + (eta * cosi - sk) * N[1]]);
           }
         }
       }
-      paths.push({ pts: r.pts, lam: r.lam, white: r.white, faint: r.faint, hits: r.hits, end, last: { p, d }, src: r.src, tag: r.tag, scr: r.scr || null });
+      paths.push({ pts: r.pts, lam: r.lam, white: r.white, faint: r.faint, hits: r.hits, end, last: { p, d }, src: r.src, tag: r.tag, scr: r.scr || null, wall: !!r.wall });
     }
     return paths;
   }
@@ -554,10 +687,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return [(c * ex - b * ey) / det, (a * ey - b * ex) / det];
   }
   function singleElementLines(paths) {
-    const hit = paths.filter((p) => !p.faint && p.hits.length && p.end !== 'absorbed');
+    const hit = paths.filter((p) => !p.faint && !p.wall && p.hits.length && p.end !== 'absorbed');
     if (hit.length < 2) return { why: 'few' };
     const E = hit[0].hits[0];
-    if (E.kind !== 'lens' && E.kind !== 'mirror') return { why: 'multi' };
+    if (E.kind !== 'lens' && E.kind !== 'mirror' && E.kind !== 'surf') return { why: 'multi' };
     if (!hit.every((p) => p.hits.length === 1 && p.hits[0] === E && p.end !== 'max')) return { why: 'multi' };
     return { E, lines: hit.map((p) => p.last) };
   }
@@ -569,9 +702,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (!res.E) return { why: res.why, obj };
     const { E, lines } = res, { u, w } = frameOf(E), C = [E.x, E.y];
     const f = focal(E);
-    const toward = E.kind === 'mirror' ? [-u[0], -u[1]] : (dot([C[0] - tip[0], C[1] - tip[1]], u) >= 0 ? u : [-u[0], -u[1]]);
+    const toward = E.kind === 'mirror' ? [-u[0], -u[1]] : E.kind === 'surf' ? u : (dot([C[0] - tip[0], C[1] - tip[1]], u) >= 0 ? u : [-u[0], -u[1]]);
     const dO = dot([C[0] - base[0], C[1] - base[1]], toward);      // > 0 means object faces the element
-    if (dO <= 0.05) return { why: 'behind', obj };
+    if (dO <= 0.05) return { why: E.kind === 'surf' ? 'surfside' : 'behind', obj };
     let imgTip = lsq(lines);
     const far = imgTip && Math.hypot(imgTip[0] - C[0], imgTip[1] - C[1]) > 2000;
     const out = { obj, E, f, tip, base, dO, toward, lines };
@@ -582,6 +715,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const bp = traceAll(sourceStarts(obj, base, 'base'), fr.prims, { faint: false });
     const bres = singleElementLines(bp);
     let imgBase = bres.E === E ? lsq(bres.lines) : null;
+    if (E.kind === 'surf') {
+      /* exact rays from the axial object point: where the one meeting the surface farthest from the axis crosses the axis */
+      let edge = null;
+      for (const p of bp) {
+        if (p.faint || p.wall || p.hits.length !== 1 || p.hits[0] !== E || p.pts.length < 2) continue;
+        const h = dot([p.pts[1][0] - C[0], p.pts[1][1] - C[1]], w), y0 = dot([p.last.p[0] - C[0], p.last.p[1] - C[1]], w), dw = dot(p.last.d, w);
+        if (Math.abs(dw) < 1e-12) continue;
+        const t = -y0 / dw, sx = dot([p.last.p[0] + t * p.last.d[0] - C[0], p.last.p[1] + t * p.last.d[1] - C[1]], u);
+        if (!edge || Math.abs(h) > Math.abs(edge.h)) edge = { h, s: sx };
+      }
+      out.edge = edge;
+    }
     if (!imgBase || Math.hypot(imgBase[0] - C[0], imgBase[1] - C[1]) > 2000) {
       const along = dot([imgTip[0] - C[0], imgTip[1] - C[1]], u), off = dot([base[0] - C[0], base[1] - C[1]], w);
       imgBase = [C[0] + u[0] * along + w[0] * off, C[1] + u[1] * along + w[1] * off];
@@ -593,12 +738,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return finishPred(out);
   }
   function finishPred(out) {
+    if (out.E.kind === 'surf') {
+      const r = surfaceImage(out.E.n1, out.E.n2, surfR(out.E), out.dO);
+      out.dIeq = r.dI; out.mEq = r.m; return out;
+    }
     const inv = (isFinite(out.f) ? 1 / out.f : 0) - 1 / out.dO;
     out.dIeq = Math.abs(inv) < 1e-9 ? Infinity : 1 / inv;
     out.mEq = isFinite(out.dIeq) ? -out.dIeq / out.dO : Infinity;
     return out;
   }
   function principalStarts(im) {
+    if (im.E.kind === 'surf') return [];            /* no principal rays for a single refracting surface */
     const { E, tip, toward } = im, C = [E.x, E.y], u = frameOf(E).u, f = focal(E);
     const thru = (X) => {
       if (!X) return null;
@@ -634,7 +784,62 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (fr.image.E && layers.principal) {
       fr.principal = traceAll(principalStarts(fr.image), primsOf(fr.image.E, true), { faint: false });
     }
+    fr.inst = instrument(fr);
     return fr;
+  }
+
+  // ---------- two lens instruments: microscope (object arrow) and telescope (parallel beam) ----------
+  // Needs exactly two converging lenses on one axis and no other optics (screens are fine).
+  function instrument(fr) {
+    const lenses = items.filter((i) => i.kind === 'lens');
+    if (lenses.length !== 2 || items.some((i) => !isSource(i) && i.kind !== 'lens' && i.kind !== 'screen')) return null;
+    const srcs = items.filter((i) => i.kind === 'object' || i.kind === 'beam');
+    const src = sel && srcs.includes(sel) ? sel : srcs.find((i) => i.kind === 'object') || srcs[0];
+    if (!src) return null;
+    const [A, B] = lenses, { u, w } = frameOf(A);
+    if (Math.abs(Math.sin(rad(A.rot - B.rot))) > 1e-3 || Math.abs(dot([B.x - A.x, B.y - A.y], w)) > 0.05) return null;
+    if (A.f <= 0 || B.f <= 0) return { why: 'conv', kind: src.kind };
+    const sp = [src.x, src.y];
+    let dir;
+    if (src.kind === 'beam') dir = dot(frameOf(src).u, u) >= 0 ? u : [-u[0], -u[1]];
+    else dir = dot([(A.x + B.x) / 2 - sp[0], (A.y + B.y) / 2 - sp[1]], u) >= 0 ? u : [-u[0], -u[1]];
+    const along = (L) => dot([L.x - sp[0], L.y - sp[1]], dir);
+    const [O, E] = along(A) <= along(B) ? [A, B] : [B, A];
+    if (along(O) <= 0.05) return { why: 'order', kind: src.kind };
+    const C = [O.x, O.y], sep = dot([E.x - O.x, E.y - O.y], dir);
+    const slope = (d) => dot(d, w) / dot(d, dir);
+    // slopes of the rays from this source that went through the objective and then the eyepiece
+    const outs = fr.paths.filter((p) => p.src === src && p.tag === 'fan' && !p.faint && p.hits.length === 2 && p.hits[0] === O && p.hits[1] === E)
+      .map((p) => slope(p.last.d));
+    const res = { kind: src.kind === 'object' ? 'microscope' : 'telescope', O, E, fO: O.f, fE: E.f, sep, n: outs.length };
+    if (outs.length) {
+      res.sOut = outs.reduce((a, v) => a + v, 0) / outs.length;
+      res.parallel = Math.max(...outs) - Math.min(...outs) < 2e-3;
+    }
+    if (res.kind === 'telescope') {
+      res.Meq = telescopeM(O.f, E.f);
+      res.sIn = slope(frameOf(src).u);
+      if (outs.length && Math.abs(res.sIn) > 1e-4) res.Mtr = res.sOut / res.sIn;   /* both angles have the same sign rule, so M = tan θ_out / tan θ_in */
+      return res;
+    }
+    // microscope: the objective's image, traced with the objective alone, and the closed form
+    const tip = [src.x, src.y + src.h], base = [src.x, src.y];
+    res.dO = dot([C[0] - base[0], C[1] - base[1]], dir);
+    res.h = dot([tip[0] - C[0], tip[1] - C[1]], w);
+    Object.assign(res, microscope(O.f, E.f, res.dO));
+    const oPrims = primsOf(O, true), img = (P) => {
+      const lines = traceAll(sourceStarts(src, P, 'mi'), oPrims, { faint: false }).filter((p) => p.hits.length === 1).map((p) => p.last);
+      return lines.length >= 2 ? lsq(lines) : null;
+    };
+    const iT = img(tip), iB = img(base);
+    if (iT && iB && Math.hypot(iT[0] - C[0], iT[1] - C[1]) < 2000) {
+      res.imgTip = iT; res.imgBase = iB;
+      res.dItr = dot([iT[0] - C[0], iT[1] - C[1]], dir);
+      res.mObjTr = dot([iT[0] - iB[0], iT[1] - iB[1]], w) / dot([tip[0] - base[0], tip[1] - base[1]], w);
+    }
+    // the eye looks back along the outgoing rays: θ_image = −(slope out); unaided, the object at the near point subtends h/25 cm
+    if (outs.length && res.parallel && Math.abs(res.h) > 1e-3) res.Mtr = -res.sOut / (res.h / NEAR_POINT);
+    return res;
   }
 
   // ---------- sizing ----------
@@ -656,7 +861,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const F3 = 60;
   const LAB_SPECTRUM = ['#9b6bff', '#4f86ff', '#22c8dc', '#4bd463', '#ffd23a', '#ff8a3a', '#ff4a4a'];
   const GLASS = (a) => `rgba(160, 210, 255, ${a})`;
-  const SCENES = { prism: 'table', tir: 'table' };     // ray table (seen from above) for these, optical bench for the rest
+  const SCENES = { prism: 'table', tir: 'table', surface: 'table', depth: 'table' };     // ray table (seen from above) for these, optical bench for the rest
   let scene = 'bench', railY = -8;
   const rrect = (x, y, w, h, r) => (ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h));
   function hexA(hex, a) {
@@ -800,6 +1005,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   // where an item's post meets it: [x, y] in world cm, or null if it has no post
   function mountOf(it) {
+    if (it.kind === 'surf') return null;            /* a medium, not a part on a post */
     if (it.kind === 'object') return [it.x - 1.35, it.y - 0.9];
     if (it.kind === 'point') return [it.x, it.y - 0.9];
     if (it.kind === 'beam') { const hp = housingPts(it); return [(hp[0][0] + hp[2][0]) / 2, Math.min(...hp.map((p) => p[1]))]; }
@@ -886,6 +1092,48 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const lp = it.kind === 'semi' ? local(it, 0, it.r * 0.45) : [it.x, it.y];
     const [lx, ly] = toPx(lp[0], lp[1]);
     if (s * (it.kind === 'semi' ? it.r : 3) > 30 * ps) tag('n = ' + it.n.toFixed(2), lx, ly, T.muted, T);
+  }
+  // refracting surface: n1 tints the bench on the incoming side, n2 the far side (a rod of glass for a curved surface)
+  function surfRegion(it) {
+    const Lx = Math.hypot(W, H) / s + Math.hypot(it.x, it.y) + 10;
+    if (it.shape === 'flat') return [local(it, 0, -Lx), local(it, Lx, -Lx), local(it, Lx, Lx), local(it, 0, Lx)];
+    const a = surfHalf(it), face = outline(it);
+    return face.concat([local(it, Lx, a), local(it, Lx, -a)]);
+  }
+  const mediumAlpha = (n) => Math.min(0.3, 0.05 + 0.42 * (n - 1));
+  function drawSurf(it, T) {
+    const reg = surfRegion(it), ps = projScale(), px = reg.map((p) => toPx(p[0], p[1]));
+    ctx.save();
+    if (it.n1 > 1.001) {
+      ctx.beginPath(); ctx.rect(0, 0, W, H);
+      px.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath();
+      ctx.fillStyle = GLASS(mediumAlpha(it.n1)); ctx.fill('evenodd');
+    }
+    if (it.n2 > 1.001) { pathW(reg, true); ctx.fillStyle = GLASS(mediumAlpha(it.n2)); ctx.fill(); }
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    if (it.shape !== 'flat') {                 /* rod walls, dimmer than the end face */
+      const a = surfHalf(it), z = sagAt(surfR(it), a), Lx = Math.hypot(W, H) / s + Math.hypot(it.x, it.y) + 10;
+      ctx.strokeStyle = 'rgba(205, 232, 255, 0.35)'; ctx.lineWidth = 1.1 * ps;
+      for (const k of [-1, 1]) polyline([local(it, z, k * a), local(it, Lx, k * a)]);
+    }
+    ctx.strokeStyle = 'rgba(205, 232, 255, 0.85)'; ctx.lineWidth = 1.8 * ps;
+    polyline(it.shape === 'flat' ? [reg[0], reg[3]] : outline(it));
+    if (it.shape !== 'flat' && surfStop(it) < surfHalf(it) - 1e-6) {      /* the aperture stop: opaque blades over the rest of the face */
+      const Rs = surfR(it), a = surfHalf(it), st = surfStop(it), th = Math.max(0.25, 4 * ps / s);
+      for (const k of [-1, 1]) {
+        const pts = [];
+        for (let i = 0; i <= 12; i++) { const h = k * (st + (a - st) * i / 12); pts.push(local(it, sagAt(Rs, h) - th, h)); }
+        ctx.strokeStyle = '#0c0f13'; ctx.lineWidth = 2 * th * s; ctx.lineCap = 'butt'; polyline(pts);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)'; ctx.lineWidth = ps; polyline(pts);
+      }
+    }
+    ctx.restore();
+    const lab = it.shape === 'flat' ? 5.5 : Math.min(Math.max(surfHalf(it) + 1.2, 2.2), 5.5);
+    const off = Math.max(3.2, 52 * ps / s);
+    const [ax, ay] = toPx(...local(it, -off, -lab)), [bx, by] = toPx(...local(it, off, -lab));
+    tag('n₁ = ' + it.n1.toFixed(2), ax, ay, T.muted, T);
+    tag('n₂ = ' + it.n2.toFixed(2), bx, by, T.muted, T);
+    if (it.shape !== 'flat' && it !== sel) { const { u, w } = frameOf(it), Rs = surfR(it); tick([it.x + u[0] * Rs, it.y + u[1] * Rs], w, 'C', T); }
   }
   function lensShape(it) {
     // half thickness: thick middle for converging, thick edges for diverging
@@ -992,6 +1240,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (it.kind === 'block' || it.kind === 'prism') return polyLocal(it).map((p) => local(it, p[0], p[1]));
     if (it.kind === 'semi') { const w = frameOf(it).w; return arcPts([it.x, it.y], it.r, Math.atan2(w[1], w[0]), Math.PI / 2, 48); }
     if (it.kind === 'mirror' && it.shape !== 'plane') { const pr = primsOf(it, false)[0]; return arcPts(pr.c, pr.r, pr.a0, pr.half, 40); }
+    if (it.kind === 'surf') {
+      if (it.shape === 'flat') { const b = bounds(), Hh = Math.max(4, Math.hypot(b.x1 - b.x0, b.y1 - b.y0) / 2 + Math.hypot(it.x, it.y)); return [local(it, 0, -Hh), local(it, 0, Hh)]; }
+      const Rs = surfR(it), a = surfHalf(it), pts = [];
+      for (let i = 0; i <= 40; i++) { const h = -a + 2 * a * i / 40; pts.push(local(it, sagAt(Rs, h), h)); }
+      return pts;
+    }
     if (it.kind === 'lens' || it.kind === 'mirror') return [local(it, 0, -it.ap / 2), local(it, 0, it.ap / 2)];
     if (it.kind === 'screen') return [[it.x, it.y - it.h / 2], [it.x, it.y + it.h / 2]];
     if (it.kind === 'object') return [[it.x, it.y], [it.x, it.y + it.h]];
@@ -1338,6 +1592,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const order = items.slice().sort((a, b) => Math.abs(toPx(b.x, 0)[0] - W / 2) - Math.abs(toPx(a.x, 0)[0] - W / 2));
       for (const it of order) drawMount(it, R, T);
     }
+    for (const it of items) if (it.kind === 'surf') drawSurf(it, T);
     for (const it of items) if (isGlass(it)) drawGlass(it, T);
     for (const it of items) if (it.kind === 'lens') drawLensBody(it, T);
     ctx.save();
@@ -1376,6 +1631,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const hw = ctx.measureText(lab).width / 2 + 8 * ps;
       tag(lab, Math.max(hw, Math.min(W - hw, x)), y + (up ? -10 : 10) * ps, T.muted, T, { base: up ? 'bottom' : 'top' });   // keep the label on the canvas
     }
+    const ins = fr.inst;
+    if (layers.image && ins && ins.kind === 'microscope' && ins.imgTip) {     /* the objective's real image, inside the tube */
+      drawObjectArrow(ins.imgBase, ins.imgTip, T.pos, false, 0.6);
+      const [x, y] = toPx(ins.imgTip[0], ins.imgTip[1]), up = ins.imgTip[1] >= ins.imgBase[1];
+      tag("objective's image", x, y + (up ? -10 : 10) * ps, T.muted, T, { base: up ? 'bottom' : 'top' });
+    }
+    if (ins && ins.O) {
+      for (const [L, name] of [[ins.O, 'objective'], [ins.E, 'eyepiece']]) {
+        const p = toPx(...local(L, 0, L.ap / 2 + 0.6));
+        tag(name, p[0], p[1] - 4 * ps, T.muted, T, { base: 'bottom', size: 10 });
+      }
+    }
     for (const sc of screens()) drawScreenInset(sc, light.get(sc), T, R);
     if (sel) { drawSelection(sel, T); drawHandles(T); }
 
@@ -1403,12 +1670,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           ? 'Aim more of the object rays at a lens or mirror to form an image.'
           : im.why === 'behind'
             ? 'The object is behind the mirror.'
-            : 'Image readouts need the object rays to pass through exactly one lens or mirror.';
+            : im.why === 'surfside'
+              ? 'Put the object on the n₁ side of the refracting surface.'
+              : frameData && frameData.inst && frameData.inst.kind === 'microscope'
+                ? 'Two lenses: the Microscope readouts below follow the image through both.'
+                : 'Image readouts need the object rays to pass through exactly one lens, mirror or refracting surface.';
     } else {
+      const isSurf = im.E.kind === 'surf';
+      setLabel('rDiEqL', isSurf ? 'd<sub>i</sub> from n<sub>1</sub>/d<sub>o</sub> + n<sub>2</sub>/d<sub>i</sub> = (n<sub>2</sub> − n<sub>1</sub>)/R' : null);
+      setLabel('rFL', isSurf ? 'Radius R' : null);
+      setLabel('rMEqL', isSurf ? 'm = −n<sub>1</sub>d<sub>i</sub>/(n<sub>2</sub>d<sub>o</sub>)' : null);
+      setLabel('imgHint', isSurf ? 'Signs: d<sub>o</sub> &gt; 0 for a real object in n<sub>1</sub>. d<sub>i</sub> &gt; 0 for a real image on the far side (in n<sub>2</sub>) and d<sub>i</sub> &lt; 0 for a virtual one on the object\'s side. R &gt; 0 when the center of curvature is on the far side. m &lt; 0 means inverted.' : null);
       $('rDo').textContent = fmtCm(im.dO);
       $('rDi').textContent = im.inf ? '∞' : fmtCm(im.dI);
       $('rDiEq').textContent = fmtCm(im.dIeq);
-      $('rF').textContent = isFinite(im.f) ? fmtCm(im.f) : '∞ (plane)';
+      $('rF').textContent = isSurf ? (isFinite(surfR(im.E)) ? fmtCm(surfR(im.E)) : '∞ (flat)') : isFinite(im.f) ? fmtCm(im.f) : '∞ (plane)';
       $('rM').textContent = im.inf ? '∞' : fmtM(im.m);
       $('rMEq').textContent = fmtM(im.mEq);
       if (im.inf) $('rKind').textContent = 'At infinity: rays leave parallel';
@@ -1418,6 +1694,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           (am > 1.02 ? 'enlarged' : am < 0.98 ? 'reduced' : 'same size');
       }
     }
+    // refracting surface: paraxial against exact rays
+    const sOk = !!(im.E && im.E.kind === 'surf');
+    $('surfSec').hidden = !sOk;
+    if (sOk) {
+      const E = im.E, Rs = surfR(E);
+      $('sN').textContent = E.n1.toFixed(2) + ' → ' + E.n2.toFixed(2);
+      $('sR').textContent = isFinite(Rs) ? fmtCm(Rs) : '∞ (flat)';
+      $('sPar').textContent = fmtCm(im.dIeq);
+      $('sEdgeL').textContent = im.edge ? 'Exact edge ray (h = ' + Math.abs(im.edge.h).toFixed(2) + ' cm) crosses the axis at' : 'Exact edge ray crosses the axis at';
+      $('sEdge').textContent = im.edge ? fmtCm(im.edge.s) : '—';
+      $('sAppRow').hidden = isFinite(Rs);
+      if (!isFinite(Rs)) $('sApp').textContent = fmtCm(apparentDepth(E.n1, E.n2, im.dO));
+    }
+    updateInstrument(frameData ? frameData.inst : null);
     const glass = (sel && isGlass(sel)) ? sel : items.find(isGlass);
     $('refSec').hidden = !glass;
     if (glass) {
@@ -1429,11 +1719,59 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
   }
 
+  const LABEL0 = {};
+  function setLabel(id, html) {             /* html = null restores the original label */
+    const el = $(id);
+    if (!(id in LABEL0)) LABEL0[id] = el.innerHTML;
+    const want = html == null ? LABEL0[id] : html;
+    if (el.innerHTML !== want) el.innerHTML = want;
+  }
+  function updateInstrument(ins) {
+    $('instSec').hidden = !ins;
+    if (!ins) return;
+    const mic = ins.kind === 'microscope' || (ins.why && ins.kind === 'object');
+    $('instTitle').textContent = mic ? 'Microscope' : 'Telescope';
+    const why = ins.why ? (ins.why === 'conv' ? 'Both lenses must be converging.' : 'Put both lenses on the far side of the source.') : '';
+    $('instNone').hidden = !why; $('instNone').textContent = why;
+    $('micDl').hidden = $('micHint').hidden = !mic || !!why;
+    $('telDl').hidden = $('telHint').hidden = mic || !!why;
+    if (why) return;
+    const fF = minus(ins.fO.toFixed(1) + ' cm, ' + ins.fE.toFixed(1) + ' cm');
+    if (!mic) {
+      $('tM').textContent = ins.Mtr != null && ins.parallel ? fmtM(ins.Mtr) : '—';
+      $('tMEq').textContent = fmtM(ins.Meq);
+      $('tF').textContent = fF;
+      $('tSep').textContent = minus(ins.sep.toFixed(1) + ' cm (' + (ins.fO + ins.fE).toFixed(1) + ' cm)');
+      $('tStat').textContent = !ins.n ? 'No beam rays pass through both lenses'
+        : !ins.parallel ? 'Not parallel: set the separation to f_obj + f_eye'
+        : Math.abs(ins.sIn) <= 1e-4 ? 'Parallel. Tilt the beam to measure M'
+        : 'Parallel, at ' + minus(deg(Math.atan(ins.sOut)).toFixed(1)) + '° (in at ' + minus(deg(Math.atan(ins.sIn)).toFixed(1)) + '°)';
+      return;
+    }
+    const realMid = isFinite(ins.dI) && ins.dI > 0 && ins.dI < ins.sep;
+    $('mDo').textContent = minus((ins.dO > 0 ? '+' : '') + ins.dO.toFixed(2) + ' cm');
+    $('mF').textContent = fF;
+    $('mDi').textContent = ins.dItr != null ? fmtCm(ins.dItr) : '∞';
+    $('mDiEq').textContent = fmtCm(ins.dI);
+    $('mObj').textContent = ins.mObjTr != null ? fmtM(ins.mObjTr) : '—';
+    $('mObjEq').textContent = fmtM(ins.mObj);
+    $('mEye').textContent = fmtM(ins.Meye);
+    $('mTube').textContent = fmtCm(ins.sep - ins.fO - ins.fE);
+    $('mNet').textContent = realMid ? fmtM(ins.M) : '—';
+    $('mTr').textContent = ins.Mtr != null ? fmtM(ins.Mtr) : '—';
+    $('m16').textContent = fmtM(ins.M16);
+    const gap = ins.sep - ins.dI;
+    $('mStat').textContent = !realMid ? "The objective's image must be real and between the lenses"
+      : !ins.n ? 'No object rays pass through both lenses'
+      : Math.abs(gap - ins.fE) < 0.05 && ins.parallel ? 'At infinity (eye relaxed)'
+      : minus("Not at infinity: the objective's image is " + gap.toFixed(1) + ' cm from the eyepiece, f_eye = ' + ins.fE.toFixed(1) + ' cm');
+  }
+
   // ---------- selected element editor ----------
   const SPECS = {
     lens: [
       { chips: [['conv', 'Converging'], ['div', 'Diverging']], get: (it) => it.f > 0 ? 'conv' : 'div', set: (it, v) => { it.f = (v === 'conv' ? 1 : -1) * Math.abs(it.f); } },
-      { label: 'Focal length', hk: 'f', min: 5, max: 30, step: 0.5, get: (it) => Math.abs(it.f), set: (it, v) => { it.f = Math.sign(it.f) * v; }, fmt: (it) => 'f = ' + fmtCm(it.f) },
+      { label: 'Focal length', hk: 'f', min: 1, max: 30, step: 0.5, get: (it) => Math.abs(it.f), set: (it, v) => { it.f = Math.sign(it.f) * v; }, fmt: (it) => 'f = ' + fmtCm(it.f) },
       { label: 'Aperture height', min: 2, max: 20, step: 0.5, key: 'ap', unit: ' cm' },
       { label: 'Rotate', min: -90, max: 90, step: 1, key: 'rot', unit: '°' }
     ],
@@ -1461,7 +1799,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       { label: 'Rotate', min: -180, max: 180, step: 1, key: 'rot', unit: '°' }
     ],
     object: [
-      { label: 'Height', min: 1, max: 8, step: 0.5, key: 'h', unit: ' cm' },
+      { label: 'Height', min: 0.5, max: 8, step: 0.5, key: 'h', unit: ' cm' },
       { label: 'Ray count', min: 3, max: 21, step: 1, key: 'rays', digits: 0 },
       { label: 'Fan half angle', min: 2, max: 60, step: 1, key: 'spread', unit: '°' },
       { label: 'Aim', min: -60, max: 60, step: 0.5, key: 'rot', unit: '°' },
@@ -1475,6 +1813,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ],
     screen: [
       { label: 'Height', min: 4, max: 20, step: 0.5, key: 'h', unit: ' cm' }
+    ],
+    surf: [
+      { chips: [['pos', 'R > 0'], ['neg', 'R < 0'], ['flat', 'Flat']], get: (it) => it.shape, set: (it, v) => { it.shape = v; } },
+      { label: 'Radius |R|', min: 2, max: 40, step: 0.5, key: 'R', show: (it) => it.shape !== 'flat', fmt: (it) => 'R = ' + fmtCm(surfR(it)) },
+      { label: 'Index n₁ (object side)', min: 1, max: 2.4, step: 0.01, key: 'n1', digits: 2 },
+      { label: 'Index n₂ (far side)', min: 1, max: 2.4, step: 0.01, key: 'n2', digits: 2 },
+      { label: 'Aperture height', min: 1, max: 30, step: 0.5, key: 'ap', unit: ' cm', show: (it) => it.shape !== 'flat' },
+      { label: 'Rotate', min: -180, max: 180, step: 1, key: 'rot', unit: '°' }
     ],
     point: [
       { label: 'Ray count', min: 4, max: 72, step: 1, key: 'rays', digits: 0 },
@@ -1493,6 +1839,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function itemName(it) {
     if (it.kind === 'lens') return it.f > 0 ? 'Converging lens' : 'Diverging lens';
     if (it.kind === 'mirror') return { concave: 'Concave mirror', convex: 'Convex mirror', plane: 'Plane mirror' }[it.shape];
+    if (it.kind === 'surf') return it.shape === 'flat' ? 'Flat surface' : 'Spherical surface';
     return NAMES[it.kind];
   }
   let editorFor = null, editorRefs = [];
@@ -1553,8 +1900,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   function setPreset(name) {
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
-    $('presetHint').hidden = name !== 'converging';
+    const hint = PRESET_HINTS[name];
+    $('presetHint').hidden = !hint;
+    if (hint && $('presetHint').textContent !== hint) $('presetHint').textContent = hint;
   }
+  const PRESET_HINTS = {
+    converging: 'For a diverging lens, click the lens and choose Diverging.',
+    microscope: 'A 2 cm objective and a 5 cm eyepiece, tube length 16 cm. The object sits 2.25 cm from the objective, just outside its F.',
+    surface: 'The curved end of a glass rod (n = 1.50, R = +4 cm) with a 3 cm aperture. Shrink the aperture to bring the traced image to the paraxial one.',
+    depth: 'A fish in water (n = 1.33) seen through a flat surface, here standing upright: the eye is on the right, in air.'
+  };
 
   // ---------- drag handles on the selected item ----------
   // Dots: focal points F, F′ and center of curvature C. Grips: size (aperture, width, height, side, radius).
@@ -1645,6 +2000,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       knob(c, 0, 30 * ps / s, c);
     } else if (it.kind === 'screen') {
       grip('h', [it.x, it.y + it.h / 2 + go], [0, 1], (p) => setKey(it, 'h', 2 * (Math.abs(p.y - it.y) - go)));
+    } else if (it.kind === 'surf') {
+      if (it.shape === 'flat') knob(c, -90, 4 + g, local(it, 0, -4));
+      else {
+        const Rs = surfR(it), a = surfHalf(it), st = surfStop(it);
+        dotH('C', local(it, Rs, 0), 'C', (p) => {          /* drag C through the vertex to change the sign of R */
+          const t = dot(rel(p), u), sg = signedPick(t, Rs);
+          it.shape = sg > 0 ? 'pos' : 'neg'; setKey(it, 'R', Math.abs(t));
+        });
+        grip('ap', local(it, sagAt(Rs, st) - 2 * go, st), w, (p) => setKey(it, 'ap', 2 * Math.abs(dot(rel(p), w))));
+        knob(c, -90, a + g, local(it, sagAt(Rs, a), -a));
+      }
     }
     return out;
   }
@@ -1724,11 +2090,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     object: 'Drag the tip of the arrow to change its height. The knob aims the rays.',
     beam: 'Drag either end of the beam to change its width.',
     point: 'The knob aims the rays.',
+    surf: 'Drag C along the axis to change R; pull it through the surface to change the sign. The grip sets the aperture, an opaque stop on the face.',
+    flatsurf: 'A flat surface: R is infinite and n₂/d_i = −n₁/d_o.',
     screen: 'Slide it along the bench: the image is sharp only where the rays from each point of the object meet. The grip at the top sets the height.'
   };
   function selHintText(it) {
     if (!it) return 'Click anything on the bench to edit it. Drag its grips, dots and round knob to reshape and turn it.';
-    const first = HINTS[it.kind === 'mirror' && it.shape === 'plane' ? 'plane' : it.kind];
+    const first = HINTS[it.kind === 'mirror' && it.shape === 'plane' ? 'plane' : it.kind === 'surf' && it.shape === 'flat' ? 'flatsurf' : it.kind];
     if (it.kind === 'screen') return first + ' Arrow keys nudge it, + and − resize it, Delete removes it.';
     const turn = isSource(it) ? '' : ' Turn the round knob to rotate it.';
     return first + turn + ' Arrow keys nudge it, [ and ] rotate it, + and − resize it, Delete removes it.';
@@ -1820,7 +2188,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   cv.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; schedule(); } });
 
   // what + and − change: the focal length or main size of each kind
-  const SIZE_KEYS = { lens: ['f'], mirror: ['R'], block: ['w', 'h'], prism: ['side'], semi: ['r'], object: ['h'], beam: ['w'], point: ['spread'], screen: ['h'] };
+  const SIZE_KEYS = { surf: ['R'], lens: ['f'], mirror: ['R'], block: ['w', 'h'], prism: ['side'], semi: ['r'], object: ['h'], beam: ['w'], point: ['spread'], screen: ['h'] };
   function removeSel() { items = items.filter((i) => i !== sel); sel = null; setPreset(null); schedule(); }
   cv.addEventListener('keydown', (e) => {
     if (!sel) return;
@@ -1841,7 +2209,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       sel.rot = r; placeOnPivot(sel); setPreset(null);
     } else if (['+', '=', '-', '_', '−'].includes(e.key)) {
       const keys = SIZE_KEYS[sel.kind];
-      if (!keys || (sel.kind === 'mirror' && sel.shape === 'plane')) return;
+      if (!keys || (sel.kind === 'mirror' && sel.shape === 'plane') || (sel.kind === 'surf' && sel.shape === 'flat')) return;
       const sgn = e.key === '+' || e.key === '=' ? 1 : -1;
       for (const k of keys) { const sp = specOf(sel.kind, k); setKey(sel, k, getV(sp, sel) + sgn * sp.step); }
       setPreset(null);
