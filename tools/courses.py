@@ -110,15 +110,36 @@ def thumb(name, alt, lazy=True):
 
 DEMO_NOTE = {'needs-handout': 'Student handout being revised', 'needs-feature': 'Some parts still to come'}
 
+# Link label for each student handout: "Worksheet: <topic>", or "Worksheet <n>: <topic>" when a demo has several
+# (numbered in the map's order). Add an entry here when a handout is added to the map.
+HANDOUT_TOPIC = {
+    'motion-graphs': 'Motion Graphs', 'projectile-drag': 'Projectiles and Air Resistance', 'forces': 'Friction and Work',
+    'potential-curves': 'Potential Energy Diagrams', 'impulse': 'Impulse', 'collisions': 'Collisions',
+    'rotation': 'Torque and Angular Momentum', 'kepler-orbits': "Kepler's Third Law", 'stress-strain': "Young's Modulus",
+    'fluids': 'Pressure, Buoyancy and Flow', 'viscometer': 'Viscosity', 'springs': 'Spring Constant',
+    'pendulum': 'Measuring g', 'rotational-dynamics': 'Rotational Inertia',
+    'coulomb-sandbox': 'Electric Field and Potential', 'gauss-law': "Gauss's Law", 'capacitors': 'Capacitance and Dielectrics',
+    'resistivity': 'Resistivity', 'dc-circuits': "Kirchhoff's Rules", 'rc-circuits': 'RC Time Constant',
+    'rlc-transients': 'RLC Oscillations', 'ac-circuits': 'AC Resonance',
+    'magnetic-force': 'Particle Orbits and the Hall Effect', 'wire-force': 'Magnetic Force on a Wire', 'faraday': "Faraday's Law",
+    # standalone activities
+    'measurement-and-units': 'Units and Dimensions', 'estimation-and-evidence': 'Estimates and Uncertainty',
+    'energy-sources': 'Electricity Sources',
+}
+
+
+def handout_label(h, i=None):
+    return f'Worksheet{f" {i}" if i else ""}: {HANDOUT_TOPIC[h]}'
+
 
 def card(name, demo, unit_secs, cards, notes):
     c = cards[name]
     secs = sorted([s for s in demo['sections'] if (s['vol'], s['sec']) in unit_secs], key=sec_key)
     chips = ''.join(f'<li><span class="sec">{s["vol"]}:{s["sec"]}</span> {esc(s["title"])}</li>' for s in secs)
     links = [f'<a class="go" href="demos/{name}.html">Open demo</a>']
-    for h in demo.get('handouts') or []:
-        if (ROOT / 'curriculum' / 'labs' / 'students' / f'{h}.md').exists():
-            links.append(f'<a href="curriculum/labs/students/{h}.html">Student handout</a>')
+    hs = [h for h in demo.get('handouts') or [] if (ROOT / 'curriculum' / 'labs' / 'students' / f'{h}.md').exists()]
+    for i, h in enumerate(hs, 1):
+        links.append(f'<a href="curriculum/labs/students/{h}.html">{esc(handout_label(h, i if len(hs) > 1 else None))}</a>')
     if name in notes:
         links.append(f'<a href="notes/{name}.html">Notes</a>')
     role = 'Lab' if demo['role'] == 'lab' else 'Demo'
@@ -141,13 +162,14 @@ def activity_card(activity, unit_secs):
     chips = ''.join(f'<li><span class="sec">{s["vol"]}:{s["sec"]}</span> {esc(s["title"])}</li>' for s in secs)
     href = activity['url'].removesuffix('.md') + '.html'
     role = 'Worksheet' if activity['kind'] == 'worksheet' else 'Reading and data activity'
+    label = handout_label(activity['id']) if activity['kind'] == 'worksheet' else f'Reading: {HANDOUT_TOPIC[activity["id"]]}'
     return f'''      <li class="item">
         <div class="body" style="grid-column: 1 / -1">
           <p class="kind"><span class="role">{role}</span></p>
           <h3><a href="{esc(href)}">{esc(activity['title'])}</a></h3>
           <p>{esc(activity['description'])}</p>
           <ul class="secs" aria-label="Textbook sections">{chips}</ul>
-          <p class="links"><a class="go" href="{esc(href)}">Open student activity</a></p>
+          <p class="links"><a class="go" href="{esc(href)}">{esc(label)}</a></p>
         </div>
       </li>'''
 
