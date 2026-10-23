@@ -20,6 +20,15 @@ body { margin: 0; }
 .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
 .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
 /* /vd-qr */
+.bench { position: relative; }
+/* the Set up card on the picture: it fades away while the run plays and comes back on pause or when the run ends */
+.setup-card { position: absolute; z-index: 3; left: 12px; top: 56px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card .slider-head label, .setup-card .slider-head output { font-size: 0.78rem; }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+@media (max-width: 820px) { .setup-card { position: static; width: auto; box-shadow: none; } }
 </style>
 <title>Electrostatics at Work</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -157,6 +166,12 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
+    <div class="setup-card" id="setupCard" data-for="vdg" role="group" aria-labelledby="setupTitle">
+      <span class="setup-title" id="setupTitle">Set up the generator</span>
+      <div><div class="slider-head"><label for="sR">Dome radius R</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="5" max="50" step="1"></div>
+      <div><div class="slider-head"><label for="sI">Belt current I (charge carried up per second)</label><output id="oI" for="sI"></output></div><input type="range" id="sI" min="0.5" max="50" step="0.5"></div>
+    </div>
+
     <aside class="rail">
       <section>
         <h2>Machine</h2>
@@ -170,8 +185,6 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 
       <section data-for="vdg">
         <h2>Generator</h2>
-        <div><div class="slider-head"><label for="sR">Dome radius R</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="5" max="50" step="1"></div>
-        <div><div class="slider-head"><label for="sI">Belt current I (charge carried up per second)</label><output id="oI" for="sI"></output></div><input type="range" id="sI" min="0.5" max="50" step="0.5"></div>
         <div class="btnrow"><button type="button" class="btn primary" id="motor">Start motor</button><button type="button" class="btn" id="ground">Touch with the grounded wand</button></div>
       </section>
 
@@ -310,7 +323,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   // ---------- controls ----------
   function sync() {
     $('sR').value = S.R; $('oR').textContent = `${S.R} cm`; $('sI').value = S.I; $('oI').textContent = `${S.I.toFixed(1)} µA`;
-    $('motor').textContent = S.motor ? 'Stop motor' : 'Start motor';
+    $('motor').textContent = S.motor ? 'Stop motor' : 'Start motor'; $('setupCard').classList.toggle('away', S.motor); $('setupCard').inert = S.motor;
     $('sQ').value = S.q; $('oQ').textContent = S.blind ? 'hidden' : `${S.q.toFixed(2)} pC`;
     $('sPV').value = S.PV; $('oPV').textContent = `${S.PV} V`; $('sD').value = S.d; $('oD').textContent = `${S.d} µm`; $('sV').value = S.v; $('oV').textContent = `${S.v} m/s`;
     const dp = 10 ** S.lgDp; $('sDp').value = S.lgDp; $('oDp').textContent = `${+dp.toPrecision(2)} µm`;
