@@ -324,7 +324,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
           <button type="button" class="btn" id="clearD">Clear</button>
         </div>
         <div class="twrap"><table class="rows" id="tblD"><thead></thead><tbody></tbody></table></div>
-        <p class="hint" id="tblDHint">Capture stores every meter reading as the meters show it (3 significant figures) with the part values and switch positions. The table shows four meters; the CSV has all. DC keeps its own table.</p>
+        <details class="more"><summary>More about this</summary><p class="hint" id="tblDHint">Capture stores every meter reading as the meters show it (3 significant figures) with the part values and switch positions. The table shows four meters; the CSV has all. DC keeps its own table.</p></details>
         <p class="hint" aria-live="polite" id="statD"></p>
       </section>
 
@@ -357,7 +357,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       <section data-for="time">
         <h2>Time cursor</h2>
         <dl class="readout" id="curRead"></dl>
-        <p class="hint" id="curHint">Click or drag on the scope to place the cursor, or focus the scope and use the arrow keys. It reads each channel at that instant, exactly: between stored samples the circuit equations are solved to the cursor time.</p>
+        <details class="more"><summary>More about this</summary><p class="hint" id="curHint">Click or drag on the scope to place the cursor, or focus the scope and use the arrow keys. It reads each channel at that instant, exactly: between stored samples the circuit equations are solved to the cursor time.</p></details>
       </section>
 
       <section data-for="time">
@@ -368,7 +368,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
           <button type="button" class="btn" id="clearT">Clear</button>
         </div>
         <div class="twrap"><table class="rows" id="tblT"><thead></thead><tbody></tbody></table></div>
-        <p class="hint" id="tblTHint">Capture stores the Time cursor reading as shown (no cursor: one is put at the present time). The table shows t and three channels; the CSV adds the energies and part values. In time keeps its own table.</p>
+        <details class="more"><summary>More about this</summary><p class="hint" id="tblTHint">Capture stores the Time cursor reading as shown (no cursor: one is put at the present time). The table shows t and three channels; the CSV adds the energies and part values. In time keeps its own table.</p></details>
         <p class="hint" aria-live="polite" id="statT"></p>
       </section>
 
@@ -410,14 +410,14 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         </div>
         <p class="hint" aria-live="polite" id="statTab" hidden></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>f (Hz)</th><th>I<sub>rms</sub> (mA)</th><th>φ (°)</th><th>P (W)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint" id="tblHint">Capture stores the readings at the current frequency, rounded as the panel above shows them. The table shows four; the CSV also has V<sub>0</sub>, |Z|, the part values and the rms voltage across each part. Rows can be edited or deleted.</p>
+        <details class="more"><summary>More about this</summary><p class="hint" id="tblHint">Capture stores the readings at the current frequency, rounded as the panel above shows them. The table shows four; the CSV also has V<sub>0</sub>, |Z|, the part values and the rms voltage across each part. Rows can be edited or deleted.</p></details>
       </section>
 
       <section data-for="time ac">
         <h2>Oscilloscope</h2>
         <ul class="chlist" id="chList"></ul>
         <label class="check" id="chainLab"><input type="checkbox" id="chain">Add the voltage phasors tip to tail</label>
-        <p class="hint" id="scopeHint">Select a part and press Scope V or Scope I to add a channel. Voltages use the left scale, currents the right.</p>
+        <details class="more"><summary>More about this</summary><p class="hint" id="scopeHint">Select a part and press Scope V or Scope I to add a channel. Voltages use the left scale, currents the right.</p></details>
         <button type="button" class="btn" id="csv">Export scope CSV</button>
         <p class="hint" id="csvHint"></p>
       </section>

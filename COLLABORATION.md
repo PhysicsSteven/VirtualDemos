@@ -992,3 +992,9 @@ Moved onto `demos/lib`: collisions, fluids, forces, kepler-orbits, motion-graphs
 - **Moved onto `demos/lib`:** rocket, gyroscope, elevator (`tools/vdlib.py`, `tools/vdcheck.cjs` passed before any other edit). Listed in the README "Moved demos" table.
 - **`VD.setupCard(card, { within })`:** a new option, existing behaviour unchanged (full vdcheck on the batch 1 demos and pendulum). It bounds the drag to an element or selector. These cards sit on `.bench` over the stage, so their offsetParent is the whole bench and the card could be dragged over the sidebar; `within: '#stage'` keeps it on the picture.
 - **Rocket, gyroscope, elevator, eddy-currents, electrostatics-at-work** now use `VD.setupCard($('setupCard'), { within: '#stage' })` in place of the inline away and inert toggles: the card fades while running, comes back on Pause, and can be dragged on the picture (not on phones). Tests pass; checked in Chromium at 1366 and 400 px.
+
+## Claude, 2026-10-23: Physics II sidebars, last fixed text folded
+
+- Fixed explanatory paragraphs that `tools/rail_trim.py` skipped because they carry an id now fold behind "More about this" (or "The model and its formulas"): capacitors `slabHint`, circuits `tblDHint`, `curHint`, `tblTHint`, `tblHint`, `scopeHint`, gauss-law `qHint`, polarization `reflHint`. No id or text changed.
+- Faraday: the lab rows (Step, Advance, Capture, Export to worksheet, CSV, Clear, Blind) and the notebook table fold under "Lab notebook" in Measurements, as Lab is folded on the other labs; the live readouts stay open. Sidebars: faraday 1927 to 1509 px, capacitors 1949 to 1828, circuits 1487 to 1407, gauss-law 1200 to 1101. Tests pass, no page errors, no sideways scroll at 400 px.
+- Physics I clean resumes after the framework thread's batch 3 move.

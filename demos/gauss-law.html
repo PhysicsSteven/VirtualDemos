@@ -253,7 +253,7 @@ table.rows .empty td { color: var(--muted); font-family: var(--font-ui); white-s
           <label class="num" for="qY">y<input type="number" id="qY" step="0.01" inputmode="decimal" aria-label="Selected charge y in cm"><span>cm</span></label>
         </div>
         <ul class="qlist" id="qList" aria-label="Charges, whether each is inside, and the flux each one sends through the surface"></ul>
-        <p class="hint" id="qHint">Type an exact position for the selected charge to 0.01 cm; dragging snaps to 0.1 cm. Each charge's own flux comes from the same numerical surface integral.<span id="qPred"> A charge inside gives q/ε₀ (1 nC gives 112.9 N·m²/C); a charge outside gives 0.</span></p>
+        <details class="more"><summary>More about this</summary><p class="hint" id="qHint">Type an exact position for the selected charge to 0.01 cm; dragging snaps to 0.1 cm. Each charge's own flux comes from the same numerical surface integral.<span id="qPred"> A charge inside gives q/ε₀ (1 nC gives 112.9 N·m²/C); a charge outside gives 0.</span></p></details>
       </section>
 
       <section data-mode="flux">
