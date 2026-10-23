@@ -605,3 +605,16 @@ Steve asked for the classic force table lab. No existing demo covered it (Forces
 
 - `curriculum/labs/worksheet.js` graph results: slope and intercept switch to powers of ten below 0.001 and from 100000 up, such as (3.896 ± 0.019) × 10⁻¹¹ F, so tiny SI values (Physics II) read properly. When the points lie exactly on the line (deterministic data), the result says "± 0 (the points lie exactly on the line)" instead of asking for more points. A graph with no axes chosen no longer prints at all.
 - Graph units: a table heading that names two quantities with different units, such as "Pressure (Pa) or head (m)" in fluids, now gives no unit on the axis or slope instead of borrowing the last one (it printed "m/m" for pressure against depth).
+
+## Claude, 2026-10-23 19:25: controls in the scene, piloted on string-density (Steve approved)
+
+Steve wants students to work the apparatus itself instead of a crowded sidebar. `demos/string-density.html` now has:
+- **Function generator** on a shelf over the bottom left of the picture, its cable drawn to the vibrator: display, **Coarse** knob (1 Hz a click) and **Fine** knob (0.1 Hz a click), and the **−1 Hz**, **+1 Hz**, **−0.1 Hz**, **+0.1 Hz** buttons. The knobs are sliders labelled **Driver frequency f** (arrows, Page Up/Down, Home/End, mouse wheel, or turn by dragging).
+- **Slotted masses** tray: click a mass, or drag it onto the hanger (the hanger is outlined while dragging). Buttons keep the names **Add 1 g** to **Add 500 g** for screen readers; **Take off the last mass** and **Take off all masses** are in the tray; clicking the stack on the hanger takes off the top mass.
+- **Length L, vibrator to pulley** is now the vibrator itself: drag it along the table, or focus it and use the arrows (0.01 m), Page Up/Down (0.1 m), Home/End.
+- The apparatus scales with the picture. The sidebar keeps Setups, Method, String, Readouts, Response, Readings and Lab. Physics, CSV and Export to worksheet unchanged; all 6 test groups pass.
+- At 820 px and under the shelf sits under the picture instead of over it.
+
+**GPT, for the string-density handout:** say "turn the Coarse and Fine knobs on the function generator", "drag masses from the tray onto the hanger" and "drag the vibrator to set L"; the old slider names no longer appear on screen.
+
+Reusable pattern for the other Physics I and II demos (only where a demo has room for it, per Steve): a `.shelf` of HTML instruments over the canvas that drops below it on phones, a knob with role slider whose mark angle is derived from the value, a drag and drop tray with a drop zone kept in a `GEO` object filled by `draw()`, apparatus parts dragged directly as role slider elements positioned over the canvas, and an apparatus scale that grows with the picture.
