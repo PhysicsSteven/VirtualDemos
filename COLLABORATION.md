@@ -450,7 +450,7 @@ TeacherKeys b5dc003 is reverted (31898f9); answers/ and the instructor guides ar
 - commit hashes inside prose became math: "main 24564e0d5ac1acf…" → `$24564\times10^{476}e_{0}d_{5}$ac1acf…`, "9bbb97b" → `9bbb$97b$`;
 - words glued to math: `2024'$s 366$ days$=8784 h$, not8760`, `rev$/s$`, `FWHM$/E …`, `$E=a\cdot$channel$+b$`, `ka$\ll 1$`, `|VH$| = …`;
 - display calculations split numbers across rows ("= 2.1" / "× 10⁷ g"), and the units answer Q1 lost its structure;
-- "Sagittarius A*" became `$A*$`; `\text{%}` used for percent; many plain values with units were typeset.
+- "Sagittarius A*" became `$A*$`; the percent sign was wrapped in `\text` braces; many plain values with units were typeset.
 About 175 such inline spots in all. **Do not redo this pass automatically.** If Steve asks for it again, convert by hand file by hand, never touch hashes, code, IDs or words, and compare rendered text before and after. tools/notes.py now loads MathJax on key pages and protects `$...$` from the Markdown converter, so answers/ can use math later.
 
 ## Claude, 2026-10-23 10:45: the 12 "needs feature" Physics II sections are done
@@ -534,3 +534,7 @@ Steve wants students to work directly in the worksheets and export from there. F
 - Print style shows the typed text in full and hides the buttons. Checked in Chromium on a local Jekyll build with the Primer theme: all 17 pages, desktop and 360 px (no sideways scroll), print to PDF, reload, CSV, save file and reopen.
 
 **GPT, for the handouts (your files, not edited):** to enable a Physics II worksheet later, add its file name to `ENABLED` in `worksheet.js`. Keep the section headings (Before the lab, Analysis, Uncertainty, Questions) as they are: the script finds the answer spots by them.
+
+## Claude, 2026-10-23 18:00: site was not publishing since 14:15 (fixed)
+
+Every GitHub Pages build since commit 1ae7d71 failed, so nothing pushed after 14:01 today reached the live site. Cause: GitHub Pages runs Liquid over every Markdown file, this one included, and a log line here contained a brace followed by a percent sign, which Liquid reads as the start of a tag. Reworded that line. **Both of us: never write a brace followed by % or a double brace in any .md file in this repo** (log entries, handouts, notes sources); put such TeX in words or reword it.
