@@ -102,6 +102,18 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
 .spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; min-width: 64px; }
 .spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.viewbar .seg { background: var(--canvas); }
+.stage canvas.gl { touch-action: none; cursor: grab; }
+.ft3dnote { position: absolute; top: 52px; left: 10px; z-index: 2; pointer-events: none; display: flex; flex-direction: column; gap: 2px; font-size: 0.85rem; font-weight: 700; color: var(--ink); text-shadow: 0 0 4px var(--canvas), 0 0 2px var(--canvas); }
+.ft3dnote small { font-size: 0.72rem; font-weight: 400; color: var(--muted); }
+.ft3dnote.ok { color: var(--rcol); }
+.ft3dlabels { position: absolute; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
+.ft3dlabels span { position: absolute; transform: translate(-50%, -50%); font-size: 0.8rem; font-weight: 700; padding: 1px 6px; border-radius: 5px; background: color-mix(in srgb, var(--canvas) 85%, transparent); color: var(--sc); border: 1.5px solid transparent; white-space: nowrap; }
+.ft3dlabels span.sel { border-color: var(--sc); }
+.ftmass { position: absolute; right: 10px; bottom: 10px; z-index: 2; max-width: calc(100% - 20px); display: flex; flex-wrap: wrap; align-items: center; justify-content: flex-end; gap: 6px 8px; padding: 6px 8px; background: color-mix(in srgb, var(--canvas) 88%, transparent); border: 1px solid var(--line); border-left: 4px solid var(--sc, var(--accent)); border-radius: 8px; }
+.ftmass-lab { font-size: 0.85rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ftmass-btns { display: flex; gap: 4px; }
+.ftmass .spin { min-width: 0; padding: 4px 8px; }
 .blindtag { position: absolute; left: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
 .rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
 .rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
@@ -181,10 +193,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   <main class="bench">
     <div class="stage" id="stage">
-      <canvas id="can" tabindex="0" role="application" aria-label="A grid with vectors drawn from the origin. Drag a vector's tip to change it. Keys: 1 or 2 picks vector A or B, the arrow keys move its tip by one grid step (with Shift by a tenth). In River crossing, space starts or stops the boat. On the force table, 1 to 4 picks a string, the left and right arrow keys turn its pulley by one degree (with Shift by ten) and the up and down arrow keys change its mass by one gram (with Shift by ten)."></canvas>
+      <canvas id="can" tabindex="0" role="application" aria-label="A grid with vectors drawn from the origin. Drag a vector's tip to change it. Keys: 1 or 2 picks vector A or B, the arrow keys move its tip by one grid step (with Shift by a tenth). In River crossing, space starts or stops the boat. On the force table, 1 to 4 picks a string, the left and right arrow keys turn its pulley by one degree (with Shift by ten) and the up and down arrow keys change its mass by one gram (with Shift by ten), and P pulls or replaces the center pin."></canvas>
       <div class="viewbar" id="riverBar" hidden>
         <button type="button" class="spin attn" id="go">Launch boat</button>
         <button type="button" class="spin" id="again">Back to the bank</button>
+      </div>
+      <div class="viewbar" id="tableBar" hidden>
+        <div class="seg" role="group" aria-label="View of the table" id="ftViewSeg">
+          <button type="button" data-v="top" aria-pressed="true">Top view</button>
+          <button type="button" data-v="3d" aria-pressed="false">3D</button>
+        </div>
+        <button type="button" class="spin" id="ftPin" aria-pressed="false" title="Take the center pin out and see where the ring comes to rest (key P)">Pull the pin</button>
+      </div>
+      <div class="ft3dnote" id="ft3dNote" hidden></div>
+      <div class="ft3dlabels" id="ft3dLabels" hidden></div>
+      <div class="ftmass" id="ftMassBar" hidden role="group" aria-label="Masses on the chosen string">
+        <span class="ftmass-lab" id="ftMassLab"></span>
+        <span class="ftmass-btns">
+          <button type="button" class="spin" data-dg="-10" aria-label="Take 10 g off the chosen string">−10 g</button>
+          <button type="button" class="spin" data-dg="-1" aria-label="Take 1 g off the chosen string">−1 g</button>
+          <button type="button" class="spin" data-dg="1" aria-label="Add 1 g to the chosen string">+1 g</button>
+          <button type="button" class="spin" data-dg="10" aria-label="Add 10 g to the chosen string">+10 g</button>
+        </span>
       </div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
@@ -276,7 +306,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </div>
         <p class="capstatus" id="capStatus" role="status"></p>
         <div class="scroll"><table class="fttbl" id="rowsTbl"><thead><tr><th>#</th><th>Strings, mass and angle</th><th>Ring</th><th></th></tr></thead><tbody></tbody></table></div>
-        <details class="more"><summary>More about this</summary><p class="hint">Each string pulls the ring with its tension, which for a hanging mass at rest is its weight, F = mg with g = 9.81 m/s². Angles are counterclockwise from the 0° mark. The strings are massless, the ring is light and slides freely on the table, and every string is taken to point at the pin, ignoring the ring's few millimetres of play. Pulley friction lets each string's tension differ from its hanging weight by up to the amount set (given as the weight of that many grams; a chosen value, not a measured one), so the ring centers over a small range of masses and angles, as on a real table. At 0 the pulleys are ideal and the ring centers only when the weights cancel exactly.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Each string pulls the ring with its tension, which for a hanging mass at rest is its weight, F = mg with g = 9.81 m/s². Angles are counterclockwise from the 0° mark. The strings are massless, the ring is light and slides freely on the table, and every string is taken to point at the pin, ignoring the ring's few millimetres of play. The model table's sizes are chosen: strings leave the table 20 cm from the center, the ring is 4 cm across (to the middle of its 3 mm wire) and the pin is 8 mm across, so an unbalanced ring rests against the pin with its center 14.5 mm toward the net pull. With the pin pulled, the ring is pulled toward the pulleys with the hanging weights and can rest only where those pulls add to zero, the weighted geometric median of the pulleys (the point that minimizes the sum of each weight times its distance, which is where the hangers hang lowest). It is shown sliding slowly along the net pull and stopping at the first place the pulley friction can hold it; when one string outweighs the rest the ring runs toward the rim and is stopped there, as a real ring would be when a hanger reaches the floor. The 3D view is drawn to the same scale on a table 36 cm across; each hanger drops by as much as the ring moves toward its pulley. A hanger is drawn as 50 g with brass slotted masses (thickness from their mass and the density of brass, 8500 kg/m³) making up the rest; the split is a picture, only the total matters. Pulley friction lets each string's tension differ from its hanging weight by up to the amount set (given as the weight of that many grams; a chosen value, not a measured one), so the ring centers over a small range of masses and angles, as on a real table. At 0 the pulleys are ideal and the ring centers only when the weights cancel exactly.</p></details>
       </section>
 
       <section>
@@ -328,14 +358,40 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const G_FT = 9.81;
   const ftForces = (strings, g) => strings.map((q) => fromPolar(q.m * (g || G_FT), q.deg));
   function ftHolds(strings, fN, g) {
-    const F = ftForces(strings, g), S = F.reduce(add, [0, 0]);
+    return ftHeld(ftForces(strings, g).reduce(add, [0, 0]), strings.map((q) => fromPolar(1, q.deg)), fN);
+  }
+  // S: the sum of the weights along the strings; dirs: unit vectors along the strings
+  function ftHeld(S, dirs, fN) {
     if (!(fN > 0)) return mag(S) <= 1e-9;
-    const dirs = strings.map((q) => fromPolar(1, q.deg));
     for (const u of dirs) for (const n of [[-u[1], u[0]], u]) {
       const cap = fN * dirs.reduce((t, v) => t + Math.abs(dot(v, n)), 0);
       if (Math.abs(dot(S, n)) > cap + 1e-12) return false;
     }
     return true;
+  }
+  // The model table (chosen sizes, in m): strings leave the table at radius R, where they meet the tops of the pulleys; a ring of
+  // radius ring (to the middle of its wire, wire thick) sits around a pin of radius pin. With the pin in, an unbalanced ring rests
+  // against the pin, its center moved by the play, ring − wire/2 − pin, toward the net pull.
+  const FT_GEOM = { R: 0.20, ring: 0.020, wire: 0.003, pin: 0.004 };
+  const ftPlay = (geo) => { const q = geo || FT_GEOM; return q.ring - q.wire / 2 - q.pin; };
+  // Pin out: the light ring is pulled by tensions W_i = m_i g toward the pulley points p_i, so it can rest only where
+  // Σ W_i (p_i − x)/|p_i − x| = 0, the minimum of U(x) = Σ W_i |x − p_i| (the hangers' potential energy, up to a constant: each
+  // hanger drops by as much as the ring moves toward its pulley). That is the weighted geometric median of the pulleys (Varignon's
+  // frame). The ring is taken to slide slowly down U along the net pull, with no overshoot, and to stop at the first place where
+  // tensions within W_i ± fN can hold it. If one string outweighs the rest it is pulled toward that pulley; the slide is stopped at
+  // 0.8 R and reported as reaching the rim.
+  function ftRest(strings, fN, g, geo) {
+    const gg = g || G_FT, R = (geo || FT_GEOM).R, W = strings.map((q) => q.m * gg), P = strings.map((q) => fromPolar(R, q.deg)), lim = 0.8 * R;
+    const pull = (x) => { const dirs = P.map((p) => { const d = sub(p, x), L = mag(d); return L > 1e-12 ? scale(1 / L, d) : [0, 0]; }); return { dirs, F: dirs.map((u, i) => scale(W[i], u)) }; };
+    let x = [0, 0], ds = R * 2e-4, prev = null;
+    for (let k = 0; k < 40000; k++) {
+      const { dirs, F } = pull(x), S = F.reduce(add, [0, 0]), n = mag(S);
+      if (ftHeld(S, dirs, fN) || ds < R * 1e-10 || n < 1e-12) return { x, F, S, held: true, rim: false, steps: k };
+      if (prev && dot(prev, S) < 0) ds /= 2;   // stepped past the minimum along the path: halve the step
+      prev = S; x = add(x, scale(ds / n, S));
+      if (mag(x) >= lim) { x = scale(lim / mag(x), x); const q = pull(x); return { x, F: q.F, S: q.F.reduce(add, [0, 0]), held: false, rim: true, steps: k }; }
+    }
+    const q = pull(x); return { x, F: q.F, S: q.F.reduce(add, [0, 0]), held: false, rim: false, steps: -1 };
   }
   function forceTable(strings, fN, g) {
     const gg = g || G_FT, F = ftForces(strings, gg), S = F.reduce(add, [0, 0]);
@@ -353,7 +409,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     add: { A: [5, 1], B: [-2, 4], hint: 'Put B\'s tail on A\'s head: A + B runs from A\'s tail to B\'s head. Components add separately, R_x = A_x + B_x and R_y = A_y + B_y; magnitudes do not, unless the vectors point the same way.' },
     sub: { A: [5, 2], B: [2, 4], hint: 'A − B = A + (−B): flip B and add it. Drawn from the same tail, A − B is the arrow from B\'s head to A\'s head. This is how a change in velocity, Δv = v₂ − v₁, is found.' },
     prod: { A: [5, 1], B: [2, 4], hint: 'A · B = |A||B| cos φ = A_x B_x + A_y B_y, a number: how much of A lies along B, times |B|. A × B points out of the page here with size |A||B| sin φ, the area of the parallelogram. Swap the order and the cross product flips.' },
-    table: { hint: 'The ring sits around a pin at the center. Each string runs over a pulley at the rim to a hanging mass, so it pulls the ring outward with a force mg along its angle. The ring is centered when the forces add to zero. Find the mass and angle for the last string that centers the ring: that force is the equilibrant of the others, equal in size and opposite in direction to their resultant. Drag a pulley around the rim to move it.' },
+    table: { hint: 'The ring sits around a pin at the center. Each string runs over a pulley at the rim to a hanging mass, so it pulls the ring outward with a force mg along its angle. The ring is centered when the forces add to zero. Find the mass and angle for the last string that centers the ring: that force is the equilibrant of the others, equal in size and opposite in direction to their resultant. Drag a pulley around the rim to move it, in the top view or in 3D. Pull the pin to see where the ring goes when nothing holds it.' },
     river: { hint: 'The boat aims across, but the water carries it downstream. Its velocity relative to the shore is the vector sum. Aim upstream to land straight across; the crossing then takes longer.' }
   };
   const S = { preset: 'comp', A: [4, 3], B: null, h2t: true, snap: true, comp: true, sel: 'A', blind: false,
@@ -388,9 +444,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const ux = (px) => (px - view.cx) / view.s, uy = (py) => (view.cy - py) / view.s;
 
   // ---------- drawing helpers ----------
-  function arrow(x0, y0, x1, y1, col, lw, dashed) {
-    const p = ps(), L = Math.hypot(x1 - x0, y1 - y0); if (L < 1) return;
-    const hl = Math.min(13 * p, L * 0.45), ang = Math.atan2(y1 - y0, x1 - x0), bx = x1 - Math.cos(ang) * hl * 0.8, by = y1 - Math.sin(ang) * hl * 0.8;
+  const arrow = (x0, y0, x1, y1, col, lw, dashed) => arrowOn(ctx, x0, y0, x1, y1, col, lw, dashed, 13 * ps());
+  function arrowOn(ctx, x0, y0, x1, y1, col, lw, dashed, head) {
+    const p = head / 13, L = Math.hypot(x1 - x0, y1 - y0); if (L < 1) return;
+    const hl = Math.min(head, L * 0.45), ang = Math.atan2(y1 - y0, x1 - x0), bx = x1 - Math.cos(ang) * hl * 0.8, by = y1 - Math.sin(ang) * hl * 0.8;
     ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw; if (dashed) ctx.setLineDash([6 * p, 5 * p]);
     ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(bx, by); ctx.stroke(); ctx.setLineDash([]);
     ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - Math.cos(ang - 0.4) * hl, y1 - Math.sin(ang - 0.4) * hl); ctx.lineTo(x1 - Math.cos(ang + 0.4) * hl, y1 - Math.sin(ang + 0.4) * hl); ctx.closePath(); ctx.fill();
@@ -412,6 +469,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- draw ----------
   function draw() {
+    glDirty = true;
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     view = makeView();
@@ -512,7 +570,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (R.landed && !bl) label(`landed ${f(res.drift, 1)} m ${res.drift >= 0 ? 'downstream' : 'upstream'} after ${f(res.t, 1)} s`, X(res.drift), Y(WIDTH) - 18 * p, T.ink);
   }
   // ---------- force table ----------
-  const FT = { n: 3, s: [{ g: 150, a: 20 }, { g: 200, a: 110 }, { g: 100, a: 230 }, { g: 100, a: 300 }], fric: 1, arrows: true, poly: false, sel: 0, rows: [], series: 1 };
+  const FT = { n: 3, s: [{ g: 150, a: 20 }, { g: 200, a: 110 }, { g: 100, a: 230 }, { g: 100, a: 300 }], fric: 1, arrows: true, poly: false, sel: 0, rows: [], series: 1,
+    pinOut: false, rest: null, ringNow: [0, 0], ringTo: [0, 0], view: 'top' };
   const ftStrings = () => FT.s.slice(0, FT.n).map((q) => ({ m: q.g / 1000, deg: q.a }));
   const ftFricN = () => FT.fric / 1000 * G_FT;
   const ftRes = () => forceTable(ftStrings(), ftFricN());
@@ -529,27 +588,37 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     for (let d = 0; d < 360; d += 30) { const q = P(r - 24 * p, d); ctx.fillText(`${d}°`, q[0], q[1]); }
     ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, r * 0.5, 0, 7); ctx.moveTo(cx - r + 30 * p, cy); ctx.lineTo(cx + r - 30 * p, cy); ctx.moveTo(cx, cy - r + 30 * p); ctx.lineTo(cx, cy + r - 30 * p); ctx.stroke();
-    // the ring: centered, or resting against the pin on the side away from the net pull
-    const rr = Math.max(9 * p, r * 0.07), pin = 3 * p, play = rr - pin - 2 * p, off = res.centered ? [0, 0] : [play * Math.cos(res.netDeg * Math.PI / 180), -play * Math.sin(res.netDeg * Math.PI / 180)];
-    const rc = [cx + off[0], cy + off[1]];
+    // the ring, to scale (FT_GEOM): around the pin, against it when the pull is unbalanced, or where it comes to rest with the pin out
+    const m2p = r / FT_GEOM.R, rr = FT_GEOM.ring * m2p, pin = FT_GEOM.pin * m2p, at = FT.ringNow, rc = [cx + at[0] * m2p, cy - at[1] * m2p];
+    const pulled = FT.pinOut && FT.rest, Fs = pulled ? FT.rest.F : res.F;
     ftStrings().forEach((q, i) => {
-      const u = [Math.cos(q.deg * Math.PI / 180), -Math.sin(q.deg * Math.PI / 180)], pl = P(r + 9 * p, q.deg), c = ftCol(i);
-      ctx.strokeStyle = c; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(rc[0] + u[0] * rr, rc[1] + u[1] * rr); ctx.lineTo(pl[0] - u[0] * 7 * p, pl[1] - u[1] * 7 * p); ctx.stroke();
+      const pl = P(r + 9 * p, q.deg), d = [pl[0] - rc[0], pl[1] - rc[1]], L = Math.hypot(d[0], d[1]) || 1, u = [d[0] / L, d[1] / L], c = ftCol(i), knot = [rc[0] + u[0] * rr, rc[1] + u[1] * rr];
+      ctx.strokeStyle = c; ctx.lineWidth = 1.8 * p; ctx.beginPath(); ctx.moveTo(knot[0], knot[1]); ctx.lineTo(pl[0] - u[0] * 7 * p, pl[1] - u[1] * 7 * p); ctx.stroke();
+      ctx.fillStyle = c; ctx.beginPath(); ctx.arc(knot[0], knot[1], 2.6 * p, 0, 7); ctx.fill();
       ctx.fillStyle = T.canvas; ctx.lineWidth = (FT.sel === i ? 3 : 2) * p; ctx.beginPath(); ctx.arc(pl[0], pl[1], (FT.sel === i ? 9 : 7) * p, 0, 7); ctx.fill(); ctx.stroke();
       const lp = P(r + 32 * p, q.deg); label(`${Math.round(q.m * 1000)} g`, lp[0], lp[1], c, true);
     });
-    ctx.strokeStyle = res.centered ? T.R : T.ink; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.arc(rc[0], rc[1], rr, 0, 7); ctx.stroke();
-    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, pin, 0, 7); ctx.fill();
-    // forces to scale from the center, the tip to tail sum, the net force and the equilibrant of all but the last string
-    const k = r / ARROW_N, A = (v) => [cx + k * v[0], cy - k * v[1]];
-    if (FT.arrows) res.F.forEach((F, i) => { const e = A(F); arrow(cx, cy, e[0], e[1], ftCol(i), 2.4 * p); });
-    if (!bl && FT.poly) { let t = [0, 0]; res.F.forEach((F, i) => { const a = A(t), b = A(add(t, F)); ctx.globalAlpha = 0.6; arrow(a[0], a[1], b[0], b[1], ftCol(i), 2 * p, true); ctx.globalAlpha = 1; t = add(t, F); }); }
-    if (!bl && FT.n > 1) { const e = A(res.E); ctx.globalAlpha = 0.8; arrow(cx, cy, e[0], e[1], T.equi, 3 * p, true); ctx.globalAlpha = 1; label(FT.n === 2 ? 'equilibrant of string 1' : `equilibrant of strings 1 to ${FT.n - 1}`, e[0], e[1] + (res.E[1] >= 0 ? -16 : 16) * p, T.equi); }
-    if (!bl && res.net * k > 8 * p) { const e = A(res.S); arrow(cx, cy, e[0], e[1], T.R, 3.2 * p); label('net ΣF', e[0], e[1] + (res.S[1] >= 0 ? -16 : 16) * p, T.R); }
-    // status and scale, top left
+    ctx.strokeStyle = res.centered ? T.R : T.ink; ctx.lineWidth = Math.max(2.5 * p, FT_GEOM.wire * m2p); ctx.beginPath(); ctx.arc(rc[0], rc[1], rr, 0, 7); ctx.stroke();
+    if (!FT.pinOut) { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, pin, 0, 7); ctx.fill(); ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(cx - pin * 0.3, cy - pin * 0.3, pin * 0.35, 0, 7); ctx.fill(); }
+    else { ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.arc(cx, cy, pin, 0, 7); ctx.stroke(); ctx.setLineDash([]); }
+    // forces to scale: each string's from the knot where it pulls; the tip to tail sum, the net force and the equilibrant of all but
+    // the last string from the ring's center
+    const k = r / ARROW_N, o = rc, A = (v) => [o[0] + k * v[0], o[1] - k * v[1]];
+    if (FT.arrows) Fs.forEach((F, i) => { const n = mag(F), t = n ? [o[0] + rr * F[0] / n, o[1] - rr * F[1] / n] : o; arrow(t[0], t[1], t[0] + k * F[0], t[1] - k * F[1], ftCol(i), 2.6 * p); });
+    if (!bl && FT.poly) { let t = [0, 0]; Fs.forEach((F, i) => { const a = A(t), b = A(add(t, F)); ctx.globalAlpha = 0.6; arrow(a[0], a[1], b[0], b[1], ftCol(i), 2 * p, true); ctx.globalAlpha = 1; t = add(t, F); }); }
+    if (!bl && !pulled && FT.n > 1) { const e = A(res.E); ctx.globalAlpha = 0.8; arrow(o[0], o[1], e[0], e[1], T.equi, 3 * p, true); ctx.globalAlpha = 1; label(FT.n === 2 ? 'equilibrant of string 1' : `equilibrant of strings 1 to ${FT.n - 1}`, e[0], e[1] + (res.E[1] >= 0 ? -16 : 16) * p, T.equi); }
+    const net = pulled ? FT.rest.S : res.S;
+    if (!bl && mag(net) * k > 8 * p) { const e = A(net); arrow(o[0], o[1], e[0], e[1], T.R, 3.2 * p); label('net ΣF', e[0], e[1] + (net[1] >= 0 ? -16 : 16) * p, T.R); }
+    // status and scale, top left, under the view buttons
+    const ty = 52 * p;
     ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = res.centered ? T.R : T.ink;
-    ctx.fillText(res.centered ? 'Ring centered' : 'Ring off center', 10 * p, 10 * p);
-    ctx.font = `${10.5 * p}px ${T.ui}`; ctx.fillStyle = T.muted; if (FT.arrows || !bl) ctx.fillText(`Arrows: the table's radius is ${ARROW_N} N`, 10 * p, 28 * p);
+    ctx.fillText(ftStatus(res), 10 * p, ty);
+    ctx.font = `${10.5 * p}px ${T.ui}`; ctx.fillStyle = T.muted; if (FT.arrows || !bl) ctx.fillText(`Arrows: the table's radius is ${ARROW_N} N`, 10 * p, ty + 18 * p);
+  }
+  function ftStatus(res) {
+    if (!FT.pinOut) return res.centered ? 'Ring centered' : 'Ring off center, against the pin';
+    if (res.centered) return 'Pin out: the ring stays centered';
+    return FT.rest && FT.rest.rim ? 'Pin out: the ring runs toward the rim' : 'Pin out: the ring slides off center';
   }
   function boatPos() { const R = S.river; return riverPos(R.u, R.vb, R.th, WIDTH, R.profile, R.t); }
 
@@ -598,7 +667,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const k of [2, 3, 4]) $('ftN' + k).setAttribute('aria-pressed', String(k === n));
     $('ftSolve').disabled = bl || n < 2; $('ftSolve').textContent = n < 2 ? 'Set the last string to the equilibrant' : `Set string ${n} to the equilibrant`;
     const ring = res.centered ? 'Centered: the strings balance within the pulley friction.' : (bl ? 'Off center.' : `Off center: the net pull is toward the ${f(res.netDeg, 0)}° mark.`);
-    let h = `<dl class="readout"><div class="wide"><dt>Ring</dt><dd class="ok">${ring}</dd></div></dl>`;
+    let h = `<dl class="readout"><div class="wide"><dt>Ring</dt><dd class="ok">${ring}</dd></div>`;
+    if (FT.pinOut && FT.rest) {
+      const x = FT.rest.x, d = mag(x) * 100;
+      const where = res.centered ? 'It stays at the center.' : FT.rest.rim ? `It runs toward the rim${bl ? '' : `, toward the ${f(angleDeg(x), 0)}° mark`}, until a hanger reaches the floor.` : bl ? 'It comes to rest off center.' : `It comes to rest ${f(d, 1)} cm from the center, toward the ${f(angleDeg(x), 0)}° mark.`;
+      h += `<div class="wide"><dt>Pin out</dt><dd class="ok">${where}</dd></div>`;
+    }
+    h += '</dl>';
     if (bl) { $('ftOut').innerHTML = h + '<dl class="readout"><div class="wide"><dt>Forces, components, net force, equilibrant</dt><dd class="ok">hidden in Blind</dd></div></dl>'; return; }
     h += '<div class="scroll"><table class="fttbl"><thead><tr><th></th><th>F = mg (N)</th><th>F_x (N)</th><th>F_y (N)</th></tr></thead><tbody>';
     res.F.forEach((F, i) => { h += `<tr><td>String ${i + 1}</td><td>${f(mag(F), 3)}</td><td>${f(F[0], 3)}</td><td>${f(F[1], 3)}</td></tr>`; });
@@ -608,7 +683,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     h += `<div class="wide"><dt>Equilibrant of ${who}: −(the sum of their forces)</dt><dd>${f(res.Emag, 3)} N at ${f(res.Edeg, 1)}°, the weight of ${f(res.Em, 3)} kg</dd></div></dl>`;
     $('ftOut').innerHTML = h;
   }
-  function ftSet() { draw(); readouts(); }
+  // where the ring goes: centered, against the pin toward the net pull, or (pin out) where it comes to rest
+  function ftTarget() {
+    const res = ftRes();
+    FT.rest = FT.pinOut ? ftRest(ftStrings(), ftFricN()) : null;
+    if (FT.pinOut) return FT.rest.x;
+    return res.centered || !(res.net > 0) ? [0, 0] : scale(ftPlay() / res.net, res.S);
+  }
+  function ftSet(jump) { FT.ringTo = ftTarget(); if (jump || reduce) FT.ringNow = FT.ringTo.slice(); draw(); readouts(); ftMassBar(); glDirty = true; }
+  function ftMassBar() {
+    const i = FT.sel, q = FT.s[i];
+    $('ftMassBar').style.setProperty('--sc', `var(${['--acol', '--bcol', '--s3col', '--s4col'][i]})`);
+    $('ftMassLab').textContent = `String ${i + 1}: ${f(q.g / 1000, 3)} kg at ${q.a}°`;
+    for (const b of $('ftMassBar').querySelectorAll('[data-dg]')) { const d = +b.dataset.dg; b.disabled = d < 0 ? q.g <= 10 : q.g >= 500; }
+  }
+  $('ftMassBar').addEventListener('click', (e) => { const b = e.target.closest('[data-dg]'); if (!b) return; const q = FT.s[FT.sel]; q.g = Math.max(10, Math.min(500, q.g + +b.dataset.dg)); ftSet(); });
+  function ftSetPin(out) { FT.pinOut = out; $('ftPin').setAttribute('aria-pressed', String(out)); $('ftPin').textContent = out ? 'Put the pin back' : 'Pull the pin'; ftSet(); }
+  $('ftPin').addEventListener('click', () => ftSetPin(!FT.pinOut));
   for (const k of [2, 3, 4]) $('ftN' + k).addEventListener('click', () => { FT.n = k; if (FT.sel >= k) FT.sel = k - 1; ftSet(); });
   for (let i = 0; i < 4; i++) {
     $('ftM' + (i + 1)).addEventListener('input', (e) => { FT.s[i].g = +e.target.value; FT.sel = i; ftSet(); });
@@ -662,13 +753,271 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   $('exportCsv').addEventListener('click', () => { if (!FT.rows.length) { capStatus('No setups to export. Record one first.'); return; } const txt = readingsCSV(); toWorksheet(txt, () => downloadCSV(txt)); });
 
+  // ---------- force table in 3D (three.js r128 from cdnjs, loaded the first time the 3D view opens) ----------
+  /* The same state as the top view, drawn to the scale of FT_GEOM: a table 36 cm across on a stand, pulleys clamped to the rim with
+     their tops level with the ring, strings over them to hangers. Each hanger drops by as much as the ring moves toward its pulley
+     (the string's length is fixed). The hanger and slotted masses are a picture of the total: a 50 g hanger with brass slotted
+     masses (100, 50, 20, 10, 5, 2 and 1 g, thickness from the mass and the density of brass), or below 50 g the hanger alone. */
+  const G3 = { ok: false, tried: false, loading: false };
+  const orb = { th: -1.2, ph: 0.92, zoom: 1 };
+  let glDirty = true;
+  const Z_TOP = 0.40, TOP_R = 0.18, TOP_T = 0.008, PUL_R = 0.014, DROP0 = 0.12, HANG_L = 0.10, BRASS = 8500;   // m; kg/m³
+  const Z_STR = Z_TOP + FT_GEOM.wire / 2;   // the strings run level with the middle of the ring's wire, over the tops of the pulleys
+  const DISCS = [[100, 0.022], [50, 0.022], [20, 0.016], [10, 0.016], [5, 0.011], [2, 0.011], [1, 0.011]];   // g, radius in m
+  function loadThree(cb) {
+    if (window.THREE) { cb(true); return; }
+    const sc = document.createElement('script'); sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js';
+    sc.onload = () => cb(!!window.THREE); sc.onerror = () => cb(false); document.head.appendChild(sc);
+  }
+  function glDark() { const t = document.documentElement.getAttribute('data-theme'); if (t) return t === 'dark'; try { return matchMedia('(prefers-color-scheme: dark)').matches; } catch (_) { return false; } }
+  function init3D() {
+    G3.tried = true;
+    if (!window.THREE) return false;
+    let renderer;
+    try { renderer = new THREE.WebGLRenderer({ antialias: true }); } catch (_) { return false; }
+    if (!renderer || !renderer.getContext()) return false;
+    const el = renderer.domElement; el.className = 'gl'; el.tabIndex = 0; el.hidden = true;
+    el.setAttribute('role', 'application');
+    el.setAttribute('aria-label', 'The force table in 3D. Drag a pulley around the rim to change its angle, click a hanger to choose its string, drag elsewhere to turn the view, scroll or pinch to zoom, double click to reset the view. Keys as on the top view: 1 to 4 picks a string, left and right turn its pulley, up and down change its mass, P pulls or replaces the pin.');
+    stage.insertBefore(el, $('tableBar'));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(35, 1, 0.02, 20); cam.up.set(0, 0, 1);
+    scene.add(new THREE.HemisphereLight(0xffffff, 0x6a6258, 0.75));
+    const spot = new THREE.SpotLight(0xfff6ea, 0.9, 0, 0.7, 0.6, 1); spot.position.set(-0.7, -0.9, 2.0); spot.target.position.set(0, 0, Z_TOP * 0.6);
+    spot.castShadow = true; spot.shadow.mapSize.set(2048, 2048); spot.shadow.bias = -0.0004; spot.shadow.radius = 3; scene.add(spot, spot.target);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.3); fill.position.set(1.2, 0.8, 1); scene.add(fill);
+    const metal = new THREE.MeshStandardMaterial({ color: 0xb4bcc5, metalness: 0.35, roughness: 0.4 });
+    const dark = new THREE.MeshStandardMaterial({ color: 0x3a414b, metalness: 0.3, roughness: 0.55 });
+    const brass = new THREE.MeshStandardMaterial({ color: 0xd9b25a, metalness: 0.55, roughness: 0.35 });
+    const benchMat = new THREE.MeshStandardMaterial({ color: 0xc4b9aa, roughness: 0.85 });
+    const shade = (m) => { m.castShadow = true; m.receiveShadow = true; return m; };
+    // bench and stand: a tripod base, a column and the round top
+    const bench = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), benchMat); bench.receiveShadow = true; scene.add(bench);
+    for (let k = 0; k < 3; k++) {
+      const a = k * 2 * Math.PI / 3 + Math.PI / 6, leg = shade(new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.024, 0.016), dark));
+      leg.position.set(0.075 * Math.cos(a), 0.075 * Math.sin(a), 0.012); leg.rotation.z = a; scene.add(leg);
+      const foot = shade(new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.014, 0.008, 16), dark)); foot.rotation.x = Math.PI / 2; foot.position.set(0.15 * Math.cos(a), 0.15 * Math.sin(a), 0.004); scene.add(foot);
+    }
+    const col = shade(new THREE.Mesh(new THREE.CylinderGeometry(0.0125, 0.0125, Z_TOP - TOP_T - 0.02, 24), metal)); col.rotation.x = Math.PI / 2; col.position.z = (Z_TOP - TOP_T + 0.02) / 2; scene.add(col);
+    const body = shade(new THREE.Mesh(new THREE.CylinderGeometry(TOP_R, TOP_R, TOP_T, 120), metal)); body.rotation.x = Math.PI / 2; body.position.z = Z_TOP - TOP_T / 2; scene.add(body);
+    // the printed degree scale on the top face
+    const face = new THREE.Mesh(new THREE.CircleGeometry(TOP_R, 120), new THREE.MeshStandardMaterial({ map: tableTexture(), metalness: 0.15, roughness: 0.55 }));
+    face.position.z = Z_TOP + 0.0002; face.receiveShadow = true; scene.add(face);
+    // the arrows, drawn on a clear sheet just above the face
+    const OV = 0.42, ovc = document.createElement('canvas'); ovc.width = ovc.height = 1024;
+    const ovt = new THREE.CanvasTexture(ovc); ovt.anisotropy = 4;
+    const over = new THREE.Mesh(new THREE.PlaneGeometry(2 * OV, 2 * OV), new THREE.MeshBasicMaterial({ map: ovt, transparent: true, depthWrite: false }));
+    over.position.z = Z_TOP + 0.0009; over.renderOrder = 2; scene.add(over);
+    // ring and pin
+    const ring = shade(new THREE.Mesh(new THREE.TorusGeometry(FT_GEOM.ring, FT_GEOM.wire / 2, 14, 64), new THREE.MeshStandardMaterial({ color: 0xb8bec6, metalness: 0.85, roughness: 0.25 })));
+    ring.position.z = Z_STR; scene.add(ring);
+    const pin = shade(new THREE.Mesh(new THREE.CylinderGeometry(FT_GEOM.pin, FT_GEOM.pin, 0.04, 20), brass)); pin.rotation.x = Math.PI / 2; scene.add(pin);
+    // pulleys, strings and hangers, one set per string
+    const unitCyl = new THREE.CylinderGeometry(1, 1, 1, 8);
+    const sets = [0, 1, 2, 3].map((i) => {
+      const g = new THREE.Group(), cmat = new THREE.MeshStandardMaterial({ color: 0x888888, roughness: 0.6 });
+      const clamp = shade(new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.014, 0.022), dark)); clamp.position.set(TOP_R + 0.002, 0, Z_TOP - 0.008); g.add(clamp);
+      const arm = shade(new THREE.Mesh(new THREE.BoxGeometry(0.024, 0.003, 0.005), dark)); arm.position.set(FT_GEOM.R - 0.01, 0.0055, Z_STR - PUL_R); g.add(arm);
+      const wheel = shade(new THREE.Mesh(new THREE.CylinderGeometry(PUL_R, PUL_R, 0.006, 32), new THREE.MeshStandardMaterial({ color: 0xd8dde3, metalness: 0.1, roughness: 0.45 })));
+      wheel.position.set(FT_GEOM.R, 0, Z_STR - PUL_R); g.add(wheel);
+      const hub = new THREE.Mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.0072, 12), metal); hub.position.copy(wheel.position); g.add(hub);
+      const hit = new THREE.Mesh(new THREE.SphereGeometry(0.03, 8, 6), new THREE.MeshBasicMaterial({ visible: false })); hit.position.copy(wheel.position); hit.userData = { kind: 'pulley', i }; g.add(hit);
+      scene.add(g);
+      const flat = shade(new THREE.Mesh(unitCyl, cmat)), drop = shade(new THREE.Mesh(unitCyl, cmat)), wrap = new THREE.Mesh(new THREE.TorusGeometry(PUL_R, 0.0008, 6, 16, Math.PI / 2), cmat);
+      scene.add(flat, drop, wrap);
+      const hang = new THREE.Group();
+      const hook = new THREE.Mesh(new THREE.TorusGeometry(0.004, 0.0008, 6, 16, Math.PI * 1.4), metal); hook.rotation.x = Math.PI / 2; hook.position.z = -0.004; hang.add(hook);
+      const rod = shade(new THREE.Mesh(new THREE.CylinderGeometry(0.0018, 0.0018, HANG_L, 10), metal)); rod.rotation.x = Math.PI / 2; rod.position.z = -0.008 - HANG_L / 2; hang.add(rod);
+      const base = shade(new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.003, 32), metal)); base.rotation.x = Math.PI / 2; base.position.z = -0.008 - HANG_L + 0.0015; hang.add(base);
+      const stack = new THREE.Group(); hang.add(stack);
+      const hhit = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, HANG_L + 0.02, 8), new THREE.MeshBasicMaterial({ visible: false })); hhit.rotation.x = Math.PI / 2; hhit.position.z = -HANG_L / 2; hhit.userData = { kind: 'hanger', i }; hang.add(hhit);
+      scene.add(hang);
+      return { g, flat, drop, wrap, hang, stack, cmat, hit, hhit, key: '' };
+    });
+    Object.assign(G3, { ok: true, brass, renderer, el, scene, cam, ring, pin, sets, ovc, ovt, OV, benchMat, ray: new THREE.Raycaster(), ndc: new THREE.Vector2() });
+    glPointer(el); glTheme(); glResize();
+    return true;
+  }
+  function tableTexture() {
+    const N = 2048, c = document.createElement('canvas'); c.width = c.height = N; const g = c.getContext('2d'), m = N / 2, k = m / TOP_R;
+    g.fillStyle = '#eef0f2'; g.fillRect(0, 0, N, N);
+    const P = (rad, deg) => [m + rad * k * Math.cos(deg * Math.PI / 180), m - rad * k * Math.sin(deg * Math.PI / 180)];
+    g.strokeStyle = '#1c2128'; g.fillStyle = '#1c2128'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    const rim = TOP_R - 0.004;
+    for (let d = 0; d < 360; d++) { const L = d % 10 === 0 ? 0.012 : d % 5 === 0 ? 0.008 : 0.005, a = P(rim, d), b = P(rim - L, d); g.lineWidth = d % 10 === 0 ? 4 : 2.2; g.beginPath(); g.moveTo(a[0], a[1]); g.lineTo(b[0], b[1]); g.stroke(); }
+    g.lineWidth = 3; g.beginPath(); g.arc(m, m, rim * k, 0, 7); g.stroke();
+    for (let d = 0; d < 360; d += 10) {
+      const q = P(rim - 0.021, d); g.save(); g.translate(q[0], q[1]); g.rotate(-(d - 90) * Math.PI / 180);
+      g.font = `${d % 30 === 0 ? 700 : 400} ${d % 30 === 0 ? 46 : 34}px ${T.mono}`; g.fillText(String(d), 0, 0); g.restore();
+    }
+    g.strokeStyle = 'rgba(28,33,40,0.25)'; g.lineWidth = 2; g.beginPath(); g.arc(m, m, 0.09 * k, 0, 7); g.moveTo(m - 0.13 * k, m); g.lineTo(m + 0.13 * k, m); g.moveTo(m, m - 0.13 * k); g.lineTo(m, m + 0.13 * k); g.stroke();
+    g.fillStyle = '#30353c'; g.beginPath(); g.arc(m, m, FT_GEOM.pin * k * 1.1, 0, 7); g.fill();   /* the hole for the pin */
+    const t = new THREE.CanvasTexture(c); t.anisotropy = 8; return t;
+  }
+  function glTheme() {
+    if (!G3.ok) return;
+    const dk = glDark();
+    G3.scene.background = new THREE.Color(dk ? '#121820' : '#e4e8ed');
+    G3.scene.fog = new THREE.Fog(dk ? 0x121820 : 0xe4e8ed, 2.2, 6);
+    G3.benchMat.color = new THREE.Color(dk ? '#3a342e' : '#c4b9aa');
+    G3.sets.forEach((q, i) => q.cmat.color = new THREE.Color(ftCol(i)));
+    glDirty = true;
+  }
+  function glResize() {
+    if (!G3.ok || !W) return;
+    G3.renderer.setSize(Math.max(1, Math.round(W)), Math.max(1, Math.round(H)), false);
+    G3.el.style.width = W + 'px'; G3.el.style.height = H + 'px';
+    G3.cam.aspect = W / H; G3.cam.updateProjectionMatrix(); glDirty = true;
+  }
+  // a unit cylinder (axis y, height 1) stretched from a to b
+  const Y1 = () => new THREE.Vector3(0, 1, 0);
+  function segment(mesh, a, b, rad) {
+    const A = new THREE.Vector3(...a), B = new THREE.Vector3(...b), d = B.clone().sub(A), L = d.length();
+    mesh.position.copy(A).add(B).multiplyScalar(0.5); mesh.scale.set(rad, Math.max(L, 1e-6), rad);
+    mesh.quaternion.setFromUnitVectors(Y1(), L > 0 ? d.normalize() : Y1());
+  }
+  function stackDiscs(q, grams) {
+    if (q.key === String(grams)) return; q.key = String(grams);
+    while (q.stack.children.length) { const d = q.stack.children[0]; q.stack.remove(d); d.geometry.dispose(); }
+    let left = grams >= 50 ? grams - 50 : 0, z = -0.008 - HANG_L + 0.003;
+    for (const [gm, r] of DISCS) while (left >= gm) {
+      left -= gm; const t = gm / 1000 / (BRASS * Math.PI * r * r);
+      const d = new THREE.Mesh(new THREE.CylinderGeometry(r, r, t * 0.96, 32), G3.brass);
+      d.rotation.x = Math.PI / 2; d.position.z = z + t / 2; d.castShadow = true; d.receiveShadow = true; q.stack.add(d); z += t;
+    }
+  }
+  function glUpdate() {
+    const res = ftRes(), x = FT.ringNow, R = FT_GEOM.R, pulled = FT.pinOut && FT.rest;
+    G3.ring.position.set(x[0], x[1], Z_STR);
+    G3.ring.material.color = new THREE.Color(res.centered ? T.R : '#b8bec6');
+    if (FT.pinOut) { G3.pin.rotation.set(0, Math.PI / 2, 0.6); G3.pin.position.set(-0.11, -0.13, Z_TOP + FT_GEOM.pin); }
+    else { G3.pin.rotation.set(Math.PI / 2, 0, 0); G3.pin.position.set(0, 0, Z_TOP + 0.02); }
+    const st = ftStrings(), floor = 0.0;
+    G3.sets.forEach((q, i) => {
+      const on = i < FT.n; q.g.visible = q.flat.visible = q.drop.visible = q.wrap.visible = q.hang.visible = on; if (!on) return;
+      const a = st[i].deg * Math.PI / 180, c = Math.cos(a), s = Math.sin(a), top = [R * c, R * s], d = sub(top, x), L = mag(d), u = scale(1 / L, d);
+      q.g.rotation.z = a;
+      const knot = add(x, scale(FT_GEOM.ring, u));
+      segment(q.flat, [knot[0], knot[1], Z_STR], [top[0], top[1], Z_STR], 0.0008);
+      q.wrap.position.set(top[0], top[1], Z_STR - PUL_R); q.wrap.rotation.set(Math.PI / 2, 0, 0); q.wrap.rotateOnWorldAxis(new THREE.Vector3(0, 0, 1), a);
+      let zh = Z_STR - PUL_R - (DROP0 + (R - L));
+      zh = Math.max(zh, floor + HANG_L + 0.011);   // a hanger that reaches the bench stands on it
+      const out = [(R + PUL_R) * c, (R + PUL_R) * s];
+      segment(q.drop, [out[0], out[1], Z_STR - PUL_R], [out[0], out[1], zh], 0.0008);
+      q.hang.position.set(out[0], out[1], zh); q.hang.rotation.z = a;
+      stackDiscs(q, Math.round(st[i].m * 1000));
+    });
+    glOverlay(res, pulled);
+    glLabels();
+    const note = $('ft3dNote'); note.className = 'ft3dnote' + (res.centered ? ' ok' : '');
+    note.innerHTML = `<span>${ftStatus(res)}</span>` + (FT.arrows || !S.blind ? `<small>Arrows: the table's radius is ${ARROW_N} N</small>` : '');
+  }
+  function glOverlay(res, pulled) {
+    const c = G3.ovc, g = c.getContext('2d'), N = c.width, k = N / (2 * G3.OV), bl = S.blind;
+    g.clearRect(0, 0, N, N);
+    const R = FT_GEOM.R, x = FT.ringNow, o = [N / 2 + x[0] * k, N / 2 - x[1] * k], perN = R / ARROW_N * k, A = (v) => [o[0] + perN * v[0], o[1] - perN * v[1]];
+    const Fs = pulled ? FT.rest.F : res.F, head = 22, net = pulled ? FT.rest.S : res.S;
+    const rr = FT_GEOM.ring * k;
+    if (FT.arrows) Fs.forEach((F, i) => { const n = mag(F), t = n ? [o[0] + rr * F[0] / n, o[1] - rr * F[1] / n] : o; arrowOn(g, t[0], t[1], t[0] + perN * F[0], t[1] - perN * F[1], ftCol(i), 5, false, head); });
+    if (!bl && FT.poly) { let t = [0, 0]; Fs.forEach((F, i) => { const a = A(t), b = A(add(t, F)); g.globalAlpha = 0.65; arrowOn(g, a[0], a[1], b[0], b[1], ftCol(i), 4, true, head); g.globalAlpha = 1; t = add(t, F); }); }
+    if (!bl && !pulled && FT.n > 1) { const e = A(res.E); g.globalAlpha = 0.85; arrowOn(g, o[0], o[1], e[0], e[1], T.equi, 6, true, head); g.globalAlpha = 1; }
+    if (!bl && mag(net) * perN > 12) { const e = A(net); arrowOn(g, o[0], o[1], e[0], e[1], T.R, 7, false, head); }
+    G3.ovt.needsUpdate = true;
+  }
+  function glLabels() {
+    const box = $('ft3dLabels'), st = ftStrings(), v = new THREE.Vector3();
+    while (box.children.length < 6) box.appendChild(document.createElement('span'));
+    const sp = box.children, res = ftRes();
+    G3.sets.forEach((q, i) => {
+      const e = sp[i]; if (i >= FT.n) { e.hidden = true; return; } e.hidden = false;
+      const a = st[i].deg * Math.PI / 180; v.set((FT_GEOM.R + 0.045) * Math.cos(a), (FT_GEOM.R + 0.045) * Math.sin(a), Z_TOP + 0.01).project(G3.cam);
+      e.style.left = Math.max(30, Math.min(W - 30, (v.x + 1) / 2 * W)) + 'px'; e.style.top = Math.max(12, Math.min(H - 12, (1 - v.y) / 2 * H)) + 'px';
+      e.style.setProperty('--sc', ftCol(i)); e.className = FT.sel === i ? 'sel' : ''; e.textContent = `${Math.round(st[i].m * 1000)} g`;
+    });
+    // names for the equilibrant and the net force, at their tips
+    const k = FT_GEOM.R / ARROW_N, x = FT.ringNow, put = (e, vec, txt, col) => { v.set(x[0] + k * vec[0], x[1] + k * vec[1], Z_TOP + 0.004).project(G3.cam); e.hidden = false; e.style.left = ((v.x + 1) / 2 * W) + 'px'; e.style.top = ((1 - v.y) / 2 * H - 14) + 'px'; e.style.setProperty('--sc', col); e.className = ''; e.textContent = txt; };
+    const pulled = FT.pinOut && FT.rest, net = pulled ? FT.rest.S : res.S;
+    if (!S.blind && !pulled && FT.n > 1) put(sp[4], res.E, FT.n === 2 ? 'equilibrant of string 1' : `equilibrant of strings 1 to ${FT.n - 1}`, T.equi); else sp[4].hidden = true;
+    if (!S.blind && mag(net) * k > 0.012) put(sp[5], net, 'net ΣF', T.R); else sp[5].hidden = true;
+  }
+  function glFrame() {
+    if (!G3.ok || FT.view !== '3d' || S.preset !== 'table' || !glDirty) return;
+    glDirty = false;
+    /* far enough back that the table and its hangers fit the width as well as the height */
+    const r = Math.max(0.98, 0.27 / (Math.tan(17.5 * Math.PI / 180) * (W / H))) / orb.zoom, cam = G3.cam, tz = Z_TOP - 0.11;
+    cam.position.set(r * Math.sin(orb.ph) * Math.cos(orb.th), r * Math.sin(orb.ph) * Math.sin(orb.th), tz + r * Math.cos(orb.ph));
+    cam.lookAt(0, 0, tz); cam.updateMatrixWorld();
+    glUpdate();
+    G3.renderer.render(G3.scene, cam);
+  }
+  function glPointer(el) {
+    const pointers = new Map(); let mode = null;
+    const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+    const pick = (e) => {
+      const rc = el.getBoundingClientRect(); G3.ndc.set((e.clientX - rc.left) / rc.width * 2 - 1, -((e.clientY - rc.top) / rc.height) * 2 + 1);
+      G3.ray.setFromCamera(G3.ndc, G3.cam);
+      const objs = []; G3.sets.forEach((q, i) => { if (i < FT.n) objs.push(q.hit, q.hhit); });
+      const h = G3.ray.intersectObjects(objs, false); return h.length ? h[0].object.userData : null;
+    };
+    const angleAt = (e) => {
+      const rc = el.getBoundingClientRect(); G3.ndc.set((e.clientX - rc.left) / rc.width * 2 - 1, -((e.clientY - rc.top) / rc.height) * 2 + 1);
+      G3.ray.setFromCamera(G3.ndc, G3.cam); const o = G3.ray.ray.origin, d = G3.ray.ray.direction;
+      if (Math.abs(d.z) < 1e-6) return null; const t = (Z_STR - o.z) / d.z; if (t <= 0) return null;
+      return Math.round(angleDeg([o.x + t * d.x, o.y + t * d.y])) % 360;
+    };
+    const pinch = () => { const p = [...pointers.values()]; return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) || 1; };
+    el.addEventListener('pointerdown', (e) => {
+      el.focus(); el.setPointerCapture(e.pointerId); pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pointers.size === 2) { mode = { type: 'pinch', d0: pinch(), z0: orb.zoom }; return; }
+      const hit = pick(e);
+      if (hit && hit.kind === 'pulley') { mode = { type: 'pulley', i: hit.i }; FT.sel = hit.i; el.style.cursor = 'grabbing'; ftSet(); return; }
+      if (hit && hit.kind === 'hanger') { FT.sel = hit.i; ftSet(); }
+      mode = { type: 'orbit', lx: e.clientX, ly: e.clientY }; el.style.cursor = 'grabbing';
+    });
+    el.addEventListener('pointermove', (e) => {
+      if (!pointers.has(e.pointerId)) { const h = pick(e); el.style.cursor = h ? (h.kind === 'pulley' ? 'grab' : 'pointer') : 'grab'; return; }
+      pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (mode && mode.type === 'pinch' && pointers.size === 2) { orb.zoom = clamp(mode.z0 * pinch() / mode.d0, 0.5, 2.6); glDirty = true; return; }
+      if (mode && mode.type === 'pulley') { const a = angleAt(e); if (a !== null && a !== FT.s[mode.i].a) { FT.s[mode.i].a = a; ftSet(); } return; }
+      if (mode && mode.type === 'orbit') { orb.th -= (e.clientX - mode.lx) * 0.008; orb.ph = clamp(orb.ph - (e.clientY - mode.ly) * 0.008, 0.02, 1.4); mode.lx = e.clientX; mode.ly = e.clientY; glDirty = true; }
+    });
+    const up = (e) => { pointers.delete(e.pointerId); mode = pointers.size ? mode : null; el.style.cursor = 'grab'; };
+    el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+    el.addEventListener('wheel', (e) => { e.preventDefault(); orb.zoom = clamp(orb.zoom * Math.exp(-e.deltaY * 0.0012), 0.5, 2.6); glDirty = true; }, { passive: false });
+    el.addEventListener('dblclick', () => { orb.th = -1.2; orb.ph = 0.92; orb.zoom = 1; glDirty = true; });
+    el.addEventListener('keydown', (e) => { if (e.key === ',' || e.key === '.') { orb.th += e.key === ',' ? 0.12 : -0.12; glDirty = true; e.preventDefault(); return; } ftKey(e); });
+  }
+  function setFtView(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.loading) return;
+      if (G3.tried && !window.THREE) { capStatus('The 3D view needs three.js from cdnjs.cloudflare.com and WebGL; the top view works without them.'); v = 'top'; }
+      else {
+        G3.loading = true;
+        loadThree((ok) => { G3.loading = false; if (ok && init3D()) setFtView('3d'); else { G3.tried = true; capStatus('The 3D view needs three.js from cdnjs.cloudflare.com and WebGL; the top view works without them.'); setFtView('top'); } });
+        return;
+      }
+    }
+    FT.view = v; ftShowView();
+  }
+  function ftShowView() {
+    const tb = S.preset === 'table', d3 = tb && FT.view === '3d' && G3.ok;
+    for (const b of $('ftViewSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === (d3 ? '3d' : 'top')));
+    can.style.visibility = d3 ? 'hidden' : ''; if (G3.ok) G3.el.hidden = !d3;
+    $('ft3dNote').hidden = !d3; $('ft3dLabels').hidden = !d3;
+    $('tableBar').hidden = !tb; $('ftMassBar').hidden = !tb;
+    glDirty = true; if (d3) glFrame();
+  }
+  window.__ft = { FT, G3, orb, setFtView, ftSetPin, ftRest, ftRes };
+  $('ftViewSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (b) setFtView(b.dataset.v); });
+
   // ---------- presets ----------
   function applyPreset(p) {
     S.preset = p; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === p));
     const c = PRESETS[p]; $('presetHint').textContent = c.hint;
     const rv = p === 'river', tb = p === 'table'; $('secVec').hidden = rv || tb; $('secRiver').hidden = !rv; $('secTable').hidden = !tb; $('riverBar').hidden = !rv;
-    $('addStyleRow').hidden = p !== 'add';
-    if (tb) { /* the table keeps its strings between visits */ }
+    $('addStyleRow').hidden = p !== 'add'; ftShowView();
+    if (tb) { /* the table keeps its strings between visits */ ftSet(true); if (!G3.tried && FT.view3dFirst) setFtView('3d'); }
     else if (!rv) { S.A = c.A.slice(); S.B = c.B ? c.B.slice() : null; S.sel = 'A'; }
     else resetBoat();
     draw(); readouts();
@@ -698,6 +1047,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       R.t += dt * speedup; if (!isFinite(r.t) && R.t > 60) R.t = 60;
       if (R.t >= r.t) { R.t = r.t; R.run = false; R.landed = true; $('go').textContent = 'Launch again'; }
       const q = boatPos(); R.trail.push(q); draw();
+    }
+    if (S.preset === 'table') {
+      const a = FT.ringNow, b = FT.ringTo, d = mag(sub(b, a));
+      if (d > 0) { if (d < 1e-5 || reduce) FT.ringNow = b.slice(); else { const k = Math.min(1, dt * 7); FT.ringNow = add(a, scale(k, sub(b, a))); } draw(); }
+      glFrame();
     }
     requestAnimationFrame(frame);
   }
@@ -739,16 +1093,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     draw(); readouts();
   }
   function move(px, py) { setTip(drag, ux(px), uy(py)); }
+  function ftKey(e) {
+    const k = e.key;
+    if (/^[1-4]$/.test(k) && +k <= FT.n) { FT.sel = +k - 1; ftSet(); return; }
+    if (k === 'p' || k === 'P') { ftSetPin(!FT.pinOut); return; }
+    const q = FT.s[FT.sel], st = e.shiftKey ? 10 : 1;
+    if (k === 'ArrowLeft' || k === 'ArrowRight') q.a = ((q.a + (k === 'ArrowRight' ? st : -st)) % 360 + 360) % 360;
+    else if (k === 'ArrowUp' || k === 'ArrowDown') q.g = Math.max(10, Math.min(500, q.g + (k === 'ArrowUp' ? st : -st)));
+    else return;
+    e.preventDefault(); ftSet();
+  }
   can.addEventListener('keydown', (e) => {
     const k = e.key;
-    if (S.preset === 'table') {
-      if (/^[1-4]$/.test(k) && +k <= FT.n) { FT.sel = +k - 1; ftSet(); return; }
-      const q = FT.s[FT.sel], st = e.shiftKey ? 10 : 1;
-      if (k === 'ArrowLeft' || k === 'ArrowRight') q.a = ((q.a + (k === 'ArrowRight' ? st : -st)) % 360 + 360) % 360;
-      else if (k === 'ArrowUp' || k === 'ArrowDown') q.g = Math.max(10, Math.min(500, q.g + (k === 'ArrowUp' ? st : -st)));
-      else return;
-      e.preventDefault(); ftSet(); return;
-    }
+    if (S.preset === 'table') { ftKey(e); return; }
     if (S.preset === 'river') { if (k === ' ') { $('go').click(); e.preventDefault(); } return; }
     if (k === '1' || k === 'a' || k === 'A') { S.sel = 'A'; draw(); return; }
     if ((k === '2' || k === 'b' || k === 'B') && S.B) { S.sel = 'B'; draw(); return; }
@@ -763,8 +1120,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
   $('rmToggle').checked = reduce;
   $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; try { sessionStorage.setItem('vd-vec-motion', reduce ? 'reduce' : 'full'); } catch (_) {} });
-  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); }
-  const retheme = () => { tokens(); draw(); };
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; glResize(); draw(); }
+  const retheme = () => { tokens(); glTheme(); draw(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   const projBtn = $('proj');
@@ -773,6 +1130,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
   tokens(); new ResizeObserver(resize).observe(stage); renderRows();
   const q0 = (() => { try { return new URLSearchParams(location.search).get('setup'); } catch (_) { return null; } })();
+  /* the table opens in 3D where WebGL works, unless the page asks for the top view (?view=top) or the device asks to save data */
+  try {
+    const qv = new URLSearchParams(location.search).get('view'), lite = (navigator.connection && navigator.connection.saveData) || (navigator.hardwareConcurrency || 4) <= 2;
+    FT.view3dFirst = qv !== 'top' && !lite;
+  } catch (_) {}
   applyPreset(PRESETS[q0] ? q0 : 'comp'); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);

@@ -2,7 +2,7 @@
 // Vectors and Relative Motion: vector algebra identities and the river crossing.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('vectors', 'add,sub,scale,dot,crossZ,mag,angleDeg,fromPolar,between,projection,river,straightAcross,currentAt,meanCurrent,riverPos,G_FT,ftForces,ftHolds,forceTable');
+const c = core('vectors', 'add,sub,scale,dot,crossZ,mag,angleDeg,fromPolar,between,projection,river,straightAcross,currentAt,meanCurrent,riverPos,G_FT,ftForces,ftHolds,forceTable,ftHeld,FT_GEOM,ftPlay,ftRest');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -80,5 +80,30 @@ group('force table friction: centered exactly when some tensions within mg ± f 
   }
   assert(yes > 20 && no > 20, `both cases sampled (${yes}, ${no})`);
   assert(!c.ftHolds([{ m: 0.2 + 1e-6, deg: 0 }, base[1], base[2]], 0));
+});
+group('force table ring: the pin\'s play; pin out, the ring rests at the weighted geometric median of the pulleys', () => {
+  const g = c.G_FT, R = c.FT_GEOM.R; near(c.ftPlay(), 0.020 - 0.0015 - 0.004, 1e-15);
+  // balanced strings: the ring stays at the center with the pin out
+  const bal = c.ftRest([{ m: 0.2, deg: 0 }, { m: 0.2, deg: 120 }, { m: 0.2, deg: 240 }], 0);
+  assert(bal.held && !bal.rim && c.mag(bal.x) === 0);
+  // centered within friction (ftHolds) is exactly when the ring does not move with the pin out
+  const f = 0.001 * g, near3 = (dm) => [{ m: 0.2 + dm, deg: 0 }, { m: 0.2, deg: 120 }, { m: 0.2, deg: 240 }];
+  for (const dm of [0.0019, 0.0021, -0.0021, 0.01]) { const r = c.ftRest(near3(dm), f); assert.equal(c.mag(r.x) === 0, c.ftHolds(near3(dm), f), `dm ${dm}`); }
+  // ideal pulleys: at rest the pulls along the actual strings cancel, and the point agrees with Weiszfeld\'s iteration
+  const weis = (st) => { const P = st.map((q) => c.fromPolar(R, q.deg)); let x = [1e-3, 1.3e-3];
+    for (let k = 0; k < 20000; k++) { let nx = [0, 0], d = 0; P.forEach((p, i) => { const L = c.mag(c.sub(p, x)); nx = c.add(nx, c.scale(st[i].m / L, p)); d += st[i].m / L; }); x = c.scale(1 / d, nx); } return x; };
+  for (const st of [[{ m: 0.15, deg: 20 }, { m: 0.2, deg: 110 }, { m: 0.29, deg: 253 }], [{ m: 0.1, deg: 40 }, { m: 0.15, deg: 160 }, { m: 0.12, deg: 270 }, { m: 0.08, deg: 4 }]]) {
+    const r = c.ftRest(st, 0); assert(r.held && !r.rim); assert(c.mag(r.S) < 1e-6 * g, `net at rest ${c.mag(r.S)}`);
+    near(c.mag(c.sub(r.x, weis(st))), 0, 1e-7, 'Weiszfeld');
+  }
+  // equal weights on three pulleys: the Fermat point, where the strings meet at 120°
+  const fe = c.ftRest([{ m: 0.2, deg: 10 }, { m: 0.2, deg: 100 }, { m: 0.2, deg: 220 }], 0), u = fe.F.map((F) => c.scale(1 / c.mag(F), F));
+  for (const [i, j] of [[0, 1], [1, 2], [2, 0]]) near(Math.acos(c.dot(u[i], u[j])) * 180 / Math.PI, 120, 1e-4, 'Fermat');
+  // one string outweighs the others: the ring runs toward its pulley and is stopped at 0.8 R
+  const run = c.ftRest([{ m: 0.4, deg: 0 }, { m: 0.1, deg: 120 }, { m: 0.1, deg: 240 }], c.G_FT * 0.001);
+  assert(run.rim && !run.held); near(c.mag(run.x), 0.8 * R, 1e-12); near(run.x[1], 0, 1e-9);
+  // with friction the ring stops at a place the friction can hold, before (or at) the ideal rest point
+  const st = [{ m: 0.15, deg: 20 }, { m: 0.2, deg: 110 }, { m: 0.29, deg: 253 }], rf = c.ftRest(st, 0.002 * g), r0 = c.ftRest(st, 0);
+  assert(rf.held && c.ftHeld(rf.S, rf.F.map((F) => c.scale(1 / c.mag(F), F)), 0.002 * g)); assert(c.mag(rf.x) <= c.mag(r0.x) + 1e-9 && c.mag(rf.x) > 0.5 * c.mag(r0.x));
 });
 console.log(`${n} vectors test groups passed`);
