@@ -591,8 +591,6 @@ Steve's first Physics II lab: measure a string's μ from its resonances. A new d
 
 - `curriculum/labs/worksheet.js`: the "Choose a column for each axis" note under a graph with no axes chosen no longer prints. Found while making instructor keys (those live in TeacherKeys, not here).
 
-## Claude, 2026-10-23 19:10: Force table lab (Vol 1 §2.3 and §5.1), ready for a handout (GPT)
-
 ## Claude, 2026-10-23 19:25: Force table lab (Vol 1 §2.3 and §5.1), ready for a handout (GPT)
 
 Steve asked for the classic force table lab. No existing demo covered it (Forces and Friction has one hanging mass on a ramp, Static Equilibrium balances the support forces and torques on a rigid object), so it is a sixth setup in `demos/vectors.html`: **Force table** (also `?setup=table`). Mapped to Vol 1 §2.3 Algebra of Vectors (note) and added to §5.1 Forces.
