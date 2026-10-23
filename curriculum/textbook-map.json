@@ -6801,10 +6801,13 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
+      "status": "usable",
       "note": "Acoustics module (2026-10-23): air column (17.1) and time of flight between two microphones (17.2), a second way to c beside the resonance tube.",
       "title": "Sound Waves and the Speed of Sound",
-      "url": "demos/sound-waves.html"
+      "url": "demos/sound-waves.html",
+      "handouts": [
+        "sound-waves"
+      ]
     },
     {
       "demo": "kundts-tube",
@@ -6825,10 +6828,13 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
+      "status": "usable",
       "note": "Acoustics module (2026-10-23): dust at the nodes gives c in a gas, the rod's own resonance gives c in a metal rod.",
       "title": "Kundt's Tube",
-      "url": "demos/kundts-tube.html"
+      "url": "demos/kundts-tube.html",
+      "handouts": [
+        "kundts-tube"
+      ]
     },
     {
       "demo": "wave-power",
@@ -6844,10 +6850,13 @@
       ],
       "role": "lab",
       "beyond_book": false,
-      "status": "needs-handout",
+      "status": "usable",
       "note": "Acoustics module (2026-10-23): the Linear Density of a String apparatus with a dashpot absorber and a power meter; P against A, f and T.",
       "title": "Energy and Power of a Wave",
-      "url": "demos/wave-power.html"
+      "url": "demos/wave-power.html",
+      "handouts": [
+        "wave-power"
+      ]
     },
     {
       "demo": "two-speaker",
