@@ -98,4 +98,4 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 
 ## Being moved
 
-Nothing at the moment.
+Batch 3 (rest of Physics I), from 2026-10-23 23:45: cart-launch, catenary, center-of-mass, circular-motion, double-pendulum, elevator, energy-sources, equilibrium, gravity-near-earth, gps-clocks, gyroscope, impulse, potential-curves, rocket, rotation, tides, units.
