@@ -84,13 +84,20 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 /* the rack of bobs on the bench (in scene control for the mass), placed by draw() */
 .rack { position: absolute; z-index: 2; display: flex; flex-direction: column; gap: 4px; padding: 6px 8px; background: color-mix(in srgb, var(--surface) 90%, transparent); border: 1px solid var(--line); border-radius: 8px; }
 .rack-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+/* the Set up card fades away while the pendulum swings (and shows the bob through it while it is dragged) */
+.rack { width: min(300px, 100%); transition: opacity 0.35s ease, visibility 0.35s; }
+.rack .slider-head label, .rack .slider-head output { font-size: 0.78rem; }
+.rack .btn { font-size: 0.78rem; padding: 3px 8px; }
+.rack.away { opacity: 0; visibility: hidden; }
+.rack.ghost { opacity: 0.25; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .rack { transition: none; } }
 .rack-bobs { display: flex; align-items: flex-end; gap: 2px; flex-wrap: wrap; }
 .rack-bobs button { display: flex; flex-direction: column; align-items: center; gap: 2px; font: 600 0.68rem/1 var(--font-mono); color: var(--muted); background: none; border: 1px solid transparent; border-radius: 6px; padding: 3px 3px; cursor: pointer; min-width: 30px; }
 .rack-bobs button i { display: block; border-radius: 50%; background: radial-gradient(circle at 35% 30%, color-mix(in srgb, var(--bob) 40%, #fff), var(--bob) 70%); }
 .rack-bobs button[aria-pressed="true"] { border-color: var(--accent); color: var(--ink); }
 .rack-bobs button[aria-pressed="true"] i { visibility: hidden; }
 .rack-bobs button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
-@media (max-width: 820px) { main.bench .stage { height: auto; max-height: none; } .scene { position: relative; inset: auto; height: 480px; max-height: 80vh; } .rack { position: static; margin: 8px; } .rack-bobs button { min-height: 44px; } }
+@media (max-width: 820px) { main.bench .stage { height: auto; max-height: none; } .scene { position: relative; inset: auto; height: 480px; max-height: 80vh; } .rack { position: static; margin: 8px; width: auto; } .rack-bobs button { min-height: 44px; } }
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
 .spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
 .spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
@@ -167,7 +174,12 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <canvas id="can" tabindex="0" role="application" aria-label="A pendulum with a photogate at the bottom of its swing, and a trace of the angle against time. Drag the bob to set the release angle and the length. Space releases or holds, left and right arrows change the release angle θ₀ by 1°, up and down change the length L by 0.01 m (with Shift, 0.10 m)."></canvas>
       <div class="viewbar"><button type="button" class="spin attn" id="go">Release</button><button type="button" class="spin" id="hold">Hold at release angle</button></div>
       </div>
-      <div class="rack" id="rack" role="group" aria-label="Mass: the rack of bobs">
+      <div class="rack" id="rack" role="group" aria-label="Set up the pendulum: length, release angle and mass">
+        <span class="rack-title">Set up</span>
+        <div><div class="slider-head"><label for="sL">Length L (pivot to bob centre, or rod length)</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0.1" max="2" step="0.01"></div>
+        <div class="btnrow"><button type="button" class="btn" data-step="L" data-d="-0.01">L −1 cm</button><button type="button" class="btn" data-step="L" data-d="0.01">L +1 cm</button></div>
+        <div><div class="slider-head"><label for="sA">Release angle θ₀</label><output id="oA" for="sA"></output></div><input type="range" id="sA" min="1" max="170" step="1"></div>
+        <div class="btnrow"><button type="button" class="btn" data-step="A" data-d="-1">θ₀ −1°</button><button type="button" class="btn" data-step="A" data-d="1">θ₀ +1°</button></div>
         <span class="rack-title">Mass</span>
         <div class="rack-bobs" id="massRack"></div>
       </div>
@@ -191,11 +203,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <h2>Pendulum</h2>
         <div class="inline"><span class="lab">Type</span>
           <div class="seg" role="group" aria-label="Pendulum type"><button type="button" id="tSimple" aria-pressed="true">Bob on a string</button><button type="button" id="tRod" aria-pressed="false">Uniform rod</button></div></div>
-        <p class="hint">Drag the bob sideways to set the <b>Release angle θ₀</b>, or up and down along the string to set the <b>Length L (pivot to bob centre, or rod length)</b>; pick the <b>Mass</b> from the rack of bobs. Keys on the picture: ← → θ₀, ↑ ↓ L. The sliders and step buttons below set exact values.</p>
-        <div><div class="slider-head"><label for="sL">Length L (pivot to bob centre, or rod length)</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0.1" max="2" step="0.01"></div>
-        <div class="btnrow"><button type="button" class="btn" data-step="L" data-d="-0.01">L −1 cm</button><button type="button" class="btn" data-step="L" data-d="0.01">L +1 cm</button></div>
-        <div><div class="slider-head"><label for="sA">Release angle θ₀</label><output id="oA" for="sA"></output></div><input type="range" id="sA" min="1" max="170" step="1"></div>
-        <div class="btnrow"><button type="button" class="btn" data-step="A" data-d="-1">θ₀ −1°</button><button type="button" class="btn" data-step="A" data-d="1">θ₀ +1°</button></div>
+        <p class="hint">Drag the bob sideways to set the <b>Release angle θ₀</b>, or up and down along the string to set the <b>Length L (pivot to bob centre, or rod length)</b>; pick the <b>Mass</b> from the rack of bobs. Keys on the picture: ← → θ₀, ↑ ↓ L. The Set up card on the picture has sliders and step buttons for exact values; it fades away while the pendulum swings and comes back when you pause.</p>
         <div class="inline"><span class="lab">Gravity</span>
           <div class="seg" role="group" aria-label="Where" id="gSeg"><button type="button" data-g="9.81" aria-pressed="true">Earth</button><button type="button" data-g="1.62" aria-pressed="false">Moon</button><button type="button" data-g="3.71" aria-pressed="false">Mars</button><button type="button" data-g="mystery" aria-pressed="false">Mystery planet</button></div></div>
         <label class="check"><input type="checkbox" id="damp"><span>Air drag (slow decay)</span></label>
@@ -302,7 +310,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     const p = ps(), wide = W > 640, sw = wide ? W * 0.55 : W, sh = wide ? H : H * 0.62;
     const px = sw / 2, py = 96 * p, sc = scaleFor(S.A), Lpx = S.L * sc;
     geo = { px, py, sc };
-    if (getComputedStyle($('rack')).position === 'absolute') { const rk = $('rack'), bt0 = sh - 14 * p, rh = rk.offsetHeight; rk.style.left = `${10 * p}px`; rk.style.top = `${Math.max(90 * p, bt0 - rh - 8 * p)}px`; rk.style.maxWidth = `${Math.max(150, px - 24 * p)}px`; }
+    if (getComputedStyle($('rack')).position === 'absolute') { const rk = $('rack'), bt0 = sh - 14 * p, rh = rk.offsetHeight; rk.style.left = `${10 * p}px`; rk.style.top = `${Math.max(116 * p, bt0 - rh - 8 * p)}px`; rk.style.maxWidth = `${Math.max(150, px - 40 * p)}px`; }
     const gy = py + Lpx, th = S.st.th, bx = px + Lpx * Math.sin(th), by = py + Lpx * Math.cos(th);
     scenery(p, wide, sw, sh, px, py, gy, bx);
     // photogate at the bottom: a U-shaped gate whose beam lights up while the bob is in it
@@ -403,7 +411,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   $('gSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (!b) return; S.gKey = b.dataset.g; if (S.gKey === 'mystery') S.mystery = Math.round((2 + Math.random() * 20) * 100) / 100; else { S.mystery = null; S.g = +S.gKey; } changed(); fit(); });
   $('damp').addEventListener('change', (e) => { S.damp = e.target.checked; draw(); });
   for (const b of document.querySelectorAll('[data-plot]')) b.addEventListener('click', () => { S.plot = b.dataset.plot; sync(); fit(); });
-  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Release'; $('go').classList.toggle('attn', !on); }
+  function setRun(on) { S.run = on; $('rack').classList.toggle('away', on); $('rack').inert = on; $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Release'; $('go').classList.toggle('attn', !on); }
   $('go').addEventListener('click', () => setRun(!S.run));
   $('hold').addEventListener('click', () => { release(); setRun(false); draw(); readouts(); });
   let last = performance.now();
@@ -433,7 +441,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     changed(); S.st.th = Math.sign(a || 1) * S.A * Math.PI / 180; draw(); }
   function setLength(x, y) { const th = S.st.th; S.L = Math.max(0.1, Math.min(2, Math.round((Math.hypot(x - geo.px, y - geo.py) - grab) / scaleFor(S.A) * 100) / 100));
     changed(); S.st.th = th; draw(); }
-  can.addEventListener('pointerdown', (e) => { if (!geo) return; const [x, y] = local(e); const L = S.L * geo.sc, bx = geo.px + L * Math.sin(S.st.th), by = geo.py + L * Math.cos(S.st.th); if (Math.hypot(x - bx, y - by) < 40 * ps()) { grab = Math.hypot(x - geo.px, y - geo.py) - L; drag = true; mode = null; x0 = x; y0 = y; can.setPointerCapture(e.pointerId); } });
+  can.addEventListener('pointerdown', (e) => { if (!geo) return; const [x, y] = local(e); const L = S.L * geo.sc, bx = geo.px + L * Math.sin(S.st.th), by = geo.py + L * Math.cos(S.st.th); if (Math.hypot(x - bx, y - by) < 40 * ps()) { grab = Math.hypot(x - geo.px, y - geo.py) - L; drag = true; $('rack').classList.add('ghost'); mode = null; x0 = x; y0 = y; can.setPointerCapture(e.pointerId); } });
   can.addEventListener('pointermove', (e) => { if (!drag) return; const [x, y] = local(e);
     if (!mode) { const dx = x - x0, dy = y - y0; if (Math.hypot(dx, dy) < 6 * ps()) return; const th = S.st.th; mode = Math.abs(dx * Math.sin(th) + dy * Math.cos(th)) > Math.abs(dx * Math.cos(th) - dy * Math.sin(th)) ? 'L' : 'A'; }
     mode === 'L' ? setLength(x, y) : setAngle(x, y); });
@@ -441,7 +449,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   $('sA').addEventListener('input', (e) => { S.A = +e.target.value; changed(); });
   for (const b of document.querySelectorAll('[data-step]')) b.addEventListener('click', () => { const d = +b.dataset.d;
     if (b.dataset.step === 'L') S.L = Math.max(0.1, Math.min(2, Math.round((S.L + d) * 100) / 100)); else S.A = Math.max(1, Math.min(maxA(), S.A + d)); changed(); });
-  can.addEventListener('pointerup', () => { drag = false; }); can.addEventListener('pointercancel', () => { drag = false; });
+  const endDrag = () => { drag = false; $('rack').classList.remove('ghost'); }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
   can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.A = Math.max(1, Math.min(maxA(), S.A + (e.key === 'ArrowRight' ? 1 : -1))); changed(); }
     else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { S.L = Math.max(0.1, Math.min(2, Math.round((S.L + (e.key === 'ArrowDown' ? 1 : -1) * (e.shiftKey ? 0.1 : 0.01)) * 100) / 100)); changed(); } else return; e.preventDefault(); });
 
