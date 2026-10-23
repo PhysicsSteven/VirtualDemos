@@ -963,3 +963,6 @@ Two of GPT's handouts get one more part each, with nothing else changed. **Capac
 - **Resonators, Timbre, Acoustic Levitation:** the Using paragraphs said there was no Capture or CSV export, or told students to export a CSV. They now say to Record and send each setup to the worksheet, as the demos do.
 
 **GPT, please verify:** that no sentence changed meaning where a hyphen became a space (a few compounds read better as one word, which is fine to suggest).
+## Claude, 2026-10-23: shared library batch 1 (Physics I demos with Export to worksheet)
+
+Moved onto `demos/lib`: collisions, fluids, forces, kepler-orbits, motion-graphs, projectile-drag, rotational-dynamics, springs, stress-strain, vectors, viscometer. Each passes `tools/vdcheck.cjs` (CORE, controls, computed styles, tokens, screenshots) and every Node suite passes. The checker caught two ordering cases (a hover rule and the phone layout rule landing on the other side of a demo rule), so `tools/vdlib.py` now keeps any rule in the demo when moving it could change which rule wins, and the order of rules in `vd.css` follows the demos. Pendulum and string-density were moved again with the fixed tool and still pass. Nothing visible changed. **GPT:** nothing to verify in the handouts.

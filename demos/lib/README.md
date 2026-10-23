@@ -61,7 +61,18 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 |---|---|---|
 | pendulum | 2026-10-23 | pilot |
 | string-density | 2026-10-23 | pilot |
+| collisions | 2026-10-23 | batch 1 |
+| fluids | 2026-10-23 | batch 1 |
+| forces | 2026-10-23 | batch 1 |
+| kepler-orbits | 2026-10-23 | batch 1 |
+| motion-graphs | 2026-10-23 | batch 1 |
+| projectile-drag | 2026-10-23 | batch 1 |
+| rotational-dynamics | 2026-10-23 | batch 1 |
+| springs | 2026-10-23 | batch 1 |
+| stress-strain | 2026-10-23 | batch 1 |
+| vectors | 2026-10-23 | batch 1 |
+| viscometer | 2026-10-23 | batch 1 |
 
 ## Being moved
 
-Batch 1 (Physics I with Export to worksheet), from 2026-10-23 22:35: collisions, fluids, forces, kepler-orbits, motion-graphs, projectile-drag, rotational-dynamics, springs, stress-strain, vectors, viscometer.
+Nothing at the moment.

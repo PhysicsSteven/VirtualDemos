@@ -6,6 +6,7 @@
    demo looks exactly as before. Shortening a demo's list is a visible change (it adopts the shared rule): do it on purpose.
    Never change or remove a rule here: moved demos rely on it. A new rule needs a name, and every moved demo that should
    not get it lists that name. After any edit, run tools/vdcheck.cjs on every moved demo. See demos/lib/README.md. */
+
 /* root */ :where(:root:not([data-vd-off~="root"])) *, :where(:root:not([data-vd-off~="root"])) *::before, :where(:root:not([data-vd-off~="root"])) *::after { box-sizing: border-box; }
 /* root-2 */ :root:where(:not([data-vd-off~="root-2"])) { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
 /* body */ :where(:root:not([data-vd-off~="body"])) body { margin: 0; }
@@ -53,7 +54,6 @@
 /* app */ :where(:root:not([data-vd-off~="app"])) .app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
 /* bar */ :where(:root:not([data-vd-off~="bar"])) .bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
 /* bar-div-firstchild */ :where(:root:not([data-vd-off~="bar-div-firstchild"])) .bar > div:first-child { flex: 1 1 360px; min-width: 0; }
-/* bar-p */ :where(:root:not([data-vd-off~="bar-p"])) .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
 /* bar-right */ :where(:root:not([data-vd-off~="bar-right"])) .bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 /* units */ :where(:root:not([data-vd-off~="units"])) .units { color: var(--muted); font-size: 0.8rem; }
 /* proj-2 */ :where(:root:not([data-vd-off~="proj-2"])) .proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
@@ -69,7 +69,6 @@
 /* formula */ :where(:root:not([data-vd-off~="formula"])) .formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
 /* chips */ :where(:root:not([data-vd-off~="chips"])) .chips { display: flex; flex-wrap: wrap; gap: 6px; }
 /* chips-button */ :where(:root:not([data-vd-off~="chips-button"])) .chips button, :where(:root:not([data-vd-off~="chips-button"])) .btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
-/* chips-button-on */ :where(:root:not([data-vd-off~="chips-button-on"])) .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 /* btnrow */ :where(:root:not([data-vd-off~="btnrow"])) .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
 /* seg */ :where(:root:not([data-vd-off~="seg"])) .seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 /* seg-button */ :where(:root:not([data-vd-off~="seg-button"])) .seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
@@ -101,7 +100,6 @@
 @media (max-width: 820px) {
   /* phone-html */ html:where(:not([data-vd-off~="phone-html"])), :where(:root:not([data-vd-off~="phone-html"])) body { height: auto; }
   /* phone-app */ :where(:root:not([data-vd-off~="phone-app"])) .app { height: auto; }
-  /* phone-bench */ :where(:root:not([data-vd-off~="phone-bench"])) .bench { grid-template-columns: minmax(0, 1fr); }
   /* phone-rail */ :where(:root:not([data-vd-off~="phone-rail"])) .rail { overflow: visible; }
   /* phone-input */ :where(:root:not([data-vd-off~="phone-input"])) input[type="range"] { min-height: 28px; }
 }
@@ -111,13 +109,16 @@
 /* img */ :where(:root:not([data-vd-off~="img"])) img { max-width: 100%; }
 @media (min-width: 821px) and (max-height: 820px) {
   /* projshort-proj-bar-units */ :root:where(:not([data-vd-off~="projshort-proj-bar-units"]))[data-projector="on"] .bar .units { display: none; }
-  /* projshort-proj-bar-p */ :root:where(:not([data-vd-off~="projshort-proj-bar-p"]))[data-projector="on"] .bar p { font-size: 1rem; max-width: none; }
 }
 /* mono */ :where(:root:not([data-vd-off~="mono"])) .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 /* bar-h1 */ :where(:root:not([data-vd-off~="bar-h1"])) .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
 /* bench */ :where(:root:not([data-vd-off~="bench"])) .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
+@media (max-width: 820px) {
+  /* phone-bench */ :where(:root:not([data-vd-off~="phone-bench"])) .bench { grid-template-columns: minmax(0, 1fr); }
+}
 /* pane */ :where(:root:not([data-vd-off~="pane"])) .pane { position: relative; min-height: 0; }
 /* chips-button-hover */ :where(:root:not([data-vd-off~="chips-button-hover"])) .chips button:hover, :where(:root:not([data-vd-off~="chips-button-hover"])) .btn:hover { border-color: var(--muted); }
+/* chips-button-on */ :where(:root:not([data-vd-off~="chips-button-on"])) .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 /* btn */ :where(:root:not([data-vd-off~="btn"])) .btn { font-weight: 700; }
 /* btn-primary */ :where(:root:not([data-vd-off~="btn-primary"])) .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 /* btn-disabled */ :where(:root:not([data-vd-off~="btn-disabled"])) .btn:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -137,3 +138,7 @@
   /* phone-chips-button */ :where(:root:not([data-vd-off~="phone-chips-button"])) .chips button, :where(:root:not([data-vd-off~="phone-chips-button"])) .btn, :where(:root:not([data-vd-off~="phone-chips-button"])) .seg button, :where(:root:not([data-vd-off~="phone-chips-button"])) .proj { min-height: 36px; }
 }
 /* pane-canvas */ :where(:root:not([data-vd-off~="pane-canvas"])) .pane canvas { position: absolute; inset: 0; display: block; }
+/* bar-p */ :where(:root:not([data-vd-off~="bar-p"])) .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+@media (min-width: 821px) and (max-height: 820px) {
+  /* projshort-proj-bar-p */ :root:where(:not([data-vd-off~="projshort-proj-bar-p"]))[data-projector="on"] .bar p { font-size: 1rem; max-width: none; }
+}

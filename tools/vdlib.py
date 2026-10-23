@@ -8,7 +8,8 @@ What it does to demos/<demo>.html:
   - lists, in <html data-vd-off="...">, every named rule in vd.css that the demo never had, so it stays off there;
   - links lib/vd.css and lib/vd.js just before the first <style> (relative links, so file:// and thumbs.py still work);
   - removes from the demo's own <style> blocks every rule that is word for word in vd.css, unless an earlier rule the
-    demo keeps shares a selector with it (in any @media) (moving the rule ahead of it could change which one wins);
+    demo keeps can match the same elements (same selectors once states and attributes are set aside, in any @media), or when vd.css has two such
+    rules in the other order (moving the rule ahead of it could change which one wins);
     an @media block left empty goes too;
   - removes the inline scripts of the QR button, Reset all and the plot fold, which vd.js now runs (markup stays);
   - replaces the usual Projector code (the button, setProjector and the saved choice) with VD.projector, when the demo
@@ -85,7 +86,17 @@ def demo_rules(s):
     return got
 
 
-def strip_css(css, lib, removed, kept_sel):
+def base_parts(sel):
+    """the selectors of a rule without states and attributes: '.chips button:hover' and '.chips button[aria-pressed="true"]'
+    are both '.chips button', since they can match the same element"""
+    out = set()
+    for p in re.split(r',(?![^(]*\))', sel):
+        p = re.sub(r'::?[a-z-]+(\([^)]*\))?|\[[^\]]*\]', '', p)
+        out.add(re.sub(r'\s+', ' ', p).strip())
+    return out
+
+
+def strip_css(css, lib, removed, kept_sel, gone):
     """remove lib rules from one style block; returns the new text"""
     cuts = []
     def walk(rs, media_span=None):
@@ -97,12 +108,15 @@ def strip_css(css, lib, removed, kept_sel):
                 if k == 0: cuts.append((a, b)); [cuts.remove(c) for c in list(cuts) if a <= c[0] and c[1] <= b and c != (a, b)]
                 else: n_kept += 1
                 continue
-            parts = {p.strip() for p in re.split(r',(?![^(]*\))', sel)}
-            if (ctx, sel, body) in lib and not parts & kept_sel:
+            parts = base_parts(sel)
+            idx = order.get((ctx, sel, body))
+            if idx is not None and not parts & kept_sel and not any(parts & q and i > idx for q, i in gone):
+                gone.append((parts, idx))
                 cuts.append((a, b)); removed.append(f'{ctx} {sel}'.strip())
             else:
                 kept_sel.update(parts); n_kept += 1
         return n_kept
+    order = {k: i for i, k in enumerate(lib)}
     walk(rules(css))
     for a, b in sorted(cuts, reverse=True):
         # take the line with it when the rule stood on its own lines
@@ -135,12 +149,12 @@ def move(demo, report=False):
     s = p.read_text()
     if 'lib/vd.css' in s:
         print(f'{demo}: already on the library'); return
-    lib, removed, kept = lib_rules(), [], set()
+    lib, removed, kept, gone = lib_rules(), [], set(), []
     mine = demo_rules(s)
     off = [n for r, n in lib.items() if n and r not in mine]
     out, pos = [], 0
     for m in re.finditer(r'(<style[^>]*>)(.*?)(</style>)', s, flags=re.S):
-        out.append(s[pos:m.start(2)]); out.append(strip_css(m.group(2), lib, removed, kept)); pos = m.end(2)
+        out.append(s[pos:m.start(2)]); out.append(strip_css(m.group(2), lib, removed, kept, gone)); pos = m.end(2)
     out.append(s[pos:]); t = ''.join(out)
     t = re.sub(r'<style[^>]*>\s*</style>\n?', '', t)
     for rx in SCRIPTS: t = rx.sub('', t)

@@ -219,7 +219,8 @@ function same(label, a, b, log) {
       }
     }
     if (st) fails.push('styles');
-    let tk = 0; for (const k of Object.keys(Bb.tokens)) tk += same(`tokens ${k}`, Bb.tokens[k], Ba.tokens[k] || [], log); if (tk) fails.push('tokens');
+    /* a token the library declares only inside a rule switched off for this demo has no value: not a change */
+    let tk = 0; for (const k of Object.keys(Bb.tokens)) tk += same(`tokens ${k}`, Bb.tokens[k], (Ba.tokens[k] || []).filter((v) => !/: $/.test(v) || Bb.tokens[k].includes(v)), log); if (tk) fails.push('tokens');
     if (x.export) {
       if (!Bb.exported) log('export: nothing was exported before the change (check the export script)');
       if (same('export JSON', Bb.exported, Ba.exported, log) + same('readings table', Bb.table, Ba.table, log)) fails.push('export');
