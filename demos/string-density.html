@@ -342,6 +342,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Recorded readings</caption><thead><tr><th>#</th><th>m (kg)</th><th>T (N)</th><th>f (Hz)</th><th>n</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <details class="plotfold"><summary>Plot and fit</summary><div class="foldbody">
         <div class="inline"><span class="lab">Plot</span>
           <div class="seg" role="group" aria-label="What to plot" id="plotSeg"><button type="button" data-plot="fn" aria-pressed="true">f against n</button><button type="button" data-plot="Tn" aria-pressed="false">T against 1/n²</button></div></div>
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="The recorded readings with a least squares line and its residuals."></canvas></div>
@@ -349,6 +350,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
         <details class="more"><summary>More about this</summary>
           <p class="hint">Record stores L, m, T, f and the number of loops n (you can correct n in the table). f against n at one mass: slope v/2L, so μ = T/(4L² · slope²). T against 1/n² at one frequency: slope 4L²f²μ, so μ = slope/(4L²f²). Both lines should pass close to the origin.</p>
         </details>
+        </div></details>
       </section>
 
       <section>
