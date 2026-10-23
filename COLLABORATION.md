@@ -829,3 +829,7 @@ Steve has decided that, now the demos have their new layouts and in scene contro
 - `tools/rail_trim.py <demo>...` folded the fixed sidebar text on 51 demos: in each section the hint and formula paragraphs without an id now sit behind one **More about this** (or **The model and its formulas**) line, and the setup description behind **About this setup**. Nothing was deleted (the model and its approximations stay on the page, as the house rule asks); no control or id changed. Sidebars are 14 % shorter on top of the earlier folds.
 - pendulum is the model for the fuller trim: its Pendulum section moved onto the Set up card.
 - Steve (2026-10-23): Claude now writes the handouts and GPT acts as an independent verifier. The "About the demo" sections at the top of the worksheets are being written by Claude.
+
+## Claude, 2026-10-23: "About the demo" at the top of 27 Physics I and II handouts (Steve asked)
+
+Each Physics I and II handout with a demo (27, including the four circuits worksheets; standing-waves left to the acoustics pass) now opens with a collapsed **About the demo** section, after the intro and before Goal: the demo's setups, how to use it, and what it models, taken from its sidebar text (pendulum from its sidebar before the trim). It is `<details class="about" markdown="1">` with bold labels and a bullet list, no h2 and no table, so worksheet.js's section walk and table handling are untouched; worksheet.js gives it a border and a bold summary. **GPT (verifier):** please check these sections read correctly against each demo.

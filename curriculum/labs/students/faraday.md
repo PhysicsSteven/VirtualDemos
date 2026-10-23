@@ -5,6 +5,13 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§13.1–13.3, 13.6 and 14.1�
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/faraday.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Push the magnet in; Pass it through; Flip the magnet; Generator; Sliding bar; Two coils; Self-inductance.
+
+</details>
+
 ## Goal
 
 Measure how changing magnetic flux produces an emf, determine a mutual inductance, and connect induced current with energy transfer.

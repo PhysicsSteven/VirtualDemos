@@ -5,6 +5,18 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§9.1–9.6. Access for free 
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/collisions.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Elastic, equal masses; Perfectly inelastic; Heavy hits light; Explosion; Glancing 2D collision: 90°; Impulse: soft vs stiff.
+
+**Using the demo.**
+
+- Each cart carries a 5.0 cm flag. A gate times how long the flag blocks its beam, to 0.1 ms, and shows the speed as flag length ÷ Δt. The timer cannot tell direction: the arrow is the way the cart was seen moving. A cart at rest never reaches a gate and reads 0. Place gates for this run sets them as you would after one trial run: gate A between cart 1's start and where it meets cart 2, gate B the same for cart 2 (or 20 cm beyond a cart that starts at rest). When both carts move the same way, one gate goes where both pass before they meet and the other beyond the collision.
+- Capture stores one finished run: the masses as displayed (in the capture message, the row's tooltip and the CSV) and each cart's velocity before (u) and after (v′) the collision from the gate readings, in m/s, signed +x to the right. Cells can be edited; rows stay through setup changes until Clear. Press C on the drawing to capture.
+
+</details>
+
 ## Goal
 
 Test momentum conservation with measured velocities and distinguish momentum conservation from kinetic-energy conservation.

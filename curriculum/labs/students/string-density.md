@@ -3,6 +3,18 @@ Student laboratory · Physics I / Acoustics
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/string-density.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Sweep the frequency, 200 g; Add masses at 60 Hz; Third harmonic; Unknown string, sweep; Unknown string, add masses.
+
+**Using the demo.**
+
+- Drag the vibrator along the table to set the length L (or focus it and use the arrow keys), or use the slider and step buttons for an exact value.
+- Record stores L, m, T, f and the number of loops n (you can correct n in the table). f against n at one mass: slope v/2L, so μ = T/(4L² · slope²). T against 1/n² at one frequency: slope 4L²f²μ, so μ = slope/(4L²f²). Both lines should pass close to the origin.
+
+</details>
+
 ## Goal
 
 Determine the linear mass density of a vibrating string from its resonance frequencies and the tension supplied by hanging masses.

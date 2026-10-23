@@ -5,6 +5,21 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§5.3–5.7 and 7.2–7.5. Ac
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/coulomb-sandbox.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Dipole; Like pair; +3 and −1; Triangle; Quadrupole; Rod; Ring; Disk.
+
+**Using the demo.**
+
+- Hover over the field, tap to place the probe, or press P on the field and use the arrow keys. The probe sits on a 0.1 cm grid. Each charge is modeled as a uniformly charged ball 1.2 mm in radius, inside its drawn disc; outside the ball V and E are exact point charge values.
+- The field of this object alone (other charges left out), compared with the formulas of OpenStax section 5.5 at the probe. Each formula is exact only where its note says; elsewhere it is a limit. Select another rod, ring or disk to compare it.
+- Capture stores the probe position and the values shown above, rounded as displayed, with the charges that produced them (listed in the CSV header). Cells can be edited; rows stay through setup changes until Clear. Press C on the field to capture.
+- Blind hides the field lines, the equipotentials, the potential shading, the 3D landscape and the field map data table. The charges, the grid and the probe stay, so students map the field from probe readings.
+- In 3D, height is the potential: hills at positive charges, wells at negative ones. Heights are compressed near each charge, where V grows without bound.
+
+</details>
+
 ## Goal
 
 Use electric field and potential measurements to test the distance laws for a charge, then investigate how two charges combine.

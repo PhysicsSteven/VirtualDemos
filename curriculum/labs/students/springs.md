@@ -5,6 +5,24 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§15.1–15.2; optional dampi
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/springs.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Simple harmonic motion; Hanging spring; Three kinds of damping; Resonance; Normal modes; Beats.
+
+**Using the demo.**
+
+- With k<sub>1</sub> = k<sub>2</sub>, mode 1 has both blocks moving together, so the middle spring never stretches, and mode 2 has them moving opposite, so it adds 2k<sub>c</sub>. With unequal outer springs the modes are lopsided: one block swings more than the other, shown by the amplitude ratio below. Any motion is a sum of the two modes.
+- The oil pushes on each block with a force −bv. The damping ratio ζ = b/(2√(km)) sorts the motion: ζ < 1 underdamped, ζ = 1 critically damped, ζ > 1 overdamped. Drag the grip on the oil to change b.
+- The wall at the end of the spring moves as X<sub>w</sub> cos ωt. That pulls on the block exactly like a force F₀ cos ωt with F₀ = kX<sub>w</sub>. The sweep starts at the steady state for its first ω and raises ω slowly; if b is small the oscillator needs time 2m/b to catch up, so the measured dots fall a little below the peak and ring just after it, more so for a lightly damped spring.
+- Press Stopwatch (or W on the drawing) as the block passes a mark you choose, count N full oscillations, and press it again as the block passes the same mark going the same way. The stopwatch runs on simulation time, so slow motion makes timing easier, but your own reaction time still counts. It reads to 0.01 s. The gold ticks on the ruler hold the largest \|x\| since Reset peak.
+- Capture stores what is on screen, rounded as displayed: the stopwatch time, your N, the ruler peak (or, when driven, the amplitude of the last drive cycle) and the settings m, k, b, F₀ and ω. T = t/N. Cells can be edited; rows stay through setup changes until Clear.
+- Blind hides the period, ω₀ and f₀ predicted from m and k, the damping ratio, Q, the damped period and decay time, the predicted steady amplitude, phase and peak, the mode frequencies and beat period, the static stretch, the reference circle, the envelope, the ζ comparison traces, the curves on the resonance plot and the k derived from your fit. The stopwatch, the ruler, the clock, the measured period and amplitude, and the settings stay.
+- Unknown spring picks a random k from 5 to 60 N/m and hides it: the k slider, the k labels, the energy values, the wall amplitude and the k column of the CSV. It turns Blind on, and the ζ buttons are off because they would give k away. The measured period stays. Change m, time the period and find k from the slope of T² against m. One block only. Turning it off shows k, so you can check your answer.
+- Keep a trace, then drag the block farther out and let go: the peaks move apart in height but not in time.
+
+</details>
+
 ## Goal
 
 Determine an unknown spring constant from the dependence of oscillation period on mass.

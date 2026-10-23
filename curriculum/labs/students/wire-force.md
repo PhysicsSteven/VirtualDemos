@@ -5,6 +5,23 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§11.4–11.5 and 11.7. Acces
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/wire-force.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Current balance; Wire at an angle to B; Loop: torque; DC motor.
+
+**Using the demo.**
+
+- Turn the knobs on the panel in the picture (or focus one and use the arrow keys).
+- The balance was zeroed with no current, so it reads the magnet's apparent change in mass Δm = F/g (to 0.01 g). Capture stores I, L and the reading; the fit is F = Δm g against I, \|slope\| = BL sin θ.
+- Blind hides the predicted force, torque and B from the fit, and draws arrows equal length. The balance reading, the meters and the settings stay.
+
+**What the demo models.**
+
+- Model: uniform field between the poles and zero outside (no fringing); the balance sees the reaction force on the magnet, which equals the force on the wire (Newton's third law). The loop is rectangular, 4 cm by 4 cm, mass 20 g, with a little friction at its axle; the supply holds the current fixed, so back emf is ignored (a real motor's speed is limited mainly by back emf). The loop is shown 4 times slower than real, the motor about 30 times slower; the rotation rate readout is real.
+
+</details>
+
 ## Goal
 
 Determine an unknown magnetic field from a balance reading. Test the dependence of magnetic force on current, wire length and angle, then connect that force to a current loop's torque.

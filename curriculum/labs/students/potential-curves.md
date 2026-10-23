@@ -5,6 +5,18 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§7.1, 8.1–8.4. Access for 
 
 [Open the demonstration](https://physicssteven.github.io/VirtualDemos/demos/potential-curves.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Spring; Roller coaster; Double well; Molecule (Lennard Jones); Pendulum; Draw your own.
+
+**Using the demo.**
+
+- Drag the dashed energy line, or drag the particle to a new starting point; dropped where U > E, it starts from rest with E = U. Keys on the diagram: <kbd>↑</kbd> <kbd>↓</kbd> energy, <kbd>←</kbd> <kbd>→</kbd> starting point, <kbd>Space</kbd> play or pause, <kbd>R</kbd> reset.
+- At a minimum a push brings the particle back (stable). At a maximum a nudge sends it away (unstable). On a flat stretch it stays wherever it is put (neutral). Near a stable minimum U ≈ U₀ + ½U″(x − x₀)², a spring with k = U″, so ω₀ = √(U″/m).
+
+</details>
+
 ## Goal
 
 Use a potential-energy curve to predict force, speed, turning points and equilibrium stability.

@@ -5,6 +5,24 @@ Textbook: OpenStax *University Physics*, Vol. 1, §15.4, with the rotational dyn
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/pendulum.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Simple pendulum; Does mass matter?; Large swings; Swinging rod; On the Moon.
+
+**Using the demo.**
+
+- Drag the bob sideways to set the **Release angle θ₀**, or up and down along the string to set the **Length L (pivot to bob centre, or rod length)**; pick the **Mass** from the rack of bobs. Keys on the picture: ← → θ₀, ↑ ↓ L. The Set up card on the picture has sliders and step buttons for exact values; it fades away while the pendulum swings and comes back when you pause.
+- Capture stores L, θ₀ and the last full period from the photogate. T² against L uses bob rows with θ₀ ≤ 10°: slope 4π²/g. T against θ₀ shows how far large swings depart from T₀.
+- Blind hides the predicted periods and g from the fit; the photogate, the settings and the trace stay. The Mystery planet always hides its g.
+
+**What the demo models.**
+
+- T₀ = 2π√(L/g) · rod: 2π√(2L/3g) · exact: T = T₀ · (2/π) K(sin(θ₀/2))
+- Model: a point bob on a massless, inextensible string (or a thin uniform rod). A string can only pull, so the bob on a string is released from at most 90° (above horizontal it would go slack and fall); the rod can start from up to 170° about a frictionless pivot, integrated exactly enough (fourth order Runge–Kutta, 1 ms steps) that the photogate's 0.001 s readings are reliable. Air drag, when on, is a small force in proportion to speed. The photogate times every second pass of the bottom.
+
+</details>
+
 ## Goal
 
 Determine gravitational acceleration from pendulum timing, test whether mass matters, and measure when the small-angle approximation becomes inadequate.

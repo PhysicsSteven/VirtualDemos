@@ -5,6 +5,21 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§9.1–9.2. Access for free 
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/impulse.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Using the demo.**
+
+- The motion detector gives the velocity before (v₁) and after (v₂) the bounce, to 0.001 m/s, positive toward the sensor. The area is the trapezoid sum of the sampled sensor readings. Capture stores one row per run; export a run's F(t) to integrate it yourself.
+- Blind hides the area, the momentum change and the peak force, leaving the graph, the velocities and the settings.
+
+**What the demo models.**
+
+- J = ∫F dt = Δp = m(v_after − v_before)
+- Model: a frictionless cart; the bumper pushes with F = kx while it is compressed, then unloads along a steeper line so the cart leaves with e times its speed (e is the coefficient of restitution). Each phase is simple harmonic, so F(t) is exact. Stiff spring k = 4000 N/m, e = 0.90; soft spring k = 400 N/m, e = 0.90; clay k = 1500 N/m, e = 0.10. The sensor reads the force to 0.01 N at the chosen sample rate.
+
+</details>
+
 ## Goal
 
 Integrate a measured force pulse and compare its impulse with a cart's momentum change. Test how bumper stiffness and sensor sampling affect that comparison.

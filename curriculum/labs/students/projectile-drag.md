@@ -5,6 +5,29 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§3.4, 4.3 and 6.4. Access fo
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/projectile-drag.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Baseball; Ping pong ball; Cannonball; Shot put; Soccer ball; Heavy vs light, same size.
+
+**Using the demo.**
+
+- R range, H highest point, T flight time. Settings that differ between shots are in bold. Click a shot to load its settings into the controls. Up to 8 shots; the oldest drops off.
+- Drag in the view to aim, drag the arrow tip to change the speed too, and drag the hub up to raise the launcher. On the view, arrow keys change the angle, <kbd>Page Up</kbd> and <kbd>Page Down</kbd> the height, <kbd>Enter</kbd> launches.
+- The time cursor sits on a dot of the selected shot: t is a whole number of dot intervals after launch. Click a time graph to place it, or use the buttons, or <kbd>,</kbd> and <kbd>.</kbd> on the view (<kbd>Home</kbd>, <kbd>End</kbd> jump to launch and the last dot). x and y read to 1 cm from the launcher's foot; R is where the ball lands, to 1 cm.
+- Capture stores what you read for the selected shot: its settings as displayed, the cursor's t, x and y, and its range R. Cells can be edited; rows stay through preset changes until Clear. The CSV also has x and every setting.
+- Turning air resistance off keeps you on Earth with the same ball and the same air; only the drag force is switched off. Moon removes the air itself but keeps Earth's g = 9.81 m/s². A drag coefficient of 0 does the same thing gradually. Sea level is the standard atmosphere, 1.225 kg/m³ (101.3 kPa, 15 °C); Denver is 1.0 kg/m³, the standard pressure at 1609 m (83.4 kPa) at about 17 °C.
+- What the next shot will do. Each shot in the list keeps its own numbers.
+- Drag matters when the launch speed is comparable to or larger than v<sub>t</sub>.
+- Blind hides g, the vacuum path, the next shot preview, the predicted range, height, time and best angles, the terminal speed, the model curves on the range graph and the drag graph. The flight of each shot, the dots, the cursor reading and the range of each shot stay, as a real camera and tape would give them. Reduce motion shows each shot already landed instead of flying.
+- From ground level in vacuum the best angle is 45°. Drag lowers it. So does launching from above the ground, even with no air.
+
+**What the demo models.**
+
+- Model: drag F = ½ρC<sub>d</sub>Av² against the velocity with constant C<sub>d</sub>, no spin, no wind, flat ground, g and ρ constant with height. Fourth order Runge–Kutta with steps of at most 1 ms; the landing point is interpolated within the last step. The balls are drawn larger than scale.
+
+</details>
+
 ## Goal
 
 Infer gravitational acceleration from a trajectory and a range scan, then measure how air resistance changes the result.

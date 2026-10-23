@@ -5,6 +5,13 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§14.1–14.6. Access for fre
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/fluids.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Pressure grows with depth; Floating and sinking; Iceberg; Weighing in water (Archimedes); Venturi tube; Torricelli's tank.
+
+</details>
+
 ## Goal
 
 Infer liquid density from pressure, test Archimedes' principle and compare continuity with Bernoulli's equation.

@@ -168,6 +168,9 @@
   document.head.appendChild(el('style', { text: `
 .ws-panel { border: 1px solid #d0d7de; border-radius: 8px; background: #f6f8fa; padding: 12px 14px; margin: 18px 0 22px; }
 .ws-panel h2 { margin: 0 0 8px; padding: 0; border: 0; font-size: 1.1em; }
+details.about { margin: 12px 0; padding: 8px 12px; border: 1px solid #d0d7de; border-radius: 8px; }
+details.about > summary { cursor: pointer; font-weight: 700; }
+details.about[open] > summary { margin-bottom: 8px; }
 .ws-who { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 8px 12px; margin-bottom: 10px; }
 .ws-who label { display: flex; flex-direction: column; font-size: 0.85em; font-weight: 600; color: #24292f; gap: 3px; }
 .ws input.ws-f, .ws-panel input, .ws textarea.ws-f { font: inherit; font-size: 15px; color: #1f2328; background: #fff; border: 1px solid #8c959f;
