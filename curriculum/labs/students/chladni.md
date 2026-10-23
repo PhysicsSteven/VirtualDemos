@@ -31,13 +31,13 @@ For a real Chladni plate, secure the driver and plate, avoid touching vibrating 
 
 ## Procedure
 
-**Resonance survey.** Choose one steel square plate with a fixed thickness and driver position. Find at least five distinct resonances. Record the resonance frequency and sketch each nodal pattern, noting whether the shape is a cross, ring, star or another pattern. Use the same driver and damping conditions throughout.
+**Resonance survey.** Use a steel square plate 1.00 mm thick, driven at the center by the wave driver. Find the first five resonances. Record the resonance frequency and sketch each nodal pattern, noting whether the shape is a cross, ring, star or another pattern. Use the same driver and damping conditions throughout.
 
-**Thickness comparison.** Choose two or more plate thicknesses while keeping shape, material and the same identifiable mode fixed. Measure the mode frequency for each thickness and test the predicted proportionality to $$h$$.
+**Thickness comparison.** Change to the point force driver, which measures the plate's own frequencies (the wave driver's moving mass on the post shifts them). Pick one mode from the survey and measure its frequency at thicknesses of 0.50, 1.00, 1.50 and 2.00 mm. Then measure the same mode at 0.50 and 2.00 mm with the wave driver.
 
-**Material comparison.** Compare steel and aluminum for the same shape, thickness and identifiable mode. Explain the direction of the change using rigidity and density, not just Young's modulus.
+**Material comparison.** With the point force driver, compare steel and aluminum for the same mode at 1.00 mm. Explain the direction of the change using rigidity and density, not just Young's modulus.
 
-**Using the virtual apparatus.** Find each resonance by varying the drive frequency and observing a stable nodal pattern after the grains settle. Record the actual frequency at the response peak, not merely the nearest named preset. Keep the plate shape, driver position and damping unchanged during each scan. Use the frequency controls on the function generator. The model does not currently provide a worksheet measurement export for this experiment, so record the frequency and pattern observations in the Data table yourself.
+**Using the virtual apparatus.** Next resonance and Previous resonance jump to the exact peak; you can also tune by hand and watch the sand settle. Record a reading at each resonance: it records the plate, the drive and the frequency, and names the nearest mode when the frequency is within that resonance's width. Sketch the pattern yourself. Changing the shape, metal or thickness keeps the frequency, so find the resonance again after each change. Send each scan to the worksheet before clearing, so each scan gets its own copy of the Data table.
 
 ## Data
 
@@ -53,7 +53,7 @@ Keep the mode identity and driver position with every comparison.
 ## Analysis
 
 1. Organize resonance frequencies by mode and sketch their nodal patterns.
-2. For one mode, plot $$f$$ against thickness and check whether a straight line through the origin is reasonable.
+2. For one mode, plot $$f$$ against thickness for the point force driver and check whether a straight line through the origin is reasonable. Compare the wave driver's frequencies with it, and explain the difference using the driver's moving mass on the post. Why is the difference larger for the thin plate?
 3. Compare how the frequencies depend on material with the scaling $$\sqrt{E/[\rho(1-\nu^2)]}$$ for fixed thickness and geometry.
 4. Explain how changing the driver location may make some modes difficult to excite without changing their natural frequencies.
 

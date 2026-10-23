@@ -6283,7 +6283,7 @@
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "Optional optics only; current handout remains outside the rewrite queue.",
+      "note": "Optional optics. Handout rewritten 2026-10-23: Malus's law with two and three polarizers, reflection and the Brewster angle.",
       "title": "Polarization",
       "url": "demos/polarization.html",
       "handouts": [

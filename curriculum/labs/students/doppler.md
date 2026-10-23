@@ -17,7 +17,7 @@ where $$f_0$$ is emitted frequency, $$v$$ is sound speed and $$v_s$$ is source s
 
 $$f_{\mathrm{obs}}=f_0\frac{v+v_o}{v}.$$
 
-The virtual sound model uses $$v=343\ \mathrm{m/s}$$ at 20 °C. These one dimensional expressions assume subsonic motion along the line of sight; an passing source has a changing radial component.
+The virtual sound model uses $$v=343\ \mathrm{m/s}$$ at 20 °C. These one dimensional expressions assume subsonic motion along the line of sight; a passing source has a changing radial component.
 
 ## Before the lab
 
@@ -37,7 +37,7 @@ For a real sound experiment, keep loudspeaker levels safe and moving equipment c
 
 **Receding case.** Repeat selected speeds with source or observer moving away. Check the sign of the shift and the limit at zero speed.
 
-**Using the virtual apparatus.** Use the Sound model. Keep emitted frequency fixed throughout each scan and record whether the moving object is the source or the observer and whether it approaches or recedes. Use the reading for motion straight along the line, not a transient reading during a passing trajectory. Treat Mach cone and Light modes as separate extensions, not as data for the subsonic sound fit.
+**Using the virtual apparatus.** Use Sound, not Light. Only the part of the velocity along the line between the source and the observer shifts the frequency, so a reading records that part as the speed, with whether it approaches or recedes; read it while the moving object heads almost straight toward the other one (early in the run) or straight away (late in the run). Record no readings while two sounds arrive at once (supersonic) or none has arrived. Send each scan to the worksheet before clearing, so each scan gets its own copy of the Data table.
 
 ## Data
 
@@ -48,7 +48,7 @@ For a real sound experiment, keep loudspeaker levels safe and moving equipment c
 | | | | | | | |
 | | | | | | | |
 
-Record the observer/source geometry for every reading. If the demo does not export a measurement table, enter the displayed values manually.
+Record which one moves for every reading.
 
 ## Analysis
 

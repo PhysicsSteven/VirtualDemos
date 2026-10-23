@@ -97,6 +97,10 @@
     'huygens': { demo: "Huygens's Principle", cols: ['row', 'view', 'medium1', 'n1', 'medium2', 'n2', 'L_m', 't_ns', 'th1_deg', 'th2_deg', 's1v1', 's2v2', 'a_lambda', 'dark_deg'] },
     dispersion: { demo: 'Optics Bench', cols: ['row', 'element', 'material', 'lam_nm', 'n', 'dev_deg'] },
     'the-eye': { demo: 'The Eye', cols: ['row', 'eye', 'glasses_D', 'd_cm', 'seen', 'blur_mm', 'NP_cm', 'FP_cm', 'P_D', 'di_cm', 'rx_far_D', 'rx_near_D'] },
+    /* Trial | View | Light in | Elements | θ (°) | I/I₀ after each element | I/I₀ out | Light out | θᵢ (°) | n₁ | n₂ | R_s | R_p | R */
+    polarization: { demo: 'Polarization', cols: ['row', 'view', 'light_in', 'elements', 'theta_deg', 'I_each', 'I_out', 'light_out', 'thi_deg', 'n1', 'n2', 'Rs', 'Rp', 'R'] },
+    /* Scan | Harmonic n | f (Hz) | Amplitude (mm) | L (m) | T (N) | μ (g/m); the harmonic number of a driven peak is the student's */
+    'standing-waves': { demo: 'Standing Waves', cols: [both('row', 'mode'), 'n', 'f_Hz', 'amp_mm', 'L_m', 'T_N', 'mu_g_per_m'] },
   });
   /* ==PHYSICS II END== */
   /* ==ACOUSTICS START== Acoustics worksheets (acoustics.html) and their demo column maps. */
@@ -111,6 +115,11 @@
     resonators: { demo: 'Resonators', cols: ['f_Hz', 'k', null, null, 'L_read_cm', 'spacing_cm'] },
     timbre: { demo: 'Timbre and Harmonics', cols: [(r) => `run ${r.run}, ${r.preset}`, 'n', 'f_Hz', 'rel_amplitude', 'level_dB', 'phase_deg', 'notes'] },
     'acoustic-levitation': { demo: 'Acoustic Levitation', cols: ['setup_material', 'radius_mm', 'drive_Vpp', 'phase_deg', 'tracked_trap_z_mm', 'Fmax_over_W', 'notes'] },
+    /* Scan | Shape | Material | Thickness h (mm) | Mode/pattern | Frequency f (Hz) | Nodal sketch or description */
+    chladni: { demo: 'Chladni Patterns', cols: [(r) => `${r.row}, ${r.drive} drive, ${r.driver}, Q = ${r.Q}`, 'shape', 'material', 'h_mm', 'mode', 'f_Hz', null] },
+    /* Scan | Motion | Emitted f₀ (Hz) | Speed (m/s) | Direction | Observed f (Hz) | f/f₀; Speed is the part along the line of sight */
+    doppler: { demo: 'Doppler Effect', cols: ['row', (r) => (r.motion === 'both' ? `both: source ${r.vs_line_m_s} m/s, observer ${r.vo_line_m_s} m/s along the line` : r.motion),
+      'f0_Hz', 'speed_m_s', 'direction', 'f_obs_Hz', 'ratio'] },
     /* Trial | Gas | T (°C) | d (m) | Δt (ms) | Observation */
     'sound-waves': { demo: 'Sound Waves and the Speed of Sound', cols: ['row', 'gas', 'T_C', 'd_m', 'dt_ms', null] },
     /* Heap j | x (cm) | Rod | L_rod (m) | Mode n | f (Hz) | Gas | T (°C) */

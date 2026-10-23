@@ -37,7 +37,7 @@ On a real vibrating string bench, secure the string and hanging masses, keep han
 
 **Length check.** Keep tension and density fixed. Measure the fundamental at three lengths. Test whether $$f_1$$ is proportional to $$1/L$$.
 
-**Using the virtual apparatus.** Investigate the String mode in its driven configuration, beginning with Find the resonances. Set one consistent length, tension and linear density, then find successive response peaks and count the visible antinodes. Repeat at new tensions and lengths without mixing the scan settings. The drive frequency is adjustable on the function generator. Record readings in the Data table; do not treat repeated frames of the same deterministic response as independent trials.
+**Using the virtual apparatus.** Use the driven string (Find the resonances). A peak needs a few damping times to build up, so let the amplitude settle before you read it. Record a reading at each peak: it records the drive frequency, the steady amplitude and the string's settings, and leaves the harmonic number for you to fill in from the antinodes you count. Send each scan to the worksheet before clearing, so each scan gets its own copy of the Data table. Repeated readings of the same deterministic response are not independent trials.
 
 ## Data
 

@@ -138,7 +138,7 @@ HANDOUT_TOPIC = {
     'resistivity': 'Resistivity', 'dc-circuits': "Kirchhoff's Rules", 'rc-circuits': 'RC Time Constant',
     'rlc-transients': 'RLC Oscillations', 'ac-circuits': 'AC Resonance',
     'magnetic-force': 'Particle Orbits and the Hall Effect', 'wire-force': 'Magnetic Force on a Wire', 'faraday': "Faraday's Law",
-    'string-density': 'Linear Density of a String', 'standing-waves': 'Standing Waves on a String', 'polarization': "Malus's Law",
+    'string-density': 'Linear Density of a String', 'standing-waves': 'Standing Waves on a String', 'polarization': 'Polarization',
     # standalone activities
     'measurement-and-units': 'Units and Dimensions', 'estimation-and-evidence': 'Estimates and Uncertainty',
     'energy-sources': 'Electricity Sources',
