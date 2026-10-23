@@ -20,6 +20,13 @@ body { margin: 0; }
 .vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
 .vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
 /* /vd-qr */
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
+.rack-hint { margin: 0; font-size: 0.74rem; color: var(--muted); }
+.rack .inline { font-size: 0.78rem; gap: 6px; }
+.rack .seg button { font-size: 0.74rem; padding: 3px 7px; }
+.rack .check { font-size: 0.78rem; }
 </style>
 <title>Pendulum</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -75,6 +82,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .units { color: var(--muted); font-size: 0.8rem; }
 .proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
 .proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+/* the handout and its worksheet are one page; the same window name as Open the worksheet, so both reuse one tab */
+a.proj.handout { color: var(--accent); text-decoration: none; }
 .bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
 .stage { position: relative; min-height: 500px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .stage canvas { position: absolute; inset: 0; display: block; outline: none; touch-action: none; }
@@ -85,7 +94,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .rack { position: absolute; z-index: 2; display: flex; flex-direction: column; gap: 4px; padding: 6px 8px; background: color-mix(in srgb, var(--surface) 90%, transparent); border: 1px solid var(--line); border-radius: 8px; }
 .rack-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
 /* the Set up card fades away while the pendulum swings (and shows the bob through it while it is dragged) */
-.rack { width: min(300px, 100%); transition: opacity 0.35s ease, visibility 0.35s; }
+.rack { width: min(400px, 100%); transition: opacity 0.35s ease, visibility 0.35s; }
 .rack .slider-head label, .rack .slider-head output { font-size: 0.78rem; }
 .rack .btn { font-size: 0.78rem; padding: 3px 8px; }
 .rack.away { opacity: 0; visibility: hidden; }
@@ -163,6 +172,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     </div>
     <div class="bar-right">
       <div class="units mono">photogate at the bottom, 0.001 s</div>
+      <a class="proj handout" href="../curriculum/labs/students/pendulum.html" target="pendulum-worksheet">Handout and worksheet</a>
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
       <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/pendulum.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/pendulum.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h2v1h-2zM16 2h1v1h-1zM19 2h1v1h-1zM23 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h3v1h-3zM17 3h2v1h-2zM20 3h1v1h-1zM22 3h6v1h-6zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM23 4h1v1h-1zM25 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM15 5h1v1h-1zM19 5h1v1h-1zM24 5h2v1h-2zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM16 6h4v1h-4zM21 6h3v1h-3zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h2v1h-2zM17 7h1v1h-1zM19 7h1v1h-1zM23 7h1v1h-1zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM14 9h1v1h-1zM17 9h8v1h-8zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM15 10h2v1h-2zM18 10h1v1h-1zM23 10h1v1h-1zM25 10h1v1h-1zM27 10h1v1h-1zM29 10h2v1h-2zM32 10h5v1h-5zM2 11h2v1h-2zM5 11h2v1h-2zM10 11h4v1h-4zM15 11h3v1h-3zM20 11h1v1h-1zM22 11h1v1h-1zM24 11h1v1h-1zM26 11h1v1h-1zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h1v1h-1zM5 12h1v1h-1zM8 12h2v1h-2zM13 12h1v1h-1zM16 12h6v1h-6zM23 12h1v1h-1zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM4 13h2v1h-2zM7 13h1v1h-1zM11 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM20 13h4v1h-4zM26 13h1v1h-1zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM7 14h4v1h-4zM12 14h2v1h-2zM16 14h2v1h-2zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h3v1h-3zM30 14h9v1h-9zM2 15h4v1h-4zM7 15h1v1h-1zM9 15h1v1h-1zM11 15h1v1h-1zM14 15h1v1h-1zM16 15h1v1h-1zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h3v1h-3zM6 16h1v1h-1zM8 16h1v1h-1zM11 16h2v1h-2zM14 16h1v1h-1zM17 16h2v1h-2zM20 16h1v1h-1zM22 16h1v1h-1zM24 16h1v1h-1zM27 16h4v1h-4zM32 16h4v1h-4zM38 16h1v1h-1zM4 17h2v1h-2zM9 17h2v1h-2zM14 17h5v1h-5zM21 17h2v1h-2zM25 17h1v1h-1zM32 17h3v1h-3zM37 17h1v1h-1zM3 18h3v1h-3zM8 18h3v1h-3zM12 18h1v1h-1zM15 18h1v1h-1zM17 18h1v1h-1zM20 18h5v1h-5zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM3 19h1v1h-1zM9 19h3v1h-3zM13 19h2v1h-2zM17 19h2v1h-2zM23 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM2 20h3v1h-3zM6 20h4v1h-4zM11 20h1v1h-1zM13 20h1v1h-1zM15 20h2v1h-2zM22 20h5v1h-5zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM9 21h2v1h-2zM12 21h1v1h-1zM14 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h3v1h-3zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM5 22h1v1h-1zM8 22h1v1h-1zM14 22h1v1h-1zM19 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h1v1h-1zM7 23h1v1h-1zM10 23h3v1h-3zM14 23h1v1h-1zM16 23h1v1h-1zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h6v1h-6zM12 24h4v1h-4zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h2v1h-2zM26 24h1v1h-1zM29 24h7v1h-7zM37 24h2v1h-2zM2 25h1v1h-1zM5 25h2v1h-2zM9 25h4v1h-4zM14 25h12v1h-12zM29 25h1v1h-1zM31 25h4v1h-4zM37 25h1v1h-1zM3 26h2v1h-2zM8 26h1v1h-1zM10 26h1v1h-1zM13 26h2v1h-2zM17 26h2v1h-2zM21 26h1v1h-1zM23 26h1v1h-1zM25 26h4v1h-4zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h1v1h-1zM5 27h1v1h-1zM7 27h1v1h-1zM12 27h2v1h-2zM16 27h2v1h-2zM20 27h1v1h-1zM22 27h3v1h-3zM26 27h1v1h-1zM28 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM6 28h1v1h-1zM8 28h2v1h-2zM12 28h3v1h-3zM17 28h2v1h-2zM21 28h1v1h-1zM26 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM9 29h1v1h-1zM14 29h1v1h-1zM17 29h1v1h-1zM21 29h3v1h-3zM29 29h6v1h-6zM38 29h1v1h-1zM2 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM12 30h1v1h-1zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM25 30h12v1h-12zM38 30h1v1h-1zM10 31h1v1h-1zM14 31h2v1h-2zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM13 32h1v1h-1zM15 32h3v1h-3zM20 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM14 33h1v1h-1zM17 33h2v1h-2zM25 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM15 34h1v1h-1zM20 34h15v1h-15zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM13 35h1v1h-1zM15 35h4v1h-4zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM14 36h3v1h-3zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h3v1h-3zM15 37h2v1h-2zM18 37h1v1h-1zM23 37h1v1h-1zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h1v1h-1zM16 38h1v1h-1zM19 38h1v1h-1zM24 38h5v1h-5zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
     </div>
@@ -175,7 +185,13 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <div class="viewbar"><button type="button" class="spin attn" id="go">Release</button><button type="button" class="spin" id="hold">Hold at release angle</button></div>
       </div>
       <div class="rack" id="rack" role="group" aria-label="Set up the pendulum: length, release angle and mass">
-        <span class="rack-title">Set up</span>
+        <span class="rack-title">Set up, then press Release</span>
+        <p class="rack-hint">Drag the bob: sideways for θ₀, up and down for L.</p>
+        <div class="inline"><span class="lab">Type</span>
+          <div class="seg" role="group" aria-label="Pendulum type"><button type="button" id="tSimple" aria-pressed="true">Bob on a string</button><button type="button" id="tRod" aria-pressed="false">Uniform rod</button></div></div>
+        <div class="inline"><span class="lab">Gravity</span>
+          <div class="seg" role="group" aria-label="Where" id="gSeg"><button type="button" data-g="9.81" aria-pressed="true">Earth</button><button type="button" data-g="1.62" aria-pressed="false">Moon</button><button type="button" data-g="3.71" aria-pressed="false">Mars</button><button type="button" data-g="mystery" aria-pressed="false">Mystery planet</button></div></div>
+        <label class="check"><input type="checkbox" id="damp"><span>Air drag (slow decay)</span></label>
         <div><div class="slider-head"><label for="sL">Length L (pivot to bob centre, or rod length)</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0.1" max="2" step="0.01"></div>
         <div class="btnrow"><button type="button" class="btn" data-step="L" data-d="-0.01">L −1 cm</button><button type="button" class="btn" data-step="L" data-d="0.01">L +1 cm</button></div>
         <div><div class="slider-head"><label for="sA">Release angle θ₀</label><output id="oA" for="sA"></output></div><input type="range" id="sA" min="1" max="170" step="1"></div>
@@ -196,23 +212,12 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <button type="button" data-p="rod" aria-pressed="false">Swinging rod</button>
           <button type="button" data-p="moon" aria-pressed="false">On the Moon</button>
         </div>
-        <p class="hint" id="presetHint"></p>
-      </section>
-
-      <section>
-        <h2>Pendulum</h2>
-        <div class="inline"><span class="lab">Type</span>
-          <div class="seg" role="group" aria-label="Pendulum type"><button type="button" id="tSimple" aria-pressed="true">Bob on a string</button><button type="button" id="tRod" aria-pressed="false">Uniform rod</button></div></div>
-        <p class="hint">Drag the bob sideways to set the <b>Release angle θ₀</b>, or up and down along the string to set the <b>Length L (pivot to bob centre, or rod length)</b>; pick the <b>Mass</b> from the rack of bobs. Keys on the picture: ← → θ₀, ↑ ↓ L. The Set up card on the picture has sliders and step buttons for exact values; it fades away while the pendulum swings and comes back when you pause.</p>
-        <div class="inline"><span class="lab">Gravity</span>
-          <div class="seg" role="group" aria-label="Where" id="gSeg"><button type="button" data-g="9.81" aria-pressed="true">Earth</button><button type="button" data-g="1.62" aria-pressed="false">Moon</button><button type="button" data-g="3.71" aria-pressed="false">Mars</button><button type="button" data-g="mystery" aria-pressed="false">Mystery planet</button></div></div>
-        <label class="check"><input type="checkbox" id="damp"><span>Air drag (slow decay)</span></label>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
         <h2>Photogate and readouts</h2>
         <dl class="readout" id="out"></dl>
-        <p class="formula">T₀ = 2π√(L/g) · rod: 2π√(2L/3g) · exact: T = T₀ · (2/π) K(sin(θ₀/2))</p>
       </section>
 
       <section>
@@ -228,15 +233,14 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
           <div class="seg" role="group" aria-label="What to plot"><button type="button" data-plot="TL" aria-pressed="true">T² against L</button><button type="button" data-plot="TA" aria-pressed="false">T against θ₀</button></div></div>
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="The captured readings with a least squares line and residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
-        <p class="hint">Capture stores L, θ₀ and the last full period from the photogate. T² against L uses bob rows with θ₀ ≤ 10°: slope 4π²/g. T against θ₀ shows how far large swings depart from T₀.</p>
       </section>
 
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
-        <p class="hint">Blind hides the predicted periods and g from the fit; the photogate, the settings and the trace stay. The Mystery planet always hides its g.</p>
-        <p class="hint">Model: a point bob on a massless, inextensible string (or a thin uniform rod). A string can only pull, so the bob on a string is released from at most 90° (above horizontal it would go slack and fall); the rod can start from up to 170° about a frictionless pivot, integrated exactly enough (fourth order Runge–Kutta, 1 ms steps) that the photogate's 0.001 s readings are reliable. Air drag, when on, is a small force in proportion to speed. The photogate times every second pass of the bottom.</p>
+        <details class="more"><summary>The model and its formulas</summary><p class="formula">T₀ = 2π√(L/g) · rod: 2π√(2L/3g) · exact: T = T₀ · (2/π) K(sin(θ₀/2))</p>
+        <p class="hint">Model: a point bob on a massless, inextensible string (or a thin uniform rod). A string can only pull, so the bob on a string is released from at most 90° (above horizontal it would go slack and fall); the rod can start from up to 170° about a frictionless pivot, integrated exactly enough (fourth order Runge–Kutta, 1 ms steps) that the photogate's 0.001 s readings are reliable. Air drag, when on, is a small force in proportion to speed. The photogate times every second pass of the bottom.</p></details>
       </section>
     </aside>
   </main>
@@ -310,7 +314,8 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     const p = ps(), wide = W > 640, sw = wide ? W * 0.55 : W, sh = wide ? H : H * 0.62;
     const px = sw / 2, py = 96 * p, sc = scaleFor(S.A), Lpx = S.L * sc;
     geo = { px, py, sc };
-    if (getComputedStyle($('rack')).position === 'absolute') { const rk = $('rack'), bt0 = sh - 14 * p, rh = rk.offsetHeight; rk.style.left = `${10 * p}px`; rk.style.top = `${Math.max(116 * p, bt0 - rh - 8 * p)}px`; rk.style.maxWidth = `${Math.max(150, px - 40 * p)}px`; }
+    /* the Set up card sits over the trace, which it does not need while you set up; on a narrow picture, at the bottom left by the stand */
+    if (getComputedStyle($('rack')).position === 'absolute') { const rk = $('rack'), bt0 = sh - 14 * p; if (wide && W - sw > 300) { rk.style.left = `${sw + 16 * p}px`; rk.style.top = `${60 * p}px`; rk.style.maxWidth = `${W - sw - 32 * p}px`; } else { const rh = rk.offsetHeight; rk.style.left = `${10 * p}px`; rk.style.top = `${Math.max(116 * p, bt0 - rh - 8 * p)}px`; rk.style.maxWidth = `${Math.max(150, px - 40 * p)}px`; } }
     const gy = py + Lpx, th = S.st.th, bx = px + Lpx * Math.sin(th), by = py + Lpx * Math.cos(th);
     scenery(p, wide, sw, sh, px, py, gy, bx);
     // photogate at the bottom: a U-shaped gate whose beam lights up while the bob is in it
@@ -411,7 +416,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   $('gSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (!b) return; S.gKey = b.dataset.g; if (S.gKey === 'mystery') S.mystery = Math.round((2 + Math.random() * 20) * 100) / 100; else { S.mystery = null; S.g = +S.gKey; } changed(); fit(); });
   $('damp').addEventListener('change', (e) => { S.damp = e.target.checked; draw(); });
   for (const b of document.querySelectorAll('[data-plot]')) b.addEventListener('click', () => { S.plot = b.dataset.plot; sync(); fit(); });
-  function setRun(on) { S.run = on; $('rack').classList.toggle('away', on); $('rack').inert = on; $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Release'; $('go').classList.toggle('attn', !on); }
+  function setRun(on) { S.run = on; { const away = on || S.t > 0; $('rack').classList.toggle('away', away); $('rack').inert = away; } $('go').textContent = on ? 'Pause' : S.t > 0 ? 'Resume' : 'Release'; $('go').classList.toggle('attn', !on); }
   $('go').addEventListener('click', () => setRun(!S.run));
   $('hold').addEventListener('click', () => { release(); setRun(false); draw(); readouts(); });
   let last = performance.now();
