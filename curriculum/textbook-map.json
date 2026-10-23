@@ -5799,7 +5799,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-23 (Claude). Lecture demo: 120 V branch circuit solved by nodal analysis; appliances, 14 or 12 gauge, 15/20/30 A breaker, run length, GFCI, ground wire, faults (hot to neutral, hot to case), person touching with dry or wet skin; Blind.",
-      "handouts": [],
+      "handouts": [
+        "household-wiring"
+      ],
       "title": "Household Wiring and Electrical Safety",
       "url": "demos/household-wiring.html"
     },

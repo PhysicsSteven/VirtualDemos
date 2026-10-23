@@ -118,6 +118,7 @@ HANDOUT_TOPIC = {
     'two-speaker': 'Two Speaker Interference', 'ultrasound': 'Ultrasound Echoes and Doppler Flow', 'sound-intensity': 'Sound Intensity and Decibels',
     'room-acoustics': 'Reverberation Time', 'anechoic-chamber': 'Anechoic Chamber',
     'force-table': 'Force Table',
+    'household-wiring': 'Household Wiring and Electrical Safety',
     'motion-graphs': 'Motion Graphs', 'projectile-drag': 'Projectiles and Air Resistance', 'forces': 'Friction and Work',
     'potential-curves': 'Potential Energy Diagrams', 'impulse': 'Impulse', 'collisions': 'Collisions',
     'rotation': 'Torque and Angular Momentum', 'kepler-orbits': "Kepler's Third Law", 'stress-strain': "Young's Modulus",
