@@ -562,3 +562,7 @@ After the pendulum pilot, Steve asked for it everywhere in Physics I. **Export C
 
 - The student now chooses the columns for both axes (two dropdowns above the graph, saved with the worksheet); nothing is plotted until both are chosen. The graph shows only the points, the line, residuals, slope and intercept with standard errors: g = 4π²/slope was removed so the analysis stays the student's. `PLOTS` is replaced by `GRAPHS`, a list of worksheets that get the graph; no per worksheet settings, since the axes come from the table's own headings (name and unit split at the last parentheses).
 - The first data table can be removed once a copy exists (**Remove this table**, clears what was in it) and brought back (**Bring back the first table**). Removed tables are left out of the CSV and the print.
+
+## Claude, 2026-10-23 18:55: graphs on all Physics I worksheets
+
+Steve approved the student chosen axis graph, so `GRAPHS` now covers all 17 Physics I worksheets (`PHYSICS_I` list; `ENABLED` starts from it, so the Physics II thread can append its own). Compound units in the slope are bracketed: (m/s)/kg, AU/(solar masses). Checked every Physics I worksheet with a test line, and at 360 px.

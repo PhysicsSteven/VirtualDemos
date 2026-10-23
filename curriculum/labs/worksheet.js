@@ -10,9 +10,10 @@
 (function () {
   'use strict';
   /* Physics I worksheets (physics-1.html). Add a worksheet's file name here to make it interactive. */
-  const ENABLED = ['collisions', 'energy-sources', 'estimation-and-evidence', 'fluids', 'forces', 'impulse', 'kepler-orbits',
+  const PHYSICS_I = ['collisions', 'energy-sources', 'estimation-and-evidence', 'fluids', 'forces', 'impulse', 'kepler-orbits',
     'measurement-and-units', 'motion-graphs', 'pendulum', 'potential-curves', 'projectile-drag', 'rotation', 'rotational-dynamics',
     'springs', 'stress-strain', 'viscometer'];
+  const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
      a value from the CSV's header lines, a function of the row (r, keyed by CSV column) and those values (h), or null (left alone).
@@ -38,7 +39,7 @@
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
-  const GRAPHS = ['pendulum'];
+  const GRAPHS = PHYSICS_I.slice();
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
   const pretty = (h) => String(h || '').replace(/\^([23])/g, (m, d) => SUP[d]).replace(/_(\d)/g, (m, d) => SUB[d]);
@@ -533,7 +534,8 @@
     box.appendChild(svg);
     if (sameX) { box.appendChild(el('p', { class: 'ws-warn2', text: `Every point has the same ${P.xName} (${xs[0]}${P.xUnit ? ' ' + P.xUnit : ''}), so there is no slope to fit. Use rows where ${P.xName} changes, or choose another column.` })); return; }
     if (!f) return;
-    const su = P.yUnit && P.xUnit ? `${P.yUnit}/${P.xUnit}` : P.yUnit || (P.xUnit ? `1/${P.xUnit}` : '');
+    const wrap = (u) => (/[\/\s]/.test(u) ? `(${u})` : u); /* (m/s)/kg, AU/(solar masses) */
+    const su = P.yUnit && P.xUnit ? `${wrap(P.yUnit)}/${wrap(P.xUnit)}` : P.yUnit || (P.xUnit ? `1/${wrap(P.xUnit)}` : '');
     const lines = [['slope', f.b, f.seB, su], ['intercept', f.a, f.seA, P.yUnit]];
     const res = el('p', { class: 'ws-res' });
     lines.forEach(([name, v, e, u], i) => { if (i) res.appendChild(el('br')); res.appendChild(el('b', { text: name + ': ' })); res.appendChild(document.createTextNode(pm(v, e, u))); });
