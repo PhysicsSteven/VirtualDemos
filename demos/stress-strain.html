@@ -119,6 +119,23 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 .plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
 .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 480px; } }
+/* the tray of slotted masses: over the bottom of the wire's column, or under the picture on phones */
+.scene { position: absolute; inset: 0; }
+.tray { position: absolute; left: 10px; bottom: 10px; z-index: 2; display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 10px; }
+.tray-title { font-size: 0.74rem; font-weight: 700; color: var(--muted); }
+.pieces { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 5px; }
+.pieces button { --w: 40px; --h: 14px; width: var(--w); height: var(--h); padding: 0; border: 0; border-radius: 3px; cursor: pointer; font: 700 0.66rem/1 var(--font-mono); color: #17202b; background: linear-gradient(#c9d0d9, #9aa4b0); box-shadow: inset 0 -2px 0 rgba(0, 0, 0, 0.18); }
+.pieces button.brass { background: linear-gradient(#e2c26a, #b98f2e); }
+.pieces button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.tray-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
+.masslist { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
+@media (max-width: 820px) {
+  main.bench .stage { height: auto; max-height: none; }
+  .scene { position: relative; inset: auto; height: 600px; max-height: 90vh; }
+  .tray { position: static; margin: 8px; }
+  .pieces button { min-height: 30px; }
+  .tray .btn { min-height: 36px; }
+}
 @media (max-width: 820px) {
   html, body { height: auto; } .app { height: auto; }
   .bench { grid-template-columns: minmax(0, 1fr); }
@@ -145,12 +162,19 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 
   <main class="bench">
     <div class="stage" id="stage">
+      <div class="scene" id="scene">
       <canvas id="can" tabindex="0" role="img" aria-label="A wire hanging from a beam with a load on it and a dial gauge reading the extension, beside a graph of stress against strain. Up and down arrows change the load."></canvas>
       <div class="viewbar">
         <button type="button" class="spin" id="unload">Take all the load off</button>
         <button type="button" class="spin" id="fresh">New wire</button>
       </div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
+      </div>
+      <div class="tray" id="tray" role="group" aria-labelledby="trayTitle">
+        <div class="tray-title" id="trayTitle">Hanging mass: click a slotted mass to hang it</div>
+        <div class="pieces" id="addMass"></div>
+        <div class="tray-foot"><button type="button" class="btn" id="takeLast">Take off the last mass</button><span class="masslist" id="massNow"></span></div>
+      </div>
     </div>
 
     <aside class="rail">
@@ -168,7 +192,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 
       <section>
         <h2>Load</h2>
-        <div><div class="slider-head"><label for="sL">Hanging mass</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0" max="60" step="0.1"></div>
+        <p class="hint">Hang slotted masses from the tray under the wire; up and down arrows on the picture add or take off 0.1 kg (Shift: 1 kg).</p>
         <dl class="readout" id="out"></dl>
         <label class="check"><input type="checkbox" id="zoom"><span>Graph: zoom in on the elastic part</span></label>
         <p class="formula">stress σ = F/A · strain ε = ΔL/L · Y = σ/ε (elastic)</p>
@@ -257,7 +281,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     aluminium: 'An aluminium alloy: Y about 70 GPa, so it stretches almost three times as much as steel under the same stress, but it breaks soon after it yields.',
     mystery: 'An unknown metal. Find its Young\'s modulus from your readings, then load it until it yields. Its properties stay hidden.'
   };
-  const S = { zoom: false, mat: 'steel', d: 0.5, m: 0, ep: 0, broke: false, blind: false, path: [[0, 0]], rows: [] };
+  const S = { pieces: [], zoom: false, mat: 'steel', d: 0.5, m: 0, ep: 0, broke: false, blind: false, path: [[0, 0]], rows: [] };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -275,7 +299,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function setLoad(m) {
     if (S.broke) { $('capStatus').textContent = 'The wire has broken. Press New wire.'; return; }
     const A = area(S.d), s0 = S.m * G / A;
-    S.m = Math.max(0, Math.min(+$('sL').max, m));
+    S.m = Math.max(0, Math.min(Math.ceil(maxLoad() * 10) / 10, Math.round(m * 10) / 10));
     const s1 = S.m * G / A, n = s1 > s0 ? 60 : 1;          // loading follows the curve in small steps; unloading is a straight line
     for (let i = 1; i <= n; i++) {
       const s = s0 + (s1 - s0) * i / n, r = loadAt(M(), s, S.ep);
@@ -284,9 +308,9 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     }
     sync(); draw(); readouts();
   }
-  function newWire() { S.wire = (S.wire || 0) + 1; S.ep = 0; S.broke = false; S.m = 0; S.path = [[0, 0]]; sync(); draw(); readouts(); }
+  function newWire() { S.wire = (S.wire || 0) + 1; S.ep = 0; S.broke = false; S.m = 0; S.pieces = []; S.path = [[0, 0]]; sync(); draw(); readouts(); }
   function sync() {
-    const mx = Math.ceil(maxLoad() * 10) / 10; $('sL').max = mx; $('sL').step = mx > 30 ? 0.5 : 0.1; $('sL').value = S.m; $('oL').textContent = `${f(S.m, 1)} kg (F = ${f(S.m * G, 1)} N)`;
+    $('massNow').textContent = `${f(S.m, 1)} kg hanging (F = ${f(S.m * G, 1)} N)`; $('takeLast').disabled = !S.pieces.length;
     $('sD').value = S.d; $('oD').textContent = `${f(S.d, 2)} mm`; $('matHint').textContent = HINT[S.mat];
     for (const b of document.querySelectorAll('#mats button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mat));
   }
@@ -297,7 +321,8 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const p = ps(), q = now(), wide = W > 640, colW = wide ? Math.min(260 * p, W * 0.34) : W, colH = wide ? H : H * 0.55;
     // beam, wire, load, gauge
-    const bx = colW / 2, top = 112 * p, L0 = colH - top - 120 * p, stretch = Math.min(1.6, 1 + q.e * 4);   // the drawing exaggerates the stretch
+    $('tray').style.width = wide ? `${colW - 20}px` : '';
+    const trayH = getComputedStyle($('tray')).position === 'absolute' ? $('tray').offsetHeight + 16 : 0, bx = colW / 2, top = 112 * p, L0 = colH - top - Math.max(120 * p, trayH + 70 * p), stretch = Math.min(1.6, 1 + q.e * 4);   // the drawing exaggerates the stretch
     const wl = S.broke ? L0 * 0.55 : L0 * (0.85 + 0.15 * (stretch - 1) / 0.6);
     // the clamp at the wire's lower end, as the drawing places it for the extension now on the dial (the same formula as the wire)
     const armY = top + L0 * (0.85 + 0.15 * (Math.min(1.6, 1 + q.e * 4) - 1) / 0.6);
@@ -467,13 +492,17 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   // ---------- controls and boot ----------
   for (const b of document.querySelectorAll('#mats button')) b.addEventListener('click', () => { S.mat = b.dataset.m; newWire(); fit(); });
   $('sD').addEventListener('input', (e) => { S.d = +e.target.value; newWire(); fit(); });
-  $('sL').addEventListener('input', (e) => setLoad(+e.target.value));
-  $('unload').addEventListener('click', () => setLoad(0));
+  /* the slotted masses: each click hangs one; the last one hung comes off first */
+  const PIECES = [0.1, 0.2, 0.5, 1, 2, 5, 10, 20], kgName = (m) => (m < 1 ? `${Math.round(m * 1000)} g` : `${m} kg`);
+  $('addMass').innerHTML = PIECES.map((m, i) => { const lg = Math.log10(m * 10); return `<button type="button" data-kg="${m}" aria-label="Add ${kgName(m)}" class="${i % 2 ? 'brass' : ''}" style="--w:${Math.round(34 + 9 * lg)}px;--h:${Math.round(13 + 5 * lg)}px">${kgName(m)}</button>`; }).join('');
+  $('addMass').addEventListener('click', (e) => { const b = e.target.closest('[data-kg]'); if (!b) return; if (S.broke) { setLoad(0); return; } const was = S.m; setLoad(S.m + +b.dataset.kg); if (S.m > was) S.pieces.push(Math.round((S.m - was) * 10) / 10); sync(); });
+  $('takeLast').addEventListener('click', () => { const g = S.pieces.pop(); if (g) setLoad(S.m - g); sync(); });
+  $('unload').addEventListener('click', () => { S.pieces = []; setLoad(0); });
   $('fresh').addEventListener('click', () => { newWire(); fit(); });
   $('zoom').addEventListener('change', (e) => { S.zoom = e.target.checked; draw(); });
-  can.addEventListener('keydown', (e) => { if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { setLoad(Math.round((S.m + (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 1 : 0.1)) * 10) / 10); e.preventDefault(); } });
+  can.addEventListener('keydown', (e) => { if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { { const was = S.m; setLoad(Math.round((S.m + (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 1 : 0.1)) * 10) / 10); const d = Math.round((S.m - was) * 10) / 10; if (d > 0) S.pieces.push(d); else if (d < 0) S.pieces = []; sync(); } e.preventDefault(); } });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); fit(); });
-  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); fit(); }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); fit(); }
   const retheme = () => { tokens(); draw(); fit(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
@@ -481,7 +510,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
-  tokens(); new ResizeObserver(resize).observe(stage); sync(); readouts(); renderRows(); resize();
+  tokens(); new ResizeObserver(resize).observe($('scene')); sync(); readouts(); renderRows(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
 })();
 </script>
