@@ -157,6 +157,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="string" aria-pressed="true">Ball on a string</button>
           <button type="button" data-p="flat" aria-pressed="false">Car on a flat curve</button>
           <button type="button" data-p="bank" aria-pressed="false">Banked curve</button>
+          <button type="button" data-p="speed" aria-pressed="false">Speeding up or braking</button>
           <button type="button" data-p="loop" aria-pressed="false">Vertical loop</button>
         </div>
         <p class="hint" id="presetHint"></p>
@@ -168,6 +169,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div><div class="slider-head"><label for="sR">Radius r</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="0.5" max="100" step="0.5"></div>
         <div><div class="slider-head"><label for="sM">Mass m</label><output id="oM" for="sM"></output></div><input type="range" id="sM" min="0.1" max="2000" step="0.1"></div>
         <div id="muRow"><div class="slider-head"><label for="sMu">Static friction μs (tyres on road)</label><output id="oMu" for="sMu"></output></div><input type="range" id="sMu" min="0" max="1.2" step="0.01"></div>
+        <div id="atRow"><div class="slider-head"><label for="sAt">Rate of change of speed a_t (negative brakes)</label><output id="oAt" for="sAt"></output></div><input type="range" id="sAt" min="-5" max="5" step="0.5"></div>
         <div id="bankRow"><div class="slider-head"><label for="sB">Bank angle θ</label><output id="oB" for="sB"></output></div><input type="range" id="sB" min="0" max="45" step="0.5"></div>
       </section>
 
@@ -212,6 +214,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return { v: Math.sqrt(v2), N, stalls: false };
   }
   const loopMin = (r) => Math.sqrt(5 * G * r);                           // smallest speed at the bottom that keeps contact at the top
+  // speeding up or braking on a flat curve: constant rate of change of speed at (negative brakes), from speed v0; stops when braking reaches v = 0
+  function speedState(v0, at, r, t) {
+    const tStop = at < 0 ? v0 / -at : Infinity, tt = Math.min(t, tStop), v = v0 + at * tt, s = v0 * tt + 0.5 * at * tt * tt;
+    const ac = v * v / r, aT = t < tStop ? at : 0;
+    return { v, s, th: s / r, ac, at: aT, a: Math.hypot(aT, ac), ang: Math.atan2(Math.abs(aT), ac) };
+  }
+  // first time the friction needed exceeds μs g: (v²/r)² + at² = (μs g)²; null if it never does, 0 if at once
+  function slipTime(v0, at, r, mu) {
+    const A = mu * G; if (Math.abs(at) > A) return 0;
+    const vs = Math.sqrt(r * Math.sqrt(A * A - at * at));
+    if (at > 0) return vs > v0 ? (vs - v0) / at : 0;
+    if (at === 0) return v0 > vs ? 0 : null;
+    return v0 > vs ? 0 : null;   // braking only lowers v²/r, so it slips at once or never
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -222,9 +238,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     string: { v: 3, r: 1, m: 0.5, mu: 0, b: 0, hint: 'A ball whirled on a frictionless table: the string\'s pull is the only horizontal force, so T = mv²/r. Cut the string and the ball does not fly outward: it goes straight, along the velocity it had.' },
     flat: { v: 15, r: 50, m: 1200, mu: 0.7, b: 0, hint: 'Static friction from the road is all that turns the car: it needs mv²/r and can give at most μs mg. Above √(μs g r) the car slides off along a nearly straight line. Try a wet road, μs = 0.4.' },
     bank: { v: 20, r: 50, m: 1200, mu: 0.3, b: 25, hint: 'Tilting the road lets the normal force lean toward the center. At the ideal speed √(rg tan θ) no friction is needed at all. Slower, friction points up the slope; faster, it points down. Outside the range, the car slips.' },
+    speed: { v: 0, r: 60, m: 1200, mu: 0.7, b: 0, at: 2, hint: 'Speeding up or braking on the curve: the acceleration now has a part along the road, a_t, as well as v²/r toward the centre. The total is not toward the centre, and the road\'s grip must supply all of it, so a car that is speeding up or braking slides off at a lower speed than one cruising. Set a_t negative to brake.' },
     loop: { v: 9, r: 1.5, m: 0.5, mu: 0, b: 0, hint: 'A ball rolling without friction inside a loop (treated as sliding, so no rotational energy). It slows as it climbs. At the top gravity and the track both point to the center; below v = √(gr) there, gravity alone is too much and the ball falls away. That needs v ≥ √(5gr) at the bottom.' }
   };
-  const S = { preset: 'string', v: 3, r: 1, m: 0.5, mu: 0, b: 0, ang: 0, run: !reduce, cut: null, slid: null, fell: null, blind: false };
+  const S = { preset: 'string', v: 3, r: 1, m: 0.5, mu: 0, b: 0, at: 2, ts: 0, ang: 0, run: !reduce, cut: null, slid: null, fell: null, blind: false };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -242,6 +259,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (S.preset === 'string') return { need: tension(m, v, r), a: accel(v, r), T: tension(m, v, r), ok: !S.cut };
     if (S.preset === 'flat') { const need = m * accel(v, r), fmax = mu * m * G; return { need, a: accel(v, r), fmax, vmax: flatMax(mu, r), ok: need <= fmax + 1e-9 }; }
     if (S.preset === 'bank') { const q = bank(m, v, r, b, mu); return { ...q, need: m * accel(v, r), a: accel(v, r), ok: q.holds }; }
+    if (S.preset === 'speed') { const k = speedState(v, S.at, r, S.ts); return { ...k, need: m * k.a, fmax: mu * m * G, ok: k.a <= mu * G + 1e-9, tSlip: slipTime(v, S.at, r, mu) }; }
     const q = loop(m, v, r, S.ang * 180 / Math.PI); return { ...q, a: q.stalls ? 0 : q.v * q.v / r, vmin: loopMin(r), ok: !q.stalls && q.N >= 0 };
   }
 
@@ -275,7 +293,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else { x = cx + R * ux; y = cy + R * uy; vx = loopView ? Math.cos(th) : -Math.sin(th); vy = loopView ? -Math.sin(th) : -Math.cos(th); }
     if (!free) { const vm = Math.hypot(vx, vy); vx /= vm; vy /= vm; }
     // string or center: a peg on the table, a plain dot otherwise
-    const isCar = S.preset === 'flat' || S.preset === 'bank';
+    const isCar = S.preset === 'flat' || S.preset === 'bank' || S.preset === 'speed';
     if (S.preset === 'string') peg(cx, cy, p); else { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 4 * p, 0, 7); ctx.fill(); }
     if (isCar && S.slid) skid(S.slid.x, S.slid.y, x, y, p);
     if (S.preset === 'string' && !S.cut) { ctx.strokeStyle = T.tn; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x, y); ctx.stroke(); }
@@ -284,12 +302,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (isCar) car(x, y, Math.atan2(vy, vx), p);
     else ball(x, y, 9 * p, S.preset === 'string' ? 3 * p : 0);
     // velocity and acceleration arrows on the scene
-    const vL = Math.min(70 * p, 18 * p + S.v * 3 * p);
-    arrow(x, y, vx * vL, vy * vL, T.vel, 3 * p, 'v');
-    if (!free && !bl) { const al = 50 * p; arrow(x, y, (cx - x) / R * al, (cy - y) / R * al, T.net, 3 * p, 'a = v²/r', 1); }
+    const vNow = S.preset === 'speed' ? (S.slid ? S.slid.v : q.v) : S.v, vL = Math.min(70 * p, 18 * p + vNow * 3 * p);
+    if (vNow > 1e-6 || S.preset !== 'speed') arrow(x, y, vx * vL, vy * vL, T.vel, 3 * p, 'v');
+    if (S.preset === 'speed') {
+      if (!free && !bl) { const k = R * 0.75 / Math.max(1, S.mu * G), nx = (cx - x) / R, ny = (cy - y) / R; arrow(x, y, vx * q.at * k, vy * q.at * k, T.fr, 3 * p, 'a_t'); arrow(x, y, nx * q.ac * k, ny * q.ac * k, T.tn, 3 * p, 'a_c', 1); arrow(x, y, (vx * q.at + nx * q.ac) * k, (vy * q.at + ny * q.ac) * k, T.net, 3.5 * p, 'a', 1); }
+    }
+    else if (!free && !bl) { const al = 50 * p; arrow(x, y, (cx - x) / R * al, (cy - y) / R * al, T.net, 3 * p, 'a = v²/r', 1); }
     // status line
     ctx.fillStyle = T.ink; ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    const msg = S.cut ? 'String cut: no horizontal force, so it moves in a straight line.' : S.slid ? (bl ? 'The car leaves the circle.' : 'Friction cannot supply mv²/r: the car slides off the curve.') : S.fell ? (bl ? 'The ball leaves the track.' : 'N reached zero: the ball leaves the track and falls.') : S.preset === 'string' ? 'View from above' : S.preset === 'loop' ? 'Side view' : 'View from above';
+    const msg = S.cut ? 'String cut: no horizontal force, so it moves in a straight line.' : S.slid ? (bl ? 'The car leaves the circle.' : S.preset === 'speed' ? (W < 560 ? 'Not enough grip: it slides off.' : 'Friction cannot supply the whole acceleration: the car slides off.') : 'Friction cannot supply mv²/r: the car slides off the curve.') : S.fell ? (bl ? 'The ball leaves the track.' : 'N reached zero: the ball leaves the track and falls.') : S.preset === 'string' ? 'View from above' : S.preset === 'loop' ? 'Side view' : 'View from above';
     ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(8 * p, 44 * p, ctx.measureText(msg).width + 8 * p, 20 * p); ctx.globalAlpha = 1;
     ctx.fillStyle = T.ink; ctx.fillText(msg, 12 * p, 48 * p);
     // free body diagram
@@ -316,7 +337,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       for (const [fy, ph, amp] of DECO.grain) { const y = m + fy * (rh - 2 * m); ctx.lineWidth = (1 + amp / 3) * p; ctx.beginPath(); for (let x = 0; x <= rw; x += 12 * p) { const yy = y + amp * p * Math.sin(x / (90 * p) + ph); x ? ctx.lineTo(x, yy) : ctx.moveTo(x, yy); } ctx.stroke(); }
       ctx.restore();
       ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5; ctx.setLineDash([5 * p, 5 * p]); ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.stroke(); ctx.setLineDash([]);
-    } else if (S.preset === 'flat' || S.preset === 'bank') {
+    } else if (S.preset === 'flat' || S.preset === 'bank' || S.preset === 'speed') {
       // grass, a two lane road whose outer lane the car follows, red and white kerbs, trees outside
       const ri = R - 31 * p, ro = R + 11 * p;
       ctx.fillStyle = T.grass; ctx.fillRect(0, 0, rw, rh);
@@ -382,7 +403,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function drawFBD(x0, y0, w, h, q) {
     const p = ps(), bl = S.blind, cx = x0 + w / 2, cy = y0 + h / 2 + 10 * p, Rm = Math.min(w, h) * 0.34, m = S.m;
     ctx.fillStyle = T.muted; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    const view = S.preset === 'string' ? 'FROM ABOVE' : S.preset === 'loop' ? 'SIDE VIEW' : 'SEEN FROM BEHIND, CENTER TO THE LEFT';
+    const view = S.preset === 'string' || S.preset === 'speed' ? 'FROM ABOVE' : S.preset === 'loop' ? 'SIDE VIEW' : 'SEEN FROM BEHIND, CENTER TO THE LEFT';
     { const full = `FREE BODY DIAGRAM, ${view}`; if (ctx.measureText(full).width < w - 28 * p) ctx.fillText(full, x0 + 14 * p, y0 + 12 * p); else { ctx.fillText('FREE BODY DIAGRAM,', x0 + 14 * p, y0 + 12 * p); ctx.fillText(view, x0 + 14 * p, y0 + 26 * p); } }   /* two lines when narrow */
     let items = [];   // [label, color, fx (toward the center = −x on screen), fy (up +)]
     if (S.preset === 'string') items = S.cut ? [] : [['T', T.tn, -q.T, 0]];
@@ -391,8 +412,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (Math.abs(fC) > 1e-6) items.push([fC > 0 ? 'f (down the slope)' : 'f (up the slope)', T.fr, -fC * Math.cos(th), -fC * Math.sin(th)]);
       // the road surface
       ctx.strokeStyle = T.road; ctx.lineWidth = 8 * p; ctx.beginPath(); ctx.moveTo(cx - Rm * Math.cos(th), cy + 12 * p + Rm * Math.sin(th)); ctx.lineTo(cx + Rm * Math.cos(th), cy + 12 * p - Rm * Math.sin(th)); ctx.stroke(); }
+    else if (S.preset === 'speed') { if (!S.slid) { const fc = m * q.ac, ft = m * q.at, sc = q.ok ? 1 : 1; items = [['f to centre', T.fr, -fc * sc, 0], [ft >= 0 ? 'f forward' : 'f backward', T.fr, 0, ft * sc]]; }
+      ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('Motion is up the page; mg and N cancel.', x0 + 14 * p, y0 + 42 * p); }
     else if (!q.stalls) { const ph = S.ang; items = [['mg', T.w, 0, -m * G]]; if (q.N > 0) items.push(['N', T.n, -Math.sin(ph) * q.N, Math.cos(ph) * q.N]); }
-    const big = Math.max(...items.map((i) => Math.hypot(i[2], i[3])), m * accel(S.v, S.r), 1e-9), k = Rm / big;
+    const big = Math.max(...items.map((i) => Math.hypot(i[2], i[3])), S.preset === 'speed' ? m * S.mu * G : m * accel(S.v, S.r), 1e-9), k = Rm / big;
     const L = (fx, fy) => (bl ? [fx / (Math.hypot(fx, fy) || 1) * Rm * 0.6, fy / (Math.hypot(fx, fy) || 1) * Rm * 0.6] : [fx * k, fy * k]);
     for (const [lab, col, fx, fy] of items) { const [dx, dy] = L(fx, fy); arrow(cx, cy, dx, -dy, col, 3.2 * p, bl ? lab : `${lab} = ${f(Math.hypot(fx, fy), 1)} N`, lab.startsWith('f') ? 1 : S.preset === 'loop' && lab === 'N' ? -1 : 0); }
     // net force, toward the center (loop: also a tangential part)
@@ -411,39 +434,44 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     else if (P === 'flat') h = dd('Needed mv²/r', `${f(q.need, 0)} N`) + dd('Most friction μs mg', `${f(q.fmax, 0)} N`) + dd('a = v²/r', `${f(q.a, 2)} m/s²`) + dd('Top speed √(μs g r)', `${f(q.vmax, 1)} m/s (${f(q.vmax * 3.6, 0)} km/h)`);
     else if (P === 'bank') h = dd('Needed mv²/r', `${f(q.need, 0)} N`) + dd('Normal force N', `${f(q.N, 0)} N`) + dd('Friction needed', `${f(Math.abs(q.f), 0)} N ${q.f > 1e-6 ? 'down the slope' : q.f < -1e-6 ? 'up the slope' : ''}`) + dd('Most friction μs N', `${f(S.mu * q.N, 0)} N`)
       + dd('Ideal speed √(rg tan θ)', `${f(q.vIdeal, 1)} m/s`) + dd('Allowed speeds', `${f(q.vmin, 1)} to ${f(q.vmax, 1)} m/s`);
+    else if (P === 'speed') h = dd('Speed now', `${f(S.slid ? S.slid.v : q.v, 2)} m/s`) + dd('Time', `${f(S.ts, 2)} s`) + dd('Along the road a_t', `${f(q.at, 2)} m/s²`) + dd('Toward the centre v²/r', `${f(q.ac, 2)} m/s²`) + dd('Total |a|', `${f(q.a, 2)} m/s²`) + dd('Angle of a from the centre', `${f(q.ang * 180 / Math.PI, 1)}°`)
+      + dd('Friction needed m|a|', `${f(q.need, 0)} N`) + dd('Most friction μs mg', `${f(q.fmax, 0)} N`) + dd('Predicted slip', q.tSlip == null ? 'never' : q.tSlip === 0 ? 'at once' : `at ${f(q.tSlip, 2)} s, at ${f(S.v + S.at * q.tSlip, 1)} m/s`) + dd('Cruising top speed √(μs g r)', `${f(flatMax(S.mu, S.r), 1)} m/s`);
     else h = dd('Speed here', q.stalls ? '0 m/s' : `${f(q.v, 2)} m/s`) + dd('Normal force N', q.stalls ? '—' : `${f(q.N, 2)} N`) + dd('Weight mg', `${f(S.m * G, 2)} N`) + dd('Least speed at the bottom √(5gr)', `${f(q.vmin, 2)} m/s`) + dd('At the top, needs v ≥ √(gr)', `${f(Math.sqrt(G * S.r), 2)} m/s`, true);
     $('out').innerHTML = h;
   }
 
   // ---------- controls ----------
-  const SL = [['sV', 'v', (v) => `${f(v, 1)} m/s`], ['sR', 'r', (v) => `${f(v, 1)} m`], ['sM', 'm', (v) => (v < 10 ? `${f(v, 1)} kg` : `${f(v, 0)} kg`)], ['sMu', 'mu', (v) => f(v, 2)], ['sB', 'b', (v) => `${f(v, 1)}°`]];
+  const SL = [['sAt', 'at', (v) => `${f(v, 1)} m/s²`], ['sV', 'v', (v) => `${f(v, 1)} m/s`], ['sR', 'r', (v) => `${f(v, 1)} m`], ['sM', 'm', (v) => (v < 10 ? `${f(v, 1)} kg` : `${f(v, 0)} kg`)], ['sMu', 'mu', (v) => f(v, 2)], ['sB', 'b', (v) => `${f(v, 1)}°`]];
   function sync() {
     const P = S.preset;
     for (const [id, k, fmt] of SL) { $(id).value = S[k]; $('o' + id.slice(1)).textContent = fmt(S[k]); }
     $('sR').max = P === 'string' || P === 'loop' ? 3 : 100; $('sR').step = P === 'string' || P === 'loop' ? 0.1 : 1;
     $('sM').max = P === 'string' || P === 'loop' ? 2 : 2000; $('sM').min = P === 'string' || P === 'loop' ? 0.1 : 500; $('sM').step = P === 'string' || P === 'loop' ? 0.1 : 50;
     $('sV').max = P === 'string' ? 10 : P === 'loop' ? 15 : 40;
-    $('lV').textContent = P === 'loop' ? 'Speed at the bottom v₀' : 'Speed v';
-    $('muRow').hidden = !(P === 'flat' || P === 'bank'); $('bankRow').hidden = P !== 'bank';
+    $('lV').textContent = P === 'loop' ? 'Speed at the bottom v₀' : P === 'speed' ? 'Starting speed v₀' : 'Speed v';
+    $('sV').min = P === 'speed' ? 0 : 1;
+    $('atRow').hidden = P !== 'speed';
+    $('muRow').hidden = !(P === 'flat' || P === 'bank' || P === 'speed'); $('bankRow').hidden = P !== 'bank';
     $('cut').textContent = P === 'string' ? 'Cut the string' : P === 'loop' ? 'Launch again' : 'Steady';
     $('cut').hidden = !(P === 'string');
   }
   for (const [id, k] of SL) $(id).addEventListener('input', (e) => { S[k] = +e.target.value; restart(); });
-  function restart() { S.cut = S.slid = S.fell = null; S.ang = S.preset === 'loop' ? 0 : S.ang; sync(); draw(); readouts(); }
-  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; Object.assign(S, { v: c.v, r: c.r, m: c.m, mu: c.mu, b: c.b }); S.ang = 0; $('presetHint').textContent = c.hint;
+  function restart() { S.cut = S.slid = S.fell = null; S.ts = 0; S.ang = S.preset === 'loop' || S.preset === 'speed' ? 0 : S.ang; sync(); draw(); readouts(); }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; Object.assign(S, { v: c.v, r: c.r, m: c.m, mu: c.mu, b: c.b, at: c.at != null ? c.at : S.at }); S.ang = 0; $('presetHint').textContent = c.hint;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); restart(); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   function geom() { const wide = W > 760, sw = wide ? W * 0.62 : W, sh = wide ? H : H * 0.58, p = ps(); return { cx: sw / 2, cy: (wide ? H : sh) / 2 + 16 * p, R: Math.min(sw, sh) * 0.33, sw, sh }; }
   function release(kind) {   // leave the circle along the present velocity (and fall, for the loop)
     const g = geom(), loopView = S.preset === 'loop', th = S.ang, x = g.cx + g.R * (loopView ? Math.sin(th) : Math.cos(th)), y = g.cy + g.R * (loopView ? Math.cos(th) : -Math.sin(th));
-    const pxPerM = g.R / S.r, vNow = loopView ? situation().v : S.v, vx = (loopView ? Math.cos(th) : -Math.sin(th)) * vNow * pxPerM, vy = (loopView ? -Math.sin(th) : -Math.cos(th)) * vNow * pxPerM;
-    S[kind] = { x, y, vx, vy, t: 0, g: loopView ? G * pxPerM : 0, path: true };
+    const pxPerM = g.R / S.r, vNow = loopView || S.preset === 'speed' ? situation().v : S.v, vx = (loopView ? Math.cos(th) : -Math.sin(th)) * vNow * pxPerM, vy = (loopView ? -Math.sin(th) : -Math.cos(th)) * vNow * pxPerM;
+    S[kind] = { x, y, vx, vy, t: 0, g: loopView ? G * pxPerM : 0, path: true, v: vNow };
   }
   $('cut').addEventListener('click', () => { if (S.preset === 'string' && !S.cut) { release('cut'); draw(); readouts(); } });
   $('again').addEventListener('click', () => { S.ang = 0; restart(); });
+  // a link to #speed (the old Speeding Up on a Curve page) opens this setup
   $('play').addEventListener('click', () => { S.run = !S.run; $('play').textContent = S.run ? 'Pause' : 'Play'; });
   // shown slower than real time so it stays readable: the loop at half speed, the cars at a quarter
-  const timeScale = () => (S.preset === 'string' ? 1 : S.preset === 'loop' ? 0.5 : 0.25);
+  const timeScale = () => (S.preset === 'string' ? 1 : S.preset === 'loop' ? 0.5 : S.preset === 'speed' ? 1 : 0.25);
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
@@ -455,10 +483,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         const slow = timeScale();
         let w = S.v / S.r;
         if (S.preset === 'loop') { const q = situation(); w = q.stalls ? 0 : q.v / S.r; }
-        S.ang += w * dt * slow;
+        if (S.preset === 'speed') { const ts = situation().tSlip; S.ts += dt * slow; if (ts != null && S.ts >= ts) S.ts = ts; S.ang = situation().th; if (ts != null && S.ts >= ts) release('slid'); w = 0; }
+        else S.ang += w * dt * slow;
         if (S.preset === 'loop') { const q = situation(); if (q.stalls || q.N < 0) { release('fell'); S.fell.path = false; } }
         if (S.preset === 'flat' || S.preset === 'bank') { if (!situation().ok) release('slid'); }
-        if (S.ang > 2 * Math.PI) S.ang -= 2 * Math.PI;
+        if (S.preset === 'speed' && S.ts > 0 && situation().v === 0 && S.at < 0) { /* stopped: hold */ }
+        if (S.preset !== 'speed' && S.ang > 2 * Math.PI) S.ang -= 2 * Math.PI;
       }
       draw(); readouts();
     }
@@ -477,7 +507,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
   $('play').textContent = S.run ? 'Pause' : 'Play';
-  tokens(); new ResizeObserver(resize).observe(stage); applyPreset('string'); resize();
+  tokens(); new ResizeObserver(resize).observe(stage); applyPreset(location.hash === '#speed' ? 'speed' : 'string'); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();

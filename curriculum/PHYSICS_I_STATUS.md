@@ -13,7 +13,7 @@ The same resource may appear in several units. Chapter 13 precedes Chapter 12 as
 | Unit | Student labs | Lecture demos / short activities | Worksheets and readings | Coverage |
 |---|---|---|---|---|
 | Measurements and vectors | — | [vectors](../notes/src/vectors.md) | [Measuring, Converting and Checking Units](labs/students/measurement-and-units.md), [Estimating and Reporting a Physical Result](labs/students/estimation-and-evidence.md) | 11 scoped mappings |
-| Kinematics | [motion-graphs](labs/students/motion-graphs.md), [projectile-drag](labs/students/projectile-drag.md) | [vectors](../notes/src/vectors.md), [circular-motion](../notes/src/circular-motion.md), [nonuniform-circular](../notes/src/nonuniform-circular.md) | — | 11 scoped mappings |
+| Kinematics | [motion-graphs](labs/students/motion-graphs.md), [projectile-drag](labs/students/projectile-drag.md) | [vectors](../notes/src/vectors.md), [circular-motion](../notes/src/circular-motion.md) | — | 11 scoped mappings |
 | Forces | [forces](labs/students/forces.md), [projectile-drag](labs/students/projectile-drag.md) | [elevator](../notes/src/elevator.md), [circular-motion](../notes/src/circular-motion.md) | — | 11 scoped mappings |
 | Work and energy | [forces](labs/students/forces.md) | [potential-curves](../notes/src/potential-curves.md) | [Where Does Electrical Energy Come From?](labs/students/energy-sources.md) | 9 scoped mappings |
 | Momentum and collisions | [collisions](labs/students/collisions.md), [impulse](labs/students/impulse.md) | [center-of-mass](../notes/src/center-of-mass.md), [rocket](../notes/src/rocket.md) | — | 7 scoped mappings |
@@ -27,7 +27,7 @@ The same resource may appear in several units. Chapter 13 precedes Chapter 12 as
 
 - Chapter 1 now has two short activities covering measurement/scale, SI conversions, dimensional checks, Fermi estimates, significant figures, uncertainty and auditable problem solving.
 - Section 8.5 now has a reading/calculation activity with a dated EIA electricity-generation input snapshot and explicit energy/power/efficiency boundaries.
-- Claude supplied elevator, nonuniform-circular, impulse, center-of-mass, gravity-near-earth and gps-clocks demos. Impulse now has its full student/private lab, with independent signed integration and sampling comparisons.
+- Claude supplied elevator, nonuniform-circular (since merged into circular-motion as its Speeding up or braking setup), impulse, center-of-mass, gravity-near-earth and gps-clocks demos. Impulse now has its full student/private lab, with independent signed integration and sampling comparisons.
 - The strict Mystery-only fit-hiding checks now pass for pendulum, rotational-dynamics, resistivity and wire-force. Old validation reports retain their dated failures with resolution addenda.
 
 ## Integration still pending

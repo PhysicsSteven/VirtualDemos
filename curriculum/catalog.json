@@ -424,23 +424,13 @@
     {
      "demo": "circular-motion",
      "title": "Circular Motion",
-     "desc": "What supplies mv²/r? Whirl a ball on a string and cut it, take a car round a flat or banked curve until it slides, and send a ball round a vertical loop, with the free body diagram for each.",
+     "desc": "What supplies mv²/r? Whirl a ball on a string and cut it, take a car round a flat or banked curve until it slides, speed up or brake on the curve, and send a ball round a vertical loop, with the free body diagram for each.",
      "tags": [
       "centripetal force",
       "banked curve",
       "vertical loop",
-      "friction"
-     ]
-    },
-    {
-     "demo": "nonuniform-circular",
-     "title": "Speeding Up on a Curve",
-     "desc": "A car speeds up or brakes on a curve: the acceleration has parts along the path and toward the centre, and the road's grip must supply both.",
-     "tags": [
-      "nonuniform circular motion",
-      "tangential acceleration",
-      "centripetal acceleration",
-      "friction"
+      "friction",
+      "tangential acceleration"
      ]
     },
     {

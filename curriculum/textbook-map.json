@@ -1242,11 +1242,10 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "circular-motion",
-        "nonuniform-circular"
+        "circular-motion"
       ],
       "unit": "kinematics",
-      "note": "Circular Motion covers uniform circular motion; Speeding Up on a Curve (2026-10-22, Claude) covers nonuniform motion: tangential and centripetal parts, total acceleration and its angle, slip when √(a_t² + a_c²) > μs g."
+      "note": "Circular Motion covers uniform circular motion (string, flat and banked curves, loop) and nonuniform motion in its Speeding up or braking setup: tangential and centripetal parts, total acceleration and its angle, slip when √(a_t² + a_c²) > μs g."
     },
     {
       "vol": 1,
@@ -4473,30 +4472,10 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Lecture demo: ball on a string (cut it: straight line), car on a flat curve (top speed √(μs g r)), banked curve (ideal speed, allowed range), vertical loop (energy, N, leaves the track below √(gr) at the top); FBD to scale; Blind. Cars and loop shown slowed down.",
+      "note": "New 2026-10-22 (Claude). Lecture demo: ball on a string (cut it: straight line), car on a flat curve (top speed √(μs g r)), banked curve (ideal speed, allowed range), vertical loop (energy, N, leaves the track below √(gr) at the top); FBD to scale; Blind. Cars and loop shown slowed down. 2026-10-22: setup Speeding up or braking (formerly the separate Speeding Up on a Curve demo; its URL redirects here): tangential and centripetal acceleration, total acceleration, slip when √(a_t² + (v²/r)²) > μs g.",
       "handouts": [],
       "title": "Circular Motion",
       "url": "demos/circular-motion.html"
-    },
-    {
-      "demo": "nonuniform-circular",
-      "course": [
-        "physics-1"
-      ],
-      "sections": [
-        {
-          "vol": 1,
-          "sec": "4.4",
-          "title": "Uniform and Nonuniform Circular Motion"
-        }
-      ],
-      "role": "demo",
-      "beyond_book": false,
-      "status": "usable",
-      "note": "New 2026-10-22 (Claude). Car on a flat circular road speeding up from rest or braking to a stop at constant |a_t|; radius, braking start speed, μs; v, a_t, a_c and total a arrows; accelerations against time with the μs g line; slides off when grip runs out; Blind.",
-      "handouts": [],
-      "title": "Speeding Up on a Curve",
-      "url": "demos/nonuniform-circular.html"
     },
     {
       "demo": "forces",
