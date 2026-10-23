@@ -130,4 +130,4 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 
 ## Being moved
 
-Nothing at the moment.
+Batch 5 (Misc without three.js), from 2026-10-24 00:20: binding-energy, black-holes, blackbody, compton, diffraction-grating, distance-ladder, double-slit, exoplanets, franck-hertz, gamma-spectroscopy, heat-engines, hr-diagram, ideal-gas, ising, lagrange-points, lasers, moon-phases, photoelectric, quantum-waves, radioactive-decay, rotation-curves, rutherford, seasons, spacetime, spectra, thin-films, white-dwarf-cooling.
