@@ -1,0 +1,595 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Electrostatics at Work</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the machine and its graphs on the left, the rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+@media (max-width: 820px) { .chips button { min-height: 36px; } }
+:root { --dome: #9aa6b4; --dome-hi: #f4f7fa; --belt: #3a3f47; --spark: #6c4fd8; --ink-drop: #2350a8; --plate-hi: #c23f2c; --plate-lo: #5a6575; --dust: #8a6a44; --smoke: #6e6a64; --paper: #ffffff; --wood: #c9a678; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --dome: #6d7887; --dome-hi: #c9d2dc; --belt: #b8c0cc; --spark: #b8a6ff; --ink-drop: #8fb6ff; --plate-hi: #ff7660; --plate-lo: #96a2b2; --dust: #c39a66; --smoke: #a39d95; --paper: #e8edf3; --wood: #8a6a44; } }
+:root[data-theme="dark"] { --dome: #6d7887; --dome-hi: #c9d2dc; --belt: #b8c0cc; --spark: #b8a6ff; --ink-drop: #8fb6ff; --plate-hi: #ff7660; --plate-lo: #96a2b2; --dust: #c39a66; --smoke: #a39d95; --paper: #e8edf3; --wood: #8a6a44; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Electrostatics at Work</h1>
+      <p>Three machines that run on electric charge: a Van de Graaff generator charging its dome until the air breaks down, an ink jet printer steering charged drops onto paper, and a smokestack precipitator pulling charged dust out of a gas flow.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">ε₀ = 8.854 × 10⁻¹² F/m</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/electrostatics-at-work.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/electrostatics-at-work.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM19 2h2v1h-2zM24 2h2v1h-2zM27 2h1v1h-1zM29 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM16 3h3v1h-3zM20 3h3v1h-3zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM13 4h1v1h-1zM15 4h1v1h-1zM19 4h2v1h-2zM22 4h4v1h-4zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM14 5h5v1h-5zM20 5h1v1h-1zM25 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM17 6h1v1h-1zM19 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h3v1h-3zM14 7h2v1h-2zM18 7h1v1h-1zM21 7h2v1h-2zM24 7h1v1h-1zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM14 9h2v1h-2zM17 9h9v1h-9zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h7v1h-7zM17 10h3v1h-3zM21 10h1v1h-1zM23 10h1v1h-1zM25 10h2v1h-2zM31 10h5v1h-5zM38 10h1v1h-1zM4 11h4v1h-4zM9 11h1v1h-1zM11 11h1v1h-1zM13 11h4v1h-4zM20 11h1v1h-1zM23 11h1v1h-1zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h2v1h-2zM34 11h4v1h-4zM2 12h1v1h-1zM5 12h2v1h-2zM8 12h4v1h-4zM13 12h1v1h-1zM16 12h2v1h-2zM23 12h4v1h-4zM28 12h4v1h-4zM33 12h2v1h-2zM3 13h2v1h-2zM6 13h2v1h-2zM10 13h1v1h-1zM12 13h1v1h-1zM14 13h2v1h-2zM17 13h3v1h-3zM23 13h4v1h-4zM30 13h2v1h-2zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h4v1h-4zM8 14h1v1h-1zM11 14h1v1h-1zM15 14h2v1h-2zM19 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM2 15h2v1h-2zM6 15h2v1h-2zM9 15h2v1h-2zM12 15h1v1h-1zM14 15h6v1h-6zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h1v1h-1zM4 16h1v1h-1zM8 16h6v1h-6zM16 16h2v1h-2zM19 16h2v1h-2zM22 16h2v1h-2zM25 16h2v1h-2zM28 16h2v1h-2zM33 16h5v1h-5zM4 17h1v1h-1zM6 17h2v1h-2zM10 17h1v1h-1zM13 17h1v1h-1zM16 17h2v1h-2zM19 17h1v1h-1zM21 17h3v1h-3zM26 17h1v1h-1zM30 17h1v1h-1zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h2v1h-2zM5 18h2v1h-2zM8 18h4v1h-4zM13 18h4v1h-4zM20 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM4 19h1v1h-1zM6 19h2v1h-2zM10 19h2v1h-2zM13 19h3v1h-3zM18 19h1v1h-1zM20 19h1v1h-1zM24 19h7v1h-7zM33 19h3v1h-3zM37 19h1v1h-1zM5 20h1v1h-1zM7 20h3v1h-3zM11 20h3v1h-3zM15 20h1v1h-1zM18 20h3v1h-3zM23 20h1v1h-1zM25 20h2v1h-2zM28 20h9v1h-9zM2 21h1v1h-1zM4 21h2v1h-2zM9 21h4v1h-4zM19 21h1v1h-1zM21 21h3v1h-3zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM3 22h6v1h-6zM10 22h2v1h-2zM14 22h2v1h-2zM17 22h1v1h-1zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM5 23h1v1h-1zM7 23h1v1h-1zM9 23h3v1h-3zM13 23h1v1h-1zM17 23h3v1h-3zM22 23h1v1h-1zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h1v1h-1zM4 24h3v1h-3zM8 24h4v1h-4zM13 24h3v1h-3zM17 24h2v1h-2zM20 24h1v1h-1zM22 24h1v1h-1zM25 24h1v1h-1zM29 24h1v1h-1zM32 24h5v1h-5zM5 25h3v1h-3zM16 25h2v1h-2zM21 25h3v1h-3zM26 25h1v1h-1zM28 25h4v1h-4zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM4 26h7v1h-7zM13 26h1v1h-1zM15 26h1v1h-1zM18 26h1v1h-1zM22 26h4v1h-4zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h2v1h-2zM5 27h2v1h-2zM10 27h1v1h-1zM12 27h1v1h-1zM16 27h1v1h-1zM20 27h1v1h-1zM22 27h1v1h-1zM25 27h1v1h-1zM27 27h1v1h-1zM29 27h2v1h-2zM34 27h2v1h-2zM5 28h1v1h-1zM8 28h6v1h-6zM17 28h1v1h-1zM19 28h2v1h-2zM22 28h1v1h-1zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM4 29h1v1h-1zM9 29h5v1h-5zM15 29h1v1h-1zM17 29h5v1h-5zM23 29h2v1h-2zM30 29h1v1h-1zM33 29h2v1h-2zM36 29h3v1h-3zM2 30h4v1h-4zM8 30h4v1h-4zM13 30h2v1h-2zM19 30h1v1h-1zM22 30h2v1h-2zM26 30h1v1h-1zM30 30h5v1h-5zM36 30h2v1h-2zM10 31h6v1h-6zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h3v1h-3zM14 32h1v1h-1zM17 32h3v1h-3zM22 32h1v1h-1zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM14 33h1v1h-1zM17 33h1v1h-1zM19 33h2v1h-2zM23 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h1v1h-1zM17 34h1v1h-1zM20 34h1v1h-1zM22 34h5v1h-5zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM13 35h1v1h-1zM15 35h2v1h-2zM18 35h1v1h-1zM23 35h3v1h-3zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM13 36h4v1h-4zM18 36h2v1h-2zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM15 37h2v1h-2zM19 37h3v1h-3zM23 37h3v1h-3zM28 37h2v1h-2zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h3v1h-3zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h6v1h-6zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="Electrostatics at Work"></canvas>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Machine</h2>
+        <div class="chips" id="setups">
+          <button type="button" data-s="vdg" aria-pressed="true">Van de Graaff generator</button>
+          <button type="button" data-s="ink" aria-pressed="false">Ink jet printer</button>
+          <button type="button" data-s="esp" aria-pressed="false">Smoke precipitator</button>
+        </div>
+        <p class="hint" id="setupHint"></p>
+      </section>
+
+      <section data-for="vdg">
+        <h2>Generator</h2>
+        <div><div class="slider-head"><label for="sR">Dome radius R</label><output id="oR" for="sR"></output></div><input type="range" id="sR" min="5" max="50" step="1"></div>
+        <div><div class="slider-head"><label for="sI">Belt current I (charge carried up per second)</label><output id="oI" for="sI"></output></div><input type="range" id="sI" min="0.5" max="50" step="0.5"></div>
+        <div class="btnrow"><button type="button" class="btn primary" id="motor">Start motor</button><button type="button" class="btn" id="ground">Touch with the grounded wand</button></div>
+      </section>
+
+      <section data-for="ink">
+        <h2>Printer</h2>
+        <div><div class="slider-head"><label for="sQ">Charge on each drop q</label><output id="oQ" for="sQ"></output></div><input type="range" id="sQ" min="0" max="0.5" step="0.01"></div>
+        <div><div class="slider-head"><label for="sPV">Deflection plate voltage</label><output id="oPV" for="sPV"></output></div><input type="range" id="sPV" min="0" max="4000" step="50"></div>
+        <div><div class="slider-head"><label for="sD">Drop diameter</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="20" max="100" step="2"></div>
+        <div><div class="slider-head"><label for="sV">Drop speed</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="10" max="30" step="1"></div>
+        <div class="btnrow"><button type="button" class="btn primary" id="fire">Fire one drop</button><button type="button" class="btn" id="print">Print PHYS</button><button type="button" class="btn" id="clearPaper">Clear paper</button></div>
+        <p class="hint">Plates 10.0 mm long and 2.0 mm apart; the paper is 15.0 mm past the end of the plates. The lower plate is at the voltage set, the upper one grounded, so the field points up and positive drops bend up. Print PHYS works out the charge for each dot from the settings, as the printer's controller does.</p>
+      </section>
+
+      <section data-for="esp">
+        <h2>Precipitator</h2>
+        <div><div class="slider-head"><label for="sDp">Particle diameter</label><output id="oDp" for="sDp"></output></div><input type="range" id="sDp" min="-1" max="1.3" step="0.02"></div>
+        <div class="chips" id="ptype" role="group" aria-label="Particle material">
+          <button type="button" data-p="cond" aria-pressed="true">Conducting (soot)</button>
+          <button type="button" data-p="diel" aria-pressed="false">Insulating, κ = 4</button>
+        </div>
+        <div><div class="slider-head"><label for="sE">Field between wire and plates</label><output id="oE" for="sE"></output></div><input type="range" id="sE" min="1" max="6" step="0.1"></div>
+        <div><div class="slider-head"><label for="sU">Gas speed</label><output id="oU" for="sU"></output></div><input type="range" id="sU" min="0.5" max="3" step="0.1"></div>
+        <div><div class="slider-head"><label for="sL">Plate length L</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="2" max="15" step="0.5"></div>
+        <div class="btnrow"><button type="button" class="btn" id="resetCount">Reset the counts</button></div>
+        <p class="hint">One channel: a charging wire midway between two grounded plates 0.250 m apart, so s = 0.125 m from wire to plate.</p>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint" id="blindHint"></p>
+        <p class="hint" id="modelHint"></p>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  const EPS0 = 8.8541878128e-12, KC = 1 / (4 * Math.PI * EPS0), G = 9.81, QE = 1.602176634e-19, EW_VERSION = 'electrostatics-at-work@2026-10-23';
+  const E_BREAK = 3.0e6;   /* breakdown field of dry air at 1 atm, about 3 MV/m (approximate: humidity, pressure and surface finish change it) */
+
+  /* Van de Graaff dome: an isolated conducting sphere of radius R (m) holding charge Q (C) */
+  const sphereC = (R) => 4 * Math.PI * EPS0 * R;
+  const sphereV = (Q, R) => KC * Q / R;
+  const sphereField = (Q, R, r) => (r < R ? 0 : KC * Q / (r * r));   /* zero inside the metal and the hollow */
+  const vMax = (R, Eb = E_BREAK) => Eb * R;                           /* surface field E = V/R reaches Eb */
+  const qMax = (R, Eb = E_BREAK) => 4 * Math.PI * EPS0 * R * R * Eb;
+  const timeToSpark = (R, I, Eb = E_BREAK) => qMax(R, Eb) / I;        /* charging from zero at constant belt current */
+
+  /* Ink jet: a drop of diameter d (m), charge q (C), speed v (m/s) along x passes plates of length L, gap gap, voltage V,
+     then drifts a distance D to the paper. Field uniform between the plates and zero outside; gravity included; air drag left out. */
+  const INK = { rho: 1000, L: 0.010, gap: 0.0020, D: 0.015, gutterBack: 0.003, gutterTop: 0.00015 };
+  const dropMass = (d) => INK.rho * Math.PI * d * d * d / 6;
+  function inkjet(d, q, v, V) {
+    const m = dropMass(d), E = V / INK.gap, a = q * E / m, t1 = INK.L / v, t2 = INK.D / v;
+    const yAt = (x) => {   /* height of the drop centre (m) when it has travelled x past the plate entrance */
+      const t = x / v, ye = x <= INK.L ? 0.5 * a * t * t : 0.5 * a * t1 * t1 + a * t1 * (t - t1);
+      return ye - 0.5 * G * t * t;
+    };
+    const yExit = yAt(INK.L), yPaper = yAt(INK.L + INK.D), yGutter = yAt(INK.L + INK.D - INK.gutterBack);
+    const yElec = 0.5 * a * t1 * t1 + a * t1 * t2, yGrav = -0.5 * G * (t1 + t2) * (t1 + t2);
+    const hitsPlate = Math.abs(yExit) > INK.gap / 2 - d / 2;   /* |y| grows monotonically between the plates, so the exit is the worst point */
+    const inGutter = !hitsPlate && yGutter < INK.gutterTop;
+    return { m, E, a, t1, t2, yExit, yElec, yGrav, yPaper, yGutter, hitsPlate, inGutter, yAt, qm: q / m };
+  }
+  /* the charge that puts the drop at height y on the paper (inverse of the above) */
+  function chargeFor(y, d, v, V) {
+    const m = dropMass(d), E = V / INK.gap, t1 = INK.L / v, t2 = INK.D / v;
+    return (y + 0.5 * G * (t1 + t2) * (t1 + t2)) * m / (E * t1 * (0.5 * t1 + t2));
+  }
+  /* Rayleigh limit: the most charge a drop of surface tension gam can hold before it tears itself apart */
+  const rayleighLimit = (d, gam = 0.072) => 8 * Math.PI * Math.sqrt(EPS0 * gam * (d / 2) ** 3);
+
+  /* Precipitator: particles of diameter dp (m) charged to saturation in field E (field charging, Pauthenier),
+     drift to the plates at the Stokes speed with the Cunningham slip correction; collection by the Deutsch equation. */
+  const AIR = { eta: 1.81e-5, mfp: 0.066e-6 };   /* air at 20 °C, 1 atm: viscosity (Pa·s) and mean free path (m) */
+  const cunningham = (dp) => { const kn = 2 * AIR.mfp / dp; return 1 + kn * (1.257 + 0.4 * Math.exp(-1.1 / kn)); };
+  const chargeFactor = (kappa) => (kappa === Infinity ? 3 : 3 * kappa / (kappa + 2));
+  const satCharge = (dp, E, kappa = Infinity) => chargeFactor(kappa) * Math.PI * EPS0 * dp * dp * E;   /* 4πε₀a²E·p with a = dp/2 */
+  const driftSpeed = (dp, E, kappa = Infinity) => satCharge(dp, E, kappa) * E * cunningham(dp) / (3 * Math.PI * AIR.eta * dp);
+  const deutsch = (w, L, u, s) => 1 - Math.exp(-w * L / (u * s));
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const S_ESP = 0.125;
+  const S = { setup: 'vdg', blind: false,
+    R: 15, I: 2, motor: false, Q: 0, t: 0, hist: [], spark: 0, sparks: 0,
+    q: 0.15, PV: 3000, d: 60, v: 20, drops: [], paper: [], col: 0, queue: [], qAcc: 0,
+    lgDp: 0, kappa: Infinity, Ekv: 3, u: 1, L: 5, parts: [], dust: [], nIn: 0, nOut: 0, nCaught: 0, spawnAcc: 0 };
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'accent', 'pos', 'neg', 'surface', 'relief', 'dome', 'dome-hi', 'belt', 'spark', 'ink-drop', 'plate-hi', 'plate-lo', 'dust', 'smoke', 'paper', 'wood', 'equi', 'field']) T[k.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + k);
+    T.mono = g('--font-mono'); T.ui = g('--font-ui'); }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
+  function sci(v, n = 3) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v)) + 1e-12); if (e >= -2 && e < 4) return String(+v.toPrecision(n)); return `${(v / 10 ** e).toFixed(n - 1)} × 10${String(e).split('').map((c) => SUP[c]).join('')}`; }
+  const fx = (v, n) => (Math.abs(v) < 0.5 * 10 ** -n ? (0).toFixed(n) : v.toFixed(n)).replace('-', '−');
+  const HIDDEN = '<span class="ok">hidden in Blind</span>';
+
+  // ---------- setup switching ----------
+  const HINTS = {
+    vdg: 'A rubber belt carries charge up into a hollow metal dome. Charge moves to the outside surface, so the inside stays field free and the belt can keep delivering more. The dome charges until the field at its surface breaks the air down and a spark jumps.',
+    ink: 'A continuous ink jet: drops pass a charging electrode, then fly between two plates. The charge each drop carries decides how far it bends, and so where it lands on the paper. Uncharged drops fly straight into the gutter and are recycled.',
+    esp: 'Smoky gas flows between grounded plates past a high voltage wire. Ions from the wire charge the particles, and the field drives them sideways onto the plates, where they are knocked off into hoppers. Large power station units remove over 99% of the particles.'
+  };
+  const BLINDS = {
+    vdg: 'Blind hides Q, V, the surface field, V_max and the time to spark, and the numbers on the graphs: predict how V_max and the charging time change with R first.',
+    ink: 'Blind hides the drop charge, q/m and the deflections; the ruler beside the paper stays, so students can measure where drops land and work out q.',
+    esp: 'Blind hides the particle charge, the drift speed, the efficiency and its curve. The counters stay, so the efficiency can be measured.'
+  };
+  const MODELS = {
+    vdg: 'Model: the dome is an isolated conducting sphere far from everything else, so C = 4πε₀R, V = kQ/R and the surface field is V/R. The belt delivers a constant current and nothing leaks away until the surface field reaches 3.0 MV/m (dry air at 1 atm, approximate; damp air, dust and a rough surface spark sooner). A spark is drawn as emptying the dome completely; a real one leaves a little charge. The column, base and wand are not part of the calculation.',
+    ink: 'Model: a uniform field V/gap between the plates and none outside them (no fringing); the drop is a water sphere of density 1000 kg/m³ moving at constant horizontal speed. Gravity is included. Air drag is left out: for a single drop of 60 µm in still air, Stokes drag would slow it by about a tenth over this path (an underestimate at these speeds); real printers make up for it in their charge tables. The drop charge is limited well below the Rayleigh limit, where the drop would tear itself apart. Drawn to scale, in slow motion.',
+    esp: 'Model: each particle carries the saturation charge of field charging, q = 4πε₀a²E·3κ/(κ + 2) (Pauthenier), with charging and collecting field equal (a single stage unit). Diffusion charging is left out, so the charge and the efficiency of particles below about 0.5 µm are underestimated. Drift speed w = qE·Cc/(3πηd), Stokes drag with the Cunningham slip correction (air at 20 °C: η = 1.81 × 10⁻⁵ Pa·s, mean free path 0.066 µm). Efficiency by the Deutsch equation η = 1 − exp(−wL/(us)), which assumes turbulent mixing keeps the dust spread evenly across the channel. The animation catches each particle with the Deutsch probability w·Δt/s in each time step and then draws it drifting to the nearer plate. Gravity settling is left out. The channel is not drawn to scale.'
+  };
+  function setSetup(s) {
+    S.setup = s;
+    for (const b of document.querySelectorAll('#setups button')) b.setAttribute('aria-pressed', String(b.dataset.s === s));
+    for (const el of document.querySelectorAll('[data-for]')) el.hidden = el.dataset.for !== s;
+    $('setupHint').textContent = HINTS[s]; $('blindHint').textContent = BLINDS[s]; $('modelHint').textContent = MODELS[s];
+    can.setAttribute('aria-label', { vdg: 'A Van de Graaff generator: a belt in an insulating column charges a metal dome; a grounded wand stands beside it. Below, graphs of the dome voltage against time and of the field against distance from the centre.', ink: 'Side view of an ink jet printer: a nozzle, a charging electrode, two deflection plates, a gutter and the paper, with drops flying across. On the right, the paper seen face on with a millimetre ruler.', esp: 'Top view of one precipitator channel: gas carrying particles flows between two grounded plates with a charging wire down the middle; particles drift onto the plates. Below, the collection efficiency against particle diameter.' }[s]);
+    upd();
+  }
+  $('setups').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) setSetup(b.dataset.s); });
+
+  // ---------- controls ----------
+  function sync() {
+    $('sR').value = S.R; $('oR').textContent = `${S.R} cm`; $('sI').value = S.I; $('oI').textContent = `${S.I.toFixed(1)} µA`;
+    $('motor').textContent = S.motor ? 'Stop motor' : 'Start motor';
+    $('sQ').value = S.q; $('oQ').textContent = S.blind ? 'hidden' : `${S.q.toFixed(2)} pC`;
+    $('sPV').value = S.PV; $('oPV').textContent = `${S.PV} V`; $('sD').value = S.d; $('oD').textContent = `${S.d} µm`; $('sV').value = S.v; $('oV').textContent = `${S.v} m/s`;
+    const dp = 10 ** S.lgDp; $('sDp').value = S.lgDp; $('oDp').textContent = `${+dp.toPrecision(2)} µm`;
+    for (const b of document.querySelectorAll('#ptype button')) b.setAttribute('aria-pressed', String((b.dataset.p === 'cond') === (S.kappa === Infinity)));
+    $('sE').value = S.Ekv; $('oE').textContent = `${S.Ekv.toFixed(1)} kV/cm`; $('sU').value = S.u; $('oU').textContent = `${S.u.toFixed(1)} m/s`; $('sL').value = S.L; $('oL').textContent = `${S.L.toFixed(1)} m`;
+  }
+  function upd() { sync(); readouts(); draw(); }
+  const bind = (id, k, f) => $(id).addEventListener('input', (e) => { S[k] = +e.target.value; if (f) f(); upd(); });
+  bind('sR', 'R', () => { /* a bigger dome holding the same charge sits at a lower voltage; keep Q but clamp below breakdown */ S.Q = Math.min(S.Q, qMax(S.R / 100) * 0.999); S.hist = []; });
+  bind('sI', 'I'); bind('sQ', 'q'); bind('sPV', 'PV'); bind('sD', 'd'); bind('sV', 'v');
+  const espReset = () => { S.nIn = S.nOut = S.nCaught = 0; S.parts = []; S.dust = []; };
+  bind('sDp', 'lgDp', espReset); bind('sE', 'Ekv', espReset); bind('sU', 'u', espReset); bind('sL', 'L', espReset);
+  $('ptype').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) { S.kappa = b.dataset.p === 'cond' ? Infinity : 4; espReset(); upd(); } });
+  $('resetCount').addEventListener('click', () => { espReset(); upd(); });
+  $('motor').addEventListener('click', () => { S.motor = !S.motor; upd(); });
+  $('ground').addEventListener('click', () => { if (S.Q > 0) { S.spark = 0.25; S.sparkKind = 'wand'; } S.Q = 0; upd(); });
+  $('fire').addEventListener('click', () => { launch(S.q * 1e-12, true); });
+  $('print').addEventListener('click', printWord);
+  $('clearPaper').addEventListener('click', () => { S.paper = []; S.col = 0; S.queue = []; draw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; upd(); });
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`;
+    let h = '';
+    if (S.setup === 'vdg') {
+      const R = S.R / 100, I = S.I * 1e-6, V = sphereV(S.Q, R), b = S.blind;
+      h += dd('Capacitance C = 4πε₀R', `${sci(sphereC(R) * 1e12)} pF`) + dd('Charge Q', b ? HIDDEN : `${sci(S.Q * 1e6)} µC`);
+      h += dd('Dome voltage V = kQ/R', b ? HIDDEN : `${sci(V / 1000)} kV`) + dd('Field at the surface V/R', b ? HIDDEN : `${sci(V / R / 1e6)} MV/m`);
+      h += dd('Highest voltage V<sub>max</sub> = E<sub>b</sub>R', b ? HIDDEN : `${sci(vMax(R) / 1000)} kV`) + dd('Time to spark from zero', b ? HIDDEN : `${sci(timeToSpark(R, I))} s`);
+      h += dd('Energy released in a spark ½Q<sub>max</sub>V<sub>max</sub>', b ? HIDDEN : `${sci(0.5 * qMax(R) * vMax(R))} J`, true);
+      h += dd('Sparks so far', String(S.sparks));
+    } else if (S.setup === 'ink') {
+      const r = inkjet(S.d * 1e-6, S.q * 1e-12, S.v, S.PV), b = S.blind;
+      h += dd('Drop mass', `${sci(r.m * 1e12)} ng`) + dd('Field between the plates', `${sci(r.E / 1e6)} MV/m`);
+      h += dd('Time between the plates', `${sci(r.t1 * 1e6)} µs`) + dd('q/m', b ? HIDDEN : `${sci(r.qm)} C/kg`);
+      h += dd('Height at the end of the plates', b ? HIDDEN : `${fx(r.yExit * 1000, 3)} mm`) + dd('Height on the paper', b ? HIDDEN : (r.hitsPlate ? 'hits a plate' : r.inGutter ? 'caught by the gutter' : `${fx(r.yPaper * 1000, 3)} mm`));
+      h += dd('Part of that from gravity', `${fx(r.yGrav * 1e6, 1)} µm`) + dd('Rayleigh limit for this drop', `${sci(rayleighLimit(S.d * 1e-6) * 1e12)} pC`);
+      h += dd('Electrons per drop q/e', b ? HIDDEN : sci(S.q * 1e-12 / QE));
+    } else {
+      const dp = 10 ** S.lgDp * 1e-6, E = S.Ekv * 1e5, q = satCharge(dp, E, S.kappa), w = driftSpeed(dp, E, S.kappa), eta = deutsch(w, S.L, S.u, S_ESP), b = S.blind;
+      h += dd('Slip correction C<sub>c</sub>', fx(cunningham(dp), 3)) + dd('Charge (electrons)', b ? HIDDEN : sci(q / QE));
+      h += dd('Drift speed w', b ? HIDDEN : `${sci(w * 100)} cm/s`) + dd('Time in the channel L/u', `${sci(S.L / S.u)} s`);
+      h += dd('Efficiency 1 − exp(−wL/us)', b ? HIDDEN : `${(eta * 100).toFixed(eta > 0.999 ? 4 : 2)}%`) + dd('Fraction escaping', b ? HIDDEN : sci(1 - eta));
+      const meas = S.nCaught + S.nOut ? S.nCaught / (S.nCaught + S.nOut) : NaN;
+      h += dd('Counted: caught / through', `${S.nCaught} / ${S.nOut}`) + dd('Measured efficiency', isFinite(meas) ? `${(meas * 100).toFixed(1)}%` : '—');
+    }
+    $('out').innerHTML = h;
+  }
+
+  // ---------- ink jet: drops and printing ----------
+  const FONT = { P: ['11110', '10001', '10001', '11110', '10000', '10000', '10000'], H: ['10001', '10001', '10001', '11111', '10001', '10001', '10001'], Y: ['10001', '10001', '01010', '00100', '00100', '00100', '00100'], S: ['01111', '10000', '10000', '01110', '00001', '00001', '11110'] };
+  const LEVEL = (k) => 0.0004 + 0.0002 * (6 - k);   /* row k = 0 (top) to 6 (bottom): heights 1.6 mm down to 0.4 mm on the paper */
+  const FLIGHT = 0.7;   /* seconds of screen time for one flight (slow motion) */
+  function launch(q, advance) {
+    if (S.drops.length > 40) return;
+    S.drops.push({ q, d: S.d * 1e-6, v: S.v, V: S.PV, s: 0, advance, col: S.col });
+    if (advance) S.col++;
+    if (reduce) finishAll();
+  }
+  function land(dr) {
+    const r = inkjet(dr.d, dr.q, dr.v, dr.V);
+    if (!r.hitsPlate && !r.inGutter) S.paper.push({ col: dr.col, y: r.yPaper });
+  }
+  function finishAll() { for (const dr of S.drops) land(dr); S.drops = []; for (const it of S.queue) { const r = inkjet(S.d * 1e-6, it.q, S.v, S.PV); if (!r.hitsPlate && !r.inGutter) S.paper.push({ col: it.col, y: r.yPaper }); } S.queue = []; draw(); }
+  function printWord() {
+    const d = S.d * 1e-6; let col = S.col + 1;
+    for (const ch of 'PHYS') { for (let c = 0; c < 5; c++) { for (let k = 0; k < 7; k++) S.queue.push({ q: FONT[ch][k][c] === '1' ? chargeFor(LEVEL(k), d, S.v, S.PV) : 0, col }); col++; } col++; }
+    S.col = col + 1; if (reduce) finishAll();
+  }
+
+  // ---------- precipitator particles ----------
+  function espStep(dt) {
+    const dp = 10 ** S.lgDp * 1e-6, E = S.Ekv * 1e5, w = driftSpeed(dp, E, S.kappa), pc = Math.min(1, w * dt / S_ESP);
+    S.spawnAcc += dt * 30; while (S.spawnAcc >= 1) { S.spawnAcc--; S.parts.push({ x: 0, y: Math.random() * 2 - 1, st: 0 }); S.nIn++; }
+    for (const p of S.parts) {
+      if (p.st === 0) {
+        p.x += S.u * dt / S.L; p.y += (Math.random() - 0.5) * 0.25; if (p.y > 0.95) p.y = 1.9 - p.y; if (p.y < -0.95) p.y = -1.9 - p.y;   /* drawn mixing only */
+        if (Math.random() < pc) { p.st = 1; p.side = p.y >= 0 ? 1 : -1; S.nCaught++; }
+        else if (p.x >= 1) { p.st = 3; S.nOut++; }
+      } else if (p.st === 1) { p.x += S.u * dt / S.L * 0.15; p.y += p.side * dt * 2.2; if (Math.abs(p.y) >= 1) { p.st = 2; S.dust.push({ x: Math.min(p.x, 1), side: p.side }); } }
+    }
+    S.parts = S.parts.filter((p) => p.st < 2);
+    if (S.dust.length > 1500) S.dust.splice(0, S.dust.length - 1500);
+  }
+
+  // ---------- drawing ----------
+  function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
+  function plotFrame(x, y, w, h, title, xl, yl) {
+    const p = ps(); ctx.fillStyle = T.surface; ctx.fillRect(x, y, w, h); ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+    txt(title, x + 8 * p, y + 10 * p, { b: 1, s: 11 }); txt(xl, x + w - 6 * p, y + h - 8 * p, { a: 'right', c: T.muted, s: 10 }); if (yl) txt(yl, x + 8 * p, y + 24 * p, { c: T.muted, s: 10 });
+  }
+  function jag(x0, y0, x1, y1, n, amp) { ctx.beginPath(); ctx.moveTo(x0, y0); for (let i = 1; i < n; i++) { const f = i / n, nx = -(y1 - y0), ny = x1 - x0, L = Math.hypot(nx, ny) || 1, o = (Math.random() - 0.5) * 2 * amp; ctx.lineTo(x0 + (x1 - x0) * f + nx / L * o, y0 + (y1 - y0) * f + ny / L * o); } ctx.lineTo(x1, y1); ctx.stroke(); }
+
+  let beltPhase = 0;
+  function drawVdg() {
+    const p = ps(), narrow = W < 640, sceneH = Hh * (narrow ? 0.56 : 0.62), R = S.R / 100, Qm = qMax(R), V = sphereV(S.Q, R), frac = S.Q / Qm;
+    /* floor and bench */
+    const floorY = sceneH - 14 * p; ctx.fillStyle = T.relief; ctx.fillRect(0, floorY, W, sceneH - floorY);
+    const scale = Math.min((sceneH - 40 * p) / 1.55, W * 0.6 / 1.3);   /* px per metre: the 0.80 m column plus the largest dome fit */
+    const cx = narrow ? W * 0.42 : W * 0.38, colH = 0.80 * scale, baseH = 0.10 * scale, baseW = 0.36 * scale, topY = floorY - baseH - colH, rp = R * scale, domeY = topY - rp * 0.82;
+    /* base box with motor */
+    ctx.fillStyle = T.belt; ctx.beginPath(); ctx.roundRect(cx - baseW / 2, floorY - baseH, baseW, baseH, 4 * p); ctx.fill();
+    ctx.fillStyle = T.domeHi; ctx.globalAlpha = 0.25; ctx.fillRect(cx - baseW / 2 + 6 * p, floorY - baseH + 6 * p, baseW * 0.3, baseH * 0.25); ctx.globalAlpha = 1;
+    txt(S.motor ? 'motor on' : 'motor off', cx + baseW / 2 - 6 * p, floorY - baseH / 2, { a: 'right', c: T.canvas, s: 9 });
+    /* insulating column (clear acrylic) with the belt inside */
+    const cw = Math.max(18 * p, 0.07 * scale); ctx.fillStyle = T.canvas; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * p; ctx.globalAlpha = 0.9; ctx.fillRect(cx - cw / 2, topY, cw, colH); ctx.globalAlpha = 1; ctx.strokeRect(cx - cw / 2, topY, cw, colH);
+    const bx0 = cx - cw * 0.25, bx1 = cx + cw * 0.25, by0 = topY + 4 * p, by1 = floorY - baseH - 4 * p;
+    ctx.strokeStyle = T.belt; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(bx0, by0); ctx.lineTo(bx0, by1); ctx.moveTo(bx1, by0); ctx.lineTo(bx1, by1); ctx.stroke();
+    /* charges riding up the right side of the belt */
+    const gap = 16 * p; ctx.fillStyle = T.pos;
+    for (let yb = by1 - ((beltPhase * gap) % gap); yb > by0; yb -= gap) if (S.motor) txt('+', bx1 + 5 * p, yb, { c: T.pos, s: 10, b: 1, a: 'center' });
+    for (const [yy] of [[by0], [by1]]) { ctx.fillStyle = T.muted; ctx.beginPath(); ctx.arc(cx, yy, cw * 0.27, 0, 7); ctx.fill(); }
+    /* grounded wand */
+    const wx = Math.min(W - 30 * p, cx + rp + 0.35 * scale), wy = domeY + rp * 0.2, wr = Math.max(7 * p, 0.03 * scale);
+    ctx.strokeStyle = T.wood; ctx.lineWidth = 5 * p; ctx.beginPath(); ctx.moveTo(wx, wy + wr * 0.8); ctx.lineTo(wx, floorY - 6 * p); ctx.stroke(); ctx.fillStyle = T.belt; ctx.beginPath(); ctx.roundRect(wx - 0.06 * scale, floorY - 6 * p, 0.12 * scale, 6 * p, 2 * p); ctx.fill();
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(wx + wr * 0.7, wy + wr * 0.7); ctx.quadraticCurveTo(wx + 0.12 * scale, wy + 0.2 * scale, wx + 0.12 * scale, floorY); ctx.stroke(); txt('ground', wx + 0.12 * scale + 6 * p, floorY - 10 * p, { c: T.muted, s: 9 });
+    ctx.beginPath(); for (let i = 0; i < 3; i++) { const gw = (10 - 3 * i) * p; ctx.moveTo(wx + 0.12 * scale - gw / 2, floorY + 3 * p + i * 3 * p); ctx.lineTo(wx + 0.12 * scale + gw / 2, floorY + 3 * p + i * 3 * p); } ctx.stroke();
+    let gr = ctx.createRadialGradient(wx - wr * 0.4, wy - wr * 0.4, wr * 0.1, wx, wy, wr); gr.addColorStop(0, T.domeHi); gr.addColorStop(1, T.dome); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(wx, wy, wr, 0, 7); ctx.fill();
+    /* dome: a polished sphere */
+    gr = ctx.createRadialGradient(cx - rp * 0.4, domeY - rp * 0.45, rp * 0.08, cx, domeY, rp); gr.addColorStop(0, T.domeHi); gr.addColorStop(1, T.dome);
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, domeY, rp, 0, 7); ctx.fill(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * p; ctx.stroke();
+    /* charge marks spread evenly over the outside: the number is in proportion to Q (24 at the breakdown charge) */
+    const nq = Math.round(24 * frac);
+    for (let i = 0; i < nq; i++) { const a = (i + 0.5) / nq * 2 * Math.PI - Math.PI / 2; txt('+', cx + Math.cos(a) * (rp + 7 * p), domeY + Math.sin(a) * (rp + 7 * p), { c: T.pos, s: 11, b: 1, a: 'center' }); }
+    txt(`R = ${S.R} cm`, cx, domeY, { a: 'center', c: T.ink, s: 10, b: 1 });
+    /* scale bar */
+    const sb = 0.2 * scale; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(14 * p, floorY - 10 * p); ctx.lineTo(14 * p + sb, floorY - 10 * p); ctx.moveTo(14 * p, floorY - 14 * p); ctx.lineTo(14 * p, floorY - 6 * p); ctx.moveTo(14 * p + sb, floorY - 14 * p); ctx.lineTo(14 * p + sb, floorY - 6 * p); ctx.stroke();
+    txt('20 cm', 14 * p + sb / 2, floorY - 22 * p, { a: 'center', c: T.muted, s: 10 });
+    /* spark */
+    if (S.spark > 0) { ctx.strokeStyle = T.spark; ctx.lineWidth = 2.5 * p; ctx.shadowColor = T.spark; ctx.shadowBlur = 10 * p; const a = Math.atan2(wy - domeY, wx - cx); jag(cx + Math.cos(a) * rp, domeY + Math.sin(a) * rp, wx - wr, wy, 9, 7 * p); ctx.shadowBlur = 0; }
+    /* plots */
+    const py = sceneH + 8 * p, ph = Hh - py - 8 * p, gw = narrow ? W - 16 * p : (W - 24 * p) / 2;
+    const P1 = { x: 8 * p, y: py, w: gw, h: narrow ? ph / 2 - 4 * p : ph }, P2 = narrow ? { x: 8 * p, y: py + ph / 2 + 4 * p, w: gw, h: ph / 2 - 4 * p } : { x: 16 * p + gw, y: py, w: gw, h: ph };
+    const vm = vMax(R), span = 20, vTop = vm * 1.15;
+    plotFrame(P1.x, P1.y, P1.w, P1.h, 'Dome voltage against time', `last ${span} s`, S.blind ? '' : `0 to ${sci(vTop / 1000, 2)} kV`);
+    const ix0 = P1.x + 8 * p, ix1 = P1.x + P1.w - 8 * p, iy0 = P1.y + P1.h - 18 * p, iy1 = P1.y + 32 * p, X = (t) => ix1 - (S.t - t) / span * (ix1 - ix0), Y = (v) => iy0 - v / vTop * (iy0 - iy1);
+    ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(ix0, iy0); ctx.lineTo(ix1, iy0); ctx.stroke();
+    ctx.strokeStyle = T.plateHi; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(ix0, Y(vm)); ctx.lineTo(ix1, Y(vm)); ctx.stroke(); ctx.setLineDash([]);
+    txt(S.blind ? 'breakdown' : `breakdown, E_b R = ${sci(vm / 1000, 3)} kV`, ix1 - 4 * p, Y(vm) - 8 * p, { a: 'right', c: T.plateHi, s: 10 });
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); let first = true;
+    for (const [t, v] of S.hist) { if (S.t - t > span) continue; const xx = X(t), yy = Y(v); if (first) { ctx.moveTo(xx, yy); first = false; } else ctx.lineTo(xx, yy); }
+    ctx.stroke();
+    /* field against distance from the centre */
+    plotFrame(P2.x, P2.y, P2.w, P2.h, 'Field against distance from the centre', 'r, 0 to 4R', S.blind ? '' : `0 to ${sci(E_BREAK * 1.15 / 1e6, 2)} MV/m`);
+    const jx0 = P2.x + 8 * p, jx1 = P2.x + P2.w - 8 * p, jy0 = P2.y + P2.h - 18 * p, jy1 = P2.y + 32 * p, XR = (r) => jx0 + r / (4 * R) * (jx1 - jx0), YE = (e) => jy0 - e / (E_BREAK * 1.15) * (jy0 - jy1);
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(jx0, jy0); ctx.lineTo(jx1, jy0); ctx.moveTo(XR(R), jy0); ctx.lineTo(XR(R), jy1); ctx.stroke(); txt('R', XR(R), jy0 + 8 * p, { a: 'center', c: T.muted, s: 10 });
+    ctx.strokeStyle = T.plateHi; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(jx0, YE(E_BREAK)); ctx.lineTo(jx1, YE(E_BREAK)); ctx.stroke(); ctx.setLineDash([]);
+    txt('air breaks down', jx1 - 4 * p, YE(E_BREAK) - 8 * p, { a: 'right', c: T.plateHi, s: 10 });
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(jx0, jy0); ctx.lineTo(XR(R), jy0);
+    for (let i = 0; i <= 80; i++) { const r = R + i / 80 * 3 * R; ctx.lineTo(XR(r), YE(sphereField(S.Q, R, r))); } ctx.stroke();
+    if (!S.blind) txt('E = 0 inside', jx0 + 4 * p, jy0 - 8 * p, { c: T.muted, s: 10 });
+  }
+
+  /* where a drop that hits a plate touches it: bisection on |y(x)| = gap/2 - d/2 between the plates */
+  function hitX(r, d) { let a = 0, b = INK.L; const lim = INK.gap / 2 - d / 2; for (let i = 0; i < 40; i++) { const m = (a + b) / 2; if (Math.abs(r.yAt(m)) > lim) b = m; else a = m; } return b; }
+  const INKX0 = -0.008;   /* nozzle position (m), relative to the plate entrance */
+  function drawInk() {
+    const p = ps(), narrow = W < 640, paneW = narrow ? 0 : Math.min(230 * p, W * 0.3), sideW = W - paneW - 24 * p, sideH = narrow ? Hh * 0.36 : Hh - 24 * p;
+    const xMin = INKX0 - 0.002, xMax = INK.L + INK.D + (narrow ? 0.0045 : 0.002), sc = Math.min(sideW / (xMax - xMin), (sideH - 60 * p) / 0.0068);   /* px per metre, same in x and y */
+    const ox = 12 * p - xMin * sc, oy = 30 * p + (sideH - 40 * p) * 0.68, X = (x) => ox + x * sc, Y = (y) => oy - y * sc;
+    txt('Side view, to scale, slow motion', 12 * p, 22 * p, { b: 1 });
+    /* nozzle and ink line */
+    ctx.fillStyle = T.belt; ctx.beginPath(); ctx.roundRect(X(xMin) - 4 * p, Y(0.0008), X(INKX0) - X(xMin) + 4 * p, 0.0016 * sc, 3 * p); ctx.fill(); txt('nozzle', X(xMin), Y(0.0008) - 8 * p, { a: 'left', c: T.muted, s: 10 });
+    /* charging electrode: a short tube around the jet */
+    ctx.fillStyle = T.equi; ctx.fillRect(X(-0.005), Y(0.0007), 0.003 * sc, 0.00025 * sc); ctx.fillRect(X(-0.005), Y(-0.00045), 0.003 * sc, 0.00025 * sc);
+    txt(narrow ? 'charger' : 'charging electrode', X(-0.0035), Y(-0.0007) + 10 * p, { a: 'center', c: T.muted, s: 10 });
+    /* plates */
+    const pt = 0.0003 * sc; ctx.fillStyle = T.plateLo; ctx.fillRect(X(0), Y(INK.gap / 2) - pt, INK.L * sc, pt); ctx.fillStyle = T.plateHi; ctx.fillRect(X(0), Y(-INK.gap / 2), INK.L * sc, pt);
+    txt(narrow ? 'grounded' : 'grounded plate', X(INK.L / 2), Y(INK.gap / 2) - pt - 8 * p, { a: 'center', c: T.muted, s: 10 }); txt(narrow ? `+${S.PV} V` : `plate at +${S.PV} V`, X(INK.L / 2), Y(-INK.gap / 2) + pt + 10 * p, { a: 'center', c: T.plateHi, s: 10 });
+    if (S.PV > 0) { ctx.strokeStyle = T.field; ctx.globalAlpha = 0.25; ctx.lineWidth = 1 * p; for (let i = 1; i < 6; i++) { const x = X(INK.L * i / 6); ctx.beginPath(); ctx.moveTo(x, Y(-INK.gap / 2) - 2 * p); ctx.lineTo(x, Y(INK.gap / 2) + 2 * p); ctx.lineTo(x - 3 * p, Y(INK.gap / 2) + 7 * p); ctx.moveTo(x, Y(INK.gap / 2) + 2 * p); ctx.lineTo(x + 3 * p, Y(INK.gap / 2) + 7 * p); ctx.stroke(); } ctx.globalAlpha = 1; }
+    /* gutter: a cup whose lip is just above the straight path */
+    const gx = INK.L + INK.D - INK.gutterBack; ctx.fillStyle = T.muted; ctx.beginPath(); ctx.moveTo(X(gx), Y(INK.gutterTop)); ctx.lineTo(X(gx + 0.0014), Y(INK.gutterTop)); ctx.lineTo(X(gx + 0.0014), Y(-0.0012)); ctx.lineTo(X(gx - 0.0004), Y(-0.0012)); ctx.lineTo(X(gx - 0.0004), Y(INK.gutterTop)); ctx.closePath(); ctx.fill();
+    txt('gutter', X(gx + 0.0005), Y(-0.0012) + 9 * p, { a: 'center', c: T.muted, s: 10 });
+    /* paper edge */
+    const xp = INK.L + INK.D; ctx.fillStyle = T.paper; ctx.strokeStyle = T.line; ctx.fillRect(X(xp), Y(0.0042), 0.0006 * sc, 0.0054 * sc); ctx.strokeRect(X(xp), Y(0.0042), 0.0006 * sc, 0.0054 * sc);
+    txt('paper', X(xp) + 0.0003 * sc, Y(0.0042) - 8 * p, { a: 'center', c: T.muted, s: 10 });
+    /* ruler on the paper edge in mm */
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; for (let mm = -1; mm <= 4; mm += 0.5) { const y = Y(mm / 1000); ctx.beginPath(); ctx.moveTo(X(xp) + 0.0006 * sc, y); ctx.lineTo(X(xp) + 0.0006 * sc + (mm % 1 ? 4 : 8) * p, y); ctx.stroke(); if (!(mm % 1) && !narrow) txt(`${mm}`, X(xp) + 0.0006 * sc + 11 * p, y, { c: T.muted, s: 9, m: 1 }); }
+    if (!narrow) txt('mm', X(xp) + 0.0006 * sc + 11 * p, Y(0.0042) - 8 * p, { c: T.muted, s: 9 });
+    /* straight path, dashed */
+    ctx.strokeStyle = T.grid; ctx.setLineDash([3 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(X(INKX0), Y(0)); ctx.lineTo(X(xp), Y(0)); ctx.stroke(); ctx.setLineDash([]);
+    /* predicted path of the next single drop */
+    const r = inkjet(S.d * 1e-6, S.q * 1e-12, S.v, S.PV);
+    if (!S.blind) { ctx.strokeStyle = T.inkDrop; ctx.globalAlpha = 0.35; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(X(INKX0), Y(0)); const xEnd = r.hitsPlate ? hitX(r, S.d * 1e-6) : r.inGutter ? gx : xp; for (let i = 0; i <= 60; i++) { const x = xEnd * i / 60; ctx.lineTo(X(x), Y(r.yAt(x))); } ctx.stroke(); ctx.globalAlpha = 1; }
+    /* drops in flight */
+    const rad = Math.max(2 * p, S.d * 1e-6 / 2 * sc);
+    for (const dr of S.drops) {
+      const rr = inkjet(dr.d, dr.q, dr.v, dr.V), xEnd = rr.hitsPlate ? hitX(rr, dr.d) : rr.inGutter ? gx : xp, x = INKX0 + (xEnd - INKX0) * dr.s, y = x < 0 ? 0 : rr.yAt(x);
+      ctx.fillStyle = T.inkDrop; ctx.beginPath(); ctx.arc(X(x), Y(y), rad, 0, 7); ctx.fill();
+      if (dr.q > 0 && rad > 3 * p) txt('+', X(x), Y(y), { a: 'center', c: T.canvas, s: 8, b: 1 });
+    }
+    /* face view of the paper */
+    const fx0 = narrow ? 12 * p : W - paneW - 6 * p, fy0 = narrow ? sideH + 12 * p : 34 * p, fw = narrow ? W - 24 * p : paneW, fh = narrow ? Hh - sideH - 24 * p : Hh - 46 * p;
+    txt('The paper, face on', fx0, fy0 - 12 * p, { b: 1 });
+    ctx.fillStyle = T.paper; ctx.strokeStyle = T.line; ctx.fillRect(fx0, fy0, fw, fh); ctx.strokeRect(fx0 + 0.5, fy0 + 0.5, fw - 1, fh - 1);
+    const fsc = Math.min((fh - 30 * p) / 0.0052, fw / 0.004), fyz = fy0 + fh - 20 * p - 0.001 * fsc, FY = (y) => fyz - y * fsc, colW = 0.0002 * fsc;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; for (let mm = -1; mm <= 4; mm += 0.5) { const y = FY(mm / 1000); if (y < fy0 + 4 * p) continue; ctx.beginPath(); ctx.moveTo(fx0, y); ctx.lineTo(fx0 + (mm % 1 ? 5 : 10) * p, y); ctx.stroke(); if (!(mm % 1)) txt(`${mm} mm`, fx0 + 13 * p, y, { c: T.muted, s: 9, m: 1 }); }
+    const maxCol = Math.max(0, ...S.paper.map((d) => d.col)), shift = Math.max(0, (maxCol + 2) * colW - (fw - 60 * p));   /* the paper slides left as it fills */
+    ctx.save(); ctx.beginPath(); ctx.rect(fx0 + 50 * p, fy0, fw - 52 * p, fh); ctx.clip(); ctx.fillStyle = T.inkDrop;
+    for (const d of S.paper) { ctx.beginPath(); ctx.arc(fx0 + 56 * p + d.col * colW - shift, FY(d.y), Math.max(1.5 * p, colW * 0.42), 0, 7); ctx.fill(); }
+    ctx.restore();
+    txt('paper moves this way ←', fx0 + fw - 6 * p, fy0 + fh - 8 * p, { a: 'right', c: T.muted, s: 9 });
+  }
+
+  function drawEsp() {
+    const p = ps(), narrow = W < 640, sceneH = Hh * (narrow ? 0.52 : 0.58), x0 = 40 * p, x1 = W - (narrow ? 50 : 110) * p, yc = 24 * p + (sceneH - 24 * p) / 2, hw = Math.min((sceneH - 70 * p) / 2, 110 * p), Xf = (f) => x0 + f * (x1 - x0), Yf = (y) => yc - y * hw;
+    const dp = 10 ** S.lgDp * 1e-6, E = S.Ekv * 1e5, w = driftSpeed(dp, E, S.kappa), eta = deutsch(w, S.L, S.u, S_ESP);
+    txt(narrow ? `Top view, not to scale: 0.250 m by ${S.L.toFixed(1)} m` : `Top view of one channel (not to scale): 0.250 m wide, ${S.L.toFixed(1)} m long`, 12 * p, 16 * p, { b: 1 });
+    /* plates with dust layers */
+    ctx.fillStyle = T.plateLo; ctx.fillRect(x0, Yf(1) - 6 * p, x1 - x0, 6 * p); ctx.fillRect(x0, Yf(-1), x1 - x0, 6 * p);
+    ctx.fillStyle = T.dust; for (const d of S.dust) { const xx = Xf(d.x) + ((d.x * 9973) % 1) * 2 * p; ctx.fillRect(xx, d.side > 0 ? Yf(1) : Yf(-1) - 2 * p, 2 * p, 2 * p); }
+    txt('grounded plate', Xf(0.5), Yf(1) - 14 * p, { a: 'center', c: T.muted, s: 10 }); txt('grounded plate', Xf(0.5), Yf(-1) + 16 * p, { a: 'center', c: T.muted, s: 10 });
+    /* wire with a corona glow */
+    ctx.strokeStyle = T.spark; ctx.globalAlpha = 0.25; ctx.lineWidth = 7 * p; ctx.beginPath(); ctx.moveTo(x0, yc); ctx.lineTo(x1, yc); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x0, yc); ctx.lineTo(x1, yc); ctx.stroke(); txt('charging wire (high voltage)', x0 + 6 * p, yc - 10 * p, { c: T.muted, s: 10 });
+    /* field arrows from wire to plates (wire negative in most industrial units: field points toward the wire) */
+    ctx.strokeStyle = T.field; ctx.globalAlpha = 0.25; ctx.lineWidth = 1 * p; for (let i = 1; i < 8; i++) { const x = Xf(i / 8); for (const sgn of [1, -1]) { ctx.beginPath(); ctx.moveTo(x, Yf(sgn * 0.92)); ctx.lineTo(x, Yf(sgn * 0.15)); ctx.lineTo(x - 3 * p, Yf(sgn * 0.15) - sgn * 5 * p); ctx.moveTo(x, Yf(sgn * 0.15)); ctx.lineTo(x + 3 * p, Yf(sgn * 0.15) - sgn * 5 * p); ctx.stroke(); } } ctx.globalAlpha = 1;
+    /* gas arrows */
+    txt('gas', 4 * p, yc + 22 * p, { c: T.muted, s: 10 }); txt('in →', 4 * p, yc + 36 * p, { c: T.muted, s: 10 });
+    /* particles */
+    ctx.fillStyle = T.smoke; for (const q of S.parts) { ctx.globalAlpha = q.st === 1 ? 1 : 0.8; ctx.beginPath(); ctx.arc(Xf(q.x), Yf(q.y * 0.97), 2.2 * p, 0, 7); ctx.fill(); } ctx.globalAlpha = 1;
+    /* stack with a plume as dark as the fraction that escapes */
+    const sx = x1 + 18 * p, sw = 16 * p, stTop = Yf(1) - 30 * p; ctx.fillStyle = T.plateLo; ctx.fillRect(sx, stTop, sw, Yf(-1) - stTop + 6 * p); ctx.fillRect(x1, yc - 6 * p, sx - x1, 12 * p);
+    if (!S.blind) { ctx.fillStyle = T.smoke; for (let i = 0; i < 6; i++) { ctx.globalAlpha = Math.min(0.85, (1 - eta) * 1.2) * (1 - i / 7); ctx.beginPath(); ctx.arc(sx + sw / 2 + i * 6 * p, stTop - 8 * p - i * 9 * p, (6 + i * 2.5) * p, 0, 7); ctx.fill(); } ctx.globalAlpha = 1; }
+    txt('stack', sx + sw / 2, Yf(-1) + 18 * p, { a: 'center', c: T.muted, s: 10 });
+    /* efficiency against diameter */
+    const py = sceneH + 6 * p, ph = Hh - py - 8 * p; plotFrame(8 * p, py, W - 16 * p, ph, 'Collection efficiency against particle diameter', '', '');
+    txt('diameter, 0.05 to 30 µm, log scale', W - 14 * p, narrow ? py + 24 * p : py + 10 * p, { a: 'right', c: T.muted, s: 10 });
+    const ix0 = 40 * p, ix1 = W - 24 * p, iy0 = py + ph - 22 * p, iy1 = py + 32 * p, lo = Math.log10(0.05), hi = Math.log10(30), XD = (um) => ix0 + (Math.log10(um) - lo) / (hi - lo) * (ix1 - ix0), YP = (f) => iy0 - f * (iy0 - iy1);
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; for (const um of [0.1, 1, 10]) { ctx.beginPath(); ctx.moveTo(XD(um), iy0); ctx.lineTo(XD(um), iy1); ctx.stroke(); txt(`${um} µm`, XD(um), iy0 + 9 * p, { a: 'center', c: T.muted, s: 9, m: 1 }); }
+    for (const f of [0, 0.5, 1]) { ctx.beginPath(); ctx.moveTo(ix0, YP(f)); ctx.lineTo(ix1, YP(f)); ctx.stroke(); if (!S.blind) txt(`${f * 100}%`, ix0 - 4 * p, YP(f), { a: 'right', c: T.muted, s: 9, m: 1 }); }
+    if (!S.blind) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let i = 0; i <= 120; i++) { const um = 10 ** (lo + (hi - lo) * i / 120), e = deutsch(driftSpeed(um * 1e-6, E, S.kappa), S.L, S.u, S_ESP); if (i) ctx.lineTo(XD(um), YP(e)); else ctx.moveTo(XD(um), YP(e)); } ctx.stroke();
+      ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(XD(dp * 1e6), YP(eta), 4.5 * p, 0, 7); ctx.fill(); }
+    else { ctx.strokeStyle = T.accent; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(XD(dp * 1e6), iy0); ctx.lineTo(XD(dp * 1e6), iy1); ctx.stroke(); ctx.setLineDash([]); }
+  }
+
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    if (S.setup === 'vdg') drawVdg(); else if (S.setup === 'ink') drawInk(); else drawEsp();
+  }
+
+  let frameAcc = 0, roAcc = 0;
+  function tick(dt) {
+    if (!dt) return;
+    let dirty = false;
+    if (S.setup === 'vdg') {
+      S.t += dt;
+      if (S.motor) { S.Q += S.I * 1e-6 * dt; const R = S.R / 100; if (S.Q >= qMax(R)) { S.Q = 0; S.spark = 0.25; S.sparks++; } dirty = true; }
+      S.hist.push([S.t, sphereV(S.Q, S.R / 100)]); while (S.hist.length && S.t - S.hist[0][0] > 22) S.hist.shift();
+      if (S.spark > 0) { S.spark -= dt; dirty = true; }
+      if (!reduce) beltPhase += S.motor ? dt * 3 : 0;
+      dirty = dirty || S.motor;
+    } else if (S.setup === 'ink') {
+      if (S.queue.length) { S.qAcc += dt * 45; while (S.qAcc >= 1 && S.queue.length) { S.qAcc--; const it = S.queue.shift(); S.drops.push({ q: it.q, d: S.d * 1e-6, v: S.v, V: S.PV, s: 0, col: it.col }); } }
+      for (const dr of S.drops) dr.s += dt / FLIGHT;
+      for (const dr of S.drops) if (dr.s >= 1) land(dr);
+      S.drops = S.drops.filter((dr) => dr.s < 1);
+      dirty = S.drops.length > 0 || S.queue.length > 0;
+    } else { espStep(reduce ? 0 : dt); dirty = !reduce; }
+    roAcc += dt; if (roAcc > 0.2) { roAcc = 0; if (S.setup !== 'ink') readouts(); }
+    frameAcc += dt; if (dirty && frameAcc > 1 / 40) { frameAcc = 0; draw(); }
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce) finishAll(); draw(); });
+  tokens(); new ResizeObserver(resize).observe(stage);
+  const q0 = new URLSearchParams(location.search).get('setup'); setSetup(['vdg', 'ink', 'esp'].includes(q0) ? q0 : 'vdg'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  let last = performance.now();
+  (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();
+})();
+</script>
+</body>
+</html>

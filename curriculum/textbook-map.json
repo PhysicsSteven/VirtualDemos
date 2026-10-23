@@ -2597,10 +2597,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "missing",
-      "demos": [],
+      "status": "usable",
+      "demos": [
+        "electrostatics-at-work"
+      ],
       "unit": "potential",
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "Electrostatics at Work (2026-10-23, Claude): Van de Graaff dome to breakdown, ink jet deflection and printing, precipitator with the Deutsch equation. Xerography and laser printers are described in notes only."
     },
     {
       "vol": 2,
@@ -5391,6 +5393,26 @@
       ],
       "title": "Gauss's Law",
       "url": "demos/gauss-law.html"
+    },
+    {
+      "demo": "electrostatics-at-work",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "7.6",
+          "title": "Applications of Electrostatics"
+        }
+      ],
+      "role": "demo",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-23 (Claude). Lecture demo: Van de Graaff (dome radius, belt current, V(t), E(r), spark at 3.0 MV/m, V_max = E_b R), ink jet (drop charge, plate voltage, diameter, speed; gutter; Print PHYS), precipitator (Pauthenier charge, Cunningham, Deutsch efficiency against diameter, counters); Blind.",
+      "handouts": [],
+      "title": "Electrostatics at Work",
+      "url": "demos/electrostatics-at-work.html"
     },
     {
       "demo": "capacitors",

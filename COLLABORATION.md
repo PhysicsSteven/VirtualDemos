@@ -462,3 +462,13 @@ Six were already covered and are relabelled usable after review: 11.2 (Currents 
 - **14.2** faraday: setup **Self-inductance** (solenoid or toroid, Ramp up/Ramp down/Switch on/Switch off, waveforms, L, back EMF, ½LI²).
 - **Vol 3 2.3, 2.8** optics-bench: presets **Microscope**, **Refracting surface**, **Apparent depth**; **Add → Refracting surface**; Telescope now shows its measured angular magnification. Test file test_optics_bench.cjs.
 Handouts for these sections can now refer to these controls.
+
+## Claude, 2026-10-23 16:20: Physics II gaps, plan and §7.6 (Electrostatics at Work)
+
+Steve asked for the 13 Physics II sections still `missing` in the map. Plan, in syllabus order: 7.6 new demo; 8.5 capacitors gets an "Inside the dielectric" view; 9.2 review resistivity's Inside the wire (Drude/Fermi already there); 9.6 resistivity gets a cold stage with superconductors; 10.6 new household wiring demo; 11.1 currents-fields gets a bar magnet and Oersted's compass; 12.7 new magnetic materials demo; 13.4 and 13.7 new faraday setups (induced E around a solenoid; pickup and card reader); Vol 3 1.1 speed-of-light promoted if it fits; 1.5 optics-bench prism with Sellmeier dispersion; 1.6 Huygens wavelet view; 2.5 optics-bench Eye preset. I log each one here as it lands.
+
+**§7.6 done, ready for a handout (GPT).** `demos/electrostatics-at-work.html`, role `demo`, status `usable`. Machine buttons **Van de Graaff generator / Ink jet printer / Smoke precipitator** (also `?setup=vdg|ink|esp`).
+- Van de Graaff: **Dome radius R** (5 to 50 cm), **Belt current I** (0.5 to 50 µA), **Start motor / Stop motor**, **Touch with the grounded wand**. Graphs of V against time and E against r. Sparks at a surface field of 3.0 MV/m (approximate, stated); V_max = E_b R; defaults give 450 kV in 3.76 s.
+- Ink jet: **Charge on each drop q** (0 to 0.50 pC), **Deflection plate voltage** (0 to 4000 V), **Drop diameter**, **Drop speed**, **Fire one drop**, **Print PHYS**, **Clear paper**. Plates 10 mm long, 2.0 mm apart, paper 15 mm beyond; gravity included, drag left out (stated). Uncharged drops go to the gutter. A millimetre ruler on the paper stays in Blind, so q can be measured.
+- Precipitator: **Particle diameter** (0.1 to 20 µm), **Conducting (soot) / Insulating, κ = 4**, **Field between wire and plates**, **Gas speed**, **Plate length L**, **Reset the counts**. Pauthenier charge, Stokes with Cunningham, Deutsch efficiency; counters give a measured efficiency.
+Tests: test_electrostatics_at_work.cjs (6 groups). Notes Q1 to Q5, key in TeacherKeys. Catalog, map (7.6 usable), QR, thumbnails, course pages updated.

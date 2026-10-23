@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Electrostatics at Work: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Electrostatics at Work</h1><ul class="meta"><li><a href="../demos/electrostatics-at-work.html">Open the demo</a></li><li>PHYS 202</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A conductor's charge sits on its outside surface, so a hollow dome can keep taking charge from inside. That is how a Van de Graaff generator works.</li>
+<li>A charged sphere's voltage is V = kQ/R and its surface field is E = V/R. The air breaks down at about 3 MV/m, so the highest voltage is V_max = E_b R: a bigger dome holds a higher voltage, and a sharp point (small R) sparks first.</li>
+<li>A charged drop between plates is a projectile in a uniform field. Its deflection is proportional to q/m and to the plate voltage, and falls as 1/v². An ink jet printer steers each drop by choosing its charge.</li>
+<li>In a precipitator, charged particles drift across the gas flow at a speed set by the electric force against air drag. The fraction caught is 1 − exp(−wL/(us)), so larger particles and longer plates are caught far better.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need V = kQ/R and E = kQ/r² for a sphere (OpenStax Vol 2 §7.3, §6.3) and projectile motion. <strong>Blind</strong> hides the answers in each machine; the ruler beside the paper and the precipitator counters stay, so they can be used to measure.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Van de Graaff.</strong> Start the motor with R = 15 cm and I = 2.0 µA. Ask: what limits the voltage? The dome reaches 450 kV in 3.76 s and sparks. Double R to 30 cm: V_max doubles to 900 kV but the time to spark goes up four times (Q_max ∝ R²).</li>
+<li><strong>Field inside.</strong> Point at the E(r) graph: zero inside the dome, kQ/r² outside. This is why the belt can deliver charge to the inside of the dome against a high voltage.</li>
+<li><strong>Ink jet.</strong> Fire one drop with the defaults: it lands 0.99 mm up. Double q: twice as high. Double v: a quarter as high. Set q = 0 and the drop goes into the gutter.</li>
+<li><strong>Print PHYS.</strong> The controller gives each dot its own charge. Change the plate voltage and print again: the letters keep their shape because the charges are recalculated.</li>
+<li><strong>Precipitator.</strong> At 1 µm the efficiency is 87%. Slide the diameter: 10 µm particles are caught to better than 99.99%, while 0.1 µm particles are mostly lost in this model. Double the plate length: the escaping fraction is squared.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A Van de Graaff dome has radius 15 cm. Taking the breakdown field of air as 3.0 × 10⁶ V/m, find the highest voltage the dome can hold and the charge on it at that voltage.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> The belt delivers 2.0 µA. How long does the 15 cm dome take to charge from zero to breakdown? How long would a 30 cm dome take, and why is it not twice as long?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A 60 µm ink drop (water, 1000 kg/m³) carrying 0.15 pC moves at 20 m/s between plates 10 mm long and 2.0 mm apart at 3000 V, then travels 15 mm to the paper. How far up does it land? How much does gravity change that?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In the ink jet, students measure where drops land with the voltage at 3000 V and find 1.33 mm. What is the drop's charge, if the drop is the same as in Q3?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> A precipitator catches 87% of 1 µm particles with plates 5 m long. What would it catch with plates 10 m long, all else the same? Why is it not 100%?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A bigger dome is charged faster to the same voltage."</strong> For a fixed current, the time to reach a voltage V grows with R, because C = 4πε₀R.</li>
+<li><strong>"Charge spreads through the metal."</strong> In equilibrium it sits on the outer surface, and the field inside is zero.</li>
+<li><strong>"The field pushes the drop all the way to the paper."</strong> The force acts only between the plates; afterwards the drop coasts in a straight line.</li>
+<li><strong>"A precipitator filters the gas."</strong> Nothing blocks the flow: the particles are moved sideways by the electric force.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Dome: isolated conducting sphere, C = 4πε₀R. Breakdown field of dry air at 1 atm taken as 3.0 × 10⁶ V/m (approximate). Constant belt current, no leakage before the spark, spark empties the dome.</li>
+<li>Ink jet: uniform field V/gap between the plates and none outside; gravity included, air drag left out (stated on the page with an estimate). Drop charge kept far below the Rayleigh limit 8π√(ε₀γr³).</li>
+<li>Precipitator: saturation field charge q = 4πε₀a²E·3κ/(κ + 2) (Pauthenier), Stokes drag with the Cunningham slip correction 1 + Kn(1.257 + 0.4 e^(−1.1/Kn)), air at 20 °C (η = 1.81 × 10⁻⁵ Pa·s, mean free path 0.066 µm), Deutsch equation. Diffusion charging is left out, so submicron efficiencies are underestimated.</li>
+<li>OpenStax Vol 2 §7.6 describes these machines (plus xerography and laser printers) qualitatively; the numbers here are the demo's own calculations.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

@@ -786,6 +786,17 @@
      ]
     },
     {
+     "demo": "electrostatics-at-work",
+     "title": "Electrostatics at Work",
+     "desc": "A Van de Graaff dome charging until the air breaks down, an ink jet printer steering charged drops onto paper, and a smokestack precipitator pulling charged dust out of a gas flow.",
+     "tags": [
+      "Van de Graaff",
+      "breakdown field",
+      "ink jet",
+      "electrostatic precipitator"
+     ]
+    },
+    {
      "demo": "capacitors",
      "title": "Capacitors and Dielectrics",
      "desc": "Pull the plates apart and slide in a dielectric with the battery connected or not, and follow Q, V, E, C and the energy, including the work your hand does. Field lines come from a real solution with fringing at the edges.",
