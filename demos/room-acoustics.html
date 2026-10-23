@@ -898,7 +898,7 @@ window.VDGear = (function () {
   $('exportWs').addEventListener('click', () => {
     const rows = rowsNow(); if (!rows.length) { capStatus('No readings to export.'); return; }
     const kind = S.mode, slug = kind === 'decay' ? 'room-acoustics' : 'anechoic-chamber', txt = readingsCSV(kind, rows, { version: RA_VERSION }), name = `${slug}-readings.csv`;
-    const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => l.split(',');
+    const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };   /* CSV cells, quotes and all */
     if (kind === 'decay' && !S.seriesD) S.seriesD = Date.now(); if (kind === 'level' && !S.seriesL) S.seriesL = Date.now();
     const hand = { v: 1, demo: 'room-acoustics', series: kind === 'decay' ? S.seriesD : S.seriesL, sent: new Date().toISOString(), columns: split(lines[0]), rows: lines.slice(1).map(split),
       note: `Simulated data from the Room Acoustics demo (${kind === 'decay' ? 'reverberation times' : 'level against distance'}).`, csv: txt, csvName: name };

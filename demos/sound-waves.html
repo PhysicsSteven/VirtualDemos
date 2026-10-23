@@ -654,7 +654,7 @@ window.VDGear = (function () {
   const WORKSHEET = '../curriculum/labs/students/sound-waves.html';
   function downloadCsv(txt) { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'sound-waves-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} }
   function toWorksheet(txt, meta, note) {
-    const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => l.split(',');
+    const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };   /* CSV cells, quotes and all */
     if (!S.series) S.series = Date.now();
     const hand = { v: 1, demo: 'sound-waves', series: S.series, sent: new Date().toISOString(), columns: split(lines[0]), rows: lines.slice(1).map(split), meta, note, csv: txt, csvName: 'sound-waves-readings.csv' };
     localStorage.setItem('vd-handoff:sound-waves', JSON.stringify(hand));

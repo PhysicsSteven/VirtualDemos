@@ -501,7 +501,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   $('exportCsv').addEventListener('click', () => {
     if (!S.rows.length) { capStatus('No readings to export.'); return; }
     const g = S.mystery ? 'mystery planet (hidden)' : `${S.g} m/s2`, txt = readingsCSV(S.rows, { version: PD_VERSION, g });
-    const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => l.split(',');
+    const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };   /* CSV cells, quotes and all */
     if (!S.series) S.series = Date.now(); /* a new series after each Clear, so the worksheet starts a new copy of its table */
     const hand = { v: 1, demo: 'pendulum', series: S.series, sent: new Date().toISOString(), columns: split(lines[0]), rows: lines.slice(1).map(split),
       note: `Simulated data from the Pendulum demo (gravity ${g}).`, csv: txt, csvName: 'pendulum-readings.csv' };
