@@ -245,6 +245,17 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 @media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -321,15 +332,17 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-m="battery" aria-pressed="true">Connected</button>
           <button type="button" data-m="iso" aria-pressed="false">Isolated</button>
         </div>
-        <div class="ctl">
-          <div class="slider-head"><label for="sV">Battery voltage V<sub>b</sub></label><output id="oV" class="mono" for="sV"></output></div>
-          <input type="range" id="sV" min="10" max="300" step="10">
-        </div>
         <p class="hint bh" id="modeHint"></p>
       </section>
 
       <section data-view="single">
         <h2>Plates</h2>
+        <p class="hint">Drag the grips on the picture: the top plate's grip for the <b>Separation d</b>, the side grip for the <b>Plate area A</b>, the slab for <b>Inserted x/s</b>, and the battery up or down for the <b>Battery voltage V<sub>b</sub></b>; click the battery's switch to connect or isolate it. Keys on the picture: ↑ ↓ d, ← → x/s, Page Up/Down A, + − V<sub>b</sub>, M connect.</p>
+        <details class="fold"><summary>Exact values</summary><div class="foldbody">
+        <div class="ctl">
+          <div class="slider-head"><label for="sV">Battery voltage V<sub>b</sub></label><output id="oV" class="mono" for="sV"></output></div>
+          <input type="range" id="sV" min="10" max="300" step="10">
+        </div>
         <div class="ctl">
           <div class="slider-head"><label for="sD">Separation d</label><output id="oD" class="mono" for="sD"></output></div>
           <input type="range" id="sD" min="0.5" max="4" step="0.05">
@@ -338,7 +351,12 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <div class="slider-head"><label for="sA">Plate area A</label><output id="oA" class="mono" for="sA"></output></div>
           <input type="range" id="sA" min="25" max="400" step="1">
         </div>
+        <div class="ctl">
+          <div class="slider-head"><label for="sF">Inserted x/s</label><output id="oF" class="mono" for="sF"></output></div>
+          <input type="range" id="sF" min="0" max="100" step="1">
+        </div>
         <p class="hint">Square plates of side s, so A = s². Changing A counts like sliding one plate sideways to change the overlap: your hand does the work.</p>
+        </div></details>
       </section>
 
       <section data-view="single">
@@ -347,10 +365,6 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <div class="ctl bh" id="kCtl">
           <div class="slider-head"><label for="sK">Dielectric constant κ</label><output id="oK" class="mono" for="sK"></output></div>
           <input type="range" id="sK" min="1" max="100" step="0.1">
-        </div>
-        <div class="ctl">
-          <div class="slider-head"><label for="sF">Inserted x/s</label><output id="oF" class="mono" for="sF"></output></div>
-          <input type="range" id="sF" min="0" max="100" step="1">
         </div>
         <dl class="readout" id="slabBox"></dl>
         <p class="hint" id="slabHint">The slab is cut to fill the gap when it goes in. With the slab in, the plates can be pulled apart, which leaves an air gap above it, but not pushed closer than its thickness. A partly inserted slab makes two capacitors in parallel: C(x) = ε₀(s/d)(s − x) + ε₀(s/d<sub>in</sub>)x, with d<sub>in</sub> = (d − t) + t/κ.</p>
@@ -370,7 +384,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th scope="col">#</th><th scope="col">d cm</th><th scope="col">x/s %</th><th scope="col">C pF</th><th scope="col">Q nC</th><th scope="col">V (V)</th><th scope="col"><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Capture pauses the sweep and stores the settings and the values shown on screen, rounded as displayed: d, x/s, C, Q and V here, and also A, t, κ, the battery, E, U and the energies since Mark start in the CSV. Cells can be edited; rows stay through setup changes until Clear. Press C on the drawing to capture.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Capture pauses the sweep and stores the settings and the values shown on screen, rounded as displayed: d, x/s, C, Q and V here, and also A, t, κ, the battery, E, U and the energies since Mark start in the CSV. Cells can be edited; rows stay through setup changes until Clear. Press C on the drawing to capture.</p></details>
         <div class="seg full" role="group" aria-label="Plot of the readings" id="fitSeg">
           <button type="button" data-k="Cd" aria-pressed="true">C vs 1/d</button>
           <button type="button" data-k="Cf" aria-pressed="false">C vs x/s</button>
@@ -380,13 +394,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <dl class="readout fitout" id="fitOut"></dl>
         <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
         <div class="twrap" id="fitWrap" hidden><table class="rows" id="fitTbl"><caption class="sr">Plotted readings, fitted line and residuals</caption><thead></thead><tbody></tbody></table></div>
-        <p class="hint">The fit is a least squares line y = a + bx with equal weights, through your captured rows only. The standard errors come from the scatter of the rows about the line; with ideal simulated values that scatter is only the display rounding.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">The fit is a least squares line y = a + bx with equal weights, through your captured rows only. The standard errors come from the scatter of the rows about the line; with ideal simulated values that scatter is only the display rounding.</p></details>
       </section>
 
       <section>
         <h2>Lab</h2>
         <label class="check"><input type="checkbox" id="labBlind">Blind: hide predictions and answers</label>
-        <p class="hint">Blind hides the model curves in the C and U plot, the value of ε₀ and the formula in the header, κ on the material buttons and its slider, the plate and slab forces, σ and the fields inside the slab, the energy check, the energy in the field, the setup hints and the constants derived from your fit. The meters stay: C, Q, V, E, U and the energy bars.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Blind hides the model curves in the C and U plot, the value of ε₀ and the formula in the header, κ on the material buttons and its slider, the plate and slab forces, σ and the fields inside the slab, the energy check, the energy in the field, the setup hints and the constants derived from your fit. The meters stay: C, Q, V, E, U and the energy bars.</p></details>
       </section>
 
       <section data-view="single">
@@ -442,11 +456,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <input type="range" id="sCV" min="10" max="300" step="10">
         </div>
         <p class="hint" id="topHint"></p>
-        <p class="hint">Capacitor values step through the E6 series from 1 pF to 1 nF. Drag a plate on the drawing to change that capacitor, or the battery up and down to change V. The plate gap is drawn on a log scale.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Capacitor values step through the E6 series from 1 pF to 1 nF. Drag a plate on the drawing to change that capacitor, or the battery up and down to change V. The plate gap is drawn on a log scale.</p></details>
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles" data-view="single">
           <label><input type="checkbox" id="tLines" checked>Field lines</label>
           <label><input type="checkbox" id="tCharges" checked>Free charges</label>
@@ -461,7 +475,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <span data-view="single"><i class="swatch fill"></i>Dielectric slab</span>
           <span data-view="single"><i class="swatch u"></i>Energy density, darker is larger</span>
         </div>
-        <p class="hint" data-view="single">Model: the readouts use the ideal parallel plate model with a uniform field and no fringing. The field lines, drawn in the front face of the plates, come from a numerical solution of Laplace's equation for this cross section (plates infinitely deep, inside an insulating box 5 cm beyond the plates, so no field line leaves it), so they show the fringing at the edges honestly; lines start in proportion to the free charge and a share 1 − 1/κ of them ends on the bound charge where they enter the slab, so line density matches E in the uniform regions (near the slab's ends it is only approximate). The few lines that leave the outer faces fade out away from the plates. The wires, the stand, the supply and the electrometer are not part of that solution; the electrometer is ideal and draws no charge, and the water tank's thin glass walls are ignored. All changes are slow (quasi static), the battery and wires are ideal, and the slab slides without friction.</p>
+        <details class="more"><summary>More about this</summary><p class="hint" data-view="single">Model: the readouts use the ideal parallel plate model with a uniform field and no fringing. The field lines, drawn in the front face of the plates, come from a numerical solution of Laplace's equation for this cross section (plates infinitely deep, inside an insulating box 5 cm beyond the plates, so no field line leaves it), so they show the fringing at the edges honestly; lines start in proportion to the free charge and a share 1 − 1/κ of them ends on the bound charge where they enter the slab, so line density matches E in the uniform regions (near the slab's ends it is only approximate). The few lines that leave the outer faces fade out away from the plates. The wires, the stand, the supply and the electrometer are not part of that solution; the electrometer is ideal and draws no charge, and the water tank's thin glass walls are ignored. All changes are slow (quasi static), the battery and wires are ideal, and the slab slides without friction.</p></details>
+        </div></details>
       </section>
     </aside>
   </main>

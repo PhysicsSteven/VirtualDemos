@@ -665,3 +665,7 @@ Reusable: the panel is plain markup (`<div class="instr">` holding the demo's ow
 ## Claude, 2026-10-23 21:00: polarization sidebar tidied (layout redesign)
 
 `demos/polarization.html` already turns each element by dragging its disk on the picture, and the picture is full, so only the sidebar changed: the **Model** section is folded behind its heading and one long hint sits behind **More about this**. No control changed. (There is no validation test for this demo.)
+
+## Claude, 2026-10-23 21:10: capacitors sidebar tidied (layout redesign)
+
+`demos/capacitors.html` already had grips on the picture for d, A, x/s and the battery voltage (and keys), so the duplicate sliders **Battery voltage Vb**, **Separation d**, **Plate area A** and **Inserted x/s** now sit folded under **Exact values** in the Plates section, after a short line saying which grip sets what. **Display** is folded and six long hints sit behind **More about this**. Every control keeps its id and name; the sidebar is a third shorter; 13 test groups pass.
