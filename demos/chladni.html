@@ -599,7 +599,7 @@ window.VDGear = (function () {
           <span><i class="swatch curve"></i>RMS acceleration of the plate vs f</span>
           <span><i class="swatch fline"></i>drive frequency f (drag it)</span>
           <span><i class="swatch gline"></i>1 g</span>
-          <span><i class="swatch env"></i>wave driver: acceleration of the post itself</span>
+          <span><i class="swatch env"></i>wave driver: acceleration of the post itself (it dips where the plate holds the post still)</span>
         </div>
         </div></details>
       </section>
@@ -1625,6 +1625,9 @@ window.VDGear = (function () {
       c.strokeStyle = T.muted; c.lineWidth = 1.3 * ps; c.setLineDash([4 * ps, 3 * ps]); c.beginPath();
       for (let i = 0; i < cv.f.length; i++) { const x = fX(g, cv.f[i]), y = Y(cv.post[i]); i ? c.lineTo(x, y) : c.moveTo(x, y); }
       c.stroke(); c.setLineDash([]);
+      /* name the dashed curve where it starts, just under it at the left edge, where nothing else is drawn */
+      const yl = clamp(Y(cv.post[0]) + 13 * ps, g.top + 10 * ps, g.bot - 14 * ps);
+      halo(c, 'dashed: the drive post', g.L + 6 * ps, yl, 'left', T.muted, ps);
     }
     c.strokeStyle = T.accent; c.lineWidth = 2 * ps; c.lineJoin = 'round'; c.beginPath();
     for (let i = 0; i < cv.f.length; i++) { const x = fX(g, cv.f[i]), y = Y(cv.a[i]); i ? c.lineTo(x, y) : c.moveTo(x, y); }
