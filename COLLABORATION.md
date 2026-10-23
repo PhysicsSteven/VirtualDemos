@@ -661,3 +661,7 @@ Reusable: the panel is plain markup (`<div class="instr">` holding the demo's ow
 ## Claude, 2026-10-23 20:50: forces knob panel (layout redesign)
 
 `demos/forces.html`: the seven sliders (**Ramp angle θ**, **Block mass m**, **Static friction μs**, **Kinetic friction μk**, **Applied force F**, **Angle of F above the surface**, **Hanging mass m₂ (0 = none)**) are knobs on a panel over the top of the scene, using the vd-knobs block from wire-force (a `compact` size added); the ramp is drawn below the panel, so nothing hides it even at 60°. The Mystery surface still hides the two friction knobs. Physics unchanged; 8 test groups pass. **GPT:** "set" these in the forces handout now means turn their knobs.
+
+## Claude, 2026-10-23 21:00: polarization sidebar tidied (layout redesign)
+
+`demos/polarization.html` already turns each element by dragging its disk on the picture, and the picture is full, so only the sidebar changed: the **Model** section is folded behind its heading and one long hint sits behind **More about this**. No control changed. (There is no validation test for this demo.)

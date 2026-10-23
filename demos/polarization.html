@@ -172,6 +172,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .stage { height: 86vh; min-height: 660px; }
   .rail { overflow: visible; }
 }
+/* folded rail sections: secondary options behind their heading (layout redesign) */
+.rail details.fold > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 24px;
+  font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.rail details.fold > summary::-webkit-details-marker { display: none; }
+.rail details.fold > summary::after { content: "+"; font-size: 1rem; font-weight: 400; letter-spacing: 0; }
+.rail details.fold[open] > summary::after { content: "−"; }
+.rail details.fold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.fold > .foldbody { display: flex; flex-direction: column; gap: 10px; margin-top: 10px; }
+.rail details.more > summary { cursor: pointer; font-size: 0.8rem; color: var(--muted); width: fit-content; }
+.rail details.more > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.rail details.more[open] > summary { margin-bottom: 4px; }
 </style>
 </head>
 <body>
@@ -272,7 +283,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="wide big"><dt>Polarized light through N polarizers, each turned 90°/N more</dt><dd id="rN">—</dd></div>
           <div class="wide"><dt>Unpolarized light, one more polarizer first</dt><dd id="rNu">—</dd></div>
         </dl>
-        <p class="hint">Each step passes cos²(90°/N). The loss per step falls as 1/N², faster than the number of steps grows, so the total climbs toward 1: cos²ᴺ(π/2N) ≈ e^(−π²/4N), the dashed curve. N = 1 is crossed polarizers; N = 2 is the three polarizer surprise.</p>
+        <details class="more"><summary>More about this</summary><p class="hint">Each step passes cos²(90°/N). The loss per step falls as 1/N², faster than the number of steps grows, so the total climbs toward 1: cos²ᴺ(π/2N) ≈ e^(−π²/4N), the dashed curve. N = 1 is crossed polarizers; N = 2 is the three polarizer surprise.</p></details>
       </section>
 
       <!-- reflection view -->
@@ -330,10 +341,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Model</h2>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
         <p class="hint vb">Ideal elements: a polarizer passes the field component along its axis and absorbs the rest; wave plates are lossless and give exactly a quarter or half wave of delay to the slow axis. Polarized input is followed with Jones vectors, E<sub>out</sub> = J E<sub>in</sub>, with E = Re[E e<sup>i(kz − ωt)</sup>]. Unpolarized input is followed with Stokes vectors and Mueller matrices built from the same Jones matrices, M<sub>ij</sub> = ½ tr(σ<sub>i</sub> J σ<sub>j</sub> J†); at the first polarizer this is exactly the one half rule.</p>
         <p class="hint vb">Everything is drawn as seen by an observer facing the oncoming beam. Right circular means the field turns clockwise in that view (the optics convention). The ellipse size shows the field amplitude, √(I/I₀). For unpolarized light the arrow wanders at random, much more slowly than real light, whose polarization changes in about a coherence time.</p>
         <p class="hint vr" hidden>Fresnel equations for a flat, smooth interface between two transparent, nonmagnetic media (μ = μ₀). T includes the factor n₂cos θ<sub>t</sub>/n₁cos θ<sub>i</sub> for the change in beam width and speed, so R + T = 1 for each polarization. Indices are for visible light: water 1.33, crown glass 1.50. Beyond the critical angle the reflection is total. Marker sizes show field amplitudes.</p>
+        </div></details>
       </section>
     </aside>
   </main>
