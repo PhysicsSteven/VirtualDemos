@@ -969,6 +969,26 @@
      ]
     },
     {
+     "demo": "sound-waves",
+     "title": "Sound Waves and the Speed of Sound",
+     "desc": "What a sound wave is: watch the air in a tube swing back and forth with the pressure a quarter cycle behind, then time a clap between two microphones to measure the speed of sound.",
+     "tags": [
+      "sound",
+      "waves",
+      "lab"
+     ]
+    },
+    {
+     "demo": "kundts-tube",
+     "title": "Kundt's Tube",
+     "desc": "Stroke a metal rod and the cork dust in a tube of gas gathers at the nodes: one frequency, two wavelengths, and the speed of sound in both the gas and the metal.",
+     "tags": [
+      "sound",
+      "resonance",
+      "lab"
+     ]
+    },
+    {
      "demo": "resonators",
      "title": "Resonators",
      "desc": "What sets an instrument's pitch: find the speed of sound with a resonance tube, pluck and bow a string, and blow across a bottle as you fill it, with sound.",

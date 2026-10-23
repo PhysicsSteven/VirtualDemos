@@ -1,0 +1,630 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Sound Waves and the Speed of Sound</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the apparatus on the left, the rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+@media (max-width: 820px) { .chips button { min-height: 36px; } }
+.readout dd.warn { color: var(--pos); }
+:root { --wood: #d8bf98; --wood-line: #c3a77c; --metal: #9aa4b0; --metal-hi: #c9d0d9; --string: #b4532a; --env: rgba(180, 83, 42, 0.18); --brass: #b98f2e; --box: #3b4656; --rule: #f1e3b5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; } }
+:root[data-theme="dark"] { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; }
+.fine { display: flex; gap: 6px; flex-wrap: wrap; }
+.fine .btn { padding: 3px 9px; font-family: var(--font-mono); font-size: 0.82rem; }
+.readout dd .ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.masslist { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); margin: 0; overflow-wrap: anywhere; }
+/* The Set up card sits on the picture. In the time of flight view it fades while a clap is in flight (set up first, then clap) and
+   comes back when the clap is done, or when you point at it or move into it with the keyboard. In the sound wave view it stays,
+   since f is changed while the wave runs, and the tube is drawn beside it. On phones it sits under the picture. */
+.scene { position: absolute; inset: 0; }
+.card { position: absolute; z-index: 2; top: 52px; right: 12px; width: min(300px, calc(100% - 24px)); display: flex; flex-direction: column; gap: 8px;
+  padding: 10px 12px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 10px; transition: opacity 0.35s ease; }
+.card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.card .slider-head label, .card .slider-head output { font-size: 0.8rem; }
+.card .btn { font-size: 0.78rem; padding: 3px 8px; font-family: var(--font-mono); }
+.card .chips button { font-size: 0.8rem; padding: 3px 8px; }
+.card.away { opacity: 0.12; }
+.card.away:hover, .card.away:focus-within { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+.mic { position: absolute; z-index: 2; width: 34px; height: 44px; margin-left: -17px; border-radius: 6px; cursor: ew-resize; touch-action: none; }
+.mic:hover, .mic.drag { box-shadow: 0 0 0 2px var(--accent); }
+.mic:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+details.more summary { cursor: pointer; font-size: 0.85rem; color: var(--muted); }
+details.more[open] summary { margin-bottom: 6px; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+.fit-hint { margin: 0; color: var(--muted); font-size: 0.82rem; }
+@media (max-width: 820px) {
+  .stage { height: auto; max-height: none; display: flex; flex-direction: column; }
+  .scene { position: relative; inset: auto; height: 440px; max-height: 75vh; }
+  .card { position: static; width: auto; margin: 0 10px 10px; }
+  .card.away { opacity: 1; }
+  .card .btn, .card .chips button { min-height: 36px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Sound Waves and the Speed of Sound</h1>
+      <p>Watch the air in a tube as a sound wave passes: each bit of air swings back and forth, and the pressure peaks where the air is squeezed together, a quarter cycle away from the largest displacement. Then time a clap between two microphones to measure the speed of sound.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">v = √(γRT/M) · Δp_max = ρvω s_max</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/sound-waves.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/sound-waves.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h3v1h-3zM17 2h1v1h-1zM19 2h3v1h-3zM26 2h5v1h-5zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h2v1h-2zM14 3h2v1h-2zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM14 4h2v1h-2zM17 4h10v1h-10zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h4v1h-4zM17 5h1v1h-1zM20 5h2v1h-2zM26 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM18 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM15 7h1v1h-1zM20 7h5v1h-5zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h3v1h-3zM15 9h1v1h-1zM17 9h6v1h-6zM24 9h2v1h-2zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h5v1h-5zM20 10h2v1h-2zM24 10h3v1h-3zM30 10h6v1h-6zM38 10h1v1h-1zM3 11h5v1h-5zM9 11h2v1h-2zM12 11h1v1h-1zM14 11h2v1h-2zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h3v1h-3zM34 11h4v1h-4zM3 12h1v1h-1zM6 12h3v1h-3zM12 12h2v1h-2zM15 12h2v1h-2zM18 12h1v1h-1zM22 12h5v1h-5zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h1v1h-1zM4 13h1v1h-1zM6 13h2v1h-2zM9 13h1v1h-1zM11 13h5v1h-5zM19 13h1v1h-1zM23 13h4v1h-4zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h1v1h-1zM4 14h1v1h-1zM6 14h3v1h-3zM10 14h1v1h-1zM13 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM29 14h4v1h-4zM36 14h3v1h-3zM4 15h4v1h-4zM10 15h1v1h-1zM12 15h2v1h-2zM15 15h1v1h-1zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h1v1h-1zM5 16h1v1h-1zM7 16h2v1h-2zM11 16h1v1h-1zM14 16h4v1h-4zM20 16h1v1h-1zM22 16h8v1h-8zM31 16h1v1h-1zM33 16h5v1h-5zM10 17h2v1h-2zM14 17h2v1h-2zM17 17h1v1h-1zM21 17h3v1h-3zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h2v1h-2zM5 18h1v1h-1zM8 18h1v1h-1zM10 18h1v1h-1zM12 18h2v1h-2zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM11 19h4v1h-4zM20 19h2v1h-2zM24 19h2v1h-2zM27 19h3v1h-3zM33 19h3v1h-3zM37 19h1v1h-1zM7 20h2v1h-2zM12 20h2v1h-2zM15 20h1v1h-1zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h9v1h-9zM4 21h1v1h-1zM6 21h1v1h-1zM9 21h2v1h-2zM17 21h3v1h-3zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM3 22h1v1h-1zM7 22h3v1h-3zM11 22h5v1h-5zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM5 23h1v1h-1zM7 23h1v1h-1zM12 23h1v1h-1zM17 23h2v1h-2zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM3 24h1v1h-1zM5 24h1v1h-1zM7 24h3v1h-3zM11 24h1v1h-1zM15 24h5v1h-5zM22 24h1v1h-1zM25 24h1v1h-1zM28 24h2v1h-2zM32 24h5v1h-5zM2 25h2v1h-2zM6 25h1v1h-1zM10 25h1v1h-1zM14 25h1v1h-1zM16 25h2v1h-2zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM28 25h3v1h-3zM32 25h3v1h-3zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h3v1h-3zM7 26h2v1h-2zM10 26h2v1h-2zM13 26h1v1h-1zM15 26h1v1h-1zM20 26h1v1h-1zM24 26h2v1h-2zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h2v1h-2zM5 27h1v1h-1zM7 27h1v1h-1zM10 27h2v1h-2zM13 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h1v1h-1zM29 27h3v1h-3zM34 27h2v1h-2zM4 28h6v1h-6zM13 28h2v1h-2zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h2v1h-2zM27 28h8v1h-8zM36 28h1v1h-1zM7 29h1v1h-1zM12 29h1v1h-1zM15 29h1v1h-1zM19 29h2v1h-2zM23 29h3v1h-3zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h2v1h-2zM6 30h1v1h-1zM8 30h1v1h-1zM10 30h1v1h-1zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM29 30h6v1h-6zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h1v1h-1zM12 31h4v1h-4zM18 31h3v1h-3zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM14 32h1v1h-1zM16 32h3v1h-3zM20 32h1v1h-1zM22 32h4v1h-4zM27 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM14 33h2v1h-2zM17 33h1v1h-1zM23 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h4v1h-4zM16 34h3v1h-3zM22 34h1v1h-1zM25 34h2v1h-2zM28 34h1v1h-1zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM13 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM13 36h2v1h-2zM16 36h2v1h-2zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM14 37h1v1h-1zM16 37h9v1h-9zM26 37h1v1h-1zM28 37h2v1h-2zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM13 38h1v1h-1zM15 38h2v1h-2zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="Sound wave view: a tube of air drawn as dots that swing left and right, with graphs of displacement and pressure along the tube below. Time of flight view: a clap at the left, two microphones on a bench, and the two microphone traces with the timer. Space pauses; in the time of flight view, C claps."></canvas>
+        <div class="viewbar">
+          <div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-v="wave" aria-pressed="true">Sound wave</button><button type="button" data-v="tof" aria-pressed="false">Time of flight</button></div>
+          <button type="button" class="spin" id="play">Pause</button>
+          <button type="button" class="spin attn" id="clap" hidden>Clap</button>
+        </div>
+        <div class="mic" id="micA" role="slider" tabindex="0" aria-label="Clap to microphone A" aria-valuemin="0.1" aria-valuemax="1" title="Drag microphone A" hidden></div>
+        <div class="mic" id="micB" role="slider" tabindex="0" aria-label="Distance between the microphones d" aria-valuemin="0.1" aria-valuemax="3" title="Drag microphone B" hidden></div>
+        <span class="blindtag" id="blindTag" hidden>Blind</span>
+      </div>
+      <div class="card" id="card" role="group" aria-labelledby="cardTitle">
+        <div class="card-title" id="cardTitle">Set up</div>
+        <div class="waveOnly">
+          <div class="slider-head"><label for="sF">Frequency f</label><output id="oF" for="sF"></output></div>
+          <input type="range" id="sF" min="100" max="2000" step="1">
+          <div class="fine" id="fineF"><button type="button" class="btn" data-df="-10">−10 Hz</button><button type="button" class="btn" data-df="-1">−1 Hz</button><button type="button" class="btn" data-df="1">+1 Hz</button><button type="button" class="btn" data-df="10">+10 Hz</button></div>
+        </div>
+        <div class="waveOnly">
+          <div class="slider-head"><label for="sS">Displacement amplitude s_max</label><output id="oS" for="sS"></output></div>
+          <input type="range" id="sS" min="0.1" max="10" step="0.1">
+        </div>
+        <div class="tofOnly" hidden>
+          <div class="slider-head"><label for="sA">Clap to microphone A</label><output id="oA" for="sA"></output></div>
+          <input type="range" id="sA" min="0.1" max="1" step="0.01">
+        </div>
+        <div class="tofOnly" hidden>
+          <div class="slider-head"><label for="sD">Distance between the microphones d</label><output id="oD" for="sD"></output></div>
+          <input type="range" id="sD" min="0.1" max="3" step="0.01">
+          <div class="fine"><button type="button" class="btn" id="Dm">d −1 cm</button><button type="button" class="btn" id="Dp">d +1 cm</button></div>
+        </div>
+        <div class="chips" id="gases" role="group" aria-label="Gas">
+          <button type="button" data-g="air" aria-pressed="true">Air</button>
+          <button type="button" data-g="helium" aria-pressed="false">Helium</button>
+          <button type="button" data-g="argon" aria-pressed="false">Argon</button>
+          <button type="button" data-g="unknown" aria-pressed="false">Unknown gas</button>
+        </div>
+        <div class="btnrow"><button type="button" class="btn" id="newUnknown" hidden>New unknown gas</button></div>
+        <div>
+          <div class="slider-head"><label for="sT">Temperature</label><output id="oT" for="sT"></output></div>
+          <input type="range" id="sT" min="-20" max="40" step="1">
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="wave" aria-pressed="true">A sound wave in air</button>
+          <button type="button" data-p="helium" aria-pressed="false">The same note in helium</button>
+          <button type="button" data-p="clap" aria-pressed="false">Time a clap, 1.00 m apart</button>
+          <button type="button" data-p="cold" aria-pressed="false">A cold day, −10 °C</button>
+          <button type="button" data-p="unknown" aria-pressed="false">Unknown gas</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+        <p class="hint">In the time of flight view the Set up card fades while the clap travels and comes back when it has been timed (point at it or tab into it to bring it back sooner). You can also drag the microphones along the bench.</p>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="record">Record this reading</button>
+          <button type="button" class="btn" id="exportWs">Export to worksheet</button>
+          <button type="button" class="btn" id="clearRows">Clear the readings</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Recorded readings</caption><thead><tr><th>#</th><th>d (m)</th><th>Δt (ms)</th><th>T (°C)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Δt against d for the recorded readings, with a least squares line and its residuals."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <p class="fit-hint">Record stores the gas, temperature, d and the timer's Δt from the last clap. Δt against d at one temperature is a straight line through the origin with slope 1/v.</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide v, λ and the predictions</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>Model</summary><p class="hint" id="modelHint"></p></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  const PI = Math.PI, TAU = 2 * Math.PI;
+  const SW_VERSION = 'sound-waves@2026-10-23';
+  const R_GAS = 8.314462618;   /* J/(mol K), CODATA */
+  const T0K = 273.15;          /* K at 0 °C */
+  const P_ATM = 101325;        /* Pa, the pressure of the gas (one standard atmosphere) */
+  /* ideal gases: γ = cp/cv, M in kg/mol. Dry air γ = 1.400 and M = 28.9647 g/mol (as in Resonators); helium and argon are
+     monatomic, γ = 5/3, with the IUPAC standard atomic weights 4.002602 and 39.948 */
+  const GASES = { air: { name: 'Air (dry)', gamma: 1.4, M: 0.0289647 }, helium: { name: 'Helium', gamma: 5 / 3, M: 0.004002602 }, argon: { name: 'Argon', gamma: 5 / 3, M: 0.039948 } };
+  const UNKNOWN_GAMMAS = [1.3, 1.4, 5 / 3], UNKNOWN_M = [0.004, 0.060];   /* unknown gas: γ one of these, M from 4.0 to 60.0 g/mol */
+  const FS = 48000;            /* Hz, the sampling rate of the two channel recorder (chosen) */
+  const CLAP_F = 2000, CLAP_TAU = 0.25e-3, CLAP_R0 = 0.3;   /* the drawn clap pulse: 2 kHz ringing that dies away in 0.25 ms, size 1 at 0.3 m (chosen) */
+
+  const kelvin = (tC) => tC + T0K;
+  const soundSpeed = (gas, tC) => Math.sqrt(gas.gamma * R_GAS * kelvin(tC) / gas.M);
+  const gasDensity = (gas, tC) => P_ATM * gas.M / (R_GAS * kelvin(tC));
+  /* a plane harmonic sound wave moving in +x: s = s_max cos(kx − ωt) and Δp = −B ∂s/∂x = Δp_max sin(kx − ωt), with B = ρv²
+     (adiabatic bulk modulus γP) so Δp_max = Bk s_max = ρvω s_max. The pressure is a quarter cycle (90°) behind the displacement. */
+  function wave(gas, tC, f, sMax) {
+    const v = soundSpeed(gas, tC), rho = gasDensity(gas, tC), w = TAU * f, k = w / v, dp = rho * v * w * sMax, I = dp * dp / (2 * rho * v);
+    return { v, rho, w, k, lambda: v / f, B: rho * v * v, dpMax: dp, I, level: 10 * Math.log10(I / 1e-12) };
+  }
+  const displacement = (W, sMax, x, t) => sMax * Math.cos(W.k * x - W.w * t);
+  const pressure = (W, x, t) => W.dpMax * Math.sin(W.k * x - W.w * t);
+  /* the timer: a two channel recorder samples both microphones at FS, with its clock at a random phase φ (0 ≤ φ < 1) of a sample
+     when the clap starts, so sample n is taken at t = (n + φ)/FS. Each channel triggers on the first sample at or after the sound reaches its microphone; Δt is the
+     difference in samples over FS. */
+  function timerReading(xA, d, v, phi) {
+    const nA = Math.ceil(xA / v * FS - phi), nB = Math.ceil((xA + d) / v * FS - phi);
+    return { nA, nB, samples: nB - nA, dt: (nB - nA) / FS };
+  }
+  /* what a microphone at distance r records, t after the clap: the pulse, falling off as 1/r (a spherical wave) */
+  const clapSignal = (t, r, v) => { const u = t - r / v; return u < 0 ? 0 : (CLAP_R0 / r) * Math.exp(-u / CLAP_TAU) * Math.sin(TAU * CLAP_F * u); };
+
+  /* least squares line y = a + b x, free intercept, equal weights; standard errors with n − 2 */
+  function fitLine(xs, ys) {
+    const n = xs.length; if (n < 2) return null;
+    const mx = xs.reduce((s, v) => s + v, 0) / n, my = ys.reduce((s, v) => s + v, 0) / n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (sxx < 1e-30) return null;
+    const b = sxy / sxx, a0 = my - b * mx, res = xs.map((x, i) => ys[i] - a0 - b * x), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { b, a: a0, seB: Math.sqrt(s2 / sxx), seA: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), res, n };
+  }
+  const cellNum = (s) => { const v = parseFloat(String(s).replace('−', '-')); return isFinite(v) ? v : NaN; };
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  function readingsCSV(rows, meta) {
+    const L = ['# Sound waves and the speed of sound virtual apparatus: time of flight readings (simulated data)', `# demo version,${meta.version}`,
+      `# recorder,"two channels sampled at ${FS} Hz; each triggers on the first sample at or after the sound arrives"`,
+      '# model,"ideal gas at 101325 Pa; v = sqrt(gamma R T / M); the clap and both microphones on one straight line"',
+      '# rounding,"distances to 0.01 m, temperature to 1 C, dt exact in samples (shown to 0.0001 ms)"', '# noise,"none apart from the random phase of the sampling clock at each clap"',
+      'row,gas,T_C,xA_m,d_m,dt_ms,samples'];
+    rows.forEach((r, i) => L.push([i + 1, r.gas, r.T, r.xA, r.d, r.dt, r.samples].map(csvCell).join(',')));
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const newUnknown = () => ({ name: 'Unknown gas', gamma: UNKNOWN_GAMMAS[Math.floor(Math.random() * 3)], M: Math.round((UNKNOWN_M[0] + Math.random() * (UNKNOWN_M[1] - UNKNOWN_M[0])) * 1e4) / 1e4 });
+  const S = { view: 'wave', gas: 'air', unknown: newUnknown(), tC: 20, f: 500, s: 1.0, xA: 0.5, d: 1.0, blind: false, running: true, t: 0, preset: 'wave', rows: [], series: 0,
+    clap: null, last: null };
+  const PRESETS = {
+    wave: { view: 'wave', gas: 'air', tC: 20, f: 500, s: 1.0, hint: 'A 500 Hz tone in air at 20 °C: v = 343.2 m/s, so λ = v/f = 0.686 m and almost three wavelengths fit in the 2 m tube. The displacement is largest where the dots are evenly spaced; the pressure is largest where they bunch up, a quarter wavelength further on.' },
+    helium: { view: 'wave', gas: 'helium', tC: 20, f: 500, s: 1.0, hint: 'The same 500 Hz in helium: v = 1007 m/s, so the wavelength is 2.01 m, nearly three times longer. Helium is so light that the same swing of the gas gives only about 40% of the pressure (Δp_max goes as ρv).' },
+    clap: { view: 'tof', gas: 'air', tC: 20, xA: 0.5, d: 1.0, hint: 'A clap 0.50 m from microphone A, with B 1.00 m beyond it. The recorder starts timing when the sound reaches A and stops when it reaches B: Δt ≈ d/v = 2.914 ms. Change d, clap again and record each; Δt against d gives a straight line with slope 1/v.' },
+    cold: { view: 'tof', gas: 'air', tC: -10, xA: 0.5, d: 1.0, hint: 'The same bench at −10 °C: v = 325.2 m/s, about 18 m/s slower than at 20 °C. Over 1 m that adds 0.16 ms, about 8 samples at 48 kHz: well within what the timer can see.' },
+    unknown: { view: 'tof', gas: 'unknown', tC: 20, xA: 0.5, d: 1.0, hint: 'An unknown gas fills the room: its speed of sound is hidden. Time the clap at several spacings and find v from the slope. New unknown gas picks another.' }
+  };
+  const gasNow = () => (S.gas === 'unknown' ? S.unknown : GASES[S.gas]);
+  const hideV = () => S.blind || S.gas === 'unknown';
+  $('modelHint').textContent = `Model: an ideal gas at 101325 Pa, so v = √(γRT/M) and ρ = PM/(RT); dry air has γ = 1.400 and M = 28.96 g/mol, helium and argon γ = 5/3 with M = 4.003 and 39.95 g/mol; an unknown gas has γ = 1.3, 1.4 or 5/3 and M between 4 and 60 g/mol. Humidity and the small departures of real gases from the ideal gas are left out. The wave is a plane harmonic wave of small amplitude, s = s_max cos(kx − ωt) with Δp = ρvω s_max sin(kx − ωt), and no loss. The drawing slows the motion to one cycle every 2 s and exaggerates the displacement (the scale is on the picture). Time of flight: the clap and the microphones are on one line; a two channel recorder samples at ${FS / 1000} kHz (chosen), its clock starts at a random point of a sample at each clap, and each channel triggers on the first sample at or after the sound arrives, so Δt is a whole number of samples (1 sample = 20.83 μs). The drawn pulse (2 kHz, dying away in 0.25 ms, falling off as 1/r) is chosen. Simulated data.`;
+
+  function applyPreset(name) { const c = PRESETS[name]; S.preset = name; S.view = c.view; if (c.gas === 'unknown' && S.gas !== 'unknown') S.unknown = newUnknown(); S.gas = c.gas; S.tC = c.tC;
+    if (c.f) { S.f = c.f; S.s = c.s; } if (c.d) { S.xA = c.xA; S.d = c.d; } S.clap = null; S.last = null; upd(); }
+  const can = $('can'), ctx = can.getContext('2d'), scene = $('scene'), card = $('card'), GEO = {};
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'accent', 'pos', 'neg', 'surface', 'relief', 'wood', 'wood-line', 'metal', 'metal-hi', 'box', 'rule']) T[k.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + k);
+    T.mono = g('--font-mono'); T.ui = g('--font-ui'); }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const sig = (v, n = 3) => (isFinite(v) ? String(+v.toPrecision(n)) : '—');
+
+  // ---------- controls ----------
+  function sync() {
+    $('sF').value = S.f; $('oF').textContent = `${S.f} Hz`; $('sS').value = S.s; $('oS').textContent = `${S.s.toFixed(1)} μm`;
+    $('sA').value = S.xA; $('oA').textContent = `${S.xA.toFixed(2)} m`; $('sD').value = S.d; $('oD').textContent = `${S.d.toFixed(2)} m`;
+    $('sT').value = S.tC; $('oT').textContent = `${S.tC} °C`;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    for (const b of document.querySelectorAll('#gases button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.gas));
+    for (const e of document.querySelectorAll('.waveOnly')) e.hidden = S.view !== 'wave';
+    for (const e of document.querySelectorAll('.tofOnly')) e.hidden = S.view !== 'tof';
+    $('micA').hidden = $('micB').hidden = $('clap').hidden = S.view !== 'tof'; $('play').hidden = S.view !== 'wave';
+    $('newUnknown').hidden = S.gas !== 'unknown';
+    for (const [id, v, txt] of [['micA', S.xA, `${S.xA.toFixed(2)} m from the clap`], ['micB', S.d, `d = ${S.d.toFixed(2)} m`]]) { $(id).setAttribute('aria-valuenow', v.toFixed(2)); $(id).setAttribute('aria-valuetext', txt); }
+    $('presetHint').textContent = S.preset ? PRESETS[S.preset].hint : '';
+    $('record').disabled = S.view !== 'tof';
+    fade();
+  }
+  /* the card fades while a clap is in flight; in the sound wave view it stays, since f is changed while the wave runs */
+  function fade() { card.classList.toggle('away', !reduce && S.view === 'tof' && !!S.clap); }
+  const changed = () => { S.preset = ''; S.last = null; upd(); };
+  function upd() { sync(); readouts(); draw(); fit(); }
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b) { S.view = b.dataset.v; S.clap = null; upd(); } });
+  $('gases').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (!b) return; const was = S.gas; S.gas = b.dataset.g;
+    if (was === 'unknown' && S.gas !== 'unknown') capStatus(`The unknown gas had v = ${soundSpeed(S.unknown, S.tC).toFixed(1)} m/s at ${S.tC} °C (γ = ${sig(S.unknown.gamma, 4)}, M = ${(S.unknown.M * 1000).toFixed(1)} g/mol).`);
+    changed(); });
+  $('newUnknown').addEventListener('click', () => { S.unknown = newUnknown(); S.gas = 'unknown'; capStatus('A new unknown gas fills the room.'); changed(); });
+  const clampR = (v, lo, hi, st) => Math.min(hi, Math.max(lo, Math.round(v / st) * st));
+  const setF = (v) => { S.f = clampR(v, 100, 2000, 1); changed(); };
+  $('sF').addEventListener('input', (e) => setF(+e.target.value));
+  $('fineF').addEventListener('click', (e) => { const b = e.target.closest('[data-df]'); if (b) setF(S.f + +b.dataset.df); });
+  $('sS').addEventListener('input', (e) => { S.s = clampR(+e.target.value, 0.1, 10, 0.1); changed(); });
+  $('sT').addEventListener('input', (e) => { S.tC = clampR(+e.target.value, -20, 40, 1); changed(); });
+  const setA = (v) => { S.xA = +clampR(v, 0.1, 1, 0.01).toFixed(2); changed(); };
+  const setD = (v) => { S.d = +clampR(v, 0.1, 3, 0.01).toFixed(2); changed(); };
+  $('sA').addEventListener('input', (e) => setA(+e.target.value));
+  $('sD').addEventListener('input', (e) => setD(+e.target.value));
+  $('Dm').addEventListener('click', () => setD(S.d - 0.01)); $('Dp').addEventListener('click', () => setD(S.d + 0.01));
+  /* drag a microphone along the bench; each is a slider for the keyboard */
+  for (const [id, set, get, lo, hi] of [['micA', setA, () => S.xA, 0.1, 1], ['micB', setD, () => S.d, 0.1, 3]]) {
+    const m = $(id); let dx = 0;
+    m.addEventListener('pointerdown', (e) => { if (S.clap) return; m.setPointerCapture(e.pointerId); m.classList.add('drag'); dx = e.clientX - (can.getBoundingClientRect().left + (id === 'micA' ? GEO.xA : GEO.xB)); m.focus(); e.preventDefault(); });
+    m.addEventListener('pointermove', (e) => { if (!m.classList.contains('drag')) return; const x = e.clientX - can.getBoundingClientRect().left - dx;
+      set(id === 'micA' ? (x - GEO.x0) / GEO.ppm : (x - GEO.xA) / GEO.ppm); });
+    const end = () => m.classList.remove('drag'); m.addEventListener('pointerup', end); m.addEventListener('pointercancel', end);
+    m.addEventListener('keydown', (e) => { const st = { ArrowRight: 0.01, ArrowUp: 0.01, ArrowLeft: -0.01, ArrowDown: -0.01, PageUp: 0.1, PageDown: -0.1 }[e.key];
+      if (st) set(get() + st); else if (e.key === 'Home') set(lo); else if (e.key === 'End') set(hi); else return; e.preventDefault(); });
+  }
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; upd(); });
+  $('play').addEventListener('click', () => { S.running = !S.running; $('play').textContent = S.running ? 'Pause' : 'Play'; fade(); });
+  /* a clap: the sound front is drawn slowed down so that it crosses the bench in about 2 s; the traces fill in as it goes */
+  function clap() {
+    if (S.clap) return; const v = soundSpeed(gasNow(), S.tC), phi = Math.random();
+    S.clap = { v, phi, t: 0, tEnd: (S.xA + S.d) / v + 1.5e-3, R: timerReading(S.xA, S.d, v, phi), xA: S.xA, d: S.d };
+    S.last = null; if (reduce) finishClap(); sync(); draw();
+  }
+  function finishClap() { const c = S.clap; S.last = { ...c, t: c.tEnd }; S.clap = null; sync(); readouts(); draw(); }
+  $('clap').addEventListener('click', clap);
+  can.addEventListener('keydown', (e) => {
+    if (e.key === ' ') { if (S.view === 'wave') $('play').click(); else clap(); }
+    else if ((e.key === 'c' || e.key === 'C') && S.view === 'tof') clap();
+    else return;
+    e.preventDefault();
+  });
+
+  function readouts() {
+    const g = gasNow(), Wv = wave(g, S.tC, S.f, S.s * 1e-6), HID = `<span class="ok">${S.gas === 'unknown' ? 'hidden: unknown gas' : 'hidden in Blind'}</span>`, unk = S.gas === 'unknown';
+    const dd = (a, val, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${val}</dd></div>`;
+    let h = dd('Gas', unk ? 'unknown' : g.name) + dd('Temperature', `${S.tC} °C (${kelvin(S.tC).toFixed(2)} K)`);
+    h += dd('Speed of sound v = √(γRT/M)', hideV() ? HID : `${Wv.v.toFixed(1)} m/s`) + dd('Density ρ = PM/RT', unk ? HID : `${Wv.rho.toFixed(4)} kg/m³`);
+    if (S.view === 'wave') {
+      h += dd('Frequency f', `${S.f} Hz`) + dd('Wavelength λ = v/f', hideV() ? HID : `${Wv.lambda.toFixed(3)} m`);
+      h += dd('Displacement amplitude s_max', `${S.s.toFixed(1)} μm`) + dd('Pressure amplitude Δp_max = ρvω s_max', unk ? HID : `${sig(Wv.dpMax, 3)} Pa`);
+      h += dd('Intensity I = Δp_max²/(2ρv)', unk ? HID : `${sig(Wv.I, 3)} W/m²`) + dd('Sound level β', unk ? HID : `${Wv.level.toFixed(1)} dB`);
+      h += dd('Phase', '<span class="ok">Δp is largest where s passes through zero: the pressure wave is 90° (a quarter wavelength) behind the displacement.</span>', true);
+    } else {
+      const c = S.last;
+      h += dd('Clap to A', `${S.xA.toFixed(2)} m`) + dd('A to B, d', `${S.d.toFixed(2)} m`);
+      h += dd('Timer Δt (last clap)', c ? `${(c.R.dt * 1000).toFixed(4)} ms` : '<span class="ok">clap to time it</span>') + dd('Samples', c ? `${c.R.samples} at ${FS / 1000} kHz` : '—');
+      h += dd('Predicted d/v', hideV() ? HID : `${(S.d / Wv.v * 1000).toFixed(4)} ms`, true);
+    }
+    $('out').innerHTML = h;
+  }
+
+  // ---------- readings ----------
+  function capStatus(m) { $('capStatus').textContent = m; }
+  $('record').addEventListener('click', () => {
+    if (S.view !== 'tof') return;
+    if (!S.last) { capStatus('Clap first: Record stores the timer reading of the last clap at these settings.'); return; }
+    const c = S.last;
+    S.rows.push({ gas: S.gas === 'unknown' ? 'unknown gas' : gasNow().name, T: String(S.tC), xA: c.xA.toFixed(2), d: c.d.toFixed(2), dt: (c.R.dt * 1000).toFixed(4), samples: String(c.R.samples) });
+    renderRows(); capStatus(`Row ${S.rows.length} recorded.`);
+  });
+  $('clearRows').addEventListener('click', () => { S.rows = []; S.series = Date.now(); renderRows(); capStatus('Readings cleared.'); });
+  /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), as in the other demos */
+  const WORKSHEET = '../curriculum/labs/students/sound-waves.html';
+  function downloadCsv(txt) { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'sound-waves-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} }
+  function toWorksheet(txt, meta, note) {
+    const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => l.split(',');
+    if (!S.series) S.series = Date.now();
+    const hand = { v: 1, demo: 'sound-waves', series: S.series, sent: new Date().toISOString(), columns: split(lines[0]), rows: lines.slice(1).map(split), meta, note, csv: txt, csvName: 'sound-waves-readings.csv' };
+    localStorage.setItem('vd-handoff:sound-waves', JSON.stringify(hand));
+  }
+  $('exportWs').addEventListener('click', () => {
+    if (!S.rows.length) { capStatus('No readings to export.'); return; }
+    const txt = readingsCSV(S.rows, { version: SW_VERSION });
+    try { toWorksheet(txt, { sample_rate_Hz: FS }, `Simulated data from the Sound Waves and the Speed of Sound demo (timer sampled at ${FS / 1000} kHz).`); }
+    catch (_) { downloadCsv(txt); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    capStatus(`${S.rows.length} reading${S.rows.length === 1 ? '' : 's'} sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = WORKSHEET; a.target = 'sound-waves-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+    /* until the worksheet is posted, offer the CSV instead of a link that goes nowhere */
+    fetch(WORKSHEET, { method: 'HEAD' }).then((r) => { if (!r.ok) throw 0; }).catch(() => { a.remove(); const b = document.createElement('a'); b.href = '#'; b.textContent = 'The worksheet is not posted yet: download the CSV'; b.style.color = 'var(--accent)'; b.addEventListener('click', (e) => { e.preventDefault(); downloadCsv(txt); }); $('capStatus').appendChild(b); });
+  });
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr title="${r.gas}, clap to A ${r.xA} m"><td>${i + 1}</td><td>${r.d}</td><td>${r.dt}</td><td>${r.T}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="5">No readings yet. Clap, then record.</td></tr>';
+    fit();
+  }
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+
+  const fitCan = $('fitCan'), fctx = fitCan.getContext('2d');
+  function fit() {
+    const pts = S.rows.map((r) => [cellNum(r.d), cellNum(r.dt)]).filter(([a, b]) => isFinite(a) && isFinite(b));
+    const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null, dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`;
+    let h;
+    if (!F) h = dd('Fit', '<span class="ok">Record at least two readings at different d.</span>', true);
+    else {
+      h = dd('Slope (ms/m)', `${sig(F.b, 5)}${isFinite(F.seB) ? ` ± ${sig(F.seB, 2)}` : ''}`) + dd('Intercept (ms)', `${sig(F.a, 3)}${isFinite(F.seA) ? ` ± ${sig(F.seA, 2)}` : ''}`);
+      const mix = new Set(S.rows.map((r) => r.gas + '|' + r.T)).size > 1;
+      if (mix) h += dd('v = 1/slope', '<span class="ok">These rows mix gases or temperatures: clear and record one series.</span>', true);
+      else if (hideV()) h += dd('v = 1/slope', `<span class="ok">${S.gas === 'unknown' ? 'hidden for the unknown gas' : 'hidden in Blind'}: work it out</span>`, true);
+      else { const v = 1000 / F.b, sv = v * F.seB / Math.abs(F.b); h += dd('v = 1/slope', `${sig(v, 5)}${isFinite(sv) ? ` ± ${sig(sv, 2)}` : ''} m/s`, true); }
+    }
+    $('fitOut').innerHTML = h; drawFit(pts, F);
+  }
+  function drawFit(pts, F) {
+    const r = fitCan.getBoundingClientRect(), w = r.width, h = r.height; if (!w || !T) return;
+    fitCan.width = Math.round(w * dpr); fitCan.height = Math.round(h * dpr); fctx.setTransform(dpr, 0, 0, dpr, 0, 0); fctx.fillStyle = T.canvas; fctx.fillRect(0, 0, w, h);
+    const L = 44, Rr = w - 8, top = 8, mainB = h - 58, resT = h - 46, resB = h - 18;
+    fctx.strokeStyle = T.line; fctx.strokeRect(L + 0.5, top + 0.5, Rr - L, mainB - top); fctx.strokeRect(L + 0.5, resT + 0.5, Rr - L, resB - resT);
+    fctx.fillStyle = T.muted; fctx.font = `10px ${T.mono}`; fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText('d (m)', (L + Rr) / 2, resB + 3);
+    fctx.save(); fctx.translate(10, (top + mainB) / 2); fctx.rotate(-PI / 2); fctx.fillText('Δt (ms)', 0, 0); fctx.restore();
+    const xh = Math.max(0.5, ...pts.map((q) => q[0])) * 1.08, yh = Math.max(1, ...pts.map((q) => q[1])) * 1.08;
+    const PX = (x) => L + (Rr - L) * x / xh, PY = (y) => mainB - (mainB - top) * y / yh;
+    fctx.textAlign = 'right'; fctx.textBaseline = 'middle'; fctx.fillText(sig(yh, 3), L - 3, PY(yh)); fctx.fillText('0', L - 3, PY(0));
+    fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText(sig(xh, 2), Rr - 10, mainB + 2);
+    if (F) { fctx.strokeStyle = T.accent; fctx.lineWidth = 1.5; fctx.beginPath(); fctx.moveTo(PX(0), PY(F.a)); fctx.lineTo(PX(xh), PY(F.a + F.b * xh)); fctx.stroke(); }
+    fctx.fillStyle = T.pos; for (const [x, y] of pts) { fctx.beginPath(); fctx.arc(PX(x), PY(y), 3.2, 0, 7); fctx.fill(); }
+    if (F) { const m = Math.max(...F.res.map(Math.abs), 1e-12), RY = (v) => (resT + resB) / 2 - (resB - resT) / 2 * 0.85 * v / m; fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(L, RY(0)); fctx.lineTo(Rr, RY(0)); fctx.stroke(); fctx.fillStyle = T.pos; pts.forEach(([x], i) => { fctx.beginPath(); fctx.arc(PX(x), RY(F.res[i]), 2.6, 0, 7); fctx.fill(); });
+      fctx.fillStyle = T.muted; fctx.textAlign = 'left'; fctx.textBaseline = 'top'; fctx.fillText(`residuals, ±${sig(m, 2)} ms`, L + 4, resT + 2); }
+  }
+
+  // ---------- drawing ----------
+  function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
+  /* rest positions of the dots in the tube: a jittered grid, fixed once */
+  const DOTS = []; { let seed = 7; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647); for (let i = 0; i < 1400; i++) DOTS.push([rnd(), rnd()]); }
+  const SPAN = 2.0;   /* m of tube drawn */
+  function drawWave() {
+    const p = ps(), g = gasNow(), Wv = wave(g, S.tC, S.f, S.s * 1e-6), narrow = W < 620;
+    /* the card stays on the picture in this view, so the tube and graphs use the width beside it */
+    const cr = card.getBoundingClientRect(), over = getComputedStyle(card).position === 'absolute';
+    const x0 = 30 * p, x1 = over ? Math.max(W * 0.5, cr.left - can.getBoundingClientRect().left - 16 * p) : W - 16 * p, ppm = (x1 - x0) / SPAN, top = 58 * p;
+    const tubeH = Math.max(70 * p, Math.min(150 * p, Hh * 0.26)), ty = top + 14 * p;
+    /* the drawn wave runs at 0.5 Hz; phase = ωt of the real wave */
+    const ph = S.t * TAU * 0.5, t = ph / Wv.w;
+    /* displacement drawn so the largest swing is 0.6 of λ/2π on screen (so the dots never cross), but at most 6% of the tube; the scale X is shown */
+    const lamPx = Wv.lambda * ppm, aPx = Math.min(0.6 * lamPx / TAU, 0.06 * (x1 - x0)), X = aPx / (S.s * 1e-6 * ppm);
+    /* tube */
+    ctx.fillStyle = T.relief; ctx.fillRect(x0 - 6 * p, ty - 6 * p, x1 - x0 + 12 * p, tubeH + 12 * p);
+    ctx.fillStyle = T.canvas; ctx.fillRect(x0, ty, x1 - x0, tubeH);
+    /* pressure shading: darker where the air is squeezed */
+    const N = Math.max(60, Math.round((x1 - x0) / 3));
+    for (let i = 0; i < N; i++) { const xm = SPAN * (i + 0.5) / N, q = pressure(Wv, xm, t) / Wv.dpMax; ctx.fillStyle = q > 0 ? T.pos : T.neg; ctx.globalAlpha = 0.16 * Math.abs(q); ctx.fillRect(x0 + (x1 - x0) * i / N, ty, (x1 - x0) / N + 1, tubeH); }
+    ctx.globalAlpha = 1;
+    const nd = Math.min(DOTS.length, Math.round((x1 - x0) * tubeH / (narrow ? 70 : 55)));
+    ctx.fillStyle = T.ink;
+    for (let i = 0; i < nd; i++) { const xr = DOTS[i][0] * SPAN, xs = x0 + xr * ppm + (reduce && !S.running ? 0 : displacement(Wv, S.s * 1e-6, xr, t) * X * ppm); if (xs < x0 || xs > x1) continue; ctx.beginPath(); ctx.arc(xs, ty + 4 * p + DOTS[i][1] * (tubeH - 8 * p), 1.6 * p, 0, 7); ctx.fill(); }
+    /* one tracer dot in each of a few slices, with its rest position marked */
+    for (const xr of [0.25, 0.75, 1.25, 1.75]) { const xs = x0 + xr * ppm + displacement(Wv, S.s * 1e-6, xr, t) * X * ppm, yy = ty + tubeH / 2;
+      ctx.strokeStyle = T.muted; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(x0 + xr * ppm, ty); ctx.lineTo(x0 + xr * ppm, ty + tubeH); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(xs, yy, 4.5 * p, 0, 7); ctx.fill(); }
+    /* source: a speaker at the left end */
+    ctx.fillStyle = T.box; ctx.fillRect(x0 - 22 * p, ty + tubeH * 0.2, 16 * p, tubeH * 0.6);
+    /* scale under the tube, 0 to 2 m */
+    const ry = ty + tubeH + 10 * p; ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, ry); ctx.lineTo(x1, ry); ctx.stroke();
+    for (let i = 0; i <= 20; i++) { const x = x0 + i / 10 * ppm; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + (i % 5 ? 4 : 8) * p); ctx.stroke(); if (i % 5 === 0) txt(`${i / 10} m`, x, ry + 15 * p, { a: i === 20 ? 'right' : 'center', s: 9, m: 1, c: T.muted }); }
+    txt(`displacement drawn ×${sig(X, 2)}, motion slowed to one cycle in 2 s`, x1, narrow ? Hh - 26 * p : Hh - 12 * p, { a: 'right', s: 9, c: T.muted });
+    /* graphs of s and Δp along the tube at this instant */
+    const gTop = ry + 30 * p, gH = Math.max(50 * p, (Hh - gTop - (narrow ? 48 : 34) * p) / 2 - 10 * p);
+    const graph = (y0, label, unit, fn, col) => {
+      const mid = y0 + gH / 2; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(x0 + 0.5, y0 + 0.5, x1 - x0, gH);
+      ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(x0, mid); ctx.lineTo(x1, mid); ctx.stroke();
+      ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let i = 0; i <= N; i++) { const xm = SPAN * i / N, y = mid - fn(xm) * gH * 0.42; i ? ctx.lineTo(x0 + xm * ppm, y) : ctx.moveTo(x0 + xm * ppm, y); } ctx.stroke();
+      txt(label, x0 + 6 * p, y0 + 10 * p, { s: 10, b: 1, c: col }); txt(unit, x1 - 6 * p, y0 + 10 * p, { s: 9, a: 'right', m: 1, c: T.muted });
+    };
+    graph(gTop, 'displacement s (right is positive)', `±${S.s.toFixed(1)} μm`, (xm) => displacement(Wv, 1, xm, t), T.accent);
+    graph(gTop + gH + 16 * p, 'pressure change Δp', S.gas === 'unknown' ? '' : `±${sig(Wv.dpMax, 3)} Pa`, (xm) => pressure(Wv, xm, t) / Wv.dpMax, T.pos);
+    /* mark one compression on both graphs: Δp largest, s zero there */
+    const kx = (ph + PI / 2) / Wv.k; for (let xm = ((kx % Wv.lambda) + Wv.lambda) % Wv.lambda; xm < SPAN; xm += Wv.lambda) { const x = x0 + xm * ppm; ctx.strokeStyle = T.pos; ctx.globalAlpha = 0.5; ctx.setLineDash([4, 4]); ctx.beginPath(); ctx.moveTo(x, ty); ctx.lineTo(x, gTop + 2 * gH + 16 * p); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1; }
+    txt('dashed: compressions, where Δp is largest and s = 0', x0, Hh - 12 * p, { s: 9, c: T.muted });
+  }
+  function drawTof() {
+    const p = ps(), g = gasNow(), v = soundSpeed(g, S.tC), c = S.clap || S.last;
+    const x0 = 46 * p, x1 = W - 20 * p, ppm = (x1 - x0) / 4.0, benchY = Math.max(150 * p, Hh * 0.34);
+    const xA = x0 + S.xA * ppm, xB = xA + S.d * ppm; Object.assign(GEO, { x0, ppm, xA, xB });
+    /* bench and its scale, 0 at the clap */
+    ctx.fillStyle = T.wood; ctx.fillRect(x0 - 30 * p, benchY, x1 - x0 + 40 * p, 14 * p); ctx.fillStyle = T.woodLine; ctx.fillRect(x0 - 30 * p, benchY + 14 * p, x1 - x0 + 40 * p, 3 * p);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; for (let i = 0; i <= 40; i++) { const x = x0 + i / 10 * ppm; ctx.beginPath(); ctx.moveTo(x, benchY + 20 * p); ctx.lineTo(x, benchY + (i % 5 ? 24 : 28) * p); ctx.stroke(); if (i % 5 === 0 && (W > 620 || i % 10 === 0)) txt(`${i / 10} m`, x, benchY + 36 * p, { a: 'center', s: 9, m: 1, c: T.muted }); }
+    /* the clap: two hands at x = 0 */
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.ellipse(x0 - 6 * p, benchY - 40 * p, 6 * p, 16 * p, -0.25, 0, 7); ctx.fill(); ctx.beginPath(); ctx.ellipse(x0 + 6 * p, benchY - 40 * p, 6 * p, 16 * p, 0.25, 0, 7); ctx.fill();
+    txt('clap', x0, benchY - 66 * p, { a: 'center', s: 10, b: 1 });
+    /* the sound front, slowed */
+    if (S.clap) { const r = S.clap.t * S.clap.v * ppm; ctx.strokeStyle = T.pos; ctx.lineWidth = 2.5 * p; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.arc(x0, benchY - 40 * p, Math.max(1, r), -1.2, 1.2); ctx.stroke(); ctx.globalAlpha = 1; }
+    /* microphones on stands */
+    for (const [x, name] of [[xA, 'A'], [xB, 'B']]) { ctx.fillStyle = T.metal; ctx.fillRect(x - 1.5 * p, benchY - 34 * p, 3 * p, 34 * p); ctx.fillStyle = T.box; ctx.beginPath(); ctx.roundRect(x - 7 * p, benchY - 52 * p, 14 * p, 22 * p, 6 * p); ctx.fill(); txt(name, x, benchY - 62 * p, { a: 'center', s: 11, b: 1 }); }
+    for (const [id, x] of [['micA', xA], ['micB', xB]]) Object.assign($(id).style, { left: `${x}px`, top: `${benchY - 56 * p}px`, height: `${56 * p}px` });
+    const yy = benchY - 74 * p; ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(xA, yy); ctx.lineTo(xB, yy); ctx.stroke(); for (const x of [xA, xB]) { ctx.beginPath(); ctx.moveTo(x, yy - 4 * p); ctx.lineTo(x, yy + 4 * p); ctx.stroke(); }
+    txt(`d = ${S.d.toFixed(2)} m`, (xA + xB) / 2, yy - 9 * p, { a: 'center', s: 10, b: 1, c: T.accent });
+    if (S.clap) txt(`sound front slowed ×${Math.round(1 / SLOWNESS())}`, x1, 64 * p, { a: 'right', s: 9, c: T.muted });
+    /* the recorder: both channels from the clap to just after B, filled in up to the time reached */
+    const sy = benchY + 56 * p, sh = Hh - sy - 16 * p, chH = (sh - 30 * p) / 2;
+    ctx.fillStyle = T.box; ctx.beginPath(); ctx.roundRect(x0 - 30 * p, sy, x1 - x0 + 40 * p, sh, 8 * p); ctx.fill();
+    const sx0 = x0 - 18 * p, sx1 = x1 + 2 * p;
+    txt(`Recorder, ${FS / 1000} kHz`, sx0, sy + 12 * p, { s: 10, b: 1, c: '#c9d0d9' });
+    if (!c) { txt('Clap to record both microphones', (sx0 + sx1) / 2, sy + sh / 2, { a: 'center', s: 12, c: '#c9d0d9' }); return; }
+    const tEnd = c.tEnd, tNow = c.t, PX = (tt) => sx0 + (sx1 - sx0) * tt / tEnd;
+    for (const [k, r, n, lab] of [[0, c.xA, c.R.nA, 'A'], [1, c.xA + c.d, c.R.nB, 'B']]) {
+      const y0 = sy + 26 * p + k * (chH + 4 * p), mid = y0 + chH / 2; ctx.strokeStyle = '#4a5462'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx0, mid); ctx.lineTo(sx1, mid); ctx.stroke();
+      txt(lab, sx0 + 2 * p, y0 + 8 * p, { s: 10, b: 1, c: '#c9d0d9' });
+      const nMax = Math.floor(Math.min(tNow, tEnd) * FS - c.phi), amp = chH * 0.45 / (CLAP_R0 / Math.min(c.xA, 0.3));
+      /* a sample every 1/FS; draw every sample when they are more than a pixel apart, else the envelope of the samples in each pixel */
+      ctx.strokeStyle = '#7ee0a0'; ctx.lineWidth = 1.2; ctx.beginPath();
+      const step = Math.max(1, Math.floor(nMax / Math.max(1, (sx1 - sx0)) / 2));
+      for (let i = 0; i <= nMax; i += step) { const tt = (i + c.phi) / FS, y = mid - clapSignal(tt, r, c.v) * amp; i ? ctx.lineTo(PX(tt), y) : ctx.moveTo(PX(tt), y); }
+      ctx.stroke();
+      if (tNow >= (n + c.phi) / FS) { const x = PX((n + c.phi) / FS); ctx.strokeStyle = '#f1c96b'; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y0 + chH); ctx.stroke(); ctx.setLineDash([]); txt(k ? 'stop' : 'start', x + 4 * p, y0 + 8 * p, { s: 9, c: '#f1c96b' }); }
+    }
+    const done = !S.clap; txt(done ? `Δt = ${(c.R.dt * 1000).toFixed(4)} ms (${c.R.samples} samples)` : 'timing…', sx1, sy + 12 * p, { a: 'right', s: 12, b: 1, m: 1, c: '#7ee0a0' });
+    txt(`${(tEnd * 1000).toFixed(1)} ms after the clap`, sx1, sy + sh - 8 * p, { a: 'right', s: 9, c: '#c9d0d9' });
+  }
+  /* real seconds of sound per second on screen: the front crosses from the clap to B in about 2 s */
+  const SLOWNESS = () => { const c = S.clap || S.last, v = c ? c.v : soundSpeed(gasNow(), S.tC), xB = c ? c.xA + c.d : S.xA + S.d; return (xB + 0.1) / v / 2; };
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    if (S.view === 'wave') drawWave(); else drawTof();
+  }
+
+  function tick(dt) {
+    if (S.view === 'wave') { if (S.running && !reduce) { S.t += dt; draw(); } }
+    else if (S.clap) { S.clap.t += dt * SLOWNESS(); if (S.clap.t >= S.clap.tEnd) finishClap(); else draw(); }
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const rc = scene.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); fit(); }
+  const retheme = () => { tokens(); draw(); fit(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce && S.clap) finishClap(); fade(); draw(); });
+  tokens(); new ResizeObserver(resize).observe(scene); new ResizeObserver(() => draw()).observe(card);
+  const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'wave'); renderRows(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  let last = performance.now(), acc = 0;
+  (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
+})();
+</script>
+</body>
+</html>

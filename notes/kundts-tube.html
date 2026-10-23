@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kundt&#x27;s Tube: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Kundt&#x27;s Tube</h1><ul class="meta"><li><a href="../demos/kundts-tube.html">Open the demo</a></li><li>Acoustics; intro physics (sound, normal modes); intro lab (speed of sound in a gas and a solid)</li><li>25 to 45 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A rod clamped at its middle and stroked along its length rings in its lowest longitudinal mode: free ends are antinodes, the clamp a node, so the rod is half a wavelength long and f = v_rod/2L. Clamped at L/4 it rings with two half wavelengths in it.</li>
+<li>The disc drives the gas at the rod's frequency. When the plunger is a whole number of half wavelengths from the disc the tube resonates, and the dust is shaken out of the loud places and settles at the displacement nodes, λ_gas/2 apart.</li>
+<li>One frequency, two wavelengths: v_gas = 2 d f, and v_rod/v_gas = λ_rod/λ_gas = (2L/n)/(2d) = L/(nd), so the speed of sound in the metal follows from a metre rule alone if v_gas is known.</li>
+<li>The heap spacing does not depend on where the plunger is; the plunger only decides whether the tube is loud enough to move the dust.</li>
+<li>From v_gas and the temperature, γ = v²M/(RT) tells a monatomic gas (5/3) from a diatomic one (7/5).</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need v = fλ, nodes and antinodes in a tube closed at both ends, and v = √(E/ρ) for a thin rod (or just that sound is faster in metals). <strong>Blind</strong> hides the speeds, the spacing and the resonance; <strong>Unknown rod</strong> hides the rod's speed and the spacing for good.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Steel rod, air.</strong> A 1.00 m steel rod rings at 2524 Hz. Tick Keep it ringing and nudge the plunger a millimetre at a time; the loudness bar and the dust jump near ℓ = 102.0 cm. Put the pointer on the middle of each heap (the close up helps) and record; x against j has a slope of 6.80 cm.</li>
+<li><strong>Steel rod, helium.</strong> The heaps spread to 19.96 cm. Students find v_He and then γ = v²M/(RT) ≈ 5/3.</li>
+<li><strong>Clamped at L/4.</strong> The lowest mode with a node at L/4 has two half wavelengths in the rod: f doubles to 5048 Hz and the heaps close up to 3.40 cm.</li>
+<li><strong>Brass rod, air.</strong> 1715 Hz and heaps 10.0 cm apart: brass is about two thirds as fast as steel.</li>
+<li><strong>Unknown rod.</strong> Find v_rod two ways: L/(nd) times v_air, and 2Lf/n from the counter.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A steel rod 1.00 m long (E = 200 GPa, ρ = 7850 kg/m³) is clamped at its middle. Find the speed of longitudinal waves in it and the frequency it rings at.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> With that rod, the dust heaps in air at 20 °C are 6.80 cm apart. Find the speed of sound in the air, and the ratio of the speed in the steel to the speed in the air from the lengths alone.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The same rod is clamped L/4 from one end. Why can it no longer ring at 2524 Hz? At what frequency does it ring, and how far apart are the heaps in air?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> With helium in the tube at 20 °C and the rod of Q1, the heaps are 19.96 cm apart. Find v in helium, and then γ = v²M/(RT) with M = 4.003 g/mol. What does γ tell you about helium?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> An unknown rod 1.00 m long, clamped at its middle, makes heaps 9.50 cm apart in air at 20 °C (v = 343.2 m/s), and the counter shows 1807 Hz. Find the speed of sound in the rod two ways and say what metal it might be.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Why does the dust gather at the displacement nodes and not at the antinodes? A student sets the plunger 1 cm away from a resonance: what changes, and does the heap spacing change?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The dust piles where the sound is loudest."</strong> It is shaken out of the loud places (displacement antinodes) and comes to rest where the air does not move.</li>
+<li><strong>"Moving the plunger changes the wavelength."</strong> The rod sets f and the gas sets v; the plunger only tunes the tube into resonance.</li>
+<li><strong>"The rod and the gas have the same wavelength because they share a frequency."</strong> Same f, different v, so different λ: that is the whole method.</li>
+<li><strong>"Sound is faster in steel because steel is denser."</strong> Steel is much denser than aluminum, yet the two have nearly the same v; what matters is E/ρ.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Thin rod: v = √(E/ρ) (rod width much less than a wavelength). Typical handbook values (chosen; real alloys vary by several percent): steel 200 GPa and 7850 kg/m³ (5048 m/s), aluminum 69 GPa and 2700 (5055 m/s), brass 100 GPa and 8500 (3430 m/s), copper 117 GPa and 8960 (3614 m/s), glass 72 GPa and 2500 (5367 m/s); an unknown rod has 2500 to 5500 m/s. Free ends, a node at the clamp, f = n v/(2L) with n = 1 at the middle and 2 at L/4. The disc's mass and the clamp's width are left out. The counter shows f to 1 Hz.</li>
+<li>Gas: ideal at 101325 Pa, v = √(γRT/M) as in Sound Waves. The disc drives the gas as a piston with displacement a cos ωt; the plunger is rigid. With a loss of α = 0.10 per metre in amplitude (chosen), κ = ω/v − iα and S(x) = a sin(κ(ℓ − x))/sin(κℓ). Resonance when ℓ is just under mλ/2; there the loudest motion is about 1/sinh(αℓ) times the disc's (about 10 at 1 m). The nodes are λ/2 apart to better than 1 μm.</li>
+<li>The dust is a picture: while the loudest motion in the tube is more than 4 times the disc's (chosen), grains drift down the slope of |S|² toward the nodes. At ℓ = 102.0 cm with the steel rod in air this happens within about 5 mm of the resonance. Real dust also forms fine ridges, which are left out. The rod dies away in about 1.5 s (chosen); Keep it ringing holds it.</li>
+<li>Simulated data with no noise: the precision is how well you centre the pointer on a heap (1 mm steps).</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

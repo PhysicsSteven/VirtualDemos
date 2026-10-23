@@ -80,12 +80,16 @@
   });
   /* ==PHYSICS II END== */
   /* ==ACOUSTICS START== Acoustics worksheets (acoustics.html) and their demo column maps. */
-  const ACOUSTICS = ['resonators', 'timbre', 'acoustic-levitation', 'chladni', 'doppler'];
+  const ACOUSTICS = ['resonators', 'timbre', 'acoustic-levitation', 'chladni', 'doppler',
+    'sound-waves', 'kundts-tube' /* handouts (GPT) still to be written: the maps below assume the first data table's columns
+      sound-waves: Trial, Gas, T (°C), d (m), Δt (ms), Observation; kundts-tube: Heap j, x (cm), Rod, L_rod (m), Mode n, f (Hz), Gas, T (°C) */];
   ENABLED.push(...ACOUSTICS);
   Object.assign(FROM_DEMO, {
     resonators: { demo: 'Resonators', cols: ['f_Hz', 'k', null, null, 'L_read_cm', 'spacing_cm'] },
     timbre: { demo: 'Timbre and Harmonics', cols: [(r) => `run ${r.run}, ${r.preset}`, 'n', 'f_Hz', 'rel_amplitude', 'level_dB', 'phase_deg', 'notes'] },
     'acoustic-levitation': { demo: 'Acoustic Levitation', cols: ['setup_material', 'radius_mm', 'drive_Vpp', 'phase_deg', 'tracked_trap_z_mm', 'Fmax_over_W', 'notes'] },
+    'sound-waves': { demo: 'Sound Waves and the Speed of Sound', cols: ['row', 'gas', 'T_C', 'd_m', 'dt_ms', null] },
+    'kundts-tube': { demo: "Kundt's Tube", cols: ['pile', 'x_cm', 'rod', 'L_rod_m', 'n', 'f_Hz', 'gas', 'T_C'] },
   });
   /* ==ACOUSTICS END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

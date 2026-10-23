@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>Kundt's Tube</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the apparatus on the left, the rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+@media (max-width: 820px) { .chips button { min-height: 36px; } }
+.readout dd.warn { color: var(--pos); }
+:root { --wood: #d8bf98; --wood-line: #c3a77c; --metal: #9aa4b0; --metal-hi: #c9d0d9; --string: #b4532a; --env: rgba(180, 83, 42, 0.18); --brass: #b98f2e; --box: #3b4656; --rule: #f1e3b5; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; } }
+:root[data-theme="dark"] { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; }
+.fine { display: flex; gap: 6px; flex-wrap: wrap; }
+.fine .btn { padding: 3px 9px; font-family: var(--font-mono); font-size: 0.82rem; }
+.readout dd .ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.masslist { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); margin: 0; overflow-wrap: anywhere; }
+/* The Set up card (rod, clamp, gas, temperature) sits on the picture and fades while the rod rings; it comes back when the rod is
+   quiet, or when you point at it or move into it with the keyboard. The plunger and the pointer are worked while the rod rings,
+   so they stay: drag them on the picture, or use their sliders in the Tube section. On phones the card sits under the picture. */
+.scene { position: absolute; inset: 0; }
+.card { position: absolute; z-index: 2; top: 52px; right: 12px; width: min(310px, calc(100% - 24px)); display: flex; flex-direction: column; gap: 8px;
+  padding: 10px 12px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 10px; transition: opacity 0.35s ease; }
+.card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.card .slider-head label, .card .slider-head output { font-size: 0.8rem; }
+.card .btn { font-size: 0.78rem; padding: 3px 8px; font-family: var(--font-mono); }
+.card .chips button, .card .seg button { font-size: 0.8rem; padding: 3px 8px; }
+.card.away { opacity: 0.12; }
+.card.away:hover, .card.away:focus-within { opacity: 1; }
+@media (prefers-reduced-motion: reduce) { .card { transition: none; } }
+.handle { position: absolute; z-index: 2; border-radius: 5px; cursor: ew-resize; touch-action: none; }
+.handle:hover, .handle.drag { box-shadow: 0 0 0 2px var(--accent); }
+.handle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.check.inbar { background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; font-size: 0.84rem; }
+details.more summary { cursor: pointer; font-size: 0.85rem; color: var(--muted); }
+details.more[open] summary { margin-bottom: 6px; }
+.btn:disabled { opacity: 0.5; cursor: default; }
+@media (max-width: 820px) {
+  .stage { height: auto; max-height: none; display: flex; flex-direction: column; }
+  .scene { position: relative; inset: auto; height: 470px; max-height: 80vh; }
+  .card { position: static; width: auto; margin: 0 10px 10px; }
+  .card.away { opacity: 1; }
+  .card .btn, .card .chips button, .card .seg button { min-height: 36px; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Kundt's Tube</h1>
+      <p>Stroke a metal rod clamped at its middle and it rings at the frequency whose half wavelength is the rod. A disc on its end drives the gas in a glass tube; slide the plunger until the tube resonates and the cork dust gathers in heaps at the nodes, half a wavelength apart. One frequency, two wavelengths: the speed of sound in the gas and in the metal.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">v_rod = 2L f/n · v_gas = 2 d f</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/kundts-tube.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/kundts-tube.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h3v1h-3zM15 2h2v1h-2zM18 2h3v1h-3zM22 2h2v1h-2zM26 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h2v1h-2zM16 3h2v1h-2zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h3v1h-3zM15 4h1v1h-1zM18 4h1v1h-1zM21 4h3v1h-3zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM15 5h1v1h-1zM17 5h3v1h-3zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM15 6h4v1h-4zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h3v1h-3zM16 7h2v1h-2zM20 7h1v1h-1zM24 7h1v1h-1zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h5v1h-5zM17 9h1v1h-1zM21 9h2v1h-2zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM12 10h1v1h-1zM17 10h1v1h-1zM20 10h1v1h-1zM22 10h8v1h-8zM32 10h5v1h-5zM3 11h2v1h-2zM6 11h2v1h-2zM10 11h2v1h-2zM14 11h1v1h-1zM17 11h2v1h-2zM25 11h1v1h-1zM28 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h2v1h-2zM8 12h2v1h-2zM13 12h4v1h-4zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM9 13h1v1h-1zM11 13h1v1h-1zM14 13h2v1h-2zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h2v1h-2zM5 14h5v1h-5zM11 14h1v1h-1zM15 14h2v1h-2zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h15v1h-15zM3 15h1v1h-1zM6 15h2v1h-2zM9 15h1v1h-1zM11 15h3v1h-3zM15 15h2v1h-2zM18 15h2v1h-2zM22 15h4v1h-4zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h1v1h-1zM5 16h4v1h-4zM11 16h3v1h-3zM15 16h5v1h-5zM22 16h2v1h-2zM28 16h3v1h-3zM33 16h3v1h-3zM38 16h1v1h-1zM2 17h2v1h-2zM6 17h1v1h-1zM10 17h4v1h-4zM15 17h11v1h-11zM28 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM4 18h6v1h-6zM13 18h3v1h-3zM17 18h2v1h-2zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h7v1h-7zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM4 19h2v1h-2zM9 19h2v1h-2zM13 19h1v1h-1zM15 19h3v1h-3zM20 19h1v1h-1zM22 19h4v1h-4zM30 19h2v1h-2zM37 19h1v1h-1zM2 20h1v1h-1zM5 20h2v1h-2zM8 20h2v1h-2zM15 20h1v1h-1zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM4 21h1v1h-1zM7 21h1v1h-1zM10 21h1v1h-1zM12 21h1v1h-1zM17 21h1v1h-1zM20 21h5v1h-5zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM5 22h1v1h-1zM7 22h2v1h-2zM10 22h1v1h-1zM12 22h1v1h-1zM14 22h1v1h-1zM16 22h2v1h-2zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM3 23h2v1h-2zM6 23h2v1h-2zM9 23h2v1h-2zM12 23h1v1h-1zM15 23h2v1h-2zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM5 24h2v1h-2zM8 24h2v1h-2zM12 24h4v1h-4zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h2v1h-2zM29 24h7v1h-7zM37 24h2v1h-2zM7 25h1v1h-1zM10 25h2v1h-2zM13 25h1v1h-1zM17 25h2v1h-2zM21 25h2v1h-2zM25 25h1v1h-1zM29 25h1v1h-1zM31 25h4v1h-4zM37 25h1v1h-1zM6 26h5v1h-5zM13 26h1v1h-1zM17 26h1v1h-1zM20 26h6v1h-6zM27 26h2v1h-2zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h2v1h-2zM5 27h1v1h-1zM9 27h1v1h-1zM12 27h1v1h-1zM15 27h4v1h-4zM23 27h1v1h-1zM25 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM8 28h1v1h-1zM10 28h1v1h-1zM12 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM26 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM9 29h1v1h-1zM14 29h2v1h-2zM18 29h1v1h-1zM23 29h1v1h-1zM26 29h1v1h-1zM29 29h6v1h-6zM37 29h1v1h-1zM2 30h1v1h-1zM5 30h2v1h-2zM8 30h2v1h-2zM11 30h1v1h-1zM13 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM25 30h12v1h-12zM38 30h1v1h-1zM10 31h14v1h-14zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h2v1h-2zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h2v1h-2zM17 33h4v1h-4zM23 33h3v1h-3zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h2v1h-2zM16 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h3v1h-3zM29 34h6v1h-6zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h3v1h-3zM15 35h3v1h-3zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h3v1h-3zM16 36h3v1h-3zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM16 37h2v1h-2zM21 37h3v1h-3zM25 37h1v1h-1zM28 37h4v1h-4zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h5v1h-5zM34 38h5v1h-5z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="A metal rod clamped in a stand, with a disc on its right end inside a glass tube of gas closed by a plunger. Cork dust lies along the tube; a metre rule runs under it, with a pointer, and a close up of the tube around the pointer is drawn below. A frequency counter shows the ringing frequency. S strokes the rod; left and right move the pointer by 1 mm (Shift 1 cm)."></canvas>
+        <div class="viewbar">
+          <button type="button" class="spin attn" id="stroke">Stroke the rod</button>
+          <label class="check inbar"><input type="checkbox" id="keep"><span>Keep it ringing</span></label>
+          <button type="button" class="spin" id="spread">Spread the dust</button>
+        </div>
+        <div class="handle" id="plunger" role="slider" tabindex="0" aria-label="Plunger position ℓ (disc to plunger)" aria-valuemin="0.2" aria-valuemax="1.4" title="Drag the plunger"></div>
+        <div class="handle" id="pointerH" role="slider" tabindex="0" aria-label="Pointer x (from the disc)" aria-valuemin="0" title="Drag the pointer"></div>
+        <span class="blindtag" id="blindTag" hidden>Blind</span>
+      </div>
+      <div class="card" id="card" role="group" aria-labelledby="cardTitle">
+        <div class="card-title" id="cardTitle">Set up</div>
+        <div class="chips" id="rods" role="group" aria-label="Rod">
+          <button type="button" data-r="steel" aria-pressed="true">Steel</button>
+          <button type="button" data-r="aluminum" aria-pressed="false">Aluminum</button>
+          <button type="button" data-r="brass" aria-pressed="false">Brass</button>
+          <button type="button" data-r="copper" aria-pressed="false">Copper</button>
+          <button type="button" data-r="glass" aria-pressed="false">Glass</button>
+          <button type="button" data-r="unknown" aria-pressed="false">Unknown rod</button>
+        </div>
+        <div class="btnrow"><button type="button" class="btn" id="newUnknown" hidden>New unknown rod</button></div>
+        <div>
+          <div class="slider-head"><label for="sL">Rod length L</label><output id="oL" for="sL"></output></div>
+          <input type="range" id="sL" min="0.5" max="1.5" step="0.01">
+          <div class="fine"><button type="button" class="btn" id="Lm">L −1 cm</button><button type="button" class="btn" id="Lp">L +1 cm</button></div>
+        </div>
+        <div class="seg" role="group" aria-label="Clamp" id="clampSeg"><button type="button" data-c="1" aria-pressed="true">Clamp at the middle</button><button type="button" data-c="2" aria-pressed="false">Clamp at L/4</button></div>
+        <div class="chips" id="gases" role="group" aria-label="Gas in the tube">
+          <button type="button" data-g="air" aria-pressed="true">Air</button>
+          <button type="button" data-g="helium" aria-pressed="false">Helium</button>
+          <button type="button" data-g="argon" aria-pressed="false">Argon</button>
+        </div>
+        <div>
+          <div class="slider-head"><label for="sT">Gas temperature</label><output id="oT" for="sT"></output></div>
+          <input type="range" id="sT" min="-20" max="40" step="1">
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="steel" aria-pressed="true">Steel rod, air</button>
+          <button type="button" data-p="helium" aria-pressed="false">Steel rod, helium</button>
+          <button type="button" data-p="quarter" aria-pressed="false">Clamped at L/4</button>
+          <button type="button" data-p="brass" aria-pressed="false">Brass rod, air</button>
+          <button type="button" data-p="unknown" aria-pressed="false">Unknown rod</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+        <p class="hint">The Set up card fades while the rod rings (point at it or tab into it to bring it back). Tune the plunger while the rod rings, for the loudest sound and the sharpest heaps.</p>
+      </section>
+
+      <section>
+        <h2>Tube</h2>
+        <div><div class="slider-head"><label for="sl">Plunger position ℓ (disc to plunger)</label><output id="ol" for="sl"></output></div><input type="range" id="sl" min="0.2" max="1.4" step="0.001"></div>
+        <div class="fine" id="fineL"><button type="button" class="btn" data-dl="-0.01">ℓ −1 cm</button><button type="button" class="btn" data-dl="-0.001">ℓ −1 mm</button><button type="button" class="btn" data-dl="0.001">ℓ +1 mm</button><button type="button" class="btn" data-dl="0.01">ℓ +1 cm</button></div>
+        <div><div class="slider-head"><label for="sx">Pointer x (from the disc)</label><output id="ox" for="sx"></output></div><input type="range" id="sx" min="0" max="1.4" step="0.001"></div>
+        <div class="fine" id="fineX"><button type="button" class="btn" data-dx="-0.01">x −1 cm</button><button type="button" class="btn" data-dx="-0.001">x −1 mm</button><button type="button" class="btn" data-dx="0.001">x +1 mm</button><button type="button" class="btn" data-dx="0.01">x +1 cm</button></div>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="record">Record this heap</button>
+          <button type="button" class="btn" id="exportWs">Export to worksheet</button>
+          <button type="button" class="btn" id="clearRows">Clear the readings</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Recorded heaps</caption><thead><tr><th>#</th><th>heap j</th><th>x (cm)</th><th>f (Hz)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Heap position x against heap number j, with a least squares line and its residuals."></canvas></div>
+        <dl class="readout" id="fitOut"></dl>
+        <p class="hint">Put the pointer on the middle of a heap and record it; the heaps are numbered from the disc (you can correct j in the table). x against j is a straight line with slope d = λ/2 in the gas, so v_gas = 2 d f. The rod rings with a half wavelength L/n (n = 1 clamped at the middle, 2 at L/4), so v_rod = 2L f/n.</p>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the speeds and the predictions</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>Model</summary><p class="hint" id="modelHint"></p></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  const PI = Math.PI, TAU = 2 * Math.PI;
+  const KT_VERSION = 'kundts-tube@2026-10-23';
+  const R_GAS = 8.314462618, T0K = 273.15;
+  /* ideal gases, as in Sound Waves: dry air γ = 1.400, M = 28.9647 g/mol; helium and argon γ = 5/3 with the IUPAC atomic weights */
+  const GASES = { air: { name: 'Air (dry)', gamma: 1.4, M: 0.0289647 }, helium: { name: 'Helium', gamma: 5 / 3, M: 0.004002602 }, argon: { name: 'Argon', gamma: 5 / 3, M: 0.039948 } };
+  /* rods: Young's modulus E and density ρ, typical handbook values (chosen; real alloys and glasses vary by several percent) */
+  const RODS = { steel: { name: 'Steel', E: 200e9, rho: 7850 }, aluminum: { name: 'Aluminum', E: 69e9, rho: 2700 }, brass: { name: 'Brass', E: 100e9, rho: 8500 },
+    copper: { name: 'Copper', E: 117e9, rho: 8960 }, glass: { name: 'Glass', E: 72e9, rho: 2500 } };
+  const UNKNOWN_V = [2500, 5500];   /* m/s, range of the unknown rod's speed, in 1 m/s steps */
+  const ALPHA = 0.10;               /* 1/m, amplitude loss of the sound along the tube (chosen) */
+  const LIFT = 4;                   /* the dust moves only when the loudest air motion in the tube is over 4 times the disc's (chosen) */
+
+  const gasSpeed = (gas, tC) => Math.sqrt(gas.gamma * R_GAS * (tC + T0K) / gas.M);
+  /* a thin rod: longitudinal waves at v = √(E/ρ). Free ends are displacement antinodes; a clamp holds a node. Clamped at the middle
+     the lowest mode has one half wavelength in the rod (n = 1); clamped L/4 from an end, two (n = 2). f = n v/(2L). */
+  const rodSpeed = (rod) => (rod.v != null ? rod.v : Math.sqrt(rod.E / rod.rho));
+  const rodFreq = (n, L, v) => n * v / (2 * L);
+  /* the gas column: the disc at x = 0 moves as a cos ωt, the plunger at x = ℓ is rigid (s = 0). With a small loss the wavenumber
+     is κ = ω/v − iα and the steady state is S(x) = a sin(κ(ℓ − x))/sin(κℓ). |sin(p s − i q s)|² = sin²(ps) + sinh²(qs). */
+  const sinAbs = (p, q, s) => Math.sqrt(Math.sin(p * s) ** 2 + Math.sinh(q * s) ** 2);
+  /* air motion in the tube in units of the disc's: |S(x)|/a */
+  function ampRatio(x, f, v, l) { const p = TAU * f / v; return sinAbs(p, ALPHA, l - x) / sinAbs(p, ALPHA, l); }
+  /* the loudest motion anywhere in the tube, |S|max/a: at the antinode farthest from the plunger (refined), or at the disc */
+  function gain(f, v, l) {
+    const p = TAU * f / v, g = (s) => sinAbs(p, ALPHA, s); let best = g(l);
+    const m = Math.floor(p * l / PI - 0.5);
+    for (let j = Math.max(0, m - 1); j <= m; j++) { let lo = Math.max(0, j * PI / p), hi = Math.min(l, (j + 1) * PI / p);
+      for (let i = 0; i < 60; i++) { const s1 = hi - (hi - lo) * 0.618034, s2 = lo + (hi - lo) * 0.618034; if (g(s1) < g(s2)) lo = s1; else hi = s2; } best = Math.max(best, g((lo + hi) / 2)); }
+    return best / g(l);
+  }
+  /* displacement nodes in the tube, measured from the disc: minima of |S|, near ℓ − jλ/2 (found exactly by golden section) */
+  function nodes(f, v, l) {
+    const p = TAU * f / v, g = (s) => sinAbs(p, ALPHA, s), out = [];
+    for (let j = 1; j * PI / p < l; j++) { let lo = Math.max(0, (j - 0.5) * PI / p), hi = Math.min(l, (j + 0.5) * PI / p);
+      for (let i = 0; i < 80; i++) { const s1 = hi - (hi - lo) * 0.618034, s2 = lo + (hi - lo) * 0.618034; if (g(s1) > g(s2)) lo = s1; else hi = s2; } out.push(l - (lo + hi) / 2); }
+    return out.sort((a, b) => a - b);
+  }
+  /* plunger positions where the tube resonates: the minima of |sin(κℓ)|, just under ℓ = mλ/2 */
+  function resonantL(m, f, v) { const p = TAU * f / v; let lo = (m - 0.5) * PI / p, hi = (m + 0.5) * PI / p;
+    for (let i = 0; i < 80; i++) { const s1 = hi - (hi - lo) * 0.618034, s2 = lo + (hi - lo) * 0.618034; if (sinAbs(p, ALPHA, s1) > sinAbs(p, ALPHA, s2)) lo = s1; else hi = s2; } return (lo + hi) / 2; }
+
+  function fitLine(xs, ys) {
+    const n = xs.length; if (n < 2) return null;
+    const mx = xs.reduce((s, v) => s + v, 0) / n, my = ys.reduce((s, v) => s + v, 0) / n;
+    let sxx = 0, sxy = 0; for (let i = 0; i < n; i++) { sxx += (xs[i] - mx) ** 2; sxy += (xs[i] - mx) * (ys[i] - my); }
+    if (sxx < 1e-30) return null;
+    const b = sxy / sxx, a0 = my - b * mx, res = xs.map((x, i) => ys[i] - a0 - b * x), ss = res.reduce((q, r) => q + r * r, 0), s2 = n > 2 ? ss / (n - 2) : NaN;
+    return { b, a: a0, seB: Math.sqrt(s2 / sxx), seA: Math.sqrt(s2 * (1 / n + mx * mx / sxx)), res, n };
+  }
+  const cellNum = (s) => { const v = parseFloat(String(s).replace('−', '-')); return isFinite(v) ? v : NaN; };
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  function readingsCSV(rows, meta) {
+    const L = ["# Kundt's tube virtual apparatus: dust heap positions (simulated data)", `# demo version,${meta.version}`,
+      '# model,"thin rod, v_rod = sqrt(E/rho), lowest mode with a node at the clamp; ideal gas at 101325 Pa, v = sqrt(gamma R T / M); disc drives the gas, rigid plunger, small loss (0.10 per m)"',
+      '# rounding,"x to 1 mm (0.1 cm), f as the counter shows it (1 Hz), L to 0.01 m, plunger to 1 mm"', '# noise,none',
+      'row,pile,x_cm,rod,L_rod_m,n,f_Hz,gas,T_C,plunger_m'];
+    rows.forEach((r, i) => L.push([i + 1, r.j, r.x, r.rod, r.L, r.n, r.f, r.gas, r.T, r.l].map(csvCell).join(',')));
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const newUnknown = () => ({ name: 'Unknown rod', v: Math.round(UNKNOWN_V[0] + Math.random() * (UNKNOWN_V[1] - UNKNOWN_V[0])) });
+  const RING_TAU = 1.5;    /* s, how fast a stroked rod dies away (chosen) */
+  const S = { rod: 'steel', unknown: newUnknown(), L: 1.0, n: 1, gas: 'air', tC: 20, l: 1.0, x: 0.5, env: 0, keep: false, blind: false, preset: 'steel', rows: [], series: 0, dust: [] };
+  const rodNow = () => (S.rod === 'unknown' ? S.unknown : RODS[S.rod]);
+  const fNow = () => rodFreq(S.n, S.L, rodSpeed(rodNow()));
+  const vGas = () => gasSpeed(GASES[S.gas], S.tC);
+  const hide = () => S.blind || S.rod === 'unknown';
+  /* a preset puts the plunger 1 cm short of the resonance nearest 1.00 m, to the mm: the student tunes the last centimetre */
+  const nearRes = () => { const f = fNow(), v = vGas(), half = v / f / 2, m = Math.max(1, Math.round(1.0 / half)); return Math.round((resonantL(m, f, v) - 0.01) * 1000) / 1000; };
+  const PRESETS = {
+    steel: { rod: 'steel', L: 1.0, n: 1, gas: 'air', tC: 20, hint: 'A 1.00 m steel rod clamped at its middle rings at f = v/2L = 2524 Hz (v = √(E/ρ) = 5048 m/s). In air at 20 °C λ = 13.6 cm, so the heaps should be 6.80 cm apart. The plunger starts 1 cm short of a resonance: keep the rod ringing and slide it until the dust jumps.' },
+    helium: { rod: 'steel', L: 1.0, n: 1, gas: 'helium', tC: 20, hint: 'The same rod with helium in the tube: v = 1007 m/s, so λ = 39.9 cm and the heaps are 19.96 cm apart, almost three times farther than in air at the same frequency.' },
+    quarter: { rod: 'steel', L: 1.0, n: 2, gas: 'air', tC: 20, hint: 'Clamped L/4 from its end the rod cannot ring in its lowest mode (that needs a node at the middle). It rings with two half wavelengths in it, at 5048 Hz, and the heaps in air close up to 3.40 cm.' },
+    brass: { rod: 'brass', L: 1.0, n: 1, gas: 'air', tC: 20, hint: 'Brass is denser and less stiff than steel: v = √(E/ρ) = 3430 m/s, f = 1715 Hz, and the heaps in air are 10.0 cm apart.' },
+    unknown: { rod: 'unknown', L: 1.0, n: 1, gas: 'air', tC: 20, hint: 'An unknown rod in air at 20 °C, where v = 343.2 m/s. Find the heap spacing, then the speed of sound in the rod two ways: from v_rod/v_air = (L/n)/d, and from the counter, v_rod = 2Lf/n. New unknown rod picks another.' }
+  };
+  $('modelHint').textContent = "Model: the rod is thin (its width is much less than a wavelength), so its longitudinal waves travel at v = √(E/ρ), with typical handbook E and ρ (chosen): steel 200 GPa and 7850 kg/m³, aluminum 69 GPa and 2700, brass 100 GPa and 8500, copper 117 GPa and 8960, glass 72 GPa and 2500. Its ends are free, the clamp holds a node, and it rings in the lowest mode that allows that, n = 1 at the middle and n = 2 at L/4; the disc's mass and the clamp's width are left out. The counter shows f to 1 Hz. The gas is ideal at 101325 Pa, v = √(γRT/M) (air γ = 1.400, M = 28.96 g/mol; helium and argon γ = 5/3, 4.003 and 39.95 g/mol). The disc drives the gas as a piston and the plunger is rigid; a small loss, 0.10 per metre in amplitude (chosen), sets how sharp the resonance is. Shown is the steady state. The dust is a picture: it drifts from the loud places toward the nodes while the air motion somewhere in the tube is over 4 times the disc's (chosen); real dust also forms fine ridges, which are left out. The rod dies away in about 1.5 s (chosen). Simulated data with no noise.";
+
+  function spreadDust() { S.dust = []; let seed = 11; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647); for (let i = 0; i < 1500; i++) S.dust.push(rnd() * 1.4); }
+  function applyPreset(name) { const c = PRESETS[name]; S.preset = name; if (c.rod === 'unknown' && S.rod !== 'unknown') S.unknown = newUnknown(); S.rod = c.rod; S.L = c.L; S.n = c.n; S.gas = c.gas; S.tC = c.tC;
+    S.l = nearRes(); S.x = Math.min(S.x, S.l); spreadDust(); upd(); }
+  const can = $('can'), ctx = can.getContext('2d'), scene = $('scene'), card = $('card'), GEO = {};
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'accent', 'pos', 'neg', 'surface', 'relief', 'wood', 'wood-line', 'metal', 'metal-hi', 'box', 'rule', 'brass']) T[k.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + k);
+    T.mono = g('--font-mono'); T.ui = g('--font-ui'); }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const sig = (v, n = 3) => (isFinite(v) ? String(+v.toPrecision(n)) : '—');
+  const ringing = () => S.keep || S.env > 0.2;
+
+  // ---------- controls ----------
+  function sync() {
+    $('sL').value = S.L; $('oL').textContent = `${S.L.toFixed(2)} m`; $('sT').value = S.tC; $('oT').textContent = `${S.tC} °C`;
+    $('sl').value = S.l; $('ol').textContent = `${(S.l * 100).toFixed(1)} cm`; $('sx').max = S.l; $('sx').value = S.x; $('ox').textContent = `${(S.x * 100).toFixed(1)} cm`;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#rods button')) b.setAttribute('aria-pressed', String(b.dataset.r === S.rod));
+    for (const b of document.querySelectorAll('#gases button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.gas));
+    for (const b of document.querySelectorAll('#clampSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.c === S.n));
+    $('newUnknown').hidden = S.rod !== 'unknown';
+    const pl = $('plunger'), po = $('pointerH');
+    pl.setAttribute('aria-valuenow', S.l.toFixed(3)); pl.setAttribute('aria-valuetext', `ℓ = ${(S.l * 100).toFixed(1)} cm`);
+    po.setAttribute('aria-valuenow', S.x.toFixed(3)); po.setAttribute('aria-valuemax', S.l.toFixed(3)); po.setAttribute('aria-valuetext', `x = ${(S.x * 100).toFixed(1)} cm`);
+    $('presetHint').textContent = S.preset ? PRESETS[S.preset].hint : '';
+    fade();
+  }
+  function fade() { card.classList.toggle('away', !reduce && ringing()); }
+  /* a change to the rod or the gas changes the sound, so the heaps are spread again */
+  const changedSetup = () => { S.preset = ''; spreadDust(); upd(); };
+  function upd() { sync(); readouts(); draw(); fit(); }
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
+  $('rods').addEventListener('click', (e) => { const b = e.target.closest('[data-r]'); if (!b) return; const was = S.rod; S.rod = b.dataset.r;
+    if (was === 'unknown' && S.rod !== 'unknown') capStatus(`The unknown rod had v = ${S.unknown.v} m/s.`);
+    changedSetup(); });
+  $('newUnknown').addEventListener('click', () => { S.unknown = newUnknown(); S.rod = 'unknown'; capStatus('A new unknown rod is in the clamp.'); changedSetup(); });
+  $('gases').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (b) { S.gas = b.dataset.g; changedSetup(); } });
+  $('clampSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (b) { S.n = +b.dataset.c; changedSetup(); } });
+  const setRodL = (v) => { S.L = Math.min(1.5, Math.max(0.5, Math.round(v * 100) / 100)); changedSetup(); };
+  $('sL').addEventListener('input', (e) => setRodL(+e.target.value));
+  $('Lm').addEventListener('click', () => setRodL(S.L - 0.01)); $('Lp').addEventListener('click', () => setRodL(S.L + 0.01));
+  $('sT').addEventListener('input', (e) => { S.tC = Math.min(40, Math.max(-20, Math.round(+e.target.value))); changedSetup(); });
+  /* the plunger pushes any dust ahead of it */
+  const setl = (v) => { S.l = Math.min(1.4, Math.max(0.2, Math.round(v * 1000) / 1000)); S.x = Math.min(S.x, S.l); for (let i = 0; i < S.dust.length; i++) S.dust[i] = Math.min(S.dust[i], S.l - 0.002 * ((i % 5) + 1)); S.preset = ''; upd(); };
+  const setx = (v) => { S.x = Math.min(S.l, Math.max(0, Math.round(v * 1000) / 1000)); sync(); readouts(); draw(); };
+  $('sl').addEventListener('input', (e) => setl(+e.target.value));
+  $('sx').addEventListener('input', (e) => setx(+e.target.value));
+  $('fineL').addEventListener('click', (e) => { const b = e.target.closest('[data-dl]'); if (b) setl(S.l + +b.dataset.dl); });
+  $('fineX').addEventListener('click', (e) => { const b = e.target.closest('[data-dx]'); if (b) setx(S.x + +b.dataset.dx); });
+  /* drag the plunger or the pointer along the tube; each is a slider for the keyboard (arrows 1 mm, Page Up/Down 1 cm) */
+  for (const [id, set, get, gx] of [['plunger', setl, () => S.l, () => GEO.xl], ['pointerH', setx, () => S.x, () => GEO.xx]]) {
+    const h = $(id); let dx = 0;
+    h.addEventListener('pointerdown', (e) => { h.setPointerCapture(e.pointerId); h.classList.add('drag'); dx = e.clientX - (can.getBoundingClientRect().left + gx()); h.focus(); e.preventDefault(); });
+    h.addEventListener('pointermove', (e) => { if (!h.classList.contains('drag')) return; set((e.clientX - can.getBoundingClientRect().left - dx - GEO.xd) / GEO.ppm); });
+    const end = () => h.classList.remove('drag'); h.addEventListener('pointerup', end); h.addEventListener('pointercancel', end);
+    h.addEventListener('keydown', (e) => { const st = { ArrowRight: 0.001, ArrowUp: 0.001, ArrowLeft: -0.001, ArrowDown: -0.001, PageUp: 0.01, PageDown: -0.01 }[e.key];
+      if (st) set(get() + st); else if (e.key === 'Home') set(0); else if (e.key === 'End') set(1.4); else return; e.preventDefault(); });
+  }
+  $('stroke').addEventListener('click', () => { S.env = 1; fade(); readouts(); });
+  $('keep').addEventListener('change', (e) => { S.keep = e.target.checked; if (!S.keep) S.env = 1; fade(); readouts(); });
+  $('spread').addEventListener('click', () => { spreadDust(); draw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; upd(); });
+  can.addEventListener('keydown', (e) => {
+    if (e.key === 's' || e.key === 'S') $('stroke').click();
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') setx(S.x + (e.key === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 0.01 : 0.001));
+    else return;
+    e.preventDefault();
+  });
+
+  function readouts() {
+    const f = fNow(), v = vGas(), vr = rodSpeed(rodNow()), G = gain(f, v, S.l), HID = `<span class="ok">${S.rod === 'unknown' ? 'hidden: unknown rod' : 'hidden in Blind'}</span>`, HB = '<span class="ok">hidden in Blind</span>';
+    const dd = (a, val, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${val}</dd></div>`;
+    let h = dd('Rod', S.rod === 'unknown' ? 'unknown' : rodNow().name) + dd('Rod length L, mode n', `${S.L.toFixed(2)} m, n = ${S.n}`);
+    h += dd('Counter f', ringing() ? `${Math.round(f)} Hz` : '<span class="ok">stroke the rod</span>') + dd('Speed in the rod v = √(E/ρ)', hide() ? HID : `${Math.round(vr)} m/s`);
+    h += dd('Gas', `${GASES[S.gas].name}, ${S.tC} °C`) + dd('Speed in the gas v = √(γRT/M)', S.blind ? HB : `${v.toFixed(1)} m/s`);
+    h += dd('Heap spacing λ/2 in the gas', hide() ? HID : `${(v / f / 2 * 100).toFixed(2)} cm`) + dd('Plunger ℓ', `${(S.l * 100).toFixed(1)} cm`);
+    h += dd('Loudest air motion in the tube', ringing() ? `${G.toFixed(1)} × the disc's (${(20 * Math.log10(G)).toFixed(1)} dB)` : '<span class="ok">silent</span>', true);
+    if (!hide()) { const m = Math.max(1, Math.round(S.l / (v / f / 2))); h += dd('Nearest resonance of the tube', `ℓ = ${(resonantL(m, f, v) * 100).toFixed(2)} cm (${m} half wavelengths)`, true); }
+    else h += dd('Nearest resonance of the tube', hide() ? HID : '', true);
+    h += dd('Pointer x', `${(S.x * 100).toFixed(1)} cm`, true);
+    $('out').innerHTML = h;
+  }
+
+  // ---------- readings ----------
+  function capStatus(m) { $('capStatus').textContent = m; }
+  $('record').addEventListener('click', () => {
+    const j = S.rows.length ? Math.max(...S.rows.map((r) => cellNum(r.j)).filter(isFinite), 0) + 1 : 1;
+    S.rows.push({ j: String(j), x: (S.x * 100).toFixed(1), rod: S.rod === 'unknown' ? 'unknown rod' : rodNow().name, L: S.L.toFixed(2), n: String(S.n), f: String(Math.round(fNow())), gas: GASES[S.gas].name, T: String(S.tC), l: S.l.toFixed(3) });
+    renderRows(); capStatus(`Heap ${j} recorded at x = ${(S.x * 100).toFixed(1)} cm.`);
+  });
+  $('clearRows').addEventListener('click', () => { S.rows = []; S.series = Date.now(); renderRows(); capStatus('Readings cleared.'); });
+  const WORKSHEET = '../curriculum/labs/students/kundts-tube.html';
+  function downloadCsv(txt) { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'kundts-tube-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} }
+  function toWorksheet(txt, meta, note) {
+    const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => l.split(',');
+    if (!S.series) S.series = Date.now();
+    const hand = { v: 1, demo: 'kundts-tube', series: S.series, sent: new Date().toISOString(), columns: split(lines[0]), rows: lines.slice(1).map(split), meta, note, csv: txt, csvName: 'kundts-tube-readings.csv' };
+    localStorage.setItem('vd-handoff:kundts-tube', JSON.stringify(hand));
+  }
+  $('exportWs').addEventListener('click', () => {
+    if (!S.rows.length) { capStatus('No readings to export.'); return; }
+    const txt = readingsCSV(S.rows, { version: KT_VERSION }), r0 = S.rows[0];
+    try { toWorksheet(txt, { rod: r0.rod, gas: r0.gas }, `Simulated data from the Kundt's Tube demo (${r0.rod}, ${r0.gas} at ${r0.T} °C).`); }
+    catch (_) { downloadCsv(txt); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    capStatus(`${S.rows.length} reading${S.rows.length === 1 ? '' : 's'} sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = WORKSHEET; a.target = 'kundts-tube-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+    fetch(WORKSHEET, { method: 'HEAD' }).then((r) => { if (!r.ok) throw 0; }).catch(() => { a.remove(); const b = document.createElement('a'); b.href = '#'; b.textContent = 'The worksheet is not posted yet: download the CSV'; b.style.color = 'var(--accent)'; b.addEventListener('click', (e) => { e.preventDefault(); downloadCsv(txt); }); $('capStatus').appendChild(b); });
+  });
+  function renderRows() {
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr title="${r.rod}, L ${r.L} m, n ${r.n}; ${r.gas} ${r.T} °C; plunger ${r.l} m"><td>${i + 1}</td><td><input data-i="${i}" data-f="j" value="${r.j}" aria-label="heap j, row ${i + 1}" style="width:3em"></td><td>${r.x}</td><td>${r.f}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="5">No heaps yet. Put the pointer on a heap, then record.</td></tr>';
+    fit();
+  }
+  $('rowsTbl').addEventListener('change', (e) => { const el = e.target; if (el.dataset.f) { S.rows[+el.dataset.i][el.dataset.f] = el.value.trim(); fit(); } });
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+
+  const fitCan = $('fitCan'), fctx = fitCan.getContext('2d');
+  function fit() {
+    const pts = S.rows.map((r) => [cellNum(r.j), cellNum(r.x)]).filter(([a, b]) => isFinite(a) && isFinite(b));
+    const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null, dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`;
+    let h;
+    if (!F) h = dd('Fit', '<span class="ok">Record at least two heaps.</span>', true);
+    else {
+      h = dd('Slope d (cm)', `${sig(F.b, 5)}${isFinite(F.seB) ? ` ± ${sig(F.seB, 2)}` : ''}`) + dd('Intercept (cm)', `${sig(F.a, 4)}${isFinite(F.seA) ? ` ± ${sig(F.seA, 2)}` : ''}`);
+      const mix = new Set(S.rows.map((r) => [r.rod, r.L, r.n, r.f, r.gas, r.T].join('|'))).size > 1;
+      if (mix) h += dd('v_gas = 2 d f', '<span class="ok">These rows mix rods, gases or temperatures: clear and record one series.</span>', true);
+      else if (S.blind) h += dd('v_gas = 2 d f', '<span class="ok">hidden in Blind: work it out</span>', true);
+      else { const f = cellNum(S.rows[0].f), v = 2 * F.b / 100 * f, sv = v * F.seB / Math.abs(F.b); h += dd('v_gas = 2 d f', `${sig(v, 5)}${isFinite(sv) ? ` ± ${sig(sv, 2)}` : ''} m/s`, true); }
+    }
+    $('fitOut').innerHTML = h; drawFit(pts, F);
+  }
+  function drawFit(pts, F) {
+    const r = fitCan.getBoundingClientRect(), w = r.width, h = r.height; if (!w || !T) return;
+    fitCan.width = Math.round(w * dpr); fitCan.height = Math.round(h * dpr); fctx.setTransform(dpr, 0, 0, dpr, 0, 0); fctx.fillStyle = T.canvas; fctx.fillRect(0, 0, w, h);
+    const L = 44, Rr = w - 8, top = 8, mainB = h - 58, resT = h - 46, resB = h - 18;
+    fctx.strokeStyle = T.line; fctx.strokeRect(L + 0.5, top + 0.5, Rr - L, mainB - top); fctx.strokeRect(L + 0.5, resT + 0.5, Rr - L, resB - resT);
+    fctx.fillStyle = T.muted; fctx.font = `10px ${T.mono}`; fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText('heap j', (L + Rr) / 2, resB + 3);
+    fctx.save(); fctx.translate(10, (top + mainB) / 2); fctx.rotate(-PI / 2); fctx.fillText('x (cm)', 0, 0); fctx.restore();
+    const xh = Math.max(2, ...pts.map((q) => q[0])) * 1.08, yh = Math.max(10, ...pts.map((q) => q[1])) * 1.08;
+    const PX = (x) => L + (Rr - L) * x / xh, PY = (y) => mainB - (mainB - top) * y / yh;
+    fctx.textAlign = 'right'; fctx.textBaseline = 'middle'; fctx.fillText(sig(yh, 3), L - 3, PY(yh)); fctx.fillText('0', L - 3, PY(0));
+    fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText(sig(xh, 2), Rr - 10, mainB + 2);
+    if (F) { fctx.strokeStyle = T.accent; fctx.lineWidth = 1.5; fctx.beginPath(); fctx.moveTo(PX(0), PY(F.a)); fctx.lineTo(PX(xh), PY(F.a + F.b * xh)); fctx.stroke(); }
+    fctx.fillStyle = T.brass; for (const [x, y] of pts) { fctx.beginPath(); fctx.arc(PX(x), PY(y), 3.2, 0, 7); fctx.fill(); }
+    if (F) { const m = Math.max(...F.res.map(Math.abs), 1e-12), RY = (v) => (resT + resB) / 2 - (resB - resT) / 2 * 0.85 * v / m; fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(L, RY(0)); fctx.lineTo(Rr, RY(0)); fctx.stroke(); fctx.fillStyle = T.brass; pts.forEach(([x], i) => { fctx.beginPath(); fctx.arc(PX(x), RY(F.res[i]), 2.6, 0, 7); fctx.fill(); });
+      fctx.fillStyle = T.muted; fctx.textAlign = 'left'; fctx.textBaseline = 'top'; fctx.fillText(`residuals, ±${sig(m, 2)} cm`, L + 4, resT + 2); }
+  }
+
+  // ---------- dust ----------
+  /* the dust drifts down the slope of the squared air motion, toward the nodes, while the tube is loud enough to lift it.
+     The rate (at most a twelfth of λ/2 per second) is chosen for the picture. */
+  function stepDust(dt) {
+    const f = fNow(), v = vGas(), G = gain(f, v, S.l), e = S.keep ? 1 : S.env; if (G * e < LIFT) return false;
+    const lam = v / f, p = TAU / lam, h = 1e-4, u2 = (x) => ampRatio(x, f, v, S.l) ** 2, k = (lam / 24) / (G * G * p) * e * e;
+    for (let i = 0; i < S.dust.length; i++) { const x = S.dust[i]; if (x <= 0 || x >= S.l) continue; const g = (u2(x + h) - u2(x - h)) / (2 * h); S.dust[i] = Math.min(S.l - 1e-4, Math.max(1e-4, x - k * g * dt)); }
+    return true;
+  }
+
+  // ---------- drawing ----------
+  function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
+  /* dust heaps: grains counted in bins and drawn as a heap profile on the tube floor */
+  function drawDust(xd, ppm, floor, x0m, x1m, binM, hScale, clipL, clipR) {
+    const nb = Math.ceil((x1m - x0m) / binM), bins = new Array(nb).fill(0);
+    for (const x of S.dust) { if (x < x0m || x >= x1m || x > S.l) continue; bins[Math.floor((x - x0m) / binM)]++; }
+    const per = 1500 / 1.4 * binM; ctx.fillStyle = T.brass; ctx.beginPath(); ctx.moveTo(Math.max(clipL, xd + x0m * ppm), floor);
+    for (let i = 0; i < nb; i++) { const xa = xd + (x0m + i * binM) * ppm, xb = xa + binM * ppm, hgt = Math.min(hScale * 6, hScale * bins[i] / per); if (xb < clipL || xa > clipR) continue; ctx.lineTo(Math.max(clipL, xa), floor - hgt); ctx.lineTo(Math.min(clipR, xb), floor - hgt); }
+    ctx.lineTo(Math.min(clipR, xd + x1m * ppm), floor); ctx.closePath(); ctx.fill();
+  }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const p = ps(), narrow = W < 620, over = getComputedStyle(card).position === 'absolute', ring = ringing(), f = fNow(), v = vGas();
+    const cr = card.getBoundingClientRect(), sceneTop = can.getBoundingClientRect().top;
+    /* the apparatus row sits under the card (it stays clear of it); the close up below that */
+    const vb = document.querySelector('.viewbar').getBoundingClientRect().bottom - sceneTop, cy = Math.max(52 * p, vb + 8 * p);
+    const rowY = Math.max(cy + 76 * p + 56 * p, over ? Math.max(Hh * 0.42, cr.bottom - sceneTop + 70 * p) : 0);
+    const ppm = (W - 36 * p) / 2.95, xd = 18 * p + 1.5 * ppm, rodL = xd - S.L * ppm, tubeR = 7 * p * Math.max(1, ppm / 300);
+    Object.assign(GEO, { xd, ppm, xl: xd + S.l * ppm, xx: xd + S.x * ppm });
+    /* the counter and the loudness meter, top left (beside the card) */
+    const cx = 14 * p, cw = Math.min(250 * p, (over ? cr.left - can.getBoundingClientRect().left : W) - 30 * p);
+    ctx.fillStyle = T.box; ctx.beginPath(); ctx.roundRect(cx, cy, cw, 76 * p, 8 * p); ctx.fill();
+    txt('Frequency counter', cx + 10 * p, cy + 14 * p, { s: 9, b: 1, c: '#c9d0d9' });
+    ctx.fillStyle = '#0b1a12'; ctx.fillRect(cx + 10 * p, cy + 24 * p, cw - 20 * p, 26 * p);
+    txt(ring ? `${Math.round(f)} Hz` : '— Hz', cx + cw - 16 * p, cy + 37 * p, { a: 'right', s: 16, b: 1, m: 1, c: '#7ee0a0' });
+    const G = gain(f, v, S.l), lv = ring ? Math.min(1, Math.max(0, 20 * Math.log10(G) / 40)) : 0;
+    txt('loudness in the tube', cx + 10 * p, cy + 63 * p, { s: 8, c: '#c9d0d9' });
+    ctx.fillStyle = '#39414d'; ctx.fillRect(cx + 100 * p, cy + 59 * p, cw - 112 * p, 8 * p); ctx.fillStyle = G * (S.keep ? 1 : S.env) >= LIFT && ring ? '#f1c96b' : '#7ee0a0'; ctx.fillRect(cx + 100 * p, cy + 59 * p, (cw - 112 * p) * lv, 8 * p);
+    /* the rod, in a clamp stand: n = 1 at the middle, n = 2 at L/4 from the free end */
+    const ry = rowY, clampX = rodL + (S.n === 1 ? 0.5 : 0.25) * S.L * ppm;
+    ctx.fillStyle = T.wood; ctx.fillRect(4 * p, ry + 60 * p, W - 8 * p, 12 * p);
+    ctx.fillStyle = T.metal; ctx.fillRect(clampX - 3 * p, ry, 6 * p, 60 * p); ctx.fillRect(clampX - 14 * p, ry + 56 * p, 28 * p, 6 * p);
+    ctx.fillStyle = T.metalHi; ctx.fillRect(rodL, ry - 3 * p, S.L * ppm, 6 * p); ctx.fillStyle = T.box; ctx.fillRect(clampX - 6 * p, ry - 7 * p, 12 * p, 14 * p);
+    if (ring && !reduce) { ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * p; for (const [x, s] of [[rodL, -1], [xd, 1]]) for (let k = 1; k <= 2; k++) { ctx.beginPath(); ctx.arc(x - s * 2 * p, ry, (4 + 5 * k) * p, s > 0 ? -0.6 : PI - 0.6, s > 0 ? 0.6 : PI + 0.6); ctx.stroke(); } }
+    txt(`rod L = ${S.L.toFixed(2)} m`, rodL + S.L * ppm * 0.25, ry - 16 * p, { a: 'center', s: 10, b: 1 });
+    txt(S.n === 1 ? 'clamp at the middle' : 'clamp at L/4', clampX, ry + 82 * p, { a: 'center', s: 9, c: T.muted });
+    /* the microphone for the counter, at the free end */
+    ctx.fillStyle = T.box; ctx.beginPath(); ctx.arc(rodL - 12 * p, ry - 12 * p, 5 * p, 0, 7); ctx.fill();
+    /* the glass tube, the disc and the plunger */
+    const tTop = ry - tubeR - 6 * p, tBot = ry + tubeR + 6 * p, xr = xd + 1.42 * ppm;
+    ctx.fillStyle = T.relief; ctx.globalAlpha = 0.5; ctx.fillRect(xd - 4 * p, tTop, xr - xd + 4 * p, tBot - tTop); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(xd - 4 * p, tTop); ctx.lineTo(xr, tTop); ctx.moveTo(xd - 4 * p, tBot); ctx.lineTo(xr, tBot); ctx.stroke();
+    drawDust(xd, ppm, tBot - 1.5 * p, 0, S.l, 0.002, 1.6 * p, xd, GEO.xl);
+    ctx.fillStyle = T.box; ctx.fillRect(xd - 3 * p, tTop + 3 * p, 4 * p, tBot - tTop - 6 * p);
+    ctx.fillStyle = T.metal; ctx.fillRect(GEO.xl, tTop + 2 * p, 6 * p, tBot - tTop - 4 * p); ctx.fillRect(GEO.xl + 6 * p, ry - 2 * p, xr - GEO.xl + 30 * p, 4 * p);
+    Object.assign($('plunger').style, { left: `${GEO.xl - 6 * p}px`, top: `${tTop - 4 * p}px`, width: `${18 * p}px`, height: `${tBot - tTop + 8 * p}px` });
+    /* metre rule under the tube, 0 at the disc */
+    const rl = tBot + 22 * p; ctx.fillStyle = T.rule; ctx.fillRect(xd, rl, 1.4 * ppm, 14 * p); ctx.strokeStyle = T.ink; ctx.lineWidth = 1;
+    for (let i = 0; i <= 140; i++) { const x = xd + i / 100 * ppm, big = i % 10 === 0; if (!big && ppm < 250) continue; ctx.beginPath(); ctx.moveTo(x, rl); ctx.lineTo(x, rl + (big ? 7 : 3) * p); ctx.stroke(); if (big && (!narrow || i % 20 === 0)) txt(String(i), x, rl + 10.5 * p, { s: 8, a: 'center', m: 1 }); }
+    txt('cm', xd + 1.4 * ppm + 4 * p, rl + 7 * p, { s: 8, m: 1, c: T.muted });
+    /* the pointer */
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(GEO.xx, tTop - 10 * p); ctx.lineTo(GEO.xx, rl + 14 * p); ctx.stroke();
+    ctx.fillStyle = T.accent; ctx.beginPath(); ctx.moveTo(GEO.xx, tTop - 4 * p); ctx.lineTo(GEO.xx - 5 * p, tTop - 12 * p); ctx.lineTo(GEO.xx + 5 * p, tTop - 12 * p); ctx.fill();
+    Object.assign($('pointerH').style, { left: `${GEO.xx - 8 * p}px`, top: `${tTop - 16 * p}px`, width: `${16 * p}px`, height: `${12 * p}px` });
+    txt(`ℓ = ${(S.l * 100).toFixed(1)} cm`, GEO.xl + 8 * p, tTop - 10 * p, { s: 9, b: 1 });
+    /* close up of 16 cm of tube around the pointer, with a millimetre scale */
+    const zTop = rl + 34 * p, zH = Math.max(70 * p, Math.min(130 * p, Hh - zTop - 16 * p)), zL = 16 * p, zR = W - 16 * p, half = 0.08, zppm = (zR - zL) / (2 * half), zx0 = S.x - half;
+    if (zH > 40 * p && zTop + zH < Hh) {
+      ctx.fillStyle = T.surface; ctx.fillRect(zL, zTop, zR - zL, zH); ctx.strokeStyle = T.line; ctx.strokeRect(zL + 0.5, zTop + 0.5, zR - zL, zH);
+      const zFloor = zTop + zH - 30 * p, zx = (m) => zL + (m - zx0) * zppm;
+      ctx.save(); ctx.beginPath(); ctx.rect(zL, zTop, zR - zL, zH); ctx.clip();
+      drawDust(zx(0), zppm, zFloor, Math.max(0, zx0), Math.min(S.l, S.x + half), 0.0005, 3.2 * p, zL, Math.min(zR, zx(S.l)));
+      if (S.l < S.x + half) { ctx.fillStyle = T.metal; ctx.fillRect(zx(S.l), zTop + 4 * p, 8 * p, zFloor - zTop - 4 * p); }
+      if (zx0 < 0) { ctx.fillStyle = T.box; ctx.fillRect(zx(0) - 8 * p, zTop + 4 * p, 8 * p, zFloor - zTop - 4 * p); }
+      ctx.fillStyle = T.rule; ctx.fillRect(zL, zFloor + 2 * p, zR - zL, 26 * p); ctx.strokeStyle = T.ink;
+      for (let mm = Math.ceil(zx0 * 1000); mm <= (S.x + half) * 1000; mm++) { const x = zx(mm / 1000), big = mm % 10 === 0, mid = mm % 5 === 0; ctx.beginPath(); ctx.moveTo(x, zFloor + 2 * p); ctx.lineTo(x, zFloor + (big ? 12 : mid ? 8 : 5) * p); ctx.stroke(); if (big && mm >= 0) txt(String(mm / 10), x, zFloor + 20 * p, { s: 9, a: 'center', m: 1 }); }
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(zx(S.x), zTop); ctx.lineTo(zx(S.x), zFloor + 14 * p); ctx.stroke();
+      ctx.restore();
+      txt(`close up: 16 cm of tube around the pointer, x = ${(S.x * 100).toFixed(1)} cm`, zL + 6 * p, zTop + 10 * p, { s: 9, c: T.muted });
+    }
+  }
+
+  function tick(dt) {
+    let moved = false;
+    if (S.env > 0 && !S.keep) { S.env *= Math.exp(-dt / RING_TAU); if (S.env < 0.2) { S.env = 0; fade(); readouts(); draw(); } }
+    if (ringing()) moved = stepDust(reduce ? dt * 4 : dt);
+    if (moved || ringing()) draw();
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const rc = scene.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); fit(); }
+  const retheme = () => { tokens(); draw(); fit(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; fade(); draw(); });
+  tokens(); new ResizeObserver(resize).observe(scene); new ResizeObserver(() => draw()).observe(card);
+  const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'steel'); renderRows(); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  let last = performance.now(), acc = 0;
+  (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
+})();
+</script>
+</body>
+</html>

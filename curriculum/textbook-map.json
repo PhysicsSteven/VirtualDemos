@@ -3890,9 +3890,11 @@
         "acoustics"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "status": "usable",
+      "demos": [
+        "sound-waves"
+      ],
+      "note": "Sound Waves and the Speed of Sound (2026-10-23): displacement and pressure in an air column, 90° out of phase.",
       "unit": "sound"
     },
     {
@@ -3907,7 +3909,9 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "resonators"
+        "resonators",
+        "sound-waves",
+        "kundts-tube"
       ],
       "unit": "sound"
     },
@@ -3939,7 +3943,8 @@
       "status": "usable",
       "demos": [
         "timbre",
-        "resonators"
+        "resonators",
+        "kundts-tube"
       ],
       "unit": "sound"
     },
@@ -6765,6 +6770,54 @@
       "handouts": [
         "resonators"
       ]
+    },
+    {
+      "demo": "sound-waves",
+      "course": [
+        "acoustics"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "17.1",
+          "title": "Sound Waves"
+        },
+        {
+          "vol": 1,
+          "sec": "17.2",
+          "title": "Speed of Sound"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Acoustics module (2026-10-23): air column (17.1) and time of flight between two microphones (17.2), a second way to c beside the resonance tube.",
+      "title": "Sound Waves and the Speed of Sound",
+      "url": "demos/sound-waves.html"
+    },
+    {
+      "demo": "kundts-tube",
+      "course": [
+        "acoustics"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "17.2",
+          "title": "Speed of Sound"
+        },
+        {
+          "vol": 1,
+          "sec": "17.4",
+          "title": "Normal Modes of a Standing Sound Wave"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "needs-handout",
+      "note": "Acoustics module (2026-10-23): dust at the nodes gives c in a gas, the rod's own resonance gives c in a metal rod.",
+      "title": "Kundt's Tube",
+      "url": "demos/kundts-tube.html"
     },
     {
       "demo": "rotation-curves",

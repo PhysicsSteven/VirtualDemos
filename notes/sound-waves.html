@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sound Waves and the Speed of Sound: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Sound Waves and the Speed of Sound</h1><ul class="meta"><li><a href="../demos/sound-waves.html">Open the demo</a></li><li>Acoustics; intro physics (sound); intro lab (speed of sound)</li><li>20 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A sound wave in a gas is a longitudinal wave: each bit of gas swings back and forth along the direction the wave travels, s = s_max cos(kx − ωt), and returns to where it started.</li>
+<li>The pressure change is Δp = −B ∂s/∂x: largest where neighbouring bits of gas move toward each other (a compression), zero where the displacement is largest. Pressure and displacement are 90° (a quarter wavelength) out of phase, and Δp_max = ρvω s_max.</li>
+<li>The speed of sound in an ideal gas is v = √(γRT/M): set by the temperature and the gas, not by the frequency or the loudness. v = fλ then fixes the wavelength.</li>
+<li>The time of flight between two microphones, Δt = d/v, is a second way to measure v, independent of the resonance tube. A fit of Δt against d removes any delay common to both channels.</li>
+<li>A digital timer counts whole samples; its resolution sets how far apart the microphones must be.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need v = fλ, k = 2π/λ, ω = 2πf and the idea of a longitudinal wave. The <strong>Resonators</strong> demo's resonance tube measures v the other way; pairing the two makes a good lab. <strong>Blind</strong> hides v, λ, the predicted Δt and v from the fit; <strong>Unknown gas</strong> hides them (and ρ, Δp, I and β) for good.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>A sound wave in air.</strong> 500 Hz in air at 20 °C. Ask where the air is squeezed and where it moves most; then show the two graphs below the tube. The dashed lines mark the compressions: Δp is largest and s is zero there. Pause and step the frequency with the buttons to watch λ shrink.</li>
+<li><strong>The same note in helium.</strong> λ grows almost threefold (2.01 m) at the same f. The pressure amplitude drops to about 40% for the same displacement, because Δp_max = ρvω s_max and ρv is smaller.</li>
+<li><strong>Time a clap, 1.00 m apart.</strong> Clap, watch the front cross the bench (slowed about 400 times), and read Δt from the recorder: about 2.917 ms (140 samples). Record, change d, clap again. Plot Δt against d: the slope is 1/v.</li>
+<li><strong>A cold day, −10 °C.</strong> v drops to 325.2 m/s; over 1 m that is 8 samples more. Students can find v at two temperatures and check v ∝ √T.</li>
+<li><strong>Unknown gas.</strong> Students find v from the slope; the status line names the gas's v, γ and M when they switch away.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Use v = √(γRT/M) with γ = 1.400 and M = 28.96 g/mol to find the speed of sound in dry air at 20 °C and at −10 °C. By what fraction does v change, and how does that compare with the fraction by which the absolute temperature changes?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> A 500 Hz tone in air at 20 °C (ρ = 1.204 kg/m³) has a displacement amplitude of 1.0 μm. Find the wavelength, the pressure amplitude Δp_max = ρvω s_max, the intensity and the sound level in dB.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In the demo, the dots in the tube are bunched most where the displacement graph crosses zero, not where it is largest. Explain why, using Δp = −B ∂s/∂x.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> With the clap 0.50 m from microphone A in air at 20 °C, a student records Δt = 1.4583, 2.9167, 4.3750, 5.8333 and 7.2917 ms at d = 0.50, 1.00, 1.50, 2.00 and 2.50 m. Fit Δt against d and find v. Compare with Q1. Why do the points lie exactly on a line, and why is the result a little off?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The recorder samples at 48 kHz. How far apart must the microphones be for one clap to give v to 1%? Why measure the time between two microphones instead of from the clap to one microphone?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> The same 500 Hz tone in helium at 20 °C (v = 1007 m/s, ρ = 0.1664 kg/m³). Find λ, and the pressure amplitude for the same 1.0 μm displacement. Why is it smaller than in air?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The air travels with the sound."</strong> Each bit of air only swings back and forth about its place; the pattern travels.</li>
+<li><strong>"Pressure is highest where the air moves most."</strong> At the largest displacement the neighbouring air has moved the same way, so it is neither squeezed nor stretched: Δp = 0 there.</li>
+<li><strong>"Higher notes travel faster."</strong> In the ideal gas v does not depend on f; a higher f gives a shorter λ.</li>
+<li><strong>"Louder sound travels faster."</strong> v is the same for any small amplitude.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Ideal gas at 101325 Pa: v = √(γRT/M), ρ = PM/(RT), B = ρv² = γP (adiabatic). Dry air γ = 1.400, M = 28.9647 g/mol (as in Resonators); helium and argon γ = 5/3 with the IUPAC standard atomic weights 4.002602 and 39.948. An unknown gas has γ = 1.3, 1.4 or 5/3 and M from 4 to 60 g/mol. Humidity and real gas corrections are left out.</li>
+<li>The wave: s = s_max cos(kx − ωt), Δp = −B ∂s/∂x = ρvω s_max sin(kx − ωt), I = Δp_max²/(2ρv), β = 10 log₁₀(I/10⁻¹² W/m²). Plane wave, no loss. The drawing slows the motion to one cycle in 2 s and exaggerates the displacement by the factor shown.</li>
+<li>Time of flight: clap and microphones on one line. A two channel recorder samples at 48 kHz (chosen) with its clock at a random phase at each clap; each channel triggers on the first sample at or after the sound arrives, so Δt is a whole number of samples (20.83 μs each). Averaged over the clock phase the reading is exactly d/v. The drawn pulse (2 kHz, dying away in 0.25 ms, size falling as 1/r) is chosen and does not affect the timing.</li>
+<li>Simulated data; the only scatter is the sampling clock's phase.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>
