@@ -4543,8 +4543,10 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Lecture demo: draggable vectors with components, A + B (head to tail or parallelogram), A − B, dot and cross products; river crossing with v_bs = v_bw + v_ws, aim to land straight across. Blind hides results. 3D vectors and unit vector algebra in 3D not covered. Force table setup (2026-10-23, Claude): 2 to 4 strings, mass (with hanger) and angle each, pulley friction as a chosen tolerance, equilibrant and net force readouts, Record this setup and Export to worksheet (worksheet force-table, handout to come).",
-      "handouts": [],
+      "note": "New 2026-10-22 (Claude). Lecture demo: draggable vectors with components, A + B (head to tail or parallelogram), A − B, dot and cross products; river crossing with v_bs = v_bw + v_ws, aim to land straight across. Blind hides results. 3D vectors and unit vector algebra in 3D not covered. Force table setup (2026-10-23, Claude): 2 to 4 strings, mass (with hanger) and angle each, pulley friction as a chosen tolerance, equilibrant and net force readouts, Record this setup and Export to worksheet (worksheet and handout force-table).",
+      "handouts": [
+        "force-table"
+      ],
       "title": "Vectors and Relative Motion",
       "url": "demos/vectors.html"
     },

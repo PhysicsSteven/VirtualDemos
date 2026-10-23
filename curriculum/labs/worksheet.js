@@ -12,7 +12,7 @@
   /* Physics I worksheets (physics-1.html). Add a worksheet's file name here to make it interactive. */
   const PHYSICS_I = ['collisions', 'energy-sources', 'estimation-and-evidence', 'fluids', 'forces', 'impulse', 'kepler-orbits',
     'measurement-and-units', 'motion-graphs', 'pendulum', 'potential-curves', 'projectile-drag', 'rotation', 'rotational-dynamics',
-    'springs', 'stress-strain', 'viscometer', 'force-table'];   /* force-table: GPT's handout is still to come; nothing happens until it exists */
+    'springs', 'stress-strain', 'viscometer', 'force-table'];
   const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for

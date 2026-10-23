@@ -114,6 +114,7 @@ DEMO_NOTE = {'needs-handout': 'Student handout being revised', 'needs-feature': 
 # Link label for each student handout: "Worksheet: <topic>", or "Worksheet <n>: <topic>" when a demo has several
 # (numbered in the map's order). Add an entry here when a handout is added to the map.
 HANDOUT_TOPIC = {
+    'force-table': 'Force Table',
     'motion-graphs': 'Motion Graphs', 'projectile-drag': 'Projectiles and Air Resistance', 'forces': 'Friction and Work',
     'potential-curves': 'Potential Energy Diagrams', 'impulse': 'Impulse', 'collisions': 'Collisions',
     'rotation': 'Torque and Angular Momentum', 'kepler-orbits': "Kepler's Third Law", 'stress-strain': "Young's Modulus",
