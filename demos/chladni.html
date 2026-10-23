@@ -612,7 +612,7 @@ window.VDGear = (function () {
           <p>Circle: exact solution, w = [J_n(λr/a) + C I_n(λr/a)] cos nθ, with the free edge frequency equation solved to 12 digits. Square: no closed form; Rayleigh–Ritz with Legendre polynomials up to degree 30 in x and in y (961 terms, split into symmetry classes), converged to better than 1 part in a million for every mode shown.</p>
           <p>Damping: every flexural mode has the same Q (default 50, a model choice: a plate bolted to a driver and carrying sand is heavily damped). The response is the sum over all computed modes, between resonances too. The sand's mass does not load the plate.</p>
           <p>Drive level: PASCO publishes no force rating for its wave drivers. The SF-9324 manual gives amplitudes up to 7 mm peak to peak at low frequency, and its product page about 5 mm up to about 50 Hz; the WA-9855 takes at most 1.2 A. The demo takes full drive to be the coil force that moves the driver's 50 g alone 3.5 mm at 50 Hz, F = m_d (2π·50 Hz)² × 3.5 mm = 17 N, and never lets the post move more than 3.5 mm (the stroke limit). The <b>Driver setting x₀</b> is the amplitude the setting would give the driver alone at 50 Hz. These numbers are estimates, not measurements.</p>
-          <p>Sand is phenomenological, not a granular simulation. Where the local acceleration amplitude |a| exceeds g the plate throws a grain off once a cycle, at the moment its acceleration passes −g, with launch speed v_L = (g/2πf)√((|a|/g)² − 1). It flies for t_f = 2v_L/g. A grain moves on average at v_L: when t_f is shorter than 1/60 s it moves v_L × 1/60 s every 1/60 s; when it is longer it lands only once per flight, a hop of v_L × t_f in a random direction plus a drift of up to 0.5 of a hop toward smaller |a|: full where |a| changes by a factor of 4 or more across a half plate width relative to itself (near nodes), proportionally less where the plate moves nearly as a whole. The drift stands in for grains bouncing off the tilted, moving surface, which carries them toward the nodes. Where |a| &lt; g a grain stays put. So at low frequency, where v_L is large, sand hops far and the plate looks chaotic; at high frequency it buzzes and creeps. Grains in flight are drawn with a slight blur; grains that pass the edge fall off. Very light powder (lycopodium) gathers at the antinodes instead, carried by air currents over the plate (Faraday, 1831); air is not modeled.</p>
+          <p>Sand is phenomenological, not a granular simulation. Where the local acceleration amplitude |a| exceeds g the plate throws a grain off once a cycle, at the moment its acceleration passes −g, with launch speed v_L = (g/2πf)√((|a|/g)² − 1). It flies for t_f = 2v_L/g. A grain moves on average at v_L: when t_f is shorter than 1/60 s it moves v_L × 1/60 s every 1/60 s; when it is longer it lands only once per flight, a hop of v_L × t_f in a random direction plus a drift of up to 0.5 of a hop toward smaller |a|: full where |a| changes by a factor of 4 or more across a half plate width relative to itself (near nodes), proportionally less where the plate moves nearly as a whole. The drift stands in for grains bouncing off the tilted, moving surface, which carries them toward the nodes. Where |a| &lt; g a grain stays put. So at low frequency, where v_L is large, sand hops far and the plate looks chaotic; at high frequency it buzzes and creeps. Grains in flight are drawn with a slight blur; grains that pass the edge fall off. The plate starts with 24,000 grains (12,000 on a phone, a tablet or a computer with 4 cores or fewer), each drawn about a pixel across: the count and the drawn size are a picture, not real sand. Very light powder (lycopodium) gathers at the antinodes instead, carried by air currents over the plate (Faraday, 1831); air is not modeled.</p>
         </div>
         </div></details>
       </section>
@@ -1037,7 +1037,9 @@ window.VDGear = (function () {
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
   const TAU = 2 * Math.PI;
-  const GN = 101, NSAND = 6000, HALF = 0.12;      // field grid nodes per side; sand grains; half width of either plate, m
+  /* sand grains: 24000 of them (12000 on a phone or tablet, or a computer with 4 cores or fewer, to stay smooth); how big a grain is drawn is a picture */
+  const LITE = (() => { try { return (navigator.hardwareConcurrency || 4) <= 4 || matchMedia('(pointer: coarse)').matches; } catch (_) { return false; } })();
+  const GN = 101, NSAND = LITE ? 12000 : 24000, HALF = 0.12;      // field grid nodes per side; sand grains; half width of either plate, m
   const F_MIN = 20, F_CAP = 8000;
   const EPS = 1, DRIFT = 0.5, REL0 = 4, TICK = 1 / 60;   // sand: grain speed = EPS × launch speed, drift, relative slope for full drift (per half width), tick (s)
   const hop = (gam, u) => hopLength(gam, S.f, EPS, TICK, u) / HALF;
@@ -1502,6 +1504,27 @@ window.VDGear = (function () {
     hc.putImageData(img, 0, 0);
   }
 
+  /* the grains are written as pixels into an offscreen layer the size of the plate (in device pixels), then drawn in one go */
+  const sandCv = document.createElement('canvas'); let sandImg = null, sandBuf = null;
+  function drawSand(p, ps) {
+    const x0 = U2X(-1), y0 = V2Y(1), wc = 2 * p.R, pw = Math.max(1, Math.ceil(wc * dpr)), k = dpr * pw / Math.max(1e-9, wc * dpr);
+    if (sandCv.width !== pw || sandCv.height !== pw || !sandImg) { sandCv.width = pw; sandCv.height = pw; sandImg = sandCv.getContext('2d').createImageData(pw, pw); sandBuf = new Uint32Array(sandImg.data.buffer); }
+    sandBuf.fill(0);
+    const m = /^#?([0-9a-f]{6})$/i.exec(T.sand || '#f1e6c9'), rgb = m ? [0, 2, 4].map((i) => parseInt(m[1].slice(i, i + 2), 16)) : [241, 230, 201];
+    const col = new Uint32Array(new Uint8ClampedArray([rgb[0], rgb[1], rgb[2], 255]).buffer)[0];
+    const n = Math.max(1, Math.round(Math.max(0.9, p.R / 300) * (ps > 1 ? 1.15 : 1) * dpr)), off = (n - 1) / 2;   /* grain size in device pixels */
+    const jit = running ? Math.max(1.3, p.R / 190) * 0.9 * dpr : 0;   /* grains in flight jitter as far as before the grains got smaller */
+    for (let i = 0; i < NSAND; i++) {
+      if (!sand.alive[i]) continue;
+      let x = (U2X(sand.x[i]) - x0) * dpr * k, y = (V2Y(sand.y[i]) - y0) * dpr * k;
+      if (jit && sand.g[i] > 1) { const j = jit * Math.min(2.2, 0.6 + 0.4 * (sand.g[i] - 1)); x += (Math.random() - 0.5) * j; y += (Math.random() - 0.5) * j; }
+      const ix = Math.round(x - off), iy = Math.round(y - off);
+      for (let b = 0; b < n; b++) { const yy = iy + b; if (yy < 0 || yy >= pw) continue; const row = yy * pw;
+        for (let a = 0; a < n; a++) { const xx = ix + a; if (xx >= 0 && xx < pw) sandBuf[row + xx] = col; } }
+    }
+    sandCv.getContext('2d').putImageData(sandImg, 0, 0);
+    ctx.imageSmoothingEnabled = false; ctx.drawImage(sandCv, x0, y0, wc, wc); ctx.imageSmoothingEnabled = true;
+  }
   function drawPlate(ps) {
     const p = G.plate, c = ctx;
     // lamp light on the bench
@@ -1517,14 +1540,7 @@ window.VDGear = (function () {
     c.save(); platePath(c); c.clip();
     if (S.heat) { if (heatDirty) updateHeat(); c.imageSmoothingEnabled = true; c.drawImage(heatCv, U2X(-1), V2Y(1), 2 * p.R, 2 * p.R); }
     // sand: grains in flight jitter slightly
-    c.fillStyle = T.sand; const sz = Math.max(1.3, p.R / 190) * (ps > 1 ? 1.15 : 1), hs = sz / 2;
-    const jit = running ? sz * 0.9 : 0;
-    for (let i = 0; i < NSAND; i++) {
-      if (!sand.alive[i]) continue;
-      let x = U2X(sand.x[i]), y = V2Y(sand.y[i]);
-      if (jit && sand.g[i] > 1) { const j = jit * Math.min(2.2, 0.6 + 0.4 * (sand.g[i] - 1)); x += (Math.random() - 0.5) * j; y += (Math.random() - 0.5) * j; }
-      c.fillRect(x - hs, y - hs, sz, sz);
-    }
+    drawSand(p, ps);
     if (S.nodal) {
       if (nodalDirty) updateNodal();
       c.strokeStyle = T.nodal; c.lineWidth = 1.6 * ps; c.setLineDash([5 * ps, 4 * ps]); c.beginPath();
@@ -1795,7 +1811,7 @@ window.VDGear = (function () {
     const plateMat = new THREE.MeshStandardMaterial({ color: 0x3a3f47, metalness: 0.45, roughness: 0.55, side: THREE.DoubleSide });
     const mesh = new THREE.Mesh(new THREE.BufferGeometry(), plateMat); scene.add(mesh);
     const sandGeo = new THREE.BufferGeometry(); sandGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NSAND * 3), 3));
-    const sandMat = new THREE.PointsMaterial({ color: 0xf1e6c9, size: 2.2, sizeAttenuation: false });
+    const sandMat = new THREE.PointsMaterial({ color: 0xf1e6c9, size: 1.0, sizeAttenuation: false });
     const pts = new THREE.Points(sandGeo, sandMat); scene.add(pts);
     const post = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, POST_LEN, 20), new THREE.MeshStandardMaterial({ color: 0xa7740b, metalness: 0.7, roughness: 0.35 }));
     post.rotation.x = Math.PI / 2; scene.add(post);
