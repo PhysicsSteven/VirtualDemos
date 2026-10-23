@@ -1482,7 +1482,7 @@ window.VDGear = (function () {
   let fGeom = null;
   function flatGeom() {
     const [W, H] = dims.f, b = C.box, pad = 16 * projScale(), top = 8 + (S.view === 'flat' ? 74 : 0) * projScale();
-    const s = Math.min((W - 2 * pad) / (2000 * b.x), (H - top - pad) / (1000 * (b.z1 - b.z0)));
+    const s = Math.max(1e-3, Math.min((W - 2 * pad) / (2000 * b.x), (H - top - pad) / (1000 * (b.z1 - b.z0))));   /* a picture too small to draw in still gets a positive scale */
     const cx = W / 2 + (W > 420 ? 30 : 0) * projScale(), cy = top + (H - top - pad) / 2, zc = 500 * (b.z0 + b.z1);
     return { s, X: (xmm) => cx + xmm * s, Y: (zmm) => cy - (zmm - zc) * s, ix: (px) => (px - cx) / s, iz: (py) => zc - (py - cy) / s };
   }
