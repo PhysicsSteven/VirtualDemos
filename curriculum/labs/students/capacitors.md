@@ -1,7 +1,7 @@
 # Capacitance, Dielectrics and Stored Energy
 Student laboratory · Physics II
 
-Textbook: OpenStax *University Physics*, Vol. 2, §§8.1–8.4. Access for free at https://openstax.org/details/books/university-physics-volume-2.
+Textbook: OpenStax *University Physics*, Vol. 2, §§8.1–8.5. Access for free at https://openstax.org/details/books/university-physics-volume-2.
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/capacitors.html)
 
@@ -60,6 +60,8 @@ Discharge real capacitors through a suitable resistor before handling them. Obse
 
 **Combinations.** Measure the equivalent capacitance and component voltages for 10, 22 and 47 pF capacitors in series, parallel and the mixed arrangement. Draw each circuit and calculate its predicted equivalent capacitance before measuring.
 
+**Inside the dielectric (§8.5).** Open Inside the dielectric. For water and then benzene, with the free charge's field at about 10 kV/m, 100 kV/m and 1 MV/m, read $$\kappa$$, the field inside, the free and bound charge densities and the average dipole per molecule (for water also the average alignment, for benzene the shift of the electron cloud). These readings are not part of the Data table; record them in your answer to Analysis 6.
+
 **Using the virtual apparatus.** Compare connected and isolated parallel plates, beginning near an area of 144 cm², a separation of 1.00 cm and a battery voltage of 100 V. Begin each geometry scan from a clearly recorded starting state and measure capacitance, charge and voltage at five separations, with predictions hidden. Send each scan to the worksheet before changing the setup, so connected and isolated scans get their own copies of the Data table. For the dielectric scan, keep the gap fixed and measure five insertion fractions, again comparing connected and isolated plates. Analyze $$C$$ against $$1/d$$, $$C$$ against insertion fraction and $$V$$ against $$d$$ for the appropriate cases. Finally, compare series, parallel and mixed networks of 10, 22 and 47 pF capacitors. Record energy and work observations separately if they are not visible during blind measurement; reveal predictions only after completing your calculations.
 
 ## Data
@@ -79,6 +81,7 @@ Use a separate copy for each scan. For networks, put the component label in the 
 3. Plot $$C$$ against inserted fraction. Infer $$\kappa$$ from the fully filled and empty values. Do not use $$C = \kappa C_0$$ if an air gap remains beside the slab thickness.
 4. Compare stored energy in connected and isolated scans. Use the battery work $$V\Delta Q$$ to explain the energy change in the connected case.
 5. Test the series/parallel formulas and sum the component energies. The mixed arrangement has $$C_1$$ in series with the parallel pair $$C_2$$ and $$C_3$$.
+6. For the dielectric readings, check that the field inside is $$E_0/\kappa$$ and that the bound charge density is $$(1 - 1/\kappa)$$ times the free charge density. How does the average dipole per molecule depend on $$E_0$$? Water's molecules line up only a few parts in a million on average, yet water has $$\kappa = 80.1$$. Explain how, and how benzene, whose molecules have no permanent dipole, is polarized instead.
 
 ## Uncertainty
 
@@ -90,6 +93,7 @@ Include plate area and gap resolution in the capacitance comparison. A small gap
 2. Why can inserting a dielectric increase $$U$$ at fixed $$V$$ but decrease $$U$$ at fixed $$Q$$?
 3. Why is the smallest series capacitor at the largest voltage?
 4. Does the battery's work all become stored electric energy when capacitance changes?
+5. A dielectric carries no net charge. Why does it still reduce the field between the plates?
 
 ## What to hand in
 

@@ -1,7 +1,7 @@
 # Measuring a Wire's Resistivity
 Student laboratory · Physics II
 
-Textbook: OpenStax *University Physics*, Vol. 2, §§9.3–9.4. Access for free at https://openstax.org/details/books/university-physics-volume-2.
+Textbook: OpenStax *University Physics*, Vol. 2, §§9.3–9.4 and §9.6. Access for free at https://openstax.org/details/books/university-physics-volume-2.
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/resistivity.html)
 
@@ -60,6 +60,8 @@ For a real wire bench, use the assigned current limit, switch off before moving 
 
 **Temperature scan.** Use one diameter and a fixed length. On a real bench, wait for thermal equilibrium before each reading. Record at least six temperatures over the instructor-approved range, including a reading at 20 °C. Fit $$R$$ against $$T$$ and infer $$\alpha$$. In the virtual apparatus, use 0, 20, 40, 60, 80 and 100 °C. This is a prescribed linear model, not a test of whether an actual alloy remains linear over every temperature range.
 
+**Cold stage (§9.6).** Choose Cold stage. Cool a copper sample from room temperature and note $$R/R(293\ \mathrm{K})$$ as it passes about 200, 77, 20 and 4.2 K, and the value it levels off at. Repeat at a lower and a higher sample purity. Then cool lead, tin, aluminum and YBCO, and find the temperature at which each one's resistance drops to zero. These readings are not part of the Data table; record them in your answer to Analysis 5.
+
 **Using the virtual apparatus.** Investigate the Mystery wire with predictions and answers hidden. Start with a 0.405 mm diameter, 0.20 A and 20 °C. Record readings at six lengths from 0.10 to 1.00 m and determine the slope of $$R$$ against $$L$$. Repeat the length scan with the 0.255 mm wire at the same current and temperature. For the temperature scan, keep that diameter and $$L = 0.500\ \text{m}$$ and measure at 0, 20, 40, 60, 80 and 100 °C; graph $$R$$ against $$T$$. Send each scan to the worksheet before clearing, so each gets its own copy of the Data table; the demo's fit uses only rows matching the current material, diameter and either temperature or length. The Mystery setting hides calculated material properties.
 
 ## Data
@@ -78,6 +80,7 @@ Copy this table for each scan. Record real meter ranges/resolutions and diameter
 2. Compare the slope ratio with the inverse squared diameter ratio. Compare the two inferred resistivities and the repeated-current check.
 3. Fit $$R$$ against $$T$$. Calculate $$R_{20}$$ from the fitted line, then $$\alpha$$. Compare fitted $$R_{20}$$ with the direct 20 °C reading.
 4. Explain what a nonzero length-fit intercept could mean on a real bench. Distinguish a possible lead/contact effect from random reading scatter.
+5. For the cold stage, describe how copper's resistance changes as it cools and what sets the value it levels off at; compare that value with the purity setting. Give the critical temperature of lead, tin, aluminum and YBCO, and say which can be reached with liquid nitrogen (77 K) and which need liquid helium (4.2 K) or colder.
 
 ## Uncertainty
 
@@ -89,6 +92,7 @@ The virtual voltmeter records four significant figures; current is the set value
 2. Why can a real wire's resistance change when supply current is raised, even if the material is locally ohmic?
 3. Why is four-wire sensing useful for a low-resistance specimen?
 4. Can a near-zero $$\alpha$$ prove that a material is a perfect conductor?
+5. Why can the current in a superconducting magnet keep flowing for years with no power supply connected?
 
 ## What to hand in
 
