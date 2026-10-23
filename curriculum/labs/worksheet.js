@@ -35,14 +35,14 @@
     'stress-strain': { demo: 'Stress and Strain', cols: ['row', 'd_mm', '#wire_length_m', 'm_kg', 'dL_mm', null, null] },
     viscometer: { demo: 'Falling Ball Viscometer', cols: ['row', (r) => [r.liquid, r.ball].filter(Boolean).join(' / '), (r) => [r.rho_liquid_kg_m3, r.rho_ball_kg_m3].filter(Boolean).join(' / '), 'tube_D_mm', 'd_mm', 't_s', 'v_m_per_s', null, null, null] },
   };
-  /* A live graph under a worksheet's data table, drawn from the student's own cells: y against x with a least squares line (free
-     intercept, equal weights), its residuals, and a result computed from the slope. x and y name a column by its position in the
-     first data table; y may fall back to another column squared. Nothing is plotted from the demo directly. */
-  const PLOTS = {
-    pendulum: { x: 2, y: 6, yFrom: { col: 5, square: true }, xName: 'L', xUnit: 'm', yName: 'T²', yUnit: 's²', title: 'T² against L',
-      note: 'Each row with a number for L and for T² (or T, squared here) is a point. Use the rows of one length scan.',
-      result: (f) => { const g = 4 * Math.PI * Math.PI / f.b, sg = g * f.seB / Math.abs(f.b); return [['g = 4π²/slope', g, sg, 'm/s²']]; } },
-  };
+  /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
+     graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
+     their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
+  const GRAPHS = ['pendulum'];
+  /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
+  const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
+  const pretty = (h) => String(h || '').replace(/\^([23])/g, (m, d) => SUP[d]).replace(/_(\d)/g, (m, d) => SUB[d]);
+  const nameUnit = (h) => { const m = pretty(h).match(/^(.*?)\s*\(([^()]*)\)\s*$/); return m ? [m[1] || h, m[2]] : [String(h || ''), '']; };
   const ANSWER_LISTS = /^(before-the-lab|before-the-activity|analysis|questions)$/, ONE_BOX = /^uncertainty$/;
   const m = location.pathname.match(/\/curriculum\/labs\/students\/([a-z0-9-]+?)(?:\.html)?$/);
   if (!m || ENABLED.indexOf(m[1]) < 0) return;
@@ -108,6 +108,9 @@
 .ws-answer-one { margin: 6px 0 14px; } .ws-answer-one label { font-size: 0.85em; font-weight: 600; color: #24292f; }
 .ws-print { display: none; }
 .ws-plot { margin: 10px 0 4px; } .ws-plot h3 { font-size: 1em; margin: 0 0 4px; } .ws-plot svg { width: 100%; height: auto; display: block; max-width: 640px; }
+.ws-axes { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 6px; } .ws-axes label { font-size: 0.9em; font-weight: 600; display: flex; align-items: center; gap: 6px; }
+.ws select.ws-sel { width: auto; max-width: 15em; padding: 4px 6px; font-weight: 400; }
+@media print { .ws-axes { display: none; } }
 .ws-plot .ws-res { font-size: 0.95em; margin: 6px 0 2px; } .ws-plot .ws-res b { font-weight: 600; }
 .ws-plot .ws-warn2 { color: #9a6700; font-weight: 600; font-size: 0.9em; margin: 4px 0; } .ws-plot .ws-pnote { font-size: 0.85em; color: #57606a; margin: 2px 0; }
 .ws-hand { border: 1px solid #54aeff; background: #ddf4ff; border-radius: 8px; padding: 8px 12px; margin: 0 0 12px; } .ws-hand p { margin: 2px 0; }
@@ -225,7 +228,7 @@
     R.removeRow = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Remove the last added row', hidden: true, on: { click: () => { dropRow(R); changed(); } } });
     const after = el('div', { class: 'ws tex2jax_ignore' }, [el('div', { class: 'ws-btns' }, [addRow, R.removeRow]),
       el('div', { class: 'ws-notes' }, [el('label', { text: R.label ? 'Settings and notes for this copy' : 'Settings and notes for this table' }), withPrint(R.notes)])]);
-    if (PLOTS[SLUG] && T.index === 0) { R.plot = el('div', { class: 'ws-plot' }); after.appendChild(R.plot); }
+    if (GRAPHS.indexOf(SLUG) >= 0 && T.index === 0) graphBox(T, R, after);
     if (existing) {
       /* the original table can go once a copy exists (when a later copy is the one to keep) */
       R.after = after;
@@ -334,7 +337,7 @@
     const S = { worksheet: SLUG, title: TITLE, version: VERSION, saved: new Date().toISOString(), student: {}, tables: [], answers: {}, unplaced: leftovers, received };
     WHO.forEach(([k]) => { S.student[k] = who[k].value; });
     tables.forEach((T) => S.tables.push({ columns: T.cols, runs: T.runs.map((R) => ({ label: R.label ? R.label.value : null, notes: R.notes.value, source: R.source || null,
-      removed: R.removed || undefined, rows: R.rows.map((r) => r.cells.map((f) => (f ? f.value : null))) })) }));
+      removed: R.removed || undefined, axes: R.axes, rows: R.rows.map((r) => r.cells.map((f) => (f ? f.value : null))) })) }));
     answers.forEach((a) => { if (a.f.value) S.answers[a.key] = { q: a.q, text: a.f.value }; });
     return S;
   }
@@ -362,6 +365,7 @@
         if (R.label) R.label.wsSet(sr.label || '');
         R.source = sr.source || null;
         if (ri === 0 && R.dropSelf) showOriginal(T, !sr.removed);
+        setAxes(R, sr.axes);
         R.notes.wsSet(sr.notes || '');
         (sr.rows || []).forEach((cells, i) => {
           const row = R.rows[i] || newRow(T, R);
@@ -442,7 +446,7 @@
   function clearAll() {
     if (!confirm('Clear your name, data and answers from this worksheet? Save to a file first if you might need them.')) return;
     reset(); apply({ student: {}, tables: tables.map(() => ({ runs: [] })), answers: {} });
-    tables.forEach((T) => T.runs.forEach((R) => { R.source = null; }));
+    tables.forEach((T) => T.runs.forEach((R) => { R.source = null; setAxes(R, null); }));
     tables.forEach((T) => T.runs.forEach((R) => { R.rows.forEach((r) => r.cells.forEach((f) => f && f.wsSet(''))); R.notes.wsSet(''); }));
     try { localStorage.removeItem(KEY); } catch (_) {}
     setStatus('Cleared.'); checkHand(); replot();
@@ -450,7 +454,21 @@
 
   /* ---------- graphs ---------- */
   addEventListener('resize', () => replot());
-  function replot() { if (!PLOTS[SLUG] || plotFrame) return; plotFrame = requestAnimationFrame(() => { plotFrame = 0; tables[0] && tables[0].runs.forEach((R) => R.plot && drawPlot(PLOTS[SLUG], R)); }); }
+  function replot() { if (GRAPHS.indexOf(SLUG) < 0 || plotFrame) return; plotFrame = requestAnimationFrame(() => { plotFrame = 0; tables[0] && tables[0].runs.forEach((R) => R.graph && drawPlot(tables[0], R)); }); }
+  function graphBox(T, R, after) {
+    R.axes = { x: '', y: '' };
+    const pick = (k, label) => {
+      const s = el('select', { class: 'ws-f ws-sel', 'aria-label': label, on: { change: () => { R.axes[k] = s.value; changed(); } } },
+        [el('option', { value: '', text: 'choose a column' })].concat(T.cols.map((c, i) => el('option', { value: String(i), text: pretty(c) || 'Column ' + (i + 1) }))));
+      R.axesSel = R.axesSel || {}; R.axesSel[k] = s; return s;
+    };
+    R.graph = el('div');
+    const box = el('div', { class: 'ws-plot' }, [el('h3', { text: 'Graph' }),
+      el('div', { class: 'ws-axes' }, [el('label', {}, ['Vertical axis (y) ', pick('y', 'Column for the vertical axis')]), el('label', {}, ['Horizontal axis (x) ', pick('x', 'Column for the horizontal axis')])]),
+      R.graph]);
+    after.appendChild(box);
+  }
+  const setAxes = (R, a) => { if (!R.axesSel) return; R.axes = { x: (a && a.x) || '', y: (a && a.y) || '' }; R.axesSel.x.value = R.axes.x; R.axesSel.y.value = R.axes.y; };
   const numOf = (f) => { if (!f) return NaN; const t = String(f.value).trim().replace('−', '-').replace(/,/g, ''); return t && /^[-+]?(\d+\.?\d*|\.\d+)(e[-+]?\d+)?$/i.test(t) ? +t : NaN; };
   function fitLine(xs, ys) {
     const n = xs.length; if (n < 2) return null;
@@ -486,37 +504,41 @@
     return { X, Y };
   }
   const pad = (lo, hi, inc0) => { if (inc0) { lo = Math.min(lo, 0); hi = Math.max(hi, 0); } const d = (hi - lo) || Math.abs(hi) || 1; return [lo - 0.08 * d, hi + 0.08 * d]; };
-  function drawPlot(P, R) {
+  function drawPlot(T, R) {
+    const box = R.graph; box.innerHTML = '';
+    if (R.axes.x === '' || R.axes.y === '') { box.appendChild(el('p', { class: 'ws-pnote', text: 'Choose a column for each axis to draw a graph of your data.' })); return; }
+    const cx = +R.axes.x, cy = +R.axes.y, [xName, xUnit] = nameUnit(T.cols[cx]), [yName, yUnit] = nameUnit(T.cols[cy]);
+    const P = { xName, xUnit, yName, yUnit, title: `${yName} against ${xName}` };
     const pts = [];
-    R.rows.forEach((r) => {
-      const x = numOf(r.cells[P.x]); let y = numOf(r.cells[P.y]);
-      if (!isFinite(y) && P.yFrom) { const v = numOf(r.cells[P.yFrom.col]); y = P.yFrom.square ? v * v : v; }
+    R.rows.forEach((r, i) => {
+      const val = (c) => (r.cells[c] ? numOf(r.cells[c]) : numOf({ value: T.tpl[i] && T.tpl[i][c] ? T.tpl[i][c].text : '' }));
+      const x = val(cx), y = val(cy);
       if (isFinite(x) && isFinite(y)) pts.push([x, y]);
     });
-    const box = R.plot; box.innerHTML = '';
-    box.appendChild(el('h3', { text: `Graph: ${P.title}${R.label && R.label.value ? ' (' + R.label.value + ')' : ''}` }));
-    if (!pts.length) { box.appendChild(el('p', { class: 'ws-pnote', text: `${P.note} The graph appears here as you fill the table.` })); return; }
+    if (!pts.length) { box.appendChild(el('p', { class: 'ws-pnote', text: `No row has a number in both columns yet. Each row with a number for ${xName} and for ${yName} is a point.` })); return; }
     const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
     const sameX = xs.every((x) => x === xs[0]);
     const f = sameX ? null : fitLine(xs, ys);
-    const W = Math.round(Math.min(640, Math.max(330, box.clientWidth || 640))), H = f ? 380 : 270, /* drawn at the page's width so the labels stay readable on a phone */ svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${P.title}, ${pts.length} points` });
+    const W = Math.round(Math.min(640, Math.max(330, R.graph.parentNode.clientWidth || 640))), H = f ? 380 : 270, /* drawn at the page's width so the labels stay readable on a phone */ svg = sv('svg', { viewBox: `0 0 ${W} ${H}`, role: 'img', 'aria-label': `${P.title}, ${pts.length} points` });
     const xr = pad(Math.min(...xs), Math.max(...xs), true), yr = pad(Math.min(...ys), Math.max(...ys), true);
-    const A = axes(svg, { x: 62, y: 10, w: W - 80, h: 210 }, xr, yr, f ? '' : `${P.xName} (${P.xUnit})`, `${P.yName} (${P.yUnit})`, 5);
+    const lab = (n, u) => (u ? `${n} (${u})` : n);
+    const A = axes(svg, { x: 62, y: 10, w: W - 80, h: 210 }, xr, yr, f ? '' : lab(P.xName, P.xUnit), lab(P.yName, P.yUnit), 5);
     if (f) svg.appendChild(sv('line', { x1: A.X(xr[0]), y1: A.Y(f.a + f.b * xr[0]), x2: A.X(xr[1]), y2: A.Y(f.a + f.b * xr[1]), stroke: '#1f6feb', 'stroke-width': 2 }));
     pts.forEach(([x, y]) => svg.appendChild(sv('circle', { cx: A.X(x), cy: A.Y(y), r: 4.5, fill: '#cf222e', stroke: '#fff', 'stroke-width': 1 })));
     if (f) {
-      const m = Math.max(...f.res.map(Math.abs)) || 1, B = axes(svg, { x: 62, y: 250, w: W - 80, h: 90 }, xr, [-1.25 * m, 1.25 * m], `${P.xName} (${P.xUnit})`, `residual (${P.yUnit})`, 4);
+      const m = Math.max(...f.res.map(Math.abs)) || 1, B = axes(svg, { x: 62, y: 250, w: W - 80, h: 90 }, xr, [-1.25 * m, 1.25 * m], lab(P.xName, P.xUnit), lab('residual', P.yUnit), 4);
       svg.appendChild(sv('line', { x1: B.X(xr[0]), x2: B.X(xr[1]), y1: B.Y(0), y2: B.Y(0), stroke: '#1f6feb', 'stroke-width': 1.5 }));
       xs.forEach((x, i) => svg.appendChild(sv('circle', { cx: B.X(x), cy: B.Y(f.res[i]), r: 3.5, fill: '#cf222e' })));
     }
     box.appendChild(svg);
-    if (sameX) { box.appendChild(el('p', { class: 'ws-warn2', text: `Every point has the same ${P.xName} (${xs[0]} ${P.xUnit}), so there is no slope to fit. Use rows where ${P.xName} changes.` })); return; }
+    if (sameX) { box.appendChild(el('p', { class: 'ws-warn2', text: `Every point has the same ${P.xName} (${xs[0]}${P.xUnit ? ' ' + P.xUnit : ''}), so there is no slope to fit. Use rows where ${P.xName} changes, or choose another column.` })); return; }
     if (!f) return;
-    const lines = [['slope', f.b, f.seB, `${P.yUnit}/${P.xUnit}`], ['intercept', f.a, f.seA, P.yUnit]].concat(P.result ? P.result(f) : []);
+    const su = P.yUnit && P.xUnit ? `${P.yUnit}/${P.xUnit}` : P.yUnit || (P.xUnit ? `1/${P.xUnit}` : '');
+    const lines = [['slope', f.b, f.seB, su], ['intercept', f.a, f.seA, P.yUnit]];
     const res = el('p', { class: 'ws-res' });
     lines.forEach(([name, v, e, u], i) => { if (i) res.appendChild(el('br')); res.appendChild(el('b', { text: name + ': ' })); res.appendChild(document.createTextNode(pm(v, e, u))); });
     box.appendChild(res);
-    box.appendChild(el('p', { class: 'ws-pnote', text: `${f.n} points. Least squares line with a free intercept and equal weights; uncertainties are standard errors from the scatter about the line (n − 2 degrees of freedom), and the uncertainty in the result follows from the slope's. ${P.note}` }));
+    box.appendChild(el('p', { class: 'ws-pnote', text: `${f.n} points. Least squares line with a free intercept and equal weights; uncertainties are standard errors from the scatter about the line (n − 2 degrees of freedom). What the slope tells you is for you to work out.` }));
   }
 
   /* ---------- readings from the demo ---------- */

@@ -557,3 +557,8 @@ After the pendulum pilot, Steve asked for it everywhere in Physics I. **Export C
 ## Claude, 2026-10-23 18:45: live graph pilot on the pendulum worksheet (Steve's request)
 
 `worksheet.js` has a `PLOTS` config. For pendulum, under each copy of the Data table: T² against L from the student's cells (T² column, or T squared when T² is blank), a least squares line with a free intercept and equal weights, a residual plot, slope and intercept with standard errors (n − 2), and g = 4π²/slope with its uncertainty from the slope's. If every L is the same (an amplitude or mass scan), it says there is no slope to fit. Drawn as inline SVG at the page width; prints with the page. Pilot only: Steve looks at it before graphs go on other worksheets. A new graph needs only a `PLOTS` entry (columns, names, units, the result from the slope).
+
+## Claude, 2026-10-23 18:50: worksheet graph changes after Steve's review
+
+- The student now chooses the columns for both axes (two dropdowns above the graph, saved with the worksheet); nothing is plotted until both are chosen. The graph shows only the points, the line, residuals, slope and intercept with standard errors: g = 4π²/slope was removed so the analysis stays the student's. `PLOTS` is replaced by `GRAPHS`, a list of worksheets that get the graph; no per worksheet settings, since the axes come from the table's own headings (name and unit split at the last parentheses).
+- The first data table can be removed once a copy exists (**Remove this table**, clears what was in it) and brought back (**Bring back the first table**). Removed tables are left out of the CSV and the print.
