@@ -220,7 +220,8 @@ def build_notes(name):
     meta, text = parse(SRC / f"{name}.md")
     head, title = header(meta, name)
     foot = ('<footer>Part of <a href="index.html">the teaching notes</a> for '
-            '<a href="../index.html">Virtual Physics Demos</a>.</footer>')
+            '<a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the '
+            '<a href="../LICENSE.html">terms of use</a>.</footer>')
     (OUT / f"{name}.html").write_text(page(f"{title}: teaching notes", head + render_body(text) + foot), encoding="utf-8")
 
 

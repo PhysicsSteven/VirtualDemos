@@ -90,3 +90,7 @@ Assistants working on this repo: read [COLLABORATION.md](COLLABORATION.md) first
 The card thumbnails in `thumbs/` come from `tools/thumbs.py` (Python, Playwright and Pillow). Run `python3 tools/thumbs.py` after adding or changing a demo, or `python3 tools/thumbs.py name` for one demo; copy an existing card in `index.html` for the new one.
 
 In projector mode each demo shows a small QR code next to the Projector button; clicking it shows a large copy for students to scan. The codes come from `tools/qr.py` (needs `pip install qrcode`): run it after adding a demo, then `python3 tools/star-slice/build.py`. A code only appears when the page is opened at the address it points to, so a copy opened from disk or uploaded elsewhere shows none. If the site moves, rerun with `python3 tools/qr.py --base <new address of the demos folder>`.
+
+## License
+
+Copyright © 2026 Steven Anderson. All rights reserved. The live site is free to use for teaching and learning; copying, hosting, changing or redistributing any part of it needs written permission. See [LICENSE.md](LICENSE.md) and, for material by others, [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

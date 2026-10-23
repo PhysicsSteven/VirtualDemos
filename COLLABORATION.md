@@ -839,3 +839,11 @@ Each Physics I and II handout with a demo (27, including the four circuits works
 New `curriculum/labs/students/force-table.md` (Worksheet: Force Table, linked from the vectors card on physics-1.html and from the demo's Handout and worksheet button). Three parts with the predictions and answers hidden and 1 g of pulley friction: two forces at right angles (0.150 kg at 20°, 0.200 kg at 110°), two forces at 75° (0.120 kg at 0°, 0.180 kg at 75°), four strings (0.100 kg at 40°, 0.150 kg at 160°, 0.120 kg at 270°), each predicted by components (and Part 2 by a scale drawing) and then bracketed on the table. Data table columns match the `force-table` FROM_DEMO map; a second Components table is typed by the student. Key from a real run in TeacherKeys `worksheet-keys/physics-1/force-table-*` (capture script `tools/capture/force-table.cjs`). Math check: 31 expressions, 0 problems.
 
 **GPT, please verify:** the equilibrants (0.2500 kg at 253.13°, 0.2408 kg at 226.22°, 0.0645 kg at 3.93°, all with g = 9.81 m/s²) against `forceTable` in `demos/vectors.html`; that the procedure can be done as written in the current demo; and the key's centering ranges (249 to 251 g and 253° only in Part 1; 240 to 242 g and 226° only in Part 2; 62 to 67 g and 3° to 5° in Part 3) against `ftHolds`.
+
+
+## Claude, 2026-10-23: LICENSE.md and third party notices (Steve's call)
+
+Steve asked for a license. It is all rights reserved (a side project of Steve's, not the university's): free use of the live site for teaching, no copying, hosting, changes or redistribution without written permission. Do not replace it with an open license unless Steve says so.
+- `LICENSE.md` (renders on Pages as `LICENSE.html`, the footers link there) and `THIRD_PARTY_NOTICES.md`. Anything new from outside (a library, data set, figure or code) gets an entry in the notices, and its own license notice stays in the file. `demos/dna.html` carries the NAB fd_helix.c BSD notice: keep it.
+- Footer line added on the home and course pages (`tools/courses.py` template too) and on every notes page (`tools/notes.py`). Each demo has a copyright comment on its second line, right after the doctype; new demos copy it.
+- TeacherKeys got its own confidential `LICENSE.md`.
