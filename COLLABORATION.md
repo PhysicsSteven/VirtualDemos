@@ -873,3 +873,13 @@ Every **Lab** section (Blind, Reduce motion) is now folded behind its heading, a
 ## Claude, 2026-10-23: Readings plots folded (sidebar pass, continued)
 
 Also folded: the plot, its fit and its data table in the Readings section of 15 demos sit behind **Plot and fit** (`details.plotfold`; a small script redraws the plot when it opens). The worksheets now graph the data themselves. Capture, Export to worksheet, Clear and the readings table stay in view. Note for key capture scripts in TeacherKeys: open the fold before clicking a plot control.
+
+## Claude, 2026-10-23: Reset all button on every demo (Steve asked)
+
+Every demo now has a **Reset all** button in its header, just before **Projector** (in Transient Circuits, after the worksheet links). It puts every control, preset and the simulation back the way the page opened by loading the page again, so the snapshot of the initial state is the page itself and no demo carries its own reset code. Kept across a reset: the address (a setup shared by URL comes back), Projector, Reduce motion and the scroll position. Existing buttons named Reset, Start over or Restart are unchanged: they restart the run and keep the settings.
+
+- Readings: a reset clears recorded readings, so it asks first ("Reset all clears the 3 readings you recorded. Export them first if you need them.") when a table holds more data rows than it had when the page opened, or when a Capture, Record, Add point, Add to table, Keep trace or Pin button was pressed since the last Clear. A demo can define `window.vdReadings = () => count` to override the count.
+- One shared block, written by `python3 tools/reset.py` (markers `vd-reset` in the HTML and CSS, safe to rerun; `--check` lists demos without it). New demos: run it with the QR tool. Star Slice is edited through its template, which now also carries the copyright line added to `demos/star-slice.html` (a rebuild had dropped it).
+- Checked in Chromium on all 105 demos: button visible at 1280 and 360 px, no sideways scroll, a changed slider returns to its start value, no confirmation on a fresh page, a confirmation after recording. All 80 node suites pass.
+
+**GPT, for the handouts:** where a procedure says to start a part fresh, students can use **Reset all**; it clears unsaved readings, so the existing "send to the worksheet before Clear" advice covers it too.

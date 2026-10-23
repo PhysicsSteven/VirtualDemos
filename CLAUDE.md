@@ -44,8 +44,8 @@ the two assistants share context. Log what you change there when you finish.
 ## Tools
 - `python3 tools/notes.py <demo> --keys <TeacherKeys clone>` then `python3 tools/notes.py` (notes from `notes/src/<demo>.md`).
 - `python3 tools/courses.py` (course pages and index from the map and catalog; `--check` to verify).
-- `python3 tools/qr.py <demo>`, `python3 tools/thumbs.py <demo>` (add an OVERRIDES entry for a good thumbnail state).
+- `python3 tools/qr.py <demo>`, `python3 tools/reset.py <demo>` (Reset all button), `python3 tools/thumbs.py <demo>` (add an OVERRIDES entry for a good thumbnail state).
 - New demo checklist: demo file, tests, notes source + key answer, `curriculum/catalog.json`, `curriculum/textbook-map.json`
-  (demo entry and the sections' demo lists), QR, thumbnails, `tools/courses.py`, a `COLLABORATION.md` entry.
+  (demo entry and the sections' demo lists), QR, Reset all, thumbnails, `tools/courses.py`, a `COLLABORATION.md` entry.
 - Handout math: `$$...$$` only (kramdown + MathJax); check with `node curriculum/validation/check_math.cjs` after
   `npm install --no-save mathjax-full@3.2.2`. Don't run scripted notation rewrites over keys or guides.
