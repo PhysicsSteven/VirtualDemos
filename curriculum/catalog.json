@@ -1015,6 +1015,17 @@
      ]
     },
     {
+     "demo": "the-eye",
+     "title": "The Eye",
+     "desc": "Watch the eye change its power to keep an image on the retina, find the near and far points of normal, nearsighted, farsighted and older eyes, and prescribe the glasses that correct them.",
+     "tags": [
+      "accommodation",
+      "near point",
+      "far point",
+      "corrective lenses"
+     ]
+    },
+    {
      "demo": "polarization",
      "title": "Polarization",
      "desc": "Send light through polarizers and wave plates and watch the electric field after each one: Malus's law, the three polarizer surprise, circular light from a quarter wave plate, and glare at Brewster's angle.",

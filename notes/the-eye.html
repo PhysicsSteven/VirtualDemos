@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Eye: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>The Eye</h1><ul class="meta"><li><a href="../demos/the-eye.html">Open the demo</a></li><li>PHYS 202</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>The eye treated as one thin lens with the retina at a fixed distance behind it (1.80 cm here, as in OpenStax Example 2.7). The image must land on the retina, so the eye changes its power P = 1/d_o + 1/d_i (Eq. 2.24): accommodation.</li>
+<li>The range of power sets the near point (strongest lens) and the far point (most relaxed lens). A normal eye: near point 25 cm, far point at infinity.</li>
+<li>Nearsighted: too much power, so distant light focuses in front of the retina. A diverging lens puts the image of a distant object at the far point (Example 2.8: −3.51 D).</li>
+<li>Farsighted and older eyes: too little power for near objects, so the image of a book would form behind the retina. A converging lens puts the image of the book at the near point (Example 2.9: +3.24 D).</li>
+<li>Powers in diopters add for thin lenses close together, but glasses sit 1.50 cm in front of the eye, and that gap matters in the prescription.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students need the thin lens equation and the sign rules for virtual images. <strong>Blind</strong> hides whether the image is sharp, the blur spot, the power the eye uses and the prescriptions the buttons would give (the buttons still set the glasses), so students can predict first.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Normal eye.</strong> Slide the object from far away to 25 cm: the lens thickens and the power rises from 55.6 D to 59.6 D, and the image stays sharp. Move it to 10 cm: blurred.</li>
+<li><strong>Nearsighted (Example 2.8).</strong> Far point 30.0 cm. A distant object is blurred because the light focuses in front of the retina even with the eye fully relaxed. Ask what lens would help before pressing anything.</li>
+<li><strong>Nearsighted, with glasses.</strong> Prescribe for distance gives −3.51 D. On the scale, the image made by the glasses sits at the far point.</li>
+<li><strong>Farsighted (Example 2.9).</strong> Near point 1.00 m; a book at 25 cm is blurred, with dashed rays showing where the light would meet behind the retina.</li>
+<li><strong>Farsighted, with glasses.</strong> Prescribe for reading at 25 cm gives +3.24 D; the image made by the glasses sits at the near point.</li>
+<li><strong>Older eye, reading.</strong> Accommodation has shrunk to 0.5 D: distant vision is fine, but the near point is 2.00 m. Prescribe for reading gives +3.75 D. With these glasses on, look at a distant object: why bifocals?</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> In the Normal setup, find the eye's power when the object is far away and at 25 cm. What is the amplitude of accommodation? Check both powers with P = 1/d_o + 1/d_i and d_i = 1.80 cm.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> The nearsighted eye has its far point at 30.0 cm. Find its near point from the readouts (range of power 58.9 to 62.9 D) and check it with the lens equation.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> For the nearsighted eye, Prescribe for distance gives −3.51 D, not −1/(0.300 m) = −3.33 D. Explain the difference. What power of contact lens (on the eye) would this person need?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> The farsighted eye of Example 2.9 has its near point at 1.00 m. Show that +3.24 D glasses 1.50 cm from the eye let it read at 25 cm: where is the image made by the glasses?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The older eye has a range of power of only 0.5 D. With the +3.75 D reading glasses on, over what range of distances can it see sharply? Why do many older people wear bifocals?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A normal eye looks at an object 10 cm away. Where does the image form, and how big is the blur spot on the retina with a 4.0 mm pupil? Why does squinting (a smaller pupil) help?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Nearsighted people need converging glasses because they cannot see far."</strong> Their eye is too strong; the glasses must diverge.</li>
+<li><strong>"The eye moves the lens to focus, like a camera."</strong> The human eye changes the shape and so the power of its lens; the distance to the retina is fixed.</li>
+<li><strong>"Glasses make the object closer or farther."</strong> The object stays put; the glasses form an image at a distance the eye can focus on, and the eye looks at that image.</li>
+<li><strong>"Glasses and contact lenses have the same prescription."</strong> Only approximately; the 1.5 cm gap changes the power needed by a few tenths of a diopter.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>The cornea and lens are one thin lens of power P with the retina 1.80 cm behind it, a simplified eye chosen to match OpenStax Example 2.7. The eye picks the power in its range that brings the image closest to the retina.</li>
+<li>Near and far points from OpenStax Examples 2.8 (far point 30.0 cm) and 2.9 (near point 1.00 m). The accommodation ranges, 4.0 D for the younger eyes and 0.5 D for the older one, are chosen typical values, as is the 2.00 m near point of the older eye.</li>
+<li>Glasses are a thin lens 1.50 cm in front of the eye; light is followed through both lenses exactly in the paraxial (thin lens) approximation.</li>
+<li>Blur spot = pupil diameter × |1 − d_retina/d_i|, from similar triangles. The image counts as sharp when the spot is under 0.02 mm, a chosen limit of a few cone spacings.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>.</footer>
+</main>
+</body>
+</html>

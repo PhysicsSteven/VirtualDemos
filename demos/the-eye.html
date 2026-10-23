@@ -1,0 +1,381 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+*, *::before, *::after { box-sizing: border-box; }
+:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
+body { margin: 0; }
+[hidden] { display: none !important; }
+/* vd-qr */
+.vd-qr { display: none; }
+@media (min-width: 821px) {
+  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
+}
+.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
+.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
+.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
+.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
+.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
+/* /vd-qr */
+</style>
+<title>The Eye</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: the distance scale and the enlarged eye on the left, the rail on the right; stacks on phones. */
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --relief: #dfe5ec;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #e6ebf1;
+  --grid-strong: #cfd7e1;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --field: #1d2836;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --on-charge: #ffffff;
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+    --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --relief: #2a3442; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18202a; --grid-strong: #243040; --pos: #ff7660; --neg: #69a0ff;
+  --field: #dfe6ef; --equi: #e2b350; --accent: #69a0ff; --on-charge: #0d1218; color-scheme: dark;
+}
+
+:root[data-projector="on"] { font-size: 125%; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
+:root[data-projector="on"] body { font-size: 1.25rem; }
+.app { height: 100%; display: flex; flex-direction: column; gap: 12px; padding-block: 14px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
+.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
+.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
+.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
+.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.units { color: var(--muted); font-size: 0.8rem; }
+.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 12px; }
+.stage { position: relative; min-height: 480px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage canvas { position: absolute; inset: 0; display: block; outline: none; }
+.stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.spin { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.spin.attn { background: var(--accent); border-color: var(--accent); color: var(--canvas); }
+.blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
+.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
+.rail section + section { border-top: 1px solid var(--line); }
+.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+.formula { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); margin: 0; }
+.btn { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
+.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+.seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.lab { font-size: 0.88rem; }
+.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
+button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
+.slider-head label { font-size: 0.88rem; }
+.slider-head output { font-size: 0.85rem; color: var(--muted); font-family: var(--font-mono); }
+.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
+.readout div { min-width: 0; }
+.readout .wide { grid-column: 1 / -1; }
+.readout dt { font-size: 0.78rem; color: var(--muted); }
+.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1rem; font-weight: 600; overflow-wrap: anywhere; }
+.readout dd.ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
+.check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
+.check input { accent-color: var(--accent); margin: 0; }
+.status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.twrap { position: relative; max-height: 170px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
+table.rows input:focus { border-color: var(--accent); }
+table.rows button { font: inherit; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 6px; }
+.empty { color: var(--muted); padding: 8px !important; }
+.plotbox { position: relative; height: 180px; }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; } .app { height: auto; }
+  .bench { grid-template-columns: minmax(0, 1fr); }
+  .stage { min-height: 0; height: 540px; max-height: 85vh; }
+  .rail { overflow: visible; }
+  .btn, .proj, .spin, .seg button { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+@media (max-width: 820px) { .chips button { min-height: 36px; } }
+.readout dd.warn { color: var(--pos); }
+:root { --eyeball: #f4f1ec; --sclera: #c9cfd8; --lensc: #9cc3e6; --retina: #c23f2c; --ray: #b8692e; --glass: #6f9fd8; --np: #2f9a52; --fp: #a7740b; --virt: #8a95a3; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --eyeball: #1c232d; --sclera: #3a4656; --lensc: #3d6a94; --retina: #ff7660; --ray: #f0b44a; --glass: #69a0ff; --np: #4cc07f; --fp: #e2b350; --virt: #7d8899; } }
+:root[data-theme="dark"] { --eyeball: #1c232d; --sclera: #3a4656; --lensc: #3d6a94; --retina: #ff7660; --ray: #f0b44a; --glass: #69a0ff; --np: #4cc07f; --fp: #e2b350; --virt: #7d8899; }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>The Eye</h1>
+      <p>The eye focuses by changing the power of its lens. Move an object near and far and watch the eye accommodate, find the near and far points of normal, nearsighted, farsighted and older eyes, and prescribe the glasses that correct them.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">P in diopters, 1 D = 1 m⁻¹</div>
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/the-eye.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/the-eye.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM13 2h4v1h-4zM18 2h1v1h-1zM20 2h2v1h-2zM23 2h1v1h-1zM25 2h4v1h-4zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM12 3h1v1h-1zM16 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h7v1h-7zM22 4h3v1h-3zM26 4h4v1h-4zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM13 5h2v1h-2zM17 5h1v1h-1zM19 5h1v1h-1zM21 5h3v1h-3zM27 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM14 6h3v1h-3zM19 6h1v1h-1zM21 6h1v1h-1zM27 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h3v1h-3zM18 7h3v1h-3zM23 7h1v1h-1zM25 7h1v1h-1zM27 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM12 9h2v1h-2zM15 9h1v1h-1zM17 9h2v1h-2zM23 9h1v1h-1zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h10v1h-10zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h4v1h-4zM25 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM2 11h2v1h-2zM5 11h1v1h-1zM7 11h1v1h-1zM10 11h1v1h-1zM12 11h3v1h-3zM16 11h1v1h-1zM22 11h3v1h-3zM28 11h2v1h-2zM31 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM4 12h1v1h-1zM7 12h2v1h-2zM11 12h3v1h-3zM16 12h1v1h-1zM20 12h1v1h-1zM23 12h1v1h-1zM26 12h1v1h-1zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM9 13h2v1h-2zM17 13h1v1h-1zM19 13h2v1h-2zM24 13h1v1h-1zM30 13h9v1h-9zM3 14h1v1h-1zM6 14h1v1h-1zM8 14h2v1h-2zM12 14h3v1h-3zM16 14h1v1h-1zM18 14h1v1h-1zM21 14h1v1h-1zM26 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM2 15h4v1h-4zM9 15h3v1h-3zM14 15h2v1h-2zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h1v1h-1zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h1v1h-1zM10 16h3v1h-3zM14 16h2v1h-2zM17 16h1v1h-1zM19 16h1v1h-1zM21 16h4v1h-4zM27 16h1v1h-1zM29 16h1v1h-1zM31 16h2v1h-2zM34 16h3v1h-3zM38 16h1v1h-1zM5 17h3v1h-3zM9 17h5v1h-5zM15 17h1v1h-1zM19 17h3v1h-3zM25 17h1v1h-1zM28 17h3v1h-3zM32 17h2v1h-2zM35 17h3v1h-3zM2 18h1v1h-1zM6 18h3v1h-3zM12 18h1v1h-1zM16 18h4v1h-4zM21 18h3v1h-3zM25 18h1v1h-1zM27 18h1v1h-1zM29 18h2v1h-2zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM10 19h1v1h-1zM12 19h1v1h-1zM15 19h2v1h-2zM18 19h3v1h-3zM22 19h1v1h-1zM25 19h2v1h-2zM28 19h2v1h-2zM31 19h1v1h-1zM35 19h2v1h-2zM2 20h1v1h-1zM5 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM12 20h1v1h-1zM14 20h4v1h-4zM19 20h1v1h-1zM22 20h2v1h-2zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM6 21h2v1h-2zM9 21h5v1h-5zM15 21h1v1h-1zM20 21h1v1h-1zM24 21h1v1h-1zM26 21h2v1h-2zM30 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM2 22h4v1h-4zM7 22h2v1h-2zM15 22h1v1h-1zM17 22h3v1h-3zM26 22h1v1h-1zM28 22h8v1h-8zM3 23h5v1h-5zM9 23h1v1h-1zM11 23h7v1h-7zM21 23h5v1h-5zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM3 24h2v1h-2zM6 24h1v1h-1zM8 24h1v1h-1zM13 24h1v1h-1zM17 24h1v1h-1zM19 24h2v1h-2zM24 24h3v1h-3zM29 24h3v1h-3zM33 24h1v1h-1zM35 24h1v1h-1zM38 24h1v1h-1zM3 25h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM9 25h1v1h-1zM11 25h2v1h-2zM14 25h3v1h-3zM19 25h1v1h-1zM21 25h4v1h-4zM30 25h7v1h-7zM3 26h1v1h-1zM7 26h2v1h-2zM14 26h1v1h-1zM16 26h5v1h-5zM23 26h1v1h-1zM26 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h3v1h-3zM7 27h1v1h-1zM9 27h4v1h-4zM16 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM27 27h4v1h-4zM34 27h2v1h-2zM2 28h2v1h-2zM5 28h2v1h-2zM8 28h2v1h-2zM12 28h5v1h-5zM18 28h1v1h-1zM21 28h2v1h-2zM24 28h3v1h-3zM28 28h2v1h-2zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM5 29h1v1h-1zM7 29h1v1h-1zM9 29h1v1h-1zM12 29h1v1h-1zM16 29h2v1h-2zM22 29h1v1h-1zM24 29h2v1h-2zM28 29h1v1h-1zM31 29h3v1h-3zM35 29h3v1h-3zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h2v1h-2zM11 30h2v1h-2zM14 30h3v1h-3zM22 30h1v1h-1zM26 30h2v1h-2zM30 30h7v1h-7zM10 31h1v1h-1zM13 31h1v1h-1zM15 31h2v1h-2zM20 31h3v1h-3zM24 31h1v1h-1zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h2v1h-2zM15 32h4v1h-4zM21 32h1v1h-1zM23 32h5v1h-5zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h3v1h-3zM16 33h1v1h-1zM18 33h5v1h-5zM24 33h2v1h-2zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h5v1h-5zM23 34h4v1h-4zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM13 35h1v1h-1zM15 35h1v1h-1zM18 35h1v1h-1zM20 35h1v1h-1zM23 35h1v1h-1zM26 35h1v1h-1zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM37 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM14 36h9v1h-9zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h2v1h-2zM18 37h2v1h-2zM21 37h2v1h-2zM24 37h2v1h-2zM28 37h1v1h-1zM32 37h1v1h-1zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h4v1h-4zM17 38h2v1h-2zM22 38h1v1h-1zM26 38h1v1h-1zM29 38h2v1h-2zM32 38h2v1h-2zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <canvas id="can" tabindex="0" role="img" aria-label="Top: distances from the eye on a logarithmic scale, with the object, the glasses, the near and far points and the image the glasses make. Bottom: the eye enlarged, with rays from the object passing the glasses and the eye's lens to the retina. Arrow keys move the object."></canvas>
+      <span class="blindtag" id="blindTag" hidden>Blind</span>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="normal" aria-pressed="true">Normal eye, near point</button>
+          <button type="button" data-p="myopia" aria-pressed="false">Nearsighted (Example 2.8)</button>
+          <button type="button" data-p="myopiaFix" aria-pressed="false">Nearsighted, with glasses</button>
+          <button type="button" data-p="hyper" aria-pressed="false">Farsighted (Example 2.9)</button>
+          <button type="button" data-p="hyperFix" aria-pressed="false">Farsighted, with glasses</button>
+          <button type="button" data-p="older" aria-pressed="false">Older eye, reading</button>
+        </div>
+        <p class="hint" id="presetHint"></p>
+      </section>
+
+      <section>
+        <h2>Eye</h2>
+        <div class="seg" role="group" aria-label="Eye" id="eyeSeg">
+          <button type="button" data-e="normal" aria-pressed="true">Normal</button>
+          <button type="button" data-e="myopia" aria-pressed="false">Nearsighted</button>
+          <button type="button" data-e="hyper" aria-pressed="false">Farsighted</button>
+          <button type="button" data-e="older" aria-pressed="false">Older</button>
+        </div>
+        <div><div class="slider-head"><label for="sD">Object distance from the eye</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0" max="101" step="1"></div>
+      </section>
+
+      <section>
+        <h2>Glasses, 1.50 cm in front of the eye</h2>
+        <label class="check"><input type="checkbox" id="wear"><span>Wear glasses</span></label>
+        <div><div class="slider-head"><label for="sPg">Power of the glasses</label><output id="oPg" for="sPg"></output></div><input type="range" id="sPg" min="-8" max="8" step="0.01"></div>
+        <div class="btnrow"><button type="button" class="btn" id="rxFar">Prescribe for distance</button><button type="button" class="btn" id="rxNear">Prescribe for reading at 25 cm</button></div>
+      </section>
+
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+
+      <section>
+        <h2>Lab</h2>
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the answers</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <p class="hint">Blind hides whether the image is sharp, the blur, the eye's power and the prescriptions the buttons would give (the buttons still set the glasses). Predict first: can this eye see the object sharply? What power of glasses does it need?</p>
+        <p class="hint">Model: the cornea and lens act as one thin lens of power P, and the retina is a fixed 1.80 cm behind it (a simplified eye, chosen to match OpenStax Example 2.7, where an image at the near point forms 1.8 cm behind the lens). Accommodation sets P anywhere between the eye's relaxed power, which focuses its far point, and its strongest power, which focuses its near point: P = 1/d_o + 1/d_i (OpenStax Eq. 2.24). The eye picks the power that brings the image closest to the retina. Normal eye: near point 25 cm, far point at infinity. Nearsighted: far point 30.0 cm (Example 2.8). Farsighted: near point 1.00 m (Example 2.9). Older: far point at infinity, near point 2.00 m. The ranges of accommodation, 4.0 D for the young eyes and 0.5 D for the older one, are chosen typical values. Glasses are a thin lens 1.50 cm in front of the eye, as in the examples; the light is followed through both lenses exactly (thin lenses, paraxial). The pupil is 4.0 mm across; the blur is the size of the spot on the retina, and an image counts as sharp when the spot is under 0.02 mm (a chosen limit, a few cone spacings).</p>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  const RETINA = 0.0180, GLASS_GAP = 0.0150, PUPIL = 0.0040, SHARP = 2e-5, EYE_VERSION = 'the-eye@2026-10-23';
+  /* near and far points in metres (Infinity allowed); the far point of a farsighted eye lies "beyond infinity" (FP < 0: it can focus converging light) */
+  const EYES = {
+    normal: { name: 'Normal', NP: 0.25, amp: 4.0 },
+    myopia: { name: 'Nearsighted', FP: 0.30, amp: 4.0 },
+    hyper: { name: 'Farsighted', NP: 1.00, amp: 4.0 },
+    older: { name: 'Older', NP: 2.00, amp: 0.5 }
+  };
+  /* the eye's range of power: P_max focuses the near point, P_min = P_max − amplitude (or focuses the far point) */
+  function eyeRange(e) {
+    if (e.NP) { const Pmax = 1 / e.NP + 1 / RETINA; return { Pmin: Pmax - e.amp, Pmax }; }
+    const Pmin = 1 / e.FP + 1 / RETINA; return { Pmin, Pmax: Pmin + e.amp };
+  }
+  /* near and far points from the range (far point Infinity or negative = beyond infinity) */
+  const nearPoint = (r) => 1 / (r.Pmax - 1 / RETINA);
+  const farPoint = (r) => { const v = r.Pmin - 1 / RETINA; return Math.abs(v) < 1e-9 ? Infinity : 1 / v; };
+  /* vergence of the light arriving at the eye (m⁻¹, negative for diverging light) from an object d metres in front of the eye,
+     through glasses of power Pg a gap s in front of the eye (Pg = null for none) */
+  function vergenceAtEye(d, Pg, s = GLASS_GAP) {
+    if (Pg == null) return isFinite(d) ? -1 / d : 0;
+    const V0 = isFinite(d) ? -1 / (d - s) : 0, V1 = V0 + Pg;
+    return V1 / (1 - s * V1);
+  }
+  /* the eye accommodates: the power that best focuses on the retina, within its range */
+  const accommodate = (V, r) => Math.min(r.Pmax, Math.max(r.Pmin, 1 / RETINA - V));
+  /* image distance behind the lens and the blur spot on the retina */
+  function eyeImage(V, P) { const Vi = V + P, di = Vi === 0 ? Infinity : 1 / Vi; return { di, blur: PUPIL * Math.abs(1 - RETINA * Vi) }; }
+  /* prescriptions (OpenStax Examples 2.8 and 2.9): glasses that put the image of a distant object at the far point,
+     or the image of an object at dObj (from the eye) at the near point */
+  const rxFar = (FP, s = GLASS_GAP) => -1 / (FP - s);
+  const rxNear = (NP, dObj = 0.25, s = GLASS_GAP) => 1 / (dObj - s) - 1 / (NP - s);
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  /* object distance slider: 0 to 100 is 10 cm to 10 m on a log scale; 101 is far away */
+  const dOf = (v) => (v >= 101 ? Infinity : 0.1 * 10 ** (v / 50));
+  const vOf = (d) => (!isFinite(d) ? 101 : Math.max(0, Math.min(100, Math.round(50 * Math.log10(d / 0.1)))));
+  const S = { eye: 'normal', d: 0.25, wear: false, Pg: 0, P: null, blind: false, preset: 'normal' };
+  const PRESETS = {
+    normal: { eye: 'normal', d: 0.25, wear: false, Pg: 0, hint: 'An object at the near point, 25 cm: the eye is at its strongest. Move the object closer than 25 cm: the eye cannot add more power and the image blurs. Move it far away: the eye relaxes.' },
+    myopia: { eye: 'myopia', d: Infinity, wear: false, Pg: 0, hint: 'This eye has its far point at 30.0 cm. Even fully relaxed it is too strong for distant light, which focuses in front of the retina. Bring the object closer than 30 cm and it becomes sharp.' },
+    myopiaFix: { eye: 'myopia', d: Infinity, wear: true, Pg: rxFar(0.30), hint: 'OpenStax Example 2.8: a −3.51 D lens 1.50 cm from the eye makes a distant object’s image 28.5 cm in front of the glasses, which is 30.0 cm from the eye, at the far point. The eye sees that image sharply.' },
+    hyper: { eye: 'hyper', d: 0.25, wear: false, Pg: 0, hint: 'This eye’s near point is 1.00 m. A book at 25 cm needs more power than the eye has, and its image would form behind the retina.' },
+    hyperFix: { eye: 'hyper', d: 0.25, wear: true, Pg: rxNear(1.00), hint: 'OpenStax Example 2.9: a +3.24 D lens 1.50 cm from the eye makes an image of the book 98.5 cm in front of the glasses, 1.00 m from the eye, at the near point.' },
+    older: { eye: 'older', d: 0.40, wear: false, Pg: 0, hint: 'With age the lens stiffens and the range of accommodation shrinks, so the near point recedes (here to 2.00 m). Distant vision is fine, but reading needs a converging lens. Press Prescribe for reading.' }
+  };
+  function applyPreset(name) { const c = PRESETS[name]; S.preset = name; S.eye = c.eye; S.d = c.d; S.wear = c.wear; S.Pg = +c.Pg.toFixed(2); S.P = null; upd(); }
+
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  let W = 0, Hh = 0, dpr = 1, T = null;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'accent', 'surface', 'relief', 'pos', 'eyeball', 'sclera', 'lensc', 'retina', 'ray', 'glass', 'np', 'fp', 'virt']) T[k] = g('--' + k);
+    T.mono = g('--font-mono'); T.ui = g('--font-ui'); }
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const fmtD = (d) => (!isFinite(d) ? 'far away (∞)' : d >= 1 ? `${d.toFixed(2)} m` : `${(d * 100).toFixed(1)} cm`);
+  const fmtP = (P) => `${P >= 0 ? '+' : '−'}${Math.abs(P).toFixed(2)} D`;
+
+  function state() {
+    const r = eyeRange(EYES[S.eye]), V = vergenceAtEye(S.d, S.wear ? S.Pg : null), Pt = accommodate(V, r);
+    return { r, V, Pt, img: eyeImage(V, Pt), NP: nearPoint(r), FP: farPoint(r) };
+  }
+
+  // ---------- controls ----------
+  function sync() {
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#eyeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.e === S.eye));
+    $('sD').value = vOf(S.d); $('oD').textContent = fmtD(S.d); $('wear').checked = S.wear; $('sPg').value = S.Pg; $('oPg').textContent = fmtP(S.Pg); $('sPg').disabled = !S.wear;
+    $('presetHint').textContent = S.preset ? PRESETS[S.preset].hint : '';
+  }
+  function upd() { sync(); readouts(); draw(); }
+  const changed = () => { S.preset = ''; upd(); };
+  $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
+  $('eyeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-e]'); if (b) { S.eye = b.dataset.e; changed(); } });
+  $('sD').addEventListener('input', (e) => { S.d = dOf(+e.target.value); changed(); });
+  $('wear').addEventListener('change', (e) => { S.wear = e.target.checked; changed(); });
+  $('sPg').addEventListener('input', (e) => { S.Pg = +e.target.value; changed(); });
+  $('rxFar').addEventListener('click', () => { const st = state(); S.wear = true; S.Pg = isFinite(st.FP) && st.FP > 0 ? +rxFar(st.FP).toFixed(2) : 0; changed(); });
+  $('rxNear').addEventListener('click', () => { const st = state(); S.wear = true; S.Pg = st.NP > 0.25 ? +rxNear(st.NP).toFixed(2) : 0; changed(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; upd(); });
+  can.addEventListener('keydown', (e) => { const d = { ArrowRight: -1, ArrowUp: 1, ArrowLeft: 1, ArrowDown: -1 }[e.key]; if (!d) return; e.preventDefault(); S.d = dOf(Math.max(0, Math.min(101, vOf(S.d) + d))); changed(); });
+
+  function readouts() {
+    const st = state(), dd = (a, v, w, c) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd${c ? ` class="${c}"` : ''}>${v}</dd></div>`, HID = '<span class="ok">hidden in Blind</span>', hide = S.blind;
+    const sharp = st.img.blur < SHARP;
+    let h = dd('Seen', hide ? HID : sharp ? 'sharp' : `blurred: spot ${(st.img.blur * 1000).toFixed(2)} mm across`, true, hide || sharp ? '' : 'warn');
+    h += dd('Near point', `${(st.NP * 100).toFixed(1)} cm`) + dd('Far point', !isFinite(st.FP) ? 'infinity' : st.FP < 0 ? 'beyond infinity' : fmtD(st.FP));
+    h += dd('Eye’s range of power', `${st.r.Pmin.toFixed(1)} to ${st.r.Pmax.toFixed(1)} D`) + dd('Power it uses now', hide ? HID : `${st.Pt.toFixed(2)} D`);
+    h += dd('Image behind the lens (retina at 1.80 cm)', hide ? HID : !isFinite(st.img.di) ? 'at infinity' : st.img.di < 0 ? 'none: the light still diverges' : `${(st.img.di * 100).toFixed(3)} cm`, true);
+    if (S.wear) { const dI = st.V === 0 ? Infinity : -1 / st.V; h += dd('The glasses’ image, seen by the eye', !isFinite(dI) ? 'at infinity' : dI > 0 ? `${fmtD(dI)} from the eye` : 'behind the eye (converging light)', true); }
+    const fp = st.FP, np = st.NP;
+    h += dd('For distance', hide ? HID : isFinite(fp) && fp > 0 ? fmtP(rxFar(fp)) : 'no correction needed') + dd('For reading at 25 cm', hide ? HID : np > 0.25 ? fmtP(rxNear(np)) : 'no correction needed');
+    $('out').innerHTML = h;
+  }
+
+  // ---------- drawing ----------
+  function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
+  function drawScale(x0, x1, y, st) {
+    const p = ps(), lo = Math.log10(0.05), hi = Math.log10(20), X = (d) => (!isFinite(d) ? x0 : x1 - (Math.log10(d) - lo) / (hi - lo) * (x1 - x0 - 24 * p));
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+    for (const [d, l] of [[0.1, '10 cm'], [0.25, '25 cm'], [1, '1 m'], [10, '10 m']]) { const x = X(d); ctx.beginPath(); ctx.moveTo(x, y - 4 * p); ctx.lineTo(x, y + 4 * p); ctx.stroke(); txt(l, x, y + 14 * p, { a: 'center', s: 9, c: T.muted }); }
+    txt('∞', x0, y + 14 * p, { a: 'center', s: 11, c: T.muted }); txt('distance from the eye (log scale)', (x0 + x1) / 2, y + 28 * p, { a: 'center', s: 9, c: T.muted });
+    /* range the eye can focus */
+    const near = st.NP, far = st.FP, xa = X(near), xb = !isFinite(far) || far < 0 ? x0 : X(far);
+    ctx.fillStyle = T.np; ctx.globalAlpha = 0.18; ctx.fillRect(Math.min(xa, xb), y - 10 * p, Math.abs(xa - xb), 20 * p); ctx.globalAlpha = 1;
+    ctx.fillStyle = T.np; ctx.fillRect(xa - 1.5 * p, y - 14 * p, 3 * p, 28 * p); txt('near point', xa, y - 22 * p, { a: 'center', s: 9, c: T.np, b: 1 });
+    if (isFinite(far) && far > 0) { ctx.fillStyle = T.fp; ctx.fillRect(xb - 1.5 * p, y - 14 * p, 3 * p, 28 * p); txt('far point', xb, y - 22 * p, { a: 'center', s: 9, c: T.fp, b: 1 }); }
+    /* eye and glasses */
+    ctx.fillStyle = T.sclera; ctx.beginPath(); ctx.arc(x1 + 4 * p, y, 9 * p, 0, 7); ctx.fill(); txt('eye', x1 + 4 * p, y - 18 * p, { a: 'center', s: 9, c: T.muted });
+    if (S.wear) { ctx.strokeStyle = T.glass; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(x1 - 12 * p, y - 10 * p); ctx.lineTo(x1 - 12 * p, y + 10 * p); ctx.stroke(); }
+    /* object */
+    const xo = X(S.d); ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(xo, y); ctx.lineTo(xo, y - 30 * p); ctx.stroke(); ctx.beginPath(); ctx.moveTo(xo, y - 36 * p); ctx.lineTo(xo - 5 * p, y - 28 * p); ctx.lineTo(xo + 5 * p, y - 28 * p); ctx.fill();
+    txt(`object, ${fmtD(S.d)}`, Math.max(x0 + 40 * p, Math.min(x1 - 60 * p, xo)), y - 46 * p, { a: 'center', s: 10, b: 1 });
+    if (S.wear && st.V !== 0) { const dI = -1 / st.V; if (dI > 0) { const xi = X(dI); ctx.strokeStyle = T.virt; ctx.setLineDash([4 * p, 3 * p]); ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xi, y); ctx.lineTo(xi, y - 24 * p); ctx.stroke(); ctx.setLineDash([]); txt('image made by the glasses', xi, y + 40 * p, { a: 'center', s: 9, c: T.virt }); } }
+  }
+  function drawEye(x0, y0, w, h, st) {
+    const p = ps(), cy = y0 + h / 2, k = Math.min(w * 0.5 / RETINA, h * 0.7 / 0.024), xL = Math.min(x0 + w * 0.42, x0 + w - 48 * p - RETINA * k), xR = xL + RETINA * k, R = 0.012 * k;
+    /* eyeball and retina */
+    ctx.fillStyle = T.eyeball; ctx.strokeStyle = T.sclera; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.arc(xR - R, cy, R, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.strokeStyle = T.retina; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.arc(xR - R, cy, R, -0.55, 0.55); ctx.stroke(); txt('retina', xR + 6 * p, cy - R * 0.62, { s: 10, c: T.retina, b: 1 });
+    /* lens: thickness grows with the power in use */
+    const lw = (6 + 10 * Math.max(0, Math.min(1, (st.Pt - 50) / 15))) * p; ctx.fillStyle = T.lensc; ctx.beginPath(); ctx.ellipse(xL, cy, lw, 0.0045 * k, 0, 0, 7); ctx.fill(); txt('lens', xL, cy + 0.0045 * k + 12 * p, { a: 'center', s: 10, c: T.muted });
+    /* glasses */
+    const xG = xL - GLASS_GAP * k; if (S.wear) { ctx.strokeStyle = T.glass; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(xG, cy - 0.006 * k); ctx.lineTo(xG, cy + 0.006 * k); ctx.stroke(); txt(`glasses ${fmtP(S.Pg)}`, xG, cy - 0.006 * k - 10 * p, { a: 'center', s: 10, b: 1, c: T.glass }); }
+    /* rays from the axial object point across the pupil, traced through both lenses exactly (paraxial) */
+    const Vin = isFinite(S.d) ? -1 / S.d : 0, xStart = x0 + 6 * p;
+    ctx.strokeStyle = T.ray; ctx.lineWidth = 1.6 * p;
+    for (const hp of [-1, -0.5, 0, 0.5, 1]) {
+      const y = hp * PUPIL / 2;   /* height at the eye lens */
+      let pts = [];
+      if (S.wear) { /* back up to the glasses with the vergence arriving at the eye */
+        const slopeEye = -y * st.V; const yG = y - slopeEye * GLASS_GAP; const V1 = st.V / (1 + GLASS_GAP * st.V), slopeIn = -yG * (V1 - S.Pg);
+        const zs = (xStart - xG) / k; pts.push([xStart, cy - (yG + slopeIn * zs) * k], [xG, cy - yG * k]);
+      } else { const slope = -y * Vin, zs = (xStart - xL) / k; pts.push([xStart, cy - (y + slope * zs) * k]); }
+      pts.push([xL, cy - y * k]);
+      const slopeOut = -y * (st.V + st.Pt), yR = y + slopeOut * RETINA; pts.push([xR, cy - yR * k]);
+      ctx.beginPath(); pts.forEach(([a, b], i) => (i ? ctx.lineTo(a, b) : ctx.moveTo(a, b))); ctx.stroke();
+      /* focus behind the retina: show where the rays would meet, dashed */
+      const di = 1 / (st.V + st.Pt); if (di > RETINA * 1.002 && di < RETINA * 1.6 && y !== 0) { ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(xR, cy - yR * k); ctx.lineTo(xL + di * k, cy); ctx.stroke(); ctx.setLineDash([]); }
+    }
+    /* blur spot */
+    if (!S.blind) { const b = st.img.blur * k; ctx.fillStyle = st.img.blur < SHARP ? T.np : T.pos; ctx.fillRect(xR - 3 * p, cy - Math.max(b, 3 * p) / 2, 6 * p, Math.max(b, 3 * p)); }
+    txt('enlarged view of the eye: lens to retina 1.80 cm, pupil 4.0 mm', x0 + 8 * p, y0 + h - 12 * p, { s: 9, c: T.muted });
+  }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const p = ps(), st = state(), topH = Math.max(130 * p, Hh * 0.3);
+    drawScale(24 * p, W - 30 * p, topH * 0.62, st);
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, topH); ctx.lineTo(W, topH); ctx.stroke();
+    drawEye(0, topH, W, Hh - topH, st);
+    const sharp = st.img.blur < SHARP;
+    if (!S.blind) txt(sharp ? 'sharp' : 'blurred', W - 12 * p, topH + 18 * p, { a: 'right', s: 13, b: 1, c: sharp ? T.np : T.pos });
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const rc = stage.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const projBtn = $('proj');
+  function setProjector(on) { document.documentElement.setAttribute('data-projector', on ? 'on' : 'off'); projBtn.setAttribute('aria-pressed', String(on)); try { localStorage.setItem('vd-projector', on ? 'on' : 'off'); } catch (_) {} requestAnimationFrame(resize); }
+  projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
+  try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
+  tokens(); new ResizeObserver(resize).observe(stage);
+  const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'normal'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+})();
+</script>
+</body>
+</html>
