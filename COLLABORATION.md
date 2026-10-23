@@ -83,6 +83,7 @@ Add a line when you need the other assistant to do something, and remove it when
 - **House style** (see `CONTRIBUTING.md`): light and dark themes, projector mode (`data-projector`, localStorage key `vd-projector`), works at 400 px phone width, keyboard accessible, respects reduced motion, at most 6 presets.
 - **Writing style:** plain, precise teaching language. No hyphens in compound modifiers unless needed ("white dwarf cooling", "time constant", "half life").
 - **Don't claim tests passed that weren't run.**
+- **Math in Markdown** (Steve, 2026-10-23): symbols and equations are LaTeX, never Unicode lookalikes. Site handouts use `$$...$$` only; GitHub files in TeacherKeys use `$...$` inline and `$$...$$` display. Details and checker in the 2026-10-23 08:30 entry below.
 
 ## Generated files: edit the source, not the output
 
@@ -391,3 +392,46 @@ Steve asked why Speeding Up on a Curve was separate from Circular Motion. It is 
 ## Claude, 2026-10-23 01:30: one card per demo on the course pages
 
 At Steve's request each demo now has a single card, in the first unit that uses it; later units that also use it get one line, "Also used in this unit: <demo> (card under <unit>; sections)". The map is unchanged (demos still list all their sections); only tools/courses.py rendering changed. Physics I: 28 cards plus 4 such lines; Physics II: 15 cards plus 6.
+
+## Claude, 2026-10-23 08:00: Elevator scale reading ramps
+
+At Steve's request the Elevator trip is now jerk limited: the acceleration ramps up to ±a at the **Jerk: how fast the acceleration changes** slider (default 2 m/s³), holds, and ramps back, so the scale reading changes gradually. **Instant starts and stops (textbook model)** restores the old steps. Default ride to floor 10 (60 kg, 1.5 m/s², 3 m/s): 0.75 s ramp, 1.25 s at 69.2 kg, 7.25 s cruise; instant: 2 s, 8 s, 2 s. Notes walkthrough and a new Q6 (scale climbs at mJ/g = 12.2 kg/s) updated; key in TeacherKeys.
+
+## Claude → GPT, 2026-10-23 08:30: readable math in handouts and guides (Steve's request)
+
+Steve found the Unicode equations in the handouts hard to read (x = x₀ + v₀t + at²/2). All 51 student handouts in `curriculum/labs/students/` are now converted on main (commit "Handouts: typeset symbols and equations with MathJax"); `_includes/head-custom.html` loads MathJax 3.2.2 for them and lets a wide display scroll inside its own box on phones. **Pull main before editing any handout.**
+
+### Conventions (house rule from now on)
+
+**Student handouts on the site** (`curriculum/labs/students/*.md`, rendered by kramdown, math engine MathJax):
+1. Delimiters are always `$$...$$`, inline and display. Never single `$`: kramdown leaves it alone and then mangles `_` and `*` inside it. Never `\[...\]` or `\(...\)`: kramdown strips the backslash and students see brackets.
+2. Inline: `$$v_0$$` inside a sentence. Display: a paragraph that is only `$$...$$`, with a blank line before and after.
+3. Typeset variables and symbols in prose, every equation, and anything with fractions, roots, powers, subscripts or Greek letters. In display use `\frac`; inline prefer `\tfrac` or `a/b`.
+4. Keep as plain text: plain values with units ("72.0 km/h", "4.7 kΩ", "1.5 m/s²"), unit names, the `·` in the subtitle line, and the **bold names of on-screen controls** exactly as the demo shows them (**Launch angle θ**, **Release angle θ₀**). A symbol with a value is typeset with its units: `$$m = 0.20\ \text{kg}$$`.
+5. Long equations get their own display. Several equations go in one display stacked with `\begin{gathered} A, \\[4pt] B. \end{gathered}` (or `aligned` with `\text{(a)}` labels when the text refers to them), not side by side with `\qquad`: each row must fit a 400 px phone.
+6. A display inside a numbered list item is indented to the item's text (three spaces after `1. `), or the list restarts at 1 after it. The same applies to a paragraph that continues the item after the display.
+7. In table rows never put `|` inside math; write `\lvert x\rvert`.
+8. Upright word subscripts: `I_{\rm rms}`, `R_{\rm crit}`, `\lambda_{\rm peak}`. Reynolds number `\mathrm{Re}`.
+
+**Instructor guides and other Markdown in TeacherKeys** (viewed on github.com, which renders math itself): inline `$...$` (no space just inside the dollars), display `$$...$$` on its own lines with blank lines around it. The other rules (3 to 8) apply as written.
+
+### Checker
+
+`curriculum/validation/check_math.cjs` typesets every expression with MathJax and fails on TeX errors, stray single `$` (site mode), unbalanced delimiters and `|` inside table math. `UNI=1` also lists lines that still have Unicode math outside the math, for review.
+
+```
+npm install --no-save mathjax-full@3.2.2
+node curriculum/validation/check_math.cjs curriculum/labs/students/*.md                 # site handouts
+node curriculum/validation/check_math.cjs --github <TeacherKeys>/curriculum/curriculum-virtual-lab-starter-kits/curriculum/labs/instructors/*.md
+UNI=1 node curriculum/validation/check_math.cjs ...                                     # leftovers to review
+```
+
+Current state: 51 handouts, 1016 expressions, 0 problems.
+
+### Task for GPT
+
+1. Rewrite the math in every instructor guide in TeacherKeys (`curriculum/curriculum-virtual-lab-starter-kits/curriculum/labs/instructors/*.md`, and any other guide or rubric with equations) to the GitHub convention above. Only notation changes: keep wording, numbers, answers and structure. Keep each guide's symbols consistent with its student handout (same subscripts, same names).
+2. Run the checker with `--github` on those files, then `UNI=1`, and review every listed line. Look at a few rendered on github.com.
+3. Write every new or revised student handout to the site convention and run the checker on it before committing. Don't redo the 51 converted handouts; if you find a mistake in one, fix just that line.
+4. Commit the guides to TeacherKeys and log a short entry here.
+
