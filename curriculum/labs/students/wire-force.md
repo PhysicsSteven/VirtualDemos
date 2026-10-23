@@ -13,7 +13,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§11.4–11.5 and 11.7. Acces
 **Using the demo.**
 
 - Turn the knobs on the panel in the picture (or focus one and use the arrow keys).
-- The balance was zeroed with no current, so it reads the magnet's apparent change in mass Δm = F/g (to 0.01 g). Capture stores I, L and the reading; the fit is F = Δm g against I, \|slope\| = BL sin θ.
+- The balance was zeroed with no current, so it reads the magnet's apparent change in mass $$\Delta m = F/g$$ (to 0.01 g). Capture stores $$I$$, $$L$$ and the reading; the fit is $$F = \Delta m\,g$$ against $$I$$, with the size of the slope $$BL\sin\theta$$.
 - Blind hides the predicted force, torque and B from the fit, and draws arrows equal length. The balance reading, the meters and the settings stay.
 
 **What the demo models.**

@@ -11,8 +11,8 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§9.4–9.5 and 10.1–10.4. 
 **Using the demo.**
 
 - Click a switch on the drawing to flip it while the circuit runs. The plots and the clock show the circuit's own time: fast changes play in slow motion, slow ones fast forward.
-- Step forward pauses the circuit, moves it on by exactly Δt and puts the time cursor at the new time.
-- Work done by the sources goes into stored energy, ½CV<sup>2</sup> in capacitors and ½LI<sup>2</sup> in inductors, or turns into heat. The difference line checks the bookkeeping.
+- Step forward pauses the circuit, moves it on by exactly $$\Delta t$$ and puts the time cursor at the new time.
+- Work done by the sources goes into stored energy, $$\tfrac{1}{2}CV^2$$ in capacitors and $$\tfrac{1}{2}LI^2$$ in inductors, or turns into heat. The difference line checks the bookkeeping.
 - The equivalent resistance is what the battery sees: the rest of the circuit with every other battery replaced by its internal resistance. Power drawn from the EMFs always equals the power turned into heat and light.
 - Pick a part above the drawing, then drag from one dot to another, or tap two dots. A part dragged over more than one step gets wires to fill the gap; a wire that turns a corner goes across first, then down. Batteries, sources and meters have their + end where you start. With Select, drag a part or a dot to move it, click a switch to flip it, and drag the grip beside a selected part's label to change its value.
 

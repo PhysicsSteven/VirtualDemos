@@ -15,8 +15,8 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§3.1–3.6. Access for free 
 - Three stages, each with a constant acceleration for a set time. Set a stage's time to 0 to skip it.
 - Press Start run, then drag the cart (or hold ← and →, with Shift to go faster) so its graph follows the dashed target for 10 s. The velocity and acceleration are worked out from the position samples, the way a motion detector does it, so quick jerks show up as spikes.
 - Capture stores the time and position shown at the marker (t to 0.01 s, x to 0.01 m). Cells can be edited.
-- The fit is x = x₀ + v₀t + ½at² by least squares over your rows, for one stage of constant acceleration. Capture rows from one stage only.
-- Blind hides the velocity and acceleration graphs, their readouts, the tangent lines, the areas, the stage settings and the a and v₀ from your fit, leaving the position graph, as from a motion detector. Work out v and a from it.
+- The fit is $$x = x_0 + v_0 t + \tfrac{1}{2}at^2$$ by least squares over your rows, for one stage of constant acceleration. Capture rows from one stage only.
+- Blind hides the velocity and acceleration graphs, their readouts, the tangent lines, the areas, the stage settings and the $$a$$ and $$v_0$$ from your fit, leaving the position graph, as from a motion detector. Work out $$v$$ and $$a$$ from it.
 
 </details>
 

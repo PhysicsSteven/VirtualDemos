@@ -13,12 +13,12 @@ Textbook: OpenStax *University Physics*, Vol. 1, §15.4, with the rotational dyn
 **Using the demo.**
 
 - Drag the bob sideways to set the **Release angle θ₀**, or up and down along the string to set the **Length L (pivot to bob centre, or rod length)**; pick the **Mass** from the rack of bobs. Keys on the picture: ← → θ₀, ↑ ↓ L. The Set up card on the picture has sliders and step buttons for exact values; it fades away while the pendulum swings and comes back when you pause, and you can drag it by its title to anywhere on the picture.
-- Capture stores L, θ₀ and the last full period from the photogate. T² against L uses bob rows with θ₀ ≤ 10°: slope 4π²/g. T against θ₀ shows how far large swings depart from T₀.
+- Capture stores $$L$$, $$\theta_0$$ and the last full period from the photogate. $$T^2$$ against $$L$$ uses bob rows with $$\theta_0 \le 10°$$: slope $$4\pi^2/g$$. $$T$$ against $$\theta_0$$ shows how far large swings depart from $$T_0$$.
 - Blind hides the predicted periods and g from the fit; the photogate, the settings and the trace stay. The Mystery planet always hides its g.
 
 **What the demo models.**
 
-- T₀ = 2π√(L/g) · rod: 2π√(2L/3g) · exact: T = T₀ · (2/π) K(sin(θ₀/2))
+- Bob: $$T_0 = 2\pi\sqrt{L/g}$$; rod: $$T_0 = 2\pi\sqrt{2L/3g}$$; any amplitude: $$T = T_0\,\frac{2}{\pi}\,K\!\left(\sin\frac{\theta_0}{2}\right)$$, with $$K$$ the complete elliptic integral of the first kind.
 - Model: a point bob on a massless, inextensible string (or a thin uniform rod). A string can only pull, so the bob on a string is released from at most 90° (above horizontal it would go slack and fall); the rod can start from up to 170° about a frictionless pivot, integrated exactly enough (fourth order Runge–Kutta, 1 ms steps) that the photogate's 0.001 s readings are reliable. Air drag, when on, is a small force in proportion to speed. The photogate times every second pass of the bottom.
 
 </details>

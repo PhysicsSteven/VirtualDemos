@@ -14,10 +14,10 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§13.1 and 13.3–13.5. Acces
 
 - Drag the arrow tip to set speed and direction. Drag the hollow marker to move the launch point. The tip snaps to the gold circular and red escape circles; hold <kbd>Shift</kbd> to place it freely.
 - Focus the orbit view, then use the arrow keys (<kbd>Shift</kbd> for small steps). <kbd>M</kbd> switches what they move, <kbd>+</kbd> and <kbd>−</kbd> zoom, <kbd>1</kbd> and <kbd>2</kbd> pick a ruler point, <kbd>F</kbd> fits the view, <kbd>Space</kbd> plays or pauses.
-- The timer runs on simulated time, so it stops when the planet is paused. Reset puts the planet back at the launch point at t = 0. With Ruler on, click or drag in the view to place points 1 and 2 (the launch arrow is locked meanwhile). Zoom in for precise placement.
-- Capture stores the timer and the ruler as displayed, with the star mass and the launch. The a column starts as half the ruler distance, which is the semi major axis when the points sit on perihelion and aphelion; edit it if you measured another way. The fit is T² = slope·a³ through the origin, using the rows with the present star mass.
-- Each wedge is swept in the same time Δt. Areas (AU²) are summed from the integrated path, not from a formula; compare them with ½·h·Δt, where h = \|r × v\|.
-- The star is held fixed and the planet's mass is neglected, so P² = a³/M exactly (a in AU, P in years, M in solar masses). Two planets do not pull on each other. The motion is integrated with velocity Verlet using a time symmetric step that shrinks near the star. A planet that comes within 0.005 AU (one solar radius) hits the star.
+- The timer runs on simulated time, so it stops when the planet is paused. Reset puts the planet back at the launch point at $$t = 0$$. With Ruler on, click or drag in the view to place points 1 and 2 (the launch arrow is locked meanwhile). Zoom in for precise placement.
+- Capture stores the timer and the ruler as displayed, with the star mass and the launch. The a column starts as half the ruler distance, which is the semi major axis when the points sit on perihelion and aphelion; edit it if you measured another way. The fit is $$T^2 = \text{slope}\times a^3$$ through the origin, using the rows with the present star mass.
+- Each wedge is swept in the same time $$\Delta t$$. Areas (AU²) are summed from the integrated path, not from a formula; compare them with $$\tfrac{1}{2}h\,\Delta t$$, where $$h = \lvert\mathbf{r}\times\mathbf{v}\rvert$$.
+- The star is held fixed and the planet's mass is neglected, so $$P^2 = a^3/M$$ exactly ($$a$$ in AU, $$P$$ in years, $$M$$ in solar masses). Two planets do not pull on each other. The motion is integrated with velocity Verlet using a time symmetric step that shrinks near the star. A planet that comes within 0.005 AU (one solar radius) hits the star.
 
 </details>
 

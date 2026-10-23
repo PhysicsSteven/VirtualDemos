@@ -10,13 +10,13 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§6.4 and 14.7. Access for fr
 
 **Using the demo.**
 
-- Capture stores the liquid, ball, tube and the gate time between the marks (0.01 s); v = 0.200 m / t. Stokes' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / (18 × slope). The fit uses the rows that match the current settings.
-- Blind hides η, the Stokes prediction, the Reynolds number and the fitted η, leaving the timer and the densities. The Mystery liquid always hides its η.
+- Capture stores the liquid, ball, tube and the gate time between the marks (0.01 s); $$v = (0.200\ \text{m})/t$$. Stokes' law predicts $$v \propto d^2$$, so plot $$v$$ against $$d^2$$ for one liquid, ball and tube: $$\eta = (\rho_b - \rho_f)g/(18\times\text{slope})$$. The fit uses the rows that match the current settings.
+- Blind hides $$\eta$$, the Stokes prediction, the Reynolds number and the fitted $$\eta$$, leaving the timer and the densities. The Mystery liquid always hides its $$\eta$$.
 
 **What the demo models.**
 
-- Stokes: F = 6πηrv · v_t = 2(ρ_b − ρ_f)g r²/(9η)
-- Model: drag F = 6πηrv × K(d/D) × C_D Re/24, with the standard drag curve of Clift, Grace and Weber (Oseen's 1 + 3Re/16 below Re = 0.01) and Haberman and Sayre's wall factor K for a sphere on the axis of a tube in slow flow (the K you apply). At higher Re the walls matter less: the factor is weakened following Di Felice (1996), whose fit covers Re up to about 200. The ball's motion includes buoyancy and the added mass ½ρ_f V. Densities in kg/m³: steel 7800, glass 2500, nylon 1140. Liquids at 20 °C: glycerol 1261 and η = 1.41 Pa·s; castor oil 961 and 0.986 Pa·s; motor oil (typical SAE 30) 875 and 0.29 Pa·s; water 998 and 1.00 mPa·s.
+- Stokes: $$F = 6\pi\eta r v$$; $$v_t = 2(\rho_b - \rho_f)g r^2/(9\eta)$$
+- Model: drag $$F = 6\pi\eta r v\times K(d/D)\times C_D\,\text{Re}/24$$, with the standard drag curve of Clift, Grace and Weber (Oseen's $$1 + 3\,\text{Re}/16$$ below $$\text{Re} = 0.01$$) and Haberman and Sayre's wall factor $$K$$ for a sphere on the axis of a tube in slow flow (the $$K$$ you apply). At higher $$\text{Re}$$ the walls matter less: the factor is weakened following Di Felice (1996), whose fit covers $$\text{Re}$$ up to about 200. The ball's motion includes buoyancy and the added mass $$\tfrac{1}{2}\rho_f V$$. Densities in kg/m³: steel 7800, glass 2500, nylon 1140. Liquids at 20 °C: glycerol 1261 and $$\eta = 1.41$$ Pa·s; castor oil 961 and 0.986 Pa·s; motor oil (typical SAE 30) 875 and 0.29 Pa·s; water 998 and 1.00 mPa·s.
 
 </details>
 

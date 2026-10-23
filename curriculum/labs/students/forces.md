@@ -14,9 +14,9 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§5.3, 5.5–5.7, 6.2, 7.1–
 
 - Turn the knobs on the panel in the picture (or focus one and use the arrow keys).
 - F points up the ramp, tilted above the surface by its angle (below for a negative angle, pressing into the ramp). The string over the pulley runs parallel to the ramp. The string and pulley are massless and frictionless.
-- Work by each force on the block, W = F·Δs, added up as it moves. Their sum equals the change in the block's kinetic energy (the work energy theorem). The normal force does no work. Friction's work is negative: that energy becomes thermal energy of the block and ramp. Power is the rate of work now, P = F·v.
-- Use **Release at the top mark**: the timer reads the time for the block to slide 1.000 m from rest (to 0.001 s). Capture stores θ, m, m₂, F and that time; a = 2d/t² is worked out from your time.
-- Sliding down with no push or hanging mass, a = g sin θ − μk g cos θ, so a/cos θ = g tan θ − μk g: a straight line with slope g and intercept −μk g. The fit uses only rows with F = 0 and m₂ = 0.
+- Work by each force on the block, $$W = \mathbf{F}\cdot\Delta\mathbf{s}$$, added up as it moves. Their sum equals the change in the block's kinetic energy (the work energy theorem). The normal force does no work. Friction's work is negative: that energy becomes thermal energy of the block and ramp. Power is the rate of work now, $$P = \mathbf{F}\cdot\mathbf{v}$$.
+- Use **Release at the top mark**: the timer reads the time for the block to slide 1.000 m from rest (to 0.001 s). Capture stores θ, m, m₂, F and that time; $$a = 2d/t^2$$ is worked out from your time.
+- Sliding down with no push or hanging mass, $$a = g\sin\theta - \mu_k g\cos\theta$$, so $$a/\cos\theta = g\tan\theta - \mu_k g$$: a straight line in $$\tan\theta$$ with slope $$g$$ and intercept $$-\mu_k g$$. The fit uses only rows with $$F = 0$$ and $$m_2 = 0$$.
 - Blind hides every force size, the acceleration, the friction type, the slip angle, the arrows' lengths (all drawn the same size) and μk from the fit. The timer, the settings and the force directions stay.
 
 </details>

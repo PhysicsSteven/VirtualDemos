@@ -12,10 +12,10 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§11.3, 11.6–11.7. Access f
 
 **Using the demo.**
 
-- Drag the arrow tip on the drawing to aim and set the speed, and the ring to move the launch point. Speeds stop at 10⁷ m/s (v/c = 0.033) so the nonrelativistic motion stays accurate.
+- Drag the arrow tip on the drawing to aim and set the speed, and the ring to move the launch point. Speeds stop at $$10^7$$ m/s ($$v/c = 0.033$$) so the nonrelativistic motion stays accurate.
 - Lay the ruler across the track: drag its two ends onto opposite sides of the circle. It reads to one screen pixel, so zoom in (wheel or +) for a finer reading. The timer counts time in the simulation and stops while paused. Start it as the particle passes a mark, such as the launch ring, and stop it after a whole number of turns. Keys on the drawing: M ruler, T timer, S picks what the arrow keys move.
 - Capture stores what you read: the particle, the settings as displayed (q, m, v, B, E), your ruler reading and your timer reading divided by the turns timed. It never stores the model's r or T. Cells can be edited; rows stay through setup changes until Clear.
-- Blind hides the r, T, f, turns, drift and pitch readouts, the r label, the circle's center, the dashed path ahead and the period axis, and in the other setups the predicted speeds, landing points, f<sub>c</sub> and K<sub>max</sub>. In the Hall strip it renames the samples and hides the carriers, n, R<sub>H</sub> and v<sub>d</sub>. The ruler, the timer, the settings, the Hall voltmeter and the speed and energy readouts stay.
+- Blind hides the r, T, f, turns, drift and pitch readouts, the r label, the circle's center, the dashed path ahead and the period axis, and in the other setups the predicted speeds, landing points, $$f_c$$ and $$K_{\max}$$. In the Hall strip it renames the samples and hides the carriers, $$n$$, $$R_H$$ and $$v_d$$. The ruler, the timer, the settings, the Hall voltmeter and the speed and energy readouts stay.
 
 </details>
 

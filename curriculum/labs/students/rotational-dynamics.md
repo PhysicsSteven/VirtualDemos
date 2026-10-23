@@ -11,13 +11,13 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§10.2, 10.5–10.8 and 11.1.
 **Using the demo.**
 
 - Set the **Hanging mass m** with the slotted masses beside the pulley (on the picture, the up arrow hangs 5 g and the down arrow takes off the last mass).
-- Capture stores m, r, what is on the table and the timer reading for the 0.500 m drop (0.001 s). From each row: a = 2h/t², α = a/r, and the string's torque τ = m(g − a)r. Plotting τ against α for one load gives a line: slope I, intercept the friction torque.
+- Capture stores $$m$$, $$r$$, what is on the table and the timer reading for the 0.500 m drop (0.001 s). From each row: $$a = 2h/t^2$$, $$\alpha = a/r$$, and the string's torque $$\tau = m(g - a)r$$. Plotting $$\tau$$ against $$\alpha$$ for one load gives a line: slope $$I$$, intercept the friction torque.
 - Blind hides moments of inertia, the predicted motion, the energies and I from the fit, leaving the timer, the masses and the settings. The Mystery object always hides its I.
 
 **What the demo models.**
 
-- mg − T = ma · Tr − τ_f = Iα · a = αr
-- Model: a rigid turntable on its axle, a massless string that does not slip on the spool, a massless frictionless pulley, and (optionally) a constant friction torque at the bearing. Turntable I₀ = 2.00 × 10⁻³ kg·m². Disk 1.00 kg, radius 10.0 cm; ring 1.00 kg, radii 9.0 and 10.0 cm; two 0.200 kg masses (small cylinders, 1.5 cm radius).
+- $$mg - T = ma$$; $$Tr - \tau_f = I\alpha$$; $$a = \alpha r$$
+- Model: a rigid turntable on its axle, a massless string that does not slip on the spool, a massless frictionless pulley, and (optionally) a constant friction torque at the bearing. Turntable $$I_0 = 2.00\times10^{-3}\ \text{kg}\,\text{m}^2$$. Disk 1.00 kg, radius 10.0 cm; ring 1.00 kg, radii 9.0 and 10.0 cm; two 0.200 kg masses (small cylinders, 1.5 cm radius).
 
 </details>
 

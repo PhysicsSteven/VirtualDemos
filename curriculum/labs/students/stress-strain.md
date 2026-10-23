@@ -11,12 +11,12 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§12.3–12.4. Access for fre
 **Using the demo.**
 
 - Hang slotted masses from the tray under the wire; up and down arrows on the picture add or take off 0.1 kg (Shift: 1 kg).
-- Capture stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire's diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).
+- Capture stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire's diameter. The fit is a straight line of the load $$F = mg$$ against $$\Delta L$$; $$Y = \text{slope}\times L/A$$. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).
 - Blind hides Young's modulus, the yield and breaking stresses, the stress and strain readouts, the material curve and Y from the fit, leaving the load, the diameter and the dial gauge. The Mystery metal is always blind about its own properties.
 
 **What the demo models.**
 
-- stress σ = F/A · strain ε = ΔL/L · Y = σ/ε (elastic)
+- Stress $$\sigma = F/A$$; strain $$\varepsilon = \Delta L/L$$; $$Y = \sigma/\varepsilon$$ (elastic)
 - Model: an idealized stress against strain curve: straight to the yield stress, then hardening up to the tensile strength, breaking at the fracture strain; unloading follows a line parallel to the elastic one, leaving a permanent stretch. Values are typical for each metal; real samples vary. Necking, creep and the wire's own weight are ignored.
 
 </details>
