@@ -127,6 +127,12 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.row3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+.row3 .btn { padding-inline: 4px; }
+table.lim td { padding: 4px 2px; }
+table.lim td.f { font-size: 0.78rem; }
+table.lim td.f small { display: block; color: var(--muted); font-size: 0.72rem; }
+table.lim tr.exact td { font-weight: 700; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; }
 .btn .dot { width: 10px; height: 10px; border-radius: 50%; }
 .btn.pos .dot { background: var(--pos); }
@@ -208,7 +214,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   <header class="bar">
     <div>
       <h1>Coulomb Sandbox</h1>
-      <p>Drag the charges around, and drag the knob on a selected charge to change its value. Switch to 3D to see the potential as a landscape of hills and wells.</p>
+      <p>Drag the charges around, and drag the knob on a selected charge to change its value. Add a charged rod, ring or disk to compare with the textbook formulas. Switch to 3D to see the potential as a landscape of hills and wells.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">1 grid square = 1 cm · q in nC · k = 8.99×10⁹ N·m²/C²</div>
@@ -230,7 +236,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       </div>
       <div class="qtag mono" id="qTag" hidden></div>
       <div class="blindtag" id="blindTag" hidden>Blind</div>
-      <p class="sr-only" id="kbHelp">Keys: Tab or ] selects the next charge, Shift+Tab or [ the previous one. Arrow keys move the selected charge 0.1 cm, Shift+arrow 1 cm. + and − change its charge by 0.5 nC. Delete removes it. P switches between the probe and the last selected charge (Escape also switches to the probe); with the probe selected, arrow keys move it 0.1 cm, Shift+arrow 1 cm. C captures a reading. In the 3D landscape, A and D rotate the view, W and S tilt it, Z and X zoom in and out, 0 resets it.</p>
+      <p class="sr-only" id="kbHelp">Keys: Tab or ] selects the next charge, Shift+Tab or [ the previous one. Arrow keys move the selected charge 0.1 cm, Shift+arrow 1 cm. + and − change its charge by 0.5 nC. Delete removes it. P switches between the probe and the last selected charge (Escape also switches to the probe); with the probe selected, arrow keys move it 0.1 cm, Shift+arrow 1 cm. R turns a selected rod, ring or disk by 15° (Shift+R the other way). C captures a reading. In the 3D landscape, A and D rotate the view, W and S tilt it, Z and X zoom in and out, 0 resets it.</p>
       <p class="sr-only" id="kbLive" aria-live="polite"></p>
       <div class="hint3d" id="hint3d" hidden></div>
     </div>
@@ -244,6 +250,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-p="uneven" aria-pressed="false">+3 and −1</button>
           <button type="button" data-p="trio" aria-pressed="false">Triangle</button>
           <button type="button" data-p="quad" aria-pressed="false">Quadrupole</button>
+          <button type="button" data-p="rod" aria-pressed="false">Rod</button>
+          <button type="button" data-p="ring" aria-pressed="false">Ring</button>
+          <button type="button" data-p="disk" aria-pressed="false">Disk</button>
         </div>
       </section>
 
@@ -253,12 +262,25 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" class="btn pos" id="addPos"><span class="dot"></span>Add +1 nC</button>
           <button type="button" class="btn neg" id="addNeg"><span class="dot"></span>Add −1 nC</button>
         </div>
+        <div class="row3">
+          <button type="button" class="btn" id="addRod">Add rod</button>
+          <button type="button" class="btn" id="addRing">Add ring</button>
+          <button type="button" class="btn" id="addDisk">Add disk</button>
+        </div>
         <div class="sel" id="selEditor" hidden>
           <div class="selhead"><label for="q">Selected charge</label><output id="qOut" class="mono" for="q">+2.0 nC</output></div>
           <input type="range" id="q" min="-5" max="5" step="0.5" value="2">
+          <div class="sel" id="bodyEd" hidden>
+            <div class="slider-head"><label for="bodySize" id="bodySizeLab">Length L</label><output id="bodySizeOut" class="mono" for="bodySize">6.0 cm</output></div>
+            <input type="range" id="bodySize" min="1" max="16" step="0.5" value="6">
+            <div class="slider-head"><label for="bodyAng" id="bodyAngLab">Direction</label><output id="bodyAngOut" class="mono" for="bodyAng">0°</output></div>
+            <input type="range" id="bodyAng" min="0" max="165" step="15" value="0">
+            <p class="hint mono" id="bodyDens"></p>
+          </div>
           <div class="selfoot"><span id="selPos" class="mono"></span><button type="button" class="link" id="del">Remove</button></div>
         </div>
         <p class="hint" id="selHint">Click a charge to select it, or click the field and press Tab.</p>
+        <p class="hint" id="bodyHint" hidden>A rod lies in the map. A ring or disk stands perpendicular to the map with its axis (dotted) in the map, so you see it edge on: the map slices the ring at its two dots and the disk along the bar.</p>
       </section>
 
       <section>
@@ -271,6 +293,14 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         </dl>
         <p class="hint core-note" id="coreNote" hidden>The probe is inside a charge's 1.2 mm model ball. A true point charge has no finite V or E here; these values are for a uniformly charged ball.</p>
         <p class="hint">Hover over the field, tap to place the probe, or press P on the field and use the arrow keys. The probe sits on a 0.1 cm grid. Each charge is modeled as a uniformly charged ball 1.2 mm in radius, inside its drawn disc; outside the ball V and E are exact point charge values.</p>
+        <p class="hint" id="bodyModel" hidden>Model: a rod, ring or disk carries its charge Q spread uniformly, and V and E are the exact integrals of k dq/r: closed forms for the rod, and complete elliptic integrals for the ring and the disk off their axis (on the axis these reduce to the textbook formulas). Within 1.2 mm of a body its charge is treated as a line or sheet of uniformly charged balls 1.2 mm in radius, integrated numerically to 1 part in 10¹⁰.</p>
+      </section>
+
+      <section id="limitsSec" hidden>
+        <h2>Textbook formulas</h2>
+        <p class="hint" id="limWhat"></p>
+        <div class="twrap"><table class="rows lim" id="limTbl"><caption class="sr-only">Field of one object at the probe compared with textbook formulas</caption><thead><tr><th scope="col">Formula</th><th scope="col">|E|</th><th scope="col">vs exact</th></tr></thead><tbody></tbody></table></div>
+        <p class="hint">The field of this object alone (other charges left out), compared with the formulas of OpenStax section 5.5 at the probe. Each formula is exact only where its note says; elsewhere it is a limit. Select another rod, ring or disk to compare it.</p>
       </section>
 
       <section>
@@ -338,35 +368,246 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 (() => {
   // ==CORE START==
   // Pure physics and reading helpers, no DOM. Lengths in cm, charges in nC, V in volts, E in V/m.
-  const DEMO_VERSION = 'coulomb-sandbox@2026-10-22';
+  const DEMO_VERSION = 'coulomb-sandbox@2026-10-23';
   const C_V = 898.755;   // V·cm per nC   (k q / r), k = 8.98755×10⁹ N·m²/C²
   const C_E = 89875.5;   // V/m · cm² per nC (k q / r²)
   const CORE_R = 0.12, CORE_R3 = CORE_R ** 3;   // cm: each charge is a uniformly charged ball of this radius (always inside its drawn disc)
+
+  // ---- continuous charge distributions (OpenStax University Physics Vol 2, section 5.5) ----
+  // A body is { kind: 'rod' | 'ring' | 'disk', x, y, q, size, ang } with total charge q (nC) spread uniformly, centered at (x, y) cm.
+  // rod: a straight segment of length size (cm) lying in the map, pointing ang degrees from +x.
+  // ring, disk: radius size (cm), standing perpendicular to the map with the axis in the map, pointing ang degrees from +x.
+  // The map is then a slice through the axis: the ring crosses the map at two points, the disk along one diameter.
+  // Model: each body is a line or sheet of uniformly charged balls of radius CORE_R (the same ball as a point charge).
+  // Farther than CORE_R from the charge every ball acts as a point, so there V and E are exactly the thin body integrals.
+  const XGK = [0.991455371120812639, 0.949107912342758525, 0.864864423359769073, 0.741531185599394440, 0.586087235467691130, 0.405845151377397167, 0.207784955007898468, 0];
+  const WGK = [0.022935322010529225, 0.063092092629978553, 0.104790010322250184, 0.140653259715525919, 0.169004726639267903, 0.190350578064785410, 0.204432940075298892, 0.209482141084727828];
+  const WG = [0.129484966168869693, 0.279705391489276668, 0.381830050505118945, 0.417959183673469388];
+  const QUAD_REL = 1e-10;   // adaptive Gauss–Kronrod target: each component to 1 part in 10¹⁰ of its size
+  // ∫ from A to B of f(t, out), where f writes three numbers into out; adaptive 7 point Gauss / 15 point Kronrod
+  function quad3(f, A, B) {
+    const st = new Float64Array(8 * 256), o = new Float64Array(3);
+    let sp = 0;
+    const rule = (a, b) => {   /* pushes [a, b, three Kronrod sums, three error estimates] */
+      const c = (a + b) / 2, h = (b - a) / 2;
+      f(c, o);
+      let k0 = WGK[7] * o[0], k1 = WGK[7] * o[1], k2 = WGK[7] * o[2], g0 = WG[3] * o[0], g1 = WG[3] * o[1], g2 = WG[3] * o[2];
+      for (let j = 0; j < 7; j++) {
+        const x = h * XGK[j];
+        f(c - x, o); const s0 = o[0], s1 = o[1], s2 = o[2];
+        f(c + x, o); const t0 = s0 + o[0], t1 = s1 + o[1], t2 = s2 + o[2], w = WGK[j];
+        k0 += w * t0; k1 += w * t1; k2 += w * t2;
+        if (j & 1) { const v = WG[(j - 1) >> 1]; g0 += v * t0; g1 += v * t1; g2 += v * t2; }
+      }
+      st[sp] = a; st[sp + 1] = b; st[sp + 2] = k0 * h; st[sp + 3] = k1 * h; st[sp + 4] = k2 * h;
+      st[sp + 5] = Math.abs(k0 - g0) * h; st[sp + 6] = Math.abs(k1 - g1) * h; st[sp + 7] = Math.abs(k2 - g2) * h;
+      sp += 8;
+    };
+    rule(A, B);
+    const tol0 = QUAD_REL * Math.abs(st[2]) + 1e-300, tol1 = QUAD_REL * (Math.abs(st[3]) + Math.abs(st[4])) + 1e-300;
+    let n = 0, i0 = 0, i1 = 0, i2 = 0;
+    while (sp) {
+      sp -= 8;
+      const a = st[sp], b = st[sp + 1], w = (b - a) / (B - A);
+      if (n++ < 4000 && sp < st.length - 16 && (st[sp + 5] > tol0 * w || st[sp + 6] > tol1 * w || st[sp + 7] > tol1 * w)) {
+        const m = (a + b) / 2; rule(a, m); rule(m, b); continue;
+      }
+      i0 += st[sp + 2]; i1 += st[sp + 3]; i2 += st[sp + 4];
+    }
+    return [i0, i1, i2];
+  }
+  // complete elliptic integrals over ψ from 0 to π/2 with s = sin²ψ:
+  // K = ∫(1 − ms)^(−1/2), E = ∫(1 − ms)^(1/2), A = ∫(1 − ms)^(−3/2), B = ∫(2s − 1)(1 − ms)^(−3/2), Cc = ∫(2s − 1)(1 − ms)^(−1/2)
+  // power series for m < 0.5 (no cancellation near m = 0), arithmetic geometric mean above
+  function ellip(m) {
+    const hp = Math.PI / 2;
+    if (m < 0.5) {
+      let c = 1, mn = 1, K = 0, E = 0, A = 0, B = 0, Cc = 0;
+      for (let n = 0; n < 400; n++) {
+        const t = c * c * mn;
+        K += t; E += t / (1 - 2 * n); A += (2 * n + 1) * t; B += (2 * n + 1) * t * n / (n + 1); Cc += t * n / (n + 1);
+        if ((2 * n + 1) * t < 1e-18) break;
+        c *= (2 * n + 1) / (2 * n + 2); mn *= m;
+      }
+      return { K: K * hp, E: E * hp, A: A * hp, B: B * hp, Cc: Cc * hp };
+    }
+    let a = 1, b = Math.sqrt(1 - m), sum = m / 2, w = 0.5;
+    for (let i = 0; i < 60; i++) {
+      const cn = (a - b) / 2, an = (a + b) / 2; b = Math.sqrt(a * b); a = an; w *= 2; sum += w * cn * cn;
+      if (Math.abs(cn) < 1e-17 * a) break;
+    }
+    const K = Math.PI / (2 * a), E = K * (1 - sum), A = E / (1 - m);
+    return { K, E, A, B: (2 / m) * (A - K) - A, Cc: (2 / m) * (K - E) - K };
+  }
+  // Carlson's symmetric integral RJ(x, y, z, p), p > 0, by duplication (Carlson 1995); gives Π(n, m) = K(m) + (n/3) RJ(0, 1 − m, 1, 1 − n)
+  function carlsonRJ(x, y, z, p) {
+    const A0 = (x + y + z + 2 * p) / 5, delta = (p - x) * (p - y) * (p - z);
+    const Q = Math.pow(2.5e-17, -1 / 6) * Math.max(Math.abs(A0 - x), Math.abs(A0 - y), Math.abs(A0 - z), Math.abs(A0 - p));
+    let A = A0, f = 1, sum = 0;
+    for (let i = 0; i < 60 && f * Q >= Math.abs(A); i++) {
+      const sx = Math.sqrt(x), sy = Math.sqrt(y), sz = Math.sqrt(z), sq = Math.sqrt(p), lam = sx * sy + sy * sz + sz * sx;
+      const d = (sq + sx) * (sq + sy) * (sq + sz), e = delta * f * f * f / (d * d);
+      const rc = Math.abs(e) < 1e-8 ? 1 - e / 3 + e * e / 5 : e > 0 ? Math.atan(Math.sqrt(e)) / Math.sqrt(e) : Math.atanh(Math.sqrt(-e)) / Math.sqrt(-e);
+      sum += f * rc / d;
+      x = (x + lam) / 4; y = (y + lam) / 4; z = (z + lam) / 4; p = (p + lam) / 4; A = (A + lam) / 4; f /= 4;
+    }
+    const X = (A0 - x) * f / A, Y = (A0 - y) * f / A, Z = (A0 - z) * f / A, P = -(X + Y + Z) / 2;
+    const E2 = X * Y + X * Z + Y * Z - 3 * P * P, E3 = X * Y * Z + 2 * E2 * P + 4 * P * P * P, E4 = (2 * X * Y * Z + E2 * P + 3 * P * P * P) * P, E5 = X * Y * Z * P * P;
+    return f * Math.pow(A, -1.5) * (1 - 3 * E2 / 14 + E3 / 6 + 9 * E2 * E2 / 88 - 3 * E4 / 22 - 9 * E2 * E3 / 52 + 3 * E5 / 26) + 6 * sum;
+  }
+  // rod of length L along u, center at the origin, probe at (u, v): [V, Eu, Ev] in V and V/m for Q = 1 nC. Closed form.
+  function rodLocal(L, u, v) {
+    const a = CORE_R, d = Math.abs(v), d2 = v * v, t1 = -L / 2 - u, t2 = L / 2 - u;
+    let V = 0, Eu = 0, Ev = 0;
+    const outer = (al, be) => {   /* thin line from t = al to be (t = source minus probe along the rod), all of it at least a away */
+      const ra = Math.sqrt(al * al + d2), rb = Math.sqrt(be * be + d2);
+      V += al >= 0 ? Math.log((be + rb) / (al + ra)) : be <= 0 ? Math.log((ra - al) / (rb - be)) : Math.asinh(be / d) - Math.asinh(al / d);
+      Eu += 1 / rb - 1 / ra;
+      Ev += v * (al >= 0 || be <= 0 ? (be * be - al * al) / (ra * rb * (be * ra + al * rb)) : (be / rb - al / ra) / d2);
+    };
+    const inner = (p, q) => {     /* the stretch whose balls contain the probe */
+      V += ((3 * a * a - d2) * (q - p) - (q * q * q - p * p * p) / 3) / (2 * CORE_R3);
+      Eu -= (q * q - p * p) / (2 * CORE_R3); Ev += v * (q - p) / CORE_R3;
+    };
+    if (d < a) {
+      const w = Math.sqrt(a * a - d2), p = Math.max(t1, -w), q = Math.min(t2, w);
+      if (t1 < -w) outer(t1, Math.min(t2, -w));
+      if (q > p) inner(p, q);
+      if (t2 > w) outer(Math.max(t1, w), t2);
+    } else outer(t1, t2);
+    return [C_V * V / L, C_E * Eu / L, C_E * Ev / L];
+  }
+  // ring of radius R in the plane z = 0, probe at distance rho ≥ 0 from the axis and z along it: [V, Erho, Ez] for Q = 1 nC.
+  // Closed form with complete elliptic integrals; within a of the wire, the ball stretch in closed form plus the rest by quadrature.
+  function ringLocal(R, rho, z) {
+    const a = CORE_R, S = rho * rho + R * R + z * z;
+    if ((rho - R) ** 2 + z * z >= a * a) {
+      const D2 = (R + rho) ** 2 + z * z, D = Math.sqrt(D2), f = ellip(4 * R * rho / D2), D3 = D2 * D;
+      return [C_V * 2 * f.K / (Math.PI * D), C_E * 2 * (rho * f.A - R * f.B) / (Math.PI * D3), C_E * 2 * z * f.A / (Math.PI * D3)];
+    }
+    const pc = Math.acos(Math.max(-1, Math.min(1, (S - a * a) / (2 * rho * R)))), sc = Math.sin(pc);
+    const out = quad3((p, o) => { const cp = Math.cos(p), r = Math.sqrt(S - 2 * rho * R * cp), r3 = r * r * r; o[0] = 1 / r; o[1] = (rho - R * cp) / r3; o[2] = z / r3; }, pc, Math.PI);
+    const v = ((3 * a * a - S) * pc + 2 * rho * R * sc) / (2 * CORE_R3) + out[0];
+    const er = (rho * pc - R * sc) / CORE_R3 + out[1], ez = z * pc / CORE_R3 + out[2];
+    return [C_V * v / Math.PI, C_E * er / Math.PI, C_E * ez / Math.PI];
+  }
+  // along a ray in a sheet at height h: ∫ s Φ ds, ∫ s g ds, ∫ s² g ds from s = lo to hi, with Φ = 1/r, g = 1/r³ outside the ball, ball values inside
+  function sheetRay(lo, hi, h, o) {
+    const a = CORE_R, h2 = h * h;
+    o[0] = o[1] = o[2] = 0;
+    let w = -1;
+    if (h < a) {
+      w = Math.sqrt(a * a - h2);
+      const q = Math.min(hi, w);
+      if (q > lo) {
+        o[0] += ((3 * a * a - h2) * (q * q - lo * lo) / 2 - (q ** 4 - lo ** 4) / 4) / (2 * CORE_R3);
+        o[1] += (q * q - lo * lo) / (2 * CORE_R3); o[2] += (q ** 3 - lo ** 3) / (3 * CORE_R3);
+      }
+    }
+    const p = Math.max(lo, w);
+    if (hi > p) {
+      const rp = Math.sqrt(p * p + h2), rh = Math.sqrt(hi * hi + h2);
+      o[0] += rh - rp; o[1] += 1 / rp - 1 / rh; o[2] += Math.log((hi + rh) / (p + rp)) - hi / rh + p / rp;
+    }
+  }
+  // disk of radius R in the plane z = 0, probe at rho ≥ 0, z: [V, Erho, Ez] for Q = 1 nC.
+  // Farther than a from the disk: closed form. Writing the area integral as a rim integral gives, with D² = (R + rho)² + z²,
+  // m = 4R rho/D², n = 4R rho/(R + rho)², h = |z| and K, E, Π complete elliptic integrals:
+  //   V  = kσ [2D E + (R² − rho²)(2K + 2h²Π/(R + rho)²)/D − 2πh step],   step = 1 for rho < R, 1/2 at rho = R, 0 beyond
+  //   Ez = kσ sign(z) [2π step − 2hK/D − 2h(R − rho)Π/(D(R + rho))],    Erho = kσ R ∮ cos φ dφ / r = 4kσ R Cc/D.
+  // Within a of the disk (the model layer) V, Ez and Erho come from quadrature over the direction from the foot of the probe.
+  function diskLocal(R, rho, z) {
+    const a = CORE_R, h = Math.abs(z), sig = 1 / (Math.PI * R * R);
+    if ((rho <= R ? h * h : (rho - R) ** 2 + h * h) >= a * a) {
+      const D2 = (R + rho) ** 2 + z * z, D = Math.sqrt(D2), m = 4 * R * rho / D2, f = ellip(m), sz = z < 0 ? -1 : 1;
+      if (rho === R) return [C_V * sig * (2 * D * f.E - Math.PI * h), C_E * sig * 4 * R * f.Cc / D, C_E * sig * sz * (Math.PI - 2 * h * f.K / D)];
+      const n = 4 * R * rho / (R + rho) ** 2, Pi = h > 0 ? f.K + (n / 3) * carlsonRJ(0, 1 - m, 1, ((R - rho) / (R + rho)) ** 2) : 0, step = rho < R ? 1 : 0;   /* 1 − n written without cancellation */
+      const V = 2 * D * f.E + (R * R - rho * rho) * (2 * f.K + 2 * h * h * Pi / (R + rho) ** 2) / D - 2 * Math.PI * h * step;
+      const Ez = sz * (2 * Math.PI * step - 2 * h * f.K / D - 2 * h * (R - rho) * Pi / (D * (R + rho)));
+      return [C_V * sig * V, C_E * sig * 4 * R * f.Cc / D, C_E * sig * Ez];
+    }
+    const t = [0, 0, 0];
+    const I = rho <= R
+      ? quad3((p, o) => {
+        const cp = Math.cos(p), sp = Math.sin(p);
+        sheetRay(0, rho * cp + Math.sqrt(Math.max(0, R * R - rho * rho * sp * sp)), h, t);
+        o[0] = t[0]; o[1] = z * t[1]; o[2] = cp * t[2];
+      }, 0, Math.PI)
+      : quad3((th, o) => {   /* only directions that cross the disk: sin φ = (R/rho) sin θ */
+        const st = Math.sin(th), ct = Math.cos(th), sp = R * st / rho, cp = Math.sqrt(1 - sp * sp), s2 = rho * cp + R * ct, jac = R * ct / (rho * cp);
+        sheetRay((rho * rho - R * R) / s2, s2, h, t);
+        o[0] = jac * t[0]; o[1] = jac * z * t[1]; o[2] = jac * cp * t[2];
+      }, 0, Math.PI / 2);
+    return [C_V * sig * 2 * I[0], C_E * sig * 2 * I[2], C_E * sig * 2 * I[1]];
+  }
+  const bodyDir = (c) => { const r = c.ang * Math.PI / 180; return [Math.cos(r), Math.sin(r)]; };
+  // the body's segment in the map: the rod itself, or the ring's or disk's diameter seen edge on
+  function bodyEnds(c) {
+    const [ca, sa] = bodyDir(c), h = c.kind === 'rod' ? c.size / 2 : c.size, ux = c.kind === 'rod' ? ca : -sa, uy = c.kind === 'rod' ? sa : ca;
+    return [[c.x - h * ux, c.y - h * uy], [c.x + h * ux, c.y + h * uy]];
+  }
+  // coordinates in the body's frame: rod (along, across); ring and disk (z along the axis, signed distance from the axis)
+  function bodyFrame(c, x, y) { const [ca, sa] = bodyDir(c), dx = x - c.x, dy = y - c.y; return [dx * ca + dy * sa, -dx * sa + dy * ca]; }
+  // [V, Ex, Ey] of one body at (x, y) in the map
+  function bodyAt(c, x, y) {
+    const [ca, sa] = bodyDir(c), [p1, p2] = bodyFrame(c, x, y);
+    let V, E1, E2;
+    if (c.kind === 'rod') [V, E1, E2] = rodLocal(c.size, p1, p2);
+    else { let Er; [V, Er, E1] = (c.kind === 'ring' ? ringLocal : diskLocal)(c.size, Math.abs(p2), p1); E2 = p2 < 0 ? -Er : Er; }
+    return [c.q * V, c.q * (E1 * ca - E2 * sa), c.q * (E1 * sa + E2 * ca)];
+  }
+  // distance from (x, y) to the body's charge (in 3D; the map is a plane through the body's axis or along the rod)
+  function bodyDist(c, x, y) {
+    const [p1, p2] = bodyFrame(c, x, y);
+    if (c.kind === 'rod') return Math.hypot(Math.max(0, Math.abs(p1) - c.size / 2), p2);
+    const rho = Math.abs(p2);
+    return c.kind === 'disk' && rho <= c.size ? Math.abs(p1) : Math.hypot(rho - c.size, p1);
+  }
+  // the textbook results for one body at (x, y), magnitudes in V/m (null where a formula has no value)
+  function bodyLimits(c, x, y) {
+    const [, ex, ey] = bodyAt(c, x, y), [p1, p2] = bodyFrame(c, x, y), Q = Math.abs(c.q), R = c.size;
+    const r = Math.hypot(x - c.x, y - c.y), point = r > 0 ? C_E * Q / (r * r) : null, rows = [];
+    if (c.kind === 'rod') {
+      const d = Math.abs(p2);
+      rows.push({ id: 'line', E: d > 0 ? 2 * C_E * Q / (R * d) : null });
+      rows.push({ id: 'bisector', E: d > 0 ? C_E * Q / (d * Math.sqrt(d * d + R * R / 4)) : null });
+    } else if (c.kind === 'ring') {
+      rows.push({ id: 'ringAxis', E: C_E * Q * Math.abs(p1) / (p1 * p1 + R * R) ** 1.5 });
+    } else {
+      const plane = 2 * Math.PI * C_E * Q / (Math.PI * R * R);
+      rows.push({ id: 'diskAxis', E: plane * (1 - Math.abs(p1) / Math.hypot(p1, R)) });
+      rows.push({ id: 'plane', E: plane });
+    }
+    rows.push({ id: 'point', E: point });
+    return { E: Math.hypot(ex, ey), along: p1, across: p2, rows };
+  }
 
   // Outside r = CORE_R both are exactly the point charge results kq/r and kq r̂/r².
   // Inside, each charge is a uniformly charged ball: V = kq(3a² − r²)/(2a³), E = kq r/a³,
   // so E = −∇V everywhere and both are continuous at r = a.
   function potentialAt(list, x, y) {
-    let v = 0;
+    let v = 0, vb = 0;
     for (const c of list) {
       if (!c.q) continue;
+      if (c.kind) { vb += bodyAt(c, x, y)[0]; continue; }
       const r = Math.hypot(x - c.x, y - c.y);
       v += r >= CORE_R ? c.q / r : c.q * (3 * CORE_R * CORE_R - r * r) / (2 * CORE_R3);
     }
-    return v * C_V;
+    return v * C_V + vb;
   }
   function fieldAt(list, x, y) { // V/m
-    let ex = 0, ey = 0;
+    let ex = 0, ey = 0, bx = 0, by = 0;
     for (const c of list) {
       if (!c.q) continue;
+      if (c.kind) { const b = bodyAt(c, x, y); bx += b[1]; by += b[2]; continue; }
       const dx = x - c.x, dy = y - c.y, r2 = dx * dx + dy * dy;
       const r3 = r2 >= CORE_R * CORE_R ? r2 * Math.sqrt(r2) : CORE_R3;
       ex += c.q * dx / r3; ey += c.q * dy / r3;
     }
-    return [ex * C_E, ey * C_E];
+    return [ex * C_E + bx, ey * C_E + by];
   }
-  // the charge whose model ball contains (x, y), if any
-  const coreAt = (list, x, y) => list.find((c) => c.q && Math.hypot(x - c.x, y - c.y) < CORE_R) || null;
+  // the charge whose model ball contains (x, y), or the body within CORE_R of (x, y), if any
+  const coreAt = (list, x, y) => list.find((c) => c.q && (c.kind ? bodyDist(c, x, y) : Math.hypot(x - c.x, y - c.y)) < CORE_R) || null;
   // the visible region in cm for a W × H pane with origin at (cx, cy) px and s px per cm
   const viewBounds = (W, H, cx, cy, s) => ({ x0: -cx / s, x1: (W - cx) / s, y0: -(H - cy) / s, y1: cy / s });
 
@@ -403,7 +644,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     }
     return out;
   }
-  const chargeKey = (list) => list.map((c) => `${snap01(c.x)},${snap01(c.y)},${c.q}`).join(';');
+  const chargeKey = (list) => list.map((c) => `${snap01(c.x)},${snap01(c.y)},${c.q}` + (c.kind ? `,${c.kind},${c.size},${c.ang}` : '')).join(';');
 
   // ---- CSV ----
   const csvCell = (v) => { const t = v === null || v === undefined ? '' : String(v); return /[",\n]/.test(t) ? '"' + t.replace(/"/g, '""') + '"' : t; };
@@ -412,7 +653,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const cmToM = (t) => { const u = String(t).trim().replace(/−/g, '-'), n = Number(u); return u !== '' && isFinite(n) ? tidy(n / 100) : u; };
   // rows: [{ config, x, y, V, E, dir, inCore }] with x, y in cm (typed strings are fine)
   // configs: [{ name, charges: [{ x, y, q }] }] in cm and nC; row.config is its 1 based index
+  // a rod, ring or disk in charges also has kind, size (cm) and ang (degrees)
   function readingsCsv(rows, configs) {
+    const bodies = configs.some((cf) => cf.charges.some((c) => c.kind));
     const L = [
       '# Coulomb Sandbox probe readings (simulated data)',
       `# demo version,${DEMO_VERSION}`,
@@ -421,9 +664,18 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       '# charge_ball_radius_m,0.0012',
       '# rounding,positions to 0.001 m (the probe sits on a 0.1 cm grid); V to 1 V below 1 kV and 10 V from 1 kV; |E| to 1 V/m below 1 kV/m then 100 V/m below 100 kV/m then 1 kV/m below 1 MV/m then 10 kV/m; direction to 1 degree counterclockwise from +x'
     ];
+    if (bodies) {
+      L.push('# model_bodies,charge Q spread uniformly; a rod lies in the plane along direction_deg from +x; a ring or disk stands perpendicular to the plane with its axis in the plane along axis_deg from +x so the plane slices it through the axis; V and E are the exact integrals of k dq/r (closed forms with complete elliptic integrals for the ring and disk; inside the 1.2 mm layer adaptive Gauss-Kronrod quadrature to 1e-10 relative); within 1.2 mm of a body its charge is a line or sheet of 1.2 mm uniformly charged balls');
+      L.push('# inside_charge_ball,1 also when the probe is within 1.2 mm of a rod or ring or disk');
+    }
     configs.forEach((cf, i) => {
       L.push(`# config ${i + 1},${csvCell(cf.name)}`);
-      cf.charges.forEach((c, j) => L.push(`# config ${i + 1} charge ${j + 1},x_m,${tidy(c.x / 100)},y_m,${tidy(c.y / 100)},q_C,${tidy(c.q * 1e-9)}`));
+      let jp = 0, jb = 0;
+      cf.charges.forEach((c) => {
+        if (!c.kind) { L.push(`# config ${i + 1} charge ${++jp},x_m,${tidy(c.x / 100)},y_m,${tidy(c.y / 100)},q_C,${tidy(c.q * 1e-9)}`); return; }
+        const rod = c.kind === 'rod';
+        L.push(`# config ${i + 1} body ${++jb},${c.kind},x_m,${tidy(c.x / 100)},y_m,${tidy(c.y / 100)},Q_C,${tidy(c.q * 1e-9)},${rod ? 'L_m' : 'R_m'},${tidy(c.size / 100)},${rod ? 'direction_deg' : 'axis_deg'},${tidy(c.ang)}`);
+      });
     });
     L.push('row,config,x_m,y_m,V_volts,E_V_per_m,E_direction_deg,inside_charge_ball');
     rows.forEach((r, i) => L.push([i + 1, r.config, cmToM(r.x), cmToM(r.y), r.V, r.E, r.dir === null ? '' : r.dir, r.inCore ? 1 : 0].map(csvCell).join(',')));
@@ -449,13 +701,18 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   let baseDirty = true, overDirty = true, raf = 0;
 
   const mk = (x, y, q) => ({ id: nextId++, x, y, q });
+  const mkB = (kind, x, y, q, size, ang) => ({ id: nextId++, kind, x, y, q, size, ang });
   const PRESETS = {
     dipole: () => [mk(-3, 0, 2), mk(3, 0, -2)],
     like:   () => [mk(-3, 0, 2), mk(3, 0, 2)],
     uneven: () => [mk(-2.5, 0, 3), mk(2.5, 0, -1)],
     trio:   () => [mk(-3, 2, 2), mk(3, 2, 2), mk(0, -2.5, -2)],
-    quad:   () => [mk(-2.5, 2.5, 2), mk(2.5, 2.5, -2), mk(2.5, -2.5, 2), mk(-2.5, -2.5, -2)]
+    quad:   () => [mk(-2.5, 2.5, 2), mk(2.5, 2.5, -2), mk(2.5, -2.5, 2), mk(-2.5, -2.5, -2)],
+    rod:    () => [mkB('rod', 0, 0, 2, 6, 0)],      /* the probe at (0, 2.5) sits on the rod's perpendicular bisector */
+    ring:   () => [mkB('ring', 0, 0, 2, 2, 90)],    /* axis along y: the probe at (0, 2.5) is on the axis */
+    disk:   () => [mkB('disk', 0, 0, 2, 2, 90)]
   };
+  const KIND_NAME = { rod: 'Rod', ring: 'Ring', disk: 'Disk' };
 
   // ---------- helpers ----------
   const projScale = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.45 : 1);
@@ -476,7 +733,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   }
   const toPx = (x, y) => [cx + x * s, cy - y * s];
   const toW = (px, py) => ({ x: (px - cx) / s, y: (cy - py) / s });
-  const radius = (c) => 11 + 4 * Math.sqrt(Math.abs(c.q));
+  const radius = (c) => (c.kind ? 9 : 11 + 4 * Math.sqrt(Math.abs(c.q)));   /* a body's value is on a label 18 px tall */
   const drawRadius = (c) => radius(c) * chargeScale();   // drawn and grabbed size; field lines still start from radius()
   const fmtQ = (q) => (q > 0 ? '+' : q < 0 ? '−' : '') + (Number.isInteger(Math.abs(q)) ? Math.abs(q) : Math.abs(q).toFixed(1));
 
@@ -534,13 +791,52 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       if (x < b.x0 - m || x > b.x1 + m || y < b.y0 - m || y > b.y1 + m) return { pts, end: null };
       for (const c of charges) {
         if (!c.q || c === from) continue;
-        if (Math.hypot(x - c.x, y - c.y) < (radius(c) * 0.7) / s) {
-          pts.push([c.x, c.y]);
+        if (reached(c, x, y)) {
+          pts.push(c.kind ? nearestOn(c, x, y) : [c.x, c.y]);
           return { pts, end: c };
         }
       }
     }
     return { pts, end: null };
+  }
+
+  // ---- rods, rings and disks: where field lines start and end ----
+  const bodyOff = () => Math.max(0.2, 8 / s);   /* cm: field lines start this far from a body's charge, outside its 1.2 mm model layer */
+  // n start points off cm from a body: round the ring's two crossings of the map, or evenly round the outline of the rod or the disk's bar
+  function bodySeeds(c, n, off) {
+    const [e1, e2] = bodyEnds(c), pts = [];
+    if (c.kind === 'ring') {
+      const n1 = Math.ceil(n / 2);
+      [[e1, n1], [e2, n - n1]].forEach(([e, m]) => {
+        for (let k = 0; k < m; k++) { const a = (k + 0.5) * 2 * Math.PI / m; pts.push([e[0] + off * Math.cos(a), e[1] + off * Math.sin(a)]); }
+      });
+      return pts;
+    }
+    const len = Math.hypot(e2[0] - e1[0], e2[1] - e1[1]), ux = (e2[0] - e1[0]) / len, uy = (e2[1] - e1[1]) / len, nx = -uy, ny = ux;
+    const arc = Math.PI * off, per = 2 * len + 2 * arc, a0 = Math.atan2(ny, nx);
+    for (let k = 0; k < n; k++) {
+      let t = (k + 0.5) * per / n;
+      if (t < len) { pts.push([e1[0] + t * ux + off * nx, e1[1] + t * uy + off * ny]); continue; }
+      t -= len;
+      if (t < arc) { const a = a0 - t / off; pts.push([e2[0] + off * Math.cos(a), e2[1] + off * Math.sin(a)]); continue; }
+      t -= arc;
+      if (t < len) { pts.push([e2[0] - t * ux - off * nx, e2[1] - t * uy - off * ny]); continue; }
+      t -= len;
+      const a = a0 - Math.PI - t / off; pts.push([e1[0] + off * Math.cos(a), e1[1] + off * Math.sin(a)]);
+    }
+    return pts;
+  }
+  // the point of a body's charge in the map nearest (x, y): on the rod or the disk's bar, or the nearer crossing of the ring
+  function nearestOn(c, x, y) {
+    const [e1, e2] = bodyEnds(c);
+    if (c.kind === 'ring') return Math.hypot(x - e1[0], y - e1[1]) < Math.hypot(x - e2[0], y - e2[1]) ? e1 : e2;
+    const dx = e2[0] - e1[0], dy = e2[1] - e1[1], t = Math.max(0, Math.min(1, ((x - e1[0]) * dx + (y - e1[1]) * dy) / (dx * dx + dy * dy)));
+    return [e1[0] + t * dx, e1[1] + t * dy];
+  }
+  function reached(c, x, y) {
+    if (!c.kind) return Math.hypot(x - c.x, y - c.y) < (radius(c) * 0.7) / s;
+    const p = nearestOn(c, x, y);
+    return Math.hypot(x - p[0], y - p[1]) < 0.7 * bodyOff();
   }
 
   // field lines in world cm, each oriented along E
@@ -551,15 +847,16 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const lines = [], arrivals = new Map();
     for (const c of active) {
       if (c.q <= 0) continue;
-      const n = nFor(c), r0 = radius(c) / s;
+      const n = nFor(c), r0 = radius(c) / s, seeds = c.kind ? bodySeeds(c, n, bodyOff()) : null;
       for (let k = 0; k < n; k++) {
         const a = (k + 0.5) * 2 * Math.PI / n;
-        const res = trace(c.x + r0 * Math.cos(a), c.y + r0 * Math.sin(a), 1, c);
+        const res = seeds ? trace(seeds[k][0], seeds[k][1], 1, c) : trace(c.x + r0 * Math.cos(a), c.y + r0 * Math.sin(a), 1, c);
+        if (seeds) res.pts.unshift(nearestOn(c, seeds[k][0], seeds[k][1]));
         lines.push(res.pts);
         if (res.end && res.end.q < 0) {
           const p = res.pts[res.pts.length - 2];
           if (!arrivals.has(res.end)) arrivals.set(res.end, []);
-          arrivals.get(res.end).push(Math.atan2(p[1] - res.end.y, p[0] - res.end.x));
+          arrivals.get(res.end).push(p);
         }
       }
     }
@@ -567,16 +864,25 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       if (c.q >= 0) continue;
       const n = nFor(c), arr = arrivals.get(c) || [], rem = n - arr.length;
       if (rem <= 0) continue;
-      const slots = [];
+      const slots = [], seeds = c.kind ? bodySeeds(c, n, bodyOff()) : null;
       for (let k = 0; k < n; k++) {
+        if (seeds) {   /* a body's free start points are those farthest from where lines already arrive */
+          let d = Infinity;
+          for (const p of arr) d = Math.min(d, Math.hypot(p[0] - seeds[k][0], p[1] - seeds[k][1]));
+          slots.push([k, d]); continue;
+        }
         const a = (k + 0.5) * 2 * Math.PI / n;
         let d = Infinity;
-        for (const b of arr) { const t = Math.abs(a - b) % (2 * Math.PI); d = Math.min(d, Math.min(t, 2 * Math.PI - t)); }
+        for (const p of arr) { const b = Math.atan2(p[1] - c.y, p[0] - c.x), t = Math.abs(a - b) % (2 * Math.PI); d = Math.min(d, Math.min(t, 2 * Math.PI - t)); }
         slots.push([a, d]);
       }
       slots.sort((p, q) => q[1] - p[1]);
       const r0 = radius(c) / s;
       for (let k = 0; k < rem; k++) {
+        if (seeds) {
+          const sd = seeds[slots[k][0]], res = trace(sd[0], sd[1], -1, c);
+          res.pts.unshift(nearestOn(c, sd[0], sd[1])); lines.push(res.pts.reverse()); continue;
+        }
         const a = slots[k][0];
         const res = trace(c.x + r0 * Math.cos(a), c.y + r0 * Math.sin(a), -1, c);
         lines.push(res.pts.reverse());
@@ -644,9 +950,49 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctx.closePath(); ctx.fill();
   }
 
+  // a rod: a bar in the map. A ring or disk, seen edge on: its dotted axis, the disk's bar or the ring's two crossings. Q on a label at the center.
+  function drawBody(ctx, T, c) {
+    const ps = projScale(), cs = chargeScale(), col = c.q > 0 ? T.pos : c.q < 0 ? T.neg : T.muted;
+    const [e1, e2] = bodyEnds(c), [x1, y1] = toPx(e1[0], e1[1]), [x2, y2] = toPx(e2[0], e2[1]), [px, py] = toPx(c.x, c.y);
+    const seg = (w, style, cap, alpha, dash) => {
+      ctx.save(); ctx.lineWidth = w; ctx.strokeStyle = style; ctx.lineCap = cap; ctx.globalAlpha = alpha; if (dash) ctx.setLineDash(dash);
+      ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke(); ctx.restore();
+    };
+    if (c.kind !== 'rod') {
+      const [ca, sa] = bodyDir(c), ext = c.size + 1.5, [ax1, ay1] = toPx(c.x - ext * ca, c.y - ext * sa), [ax2, ay2] = toPx(c.x + ext * ca, c.y + ext * sa);
+      const ux = (ax1 - px) / Math.hypot(ax1 - px, ay1 - py), uy = (ay1 - py) / Math.hypot(ax1 - px, ay1 - py);   /* name at the end away from the probe's start */
+      ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([1.5 * ps, 4 * ps]); ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(ax1, ay1); ctx.lineTo(ax2, ay2); ctx.stroke();
+      ctx.fillStyle = T.muted; ctx.font = `600 ${11 * ps}px ` + monoFont(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('axis', ax1 + ux * 16 * ps, ay1 + uy * 9 * ps);
+      ctx.restore();
+    }
+    if (c === sel) seg(18 * ps, T.accent, 'round', 0.28);
+    if (c.kind === 'ring') {
+      seg(2 * ps, col, 'butt', 0.75, [5 * ps, 4 * ps]);
+      for (const [x, y] of [[x1, y1], [x2, y2]]) {
+        const r = 6.5 * cs;
+        ctx.beginPath(); ctx.arc(x, y, r + 2 * ps, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill();
+        ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fillStyle = col; ctx.fill();
+      }
+    } else {
+      const w = (c.kind === 'disk' ? 7 : 5.5) * ps, cap = c.kind === 'disk' ? 'butt' : 'round';
+      seg(w + 4 * ps, T.canvas, cap, 1); seg(w, col, cap, 1);
+    }
+    const txt = fmtQ(c.q);
+    ctx.font = `600 ${12 * cs}px ${monoFont()}`;
+    const tw = ctx.measureText(txt).width + 12 * cs, th = 18 * cs;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px - tw / 2 - 2 * ps, py - th / 2 - 2 * ps, tw + 4 * ps, th + 4 * ps, 7 * cs) : ctx.rect(px - tw / 2 - 2 * ps, py - th / 2 - 2 * ps, tw + 4 * ps, th + 4 * ps);
+    ctx.fillStyle = T.canvas; ctx.fill();
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px - tw / 2, py - th / 2, tw, th, 6 * cs) : ctx.rect(px - tw / 2, py - th / 2, tw, th);
+    ctx.fillStyle = col; ctx.fill();
+    ctx.fillStyle = T.onCharge; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(txt, px, py + 0.5);
+  }
+
   function drawCharges(ctx, T) {
     const ps = projScale(), cs = chargeScale();
     for (const c of charges) {
+      if (c.kind) { drawBody(ctx, T, c); continue; }
       const [px, py] = toPx(c.x, c.y), r = drawRadius(c);
       ctx.beginPath(); ctx.arc(px, py, r + 2.5 * ps, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill();
       ctx.beginPath(); ctx.arc(px, py, r, 0, 2 * Math.PI);
@@ -953,12 +1299,29 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
                          b.x1, b.y1, 0, b.x0, b.y1, 0, b.x0, b.y1, 0, b.x0, b.y0, 0]);
 
     // charges as spheres on the peaks and in the wells
+    G.spheres.children.forEach((o) => { if (o.userData.own) o.geometry.dispose(); });
     G.spheres.clear();
     for (const c of charges) {
-      const m = new THREE.Mesh(G.sphGeo, c.q > 0 ? G.posMat : c.q < 0 ? G.negMat : G.zeroMat);
-      const rr = (0.2 + 0.08 * Math.sqrt(Math.abs(c.q))) * chargeScale();
+      const mat = c.q > 0 ? G.posMat : c.q < 0 ? G.negMat : G.zeroMat;
+      const m = new THREE.Mesh(G.sphGeo, mat);
+      let rr;
+      if (c.kind) {   /* a body lies on the surface: a tube along the rod or the disk's bar, two beads where the ring crosses; a bead at the center to grab */
+        const zAt = (x, y) => height(potential(x, y)), [e1, e2] = bodyEnds(c);
+        if (c.kind === 'ring') {
+          for (const e of [e1, e2]) { const d = new THREE.Mesh(G.sphGeo, mat); d.scale.setScalar(0.17 * chargeScale()); d.position.set(e[0], e[1], zAt(e[0], e[1])); d.userData.c = c; G.spheres.add(d); }
+        } else {
+          const pts = [];
+          for (let i = 0; i <= 40; i++) { const x = e1[0] + (e2[0] - e1[0]) * i / 40, y = e1[1] + (e2[1] - e1[1]) * i / 40; pts.push(new THREE.Vector3(x, y, zAt(x, y) + 0.03)); }
+          const tube = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 60, (c.kind === 'disk' ? 0.1 : 0.07) * chargeScale(), 8, false), mat);
+          tube.userData.c = c; tube.userData.own = true; G.spheres.add(tube);
+        }
+        rr = 0.15 * chargeScale();
+        m.position.set(c.x, c.y, zAt(c.x, c.y) + rr * 0.3);
+      } else {
+        rr = (0.2 + 0.08 * Math.sqrt(Math.abs(c.q))) * chargeScale();
+        m.position.set(c.x, c.y, Math.sign(c.q) * 4 * reliefMult);
+      }
       m.scale.setScalar(rr);
-      m.position.set(c.x, c.y, Math.sign(c.q) * 4 * reliefMult);
       m.userData.c = c;
       G.spheres.add(m);
       if (c === sel) {
@@ -1051,7 +1414,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       if (h) {
         const c = h.object.userData.c;
         sel = c; lastSel = c;
-        const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -h.object.position.z);
+        const plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), -(c.kind ? h.point.z : h.object.position.z));
         const p = new THREE.Vector3(); ray.ray.intersectPlane(plane, p);
         mode = { type: 'charge', c, plane, ox: p.x - c.x, oy: p.y - c.y };
         el.style.cursor = 'grabbing';
@@ -1117,9 +1480,20 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 
   // ---------- panel ----------
   const rV = $('rV'), rE = $('rE'), rDir = $('rDir'), rPos = $('rPos'), coreNote = $('coreNote');
+  const CORE_TXT = {
+    point: coreNote.textContent,
+    rod: 'The probe is within 1.2 mm of the rod. A thin rod has no finite V or E on it; these values are for a line of uniformly charged balls 1.2 mm in radius.',
+    ring: 'The probe is within 1.2 mm of the ring, where it crosses the map. A thin ring has no finite V or E on its wire; these values are for a loop of uniformly charged balls 1.2 mm in radius.',
+    disk: 'The probe is within 1.2 mm of the disk. E jumps by σ/ε₀ across a thin disk and has no finite value at its rim; these values are for a sheet of uniformly charged balls 1.2 mm in radius.'
+  };
+  const bodyModel = $('bodyModel'), bodyHint = $('bodyHint');
   function updateReadout() {
-    const inside = !!(probe && inCore(probe.x, probe.y));
+    const coreObj = probe ? inCore(probe.x, probe.y) : null, inside = !!coreObj;
     if (coreNote.hidden === inside) coreNote.hidden = !inside;
+    if (coreObj && coreNote.textContent !== CORE_TXT[coreObj.kind || 'point']) coreNote.textContent = CORE_TXT[coreObj.kind || 'point'];
+    const anyBody = charges.some((c) => c.kind);
+    if (bodyModel.hidden === anyBody) bodyModel.hidden = bodyHint.hidden = !anyBody;
+    updateLimits();
     if (!probe || !charges.some((c) => c.q)) { rV.textContent = rE.textContent = rDir.textContent = rPos.textContent = '—'; return; }
     const [ex, ey] = field(probe.x, probe.y), m = Math.hypot(ex, ey);
     rV.textContent = fmtV(potential(probe.x, probe.y));
@@ -1128,19 +1502,66 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     rDir.textContent = deg === null ? '—' : deg + '° from +x';
     rPos.textContent = minus(`(${probe.x.toFixed(1)}, ${probe.y.toFixed(1)})`);
   }
+  // ---- textbook formulas for one rod, ring or disk at the probe ----
+  const limSec = $('limitsSec'), limWhat = $('limWhat'), limBody = $('limTbl').querySelector('tbody');
+  const LIM = {
+    line: ['Infinite line, λ/(2πε₀r)', 'r from the rod’s line; the limit of a long rod'],
+    bisector: ['Rod on its bisector, kQ/(r√(r² + L²/4))', 'exact on the perpendicular bisector'],
+    ringAxis: ['Ring on its axis, kQz/(z² + R²)³ᐟ²', 'exact on the axis'],
+    diskAxis: ['Disk on its axis, 2πkσ(1 − z/√(z² + R²))', 'exact on the axis'],
+    plane: ['Infinite plane, σ/(2ε₀)', 'the limit close to a wide disk'],
+    point: ['Point charge, kQ/r²', 'r from the center; the limit far away']
+  };
+  const pctText = (d) => minus(Math.abs(d) < 1 ? (d >= 0.0005 ? '+' : '') + (Math.abs(d) < 0.0005 ? '0.0' : (100 * d).toFixed(1)) + '%' : '×' + (1 + d).toPrecision(2));
+  let limKey = '';
+  function updateLimits() {
+    const bodies = order().filter((c) => c.kind && c.q), ref = sel && sel.kind && sel.q ? sel : bodies[0];
+    const on = !!(ref && probe && !blind);
+    if (limSec.hidden === on) limSec.hidden = !on;
+    if (!on) return;
+    const L = bodyLimits(ref, probe.x, probe.y), Q = minus(fmtQ(ref.q)) + ' nC', f1 = (v) => minus(nz(+v.toFixed(1)).toFixed(1));
+    const name = KIND_NAME[ref.kind] + (bodies.length > 1 ? ' ' + (bodies.indexOf(ref) + 1) : '');
+    const what = ref.kind === 'rod'
+      ? `${name}: Q = ${Q}, L = ${ref.size.toFixed(1)} cm, λ = Q/L. Probe ${f1(Math.abs(L.across))} cm from the rod’s line, ${f1(L.along)} cm along it from the center.`
+      : `${name}: Q = ${Q}, R = ${ref.size.toFixed(2)} cm${ref.kind === 'disk' ? ', σ = Q/πR²' : ', λ = Q/2πR'}. Probe at z = ${f1(L.along)} cm along the axis, ${f1(Math.abs(L.across))} cm off it.`;
+    const rows = [[`This ${ref.kind} alone (exact)`, '', L.E, true]].concat(L.rows.map((r) => [LIM[r.id][0], LIM[r.id][1], r.E, false]));
+    const html = rows.map(([f, note, E, ex]) => {
+      const pct = ex || E === null || !(L.E > 0) ? '—' : pctText(E / L.E - 1);
+      return `<tr${ex ? ' class="exact"' : ''}><td class="f">${f}${note ? `<small>${note}</small>` : ''}</td><td class="b">${E === null ? '—' : fmtE(E)}</td><td class="b">${pct}</td></tr>`;
+    }).join('');
+    if (what + html !== limKey) { limKey = what + html; limWhat.textContent = what; limBody.innerHTML = html; }
+  }
+
   const selEditor = $('selEditor'), selHint = $('selHint'), qIn = $('q'), qOut = $('qOut'), selPos = $('selPos');
+  const bodyEd = $('bodyEd'), bodySize = $('bodySize'), bodyAng = $('bodyAng'), qLab = document.querySelector('label[for="q"]');
+  const HINT_BODY = 'Drag the knob above its label up or down, scroll over it, or press + and − to change its charge Q. Arrow keys move it 0.1 cm, Shift+arrow 1 cm; R turns it 15°. P switches to the probe.';
   const HINT_NONE = 'Click a charge to select it, or click the field and press Tab.';
   const HINT_SEL = 'Drag the knob above the charge up or down, scroll over the charge, or press + and − to change its value. Arrow keys move it 0.1 cm, Shift+arrow 1 cm. P switches to the probe.';
   function updateSel() {
     selEditor.hidden = !sel;
-    const hintText = sel ? HINT_SEL : HINT_NONE;
+    const hintText = sel ? (sel.kind ? HINT_BODY : HINT_SEL) : HINT_NONE;
     if (selHint.textContent !== hintText) selHint.textContent = hintText;
     if (sel) {
       if (document.activeElement !== qIn) qIn.value = sel.q;
       qOut.textContent = (sel.q > 0 ? '+' : sel.q < 0 ? '−' : '') + Math.abs(sel.q).toFixed(1) + ' nC';
       selPos.textContent = minus(`x = ${sel.x.toFixed(1)} cm, y = ${sel.y.toFixed(1)} cm`);
     }
-    $('addPos').disabled = $('addNeg').disabled = charges.length >= MAX_CHARGES;
+    const isB = !!(sel && sel.kind), qText = isB ? 'Total charge Q' : 'Selected charge';
+    if (qLab.textContent !== qText) qLab.textContent = qText;
+    if (bodyEd.hidden === isB) bodyEd.hidden = !isB;
+    if (isB) {
+      const rod = sel.kind === 'rod', rng = rod ? ['1', '16', '0.5'] : ['0.5', '5', '0.25'];
+      if (bodySize.min !== rng[0] || bodySize.max !== rng[1]) { bodySize.min = rng[0]; bodySize.max = rng[1]; bodySize.step = rng[2]; }
+      if (document.activeElement !== bodySize) bodySize.value = sel.size;
+      if (document.activeElement !== bodyAng) bodyAng.value = sel.ang;
+      $('bodySizeLab').textContent = rod ? 'Length L' : 'Radius R';
+      $('bodySizeOut').textContent = (rod ? sel.size.toFixed(1) : sel.size.toFixed(2)) + ' cm';
+      $('bodyAngLab').textContent = rod ? 'Direction' : 'Axis direction';
+      $('bodyAngOut').textContent = sel.ang + '° from +x';
+      $('bodyDens').textContent = minus(rod ? `λ = Q/L = ${(sel.q / sel.size).toFixed(3)} nC/cm`
+        : sel.kind === 'ring' ? `λ = Q/2πR = ${(sel.q / (2 * Math.PI * sel.size)).toFixed(3)} nC/cm` : `σ = Q/πR² = ${(sel.q / (Math.PI * sel.size * sel.size)).toFixed(3)} nC/cm²`);
+    }
+    for (const id of ['addPos', 'addNeg', 'addRod', 'addRing', 'addDisk']) $(id).disabled = charges.length >= MAX_CHARGES;
   }
   function setPreset(name) {
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
@@ -1225,6 +1646,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function hit(p) {
     for (let i = charges.length - 1; i >= 0; i--) {
       const c = charges[i];
+      if (c.kind) { const q = nearestOn(c, p.x, p.y); if (Math.min(Math.hypot(p.x - q[0], p.y - q[1]), Math.hypot(p.x - c.x, p.y - c.y)) * s <= 9 * projScale() + 3) return c; continue; }
       if (Math.hypot(p.x - c.x, p.y - c.y) * s <= drawRadius(c) + 4 * projScale()) return c;
     }
     return null;
@@ -1306,7 +1728,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function announceSel() {
     if (sel) {
       const o = order();
-      announce(`Charge ${o.indexOf(sel) + 1} of ${o.length} selected: ${minus(fmtQ(sel.q))} nC at ${posText(sel.x, sel.y)}.`);
+      announce(sel.kind ? `${o.indexOf(sel) + 1} of ${o.length} selected: ${bodyText(sel)}.` : `Charge ${o.indexOf(sel) + 1} of ${o.length} selected: ${minus(fmtQ(sel.q))} nC at ${posText(sel.x, sel.y)}.`);
     } else announceProbe('Probe selected');
   }
   function announceProbe(lead) {
@@ -1333,6 +1755,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     else if (k === '[') cycle(-1, true);
     else if (lk === 'p') selectCharge(sel ? null : (lastSel && charges.includes(lastSel) ? lastSel : order()[0]));
     else if (lk === 'c') capture();
+    else if (lk === 'r' && sel && sel.kind) {
+      sel.ang = ((sel.ang + (e.shiftKey ? -15 : 15)) % 180 + 180) % 180; setPreset(null);
+      announce(`${KIND_NAME[sel.kind]} turned: ${sel.kind === 'rod' ? 'direction' : 'axis'} ${sel.ang} degrees from +x.`);
+    }
     else if (view === '3d' && ORBIT_KEYS[lk]) {
       const [dt, dp, z] = ORBIT_KEYS[lk];
       orbit.theta += dt; orbit.phi = Math.min(1.52, Math.max(0.05, orbit.phi + dp));
@@ -1342,7 +1768,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       const st = e.shiftKey ? 1 : 0.1, [mx, my] = moves[k];
       if (sel) {
         sel.x += mx * st; sel.y += my * st; clampToView(sel); snapC(sel); setPreset(null);
-        announce(`Charge at ${posText(sel.x, sel.y)}.`);
+        announce(`${sel.kind ? KIND_NAME[sel.kind] + ' centered' : 'Charge'} at ${posText(sel.x, sel.y)}.`);
       } else {
         const b = bounds();
         probe = { x: snap01(Math.min(b.x1 - 0.1, Math.max(b.x0 + 0.1, probe.x + mx * st))), y: snap01(Math.min(b.y1 - 0.1, Math.max(b.y0 + 0.1, probe.y + my * st))) };
@@ -1375,6 +1801,23 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const c = mk(Math.round(best.x * 2) / 2, Math.round(best.y * 2) / 2, q);
     charges.push(c); sel = c; setPreset(null); markBase();
   }
+  const BODY_NEW = { rod: [4, 0], ring: [1.5, 90], disk: [1.5, 90] };   /* size (cm) and direction (degrees) of a new body */
+  function addBody(kind) {
+    if (charges.length >= MAX_CHARGES) return;
+    const b = bounds();
+    let best = null, bestD = -1;
+    for (let t = 0; t < 40; t++) {
+      const x = (Math.random() - 0.5) * Math.max(0, Math.min(10, b.x1 - b.x0 - 5));
+      const y = (Math.random() - 0.5) * Math.max(0, Math.min(6, b.y1 - b.y0 - 4));
+      const d = charges.length ? Math.min(...charges.map((c) => Math.hypot(c.x - x, c.y - y))) : 99;
+      if (d > bestD) { bestD = d; best = { x, y }; }
+    }
+    const [size, ang] = BODY_NEW[kind], c = mkB(kind, Math.round(best.x * 2) / 2, Math.round(best.y * 2) / 2, 2, size, ang);
+    charges.push(c); sel = c; lastSel = c; setPreset(null); markBase();
+  }
+  for (const k of ['rod', 'ring', 'disk']) $('add' + KIND_NAME[k]).addEventListener('click', () => addBody(k));
+  bodySize.addEventListener('input', () => { if (sel && sel.kind) { sel.size = +bodySize.value; setPreset(null); markBase(); } });
+  bodyAng.addEventListener('input', () => { if (sel && sel.kind) { sel.ang = +bodyAng.value; setPreset(null); markBase(); } });
   $('addPos').addEventListener('click', () => addCharge(1));
   $('addNeg').addEventListener('click', () => addCharge(-1));
   $('del').addEventListener('click', () => { charges = charges.filter((c) => c !== sel); sel = null; setPreset(null); markBase(); });
@@ -1400,7 +1843,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function configIndex() {
     const key = chargeKey(charges);
     let i = configs.findIndex((c) => c.key === key);
-    if (i < 0) { configs.push({ key, name: presetName(), charges: order().map((c) => ({ x: snap01(c.x), y: snap01(c.y), q: c.q })) }); i = configs.length - 1; }
+    if (i < 0) { configs.push({ key, name: presetName(), charges: order().map((c) => Object.assign({ x: snap01(c.x), y: snap01(c.y), q: c.q }, c.kind ? { kind: c.kind, size: c.size, ang: c.ang } : {})) }); i = configs.length - 1; }
     return i + 1;
   }
   function capture() {
@@ -1408,7 +1851,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const r = probeReading(charges, probe.x, probe.y);
     rows.push({ config: configIndex(), x: r.x.toFixed(1), y: r.y.toFixed(1), V: String(r.V), E: String(r.E), dir: r.dir === null ? '' : String(r.dir), inCore: r.inCore });
     renderRows();
-    status(minus(`Reading ${rows.length} captured at (${r.x.toFixed(1)}, ${r.y.toFixed(1)}) cm.`) + (r.inCore ? ' The probe is inside a charge’s model ball.' : ''));
+    status(minus(`Reading ${rows.length} captured at (${r.x.toFixed(1)}, ${r.y.toFixed(1)}) cm.`) + (r.inCore ? ' The probe is inside a charge’s model ball or a body’s 1.2 mm layer.' : ''));
   }
   const esc = (t) => String(t).replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;');
   function renderRows() {
@@ -1472,10 +1915,18 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   $('labBlind').addEventListener('change', (e) => setBlind(e.target.checked));
 
   // ---------- text descriptions of the canvases ----------
+  function bodyText(c) {
+    const q = minus(fmtQ(c.q)) + ' nC', at = posText(c.x, c.y);
+    return c.kind === 'rod' ? `a rod of ${q}, ${c.size} cm long, centered at ${at}, pointing ${c.ang}° from +x`
+      : `a ${c.kind} of ${q}, radius ${c.size} cm, standing perpendicular to the map, centered at ${at}, axis ${c.ang}° from +x`;
+  }
   let lastDesc = '';
   function describe() {
-    const o = order(), list = o.length ? o.map((c) => `${minus(fmtQ(c.q))} nC at ${posText(c.x, c.y)}`).join('; ') : 'no charges';
-    const d = `${o.length} point charge${o.length === 1 ? '' : 's'}: ${list}.` + (blind ? ' Blind is on: field lines, equipotentials and shading are hidden.' : '');
+    const o = order(), pts = o.filter((c) => !c.kind), bods = o.filter((c) => c.kind);
+    const list = pts.length ? pts.map((c) => `${minus(fmtQ(c.q))} nC at ${posText(c.x, c.y)}`).join('; ') : 'no charges';
+    let d = pts.length || !bods.length ? `${pts.length} point charge${pts.length === 1 ? '' : 's'}: ${list}.` : '';
+    if (bods.length) d += (d ? ' ' : '') + bods.map(bodyText).join('; ') + '.';
+    d += blind ? ' Blind is on: field lines, equipotentials and shading are hidden.' : '';
     if (d === lastDesc) return;
     lastDesc = d;
     over.setAttribute('aria-label', 'Field map on a 1 cm grid with ' + d);
@@ -1538,7 +1989,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   charges = PRESETS.dipole();
   setBlind(false); setReduce(reduceMotion, false);
   window.__cs = { get rows() { return rows; }, get configs() { return configs; }, get probe() { return probe; }, get sel() { return sel; }, get view() { return view; },
-    get charges() { return charges; }, get orbit() { return orbit; }, csv: () => readingsCsv(rows, configs), probeReading, potentialAt, fieldAt };
+    get charges() { return charges; }, get orbit() { return orbit; }, csv: () => readingsCsv(rows, configs), probeReading, potentialAt, fieldAt, bodyAt, bodyLimits };
   new ResizeObserver(resize).observe(stage);
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(markBase);

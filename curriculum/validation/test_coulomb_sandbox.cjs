@@ -74,6 +74,116 @@ test('readings: capture rounds as displayed, CSV carries the charges and parses 
  const b=m.viewBounds(800,600,400,300,40);assert.equal(JSON.stringify(b),JSON.stringify({x0:-10,x1:10,y0:-7.5,y1:7.5}));
  assert.equal(m.chargeKey(dip),'-3,0,2;3,0,-2');
 });
+
+// ---------- continuous charge distributions (OpenStax Vol 2 section 5.5) ----------
+const b=core('coulomb-sandbox','C_V,C_E,CORE_R,QUAD_REL,ellip,carlsonRJ,quad3,rodLocal,ringLocal,diskLocal,bodyAt,bodyDist,bodyFrame,bodyEnds,bodyLimits,potentialAt,fieldAt,coreAt,probeReading,readingsCsv,chargeKey');
+const KC=b.C_E,KV=b.C_V,A=b.CORE_R,rel=(x,y)=>Math.abs(x-y)/Math.max(Math.abs(y),1e-300);
+const within=(x,y,r,w)=>assert(rel(x,y)<=r,`${w||''}: expected ${y}, got ${x} (rel ${rel(x,y).toExponential(2)})`);
+// independent Gauss-Legendre nodes on [-1, 1] (Newton on P_n), for brute force integrals
+function gl(n){const x=[],w=[];for(let i=1;i<=n;i++){let z=Math.cos(Math.PI*(i-.25)/(n+.5)),pp;for(let it=0;it<100;it++){let p1=1,p2=0;for(let j=1;j<=n;j++){const p3=p2;p2=p1;p1=((2*j-1)*z*p2-(j-1)*p3)/j;}pp=n*(z*p1-p2)/(z*z-1);const dz=p1/pp;z-=dz;if(Math.abs(dz)<1e-16)break;}x.push(z);w.push(2/((1-z*z)*pp*pp));}return {x,w};}
+const G=gl(64);
+function integ(f,a,b,panels){let s=0;const h=(b-a)/panels;for(let p=0;p<panels;p++){const c=a+(p+.5)*h;for(let i=0;i<G.x.length;i++)s+=G.w[i]*f(c+G.x[i]*h/2)*h/2;}return s;}
+// brute force thin body fields from k dq / r, independent of the demo: [V, E1, E2] in the body's local frame for Q = 1 nC
+const bruteRod=(L,u,v)=>[integ(t=>1/Math.hypot(u-t,v),-L/2,L/2,40)*KV/L,integ(t=>(u-t)/Math.hypot(u-t,v)**3,-L/2,L/2,40)*KC/L,integ(t=>v/Math.hypot(u-t,v)**3,-L/2,L/2,40)*KC/L];
+function bruteRing(R,rho,z){const N=4000;let V=0,Er=0,Ez=0;for(let i=0;i<N;i++){const p=2*Math.PI*(i+.5)/N,r=Math.sqrt(rho*rho+R*R-2*rho*R*Math.cos(p)+z*z);V+=1/r;Er+=(rho-R*Math.cos(p))/r**3;Ez+=z/r**3;}return [V*KV/N,Er*KC/N,Ez*KC/N];}
+function bruteDisk(R,rho,z){const sig=1/(Math.PI*R*R),N=720;let V=0,Er=0,Ez=0;for(let i=0;i<N;i++){const p=2*Math.PI*(i+.5)/N,cp=Math.cos(p);
+ const f=(g)=>integ(s=>{const r=Math.sqrt(rho*rho+s*s-2*rho*s*cp+z*z);return g(s,r)*s;},0,R,8);
+ V+=f((s,r)=>1/r);Er+=f((s,r)=>(rho-s*cp)/r**3);Ez+=f((s,r)=>z/r**3);}const d=2*Math.PI/N;return [V*d*sig*KV,Er*d*sig*KC,Ez*d*sig*KC];}
+test('elliptic integrals: K and E at known values, series and AGM agree at the switch, A B Cc match their definitions',()=>{
+ within(b.ellip(.5).K,1.8540746773013719,1e-13,'K(0.5)');within(b.ellip(.5).E,1.3506438810476755,1e-13,'E(0.5)');
+ within(b.ellip(.9).K,2.5780921133481733,1e-13,'K(0.9)');within(b.ellip(.9).E,1.1047747327040733,1e-13,'E(0.9)');
+ within(b.ellip(.1).K,1.6124413487202194,1e-13,'K(0.1)');within(b.ellip(.1).E,1.5307576368977633,1e-13,'E(0.1)');
+ for(const k of ['K','E','A','B','Cc'])within(b.ellip(.5-1e-12)[k],b.ellip(.5)[k],1e-10,'switch '+k);
+ // complete elliptic integral of the third kind from Carlson's RJ: Π(n, m) = ∫ dψ / ((1 − n sin²ψ) √(1 − m sin²ψ))
+ for(const [n,m] of [[.3,.1],[.9,.5],[.999,.8],[.5,.49],[1-1e-6,.3]]){const P=b.ellip(m).K+n/3*b.carlsonRJ(0,1-m,1,1-n);
+  within(P,integ(p=>{const s=Math.sin(p)**2;return 1/((1-n*s)*Math.sqrt(1-m*s));},0,Math.PI/2,n>.99?4000:40),1e-10,`Pi(${n}, ${m})`);}
+ for(const m of [1e-6,.2,.6,.95]){const f=b.ellip(m),q=(g)=>integ(p=>{const s=Math.sin(p)**2;return g(s);},0,Math.PI/2,20);
+  within(f.A,q(s=>(1-m*s)**-1.5),1e-12,'A');within(f.B,q(s=>(2*s-1)*(1-m*s)**-1.5),1e-10,'B');within(f.Cc,q(s=>(2*s-1)*(1-m*s)**-.5),m<1e-4?1e-8:1e-12,'Cc');}
+});
+test('rod: closed form equals brute force k dq/r, OpenStax bisector result, infinite line and point charge limits',()=>{
+ for(const [L,u,v] of [[6,0,2.5],[6,1.3,.7],[6,4,-1],[6,-5.5,.2],[2,9,3],[6,3.2,0],[6,-8,0]]){const e=b.rodLocal(L,u,v),f=bruteRod(L,u,v);
+  within(e[0],f[0],1e-10,'V');within(Math.hypot(e[1]-f[1],e[2]-f[2])/Math.hypot(f[1],f[2])+1,1,1e-9,'E');}
+ // OpenStax Example 5.7: on the perpendicular bisector E = k λ L / (z √(z² + L²/4)), along the bisector; V = 2kλ asinh(L/2z)
+ for(const [L,z] of [[6,2.5],[1,.3],[10,7]]){const e=b.rodLocal(L,0,z);within(e[2],KC*(1/L)*L/(z*Math.sqrt(z*z+L*L/4)),1e-13,'bisector E');assert(Math.abs(e[1])<1e-12*e[2]);within(e[0],2*KV/L*Math.asinh(L/(2*z)),1e-13,'bisector V');}
+ // long rod: E -> 2kλ/r = λ/(2πε0 r), relative error (2r/L)²/2 for r << L
+ for(const L of [100,1000,1e4]){const r=1,e=b.rodLocal(L,0,r);within(e[2],2*KC/L/r,(2*r/L)**2,'infinite line');}
+ // far: E -> kQ/r² in every direction, with relative error of order (L/r)²
+ for(const ang of [0,.4,1.2,Math.PI/2]){const r=600,e=b.rodLocal(6,r*Math.cos(ang),r*Math.sin(ang));within(Math.hypot(e[1],e[2]),KC/(r*r),(6/r)**2,'far E');within(e[0],KV/r,(6/r)**2,'far V');}
+});
+test('ring: on the axis E = kQz/(z²+R²)^3/2 exactly, off the axis equals brute force, far field is a point charge',()=>{
+ for(const R of [.5,2,5])for(const z of [-4,-.3,0,.1,1,R/Math.SQRT2,2.5,40]){const e=b.ringLocal(R,0,z);within(e[2]+1,KC*z/(z*z+R*R)**1.5+1,1e-13,'axis Ez');assert.equal(e[1],0);within(e[0],KV/Math.hypot(z,R),1e-14,'axis V');}
+ // the on axis maximum sits at z = R/√2
+ const R=2,zm=R/Math.SQRT2;assert(b.ringLocal(R,0,zm)[2]>b.ringLocal(R,0,zm*1.01)[2]&&b.ringLocal(R,0,zm)[2]>b.ringLocal(R,0,zm*.99)[2]);
+ for(const [rho,z] of [[1e-7,1],[1e-3,.5],[.5,1],[1.5,.2],[1.85,0],[2.13,0],[3,-1],[6,2],[2,.5],[2.5,0]]){const e=b.ringLocal(2,rho,z),f=bruteRing(2,rho,z);
+  within(e[0],f[0],1e-10,'V');within(e[1]+e[2]*0,f[1],Math.abs(f[1])>1?1e-9:1e-6,'Erho');within(e[2]+1e-9,f[2]+1e-9,1e-9,'Ez');}
+ for(const t of [0,.7,1.4]){const r=800,e=b.ringLocal(2,r*Math.sin(t),r*Math.cos(t));within(Math.hypot(e[1],e[2]),KC/(r*r),2*(2/r)**2,'far');}
+});
+test('disk: on the axis V and E are the closed forms, near the center E -> σ/2ε0, off the axis equals brute force',()=>{
+ for(const R of [.5,2,5])for(const z of [-3,-.2,.13,.5,2.5,30]){const s=1/(Math.PI*R*R),e=b.diskLocal(R,0,z),h=Math.abs(z);
+  within(e[0],2*Math.PI*KV*s*(Math.hypot(z,R)-h),1e-12,'axis V');within(e[2],Math.sign(z)*2*Math.PI*KC*s*(1-h/Math.hypot(z,R)),1e-12,'axis E');assert(Math.abs(e[1])<1e-12*Math.abs(e[2]));}
+ // infinite plane: E = σ/(2ε0) = 2πkσ, approached as 1 − z/R near the center of a wide disk
+ for(const z of [.5,.2,.13]){const R=5,pl=2*Math.PI*KC/(Math.PI*R*R),e=b.diskLocal(R,0,z)[2];assert(e<pl&&e>pl*(1-z/R-1e-12));}
+ for(const [rho,z] of [[.7,.5],[1.5,1],[1.9,.4],[2.5,.4],[2.5,0],[3,-1],[6,2],[1,-.3],[2,.6]]){const e=b.diskLocal(2,rho,z),f=bruteDisk(2,rho,z);
+  within(e[0],f[0],2e-9,'V');within(e[1],f[1],2e-9,'Erho');within(e[2]+1e-6,f[2]+1e-6,2e-9,'Ez');}
+ // the closed form switches branch at the rim (rho = R): V and E are continuous through it
+ for(const z of [.5,-1.3]){const m=b.diskLocal(2,2,z);for(const d of [-1e-9,1e-9]){const e=b.diskLocal(2,2+d,z);for(let i=0;i<3;i++)within(e[i],m[i],1e-7,'rim '+i);}}
+ for(const t of [0,.7,1.4,Math.PI/2]){const r=800,e=b.diskLocal(2,r*Math.sin(t),r*Math.cos(t));within(Math.hypot(e[1],e[2]),KC/(r*r),2*(2/r)**2,'far');}
+ // across the sheet Ez is odd in z, zero in the middle of the 1.2 mm model layer, and swings by nearly σ/ε0 = 4πkσ across it
+ const s=1/(Math.PI*4),up=b.diskLocal(2,1,A),dn=b.diskLocal(2,1,-A),mid=b.diskLocal(2,1,0);within(-dn[2],up[2],1e-9,'odd');assert(Math.abs(mid[2])<1e-9*up[2]);
+ assert(up[2]-dn[2]<4*Math.PI*KC*s&&up[2]-dn[2]>0.9*4*Math.PI*KC*s);
+});
+test('Gauss: flux of each body through a sphere is 4πkQ when it encloses the body and 0 when it encloses none of it',()=>{
+ const flux=(fn,c0,Rs)=>integ(t=>{const st=Math.sin(t),ct=Math.cos(t),e=fn(Rs*st,c0+Rs*ct);return (e[0]*st+e[1]*ct)*2*Math.PI*Rs*Rs*st;},0,Math.PI,24);
+ const rod=(rho,z)=>{const e=b.rodLocal(6,z,rho);return [e[2],e[1]];},ring=(rho,z)=>b.ringLocal(2,rho,z).slice(1),disk=(rho,z)=>b.diskLocal(2,rho,z).slice(1);
+ for(const [fn,Rs] of [[rod,3.5],[rod,9],[ring,2.6],[ring,7],[disk,2.6],[disk,7]])within(flux(fn,0,Rs),4*Math.PI*KC,1e-9,'encloses');
+ for(const [fn,c0,Rs] of [[ring,0,1.4],[ring,3,1.5],[disk,-2,1.5],[rod,6,2]])assert(Math.abs(flux(fn,c0,Rs))<1e-8*4*Math.PI*KC,'empty sphere');
+});
+test('bodies: E = −∇V everywhere, continuous at the 1.2 mm model layer, and exact thin body values outside it',()=>{
+ const bodies=[{kind:'rod',x:.3,y:-.2,q:2,size:6,ang:30},{kind:'ring',x:-.5,y:.4,q:-1.5,size:2,ang:90},{kind:'disk',x:.2,y:.1,q:3,size:2,ang:15}];
+ const pts=[[0,2.5],[1.1,.3],[-2.3,-1.7],[3.05,1.6],[.31,-.15],[-2.5,.45],[-.5,.43],[1.5,.4],[2.25,.6],[.21,.12]];
+ for(const c of bodies)for(const [x,y] of pts){const e=b.bodyAt(c,x,y),h=1e-3,V=(X,Y)=>b.bodyAt(c,X,Y)[0];
+  const gx=-(-V(x+2*h,y)+8*V(x+h,y)-8*V(x-h,y)+V(x-2*h,y))/(12*h*.01),gy=-(-V(x,y+2*h)+8*V(x,y+h)-8*V(x,y-h)+V(x,y-2*h))/(12*h*.01);
+  const d=b.bodyDist(c,x,y);if(Math.abs(d-A)<3*h)continue;
+  assert(Math.hypot(e[1]-gx,e[2]-gy)<=2e-6*Math.hypot(e[1],e[2])+1e-6,`${c.kind} at (${x}, ${y}): E ${e[1]},${e[2]} vs -grad V ${gx},${gy}`);}
+ // inside the model layer (rod line, ring wire crossing, disk sheet) values are finite and E = −∇V there too
+ for(const [c,x,y] of [[bodies[0],.3,-.2],[bodies[1],-2.5,.4],[bodies[2],.2,.1],[bodies[2],.2+2*Math.sin(15*Math.PI/180)*-1,.1+2*Math.cos(15*Math.PI/180)]]){
+  assert(b.bodyDist(c,x,y)<A+1e-12);const e=b.bodyAt(c,x+.03,y+.02);assert(e.every(Number.isFinite));}
+ // continuity across the layer: step from just inside to just outside
+ for(const c of bodies){const [e1,e2]=b.bodyEnds(c),mx=(e1[0]+e2[0])/2,my=(e1[1]+e2[1])/2;
+  const pick=c.kind==='ring'?e2:[mx*.7+e2[0]*.3,my*.7+e2[1]*.3],nx=-(e2[1]-e1[1]),ny=e2[0]-e1[0],nn=Math.hypot(nx,ny);
+  const P=t=>[pick[0]+t*nx/nn,pick[1]+t*ny/nn],lo=b.bodyAt(c,...P(A-1e-9)),hi=b.bodyAt(c,...P(A+1e-9));
+  for(let i=0;i<3;i++)assert(Math.abs(lo[i]-hi[i])<=1e-6*Math.hypot(...hi),`${c.kind} continuity ${i}`);}
+ // outside the layer the ring and rod use no model at all: equal to brute force thin values
+ const f=b.rodLocal(6,3.1,.13),g=bruteRod(6,3.1,.13);within(f[0],g[0],1e-9,'rod just outside');
+});
+test('bodies in the sandbox: superposition with points, map frame, probe readings, limits table, CSV',()=>{
+ const rod={kind:'rod',x:0,y:0,q:2,size:6,ang:0},ring={kind:'ring',x:0,y:0,q:2,size:2,ang:90},disk={kind:'disk',x:0,y:0,q:2,size:2,ang:90};
+ // the presets put the probe at (0, 2.5): on the rod's bisector, on the ring's and the disk's axis
+ within(b.fieldAt([rod],0,2.5)[1],KC*2/(2.5*Math.sqrt(2.5**2+9)),1e-13,'rod preset');
+ within(b.fieldAt([ring],0,2.5)[1],KC*2*2.5/(2.5**2+4)**1.5,1e-13,'ring preset');
+ within(b.fieldAt([disk],0,2.5)[1],2*Math.PI*KC*2/(Math.PI*4)*(1-2.5/Math.hypot(2.5,2)),1e-12,'disk preset');
+ assert(Math.abs(b.fieldAt([ring],0,2.5)[0])<1e-9&&Math.abs(b.fieldAt([disk],0,2.5)[0])<1e-9);
+ // turning a body turns its field: a ring with its axis along +x seen at (2.5, 0)
+ const r0=b.fieldAt([{...ring,ang:0}],2.5,0);within(r0[0],KC*2*2.5/(2.5**2+4)**1.5,1e-13,'turned ring');assert(Math.abs(r0[1])<1e-9);
+ // a turned rod: symmetric about its own bisector
+ const t={...rod,ang:30},a=b.fieldAt([t],-1,2),bb=b.potentialAt([t],-1,2),u=[Math.cos(Math.PI/6),Math.sin(Math.PI/6)];
+ const m=[-1-2*((-1)*u[0]+2*u[1])*u[0],2-2*((-1)*u[0]+2*u[1])*u[1]];within(b.potentialAt([t],...m),bb,1e-12,'mirror');
+ // superposition with point charges
+ const pts=[{x:-3,y:0,q:2},{x:3,y:1,q:-1}],all=[...pts,rod,ring],p=[1.3,2.2];
+ within(b.potentialAt(all,...p),b.potentialAt(pts,...p)+b.bodyAt(rod,...p)[0]+b.bodyAt(ring,...p)[0],1e-13,'superposition V');
+ // probe reading flags the model layer of a body; the ring only where it crosses the map
+ assert(b.probeReading([rod],1,0).inCore&&!b.probeReading([rod],1,.2).inCore&&b.probeReading([ring],2,0).inCore&&!b.probeReading([ring],0,0).inCore&&b.probeReading([disk],.5,0).inCore);
+ assert.equal(b.coreAt([pts[0],rod],1,.1),rod);
+ // limits rows are the textbook formulas evaluated at the probe
+ let L=b.bodyLimits(rod,0,2.5);within(L.E,L.rows.find(r=>r.id==='bisector').E,1e-13,'bisector row');within(L.rows.find(r=>r.id==='line').E,2*KC*2/6/2.5,1e-15);within(L.rows.find(r=>r.id==='point').E,KC*2/6.25,1e-15);
+ L=b.bodyLimits({...ring,q:-2},0,-1.4);within(L.E,L.rows.find(r=>r.id==='ringAxis').E,1e-13,'ring axis row');
+ L=b.bodyLimits({...disk,size:5},0,.2);within(L.E,L.rows.find(r=>r.id==='diskAxis').E,1e-12,'disk axis row');within(L.rows.find(r=>r.id==='plane').E,2*Math.PI*KC*2/(Math.PI*25),1e-15);
+ // CSV: points keep their old lines, bodies get their own
+ const csv=b.readingsCsv([{config:1,x:'0.0',y:'2.5',V:'1',E:'2',dir:'90',inCore:false}],[{name:'Ring',charges:[{x:0,y:0,q:2,kind:'ring',size:2,ang:90},{x:-3,y:0,q:2}]}]);
+ assert(csv.includes('# config 1 body 1,ring,x_m,0,y_m,0,Q_C,2e-9,R_m,0.02,axis_deg,90\n')&&csv.includes('# config 1 charge 1,x_m,-0.03,y_m,0,q_C,2e-9\n')&&csv.includes('# model_bodies,'));
+ assert(!b.readingsCsv([],[{name:'Dipole',charges:pts}]).includes('model_bodies'));
+ assert.notEqual(b.chargeKey([ring]),b.chargeKey([disk]));assert.equal(b.chargeKey(pts),'-3,0,2;3,1,-1');
+});
 if(process.argv.includes('--strict-core')){
  // Independent check at a point inside the core: the field must equal the numerical -dV/dx there.
  c.set([{x:0,y:0,q:1}]);const x=.05,h=1e-5,expected=-(c.potential(x+h,0)-c.potential(x-h,0))/(2*h*.01);

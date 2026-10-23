@@ -452,3 +452,13 @@ TeacherKeys b5dc003 is reverted (31898f9); answers/ and the instructor guides ar
 - display calculations split numbers across rows ("= 2.1" / "× 10⁷ g"), and the units answer Q1 lost its structure;
 - "Sagittarius A*" became `$A*$`; `\text{%}` used for percent; many plain values with units were typeset.
 About 175 such inline spots in all. **Do not redo this pass automatically.** If Steve asks for it again, convert by hand file by hand, never touch hashes, code, IDs or words, and compare rendered text before and after. tools/notes.py now loads MathJax on key pages and protects `$...$` from the Markdown converter, so answers/ can use math later.
+
+## Claude, 2026-10-23 10:45: the 12 "needs feature" Physics II sections are done
+
+Six were already covered and are relabelled usable after review: 11.2 (Currents and Fields field lines), 11.3 (Magnetic Force helix, selector, spectrometer, cyclotron; e/m), 16.2–16.5 (EM Waves plane wave, intensity, radiation pressure, spectrum). Six got new features, each with tests, notes and a key question:
+- **5.5** coulomb-sandbox: **Rod**, **Ring**, **Disk** presets and **Add rod/ring/disk**; exact integrals; **Textbook formulas** panel. CSV gains per body header lines only when such bodies exist.
+- **6.4** induction: setup **Conductor shapes in a field (2D)** (Circle, Ellipse, Teardrop, Hollow ring, Hollow box; E₀, line charge λ and distance, net charge; σ against θ graph).
+- **9.1** resistivity: **Bench / Inside the wire** view (v_d = I/(nqA), J, electrons per second counter, transit time). Existing CSV and fits unchanged.
+- **14.2** faraday: setup **Self-inductance** (solenoid or toroid, Ramp up/Ramp down/Switch on/Switch off, waveforms, L, back EMF, ½LI²).
+- **Vol 3 2.3, 2.8** optics-bench: presets **Microscope**, **Refracting surface**, **Apparent depth**; **Add → Refracting surface**; Telescope now shows its measured angular magnification. Test file test_optics_bench.cjs.
+Handouts for these sections can now refer to these controls.

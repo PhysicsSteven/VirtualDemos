@@ -2402,12 +2402,12 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "coulomb-sandbox"
       ],
       "unit": "charge-fields",
-      "note": "Point-charge sums only; general extended-distribution integration is missing."
+      "note": "Coulomb Sandbox: finite rod, ring and disk with total charge Q; exact integrals (closed forms with elliptic integrals); Textbook formulas panel compares infinite line, ring and disk on axis, infinite plane and point charge limits. Added by Claude 2026-10-23."
     },
     {
       "vol": 2,
@@ -2499,13 +2499,13 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "gauss-law",
         "induction"
       ],
       "unit": "flux-gauss",
-      "note": "Spherical conductor example only, not arbitrary conductors."
+      "note": "Induction: Conductor shapes in a field (2D): circle, ellipse, teardrop, hollow ring and hollow box in a uniform field or near a line charge; E = 0 in metal and cavity, sigma = eps0 E_perp, charge piles up at the point; boundary element solution tested against exact cases. Spheres solved exactly by images. Added by Claude 2026-10-23."
     },
     {
       "vol": 2,
@@ -2691,12 +2691,13 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "circuits"
+        "circuits",
+        "resistivity"
       ],
       "unit": "current-resistance",
-      "note": "Circuit-level current only, not a microscopic charge-flow experiment."
+      "note": "Resistivity: Inside the wire view: free electrons drifting at v_d = I/(nqA) with random Fermi speed motion, J = I/A, a counting plane for electrons per second, transit time L/v_d. Circuits for circuit level current. Added by Claude 2026-10-23."
     },
     {
       "vol": 2,
@@ -3244,13 +3245,13 @@
         "physics-2"
       ],
       "requirement": "required",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "circuits",
         "faraday"
       ],
       "unit": "induction",
-      "note": "Lumped inductors and fixed coil model, not every inductor geometry."
+      "note": "Faraday: Self-inductance setup: solenoid L = mu_r mu0 N^2 A/l (Nagaoka end correction for comparison) and toroid; back EMF -L dI/dt for ramp, triangle, sine and switch; NPhi = LI; energy LI^2/2 = field energy. Added by Claude 2026-10-23."
     },
     {
       "vol": 2,
@@ -3554,12 +3555,12 @@
         "physics-2"
       ],
       "requirement": "optional",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "optics-bench"
       ],
       "unit": "optional-optics",
-      "note": "Basic refraction supported; general curved-surface image formation needs review."
+      "note": "Optics bench: Refracting surface element (exact Snell rays vs paraxial n1/do + n2/di = (n2 - n1)/R, m = -n1 di/(n2 do)) and Apparent depth preset. Added by Claude 2026-10-23."
     },
     {
       "vol": 3,
@@ -3635,12 +3636,12 @@
         "physics-2"
       ],
       "requirement": "optional",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "optics-bench"
       ],
       "unit": "optional-optics",
-      "note": "Instrument examples require review before section-complete labeling."
+      "note": "Optics bench: Microscope preset (m_obj, M_eye = 25 cm/f_eye, net M measured from traced rays and the -(16 cm)(25 cm)/(f_obj f_eye) estimate) and Telescope with M = -f_obj/f_eye measured. Added by Claude 2026-10-23."
     },
     {
       "vol": 1,
@@ -5434,6 +5435,11 @@
         "physics-2"
       ],
       "sections": [
+        {
+          "vol": 2,
+          "sec": "9.1",
+          "title": "Electrical Current"
+        },
         {
           "vol": 2,
           "sec": "9.3",

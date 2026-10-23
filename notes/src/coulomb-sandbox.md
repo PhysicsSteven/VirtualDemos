@@ -22,6 +22,8 @@ Students need Coulomb's law, vector components and potential. Grid squares are 1
 5. **Equipotential spacing ΔV.** On **Dipole**, compare the packing of equipotentials near the charges and the midpoint (Q6). Build your own with **Add +1 nC** and **Add −1 nC**.
 6. **Field mapping (lab).** Tick **Blind: hide predictions and answers** in Lab: field lines, equipotentials, shading, the 3D landscape and the field map data table disappear, and a Blind tag shows on the field. Students move the probe (tap, or press P on the field and use the arrow keys, 0.1 cm per press, 1 cm with Shift), press **Capture reading** (or C) at each point, then **Export CSV**. The CSV lists every setup's charges in SI in its header, so readings can be checked against V = Σ kq/r.
 
+7. **Continuous charge (OpenStax 5.5).** Press **Rod**, **Ring** or **Disk** (each +2 nC; the probe starts on the rod's perpendicular bisector, or on the ring's or disk's axis). Rings and disks stand perpendicular to the map with their dotted axis in it, so you see them edge on: the map slices the ring at its two dots and the disk along its bar. The **Textbook formulas** panel compares the object's exact |E| at the probe with the formulas: on the **Rod** bisector the finite rod result matches to 0.0% while the infinite line λ/(2πε₀r) is 30% high at 2.5 cm and 0.2% high at 0.2 cm; on the **Ring** axis kQz/(z² + R²)³ᐟ² is exact everywhere (Q7); on the **Disk** axis the plane value σ/2ε₀ = 89.9 kV/m is approached close to the disk (80.9 kV/m at 0.2 cm). Far away every object reads like a point charge. Use **Add rod**, **Add ring**, **Add disk**, and the **Length L** / **Radius R** and **Direction** / **Axis direction** sliders (or R on the field to turn one 15°) to build your own.
+
 Keyboard on the field: Tab or ] and [ select charges, arrows move the selected one, + and − change it by 0.5 nC, P switches between the probe and a charge, C captures. In 3D: A and D rotate, W and S tilt, Z and X zoom, 0 resets. **Reduce motion** (in Layers) turns off Spin; it starts on when the system asks for reduced motion. **Show data table** (in Key) lists V and E on a 2 cm grid as text.
 
 ## Questions
@@ -38,6 +40,8 @@ Keyboard on the field: Tab or ] and [ select charges, arrows move the selected o
 
 **Q6.** On **Dipole** with ΔV = 250 V, the equipotentials near the midpoint are about 0.6 cm apart along the x axis. Estimate |E| there and compare with the probe.
 
+**Q7.** In **Ring** (+2 nC spread around a ring of radius R = 2 cm, axis along y), (a) calculate E at the probe, z = 2.5 cm along the axis, and check it. (b) E is zero at the center and small far away, so somewhere on the axis it is largest. Find where, and the largest value; check by moving the probe up the axis. (c) At z = 10 cm, by what percentage does the ring's field differ from that of a point charge of 2 nC at its center?
+
 ## Common misconceptions
 
 - **"Where V = 0, E must be zero too."** E is the slope of V, not its value; along the dipole's midline V = 0 and E is strong.
@@ -48,4 +52,5 @@ Keyboard on the field: Tab or ] and [ select charges, arrows move the selected o
 
 - Up to 8 point charges (−5 to +5 nC) in one plane, with the full 3D Coulomb field: V = Σ kqᵢ/rᵢ, E = Σ kqᵢ r̂ᵢ/rᵢ², k = 8.99×10⁹ N·m²/C².
 - A point charge has no finite V or E at its own position, so inside a radius a = 1.2 mm (well inside every drawn disc) each charge is treated as a uniformly charged ball: V = kq(3a² − r²)/(2a³) and E = kq r/a³. Outside that ball the values are exactly the point charge values, and E = −∇V everywhere. If the probe enters a ball, the Probe panel says so.
+- Rods, rings and disks carry their total charge Q spread uniformly. A rod lies in the map; a ring or disk stands perpendicular to it with its axis in the map, so the map is a plane through the axis and contains E there (by symmetry). V and E are the exact integrals of k dq/r: closed forms for the rod everywhere, and complete elliptic integrals for the ring and the disk off their axis (on the axis they are the textbook formulas kQz/(z² + R²)³ᐟ² and 2πkσ(1 − z/√(z² + R²))). Within 1.2 mm of a body its charge is a line or sheet of 1.2 mm uniformly charged balls, integrated numerically to 1 part in 10¹⁰; the Probe panel says when the probe is there. Field lines start evenly along a rod or disk bar and from the two points where a ring crosses the map.
 - Field lines follow E, in number proportional to |q|. In 3D the height is V, compressed near each charge: read it for shape, not scale.
