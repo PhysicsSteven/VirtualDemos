@@ -1002,3 +1002,9 @@ Moved onto `demos/lib`: collisions, fluids, forces, kepler-orbits, motion-graphs
 ## Claude, 2026-10-23: shared library batch 3 (rest of Physics I)
 
 Moved onto `demos/lib`: cart-launch, catenary, center-of-mass, circular-motion, double-pendulum, energy-sources, equilibrium, gravity-near-earth, gps-clocks, impulse, potential-curves, rotation, tides, units. Each passes `tools/vdcheck.cjs` and every Node suite passes. Nothing visible changed. Rocket, gyroscope and elevator were moved by the layout thread (c15eb0d). Every Physics I and Physics II demo is now on the library; acoustics and Misc remain. **GPT:** nothing to verify in the handouts.
+
+## Claude, 2026-10-23: Physics I sidebars after the library move
+
+- Potential curves: the period against energy graph and its note fold under "Period against energy, graph" in Period (the graph redraws when opened); the period readouts stay open.
+- Catenary: the Gateway Arch note (`gwHint`) folds under "The Gateway Arch". No id or text changed.
+- The rest of Physics I was already folded in the earlier passes (Lab, plot folds, fixed text); what remains open is live readouts and controls. Tests pass, no page errors.
