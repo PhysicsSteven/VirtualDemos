@@ -41,6 +41,9 @@ input[type="number"], select { max-width:100%; width:100%; padding:.45rem; color
 .handout:focus-visible, .handout-menu > summary:focus-visible, .handout-menu li a:focus-visible { outline: 3px solid var(--ink); outline-offset: -3px; }
 .handout svg, .handout-menu svg { width: 18px; height: 18px; flex: none; }
 /* /vd-handout */
+.labrow { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.labrow .btn { width: auto; flex: 1 1 auto; }
+.labrow input[type="number"] { width: 5.5em; }
 </style>
 <title>Faraday's and Lenz's Laws</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -298,13 +301,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section>
         <h2>Measurements</h2>
         <dl class="readout" id="meas"></dl>
-        <p class="hint" id="measHint">Flux is evaluated at the displayed time. EMF, current and velocity are averages over the preceding 1 ms interval, not endpoint values.</p>
+        <div class="labrow"><button class="btn" id="labStep">Step 1 ms</button></div>
+        <div class="labrow"><label for="labDuration">Advance by (s)</label><input id="labDuration" type="number" min="0.001" max="10" step="0.001" value="0.1"><button class="btn" id="labAdvance">Advance and pause</button></div>
+        <div class="labrow"><button class="btn primary" id="labCapture">Capture measurement</button><button class="btn" id="labExport">Export to worksheet</button><button class="btn" id="labTrace">Export current run CSV</button><button class="btn" id="labClear">Clear notebook</button></div>
         <label class="check"><input id="labBlind" type="checkbox" checked><span>Blind: hide predictions and answers</span></label>
-        <p class="hint" id="blindHint">Blind hides the predicted amplitudes, the integral checks, the steady state predictions and phasor dial, M and k, and the theory curves on the plots. A CSV exported while it is on leaves out the model only columns.</p>
-        <button class="btn" id="labStep">Step 1 ms</button>
-        <label for="labDuration">Advance by (s)</label><input id="labDuration" type="number" min="0.001" max="10" step="0.001" value="0.1">
-        <button class="btn" id="labAdvance">Advance and pause</button>
-        <button class="btn" id="labCapture">Capture measurement</button><button class="btn" id="labExport">Export to worksheet</button><button class="btn" id="labTrace">Export current run CSV</button><button class="btn" id="labClear">Clear notebook</button>
+        <details class="more"><summary>More about this</summary><p class="hint" id="measHint">Flux is evaluated at the displayed time. EMF, current and velocity are averages over the preceding 1 ms interval, not endpoint values.</p><p class="hint" id="blindHint">Blind hides the predicted amplitudes, the integral checks, the steady state predictions and phasor dial, M and k, and the theory curves on the plots. A CSV exported while it is on leaves out the model only columns.</p></details>
         <p id="labStatus" role="status" aria-live="polite"></p>
         <div class="twrap"><table class="dtab"><caption>Measurement notebook</caption><thead><tr><th>Mode</th><th>t (s)</th><th>Φ (Wb)</th><th>EMF (V)</th><th>I (A)</th></tr></thead><tbody id="labRows"></tbody></table></div>
       </section>
