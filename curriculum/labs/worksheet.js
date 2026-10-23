@@ -190,7 +190,8 @@
     t.parentNode.insertBefore(box, t.nextSibling);
     T.box = box; T.first = t;
     T.copies = el('div');
-    T.tools = el('div', { class: 'ws-btns' }, [
+    T.bringBack = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Bring back the first table', hidden: true, on: { click: () => { showOriginal(T, true); changed(); } } });
+    T.tools = el('div', { class: 'ws-btns' }, [T.bringBack, 
       el('button', { type: 'button', class: 'ws-btn', text: 'Add another copy of this table', on: { click: () => { const r = addRun(T); r.label.focus(); changed(); } } })]);
     box.appendChild(T.copies); box.appendChild(T.tools);
     tables.push(T);
@@ -225,8 +226,15 @@
     const after = el('div', { class: 'ws tex2jax_ignore' }, [el('div', { class: 'ws-btns' }, [addRow, R.removeRow]),
       el('div', { class: 'ws-notes' }, [el('label', { text: R.label ? 'Settings and notes for this copy' : 'Settings and notes for this table' }), withPrint(R.notes)])]);
     if (PLOTS[SLUG] && T.index === 0) { R.plot = el('div', { class: 'ws-plot' }); after.appendChild(R.plot); }
-    if (existing) T.box.insertBefore(after, T.copies); else R.wrap.appendChild(after);
+    if (existing) {
+      /* the original table can go once a copy exists (when a later copy is the one to keep) */
+      R.after = after;
+      R.dropSelf = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Remove this table', hidden: true, on: { click: () => dropOriginal(T, R) } });
+      after.firstChild.appendChild(R.dropSelf);
+      T.box.insertBefore(after, T.copies);
+    } else R.wrap.appendChild(after);
     T.runs.push(R);
+    syncOriginal(T);
     replot();
     return R;
   }
@@ -258,7 +266,26 @@
   function removeRun(T, R) {
     const filled = R.rows.some((r) => r.cells.some((f) => f && f.value)) || R.notes.value || R.label.value;
     if (filled && !confirm('Remove this copy of the table and everything typed in it?')) return;
-    R.wrap.remove(); T.runs.splice(T.runs.indexOf(R), 1); changed();
+    R.wrap.remove(); T.runs.splice(T.runs.indexOf(R), 1);
+    if (T.runs[0].removed && T.runs.length === 1) showOriginal(T, true);
+    syncOriginal(T); changed();
+  }
+  function syncOriginal(T) {
+    const R = T.runs[0]; if (!R || !R.dropSelf) return;
+    R.dropSelf.hidden = R.removed || T.runs.length < 2;
+    T.bringBack.hidden = !R.removed;
+  }
+  function showOriginal(T, on) {
+    const R = T.runs[0]; R.removed = !on;
+    R.table.hidden = !on; R.after.hidden = !on;
+    syncOriginal(T);
+  }
+  function dropOriginal(T, R) {
+    const filled = R.rows.some((r) => r.cells.some((f) => f && f.value)) || R.notes.value;
+    if (filled && !confirm('Remove the first table and everything typed in it? Your copies stay.')) return;
+    R.rows.forEach((r) => r.cells.forEach((f) => f && f.wsSet(''))); R.notes.wsSet(''); R.source = null;
+    while (R.extra) { R.rows.pop().tr.remove(); R.extra--; } R.removeRow.hidden = true;
+    showOriginal(T, false); changed();
   }
   /* Enter moves down a row; arrow keys move between cells when the caret is at the edge of the text. */
   function moveKey(e, R, row, c) {
@@ -307,7 +334,7 @@
     const S = { worksheet: SLUG, title: TITLE, version: VERSION, saved: new Date().toISOString(), student: {}, tables: [], answers: {}, unplaced: leftovers, received };
     WHO.forEach(([k]) => { S.student[k] = who[k].value; });
     tables.forEach((T) => S.tables.push({ columns: T.cols, runs: T.runs.map((R) => ({ label: R.label ? R.label.value : null, notes: R.notes.value, source: R.source || null,
-      rows: R.rows.map((r) => r.cells.map((f) => (f ? f.value : null))) })) }));
+      removed: R.removed || undefined, rows: R.rows.map((r) => r.cells.map((f) => (f ? f.value : null))) })) }));
     answers.forEach((a) => { if (a.f.value) S.answers[a.key] = { q: a.q, text: a.f.value }; });
     return S;
   }
@@ -334,6 +361,7 @@
         const R = T.runs[ri] || addRun(T);
         if (R.label) R.label.wsSet(sr.label || '');
         R.source = sr.source || null;
+        if (ri === 0 && R.dropSelf) showOriginal(T, !sr.removed);
         R.notes.wsSet(sr.notes || '');
         (sr.rows || []).forEach((cells, i) => {
           const row = R.rows[i] || newRow(T, R);
@@ -382,6 +410,7 @@
     WHO.forEach(([k, label]) => L.push(['# ' + label, who[k].value].map(csvCell).join(',')));
     L.push(`# exported,${new Date().toISOString()}`);
     tables.forEach((T, ti) => T.runs.forEach((R, ri) => {
+      if (R.removed) return;
       L.push('');
       const name = `${T.heading}${tables.length > 1 ? ' table ' + (ti + 1) : ''}, copy ${ri + 1}${R.label && R.label.value ? ': ' + R.label.value : ''}`;
       L.push('# ' + name.replace(/[\r\n]+/g, ' '));
@@ -407,7 +436,7 @@
     }, () => alert('The file could not be read.'));
   }
   function reset() {
-    tables.forEach((T) => { T.runs.slice(1).forEach((R) => R.wrap.remove()); T.runs.length = 1; const R = T.runs[0]; while (R.extra) { R.rows.pop().tr.remove(); R.extra--; } R.removeRow.hidden = true; });
+    tables.forEach((T) => { T.runs.slice(1).forEach((R) => R.wrap.remove()); T.runs.length = 1; const R = T.runs[0]; while (R.extra) { R.rows.pop().tr.remove(); R.extra--; } R.removeRow.hidden = true; showOriginal(T, true); });
     leftovers = [];
   }
   function clearAll() {
@@ -520,7 +549,7 @@
     const filled = (R) => R.source || R.rows.some((r) => get.some((g, c) => g && r.cells[c] && r.cells[c].value)); /* the demo's columns already used */
     let R = dT.runs.find((x) => x.source === src);
     if (!R) {
-      R = filled(dT.runs[0]) ? addRun(dT) : dT.runs[0];
+      R = dT.runs[0].removed || filled(dT.runs[0]) ? addRun(dT) : dT.runs[0];
       if (R.label && !R.label.value) R.label.wsSet(`Readings from the ${MAP.demo} demo`);
       R.source = src;
       if (R.wrap) typeset(R.wrap);
