@@ -138,6 +138,27 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
 :root[data-theme="dark"] { --coil: #d98a4c; --mag-n: #ff7660; --mag-s: #69a0ff; --tube: #243040; --lit: #f0cf5a; --cap: #4cc07f; --wire: #3a4656; --card: #26364a; --stripe: #0a0c0f; --true: #7d8899; }
 .stage canvas { touch-action: none; }
 .digits { font: inherit; font-family: var(--font-mono); width: 6em; padding: 4px 6px; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); color: var(--ink); }
+/* vd-knobs: an instrument panel in the picture; each range input inside it is shown as a knob (layout redesign) */
+.instr { position: absolute; z-index: 2; display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px 14px; padding: 8px 12px; border-radius: 10px; background: #2c3542; color: #e3e8ef; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
+.instr > [hidden] { display: none !important; }
+.instr .kctl { display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 84px; }
+.instr .kctl label, .instr .kctl .klab { font-size: 0.72rem; font-weight: 700; color: #c9d0d9; text-align: center; max-width: 120px; line-height: 1.2; min-height: 2.4em; display: flex; align-items: flex-end; justify-content: center; }
+.instr .kctl output { font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem; color: #7ee0a0; background: #0b1a12; border-radius: 4px; padding: 1px 6px; white-space: nowrap; }
+.instr input[type="range"] { display: none; }
+.vdknob { position: relative; width: 44px; height: 44px; border-radius: 50%; cursor: grab; touch-action: none; flex: none;
+  background: radial-gradient(circle at 38% 32%, #8b96a4, #4a5462 62%, #39414d); box-shadow: 0 0 0 3px #232a34, 0 2px 4px rgba(0, 0, 0, 0.5); }
+.vdknob::before { content: ""; position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; border-radius: 2px; background: #f1f4f8; transform: rotate(var(--a, 0deg)); transform-origin: 50% 18px; }
+.vdknob:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.instr.compact { gap: 6px 8px; padding: 6px 8px; }
+.instr.compact .kctl { min-width: 70px; gap: 3px; }
+.instr.compact .kctl label { font-size: 0.66rem; max-width: 96px; }
+.instr.compact .kctl output { font-size: 0.8rem; }
+.instr.compact .vdknob { width: 34px; height: 34px; }
+.instr.compact .vdknob::before { top: 3px; height: 10px; transform-origin: 50% 14px; }
+.bench { position: relative; }
+.instr { left: 8px; top: 8px; gap: 8px 8px; padding: 6px 8px; }
+.instr .kctl { max-width: 84px; }
+@media (max-width: 820px) { .instr { position: static; margin: 0; max-width: none; justify-content: center; } }
 </style>
 </head>
 <body>
@@ -160,6 +181,11 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
+    <div class="instr compact" id="instr" role="group" aria-label="Apparatus controls">
+      <div class="kctl" id="kF"><label for="sF">Shakes per second</label><input type="range" id="sF" min="1" max="6" step="0.5"><output id="oF" for="sF"></output></div>
+      <div class="kctl" id="kA"><label for="sA">Stroke, centre to end</label><input type="range" id="sA" min="1" max="5" step="0.5"><output id="oA" for="sA"></output></div>
+      <div class="kctl" id="kV"><label for="sV">Swipe speed</label><input type="range" id="sV" min="0.1" max="1.5" step="0.05"><output id="oV" for="sV"></output></div>
+    </div>
     <aside class="rail">
       <section>
         <h2>Setups</h2>
@@ -177,8 +203,8 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <section id="secFlash">
         <h2>Shake flashlight</h2>
         <div class="btnrow"><button type="button" class="btn primary" id="shakeBtn">Shake</button><button type="button" class="btn" id="emptyBtn">Empty the capacitor</button></div>
-        <div><div class="slider-head"><label for="sF">Shakes per second</label><output id="oF" for="sF"></output></div><input type="range" id="sF" min="1" max="6" step="0.5"></div>
-        <div><div class="slider-head"><label for="sA">Stroke, centre to end</label><output id="oA" for="sA"></output></div><input type="range" id="sA" min="1" max="5" step="0.5"></div>
+        
+        
         <div class="inline"><span class="lab">Capacitor</span>
           <div class="seg" role="group" aria-label="Capacitor" id="capSeg">
             <button type="button" data-c="0.1" aria-pressed="true">0.10 F</button>
@@ -198,7 +224,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
       <section id="secCard" hidden>
         <h2>Card reader</h2>
         <div class="inline"><label class="lab" for="digits">Number on the stripe</label><input id="digits" class="digits" inputmode="numeric" maxlength="6" value="2026"></div>
-        <div><div class="slider-head"><label for="sV">Swipe speed</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="0.1" max="1.5" step="0.05"></div>
+        
         <label class="check"><input type="checkbox" id="uneven"><span>Uneven swipe (speed changes by ±40 %)</span></label>
         <div class="btnrow"><button type="button" class="btn primary" id="swipeBtn">Swipe the card</button></div>
       </section>
@@ -371,7 +397,7 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   // ---------- controls ----------
   function sync() {
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
-    $('secFlash').hidden = S.machine !== 'flash'; $('secTablet').hidden = S.machine !== 'tablet'; $('secCard').hidden = S.machine !== 'card';
+    $('secFlash').hidden = S.machine !== 'flash'; $('secTablet').hidden = S.machine !== 'tablet'; $('secCard').hidden = S.machine !== 'card'; $('kF').hidden = $('kA').hidden = S.machine !== 'flash'; $('kV').hidden = S.machine !== 'card'; $('instr').hidden = S.machine === 'tablet';
     $('modelFlash').hidden = S.machine !== 'flash'; $('modelTablet').hidden = S.machine !== 'tablet'; $('modelCard').hidden = S.machine !== 'card';
     const F = S.fl; $('shakeBtn').textContent = F.shaking ? 'Stop shaking' : 'Shake'; $('sF').value = F.f; $('oF').textContent = `${F.f} Hz`; $('sA').value = F.A * 100; $('oA').textContent = `${(F.A * 100).toFixed(1)} cm`;
     for (const b of document.querySelectorAll('#capSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.c === F.C)); $('ledOn').checked = F.led; $('ff').checked = F.ff;
@@ -556,6 +582,29 @@ table.rows button { font: inherit; background: none; border: 0; color: var(--mut
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce) { S.fl.shaking = false; S.tb.circle = false; } upd(); });
+  /* vd-knobs: every range input inside .instr gets a knob that drives it (one step every 15° of turn, arrow keys, Page Up/Down for
+     ten steps, Home/End, mouse wheel). The input stays the source of truth, so the demo's own code is unchanged; the knob dispatches
+     'input' events and redraws its mark whenever the value changes, even when the demo sets it. */
+  (function knobs() {
+    const DEG = 15, all = [];
+    for (const inp of document.querySelectorAll('.instr input[type="range"]')) {
+      const k = document.createElement('div'), lab = document.querySelector(`label[for="${inp.id}"]`);
+      k.className = 'vdknob'; k.tabIndex = 0; k.setAttribute('role', 'slider'); k.setAttribute('aria-label', lab ? lab.textContent.trim() : inp.id);
+      k.setAttribute('aria-valuemin', inp.min); k.setAttribute('aria-valuemax', inp.max); inp.tabIndex = -1; inp.setAttribute('aria-hidden', 'true');
+      inp.insertAdjacentElement('afterend', k);
+      const st = () => +inp.step || 1, out = inp.id && document.querySelector(`output[for="${inp.id}"]`);
+      const set = (n) => { const v = Math.max(+inp.min, Math.min(+inp.max, +inp.value + n * st())), r = +(Math.round(v / st()) * st()).toFixed(6); if (r !== +inp.value) { inp.value = r; inp.dispatchEvent(new Event('input', { bubbles: true })); } };
+      let last = null, acc = 0;
+      const ang = (e) => { const r = k.getBoundingClientRect(); return Math.atan2(e.clientY - r.top - r.height / 2, e.clientX - r.left - r.width / 2) * 180 / Math.PI; };
+      k.addEventListener('pointerdown', (e) => { k.setPointerCapture(e.pointerId); last = ang(e); acc = 0; k.focus(); e.preventDefault(); });
+      k.addEventListener('pointermove', (e) => { if (last === null) return; const a = ang(e); let d = a - last; d -= 360 * Math.round(d / 360); last = a; acc += d; const n = Math.trunc(acc / DEG); if (n) { acc -= n * DEG; set(n); } });
+      const end = () => { last = null; }; k.addEventListener('pointerup', end); k.addEventListener('pointercancel', end);
+      k.addEventListener('wheel', (e) => { e.preventDefault(); set(e.deltaY < 0 ? 1 : -1); }, { passive: false });
+      k.addEventListener('keydown', (e) => { const n = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 10, PageDown: -10, Home: -1e9, End: 1e9 }[e.key]; if (!n) return; set(n); e.preventDefault(); });
+      all.push({ inp, k, out, shown: null });
+    }
+    (function show() { for (const o of all) { if (o.inp.value !== o.shown) { o.shown = o.inp.value; o.k.style.setProperty('--a', `${(Math.round((+o.inp.value - +o.inp.min) / (+o.inp.step || 1)) * DEG) % 360}deg`); o.k.setAttribute('aria-valuenow', o.inp.value); } if (o.out) o.k.setAttribute('aria-valuetext', o.out.textContent); } requestAnimationFrame(show); })();
+  })();
   tokens(); new ResizeObserver(resize).observe(stage);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'flash'); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
