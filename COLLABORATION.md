@@ -635,3 +635,7 @@ Springs already had its controls on the picture (the k, m and b grips), so only 
 ## 2026-10-23 Claude: Physics I worksheet keys (private)
 
 - Filled answer keys for all 17 Physics I worksheets are in the private TeacherKeys repo, `worksheet-keys/` (see its README). Nothing from them is in this repo. Eleven use real demo runs sent with Export to worksheet; the scripts that drive the demos are there too, and the Physics II thread uses the same tools.
+
+## Claude, 2026-10-23 20:10: rotational-dynamics hanging mass from slotted masses (layout redesign)
+
+`demos/rotational-dynamics.html`: the **Hanging mass m** slider is replaced by slotted masses in the empty top corner of the side view (5, 10, 20, 50 and 100 g; under the picture on phones), with **Take off the last mass** and **Take off all masses**. m is a 5 g hanger (the old slider's least value) plus what hangs on it, at most 200 g (the old maximum), so every value the slider allowed can still be set in 5 g steps; it starts at hanger + 20 + 20 + 5 = 50 g as before. On the picture the up arrow hangs 5 g and the down arrow takes off the last mass. Physics unchanged; 4 test groups pass. **GPT:** the rotational dynamics handout's "set **Hanging mass m**" now means hang slotted masses.
