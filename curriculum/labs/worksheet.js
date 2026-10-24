@@ -267,7 +267,7 @@
   const THERMO = ['heating-curve' /* States of Matter demo, Beaker view */, 'bonds-and-latent-heat' /* States of Matter demo, Atoms view */,
     'thermal-equilibrium', 'gas-thermometer', 'thermal-expansion', 'heat-conduction' /* Temperature and Heat demo, one per view */,
     'heat-capacities-of-gases', 'ruchardt' /* Heat Capacities of Gases demo */, 'free-expansion', 'einstein-solids', 'second-law' /* Entropy demo */,
-    'ideal-gas', 'heat-engines', 'blackbody', 'convection' /* Temperature and Heat demo, Cooling view (2026-10-24) */];
+    'ideal-gas', 'heat-engines', 'blackbody', 'convection' /* Temperature and Heat demo, Cooling view (2026-10-24) */, 'ising'];
   ENABLED.push(...THERMO);
   Object.assign(FROM_DEMO, {
     /* Reading | Time t (s) | Temperature T (°C) | Balance m (g) | Stage */
@@ -302,6 +302,10 @@
       'Q_in_J', 'Q_out_J', 'W_net_J', null, null, null, null] },
     /* Reading | Temperature T (K) | Peak wavelength (nm) | Flux F (W/m²) | 1/T | ln T | ln F */
     blackbody: { demo: 'Blackbody Radiation', cols: ['row', 'T_K', 'peak_nm', 'flux_W_m2', null, null, null] },
+    /* Reading | Lattice and update | T | ⟨∣m∣⟩ | ± | ⟨e⟩ | c | ± | ⟨∣m∣⟩⁸ | sinh⁻⁴(2/T) */
+    ising: { demo: 'Ising Model', cols: ['row', (r) => `${r.L}, ${r.update}`, 'T', 'abs_order', 'abs_order_err', 'e', 'c', 'c_err', null, null],
+      /* every reading at T_c: Reading | Update | L | ⟨∣m∣⟩ | c | χ | τ_int (sweeps) | ln L | ln ⟨∣m∣⟩ | ln χ */
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => Math.abs(+r.T - 2.269185) < 0.0005), cols: ['row', 'update', 'L', 'abs_order', 'c', 'chi', 'tau_int_sweeps', null, null, null] }] },
   });
   /* ==THERMO END== */
   /* ==MODERN START== Modern Physics worksheets (modern.html) and their demo column maps. Threads for other chapters push into MODERN. */
@@ -450,13 +454,45 @@
     /* Reading | Setup | r (kpc, or AU) | v (km/s) | Visible alone (km/s) | M(<r) = v²r/G (M☉) | Visible mass inside r (M☉) | Dark matter share of v² (%) | Period (Myr, or yr) | Line | Shift of the edge | Speed from the shift (km/s) | 1/r | v² */
     'rotation-curves': { demo: 'Galaxy Rotation Curves', cols: ['row', 'setup', 'r', 'v_km_s', 'v_vis', 'M_dyn', 'M_vis', 'dm_pct', 'period', 'line', 'shift', 'v_shift', null, null] },
   });
+  /* Black Holes and Lensing demo (2026-10-24): four data tables, one per part, chosen by the view the readings came from */
+  ASTRO.push('black-holes'); ENABLED.push('black-holes');
+  Object.assign(FROM_DEMO, {
+    /* Reading | Lens mass M (M☉) | D_L (kpc) | D_S (kpc) | θ_E (mas) | θ_E² (mas²) */
+    'black-holes': { demo: 'Black Holes and Lensing', cols: ['row', 'M_Msun', 'DL_kpc', 'DS_kpc', 'thetaE_mas', null],
+      alt: [
+        /* Near the hole: Reading | M | r (km) | Clock rate | Tidal stretch (g) | At the horizon (g) | 1/r | (clock rate)² | 1/r³ */
+        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'Near the hole'), cols: ['row', 'M_Msun', 'r_km', 'clock_rate', 'tidal_g', 'tidal_horizon_g', null, null, null] },
+        /* Ray traced: Reading | r_o (r_s) | Shadow radius (°) | Far away estimate (°) | Ring, exact (°) | Ring, thin lens (°) | sin α | (r_s/r_o)√(1 − r_s/r_o) */
+        { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'Ray traced'), cols: ['row', 'ro_rs', 'shadow_deg', 'shadow_far_deg', 'ring_deg', 'ring_thin_deg', null, null] },
+        /* a light curve (lensing readings, one lens mass): Reading | t − t₀ (days) | A, point source | A, source as drawn | u from A | u² | (t − t₀)² */
+        { table: 1, when: (rows) => rows.length > 1 && rows.every((r) => r.view === 'Lensing') && new Set(rows.map((r) => r.M_Msun)).size === 1, cols: ['row', 't_days', 'A_point', 'A_source', null, null, null] }] },
+  });
+  /* Stellar Evolution demo (2026-10-24): readings at several masses, readings of one star through its life, and cluster readings */
+  ASTRO.push('hr-diagram'); ENABLED.push('hr-diagram');
+  Object.assign(FROM_DEMO, {
+    /* Reading | M (M☉) | L (L☉) | T (K) | R (R☉) | Main sequence lifetime t (yr) | log₁₀ M | log₁₀ L | log₁₀ t */
+    'hr-diagram': { demo: 'Stellar Evolution', cols: ['row', 'M', 'L_Lsun', 'T_K', 'R_Rsun', 'left_yr', null, null, null],
+      alt: [
+        /* the cluster: Reading | Age t (yr) | M_to (M☉) | Main sequence | Giants | White dwarfs | Exploded | log₁₀ M_to | log₁₀ N_left */
+        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'Cluster'), cols: ['row', 'cluster_age_yr', 'turnoff_Msun', 'n_ms', 'n_giants', 'n_wd', 'n_exploded', null, null] },
+        /* one star through its life: Reading | Phase | Age (yr) | Time left (yr) | L (L☉) | T (K) | R (R☉) | R from L and T (R☉) */
+        { table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.mode === 'Single star') && new Set(rows.map((r) => r.M)).size === 1, cols: ['row', 'phase', 'age_yr', 'left_yr', 'L_Lsun', 'T_K', 'R_Rsun', null] }] },
+  });
+  /* White Dwarf Cooling demo (2026-10-24): one white dwarf through time, or one reading at each of several masses */
+  ASTRO.push('white-dwarf-cooling'); ENABLED.push('white-dwarf-cooling');
+  Object.assign(FROM_DEMO, {
+    /* Reading | Model | Cooling age t (yr) | L (L☉) | T_c (K) | T_eff (K) | Solid (% of the mass) | log₁₀ t | log₁₀ L | log₁₀ T_c */
+    'white-dwarf-cooling': { demo: 'White Dwarf Cooling', cols: ['row', 'model', 'age_yr', 'L_Lsun', 'Tc_K', 'Teff_K', 'solid_pct', null, null, null],
+      /* several masses: Reading | M (M☉) | R (km) | ρ_c (g/cm³) | T_m (K) | Crystallization begins at age (yr) | T_eff then (K) | ρ_c^(1/3) */
+      alt: [{ table: 1, when: (rows) => new Set(rows.map((r) => r.M_Msun)).size > 1, cols: ['row', 'M_Msun', 'R_km', 'rhoc_g_cm3', 'Tm_K', 'onset_yr', 'onset_Teff_K', null] }] },
+  });
   /* ==ASTRO END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
-  const GRAPH_EVERY_TABLE = ['shear-bulk', 'neutral-attraction', 'terminal-velocity'];
+  const GRAPH_EVERY_TABLE = ['shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising'];
   GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };

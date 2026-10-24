@@ -168,6 +168,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/ising.html" target="ising-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -269,9 +270,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <p class="note" id="resNote" hidden></p>
         <div class="btnrow">
           <button type="button" class="btn" id="capture" disabled>Capture reading</button>
+          <button type="button" class="btn" id="toWs">Export to worksheet</button>
           <button type="button" class="btn" id="export">Export CSV</button>
           <button type="button" class="btn" id="clear">Clear</button>
         </div>
+        <p class="hint" id="wsState" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>T, L</th><th>⟨|m|⟩</th><th>⟨e⟩</th><th>c</th><th>χ</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Errors are one standard error. ⟨|m|⟩ and ⟨e⟩: blocking analysis of the correlated series (Flyvbjerg and Petersen), taking the largest error over levels with at least 32 blocks, which errs on the large side. c = N(⟨e²⟩ − ⟨e⟩²)/T² and χ = N(⟨m²⟩ − ⟨|m|⟩²)/T: jackknife over 20 blocks. τ<sub>int</sub> is the integrated autocorrelation time. With J = −1 the order parameter is m<sub>s</sub>.</p>
@@ -1333,7 +1336,22 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   $('stopM').addEventListener('click', () => stopMeasure('user'));
   $('capture').addEventListener('click', capture);
   $('export').addEventListener('click', () => download(`ising-readings-seed${S.seed}.csv`, csvTable()));
-  $('clear').addEventListener('click', () => { S.rows = []; renderTable(); dirty.plot = true; });
+  $('clear').addEventListener('click', () => { S.rows = []; wsSeries = Date.now(); $('wsState').textContent = ''; renderTable(); dirty.plot = true; });
+  // Export to worksheet: every captured reading of this series goes to the Ising worksheet (localStorage vd-handoff:ising); Clear starts a new series
+  let wsSeries = Date.now();
+  $('toWs').addEventListener('click', () => {
+    const st = $('wsState');
+    if (!S.rows.length) { st.textContent = 'No captured readings to export.'; return; }
+    const columns = ['row', 'T', 'L', 'J', 'h', 'update', 'seed', 'discarded_sweeps', 'averaged_sweeps', 'abs_order', 'abs_order_err', 'e', 'e_err', 'c', 'c_err', 'chi', 'chi_err', 'tau_int_sweeps', 'errors_reliable'];
+    const rows = S.rows.map((r, i) => [String(i + 1), r.T.toFixed(4), String(r.L), String(r.J), String(r.h), methName(r.method), String(r.seed), String(r.eq), String(r.sweeps),
+      r.absq.toPrecision(5), r.absqErr.toPrecision(2), r.e.toPrecision(5), r.eErr.toPrecision(2), r.c.toPrecision(4), r.cErr.toPrecision(2),
+      r.chi.toPrecision(4), r.chiErr.toPrecision(2), r.tau.toPrecision(3), r.reliable ? 'yes' : 'no']);
+    const hand = { v: 1, demo: 'ising', series: wsSeries, sent: new Date().toISOString(), columns, rows, note: 'Simulated data from the Ising Model demo (Monte Carlo, seed ' + S.seed + ').', csv: csvTable(), csvName: `ising-readings-seed${S.seed}.csv` };
+    try { localStorage.setItem('vd-handoff:ising', JSON.stringify(hand)); }
+    catch (_) { download(hand.csvName, hand.csv); st.textContent = 'This browser blocks storage, so the readings were saved as a CSV file instead.'; return; }
+    st.textContent = `${rows.length} reading${rows.length === 1 ? '' : 's'} sent to the worksheet. `;
+    const l = document.createElement('a'); l.href = '../curriculum/labs/students/ising.html'; l.target = 'ising-worksheet'; l.textContent = 'Open the worksheet'; st.appendChild(l);
+  });
   $('tbl').addEventListener('click', (e) => { const b = e.target.closest('button[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderTable(); dirty.plot = true; } });
   $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; renderResult(); dirty.ui = dirty.plot = dirty.lat = true; });
   $('exact').addEventListener('change', (e) => { S.exact = e.target.checked; dirty.ui = dirty.plot = true; });

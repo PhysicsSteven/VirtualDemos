@@ -8,6 +8,16 @@
 <script src="lib/vd.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
+/* the Readings section: this demo keeps the shared table and button rules off, so the panel brings its own */
+.vd-readings .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.vd-readings .btn { font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+.vd-readings .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.vd-readings .status { margin: 6px 0 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.vd-readings table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.vd-readings table.rows th { text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.vd-readings table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+.vd-readings .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.readout .mysOff { display: none; }
 </style>
 <title>Stellar Evolution</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -156,6 +166,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/hr-diagram.html" target="hr-diagram-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Stars</h2>
         <div class="chips" id="presets">
@@ -269,6 +280,27 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div></details>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="hr-diagram" data-title="Stellar Evolution" data-demo="hr-diagram">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Model</summary><div class="foldbody">
           <p class="hint">Main sequence: L ≈ M⁴ for 0.43 to 2 M☉ and 1.4 M³·⁵ above (0.23 M²·³ below), R ≈ M⁰·⁸ below 1 M☉ and M⁰·⁵⁷ above, lifetime t ≈ 10¹⁰ yr × M⁻²·⁵. These fits describe a star midway through its main sequence; here it brightens by about a factor of 2 from start to end.</p>
@@ -1192,6 +1224,24 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   new ResizeObserver(resize).observe(stage);
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+
+  // readings for the worksheet: the star's state at the marker, or the cluster's counts at its age (ages and times in years)
+  const PRESET_NAME = { sun: 'The Sun', red: 'Red dwarf', sirius: 'Sirius A', massive: 'Massive star', wd: 'White dwarf cooling', cluster: 'Cluster' };
+  const g5 = (x) => String(+(+x).toPrecision(5));
+  window.vdVersion = 'hr-diagram@2026-10-24';
+  window.vdShowCols = [['M', 'M (M☉)'], ['phase', 'phase'], ['L_Lsun', 'L (L☉)']];
+  window.vdReadingRow = () => {
+    if (S.mode === 'cluster') {
+      let nMS = 0, nG = 0, nWD = 0, nSN = 0;
+      for (const c of CL) { const k = c.st.p.key; if (k === 'ms') nMS++; else if (c.st.p.gone) nSN++; else if (k === 'wd' || k === 'knee') nWD++; else nG++; }
+      const toM = (S.cAge / 1e10) ** (-1 / 2.5);
+      return { mode: 'Cluster', M: '', phase: `cluster at ${fmtAge(S.cAge)}`, cluster_age_yr: g5(S.cAge), turnoff_Msun: toM > 25 ? 'above 25' : g5(toM), n_ms: nMS, n_giants: nG, n_wd: nWD, n_exploded: nSN };
+    }
+    const tr = S.track, st = stateAtS(tr, S.s);
+    if (st.p.gone) return `The star has exploded as a supernova; its ${tr.remnant} is not on the diagram.`;
+    return { mode: 'Single star', setup: PRESET_NAME[S.preset] || 'Own setup', M: g5(S.M), phase: st.p.name, age_yr: g5(st.age), left_yr: st.p.wd ? 'cools forever' : g5(st.left),
+      L_Lsun: g5(st.L), T_K: g5(st.Te), R_Rsun: g5(st.R), cooling_age_yr: st.cool != null ? g5(st.cool) : '' };
+  };
 
   // exposed for testing
   window.__hr = { msL, msR, tMS, teff, radiusOf, ifmr, wdRadius, mestelL, buildTrack, stateAtAge, stateAtS, S, CL };

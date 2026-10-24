@@ -6248,9 +6248,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Qualitative GR connection; detailed lensing exceeds this section.",
+      "note": "Qualitative GR connection; detailed lensing exceeds this section. 2026-10-24 (Claude): Record reading and Export to worksheet; interactive worksheet black-holes (Einstein radius against lens mass, a microlensing light curve, clock rates and tidal stretch near the hole, the shadow seen from close in) with a key in TeacherKeys.",
       "title": "Black Holes and Lensing",
-      "url": "demos/black-holes.html"
+      "url": "demos/black-holes.html",
+      "handouts": [
+        "black-holes"
+      ]
     },
     {
       "demo": "blackbody",
@@ -7821,9 +7824,12 @@
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Astronomy module (Vol. 3 §6.1 and §10.6 context). 2026-10-24 (Claude): Record reading and Export to worksheet; interactive worksheet hr-diagram (mass against luminosity and lifetime, the Sun's life, cluster turnoff and the birth mass function) with a key in TeacherKeys.",
       "title": "Stellar Evolution",
-      "url": "demos/hr-diagram.html"
+      "url": "demos/hr-diagram.html",
+      "handouts": [
+        "hr-diagram"
+      ]
     },
     {
       "demo": "huygens",
@@ -8044,9 +8050,12 @@
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Thermodynamics module, beyond the book (Vol. 2 §12.7 and §4.7 context). 2026-10-24 (Claude): Export to worksheet; interactive worksheet ising (temperature scan against Yang's magnetization, finite size scaling at Tc, critical slowing down) with a key from real Monte Carlo runs in TeacherKeys.",
       "title": "Ising Model",
-      "url": "demos/ising.html"
+      "url": "demos/ising.html",
+      "handouts": [
+        "ising"
+      ]
     },
     {
       "demo": "kepler-orbits",
@@ -9972,9 +9981,12 @@
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Astronomy module (Vol. 2 §2.3 and Vol. 3 §6.1 context). 2026-10-24 (Claude): Record reading and Export to worksheet; interactive worksheet white-dwarf-cooling (Mestel's law, Coulomb liquid and freezing, onset of crystallization against mass) with a key in TeacherKeys.",
       "title": "White Dwarf Cooling",
-      "url": "demos/white-dwarf-cooling.html"
+      "url": "demos/white-dwarf-cooling.html",
+      "handouts": [
+        "white-dwarf-cooling"
+      ]
     },
     {
       "demo": "wire-force",
