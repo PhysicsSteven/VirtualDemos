@@ -72,7 +72,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/induction.html" target="induction-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/induction.html" target="induction-worksheet">Worksheet 1: Charging by Induction</a></li><li><a href="../curriculum/labs/students/neutral-attraction.html" target="neutral-attraction-worksheet">Worksheet 2: Attracting a Neutral Insulator</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -80,6 +80,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="ground" aria-pressed="false">Charging one sphere by grounding</button>
           <button type="button" data-p="contact" aria-pressed="false">Sharing charge by contact</button>
           <button type="button" data-p="shapes" aria-pressed="false">Conductor shapes in a field (2D)</button>
+          <button type="button" data-p="polar" aria-pressed="false">Attracting a neutral insulator</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -116,6 +117,26 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <p class="hint" id="plotHint"></p>
       </section>
 
+      <section id="polSec" hidden>
+        <h2>Ball on the balance</h2>
+        <div class="chips" id="ballChips" role="group" aria-label="Ball material">
+          <button type="button" data-b="teflon" aria-pressed="false">Teflon</button>
+          <button type="button" data-b="polystyrene" aria-pressed="true">Polystyrene</button>
+          <button type="button" data-b="nylon" aria-pressed="false">Nylon</button>
+          <button type="button" data-b="pyrex" aria-pressed="false">Pyrex glass</button>
+          <button type="button" data-b="srtio3" aria-pressed="false">Strontium titanate</button>
+          <button type="button" data-b="metal" aria-pressed="false">Metal</button>
+          <button type="button" data-b="mystery" aria-pressed="false">Mystery insulator</button>
+        </div>
+        <label class="check"><input type="checkbox" id="rodP"><span>Charged rod lowered</span></label>
+        <div><div class="slider-head"><label for="sQp">Rod charge</label><output id="oQp" for="sQp"></output></div><input type="range" id="sQp" min="-20" max="20" step="1"></div>
+        <div><div class="slider-head"><label for="sS">Gap from the rod tip to the ball</label><output id="oS" for="sS"></output></div><input type="range" id="sS" min="1.5" max="15" step="0.1"></div>
+        <p><button type="button" class="spin" id="tare">Tare the balance</button></p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Up and down arrows on the picture move the rod by 1 mm (Shift: 1 cm). The rod moves at a steady 15 cm/s; the balance shows a small ring while it is still settling. Tare sets the reading to zero with whatever is pulling on the ball at that moment. Choosing the Mystery insulator again gives a new one.</p>
+        </details>
+      </section>
+
       <section>
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
@@ -147,6 +168,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides the net charges and potentials; the marks on the spheres stay, as an electroscope or a charge probe would show. In Conductor shapes, Blind hides the summary readouts, the E = 0 labels and the exact curve; the field lines, marks, graph and probe stay.</p></details>
         <p class="hint" id="modelSph">Model: two perfectly conducting spheres on ideal insulating stands and the rod's tip as a point charge, solved exactly with Kelvin image charges (a thin wire or contact makes the spheres one conductor; ground holds a sphere at zero potential). The marks are drawn from the surface charge density in the plane of the drawing: their darkness is in proportion to the density, and their sign is its sign. Real charge sits as a tiny excess or shortage of electrons; only electrons move.</p>
+        <p class="hint" id="modelPol" hidden>Model (Attracting a neutral insulator): a solid ball of radius 2.00 cm, uniform and linear with the dielectric constant of OpenStax Vol. 2, Table 8.1 (metal: a perfect conductor), and the rod's tip as a point charge on the line through the ball's centre. The field and the force are the exact solution as a series of Legendre polynomials; the force is the sum of every multipole term, not only the induced dipole. The ball sits on a 2.00 cm insulating post on the pan; the balance, the post and the rest of the rod are left out of the electrostatics. The balance converts force to mass with g = 9.81 m/s² and reads to 0.01 mg. The molecules are drawn huge and their stretch is exaggerated; the + and − marks show the bound (or, in metal, free) surface charge density. At the smallest gap and 20 nC the field at a metal ball's surface stays below air's breakdown field, 3 × 10⁶ V/m.</p>
         <p class="hint" id="modelShape" hidden>Model (Conductor shapes): a 2D cross-section. Each conductor is very long along the line of sight, so every field lies in the plane of the picture; the point charge becomes a line charge λ (charge per length, seen end on) and the conductor's net charge is per length too. The conductor is a perfect conductor, isolated, with the net charge per length you set (zero: neutral); its potential comes out of the solution. Solved by a boundary element method: the surface is cut into straight panels (the readout gives how many), each with a uniform σ; the potential is set equal at every panel's midpoint and the total charge is fixed, and one dense linear solve gives every σ. The field anywhere is then the exact field of those panel charges plus E₀ and λ, so E = 0 inside the metal and the cavity is not imposed: it comes out of the solution, and the readouts report what is left (the numerical error). Convergence, checked in the test file: doubling the panels changes the largest σ by less than 0.1 %, and the circle matches the exact σ = 2ε₀E₀ cos θ to better than 0.01 % of 2ε₀E₀. The teardrop's point is rounded to 1.5 mm and the box's corners to 3 mm (outside) and 1 mm (cavity): at a perfectly sharp point σ grows without limit. Field lines are traced from positive charges and from where the field enters the picture, one line per equal amount of flux. The probe compares σ on the nearest panel with ε₀E⊥ just outside it; with uniform σ on each panel they agree to within about 1 % of the largest σ.</p>
         </div></details>
       </section>
@@ -434,16 +456,74 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     return EPS0 * er;
   }
+
+  // ---- A neutral ball (radius a, dielectric constant κ; κ = Infinity for metal) and a point charge q at distance D from its centre ----
+  // Exact solution in Legendre polynomials, with θ measured at the ball's centre from the direction toward the charge. Outside the ball the
+  // charge's own potential is Σ c_l r^l P_l (c_l = kq/D^(l+1), for r < D); the ball adds Σ B_l r^-(l+1) P_l and inside it the potential is
+  // Σ A_l r^l P_l. Continuity of the potential and of κ ∂φ/∂r at r = a give
+  //   A_l = c_l (2l + 1)/(lκ + l + 1),   B_l = −c_l a^(2l+1) l(κ − 1)/(lκ + l + 1)   (metal: A_l = 0, B_l = −c_l a^(2l+1)).
+  // The force of the ball on the charge is q times the field of the B terms at the charge, so the attraction is
+  //   F = kq² Σ_{l≥1} (l + 1) l(κ − 1)/(lκ + l + 1) a^(2l+1)/D^(2l+3),
+  // whose first term is the induced dipole result F = 2kq² a³ (κ − 1)/(κ + 2)/D⁵. For metal it sums to the Kelvin image result.
+  const DI_A = 0.02, DI_POST = 0.02, G_BAL = 9.81, DI_GAP_MIN = 1.5, DI_GAP_MAX = 15;
+  // dielectric constants: OpenStax University Physics Vol. 2, Table 8.1 (room temperature)
+  const DI_MATS = { teflon: { name: 'Teflon', kappa: 2.1 }, polystyrene: { name: 'Polystyrene', kappa: 2.56 }, nylon: { name: 'Nylon', kappa: 3.4 },
+    pyrex: { name: 'Pyrex glass', kappa: 5.6 }, srtio3: { name: 'Strontium titanate', kappa: 310 }, metal: { name: 'Metal', kappa: Infinity } };
+  const diRatio = (l, kappa) => (kappa === Infinity ? 1 : l * (kappa - 1) / (l * kappa + l + 1));   // −B_l/(c_l a^(2l+1))
+  // attraction between the ball and the charge, N (always toward each other, whatever the sign of q)
+  function diForce(q, D, a, kappa) {
+    let s = 0, pw = a / (D * D * D);
+    for (let l = 1; l < 2000; l++) {
+      pw *= (a / D) * (a / D); const t = (l + 1) * diRatio(l, kappa) * pw; s += t;
+      if (t < 1e-17 * s) break;
+    }
+    return K * q * q * s;
+  }
+  // the dipole (l = 1) term alone
+  const diDipoleForce = (q, D, a, kappa) => 2 * K * q * q * a ** 3 * diRatio(1, kappa) / D ** 5;
+  // P_l(x) and dP_l/dx for l = 0..L
+  function legendre(x, L) {
+    const P = new Float64Array(L + 1), dP = new Float64Array(L + 1); P[0] = 1; if (L > 0) { P[1] = x; dP[1] = 1; }
+    for (let l = 2; l <= L; l++) { P[l] = ((2 * l - 1) * x * P[l - 1] - (l - 1) * P[l - 2]) / l; dP[l] = l * P[l - 1] + x * dP[l - 1]; }
+    return { P, dP };
+  }
+  const diTerms = (D, a) => Math.min(1500, Math.max(8, Math.ceil(Math.log(1e-12) / Math.log(a / D))));
+  // the field inside the ball at (r, θ): [E_r, E_θ] in V/m (zero in metal)
+  function diFieldIn(q, D, a, kappa, r, th) {
+    if (kappa === Infinity) return [0, 0];
+    const L = diTerms(D, a), x = Math.cos(th), sn = Math.sin(th), { P, dP } = legendre(x, L);
+    let er = 0, et = 0, cl = K * q / D;
+    for (let l = 1; l <= L; l++) {
+      cl /= D; const A = cl * (2 * l + 1) / (l * kappa + l + 1), rl = r ** (l - 1);
+      er -= l * A * rl * P[l]; et += A * rl * sn * dP[l];   // E = −∇φ, with ∂P_l(cos θ)/∂θ = −sin θ P_l′
+    }
+    return [er, et];
+  }
+  // surface charge density on the ball at angle θ, C/m²: bound charge P·n for a dielectric, free charge for metal (σ = ε0(E_out − E_in)·n)
+  function diSigma(q, D, a, kappa, th) {
+    const L = diTerms(D, a), { P } = legendre(Math.cos(th), L);
+    let s = 0, cl = K * q / D;
+    for (let l = 1; l <= L; l++) {
+      cl /= D; const B = -cl * a ** (2 * l + 1) * diRatio(l, kappa), A = kappa === Infinity ? 0 : cl * (2 * l + 1) / (l * kappa + l + 1);
+      const eOut = -(l * cl * a ** (l - 1) - (l + 1) * B * a ** (-l - 2)), eIn = -l * A * a ** (l - 1);
+      s += (eOut - eIn) * P[l];
+    }
+    return EPS0 * s;
+  }
+  // the balance reading in mg for an upward pull F (N), rounded to the balance's 0.01 mg
+  const diBalance = (F) => Math.round(-F / G_BAL * 1e8) / 100 + 0;
   // ==CORE END==
 
   if (typeof document === 'undefined') return;
 
-  const $ = (id) => document.getElementById(id);
+  const $ = (id) => document.getElementById(id), VG = window.VDGear;
   const CM = 0.01, NC = 1e-9;
   // the state of the apparatus; charges QA, QB carry over whenever the connections change
   const S = { preset: 'induce', step: 0, rod: false, q: 10, d: 5, gap: 0.05, rB: 5, wire: true, gA: false, gB: false, QA: 0, QB: 0, blind: false, sol: null,
     /* Conductor shapes (2D): shape, E0 in N/C, line charge lam in nC/m at distance ld (cm) left of the conductor, net charge lamC in nC/m, probe in metres */
-    shape: 'circle', E0: 1000, lam: 0, ld: 2, lamC: 0, probe: [0.025, 0], sys: null, ssol: null, chk: null, lines: null, lineKey: '' };
+    shape: 'circle', E0: 1000, lam: 0, ld: 2, lamC: 0, probe: [0.025, 0], sys: null, ssol: null, chk: null, lines: null, lineKey: '',
+    /* Attracting a neutral insulator: ball material, rod lowered or raised, rod charge (nC), target gap and shown gap (cm), the force taken off by Tare (N) */
+    pb: 'polystyrene', prod: false, pq: 20, ps: 3, pv: 25, tare: 0, myst: null, pol: null };
   const STEPS = {
     induce: [
       ['Two neutral metal spheres touch, so they are one conductor. No net charge anywhere.', (s) => Object.assign(s, { rod: false, gap: 0.05, wire: true, gA: false, gB: false, QA: 0, QB: 0, rB: 5 })],
@@ -463,6 +543,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ['Touch them together. They become one conductor at one potential, and the charge redistributes: the bigger sphere takes more.', (s) => Object.assign(s, { gap: 0.05, wire: true })],
       ['Separate them. Each keeps its share. Joined by a long wire far apart, the shares would go as the radii (5 : 3), since V = kQ/R must match; touching, each sphere crowds the other\'s charge, and the smaller one ends up with less than that.', (s) => Object.assign(s, { wire: false, gap: 15 })]
     ],
+    polar: [
+      ['A neutral polystyrene ball sits on an insulating post on a sensitive balance, tared to zero. The charged rod is raised out of the way.', (s) => Object.assign(s, { pb: 'polystyrene', prod: false, pq: 20, ps: 3, tare: 0 })],
+      ['Lower the positive rod to 3 cm above the ball. The reading goes negative: the neutral ball is pulled up. No charge flows in plastic, but each molecule is stretched a little, so the side facing the rod gets a thin layer of negative bound charge and the far side positive. The near layer is closer, so the attraction wins.', (s) => Object.assign(s, { prod: true })],
+      ['Make the rod negative. The molecules turn round and the bound charges swap sides: the ball is still attracted, with the same force, because the force goes as q².', (s) => Object.assign(s, { pq: -20 })],
+      ['Swap in a metal ball of the same size. Its free electrons move all the way to the surface, so it polarizes much more and the pull is nearly three times as strong.', (s) => Object.assign(s, { pb: 'metal' })],
+      ['A ball of strontium titanate, an insulator with κ = 310, is pulled almost exactly as hard as the metal one.', (s) => Object.assign(s, { pb: 'srtio3' })]
+    ],
     shapes: [
       ['A long metal cylinder, seen end on, in a uniform field E₀. Free electrons shift until E = 0 inside; the field lines bend to meet the surface at right angles, and σ = 2ε₀E₀ cos θ (the dashed curve in the graph).', (s) => Object.assign(s, { shape: 'circle', E0: 1000, lam: 0, ld: 2, lamC: 0, probe: [0.025, 0] })],
       ['Stretch it into an ellipse. The induced charge crowds onto the ends, where the surface curves most sharply.', (s) => Object.assign(s, { shape: 'ellipse', probe: [0.032, 0] })],
@@ -472,7 +559,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ['Bring a line charge near the box. The field outside and the charge on the outer surface change a lot; the cavity stays free of field.', (s) => Object.assign(s, { lam: 2, ld: 1.5 })]
     ]
   };
-  const HINT = { induce: 'The classic demonstration with two spheres on insulating stands. Step through it, or use the controls.', ground: 'Grounding lets charge flow to or from the Earth. The order of the last two steps matters: try removing the rod before the ground.', contact: 'Charging by contact: charge is shared until both spheres are at the same potential.', shapes: 'OpenStax §6.4: a conductor in electrostatic equilibrium. A 2D cross-section of long conductors, solved numerically. Pick a shape, set the sources, and probe the field.' };
+  const HINT = { polar: 'OpenStax Vol. 2 §5.2 and §8.5: a charged rod attracts a neutral insulator too, because its molecules polarize. The pull on a neutral ball is measured with an analytical balance: it reads less when the ball is pulled up.', induce: 'The classic demonstration with two spheres on insulating stands. Step through it, or use the controls.', ground: 'Grounding lets charge flow to or from the Earth. The order of the last two steps matters: try removing the rod before the ground.', contact: 'Charging by contact: charge is shared until both spheres are at the same potential.', shapes: 'OpenStax §6.4: a conductor in electrostatic equilibrium. A 2D cross-section of long conductors, solved numerically. Pick a shape, set the sources, and probe the field.' };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -558,6 +645,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function compute() {
     if (S.preset === 'shapes') { computeShapes(); return; }
+    if (S.preset === 'polar') { computePolar(); return; }
     const g = geomSI(), sol = solve({ q0: S.q * NC, x0: g.x0, A: g.A, B: g.B, QA: S.QA, QB: S.QB, wire: S.wire, gA: S.gA, gB: S.gB });
     S.sol = sol; S.QA = sol.QA; S.QB = sol.QB;   // the charge each sphere now holds carries into the next change of connections
   }
@@ -724,7 +812,117 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cav = sys.curves.some((c) => c.cavity);
     $('plotHint').textContent = 'Solid blue line: outer surface' + (cav ? '; gold line: cavity walls' : '') + (exactR && !S.blind ? `; dashed: exact result for a cylinder of radius ${f(exactR / CM, 1)} cm` : '') + '. θ = 0 is the +x side' + (S.shape === 'teardrop' ? ' (the point)' : '') + '.';
   }
+
+  // ---- Attracting a neutral insulator ----
+  const pMat = () => (S.pb === 'mystery' ? S.myst : DI_MATS[S.pb]);
+  const pTarget = () => (S.prod ? S.ps : 25);   // a raised rod is 25 cm above the ball, out of the picture
+  function computePolar() {
+    const m = pMat(), q = S.pq * NC, D = DI_A + S.pv * CM, F = diForce(q, D, DI_A, m.kappa);
+    S.pol = { m, q, D, F, Fd: diDipoleForce(q, D, DI_A, m.kappa), mg: diBalance(F - S.tare), stable: Math.abs(S.pv - pTarget()) < 1e-9 };
+  }
+  /* the rod moves at 8 cm/s toward its target (at once with reduced motion); the picture and the balance follow it */
+  let pAnim = 0, pLast = 0;
+  const reduceMotion = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  function pKick() {
+    if (pAnim) return;
+    pLast = 0;
+    const step = (t) => {
+      const dt = pLast ? Math.min(0.05, (t - pLast) / 1000) : 0.016; pLast = t;
+      const to = pTarget(), d = to - S.pv, v = 15;
+      S.pv = reduceMotion || Math.abs(d) <= v * dt ? to : S.pv + Math.sign(d) * v * dt;
+      if (S.preset !== 'polar') { S.pv = to; pAnim = 0; return; }
+      compute(); draw(); readouts();
+      pAnim = S.pv === to ? 0 : requestAnimationFrame(step);
+    };
+    pAnim = requestAnimationFrame(step);
+  }
+  const BALL_C = { teflon: '#f1f0ea', polystyrene: '#e9e2cc', nylon: '#efe2bd', pyrex: '#cfe3e6', srtio3: '#d9cfc0', metal: '#b9c2cc', mystery: '#a9c4a6' };
+  function drawPolar() {
+    const p = ps(), sol = S.pol, a = DI_A, sb = document.querySelector('.stepbar'), Hu = Math.max(200, (sb ? sb.offsetTop : H) - 4 * p);
+    VG.backdrop(ctx, W, H);
+    const benchY = Hu - 12 * p; VG.bench(ctx, 0, benchY, W, 16 * p, 12 * p);
+    /* the balance: a fixed size case (not to scale) with the pan on top; everything above the pan is to scale */
+    const bx = W * (W > 560 ? 0.42 : 0.4), bw = Math.min(300 * p, W * 0.8), bh = 62 * p, yPan = benchY - bh - 10 * p;
+    const yPanM = -a - DI_POST, tipM = a + S.pv * CM, topM = Math.min(tipM, a + 20 * CM) + 0.035;
+    const sc = Math.min((yPan - 26 * p) / (topM - yPanM), 0.36 * Hu / (2 * a)), X = (x) => bx + x * sc, Y = (y) => yPan - (y - yPanM) * sc;
+    VG.box(ctx, bx - bw / 2, benchY - bh, bw, bh, { color: VG.dark() ? '#2b323c' : '#d6dbe1', r: 8 });
+    VG.plate(ctx, 'analytical balance', bx + bw * 0.22, benchY - bh + 14 * p, { c: VG.dark() ? 'rgba(230,236,243,0.6)' : 'rgba(40,50,62,0.7)' });
+    const lw = Math.min(130 * p, bw * 0.46), lx = bx - bw / 2 + 12 * p, ly = benchY - bh + 12 * p;
+    VG.lcd(ctx, lx, ly, lw, 26 * p, `${(sol.mg === 0 ? 0 : sol.mg).toFixed(2).replace('-', '−')} mg`);
+    if (!sol.stable) { ctx.strokeStyle = '#8ef0b0'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(lx + 9 * p, ly + 13 * p, 3.5 * p, 0, 7); ctx.stroke(); }
+    VG.label(ctx, 'reads to 0.01 mg', lx, ly + 36 * p, { s: 9 * p, c: VG.dark() ? '#9aa6b4' : '#4a5563' });
+    VG.label(ctx, 'TARE', bx + bw * 0.22, benchY - bh + 40 * p, { a: 'center', s: 9 * p, w: 700, c: VG.dark() ? '#9aa6b4' : '#4a5563' });
+    /* pan and the insulating post */
+    VG.rod(ctx, bx, benchY - bh, bx, yPan, 3 * p, { color: '#9aa4b0' });
+    VG.box(ctx, X(-0.035), yPan - 3 * p, 0.07 * sc, 4 * p, { color: '#b8c0ca', r: 2, shadow: false });
+    ctx.fillStyle = VG.dark() ? 'rgba(170,210,230,0.28)' : 'rgba(150,200,225,0.45)'; ctx.fillRect(X(-0.004), Y(-a) - 1, 0.008 * sc, Y(yPanM) - Y(-a) - 3 * p + 1);
+    ctx.strokeStyle = 'rgba(80,120,150,0.5)'; ctx.lineWidth = 1; ctx.strokeRect(X(-0.004), Y(-a) - 1, 0.008 * sc, Y(yPanM) - Y(-a) - 3 * p + 1);
+    /* the ball */
+    const cx = X(0), cy = Y(0), r = a * sc, metal = sol.m.kappa === Infinity;
+    VG.ball(ctx, cx, cy, r, BALL_C[S.pb], { matte: !metal && S.pb !== 'pyrex', glint: metal ? 1 : 0.5 });
+    /* molecules: drawn huge, stretched along the field inside (exaggerated); metal has none, and E = 0 inside it */
+    if (!metal) {
+      const n = 4, h = a / n, P0 = 4e-7;
+      for (let i = -n; i <= n; i++) for (let j = -n; j <= n; j++) {
+        const x = i * h, y = j * h, rr = Math.hypot(x, y); if (rr > a - 0.6 * h) continue;
+        const th = Math.atan2(Math.abs(x), y), [er, et] = diFieldIn(sol.q, sol.D, a, sol.m.kappa, rr, th);
+        const erho = er * Math.sin(th) + et * Math.cos(th), ez = er * Math.cos(th) - et * Math.sin(th), ex = x < 0 ? -erho : erho;
+        const Pm = EPS0 * (sol.m.kappa - 1) * Math.hypot(ex, ez), t = Pm / (Pm + P0), ang = Math.atan2(-ez, ex);
+        const L = h * sc * (0.26 + 0.16 * t), Wd = h * sc * 0.2 * (1 - 0.25 * t), px = X(x), py = Y(y);
+        ctx.save(); ctx.translate(px, py); ctx.rotate(t > 0.02 ? ang : 0);
+        ctx.globalAlpha = 0.5 + 0.4 * t;
+        ctx.fillStyle = VG.dark() ? '#6b7787' : '#9aa3ad'; ctx.beginPath(); ctx.ellipse(0, 0, L, Wd, 0, 0, 7); ctx.fill();
+        if (t > 0.02) {
+          ctx.globalAlpha = 0.25 + 0.75 * t;
+          ctx.fillStyle = T.pos; ctx.beginPath(); ctx.ellipse(L * 0.45, 0, L * 0.55, Wd, 0, -Math.PI / 2, Math.PI / 2); ctx.fill();
+          ctx.fillStyle = T.neg; ctx.beginPath(); ctx.ellipse(-L * 0.45, 0, L * 0.55, Wd, 0, Math.PI / 2, 3 * Math.PI / 2); ctx.fill();
+        }
+        ctx.restore();
+      }
+      ctx.globalAlpha = 1;
+    } else if (!S.blind) VG.label(ctx, 'metal: E = 0', cx, cy, { a: 'center', s: 10.5 * p, c: T.ink });
+    /* surface charge: bound charge on an insulator, free charge on metal; darker marks mean more charge per area */
+    ctx.font = `700 ${Math.max(10, Math.min(14, r * 0.2)) * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (let i = 0; i < 40; i++) {
+      const th = 2 * Math.PI * i / 40, sg = diSigma(sol.q, sol.D, a, sol.m.kappa, th), al = Math.min(1, Math.sqrt(Math.abs(sg) / 6e-6));
+      if (al < 0.12) continue;
+      ctx.globalAlpha = 0.2 + 0.8 * al; ctx.fillStyle = sg > 0 ? T.pos : T.neg;
+      ctx.fillText(sg > 0 ? '+' : '−', cx + (r + 8 * p) * Math.sin(th), cy - (r + 8 * p) * Math.cos(th));
+    }
+    ctx.globalAlpha = 1;
+    /* the rod, coming down from above: insulating, charged near its tip (a point charge in the model) */
+    const ty = Y(tipM), rw = 7 * p;
+    if (ty > -20) {
+      VG.rod(ctx, cx - rw, -10, cx - rw, ty - rw, 0.001, {});
+      const g = ctx.createLinearGradient(cx - rw, 0, cx + rw, 0); g.addColorStop(0, VG.mix(T.rod.startsWith('#') ? T.rod : '#8a6a3c', '#000000', 0.3)); g.addColorStop(0.4, VG.mix(T.rod.startsWith('#') ? T.rod : '#8a6a3c', '#ffffff', 0.3)); g.addColorStop(1, VG.mix(T.rod.startsWith('#') ? T.rod : '#8a6a3c', '#000000', 0.35));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(cx - rw, -10); ctx.lineTo(cx - rw, ty - rw); ctx.arc(cx, ty - rw, rw, Math.PI, 0, true); ctx.lineTo(cx + rw, -10); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = S.pq >= 0 ? T.pos : T.neg; ctx.font = `700 ${12 * p}px ${T.mono}`;
+      if (S.pq !== 0) for (let i = 0; i < 4; i++) ctx.fillText(S.pq > 0 ? '+' : '−', cx + rw + 9 * p, ty - 4 * p - i * 13 * p);
+      ctx.beginPath(); ctx.arc(cx, ty, 2.5 * p, 0, 7); ctx.fill();
+      ctx.fillStyle = T.ink; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textAlign = 'left';
+      ctx.fillText(`rod ${S.pq > 0 ? '+' : ''}${S.pq} nC`.replace('-', '−'), cx + rw + 20 * p, Math.max(16 * p, ty - 26 * p));
+      /* the gap, measured from the tip to the top of the ball */
+      if (S.prod || S.pv < 24.95) {
+        const gx = cx - r - 26 * p, y0 = Y(a), y1 = ty;
+        ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1;
+        ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(cx - 4 * p, y1); ctx.lineTo(gx - 6 * p, y1); ctx.moveTo(cx - r * 0.2, y0); ctx.lineTo(gx - 6 * p, y0); ctx.stroke(); ctx.setLineDash([]);
+        ctx.beginPath(); ctx.moveTo(gx, y0); ctx.lineTo(gx, y1); ctx.stroke();
+        for (const [yy, dir] of [[y0, 1], [y1, -1]]) { ctx.beginPath(); ctx.moveTo(gx, yy); ctx.lineTo(gx - 3.5 * p, yy - dir * 6 * p); ctx.lineTo(gx + 3.5 * p, yy - dir * 6 * p); ctx.closePath(); ctx.fill(); }
+        ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillStyle = T.ink; ctx.fillText(`s = ${f(S.pv, 1)} cm`, gx - 6 * p, (y0 + y1) / 2);
+      }
+    }
+    /* the pull on the ball */
+    if (!S.blind && sol.F > 1e-9) {
+      const len = Math.max(10, Math.min(70, 14 * Math.log10(sol.F / 1e-8))) * p, ax = cx + r + 30 * p;
+      ctx.strokeStyle = T.accent; ctx.fillStyle = T.accent; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(ax, cy); ctx.lineTo(ax, cy - len); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(ax, cy - len - 7 * p); ctx.lineTo(ax - 5 * p, cy - len + 2 * p); ctx.lineTo(ax + 5 * p, cy - len + 2 * p); ctx.closePath(); ctx.fill();
+      ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.fillText(`F = ${sci(sol.F * 1e6, 'µN')}`, ax + 8 * p, cy - len / 2);
+    }
+    ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    VG.label(ctx, `${S.pb === 'mystery' ? 'Mystery insulator' : sol.m.name} ball, 2.00 cm radius${W > 520 ? ' · side view to scale' : ''} · molecules drawn huge`, 10 * p, 14 * p, { s: 10 * p });
+  }
   function draw() {
+    if (S.preset === 'polar') { if (!T || !W || !S.pol) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawPolar(); return; }
     if (S.preset === 'shapes') { if (!T || !W || !S.ssol) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); drawShapes(); return; }
     if (!T || !W || !S.sol) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
@@ -797,8 +995,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     $('out').innerHTML = h;
   }
+  function readoutsPolar() {
+    const o = S.pol, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, myst = S.pb === 'mystery';
+    let h = dd('Balance reading', `${(o.mg === 0 ? 0 : o.mg).toFixed(2).replace('-', '−')} mg${o.stable ? '' : ' (settling)'}`) + dd('Gap s', S.prod || S.pv < 24.95 ? `${f(S.pv, 1)} cm` : 'rod raised')
+      + dd('Rod tip to ball centre D', `${f(o.D / CM, 2)} cm`) + dd('Dielectric constant κ', myst ? 'hidden: measure it' : o.m.kappa === Infinity ? 'metal (free charges)' : String(o.m.kappa));
+    if (S.blind) h += '<div class="wide"><dt>Force</dt><dd class="ok">hidden in Blind: read the balance</dd></div>';
+    else h += dd('Pull on the ball F', sci(o.F * 1e6, 'µN')) + dd('Dipole term alone', sci(o.Fd * 1e6, 'µN')) + dd('F ÷ dipole term', o.Fd > 0 ? f(o.F / o.Fd, 3) : '—')
+      + dd('Taken off by Tare', sci(S.tare * 1e6, 'µN'));
+    $('out').innerHTML = h;
+  }
   function readouts() {
     if (S.preset === 'shapes') { readoutsShapes(); return; }
+    if (S.preset === 'polar') { readoutsPolar(); return; }
     const sol = S.sol, dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
     let h;
     if (S.blind) h = '<div class="wide"><dt>Net charges and potentials</dt><dd class="ok">hidden in Blind: read the marks</dd></div>';
@@ -809,10 +1017,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('rodOn').checked = S.rod; $('sQ').value = S.q; $('oQ').textContent = `${S.q > 0 ? '+' : ''}${S.q} nC`.replace('-', '−'); $('sD').value = S.d; $('oD').textContent = `${f(S.d, 1)} cm`;
     $('sG').value = S.gap; $('oG').textContent = S.gap < 0.1 ? 'touching' : `${f(S.gap, 1)} cm`; $('sRB').value = S.rB; $('oRB').textContent = `${f(S.rB, 1)} cm`;
     $('wire').checked = S.wire; $('gA').checked = S.gA; $('gB').checked = S.gB;
-    const sh = S.preset === 'shapes';
-    $('appSec').hidden = sh; $('shapeSec').hidden = !sh; $('modelSph').hidden = sh; $('modelShape').hidden = !sh;
-    $('units').textContent = sh ? '2D cross-section · numerical boundary element solution' : 'spheres 5 cm radius · exact image charge solution';
-    can.setAttribute('aria-label', sh ? 'A cross-section of a long metal conductor in an electric field, with field lines meeting its surface at right angles. Plus and minus marks inside its surface show the surface charge density; darker marks mean more charge per area. A ring marks the probe; use the arrow keys to move it.' : 'Two metal spheres on insulating stands, a charged rod on the left and a ground connection. The plus and minus marks around each sphere show its surface charge density: darker marks mean more charge per area.');
+    const sh = S.preset === 'shapes', pol = S.preset === 'polar';
+    $('appSec').hidden = sh || pol; $('shapeSec').hidden = !sh; $('polSec').hidden = !pol; $('modelSph').hidden = sh || pol; $('modelShape').hidden = !sh; $('modelPol').hidden = !pol;
+    for (const b of document.querySelectorAll('#ballChips button')) b.setAttribute('aria-pressed', String(b.dataset.b === S.pb));
+    $('rodP').checked = S.prod; $('sQp').value = S.pq; $('oQp').textContent = `${S.pq > 0 ? '+' : ''}${S.pq} nC`.replace('-', '−'); $('sS').value = S.ps; $('oS').textContent = `${f(S.ps, 1)} cm`; $('sS').disabled = !S.prod;
+    window.vdShowCols = pol ? [['ball', 'ball'], ['q_rod_nC', 'q (nC)'], ['gap_cm', 's (cm)'], ['balance_mg', 'reading (mg)']] : [['setup', 'setup'], ['d_cm', 'd (cm)'], ['QA_nC', 'Q_A (nC)'], ['QB_nC', 'Q_B (nC)']];
+    $('units').textContent = pol ? 'ball 2.00 cm radius · exact multipole series' : sh ? '2D cross-section · numerical boundary element solution' : 'spheres 5 cm radius · exact image charge solution';
+    can.setAttribute('aria-label', pol ? 'A neutral ball on an insulating post on an analytical balance, with a charged rod above it. Molecules drawn inside the ball stretch along the field, and plus and minus marks show the surface charge. Up and down arrows move the rod.' : sh ? 'A cross-section of a long metal conductor in an electric field, with field lines meeting its surface at right angles. Plus and minus marks inside its surface show the surface charge density; darker marks mean more charge per area. A ring marks the probe; use the arrow keys to move it.' : 'Two metal spheres on insulating stands, a charged rod on the left and a ground connection. The plus and minus marks around each sphere show its surface charge density: darker marks mean more charge per area.');
     for (const b of document.querySelectorAll('#shapeChips button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.shape));
     $('sE0').value = S.E0; $('oE0').textContent = `${S.E0} N/C`; $('sLam').value = S.lam; $('oLam').textContent = S.lam ? `${f(S.lam, 1)} nC/m` : 'off';
     $('sLd').value = S.ld; $('oLd').textContent = `${f(S.ld, 1)} cm`; $('sLd').disabled = !S.lam; $('sLc').value = S.lamC; $('oLc').textContent = `${f(S.lamC, 1)} nC/m`;
@@ -820,7 +1031,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const st = STEPS[S.preset]; $('stepText').textContent = S.step >= 0 ? `Step ${S.step + 1} of ${st.length}: ${st[S.step][0]}` : 'Your own arrangement. Press Start over for the steps.';
     $('next').disabled = S.step < 0 || S.step >= st.length - 1; $('next').classList.toggle('attn', !$('next').disabled);
   }
-  function update() { compute(); sync(); draw(); readouts(); }
+  function update() { compute(); sync(); draw(); readouts(); if (S.preset === 'polar' && S.pv !== pTarget()) pKick(); }
   function goStep(k) { S.step = k; STEPS[S.preset][k][1](S); update(); }
   function applyPreset(p) { S.preset = p; $('presetHint').textContent = HINT[p]; goStep(0); }
   $('next').addEventListener('click', () => goStep(Math.min(S.step + 1, STEPS[S.preset].length - 1)));
@@ -841,12 +1052,27 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdShowCols = [['setup', 'setup'], ['d_cm', 'd (cm)'], ['QA_nC', 'Q_A (nC)'], ['QB_nC', 'Q_B (nC)']];
   const SETUP = { induce: 'two spheres by induction', ground: 'one sphere by grounding', contact: 'sharing by contact' };
   window.vdReadingRow = () => {
-    if (S.preset === 'shapes') return 'Readings are recorded in the three sphere setups.';
+    if (S.preset === 'shapes') return 'Readings are recorded in the three sphere setups and with the neutral ball.';
+    if (S.preset === 'polar') {
+      const o = S.pol; if (!o.stable) return 'Wait for the balance to settle: the rod is still moving.';
+      return { setup: 'neutral ball on a balance', ball: S.pb === 'mystery' ? 'Mystery insulator' : o.m.name, q_rod_nC: S.prod ? S.pq : '', gap_cm: S.prod ? S.ps : 'rod raised', balance_mg: (o.mg === 0 ? 0 : o.mg).toFixed(2) };
+    }
     const sol = S.sol, r6 = (v) => +(+v).toPrecision(6), nc = (Q) => (Math.abs(Q / NC) < 5e-7 ? 0 : r6(Q / NC));   /* charges to 10⁻⁶ nC: below that is rounding in the solution */
     return { setup: SETUP[S.preset], step: S.step >= 0 ? `${S.step + 1} of ${STEPS[S.preset].length}` : 'own arrangement', q_rod_nC: S.preset === 'contact' ? '' : S.q, d_cm: S.preset === 'contact' ? '' : S.d, rB_cm: S.rB, gap_cm: S.gap < 0.1 ? 'touching' : S.gap,
       rod: S.rod ? 'present' : 'removed', connections: [S.wire ? 'A and B joined' : '', S.gA ? 'A grounded' : '', S.gB ? 'B grounded' : ''].filter(Boolean).join(', ') || 'none',
       QA_nC: nc(sol.QA), QB_nC: nc(sol.QB), R_over_R_plus_d: S.preset === 'contact' ? '' : r6(5 / (5 + S.d)), VA_V: r6(sol.VA), VB_V: r6(sol.VB) };
   };
+  window.vdWorksheet = () => (S.preset === 'polar' ? 'neutral-attraction' : 'induction');
+  for (const b of document.querySelectorAll('#ballChips button')) b.addEventListener('click', () => {
+    let msg = '';
+    if (b.dataset.b === 'mystery') { msg = S.pb === 'mystery' && S.myst ? `The last Mystery insulator had κ = ${S.myst.kappa}. A new one is on the balance; its κ is hidden.` : 'A Mystery insulator ball: its κ is hidden. Find it from the balance readings.';
+      S.myst = { name: 'Mystery insulator', kappa: Math.round((3 + Math.random() * 6) * 100) / 100 }; }
+    S.pb = b.dataset.b; own(); update(); if (msg) $('stepText').textContent = msg; });
+  $('rodP').addEventListener('change', (e) => { S.prod = e.target.checked; own(); update(); });
+  $('sQp').addEventListener('input', (e) => { S.pq = +e.target.value; own(); update(); });
+  $('sS').addEventListener('input', (e) => { S.ps = +e.target.value; own(); update(); });
+  $('tare').addEventListener('click', () => { compute(); S.tare = S.pol.F; update(); });
+  window.__pol = { set: (o) => { Object.assign(S, o); S.step = -1; update(); }, settle: () => { S.pv = pTarget(); update(); }, get S() { return S; } };
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
   for (const b of document.querySelectorAll('#shapeChips button')) b.addEventListener('click', () => { S.shape = b.dataset.s; own(); update(); });
   $('sE0').addEventListener('input', (e) => { S.E0 = +e.target.value; own(); update(); });
@@ -863,6 +1089,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const stopDrag = () => { dragging = false; };
   can.addEventListener('pointerup', stopDrag); can.addEventListener('pointercancel', stopDrag);
   can.addEventListener('keydown', (e) => {
+    if (S.preset === 'polar') { if (!S.prod || (e.key !== 'ArrowUp' && e.key !== 'ArrowDown')) return; e.preventDefault();
+      S.ps = Math.round(Math.min(DI_GAP_MAX, Math.max(DI_GAP_MIN, S.ps + (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 1 : 0.1))) * 10) / 10; own(); update(); return; }
     if (S.preset !== 'shapes') return;
     const k = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key]; if (!k) return;
     e.preventDefault(); const st = (e.shiftKey ? 5 : 1) * 0.001; setProbe(S.probe[0] + k[0] * st, S.probe[1] + k[1] * st);

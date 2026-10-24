@@ -95,6 +95,7 @@
     'household-wiring', 'van-de-graaff', 'ink-jet-printer', 'precipitator' /* the last three: Electrostatics at Work */,
     'magnetism-in-matter', 'induced-electric-field', 'induction-at-work', 'magnets-oersted', 'huygens', 'dispersion', 'the-eye',
     'induction' /* Charging by Induction, 2026-10-24 */,
+    'neutral-attraction' /* Attracting a neutral insulator setup of Charging by Induction, 2026-10-24 */,
     'eddy-currents' /* Eddy Currents: Magnet in a Pipe, 2026-10-24 */,
     'michelson' /* Michelson Interferometer, 2026-10-24 */,
     'transformers', 'displacement-current' /* 2026-10-24 */,
@@ -150,6 +151,10 @@
     'wire-force': { demo: 'Force on a Current', cols: ['row', 'I_A', 'L_cm', 'theta_deg', 'dm_g', 'F_N', null] },
     'string-density': { demo: 'Linear Density of a String', cols: ['row', '#string', 'L_m', 'm_kg', 'T_N', 'n', 'inv_n2', 'f_Hz'] },
     /* Trial | Setup | Rod charge (nC) | d (cm) | Radius of B (cm) | Gap (cm) | Connections | Q_A (nC) | Q_B (nC) | R/(R + d) */
+    /* Charge and distance: Reading | Ball | q | Gap s | Balance reading | F | D | q² | ln D | ln F. A series with more than one ball (Part 3)
+       goes to the second table: Reading | Ball | q | Gap s | Balance reading | F | κ | (κ − 1)/(κ + 2) */
+    'neutral-attraction': { demo: 'Charging by Induction (Attracting a neutral insulator)', cols: ['row', 'ball', 'q_rod_nC', 'gap_cm', 'balance_mg', null, null, null, null, null],
+      alt: [{ table: 1, when: (rows) => new Set(rows.map((r) => r.ball)).size > 1, cols: ['row', 'ball', 'q_rod_nC', 'gap_cm', 'balance_mg', null, null, null] }] },
     induction: { demo: 'Charging by Induction', cols: ['row', (r) => `${r.setup}, rod ${r.rod}`, 'q_rod_nC', 'd_cm', 'rB_cm', 'gap_cm', 'connections', 'QA_nC', 'QB_nC', 'R_over_R_plus_d'] },
     /* Reading | Setup | λ₀ (nm) | Thickness t (nm) | Reflectance R (%) | Probe x (mm) | Order m (typed) */
     'thin-films': { demo: 'Thin Film Interference', cols: ['row', (r) => `${r.view}, n ${r.n1} / ${r.nf} / ${r.n2}${+r.theta_deg ? `, θ₁ = ${r.theta_deg}°` : ''}${r.h_um ? `, spacer ${r.h_um} µm` : ''}${r.lens_R_m ? `, lens R = ${r.lens_R_m} m` : ''}`,
@@ -432,7 +437,7 @@
      their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
-  const GRAPH_EVERY_TABLE = ['shear-bulk'];
+  const GRAPH_EVERY_TABLE = ['shear-bulk', 'neutral-attraction'];
   GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };

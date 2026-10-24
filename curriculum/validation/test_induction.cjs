@@ -108,4 +108,34 @@ group('2D: convergence: doubling the panels changes the largest σ by < 0.1 %, a
   const e = (sc) => { const S = build('circle', sc), sol = d.cSolve(S, { E0 }); return maxOver(S, (j) => Math.abs(sol.sig[j] - s2 * Math.cos(at(S, j)))); };
   const r = e(1) / e(2); console.log('   circle error ratio 240 → 480 panels:', r.toFixed(2)); assert(r > 3 && r < 5);
 });
+// The neutral ball (dielectric or metal) near a point charge: exact Legendre series.
+const di = core('induction', 'K,EPS0,diForce,diDipoleForce,diFieldIn,diSigma,diBalance,DI_MATS,DI_A');
+group('neutral ball: metal limit equals the Kelvin image force; far away the dipole term (κ − 1)/(κ + 2) takes over; F ∝ q²', () => {
+  const q = 20 * nC, a = di.DI_A;
+  for (const D of [0.035, 0.05, 0.1]) {
+    const qa = q * a / D, b = a * a / D, img = di.K * q * qa * (1 / (D - b) ** 2 - 1 / D ** 2);
+    near(di.diForce(q, D, a, Infinity) / img, 1, 1e-12, 'metal ' + D);
+  }
+  for (const k of [2.1, 2.56, 5.6, 310]) {
+    near(di.diForce(q, 5, a, k) / di.diDipoleForce(q, 5, a, k), 1, 1e-4, 'far ' + k);
+    near(di.diDipoleForce(q, 5, a, k) / (2 * di.K * q * q * a ** 3 / 5 ** 5), (k - 1) / (k + 2), 1e-12);
+  }
+  near(di.diForce(2 * q, 0.05, a, 2.56) / di.diForce(q, 0.05, a, 2.56), 4, 1e-12, 'q²');
+  near(di.diForce(-q, 0.05, a, 2.56), di.diForce(q, 0.05, a, 2.56), 0, 'sign');
+  assert(di.diForce(q, 0.05, a, 310) < di.diForce(q, 0.05, a, Infinity));
+});
+group('neutral ball: bound charge sums to zero; metal σ matches the images; uniform field limit E_in = 3E₀/(κ + 2); balance rounds to 0.01 mg', () => {
+  const q = 20 * nC, a = di.DI_A, D = 0.05;
+  for (const k of [2.56, Infinity]) { let tot = 0; const N = 4000; for (let i = 0; i < N; i++) { const th = Math.PI * (i + 0.5) / N; tot += di.diSigma(q, D, a, k, th) * 2 * Math.PI * a * a * Math.sin(th) * Math.PI / N; } near(tot / nC, 0, 1e-6, 'total ' + k); }
+  const qa = q * a / D, b = a * a / D;
+  for (const th of [0, 0.7, 2, Math.PI]) {
+    const px = a * Math.cos(th), py = a * Math.sin(th); let ex = 0, ey = 0;
+    for (const [Q, x] of [[q, D], [-qa, b], [qa, 0]]) { const dx = px - x, r3 = (dx * dx + py * py) ** 1.5; ex += di.K * Q * dx / r3; ey += di.K * Q * py / r3; }
+    near(di.diSigma(q, D, a, Infinity, th), di.EPS0 * (ex * Math.cos(th) + ey * Math.sin(th)), 1e-12);
+  }
+  /* a polystyrene ball's bound charge just inside the surface equals P·n = ε0(κ − 1)E_in·n */
+  const th = 1.1, e = di.diFieldIn(q, D, a, 2.56, a * (1 - 1e-9), th); near(di.diSigma(q, D, a, 2.56, th), di.EPS0 * 1.56 * e[0], 1e-15);
+  const Dfar = 50, E0 = di.K * q / Dfar ** 2; near(-di.diFieldIn(q, Dfar, a, 2.56, 0, 0)[0] / E0, 3 / 4.56, 1e-3);
+  near(di.diBalance(84.676e-6), -8.63, 1e-9); near(di.diBalance(-1e-12), 0, 0);
+});
 console.log(`${n} induction test groups passed`);

@@ -164,7 +164,7 @@ HANDOUT_TOPIC = {
     'potential-curves': 'Potential Energy Diagrams', 'impulse': 'Impulse', 'collisions': 'Collisions',
     'rotation': 'Torque and Angular Momentum', 'kepler-orbits': "Kepler's Third Law", 'stress-strain': "Young's Modulus", 'shear-bulk': 'Shear and Bulk Moduli',
     'fluids': 'Pressure, Buoyancy and Flow', 'viscometer': 'Viscosity', 'pipe-flow': 'Pipe Flow and Turbulence', 'springs': 'Spring Constant',
-    'pendulum': 'Measuring g', 'rotational-dynamics': 'Rotational Inertia', 'gyroscope': 'Gyroscope Precession', 'circular-motion': 'Speed Limits on Curves and Loops', 'rocket': 'The Rocket Equation', 'induction': 'Charging by Induction',
+    'pendulum': 'Measuring g', 'rotational-dynamics': 'Rotational Inertia', 'gyroscope': 'Gyroscope Precession', 'circular-motion': 'Speed Limits on Curves and Loops', 'rocket': 'The Rocket Equation', 'induction': 'Charging by Induction', 'neutral-attraction': 'Attracting a Neutral Insulator',
     'michelson': 'Michelson Interferometer',
     'holography': 'Holography: Fringes and Images',
     'gravity-near-earth': 'How g Changes with Height and Latitude', 'tides': 'Tidal Forces', 'gps-clocks': 'GPS Clocks and Relativity',

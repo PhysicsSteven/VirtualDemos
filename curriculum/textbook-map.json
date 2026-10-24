@@ -3044,7 +3044,7 @@
         "induction"
       ],
       "unit": "charge-fields",
-      "note": "Charging by Induction: two conducting spheres and a charged rod solved exactly (image charges); induction, grounding, contact. Insulator polarization not shown."
+      "note": "Charging by Induction: two conducting spheres and a charged rod solved exactly (image charges); induction, grounding, contact. Attracting a neutral insulator setup (2026-10-24, Claude): a neutral dielectric or metal ball on an analytical balance under a charged rod, exact multipole force, molecules and bound charge shown; worksheet neutral-attraction."
     },
     {
       "vol": 2,
@@ -3366,10 +3366,11 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "capacitors"
+        "capacitors",
+        "induction"
       ],
       "unit": "capacitance",
-      "note": "Capacitors and Dielectrics, Inside the dielectric (2026-10-23, Claude): water (polar) and benzene (nonpolar) at a chosen E0; bound charge, E = E0/kappa, average dipole per molecule, real alignment and cloud shift with the drawing's exaggeration stated."
+      "note": "Capacitors and Dielectrics, Inside the dielectric (2026-10-23, Claude): water (polar) and benzene (nonpolar) at a chosen E0; bound charge, E = E0/kappa, average dipole per molecule, real alignment and cloud shift with the drawing's exaggeration stated. Charging by Induction, Attracting a neutral insulator (2026-10-24): the pull on dielectric balls of Table 8.1 materials, (κ − 1)/(κ + 2)."
     },
     {
       "vol": 2,
@@ -8012,14 +8013,20 @@
           "vol": 2,
           "sec": "6.4",
           "title": "Conductors in Electrostatic Equilibrium"
+        },
+        {
+          "vol": 2,
+          "sec": "8.5",
+          "title": "Molecular Model of a Dielectric"
         }
       ],
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Lecture demo: two metal spheres and a charged rod tip (point charge), exact Kelvin image solution; step through charging by induction, by grounding, and by contact; surface charge marks from σ; net charges and potentials. Conductors only. 2026-10-24: student worksheet induction (charging by grounding against rod distance and charge, two spheres by induction, sharing by contact against a long wire) with the shared Readings section.",
+      "note": "New 2026-10-22 (Claude). Lecture demo: two metal spheres and a charged rod tip (point charge), exact Kelvin image solution; step through charging by induction, by grounding, and by contact; surface charge marks from σ; net charges and potentials. Conductors only. 2026-10-24: student worksheet induction (charging by grounding against rod distance and charge, two spheres by induction, sharing by contact against a long wire) with the shared Readings section. 2026-10-24: Attracting a neutral insulator setup (dielectric balls on a balance, exact series force) with worksheet neutral-attraction.",
       "handouts": [
-        "induction"
+        "induction",
+        "neutral-attraction"
       ],
       "title": "Charging by Induction",
       "url": "demos/induction.html"
