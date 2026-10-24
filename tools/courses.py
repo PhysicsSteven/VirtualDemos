@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the course pages (physics-1.html, physics-2.html, and the acoustics.html, thermo.html and modern.html modules), misc.html and the course tiles on index.html
+"""Build the course pages (physics-1.html, physics-2.html, and the acoustics.html, thermo.html, modern.html and astro.html modules), misc.html and the course tiles on index.html
 from curriculum/textbook-map.json.
 
     python3 tools/courses.py          # write the pages and update index.html
@@ -28,8 +28,9 @@ BLURB = {
     'acoustics': ('Waves and sound', 'Waves on strings, the speed of sound, resonance, musical tones and the Doppler effect, then two demos beyond the textbook. OpenStax University Physics Volume 1, chapters 16 and 17.'),
     'thermo': ('Heat and the laws of thermodynamics', 'Temperature and heat, phase changes, the kinetic theory of gases, and the first and second laws with engines and entropy. OpenStax University Physics Volume 2, chapters 1 to 4.'),
     'modern': ('Relativity, quanta, atoms and nuclei', 'Relativity, photons and matter waves, quantum mechanics, atoms, solids, nuclei, particles and cosmology. OpenStax University Physics Volume 3, chapters 5 to 11.'),
+    'astro': ('Sky, planets, stars and galaxies', 'Seasons and the Moon, gravitation and orbits, how stars shine and age, and galaxies, dark matter and the expanding universe. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.'),
 }
-MODULES = {'acoustics', 'thermo', 'modern'}   # modules follow the textbook chapters, not a course schedule
+MODULES = {'acoustics', 'thermo', 'modern', 'astro'}   # modules follow the textbook chapters, not a course schedule
 TILE_START, TILE_END = '<!-- COURSES START (tools/courses.py) -->', '<!-- COURSES END -->'
 esc = html.escape
 
@@ -49,7 +50,7 @@ def CATALOG_DATA():
 
 
 MISC = {'id': 'misc', 'title': 'Misc.', 'sub': 'Everything else',
-        'lede': 'Astronomy, statistical physics, molecules and more: every demo that is not part of a course or module yet. These will become their own courses later.'}
+        'lede': 'Demos that are not part of a course or module: for now a chemical reaction that makes patterns and a molecule in 3D.'}
 
 
 def misc_names(m):
@@ -58,8 +59,7 @@ def misc_names(m):
 
 def misc_page(m, cards, notes):
     keep = set(misc_names(m))
-    groups = [(t, [n for n in names if n in keep]) for t, names in index_subjects()]
-    groups = [(t, ns) for t, ns in groups if ns]
+    groups = [('Misc', [n for _, names in index_subjects() for n in names if n in keep])]   # one heading (Steve, 2026-10-24)
     jump, secs = [], []
     for t, ns in groups:
         sid = re.sub(r'[^a-z]+', '-', t.lower()).strip('-')
@@ -84,8 +84,8 @@ def misc_page(m, cards, notes):
     </ul>
   </section>''')
     return page_shell(MISC['title'], MISC['sub'], MISC['lede'],
-                      f'<li><span><strong>{len(keep)}</strong> demos</span></li><li><span><strong>{len(groups)}</strong> subjects</span></li>',
-                      ''.join(jump), '\n'.join(secs), 'Grouped by subject for now.')
+                      f'<li><span><strong>{len(keep)}</strong> demos</span></li>',
+                      ''.join(jump), '\n'.join(secs), 'Astronomy, e/m and the Ising model moved into the Astronomy, Modern Physics and Thermodynamics modules.')
 
 
 def sec_key(s):

@@ -41,7 +41,8 @@
     "exam_metadata": "Course metadata may later hold exam_boundaries; omitted for now.",
     "activities": "Optional activities array contains standalone worksheet/reading resources, distinct from the real-demo catalog. Sections reference activities by id; render both section.demos and section.activities, filtering course membership and deduplicating within a unit.",
     "acoustics": "Acoustics (2026-10-23, Steve) is a module, not a syllabus course: Vol 1 ch 16 and 17 plus a Beyond the textbook unit that lists demos directly (unit.demos). Its units use requirement module. A section shared with another course keeps its unit there and names its acoustics unit in unit_in.",
-    "modules": "Thermodynamics and Modern Physics (2026-10-24, Steve) are modules like Acoustics: Thermodynamics is Vol 2 ch 1 to 4, Modern Physics is Vol 3 ch 5 to 11 (relativity through cosmology). Their units use requirement module and follow the textbook chapters. Wave optics (Vol 3 ch 3 and 4) is a second optional unit at the end of Physics II (Steve, 2026-10-24). Demos from Misc that serve these sections moved into them; demos from other courses that serve a section here also list the module. Astronomy demos star-slice and distance-ladder stay on Misc as well."
+    "modules": "Thermodynamics and Modern Physics (2026-10-24, Steve) are modules like Acoustics: Thermodynamics is Vol 2 ch 1 to 4, Modern Physics is Vol 3 ch 5 to 11 (relativity through cosmology). Their units use requirement module and follow the textbook chapters. Wave optics (Vol 3 ch 3 and 4) is a second optional unit at the end of Physics II (Steve, 2026-10-24). Demos from Misc that serve these sections moved into them; demos from other courses that serve a section here also list the module.",
+    "astro": "Astronomy (2026-10-24, Steve) is a module like the others: every astronomy demo, in four units (sky, gravitation and orbits from Vol 1 ch 13, stars, galaxies and cosmology from Vol 3 10.6, 11.6, 11.7). Demos stay in their other courses too. Demos with no section here are listed in unit.demos, which may also hold a demo whose sections belong to another course (e-over-m in Modern). Ising moved to Thermodynamics (Beyond the textbook) and e-over-m to Modern Physics; Misc keeps only bz-reaction and dna, under one heading."
   },
   "courses": [
     {
@@ -1150,6 +1151,15 @@
               "sec": "4.7"
             }
           ]
+        },
+        {
+          "id": "beyond-book",
+          "title": "Beyond the textbook",
+          "requirement": "module",
+          "sections": [],
+          "demos": [
+            "ising"
+          ]
         }
       ]
     },
@@ -1230,6 +1240,9 @@
               "vol": 3,
               "sec": "6.6"
             }
+          ],
+          "demos": [
+            "e-over-m"
           ]
         },
         {
@@ -1401,6 +1414,95 @@
               "vol": 3,
               "sec": "11.7"
             }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "astro",
+      "title": "Astronomy",
+      "metadata": {},
+      "units": [
+        {
+          "id": "sky",
+          "title": "The sky from Earth",
+          "requirement": "module",
+          "sections": [],
+          "demos": [
+            "seasons",
+            "moon-phases"
+          ]
+        },
+        {
+          "id": "gravitation",
+          "title": "Gravitation and orbits",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 1,
+              "sec": "13.1"
+            },
+            {
+              "vol": 1,
+              "sec": "13.2"
+            },
+            {
+              "vol": 1,
+              "sec": "13.3"
+            },
+            {
+              "vol": 1,
+              "sec": "13.4"
+            },
+            {
+              "vol": 1,
+              "sec": "13.5"
+            },
+            {
+              "vol": 1,
+              "sec": "13.6"
+            },
+            {
+              "vol": 1,
+              "sec": "13.7"
+            }
+          ],
+          "demos": [
+            "lagrange-points",
+            "exoplanets"
+          ]
+        },
+        {
+          "id": "stars",
+          "title": "Stars",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 3,
+              "sec": "10.6"
+            }
+          ],
+          "demos": [
+            "hr-diagram",
+            "white-dwarf-cooling"
+          ]
+        },
+        {
+          "id": "galaxies-cosmology",
+          "title": "Galaxies and cosmology",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 3,
+              "sec": "11.6"
+            },
+            {
+              "vol": 3,
+              "sec": "11.7"
+            }
+          ],
+          "demos": [
+            "rotation-curves"
           ]
         }
       ]
@@ -2473,7 +2575,8 @@
       "chapter": 13,
       "chapter_title": "Gravitation",
       "course": [
-        "physics-1"
+        "physics-1",
+        "astro"
       ],
       "requirement": "required",
       "status": "usable",
@@ -2489,7 +2592,8 @@
       "chapter": 13,
       "chapter_title": "Gravitation",
       "course": [
-        "physics-1"
+        "physics-1",
+        "astro"
       ],
       "requirement": "required",
       "status": "usable",
@@ -2506,7 +2610,8 @@
       "chapter": 13,
       "chapter_title": "Gravitation",
       "course": [
-        "physics-1"
+        "physics-1",
+        "astro"
       ],
       "requirement": "required",
       "status": "usable",
@@ -2522,7 +2627,8 @@
       "chapter": 13,
       "chapter_title": "Gravitation",
       "course": [
-        "physics-1"
+        "physics-1",
+        "astro"
       ],
       "requirement": "required",
       "status": "usable",
@@ -2538,7 +2644,8 @@
       "chapter": 13,
       "chapter_title": "Gravitation",
       "course": [
-        "physics-1"
+        "physics-1",
+        "astro"
       ],
       "requirement": "required",
       "status": "usable",
@@ -2554,7 +2661,8 @@
       "chapter": 13,
       "chapter_title": "Gravitation",
       "course": [
-        "physics-1"
+        "physics-1",
+        "astro"
       ],
       "requirement": "required",
       "status": "usable",
@@ -2571,12 +2679,14 @@
       "chapter": 13,
       "chapter_title": "Gravitation",
       "course": [
-        "physics-1"
+        "physics-1",
+        "astro"
       ],
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "gps-clocks"
+        "gps-clocks",
+        "black-holes"
       ],
       "unit": "gravitation",
       "note": "GPS Clocks and Relativity (2026-10-22, Claude): gravitational time dilation and the speed effect for clocks in orbit or on a tower, the GPS +38.6 μs/day, Pound and Rebka, Schwarzschild radii. Light bending and the equivalence principle are discussion only."
@@ -5832,7 +5942,8 @@
       "chapter": 10,
       "chapter_title": "Nuclear Physics",
       "course": [
-        "modern"
+        "modern",
+        "astro"
       ],
       "requirement": "module",
       "status": "usable",
@@ -5842,7 +5953,10 @@
         "nuclear-reactions"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Nuclear Reactions, Fission and Fusion: D–T and D–D Q values (worksheet nuclear-reactions); the Coulomb barrier, the Gamow peak from the Maxwell–Boltzmann tail and tunnelling, ⟨σv⟩ for p + p and D + T against temperature, why the Sun is 1.5 × 10⁷ K and reactors 10⁸ K (worksheet fusion-gamow). Binding energy curve and star slice as before.",
-      "unit": "nuclear"
+      "unit": "nuclear",
+      "unit_in": {
+        "astro": "stars"
+      }
     },
     {
       "vol": 3,
@@ -5956,7 +6070,8 @@
       "chapter": 11,
       "chapter_title": "Particle Physics and Cosmology",
       "course": [
-        "modern"
+        "modern",
+        "astro"
       ],
       "requirement": "module",
       "status": "usable",
@@ -5965,7 +6080,10 @@
         "early-universe"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Distance ladder: Hubble's law fitted to galaxy redshifts. The Big Bang and the Early Universe (Expansion view): the scale factor from the Friedmann equation for four model universes, Hubble's law from timed distances, the age and the Hubble time (worksheet cosmic-expansion).",
-      "unit": "particles-cosmology"
+      "unit": "particles-cosmology",
+      "unit_in": {
+        "astro": "galaxies-cosmology"
+      }
     },
     {
       "vol": 3,
@@ -5974,7 +6092,8 @@
       "chapter": 11,
       "chapter_title": "Particle Physics and Cosmology",
       "course": [
-        "modern"
+        "modern",
+        "astro"
       ],
       "requirement": "module",
       "status": "usable",
@@ -5982,7 +6101,10 @@
         "early-universe"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). The Big Bang and the Early Universe: thermal history with the book's eras and kT = mc² thresholds (worksheet thermal-history), helium from neutron freeze out and decay (worksheet big-bang-helium), and the microwave background stretched from decoupling with COBE FIRAS data.",
-      "unit": "particles-cosmology"
+      "unit": "particles-cosmology",
+      "unit_in": {
+        "astro": "galaxies-cosmology"
+      }
     }
   ],
   "demos": [
@@ -6047,7 +6169,7 @@
     {
       "demo": "black-holes",
       "course": [
-        "later"
+        "astro"
       ],
       "sections": [
         {
@@ -6666,8 +6788,8 @@
     {
       "demo": "distance-ladder",
       "course": [
-        "later",
-        "modern"
+        "modern",
+        "astro"
       ],
       "sections": [
         {
@@ -6800,7 +6922,7 @@
     {
       "demo": "e-over-m",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -6824,7 +6946,8 @@
     {
       "demo": "early-universe",
       "course": [
-        "modern"
+        "modern",
+        "astro"
       ],
       "sections": [
         {
@@ -7089,7 +7212,7 @@
     {
       "demo": "exoplanets",
       "course": [
-        "later"
+        "astro"
       ],
       "sections": [],
       "role": "demo",
@@ -7411,7 +7534,8 @@
       "demo": "gps-clocks",
       "course": [
         "physics-1",
-        "modern"
+        "modern",
+        "astro"
       ],
       "sections": [
         {
@@ -7438,7 +7562,8 @@
     {
       "demo": "gravity-near-earth",
       "course": [
-        "physics-1"
+        "physics-1",
+        "astro"
       ],
       "sections": [
         {
@@ -7588,7 +7713,7 @@
     {
       "demo": "hr-diagram",
       "course": [
-        "later"
+        "astro"
       ],
       "sections": [],
       "role": "demo",
@@ -7787,7 +7912,7 @@
     {
       "demo": "ising",
       "course": [
-        "later"
+        "thermo"
       ],
       "sections": [],
       "role": "demo",
@@ -7800,7 +7925,8 @@
     {
       "demo": "kepler-orbits",
       "course": [
-        "physics-1"
+        "physics-1",
+        "astro"
       ],
       "sections": [
         {
@@ -7864,7 +7990,7 @@
     {
       "demo": "lagrange-points",
       "course": [
-        "later"
+        "astro"
       ],
       "sections": [],
       "role": "demo",
@@ -8040,7 +8166,7 @@
     {
       "demo": "moon-phases",
       "course": [
-        "later"
+        "astro"
       ],
       "sections": [],
       "role": "demo",
@@ -8760,7 +8886,7 @@
     {
       "demo": "rotation-curves",
       "course": [
-        "later"
+        "astro"
       ],
       "sections": [],
       "role": "demo",
@@ -8834,7 +8960,7 @@
     {
       "demo": "seasons",
       "course": [
-        "later"
+        "astro"
       ],
       "sections": [],
       "role": "demo",
@@ -9160,8 +9286,8 @@
     {
       "demo": "star-slice",
       "course": [
-        "later",
-        "modern"
+        "modern",
+        "astro"
       ],
       "sections": [
         {
@@ -9351,7 +9477,8 @@
     {
       "demo": "tides",
       "course": [
-        "physics-1"
+        "physics-1",
+        "astro"
       ],
       "sections": [
         {
@@ -9635,7 +9762,7 @@
     {
       "demo": "white-dwarf-cooling",
       "course": [
-        "later"
+        "astro"
       ],
       "sections": [],
       "role": "demo",

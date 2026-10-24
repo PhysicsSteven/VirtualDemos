@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Astronomy · Virtual Physics Demos</title>
+<meta name="description" content="Astronomy: Seasons and the Moon, gravitation and orbits, how stars shine and age, and galaxies, dark matter and the expanding universe. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #dde3ea;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --shadow: 0 1px 2px rgb(23 32 43 / 0.06), 0 8px 24px -12px rgb(23 32 43 / 0.25);
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: 76px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.5; }
+[hidden] { display: none !important; }
+a { color: inherit; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Header: graph paper, like the demo canvases */
+.hero {
+  border-bottom: 1px solid var(--line);
+  background-color: var(--canvas);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+.hero .wrap { position: relative; padding-top: 56px; padding-bottom: 44px; }
+.art { position: absolute; right: 16px; top: 50%; translate: 0 -50%; width: min(34%, 380px); height: auto; overflow: visible; }
+.art .orbit { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.art .axis { stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 4 5; }
+.art .sweep { fill: color-mix(in srgb, var(--equi) 26%, transparent); stroke: var(--equi); stroke-width: 1.2; }
+.art .sun { fill: var(--equi); }
+.art .glow { fill: color-mix(in srgb, var(--equi) 22%, transparent); }
+.art .planet { fill: var(--neg); }
+.art .vel { stroke: var(--pos); stroke-width: 2.5; stroke-linecap: round; fill: none; }
+.art .head { fill: var(--pos); }
+.eyebrow { margin: 0 0 14px; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--muted); }
+.eyebrow b { color: var(--accent); font-weight: 600; }
+h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
+.lede { margin: 14px 0 0; max-width: 56ch; font-size: 1.15rem; color: var(--muted); text-wrap: pretty; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 22px 0 0; padding: 0; list-style: none; font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+.facts li { display: flex; align-items: center; gap: 8px; }
+.facts li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dot, var(--accent)); }
+.facts li:nth-child(2) { --dot: var(--pos); }
+.facts li:nth-child(3) { --dot: var(--equi); }
+.facts a { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.facts strong { color: var(--ink); font-weight: 600; }
+
+/* Toolbar: filter and subject links, stays on screen while scrolling */
+.tools {
+  position: sticky; top: 0; z-index: 5;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.tools .wrap { display: flex; align-items: center; gap: 10px 18px; padding-top: 10px; padding-bottom: 10px; }
+.filter { position: relative; flex: 0 1 300px; min-width: 0; }
+.filter svg { position: absolute; left: 11px; top: 50%; translate: 0 -50%; width: 16px; height: 16px; color: var(--muted); pointer-events: none; }
+.filter input {
+  width: 100%; font: inherit; font-size: 0.95rem; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 34px 8px 34px;
+}
+.filter input::placeholder { color: var(--muted); }
+.filter input::-webkit-search-cancel-button { display: none; }
+.filter kbd {
+  position: absolute; right: 8px; top: 50%; translate: 0 -50%;
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; line-height: 1.5; pointer-events: none;
+}
+.filter input:not(:placeholder-shown) + kbd { display: none; }
+.clear {
+  position: absolute; right: 5px; top: 50%; translate: 0 -50%;
+  font: inherit; font-size: 0.8rem; font-weight: 700; color: var(--muted);
+  background: none; border: 0; border-radius: 5px; padding: 3px 7px; cursor: pointer;
+}
+.clear:hover { color: var(--ink); }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; min-width: 0; flex: 1 1 auto; }
+.jump a {
+  display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap;
+  font-size: 0.88rem; font-weight: 700; text-decoration: none; color: var(--ink);
+  padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+}
+.jump a:hover { border-color: var(--accent); color: var(--accent); }
+.n { font-family: var(--font-mono); font-size: 0.75em; font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; }
+.status { margin: 20px 0 -12px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); }
+.status:empty { display: none; }
+
+/* Subjects and cards */
+main { padding-top: 12px; padding-bottom: 48px; }
+.subject { padding-top: 36px; }
+.subject h2 {
+  display: flex; align-items: baseline; gap: 10px; margin: 0 0 16px;
+  font-size: 1.35rem; letter-spacing: -0.01em;
+}
+.subject h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.subject h2 .n { font-size: 0.8rem; }
+/* Click a subject heading to fold its cards away; the sections below move up. Remembered per browser. */
+.fold { all: unset; display: inline-flex; align-items: baseline; gap: 10px; cursor: pointer; border-radius: 6px; }
+.fold:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.fold::before { content: ""; width: 0.5em; height: 0.5em; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+  transform: translateY(-0.15em) rotate(45deg); transition: transform 0.15s ease; align-self: center; }
+.fold:hover::before { border-color: var(--ink); }
+.subject.collapsed .fold::before { transform: rotate(-45deg); }
+.subject.collapsed .grid { display: none; }
+.subject.collapsed h2 { margin-bottom: 0; color: var(--muted); }
+.subject.collapsed { padding-top: 22px; }
+.searching .subject.collapsed .grid { display: grid; }
+.searching .subject.collapsed h2 { margin-bottom: 16px; color: inherit; }
+@media (prefers-reduced-motion: reduce) { .fold::before { transition: none; } }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 272px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.grid > li { display: flex; min-width: 0; }
+.card {
+  display: flex; flex-direction: column; width: 100%;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  text-decoration: none; color: inherit;
+  transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s;
+}
+.thumb { display: block; aspect-ratio: 16 / 10; background: var(--canvas); border-bottom: 1px solid var(--line); overflow: hidden; }
+.thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale 0.35s ease; }
+.body { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px 16px; flex: 1; }
+.card h3 { margin: 0; font-size: 1.12rem; line-height: 1.25; }
+.card p { margin: 0; color: var(--muted); font-size: 0.93rem; text-wrap: pretty; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin: auto 0 0; padding: 8px 0 0; list-style: none; }
+.tags li {
+  font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.4; color: var(--muted);
+  background: var(--canvas); border: 1px solid var(--line); border-radius: 5px; padding: 2px 6px;
+}
+.card:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
+.card:hover .thumb img { scale: 1.03; }
+.card:hover h3 { color: var(--accent); }
+.card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.filter input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.empty { margin: 48px 0 0; padding: 28px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 12px; }
+.empty button { font: inherit; font-weight: 700; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+
+footer { border-top: 1px solid var(--line); margin-top: 24px; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 22px; padding-bottom: max(28px, env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: 0.9rem; }
+footer p { margin: 0; }
+footer a { color: var(--accent); text-underline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .thumb img { transition: none; }
+  .card:hover { translate: none; }
+  .card:hover .thumb img { scale: none; }
+}
+@media (max-width: 700px) {
+  html { scroll-padding-top: 116px; }
+  .hero .wrap { padding-top: 36px; padding-bottom: 30px; }
+  .art { display: none; }
+  .lede { font-size: 1.05rem; }
+  .tools .wrap { flex-wrap: wrap; }
+  .filter { flex: 1 1 100%; }
+  .filter kbd { display: none; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+    .subject { padding-top: 28px; }
+}
+
+/* course pages */
+.eyebrow a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
+.jump a.opt { border-style: dashed; }
+.how { margin: 22px 0 0; max-width: 75ch; color: var(--muted); font-size: 0.92rem; }
+.unit { padding-top: 34px; }
+.unit h2 { display: flex; align-items: baseline; gap: 10px; margin: 0; font-size: 1.4rem; letter-spacing: -0.01em; }
+.unit h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 14px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.unit.optional { margin-top: 30px; padding: 24px 18px 18px; border: 1px dashed var(--line); border-radius: 14px; }
+.optnote { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--equi); }
+.list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.item { display: grid; grid-template-columns: 200px 1fr; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.item .pic { display: block; border-right: 1px solid var(--line); }
+.item .thumb { height: 100%; aspect-ratio: auto; border-bottom: 0; }
+.item .thumb img { min-height: 125px; }
+.item .body { padding: 12px 14px 14px; gap: 5px; }
+.item h3 { margin: 0; font-size: 1.08rem; line-height: 1.25; }
+.item h3 a { text-decoration: none; }
+.item h3 a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.item p { margin: 0; color: var(--muted); font-size: 0.9rem; text-wrap: pretty; }
+.kind { display: flex; flex-wrap: wrap; gap: 6px; }
+.role, .flag { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; border-radius: 5px; padding: 1px 6px; }
+.role-lab { background: var(--accent); color: var(--canvas); }
+.role-demo { border: 1px solid var(--line); color: var(--muted); }
+.flag { border: 1px dashed var(--equi); color: var(--equi); text-transform: none; letter-spacing: 0; }
+.secs { display: flex; flex-direction: column; gap: 2px; margin: 4px 0 0; padding: 0; list-style: none; font-size: 0.82rem; }
+.sec { font-family: var(--font-mono); font-size: 0.74rem; color: var(--accent); margin-right: 4px; }
+.links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: auto !important; padding-top: 8px; font-size: 0.88rem; }
+.links a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; min-height: 28px; display: inline-flex; align-items: center; }
+.links a.go { color: var(--canvas); background: var(--accent); border-radius: 7px; padding: 4px 12px; text-decoration: none; min-height: 36px; }
+.also { grid-column: 1 / -1; color: var(--muted); font-size: 0.92rem; padding: 4px 2px; }
+.also a { font-weight: 700; }
+.also .where, .also .where a { font-weight: 400; }
+.none { color: var(--muted); padding: 18px; border: 1px dashed var(--line); border-radius: 12px; }
+.gaps { margin-top: 12px; font-size: 0.9rem; }
+.gaps summary { cursor: pointer; color: var(--muted); font-weight: 700; min-height: 32px; display: flex; align-items: center; gap: 8px; }
+.gaps ul { margin: 6px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 3px 22px; }
+.gaps li { display: flex; align-items: baseline; gap: 4px; }
+.st { margin-left: auto; padding-left: 10px; white-space: nowrap; font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
+.st-needs-feature { color: var(--equi); }
+.more { margin: 40px 0 0; color: var(--muted); }
+.more a { color: var(--accent); font-weight: 700; }
+@media (max-width: 700px) {
+  html { scroll-padding-top: 64px; }
+  .item { grid-template-columns: 1fr; }
+  .item .pic { border-right: 0; border-bottom: 1px solid var(--line); }
+  .item .thumb { aspect-ratio: 16 / 10; height: auto; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .gaps li { flex-wrap: wrap; }
+  .st { margin-left: 0; }
+}
+
+</style>
+</head>
+<body>
+<!-- Generated by tools/courses.py from curriculum/textbook-map.json. Edit the map or the script, not this file. -->
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow"><a href="index.html">Virtual Physics Demos</a> · <b>Sky, planets, stars and galaxies</b></p>
+    <h1>Astronomy</h1>
+    <p class="lede">Seasons and the Moon, gravitation and orbits, how stars shine and age, and galaxies, dark matter and the expanding universe. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.</p>
+    <ul class="facts"><li><span><strong>4</strong> units</span></li><li><span><strong>15</strong> demos and labs</span></li><li><span>Free textbook: <a href="https://openstax.org/details/books/university-physics-volume-1">University Physics Volume 1</a> · <a href="https://openstax.org/details/books/university-physics-volume-3">University Physics Volume 3</a></span></li></ul>
+  </div>
+</header>
+<nav class="tools" aria-label="Sections">
+  <div class="wrap"><ul class="jump"><li><a href="#sky">The sky from Earth</a></li><li><a href="#gravitation">Gravitation and orbits</a></li><li><a href="#stars">Stars</a></li><li><a href="#galaxies-cosmology">Galaxies and cosmology</a></li></ul></div>
+</nav>
+<main class="wrap">
+  <p class="how">Units follow the textbook chapters. Section numbers are volume:section in OpenStax University Physics. A demo can appear in more than one unit. Sections with no activity yet are listed under each unit.</p>
+  <section class="unit" id="sky" aria-labelledby="sky-h">
+    
+    <h2 id="sky-h">The sky from Earth</h2>
+    <p class="meta"><span>Not in the textbook</span></p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/seasons.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/seasons-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/seasons-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/seasons.html">Reasons for Seasons</a></h3>
+          <p>Earth's tilted axis, the Sun's path across your sky, day length and sunlight through the year, and why distance from the Sun is not the reason.</p>
+          <ul class="secs" aria-label="Textbook sections"></ul>
+          <p class="links"><a class="go" href="demos/seasons.html">Open demo</a> <a href="notes/seasons.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/moon-phases.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/moon-phases-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/moon-phases-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/moon-phases.html">Moon Phases</a></h3>
+          <p>Drag the Moon around Earth and see its phase from the ground, when it rises and sets, and why eclipses only happen in eclipse seasons.</p>
+          <ul class="secs" aria-label="Textbook sections"></ul>
+          <p class="links"><a class="go" href="demos/moon-phases.html">Open demo</a> <a href="notes/moon-phases.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="unit" id="gravitation" aria-labelledby="gravitation-h">
+    
+    <h2 id="gravitation-h">Gravitation and orbits</h2>
+    <p class="meta"><span>Vol 1 · Ch. 13</span><span>7 of 7 sections with an activity</span></p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/kepler-orbits.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/kepler-orbits-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/kepler-orbits-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/kepler-orbits.html">Kepler&#x27;s Laws</a></h3>
+          <p>Launch a planet by dragging its velocity arrow. Watch ellipses form, equal areas sweep out in equal times, and the orbit land on P² = a³/M with the real planets.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:13.1</span> Newton&#x27;s Law of Universal Gravitation</li><li><span class="sec">1:13.3</span> Gravitational Potential Energy and Total Energy</li><li><span class="sec">1:13.4</span> Satellite Orbits and Energy</li><li><span class="sec">1:13.5</span> Kepler&#x27;s Laws of Planetary Motion</li></ul>
+          <p class="links"><a class="go" href="demos/kepler-orbits.html">Open demo</a> <a href="curriculum/labs/students/kepler-orbits.html">Worksheet: Kepler&#x27;s Third Law</a> <a href="notes/kepler-orbits.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/gravity-near-earth.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/gravity-near-earth-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/gravity-near-earth-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/gravity-near-earth.html">Gravity Near Earth</a></h3>
+          <p>How g changes with height and latitude: from sea level to the space station and geostationary orbit, and how Earth's spin takes a little off at the equator.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:13.2</span> Gravitation Near Earth&#x27;s Surface</li></ul>
+          <p class="links"><a class="go" href="demos/gravity-near-earth.html">Open demo</a> <a href="curriculum/labs/students/gravity-near-earth.html">Worksheet: How g Changes with Height and Latitude</a> <a href="notes/gravity-near-earth.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/tides.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/tides-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/tides-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/tides.html">Tides</a></h3>
+          <p>See why the Moon raises two ocean bulges, not one: subtract the pull at Earth's center from the pull everywhere else. Watch a city's tides over a day and spring and neap tides over a month.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:13.6</span> Tidal Forces</li></ul>
+          <p class="links"><a class="go" href="demos/tides.html">Open demo</a> <a href="curriculum/labs/students/tides.html">Worksheet: Tidal Forces</a> <a href="notes/tides.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/gps-clocks.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/gps-clocks-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/gps-clocks-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/gps-clocks.html">GPS Clocks and Relativity</a></h3>
+          <p>Why a GPS satellite's clock gains 38 microseconds a day: gravity makes higher clocks run fast, speed makes moving clocks run slow.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:13.7</span> Einstein&#x27;s Theory of Gravity</li></ul>
+          <p class="links"><a class="go" href="demos/gps-clocks.html">Open demo</a> <a href="curriculum/labs/students/gps-clocks.html">Worksheet: GPS Clocks and Relativity</a> <a href="notes/gps-clocks.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/black-holes.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/black-holes-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/black-holes-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/black-holes.html">Black Holes and Lensing</a></h3>
+          <p>Slide a galaxy behind a lens to make an Einstein ring, watch a microlensing event brighten, ray trace a black hole's shadow exactly, and see what gravity does to clocks, light and a person near Sagittarius A* and a stellar black hole.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">1:13.7</span> Einstein&#x27;s Theory of Gravity</li></ul>
+          <p class="links"><a class="go" href="demos/black-holes.html">Open demo</a> <a href="notes/black-holes.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/lagrange-points.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/lagrange-points-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/lagrange-points-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/lagrange-points.html">Lagrange Points</a></h3>
+          <p>Drop or throw test particles in the rotating frame of two orbiting bodies: the five Lagrange points, zero velocity curves, Jupiter's Trojans, tadpole and horseshoe orbits, and halo style orbits near JWST's L2.</p>
+          <ul class="secs" aria-label="Textbook sections"></ul>
+          <p class="links"><a class="go" href="demos/lagrange-points.html">Open demo</a> <a href="notes/lagrange-points.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/exoplanets.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/exoplanets-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/exoplanets-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/exoplanets.html">Finding Exoplanets</a></h3>
+          <p>Watch a planet tug its star and cross its face, with the transit light curve and radial velocity curve drawing live. See why Earth twins are so hard to find.</p>
+          <ul class="secs" aria-label="Textbook sections"></ul>
+          <p class="links"><a class="go" href="demos/exoplanets.html">Open demo</a> <a href="notes/exoplanets.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="unit" id="stars" aria-labelledby="stars-h">
+    
+    <h2 id="stars-h">Stars</h2>
+    <p class="meta"><span>Vol 3 · Ch. 10</span><span>1 of 1 sections with an activity</span></p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/star-slice.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/star-slice-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/star-slice-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/star-slice.html">Star Slice</a></h3>
+          <p>Cut a real MESA star model in half and zoom from the envelope to the core: composition, convection zones, burning shells, and a white dwarf crystallizing from the center out.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:10.6</span> Nuclear Fusion</li></ul>
+          <p class="links"><a class="go" href="demos/star-slice.html">Open demo</a> <a href="notes/star-slice.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/hr-diagram.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/hr-diagram-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/hr-diagram-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/hr-diagram.html">Stellar Evolution</a></h3>
+          <p>Follow a star of any mass across the HR diagram from the main sequence to a cooling white dwarf or a supernova, and date a star cluster from its turnoff.</p>
+          <ul class="secs" aria-label="Textbook sections"></ul>
+          <p class="links"><a class="go" href="demos/hr-diagram.html">Open demo</a> <a href="notes/hr-diagram.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/white-dwarf-cooling.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/white-dwarf-cooling-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/white-dwarf-cooling-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/white-dwarf-cooling.html">White Dwarf Cooling</a></h3>
+          <p>Watch a white dwarf fade: Mestel's cooling law, the core freezing from the center out once the ion coupling reaches 175, the latent heat that slows it, the Gaia Q branch and white dwarfs as a cosmic clock.</p>
+          <ul class="secs" aria-label="Textbook sections"></ul>
+          <p class="links"><a class="go" href="demos/white-dwarf-cooling.html">Open demo</a> <a href="notes/white-dwarf-cooling.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="unit" id="galaxies-cosmology" aria-labelledby="galaxies-cosmology-h">
+    
+    <h2 id="galaxies-cosmology-h">Galaxies and cosmology</h2>
+    <p class="meta"><span>Vol 3 · Ch. 11</span><span>2 of 2 sections with an activity</span></p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/distance-ladder.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/distance-ladder-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/distance-ladder-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/distance-ladder.html">Cosmic Distance Ladder</a></h3>
+          <p>Measure a parallax from two photos, time a Cepheid's light curve, find a supernova's peak, and fit Hubble's law to galaxy redshifts. Each rung calibrates the next.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:11.6</span> The Big Bang</li></ul>
+          <p class="links"><a class="go" href="demos/distance-ladder.html">Open demo</a> <a href="curriculum/labs/students/hubble-law.html">Worksheet: Measuring the Hubble Constant</a> <a href="notes/distance-ladder.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/early-universe.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/early-universe-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/early-universe-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/early-universe.html">The Big Bang and the Early Universe</a></h3>
+          <p>Watch every galaxy move away from every other as space stretches and time the distances to find Hubble's law and the age of the universe. Follow the temperature from the first instant to today, make the helium of the first three minutes, and stretch the glow of decoupling into the 2.7 K microwave background.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">3:11.6</span> The Big Bang</li><li><span class="sec">3:11.7</span> Evolution of the Early Universe</li></ul>
+          <p class="links"><a class="go" href="demos/early-universe.html">Open demo</a> <a href="curriculum/labs/students/cosmic-expansion.html">Worksheet 1: Hubble&#x27;s Law and the Age of the Universe</a> <a href="curriculum/labs/students/thermal-history.html">Worksheet 2: Thermal History of the Universe</a> <a href="curriculum/labs/students/big-bang-helium.html">Worksheet 3: Helium from the First Three Minutes</a> <a href="notes/early-universe.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/rotation-curves.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/rotation-curves-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/rotation-curves-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/rotation-curves.html">Galaxy Rotation Curves</a></h3>
+          <p>Stars far from a galaxy's center orbit as fast as those near it, though the visible matter says they should slow down. Build the curve from a bulge, disk, gas and a dark matter halo, measure it with Doppler shifts, and compare the Milky Way and NGC 3198.</p>
+          <ul class="secs" aria-label="Textbook sections"></ul>
+          <p class="links"><a class="go" href="demos/rotation-curves.html">Open demo</a> <a href="notes/rotation-curves.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <p class="more"><a href="index.html">Back to all courses</a></p>
+</main>
+<footer>
+  <div class="wrap">
+    <p>© 2026 Steven Anderson. All rights reserved. Free to use for teaching and learning; see the <a href="LICENSE.html">terms of use</a>.</p>
+    <p><a href="https://github.com/PhysicsSteven/VirtualDemos">Source on GitHub</a></p>
+  </div>
+</footer>
+</body>
+</html>
