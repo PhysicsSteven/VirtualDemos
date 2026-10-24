@@ -1,0 +1,870 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>The Big Bang and the Early Universe</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --lcdm: #2b6fc4; --matter: #c0562b; --empty: #2f8a4e; --desit: #8a4fc4; --hot: #d2452b; --neutron: #5d6b7e; --helium: #c99a12; --theory: #6a4fc4; --data: #1f2937; --band: rgba(43, 111, 196, 0.07); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lcdm: #69a8ff; --matter: #ff9a6c; --empty: #66d38c; --desit: #c4a0ff; --hot: #ff7a5c; --neutron: #a9b6c8; --helium: #ffd257; --theory: #a991ff; --data: #e6edf5; --band: rgba(105, 168, 255, 0.09); } }
+:root[data-theme="dark"] { --lcdm: #69a8ff; --matter: #ff9a6c; --empty: #66d38c; --desit: #c4a0ff; --hot: #ff7a5c; --neutron: #a9b6c8; --helium: #ffd257; --theory: #a991ff; --data: #e6edf5; --band: rgba(105, 168, 255, 0.09); }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.pane { position: relative; flex: 1 1 auto; min-height: 420px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; }
+.curvebox { position: relative; flex: none; height: 210px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { align-self: stretch; flex: 1 1 520px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.shelf-card .seg { flex-wrap: wrap; }
+.stage-ctl .seg { flex-wrap: wrap; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 420px; flex: none; } .curvebox { height: 200px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 380px; } .curvebox { height: 220px; } }
+@media (min-width: 821px) { .stage { min-height: 760px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>The Big Bang and the Early Universe</h1>
+      <p>Watch every galaxy move away from every other as space stretches, and find the age of the universe from how fast. Follow the temperature back to the first seconds, make the helium of the first three minutes, and see the glow of the young universe cool into today's microwave background.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">distances in Mpc · time in Gyr</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/early-universe.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/early-universe.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM16 2h4v1h-4zM21 2h2v1h-2zM24 2h2v1h-2zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM20 3h2v1h-2zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h6v1h-6zM19 4h2v1h-2zM23 4h3v1h-3zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM13 5h5v1h-5zM20 5h1v1h-1zM26 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM16 6h2v1h-2zM19 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM14 7h1v1h-1zM17 7h3v1h-3zM21 7h2v1h-2zM24 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM14 9h4v1h-4zM21 9h5v1h-5zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM12 10h1v1h-1zM14 10h1v1h-1zM18 10h1v1h-1zM21 10h6v1h-6zM30 10h6v1h-6zM38 10h1v1h-1zM4 11h1v1h-1zM6 11h2v1h-2zM9 11h2v1h-2zM12 11h1v1h-1zM16 11h1v1h-1zM20 11h2v1h-2zM23 11h1v1h-1zM25 11h1v1h-1zM27 11h4v1h-4zM34 11h4v1h-4zM5 12h1v1h-1zM7 12h4v1h-4zM12 12h1v1h-1zM17 12h1v1h-1zM21 12h1v1h-1zM23 12h3v1h-3zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h2v1h-2zM5 13h2v1h-2zM9 13h1v1h-1zM12 13h3v1h-3zM16 13h4v1h-4zM21 13h4v1h-4zM26 13h1v1h-1zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM3 14h1v1h-1zM5 14h1v1h-1zM8 14h2v1h-2zM14 14h2v1h-2zM19 14h1v1h-1zM23 14h4v1h-4zM29 14h4v1h-4zM36 14h3v1h-3zM2 15h6v1h-6zM9 15h2v1h-2zM14 15h5v1h-5zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h2v1h-2zM5 16h2v1h-2zM8 16h1v1h-1zM12 16h2v1h-2zM17 16h1v1h-1zM19 16h1v1h-1zM22 16h2v1h-2zM25 16h2v1h-2zM29 16h1v1h-1zM33 16h5v1h-5zM2 17h2v1h-2zM7 17h1v1h-1zM9 17h1v1h-1zM14 17h1v1h-1zM16 17h2v1h-2zM19 17h5v1h-5zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h1v1h-1zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h3v1h-3zM6 18h1v1h-1zM8 18h1v1h-1zM11 18h1v1h-1zM13 18h1v1h-1zM15 18h1v1h-1zM20 18h1v1h-1zM23 18h2v1h-2zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM5 19h2v1h-2zM9 19h2v1h-2zM12 19h1v1h-1zM14 19h1v1h-1zM18 19h1v1h-1zM21 19h2v1h-2zM25 19h3v1h-3zM29 19h1v1h-1zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h1v1h-1zM6 20h1v1h-1zM8 20h1v1h-1zM11 20h1v1h-1zM13 20h4v1h-4zM18 20h3v1h-3zM22 20h2v1h-2zM25 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM2 21h4v1h-4zM7 21h1v1h-1zM12 21h2v1h-2zM16 21h1v1h-1zM19 21h1v1h-1zM23 21h1v1h-1zM25 21h2v1h-2zM28 21h4v1h-4zM36 21h2v1h-2zM4 22h2v1h-2zM8 22h1v1h-1zM11 22h5v1h-5zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h4v1h-4zM26 22h1v1h-1zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h6v1h-6zM11 23h1v1h-1zM14 23h1v1h-1zM16 23h4v1h-4zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h1v1h-1zM5 24h2v1h-2zM8 24h1v1h-1zM10 24h4v1h-4zM15 24h4v1h-4zM20 24h1v1h-1zM22 24h2v1h-2zM25 24h1v1h-1zM27 24h3v1h-3zM31 24h1v1h-1zM33 24h4v1h-4zM5 25h1v1h-1zM9 25h1v1h-1zM12 25h6v1h-6zM21 25h4v1h-4zM26 25h1v1h-1zM29 25h2v1h-2zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h1v1h-1zM4 26h2v1h-2zM8 26h3v1h-3zM14 26h1v1h-1zM16 26h1v1h-1zM18 26h1v1h-1zM22 26h1v1h-1zM25 26h2v1h-2zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h1v1h-1zM9 27h1v1h-1zM11 27h1v1h-1zM13 27h1v1h-1zM16 27h1v1h-1zM20 27h2v1h-2zM25 27h1v1h-1zM27 27h5v1h-5zM34 27h2v1h-2zM6 28h1v1h-1zM8 28h1v1h-1zM17 28h1v1h-1zM19 28h3v1h-3zM24 28h11v1h-11zM36 28h1v1h-1zM5 29h3v1h-3zM9 29h1v1h-1zM11 29h2v1h-2zM15 29h1v1h-1zM17 29h8v1h-8zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h3v1h-3zM2 30h4v1h-4zM8 30h1v1h-1zM15 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM26 30h1v1h-1zM29 30h6v1h-6zM36 30h3v1h-3zM10 31h1v1h-1zM13 31h2v1h-2zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h2v1h-2zM13 32h1v1h-1zM16 32h4v1h-4zM22 32h1v1h-1zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h4v1h-4zM17 33h1v1h-1zM19 33h2v1h-2zM24 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h4v1h-4zM17 34h1v1h-1zM20 34h1v1h-1zM24 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM16 35h1v1h-1zM18 35h1v1h-1zM21 35h3v1h-3zM25 35h1v1h-1zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h3v1h-3zM15 36h1v1h-1zM18 36h2v1h-2zM22 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM14 37h1v1h-1zM19 37h2v1h-2zM23 37h2v1h-2zM28 37h2v1h-2zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM14 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h4v1h-4zM26 38h1v1h-1zM29 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="ex" aria-pressed="true">Expansion</button>
+          <button type="button" data-v="th" aria-pressed="false">Thermal history</button>
+          <button type="button" data-v="bbn" aria-pressed="false">Helium</button>
+          <button type="button" data-v="cmb" aria-pressed="false">Microwave background</button>
+        </div>
+        <button type="button" class="spin attn" id="go">Play</button>
+        <button type="button" class="btn" id="restart">Start over</button>
+        <div class="seg" role="group" aria-label="Playback speed" id="speedSeg">
+          <button type="button" data-s="1" aria-pressed="true">1×</button>
+          <button type="button" data-s="4" aria-pressed="false">4×</button>
+        </div>
+        <span class="count mono" id="clock"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="A patch of the universe full of galaxies, drawn to a fixed ruler in megaparsecs. Click a galaxy to watch from it. Space plays or pauses."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" role="img" aria-label="The graph for the view."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardEx" role="group" aria-label="The model universe">
+          <span class="card-title">A model universe: galaxies fixed in space that stretches by the scale factor a(t)</span>
+          <div class="wide">
+            <span class="lab">Model</span>
+            <div class="seg" role="group" aria-label="Model universe" id="modelSeg">
+              <button type="button" data-m="lcdm" aria-pressed="true">Planck ΛCDM</button>
+              <button type="button" data-m="matter" aria-pressed="false">Matter only</button>
+              <button type="button" data-m="empty" aria-pressed="false">Empty</button>
+              <button type="button" data-m="desitter" aria-pressed="false">de Sitter</button>
+            </div>
+          </div>
+          <div><div class="slider-head"><label for="sTau">Time from today t</label><output id="oTau" class="mono" for="sTau"></output></div><input type="range" id="sTau" min="-14" max="20" step="0.01"></div>
+          <div><div class="slider-head"><label for="sH0">Hubble constant today H<sub>0</sub></label><output id="oH0" class="mono" for="sH0"></output></div><input type="range" id="sH0" min="50" max="90" step="0.1"></div>
+          <div class="wide">
+            <button type="button" class="btn" id="back">−0.1 Gyr</button><button type="button" class="btn" id="fwd">+0.1 Gyr</button><button type="button" class="btn" id="now">Today</button>
+            <label class="check"><input type="checkbox" id="arrows" checked><span>Velocity arrows</span></label>
+            <span class="lab">Click a galaxy to watch from it.</span>
+          </div>
+        </div>
+        <div class="shelf-card" id="cardTh" role="group" aria-label="The time" hidden>
+          <span class="card-title">The temperature of the radiation that fills the universe, from the first instant to today</span>
+          <div><div class="slider-head"><label for="sLogT">Time since the Big Bang t</label><output id="oLogT" class="mono" for="sLogT"></output></div><input type="range" id="sLogT" min="-44" max="17.64" step="0.01"></div>
+          <div class="wide">
+            <label class="check"><input type="checkbox" id="showEras" checked><span>The book's eras</span></label>
+            <label class="check"><input type="checkbox" id="showThr" checked><span>Lines at kT = mc²</span></label>
+          </div>
+        </div>
+        <div class="shelf-card" id="cardBbn" role="group" aria-label="The nucleons" hidden>
+          <span class="card-title">2000 neutrons and protons in the first minutes (a simulated sample)</span>
+          <div><div class="slider-head"><label for="sKf">Freeze out at kT<sub>f</sub></label><output id="oKf" class="mono" for="sKf"></output></div><input type="range" id="sKf" min="0.4" max="1.5" step="0.01"></div>
+          <div><div class="slider-head"><label for="sTauN">Neutron lifetime τ</label><output id="oTauN" class="mono" for="sTauN"></output></div><input type="range" id="sTauN" min="200" max="2000" step="0.1"></div>
+          <div><div class="slider-head"><label for="sTD">Deuterium survives from t<sub>D</sub></label><output id="oTD" class="mono" for="sTD"></output></div><input type="range" id="sTD" min="30" max="1000" step="1"></div>
+          <div><div class="slider-head"><label for="sTb">Time t</label><output id="oTb" class="mono" for="sTb"></output></div><input type="range" id="sTb" min="-2" max="4" step="0.01"></div>
+        </div>
+        <div class="shelf-card" id="cardCmb" role="group" aria-label="The radiation" hidden>
+          <span class="card-title">Blackbody radiation filling a universe that stretches: every wavelength grows by (1 + z)</span>
+          <div><div class="slider-head"><label for="sZ">Redshift z</label><output id="oZ" class="mono" for="sZ"></output></div><input type="range" id="sZ" min="0" max="1500" step="1"></div>
+          <div class="wide"><label class="check"><input type="checkbox" id="showToday" checked><span>Today's spectrum for comparison</span></label></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/cosmic-expansion.html" target="cosmic-expansion-worksheet">Worksheet 1: Hubble's Law and the Age of the Universe</a></li><li><a href="../curriculum/labs/students/thermal-history.html" target="thermal-history-worksheet">Worksheet 2: Thermal History of the Universe</a></li><li><a href="../curriculum/labs/students/big-bang-helium.html" target="big-bang-helium-worksheet">Worksheet 3: Helium from the First Three Minutes</a></li></ul></details><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="exToday" aria-pressed="true">Hubble's law today</button>
+          <button type="button" data-p="exHalf" aria-pressed="false">Half the size</button>
+          <button type="button" data-p="exMatter" aria-pressed="false">Matter only universe</button>
+          <button type="button" data-p="thProton" aria-pressed="false">Proton pairs stop</button>
+          <button type="button" data-p="thRecomb" aria-pressed="false">Atoms form</button>
+          <button type="button" data-p="bbnStd" aria-pressed="false">First three minutes</button>
+          <button type="button" data-p="cmbDec" aria-pressed="false">Glow at decoupling</button>
+          <button type="button" data-p="cmbToday" aria-pressed="false">Microwave sky today</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="cosmic-expansion" data-title="The Big Bang and the Early Universe" data-demo="early-universe">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide speeds, ages, predictions and theory curves</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="aboutEx"></p>
+          <p class="hint" id="aboutTh"></p>
+          <p class="hint" id="aboutBbn"></p>
+          <p class="hint" id="aboutCmb"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* The Big Bang and the Early Universe. Runnable in Node (curriculum/validation/test_early-universe.cjs).
+     Sources: OpenStax University Physics Volume 3 (2016) §11.6 (Hubble's law v = H₀d, the expanding balloon, the scale factor,
+     the age of the universe) and §11.7 (the eras of the early universe, kT as the typical particle energy, nucleosynthesis in the
+     first minutes, about 25% helium by mass, decoupling about 380 000 years after the Big Bang, the 2.7 K microwave background).
+     Cosmological parameters: Planck Collaboration 2018 VI (A&A 641, A6, 2020), base ΛCDM: H₀ = 67.4 km/s/Mpc, Ω_m = 0.315,
+     Ω_Λ = 0.685, z* = 1089.9, age 13.79 Gyr. CMB temperature T₀ = 2.7255 K (Fixsen 2009, ApJ 707, 916). COBE FIRAS monopole
+     spectrum: Fixsen et al. 1996 (ApJ 473, 576) Table 4, as distributed by NASA LAMBDA (firas_monopole_spec_v1.txt).
+     Particle masses, the neutron lifetime τ = 878.4 s and m_n − m_p = 1.29333 MeV: Particle Data Group, Review of Particle
+     Physics 2024. Constants: CODATA 2018. Time against temperature in the radiation era: PDG review "Big Bang Cosmology"
+     (t ≈ 2.42 s g*^(−1/2) (kT/1 MeV)^(−2) for constant g*), done here by integrating the Friedmann equation. */
+  const C = 299792458, G = 6.67430e-11, HBAR = 1.054571817e-34, KB = 1.380649e-23, KB_EV = 8.617333262e-5, H_PL = 6.62607015e-34;
+  const SIGMA_SB = 5.670374419e-8, A_RAD = 4 * SIGMA_SB / C, ZETA3 = 1.2020569031595942;
+  const MPC_KM = 3.0856775814913673e19, GYR_S = 3.15576e16, YR_S = 3.15576e7;
+  /* 1/H₀ in Gyr when H₀ is in km/s/Mpc: 977.79/H₀; and 1 Mpc/Gyr = 977.79 km/s */
+  const HUBBLE_GYR = MPC_KM / GYR_S;
+  const PLANCK = { H0: 67.4, Om: 0.315, OL: 0.685, T0: 2.7255, Neff: 3.046, zStar: 1089.92 };
+  /* each neutrino species carries 7/8 (4/11)^(4/3) of the photon energy density once electrons and positrons have annihilated */
+  const NU_PER = 7 / 8 * Math.pow(4 / 11, 4 / 3);
+  const Hsi = (H0) => H0 / MPC_KM;
+  /* Ω of the photons today: ρ_γ = a T⁴ against ρ_crit = 3H₀²/(8πG) (energy densities: ρ_crit c²) */
+  const omegaGamma = (H0 = PLANCK.H0, T0 = PLANCK.T0) => 8 * Math.PI * G * A_RAD * Math.pow(T0, 4) / (3 * Math.pow(Hsi(H0), 2) * C * C);
+  const omegaRad = (H0 = PLANCK.H0, T0 = PLANCK.T0, Neff = PLANCK.Neff) => omegaGamma(H0, T0) * (1 + NU_PER * Neff);
+
+  /* The four model universes, each with the same H₀ today. Planck ΛCDM is made exactly flat: Ω_Λ = 1 − Ω_m − Ω_r (0.68491,
+     the 0.685 of Planck 2018 to the digits given). Matter only (Einstein–de Sitter), empty (Milne: all curvature) and
+     de Sitter (only a cosmological constant). */
+  function model(name, H0 = PLANCK.H0) {
+    const Or = omegaRad(H0);
+    if (name === 'lcdm') return { name, H0, Or, Om: PLANCK.Om, Ok: 0, OL: 1 - PLANCK.Om - Or };
+    if (name === 'matter') return { name, H0, Or: 0, Om: 1, Ok: 0, OL: 0 };
+    if (name === 'empty') return { name, H0, Or: 0, Om: 0, Ok: 1, OL: 0 };
+    return { name: 'desitter', H0, Or: 0, Om: 0, Ok: 0, OL: 1 };
+  }
+  /* the Friedmann equation: H(a)/H₀ = E(a) */
+  const Ea = (m, a) => Math.sqrt(m.Or / (a * a * a * a) + m.Om / (a * a * a) + m.Ok / (a * a) + m.OL);
+  const Hof = (m, a) => m.H0 * Ea(m, a);
+  /* Time from today τ(a) = ∫ d(ln a)/H, tabulated on a grid of ln a (Simpson's rule on each step of 0.002), in Gyr. The age is
+     τ at the smallest a plus the exact early tail: radiation a²/(2H₀√Ω_r), matter 2a^(3/2)/(3H₀√Ω_m), curvature a/H₀;
+     de Sitter has no beginning. */
+  const LNA_MIN = -16, LNA_MAX = Math.log(30), LNA_STEP = 0.002;
+  function expansion(m) {
+    const n = Math.round((LNA_MAX - LNA_MIN) / LNA_STEP), i0 = Math.round(-LNA_MIN / LNA_STEP), unit = HUBBLE_GYR / m.H0;
+    const lna = new Float64Array(n + 1), tau = new Float64Array(n + 1), f = (x) => unit / Ea(m, Math.exp(x));
+    for (let i = 0; i <= n; i++) lna[i] = LNA_MIN + i * LNA_STEP;
+    tau[i0] = 0; lna[i0] = 0;
+    for (let i = i0 + 1; i <= n; i++) { const a = lna[i - 1], b = lna[i]; tau[i] = tau[i - 1] + (b - a) / 6 * (f(a) + 4 * f((a + b) / 2) + f(b)); }
+    for (let i = i0 - 1; i >= 0; i--) { const a = lna[i], b = lna[i + 1]; tau[i] = tau[i + 1] - (b - a) / 6 * (f(a) + 4 * f((a + b) / 2) + f(b)); }
+    const a0 = Math.exp(LNA_MIN);
+    const tail = m.Or > 0 ? a0 * a0 / (2 * Math.sqrt(m.Or)) : m.Om > 0 ? 2 * Math.pow(a0, 1.5) / (3 * Math.sqrt(m.Om)) : m.Ok > 0 ? a0 / Math.sqrt(m.Ok) : Infinity;
+    const age = tail * unit - tau[0];
+    return { m, lna, tau, age, hubbleTime: unit };
+  }
+  /* the scale factor at a time τ from today (Gyr), by bisection in the table; 0 before the Big Bang */
+  function aAt(X, tau) {
+    const t = X.tau, n = t.length - 1;
+    if (tau <= t[0]) { if (!isFinite(X.age)) return Math.exp(X.lna[0] + (tau - t[0]) / X.hubbleTime); if (tau <= -X.age) return 0;
+      const m = X.m, s = (tau + X.age) / X.hubbleTime; return m.Or > 0 ? Math.sqrt(2 * Math.sqrt(m.Or) * s) : m.Om > 0 ? Math.pow(1.5 * Math.sqrt(m.Om) * s, 2 / 3) : Math.sqrt(m.Ok) * s; }
+    if (tau >= t[n]) return Math.exp(X.lna[n]);
+    let lo = 0, hi = n; while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (t[mid] <= tau) lo = mid; else hi = mid; }
+    /* within one step, interpolate with the local rate d(ln a)/dτ = H, which is near exact over a step of 0.002 */
+    const fr = (tau - t[lo]) / (t[hi] - t[lo]); return Math.exp(X.lna[lo] + fr * (X.lna[hi] - X.lna[lo]));
+  }
+  function tauAt(X, a) {
+    const x = Math.log(a), i = Math.min(X.lna.length - 2, Math.max(0, Math.floor((x - LNA_MIN) / LNA_STEP)));
+    const fr = (x - X.lna[i]) / (X.lna[i + 1] - X.lna[i]); return X.tau[i] + fr * (X.tau[i + 1] - X.tau[i]);
+  }
+  /* deceleration parameter q = −a ä/ȧ² = (Ω_r/a⁴ + Ω_m/(2a³) − Ω_Λ)/E² */
+  const qDecel = (m, a) => (m.Or / Math.pow(a, 4) + m.Om / (2 * a * a * a) - m.OL) / Math.pow(Ea(m, a), 2);
+
+  /* A patch of galaxies at fixed comoving positions (Mpc today): proper distance d = a χ, so every galaxy moves away from every
+     other with v = ḋ = (ȧ/a) d = H d. The lattice is jittered by a hash so it looks natural; the marked galaxies A to E are fixed. */
+  const CELL = 36;
+  function hash2(i, j, k) { let h = (i * 374761393 + j * 668265263 + k * 2147483647) | 0; h = Math.imul(h ^ (h >>> 13), 1274126177); h ^= h >>> 16; return (h >>> 0) / 4294967296; }
+  const galaxyAt = (i, j) => ({ i, j, x: (i + 0.8 * (hash2(i, j, 1) - 0.5)) * CELL, y: (j + 0.8 * (hash2(i, j, 2) - 0.5)) * CELL, kind: hash2(i, j, 3), tilt: hash2(i, j, 4), size: 0.6 + 0.8 * hash2(i, j, 5) });
+  const MARKED = [['A', 2, 1], ['B', -3, 3], ['C', -6, -3], ['D', 8, -4], ['E', 3, 10]];
+  const properDist = (a, g1, g2) => a * Math.hypot(g1.x - g2.x, g1.y - g2.y);
+
+  /* Thermal history. The photon temperature T falls as the universe expands. While the kinds of particles in equilibrium stay the
+     same, T ∝ 1/a, so T = T₀(1 + z). When a kind of particle stops being made and its pairs annihilate, their entropy goes to
+     the rest, which slows the fall of T a little: entropy conservation g*s(T) T³ a³ = constant gives
+     a(T) = (T₀/T) (g*s(T₀)/g*s(T))^(1/3). The energy density of each kind of particle is that of an ideal Bose or Fermi gas of
+     its mass at temperature T (exact integrals), so g*(T) = Σ g_i × (its share of a massless boson gas). Quarks and gluons are
+     free above T_QCD = 156.5 MeV (HotQCD, Phys. Lett. B 795, 15, 2019) and only pions are kept below it: a sharp step in place of
+     the real smooth crossover. Neutrinos are taken to stop interacting before electrons and positrons annihilate, so they keep
+     T_ν ∝ 1/a and end at (4/11)^(1/3) T; N_eff = 3.046 scales their energy density. */
+  const T_QCD = 156.5, DM_NP = 1.29333, TAU_N = 878.4;
+  const SPECIES = [
+    /* name, mc² (MeV), degrees of freedom g, 'b' boson or 'f' fermion, phase: '' always, 'q' above T_QCD, 'h' below */
+    ['photon', 0, 2, 'b', ''], ['electron', 0.51099895, 4, 'f', ''], ['muon', 105.6583755, 4, 'f', ''], ['tau', 1776.86, 4, 'f', ''],
+    ['up quark', 2.16, 12, 'f', 'q'], ['down quark', 4.70, 12, 'f', 'q'], ['strange quark', 93.5, 12, 'f', 'q'], ['charm quark', 1273, 12, 'f', 'q'],
+    ['bottom quark', 4183, 12, 'f', 'q'], ['top quark', 172570, 12, 'f', 'q'], ['gluon', 0, 16, 'b', 'q'],
+    ['charged pion', 139.57039, 2, 'b', 'h'], ['neutral pion', 134.9768, 1, 'b', 'h'],
+    ['W boson', 80369.2, 6, 'b', ''], ['Z boson', 91188.0, 3, 'b', ''], ['Higgs boson', 125200, 1, 'b', ''],
+  ];
+  /* thresholds kT = mc² for the particles students look for (rest energies in MeV, PDG 2024) */
+  const THRESHOLDS = [['top quark', 172570], ['Higgs', 125200], ['Z', 91188], ['W', 80369.2], ['bottom', 4183], ['tau', 1776.86], ['charm', 1273],
+    ['neutron', 939.56542], ['proton', 938.27209], ['muon', 105.6583755], ['pion', 139.57039], ['electron', 0.51099895]];
+  /* shares of a massless boson gas for one degree of freedom of mass x = mc²/kT:
+     ρ: (15/π⁴) ∫ y² E/(e^E ∓ 1) dy and s: (45/4π⁴) ∫ y² (E + y²/3E)/(e^E ∓ 1) dy, E = √(y² + x²); fermions give 7/8 at x = 0 */
+  function gasShares(x, fermion) {
+    const n = 800, top = x + 60, h = top / n, sg = fermion ? 1 : -1; let r = 0, s = 0;
+    for (let k = 0; k <= n; k++) { const y = k * h, E = Math.sqrt(y * y + x * x), w = k === 0 || k === n ? 1 : k % 2 ? 4 : 2;
+      if (E === 0) continue; const occ = 1 / (Math.exp(E) + sg); r += w * y * y * E * occ; s += w * y * y * (E + y * y / (3 * E)) * occ; }
+    return [r * h / 3 * 15 / Math.pow(Math.PI, 4), s * h / 3 * 45 / (4 * Math.pow(Math.PI, 4))];
+  }
+  const XS = [], SH = { b: [], f: [] };
+  for (let i = 0; i <= 240; i++) { const x = Math.exp(Math.log(1e-3) + i * (Math.log(80) - Math.log(1e-3)) / 240); XS.push(x); SH.b.push(gasShares(x, false)); SH.f.push(gasShares(x, true)); }
+  function share(x, kind, which) {
+    if (x <= XS[0]) return kind === 'f' ? 7 / 8 : 1; if (x >= XS[XS.length - 1]) return 0;
+    const u = (Math.log(x) - Math.log(XS[0])) / (Math.log(XS[XS.length - 1]) - Math.log(XS[0])) * (XS.length - 1), i = Math.floor(u), fr = u - i, t = SH[kind];
+    return Math.exp(Math.log(t[i][which]) * (1 - fr) + Math.log(t[i + 1][which]) * fr);
+  }
+  /* g* for energy (which 0) and for entropy (which 1) at photon temperature kT (MeV) */
+  function gStar(kT, which = 0, Neff = PLANCK.Neff) {
+    let g = 0;
+    for (const [, m, gi, k, ph] of SPECIES) { if ((ph === 'q' && kT < T_QCD) || (ph === 'h' && kT >= T_QCD)) continue; g += gi * (m === 0 ? (k === 'f' ? 7 / 8 : 1) : share(m / kT, k, which)); }
+    const hE = 2 + 4 * share(SPECIES[1][1] / kT, 'f', 1), r = Math.cbrt(hE / 5.5);
+    return g + (which === 0 ? 6 * 7 / 8 * Math.pow(r, 4) * Neff / 3 : 6 * 7 / 8 * Math.pow(r, 3));
+  }
+  /* The clock: t(T) = ∫ d(ln a)/H with H² = (8πG/3c²)(ρ_rad(T) + ρ_m + ρ_Λ), on a grid of 3000 temperatures from 10³³ K down to
+     T₀, starting from t = 1/(2H) (pure radiation, constant g*) at the top. ρ_m and ρ_Λ follow Planck ΛCDM with a(T) above. */
+  function thermalClock(H0 = PLANCK.H0, T0 = PLANCK.T0) {
+    const n = 3000, lt0 = Math.log(1e33), lt1 = Math.log(T0), m = model('lcdm', H0), rhoC = 3 * Math.pow(Hsi(H0), 2) * C * C / (8 * Math.PI * G);
+    const gs0 = gStar(KB_EV * T0 * 1e-6, 1);
+    const lnT = new Float64Array(n + 1), lna = new Float64Array(n + 1), t = new Float64Array(n + 1), g = new Float64Array(n + 1), Hs = new Float64Array(n + 1);
+    for (let i = 0; i <= n; i++) {
+      const T = Math.exp(lt0 + (lt1 - lt0) * i / n), kT = KB_EV * T * 1e-6, gr = gStar(kT, 0), gs = gStar(kT, 1);
+      const a = T0 / T * Math.cbrt(gs0 / gs), rhoR = Math.PI * Math.PI / 30 * gr * Math.pow(KB * T, 4) / Math.pow(HBAR * C, 3);
+      lnT[i] = Math.log(T); lna[i] = Math.log(a); g[i] = gr;
+      Hs[i] = Math.sqrt(8 * Math.PI * G / (3 * C * C) * (rhoR + rhoC * (m.Om / (a * a * a) + m.OL)));
+    }
+    t[0] = 1 / (2 * Hs[0]);
+    for (let i = 1; i <= n; i++) t[i] = t[i - 1] + (lna[i] - lna[i - 1]) * 0.5 * (1 / Hs[i - 1] + 1 / Hs[i]);
+    return { lnT, lna, t, g, H: Hs, n };
+  }
+  /* temperature (K) at time t (s), and time at temperature T, by interpolation in ln t and ln T */
+  function tempAt(K, ts) {
+    const t = K.t, n = K.n; if (ts <= t[0]) return Math.exp(K.lnT[0]) * Math.sqrt(t[0] / ts); if (ts >= t[n]) return Math.exp(K.lnT[n]);
+    let lo = 0, hi = n; while (hi - lo > 1) { const mid = (lo + hi) >> 1; if (t[mid] <= ts) lo = mid; else hi = mid; }
+    const fr = (Math.log(ts) - Math.log(t[lo])) / (Math.log(t[hi]) - Math.log(t[lo])); return Math.exp(K.lnT[lo] + fr * (K.lnT[hi] - K.lnT[lo]));
+  }
+  function timeAt(K, T) {
+    const L = K.lnT, n = K.n, x = Math.log(T); if (x >= L[0]) return K.t[0] * Math.exp(2 * (L[0] - x)); if (x <= L[n]) return K.t[n];
+    const u = (L[0] - x) / (L[0] - L[n]) * n, i = Math.min(n - 1, Math.floor(u)), fr = u - i;
+    return Math.exp(Math.log(K.t[i]) * (1 - fr) + Math.log(K.t[i + 1]) * fr);
+  }
+  const gAt = (K, T) => { const n = K.n, u = Math.min(n, Math.max(0, (K.lnT[0] - Math.log(T)) / (K.lnT[0] - K.lnT[n]) * n)), i = Math.min(n - 1, Math.floor(u)); return K.g[i] + (u - i) * (K.g[i + 1] - K.g[i]); };
+  const kTeV = (T) => KB_EV * T, Tof = (eV) => eV / KB_EV;
+  /* the eras as the book gives them (§11.7, Figure 11.21 and its table), with its approximate times in seconds */
+  const ERAS = [
+    ['Big Bang (Planck era)', 0, 1e-43], ['Inflation', 1e-43, 1e-35], ['Age of quarks', 1e-35, 1e-5], ['Age of hadrons and leptons', 1e-5, 10],
+    ['Nucleosynthesis', 10, 1200], ['Age of ions', 1200, 370000 * YR_S], ['Age of atoms', 370000 * YR_S, 1e8 * YR_S], ['Age of stars and galaxies', 1e8 * YR_S, Infinity],
+  ];
+
+  /* Helium from the Big Bang. While weak reactions are fast, neutrons and protons stay in equilibrium,
+     n/p = exp(−Δm c²/kT) with Δm c² = 1.293 MeV. At freeze out (kT_f, about 0.8 MeV) the weak reactions become too slow and the
+     ratio is fixed; after that free neutrons decay (τ = 878.4 s) until deuterium can survive at t_D (about 3 minutes), and then
+     nearly every neutron ends up in helium 4. Y = 2(n/p)/(1 + n/p) = 2 X_n, the neutron share of all nucleons. Simplifications:
+     a sudden freeze out (the weak reactions really fade over about a second, still turning neutrons into protons), all of the
+     surviving neutrons in helium 4 (really about 10⁻⁵ of them stay in deuterium, helium 3 and lithium 7), and t_D set by hand. */
+  const npEq = (kT) => Math.exp(-DM_NP / kT);
+  const XnEq = (kT) => 1 / (1 + Math.exp(DM_NP / kT));
+  function bbn(o, K) {
+    const kTf = o.kTf, tau = o.tau == null ? TAU_N : o.tau, tf = timeAt(K, Tof(kTf * 1e6)), tD = Math.max(o.tD, tf);
+    const Xf = XnEq(kTf), XD = Xf * Math.exp(-(tD - tf) / tau), npD = XD / (1 - XD);
+    return { kTf, tau, tf, tD, npF: npEq(kTf), Xf, XD, npD, Y: 2 * XD, kTD: kTeV(tempAt(K, tD)) * 1e-6 };
+  }
+  /* the neutron share at time t (s) in the same model */
+  function XnAt(o, K, ts) { const r = bbn(o, K); if (ts <= r.tf) return XnEq(kTeV(tempAt(K, ts)) * 1e-6); return r.Xf * Math.exp(-(Math.min(ts, r.tD) - r.tf) / r.tau); }
+  /* a simulated sample of N nucleons: each has a fixed random number u (it is a neutron while u < X_n,eq, so the count follows
+     equilibrium) and, if it is a neutron at freeze out, a random decay time from the exponential law. Returns counts. */
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  function nucleons(N, seed) { const r = rng(seed), u = new Float64Array(N), v = new Float64Array(N); for (let i = 0; i < N; i++) { u[i] = r(); v[i] = -Math.log(1 - r()); } return { N, u, v }; }
+  /* counts at time t: free neutrons n, free protons p, helium 4 nuclei He (after t_D), neutrons at freeze out nF and left at t_D nD */
+  function sampleCount(s, o, K, ts) {
+    const r = bbn(o, K), xeq = ts <= r.tf ? XnEq(kTeV(tempAt(K, ts)) * 1e-6) : 0, tc = Math.min(ts, r.tD); let n = 0, nF = 0, nD = 0;
+    for (let i = 0; i < s.N; i++) {
+      const isNf = s.u[i] < r.Xf, decay = r.tf + s.v[i] * r.tau;
+      if (isNf) nF++; if (isNf && decay > r.tD) nD++;
+      if (ts <= r.tf) { if (s.u[i] < xeq) n++; } else if (isNf && decay > tc) n++;
+    }
+    const He = ts >= r.tD ? Math.floor(nD / 2) : 0;
+    return { n: ts >= r.tD ? nD - 2 * He : n, nF, nD, He, p: ts >= r.tD ? s.N - nD - 2 * He : s.N - n, Y: 4 * Math.floor(nD / 2) / s.N };
+  }
+
+  /* The cosmic microwave background: a blackbody. In an expanding universe each photon's wavelength stretches by (1 + z), and a
+     blackbody at T seen after stretching is a blackbody at T/(1 + z), so T = T₀(1 + z). Planck's law per unit frequency,
+     Wien's law λ_max T = 2.897771955 × 10⁻³ m K (and ν_max = 5.878925757 × 10¹⁰ Hz/K × T), the photon number density
+     n = (2ζ(3)/π²)(kT/ħc)³ = 410.7 cm⁻³ today, and the energy density a T⁴. */
+  const B_nu = (nu, T) => 2 * H_PL * nu * nu * nu / (C * C) / Math.expm1(H_PL * nu / (KB * T));
+  const B_lam = (lam, T) => 2 * H_PL * C * C / Math.pow(lam, 5) / Math.expm1(H_PL * C / (lam * KB * T));
+  const WIEN_B = 2.897771955e-3, WIEN_NU = 5.878925757e10;
+  const nGamma = (T) => 2 * ZETA3 / (Math.PI * Math.PI) * Math.pow(KB * T / (HBAR * C), 3);
+  const uGamma = (T) => A_RAD * Math.pow(T, 4);
+  /* COBE FIRAS: frequency (cm⁻¹), monopole intensity (MJy/sr) = 2.725 K blackbody + residual, residual (kJy/sr), 1σ (kJy/sr) */
+  const FIRAS = [[2.27, 200.723, 5, 14], [2.72, 249.508, 9, 19], [3.18, 293.024, 15, 25], [3.63, 327.770, 4, 23], [4.08, 354.081, 19, 22], [4.54, 372.079, -30, 21],
+    [4.99, 381.493, -30, 18], [5.45, 383.478, -10, 18], [5.90, 378.901, 32, 16], [6.35, 368.833, 4, 14], [6.81, 354.063, -2, 13], [7.26, 336.278, 13, 12],
+    [7.71, 316.076, -22, 11], [8.17, 293.924, 8, 10], [8.62, 271.432, 8, 11], [9.08, 248.239, -21, 12], [9.53, 225.940, 9, 14], [9.98, 204.327, 12, 16],
+    [10.44, 183.262, 11, 18], [10.89, 163.830, -29, 22], [11.34, 145.750, -46, 22], [11.80, 128.835, 58, 23], [12.25, 113.568, 6, 23], [12.71, 99.451, -6, 23],
+    [13.16, 87.036, 6, 22], [13.61, 75.876, -17, 21], [14.07, 65.766, 6, 20], [14.52, 57.008, 26, 19], [14.97, 49.223, -12, 19], [15.43, 42.267, -19, 19],
+    [15.88, 36.352, 8, 21], [16.34, 31.062, 7, 23], [16.79, 26.580, 14, 26], [17.24, 22.644, -33, 28], [17.70, 19.255, 6, 30], [18.15, 16.391, 26, 32],
+    [18.61, 13.811, -26, 33], [19.06, 11.716, -6, 35], [19.51, 9.921, 8, 41], [19.97, 8.364, 26, 55], [20.42, 7.087, 57, 88], [20.87, 5.801, -116, 155], [21.33, 4.523, -432, 282]];
+  const wavenumberHz = (s) => s * 100 * C;
+  /* blackbody intensity in MJy/sr (1 MJy = 10⁻²⁰ W m⁻² Hz⁻¹) at a wavenumber in cm⁻¹ */
+  const firasModel = (s, T) => B_nu(wavenumberHz(s), T) * 1e20;
+  /* the temperature that best fits the FIRAS points (weighted least squares, by golden section search) */
+  function fitFiras(lo = 2.70, hi = 2.75) {
+    const chi = (T) => FIRAS.reduce((s, r) => s + Math.pow((r[1] - firasModel(r[0], T)) * 1000 / r[3], 2), 0);
+    const gr = (Math.sqrt(5) - 1) / 2; let a = lo, b = hi;
+    for (let k = 0; k < 80; k++) { const c = b - gr * (b - a), d = a + gr * (b - a); if (chi(c) < chi(d)) b = d; else a = c; }
+    const T = (a + b) / 2; return { T, chi2: chi(T), dof: FIRAS.length - 1 };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VG = window.VDGear;
+  const MODEL_NAME = { lcdm: 'Planck ΛCDM', matter: 'Matter only', empty: 'Empty', desitter: 'de Sitter' };
+  const MODEL_TOK = { lcdm: 'lcdm', matter: 'matter', empty: 'empty', desitter: 'desit' };
+  const S = { view: 'ex', preset: 'exToday', run: false, speed: 1, blind: false, seed: 7,
+    ex: { model: 'lcdm', H0: PLANCK.H0, tau: 0, home: [0, 0], arrows: true },
+    th: { logt: Math.log10(372000 * YR_S), eras: true, thr: true },
+    bbn: { kTf: 0.8, tau: TAU_N, tD: 180, logt: 3, trace: [] },
+    cmb: { z: 1090, today: true } };
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
+  let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const f = (v, d = 2) => (!isFinite(v) ? (v === Infinity ? '∞' : '—') : v.toFixed(d).replace('-', '−'));
+  const sup = (e) => String(e).replace(/-/g, '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  const sci = (v, d = 3) => { if (!isFinite(v) || v === 0) return f(v, 0); const e = Math.floor(Math.log10(Math.abs(v)) + 1e-12); if (e >= -2 && e < 5) return f(v, Math.max(0, d - 1 - e)); return `${(v / Math.pow(10, e)).toFixed(d - 1).replace('-', '−')} × 10${sup(e)}`; };
+  /* plain text numbers for the readings (the worksheet reads 1.234e-5) */
+  const num = (v, d = 4) => (Math.abs(v) >= 1e5 || (Math.abs(v) < 1e-3 && v !== 0) ? v.toExponential(d - 1) : (+v.toPrecision(d)).toString());
+  const eV = (e) => { const u = [[1e12, 'TeV'], [1e9, 'GeV'], [1e6, 'MeV'], [1e3, 'keV'], [1, 'eV'], [1e-3, 'meV']]; for (const [s, n] of u) if (Math.abs(e) >= s) return `${sci(e / s, 3)} ${n}`; return `${sci(e / 1e-3, 3)} meV`; };
+  const tWords = (s) => s < 1e-3 ? `${sci(s, 3)} s` : s < 120 ? `${sci(s, 3)} s` : s < 7200 ? `${f(s / 60, 1)} min` : s < 2 * 86400 * 365.25 ? `${sci(s / 86400, 3)} days` : s < 1e6 * YR_S ? `${sci(s / YR_S, 3)} years` : s < 1e9 * YR_S ? `${f(s / YR_S / 1e6, 1)} million years` : `${f(s / GYR_S, 2)} billion years`;
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const dark = () => (VG ? VG.dark() : false);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
+      lcdm: g('--lcdm'), matter: g('--matter'), empty: g('--empty'), desit: g('--desit'), hot: g('--hot'), neutron: g('--neutron'), helium: g('--helium'),
+      theory: g('--theory'), data: g('--data'), band: g('--band'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+
+  /* the physics, computed once (and again when H₀ changes) */
+  let EXP = {}, K = null, NUC = null;
+  function buildExpansion() { for (const k of ['lcdm', 'matter', 'empty', 'desitter']) EXP[k] = expansion(model(k, S.ex.H0)); }
+  const X = () => EXP[S.ex.model];
+  const LCDM0 = expansion(model('lcdm'));
+  K = thermalClock();
+  NUC = nucleons(2000, S.seed);
+  const bbnOpt = () => ({ kTf: S.bbn.kTf, tau: S.bbn.tau, tD: S.bbn.tD });
+
+  // ---------- shared plot helpers ----------
+  function logAxes(c, x0, y0, w, h, xs, ys, xl, yl, o = {}) {
+    const p = proj(), X = (v) => x0 + (v - xs[0]) / (xs[1] - xs[0]) * w, Y = (v) => y0 + h - (v - ys[0]) / (ys[1] - ys[0]) * h;
+    c.font = `${(o.fs || 10) * p}px ${T.mono}`; c.strokeStyle = T.grid; c.fillStyle = T.muted; c.lineWidth = 1;
+    const stepX = o.sx || Math.max(1, Math.ceil((xs[1] - xs[0]) / Math.max(3, w / (46 * p)))), stepY = o.sy || Math.max(1, Math.ceil((ys[1] - ys[0]) / Math.max(3, h / (24 * p))));
+    c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let v = Math.ceil(xs[0] / stepX) * stepX; v <= xs[1] + 1e-9; v += stepX) { c.beginPath(); c.moveTo(X(v), y0); c.lineTo(X(v), y0 + h); c.stroke(); c.fillText(o.linX ? String(v) : `10${sup(v)}`, X(v), y0 + h + 4); }
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let v = Math.ceil(ys[0] / stepY) * stepY; v <= ys[1] + 1e-9; v += stepY) { c.beginPath(); c.moveTo(x0, Y(v)); c.lineTo(x0 + w, Y(v)); c.stroke(); c.fillText(o.linY ? String(+v.toPrecision(6)) : `10${sup(v)}`, x0 - 5, Y(v)); }
+    c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(xl, x0 + w / 2, o.xlY || (y0 + h + 30 * p));
+    c.save(); c.translate(x0 - (o.ylX || 40) * p, y0 + h / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore();
+    return { X, Y };
+  }
+  const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+  function linAxes(c, x0, y0, w, h, xs, ys, xl, yl, o = {}) {
+    const sx = nice((xs[1] - xs[0]) / Math.max(2, Math.min(6, w / (60 * proj())))), sy = nice((ys[1] - ys[0]) / Math.max(2, Math.min(5, h / (30 * proj()))));
+    return logAxes(c, x0, y0, w, h, xs, ys, xl, yl, Object.assign({ sx, sy, linX: true, linY: true }, o));
+  }
+  function poly(c, pts, col, lw, dash) { c.save(); c.strokeStyle = col; c.lineWidth = lw; if (dash) c.setLineDash(dash); c.beginPath(); let on = false; for (const q of pts) { if (!q || !isFinite(q[0]) || !isFinite(q[1])) { on = false; continue; } if (on) c.lineTo(q[0], q[1]); else { c.moveTo(q[0], q[1]); on = true; } } c.stroke(); c.restore(); }
+  const txt = (c, s, x, y, o = {}) => { c.save(); c.font = `${o.w || 400} ${(o.s || 10) * proj()}px ${o.ui ? T.ui : T.mono}`; c.fillStyle = o.c || T.muted; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle'; c.fillText(s, x, y); c.restore(); };
+
+  // ---------- Expansion view ----------
+  const homeG = () => galaxyAt(S.ex.home[0], S.ex.home[1]);
+  const aNow = () => aAt(X(), S.ex.tau);
+  const before = () => aNow() <= 0;
+  function space(x, y, w, h) {
+    const g = ctx.createRadialGradient(x + w * 0.5, y + h * 0.45, 0, x + w * 0.5, y + h * 0.45, Math.max(w, h) * 0.8);
+    g.addColorStop(0, '#111a2e'); g.addColorStop(1, '#04060c'); ctx.fillStyle = g; ctx.fillRect(x, y, w, h);
+    for (let k = 0; k < 160; k++) { const sx = hash2(k, 7, 11) * w, sy = hash2(k, 9, 13) * h, b = hash2(k, 3, 17); ctx.fillStyle = `rgba(220,230,255,${0.15 + 0.4 * b})`; ctx.fillRect(x + sx, y + sy, b > 0.85 ? 1.6 : 1, b > 0.85 ? 1.6 : 1); }
+  }
+  function drawGalaxy(x, y, g, r, dim) {
+    const sp = g.kind < 0.62, col = sp ? '200,218,255' : '255,226,184', rr = r * g.size;
+    ctx.save(); ctx.translate(x, y); ctx.rotate(g.tilt * Math.PI); ctx.scale(1, sp ? 0.45 : 0.75);
+    const gr = ctx.createRadialGradient(0, 0, 0, 0, 0, rr * 2.2); gr.addColorStop(0, `rgba(${col},${dim ? 0.35 : 0.95})`); gr.addColorStop(0.35, `rgba(${col},${dim ? 0.15 : 0.45})`); gr.addColorStop(1, `rgba(${col},0)`);
+    ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(0, 0, rr * 2.2, 0, 7); ctx.fill(); ctx.restore();
+  }
+  let exGeom = null;
+  function drawEx() {
+    const p = proj(), a = aNow(), h0 = homeG();
+    space(0, 0, W, H);
+    const pxPerMpc = Math.min(W, H) * 0.5 / (W < 560 ? 300 : 230), cx = W * (W < 560 ? 0.5 : 0.42), cy = H * 0.5;
+    exGeom = { pxPerMpc, cx, cy, a };
+    if (a <= 0) { txt(ctx, `Before the Big Bang of the ${MODEL_NAME[S.ex.model]} model`, W / 2, H / 2, { c: '#dbe6f5', a: 'center', s: 13, ui: true, w: 700 });
+      txt(ctx, `This model is only ${f(X().age, 2)} billion years old.`, W / 2, H / 2 + 22 * p, { c: '#b9c6d8', a: 'center', s: 11, ui: true }); return; }
+    const sc = a * pxPerMpc, halfX = (W / 2 + 40) / sc, halfY = (H / 2 + 40) / sc;
+    const i0 = Math.floor((h0.x - (cx + 40) / sc) / CELL) - 1, i1 = Math.ceil((h0.x + (W - cx + 40) / sc) / CELL) + 1, j0 = Math.floor((h0.y - halfY) / CELL) - 1, j1 = Math.ceil((h0.y + halfY) / CELL) + 1;
+    const count = (i1 - i0 + 1) * (j1 - j0 + 1), stride = Math.max(1, Math.ceil(Math.sqrt(count / 2600)));
+    const early = a < 1 / 21, H_now = Hof(X().m, a), r = 2.2 * p;
+    exGeom.stride = stride;
+    const scr = (g) => [cx + (g.x - h0.x) * sc, cy - (g.y - h0.y) * sc];
+    for (let i = Math.floor(i0 / stride) * stride; i <= i1; i += stride) for (let j = Math.floor(j0 / stride) * stride; j <= j1; j += stride) {
+      const g = galaxyAt(i, j), [x, y] = scr(g); if (x < -20 || x > W + 20 || y < -20 || y > H + 20) continue; drawGalaxy(x, y, g, r, early);
+    }
+    /* velocity arrows: the distance each marked galaxy would move in 2 Gyr at its present speed v = H d */
+    const showV = S.ex.arrows && !S.blind;
+    const arrowTo = (x1, y1, x2, y2, col) => { const L = Math.hypot(x2 - x1, y2 - y1); if (L < 3) return; const ux = (x2 - x1) / L, uy = (y2 - y1) / L, hl = Math.min(8 * p, L * 0.5);
+      ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - ux * hl, y2 - uy * hl); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - ux * hl - uy * hl * 0.5, y2 - uy * hl + ux * hl * 0.5); ctx.lineTo(x2 - ux * hl + uy * hl * 0.5, y2 - uy * hl - ux * hl * 0.5); ctx.closePath(); ctx.fill(); };
+    const fac = H_now / HUBBLE_GYR * 2;
+    if (showV) for (let i = Math.floor(i0 / 3) * 3; i <= i1; i += 3 * stride) for (let j = Math.floor(j0 / 3) * 3; j <= j1; j += 3 * stride) {
+      const g = galaxyAt(i, j), [x, y] = scr(g); if (x < 0 || x > W || y < 0 || y > H || (i === S.ex.home[0] && j === S.ex.home[1])) continue;
+      arrowTo(x, y, x + (x - cx) * fac, y + (y - cy) * fac, 'rgba(255,200,120,0.55)');
+    }
+    MARKED.forEach(([nm, i, j]) => { const g = galaxyAt(i, j), [x, y] = scr(g); if (x < -10 || x > W + 10 || y < -10 || y > H + 10) return;
+      if (showV) arrowTo(x, y, x + (x - cx) * fac, y + (y - cy) * fac, '#ffc878');
+      ctx.strokeStyle = '#8fd0ff'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(x, y, 9 * p, 0, 7); ctx.stroke();
+      txt(ctx, nm, x + 11 * p, y - 10 * p, { c: '#cfe9ff', s: 12, w: 700, ui: true }); });
+    /* home */
+    drawGalaxy(cx, cy, h0, r * 1.3, false);
+    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(cx, cy, 11 * p, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.arc(cx, cy, 15 * p, 0, 7); ctx.stroke();
+    txt(ctx, S.ex.home[0] === 0 && S.ex.home[1] === 0 ? 'home: the Milky Way' : 'home: the galaxy you chose', cx, cy + 26 * p, { c: '#ffffff', a: 'center', s: 10.5, ui: true, w: 700 });
+    /* ruler: 100 Mpc, proper */
+    const rl = 100 * pxPerMpc, rx = 16 * p, ry = H - 22 * p;
+    ctx.strokeStyle = '#dbe6f5'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(rx, ry); ctx.lineTo(rx + rl, ry); ctx.moveTo(rx, ry - 5); ctx.lineTo(rx, ry + 5); ctx.moveTo(rx + rl, ry - 5); ctx.lineTo(rx + rl, ry + 5); ctx.stroke();
+    txt(ctx, '100 Mpc', rx + rl / 2, ry - 10 * p, { c: '#dbe6f5', a: 'center', s: 10.5 });
+    if (stride > 1) txt(ctx, `showing 1 galaxy in ${stride * stride}`, rx + rl + 14 * p, ry, { c: '#9fb0c6', s: 9.5 });
+    if (early) txt(ctx, 'z > 20: before the first galaxies; the dots mark where the matter is', W / 2, 18 * p, { c: '#ffd9a0', a: 'center', s: 10.5, ui: true });
+    if (showV) txt(ctx, 'arrows: distance moved in 2 Gyr at today\'s speed', W - 12 * p, H - 22 * p, { c: '#ffc878', a: 'right', s: 9.5, ui: true });
+    /* the survey: distances from home to A to E (Mpc) */
+    const narrow = W < 560, pw = (narrow ? 150 : 178) * p, ph = (narrow ? 104 : 140) * p, px = W - pw - 10 * p, py = 10 * p;
+    if (VG) VG.panel(ctx, px, py, pw, ph, { fill: 'rgba(8,12,22,0.82)', r: 8 });
+    txt(ctx, `${MODEL_NAME[S.ex.model]}  t = ${f(S.ex.tau, 2)} Gyr`, px + 10 * p, py + 13 * p, { c: '#dbe6f5', s: narrow ? 9.5 : 10.5, w: 700 });
+    MARKED.forEach(([nm, i, j], k) => { const d = properDist(a, galaxyAt(i, j), h0), y = py + (narrow ? 30 : 34) * p + k * (narrow ? 15 : 20) * p;
+      txt(ctx, `${nm}`, px + 12 * p, y, { c: '#8fd0ff', s: narrow ? 10 : 11, w: 700 }); txt(ctx, `${f(d, 2)} Mpc`, px + pw - 10 * p, y, { c: '#8ef0b0', s: narrow ? 10 : 11.5, a: 'right', w: 600 }); });
+  }
+  function curveEx() {
+    const p = proj(), c = cctx, L = 46 * p, Tp = 12 * p, B = 34 * p, w = CW - L - 14 * p, ph = CH - Tp - B;
+    const A = linAxes(c, L, Tp, w, ph, [-15, 20], [0, 3], 'time from today t (Gyr)', 'scale factor a', { ylX: 34 });
+    c.save(); c.beginPath(); c.rect(L, Tp, w, ph); c.clip();
+    for (const k of ['empty', 'matter', 'desitter', 'lcdm']) { const E = EXP[k], pts = []; for (let i = 0; i <= 400; i++) { const t = -15 + 35 * i / 400, a = aAt(E, t); pts.push(a > 0 || i === 400 ? [A.X(t), A.Y(Math.min(a, 3.2))] : null); }
+      if (isFinite(E.age)) pts.unshift([A.X(-E.age), A.Y(0)]); poly(c, pts.filter(Boolean).sort((u, v) => u[0] - v[0]), T[MODEL_TOK[k]], k === S.ex.model ? 3 * p : 1.4 * p, k === S.ex.model ? null : [5 * p, 4 * p]); }
+    const a = aNow(); c.fillStyle = T.ink; c.beginPath(); c.arc(A.X(S.ex.tau), A.Y(Math.min(a, 3)), 4.5 * p, 0, 7); c.fill();
+    c.setLineDash([2 * p, 3 * p]); c.strokeStyle = T.muted; c.beginPath(); c.moveTo(A.X(0), Tp); c.lineTo(A.X(0), Tp + ph); c.moveTo(L, A.Y(1)); c.lineTo(L + w, A.Y(1)); c.stroke(); c.setLineDash([]);
+    c.restore();
+    let lx = L + 8 * p; const ly = Tp + 8 * p;
+    for (const k of ['lcdm', 'matter', 'empty', 'desitter']) { const s = MODEL_NAME[k]; c.font = `${10 * p}px ${T.mono}`; const tw = c.measureText(s).width; if (lx + tw > L + w) break; txt(c, s, lx, ly, { c: T[MODEL_TOK[k]], w: k === S.ex.model ? 700 : 400 }); lx += tw + 14 * p; }
+    txt(c, 'today', A.X(0) + 4 * p, Tp + ph - 8 * p, { c: T.muted });
+  }
+
+  // ---------- Thermal history view ----------
+  const XT = [-45, 18], YT = [0, 33];
+  const thT = () => tempAt(K, Math.pow(10, S.th.logt));
+  const thA = (Tk) => { const n = K.n, u = Math.min(n, Math.max(0, (K.lnT[0] - Math.log(Tk)) / (K.lnT[0] - K.lnT[n]) * n)), i = Math.min(n - 1, Math.floor(u)); return Math.exp(K.lna[i] + (u - i) * (K.lna[i + 1] - K.lna[i])); };
+  const eraAt = (ts) => ERAS.find((e) => ts >= e[1] && ts < e[2]) || ERAS[ERAS.length - 1];
+  const ERA_SHORT = ['Planck', 'Inflation', 'Quarks', 'Hadrons, leptons', 'Nuclei', 'Ions', 'Atoms', 'Stars, galaxies'];
+  function thPlot(c, x0, y0, w, h, big) {
+    const p = proj(), A = logAxes(c, x0, y0, w, h, XT, YT, 'time since the Big Bang t (s)', 'temperature T (K)', { sx: w < 500 ? 9 : 5, sy: h < 260 ? 6 : 3 });
+    /* the right axis: kT in eV */
+    const off = Math.log10(KB_EV);
+    c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'middle'; c.font = `${10 * p}px ${T.mono}`;
+    for (let e = -3; e <= 30; e += h < 260 ? 6 : 3) { const y = A.Y(e - off); if (y < y0 || y > y0 + h) continue; c.fillText(`10${sup(e)}`, x0 + w + 5, y); }
+    c.save(); c.translate(x0 + w + 46 * p, y0 + h / 2); c.rotate(Math.PI / 2); c.textAlign = 'center'; c.fillText('kT (eV)', 0, 0); c.restore();
+    c.save(); c.beginPath(); c.rect(x0, y0, w, h); c.clip();
+    /* the book's eras */
+    if (S.th.eras) ERAS.forEach((e, i) => { const xa = A.X(Math.max(XT[0], e[1] > 0 ? Math.log10(e[1]) : XT[0])), xb = A.X(Math.min(XT[1], isFinite(e[2]) ? Math.log10(e[2]) : XT[1]));
+      if (i % 2 === 0) { c.fillStyle = T.band; c.fillRect(xa, y0, xb - xa, h); }
+      c.font = `700 ${9.5 * p}px ${T.ui}`; const s = ERA_SHORT[i], tw = c.measureText(s).width;
+      if (tw + 6 < xb - xa) { c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(s, (xa + xb) / 2, y0 + 4 + (i % 2) * 12 * p); } });
+    /* beyond tested physics: kT above about 10⁴ GeV (the book's figure for accelerators) */
+    const yAcc = A.Y(Math.log10(Tof(1e13)));
+    c.fillStyle = dark() ? 'rgba(255,255,255,0.04)' : 'rgba(0,0,0,0.035)'; c.fillRect(x0, y0, w, yAcc - y0);
+    c.setLineDash([3 * p, 3 * p]); c.strokeStyle = T.muted; c.beginPath(); c.moveTo(x0, yAcc); c.lineTo(x0 + w, yAcc); c.stroke(); c.setLineDash([]);
+    if (big) txt(c, 'above this line kT is beyond accelerators (10⁴ GeV): extrapolated, with no inflation', x0 + 8 * p, yAcc - 9 * p, { c: T.muted, s: 9.5, ui: true });
+    /* thresholds kT = mc² */
+    if (S.th.thr && !S.blind) {
+      const L = [['top', 172570], ['W', 80369.2], ['bottom', 4183], ['tau', 1776.86], ['charm', 1273], ['proton, neutron', 938.27209], ['pion', 139.57039], ['muon', 105.6583755], ['electron', 0.51099895]];
+      let lastY = -1e9; const ys = L.map(([nm, m]) => [nm, m, A.Y(Math.log10(Tof(m * 1e6)))]).sort((u, v) => u[2] - v[2]);
+      c.strokeStyle = T.hot; c.globalAlpha = 0.55; c.lineWidth = 1;
+      ys.forEach(([, , y]) => { c.beginPath(); c.moveTo(x0, y); c.lineTo(x0 + w, y); c.stroke(); }); c.globalAlpha = 1;
+      c.font = `${9 * p}px ${T.mono}`; ys.forEach(([nm, m, y]) => { const yy = Math.max(y - 1, lastY + 11 * p), s = `${nm} ${eV(m * 1e6)}`, tw = c.measureText(s).width; lastY = yy; c.fillStyle = T.canvas; c.globalAlpha = 0.85; c.fillRect(x0 + w - 6 - tw, yy - 10 * p, tw + 4, 10 * p); c.globalAlpha = 1; txt(c, s, x0 + w - 4, yy, { c: T.hot, a: 'right', s: 9, b: 'bottom' }); });
+    }
+    /* T(t) from the clock */
+    const pts = []; for (let i = 0; i <= K.n; i += 3) pts.push([A.X(Math.log10(K.t[i])), A.Y(K.lnT[i] / Math.LN10)]);
+    pts.unshift([A.X(XT[0]), A.Y(K.lnT[0] / Math.LN10 + 0.5 * (Math.log10(K.t[0]) - XT[0]))]);
+    poly(c, pts, T.accent, 2.6 * p);
+    /* landmarks */
+    const mark = (ts, Tk, s, al) => { const x = A.X(Math.log10(ts)), y = A.Y(Math.log10(Tk)); c.fillStyle = T.ink; c.beginPath(); c.arc(x, y, 3.5 * p, 0, 7); c.fill(); if (big) txt(c, s, x + (al === 'right' ? -7 : 7) * p, y + 10 * p, { c: T.ink, s: 9.5, a: al || 'left', ui: true }); };
+    mark(timeAt(K, PLANCK.T0 * (1 + PLANCK.zStar)), PLANCK.T0 * (1 + PLANCK.zStar), 'atoms form, z = 1090', 'right');
+    mark(K.t[K.n], PLANCK.T0, 'today, 2.7255 K', 'right');
+    /* cursor */
+    const ts = Math.pow(10, S.th.logt), Tk = tempAt(K, ts), x = A.X(S.th.logt), y = A.Y(Math.log10(Tk));
+    c.strokeStyle = T.ink; c.lineWidth = 1; c.setLineDash([2 * p, 3 * p]); c.beginPath(); c.moveTo(x, y0); c.lineTo(x, y0 + h); c.moveTo(x0, y); c.lineTo(x0 + w, y); c.stroke(); c.setLineDash([]);
+    c.fillStyle = T.accent; c.strokeStyle = T.canvas; c.lineWidth = 2; c.beginPath(); c.arc(x, y, 6 * p, 0, 7); c.fill(); c.stroke();
+    c.restore();
+    return A;
+  }
+  let thGeom = null;
+  function drawTh() {
+    const p = proj(); if (VG) VG.backdrop(ctx, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    const narrow = W < 560, x0 = (narrow ? 48 : 64) * p, y0 = 14 * p, w = W - x0 - (narrow ? 50 : 62) * p, h = H - y0 - 44 * p;
+    if (VG) VG.panel(ctx, 6, 6, W - 12, H - 12, { r: 10 });
+    thGeom = { x0, w }; thPlot(ctx, x0, y0, w, h, !narrow);
+  }
+  function curveTh() {
+    const p = proj(), c = cctx, narrow = CW < 560, x0 = (narrow ? 48 : 64) * p, Tp = 12 * p, w = CW - x0 - (narrow ? 50 : 62) * p, ph = CH - Tp - 36 * p;
+    const A = logAxes(c, x0, Tp, w, ph, XT, [0, 110], 'time since the Big Bang t (s)', 'g*', { sx: w < 500 ? 9 : 5, sy: 25, linY: true, ylX: 34 });
+    c.save(); c.beginPath(); c.rect(x0, Tp, w, ph); c.clip();
+    const pts = []; for (let i = 0; i <= K.n; i += 2) pts.push([A.X(Math.log10(K.t[i])), A.Y(K.g[i])]); pts.unshift([A.X(XT[0]), A.Y(K.g[0])]); poly(c, pts, T.theory, 2 * p);
+    const x = A.X(S.th.logt); c.strokeStyle = T.ink; c.setLineDash([2 * p, 3 * p]); c.beginPath(); c.moveTo(x, Tp); c.lineTo(x, Tp + ph); c.stroke(); c.setLineDash([]);
+    c.restore();
+    txt(c, 'g*: how many kinds of particles share the energy (photons count 2)', x0 + 8 * p, Tp + 10 * p, { c: T.theory, s: 10, ui: true });
+  }
+
+  // ---------- Helium view ----------
+  const bbnT = () => Math.pow(10, S.bbn.logt);
+  /* fixed spots for the 2000 nucleons in the box, with a little thermal jiggle */
+  const SPOT = Array.from({ length: 2000 }, (_, i) => [hash2(i, 1, 21), hash2(i, 2, 23)]);
+  let jig = 0;
+  function nucleonKinds(ts) {
+    /* which nucleons are neutrons, free protons or in helium at time ts, from the same random numbers as sampleCount */
+    const r = bbn(bbnOpt(), K), xeq = ts <= r.tf ? XnEq(kTeV(tempAt(K, ts)) * 1e-6) : 0, kinds = new Uint8Array(NUC.N);
+    let He = 0; if (ts >= r.tD) { let nD = 0; for (let i = 0; i < NUC.N; i++) if (NUC.u[i] < r.Xf && r.tf + NUC.v[i] * r.tau > r.tD) nD++; He = Math.floor(nD / 2); }
+    let nIn = 0, pIn = 0;
+    for (let i = 0; i < NUC.N; i++) {
+      const isNf = NUC.u[i] < r.Xf, alive = isNf && r.tf + NUC.v[i] * r.tau > Math.min(ts, r.tD);
+      const neutron = ts <= r.tf ? NUC.u[i] < xeq : alive;
+      if (ts >= r.tD) { if (neutron && nIn < 2 * He) { kinds[i] = 2; nIn++; } else if (!neutron && pIn < 2 * He) { kinds[i] = 2; pIn++; } else kinds[i] = neutron ? 1 : 0; }
+      else kinds[i] = neutron ? 1 : 0;
+    }
+    return kinds;
+  }
+  function drawBbn() {
+    const p = proj(), by = Math.round(H * 0.9);
+    if (VG) { VG.wall(ctx, 0, 0, W, by); VG.bench(ctx, 0, by, W, 14, Math.max(14, H - by - 2)); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    const narrow = W < 560, bw = narrow ? W - 40 * p : Math.min(W * 0.58, (by - 50 * p) * 1.5), bh = Math.min(by - (narrow ? 120 : 50) * p, bw / 1.5), bx = narrow ? 20 * p : W * 0.05, byy = 22 * p;
+    if (VG) VG.box(ctx, bx - 10 * p, byy - 10 * p, bw + 20 * p, bh + 20 * p, { color: dark() ? '#3a4552' : '#56616f', r: 8 });
+    ctx.fillStyle = '#0b1018'; ctx.fillRect(bx, byy, bw, bh);
+    const ts = bbnT(), kinds = nucleonKinds(ts), rad = Math.max(1.6, Math.min(3.2, Math.sqrt(bw * bh / 2000) * 0.32)) * p, col = ['#e8384f', '#9fb0c6', '#ffd84a'];
+    for (let i = 0; i < NUC.N; i++) { const jx = reduce ? 0 : Math.sin(jig * 3 + i) * 1.2, jy = reduce ? 0 : Math.cos(jig * 2.6 + i * 1.7) * 1.2;
+      ctx.fillStyle = col[kinds[i]]; ctx.beginPath(); ctx.arc(bx + rad + SPOT[i][0] * (bw - 2 * rad) + jx, byy + rad + SPOT[i][1] * (bh - 2 * rad) + jy, rad, 0, 7); ctx.fill(); }
+    const c = sampleCount(NUC, bbnOpt(), K, ts), kT = kTeV(tempAt(K, ts)) * 1e-6;
+    const key = [['proton', col[0]], ['neutron', col[1]], ['in helium 4', col[2]]]; let kx = bx;
+    key.forEach(([s, cc]) => { ctx.fillStyle = cc; ctx.beginPath(); ctx.arc(kx + 5, byy + bh + 22 * p, 4 * p, 0, 7); ctx.fill(); if (VG) VG.label(ctx, s, kx + 13 * p, byy + bh + 22 * p, { s: 10.5 * p }); kx += 100 * p; });
+    const lcdBox = (x, y, w, h, text, name) => { if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * p }); } };
+    if (narrow) { const mw = (W - 60 * p) / 3, y = byy + bh + 42 * p;
+      lcdBox(20 * p, y, mw - 8 * p, 24 * p, ts < 100 ? `${f(ts, 2)} s` : `${f(ts, 0)} s`, 'time'); lcdBox(20 * p + mw + 6 * p, y, mw - 8 * p, 24 * p, `${c.n}`, 'neutrons'); lcdBox(20 * p + 2 * mw + 12 * p, y, mw - 8 * p, 24 * p, `${c.He}`, 'helium 4'); return; }
+    const mx = Math.min(W - 150 * p, bx + bw + 40 * p), mw = 120 * p, mh = 28 * p;
+    lcdBox(mx, byy, mw, mh, ts < 100 ? `${f(ts, 2)} s` : `${f(ts, 0)} s`, 'time t');
+    lcdBox(mx, byy + 64 * p, mw, mh, kT >= 0.1 ? `${f(kT, 3)} MeV` : `${f(kT * 1000, 1)} keV`, 'kT');
+    lcdBox(mx, byy + 128 * p, mw, mh, `${c.n}`, 'free neutrons');
+    lcdBox(mx, byy + 192 * p, mw, mh, `${c.p}`, 'free protons');
+    lcdBox(mx, byy + 256 * p, mw, mh, `${c.He}`, 'helium 4 nuclei');
+  }
+  function curveBbn() {
+    const p = proj(), c = cctx, L = 50 * p, Tp = 12 * p, w = CW - L - 14 * p, ph = CH - Tp - 36 * p;
+    const A = logAxes(c, L, Tp, w, ph, [-2, 4], [0, 0.5], 'time t (s)', 'neutron share n/(n + p)', { sx: 1, sy: 0.1, linY: true, ylX: 40 });
+    const r = bbn(bbnOpt(), K);
+    c.save(); c.beginPath(); c.rect(L, Tp, w, ph); c.clip();
+    if (!S.blind) {
+      const eq = [], mod = []; for (let i = 0; i <= 300; i++) { const lt = -2 + 6 * i / 300, ts = Math.pow(10, lt); eq.push([A.X(lt), A.Y(XnEq(kTeV(tempAt(K, ts)) * 1e-6))]); mod.push([A.X(lt), A.Y(XnAt(bbnOpt(), K, ts))]); }
+      poly(c, eq, T.muted, 1.5 * p, [4 * p, 4 * p]); poly(c, mod, T.theory, 2 * p);
+      const yo = A.Y(0.2449 / 2); c.setLineDash([2 * p, 3 * p]); c.strokeStyle = T.helium; c.beginPath(); c.moveTo(L, yo); c.lineTo(L + w, yo); c.stroke(); c.setLineDash([]);
+    }
+    for (const [tt, s] of [[r.tf, 'freeze out'], [r.tD, 't_D']]) { const x = A.X(Math.log10(tt)); c.strokeStyle = T.ink; c.globalAlpha = 0.5; c.beginPath(); c.moveTo(x, Tp); c.lineTo(x, Tp + ph); c.stroke(); c.globalAlpha = 1; txt(c, s, x + 4 * p, Tp + ph - 10 * p, { c: T.ink, s: 9.5 }); }
+    /* the sample's count, as the clock has run so far */
+    c.fillStyle = T.data; for (const [lt, x] of S.bbn.trace) { c.beginPath(); c.arc(A.X(lt), A.Y(x), 2.2 * p, 0, 7); c.fill(); }
+    c.restore();
+    /* the legend sits in the empty space above the late curves */
+    const ly = A.Y(0.43), fs = CW < 560 ? 8.5 : 10;
+    if (!S.blind) { txt(c, 'dashed: equilibrium e^(−Δmc²/kT)', L + w - 6 * p, ly, { c: T.muted, a: 'right', s: fs }); txt(c, 'line: frozen, then decay', L + w - 6 * p, ly + 13 * p, { c: T.theory, a: 'right', s: fs });
+      txt(c, 'dotted: half the observed Y_p = 0.245', L + w - 6 * p, ly + 26 * p, { c: T.helium, a: 'right', s: fs }); }
+    txt(c, 'dots: the sample of 2000', L + w - 6 * p, ly + (S.blind ? 0 : 39) * p, { c: T.data, a: 'right', s: fs });
+  }
+  function bbnTrace() {
+    /* the sample's neutron share at 120 times from 10⁻² s up to now (recomputed when a setting changes) */
+    const now = S.bbn.logt, tr = []; for (let i = 0; i <= 120; i++) { const lt = -2 + 6 * i / 120; if (lt > now + 1e-9) break; const cc = sampleCount(NUC, bbnOpt(), K, Math.pow(10, lt)); tr.push([lt, (cc.n + (cc.He ? 2 * cc.He : 0)) / NUC.N]); }
+    S.bbn.trace = tr;
+  }
+
+  // ---------- Microwave background view ----------
+  const cmbT = () => PLANCK.T0 * (1 + S.cmb.z);
+  function drawCmb() {
+    const p = proj(); if (VG) VG.backdrop(ctx, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    if (VG) VG.panel(ctx, 6, 6, W - 12, H - 12, { r: 10 });
+    const narrow = W < 560, x0 = (narrow ? 64 : 70) * p, y0 = 16 * p, w = W - x0 - 14 * p, h = H - y0 - 50 * p;
+    /* x: frequency in GHz (log), y: spectral radiance B_ν in W m⁻² Hz⁻¹ sr⁻¹ (log) */
+    const xs = [0, 6.7], ys = [-24, -7];
+    const A = logAxes(ctx, x0, y0, w, h, xs, ys, 'frequency ν (GHz)', 'B_ν (W m⁻² Hz⁻¹ sr⁻¹)', { sx: 1, sy: narrow ? 4 : 2, ylX: narrow ? 52 : 52, fs: narrow ? 9 : 10 });
+    ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, w, h); ctx.clip();
+    /* bands of the spectrum */
+    const bands = [['radio', 0, 2], ['microwave', 2, 5], ['infrared', 5, Math.log10(C / 760e-9 / 1e9)], ['visible', Math.log10(C / 760e-9 / 1e9), Math.log10(C / 380e-9 / 1e9)], ['UV', Math.log10(C / 380e-9 / 1e9), 6.7]];
+    bands.forEach(([nm, a, b], i) => { const xa = A.X(a), xb = A.X(b);
+      if (nm === 'visible') { const g = ctx.createLinearGradient(xa, 0, xb, 0); ['#ff3030', '#ff9a00', '#f5e300', '#30d050', '#3080ff', '#8040ff'].forEach((cc, k) => g.addColorStop(k / 5, cc)); ctx.globalAlpha = 0.28; ctx.fillStyle = g; ctx.fillRect(xa, y0, xb - xa, h); ctx.globalAlpha = 1; }
+      else if (i % 2) { ctx.fillStyle = T.band; ctx.fillRect(xa, y0, xb - xa, h); }
+      ctx.font = `700 ${9.5 * p}px ${T.ui}`; if (ctx.measureText(nm).width + 4 < xb - xa) txt(ctx, nm, (xa + xb) / 2, y0 + h - 10 * p, { c: T.muted, a: 'center', s: 9.5, ui: true, w: 700 }); });
+    const curve = (Tk, col, lw, dash) => { const pts = []; for (let i = 0; i <= 500; i++) { const lg = xs[0] + (xs[1] - xs[0]) * i / 500, b = B_nu(Math.pow(10, lg) * 1e9, Tk); pts.push(b > 0 ? [A.X(lg), A.Y(Math.log10(b))] : null); } poly(ctx, pts, col, lw, dash); };
+    const Tz = cmbT();
+    if (S.cmb.today && S.cmb.z > 0) curve(PLANCK.T0, T.muted, 1.6 * p, [5 * p, 4 * p]);
+    curve(Tz, T.hot, 2.8 * p);
+    /* FIRAS points on today's curve */
+    ctx.fillStyle = T.data; for (const r of FIRAS) { const x = A.X(Math.log10(wavenumberHz(r[0]) / 1e9)), y = A.Y(Math.log10(r[1] * 1e-20)); ctx.fillRect(x - 1.5 * p, y - 1.5 * p, 3 * p, 3 * p); }
+    if (!S.blind) { const nu = WIEN_NU * Tz, x = A.X(Math.log10(nu / 1e9)), y = A.Y(Math.log10(B_nu(nu, Tz)));
+      ctx.strokeStyle = T.hot; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y0 + h); ctx.stroke(); ctx.setLineDash([]);
+      const right = x > x0 + w * 0.6; txt(ctx, `peak ${sci(nu / 1e9, 3)} GHz`, x + (right ? -5 : 5) * p, y - 10 * p, { c: T.hot, s: 10, w: 600, a: right ? 'right' : 'left' }); }
+    ctx.restore();
+    txt(ctx, `T = ${f(Tz, Tz < 100 ? 4 : 0)} K at z = ${S.cmb.z}`, x0 + 10 * p, y0 + 12 * p, { c: T.hot, s: 12, w: 700 });
+    if (S.cmb.today && S.cmb.z > 0) txt(ctx, 'dashed: today, 2.7255 K', x0 + 10 * p, y0 + 30 * p, { c: T.muted, s: 10 });
+    txt(ctx, 'squares: COBE FIRAS', x0 + 10 * p, y0 + (S.cmb.today && S.cmb.z > 0 ? 46 : 30) * p, { c: T.data, s: 10 });
+  }
+  function curveCmb() {
+    const p = proj(), c = cctx, narrow = CW < 620, L = 52 * p, Tp = 12 * p, B = 36 * p, ph = CH - Tp - B;
+    const w1 = narrow ? CW - L - 14 * p : (CW - L - 70 * p) * 0.6, x2 = L + w1 + 60 * p, w2 = CW - x2 - 14 * p;
+    const A = linAxes(c, L, Tp, w1, ph, [0, 22], [0, 420], 'wavenumber 1/λ (cm⁻¹)', 'I_ν (MJy/sr)', { ylX: 40 });
+    c.save(); c.beginPath(); c.rect(L, Tp, w1, ph); c.clip();
+    if (!S.blind) { const pts = []; for (let i = 0; i <= 300; i++) { const s = 0.05 + 22 * i / 300; pts.push([A.X(s), A.Y(firasModel(s, PLANCK.T0))]); } poly(c, pts, T.hot, 2 * p); }
+    c.fillStyle = T.data; for (const r of FIRAS) { c.beginPath(); c.arc(A.X(r[0]), A.Y(r[1]), 2.4 * p, 0, 7); c.fill(); }
+    c.restore();
+    txt(c, S.blind ? 'COBE FIRAS (Fixsen et al. 1996)' : narrow ? 'FIRAS; line: 2.7255 K' : 'COBE FIRAS points; line: blackbody at 2.7255 K', L + w1 - 4 * p, Tp + 8 * p, { c: T.muted, a: 'right', s: 9.5 });
+    if (narrow) return;
+    const B2 = linAxes(c, x2, Tp, w2, ph, [0, 22], [-150, 150], 'wavenumber (cm⁻¹)', 'residual (kJy/sr)', { ylX: 44 });
+    c.save(); c.beginPath(); c.rect(x2, Tp, w2, ph); c.clip();
+    c.strokeStyle = T.muted; c.beginPath(); c.moveTo(x2, B2.Y(0)); c.lineTo(x2 + w2, B2.Y(0)); c.stroke();
+    c.strokeStyle = T.data; c.fillStyle = T.data; for (const r of FIRAS) { const x = B2.X(r[0]); c.beginPath(); c.moveTo(x, B2.Y(r[2] - r[3])); c.lineTo(x, B2.Y(r[2] + r[3])); c.stroke(); c.beginPath(); c.arc(x, B2.Y(r[2]), 2 * p, 0, 7); c.fill(); }
+    c.restore();
+    txt(c, 'data − 2.725 K blackbody, ±1σ', x2 + w2 - 4 * p, Tp + 8 * p, { c: T.muted, a: 'right', s: 9.5 });
+  }
+
+  // ---------- frame ----------
+  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); ({ ex: drawEx, th: drawTh, bbn: drawBbn, cmb: drawCmb })[S.view]();
+    cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH); ({ ex: curveEx, th: curveTh, bbn: curveBbn, cmb: curveCmb })[S.view](); readouts(); clock(); }
+  function clock() { $('clock').textContent = S.view === 'ex' ? `t = ${f(S.ex.tau, 2)} Gyr from today` : S.view === 'th' ? `t = ${tWords(Math.pow(10, S.th.logt))}` : S.view === 'bbn' ? `t = ${tWords(bbnT())}` : `z = ${S.cmb.z}`; }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, wide = (a, b) => `<div class="wide"><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>';
+    let o = '';
+    if (S.view === 'ex') {
+      const E = X(), a = aNow(), m = E.m;
+      if (a <= 0) o = dd('Model', MODEL_NAME[S.ex.model]) + dd('Time from today', `${f(S.ex.tau, 2)} Gyr`) + wide('Scale factor', 'before this model\'s Big Bang');
+      else { const Hn = Hof(m, a);
+        o = dd('Model', MODEL_NAME[S.ex.model]) + dd('Time from today', `${f(S.ex.tau, 2)} Gyr`) + dd('Scale factor a', f(a, 4)) + dd('Redshift z = 1/a − 1', a < 1 ? f(1 / a - 1, 3) : '—')
+          + dd('Time since the Big Bang', S.blind ? hide : isFinite(E.age) ? `${f(E.age + S.ex.tau, 3)} Gyr` : 'no beginning') + dd('Age today', S.blind ? hide : isFinite(E.age) ? `${f(E.age, 3)} Gyr` : 'no beginning')
+          + dd('Hubble parameter H', S.blind ? hide : `${f(Hn, 2)} km/s/Mpc`) + dd('Hubble time 1/H', S.blind ? hide : `${f(HUBBLE_GYR / Hn, 3)} Gyr`)
+          + dd('Speed of A, v = H d', S.blind ? hide : `${sci(Hn * properDist(a, galaxyAt(MARKED[0][1], MARKED[0][2]), homeG()), 4)} km/s`) + dd('Deceleration q', S.blind ? hide : f(qDecel(m, a), 3)); }
+    } else if (S.view === 'th') {
+      const ts = Math.pow(10, S.th.logt), Tk = tempAt(K, ts), a = thA(Tk);
+      o = dd('Time since the Big Bang', tWords(ts)) + dd('Temperature T', `${sci(Tk, 4)} K`) + dd('kT', eV(KB_EV * Tk)) + dd('Redshift z', sci(1 / a - 1, 4))
+        + dd('Scale factor a', sci(a, 4)) + dd('g* (energy)', f(gAt(K, Tk), 2)) + wide('Era (the book\'s times)', eraAt(ts)[0]);
+    } else if (S.view === 'bbn') {
+      const r = bbn(bbnOpt(), K), ts = bbnT(), cc = sampleCount(NUC, bbnOpt(), K, ts);
+      o = dd('Time t', tWords(ts)) + dd('kT', eV(KB_EV * tempAt(K, ts))) + dd('Freeze out time t_f', `${f(r.tf, 2)} s`) + dd('kT at t_D', `${f(r.kTD * 1000, 1)} keV`)
+        + dd('Neutrons at freeze out (sample)', cc.nF) + dd('Neutrons left at t_D (sample)', ts >= r.tD ? cc.nD : '—') + dd('Helium 4 nuclei (sample)', cc.He) + dd('Y from the sample', ts >= r.tD ? f(cc.Y, 4) : '—')
+        + dd('n/p at freeze out, e^(−Δmc²/kT_f)', S.blind ? hide : f(r.npF, 4)) + dd('n/p at t_D', S.blind ? hide : f(r.npD, 4)) + dd('Predicted Y = 2(n/p)/(1 + n/p)', S.blind ? hide : f(r.Y, 4)) + dd('Observed Y_p', '0.245 ± 0.004');
+    } else {
+      const Tk = cmbT(), a = 1 / (1 + S.cmb.z), age = LCDM0.age + tauAt(LCDM0, a);
+      o = dd('Redshift z', S.cmb.z) + dd('Temperature T = T₀(1 + z)', `${f(Tk, Tk < 100 ? 4 : 1)} K`) + dd('Time since the Big Bang', age < 0.01 ? `${f(age * 1e6, 0)} thousand years` : `${f(age, 3)} Gyr`)
+        + dd('Peak wavelength λ_max (Wien)', S.blind ? hide : (WIEN_B / Tk >= 1e-3 ? `${f(WIEN_B / Tk * 1e3, 3)} mm` : `${f(WIEN_B / Tk * 1e9, 0)} nm`)) + dd('Peak frequency ν_max', S.blind ? hide : `${sci(WIEN_NU * Tk / 1e9, 4)} GHz`)
+        + dd('Photons per cm³', S.blind ? hide : sci(nGamma(Tk) * 1e-6, 4)) + dd('Energy density aT⁴', S.blind ? hide : `${sci(uGamma(Tk), 4)} J/m³`) + dd('Mean photon energy 2.701 kT', S.blind ? hide : eV(2.701 * KB_EV * Tk))
+        + dd('Best fit to FIRAS', S.blind ? hide : `${f(fitFiras().T, 4)} K`);
+    }
+    $('out').innerHTML = o;
+  }
+
+  // ---------- controls ----------
+  function sync() {
+    for (const b of document.querySelectorAll('#modelSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.ex.model));
+    $('sTau').value = S.ex.tau; $('oTau').textContent = `${f(S.ex.tau, 2)} Gyr`; $('sH0').value = S.ex.H0; $('oH0').textContent = `${f(S.ex.H0, 1)} km/s/Mpc`; $('arrows').checked = S.ex.arrows;
+    $('sLogT').value = S.th.logt; $('oLogT').textContent = `${sci(Math.pow(10, S.th.logt), 3)} s`; $('showEras').checked = S.th.eras; $('showThr').checked = S.th.thr;
+    $('sKf').value = S.bbn.kTf; $('oKf').textContent = `${f(S.bbn.kTf, 2)} MeV`; $('sTauN').value = S.bbn.tau; $('oTauN').textContent = `${f(S.bbn.tau, 1)} s`;
+    $('sTD').value = S.bbn.tD; $('oTD').textContent = `${S.bbn.tD} s`; $('sTb').value = S.bbn.logt; $('oTb').textContent = tWords(bbnT());
+    $('sZ').value = S.cmb.z; $('oZ').textContent = String(S.cmb.z); $('showToday').checked = S.cmb.today;
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  const tAtTemp = (Tk) => Math.log10(timeAt(K, Tk));
+  const PRESETS = {
+    exToday: { view: 'ex', hint: 'The Planck ΛCDM universe today, seen from the Milky Way. The panel gives the distance to five marked galaxies, A to E. Step the time forward by 0.1 Gyr and read the distances again: each galaxy has moved away, and the farther ones have moved more. Click any other galaxy to watch from there: everything moves away from it too.', set: () => Object.assign(S.ex, { model: 'lcdm', tau: 0, H0: PLANCK.H0, home: [0, 0] }) },
+    exHalf: { view: 'ex', hint: 'The same universe 7.95 billion years ago, when the scale factor was 0.5: every distance between galaxies was half of today\'s. Light sent then reaches us today with every wavelength doubled, a redshift z = 1. Measure the Hubble parameter then and compare it with today\'s.', set: () => Object.assign(S.ex, { model: 'lcdm', H0: PLANCK.H0, home: [0, 0], tau: +tauAt(expansion(model('lcdm')), 0.5).toFixed(2) }) },
+    exMatter: { view: 'ex', hint: 'A universe of matter alone (Einstein and de Sitter\'s model) with the same Hubble constant today. Gravity has been slowing it down, so it was expanding faster in the past and is younger: 2/(3H₀) = 9.67 billion years. The Planck universe is older than its Hubble time would suggest from matter alone, because dark energy has been speeding it up for the last few billion years.', set: () => Object.assign(S.ex, { model: 'matter', tau: 0, H0: PLANCK.H0, home: [0, 0] }) },
+    thProton: { view: 'th', hint: 'The moment when kT equals the rest energy of a proton, 938 MeV: about 10¹³ K, about 0.3 microseconds after the Big Bang. Before this, photons in the hot soup had enough energy to make proton and antiproton pairs; after it, pairs stop being made and almost all of them annihilate. (The quarks only bind into protons at about 156 MeV, a little later.)', set: () => { S.th.logt = tAtTemp(Tof(938.27209e6)); } },
+    thRecomb: { view: 'th', hint: 'Redshift 1090, about 370 000 years after the Big Bang, at about 3000 K. Electrons and nuclei combine into neutral atoms, and the universe becomes transparent: light that last scattered here is the cosmic microwave background. kT is only 0.26 eV, far below hydrogen\'s 13.6 eV ionization energy, because photons outnumber atoms more than a billion to one and the few in the high energy tail keep ionizing.', set: () => { S.th.logt = tAtTemp(PLANCK.T0 * (1 + PLANCK.zStar)); } },
+    bbnStd: { view: 'bbn', hint: 'Neutrons and protons are in equilibrium until kT falls to about 0.8 MeV, about a second after the Big Bang. Then the ratio freezes at about 1 neutron for 5 protons. Free neutrons decay with a lifetime of 878.4 s until deuterium can survive, at about 3 minutes; then nearly all of the neutrons that are left end up in helium 4. Press Play to run the first 3 hours.', set: () => { Object.assign(S.bbn, { kTf: 0.8, tau: TAU_N, tD: 180, logt: -2 }); bbnTrace(); } },
+    cmbDec: { view: 'cmb', hint: 'Decoupling at z = 1090: the radiation is a blackbody at about 2970 K, a little cooler than a light bulb filament, peaking in the near infrared with a red visible glow. Press Play to let the universe expand: every wavelength stretches by (1 + z), and the spectrum slides down to the 2.7255 K microwave background of today.', set: () => Object.assign(S.cmb, { z: 1090, today: true }) },
+    cmbToday: { view: 'cmb', hint: 'The microwave background today: a blackbody at 2.7255 K peaking at 160 GHz (a wavelength of about 1 mm). The squares are the COBE FIRAS measurements (Fixsen et al. 1996); the graph below shows them against the blackbody curve and, at the right, their tiny differences from it.', set: () => Object.assign(S.cmb, { z: 0, today: true }) },
+  };
+  function setView(v) {
+    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('cardEx').hidden = v !== 'ex'; $('cardTh').hidden = v !== 'th'; $('cardBbn').hidden = v !== 'bbn'; $('cardCmb').hidden = v !== 'cmb';
+    $('speedSeg').hidden = v === 'th'; $('go').hidden = v === 'th'; $('restart').hidden = v === 'th';
+    $('units').textContent = { ex: 'distances in Mpc · time in Gyr', th: 'T in K · kT in eV · t in s', bbn: 'time in s · kT in MeV', cmb: 'T in K · frequency in GHz' }[v];
+    can.setAttribute('aria-label', { ex: 'A patch of the universe full of galaxies, drawn to a fixed ruler in megaparsecs. Click a galaxy to watch from it. Space plays or pauses.', th: 'The temperature of the universe against time since the Big Bang, on logarithmic scales, with the book\'s eras and the temperatures at which kT equals the rest energy of particles.', bbn: 'A box of 2000 neutrons and protons, with meters for the time, kT and the counts. Space plays or pauses.', cmb: 'The blackbody spectrum of the radiation at the chosen redshift, with today\'s spectrum and the COBE FIRAS points. Space plays or pauses.' }[v]);
+    window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
+    setRun(false); sync(); redraw();
+  }
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : 'Play'; $('go').classList.toggle('attn', !on); }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; const h0 = S.ex.H0; c.set(); if (S.ex.H0 !== h0) buildExpansion(); setView(c.view); }
+  const custom = () => { S.preset = 'custom'; sync(); redraw(); };
+  const clampTau = (v) => Math.max(-14, Math.min(20, Math.round(v * 100) / 100));
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
+  $('go').addEventListener('click', () => { if (!S.run) { if (S.view === 'bbn' && S.bbn.logt >= 4) { S.bbn.logt = -2; bbnTrace(); } if (S.view === 'cmb' && S.cmb.z <= 0) S.cmb.z = 1090; if (S.view === 'ex' && S.ex.tau >= 20) S.ex.tau = -13.5; } setRun(!S.run); sync(); });
+  $('restart').addEventListener('click', () => { if (S.view === 'ex') { S.ex.tau = isFinite(X().age) ? clampTau(-X().age + 0.3) : -14; } else if (S.view === 'bbn') { S.seed = (S.seed * 7919 + 13) % 100003; NUC = nucleons(2000, S.seed); S.bbn.logt = -2; bbnTrace(); } else S.cmb.z = 1090; setRun(false); sync(); redraw(); });
+  $('modelSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { S.ex.model = b.dataset.m; custom(); } });
+  $('sTau').addEventListener('input', (e) => { S.ex.tau = +e.target.value; custom(); });
+  $('sH0').addEventListener('input', (e) => { S.ex.H0 = +e.target.value; buildExpansion(); custom(); });
+  $('back').addEventListener('click', () => { S.ex.tau = clampTau(S.ex.tau - 0.1); custom(); });
+  $('fwd').addEventListener('click', () => { S.ex.tau = clampTau(S.ex.tau + 0.1); custom(); });
+  $('now').addEventListener('click', () => { S.ex.tau = 0; custom(); });
+  $('arrows').addEventListener('change', (e) => { S.ex.arrows = e.target.checked; redraw(); });
+  /* the slider's last step is today (13.79 Gyr, 10^17.639 s) */
+  $('sLogT').addEventListener('input', (e) => { const v = +e.target.value, now = Math.log10(K.t[K.n]); S.th.logt = v >= now - 0.006 ? now : v; custom(); });
+  $('showEras').addEventListener('change', (e) => { S.th.eras = e.target.checked; redraw(); });
+  $('showThr').addEventListener('change', (e) => { S.th.thr = e.target.checked; redraw(); });
+  const bbnSet = (k, v) => { S.bbn[k] = v; bbnTrace(); custom(); };
+  $('sKf').addEventListener('input', (e) => bbnSet('kTf', +e.target.value));
+  $('sTauN').addEventListener('input', (e) => bbnSet('tau', +e.target.value));
+  $('sTD').addEventListener('input', (e) => bbnSet('tD', +e.target.value));
+  $('sTb').addEventListener('input', (e) => bbnSet('logt', +e.target.value));
+  $('sZ').addEventListener('input', (e) => { S.cmb.z = +e.target.value; custom(); });
+  $('showToday').addEventListener('change', (e) => { S.cmb.today = e.target.checked; redraw(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ' && S.view !== 'th') { $('go').click(); e.preventDefault(); } if (e.key === 'h' && S.view === 'ex') { S.ex.home = [0, 0]; redraw(); } });
+  can.addEventListener('click', (e) => {
+    if (S.view !== 'ex' || !exGeom || exGeom.a <= 0) return;
+    const r = can.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top, h0 = homeG(), sc = exGeom.a * exGeom.pxPerMpc, st = exGeom.stride || 1;
+    const gx = h0.x + (mx - exGeom.cx) / sc, gy = h0.y - (my - exGeom.cy) / sc; let best = null, bd = 14 * proj();
+    for (let i = Math.floor(gx / CELL) - 2; i <= Math.floor(gx / CELL) + 2; i++) for (let j = Math.floor(gy / CELL) - 2; j <= Math.floor(gy / CELL) + 2; j++) {
+      if (i % st || j % st) continue; const g = galaxyAt(i, j), d = Math.hypot(exGeom.cx + (g.x - h0.x) * sc - mx, exGeom.cy - (g.y - h0.y) * sc - my); if (d < bd) { bd = d; best = [i, j]; } }
+    if (best) { S.ex.home = best; S.preset = 'custom'; sync(); redraw(); }
+  });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
+
+  // ---------- the clock ----------
+  /* Expansion: 1 Gyr of model time per second at 1×. Helium: 0.4 decades of time per second. Background: ln(1 + z) falls 0.6 per second. */
+  function advance(dt) {
+    const k = dt * S.speed;
+    if (S.view === 'ex') { S.ex.tau = Math.min(20, S.ex.tau + k); if (S.ex.tau >= 20) setRun(false); }
+    else if (S.view === 'bbn') { S.bbn.logt = Math.min(4, S.bbn.logt + 0.4 * k); bbnTrace(); if (S.bbn.logt >= 4) setRun(false); }
+    else if (S.view === 'cmb') { const l = Math.log(1 + S.cmb.z) - 0.6 * k; S.cmb.z = Math.max(0, Math.round(Math.exp(l) - 1)); if (S.cmb.z <= 0) setRun(false); }
+    jig += dt;
+  }
+  let last = performance.now();
+  function frame(now) { const dt = Math.min(0.1, (now - last) / 1000); last = now; if (S.run && S.view !== 'th') { advance(dt); sync(); redraw(); } else if (S.view === 'bbn' && !reduce) { jig += dt; drawOnly(); } requestAnimationFrame(frame); }
+  let jt = 0; function drawOnly() { jt++; if (jt % 3) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); drawBbn(); }
+
+  // ---------- readings ----------
+  window.vdVersion = 'early-universe@2026-10-24';
+  const SHOW = { ex: [['galaxy', 'galaxy'], ['t_Gyr', 't (Gyr)'], ['d_Mpc', 'd (Mpc)']], th: [['t_s', 't (s)'], ['T_K', 'T (K)']], bbn: [['kTf_MeV', 'kT_f'], ['n_f', 'n_f'], ['He', 'He']], cmb: [['z', 'z']] };
+  window.vdShowCols = SHOW.ex;
+  window.vdWorksheet = () => ({ ex: 'cosmic-expansion', th: 'thermal-history', bbn: 'big-bang-helium', cmb: 'thermal-history' })[S.view];
+  window.vdReadingRow = () => {
+    const name = { ex: 'Expansion', th: 'Thermal history', bbn: 'Helium' };
+    if (S.view === 'cmb') return 'The Microwave background view has no readings to record: use its readouts, or record temperatures in the Thermal history view.';
+    const other = (window.vdRows ? window.vdRows() : []).find((r) => r.view !== S.view);
+    if (other) return `These readings are from the ${name[other.view]} view: export them to its worksheet or clear them first.`;
+    window.vdShowCols = SHOW[S.view];
+    if (S.view === 'ex') { const a = aNow(); if (a <= 0) return 'There are no galaxies before this model\'s Big Bang.';
+      /* one row per marked galaxy: its distance from home now */
+      return MARKED.map(([nm, i, j]) => ({ view: 'ex', model: MODEL_NAME[S.ex.model], H0: S.ex.H0, t_Gyr: S.ex.tau.toFixed(2), galaxy: nm, d_Mpc: f(properDist(a, galaxyAt(i, j), homeG()), 2) })); }
+    if (S.view === 'th') { const ts = Math.pow(10, S.th.logt), Tk = tempAt(K, ts); return { view: 'th', t_s: num(ts), T_K: num(Tk), kT_eV: num(KB_EV * Tk) }; }
+    const ts = bbnT(), r = bbn(bbnOpt(), K), cc = sampleCount(NUC, bbnOpt(), K, ts);
+    if (ts < r.tD) return 'Run the clock past t_D first (Play, or set the time later than t_D): the reading is the count of helium nuclei made.';
+    return { view: 'bbn', kTf_MeV: f(S.bbn.kTf, 2), tau_s: f(S.bbn.tau, 1), tD_s: S.bbn.tD, N: NUC.N, n_f: cc.nF, n_D: cc.nD, He: cc.He };
+  };
+
+  // ---------- about ----------
+  $('aboutEx').textContent = 'Expansion: galaxies sit at fixed places in space (comoving positions) and space stretches by the scale factor a(t), with a = 1 today, so every distance between galaxies is a times its value today and every galaxy moves away from every other at v = H d, with H = (da/dt)/a (§11.6). The galaxies are a jittered grid one every 36 Mpc, drawn to a fixed ruler; real galaxies also have their own peculiar motions of a few hundred km/s, left out here, and galaxies did not exist before about z = 20. a(t) comes from the Friedmann equation H² = H₀²(Ω_r/a⁴ + Ω_m/a³ + Ω_k/a² + Ω_Λ), integrated numerically. Planck ΛCDM uses the Planck 2018 values H₀ = 67.4 km/s/Mpc and Ω_m = 0.315, radiation from photons at T₀ = 2.7255 K (Fixsen 2009) and three neutrino species (N_eff = 3.046), and Ω_Λ = 1 − Ω_m − Ω_r = 0.685 so that it is flat; it treats the neutrinos as massless and gives an age of 13.79 Gyr (Planck: 13.79 ± 0.02). Matter only gives 2/(3H₀), the empty (Milne) universe 1/H₀, and de Sitter, with only a cosmological constant, has no beginning. Every model has the same H₀ today. For measuring H₀ from real galaxy redshifts, see the Cosmic Distance Ladder demo.';
+  $('aboutTh').textContent = 'Thermal history: the temperature of the radiation against time since the Big Bang. While the same kinds of particles fill the universe, T = T₀(1 + z) = T₀/a. When one kind stops being made and its pairs annihilate, their energy heats the rest, so T falls a little more slowly: the demo keeps the entropy g*s T³ a³ constant. The time comes from the Friedmann equation with the energy of every Standard Model particle treated as an ideal gas at temperature T (the curve below: g*, from 106.75 when everything is hot to 3.38 today), plus Planck ΛCDM matter and dark energy. Simplifications: quarks become hadrons suddenly at 156.5 MeV and only pions are kept below that; neutrinos decouple before electrons and positrons annihilate; there is no inflation, so the times before about 10⁻³² s are an extrapolation, and nothing is known for sure above the energies of accelerators (about 10⁴ GeV, §11.7). The era bands use the book\'s approximate times, which are rough: for instance the book puts 10³² K at 10⁻⁴³ s, and this clock gives 3 × 10⁻⁴⁵ s. The red lines mark kT = mc², the rough temperature below which photons stop making pairs of that particle (pairs keep forming a little below it, from the energetic tail of the photons).';
+  $('aboutBbn').textContent = 'Helium: 2000 nucleons (a simulated sample; each run is random). Until freeze out, weak reactions keep neutrons and protons in equilibrium, n/p = e^(−Δmc²/kT) with Δmc² = 1.293 MeV (PDG). At kT_f the ratio freezes; then free neutrons decay, n → p + e⁻ + ν̄, with lifetime τ = 878.4 s (PDG 2024), until deuterium can survive photodisintegration at t_D, and then the demo puts every pair of remaining neutrons, with two protons, into a helium 4 nucleus, so Y = 2(n/p)/(1 + n/p). The times come from the Thermal history clock. Simplifications, all stated: freeze out is sudden (the weak reactions really fade over a second or so and keep turning neutrons into protons), t_D is set by hand (about 180 s, kT ≈ 80 keV), and the traces of deuterium, helium 3 and lithium 7 are ignored. With kT_f = 0.8 MeV the model gives Y ≈ 0.27; the observed primordial value is Y_p = 0.245 ± 0.004 (Aver, Olive and Skillman 2015), which full network calculations reproduce.';
+  $('aboutCmb').textContent = 'Microwave background: the radiation left from decoupling at z ≈ 1090 (Planck 2018: z* = 1089.9), when the universe was about 3000 K. Each photon\'s wavelength stretches by the same factor (1 + z), and a blackbody at T stretched that way is exactly a blackbody at T/(1 + z), so the spectrum keeps its shape and T = T₀(1 + z) with T₀ = 2.7255 K (Fixsen 2009). Wien\'s law λ_max T = 2.898 × 10⁻³ m·K (§11.7; per unit frequency the peak is at ν = 58.79 GHz × T/K); photon density (2ζ(3)/π²)(kT/ħc)³ = 411 per cm³ today. The squares are the COBE FIRAS monopole spectrum (Fixsen et al. 1996, Table 4, from NASA LAMBDA): column 2 is a 2.725 K blackbody plus the measured residual, and the error bars (in kJy/sr) are far too small to see on the main graph, so the right panel shows the residuals. For blackbodies at everyday temperatures, see the Blackbody Radiation demo.';
+
+  // ---------- size, theme, start ----------
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); buildExpansion(); bbnTrace();
+  const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'exToday');
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__eu = { S, setView, applyPreset, setRun, redraw, sync, advance, bbnTrace, buildExpansion, X, aNow, K: () => K };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

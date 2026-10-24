@@ -1,0 +1,732 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Molecules: Bonds and Spectra</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --na: #8a63c9; --cl: #3f9a54; --elec: #2b6fc4; --ion: #d2452b; --neutral: #6b7787; --theory: #6a4fc4; --cursor: #d9682b; --iso: #2b8fc4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --na: #b18cf0; --cl: #6fd08a; --elec: #69a8ff; --ion: #ff7a5c; --neutral: #9aa6b6; --theory: #a991ff; --cursor: #ff9a5c; --iso: #5cc2ff; } }
+:root[data-theme="dark"] { --na: #b18cf0; --cl: #6fd08a; --elec: #69a8ff; --ion: #ff7a5c; --neutral: #9aa6b6; --theory: #a991ff; --cursor: #ff9a5c; --iso: #5cc2ff; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.seg { flex-wrap: wrap; }
+.pane { position: relative; flex: 1 1 auto; min-height: 340px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; touch-action: none; cursor: ew-resize; }
+.curvebox { position: relative; flex: none; height: 270px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; touch-action: none; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { align-self: stretch; flex: 1 1 520px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.rail details.more > p + p { margin-top: 6px; }
+.stage.v-lev .curvebox { height: 200px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 380px; flex: none; } .curvebox { height: 220px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 330px; } .curvebox { height: 210px; } }
+@media (min-width: 821px) { .stage { min-height: 760px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Molecules: Bonds and Spectra</h1>
+      <p>Pull a sodium ion away from a chloride ion and read the energy; stretch the covalent bond of H₂ and other molecules. Then climb the ladder of vibration and rotation levels and measure the infrared spectrum of HCl to find its bond length and its spring constant.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">r in nm · U in eV</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/molecules.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/molecules.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM15 2h1v1h-1zM17 2h1v1h-1zM19 2h2v1h-2zM26 2h1v1h-1zM28 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM17 3h1v1h-1zM19 3h1v1h-1zM21 3h1v1h-1zM23 3h1v1h-1zM25 3h3v1h-3zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h2v1h-2zM16 4h1v1h-1zM19 4h1v1h-1zM21 4h2v1h-2zM24 4h3v1h-3zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM14 5h2v1h-2zM17 5h1v1h-1zM20 5h1v1h-1zM24 5h3v1h-3zM28 5h1v1h-1zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM11 6h1v1h-1zM13 6h1v1h-1zM15 6h2v1h-2zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM14 7h1v1h-1zM17 7h2v1h-2zM21 7h2v1h-2zM24 7h1v1h-1zM26 7h2v1h-2zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM13 9h1v1h-1zM15 9h2v1h-2zM19 9h4v1h-4zM24 9h2v1h-2zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM5 10h1v1h-1zM7 10h2v1h-2zM10 10h1v1h-1zM13 10h1v1h-1zM15 10h1v1h-1zM18 10h3v1h-3zM22 10h1v1h-1zM26 10h3v1h-3zM30 10h2v1h-2zM33 10h1v1h-1zM3 11h1v1h-1zM6 11h1v1h-1zM12 11h2v1h-2zM15 11h7v1h-7zM25 11h4v1h-4zM30 11h3v1h-3zM36 11h1v1h-1zM38 11h1v1h-1zM2 12h1v1h-1zM5 12h1v1h-1zM8 12h1v1h-1zM10 12h1v1h-1zM12 12h2v1h-2zM15 12h1v1h-1zM17 12h1v1h-1zM19 12h3v1h-3zM25 12h3v1h-3zM30 12h1v1h-1zM32 12h1v1h-1zM35 12h4v1h-4zM2 13h6v1h-6zM9 13h4v1h-4zM18 13h1v1h-1zM21 13h3v1h-3zM25 13h6v1h-6zM2 14h1v1h-1zM4 14h2v1h-2zM8 14h1v1h-1zM10 14h1v1h-1zM12 14h1v1h-1zM14 14h1v1h-1zM16 14h4v1h-4zM23 14h1v1h-1zM25 14h3v1h-3zM31 14h3v1h-3zM37 14h2v1h-2zM3 15h1v1h-1zM10 15h4v1h-4zM20 15h1v1h-1zM22 15h2v1h-2zM26 15h1v1h-1zM31 15h3v1h-3zM36 15h3v1h-3zM2 16h2v1h-2zM6 16h1v1h-1zM8 16h4v1h-4zM13 16h2v1h-2zM16 16h1v1h-1zM22 16h1v1h-1zM24 16h2v1h-2zM27 16h1v1h-1zM33 16h2v1h-2zM36 16h3v1h-3zM3 17h2v1h-2zM6 17h2v1h-2zM10 17h2v1h-2zM17 17h2v1h-2zM22 17h3v1h-3zM26 17h3v1h-3zM34 17h1v1h-1zM38 17h1v1h-1zM2 18h5v1h-5zM8 18h1v1h-1zM11 18h1v1h-1zM13 18h2v1h-2zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM28 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h2v1h-2zM5 19h2v1h-2zM9 19h1v1h-1zM12 19h2v1h-2zM17 19h1v1h-1zM21 19h1v1h-1zM23 19h2v1h-2zM27 19h2v1h-2zM30 19h1v1h-1zM32 19h3v1h-3zM37 19h2v1h-2zM3 20h1v1h-1zM5 20h1v1h-1zM8 20h2v1h-2zM12 20h1v1h-1zM14 20h1v1h-1zM21 20h2v1h-2zM26 20h1v1h-1zM33 20h1v1h-1zM36 20h3v1h-3zM3 21h1v1h-1zM6 21h2v1h-2zM12 21h1v1h-1zM16 21h4v1h-4zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h1v1h-1zM30 21h2v1h-2zM36 21h2v1h-2zM2 22h1v1h-1zM8 22h3v1h-3zM13 22h1v1h-1zM15 22h2v1h-2zM18 22h1v1h-1zM21 22h1v1h-1zM23 22h1v1h-1zM26 22h3v1h-3zM30 22h1v1h-1zM32 22h1v1h-1zM34 22h1v1h-1zM37 22h1v1h-1zM4 23h2v1h-2zM7 23h1v1h-1zM9 23h2v1h-2zM14 23h2v1h-2zM18 23h3v1h-3zM26 23h1v1h-1zM28 23h1v1h-1zM30 23h1v1h-1zM32 23h2v1h-2zM35 23h1v1h-1zM38 23h1v1h-1zM2 24h2v1h-2zM6 24h1v1h-1zM8 24h1v1h-1zM10 24h1v1h-1zM13 24h1v1h-1zM15 24h1v1h-1zM20 24h2v1h-2zM23 24h2v1h-2zM26 24h1v1h-1zM30 24h2v1h-2zM37 24h2v1h-2zM2 25h3v1h-3zM6 25h1v1h-1zM9 25h3v1h-3zM14 25h1v1h-1zM17 25h2v1h-2zM20 25h1v1h-1zM25 25h5v1h-5zM31 25h2v1h-2zM37 25h2v1h-2zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h2v1h-2zM14 26h1v1h-1zM16 26h1v1h-1zM18 26h1v1h-1zM20 26h2v1h-2zM25 26h3v1h-3zM29 26h5v1h-5zM35 26h1v1h-1zM37 26h1v1h-1zM4 27h1v1h-1zM6 27h1v1h-1zM11 27h2v1h-2zM16 27h2v1h-2zM19 27h2v1h-2zM23 27h2v1h-2zM26 27h1v1h-1zM31 27h3v1h-3zM36 27h3v1h-3zM2 28h1v1h-1zM4 28h2v1h-2zM7 28h3v1h-3zM12 28h3v1h-3zM16 28h4v1h-4zM22 28h4v1h-4zM27 28h2v1h-2zM31 28h1v1h-1zM33 28h4v1h-4zM38 28h1v1h-1zM3 29h1v1h-1zM7 29h1v1h-1zM10 29h1v1h-1zM12 29h4v1h-4zM18 29h4v1h-4zM23 29h1v1h-1zM25 29h3v1h-3zM29 29h2v1h-2zM34 29h1v1h-1zM2 30h3v1h-3zM7 30h3v1h-3zM13 30h3v1h-3zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h2v1h-2zM13 31h1v1h-1zM17 31h3v1h-3zM23 31h1v1h-1zM25 31h1v1h-1zM28 31h3v1h-3zM34 31h2v1h-2zM38 31h1v1h-1zM2 32h7v1h-7zM11 32h1v1h-1zM15 32h1v1h-1zM18 32h2v1h-2zM24 32h1v1h-1zM26 32h1v1h-1zM28 32h3v1h-3zM32 32h1v1h-1zM34 32h2v1h-2zM37 32h2v1h-2zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM15 33h3v1h-3zM23 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM11 34h2v1h-2zM16 34h2v1h-2zM19 34h1v1h-1zM21 34h1v1h-1zM24 34h1v1h-1zM26 34h3v1h-3zM30 34h6v1h-6zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM13 35h2v1h-2zM16 35h2v1h-2zM19 35h1v1h-1zM21 35h2v1h-2zM24 35h1v1h-1zM26 35h3v1h-3zM30 35h1v1h-1zM33 35h2v1h-2zM36 35h2v1h-2zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM13 36h2v1h-2zM18 36h1v1h-1zM20 36h1v1h-1zM22 36h3v1h-3zM26 36h2v1h-2zM31 36h1v1h-1zM33 36h3v1h-3zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM13 37h1v1h-1zM15 37h3v1h-3zM20 37h1v1h-1zM23 37h1v1h-1zM26 37h2v1h-2zM29 37h5v1h-5zM2 38h7v1h-7zM10 38h4v1h-4zM15 38h1v1h-1zM18 38h2v1h-2zM21 38h3v1h-3zM26 38h2v1h-2zM29 38h2v1h-2zM32 38h1v1h-1zM37 38h2v1h-2z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="ion" aria-pressed="true">Ionic bond</button>
+          <button type="button" data-v="cov" aria-pressed="false">Covalent bond</button>
+          <button type="button" data-v="lev" aria-pressed="false">Energy levels</button>
+          <button type="button" data-v="sp" aria-pressed="false">HCl spectrum</button>
+        </div>
+        <span class="count mono" id="clock"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="A sodium and a chlorine atom on a scale in nanometres. Drag the sodium, or use the arrow keys, to change their separation."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" tabindex="0" role="img" aria-label="The graph for the view: energy against separation, the lines of the spectrum, or a close up of the spectrum around the cursor."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardIon" role="group" aria-label="The ionic bond">
+          <span class="card-title">Sodium and chlorine: drag the sodium along the scale. Close enough, the electron moves to chlorine and they become the ions Na⁺ and Cl⁻.</span>
+          <div><div class="slider-head"><label for="sRi">Separation r</label><output id="oRi" class="mono" for="sRi"></output></div><input type="range" id="sRi" min="0.150" max="1.400" step="0.001"></div>
+          <div><div class="slider-head"><label for="sN">Repulsion exponent n</label><output id="oN" class="mono" for="sN"></output></div><input type="range" id="sN" min="4" max="24" step="0.5"></div>
+          <div class="wide"><label class="check"><input type="checkbox" id="rep"><span>Exclusion principle repulsion A/rⁿ</span></label></div>
+        </div>
+        <div class="shelf-card" id="cardCov" role="group" aria-label="The covalent bond" hidden>
+          <span class="card-title">Two atoms share electrons. Drag the right hand atom to stretch or squeeze the bond.</span>
+          <div class="wide"><span class="lab">Molecule</span>
+            <div class="seg" role="group" aria-label="Molecule" id="molSeg">
+              <button type="button" data-m="H2" aria-pressed="true">H₂</button><button type="button" data-m="N2" aria-pressed="false">N₂</button><button type="button" data-m="O2" aria-pressed="false">O₂</button><button type="button" data-m="CO" aria-pressed="false">CO</button><button type="button" data-m="HF" aria-pressed="false">HF</button><button type="button" data-m="HCl" aria-pressed="false">HCl</button><button type="button" data-m="Cl2" aria-pressed="false">Cl₂</button>
+            </div>
+          </div>
+          <div><div class="slider-head"><label for="sRc">Separation r</label><output id="oRc" class="mono" for="sRc"></output></div><input type="range" id="sRc" min="0" max="1" step="0.001"></div>
+          <div class="wide" id="spinRow"><span class="lab">Electron spins</span>
+            <div class="seg" role="group" aria-label="Electron spins" id="spinSeg">
+              <button type="button" data-s="bond" aria-pressed="true">Opposite (bonding)</button>
+              <button type="button" data-s="anti" aria-pressed="false">Parallel (antibonding)</button>
+            </div>
+          </div>
+          <div class="wide"><label class="check"><input type="checkbox" id="showLev"><span>Show the vibration levels in the well</span></label></div>
+        </div>
+        <div class="shelf-card" id="cardLev" role="group" aria-label="The energy levels" hidden>
+          <span class="card-title">Vibration and rotation levels of one molecule, and a photon that moves it between two of them</span>
+          <div class="wide"><span class="lab">Molecule</span>
+            <div class="seg" role="group" aria-label="Molecule" id="levMolSeg">
+              <button type="button" data-m="HCl" aria-pressed="true">HCl</button><button type="button" data-m="HF" aria-pressed="false">HF</button><button type="button" data-m="CO" aria-pressed="false">CO</button><button type="button" data-m="N2" aria-pressed="false">N₂</button>
+            </div>
+          </div>
+          <div class="wide"><span class="lab">Model</span>
+            <div class="seg" role="group" aria-label="Model" id="modelSeg">
+              <button type="button" data-k="book" aria-pressed="true">Rigid rotor and harmonic (the book)</button>
+              <button type="button" data-k="full" aria-pressed="false">Measured constants</button>
+            </div>
+          </div>
+          <div class="wide"><span class="lab">Vibration change Δn</span>
+            <div class="seg" role="group" aria-label="Vibration change" id="dvSeg">
+              <button type="button" data-d="1" aria-pressed="true">+1 (infrared)</button>
+              <button type="button" data-d="0" aria-pressed="false">0 (microwave)</button>
+            </div>
+          </div>
+          <div><div class="slider-head"><label for="sL">Starting rotation level l</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="0" max="7" step="1"></div>
+          <div class="wide"><span class="lab">Rotation change Δl</span>
+            <div class="seg" role="group" aria-label="Rotation change" id="dlSeg">
+              <button type="button" data-d="1" aria-pressed="true">+1</button><button type="button" data-d="-1" aria-pressed="false">−1</button><button type="button" data-d="0" aria-pressed="false">0</button><button type="button" data-d="2" aria-pressed="false">+2</button>
+            </div>
+          </div>
+        </div>
+        <div class="shelf-card" id="cardSp" role="group" aria-label="The spectrometer" hidden>
+          <span class="card-title">Infrared light through a cell of HCl gas: the absorption around 3.5 μm. Drag the cursor across the band.</span>
+          <div><div class="slider-head"><label for="sNu">Cursor</label><output id="oNu" class="mono" for="sNu"></output></div><input type="range" id="sNu" min="2560" max="3140" step="0.01"></div>
+          <div><div class="slider-head"><label for="sT">Gas temperature T</label><output id="oT" class="mono" for="sT"></output></div><input type="range" id="sT" min="50" max="1000" step="10"></div>
+          <div><div class="slider-head"><label for="sRes">Resolution (line width)</label><output id="oRes" class="mono" for="sRes"></output></div><input type="range" id="sRes" min="0.1" max="4" step="0.05"></div>
+          <div class="wide"><span class="lab">Chlorine</span>
+            <div class="seg" role="group" aria-label="Chlorine isotopes" id="isoSeg">
+              <button type="button" data-i="both" aria-pressed="true">Natural (³⁵Cl and ³⁷Cl)</button>
+              <button type="button" data-i="35" aria-pressed="false">³⁵Cl only</button>
+            </div>
+          </div>
+          <div class="wide"><label class="check"><input type="checkbox" id="lock"><span>Lock the cursor to the top of the nearest peak</span></label></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/molecular-bonds.html" target="molecular-bonds-worksheet">Worksheet 1: Ionic and Covalent Bonds</a></li><li><a href="../curriculum/labs/students/hcl-spectrum.html" target="hcl-spectrum-worksheet">Worksheet 2: The Infrared Spectrum of HCl</a></li></ul></details><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="nacl" aria-pressed="true">NaCl molecule</button>
+          <button type="button" data-p="naclApart" aria-pressed="false">Pull the ions apart</button>
+          <button type="button" data-p="h2" aria-pressed="false">H₂ bond</button>
+          <button type="button" data-p="h2anti" aria-pressed="false">H₂ spins parallel</button>
+          <button type="button" data-p="levels" aria-pressed="false">HCl levels</button>
+          <button type="button" data-p="band" aria-pressed="false">HCl band</button>
+          <button type="button" data-p="isotopes" aria-pressed="false">Two isotopes</button>
+          <button type="button" data-p="hot" aria-pressed="false">Hot gas</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="molecular-bonds" data-title="Molecules: Bonds and Spectra" data-demo="molecules">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the model curves, the predicted values and the line names</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="aboutIon"></p>
+          <p class="hint" id="aboutCov"></p>
+          <p class="hint" id="aboutLev"></p>
+          <p class="hint" id="aboutSp"></p>
+          <p class="hint" id="aboutSrc"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Molecules: Bonds and Spectra. Runnable in Node (curriculum/validation/test_molecules.cjs).
+     Sources: OpenStax University Physics Volume 3 (2016) §9.1 (the ionic bond of NaCl: ionization energy of Na 5.14 eV, electron
+     affinity of Cl 3.62 eV, Coulomb energy −ke²/r, a repulsion from the exclusion principle, equilibrium separation 0.236 nm and
+     dissociation energy 4.26 eV; the covalent bond of H₂, 0.074 nm and 4.52 eV) and §9.2 (E_vib = (n + 1/2)hf, E_rot = l(l + 1)ħ²/2I
+     with the reduced mass, selection rules Δn = ±1 and Δl = ±1, the HCl absorption band with its gap at the center).
+     Spectroscopic constants of the ground states: K. P. Huber and G. Herzberg, Constants of Diatomic Molecules (1979), as given in
+     the NIST Chemistry WebBook (webbook.nist.gov, "Constants of diatomic molecules"); the HCl higher terms (ωe ze, the v dependence
+     of B_v and D_v) are the WebBook's notes, from Rank, Rao et al. (1965). D₀ values: Huber and Herzberg (HF and Cl₂ as given in
+     the WebBook notes). Atomic masses: AME2020 (Wang et al. 2021). Chlorine isotope abundances 75.76 % and 24.24 %: IUPAC (CIAAW).
+     Constants: CODATA 2018. */
+  const KE2 = 1.43996448, HC_EVNM = 1239.84198, CM_EV = 1.239841984e-4, U_KG = 1.66053906660e-27, EV_J = 1.602176634e-19;
+  const H_PL = 6.62607015e-34, HBAR = H_PL / (2 * Math.PI), C_MS = 299792458, KB_EV = 8.617333262e-5, C2 = 1.438776877; /* second radiation constant hc/k in cm K */
+  const MASS = { H: 1.00782503223, C: 12, N: 14.00307400443, O: 15.99491461957, F: 18.99840316273, Na: 22.9897692820, Cl35: 34.968852682, Cl37: 36.965902602 };
+  const ABUND = { Cl35: 0.7576, Cl37: 0.2424 };
+  const reduced = (m1, m2) => m1 * m2 / (m1 + m2);
+
+  /* Ionic bond, as OpenStax §9.1 builds it. Taking the electron from Na costs 5.14 eV and giving it to Cl returns 3.62 eV, so the
+     ion pair at large separation sits ΔE = 1.52 eV above the neutral atoms. The Coulomb energy −ke²/r pulls the ions together and
+     the exclusion principle pushes back when their electron clouds overlap. The book gives no formula for that repulsion; the demo
+     takes A/rⁿ (the Born form), with A chosen so the minimum is at the measured r₀ = 0.236 nm. Then the depth depends only on n:
+     U(r₀) = ΔE − (ke²/r₀)(1 − 1/n). Energies are relative to neutral Na and Cl at rest far apart. */
+  const NACL = { IE: 5.14, EA: 3.62, r0: 0.236, D: 4.26 };
+  const ionA = (n, r0 = NACL.r0) => KE2 * Math.pow(r0, n - 1) / n;
+  function ionTerms(r, n, rep = true) {
+    const dE = NACL.IE - NACL.EA, coul = -KE2 / r, ex = rep ? ionA(n) / Math.pow(r, n) : 0;
+    return { dE, coul, ex, U: dE + coul + ex };
+  }
+  const ionU = (r, n, rep = true) => ionTerms(r, n, rep).U;
+  /* the minimum of a function on [a, b] by golden section search */
+  function argmin(fn, a, b, tol = 1e-12) {
+    const g = (Math.sqrt(5) - 1) / 2; let c = b - g * (b - a), d = a + g * (b - a), fc = fn(c), fd = fn(d);
+    while (b - a > tol) { if (fc < fd) { b = d; d = c; fd = fc; c = b - g * (b - a); fc = fn(c); } else { a = c; c = d; fc = fd; d = a + g * (b - a); fd = fn(d); } }
+    return (a + b) / 2;
+  }
+  function ionMin(n) { const r = argmin((x) => ionU(x, n), 0.12, 1.0); return { r0: r, U0: ionU(r, n), D: -ionU(r, n) }; }
+  /* the exponent that makes the depth equal a dissociation energy D */
+  const nForD = (D = NACL.D) => (KE2 / NACL.r0) / (KE2 / NACL.r0 - (NACL.IE - NACL.EA) - D);
+  /* where the ion pair and the neutral atoms have the same energy: −ke²/r + ΔE = 0 without the repulsion, and the exact root with it */
+  const crossBare = () => KE2 / (NACL.IE - NACL.EA);
+  function crossR(n) { let a = NACL.r0, b = 5; for (let i = 0; i < 200; i++) { const m = (a + b) / 2; if (ionU(m, n) < 0) a = m; else b = m; } return (a + b) / 2; }
+
+  /* Covalent bonds and molecular constants (ground electronic state). we, wexe, weye, weze, Be, ae in cm⁻¹; re in nm; D0 in eV.
+     Optional: g2, g3 (the (v + 1/2)² and (v + 1/2)³ terms of B_v), Dc, d1, d2 (centrifugal distortion D_v and its v dependence).
+     When Dc is not given, D_v = 4B_e³/ωe² (Kratzer's relation). polar: has an electric dipole, so it absorbs in the infrared. */
+  const MOLS = {
+    H2: { name: 'H₂', a: 'H', b: 'H', m1: MASS.H, m2: MASS.H, we: 4401.213, wexe: 121.336, Be: 60.8530, ae: 3.0622, Dc: 0.0471, re: 0.074144, D0: 4.4781, polar: false },
+    N2: { name: 'N₂', a: 'N', b: 'N', m1: MASS.N, m2: MASS.N, we: 2358.57, wexe: 14.324, Be: 1.998241, ae: 0.017318, re: 0.1097685, D0: 9.759, polar: false },
+    O2: { name: 'O₂', a: 'O', b: 'O', m1: MASS.O, m2: MASS.O, we: 1580.193, wexe: 11.981, Be: 1.44563, ae: 0.01593, re: 0.120752, D0: 5.115, polar: false },
+    CO: { name: 'CO', a: 'C', b: 'O', m1: MASS.C, m2: MASS.O, we: 2169.81358, wexe: 13.28831, Be: 1.93128087, ae: 0.01750441, re: 0.1128323, D0: 11.09, polar: true },
+    HF: { name: 'HF', a: 'H', b: 'F', m1: MASS.H, m2: MASS.F, we: 4138.32, wexe: 89.88, Be: 20.9557, ae: 0.798, re: 0.0916808, D0: 47333 * CM_EV, polar: true },
+    HCl: { name: 'H³⁵Cl', a: 'H', b: 'Cl', m1: MASS.H, m2: MASS.Cl35, we: 2990.9463, wexe: 52.8186, weye: 0.22437, weze: -0.01218, Be: 10.593416, ae: 0.307181, g2: 0.0017724, g3: -0.0001201,
+      Dc: 5.3194e-4, d1: -7.510e-6, d2: 4.00e-7, re: 0.1274552, D0: 4.4336, polar: true },
+    Cl2: { name: '³⁵Cl₂', a: 'Cl', b: 'Cl', m1: MASS.Cl35, m2: MASS.Cl35, we: 559.72, wexe: 2.675, Be: 0.24399, ae: 0.00149, re: 0.19879, D0: 2.479349, polar: false },
+  };
+  /* The same molecule with one atom replaced by another isotope (Born–Oppenheimer: the potential is unchanged, so each constant
+     scales with a power of ρ = √(μ/μ_i)). */
+  function isotope(mol, m2, name) {
+    const r = Math.sqrt(reduced(mol.m1, mol.m2) / reduced(mol.m1, m2)), o = Object.assign({}, mol, { name, m2 });
+    const sc = { we: 1, wexe: 2, weye: 3, weze: 4, Be: 2, ae: 3, g2: 4, g3: 5, Dc: 4, d1: 5, d2: 6 };
+    for (const k in sc) if (mol[k] != null) o[k] = mol[k] * Math.pow(r, sc[k]);
+    return o;
+  }
+  const HCL37 = isotope(MOLS.HCl, MASS.Cl37, 'H³⁷Cl');
+  const mu = (m) => reduced(m.m1, m.m2);
+  /* vibrational term G(v), rotational constant B_v and centrifugal constant D_v, all in cm⁻¹ */
+  const G = (m, v) => { const x = v + 0.5; return m.we * x - m.wexe * x * x + (m.weye || 0) * x ** 3 + (m.weze || 0) * x ** 4; };
+  const Bv = (m, v) => { const x = v + 0.5; return m.Be - m.ae * x + (m.g2 || 0) * x * x + (m.g3 || 0) * x ** 3; };
+  const Dv = (m, v) => { const x = v + 0.5; return m.Dc != null ? m.Dc + (m.d1 || 0) * x + (m.d2 || 0) * x * x : 4 * m.Be ** 3 / m.we ** 2; };
+  /* term value of the level (v, J) in cm⁻¹ above the bottom of the well. model 'book': the rigid rotor and harmonic oscillator of
+     §9.2, with hf the measured 0 → 1 spacing and ħ²/2I = B₀; model 'full': anharmonic, B depends on v, centrifugal distortion */
+  const nuVib = (m) => G(m, 1) - G(m, 0);
+  function term(m, v, J, model = 'full') {
+    if (model === 'book') return nuVib(m) * (v + 0.5) + Bv(m, 0) * J * (J + 1);
+    const jj = J * (J + 1); return G(m, v) + Bv(m, v) * jj - Dv(m, v) * jj * jj;
+  }
+  /* a transition from (v, J) to (v + dv, J + dJ): wavenumber in cm⁻¹ (negative means emission), with its selection rule verdict */
+  function transition(m, v, J, dv, dJ, model = 'full') {
+    const J2 = J + dJ, v2 = v + dv;
+    const allowed = m.polar && J2 >= 0 && Math.abs(dJ) === 1 && Math.abs(dv) <= 1;
+    const why = !m.polar ? 'no electric dipole' : J2 < 0 ? 'no level' : Math.abs(dJ) !== 1 ? 'Δl must be ±1' : Math.abs(dv) > 1 ? 'Δn must be 0 or ±1' : '';
+    const nu = J2 < 0 ? NaN : term(m, v2, J2, model) - term(m, v, J, model);
+    return { nu, eV: nu * CM_EV, um: 1e4 / nu, allowed, why };
+  }
+  /* rotational constant B (cm⁻¹) ↔ moment of inertia I (kg m²) ↔ bond length (nm); B = h/(8π²cI) with c in cm/s */
+  const IfromB = (B) => H_PL / (8 * Math.PI * Math.PI * C_MS * 100 * B);
+  const rFromB = (B, muU) => Math.sqrt(IfromB(B) / (muU * U_KG)) * 1e9;
+  /* force constant (N/m) from a vibration wavenumber (cm⁻¹): k = μ(2πcν̃)² */
+  const kFromNu = (nu, muU) => muU * U_KG * (2 * Math.PI * C_MS * 100 * nu) ** 2;
+  /* Morse potential through the measured r_e, ωe and D_e = D₀ + G(0): U = D_e(1 − e^(−a(r − r_e)))² − D_e, a = 2πcωe √(μ/2D_e).
+     The anti Morse curve (Sato 1955) U = (D_e/2)(e^(−2a(r − r_e)) + 2e^(−a(r − r_e))) is a model of the antibonding (spins
+     parallel) state, drawn for the idea only. */
+  const De = (m) => m.D0 + G(m, 0) * CM_EV;
+  const morseA = (m) => 2 * Math.PI * C_MS * 100 * m.we * Math.sqrt(mu(m) * U_KG / (2 * De(m) * EV_J)) * 1e-9; /* in 1/nm */
+  function morse(m, r) { const x = Math.exp(-morseA(m) * (r - m.re)), d = De(m); return d * (1 - x) * (1 - x) - d; }
+  function antiMorse(m, r) { const x = Math.exp(-morseA(m) * (r - m.re)), d = De(m); return d / 2 * (x * x + 2 * x); }
+  /* the energy of vibrational level v measured from separated atoms: −D_e + G(v) */
+  const levelE = (m, v) => -De(m) + G(m, v) * CM_EV;
+
+  /* The HCl fundamental band (v = 0 → 1) in absorption. Line R(J): J → J + 1, P(J): J → J − 1, from the full term values.
+     Strength ∝ abundance × ν × (Boltzmann population of the lower level)/(2J + 1) × Hönl–London factor (J + 1 for R, J for P).
+     Left out: the vibrational dependence of the dipole moment (Herman–Wallis factor, a few percent difference between R and P
+     lines), the v = 1 → 2 hot band (population e^(−hcν/kT) < 10⁻⁵ at 300 K) and pressure broadening. Each line is drawn as a
+     Gaussian whose full width at half maximum is the spectrometer's resolution (the Doppler width at 300 K is about 0.006 cm⁻¹). */
+  function bandLines(T, iso = 'both', Jmax = 30) {
+    const sets = iso === '35' ? [[MOLS.HCl, 'H35Cl', 1]] : [[MOLS.HCl, 'H35Cl', ABUND.Cl35], [HCL37, 'H37Cl', ABUND.Cl37]], L = [];
+    for (const [m, nm, ab] of sets) {
+      let Q = 0; for (let J = 0; J <= 60; J++) Q += (2 * J + 1) * Math.exp(-C2 * (term(m, 0, J) - term(m, 0, 0)) / T);
+      for (let J = 0; J <= Jmax; J++) {
+        const pop = Math.exp(-C2 * (term(m, 0, J) - term(m, 0, 0)) / T) / Q;
+        const R = term(m, 1, J + 1) - term(m, 0, J); L.push({ iso: nm, br: 'R', J, m: J + 1, nu: R, S: ab * R * pop * (J + 1) });
+        if (J > 0) { const P = term(m, 1, J - 1) - term(m, 0, J); L.push({ iso: nm, br: 'P', J, m: -J, nu: P, S: ab * P * pop * J }); }
+      }
+    }
+    const top = Math.max(...L.map((l) => l.S)); L.forEach((l) => { l.S /= top; });
+    return L.sort((a, b) => a.nu - b.nu);
+  }
+  /* absorbance of the band at wavenumber nu, lines broadened to fwhm (area kept, so a wider slit gives lower, broader peaks) */
+  function absorb(L, nu, fwhm) { const s = fwhm / 2.354820045, k = 1 / (2 * s * s); let a = 0; for (const l of L) { const d = nu - l.nu; if (Math.abs(d) < 6 * s) a += l.S * Math.exp(-d * d * k); } return a / (s * Math.sqrt(2 * Math.PI)); }
+  /* the top of the displayed peak nearest nu: every local maximum of the absorbance within 12 cm⁻¹ (sampled every fwhm/20 or
+     0.01 cm⁻¹), the one closest to nu, refined by a parabola through the top three samples */
+  function peakNear(L, nu, fwhm) {
+    const h = Math.min(0.01, fwhm / 20), n = Math.round(12 / h), xs = (i) => nu + i * h, v = new Float64Array(2 * n + 1), near = L.filter((l) => Math.abs(l.nu - nu) < 13 + 3 * fwhm);
+    for (let i = -n; i <= n; i++) v[i + n] = absorb(near, xs(i), fwhm);
+    const top = Math.max(...v); let best = null;
+    for (let k = 1; k < 2 * n; k++) if (v[k] > v[k - 1] && v[k] >= v[k + 1] && v[k] > 1e-4 * top && (best == null || Math.abs(k - n) < Math.abs(best - n))) best = k;
+    if (best == null) return { nu, A: absorb(L, nu, fwhm) };
+    const fa = v[best - 1], f0 = v[best], fb = v[best + 1], den = fa - 2 * f0 + fb, x = xs(best - n) + (den < 0 ? 0.5 * h * (fa - fb) / den : 0);
+    return { nu: x, A: absorb(L, x, fwhm) };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VG = window.VDGear;
+  const S = { view: 'ion', preset: 'nacl', blind: false,
+    ion: { r: 0.236, n: 19, rep: true },
+    cov: { mol: 'H2', r: MOLS.H2.re, spin: 'bond', lev: true },
+    lev: { mol: 'HCl', model: 'book', dv: 1, l: 0, dl: 1 },
+    sp: { raw: 2906.25, nu: 2906.25, T: 300, res: 0.5, iso: 'both', lock: true } };
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
+  let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const dark = () => (VG ? VG.dark() : false);
+  const ASCII = { H2: 'H2', N2: 'N2', O2: 'O2', CO: 'CO', HF: 'HF', HCl: 'H35Cl', Cl2: '35Cl2' };
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
+      na: g('--na'), cl: g('--cl'), elec: g('--elec'), ion: g('--ion'), neutral: g('--neutral'), theory: g('--theory'), cursor: g('--cursor'), iso: g('--iso'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+  const lab = (c, s, x, y, o = {}) => { c.save(); c.fillStyle = o.c || T.muted; c.font = `${o.w || 400} ${(o.s || 10.5) * proj()}px ${o.m ? T.mono : T.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.bl || 'middle'; c.fillText(s, x, y); c.restore(); };
+  function lcdBox(x, y, w, h, text, name) {
+    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
+  }
+  function back(c, w, h) { if (VG) VG.backdrop(c, w, h); else { c.fillStyle = T.canvas; c.fillRect(0, 0, w, h); } }
+  const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+  function axes(c, x0, y0, w, h, xs, ys, xl, yl, HH, o = {}) {
+    const p = proj(), X = (v) => x0 + (v - xs[0]) / (xs[1] - xs[0]) * w, Y = (v) => y0 + h - (v - ys[0]) / (ys[1] - ys[0]) * h;
+    c.font = `${10 * p}px ${T.mono}`; c.strokeStyle = T.grid; c.fillStyle = T.muted; c.lineWidth = 1;
+    const sx = o.sx || nice((xs[1] - xs[0]) / Math.max(3, Math.min(8, w / (70 * p)))), sy = o.sy || nice((ys[1] - ys[0]) / 4);
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (let v = Math.ceil(xs[0] / sx - 1e-9) * sx; v <= xs[1] + 1e-9; v += sx) { c.beginPath(); c.moveTo(X(v), y0); c.lineTo(X(v), y0 + h); c.stroke(); c.fillText(String(+v.toPrecision(6)).replace('-', '−'), X(v), y0 + h + 4); }
+    if (!o.noY) { c.textAlign = 'right'; c.textBaseline = 'middle'; for (let v = Math.ceil(ys[0] / sy - 1e-9) * sy; v <= ys[1] + 1e-9; v += sy) { c.beginPath(); c.moveTo(x0, Y(v)); c.lineTo(x0 + w, Y(v)); c.stroke(); c.fillText(String(+v.toPrecision(6)).replace('-', '−'), x0 - 5, Y(v)); } }
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(xl, x0 + w / 2, HH - 2);
+    if (yl) { c.save(); c.translate(x0 - 40 * p, y0 + h / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore(); }
+    return { X, Y, x0, y0, w, h, xs, ys };
+  }
+  const plotLine = (c, A, fn, a, b, col, wd = 2, dash) => { const p = proj(); c.save(); c.beginPath(); c.rect(A.x0, A.y0, A.w, A.h); c.clip(); c.strokeStyle = col; c.lineWidth = wd * p; if (dash) c.setLineDash(dash.map((d) => d * p));
+    c.beginPath(); let first = true; const n = Math.max(60, Math.round(A.w)); for (let i = 0; i <= n; i++) { const x = a + (b - a) * i / n, y = fn(x); if (!isFinite(y)) { first = true; continue; } const py = Math.max(A.y0 - 2000, Math.min(A.y0 + A.h + 2000, A.Y(y))); if (first) { c.moveTo(A.X(x), py); first = false; } else c.lineTo(A.X(x), py); } c.stroke(); c.restore(); };
+  const dot = (c, x, y, r, col) => { c.fillStyle = col; c.beginPath(); c.arc(x, y, r, 0, 7); c.fill(); };
+  const rowsOf = (v) => (window.vdRows ? window.vdRows() : []).filter((r) => r.view === v);
+  const MAP = { pane: null, curve: null };
+
+  // ---------- ionic bond ----------
+  const ionCross = () => (S.ion.rep ? crossR(S.ion.n) : crossBare());
+  function ionGeom() {
+    const p = proj(), mR = W >= 640 ? 170 * p : 18 * p, xCl = 48 * p, sc = (W - mR - xCl - 22 * p) / 1.4;
+    return { p, xCl, sc, yc: H * 0.40 };
+  }
+  function drawIon() {
+    back(ctx, W, H); const g = ionGeom(), { p, xCl, sc, yc } = g, r = S.ion.r, ions = r < ionCross();
+    const base = Math.max(16 * p, Math.min(46 * p, H * 0.11, sc * 0.12)), xNa = xCl + r * sc;
+    const rCl = base * (ions ? 1 : 0.7), rNa = base * (ions ? 0.62 : 1);
+    if (VG) { VG.shadow(ctx, xCl, yc + rCl + 18 * p, rCl * 0.9, 4 * p, 0.6); VG.shadow(ctx, xNa, yc + rNa + 18 * p, rNa * 0.9, 4 * p, 0.6); }
+    /* the attraction between the ions, drawn as faint field lines */
+    if (ions) { ctx.save(); ctx.strokeStyle = T.ion; ctx.globalAlpha = 0.25; ctx.lineWidth = 1.2 * p; for (const k of [-1, -0.5, 0, 0.5, 1]) { ctx.beginPath(); ctx.moveTo(xNa - rNa * 0.9, yc + k * rNa * 0.7); ctx.bezierCurveTo(xNa - (xNa - xCl) * 0.35, yc + k * (rNa + rCl) * 0.9, xCl + (xNa - xCl) * 0.35, yc + k * (rNa + rCl) * 0.9, xCl + rCl * 0.9, yc + k * rCl * 0.7); ctx.stroke(); } ctx.restore(); }
+    const ball = (x, rr, col) => { if (VG) VG.ball(ctx, x, yc, rr, col); else dot(ctx, x, yc, rr, col); };
+    ball(xCl, rCl, T.cl); ball(xNa, rNa, T.na);
+    /* the valence electron: on sodium for neutral atoms, on chlorine for ions */
+    const ex = ions ? xCl + rCl * 0.72 : xNa - rNa * 0.72, ey = yc - (ions ? rCl : rNa) * 0.55;
+    ctx.save(); ctx.shadowColor = T.elec; ctx.shadowBlur = 8 * p; dot(ctx, ex, ey, 4.5 * p, T.elec); ctx.restore();
+    lab(ctx, 'e⁻', ex + 7 * p, ey - 8 * p, { c: T.elec, w: 700, s: 10 });
+    const sign = (x, s) => lab(ctx, s, x, yc, { c: '#ffffff', w: 700, s: 16, a: 'center' });
+    if (ions) { sign(xCl, '−'); sign(xNa, '+'); }
+    lab(ctx, ions ? 'Cl⁻' : 'Cl', xCl, yc + Math.max(rCl, rNa) + 34 * p, { a: 'center', c: T.ink, w: 700, s: 12 });
+    lab(ctx, ions ? 'Na⁺' : 'Na', xNa, yc + Math.max(rCl, rNa) + 34 * p, { a: 'center', c: T.ink, w: 700, s: 12 });
+    /* the separation bracket and the scale */
+    const by = yc + Math.max(rCl, rNa) + 56 * p; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(xCl, by - 5 * p); ctx.lineTo(xCl, by + 5 * p); ctx.moveTo(xCl, by); ctx.lineTo(xNa, by); ctx.moveTo(xNa, by - 5 * p); ctx.lineTo(xNa, by + 5 * p); ctx.stroke();
+    lab(ctx, `r = ${f(r, 3)} nm`, (xCl + xNa) / 2, by + 13 * p, { a: 'center', c: T.ink, m: true, s: 10.5 });
+    const ry = H - 46 * p; if (VG) VG.box(ctx, xCl - 10 * p, ry - 8 * p, 1.4 * sc + 20 * p, 26 * p, { color: dark() ? '#4a5563' : '#c9b48e', r: 3 });
+    ctx.strokeStyle = dark() ? '#e6edf5' : '#2b3644'; ctx.fillStyle = ctx.strokeStyle; ctx.lineWidth = 1;
+    for (let i = 0; i <= 140; i++) { const x = xCl + i / 100 * sc, len = i % 10 === 0 ? 10 : i % 5 === 0 ? 7 : 4; if (sc / 100 < 2.5 && i % 5) continue; ctx.beginPath(); ctx.moveTo(x, ry - 8 * p); ctx.lineTo(x, ry - 8 * p + len * p); ctx.stroke(); }
+    for (let i = 0; i <= 14; i += (sc < 260 ? 4 : 2)) lab(ctx, f(i / 10, 1), xCl + i / 10 * sc, ry + 9 * p, { a: 'center', c: dark() ? '#e6edf5' : '#2b3644', m: true, s: 9 });
+    lab(ctx, 'nm', xCl + 1.4 * sc + 14 * p, ry + 9 * p, { c: T.muted, s: 9 });
+    if (!S.blind) { const xc = xCl + ionCross() * sc; if (ionCross() < 1.4) { ctx.save(); ctx.setLineDash([3 * p, 3 * p]); ctx.strokeStyle = T.ion; ctx.beginPath(); ctx.moveTo(xc, ry - 12 * p); ctx.lineTo(xc, yc - 50 * p); ctx.stroke(); ctx.restore();
+      lab(ctx, 'ions below here', xc - 4 * p, yc - 58 * p, { a: 'right', c: T.ion, s: 9.5 }); } }
+    lab(ctx, 'sizes are only suggestive; the scale gives the separation of the centers', xCl - 8 * p, 18 * p, { s: 9.5 });
+    if (W >= 640) { const mx = W - 150 * p, mw = 124 * p, mh = 28 * p;
+      lcdBox(mx, 40 * p, mw, mh, `${f(r, 3)} nm`, 'separation r');
+      lcdBox(mx, 106 * p, mw, mh, `${f(ionU(r, S.ion.n, S.ion.rep), 3)} eV`, 'energy of Na⁺ + Cl⁻');
+      if (!S.blind) lcdBox(mx, 172 * p, mw, mh, ions ? 'ions' : 'atoms', 'lower energy'); }
+    MAP.pane = { toVal: (x) => (x - xCl) / sc, lo: 0.15, hi: 1.4 };
+  }
+  function curveIon() {
+    const p = proj(), c = cctx, L = 54 * p, Tp = 12 * p, B = 34 * p, w = CW - L - 14 * p, h = CH - Tp - B;
+    const A = axes(c, L, Tp, w, h, [0.1, 1.4], [-6, 3], 'separation r (nm)', 'U (eV)', CH);
+    c.save(); c.strokeStyle = T.muted; c.lineWidth = 1; c.beginPath(); c.moveTo(L, A.Y(0)); c.lineTo(L + w, A.Y(0)); c.stroke(); c.restore();
+    const n = S.ion.n, rep = S.ion.rep;
+    if (!S.blind) {
+      plotLine(c, A, () => 0, 0.1, 1.4, T.neutral, 2, [6, 4]);
+      plotLine(c, A, (r) => NACL.IE - NACL.EA - KE2 / r, 0.1, 1.4, T.theory, 1.3, [3, 3]);
+      if (rep) plotLine(c, A, (r) => ionA(n) / Math.pow(r, n), 0.1, 1.4, T.theory, 1.3, [1, 3]);
+      plotLine(c, A, (r) => ionU(r, n, rep), 0.1, 1.4, T.ion, 2.4);
+      const tx = L + w - 6 * p; c.textAlign = 'right'; c.font = `${10 * p}px ${T.mono}`;
+      c.fillStyle = T.ion; c.fillText('Na⁺ + Cl⁻', tx, A.Y(1.52) - 9 * p); c.fillStyle = T.neutral; c.textAlign = 'left'; c.fillText('Na + Cl (neutral atoms)', A.X(0.42), A.Y(0) - 9 * p); c.textAlign = 'right';
+      c.fillStyle = T.theory; c.fillText(rep ? 'dashed: ΔE − ke²/r and A/rⁿ' : 'dashed: ΔE − ke²/r', tx, A.Y(-4.2));
+    }
+    for (const q of rowsOf('ion')) dot(c, A.X(+q.r_nm), A.Y(+q.U_eV), 3.2 * p, T.ink);
+    const U = ionU(S.ion.r, n, rep); if (U > -6 && U < 3) { dot(c, A.X(S.ion.r), A.Y(U), 6 * p, T.cursor); }
+    MAP.curve = { toVal: (x) => 0.1 + (x - L) / w * 1.3, lo: 0.15, hi: 1.4 };
+  }
+
+  // ---------- covalent bond ----------
+  function covGeom() { const p = proj(), m = MOLS[S.cov.mol], mR = W >= 640 ? 170 * p : 18 * p, xA = 60 * p, sc = (W - mR - xA - 40 * p) / (4.2 * m.re); return { p, m, xA, sc, yc: H * 0.40 }; }
+  function drawCov() {
+    back(ctx, W, H); const { p, m, xA, sc, yc } = covGeom(), r = S.cov.r, xB = xA + r * sc, anti = S.cov.spin === 'anti' && S.cov.mol === 'H2';
+    const rad = (el) => ({ H: 0.30, C: 0.42, N: 0.40, O: 0.38, F: 0.36, Cl: 0.50 }[el] * m.re * sc);
+    const col = (el) => ({ H: '#d8dde4', C: '#4a4f57', N: '#3d66c9', O: '#d2452b', F: '#7cc24b', Cl: '#3f9a54' }[el]);
+    const ra = rad(m.a), rb = rad(m.b);
+    /* the shared electron cloud: bonding piles charge up between the nuclei, antibonding leaves a node there */
+    ctx.save(); const a0 = dark() ? 0.55 : 0.4;
+    const blob = (x, y, rx, ry, al) => { const g = ctx.createRadialGradient(x, y, 0, x, y, Math.max(rx, ry)); g.addColorStop(0, `rgba(105,160,255,${al})`); g.addColorStop(1, 'rgba(105,160,255,0)'); ctx.fillStyle = g; ctx.save(); ctx.translate(x, y); ctx.scale(rx / Math.max(rx, ry), ry / Math.max(rx, ry)); ctx.translate(-x, -y); ctx.beginPath(); ctx.arc(x, y, Math.max(rx, ry), 0, 7); ctx.fill(); ctx.restore(); };
+    blob(xA, yc, ra * 2.4, ra * 2.4, a0); blob(xB, yc, rb * 2.4, rb * 2.4, a0);
+    if (!anti) { const share = Math.exp(-Math.max(0, r - m.re) / (0.6 * m.re)); blob((xA + xB) / 2, yc, Math.max(10 * p, (xB - xA) * 0.55), (ra + rb) * 1.1, a0 * 1.2 * share); }
+    else { ctx.setLineDash([4 * p, 4 * p]); ctx.strokeStyle = T.muted; ctx.beginPath(); ctx.moveTo((xA + xB) / 2, yc - 70 * p); ctx.lineTo((xA + xB) / 2, yc + 70 * p); ctx.stroke(); ctx.setLineDash([]); }
+    ctx.restore();
+    if (VG) { VG.shadow(ctx, xA, yc + ra + 30 * p, ra, 4 * p, 0.5); VG.shadow(ctx, xB, yc + rb + 30 * p, rb, 4 * p, 0.5); VG.ball(ctx, xA, yc, ra, col(m.a)); VG.ball(ctx, xB, yc, rb, col(m.b)); }
+    else { dot(ctx, xA, yc, ra, col(m.a)); dot(ctx, xB, yc, rb, col(m.b)); }
+    lab(ctx, m.a, xA, yc, { a: 'center', c: m.a === 'H' ? '#2b3644' : '#ffffff', w: 700, s: 12 }); lab(ctx, m.b, xB, yc, { a: 'center', c: m.b === 'H' ? '#2b3644' : '#ffffff', w: 700, s: 12 });
+    if (S.cov.mol === 'H2') { const ay = yc - Math.max(ra, rb) - 40 * p;
+      if (anti) { lab(ctx, '↑', xA, ay, { a: 'center', c: T.elec, w: 700, s: 18 }); lab(ctx, '↑', xB, ay, { a: 'center', c: T.elec, w: 700, s: 18 }); lab(ctx, 'spins parallel: the exclusion principle keeps the electrons apart', xA - 20 * p, ay - 26 * p, { s: 9.5 }); }
+      else { lab(ctx, '↑↓', (xA + xB) / 2, ay, { a: 'center', c: T.elec, w: 700, s: 18 }); lab(ctx, 'spins opposite: both electrons can sit between the nuclei', xA - 20 * p, ay - 26 * p, { s: 9.5 }); } }
+    const by = yc + Math.max(ra, rb) + 52 * p; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(xA, by - 5 * p); ctx.lineTo(xA, by + 5 * p); ctx.moveTo(xA, by); ctx.lineTo(xB, by); ctx.moveTo(xB, by - 5 * p); ctx.lineTo(xB, by + 5 * p); ctx.stroke();
+    lab(ctx, `r = ${f(r, 3)} nm`, (xA + xB) / 2, by + 13 * p, { a: 'center', c: T.ink, m: true });
+    /* scale */
+    const ry = H - 46 * p, span = 4.2 * m.re, st = nice(span / 6); if (VG) VG.box(ctx, xA - 10 * p, ry - 8 * p, span * sc + 20 * p, 26 * p, { color: dark() ? '#4a5563' : '#c9b48e', r: 3 });
+    ctx.strokeStyle = dark() ? '#e6edf5' : '#2b3644'; ctx.lineWidth = 1;
+    for (let v = 0; v <= span + 1e-9; v += st / 5) { const big = Math.abs(v / st - Math.round(v / st)) < 1e-6; ctx.beginPath(); ctx.moveTo(xA + v * sc, ry - 8 * p); ctx.lineTo(xA + v * sc, ry - 8 * p + (big ? 10 : 4) * p); ctx.stroke(); if (big) lab(ctx, String(+v.toPrecision(4)), xA + v * sc, ry + 9 * p, { a: 'center', c: dark() ? '#e6edf5' : '#2b3644', m: true, s: 9 }); }
+    lab(ctx, 'nm', xA + span * sc + 14 * p, ry + 9 * p, { s: 9 });
+    lab(ctx, `${m.name}: atom sizes and the cloud are only suggestive`, xA - 40 * p, ry - 24 * p, { s: 9.5 });
+    if (W >= 640) { const mx = W - 150 * p, mw = 124 * p, mh = 28 * p; lcdBox(mx, 40 * p, mw, mh, `${f(r, 3)} nm`, 'separation r'); lcdBox(mx, 106 * p, mw, mh, `${f(covU(), 3)} eV`, 'energy U'); }
+    MAP.pane = { toVal: (x) => (x - xA) / sc, lo: covLo(), hi: covHi() };
+  }
+  const covLo = () => +(0.5 * MOLS[S.cov.mol].re).toFixed(3), covHi = () => +(4 * MOLS[S.cov.mol].re).toFixed(3);
+  const covU = () => { const m = MOLS[S.cov.mol]; return S.cov.spin === 'anti' && S.cov.mol === 'H2' ? antiMorse(m, S.cov.r) : morse(m, S.cov.r); };
+  function curveCov() {
+    const p = proj(), c = cctx, m = MOLS[S.cov.mol], d = De(m), L = 54 * p, Tp = 12 * p, B = 34 * p, w = CW - L - 14 * p, h = CH - Tp - B, lo = covLo(), hi = covHi();
+    const A = axes(c, L, Tp, w, h, [lo, hi], [-1.15 * d, 0.85 * d], 'separation r (nm)', 'U (eV)', CH);
+    c.save(); c.strokeStyle = T.muted; c.lineWidth = 1; c.beginPath(); c.moveTo(L, A.Y(0)); c.lineTo(L + w, A.Y(0)); c.stroke(); c.restore();
+    const anti = S.cov.mol === 'H2';
+    if (!S.blind) {
+      if (anti) plotLine(c, A, (r) => antiMorse(m, r), lo, hi, T.ion, S.cov.spin === 'anti' ? 2.4 : 1.4, S.cov.spin === 'anti' ? null : [5, 4]);
+      plotLine(c, A, (r) => morse(m, r), lo, hi, T.accent, S.cov.spin === 'anti' ? 1.4 : 2.4, S.cov.spin === 'anti' ? [5, 4] : null);
+      if (S.cov.lev) { const a = morseA(m); c.save(); c.beginPath(); c.rect(L, Tp, w, h); c.clip(); c.strokeStyle = T.theory; c.lineWidth = 1.2 * p; c.fillStyle = T.theory; c.font = `${9.5 * p}px ${T.mono}`; c.textBaseline = 'bottom';
+        for (let v = 0; v < 40; v++) { const E = levelE(m, v); if (E > -0.02 * d || (v > 0 && E <= levelE(m, v - 1))) break; const s = Math.sqrt((E + d) / d), r1 = m.re - Math.log(1 + s) / a, r2 = m.re - Math.log(1 - s) / a;
+          if (A.Y(levelE(m, 0)) - A.Y(E) > 0 && v > 0 && A.Y(levelE(m, v - 1)) - A.Y(E) < 3 * p) continue; c.beginPath(); c.moveTo(A.X(r1), A.Y(E)); c.lineTo(A.X(Math.min(r2, hi)), A.Y(E)); c.stroke(); if (v < 3) { c.textAlign = 'right'; c.fillText(`n = ${v}`, A.X(r1) - 5 * p, A.Y(E) + 4 * p); } }
+        c.restore(); }
+      c.textAlign = 'right'; c.font = `${10 * p}px ${T.mono}`; c.textBaseline = 'middle';
+      c.fillStyle = T.accent; c.fillText(anti ? 'spins opposite (Morse)' : `${m.name} (Morse curve)`, L + w - 6 * p, A.Y(-0.85 * d));
+      if (anti) { c.fillStyle = T.ion; c.fillText('spins parallel (model)', L + w - 6 * p, A.Y(0.6 * d)); }
+    }
+    for (const q of rowsOf('cov').filter((q) => q.molecule.startsWith(ASCII[S.cov.mol]))) dot(c, A.X(+q.r_nm), A.Y(+q.U_eV), 3.2 * p, T.ink);
+    const U = covU(); if (U < 0.85 * d) dot(c, A.X(S.cov.r), A.Y(U), 6 * p, T.cursor);
+    MAP.curve = { toVal: (x) => lo + (x - L) / w * (hi - lo), lo, hi };
+  }
+
+  // ---------- energy levels ----------
+  const levMol = () => MOLS[S.lev.mol];
+  const levTr = () => transition(levMol(), 0, S.lev.l, S.lev.dv, S.lev.dl, S.lev.model);
+  const brName = (dl) => (dl === 1 ? 'R' : dl === -1 ? 'P' : dl === 0 ? 'Q' : 'S');
+  function drawLev() {
+    back(ctx, W, H); const p = proj(), m = levMol(), model = S.lev.model, dv = S.lev.dv, Jm = 8, wide = W >= 640;
+    const x0 = 70 * p, x1 = wide ? W - 190 * p : W - 20 * p, top = 34 * p, bot = H - 26 * p;
+    const stacks = dv === 1 ? [0, 1] : [0], gap = 34 * p, sh = (bot - top - gap * (stacks.length - 1)) / stacks.length;
+    const Er = (v, J) => term(m, v, J, model) - term(m, v, 0, model), Emax = Er(0, Jm);
+    const yOf = (v, J) => { const k = stacks.indexOf(v); const yb = bot - k * (sh + gap); return yb - Er(v, J) / Emax * (sh - 12 * p); };
+    ctx.lineWidth = 1.5 * p;
+    for (const v of stacks) {
+      for (let J = 0; J <= Jm; J++) { const y = yOf(v, J); ctx.strokeStyle = T.ink; ctx.globalAlpha = J === S.lev.l && v === 0 || (v === dv && J === S.lev.l + S.lev.dl) ? 1 : 0.55; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke(); ctx.globalAlpha = 1;
+        if (J === Jm || (J >= 1 && yOf(v, J - 1) - y >= 10 * p && (J === Jm - 1 || y - yOf(v, J + 1) >= 10 * p))) lab(ctx, `l = ${J}`, x0 - 6 * p, y, { a: 'right', m: true, s: 9 }); }
+      lab(ctx, `n = ${v}, l = 0`, x0 - 6 * p, yOf(v, 0) + 10 * p, { a: 'right', w: 700, c: T.ink, s: 9.5 });
+    }
+    if (dv === 1) { const yb = yOf(0, Jm) - 4 * p, yt = yOf(1, 0) + 4 * p; ctx.save(); ctx.strokeStyle = T.muted; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(x0 + 20 * p, yb - 10 * p); ctx.lineTo(x0 + 20 * p, yt); ctx.stroke(); ctx.restore();
+      { const tx = x0 + (x1 - x0) * 0.47, ty = (yb + yt) / 2; ctx.save(); ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.88; ctx.beginPath(); ctx.roundRect(tx - 150 * p, ty - 10 * p, 300 * p, 20 * p, 6 * p); ctx.fill(); ctx.restore(); }
+      lab(ctx, S.blind ? 'the gap between n = 0 and n = 1 is not to scale' : `n = 0 to n = 1: ${f(term(m, 1, 0, model) - term(m, 0, 0, model), 1)} cm⁻¹ (gap not to scale)`, x0 + (x1 - x0) * 0.47, (yb + yt) / 2, { s: 9.5, a: 'center', c: T.ink }); }
+    /* faint arrows for every allowed line from l ≤ 7, P branch on the left, R branch on the right; the chosen one bold */
+    const span = x1 - x0, arrow = (xa, ya, yb2, col, wd, dash) => { ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = wd; if (dash) ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(xa, ya); ctx.lineTo(xa, yb2 + (yb2 < ya ? 7 : -7) * p); ctx.stroke(); ctx.setLineDash([]); const s = yb2 < ya ? 1 : -1; ctx.beginPath(); ctx.moveTo(xa, yb2); ctx.lineTo(xa - 4 * p, yb2 + s * 8 * p); ctx.lineTo(xa + 4 * p, yb2 + s * 8 * p); ctx.closePath(); ctx.fill(); ctx.restore(); };
+    if (m.polar) for (let J = 0; J <= 6; J++) for (const dl of [-1, 1]) { if (J + dl < 0) continue; const xa = dl < 0 ? x0 + span * (0.42 - J * 0.045) : x0 + span * (0.52 + J * 0.045); arrow(xa, yOf(0, J), yOf(dv, J + dl), dl < 0 ? T.iso : T.accent, 1 * p, null); }
+    const tr = levTr(), J2 = S.lev.l + S.lev.dl;
+    if (J2 >= 0 && J2 <= Jm) { const dl = S.lev.dl, xa = dl === -1 ? x0 + span * (0.42 - S.lev.l * 0.045) : dl === 1 ? x0 + span * (0.52 + S.lev.l * 0.045) : x0 + span * (dl === 0 ? 0.47 : 0.9);
+      arrow(xa, yOf(0, S.lev.l), yOf(dv, J2), tr.allowed ? T.cursor : T.ion, 3 * p, tr.allowed ? null : [5 * p, 4 * p]);
+      if (!tr.allowed) lab(ctx, '✕', xa + 8 * p, (yOf(0, S.lev.l) + yOf(dv, J2)) / 2, { c: T.ion, w: 700, s: 16 }); }
+    lab(ctx, 'P branch (Δl = −1)', x0 + span * 0.1, 16 * p, { c: T.iso, s: 9.5 }); lab(ctx, 'R branch (Δl = +1)', x0 + span * 0.6, 16 * p, { c: T.accent, s: 9.5 });
+    if (!m.polar) lab(ctx, `${m.name} has no electric dipole, so it neither absorbs nor emits these lines`, x0, H - 10 * p, { c: T.ion, w: 700, s: 10 });
+    if (wide) { const mx = W - 150 * p, mw = 124 * p, mh = 28 * p;
+      lcdBox(mx, 40 * p, mw, mh, tr.allowed ? `${f(tr.nu, 2)}` : 'forbidden', 'photon, cm⁻¹');
+      lcdBox(mx, 106 * p, mw, mh, tr.allowed ? `${f(tr.eV * 1000, 2)} meV` : '—', 'photon energy');
+      lcdBox(mx, 172 * p, mw, mh, tr.allowed ? (dv === 1 ? `${f(tr.um, 3)} μm` : `${f(1e4 / tr.nu, 1)} μm`) : '—', 'wavelength'); }
+    MAP.pane = null;
+  }
+  /* the lines of the chosen kind, with Boltzmann weights at 300 K for their heights */
+  function levLines() {
+    const m = levMol(), model = S.lev.model, dv = S.lev.dv, out = [];
+    const pop = (J) => (2 * J + 1) * Math.exp(-C2 * (term(m, 0, J, model) - term(m, 0, 0, model)) / 300);
+    for (let J = 0; J <= 14; J++) for (const dl of dv === 1 ? [-1, 1] : [1]) { if (J + dl < 0) continue; const t = transition(m, 0, J, dv, dl, model); out.push({ J, dl, nu: t.nu, s: pop(J) * (dl > 0 ? J + 1 : J) / (2 * J + 1) }); }
+    const mx = Math.max(...out.map((o) => o.s)); out.forEach((o) => { o.s /= mx; }); return out;
+  }
+  function curveLev() {
+    const p = proj(), c = cctx, L = 54 * p, Tp = 22 * p, B = 34 * p, w = CW - L - 14 * p, h = CH - Tp - B, m = levMol();
+    if (!m.polar) { lab(c, `${m.name}: no electric dipole, no absorption lines`, CW / 2, CH / 2, { a: 'center', c: T.muted, s: 12 }); return; }
+    const ls = levLines(), lo = Math.min(...ls.map((l) => l.nu)), hi = Math.max(...ls.map((l) => l.nu)), pad = (hi - lo) * 0.04;
+    const A = axes(c, L, Tp, w, h, [lo - pad, hi + pad], [0, 1.1], 'photon wavenumber (cm⁻¹)', 'relative strength', CH);
+    const tr = levTr();
+    for (const l of ls) { const sel = l.J === S.lev.l && l.dl === S.lev.dl; c.strokeStyle = sel ? T.cursor : l.dl < 0 ? T.iso : T.accent; c.lineWidth = (sel ? 3.5 : 2) * p; c.beginPath(); c.moveTo(A.X(l.nu), A.Y(0)); c.lineTo(A.X(l.nu), A.Y(l.s)); c.stroke(); }
+    if (S.lev.dv === 1 && !S.blind) { const g = term(m, 1, 0, S.lev.model) - term(m, 0, 0, S.lev.model); c.save(); c.setLineDash([3 * p, 3 * p]); c.strokeStyle = T.theory; c.beginPath(); c.moveTo(A.X(g), A.Y(0)); c.lineTo(A.X(g), A.Y(1.05)); c.stroke(); c.restore();
+      lab(c, 'no line at the band center', A.X(g), Tp - 10 * p, { a: 'center', c: T.theory, s: 9.5 }); }
+    if (!tr.allowed) lab(c, `chosen transition forbidden: ${tr.why}`, L + 6 * p, Tp - 10 * p, { c: T.ion, s: 9.5, w: 700 });
+    MAP.curve = null;
+  }
+
+  // ---------- spectrum ----------
+  const SP_LO = 2560, SP_HI = 3140;
+  let spCache = null;
+  function spData() {
+    const k = `${S.sp.T}|${S.sp.iso}|${S.sp.res}`; if (spCache && spCache.k === k) return spCache;
+    const L = bandLines(S.sp.T, S.sp.iso), dx = Math.min(0.02, S.sp.res / 8), n = Math.ceil((SP_HI - SP_LO) / dx) + 1, g = new Float32Array(n); let mx = 0;
+    for (let i = 0; i < n; i++) { g[i] = absorb(L, SP_LO + i * dx, S.sp.res); if (g[i] > mx) mx = g[i]; }
+    spCache = { k, L, dx, g, mx }; return spCache;
+  }
+  function spSet(raw) { S.sp.raw = Math.max(SP_LO, Math.min(SP_HI, raw)); const d = spData(); S.sp.nu = S.sp.lock ? Math.max(SP_LO, Math.min(SP_HI, peakNear(d.L, S.sp.raw, S.sp.res).nu)) : S.sp.raw; }
+  const spRel = (nu) => { const d = spData(); return absorb(d.L, nu, S.sp.res) / d.mx; };
+  function nearestLine(nu) { const d = spData(); let b = null; for (const l of d.L) if (l.S > 0.003 && (!b || Math.abs(l.nu - nu) < Math.abs(b.nu - nu))) b = l; return b; }
+  const lineName = (l) => `${l.br}(${l.J})`;
+  function drawSp() {
+    back(ctx, W, H); const p = proj(), d = spData(), L = 54 * p, Tp = 40 * p, B = 40 * p, w = W - L - 18 * p, h = H - Tp - B;
+    if (VG) VG.panel(ctx, L - 46 * p, 8 * p, w + 58 * p, H - 14 * p, { r: 10 });
+    const A = axes(ctx, L, Tp, w, h, [SP_LO, SP_HI], [0, 1.12], 'wavenumber (cm⁻¹)', 'relative absorbance', H, { sx: W < 560 ? 100 : 50, sy: 0.25 });
+    /* the trace: the largest value in each pixel column, so no line is lost between samples */
+    ctx.save(); ctx.beginPath(); ctx.rect(L, Tp, w, h); ctx.clip(); ctx.beginPath(); ctx.moveTo(L, A.Y(0));
+    const cols = Math.max(2, Math.round(w)); for (let i = 0; i <= cols; i++) { const a = SP_LO + (SP_HI - SP_LO) * i / cols, b = SP_LO + (SP_HI - SP_LO) * (i + 1) / cols; let v = 0; for (let k = Math.floor((a - SP_LO) / d.dx); k <= Math.ceil((b - SP_LO) / d.dx) && k < d.g.length; k++) if (k >= 0 && d.g[k] > v) v = d.g[k]; ctx.lineTo(L + i * w / cols, A.Y(v / d.mx)); }
+    ctx.lineTo(L + w, A.Y(0)); ctx.closePath(); ctx.fillStyle = dark() ? 'rgba(105,160,255,0.22)' : 'rgba(43,96,181,0.16)'; ctx.fill(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.3 * p; ctx.stroke(); ctx.restore();
+    /* wavelength along the top */
+    ctx.save(); ctx.strokeStyle = T.grid; ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    for (let um = 3.2; um <= 3.9; um += W < 560 ? 0.2 : 0.1) { const nu = 1e4 / um; if (nu < SP_LO || nu > SP_HI) continue; const x = A.X(nu); ctx.beginPath(); ctx.moveTo(x, Tp); ctx.lineTo(x, Tp - 5 * p); ctx.stroke(); ctx.fillText(`${um.toFixed(1)} μm`, x, Tp - 6 * p); }
+    ctx.restore();
+    if (!S.blind) { const sp = 2 * 10.4 * w / (SP_HI - SP_LO); if (sp > 22 * p) for (const l of d.L) if (l.iso === 'H35Cl' && l.S > 0.06) lab(ctx, lineName(l), A.X(l.nu), A.Y(Math.min(1.05, absorb(d.L, l.nu, S.sp.res) / d.mx)) - 8 * p, { a: 'center', s: 8.5, m: true });
+      const c0 = nuVib(MOLS.HCl); ctx.save(); ctx.setLineDash([3 * p, 3 * p]); ctx.strokeStyle = T.theory; ctx.beginPath(); ctx.moveTo(A.X(c0), A.Y(0)); ctx.lineTo(A.X(c0), A.Y(0.75)); ctx.stroke(); ctx.restore(); lab(ctx, 'band center', A.X(c0), A.Y(0.8), { a: 'center', c: T.theory, s: 9 }); }
+    for (const q of rowsOf('sp')) { const x = A.X(+q.nu_cm); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.moveTo(x, A.Y(0) + 1); ctx.lineTo(x - 4 * p, A.Y(0) + 8 * p); ctx.lineTo(x + 4 * p, A.Y(0) + 8 * p); ctx.closePath(); ctx.fill(); }
+    const x = A.X(S.sp.nu); ctx.save(); ctx.strokeStyle = T.cursor; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x, Tp); ctx.lineTo(x, Tp + h); ctx.stroke(); ctx.restore();
+    lab(ctx, `${f(S.sp.nu, 2)} cm⁻¹`, x + (x > L + w - 110 * p ? -6 : 6) * p, Tp + 12 * p, { a: x > L + w - 110 * p ? 'right' : 'left', c: T.cursor, m: true, w: 700, s: 10.5 });
+    lab(ctx, `simulated spectrum · T = ${S.sp.T} K · resolution ${f(S.sp.res, 2)} cm⁻¹`, L + 6 * p, Tp + 12 * p, { s: 9 });
+    MAP.pane = { toVal: (px) => SP_LO + (px - L) / w * (SP_HI - SP_LO), lo: SP_LO, hi: SP_HI, sp: true };
+  }
+  function curveSp() {
+    const p = proj(), c = cctx, d = spData(), L = 54 * p, Tp = 14 * p, B = 34 * p, w = CW - L - 14 * p, h = CH - Tp - B, half = Math.max(6, Math.min(16, 5 * S.sp.res + 6));
+    const lo = Math.max(SP_LO, S.sp.nu - half), hi = Math.min(SP_HI, lo + 2 * half), lo2 = hi - 2 * half;
+    const A = axes(c, L, Tp, w, h, [lo2, hi], [0, 1.12], 'wavenumber (cm⁻¹), close up around the cursor', 'absorbance', CH, { sy: 0.25 });
+    if (!S.blind) for (const l of d.L) if (l.nu > lo2 && l.nu < hi && l.S > 0.003) { c.strokeStyle = l.iso === 'H35Cl' ? T.accent : T.iso; c.globalAlpha = 0.6; c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(A.X(l.nu), A.Y(0)); c.lineTo(A.X(l.nu), A.Y(0) - 10 * p); c.stroke(); c.globalAlpha = 1;
+      if (A.X(2) - A.X(0) > 70 * p) lab(c, `${l.iso === 'H35Cl' ? 'H³⁵Cl' : 'H³⁷Cl'} ${lineName(l)}`, A.X(l.nu), Tp + 6 * p, { a: 'center', s: 8.5, c: l.iso === 'H35Cl' ? T.accent : T.iso }); }
+    plotLine(c, A, (nu) => absorb(d.L, nu, S.sp.res) / d.mx, lo2, hi, T.accent, 2);
+    const x = A.X(S.sp.nu); c.save(); c.strokeStyle = T.cursor; c.lineWidth = 2 * p; c.beginPath(); c.moveTo(x, Tp); c.lineTo(x, Tp + h); c.stroke(); c.restore();
+    dot(c, x, A.Y(spRel(S.sp.nu)), 4.5 * p, T.cursor);
+    MAP.curve = { toVal: (px) => lo2 + (px - L) / w * (hi - lo2), lo: SP_LO, hi: SP_HI, sp: true };
+  }
+
+  function redraw() {
+    if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH);
+    ({ ion: drawIon, cov: drawCov, lev: drawLev, sp: drawSp })[S.view](); ({ ion: curveIon, cov: curveCov, lev: curveLev, sp: curveSp })[S.view](); readouts();
+    $('clock').textContent = S.view === 'ion' ? `r = ${f(S.ion.r, 3)} nm` : S.view === 'cov' ? `r = ${f(S.cov.r, 3)} nm` : S.view === 'sp' ? `${f(S.sp.nu, 2)} cm⁻¹` : `${levMol().name}`;
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>', bl = (v) => (S.blind ? hide : v);
+    let o = '';
+    if (S.view === 'ion') { const t = ionTerms(S.ion.r, S.ion.n, S.ion.rep), mn = S.ion.rep ? ionMin(S.ion.n) : null;
+      o = dd('Separation r', `${f(S.ion.r, 3)} nm`) + dd('Energy of Na⁺ + Cl⁻', `${f(t.U, 3)} eV`) + dd('Lower energy state', bl(S.ion.r < ionCross() ? 'ions Na⁺ Cl⁻' : 'neutral atoms'))
+        + dd('Cost of the transfer ΔE', bl(`${f(t.dE, 2)} eV`)) + dd('Coulomb −ke²/r', bl(`${f(t.coul, 3)} eV`)) + dd('Repulsion A/rⁿ', bl(S.ion.rep ? `${f(t.ex, 3)} eV` : 'off'))
+        + dd('Model minimum r₀', bl(mn ? `${f(mn.r0, 3)} nm` : 'none: the ions collapse')) + dd('Model dissociation energy', bl(mn ? `${f(mn.D, 3)} eV` : '—'))
+        + dd('Transfer pays off below', bl(`${f(ionCross(), 3)} nm`)) + dd('Measured (OpenStax §9.1)', 'r₀ 0.236 nm, D 4.26 eV');
+    } else if (S.view === 'cov') { const m = MOLS[S.cov.mol];
+      o = dd('Molecule', m.name) + dd('Separation r', `${f(S.cov.r, 3)} nm`) + dd('Energy U', `${f(covU(), 3)} eV`)
+        + dd('Bond length r_e', bl(`${f(m.re, 4)} nm`)) + dd('Well depth D_e', bl(`${f(De(m), 3)} eV`)) + dd('Zero point energy', bl(`${f(G(m, 0) * CM_EV, 3)} eV`))
+        + dd('Dissociation energy D₀', bl(`${f(m.D0, 3)} eV`)) + dd('Vibration ωe', bl(`${f(m.we, 1)} cm⁻¹`)) + dd('Force constant k', bl(`${f(kFromNu(m.we, mu(m)), 0)} N/m`))
+        + dd('Reduced mass μ', `${f(mu(m), 4)} u`) + (S.cov.mol === 'H2' ? dd('OpenStax §9.1 for H₂', '0.074 nm, 4.52 eV') : '');
+    } else if (S.view === 'lev') { const m = levMol(), tr = levTr(), B0 = Bv(m, 0);
+      o = dd('Molecule', m.name) + dd('Model', S.lev.model === 'book' ? 'rigid rotor and harmonic' : 'measured constants') + dd('Transition', `n 0 → ${S.lev.dv}, l ${S.lev.l} → ${S.lev.l + S.lev.dl}`)
+        + dd('Allowed?', tr.allowed ? 'yes' : `no: ${tr.why}`) + dd('Photon wavenumber', tr.allowed || isFinite(tr.nu) ? `${f(tr.nu, 3)} cm⁻¹` : '—') + dd('Photon energy', isFinite(tr.nu) ? `${f(tr.eV * 1000, 3)} meV` : '—')
+        + dd('Frequency', isFinite(tr.nu) ? `${f(tr.nu * C_MS * 100 / 1e12, 3)} THz` : '—') + dd('hf (n = 0 → 1)', bl(`${f(nuVib(m), 2)} cm⁻¹, ${f(nuVib(m) * CM_EV * 1000, 1)} meV`))
+        + dd('ħ²/2I = B₀', bl(`${f(B0, 4)} cm⁻¹, ${f(B0 * CM_EV * 1000, 4)} meV`)) + dd('Moment of inertia I', bl(`${(IfromB(B0) * 1e47).toFixed(4)} × 10⁻⁴⁷ kg m²`));
+    } else { const l = nearestLine(S.sp.nu);
+      o = dd('Cursor', `${f(S.sp.nu, 2)} cm⁻¹`) + dd('Wavelength', `${f(1e4 / S.sp.nu, 4)} μm`) + dd('Relative absorbance', f(spRel(S.sp.nu), 3)) + dd('Locked to a peak', S.sp.lock ? 'yes' : 'no')
+        + dd('Nearest line', bl(l ? `${l.iso === 'H35Cl' ? 'H³⁵Cl' : 'H³⁷Cl'} ${lineName(l)} at ${f(l.nu, 3)} cm⁻¹` : '—')) + dd('Band center H³⁵Cl', bl(`${f(nuVib(MOLS.HCl), 3)} cm⁻¹`))
+        + dd('Gas', `HCl at ${S.sp.T} K, ${S.sp.iso === 'both' ? 'natural chlorine' : '³⁵Cl only'}`) + dd('Reduced mass H³⁵Cl', `${f(mu(MOLS.HCl), 6)} u`) + dd('Reduced mass H³⁷Cl', `${f(mu(HCL37), 6)} u`);
+    }
+    $('out').innerHTML = o;
+  }
+
+  // ---------- controls ----------
+  const press = (sel, test) => { for (const b of document.querySelectorAll(sel)) b.setAttribute('aria-pressed', String(test(b))); };
+  function sync() {
+    $('sRi').value = S.ion.r; $('oRi').textContent = `${f(S.ion.r, 3)} nm`; $('sN').value = S.ion.n; $('oN').textContent = f(S.ion.n, 1); $('rep').checked = S.ion.rep; $('sN').disabled = !S.ion.rep;
+    const m = MOLS[S.cov.mol]; $('sRc').min = covLo(); $('sRc').max = covHi(); $('sRc').value = S.cov.r; $('oRc').textContent = `${f(S.cov.r, 3)} nm`;
+    press('#molSeg button', (b) => b.dataset.m === S.cov.mol); press('#spinSeg button', (b) => b.dataset.s === S.cov.spin); $('spinRow').hidden = S.cov.mol !== 'H2'; $('showLev').checked = S.cov.lev;
+    press('#levMolSeg button', (b) => b.dataset.m === S.lev.mol); press('#modelSeg button', (b) => b.dataset.k === S.lev.model); press('#dvSeg button', (b) => +b.dataset.d === S.lev.dv); press('#dlSeg button', (b) => +b.dataset.d === S.lev.dl);
+    $('sL').value = S.lev.l; $('oL').textContent = S.lev.l;
+    $('sNu').value = S.sp.raw; $('oNu').textContent = `${f(S.sp.nu, 2)} cm⁻¹`; $('sT').value = S.sp.T; $('oT').textContent = `${S.sp.T} K`; $('sRes').value = S.sp.res; $('oRes').textContent = `${f(S.sp.res, 2)} cm⁻¹`;
+    press('#isoSeg button', (b) => b.dataset.i === S.sp.iso); $('lock').checked = S.sp.lock;
+    press('#presets button', (b) => b.dataset.p === S.preset);
+    void m;
+  }
+  const PRESETS = {
+    nacl: { view: 'ion', hint: 'A sodium ion and a chloride ion at the measured separation of the NaCl molecule, 0.236 nm. With the repulsion exponent n = 19 the depth of the well matches the measured dissociation energy, 4.26 eV.', set: () => Object.assign(S.ion, { r: 0.236, n: 19, rep: true }) },
+    naclApart: { view: 'ion', hint: 'The ions 1.2 nm apart. Here the ion pair has more energy than neutral atoms: the 1.52 eV it cost to move the electron is more than the Coulomb energy gives back. Bring them closer and find where the transfer starts to pay off.', set: () => Object.assign(S.ion, { r: 1.2, n: 19, rep: true }) },
+    h2: { view: 'cov', hint: 'H₂ at its bond length, 0.0741 nm. Both electrons, with opposite spins, sit mostly between the protons and pull them together. Stretch the bond and read the energy; the bottom of the well is −D_e and the molecule\'s lowest level sits a zero point energy above it.', set: () => Object.assign(S.cov, { mol: 'H2', r: 0.074, spin: 'bond', lev: true }) },
+    h2anti: { view: 'cov', hint: 'Two hydrogen atoms whose electrons have parallel spins. The exclusion principle keeps the electrons out of the region between the protons, the protons repel, and there is no bond at any separation.', set: () => Object.assign(S.cov, { mol: 'H2', r: 0.074, spin: 'anti', lev: false }) },
+    levels: { view: 'lev', hint: 'The vibration and rotation levels of HCl in the book\'s model. A photon of the infrared band raises n by one and changes l by one, up (R branch) or down (P branch). Try Δl = 0 or +2 and see why they are forbidden.', set: () => Object.assign(S.lev, { mol: 'HCl', model: 'book', dv: 1, l: 0, dl: 1 }) },
+    band: { view: 'sp', hint: 'The infrared absorption band of HCl gas at room temperature, as a spectrometer with a resolution of 0.5 cm⁻¹ would record it. The lines come in two branches with a gap at the center, where the missing line would be.', set: () => { Object.assign(S.sp, { T: 300, res: 0.5, iso: 'both', lock: true }); spSet(2906.25); } },
+    isotopes: { view: 'sp', hint: 'Look closely: each line is a pair. Natural chlorine is 76 % ³⁵Cl and 24 % ³⁷Cl, and the heavier isotope gives a slightly larger reduced mass, so its lines sit a little lower. The close up shows one pair.', set: () => { Object.assign(S.sp, { T: 300, res: 0.2, iso: 'both', lock: true }); spSet(2944.91); } },
+    hot: { view: 'sp', hint: 'The same gas at 1000 K. More molecules sit in high rotation levels, so the strongest lines move away from the center and the band spreads out. The line positions do not move.', set: () => { Object.assign(S.sp, { T: 1000, res: 0.5, iso: 'both', lock: true }); spSet(2981); } },
+  };
+  function setView(v) {
+    S.view = v; press('#viewSeg button', (b) => b.dataset.v === v); $('stage').className = `stage v-${v}`;
+    $('cardIon').hidden = v !== 'ion'; $('cardCov').hidden = v !== 'cov'; $('cardLev').hidden = v !== 'lev'; $('cardSp').hidden = v !== 'sp';
+    $('units').textContent = v === 'ion' || v === 'cov' ? 'r in nm · U in eV, from separated neutral atoms' : v === 'lev' ? 'wavenumbers in cm⁻¹ · 1 cm⁻¹ = 0.124 meV' : 'wavenumber in cm⁻¹ · simulated spectrum';
+    can.setAttribute('aria-label', { ion: 'A sodium and a chlorine atom on a scale in nanometres. Drag the sodium, or use the arrow keys, to change their separation.', cov: 'Two atoms sharing an electron cloud, on a scale in nanometres. Drag the right hand atom, or use the arrow keys, to change the bond length.', lev: 'An energy level diagram: rotation levels l = 0 to 8 for vibration levels n = 0 and n = 1, with arrows for the allowed transitions.', sp: 'The infrared absorption spectrum of HCl with a movable cursor. Drag, or use the arrow keys, to move the cursor.' }[v]);
+    can.style.cursor = v === 'lev' ? 'default' : 'ew-resize';
+    window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
+    sync(); redraw();
+  }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); setView(c.view); }
+  const custom = () => { S.preset = 'custom'; sync(); redraw(); };
+  const setR = (v) => { if (S.view === 'ion') S.ion.r = +Math.max(0.15, Math.min(1.4, v)).toFixed(3); else if (S.view === 'cov') S.cov.r = +Math.max(covLo(), Math.min(covHi(), v)).toFixed(3); };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
+  $('sRi').addEventListener('input', (e) => { S.ion.r = +e.target.value; custom(); });
+  $('sN').addEventListener('input', (e) => { S.ion.n = +e.target.value; custom(); });
+  $('rep').addEventListener('change', (e) => { S.ion.rep = e.target.checked; custom(); });
+  $('molSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { S.cov.mol = b.dataset.m; S.cov.r = +MOLS[b.dataset.m].re.toFixed(3); if (S.cov.mol !== 'H2') S.cov.spin = 'bond'; custom(); } });
+  $('sRc').addEventListener('input', (e) => { S.cov.r = +e.target.value; custom(); });
+  $('spinSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.cov.spin = b.dataset.s; custom(); } });
+  $('showLev').addEventListener('change', (e) => { S.cov.lev = e.target.checked; custom(); });
+  $('levMolSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { S.lev.mol = b.dataset.m; custom(); } });
+  $('modelSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) { S.lev.model = b.dataset.k; custom(); } });
+  $('dvSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-d]'); if (b) { S.lev.dv = +b.dataset.d; custom(); } });
+  $('dlSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-d]'); if (b) { S.lev.dl = +b.dataset.d; custom(); } });
+  $('sL').addEventListener('input', (e) => { S.lev.l = +e.target.value; custom(); });
+  $('sNu').addEventListener('input', (e) => { spSet(+e.target.value); custom(); });
+  $('sT').addEventListener('input', (e) => { S.sp.T = +e.target.value; spSet(S.sp.raw); custom(); });
+  $('sRes').addEventListener('input', (e) => { S.sp.res = +e.target.value; spSet(S.sp.raw); custom(); });
+  $('isoSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-i]'); if (b) { S.sp.iso = b.dataset.i; spSet(S.sp.raw); custom(); } });
+  $('lock').addEventListener('change', (e) => { S.sp.lock = e.target.checked; spSet(S.sp.lock ? S.sp.raw : S.sp.nu); custom(); });
+  /* dragging on the picture or on the graph */
+  function drag(el, which) {
+    let on = false; const at = (e) => { const M = MAP[which]; if (!M) return; const r = el.getBoundingClientRect(), v = M.toVal(e.clientX - r.left); if (M.sp) spSet(v); else setR(v); custom(); };
+    el.addEventListener('pointerdown', (e) => { if (!MAP[which]) return; on = true; try { el.setPointerCapture(e.pointerId); } catch (_) {} at(e); });
+    el.addEventListener('pointermove', (e) => { if (on) at(e); });
+    const end = () => { on = false; }; el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
+  }
+  drag(can, 'pane'); drag(cur, 'curve');
+  /* arrow keys: separation in steps of 0.001 nm (Shift 0.01); cursor to the next peak when locked, else 0.05 cm⁻¹ (Shift 1); level l */
+  function key(e) {
+    const d = e.key === 'ArrowRight' || e.key === 'ArrowUp' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -1 : 0; if (!d) return; e.preventDefault();
+    if (S.view === 'ion') setR(S.ion.r + d * (e.shiftKey ? 0.01 : 0.001)); else if (S.view === 'cov') setR(S.cov.r + d * (e.shiftKey ? 0.01 : 0.001));
+    else if (S.view === 'lev') S.lev.l = Math.max(0, Math.min(7, S.lev.l + d));
+    else if (S.sp.lock) { const d0 = spData(), now = S.sp.nu; for (let k = 1; k < 400; k++) { const c = peakNear(d0.L, now + d * k * 0.25, S.sp.res).nu; if ((c - now) * d > 0.15) { S.sp.raw = now + d * k * 0.25; S.sp.nu = c; break; } } }
+    else spSet(S.sp.raw + d * (e.shiftKey ? 1 : 0.05));
+    custom();
+  }
+  can.addEventListener('keydown', key); cur.addEventListener('keydown', key);
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
+
+  // ---------- readings ----------
+  window.vdVersion = 'molecules@2026-10-24';
+  const SHOW = { ion: [['molecule', 'molecule'], ['r_nm', 'r (nm)'], ['U_eV', 'U (eV)']], cov: [['molecule', 'molecule'], ['r_nm', 'r (nm)'], ['U_eV', 'U (eV)']], lev: [], sp: [['nu_cm', 'ν (cm⁻¹)'], ['absorbance', 'absorbance']] };
+  const WS = { ion: 'molecular-bonds', cov: 'molecular-bonds', sp: 'hcl-spectrum' };
+  window.vdShowCols = SHOW.ion;
+  window.vdWorksheet = () => WS[S.view] || 'molecular-bonds';
+  window.vdReadingRow = () => {
+    if (S.view === 'lev') return 'The Energy levels view has nothing to record: measure the lines in the HCl spectrum view.';
+    const other = (window.vdRows ? window.vdRows() : []).find((r) => WS[r.view] !== WS[S.view]);
+    if (other) return `These readings are for the ${WS[other.view] === 'hcl-spectrum' ? 'HCl spectrum' : 'bonds'} worksheet: export them or clear them first.`;
+    window.vdShowCols = SHOW[S.view];
+    if (S.view === 'ion') return { view: 'ion', molecule: S.ion.rep ? `NaCl ion pair, n = ${S.ion.n}` : 'NaCl ion pair, no repulsion', r_nm: f(S.ion.r, 3).replace('−', '-'), U_eV: f(ionU(S.ion.r, S.ion.n, S.ion.rep), 3).replace('−', '-'), n: S.ion.rep ? S.ion.n : '' };
+    if (S.view === 'cov') return { view: 'cov', molecule: ASCII[S.cov.mol] + (S.cov.mol === 'H2' ? (S.cov.spin === 'anti' ? ' spins parallel' : ' spins opposite') : ''), r_nm: f(S.cov.r, 3), U_eV: f(covU(), 3).replace('−', '-'), n: '' };
+    return { view: 'sp', nu_cm: f(S.sp.nu, 2), absorbance: f(spRel(S.sp.nu), 3), T_K: S.sp.T, resolution_cm: f(S.sp.res, 2), chlorine: S.sp.iso === 'both' ? 'natural' : '35Cl only', locked: S.sp.lock ? 'peak' : 'cursor' };
+  };
+
+  // ---------- about ----------
+  $('aboutIon').textContent = 'Ionic bond (OpenStax §9.1): taking the outer electron from sodium costs its ionization energy, 5.14 eV, and giving it to chlorine returns the electron affinity, 3.62 eV, so the ions Na⁺ and Cl⁻ far apart have ΔE = 1.52 eV more energy than the neutral atoms. Brought to a separation r they gain the Coulomb energy −ke²/r (point charges). When their electron clouds overlap the exclusion principle pushes them apart. The book describes this repulsion but gives no formula, so the demo uses A/rⁿ with A chosen to put the minimum at the measured separation r₀ = 0.236 nm; the exponent n sets how stiff the repulsion is and how deep the well is. With n = 19 the depth matches the measured dissociation energy, 4.26 eV. Left out: the polarization of each ion by the other, and the motion of the nuclei (the zero point energy, about 0.02 eV). Energies are measured from neutral Na and Cl at rest far apart; the neutral atoms are taken not to interact.';
+  $('aboutCov').textContent = 'Covalent bond (OpenStax §9.1): two atoms share a pair of electrons. The curve is a Morse potential U = D_e(1 − e^(−a(r − r_e)))² − D_e, a model with three measured inputs: the bond length r_e, the vibration wavenumber ωe (which fixes a = 2πcωe√(μ/2D_e)) and the well depth D_e = D₀ + G(0), where D₀ is the measured dissociation energy and G(0) the zero point energy of the lowest vibration level (constants from Huber and Herzberg 1979 via the NIST Chemistry WebBook). The levels drawn in the well use the measured ωe and ωe xe. The parallel spin curve for H₂ is Sato\'s anti Morse form, a model of the repulsive (antibonding) state, shown for the idea only. OpenStax quotes 0.074 nm and 4.52 eV for H₂; the spectroscopic values are r_e = 0.0741 nm and D₀ = 4.478 eV (D_e = 4.747 eV).';
+  $('aboutLev').textContent = 'Energy levels (OpenStax §9.2): in the book\'s model the molecule vibrates as a harmonic oscillator, E_vib = (n + 1/2)hf, and turns as a rigid rotor, E_rot = l(l + 1)ħ²/2I with I = μr² and μ the reduced mass. Here hf is the measured spacing of n = 0 and n = 1 and ħ²/2I = B₀ (the measured rotational constant of n = 0). A photon carries one unit of angular momentum, so l must change by 1 (Δl = ±1); in the harmonic model n changes by 1 or not at all, and only molecules with an electric dipole (HCl, HF, CO, not N₂) absorb. "Measured constants" uses the full term values: anharmonic vibration G(v) = ωe(v + 1/2) − ωe xe(v + 1/2)² + ..., a rotational constant B_v that falls as v rises, and centrifugal stretching D_v [l(l + 1)]². Wavenumbers are in cm⁻¹; 1 cm⁻¹ is 0.12398 meV.';
+  $('aboutSp').textContent = 'HCl spectrum: the v = 0 → 1 band of HCl gas, simulated from the measured spectroscopic constants of H³⁵Cl (NIST WebBook, Huber and Herzberg 1979, with the higher terms of Rank, Rao et al. 1965). They reproduce the measured lines to about 0.01 cm⁻¹ (R(0) 2906.25, P(1) 2865.10 cm⁻¹). H³⁷Cl constants are scaled from H³⁵Cl by the reduced mass (Born–Oppenheimer). Line strengths follow the Boltzmann population of the lower level, the Hönl–London factors and the isotope abundances (75.76 % and 24.24 %); the slight difference in strength between the R and P branches from the stretching of the dipole (Herman–Wallis effect), pressure broadening and the weak hot band are left out. Each line is drawn as a Gaussian as wide as the spectrometer\'s resolution. Absorbance is relative to the strongest peak. The lock finds the top of the displayed peak, as you would by eye.';
+  $('aboutSrc').textContent = 'Sources: OpenStax University Physics Vol. 3, §9.1 and §9.2; K. P. Huber and G. Herzberg, Constants of Diatomic Molecules (1979), via the NIST Chemistry WebBook; atomic masses AME2020; chlorine abundances IUPAC (CIAAW); constants CODATA 2018.';
+
+  /* recorded readings are drawn on the graphs: redraw after Record, Clear or a deleted row */
+  document.querySelector('.vd-readings').addEventListener('click', () => setTimeout(redraw, 0));
+
+  // ---------- size, theme, start ----------
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'nacl');
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.addEventListener('load', () => setTimeout(redraw, 0));
+  window.__mo = { S, setView, applyPreset, redraw, sync, spSet, spData, spRel, setR, custom };
+})();
+</script>
+</body>
+</html>

@@ -204,7 +204,9 @@
   });
   /* Vol. 3 ch. 9 to 11 (condensed matter, nuclear, particles and cosmology), kept in its own list so the chapter threads don't collide */
   const MODERN_9_11 = ['radioactive-decay', 'decay-chains' /* Radioactive Decay demo: one step setups, chains */, 'binding-energy',
-    'gamma-spectroscopy', 'gamma-absorption' /* Gamma Spectroscopy demo */];
+    'gamma-spectroscopy', 'gamma-absorption' /* Gamma Spectroscopy demo */, 'hubble-law' /* Cosmic Distance Ladder, rung 4 */,
+    'molecular-bonds', 'hcl-spectrum' /* Molecules: Bonds and Spectra demo */,
+    'cosmic-expansion', 'thermal-history', 'big-bang-helium' /* The Big Bang and the Early Universe demo */];
   MODERN.push(...MODERN_9_11); ENABLED.push(...MODERN_9_11);
   Object.assign(FROM_DEMO, {
     /* Reading | Setup and N₀ | Time t | Parents left N | N/N₀ | ln(N/N₀) */
@@ -217,6 +219,18 @@
     'gamma-spectroscopy': { demo: 'Gamma Spectroscopy', cols: ['row', 'source', 'centroid_ch', 'centroid_unc', null, 'net', 'fwhm_ch', 'E_keV'] },
     /* Reading | Distance d (cm) | Absorber | Mass thickness x (g/cm²) | Live time (s) | Net counts | Net rate R (1/s) | Rate uncertainty (1/s) | ln R | 1/√R (√s) */
     'gamma-absorption': { demo: 'Gamma Spectroscopy (absorption)', cols: ['row', 'd_cm', 'absorber', 'x_g_cm2', 'live_s', 'net', 'rate_per_s', 'rate_unc', null, null] },
+    /* Reading | Galaxy | Distance indicator | Calibration a, M (mag) | Distance d (Mpc) | Distance uncertainty (%) | Your redshift z | Recession velocity v = cz (km/s) */
+    'hubble-law': { demo: 'Cosmic Distance Ladder', cols: ['row', 'galaxy', 'indicator', (r) => `a = ${r.a}, M = ${r.M_Ia}`.replace(/-/g, '−'), 'd_Mpc', 'd_unc_pct', 'z_comb', null] },
+    /* Reading | Molecule and state | Separation r (nm) | Energy U (eV) | 1/r (1/nm) */
+    'molecular-bonds': { demo: 'Molecules: Bonds and Spectra (Ionic and Covalent bond)', cols: ['row', 'molecule', 'r_nm', 'U_eV', null] },
+    /* Reading | Wavenumber (cm⁻¹) | Relative absorbance | Line | m | Spacing to the next line (cm⁻¹) */
+    'hcl-spectrum': { demo: 'Molecules: Bonds and Spectra (HCl spectrum)', cols: ['row', 'nu_cm', 'absorbance', null, null, null] },
+    /* Reading | Model | Time from today t (Gyr) | Galaxy | Distance d (Mpc) | Speed v (km/s) */
+    'cosmic-expansion': { demo: 'The Big Bang and the Early Universe (Expansion)', cols: ['row', 'model', 't_Gyr', 'galaxy', 'd_Mpc', null] },
+    /* Reading | Time t (s) | Temperature T (K) | kT (eV) | log₁₀ t | log₁₀ T */
+    'thermal-history': { demo: 'The Big Bang and the Early Universe (Thermal history)', cols: ['row', 't_s', 'T_K', 'kT_eV', null, null] },
+    /* Reading | Freeze out kT_f (MeV) | Lifetime τ (s) | Deuterium time t_D (s) | Neutrons at freeze out | Neutrons left at t_D | Helium nuclei | 1/kT_f | ln(n/p) | Y */
+    'big-bang-helium': { demo: 'The Big Bang and the Early Universe (Helium)', cols: ['row', 'kTf_MeV', 'tau_s', 'tD_s', 'n_f', 'n_D', 'He', null, null, null] },
   });
   /* ==MODERN END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

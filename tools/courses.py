@@ -158,6 +158,9 @@ HANDOUT_TOPIC = {
     'radioactive-decay': 'Measuring a Half Life', 'decay-chains': 'Parent and Daughter',
     'binding-energy': 'The Curve of Binding Energy',
     'gamma-spectroscopy': 'Calibrating a Detector', 'gamma-absorption': 'Absorbing Gamma Rays',
+    'hubble-law': 'Measuring the Hubble Constant',
+    'cosmic-expansion': "Hubble's Law and the Age of the Universe", 'thermal-history': 'Thermal History of the Universe', 'big-bang-helium': 'Helium from the First Three Minutes',
+    'molecular-bonds': 'Ionic and Covalent Bonds', 'hcl-spectrum': 'The Infrared Spectrum of HCl',
 }
 
 

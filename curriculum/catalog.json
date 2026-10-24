@@ -277,6 +277,18 @@
      ]
     },
     {
+     "demo": "early-universe",
+     "title": "The Big Bang and the Early Universe",
+     "desc": "Watch every galaxy move away from every other as space stretches and time the distances to find Hubble's law and the age of the universe. Follow the temperature from the first instant to today, make the helium of the first three minutes, and stretch the glow of decoupling into the 2.7 K microwave background.",
+     "tags": [
+      "Hubble's law",
+      "scale factor",
+      "early universe",
+      "nucleosynthesis",
+      "cosmic microwave background"
+     ]
+    },
+    {
      "demo": "compton",
      "title": "Compton Scattering",
      "desc": "A photon bounces off a free electron and comes away with a longer wavelength. Drag the scattered photon around to see the shift, the electron's recoil and the momentum triangle, from Compton's 1923 x rays to cesium 137 gamma rays and the Compton edge.",
@@ -285,6 +297,17 @@
       "photon momentum",
       "Klein–Nishina",
       "Compton edge"
+     ]
+    },
+    {
+     "demo": "molecules",
+     "title": "Molecules: Bonds and Spectra",
+     "desc": "Pull a sodium ion from a chloride ion and stretch the bond of H₂ to see what holds molecules together, then climb the ladder of vibration and rotation levels and measure the infrared band of HCl to find its bond length and the stiffness of its bond.",
+     "tags": [
+      "ionic bond",
+      "covalent bond",
+      "rotation and vibration",
+      "infrared spectrum"
      ]
     },
     {

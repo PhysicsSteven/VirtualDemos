@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark bar-div-firstchild stage-canvas-focusvisible spin spin-attn formula btnrow seg readout-dd-ok status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage toggles toggles-label toggles-input projshort-proj-stage phone-chips-button" lang="en">
+<html data-vd-off="handout-svg root-4 auto-dark dark bar-div-firstchild stage-canvas-focusvisible spin spin-attn formula seg readout-dd-ok empty plotbox-canvas wide-proj-bench wide-proj-stage toggles toggles-label toggles-input projshort-proj-stage phone-chips-button" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -140,6 +140,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/hubble-law.html" target="hubble-law-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2 id="rungTitle">Rung 1: parallax</h2>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
@@ -273,6 +274,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <label class="check"><input type="checkbox" id="link" checked> Supernova calibration follows the Cepheids</label>
         <h2>Selected galaxy</h2>
         <dl class="readout">
+          <div><dt>Galaxy</dt><dd id="gName">—</dd></div>
           <div><dt>Distance</dt><dd id="gD">—</dd></div>
           <div><dt>Catalog z</dt><dd id="gZ">—</dd></div>
           <div class="wide"><dt>Your comb: z = Δλ/λ, v ≈ cz</dt><dd id="gComb">—</dd></div>
@@ -293,6 +295,27 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </details>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="hubble-law" data-title="Cosmic Distance Ladder" data-demo="distance-ladder">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Model</summary><div class="foldbody">
         <p class="hint" id="modelText"></p>
@@ -1434,6 +1457,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('hT').textContent = isFinite(fit.H) ? `${hubbleTimeGyr(fit.H).toFixed(1)} Gyr` : '—';
     $('hN').textContent = String(fit.n);
     const hp = HUB[S.hub.sel];
+    $('gName').textContent = `Galaxy ${S.hub.sel + 1} (${hp.grp === 'cep' ? 'Cepheids' : 'Type Ia'})`;
     $('gD').textContent = `${sig(hubD(S.hub.sel), 3)} Mpc ±${Math.round(hp.sig * 100)}%`;
     $('gZ').textContent = `${hp.z.toFixed(4)} (${grp(velocityFromZ(hp.z))} km/s)`;
     $('gComb').textContent = `z = ${S.hub.zc.toFixed(4)}, v = ${grp(velocityFromZ(S.hub.zc))} km/s${Math.abs(S.hub.zc - hp.z) < 0.0006 ? ', lines match' : ''}`;
@@ -1528,12 +1552,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     requestAnimationFrame(loop);
   }
   let parTick = 0;
+  // ---------- readings (Hubble's law worksheet) ----------
+  window.vdVersion = 'distance-ladder@2026-10-24';
+  window.vdShowCols = [['galaxy', 'Galaxy'], ['d_Mpc', 'd (Mpc)'], ['z_comb', 'Your z']];
+  window.vdReadingRow = () => {
+    if (S.tab !== 'hub') return "Readings are taken in Rung 4, Hubble's law: open it, click a galaxy and match the comb to its lines.";
+    const i = S.hub.sel, p = HUB[i];
+    if (!hubOn(i)) return 'Pick a galaxy that is in the fit.';
+    const match = Math.abs(S.hub.zc - p.z) < 0.0006;
+    return { galaxy: `Galaxy ${i + 1}`, indicator: p.grp === 'cep' ? 'Cepheids' : 'Type Ia', d_Mpc: +hubD(i).toPrecision(4), d_unc_pct: Math.round(p.sig * 100),
+      z_comb: match ? S.hub.zc.toFixed(4) : '', z_catalog: p.z.toFixed(4), a: S.calA.toFixed(2), M_Ia: S.snM.toFixed(2), moved: S.hub.over[i] !== undefined ? 'yes' : 'no' };
+  };
   window.__dl = { get frameMs() { return frameMs; }, S, HUB, CEP, SNE, hubFit, cepMeasure, snMeasure, applyPreset, openRung, handles: () => handles(), get G() { return G; },
     core: { apparentOffset, distModulus, distFromModulus, leavitt, fitOrigin, hubbleTimeGyr } };
 
   tokens();
   buildCepChips();
-  applyPreset('par');
+  { const q = new URLSearchParams(location.search).get('setup'); applyPreset(['par', 'cep', 'sn', 'hub', 'all'].includes(q) ? q : 'par'); }
   stageHeight();
   const ro = new ResizeObserver(resize);
   ro.observe(pane);
