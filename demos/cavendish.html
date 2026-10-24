@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <title>The Cavendish Experiment</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -45,8 +46,8 @@
   <main class="bench">
     <div class="stage" id="stage">
       <div class="scene" id="scene">
-        <canvas id="can" tabindex="0" role="img" aria-label="Top view of a torsion balance: a beam with two small lead spheres hangs from a fibre inside a case, with two large lead spheres outside on a swivel frame. A laser beam reflects from a mirror on the beam to a scale. Space runs or pauses."></canvas>
-        <div class="viewbar"><button type="button" class="spin attn" id="go">Run</button><button type="button" class="spin" id="turn">Run to the next turning point</button></div>
+        <canvas id="can" tabindex="0" role="img" aria-label="A torsion balance, in 3D or from the top: a beam with two small lead spheres hangs from a fibre inside a case, with two large lead spheres outside on a swivel frame. A laser beam reflects from a mirror on the beam to a scale. Space runs or pauses."></canvas>
+        <div class="viewbar"><button type="button" class="spin attn" id="go">Run</button><button type="button" class="spin" id="turn">Run to the next turning point</button><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
       </div>
       <div class="plotbox"><canvas id="chart" role="img" aria-label="Strip chart of the spot's position on the scale against time"></canvas></div>
     </div>
@@ -197,6 +198,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const EXAG = 20;   /* the beam's turn is drawn this many times larger */
   function draw() {
     if (!T || !W) return;
+    if (use3()) { draw3D(); return; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); VG.backdrop(ctx, W, H);
     const p = ps(), wide = W > 640, a = aOf(S.t), th = S.th;
     /* the balance, top view, to scale except the beam's turn */
@@ -244,6 +246,121 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     drawScale(wide ? pw + 40 * p : W - 58 * p, wide ? W - 16 * p : W - 6 * p, 60 * p, H - 30 * p, my);
     drawChart();
   }
+  // ---------- 3D view of the balance (three.js through demos/lib/vd3.js); the flat top view stays (Flat button, or ?view=flat) ----------
+  /* Metres, z up, the fibre on the z axis: the same balance as the top view, to scale, with the beam's turn drawn ×20 as there. The fibre
+     (really about 25 µm) is drawn 0.8 mm thick so it shows. The laser sits beside the scale's line; the reflected ray is drawn from the
+     drawn mirror, so it turns by twice the drawn angle, and leaves the picture towards the scale 5.000 m away, shown magnified on the
+     right. Drag to turn the view, wheel or pinch to zoom, double click to reset. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 - 0.35, ph: 0.95, zoom: 1 } };
+  let g3 = null;
+  const use3 = () => !!(G3.on && g3);
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  const MIRROR_Z = 0.012, LASER = [0.1, -0.03, MIRROR_Z];
+  function init3D() {
+    G3.tried = true;
+    const rd = VD3.renderer(); if (!rd) return false;
+    rd.shadowMap.enabled = true; rd.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = rd.domElement; el.setAttribute('aria-hidden', 'true'); el.style.pointerEvents = 'none'; $('scene').insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.005, 20), M = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x8a8170, 0.65), sun = new THREE.DirectionalLight(0xffffff, 0.8); sun.position.set(-0.3, -0.4, 0.8); sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024);
+    Object.assign(sun.shadow.camera, { left: -0.2, right: 0.2, top: 0.2, bottom: -0.2, near: 0.1, far: 2 }); sun.shadow.bias = -0.0005; scene.add(hemi, sun);
+    const mesh = (geo, m, cast = true, recv = true) => { const x = new THREE.Mesh(geo, m); x.castShadow = cast; x.receiveShadow = recv; return x; };
+    const upZ = (g) => g.rotateX(Math.PI / 2);
+    const rs = sphereR(CAV.m), RL = sphereR(CAV.M), zArm = -RL - 0.005, zTab = zArm - 0.012;
+    const tableM = M({ roughness: 0.85 }), table = mesh(upZ(new THREE.CylinderGeometry(0.13, 0.13, 0.012, 64)), tableM, false, true); table.position.z = zTab - 0.006;
+    const steelM = M({ roughness: 0.35, metalness: 0.7 }), leadM = M({ roughness: 0.55, metalness: 0.35 });
+    const post = mesh(upZ(new THREE.CylinderGeometry(0.006, 0.008, zArm - zTab, 16)), steelM); post.position.z = (zArm + zTab) / 2;
+    /* the swivel frame: an arm under the large spheres, turned to the frame angle */
+    const rho = Math.hypot(CAV.l, CAV.r), frame = new THREE.Group();
+    const arm = mesh(new THREE.BoxGeometry(2 * rho + 0.02, 0.012, 0.004), steelM); arm.position.z = zArm - 0.002; frame.add(arm);
+    const bigs = [1, -1].map((s) => { const b = mesh(new THREE.SphereGeometry(RL, 40, 28), leadM); b.position.set(s * rho, 0, 0); frame.add(b);
+      const cup = mesh(upZ(new THREE.CylinderGeometry(0.008, 0.01, -zArm - RL + 0.004, 16)).translate(0, 0, 0), steelM); cup.position.set(s * rho, 0, (zArm - RL + 0.004) / 2 + 0.0005); frame.add(cup); return b; });
+    /* the case, the fibre tube and the clamp at the top */
+    const cw = CAV.l + rs + 0.006, ch = rs + 0.005, cz = rs + 0.008;
+    const glassM = new THREE.MeshPhysicalMaterial({ color: 0xbfe3f5, transparent: true, opacity: 0.16, roughness: 0.05, metalness: 0, depthWrite: false });
+    const caseG = new THREE.BoxGeometry(2 * cw, 2 * ch, 2 * cz), cbox = mesh(caseG, glassM, false, false);
+    const edgeM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.55 }), cedge = new THREE.LineSegments(new THREE.EdgesGeometry(caseG), edgeM);
+    const caseBase = mesh(new THREE.BoxGeometry(2 * cw + 0.004, 2 * ch + 0.004, 0.003), steelM); caseBase.position.z = -cz - 0.0015;
+    const tubeH = 0.11, tube = mesh(upZ(new THREE.CylinderGeometry(0.007, 0.007, tubeH, 24, 1, true)), glassM, false, false); tube.position.z = cz + tubeH / 2;
+    const clamp = mesh(new THREE.BoxGeometry(0.03, 0.02, 0.012), steelM); clamp.position.z = cz + tubeH + 0.006;
+    const fibreM = M({ roughness: 0.4, metalness: 0.6 }), fibre = mesh(upZ(new THREE.CylinderGeometry(0.0004, 0.0004, cz + tubeH, 6)), fibreM, false, false); fibre.position.z = (cz + tubeH) / 2;
+    /* the beam, the small spheres and the mirror, turned by ×20 the twist */
+    const beam = new THREE.Group();
+    const rod = mesh(new THREE.CylinderGeometry(0.0012, 0.0012, 2 * CAV.l, 10).rotateZ(Math.PI / 2), steelM); beam.add(rod);
+    for (const s of [1, -1]) { const b = mesh(new THREE.SphereGeometry(rs, 24, 16), leadM); b.position.x = s * CAV.l; beam.add(b); }
+    const mirM = M({ roughness: 0.05, metalness: 1 }), mir = mesh(new THREE.BoxGeometry(0.0012, 0.014, 0.012), mirM); mir.position.z = MIRROR_Z; beam.add(mir);
+    const holder = mesh(upZ(new THREE.CylinderGeometry(0.001, 0.001, MIRROR_Z, 6)).translate(0, 0, MIRROR_Z / 2), steelM); beam.add(holder);
+    /* the laser and its two rays */
+    const laserM = M({ roughness: 0.5, metalness: 0.2 }), laser = mesh(new THREE.BoxGeometry(0.04, 0.014, 0.014), laserM); laser.position.set(LASER[0] + 0.02, LASER[1], LASER[2]);
+    const lpost = mesh(upZ(new THREE.CylinderGeometry(0.003, 0.004, LASER[2] - 0.007 - zTab, 12)), steelM); lpost.position.set(LASER[0] + 0.02, LASER[1], (LASER[2] - 0.007 + zTab) / 2);
+    const rayM = new THREE.MeshBasicMaterial(), rayG = new THREE.CylinderGeometry(0.0007, 0.0007, 1, 6).translate(0, 0.5, 0);
+    const rayIn = new THREE.Mesh(rayG, rayM), rayOut = new THREE.Mesh(rayG, rayM);
+    /* force arrows on the small spheres */
+    const fM = new THREE.MeshBasicMaterial({ depthTest: false, transparent: true }), shaftG = new THREE.CylinderGeometry(1, 1, 1, 8).translate(0, 0.5, 0), headG = new THREE.ConeGeometry(1, 1, 12).translate(0, 0.5, 0);
+    const farr = [0, 1].map(() => { const gr = new THREE.Group(), a = new THREE.Mesh(shaftG, fM), b = new THREE.Mesh(headG, fM); a.renderOrder = b.renderOrder = 10; gr.add(a, b); return gr; });
+    scene.add(table, post, lpost, frame, cbox, cedge, caseBase, tube, clamp, fibre, beam, laser, rayIn, rayOut, ...farr);
+    g3 = { rd, el, scene, cam, hemi, sun, tableM, steelM, leadM, glassM, edgeM, fibreM, laserM, rayM, fM, frame, beam, bigs, rayIn, rayOut, farr, Y: new THREE.Vector3(0, 1, 0) };
+    can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.1, phMax: 1.5, zMin: 0.5, zMax: 4, keys: false });
+    return true;
+  }
+  function theme3() {
+    const g = g3, dk = VD3.dark();
+    g.scene.background = col3(T.canvas, '#ffffff'); g.tableM.color = col3(dk ? '#3a3128' : '#b89a74', '#b89a74'); g.steelM.color = col3('#a7b0ba', '#a7b0ba'); g.leadM.color = col3(T.lead, '#6f7a86');
+    g.edgeM.color = col3(dk ? '#a9d2ee' : '#5a8fb4', '#5a8fb4'); g.fibreM.color = col3(dk ? '#e6ebf0' : '#4a525c', '#4a525c'); g.laserM.color = col3('#2e353f', '#2e353f'); g.rayM.color = col3(T.laser, '#e0322a'); g.fM.color = col3(T.force, '#2b60b5');
+    g.hemi.intensity = dk ? 0.55 : 0.7; g.sun.intensity = dk ? 0.7 : 0.8;
+  }
+  function ray3(m, a, b) { const v = new THREE.Vector3(b[0] - a[0], b[1] - a[1], b[2] - a[2]), L = v.length(); m.position.set(a[0], a[1], a[2]); m.scale.set(1, L, 1); m.quaternion.setFromUnitVectors(g3.Y, v.divideScalar(L)); }
+  function draw3D() {
+    const g = g3, dk = VD3.dark(), p = ps(), wide = W > 640, pw = wide ? W * 0.56 : W - 64 * p, a = aOf(S.t), th = S.th, ang = th * EXAG, W0 = Math.max(1, Math.round(W)), H0 = Math.max(1, Math.round(H));
+    if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; }
+    const key = [T.canvas, T.lead, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    g.el.hidden = false;
+    g.frame.rotation.z = a; g.beam.rotation.z = ang;
+    /* the light: from the laser to the mirror, then reflected by the drawn mirror (normal along the beam) */
+    const mz = MIRROR_Z, inA = [LASER[0], LASER[1], LASER[2]], d = new THREE.Vector3(-LASER[0], -LASER[1], mz - LASER[2]).normalize(), n = new THREE.Vector3(Math.cos(ang), Math.sin(ang), 0);
+    const r = d.clone().sub(n.clone().multiplyScalar(2 * d.dot(n))), out = [r.x * 0.3, r.y * 0.3, mz + r.z * 0.3];
+    ray3(g.rayIn, inA, [0, 0, mz]); ray3(g.rayOut, [0, 0, mz], out);
+    const big = largeSpheres(a), fl = [];
+    g.farr.forEach((gr, i) => {
+      const s = i ? -1 : 1, x = s * CAV.l * Math.cos(th), y = s * CAV.l * Math.sin(th); let fx = 0, fy = 0;
+      for (const [bx, by] of big) { const dx = bx - x, dy = by - y, dd = Math.hypot(dx, dy), F = G_CODATA * CAV.M * CAV.m / (dd * dd); fx += F * dx / dd; fy += F * dy / dd; }
+      const F = Math.hypot(fx, fy); gr.visible = !S.blind && F > 1e-13; fl.push(F); if (!gr.visible) return;
+      const L = Math.min(0.016, 0.013 * F / 9e-10), h = Math.min(0.005, L * 0.45), [sh, hd] = gr.children, px = s * CAV.l * Math.cos(ang), py = s * CAV.l * Math.sin(ang);
+      sh.scale.set(0.0009, L - h, 0.0009); hd.position.set(0, L - h, 0); hd.scale.set(0.0026, h, 0.0026);
+      gr.position.set(px, py, 0); gr.quaternion.setFromUnitVectors(g.Y, new THREE.Vector3(fx / F, fy / F, 0));
+    });
+    /* frame the balance in the left part of the picture */
+    const top = 50 * p, bot = 40 * p, f2 = Math.max(0.3, (H0 - top - bot) / H0), tv = Math.tan(g.cam.fov * Math.PI / 360);
+    g.cam.setViewOffset(W0, H0, (W0 - pw) / 2, -(top - bot) / 2, W0, H0);
+    const R = 0.125, dist = Math.max(R / (tv * f2), R / (tv * g.cam.aspect * pw / W0)) * 1.05 + R * 0.8;
+    VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0, 0.012), dist); g.cam.updateProjectionMatrix();
+    g.scene.updateMatrixWorld(); g.rd.render(g.scene, g.cam);
+    const v = new THREE.Vector3(), Q = (x, y, z) => { v.set(x, y, z).project(g.cam); return [(v.x + 1) / 2 * W0, (1 - v.y) / 2 * H0]; };
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    const RL = sphereR(CAV.M);
+    for (const q of ['A', 'B']) { const sp = largeSpheres(frameAngle(q))[q === 'A' ? 0 : 1], s = Q(sp[0] * 1.45, sp[1] * 1.45, -RL - 0.017); txt(ctx, q, s[0], s[1], { s: 10, c: T.muted, b: 1, a: 'center' }); }   /* on the table, beyond each position */
+    { const lq = Q(LASER[0] + 0.02, LASER[1], LASER[2] - 0.012); txt(ctx, 'laser', lq[0], lq[1] + 8 * p, { a: 'center', s: 9, c: T.muted }); }
+    { const oq = Q(out[0], out[1], out[2]); if (oq[0] > 0 && oq[0] < W) txt(ctx, 'to the scale, 5.000 m', Math.min(oq[0], (wide ? pw : W - 70 * p) - 4 * p), oq[1] - 12 * p, { a: 'right', s: 9, c: T.laser, b: 1 }); }
+    { const fq = Q(0, 0, 0.09); txt(ctx, 'fibre', fq[0] + 10 * p, fq[1], { s: 9, c: T.muted }); }
+    txt(ctx, '3D, to scale · beam turn drawn ×20 · drag to turn', 12 * p, H - 14 * p, { s: 9.5, c: T.muted });
+    if (!S.blind && fl[0] > 1e-13) txt(ctx, `pull on each small sphere: ${f(fl[0] * 1e9, 2)} nN`, 12 * p, H - 30 * p, { s: 9.5, m: 1, c: T.force, b: 1 });
+    const myq = Q(0, 0, MIRROR_Z);
+    drawScale(wide ? pw + 40 * p : W - 58 * p, wide ? W - 16 * p : W - 6 * p, 60 * p, H - 30 * p, myq[1]);
+    drawChart();
+  }
+  function setView(v) {
+    G3.want = v === '3d';
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { G3.want = false; v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setView(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; can.style.cursor = use3() ? 'grab' : ''; if (g3 && !G3.on) g3.el.hidden = true;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    draw();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
   /* the scale 5.000 m away, seen face on, magnified around the spot */
   function drawScale(x0, x1, y0, y1, yBeam) {
     const p = ps(), w = x1 - x0, cxs = x0 + w / 2, s = spot(S.th) * 100, span = 12, pxcm = (y1 - y0) / span, mid = Math.round(s / 2) * 2;
@@ -331,6 +448,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* on opening: settled at A, then the large spheres swing to B and the balance starts to move */
   tokens(); startOver(); sync(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe(chart.parentElement); resize(); readouts();
   swingTo('B'); setRun(true);
+  G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();
+  if (G3.want) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();
