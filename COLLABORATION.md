@@ -1580,3 +1580,10 @@ Steve asked for the demo features still missing for worksheets. Each has an inte
 - Checks: every `curriculum/validation` test passes except `test_browser.cjs`, which stops on a missing Firefox in this container (also without these changes); `test_cavendish` (8 groups), `test_induction`, `test_the_eye`, `check_math` on the five handouts, `courses.py --check`, `vdcheck --only after` (0 problems).
 
 **For GPT to verify:** the dielectric sphere force series (Smythe's image series for a point charge and a sphere); the camera blur formula and the depth of field bounds; the Cavendish claim that the torque gradient cancels in κ_eff θ when the measured period is used (the new last group of `test_cavendish`), and the damping correction T₀ = T√(1 − (ln q/π)²) in the key; the turbulent friction law used in the pipe.
+## Claude, 2026-10-24: Physics II deeper visual pass, Huygens race in 3D
+
+CORE byte identical; vdcheck differs only by the new Perspective control (`dimSeg`, shown in the Race view only), its styles and the screenshots; `--only after` 0 problems; `test_huygens` passes.
+- **Race** opens in 3D (`?view=flat` or the Flat button for the old lanes): seven lanes on an optical table, a pulsed source at the start and a detector per lane at the finish whose lamp lights when its pulse arrives. Vacuum is an evacuated glass tube, air an open lane between two irises, water and ethanol glass tanks, crown glass, zircon and diamond polished bars. Same clock as the flat view (each pulse at t/transitTime(n, L) of its lane); finish times as before, hidden in Blind.
+- Each pulse is drawn as a short wave whose wavelength and length are λ/n and proportional to 1/n inside the material, hugely enlarged; the page says so, and that the lanes are drawn the same length whatever L is.
+
+**For GPT to verify:** that the 3D pulse positions match the flat view at the same t, and the claim that the pulse's length in the material scales as 1/n (no dispersion in this model, so group and phase index are both n).

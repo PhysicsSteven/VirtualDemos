@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* Layout: the picture on the left, the rail on the right; stacks on phones. */
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
@@ -50,6 +51,10 @@ table.rows input:focus { border-color: var(--accent); }
 select { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; max-width: 100%; }
 @media (max-width: 820px) { select { min-height: 36px; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
+.dimseg { position: absolute; top: 30px; right: 10px; z-index: 2; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+.dimseg[hidden] { display: none; }
+.dimseg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.dimseg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -72,6 +77,7 @@ select { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(-
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="Depending on the view: light pulses racing along lanes of different materials; a wavefront building the next one from wavelets; a plane wave meeting a boundary with wavelets from the boundary; or a wave passing through an opening in a wall."></canvas>
+      <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -235,7 +241,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('sL').value = S.L; $('oL').textContent = `${S.L.toFixed(1)} m`; $('sNw').value = S.nW; $('oNw').textContent = String(S.nW);
     $('m1').value = S.m1; $('m2').value = S.mirror ? 'mirror' : S.m2; $('sTh').value = Math.round(deg(S.th)); $('oTh').textContent = `${Math.round(deg(S.th))}°`; $('showRefl').checked = S.showRefl || S.mirror; $('showRefl').disabled = S.mirror; $('allWavelets').checked = S.all;
     $('sA').value = S.a; $('oA').textContent = `${S.a.toFixed(1)} λ`; $('showSrc').checked = S.showSrc;
-    $('playBtn').textContent = S.playing ? 'Pause' : 'Play';
+    $('playBtn').textContent = S.playing ? 'Pause' : 'Play'; $('dimSeg').hidden = S.view !== 'race';
     $('presetHint').textContent = S.preset ? PRESETS[S.preset].hint : '';
   }
   function upd() { sync(); readouts(); draw(); }
@@ -408,9 +414,138 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.blind) txt('hidden in Blind', wallX + (W - wallX) / 2, cy, { a: 'center', s: 12, b: 1, c: T.muted });
     const fd = firstDark(S.a); if (fd !== null && !S.blind) { ctx.strokeStyle = T.muted; ctx.setLineDash([5 * p, 5 * p]); ctx.lineWidth = 1 * p; ctx.beginPath(); for (const s of [-1, 1]) { ctx.moveTo(wallX, cy); ctx.lineTo(wallX + Math.cos(fd) * W, cy + s * Math.sin(fd) * W); } ctx.stroke(); ctx.setLineDash([]); txt('first dark directions, sin θ = λ/a', W - 10 * p, 16 * p, { a: 'right', s: 9, c: T.muted }); }
   }
+  /* ---------- the race in 3D: seven lanes on an optical table, a pulsed source at the start, a detector per lane at the finish.
+     Same clock as the flat view: each pulse is at t/transitTime(n, L) of its lane. The lanes are drawn the same length whatever L is.
+     The pulse is drawn as a short wave whose wavelength and length shrink by 1/n inside the material, both hugely enlarged. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.14, ph: 0.92, zoom: 1 } };
+  const LANE_Y = (i) => (3 - i) * 0.13, ZC = 0.045, NSEG = 72, LAM3 = 0.05, AMP3 = 0.022;
+  let g3 = null;
+  const use3 = () => !!(G3.on && g3 && S.view === 'race');
+  function init3D() {
+    G3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); el.style.right = 'auto'; el.style.bottom = 'auto'; stage.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.05, 40), Ms = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.85), sun = new THREE.DirectionalLight(0xffffff, 0.6);
+    sun.position.set(-0.6, -1.4, 2.4); sun.target.position.set(0.5, 0, 0); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+    Object.assign(sun.shadow.camera, { left: -1.2, right: 1.2, top: 1.2, bottom: -1.2, near: 0.5, far: 6 }); sun.shadow.radius = 3;
+    scene.add(hemi, sun, sun.target);
+    const mesh = (g, m, cast) => { const x = new THREE.Mesh(g, m); x.castShadow = cast !== false; x.receiveShadow = true; return x; };
+    /* the optical table: a steel top with a grid of tapped holes */
+    const hc = document.createElement('canvas'); hc.width = hc.height = 32; const hx = hc.getContext('2d'); hx.fillStyle = '#ffffff'; hx.fillRect(0, 0, 32, 32); hx.fillStyle = '#9aa1aa'; hx.beginPath(); hx.arc(16, 16, 4.5, 0, 7); hx.fill();
+    const tex = new THREE.CanvasTexture(hc); tex.wrapS = tex.wrapT = THREE.RepeatWrapping; tex.repeat.set(1.7 / 0.025, 1.3 / 0.025); tex.anisotropy = 4;
+    const tableM = Ms({ map: tex, roughness: 0.55, metalness: 0.25 }), table = mesh(new THREE.BoxGeometry(1.7, 1.3, 0.05), tableM, false); table.position.set(0.5, 0, -0.025);
+    const floorM = Ms({ roughness: 0.9 }), floor = mesh(new THREE.PlaneGeometry(40, 40), floorM, false); floor.position.z = -0.75;
+    const darkM = Ms({ roughness: 0.45, metalness: 0.3, color: 0x2a3038 }), postM = Ms({ roughness: 0.35, metalness: 0.4, color: 0x8d96a1 });
+    scene.add(table, floor);
+    /* the materials */
+    const glass = (color, opacity) => new THREE.MeshPhongMaterial({ color, transparent: true, opacity, shininess: 110, specular: 0xffffff, depthWrite: false, side: THREE.DoubleSide });
+    const edges = (geo, color, op) => new THREE.LineSegments(new THREE.EdgesGeometry(geo), new THREE.LineBasicMaterial({ color, transparent: true, opacity: op }));
+    const LOOK = { water: [0x58a8e0, 0.32, 0x8fc4ea], ethanol: [0xd9e9f2, 0.2, 0xb8cfdc], crown: [0xcfeee2, 0.38, 0x8fcfb6], zircon: [0xf0dca8, 0.48, 0xd8b968], diamond: [0xf2f8ff, 0.55, 0xffffff] };
+    const lanes = [], leds = [];
+    LANES.forEach((k, i) => {
+      const y = LANE_Y(i), grp = new THREE.Group(); grp.position.y = y;
+      const rail = mesh(new THREE.BoxGeometry(1.0, 0.03, 0.006), darkM, false); rail.position.set(0.5, 0, 0.003); grp.add(rail);
+      for (const x of [0.06, 0.94]) { const post = mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.012, 16).rotateX(Math.PI / 2), postM); post.position.set(x, 0, 0.012); grp.add(post); }
+      if (k === 'vacuum') {   /* an evacuated glass tube with end windows and a pump stub */
+        const tube = mesh(new THREE.CylinderGeometry(0.03, 0.03, 1.0, 40, 1, true).rotateZ(Math.PI / 2), glass(0xe4eef8, 0.2), false); tube.position.set(0.5, 0, ZC); grp.add(tube);
+        for (const x of [0, 1]) { const ring = mesh(new THREE.CylinderGeometry(0.034, 0.034, 0.012, 32).rotateZ(Math.PI / 2), postM); ring.position.set(x, 0, ZC); grp.add(ring); }
+        const stub = mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.04, 16).rotateX(Math.PI / 2), glass(0xe4eef8, 0.35), false); stub.position.set(0.5, 0, ZC + 0.045); grp.add(stub);
+      } else if (k === 'air') {   /* open air: two irises mark the lane */
+        for (const x of [0, 1]) { const iris = mesh(new THREE.TorusGeometry(0.026, 0.006, 10, 32).rotateY(Math.PI / 2), darkM); iris.position.set(x, 0, ZC); grp.add(iris); }
+      } else if (k === 'water' || k === 'ethanol') {   /* a glass tank, liquid inside */
+        const bg = new THREE.BoxGeometry(1.0, 0.07, 0.07), tank = mesh(bg, glass(0xeef4fa, 0.16), false); tank.position.set(0.5, 0, ZC + 0.002); grp.add(tank, edges(bg, 0xaec2d4, 0.8).translateX(0.5).translateZ(ZC + 0.002));
+        const lg = new THREE.BoxGeometry(0.992, 0.064, 0.058), liq = mesh(lg, glass(LOOK[k][0], LOOK[k][1]), false); liq.position.set(0.5, 0, ZC - 0.003); grp.add(liq);
+      } else {   /* a polished bar */
+        const bg = new THREE.BoxGeometry(1.0, 0.06, 0.06), bar = mesh(bg, glass(LOOK[k][0], LOOK[k][1]), false); bar.position.set(0.5, 0, ZC); grp.add(bar, edges(bg, LOOK[k][2], 0.9).translateX(0.5).translateZ(ZC));
+      }
+      /* the detector at the finish and its lamp */
+      const det = mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.03, 24).rotateZ(Math.PI / 2), darkM); det.position.set(1.06, 0, ZC); grp.add(det);
+      const ledM = new THREE.MeshStandardMaterial({ color: 0x3a3f46, emissive: 0x000000, roughness: 0.4 }), led = mesh(new THREE.SphereGeometry(0.008, 16, 12), ledM, false); led.position.set(1.06, 0, ZC + 0.028); grp.add(led); leds.push(ledM);
+      /* the pulse: a ribbon that follows the wave, and a glow */
+      const rg = new THREE.PlaneGeometry(1, 1, NSEG, 1), pm = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide, transparent: true, opacity: 0.95 }), ribbon = new THREE.Mesh(rg, pm); ribbon.frustumCulled = false; grp.add(ribbon);
+      lanes.push({ grp, ribbon, pm });
+      scene.add(grp);
+    });
+    /* the source and the detector rail */
+    const src = mesh(new THREE.BoxGeometry(0.12, 0.98, 0.1), darkM); src.position.set(-0.09, 0, 0.05);
+    const srcFace = mesh(new THREE.BoxGeometry(0.004, 0.94, 0.07), Ms({ color: 0x1a1d22, roughness: 0.3 }), false); srcFace.position.set(-0.029, 0, 0.05);
+    const detRail = mesh(new THREE.BoxGeometry(0.05, 0.98, 0.02), postM); detRail.position.set(1.06, 0, 0.01);
+    scene.add(src, srcFace, detRail);
+    const gc = document.createElement('canvas'); gc.width = gc.height = 64; const gx = gc.getContext('2d'), gg = gx.createRadialGradient(32, 32, 0, 32, 32, 32); gg.addColorStop(0, 'rgba(255,255,255,1)'); gg.addColorStop(0.3, 'rgba(255,255,255,0.45)'); gg.addColorStop(1, 'rgba(255,255,255,0)'); gx.fillStyle = gg; gx.fillRect(0, 0, 64, 64);
+    const glowTex = new THREE.CanvasTexture(gc);
+    for (const L of lanes) { L.glowM = new THREE.SpriteMaterial({ map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }); L.glow = new THREE.Sprite(L.glowM); L.glow.scale.set(0.1, 0.1, 1); L.grp.add(L.glow);
+      L.apM = new THREE.MeshBasicMaterial({ color: 0x000000 }); const ap = new THREE.Mesh(new THREE.CircleGeometry(0.009, 20).rotateY(Math.PI / 2), L.apM); ap.position.set(-0.026, 0, ZC); L.grp.add(ap); }
+    g3 = { r, el, scene, cam, hemi, sun, floorM, tableM, lanes, leds };
+    can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.35, phMax: 1.45, zMin: 0.6, zMax: 3 });
+    return true;
+  }
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function theme3() {
+    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fbfcfd');
+    g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 3, 8);
+    g.hemi.intensity = dk ? 0.95 : 0.85; g.sun.intensity = dk ? 0.7 : 0.6; g.hemi.groundColor = col3(dk ? '#1c222a' : '#8c8a84', '#8c8a84');
+    g.floorM.color = col3(dk ? '#1a2029' : '#d9dde3', '#d9dde3'); g.tableM.color = col3(dk ? '#59616c' : '#b8bfc8', '#b8bfc8');
+    const pc = col3(T.pulse, '#e0a12c'); for (const L of g.lanes) { L.pm.color = pc; L.glowM.color = pc; }
+  }
+  function render3() {
+    const g = g3; if (!g) return null;
+    if (G3.w !== W || G3.h !== Hh) { G3.w = W; G3.h = Hh; g.r.setSize(W, Math.max(1, Hh)); g.cam.aspect = W / Math.max(1, Hh); g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.pulse].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    const asp = W / Math.max(1, Hh), narrow = W < 620, span = Math.max(1.05, (narrow ? 1.5 : 1.7) / asp), dist = span / (2 * Math.tan(15 * Math.PI / 180));
+    VD3.place(g.cam, G3.o, new THREE.Vector3(narrow ? 0.42 : 0.5, 0.03, 0), dist);
+    g.scene.fog.near = 1.5 * dist; g.scene.fog.far = 3.5 * dist;
+    const tv = transitTime(1, S.L), slow = 3.5 / tv, t = S.t / slow, pc = col3(T.pulse, '#e0a12c');
+    LANES.forEach((k, i) => {
+      const n = MEDIA[k].n, frac = Math.min(1, t / transitTime(n, S.L)), L = g.lanes[i], lam = LAM3 / n, half = 1.3 * lam, xc = frac;
+      const show = t > 0 && frac < 1, pos = L.ribbon.geometry.attributes.position;
+      L.ribbon.visible = L.glow.visible = show;
+      const xe = xc - 0.6 * half;
+      if (show) for (let j = 0; j <= NSEG; j++) {
+        const u = (j / NSEG - 0.5) * 2 * half; let x = xe + u, env = Math.exp(-((u / (0.5 * half)) ** 2)); if (x < 0) { x = 0; env = 0; }
+        const zz = ZC + AMP3 * env * Math.cos(2 * Math.PI * u / lam);
+        pos.setXYZ(j, x, 0, zz + 0.0022); pos.setXYZ(j + NSEG + 1, x, 0, zz - 0.0022);
+      }
+      pos.needsUpdate = true; L.glow.position.set(Math.max(0, xe), 0, ZC);
+      g.leds[i].color = frac >= 1 ? pc : col3('#3a3f46', '#3a3f46'); g.leds[i].emissive = frac >= 1 ? pc : col3('#000000', '#000000');
+      L.apM.color = t > 0 && t < tv * 0.08 ? pc : col3('#0d0f12', '#0d0f12');
+    });
+    g.scene.updateMatrixWorld(); g.r.render(g.scene, g.cam);
+    const tmp = new THREE.Vector3();
+    return (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * Hh, tmp.z]; };
+  }
+  function drawRace3() {
+    const p = ps(), Q = render3(); ctx.clearRect(0, 0, W, Hh); if (!Q) return;
+    const narrow = W < 620, tv = transitTime(1, S.L), tmax = transitTime(MEDIA.diamond.n, S.L), slow = 3.5 / tv, t = S.t / slow;
+    const e9 = Math.floor(Math.log10(slow)), SUP = '⁰¹²³⁴⁵⁶⁷⁸⁹'; txt(`time slowed down ${(slow / 10 ** e9).toFixed(1)} × 10${String(e9).split('').map((ch) => SUP[+ch]).join('')} times`, 12 * p, 18 * p, { s: 10, c: T.muted });
+    txt(`t = ${si(Math.min(t, tmax * 1.05), 's', 3)}`, W - 12 * p, 18 * p, { a: 'right', s: 12, b: 1, m: 1 });
+    LANES.forEach((k, i) => {
+      const m = MEDIA[k], y = LANE_Y(i), a = Q([0.02, y, ZC + 0.05]), b = Q([1.1, y, ZC + 0.03]), frac = Math.min(1, t / transitTime(m.n, S.L));
+      const s1 = `${m.name}  n = ${m.n}`; ctx.font = `700 ${(narrow ? 9.5 : 10.5) * p}px ${T.ui}`; const lw = ctx.measureText(s1).width + 12 * p;
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.82; ctx.beginPath(); ctx.roundRect(a[0], a[1] - 8 * p, lw, 16 * p, 4 * p); ctx.fill(); ctx.globalAlpha = 1;
+      txt(s1, a[0] + 6 * p, a[1], { s: narrow ? 9.5 : 10.5, b: 1 });
+      if (frac >= 1 && !S.blind) txt(narrow ? '✓' : si(transitTime(m.n, S.L), 's', 4), b[0] + 8 * p, b[1], { s: 10, m: 1, b: narrow ? 1 : 0 });
+    });
+    const s0 = Q([0, LANE_Y(6) - 0.1, 0]), s1 = Q([1, LANE_Y(6) - 0.1, 0]);
+    txt('start', s0[0], s0[1], { a: 'center', s: 9, c: T.muted }); txt(`finish, ${S.L.toFixed(1)} m`, s1[0], s1[1], { a: 'center', s: 9, c: T.muted });
+    txt(narrow ? 'Wavelength drawn hugely enlarged. Drag to turn.' : 'Each pulse drawn as a short wave, hugely enlarged: its wavelength and length shrink to 1/n inside the material. Lanes drawn the same length whatever L is. Drag to turn.', W - 12 * p, Hh - 12 * p, { a: 'right', s: 9.5, c: T.muted });
+  }
+  function setDim(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried || !window.VD3) { v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setDim(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3) g3.el.hidden = !use3(); can.style.cursor = use3() ? 'grab' : '';
+    for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String(b.dataset.dim === v));
+    draw();
+  }
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setDim(b.dataset.dim); });
   function draw() {
     if (!T || !W) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    if (g3) { g3.el.hidden = !use3(); can.style.cursor = use3() ? 'grab' : ''; }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (use3()) { drawRace3(); return; } ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     if (S.view === 'race') drawRace(); else if (S.view === 'construct') drawConstruct(); else if (S.view === 'boundary') drawBoundary(); else drawOpening();
   }
 
@@ -424,6 +559,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce) S.playing = false; upd(); });
   tokens(); new ResizeObserver(resize).observe(stage);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'race'); resize();
+  { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (W < 620) G3.o.ph = 0.62; if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
