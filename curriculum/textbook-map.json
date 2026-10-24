@@ -2911,7 +2911,7 @@
         "viscometer"
       ],
       "unit": "fluids",
-      "note": "Falling Ball Viscometer (2026-10-22, Claude): Stokes drag, terminal speed, η from v against d², wall effect and Reynolds number; turbulence only as the high Re drag regime (water), no flow visualisation."
+      "note": "Falling Ball Viscometer (2026-10-22, Claude): Stokes drag, terminal speed, η from v against d², wall effect and Reynolds number. Flow in a pipe experiment (2026-10-24, Claude): Poiseuille's law from ΔP against Q in a 6 or 10 mm pipe, Reynolds dye thread through the laminar, unstable and turbulent regimes, Darcy–Weisbach with Blasius friction above N_R 3000; worksheet pipe-flow."
     },
     {
       "vol": 1,
@@ -9897,9 +9897,10 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Glycerol, castor oil, motor oil, water or a Mystery liquid in a 40 or 100 mm tube; steel, glass or nylon balls 1 to 10 mm; gate timer between marks 0.200 m apart (0.01 s), playback ×1/×10/×100; drag from Stokes × standard drag curve × Haberman–Sayre wall factor, with buoyancy and added mass; Capture, CSV, v against d² fit for η; Reynolds number; Blind. Full student/private package written 2026-10-22 for low-Re glass balls in glycerol, with CSV wall correction and model-limit diagnostic. Core/source-fit/reference checks passed; full empirical-drag bibliographic audit and browser/classroom review remain open. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
+      "note": "New 2026-10-22 (Claude). Glycerol, castor oil, motor oil, water or a Mystery liquid in a 40 or 100 mm tube; steel, glass or nylon balls 1 to 10 mm; gate timer between marks 0.200 m apart (0.01 s), playback ×1/×10/×100; drag from Stokes × standard drag curve × Haberman–Sayre wall factor, with buoyancy and added mass; Capture, CSV, v against d² fit for η; Reynolds number; Blind. Full student/private package written 2026-10-22 for low-Re glass balls in glycerol, with CSV wall correction and model-limit diagnostic. Core/source-fit/reference checks passed; full empirical-drag bibliographic audit and browser/classroom review remain open. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind. Flow in a pipe experiment added 2026-10-24: water at 20 or 40 °C or a Mystery liquid, collection cylinder and stopwatch, differential pressure gauge and manometers, dye thread.",
       "handouts": [
-        "viscometer"
+        "viscometer",
+        "pipe-flow"
       ],
       "title": "Falling Ball Viscometer",
       "url": "demos/viscometer.html"

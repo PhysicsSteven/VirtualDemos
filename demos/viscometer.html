@@ -55,6 +55,8 @@ table.rows input:focus { border-color: var(--accent); }
 .scene { position: absolute; inset: 0; }
 .tray { position: absolute; right: 14px; bottom: 26px; z-index: 2; width: min(320px, 40%); display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 10px; }
 .tray-title { font-size: 0.74rem; font-weight: 700; color: var(--muted); }
+#valveTray { left: 14px; right: auto; width: min(300px, 44%); }
+#valveTray input { width: 100%; }
 .balls { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 3px; }
 .balls button { display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 2px; min-width: 26px; padding: 2px 1px; background: none; border: 1px solid transparent; border-radius: 5px; cursor: pointer; font: 600 0.62rem/1 var(--font-mono); color: var(--muted); }
 .balls button i { display: block; border-radius: 50%; background: radial-gradient(circle at 35% 30%, #fff, var(--ballc, #8a949f) 65%); }
@@ -81,10 +83,10 @@ table.rows input:focus { border-color: var(--accent); }
   <header class="bar">
     <div>
       <h1>Falling Ball Viscometer</h1>
-      <p>Drop a ball into a tall tube of liquid. It quickly reaches a terminal speed, where weight balances buoyancy and drag. Time it between two marks and use Stokes' law to measure the liquid's viscosity, then find where Stokes' law stops working.</p>
+      <p id="lede">Drop a ball into a tall tube of liquid. It quickly reaches a terminal speed, where weight balances buoyancy and drag. Time it between two marks and use Stokes' law to measure the liquid's viscosity, then find where Stokes' law stops working.</p>
     </div>
     <div class="bar-right">
-      <div class="units mono">marks 0.200 m apart · 20 °C · g = 9.81 m/s²</div>
+      <div class="units mono" id="unitsLine">marks 0.200 m apart · 20 °C · g = 9.81 m/s²</div>
       <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
       <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/viscometer.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/viscometer.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM14 2h3v1h-3zM21 2h5v1h-5zM27 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h2v1h-2zM14 3h1v1h-1zM17 3h2v1h-2zM20 3h2v1h-2zM24 3h3v1h-3zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h3v1h-3zM17 4h1v1h-1zM21 4h1v1h-1zM23 4h3v1h-3zM27 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM12 5h2v1h-2zM16 5h1v1h-1zM19 5h1v1h-1zM22 5h2v1h-2zM25 5h1v1h-1zM27 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h3v1h-3zM15 6h3v1h-3zM21 6h1v1h-1zM23 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM13 7h3v1h-3zM24 7h2v1h-2zM28 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h4v1h-4zM16 9h2v1h-2zM19 9h2v1h-2zM24 9h1v1h-1zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h7v1h-7zM21 10h1v1h-1zM23 10h4v1h-4zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM4 11h1v1h-1zM7 11h1v1h-1zM9 11h8v1h-8zM18 11h1v1h-1zM20 11h1v1h-1zM23 11h1v1h-1zM26 11h1v1h-1zM28 11h2v1h-2zM31 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h1v1h-1zM7 12h2v1h-2zM11 12h2v1h-2zM15 12h1v1h-1zM17 12h2v1h-2zM20 12h4v1h-4zM25 12h2v1h-2zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM14 13h3v1h-3zM18 13h5v1h-5zM24 13h2v1h-2zM31 13h8v1h-8zM5 14h4v1h-4zM14 14h1v1h-1zM16 14h3v1h-3zM26 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM6 15h2v1h-2zM9 15h1v1h-1zM12 15h2v1h-2zM15 15h4v1h-4zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h3v1h-3zM6 16h3v1h-3zM10 16h1v1h-1zM12 16h2v1h-2zM16 16h2v1h-2zM20 16h3v1h-3zM27 16h3v1h-3zM31 16h2v1h-2zM34 16h3v1h-3zM38 16h1v1h-1zM2 17h1v1h-1zM4 17h1v1h-1zM6 17h1v1h-1zM11 17h2v1h-2zM15 17h1v1h-1zM21 17h1v1h-1zM23 17h3v1h-3zM29 17h2v1h-2zM33 17h1v1h-1zM35 17h3v1h-3zM2 18h1v1h-1zM4 18h1v1h-1zM8 18h4v1h-4zM13 18h1v1h-1zM17 18h1v1h-1zM19 18h3v1h-3zM23 18h5v1h-5zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM7 19h1v1h-1zM9 19h1v1h-1zM13 19h1v1h-1zM16 19h1v1h-1zM19 19h1v1h-1zM24 19h1v1h-1zM28 19h2v1h-2zM31 19h1v1h-1zM35 19h2v1h-2zM3 20h2v1h-2zM8 20h3v1h-3zM12 20h2v1h-2zM15 20h2v1h-2zM18 20h2v1h-2zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM4 21h2v1h-2zM7 21h1v1h-1zM10 21h2v1h-2zM13 21h3v1h-3zM17 21h2v1h-2zM20 21h3v1h-3zM24 21h1v1h-1zM27 21h1v1h-1zM29 21h2v1h-2zM32 21h4v1h-4zM38 21h1v1h-1zM3 22h3v1h-3zM8 22h2v1h-2zM11 22h3v1h-3zM18 22h2v1h-2zM21 22h1v1h-1zM25 22h2v1h-2zM28 22h1v1h-1zM30 22h6v1h-6zM4 23h1v1h-1zM9 23h1v1h-1zM11 23h4v1h-4zM16 23h2v1h-2zM19 23h1v1h-1zM21 23h2v1h-2zM24 23h2v1h-2zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM3 24h3v1h-3zM7 24h5v1h-5zM17 24h1v1h-1zM23 24h1v1h-1zM25 24h7v1h-7zM33 24h1v1h-1zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h1v1h-1zM7 25h1v1h-1zM9 25h1v1h-1zM12 25h1v1h-1zM14 25h3v1h-3zM20 25h3v1h-3zM30 25h1v1h-1zM32 25h5v1h-5zM3 26h2v1h-2zM7 26h2v1h-2zM11 26h3v1h-3zM16 26h2v1h-2zM19 26h1v1h-1zM22 26h3v1h-3zM26 26h1v1h-1zM28 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h1v1h-1zM4 27h2v1h-2zM7 27h1v1h-1zM9 27h1v1h-1zM14 27h1v1h-1zM20 27h2v1h-2zM24 27h2v1h-2zM27 27h5v1h-5zM34 27h2v1h-2zM2 28h3v1h-3zM6 28h1v1h-1zM8 28h1v1h-1zM10 28h3v1h-3zM15 28h1v1h-1zM17 28h1v1h-1zM24 28h1v1h-1zM26 28h1v1h-1zM28 28h2v1h-2zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h2v1h-2zM7 29h1v1h-1zM10 29h2v1h-2zM13 29h4v1h-4zM18 29h1v1h-1zM21 29h1v1h-1zM24 29h1v1h-1zM28 29h6v1h-6zM35 29h2v1h-2zM2 30h1v1h-1zM8 30h1v1h-1zM12 30h1v1h-1zM17 30h1v1h-1zM21 30h2v1h-2zM25 30h3v1h-3zM29 30h10v1h-10zM10 31h2v1h-2zM13 31h2v1h-2zM19 31h6v1h-6zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h1v1h-1zM15 32h1v1h-1zM17 32h5v1h-5zM25 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h3v1h-3zM15 33h2v1h-2zM18 33h1v1h-1zM21 33h3v1h-3zM25 33h1v1h-1zM27 33h4v1h-4zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM14 34h1v1h-1zM18 34h1v1h-1zM20 34h1v1h-1zM22 34h2v1h-2zM25 34h1v1h-1zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h3v1h-3zM14 35h2v1h-2zM22 35h4v1h-4zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM19 36h2v1h-2zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h5v1h-5zM17 37h1v1h-1zM19 37h1v1h-1zM24 37h3v1h-3zM28 37h1v1h-1zM31 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM14 38h1v1h-1zM16 38h1v1h-1zM18 38h1v1h-1zM21 38h2v1h-2zM26 38h1v1h-1zM30 38h1v1h-1zM33 38h1v1h-1zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
@@ -96,6 +98,7 @@ table.rows input:focus { border-color: var(--accent); }
       <div class="scene" id="scene">
       <canvas id="can" tabindex="0" role="img" aria-label="A tall glass tube of liquid with two timing marks 0.200 m apart and a ball falling through it, with the gate timer. Space drops the ball, R takes it out."></canvas>
       <div class="viewbar"><button type="button" class="spin attn" id="go">Drop the ball</button><button type="button" class="spin" id="back">Take it out</button>
+        <button type="button" class="spin attn" id="collect" hidden>Start collecting</button><button type="button" class="spin" id="empty" hidden>Empty the cylinder</button>
         <div class="seg" role="group" aria-label="Playback speed" id="speedSeg"><button type="button" data-s="1" aria-pressed="true">×1</button><button type="button" data-s="10" aria-pressed="false">×10</button><button type="button" data-s="100" aria-pressed="false">×100</button></div></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
       </div>
@@ -109,11 +112,32 @@ table.rows input:focus { border-color: var(--accent); }
         <div class="balls" id="ballBox" role="group" aria-label="Ball diameter d"></div>
         <div class="masslist" id="ballNow"></div>
       </div>
+      <div class="tray" id="valveTray" role="group" aria-labelledby="valveTitle" hidden>
+        <div class="tray-title" id="valveTitle">Outlet valve: open it to let more water through</div>
+        <div><div class="slider-head"><label for="sValve">Valve opening</label><output id="oValve" for="sValve"></output></div><input type="range" id="sValve" min="0" max="100" step="1" value="20"></div>
+      </div>
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/viscometer.html" target="viscometer-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/viscometer.html" target="viscometer-worksheet">Worksheet 1: Viscosity</a></li><li><a href="../curriculum/labs/students/pipe-flow.html" target="pipe-flow-worksheet">Worksheet 2: Pipe Flow and Turbulence</a></li></ul></details><!-- /vd-handout -->
       <section>
+        <h2>Experiment</h2>
+        <div class="seg" role="group" aria-label="Experiment" id="expSeg"><button type="button" data-x="ball" aria-pressed="true">Falling ball</button><button type="button" data-x="pipe" aria-pressed="false">Flow in a pipe</button></div>
+      </section>
+
+      <section id="pipeSec" hidden>
+        <h2>Liquid and pipe</h2>
+        <div class="seg" role="group" aria-label="Liquid in the pipe" id="pliqSeg">
+          <button type="button" data-l="water20" aria-pressed="true">Water, 20 °C</button>
+          <button type="button" data-l="water40" aria-pressed="false">Water, 40 °C</button>
+          <button type="button" data-l="mystery" aria-pressed="false">Mystery liquid</button>
+        </div>
+        <div class="inline"><span class="lab">Pipe inside diameter</span>
+          <div class="seg" role="group" aria-label="Pipe" id="pipeSeg"><button type="button" data-d="0.006" aria-pressed="false">6 mm</button><button type="button" data-d="0.01" aria-pressed="true">10 mm</button></div></div>
+        <p class="hint" id="pipeHint"></p>
+      </section>
+
+      <section id="ballSec">
         <h2>Liquid</h2>
         <div class="seg" role="group" aria-label="Liquid" id="fluidSeg">
           <button type="button" data-f="glycerol" aria-pressed="true">Glycerol</button>
@@ -132,7 +156,7 @@ table.rows input:focus { border-color: var(--accent); }
         <h2>Readouts</h2>
         <dl class="readout" id="out"></dl>
         <details class="more"><summary>The model and its formulas</summary>
-          <p class="formula">Stokes: F = 6πηrv · v_t = 2(ρ_b − ρ_f)g r²/(9η)</p>
+          <p class="formula" id="formula">Stokes: F = 6πηrv · v_t = 2(ρ_b − ρ_f)g r²/(9η)</p>
         </details>
       </section>
 
@@ -144,12 +168,12 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
-        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>d (mm)</th><th>t (s)</th><th>v (mm/s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th id="th1">d (mm)</th><th id="th2">t (s)</th><th id="th3">v (mm/s)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="plotfold"><summary>Plot and fit</summary><div class="foldbody">
         <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Terminal speed against diameter squared for the captured rows, with a least squares line through the smallest balls and residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Capture stores the liquid, ball, tube and the gate time between the marks (0.01 s); v = 0.200 m / t. Stokes' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / (18 × slope). The fit uses the rows that match the current settings.</p>
+          <p class="hint" id="capHow">Capture stores the liquid, ball, tube and the gate time between the marks (0.01 s); v = 0.200 m / t. Stokes' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / (18 × slope). The fit uses the rows that match the current settings.</p>
         </details>
         </div></details>
       </section>
@@ -159,7 +183,8 @@ table.rows input:focus { border-color: var(--accent); }
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>The model and its formulas</summary>
-          <p class="hint">Blind hides η, the Stokes prediction, the Reynolds number and the fitted η, leaving the timer and the densities. The Mystery liquid always hides its η.</p>
+          <p class="hint">Blind hides η, the Stokes prediction, the Reynolds number and the fitted η, leaving the timer and the densities. The Mystery liquid always hides its η. In Flow in a pipe, Blind hides the flow rate, speed, Reynolds number, regime and η, leaving the cylinder, the stopwatch and the pressure gauge.</p>
+          <p class="hint">Flow in a pipe: a smooth horizontal glass pipe fed from a constant head tank; the outlet valve sets the flow rate (0 to 60 mL/s in the 6 mm pipe, 0 to 100 mL/s in the 10 mm pipe). Two taps 0.500 m apart, far enough downstream that the flow is fully developed (the pipe before them is drawn shortened), feed a differential pressure gauge (0.1 Pa) and two manometer tubes. The pressure drop is the Darcy–Weisbach ΔP = f (L/D) ρv²/2 with f = 64/Re below Re = 2000 (exactly Poiseuille's law, ΔP = 8ηLQ/(πr⁴)) and Blasius's f = 0.3164 Re^(−1/4) for a smooth pipe above Re = 3000; between them, the range OpenStax calls unstable, f is interpolated on logarithmic axes. Water: η = 1.002 mPa·s at 20 °C and 0.653 mPa·s at 40 °C (OpenStax Table 14.4), ρ = 998.2 and 992.2 kg/m³ (CRC Handbook). The Mystery liquid is a water and glycerol mix with its own hidden η. The dye's path is drawn to show the kind of flow (straight in laminar flow, puffs in the unstable range, mixed across the pipe when turbulent) and slowed down; the eddies are illustrative, and the flow rate and pressure drop come only from the formulas.</p>
           <p class="hint">Model: drag F = 6πηrv × K(d/D) × C_D Re/24, with the standard drag curve of Clift, Grace and Weber (Oseen's 1 + 3Re/16 below Re = 0.01) and Haberman and Sayre's wall factor K for a sphere on the axis of a tube in slow flow (the K you apply). At higher Re the walls matter less: the factor is weakened following Di Felice (1996), whose fit covers Re up to about 200. The ball's motion includes buoyancy and the added mass ½ρ_f V. Densities in kg/m³: steel 7800, glass 2500, nylon 1140. Liquids at 20 °C: glycerol 1261 and η = 1.41 Pa·s; castor oil 961 and 0.986 Pa·s; motor oil (typical SAE 30) 875 and 0.29 Pa·s; water 998 and 1.00 mPa·s.</p>
         </details>
         </div></details>
@@ -252,13 +277,41 @@ table.rows input:focus { border-color: var(--accent); }
     rows.forEach((r, i) => { const t = cellNum(r.t); L.push([i + 1, r.liquid, r.rhoF, r.ball, r.rhoB, r.D, r.d, r.t, t > 0 ? +((MARK2 - MARK1) / t).toPrecision(6) : ''].map(csvCell).join(',')); });
     return L.join('\n') + '\n';
   }
+  /* Flow in a pipe (2026-10-24): steady, fully developed flow through a smooth round pipe between two pressure taps PIPE_L apart.
+     Darcy–Weisbach ΔP = f (L/D) ρ v²/2. Laminar (Re ≤ RE_LAM): f = 64/Re, which is Poiseuille's law exactly. Turbulent (Re ≥ RE_TURB):
+     Blasius's smooth pipe friction factor f = 0.3164 Re^(−1/4) (Blasius 1913, for Re up to about 10⁵). In between, the range OpenStax
+     §14.7 calls unstable, ln f is interpolated linearly in ln Re: an approximation, since real flow there flickers between the two. */
+  const PIPE_L = 0.5, RE_LAM = 2000, RE_TURB = 3000;
+  const PIPE_QMAX = { 0.006: 60e-6, 0.01: 100e-6 };   // the valve fully open, m³/s
+  const PIPE_LIQ = { water20: { name: 'Water, 20 °C', rho: 998.2, eta: 1.002e-3 }, water40: { name: 'Water, 40 °C', rho: 992.2, eta: 0.653e-3 } };   // η: OpenStax Vol. 1 Table 14.4; ρ: CRC Handbook
+  const pipeArea = (D) => Math.PI * D * D / 4;
+  const pipeSpeed = (Q, D) => Q / pipeArea(D);
+  const pipeRe = (Q, D, liq) => liq.rho * pipeSpeed(Q, D) * D / liq.eta;
+  const blasius = (Re) => 0.3164 * Re ** -0.25;
+  function friction(Re) {
+    if (Re <= RE_LAM) return 64 / Re;
+    if (Re >= RE_TURB) return blasius(Re);
+    const u = Math.log(Re / RE_LAM) / Math.log(RE_TURB / RE_LAM);
+    return Math.exp(Math.log(64 / RE_LAM) + u * (Math.log(blasius(RE_TURB)) - Math.log(64 / RE_LAM)));
+  }
+  function pipeDP(Q, D, liq) { if (Q <= 0) return 0; const v = pipeSpeed(Q, D), Re = pipeRe(Q, D, liq); return friction(Re) * PIPE_L / D * liq.rho * v * v / 2; }
+  const poiseuilleDP = (Q, D, liq) => 8 * liq.eta * PIPE_L * Q / (Math.PI * (D / 2) ** 4);   // Poiseuille's law (OpenStax §14.7): Q = (P₂ − P₁) π r⁴/(8ηl)
+  const regime = (Re) => (Re <= RE_LAM ? 'laminar' : Re < RE_TURB ? 'unstable' : 'turbulent');
+  function pipeCSV(rows, meta) {
+    const L = ['# Falling Ball Viscometer, flow in a pipe: captured readings (simulated data)', `# demo version,${meta.version}`, `# tap_spacing_m,${PIPE_L}`, `# g_m_per_s2,${G}`,
+      '# model,"Darcy-Weisbach with f = 64/Re (Re <= 2000, Poiseuille) and Blasius f = 0.3164 Re^-0.25 (Re >= 3000), log interpolation between; smooth pipe, fully developed flow"',
+      '# rounding,"cylinder to 1 mL, stopwatch to 0.01 s, pressure gauge to 0.1 Pa"', '# noise,none',
+      'row,liquid,rho_kg_m3,pipe_D_mm,valve_percent,V_mL,t_s,dP_Pa,dye'];
+    rows.forEach((r, i) => L.push([i + 1, r.liquid, r.rho, r.D, r.valve, r.V, r.t, r.dP, r.dye].map(csvCell).join(',')));
+    return L.join('\n') + '\n';
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id);
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const HINT = { glycerol: 'Glycerol: thick and dense. Steel balls of a few millimetres fall slowly enough for Stokes\' law to work well.', castor: 'Castor oil: a little less viscous than glycerol and less dense.', oil: 'Motor oil: much thinner. Bigger balls start to fall too fast for Stokes\' law.', water: 'Water: about 1400 times less viscous than glycerol. Every ball here falls far too fast for Stokes\' law; see what the timings give.' };
-  const S = { fluid: 'glycerol', myst: null, D: 0.04, ball: 'steel', d: 3, speed: 1, run: false, done: false, t: 0, s: { x: 0, v: 0 }, gate: null, t1: null, blind: false, rows: [] };
+  const S = { exp: 'ball', fluid: 'glycerol', myst: null, D: 0.04, ball: 'steel', d: 3, speed: 1, run: false, done: false, t: 0, s: { x: 0, v: 0 }, gate: null, t1: null, blind: false, rows: [] };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -315,6 +368,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function draw() {
     if (!T || !W) return;
+    if (S.exp === 'pipe') { drawPipe(); return; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     const p = ps(), top = (W < 560 ? 104 : 70) * p, bot = Hh - 30 * p, sc = (bot - top) / (LTUBE + 0.03), tw = Math.max(46 * p, Math.min(W * 0.32, S.D * sc)), cx = W * 0.42;
     const yOf = (z) => top + 0.03 * sc + z * sc;
@@ -352,6 +406,7 @@ table.rows input:focus { border-color: var(--accent); }
     if (up()) { ctx.fillStyle = T.mark; ctx.fillText('lighter than the liquid: it rises', tx, ty + 38 * p); }
   }
   function readouts() {
+    if (S.exp === 'pipe') { pReadouts(); return; }
     const fl = FL(), d = dm(), vt = terminal(d, rhoB(), fl, S.D), dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
     let h = dd('Ball density', `${rhoB()} kg/m³`) + dd('Liquid density', `${fl.rho} kg/m³`);
     h += dd('Speed now', `${g3(Math.abs(S.s.v) * 1000)} mm/s`) + dd('Timer A to B', S.done ? `${S.gate.dt.toFixed(2)} s` : '—');
@@ -397,7 +452,8 @@ table.rows input:focus { border-color: var(--accent); }
     setRun(!S.run);
   });
   $('back').addEventListener('click', reset);
-  can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'r' || e.key === 'R') reset(); else return; e.preventDefault(); });
+  can.addEventListener('keydown', (e) => { if (S.exp === 'pipe') { if (e.key === ' ') $('collect').click(); else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { window.__vi.valve(Math.max(0, Math.min(100, P.valve + (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 10 : 1)))); } else return; e.preventDefault(); return; }
+    if (e.key === ' ') $('go').click(); else if (e.key === 'r' || e.key === 'R') reset(); else return; e.preventDefault(); });
   function advance(dt) {
     // the timer shows the exact gate times; the drawn motion integrates the same equation
     const fl = FL(), d = dm(), tau = respTime(d, rhoB(), fl, S.D), h = Math.min(tau / 20, 1e-3), vt = terminal(d, rhoB(), fl, S.D), tEnd = S.t + dt;
@@ -414,50 +470,61 @@ table.rows input:focus { border-color: var(--accent); }
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
-    if (S.run) { advance(dt * S.speed); draw(); readouts(); }
+    if (S.exp === 'pipe') { const was = P.coll.on; pAdvance(dt * S.speed); if (!reduce) dyeStep(dt); draw(); if (was) readouts(); }
+    else if (S.run) { advance(dt * S.speed); draw(); readouts(); }
     requestAnimationFrame(frame);
   }
   // ---------- readings ----------
   function capStatus(m) { $('capStatus').textContent = m; }
   const key = () => `${S.myst ? 'mystery' : S.fluid}|${S.ball}|${S.D}`;
   $('capture').addEventListener('click', () => {
+    if (S.exp === 'pipe') { pCapture(); return; }
     if (!S.done) { capStatus('Drop the ball and let it pass both marks first.'); return; }
     const fl = FL(); S.rows.push({ key: key(), liquid: S.myst ? 'mystery' : S.fluid, rhoF: String(fl.rho), ball: S.ball, rhoB: String(rhoB()), D: String(S.D * 1000), d: S.d.toFixed(1), t: S.gate.dt.toFixed(2) });
     renderRows(); capStatus(`Row ${S.rows.length} captured.`);
   });
-  $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); if (S.exp === 'pipe') P.rows = []; else S.rows = []; renderRows(); capStatus('Readings cleared.'); });
   /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
      them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. Clear starts
      a new series, so the worksheet puts the next export in a new copy of its table. */
   let wsSeries = Date.now();
-  function toWorksheet(txt, fallback) {
+  function toWorksheet(txt, fallback, slug = 'viscometer') {
     const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
     const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {};
     lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); if (c.length > 1) meta[c[0]] = c[1]; });
     const hand = { v: 1, demo: 'viscometer', series: wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
-      note: 'Simulated data from the Falling Ball Viscometer demo.', csv: txt, csvName: 'viscometer-readings.csv' };
-    try { localStorage.setItem('vd-handoff:viscometer', JSON.stringify(hand)); }
+      note: 'Simulated data from the Falling Ball Viscometer demo.', csv: txt, csvName: `${slug}-readings.csv` };
+    try { localStorage.setItem('vd-handoff:' + slug, JSON.stringify(hand)); }
     catch (_) { fallback(); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
     const n = hand.rows.length;
     capStatus(`${n} reading${n === 1 ? '' : 's'} sent to the worksheet. `);
-    const a = document.createElement('a'); a.href = '../curriculum/labs/students/viscometer.html'; a.target = 'viscometer-worksheet'; a.textContent = 'Open the worksheet';
+    const a = document.createElement('a'); a.href = `../curriculum/labs/students/${slug}.html`; a.target = `${slug}-worksheet`; a.textContent = 'Open the worksheet';
     a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
   }
   $('exportCsv').addEventListener('click', () => {
+    if (S.exp === 'pipe') {
+      if (!P.rows.length) { capStatus('No readings to export.'); return; }
+      const txt = pipeCSV(P.rows, { version: VI_VERSION });
+      toWorksheet(txt, () => { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'pipe-flow-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} }, 'pipe-flow');
+      return;
+    }
     if (!S.rows.length) { capStatus('No readings to export.'); return; }
     const txt = readingsCSV(S.rows, { version: VI_VERSION });
     toWorksheet(txt, () => { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'viscometer-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} });
   });
   function renderRows() {
+    if (S.exp === 'pipe') { pRenderRows(); return; }
+    $('th1').textContent = 'd (mm)'; $('th2').textContent = 't (s)'; $('th3').textContent = 'v (mm/s)';
     const tb = $('rowsTbl').querySelector('tbody');
     tb.innerHTML = S.rows.length ? S.rows.map((r, i) => { const t = cellNum(r.t); return `<tr title="${r.liquid}, ${r.ball}, tube ${r.D} mm"><td>${i + 1}</td><td><input data-i="${i}" data-f="d" value="${r.d}" aria-label="d, row ${i + 1}"></td><td><input data-i="${i}" data-f="t" value="${r.t}" aria-label="t, row ${i + 1}"></td><td>${t > 0 ? g3(200 / t) : '—'}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`; }).join('')
       : '<tr><td class="empty" colspan="5">No readings yet. Drop a ball, let it pass both marks, capture.</td></tr>';
     fit();
   }
   $('rowsTbl').addEventListener('change', (e) => { const el = e.target; if (el.dataset.f) { S.rows[+el.dataset.i][el.dataset.f] = el.value.trim(); renderRows(); } });
-  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { (S.exp === 'pipe' ? P.rows : S.rows).splice(+b.dataset.del, 1); renderRows(); } });
   const fitCan = $('fitCan'), fctx = fitCan.getContext('2d');
   function fit() {
+    if (S.exp === 'pipe') { pFit(); return; }
     const pts = S.rows.filter((r) => r.key === key()).map((r) => { const d = cellNum(r.d), t = cellNum(r.t); return d > 0 && t > 0 ? [(d / 1000) ** 2, 0.2 / t] : null; }).filter(Boolean).sort((a, b) => a[0] - b[0]);
     const F = pts.length >= 1 ? fitOrigin(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
     let h;
@@ -484,6 +551,211 @@ table.rows input:focus { border-color: var(--accent); }
     fctx.fillStyle = T.ball; for (const [x, y] of pts) { fctx.beginPath(); fctx.arc(PX(x), PY(y), 3.2, 0, 7); fctx.fill(); }
     if (F) { const m = Math.max(...F.res.map(Math.abs), 1e-15), RY = (v) => (resT + resB) / 2 - (resB - resT) / 2 * 0.85 * v / m; fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(L, RY(0)); fctx.lineTo(Rr, RY(0)); fctx.stroke(); fctx.fillStyle = T.ball; pts.forEach(([x], i) => { fctx.beginPath(); fctx.arc(PX(x), RY(F.res[i]), 2.6, 0, 7); fctx.fill(); }); }
   }
+  // ---------- flow in a pipe (2026-10-24) ----------
+  const VG = window.VDGear;
+  function niceStep(r) { const e = 10 ** Math.floor(Math.log10(r)), q = r / e; return (q < 1.5 ? 1 : q < 3.5 ? 2 : q < 7.5 ? 5 : 10) * e; }
+  const P = { liq: 'water20', myst: null, D: 0.01, valve: 20, coll: { on: false, t: 0, V: 0 }, dye: [], puffs: [], rows: [], seed: 11 };
+  const LEDE = { ball: $('lede').textContent, pipe: 'Water flows from a constant head tank through a long glass pipe. Measure the flow rate and the pressure drop between two taps: in slow, laminar flow they follow Poiseuille\'s law and give the viscosity. Open the valve further and a thread of dye shows the flow turn turbulent near a Reynolds number of 2000 to 3000.' };
+  const UNITS = { ball: $('unitsLine').textContent, pipe: 'taps 0.500 m apart · cylinder 1000 mL · g = 9.81 m/s²' };
+  const pliq = () => (P.liq === 'mystery' ? P.myst : PIPE_LIQ[P.liq]);
+  const pQ = () => PIPE_QMAX[P.D] * P.valve / 100;
+  const pHidden = () => S.blind || P.liq === 'mystery';
+  function pNow() {
+    const liq = pliq(), Q = pQ(), Re = Q > 0 ? pipeRe(Q, P.D, liq) : 0, dP = pipeDP(Q, P.D, liq);
+    return { liq, Q, v: pipeSpeed(Q, P.D), Re, dP, dPr: Math.round(dP * 10) / 10, f: Q > 0 ? friction(Re) : NaN, reg: Q > 0 ? regime(Re) : 'no flow',
+      Vr: Math.round(P.coll.V * 1e6), tr: Math.round(P.coll.t * 100) / 100 };
+  }
+  function setExp(x) {
+    S.exp = x; const pipe = x === 'pipe';
+    for (const b of document.querySelectorAll('#expSeg button')) b.setAttribute('aria-pressed', String(b.dataset.x === x));
+    $('pipeSec').hidden = !pipe; $('ballSec').hidden = pipe; $('tray').hidden = pipe; $('valveTray').hidden = !pipe;
+    $('go').hidden = pipe; $('back').hidden = pipe; $('collect').hidden = !pipe; $('empty').hidden = !pipe;
+    $('lede').textContent = LEDE[x]; $('unitsLine').textContent = UNITS[x];
+    $('formula').textContent = pipe ? 'Poiseuille: Q = ΔP πr⁴/(8ηL) · Reynolds number N_R = ρvD/η · turbulent: ΔP = f (L/D) ρv²/2' : 'Stokes: F = 6πηrv · v_t = 2(ρ_b − ρ_f)g r²/(9η)';
+    $('capHow').textContent = pipe ? 'Capture stores the cylinder volume (1 mL), the stopwatch time (0.01 s), the pressure gauge (0.1 Pa) and what the dye is doing, with the liquid, pipe and valve setting. The fit uses the rows for this liquid and pipe: the slope of log ΔP against log Q for the three lowest and the three highest flows, and η from a line through the origin of ΔP against Q for the three lowest.'
+      : 'Capture stores the liquid, ball, tube and the gate time between the marks (0.01 s); v = 0.200 m / t. Stokes\' law predicts v ∝ d², so plot v against d² for one liquid, ball and tube: η = (ρ_b − ρ_f) g / (18 × slope). The fit uses the rows that match the current settings.';
+    if (pipe) { S.run = false; pSync(); }
+    renderRows(); draw(); readouts();
+  }
+  function pSync() {
+    for (const b of document.querySelectorAll('#pliqSeg button')) b.setAttribute('aria-pressed', String(b.dataset.l === P.liq));
+    for (const b of document.querySelectorAll('#pipeSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.d === P.D));
+    $('sValve').value = P.valve; $('oValve').textContent = `${P.valve}%`;
+    const liq = pliq();
+    $('pipeHint').textContent = P.liq === 'mystery' ? `A water and glycerol mix: ρ = ${liq.rho} kg/m³, η hidden. Find η from laminar flow, then predict where it turns turbulent.`
+      : `${liq.name}: ρ = ${liq.rho} kg/m³, η = ${(liq.eta * 1000).toFixed(3)} mPa·s. Fully open, the valve passes ${PIPE_QMAX[P.D] * 1e6} mL/s through the ${P.D * 1000} mm pipe.`;
+    $('collect').textContent = P.coll.on ? 'Stop collecting' : 'Start collecting';
+  }
+  function pStopColl() { P.coll.on = false; pSync(); }
+  function pAdvance(dtSim) {
+    if (!P.coll.on) return; const Q = pQ(); P.coll.t += dtSim; P.coll.V = Q * P.coll.t;
+    if (P.coll.V >= 1e-3) { P.coll.t = Q > 0 ? 1e-3 / Q : P.coll.t; P.coll.V = 1e-3; pStopColl(); capStatus('The cylinder is full (1000 mL): the stopwatch stopped.'); }
+  }
+  function pEmpty() { P.coll = { on: false, t: 0, V: 0 }; pSync(); draw(); readouts(); }
+  /* dye: a thread released on the axis at the inlet, carried along by the flow profile and, in turbulent flow, mixed across the pipe.
+     x runs from 0 (needle) to 1 (valve) along the drawn pipe, r from −1 to 1 across it. Picture only. */
+  const prand = () => { P.seed = (P.seed * 16807) % 2147483647; return P.seed / 2147483647; };
+  const gauss = () => { const u = Math.max(1e-9, prand()), v = prand(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v); };
+  function dyeStep(dt) {
+    const q = pNow(); if (q.Q <= 0) { return; }
+    const mean = 0.16, tl = q.Re >= RE_TURB ? 1 : 0, gam = q.Re > RE_LAM && q.Re < RE_TURB ? (q.Re - RE_LAM) / (RE_TURB - RE_LAM) : 0;
+    const mix = tl ? Math.min(2.2, 0.9 + (q.Re - RE_TURB) / 6000) : 1.2;
+    if (gam > 0 && prand() < dt * 1.6 * gam) P.puffs.push({ x0: -0.25, len: 0.1 + 0.18 * gam });
+    for (const pf of P.puffs) pf.x0 += mean * dt; P.puffs = P.puffs.filter((pf) => pf.x0 < 1.05);
+    const n = Math.round(150 * dt) + (prand() < (150 * dt) % 1 ? 1 : 0);
+    for (let i = 0; i < n; i++) P.dye.push({ x: prand() * 2 * mean * dt, r: 0.012 * gauss() });   /* spread over the frame, so the thread is even */
+    for (const d of P.dye) {
+      const inPuff = gam > 0 && P.puffs.some((pf) => d.x >= pf.x0 && d.x <= pf.x0 + pf.len), turb = (tl || inPuff) && d.x > 0.05;
+      const a = Math.min(0.999, Math.abs(d.r)), u = turb ? Math.pow(1 - a, 1 / 7) / 0.8167 : 2 * (1 - a * a);
+      d.x += mean * u * dt;
+      if (turb) { d.r += mix * Math.sqrt(dt) * gauss() * 0.6 + Math.sin(d.x * 40 + d.r * 3) * dt * mix; if (d.r > 1) d.r = 2 - d.r; if (d.r < -1) d.r = -2 - d.r; }
+    }
+    P.dye = P.dye.filter((d) => d.x < 1).slice(-2400);
+  }
+  function drawPipe() {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const p = ps(), q = pNow(), wide = W >= 640, benchY = Hh - 14 * p, liqC = P.liq === 'mystery' ? T.fluid : (VG.dark() ? '#3d6f9c' : '#8ec3ec');
+    ctx.fillStyle = T.wall; ctx.fillRect(0, 0, W, benchY); ctx.fillStyle = T.bench; ctx.fillRect(0, benchY, W, Hh - benchY); ctx.fillStyle = T.benchEdge; ctx.fillRect(0, benchY, W, 2 * p);
+    const trayOn = getComputedStyle($('valveTray')).position === 'absolute', trayH = trayOn ? $('valveTray').offsetHeight + 34 : 0;
+    const pipeY = Math.round(Math.min(benchY - trayH - 120 * p, Hh * 0.6)), pd = P.D * 2200 * p, tankW = wide ? 92 * p : 64 * p;
+    const tx0 = 14 * p, tTop = Math.max(118 * p, pipeY - 230 * p), xs = tx0 + tankW, cylX = W - (wide ? 84 : 58) * p, xe = cylX - (wide ? 60 : 40) * p;
+    // constant head tank on a stand, with an overflow
+    ctx.fillStyle = T.standDark; ctx.fillRect(tx0 + tankW * 0.2, pipeY + 24 * p, 6 * p, benchY - pipeY - 24 * p); ctx.fillRect(tx0 + tankW * 0.8 - 6 * p, pipeY + 24 * p, 6 * p, benchY - pipeY - 24 * p);
+    ctx.fillStyle = T.glassFill; ctx.fillRect(tx0, tTop, tankW, pipeY + 24 * p - tTop);
+    ctx.save(); ctx.globalAlpha = 0.8; ctx.fillStyle = liqC; ctx.fillRect(tx0 + 2 * p, tTop + 16 * p, tankW - 4 * p, pipeY + 22 * p - tTop - 16 * p); ctx.restore();
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 2.5 * p; ctx.strokeRect(tx0, tTop, tankW, pipeY + 24 * p - tTop);
+    VG.label(ctx, 'constant head tank', tx0 + tankW / 2, tTop - 8 * p, { a: 'center', s: 9.5 * p });
+    // the pipe: glass walls, liquid, dye
+    const yT = pipeY - pd / 2, yB = pipeY + pd / 2, X = (x) => xs + 26 * p + x * (xe - xs - 26 * p);
+    ctx.save(); ctx.globalAlpha = 0.75; ctx.fillStyle = liqC; ctx.fillRect(xs, yT, xe - xs, pd); ctx.restore();
+    ctx.fillStyle = 'rgba(214, 51, 132, 0.55)';
+    for (const d of P.dye) { ctx.beginPath(); ctx.arc(X(d.x), pipeY + d.r * (pd / 2 - 1.5 * p), 1.3 * p, 0, 7); ctx.fill(); }
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(xs, yT); ctx.lineTo(xe, yT); ctx.moveTo(xs, yB); ctx.lineTo(xe, yB); ctx.stroke();
+    ctx.strokeStyle = T.glassHi; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(xs, yT + 2.5 * p); ctx.lineTo(xe, yT + 2.5 * p); ctx.stroke();
+    // dye bottle and needle on the axis at the inlet
+    const nx = X(0); VG.box(ctx, nx - 9 * p, yT - 64 * p, 18 * p, 26 * p, { color: '#a02a68', r: 3, shadow: false });
+    ctx.strokeStyle = T.standDark; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(nx, yT - 38 * p); ctx.lineTo(nx, pipeY); ctx.lineTo(nx + 6 * p, pipeY); ctx.stroke();
+    VG.label(ctx, 'dye', nx + 12 * p, yT - 52 * p, { s: 9.5 * p });
+    // the two taps, manometer tubes and the differential gauge
+    const x1 = X(0.36), x2 = X(0.74), dh = q.dP / (q.liq.rho * G);
+    const dhMax = Math.max(0.02, pipeDP(PIPE_QMAX[P.D], P.D, PIPE_LIQ.water20) / (998.2 * G)), base = 0.06, mTop = 96 * p;
+    const mpx = (pipeY - pd / 2 - mTop - 8 * p) / (base + dhMax * 1.04), h2 = base, h1 = base + dh;
+    for (const [x, h, lab] of [[x1, h1, 'tap 1'], [x2, h2, 'tap 2']]) {
+      ctx.fillStyle = T.glassFill; ctx.fillRect(x - 4 * p, mTop, 8 * p, yT - mTop);
+      ctx.save(); ctx.globalAlpha = 0.85; ctx.fillStyle = liqC; ctx.fillRect(x - 3 * p, yT - h * mpx, 6 * p, h * mpx); ctx.restore();
+      ctx.strokeStyle = T.glass; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x - 4 * p, mTop); ctx.lineTo(x - 4 * p, yT); ctx.moveTo(x + 4 * p, mTop); ctx.lineTo(x + 4 * p, yT); ctx.stroke();
+      VG.label(ctx, lab, x, yB + 10 * p, { a: 'center', s: 9 * p });
+    }
+    // manometer ruler: centimetres of head
+    const rx = x2 + 14 * p; ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    const cmStep = niceStep((base + dhMax) * 100 / 6);
+    for (let c = 0; c <= (base + dhMax * 1.04) * 100 + 1e-9; c += cmStep) { const y = yT - c / 100 * mpx; ctx.beginPath(); ctx.moveTo(rx, y); ctx.lineTo(rx + 6 * p, y); ctx.stroke(); ctx.fillText(`${+c.toFixed(3)} cm`, rx + 9 * p, y); }
+    if (dh * mpx > 3 * p) { ctx.strokeStyle = T.mark; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(x1, yT - h1 * mpx); ctx.lineTo(x2, yT - h1 * mpx); ctx.moveTo(x1, yT - h2 * mpx); ctx.lineTo(x2, yT - h2 * mpx); ctx.stroke(); ctx.setLineDash([]);
+      VG.label(ctx, 'Δh', (x1 + x2) / 2, yT - (h1 + h2) / 2 * mpx, { a: 'center', c: T.mark, w: 700, s: 11 * p }); }
+    const gy = yB + 36 * p, gx = (x1 + x2) / 2;
+    ctx.strokeStyle = T.standDark; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(x1, yB); ctx.lineTo(x1, gy + 12 * p); ctx.lineTo(gx - 50 * p, gy + 12 * p); ctx.moveTo(x2, yB); ctx.lineTo(x2, gy + 12 * p); ctx.lineTo(gx + 50 * p, gy + 12 * p); ctx.stroke();
+    VG.box(ctx, gx - 52 * p, gy, 104 * p, 40 * p, { color: '#2e353f', r: 5 });
+    VG.lcd(ctx, gx - 46 * p, gy + 5 * p, 92 * p, 20 * p, `${q.dPr.toFixed(1)} Pa`);
+    VG.plate(ctx, 'ΔP gauge', gx, gy + 33 * p, { s: 7 * p });
+    const bL = X(0.36), bR = X(0.74), by = yT - 14 * p - pd * 0;
+    VG.label(ctx, '0.500 m', (bL + bR) / 2, gy + 54 * p, { a: 'center', s: 9.5 * p });
+    // the flow profile across the pipe, after tap 2
+    if (wide) {
+      const px0 = X(0.86), ph = 70 * p, py0 = gy - 4 * p, uMax = q.Re >= RE_TURB ? 1 / 0.8167 : 2;
+      VG.label(ctx, 'speed across the pipe', px0 + 20 * p, py0 - 8 * p, { a: 'center', s: 9 * p });
+      ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(px0, py0); ctx.lineTo(px0, py0 + ph); ctx.stroke();
+      if (q.Q > 0) {
+        const sh = (r) => { const a = Math.abs(r); return q.Re >= RE_TURB ? Math.pow(1 - a, 1 / 7) / 0.8167 : q.Re <= RE_LAM ? 2 * (1 - a * a) : (1 - (q.Re - RE_LAM) / 1000) * 2 * (1 - a * a) + (q.Re - RE_LAM) / 1000 * Math.pow(1 - a, 1 / 7) / 0.8167; };
+        ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2 * p;
+        for (let i = -4; i <= 4; i++) { const r = i / 4.4, y = py0 + ph / 2 + r * ph / 2, L = 44 * p * sh(r) / 2; ctx.beginPath(); ctx.moveTo(px0, y); ctx.lineTo(px0 + L, y); ctx.lineTo(px0 + L - 3 * p, y - 2 * p); ctx.moveTo(px0 + L, y); ctx.lineTo(px0 + L - 3 * p, y + 2 * p); ctx.stroke(); }
+        ctx.beginPath(); for (let i = -50; i <= 50; i++) { const r = i / 50, y = py0 + ph / 2 + r * ph / 2, L = 44 * p * sh(r) / 2; i === -50 ? ctx.moveTo(px0 + L, y) : ctx.lineTo(px0 + L, y); } ctx.stroke();
+      }
+    }
+    // valve, spout, cylinder and stopwatch
+    const vx = xe - 2 * p; ctx.fillStyle = '#b0452f'; ctx.beginPath(); ctx.arc(vx, yT - 14 * p, 10 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.arc(vx, yT - 14 * p, 4 * p, 0, 7); ctx.fill();
+    ctx.strokeStyle = T.standDark; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(vx, yT - 4 * p); ctx.lineTo(vx, yT); ctx.stroke();
+    VG.label(ctx, `valve ${P.valve}%`, vx, yT - 32 * p, { a: 'center', s: 9.5 * p });
+    ctx.save(); ctx.globalAlpha = 0.85; ctx.fillStyle = liqC; ctx.fillRect(xe, yT, cylX - xe + 6 * p, pd); ctx.restore();
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(xe, yT); ctx.lineTo(cylX + 6 * p, yT); ctx.lineTo(cylX + 6 * p, yB + 10 * p); ctx.moveTo(xe, yB); ctx.lineTo(cylX - 6 * p + pd * 0, yB); ctx.lineTo(cylX - 6 * p, yB + 10 * p); ctx.stroke();
+    const cw = (wide ? 46 : 36) * p, cTop = yB + 46 * p, cBot = benchY - 4 * p, ch = cBot - cTop - 6 * p, cx0 = cylX - cw / 2;
+    if (q.Q > 0) { const sw = Math.max(1.5 * p, Math.min(pd * 0.7, 2 * p + q.Q * 1e5 * p * 0.12)); ctx.save(); ctx.globalAlpha = 0.8; ctx.fillStyle = liqC;
+      const yEnd = P.coll.on || P.coll.V > 0 ? cBot - 6 * p - ch * P.coll.V / 1e-3 : cBot; ctx.fillRect(cylX - sw / 2, yB + 10 * p, sw, (P.coll.on ? yEnd : cTop - 8 * p) - yB - 10 * p); ctx.restore(); }
+    ctx.fillStyle = T.glassFill; ctx.fillRect(cx0, cTop, cw, cBot - cTop);
+    ctx.save(); ctx.globalAlpha = 0.8; ctx.fillStyle = liqC; const lvl = ch * P.coll.V / 1e-3; ctx.fillRect(cx0 + 2 * p, cBot - 6 * p - lvl, cw - 4 * p, lvl); ctx.restore();
+    ctx.strokeStyle = T.glass; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx0, cTop); ctx.lineTo(cx0, cBot); ctx.lineTo(cx0 + cw, cBot); ctx.lineTo(cx0 + cw, cTop); ctx.stroke();
+    ctx.fillStyle = T.standDark; ctx.fillRect(cx0 - 6 * p, cBot - 4 * p, cw + 12 * p, 5 * p);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; for (let k = 0; k <= 10; k++) { const y = cBot - 6 * p - ch * k / 10; ctx.beginPath(); ctx.moveTo(cx0, y); ctx.lineTo(cx0 + (k % 5 ? 7 : 12) * p, y); ctx.stroke(); }
+    VG.label(ctx, '1000', cx0 - 3 * p, cBot - 6 * p - ch, { a: 'right', s: 8.5 * p, m: true }); VG.label(ctx, '500', cx0 - 3 * p, cBot - 6 * p - ch / 2, { a: 'right', s: 8.5 * p, m: true });
+    VG.label(ctx, `${q.Vr} mL`, cx0 + cw / 2, cBot - 6 * p - lvl - 8 * p, { a: 'center', s: 10 * p, w: 700, c: T.ink });
+    if (!(P.coll.on || P.coll.V > 0)) VG.label(ctx, 'to the drain', cylX + cw / 2 + 4 * p, cTop - 14 * p, { a: 'right', s: 8.5 * p });
+    // readings at the top left
+    ctx.fillStyle = T.ink; ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const ty = (wide ? 54 : 58) * p; ctx.fillText(`stopwatch ${q.tr.toFixed(2)} s   cylinder ${q.Vr} mL   ΔP ${q.dPr.toFixed(1)} Pa`, 14 * p, ty);
+    ctx.font = `${11 * p}px ${T.ui}`; ctx.fillStyle = T.muted;
+    ctx.fillText(`${q.liq.name}${P.liq === 'mystery' ? ' (water and glycerol)' : ''} · ${P.D * 1000} mm pipe · dye ${q.reg === 'no flow' ? 'still' : q.reg === 'laminar' ? 'a straight thread' : q.reg === 'unstable' ? 'breaking into puffs' : 'mixed across the pipe'}${S.speed > 1 ? ` · stopwatch running ×${S.speed}` : ''}`, 14 * p, ty + 20 * p);
+  }
+  function pReadouts() {
+    const q = pNow(), dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    let h = dd('Liquid density', `${q.liq.rho} kg/m³`) + dd('Pipe inside diameter', `${(P.D * 1000).toFixed(1)} mm`) + dd('Cylinder', `${q.Vr} mL`) + dd('Stopwatch', `${q.tr.toFixed(2)} s`) + dd('Pressure drop ΔP', `${q.dPr.toFixed(1)} Pa`, true);
+    if (pHidden()) h += `<div class="wide"><dt>Flow rate, speed, Reynolds number, η</dt><dd class="ok">${P.liq === 'mystery' && !S.blind ? 'Mystery liquid: hidden. Measure them.' : 'hidden in Blind'}</dd></div>`;
+    else {
+      h += dd('Flow rate Q', `${(q.Q * 1e6).toFixed(2)} mL/s`) + dd('Mean speed v', `${(q.v * 100).toFixed(2)} cm/s`) + dd('Reynolds number N_R = ρvD/η', q.Q > 0 ? q.Re.toFixed(0) : '—') + dd('Flow', q.reg);
+      h += dd('Friction factor f', q.Q > 0 ? q.f.toFixed(4) : '—') + dd('Poiseuille\'s ΔP', `${poiseuilleDP(q.Q, P.D, q.liq).toFixed(1)} Pa`) + dd('Viscosity η', `${(q.liq.eta * 1000).toFixed(3)} mPa·s`, true);
+    }
+    $('out').innerHTML = h;
+  }
+  function pCapture() {
+    const q = pNow();
+    if (P.coll.on) { capStatus('Stop collecting first, then capture the cylinder and stopwatch readings.'); return; }
+    if (!(P.coll.V > 0)) { capStatus('Collect some water in the cylinder first.'); return; }
+    P.rows.push({ key: `${P.liq}|${P.D}`, liquid: q.liq.name, rho: String(q.liq.rho), D: (P.D * 1000).toFixed(1), valve: String(P.valve), V: String(q.Vr), t: q.tr.toFixed(2), dP: q.dPr.toFixed(1),
+      dye: q.reg === 'laminar' ? 'straight thread' : q.reg === 'unstable' ? 'puffs' : q.reg === 'turbulent' ? 'mixed' : 'still' });
+    renderRows(); capStatus(`Row ${P.rows.length} captured.`);
+  }
+  function pRenderRows() {
+    $('th1').textContent = 'V (mL)'; $('th2').textContent = 't (s)'; $('th3').textContent = 'ΔP (Pa)';
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = P.rows.length ? P.rows.map((r, i) => `<tr title="${r.liquid}, ${r.D} mm pipe, valve ${r.valve}%, dye ${r.dye}"><td>${i + 1}</td><td>${r.V}</td><td>${r.t}</td><td>${r.dP}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="5">No readings yet. Collect water for a while, stop, then capture.</td></tr>';
+    pFit();
+  }
+  function pFit() {
+    const pts = P.rows.filter((r) => r.key === `${P.liq}|${P.D}`).map((r) => { const V = cellNum(r.V), t = cellNum(r.t), dp = cellNum(r.dP); return V > 0 && t > 0 && dp > 0 ? [V / t * 1e-6, dp] : null; }).filter(Boolean).sort((a, b) => a[0] - b[0]);
+    let h;
+    if (pts.length < 3) h = '<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least three flows with this liquid and pipe.</dd></div>';
+    else {
+      const lo = pts.slice(0, 3), hi = pts.slice(-3), ll = (a) => fitLine(a.map((q) => Math.log(q[0])), a.map((q) => Math.log(q[1])));
+      const nLo = ll(lo), nHi = ll(hi), F0 = fitOrigin(lo.map((q) => q[0]), lo.map((q) => q[1])), eta = F0.b * Math.PI * (P.D / 2) ** 4 / (8 * PIPE_L);
+      h = `<div><dt>log ΔP against log Q, lowest three</dt><dd>slope ${nLo.b.toFixed(3)}</dd></div><div><dt>highest three</dt><dd>slope ${nHi.b.toFixed(3)}</dd></div>`;
+      h += pHidden() ? '<div class="wide"><dt>η = slope × πr⁴/(8L), lowest three</dt><dd class="ok">hidden: work it out</dd></div>' : `<div class="wide"><dt>η = slope × πr⁴/(8L), lowest three</dt><dd>${(eta * 1000).toFixed(3)} mPa·s</dd></div>`;
+    }
+    $('fitOut').innerHTML = h; pDrawFit(pts);
+  }
+  function pDrawFit(pts) {
+    const r = fitCan.getBoundingClientRect(), w = r.width, h = r.height; if (!w || !T) return;
+    fitCan.width = Math.round(w * dpr); fitCan.height = Math.round(h * dpr); fctx.setTransform(dpr, 0, 0, dpr, 0, 0); fctx.fillStyle = T.canvas; fctx.fillRect(0, 0, w, h);
+    const L = 40, Rr = w - 8, top = 8, B = h - 22;
+    fctx.strokeStyle = T.line; fctx.strokeRect(L + 0.5, top + 0.5, Rr - L, B - top);
+    fctx.fillStyle = T.muted; fctx.font = `10px ${T.mono}`; fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText('Q (mL/s), log scale', (L + Rr) / 2, B + 4);
+    fctx.save(); fctx.translate(10, (top + B) / 2); fctx.rotate(-Math.PI / 2); fctx.fillText('ΔP (Pa), log', 0, 0); fctx.restore();
+    if (pts.length < 1) return;
+    const xs = pts.map((q) => Math.log10(q[0] * 1e6)), ys = pts.map((q) => Math.log10(q[1]));
+    const x0 = Math.min(...xs) - 0.1, x1 = Math.max(...xs) + 0.1, y0 = Math.min(...ys) - 0.15, y1 = Math.max(...ys) + 0.15, PX = (x) => L + (Rr - L) * (x - x0) / (x1 - x0), PY = (y) => B - (B - top) * (y - y0) / (y1 - y0);
+    fctx.textAlign = 'right'; fctx.textBaseline = 'middle'; fctx.fillText(g3(10 ** y1), L - 3, PY(y1)); fctx.fillText(g3(10 ** y0), L - 3, PY(y0));
+    fctx.textAlign = 'left'; fctx.textBaseline = 'bottom'; fctx.fillText(g3(10 ** x0), L + 2, B - 2); fctx.textAlign = 'right'; fctx.fillText(g3(10 ** x1), Rr - 2, B - 2);
+    fctx.fillStyle = T.mark; xs.forEach((x, i) => { fctx.beginPath(); fctx.arc(PX(x), PY(ys[i]), 3.2, 0, 7); fctx.fill(); });
+  }
+  for (const b of document.querySelectorAll('#expSeg button')) b.addEventListener('click', () => setExp(b.dataset.x));
+  $('pliqSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-l]'); if (!b) return;
+    if (P.liq === 'mystery' && P.myst) capStatus(`Mystery liquid: it was η = ${(P.myst.eta * 1000).toFixed(3)} mPa·s.`);
+    P.liq = b.dataset.l; if (P.liq === 'mystery') { const eta = Math.round((2 + Math.random() * 2) * 1000) / 1e6; P.myst = { name: 'Mystery liquid', eta, rho: Math.round(1000 + 30 * eta * 1000) }; }
+    P.dye = []; P.puffs = []; pEmpty(); pFit(); });
+  $('pipeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-d]'); if (!b) return; P.D = +b.dataset.d; P.dye = []; P.puffs = []; pEmpty(); pFit(); });
+  $('sValve').addEventListener('input', (e) => { P.valve = +e.target.value; if (P.coll.on) { pStopColl(); capStatus('Changing the flow stops the stopwatch; empty the cylinder and collect again.'); } pSync(); draw(); readouts(); });
+  $('collect').addEventListener('click', () => { if (P.coll.on) { pStopColl(); } else { if (P.coll.V >= 1e-3) { capStatus('The cylinder is full: empty it first.'); return; } if (P.coll.V > 0) { capStatus('Empty the cylinder first, so the stopwatch and volume start from zero.'); return; } P.coll.on = true; pSync(); } draw(); readouts(); });
+  $('empty').addEventListener('click', pEmpty);
+  window.__vi = { setExp, valve: (u) => { $('sValve').value = u; $('sValve').dispatchEvent(new Event('input')); }, collectFor: (t) => { pEmpty(); P.coll.on = true; pAdvance(t); pStopColl(); draw(); readouts(); }, now: pNow, get P() { return P; } };
+
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; readouts(); fit(); });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); fit(); }
