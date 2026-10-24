@@ -68,9 +68,9 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 @media (max-height: 820px) and (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 320px; } }
 .stage {
   position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas);
-  display: grid; grid-template-rows: minmax(0, 1fr) 170px;
+  display: grid; grid-template-rows: minmax(0, 1fr) 210px;
 }
-:root[data-projector="on"] .stage { grid-template-rows: minmax(0, 1fr) 200px; }
+:root[data-projector="on"] .stage { grid-template-rows: minmax(0, 1fr) 250px; }
 .pane + .pane { border-top: 1px solid var(--line); }
 .stage canvas { position: absolute; inset: 0; display: block; touch-action: none; outline: none; }
 /* pictures, not controls: let a finger on them scroll the page */
@@ -119,9 +119,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   .stage { min-height: 0; grid-template-rows: auto auto auto; }
   .viewbar { position: static; justify-content: flex-start; padding: 10px 10px 0; }
   .pane.main { height: 56vh; min-height: 330px; }
-  .pane.strip { height: 170px; }
+  .pane.strip { height: 330px; }
   :root[data-projector="on"] .stage { grid-template-rows: auto auto auto; }
-  :root[data-projector="on"] .pane.strip { height: 245px; }
+  :root[data-projector="on"] .pane.strip { height: 420px; }
 }
 /* phone touch targets: the house minimums (buttons 36 px, sliders 28 px) */
 @media (max-width: 820px) {
@@ -129,6 +129,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   input[type="range"] { min-height: 28px; }
 }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -163,7 +165,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <canvas id="chart" tabindex="0" role="application" aria-label="Planck spectrum chart. Drag the peak marker sideways to change the temperature. Arrow keys up and down change the temperature, left and right move the peak."></canvas>
       </div>
       <div class="pane strip">
-        <canvas id="strip" role="img" aria-label="Perceived color of a blackbody at this temperature, and the blackbody color scale from 1000 K to 40,000 K with spectral classes."></canvas>
+        <canvas id="strip" role="img" aria-label="The glowing object in its perceived color, its light spread by a prism onto a screen with the ultraviolet, visible and infrared shares, a radiometer reading the flux, and the blackbody color scale from 1000 K to 40,000 K with spectral classes."></canvas>
       </div>
     </div>
 
@@ -706,8 +708,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
     pins.forEach((p, i) => stroke((l) => yOfCurve(l, p.T), pinColor(T, i), 2 * ps));
     if (S.rj) stroke((l) => yOfRJ(l, S.T), T.pos, 1.8 * ps, [7 * ps, 5 * ps]);
+    /* the area under the curve, shaded: π times it is the flux σT⁴ that the radiometer reads (only on linear axes, where the
+       area on the page is the integral) */
+    if (!xlog && !ylog) {
+      ctx.beginPath(); ctx.moveTo(padL, padT + ph);
+      for (let i = 0; i <= N; i++) { const lam = lamAt(i); ctx.lineTo(padL + pw * i / N, lam > 0 ? yOfCurve(lam, S.T) : padT + ph); }
+      ctx.lineTo(padL + pw, padT + ph); ctx.closePath();
+      ctx.fillStyle = T.pos; ctx.globalAlpha = 0.09; ctx.fill(); ctx.globalAlpha = 1;
+    }
     stroke((l) => yOfCurve(l, S.T), T.pos, 2.8 * ps);
     ctx.restore();
+    if (!xlog && !ylog) {
+      const lp = wien(S.T), xa = X(lp * 1.9), ya = yOfCurve(lp * 1.9, S.T);
+      const txt = 'π × shaded area = σT⁴ = ' + sci(SIG * S.T ** 4, 3) + ' W/m²';
+      ctx.font = `600 ${11 * ps}px ${mono}`;
+      const w = ctx.measureText(txt).width;
+      const tx = Math.min(padL + pw - w - 4, Math.max(padL + 6, xa - 10 * ps)), tyy = Math.min(padT + ph - 22 * ps, Math.max(ya + 26 * ps, padT + ph * 0.55));
+      if (xa < padL + pw && w < pw - 20) { ctx.fillStyle = T.pos; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, tx, tyy); }
+    }
 
     // peak markers
     const marks = [...pins.map((p, i) => ({ T: p.T, c: pinColor(T, i), cur: false })), { T: S.T, c: T.pos, cur: true }];
@@ -784,37 +802,70 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
   }
 
-  // ---------- star color strip ----------
-  function drawStrip() {
-    const ctx = sctx, T = tokens(), W = SW, H = SH, ps = T.ps;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    const mono = monoFont(), ui = uiFont();
-    const pad = 12 * ps;
-    const box = Math.min(H - 2 * pad, Math.max(110 * ps, W * 0.32));
-    const bx = pad, by = (H - box) / 2;
-
-    // sky box with glowing disk
-    ctx.fillStyle = T.sky;
-    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(bx, by, box, box, 8) : ctx.rect(bx, by, box, box); ctx.fill();
-    // below about 1000 K the visible tail is pure deep red; the CIE fit is unreliable that far out, so use the 1000 K hue
+  // ---------- the glowing object, a prism spectrometer, a radiometer and the color scale ----------
+  /* share of σT⁴ below 380 nm (ultraviolet), Simpson's rule on ln λ from 0.01 times the peak wavelength; the visible share is
+     visibleFraction(T) and infrared is the rest */
+  function uvFraction(T) {
+    const a = Math.log(BW / T * 0.01), b = Math.log(380e-9);
+    if (a >= b) return 0;
+    const n = 2000, h = (b - a) / n, g = (u) => { const l = Math.exp(u); return planck(l, T) * l; };
+    let sum = g(a) + g(b);
+    for (let i = 1; i < n; i++) sum += (i % 2 ? 4 : 2) * g(a + i * h);
+    return Math.min(1, (sum * h / 3) / (SIG * T ** 4 / Math.PI));
+  }
+  /* screen exposure: one fixed setting for every temperature, so the spectrum on the screen is as bright as B(λ) itself; set so the
+     Sun's peak radiance just fills the scale (brightness = (B/B_sun peak)^(1/2.2), the display gamma) */
+  const B_EXPOSE = planck(wien(5772), 5772);
+  const pct = (f) => f <= 0 ? '0%' : f >= 0.995 ? Math.round(f * 100) + '%' : f >= 0.095 ? (f * 100).toFixed(0) + '%' : f >= 0.001 ? (f * 100).toFixed(1) + '%' : '< 0.1%';
+  function rr(ctx, x, y, w, h, r) { ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x, y, w, h, r) : ctx.rect(x, y, w, h); }
+  function drawSource(ctx, bx, by, box, ps, mono) {
+    const G = window.VDGear;
+    ctx.fillStyle = S.star ? T0.sky : '#11161d';
+    rr(ctx, bx, by, box, box, 8); ctx.fill();
+    /* below about 1000 K the visible tail is pure deep red; the CIE fit is unreliable that far out, so use the 1000 K hue */
     const col = bbColor(Math.max(S.T, 1000));
     const dim = S.T < 700 ? 0 : S.T < 1000 ? (S.T - 700) / 300 : 1;
-    const cx = bx + box / 2, cy = by + box * 0.44, r = box * 0.2;
-    if (dim === 0) {
-      ctx.fillStyle = '#161c24'; ctx.strokeStyle = '#3a4554'; ctx.lineWidth = 1.5 * ps; ctx.setLineDash([4 * ps, 4 * ps]);
-      ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
+    const cx = bx + box / 2, cy = by + box * 0.44;
+    /* the halo grows with the flux σT⁴: one step per factor of ten, the Sun's at 2.3 disk radii */
+    const halo = Math.max(1.3, Math.min(3.4, 2.3 + 0.28 * Math.log10(SIG * S.T ** 4 / (SIG * 5772 ** 4))));
+    ctx.save(); rr(ctx, bx, by, box, box, 8); ctx.clip();
+    if (S.star) {
+      /* a few faint background stars, fixed */
+      ctx.fillStyle = 'rgba(220,228,240,0.55)';
+      for (let i = 0; i < 26; i++) { const u = (Math.sin(i * 91.7) * 0.5 + 0.5), v = (Math.sin(i * 37.3 + 1) * 0.5 + 0.5); ctx.fillRect(bx + u * box, by + v * box, i % 5 ? 1 : 1.6, i % 5 ? 1 : 1.6); }
+      const r = box * 0.2;
+      if (dim === 0) {
+        ctx.fillStyle = '#161c24'; ctx.strokeStyle = '#3a4554'; ctx.lineWidth = 1.5 * ps; ctx.setLineDash([4 * ps, 4 * ps]);
+        ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
+      }
+      ctx.globalAlpha = dim;
+      const hg = ctx.createRadialGradient(cx, cy, r * 0.8, cx, cy, r * halo);
+      hg.addColorStop(0, css(col, 0.55)); hg.addColorStop(0.4, css(col, 0.16)); hg.addColorStop(1, css(col, 0));
+      ctx.fillStyle = hg; ctx.fillRect(bx, by, box, box);
+      const core = col.map((v) => Math.round(v + (255 - v) * 0.3));
+      const disk = ctx.createRadialGradient(cx - r * 0.15, cy - r * 0.15, 0, cx, cy, r);
+      disk.addColorStop(0, css(core)); disk.addColorStop(0.75, css(col)); disk.addColorStop(1, css(col.map((v) => Math.round(v * 0.85))));
+      ctx.fillStyle = disk; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill();
+    } else {
+      /* a lamp: glass bulb, two leads and a coiled filament glowing in its computed color */
+      const rb = box * 0.27;
+      const fil = dim > 0 ? css(col.map((v) => Math.round(v + (255 - v) * 0.2))) : '#4a525c';
+      if (dim > 0) {
+        ctx.globalAlpha = dim;
+        const hg = ctx.createRadialGradient(cx, cy, 0, cx, cy, rb * halo * 0.75);
+        hg.addColorStop(0, css(col, 0.6)); hg.addColorStop(0.35, css(col, 0.2)); hg.addColorStop(1, css(col, 0));
+        ctx.fillStyle = hg; ctx.fillRect(bx, by, box, box); ctx.globalAlpha = 1;
+      }
+      ctx.strokeStyle = 'rgba(200,215,230,0.35)'; ctx.lineWidth = 1.4 * ps;
+      ctx.beginPath(); ctx.arc(cx, cy, rb, Math.PI * 0.72, Math.PI * 2.28); ctx.stroke();
+      ctx.fillStyle = '#6b7480'; ctx.fillRect(cx - rb * 0.42, cy + rb * 0.68, rb * 0.84, rb * 0.5);
+      ctx.strokeStyle = '#8a939e'; ctx.lineWidth = 1.2 * ps;
+      ctx.beginPath(); ctx.moveTo(cx - rb * 0.3, cy + rb * 0.7); ctx.lineTo(cx - rb * 0.42, cy); ctx.moveTo(cx + rb * 0.3, cy + rb * 0.7); ctx.lineTo(cx + rb * 0.42, cy); ctx.stroke();
+      ctx.strokeStyle = fil; ctx.lineWidth = 2 * ps; ctx.shadowColor = dim > 0 ? css(col, 0.9) : 'transparent'; ctx.shadowBlur = 10 * ps * dim;
+      ctx.beginPath();
+      for (let i = 0; i <= 48; i++) { const t = i / 48, x = cx - rb * 0.42 + rb * 0.84 * t, y = cy - Math.sin(t * Math.PI * 14) * rb * 0.09; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }
+      ctx.stroke(); ctx.shadowBlur = 0;
     }
-    ctx.save();
-    ctx.globalAlpha = dim;
-    const halo = ctx.createRadialGradient(cx, cy, r * 0.8, cx, cy, r * 2.3);
-    halo.addColorStop(0, css(col, 0.55)); halo.addColorStop(0.4, css(col, 0.16)); halo.addColorStop(1, css(col, 0));
-    ctx.fillStyle = halo; ctx.fillRect(bx, by, box, box);
-    const core = col.map((v) => Math.round(v + (255 - v) * 0.3));
-    const disk = ctx.createRadialGradient(cx - r * 0.15, cy - r * 0.15, 0, cx, cy, r);
-    disk.addColorStop(0, css(core)); disk.addColorStop(0.75, css(col)); disk.addColorStop(1, css(col.map((v) => Math.round(v * 0.85))));
-    ctx.fillStyle = disk; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill();
     ctx.restore();
     ctx.fillStyle = '#e3e8ef'; ctx.textAlign = 'center'; ctx.textBaseline = 'alphabetic';
     ctx.font = `600 ${11.5 * ps}px ${mono}`;
@@ -823,16 +874,97 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const hex = '#' + col.map((v) => v.toString(16).padStart(2, '0')).join('');
     const note = S.T < 100 ? 'microwaves, no glow' : S.T < 700 ? 'infrared, no visible glow' : S.T < 1000 ? 'dull red glow' : hex;
     ctx.fillText(note, cx, by + box - 8 * ps);
+    return { col, dim, cx, cy };
+  }
+  let T0 = null;
+  function drawStrip() {
+    const ctx = sctx, T = tokens(), W = SW, H = SH, ps = T.ps;
+    T0 = T;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, W, H);
+    const G = window.VDGear;
+    if (G) G.backdrop(ctx, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    const mono = monoFont(), ui = uiFont();
+    const pad = 12 * ps;
+    const two = W < 700;                       /* phones: the meter and the color scale go on a second row */
+    const rowH = two ? Math.round(H * 0.58) : H;
+    const box = Math.min(rowH - 2 * pad, Math.max(104 * ps, W * 0.2), 190 * ps);
+    const bx = pad, by = (rowH - box) / 2;
+    const src = drawSource(ctx, bx, by, box, ps, mono);
+
+    /* spectrometer: slit, prism, and a screen; the prism bends violet most, so violet lands at the top */
+    const uv = uvFraction(S.T), vis = visibleFraction(S.T), ir = Math.max(0, 1 - uv - vis);
+    const slitX = bx + box + 22 * ps, prX = slitX + 34 * ps, prW = 40 * ps;
+    const scrW = 14 * ps, scrX = prX + prW + (two ? 46 : 70) * ps;
+    const scrT = by + 4 * ps, scrB = by + box - 4 * ps, scrH = scrB - scrT;
+    const uvH = scrH * 0.17, irH = scrH * 0.25, visT = scrT + uvH, visB = scrB - irH;
+    const beamY = by + box * 0.44;
+    if (G) { G.shadow(ctx, prX + prW / 2, by + box + 4 * ps, prW * 0.7, 4 * ps, 0.6); }
+    /* incoming white beam */
+    ctx.save(); ctx.globalAlpha = 0.25 + 0.6 * src.dim;
+    const bg = ctx.createLinearGradient(bx + box, 0, prX, 0); bg.addColorStop(0, css(src.col, 0.15)); bg.addColorStop(1, css(src.col, 0.7));
+    ctx.fillStyle = src.dim ? bg : 'rgba(150,40,40,0.18)'; ctx.fillRect(bx + box - 6 * ps, beamY - 2.5 * ps, prX - bx - box + 22 * ps, 5 * ps); ctx.restore();
+    ctx.fillStyle = '#2e353f'; ctx.fillRect(slitX - 2 * ps, beamY - 26 * ps, 4 * ps, 22 * ps); ctx.fillRect(slitX - 2 * ps, beamY + 4 * ps, 4 * ps, 22 * ps);
+    /* fan of colored rays to the screen, each as bright as B(λ) on the fixed exposure */
+    const prOut = { x: prX + prW * 0.62, y: beamY };
+    const ys = (l) => visT + (l - 380) / 370 * (visB - visT);
+    const bright = (l) => Math.min(1, Math.pow(planck(l * 1e-9, S.T) / B_EXPOSE, 1 / 2.2));
+    for (let l = 380; l <= 750; l += 2) {
+      const k = l - 380, a = bright(l);
+      if (a < 0.004) continue;
+      ctx.strokeStyle = css(BAND[k].rgb, 0.18 * a); ctx.lineWidth = 2.2 * ps;
+      ctx.beginPath(); ctx.moveTo(prOut.x, prOut.y); ctx.lineTo(scrX, ys(l)); ctx.stroke();
+    }
+    /* prism */
+    ctx.save();
+    ctx.beginPath(); ctx.moveTo(prX, beamY + 30 * ps); ctx.lineTo(prX + prW, beamY + 30 * ps); ctx.lineTo(prX + prW / 2, beamY - 34 * ps); ctx.closePath();
+    const pg = ctx.createLinearGradient(prX, 0, prX + prW, 0); pg.addColorStop(0, 'rgba(190,215,240,0.55)'); pg.addColorStop(0.5, 'rgba(235,245,255,0.35)'); pg.addColorStop(1, 'rgba(160,190,220,0.55)');
+    ctx.fillStyle = pg; ctx.fill(); ctx.strokeStyle = 'rgba(120,150,180,0.9)'; ctx.lineWidth = 1.2 * ps; ctx.stroke();
+    ctx.restore();
+    /* screen */
+    ctx.fillStyle = '#0d1117'; rr(ctx, scrX, scrT, scrW, scrH, 2); ctx.fill();
+    for (let l = 380; l < 750; l++) {
+      const k = l - 380, a = bright(l), y0 = ys(l), y1 = ys(l + 1);
+      ctx.fillStyle = css(BAND[k].rgb.map((v) => Math.round(v * a)));
+      ctx.fillRect(scrX + 1, y0, scrW - 2, y1 - y0 + 0.6);
+    }
+    ctx.strokeStyle = 'rgba(160,170,185,0.6)'; ctx.lineWidth = 1; ctx.setLineDash([2, 2]);
+    ctx.beginPath(); ctx.moveTo(scrX, visT); ctx.lineTo(scrX + scrW, visT); ctx.moveTo(scrX, visB); ctx.lineTo(scrX + scrW, visB); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = '#59616c'; ctx.lineWidth = 1.5 * ps; rr(ctx, scrX, scrT, scrW, scrH, 2); ctx.stroke();
+    /* share of the power in each band, beside the screen */
+    ctx.font = `600 ${10.5 * ps}px ${mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = T.ink;
+    const lx = scrX + scrW + 6 * ps;
+    ctx.fillText('UV ' + pct(uv), lx, scrT + uvH / 2);
+    ctx.fillText('vis ' + pct(vis), lx, (visT + visB) / 2);
+    ctx.fillText('IR ' + pct(ir), lx, scrB - irH / 2);
+    ctx.font = `${9.5 * ps}px ${ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    if (!two) ctx.fillText('prism', prX + prW / 2, beamY + 34 * ps);
+
+    /* radiometer: reads σT⁴, the flux from each square meter of surface (π times the area under the curve) */
+    let mx, my, mw = 150 * ps, mh = 64 * ps;
+    if (two) { mx = pad; my = rowH + 4 * ps; mw = Math.min(150 * ps, W * 0.42); }
+    else { mx = lx + 62 * ps; my = (H - mh) / 2 - 8 * ps; }
+    if (G) G.shadow(ctx, mx + mw / 2, my + mh + 4 * ps, mw * 0.5, 4 * ps, 0.7);
+    const ig = ctx.createLinearGradient(0, my, 0, my + mh); ig.addColorStop(0, '#4a5665'); ig.addColorStop(1, '#333c48');
+    ctx.fillStyle = ig; rr(ctx, mx, my, mw, mh, 7 * ps); ctx.fill();
+    const F = SIG * Math.pow(S.T, 4);
+    const lcdH = 24 * ps;
+    if (G) G.lcd(ctx, mx + 8 * ps, my + 8 * ps, mw - 16 * ps, lcdH, sci(F, 3), { font: `600 ${14 * ps}px ${mono}` });
+    ctx.fillStyle = '#e6ebf1'; ctx.font = `700 ${9 * ps}px ${ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('RADIOMETER · W/m²', mx + mw / 2, my + lcdH + 13 * ps);
+    ctx.fillStyle = '#b9c3cf'; ctx.font = `${9 * ps}px ${ui}`;
+    ctx.fillText('σT⁴ = π × area under Bλ', mx + mw / 2, my + lcdH + 26 * ps);
 
     // color scale bar
-    const x0 = bx + box + 18 * ps, x1 = W - pad;
-    if (x1 - x0 < 80) return;
+    const x0 = two ? mx + mw + 16 * ps : mx + mw + 22 * ps, x1 = W - pad;
+    if (x1 - x0 < 120 * ps) return;
+    const top = two ? rowH : 0;
     const lt0 = Math.log(BAR_T0), lt1 = Math.log(BAR_T1);
     const XT = (t) => x0 + (Math.log(t) - lt0) / (lt1 - lt0) * (x1 - x0);
     ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillStyle = T.muted;
     ctx.font = `700 ${12 * ps}px ${ui}`;
-    ctx.fillText('Blackbody color by temperature', x0, pad + 10 * ps);
-    const lettersY = pad + 34 * ps, barY = pad + 42 * ps, barH = 30 * ps;
+    ctx.fillText(x1 - x0 > 230 * ps ? 'Blackbody color by temperature' : 'Color by temperature', x0, top + pad + 10 * ps);
+    const lettersY = top + pad + 34 * ps, barY = top + pad + 42 * ps, barH = 30 * ps;
     for (let px = Math.floor(x0); px < x1; px++) {
       const u = (px - x0) / (x1 - x0), k = Math.round(u * BAR_N);
       ctx.fillStyle = css(BAR[Math.max(0, Math.min(BAR_N, k))]); ctx.fillRect(px, barY, 1.5, barH);
@@ -877,7 +1009,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.font = `${11 * ps}px ${ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     let msg = 'Red, orange, yellow, white, blue. Never green.';
     if (ctx.measureText(msg).width > x1 - x0) msg = 'Never green.';
-    if (H - pad > barY + barH + 40 * ps) ctx.fillText(msg, x0, Math.min(H - pad, barY + barH + 44 * ps));
+    if (top + H - pad > barY + barH + 40 * ps && (!two || H - pad > barY + barH + 34 * ps)) ctx.fillText(msg, x0, Math.min(H - pad, barY + barH + 44 * ps));
+    if (!two && H - pad > barY + barH + 62 * ps) {
+      ctx.font = `${10 * ps}px ${ui}`;
+      const n2 = 'Screen: one fixed exposure for every T, set by the Sun’s peak.';
+      if (ctx.measureText(n2).width <= x1 - x0) ctx.fillText(n2, x0, Math.min(H - pad, barY + barH + 62 * ps));
+    }
   }
 
   // ---------- panel ----------
