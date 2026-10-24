@@ -173,6 +173,8 @@ HANDOUT_TOPIC = {
     'binding-energy': 'The Curve of Binding Energy',
     'gamma-spectroscopy': 'Calibrating a Detector', 'gamma-absorption': 'Absorbing Gamma Rays',
     'hubble-law': 'Measuring the Hubble Constant',
+    'nuclear-reactions': 'Nuclear Reactions', 'critical-mass': 'Chain Reactions and Critical Size', 'fusion-gamow': 'Fusion and the Gamow Peak',
+    'radiation-dose': 'Radiation Dose and Shielding',
     'particle-reactions': 'Conservation Laws for Particle Reactions', 'quark-model': 'Building Hadrons from Quarks', 'invariant-mass': 'Invariant Mass in a Bubble Chamber',
     'lattice-energy': 'Lattice Energy of Ionic Crystals', 'energy-bands': 'Energy Bands', 'semiconductor-doping': 'Carriers in Doped Silicon',
     'pn-junction': 'The pn Junction and LEDs',

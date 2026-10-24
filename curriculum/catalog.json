@@ -277,6 +277,18 @@
      ]
     },
     {
+     "demo": "nuclear-reactions",
+     "title": "Nuclear Reactions, Fission and Fusion",
+     "desc": "Balance a nuclear reaction and weigh it with AME2020 masses to find Q and the threshold energy; grow a chain reaction and find the critical size of a uranium or plutonium sphere; see how the Gamow peak lets the Sun fuse protons at 15 million kelvin; measure the dose from a gamma source with distance and shielding.",
+     "tags": [
+      "nuclear reactions",
+      "fission",
+      "chain reaction",
+      "fusion",
+      "radiation dose"
+     ]
+    },
+    {
      "demo": "particles",
      "title": "Particles, Quarks and Conservation Laws",
      "desc": "The Standard Model and its particles with PDG 2024 data; test decays and collisions against the conservation laws and name the force that drives them; build hadrons from coloured quarks and predict the Ω⁻; then fit tracks in a bubble chamber and weigh a K⁰ or Λ⁰ from its decay.",

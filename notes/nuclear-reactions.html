@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nuclear Reactions, Fission and Fusion: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Nuclear Reactions, Fission and Fusion</h1><ul class="meta"><li><a href="../demos/nuclear-reactions.html">Open the demo</a></li><li>Intro modern physics (nuclear reactions, fission, fusion, radiation dose)</li><li>20 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A nuclear reaction conserves charge and nucleon number, and its energy comes from mass: Q = (Σm before − Σm after)c². Positive Q releases energy; negative Q needs a projectile above a threshold, which is more than |Q| because the products must keep moving.</li>
+<li>A chain reaction grows when each neutron leads to more than one new neutron (k &gt; 1). In a lump of metal neutrons escape through the surface, so there is a critical size: about 8.3 cm and 45 kg for bare ²³⁵U in the demo's model.</li>
+<li>Fusion happens far below the Coulomb barrier because a few nuclei in the Maxwell–Boltzmann tail tunnel through it. The product of the two factors, the Gamow peak, sets the energy at which stars and reactors actually fuse.</li>
+<li>Absorbed dose is energy per kilogram (Gy); equivalent dose weights it by the kind of radiation (Sv). Distance (1/r²), shielding (e^(−μx)) and time are the three ways to cut it.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know E = mc², the atomic mass unit (931.5 MeV/c²), Z and A, and the idea of binding energy (§10.2). The demo has four views. <strong>Reactions</strong>: a scattering chamber where students choose a projectile, a target and the products; the panel checks ΣZ and ΣA, shows the masses (AME2020) and Q, and a detector at angle θ gives the energy of the light product. <strong>Chain reaction</strong>: generations with a chosen k and random numbers of neutrons per fission, or a Monte Carlo sphere of ²³⁵U or ²³⁹Pu where neutrons either cause fissions or escape. <strong>Fusion</strong>: the Coulomb barrier on log axes with the Gamow peak energy and the tunnel through the barrier, the Gamow peak itself, and ⟨σv⟩ against T for p + p and D + T. <strong>Dose</strong>: a γ source, a shield and a dose rate meter. It complements Binding Energy (where the energy comes from), Radioactive Decay (half lives) and Gamma Spectroscopy (detecting γ rays).</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Rutherford 1919.</strong> Ask Q1 first. Fire at 7.69 MeV, then lower K until the reaction stops (Q1). Switch to Fission of ²³⁵U and compare Q per nucleon with D–T fusion (Q2).</li>
+<li><strong>Pick ²³⁹Pu α decay</strong> from the Famous reactions list and read how the 5.24 MeV is shared (Q3). The Q of p + p (Q9) is a good follow up for the stronger students.</li>
+<li><strong>Generations.</strong> Run k = 0.95, 1.00 and 1.05; then start 10 neutrons at k = 1.00 a few times (Q4).</li>
+<li><strong>Bare ²³⁵U sphere.</strong> Run R = 8 cm, then 9 cm. Have the class bracket the critical radius by changing R (Q5).</li>
+<li><strong>The Sun's core</strong>, then <strong>D–T reactor</strong> (Q6, Q7).</li>
+<li><strong>¹³⁷Cs source</strong> and <strong>⁹⁹ᵐTc patient</strong> (Q8).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> In Rutherford's reaction α + ¹⁴N → p + ¹⁷O, the products are heavier than the reactants by 0.0012795 u. What is Q, and what is the least kinetic energy the α particle needs? Why more than |Q|?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Compare the energy released per nucleon in n + ²³⁵U → ¹⁴¹Ba + ⁹²Kr + 3n with that in D + T → ⁴He + n.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> In the α decay of ²³⁹Pu (Q = 5.24 MeV), how much kinetic energy does the α particle carry, and why so much of it?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> With k = 1.05, how many neutrons are there after 20 generations from 1000? Why does a chain started by 10 neutrons at k = 1.00 so often die out?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Where does the bare ²³⁵U sphere go critical in the demo, and what share of the neutrons escape there? How does that compare with a full calculation?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> At the Sun's centre (1.57 × 10⁷ K), compare kT, the Gamow peak energy and the p + p barrier. What temperature would make kT equal to the barrier?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> Why do fusion reactors burn D + T at about 1.5 × 10⁸ K rather than p + p at the Sun's temperature? Use ⟨σv⟩.</p></div>
+
+<div class="q"><p><strong>Q8.</strong> A 1 GBq ¹³⁷Cs source gives 83 µSv/h at 1 m. What does it give at 2 m, and behind how much lead is the 1 m reading halved? A visitor sits 1 m from a patient given 740 MBq of ⁹⁹ᵐTc for 8 hours: how does the dose compare with background?</p></div>
+
+<div class="q"><p><strong>Q9.</strong> OpenStax Example 10.11 finds 25.7 MeV for the Sun's net reaction 4 ¹H → ⁴He + 2e⁺ + 2ν. Four hydrogen atoms outweigh a helium atom by 0.028697 u, or 26.73 MeV. Which is the energy the Sun gets, and why?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Mass is converted to energy only in nuclear reactions."</strong> Every exothermic reaction loses mass; in chemistry it is a billionth of the mass and too small to weigh.</li>
+<li><strong>"An endothermic reaction just needs a projectile with K = |Q|."</strong> Momentum must be conserved, so the products keep moving and the threshold is larger: −Q(1 + m_a/m_A).</li>
+<li><strong>"Critical mass is a property of the material."</strong> It depends on shape, density and surroundings: a reflector or compression lowers it.</li>
+<li><strong>"Fusion needs the nuclei to go over the Coulomb barrier."</strong> Almost all fusions tunnel through it, at the Gamow peak far below its top.</li>
+<li><strong>"Gray and sievert are the same unit."</strong> They are equal for γ rays, but 1 Gy of α particles is 20 Sv.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li><strong>Masses.</strong> AME2020 atomic mass excesses (the same table as Binding Energy); atomic masses make electrons cancel when the charge balances. Ground states only; electron binding energies (up to 0.8 MeV for uranium) stay in the atomic masses.</li>
+<li><strong>Kinematics.</strong> Exact relativistic two body kinematics with the target at rest; the threshold K_th = −Q(Σm before + Σm after)/(2m_target).</li>
+<li><strong>Chain reaction.</strong> Terrell's Gaussian distribution of ν (σ = 1.08), ν̄ = 2.4355 for thermal ²³⁵U. The sphere is a one speed Monte Carlo with Chadwick's (2021) ENDF/B-VIII.0 constants at 1.5 MeV, isotropic scattering, no capture, no reflector: a teaching model, which finds about 45 kg for ²³⁵U and 8.5 kg for α phase ²³⁹Pu against 46 kg and 10.2 kg from MCNP6.</li>
+<li><strong>Fusion.</strong> E_G = 2μc²(παZ₁Z₂)², E₀ = (E_G(kT)²/4)^(1/3). p + p with a constant S factor 4.01 × 10⁻²⁵ MeV b; D + T from the Bosch–Hale fit. No electron screening.</li>
+<li><strong>Dose.</strong> Narrow beam, no buildup, NIST μ/ρ and tissue μ_en/ρ, w_R = 1 for photons, the source decaying during the exposure.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: from your critical radius, find how much smaller the critical mass becomes if the metal is compressed to twice its density (the critical radius scales as 1/ρ, so the mass as 1/ρ²).</li>
+<li>Pair with <strong>Binding Energy</strong> (why fission and fusion release energy), <strong>Radioactive Decay</strong> and <strong>Gamma Spectroscopy</strong> (detecting the γ rays the Dose view counts).</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

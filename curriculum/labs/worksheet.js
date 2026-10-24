@@ -279,7 +279,8 @@
     'molecular-bonds', 'hcl-spectrum' /* Molecules: Bonds and Spectra demo */,
     'cosmic-expansion', 'thermal-history', 'big-bang-helium' /* The Big Bang and the Early Universe demo */,
     'lattice-energy', 'energy-bands', 'semiconductor-doping', 'pn-junction' /* Crystals, Bands and Semiconductors demo */,
-    'particle-reactions', 'quark-model', 'invariant-mass' /* Particles, Quarks and Conservation Laws demo */];
+    'particle-reactions', 'quark-model', 'invariant-mass' /* Particles, Quarks and Conservation Laws demo */,
+    'nuclear-reactions', 'critical-mass', 'fusion-gamow', 'radiation-dose' /* Nuclear Reactions, Fission and Fusion demo */];
   MODERN.push(...MODERN_9_11); ENABLED.push(...MODERN_9_11);
   Object.assign(FROM_DEMO, {
     /* Reading | Setup and N₀ | Time t | Parents left N | N/N₀ | ln(N/N₀) */
@@ -319,6 +320,14 @@
     'quark-model': { demo: 'Particles, Quarks and Conservation Laws (Quarks)', cols: ['row', 'quarks', 'J', 'Q', 'B', 'S', 'I3', 'hadron', 'mass_MeV'] },
     /* Reading | Event | B (T) | r₊ (cm) | r₋ (cm) | Opening angle θ (°) | p₊ (MeV/c) | p₋ (MeV/c) | M if π⁺π⁻ (MeV/c²) | M if pπ⁻ (MeV/c²) | Parent */
     'invariant-mass': { demo: 'Particles, Quarks and Conservation Laws (Detector)', cols: ['row', 'event', 'B_T', 'r_plus_cm', 'r_minus_cm', 'theta_deg', null, null, null, null, null] },
+    /* Reading | Reaction | Mass before (u) | Mass after (u) | Projectile K (MeV) | Products K (MeV) | Allowed? | Q from masses (MeV) | K after − K before (MeV) */
+    'nuclear-reactions': { demo: 'Nuclear Reactions, Fission and Fusion (Reactions)', cols: ['row', 'reaction', 'M_in_u', 'M_out_u', 'K_MeV', 'K_out_MeV', 'allowed', null, null] },
+    /* Reading | Material | Radius R (cm) | Mass M (kg) | Generations | k | Uncertainty in k | Leaked (%) */
+    'critical-mass': { demo: 'Nuclear Reactions, Fission and Fusion (Chain reaction)', cols: ['row', 'material', 'R_cm', 'M_kg', 'generations', 'k', 'k_err', 'leak_pct'] },
+    /* Reading | Nuclei | T (million K) | kT (keV) | Gamow peak E₀ (keV) | Peak width (keV) | Barrier (keV) | ⟨σv⟩ (cm³/s) | ln kT | ln E₀ */
+    'fusion-gamow': { demo: 'Nuclear Reactions, Fission and Fusion (Fusion)', cols: ['row', 'pair', 'T_MK', 'kT_keV', 'E0_keV', 'fwhm_keV', 'VC_keV', 'sigv_cm3_s', null, null] },
+    /* Reading | Source | Activity (MBq) | Distance r (m) | Shield | Thickness x (cm) | Dose rate (µSv/h) | 1/r² (1/m²) | ln(dose rate) */
+    'radiation-dose': { demo: 'Nuclear Reactions, Fission and Fusion (Dose)', cols: ['row', 'source', 'A_MBq', 'r_m', 'shield', 'x_cm', 'rate_uSv_h', null, null] },
   });
   /* Vol. 3 ch. 7 and 8 (quantum mechanics, atomic structure), kept in its own list so the chapter threads don't collide */
   const MODERN_7_8 = ['orbital-magnetic-moment', 'stern-gerlach', 'zeeman-effect' /* Atoms in a Magnetic Field demo, one per view */,

@@ -24,20 +24,7 @@ All 85 course sections have an explicit scoped mapping: 27 real demos, 12 full l
 
 Regenerated from `textbook-map.json` on 2026-10-24 (Claude), after the Thermodynamics and Modern Physics modules were made and wave optics joined Physics II. Every section of Volumes 1, 2 and 3 has a record (99, 95 and 76). Physics I, required Physics II, Acoustics and Thermodynamics have no missing section (Thermodynamics filled 2026-10-24 by the Temperature and Heat, Heat Capacities of Gases, and Entropy and the Second Law demos). Thermodynamics is Vol. 2 ch. 1 to 4, Modern Physics is Vol. 3 ch. 5 to 11, and Physics II's optional wave optics unit is Vol. 3 ch. 3 and 4; Vol. 2 §15.6 (Transformers), tagged later with the rest of ch. 15, was filled 2026-10-24 by the Transformers demo. Physics II's optional wave optics unit has no missing or partial section since 2026-10-24 (Michelson Interferometer, Circular Apertures and Resolution, and Holography demos; a single slit aperture in Diffraction Grating for §4.1 and §4.2; an X rays view in Electron Diffraction for §4.6).
 
-| Course / priority | Volume | Section | Exact textbook title | Status |
-|---|---:|---|---|---|
-| modern | 3 | 9.1 | Types of Molecular Bonds | missing |
-| modern | 3 | 9.2 | Molecular Spectra | missing |
-| modern | 3 | 9.3 | Bonding in Crystalline Solids | missing |
-| modern | 3 | 9.5 | Band Theory of Solids | missing |
-| modern | 3 | 9.6 | Semiconductors and Doping | missing |
-| modern | 3 | 9.7 | Semiconductor Devices | missing |
-| modern | 3 | 10.4 | Nuclear Reactions | missing |
-| modern | 3 | 11.1 | Introduction to Particle Physics | missing |
-| modern | 3 | 11.2 | Particle Conservation Laws | missing |
-| modern | 3 | 11.3 | Quarks | missing |
-| modern | 3 | 11.5 | The Standard Model | missing |
-| modern | 3 | 11.7 | Evolution of the Early Universe | missing |
+None: every section of Volumes 1, 2 and 3 now has a usable mapping (the last Modern Physics gaps, Vol. 3 ch. 9 to 11, were filled on 2026-10-24).
 
 ## Partial section mappings
 
@@ -51,11 +38,6 @@ Regenerated from `textbook-map.json` on 2026-10-24 (Claude), after the Thermodyn
 | 2 / 14.2 | circuits, faraday | Lumped inductors and fixed coil model, not every inductor geometry. |
 | 3 / 2.3 | optics-bench | Basic refraction supported; general curved-surface image formation needs review. |
 | 3 / 2.8 | optics-bench | Instrument examples require review before section-complete labeling. |
-| 3 / 10.5 | binding-energy, energy-sources | Partial: energy released from the binding energy curve; energy sources uses 200 MeV per fission. No chain reaction activity. |
-| 3 / 10.6 | binding-energy, star-slice | Partial: energy released from the binding energy curve; star slice shows burning shells. No reaction rate activity. |
-| 3 / 10.7 | gamma-spectroscopy | Partial: gamma spectroscopy measures lead attenuation; no dose or biological effects. |
-| 3 / 11.4 | magnetic-force, gamma-spectroscopy | Partial: cyclotron motion in charges in magnetic fields; a NaI(Tl) scintillation detector in gamma spectroscopy. |
-| 3 / 11.6 | distance-ladder | Partial: Hubble's law fitted to galaxy redshifts; no cosmological model. |
 
 ## Optional optics gaps
 

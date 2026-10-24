@@ -5799,9 +5799,11 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "status": "usable",
+      "demos": [
+        "nuclear-reactions"
+      ],
+      "note": "Nuclear Reactions, Fission and Fusion (2026-10-24, Claude): build a reaction, check ΣZ and ΣA, Q from AME2020 atomic masses, exothermic or endothermic, the threshold energy measured and compared with −Q(1 + m_a/m_A); Rutherford, Cockcroft–Walton, Chadwick, Example 10.7 (²³⁹Pu α decay). Worksheet nuclear-reactions.",
       "unit": "nuclear"
     },
     {
@@ -5814,12 +5816,13 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "binding-energy",
-        "energy-sources"
+        "energy-sources",
+        "nuclear-reactions"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: energy released from the binding energy curve; energy sources uses 200 MeV per fission. No chain reaction activity.",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Nuclear Reactions, Fission and Fusion: Q of ²³⁵U splits and Example 10.9 from masses (worksheet nuclear-reactions); a chain reaction by generations with Terrell's random ν, and a Monte Carlo bare sphere of ²³⁵U or ²³⁹Pu metal in which students find the critical radius and mass (worksheet critical-mass). Binding energy curve and energy sources (200 MeV per fission) as before.",
       "unit": "nuclear"
     },
     {
@@ -5832,12 +5835,13 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "binding-energy",
-        "star-slice"
+        "star-slice",
+        "nuclear-reactions"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: energy released from the binding energy curve; star slice shows burning shells. No reaction rate activity.",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Nuclear Reactions, Fission and Fusion: D–T and D–D Q values (worksheet nuclear-reactions); the Coulomb barrier, the Gamow peak from the Maxwell–Boltzmann tail and tunnelling, ⟨σv⟩ for p + p and D + T against temperature, why the Sun is 1.5 × 10⁷ K and reactors 10⁸ K (worksheet fusion-gamow). Binding energy curve and star slice as before.",
       "unit": "nuclear"
     },
     {
@@ -5850,11 +5854,12 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "gamma-spectroscopy"
+        "gamma-spectroscopy",
+        "nuclear-reactions"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: gamma spectroscopy measures lead attenuation; no dose or biological effects.",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Nuclear Reactions, Fission and Fusion: dose from a γ point source (¹³⁷Cs, ⁶⁰Co, ⁹⁹ᵐTc, ¹⁸F) with distance, lead, concrete or water shielding (NIST coefficients), gray and sievert with weighting factors, compared with the 3.5 mSv/y background (worksheet radiation-dose). Gamma spectroscopy also measures lead attenuation.",
       "unit": "nuclear"
     },
     {
@@ -8091,6 +8096,46 @@
       ],
       "title": "Motion Graphs",
       "url": "demos/motion-graphs.html"
+    },
+    {
+      "demo": "nuclear-reactions",
+      "course": [
+        "modern"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "10.4",
+          "title": "Nuclear Reactions"
+        },
+        {
+          "vol": 3,
+          "sec": "10.5",
+          "title": "Fission"
+        },
+        {
+          "vol": 3,
+          "sec": "10.6",
+          "title": "Nuclear Fusion"
+        },
+        {
+          "vol": 3,
+          "sec": "10.7",
+          "title": "Medical Applications and Biological Effects of Nuclear Radiation"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). Four views: Reactions (balance Z and A, Q from AME2020 atomic masses, thresholds, relativistic two body kinematics; famous reactions and OpenStax Examples 10.7 and 10.9); Chain reaction (generations with factor k and Terrell's ν distribution, and a Monte Carlo bare sphere with Chadwick 2021 one group constants for finding the critical size); Fusion (Coulomb barrier, Gamow peak, ⟨σv⟩ for p + p and D + T, beyond the book); Dose (γ point source, inverse square, NIST attenuation, Gy and Sv, background). Four worksheets with keys from real runs in TeacherKeys.",
+      "handouts": [
+        "nuclear-reactions",
+        "critical-mass",
+        "fusion-gamow",
+        "radiation-dose"
+      ],
+      "title": "Nuclear Reactions, Fission and Fusion",
+      "url": "demos/nuclear-reactions.html"
     },
     {
       "demo": "optics-bench",
