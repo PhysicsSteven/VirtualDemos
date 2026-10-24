@@ -95,7 +95,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     <div class="stage" id="stage">
       <div class="scene" id="scene">
       <canvas id="can" tabindex="0" role="application" aria-label="Plan view of a room with a loudspeaker and a microphone on its centre line, and under it a graph: the decay of a clap, or the sound level against distance. Drag the microphone to change its distance r from the speaker. Left and right arrows move it by 0.1 m (with Shift, 1 m); C claps."></canvas>
-      <div class="viewbar"><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D room</button><button type="button" data-view="plan" aria-pressed="true">Plan</button></div><button type="button" class="spin attn" id="go">Clap</button></div>
+      <div class="viewbar"><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D room</button><button type="button" data-view="plan" aria-pressed="true">Plan</button></div><div class="seg" role="group" aria-label="Clap speed" id="speedSeg"><button type="button" data-slow="100" aria-pressed="true">Slow motion</button><button type="button" data-slow="1" aria-pressed="false">Real time</button></div><button type="button" class="spin attn" id="go">Clap</button></div>
       <div class="tag3" id="tagR" hidden></div><div class="tag3 big" id="tagL" hidden></div>
       </div>
       <div class="rack" id="rack" role="group" aria-label="Set up the room">
@@ -181,6 +181,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
           <summary>Model</summary>
           <div class="foldbody">
             <p class="hint">Geometrical acoustics: N rays leave the loudspeaker in random directions, each carrying 1/N of the clap's energy (N = 4000 to 64000, more when T is short, so that every measurement collects about as many rays). At a surface a ray keeps (1 − α) of its energy and leaves in a random direction (Lambert's cosine law, a fully diffuse reflection). The microphone is a sphere 0.5 m in radius that adds up the energy of the rays crossing it; the direct sound is added exactly, 1/(4πr²). Energies add, so there is no interference: no room modes or standing waves, which matter in real rooms at low frequency. Air absorption is left out (it shortens T in large rooms above about 2 kHz).</p>
+            <p class="hint">The clap shows 1500 of these rays, by the same rules, each drawn fainter as its energy falls and gone at −40 dB. Slow motion runs the sound 100 times slower than life; Real time moves it at 343 m/s, so it crosses a 9 m room in 26 ms and dies away in about two thirds of T (the rays reach −40 dB at 40/60 of the time to fall 60 dB).</p>
             <p class="hint">T is measured as in ISO 3382: the decay curve is the backward integral of the clap response (Schroeder's method), and a least squares line from −5 to −25 dB is extended to −60 dB (T20). A measured T scatters by about 1 to 3 % from run to run of the rays (each setup always gives the same run); the level meter by under 0.2 dB.</p>
             <p class="hint">Sabine: T = 24 ln 10 · V/(cA) = 0.161 V/A, A = Σ Sα. Eyring: T = 0.161 V/(−S ln(1 − ᾱ)), which goes to 0 as ᾱ → 1. Panels are 1.2 m × 0.6 m, spread evenly around the walls; the ceiling is the wall material.</p>
             <p class="hint">Wedges line all six surfaces (the floor is a wire net), and the room is the free space between their tips. Beranek and Sleeper (J. Acoust. Soc. Am. 18, 140, 1946) define the cutoff as the frequency where the pressure reflection rises to 10 % (α = 0.99) and find it where the wedge length is about a quarter wavelength: f_c = c/(4d). Around f_c this demo uses the stated model R = 0.1 (f_c/f)², at most 0.9, α = 1 − R²; the shape is a model, not measured data. The level meter reads the steady sound of a 10 mW source (sound power level 100 dB), with ρ = 1.204 kg/m³.</p>
@@ -405,7 +406,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   function regions() {
     const p = ps(), rk = $('rack'), abs = getComputedStyle(rk).position === 'absolute';
     const x0 = abs ? rk.offsetLeft + rk.offsetWidth + 16 * p : 14 * p, x1 = W - 14 * p;
-    const gh = Math.max(150 * p, H * 0.36), ty = x1 - x0 < 520 * p ? 66 * p : 24 * p, planTop = ty + 28 * p, planBot = H - gh - 34 * p;   /* on a narrow picture the title goes under the view buttons */
+    const gh = Math.max(150 * p, H * 0.36), vb = document.querySelector('.viewbar'), ty = x1 - x0 < 520 * p ? Math.max(66 * p, vb.offsetTop + vb.offsetHeight + 22 * p) : 24 * p, planTop = ty + 28 * p, planBot = H - gh - 34 * p;   /* on a narrow picture the title goes under the view buttons, which can wrap to two rows */
     return { p, x0, x1, ty, planTop, planBot, gx0: x0 + 44 * p, gx1: x1 - 6 * p, gy0: H - gh + 4 * p, gy1: H - 30 * p };
   }
   function draw() {
@@ -429,7 +430,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`;
     ctx.fillText(S.walls === 'wedges' ? `free space between the wedge tips ${f(m.L, 2)} × ${f(m.W, 2)} × ${f(m.H, 2)} m` : `floor: ${MATERIALS[S.floor].name.toLowerCase()}`, R.x0, R.ty + 16 * p);
     if (in3) { geo = null; ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right';
-      ctx.fillText(anim ? `slow motion ×1/${SLOW}, t = ${(anim.t * 1000).toFixed(0)} ms` : 'drag to turn · drag the microphone to change r', R.x1, R.planBot + 22 * p); ctx.textAlign = 'left'; return; }
+      ctx.fillText(anim ? `${speedTxt()}, t = ${(anim.t * 1000).toFixed(0)} ms` : 'drag to turn · drag the microphone to change r', R.x1, R.planBot + 22 * p); ctx.textAlign = 'left'; return; }
     /* floor and walls */
     const Gm = window.VDGear.mix, dk = window.VDGear.dark(), rw = S.L * sc, rh = S.W * sc, rnd = mulberry(5), wt = 8 * p;
     ctx.save(); ctx.shadowColor = dk ? 'rgba(0,0,0,0.5)' : 'rgba(20,30,45,0.22)'; ctx.shadowBlur = 18 * p; ctx.shadowOffsetY = 6 * p;
@@ -479,7 +480,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
       ctx.globalAlpha = 1;
       const rr = C_AIR * anim.t * sc; if (rr < Math.hypot(m.L, m.W) * sc) { const [sx, sy] = srcPos(m); ctx.save(); ctx.beginPath(); ctx.rect(X(0), Y(0), m.L * sc, m.W * sc); ctx.clip();
         ctx.strokeStyle = T.ray; ctx.globalAlpha = 0.5; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(X(sx), Y(sy), rr, 0, 7); ctx.stroke(); ctx.restore(); ctx.globalAlpha = 1; }
-      ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillText(`slow motion ×1/${SLOW}, t = ${(anim.t * 1000).toFixed(0)} ms`, ox + S.L * sc, Math.min(R.planBot + 18 * p, oy + S.W * sc + 18 * p) + 3 * p); ctx.textAlign = 'left';
+      ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillText(`${speedTxt()}, t = ${(anim.t * 1000).toFixed(0)} ms`, ox + S.L * sc, Math.min(R.planBot + 18 * p, oy + S.W * sc + 18 * p) + 3 * p); ctx.textAlign = 'left';
     }
     /* loudspeaker, microphone and r */
     const [sx, sy] = srcPos(m), mx = sx + S.r;
@@ -522,13 +523,13 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     ctx.strokeStyle = T.ray; ctx.lineWidth = 2 * p; ctx.beginPath(); let first = true;
     for (let i = 0; i * dt < tEnd && i < db.length; i++) { const v = db[i]; if (!isFinite(v) || v < yMin) break; first ? ctx.moveTo(PX(i * dt), PY(v)) : ctx.lineTo(PX(i * dt), PY(v)); first = false; }
     ctx.stroke();
-    const dc = res.dec;
+    const dc = res.dec, nar = R.gx1 - R.gx0 < 560 * R.p, ly = R.gy0 + (nar ? 22 : 8) * R.p;   /* on a narrow graph the T line goes under the key */
     if (isFinite(dc.T)) { ctx.strokeStyle = T.fit; ctx.setLineDash([6 * p, 4 * p]); ctx.lineWidth = 1.5 * p; const tA = Math.max(0, -dc.icpt / dc.slope), tB = (-60 - dc.icpt) / dc.slope;
       ctx.beginPath(); ctx.moveTo(PX(tA), PY(0)); ctx.lineTo(PX(Math.min(tB, tEnd)), PY(dc.icpt + dc.slope * Math.min(tB, tEnd))); ctx.stroke(); ctx.setLineDash([]);
-      ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(`T = ${f(dc.T, 2)} s (measured, T20)`, R.gx1 - 8 * p, R.gy0 + 8 * p); }
-    else { ctx.fillStyle = T.ink; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('No reverberation: only the direct sound arrives', R.gx1 - 8 * p, R.gy0 + 8 * p); }
+      ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(`T = ${f(dc.T, 2)} s (measured, T20)`, R.gx1 - 8 * p, ly); }
+    else { ctx.fillStyle = T.ink; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('No reverberation: only the direct sound arrives', R.gx1 - 8 * p, ly); }
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    ctx.fillText('bars: energy arriving every 5 ms · blue: decay curve (Schroeder) · dashed: fit −5 to −25 dB', R.gx0 + 6 * p, R.gy0 + 6 * p);
+    ctx.fillText(nar ? 'bars: energy every 5 ms · blue: Schroeder · dashed: fit' : 'bars: energy arriving every 5 ms · blue: decay curve (Schroeder) · dashed: fit −5 to −25 dB', R.gx0 + 6 * p, R.gy0 + 6 * p);
     if (anim) { ctx.strokeStyle = T.mic; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(PX(anim.t), R.gy0); ctx.lineTo(PX(anim.t), R.gy1); ctx.stroke(); }
   }
   const niceStep = (s) => { const e = Math.pow(10, Math.floor(Math.log10(s))), q = s / e; return (q < 1.5 ? 1 : q < 3.5 ? 2 : q < 7.5 ? 5 : 10) * e; };
@@ -609,7 +610,11 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     if (b.dataset.step === 'N') S.nPanels = Math.max(0, Math.min(40, S.nPanels + d)); else S.r = Math.max(0.5, Math.min(rMax(model()), Math.round((S.r + d) * 20) / 20)); changed(); });
 
   // ---------- the clap, in slow motion: 1500 rays drawn on the plan, by the same rules as the measurement ----------
-  let anim = null; const SLOW = 100, NPART = 1500, card = VD.setupCard($('rack'));
+  let anim = null; const NPART = 1500, card = VD.setupCard($('rack'));
+  /* clap speed: slow motion shows the sound 100 times slower; real time moves it at c = 343 m/s, so the clap dies in about T */
+  let SLOW = 100; const speedTxt = () => (SLOW === 1 ? 'real time' : `slow motion ×1/${SLOW}`);
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-slow]'); if (!b) return; SLOW = +b.dataset.slow;
+    for (const x of $('speedSeg').querySelectorAll('button')) x.setAttribute('aria-pressed', String(x === b)); draw(); });
   function clap() {
     if (anim) { stopAnim(); return; }
     S.clapped = true; if (!S.res && !S.pending) remeasure();
@@ -623,7 +628,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     const a = anim, m = a.m, dist = C_AIR * dtw / SLOW, alphaAt = surfaceAlpha(m); a.t += dtw / SLOW; a.wall += dtw; let live = 0;
     for (const q of a.parts) {
       if (q.e < 1e-4) continue; let left = dist;
-      for (let k = 0; k < 6 && left > 0; k++) {
+      for (let k = 0; k < 60 && left > 0; k++) {   /* in real time a frame can hold many reflections */
         const hit = boxExit(m, q.x, q.y, q.z, q.dx, q.dy, q.dz);
         if (hit.d > left) { q.x += q.dx * left; q.y += q.dy * left; q.z += q.dz * left; left = 0; break; }
         q.x += q.dx * hit.d; q.y += q.dy * hit.d; q.z += q.dz * hit.d; left -= hit.d; q.e *= 1 - alphaAt(hit.face, q.x, q.y, q.z);

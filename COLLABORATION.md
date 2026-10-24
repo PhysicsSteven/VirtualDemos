@@ -1113,3 +1113,9 @@ Drawing code and the look link only; physics, CORE, control ids and names unchan
 The gyroscope now opens in 3D (three.js through `demos/lib/vd3.js`): cast base, post and cup, axle, the solid disk or the spoked rim wheel, soft shadows on a tiled floor, the precession ring and the gate, the trail of the wheel centre, and 3D arrows for L, the torque and Mg. Drag turns the view, scroll or pinch zooms, double click resets. It draws the same simulated state as before (CORE byte identical); the flat oblique drawing stays behind a new **3D | Flat** switch (`#viewSeg`) and opens with `?view=flat`, on devices that ask to save data, and wherever WebGL is missing. The strip chart, timer and labels stay on the 2D canvas on top. Node tests pass (6 groups); vdcheck shows only the added switch and the look link.
 
 - For the handouts: the notes now describe the 3D view and the Flat button. No control was renamed or moved.
+
+## Claude, 2026-10-24: real time clap in room acoustics
+
+Steve asked for a real time speed so students see how fast sound moves and how quickly it dies. Room acoustics now has a **Slow motion | Real time** switch (`#speedSeg`) beside the view buttons; Slow motion (the default, unchanged) runs the clap 100 times slower than life, Real time moves the rays at c = 343 m/s, so they cross the 9 m room in 26 ms and the clap fades out in about 3 to 5 s in the bare room (the rays stop at −40 dB, two thirds of T = 4.75 s). The time label reads "real time" or "slow motion ×1/100". Up to 60 reflections per frame are now followed so no ray skips a wall at full speed. The Model fold says all this. On narrow screens the room title moves below the view buttons when they wrap, and the graph key shortens so it no longer runs under the T line. CORE unchanged; Node tests pass; vdcheck 0 problems.
+
+- For the handouts: neither room acoustics handout mentions the clap speed, so nothing to change. No control renamed.
