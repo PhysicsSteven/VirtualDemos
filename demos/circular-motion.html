@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg formula chips-button btnrow seg seg-button seg-button-on inline status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-stage img projshort-proj-bar-units mono bar-h1 bench pane chips-button-hover btn btn-primary btn-disabled slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas projshort-proj-bar-p" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg formula chips-button btnrow inline status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-stage img projshort-proj-bar-units mono bar-h1 bench pane chips-button-hover btn btn-primary btn-disabled slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas projshort-proj-bar-p" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* Layout: the moving object and its free body diagram on the left; the instrument rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
@@ -53,6 +54,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   input[type="range"] { min-height: 28px; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
+#viewSeg[hidden] { display: none; }   /* the 3D | Flat switch shows only on the banked curve */
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -76,6 +78,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="The moving object on its circle with velocity and acceleration arrows, beside its free body diagram. Space plays or pauses, C cuts the string or removes the force."></canvas>
       <div class="viewbar">
+        <div class="seg" role="group" aria-label="View" id="viewSeg" hidden><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div>
         <button type="button" class="spin" id="play">Pause</button>
         <button type="button" class="spin" id="cut">Cut the string</button>
         <button type="button" class="spin" id="again">Start over</button>
@@ -217,7 +220,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const p = ps(), wide = W > 760, sw = wide ? W * 0.62 : W, sh = wide ? H : H * 0.58, q = situation(), bl = S.blind;
     const cx = sw / 2, cy = (wide ? H : sh) / 2 + 16 * p, R = Math.min(sw, sh) * 0.33;
     // the setting behind the motion: tabletop, road or coaster track (decoration only)
-    scenery(cx, cy, R, sw, wide ? H : sh, p);
+    if (G3.want && !G3.ok && !G3.tried && S.preset === 'bank') setView('3d');   // three.js loads the first time the banked curve shows
+    const u3 = use3(); $('viewSeg').hidden = S.preset !== 'bank'; if (g3) g3.el.hidden = !u3;
+    if (u3) ctx.clearRect(0, 0, sw, wide ? H : sh); else scenery(cx, cy, R, sw, wide ? H : sh, p);
     // the object's place: on the circle, or flying off along a straight line after release
     let x, y, vx, vy;
     const loopView = S.preset === 'loop';
@@ -226,31 +231,141 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (free) { x = free.x + free.vx * free.t; y = free.y + free.vy * free.t + (free.g ? 0.5 * free.g * free.t * free.t : 0); vx = free.vx; vy = free.vy + (free.g ? free.g * free.t : 0); }
     else { x = cx + R * ux; y = cy + R * uy; vx = loopView ? Math.cos(th) : -Math.sin(th); vy = loopView ? -Math.sin(th) : -Math.cos(th); }
     if (!free) { const vm = Math.hypot(vx, vy); vx /= vm; vy /= vm; }
-    // string or center: a peg on the table, a plain dot otherwise
-    const isCar = S.preset === 'flat' || S.preset === 'bank' || S.preset === 'speed';
-    if (S.preset === 'string') peg(cx, cy, p); else { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 4 * p, 0, 7); ctx.fill(); }
-    if (isCar && S.slid) skid(S.slid.x, S.slid.y, x, y, p);
-    if (S.preset === 'string' && !S.cut) { ctx.strokeStyle = T.tn; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x, y); ctx.stroke(); }
-    if (free && free.path) { ctx.strokeStyle = T.fr; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(free.x, free.y); ctx.lineTo(x, y); ctx.stroke(); ctx.setLineDash([]); }
-    // object: a car seen from above, pointing along its velocity, or a ball
-    if (isCar) car(x, y, Math.atan2(vy, vx), p);
-    else ball(x, y, 9 * p, S.preset === 'string' ? 3 * p : 0);
-    // velocity and acceleration arrows on the scene
-    const vNow = S.preset === 'speed' ? (S.slid ? S.slid.v : q.v) : S.v, vL = Math.min(70 * p, 18 * p + vNow * 3 * p);
-    if (vNow > 1e-6 || S.preset !== 'speed') arrow(x, y, vx * vL, vy * vL, T.vel, 3 * p, 'v');
-    if (S.preset === 'speed') {
-      if (!free && !bl) { const k = R * 0.75 / Math.max(1, S.mu * G), nx = (cx - x) / R, ny = (cy - y) / R; arrow(x, y, vx * q.at * k, vy * q.at * k, T.fr, 3 * p, 'a_t'); arrow(x, y, nx * q.ac * k, ny * q.ac * k, T.tn, 3 * p, 'a_c', 1); arrow(x, y, (vx * q.at + nx * q.ac) * k, (vy * q.at + ny * q.ac) * k, T.net, 3.5 * p, 'a', 1); }
+    if (u3) {   // the 3D view draws the road, the car and its arrows; this canvas keeps their labels, the status line and the free body diagram
+      const R3 = render3((x - cx) / R * S.r, -(y - cy) / R * S.r, Math.atan2(-vy, vx), sw, wide ? H : sh, !free && !bl), lab = (q, t, c) => { const a = R3.Q(q); ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; const w = ctx.measureText(t).width + 6 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.8; ctx.fillRect(a[0] + 4 * p, a[1] - 8 * p, w, 16 * p); ctx.globalAlpha = 1; ctx.fillStyle = c; ctx.fillText(t, a[0] + 7 * p, a[1]); };
+      const o = R3.o, hd = Math.atan2(-vy, vx); lab([o[0] + Math.cos(hd) * R3.vL, o[1] + Math.sin(hd) * R3.vL, o[2]], 'v', T.vel);
+      if (!free && !bl) { const n = Math.hypot(o[0], o[1]) || 1; lab([o[0] - o[0] / n * 0.25 * S.r, o[1] - o[1] / n * 0.25 * S.r, o[2]], 'a = v²/r', T.net); }
+    } else {
+      // string or center: a peg on the table, a plain dot otherwise
+      const isCar = S.preset === 'flat' || S.preset === 'bank' || S.preset === 'speed';
+      if (S.preset === 'string') peg(cx, cy, p); else { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 4 * p, 0, 7); ctx.fill(); }
+      if (isCar && S.slid) skid(S.slid.x, S.slid.y, x, y, p);
+      if (S.preset === 'string' && !S.cut) { ctx.strokeStyle = T.tn; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(x, y); ctx.stroke(); }
+      if (free && free.path) { ctx.strokeStyle = T.fr; ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(free.x, free.y); ctx.lineTo(x, y); ctx.stroke(); ctx.setLineDash([]); }
+      // object: a car seen from above, pointing along its velocity, or a ball
+      if (isCar) car(x, y, Math.atan2(vy, vx), p);
+      else ball(x, y, 9 * p, S.preset === 'string' ? 3 * p : 0);
+      // velocity and acceleration arrows on the scene
+      const vNow = S.preset === 'speed' ? (S.slid ? S.slid.v : q.v) : S.v, vL = Math.min(70 * p, 18 * p + vNow * 3 * p);
+      if (vNow > 1e-6 || S.preset !== 'speed') arrow(x, y, vx * vL, vy * vL, T.vel, 3 * p, 'v');
+      if (S.preset === 'speed') {
+        if (!free && !bl) { const k = R * 0.75 / Math.max(1, S.mu * G), nx = (cx - x) / R, ny = (cy - y) / R; arrow(x, y, vx * q.at * k, vy * q.at * k, T.fr, 3 * p, 'a_t'); arrow(x, y, nx * q.ac * k, ny * q.ac * k, T.tn, 3 * p, 'a_c', 1); arrow(x, y, (vx * q.at + nx * q.ac) * k, (vy * q.at + ny * q.ac) * k, T.net, 3.5 * p, 'a', 1); }
+      }
+      else if (!free && !bl) { const al = 50 * p; arrow(x, y, (cx - x) / R * al, (cy - y) / R * al, T.net, 3 * p, 'a = v²/r', 1); }
     }
-    else if (!free && !bl) { const al = 50 * p; arrow(x, y, (cx - x) / R * al, (cy - y) / R * al, T.net, 3 * p, 'a = v²/r', 1); }
     // status line
     ctx.fillStyle = T.ink; ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    const msg = S.cut ? 'String cut: no horizontal force, so it moves in a straight line.' : S.slid ? (bl ? 'The car leaves the circle.' : S.preset === 'speed' ? (W < 560 ? 'Not enough grip: it slides off.' : 'Friction cannot supply the whole acceleration: the car slides off.') : 'Friction cannot supply mv²/r: the car slides off the curve.') : S.fell ? (bl ? 'The ball leaves the track.' : 'N reached zero: the ball leaves the track and falls.') : S.preset === 'string' ? 'View from above' : S.preset === 'loop' ? 'Side view' : 'View from above';
+    const msg = S.cut ? 'String cut: no horizontal force, so it moves in a straight line.' : S.slid ? (bl ? 'The car leaves the circle.' : S.preset === 'speed' ? (W < 560 ? 'Not enough grip: it slides off.' : 'Friction cannot supply the whole acceleration: the car slides off.') : 'Friction cannot supply mv²/r: the car slides off the curve.') : S.fell ? (bl ? 'The ball leaves the track.' : 'N reached zero: the ball leaves the track and falls.') : S.preset === 'string' ? 'View from above' : S.preset === 'loop' ? 'Side view' : use3() ? 'The banked road in 3D: drag to turn the view' : 'View from above';
     ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(8 * p, 44 * p, ctx.measureText(msg).width + 8 * p, 20 * p); ctx.globalAlpha = 1;
     ctx.fillStyle = T.ink; ctx.fillText(msg, 12 * p, 48 * p);
     // free body diagram
     if (wide) { ctx.strokeStyle = T.line; ctx.beginPath(); ctx.moveTo(sw, 12 * p); ctx.lineTo(sw, H - 12 * p); ctx.stroke(); drawFBD(sw, 0, W - sw, H, q); }
     else { ctx.strokeStyle = T.line; ctx.beginPath(); ctx.moveTo(12 * p, sh); ctx.lineTo(W - 12 * p, sh); ctx.stroke(); drawFBD(0, sh, W, H - sh, q); }
   }
+  // ---------- 3D view of the banked curve (three.js through demos/lib/vd3.js), Banked curve setup only ----------
+  // The road is a cone at the bank angle θ: its height rises by tan θ per metre outward. The car follows the same angle as the flat
+  // view, at radius r, leaning in by θ. Road width, car and trees are scenery (the car is drawn up to 1.6 times life size so it can be seen, and shrunk on tight curves).
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', geo: '', w: 0, h: 0, o: { th: -0.45, ph: 1.12, zoom: 1.1 } };
+  let g3 = null;
+  const roadIn = (r) => r * 0.8, roadOut = (r) => r * 1.08, laneR = (r) => r - (r - roadIn(r)) * 10 / 31;   // the same proportions as the flat drawing
+  function zRoad(rho, r, th) {   // height of the ground at distance rho from the centre: the infield, the banked road, then an embankment down to the infield level
+    const t = Math.tan(th), ri = roadIn(r), ro = roadOut(r), zi = (ri - r) * t, zo = (ro - r) * t;
+    if (rho <= ri) return zi; if (rho <= ro) return (rho - r) * t; return Math.max(zi, zo - (rho - ro) * Math.tan(35 * Math.PI / 180));
+  }
+  function init3D() {
+    G3.tried = true;
+    const rd = VD3.renderer(); if (!rd) return false;
+    rd.shadowMap.enabled = true; rd.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = rd.domElement; el.setAttribute('aria-hidden', 'true'); el.style.position = 'absolute'; el.style.left = '0'; el.style.top = '0'; stage.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(34, 1, 0.1, 4000), M = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x667755, 0.7), sun = new THREE.DirectionalLight(0xffffff, 0.75); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+    scene.add(hemi, sun, sun.target);
+    const groundM = M({ vertexColors: true, roughness: 0.95 }), ground = new THREE.Mesh(new THREE.BufferGeometry(), groundM); ground.receiveShadow = true; scene.add(ground);
+    const field = new THREE.Mesh(new THREE.CircleGeometry(1, 64), M({ roughness: 1 })); field.receiveShadow = true; scene.add(field);
+    // the car: body, cabin, glass, wheels; its nose along +x, its left (towards the centre) along +y
+    const car = new THREE.Group(); car.rotation.order = 'ZXY'; scene.add(car);
+    const bodyM = M({ roughness: 0.35, metalness: 0.3 }), glassM = M({ roughness: 0.15, metalness: 0.2 }), tyreM = M({ roughness: 0.85 }), lampM = M({ roughness: 0.4, emissive: 0x332200 });
+    const box = (w, d, h, m, x, y, z) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, d, h), m); b.position.set(x, y, z); b.castShadow = true; car.add(b); return b; };
+    box(4.4, 1.8, 0.7, bodyM, 0, 0, 0.65); box(2.3, 1.62, 0.62, bodyM, -0.3, 0, 1.25); box(2.32, 1.64, 0.44, glassM, -0.3, 0, 1.27);
+    box(0.06, 0.3, 0.14, lampM, 2.2, 0.6, 0.75); box(0.06, 0.3, 0.14, lampM, 2.2, -0.6, 0.75);
+    const wg = new THREE.CylinderGeometry(0.34, 0.34, 0.24, 20); for (const x of [-1.4, 1.35]) for (const y of [-0.82, 0.82]) { const w = new THREE.Mesh(wg, tyreM); w.position.set(x, y, 0.34); w.castShadow = true; car.add(w); }
+    // arrows for v and a, a shaft and a cone scaled to length
+    function arrow3() { const m = new THREE.MeshStandardMaterial({ roughness: 0.5 }), g = new THREE.Group(), sg = new THREE.CylinderGeometry(1, 1, 1, 10); sg.rotateX(Math.PI / 2); sg.translate(0, 0, 0.5);
+      const sh = new THREE.Mesh(sg, m), hd = new THREE.Mesh(new THREE.ConeGeometry(1, 1, 16).rotateX(Math.PI / 2), m); g.add(sh, hd); g.userData = { m, sh, hd }; scene.add(g); return g; }
+    const aV = arrow3(), aA = arrow3();
+    // trees on the infield and outside: trunk and crown, placed once in units of r
+    const trees = new THREE.Group(), trunkM = M({ roughness: 0.9 }), crownM = M({ roughness: 0.85 }), crownM2 = M({ roughness: 0.85 }); scene.add(trees);
+    const rnd = rng(20261024);
+    for (let i = 0; i < 46; i++) { const out = i % 3 !== 0, a = rnd() * 2 * Math.PI, d = out ? 1.25 + rnd() * 0.9 : 0.15 + rnd() * 0.5, s = 0.7 + rnd() * 0.6, t = new THREE.Group();
+      const tr = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.16, 1.6, 8).rotateX(Math.PI / 2), trunkM); tr.position.z = 0.8; const cr = new THREE.Mesh(new THREE.IcosahedronGeometry(1.5, 1), i % 2 ? crownM : crownM2); cr.position.z = 2.6; cr.scale.set(1, 1, 1.2);
+      tr.castShadow = cr.castShadow = true; t.add(tr, cr); t.userData = { a, d, s }; trees.add(t); }
+    g3 = { rd, el, scene, cam, hemi, sun, groundM, ground, field, car, bodyM, glassM, tyreM, aV, aA, trees, trunkM, crownM, crownM2 };
+    can.addEventListener('wheel', (e) => { if (!use3() || !inScene(e)) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (!S.run) draw(); }, { grab: (e) => !use3() || !inScene(e), phMin: 0.25, phMax: 1.45, zMin: 0.5, zMax: 2.6 });
+    can.addEventListener('pointerup', () => { if (!use3()) can.style.cursor = ''; });
+    return true;
+  }
+  const use3 = () => G3.on && !!g3 && S.preset === 'bank';
+  const inScene = (e) => { const r = can.getBoundingClientRect(), g = geom(); return e.clientX - r.left < g.sw && e.clientY - r.top < g.sh; };
+  // the ground: infield edge, the banked road with kerbs and a dashed lane line, the embankment; rebuilt when r or θ changes
+  function build3(r, th) {
+    const col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+    const cRoad = col(T.road, '#dfe5ec').lerp(new THREE.Color(VD3.dark() ? '#3a414b' : '#8b939c'), 0.55), cK1 = col(T.kerb, '#c0392b'), cK2 = col(T.kerb2, '#ffffff'), cLane = col(T.lane, '#ffffff'), cGrass = col(T.grass, '#e3ecd9'), cBank = col(T.tuft, '#c2d4ae');
+    const ri = roadIn(r), ro = roadOut(r), kw = (ro - ri) * 0.07, ln = laneR(r), lw = (ro - ri) * 0.025, t = Math.tan(th), zo = (ro - r) * t, zi = (ri - r) * t;
+    const ro2 = ro + Math.max(0, zo - zi) / Math.tan(35 * Math.PI / 180) + 0.001, N = 160, pos = [], cols = [];
+    const band = (r0, r1, colOf, lift) => { for (let i = 0; i < N; i++) { const a0 = i / N * 2 * Math.PI, a1 = (i + 1) / N * 2 * Math.PI, c = colOf(i); if (!c) continue;
+      const P = (rr, a) => [rr * Math.cos(a), rr * Math.sin(a), zRoad(Math.min(rr, ro2), r, th) + (lift || 0)];
+      const q = [P(r0, a0), P(r1, a0), P(r1, a1), P(r0, a1)]; for (const k of [0, 1, 2, 0, 2, 3]) { pos.push(...q[k]); cols.push(c.r, c.g, c.b); } } };
+    band(ri, ro, () => cRoad); band(ri, ri + kw, (i) => (i % 2 ? cK1 : cK2), 0.01 * r / 50); band(ro - kw, ro, (i) => (i % 2 ? cK1 : cK2), 0.01 * r / 50);
+    band(ln - lw, ln + lw, (i) => (i % 2 ? null : cLane), 0.012 * r / 50); band(ro, ro2, () => cBank);
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3)); g.computeVertexNormals();
+    g3.ground.geometry.dispose(); g3.ground.geometry = g;
+    g3.field.material.color = cGrass; g3.field.scale.set(r * 8, r * 8, 1); g3.field.position.z = zi - 0.002 * r;
+    g3.trees.children.forEach((tr) => { const { a, d, s } = tr.userData, rho = d < 1 ? ri * d : ro2 + (d - 1.25) * r + 0.06 * r, k = s * Math.max(0.25, r / 50); tr.position.set(rho * Math.cos(a), rho * Math.sin(a), zRoad(rho, r, th)); tr.scale.setScalar(k); });
+    const sh = g3.sun.shadow.camera; Object.assign(sh, { left: -2.4 * r, right: 2.4 * r, top: 2.4 * r, bottom: -2.4 * r, near: 0.1 * r, far: 8 * r }); sh.updateProjectionMatrix();
+    g3.sun.position.set(-1.5 * r, -1.8 * r, 3 * r); g3.scene.fog = new THREE.Fog(g3.scene.background || new THREE.Color('#fff'), 4 * r, 9 * r);
+  }
+  function theme3() {
+    const g = g3, d = VD3.dark(), col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+    g.scene.background = col(T.skyBot || T.canvas, '#eef3f8'); g.hemi.intensity = d ? 1.0 : 0.7; g.sun.intensity = d ? 0.9 : 0.75;
+    g.bodyM.color = col(T.n, '#2b60b5'); g.glassM.color = col(T.glass, '#9fc1e0'); g.tyreM.color = col(T.tyre, '#2b3038');
+    g.trunkM.color = col(d ? '#5a4632' : '#8a6a45', '#8a6a45'); g.crownM.color = col(T.tree, '#b5cfa6'); g.crownM2.color = col(T.treeDark, '#8db27e');
+    g.aV.userData.m.color = col(T.vel, '#6f4bb3'); g.aA.userData.m.color = col(T.net, '#2f7d4f'); G3.geo = '';
+  }
+  function setArrow(a, o, dir, len, rad) {
+    const n = Math.hypot(...dir); if (!(n > 0) || !(len > 0)) { a.visible = false; return; }
+    a.visible = true; a.position.set(...o); a.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(dir[0] / n, dir[1] / n, dir[2] / n));
+    const hl = Math.min(len * 0.4, rad * 5); a.userData.sh.scale.set(rad, rad, len - hl); a.userData.hd.scale.set(rad * 2.4, hl, rad * 2.4); a.userData.hd.position.z = len - hl / 2;
+  }
+  // draws the banked curve into its canvas (w × h); X, Y in metres from the centre, heading in radians; returns metres → overlay pixels
+  function render3(X, Y, heading, w, h, showA) {
+    const g = g3, r = S.r, th = S.b * Math.PI / 180;
+    if (G3.w !== w || G3.h !== h) { G3.w = w; G3.h = h; g.rd.setSize(w, Math.max(1, h)); g.cam.aspect = w / Math.max(1, h); g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.road, T.n, T.grass].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    const gk = `${r},${S.b}`; if (G3.geo !== gk) { G3.geo = gk; build3(r, th); }
+    g.cam.near = 0.02 * r; g.cam.far = 30 * r; g.cam.updateProjectionMatrix();
+    VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0, 0), 4.4 * r);
+    const rho = Math.hypot(X, Y), onRoad = rho >= roadIn(r) && rho <= roadOut(r), k = Math.min(1.6, 0.09 * r / 4.4), z = zRoad(rho, r, th);
+    g.car.position.set(X, Y, z); g.car.rotation.z = heading; g.car.rotation.x = onRoad ? -th : 0; g.car.scale.setScalar(k);
+    // v along the heading, a horizontal towards the centre (as in the flat view), from the car's centre of mass
+    const up = 1.0 * k, o = [X, Y, z + up], vL = Math.min(0.35 * r, r * (0.12 + 0.006 * S.v)), rad = 0.006 * r;
+    setArrow(g.aV, o, [Math.cos(heading), Math.sin(heading), 0], vL, rad);
+    setArrow(g.aA, o, showA ? [-X, -Y, 0] : [0, 0, 0], 0.25 * r, rad);
+    g.scene.updateMatrixWorld(); g.rd.render(g.scene, g.cam);
+    const tmp = new THREE.Vector3();
+    return { Q: (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [(tmp.x + 1) / 2 * w, (1 - tmp.y) / 2 * h]; }, o, vL };
+  }
+  function setView(v) {
+    G3.want = v === '3d';
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { G3.want = false; v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setView(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; can.style.cursor = use3() ? 'grab' : '';
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    draw();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
   // ---------- scenery (decoration only; random layout precomputed once from a seeded generator) ----------
   function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
   const DECO = (() => { const r = rng(20261022), n = (k, fn) => Array.from({ length: k }, fn);
@@ -439,6 +554,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   $('play').textContent = S.run ? 'Pause' : 'Play';
+  /* the banked curve opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
+  G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();
   tokens(); new ResizeObserver(resize).observe(stage); applyPreset(location.hash === '#speed' ? 'speed' : 'string'); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
