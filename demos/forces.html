@@ -740,7 +740,7 @@ table.rows input:focus { border-color: var(--accent); }
   function fit() {
     const pts = fitPoints(), F = pts.length >= 2 ? fitLine(pts.map((q) => q[0]), pts.map((q) => q[1])) : null;
     let h;
-    if (!F) h = '<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two sliding-down rows at different angles, with F = 0 and no hanging mass.</dd></div>';
+    if (!F) h = '<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two rows from sliding down the ramp at different angles, with F = 0 and no hanging mass.</dd></div>';
     else {
       const pm = (v, e, d) => `${f(v, d)}${isFinite(e) ? ` ± ${f(e, d)}` : ''}`;
       h = `<div><dt>Slope (m/s²)</dt><dd>${pm(F.b, F.seB, 3)}</dd></div><div><dt>Intercept (m/s²)</dt><dd>${pm(F.a, F.seA, 3)}</dd></div>`;

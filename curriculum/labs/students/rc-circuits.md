@@ -3,7 +3,7 @@ Student laboratory · Physics II
 
 Textbook: OpenStax *University Physics*, Vol. 2, §§10.3, 10.5 and 8.3. Access for free at https://openstax.org/details/books/university-physics-volume-2.
 
-[Open the virtual Circuits bench](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#rc)
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#rc)
 
 <details class="about" markdown="1">
 <summary>About the demo</summary>

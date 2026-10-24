@@ -42,7 +42,7 @@ Students need gravitational potential energy −GMm/r and orbital speed v = √(
 
 ## Physics behind the demo
 
-- Earth as a non-rotating sphere (Schwarzschild exterior). A clock at radius r moving at speed v in the non-rotating frame ticks at dτ/dt = √(1 − 2GM/(rc²) − v²/c²) of coordinate time; for a circular orbit this is the exact √(1 − 3GM/(rc²)). Computed without cancellation in double precision.
+- Earth as a nonrotating sphere (Schwarzschild exterior). A clock at radius r moving at speed v in the nonrotating frame ticks at dτ/dt = √(1 − 2GM/(rc²) − v²/c²) of coordinate time; for a circular orbit this is the exact √(1 − 3GM/(rc²)). Computed without cancellation in double precision.
 - The gravity part is the rate difference with the second clock moved to r but given the ground clock's speed; the speed part is the rest. They add to the total.
 - The ground clock sits at radius 6371 km, either at rest or at the equator turning with Earth (465 m/s). The real GPS correction uses the geoid and includes Earth's flattening; the sphere model gives 38.6 μs/day, the usual quoted value.
 - Not included: the Sun's and Moon's fields, orbit eccentricity (which adds a periodic term GPS receivers correct), and the Sagnac effect for signals.

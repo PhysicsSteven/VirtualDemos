@@ -1,5 +1,5 @@
 ---
-title: Elevator and Apparent Weight
+title: Elevator: Apparent Weight
 level: PHYS 201
 time: 10 to 20 minutes
 ---

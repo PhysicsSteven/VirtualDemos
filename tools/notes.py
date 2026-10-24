@@ -134,7 +134,10 @@ def parse(path):
         for line in m.group(1).splitlines():
             if ":" in line:
                 k, v = line.split(":", 1)
-                meta[k.strip()] = v.strip()
+                v = v.strip()
+                if len(v) >= 2 and v[0] == v[-1] and v[0] in "'\"":
+                    v = v[1:-1]   # a quoted YAML value, such as a title with a colon
+                meta[k.strip()] = v
         t = t[m.end():]
     return meta, t
 

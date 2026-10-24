@@ -1,7 +1,7 @@
 # Acoustic Levitation
 Student laboratory · Acoustics
 
-[Open Acoustic Levitation](https://physicssteven.github.io/VirtualDemos/demos/acoustic-levitation.html)
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/acoustic-levitation.html)
 
 ## Goal
 

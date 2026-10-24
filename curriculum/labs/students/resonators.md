@@ -1,7 +1,7 @@
 # Resonance Tube: Speed of Sound
 Student laboratory · Acoustics
 
-[Open Resonators](https://physicssteven.github.io/VirtualDemos/demos/resonators.html)
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/resonators.html)
 
 ## Goal
 

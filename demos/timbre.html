@@ -294,7 +294,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>Shape cycles every</dt><dd id="rDrift">—</dd></div>
           <div><dt>Partial 16 / 16 f₁</dt><dd id="rStretch">—</dd></div>
         </dl>
-        <p class="hint">Detune one harmonic and the waveform stops repeating: its shape drifts through a full cycle every 1/|Δf|, and you hear a slow, regular change at |Δf| per second. Mistuned by more than a few percent, the harmonic starts to stand out as a separate tone. Stiffness stretches every partial upward, fₙ = n f₁ √((1 + Bn²)/(1 + B)), as in a stiff string; piano strings have a small B, one reason pianos are tuned with slightly wide octaves. A large B gives a clangy, bell-like tone without one clear pitch. Real bells have their own particular partials; this only shows what inharmonic partials do.</p>
+        <p class="hint">Detune one harmonic and the waveform stops repeating: its shape drifts through a full cycle every 1/|Δf|, and you hear a slow, regular change at |Δf| per second. Mistuned by more than a few percent, the harmonic starts to stand out as a separate tone. Stiffness stretches every partial upward, fₙ = n f₁ √((1 + Bn²)/(1 + B)), as in a stiff string; piano strings have a small B, one reason pianos are tuned with slightly wide octaves. A large B gives a clangy tone like a bell without one clear pitch. Real bells have their own particular partials; this only shows what inharmonic partials do.</p>
         <button type="button" class="btn" id="harmonicAgain">Back to exact harmonics</button>
         </div></details>
       </section>
@@ -537,7 +537,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   const MODEL = 'Each harmonic is a pure sine, aₙ sin(2π fₙ t + φₙ), held steady with no attack or decay. Real instruments change their spectrum during every note, and the attack matters a great deal for telling instruments apart. ' +
     'Harmonic n is at fₙ = n f₁; the stiffness slider uses the stiff string result fₙ = n f₁ √((1 + Bn²)/(1 + B)), scaled so partial 1 stays at f₁. Equal temperament: f = 440 Hz × 2^(k/12), k semitones from A4. ' +
-    'The square, sawtooth and triangle presets are the exact Fourier series cut off at 16 harmonics, which causes the ripples near the jumps. The clarinet-like and flute-like presets are illustrative spectra chosen to show one feature, not measurements of real instruments. ' +
+    'The square, sawtooth and triangle presets are the exact Fourier series cut off at 16 harmonics, which causes the ripples near the jumps. The clarinet and flute presets are illustrative spectra chosen to show one feature, not measurements of real instruments. ' +
     'The instrument slider uses five such illustrative spectra (flute, clarinet, oboe, trumpet and bowed string like). It keeps f₁ and the phases and, between two neighbors, mixes each amplitude linearly: aₙ = (1 − w) aₙ(left) + w aₙ(right), w from 0 to 1. Real instruments change their spectrum with pitch and loudness; these do not. ' +
     'The ladder shows each partial as a mode of an ideal string or ideal pipe (no end correction), with amplitude aₙ, slowed so f₁ is drawn at 0.5 Hz. Spectrum levels are 20 log₁₀ aₙ, with 0 dB the top of a bar.';
 

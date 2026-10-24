@@ -1928,7 +1928,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     base.hidden = over.hidden = is3;
     if (G.ready) G.el.hidden = !is3;
     spinBtn.hidden = hint3d.hidden = !is3;
-    if (is3) hint3d.textContent = 'Drag to orbit · Scroll or pinch to zoom · Drag a sphere to move it · Drag its knob up or down to change its charge · Double-click to reset · Keys A D W S Z X, 0 to reset';
+    if (is3) hint3d.textContent = 'Drag to orbit · Scroll or pinch to zoom · Drag a sphere to move it · Drag its knob up or down to change its charge · Double click to reset · Keys A D W S Z X, 0 to reset';
     hoverKnob = false; qDrag = null;
     for (const b of viewBtns) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     if (!is3) { orbit.spin = false; spinBtn.setAttribute('aria-pressed', 'false'); }

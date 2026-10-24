@@ -3,7 +3,7 @@ Student laboratory · Physics II and Modern Physics
 
 Textbook: OpenStax *University Physics*, Vol. 3, §9.7 (Semiconductor Devices). Access for free at https://openstax.org/details/books/university-physics-volume-3.
 
-[Open the virtual Circuits bench](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#diode)
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#diode)
 
 <details class="about" markdown="1">
 <summary>About the demo</summary>

@@ -1396,7 +1396,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       rounding:'none: values are the model\'s double precision output, unrounded; the on screen notebook shows 6 significant figures',seed:'none (deterministic model, no simulated noise)',
       notes:[...(kind==='run'?['rows: every 1 ms sample of the current run (at most 60001); flux_Wb is the value at t_s, interval quantities are averages over the interval ending at t_s']:['rows: captured measurements, which may come from different setups; settings_SI_json gives each row\'s own settings']),
         ...(modes.length>1||modes[0]!==S.mode?[`rows include apparatus: ${modes.join(' ')}; the parameters above are the setup at export`]:[]),
-        ...(modes.includes('self')?['self-inductance rows: interval_I_A is the source current at t_s; interval_EMF_V is the back EMF averaged over the interval; source_V1_V is the source voltage -EMF; magnetic_energy_J is L I^2/2; source_energy_since_start_J is the work done by the source']:[]),
+        ...(modes.includes('self')?['self inductance rows: interval_I_A is the source current at t_s; interval_EMF_V is the back EMF averaged over the interval; source_V1_V is the source voltage -EMF; magnetic_energy_J is L I^2/2; source_energy_since_start_J is the work done by the source']:[]),
         ...(B?['Blind was on at export: flux_from_primary_Wb, magnetic_energy_J and M_H, k, L_H in settings_SI_json are left out']:[])]});
     return [...head,cols.join(','),...data.map(r=>keys.map(k=>cell(r,k)).join(','))].join('\n')+'\n';
   }

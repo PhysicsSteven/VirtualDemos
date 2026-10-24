@@ -8,7 +8,7 @@ time: 25 to 40 minutes
 - Resistance depends on shape: R = ρL/A. Twice the length, twice the resistance; twice the diameter, a quarter.
 - Resistivity ρ is the material's property; it differs by a factor of about 65 between nichrome and copper.
 - Metal resistivity rises with temperature, ρ(T) = ρ₂₀[1 + α(T − 20 °C)]; some alloys (constantan) barely change.
-- A four-wire measurement (current through the whole wire, voltage across the clips only) measures just the length between the clips.
+- A four wire measurement (current through the whole wire, voltage across the clips only) measures just the length between the clips.
 
 ## Before class
 
@@ -32,7 +32,7 @@ Students should know R = V/I. The wire runs along a 1.000 m rule. A constant cur
 
 **Q3.** By what factor does the resistance of copper wire rise from 20 °C to 100 °C (α = 0.00393 /K)? Why is constantan used for precision resistors?
 
-**Q4 (lab).** From your R against L fit, explain why ρ = slope × A. Why should the intercept be zero here, and what would a two-wire meter (one that also measures the leads and clip contacts) do to it?
+**Q4 (lab).** From your R against L fit, explain why ρ = slope × A. Why should the intercept be zero here, and what would a two wire meter (one that also measures the leads and clip contacts) do to it?
 
 **Q5 (lab).** With R measured at several temperatures at fixed L, show that α = slope / R(20 °C). Find ρ and α for the Mystery wire.
 
@@ -53,7 +53,7 @@ Students should know R = V/I. The wire runs along a 1.000 m rule. A constant cur
 
 - R = ρL/A with A = πd²/4, ρ(T) linear in T from handbook values at 20 °C: nichrome 1.10 × 10⁻⁶ Ω·m (α 0.0004 /K), constantan 4.9 × 10⁻⁷ Ω·m (α 0.00001 /K), copper 1.68 × 10⁻⁸ Ω·m (α 0.00393 /K). Real alloys vary by a few percent.
 - Diameters are AWG 22, 26, 30 and 34 (0.644, 0.405, 0.255, 0.160 mm).
-- Ideal four-wire measurement: the voltmeter draws no current and the clip and lead resistances do not enter; the supply holds I exactly. Heating of the wire by the current is ignored (the temperature is what you set).
+- Ideal four wire measurement: the voltmeter draws no current and the clip and lead resistances do not enter; the supply holds I exactly. Heating of the wire by the current is ignored (the temperature is what you set).
 - Readings: V to 4 significant figures, I as set.
 - Inside the wire (OpenStax 9.1 and 9.2): v_d = I/(nqA), J = I/A = nqv_d, transit time L/v_d, electrons per second I/e. Copper uses the cited free electron density n = 8.47 × 10²⁸ m⁻³ (one per atom; pure copper at 8.96 g/cm³ gives 8.49 × 10²⁸). The alloys are estimates from composition and density with one free electron per atom assumed: nichrome (80% Ni, 20% Cr, 8.40 g/cm³) 8.84 × 10²⁸, constantan (55% Cu, 45% Ni, 8.90 g/cm³) 8.75 × 10²⁸ m⁻³. OpenStax Example 9.3 uses 8.80 g/cm³ for copper and so gets n = 8.34 × 10²⁸ m⁻³ and v_d = 4.54 × 10⁻⁴ m/s for 12 gauge at 20 A; with 8.47 × 10²⁸ the same wire gives 4.45 × 10⁻⁴ m/s. (The 12 gauge wire is not one of the demo's gauges; the tests check it.)
 - The magnified region is 4 nm × 2 nm × 0.3 nm and holds every free electron in it (n × volume, about 200). The random speed is the Fermi speed of the free electron model, v_F = ħ(3π²n)^⅓/m (1.57 × 10⁶ m/s for copper); the electrons change to a new random 3D direction after a mean time τ = m/(ne²ρ) (Drude), which follows ρ(T): 2.5 × 10⁻¹⁴ s in copper and 3.6 × 10⁻¹⁶ s in nichrome. Ions are drawn on a square grid at the mean atomic spacing; copper's real lattice is face centred cubic. n is held fixed with temperature.

@@ -33,7 +33,7 @@ Students need L = Iω as a vector along the spin axis (right hand rule) and τ =
 
 **Q3.** Which way does the axle go round? Use the arrows to explain, then predict what happens if the spin is reversed.
 
-**Q4.** What happens to the precession rate if d is doubled? If the spin is doubled? If the rim-heavy wheel is used?
+**Q4.** What happens to the precession rate if d is doubled? If the spin is doubled? If the rim heavy wheel is used?
 
 **Q5 (lab).** Show that Ω against 1/ω_s is a line through the origin with slope Mgd/I_s, and find I_s for the Mystery wheel. Why should you use fast spin or the steady start for this?
 
@@ -46,7 +46,7 @@ Students need L = Iω as a vector along the spin axis (right hand rule) and τ =
 
 ## Physics behind the demo
 
-- Rigid wheel on a massless axle, frictionless pivot at the axle's end, the spin about the axle constant. The wheel is a flat body of mass 0.500 kg and radius 6.0 cm: I_s = ½MR² = 9.00 × 10⁻⁴ kg·m² for the solid disk, 0.905MR² = 1.629 × 10⁻³ kg·m² for the rim-heavy wheel (rim between 5.4 and 6.0 cm); about a diameter I_s/2, so about the pivot I₁ = I_s/2 + Md².
+- Rigid wheel on a massless axle, frictionless pivot at the axle's end, the spin about the axle constant. The wheel is a flat body of mass 0.500 kg and radius 6.0 cm: I_s = ½MR² = 9.00 × 10⁻⁴ kg·m² for the solid disk, 0.905MR² = 1.629 × 10⁻³ kg·m² for the rim heavy wheel (rim between 5.4 and 6.0 cm); about a diameter I_s/2, so about the pivot I₁ = I_s/2 + Md².
 - The motion comes from the exact Lagrangian of a heavy symmetric top. The spin ω_s about the axle and p_φ = I₁ sin²θ φ' + I_s ω_s cos θ are conserved; θ'' = sin θ (I₁ φ'² cos θ − I_s ω_s φ' + Mgd)/I₁. RK4, 0.2 ms steps; energy holds to 1 part in 10⁹ over 5 s.
 - Steady precession at angle θ satisfies I₁ cos θ φ'² − I_s ω_s φ' + Mgd = 0; for a level axle its slow root is exactly Mgd/(I_s ω_s). **Smooth start** releases at that rate.
 - Released from rest the axle dips by about 2I₁Mgd/(I_s ω_s)² and wobbles at about I_s ω_s/I₁. With fast spin the average rate is the formula to within 0.2% (3000 rpm, d = 10 cm). For slower spin or a larger d it drifts below: at 1500 rpm the period is 1.870 s against 1.811 s.

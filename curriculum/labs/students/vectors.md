@@ -3,7 +3,7 @@ Student activity · Physics I
 
 Textbook: OpenStax *University Physics*, Vol. 1, §2.1, §2.2, §2.4, §4.1 and §4.2. Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
-[Open the demo](https://physicssteven.github.io/VirtualDemos/demos/vectors.html?setup=comp)
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/vectors.html?setup=comp)
 
 ## Goal
 

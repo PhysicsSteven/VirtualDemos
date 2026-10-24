@@ -3,7 +3,7 @@ Student laboratory · Physics II
 
 Textbook: OpenStax *University Physics*, Vol. 2, §§14.3–14.6; RC comparison: §10.5. Access for free at https://openstax.org/details/books/university-physics-volume-2.
 
-[Open the virtual Circuits bench](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#transients)
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#transients)
 
 <details class="about" markdown="1">
 <summary>About the demo</summary>

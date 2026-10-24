@@ -1,7 +1,7 @@
 # Timbre and Harmonics
 Student laboratory · Acoustics
 
-[Open Timbre and Harmonics](https://physicssteven.github.io/VirtualDemos/demos/timbre.html)
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/timbre.html)
 
 ## Goal
 

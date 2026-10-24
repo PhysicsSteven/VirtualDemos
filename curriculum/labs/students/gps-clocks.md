@@ -20,7 +20,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §13.7, and Vol. 3, §5.3. Acce
 
 **What the demo models.**
 
-- Earth is a non-rotating spherical mass with GM = 3.986004 × 10¹⁴ m³/s². Each clock ticks, compared with a clock far away and at rest, at the rate $$\sqrt{1 - 2GM/(rc^2) - v^2/c^2}$$, where v is its speed in a frame that does not turn with Earth (the Schwarzschild field of general relativity, exact for a clock that moves along a circle about Earth's centre).
+- Earth is a nonrotating spherical mass with GM = 3.986004 × 10¹⁴ m³/s². Each clock ticks, compared with a clock far away and at rest, at the rate $$\sqrt{1 - 2GM/(rc^2) - v^2/c^2}$$, where v is its speed in a frame that does not turn with Earth (the Schwarzschild field of general relativity, exact for a clock that moves along a circle about Earth's centre).
 - The ground clock sits on a sphere of radius 6371 km, at rest or carried round at the equator once per sidereal day (465 m/s). Earth's flattening, the shape of the sea level surface, eccentric orbits, and the Sun and Moon are left out. One day is 86,400 s.
 
 </details>
