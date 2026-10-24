@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>Velocity, Momentum and Energy Near c</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,6 +22,7 @@
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
 .pane { position: relative; flex: 1 1 auto; min-height: 380px; }
 .pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; }
+.pane.in3d #can { pointer-events: none; }
 .curvebox { position: relative; flex: none; height: 200px; border-top: 1px solid var(--line); }
 .curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
@@ -71,6 +74,7 @@
           <button type="button" data-s="5" aria-pressed="false">5×</button>
           <button type="button" data-s="20" aria-pressed="false">20×</button>
         </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <span class="count mono" id="clock">t = 0 s</span>
       </div>
       <div class="pane" id="pane">
@@ -256,8 +260,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
     else { ctx.fillStyle = T.ink; ctx.font = `${12 * proj()}px ${T.mono}`; ctx.textAlign = 'left'; ctx.fillText(`${name}: ${text}`, x, y + h / 2); }
   }
-  function drawVel() {
-    const p = proj(), h = S.vel; space();
+  function drawVel(hud) {
+    const p = proj(), h = S.vel;
+    if (hud) { hudVel(p, h); return; }
+    space();
     const x0 = -0.9, x1 = 3.5, L = 30 * p, R = W - 30 * p, X = (x) => L + (x - x0) / (x1 - x0) * (R - L), y = H * 0.56;
     /* the light second ruler along the track */
     ctx.strokeStyle = 'rgba(200,215,235,0.4)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, y + 58 * p); ctx.lineTo(R, y + 58 * p); ctx.stroke();
@@ -280,6 +286,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     rocketShape(X(xr) - 12 * p, y + 14 * p, 0.9 * p);
     if (VG && xp < x1) VG.label(ctx, h.light ? 'light pulse' : 'probe', X(xp), y - 18 * p, { a: 'center', s: 10 * p, c: '#ffe2b0' });
+    hudVel(p, h);
+  }
+  /* the timers and the ground clock: drawn over the flat picture and over the 3D one */
+  function hudVel(p, h) {
+    const t = h.t, v = rocketV(), u = probeU(), pg = gateTimes(u), rg = gateTimes(v);
     /* timers: each shows the time between beacon A and beacon B once the body has passed B */
     const narrow = W < 640, pw = (narrow ? 118 : 128) * p, ph = 26 * p, px = W - pw - (narrow ? 14 : 24) * p, py = (narrow ? 66 : 18) * p, pd = passed(u, t), rd = passed(v, t);
     const live = (g) => (g && t > g.tA ? `${f(Math.min(t, g.tB) - g.tA, 4)} s` : '—');
@@ -329,8 +340,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- the electron flight view ----------
   const ePart = () => (S.en.mystery ? S.en.mys : S.en.part);
   const eState = () => flight(ePart(), VOLTS[S.en.vi], S.en.B);
-  function drawEn() {
+  function drawEn(hud) {
     const p = proj(), s = eState(), h = S.en, by = Math.round(H * 0.86);
+    if (hud) { hudEn(p, s, h, by); return; }
     if (VG) { VG.wall(ctx, 0, 0, W, by); VG.bench(ctx, 0, by, W, 14, Math.max(14, H - by - 2)); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
     const gunX = 24 * p, gunW = 90 * p, y = H * 0.36, magW = Math.min(170 * p, W * 0.24), magX = W - magW - 20 * p, x1 = gunX + gunW + 40 * p, x2 = magX - 30 * p;
     /* accelerator */
@@ -356,8 +368,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (VG) VG.label(ctx, `bend radius ${h.shots ? f(s.r_m * 100, 2) + ' cm' : '—'}${W < 640 ? '' : ' (picture not to scale)'}`, W - 10 * p, y + 96 * p, { a: 'right', s: 10 * p });
     /* the bunch in flight */
     if (S.run && !reduce) { const fr = (h.t % 1); const bx = gunX + gunW + fr * (magX - gunX - gunW); ctx.save(); ctx.fillStyle = T.probe; ctx.shadowColor = T.probe; ctx.shadowBlur = 10 * p; ctx.beginPath(); ctx.arc(bx, y, 4 * p, 0, 7); ctx.fill(); ctx.restore(); }
-    /* the oscilloscope: the two pickup pulses */
-    const ox = gunX, oy = y + 70 * p, ow = Math.min(x2 - gunX - 20 * p, 420 * p), oh = Math.max(70 * p, by - oy - 40 * p);
+    hudEn(p, s, h, by);
+  }
+  /* the oscilloscope with the two pickup pulses, the time of flight meter and the particle's name: over both pictures */
+  function hudEn(p, s, h, by) {
+    const gunX = 24 * p, y = H * 0.36, magW = Math.min(170 * p, W * 0.24), magX = W - magW - 20 * p, x2 = magX - 30 * p, in3 = use3();
+    const ox = gunX, oy = in3 ? H - Math.max(96 * p, H * 0.3) - 14 * p : y + 70 * p, ow = Math.min(x2 - gunX - 20 * p, 420 * p), oh = in3 ? Math.max(96 * p, H * 0.3) - 30 * p : Math.max(70 * p, by - oy - 40 * p);
     if (VG) VG.box(ctx, ox - 8 * p, oy - 8 * p, ow + 16 * p, oh + 30 * p, { color: '#2b3440', r: 8 });
     ctx.fillStyle = '#0b1a14'; ctx.fillRect(ox, oy, ow, oh);
     const span = Math.max(40, nice(s.t_ns * 1.4 / 10) * 10), Xo = (tt) => ox + (tt + span * 0.1) / (span * 1.1) * ow;
@@ -368,6 +384,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (VG) VG.plate(ctx, `oscilloscope · ${sig(span * 1.1 / 10, 2)} ns per division`, ox + ow / 2, oy + oh + 11 * p, { s: 8 * p });
     const lx = Math.min(W - 160 * p, ox + ow + 40 * p); if (lx + 132 * p < magX - 10 * p) lcdBox(lx, oy + 6 * p, 132 * p, 26 * p, h.shots ? `${f(s.t_ns, 2)} ns` : '—', 'time of flight');
     if (VG) VG.label(ctx, h.mystery ? 'mystery particle' : PARTICLES[ePart()].name.toLowerCase(), gunX, H * 0.08, { s: 11 * p, c: T.ink });
+    if (in3 && VG) VG.label(ctx, `bend radius ${h.shots ? f(s.r_m * 100, 2) + ' cm' : '—'} · ${G3.bendNote}`, W - 10 * p, H * 0.08, { a: 'right', s: 10 * p, c: T.ink });
   }
 
   // ---------- the graph ----------
@@ -410,7 +427,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     c.restore();
   }
-  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); ({ vel: drawVel, mom: drawMom, en: drawEn })[S.view](); drawCurve(); readouts(); clock(); }
+  function redraw() {
+    if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    const in3 = use3(); $('pane').classList.toggle('in3d', in3); if (G3.st) G3.st.el.style.visibility = in3 ? 'visible' : 'hidden';
+    $('dimSeg').hidden = S.view === 'mom';
+    if (in3) draw3();
+    ({ vel: drawVel, mom: drawMom, en: drawEn })[S.view](in3);
+    drawCurve(); readouts(); clock();
+  }
   function clock() { $('clock').textContent = S.view === 'vel' ? `t = ${f(S.vel.t, 2)} s` : S.view === 'mom' ? `t = ${sig(S.mom.t, 4)} ns` : `${S.en.shots} bunch${S.en.shots === 1 ? '' : 'es'} timed`; }
 
   // ---------- readouts ----------
@@ -442,6 +466,120 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- controls ----------
   const fill = (sel, extra) => { sel.innerHTML = Object.keys(PARTICLES).map((k) => `<option value="${k}">${PARTICLES[k].name}</option>`).join('') + (extra || ''); };
   fill($('selPm')); fill($('selPe'), '<option value="mystery">Mystery particle</option>');
+  // ---------- the 3D views (three.js through demos/lib/vd3kit.js); Flat button or ?view=flat for the flat pictures ----------
+  /* Adding velocities: one scene unit is one light second along the track. The rocket, beacons and probe move exactly as in the flat
+     view (x = −0.600 + vt and −0.600 + ut); the camera follows the stretch between the rocket and the probe. The rocket and the beacons
+     are drawn far larger than to scale, and the rocket's length contraction is not shown, as in the flat view.
+     Electron flight: one scene unit is one metre. The pickups are 8.400 m apart on the beam line; in the magnet the path bends in a
+     half circle of the computed radius, drawn to scale up to 0.45 m (half the magnet); a larger radius is drawn at 0.45 m and says so. */
+  const G3 = { st: null, view: null, o: { th: -1.38, ph: 1.18, zoom: 1 }, fol: null, bendNote: '' };
+  const use3 = () => !!(S.view !== 'mom' && G3.view && G3.view.is3d() && G3.st);
+  function init3() {
+    const st = VD3K.stage($('pane'), { before: can, fov: 34, near: 0.01, far: 2000, shadow: 6 }); if (!st) return false;
+    G3.st = st; const sc = st.scene, M = (o) => new THREE.MeshStandardMaterial(o);
+    /* ---- space, for adding velocities ---- */
+    const vel = G3.vel = new THREE.Group(); sc.add(vel);
+    vel.add(VD3K.sky(st, { n: 1800, r: 400, milky: true }));
+    const trackM = new THREE.LineBasicMaterial({ color: 0x9fb4d2, transparent: true, opacity: 0.55 });
+    vel.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-0.9, 0, -0.06), new THREE.Vector3(3.6, 0, -0.06)]), trackM));
+    const tk = [];
+    for (let k = -0.5; k <= 3.5 + 1e-9; k += 0.5) {
+      const big = Math.abs(k - Math.round(k)) < 1e-9; tk.push(new THREE.Vector3(k, 0, -0.06), new THREE.Vector3(k, big ? -0.07 : -0.04, -0.06));
+      if (big) { const L = VD3K.label(`${k} ls`, { size: 0.045, color: '#c9d6ea' }); L.position.set(k, -0.12, -0.06); vel.add(L); }
+    }
+    vel.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(tk), trackM));
+    const mark = new THREE.Mesh(new THREE.TorusGeometry(0.07, 0.004, 8, 48), new THREE.MeshBasicMaterial({ color: 0xffc77a, transparent: true, opacity: 0.8 }));
+    mark.rotation.y = Math.PI / 2; mark.position.set(MARK, 0, 0); vel.add(mark);
+    const ml = VD3K.label('launch mark', { size: 0.04, color: '#ffd9a0' }); ml.position.set(MARK, 0, 0.12); vel.add(ml);
+    G3.lamps = [];
+    for (const [bx, nm] of [[0, 'beacon A'], [GAP, 'beacon B']]) {
+      const g = new THREE.Group(); g.position.set(bx, 0.16, 0);
+      const post = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.22, 12), M({ color: 0x8a96a6, metalness: 0.6, roughness: 0.35 })); post.rotation.x = Math.PI / 2; g.add(post);
+      const body = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.035, 0.06, 20), M({ color: 0x3b4654, metalness: 0.4, roughness: 0.5 })); body.rotation.x = Math.PI / 2; body.position.z = -0.12; g.add(body);
+      const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.022, 20, 12), new THREE.MeshBasicMaterial({ color: 0x4a1f1a })); lamp.position.z = 0.12; g.add(lamp);
+      const halo = VD3K.star(st, { r: 0.022, color: '#ff5a3c', glow: 7 }); halo.position.z = 0.12; halo.visible = false; g.add(halo);
+      const L = VD3K.label(nm, { size: 0.05, color: '#e3e8ef' }); L.position.z = 0.2; g.add(L);
+      const beam = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0.1), new THREE.Vector3(0, -0.16, -0.06)]), new THREE.LineDashedMaterial({ color: 0xc8d7eb, dashSize: 0.01, gapSize: 0.012, transparent: true, opacity: 0.5 }));
+      beam.computeLineDistances(); g.add(beam);
+      vel.add(g); G3.lamps.push({ lamp, halo });
+    }
+    /* the rocket: about a quarter of a light second long here, far larger than any real rocket */
+    const rk = G3.rocket = new THREE.Group(), hull = M({ color: 0xdfe5ec, metalness: 0.55, roughness: 0.3 }), red = M({ color: 0xc0432a, roughness: 0.5 });
+    const body = new THREE.Mesh(new THREE.CylinderGeometry(0.032, 0.032, 0.17, 24), hull); body.rotation.z = -Math.PI / 2; rk.add(body);
+    const nose = new THREE.Mesh(new THREE.ConeGeometry(0.032, 0.07, 24), hull); nose.rotation.z = -Math.PI / 2; nose.position.x = 0.12; rk.add(nose);
+    for (let i = 0; i < 4; i++) { const fin = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.004, 0.035), red), a = i * Math.PI / 2; fin.position.set(-0.07, Math.cos(a) * 0.045, Math.sin(a) * 0.045); fin.rotation.x = a; rk.add(fin); }
+    const win = new THREE.Mesh(new THREE.SphereGeometry(0.012, 16, 10), M({ color: 0x2b4f86, metalness: 0.2, roughness: 0.15 })); win.position.set(0.05, -0.028, 0.008); rk.add(win);
+    vel.add(rk);
+    G3.probe = VD3K.star(st, { r: 0.016, color: '#ffb347', glow: 6 }); vel.add(G3.probe);
+    G3.trail = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 1, 10), new THREE.MeshBasicMaterial({ color: 0xffb347, transparent: true, opacity: 0.45 })); G3.trail.rotation.z = Math.PI / 2; vel.add(G3.trail);
+    G3.plab = VD3K.label('probe', { size: 0.045, color: '#ffe2b0' }); vel.add(G3.plab);
+    G3.fol = VD3K.follow({ x: 0.6, y: 0, z: 0 }, 0.08);
+    /* ---- the beam line, for electron flight ---- */
+    const en = G3.en = new THREE.Group(); sc.add(en);
+    en.add(VD3K.bench(st, { w: 13, d: 3.2, x: 4.6, y: 0.4, z: 0 }));
+    const steel = M({ color: 0xb7c0ca, metalness: 0.7, roughness: 0.3 }), dark = M({ color: 0x2f3945, metalness: 0.3, roughness: 0.5 });
+    en.add(VD3K.box(1.2, 0.8, 1.1, M({ color: 0x4a3d5c, roughness: 0.5, metalness: 0.2 }), -0.7, 0, 0));
+    G3.accM = VD3K.meter(st, { w: 0.62, h: 0.36, label: 'ACCELERATOR', kind: 'lcd', text: '' }); G3.accM.position.set(-0.7, -0.42, 0.55); en.add(G3.accM);
+    const ZB = 0.9;   /* beam height above the floor (m) */
+    en.add(VD3K.rod([-0.1, 0, ZB], [9.4, 0, ZB], 0.05, steel));
+    for (let x = 1.4; x < 9; x += 2) { en.add(VD3K.rod([x, 0, 0], [x, 0, ZB - 0.05], 0.03, dark)); en.add(VD3K.box(0.3, 0.3, 0.03, dark, x, 0, 0)); }
+    for (const [x, nm] of [[0.5, 'pickup 1'], [0.5 + FLIGHT, 'pickup 2']]) {
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.11, 0.035, 12, 36), dark); ring.rotation.y = Math.PI / 2; ring.position.set(x, 0, ZB); ring.castShadow = true; en.add(ring);
+      const L = VD3K.label(nm, { size: 0.3, color: '#ffffff', bg: 'rgba(30,38,48,0.78)' }); L.position.set(x, 0, ZB + 0.38); en.add(L);
+    }
+    en.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0.5, -0.3, ZB - 0.25), new THREE.Vector3(0.5 + FLIGHT, -0.3, ZB - 0.25)]), new THREE.LineBasicMaterial({ color: 0x5a6575 })));
+    const dl = VD3K.label('8.400 m between the pickups', { size: 0.28, color: '#ffffff', bg: 'rgba(30,38,48,0.7)' }); dl.position.set(0.5 + FLIGHT / 2, -0.3, ZB - 0.42); en.add(dl);
+    /* the magnet: iron poles above and below a 1 m square gap the beam enters at its middle; a ruler along the entrance face */
+    const MX = 9.4, MS = 1.0, mag = new THREE.Group(); mag.position.set(MX, 0, 0); en.add(mag);
+    const ironM = M({ color: 0x7a2b2b, roughness: 0.55, metalness: 0.25 });
+    const topM = M({ color: 0x7a2b2b, roughness: 0.55, metalness: 0.25, transparent: true, opacity: 0.3, depthWrite: false });   /* the upper pole drawn see through, to show the bend in the gap */
+    const top = VD3K.box(MS, MS, 0.4, topM, MS / 2, 0.45, ZB + 0.12); top.castShadow = false;
+    mag.add(VD3K.box(MS, MS, ZB - 0.12, ironM, MS / 2, 0.45, 0), top);
+    const rule = VD3K.ruler(st, { len: 0.9, from: 0, to: 90, unit: 'cm', step: 1, w: 0.06 }); rule.rotation.z = Math.PI / 2; rule.position.set(0.0, 0.02, ZB - 0.11); mag.add(rule);
+    const ml2 = VD3K.label('magnet', { size: 0.3, color: '#ffffff', bg: 'rgba(90,32,32,0.85)' }); ml2.position.set(MS / 2, 0.45, ZB + 0.75); mag.add(ml2);
+    G3.bendM = new THREE.MeshBasicMaterial({ color: 0xffb347, transparent: true, opacity: 0.9 });
+    G3.bend = new THREE.Mesh(new THREE.BufferGeometry(), G3.bendM); mag.add(G3.bend); G3.MX = MX; G3.ZB = ZB;
+    G3.bunch = VD3K.star(st, { r: 0.05, color: '#ffb347', glow: 5 }); en.add(G3.bunch);
+    st.orbit(st.el, G3.o, () => redraw(), { phMin: 0.25, phMax: 1.5, zMin: 0.5, zMax: 3 });
+    return true;
+  }
+  let lastBend = '';
+  function draw3() {
+    const st = G3.st; st.size(W, H);
+    const isVel = S.view === 'vel'; G3.vel.visible = isVel; G3.en.visible = !isVel;
+    if (isVel) {
+      st.scene.background = new THREE.Color('#05080f'); st.scene.fog = null;
+      const h = S.vel, t = h.t, v = rocketV(), u = probeU(), pg = gateTimes(u), rg = gateTimes(v), xr = MARK + v * t, xp = MARK + u * t;
+      const lit = [(pg && Math.abs(t - pg.tA) < 0.25) || (rg && Math.abs(t - rg.tA) < 0.25), (pg && Math.abs(t - pg.tB) < 0.25) || (rg && Math.abs(t - rg.tB) < 0.25)];
+      G3.lamps.forEach((L, i) => { L.lamp.material.color.set(lit[i] ? '#ff5a3c' : '#4a1f1a'); L.halo.visible = !!lit[i]; });
+      G3.rocket.position.set(xr - 0.02, 0, 0);
+      const col = h.light ? '#ffe066' : '#ffb347'; G3.probe.tint(col); G3.trail.material.color.set(col);
+      G3.probe.visible = t > 0; G3.probe.position.set(xp, 0, 0);
+      const tail = Math.min(xp - MARK, 0.5); G3.trail.visible = t > 0 && tail > 0.01; G3.trail.scale.set(1, Math.max(0.001, tail), 1); G3.trail.position.set(xp - tail / 2, 0, 0);
+      G3.plab.set(h.light ? 'light pulse' : 'probe'); G3.plab.visible = t > 0 && xp < 3.5; G3.plab.position.set(xp, 0, 0.07);
+      /* follow the stretch from the rocket to the probe, kept on the track between the mark and beacon B */
+      const a = Math.min(xr, t > 0 ? xp : xr), b = Math.max(xr, t > 0 ? Math.min(xp, 3.6) : xr), mid = Math.max(-0.1, Math.min(3.0, (a + b) / 2));
+      const span = Math.max(1.4, Math.min(4.6, b - a + 1.0)), at = G3.fol.to(mid, 0, 0.02, reduce || !S.run);
+      st.place(G3.o, at, st.fit(span * 1.35, 1.6));
+    } else {
+      st.theme(true);
+      const s = eState(), h = S.en, ZB = G3.ZB, MX = G3.MX;
+      G3.accM.set(`${VOLTS[h.vi]} MV`);
+      const r = Math.max(0.01, Math.min(0.45, s.r_m));
+      G3.bendNote = s.r_m <= 0.45 ? 'bend drawn to scale' : 'radius over 45 cm, drawn at 45 cm';
+      const key = r.toFixed(5);
+      if (key !== lastBend) {
+        lastBend = key; const p2 = [new THREE.Vector3(-0.05, 0, ZB)];
+        for (let i = 0; i <= 48; i++) { const a = Math.PI * i / 48; p2.push(new THREE.Vector3(r * Math.sin(a), r - r * Math.cos(a), ZB)); }
+        G3.bend.geometry.dispose(); G3.bend.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(p2), 64, 0.02, 8, false);
+      }
+      G3.bendM.opacity = h.shots ? 0.95 : 0.25;
+      if (S.run && !reduce) { G3.bunch.visible = true; G3.bunch.position.set(-0.05 + (h.t % 1) * (MX + 0.05), 0, ZB); } else G3.bunch.visible = false;
+      st.place(G3.o, new THREE.Vector3(4.6, 0.3, -0.9), st.fit(12.5, 1.6));
+    }
+    st.render();
+  }
+
   function sync() {
     const h = S.vel, m = S.mom, e = S.en;
     $('sV').value = h.v; $('oV').textContent = h.mystery ? 'mystery' : `${f(h.v, 2)}c`; $('sV').disabled = h.mystery;
@@ -561,6 +699,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   tokens();
+  G3.view = VD3K.view({ seg: '#dimSeg', init: init3, change: () => redraw(), status: () => {} });
   const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'probe');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
