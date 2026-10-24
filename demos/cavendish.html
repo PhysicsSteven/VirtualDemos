@@ -1,0 +1,339 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>The Cavendish Experiment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: its colours, the picture and the strip chart */
+:root { --lead: #6f7a86; --lead-hi: #c3cad3; --laser: #e0322a; --force: #2b60b5; --equil: #2f9a52; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lead: #7d8794; --lead-hi: #c9d0d8; --laser: #ff5a4f; --force: #69a0ff; --equil: #4cc07f; } }
+:root[data-theme="dark"] { --lead: #7d8794; --lead-hi: #c9d0d8; --laser: #ff5a4f; --force: #69a0ff; --equil: #4cc07f; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.scene { position: relative; flex: 1 1 auto; min-height: 400px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.plotbox { position: relative; flex: none; height: 220px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+@media (min-width: 821px) { .stage { min-height: 680px; } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 420px; flex: none; } .plotbox { height: 200px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>The Cavendish Experiment</h1>
+      <p>Two small lead spheres on a beam hang from a thin fibre. Swing two large lead spheres up beside them and their gravity twists the fibre a few thousandths of a radian; a laser reflected from a mirror on the beam turns that into centimetres on a scale 5 m away. From the twist and the period of the swing, find G.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">spot on the scale in cm · time in s</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/cavendish.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/cavendish.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h4v1h-4zM16 2h2v1h-2zM19 2h3v1h-3zM24 2h1v1h-1zM26 2h2v1h-2zM29 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h2v1h-2zM15 3h3v1h-3zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM19 4h7v1h-7zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM17 5h2v1h-2zM20 5h2v1h-2zM25 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h2v1h-2zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM18 7h1v1h-1zM20 7h5v1h-5zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h2v1h-2zM15 9h2v1h-2zM19 9h4v1h-4zM24 9h2v1h-2zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h4v1h-4zM14 10h1v1h-1zM20 10h2v1h-2zM24 10h3v1h-3zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h1v1h-1zM5 11h2v1h-2zM9 11h1v1h-1zM11 11h1v1h-1zM13 11h1v1h-1zM15 11h1v1h-1zM18 11h1v1h-1zM21 11h3v1h-3zM27 11h4v1h-4zM34 11h4v1h-4zM3 12h1v1h-1zM6 12h4v1h-4zM11 12h1v1h-1zM13 12h1v1h-1zM16 12h1v1h-1zM18 12h1v1h-1zM22 12h3v1h-3zM28 12h4v1h-4zM33 12h2v1h-2zM2 13h1v1h-1zM4 13h1v1h-1zM9 13h3v1h-3zM13 13h4v1h-4zM19 13h1v1h-1zM23 13h2v1h-2zM26 13h1v1h-1zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h2v1h-2zM5 14h2v1h-2zM8 14h1v1h-1zM10 14h1v1h-1zM14 14h4v1h-4zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM4 15h4v1h-4zM9 15h1v1h-1zM14 15h1v1h-1zM16 15h4v1h-4zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM5 16h7v1h-7zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h5v1h-5zM29 16h1v1h-1zM31 16h1v1h-1zM33 16h5v1h-5zM3 17h2v1h-2zM7 17h1v1h-1zM9 17h2v1h-2zM15 17h3v1h-3zM21 17h3v1h-3zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h4v1h-4zM8 18h1v1h-1zM10 18h2v1h-2zM13 18h4v1h-4zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM28 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM3 19h1v1h-1zM6 19h1v1h-1zM9 19h1v1h-1zM11 19h1v1h-1zM14 19h1v1h-1zM16 19h1v1h-1zM20 19h2v1h-2zM24 19h1v1h-1zM26 19h5v1h-5zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h3v1h-3zM7 20h2v1h-2zM11 20h3v1h-3zM16 20h2v1h-2zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h9v1h-9zM3 21h5v1h-5zM12 21h1v1h-1zM16 21h4v1h-4zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h1v1h-1zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h3v1h-3zM6 22h4v1h-4zM12 22h2v1h-2zM19 22h1v1h-1zM22 22h5v1h-5zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h1v1h-1zM6 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM13 23h1v1h-1zM15 23h4v1h-4zM22 23h2v1h-2zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM3 24h3v1h-3zM8 24h2v1h-2zM14 24h2v1h-2zM17 24h3v1h-3zM22 24h1v1h-1zM25 24h1v1h-1zM27 24h3v1h-3zM31 24h1v1h-1zM33 24h4v1h-4zM3 25h1v1h-1zM11 25h7v1h-7zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h2v1h-2zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h1v1h-1zM5 26h1v1h-1zM8 26h2v1h-2zM12 26h1v1h-1zM14 26h2v1h-2zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM4 27h2v1h-2zM10 27h1v1h-1zM12 27h1v1h-1zM14 27h2v1h-2zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h5v1h-5zM34 27h2v1h-2zM4 28h2v1h-2zM7 28h2v1h-2zM10 28h5v1h-5zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM4 29h1v1h-1zM6 29h2v1h-2zM9 29h1v1h-1zM14 29h1v1h-1zM19 29h2v1h-2zM23 29h4v1h-4zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h2v1h-2zM7 30h3v1h-3zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h1v1h-1zM13 31h2v1h-2zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h3v1h-3zM16 32h3v1h-3zM20 32h1v1h-1zM22 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM16 33h2v1h-2zM23 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h3v1h-3zM17 34h2v1h-2zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM12 35h3v1h-3zM16 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h2v1h-2zM15 36h3v1h-3zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h4v1h-4zM17 37h10v1h-10zM28 37h2v1h-2zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="Top view of a torsion balance: a beam with two small lead spheres hangs from a fibre inside a case, with two large lead spheres outside on a swivel frame. A laser beam reflects from a mirror on the beam to a scale. Space runs or pauses."></canvas>
+        <div class="viewbar"><button type="button" class="spin attn" id="go">Run</button><button type="button" class="spin" id="turn">Run to the next turning point</button></div>
+      </div>
+      <div class="plotbox"><canvas id="chart" role="img" aria-label="Strip chart of the spot's position on the scale against time"></canvas></div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/cavendish.html" target="cavendish-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Large spheres</h2>
+        <div class="seg" role="group" aria-label="Swing the large spheres to" id="posSeg"><button type="button" data-q="A" aria-pressed="true">Position A</button><button type="button" data-q="away" aria-pressed="false">Away</button><button type="button" data-q="B" aria-pressed="false">Position B</button></div>
+        <p class="hint">Swinging the frame takes 5 s. In A and B each large sphere sits beside a small one, on opposite sides, so both pull the beam the same way round.</p>
+      </section>
+      <section>
+        <h2>Time</h2>
+        <div class="seg" role="group" aria-label="Playback speed" id="spdSeg"><button type="button" data-s="1" aria-pressed="false">×1</button><button type="button" data-s="10" aria-pressed="false">×10</button><button type="button" data-s="100" aria-pressed="true">×100</button></div>
+        <p><button type="button" class="spin" id="restart">Start over: settled at A, t = 0</button></p>
+        <details class="more"><summary>More about this</summary><p class="hint">Faster playback only shortens the wait; the clock always shows the real time of the experiment. Run to the next turning point stops the clock where the spot stops and turns back. Space on the picture runs or pauses.</p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="cavendish" data-title="The Cavendish Experiment" data-demo="cavendish">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">G = π² r² l ΔS / (M T² L)</p>
+          <p class="hint">Model: small spheres m = 20.0 g and large spheres M = 1.500 kg of lead (11 340 kg/m³), so their radii are 7.5 mm and 31.6 mm. The beam is 2l = 100.0 mm between the small spheres' centres and is taken as massless, with a massless mirror at its centre. In A and B each large sphere's centre is r = 46.5 mm from the nearer small sphere's centre, square to the beam, with the beam untwisted. The torque is the exact sum over all four pairs of spheres (uniform spheres attract as points), including the pull of each large sphere on the far small sphere, and changes as the beam turns. The fibre's torsion constant gives an undamped period of 360.0 s; air damping makes the swing die away by a factor of e every 720 s. G = 6.674 30 × 10⁻¹¹ N·m²/kg² (CODATA 2018). The scale is L = 5.000 m from the mirror, and the spot sits at 50.0 cm + L tan 2θ, read to 1 mm. The clock reads to 1 s. No noise, drift or seismic shaking is added.</p>
+          <p class="hint">Blind hides the twist angle, the forces, the predicted resting positions and the value of G, leaving the clock and the spot.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* The torsion balance, top view: the fibre is the z axis, the beam turns by θ (counterclockwise positive). Small spheres m at
+     ±l(cos θ, sin θ); the large spheres M on a swivel frame at radius ρ = √(l² + r²), at frame angle a and a + π. */
+  const G_CODATA = 6.67430e-11, RHO_PB = 11340;
+  const CAV = { m: 0.0200, M: 1.500, l: 0.0500, r: 0.0465, L: 5.000, T0: 360.0, tau: 720.0, swing: 5.0 };
+  const sphereR = (mass) => Math.cbrt(3 * mass / (4 * Math.PI * RHO_PB));
+  const inertia = (c = CAV) => 2 * c.m * c.l * c.l;                         // massless beam and mirror
+  const kappa = (c = CAV) => 4 * Math.PI * Math.PI * inertia(c) / (c.T0 * c.T0);
+  const gamma = (c = CAV) => 1 / c.tau;                                       // amplitude decays as e^(−γt)
+  const frameAngle = (pos, c = CAV) => { const a = Math.atan2(c.r, c.l); return pos === 'A' ? a : pos === 'B' ? Math.PI - a : Math.PI / 2; };
+  function largeSpheres(a, c = CAV) { const rho = Math.hypot(c.l, c.r); return [[rho * Math.cos(a), rho * Math.sin(a)], [-rho * Math.cos(a), -rho * Math.sin(a)]]; }
+  // torque about the fibre on the beam (N·m), exact for point masses
+  function torque(th, a, G = G_CODATA, c = CAV) {
+    const big = largeSpheres(a, c), cs = Math.cos(th), sn = Math.sin(th); let t = 0;
+    for (const s of [1, -1]) {
+      const x = s * c.l * cs, y = s * c.l * sn;
+      for (const [X, Y] of big) { const dx = X - x, dy = Y - y, d3 = (dx * dx + dy * dy) ** 1.5, k = G * c.M * c.m / d3; t += x * k * dy - y * k * dx; }
+    }
+    return t;
+  }
+  // the beam's angular acceleration: I θ'' = τ(θ) − κθ − 2Iγ θ'
+  const accel = (th, w, a, G = G_CODATA, c = CAV) => torque(th, a, G, c) / inertia(c) - kappa(c) / inertia(c) * th - 2 * gamma(c) * w;
+  // one RK4 step of the motion; a(t) is the frame angle at time t
+  function rk4(st, dt, aOf, G = G_CODATA, c = CAV) {
+    const f = (t, th, w) => [w, accel(th, w, aOf(t), G, c)];
+    const k1 = f(st.t, st.th, st.w), k2 = f(st.t + dt / 2, st.th + dt / 2 * k1[0], st.w + dt / 2 * k1[1]);
+    const k3 = f(st.t + dt / 2, st.th + dt / 2 * k2[0], st.w + dt / 2 * k2[1]), k4 = f(st.t + dt, st.th + dt * k3[0], st.w + dt * k3[1]);
+    return { t: st.t + dt, th: st.th + dt / 6 * (k1[0] + 2 * k2[0] + 2 * k3[0] + k4[0]), w: st.w + dt / 6 * (k1[1] + 2 * k2[1] + 2 * k3[1] + k4[1]) };
+  }
+  // resting angle with the frame at a: κθ = τ(θ), by Newton's method
+  function restAngle(a, G = G_CODATA, c = CAV) {
+    let th = 0; for (let i = 0; i < 30; i++) { const h = 1e-7, g = kappa(c) * th - torque(th, a, G, c), dg = kappa(c) - (torque(th + h, a, G, c) - torque(th - h, a, G, c)) / (2 * h); th -= g / dg; }
+    return th;
+  }
+  // the spot on the scale, m from its zero end (the untwisted beam puts it at 0.500 m): the mirror turns the light by 2θ
+  const spot = (th, c = CAV) => 0.5 + c.L * Math.tan(2 * th);
+  // the textbook's result from the shift of the resting spot ΔS between A and B and the period T (small angles, near spheres only)
+  const textbookG = (dS, T, c = CAV) => Math.PI * Math.PI * c.r * c.r * c.l * dS / (c.M * T * T * c.L);
+  // the fraction of the torque taken back by each large sphere's pull on the far small sphere
+  const beta = (c = CAV) => c.r ** 3 / (c.r * c.r + 4 * c.l * c.l) ** 1.5;
+  // resting position from three successive turning points of an exponentially damped swing (exact for x_n = E + A(−q)^n)
+  const restFromTurns = (s1, s2, s3) => (s1 * s3 - s2 * s2) / (s1 + s3 - 2 * s2);
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id), VG = window.VDGear;
+  const DT = 0.25;   /* integration step, s of experiment time */
+  /* the experiment: time, twist and its rate; the frame swings from a0 (at time ts) to a1 over CAV.swing seconds */
+  const S = { t: 0, th: 0, w: 0, pos: 'A', a0: 0, a1: 0, ts: -1e9, run: false, speed: 100, blind: false, trace: [], turns: [], stopAtTurn: false };
+  const aOf = (t) => { const u = Math.min(1, Math.max(0, (t - S.ts) / CAV.swing)), e = u * u * (3 - 2 * u); return S.a0 + (S.a1 - S.a0) * e; };
+  function startOver() {
+    const a = frameAngle('A'); Object.assign(S, { t: 0, th: restAngle(a), w: 0, pos: 'A', a0: a, a1: a, ts: -1e9, trace: [], turns: [] });
+    S.trace.push([0, spot(S.th)]);
+  }
+  /* swing the frame the way that keeps the large spheres clear of the case: A (a) → B (π − a) passes through π/2 */
+  function swingTo(pos) {
+    if (pos === S.pos) return;
+    const a = aOf(S.t); S.a0 = a; S.a1 = frameAngle(pos); S.ts = S.t; S.pos = pos; sync();
+  }
+  const can = $('can'), ctx = can.getContext('2d'), chart = $('chart'), cctx = chart.getContext('2d');
+  let W = 0, H = 0, CW = 0, CH = 0, dpr = 1, T = null;
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'), lead: g('--lead'), leadHi: g('--lead-hi'), laser: g('--laser'), force: g('--force'), equil: g('--equil'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+  const spotR = () => Math.round(spot(S.th) * 1000) / 10;     /* the scale reads to 1 mm: cm with one decimal */
+  const clockR = () => Math.round(S.t);
+
+  /* advance the experiment by dt seconds; with stopAtTurn, stop exactly where the spot turns back (θ' = 0), found by bisection */
+  function advance(dt) {
+    let left = dt;
+    while (left > 1e-9) {
+      const h = Math.min(DT, left), nx = rk4(S, h, aOf);
+      const swinging = S.t < S.ts + CAV.swing + 1;
+      if (S.w !== 0 && nx.w !== 0 && Math.sign(nx.w) !== Math.sign(S.w) && !swinging) {
+        let lo = 0, hi = h; for (let i = 0; i < 40; i++) { const m = (lo + hi) / 2, p = rk4(S, m, aOf); if (Math.sign(p.w) === Math.sign(S.w)) lo = m; else hi = m; }
+        const p = rk4(S, (lo + hi) / 2, aOf); S.turns.push([p.t, spot(p.th)]);
+        if (S.stopAtTurn) { Object.assign(S, p); S.w = 0; S.stopAtTurn = false; setRun(false); S.trace.push([S.t, spot(S.th)]); return; }
+      }
+      Object.assign(S, nx); left -= h;
+      const last = S.trace[S.trace.length - 1]; if (!last || S.t - last[0] >= 2) S.trace.push([S.t, spot(S.th)]);
+    }
+  }
+
+  // ---------- drawing ----------
+  function txt(c, s, x, y, o = {}) { const p = ps(); c.fillStyle = o.c || T.ink; c.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.bl || 'middle'; c.fillText(s, x, y); }
+  function arrow(x0, y0, x1, y1, col, w) { const p = ps(), a = Math.atan2(y1 - y0, x1 - x0), h = 7 * p;
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - h * 0.6 * Math.cos(a), y1 - h * 0.6 * Math.sin(a)); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - h * Math.cos(a - 0.4), y1 - h * Math.sin(a - 0.4)); ctx.lineTo(x1 - h * Math.cos(a + 0.4), y1 - h * Math.sin(a + 0.4)); ctx.closePath(); ctx.fill(); }
+  const EXAG = 20;   /* the beam's turn is drawn this many times larger */
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); VG.backdrop(ctx, W, H);
+    const p = ps(), wide = W > 640, a = aOf(S.t), th = S.th;
+    /* the balance, top view, to scale except the beam's turn */
+    const span = 0.2, pw = wide ? W * 0.56 : W, sc = Math.min(pw * 0.86 / span, (H - 80 * p) / span), cx = wide ? pw * 0.5 : W * 0.5, cy = 46 * p + (H - 60 * p) / 2;
+    const X = (x) => cx + x * sc, Y = (y) => cy - y * sc, rs = sphereR(CAV.m), RL = sphereR(CAV.M);
+    /* the table under the balance */
+    ctx.fillStyle = VG.dark() ? 'rgba(255,255,255,0.03)' : 'rgba(40,30,20,0.04)'; ctx.beginPath(); ctx.arc(cx, cy, 0.098 * sc, 0, 7); ctx.fill();
+    /* the swivel frame and the large spheres */
+    const big = largeSpheres(a);
+    ctx.strokeStyle = VG.dark() ? '#56606c' : '#9aa3ad'; ctx.lineWidth = 5 * p; ctx.beginPath(); ctx.moveTo(X(big[0][0]), Y(big[0][1])); ctx.lineTo(X(big[1][0]), Y(big[1][1])); ctx.stroke();
+    VG.screw(ctx, cx, cy, 5 * p);
+    for (const [bx, by] of big) { VG.shadow(ctx, X(bx) + 4 * p, Y(by) + RL * sc * 0.9, RL * sc, RL * sc * 0.3, 0.6); VG.ball(ctx, X(bx), Y(by), RL * sc, '#6f7a86', { glint: 0.5 }); }
+    /* the case: a box with glass walls around the beam */
+    const cw = CAV.l + rs + 0.006, ch = rs + 0.005, ang = -th * EXAG;
+    ctx.fillStyle = VG.dark() ? 'rgba(140,190,230,0.10)' : 'rgba(150,200,230,0.22)'; ctx.strokeStyle = VG.dark() ? 'rgba(170,210,240,0.55)' : 'rgba(80,130,170,0.6)'; ctx.lineWidth = 1.5 * p;
+    ctx.beginPath(); ctx.roundRect(X(-cw), Y(ch), 2 * cw * sc, 2 * ch * sc, 4 * p); ctx.fill(); ctx.stroke();
+    /* the beam, the mirror and the small spheres, turned by EXAG × θ */
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(ang);
+    ctx.fillStyle = VG.dark() ? '#9aa4b0' : '#7c8794'; ctx.fillRect(-CAV.l * sc, -1.5 * p, 2 * CAV.l * sc, 3 * p);
+    ctx.fillStyle = '#d8e2ec'; ctx.fillRect(-1.5 * p, -7 * p, 3 * p, 14 * p);
+    for (const s of [1, -1]) VG.ball(ctx, s * CAV.l * sc, 0, rs * sc, '#6f7a86', { glint: 0.6 });
+    ctx.restore();
+    ctx.fillStyle = VG.dark() ? '#e9edf2' : '#2e353f'; ctx.beginPath(); ctx.arc(cx, cy, 2.2 * p, 0, 7); ctx.fill();
+    /* forces on the small spheres from the near large spheres */
+    let Fshow = 0;
+    if (!S.blind) {
+      for (const s of [1, -1]) {
+        const x = s * CAV.l * Math.cos(th), y = s * CAV.l * Math.sin(th); let fx = 0, fy = 0;
+        for (const [bx, by] of big) { const dx = bx - x, dy = by - y, d = Math.hypot(dx, dy), F = G_CODATA * CAV.M * CAV.m / (d * d); fx += F * dx / d; fy += F * dy / d; }
+        const F = Math.hypot(fx, fy); if (F < 1e-13) continue;
+        const len = Math.min(48, 40 * F / 9e-10) * p, px = cx + Math.cos(ang) * s * CAV.l * sc, py = cy + Math.sin(ang) * s * CAV.l * sc;
+        arrow(px, py, px + len * fx / F, py - len * fy / F, T.force, 2.2);
+        if (s === 1) Fshow = F;
+      }
+    }
+    /* the laser sits beside the scale: in to the mirror and back out to the scale, nearly along the same line */
+    const mx = cx, my = cy, ex = wide ? pw + 6 * p : W - 64 * p, ly = my + 14 * p;
+    ctx.strokeStyle = T.laser; ctx.lineWidth = 1.6 * p; ctx.globalAlpha = 0.9;
+    ctx.beginPath(); ctx.moveTo(ex - 26 * p, ly); ctx.lineTo(mx, my); ctx.lineTo(ex, my); ctx.stroke(); ctx.globalAlpha = 1;
+    VG.box(ctx, ex - 30 * p, ly - 6 * p, 26 * p, 12 * p, { color: '#2e353f', r: 3, shadow: false }); txt(ctx, 'laser', ex - 17 * p, ly + 15 * p, { a: 'center', s: 9, c: T.muted });
+    txt(ctx, 'top view, to scale · beam turn drawn ×20', 12 * p, H - 14 * p, { s: 9.5, c: T.muted });
+    if (Fshow) txt(ctx, `pull on each small sphere: ${f(Fshow * 1e9, 2)} nN`, 12 * p, H - 30 * p, { s: 9.5, m: 1, c: T.force, b: 1 });
+    txt(ctx, 'A', X(largeSpheres(frameAngle('A'))[0][0]) + RL * sc + 6 * p, Y(largeSpheres(frameAngle('A'))[0][1]) - RL * sc, { s: 10, c: T.muted, b: 1 });
+    txt(ctx, 'B', X(largeSpheres(frameAngle('B'))[1][0]) + RL * sc + 6 * p, Y(largeSpheres(frameAngle('B'))[1][1]) - RL * sc, { s: 10, c: T.muted, b: 1 });
+    drawScale(wide ? pw + 40 * p : W - 58 * p, wide ? W - 16 * p : W - 6 * p, 60 * p, H - 30 * p, my);
+    drawChart();
+  }
+  /* the scale 5.000 m away, seen face on, magnified around the spot */
+  function drawScale(x0, x1, y0, y1, yBeam) {
+    const p = ps(), w = x1 - x0, cxs = x0 + w / 2, s = spot(S.th) * 100, span = 12, pxcm = (y1 - y0) / span, mid = Math.round(s / 2) * 2;
+    if (w > 120 * p) { ctx.strokeStyle = T.muted; ctx.setLineDash([3, 4]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0 - 30 * p, yBeam - 10 * p); ctx.lineTo(x0 - 30 * p, yBeam + 10 * p); ctx.stroke(); ctx.setLineDash([]);
+      txt(ctx, '5.000 m', x0 - 30 * p, yBeam - 20 * p, { a: 'center', s: 9, c: T.muted }); }
+    const bw = Math.min(70 * p, w * 0.7), bx = cxs - bw / 2;
+    ctx.fillStyle = VG.dark() ? '#e8e2cf' : '#f6f1df'; ctx.fillRect(bx, y0, bw, y1 - y0); ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; ctx.strokeRect(bx, y0, bw, y1 - y0);
+    const Yc = (v) => y0 + (y1 - y0) / 2 - (v - mid) * pxcm;   /* larger readings higher up */
+    ctx.save(); ctx.beginPath(); ctx.rect(bx, y0, bw, y1 - y0); ctx.clip();
+    ctx.strokeStyle = '#2a2a2a'; ctx.fillStyle = '#2a2a2a';
+    for (let mm = Math.floor((mid - span / 2 - 1) * 10); mm <= (mid + span / 2 + 1) * 10; mm++) {
+      const yy = Yc(mm / 10), len = mm % 10 === 0 ? 0.42 : mm % 5 === 0 ? 0.28 : 0.16; ctx.lineWidth = mm % 10 === 0 ? 1.2 : 0.7;
+      ctx.beginPath(); ctx.moveTo(bx, yy); ctx.lineTo(bx + bw * len, yy); ctx.stroke();
+      if (mm % 10 === 0) { ctx.font = `600 ${10 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(String(mm / 10), bx + bw - 4 * p, yy); }
+    }
+    /* resting positions (not in Blind) and the spot */
+    if (!S.blind) for (const q of ['A', 'B']) { const v = spot(restAngle(frameAngle(q))) * 100, yy = Yc(v); ctx.strokeStyle = T.equil; ctx.setLineDash([4, 3]); ctx.beginPath(); ctx.moveTo(bx, yy); ctx.lineTo(bx + bw, yy); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = T.equil; ctx.font = `700 ${9 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText(bw < 56 * p ? q : `rest ${q}`, bx + 3 * p, yy - 6 * p); }
+    const ys = Yc(s), g = ctx.createRadialGradient(cxs, ys, 0, cxs, ys, 9 * p); g.addColorStop(0, 'rgba(255,60,50,1)'); g.addColorStop(0.35, 'rgba(255,40,30,0.75)'); g.addColorStop(1, 'rgba(255,40,30,0)');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cxs, ys, 9 * p, 0, 7); ctx.fill();
+    ctx.restore();
+    txt(ctx, 'scale (cm)', cxs, y0 - 10 * p, { a: 'center', s: 9.5, c: T.muted, b: 1 });
+    txt(ctx, `${f(spotR(), 1)} cm`, cxs, y1 + 14 * p, { a: 'center', s: 12, m: 1, b: 1, c: T.laser });
+    /* the clock */
+    txt(ctx, `t = ${clockR()} s`, 12 * p, 58 * p, { s: 13, m: 1, b: 1 });
+    txt(ctx, `×${S.speed}${S.run ? '' : ' · paused'}`, 12 * p, 76 * p, { s: 10, c: T.muted });
+  }
+  /* the strip chart: spot against time, with the turning points */
+  function drawChart() {
+    if (!CW) return; const p = ps(), c = cctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
+    const L = 46 * p, R = 12 * p, Tp = 14 * p, B = 28 * p, tw = Math.max(1800, Math.ceil((S.t + 1) / 600) * 600), t0 = Math.max(0, tw - 3600);
+    let lo = 44, hi = 56; for (const [, v] of S.trace) { lo = Math.min(lo, v * 100 - 0.5); hi = Math.max(hi, v * 100 + 0.5); }
+    const PX = (t) => L + (t - t0) / (tw - t0) * (CW - L - R), PY = (v) => Tp + (hi - v) / (hi - lo) * (CH - Tp - B);
+    c.strokeStyle = T.grid; c.lineWidth = 1; c.font = `${9.5 * p}px ${T.mono}`; c.fillStyle = T.muted;
+    for (let t = Math.ceil(t0 / 300) * 300; t <= tw; t += 300) { c.beginPath(); c.moveTo(PX(t), Tp); c.lineTo(PX(t), CH - B); c.stroke(); c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(String(t), PX(t), CH - B + 4 * p); }
+    const st = hi - lo > 14 ? 4 : 2; for (let v = Math.ceil(lo / st) * st; v <= hi; v += st) { c.beginPath(); c.moveTo(L, PY(v)); c.lineTo(CW - R, PY(v)); c.stroke(); c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(String(v), L - 4 * p, PY(v)); }
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText('t (s)', (L + CW) / 2, CH - 1); c.save(); c.translate(11 * p, (Tp + CH - B) / 2); c.rotate(-Math.PI / 2); c.fillText('spot (cm)', 0, 0); c.restore();
+    c.strokeStyle = T.laser; c.lineWidth = 1.8 * p; c.beginPath(); let first = true;
+    for (const [t, v] of S.trace) { if (t < t0) continue; const x = PX(t), y = PY(v * 100); if (first) { c.moveTo(x, y); first = false; } else c.lineTo(x, y); } c.stroke();
+    c.fillStyle = T.ink; for (const [t, v] of S.turns) { if (t < t0) continue; c.beginPath(); c.arc(PX(t), PY(v * 100), 2.5 * p, 0, 7); c.fill(); }
+  }
+  function readouts() {
+    const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, HID = '<span class="ok">hidden in Blind</span>';
+    const posName = { A: 'position A', B: 'position B', away: 'away' }[S.pos], swinging = S.t < S.ts + CAV.swing;
+    let h = dd('Clock t', `${clockR()} s`) + dd('Spot on the scale', `${f(spotR(), 1)} cm`) + dd('Large spheres', swinging ? `swinging to ${posName}` : posName);
+    h += dd('Spot moving', Math.abs(S.w) < 1e-12 ? 'stopped' : S.w > 0 ? 'up the scale' : 'down the scale');
+    if (S.blind) h += dd('Twist, forces, resting positions and G', HID, true);
+    else {
+      const rest = spot(restAngle(aOf(S.t))) * 100;
+      h += dd('Twist θ', `${f(S.th * 1000, 4)} mrad`) + dd('Resting spot here', `${f(rest, 2)} cm`) + dd('Undamped period', `${f(CAV.T0, 1)} s`)
+        + dd('Torsion constant κ', `${f(kappa() * 1e8, 4)} × 10⁻⁸ N·m/rad`) + dd('G in the model', '6.674 30 × 10⁻¹¹ N·m²/kg²', true);
+    }
+    $('out').innerHTML = h;
+  }
+  function sync() {
+    for (const b of document.querySelectorAll('#posSeg button')) b.setAttribute('aria-pressed', String(b.dataset.q === S.pos));
+    for (const b of document.querySelectorAll('#spdSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+  }
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : 'Run'; $('go').classList.toggle('attn', !on); }
+  const all = () => { sync(); draw(); readouts(); };
+  $('go').addEventListener('click', () => { S.stopAtTurn = false; setRun(!S.run); all(); });
+  $('turn').addEventListener('click', () => { S.stopAtTurn = true; setRun(true); all(); });
+  $('restart').addEventListener('click', () => { setRun(false); startOver(); all(); });
+  $('posSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-q]'); if (b) { swingTo(b.dataset.q); all(); } });
+  $('spdSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; all(); } });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; all(); });
+  /* readings for the worksheet (tools/readings_panel.py): the clock, the spot and where the large spheres are */
+  window.vdVersion = 'cavendish@2026-10-24';
+  window.vdShowCols = [['spheres', 'Spheres'], ['t_s', 't (s)'], ['S_cm', 'Spot (cm)']];
+  window.vdReadingRow = () => (S.t < S.ts + CAV.swing ? 'Wait until the large spheres have finished swinging.' : { spheres: S.pos === 'away' ? 'away' : S.pos, t_s: clockR(), S_cm: spotR().toFixed(1) });
+  /* for the key's capture script and tests */
+  window.__cav = { advance: (dt) => { advance(dt); all(); }, toTurn: () => { S.stopAtTurn = true; let n = 0; while (S.stopAtTurn && n++ < 1e5) advance(DT); S.stopAtTurn = false; all(); }, swingTo: (q) => { swingTo(q); all(); }, get S() { return S; } };
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) { advance(dt * S.speed); draw(); readouts(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(), r2 = chart.parentElement.getBoundingClientRect(); W = r.width; H = r.height; CW = r2.width; CH = r2.height;
+    can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); chart.width = Math.round(CW * dpr); chart.height = Math.round(CH * dpr); draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  /* on opening: settled at A, then the large spheres swing to B and the balance starts to move */
+  tokens(); startOver(); sync(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe(chart.parentElement); resize(); readouts();
+  swingTo('B'); setRun(true);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

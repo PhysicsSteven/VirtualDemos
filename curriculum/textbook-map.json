@@ -2620,9 +2620,11 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "kepler-orbits"
+        "kepler-orbits",
+        "cavendish"
       ],
-      "unit": "gravitation"
+      "unit": "gravitation",
+      "note": "The Cavendish Experiment (2026-10-24, Claude): a torsion balance to scale, exact torque from all four sphere pairs, damped swing; G from the turning points and the period, with the far sphere correction."
     },
     {
       "vol": 1,
@@ -2637,7 +2639,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "gravity-near-earth"
+        "gravity-near-earth",
+        "cavendish"
       ],
       "unit": "gravitation",
       "note": "Gravity Near Earth (2026-10-22, Claude): g = GM/(R + h)² against height, the near surface approximation g₀(1 − 2h/R), rotation and latitude (effective g, plumb line tilt), sphere vs WGS 84, Moon and Mars."
@@ -10013,6 +10016,33 @@
       ],
       "title": "Force on a Current",
       "url": "demos/wire-force.html"
+    },
+    {
+      "demo": "cavendish",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "13.1",
+          "title": "Newton's Law of Universal Gravitation"
+        },
+        {
+          "vol": 1,
+          "sec": "13.2",
+          "title": "Gravitation Near Earth's Surface"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). Top view of a torsion balance (20.0 g and 1.500 kg lead spheres, l = 50.0 mm, r = 46.5 mm), laser lever to a scale 5.000 m away, undamped period 360.0 s, damping time 720 s. Torque summed exactly over all four sphere pairs; RK4 motion with turning points. Worksheet cavendish (G from the period and the shift of the resting spot, far sphere correction, weighing the Earth) with a key from real runs in TeacherKeys.",
+      "handouts": [
+        "cavendish"
+      ],
+      "title": "The Cavendish Experiment",
+      "url": "demos/cavendish.html"
     }
   ],
   "activities": [

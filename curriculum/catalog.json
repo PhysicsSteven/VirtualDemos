@@ -744,6 +744,17 @@
       "yield",
       "elasticity"
      ]
+    },
+    {
+     "demo": "cavendish",
+     "title": "The Cavendish Experiment",
+     "desc": "Swing two large lead spheres beside a torsion balance and watch a laser spot 5 m away creep a few centimetres as gravity twists the fibre; time the swing, find G, and weigh the Earth.",
+     "tags": [
+      "universal gravitation",
+      "torsion balance",
+      "Cavendish experiment",
+      "G"
+     ]
     }
    ]
   },

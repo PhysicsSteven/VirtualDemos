@@ -18,7 +18,8 @@
     'static-equilibrium', 'catenary', 'double-pendulum' /* Static Equilibrium, Hanging Chains and Arches, Pendulums and Chaos demos, 2026-10-24 */,
     'vectors' /* components, sums, differences and products, Vectors demo, 2026-10-24 */,
     'shear-bulk' /* Shear and Bulk tests of the Stress and Strain demo, 2026-10-24 */,
-    'pipe-flow' /* Flow in a pipe experiment of the Falling Ball Viscometer demo, 2026-10-24 */];
+    'pipe-flow' /* Flow in a pipe experiment of the Falling Ball Viscometer demo, 2026-10-24 */,
+    'cavendish' /* torsion balance, The Cavendish Experiment demo, 2026-10-24 */];
   const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
@@ -53,6 +54,7 @@
     'shear-bulk': { demo: 'Stress and Strain', cols: ['row', 'sample', 'F_kN', 'shear_dx_um', null, null],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.test === 'bulk'), cols: ['row', 'sample', 'F_kN', 'piston_dx_mm', 'gauge_strain_ue', null, null] }] },
     /* Reading | Liquid and pipe | Valve (%) | V (mL) | t (s) | ΔP (Pa) | Q | v | N_R | Dye (Q, v and N_R are the student's) */
+    'cavendish': { demo: 'The Cavendish Experiment', cols: ['row', 'spheres', 't_s', 'S_cm', null, null] },
     'pipe-flow': { demo: 'Falling Ball Viscometer (Flow in a pipe)', cols: ['row', (r) => `${r.liquid}, ${r.pipe_D_mm} mm`, 'valve_percent', 'V_mL', 't_s', 'dP_Pa', null, null, null, 'dye'] },
     /* Force table setup of the Vectors demo. The handout's first data table is expected to have these columns in this order:
        Trial | m₁ (kg) | θ₁ (°) | m₂ (kg) | θ₂ (°) | m₃ (kg) | θ₃ (°) | m₄ (kg) | θ₄ (°) | Ring centered?  (more columns may follow). */
