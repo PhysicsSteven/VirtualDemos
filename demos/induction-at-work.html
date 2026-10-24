@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>.rail details.more > p + p { margin-top: 6px; }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
@@ -76,6 +77,11 @@ table.rows input:focus { border-color: var(--accent); }
 .instr { left: 8px; top: 8px; gap: 8px 8px; padding: 6px 8px; }
 .instr .kctl { max-width: 84px; }
 @media (max-width: 820px) { .instr { position: static; margin: 0; max-width: none; justify-content: center; } }
+.dimseg { position: absolute; top: 10px; right: 214px; z-index: 2; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+@media (max-width: 820px) { .dimseg { right: 10px; } }
+.dimseg[hidden] { display: none; }
+.dimseg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.dimseg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -98,6 +104,7 @@ table.rows input:focus { border-color: var(--accent); }
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="The chosen device: a shake flashlight with a magnet sliding through a coil, a graphics tablet with a grid of wires under a magnetic pen, or a card sliding past a reading head, with a plot of the induced EMF."></canvas>
+      <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -345,6 +352,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function sync() {
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     $('secFlash').hidden = S.machine !== 'flash'; $('secTablet').hidden = S.machine !== 'tablet'; $('secCard').hidden = S.machine !== 'card'; $('kF').hidden = $('kA').hidden = S.machine !== 'flash'; $('kV').hidden = S.machine !== 'card'; $('instr').hidden = S.machine === 'tablet';
+    $('dimSeg').hidden = S.machine !== 'flash'; if (g3) g3.el.hidden = !use3();
     $('modelFlash').hidden = S.machine !== 'flash'; $('modelTablet').hidden = S.machine !== 'tablet'; $('modelCard').hidden = S.machine !== 'card';
     const F = S.fl; $('shakeBtn').textContent = F.shaking ? 'Stop shaking' : 'Shake'; $('sF').value = F.f; $('oF').textContent = `${F.f} Hz`; $('sA').value = F.A * 100; $('oA').textContent = `${(F.A * 100).toFixed(1)} cm`;
     for (const b of document.querySelectorAll('#capSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.c === F.C)); $('ledOn').checked = F.led; $('ff').checked = F.ff;
@@ -436,20 +444,103 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     txt(xlab, X1, Y1 + 21 * p, { a: 'right', s: 9, c: T.muted }); txt(ylab, X0 + 4 * p, Y0 - 2 * p, { s: 9, c: T.muted, bl: 'bottom' });
     return { X, Y };
   }
+  /* ---------- 3D: the shake flashlight, in centimetres. The magnet slides at st.z inside a clear tube through the 1000 turn coil;
+     its field lines are the point dipole's (r = C sin²θ, the model the EMF is computed from), moving with it. The LED glows as the
+     flat view's light does (from the LED current); the coil is tinted by the sign of the EMF. Board, capacitor and shell are pictures. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.38, ph: 1.12, zoom: 1 }, pane: [0, 0, 0, 0] };
+  let g3 = null;
+  const use3 = () => !!(G3.on && g3 && S.machine === 'flash');
+  function init3D() {
+    G3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); el.style.right = 'auto'; el.style.bottom = 'auto'; stage.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.3, 200), Ms = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.9), sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(-8, -14, 18); scene.add(hemi, sun);
+    const alongX = (geo) => geo.rotateZ(-Math.PI / 2);
+    const clear = (c, o) => new THREE.MeshPhongMaterial({ color: c, transparent: true, opacity: o, depthWrite: false, side: THREE.DoubleSide, shininess: 100, specular: 0xffffff });
+    const shell = new THREE.Mesh(alongX(new THREE.CylinderGeometry(1.9, 1.9, 17, 48, 1, true)), clear(0xe6eef6, 0.14)); shell.position.x = 1.5;
+    const tube = new THREE.Mesh(alongX(new THREE.CylinderGeometry(0.62, 0.62, 13, 32, 1, true)), clear(0xdfe8f2, 0.3));
+    const capM = Ms({ color: 0x30363e, roughness: 0.6 }), endCap = new THREE.Mesh(alongX(new THREE.CylinderGeometry(1.95, 1.95, 0.8, 48)), capM); endCap.position.x = -7.4;
+    const bumpM = Ms({ color: 0x1d2126, roughness: 0.9 }), bumps = [-1, 1].map((s) => { const b = new THREE.Mesh(alongX(new THREE.CylinderGeometry(0.55, 0.55, 0.4, 24)), bumpM); b.position.x = s * 6.3; return b; });
+    /* head: bezel, reflector and the LED */
+    const bezelM = Ms({ color: 0x8d96a1, roughness: 0.3, metalness: 0.4 }), bezel = new THREE.Mesh(alongX(new THREE.CylinderGeometry(2.15, 1.95, 1.6, 48, 1, true)), bezelM); bezel.position.x = 10.4;
+    const reflM = Ms({ color: 0xe8edf2, roughness: 0.15, metalness: 0.6, side: THREE.DoubleSide }), refl = new THREE.Mesh(alongX(new THREE.CylinderGeometry(2.0, 0.4, 1.4, 40, 1, true)), reflM); refl.position.x = 10.4;
+    const ledM = Ms({ color: 0xf6f1d8, roughness: 0.2, emissive: 0x000000 }), led = new THREE.Mesh(new THREE.SphereGeometry(0.35, 20, 14), ledM); led.position.x = 9.85;
+    const lamp = new THREE.PointLight(0xffe6a0, 0, 14); lamp.position.x = 10.6;
+    const lens = new THREE.Mesh(alongX(new THREE.CylinderGeometry(2.05, 2.05, 0.1, 48)), clear(0xf4f8fc, 0.25)); lens.position.x = 11.15;
+    /* the board below the tube: rectifier diodes and the capacitor */
+    const pcb = new THREE.Mesh(new THREE.BoxGeometry(6, 2.2, 0.12), Ms({ color: 0x2f7d4f, roughness: 0.6 })); pcb.position.set(5.6, 0, -1.35);
+    const capCan = new THREE.Mesh(alongX(new THREE.CylinderGeometry(0.75, 0.75, 2.2, 28)), Ms({ color: 0x2b4f8f, roughness: 0.4 })); capCan.position.set(6.4, 0, -0.55);
+    const diodes = [0, 1, 2, 3].map((i) => { const d = new THREE.Mesh(alongX(new THREE.CylinderGeometry(0.15, 0.15, 0.6, 12)), Ms({ color: 0x1d2126 })); d.position.set(3.4 + (i % 2) * 0.9, (i < 2 ? -0.5 : 0.5), -1.12); return d; });
+    /* the coil: copper turns, tinted by the EMF */
+    const coilM = Ms({ color: 0xc47a3c, roughness: 0.35, metalness: 0.3, emissive: 0x000000 }), pts = [];
+    for (let i = 0; i <= 24 * 30; i++) { const f = i / (24 * 30), a = f * 24 * 2 * Math.PI; pts.push(new THREE.Vector3(-0.5 + f, 1.2 * Math.sin(a), 1.2 * Math.cos(a))); }
+    const coil = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 24 * 30, 0.045, 6, false), coilM);
+    const bobbin = new THREE.Mesh(alongX(new THREE.CylinderGeometry(1.13, 1.13, 1.3, 32, 1, true)), Ms({ color: 0x2a2f36, roughness: 0.7, side: THREE.DoubleSide }));
+    /* the magnet, N toward +x, and its field lines */
+    const magnet = new THREE.Group(), nM = Ms({ roughness: 0.4, metalness: 0.2 }), sM = Ms({ roughness: 0.4, metalness: 0.2 });
+    const halfN = new THREE.Mesh(alongX(new THREE.CylinderGeometry(0.5, 0.5, 1, 32)), nM), halfS = new THREE.Mesh(alongX(new THREE.CylinderGeometry(0.5, 0.5, 1, 32)), sM); halfN.position.x = 0.5; halfS.position.x = -0.5; magnet.add(halfN, halfS);
+    const lineM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.55 }), headM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.8 });
+    for (const C of [1.6, 2.3, 3.3, 4.8]) for (const phi of [0, Math.PI / 2, Math.PI, 1.5 * Math.PI]) {
+      const lp = []; for (let i = 0; i <= 80; i++) { const th = 0.04 + (Math.PI - 0.08) * i / 80, rr = C * Math.sin(th) ** 2; if (rr < 1.15) continue; lp.push(new THREE.Vector3(rr * Math.cos(th), rr * Math.sin(th) * Math.cos(phi), rr * Math.sin(th) * Math.sin(phi))); }
+      const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints(lp), lineM); magnet.add(ln);
+      /* at the equator the field points back along −x, from N around to S */
+      const hd = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.4, 10).rotateZ(Math.PI / 2), headM); hd.position.set(0, C * Math.cos(phi), C * Math.sin(phi)); magnet.add(hd);
+    }
+    scene.add(shell, tube, endCap, ...bumps, bezel, refl, led, lamp, lens, pcb, capCan, ...diodes, coil, bobbin, magnet);
+    g3 = { r, el, scene, cam, hemi, nM, sM, lineM, headM, coilM, ledM, lamp, magnet };
+    can.addEventListener('wheel', (e) => { if (!use3() || !inPane(e)) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || !inPane(e), phMin: 0.4, phMax: 1.55, zMin: 0.6, zMax: 3, keys: false });
+    return true;
+  }
+  const inPane = (e) => { const b = can.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top, [x0, y0, w, h] = G3.pane; return x >= x0 && x <= x0 + w && y >= y0 && y <= y0 + h; };
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function flash3(n) {
+    const g = g3, F = S.fl, st = F.st, [x0, y0, w, h] = G3.pane;
+    if (G3.w !== w || G3.h !== h) { G3.w = w; G3.h = h; g.r.setSize(w, Math.max(1, h)); g.cam.aspect = w / Math.max(1, h); g.cam.updateProjectionMatrix(); }
+    g.el.style.left = x0 + 'px'; g.el.style.top = y0 + 'px';
+    const key = [T.canvas, T.magN, T.magS].join(); if (G3.key !== key) { G3.key = key; const dk = VD3.dark(); g.scene.background = col3(T.canvas, '#fbfcfd'); g.hemi.groundColor = col3(dk ? '#1c222a' : '#8c8a84', '#8c8a84');
+      g.nM.color = col3(T.magN, '#c23f2c'); g.sM.color = col3(T.magS, '#2b60b5'); g.lineM.color = g.headM.color = col3(dk ? '#9fb0c4' : '#5a6575', '#5a6575'); }
+    const asp = w / Math.max(1, h), span = Math.max(9.5, 25 / asp);
+    VD3.place(g.cam, G3.o, new THREE.Vector3(1.1, 0, -0.2), span / (2 * Math.tan(15 * Math.PI / 180)));
+    g.magnet.position.x = st.z * 100;
+    const vref = Math.max(1, ...F.hist.map((q) => Math.abs(q[1]))), e = S.blind ? 0 : Math.min(1, Math.abs(n.eps) / vref);
+    g.coilM.emissive = col3(n.eps >= 0 ? T.pos : T.neg, '#c0392b').multiplyScalar(0.55 * e);
+    const glow = S.blind ? 0 : Math.min(1, n.iL / 0.02); g.ledM.emissive = col3(T.lit, '#f5c542').multiplyScalar(glow); g.lamp.intensity = 2.2 * glow;
+    g.r.render(g.scene, g.cam);
+    const tmp = new THREE.Vector3();
+    return (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [x0 + (tmp.x + 1) / 2 * w, y0 + (1 - tmp.y) / 2 * h, tmp.z]; };
+  }
+  function setDim(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried || !window.VD3) { v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setDim(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3) g3.el.hidden = !use3();
+    for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String(b.dataset.dim === v));
+    draw();
+  }
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setDim(b.dataset.dim); });
   function drawFlash() {
     const p = ps(), F = S.fl, st = F.st, n = F.now || { eps: 0, i: 0, iL: 0 }, narrow = W < 620, sceneH = Math.min(Hh * 0.46, 300 * p);
     /* tube, coil and magnet: 1 cm of travel is k pixels */
     const k = Math.min((W - (narrow ? 30 : 260) * p) / 0.15, 3200 * p), cy = 34 * p + FL.a * k, cx = narrow ? W / 2 : (W - 200 * p) / 2;
+    const in3 = use3(), paneH = narrow ? 210 * p : Math.max(220 * p, Math.min(420 * p, Hh * 0.52)), ch = FL.a * 2 * k + 8 * p;
+    if (in3) { G3.pane = [0, 0, narrow ? W : W - 200 * p, paneH]; ctx.clearRect(0, 0, G3.pane[2], paneH); const Q = flash3(n);
+      const lm = Q([st.z * 100, 0, 1.6]), lc = Q([0, 0, -2.3]); txt(`stroke ±${(F.A * 100).toFixed(1)} cm`, lm[0], lm[1] - 8 * p, { a: 'center', s: 10, c: T.muted }); txt('coil, 1000 turns', lc[0], lc[1] + 10 * p, { a: 'center', s: 10, c: T.muted });
+      if (G3.pane[2] > 520) txt('Field lines: the magnet as a point dipole, as in the model. Coil tinted by the sign of the EMF. Drag to turn.', G3.pane[2] - 8 * p, paneH - 8 * p, { a: 'right', s: 9, c: T.muted }); }
+    else {
     ctx.fillStyle = T.tube; ctx.beginPath(); ctx.roundRect(cx - 0.065 * k, cy - 0.009 * k, 0.13 * k, 0.018 * k, 6 * p); ctx.fill();
     /* magnet */
     const mx = cx + st.z * k, mw = FL.LMag * k, mh = FL.dMag * k; ctx.fillStyle = T.magN; ctx.fillRect(mx, cy - mh / 2, mw / 2, mh); ctx.fillStyle = T.magS; ctx.fillRect(mx - mw / 2, cy - mh / 2, mw / 2, mh);
     txt('N', mx + mw / 4, cy, { a: 'center', s: 10, b: 1, c: T.canvas }); txt('S', mx - mw / 4, cy, { a: 'center', s: 10, b: 1, c: T.canvas });
     /* coil */
-    const ch = FL.a * 2 * k + 8 * p, cw = FL.coilLen * k; ctx.strokeStyle = T.coil; ctx.lineWidth = 2 * p; ctx.globalAlpha = 0.85;
+    const cw = FL.coilLen * k; ctx.strokeStyle = T.coil; ctx.lineWidth = 2 * p; ctx.globalAlpha = 0.85;
     for (let j = 0; j <= 10; j++) { const x = cx - cw / 2 + cw * j / 10; ctx.beginPath(); ctx.moveTo(x, cy - ch / 2); ctx.lineTo(x + 3 * p, cy + ch / 2); ctx.stroke(); } ctx.globalAlpha = 1;
     txt('coil, 1000 turns', cx, cy + ch / 2 + 12 * p, { a: 'center', s: 10, c: T.muted }); txt(`stroke ±${(F.A * 100).toFixed(1)} cm`, cx, cy - ch / 2 - 10 * p, { a: 'center', s: 10, c: T.muted });
+    }
     /* circuit: rectifier, capacitor gauge, light */
-    const bx = narrow ? 16 * p : W - 200 * p, by = narrow ? cy + ch / 2 + 30 * p : 20 * p, bw = narrow ? W - 32 * p : 184 * p;
+    const bx = narrow ? 16 * p : W - 200 * p, by = narrow ? (in3 ? paneH + 6 * p : cy + ch / 2 + 30 * p) : 20 * p, bw = narrow ? W - 32 * p : 184 * p;
     ctx.fillStyle = T.surface; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(bx, by, bw, narrow ? 62 * p : 140 * p, 8 * p); ctx.fill(); ctx.stroke();
     const gx = bx + 12 * p, gy = by + (narrow ? 14 : 22) * p, gw = (narrow ? bw * 0.45 : bw - 24 * p), Vfull = 4;
     txt(`capacitor ${F.C} F`, gx, gy, { s: 10, c: T.muted });
@@ -462,9 +553,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = glow > 0.05 ? T.lit : T.relief; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(lx, ly, 10 * p, 0, 7); ctx.fill(); ctx.stroke();
     txt(F.led ? 'light on' : 'light off', lx, ly + 20 * p, { a: 'center', s: 9, c: T.muted });
     /* plot of EMF and capacitor voltage */
-    const py0 = Math.max(narrow ? by + 80 * p : cy + FL.a * k + 40 * p, narrow ? 0 : 180 * p), win = F.ff ? 20 : 2;
+    const py0 = in3 ? (narrow ? by + 80 * p : paneH + 6 * p) : Math.max(narrow ? by + 80 * p : cy + FL.a * k + 40 * p, narrow ? 0 : 180 * p), win = F.ff ? 20 : 2;
     frame(8 * p, py0, W - 8 * p, Hh - 8 * p, 'EMF of the coil and capacitor voltage');
-    const vmax = Math.max(1, ...F.hist.map((r) => Math.abs(r[1]))) * 1.1;
+    const vmax = Math.max(1, ...F.hist.map((r) => Math.max(Math.abs(r[1]), Math.abs(r[2])))) * 1.1;
     const ax = axes(48 * p, py0 + 40 * p, W - 20 * p, Hh - 36 * p, Math.max(0, st.t - win), Math.max(win, st.t), -vmax, vmax, 't (s)', 'V');
     if (S.blind) { txt('hidden in Blind', W / 2, (py0 + Hh) / 2, { a: 'center', s: 11, c: T.muted }); return; }
     ctx.lineWidth = 1.6 * p; ctx.strokeStyle = T.coil; ctx.beginPath(); F.hist.forEach((r, i) => (i ? ctx.lineTo(ax.X(r[0]), ax.Y(r[1])) : ctx.moveTo(ax.X(r[0]), ax.Y(r[1])))); ctx.stroke();
@@ -521,7 +612,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function draw() {
     if (!T || !W) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh); if (g3) g3.el.hidden = !use3();
     if (S.machine === 'flash') drawFlash(); else if (S.machine === 'tablet') drawTablet(); else drawCard();
   }
 
@@ -562,6 +653,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   })();
   tokens(); new ResizeObserver(resize).observe(stage);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'flash'); resize();
+  { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
