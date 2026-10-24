@@ -226,8 +226,9 @@ table.rows input:focus { border-color: var(--accent); }
     const p = ps(), wide = W > 640, sw = wide ? W * 0.55 : W, sh = wide ? H : H * 0.62;
     const px = sw / 2, py = 96 * p, sc = scaleFor(S.A), Lpx = S.L * sc;
     geo = { px, py, sc };
-    /* the Set up card sits over the trace, which it does not need while you set up; on a narrow picture, at the bottom left by the stand */
-    if (getComputedStyle($('rack')).position === 'absolute') { const rk = $('rack'), bt0 = sh - 14 * p; if (wide && W - sw > 300) { rk.style.left = `${sw + 16 * p}px`; rk.style.top = `${60 * p}px`; rk.style.maxWidth = `${W - sw - 32 * p}px`; } else { const rh = rk.offsetHeight; rk.style.left = `${10 * p}px`; rk.style.top = `${Math.max(116 * p, bt0 - rh - 8 * p)}px`; rk.style.maxWidth = `${Math.max(150, px - 40 * p)}px`; } }
+    /* on a wide picture the Set up card sits above the trace, which moves down to start below it (traceTop); on a narrow picture, at the bottom left by the stand */
+    let traceTop = 70 * p;
+    if (getComputedStyle($('rack')).position === 'absolute') { const rk = $('rack'), bt0 = sh - 14 * p; if (wide && W - sw > 300) { rk.style.left = `${sw + 16 * p}px`; rk.style.top = `${60 * p}px`; rk.style.maxWidth = `${W - sw - 32 * p}px`; const below = 60 * p + rk.offsetHeight + 30 * p; if (H - 40 * p - below >= 110 * p) traceTop = below; } else { const rh = rk.offsetHeight; rk.style.left = `${10 * p}px`; rk.style.top = `${Math.max(116 * p, bt0 - rh - 8 * p)}px`; rk.style.maxWidth = `${Math.max(150, px - 40 * p)}px`; } }
     const gy = py + Lpx, th = S.st.th, bx = px + Lpx * Math.sin(th), by = py + Lpx * Math.cos(th);
     scenery(p, wide, sw, sh, px, py, gy, bx);
     // photogate at the bottom: a U shaped gate whose infrared beam is drawn lit while the bob blocks it
@@ -256,7 +257,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`;
     ctx.fillText(`θ = ${f(th * 180 / Math.PI, 1)}°   t = ${f(S.t, 2)} s`, 16 * p, 104 * p); ctx.fillText(`L = ${f(S.L, 2)} m   θ₀ = ${S.A}°`, 16 * p, 120 * p); ctx.fillText(`m = ${f(S.m, 2)} kg`, 16 * p, 136 * p);
     // angle trace
-    const tx0 = wide ? sw + 30 * p : 40 * p, tx1 = W - 14 * p, ty0 = wide ? 70 * p : sh + 10 * p, ty1 = wide ? H - 40 * p : H - 24 * p, mid = (ty0 + ty1) / 2, span = 10;
+    const tx0 = wide ? sw + 30 * p : 40 * p, tx1 = W - 14 * p, ty0 = wide ? traceTop : sh + 10 * p, ty1 = wide ? H - 40 * p : H - 24 * p, mid = (ty0 + ty1) / 2, span = 10;
     VG.panel(ctx, tx0 - 34 * p, ty0 - 12 * p, tx1 - tx0 + 42 * p, ty1 - ty0 + 34 * p);   // the trace sits on a frosted panel in front of the wall
     ctx.strokeStyle = T.grid; ctx.lineWidth = 1; for (const k of [0.25, 0.75]) { const y = Math.round(ty0 + (ty1 - ty0) * k) + 0.5; ctx.beginPath(); ctx.moveTo(tx0, y); ctx.lineTo(tx1, y); ctx.stroke(); }
     ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(tx0, mid); ctx.lineTo(tx1, mid); ctx.stroke();

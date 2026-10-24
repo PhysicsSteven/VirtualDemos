@@ -1166,3 +1166,9 @@ Steve asked for the visual pass on the Race view, which was built after the pass
 - Steve asked for the remaining 3D views, then a visual pass on them. Magnetic force (oblique 3D view of the helix in a cut solenoid), Faraday (the generator drawn in 3D, drag to turn) and EM waves (three.js) already had 3D views, so no new builds were needed.
 - **EM waves:** the arrows are now lit solids instead of flat colour, a faint tiled floor under the wave fades into fog (only the floor is fogged, so the fields keep their full colour), and the axis of travel is a soft gold beam. Physics, controls and the 2D fallback are unchanged; vdcheck passes.
 - Magnetic force and the Faraday generator were already drawn at this standard (copper winding, lit magnets, bench), so they keep their look link from the Physics II pass and nothing else.
+
+## Claude, 2026-10-24: two fixes from the second PhET review (Steve OK'd)
+
+- **Pendulum:** at desktop width the Set up card sat over the angle trace, which hid it whenever the card came back on Hold. The trace now starts below the card (it keeps at least 110 px; if the pane is too short it falls back to the old place). Narrow layouts unchanged.
+- **Knob panels (Forces, and the same panel in force on a current, cart launch, impulse, induction at work):** in the light theme the panel is now a brushed aluminium faceplate with dark labels instead of a dark slab on a light wall. The knobs and the green readouts stay dark like a real instrument's; the dark theme is unchanged.
+- CSS and drawing only; CORE identical, Node tests pass, vdcheck differs only by these styles and screenshots. No control renamed or moved.
