@@ -1496,3 +1496,20 @@ Demo changes (no visual change): `currents-fields` records readings in the Strai
 Keys in TeacherKeys `worksheet-keys/physics-2/` from real runs: μ₀ from five fits between 1.2564 and 1.2568 × 10⁻⁶ T·m/A; ∮B·dl/I_enc = 1.25664 μT·m/A for every loop; solenoid center 0.97014 μ₀nI at L/R = 8 as the sheet formula gives; concave mirror f = 12.02 cm (R/2 = 12), convex −11.91 cm; thin lens f = 10.000 cm; microscope and telescope magnifications equal their formulas exactly.
 
 **For GPT to verify:** the handout physics (in particular the magnifier's M = 25 cm/dₒ with the eye at the lens, the current sheet formula at the center and at an end, and the refracting surface signs), that the mirror and surface "traced against paraxial" explanations match what the demo does, and that the procedure steps are doable as written.
+
+## Claude, 2026-10-24: The other missing worksheets from the OpenStax recheck
+
+Every gap in the recheck except currents and fields (ch. 12), the optics bench (Vol. 3 ch. 2) and AC (ch. 15), which other threads did. Each key in TeacherKeys `worksheet-keys/` is from a real run of the demo, with its capture script in `tools/capture/`.
+- `vectors` (new worksheet, Vol. 1 §§2.1, 2.2, 2.4, 4.1, 4.2): components, sums, displacement and average acceleration by subtraction, dot and cross products. The Vectors demo records the vectors set (nothing computed) and exports them.
+- `rotation`: Door swing part (§§10.1 to 10.4), torque, α, time to 90° and ω at 90°, with v = rω, a_t = rα, a_c.
+- `springs`: reference circle and Driven oscillator parts (§§15.3, 15.6), steady amplitude against drive frequency at two dampings. `worksheet.js` FROM_DEMO accepts `alt` routes, so driven series go to the second table.
+- `resistivity`: Current and drift part (Vol. 2 §§9.1, 9.2), I = nqAv_d from drift distances inside the wire.
+- `coulomb-sandbox`: the demo now shows the potential energy of the charges and the work to bring +1 nC to the probe (both hidden in Blind); Potential energy part (§7.1). Test added to `test_coulomb_sandbox.cjs`.
+- `standing-waves`: Beats part (§17.6). The Beats setup has a Mystery tone (f₂ drawn from 425.0 to 455.0 Hz and hidden); f_beat from quiet moments on the 4 s strip at six f₁, f₂ where the two lines meet. Key run: f₂ = 435.90 Hz from the fits, 435.9 Hz revealed.
+- `doppler`: Mach cone part (§17.8). Boom times at Mach 1.2 to 2.5 in the Supersonic jet setup (h = 140 m, 110 m to overhead), θ from tan θ = h/d; 1/sin θ against M has slope 0.995.
+- `heat-engines`: First law, leg by leg (Vol. 2 §§3.1 to 3.3) on the Rectangle and Carnot cycles, W, Q, ΔU by hand against the demo's rows, and the two routes between equal temperature corners.
+- `doppler-light` (new, Modern, Vol. 3 §5.7): λ′ and θ read at three angles for β = 0.30, 0.60, 0.90; γ from data, 1/γ² against β² gives slope −0.9998, intercept 0.9999. Doppler now has a handout drop-down.
+- `e-over-m`: the old static handout is now an interactive worksheet. The demo has Export to worksheet (meter and pointer readings only, radii cm to mm); two columns B²r² and 2U added for the graph. Key: slope 1.7543 ± 0.0022 × 10¹¹ C/kg, 0.3% low because the demo uses the full coil field, weaker off centre.
+- `test_physics1_packages.cjs` (from 2026-10-22) required exactly one data table and short lists; it now allows parts with their own tables.
+
+**GPT, please verify:** the beats envelope derivation and the quiet moment method; the Mach cone geometry (d = h√(M² − 1) and the claim that the delay after overhead tends to h/v); the light Doppler formula λ′/λ = γ(1 − β cos θ) with θ in the observer's frame, and the no shift angle cos θ = (1 − 1/γ)/β; the first law signs on each kind of leg; and the e/m explanation of the low bias.
