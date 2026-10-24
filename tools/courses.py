@@ -133,7 +133,7 @@ HANDOUT_TOPIC = {
     'potential-curves': 'Potential Energy Diagrams', 'impulse': 'Impulse', 'collisions': 'Collisions',
     'rotation': 'Torque and Angular Momentum', 'kepler-orbits': "Kepler's Third Law", 'stress-strain': "Young's Modulus",
     'fluids': 'Pressure, Buoyancy and Flow', 'viscometer': 'Viscosity', 'springs': 'Spring Constant',
-    'pendulum': 'Measuring g', 'rotational-dynamics': 'Rotational Inertia', 'gyroscope': 'Gyroscope Precession', 'circular-motion': 'Speed Limits on Curves and Loops',
+    'pendulum': 'Measuring g', 'rotational-dynamics': 'Rotational Inertia', 'gyroscope': 'Gyroscope Precession', 'circular-motion': 'Speed Limits on Curves and Loops', 'rocket': 'The Rocket Equation',
     'coulomb-sandbox': 'Electric Field and Potential', 'gauss-law': "Gauss's Law", 'capacitors': 'Capacitance and Dielectrics',
     'resistivity': 'Resistivity', 'dc-circuits': "Kirchhoff's Rules", 'rc-circuits': 'RC Time Constant',
     'rlc-transients': 'RLC Oscillations', 'ac-circuits': 'AC Resonance',

@@ -5936,8 +5936,10 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Lecture demo: Δv = u ln(m0/m) in deep space, vertical launch in constant g with no air, gravity loss g × burn time, too heavy to lift off at first, slow against fast burn; v(t) and m(t) graphs. Constant g is rough above ~100 km (stated in the readout).",
-      "handouts": [],
+      "note": "New 2026-10-22 (Claude). Lecture demo: Δv = u ln(m0/m) in deep space, vertical launch in constant g with no air, gravity loss g × burn time, too heavy to lift off at first, slow against fast burn; v(t) and m(t) graphs. Constant g is rough above ~100 km (stated in the readout). 2026-10-24: student worksheet rocket (fuel scan and burn rate in deep space, gravity loss against burn time, too heavy at first) with the shared Readings section.",
+      "handouts": [
+        "rocket"
+      ],
       "title": "Rocket Propulsion",
       "url": "demos/rocket.html"
     },

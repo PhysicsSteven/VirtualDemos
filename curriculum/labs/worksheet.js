@@ -12,7 +12,7 @@
   /* Physics I worksheets (physics-1.html). Add a worksheet's file name here to make it interactive. */
   const PHYSICS_I = ['collisions', 'energy-sources', 'estimation-and-evidence', 'fluids', 'forces', 'impulse', 'kepler-orbits',
     'measurement-and-units', 'motion-graphs', 'pendulum', 'potential-curves', 'projectile-drag', 'rotation', 'rotational-dynamics',
-    'springs', 'stress-strain', 'viscometer', 'force-table', 'gyroscope', 'circular-motion'];
+    'springs', 'stress-strain', 'viscometer', 'force-table', 'gyroscope', 'circular-motion', 'rocket'];
   const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
@@ -41,6 +41,8 @@
     gyroscope: { demo: 'Gyroscope Precession', cols: ['row', 'wheel', 'start', 'tilt_deg', 'spin_rpm', 'd_m', 'P_s', 'Omega_rad_per_s', 'inv_spin_s'] },
     /* Trial | Setup | r (m) | μs | θ (°) | tan θ | m (kg) | v (m/s) | v² (m²/s²) | Outcome */
     'circular-motion': { demo: 'Circular Motion', cols: ['row', 'setup', 'r_m', 'mu_s', 'bank_deg', 'tan_theta', 'm_kg', 'v_m_s', 'v2_m2_s2', 'outcome'] },
+    /* Trial | Gravity | m_dry (kg) | m_fuel (kg) | u (m/s) | Burn rate (kg/s) | Burn time (s) | ln(m0/m_dry) | Lift off at (s) | v at cutoff (m/s) | Height at cutoff (m) */
+    rocket: { demo: 'Rocket Propulsion', cols: ['row', 'gravity', 'm_dry_kg', 'm_fuel_kg', 'u_m_s', 'b_kg_s', 't_burn_s', 'ln_m0_over_mdry', 't_liftoff_s', 'v_cutoff_m_s', 'y_cutoff_m'] },
     viscometer: { demo: 'Falling Ball Viscometer', cols: ['row', (r) => [r.liquid, r.ball].filter(Boolean).join(' / '), (r) => [r.rho_liquid_kg_m3, r.rho_ball_kg_m3].filter(Boolean).join(' / '), 'tube_D_mm', 'd_mm', 't_s', 'v_m_per_s', null, null, null] },
   };
   /* ==PHYSICS II START== Physics II worksheets (physics-2.html) and their demo column maps, kept in one block. */
