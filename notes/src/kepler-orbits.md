@@ -1,6 +1,6 @@
 ---
 title: Kepler's Laws
-level: Intro astronomy (non-majors and majors); intro mechanics (gravitation, angular momentum, energy)
+level: Intro astronomy (majors and non majors); intro mechanics (gravitation, angular momentum, energy)
 time: 20 to 30 minutes
 ---
 ## What students should come away with
