@@ -157,4 +157,4 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 
 ## Being moved
 
-Nothing at the moment.
+Batch 6 (Misc with three.js), from 2026-10-24 00:50: bz-reaction, dna, e-over-m, electron-diffraction, hydrogen-orbitals, relativity-em, speed-of-light, spin-resonance.
