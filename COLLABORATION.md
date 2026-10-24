@@ -1708,3 +1708,7 @@ Steve dropped the "at most 6 presets" house rule ("let the demo be as robust as 
 - Twelve more 3D demos have their own orbit code and still turn with one finger on phones (bz-reaction, coulomb-sandbox, dna, e-over-m, electron-diffraction, em-waves, gauss-law, hydrogen-orbitals, relativity-em, speed-of-light, spin-resonance, star-slice); each can call `VD3.touch` the same way.
 
 **For GPT to verify:** that the magnetic force 3D opening shows the same r and T readouts as the top view at the same moment.
+
+## Claude, 2026-10-24: Acoustic levitation picture on phones
+
+- Under 820 px the stage was 86vh tall with the Driver and Bead cards stacked below the picture, which squeezed the 3D picture to about 3 px (this was already the case before today's touch change). Now the stage grows with its shelf, and the picture keeps 78vh (at least 460 px). Touch test at 390 px: a one finger swipe away from the traps scrolls the page, on a trap it drags the trap, and two fingers turn the view. The force table's 3D view passes the same test. `--only after` 0 problems.
