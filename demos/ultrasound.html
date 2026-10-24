@@ -378,9 +378,9 @@ table.rows input:focus { border-color: var(--accent); }
   can.addEventListener('keydown', (e) => { const big = e.shiftKey ? 10 : 1, st = S.mode === 'echo' ? 0.1 : 10;
     if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') setCur((S.mode === 'echo' ? S.curT : S.curF) + (e.key === 'ArrowRight' ? 1 : -1) * st * big);
     else if (e.key === ' ') $('run').click(); else return; e.preventDefault(); });
-  function setRun(on) { S.running = on; const over = getComputedStyle(card).position === 'absolute'; card.classList.toggle('away', on && over); card.inert = on && over;
+  function setRun(on, keepCard) { S.running = on; if (keepCard !== undefined) S.keepCard = keepCard; const over = getComputedStyle(card).position === 'absolute' && !S.keepCard; card.classList.toggle('away', on && over); card.inert = on && over;
     $('run').textContent = on ? 'Stop the scanner' : 'Start the scanner'; $('run').classList.toggle('attn', !on); readouts(); draw(); tone(); }
-  $('run').addEventListener('click', () => setRun(!S.running));
+  $('run').addEventListener('click', () => setRun(!S.running, false));
 
   /* Listen: the shift is in the audible range, as on a Doppler scanner; laminar flow plays a spread of tones up to the largest */
   let AC = null, oscs = [];
@@ -507,12 +507,33 @@ table.rows input:focus { border-color: var(--accent); }
     /* a blob of gel under the probe face */
     ctx.fillStyle = Gr.dark() ? 'rgba(150,200,240,0.35)' : 'rgba(150,200,240,0.55)'; ctx.beginPath(); ctx.ellipse(tx, y, 22 * p, 4 * p, 0, PI, 0); ctx.fill();
     probe(tx, y - 1 * p, 0, p, `${S.f0} MHz`);
-    if (S.running && !reduce) { /* a marker for the pulse, slowed: its depth for a time on the screen's scale */ const tt = S.phase / TAU * 200e-6; let dd = 0, t = 0, back = false;
-      for (const l of L) { const dt = l.d / MEDIA[l.m].c; if (t + dt >= tt) { dd += (tt - t) * MEDIA[l.m].c; break; } t += dt; dd += l.d; }
-      if (t < tt && dd >= DEPTH_MAX) back = true;
-      if (!back) { ctx.fillStyle = T.accent; ctx.fillRect(tx - 9 * p, y + Math.min(dd, DEPTH_MAX) * ppm - 2 * p, 18 * p, 4 * p); } }
+    if (S.running && !reduce) drawPulses(L, y, h, ppm, tx, p);
     if (S.preset === 'water') txt(`water depth ${S.water.toFixed(1)} cm (ruler)`, x + w - 6 * p, y + cm(S.water) * ppm - 9 * p, { a: 'right', s: 10, b: 1 });
     Gr.label(ctx, 'gel', tx + 26 * p, y - 5 * p, { s: 9 * p });
+  }
+  /* The pulse and its echoes in the body, slowed 20 000× (200 μs of echo time every 4 s, the same clock as the sweep on the
+     screen). The pulse goes down at each layer's own speed (faster in bone) and weakens by 1 − r² at each boundary; each boundary
+     sends back an echo of amplitude r Π(1 − r²), which climbs back at the speeds of the layers above and reaches the probe at the
+     time its peak shows on the screen. Stripes are the compressions, a wavelength apart (drawn at least 3 px apart: a 3.5 MHz
+     wavelength in muscle is 0.45 mm). Blue: the pulse and echoes the right way up; red: an echo turned upside down (r < 0). */
+  function drawPulses(L, y, h, ppm, tx, p) {
+    const tt = S.phase / TAU * 200e-6, f0 = S.f0 * 1e6, ech = echoes(L);
+    /* depth (m) reached a time τ after leaving the probe, and the medium there */
+    const at = (tau) => { let t = 0, d = 0; for (const l of L) { const dt = l.d / MEDIA[l.m].c; if (t + dt >= tau) return [d + (tau - t) * MEDIA[l.m].c, l.m]; t += dt; d += l.d; } return [Infinity, null]; };
+    const packet = (tau, a, up, name) => {
+      const [dep, m] = at(tau); if (!m || dep > DEPTH_MAX || dep < 0) return;
+      const lam = Math.max(3.2 * p, MEDIA[m].c / f0 * ppm), yc = y + dep * ppm, al = Math.min(1, 0.3 + 2.2 * Math.abs(a)), bw = 22 * p;
+      ctx.fillStyle = a < 0 ? T.pos : T.accent;
+      for (let j = 0; j < 3; j++) { const yy = yc + (up ? j : -j) * lam; if (yy < y || yy > y + h) continue; ctx.globalAlpha = al * (1 - 0.25 * j); ctx.fillRect(tx - bw / 2, yy - 1.2 * p, bw, 2.4 * p); }
+      ctx.globalAlpha = al; ctx.beginPath(); const ay = yc + (up ? -3 : 3) * p; ctx.moveTo(tx + bw / 2 + 5 * p, ay); ctx.lineTo(tx + bw / 2 + 10 * p, ay + (up ? -5 : 5) * p); ctx.lineTo(tx + bw / 2 + 15 * p, ay); ctx.fill(); ctx.globalAlpha = 1;
+      if (name && !S.blind) txt(name, tx + bw / 2 + 19 * p, yc, { s: 9.5, c: a < 0 ? T.pos : T.accent, b: 1 });
+    };
+    /* the pulse going down, weaker past each boundary */
+    let thr = 1; for (const e of ech) if (e.t / 2 < tt) thr *= 1 - e.r * e.r;
+    packet(tt, thr, false, 'pulse');
+    /* echoes on their way back up */
+    for (const e of ech) if (tt > e.t / 2 && tt < e.t) packet(e.t - tt, e.a, true, S.preset === 'cyst' && e.from !== 'fat' ? 'echo' : `echo, r = ${e.r.toFixed(2)}`);
+    txt('pulse and echoes shown 20 000× slower', tx - 14 * p, y + h - 10 * p, { a: 'right', s: 9, c: T.ink });
   }
   function drawVessel(x, y, w, h, p) {
     const Gr0 = window.VDGear;
@@ -529,6 +550,11 @@ table.rows input:focus { border-color: var(--accent); }
     const th = S.theta * PI / 180, hx = x + w * 0.55, d = vy - y, tx = hx - d / Math.tan(th);
     ctx.save(); ctx.beginPath(); ctx.rect(x, y - 40 * p, w, h + 40 * p); ctx.clip();
     ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.45; ctx.lineWidth = 8 * p; ctx.beginPath(); ctx.moveTo(tx, y); ctx.lineTo(hx + (h - d) / Math.tan(th), y + h); ctx.stroke(); ctx.globalAlpha = 1;
+    /* wavefronts of the continuous beam, moving out from the probe (spacing drawn 8 px; really c/f₀ ≈ 0.3 mm) */
+    if (S.running && !reduce) { const ux = Math.cos(th), uy = Math.sin(th), Lb = Math.hypot(hx - tx, vy - y), sp = 8 * p, off = (S.phase * 6 * p) % sp;
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 1.6 * p;
+      for (let s0 = off; s0 < Lb; s0 += sp) { const cx = tx + ux * s0, cy = y + uy * s0; ctx.globalAlpha = 0.85 * (1 - 0.5 * s0 / Lb); ctx.beginPath(); ctx.moveTo(cx - uy * 7 * p, cy + ux * 7 * p); ctx.lineTo(cx + uy * 7 * p, cy - ux * 7 * p); ctx.stroke(); }
+      ctx.globalAlpha = 1; }
     probe(tx, y, th - PI / 2, p, '');
     ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(hx, vy, 26 * p, PI, PI + th); ctx.stroke(); txt(`θ = ${S.theta}°`, hx - 30 * p, vy - 30 * p, { a: 'right', s: 10, b: 1 });
     ctx.restore();
@@ -549,13 +575,21 @@ table.rows input:focus { border-color: var(--accent); }
       txt('time after the pulse is sent (μs)', x + w / 2, y + h + 22 * p, { a: 'center', s: 9, c: '#b9c3cf' });
       if (S.running) {
         const ech = echoes(layers()), f0 = S.f0 * 1e6, n = Math.round(w * (zoom ? 2 : 3)), base = zoom ? y + h / 2 : y + h - 6 * p, amp = (zoom ? h / 2 - 6 * p : h - 14 * p) * S.gain;
+        /* the sweep: the spot crosses the screen on the same slowed clock as the pulse in the body; what it has not reached yet
+           still shows the last sweep, dimmer, as on a phosphor screen */
+        const sweep = !zoom && !reduce, sx = x + w * (S.phase / TAU * 200 - lo) / (hi - lo);
         /* the pulse sent (drawn at t = 0, off the scale) */
-        ctx.strokeStyle = tr; ctx.lineWidth = 1.3 * p; ctx.beginPath(); let clipped = false;
+        ctx.strokeStyle = tr; ctx.lineWidth = 1.3 * p; const path = new Path2D(); let clipped = false;
         for (let i = 0; i <= n; i++) { const t = (lo + (hi - lo) * i / n) * 1e-6, s = signal(ech, f0, t), v = zoom ? s[0] : Math.hypot(s[0], s[1]);
           const send = Math.exp(-t * t / (2 * sigmaFor(f0) ** 2)) * (zoom ? Math.cos(TAU * f0 * t) : 1), vv = v + send;
           let yy = base - vv * amp; if (yy < y + 2) { yy = y + 2; clipped = true; } if (yy > y + h - 2) { yy = y + h - 2; clipped = true; }
-          i ? ctx.lineTo(x + w * i / n, yy) : ctx.moveTo(x + w * i / n, yy); }
-        ctx.stroke();
+          i ? path.lineTo(x + w * i / n, yy) : path.moveTo(x + w * i / n, yy); }
+        if (sweep) {
+          ctx.globalAlpha = 0.35; ctx.stroke(path); ctx.globalAlpha = 1;
+          ctx.save(); ctx.beginPath(); ctx.rect(x - 2, y - 2, sx - x + 2, h + 4); ctx.clip(); ctx.stroke(path); ctx.restore();
+          ctx.strokeStyle = 'rgba(126, 224, 160, 0.35)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx, y); ctx.lineTo(sx, y + h); ctx.stroke();
+          ctx.fillStyle = tr; ctx.beginPath(); ctx.arc(sx, base, 3 * p, 0, 7); ctx.fill();
+        } else ctx.stroke(path);
         txt(zoom ? 'echo pressure (radio frequency trace)' : 'echo amplitude (envelope)', x + 6 * p, y + 10 * p, { s: 9, c: tr });
         if (clipped && S.gain > 1) txt('off the top: lower the gain', x + w - 6 * p, y + 10 * p, { a: 'right', s: 9, c: tr });
       } else txt('Start the scanner', x + w / 2, y + h / 2, { a: 'center', s: 12, c: tr, b: 1 });
@@ -587,7 +621,8 @@ table.rows input:focus { border-color: var(--accent); }
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
   tokens(); new ResizeObserver(resize).observe(scene); new ResizeObserver(() => draw()).observe(shelf);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'layers'); renderRows(); resize();
-  if (new URLSearchParams(location.search).get('run') === '1') setRun(true);
+  /* the scanner runs from the start, so the pulse is already going down; the Set up card stays until the scanner is next started */
+  if (new URLSearchParams(location.search).get('run') === '1') setRun(true); else if (!reduce) setRun(true, true);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
