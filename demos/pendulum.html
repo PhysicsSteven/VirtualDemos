@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>.rack-hint { margin: 0; font-size: 0.74rem; color: var(--muted); }
 .rack .inline { font-size: 0.78rem; gap: 6px; }
 .rack .seg button { font-size: 0.74rem; padding: 3px 7px; }
@@ -51,6 +53,15 @@
 .rack-bobs button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 @media (max-width: 820px) { main.bench #stage { height: auto; max-height: none; } .scene { position: relative; inset: auto; height: 480px; max-height: 80vh; } .rack { position: static; margin: 8px; width: auto; } .rack-bobs button { min-height: 44px; } }
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+/* the 3D | Flat switch (both scenes share one choice) and the lab's camera choice; the 3D canvas sits under the drawing canvas, which keeps the words */
+.dimbar { position: absolute; top: 10px; right: 10px; z-index: 2; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 6px; }
+@media (max-width: 820px) { .dimbar { flex-direction: column; align-items: flex-end; } }
+.dimseg { background: var(--surface); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+.dimbar .seg button { font-size: 0.8rem; }
+#stage[data-dim="flat"] .camseg, #dpStage[data-dim="flat"] .camseg { display: none; }
+#stage canvas.c3d, #pPane canvas.c3d { pointer-events: none; }
+@media (max-width: 1060px) { .dimbar { top: 52px; } }
+@media (max-width: 520px) { .dimbar { top: 52px; } .dimbar .lg { display: none; } .camseg button { text-transform: capitalize; } }
 .blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
 .lab { font-size: 0.88rem; }
@@ -187,6 +198,10 @@ table.rows input:focus { border-color: var(--accent); }
       <div class="scene" id="scene">
       <canvas id="can" tabindex="0" role="application" aria-label="A pendulum with a photogate at the bottom of its swing, and a trace of the angle against time. Drag the bob to set the release angle and the length. Space releases or holds, left and right arrows change the release angle θ₀ by 1°, up and down change the length L by 0.01 m (with Shift, 0.10 m)."></canvas>
       <div class="viewbar"><button type="button" class="spin attn" id="go">Release</button><button type="button" class="spin" id="hold">Hold at release angle</button></div>
+      <div class="dimbar" id="dimbar">
+        <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+        <div class="seg dimseg camseg" role="group" aria-label="Camera" id="camSeg"><button type="button" data-cam="all" aria-pressed="true"><span class="lg">Whole </span>pendulum</button><button type="button" data-cam="gate" aria-pressed="false"><span class="lg">At the </span>gate</button></div>
+      </div>
       </div>
       <div class="rack" id="rack" role="group" aria-label="Set up the pendulum: length, release angle and mass">
         <span class="rack-title">Set up, then press Release</span>
@@ -211,6 +226,7 @@ table.rows input:focus { border-color: var(--accent); }
         <div class="stage-ctl">
           <button type="button" class="btn primary" id="play">Play</button>
           <button type="button" class="btn" id="reset">Reset</button>
+          <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg2"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
           <span class="tclock mono" id="tclock">t = 0<small id="rateTag">real time</small></span>
         </div>
       </div>
@@ -625,6 +641,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (typeof document === 'undefined') return;
 
   /* ========== Photogate lab (the Pendulum demo) ========== */
+  let view3 = null;   /* the 3D | Flat choice, shared by the scenes (set up at the end) */
   const lab = (() => {
     const $ = (id) => document.getElementById(id);
     let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
@@ -654,13 +671,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       return Math.min((sh - 96 * p - 60 * p) / Lmax, (sw - 40 * p) / (2 * Lmax * Math.max(0.3, Math.sin(Math.min(A, 90) * Math.PI / 180)))); }
     function draw() {
       if (!T || !W) return;
+      if (use3()) { draw3(); return; }
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
       const p = ps(), wide = W > 640, sw = wide ? W * 0.55 : W, sh = wide ? H : H * 0.62;
       const px = sw / 2, py = 96 * p, sc = scaleFor(S.A), Lpx = S.L * sc;
       geo = { px, py, sc };
-      /* on a wide picture the Set up card sits above the trace, which moves down to start below it (traceTop); on a narrow picture, at the bottom left by the stand */
-      let traceTop = 70 * p;
-      if (getComputedStyle($('rack')).position === 'absolute') { const rk = $('rack'), bt0 = sh - 14 * p; if (wide && W - sw > 300) { rk.style.left = `${sw + 16 * p}px`; rk.style.top = `${60 * p}px`; rk.style.maxWidth = `${W - sw - 32 * p}px`; const below = 60 * p + rk.offsetHeight + 30 * p; if (H - 40 * p - below >= 110 * p) traceTop = below; } else { const rh = rk.offsetHeight; rk.style.left = `${10 * p}px`; rk.style.top = `${Math.max(116 * p, bt0 - rh - 8 * p)}px`; rk.style.maxWidth = `${Math.max(150, px - 40 * p)}px`; } }
+      const traceTop = placeRack(p, wide, sw, sh, px);
       const gy = py + Lpx, th = S.st.th, bx = px + Lpx * Math.sin(th), by = py + Lpx * Math.cos(th);
       scenery(p, wide, sw, sh, px, py, gy, bx);
       // photogate at the bottom: a U shaped gate whose infrared beam is drawn lit while the bob blocks it
@@ -683,6 +699,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         VG.ball(ctx, bx, by, r, T.bob); }
       // the knife edge pivot: a steel axle through the block
       VG.screw(ctx, px, py, 4 * p);
+      hud(p, wide, sw, sh, th, traceTop);
+    }
+    /* on a wide picture the Set up card sits above the trace, which moves down to start below it (traceTop); on a narrow picture, at the bottom left by the stand */
+    function placeRack(p, wide, sw, sh, px) {
+      let traceTop = 70 * p;
+      if (getComputedStyle($('rack')).position === 'absolute') { const rk = $('rack'), bt0 = sh - 14 * p; if (wide && W - sw > 300) { rk.style.left = `${sw + 16 * p}px`; rk.style.top = `${60 * p}px`; rk.style.maxWidth = `${W - sw - 32 * p}px`; const below = 60 * p + rk.offsetHeight + 30 * p; if (H - 40 * p - below >= 110 * p) traceTop = below; } else { const rh = rk.offsetHeight; rk.style.left = `${10 * p}px`; rk.style.top = `${Math.max(116 * p, bt0 - rh - 8 * p)}px`; rk.style.maxWidth = `${Math.max(150, px - 40 * p)}px`; } }
+      return traceTop;
+    }
+    /* the timer, the numbers under it and the angle trace: the same in the flat and the 3D view */
+    function hud(p, wide, sw, sh, th, traceTop) {
       // the photogate timer: an instrument with an LCD that shows the last full period
       VG.box(ctx, 14 * p, 50 * p, 150 * p, 46 * p, { r: 6 * p, shadow: false }); VG.plate(ctx, 'Photogate timer', 89 * p, 59 * p, { s: 7 * p });
       VG.lcd(ctx, 22 * p, 66 * p, 134 * p, 22 * p, S.lastT ? `T = ${S.lastT.toFixed(3)} s` : 'T = –.––– s', { font: `600 ${13 * p}px ${T.mono}` });
@@ -721,6 +747,137 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       VG.rod(ctx, px, cy, sx, cy, 2.6 * p, { color: T.metalHi });
       VG.boss(ctx, sx, cy, p);
       VG.box(ctx, px - 9 * p, py - 22 * p, 18 * p, 27 * p, { color: T.metalDark, r: 2.5 * p, shadow: false });   // pivot block; the axle is drawn on top later
+    }
+    // ---------- the lab in 3D (three.js through lib/vd3.js and lib/vd3kit.js); the flat drawing above stays (Flat, or ?view=flat) ----------
+    /* The same swing on a bench, to scale and in metres (z up, the swing in the x–z plane): a retort stand whose boss holds an arm with the
+       pivot block, the string (or the uniform rod) and a steel bob whose size follows its mass, and a photogate on the bench whose beam crosses
+       the bottom of the swing; its LED lights while the bob (or rod) is in the beam. The clamp sits L above the beam, as a student sets it.
+       The timer, the numbers and the trace stay on the drawing canvas on top. Nothing here feeds the physics. */
+    const L3 = { o: { th: -Math.PI / 2 + 0.24, ph: 1.4, zoom: 1 }, cam: 'all', tgt: null, ppm: 0, freeze: false, raf: 0 };
+    const ZG = 0.16, RHO = 7850, GY = 0.07, AT = 0.024;   /* beam height above the bench, steel density (kg/m³), half gap of the gate, arm thickness (m) */
+    const bobR3 = (m) => Math.cbrt(3 * m / (4 * Math.PI * RHO));
+    const pivZ = () => ZG + S.L - (S.rod ? 0.04 : 0);     /* a rod hangs 4 cm lower, so the beam crosses it above its end */
+    let g3 = null, d3 = null;
+    const use3 = () => !!(g3 && view3 && view3.is3d());
+    function init3D() {
+      const S3 = VD3K.stage($('scene'), { before: can, shadow: 2.6, fov: 30, near: 0.02, far: 40 }); if (!S3) return false;
+      S3.el.classList.add('c3d'); S3.sun.position.set(1.4, -2.4, 4.6); S3.sun.target.position.set(0, 0, 1);
+      const fill = new THREE.DirectionalLight(0xffffff, 0.3); fill.position.set(-1, -3, 1.5); S3.scene.add(fill);
+      const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c);
+      sc.add(VD3K.bench(S3, { w: 12, d: 14, y: -5.4 }), VD3K.backdrop(S3, { r: 5, h: 5, y: 1.6 - 5 }));
+      const steel = M({ roughness: 0.3, metalness: 0.75 }, ['#c3cad2', '#7d8792']), dark = M({ roughness: 0.6, metalness: 0.3 }, ['#3a434e', '#2c333c']);
+      const body = M({ roughness: 0.5, metalness: 0.1 }, ['#36414e', '#4c5866']);
+      /* the retort stand, behind and to the left of the swing; the boss, its arm and the pivot block move with the pivot height */
+      const SX = -0.34, SY = 0.3;
+      const upright = VD3K.rod([SX, SY, 0], [SX, SY, 1], 0.0085, steel);   /* scaled to stand a little above the clamp */
+      sc.add(VD3K.box(0.2, 0.3, 0.018, dark, SX, SY + 0.03, 0), upright);
+      const clamp = new THREE.Group(); sc.add(clamp);
+      clamp.add(VD3K.box(0.045, 0.045, 0.05, dark, SX, SY, -0.005), VD3K.rod([SX, SY, 0.02], [0.03, -0.036, 0.02], 0.0065, steel));
+      clamp.add(VD3K.box(0.03, 0.036, 0.042, dark, 0, 0, -0.01), VD3K.rod([0, -0.024, 0], [0, 0.024, 0], 0.0032, steel));
+      /* the swing, turned about the pivot: string, hook and bob, or the wooden rod */
+      const swing = new THREE.Group(); sc.add(swing);
+      const down = (g) => { g.rotateX(Math.PI / 2); g.translate(0, 0, -0.5); return g; };   /* unit length, hanging down from the origin */
+      const string = new THREE.Mesh(down(new THREE.CylinderGeometry(0.0012, 0.0012, 1, 8)), M({ roughness: 0.85 }, ['#59636f', '#b4bfcc'])); string.castShadow = true;
+      const hook = new THREE.Mesh(down(new THREE.CylinderGeometry(0.0024, 0.0024, 1, 10)), steel);
+      const bobM = new THREE.MeshStandardMaterial({ roughness: 0.22, metalness: 0.5 }), bob = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 24), bobM); bob.castShadow = true;
+      const rodG = new THREE.BoxGeometry(0.025, 0.012, 1); rodG.translate(0, 0, -0.5);
+      const rodBar = new THREE.Mesh(rodG, M({ roughness: 0.7, metalness: 0 }, ['#c0925a', '#8f6d45'])); rodBar.castShadow = true;
+      swing.add(string, hook, bob, rodBar);
+      const plumbM = new THREE.LineDashedMaterial({ dashSize: 0.02, gapSize: 0.016, transparent: true, opacity: 0.55 });
+      /* the photogate: a U frame on a post, its beam across the gap at the height of the bob's lowest point, an LED on top */
+      const AW = 0.022, ZB = ZG - 0.075;
+      for (const s of [-1, 1]) sc.add(VD3K.box(AW, AT, 0.12, body, 0, s * (GY + AT / 2), ZB));
+      sc.add(VD3K.box(AW, 2 * GY + 2 * AT, 0.024, body, 0, 0, ZB), VD3K.rod([0, 0, 0.012], [0, 0, ZB], 0.0065, steel), VD3K.box(0.1, 0.12, 0.012, dark, 0, 0, 0));
+      const beamM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.55, depthWrite: false }), beam = new THREE.Mesh(new THREE.CylinderGeometry(0.0014, 0.0014, 2 * GY, 8), beamM);
+      beam.position.set(0, 0, ZG); sc.add(beam);
+      const ledM = new THREE.MeshStandardMaterial({ roughness: 0.3, color: 0x5a2a26 }), led = new THREE.Mesh(new THREE.SphereGeometry(0.004, 16, 10), ledM);
+      led.position.set(0, -(GY + AT / 2), ZB + 0.12 + 0.003); sc.add(led);
+      const ledOn = VD3K.star(S3, { r: 0.0045, color: '#ff4a36', glow: 9 }); ledOn.position.copy(led.position); sc.add(ledOn);
+      /* the timer on the bench, wired to the gate; its LCD shows what the timer above the picture shows */
+      const meter = VD3K.meter(S3, { w: 0.2, h: 0.11, label: 'PHOTOGATE TIMER', sub: 'period' }); meter.rotation.order = 'ZXY'; meter.rotation.z = 0.32; meter.position.x = -0.2; meter.position.y = 0.2; sc.add(meter);   /* behind the swing, left of the gate: clear of the trace strip */
+      sc.add(VD3K.cable([0, GY + AT, ZB + 0.01], [-0.15, 0.22, 0.03], { sag: 0.03, color: 0x23282f }));
+      /* the fading arc the bob leaves: a ribbon in the swing plane, its colour fading with age */
+      const NT = 600, trP = new Float32Array(NT * 6), trC = new Float32Array(NT * 8), idx = [];
+      for (let i = 0; i < NT - 1; i++) { const a = 2 * i; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+      const trG = new THREE.BufferGeometry(); trG.setAttribute('position', new THREE.BufferAttribute(trP, 3)); trG.setAttribute('color', new THREE.BufferAttribute(trC, 4)); trG.setIndex(idx); trG.setDrawRange(0, 0);
+      const trail = new THREE.Mesh(trG, new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, depthWrite: false, side: THREE.DoubleSide })); trail.frustumCulled = false; sc.add(trail);
+      S3.onTheme(() => { bobM.color = VD3K.token('--bob', '#2b60b5'); beamM.color = VD3K.token('--beam', '#b0452f'); plumbM.color = VD3K.token('--muted', '#5a6575'); });
+      g3 = { S3, upright, clamp, swing, string, hook, bob, rodBar, plumbM, plumb: null, plumbKey: '', beam, led, ledOn, meter, trG, trP, trC, NT, ray: new THREE.Raycaster(), plane: new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), blocked: false };
+      /* in the flat view the canvas keeps the page's own wheel and double click */
+      can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+      can.addEventListener('dblclick', (e) => { if (!use3()) e.stopImmediatePropagation(); });
+      VD3.orbit(can, L3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || near3(e), phMin: 0.5, phMax: 1.62, zMin: 0.6, zMax: 4 });
+      return true;
+    }
+    function dim3(on) { if (g3) g3.S3.el.hidden = !on; stage.dataset.dim = on ? '3d' : 'flat'; can.style.touchAction = on ? 'pan-y' : 'none'; can.style.cursor = ''; L3.tgt = null; draw(); }
+    /* the bob (or the rod's end) in the scene, and where it is on the screen */
+    function tip3() { const th = S.st.th, ZP = pivZ(); return [S.L * Math.sin(th), 0, ZP - S.L * Math.cos(th)]; }
+    function near3(e) { if (!use3()) return false; const r = can.getBoundingClientRect(), q = g3.S3.project(tip3()), rb = S.rod ? 0.02 : bobR3(S.m), q2 = g3.S3.project([tip3()[0] + rb, 0, tip3()[2]]);
+      return Math.hypot(e.clientX - r.left - q[0], e.clientY - r.top - q[1]) < Math.max(26 * ps(), Math.abs(q2[0] - q[0]) + 12 * ps()); }
+    function plane3(e) { const r = can.getBoundingClientRect(), v = new THREE.Vector2((e.clientX - r.left) / r.width * 2 - 1, 1 - (e.clientY - r.top) / r.height * 2), q = new THREE.Vector3();
+      g3.ray.setFromCamera(v, g3.S3.cam); return g3.ray.ray.intersectPlane(g3.plane, q) ? q : null; }
+    /* dragging the bob in 3D: across the string sets θ₀, along it sets L (the camera holds still while dragging; pulling the bob down lengthens the string and the clamp rises with it) */
+    function down3(e) { if (!near3(e)) return; const q = plane3(e); if (!q) return; drag = true; card.ghost(true); mode = null; L3.freeze = true; d3 = { L: S.L, x: q.x, z: q.z, sx: e.clientX, sy: e.clientY }; try { can.setPointerCapture(e.pointerId); } catch (_) {} }
+    function move3(e) {
+      const q = plane3(e); if (!q || !d3) return; const th = S.st.th, dx = q.x - d3.x, dz = q.z - d3.z;
+      if (!mode) { if (Math.hypot(e.clientX - d3.sx, e.clientY - d3.sy) < 6 * ps()) return; mode = Math.abs(dx * Math.sin(th) - dz * Math.cos(th)) > Math.abs(dx * Math.cos(th) + dz * Math.sin(th)) ? 'L' : 'A'; }
+      if (mode === 'L') { S.L = Math.max(0.1, Math.min(2, Math.round((d3.L + dx * Math.sin(th) - dz * Math.cos(th)) * 100) / 100)); changed(); S.st.th = th; draw(); }
+      else { const a = Math.round(Math.atan2(q.x, pivZ() - q.z) * 180 / Math.PI); S.A = Math.max(1, Math.min(maxA(), Math.abs(a))); changed(); S.st.th = Math.sign(a || 1) * S.A * Math.PI / 180; draw(); }
+    }
+    function render3(p, wide, sw, sh) {
+      const g = g3, S3 = g.S3, cam = S3.cam, th = S.st.th, L = S.L, rb = bobR3(S.m), ZP = pivZ();
+      S3.size(W, H);
+      g.clamp.position.z = ZP; g.upright.scale.y = Math.max(0.75, ZP + 0.22); g.upright.position.z = g.upright.scale.y / 2; g.swing.position.set(0, 0, ZP); g.swing.rotation.y = -th;
+      g.string.visible = g.hook.visible = g.bob.visible = !S.rod; g.rodBar.visible = S.rod;
+      if (S.rod) g.rodBar.scale.set(1, 1, L);
+      else { g.string.scale.set(1, 1, L - 1.25 * rb); g.hook.scale.set(1, 1, 0.5 * rb); g.hook.position.z = -L + rb; g.bob.scale.setScalar(rb); g.bob.position.set(0, 0, -L); }
+      const pk = ZP.toFixed(4);
+      if (g.plumbKey !== pk) { g.plumbKey = pk; if (g.plumb) S3.dispose(g.plumb); g.plumb = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0.003, ZP), new THREE.Vector3(0, 0.003, ZG - 0.06)]), g.plumbM); g.plumb.computeLineDistances(); S3.scene.add(g.plumb); }
+      /* the LED: on while the bob (or the rod) is in the beam, from where the picture puts them */
+      const h = ZP - ZG, c = Math.cos(th), sn = Math.sin(th);
+      g.blocked = S.rod ? c > 0 && L * c >= h && Math.abs(h * sn / c) < 0.0125 / c + 0.0014 : Math.hypot(L * sn, L * c - h) < rb + 0.0014;
+      g.led.visible = !g.blocked; g.ledOn.visible = g.blocked;
+      g.meter.set(S.lastT ? `T = ${S.lastT.toFixed(3)} s` : 'T = –.––– s');
+      /* the arc of the last 1.5 s, from the trace the angle graph draws */
+      let n = 0;
+      if (S.t > 0 && !drag) {
+        const span = 1.5, col = new THREE.Color(T.bob), w = S.rod ? 0.005 : Math.max(0.003, 0.28 * rb), tr = S.trace;
+        for (let i = Math.max(0, tr.length - g.NT); i < tr.length && n < g.NT; i++) {
+          const age = S.t - tr[i][0]; if (age > span || age < 0) continue;
+          const a = tr[i][1], sx = Math.sin(a), cz = Math.cos(a), x = L * sx, z = ZP - L * cz, al = 0.5 * Math.pow(1 - age / span, 1.6);
+          g.trP.set([x - sx * w, 0.004, z + cz * w, x + sx * w, 0.004, z - cz * w], n * 6); g.trC.set([col.r, col.g, col.b, al, col.r, col.g, col.b, al], n * 8); n++;
+        }
+      }
+      g.trG.setDrawRange(0, Math.max(0, n - 1) * 6); g.trG.attributes.position.needsUpdate = true; g.trG.attributes.color.needsUpdate = true;
+      /* the camera: the whole pendulum from the bench to the clamp, or a close up at the gate; it eases to a new framing */
+      const top = 58 * p, cx = sw / 2, cy = (top + sh) / 2, gate = L3.cam === 'gate';
+      const want = gate ? [-0.09, 0.08, ZG - 0.03] : [0, 0, (ZP + 0.05) / 2];
+      const ppm = gate ? Math.min((sh - top) * 0.9 / 0.32, sw * 0.92 / 0.56)
+        : Math.min((sh - top) * 0.97 / (ZP + 0.1), sw * 0.96 / (2 * Math.max(0.42, L * Math.sin(Math.min(S.A, 90) * Math.PI / 180) + rb + 0.04)));
+      if (!L3.tgt || reduce) { L3.tgt = want.slice(); L3.ppm = ppm; }
+      else if (!L3.freeze) { for (let i = 0; i < 3; i++) L3.tgt[i] += (want[i] - L3.tgt[i]) * 0.16; L3.ppm *= Math.pow(ppm / L3.ppm, 0.16); }
+      if (!L3.freeze && !L3.raf && (Math.abs(L3.ppm / ppm - 1) > 0.002 || Math.abs(L3.tgt[2] - want[2]) > 0.0005)) L3.raf = requestAnimationFrame(() => { L3.raf = 0; draw(); });
+      /* the target sits at (cx, cy), the middle of the pendulum's part of the picture, through an off centre view */
+      const FW = cx <= W / 2 ? 2 * (W - cx) : 2 * cx, FH = cy <= H / 2 ? 2 * (H - cy) : 2 * cy;
+      cam.aspect = FW / FH; cam.setViewOffset(FW, FH, cx <= W / 2 ? FW - W : 0, cy <= H / 2 ? FH - H : 0, W, H);
+      const dist = FH / (2 * Math.tan(cam.fov * Math.PI / 360) * L3.ppm);
+      VD3.place(cam, L3.o, new THREE.Vector3(L3.tgt[0], L3.tgt[1], L3.tgt[2]), dist);
+      S3.fog(dist / L3.o.zoom * 1.0, dist / L3.o.zoom * 1.65);   /* the far bench and the wall fade into the page, as in the other 3D demos */
+      S3.render();
+      return S3.project;
+    }
+    function draw3() {
+      const p = ps(), wide = W > 640, sw = wide ? W * 0.55 : W, sh = wide ? H : H * 0.62;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      const traceTop = placeRack(p, wide, sw, sh, sw / 2), Q = render3(p, wide, sw, sh);
+      /* words on the picture: the gate and its beam */
+      const halo = (s, q, col, al, wt) => { ctx.font = `${wt || 400} ${10.5 * p}px ${T.ui}`; ctx.textAlign = al || 'left'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.lineWidth = 4; ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.strokeText(s, q[0], q[1]); ctx.globalAlpha = 1; ctx.fillStyle = col; ctx.fillText(s, q[0], q[1]); };
+      const qg = Q([0, -0.09, 0]);
+      if (qg[1] < sh - 24 * p && qg[1] > 60 * p) {
+        halo('photogate', [qg[0], qg[1] + 6 * p], T.muted, 'center', 700);
+        halo(g3.blocked ? `${S.rod ? 'rod' : 'bob'} in the beam: LED on` : 'beam clear', [qg[0], qg[1] + 19 * p], g3.blocked ? T.beam : T.muted, 'center');
+      }
+      hud(p, wide, sw, sh, S.st.th, traceTop);
     }
     function readouts() {
       const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, g = gNow(), th0 = S.A * Math.PI / 180;
@@ -785,15 +942,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       changed(); S.st.th = Math.sign(a || 1) * S.A * Math.PI / 180; draw(); }
     function setLength(x, y) { const th = S.st.th; S.L = Math.max(0.1, Math.min(2, Math.round((Math.hypot(x - geo.px, y - geo.py) - grab) / scaleFor(S.A) * 100) / 100));
       changed(); S.st.th = th; draw(); }
-    can.addEventListener('pointerdown', (e) => { if (!geo) return; const [x, y] = local(e); const L = S.L * geo.sc, bx = geo.px + L * Math.sin(S.st.th), by = geo.py + L * Math.cos(S.st.th); if (Math.hypot(x - bx, y - by) < 40 * ps()) { grab = Math.hypot(x - geo.px, y - geo.py) - L; drag = true; card.ghost(true); mode = null; x0 = x; y0 = y; can.setPointerCapture(e.pointerId); } });
-    can.addEventListener('pointermove', (e) => { if (!drag) return; const [x, y] = local(e);
+    can.addEventListener('pointerdown', (e) => { if (use3()) { down3(e); return; } if (!geo) return; const [x, y] = local(e); const L = S.L * geo.sc, bx = geo.px + L * Math.sin(S.st.th), by = geo.py + L * Math.cos(S.st.th); if (Math.hypot(x - bx, y - by) < 40 * ps()) { grab = Math.hypot(x - geo.px, y - geo.py) - L; drag = true; card.ghost(true); mode = null; x0 = x; y0 = y; can.setPointerCapture(e.pointerId); } });
+    can.addEventListener('pointermove', (e) => { if (!drag) return; if (use3()) { move3(e); return; } const [x, y] = local(e);
       if (!mode) { const dx = x - x0, dy = y - y0; if (Math.hypot(dx, dy) < 6 * ps()) return; const th = S.st.th; mode = Math.abs(dx * Math.sin(th) + dy * Math.cos(th)) > Math.abs(dx * Math.cos(th) - dy * Math.sin(th)) ? 'L' : 'A'; }
       mode === 'L' ? setLength(x, y) : setAngle(x, y); });
     $('sL').addEventListener('input', (e) => { S.L = +e.target.value; changed(); });
     $('sA').addEventListener('input', (e) => { S.A = +e.target.value; changed(); });
     for (const b of document.querySelectorAll('[data-step]')) b.addEventListener('click', () => { const d = +b.dataset.d;
       if (b.dataset.step === 'L') S.L = Math.max(0.1, Math.min(2, Math.round((S.L + d) * 100) / 100)); else S.A = Math.max(1, Math.min(maxA(), S.A + d)); changed(); });
-    const endDrag = () => { drag = false; card.ghost(false); }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+    const endDrag = () => { drag = false; card.ghost(false); d3 = null; if (L3.freeze) { L3.freeze = false; draw(); } }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
     can.addEventListener('keydown', (e) => { if (e.key === ' ') $('go').click(); else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.A = Math.max(1, Math.min(maxA(), S.A + (e.key === 'ArrowRight' ? 1 : -1))); changed(); }
       else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { S.L = Math.max(0.1, Math.min(2, Math.round((S.L + (e.key === 'ArrowDown' ? 1 : -1) * (e.shiftKey ? 0.1 : 0.01)) * 100) / 100)); changed(); } else return; e.preventDefault(); });
 
@@ -869,7 +1026,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     tokens(); new ResizeObserver(resize).observe($('scene')); applyPreset('simple'); renderRows(); resize();
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
     requestAnimationFrame(frame);
-    return { resize, pause: () => setRun(false), applyPreset, presets: PRESETS, rows: () => S.rows.length };
+    /* the camera in the 3D view: the whole pendulum, or a close up at the photogate */
+    $('camSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-cam]'); if (!b) return; L3.cam = b.dataset.cam; for (const x of $('camSeg').querySelectorAll('[data-cam]')) x.setAttribute('aria-pressed', String(x === b)); draw(); });
+    stage.dataset.dim = 'flat';
+    return { resize, pause: () => setRun(false), applyPreset, presets: PRESETS, rows: () => S.rows.length, init3D, dim3, status: capStatus };
   })();
 
   /* ========== Exact period and double pendulum (the Pendulums and Chaos demo, merged 2026-10-24) ========== */
@@ -1171,6 +1331,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // ---------- drawing: pendulum ----------
     function drawPend() {
       const [W, H] = dims.p; if (!W || !H) return;
+      if (use3d()) { drawPend3(); return; }
       const ctx = ctxs.p, g = pGeom(), ls = g.ls;
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
@@ -1315,6 +1476,177 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         ctx.font = `600 ${11 * ls}px ${T.mono}`;
         halo(ctx, `θ₁ = ${deg(drag.y[0], 0)}   θ₂ = ${deg(drag.y[1], 0)}`, g.cx, g.H - 16 * ls, T.accent, 'center', 'bottom', ls);
       }
+    }
+
+    // ---------- the pendulum in 3D (three.js through lib/vd3.js and lib/vd3kit.js); the flat drawing stays (Flat, or ?view=flat) ----------
+    /* The same state as rods and bobs in front of a board, in units of the reach (L₁ + L₂, or L), so the picture always fills the pane as the
+       flat drawing does. The upper rod swings just in front of the board and the lower one in front of that, as on a real double pendulum. The
+       lower bob leaves a glowing trail of its last 10 s; copies are small bobs coloured as in the plots. Pointer positions on the picture are
+       turned into the flat drawing's coordinates, so dragging works the same way. Words and grips stay on the drawing canvas on top. */
+    const D3 = { o: { th: -Math.PI / 2 + 0.2, ph: 1.46, zoom: 1 }, k: 1, ampKey: '' };
+    let d3 = null;
+    const use3d = () => !!(d3 && view3 && view3.is3d());
+    const Y1 = -0.035, Y2 = -0.07, BS = 2.6;   /* the planes of the upper and lower rods in front of the board, and the board's side (reach units) */
+    function init3D() {
+      const S3 = VD3K.stage(panes.p, { before: cans.p, shadow: 1.5, fov: 30, near: 0.05, far: 60 }); if (!S3) return false;
+      S3.el.classList.add('c3d'); S3.sun.position.set(0.9, -3, 2.2); S3.sun.target.position.set(0, 0, 0);
+      const fill = new THREE.DirectionalLight(0xffffff, 0.3); fill.position.set(-1, -3, 0.5); S3.scene.add(fill);
+      const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c);
+      const wall = VD3K.backdrop(S3, { r: 5, h: 7, y: 0.9 - 5 }); wall.position.z = -3.4; sc.add(wall);
+      /* the board, with the reach circle and a protractor about the pivot printed on it */
+      const bcv = document.createElement('canvas'); bcv.width = bcv.height = 1024; const btex = new THREE.CanvasTexture(bcv); btex.anisotropy = S3.r.capabilities.getMaxAnisotropy();
+      const face = new THREE.Mesh(new THREE.PlaneGeometry(BS, BS).rotateX(Math.PI / 2), new THREE.MeshStandardMaterial({ map: btex, roughness: 0.85, metalness: 0 })); face.receiveShadow = true;
+      const edge = M({ roughness: 0.6, metalness: 0.2 }, ['#9aa4ae', '#2a323b']), slab = VD3K.box(BS + 0.03, 0.04, BS + 0.03, edge, 0, 0.021, -(BS + 0.03) / 2);
+      sc.add(face, slab);
+      const paint = (dk) => {
+        const c = bcv.getContext('2d'), N = 1024, X = (u) => (u / BS + 0.5) * N, R = (u) => u / BS * N, cx = X(0), cy = X(0);
+        c.fillStyle = dk ? '#1b232c' : '#e4eaf1'; c.fillRect(0, 0, N, N);
+        c.strokeStyle = dk ? 'rgba(255,255,255,0.05)' : 'rgba(30,40,55,0.06)'; c.lineWidth = 1;
+        for (let u = -1.1; u <= 1.11; u += 0.1) { c.beginPath(); c.moveTo(X(u), 0); c.lineTo(X(u), N); c.moveTo(0, X(u)); c.lineTo(N, X(u)); c.stroke(); }
+        c.strokeStyle = dk ? 'rgba(220,228,238,0.45)' : 'rgba(40,52,66,0.45)'; c.setLineDash([10, 12]); c.lineWidth = 2; c.beginPath(); c.arc(cx, cy, R(1), 0, TAU); c.stroke(); c.setLineDash([]);
+        /* protractor: angles from straight down, a tick every 10° */
+        c.lineWidth = 2; c.fillStyle = c.strokeStyle = dk ? 'rgba(220,228,238,0.7)' : 'rgba(40,52,66,0.7)'; c.font = '600 22px "JetBrains Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'middle';
+        const r0 = R(0.2); c.beginPath(); c.arc(cx, cy, r0, 0, TAU); c.stroke();
+        for (let a = 0; a < 360; a += 10) { const t = a * DEG, l = a % 90 ? (a % 30 ? 8 : 14) : 22, sx = Math.sin(t), cy2 = Math.cos(t); c.beginPath(); c.moveTo(cx + r0 * sx, cy + r0 * cy2); c.lineTo(cx + (r0 + l) * sx, cy + (r0 + l) * cy2); c.stroke(); }
+        for (const [a, s] of [[0, '0°'], [90, '90°'], [-90, '−90°'], [180, '180°']]) { const t = a * DEG; c.fillText(s, cx + (r0 + 42) * Math.sin(t), cy + (r0 + 36) * Math.cos(t)); }
+        btex.needsUpdate = true;
+      };
+      /* the pivot hub, the rods (unit length, hanging from their top end), the joint pin and the bobs */
+      const steel = M({ roughness: 0.3, metalness: 0.7 }, ['#a9b2bd', '#a9b2bd']), dark = M({ roughness: 0.5, metalness: 0.4 }, ['#3a434e', '#59636f']);
+      const hub = VD3K.rod([0, 0, 0], [0, Y2 - 0.02, 0], 0.016, dark); hub.castShadow = true; sc.add(hub);
+      const down = (g) => { g.rotateX(Math.PI / 2); g.translate(0, 0, -0.5); return g; };
+      const rodG = down(new THREE.CylinderGeometry(0.0085, 0.0085, 1, 14));
+      const rod1 = new THREE.Mesh(rodG, steel), rod2 = new THREE.Mesh(rodG, steel); rod1.castShadow = rod2.castShadow = true;
+      const pin = VD3K.rod([0, Y1 + 0.012, 0], [0, Y2 - 0.012, 0], 0.011, dark);
+      const m1 = new THREE.MeshStandardMaterial({ roughness: 0.25, metalness: 0.45 }), m2 = new THREE.MeshStandardMaterial({ roughness: 0.25, metalness: 0.45 });
+      const ball = (m) => { const b = new THREE.Mesh(new THREE.SphereGeometry(1, 36, 22), m); b.castShadow = true; return b; };
+      const b1 = ball(m1), b2 = ball(m2); sc.add(rod1, rod2, pin, b1, b2);
+      /* the small angle model (simple pendulum): a see through rod and bob; and the turning points of the swing, a dashed arc */
+      const ghostM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.28, depthWrite: false }), gRod = new THREE.Mesh(rodG, ghostM), gBob = new THREE.Mesh(new THREE.SphereGeometry(1, 28, 16), ghostM);
+      const ampM = new THREE.LineDashedMaterial({ dashSize: 0.02, gapSize: 0.03, transparent: true, opacity: 0.9 }); let amp = null;
+      sc.add(gRod, gBob);
+      /* the trail of the lower bob: a bright core and a wide faint glow, fading with age */
+      const ribbon = () => {
+        const n = 1200, P = new Float32Array(n * 6), C = new Float32Array(n * 8), ix = []; for (let i = 0; i < n - 1; i++) { const a = 2 * i; ix.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+        const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(P, 3)); g.setAttribute('color', new THREE.BufferAttribute(C, 4)); g.setIndex(ix); g.setDrawRange(0, 0);
+        const m = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ vertexColors: true, transparent: true, depthWrite: false, side: THREE.DoubleSide })); m.frustumCulled = false; m.P = P; m.C = C; m.n = n; return m;
+      };
+      const core = ribbon(), glow = ribbon(); sc.add(glow, core);
+      /* the copies: lower bobs as small balls, their rods as thin lines */
+      const cp = VD3K.particles(S3, { n: 200, r: 0.014, seg: 10 }); sc.add(cp);
+      const cl = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.45 }));
+      cl.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(200 * 12), 3)); cl.geometry.setAttribute('color', new THREE.BufferAttribute(new Float32Array(200 * 12), 3)); cl.frustumCulled = false; sc.add(cl);
+      S3.onTheme((dk) => { paint(dk); m1.color = VD3K.token('--neg', '#2b60b5'); m2.color = VD3K.token('--pos', '#b8382a'); ghostM.color = VD3K.token('--muted', '#5a6575'); ampM.color = VD3K.token('--equi', '#a7740b');
+        for (const r of [core, glow]) r.material.blending = dk ? THREE.AdditiveBlending : THREE.NormalBlending; });
+      d3 = { S3, rod1, rod2, pin, b1, b2, gRod, gBob, ampM, amp: null, core, glow, cp, cl, ray: new THREE.Raycaster(), plane: new THREE.Plane(new THREE.Vector3(0, 1, 0), -Y1) };
+      void amp;
+      cans.p.addEventListener('wheel', (e) => { if (!use3d()) e.stopImmediatePropagation(); }, { passive: true });
+      cans.p.addEventListener('dblclick', (e) => { if (!use3d()) e.stopImmediatePropagation(); });
+      VD3.orbit(cans.p, D3.o, () => { if (use3d()) drawPend(); }, { grab: (e) => !use3d() || !!handleAt(e), phMin: 0.55, phMax: 1.75, zMin: 0.6, zMax: 3, keys: true });
+      return true;
+    }
+    function dim3(on) { if (d3) d3.S3.el.hidden = !on; $('dpStage').dataset.dim = on ? '3d' : 'flat'; cans.p.style.touchAction = on ? 'pan-y' : 'none'; cans.p.style.cursor = ''; drawAll(); }
+    /* between the flat drawing's pixels and the scene: x right and y down in metres from the pivot, in reach units with z up in the scene */
+    const toW = (g, X, Y, yy) => [(X - g.cx) / g.sc / g.reach, yy, -(Y - g.cy) / g.sc / g.reach];
+    function flatFrom3(x, y) {
+      const g = pGeom(), r = cans.p.getBoundingClientRect(), v = new THREE.Vector2(x / r.width * 2 - 1, 1 - y / r.height * 2), q = new THREE.Vector3();
+      d3.ray.setFromCamera(v, d3.S3.cam); if (!d3.ray.ray.intersectPlane(d3.plane, q)) return [-1e6, -1e6];
+      return [g.cx + q.x * g.reach * g.sc, g.cy - q.z * g.reach * g.sc];
+    }
+    function evXY(ev) { const r = cans.p.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top; return use3d() ? flatFrom3(x, y) : [x, y]; }
+    const bobU = (m, L, reach) => Math.min(0.024 + 0.024 * Math.cbrt(m), 0.22 * L / reach);
+    function place(mesh, a, b) { const dx = b[0] - a[0], dz = b[2] - a[2]; mesh.position.set(a[0], a[1], a[2]); mesh.rotation.set(0, Math.atan2(-dx, -dz), 0); mesh.scale.set(1, 1, Math.hypot(dx, dz)); }
+    function render3() {
+      const [W, H] = dims.p, g = pGeom(), S3 = d3.S3, cam = S3.cam, y = shownState(), simple = S.mode === 'simple', u = 1 / g.reach, r = simple ? Rs : R;
+      S3.size(W, H);
+      const L1 = (simple ? S.sp.L : S.p.L1) * u, L2 = simple ? 0 : S.p.L2 * u;
+      const p1 = [L1 * Math.sin(y[0]), Y1, -L1 * Math.cos(y[0])];
+      place(d3.rod1, [0, Y1, 0], p1); d3.b1.position.set(p1[0], p1[1], p1[2]); d3.b1.scale.setScalar(bobU(simple ? 1 : S.p.m1, L1, 1));
+      d3.rod2.visible = d3.b2.visible = d3.pin.visible = !simple;
+      let p2 = null;
+      if (!simple) { p2 = [p1[0] + L2 * Math.sin(y[1]), Y2, p1[2] - L2 * Math.cos(y[1])]; place(d3.rod2, [p1[0], Y2, p1[2]], p2); d3.b2.position.set(p2[0], p2[1], p2[2]); d3.b2.scale.setScalar(bobU(S.p.m2, L2, 1)); d3.pin.position.set(p1[0], 0, p1[2]); }
+      /* the small angle model and the turning points, as the flat drawing shows them */
+      const ghost = simple && S.layers.ghost && r && !drag;
+      d3.gRod.visible = d3.gBob.visible = !!ghost;
+      if (ghost) { const th = r.y0[0] * Math.cos(r.w0 * r.t) + r.y0[1] / r.w0 * Math.sin(r.w0 * r.t), q = [L1 * Math.sin(th), Y1 + 0.004, -L1 * Math.cos(th)]; place(d3.gRod, [0, Y1 + 0.004, 0], q); d3.gBob.position.set(q[0], q[1], q[2]); d3.gBob.scale.setScalar(bobU(1, L1, 1)); }
+      let a0 = NaN; if (simple && r && !drag) { const pk = simplePeriod(S.sp.L, S.p.g, r.y0[0], r.y0[1]); if (!pk.rot && pk.k < 1) a0 = 2 * Math.asin(pk.k); }
+      const ak = isFinite(a0) ? `${a0.toFixed(5)}|${L1}` : '';
+      if (ak !== D3.ampKey) { D3.ampKey = ak; if (d3.amp) S3.dispose(d3.amp); d3.amp = null;
+        if (ak) { const pts = []; for (let i = 0; i <= 96; i++) { const t = -a0 + 2 * a0 * i / 96; pts.push(new THREE.Vector3(L1 * Math.sin(t), Y1 + 0.002, -L1 * Math.cos(t))); } d3.amp = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), d3.ampM); d3.amp.computeLineDistances(); S3.scene.add(d3.amp); } }
+      /* the trail of the lower bob over the last 10 s */
+      let n = 0;
+      if (!simple && S.layers.trail && R && !drag && R.trail.length > 1) {
+        const tr = R.trail, span = 10, col = new THREE.Color(T.pos), dk = VD3.dark(), cr = d3.core, gl = d3.glow;
+        let i0 = 0; while (i0 < tr.length && R.t - tr[i0][0] > span) i0++;
+        for (let i = i0; i < tr.length && n < cr.n; i++) {
+          const a = tr[Math.max(0, i - 1)], b = tr[Math.min(tr.length - 1, i + 1)], tx = b[1] - a[1], ty = b[2] - a[2], tl = Math.hypot(tx, ty) || 1, nx = -ty / tl, nz = -tx / tl;
+          const x = tr[i][1] * u, z = -tr[i][2] * u, f = Math.pow(Math.max(0, 1 - (R.t - tr[i][0]) / span), 1.4), al = (dk ? 0.95 : 0.85) * f;
+          for (const [m, w, k] of [[cr, 0.0045, 1], [gl, 0.02, dk ? 0.3 : 0.16]]) { m.P.set([x - nx * w, Y2 - 0.002, z - nz * w, x + nx * w, Y2 - 0.002, z + nz * w], n * 6); m.C.set([col.r, col.g, col.b, al * k, col.r, col.g, col.b, al * k], n * 8); }
+          n++;
+        }
+      }
+      for (const m of [d3.core, d3.glow]) { m.geometry.setDrawRange(0, Math.max(0, n - 1) * 6); m.geometry.attributes.position.needsUpdate = true; m.geometry.attributes.color.needsUpdate = true; }
+      /* copies */
+      let nc = 0;
+      if (!simple && R && R.N > 1 && !drag) {
+        const pos = d3.cl.geometry.attributes.position.array, cols = d3.cl.geometry.attributes.color.array, dk = VD3.dark(), c = new THREE.Color();
+        for (let k = 1; k < R.N && k < 200; k++) {
+          const q = R.copies[k].y, x1 = S.p.L1 * u * Math.sin(q[0]), z1 = -S.p.L1 * u * Math.cos(q[0]), x2 = x1 + L2 * Math.sin(q[1]), z2 = z1 - L2 * Math.cos(q[1]);
+          c.setHSL((((hueOf(k, R.N) % 360) + 360) % 360) / 360, dk ? 0.75 : 0.72, dk ? 0.62 : 0.46);
+          d3.cp.put(nc, x2, Y2 - 0.004, z2, c);
+          pos.set([0, Y1 + 0.004, 0, x1, Y1 + 0.004, z1, x1, Y2 + 0.004, z1, x2, Y2 + 0.004, z2], nc * 12); for (let j = 0; j < 4; j++) cols.set([c.r, c.g, c.b], nc * 12 + j * 3);
+          nc++;
+        }
+        d3.cl.geometry.attributes.position.needsUpdate = true; d3.cl.geometry.attributes.color.needsUpdate = true;
+      }
+      d3.cp.show(nc); d3.cp.done(); d3.cl.geometry.setDrawRange(0, nc * 4); d3.cl.material.opacity = R && R.N > 30 ? 0.3 : 0.5;
+      /* the camera: the reach circle fills the pane below the buttons, as in the flat drawing */
+      const cx = g.cx, cy = g.cy, ppm = g.rad / 1.06;
+      const FW = cx <= W / 2 ? 2 * (W - cx) : 2 * cx, FH = cy <= H / 2 ? 2 * (H - cy) : 2 * cy;
+      cam.aspect = FW / FH; cam.setViewOffset(FW, FH, cx <= W / 2 ? FW - W : 0, cy <= H / 2 ? FH - H : 0, W, H);
+      VD3.place(cam, D3.o, new THREE.Vector3(0, Y1, 0), FH / (2 * Math.tan(cam.fov * Math.PI / 360) * ppm));
+      S3.render();
+      const a = S3.project([0, Y1, 0]), b = S3.project([1, Y1, 0]); D3.k = g.sc * g.reach / Math.max(1, Math.hypot(b[0] - a[0], b[1] - a[1]));
+      return { Q: S3.project, g, u, p1, p2 };
+    }
+    /* the words and grips over the 3D picture */
+    function drawPend3() {
+      const [W, H] = dims.p, ctx = ctxs.p, R3 = render3(), g = R3.g, ls = g.ls, Q = R3.Q, y = shownState(), simple = S.mode === 'simple', r = simple ? Rs : R;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+      const at = (X, Y, yy) => Q(toW(g, X, Y, yy == null ? Y1 : yy));
+      /* angle arcs, from straight down to the rod, drawn in the rod's plane */
+      const arc3 = (c, yy, rad, a, txt, col) => {
+        if (Math.abs(a) < 0.5 * DEG) return;
+        ctx.strokeStyle = col; ctx.lineWidth = 1.4 * ls; ctx.beginPath();
+        for (let i = 0; i <= 32; i++) { const t = a * i / 32, q = Q([c[0] + rad * Math.sin(t), yy, c[2] - rad * Math.cos(t)]); i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]); }
+        ctx.stroke();
+        const q = Q([c[0], yy, c[2] - rad]); ctx.font = `600 ${11 * ls}px ${T.mono}`; const sd = a > 0 ? -1 : 1;
+        halo(ctx, txt, q[0] + sd * 5 * ls, q[1] + 2 * ls, col, sd < 0 ? 'right' : 'left', 'top', ls);
+      };
+      if (S.layers.arcs) {
+        if (simple) arc3([0, Y1, 0], Y1 - 0.002, Math.min(0.3, 0.35 * S.sp.L * R3.u), wrapPi(y[0]), `θ = ${deg(wrapPi(y[0]), 0)}`, T.neg);
+        else if (!r || r.N <= 1 || drag) { arc3([0, Y1, 0], Y1 - 0.002, Math.min(0.28, 0.3 * S.p.L1 * R3.u), wrapPi(y[0]), 'θ₁', T.neg); arc3([R3.p1[0], Y2, R3.p1[2]], Y2 - 0.002, Math.min(0.24, 0.3 * S.p.L2 * R3.u), wrapPi(y[1]), 'θ₂', T.pos); }
+      }
+      if (simple && S.layers.ghost && r && !drag && Math.abs(r.y0[1]) < 1e-12 && Math.abs(r.y0[0]) < Math.PI) {
+        const th = r.y0[0] * Math.cos(r.w0 * r.t) + r.y0[1] / r.w0 * Math.sin(r.w0 * r.t), L1 = S.sp.L * R3.u, q = Q([L1 * Math.sin(th), Y1, -L1 * Math.cos(th) - bobU(1, L1, 1) - 0.03]);
+        ctx.font = `${10.5 * ls}px ${T.mono}`; halo(ctx, 'small angle model', q[0], q[1], T.muted, 'center', 'top', ls);
+      }
+      /* grips: the hovered or dragged one is ringed, a dot marks each bob, three bars the middle of each rod */
+      for (const h of dragHandles()) {
+        const hot = (drag && drag.id === h.id) || (!drag && hoverId === h.id);
+        if (h.pt) {
+          const yy = h.id === 'b2' ? Y2 : Y1, q = at(h.pt[0], h.pt[1], yy), e = at(h.pt[0] + h.r, h.pt[1], yy), rr = Math.abs(e[0] - q[0]) || h.r;
+          if (hot) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.4 * ls; ctx.beginPath(); ctx.arc(q[0], q[1], rr + 4 * ls, 0, TAU); ctx.stroke(); }
+        } else if (h.grip) {
+          const yy = h.id === 'L2' ? Y2 : Y1, q = at(h.grip[0], h.grip[1], yy);
+          ctx.fillStyle = hot ? T.accent : T.canvas; ctx.globalAlpha = hot ? 0.9 : 0.75; ctx.beginPath(); ctx.arc(q[0], q[1], 4.5 * ls, 0, TAU); ctx.fill(); ctx.globalAlpha = 1;
+          ctx.strokeStyle = hot ? T.accent : T.muted; ctx.lineWidth = 1.4 * ls; ctx.stroke();
+        }
+      }
+      if (drag && drag.id && drag.id[0] === 'L') { const key = simple ? 'L' : drag.id, v = simple ? S.sp.L : S.p[drag.id]; ctx.font = `600 ${11 * ls}px ${T.mono}`; halo(ctx, `${key === 'L' ? 'L' : key === 'L1' ? 'L₁' : 'L₂'} = ${v.toFixed(2)} m`, W / 2, H - 16 * ls, T.accent, 'center', 'bottom', ls); }
+      else if (drag && drag.y && (drag.id === 'b1' || drag.id === 'b2') && !simple) { ctx.font = `600 ${11 * ls}px ${T.mono}`; halo(ctx, `θ₁ = ${deg(drag.y[0], 0)}   θ₂ = ${deg(drag.y[1], 0)}`, W / 2, H - 16 * ls, T.accent, 'center', 'bottom', ls); }
+      else { ctx.font = `${10 * ls}px ${T.mono}`; let cap = simple ? 'point mass drawn as a ball · dashed arc: the turning points' : 'point masses drawn as balls' + (S.layers.trail ? ' · trail: the lower bob, last 10 s' : '');
+        if (ctx.measureText(cap).width > W - 24 * ls) cap = cap.split(' · ')[1] || cap; halo(ctx, cap, 12 * ls, H - 12 * ls, T.muted, 'left', 'bottom', ls); }
     }
 
     // ---------- plot helpers ----------
@@ -1773,8 +2105,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
     // ---------- dragging on the pendulum ----------
     function handleAt(ev) {
-      const r = cans.p.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
-      const tol = 8 * lsOf(...dims.p) * (ev.pointerType === 'touch' ? 2 : 1);
+      const [x, y] = evXY(ev);
+      const tol = 8 * lsOf(...dims.p) * (ev.pointerType === 'touch' ? 2 : 1) * (use3d() ? D3.k : 1);
       let best = null, bd = Infinity;
       for (const h of dragHandles()) {
         let d;
@@ -1786,8 +2118,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     let pQueued = null, pFrame = false;
     function pDragTo(ev) {
-      const r = cans.p.getBoundingClientRect();
-      pQueued = [ev.clientX - r.left, ev.clientY - r.top, performance.now()];
+      const [qx, qy] = evXY(ev);
+      pQueued = [qx, qy, performance.now()];
       if (pFrame) return;
       pFrame = true;
       requestAnimationFrame(() => {
@@ -2085,7 +2417,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     setRunning(running);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
     requestAnimationFrame(loop);
-    return { resize, pause: () => setRunning(false), setMode, applyPreset, presets: PRESETS, mode: () => S.mode };
+    $('dpStage').dataset.dim = 'flat';
+    return { resize, pause: () => setRunning(false), setMode, applyPreset, presets: PRESETS, mode: () => S.mode, init3D, dim3 };
   })();
 
   /* ========== scenes ========== */
@@ -2110,7 +2443,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.projector({ onChange: () => { lab.resize(); dbl.resize(); } });
   const dpCount = window.vdReadings;
   window.vdReadings = () => lab.rows() + (typeof dpCount === 'function' ? dpCount() : 0);
-  window.__pend = { setScene, get scene() { return scene; } };
+  /* 3D | Flat: one choice for the scenes; 3D opens first (unless ?view=flat, a low power device, or no WebGL) */
+  view3 = VD3K.view({ seg: document.querySelector('main.bench'), init: () => { const ok = lab.init3D(); if (ok) dbl.init3D(); return ok; },
+    change: (on) => { lab.dim3(on); dbl.dim3(on); }, status: (m) => lab.status(m) });
+  window.__pend = { setScene, get scene() { return scene; }, get view3() { return view3; } };
   (() => {
     let q = null; try { q = new URLSearchParams(location.search); } catch (_) { return; }
     const ALIAS = { 'double-pendulum': 'double', chaos: 'double', simple: 'phase', exact: 'phase', photogate: 'lab' };
