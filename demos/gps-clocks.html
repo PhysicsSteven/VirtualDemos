@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* Layout: Earth, the orbit and the two clocks on the left, the rate against radius graph on the right; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
@@ -72,7 +73,7 @@ table.rows input:focus { border-color: var(--accent); }
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="Earth with a satellite in a circular orbit, two clocks showing the time difference built up so far, and a graph of how much a clock at each orbit radius gains or loses per day."></canvas>
-      <div class="viewbar"><button type="button" class="spin attn" id="go">Run the clocks</button><button type="button" class="spin" id="reset">Set both to zero</button></div>
+      <div class="viewbar"><button type="button" class="spin attn" id="go">Run the clocks</button><button type="button" class="spin" id="reset">Set both to zero</button><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -263,21 +264,123 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.lineCap = 'round'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.sin(hA) * r * 0.5, y - Math.cos(hA) * r * 0.5); ctx.stroke();
     ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x + Math.sin(mA) * r * 0.8, y - Math.cos(mA) * r * 0.8); ctx.stroke(); ctx.lineCap = 'butt';
   }
+  // ---------- 3D view of Earth and the second clock (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
+  /* Lengths in Earth radii, z along Earth's axis (north up). Earth turns at ω = 7.292 × 10⁻⁵ rad/s of simulated time, the orbit is the
+     circle of radius r to scale in the equatorial plane, and the satellite goes round at v/r, as in the flat view. The sun's light comes
+     from a fixed direction, so day and night sweep round as Earth turns (the year's motion is left out). The coastlines are rough and
+     the satellite and tower are drawn larger than life so they show. Drag to turn the view, wheel or pinch to zoom, double click to reset. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2, ph: 0.82, zoom: 1 } };
+  const LAND_S = [   /* southern outlines for the globe only (the flat view looks down on the north and folds the south onto the equator) */
+    [[-80, -2], [-81, -6], [-76, -14], [-71, -18], [-70, -30], [-73, -40], [-75, -50], [-68, -55], [-65, -45], [-57, -37], [-48, -27], [-41, -22], [-35, -8], [-50, 0]],
+    [[9, -1], [13, -12], [12, -18], [15, -27], [18, -34], [25, -34], [33, -27], [35, -20], [40, -15], [40, -10], [42, -1]],
+    [[114, -22], [122, -18], [130, -12], [137, -12], [142, -11], [146, -19], [153, -26], [150, -37], [141, -38], [132, -32], [116, -35], [114, -27]],
+    [[95, 5], [105, -6], [115, -8], [125, -9], [140, -6], [150, -6], [140, -2], [118, 2], [108, 2]]];
+  let g3 = null, rect3 = { x: 0, y: 0, w: 0, h: 0 };
+  const use3 = () => !!(G3.on && g3);
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function init3D() {
+    G3.tried = true;
+    const rd = VD3.renderer(); if (!rd) return false;
+    const el = rd.domElement; el.setAttribute('aria-hidden', 'true'); el.style.position = 'absolute'; stage.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 0.05, 500), M = (o) => new THREE.MeshStandardMaterial(o);
+    const amb3 = new THREE.AmbientLight(0xffffff, 0.16), sun = new THREE.DirectionalLight(0xffffff, 1.1); sun.position.set(-8, -5, 2.5); scene.add(amb3, sun);
+    const upZ = (g) => g.rotateX(Math.PI / 2);
+    const tc = document.createElement('canvas'); tc.width = 2048; tc.height = 1024; const landT = new THREE.CanvasTexture(tc); landT.anisotropy = 4;
+    const earthM = M({ map: landT, roughness: 0.85, metalness: 0 }), earth = new THREE.Mesh(upZ(new THREE.SphereGeometry(1, 72, 48)), earthM);
+    const atmoM = new THREE.MeshBasicMaterial({ color: 0x6eaaff, transparent: true, opacity: 0.16, side: THREE.BackSide, depthWrite: false }), atmo = new THREE.Mesh(new THREE.SphereGeometry(1.035, 48, 32), atmoM);
+    /* the ground clock: a marker on the equator that turns with Earth */
+    const gcM = new THREE.MeshBasicMaterial({ color: 0x17202b }), gclock = new THREE.Group(), gdot = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), gcM); gclock.add(gdot);
+    const towerM = M({ roughness: 0.5, metalness: 0.4 }), tower = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 8).rotateZ(Math.PI / 2).translate(0.5, 0, 0), towerM);
+    /* the orbit: a dashed circle of radius r */
+    const ringM = new THREE.LineDashedMaterial({ dashSize: 0.06, gapSize: 0.05, transparent: true, opacity: 0.75 }), pts = [];
+    for (let i = 0; i <= 256; i++) { const a = i / 256 * 2 * Math.PI; pts.push(new THREE.Vector3(Math.cos(a), Math.sin(a), 0)); }
+    const ring = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), ringM); ring.computeLineDistances();
+    /* the satellite: body, two solar panels and a dish toward Earth */
+    const sat = new THREE.Group(), bodyM = M({ roughness: 0.4, metalness: 0.6 }), panM = M({ roughness: 0.35, metalness: 0.3, emissive: 0x0a1630 });
+    sat.add(new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), bodyM));
+    for (const s of [-1, 1]) { const pn = new THREE.Mesh(new THREE.BoxGeometry(0.7, 2.2, 0.05), panM); pn.position.set(0, s * 1.75, 0); sat.add(pn); const arm = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.8, 0.08), bodyM); arm.position.set(0, s * 0.7, 0); sat.add(arm); }
+    const dish = new THREE.Mesh(new THREE.ConeGeometry(0.4, 0.3, 16, 1, true).rotateZ(Math.PI / 2), bodyM); dish.position.x = -0.65; sat.add(dish);
+    /* stars far away */
+    const sg = new THREE.BufferGeometry(), sp = []; for (const [a, b] of STARS.concat(STARS.map(([x, y]) => [y, x]))) { const u = a * 2 - 1, ang = b * 6.283, r = Math.sqrt(1 - u * u); sp.push(r * Math.cos(ang) * 200, r * Math.sin(ang) * 200, u * 200); }
+    sg.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3)); const starM = new THREE.PointsMaterial({ size: 1.6, sizeAttenuation: false }), stars3 = new THREE.Points(sg, starM);
+    scene.add(earth, atmo, gclock, tower, ring, sat, stars3);
+    g3 = { rd, el, scene, cam, amb3, sun, tc, landT, earthM, earth, atmoM, gcM, gclock, gdot, towerM, tower, ringM, ring, sat, bodyM, panM, starM };
+    can.addEventListener('wheel', (e) => { if (!use3() || !in3(e)) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3() && !S.run) draw(); }, { grab: (e) => !use3() || !in3(e), phMin: 0.05, phMax: 2.9, zMin: 0.5, zMax: 4, keys: false });
+    can.addEventListener('pointerup', () => { if (!use3()) can.style.cursor = ''; });
+    return true;
+  }
+  const in3 = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; return x >= rect3.x && x < rect3.x + rect3.w && y >= rect3.y && y < rect3.y + rect3.h; };
+  /* the globe's texture: equirectangular, longitude −180° at the left, north at the top */
+  function paintLand() {
+    const c = g3.tc.getContext('2d'), w = g3.tc.width, h = g3.tc.height, X = (lo) => (lo + 180) / 360 * w, Y = (la) => (90 - la) / 180 * h;
+    const og = c.createLinearGradient(0, 0, 0, h); og.addColorStop(0, T.oceanDeep); og.addColorStop(0.5, T.earth); og.addColorStop(1, T.oceanDeep); c.fillStyle = og; c.fillRect(0, 0, w, h);
+    c.fillStyle = T.land; for (const poly of LAND_LL.concat(LAND_S)) { c.beginPath(); poly.forEach(([lo, la], i) => (i ? c.lineTo(X(lo), Y(la)) : c.moveTo(X(lo), Y(la)))); c.closePath(); c.fill(); }
+    c.fillStyle = T.ice; c.fillRect(0, 0, w, Y(80)); c.fillRect(0, Y(-68), w, h - Y(-68));
+    g3.landT.needsUpdate = true;
+  }
+  function theme3() {
+    const g = g3, dk = VD3.dark();
+    g.scene.background = col3(dk ? '#050a14' : '#0d1626', '#0d1626'); paintLand();
+    g.gcM.color = col3('#ffd27a', '#ffd27a'); g.towerM.color = col3(T.sat, '#c3cad4'); g.ringM.color = col3(dk ? '#9fb0c6' : '#b8c6d8', '#b8c6d8');
+    g.bodyM.color = col3('#c9ced6', '#c9ced6'); g.panM.color = col3(T.panel, '#2f5ea8'); g.starM.color = col3('#e8eefc', '#e8eefc');
+  }
+  /* draws the 3D picture into (x0, y0, w, h); returns a projector from Earth radii to this canvas */
+  function draw3(x0, y0, w, h, gth, th, K) {
+    const g = g3, dk = VD3.dark(), W0 = Math.max(1, Math.round(w)), H0 = Math.max(1, Math.round(h));
+    rect3 = { x: x0, y: y0, w: W0, h: H0 }; g.el.hidden = false; Object.assign(g.el.style, { left: x0 + 'px', top: y0 + 'px', width: W0 + 'px', height: H0 + 'px' });
+    if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.land, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    const r = S.r / RE, rv = Math.max(r, 1.6), big = rv * 0.035;
+    /* longitude λ sits at angle λ on the sphere as built, so turning it by gth + 78° puts the ground clock (78° W) at angle gth */
+    g.earth.rotation.z = gth - CLOCK_LON * Math.PI / 180;
+    g.gclock.position.set(Math.cos(gth), Math.sin(gth), 0); g.gdot.scale.setScalar(Math.max(0.025, big * 0.5));
+    g.ring.scale.setScalar(r); g.ring.visible = S.mode === 'orbit';
+    g.sat.visible = S.mode === 'orbit'; g.sat.position.set(r * Math.cos(th), r * Math.sin(th), 0); g.sat.rotation.z = th; g.sat.scale.setScalar(big);
+    const hT = Math.max(r - 1, 0.06); g.tower.visible = S.mode !== 'orbit'; g.tower.scale.set(hT, Math.max(0.008, big * 0.15), Math.max(0.008, big * 0.15)); g.tower.position.set(Math.cos(gth), Math.sin(gth), 0); g.tower.rotation.z = gth;
+    const tv = Math.tan(g.cam.fov * Math.PI / 360), dist = rv * 1.12 / (tv * Math.min(1, g.cam.aspect));
+    VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0, 0), dist); g.cam.far = dist + 300; g.cam.updateProjectionMatrix();
+    g.scene.updateMatrixWorld(); g.rd.render(g.scene, g.cam);
+    const v = new THREE.Vector3();
+    return (x, y, z) => { v.set(x, y, z).project(g.cam); return [x0 + (v.x + 1) / 2 * W0, y0 + (1 - v.y) / 2 * H0, v.z]; };
+  }
+  function setView(v) {
+    G3.want = v === '3d';
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { G3.want = false; v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setView(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; can.style.cursor = use3() ? 'grab' : ''; if (g3 && !G3.on) g3.el.hidden = true;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    draw();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     const p = ps(), wide = W > 640, K = clocks(S.r, S.mode, S.spin);
     const pw = wide ? W * 0.5 : W, ph = wide ? Hh : Hh * 0.55, cx = pw / 2, cy = ph / 2 + (wide ? 20 : 40) * p, rMax = Math.min(pw, ph) / 2 - 40 * p, sc = rMax / Math.max(S.r, 1.6 * RE);
     const gth = (S.spin ? WE : 0) * S.t, gx = cx + RE * sc * Math.cos(gth), gy = cy - RE * sc * Math.sin(gth);
+    const th = S.mode === 'orbit' ? K.v2 / S.r * S.t : gth, sx = cx + S.r * sc * Math.cos(th), sy = cy - S.r * sc * Math.sin(th);
+    if (g3 && !use3()) g3.el.hidden = true;
+    if (use3()) {
+      const h3 = wide ? Hh : ph; ctx.clearRect(0, 0, pw, h3);
+      const Q = draw3(0, 0, pw, h3, gth, th, K), r = S.r / RE, lab = (q, t, col) => { ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(t, q[0], q[1] - 8 * p); };
+      { const q = Q(Math.cos(gth), Math.sin(gth), -0.04); ctx.fillStyle = '#ffd27a'; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('ground clock', q[0], q[1] + 8 * p); }
+      const top = S.mode === 'orbit' ? Q(r * Math.cos(th), r * Math.sin(th), 0.08 * Math.max(r, 1.6)) : Q((1 + Math.max(r - 1, 0.06)) * Math.cos(gth), (1 + Math.max(r - 1, 0.06)) * Math.sin(gth), 0.04);
+      lab(top, 'second clock', '#e8eefc');
+      ctx.fillStyle = 'rgba(232,238,252,0.7)'; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('drag to turn, wheel to zoom', pw / 2, h3 - 20 * p);
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(10 * p, 46 * p, Math.min(pw - 20 * p, 360 * p), 54 * p, 8 * p) : ctx.rect(10 * p, 46 * p, Math.min(pw - 20 * p, 360 * p), 54 * p); ctx.fill(); ctx.globalAlpha = 1;
+    } else {
     stars(0, 0, pw, wide ? Hh : ph);
     earth(cx, cy, RE * sc, gth);   // Earth turns with the ground clock, and stands still when the ground clock does
     ctx.strokeStyle = T.gridStrong; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.arc(cx, cy, S.r * sc, 0, 7); ctx.stroke(); ctx.setLineDash([]);
     // in orbit the second clock goes round at v/r; on a tower it is carried with the ground, so it sits above the ground clock
-    const th = S.mode === 'orbit' ? K.v2 / S.r * S.t : gth, sx = cx + S.r * sc * Math.cos(th), sy = cy - S.r * sc * Math.sin(th);
     if (S.mode === 'orbit') satellite(sx, sy, th);
     else { const rt = Math.max(S.r * sc, RE * sc + 14 * p), tx = cx + rt * Math.cos(th), ty = cy - rt * Math.sin(th); ctx.strokeStyle = T.sat; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(tx, ty); ctx.stroke(); ctx.fillStyle = T.sat; ctx.fillRect(tx - 4 * p, ty - 4 * p, 8 * p, 8 * p); }
     ctx.fillStyle = T.ink; ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(gx, gy, 4 * p, 0, 7); ctx.fill(); ctx.stroke();
     ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('view from above the North Pole', cx, ph - 20 * p);
+    }
     // clocks
     ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink;
     dial(24 * p, 61 * p, 10 * p, S.t); dial(24 * p, 85 * p, 10 * p, S.t * (1 + K.total));
@@ -308,6 +411,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.projector({ onChange: resize });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
+  /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
+  G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
+  /* the clocks run on open, so Earth turns and the satellite moves; the first click, key or slider change stops them and sets both to zero first */
+  let touched = false, auto = false;
+  for (const ev of ['pointerdown', 'keydown', 'click', 'input']) document.addEventListener(ev, () => { touched = true; if (auto) { auto = false; S.run = false; S.t = 0; $('go').textContent = 'Run the clocks'; $('go').classList.add('attn'); draw(); readouts(); } }, { capture: true });
+  setTimeout(() => { if (!touched && !reduce && !S.run && S.t === 0) { $('go').click(); auto = true; } }, 900);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now();
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();
