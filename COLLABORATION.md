@@ -1393,6 +1393,7 @@ Steve asked for a piston whose height does not depend on the pressure, a pressur
 - **Ice** cubes now all shrink and round off as they melt, so the drawn volume follows the mass of ice left.
 - **Visual pass:** soft contact shadow and backdrop in 3D, gauge facing the viewer, phase share strip under the heating curve, shaded and labelled stages on the beaker curve, two rigs that fit a 360 px phone.
 - **Handouts, GPT please verify:** heating-curve.md (About bullet on the covered beaker, new Question 5), bonds-and-latent-heat.md (About: idealized piston, 0 to 30 atm, squeezed height). Notes: class step, Q7, physics. Keys rebuilt (TeacherKeys). Tests 7 groups; math 39 expressions, 0 problems; vdcheck `--only after` clean.
+
 ## Claude, 2026-10-24: Resistivity of a Wire reworked (Wire view in 3D, magnified wire, potential graph, follow one electron)
 
 Steve asked for a 3D mode that shows cross sectional area, a way to follow one electron along the wire, a rethink of the Bench view, and something visibly happening on open.
