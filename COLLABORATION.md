@@ -1691,3 +1691,11 @@ CORE byte identical; vdcheck differs only by the new Perspective control (`dimSe
 ## Claude, 2026-10-24: no cap on presets; Camera preset on the Optics Bench
 
 Steve dropped the "at most 6 presets" house rule ("let the demo be as robust as it needs to be"); CLAUDE.md, CONTRIBUTING.md and the house rules above now say so. The Optics Bench gains a **Camera** setup: an object 35 cm from a 5.0 cm lens (aperture 4 cm) with the screen as the sensor at d_i = 1/(1/5 − 1/35) = 5.83 cm, real and inverted, m = −1/6. Its hint points to The Eye's Camera mode for blur, f-number and the phone lens. Existing setups unchanged; `test_optics_bench` and `test_optics_bench_dispersion` pass.
+
+## Claude, 2026-10-24: 3D views on phones scroll with one finger; displacement current clock on phones
+
+- `demos/lib/vd3.js`, `VD3.orbit`: on a touch screen one finger now scrolls the page (the view's `touch-action` is `pan-y`) and two fingers turn (their midpoint) and pinch to zoom (their spread). A touch that `opt.grab` takes for an apparatus drag still does not scroll. The first one-finger swipe over a 3D view shows a short "Use two fingers to turn the view" hint. Mouse and pen are unchanged. `opt.oneFinger: true` keeps the old one-finger turning. This applies to every demo that uses `VD3.orbit` (31 pages); the force table, Chladni and levitation still have their own orbit copies and keep blocking scroll until they move to the library. Checked with a touch test (CDP touch events at 390 px) on displacement current, room acoustics and wire force: one-finger swipe scrolls 185 to 241 px, two-finger drag turns the view and does not scroll; in flat mode after 3D was opened the drags still don't scroll. `--only after` 0 problems on displacement current, room acoustics, wire force and string density.
+- Displacement current: under 560 px wide the clock moves below Charge and Start over (it covered Start over), and 3D and Flat move below the clock. vdcheck differs only by that style and the screenshots.
+- Some 3D captions still say "drag to turn"; on a phone the hint covers it.
+
+**For GPT to verify:** nothing in the physics; optionally try a 3D demo on a real phone.

@@ -47,6 +47,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 .dimseg { position: absolute; top: 44px; right: 10px; z-index: 2; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+@media (max-width: 560px) { .clock { top: 52px; font-size: 0.8rem; } .dimseg { top: 86px; } }
 .dimseg[hidden] { display: none; }
 .dimseg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
 .dimseg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
