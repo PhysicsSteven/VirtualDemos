@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* Layout: the scene on the left; the rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
@@ -76,6 +77,7 @@ table.rows input:focus { border-color: var(--accent); }
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="The current setup: masses on a plate that can be dragged, a firework that explodes into two pieces, or a person walking along a boat, with the centre of mass marked."></canvas>
       <div class="viewbar" id="runBar"><button type="button" class="spin attn" id="go">Launch</button><button type="button" class="spin" id="back">Start over</button></div>
+      <div class="viewbar" id="viewBar" style="left: auto; right: 10px;"><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -206,7 +208,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const tEndBoat = () => LB / WALK + 0.5;
   function sync() {
     for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
-    $('plateCtl').hidden = S.mode !== 'plate'; $('fireCtl').hidden = S.mode !== 'fire'; $('boatCtl').hidden = S.mode !== 'boat'; $('runBar').hidden = S.mode === 'plate'; $('modeHint').textContent = HINT[S.mode];
+    $('plateCtl').hidden = S.mode !== 'plate'; $('fireCtl').hidden = S.mode !== 'fire'; $('boatCtl').hidden = S.mode !== 'boat'; $('runBar').hidden = S.mode === 'plate'; $('modeHint').textContent = HINT[S.mode]; $('viewBar').hidden = S.mode === 'fire';
     $('go').textContent = S.run ? 'Pause' : S.mode === 'fire' ? 'Launch' : 'Walk';
     const sm = S.ms[S.sel]; if (sm) { $('sMass').value = sm.m; $('oMass').textContent = `${sm.m.toFixed(1)} kg (mass ${S.sel + 1})`; }
     $('sRatio').value = S.ratio; $('oRatio').textContent = S.ratio.toFixed(2); $('sKick').value = S.kick; $('oKick').textContent = `${S.kick} m/s`; $('sAng').value = S.ang; $('oAng').textContent = `${S.ang}° above horizontal`;
@@ -227,10 +229,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // plate geometry
   function plateBox() { const p = ps(), pad = 30 * p, w = Math.min(W - 2 * pad, (Hh - 2 * pad - 40 * p) / 0.6), h = w * 0.6; return { x0: (W - w) / 2, y0: 60 * p + (Hh - 60 * p - h) / 2, w, h, sc: w / 1.0 }; }
   const toPx = (B, a) => [B.x0 + a.x * B.sc, B.y0 + B.h - a.y * B.sc];
-  let drag = -1;
-  can.addEventListener('pointerdown', (e) => { if (S.mode !== 'plate') return; const r = can.getBoundingClientRect(), B = plateBox(), px = e.clientX - r.left, py = e.clientY - r.top;
+  let drag = -1, dragOff = { x: 0, y: 0 };
+  can.addEventListener('pointerdown', (e) => { if (S.mode !== 'plate') return; if (use3()) { const i = hit3(e); if (i >= 0) { const q = plateAt(e); dragOff = q ? { x: q.x - S.ms[i].x, y: q.y - S.ms[i].y } : { x: 0, y: 0 }; drag = i; S.sel = i; can.setPointerCapture(e.pointerId); upd(); } return; } const r = can.getBoundingClientRect(), B = plateBox(), px = e.clientX - r.left, py = e.clientY - r.top;
     let best = -1, bd = 30 * ps(); S.ms.forEach((a, i) => { const [x, y] = toPx(B, a), d = Math.hypot(x - px, y - py); if (d < bd) { bd = d; best = i; } }); if (best >= 0) { drag = best; S.sel = best; can.setPointerCapture(e.pointerId); upd(); } });
-  can.addEventListener('pointermove', (e) => { if (drag < 0) return; const r = can.getBoundingClientRect(), B = plateBox(); const a = S.ms[drag]; a.x = Math.max(0, Math.min(1, (e.clientX - r.left - B.x0) / B.sc)); a.y = Math.max(0, Math.min(0.6, (B.y0 + B.h - (e.clientY - r.top)) / B.sc)); a.x = Math.round(a.x * 100) / 100; a.y = Math.round(a.y * 100) / 100; draw(); readouts(); });
+  can.addEventListener('pointermove', (e) => { if (drag < 0) return; if (use3()) { const q = plateAt(e), a = S.ms[drag]; if (q) { a.x = Math.round(Math.max(0, Math.min(1, q.x - dragOff.x)) * 100) / 100; a.y = Math.round(Math.max(0, Math.min(0.6, q.y - dragOff.y)) * 100) / 100; draw(); readouts(); } return; } const r = can.getBoundingClientRect(), B = plateBox(); const a = S.ms[drag]; a.x = Math.max(0, Math.min(1, (e.clientX - r.left - B.x0) / B.sc)); a.y = Math.max(0, Math.min(0.6, (B.y0 + B.h - (e.clientY - r.top)) / B.sc)); a.x = Math.round(a.x * 100) / 100; a.y = Math.round(a.y * 100) / 100; draw(); readouts(); });
   can.addEventListener('pointerup', () => { drag = -1; });
   can.addEventListener('keydown', (e) => {
     if (S.mode !== 'plate') { if (e.key === ' ') { $('go').click(); e.preventDefault(); } return; }
@@ -268,8 +270,158 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(x, y, r * 0.74, Math.PI * 0.95, Math.PI * 1.75); ctx.stroke();
     ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.arc(x, y, r * 0.74, Math.PI * 1.95, Math.PI * 2.75); ctx.stroke();
   }
+  // ---------- 3D view of the plate and the boat (three.js through demos/lib/vd3.js); the firework and the flat view stay 2D ----------
+  /* Plate: the 1.0 m × 0.6 m plate on a lab table, metres, z up, with the plate's corner (0, 0) at world (−0.5, −0.3). Each mass is a
+     painted steel cylinder as tall as it is wide, sized to scale from its mass (ρ = 7850 kg/m³, so d = (4m/πρ)^(1/3): 2.5 cm for
+     0.1 kg, 9.3 cm for 5 kg). Drag a mass across the plate; drag elsewhere to turn the view. Boat: a 4.0 m boat on a lake with the
+     person walking along it, a dock post as the fixed reference and buoys every metre (the flat view's scale). Sizes other than the
+     plate, the masses and the boat's length are scenery. Wheel or pinch to zoom, double click to reset. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.35, ph: 0.95, zoom: 1 }, ob: { th: -Math.PI / 2 + 0.3, ph: 1.36, zoom: 1 } };
+  const RHO = 7850, dia = (m) => Math.cbrt(4 * m / (Math.PI * RHO));
+  let g3 = null, Q3 = null;
+  const use3 = () => !!(G3.on && g3) && S.mode !== 'fire';
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function init3D() {
+    G3.tried = true;
+    const rd = VD3.renderer(); if (!rd) return false;
+    rd.shadowMap.enabled = true; rd.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = rd.domElement; el.setAttribute('aria-hidden', 'true'); Object.assign(el.style, { position: 'absolute', left: '0', top: '0' }); stage.insertBefore(el, can);
+    const M = (o) => new THREE.MeshStandardMaterial(o), mesh = (g, m, cast = true, recv = false) => { const x = new THREE.Mesh(g, m); x.castShadow = cast; x.receiveShadow = recv; return x; };
+    const upZ = (g) => g.rotateX(Math.PI / 2);
+    const light = (sc, ext) => { const hemi = new THREE.HemisphereLight(0xffffff, 0x8a8170, 0.6), sun = new THREE.DirectionalLight(0xffffff, 0.85); sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024);
+      Object.assign(sun.shadow.camera, { left: -ext, right: ext, top: ext, bottom: -ext, near: 0.1, far: ext * 8 }); sun.shadow.bias = -0.0004; sc.add(hemi, sun, sun.target); return { hemi, sun }; };
+    /* the plate scene */
+    const ps3 = new THREE.Scene(), pl = light(ps3, 0.9); pl.sun.position.set(-0.8, -1.2, 2.2);
+    const tableM = M({ roughness: 0.8 }), floorM = M({ roughness: 1 }), legM = M({ roughness: 0.5, metalness: 0.5 });
+    const table = mesh(new THREE.BoxGeometry(1.5, 1.0, 0.04), tableM, false, true); table.position.z = -0.026;
+    for (const [x, y] of [[-0.7, -0.45], [0.7, -0.45], [-0.7, 0.45], [0.7, 0.45]]) { const l = mesh(upZ(new THREE.CylinderGeometry(0.02, 0.02, 0.74, 10)), legM); l.position.set(x, y, -0.046 - 0.37); ps3.add(l); }
+    const floor = mesh(new THREE.PlaneGeometry(12, 12), floorM, false, true); floor.position.z = -0.79;
+    const gc = document.createElement('canvas'); gc.width = 1000; gc.height = 600; const gridT = new THREE.CanvasTexture(gc); gridT.anisotropy = 4;
+    const plateM = M({ roughness: 0.45, metalness: 0.35, map: gridT }), edgeM = M({ roughness: 0.45, metalness: 0.5 });
+    const plate = new THREE.Mesh(new THREE.BoxGeometry(1.0, 0.6, 0.006), [edgeM, edgeM, edgeM, edgeM, plateM, edgeM]); plate.position.z = -0.003; plate.receiveShadow = true; plate.castShadow = true;
+    const masses = [], massMs = [0, 1, 2, 3].map(() => M({ roughness: 0.4, metalness: 0.3 }));
+    for (let i = 0; i < 4; i++) { const c = mesh(upZ(new THREE.CylinderGeometry(0.5, 0.5, 1, 40)), massMs[i]); ps3.add(c); masses.push(c); }
+    const selM = new THREE.MeshBasicMaterial({ color: 0x17202b }), sel = new THREE.Mesh(new THREE.TorusGeometry(1, 0.06, 8, 48), selM); ps3.add(sel);
+    const cmM = new THREE.MeshBasicMaterial({ color: 0x17202b }), cm = new THREE.Group();
+    cm.add(new THREE.Mesh(new THREE.TorusGeometry(0.022, 0.003, 8, 32), cmM), new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.004, 0.002), cmM), new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.06, 0.002), cmM));
+    const pole = new THREE.Mesh(upZ(new THREE.CylinderGeometry(0.0025, 0.0025, 0.22, 8)), cmM); pole.position.z = 0.11; const ball = new THREE.Mesh(new THREE.SphereGeometry(0.009, 16, 12), cmM); ball.position.z = 0.22; cm.add(pole, ball);
+    const lineM = new THREE.LineDashedMaterial({ color: 0x17202b, dashSize: 0.012, gapSize: 0.01, transparent: true, opacity: 0.7 }), spokes = [];
+    for (let i = 0; i < 4; i++) { const g = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(1, 0, 0)]), ln = new THREE.Line(g, lineM); ps3.add(ln); spokes.push(ln); }
+    ps3.add(table, floor, plate, cm);
+    /* the lake scene */
+    const bs3 = new THREE.Scene(), bl = light(bs3, 7); bl.sun.position.set(-6, -9, 14);
+    const waterM = M({ roughness: 0.25, metalness: 0.15 }), water = mesh(new THREE.PlaneGeometry(400, 400), waterM, false, true);
+    const shoreM = M({ roughness: 1 }), treeM = M({ roughness: 1 }), shore = mesh(new THREE.BoxGeometry(400, 20, 1.2), shoreM, false, true); shore.position.set(0, 70, 0.3);
+    const trees = new THREE.Group(), rt = seeded(99); for (let i = 0; i < 70; i++) { const h = 6 + rt() * 7, t = mesh(upZ(new THREE.ConeGeometry(1.6 + rt(), h, 8)), treeM, false); t.position.set(-90 + rt() * 180, 62 + rt() * 12, 0.9 + h / 2); trees.add(t); }
+    const dockM = M({ roughness: 0.85 }), dock = new THREE.Group();
+    const deck = mesh(new THREE.BoxGeometry(9, 1.6, 0.12), dockM, true, true); deck.position.set(-3.4 - 4.5, 1.9, 0.45); dock.add(deck);
+    for (let x = -12; x <= -3.6; x += 1.4) for (const y of [1.2, 2.6]) { const p = mesh(upZ(new THREE.CylinderGeometry(0.08, 0.08, 1.4, 10)), dockM); p.position.set(x, y, -0.2); dock.add(p); }
+    const postM = M({ roughness: 0.6 }), post = mesh(upZ(new THREE.CylinderGeometry(0.1, 0.1, 2.6, 14)), postM); post.position.set(-3.6, 1.05, 0.6);
+    const buoyM = M({ roughness: 0.5, color: 0xe8e8e8 }), buoys = new THREE.Group();
+    for (let k = -4; k <= 4; k++) { const b = mesh(new THREE.SphereGeometry(k === 0 ? 0.11 : 0.08, 16, 12), buoyM); b.position.set(k, -1.5, 0.02); buoys.add(b); }
+    const rope = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 8, 6).rotateZ(Math.PI / 2), M({ color: 0x9a8f7a, roughness: 1 })); rope.position.set(0, -1.5, 0.02); buoys.add(rope);
+    /* the boat: a tapered hull (ends and keel pinched in), a floor and two benches; z = 0 at the waterline */
+    const hullM = M({ roughness: 0.7 }), rimM = M({ roughness: 0.6 }), inM = M({ roughness: 0.9 }), boat = new THREE.Group();
+    const taper = (g, k) => { const p = g.attributes.position; for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i), z = p.getZ(i), u = Math.abs(x) / (LB / 2), v = (z + 0.3) / 0.65;
+      p.setY(i, y * Math.max(0.04, (1 - Math.pow(u, 3) * 0.96)) * (0.45 + 0.55 * Math.min(1, Math.max(0, v))) * k); p.setZ(i, z + 0.18 * Math.pow(u, 2) * (z > 0 ? 1 : 0.4)); } g.computeVertexNormals(); return g; };
+    const hullG = taper(new THREE.BoxGeometry(LB, 1.3, 0.65, 40, 4, 6).translate(0, 0, 0.025), 1);
+    const hull = mesh(hullG, hullM, true, false), inner = mesh(taper(new THREE.BoxGeometry(LB - 0.16, 1.18, 0.5, 40, 4, 4).translate(0, 0, 0.15), 1), inM, false, true);
+    const floorB = mesh(new THREE.BoxGeometry(LB - 0.9, 0.7, 0.04), inM, false, true); floorB.position.z = -0.08;
+    for (const x of [-1.2, 1.2]) { const s = mesh(new THREE.BoxGeometry(0.28, 1.0, 0.04), rimM); s.position.set(x, 0, 0.2); boat.add(s); }
+    boat.add(hull, inner, floorB);
+    /* the person: legs that swing while walking, body, arms and head, 1.75 m tall */
+    const skinM = M({ roughness: 0.7, color: 0xd9a98a }), shirtM = M({ roughness: 0.8 }), pantsM = M({ roughness: 0.8, color: 0x3a4250 }), person = new THREE.Group(), legs = [];
+    for (const y of [-0.1, 0.1]) { const lg = new THREE.Group(), l = mesh(upZ(new THREE.CylinderGeometry(0.07, 0.06, 0.85, 10)), pantsM); l.position.z = -0.425; lg.add(l); lg.position.set(0, y, 0.85); person.add(lg); legs.push(lg); }
+    const torso = mesh(upZ(new THREE.CylinderGeometry(0.17, 0.15, 0.62, 14)), shirtM); torso.position.z = 1.16;
+    const head = mesh(new THREE.SphereGeometry(0.12, 16, 12), skinM); head.position.z = 1.62;
+    for (const y of [-0.22, 0.22]) { const a = mesh(upZ(new THREE.CylinderGeometry(0.045, 0.04, 0.6, 8)), shirtM); a.position.set(0, y, 1.13); person.add(a); }
+    person.add(torso, head); person.position.z = -0.06;
+    const bcmM = new THREE.MeshBasicMaterial({ color: 0x17202b }), bcm = new THREE.Group(), bpole = new THREE.Mesh(upZ(new THREE.CylinderGeometry(0.02, 0.02, 2.6, 8)), bcmM); bpole.position.z = 1.3;
+    const bball = new THREE.Mesh(new THREE.SphereGeometry(0.09, 16, 12), bcmM); bball.position.z = 2.6; bcm.add(bpole, bball);
+    bs3.add(water, shore, trees, dock, post, buoys, boat, person, bcm);
+    const cam = new THREE.PerspectiveCamera(32, 1, 0.02, 600);
+    g3 = { rd, el, cam, ps3, pl, bs3, bl, tableM, floorM, gc, gridT, plateM, edgeM, masses, massMs, sel, selM, cm, cmM, lineM, spokes, waterM, shoreM, treeM, dockM, postM, hullM, rimM, inM, boat, person, legs, shirtM, bcm, bcmM };
+    can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || S.mode !== 'plate' || hit3(e) >= 0, phMin: 0.2, phMax: 1.5, zMin: 0.5, zMax: 3, keys: false });
+    VD3.orbit(can, G3.ob, () => { if (use3()) draw(); }, { grab: () => !use3() || S.mode !== 'boat', zMin: 0.5, zMax: 3, keys: false });
+    return true;
+  }
+  /* the mass under the pointer in the 3D plate view, or −1 */
+  function hit3(e) {
+    if (!Q3) return -1; const r = can.getBoundingClientRect(), px = e.clientX - r.left, py = e.clientY - r.top;
+    let best = -1, bd = 30 * ps(); S.ms.forEach((a, i) => { const q = Q3(a.x - 0.5, a.y - 0.3, dia(a.m) / 2), d = Math.hypot(q[0] - px, q[1] - py); if (d < bd) { bd = d; best = i; } }); return best;
+  }
+  /* where the pointer meets the plate's top, in plate coordinates (m) */
+  function plateAt(e) {
+    const r = can.getBoundingClientRect(), v = new THREE.Vector2((e.clientX - r.left) / W * 2 - 1, -((e.clientY - r.top) / Hh * 2 - 1)), rc = new THREE.Raycaster(); rc.setFromCamera(v, g3.cam);
+    const p = new THREE.Vector3(); return rc.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), p) ? { x: p.x + 0.5, y: p.y + 0.3 } : null;
+  }
+  function paintGrid(dk) {
+    const c = g3.gc.getContext('2d'), w = 1000, h = 600; const gr = c.createLinearGradient(0, 0, w, h); gr.addColorStop(0, T.plateHi); gr.addColorStop(1, T.plate); c.fillStyle = gr; c.fillRect(0, 0, w, h);
+    c.strokeStyle = T.brush; c.lineWidth = 2; c.beginPath(); for (const [u, v, l] of BRUSH) { c.moveTo(u * w * (1 - l), v * h); c.lineTo((u * (1 - l) + l) * w, v * h); } c.stroke();
+    c.strokeStyle = T.plateGrid; c.lineWidth = 2; c.beginPath(); for (let i = 1; i < 10; i++) { c.moveTo(i * 100, 0); c.lineTo(i * 100, h); } for (let j = 1; j < 6; j++) { c.moveTo(0, j * 100); c.lineTo(w, j * 100); } c.stroke();
+    c.fillStyle = T.muted; c.font = '600 22px sans-serif'; c.textBaseline = 'bottom'; c.textAlign = 'left'; for (let i = 1; i < 10; i++) c.fillText(`0.${i}`, i * 100 + 4, h - 4); c.textBaseline = 'top'; for (let j = 1; j < 6; j++) c.fillText(`0.${j}`, 4, h - j * 100 + 4);
+    g3.gridT.needsUpdate = true;
+  }
+  function theme3() {
+    const g = g3, dk = VD3.dark();
+    g.ps3.background = col3(T.canvas, '#ffffff'); g.tableM.color = col3(dk ? '#3a3229' : '#e6dccb', '#e6dccb'); g.floorM.color = col3(dk ? '#161b22' : '#e4e7eb', '#e4e7eb'); g.edgeM.color = col3(dk ? '#56606e' : '#aab4c1', '#aab4c1');
+    COLS().forEach((c, i) => { g.massMs[i].color = col3(c, '#2b60b5'); }); g.selM.color = g.cmM.color = col3(T.ink, '#17202b'); g.lineM.color = col3(T.cm, '#17202b'); paintGrid(dk);
+    g.bs3.background = col3(T.skyBottom, '#f3f6fa'); g.bs3.fog = new THREE.Fog(col3(T.skyBottom, '#f3f6fa'), 40, 160); g.waterM.color = col3(T.water, '#9cc3e6'); g.shoreM.color = col3(T.shore, '#bccbb2'); g.treeM.color = col3(T.tree, '#a2b897');
+    g.dockM.color = col3(T.dock, '#ab8f6a'); g.postM.color = col3(T.muted, '#6b7686'); g.hullM.color = col3(T.boat, '#8a6d4a'); g.rimM.color = col3(T.hullRim, '#6b5236'); g.inM.color = col3(T.boat, '#8a6d4a').multiplyScalar(0.8);
+    g.shirtM.color = col3(T.m1, '#2b60b5'); g.bcmM.color = col3(T.cm, '#17202b');
+    for (const L of [g.pl, g.bl]) { L.hemi.intensity = dk ? 0.5 : 0.62; L.sun.intensity = dk ? 0.7 : 0.85; }
+  }
+  /* renders the 3D picture over the whole stage and draws the labels on the 2D canvas */
+  function draw3D() {
+    const g = g3, dk = VD3.dark(), p = ps(), W0 = Math.max(1, Math.round(W)), H0 = Math.max(1, Math.round(Hh));
+    g.el.hidden = false; Object.assign(g.el.style, { width: W0 + 'px', height: H0 + 'px' });
+    if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.m1, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    ctx.clearRect(0, 0, W, Hh);
+    const tv = Math.tan(g.cam.fov * Math.PI / 360), v = new THREE.Vector3(), Q = (x, y, z) => { v.set(x, y, z).project(g.cam); return [(v.x + 1) / 2 * W0, (1 - v.y) / 2 * H0]; };
+    const label = (q, t, col, bold) => { ctx.fillStyle = col; ctx.font = `${bold ? 700 : 400} ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(t, q[0], q[1]); };
+    if (S.mode === 'plate') {
+      S.ms.forEach((a, i) => { const d = dia(a.m), c = g.masses[i]; c.visible = true; c.scale.set(d, d, d); c.position.set(a.x - 0.5, a.y - 0.3, d / 2); });
+      for (let i = S.ms.length; i < 4; i++) g.masses[i].visible = false;
+      const sa = S.ms[S.sel]; g.sel.visible = !!sa; if (sa) { const r = dia(sa.m) / 2 + 0.008; g.sel.scale.set(r, r, r); g.sel.position.set(sa.x - 0.5, sa.y - 0.3, 0.001); }
+      const C = centre(S.ms); g.cm.visible = !S.blind; g.cm.position.set(C.x - 0.5, C.y - 0.3, 0.001);
+      g.spokes.forEach((ln, i) => { const a = S.ms[i]; ln.visible = !S.blind && !!a; if (!a) return; const pa = ln.geometry.attributes.position; pa.setXYZ(0, C.x - 0.5, C.y - 0.3, 0.002); pa.setXYZ(1, a.x - 0.5, a.y - 0.3, 0.002); pa.needsUpdate = true; ln.computeLineDistances(); });
+      VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0.03, 0), Math.max(0.64 / (tv * g.cam.aspect), 0.46 / tv));
+      g.ps3.updateMatrixWorld(); g.rd.render(g.ps3, g.cam); Q3 = Q;
+      S.ms.forEach((a, i) => { const q = Q(a.x - 0.5, a.y - 0.3, dia(a.m) + 0.012); label(q, `${a.m.toFixed(1)} kg`, T.ink, i === S.sel); });
+      if (!S.blind) { const q = Q(C.x - 0.5, C.y - 0.3, 0.245); label(q, 'centre of mass', T.cm, true); }
+      ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('drag a mass to move it, drag the table to turn', W - 10 * p, Hh - 8 * p);
+      return;
+    }
+    Q3 = null;
+    const b = boatState(), walking = S.t > 0 && S.t < LB / WALK, ph = b.s / 0.38 * Math.PI;
+    g.boat.position.set(b.xb, 0, reduce ? 0 : 0.015 * Math.sin(amb() * 1.3)); g.person.position.x = b.xp;
+    g.legs.forEach((l, i) => { l.rotation.y = walking && !reduce ? (i ? 1 : -1) * 0.38 * Math.sin(ph) : 0; });
+    const cmx = (S.pm * b.xp + S.bm * b.xb) / (S.pm + S.bm); g.bcm.visible = !S.blind; g.bcm.position.set(cmx, 0, 0);
+    VD3.place(g.cam, G3.ob, new THREE.Vector3(-0.2, 0, 0.6), Math.max(4.9 / (tv * g.cam.aspect), 2.4 / tv));
+    g.bs3.updateMatrixWorld(); g.rd.render(g.bs3, g.cam);
+    label(Q(b.xp, 0, 1.85), `person ${S.pm} kg`, T.ink, true); label(Q(b.xb + 1.2, -0.7, 0.55), `boat ${S.bm} kg`, T.ink, true);
+    label(Q(-3.6, 1.05, 1.98), 'post', T.muted, false);
+    for (let k = -4; k <= 4; k++) { const q = Q(k, -1.5, -0.12); ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`${k} m`, q[0], q[1]); }
+    if (!S.blind) label(Q(cmx, 0, 2.78), 'centre of mass', T.cm, true);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('drag to turn, wheel to zoom', W - 10 * p, Hh - 8 * p);
+  }
+  function setView(v) {
+    G3.want = v === '3d';
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { G3.want = false; v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setView(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; can.style.cursor = use3() ? 'grab' : ''; if (g3 && !use3()) g3.el.hidden = true;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    draw();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
   function draw() {
     if (!T || !W) return;
+    if (g3 && !use3()) g3.el.hidden = true;
+    if (use3()) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); draw3D(); return; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh); const p = ps();
     if (S.mode === 'plate') {
       const B = plateBox();
@@ -365,7 +517,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { setup: 'boat', masses: `person ${S.pm} kg, boat ${S.bm} kg`, M_kg: M, f: f(S.pm / M, 4), t_s: f(S.t, 2), x_cm_m: mm((S.pm * b.xp + S.bm * b.xb) / M), y_cm_m: '',
       x_whole_m: '', y_whole_m: '', walked_m: f(b.s, 2), boat_m: mm(b.xb) };
   };
-  window.__cm = { S, upd, FW };   /* for the worksheet key's capture script */
+  window.__cm = { S, upd, FW, q3: (a) => Q3 && Q3(a.x - 0.5, a.y - 0.3, dia(a.m) / 2) };   /* for the worksheet key's capture script */
   function init() { sync(); readouts(); }
   function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
   const retheme = () => { tokens(); draw(); };
@@ -374,6 +526,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.projector({ onChange: resize });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
+  /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
+  G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now();
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); if (!S.run && !reduce && S.mode !== 'plate') draw(); requestAnimationFrame(loop); })();   // idle redraw keeps the stars and ripples moving
