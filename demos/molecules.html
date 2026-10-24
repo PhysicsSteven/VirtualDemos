@@ -487,7 +487,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const brName = (dl) => (dl === 1 ? 'R' : dl === -1 ? 'P' : dl === 0 ? 'Q' : 'S');
   function drawLev() {
     back(ctx, W, H); const p = proj(), m = levMol(), model = S.lev.model, dv = S.lev.dv, Jm = 8, wide = W >= 640;
-    const x0 = 70 * p, x1 = wide ? W - 190 * p : W - 20 * p, top = 34 * p, bot = H - 26 * p;
+    const spin = W >= 720 && H >= 300, x0 = 70 * p, x1 = spin ? W - 350 * p : wide ? W - 190 * p : W - 20 * p, top = 34 * p, bot = H - 26 * p;
     const stacks = dv === 1 ? [0, 1] : [0], gap = 34 * p, sh = (bot - top - gap * (stacks.length - 1)) / stacks.length;
     const Er = (v, J) => term(m, v, J, model) - term(m, v, 0, model), Emax = Er(0, Jm);
     const yOf = (v, J) => { const k = stacks.indexOf(v); const yb = bot - k * (sh + gap); return yb - Er(v, J) / Emax * (sh - 12 * p); };
@@ -512,8 +512,36 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (wide) { const mx = W - 150 * p, mw = 124 * p, mh = 28 * p;
       lcdBox(mx, 40 * p, mw, mh, tr.allowed ? `${f(tr.nu, 2)}` : 'forbidden', 'photon, cm⁻¹');
       lcdBox(mx, 106 * p, mw, mh, tr.allowed ? `${f(tr.eV * 1000, 2)} meV` : '—', 'photon energy');
-      lcdBox(mx, 172 * p, mw, mh, tr.allowed ? (dv === 1 ? `${f(tr.um, 3)} μm` : `${f(1e4 / tr.nu, 1)} μm`) : '—', 'wavelength'); }
+      lcdBox(mx, 172 * p, mw, mh, tr.allowed ? (dv === 1 ? `${f(tr.um, 3)} μm` : `${f(1e4 / tr.nu, 1)} μm`) : '—', 'wavelength');
+      if (spin) spinBox(m, W - 336 * p, 26 * p, 170 * p, H - 40 * p); }
     MAP.pane = null;
+  }
+  /* The molecule in its lower level, n = 0 and the chosen l, in the classical picture. It turns about its center of mass at
+     ω = ħ√(l(l + 1))/I with I from B₀, and the bond swings between the classical turning points of n = 0 in the harmonic
+     estimate, r_e ± √(ħ/μω_vib). The turn is slowed so l = 1 takes 4 s; the vibration is slowed much further, to 1.5 cycles a
+     second, and the panel states how many vibrations really happen in one turn. The bond length is to scale, the atoms are not. */
+  let spinT0 = 0, spinRaf = 0;
+  function spinBox(m, x, y, w, h) {
+    const p = proj(), l = S.lev.l, I = IfromB(Bv(m, 0)), wRot = HBAR * Math.sqrt(l * (l + 1)) / I, Trot1 = 2 * Math.PI * I / (HBAR * Math.SQRT2);
+    const wVib = 2 * Math.PI * C_MS * 100 * nuVib(m), A = Math.sqrt(HBAR / (mu(m) * U_KG * wVib)) * 1e9, M = m.m1 + m.m2;
+    const t = (performance.now() - spinT0) / 1000, slow = 4 / Trot1, ang = l ? wRot * slow * t : 0, r = m.re + A * Math.sin(2 * Math.PI * 1.5 * t);
+    if (VG) VG.box(ctx, x, y, w, h, { color: dark() ? '#1d2531' : '#2b3644', r: 8 }); else { ctx.fillStyle = '#2b3644'; ctx.fillRect(x, y, w, h); }
+    const cx = x + w / 2, cy = y + 24 * p + (h - 70 * p) / 2, sc = (Math.min(w, h - 70 * p) / 2 - 14 * p) / ((m.re + A) * Math.max(m.m1, m.m2) / M);
+    const ca = Math.cos(ang), sa = Math.sin(ang), dA = r * m.m2 / M * sc, dB = r * m.m1 / M * sc;
+    const xa = cx - dA * ca, ya = cy - dA * sa, xb = cx + dB * ca, yb = cy + dB * sa;
+    ctx.save(); ctx.strokeStyle = 'rgba(255,255,255,0.18)'; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.arc(cx, cy, m.re * Math.max(m.m1, m.m2) / M * sc, 0, 7); ctx.stroke(); ctx.setLineDash([]);
+    ctx.strokeStyle = 'rgba(255,255,255,0.7)'; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(xa, ya); ctx.lineTo(xb, yb); ctx.stroke(); ctx.restore();
+    const cl = (el) => ({ H: '#d8dde4', C: '#4a4f57', N: '#3d66c9', O: '#d2452b', F: '#7cc24b', Cl: '#3f9a54' }[el]), rr = (el) => (el === 'H' ? 6 : 10) * p;
+    const ball = (bx, by, el) => { if (VG) VG.ball(ctx, bx, by, rr(el), cl(el)); else dot(ctx, bx, by, rr(el), cl(el)); };
+    ball(xa, ya, m.a); ball(xb, yb, m.b); dot(ctx, cx, cy, 2 * p, '#f2c14e');
+    const wt = { c: '#e8edf3', a: 'center', s: 8.5 };
+    lab(ctx, `${m.name} in n = 0, l = ${l}`, cx, y + 12 * p, Object.assign({}, wt, { w: 700, s: 9 }));
+    const N = l ? nuVib(m) * C_MS * 100 * 2 * Math.PI / wRot : 0, by0 = y + h - 40 * p;
+    const ex = Math.floor(Math.log10(slow)), sup = (n) => [...String(n)].map((c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]).join('');
+    lab(ctx, l ? `turn slowed ${f(slow / 10 ** ex, 1)} × 10${sup(ex)} times` : 'l = 0: not turning', cx, by0, wt);
+    lab(ctx, l ? `really ${f(N, 0)} vibrations a turn` : 'the bond still vibrates', cx, by0 + 12 * p, wt);
+    lab(ctx, 'bond to scale, atoms not', cx, by0 + 24 * p, Object.assign({}, wt, { c: '#a9b4c2' }));
+    if (!spinRaf) spinRaf = requestAnimationFrame(() => { spinRaf = 0; if (S.view === 'lev') redraw(); });
   }
   /* the lines of the chosen kind, with Boltzmann weights at 300 K for their heights */
   function levLines() {
