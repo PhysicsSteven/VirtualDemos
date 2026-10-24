@@ -85,7 +85,7 @@ OVERRIDES = {
     "huygens": {"wait": 2500, "js": "document.querySelector('[data-p=refract]').click()"},
     "the-eye": {"wait": 2000, "js": "document.querySelector('[data-p=myopiaFix]').click()"},
     "resolution": {"wait": 800, "js": "document.querySelector('[data-p=eye]').click(); document.getElementById('gainToggle').click();"},
-    "electrostatics-at-work": {"wait": 3500, "js": "document.getElementById('motor').click()"},
+    "electrostatics-at-work": {"wait": 3500, "js": "document.getElementById('wandUp').click(); document.getElementById('motor').click()"},
     "eddy-currents": {"wait": 3500, "js": "document.getElementById('drop').click();"},
     "wire-force": {"wait": 2500, "js": "document.querySelector('#presets button[data-p=\"motor\"]').click(); document.getElementById('spin').click();"},
     "induction": {"wait": 2500, "js": "document.getElementById('next').click(); window.__ind.finish();"},

@@ -38,6 +38,13 @@
 .lab { font-size: 0.88rem; }
 .dimseg { position: absolute; top: 10px; right: 10px; z-index: 2; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
 .dimseg[hidden] { display: none; }
+.wandcard { position: absolute; left: 10px; top: 10px; z-index: 2; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; background: color-mix(in srgb, var(--canvas) 88%, transparent); border: 1px solid var(--line); border-radius: 8px; padding: 5px 7px; font-size: 0.84rem; }
+.wandcard[hidden] { display: none; }
+@media (max-width: 640px) { .wandcard { font-size: 0.8rem; padding: 4px 5px; gap: 4px; } .wandcard span { display: none; } .wandcard button { padding: 3px 7px; } }
+.wandcard span { font-weight: 700; color: var(--muted); font-size: 0.76rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 0 2px; }
+.wandcard button { font: inherit; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 9px; cursor: pointer; }
+.wandcard button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.wandcard button:disabled { opacity: 0.45; cursor: default; }
 .dimseg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
 .dimseg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
@@ -60,9 +67,9 @@ table.rows input:focus { border-color: var(--accent); }
 .chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 @media (max-width: 820px) { .chips button { min-height: 36px; } }
-:root { --dome: #9aa6b4; --dome-hi: #f4f7fa; --belt: #3a3f47; --spark: #6c4fd8; --ink-drop: #2350a8; --plate-hi: #c23f2c; --plate-lo: #5a6575; --dust: #8a6a44; --smoke: #6e6a64; --paper: #ffffff; --wood: #c9a678; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --dome: #6d7887; --dome-hi: #c9d2dc; --belt: #b8c0cc; --spark: #b8a6ff; --ink-drop: #8fb6ff; --plate-hi: #ff7660; --plate-lo: #96a2b2; --dust: #c39a66; --smoke: #a39d95; --paper: #e8edf3; --wood: #8a6a44; } }
-:root[data-theme="dark"] { --dome: #6d7887; --dome-hi: #c9d2dc; --belt: #b8c0cc; --spark: #b8a6ff; --ink-drop: #8fb6ff; --plate-hi: #ff7660; --plate-lo: #96a2b2; --dust: #c39a66; --smoke: #a39d95; --paper: #e8edf3; --wood: #8a6a44; }
+:root { --lead: #2f7d43; --dome: #9aa6b4; --dome-hi: #f4f7fa; --belt: #3a3f47; --spark: #6c4fd8; --ink-drop: #2350a8; --plate-hi: #c23f2c; --plate-lo: #5a6575; --dust: #8a6a44; --smoke: #6e6a64; --paper: #ffffff; --wood: #c9a678; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --lead: #6fbf83; --dome: #6d7887; --dome-hi: #c9d2dc; --belt: #b8c0cc; --spark: #b8a6ff; --ink-drop: #8fb6ff; --plate-hi: #ff7660; --plate-lo: #96a2b2; --dust: #c39a66; --smoke: #a39d95; --paper: #e8edf3; --wood: #8a6a44; } }
+:root[data-theme="dark"] { --lead: #6fbf83; --dome: #6d7887; --dome-hi: #c9d2dc; --belt: #b8c0cc; --spark: #b8a6ff; --ink-drop: #8fb6ff; --plate-hi: #ff7660; --plate-lo: #96a2b2; --dust: #c39a66; --smoke: #a39d95; --paper: #e8edf3; --wood: #8a6a44; }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -86,6 +93,7 @@ table.rows input:focus { border-color: var(--accent); }
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="Electrostatics at Work"></canvas>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
+      <div class="wandcard" id="wandCard" data-for="vdg" role="group" aria-label="Grounded wand"><span>Wand</span><button type="button" id="wandUp" aria-pressed="false" title="Take the grounded wand in your hand and drag its brass ball toward the dome">Pick up the wand</button><button type="button" id="wandAway" title="Hang the wand up far away, out of the picture" disabled>Hang it up</button></div>
       <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
     </div>
 
@@ -191,6 +199,42 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const qMax = (R, Eb = E_BREAK) => 4 * Math.PI * EPS0 * R * R * Eb;
   const timeToSpark = (R, I, Eb = E_BREAK) => qMax(R, Eb) / I;        /* charging from zero at constant belt current */
 
+  /* The grounded wand held near the dome. The dome (radius R, centre at s = 0, isolated, charge Q) and the wand's brass ball
+     (radius a, centre at s = D on the line of centres, joined to earth) are both conducting spheres, so the field outside them is
+     exactly that of Kelvin image charges on the line of centres. Start from the dome at 1 V: 4πε₀R at its centre; each charge
+     in the dome has an image −qa/(D − s) at D − a²/(D − s) in the ball (ball back to 0 V), and each charge in the ball an image
+     −qR/s at R²/s in the dome (dome back to 1 V). The sums are the capacitance coefficients c₁₁ (dome) and c₂₁ (ball), so with
+     charge Q the dome sits at V = Q/c₁₁ and the ball holds c₂₁V. Everything scales with Q, so one solve per position gives the
+     charges, the voltage and the surface fields per coulomb. The wand's rod, handle and lead, the column, the base and the floor
+     are left out, as before. */
+  const WAND_A = 0.03;
+  function vdgWand(R, D, a = WAND_A) {
+    const k4 = 4 * Math.PI * EPS0, dome = [[k4 * R, 0]], ball = [];
+    let q = k4 * R, s = 0;
+    for (let i = 0; i < 100000; i++) {
+      const qb = -q * a / (D - s), sb = D - a * a / (D - s); ball.push([qb, sb]);
+      q = -qb * R / sb; s = R * R / sb; dome.push([q, s]);
+      if (Math.abs(q) < 1e-13 * k4 * R) break;
+    }
+    let c11 = 0, c21 = 0; for (const x of dome) c11 += x[0]; for (const x of ball) c21 += x[0];
+    const ch = dome.concat(ball).map(([qq, ss]) => [qq / c11, ss]);   /* charges per coulomb on the dome */
+    const dS = surfaceField(ch, 0, R), bS = surfaceField(ch, D, a, true);
+    return { R, D, a, ch, C: c11, V1: 1 / c11, qb1: c21 / c11, eDome1: dS.peak, thDome: dS.th, eBall1: bS.peak, thBall: bS.th,
+      qSpark: E_BREAK / Math.max(dS.peak, bS.peak), sparkOn: bS.peak > dS.peak ? 'ball' : 'dome' };
+  }
+  /* field (E along the line, E across it) at a point s along the line and rho off it, from charges [q, s] on the line */
+  function lineField(ch, s, rho) { let es = 0, er = 0; for (const [q, si] of ch) { const ds = s - si, r2 = ds * ds + rho * rho, f = KC * q / (r2 * Math.sqrt(r2)); es += f * ds; er += f * rho; } return [es, er]; }
+  /* outward normal field on a sphere (centre c, radius r) at angle th from the line of centres; th = 0 faces the ball for the dome,
+     and faces the dome for the ball (back), so both are measured from the gap. σ = ε₀ × this. */
+  function normalField(ch, c, r, th, back) { const sg = back ? -1 : 1, s = c + sg * r * Math.cos(th), rho = r * Math.sin(th), [es, er] = lineField(ch, s, rho); return es * sg * Math.cos(th) + er * Math.sin(th); }
+  /* the largest |normal field| on a sphere: every 1.5° from the gap round to the back, then narrowed down to 0.001° round the best */
+  function surfaceField(ch, c, r, back, n = 120) {
+    const f = (t) => Math.abs(normalField(ch, c, r, Math.min(Math.PI, Math.max(0, t)), back)); let peak = 0, th = 0;
+    for (let i = 0; i <= n; i++) { const t = i / n * Math.PI, e = f(t); if (e > peak) { peak = e; th = t; } }
+    let lo = th - Math.PI / n, hi = th + Math.PI / n; while (hi - lo > 2e-5) { const m1 = lo + (hi - lo) / 3, m2 = hi - (hi - lo) / 3; if (f(m1) < f(m2)) lo = m1; else hi = m2; }
+    const tt = Math.min(Math.PI, Math.max(0, (lo + hi) / 2)), e = f(tt); return e > peak ? { peak: e, th: tt } : { peak, th };
+  }
+
   /* Ink jet: a drop of diameter d (m), charge q (C), speed v (m/s) along x passes plates of length L, gap gap, voltage V,
      then drifts a distance D to the paper. Field uniform between the plates and zero outside; gravity included; air drag left out. */
   const INK = { rho: 1000, L: 0.010, gap: 0.0020, D: 0.015, gutterBack: 0.003, gutterTop: 0.00015 };
@@ -236,7 +280,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
-    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'accent', 'pos', 'neg', 'surface', 'relief', 'dome', 'dome-hi', 'belt', 'spark', 'ink-drop', 'plate-hi', 'plate-lo', 'dust', 'smoke', 'paper', 'wood', 'equi', 'field']) T[k.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + k);
+    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'accent', 'pos', 'neg', 'surface', 'relief', 'dome', 'dome-hi', 'belt', 'spark', 'ink-drop', 'plate-hi', 'plate-lo', 'dust', 'smoke', 'paper', 'wood', 'equi', 'field', 'lead']) T[k.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + k);
     T.mono = g('--font-mono'); T.ui = g('--font-ui'); }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
@@ -256,7 +300,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     esp: 'Blind hides the particle charge, the drift speed, the efficiency and its curve. The counters stay, so the efficiency can be measured.'
   };
   const MODELS = {
-    vdg: 'Model: the dome is an isolated conducting sphere far from everything else, so C = 4πε₀R, V = kQ/R and the surface field is V/R. The belt delivers a constant current and nothing leaks away until the surface field reaches 3.0 MV/m (dry air at 1 atm, approximate; damp air, dust and a rough surface spark sooner). A spark is drawn as emptying the dome completely; a real one leaves a little charge. The column, base and wand are not part of the calculation.',
+    vdg: 'Model: the dome is an isolated conducting sphere far from everything else, so C = 4πε₀R, V = kQ/R and the surface field is V/R. The belt delivers a constant current and nothing leaks away until the surface field reaches 3.0 MV/m (dry air at 1 atm, approximate; damp air, dust and a rough surface spark sooner). A spark is drawn as emptying the dome completely; a real one leaves a little charge. The column and base are not part of the calculation. Hung up, the wand is far away and left out. Picked up, its brass ball (radius 3.0 cm, joined to earth) is part of the calculation wherever you drag it: the dome and the ball are both conducting spheres, so the field outside them is exactly that of Kelvin image charges on the line between their centres (worked out afresh at every position; the ball\'s rod, handle and lead are left out). The ball takes on an opposite charge, the field in the gap grows, and air breaks down where the field first reaches 3.0 MV/m, on the dome or on the small ball. That is the textbook rule and a good guide for a gap no wider than about the ball\'s radius; across a wider gap a real discharge starts as a faint glow (corona) at the ball and the voltage can climb further before a spark jumps, so the breakdown voltage shown is then a lower limit. A gap under 0.5 mm counts as touching: the dome is grounded through the wand. Blue dots in the lead are electrons, each 1/200 of the dome\'s Q_max, moving far slower than real ones.',
     ink: 'Model: a uniform field V/gap between the plates and none outside them (no fringing); the drop is a water sphere of density 1000 kg/m³ moving at constant horizontal speed. Gravity is included. Air drag is left out: for a single drop of 60 µm in still air, Stokes drag would slow it by about a tenth over this path (an underestimate at these speeds); real printers make up for it in their charge tables. The drop charge is limited well below the Rayleigh limit, where the drop would tear itself apart. Drawn to scale, in slow motion. The faint drops flying into the gutter are the uncharged jet that runs between printed drops; real drops follow each other much more closely.',
     esp: 'Model: each particle carries the saturation charge of field charging, q = 4πε₀a²E·3κ/(κ + 2) (Pauthenier), with charging and collecting field equal (a single stage unit). Diffusion charging is left out, so the charge and the efficiency of particles below about 0.5 µm are underestimated. Drift speed w = qE·Cc/(3πηd), Stokes drag with the Cunningham slip correction (air at 20 °C: η = 1.81 × 10⁻⁵ Pa·s, mean free path 0.066 µm). Efficiency by the Deutsch equation η = 1 − exp(−wL/(us)), which assumes turbulent mixing keeps the dust spread evenly across the channel. The animation catches each particle with the Deutsch probability w·Δt/s in each time step and then draws it drifting to the nearer plate. Gravity settling is left out. The channel is not drawn to scale. The grey haze between the plates fades as exp(−wx/(us)), the concentration the Deutsch equation gives along the channel; the small dots streaming from the wire are ions, drawn only to show where the charging happens.'
   };
@@ -276,6 +320,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function sync() {
     $('sR').value = S.R; $('oR').textContent = `${S.R} cm`; $('sI').value = S.I; $('oI').textContent = `${S.I.toFixed(1)} µA`;
     $('motor').textContent = S.motor ? 'Stop motor' : 'Start motor'; card.away(S.motor);
+    $('wandUp').setAttribute('aria-pressed', String(S.wand.on)); $('wandUp').disabled = S.wand.on; $('wandAway').disabled = !S.wand.on;
     $('sQ').value = S.q; $('oQ').textContent = S.blind ? 'hidden' : `${S.q.toFixed(2)} pC`;
     $('sPV').value = S.PV; $('oPV').textContent = `${S.PV} V`; $('sD').value = S.d; $('oD').textContent = `${S.d} µm`; $('sV').value = S.v; $('oV').textContent = `${S.v} m/s`;
     const dp = 10 ** S.lgDp; $('sDp').value = S.lgDp; $('oDp').textContent = `${+dp.toPrecision(2)} µm`;
@@ -284,24 +329,127 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function upd() { sync(); readouts(); draw(); }
   const bind = (id, k, f) => $(id).addEventListener('input', (e) => { S[k] = +e.target.value; if (f) f(); upd(); });
-  bind('sR', 'R', () => { /* a bigger dome holding the same charge sits at a lower voltage; keep Q but clamp below breakdown */ S.Q = Math.min(S.Q, qMax(S.R / 100) * 0.999); S.hist = []; });
+  bind('sR', 'R', () => { /* a bigger dome holding the same charge sits at a lower voltage; keep Q but clamp below breakdown */ S.Q = Math.min(S.Q, qMax(S.R / 100) * 0.999); S.hist = []; if (S.wand.on) wandFix(); });
   bind('sI', 'I'); bind('sQ', 'q'); bind('sPV', 'PV'); bind('sD', 'd'); bind('sV', 'v');
   const espReset = () => { S.nIn = S.nOut = S.nCaught = 0; S.parts = []; S.dust = []; S.pend = []; };
   bind('sDp', 'lgDp', espReset); bind('sE', 'Ekv', espReset); bind('sU', 'u', espReset); bind('sL', 'L', espReset);
   $('ptype').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) { S.kappa = b.dataset.p === 'cond' ? Infinity : 4; espReset(); upd(); } });
   $('resetCount').addEventListener('click', () => { espReset(); upd(); });
   $('motor').addEventListener('click', () => { S.motor = !S.motor; if (S.motor) { S.sparks = 0; S.tRun = 0; } upd(); });   /* the spark count and the clock start with the motor */
-  $('ground').addEventListener('click', () => { if (S.Q > 0) { S.spark = 0.25; S.sparkKind = 'wand'; } S.Q = 0; upd(); });
+  $('ground').addEventListener('click', () => { if (S.Q > 0) { S.spark = 0.25; S.sparkKind = 'wand'; } const q = S.Q, w = wandNow(); S.Q = 0; if (w) settle(w, q); upd(); });
   $('fire').addEventListener('click', () => { launch(S.q * 1e-12, true); });
   $('print').addEventListener('click', printWord);
   $('clearPaper').addEventListener('click', () => { S.paper = []; S.col = 0; S.queue = []; draw(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; upd(); });
 
+  // ---------- the grounded wand, held by hand ----------
+  /* Hung up, the wand is far away and out of the calculation, so the dome is the isolated sphere of the model above. Picked up,
+     its brass ball can be dragged anywhere in the plane of the picture and vdgWand gives the exact charges with the ball where it
+     is. Coordinates in metres: x across from the column's axis, z up from the floor. */
+  const ZD = (R) => 0.10 + 0.80 + R * 0.82;   /* height of the dome's centre: base 0.10 m and column 0.80 m (as drawn) */
+  const TOUCH = 0.0005;                        /* a gap under 0.5 mm counts as touching: the dome is then grounded through the wand */
+  const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+  S.wand = { on: false, x: 0, z: 0 }; S.qBall = 0; S.dots = []; S.dotAcc = 0;
+  let wsol = null, wkey = '';
+  function wandFix() {
+    const R = S.R / 100, a = WAND_A, w = S.wand, zd = ZD(R);
+    w.x = clamp(w.x, -(R + 0.25), R + 0.6); w.z = clamp(w.z, 0.08, zd + R + 0.2);
+    if (w.z < 0.91 && Math.abs(w.x) < 0.045 + a) w.x = (w.x < 0 ? -1 : 1) * (0.045 + a);   /* the column and the base are solid */
+    if (w.z < 0.10 + a && Math.abs(w.x) < 0.18 + a) w.z = 0.10 + a;
+    const dz = w.z - zd, D = Math.hypot(w.x, dz); if (D < R + a) { const k = (R + a) / (D || 1); w.x = D ? w.x * k : R + a; w.z = D ? zd + dz * k : zd; }   /* and so is the dome: the ball stops touching it */
+  }
+  /* the wand where it is now: null when hung up; s is the exact solution, null while touching */
+  function wandNow() {
+    if (!S.wand.on || S.setup !== 'vdg') return null;
+    const R = S.R / 100, zd = ZD(R), dx = S.wand.x, dz = S.wand.z - zd, key = `${R}|${dx}|${dz}`;
+    if (key !== wkey) { const D = Math.hypot(dx, dz), gap = D - R - WAND_A, touching = gap < TOUCH; wkey = key; wsol = { R, zd, D, gap: Math.max(0, gap), touching, ux: dx / D, uz: dz / D, s: touching ? null : vdgWand(R, D), lines: null }; }
+    return wsol;
+  }
+  const qSparkNow = () => { const w = wandNow(); return !w ? qMax(S.R / 100) : w.touching ? Infinity : w.s.qSpark; };
+  const vNow = () => { const w = wandNow(); return !w ? sphereV(S.Q, S.R / 100) : w.touching ? 0 : S.Q * w.s.V1; };
+  /* charge through the earth lead in this frame: thru reached the ball by touching or by a spark, and the ball's own induced charge
+     changed from S.qBall. Each dot stands for 1/200 of the dome's breakdown charge Q_max, so a full spark sends 200 of them. */
+  const QDOT = () => qMax(S.R / 100) / 200;
+  function wandCharge(q0) {
+    const w = wandNow(); if (!w) { S.qBall = 0; S.dots = []; S.dotAcc = 0; return; }
+    let thru = 0;
+    if (w.touching) { thru = S.Q; S.Q = 0; }
+    else if (S.Q >= w.s.qSpark) { const left = q0 < w.s.qSpark ? S.Q - w.s.qSpark : 0; thru = S.Q - left; S.Q = left; S.spark = 0.25; S.sparkKind = 'gap'; S.sparks++; }   /* charged across the threshold by the belt: what came after the spark stays, as without the wand; brought in to a charged dome: the spark empties it */
+    settle(w, thru);
+  }
+  function settle(w, thru) {
+    const qb = w.s ? S.Q * w.s.qb1 : 0, down = thru - (qb - S.qBall); S.qBall = qb;   /* positive charge carried down to earth; the electrons go up */
+    S.dotAcc += down / QDOT();
+    let k = 0; while (S.dotAcc >= 1) { S.dotAcc -= 1; if (S.dots.length < 260) S.dots.push({ u: -0.012 * k++, dir: 1 }); }
+    k = 0; while (S.dotAcc <= -1) { S.dotAcc += 1; if (S.dots.length < 260) S.dots.push({ u: 1 + 0.012 * k++, dir: -1 }); }
+  }
+  function dotStep(dt) { for (const d of S.dots) d.u += d.dir * dt * (reduce ? 3 : 0.55); S.dots = S.dots.filter((d) => (d.dir > 0 ? d.u < 1 : d.u > 0)); }
+  function wandUp(on) {
+    S.wand.on = on; if (on) { const R = S.R / 100; S.wand.x = R + 0.35; S.wand.z = ZD(R) - R * 0.2; wandFix(); }   /* picked up where the old stand stood */
+    wkey = ''; wandCharge(S.Q); if (!on) { S.qBall = 0; S.dots = []; S.dotAcc = 0; }
+    upd();
+  }
+  $('wandUp').addEventListener('click', () => wandUp(true));
+  window.__vdg = { S, wandNow, wandMoved, hit: () => WH, qSpark: qSparkNow };   /* for the browser tests */
+  $('wandAway').addEventListener('click', () => wandUp(false));
+  /* drag the wand by its ball, rod or handle: in the flat picture straight from the screen, in 3D onto the plane y = 0 through the column */
+  let wdrag = null;
+  const stageXY = (e) => { const b = can.getBoundingClientRect(); return [e.clientX - b.left, e.clientY - b.top]; };
+  const segD = (x, y, x0, y0, x1, y1) => { const dx = x1 - x0, dy = y1 - y0, t = clamp(((x - x0) * dx + (y - y0) * dy) / (dx * dx + dy * dy || 1), 0, 1); return Math.hypot(x - x0 - t * dx, y - y0 - t * dy); };
+  function onWand(e) { if (S.setup !== 'vdg' || !S.wand.on || !WH) return false; const [x, y] = stageXY(e), p = ps(); return Math.hypot(x - WH.bx, y - WH.by) < WH.br + 12 * p || segD(x, y, ...WH.h) < 10 * p; }
+  function worldAt(e) {
+    const [x, y] = stageXY(e);
+    if (use3()) { if (!G3.h) return null; const rc = new THREE.Raycaster(), o = new THREE.Vector3(); rc.setFromCamera(new THREE.Vector2(x / W * 2 - 1, 1 - y / G3.h * 2), g3.cam); return rc.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), o) ? [o.x, o.z] : null; }
+    return FL ? [(x - FL.cx) / FL.scale, (FL.floorY - y) / FL.scale] : null;
+  }
+  function wandMoved() { if (!use3() && FL) { const m = 16 * ps(); S.wand.x = clamp(S.wand.x, (m - FL.cx) / FL.scale, (W - m - FL.cx) / FL.scale); } wandFix(); readouts(); draw(); }
+  can.addEventListener('pointerdown', (e) => { if (!onWand(e)) return; const q = worldAt(e); if (!q) return; wdrag = { id: e.pointerId, dx: S.wand.x - q[0], dz: S.wand.z - q[1] }; try { can.setPointerCapture(e.pointerId); } catch (_) {} can.style.cursor = 'grabbing'; e.preventDefault(); });
+  can.addEventListener('pointermove', (e) => {
+    if (!wdrag) { if (S.setup === 'vdg' && e.pointerType !== 'touch') can.style.cursor = onWand(e) ? 'move' : use3() ? 'grab' : ''; return; }
+    if (e.pointerId !== wdrag.id) return; const q = worldAt(e); if (!q) return; S.wand.x = q[0] + wdrag.dx; S.wand.z = q[1] + wdrag.dz; wandMoved(); });
+  const endDrag = (e) => { if (!wdrag || e.pointerId !== wdrag.id) return; wdrag = null; can.style.cursor = use3() ? 'grab' : ''; };
+  can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('touchmove', (e) => { if (wdrag) e.preventDefault(); }, { passive: false });
+  /* arrow keys move the wand 1 mm (Shift: 1 cm) when the picture has focus */
+  can.addEventListener('keydown', (e) => { if (S.setup !== 'vdg' || !S.wand.on) return; const st = e.shiftKey ? 0.01 : 0.001, m = { ArrowLeft: [-st, 0], ArrowRight: [st, 0], ArrowUp: [0, st], ArrowDown: [0, -st] }[e.key]; if (!m) return; S.wand.x += m[0]; S.wand.z += m[1]; wandMoved(); e.preventDefault(); });
+  /* the field lines in a half plane through the line of centres, as [s, rho] points from the dome to the ball (or out to 2.6R).
+     The field outside two conducting spheres is the same in every such half plane, so one tracing serves every direction round the line. */
+  function traceLine(w, th) {
+    const R = w.R, a = WAND_A, D = w.D, pts = []; let s = R * 1.001 * Math.cos(th), r = R * 1.001 * Math.sin(th);
+    const far = Math.max(2.6 * R, D + 3 * a);
+    for (let i = 0; i < 400; i++) {
+      pts.push([s, r]);
+      const dB = Math.hypot(s - D, r); if (dB <= a) break; const d0 = Math.hypot(s, r); if (d0 > far) break;
+      const h = Math.max(0.0012, 0.05 * Math.min(d0 - R + 0.02, dB - a + 0.004)), f = (ss, rr) => { const e = w.s ? lineField(w.s.ch, ss, rr) : [ss, rr]; const m = Math.hypot(e[0], e[1]) || 1; return [e[0] / m, e[1] / m]; };
+      const k1 = f(s, r), k2 = f(s + k1[0] * h / 2, Math.abs(r + k1[1] * h / 2)); s += k2[0] * h; r = Math.abs(r + k2[1] * h);
+      if (Math.hypot(s - D, r) < a) { const m = Math.hypot(s - D, r) || 1; pts.push([D + (s - D) / m * a, r / m * a]); break; }
+    }
+    return pts;
+  }
+  /* angles round a sphere spaced by its surface charge: cum(f) gives the angle th from the gap below which a fraction f of the charge
+     lies; slice: true spaces them along the outline of the flat picture (∝ σ dθ), otherwise over the surface (∝ σ sinθ dθ) */
+  function chargeAngles(w, ball, slice) {
+    const n = 180, c = ball ? w.D : 0, r = ball ? WAND_A : w.R, F = [0];
+    for (let i = 1; i <= n; i++) { const t0 = (i - 1) / n * Math.PI, t1 = i / n * Math.PI, g = (t) => Math.abs(w.s ? normalField(w.s.ch, c, r, t, ball) : 1) * (slice ? 1 : Math.sin(t)); F.push(F[i - 1] + (g(t0) + g(t1)) / 2); }
+    return (f) => { const v = f * F[n]; let i = 1; while (i < n && F[i] < v) i++; const t = (v - F[i - 1]) / ((F[i] - F[i - 1]) || 1); return (i - 1 + t) / n * Math.PI; };
+  }
+
   // ---------- readouts ----------
   function readouts() {
     const dd = (a, v, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${v}</dd></div>`;
     let h = '';
-    if (S.setup === 'vdg') {
+    if (S.setup === 'vdg' && wandNow()) {
+      const R = S.R / 100, I = S.I * 1e-6, w = wandNow(), b = S.blind, V = vNow();
+      h += dd('Wand', w.touching ? 'touching the dome: it is grounded, and the belt\'s charge runs to earth' : `gap ${(w.gap * 100).toFixed(w.gap < 0.1 ? 2 : 1)} cm`, true);
+      h += dd('Capacitance with the wand here Q/V', w.touching ? '—' : `${sci(w.s.C * 1e12)} pF`) + dd('Charge Q', b ? HIDDEN : `${sci(S.Q * 1e6)} µC`);
+      h += dd('Dome voltage V', b ? HIDDEN : `${sci(V / 1000)} kV`) + dd('Charge drawn onto the ball', b ? HIDDEN : `${sci(S.qBall * 1e9)} nC`);
+      if (!w.touching) { const Qs = w.s.qSpark, Vs = Qs * w.s.V1;
+        h += dd('Largest field on the dome', b ? HIDDEN : `${sci(S.Q * w.s.eDome1 / 1e6)} MV/m`) + dd('Largest field on the ball', b ? HIDDEN : `${sci(S.Q * w.s.eBall1 / 1e6)} MV/m`);
+        h += dd(`Breakdown starts (at the ${w.s.sparkOn}) at`, b ? HIDDEN : `${sci(Vs / 1000)} kV, Q = ${sci(Qs * 1e6)} µC`, true);
+        h += dd('Time to spark from zero', b ? HIDDEN : `${sci(Qs / I)} s`) + dd('Energy released in a spark ½Q<sub>s</sub>V<sub>s</sub>', b ? HIDDEN : `${sci(0.5 * Qs * Vs)} J`); }
+      h += dd('Dome alone: V<sub>max</sub> = E<sub>b</sub>R', b ? HIDDEN : `${sci(vMax(R) / 1000)} kV`) + dd('Each blue dot in the lead', `${sci(QDOT() * 1e9)} nC of electrons`);
+      h += dd('Sparks since the motor started', String(S.sparks)) + dd('Motor running for', `${S.tRun.toFixed(1)} s`);
+    } else if (S.setup === 'vdg') {
       const R = S.R / 100, I = S.I * 1e-6, V = sphereV(S.Q, R), b = S.blind;
       h += dd('Capacitance C = 4πε₀R', `${sci(sphereC(R) * 1e12)} pF`) + dd('Charge Q', b ? HIDDEN : `${sci(S.Q * 1e6)} µC`);
       h += dd('Dome voltage V = kQ/R', b ? HIDDEN : `${sci(V / 1000)} kV`) + dd('Field at the surface V/R', b ? HIDDEN : `${sci(V / R / 1e6)} MV/m`);
@@ -337,8 +485,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const b = S.blind;
     if (S.setup === 'vdg') { const R = S.R / 100, I = S.I * 1e-6;
       window.vdShowCols = [['R_cm', 'R (cm)'], ['I_uA', 'I (µA)'], ['sparks', 'Sparks'], ['run_s', 'Time (s)']];
-      return { machine: 'generator', R_cm: S.R, I_uA: S.I, C_pF: g4(sphereC(R) * 1e12), Vmax_kV: b ? '' : g4(vMax(R) / 1000), t_spark_s: b ? '' : g4(timeToSpark(R, I)),
-        E_spark_J: b ? '' : g4(0.5 * qMax(R) * vMax(R)), sparks: S.sparks, run_s: +S.tRun.toFixed(1) }; }
+      const w = wandNow();
+      if (!w) return { machine: 'generator', R_cm: S.R, I_uA: S.I, C_pF: g4(sphereC(R) * 1e12), Vmax_kV: b ? '' : g4(vMax(R) / 1000), t_spark_s: b ? '' : g4(timeToSpark(R, I)),
+        E_spark_J: b ? '' : g4(0.5 * qMax(R) * vMax(R)), sparks: S.sparks, run_s: +S.tRun.toFixed(1), wand_gap_cm: '', Vspark_kV: b ? '' : g4(vMax(R) / 1000) };
+      /* with the wand in hand: C is the capacitance with the wand where it is, and the spark columns follow the wand; Vmax_kV stays E_b R */
+      const Qs = w.touching ? 0 : w.s.qSpark, Vs = w.touching ? 0 : Qs * w.s.V1;
+      return { machine: 'generator', R_cm: S.R, I_uA: S.I, C_pF: w.touching ? '' : g4(w.s.C * 1e12), Vmax_kV: b ? '' : g4(vMax(R) / 1000), t_spark_s: b || w.touching ? '' : g4(Qs / I),
+        E_spark_J: b || w.touching ? '' : g4(0.5 * Qs * Vs), sparks: S.sparks, run_s: +S.tRun.toFixed(1), wand_gap_cm: +(w.gap * 100).toFixed(2), Vspark_kV: b ? '' : g4(Vs / 1000) }; }
     if (S.setup === 'ink') { const r = inkjet(S.d * 1e-6, S.q * 1e-12, S.v, S.PV);
       window.vdShowCols = [['q_pC', 'q (pC)'], ['V_plates_V', 'Plates (V)'], ['y_paper_mm', 'Height (mm)']];
       return { machine: 'printer', d_um: S.d, v_m_s: S.v, q_pC: b ? '' : S.q, V_plates_V: S.PV, m_ng: g4(r.m * 1e12),
@@ -396,9 +549,101 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function jag(x0, y0, x1, y1, n, amp) { ctx.beginPath(); ctx.moveTo(x0, y0); for (let i = 1; i < n; i++) { const f = i / n, nx = -(y1 - y0), ny = x1 - x0, L = Math.hypot(nx, ny) || 1, o = (Math.random() - 0.5) * 2 * amp; ctx.lineTo(x0 + (x1 - x0) * f + nx / L * o, y0 + (y1 - y0) * f + ny / L * o); } ctx.lineTo(x1, y1); ctx.stroke(); }
 
-  let beltPhase = 0, inkPhase = 0, espPhase = 0;
+  let beltPhase = 0, inkPhase = 0, espPhase = 0, FL = null, WH = null;
+  /* the wand in metres: ball centre B, the joint J where the metal rod meets the rubber handle, the handle's end H, the lead's foot G
+     on the floor, and the lead from G up to J and along the rod to the ball (the path the electrons take) */
+  function wandParts(w) {
+    const B = [S.wand.x, S.wand.z], sd = w.ux >= -0.05 ? 1 : -1; let rx = w.ux + sd * 0.7, rz = w.uz - 0.7; const m = Math.hypot(rx, rz); rx /= m; rz /= m;
+    if (B[1] + rz * 0.41 < 0.03) { rz = (0.03 - B[1]) / 0.41; rx = sd * Math.sqrt(Math.max(0, 1 - rz * rz)); }   /* keep the handle off the floor */
+    const J = [B[0] + rx * 0.28, B[1] + rz * 0.28], H = [B[0] + rx * 0.41, B[1] + rz * 0.41], G = [J[0] + sd * 0.1, 0];
+    const lead = []; for (let i = 0; i <= 16; i++) { const t = i / 16, u = 1 - t; lead.push([u * u * G[0] + 2 * u * t * (J[0] + sd * 0.06) + t * t * J[0], u * u * G[1] + 2 * u * t * 0.02 + t * t * J[1]]); }
+    return { B, J, H, G, sd, path: lead.concat([B]) };
+  }
+  /* a point a fraction u along a polyline (screen px) */
+  function along(pts, u) { let L = 0; const d = []; for (let i = 1; i < pts.length; i++) { d.push(Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1])); L += d[i - 1]; }
+    let t = clamp(u, 0, 1) * L; for (let i = 0; i < d.length; i++) { if (t <= d[i] || i === d.length - 1) { const f = d[i] ? Math.min(1, t / d[i]) : 0; return [pts[i][0] + (pts[i + 1][0] - pts[i][0]) * f, pts[i][1] + (pts[i + 1][1] - pts[i][1]) * f]; } t -= d[i]; } return pts[0]; }
+  /* 16 field lines in the plane of the picture, starting where 1/16 of the dome's charge (counted along the outline) lies between them */
+  function linesFlat(w) {
+    if (w.lines) return w.lines; const cum = w.cumF || (w.cumF = chargeAngles(w, false, true)), memo = {};
+    return (w.lines = Array.from({ length: 16 }, (_, j) => { const f = (j + 0.5) / 16, th = cum(f < 0.5 ? 2 * f : 2 - 2 * f), k = th.toFixed(6); return { sd: f < 0.5 ? 1 : -1, pts: memo[k] || (memo[k] = traceLine(w, th)) }; }));
+  }
+  const planeXZ = (w, sv, r, sd) => [sv * w.ux + sd * r * w.uz, w.zd + sv * w.uz - sd * r * w.ux];   /* (along the line, off it, side) to (x, z) */
+  function fieldLinesFlat(w, R, frac, X, Y, p) {
+    const nl = Math.round(16 * frac); if (!nl || (w && w.touching)) return;
+    ctx.save(); ctx.strokeStyle = T.pos; ctx.globalAlpha = S.blind ? 0.22 : 0.36; ctx.lineWidth = 1.1 * p; ctx.beginPath();
+    const zd = ZD(R);
+    for (let i = 0; i < nl; i++) { const j = Math.floor(i * 16 / nl);
+      if (!w) { const a = (j + 0.5) / 16 * 2 * Math.PI - Math.PI / 2, ex = Math.cos(a), ez = -Math.sin(a); let t1 = 2.6 * R; if (zd + ez * t1 < 0) t1 = -zd / ez; ctx.moveTo(X(ex * R), Y(zd + ez * R)); ctx.lineTo(X(ex * t1), Y(zd + ez * t1)); continue; }
+      const L = linesFlat(w)[j]; let first = true;
+      for (const [sv, r] of L.pts) { const [x, z] = planeXZ(w, sv, r, L.sd); if (z < 0) break; if (first) { ctx.moveTo(X(x), Y(z)); first = false; } else ctx.lineTo(X(x), Y(z)); } }
+    ctx.stroke(); ctx.restore();
+  }
+  /* the wand's label beside the handle's end, or under it when that would run into the close up */
+  function wandLabel(P, H, p) { const bw = Math.min(150 * p, W * 0.32), r = P.sd > 0 && H[0] + 100 * p > W - bw - 14 * p;
+    if (r) txt('grounded wand', H[0], H[1] + 14 * p, { a: 'center', c: T.muted, s: 10 }); else txt('grounded wand', H[0] + P.sd * 8 * p, H[1], { a: P.sd > 0 ? 'left' : 'right', c: T.muted, s: 10 }); }
+  function ground(x, y, p) { ctx.beginPath(); for (let i = 0; i < 3; i++) { const gw = (12 - 4 * i) * p; ctx.moveTo(x - gw / 2, y + i * 3 * p); ctx.lineTo(x + gw / 2, y + i * 3 * p); } ctx.stroke(); }
+  function drawWandFlat(w, X, Y, scale, p, floorY) {
+    const P = wandParts(w), M = (q) => [X(q[0]), Y(q[1])], B = M(P.B), J = M(P.J), H = M(P.H), G = M(P.G), wr = Math.max(4 * p, WAND_A * scale);
+    const lead = P.path.slice(0, -1).map(M);
+    ctx.lineCap = 'round'; ctx.strokeStyle = T.lead; ctx.lineWidth = 1.8 * p; ctx.beginPath(); lead.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.stroke();
+    ctx.lineWidth = 1.2 * p; ground(G[0], floorY + 3 * p, p);
+    ctx.strokeStyle = T.dome; ctx.lineWidth = 3.5 * p; ctx.beginPath(); ctx.moveTo(B[0], B[1]); ctx.lineTo(J[0], J[1]); ctx.stroke();
+    ctx.strokeStyle = T.belt; ctx.lineWidth = 7 * p; ctx.beginPath(); ctx.moveTo(J[0], J[1]); ctx.lineTo(H[0], H[1]); ctx.stroke(); ctx.lineCap = 'butt';
+    const gr = ctx.createRadialGradient(B[0] - wr * 0.4, B[1] - wr * 0.4, wr * 0.1, B[0], B[1], wr); gr.addColorStop(0, T.domeHi); gr.addColorStop(1, T.wood); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(B[0], B[1], wr, 0, 7); ctx.fill(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * p; ctx.stroke();
+    /* the charge drawn onto the ball, on the same scale as the dome's marks, crowded toward the dome */
+    const nb = Math.round(24 * Math.abs(S.qBall) / qMax(w.R));
+    if (nb && w.s) { const cum = w.cumB || (w.cumB = chargeAngles(w, true, true)); for (let i = 0; i < nb; i++) { const f = (i + 0.5) / nb, th = cum(f < 0.5 ? 2 * f : 2 - 2 * f), sd = f < 0.5 ? 1 : -1, ex = -Math.cos(th) * w.ux + sd * Math.sin(th) * w.uz, ez = -Math.cos(th) * w.uz - sd * Math.sin(th) * w.ux;
+      txt('−', B[0] + ex * (wr + 6 * p), B[1] - ez * (wr + 6 * p), { c: T.neg, s: 12, b: 1, a: 'center' }); } }
+    /* electrons in the lead */
+    const path = P.path.map(M); ctx.fillStyle = T.neg; for (const d of S.dots) { if (d.u < 0 || d.u > 1) continue; const q = along(path, d.u); ctx.beginPath(); ctx.arc(q[0], q[1], 2.3 * p, 0, 7); ctx.fill(); }
+    wandLabel(P, H, p); txt('ground', G[0] + 9 * p, floorY - 8 * p, { c: T.muted, s: 9 });
+    if (w.touching) txt('touching', B[0], B[1] - wr - 12 * p, { a: 'center', c: T.ink, s: 10, b: 1 });
+    WH = { bx: B[0], by: B[1], br: wr, h: [J[0], J[1], H[0], H[1]] };
+  }
+  /* close up of the gap: the air shaded by the field there as a share of the breakdown field (per coulomb on the dome, worked out once
+     for each position of the wand, then scaled by Q), the field lines, and the gap */
+  function drawInset(w, p, sceneH) {
+    const bw = Math.round(Math.min(150 * p, W * 0.3)), x0 = W - bw - 10 * p, a = WAND_A, R = w.R;
+    let y0 = 50 * p; const inR = (x, y) => x > x0 - 20 * p && y < y0 + bw + 20 * p; if (WH && (inR(WH.bx, WH.by) || inR(WH.h[2], WH.h[3]) || inR(WH.h[0], WH.h[1]))) y0 = sceneH - bw - 10 * p;   /* out of the wand's way */
+    const nd = [R * w.ux, w.zd + R * w.uz], nb = [S.wand.x - a * w.ux, S.wand.z - a * w.uz], C = [(nd[0] + nb[0]) / 2, (nd[1] + nb[1]) / 2], hw = Math.max(2.5 * a, w.gap / 2 + 1.6 * a), k = bw / 2 / hw;
+    const M = (x, z) => [x0 + bw / 2 + (x - C[0]) * k, y0 + bw / 2 - (z - C[1]) * k];
+    ctx.save(); ctx.beginPath(); ctx.roundRect(x0, y0, bw, bw, 8 * p); ctx.fillStyle = T.canvas; ctx.fill(); ctx.clip();
+    const NG = 28, cs = bw / NG;
+    if (w.s && S.Q > 0) {
+      if (!w.grid) { w.grid = new Float32Array(NG * NG); for (let i = 0; i < NG; i++) for (let j = 0; j < NG; j++) { const x = C[0] + ((i + 0.5) / NG * 2 - 1) * hw, z = C[1] - ((j + 0.5) / NG * 2 - 1) * hw, dx = x, dz = z - w.zd;
+        const sv = dx * w.ux + dz * w.uz, r = Math.abs(dx * w.uz - dz * w.ux); if (Math.hypot(sv, r) < R || Math.hypot(sv - w.D, r) < a) { w.grid[i * NG + j] = -1; continue; } const e = lineField(w.s.ch, sv, r); w.grid[i * NG + j] = Math.hypot(e[0], e[1]); } }
+      ctx.fillStyle = T.spark; for (let i = 0; i < NG; i++) for (let j = 0; j < NG; j++) { const e = w.grid[i * NG + j]; if (e < 0) continue; ctx.globalAlpha = 0.7 * Math.min(1, S.Q * e / E_BREAK); ctx.fillRect(x0 + i * cs, y0 + j * cs, cs + 0.5, cs + 0.5); }
+      ctx.globalAlpha = 1;
+      const nl = Math.round(16 * S.Q / qMax(R)); ctx.strokeStyle = T.pos; ctx.globalAlpha = 0.55; ctx.lineWidth = 1 * p; ctx.beginPath();
+      for (let i = 0; i < nl; i++) { const L = linesFlat(w)[Math.floor(i * 16 / nl)]; L.pts.forEach(([sv, r], n) => { const [x, z] = planeXZ(w, sv, r, L.sd), q = M(x, z); if (n) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); }); }
+      ctx.stroke(); ctx.globalAlpha = 1; }
+    const dc = M(0, w.zd), bc = M(S.wand.x, S.wand.z);
+    ctx.fillStyle = T.dome; ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.arc(dc[0], dc[1], R * k, 0, 7); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = T.wood; ctx.beginPath(); ctx.arc(bc[0], bc[1], a * k, 0, 7); ctx.fill(); ctx.stroke();
+    const P = wandParts(w), jq = M(P.J[0], P.J[1]), ux = (jq[0] - bc[0]), uy = (jq[1] - bc[1]), um = Math.hypot(ux, uy) || 1;
+    ctx.strokeStyle = T.dome; ctx.lineWidth = 0.012 * k; ctx.beginPath(); ctx.moveTo(bc[0] + ux / um * a * k, bc[1] + uy / um * a * k); ctx.lineTo(bc[0] + ux / um * bw, bc[1] + uy / um * bw); ctx.stroke();
+    if (S.spark > 0 && S.sparkKind === 'gap') { const q0 = M(nd[0], nd[1]), q1 = M(nb[0], nb[1]); ctx.strokeStyle = T.spark; ctx.lineWidth = 2.5 * p; ctx.shadowColor = T.spark; ctx.shadowBlur = 8 * p; jag(q0[0], q0[1], q1[0], q1[1], 7, 4 * p); ctx.shadowBlur = 0; }
+    if (!w.touching) { const q0 = M(nd[0], nd[1]), q1 = M(nb[0], nb[1]); ctx.strokeStyle = T.ink; ctx.lineWidth = 1 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(q0[0], q0[1]); ctx.lineTo(q1[0], q1[1]); ctx.stroke(); ctx.setLineDash([]); }
+    const sb = hw > 0.2 ? 0.05 : 0.01, sbp = sb * k; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(x0 + 8 * p, y0 + bw - 9 * p); ctx.lineTo(x0 + 8 * p + sbp, y0 + bw - 9 * p); ctx.stroke();
+    txt(`${sb * 100} cm`, x0 + 8 * p + sbp / 2, y0 + bw - 17 * p, { a: 'center', c: T.ink, s: 9 });
+    ctx.restore(); ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x0 + 0.5, y0 + 0.5, bw - 1, bw - 1, 8 * p); ctx.stroke();
+    txt(w.touching ? 'touching' : `gap ${(w.gap * 100).toFixed(w.gap < 0.1 ? 2 : 1)} cm`, x0 + 7 * p, y0 + 10 * p, { c: T.ink, s: 10, b: 1 });
+    if (w.s && !S.blind) { const eb = S.Q * w.s.eBall1, ed = S.Q * w.s.eDome1, hi = eb >= ed; txt(`${hi ? 'ball' : 'dome'}: ${Math.round(100 * Math.max(eb, ed) / E_BREAK)}% of E_b`, x0 + bw - 6 * p, y0 + bw - 10 * p, { a: 'right', c: T.spark, s: 9.5, b: 1 }); }
+  }
+  function fieldPlotWand(w, P2, p) {
+    plotFrame(P2.x, P2.y, P2.w, P2.h, 'Field along the line to the wand', '', S.blind ? '' : `0 to ${sci(E_BREAK * 1.15 / 1e6, 2)} MV/m`);
+    const L = w.D + WAND_A, jx0 = P2.x + 8 * p, jx1 = P2.x + P2.w - 8 * p, jy0 = P2.y + P2.h - 18 * p, jy1 = P2.y + 32 * p, XR = (sv) => jx0 + sv / L * (jx1 - jx0), YE = (e) => jy0 - Math.min(e, E_BREAK * 1.15) / (E_BREAK * 1.15) * (jy0 - jy1);
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(jx0, jy0); ctx.lineTo(jx1, jy0); for (const sv of [w.R, w.D - WAND_A]) { ctx.moveTo(XR(sv), jy0); ctx.lineTo(XR(sv), jy1); } ctx.stroke();
+    txt('R', XR(w.R), jy0 + 8 * p, { a: 'center', c: T.muted, s: 10 }); txt('ball', XR(w.D - WAND_A), jy0 + 8 * p, { a: 'right', c: T.muted, s: 10 });
+    ctx.strokeStyle = T.plateHi; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(jx0, YE(E_BREAK)); ctx.lineTo(jx1, YE(E_BREAK)); ctx.stroke(); ctx.setLineDash([]);
+    txt('air breaks down', jx1 - 4 * p, YE(E_BREAK) - 8 * p, { a: 'right', c: T.plateHi, s: 10 });
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(jx0, jy0); ctx.lineTo(XR(w.R), jy0);
+    if (w.s) for (let i = 0; i <= 200; i++) { const sv = w.R + (w.D - WAND_A - w.R) * i / 200; ctx.lineTo(XR(sv), YE(Math.abs(S.Q * lineField(w.s.ch, sv, 0)[0]))); }
+    ctx.lineTo(XR(w.D - WAND_A), jy0); ctx.lineTo(jx1, jy0); ctx.stroke();
+    if (w.touching) txt('touching: no field', jx0 + 4 * p, jy0 - 8 * p, { c: T.muted, s: 10 }); else if (!S.blind) txt('from the dome centre to the ball centre; E = 0 inside both', jx0 + 4 * p, jy0 - 8 * p, { c: T.muted, s: 10 });
+  }
   function drawVdg() {
-    const p = ps(), narrow = W < 640, sceneH = Hh * (narrow ? 0.56 : 0.62), R = S.R / 100, Qm = qMax(R), V = sphereV(S.Q, R), frac = S.Q / Qm;
+    const p = ps(), narrow = W < 640, sceneH = Hh * (narrow ? 0.56 : 0.62), R = S.R / 100, Qm = qMax(R), V = sphereV(S.Q, R), frac = S.Q / Qm; WH = null;
     if (use3()) vdg3(sceneH); else {
     /* floor and bench */
     const floorY = sceneH - 14 * p; ctx.fillStyle = T.relief; ctx.fillRect(0, floorY, W, sceneH - floorY);
@@ -416,38 +661,50 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const gap = 16 * p; ctx.fillStyle = T.pos;
     for (let yb = by1 - ((beltPhase * gap) % gap); yb > by0; yb -= gap) if (S.motor) txt('+', bx1 + 5 * p, yb, { c: T.pos, s: 10, b: 1, a: 'center' });
     for (const [yy] of [[by0], [by1]]) { ctx.fillStyle = T.muted; ctx.beginPath(); ctx.arc(cx, yy, cw * 0.27, 0, 7); ctx.fill(); }
-    /* grounded wand */
-    const wx = Math.min(W - 30 * p, cx + rp + 0.35 * scale), wy = domeY + rp * 0.2, wr = Math.max(7 * p, 0.03 * scale);
-    ctx.strokeStyle = T.wood; ctx.lineWidth = 5 * p; ctx.beginPath(); ctx.moveTo(wx, wy + wr * 0.8); ctx.lineTo(wx, floorY - 6 * p); ctx.stroke(); ctx.fillStyle = T.belt; ctx.beginPath(); ctx.roundRect(wx - 0.06 * scale, floorY - 6 * p, 0.12 * scale, 6 * p, 2 * p); ctx.fill();
-    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(wx + wr * 0.7, wy + wr * 0.7); ctx.quadraticCurveTo(wx + 0.12 * scale, wy + 0.2 * scale, wx + 0.12 * scale, floorY); ctx.stroke(); txt('ground', wx + 0.12 * scale + 6 * p, floorY - 10 * p, { c: T.muted, s: 9 });
-    ctx.beginPath(); for (let i = 0; i < 3; i++) { const gw = (10 - 3 * i) * p; ctx.moveTo(wx + 0.12 * scale - gw / 2, floorY + 3 * p + i * 3 * p); ctx.lineTo(wx + 0.12 * scale + gw / 2, floorY + 3 * p + i * 3 * p); } ctx.stroke();
-    let gr = ctx.createRadialGradient(wx - wr * 0.4, wy - wr * 0.4, wr * 0.1, wx, wy, wr); gr.addColorStop(0, T.domeHi); gr.addColorStop(1, T.dome); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(wx, wy, wr, 0, 7); ctx.fill();
+    const X = (x) => cx + x * scale, Y = (z) => floorY - z * scale, w = wandNow(); FL = { X, Y, scale, cx, floorY };
+    /* field lines in the plane of the picture: radial for the dome alone, traced through the exact field with the wand */
+    fieldLinesFlat(w, R, frac, X, Y, p);
     /* dome: a polished sphere */
     gr = ctx.createRadialGradient(cx - rp * 0.4, domeY - rp * 0.45, rp * 0.08, cx, domeY, rp); gr.addColorStop(0, T.domeHi); gr.addColorStop(1, T.dome);
     ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, domeY, rp, 0, 7); ctx.fill(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * p; ctx.stroke();
     /* charge marks spread evenly over the outside: the number is in proportion to Q (24 at the breakdown charge) */
     const nq = Math.round(24 * frac);
-    for (let i = 0; i < nq; i++) { const a = (i + 0.5) / nq * 2 * Math.PI - Math.PI / 2; txt('+', cx + Math.cos(a) * (rp + 7 * p), domeY + Math.sin(a) * (rp + 7 * p), { c: T.pos, s: 11, b: 1, a: 'center' }); }
+    if (!w) for (let i = 0; i < nq; i++) { const a = (i + 0.5) / nq * 2 * Math.PI - Math.PI / 2; txt('+', cx + Math.cos(a) * (rp + 7 * p), domeY + Math.sin(a) * (rp + 7 * p), { c: T.pos, s: 11, b: 1, a: 'center' }); }
+    else if (w.s) { /* with the wand near, the marks crowd where σ is largest: spaced by σ along the outline */
+      const cum = w.cumF || (w.cumF = chargeAngles(w, false, true)), nx = w.uz, nz = -w.ux;
+      for (let i = 0; i < nq; i++) { const f = (i + 0.5) / nq, th = cum(f < 0.5 ? 2 * f : 2 - 2 * f), sd = f < 0.5 ? 1 : -1, ex = Math.cos(th) * w.ux + sd * Math.sin(th) * nx, ez = Math.cos(th) * w.uz + sd * Math.sin(th) * nz;
+        txt('+', cx + ex * (rp + 7 * p), domeY - ez * (rp + 7 * p), { c: T.pos, s: 11, b: 1, a: 'center' }); } }
+    if (w) drawWandFlat(w, X, Y, scale, p, floorY);
     txt(`R = ${S.R} cm`, cx, domeY, { a: 'center', c: T.ink, s: 10, b: 1 });
     /* scale bar */
     const sb = 0.2 * scale; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(14 * p, floorY - 10 * p); ctx.lineTo(14 * p + sb, floorY - 10 * p); ctx.moveTo(14 * p, floorY - 14 * p); ctx.lineTo(14 * p, floorY - 6 * p); ctx.moveTo(14 * p + sb, floorY - 14 * p); ctx.lineTo(14 * p + sb, floorY - 6 * p); ctx.stroke();
     txt('20 cm', 14 * p + sb / 2, floorY - 22 * p, { a: 'center', c: T.muted, s: 10 });
     /* spark */
-    if (S.spark > 0) { ctx.strokeStyle = T.spark; ctx.lineWidth = 2.5 * p; ctx.shadowColor = T.spark; ctx.shadowBlur = 10 * p; const a = Math.atan2(wy - domeY, wx - cx); jag(cx + Math.cos(a) * rp, domeY + Math.sin(a) * rp, wx - wr, wy, 9, 7 * p); ctx.shadowBlur = 0; }
+    if (S.spark > 0) { ctx.strokeStyle = T.spark; ctx.lineWidth = 2.5 * p; ctx.shadowColor = T.spark; ctx.shadowBlur = 10 * p;
+      if (w && w.s) { const R0 = w.R, zd = w.zd; jag(X(R0 * w.ux), Y(zd + R0 * w.uz), X(S.wand.x - WAND_A * w.ux), Y(S.wand.z - WAND_A * w.uz), 9, 7 * p); }   /* across the gap, between the facing points */
+      else { /* the dome alone: a spark into the air, with a fork */ const a = -0.45, x0 = cx + Math.cos(a) * rp, y0 = domeY - Math.sin(a) * rp, L = Math.max(40 * p, rp * 0.8);
+        jag(x0, y0, x0 + L, y0 + L * 0.45, 8, 6 * p); jag(x0 + L * 0.45, y0 + L * 0.2, x0 + L * 0.8, y0 - L * 0.15, 5, 4 * p); }
+      ctx.shadowBlur = 0; }
+    if (w) drawInset(w, p, sceneH);
     }
     /* plots */
     const py = sceneH + 8 * p, ph = Hh - py - 8 * p, gw = narrow ? W - 16 * p : (W - 24 * p) / 2;
     const P1 = { x: 8 * p, y: py, w: gw, h: narrow ? ph / 2 - 4 * p : ph }, P2 = narrow ? { x: 8 * p, y: py + ph / 2 + 4 * p, w: gw, h: ph / 2 - 4 * p } : { x: 16 * p + gw, y: py, w: gw, h: ph };
-    const vm = vMax(R), span = 20, vTop = vm * 1.15;
+    const vm = vMax(R), span = 20, vTop = vm * 1.15, wP = wandNow(), vs = !wP ? vm : wP.touching ? 0 : wP.s.qSpark * wP.s.V1;
     plotFrame(P1.x, P1.y, P1.w, P1.h, 'Dome voltage against time', `last ${span} s`, S.blind ? '' : `0 to ${sci(vTop / 1000, 2)} kV`);
     const ix0 = P1.x + 8 * p, ix1 = P1.x + P1.w - 8 * p, iy0 = P1.y + P1.h - 18 * p, iy1 = P1.y + 32 * p, X = (t) => ix1 - (S.t - t) / span * (ix1 - ix0), Y = (v) => iy0 - v / vTop * (iy0 - iy1);
     ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(ix0, iy0); ctx.lineTo(ix1, iy0); ctx.stroke();
-    ctx.strokeStyle = T.plateHi; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(ix0, Y(vm)); ctx.lineTo(ix1, Y(vm)); ctx.stroke(); ctx.setLineDash([]);
-    txt(S.blind ? 'breakdown' : `breakdown, E_b R = ${sci(vm / 1000, 3)} kV`, ix1 - 4 * p, Y(vm) - 8 * p, { a: 'right', c: T.plateHi, s: 10 });
+    ctx.strokeStyle = T.plateHi; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(ix0, Y(vs)); ctx.lineTo(ix1, Y(vs)); ctx.stroke(); ctx.setLineDash([]);
+    if (!wP) txt(S.blind ? 'breakdown' : `breakdown, E_b R = ${sci(vm / 1000, 3)} kV`, ix1 - 4 * p, Y(vm) - 8 * p, { a: 'right', c: T.plateHi, s: 10 });
+    else if (wP.touching) txt('touching: the dome is grounded', ix1 - 4 * p, Y(0) - 8 * p, { a: 'right', c: T.plateHi, s: 10 });
+    else { txt(S.blind ? 'breakdown, wand here' : `breakdown with the wand here, ${sci(vs / 1000, 3)} kV`, ix1 - 4 * p, Y(vs) - 8 * p, { a: 'right', c: T.plateHi, s: 10 });
+      ctx.strokeStyle = T.grid; ctx.setLineDash([2 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(ix0, Y(vm)); ctx.lineTo(ix1, Y(vm)); ctx.stroke(); ctx.setLineDash([]);
+      if (!S.blind) txt(`dome alone ${sci(vm / 1000, 3)} kV`, ix0 + 4 * p, Y(vm) - 8 * p, { c: T.muted, s: 9.5 }); }
     ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.beginPath(); let first = true;
     for (const [t, v] of S.hist) { if (S.t - t > span) continue; const xx = X(t), yy = Y(v); if (first) { ctx.moveTo(xx, yy); first = false; } else ctx.lineTo(xx, yy); }
     ctx.stroke();
-    /* field against distance from the centre */
+    /* field against distance from the centre; with the wand, along the line of centres to the ball */
+    if (wP) { fieldPlotWand(wP, P2, p); return; }
     plotFrame(P2.x, P2.y, P2.w, P2.h, 'Field against distance from the centre', 'r, 0 to 4R', S.blind ? '' : `0 to ${sci(E_BREAK * 1.15 / 1e6, 2)} MV/m`);
     const jx0 = P2.x + 8 * p, jx1 = P2.x + P2.w - 8 * p, jy0 = P2.y + P2.h - 18 * p, jy1 = P2.y + 32 * p, XR = (r) => jx0 + r / (4 * R) * (jx1 - jx0), YE = (e) => jy0 - e / (E_BREAK * 1.15) * (jy0 - jy1);
     ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(jx0, jy0); ctx.lineTo(jx1, jy0); ctx.moveTo(XR(R), jy0); ctx.lineTo(XR(R), jy1); ctx.stroke(); txt('R', XR(R), jy0 + 8 * p, { a: 'center', c: T.muted, s: 10 });
@@ -564,8 +821,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let dirty = false;
     if (S.setup === 'vdg') {
       S.t += dt;
-      if (S.motor) { S.tRun += dt; S.Q += S.I * 1e-6 * dt; const R = S.R / 100; while (S.Q >= qMax(R)) { S.Q -= qMax(R); S.spark = 0.25; S.sparks++; }   /* the spark empties the dome at the moment it reaches Q_max; the belt's charge after that moment in this frame stays */ dirty = true; }
-      S.hist.push([S.t, sphereV(S.Q, S.R / 100)]); while (S.hist.length && S.t - S.hist[0][0] > 22) S.hist.shift();
+      const q0 = S.Q, wd = wandNow();
+      if (S.motor) { S.tRun += dt; S.Q += S.I * 1e-6 * dt; const R = S.R / 100; if (!wd) while (S.Q >= qMax(R)) { S.Q -= qMax(R); S.spark = 0.25; S.sparkKind = 'air'; S.sparks++; }   /* the spark empties the dome at the moment it reaches Q_max; the belt's charge after that moment in this frame stays */ dirty = true; }
+      if (wd) wandCharge(q0); if (S.dots.length) { dotStep(dt); dirty = true; }
+      const fT = S.wand.on ? 1 : 0; if (G3.on && Math.abs(G3.fw - fT) > 1e-3) { G3.fw = reduce ? fT : G3.fw + (fT - G3.fw) * Math.min(1, dt * 4); dirty = true; } else G3.fw = fT;   /* the 3D camera eases out to take in the wand's reach */
+      S.hist.push([S.t, vNow()]); while (S.hist.length && S.t - S.hist[0][0] > 22) S.hist.shift();
       if (S.spark > 0) { S.spark -= dt; dirty = true; }
       if (!reduce) beltPhase += S.motor ? dt * 3 : 0;
       dirty = dirty || S.motor;
@@ -584,7 +844,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   /* To scale: the 0.80 m acrylic column on its motor base, the dome of radius R on top, the grounded wand on its own stand 0.35 m from the dome.
      Red beads on the dome stand for its charge, their number in proportion to Q (60 at the breakdown charge), spread evenly over the outside;
      the lines leave the dome radially, their number also in proportion to Q (field lines start on charge). Drag to turn the view. */
-  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.25, ph: 1.26, zoom: 1 }, R: -1, nq: -1, spark: '' };
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.25, ph: 1.26, zoom: 1 }, R: -1, nq: -1, spark: '', fw: 0, proj: null };
   const NQ3 = 60, NL3 = 40, COL3 = 0.80, BASE3 = 0.10;
   let g3 = null;
   const use3 = () => !!(G3.on && g3 && S.setup === 'vdg');
@@ -611,21 +871,23 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const z of [BASE3 + 0.025, BASE3 + COL3 - 0.02]) { const ro = mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.05, 24), rollM, false); ro.position.set(0, 0, z); belt.add(ro); }
     const domeM = Ms({ roughness: 0.22, metalness: 0.35, color: 0xe3e7ec }), dome = mesh(new THREE.SphereGeometry(1, 64, 48), domeM);
     const neck = mesh(up(new THREE.CylinderGeometry(0.05, 0.05, 0.03, 32)), rollM); neck.position.z = BASE3 + COL3 + 0.01;
-    /* the wand: a brass ball on a wooden rod on a small base, and its earth lead */
+    /* the wand, held by hand: a brass ball on a metal rod with a rubber handle, and its earth lead */
     const woodM = Ms({ roughness: 0.7 }), brassM = Ms({ roughness: 0.3, metalness: 0.4, color: 0xc9a24a }), wand = new THREE.Group();
-    const wBall = mesh(new THREE.SphereGeometry(0.03, 32, 24), brassM), wRod = mesh(up(new THREE.CylinderGeometry(0.008, 0.008, 1, 16)), woodM), wBase = mesh(new THREE.CylinderGeometry(0.06, 0.07, 0.015, 32).rotateX(Math.PI / 2), baseM);
-    wBase.position.z = 0.0075; wand.add(wBall, wRod, wBase);
+    const wBall = mesh(new THREE.SphereGeometry(WAND_A, 32, 24), brassM), wRod = mesh(up(new THREE.CylinderGeometry(0.006, 0.006, 1, 16)), rollM), wBase = mesh(up(new THREE.CylinderGeometry(0.014, 0.014, 1, 20)), rubM);
+    const clampG = mesh(new THREE.BoxGeometry(0.05, 0.03, 0.012), rollM); wand.add(wBall, wRod, wBase, clampG); wand.visible = false;
     const leadM = Ms({ roughness: 0.6, color: 0x2a7a3a }), lead = new THREE.Group();
+    const negM = Ms({ roughness: 0.35 }), negB = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 10, 8), negM, 40); negB.frustumCulled = false; negB.count = 0;
+    const dotB = new THREE.InstancedMesh(new THREE.SphereGeometry(0.005, 8, 6), negM, 260); dotB.frustumCulled = false; dotB.count = 0;
     /* charge beads, field lines, beads on the belt, the spark */
     const qM = Ms({ roughness: 0.35, emissive: 0x000000 }), beads = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 10, 8), qM, NQ3); beads.frustumCulled = false;
     const beltQ = new THREE.InstancedMesh(new THREE.SphereGeometry(0.004, 8, 6), qM, 24); beltQ.frustumCulled = false;
-    const lineM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.6 }), lines = new THREE.LineSegments(new THREE.BufferGeometry(), lineM); lines.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NL3 * 6), 3));
+    const lineM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.6 }), lines = new THREE.LineSegments(new THREE.BufferGeometry(), lineM); lines.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NL3 * 2 * 220 * 3), 3));
     const sparkM = new THREE.MeshBasicMaterial({ color: 0xf4f8ff }), spark = new THREE.Mesh(new THREE.BufferGeometry(), sparkM);
     const glowM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.35, color: 0x8fb6ff, depthWrite: false }), glow = new THREE.Mesh(new THREE.BufferGeometry(), glowM);
-    scene.add(floor, base, col, belt, dome, neck, wand, lead, beads, beltQ, lines, spark, glow);
-    g3 = { r, el, scene, cam, hemi, sun, flash, floorM, baseM, acryM, rubM, domeM, dome, woodM, wand, wBall, wRod, lead, leadM, qM, beads, beltQ, lineM, lines, spark, glow, sparkM, mat4: new THREE.Matrix4(), pts: fib(NQ3), lpts: fib(NL3) };
+    scene.add(floor, base, col, belt, dome, neck, wand, lead, beads, negB, dotB, beltQ, lines, spark, glow);
+    g3 = { r, el, scene, cam, hemi, sun, flash, floorM, baseM, acryM, rubM, domeM, dome, woodM, wand, wBall, wRod, wBase, clampG, lead, leadM, qM, negM, negB, dotB, beads, beltQ, lineM, lines, spark, glow, sparkM, mat4: new THREE.Matrix4(), pts: fib(NQ3), lpts: fib(NL3) };
     can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
-    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => { if (!use3()) return true; const b = can.getBoundingClientRect(); return e.clientY - b.top > G3.h; }, phMin: 0.6, phMax: 1.5, zMin: 0.6, zMax: 3 });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => { if (!use3()) return true; const b = can.getBoundingClientRect(); return e.clientY - b.top > G3.h || onWand(e); }, phMin: 0.6, phMax: 1.5, zMin: 0.6, zMax: 3 });
     return true;
   }
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
@@ -635,56 +897,90 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g.hemi.intensity = dk ? 1.0 : 0.8; g.sun.intensity = dk ? 0.85 : 0.7; g.hemi.groundColor = col3(dk ? '#2a241d' : '#8c7a60', '#8c7a60');
     g.floorM.color = col3(dk ? '#3a3229' : '#cdbb9d', '#cdbb9d'); g.baseM.color = col3(T.belt, '#3a4250'); g.rubM.color = col3(T.belt, '#3a4250'); g.woodM.color = col3(T.wood, '#c49a6c');
     g.qM.color = col3(T.pos, '#c0392b'); g.qM.emissive = col3(T.pos, '#c0392b').multiplyScalar(0.3); g.lineM.color = col3(T.pos, '#c0392b');
+    g.negM.color = col3(T.neg, '#2350a8'); g.negM.emissive = col3(T.neg, '#2350a8').multiplyScalar(0.35); g.leadM.color = col3(T.lead, '#2f7d43');
     G3.R = -1; G3.nq = -1;
   }
   function geom3() {
-    const g = g3, R = S.R / 100, zd = BASE3 + COL3 + R * 0.82; if (G3.R === R) return zd; G3.R = R;
+    const g = g3, R = S.R / 100, zd = BASE3 + COL3 + R * 0.82, w = wandNow(), key = w ? `${R}|${S.wand.x}|${S.wand.z}` : `${R}`; if (G3.R === key) return zd; G3.R = key;
     g.dome.scale.setScalar(R); g.dome.position.set(0, 0, zd);
-    const wx = R + 0.35, wz = zd - R * 0.2; g.wBall.position.set(wx, 0, wz); g.wand.children[2].position.x = wx; g.wRod.scale.set(1, wz - 0.03, 1); g.wRod.position.set(wx, 0, (wz - 0.03) / 2);
     for (const m of g.lead.children.slice()) { m.geometry.dispose(); g.lead.remove(m); }
-    const cv = new THREE.CatmullRomCurve3([[wx + 0.02, 0, wz - 0.02], [wx + 0.12, 0.02, wz * 0.6], [wx + 0.14, 0.05, 0.1], [wx + 0.2, 0.08, 0.004]].map((q) => new THREE.Vector3(...q)));
+    g.wand.visible = !!w; if (!w) return zd;
+    /* the wand in the plane y = 0 through the column, as in the flat picture */
+    const P = wandParts(w), V = (q, y = 0) => new THREE.Vector3(q[0], y, q[1]), zA = new THREE.Vector3(0, 0, 1);
+    const seg = (m, a, b) => { const d = V(b).sub(V(a)), L = d.length(); m.scale.set(1, 1, L); m.quaternion.setFromUnitVectors(zA, d.normalize()); m.position.copy(V(a).add(V(b)).multiplyScalar(0.5)); };
+    g.wBall.position.copy(V(P.B)); seg(g.wRod, P.B, P.J); seg(g.wBase, P.J, P.H); g.clampG.position.set(P.G[0], 0, 0.006);
+    const cv = new THREE.CatmullRomCurve3(P.path.slice(0, -1).map((q) => V(q)));
     const t = new THREE.Mesh(new THREE.TubeGeometry(cv, 40, 0.003, 8, false), g.leadM); t.castShadow = true; g.lead.add(t);
     return zd;
   }
+  /* a point on the dome (c = 0) or the ball, th from the gap and ph round the line of centres; u3 points from the dome to the ball */
+  function onLine3(w, sv, r, ph) { const c = Math.cos(ph), s2 = Math.sin(ph); return [sv * w.ux + r * c * w.uz, r * s2, w.zd + sv * w.uz - r * c * w.ux]; }
   function render3(rh) {
     const g = g3; if (!g) return null;
     if (G3.w !== W || G3.h !== rh) { G3.w = W; G3.h = rh; g.r.setSize(W, Math.max(1, rh)); g.cam.aspect = W / Math.max(1, rh); g.cam.updateProjectionMatrix(); }
     const key = [T.canvas, T.pos, T.belt].join(); if (G3.key !== key) { G3.key = key; theme3(); }
-    const R = S.R / 100, zd = geom3(), asp = W / Math.max(1, rh), top = zd + R + 0.05, wx = R + 0.35;
-    /* frame the machine and the wand: centre between them, distance from the taller of the height and the width */
-    const cx = (wx - R) / 2 + (W < 640 ? 0 : -0.12), cz = top / 2, span = Math.max(top * 1.18, (wx + R + 0.25) / asp * 1.25);
+    const R = S.R / 100, zd = geom3(), asp = W / Math.max(1, rh), top = zd + R + 0.05, wx = R + 0.35, w = wandNow();
+    /* frame the machine and the wand: centre between them, distance from the taller of the height and the width; with the wand in
+       hand, the whole region it can be dragged over (the framing eases between the two) */
+    const cx0 = (wx - R) / 2 + (W < 640 ? 0 : -0.12), span0 = Math.max(top * 1.18, (wx + R + 0.25) / asp * 1.25);
+    const cx1 = 0.175 + (W < 640 ? 0 : -0.1), span1 = Math.max((top + 0.2) * 1.12, (2 * R + 1.05) / asp * 1.12), f = G3.fw;
+    const cx = cx0 + (cx1 - cx0) * f, cz = top / 2 + 0.06 * f, span = span0 + (span1 - span0) * f;
     VD3.place(g.cam, G3.o, new THREE.Vector3(cx, 0, cz), span / (2 * Math.tan(15 * Math.PI / 180)));
     const dist = span / (2 * Math.tan(15 * Math.PI / 180)); g.scene.fog.near = 1.3 * dist; g.scene.fog.far = 3.2 * dist;
     const frac = S.Q / qMax(R), nq = Math.round(NQ3 * frac), nl = Math.round(NL3 * frac);
-    const br = Math.max(0.006, R * 0.045);
-    for (let i = 0; i < nq; i++) { const q = g.pts[Math.floor(i * NQ3 / Math.max(1, nq)) % NQ3]; g.mat4.makeScale(br, br, br).setPosition(q[0] * R * 1.01, q[1] * R * 1.01, zd + q[2] * R * 1.01); g.beads.setMatrixAt(i, g.mat4); }
+    const br = Math.max(0.006, R * 0.045), ws = w && w.s;
+    /* beads: spread evenly over the dome alone; with the wand near, spaced by σ (each bead the same charge), crowding toward the ball */
+    const cum = ws && (w.cum3 || (w.cum3 = chargeAngles(w, false, false)));
+    for (let i = 0; i < nq; i++) { const q = g.pts[Math.floor(i * NQ3 / Math.max(1, nq)) % NQ3];
+      if (!ws) g.mat4.makeScale(br, br, br).setPosition(q[0] * R * 1.01, q[1] * R * 1.01, zd + q[2] * R * 1.01);
+      else { const th = cum((1 - q[2]) / 2), ph = Math.atan2(q[1], q[0]), P = onLine3(w, R * 1.01 * Math.cos(th), R * 1.01 * Math.sin(th), ph); g.mat4.makeScale(br, br, br).setPosition(P[0], P[1], P[2]); }
+      g.beads.setMatrixAt(i, g.mat4); }
     g.beads.count = nq; g.beads.instanceMatrix.needsUpdate = true;
+    /* the charge drawn onto the wand's ball, beads of the same size and charge */
+    const nb = ws ? Math.min(40, Math.round(NQ3 * Math.abs(S.qBall) / qMax(R))) : 0, bb = Math.min(br, WAND_A * 0.22);
+    if (nb) { const cb = w.cumB3 || (w.cumB3 = chargeAngles(w, true, false)); for (let i = 0; i < nb; i++) { const q = g.pts[Math.floor(i * NQ3 / nb) % NQ3], th = cb((1 - q[2]) / 2), ph = Math.atan2(q[1], q[0]), rr = WAND_A * 1.02, P = onLine3(w, w.D - rr * Math.cos(th), rr * Math.sin(th), ph);
+      g.mat4.makeScale(bb, bb, bb).setPosition(P[0], P[1], P[2]); g.negB.setMatrixAt(i, g.mat4); } }
+    g.negB.count = nb; g.negB.instanceMatrix.needsUpdate = true;
+    /* field lines: radial for the dome alone; with the wand, traced through the exact field (each line keeps to its half plane through the line of centres) */
     const lp = g.lines.geometry.attributes.position; let k = 0;
-    for (let i = 0; i < nl; i++) { const q = g.lpts[Math.floor(i * NL3 / Math.max(1, nl)) % NL3]; if (zd + q[2] * R * 2.6 < 0.02) continue; lp.setXYZ(k++, q[0] * R * 1.03, q[1] * R * 1.03, zd + q[2] * R * 1.03); lp.setXYZ(k++, q[0] * R * 2.6, q[1] * R * 2.6, zd + q[2] * R * 2.6); }
+    if (!ws && !(w && w.touching)) for (let i = 0; i < nl; i++) { const q = g.lpts[Math.floor(i * NL3 / Math.max(1, nl)) % NL3]; if (zd + q[2] * R * 2.6 < 0.02) continue; lp.setXYZ(k++, q[0] * R * 1.03, q[1] * R * 1.03, zd + q[2] * R * 1.03); lp.setXYZ(k++, q[0] * R * 2.6, q[1] * R * 2.6, zd + q[2] * R * 2.6); }
+    else if (ws) { if (!w.l3) { const memo = {}; w.l3 = g.lpts.map((q) => { const th = cum((1 - q[2]) / 2), kk = th.toFixed(6); return { ph: Math.atan2(q[1], q[0]), pts: memo[kk] || (memo[kk] = traceLine(w, th)) }; }); }
+      for (let i = 0; i < nl; i++) { const L = w.l3[Math.floor(i * NL3 / Math.max(1, nl)) % NL3]; let prev = null;
+        for (let n = 0; n < L.pts.length; n += 2) { const P = onLine3(w, L.pts[n][0], L.pts[n][1], L.ph); if (P[2] < 0.005 || k > lp.count - 2) break; if (prev) { lp.setXYZ(k++, ...prev); lp.setXYZ(k++, ...P); } prev = P; }
+        const e = L.pts[L.pts.length - 1], P = onLine3(w, e[0], e[1], L.ph); if (prev && P[2] >= 0.005 && k <= lp.count - 2) { lp.setXYZ(k++, ...prev); lp.setXYZ(k++, ...P); } } }
     g.lines.geometry.setDrawRange(0, k); lp.needsUpdate = true; g.lines.geometry.computeBoundingSphere(); g.lineM.opacity = S.blind ? 0.3 : 0.55;
+    /* electrons in the earth lead */
+    let nd = 0; if (w) { const P = wandParts(w), path = P.path; for (const d of S.dots) { if (d.u < 0 || d.u > 1 || nd >= 260) continue; const q = along(path, d.u); g.mat4.makeTranslation(q[0], -0.006, q[1]); g.dotB.setMatrixAt(nd++, g.mat4); } }
+    g.dotB.count = nd; g.dotB.instanceMatrix.needsUpdate = true;
     /* charge riding up the right side of the belt while the motor runs */
-    let nb = 0; if (S.motor) for (let i = 0; i < 24; i++) { const f = ((i / 24 + beltPhase * 0.05) % 1); g.mat4.makeTranslation(0.0255, 0, BASE3 + 0.04 + f * (COL3 - 0.08)); g.beltQ.setMatrixAt(nb++, g.mat4); }
-    g.beltQ.count = nb; g.beltQ.instanceMatrix.needsUpdate = true;
-    /* the spark: a jagged path from the dome to the wand ball, redrawn for each spark */
+    let nbt = 0; if (S.motor) for (let i = 0; i < 24; i++) { const f2 = ((i / 24 + beltPhase * 0.05) % 1); g.mat4.makeTranslation(0.0255, 0, BASE3 + 0.04 + f2 * (COL3 - 0.08)); g.beltQ.setMatrixAt(nbt++, g.mat4); }
+    g.beltQ.count = nbt; g.beltQ.instanceMatrix.needsUpdate = true;
+    /* the spark: across the gap to the wand's ball, or from the dome alone into the air; a jagged path redrawn for each spark */
     const on = S.spark > 0; g.spark.visible = g.glow.visible = on; g.flash.intensity = on ? 2.5 * S.spark / 0.25 : 0;
-    if (on) { const key2 = `${S.sparks}|${S.sparkKind || ''}|${R}`; if (G3.spark !== key2) { G3.spark = key2; const wz = zd - R * 0.2, a = Math.atan2(wz - zd, wx), x0 = R * Math.cos(a), z0 = zd + R * Math.sin(a), x1 = wx - 0.03, z1 = wz, pts = [];
-        for (let i = 0; i < 14; i++) { const f = i / 13, j = i && i < 13 ? (Math.random() - 0.5) * 0.04 : 0; pts.push(new THREE.Vector3(x0 + (x1 - x0) * f + j * 0.3, (Math.random() - 0.5) * 0.02 * (i && i < 13), z0 + (z1 - z0) * f + j)); }
+    if (on) { const key2 = `${S.sparks}|${S.sparkKind || ''}|${G3.R}`; let x0, z0, x1, z1;
+      if (ws) { x0 = R * w.ux; z0 = zd + R * w.uz; x1 = S.wand.x - WAND_A * w.ux; z1 = S.wand.z - WAND_A * w.uz; }
+      else { const a = -0.45; x0 = R * Math.cos(a); z0 = zd + R * Math.sin(a); x1 = x0 + Math.max(0.08, R * 0.8); z1 = z0 - Math.max(0.035, R * 0.36); }
+      if (G3.spark !== key2) { G3.spark = key2; const pts = [], L = Math.hypot(x1 - x0, z1 - z0);
+        for (let i = 0; i < 14; i++) { const f2 = i / 13, j = i && i < 13 ? (Math.random() - 0.5) * Math.min(0.04, L * 0.25) : 0; pts.push(new THREE.Vector3(x0 + (x1 - x0) * f2 + j * 0.3, (Math.random() - 0.5) * Math.min(0.02, L * 0.1) * (i && i < 13), z0 + (z1 - z0) * f2 + j)); }
         const cv = new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.1); g.spark.geometry.dispose(); g.glow.geometry.dispose();
         g.spark.geometry = new THREE.TubeGeometry(cv, 60, 0.0025, 6, false); g.glow.geometry = new THREE.TubeGeometry(cv, 60, 0.009, 8, false); }
-      g.flash.position.set((wx + R) / 2, 0, zd - R * 0.1); }
+      g.flash.position.set((x0 + x1) / 2, 0, (z0 + z1) / 2); }
     g.scene.updateMatrixWorld(); g.r.render(g.scene, g.cam);
     const tmp = new THREE.Vector3();
     return (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * rh, tmp.z]; };
   }
   function vdg3(sceneH) {
-    const p = ps(), Q = render3(sceneH); ctx.clearRect(0, 0, W, sceneH); if (!Q) return;
-    const R = S.R / 100, zd = BASE3 + COL3 + R * 0.82, wx = R + 0.35, V = sphereV(S.Q, R);
-    const d = Q([0, 0, zd]), w0 = Q([wx, 0, zd - R * 0.2 - 0.05]), b0 = Q([0, -0.13, BASE3 * 0.5]), gq = Q([wx + 0.2, 0.08, 0]);
+    const p = ps(), Q = render3(sceneH); ctx.clearRect(0, 0, W, sceneH); if (!Q) return; G3.proj = Q;
+    const R = S.R / 100, zd = BASE3 + COL3 + R * 0.82, V = vNow(), w = wandNow();
+    const d = Q([0, 0, zd]);
     txt(`R = ${S.R} cm`, d[0], d[1], { a: 'center', c: T.ink, s: 10.5, b: 1 });
     if (!S.blind) txt(`V = ${sci(V / 1000)} kV`, d[0], Q([0, 0, zd + R])[1] - 12 * p, { a: 'center', c: T.pos, s: 11, b: 1, m: 1 });
-    txt('grounded wand', w0[0] + 10 * p, w0[1] + 8 * p, { c: T.muted, s: 10 });
-    txt('ground', gq[0] + 6 * p, gq[1], { c: T.muted, s: 9 });
-    if (W > 560) txt(`To scale. Beads stand for the dome's charge and lines leave it radially, both in proportion to Q. Drag to turn.`, W - 12 * p, sceneH - 12 * p, { a: 'right', c: T.muted, s: 9.5 });
+    if (w) { const P = wandParts(w), b = Q([P.B[0], 0, P.B[1]]), h = Q([P.H[0], 0, P.H[1]]), j = Q([P.J[0], 0, P.J[1]]), gq = Q([P.G[0], 0, 0]), e = Q([P.B[0] + WAND_A, 0, P.B[1]]);
+      wandLabel(P, h, p); txt('ground', gq[0] + 8 * p, gq[1] + 2 * p, { c: T.muted, s: 9 });
+      if (w.touching) txt('touching', b[0], b[1] - 16 * p, { a: 'center', c: T.ink, s: 10, b: 1 });
+      WH = { bx: b[0], by: b[1], br: Math.max(6 * p, Math.abs(e[0] - b[0])), h: [j[0], j[1], h[0], h[1]] };
+      drawInset(w, p, sceneH); }
+    if (W > 560) txt(w ? 'To scale. Each bead is the same charge; field lines traced through the exact field. Drag the wand; drag elsewhere to turn.' : `To scale. Beads stand for the dome's charge and lines leave it radially, both in proportion to Q. Drag to turn.`, W - 12 * p, sceneH - 12 * p, { a: 'right', c: T.muted, s: 9.5 });
   }
   function setDim(v) {
     if (v === '3d' && !G3.ok) {

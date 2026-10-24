@@ -2,7 +2,7 @@
 // Electrostatics at Work: Van de Graaff dome, ink jet deflection, precipitator drift and Deutsch efficiency.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('electrostatics-at-work', 'EPS0,KC,G,E_BREAK,sphereC,sphereV,sphereField,vMax,qMax,timeToSpark,INK,dropMass,inkjet,chargeFor,rayleighLimit,AIR,cunningham,chargeFactor,satCharge,driftSpeed,deutsch');
+const c = core('electrostatics-at-work', 'EPS0,KC,G,E_BREAK,sphereC,sphereV,sphereField,vMax,qMax,timeToSpark,WAND_A,vdgWand,lineField,normalField,INK,dropMass,inkjet,chargeFor,rayleighLimit,AIR,cunningham,chargeFactor,satCharge,driftSpeed,deutsch');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -50,5 +50,44 @@ group('precipitator: Cunningham, saturation charge, drift speed, Deutsch', () =>
   const eta = c.deutsch(c.driftSpeed(dp, E), 5, 1, 0.125); near(eta, 1 - Math.exp(-0.0513 * 40), 3e-3, 'η ≈ 87%');
   assert(c.deutsch(c.driftSpeed(10e-6, E), 5, 1, 0.125) > 0.9999, 'large particles: over 99.99%');
   assert(c.deutsch(0, 5, 1, 0.125) === 0); near(1 - c.deutsch(0.1, 10, 1, 0.125), (1 - c.deutsch(0.1, 5, 1, 0.125)) ** 2, 1e-12, 'doubling L squares the penetration');
+});
+/* the grounded wand: a dome of radius R (isolated, charge Q) and the wand's ball of radius a (grounded), centres D apart */
+const pot = (ch, s, rho) => ch.reduce((v, [q, si]) => v + c.KC * q / Math.hypot(s - si, rho), 0);
+const CASES = [[0.05, 0.0005], [0.05, 0.1], [0.15, 0.0005], [0.15, 0.01], [0.15, 0.35], [0.30, 0.05], [0.50, 0.0005], [0.50, 0.6]];   /* [R, gap] */
+group('wand: the dome is an equipotential at V = Q/C and the ball stays at 0 V (every image solution, 0.5 mm to 60 cm gaps)', () => {
+  for (const [R, gap] of CASES) { const a = c.WAND_A, D = R + a + gap, w = c.vdgWand(R, D);
+    for (let i = 0; i <= 24; i++) { const th = i / 24 * Math.PI;
+      near(pot(w.ch, R * Math.cos(th), R * Math.sin(th)), w.V1, 1e-9, `dome at ${R} m, gap ${gap} m, θ = ${th.toFixed(2)}`);
+      const vb = pot(w.ch, D - a * Math.cos(th), a * Math.sin(th)); assert(Math.abs(vb) < 1e-9 * w.V1, `ball at 0 V: ${vb} (R ${R}, gap ${gap})`); } }
+});
+group('wand: Gauss, the surface charge ε₀E·n adds up to Q on the dome and to the ball\'s charge on the ball', () => {
+  for (const [R, gap] of CASES) { const a = c.WAND_A, D = R + a + gap, w = c.vdgWand(R, D), n = 4000;
+    let qd = 0, qb = 0; for (let i = 0; i < n; i++) { const th = (i + 0.5) / n * Math.PI, dA = 2 * Math.PI * Math.sin(th) * Math.PI / n;
+      qd += c.EPS0 * c.normalField(w.ch, 0, R, th) * R * R * dA; qb += c.EPS0 * c.normalField(w.ch, D, a, th, true) * a * a * dA; }
+    near(qd, 1, gap < 0.001 ? 2e-3 : 2e-4, `dome total (R ${R}, gap ${gap})`); near(qb, w.qb1, gap < 0.001 ? 2e-3 : 2e-4, `ball total (R ${R}, gap ${gap})`);
+    const sum = w.ch.reduce((t, [q]) => t + q, 0); near(sum - 1, w.qb1, 1e-9, 'image charges inside the ball add up to its charge'); assert(w.qb1 < 0 && w.qb1 > -1, 'the ball takes an opposite, smaller charge'); }
+});
+group('wand: far away it makes no difference (C → 4πε₀R, breakdown at Q_max, ball charge → −Qa/D)', () => {
+  for (const R of [0.05, 0.15, 0.5]) { const D = 1000, w = c.vdgWand(R, D);
+    near(w.C, c.sphereC(R), 1e-4, `C at ${R} m`); near(w.qSpark, c.qMax(R), 1e-3, `Q_spark at ${R} m`); near(w.qb1, -c.WAND_A / D, 1e-3, 'ball charge'); assert.strictEqual(w.sparkOn, 'dome'); }
+});
+group('wand: the largest field is at the facing points, and at Q_spark it is exactly E_b', () => {
+  for (const [R, gap] of CASES) { const a = c.WAND_A, D = R + a + gap, w = c.vdgWand(R, D);
+    assert(w.thDome < 1e-3 && w.thBall < 1e-3, `peaks face each other (R ${R}, gap ${gap}): ${w.thDome}, ${w.thBall}`);
+    near(w.eDome1, Math.abs(c.lineField(w.ch, R, 0)[0]), 1e-9, 'dome peak on the line'); near(w.eBall1, Math.abs(c.lineField(w.ch, D - a, 0)[0]), 1e-9, 'ball peak on the line');
+    near(w.qSpark * Math.max(w.eDome1, w.eBall1), c.E_BREAK, 1e-12, 'breakdown at Q_spark');
+    for (let i = 1; i <= 60; i++) { const th = i / 60 * Math.PI; assert(Math.abs(c.normalField(w.ch, 0, R, th)) <= w.eDome1 * (1 + 1e-12)); assert(Math.abs(c.normalField(w.ch, D, a, th, true)) <= w.eBall1 * (1 + 1e-12)); } }
+});
+group('wand: agrees with the two sphere solver of Charging by Induction (to its 1.0001R sampling)', () => {
+  const ind = core('induction', 'EPS0,K,solve,sigmaPeak');
+  for (const [R, gap] of CASES) { const a = c.WAND_A, D = R + a + gap, w = c.vdgWand(R, D);
+    const s = ind.solve({ q0: 0, x0: null, A: { c: 0, r: R }, B: { c: D, r: a }, QA: 1, QB: 0, wire: false, gA: false, gB: true });
+    near(s.QB, w.qb1, 1e-6, `ball charge (R ${R}, gap ${gap})`); near(s.VA, w.V1, 1e-6, 'dome voltage');
+    near(Math.abs(ind.sigmaPeak(s.charges, { c: D, r: a }).sigma) / ind.EPS0, w.eBall1 / 1.0001 ** 2, 2e-4, 'ball peak field'); }
+});
+group('wand: closer means an earlier spark, and the default reach (R = 15 cm, ball 35 cm from the dome) breaks down at the ball', () => {
+  let prev = Infinity; for (const gap of [0.6, 0.35, 0.2, 0.1, 0.05, 0.02, 0.01, 0.002]) { const w = c.vdgWand(0.15, 0.18 + gap); assert(w.qSpark < prev, `Q_spark falls as the gap closes (${gap})`); prev = w.qSpark; }
+  const w = c.vdgWand(0.15, 0.15 + 0.35); assert.strictEqual(w.sparkOn, 'ball'); near(w.qSpark / c.qMax(0.15), 0.5545, 1e-3, 'about 55% of Q_max');
+  near(w.qSpark * w.V1, 245.0e3, 1e-3, 'breakdown starts at about 245 kV');
 });
 console.log(`${n} electrostatics at work test groups passed`);
