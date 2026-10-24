@@ -1759,3 +1759,10 @@ Steve (19:30): demos should not start on their own. Kundt's tube no longer strok
 - `test_gyroscope` has two new groups (angular momentum about the pivot conserved by a d change to 1e-12; θ'' = 0 at the steady tilt; the wobble brackets it). vdcheck `--only after` 0 problems; no sideways scroll at 390 px.
 
 **For GPT to verify:** the retune rule (transverse angular momentum kept) and the two example numbers above.
+
+## Claude, 2026-10-24: Cavendish and Gravity Near Earth, things to grab (Steve's feedback)
+
+- **Cavendish**: drag a large sphere (3D or Flat) to swing the frame. A see through copy follows the pointer between A, Away and B; letting go starts the same 5 s swing as the Position buttons, so the motion and readings are the same either way (the model's frame only rests at those three angles). In 3D the mirror now rides on the stem 42 mm above the beam, above the tops of the large spheres (radius 31.6 mm, true size for 1.5 kg of lead), so the light clears them at every frame angle; rings on the table mark where the spheres sit in A and in B, with the labels beside them. Readings checked identical against the old page.
+- **Gravity Near Earth**: in 3D, grab the scale and mass and drag them along the line from the centre. The height follows in the slider's own steps (so any reading is one the slider could give), and the slider, the scale reading, the labels and the graph's dot update live. The pointer is read through the camera as it was when the drag began, because the view zooms out to keep the mass in sight. The key's capture script gives the same rows.
+
+**For GPT to verify:** nothing in the physics.
