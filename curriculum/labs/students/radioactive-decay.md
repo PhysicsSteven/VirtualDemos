@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §10.3. Access for free at http
 
 **Using the demo.**
 
-- The grid shows every nucleus of the sample: parents are filled squares, daughters are round, stable end products are small dots. Choose 100, 400, 1600 or 10 000 nuclei.
+- The tray shows every nucleus of the sample: parents are large balls, daughters slightly smaller balls in a second colour, stable end products small grey balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose 100, 400, 1600 or 10 000 nuclei.
 - Time advances in steps. In each step every parent decays with the exact probability for that step, $$p = 1 - e^{-\lambda\Delta t}$$, decided by its own random number, so no two runs are the same. Play runs the steps; Step takes one at a time. The step length is shown by the clock: one step for the coin flip nuclei, 0.2 d for iodine 131.
 - The middle plot shows the number of each kind against time. Its dashed curve is the expected number $$N_0e^{-\lambda t}$$ and the band is the expected spread; the Display section can hide both, and the half life markers.
 - The half lives are the evaluated values (ENSDF), for example 8.0252 d for iodine 131. A slider, or dragging the T½ marker, changes a half life; the nuclides are then labelled parent and daughter.

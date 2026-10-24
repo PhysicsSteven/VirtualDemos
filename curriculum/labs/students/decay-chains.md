@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §10.3. Access for free at http
 
 **Using the demo.**
 
-- The grid shows every nucleus: parents are filled squares, daughters are round, stable end products are small dots. Choose 100, 400, 1600 or 10 000 nuclei.
+- The tray shows every nucleus: parents are large balls, daughters slightly smaller balls in a second colour, stable end products small grey balls. Each decay flashes, and the Geiger counter under the tray counts every decay. Choose 100, 400, 1600 or 10 000 nuclei.
 - Two step chain: bismuth 210 (half life 5.012 d) beta decays to polonium 210 (138.376 d), which alpha decays to stable lead 206. Short daughter, long parent: tellurium 132 (76.896 h) beta decays to iodine 132 (2.295 h), which decays to stable xenon 132. Half lives are the evaluated values (ENSDF); tiny side branches are left out, as the setup notes say.
 - Time advances in steps (1 d for the bismuth chain, 0.5 h for the tellurium chain). In each step every nucleus changes with the exact probabilities for that step from the Bateman solution, decided by its own random number. Play runs the steps; Step takes one at a time.
 - The middle plot shows the number of each kind against time with the expected curves dashed; the lower plot shows the decays in each time bin. The Display section can hide the expected curves and band. The Parent and daughter readouts show the activity ratio now and the expected values.

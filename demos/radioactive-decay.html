@@ -153,7 +153,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="pane" id="gPane">
-        <canvas id="gCan" tabindex="0" aria-label="Grid of nuclei. Parent nuclei are filled squares, daughters are round, stable end products are small dots. Click a nucleus to follow it. Keys: arrows move the followed nucleus, space plays or pauses, S takes one step, R resets."></canvas>
+        <canvas id="gCan" tabindex="0" aria-label="Tray of nuclei. Parent nuclei are large balls, daughters slightly smaller balls in a second colour, stable end products small grey balls. Each decay flashes and sends a short alpha or beta track out of the nucleus; the Geiger counter below counts every decay. Click a nucleus to follow it. Keys: arrows move the followed nucleus, space plays or pauses, S takes one step, R resets."></canvas>
         <div class="stage-ctl">
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="stepBtn">Step</button>
@@ -606,8 +606,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const itemW = items.map((it) => ctx.measureText(it.txt).width / dpr + 22 * ps);
     const totalW = itemW.reduce((a, b) => a + b, 0) + 14 * ps * (items.length - 1);
     const twoLines = totalW > W - 24;
-    const legH = (twoLines ? 2 : 1) * 20 * ps + 10 * ps;
-    const top = ctlH + 14 * ps, avail = H0 - top - legH - 10 * ps;
+    const legH = (twoLines ? 2 : 1) * 20 * ps + 10 * ps, IR = 50 * ps;
+    const top = ctlH + 14 * ps, avail = H0 - top - legH - IR - 10 * ps;
     const n = Math.round(Math.sqrt(S.N0));
     const side = Math.max(40, Math.min(W - 28, avail));
     const cell = Math.max(1, Math.floor(side * dpr / n));
@@ -616,49 +616,31 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const x0 = Math.round((W * dpr - gp) / 2), y0 = Math.round(blockTop * dpr);
     const legTop = blockTop + gp / dpr + 8 * ps;
     gGeom = { x0, y0, cell, n, gp };
-    // backing
-    ctx.fillStyle = T.grid; ctx.fillRect(x0 - 2, y0 - 2, gp + 4, gp + 4);
-    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(x0 - 2.5, y0 - 2.5, gp + 5, gp + 5);
-    const sp = sim.sp, ns = nSp();
-    const gap = cell >= 5 ? Math.max(1, Math.floor(cell * 0.12)) : 0;
-    const full = cell - 2 * gap;
-    // parent: filled square
-    ctx.fillStyle = T.sp[0]; ctx.beginPath();
-    for (let k = 0; k < S.N0; k++) if (sp[k] === 0) ctx.rect(x0 + (k % n) * cell + gap, y0 + Math.floor(k / n) * cell + gap, full, full);
-    ctx.fill();
-    // intermediate daughter: circle (large cells) or a smaller square
-    if (ns === 2) {
-      ctx.fillStyle = T.sp[1]; ctx.beginPath();
-      if (cell >= 7) {
-        const r = full / 2 * 0.98;
-        for (let k = 0; k < S.N0; k++) if (sp[k] === 1) {
-          const cx = x0 + (k % n) * cell + cell / 2, cy = y0 + Math.floor(k / n) * cell + cell / 2;
-          ctx.moveTo(cx + r, cy); ctx.arc(cx, cy, r, 0, 2 * Math.PI);
-        }
-      } else {
-        const g2 = Math.max(gap, Math.round(cell * 0.15)), f2 = Math.max(1, cell - 2 * g2);
-        for (let k = 0; k < S.N0; k++) if (sp[k] === 1) ctx.rect(x0 + (k % n) * cell + g2, y0 + Math.floor(k / n) * cell + g2, f2, f2);
-      }
-      ctx.fill();
-    }
-    // stable end product: small dot
-    const ds = Math.max(1, Math.round(cell * 0.34)), off = Math.floor((cell - ds) / 2);
-    ctx.fillStyle = T.sp[2]; ctx.beginPath();
-    for (let k = 0; k < S.N0; k++) if (sp[k] === ns) ctx.rect(x0 + (k % n) * cell + off, y0 + Math.floor(k / n) * cell + off, ds, ds);
-    ctx.fill();
-    // flashes: a bright outline that fades (and grows unless reduced motion)
+    // the sample: nuclei in a shallow metal tray (a planchet), each drawn as a small shaded ball
+    trayAndNuclei(ctx, x0, y0, cell, n, gp, ps);
+    // decays of the last step: a flash at the nucleus and the emitted particle's short track leaving it
     const now = performance.now(), dur = 520;
     let keep = 0;
-    ctx.strokeStyle = T.ink;
+    const kind = decayKinds();
     for (let j = 0; j < flashes.length; j++) {
       const f = flashes[j], a = 1 - (now - f.t0) / dur;
       if (a <= 0) continue;
       flashes[keep++] = f;
       if (f.i >= S.N0) continue;
-      const grow = reduce ? 0 : (1 - a) * cell * 0.2;
-      const cx = x0 + (f.i % n) * cell + cell / 2, cy = y0 + Math.floor(f.i / n) * cell + cell / 2, h = cell / 2 - Math.max(0.5, cell * 0.04) + grow;
-      ctx.globalAlpha = 0.85 * a; ctx.lineWidth = Math.max(1, Math.round(cell * 0.1));
-      ctx.strokeRect(cx - h, cy - h, 2 * h, 2 * h);
+      const cx = x0 + (f.i % n) * cell + cell / 2, cy = y0 + Math.floor(f.i / n) * cell + cell / 2;
+      const from = Math.max(0, sim.sp[f.i] - 1), k = kind[from] || 'b', u = reduce ? 1 : Math.min(1, (1 - a) * 1.6);
+      const ang = ((f.i * 2654435761) >>> 0) / 4294967296 * 2 * Math.PI, Lt = (k === 'a' ? 1.8 : 4.5) * Math.max(cell, 6 * dpr) * u;
+      ctx.globalAlpha = a;
+      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, cell * 0.9 + 3 * dpr);
+      g.addColorStop(0, 'rgba(255,248,214,0.95)'); g.addColorStop(0.35, k === 'a' ? 'rgba(255,190,70,0.55)' : 'rgba(120,220,255,0.5)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = g; ctx.fillRect(cx - cell * 1.4 - 4 * dpr, cy - cell * 1.4 - 4 * dpr, cell * 2.8 + 8 * dpr, cell * 2.8 + 8 * dpr);
+      if (flashes.length < 1500) {
+        const w = (k === 'a' ? 3 : 1.6) * dpr * ps;
+        ctx.globalAlpha = Math.min(1, a * 1.5); ctx.lineCap = 'round';
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(ang) * Lt, cy + Math.sin(ang) * Lt);
+        ctx.strokeStyle = 'rgba(10,20,35,0.55)'; ctx.lineWidth = w + 2 * dpr; ctx.stroke();
+        ctx.strokeStyle = k === 'a' ? '#ffe27a' : '#7fe3ff'; ctx.lineWidth = w; ctx.stroke();
+      }
     }
     flashes.length = keep; ctx.globalAlpha = 1;
     // followed nucleus: accent ring and ticks on the grid edge
@@ -687,8 +669,68 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         x += itemW[it.i] + 14 * ps;
       }
     });
+    geiger(ctx, W, legTop + legH - 2 * ps, IR, ps);
+  }
+  /* what leaves the nucleus in each decay of the chain, for the track drawn at a flash: 'a' alpha, 'b' beta (the coin is drawn as beta) */
+  function decayKinds() { return S.preset === 'bi210' && !S.custom ? ['b', 'a'] : ['b', 'b']; }
+  /* nucleus sprites, made once per cell size and theme: parent full size, intermediate a little smaller, stable end product small and grey */
+  let sprites = null;
+  function nucleusSprites(cell) {
+    const key = cell + '|' + T.sp.join(',');
+    if (sprites && sprites.key === key) return sprites;
+    const make = (col, f, glint) => {
+      const c = document.createElement('canvas'); c.width = c.height = Math.max(1, cell);
+      const x = c.getContext('2d'), r = Math.max(0.5, cell / 2 * f);
+      if (window.VDGear && cell >= 4) VDGear.ball(x, cell / 2, cell / 2, r, col, { glint });
+      else { x.fillStyle = col; x.beginPath(); x.arc(cell / 2, cell / 2, r, 0, 7); x.fill(); }
+      return c;
+    };
+    const hex = (c, fb) => (/^#[0-9a-f]{6}$/i.test(c) ? c : fb);
+    sprites = { key, s: [make(hex(T.sp[0], '#1f57b0'), 0.9, 0.9), make(hex(T.sp[1], '#e08414'), 0.78, 0.8), make(hex(T.sp[2], '#a3adba'), 0.5, 0.4)] };
+    return sprites;
+  }
+  function trayAndNuclei(ctx, x0, y0, cell, n, gp, ps) {
+    const rim = Math.round(7 * dpr * ps), d = VDGear && VDGear.dark ? false : false;
+    void d;
+    let g = ctx.createLinearGradient(x0 - rim, y0 - rim, x0 + gp + rim, y0 + gp + rim);
+    g.addColorStop(0, '#eef2f6'); g.addColorStop(0.45, '#a9b3bf'); g.addColorStop(1, '#6d7784');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(x0 - rim, y0 - rim, gp + 2 * rim, gp + 2 * rim, rim * 1.4); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = dpr; ctx.stroke();
+    g = ctx.createRadialGradient(x0 + gp * 0.4, y0 + gp * 0.35, gp * 0.05, x0 + gp / 2, y0 + gp / 2, gp * 0.75);
+    g.addColorStop(0, T.canvas); g.addColorStop(1, T.grid);
+    ctx.fillStyle = g; ctx.fillRect(x0 - 2, y0 - 2, gp + 4, gp + 4);
+    ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 2 * dpr; ctx.strokeRect(x0 - 2, y0 - 2, gp + 4, gp + 4);
+    const sp = sim.sp, ns = nSp(), spr = nucleusSprites(cell).s;
+    for (let k = 0; k < S.N0; k++) {
+      const v = sp[k], im = v === 0 ? spr[0] : v === ns ? spr[2] : spr[1];
+      ctx.drawImage(im, x0 + (k % n) * cell, y0 + Math.floor(k / n) * cell);
+    }
+  }
+  /* the Geiger counter under the sample: it counts every decay (taken as 100% efficient, a stated idealisation), so its total is the
+     number of nuclei that have decayed and its last step reading is the activity histogram's last bar at one step a bin */
+  function geiger(ctx, W, y, h, ps) {
+    if (!window.VDGear || h < 20) return;
+    ctx.save(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    let tot = 0, last = 0;
+    for (let i = 0; i < nSp(); i++) { const d = D[i]; last += d[d.length - 1] || 0; for (let k = 0; k < d.length; k++) tot += d[k]; }
+    const bw = Math.min(W - 24, 330 * ps), bx = (W - bw) / 2, bh = h - 10 * ps, by = y + 4 * ps;
+    const tube = Math.min(110 * ps, bw * 0.3);
+    VDGear.rod(ctx, bx, by + bh / 2, bx + tube, by + bh / 2, 7 * ps, { color: '#b9c1cb' });
+    ctx.fillStyle = '#3a2f22'; ctx.beginPath(); ctx.ellipse(bx, by + bh / 2, 2.5 * ps, 7 * ps, 0, 0, 7); ctx.fill();
+    ctx.font = `600 ${9 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('GM tube', bx + tube / 2, by + bh / 2 + 9 * ps);
+    VDGear.cable(ctx, bx + tube, by + bh / 2, bx + tube + 16 * ps, by + bh / 2, 4 * ps, { w: 2.5 * ps });
+    const cx = bx + tube + 16 * ps, cw = bw - tube - 16 * ps;
+    VDGear.box(ctx, cx, by, cw, bh, { r: 6 * ps, shadow: false });
+    const lw = (cw - 24 * ps) / 2, lh = Math.min(22 * ps, bh - 18 * ps);
+    VDGear.lcd(ctx, cx + 8 * ps, by + 5 * ps, lw, lh, fmtInt(tot));
+    VDGear.lcd(ctx, cx + 16 * ps + lw, by + 5 * ps, lw, lh, fmtInt(last));
+    ctx.font = `700 ${7.5 * ps}px ${T.ui}`; ctx.fillStyle = '#c9d2dc'; ctx.textAlign = 'center';
+    ctx.fillText('COUNTS', cx + 8 * ps + lw / 2, by + 7 * ps + lh); ctx.fillText('LAST STEP', cx + 16 * ps + lw * 1.5, by + 7 * ps + lh);
+    ctx.restore();
   }
   function drawSwatch(ctx, i, cx, cy, s) {
+    if (window.VDGear && /^#[0-9a-f]{6}$/i.test(spFill(i))) { VDGear.ball(ctx, cx, cy, s / 2 * (i === 0 ? 0.95 : i < nSp() ? 0.82 : 0.55), spFill(i), { glint: 0.8 }); return; }
     ctx.fillStyle = spFill(i);
     if (i === 0) ctx.fillRect(cx - s / 2, cy - s / 2, s, s);
     else if (i < nSp()) { ctx.beginPath(); ctx.arc(cx, cy, s / 2, 0, 2 * Math.PI); ctx.fill(); }
