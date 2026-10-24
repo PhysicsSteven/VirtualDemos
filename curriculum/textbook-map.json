@@ -9183,7 +9183,10 @@
       "status": "usable",
       "note": "Dedicated modern bench deferred despite introductory speed-of-light connection.",
       "title": "Speed of Light",
-      "url": "demos/speed-of-light.html"
+      "url": "demos/speed-of-light.html",
+      "handouts": [
+        "speed-of-light"
+      ]
     },
     {
       "demo": "spin-resonance",

@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles toggles-label toggles-input swatch phone-chips-button pane-canvas" lang="en">
+<html data-vd-off="root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles toggles-label toggles-input swatch phone-chips-button pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -171,6 +171,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/speed-of-light.html" target="speed-of-light-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -241,9 +242,10 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
         <h2>Readings</h2>
         <div class="btnrow">
           <button type="button" class="btn primary" id="capture">Capture reading</button>
-          <button type="button" class="btn" id="expTab">Export CSV</button>
+          <button type="button" class="btn" id="expTab">Export to worksheet</button>
           <button type="button" class="btn" id="clearTab">Clear</button>
         </div>
+        <p class="note" id="expMsg" aria-live="polite"></p>
         <p class="note" id="simNote" hidden></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>Dir</th><th>Meter rev/s</th><th>Micrometer</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
         <div>
@@ -861,8 +863,8 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
       const f = F.fit, kum = f.k * 1e3, sek = f.seK * 1e3;
       html += `<div class="wide"><dt>Slope k (${f.n} reading${f.n > 1 ? 's' : ''})</dt><dd>${isFinite(sek) ? `${kum.toFixed(4)} ± ${sek.toFixed(4)}` : kum.toFixed(4)} µm per rev/s</dd></div>`;
       html += `<div class="wide"><dt>Intercept: the reading at rest</dt><dd>${f.a.toFixed(4)}${isFinite(f.seA) ? ` ± ${f.seA.toFixed(4)}` : ''} mm</dd></div>`;
-      if (isFinite(F.c)) html += `<div class="wide big"><dt>c = 8πAD² / (D + B)k</dt><dd>${isFinite(F.sc) ? `(${c8(F.c, 3)} ± ${c8(F.sc, 3)})` : c8(F.c, 3)} × 10⁸ m/s</dd></div>`;
-      if (F.pair && isFinite(F.pair.c)) html += `<div class="wide"><dt>Pair method: last CW and CCW rows, ω = 2π(f<sub>CW</sub> + f<sub>CCW</sub>)</dt><dd>${c8(F.pair.c, 3)} × 10⁸ m/s</dd></div>`;
+      if (isFinite(F.c) && !S.blind) html += `<div class="wide big"><dt>c = 8πAD² / (D + B)k</dt><dd>${isFinite(F.sc) ? `(${c8(F.c, 3)} ± ${c8(F.sc, 3)})` : c8(F.c, 3)} × 10⁸ m/s</dd></div>`;
+      if (F.pair && isFinite(F.pair.c) && !S.blind) html += `<div class="wide"><dt>Pair method: last CW and CCW rows, ω = 2π(f<sub>CW</sub> + f<sub>CCW</sub>)</dt><dd>${c8(F.pair.c, 3)} × 10⁸ m/s</dd></div>`;
       if (!S.blind && isFinite(F.c)) {
         const diff = (F.c - C_LIGHT) / C_LIGHT * 100, z = isFinite(F.sc) && F.sc > 0 ? Math.abs(F.c - C_LIGHT) / F.sc : NaN;
         html += `<div class="wide"><dt>Accepted c = 299 792 458 m/s (exact)</dt><dd>yours ${diff >= 0 ? '+' : '−'}${Math.abs(diff).toFixed(2)} %${isFinite(z) ? `, ${z.toFixed(1)} σ` : ''}</dd></div>`;
@@ -1247,8 +1249,24 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
   document.querySelectorAll('[data-step]').forEach((b) => b.addEventListener('click', () => setMic(S.mic + +b.dataset.step)));
   for (const id of ['eD', 'eB', 'eA']) $(id).addEventListener('change', fitAndPlot);
   $('capture').addEventListener('click', capture);
-  $('expTab').addEventListener('click', () => download(`speed-of-light-readings-seed${inst.seed}.csv`, csvTable()));
-  $('clearTab').addEventListener('click', () => { S.rows = []; renderTable(); });
+  /* Export to worksheet: the rows go to the worksheet (vd-handoff:speed-of-light), or to a CSV file where storage is blocked.
+     Clear starts a new series, which the worksheet puts in a new copy of its table. */
+  let wsSeries = Date.now();
+  function toWorksheet() {
+    const msg = $('expMsg');
+    if (!S.rows.length) { msg.textContent = 'No readings to export yet.'; return; }
+    const columns = ['row', 'direction', 'meter_rev_per_s', 'signed_rev_per_s', 'micrometer_mm', 'D_m', 'B_m', 'seed', 'simulated'];
+    const rows = S.rows.map((r, i) => { const f = rowSigned(r); return [String(i + 1), r.dir, r.meter, isFinite(f) ? String(f) : '', r.mic, r.D.toFixed(2), r.B.toFixed(3), String(inst.seed), r.sim ? 'yes' : 'no']; });
+    const name = `speed-of-light-readings-seed${inst.seed}.csv`, txt = csvTable();
+    const hand = { v: 1, demo: 'speed-of-light', series: wsSeries, sent: new Date().toISOString(), columns, rows, note: `Simulated data from the Speed of Light demo, bench seed ${inst.seed}.`, csv: txt, csvName: name };
+    try { localStorage.setItem('vd-handoff:speed-of-light', JSON.stringify(hand)); }
+    catch (_) { download(name, txt); msg.textContent = 'This browser blocks storage, so the readings were saved as a CSV file instead.'; return; }
+    msg.textContent = `${rows.length} reading${rows.length === 1 ? '' : 's'} sent to the worksheet. `;
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/speed-of-light.html'; a.target = 'speed-of-light-worksheet'; a.textContent = 'Open the worksheet';
+    a.style.color = 'var(--accent)'; msg.appendChild(a);
+  }
+  $('expTab').addEventListener('click', toWorksheet);
+  $('clearTab').addEventListener('click', () => { S.rows = []; wsSeries = Date.now(); $('expMsg').textContent = ''; renderTable(); });
   $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; if (S.blind) { S.truth = false; $('showTrue').checked = false; } syncUI(); fitAndPlot(); dirtyAll(); });
   $('showTrue').addEventListener('change', (e) => { S.truth = e.target.checked; dirtyAll(); });
   $('digits').addEventListener('change', (e) => { S.digits = e.target.checked; dirtyAll(); });
@@ -1274,7 +1292,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
       apply() { S.revs = 1000; S.dir = 1; S.D = 12; S.B = 0.5; S.view = 'normal'; S.mic = restMic(); S.rows = simulatedRows(); } },
   };
   function applyPreset(p) {
-    S.preset = p; S.ghost = null; if (p === 'measure') S.rows = [];
+    S.preset = p; S.ghost = null; if (p === 'measure') { S.rows = []; wsSeries = Date.now(); }
     PRESETS[p].apply(); slowState.t = 0;
     meterShown = tachReading(signed(), inst.seed, gateN);
     document.querySelectorAll('#presets button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.p === p)));

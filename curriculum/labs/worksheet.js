@@ -257,7 +257,7 @@
   const MODERN = [];
   /* Vol. 3 ch. 5 (relativity) and ch. 6 (photons and matter waves) */
   MODERN.push('velocity-addition', 'relativistic-momentum', 'relativistic-energy' /* Velocity, Momentum and Energy Near c demo, one per view */);
-  MODERN.push('photoelectric', 'compton', 'franck-hertz', 'spacetime');
+  MODERN.push('photoelectric', 'compton', 'franck-hertz', 'spacetime', 'speed-of-light');
   Object.assign(FROM_DEMO, {
     /* Reading | Launch speed u′ (c) | Probe time A to B Δt (s) | Ground speed u (c) | u − u′ (c) | 1 − uu′/c² */
     'velocity-addition': { demo: 'Velocity, Momentum and Energy Near c (Adding velocities)', cols: ['row', 'u_prime_c', 'probe_dt_s', null, null, null] },
@@ -273,6 +273,8 @@
     'franck-hertz': { demo: 'Franck–Hertz Experiment', cols: ['row', (r) => `${r.gas === 'Neon' ? 'Neon' : `Mercury, ${r.T_C} °C`}, retarding ${r.Ur_V} V, contact ${r.Uc_V} V`, 'n', 'U_V', null] },
     /* Reading | Event | Speed β | ct (ly) | x (ly) | ct′ (ly) | x′ (ly) | (ct′)² (ly²) | (x′)² (ly²) */
     spacetime: { demo: 'Spacetime Diagrams', cols: ['row', 'event', 'beta', 'ct', 'x', 'ctp', 'xp', null, null] },
+    /* Reading | Direction | Signed speed f (rev/s) | Micrometer reading s (mm) | D (m) | B (m) */
+    'speed-of-light': { demo: 'Speed of Light', cols: ['row', 'direction', 'signed_rev_per_s', 'micrometer_mm', 'D_m', 'B_m'] },
   });
   ENABLED.push(...MODERN);
   Object.assign(FROM_DEMO, {
