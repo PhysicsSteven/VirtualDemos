@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow button-focusvisible input slider-head slider-head-label readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage slider-head-output readout-big-dd phone-chips-button" lang="en">
+<html data-vd-off="root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow button-focusvisible input slider-head slider-head-label readout-dd-ok check check-input status plotbox-canvas wide-proj-bench wide-proj-stage slider-head-output readout-big-dd phone-chips-button" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -191,6 +191,7 @@ select:disabled { opacity: 0.5; }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/hydrogen-atom.html" target="hydrogen-atom-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Presets</h2>
         <div class="chips" id="presets">
@@ -253,6 +254,27 @@ select:disabled { opacity: 0.5; }
         </details>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="hydrogen-atom" data-title="Hydrogen Orbitals" data-demo="hydrogen-orbitals">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="inline">
@@ -772,6 +794,7 @@ select:disabled { opacity: 0.5; }
     }
     sigRef = Math.max(mc, 1) / (N * D * D); dRef = dm || 1;
     if (G.ready) { uploadCloud(); if (MZ.on) startMeasure(); }
+    if (!MZ.on) { MZ.k = 0; MZ.sr = 0; MZ.sr2 = 0; }  /* a new state's readings never carry an old run's finds */
     dirty.cloudColor = true; dirty.faces = true;
   }
 
@@ -790,7 +813,7 @@ select:disabled { opacity: 0.5; }
   const GLOW_PEAK = 3.2;         // tone map input at the densest column seen (1 − e^(−3.2) = 0.96)
   const FACE_N = 150, FLOOR_NY = 212;   // cut face textures: walls FACE_N square, the floor FACE_N by FLOOR_NY
   const CUT = { on: false, az: null, zs: 1, L: 1 };
-  const MZ = { on: false, k: 0, tt: 0 };
+  const MZ = { on: false, k: 0, tt: 0, sr: 0, sr2: 0 };  /* sr, sr2: sums of r and r² over the finds, for Record reading */
   const NO_FLASH = -1e4;
   // one clock for the flashes of new finds, in seconds since the page opened
   const T_0 = performance.now(), clk = () => (performance.now() - T_0) / 1000;
@@ -1011,7 +1034,7 @@ select:disabled { opacity: 0.5; }
   const MEAS_TAU = 2.5, MEAS_RATE0 = 4;
   const measTarget = (tt) => Math.floor(MEAS_RATE0 * MEAS_TAU * (Math.exp(tt / MEAS_TAU) - 1));
   function startMeasure() {
-    MZ.on = true; MZ.k = 0; MZ.tt = 0;
+    MZ.on = true; MZ.k = 0; MZ.tt = 0; MZ.sr = 0; MZ.sr2 = 0;
     if (G.ready) { G.bA.array.fill(NO_FLASH); markAll(G.bA); G.geo.setDrawRange(0, 0); }
     updateMeasureUI();
   }
@@ -1041,7 +1064,8 @@ select:disabled { opacity: 0.5; }
       if (stB) psiAt(stB, p[0], p[1], p[2], ob);
       const acc = pointColor(oa[0], oa[1], stB ? ob[0] : null, ob[1], del, C);
       if (stB && Math.random() >= acc) continue;
-      const k = MZ.k++;
+      const k = MZ.k++, rr = p[0] * p[0] + p[1] * p[1] + p[2] * p[2];
+      MZ.sr += Math.sqrt(rr); MZ.sr2 += rr;
       pos[3 * k] = p[0]; pos[3 * k + 1] = p[1]; pos[3 * k + 2] = p[2];
       col[3 * k] = C[0]; col[3 * k + 1] = C[1]; col[3 * k + 2] = C[2];
       w[k] = 1; bA[k] = now;
@@ -1979,10 +2003,19 @@ select:disabled { opacity: 0.5; }
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+  /* Record reading: the finds of a Measure run, their mean distance from the nucleus and its standard error s/√N */
+  window.vdShowCols = [['orbital', 'orbital'], ['N', 'N'], ['r_mean', '⟨r⟩ (a₀)'], ['r_se', '± (a₀)']];
+  window.vdReadingRow = () => {
+    if (stB) return 'Record works on one state: turn off the second state. Write the superposition readouts in the second table by hand.';
+    if (!MZ.k) return 'Press Measure first, and record once it has found some positions.';
+    const N = MZ.k, mean = MZ.sr / N, sd = N > 1 ? Math.sqrt(Math.max(0, (MZ.sr2 - N * mean * mean) / (N - 1))) : 0;
+    return { orbital: nameText(nameOf(S.n, S.l, S.m, S.real)), n: S.n, l: S.l, m: S.m, N, r_mean: +mean.toFixed(4), r_se: +(sd / Math.sqrt(N)).toFixed(4),
+      r_sd: +sd.toFixed(4), r_mp: +stA.rMP.toFixed(2) };
+  };
   window.__ho = {
     S, get stA() { return stA; }, get stB() { return stB; }, get dip() { return dip; }, get cloud() { return cloud; },
     get three() { return G.ready; }, get fit() { return curFit; }, get frameMs() { return frameMs; }, get floatGlow() { return !!G.rt; },
-    get measured() { return MZ.k; }, get glowFrac() { return G.glowFrac; }, get refs() { return { sigRef, dRef, N: cloud && cloud.N, fit: curFit, rtH: G.rt && G.rt.height }; }, orbit, applyPreset, setView, setPlaying, update, setCut, setMeasure,
+    get measured() { return MZ.k; }, get MZ() { return MZ; }, get glowFrac() { return G.glowFrac; }, get refs() { return { sigRef, dRef, N: cloud && cloud.N, fit: curFit, rtH: G.rt && G.rt.height }; }, orbit, applyPreset, setView, setPlaying, update, setCut, setMeasure,
     hover(r) { hoverR = r; rHoverPx = r === null ? null : rGeom().X(r); dirty.radial = true; dirty.slice = true; schedule(); }
   };
 
@@ -1995,7 +2028,7 @@ select:disabled { opacity: 0.5; }
   ro.observe(vPane); ro.observe(rPane);
   resize();
   spinBtn.setAttribute('aria-pressed', String(orbit.spin));
-  applyPreset('3dz2');
+  { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : '3dz2'); }
   curFit = targetFit;
   setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty.radial = true; dirty.slice = true; schedule(); });

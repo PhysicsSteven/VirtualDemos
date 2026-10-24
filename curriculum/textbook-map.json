@@ -7782,9 +7782,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
+      "note": "Volume 3 sections mapped 2026-10-24. Interactive worksheet (2026-10-24): Measure finds the electron at random from |ψ|²; the mean distance of the finds against ⟨r⟩ = (a₀/2)[3n² − l(l + 1)], most probable radii against Bohr’s n²a₀, and superpositions for the Δl = ±1 selection rule.",
       "title": "Hydrogen Orbitals",
-      "url": "demos/hydrogen-orbitals.html"
+      "url": "demos/hydrogen-orbitals.html",
+      "handouts": [
+        "hydrogen-atom"
+      ]
     },
     {
       "demo": "ideal-gas",
@@ -8027,9 +8030,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
+      "note": "Volume 3 sections mapped 2026-10-24. Interactive worksheet (2026-10-24): output against absorbed pump power for Nd:YAG at two output mirrors and for ruby (threshold, slope efficiency, inversion clamped at threshold), and He–Ne cavity mode spacing c/2L.",
       "title": "Lasers and Stimulated Emission",
-      "url": "demos/lasers.html"
+      "url": "demos/lasers.html",
+      "handouts": [
+        "laser-threshold"
+      ]
     },
     {
       "demo": "magnetic-force",
@@ -9226,9 +9232,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
+      "note": "Volume 3 sections mapped 2026-10-24. Lab bench (Teltron TEL.2560) with the full student lab; its Capture reading table now goes to the interactive worksheet with Export to worksheet (2026-10-24): g for DPPH, γ/2π for ¹H and ¹⁹F.",
       "title": "Spin Resonance",
-      "url": "demos/spin-resonance.html"
+      "url": "demos/spin-resonance.html",
+      "handouts": [
+        "spin-resonance"
+      ]
     },
     {
       "demo": "springs",

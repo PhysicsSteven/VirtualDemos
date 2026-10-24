@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles swatch phone-chips-button pane-canvas" lang="en">
+<html data-vd-off="root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles swatch phone-chips-button pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -181,6 +181,7 @@ table.rows td.b { font-size: 0.76rem; }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/spin-resonance.html" target="spin-resonance-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -268,6 +269,7 @@ table.rows td.b { font-size: 0.76rem; }
         <h2>Readings</h2>
         <div class="btnrow">
           <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="expWs">Export to worksheet</button>
           <button type="button" class="btn" id="expTab">Export table CSV</button>
           <button type="button" class="btn" id="clearTab">Clear</button>
         </div>
@@ -1391,7 +1393,30 @@ table.rows td.b { font-size: 0.76rem; }
   $('expTr').addEventListener('click', () => download(`spin-resonance-traces-seed${inst.seed}.csv`, csvTraces()));
   $('expTab').addEventListener('click', () => download(`spin-resonance-readings-seed${inst.seed}.csv`, csvTable()));
   $('capture').addEventListener('click', capture);
-  $('clearTab').addEventListener('click', () => { S.rows = []; renderTable(); $('capNote').hidden = true; });
+  $('clearTab').addEventListener('click', () => { S.rows = []; wsSeries = Date.now(); renderTable(); $('capNote').hidden = true; });
+  /* Export to worksheet: the captured rows go to the Spin Resonance worksheet (the vd-handoff format of the shared Readings section);
+     Clear starts a new series, which the worksheet puts in a new copy of its table */
+  let wsSeries = 0;
+  function handoffRows() {
+    return S.rows.map((r) => { const B = rowB(r), BZv = r.exp === 'psr' ? zeemanField(r.B20, r.temp) : 0;
+      return { experiment: r.exp.toUpperCase(), sample: SAMPLES[r.exp][r.sample].name, range: r.range, meter_kHz: r.meter, nu_MHz: String(parseFloat(r.meter)),
+        sweep: r.sweep.toUpperCase(), method: r.method === 'volt' ? 'V cursor' : r.method === 'ruler' ? 'chart ruler' : 'cursors A to B', reading: r.reading, unit: r.unit,
+        temp_C: r.exp === 'psr' ? r.temp : '', B20_mT: r.exp === 'psr' ? (r.B20 * 1e3).toFixed(2) : '', BZ_mT: r.exp === 'psr' ? (BZv * 1e3).toFixed(3) : '',
+        Bscan_mT: isFinite(B) ? ((B - BZv) * 1e3).toFixed(4) : '', B_mT: isFinite(B) ? (B * 1e3).toFixed(4) : '', seed: r.seed }; });
+  }
+  $('expWs').addEventListener('click', () => {
+    const note = $('capNote'), slug = 'spin-resonance';
+    if (!S.rows.length) { note.textContent = 'No readings to export.'; note.hidden = false; return; }
+    if (!wsSeries) wsSeries = Date.now();
+    const rows = handoffRows(), cols = Object.keys(rows[0]), txt = csvTable(), name = `spin-resonance-readings-seed${inst.seed}.csv`;
+    const hand = { v: 1, demo: 'spin-resonance', series: wsSeries, sent: new Date().toISOString(), columns: ['row'].concat(cols),
+      rows: rows.map((r, i) => [String(i + 1)].concat(cols.map((k) => (r[k] == null ? '' : String(r[k]))))), note: 'Simulated data from the Spin Resonance demo.', csv: txt, csvName: name };
+    try { localStorage.setItem('vd-handoff:' + slug, JSON.stringify(hand)); } catch (_) { download(name, txt); note.textContent = 'This browser blocks storage, so the readings were saved as a CSV file instead.'; note.hidden = false; return; }
+    note.textContent = rows.length + ' reading' + (rows.length === 1 ? '' : 's') + ' sent to the worksheet. ';
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/' + slug + '.html'; a.target = slug + '-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)';
+    note.appendChild(a); note.hidden = false;
+  });
+  window.vdReadings = () => S.rows.length; window.vdRows = () => handoffRows();
   $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; if (S.blind) { S.expect = false; $('expect').checked = false; } syncUI(); fitAndPlot(); dirtyAll(); });
   $('expect').addEventListener('change', (e) => { S.expect = e.target.checked; dirtyAll(); });
   function setSeed(n) {
@@ -1470,7 +1495,7 @@ table.rows td.b { font-size: 0.76rem; }
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
     requestAnimationFrame(loop);
   }
-  window.__sr = { get frameMs() { return frameMs; }, S, slow, get inst() { return inst; }, osc, res, nu, BZ, meterValue: () => meterShown, applyPreset, setSens, setDial, setRange, setCfg, setSweep, slowRun, capture, fits, csvTable, csvTraces, scopeHandles, get sg() { return sg; }, get cg() { return cg; }, get gl() { return G.ready; }, setPlaying, advanceSlow,
+  window.__sr = { get frameMs() { return frameMs; }, get scope() { return scopeData; }, S, slow, get inst() { return inst; }, osc, res, nu, BZ, meterValue: () => meterShown, applyPreset, setSens, setDial, setRange, setCfg, setSweep, slowRun, capture, fits, csvTable, csvTraces, scopeHandles, get sg() { return sg; }, get cg() { return cg; }, get gl() { return G.ready; }, setPlaying, advanceSlow,
     pickScreen() { if (!G.ready) return null; const r = G.el.getBoundingClientRect(), o = {}; for (const p of G.pick) { const v = new THREE.Vector3(); p.grip.getWorldPosition(v); v.project(G.cam); o[p.id] = [r.left + (v.x + 1) / 2 * r.width, r.top + (1 - v.y) / 2 * r.height]; } return o; } };
 
   // ---------- start ----------
@@ -1482,7 +1507,7 @@ table.rows td.b { font-size: 0.76rem; }
   for (const id of ['p3d', 'pScope', 'pChart']) ro.observe($(id));
   ro.observe(cans.plot.parentElement);
   resize();
-  applyPreset('esr');
+  { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'esr'); }
   renderTable();
   setPlaying(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { G.panelDirty = true; dirtyAll(); });

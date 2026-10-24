@@ -352,7 +352,8 @@
   /* Vol. 3 ch. 7 and 8 (quantum mechanics, atomic structure), kept in its own list so the chapter threads don't collide */
   const MODERN_7_8 = ['orbital-magnetic-moment', 'stern-gerlach', 'zeeman-effect' /* Atoms in a Magnetic Field demo, one per view */,
     'periodic-table', 'x-ray-spectra' /* Shells, the Periodic Table and X Rays demo, one per view */,
-    'quantum-tunneling', 'energy-levels', 'uncertainty-principle' /* Quantum Wave Packets demo, by setup */];
+    'quantum-tunneling', 'energy-levels', 'uncertainty-principle' /* Quantum Wave Packets demo, by setup */,
+    'hydrogen-atom' /* Hydrogen Orbitals demo */, 'laser-threshold' /* Lasers demo */, 'spin-resonance' /* Spin Resonance bench */];
   MODERN.push(...MODERN_7_8); ENABLED.push(...MODERN_7_8);
   Object.assign(FROM_DEMO, {
     /* Reading | n | l | m_l | Field B (T) | Current I (A) | Area A (m²) | Moment μ = IA (A·m²) | Bohr angular momentum L (J·s) | Energy shift U (meV) */
@@ -371,6 +372,12 @@
     'energy-levels': { demo: 'Quantum Wave Packets (wells)', cols: ['row', (r) => (r.V0_eV !== '' ? `${r.setup}, V₀ = ${r.V0_eV} eV` : r.setup), 'L_nm', 'hbar_omega_eV', 'n', 'E_eV', null] },
     /* Reading | Width σ (nm) | Time t (fs) | Spread Δx (nm) | Momentum spread Δp (eV/c) | Δx·Δp (ħ) | 1/σ (1/nm) | t² (fs²) | Δx² (nm²) */
     'uncertainty-principle': { demo: 'Quantum Wave Packets (free particle)', cols: ['row', 'sigma_nm', 't_fs', 'dx_nm', 'dp_eV_c', 'dxdp_hbar', null, null, null] },
+    /* Reading | Orbital | n | l | Positions found N | Mean r of the finds (a₀) | Standard error (a₀) | Most probable r (a₀) | 3n² − l(l + 1) */
+    'hydrogen-atom': { demo: 'Hydrogen Orbitals', cols: ['row', 'orbital', 'n', 'l', 'N', 'r_mean', 'r_se', 'r_mp', null] },
+    /* Reading | Medium | Mirror R | Pump rate W (1/s) | Absorbed pump power (W) | Output power (W) | Inversion N/N_th */
+    'laser-threshold': { demo: 'Lasers and Stimulated Emission (Laser)', cols: ['row', 'medium', 'R', 'W_per_s', 'Pabs_W', 'Pout_W', 'N_over_Nth'] },
+    /* Sample | Range | Probe frequency ν (MHz) | Method | Time or voltage reading (units) | Temperature t (°C) | B₂₀ (mT) | Scan field B_scan (mT) | Total field B (mT) */
+    'spin-resonance': { demo: 'Spin Resonance', cols: ['sample', 'range', 'nu_MHz', (r) => `${r.method}, ${r.sweep}`, (r) => `${r.reading} ${r.unit}`, 'temp_C', 'B20_mT', 'Bscan_mT', 'B_mT'] },
   });
   /* ==MODERN END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

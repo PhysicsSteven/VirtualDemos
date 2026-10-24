@@ -49,17 +49,17 @@ For real equipment, follow the department's power and instructions for handling 
 
 **Nuclear resonance.** Put glycerine in the proton probe. Record the magnet's $$B_{20}$$ and the thermometer reading. Tune the frequency until a peak appears during the scan. Take at least five frequencies, keeping the temperature fixed. Compare the width with polystyrene. Then use PTFE on LO and take at least three fluorine readings. Keep the hydrogen and fluorine results separate.
 
-**Using the virtual apparatus.** Select **ESR** for DPPH and **PSR** for glycerine, polystyrene and PTFE. Record the **Instrument seed**, turn on **Blind**, leave **Show expected resonance** off and click **Clear**. Use **Time A→B** or **V cursor**, then **Capture reading**. For SLOW, press **SLOW RUN** and place the ruler lines on the start pulse and peak. Use **Export table CSV** when finished. The frequency meter shows the probe frequency divided by 1000: a reading of 60 kHz means a probe frequency of 60 MHz.
+**Using the virtual apparatus.** Select **ESR** for DPPH and **PSR** for glycerine, polystyrene and PTFE. Record the **Instrument seed**, turn on **Blind**, leave **Show expected resonance** off and click **Clear**. Use **Time A→B** or **V cursor**, then **Capture reading**. For SLOW, press **SLOW RUN** and place the ruler lines on the start pulse and peak. Use **Export to worksheet** to send the readings to the Data table below, or **Export table CSV** for a file. Send the electron, proton and fluorine readings separately, pressing **Clear** in between, so that each goes into its own copy of the table. The frequency meter shows the probe frequency divided by 1000: a reading of 60 kHz means a probe frequency of 60 MHz.
 
 ## Data
 
-| Sample | Range | Probe $$\nu$$ (MHz) | Method | Time or voltage reading (units) | $$t$$ (°C) | $$B_{20}$$ (mT) | $$B_{\rm scan}$$ (mT) | Total $$B$$ (mT) |
+| Sample | Range | Probe frequency ν (MHz) | Method | Time or voltage reading (units) | Temperature t (°C) | B₂₀ (mT) | Scan field B_scan (mT) | Total field B (mT) |
 |---|---|---|---|---|---|---|---|---|
 | | | | | | | | | |
 | | | | | | | | | |
 | | | | | | | | | |
 
-Add rows for all frequencies and repeat readings. Record the seed and scan calibration above the table.
+Add rows for all frequencies and repeat readings. Record the seed and scan calibration above the table. In the virtual lab, Export to worksheet fills the table; the scan and total fields it gives are worked out from your own cursor reading.
 
 ## Analysis
 
