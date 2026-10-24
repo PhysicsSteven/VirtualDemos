@@ -1587,3 +1587,18 @@ CORE byte identical; vdcheck differs only by the new Perspective control (`dimSe
 - Each pulse is drawn as a short wave whose wavelength and length are λ/n and proportional to 1/n inside the material, hugely enlarged; the page says so, and that the lanes are drawn the same length whatever L is.
 
 **For GPT to verify:** that the 3D pulse positions match the flat view at the same t, and the claim that the pulse's length in the material scales as 1/n (no dispersion in this model, so group and phase index are both n).
+
+## Claude, 2026-10-24: Acoustics deeper visual pass (Doppler, Standing Waves, Ultrasound, Wave Power, Kundt's Tube, Room Acoustics, Sound Intensity, Resonators)
+
+Steve asked for a deeper visual pass on acoustics to the resistivity standard. In every demo the CORE is byte identical and the readings, the CSV and the worksheet export are unchanged; `vdcheck --only after` reports 0 problems for each, and the tests that exist pass (`test_ultrasound`, `test_wave_power`, `test_kundts_tube`, `test_room_acoustics`, `test_sound_intensity`).
+- **Doppler** opens in 3D (`?view=flat` for the old picture): a street for the ambulance and observer setups, the sky for Mach 1 and the jet. Crests are shells around their emission points, the Mach cone is drawn open with its edges in the plane, and the ground circles stay on the 2D overlay. Cameras: Whole view, Follow source, Observer's eye. All drags work in 3D.
+- **Standing Waves**, String view, opens as a 3D sonometer (box, bridge, pulley, slotted masses with m = T/g, a metre stick); the string's sideways motion is magnified and the factor is printed. Bridge and pluck can be dragged in 3D.
+- **Ultrasound**: the pulse goes down through each layer at that layer's speed, weakened by (1 − r²), with echoes coming back up labelled with r; the A scan sweeps in step. The scanner runs on open and the Set up card stays until the first Start.
+- **Wave Power**: the vibrator runs on open (`?run=0` opens it stopped). A glow along the string is the energy per metre ½μy_t² + ½Ty_x² from the CORE's energyAt, so the bright patches ride with the crests when the absorber is matched and partly stand still when it is not. An arrow under the string carries the meter's own reading into the absorber.
+- **Kundt's Tube**: the rod is stroked once on open (`?ring=0` for quiet). While it rings a band in the tube is e|S(x)| from the CORE's steady state (zero at the displacement nodes where the dust heaps), and in the close up lines of gas move by e Re[S e^(iφ)], magnified, so they bunch and spread. One scale for every setup, so a tube off resonance looks quieter. The rod shows its own strain, ∝ sin(nπx/L), as darker and lighter bands.
+- **Room Acoustics**: one slow motion clap on open (`?clap=0` for none), with the Set up card kept; the plan's wavefront ring is now skipped before layout (it threw on a negative radius).
+- **Sound Intensity**: a cone from the speaker through squares at d, 2d and 3d (d a quarter of the tape), split into 1, 4 and 9 squares: the same power through each, so I ∝ 1/r². No numbers are added to the picture.
+- **Resonators**: the bottle is tinted glass with highlights on a bench and shaded water; the string is a steel string over a wooden board with a sound hole. Pictures only.
+- Two Speaker, Timbre, Chladni, Sound Waves and Acoustic Levitation already move on open and meet the standard; they were left alone.
+
+**For GPT to verify:** the Kundt's complex S(x) used for the layers (sin(κ(ℓ − x))/sin(κℓ) with κ = ω/v − iα, the same as the CORE's |S|); that the wave power glow uses energyAt at the same phase as the drawn string; the Doppler 3D crest radii against the flat view at the same t.
