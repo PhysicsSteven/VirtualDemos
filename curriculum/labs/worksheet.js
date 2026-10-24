@@ -187,11 +187,17 @@
     blackbody: { demo: 'Blackbody Radiation', cols: ['row', 'T_K', 'peak_nm', 'flux_W_m2', null, null, null] },
   });
   /* ==THERMO END== */
+  /* ==MODERN START== Modern Physics worksheets (modern.html) and their demo column maps. Threads for other chapters push into MODERN. */
+  const MODERN = [];
+  ENABLED.push(...MODERN);
+  Object.assign(FROM_DEMO, {
+  });
+  /* ==MODERN END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
-  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
+  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
   const pretty = (h) => String(h || '').replace(/\^([23])/g, (m, d) => SUP[d]).replace(/_(\d)/g, (m, d) => SUB[d]);
