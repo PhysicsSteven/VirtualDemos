@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>Shells, the Periodic Table and X Rays</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +24,8 @@
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
 .pane { position: relative; flex: 1 0 auto; min-height: 270px; }
 .pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; }
+#can { z-index: 1; }
+.pane canvas.xr3 { z-index: 0; right: auto; bottom: auto; }
 .curvebox { position: relative; flex: none; height: 180px; border-top: 1px solid var(--line); }
 .curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
 .shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); flex: 0 1 auto; min-height: 96px; overflow-y: auto; }
@@ -71,6 +75,7 @@
           <button type="button" data-v="shells" aria-pressed="true">Shells</button>
           <button type="button" data-v="xray" aria-pressed="false">X ray tube</button>
         </div>
+        <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <button type="button" class="btn" id="zDown" aria-label="One electron fewer (previous element)">− electron</button>
         <button type="button" class="btn" id="zUp" aria-label="One electron more (next element)">+ electron</button>
         <span class="count mono" id="clock"></span>
@@ -470,6 +475,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawTube() {
     const p = proj(), Z = xZ(), x = XR[Z], kV = S.xr.kV, myst = S.xr.target === 'mystery', lines = xrayLines(Z, kV);
     backdrop();
+    if (use3()) { ctx.clearRect(0, 0, W3(), Hh); drawTube3(Z, kV, myst, lines); } else {
     /* the tube: glass envelope, hot filament, target tilted to send X rays down through a window */
     const cx = W * 0.27, cy = Hh * 0.42, tw = Math.min(W * 0.42, 340 * p), th = 84 * p;
     ctx.save(); const gl = ctx.createLinearGradient(0, cy - th / 2, 0, cy + th / 2); gl.addColorStop(0, 'rgba(255,255,255,0.45)'); gl.addColorStop(0.5, 'rgba(200,220,235,0.12)'); gl.addColorStop(1, 'rgba(150,170,190,0.35)');
@@ -483,7 +489,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lbl(`electrons, ${f(kV, 1)} keV each`, (fx + ax) / 2, cy - 22 * p, { a: 'center', s: 10 * p, c: T.up });
     for (let k = -2; k <= 2; k++) { ctx.save(); ctx.globalAlpha = 0.6; arrow(ctx, ax - 2 * p, cy + 6 * p, ax - 2 * p + k * 16 * p, cy + th / 2 + 60 * p, T.ka, 1.2 * p); ctx.restore(); }
     lbl('X rays to the spectrometer', ax, cy + th / 2 + 74 * p, { a: 'center', s: 10 * p });
-    lbl(`high voltage ${f(kV, 1)} kV`, cx, cy - th / 2 - 28 * p, { a: 'center', s: 11 * p, w: 700, c: T.ink });
+    lbl(`high voltage ${f(kV, 1)} kV`, cx, cy - th / 2 - 28 * p, { a: 'center', s: 11 * p, w: 700, c: T.ink }); }
     /* right: the K, L and M levels of the target, with the transitions that fill a K hole */
     const lx = W * 0.6, lw = W * 0.34, yK = Hh - 40 * p, yTop = 46 * p;
     if (!x) return; const EK = x.kedge, EL3 = EK - x.ka1, EL2 = EK - x.ka2, EM3 = EK - x.kb1;
@@ -529,6 +535,104 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     cur.dataset.x0 = x0; cur.dataset.x1 = x1; cur.dataset.L = L; cur.dataset.pw = pw;
   }
 
+
+  // ---------- the X ray tube in 3D (three.js through lib/vd3.js and lib/vd3kit.js); Flat keeps the drawn tube (or ?view=flat) ----------
+  /* A glass Coolidge tube on a stand: a hot filament in its focusing cup, a copper anode with the target set in its slanted face, cooling
+     fins outside the glass, and the high voltage supply. Proportions typical, not one particular tube. The electrons and X rays are
+     slowed down for the eye (a 30 keV electron crosses the gap in about 0.2 ns). Each X ray drawn has an energy picked from the
+     same spectrum as the graph below (photon number ∝ intensity / E), coloured as a Kα or Kβ line photon or as bremsstrahlung. */
+  const G3 = { o: { th: -Math.PI / 2 - 0.3, ph: 1.08, zoom: 1 }, key: '', cdf: null };
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d() && S.view === 'xray');
+  const W3 = () => Math.round(W * 0.57);
+  const ZT = 0.13, XC = -0.03, XA = -0.004;   /* tube axis height, cathode and focal spot along x (m) */
+  const hash = (i, k) => { const v = Math.sin(i * 127.1 + k * 311.7) * 43758.5453; return v - Math.floor(v); };
+  function init3D() {
+    const S3 = VD3K.stage($('pane'), { before: can, shadow: 0.3, fov: 30, fogAt: [1.8, 3.4] }); if (!S3) return false;
+    S3.el.classList.add('xr3');
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
+    sc.add(VD3K.bench(S3, { w: 2, d: 1.4, y: 0.25 }), VD3K.backdrop(S3, { r: 0.8, h: 0.7, y: -0.3 }));
+    const steel = M({ roughness: 0.4, metalness: 0.5 }, ['#b9c0c8', '#77808a']), dark3 = M({ roughness: 0.5, metalness: 0.2 }, ['#5d6774', '#4b5460']);
+    const copper = M({ roughness: 0.35, metalness: 0.7 }, ['#b87333', '#c4854a']), lead = M({ roughness: 0.7, metalness: 0.2 }, ['#6f7680', '#5a616a']);
+    /* stand: two posts and clamps */
+    for (const x of [-0.09, 0.09]) sc.add(VD3K.box(0.035, 0.035, 0.006, dark3, x, 0, 0), VD3K.rod([x, 0, 0.008], [x, 0, ZT - 0.04], 0.005, steel));
+    /* the glass envelope with its two necks */
+    const env = VD3K.glass(S3, { r: 0.04, len: 0.12, axis: 'x', opacity: 0.18 }); env.position.set(-0.01, 0, ZT); sc.add(env);
+    for (const [a, b] of [[-0.14, -0.07], [0.05, 0.13]]) { const n = VD3K.glass(S3, { r: 0.016, len: b - a, axis: 'x', ends: false, opacity: 0.22 }); n.position.set((a + b) / 2, 0, ZT); sc.add(n); }
+    /* cathode: stem, focusing cup and the hot filament */
+    sc.add(VD3K.rod([-0.15, 0, ZT], [XC - 0.008, 0, ZT], 0.004, steel));
+    const cup = mesh(new THREE.CylinderGeometry(0.009, 0.007, 0.01, 24, 1, true), M({ roughness: 0.3, metalness: 0.7, side: THREE.DoubleSide }, ['#9aa3ad', '#8a939d']), true);
+    cup.rotation.z = Math.PI / 2; cup.position.set(XC - 0.003, 0, ZT); sc.add(cup);
+    const filM = new THREE.MeshBasicMaterial({ color: 0xffa040 }), coil = new THREE.Group();
+    for (let i = 0; i < 6; i++) { const t = mesh(new THREE.TorusGeometry(0.0016, 0.00045, 6, 16), filM); t.rotation.y = Math.PI / 2; t.position.set(XC - 0.001, 0, ZT - 0.003 + i * 0.0012); coil.add(t); }
+    coil.rotation.x = 0; sc.add(coil);
+    const glowTex = (() => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d'), g = x.createRadialGradient(32, 32, 0, 32, 32, 32);
+      g.addColorStop(0, 'rgba(255,190,110,0.9)'); g.addColorStop(1, 'rgba(255,140,60,0)'); x.fillStyle = g; x.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(c); })();
+    const filGlow = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false })); filGlow.scale.set(0.014, 0.014, 1); filGlow.position.set(XC, 0, ZT); sc.add(filGlow);
+    /* anode: a copper rod with the target set in its slanted face, cooling fins outside the glass */
+    const body = VD3K.rod([XA + 0.006, 0, ZT], [0.17, 0, ZT], 0.011, copper); sc.add(body);
+    const wedge = new THREE.Shape(); wedge.moveTo(0, -0.011); wedge.lineTo(0.014, -0.011); wedge.lineTo(0.014, 0.011); wedge.lineTo(0.006, 0.011); wedge.closePath();
+    const head = mesh(new THREE.ExtrudeGeometry(wedge, { depth: 0.022, bevelEnabled: false }), copper, true); head.geometry.translate(0, 0, -0.011);
+    head.position.set(XA - 0.002, 0, ZT); sc.add(head);   /* the shape lies in (x, y): its slanted face looks back at the cathode and toward the front (−y) */
+    const tgtM = M({ roughness: 0.3, metalness: 0.7 }, ['#9aa3ad', '#a3acb6']), slant = Math.atan2(0.006, 0.022), tgt = mesh(new THREE.BoxGeometry(0.0012, 0.012, 0.012), tgtM);
+    tgt.rotation.z = -slant; tgt.position.set(XA + 0.0015, -0.0005, ZT); sc.add(tgt);
+    const spotM = new THREE.SpriteMaterial({ map: glowTex, transparent: true, depthWrite: false, color: 0xffffff }), spot = new THREE.Sprite(spotM); spot.scale.set(0.01, 0.01, 1); spot.position.set(XA, -0.001, ZT); sc.add(spot);
+    for (let i = 0; i < 5; i++) { const fin = mesh(new THREE.CylinderGeometry(0.024, 0.024, 0.003, 32), copper, true); fin.rotation.z = Math.PI / 2; fin.position.set(0.14 + i * 0.009, 0, ZT); sc.add(fin); }
+    /* lead collimator in front of the focal spot: X rays that pass go on to the spectrometer */
+    const yC = -0.075; sc.add(VD3K.box(0.012, 0.012, 0.03, lead, XA - 0.012, yC, ZT - 0.015), VD3K.box(0.012, 0.012, 0.03, lead, XA + 0.012, yC, ZT - 0.015), VD3K.rod([XA, yC, 0.004], [XA, yC, ZT - 0.016], 0.003, steel));
+    /* the high voltage supply behind, with its meter and leads to both ends */
+    sc.add(VD3K.box(0.13, 0.1, 0.075, dark3, -0.2, 0.14, 0));
+    const meter = VD3K.meter(S3, { w: 0.1, h: 0.06, label: 'TUBE VOLTAGE', sub: 'kV' }); meter.position.set(-0.2, 0.078, 0.012); meter.rotation.x = 0; sc.add(meter);
+    sc.add(VD3K.cable([-0.17, 0.15, 0.075], [-0.15, 0, ZT], { via: [[-0.17, 0.1, 0.12], [-0.17, 0.02, ZT + 0.01]], color: 0x2b60b5 }), VD3K.cable([-0.23, 0.17, 0.075], [0.175, 0, ZT], { via: [[-0.22, 0.2, 0.03], [-0.1, 0.2, 0.004], [0.15, 0.13, 0.004], [0.21, 0.05, 0.06], [0.19, 0.01, ZT]], color: 0xc0432a }));
+    const els = VD3K.particles(S3, { n: 48, r: 0.0009, color: T.up, emissive: T.up }), xs = VD3K.particles(S3, { n: 90, r: 0.0014, emissive: '#333333' });
+    sc.add(els.mesh || els, xs.mesh || xs);
+    g3 = { S3, meter, tgtM, spotM, els, xs, t0: performance.now() };
+    VD3.orbit(can, G3.o, () => { if (use3()) redraw(); }, { grab: (e) => !use3() || !in3(e), phMin: 0.4, phMax: 1.45, zMin: 0.6, zMax: 3 });
+    can.style.touchAction = ''; can.style.cursor = '';
+    return true;
+  }
+  const in3 = (e) => { const r = can.getBoundingClientRect(); return e.clientX - r.left < W3(); };
+  /* photon energies drawn from the graph's spectrum: a table of the photon number per energy, built when the target or voltage changes */
+  function photonTable(Z, kV) {
+    const k = Z + ',' + kV; if (G3.key === k) return G3.cdf; G3.key = k;
+    const E0 = kV * 1000, n = 600, cdf = []; let sum = 0;
+    for (let i = 0; i < n; i++) { const E = E0 * (i + 0.5) / n; sum += spectrum(Z, kV, E) / E; cdf.push([sum, E]); }
+    cdf.forEach((q) => { q[0] /= sum; }); return (G3.cdf = cdf);
+  }
+  function pickE(cdf, u) { let a = 0, b = cdf.length - 1; while (a < b) { const m = (a + b) >> 1; if (cdf[m][0] < u) a = m + 1; else b = m; } return cdf[a][1]; }
+  function drawTube3(Z, kV, myst, lines) {
+    const g = g3, S3 = g.S3, p = proj(), w3 = W3(), asp = w3 / Math.max(1, Hh);
+    S3.size(w3, Hh); const narrow = W < 560; S3.place(G3.o, narrow ? [0, 0.01, ZT - 0.02] : [-0.02, 0.03, ZT - 0.04], (narrow ? 0.45 : 0.72) * Math.max(1, 1.45 / asp));
+    g.tgtM.color.set(myst ? '#9aa3ad' : Z === 29 ? '#b87333' : Z === 79 ? '#d4af37' : '#a3acb6');
+    g.meter.set(f(kV, 1));
+    const t = (performance.now() - g.t0) / 1000, glow = Math.min(1, kV / 60); g.spotM.opacity = 0.35 + 0.65 * glow;
+    /* electrons: speed up across the gap (x grows as the square of the time), squeezed toward the focal spot by the cup */
+    const ne = 48; for (let i = 0; i < ne; i++) { const u = (t * 1.1 + i / ne) % 1, a = hash(i, 1) * 6.283, r0 = 0.0025 * (1 - 0.7 * u);
+      g.els.put(i, XC + (XA - XC) * u * u, r0 * Math.cos(a), ZT + r0 * Math.sin(a)); }
+    g.els.show(ne); g.els.done();
+    /* X rays from the focal spot, out of the slanted face toward the front, each with an energy from the spectrum */
+    const cdf = photonTable(Z, kV), nx = 90, col = new THREE.Color(), kb = lines.find((l) => l.name === 'Kβ₁'), sgOf = (E) => 3 * RES * E / 2.3548;
+    for (let i = 0; i < nx; i++) { const life = (t * 0.7 + i / nx) % 1, gen = Math.floor(t * 0.7 + i / nx), h1 = hash(i, gen), h2 = hash(i + 91, gen), h3 = hash(i + 7, gen);
+      const E = pickE(cdf, h3), th = (h1 - 0.5) * 1.5, ph = (h2 - 0.5) * 0.9, d = 0.14 * life, dx = Math.sin(th) * Math.cos(ph) - 0.25, dy = -Math.cos(th) * Math.cos(ph), dz = Math.sin(ph), nn = Math.hypot(dx, dy, dz);
+      const ln = lines.find((l) => Math.abs(E - l.E) < sgOf(l.E));
+      col.set(ln ? (ln === kb ? T.kb : T.ka) : T.brems);
+      g.xs.put(i, XA + d * dx / nn, -0.001 + d * dy / nn, ZT + d * dz / nn, col); }
+    g.xs.show(nx); g.xs.done();
+    S3.render();
+    const Q = (q) => S3.project(q), lab = (txt, q, o) => { o = Object.assign({ a: 'center', s: 10.5 * p, c: T.ink }, o || {});
+      ctx.save(); ctx.font = `${o.w || 400} ${o.s}px ${T.ui}`; ctx.textAlign = o.a; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.lineWidth = 3.5 * p; ctx.strokeStyle = T.surface; ctx.globalAlpha = 0.75; ctx.strokeText(txt, q[0], q[1]); ctx.restore(); lbl(txt, q[0], q[1], o); };
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, w3, Hh); ctx.clip();
+    if (narrow) { lab(myst ? 'target: mystery' : `target: ${byZ(Z)[2].toLowerCase()}`, Q([XA + 0.02, -0.02, ZT + 0.035])); lbl('electrons and X rays slowed down for the eye', 8 * p, 14 * p, { s: 9 * p }); ctx.restore(); return; }
+    lab('hot filament (cathode)', Q([XC - 0.01, -0.02, ZT - 0.03]));
+    lab(myst ? 'target: mystery' : `target: ${byZ(Z)[2].toLowerCase()}`, Q([XA + 0.02, -0.02, ZT + 0.035]));
+    lab(`electrons, ${f(kV, 1)} keV each`, Q([(XC + XA) / 2 - 0.01, 0, ZT + 0.055]), { c: T.up });
+    lab('X rays to the spectrometer (graph below)', Q([XA, -0.085, ZT - 0.045]));
+    lab('copper anode, cooled', Q([0.155, 0, ZT + 0.035]));
+    lab(`high voltage supply, ${f(kV, 1)} kV`, Q([-0.2, 0.14, 0.1]), { w: 700 });
+    lbl('electrons and X rays slowed down for the eye', 10 * p, 16 * p, { s: 10 * p });
+    ctx.restore();
+  }
+  (function spin() { if (use3() && !document.hidden) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawTube(); } requestAnimationFrame(spin); })();
   function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh); if (S.view === 'shells') { drawShells(); drawIE(); } else { drawTube(); drawXspec(); } readouts(); }
 
   // ---------- readouts ----------
@@ -586,6 +690,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('units').textContent = v === 'shells' ? 'energies in eV' : 'λ in pm · E in keV · V in kV';
     can.setAttribute('aria-label', VIEW_LABEL[v]); cur.setAttribute('aria-label', CURVE_LABEL[v]);
     window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
+    if (g3) g3.S3.el.hidden = !use3(); $('dimSeg').hidden = v !== 'xray';
     sync(); redraw();
   }
   function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); setView(c.view); }
@@ -631,7 +736,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- about ----------
   $('aboutShells').textContent = 'Shells: each electron in an atom has four quantum numbers n, l, m_l and m_s, and no two can share all four (the Pauli exclusion principle, OpenStax Vol. 3 §8.4). So a subshell holds 2(2l + 1) electrons (2, 6, 10, 14 for s, p, d, f) and a shell 2n². Each box is one orbital (one m_l), holding at most one spin up and one spin down electron; within a subshell the boxes fill once with spin up before any pairs (Hund\'s rule). "By the n + l rule" fills subshells in order of n + l, lower n first on a tie (1s 2s 2p 3s 3p 4s 3d 4p 5s 4d 5p 6s 4f 5d 6p 7s 5f 6d 7p). "Measured ground state" is the configuration NIST lists; about twenty elements (chromium, copper, palladium, gadolinium, …) differ from the rule, and those subshells are outlined. The rows are drawn by n, not by energy. Z_eff = n√(IE/13.6 eV) treats the outer electron as if it were in a hydrogen atom with nuclear charge Z_eff, a rough estimate.';
-  $('aboutXray').textContent = 'X ray tube: electrons from a hot filament are accelerated through V and stop in the target. Slowing down in the target, they emit a continuous spectrum (bremsstrahlung) with energy per unit photon energy ∝ Z(E₀ − E) (Kramers\' law for a thick target), ending at E₀ = eV, the shortest wavelength λ_min = hc/eV (the Duane–Hunt limit). Per unit wavelength it becomes ∝ (λ/λ_min − 1)/λ³. If eV exceeds the K edge, electrons can knock out a K electron, and an L or M electron falls into the hole: Kα₁ (L₃ to K), Kα₂ (L₂ to K) and Kβ₁ (M₃ to K). The line energies and K edges are measured values; the level diagram\'s L₃, L₂ and M₃ energies are the K edge minus each line energy. Line heights are drawn, not computed: Kα₂ half of Kα₁, Kβ₁ a fifth, all growing as (U − 1)^1.6 with U = eV/E_K, which only roughly follows real tubes; Kβ₃ (beside Kβ₁), L lines and absorption in the target and the window, which removes the long wavelength end of a real spectrum, are left out. The spectrometer gives each line a width of 0.15% of its energy, enough to separate Kα₁ and Kα₂ for most targets. For elements that are not solid metals, the target is a compound of the element.';
+  $('aboutXray').textContent = 'X ray tube: electrons from a hot filament are accelerated through V and stop in the target. Slowing down in the target, they emit a continuous spectrum (bremsstrahlung) with energy per unit photon energy ∝ Z(E₀ − E) (Kramers\' law for a thick target), ending at E₀ = eV, the shortest wavelength λ_min = hc/eV (the Duane–Hunt limit). Per unit wavelength it becomes ∝ (λ/λ_min − 1)/λ³. If eV exceeds the K edge, electrons can knock out a K electron, and an L or M electron falls into the hole: Kα₁ (L₃ to K), Kα₂ (L₂ to K) and Kβ₁ (M₃ to K). The line energies and K edges are measured values; the level diagram\'s L₃, L₂ and M₃ energies are the K edge minus each line energy. Line heights are drawn, not computed: Kα₂ half of Kα₁, Kβ₁ a fifth, all growing as (U − 1)^1.6 with U = eV/E_K, which only roughly follows real tubes; Kβ₃ (beside Kβ₁), L lines and absorption in the target and the window, which removes the long wavelength end of a real spectrum, are left out. The spectrometer gives each line a width of 0.15% of its energy, enough to separate Kα₁ and Kα₂ for most targets. For elements that are not solid metals, the target is a compound of the element. The 3D picture is a glass Coolidge tube of typical proportions, not one particular tube; the electrons and X rays move slowed down for the eye, and each X ray drawn has an energy picked from the spectrum in the graph (red for a Kα photon, blue for Kβ, grey for bremsstrahlung).';
   $('aboutData').textContent = 'Data: ground configurations and first ionization energies from the NIST Atomic Spectra Database (version 5.11); ionization energies are given for Z = 1 to 103, and configurations above 103 are predicted. X ray line energies (Kα₁, Kα₂, Kβ₁) and K edges from the NIST X-Ray Transition Energies Database (Deslattes et al., Rev. Mod. Phys. 75, 35, 2003), direct measurements; targets whose values NIST interpolates or flags (P, Tc, Pm, Lu, Hf and Z above 83) are not offered, nor sodium and magnesium, whose atoms have no 3p electron for Kβ₁. hc = 1239.84198 eV·nm (CODATA 2018). Element families and the table layout are those of the Spectra Explorer.';
 
   // ---------- size, theme, start ----------
@@ -644,6 +749,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'neon');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); redraw(); }, status: () => {} });
   window.__sx = { S, setView, applyPreset, redraw, sync, setZ, newTarget, xrayLines, lamPm, xZ };
 })();
 </script>
