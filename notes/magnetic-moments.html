@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atoms in a Magnetic Field: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Atoms in a Magnetic Field</h1><ul class="meta"><li><a href="../demos/magnetic-moments.html">Open the demo</a></li><li>Intro modern physics (atomic structure)</li><li>20 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>An orbiting electron is a current loop, so it has a magnetic moment. For any orbit the moment is tied to the angular momentum by μ = (e/2m_e) L, which makes μ_B = eħ/2m_e the natural unit.</li>
+<li>The direction of L, and so of μ, is quantized: L_z = m_l ħ with m_l = −l, …, +l. In a field B each m_l has its own energy U = m_l μ_B B, so a level with 2l + 1 states splits into 2l + 1.</li>
+<li>The Stern–Gerlach experiment shows the quantization directly: a beam of silver atoms splits into two spots, not a smear. Two is an even number, which no orbital angular momentum can give (2l + 1 is odd): the moment is the electron's spin, with s = 1/2 and g ≈ 2.</li>
+<li>Spectral lines split in a magnetic field (the Zeeman effect). With no spin in the levels, a line splits into three evenly spaced lines; with spin, the pattern is more complicated.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the Bohr model (radius n²a₀, speed αc/n), the magnetic moment of a current loop μ = IA, and the quantum numbers n, l and m_l of the hydrogen atom. The demo has three views. <strong>Orbit</strong>: a Bohr orbit drawn as a current loop with its L and μ arrows, beside the quantum vector model (L on a cone about B) and a graph of the energy of each m_l level against B. <strong>Stern–Gerlach</strong>: atoms from an oven pass two slits, a magnet 3.50 cm long with a field gradient dB/dz and an optional drift space, and stick to a glass screen; the lower panel shows the face of the screen and a count of atoms along z, with a cursor to measure positions. A velocity selector can pick one speed. <strong>Zeeman effect</strong>: a lamp between the poles of an electromagnet, the energy levels split into their m sublevels with every allowed transition, and the spectrum seen through a spectrometer that resolves 0.20 pm.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Orbit as a current loop.</strong> Ask Q1, then step n from 1 to 6. The current falls fast (as 1/n³) but the area grows as n⁴, so μ = IA grows as n; μ/L stays at 8.794 × 10¹⁰ C/kg (Q2).</li>
+<li><strong>3d electron in a field.</strong> Five allowed directions of L. Step m_l and B and watch the fan of energy levels in the graph (Q3).</li>
+<li><strong>Stern and Gerlach, 1922.</strong> Ask what classical physics predicts before starting the beam (pick "Classical magnets" to show it). Silver gives two lips about 0.1 mm apart (Q4).</li>
+<li><strong>Silver at one speed.</strong> With the velocity selector at 600 m/s and the screen 20 cm past the magnet the spots are sharp. Step the gradient and measure the separation (Q5).</li>
+<li><strong>Mystery atom.</strong> Students count the spots, measure the spacing and find J and g (Q6).</li>
+<li><strong>Zeeman: cadmium red line.</strong> One line becomes three. Measure the spacing against B and get e/m_e (Q7). Then look along the field (the middle line disappears), and try the sodium D lines (Q8).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> In the Bohr model the n = 1 electron circles at r = 5.292 × 10⁻¹¹ m with speed 2.188 × 10⁶ m/s. Find the current it makes and the magnetic moment of the loop.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Show that for any circular orbit μ/L = e/(2m_e), whatever the radius and speed. What is μ for the Bohr orbit n, in units of μ_B = eħ/(2m_e)?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A 3d electron (l = 2) is in a field of 1.00 T. List the allowed values of L_z, the angles L can make with the field, and the energy shift of each state.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Silver atoms (one unpaired 5s electron, l = 0) leave an oven at 1320 K. Classical physics predicts what pattern on the screen? Quantum mechanics with only orbital angular momentum predicts what? What is seen, and what does it tell us?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> With the velocity selector at 600 m/s, a gradient of 500 T/m, a magnet 3.50 cm long and a drift of 20.0 cm, predict the separation of the two silver spots. Take μ_z = ±1.001 μ_B and M = 107.87 u.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A mystery atom at 600 m/s (M = 55.845 u) makes nine evenly spaced spots 1.587 mm apart at 500 T/m with a 20 cm drift. Find J, μ_z of each spot and the g factor. Which atom and ground level fit?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> In a 1.00 T field the cadmium line at 643.847 nm splits into three lines 19.35 pm apart. Use this to find μ_B and then e/m_e.</p></div>
+
+<div class="q"><p><strong>Q8.</strong> Why does the cadmium line split into three while each sodium D line splits into four or six?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The electron's moment points along its angular momentum."</strong> The electron is negative, so μ points opposite to L.</li>
+<li><strong>"L can point along the field."</strong> |L| = √(l(l+1)) ħ is always larger than the largest L_z = lħ, so L can never lie along the field; it sits on a cone.</li>
+<li><strong>"The magnet pulls the atoms toward it."</strong> A uniform field only twists a magnet. It takes a field that changes across the beam (a gradient) to push the atoms up or down, which is why one pole is a knife edge.</li>
+<li><strong>"Silver's two spots are the two values of m_l."</strong> Silver's outer electron has l = 0, so m_l = 0 only. The two spots come from spin.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Orbit: Bohr's hydrogen with an infinitely heavy nucleus, r = n²a₀, v = αc/n, I = e/T = ev/(2πr), μ = Iπr² = evr/2 = (e/2m_e)L. With L = nħ, μ = nμ_B exactly. The quantum picture uses |L| = √(l(l+1)) ħ, L_z = m_l ħ, μ_z = −m_l μ_B and U = m_l μ_B B. The drawn precession is slowed down; the real Larmor frequency is eB/(4πm_e) = 14.0 GHz per tesla.</li>
+<li>Stern–Gerlach: inside the magnet the force μ_z dB/dz is constant, so an atom of speed v lands at z = (μ_z G/M)(L₁/v²)(L₁/2 + L₂). Each m_J sublevel has μ_z = −g_J m_J μ_B (Landé g with the electron's g = 2.00232) and the same population. Without the selector, speeds have weight v³ exp(−Mv²/2kT) (an effusive beam), and since z ∝ 1/v² the deposit peaks where v² = 6kT/M; with the selector every atom has the chosen speed. The field's variation along the slit, gravity, collisions and nuclear moments are left out.</li>
+<li>Zeeman: each level shifts by g m μ_B B; components with Δm = 0 (π) and ±1 (σ) appear with strengths from 3j symbols. Across the field π counts fully and σ half; along it π vanishes. With g = 1 in both levels all components fall on three wavelengths spaced λ²μ_B B/(hc). Wavelengths from the NIST Handbook (Cd 643.847 nm, Na 588.995 and 589.592 nm, in air) and NIST ASD (H Lyman α 121.567 nm). The spectrometer width (0.20 pm) is a chosen value.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>Spin Resonance</strong>: flipping the spin moment found here costs g μ_B B, which a microwave photon supplies.</li>
+<li>Homework: hydrogen atoms (M = 1.008 u) at the same 600 m/s and 500 T/m deflect about 107 times further than silver. Why, and what would that do to the experiment?</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Shells, the Periodic Table and X Rays: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Shells, the Periodic Table and X Rays</h1><ul class="meta"><li><a href="../demos/shells-and-x-rays.html">Open the demo</a></li><li>Intro modern physics (atomic structure)</li><li>20 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>The Pauli exclusion principle: no two electrons in an atom share all four quantum numbers n, l, m_l and m_s. So a subshell holds 2(2l + 1) electrons and a shell 2n², and atoms build up shell by shell.</li>
+<li>The periodic table is that build up. Elements in a column have the same arrangement of outer electrons; the noble gases have closed shells and hold their electrons hardest, and the alkali metals have one electron outside a closed shell and lose it most easily.</li>
+<li>Filling follows the n + l rule well but not perfectly: about twenty elements (chromium and copper among them) have measured ground states that break it.</li>
+<li>An X ray tube gives a continuous spectrum that stops sharply at λ_min = hc/eV, plus lines that belong to the target: an electron falls into a hole in the K shell. Moseley found that the Kα line's frequency grows as (Z − 1)², which put the elements in order of atomic number.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know the four quantum numbers of the hydrogen atom and the Bohr energy levels E = −13.6 eV Z²/n². The demo has two views. <strong>Shells</strong>: pick an element on the periodic table (or add and remove electrons one at a time) and see its orbital boxes filled with spin up and spin down arrows, the count in each shell against 2n², and the first ionization energy of every element from H to Lr. A switch compares the measured ground state with the n + l rule. <strong>X ray tube</strong>: choose a target and a voltage, and read the spectrum (against wavelength or photon energy) with a cursor; beside the tube, the target's K, L and M levels show the transitions behind each line.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Fill up to neon.</strong> Step down to hydrogen with − electron and back up. Ask Q1 at each closed shell. The ionization graph shows the noble gas peaks and alkali dips (Q2).</li>
+<li><strong>Chromium breaks the rule.</strong> Switch between the two fills: the rule gives 3d⁴ 4s², the measured ground state 3d⁵ 4s¹. Copper does the same (Q3).</li>
+<li><strong>Copper tube, 30 kV.</strong> The smooth curve starts at 41.33 pm. Change the voltage: the start moves, the lines stay (Q4, Q5).</li>
+<li><strong>Below the K edge.</strong> Molybdenum at 15 kV has no K lines. Raise the voltage past 20.0 kV and they appear (Q6).</li>
+<li><strong>Mystery target.</strong> Students measure Kα₁ and use Moseley's law to find Z (Q7).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Using the Pauli principle, show that the n = 2 shell holds 8 electrons and the n = 3 shell 18. Why does the third row of the periodic table still have only 8 elements?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Helium has the largest first ionization energy (24.59 eV) and lithium one of the smallest (5.39 eV). Explain both. Estimate the effective nuclear charge seen by sodium's outer electron from its ionization energy, 5.139 eV.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> By the n + l rule chromium (Z = 24) should be 3d⁴ 4s². The measured ground state is 3d⁵ 4s¹. Suggest why.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> A copper target is run at 30.0 kV. Predict the shortest wavelength in the spectrum. What happens to it at 15.0 kV, and why does it not depend on the target?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Copper's Kα₁ line is at 154.06 pm. Find its photon energy, and compare with Moseley's estimate (3/4)(13.6 eV)(Z − 1)². Why Z − 1 and not Z?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Molybdenum's K edge is 20.00 keV. Why are there no K lines at 15 kV, while the continuous spectrum is there at any voltage?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> A mystery target's Kα₁ line is at 40.03 pm. Find its atomic number.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Shells fill strictly in order of n."</strong> 4s fills before 3d (n + l = 4 against 5), which is why potassium and calcium come before the transition metals.</li>
+<li><strong>"The X ray lines come from the electrons in the beam."</strong> The beam electrons only knock out an inner electron of a target atom; the line photon comes when another electron of the same atom falls into the hole.</li>
+<li><strong>"Raising the voltage moves the lines."</strong> It moves the continuous spectrum's cutoff and makes everything brighter; the line wavelengths belong to the target and do not move.</li>
+<li><strong>"Ionization energies rise smoothly across a period."</strong> They dip after each filled or half filled subshell (boron after beryllium, oxygen after nitrogen).</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Configurations and first ionization energies are from the NIST Atomic Spectra Database (ionization energies for Z = 1 to 103; configurations above 103 are predicted). The boxes fill within a subshell by Hund's rule (all spin up first). The n + l rule fills subshells in order of n + l, lower n first on a tie. Z_eff = n√(IE/13.6 eV) is a rough hydrogen like estimate.</li>
+<li>The continuous spectrum follows Kramers' law for a thick target: energy per unit photon energy ∝ Z(E₀ − E), ending at E₀ = eV (λ_min = hc/eV, the Duane–Hunt limit). Absorption in the target and window is left out, so the long wavelength end does not fall away as in a real tube.</li>
+<li>Kα₁, Kα₂, Kβ₁ and the K edge are measured values from the NIST X-Ray Transition Energies Database (Deslattes et al. 2003). The lines appear only when eV exceeds the K edge. Their heights are drawn, not measured (Kα₂ half of Kα₁, Kβ₁ a fifth, growing as (U − 1)^1.6 with U = eV/E_K), and each line is given a width of 0.15% of its energy.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Plot √f of Kα₁ against Z for several targets and fit a line: the slope is close to √(3/4 × 13.6 eV/h) and the line crosses zero near Z = 1, as the Bohr model with one electron screening the nucleus predicts.</li>
+<li>Pair with <strong>Spectra Explorer</strong> for the optical lines of the same atoms, and with <strong>Atoms in a Magnetic Field</strong> for what m_l and m_s mean.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

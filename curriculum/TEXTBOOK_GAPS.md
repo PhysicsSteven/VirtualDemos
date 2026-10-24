@@ -31,8 +31,6 @@ Regenerated from `textbook-map.json` on 2026-10-24 (Claude), after the Thermodyn
 | physics-2 | 3 | 4.5 | Circular Apertures and Resolution | missing |
 | physics-2 | 3 | 4.7 | Holography | missing |
 | modern | 3 | 5.6 | Relativistic Velocity Transformation | missing |
-| modern | 3 | 8.2 | Orbital Magnetic Dipole Moment of the Electron | missing |
-| modern | 3 | 8.4 | The Exclusion Principle and the Periodic Table | missing |
 | modern | 3 | 9.1 | Types of Molecular Bonds | missing |
 | modern | 3 | 9.2 | Molecular Spectra | missing |
 | modern | 3 | 9.3 | Bonding in Crystalline Solids | missing |
@@ -63,8 +61,6 @@ Regenerated from `textbook-map.json` on 2026-10-24 (Claude), after the Thermodyn
 | 3 / 4.6 | electron-diffraction | Partial: electron diffraction uses Bragg's law 2d sin θ = λ on graphite with electrons, not X rays. |
 | 3 / 5.8 | compton | Partial: Compton scattering uses exact relativistic kinematics for the recoil electron; no dedicated momentum activity. |
 | 3 / 5.9 | compton, binding-energy | Partial: Compton (E/mc² of the collision) and binding energy (mass defect, E = mc²); no dedicated activity. |
-| 3 / 8.3 | spin-resonance | Partial: electron spin resonance measures g for DPPH; spin itself is not the subject of an activity. |
-| 3 / 8.5 | spectra | Partial: spectra covers optical emission and absorption lines; no X ray spectra (Moseley). |
 | 3 / 10.5 | binding-energy, energy-sources | Partial: energy released from the binding energy curve; energy sources uses 200 MeV per fission. No chain reaction activity. |
 | 3 / 10.6 | binding-energy, star-slice | Partial: energy released from the binding energy curve; star slice shows burning shells. No reaction rate activity. |
 | 3 / 10.7 | gamma-spectroscopy | Partial: gamma spectroscopy measures lead attenuation; no dose or biological effects. |

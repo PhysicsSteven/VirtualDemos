@@ -5510,9 +5510,11 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "status": "usable",
+      "demos": [
+        "magnetic-moments"
+      ],
+      "note": "Atoms in a Magnetic Field (2026-10-24): orbital moment of a Bohr orbit as a current loop, μ = (e/2m_e)L, quantized L_z and U = m_l μ_B B; normal Zeeman effect.",
       "unit": "atomic-structure"
     },
     {
@@ -5525,11 +5527,12 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
+        "magnetic-moments",
         "spin-resonance"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: electron spin resonance measures g for DPPH; spin itself is not the subject of an activity.",
+      "note": "Atoms in a Magnetic Field (2026-10-24): Stern–Gerlach splitting of silver into two spots (spin 1/2, g ≈ 2), mystery atoms for J and g, anomalous Zeeman effect of the sodium D lines. Spin resonance measures g for DPPH.",
       "unit": "atomic-structure"
     },
     {
@@ -5542,9 +5545,11 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet (spectra has a periodic table to pick elements, but no shell filling).",
+      "status": "usable",
+      "demos": [
+        "shells-and-x-rays"
+      ],
+      "note": "Shells, the Periodic Table and X Rays (2026-10-24): Pauli filling of orbital boxes, 2(2l+1) and 2n², measured NIST ground states against the n + l rule, first ionization energies against Z.",
       "unit": "atomic-structure"
     },
     {
@@ -5557,11 +5562,12 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
+        "shells-and-x-rays",
         "spectra"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: spectra covers optical emission and absorption lines; no X ray spectra (Moseley).",
+      "note": "Shells, the Periodic Table and X Rays (2026-10-24): X ray tube with the Duane–Hunt cutoff, Kα and Kβ lines above the K edge (NIST), Moseley's law with a mystery target. Spectra covers the optical emission and absorption lines.",
       "unit": "atomic-structure"
     },
     {
@@ -9205,6 +9211,63 @@
       ],
       "title": "Entropy and the Second Law",
       "url": "demos/entropy.html"
+    },
+    {
+      "demo": "magnetic-moments",
+      "course": [
+        "modern"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "8.2",
+          "title": "Orbital Magnetic Dipole Moment of the Electron"
+        },
+        {
+          "vol": 3,
+          "sec": "8.3",
+          "title": "Electron Spin"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). Orbit: a Bohr orbit as a current loop (μ = IA, μ/L = e/2m_e) beside the quantum vector model (L_z = m_l ħ, U = m_l μ_B B). Stern–Gerlach: oven, slits, magnet gradient, drift and screen deposit with a velocity selector; silver, hydrogen, sodium, potassium, O ³P₂, Cr ⁷S₃, Fe ⁵D₄, two imagined comparisons and a mystery atom. Zeeman: Cd 643.847 nm normal triplet, Na D lines anomalous, H Lyman α with spin left out, across and along the field. Three worksheets with keys from real runs in TeacherKeys.",
+      "handouts": [
+        "orbital-magnetic-moment",
+        "stern-gerlach",
+        "zeeman-effect"
+      ],
+      "title": "Atoms in a Magnetic Field",
+      "url": "demos/magnetic-moments.html"
+    },
+    {
+      "demo": "shells-and-x-rays",
+      "course": [
+        "modern"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "8.4",
+          "title": "The Exclusion Principle and the Periodic Table"
+        },
+        {
+          "vol": 3,
+          "sec": "8.5",
+          "title": "Atomic Spectra and X-rays"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). Shells: orbital boxes for any element (Pauli, Hund), measured NIST ground states against the n + l rule (20 exceptions up to Lr), electrons per shell against 2n², first ionization energies for Z = 1 to 103. X ray tube: Kramers continuum with the Duane–Hunt cutoff, Kα₁, Kα₂ and Kβ₁ from the NIST X-Ray Transition Energies Database above the K edge, K/L/M level diagram, mystery target for Moseley's law. Two worksheets with keys from real runs in TeacherKeys.",
+      "handouts": [
+        "periodic-table",
+        "x-ray-spectra"
+      ],
+      "title": "Shells, the Periodic Table and X Rays",
+      "url": "demos/shells-and-x-rays.html"
     }
   ],
   "activities": [

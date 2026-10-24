@@ -45,6 +45,8 @@ OVERRIDES = {
                    "js": "setTimeout(() => { const m = document.getElementById('mass'); m.value = 1000; m.dispatchEvent(new Event('input', { bubbles: true })); "
                          "setTimeout(() => { const b = [...document.querySelectorAll('#presets button')].find((x) => x.textContent === 'Onion shells'); if (b) b.click(); }, 3500); }, 1500)"},
     "hydrogen-orbitals": {"wait": 2500},
+    "magnetic-moments": {"wait": 1200, "js": "__mm.applyPreset('selector'); for (let i = 0; i < 4000; i++) __mm.S.sg.dots.push(__mm.sampleAtom()); __mm.redraw();"},
+    "shells-and-x-rays": {"wait": 1000, "js": "__sx.applyPreset('copper');"},
     "sound-waves": {"wait": 1500},
     "sound-intensity": {"wait": 1200, "js": "document.querySelector('#presets [data-p=two]').click(); const r = document.getElementById('sR'); r.value = 12; r.dispatchEvent(new Event('input')); document.getElementById('rack').style.display = 'none'; window.dispatchEvent(new Event('resize'));"},
     "room-acoustics": {"wait": 2200, "js": "document.getElementById('rack').style.display = 'none'; setTimeout(() => document.getElementById('go').click(), 600);"},

@@ -1,0 +1,644 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Shells, the Periodic Table and X Rays</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --up: #2b60b5; --down: #c0432a; --ka: #c0432a; --kb: #2b60b5; --brems: #6b7787; --diff: #b07a10;
+  --cat-alkali: #d0573f; --cat-alkaline: #d98a2b; --cat-transition: #5f7fa8; --cat-post: #6f8f72; --cat-metalloid: #8b7bb5; --cat-nonmetal: #3f9a8a;
+  --cat-halogen: #b5a42f; --cat-noble: #b55a9a; --cat-lanthanide: #4d9bc9; --cat-actinide: #a8745a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --up: #69a0ff; --down: #ff8a6a; --ka: #ff8a6a; --kb: #69a0ff; --brems: #9aa6b6; --diff: #f0c060; } }
+:root[data-theme="dark"] { --up: #69a0ff; --down: #ff8a6a; --ka: #ff8a6a; --kb: #69a0ff; --brems: #9aa6b6; --diff: #f0c060; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.pane { position: relative; flex: 1 0 auto; min-height: 270px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; }
+.curvebox { position: relative; flex: none; height: 180px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); flex: 0 1 auto; min-height: 96px; overflow-y: auto; }
+.shelf-card { align-self: stretch; flex: 1 1 520px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.shelf-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; max-width: 100%; }
+.shelf-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.shelf-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.ptable-wrap { grid-column: 1 / -1; overflow-x: auto; }
+.ptable { display: grid; grid-template-columns: repeat(18, minmax(24px, 1fr)); gap: 2px; min-width: 470px; }
+.ptable button { font: inherit; font-size: 0.68rem; line-height: 1; padding: 1px 0; border: 1px solid transparent; border-radius: 4px; cursor: pointer; color: #fff; background: var(--c, #777); text-align: center; }
+.ptable button small { display: block; font-size: 0.5rem; opacity: 0.85; }
+.ptable button[aria-pressed="true"] { outline: 2px solid var(--ink); outline-offset: 1px; }
+.ptable button:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.ptable .gap { height: 6px; grid-column: 1 / -1; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 340px; flex: none; } .curvebox { height: 200px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 320px; } }
+@media (min-width: 821px) { .stage { min-height: 760px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Shells, the Periodic Table and X Rays</h1>
+      <p>No two electrons in an atom can share all four quantum numbers, so they fill shells and subshells one place at a time, and the periodic table follows. Knock an electron out of the innermost shell and the atom gives off an X ray whose energy grows as (Z − 1)².</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">energies in eV</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/shells-and-x-rays.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/shells-and-x-rays.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM13 2h2v1h-2zM16 2h1v1h-1zM18 2h1v1h-1zM20 2h2v1h-2zM23 2h1v1h-1zM27 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM14 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM15 4h1v1h-1zM18 4h1v1h-1zM22 4h3v1h-3zM26 4h4v1h-4zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM13 5h1v1h-1zM16 5h2v1h-2zM19 5h1v1h-1zM21 5h3v1h-3zM25 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM15 6h1v1h-1zM17 6h1v1h-1zM19 6h1v1h-1zM21 6h1v1h-1zM23 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM13 7h1v1h-1zM16 7h2v1h-2zM19 7h2v1h-2zM23 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM14 9h1v1h-1zM17 9h1v1h-1zM24 9h1v1h-1zM26 9h2v1h-2zM29 9h1v1h-1zM2 10h1v1h-1zM5 10h6v1h-6zM13 10h2v1h-2zM18 10h1v1h-1zM20 10h3v1h-3zM24 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM2 11h1v1h-1zM5 11h1v1h-1zM9 11h2v1h-2zM15 11h2v1h-2zM22 11h4v1h-4zM28 11h4v1h-4zM33 11h3v1h-3zM37 11h1v1h-1zM3 12h2v1h-2zM6 12h1v1h-1zM8 12h3v1h-3zM13 12h2v1h-2zM16 12h1v1h-1zM20 12h1v1h-1zM23 12h1v1h-1zM25 12h1v1h-1zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM2 13h1v1h-1zM4 13h1v1h-1zM7 13h1v1h-1zM9 13h2v1h-2zM13 13h1v1h-1zM17 13h1v1h-1zM19 13h2v1h-2zM24 13h3v1h-3zM29 13h10v1h-10zM3 14h2v1h-2zM7 14h4v1h-4zM12 14h2v1h-2zM15 14h1v1h-1zM18 14h1v1h-1zM21 14h1v1h-1zM25 14h2v1h-2zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM2 15h1v1h-1zM7 15h1v1h-1zM9 15h1v1h-1zM11 15h2v1h-2zM14 15h1v1h-1zM16 15h4v1h-4zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM4 16h1v1h-1zM7 16h3v1h-3zM11 16h2v1h-2zM14 16h1v1h-1zM16 16h2v1h-2zM19 16h1v1h-1zM21 16h2v1h-2zM28 16h2v1h-2zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM3 17h4v1h-4zM10 17h1v1h-1zM12 17h1v1h-1zM16 17h1v1h-1zM19 17h3v1h-3zM24 17h2v1h-2zM28 17h4v1h-4zM33 17h1v1h-1zM35 17h3v1h-3zM3 18h1v1h-1zM6 18h3v1h-3zM10 18h1v1h-1zM14 18h2v1h-2zM17 18h3v1h-3zM21 18h2v1h-2zM24 18h4v1h-4zM29 18h2v1h-2zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h2v1h-2zM18 19h3v1h-3zM22 19h1v1h-1zM24 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM35 19h2v1h-2zM3 20h1v1h-1zM5 20h2v1h-2zM8 20h1v1h-1zM10 20h2v1h-2zM15 20h3v1h-3zM19 20h1v1h-1zM22 20h2v1h-2zM25 20h3v1h-3zM29 20h3v1h-3zM35 20h2v1h-2zM38 20h1v1h-1zM2 21h2v1h-2zM7 21h1v1h-1zM14 21h3v1h-3zM20 21h1v1h-1zM24 21h4v1h-4zM30 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM2 22h1v1h-1zM4 22h3v1h-3zM8 22h1v1h-1zM11 22h3v1h-3zM16 22h4v1h-4zM26 22h1v1h-1zM28 22h1v1h-1zM30 22h6v1h-6zM4 23h1v1h-1zM9 23h2v1h-2zM12 23h1v1h-1zM14 23h1v1h-1zM17 23h1v1h-1zM21 23h5v1h-5zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM2 24h5v1h-5zM8 24h1v1h-1zM10 24h3v1h-3zM14 24h1v1h-1zM17 24h1v1h-1zM19 24h2v1h-2zM23 24h1v1h-1zM25 24h2v1h-2zM29 24h3v1h-3zM33 24h1v1h-1zM35 24h1v1h-1zM38 24h1v1h-1zM5 25h1v1h-1zM9 25h1v1h-1zM11 25h1v1h-1zM14 25h2v1h-2zM19 25h1v1h-1zM21 25h2v1h-2zM24 25h1v1h-1zM30 25h7v1h-7zM2 26h2v1h-2zM5 26h1v1h-1zM7 26h5v1h-5zM14 26h7v1h-7zM22 26h1v1h-1zM28 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h2v1h-2zM6 27h2v1h-2zM11 27h2v1h-2zM15 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM24 27h2v1h-2zM27 27h4v1h-4zM34 27h2v1h-2zM2 28h5v1h-5zM8 28h3v1h-3zM13 28h4v1h-4zM18 28h1v1h-1zM21 28h1v1h-1zM24 28h1v1h-1zM28 28h3v1h-3zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h1v1h-1zM7 29h1v1h-1zM11 29h1v1h-1zM13 29h2v1h-2zM16 29h2v1h-2zM24 29h1v1h-1zM28 29h1v1h-1zM31 29h3v1h-3zM35 29h4v1h-4zM2 30h1v1h-1zM4 30h2v1h-2zM8 30h3v1h-3zM13 30h1v1h-1zM15 30h1v1h-1zM21 30h2v1h-2zM26 30h2v1h-2zM30 30h8v1h-8zM10 31h2v1h-2zM14 31h3v1h-3zM20 31h3v1h-3zM24 31h1v1h-1zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h1v1h-1zM14 32h1v1h-1zM16 32h3v1h-3zM21 32h1v1h-1zM23 32h1v1h-1zM25 32h3v1h-3zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM14 33h1v1h-1zM18 33h5v1h-5zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h4v1h-4zM25 34h2v1h-2zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM13 35h2v1h-2zM16 35h1v1h-1zM18 35h1v1h-1zM20 35h2v1h-2zM23 35h4v1h-4zM29 35h1v1h-1zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h3v1h-3zM15 36h6v1h-6zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM13 37h1v1h-1zM15 37h2v1h-2zM18 37h2v1h-2zM22 37h1v1h-1zM24 37h3v1h-3zM28 37h1v1h-1zM32 37h1v1h-1zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h2v1h-2zM17 38h2v1h-2zM22 38h1v1h-1zM26 38h1v1h-1zM30 38h1v1h-1zM32 38h2v1h-2zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="shells" aria-pressed="true">Shells</button>
+          <button type="button" data-v="xray" aria-pressed="false">X ray tube</button>
+        </div>
+        <button type="button" class="btn" id="zDown" aria-label="One electron fewer (previous element)">− electron</button>
+        <button type="button" class="btn" id="zUp" aria-label="One electron more (next element)">+ electron</button>
+        <span class="count mono" id="clock"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="Orbital boxes for every subshell from 1s to 7p, filled with spin up and spin down electrons, and a bar for each shell showing how many electrons it holds out of 2n²."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" tabindex="0" role="img" aria-label="Graph of the first ionization energy against atomic number."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardShells" role="group" aria-label="Pick an element">
+          <span class="card-title">Pick an element, or add and remove electrons one at a time</span>
+          <div class="wide">
+            <span class="lab">Fill</span>
+            <div class="seg" role="group" aria-label="How the subshells are filled" id="fillSeg">
+              <button type="button" data-f="real" aria-pressed="true">Measured ground state (NIST)</button>
+              <button type="button" data-f="rule" aria-pressed="false">By the n + l rule</button>
+            </div>
+          </div>
+          <div class="ptable-wrap"><div class="ptable" id="ptable"></div></div>
+        </div>
+        <div class="shelf-card" id="cardXray" role="group" aria-label="The X ray tube" hidden>
+          <span class="card-title">Electrons accelerated through a voltage V hit a target; a spectrometer measures the X rays</span>
+          <div class="pick"><label for="selTarget">Target</label><select id="selTarget"></select></div>
+          <div><div class="slider-head"><label for="sV">Tube voltage V</label><output id="oV" class="mono" for="sV"></output></div><input type="range" id="sV" min="5" max="100" step="0.5"></div>
+          <div class="pick">
+            <span class="lab">Plot against</span>
+            <div class="seg" role="group" aria-label="Spectrum axis" id="axisSeg">
+              <button type="button" data-a="lam" aria-pressed="true">Wavelength</button>
+              <button type="button" data-a="E" aria-pressed="false">Photon energy</button>
+            </div>
+          </div>
+          <div class="wide" id="mysRow"><button type="button" class="btn" id="newTarget">New mystery target</button><span class="lab" id="tNote"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="neon" aria-pressed="true">Fill up to neon</button>
+          <button type="button" data-p="chromium" aria-pressed="false">Chromium breaks the rule</button>
+          <button type="button" data-p="copper" aria-pressed="false">Copper tube, 30 kV</button>
+          <button type="button" data-p="voltage" aria-pressed="false">Below the K edge</button>
+          <button type="button" data-p="mystery" aria-pressed="false">Mystery target</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="periodic-table" data-title="Shells, the Periodic Table and X Rays" data-demo="shells-and-x-rays">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the ionization graph, the line energies and the cutoff (read the spectrum with the cursor)</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="aboutShells"></p>
+          <p class="hint" id="aboutXray"></p>
+          <p class="hint" id="aboutData"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Shells, the Periodic Table and X Rays. Runnable in Node (curriculum/validation/test_shells-and-x-rays.cjs).
+     ELEMENTS: [Z, symbol, name, table row, table column, family, ground configuration, first ionization energy in eV].
+     Configurations and ionization energies: NIST Atomic Spectra Database (Kramida, Ralchenko, Reader and NIST ASD Team), ionization
+     energies for Z ≤ 103; configurations above Z = 103 are predicted. XRAY: NIST X-Ray Transition Energies Database (Deslattes et al.,
+     Rev. Mod. Phys. 75, 35, 2003), direct measurements, for the targets offered. */
+  const ELEMENTS = [
+    [1, "H", "Hydrogen", 1, 1, "nonmetal", "1s1", 13.598434599702],
+    [2, "He", "Helium", 1, 18, "noble", "1s2", 24.587389011],
+    [3, "Li", "Lithium", 2, 1, "alkali", "1s2 2s1", 5.391714996],
+    [4, "Be", "Beryllium", 2, 2, "alkaline", "1s2 2s2", 9.322699],
+    [5, "B", "Boron", 2, 13, "metalloid", "1s2 2s2 2p1", 8.298019],
+    [6, "C", "Carbon", 2, 14, "nonmetal", "1s2 2s2 2p2", 11.260288],
+    [7, "N", "Nitrogen", 2, 15, "nonmetal", "1s2 2s2 2p3", 14.53413],
+    [8, "O", "Oxygen", 2, 16, "nonmetal", "1s2 2s2 2p4", 13.618055],
+    [9, "F", "Fluorine", 2, 17, "halogen", "1s2 2s2 2p5", 17.42282],
+    [10, "Ne", "Neon", 2, 18, "noble", "1s2 2s2 2p6", 21.564541],
+    [11, "Na", "Sodium", 3, 1, "alkali", "1s2 2s2 2p6 3s1", 5.13907696],
+    [12, "Mg", "Magnesium", 3, 2, "alkaline", "1s2 2s2 2p6 3s2", 7.646236],
+    [13, "Al", "Aluminum", 3, 13, "post", "1s2 2s2 2p6 3s2 3p1", 5.985769],
+    [14, "Si", "Silicon", 3, 14, "metalloid", "1s2 2s2 2p6 3s2 3p2", 8.15168],
+    [15, "P", "Phosphorus", 3, 15, "nonmetal", "1s2 2s2 2p6 3s2 3p3", 10.486686],
+    [16, "S", "Sulfur", 3, 16, "nonmetal", "1s2 2s2 2p6 3s2 3p4", 10.36001],
+    [17, "Cl", "Chlorine", 3, 17, "halogen", "1s2 2s2 2p6 3s2 3p5", 12.967633],
+    [18, "Ar", "Argon", 3, 18, "noble", "1s2 2s2 2p6 3s2 3p6", 15.7596119],
+    [19, "K", "Potassium", 4, 1, "alkali", "1s2 2s2 2p6 3s2 3p6 4s1", 4.34066373],
+    [20, "Ca", "Calcium", 4, 2, "alkaline", "1s2 2s2 2p6 3s2 3p6 4s2", 6.11315547],
+    [21, "Sc", "Scandium", 4, 3, "transition", "1s2 2s2 2p6 3s2 3p6 3d1 4s2", 6.56149],
+    [22, "Ti", "Titanium", 4, 4, "transition", "1s2 2s2 2p6 3s2 3p6 3d2 4s2", 6.82812],
+    [23, "V", "Vanadium", 4, 5, "transition", "1s2 2s2 2p6 3s2 3p6 3d3 4s2", 6.746187],
+    [24, "Cr", "Chromium", 4, 6, "transition", "1s2 2s2 2p6 3s2 3p6 3d5 4s1", 6.76651],
+    [25, "Mn", "Manganese", 4, 7, "transition", "1s2 2s2 2p6 3s2 3p6 3d5 4s2", 7.434038],
+    [26, "Fe", "Iron", 4, 8, "transition", "1s2 2s2 2p6 3s2 3p6 3d6 4s2", 7.9024681],
+    [27, "Co", "Cobalt", 4, 9, "transition", "1s2 2s2 2p6 3s2 3p6 3d7 4s2", 7.88101],
+    [28, "Ni", "Nickel", 4, 10, "transition", "1s2 2s2 2p6 3s2 3p6 3d8 4s2", 7.639878],
+    [29, "Cu", "Copper", 4, 11, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s1", 7.72638],
+    [30, "Zn", "Zinc", 4, 12, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2", 9.394197],
+    [31, "Ga", "Gallium", 4, 13, "post", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p1", 5.999302],
+    [32, "Ge", "Germanium", 4, 14, "metalloid", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p2", 7.899435],
+    [33, "As", "Arsenic", 4, 15, "metalloid", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p3", 9.78855],
+    [34, "Se", "Selenium", 4, 16, "nonmetal", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p4", 9.752368],
+    [35, "Br", "Bromine", 4, 17, "halogen", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p5", 11.81381],
+    [36, "Kr", "Krypton", 4, 18, "noble", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6", 13.9996055],
+    [37, "Rb", "Rubidium", 5, 1, "alkali", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 5s1", 4.1771281],
+    [38, "Sr", "Strontium", 5, 2, "alkaline", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 5s2", 5.69486745],
+    [39, "Y", "Yttrium", 5, 3, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d1 5s2", 6.21726],
+    [40, "Zr", "Zirconium", 5, 4, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d2 5s2", 6.634126],
+    [41, "Nb", "Niobium", 5, 5, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d4 5s1", 6.75885],
+    [42, "Mo", "Molybdenum", 5, 6, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d5 5s1", 7.09243],
+    [43, "Tc", "Technetium", 5, 7, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d5 5s2", 7.11938],
+    [44, "Ru", "Ruthenium", 5, 8, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d7 5s1", 7.3605],
+    [45, "Rh", "Rhodium", 5, 9, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d8 5s1", 7.4589],
+    [46, "Pd", "Palladium", 5, 10, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10", 8.336839],
+    [47, "Ag", "Silver", 5, 11, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s1", 7.576234],
+    [48, "Cd", "Cadmium", 5, 12, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2", 8.99382],
+    [49, "In", "Indium", 5, 13, "post", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p1", 5.7863558],
+    [50, "Sn", "Tin", 5, 14, "post", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p2", 7.343918],
+    [51, "Sb", "Antimony", 5, 15, "metalloid", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p3", 8.608389],
+    [52, "Te", "Tellurium", 5, 16, "metalloid", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p4", 9.009808],
+    [53, "I", "Iodine", 5, 17, "halogen", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p5", 10.451236],
+    [54, "Xe", "Xenon", 5, 18, "noble", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6", 12.1298437],
+    [55, "Cs", "Cesium", 6, 1, "alkali", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 6s1", 3.89390572743],
+    [56, "Ba", "Barium", 6, 2, "alkaline", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 6s2", 5.2116646],
+    [57, "La", "Lanthanum", 9, 3, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 5s2 5p6 5d1 6s2", 5.5769],
+    [58, "Ce", "Cerium", 9, 4, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f1 5s2 5p6 5d1 6s2", 5.5386],
+    [59, "Pr", "Praseodymium", 9, 5, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f3 5s2 5p6 6s2", 5.4702],
+    [60, "Nd", "Neodymium", 9, 6, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f4 5s2 5p6 6s2", 5.525],
+    [61, "Pm", "Promethium", 9, 7, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f5 5s2 5p6 6s2", 5.58187],
+    [62, "Sm", "Samarium", 9, 8, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f6 5s2 5p6 6s2", 5.643722],
+    [63, "Eu", "Europium", 9, 9, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f7 5s2 5p6 6s2", 5.670385],
+    [64, "Gd", "Gadolinium", 9, 10, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f7 5s2 5p6 5d1 6s2", 6.1498],
+    [65, "Tb", "Terbium", 9, 11, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f9 5s2 5p6 6s2", 5.8638],
+    [66, "Dy", "Dysprosium", 9, 12, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f10 5s2 5p6 6s2", 5.939061],
+    [67, "Ho", "Holmium", 9, 13, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f11 5s2 5p6 6s2", 6.0215],
+    [68, "Er", "Erbium", 9, 14, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f12 5s2 5p6 6s2", 6.1077],
+    [69, "Tm", "Thulium", 9, 15, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f13 5s2 5p6 6s2", 6.184402],
+    [70, "Yb", "Ytterbium", 9, 16, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 6s2", 6.25416],
+    [71, "Lu", "Lutetium", 9, 17, "lanthanide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d1 6s2", 5.425871],
+    [72, "Hf", "Hafnium", 6, 4, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d2 6s2", 6.82507],
+    [73, "Ta", "Tantalum", 6, 5, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d3 6s2", 7.549571],
+    [74, "W", "Tungsten", 6, 6, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d4 6s2", 7.86403],
+    [75, "Re", "Rhenium", 6, 7, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d5 6s2", 7.83352],
+    [76, "Os", "Osmium", 6, 8, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d6 6s2", 8.43823],
+    [77, "Ir", "Iridium", 6, 9, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d7 6s2", 8.96702],
+    [78, "Pt", "Platinum", 6, 10, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d9 6s1", 8.95883],
+    [79, "Au", "Gold", 6, 11, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 6s1", 9.225554],
+    [80, "Hg", "Mercury", 6, 12, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 6s2", 10.437504],
+    [81, "Tl", "Thallium", 6, 13, "post", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 6s2 6p1", 6.1082873],
+    [82, "Pb", "Lead", 6, 14, "post", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 6s2 6p2", 7.4166799],
+    [83, "Bi", "Bismuth", 6, 15, "post", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 6s2 6p3", 7.285516],
+    [84, "Po", "Polonium", 6, 16, "post", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 6s2 6p4", 8.41807],
+    [85, "At", "Astatine", 6, 17, "halogen", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 6s2 6p5", 9.31751],
+    [86, "Rn", "Radon", 6, 18, "noble", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 6s2 6p6", 10.7485],
+    [87, "Fr", "Francium", 7, 1, "alkali", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 6s2 6p6 7s1", 4.0727411],
+    [88, "Ra", "Radium", 7, 2, "alkaline", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 6s2 6p6 7s2", 5.2784239],
+    [89, "Ac", "Actinium", 10, 3, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 6s2 6p6 6d1 7s2", 5.380235],
+    [90, "Th", "Thorium", 10, 4, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 6s2 6p6 6d2 7s2", 6.3067],
+    [91, "Pa", "Protactinium", 10, 5, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f2 6s2 6p6 6d1 7s2", 5.89],
+    [92, "U", "Uranium", 10, 6, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f3 6s2 6p6 6d1 7s2", 6.19405],
+    [93, "Np", "Neptunium", 10, 7, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f4 6s2 6p6 6d1 7s2", 6.26554],
+    [94, "Pu", "Plutonium", 10, 8, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f6 6s2 6p6 7s2", 6.02576],
+    [95, "Am", "Americium", 10, 9, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f7 6s2 6p6 7s2", 5.97381],
+    [96, "Cm", "Curium", 10, 10, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f7 6s2 6p6 6d1 7s2", 5.992241],
+    [97, "Bk", "Berkelium", 10, 11, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f9 6s2 6p6 7s2", 6.19785],
+    [98, "Cf", "Californium", 10, 12, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f10 6s2 6p6 7s2", 6.281878],
+    [99, "Es", "Einsteinium", 10, 13, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f11 6s2 6p6 7s2", 6.3684],
+    [100, "Fm", "Fermium", 10, 14, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f12 6s2 6p6 7s2", 6.5],
+    [101, "Md", "Mendelevium", 10, 15, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f13 6s2 6p6 7s2", 6.58],
+    [102, "No", "Nobelium", 10, 16, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 7s2", 6.62621],
+    [103, "Lr", "Lawrencium", 10, 17, "actinide", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 7s2 7p1", 4.96],
+    [104, "Rf", "Rutherfordium", 7, 4, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d2 7s2", null],
+    [105, "Db", "Dubnium", 7, 5, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d3 7s2", null],
+    [106, "Sg", "Seaborgium", 7, 6, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d4 7s2", null],
+    [107, "Bh", "Bohrium", 7, 7, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d5 7s2", null],
+    [108, "Hs", "Hassium", 7, 8, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d6 7s2", null],
+    [109, "Mt", "Meitnerium", 7, 9, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d7 7s2", null],
+    [110, "Ds", "Darmstadtium", 7, 10, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d9 7s1", null],
+    [111, "Rg", "Roentgenium", 7, 11, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d10 7s1", null],
+    [112, "Cn", "Copernicium", 7, 12, "transition", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d10 7s2", null],
+    [113, "Nh", "Nihonium", 7, 13, "post", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d10 7s2 7p1", null],
+    [114, "Fl", "Flerovium", 7, 14, "post", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d10 7s2 7p2", null],
+    [115, "Mc", "Moscovium", 7, 15, "post", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d10 7s2 7p3", null],
+    [116, "Lv", "Livermorium", 7, 16, "post", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d10 7s2 7p4", null],
+    [117, "Ts", "Tennessine", 7, 17, "halogen", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d10 7s2 7p5", null],
+    [118, "Og", "Oganesson", 7, 18, "noble", "1s2 2s2 2p6 3s2 3p6 3d10 4s2 4p6 4d10 4f14 5s2 5p6 5d10 5f14 6s2 6p6 6d10 7s2 7p6", null]];
+  /* [Z, Kα₁ (KL₃), Kα₂ (KL₂), Kβ₁ (KM₃), K edge], eV */
+  const XRAY = [
+    [13, 1486.708, 1486.295, 1557.57, 1559.893],
+    [14, 1739.985, 1739.394, 1835.96, 1840.05],
+    [16, 2307.885, 2306.7, 2464.07, 2470.506],
+    [17, 2622.44, 2620.846, 2815.6, 2819.639],
+    [18, 2957.682, 2955.566, 3190.49, 3202.933],
+    [19, 3313.9476, 3311.1956, 3589.63, 3607.81],
+    [20, 3691.719, 3688.128, 4012.76, 4038.12],
+    [21, 4090.735, 4085.9526, 4460.44, 4488.9],
+    [22, 4510.8991, 4504.9201, 4931.827, 4964.58],
+    [23, 4952.216, 4944.671, 5427.32, 5463.757],
+    [24, 5414.8045, 5405.5384, 5946.823, 5989.017],
+    [25, 5898.801, 5887.6859, 6490.585, 6537.667],
+    [26, 6404.0062, 6391.0264, 7058.175, 7110.747],
+    [27, 6930.378, 6915.538, 7649.445, 7708.776],
+    [28, 7478.2521, 7461.0343, 8264.775, 8331.486],
+    [29, 8047.8227, 8027.8416, 8905.413, 8980.476],
+    [30, 8638.906, 8615.823, 9572.03, 9660.755],
+    [31, 9251.674, 9224.835, 10264.19, 10368.1],
+    [32, 9886.52, 9855.42, 10982.19, 11103.76],
+    [33, 10543.2674, 10507.5, 11725.73, 11864.3],
+    [34, 11222.52, 11181.53, 12496.03, 12654.61],
+    [35, 11924.36, 11877.75, 13291.56, 13470.5],
+    [36, 12648.002, 12595.424, 14112.815, 14324.61],
+    [37, 13395.49, 13335.88, 14961.42, 15202.5],
+    [38, 14165.2, 14098.03, 15835.89, 16107.2],
+    [39, 14958.54, 14882.94, 16738.08, 17036.612],
+    [40, 15774.914, 15690.645, 17666.578, 17995.872],
+    [41, 16615.16, 16521.28, 18622.68, 18982.961],
+    [42, 17479.372, 17374.29, 19608.34, 20000.351],
+    [44, 19279.16, 19150.49, 21656.75, 22119.56],
+    [45, 20216.12, 20073.67, 22723.59, 23221.99],
+    [46, 21177.08, 21020.15, 23818.69, 24352.59],
+    [47, 22162.917, 21990.3, 24942.42, 25515.59],
+    [48, 23173.98, 22984.05, 26095.44, 26713.29],
+    [49, 24209.75, 24002.03, 27275.55, 27940.39],
+    [50, 25271.36, 25044.04, 28486.26, 29200.39],
+    [51, 26358.86, 26110.78, 29725.53, 30490.49],
+    [52, 27472.57, 27201.99, 30995.97, 31811.5],
+    [53, 28612.32, 28317.52, 32295.05, 33167.2],
+    [54, 29778.78, 29458.25, 33624.23, 34593.0],
+    [55, 30973.13, 30625.4, 34987.3, 35988.0],
+    [56, 32193.262, 31816.615, 36377.445, 37452.4],
+    [57, 33442.12, 33034.38, 37801.45, 38934.3],
+    [58, 34720.0, 34279.28, 39257.77, 40453.6],
+    [59, 36026.71, 35550.59, 40748.67, 42002.0],
+    [60, 37360.739, 36847.502, 42270.9, 43574.0],
+    [62, 40118.481, 39523.39, 45413.0, 46849.0],
+    [63, 41542.63, 40902.33, 47038.4, 48519.7],
+    [64, 42996.72, 42309.3, 48696.9, 50233.9],
+    [65, 44482.75, 43744.62, 50382.9, 52003.8],
+    [66, 45998.94, 45208.27, 52119.7, 53793.1],
+    [67, 47547.1, 46699.98, 53877.1, 55619.9],
+    [68, 49127.24, 48221.61, 55673.52, 57485.2],
+    [69, 50741.475, 49772.67, 57508.76, 59379.0],
+    [70, 52389.48, 51354.6, 59367.1, 61305.0],
+    [73, 57533.2, 56277.6, 65223.3, 67403.7],
+    [74, 59318.847, 57981.77, 67245.0, 69508.5],
+    [75, 61141.0, 59718.57, 69310.3, 71657.8],
+    [76, 63001.07, 61487.27, 71413.9, 73856.2],
+    [77, 64896.2, 63287.29, 73561.7, 76100.1],
+    [78, 66832.9, 65123.3, 75749.1, 78380.5],
+    [79, 68804.5, 66990.73, 77979.8, 80721.3],
+    [80, 70819.5, 68895.1, 80254.2, 83109.2],
+    [81, 72872.5, 70832.5, 82576.7, 85534.5],
+    [82, 74970.11, 72805.42, 84939.08, 88005.6],
+    [83, 77109.2, 74816.21, 87344.1, 90537.7]];
+  const SUB_ORDER = ['1s', '2s', '2p', '3s', '3p', '4s', '3d', '4p', '5s', '4d', '5p', '6s', '4f', '5d', '6p', '7s', '5f', '6d', '7p'];
+  const L_OF = { s: 0, p: 1, d: 2, f: 3 };
+  const cap = (sub) => 2 * (2 * L_OF[sub[1]] + 1);
+  const byZ = (z) => ELEMENTS[z - 1];
+  /* the n + l (Madelung) rule: fill subshells in order of n + l, and of n where n + l ties; each holds 2(2l + 1) electrons (Pauli) */
+  function ruleConfig(Z) { const o = {}; let left = Z; for (const s of SUB_ORDER) { if (left <= 0) break; const k = Math.min(cap(s), left); o[s] = k; left -= k; } return o; }
+  function parseConfig(str) { const o = {}; for (const t of str.split(' ')) { const m = /^(\d)([spdf])(\d+)$/.exec(t); if (m) o[m[1] + m[2]] = +m[3]; } return o; }
+  const realConfig = (Z) => parseConfig(byZ(Z)[6]);
+  function configText(o) { return SUB_ORDER.slice().sort((a, b) => +a[0] - +b[0] || L_OF[a[1]] - L_OF[b[1]]).filter((s) => o[s]).map((s) => s + o[s]).join(' '); }
+  function shellCounts(o) { const n = [0, 0, 0, 0, 0, 0, 0, 0]; for (const s in o) n[+s[0]] += o[s]; return n.slice(1); }
+  function outerShell(o) { const c = shellCounts(o); let n = 0; c.forEach((k, i) => { if (k) n = i + 1; }); return { n, count: c[n - 1] || 0 }; }
+  /* orbital boxes within a subshell: Hund's rule fills m_l = +l, …, −l once with spin up, then again with spin down */
+  function boxes(sub, k) { const l = L_OF[sub[1]], out = []; for (let m = l; m >= -l; m--) out.push({ m, up: false, down: false });
+    for (let i = 0; i < k; i++) { const b = out[i % out.length]; if (i < out.length) b.up = true; else b.down = true; } return out; }
+  /* the quantum numbers of the last electron placed by the rule */
+  function lastElectron(Z) { const o = ruleConfig(Z); let s = null; for (const t of SUB_ORDER) if (o[t]) s = t; const k = o[s], l = L_OF[s[1]], nb = 2 * l + 1, i = k - 1;
+    return { n: +s[0], l, sub: s, m: l - (i % nb), ms: i < nb ? 0.5 : -0.5 }; }
+  /* hydrogen-like estimate for the outer electron: IE = 13.6 eV Z_eff²/n², so Z_eff = n√(IE/13.6 eV) */
+  const RY = 13.605693122994;
+  const zEff = (IE, n) => n * Math.sqrt(IE / RY);
+  /* X rays. Electrons of energy eV stop in the target. The continuous spectrum follows Kramers' law for a thick target: energy per
+     unit photon energy ∝ Z(E₀ − E) up to E₀ = eV (the Duane–Hunt limit, λ_min = hc/eV). Per unit wavelength, I_λ = I_E hc/λ². */
+  const HC_EV_PM = 1239841.98;   /* hc in eV·pm (CODATA 2018) */
+  const lamPm = (EeV) => HC_EV_PM / EeV, ePm = (lam) => HC_EV_PM / lam;
+  const XR = Object.fromEntries(XRAY.map((r) => [r[0], { ka1: r[1], ka2: r[2], kb1: r[3], kedge: r[4] }]));
+  /* K lines appear only when the electrons can empty the K shell: eV above the K edge. Their heights are drawn, not measured:
+     Kα₂ half of Kα₁ (4 electrons in 2p₃/₂ to 2 in 2p₁/₂), Kβ₁ a fifth, all growing as (U − 1)^1.6 with U = eV/E_K. */
+  function xrayLines(Z, kV) { const x = XR[Z], E0 = kV * 1000; if (!x || E0 <= x.kedge) return [];
+    const s = Math.pow(E0 / x.kedge - 1, 1.6); return [{ name: 'Kα₁', E: x.ka1, h: s }, { name: 'Kα₂', E: x.ka2, h: 0.5 * s }, { name: 'Kβ₁', E: x.kb1, h: 0.2 * s }]; }
+  const kramersE = (Z, kV, E) => Math.max(0, Z * (kV * 1000 - E));
+  /* Moseley's law in the textbook's Bohr model (§8.5): E_Kα ≈ (3/4)(13.6 eV)(Z − 1)² */
+  const moseleyE = (Z) => 0.75 * RY * (Z - 1) * (Z - 1);
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VG = window.VDGear;
+  const S = { view: 'shells', preset: 'neon', blind: false, sh: { Z: 10, fill: 'real' }, xr: { Z: 29, kV: 30, axis: 'lam', target: '29', mys: 26, mysN: 0, lastMys: null, cur: 154 } };
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
+  let W = 0, Hh = 0, dpr = 1, CW = 0, CH = 0, T = null;
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const g6 = (v) => +(+v).toPrecision(6);
+  const SUPD = '⁰¹²³⁴⁵⁶⁷⁸⁹', sup = (k) => String(k).replace(/\d/g, (d) => SUPD[d]);
+  const pretty = (o) => configText(o).split(' ').map((t) => t.slice(0, 2) + sup(t.slice(2))).join(' ');
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const dark = () => (VG ? VG.dark() : false);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
+      up: g('--up'), down: g('--down'), ka: g('--ka'), kb: g('--kb'), brems: g('--brems'), diff: g('--diff'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+  const lbl = (s, x, y, o = {}) => { if (VG) VG.label(ctx, s, x, y, o); else { ctx.fillStyle = o.c || T.muted; ctx.font = `${o.s || 11}px ${T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y); } };
+  function arrow(c, x1, y1, x2, y2, col, w) {
+    const a = Math.atan2(y2 - y1, x2 - x1), hd = 6 + w * 1.5; c.strokeStyle = col; c.fillStyle = col; c.lineWidth = w; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2 - Math.cos(a) * hd * 0.8, y2 - Math.sin(a) * hd * 0.8); c.stroke();
+    c.beginPath(); c.moveTo(x2, y2); c.lineTo(x2 - hd * Math.cos(a - 0.4), y2 - hd * Math.sin(a - 0.4)); c.lineTo(x2 - hd * Math.cos(a + 0.4), y2 - hd * Math.sin(a + 0.4)); c.closePath(); c.fill();
+  }
+  function backdrop() { if (VG) VG.backdrop(ctx, W, Hh); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh); } }
+  const niceStep = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+  const xZ = () => (S.xr.target === 'mystery' ? S.xr.mys : +S.xr.target);
+
+  // ---------- Shells view ----------
+  const ROWS = [['1s'], ['2s', '2p'], ['3s', '3p', '3d'], ['4s', '4p', '4d', '4f'], ['5s', '5p', '5d', '5f'], ['6s', '6p', '6d'], ['7s', '7p']];
+  function drawShells() {
+    const p = proj(), Z = S.sh.Z, e = byZ(Z), real = realConfig(Z), rule = ruleConfig(Z), o = S.sh.fill === 'real' ? real : rule;
+    backdrop();
+    const left = 16 * p, top = 34 * p, areaW = W * 0.68 - left, rowH = Math.min(36 * p, (Hh - top - 26 * p) / 7), bs = Math.min(rowH - 6 * p, (areaW - 40 * p - 4 * 18 * p - 3 * 14 * p) / 16), gapS = 14 * p;
+    lbl(`${e[2]} (Z = ${Z}): ${pretty(o)}${Z > 103 ? '  (predicted)' : ''}`, left, 18 * p, { s: 12.5 * p, w: 700, c: T.ink });
+    ROWS.forEach((row, ri) => {
+      const y = top + ri * rowH; let x = left + 40 * p;
+      lbl(`n = ${ri + 1}`, left, y + 2 * p + bs / 2, { s: 10.5 * p, m: true });
+      for (const sub of row) {
+        const k = o[sub] || 0, bx = boxes(sub, k), differs = (real[sub] || 0) !== (rule[sub] || 0);
+        lbl(sub, x, y + 2 * p + bs / 2, { s: 9.5 * p, m: true, c: differs ? T.diff : T.muted }); x += 18 * p;
+        bx.forEach((b, i) => { const xx = x + i * bs, yy = y + 2 * p;
+          ctx.fillStyle = k ? (dark() ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.7)') : 'transparent'; ctx.fillRect(xx, yy, bs, bs);
+          ctx.strokeStyle = differs ? T.diff : T.line; ctx.lineWidth = differs ? 1.6 : 1; ctx.strokeRect(xx + 0.5, yy + 0.5, bs - 1, bs - 1);
+          if (b.up) arrow(ctx, xx + bs * 0.35, yy + bs * 0.85, xx + bs * 0.35, yy + bs * 0.15, T.up, 1.4 * p);
+          if (b.down) arrow(ctx, xx + bs * 0.65, yy + bs * 0.15, xx + bs * 0.65, yy + bs * 0.85, T.down, 1.4 * p); });
+        x += bx.length * bs + gapS;
+      }
+    });
+    /* shell bars */
+    const sx = W * 0.72, sw = W * 0.18, c = shellCounts(o);
+    lbl('electrons in each shell (of 2n²)', sx, 18 * p, { s: 11 * p, w: 700, c: T.ink });
+    for (let n = 1; n <= 7; n++) { const y = top + (n - 1) * rowH, capN = 2 * n * n, w = sw * Math.min(1, capN / 98);
+      ctx.strokeStyle = T.line; ctx.strokeRect(sx + 0.5, y + 2 * p, w, bs); ctx.fillStyle = T.up; ctx.globalAlpha = 0.65; ctx.fillRect(sx + 1, y + 2 * p + 1, w * c[n - 1] / capN, bs - 2); ctx.globalAlpha = 1;
+      lbl(`${c[n - 1]} / ${capN}`, sx + w + 6 * p, y + 2 * p + bs / 2, { s: 10 * p, m: true }); }
+    if (S.sh.fill === 'real') { const d = SUB_ORDER.filter((s) => (real[s] || 0) !== (rule[s] || 0));
+      if (d.length) lbl(`differs from the n + l rule in ${d.join(', ')} (outlined); rule: ${pretty(rule)}`, left, Hh - 12 * p, { s: 10.5 * p, c: T.diff }); }
+    else { const le = lastElectron(Z); lbl(`last electron placed: n = ${le.n}, l = ${le.l}, m_l = ${String(le.m).replace('-', '−')}, m_s = ${le.ms > 0 ? '+1/2' : '−1/2'}`, left, Hh - 12 * p, { s: 10.5 * p, c: T.ink }); }
+  }
+  function drawIE() {
+    const p = proj(), c = cctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
+    if (S.blind) { c.fillStyle = T.muted; c.font = `${12 * p}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Graph hidden (Blind mode in the Lab section): record each element\'s ionization energy and plot it yourself', CW / 2, CH / 2); return; }
+    const L = 50 * p, Rr = 14 * p, Tp = 14 * p, Bt = 34 * p, pw = CW - L - Rr, ph = CH - Tp - Bt, X = (z) => L + (z - 0.5) / 103.5 * pw, Y = (v) => Tp + ph - v / 26 * ph;
+    c.strokeStyle = T.grid; c.fillStyle = T.muted; c.font = `${10 * p}px ${T.mono}`; c.lineWidth = 1;
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (let z = 10; z <= 100; z += 10) { c.beginPath(); c.moveTo(X(z), Tp); c.lineTo(X(z), Tp + ph); c.stroke(); c.fillText(String(z), X(z), Tp + ph + 4); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (let v = 0; v <= 25; v += 5) { c.beginPath(); c.moveTo(L, Y(v)); c.lineTo(L + pw, Y(v)); c.stroke(); c.fillText(String(v), L - 5, Y(v)); }
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText('atomic number Z', L + pw / 2, CH - 2);
+    c.save(); c.translate(12 * p, Tp + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText('first ionization energy (eV)', 0, 0); c.restore();
+    c.strokeStyle = T.brems; c.lineWidth = 1.2 * p; c.beginPath(); for (let z = 1; z <= 103; z++) { const v = byZ(z)[7]; z === 1 ? c.moveTo(X(z), Y(v)) : c.lineTo(X(z), Y(v)); } c.stroke();
+    for (let z = 1; z <= 103; z++) { const e = byZ(z), noble = e[5] === 'noble', alk = e[5] === 'alkali'; c.fillStyle = noble ? T.down : alk ? T.up : T.brems; c.beginPath(); c.arc(X(z), Y(e[7]), (noble || alk ? 3 : 2) * p, 0, 7); c.fill();
+      if (noble || alk) { c.fillStyle = noble ? T.down : T.up; c.textAlign = 'center'; c.textBaseline = noble ? 'bottom' : 'top'; c.fillText(e[1], X(z), Y(e[7]) + (noble ? -5 : 5) * p); } }
+    const Z = S.sh.Z; if (Z <= 103) { c.strokeStyle = T.accent; c.lineWidth = 2; c.beginPath(); c.arc(X(Z), Y(byZ(Z)[7]), 6 * p, 0, 7); c.stroke(); }
+  }
+
+  // ---------- X ray view ----------
+  function drawTube() {
+    const p = proj(), Z = xZ(), x = XR[Z], kV = S.xr.kV, myst = S.xr.target === 'mystery', lines = xrayLines(Z, kV);
+    backdrop();
+    /* the tube: glass envelope, hot filament, target tilted to send X rays down through a window */
+    const cx = W * 0.27, cy = Hh * 0.42, tw = Math.min(W * 0.42, 340 * p), th = 84 * p;
+    ctx.save(); const gl = ctx.createLinearGradient(0, cy - th / 2, 0, cy + th / 2); gl.addColorStop(0, 'rgba(255,255,255,0.45)'); gl.addColorStop(0.5, 'rgba(200,220,235,0.12)'); gl.addColorStop(1, 'rgba(150,170,190,0.35)');
+    ctx.fillStyle = gl; ctx.strokeStyle = dark() ? 'rgba(220,235,245,0.6)' : 'rgba(80,110,130,0.7)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(cx - tw / 2, cy - th / 2, tw, th, th / 2) : ctx.rect(cx - tw / 2, cy - th / 2, tw, th); ctx.fill(); ctx.stroke(); ctx.restore();
+    const fx = cx - tw / 2 + 34 * p; ctx.strokeStyle = '#ff7a3d'; ctx.lineWidth = 2.5 * p; ctx.beginPath(); for (let i = 0; i <= 12; i++) { const yy = cy - 14 * p + i * 28 * p / 12, xx = fx + (i % 2 ? 5 : -5) * p; i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); } ctx.stroke();
+    lbl('hot filament (cathode)', fx, cy + th / 2 + 14 * p, { a: 'center', s: 10 * p });
+    const ax = cx + tw / 2 - 30 * p; if (VG) VG.box(ctx, ax - 6 * p, cy - 26 * p, 46 * p, 52 * p, { color: '#b87333', r: 3 });
+    ctx.fillStyle = dark() ? '#e9d0a0' : '#8a6a3a'; ctx.beginPath(); ctx.moveTo(ax - 6 * p, cy - 26 * p); ctx.lineTo(ax + 8 * p, cy - 26 * p); ctx.lineTo(ax - 6 * p, cy + 26 * p); ctx.closePath(); ctx.fill();
+    lbl(myst ? 'target: mystery' : `target: ${byZ(Z)[2].toLowerCase()}`, ax + 10 * p, cy - th / 2 - 12 * p, { a: 'center', s: 10.5 * p, c: T.ink });
+    for (let k = 0; k < 3; k++) arrow(ctx, fx + 16 * p, cy - 10 * p + k * 10 * p, ax - 10 * p, cy - 10 * p + k * 10 * p, T.up, 1.2 * p);
+    lbl(`electrons, ${f(kV, 1)} keV each`, (fx + ax) / 2, cy - 22 * p, { a: 'center', s: 10 * p, c: T.up });
+    for (let k = -2; k <= 2; k++) { ctx.save(); ctx.globalAlpha = 0.6; arrow(ctx, ax - 2 * p, cy + 6 * p, ax - 2 * p + k * 16 * p, cy + th / 2 + 60 * p, T.ka, 1.2 * p); ctx.restore(); }
+    lbl('X rays to the spectrometer', ax, cy + th / 2 + 74 * p, { a: 'center', s: 10 * p });
+    lbl(`high voltage ${f(kV, 1)} kV`, cx, cy - th / 2 - 28 * p, { a: 'center', s: 11 * p, w: 700, c: T.ink });
+    /* right: the K, L and M levels of the target, with the transitions that fill a K hole */
+    const lx = W * 0.6, lw = W * 0.34, yK = Hh - 40 * p, yTop = 46 * p;
+    if (!x) return; const EK = x.kedge, EL3 = EK - x.ka1, EL2 = EK - x.ka2, EM3 = EK - x.kb1;
+    const Y = (Eb) => yTop + (yK - yTop) * Math.sqrt(Eb / EK);   /* square root scale, so the outer levels can be seen */
+    lbl('inner levels of the target atom', lx, 20 * p, { s: 11 * p, w: 700, c: T.ink });
+    const lev = (Eb, name, dy = 0) => { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(lx, Y(Eb)); ctx.lineTo(lx + lw * 0.62, Y(Eb)); ctx.stroke();
+      lbl(myst || S.blind ? name : `${name}  ${f(Eb / 1000, 3)} keV`, lx + lw * 0.64, Y(Eb) + dy, { s: 10 * p, m: true }); };
+    ctx.strokeStyle = T.grid; ctx.beginPath(); ctx.moveTo(lx, yTop); ctx.lineTo(lx + lw * 0.62, yTop); ctx.stroke(); lbl('ionized (0)', lx + lw * 0.64, yTop, { s: 10 * p, m: true });
+    lev(EM3, 'M₃'); lev(EL3, 'L₃'); lev(EK, 'K'); lev(EL2, 'L₂', 14 * p);
+    const on = lines.length > 0;
+    ctx.save(); ctx.globalAlpha = on ? 0.95 : 0.25;
+    arrow(ctx, lx + lw * 0.16, Y(EL3), lx + lw * 0.16, Y(EK) - 3, T.ka, 2 * p); lbl('Kα₁', lx + lw * 0.16 - 4 * p, (Y(EL3) + Y(EK)) / 2, { a: 'right', s: 10 * p, c: T.ka });
+    arrow(ctx, lx + lw * 0.30, Y(EL2), lx + lw * 0.30, Y(EK) - 3, T.ka, 1.4 * p); lbl('Kα₂', lx + lw * 0.30 - 4 * p, (Y(EL2) + Y(EK)) / 2 + 12 * p, { a: 'right', s: 10 * p, c: T.ka });
+    arrow(ctx, lx + lw * 0.46, Y(EM3), lx + lw * 0.46, Y(EK) - 3, T.kb, 1.6 * p); lbl('Kβ₁', lx + lw * 0.46 + 4 * p, (Y(EM3) + Y(EK)) / 2, { s: 10 * p, c: T.kb });
+    ctx.restore();
+    lbl(on ? 'electrons have enough energy to empty the K shell' : `below the K edge${myst || S.blind ? '' : ` (${f(EK / 1000, 3)} keV)`}: no K lines`, lx, Hh - 14 * p, { s: 10.5 * p, c: on ? T.ink : T.down });
+  }
+  const RES = 0.0015;   /* the spectrometer's FWHM as a fraction of the photon energy */
+  function spectrum(Z, kV, Ex) {
+    let I = kramersE(Z, kV, Ex) / (Z * kV * 1000);
+    for (const l of xrayLines(Z, kV)) { const sg = RES * l.E / 2.3548; I += 3 * l.h * Math.exp(-0.5 * Math.pow((Ex - l.E) / sg, 2)); }
+    return I;
+  }
+  function xRange() { const Z = xZ(), kV = S.xr.kV, x = XR[Z], lmin = lamPm(kV * 1000);
+    if (S.xr.axis === 'lam') return [0, Math.max(lmin * 3, x ? lamPm(x.ka2) * 1.2 : 0)]; return [0, kV * 1000 * 1.05]; }
+  function drawXspec() {
+    const p = proj(), c = cctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
+    const Z = xZ(), kV = S.xr.kV, lam = S.xr.axis === 'lam', [x0, x1] = xRange(), L = 52 * p, Rr = 16 * p, Tp = 14 * p, Bt = 36 * p, pw = CW - L - Rr, ph = CH - Tp - Bt;
+    const X = (v) => L + (v - x0) / (x1 - x0) * pw;
+    const N = 900, ys = []; let ymax = 0;
+    for (let i = 0; i <= N; i++) { const v = x0 + (x1 - x0) * i / N; let y = 0; if (v > 0) { const E = lam ? ePm(v) : v; y = spectrum(Z, kV, E); if (lam) y *= HC_EV_PM / (v * v); } ys.push(y); ymax = Math.max(ymax, y); }
+    c.strokeStyle = T.grid; c.fillStyle = T.muted; c.font = `${10 * p}px ${T.mono}`; c.lineWidth = 1; c.textAlign = 'center'; c.textBaseline = 'top';
+    const scale = lam ? 1 : 1000, st = niceStep((x1 - x0) / scale / 6) * scale;
+    for (let v = Math.ceil(x0 / st) * st; v <= x1 + 1e-9; v += st) { c.beginPath(); c.moveTo(X(v), Tp); c.lineTo(X(v), Tp + ph); c.stroke(); c.fillText(String(+(v / scale).toFixed(3)), X(v), Tp + ph + 4); }
+    c.textBaseline = 'bottom'; c.fillText(lam ? 'wavelength λ (pm)' : 'photon energy E (keV)', L + pw / 2, CH - 2);
+    c.save(); c.translate(14 * p, Tp + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(lam ? 'intensity per unit λ' : 'intensity per unit E', 0, 0); c.restore();
+    c.save(); c.beginPath(); c.rect(L, Tp, pw, ph); c.clip(); c.strokeStyle = T.ink; c.lineWidth = 1.8 * p; c.beginPath();
+    ys.forEach((y, i) => { const xx = L + pw * i / N, yy = Tp + ph - (ymax ? y / ymax : 0) * ph * 0.92; i ? c.lineTo(xx, yy) : c.moveTo(xx, yy); }); c.stroke(); c.restore();
+    c.strokeStyle = T.line; c.strokeRect(L, Tp, pw, ph);
+    const xc = X(S.xr.cur); if (S.xr.cur >= x0 && S.xr.cur <= x1) { c.strokeStyle = T.accent; c.lineWidth = 1.5; c.beginPath(); c.moveTo(xc, Tp); c.lineTo(xc, Tp + ph); c.stroke();
+      const E = lam ? ePm(S.xr.cur) : S.xr.cur, lp = lam ? S.xr.cur : lamPm(S.xr.cur);
+      c.fillStyle = T.accent; c.textAlign = xc > L + pw * 0.65 ? 'right' : 'left'; c.textBaseline = 'top'; c.fillText(` cursor ${f(lp, 2)} pm, ${f(E / 1000, 4)} keV `, xc, Tp + 2); }
+    cur.dataset.x0 = x0; cur.dataset.x1 = x1; cur.dataset.L = L; cur.dataset.pw = pw;
+  }
+
+  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh); if (S.view === 'shells') { drawShells(); drawIE(); } else { drawTube(); drawXspec(); } readouts(); }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>';
+    let o = '';
+    if (S.view === 'shells') {
+      const Z = S.sh.Z, e = byZ(Z), real = realConfig(Z), rule = ruleConfig(Z), os = outerShell(real);
+      o = dd('Element', `${e[2]}, ${e[1]}`) + dd('Atomic number Z', Z) + dd('Configuration (measured)', pretty(real) + (Z > 103 ? ' (predicted)' : '')) + dd('By the n + l rule', pretty(rule))
+        + dd('Electrons per shell', shellCounts(real).filter((k, i, a) => a.slice(i).some((q) => q)).join(', ')) + dd('Outer shell', `n = ${os.n}, ${os.count} electron${os.count === 1 ? '' : 's'}`)
+        + dd('First ionization energy', S.blind ? hide : e[7] == null ? 'not measured' : `${f(e[7], 4)} eV`) + dd('Z_eff = n√(IE/13.6 eV)', S.blind || e[7] == null ? hide : f(zEff(e[7], os.n), 3));
+    } else {
+      const Z = xZ(), x = XR[Z], kV = S.xr.kV, myst = S.xr.target === 'mystery', ln = xrayLines(Z, kV), lmin = lamPm(kV * 1000), cl = S.xr.axis === 'lam' ? S.xr.cur : lamPm(S.xr.cur);
+      o = dd('Target', myst ? 'mystery' : `${byZ(Z)[2]}, Z = ${Z}`) + dd('Tube voltage', `${f(kV, 1)} kV`) + dd('Cutoff λ_min = hc/eV', S.blind ? hide : `${f(lmin, 3)} pm`)
+        + dd('K edge', S.blind || myst ? hide : `${f(x.kedge / 1000, 4)} keV`) + (ln.length ? ln.map((l) => dd(`${l.name} line`, S.blind ? hide : `${f(lamPm(l.E), 3)} pm`)).join('') : dd('K lines', 'none: below the K edge'))
+        + dd('Cursor λ', `${f(cl, 2)} pm`) + dd('Cursor E', `${f(ePm(cl) / 1000, 4)} keV`);
+    }
+    $('out').innerHTML = o;
+    $('clock').textContent = S.view === 'shells' ? `Z = ${S.sh.Z}` : '';
+  }
+
+  // ---------- controls ----------
+  const CATCOL = (cat) => `var(--cat-${cat})`;
+  (function buildTable() { const t = $('ptable'); let h = '';
+    const cells = []; for (const e of ELEMENTS) { const r = e[3], c0 = e[4]; cells.push({ e, row: r <= 7 ? r : r + 0, col: c0 }); }
+    t.innerHTML = ''; for (let r = 1; r <= 10; r++) { if (r === 8) { const g = document.createElement('div'); g.className = 'gap'; t.appendChild(g); continue; }
+      for (let c0 = 1; c0 <= 18; c0++) { const cell = cells.find((q) => q.row === r && q.col === c0); if (!cell) { const sp = document.createElement('span'); t.appendChild(sp); continue; }
+        const e = cell.e, b = document.createElement('button'); b.type = 'button'; b.dataset.z = e[0]; b.style.setProperty('--c', CATCOL(e[5])); b.innerHTML = `${e[1]}<small>${e[0]}</small>`;
+        b.title = `${e[2]}, Z = ${e[0]}`; b.setAttribute('aria-label', `${e[2]}, Z = ${e[0]}`); b.setAttribute('aria-pressed', 'false'); t.appendChild(b); } } })();
+  $('selTarget').innerHTML = XRAY.map((r) => `<option value="${r[0]}">${byZ(r[0])[2]} (Z = ${r[0]})</option>`).join('') + '<option value="mystery">Mystery target</option>';
+  function sync() {
+    for (const b of document.querySelectorAll('#ptable button')) b.setAttribute('aria-pressed', String(+b.dataset.z === S.sh.Z));
+    for (const b of document.querySelectorAll('#fillSeg button')) b.setAttribute('aria-pressed', String(b.dataset.f === S.sh.fill));
+    $('selTarget').value = S.xr.target; $('sV').value = S.xr.kV; $('oV').textContent = `${f(S.xr.kV, 1)} kV`;
+    for (const b of document.querySelectorAll('#axisSeg button')) b.setAttribute('aria-pressed', String(b.dataset.a === S.xr.axis));
+    $('newTarget').hidden = S.xr.target !== 'mystery'; $('mysRow').hidden = S.xr.target !== 'mystery' && !S.xr.lastMys;
+    $('tNote').textContent = S.xr.lastMys ? `The last mystery target was ${byZ(S.xr.lastMys)[2].toLowerCase()} (Z = ${S.xr.lastMys}).` : '';
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    $('zDown').hidden = $('zUp').hidden = S.view !== 'shells';
+  }
+  const MYSTERY_POOL = XRAY.map((r) => r[0]).filter((z) => z >= 20 && z <= 60);
+  function newTarget(quiet) { const x = S.xr; let z; do { z = MYSTERY_POOL[Math.floor(Math.random() * MYSTERY_POOL.length)]; } while (z === x.mys); if (!quiet && x.mysN) x.lastMys = x.mys; x.mys = z; x.mysN++; }
+  const PRESETS = {
+    neon: { view: 'shells', hint: 'Neon, Z = 10: the first shell holds 2 electrons and the second 8, both full. Step down with − electron and up again: each new electron takes the lowest free place that leaves no two electrons with the same four quantum numbers.', set: () => Object.assign(S.sh, { Z: 10, fill: 'real' }) },
+    chromium: { view: 'shells', hint: 'Chromium, Z = 24. The n + l rule puts four electrons in 3d and two in 4s; the measured ground state has five in 3d and one in 4s, a half full 3d subshell. Switch between the two fills, and look at copper (Z = 29) too.', set: () => Object.assign(S.sh, { Z: 24, fill: 'real' }) },
+    copper: { view: 'xray', hint: 'A copper target at 30 kV, the usual tube for X ray diffraction. The smooth curve is bremsstrahlung from electrons slowing in the target; it starts at a sharp shortest wavelength. The peaks are copper\'s Kα and Kβ lines. Change the voltage and see what moves and what stays.', set: () => Object.assign(S.xr, { target: '29', kV: 30, axis: 'lam', cur: 154 }) },
+    voltage: { view: 'xray', hint: 'Molybdenum at 15 kV: the electrons cannot knock out a K electron (molybdenum\'s K edge is at 20.0 keV), so there are no K lines yet. Raise the voltage past 20 kV and they appear.', set: () => Object.assign(S.xr, { target: '42', kV: 15, axis: 'lam', cur: 71 }) },
+    mystery: { view: 'xray', hint: 'An unknown target at 70 kV. Measure the wavelength of its Kα₁ line and use Moseley\'s law to find its atomic number.', set: () => { Object.assign(S.xr, { target: 'mystery', kV: 70, axis: 'lam', cur: 60 }); newTarget(true); } } };
+  const VIEW_LABEL = { shells: 'Orbital boxes for every subshell from 1s to 7p, filled with spin up and spin down electrons, and a bar for each shell showing how many electrons it holds out of 2n².',
+    xray: 'An X ray tube: a hot filament, electrons accelerated to a metal target, and X rays leaving through a window; beside it, the target atom\'s K, L and M levels with the Kα and Kβ transitions.' };
+  const CURVE_LABEL = { shells: 'Graph of the first ionization energy against atomic number, for Z = 1 to 103.', xray: 'The X ray spectrum, intensity against wavelength or photon energy. Drag or use the arrow keys to move the cursor.' };
+  function setView(v) {
+    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('cardShells').hidden = v !== 'shells'; $('cardXray').hidden = v !== 'xray';
+    $('units').textContent = v === 'shells' ? 'energies in eV' : 'λ in pm · E in keV · V in kV';
+    can.setAttribute('aria-label', VIEW_LABEL[v]); cur.setAttribute('aria-label', CURVE_LABEL[v]);
+    window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
+    sync(); redraw();
+  }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); setView(c.view); }
+  const custom = () => { S.preset = 'custom'; };
+  const setZ = (z) => { S.sh.Z = Math.max(1, Math.min(118, z)); custom(); sync(); redraw(); };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
+  $('ptable').addEventListener('click', (e) => { const b = e.target.closest('[data-z]'); if (b) setZ(+b.dataset.z); });
+  $('zDown').addEventListener('click', () => setZ(S.sh.Z - 1)); $('zUp').addEventListener('click', () => setZ(S.sh.Z + 1));
+  $('fillSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-f]'); if (b) { S.sh.fill = b.dataset.f; custom(); sync(); redraw(); } });
+  $('selTarget').addEventListener('change', (e) => { S.xr.target = e.target.value; if (S.xr.target === 'mystery') newTarget(true); custom(); sync(); redraw(); });
+  $('sV').addEventListener('input', (e) => { S.xr.kV = +e.target.value; custom(); sync(); redraw(); });
+  $('axisSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-a]'); if (b && b.dataset.a !== S.xr.axis) { const x = S.xr; x.cur = x.cur > 0 ? HC_EV_PM / x.cur : x.cur; x.axis = b.dataset.a; sync(); redraw(); } });
+  $('newTarget').addEventListener('click', () => { newTarget(false); custom(); sync(); redraw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  can.addEventListener('keydown', (e) => { if (S.view !== 'shells') return; if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { setZ(S.sh.Z + 1); e.preventDefault(); } if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { setZ(S.sh.Z - 1); e.preventDefault(); } });
+  /* the spectrum cursor: drag, click or arrow keys (Shift for bigger steps) */
+  function cursorAt(ev) { if (S.view !== 'xray') return; const r = cur.getBoundingClientRect(), x = ev.clientX - r.left, x0 = +cur.dataset.x0, x1 = +cur.dataset.x1, L = +cur.dataset.L, pw = +cur.dataset.pw;
+    S.xr.cur = Math.max(x0 + 1e-6, Math.min(x1, x0 + (x - L) / pw * (x1 - x0))); redraw(); }
+  let dragging = false;
+  cur.addEventListener('pointerdown', (e) => { if (S.view !== 'xray') return; dragging = true; cur.setPointerCapture(e.pointerId); cursorAt(e); });
+  cur.addEventListener('pointermove', (e) => { if (dragging) cursorAt(e); });
+  cur.addEventListener('pointerup', () => { dragging = false; });
+  cur.addEventListener('keydown', (e) => { if (S.view !== 'xray') return; const d = e.key === 'ArrowRight' || e.key === 'ArrowUp' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -1 : 0; if (!d) return; e.preventDefault();
+    const st = S.xr.axis === 'lam' ? (e.shiftKey ? 1 : 0.01) : (e.shiftKey ? 100 : 1), [x0, x1] = xRange(); S.xr.cur = Math.max(x0 + st, Math.min(x1, Math.round(S.xr.cur / st + d) * st)); redraw(); });
+
+  // ---------- readings (tools/readings_panel.py) ----------
+  window.vdVersion = 'shells-and-x-rays@2026-10-24';
+  const SHOW = { shells: [['element', 'element'], ['Z', 'Z'], ['IE_eV', 'IE (eV)']], xray: [['target', 'target'], ['V_kV', 'V (kV)'], ['cursor_pm', 'cursor (pm)']] };
+  window.vdShowCols = SHOW.shells;
+  window.vdWorksheet = () => (S.view === 'shells' ? 'periodic-table' : 'x-ray-spectra');
+  window.vdReadingRow = () => {
+    const other = (window.vdRows ? window.vdRows() : []).find((r) => r.view !== S.view);
+    if (other) return `These readings are from the ${other.view === 'shells' ? 'Shells' : 'X ray tube'} view: export them to its worksheet or clear them first.`;
+    window.vdShowCols = SHOW[S.view];
+    if (S.view === 'shells') { const Z = S.sh.Z, e = byZ(Z), real = realConfig(Z), os = outerShell(real);
+      return { view: 'shells', element: e[2], symbol: e[1], Z, configuration: configText(real), rule_configuration: configText(ruleConfig(Z)), shells: shellCounts(real).filter((k, i, a) => a.slice(i).some((q) => q)).join(' '),
+        outer_n: os.n, outer_electrons: os.count, IE_eV: S.blind || e[7] == null ? '' : g6(e[7]) }; }
+    const Z = xZ(), kV = S.xr.kV, myst = S.xr.target === 'mystery', ln = xrayLines(Z, kV), cl = S.xr.axis === 'lam' ? S.xr.cur : lamPm(S.xr.cur), get = (n) => { const l = ln.find((q) => q.name === n); return l && !S.blind ? g6(l.E) : ''; };
+    return { view: 'xray', target: myst ? 'mystery' : byZ(Z)[2], Z: myst ? '' : Z, V_kV: kV, cursor_pm: f(cl, 2), cursor_keV: f(ePm(cl) / 1000, 4), lambda_min_pm: S.blind ? '' : f(lamPm(kV * 1000), 3),
+      Ka1_eV: get('Kα₁'), Ka2_eV: get('Kα₂'), Kb1_eV: get('Kβ₁') };
+  };
+
+  // ---------- about ----------
+  $('aboutShells').textContent = 'Shells: each electron in an atom has four quantum numbers n, l, m_l and m_s, and no two can share all four (the Pauli exclusion principle, OpenStax Vol. 3 §8.4). So a subshell holds 2(2l + 1) electrons (2, 6, 10, 14 for s, p, d, f) and a shell 2n². Each box is one orbital (one m_l), holding at most one spin up and one spin down electron; within a subshell the boxes fill once with spin up before any pairs (Hund\'s rule). "By the n + l rule" fills subshells in order of n + l, lower n first on a tie (1s 2s 2p 3s 3p 4s 3d 4p 5s 4d 5p 6s 4f 5d 6p 7s 5f 6d 7p). "Measured ground state" is the configuration NIST lists; about twenty elements (chromium, copper, palladium, gadolinium, …) differ from the rule, and those subshells are outlined. The rows are drawn by n, not by energy. Z_eff = n√(IE/13.6 eV) treats the outer electron as if it were in a hydrogen atom with nuclear charge Z_eff, a rough estimate.';
+  $('aboutXray').textContent = 'X ray tube: electrons from a hot filament are accelerated through V and stop in the target. Slowing down in the target, they emit a continuous spectrum (bremsstrahlung) with energy per unit photon energy ∝ Z(E₀ − E) (Kramers\' law for a thick target), ending at E₀ = eV, the shortest wavelength λ_min = hc/eV (the Duane–Hunt limit). Per unit wavelength it becomes ∝ (λ/λ_min − 1)/λ³. If eV exceeds the K edge, electrons can knock out a K electron, and an L or M electron falls into the hole: Kα₁ (L₃ to K), Kα₂ (L₂ to K) and Kβ₁ (M₃ to K). The line energies and K edges are measured values; the level diagram\'s L₃, L₂ and M₃ energies are the K edge minus each line energy. Line heights are drawn, not computed: Kα₂ half of Kα₁, Kβ₁ a fifth, all growing as (U − 1)^1.6 with U = eV/E_K, which only roughly follows real tubes; Kβ₃ (beside Kβ₁), L lines and absorption in the target and the window, which removes the long wavelength end of a real spectrum, are left out. The spectrometer gives each line a width of 0.15% of its energy, enough to separate Kα₁ and Kα₂ for most targets. For elements that are not solid metals, the target is a compound of the element.';
+  $('aboutData').textContent = 'Data: ground configurations and first ionization energies from the NIST Atomic Spectra Database (version 5.11); ionization energies are given for Z = 1 to 103, and configurations above 103 are predicted. X ray line energies (Kα₁, Kα₂, Kβ₁) and K edges from the NIST X-Ray Transition Energies Database (Deslattes et al., Rev. Mod. Phys. 75, 35, 2003), direct measurements; targets whose values NIST interpolates or flags (P, Tc, Pm, Lu, Hf and Z above 83) are not offered, nor sodium and magnesium, whose atoms have no 3p electron for Kβ₁. hc = 1239.84198 eV·nm (CODATA 2018). Element families and the table layout are those of the Spectra Explorer.';
+
+  // ---------- size, theme, start ----------
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); newTarget(true); S.xr.mysN = 0;
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'neon');
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__sx = { S, setView, applyPreset, redraw, sync, setZ, newTarget };
+})();
+</script>
+</body>
+</html>

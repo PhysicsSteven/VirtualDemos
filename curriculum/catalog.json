@@ -359,6 +359,28 @@
       "hydrogen bonds",
       "biophysics"
      ]
+    },
+    {
+     "demo": "magnetic-moments",
+     "title": "Atoms in a Magnetic Field",
+     "desc": "An orbiting electron is a tiny current loop. See its moment point only in allowed directions, split a beam of silver atoms into two spots as Stern and Gerlach did, and split spectral lines in a magnet.",
+     "tags": [
+      "magnetic moment",
+      "Stern–Gerlach",
+      "spin",
+      "Zeeman effect"
+     ]
+    },
+    {
+     "demo": "shells-and-x-rays",
+     "title": "Shells, the Periodic Table and X Rays",
+     "desc": "Fill orbital boxes one electron at a time and watch the periodic table build up, see where the n + l rule fails, then fire electrons at a target and read its X ray lines, the Duane–Hunt cutoff and Moseley's law.",
+     "tags": [
+      "Pauli principle",
+      "periodic table",
+      "X rays",
+      "Moseley"
+     ]
     }
    ]
   },

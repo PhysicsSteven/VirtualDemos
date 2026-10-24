@@ -1,0 +1,628 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Atoms in a Magnetic Field</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --orbit: #2b60b5; --mom: #c0432a; --field: #2f8a4e; --pi: #2f8a4e; --sp: #2b60b5; --sm: #c0432a; --atom: #8a5a14; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --orbit: #69a0ff; --mom: #ff8a6a; --field: #66d38c; --pi: #66d38c; --sp: #69a0ff; --sm: #ff8a6a; --atom: #f0c060; } }
+:root[data-theme="dark"] { --orbit: #69a0ff; --mom: #ff8a6a; --field: #66d38c; --pi: #66d38c; --sp: #69a0ff; --sm: #ff8a6a; --atom: #f0c060; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.pane { position: relative; flex: 1 1 auto; min-height: 300px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; }
+.curvebox { position: relative; flex: none; height: 210px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { align-self: stretch; flex: 1 1 520px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.shelf-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; max-width: 100%; }
+.shelf-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.shelf-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.shelf-card label.check { font-size: 0.86rem; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 360px; flex: none; } .curvebox { height: 210px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 320px; } }
+@media (min-width: 821px) { .stage { min-height: 760px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Atoms in a Magnetic Field</h1>
+      <p>An electron going round a nucleus is a tiny current loop, so an atom is a tiny magnet. Its moment can only point in certain directions: watch a beam of silver atoms split in two, and spectral lines split in a magnet.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">B in T · μ in units of μ_B</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/magnetic-moments.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/magnetic-moments.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h1v1h-1zM15 2h1v1h-1zM17 2h2v1h-2zM21 2h4v1h-4zM26 2h3v1h-3zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM12 3h1v1h-1zM15 3h1v1h-1zM18 3h1v1h-1zM20 3h2v1h-2zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h3v1h-3zM14 4h2v1h-2zM17 4h2v1h-2zM21 4h1v1h-1zM23 4h8v1h-8zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM15 5h2v1h-2zM19 5h1v1h-1zM22 5h2v1h-2zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM15 6h4v1h-4zM21 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM12 7h7v1h-7zM23 7h1v1h-1zM25 7h1v1h-1zM27 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h2v1h-2zM14 9h1v1h-1zM19 9h2v1h-2zM26 9h2v1h-2zM29 9h1v1h-1zM2 10h1v1h-1zM5 10h6v1h-6zM13 10h2v1h-2zM17 10h1v1h-1zM21 10h1v1h-1zM25 10h1v1h-1zM29 10h3v1h-3zM34 10h1v1h-1zM36 10h3v1h-3zM2 11h2v1h-2zM5 11h1v1h-1zM7 11h1v1h-1zM10 11h3v1h-3zM18 11h1v1h-1zM20 11h1v1h-1zM23 11h3v1h-3zM28 11h2v1h-2zM33 11h3v1h-3zM37 11h1v1h-1zM4 12h3v1h-3zM8 12h1v1h-1zM10 12h4v1h-4zM16 12h3v1h-3zM20 12h4v1h-4zM25 12h2v1h-2zM29 12h1v1h-1zM31 12h3v1h-3zM36 12h1v1h-1zM38 12h1v1h-1zM2 13h1v1h-1zM6 13h2v1h-2zM12 13h1v1h-1zM16 13h1v1h-1zM18 13h5v1h-5zM24 13h2v1h-2zM31 13h8v1h-8zM2 14h3v1h-3zM6 14h1v1h-1zM8 14h2v1h-2zM11 14h1v1h-1zM14 14h5v1h-5zM25 14h2v1h-2zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM2 15h1v1h-1zM4 15h4v1h-4zM10 15h1v1h-1zM12 15h1v1h-1zM14 15h2v1h-2zM17 15h2v1h-2zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h2v1h-2zM5 16h1v1h-1zM8 16h1v1h-1zM10 16h3v1h-3zM14 16h2v1h-2zM17 16h1v1h-1zM20 16h5v1h-5zM27 16h3v1h-3zM31 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM3 17h2v1h-2zM6 17h1v1h-1zM10 17h1v1h-1zM13 17h1v1h-1zM15 17h2v1h-2zM21 17h1v1h-1zM24 17h2v1h-2zM29 17h5v1h-5zM35 17h3v1h-3zM3 18h2v1h-2zM8 18h1v1h-1zM10 18h2v1h-2zM13 18h1v1h-1zM16 18h2v1h-2zM19 18h3v1h-3zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h2v1h-2zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h1v1h-1zM4 19h4v1h-4zM9 19h1v1h-1zM11 19h1v1h-1zM15 19h1v1h-1zM19 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM35 19h2v1h-2zM2 20h2v1h-2zM5 20h5v1h-5zM11 20h1v1h-1zM13 20h1v1h-1zM16 20h1v1h-1zM18 20h2v1h-2zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h3v1h-3zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM4 21h1v1h-1zM7 21h1v1h-1zM10 21h1v1h-1zM12 21h1v1h-1zM14 21h2v1h-2zM17 21h2v1h-2zM20 21h3v1h-3zM24 21h2v1h-2zM27 21h1v1h-1zM30 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM2 22h1v1h-1zM4 22h2v1h-2zM7 22h2v1h-2zM10 22h1v1h-1zM13 22h3v1h-3zM18 22h2v1h-2zM21 22h1v1h-1zM25 22h2v1h-2zM28 22h8v1h-8zM2 23h2v1h-2zM5 23h3v1h-3zM9 23h3v1h-3zM13 23h1v1h-1zM15 23h3v1h-3zM19 23h1v1h-1zM21 23h2v1h-2zM24 23h2v1h-2zM27 23h1v1h-1zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM4 24h2v1h-2zM8 24h1v1h-1zM10 24h2v1h-2zM15 24h1v1h-1zM17 24h1v1h-1zM23 24h4v1h-4zM29 24h5v1h-5zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h2v1h-2zM6 25h2v1h-2zM10 25h2v1h-2zM15 25h1v1h-1zM20 25h3v1h-3zM24 25h1v1h-1zM28 25h1v1h-1zM30 25h1v1h-1zM32 25h5v1h-5zM2 26h1v1h-1zM5 26h9v1h-9zM15 26h3v1h-3zM19 26h1v1h-1zM22 26h1v1h-1zM26 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h1v1h-1zM4 27h1v1h-1zM6 27h2v1h-2zM9 27h2v1h-2zM12 27h1v1h-1zM15 27h1v1h-1zM20 27h2v1h-2zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM2 28h3v1h-3zM6 28h1v1h-1zM8 28h1v1h-1zM11 28h2v1h-2zM15 28h1v1h-1zM17 28h1v1h-1zM24 28h1v1h-1zM28 28h3v1h-3zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h2v1h-2zM9 29h4v1h-4zM16 29h1v1h-1zM18 29h1v1h-1zM21 29h1v1h-1zM24 29h1v1h-1zM28 29h2v1h-2zM31 29h3v1h-3zM35 29h2v1h-2zM38 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h3v1h-3zM11 30h3v1h-3zM16 30h2v1h-2zM21 30h2v1h-2zM25 30h3v1h-3zM30 30h8v1h-8zM10 31h1v1h-1zM13 31h2v1h-2zM19 31h6v1h-6zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h2v1h-2zM16 32h6v1h-6zM23 32h1v1h-1zM25 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM13 33h3v1h-3zM18 33h1v1h-1zM21 33h2v1h-2zM24 33h2v1h-2zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h3v1h-3zM14 34h3v1h-3zM18 34h1v1h-1zM20 34h1v1h-1zM25 34h2v1h-2zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h1v1h-1zM16 35h1v1h-1zM22 35h4v1h-4zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h5v1h-5zM19 36h2v1h-2zM22 36h1v1h-1zM24 36h2v1h-2zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h2v1h-2zM17 37h1v1h-1zM19 37h1v1h-1zM22 37h1v1h-1zM24 37h2v1h-2zM28 37h1v1h-1zM32 37h1v1h-1zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h3v1h-3zM14 38h2v1h-2zM18 38h1v1h-1zM22 38h1v1h-1zM26 38h1v1h-1zM30 38h1v1h-1zM33 38h1v1h-1zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="orbit" aria-pressed="true">Orbit</button>
+          <button type="button" data-v="sg" aria-pressed="false">Stern–Gerlach</button>
+          <button type="button" data-v="zee" aria-pressed="false">Zeeman effect</button>
+        </div>
+        <button type="button" class="spin attn" id="go">Start</button>
+        <button type="button" class="btn" id="restart">Clear the screen</button>
+        <span class="count mono" id="clock"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="An electron orbit drawn as a current loop, with its angular momentum and magnetic moment arrows, beside the vector model of the orbital angular momentum in a magnetic field."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" tabindex="0" role="img" aria-label="Graph of the energy shift of each m_l level against the magnetic field."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardOrbit" role="group" aria-label="The orbit and the field">
+          <span class="card-title">A hydrogen electron: Bohr orbit n, and the quantum numbers l and m_l of the same level</span>
+          <div><div class="slider-head"><label for="sN">Principal quantum number n</label><output id="oN" class="mono" for="sN"></output></div><input type="range" id="sN" min="1" max="6" step="1"></div>
+          <div><div class="slider-head"><label for="sL">Orbital quantum number l</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="0" max="5" step="1"></div>
+          <div><div class="slider-head"><label for="sM">Magnetic quantum number m_l</label><output id="oM" class="mono" for="sM"></output></div><input type="range" id="sM" min="-5" max="5" step="1"></div>
+          <div><div class="slider-head"><label for="sB">Field B</label><output id="oB" class="mono" for="sB"></output></div><input type="range" id="sB" min="0" max="5" step="0.1"></div>
+        </div>
+        <div class="shelf-card" id="cardSg" role="group" aria-label="The oven, the magnet and the screen" hidden>
+          <span class="card-title">Atoms from an oven pass two slits, a magnet 3.50 cm long and a drift space, then stick to a glass screen</span>
+          <div class="pick"><label for="selAtom">Atoms in the oven</label><select id="selAtom"></select></div>
+          <div><div class="slider-head"><label for="sG">Field gradient dB/dz</label><output id="oG" class="mono" for="sG"></output></div><input type="range" id="sG" min="0" max="2000" step="10"></div>
+          <div><div class="slider-head"><label for="sT">Oven temperature</label><output id="oT" class="mono" for="sT"></output></div><input type="range" id="sT" min="300" max="1800" step="10"></div>
+          <div><div class="slider-head"><label for="sD">Drift to the screen</label><output id="oD" class="mono" for="sD"></output></div><input type="range" id="sD" min="0" max="40" step="1"></div>
+          <div><div class="slider-head"><label class="check"><input type="checkbox" id="selOn"><span>Velocity selector</span></label><output id="oV" class="mono" for="sV"></output></div><input type="range" id="sV" min="200" max="2000" step="10" aria-label="Selected speed v"></div>
+          <div class="wide" id="mysRow"><button type="button" class="btn" id="newAtom">New mystery atom</button><span class="lab" id="atomNote"></span></div>
+        </div>
+        <div class="shelf-card" id="cardZee" role="group" aria-label="The lamp, the magnet and the spectrometer" hidden>
+          <span class="card-title">A discharge lamp between the poles of an electromagnet, seen through a spectrometer that resolves 0.20 pm</span>
+          <div class="pick"><label for="selLine">Spectral line</label><select id="selLine"></select></div>
+          <div><div class="slider-head"><label for="sBz">Field B</label><output id="oBz" class="mono" for="sBz"></output></div><input type="range" id="sBz" min="0" max="2" step="0.05"></div>
+          <div class="pick">
+            <span class="lab">Look</span>
+            <div class="seg" role="group" aria-label="Viewing direction" id="lookSeg">
+              <button type="button" data-k="across" aria-pressed="true">Across the field</button>
+              <button type="button" data-k="along" aria-pressed="false">Along the field</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="bohr" aria-pressed="true">Orbit as a current loop</button>
+          <button type="button" data-p="dstate" aria-pressed="false">3d electron in a field</button>
+          <button type="button" data-p="sg1922" aria-pressed="false">Stern and Gerlach, 1922</button>
+          <button type="button" data-p="selector" aria-pressed="false">Silver at one speed</button>
+          <button type="button" data-p="mystery" aria-pressed="false">Mystery atom</button>
+          <button type="button" data-p="cadmium" aria-pressed="false">Zeeman: cadmium red line</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="orbital-magnetic-moment" data-title="Atoms in a Magnetic Field" data-demo="magnetic-moments">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the computed moments, spot positions and line shifts (read them with the cursor)</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="aboutOrbit"></p>
+          <p class="hint" id="aboutSg"></p>
+          <p class="hint" id="aboutZee"></p>
+          <p class="hint" id="aboutData"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Atoms in a Magnetic Field. Runnable in Node (curriculum/validation/test_magnetic-moments.cjs).
+     Constants: CODATA 2018 (e, h, k_B exact; m_e, μ_B, a₀, α, the electron's g factor, the atomic mass unit). */
+  const E = 1.602176634e-19, H = 6.62607015e-34, HBAR = H / (2 * Math.PI), CL = 299792458, ME = 9.1093837015e-31, MU_B = 9.2740100783e-24,
+    A0 = 5.29177210903e-11, ALPHA = 7.2973525693e-3, G_S = 2.00231930436256, AMU = 1.66053906660e-27, KB = 1.380649e-23, HC = H * CL;
+  /* Bohr orbit n (OpenStax Vol. 3 §6.4, nucleus infinitely heavy): r = n²a₀, v = αc/n. The electron passes a point once per period
+     T = 2πr/v, so the loop carries I = e/T; its moment is μ = IA = IπR², and μ/L = e/2m_e with L = m_e v r = nħ (§8.2). */
+  function bohrOrbit(n) {
+    const r = n * n * A0, v = ALPHA * CL / n, T = 2 * Math.PI * r / v, I = E / T, A = Math.PI * r * r, mu = I * A, L = ME * v * r;
+    return { r, v, T, I, A, mu, L, ratio: mu / L };
+  }
+  /* Quantum orbital angular momentum (§8.1, 8.2): |L| = √(l(l+1)) ħ, L_z = m_l ħ, μ = −(e/2m_e) L, so μ_z = −m_l μ_B. In a field B along z
+     the energy is U = −μ·B = m_l μ_B B, and L precesses about B at the Larmor frequency eB/(2m_e). */
+  function orbital(l, m, B) {
+    const Lmag = Math.sqrt(l * (l + 1)) * HBAR, Lz = m * HBAR, theta = l > 0 ? Math.acos(m / Math.sqrt(l * (l + 1))) : NaN;
+    return { Lmag, Lz, mumag: Math.sqrt(l * (l + 1)) * MU_B, muz: -m * MU_B, theta, U: m * MU_B * B, larmor: E * B / (2 * ME) };
+  }
+  /* Landé g factor of a level with orbital L, spin S and total J (§8.3), with the electron's g_s and g_L = 1 (nuclear motion ignored). */
+  function lande(L, S, J) { if (J === 0) return 0; return 1 + (G_S - 1) * (J * (J + 1) + S * (S + 1) - L * (L + 1)) / (2 * J * (J + 1)); }
+  /* Atoms for the Stern–Gerlach view: ground levels from the NIST Atomic Spectra Database, masses are standard atomic weights (IUPAC).
+     Each m_J sublevel has μ_z = −g_J m_J μ_B and, from a hot oven, the same population. */
+  const ATOMS = {
+    Ag: { name: 'Silver, Ag', sym: 'Ag', mass: 107.8682, L: 0, S: 0.5, J: 0.5, term: '²S₁/₂' },
+    H: { name: 'Hydrogen, H', sym: 'H', mass: 1.008, L: 0, S: 0.5, J: 0.5, term: '²S₁/₂' },
+    Na: { name: 'Sodium, Na', sym: 'Na', mass: 22.98976928, L: 0, S: 0.5, J: 0.5, term: '²S₁/₂' },
+    K: { name: 'Potassium, K', sym: 'K', mass: 39.0983, L: 0, S: 0.5, J: 0.5, term: '²S₁/₂' },
+    O: { name: 'Oxygen, O', sym: 'O', mass: 15.999, L: 1, S: 1, J: 2, term: '³P₂' },
+    Cr: { name: 'Chromium, Cr', sym: 'Cr', mass: 51.9961, L: 0, S: 3, J: 3, term: '⁷S₃' },
+    Fe: { name: 'Iron, Fe', sym: 'Fe', mass: 55.845, L: 2, S: 2, J: 4, term: '⁵D₄' },
+    noSpin: { name: 'An l = 1 atom with no spin (imagined)', sym: 'l = 1', mass: 107.8682, L: 1, S: 0, J: 1, term: '¹P₁', imagined: true },
+    classical: { name: 'Classical magnets, |μ| = μ_B (imagined)', sym: 'classical', mass: 107.8682, classical: true, imagined: true } };
+  const MYSTERY_POOL = ['Na', 'K', 'O', 'Cr', 'Fe'];
+  function sgStates(key) {
+    const a = ATOMS[key]; if (a.classical) return [];
+    const g = lande(a.L, a.S, a.J), out = []; for (let k = 0; k <= 2 * a.J; k++) { const m = a.J - k; out.push({ m, g, muz: -g * m * MU_B }); } return out;
+  }
+  /* Deflection: inside the magnet (length L1) the force μ_z dB/dz gives a steady acceleration a = μ_z G/M across the beam; after
+     it the atom drifts L2 in a straight line. z = (a L1/v²)(L1/2 + L2). */
+  const SG_L1 = 0.0350, SG_SLIT = 0.030e-3, SG_LEN = 0.80e-3;
+  const sgZ = (muz, G, massU, v, L2) => (muz * G / (massU * AMU)) * SG_L1 * (SG_L1 / 2 + L2) / (v * v);
+  /* An effusive beam carries speeds with weight v³ exp(−Mv²/2kT). Since z ∝ 1/v², the deposit along z peaks where v² = 6kT/M. */
+  const peakSpeed = (T, massU) => Math.sqrt(6 * KB * T / (massU * AMU));
+  const meanSpeedBeam = (T, massU) => 0.75 * Math.sqrt(2 * Math.PI * KB * T / (massU * AMU));
+  /* Zeeman effect (§8.2, 8.3). Each level has energy shift g m μ_B B. A line shows every pair of sublevels with Δm = 0 (π) or ±1 (σ).
+     Relative strength of a component: the square of the 3j symbol (J_u 1 J_l; −m_u q m_l), q = m_u − m_l. Seen across the field a
+     π component counts 1 and each σ component 1/2; seen along the field the π components are missing and σ count 1. */
+  const LINES = {
+    cd: { name: 'Cadmium red line, 643.847 nm (¹D₂ → ¹P₁)', lam: 643.847, up: { L: 2, S: 0, J: 2 }, lo: { L: 1, S: 0, J: 1 } },
+    h: { name: 'Hydrogen Lyman α, 121.567 nm (2p → 1s, spin left out)', lam: 121.567, up: { L: 1, S: 0, J: 1 }, lo: { L: 0, S: 0, J: 0 }, noSpin: true },
+    naD2: { name: 'Sodium D₂, 588.995 nm (²P₃/₂ → ²S₁/₂)', lam: 588.995, up: { L: 1, S: 0.5, J: 1.5 }, lo: { L: 0, S: 0.5, J: 0.5 } },
+    naD1: { name: 'Sodium D₁, 589.592 nm (²P₁/₂ → ²S₁/₂)', lam: 589.592, up: { L: 1, S: 0.5, J: 0.5 }, lo: { L: 0, S: 0.5, J: 0.5 } } };
+  function fact(n) { let f = 1; for (let i = 2; i <= n; i++) f *= i; return f; }
+  function threeJ(j1, j2, j3, m1, m2, m3) {
+    const ok = (x) => Math.abs(x - Math.round(x)) < 1e-9;
+    if (Math.abs(m1 + m2 + m3) > 1e-9 || Math.abs(m1) > j1 || Math.abs(m2) > j2 || Math.abs(m3) > j3 || j3 < Math.abs(j1 - j2) || j3 > j1 + j2) return 0;
+    if (!ok(j1 + j2 + j3) || !ok(j1 + m1) || !ok(j2 + m2) || !ok(j3 + m3)) return 0;
+    const r = (x) => Math.round(x), tri = Math.sqrt(fact(r(j1 + j2 - j3)) * fact(r(j1 - j2 + j3)) * fact(r(-j1 + j2 + j3)) / fact(r(j1 + j2 + j3 + 1)));
+    const pre = Math.sqrt(fact(r(j1 + m1)) * fact(r(j1 - m1)) * fact(r(j2 + m2)) * fact(r(j2 - m2)) * fact(r(j3 + m3)) * fact(r(j3 - m3)));
+    let s = 0; for (let k = 0; k <= 60; k++) { const d = [k, r(j1 + j2 - j3 - k), r(j1 - m1 - k), r(j2 + m2 - k), r(j3 - j2 + m1 + k), r(j3 - j1 - m2 + k)]; if (d.some((x) => x < 0)) continue;
+      s += (k % 2 ? -1 : 1) / d.reduce((p, x) => p * fact(x), 1); }
+    return ((r(j1 - j2 - m3) % 2) ? -1 : 1) * tri * pre * s;
+  }
+  function levelG(lv, noSpin) { return noSpin ? 1 : lande(lv.L, lv.S, lv.J); }
+  function zeeman(key, B, look) {
+    const ln = LINES[key], gu = levelG(ln.up, ln.noSpin), gl = levelG(ln.lo, ln.noSpin), out = [];
+    for (let mu = -ln.up.J; mu <= ln.up.J + 1e-9; mu++) for (let ml = -ln.lo.J; ml <= ln.lo.J + 1e-9; ml++) {
+      const q = Math.round(mu - ml); if (Math.abs(q) > 1) continue;
+      const s = Math.pow(threeJ(ln.up.J, 1, ln.lo.J, -mu, q, ml), 2); if (s < 1e-12) continue;
+      const w = look === 'along' ? (q === 0 ? 0 : 1) : (q === 0 ? 1 : 0.5); if (!w) continue;
+      const dE = (gu * mu - gl * ml) * MU_B * B, lamM = ln.lam * 1e-9, dLam = -lamM * lamM * dE / HC;
+      out.push({ mu, ml, q, dE, shift_pm: dLam * 1e12, rel: s * w }); }
+    /* components that fall at the same wavelength (all of them in a normal Zeeman pattern) are merged */
+    const merged = []; for (const c of out.sort((a, b) => a.shift_pm - b.shift_pm)) { const p = merged.find((x) => Math.abs(x.shift_pm - c.shift_pm) < 1e-9);
+      if (p) p.rel += c.rel; else merged.push({ ...c }); }
+    return { gu, gl, comps: merged, all: out };
+  }
+  /* the energy, in J, of one Zeeman step μ_B B and the wavelength shift it makes at λ */
+  const zeemanStep = (lam_nm, B) => { const lamM = lam_nm * 1e-9; return { dE: MU_B * B, dLam_pm: lamM * lamM * MU_B * B / HC * 1e12 }; };
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VG = window.VDGear;
+  const S = { view: 'orbit', preset: 'bohr', run: false, blind: false,
+    orb: { n: 3, l: 2, m: 1, B: 1, phase: 0, prec: 0 },
+    sg: { atom: 'Ag', G: 1000, T: 1320, L2: 0, sel: false, v: 600, mys: 'O', mysN: 0, lastMys: null, dots: [], made: 0, cur: 0 },
+    zee: { line: 'cd', B: 1, look: 'across', cur: 0 } };
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
+  let W = 0, Hh = 0, dpr = 1, CW = 0, CH = 0, T = null;
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const g6 = (v) => +(+v).toPrecision(6);
+  const sci = (v, d = 4) => { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))), m = v / Math.pow(10, e); return `${m.toFixed(d - 1).replace('-', '−')} × 10${String(e).replace('-', '⁻').replace(/\d/g, (d0) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d0])}`; };
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const dark = () => (VG ? VG.dark() : false);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
+      orbit: g('--orbit'), mom: g('--mom'), field: g('--field'), pi: g('--pi'), sp: g('--sp'), sm: g('--sm'), atom: g('--atom'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+  const atomKey = () => (S.sg.atom === 'mystery' ? S.sg.mys : S.sg.atom);
+  const lbl = (s, x, y, o = {}) => { if (VG) VG.label(ctx, s, x, y, o); else { ctx.fillStyle = o.c || T.muted; ctx.font = `${o.s || 11}px ${T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y); } };
+  function arrow(c, x1, y1, x2, y2, col, w) {
+    const a = Math.atan2(y2 - y1, x2 - x1), hd = 7 + w * 1.5; c.strokeStyle = col; c.fillStyle = col; c.lineWidth = w; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2 - Math.cos(a) * hd * 0.8, y2 - Math.sin(a) * hd * 0.8); c.stroke();
+    c.beginPath(); c.moveTo(x2, y2); c.lineTo(x2 - hd * Math.cos(a - 0.4), y2 - hd * Math.sin(a - 0.4)); c.lineTo(x2 - hd * Math.cos(a + 0.4), y2 - hd * Math.sin(a + 0.4)); c.closePath(); c.fill();
+  }
+  function backdrop() { if (VG) VG.backdrop(ctx, W, Hh); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh); } }
+
+  // ---------- Orbit view ----------
+  function drawOrbit() {
+    const p = proj(), o = S.orb, b = bohrOrbit(o.n), q = orbital(o.l, o.m, o.B);
+    backdrop();
+    /* left: the Bohr orbit seen from above at a slant, as a current loop */
+    const cx = W * 0.27, cy = Hh * 0.52, R = Math.min(W * 0.2, Hh * 0.34), ry = R * 0.38;
+    lbl('Bohr orbit as a current loop', cx, 22 * p, { a: 'center', s: 12 * p, w: 700, c: T.ink });
+    lbl(`n = ${o.n}: radius ${f(b.r * 1e9, 4)} nm (drawn the same size for every n)`, cx, 40 * p, { a: 'center', s: 10.5 * p });
+    ctx.save(); ctx.strokeStyle = T.orbit; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.ellipse(cx, cy, R, ry, 0, 0, 7); ctx.stroke(); ctx.restore();
+    /* nucleus */
+    if (VG) VG.ball(ctx, cx, cy, 7 * p, '#c0432a', { glint: 1 }); else { ctx.fillStyle = T.mom; ctx.beginPath(); ctx.arc(cx, cy, 7 * p, 0, 7); ctx.fill(); }
+    /* the electron goes counterclockwise seen from above; the conventional current goes the other way */
+    const ph = o.phase, ex = cx + R * Math.cos(ph), ey = cy - ry * Math.sin(ph);
+    if (VG) VG.ball(ctx, ex, ey, 5.5 * p, '#2b60b5', { glint: 1 }); else { ctx.fillStyle = T.orbit; ctx.beginPath(); ctx.arc(ex, ey, 5.5 * p, 0, 7); ctx.fill(); }
+    lbl('e⁻', ex + 9 * p, ey - 9 * p, { s: 11 * p, c: T.orbit });
+    for (const a0 of [0.6, 2.2, 3.8, 5.3]) { const x1 = cx + R * Math.cos(a0), y1 = cy - ry * Math.sin(a0), x2 = cx + R * Math.cos(a0 - 0.25), y2 = cy - ry * Math.sin(a0 - 0.25); arrow(ctx, x1, y1, x2, y2, T.muted, 1.5 * p); }
+    lbl('current I (opposite to the electron)', cx + R * 0.72, cy + ry + 16 * p, { a: 'center', s: 10 * p });
+    /* L up (electron counterclockwise seen from above), μ down */
+    const Lh = Math.min(Hh * 0.3, 120 * p);
+    arrow(ctx, cx, cy, cx, cy - Lh, T.orbit, 3 * p); lbl('L', cx + 8 * p, cy - Lh + 6 * p, { s: 13 * p, w: 700, c: T.orbit });
+    arrow(ctx, cx, cy, cx, cy + Lh * (b.mu / MU_B / o.n) * 0.8, T.mom, 3 * p); lbl('μ', cx + 8 * p, cy + Lh * 0.8 - 4 * p, { s: 13 * p, w: 700, c: T.mom });
+    if (!S.blind) { const yy = Hh - 52 * p; lbl(`I = e/T = ${sci(b.I, 4)} A · A = πr² = ${sci(b.A, 4)} m²`, cx, yy, { a: 'center', s: 10.5 * p, m: true, c: T.ink });
+      lbl(`μ = IA = ${sci(b.mu, 4)} A·m² = ${f(b.mu / MU_B, 4)} μ_B`, cx, yy + 17 * p, { a: 'center', s: 10.5 * p, m: true, c: T.ink }); }
+    /* right: vector model, L on its cone about B */
+    const vx = W * 0.72, vy = Hh * 0.5, sc = Math.min(W * 0.06, Hh * 0.075);
+    lbl('Quantum picture: L on a cone about B', vx, 22 * p, { a: 'center', s: 12 * p, w: 700, c: T.ink });
+    lbl(`l = ${o.l}, m_l = ${o.m}: |L| = √(l(l+1)) ħ = ${f(Math.sqrt(o.l * (o.l + 1)), 4)} ħ, L_z = ${o.m} ħ`, vx, 40 * p, { a: 'center', s: 10.5 * p });
+    /* z axis and field */
+    ctx.save(); ctx.setLineDash([4, 4]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(vx, vy + sc * 3.3); ctx.lineTo(vx, vy - sc * 3.4); ctx.stroke(); ctx.restore();
+    if (o.B > 0) { for (const dx of [-2.6, 2.6]) arrow(ctx, vx + dx * sc, vy + sc * 2.6, vx + dx * sc, vy - sc * 2.6, T.field, 2 * p); lbl(`B = ${f(o.B, 1)} T`, vx + 2.6 * sc + 6 * p, vy - sc * 2.6, { s: 11 * p, c: T.field }); }
+    else lbl('no field: z is any chosen axis', vx + 1.4 * sc, vy - sc * 3.2, { s: 10 * p });
+    /* allowed m levels as horizontal ticks at L_z = mħ */
+    for (let m = -o.l; m <= o.l; m++) { const y = vy - m * sc; ctx.strokeStyle = m === o.m ? T.orbit : T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(vx - 6, y); ctx.lineTo(vx + 6, y); ctx.stroke(); lbl(`${m}ħ`, vx - 10 * p, y, { a: 'right', s: 9.5 * p, m: true }); }
+    if (o.l > 0) {
+      const Lm = Math.sqrt(o.l * (o.l + 1)), zT = o.m, rho = Math.sqrt(Math.max(0, Lm * Lm - zT * zT)), tilt = 0.32;
+      /* the cone's rim and the vector at the current precession angle */
+      ctx.save(); ctx.strokeStyle = T.orbit; ctx.globalAlpha = 0.45; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.ellipse(vx, vy - zT * sc, rho * sc, rho * sc * tilt, 0, 0, 7); ctx.stroke(); ctx.restore();
+      const a = o.prec, tx = vx + rho * sc * Math.cos(a), ty = vy - zT * sc + rho * sc * tilt * Math.sin(a);
+      arrow(ctx, vx, vy, tx, ty, T.orbit, 3 * p); lbl('L', tx + 8 * p, ty, { s: 13 * p, w: 700, c: T.orbit });
+      const mx = vx - (tx - vx) * 0.7, my = vy - (ty - vy) * 0.7; arrow(ctx, vx, vy, mx, my, T.mom, 2.4 * p); lbl('μ', mx - 14 * p, my, { s: 13 * p, w: 700, c: T.mom });
+      if (!S.blind) lbl(`angle to z: θ = ${f(q.theta * 180 / Math.PI, 2)}°`, vx, Hh - 48 * p, { a: 'center', s: 10.5 * p, m: true, c: T.ink });
+    } else lbl('l = 0: no orbital angular momentum, no orbital moment', vx, vy + sc * 1.2, { a: 'center', s: 11 * p });
+    if (!S.blind) lbl(`U = m_l μ_B B = ${f(q.U / E * 1000, 4)} meV`, vx, Hh - 31 * p, { a: 'center', s: 10.5 * p, m: true, c: T.ink });
+  }
+
+  // ---------- Stern–Gerlach view ----------
+  function sampleAtom() {
+    const k = atomKey(), a = ATOMS[k], s = S.sg, st = sgStates(k);
+    let muz; if (a.classical) muz = MU_B * (2 * Math.random() - 1); else muz = st[Math.floor(Math.random() * st.length)].muz;
+    let v; if (s.sel) v = s.v; else { const u = -Math.log(Math.max(1e-12, Math.random() * Math.random())); v = Math.sqrt(u * 2 * KB * s.T / (a.mass * AMU)); }
+    const z0 = (Math.random() - 0.5) * SG_SLIT, x = (Math.random() - 0.5) * SG_LEN;
+    return { x, z: z0 + sgZ(muz, s.G, a.mass, v, s.L2 / 100), v };
+  }
+  /* the spot centres: the deflection at the selected speed, or at the peak speed of the beam's deposit */
+  function spotCentres() {
+    const k = atomKey(), a = ATOMS[k], s = S.sg, v = s.sel ? s.v : peakSpeed(s.T, a.mass);
+    if (a.classical) { const zmax = sgZ(MU_B, s.G, a.mass, v, s.L2 / 100); return { v, list: [], band: zmax }; }
+    return { v, list: sgStates(k).map((q) => ({ m: q.m, g: q.g, muz: q.muz, z: sgZ(q.muz, s.G, a.mass, v, s.L2 / 100) })) };
+  }
+  const sgHalf = () => { const c = spotCentres(), zmax = c.band != null ? c.band : Math.max(0, ...c.list.map((q) => Math.abs(q.z))); return Math.max(0.08e-3, zmax * 1.6 + SG_SLIT); };
+  function drawSg() {
+    const p = proj(), s = S.sg, a = ATOMS[atomKey()], c = spotCentres();
+    backdrop();
+    const y0 = Hh * 0.5, xO = W * 0.06, xS1 = W * 0.2, xS2 = W * 0.28, xM0 = W * 0.36, Lpx = W * 0.22, xM1 = xM0 + Lpx, xScr = Math.min(W * 0.93, xM1 + Lpx * (0.1 + s.L2 / 3.5 * 0.45));
+    /* oven */
+    if (VG) VG.box(ctx, xO - 30 * p, y0 - 34 * p, 60 * p, 68 * p, { color: dark() ? '#3b4450' : '#4a5563', r: 6 });
+    const glow = Math.min(1, (s.T - 300) / 1300); ctx.fillStyle = `rgba(255,${Math.round(140 - 60 * glow)},40,${0.25 + 0.6 * glow})`; ctx.fillRect(xO - 18 * p, y0 - 20 * p, 36 * p, 40 * p);
+    lbl(`oven ${s.T} K`, xO, y0 + 48 * p, { a: 'center', s: 10.5 * p });
+    /* slits */
+    for (const xs of [xS1, xS2]) { ctx.fillStyle = dark() ? '#8b95a3' : '#59636f'; ctx.fillRect(xs - 3 * p, y0 - 60 * p, 6 * p, 56 * p); ctx.fillRect(xs - 3 * p, y0 + 4 * p, 6 * p, 56 * p); }
+    lbl('slits', (xS1 + xS2) / 2, y0 - 70 * p, { a: 'center', s: 10.5 * p });
+    if (s.sel) { ctx.save(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.strokeRect(xS1 + 8 * p, y0 - 16 * p, xS2 - xS1 - 16 * p, 32 * p); ctx.restore(); lbl(`velocity selector, ${s.v} m/s`, (xS1 + xS2) / 2, y0 + 72 * p, { a: 'center', s: 10 * p, c: T.accent }); }
+    /* magnet: a knife edge pole above, a grooved pole below, drawn side on */
+    const mh = 46 * p; if (VG) { VG.box(ctx, xM0, y0 - 14 * p - mh, Lpx, mh, { color: '#b23a2e', r: 4 }); VG.box(ctx, xM0, y0 + 14 * p, Lpx, mh, { color: '#3a5fae', r: 4 }); }
+    lbl('N (knife edge)', xM0 + Lpx / 2, y0 - 14 * p - mh / 2, { a: 'center', s: 10.5 * p, c: '#fff' }); lbl('S (groove)', xM0 + Lpx / 2, y0 + 14 * p + mh / 2, { a: 'center', s: 10.5 * p, c: '#fff' });
+    lbl(`magnet 3.50 cm, dB/dz = ${s.G} T/m`, xM0 + Lpx / 2, y0 - 14 * p - mh - 12 * p, { a: 'center', s: 10.5 * p });
+    /* screen */
+    if (VG) VG.box(ctx, xScr - 4 * p, y0 - 80 * p, 8 * p, 160 * p, { color: dark() ? '#9fb3c4' : '#c5d4df', r: 2, shadow: false });
+    lbl('glass screen', xScr, y0 + 92 * p, { a: 'center', s: 10.5 * p }); if (s.L2 > 0) lbl(`drift ${s.L2} cm`, (xM1 + xScr) / 2, y0 + 50 * p, { a: 'center', s: 10 * p });
+    /* paths, with the sideways scale blown up so they show */
+    const half = sgHalf(), zpx = 70 * p / half, path = (zEnd, col, alpha) => {
+      ctx.save(); ctx.strokeStyle = col; ctx.globalAlpha = alpha; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xO + 30 * p, y0); ctx.lineTo(xM0, y0);
+      const zM = zEnd * (SG_L1 / 2) / (SG_L1 / 2 + s.L2 / 100);
+      for (let i = 1; i <= 20; i++) { const t = i / 20, z = zM * t * t; ctx.lineTo(xM0 + Lpx * t, y0 - z * zpx); }
+      ctx.lineTo(xScr, y0 - zEnd * zpx); ctx.stroke(); ctx.restore(); };
+    if (c.band != null) { for (let k = -4; k <= 4; k++) path(c.band * k / 4, T.atom, 0.35); }
+    else for (const q of c.list) path(q.z, T.atom, 0.85);
+    lbl(`sideways scale: ${f(70 * p / zpx * 1000, 3)} mm per ${f(70 * p, 0)} px (stretched; along the beam to scale only roughly)`, W * 0.5, Hh - 18 * p, { a: 'center', s: 10 * p });
+    lbl(a.imagined ? a.name : S.sg.atom === 'mystery' ? 'mystery atoms, ground level unknown' : `${a.name.split(',')[0].toLowerCase()} atoms, ground level ${a.term}`, W * 0.5, 22 * p, { a: 'center', s: 11.5 * p, w: 700, c: T.ink });
+  }
+  /* screen face (lower canvas): the deposit, with the cursor */
+  function drawSgScreen() {
+    const p = proj(), c = cctx, s = S.sg; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
+    const half = sgHalf(), boxH = CH - 40 * p, boxW = Math.min(CW * 0.42, boxH * 1.4), bx = 54 * p, by = 14 * p, zpx = boxH / (2 * half), xpx = boxW / (SG_LEN * 1.3);
+    c.fillStyle = dark() ? '#1b2530' : '#e9f0f5'; c.fillRect(bx, by, boxW, boxH); c.strokeStyle = T.line; c.strokeRect(bx, by, boxW, boxH);
+    const col = dark() ? 'rgba(235,225,200,0.55)' : 'rgba(60,50,40,0.45)'; c.fillStyle = col;
+    for (const d of s.dots) { const x = bx + boxW / 2 + d.x * xpx, y = by + boxH / 2 - d.z * zpx; if (y < by || y > by + boxH) continue; c.fillRect(x, y, 1.6, 1.6); }
+    /* ticks in mm */
+    c.font = `${10 * p}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    const step = niceStep(half * 1000 / 2.5); for (let v = -Math.floor(half * 1000 / step) * step; v <= half * 1000 + 1e-12; v += step) { const y = by + boxH / 2 - v / 1000 * zpx; c.fillRect(bx - 4, y, 4, 1); c.fillText(String(+v.toFixed(4)).replace('-', '−'), bx - 6, y); }
+    c.save(); c.translate(12 * p, by + boxH / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.fillText('z on the screen (mm)', 0, 0); c.restore();
+    c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('face of the screen (the beam is a ribbon 0.80 mm long)', bx + boxW / 2, by + boxH + 6);
+    /* profile: counts along z */
+    const px0 = bx + boxW + 50 * p, pw = CW - px0 - 16 * p, nb = 120, hist = new Array(nb).fill(0);
+    for (const d of s.dots) { const k = Math.floor((d.z + half) / (2 * half) * nb); if (k >= 0 && k < nb) hist[k]++; }
+    const hmax = Math.max(1, ...hist);
+    c.strokeStyle = T.line; c.strokeRect(px0, by, pw, boxH);
+    c.fillStyle = T.atom; for (let k = 0; k < nb; k++) { const y = by + boxH - (k + 1) * boxH / nb, w = hist[k] / hmax * (pw - 6); c.fillRect(px0, y, w, boxH / nb + 0.5); }
+    c.fillStyle = T.muted; c.textAlign = 'center'; c.fillText(`atoms counted along z (${s.dots.length} so far)`, px0 + pw / 2, by + boxH + 6);
+    /* cursor */
+    const yC = by + boxH / 2 - s.cur * zpx; c.strokeStyle = T.accent; c.lineWidth = 1.5; c.beginPath(); c.moveTo(bx, yC); c.lineTo(px0 + pw, yC); c.stroke();
+    c.fillStyle = T.accent; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(`cursor z = ${f(s.cur * 1000, 4)} mm`, px0 + 6, yC - 2);
+    cur.dataset.half = half; cur.dataset.by = by; cur.dataset.boxH = boxH;
+  }
+  function niceStep(r) { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; }
+
+  // ---------- Zeeman view ----------
+  function drawZee() {
+    const p = proj(), z = S.zee, ln = LINES[z.line], r = zeeman(z.line, z.B, z.look);
+    backdrop();
+    /* left: the lamp between the poles, and where the spectrometer looks */
+    const cx = W * 0.2, cy = Hh * 0.5, ph = 48 * p;
+    if (VG) { VG.box(ctx, cx - 52 * p, cy - 30 * p - ph, 104 * p, ph, { color: '#b23a2e', r: 4 }); VG.box(ctx, cx - 52 * p, cy + 30 * p, 104 * p, ph, { color: '#3a5fae', r: 4 }); }
+    lbl('N', cx, cy - 30 * p - ph / 2, { a: 'center', s: 12 * p, c: '#fff', w: 700 }); lbl('S', cx, cy + 30 * p + ph / 2, { a: 'center', s: 12 * p, c: '#fff', w: 700 });
+    const lc = z.line === 'cd' ? '#ff5040' : z.line === 'h' ? '#b07cff' : '#ffc040';
+    ctx.save(); ctx.shadowColor = lc; ctx.shadowBlur = 18 * p; ctx.fillStyle = lc; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.ellipse(cx, cy, 10 * p, 22 * p, 0, 0, 7); ctx.fill(); ctx.restore();
+    if (z.B > 0) arrow(ctx, cx + 64 * p, cy + 26 * p, cx + 64 * p, cy - 26 * p, T.field, 2 * p);
+    lbl(`B = ${f(z.B, 2)} T`, cx + 72 * p, cy, { s: 11 * p, c: T.field });
+    if (z.look === 'across') { arrow(ctx, cx + 20 * p, cy, cx + 120 * p, cy + 70 * p, T.muted, 1.5 * p); lbl('to the spectrometer (across B)', cx + 40 * p, cy + 92 * p, { s: 10 * p }); }
+    else { arrow(ctx, cx, cy - 20 * p, cx, cy - 30 * p - ph - 34 * p, T.muted, 1.5 * p); lbl('to the spectrometer (along B, through a hole in the pole)', cx, cy - 30 * p - ph - 44 * p, { a: 'center', s: 10 * p }); }
+    lbl(ln.name, W * 0.5, 20 * p, { a: 'center', s: 11.5 * p, w: 700, c: T.ink });
+    /* right: energy levels split into m sublevels (spacing drawn larger than life), with one vertical arrow per component,
+       placed left to right in order of wavelength */
+    const lx0 = W * 0.44, lx1 = W * 0.95, yU = Hh * 0.3, yL = Hh * 0.74, spread = Math.min(26 * p, Hh * 0.05), Bn = Math.max(z.B, 0) / 2;
+    const yOf = (lv, g, y, m) => y - g * m * spread * Bn;
+    const lev = (lv, g, y, name) => { for (let m = -lv.J; m <= lv.J + 1e-9; m++) { const yy = yOf(lv, g, y, m); ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(lx0 + 70 * p, yy); ctx.lineTo(lx1 - 34 * p, yy); ctx.stroke();
+        lbl(`m = ${fmtM(m)}`, lx1 - 30 * p, yy, { s: 9.5 * p, m: true }); }
+      lbl(name, lx0, y, { s: 10.5 * p, c: T.ink }); };
+    const sub = (lv) => (ln.noSpin ? `l = ${lv.L}` : `J = ${fmtM(lv.J)}`);
+    lev(ln.up, r.gu, yU, `upper, ${sub(ln.up)}`); lev(ln.lo, r.gl, yL, `lower, ${sub(ln.lo)}`);
+    if (!S.blind) { lbl(`g = ${f(r.gu, 4)}`, lx0, yU + 15 * p, { s: 10 * p }); lbl(`g = ${f(r.gl, 4)}`, lx0, yL + 15 * p, { s: 10 * p }); }
+    const list = r.all.slice().sort((u, v) => u.shift_pm - v.shift_pm || u.mu - v.mu), xa = lx0 + 90 * p, xb = lx1 - 54 * p;
+    list.forEach((c, i) => { const x = list.length === 1 ? (xa + xb) / 2 : xa + (xb - xa) * i / (list.length - 1), col = c.q === 0 ? T.pi : c.q > 0 ? T.sp : T.sm;
+      ctx.save(); ctx.globalAlpha = 0.9; arrow(ctx, x, yOf(ln.up, r.gu, yU, c.mu) + 3 * p, x, yOf(ln.lo, r.gl, yL, c.ml) - 3 * p, col, 1.8 * p); ctx.restore(); });
+    lbl('Δm = 0 (π)', lx0, Hh - 20 * p, { s: 10 * p, c: T.pi }); lbl('Δm = +1 (σ)', lx0 + 90 * p, Hh - 20 * p, { s: 10 * p, c: T.sp }); lbl('Δm = −1 (σ)', lx0 + 180 * p, Hh - 20 * p, { s: 10 * p, c: T.sm });
+    lbl('level spacing drawn larger than life', lx1, Hh - 20 * p, { a: 'right', s: 10 * p });
+  }
+  const fmtM = (m) => { const r2 = Math.round(2 * m); if (r2 % 2 === 0) return String(r2 / 2).replace('-', '−'); return `${r2 < 0 ? '−' : ''}${Math.abs(r2)}/2`; };
+  const ZW_PM = 0.20;   /* FWHM of the spectrometer's line shape, pm */
+  function zeeRange() { const r = zeeman(S.zee.line, S.zee.B, S.zee.look), mx = Math.max(0, ...r.comps.map((c) => Math.abs(c.shift_pm))); return Math.max(1.5, mx * 1.5 + 0.6); }
+  function drawSpectrum() {
+    const p = proj(), c = cctx, z = S.zee; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
+    const L = 54 * p, Rr = 16 * p, Tp = 14 * p, Bt = 36 * p, pw = CW - L - Rr, ph = CH - Tp - Bt, span = zeeRange(), r = zeeman(z.line, z.B, z.look);
+    const X = (v) => L + (v + span) / (2 * span) * pw;
+    c.strokeStyle = T.grid; c.fillStyle = T.muted; c.font = `${10 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+    const st = niceStep(span / 3); for (let v = -Math.floor(span / st) * st; v <= span + 1e-9; v += st) { c.beginPath(); c.moveTo(X(v), Tp); c.lineTo(X(v), Tp + ph); c.stroke(); c.fillText(String(+v.toFixed(3)).replace('-', '−'), X(v), Tp + ph + 4); }
+    c.textBaseline = 'bottom'; c.fillText(`wavelength shift from ${LINES[z.line].lam} nm (pm); longer wavelength to the right`, L + pw / 2, CH - 2);
+    const sig = ZW_PM / 2.3548, prof = (x) => r.comps.reduce((a, q) => a + q.rel * Math.exp(-0.5 * Math.pow((x - q.shift_pm) / sig, 2)), 0);
+    let ymax = 0; const N = 600, ys = []; for (let i = 0; i <= N; i++) { const x = -span + 2 * span * i / N, y = prof(x); ys.push(y); ymax = Math.max(ymax, y); }
+    c.save(); c.beginPath(); c.rect(L, Tp, pw, ph); c.clip(); c.strokeStyle = T.ink; c.lineWidth = 2 * p; c.beginPath();
+    ys.forEach((y, i) => { const xx = L + pw * i / N, yy = Tp + ph - (ymax ? y / ymax : 0) * ph * 0.9; i ? c.lineTo(xx, yy) : c.moveTo(xx, yy); }); c.stroke(); c.restore();
+    c.strokeStyle = T.line; c.strokeRect(L, Tp, pw, ph);
+    const xc = X(z.cur); c.strokeStyle = T.accent; c.lineWidth = 1.5; c.beginPath(); c.moveTo(xc, Tp); c.lineTo(xc, Tp + ph); c.stroke();
+    c.fillStyle = T.accent; c.textAlign = xc > L + pw * 0.7 ? 'right' : 'left'; c.textBaseline = 'top'; c.fillText(` cursor ${f(z.cur, 3)} pm `, xc, Tp + 2);
+    c.save(); c.translate(14 * p, Tp + ph / 2); c.rotate(-Math.PI / 2); c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('brightness', 0, 0); c.restore();
+    cur.dataset.span = span; cur.dataset.L = L; cur.dataset.pw = pw;
+  }
+
+  // ---------- Orbit graph: energy shift against B ----------
+  function drawFan() {
+    const p = proj(), c = cctx, o = S.orb; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
+    if (S.blind) { c.fillStyle = T.muted; c.font = `${12 * p}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Graph hidden (Blind mode in the Lab section)', CW / 2, CH / 2); return; }
+    const L = 60 * p, Rr = 70 * p, Tp = 14 * p, Bt = 34 * p, pw = CW - L - Rr, ph = CH - Tp - Bt, Umax = Math.max(1, o.l) * MU_B * 5 / E * 1000;
+    const X = (b) => L + b / 5 * pw, Y = (u) => Tp + ph / 2 - u / Umax * ph / 2 * 0.95;
+    c.strokeStyle = T.grid; c.fillStyle = T.muted; c.font = `${10 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let b = 0; b <= 5; b++) { c.beginPath(); c.moveTo(X(b), Tp); c.lineTo(X(b), Tp + ph); c.stroke(); c.fillText(String(b), X(b), Tp + ph + 4); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; const st = niceStep(Umax / 2); for (let u = -Math.floor(Umax / st) * st; u <= Umax + 1e-9; u += st) { c.beginPath(); c.moveTo(L, Y(u)); c.lineTo(L + pw, Y(u)); c.stroke(); c.fillText(String(+u.toFixed(3)).replace('-', '−'), L - 5, Y(u)); }
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText('field B (T)', L + pw / 2, CH - 2);
+    c.save(); c.translate(14 * p, Tp + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText('energy shift U (meV)', 0, 0); c.restore();
+    for (let m = -o.l; m <= o.l; m++) { const u5 = m * MU_B * 5 / E * 1000; c.strokeStyle = m === o.m ? T.orbit : T.muted; c.lineWidth = (m === o.m ? 2.5 : 1.2) * p; c.beginPath(); c.moveTo(X(0), Y(0)); c.lineTo(X(5), Y(u5)); c.stroke();
+      c.fillStyle = m === o.m ? T.orbit : T.muted; c.textAlign = 'left'; c.fillText(`m_l = ${m}`, X(5) + 6, Y(u5)); }
+    c.fillStyle = T.mom; c.beginPath(); c.arc(X(o.B), Y(o.m * MU_B * o.B / E * 1000), 5 * p, 0, 7); c.fill();
+  }
+
+  function redraw() {
+    if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh);
+    if (S.view === 'orbit') { drawOrbit(); drawFan(); } else if (S.view === 'sg') { drawSg(); drawSgScreen(); } else { drawZee(); drawSpectrum(); }
+    readouts(); clock();
+  }
+  function clock() { $('clock').textContent = S.view === 'sg' ? `${S.sg.dots.length} atoms on the screen` : ''; }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>';
+    let o = '';
+    if (S.view === 'orbit') {
+      const b = bohrOrbit(S.orb.n), q = orbital(S.orb.l, S.orb.m, S.orb.B);
+      o = dd('Bohr radius r (m)', sci(b.r, 4)) + dd('Speed v (m/s)', sci(b.v, 4)) + dd('Current I = e/T (A)', sci(b.I, 4))
+        + dd('Moment μ = IA (A·m²)', S.blind ? hide : sci(b.mu, 4)) + dd('L = m_e v r (J·s)', S.blind ? hide : sci(b.L, 4)) + dd('μ/L (C/kg)', S.blind ? hide : sci(b.ratio, 4))
+        + dd('|L| (quantum)', `${f(Math.sqrt(S.orb.l * (S.orb.l + 1)), 4)} ħ`) + dd('L_z', `${S.orb.m} ħ`.replace('-', '−')) + dd('μ_z', S.blind ? hide : `${f(q.muz / MU_B, 0)} μ_B`)
+        + dd('Angle of L to B', S.orb.l === 0 ? '—' : S.blind ? hide : `${f(q.theta * 180 / Math.PI, 2)}°`) + dd('Energy shift U', S.blind ? hide : `${f(q.U / E * 1000, 4)} meV`);
+    } else if (S.view === 'sg') {
+      const s = S.sg, a = ATOMS[atomKey()], c = spotCentres(), myst = s.atom === 'mystery';
+      o = dd('Atoms', myst ? 'mystery' : a.imagined ? a.name : `${a.name}, ${a.term}`) + dd('Mass M', `${g6(a.mass)} u`) + dd('Gradient dB/dz', `${s.G} T/m`)
+        + dd(s.sel ? 'Selected speed' : 'Speed at the deposit peak √(6kT/M)', `${f(c.v, 1)} m/s`) + dd('Magnet L₁, drift L₂', `3.50 cm, ${s.L2} cm`)
+        + dd('Number of spots', S.blind ? hide : (a.classical ? 'one smeared band' : String(c.list.length)))
+        + dd('Spot centres z', S.blind ? hide : (a.classical ? `band from ${f(-c.band * 1000, 4)} to ${f(c.band * 1000, 4)} mm` : c.list.map((q) => f(q.z * 1000, 4)).join(', ') + ' mm'))
+        + dd('μ_z of each spot', S.blind || myst ? hide : (a.classical ? 'any value from −1 to 1 μ_B' : c.list.map((q) => f(q.muz / MU_B, 4)).join(', ') + ' μ_B'))
+        + dd('Cursor z', `${f(s.cur * 1000, 4)} mm`);
+    } else {
+      const z = S.zee, r = zeeman(z.line, z.B, z.look), st = zeemanStep(LINES[z.line].lam, z.B);
+      o = dd('Line', LINES[z.line].name.split(',')[0]) + dd('Field B', `${f(z.B, 2)} T`) + dd('Lines seen', S.blind ? hide : String(r.comps.length))
+        + dd('Shifts (pm)', S.blind ? hide : r.comps.map((c) => f(c.shift_pm, 2)).join(', ')) + dd('μ_B B', S.blind ? hide : `${f(st.dE / E * 1e6, 3)} μeV`)
+        + dd('λ²μ_B B/(hc)', S.blind ? hide : `${f(st.dLam_pm, 4)} pm`) + dd('Cursor shift', `${f(z.cur, 3)} pm`);
+    }
+    $('out').innerHTML = o;
+  }
+
+  // ---------- controls ----------
+  $('selAtom').innerHTML = Object.keys(ATOMS).map((k) => `<option value="${k}">${ATOMS[k].name}</option>`).join('') + '<option value="mystery">Mystery atom</option>';
+  $('selLine').innerHTML = Object.keys(LINES).map((k) => `<option value="${k}">${LINES[k].name}</option>`).join('');
+  function sync() {
+    const o = S.orb, s = S.sg, z = S.zee;
+    $('sN').value = o.n; $('oN').textContent = o.n; $('sL').max = o.n - 1; $('sL').value = o.l; $('oL').textContent = o.l; $('sM').min = -o.l; $('sM').max = o.l; $('sM').value = o.m; $('oM').textContent = String(o.m).replace('-', '−');
+    $('sB').value = o.B; $('oB').textContent = `${f(o.B, 1)} T`;
+    $('selAtom').value = s.atom; $('sG').value = s.G; $('oG').textContent = `${s.G} T/m`; $('sT').value = s.T; $('oT').textContent = `${s.T} K`; $('sD').value = s.L2; $('oD').textContent = `${s.L2} cm`;
+    $('selOn').checked = s.sel; $('sV').disabled = !s.sel; $('sV').value = s.v; $('oV').textContent = s.sel ? `${s.v} m/s` : 'off';
+    $('newAtom').hidden = s.atom !== 'mystery'; $('mysRow').hidden = s.atom !== 'mystery' && !s.lastMys; $('atomNote').textContent = s.lastMys ? `The last mystery atom was ${ATOMS[s.lastMys].name.split(',')[0].toLowerCase()}.` : '';
+    $('selLine').value = z.line; $('sBz').value = z.B; $('oBz').textContent = `${f(z.B, 2)} T`;
+    for (const b of document.querySelectorAll('#lookSeg button')) b.setAttribute('aria-pressed', String(b.dataset.k === z.look));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  const PRESETS = {
+    bohr: { view: 'orbit', hint: 'The Bohr model\'s electron goes round its orbit like a current in a loop of wire, so the orbit has a magnetic moment μ = IA. Step n from 1 to 6 and compare μ with the angular momentum L: their ratio is the same every time.', set: () => Object.assign(S.orb, { n: 1, l: 0, m: 0, B: 0 }) },
+    dstate: { view: 'orbit', hint: 'A 3d electron (n = 3, l = 2) in a 1 T field. Quantum mechanics allows only five directions for L: L_z = −2ħ to +2ħ. Each has its own energy U = m_l μ_B B. Step m_l and B and watch the energy levels fan out.', set: () => Object.assign(S.orb, { n: 3, l: 2, m: 1, B: 1 }) },
+    sg1922: { view: 'sg', hint: 'Silver atoms from an oven at 1320 K pass a magnet 3.50 cm long whose field changes by about 1000 T per metre across the beam, as in Stern and Gerlach\'s 1922 experiment. Classical physics expects one smeared band. Start the beam and watch the screen.', set: () => { Object.assign(S.sg, { atom: 'Ag', G: 1000, T: 1320, L2: 0, sel: false, v: 600, cur: 0 }); clearScreen(); } },
+    selector: { view: 'sg', hint: 'A velocity selector passes silver atoms at 600 m/s only, and the screen is 20 cm past the magnet, so the two spots are sharp and far apart. Measure their separation for several field gradients.', set: () => { Object.assign(S.sg, { atom: 'Ag', G: 500, T: 1320, L2: 20, sel: true, v: 600, cur: 0 }); clearScreen(); } },
+    mystery: { view: 'sg', hint: 'An unknown kind of atom at 600 m/s. Count its spots and measure where they land, then work out J, the moment of each spot and the g factor.', set: () => { Object.assign(S.sg, { atom: 'mystery', G: 500, T: 1320, L2: 20, sel: true, v: 600, cur: 0 }); newAtom(true); clearScreen(); } },
+    cadmium: { view: 'zee', hint: 'The red line of cadmium, seen across the field of an electromagnet. With no field it is a single line; in a field it splits into three, evenly spaced by λ²μ_B B/(hc). Measure the spacing for several fields.', set: () => Object.assign(S.zee, { line: 'cd', B: 1, look: 'across', cur: 0 }) } };
+  function newAtom(quiet) { const s = S.sg; let k; do { k = MYSTERY_POOL[Math.floor(Math.random() * MYSTERY_POOL.length)]; } while (k === s.mys); if (!quiet && s.mysN) s.lastMys = s.mys; s.mys = k; s.mysN++; }
+  function clearScreen() { S.sg.dots = []; S.sg.made = 0; }
+  const VIEW_LABEL = { orbit: 'An electron orbit drawn as a current loop, with its angular momentum and magnetic moment arrows, beside the vector model of the orbital angular momentum in a magnetic field.',
+    sg: 'Side view of a Stern–Gerlach apparatus: an oven, two slits, a magnet with a knife edge pole and a grooved pole, and a glass screen. Space starts or pauses the beam.',
+    zee: 'A discharge lamp between the poles of an electromagnet, and the energy levels of the line split into magnetic sublevels with the allowed transitions.' };
+  const CURVE_LABEL = { orbit: 'Graph of the energy shift of each m_l level against the magnetic field.', sg: 'The face of the screen with the atoms that have landed, and their count along z. Drag or use the arrow keys to move the cursor.',
+    zee: 'The spectrum around the line, brightness against wavelength shift in picometres. Drag or use the arrow keys to move the cursor.' };
+  function setView(v) {
+    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('cardOrbit').hidden = v !== 'orbit'; $('cardSg').hidden = v !== 'sg'; $('cardZee').hidden = v !== 'zee';
+    $('go').hidden = v !== 'sg'; $('restart').hidden = v !== 'sg';
+    $('units').textContent = v === 'orbit' ? 'B in T · U in meV' : v === 'sg' ? 'z in mm · dB/dz in T/m' : 'B in T · shifts in pm';
+    can.setAttribute('aria-label', VIEW_LABEL[v]); cur.setAttribute('aria-label', CURVE_LABEL[v]);
+    window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
+    setRun(false); sync(); redraw();
+  }
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : (S.view === 'sg' ? (S.sg.dots.length ? 'Resume the beam' : 'Start the beam') : 'Start'); $('go').classList.toggle('attn', !on); }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); setView(c.view); }
+  const custom = () => { S.preset = 'custom'; };
+  const sgChanged = () => { custom(); clearScreen(); sync(); redraw(); };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
+  $('go').addEventListener('click', () => setRun(!S.run));
+  $('restart').addEventListener('click', () => { clearScreen(); setRun(false); redraw(); });
+  $('sN').addEventListener('input', (e) => { const o = S.orb; o.n = +e.target.value; o.l = Math.min(o.l, o.n - 1); o.m = Math.max(-o.l, Math.min(o.l, o.m)); custom(); sync(); redraw(); });
+  $('sL').addEventListener('input', (e) => { const o = S.orb; o.l = +e.target.value; o.m = Math.max(-o.l, Math.min(o.l, o.m)); custom(); sync(); redraw(); });
+  $('sM').addEventListener('input', (e) => { S.orb.m = +e.target.value; custom(); sync(); redraw(); });
+  $('sB').addEventListener('input', (e) => { S.orb.B = +e.target.value; custom(); sync(); redraw(); });
+  $('selAtom').addEventListener('change', (e) => { S.sg.atom = e.target.value; if (S.sg.atom === 'mystery') newAtom(true); sgChanged(); });
+  $('sG').addEventListener('input', (e) => { S.sg.G = +e.target.value; sgChanged(); });
+  $('sT').addEventListener('input', (e) => { S.sg.T = +e.target.value; sgChanged(); });
+  $('sD').addEventListener('input', (e) => { S.sg.L2 = +e.target.value; sgChanged(); });
+  $('selOn').addEventListener('change', (e) => { S.sg.sel = e.target.checked; sgChanged(); });
+  $('sV').addEventListener('input', (e) => { S.sg.v = +e.target.value; sgChanged(); });
+  $('newAtom').addEventListener('click', () => { newAtom(false); sgChanged(); });
+  $('selLine').addEventListener('change', (e) => { S.zee.line = e.target.value; custom(); sync(); redraw(); });
+  $('sBz').addEventListener('input', (e) => { S.zee.B = +e.target.value; custom(); sync(); redraw(); });
+  $('lookSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) { S.zee.look = b.dataset.k; custom(); sync(); redraw(); } });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ' && S.view !== 'zee') { $('go').click(); e.preventDefault(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
+  /* the cursor on the lower graph: drag, click or arrow keys */
+  function cursorAt(ev) {
+    const r = cur.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    if (S.view === 'sg') { const half = +cur.dataset.half, by = +cur.dataset.by, bh = +cur.dataset.boxH; S.sg.cur = Math.max(-half, Math.min(half, (by + bh / 2 - y) / bh * 2 * half)); }
+    else if (S.view === 'zee') { const span = +cur.dataset.span, L = +cur.dataset.L, pw = +cur.dataset.pw; S.zee.cur = Math.max(-span, Math.min(span, (x - L) / pw * 2 * span - span)); }
+    else return; redraw();
+  }
+  let dragging = false;
+  cur.addEventListener('pointerdown', (e) => { if (S.view === 'orbit') return; dragging = true; cur.setPointerCapture(e.pointerId); cursorAt(e); });
+  cur.addEventListener('pointermove', (e) => { if (dragging) cursorAt(e); });
+  cur.addEventListener('pointerup', () => { dragging = false; });
+  cur.addEventListener('keydown', (e) => {
+    const d = e.key === 'ArrowUp' || e.key === 'ArrowRight' ? 1 : e.key === 'ArrowDown' || e.key === 'ArrowLeft' ? -1 : 0; if (!d) return; e.preventDefault();
+    if (S.view === 'sg') { const st = e.shiftKey ? 0.010e-3 : 0.001e-3, h = sgHalf(); S.sg.cur = Math.max(-h, Math.min(h, Math.round(S.sg.cur / st + d) * st)); }
+    else if (S.view === 'zee') { const st = e.shiftKey ? 0.1 : 0.01, sp = zeeRange(); S.zee.cur = Math.max(-sp, Math.min(sp, Math.round(S.zee.cur / st + d) * st)); }
+    redraw();
+  });
+
+  // ---------- the clock ----------
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.view === 'orbit') {
+      if (S.run || !reduce) { S.orb.phase += dt * 2.2 / Math.pow(S.orb.n, 0.5); S.orb.prec += dt * (0.3 + 0.5 * S.orb.B) * (S.orb.B > 0 ? 1 : 0.3); if (!reduce || S.run) redraw(); }
+    } else if (S.view === 'sg' && S.run) {
+      const add = Math.min(6000 - S.sg.dots.length, Math.round(400 * dt) + 1); for (let i = 0; i < add; i++) S.sg.dots.push(sampleAtom());
+      if (S.sg.dots.length >= 6000) setRun(false); redraw();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- readings (tools/readings_panel.py) ----------
+  window.vdVersion = 'magnetic-moments@2026-10-24';
+  const SHOW = { orbit: [['n', 'n'], ['l', 'l'], ['m_l', 'm_l'], ['B_T', 'B (T)'], ['U_meV', 'U (meV)']],
+    sg: [['atom', 'atoms'], ['G_T_per_m', 'dB/dz (T/m)'], ['v_m_s', 'v (m/s)'], ['cursor_mm', 'cursor (mm)']], zee: [['line', 'line'], ['B_T', 'B (T)'], ['cursor_pm', 'cursor (pm)']] };
+  window.vdShowCols = SHOW.orbit;
+  const WS = { orbit: 'orbital-magnetic-moment', sg: 'stern-gerlach', zee: 'zeeman-effect' };
+  window.vdWorksheet = () => WS[S.view];
+  const VNAME = { orbit: 'Orbit', sg: 'Stern–Gerlach', zee: 'Zeeman effect' };
+  window.vdReadingRow = () => {
+    const other = (window.vdRows ? window.vdRows() : []).find((r) => r.view !== S.view);
+    if (other) return `These readings are from the ${VNAME[other.view]} view: export them to its worksheet or clear them first.`;
+    window.vdShowCols = SHOW[S.view];
+    if (S.view === 'orbit') { const o = S.orb, b = bohrOrbit(o.n), q = orbital(o.l, o.m, o.B);
+      return { view: 'orbit', n: o.n, l: o.l, m_l: o.m, B_T: o.B, r_m: g6(b.r), v_m_s: g6(b.v), T_s: g6(b.T), I_A: g6(b.I), A_m2: g6(b.A), mu_Bohr_A_m2: g6(b.mu), L_Bohr_J_s: g6(b.L),
+        L_mag_hbar: g6(Math.sqrt(o.l * (o.l + 1))), Lz_hbar: o.m, mu_z_muB: -o.m, theta_deg: o.l ? g6(q.theta * 180 / Math.PI) : '', U_meV: g6(q.U / E * 1000) }; }
+    if (S.view === 'sg') { const s = S.sg, a = ATOMS[atomKey()], c = spotCentres();
+      if (!s.dots.length) return 'Start the beam first, so there is a deposit on the screen to measure.';
+      const up = c.list.length ? Math.max(...c.list.map((q) => q.z)) : c.band, lo = c.list.length ? Math.min(...c.list.map((q) => q.z)) : -c.band;
+      return { view: 'sg', atom: s.atom === 'mystery' ? 'mystery' : a.name, mass_u: g6(a.mass), G_T_per_m: s.G, T_K: s.T, selector: s.sel ? 'on' : 'off', v_m_s: s.sel ? s.v : g6(c.v), L2_cm: s.L2, atoms_on_screen: s.dots.length,
+        cursor_mm: f(s.cur * 1000, 4), spots: S.blind ? '' : (a.classical ? 'band' : c.list.length), top_mm: S.blind ? '' : f(up * 1000, 4), bottom_mm: S.blind ? '' : f(lo * 1000, 4), separation_mm: S.blind ? '' : f((up - lo) * 1000, 4) }; }
+    const z = S.zee, r = zeeman(z.line, z.B, z.look), mx = r.comps.length ? Math.max(...r.comps.map((c) => c.shift_pm)) : 0;
+    return { view: 'zee', line: LINES[z.line].name.split(',')[0], lambda_nm: LINES[z.line].lam, B_T: z.B, look: z.look, cursor_pm: f(z.cur, 3),
+      lines: S.blind ? '' : r.comps.length, shifts_pm: S.blind ? '' : r.comps.map((c) => f(c.shift_pm, 3)).join(' '), outer_pm: S.blind ? '' : f(mx, 3) };
+  };
+
+  // ---------- about ----------
+  $('aboutOrbit').textContent = 'Orbit: a hydrogen electron in Bohr\'s model (OpenStax Vol. 3 §6.4) with the nucleus taken as infinitely heavy: radius n²a₀, speed αc/n. Passing any point once per period, it makes a current I = e/T round the loop; the loop\'s moment is μ = IA, and μ/L = e/(2m_e) for every orbit, so μ = n μ_B (§8.2). The quantum picture beside it uses the same n with any allowed l and m_l: |L| = √(l(l+1)) ħ, L_z = m_l ħ, μ_z = −m_l μ_B, and in a field B the energy shift U = m_l μ_B B. Spin is left out in this view. L is drawn precessing about B; the real precession, at the Larmor frequency eB/(4πm_e) (14 GHz at 1 T), is far too fast to see, so the picture turns slowly.';
+  $('aboutSg').textContent = 'Stern–Gerlach: atoms leave an oven through two slits (a ribbon 0.030 mm high and 0.80 mm long), cross a magnet 3.50 cm long whose field strength changes steadily across the beam (gradient dB/dz, taken as the same everywhere in the gap), drift a chosen distance and stick to a glass screen. An atom with moment component μ_z feels a steady force μ_z dB/dz, so it lands at z = (μ_z G/M)(L₁/v²)(L₁/2 + L₂). A hot oven fills every sublevel m_J equally, with μ_z = −g_J m_J μ_B and g_J from the Landé formula with the electron\'s g factor 2.00232. Speeds in an effusive beam carry weight v³ exp(−Mv²/2kT); the deposit peaks where v² = 6kT/M, which the readouts use as the spot centre without a velocity selector. With the selector every atom has the chosen speed. Not modelled: the field\'s change along the slit (which gave the 1922 spots their lip shape), collisions, gravity (a fall under 0.1 μm here) and the nucleus\'s own moment (about 1000 times smaller). The two imagined atoms are for comparison: an l = 1 atom with no spin (three spots), and classical magnets of moment μ_B pointing every way (one smeared band).';
+  $('aboutZee').textContent = 'Zeeman effect: each level shifts by g m μ_B B in a field B. A component appears for every pair of upper and lower sublevels with Δm = 0 (π light) or ±1 (σ light), with relative strength from the square of a 3j symbol. Across the field π components count fully and σ half; along the field π components are absent. With g = 1 in both levels (cadmium\'s singlet line, or hydrogen with spin left out as in §8.2) every component falls on one of three wavelengths, λ₀ and λ₀ ± λ²μ_B B/(hc): the normal Zeeman effect. The sodium D lines, whose levels have spin, split into four and six components (the anomalous Zeeman effect). g values come from the Landé formula with the electron\'s g factor and g_L = 1. The spectrometer gives each component a Gaussian shape 0.20 pm wide (FWHM), finer than a real grating spectrometer; Zeeman splittings are measured with a Fabry–Perot étalon or a Lummer plate. Doppler width, hyperfine structure and isotope shifts are left out, and the field is uniform over the lamp.';
+  $('aboutData').textContent = 'Data: constants from CODATA 2018. Wavelengths from the NIST Handbook of Basic Atomic Spectroscopic Data (Cd 643.847 nm and Na 588.995 and 589.592 nm in air) and the NIST Atomic Spectra Database (H Lyman α 121.567 nm in vacuum). Ground levels from the NIST Atomic Spectra Database; atomic masses are IUPAC standard atomic weights. The 1922 field gradient is about the size Stern and Gerlach report (Z. Phys. 9, 349).';
+
+  // ---------- size, theme, start ----------
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); newAtom(true); S.sg.mysN = 0;
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'bohr');
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__mm = { S, setView, applyPreset, setRun, redraw, sync, sampleAtom, spotCentres, clearScreen, newAtom };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
