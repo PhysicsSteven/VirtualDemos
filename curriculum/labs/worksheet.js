@@ -192,6 +192,17 @@
   ENABLED.push(...MODERN);
   Object.assign(FROM_DEMO, {
   });
+  /* Vol. 3 ch. 9 to 11 (condensed matter, nuclear, particles and cosmology), kept in its own list so the chapter threads don't collide */
+  const MODERN_9_11 = ['radioactive-decay', 'decay-chains' /* Radioactive Decay demo: one step setups, chains */, 'binding-energy'];
+  MODERN.push(...MODERN_9_11); ENABLED.push(...MODERN_9_11);
+  Object.assign(FROM_DEMO, {
+    /* Reading | Setup and N₀ | Time t | Parents left N | N/N₀ | ln(N/N₀) */
+    'radioactive-decay': { demo: 'Radioactive Decay', cols: ['row', (r) => `${r.setup}, N₀ = ${r.N0}, t in ${r.unit}`, 't', 'parent', null, null] },
+    /* Reading | Setup and N₀ | Time t | Parents N_P | Daughters N_D | Stable N_S | Activity ratio R_D/R_P */
+    'decay-chains': { demo: 'Radioactive Decay (chains)', cols: ['row', (r) => `${r.setup}, N₀ = ${r.N0}, t in ${r.unit}`, 't', 'parent', 'daughter', 'stable', null] },
+    /* Reading | Nuclide | Z | N | A | Mass excess Δ (MeV) | B (MeV) | B/A (MeV) | B/A liquid drop (MeV) */
+    'binding-energy': { demo: 'Nuclear Binding Energy', cols: ['row', 'nuclide', 'Z', 'N', 'A', 'dm_MeV', 'B_MeV', 'BA_MeV', 'BA_ldm_MeV'] },
+  });
   /* ==MODERN END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with

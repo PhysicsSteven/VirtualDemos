@@ -7865,12 +7865,15 @@
           "title": "Nuclear Fusion"
         }
       ],
-      "role": "demo",
+      "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
+      "note": "Binding energies of every nuclide with a measured mass (AME2020), the liquid drop model with its terms, shell effects and the chart of nuclides; Q values of D + T, uranium 235 fission, the proton chain and triple alpha. Readings and Export to worksheet added 2026-10-24 (Claude): worksheet The Curve of Binding Energy, key in TeacherKeys.",
       "title": "Nuclear Binding Energy",
-      "url": "demos/binding-energy.html"
+      "url": "demos/binding-energy.html",
+      "handouts": [
+        "binding-energy"
+      ]
     },
     {
       "demo": "black-holes",
@@ -8506,12 +8509,16 @@
           "title": "Radioactive Decay"
         }
       ],
-      "role": "demo",
+      "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
+      "note": "Random decay of every nucleus with the exact step probability; half lives from ENSDF; carbon 14 dating task; two step chains with the Bateman solution. Readings and Export to worksheet added 2026-10-24 (Claude): worksheets Measuring a Half Life and Parent and Daughter, keys from real runs in TeacherKeys.",
       "title": "Radioactive Decay",
-      "url": "demos/radioactive-decay.html"
+      "url": "demos/radioactive-decay.html",
+      "handouts": [
+        "radioactive-decay",
+        "decay-chains"
+      ]
     },
     {
       "demo": "relativity-em",

@@ -153,6 +153,9 @@ HANDOUT_TOPIC = {
     # acoustics
     'resonators': 'Speed of Sound', 'timbre': 'Timbre and Harmonics', 'acoustic-levitation': 'Acoustic Levitation',
     'chladni': 'Chladni Plates', 'doppler': 'Doppler Effect',
+    # modern, Vol. 3 ch. 9 to 11
+    'radioactive-decay': 'Measuring a Half Life', 'decay-chains': 'Parent and Daughter',
+    'binding-energy': 'The Curve of Binding Energy',
 }
 
 
