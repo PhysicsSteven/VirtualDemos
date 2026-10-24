@@ -452,6 +452,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     if (label) { ctx.fillStyle = T.ink; ctx.font = `700 ${12 * proj()}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(label, cx, by + 6); }
   }
+  /* Heat drawn as dots, each carrying a fixed energy (a 1, 2, 5 step chosen so a few leave each second), so the number of dots that
+     have crossed is the heat that has flowed: in Equilibrium a dot leaves each time the heat out of A passes another step, and in
+     Conduction they leave at the steady rate P divided by the step. */
+  const step125 = (v) => { if (!(v > 0)) return 1; const e = Math.pow(10, Math.floor(Math.log10(v))), m = v / e; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * e; };
+  const fmtJ = (v) => v >= 1000 ? `${g6(v / 1000)} kJ` : v >= 1 ? `${g6(v)} J` : `${g6(v * 1000)} mJ`;
+  const eqFlow = { Ep: 0, sent: 0, dots: [], key: '' };
+  function eqDots(st, xa, xb, y, br, p) {
+    const e = S.eq, key = [e.a, e.b, e.mA, e.mB, e.TA0, e.TB0, e.bar, e.L, S.speed, e.mys].join('|');
+    if (key !== eqFlow.key || e.t === 0 || Math.abs(st.Q) < eqFlow.sent * eqFlow.Ep - 1e-9) {
+      const P0 = eqState(eqPar(), 0).P; eqFlow.key = key; eqFlow.Ep = step125(Math.abs(P0) * S.speed / 5); eqFlow.sent = Math.floor(Math.abs(st.Q) / eqFlow.Ep); eqFlow.dots = [];
+    }
+    const n = Math.floor(Math.abs(st.Q) / eqFlow.Ep);
+    while (eqFlow.sent < n) { eqFlow.sent++; eqFlow.dots.push(e.t); if (eqFlow.dots.length > 60) eqFlow.dots.shift(); }
+    const travel = 1.4 * S.speed, dir = e.TA0 >= e.TB0 ? 1 : -1, r = Math.max(2.5, br * 0.55);
+    eqFlow.dots = eqFlow.dots.filter((tb) => e.t - tb < travel);
+    ctx.save(); ctx.fillStyle = T.hot; ctx.shadowColor = T.hot; ctx.shadowBlur = 6 * p;
+    for (const tb of eqFlow.dots) { const u = (e.t - tb) / travel, x = dir > 0 ? xa + u * (xb - xa) : xb - u * (xb - xa); ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); }
+    ctx.restore();
+    if (VG && Math.abs(st.P) > 1e-6) VG.label(ctx, `each dot carries ${fmtJ(eqFlow.Ep)} · ${eqFlow.sent} have left ${dir > 0 ? 'A' : 'B'}`, (xa + xb) / 2, y - br - 44 * p, { a: 'center', s: 10 * p, c: T.hot });
+  }
   function drawEq() {
     const p = proj(), by = scene(0.78), e = S.eq, st = eqNow(), keyA = e.a === 'mystery' ? e.mys : e.a;
     const bx0 = W * 0.08, bx1 = W * 0.92, top = H * 0.2;
@@ -477,6 +497,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     block(cB, floor, sB, e.b, st.TB, `B: ${SPECIFIC[e.b].name.toLowerCase()}`);
     /* heat flow arrow, width by the power */
     const P = st.P, mx = (xa + xb) / 2, len = Math.min(70 * p, (xb - xa) * 0.35);
+    eqDots(st, xa, xb, barY, br, p);
     if (Math.abs(P) > 1e-3) { const w = Math.max(1.5, Math.min(8, 2 + Math.log10(1 + Math.abs(P)) * 4)) * p, dir = Math.sign(P);
       arrow(mx - dir * len / 2, barY - br - 14 * p, mx + dir * len / 2, barY - br - 14 * p, w, T.hot);
       if (VG) VG.label(ctx, 'heat', mx, barY - br - 28 * p, { a: 'center', s: 10.5 * p, c: T.hot }); }
@@ -622,6 +643,23 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* heat flow arrows through */
     const aw = Math.max(1.5, Math.min(9, 1.5 + Math.log10(1 + Math.abs(w.P)) * 2.5)) * p, ay = rods ? wy0 - 26 * p : top + 30 * p;
     if (Math.abs(w.P) > 1e-6) arrow(w.P > 0 ? W * 0.06 : W * 0.94, ay, w.P > 0 ? W * 0.94 : W * 0.06, ay, aw, T.hot);
+    if (Math.abs(w.P) > 1e-9) {
+      /* dots leave the warm side at the steady rate P / (energy per dot), on the clock: their spacing in time is the heat flow */
+      const Ep = step125(Math.abs(w.P) / 4), gap = Ep / Math.abs(w.P), now = reduce ? 0 : performance.now() / 1000, travel = 2.2, dir = w.P > 0 ? 1 : -1;
+      const xs = W * 0.06, xe = W * 0.94, k1 = Math.floor(now / gap), k0 = Math.ceil((now - travel) / gap);
+      ctx.save(); ctx.fillStyle = T.hot; ctx.shadowColor = T.hot; ctx.shadowBlur = 6 * p;
+      for (let k = k0; k <= k1 && k1 - k0 < 400; k++) {
+        const u = (now - k * gap) / travel, h = ((Math.sin(k * 12.9898) * 43758.5453) % 1 + 1) % 1, yy = rods ? (wy0 + wy1) / 2 + (h - 0.5) * (wy1 - wy0) * 0.6 : wy0 + 20 * p + h * (wy1 - wy0 - 40 * p);
+        const xx = dir > 0 ? xs + u * (xe - xs) : xe - u * (xe - xs); ctx.globalAlpha = Math.min(1, 6 * Math.min(u, 1 - u)); ctx.beginPath(); ctx.arc(xx, yy, 3.2 * p, 0, 7); ctx.fill();
+      }
+      ctx.restore();
+      if (VG) {
+        const msg = `each dot carries ${fmtJ(Ep)}: ${+(1 / gap).toPrecision(3)} dots a second is ${Math.abs(w.P).toPrecision(3)} W`;
+        ctx.save(); ctx.font = `400 ${10 * p}px ${getComputedStyle(document.documentElement).getPropertyValue('--font-ui')}`; const tw = ctx.measureText(msg).width;
+        ctx.fillStyle = dark() ? 'rgba(20,26,34,0.82)' : 'rgba(255,255,255,0.85)'; ctx.beginPath(); ctx.roundRect(W / 2 - tw / 2 - 6 * p, ay - 22 * p, tw + 12 * p, 16 * p, 5 * p); ctx.fill(); ctx.restore();
+        VG.label(ctx, msg, W / 2, ay - 14 * p, { a: 'center', s: 10 * p, c: T.hot, alpha: 1 });
+      }
+    }
     /* the probe */
     const xp = wx0 + c.x * total * sc, tp = w.at(c.x * total);
     ctx.strokeStyle = dark() ? '#e6edf5' : '#222b36'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xp, wy0 - 4); ctx.lineTo(xp, ty(tp)); ctx.stroke();
@@ -895,7 +933,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       else if (S.view === 'cv') S.cv.t += dt * S.speed;
       else if (S.view === 'th') { const sd = dt * S.speed; S.th.Tg = follow(S.th.Tg, bathT(), sd); S.th.t += sd; }
       redraw();
-    } else if ((S.view === 'th' || S.view === 'cv') && !reduce && now - lastDraw > 50) { lastDraw = now; redraw(); }
+    } else if ((S.view === 'th' || S.view === 'cv' || S.view === 'co') && !reduce && now - lastDraw > (S.view === 'co' ? 33 : 50)) { lastDraw = now; redraw(); }
     requestAnimationFrame(frame);
   }
 
