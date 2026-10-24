@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>/* in scene setup controls fade away while the run plays and come back on pause or reset */
 #instr { transition: opacity 0.35s ease, visibility 0.35s; }
 #instr.away { opacity: 0; visibility: hidden; }
@@ -107,7 +108,8 @@ table.rows input:focus { border-color: var(--accent); }
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="A cart on a track rolling into a bumper on a force sensor, and below it the force sensor reading against time with the area shaded. Space launches the cart."></canvas>
       <div class="viewbar"><button type="button" class="spin attn" id="go">Launch the cart</button><button type="button" class="spin" id="back">Put it back</button>
-        <div class="seg" role="group" aria-label="Playback speed" id="speedSeg"><button type="button" data-s="1" aria-pressed="false">real time</button><button type="button" data-s="0.05" aria-pressed="true">×1/20</button></div></div>
+        <div class="seg" role="group" aria-label="Playback speed" id="speedSeg"><button type="button" data-s="1" aria-pressed="false">real time</button><button type="button" data-s="0.05" aria-pressed="true">×1/20</button></div>
+        <div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -271,12 +273,174 @@ table.rows input:focus { border-color: var(--accent); }
     } else h += '<div class="wide"><dt>Area and momentum change</dt><dd class="ok">launch the cart</dd></div>';
     $('out').innerHTML = h;
   }
+  // ---------- 3D view of the track (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
+  /* Metres, z up, x along the track with the bumper's resting face at x = 0 (the ruler's zero), as in the flat view. The cart's front
+     sits at the model's x, so the spring or clay is pushed in by the model's compression to scale, and the camera closes in as the cart
+     nears the bumper. The cart (0.17 m long), sensor and logger are scenery sizes; each bumper's rest length is chosen so that the
+     largest compression the sliders allow (soft spring, 1.50 kg at 1.50 m/s: x = v√(m/k) = 9.2 cm) still fits.
+     Drag to turn the view, wheel or pinch to zoom, double click to reset. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.2, ph: 1.2, zoom: 1 } };
+  const CL = 0.17, CWD = 0.09, CH = 0.04, WR = 0.012, TW = 0.12, TH = 0.025, TL0 = -0.78, TL1 = 0.22, AXZ = 0.042;
+  const REST = { stiff: 0.05, soft: 0.11, clay: 0.06 };   /* bumper rest lengths (m) */
+  let g3 = null, rect3 = { x: 0, y: 0, w: 0, h: 0 };
+  const use3 = () => !!(G3.on && g3);
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  const texCanvas = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+  function init3D() {
+    G3.tried = true;
+    const rd = VD3.renderer(); if (!rd) return false;
+    rd.shadowMap.enabled = true; rd.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = rd.domElement; el.setAttribute('aria-hidden', 'true'); el.style.position = 'absolute'; stage.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.01, 20), M = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x8a7f70, 0.6), sun = new THREE.DirectionalLight(0xffffff, 0.85); sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024);
+    Object.assign(sun.shadow.camera, { left: -0.7, right: 0.7, top: 0.5, bottom: -0.5, near: 0.1, far: 4 }); sun.shadow.bias = -0.0005;
+    sun.position.set(-0.6, -0.9, 1.6); sun.target.position.set(-0.2, 0, 0); scene.add(hemi, sun, sun.target);
+    const mesh = (g, m, cast = true, recv = false) => { const x = new THREE.Mesh(g, m); x.castShadow = cast; x.receiveShadow = recv; return x; };
+    const box = (w, d, h, m, x, y, z, cast = true, recv = true) => { const b = mesh(new THREE.BoxGeometry(w, d, h), m, cast, recv); b.position.set(x, y, z); return b; };
+    /* bench and pegboard wall */
+    const benchM = M({ roughness: 0.85 }), wallM = M({ roughness: 1 });
+    const bench = box(1.9, 0.75, 0.05, benchM, -0.25, 0.08, -TH - 0.025, false, true);
+    const peg = texCanvas(64, 64), pg = peg.getContext('2d'); pg.fillStyle = '#fff'; pg.fillRect(0, 0, 64, 64); pg.fillStyle = '#9aa3ad'; pg.beginPath(); pg.arc(32, 32, 5, 0, 7); pg.fill();
+    const pegT = new THREE.CanvasTexture(peg); pegT.wrapS = pegT.wrapT = THREE.RepeatWrapping; pegT.repeat.set(76, 28); wallM.map = pegT;
+    const wall = mesh(new THREE.PlaneGeometry(1.9, 0.7), wallM, false, true); wall.rotation.x = Math.PI / 2; wall.position.set(-0.25, 0.45, 0.3);
+    /* aluminium track with a ruler along its face (1 cm marks, measured from the bumper's resting face), grooves and an end stop */
+    const alM = M({ roughness: 0.4, metalness: 0.55 }), darkM = M({ roughness: 0.5, metalness: 0.4 });
+    const track = box(TL1 - TL0, TW, TH, alM, (TL0 + TL1) / 2, 0, -TH / 2, true, true);
+    const grooves = new THREE.Group(); for (const y of [-0.03, 0.03]) grooves.add(box(TL1 - TL0, 0.004, 0.0012, darkM, (TL0 + TL1) / 2, y, 0.0002, false, false));
+    const rc = texCanvas(4096, 96), rx = rc.getContext('2d'), pxm = 4096 / (TL1 - TL0);
+    rx.fillStyle = '#f4f1e8'; rx.fillRect(0, 0, 4096, 96); rx.fillStyle = '#222'; rx.font = '600 34px sans-serif'; rx.textAlign = 'center'; rx.textBaseline = 'bottom';
+    for (let k = 0; ; k++) { const xm = -k / 100; if (xm < TL0 + 0.005) break; const xx = (xm - TL0) * pxm, len = k % 10 === 0 ? 50 : k % 5 === 0 ? 36 : 22; rx.fillRect(xx - 2, 0, 4, len); if (k % 10 === 0) rx.fillText(String(k), xx, 94); }
+    const rulerT = new THREE.CanvasTexture(rc); rulerT.anisotropy = 4;
+    const ruler = mesh(new THREE.PlaneGeometry(TL1 - TL0, TH * 0.8), new THREE.MeshStandardMaterial({ map: rulerT, roughness: 0.7 }), false, true);
+    ruler.rotation.x = Math.PI / 2; ruler.position.set((TL0 + TL1) / 2, -TW / 2 - 0.0006, -TH / 2);
+    const stop = box(0.02, TW, 0.05, darkM, TL0 + 0.01, 0, 0.025);
+    /* the cart: body, darker top plate, front plate, four wheels with spokes so their turning shows */
+    const cartM = M({ roughness: 0.45, metalness: 0.1 }), topM = M({ roughness: 0.5 }), tyreM = M({ roughness: 0.8, color: 0x1e2226 }), hubM = M({ roughness: 0.35, metalness: 0.7 });
+    const cart = new THREE.Group(), bz = 2 * WR - 0.004;
+    cart.add(box(CL, CWD, CH, cartM, -CL / 2, 0, bz + CH / 2), box(CL - 0.01, CWD - 0.012, 0.004, topM, -CL / 2, 0, bz + CH + 0.002), box(0.004, 0.05, 0.026, hubM, -0.002, 0, bz + CH / 2));
+    const wheels = [];
+    for (const wx of [-0.03, -CL + 0.03]) for (const wy of [-1, 1]) {
+      const w = new THREE.Group(), t = mesh(new THREE.CylinderGeometry(WR, WR, 0.01, 28), tyreM), h = mesh(new THREE.CylinderGeometry(WR * 0.62, WR * 0.62, 0.0104, 20), hubM);
+      for (let i = 0; i < 3; i++) { const s = mesh(new THREE.BoxGeometry(WR * 1.2, 0.0108, 0.0016), tyreM, false); s.rotation.y = i * Math.PI / 3; w.add(s); }
+      w.add(t, h); w.position.set(wx, wy * (CWD / 2 + 0.004), WR); cart.add(w); wheels.push(w);
+    }
+    const lab = texCanvas(256, 64), labT = new THREE.CanvasTexture(lab);
+    const labM = mesh(new THREE.PlaneGeometry(0.1, 0.025), new THREE.MeshStandardMaterial({ map: labT, roughness: 0.6, transparent: true }), false); labM.rotation.x = Math.PI / 2; labM.position.set(-CL / 2, -CWD / 2 - 0.0006, bz + CH / 2); cart.add(labM);
+    /* the bumper: a coil spring rebuilt to its current length, an end cap, or a lump of clay that keeps its volume as it squashes */
+    const springM = M({ roughness: 0.3, metalness: 0.8 }), spring = mesh(new THREE.BufferGeometry(), springM);
+    const cap = mesh(new THREE.CylinderGeometry(0.02, 0.02, 0.003, 28).rotateZ(Math.PI / 2), darkM);
+    const clayM = M({ roughness: 1 }), clay = mesh(new THREE.SphereGeometry(0.5, 32, 20), clayM);
+    /* force sensor on a clamp, with a live display of its reading; cable to a data logger on the bench */
+    const sensM = M({ roughness: 0.5 }), sensor = new THREE.Group();
+    sensor.add(box(0.05, 0.06, 0.075, sensM, 0.028, 0, AXZ + 0.004), box(0.06, TW + 0.02, 0.012, darkM, 0.03, 0, 0.006), box(0.006, 0.016, 0.016, hubM, 0.0, 0, AXZ));
+    const disp = texCanvas(256, 128), dispT = new THREE.CanvasTexture(disp);
+    const dispM = mesh(new THREE.PlaneGeometry(0.044, 0.022), new THREE.MeshBasicMaterial({ map: dispT }), false); dispM.rotation.x = Math.PI / 2; dispM.position.set(0.028, -0.0306, AXZ + 0.022); sensor.add(dispM);
+    const logM = M({ roughness: 0.6 }), logger = new THREE.Group();
+    logger.add(box(0.2, 0.12, 0.035, logM, 0, 0, 0.0175));
+    const lscr = texCanvas(256, 96), lscrT = new THREE.CanvasTexture(lscr), lscrM = mesh(new THREE.PlaneGeometry(0.11, 0.07), new THREE.MeshBasicMaterial({ map: lscrT }), false);
+    lscrM.position.set(-0.03, 0, 0.0352); logger.add(lscrM);
+    const ledM = new THREE.MeshBasicMaterial({ color: 0x2fae57 }), led = mesh(new THREE.SphereGeometry(0.004, 12, 8), ledM, false); led.position.set(0.06, -0.02, 0.036); logger.add(led);
+    logger.position.set(0.14, -0.2, -TH); logger.rotation.z = -0.25;
+    const cableM = M({ roughness: 0.7, color: 0x24282d }), cable = mesh(new THREE.BufferGeometry(), cableM);
+    scene.add(bench, wall, track, grooves, ruler, stop, cart, spring, cap, clay, sensor, logger, cable);
+    g3 = { rd, el, scene, cam, hemi, sun, benchM, wallM, alM, darkM, cartM, topM, cart, wheels, lab, labT, springM, spring, cap, clayM, clay, sensM, sensor, disp, dispT, logM, lscr, lscrT, ledM, cable, sprKey: '', labKey: '', dispKey: '', mountKey: '' };
+    can.addEventListener('wheel', (e) => { if (!use3() || !in3(e)) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3() && !S.run) draw(); }, { grab: (e) => !use3() || !in3(e), phMin: 0.35, phMax: 1.75, zMin: 0.5, zMax: 3, keys: false });
+    can.addEventListener('pointerup', () => { if (!use3()) can.style.cursor = ''; });
+    return true;
+  }
+  const in3 = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; return x >= rect3.x && x < rect3.x + rect3.w && y >= rect3.y && y < rect3.y + rect3.h; };
+  function theme3() {
+    const g = g3, dk = VD3.dark();
+    g.scene.background = col3(T.canvas, '#ffffff');
+    g.benchM.color = col3(dk ? '#3a3229' : '#ddd2bf', '#ddd2bf'); g.wallM.color = col3(dk ? '#2a313b' : '#eef1f5', '#eef1f5');
+    g.alM.color = col3(dk ? '#8b95a3' : '#c4ccd6', '#c4ccd6'); g.darkM.color = col3(dk ? '#4a5462' : '#5d6878', '#5d6878');
+    g.cartM.color = col3(T.cart, '#2b60b5'); g.topM.color = col3(T.cartTop, '#1f4a8f'); g.springM.color = col3(dk ? '#b8c0ca' : '#8a94a2', '#8a94a2');
+    g.clayM.color = col3(T.clay, '#c98a5a'); g.sensM.color = col3(dk ? '#56606e' : '#4a5563', '#4a5563'); g.logM.color = col3(dk ? '#2a333f' : '#3a4553', '#3a4553');
+    g.hemi.intensity = dk ? 0.5 : 0.62; g.sun.intensity = dk ? 0.75 : 0.85;
+    g.labKey = g.dispKey = g.lscrKey = '';
+  }
+  /* a helix along +x from 0 to 1 (scaled to length by rebuilding), n turns of radius r, wire radius a */
+  function springGeom(L, n, r, a) {
+    const pts = [], N = n * 24; for (let i = 0; i <= N; i++) { const u = i / N, ang = u * n * 2 * Math.PI; pts.push(new THREE.Vector3(u * L, r * Math.sin(ang), r * Math.cos(ang))); }
+    return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), N, a, 6, false);
+  }
+  function paintText(cv, tex, bg, fg, lines, font) {
+    const c = cv.getContext('2d'); c.clearRect(0, 0, cv.width, cv.height); if (bg) { c.fillStyle = bg; c.fillRect(0, 0, cv.width, cv.height); }
+    c.fillStyle = fg; c.textAlign = 'center'; c.textBaseline = 'middle'; lines.forEach((t, i) => { c.font = font[i]; c.fillText(t, cv.width / 2, cv.height * (i + 0.5) / lines.length); }); tex.needsUpdate = true;
+  }
+  /* draws the 3D picture into (x0, y0, w, h); returns a projector from model metres to this canvas */
+  function draw3(x0, y0, w, h, cs, comp, Fnow) {
+    const g = g3, dk = VD3.dark(), W0 = Math.max(1, Math.round(w)), H0 = Math.max(1, Math.round(h)), L0 = REST[S.bump];
+    rect3 = { x: x0, y: y0, w: W0, h: H0 }; g.el.hidden = false; Object.assign(g.el.style, { left: x0 + 'px', top: y0 + 'px', width: W0 + 'px', height: H0 + 'px' });
+    if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.cart, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    /* the sensor and its cable sit behind the chosen bumper */
+    if (g.mountKey !== S.bump) { g.mountKey = S.bump; g.sensor.position.set(L0, 0, 0);
+      const c = new THREE.CatmullRomCurve3([new THREE.Vector3(L0 + 0.054, 0.01, AXZ), new THREE.Vector3(L0 + 0.1, 0.02, 0.02), new THREE.Vector3(L0 + 0.08, -0.08, -TH + 0.004), new THREE.Vector3(0.2, -0.17, -TH + 0.004), new THREE.Vector3(0.22, -0.2, -TH + 0.018)]);
+      g.cable.geometry.dispose(); g.cable.geometry = new THREE.TubeGeometry(c, 60, 0.0022, 6, false); }
+    /* cart at the model's position; wheels turn by distance rolled over radius */
+    g.cart.position.set(cs.x, 0, 0); for (const wh of g.wheels) wh.rotation.y = (cs.x + GAP) / WR;
+    const lk = S.m.toFixed(2) + dk; if (g.labKey !== lk) { g.labKey = lk; paintText(g.lab, g.labT, null, '#ffffff', [`${S.m.toFixed(2)} kg`], ['700 44px sans-serif']); }
+    /* bumper */
+    const sp = S.bump !== 'clay', face = comp;
+    g.spring.visible = g.cap.visible = sp; g.clay.visible = !sp;
+    if (sp) {
+      const L = L0 - face - 0.003, n = S.bump === 'soft' ? 9 : 6, r = S.bump === 'soft' ? 0.014 : 0.012, a = S.bump === 'soft' ? 0.0011 : 0.0016, k = S.bump + L.toFixed(4);
+      if (g.sprKey !== k) { g.sprKey = k; g.spring.geometry.dispose(); g.spring.geometry = springGeom(L, n, r, a); }
+      g.spring.position.set(face + 0.003, 0, AXZ); g.cap.position.set(face + 0.0015, 0, AXZ);
+    } else {
+      const Lc = Math.max(0.004, L0 - face), d0 = 0.036, d = d0 * Math.sqrt(L0 / Lc);
+      g.clay.scale.set(Lc * 1.08, d, d); g.clay.position.set(face + Lc / 2, 0, Math.max(AXZ, d / 2 + 0.001));
+    }
+    /* the sensor's display shows its latest sample; the logger's screen draws the record so far */
+    const dkey = Fnow.toFixed(2) + dk; if (g.dispKey !== dkey) { g.dispKey = dkey; paintText(g.disp, g.dispT, dk ? '#1b2a1b' : '#b5cfa4', dk ? '#9fe0a0' : '#1b2a1b', [`${f(Fnow, 2)} N`], ['700 64px monospace']); }
+    const lkey = S.t.toFixed(4) + S.rate + dk + S.bump + S.m + S.v0;
+    if (g.lscrKey !== lkey) { g.lscrKey = lkey; const c = g.lscr.getContext('2d'), Wl = g.lscr.width, Hl = g.lscr.height; c.fillStyle = dk ? '#1b2a1b' : '#b5cfa4'; c.fillRect(0, 0, Wl, Hl);
+      const t0 = tHit() - 0.2 * C().tc, t1 = tHit() + 1.2 * C().tc, Fh = C().Fmax * 1.15; c.strokeStyle = dk ? '#9fe0a0' : '#1b2a1b'; c.lineWidth = 4; c.beginPath(); let first = true;
+      for (const [t, F] of S.pts) { if (t < t0 || t > t1 || t > S.t) continue; const xx = 8 + (Wl - 16) * (t - t0) / (t1 - t0), yy = Hl - 8 - (Hl - 16) * F / Fh; if (first) { c.moveTo(xx, yy); first = false; } else c.lineTo(xx, yy); }
+      c.stroke(); g.lscrT.needsUpdate = true; }
+    g.ledM.color = col3(S.run && (reduce || Math.floor(performance.now() / 400) % 2 === 0) ? T.led : (dk ? '#2a333f' : '#5d6878'), '#2fae57');
+    /* camera: frames the cart and the bumper; as the gap closes it narrows to the cart's front, the bumper and the sensor */
+    const gap = Math.max(0, -cs.x), left = cs.x - CL * Math.min(1, 0.35 + gap * 2.2) - 0.01, right = L0 + 0.075, tx = (left + right) / 2, wf = (right - left) * (g.cam.aspect < 2 ? 1.55 : 1.2);
+    const tv = Math.tan(g.cam.fov * Math.PI / 360), dist = Math.max(wf / 2 / (tv * g.cam.aspect), 0.11 / tv);
+    VD3.place(g.cam, G3.o, new THREE.Vector3(tx, 0, 0.05), dist);
+    g.scene.updateMatrixWorld(); g.rd.render(g.scene, g.cam);
+    const v = new THREE.Vector3();
+    return (x, y, z) => { v.set(x, y, z).project(g.cam); return [x0 + (v.x + 1) / 2 * W0, y0 + (1 - v.y) / 2 * H0]; };
+  }
+  function setView(v) {
+    G3.want = v === '3d';
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { G3.want = false; v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setView(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; can.style.cursor = use3() ? 'grab' : ''; if (g3 && !G3.on) g3.el.hidden = true;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    draw();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
+  /* the latest sample the sensor has taken by time t */
+  function sensorNow(t) { let F = 0; for (const q of S.pts) { if (q[0] > t) break; F = q[1]; } return F; }
+  /* the 3D strip and the labels drawn over it */
+  function scene3(p, ty, cs, c) {
+    const h3 = ty + 48 * p, xp = c.xmax * (1 - B().e * B().e), after = S.t > tHit() + c.tc, comp = S.bump === 'clay' && after ? xp : Math.max(0, cs.x);
+    ctx.clearRect(0, 0, W, h3);
+    const Q = draw3(0, 0, W, h3, cs, comp, sensorNow(S.t)), vb = document.querySelector('.viewbar'), yTop = vb.offsetTop + vb.offsetHeight + 16 * p;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    if (comp > 0 && !S.blind) { const a = Q(comp / 2, 0, AXZ + 0.032); a[1] = Math.max(a[1], yTop); ctx.fillStyle = T.ink; ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.fillText(`${S.bump === 'clay' ? 'squashed' : 'pushed in'} ${f(comp * 1000, 1)} mm`, a[0], a[1]); }
+    if (Math.abs(cs.v) > 1e-6) { const [ax, ay0] = Q(cs.x - CL / 2, 0, 0.09), ay = Math.max(ay0, yTop + 14 * p), L = cs.v * 60 * p; ctx.strokeStyle = T.vel; ctx.fillStyle = T.vel; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax + L, ay); ctx.stroke();
+      const s = Math.sign(L); ctx.beginPath(); ctx.moveTo(ax + L + s * 7 * p, ay); ctx.lineTo(ax + L, ay - 5 * p); ctx.lineTo(ax + L, ay + 5 * p); ctx.closePath(); ctx.fill(); ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.fillText(`${f(cs.v, 3)} m/s`, ax, ay - 12 * p); }
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom'; ctx.fillText('drag to turn, wheel to zoom', W - 10 * p, h3 - 6 * p);
+  }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     const p = ps(), cs = cartState(S.m, S.v0, B(), S.t), c = C();
     // track: 0.40 m shown, bumper face at x = 0
-    const ty = 150 * p, x1 = W - 60 * p, sc = (x1 - 40 * p) / 0.42, X = (x) => x1 - 40 * p + x * sc;
+    const ty = use3() ? Math.max(150 * p, Hh * 0.4) : 150 * p, x1 = W - 60 * p, sc = (x1 - 40 * p) / 0.42, X = (x) => x1 - 40 * p + x * sc;
+    if (g3 && !use3()) g3.el.hidden = true;
+    if (use3()) scene3(p, ty, cs, c); else {
     // lab bench under the track, a faint pegboard wall behind
     if (VG) { VG.wall(ctx, 0, 0, W, ty + 10 * p, { tile: 0 }); ctx.fillStyle = T.wallDot; ctx.globalAlpha = 0.6; for (let yy = 56 * p; yy < ty - 20 * p; yy += 16 * p) for (let xx = 16 * p; xx < W - 8 * p; xx += 16 * p) { ctx.fillRect(xx, yy, 2 * p, 2 * p); } ctx.globalAlpha = 1; VG.bench(ctx, 0, ty + 13 * p, W, 3 * p, 33 * p, { top: T.benchEdge, front: T.bench }); }
     else { ctx.fillStyle = T.wallDot; for (let yy = 56 * p; yy < ty - 20 * p; yy += 16 * p) for (let xx = 16 * p; xx < W - 8 * p; xx += 16 * p) { ctx.fillRect(xx, yy, 2 * p, 2 * p); }
@@ -340,6 +504,7 @@ table.rows input:focus { border-color: var(--accent); }
     // velocity arrow
     if (Math.abs(cs.v) > 1e-6) { const L = cs.v * 60 * p, ay = ty - ch - 22 * p, ax = cxr - cw / 2; ctx.strokeStyle = T.vel; ctx.fillStyle = T.vel; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax + L, ay); ctx.stroke();
       const s = Math.sign(L); ctx.beginPath(); ctx.moveTo(ax + L + s * 7 * p, ay); ctx.lineTo(ax + L, ay - 5 * p); ctx.lineTo(ax + L, ay + 5 * p); ctx.closePath(); ctx.fill(); ctx.font = `700 ${11 * p}px ${T.mono}`; ctx.fillText(`${f(cs.v, 3)} m/s`, ax, ay - 12 * p); }
+    }
     // force graph around the contact
     const gx0 = 56 * p, gw = W - gx0 - 20 * p, gy0 = ty + 60 * p, gh = Hh - gy0 - 40 * p;
     const t0 = tHit() - 0.2 * c.tc - 0.002, t1 = tHit() + 1.2 * c.tc + 0.002, Fh = c.Fmax * 1.15, Xg = (t) => gx0 + gw * (t - t0) / (t1 - t0), Yg = (F) => gy0 + gh - gh * F / Fh;
@@ -402,6 +567,12 @@ table.rows input:focus { border-color: var(--accent); }
     (function show() { for (const o of all) { if (o.inp.value !== o.shown) { o.shown = o.inp.value; o.k.style.setProperty('--a', `${(Math.round((+o.inp.value - +o.inp.min) / (+o.inp.step || 1)) * DEG) % 360}deg`); o.k.setAttribute('aria-valuenow', o.inp.value); } if (o.out) o.k.setAttribute('aria-valuetext', o.out.textContent); } requestAnimationFrame(show); })();
   })();
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
+  /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
+  G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
+  /* one launch on open, so something is already happening; the first click, key or slider change puts the cart back first */
+  let touched = false, auto = false;
+  for (const ev of ['pointerdown', 'keydown', 'click', 'input']) document.addEventListener(ev, () => { touched = true; if (auto) { auto = false; reset(); } }, { capture: true });
+  setTimeout(() => { if (!touched && !reduce && !S.run && S.t === 0) { auto = true; setRun(true); } }, 900);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now();
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();

@@ -1623,3 +1623,9 @@ CORE byte identical; vdcheck differs only by the new Perspective control (`dimSe
 
 - Doppler on phones: the Set up card was squeezing the picture row to a sliver (the narrow rows rule sat before the base `.stage` rule, so it never applied). The picture row now gets its own height, clamp(520px, 80vh, 760px), and the whole view backs off a little on a tall pane so the source stays in view. vdcheck 0 problems.
 - Ultrasound, Kundt's Tube and Room Acoustics handouts: "Using the demo" now says the scanner, the rod and the clap start once on open with the Set up card left up (it fades from the first start you make yourself). Intended, and the same in Wave Power. Wording only; no key numbers change.
+
+## Claude, 2026-10-24: Physics I deeper visual pass, Impulse and Momentum
+
+- **Impulse** opens in a 3D view of the same run (new **3D | Flat** switch `#viewSeg`; `?view=flat` opens the flat view). Aluminium track with a ruler from the bumper's resting face, cart with turning wheels, a coil spring rebuilt to its length each frame or a clay lump that keeps its volume (and its dent), the force sensor's display showing its latest sample, and a data logger whose screen draws the record. The bumper is pushed in by the model's x to scale (each rest length fits the largest compression the sliders allow: soft spring, 1.50 kg at 1.50 m/s, 9.2 cm), "pushed in x mm" shows unless Blind is on, and the camera closes in on the bumper as the gap closes. The graph strip moves down a little in 3D; the graph itself is unchanged.
+- Launches once on open (not with reduced motion); the first click, key or slider change puts the cart back first.
+- Checks: `test_impulse` passes; `vdcheck --only after impulse` 0 problems; the key's capture sequence (`impulse.cjs`) gives byte identical F(t) and readings CSVs on the old and new pages.
