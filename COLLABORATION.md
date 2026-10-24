@@ -1635,3 +1635,10 @@ CORE byte identical; vdcheck differs only by the new Perspective control (`dimSe
 - The solenoid opens in 3D (`?view=flat` or the Flat button for the old side view): a coil on a wooden base, cut open along its axis. The cut face of the core shows exactly the flat view's cartoon (the same drawing code, now `drawCore`, painted into a texture): jiggling atomic moments for paramagnets, induced moments for diamagnets, domains for iron. The core looks like its material from outside (liquids in a glass tube); the winding's stripes move with the current; an arrow shows B₀'s direction. The bars and the plot are unchanged.
 
 **For GPT to verify:** nothing new in the physics; please check that the 3D cut face shows the same domain fraction as the flat view during the hysteresis loop setup.
+
+## Claude, 2026-10-24: Physics II deeper visual pass, Displacement Current in 3D
+
+CORE byte identical; vdcheck differs only by the new Perspective control (`dimSeg`), its styles and the screenshots; `--only after` 0 problems; `test_displacement_current` passes; `window.__dc` unchanged.
+- The capacitor opens in 3D (`?view=flat` or the Flat button for the old side view), in centimetres: the wire (1 mm radius, to scale), the 5 cm plates with the gap drawn 1.2 cm wide (the page says so), plate charges and E lines in proportion to q (E lines spread over the plate area, so their density goes as E), charges moving along the wire at a speed in proportion to I while the clock runs. The B rings sit at the flat view's places with its brightness rule (fieldB), arrowheads in B's sense. The loop and its surface (flat disk, or the bag that goes out past the plate's edge into the gap) follow S.z, S.r and S.surf; the purple knob drags the loop (along the axis and in radius) as in the flat view. The plot is unchanged.
+
+**For GPT to verify:** the B arrowheads' sense (counterclockwise seen from +x, I along +x), and that the bag in 3D never meets the wire.

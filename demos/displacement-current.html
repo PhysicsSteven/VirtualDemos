@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* Layout: a charging capacitor with an Amperian loop above a plot of B against r; the instrument rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
@@ -45,6 +46,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   input[type="range"] { min-height: 28px; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
+.dimseg { position: absolute; top: 44px; right: 10px; z-index: 2; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+.dimseg[hidden] { display: none; }
+.dimseg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.dimseg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -72,6 +77,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <button type="button" class="spin" id="reset">Start over</button>
       </div>
       <div class="clock" id="clock">t = 0 µs</div>
+      <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -203,10 +209,115 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const Zx = (z) => geo.cx + z * geo.s, Ry = (r) => r * geo.s;   // cm to px; the gap is drawn from z = −0.6 to 0.6
 
+  /* ---------- 3D: the wire, the plates and the loop in perspective, in centimetres. Same numbers as the flat view: B rings at the
+     same places with the same brightness (fieldB), plate charges and E lines in proportion to q (E lines spread over the plate area,
+     so their density goes as E), the loop and its surface from S.z, S.r and S.surf. The gap is drawn 1.2 cm wide (really 2 mm). */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.42, ph: 1.15, zoom: 1 }, pane: [0, 0, 0, 0], ph: 0, surfKey: '', lr: -1 };
+  const NQ = 70, NEL = 48, NDOT = 40, BZ = [-13, -9, -5, 0, 5, 9, 13], BR = [2, 4, 6, 8];
+  let g3 = null;
+  const use3 = () => !!(G3.on && g3);
+  const sunflower = (n, R) => Array.from({ length: n }, (_, i) => { const r = R * Math.sqrt((i + 0.5) / n), a = i * 2.39996; return [r * Math.cos(a), r * Math.sin(a)]; });
+  function init3D() {
+    G3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); el.style.right = 'auto'; el.style.bottom = 'auto'; stage.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.5, 400), Ms = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.9), sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(-10, -20, 25); scene.add(hemi, sun);
+    const alongX = (geo) => geo.rotateZ(-Math.PI / 2);   /* three.js cylinders stand along y; the axis here is x */
+    const wireM = Ms({ roughness: 0.35, metalness: 0.3 }), wires = [-1, 1].map((s) => { const w = new THREE.Mesh(alongX(new THREE.CylinderGeometry(0.15, 0.15, 15, 16)), wireM); w.position.x = s * (0.6 + 7.5); return w; });
+    const plateM = Ms({ roughness: 0.35, metalness: 0.35 }), plates = [-1, 1].map((s) => { const pl = new THREE.Mesh(alongX(new THREE.CylinderGeometry(5, 5, 0.12, 64)), plateM); pl.position.x = s * 0.66; return pl; });
+    const qMp = Ms({ roughness: 0.4 }), qMn = Ms({ roughness: 0.4 }), qp = new THREE.InstancedMesh(new THREE.SphereGeometry(0.14, 10, 8), qMp, NQ), qn = new THREE.InstancedMesh(new THREE.SphereGeometry(0.14, 10, 8), qMn, NQ); qp.frustumCulled = qn.frustumCulled = false;
+    const eM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.9 }), eLines = new THREE.LineSegments(new THREE.BufferGeometry(), eM); eLines.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NEL * 6), 3));
+    const dotM = new THREE.MeshBasicMaterial(), dots = new THREE.InstancedMesh(new THREE.SphereGeometry(0.2, 8, 6), dotM, NDOT); dots.frustumCulled = false;
+    /* B rings: a circle and an arrowhead per place, both sides of the gap */
+    const bRings = []; const ringPts = []; for (let i = 0; i <= 64; i++) { const a = i / 64 * 2 * Math.PI; ringPts.push(new THREE.Vector3(0, Math.cos(a), Math.sin(a))); }
+    const ringGeo = new THREE.BufferGeometry().setFromPoints(ringPts), headGeo = new THREE.ConeGeometry(0.2, 0.6, 10);
+    for (const z of BZ) for (const rr of BR) { const m = new THREE.LineBasicMaterial({ transparent: true }), hm = new THREE.MeshBasicMaterial({ transparent: true }), ln = new THREE.Line(ringGeo, m), hd = new THREE.Mesh(headGeo, hm);
+      ln.position.x = z; ln.scale.set(1, rr, rr); hd.position.set(z, 0, rr); hd.rotation.x = Math.PI / 2; /* at the top (+z) B points along −y for I along +x... set in render */
+      scene.add(ln, hd); bRings.push({ z, rr, m, hm, ln, hd }); }
+    /* the loop and its surface */
+    const loopM = Ms({ roughness: 0.4, emissive: 0x000000 }), loop = new THREE.Mesh(new THREE.TorusGeometry(1, 0.12, 12, 80).rotateY(Math.PI / 2), loopM);
+    const surfM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide }), surf = new THREE.Mesh(new THREE.BufferGeometry(), surfM);
+    const knobM = Ms({ roughness: 0.4 }), knob = new THREE.Mesh(new THREE.SphereGeometry(0.4, 16, 12), knobM);
+    scene.add(...wires, ...plates, qp, qn, eLines, dots, loop, surf, knob);
+    g3 = { r, el, scene, cam, hemi, wireM, plateM, qMp, qMn, qp, qn, eM, eLines, dotM, dots, bRings, loop, loopM, surf, surfM, knob, knobM, m4: new THREE.Matrix4(), ray: new THREE.Raycaster(), sf: sunflower(NQ, 4.6), se: sunflower(NEL, 4.6) };
+    can.addEventListener('wheel', (e) => { if (!use3() || !inPane(e)) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || !inPane(e) || drag, phMin: 0.3, phMax: 1.5, zMin: 0.6, zMax: 3, keys: false });
+    return true;
+  }
+  const inPane = (e) => { const b = can.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top, [x0, y0, w, h] = G3.pane; return x >= x0 && x <= x0 + w && y >= y0 && y <= y0 + h; };
+  /* where the pointer meets the vertical plane through the axis that faces the camera: [axial position, distance from the axis] in cm */
+  function axisHit(e) {
+    const g = g3, b = can.getBoundingClientRect(), [x0, y0, w, h] = G3.pane, nx = (e.clientX - b.left - x0) / w * 2 - 1, ny = -((e.clientY - b.top - y0) / h * 2 - 1);
+    g.ray.setFromCamera({ x: nx, y: ny }, g.cam); const n = new THREE.Vector3(0, g.cam.position.y, g.cam.position.z).normalize(), pl = new THREE.Plane(n, 0), q = new THREE.Vector3();
+    if (!g.ray.ray.intersectPlane(pl, q)) return null; return [q.x, Math.hypot(q.y, q.z)];
+  }
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function surf3() {
+    const g = g3, key = `${S.surf}|${S.z}|${S.r}|${inGap()}`; if (G3.surfKey === key) return; G3.surfKey = key;
+    g.surf.geometry.dispose();
+    if (S.surf === 'flat' || inGap()) { g.surf.geometry = new THREE.CircleGeometry(S.r, 64).rotateY(Math.PI / 2); g.surf.position.x = S.z; return; }
+    /* the bag: rim on the loop, reaching into the gap, its bottom a disk wider than the plates (the same shape as the flat view's) */
+    const side = S.z < 0 ? 1 : -1, bx = -side * 0.15, br = Math.max(S.r, 5.6), xe = -side * 0.85, pts = [];
+    /* the bag: rim on the loop, out past the plate's edge, into the gap, and a disk wider than the plates inside it */
+    for (let i = 0; i <= 24; i++) { const t = i / 24, u = 1 - t, x = u * u * u * S.z + 3 * u * u * t * (S.z + 0.5 * (xe - S.z)) + 3 * u * t * t * xe + t * t * t * xe, rr = u * u * u * S.r + 3 * u * u * t * S.r + 3 * u * t * t * br + t * t * t * br; pts.push(new THREE.Vector2(rr, x)); }
+    pts.push(new THREE.Vector2(br, bx)); for (let i = 1; i <= 8; i++) pts.push(new THREE.Vector2(br * (1 - i / 8), bx));
+    if (side < 0) pts.reverse();   /* keep the profile running one way along the axis */
+    g.surf.geometry = new THREE.LatheGeometry(pts, 64).rotateZ(-Math.PI / 2); g.surf.position.x = 0;   /* lathe axis y becomes the x axis */
+  }
+  function render3(n) {
+    const g = g3, [x0, y0, w, h] = G3.pane;
+    if (G3.w !== w || G3.h !== h) { G3.w = w; G3.h = h; g.r.setSize(w, Math.max(1, h)); g.cam.aspect = w / Math.max(1, h); g.cam.updateProjectionMatrix(); }
+    g.el.style.left = x0 + 'px'; g.el.style.top = y0 + 'px';
+    const key = [T.canvas, T.wire, T.b, T.loop].join(); if (G3.key !== key) { G3.key = key; const dk = VD3.dark(); g.scene.background = col3(T.canvas, '#fbfcfd'); g.hemi.groundColor = col3(dk ? '#1c222a' : '#8c8a84', '#8c8a84');
+      g.wireM.color = col3(T.wire, '#b06a2c'); g.plateM.color = col3(T.plate, '#6b7787'); g.qMp.color = col3(T.pos, '#c0392b'); g.qMn.color = col3(T.neg, '#2b60b5'); g.eM.color = col3(T.e, '#a7740b');
+      g.dotM.color = col3(dk ? '#fff2c4' : '#ffe08a', '#ffe08a'); g.loopM.color = g.knobM.color = col3(T.loop, '#6f4bb3'); g.surfM.color = col3(T.surf, '#6f4bb3'); for (const b of g.bRings) { b.m.color = b.hm.color = col3(T.b, '#2f7d4f'); } }
+    const asp = w / Math.max(1, h), span = Math.max(21, 36 / asp);
+    VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0, 0), span / (2 * Math.tan(15 * Math.PI / 180)));
+    /* plate charges and E lines, in proportion to q */
+    const fq = n.q / (CAP * 200), nq = Math.min(NQ, Math.round(NQ * fq)), ne = Math.min(NEL, Math.round(NEL * fq));
+    for (let i = 0; i < nq; i++) { const [a, b] = g.sf[i]; g.m4.makeTranslation(-0.66 + 0.16, a, b); g.qp.setMatrixAt(i, g.m4); g.m4.makeTranslation(0.66 - 0.16, a, b); g.qn.setMatrixAt(i, g.m4); }
+    g.qp.count = g.qn.count = nq; g.qp.instanceMatrix.needsUpdate = g.qn.instanceMatrix.needsUpdate = true;
+    const ep = g.eLines.geometry.attributes.position; for (let i = 0; i < ne; i++) { const [a, b] = g.se[i]; ep.setXYZ(2 * i, -0.55, a, b); ep.setXYZ(2 * i + 1, 0.55, a, b); }
+    g.eLines.geometry.setDrawRange(0, 2 * ne); ep.needsUpdate = true; g.eLines.geometry.computeBoundingSphere();
+    /* charges moving along the wire, spaced evenly, moving at a speed in proportion to I (only while the clock runs) */
+    const nd = NDOT; for (let i = 0; i < nd; i++) { let x = -15.6 + ((i / nd * 31.2 + G3.ph) % 31.2); if (Math.abs(x) < 0.75) x = Math.sign(x || 1) * 0.75; g.m4.makeTranslation(x, 0, 0.16); g.dots.setMatrixAt(i, g.m4); }
+    g.dots.count = n.I > 1e-9 ? nd : 0; g.dots.instanceMatrix.needsUpdate = true;
+    /* B rings: brightness from fieldB as in the flat view; the arrowhead at the top points along −y (B circles counterclockwise seen from +x) */
+    const Bref = fieldB(n.I, 0.05, false), show = !S.blind && n.I > 1e-9;
+    for (const b of g.bRings) { const B = fieldB(n.I, b.rr * CM, Math.abs(b.z) < 0.7), a = Bref ? Math.min(1, B / Bref) : 0, vis = show && a >= 0.04;
+      b.ln.visible = b.hd.visible = vis; b.m.opacity = b.hm.opacity = 0.25 + 0.75 * a; b.hd.rotation.set(Math.PI, 0, 0); b.hd.position.set(b.z, 0, b.rr); }
+    /* the loop */
+    if (G3.lr !== S.r) { G3.lr = S.r; g.loop.geometry.dispose(); g.loop.geometry = new THREE.TorusGeometry(S.r, 0.16, 12, 96).rotateY(Math.PI / 2); } g.loop.position.x = S.z; g.knob.position.set(S.z, 0, S.r); surf3();
+    g.r.render(g.scene, g.cam);
+    const tmp = new THREE.Vector3();
+    return (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [x0 + (tmp.x + 1) / 2 * w, y0 + (1 - tmp.y) / 2 * h, tmp.z]; };
+  }
+  function drawScene3(n) {
+    const p = geo.p; G3.pane = [0, 0, W, geo.sceneH]; ctx.clearRect(0, 0, W, geo.sceneH); const Q = render3(n);
+    const li = Q([-12, 0, 0.6]), le = Q([0, 0, -5.4]), ll = Q([S.z, 0, S.r + 0.8]);
+    ctx.fillStyle = T.ink; ctx.font = `600 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(`I = ${si(n.I, 'A')}`, li[0], li[1] - 4 * p);
+    ctx.fillStyle = T.e; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.textBaseline = 'top'; ctx.fillText(`E = ${si(n.E, 'V/m')}`, le[0], le[1] + 4 * p);
+    ctx.fillStyle = T.loop; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textBaseline = 'bottom'; ctx.fillText(`loop, r = ${S.r.toFixed(1)} cm`, ll[0], ll[1] - 6 * p);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    ctx.fillText(W > 560 ? 'Gap drawn 1.2 cm wide (really 2 mm). Green rings: B, brighter where stronger. Drag the purple knob; drag elsewhere to turn.' : 'Gap drawn wider than scale. Drag the knob; drag elsewhere to turn.', W - 10 * p, geo.sceneH - 6 * p);
+  }
+  function setDim(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried || !window.VD3) { v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setDim(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3) g3.el.hidden = !use3();
+    for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String(b.dataset.dim === v));
+    draw();
+  }
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setDim(b.dataset.dim); });
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     geo = layout(); const g = geo, p = g.p, n = now(), bl = S.blind, ig = inGap();
+    if (g3) g3.el.hidden = !use3();
+    if (use3()) { drawScene3(n); drawPlot(n); $('clock').textContent = `t = ${si(S.t, 's')} · τ = RC = ${si(n.tau, 's')}`; return; }
     // wire
     ctx.fillStyle = T.wire; ctx.fillRect(10 * p, g.cy - 3 * p, Zx(-0.6) - 10 * p, 6 * p); ctx.fillRect(Zx(0.6), g.cy - 3 * p, W - 10 * p - Zx(0.6), 6 * p);
     // current arrows on the wire
@@ -313,7 +424,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let last = performance.now();
   function frame(t) {
     const dt = Math.min(0.05, (t - last) / 1000); last = t;
-    if (S.run) { S.t += dt * 1e-5; if (S.t > 8 * S.R * 1e6 * CAP) setRun(false); draw(); readouts(); }
+    if (S.run) { const n0 = now(); G3.ph += dt * 4 * n0.I / (S.V / n0.R); S.t += dt * 1e-5; if (S.t > 8 * S.R * 1e6 * CAP) setRun(false); draw(); readouts(); }
     requestAnimationFrame(frame);
   }
   // drag the loop: sideways moves it along the axis, up and down sets its radius
@@ -322,9 +433,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function setLoop(px, py) { S.z = Math.max(-14, Math.min(14, (px - geo.cx) / geo.s)); if (Math.abs(S.z) < 0.6) S.z = 0; S.r = Math.max(0.5, Math.min(9, Math.round(Math.abs(geo.cy - py) / geo.s * 10) / 10)); custom(); draw(); readouts(); }
   can.addEventListener('pointerdown', (e) => {
     const [x, y] = local(e); if (!geo || y > geo.sceneH) return; can.focus();
+    if (use3()) { const q = axisHit(e); if (q && Math.abs(q[0] - S.z) < 1.6 && Math.abs(q[1] - S.r) < 1.6) { drag = true; can.setPointerCapture(e.pointerId); } return; }
     const lx = Zx(S.z), lr = Ry(S.r); if (Math.abs(x - lx) < Math.max(26 * geo.p, lr * 0.32) && Math.abs(Math.abs(y - geo.cy) - lr) < 30 * geo.p || Math.hypot(x - lx, y - (geo.cy - lr)) < 20 * geo.p) { drag = true; can.setPointerCapture(e.pointerId); setLoop(x, y); }
   });
-  can.addEventListener('pointermove', (e) => { if (drag) { const [x, y] = local(e); setLoop(x, y); } });
+  can.addEventListener('pointermove', (e) => { if (!drag) return; if (use3()) { const q = axisHit(e); if (q) { S.z = Math.max(-14, Math.min(14, q[0])); if (Math.abs(S.z) < 0.6) S.z = 0; S.r = Math.max(0.5, Math.min(9, Math.round(q[1] * 10) / 10)); custom(); draw(); readouts(); } return; } const [x, y] = local(e); setLoop(x, y); });
   const end = () => { drag = false; }; can.addEventListener('pointerup', end); can.addEventListener('pointercancel', end);
   can.addEventListener('keydown', (e) => {
     const k = e.key;
@@ -352,6 +464,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       V_V: S.V, R_Mohm: S.R, tau_us: g6(n.tau * 1e6) };
   };
   tokens(); new ResizeObserver(resize).observe(stage); applyPreset('wire'); resize();
+  { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   window.__dc = { S, applyPreset, setRun, draw, readouts, now, inGap };
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
