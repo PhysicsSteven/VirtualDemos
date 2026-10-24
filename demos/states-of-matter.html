@@ -570,7 +570,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     for (let v = 0; v <= 30; v += 5) { const t = a(v); c.beginPath(); c.moveTo(cx + Math.cos(t) * r * 0.72, cy + Math.sin(t) * r * 0.72); c.lineTo(cx + Math.cos(t) * r * 0.9, cy + Math.sin(t) * r * 0.9); c.stroke(); }
     const t = a(Math.max(0, Math.min(30, S.Patm))); c.strokeStyle = '#d2452b'; c.lineWidth = Math.max(1.2, r / 9); c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + Math.cos(t) * r * 0.78, cy + Math.sin(t) * r * 0.78); c.stroke();
     c.fillStyle = '#3a4552'; c.beginPath(); c.arc(cx, cy, r * 0.12, 0, 7); c.fill();
-    c.font = `700 ${Math.max(7, r * 0.42)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(S.Patm), cx, cy + r * 0.48); c.restore();
+    c.font = `700 ${Math.max(7, r * 0.42)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; if (r >= 30) c.font = `700 ${r * 0.3}px ${T.mono}`; c.fillText(r >= 30 ? `${S.Patm} atm` : String(S.Patm), cx, cy + r * 0.48); c.restore();
   }
   function labelsAtoms(x0, y0, colW, sc, p) {
     const L = (s, x, y, o) => (window.VDGear ? VDGear.label(ctx, s, x, y, Object.assign({ s: 11 * p }, o || {})) : null);
@@ -790,8 +790,9 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     lamp.position.set(md.Lx / 2 - 0.6, -(md.Ly / 2 + 3.05), -1.9); scene.add(lamp);
     const glow = new THREE.PointLight(0xff7a3c, 0, 9, 2); glow.position.z = 1; scene.add(glow);
     /* the bench under it */
-    const benchCv = document.createElement('canvas'); benchCv.width = benchCv.height = 256; { const x = benchCv.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, 256, 256); x.strokeStyle = 'rgba(0,0,0,0.07)'; x.lineWidth = 2; x.strokeRect(0, 0, 256, 256); }
-    const benchTex = new THREE.CanvasTexture(benchCv); benchTex.wrapS = benchTex.wrapT = THREE.RepeatWrapping; benchTex.repeat.set(30, 30);
+    const benchCv = document.createElement('canvas'); benchCv.width = benchCv.height = 256; { const x = benchCv.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, 256, 256); x.strokeStyle = 'rgba(60,40,20,0.08)'; x.lineWidth = 1.5;   /* faint wood grain */
+      for (let k = 0; k < 14; k++) { const y = 9 + k * 18 + (k % 3) * 2; x.beginPath(); x.moveTo(0, y); x.bezierCurveTo(80, y + 4, 170, y - 4, 256, y); x.stroke(); } }
+    const benchTex = new THREE.CanvasTexture(benchCv); benchTex.wrapS = benchTex.wrapT = THREE.RepeatWrapping; benchTex.repeat.set(12, 12);
     const benchMat = new THREE.MeshStandardMaterial({ map: benchTex, roughness: 0.9, metalness: 0 });
     const bench = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), benchMat); bench.position.z = -3.4; scene.add(bench);
     const csCv = document.createElement('canvas'); csCv.width = csCv.height = 128; { const x = csCv.getContext('2d'), rg = x.createRadialGradient(64, 64, 10, 64, 64, 64); rg.addColorStop(0, 'rgba(0,0,0,0.55)'); rg.addColorStop(0.6, 'rgba(0,0,0,0.25)'); rg.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = rg; x.fillRect(0, 0, 128, 128); }
@@ -820,7 +821,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     const d = VD3.dark(), bg = new THREE.Color(d ? 0x10161e : 0xeceff3), cv = document.createElement('canvas'); cv.width = 4; cv.height = 256;
     const x = cv.getContext('2d'), lg = x.createLinearGradient(0, 0, 0, 256); lg.addColorStop(0, d ? '#0d131a' : '#e3e8ee'); lg.addColorStop(0.62, d ? '#18212c' : '#fafbfc'); lg.addColorStop(1, d ? '#10161e' : '#eceff3');
     x.fillStyle = lg; x.fillRect(0, 0, 4, 256); G3.scene.background = new THREE.CanvasTexture(cv); G3.scene.fog = new THREE.Fog(bg, 60, 260);   /* the same backdrop as the flat view */
-    G3.benchMat.color.set(d ? 0x2a323d : 0xdfe4ea);
+    G3.benchMat.color.set(d ? 0x3a3229 : 0x8a8072);   /* a wooden bench like the other 3D demos (darker here, where the lights are brighter) */
   }
   function draw3D() {
     const md = S.md, g = G3, half = { x: md.Lx / 2, y: md.Ly / 2 };
