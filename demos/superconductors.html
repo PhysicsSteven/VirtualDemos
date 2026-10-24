@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>Superconductors and the Meissner Effect</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,6 +20,9 @@
 .stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
 .scene { position: relative; flex: 1 1 auto; min-height: 400px; }
 .scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+#can { z-index: 1; }
+.scene canvas.sc3 { z-index: 0; }
+.scene .dimseg { position: absolute; z-index: 2; left: 10px; top: 10px; }
 .plotbox { position: relative; flex: none; height: 230px; border-top: 1px solid var(--line); }
 .plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .plotbar { position: absolute; top: 6px; right: 8px; z-index: 2; }
@@ -54,6 +59,7 @@
   <main class="bench">
     <div class="stage" id="stage">
       <div class="scene" id="scene">
+        <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <canvas id="can" tabindex="0" role="img" aria-label="A metal sphere in a cryostat inside a solenoid, with the magnetic field lines around and through it, a Hall probe at its equator and a magnetometer."></canvas>
       </div>
       <div class="setup-card" id="setupCard" role="group" aria-label="The sample, its temperature and the applied field">
@@ -214,7 +220,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function draw() {
     if (!T || !W) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (use3()) { ctx.clearRect(0, 0, W, H); draw3(); return; }
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const p = proj(), st = now(), phone = W < 560;
     const cx = phone ? W * 0.42 : Math.min(W * 0.36, W - 330 * p), cy = H * 0.5, R = Math.min(H * 0.13, W * 0.1), Zr = (H * 0.5 - 14) / R, Xr = Math.min(cx, W - cx) / R;
     const X = (x) => cx + x * R, Y = (z) => cy - z * R;
@@ -257,6 +265,95 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lcd(Math.max(6, lx), Math.max(10, cy - 3.0 * R), lw, lh, `${f(mm, 3)}`, 'magnetometer, mA·m²');
     lcd(Math.max(6, lx), cy + 0.6 * R, lw, lh, `${f(st.Beq, 2)}`, 'Hall probe at equator, mT');
     lcd(Math.max(6, lx), Math.min(H - lh - 26 * p, cy + 2.2 * R), lw, lh, `${f(S.T, 2)}`, 'thermometer, K');
+  }
+
+
+  // ---------- the cryostat in 3D (three.js through lib/vd3.js and lib/vd3kit.js); Flat keeps the cut through the axis (or ?view=flat) ----------
+  /* Built in units of the sphere's radius R, so the field lines are the flat view's exact contours of the stream function. The field is
+     the same all round the axis, so the lines are drawn in the plane through the axis that faces the camera (it turns as you do),
+     with fainter copies at other angles round the axis. The solenoid, cryostat and coils are sized as in the flat view, not to scale
+     with any one apparatus. The meters read the same values as the flat view's. */
+  const G3 = { o: { th: -Math.PI / 2 - 0.25, ph: 1.22, zoom: 1 }, key: '' };
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d());
+  const KR = 0.04, AS = 3.0, ZS = 3.4, CR = 2.2, xm3 = -(AS + 2.4) * KR;   /* metres per R in the picture; solenoid radius, its half length and the cryostat's radius (in R) */
+  function init3D() {
+    const S3 = VD3K.stage($('scene'), { before: can, shadow: 0.35, fov: 30, fogAt: [1.8, 3.4] }); if (!S3) return false;
+    S3.el.classList.add('sc3');
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
+    sc.add(VD3K.bench(S3, { w: 2.4, d: 1.6, y: 0.3 }), VD3K.backdrop(S3, { r: 0.9, h: 0.9, y: -0.3 }));
+    const steel = M({ roughness: 0.35, metalness: 0.6 }, ['#b9c0c8', '#7d8690']), dark3 = M({ roughness: 0.5, metalness: 0.2 }, ['#5d6774', '#4b5460']);
+    const app = new THREE.Group(); app.scale.setScalar(KR); app.position.z = (ZS + 0.5) * KR; sc.add(app);
+    /* the solenoid: a helix of copper wire on two end flanges */
+    const turn = new THREE.Group(); app.add(turn);   /* turns with the camera: the plane of the field lines, the Hall probe in it, and the cut away coil */
+    const coilM = M({ roughness: 0.35, metalness: 0.7 }, ['#c87a4f', '#d58e63']), turns = 18;
+    /* the half of each turn behind the field lines' plane (the front half is cut away so the inside shows) */
+    for (let i = 0; i < turns; i++) { const z = -ZS + 2 * ZS * (i + 0.5) / turns, ar = mesh(new THREE.TorusGeometry(AS, 0.075, 6, 40, Math.PI), coilM, true); ar.position.z = z; turn.add(ar); }
+    for (const z of [-ZS - 0.12, ZS + 0.12]) { const fl = mesh(new THREE.RingGeometry(AS - 0.25, AS + 0.35, 48, 1, 0, Math.PI), M({ roughness: 0.6, metalness: 0.1, side: THREE.DoubleSide }, ['#3b4350', '#2b323c'])); fl.position.z = z; turn.add(fl); }
+    for (let i = 0; i < 3; i++) { const a = i * 2.094 + 0.5; app.add(VD3K.rod([(AS + 0.25) * Math.cos(a), (AS + 0.25) * Math.sin(a), -ZS - 0.5], [(AS + 0.25) * Math.cos(a), (AS + 0.25) * Math.sin(a), ZS + 0.12], 0.06, steel)); }
+    /* the cryostat: a glass dewar with a steel top plate and its neck */
+    const dew = VD3K.glass(S3, { r: CR, len: 2 * ZS - 0.6, axis: 'z', tint: '#dbe9f5', opacity: 0.16 }); dew.position.z = -0.2; app.add(dew);
+    const top = mesh(new THREE.CylinderGeometry(CR + 0.25, CR + 0.25, 0.18, 40), steel, true); top.rotation.x = Math.PI / 2; top.position.z = ZS + 0.25; app.add(top);
+    app.add(VD3K.rod([0, 0, ZS + 0.3], [0, 0, ZS + 1.4], 0.35, steel));
+    /* the sample on its rod, the Hall probe at its equator and the magnetometer's pickup coils */
+    app.add(VD3K.rod([0, 0, 1], [0, 0, ZS + 0.25], 0.08, M({ roughness: 0.6 }, ['#8c6b4a', '#7a5e42'])));
+    const sphM = new THREE.MeshStandardMaterial({ roughness: 0.25, metalness: 0.35, transparent: true, opacity: 0.7, depthWrite: false });
+    const sph = mesh(new THREE.SphereGeometry(1, 48, 32), sphM, true); sph.renderOrder = 3; app.add(sph);
+    const pickM = M({ roughness: 0.4, metalness: 0.6 }, ['#8a6f55', '#a3876b']);
+    for (const z of [1.35, -1.35]) { const c = mesh(new THREE.TorusGeometry(1.25, 0.06, 8, 48), pickM, true); c.position.z = z; app.add(c); }
+    turn.add(VD3K.box(0.14, 0.1, 0.06, M({ roughness: 0.5 }, ['#20262e', '#20262e']), 1.1, 0, -0.03), VD3K.rod([1.18, 0, 0], [1.9, 0, 0], 0.025, steel), VD3K.rod([1.9, 0, 0], [1.9, 0, ZS + 0.25], 0.025, steel));
+    const lineM = new THREE.MeshStandardMaterial({ roughness: 0.6, metalness: 0 }), ghostM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.28 });
+    const lines = new THREE.Group(); turn.add(lines);
+    /* the three meters on the bench in front, with their leads to the top plate */
+    const xm = xm3, zTop = (2 * ZS + 0.85) * KR;
+    const mk = (label, sub, y) => { const m = VD3K.meter(S3, { w: 0.1, h: 0.06, label, sub }); m.rotation.z = -0.5; m.position.set(xm - 0.03 * (y + 0.1) / 0.13, y, 0); sc.add(m);
+      sc.add(VD3K.cable([xm + 0.02, y + 0.02, 0.03], [-(CR + 0.1) * KR, 0.0, zTop], { via: [[xm + 0.06, y * 0.4, 0.01], [-(AS + 0.9) * KR, 0.02, 0.02], [-(AS + 0.9) * KR, 0.02, zTop - 0.02]], color: 0x2b323c, rad: 0.0018 })); return m; };
+    const meters = { m: mk('MAGNETOMETER', 'mA·m²', -0.1), b: mk('HALL PROBE', 'mT', 0.03), t: mk('THERMOMETER', 'K', 0.16) };
+    g3 = { S3, app, sphM, turn, lines, lineM, ghostM, meters };
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.5, phMax: 1.5, zMin: 0.6, zMax: 3 });
+    can.style.touchAction = ''; can.style.cursor = '';
+    return true;
+  }
+  /* join the contour segments into lines, keeping the part inside the solenoid */
+  function chains(segs) {
+    const k = (q) => Math.round(q[0] * 1e4) + ',' + Math.round(q[1] * 1e4), ends = new Map(), used = new Uint8Array(segs.length), out = [];
+    segs.forEach((sg, i) => { for (const q of sg) { const kk = k(q); if (!ends.has(kk)) ends.set(kk, []); ends.get(kk).push(i); } });
+    const next = (q, i) => (ends.get(k(q)) || []).find((j) => j !== i && !used[j]);
+    for (let i = 0; i < segs.length; i++) { if (used[i]) continue; used[i] = 1; let line = [segs[i][0], segs[i][1]];
+      for (let dir = 0; dir < 2; dir++) { let cur = i, q = line[line.length - 1];
+        for (;;) { const j = next(q, cur); if (j == null) break; used[j] = 1; const sg = segs[j], o = k(sg[0]) === k(q) ? sg[1] : sg[0]; line.push(o); q = o; cur = j; }
+        line.reverse(); }
+      if (line.length > 3) out.push(line); }
+    return out;
+  }
+  function draw3() {
+    const g = g3, S3 = g.S3, p = proj(), st = now(), narrow = W < 560, wv = narrow ? W : W - 300 * p;
+    S3.size(W, H); S3.cam.setViewOffset(W, H, (W - wv) / 2, 0, W, H);
+    S3.place(G3.o, [-0.045, 0, (ZS + 0.5) * KR], 0.85 * Math.max(1, 1.2 / (wv / Math.max(1, H))));
+    g.turn.rotation.z = G3.o.th + Math.PI / 2;
+    const col = st.phase === 'normal' ? T.metal : st.phase === 'intermediate' ? T.onset : T.sc;
+    g.sphM.color.set(col); g.sphM.emissive = g.sphM.emissive || new THREE.Color(); g.sphM.emissive.set(col).multiplyScalar(st.phase === 'normal' ? 0.15 : 0.25);
+    const key = [S.B, st.Bin, st.mu0M].join();
+    if (g.key !== key) { g.key = key;
+      for (const m of g.lines.children.slice()) { m.geometry.dispose(); g.lines.remove(m); }
+      const levels = [], step = 0.42; for (let k = 1; k <= 30; k++) levels.push(20 * (k * step) ** 2 / 2);
+      const lim = AS - 0.12, segs = contours(st, -lim, lim, -ZS, ZS, 140, 140, levels);
+      g.lineM.color.set(T.field); g.lineM.emissive = new THREE.Color(T.field).multiplyScalar(0.35); g.ghostM.color.set(T.field);
+      for (const c of chains(segs)) { const pts = c.filter((_, i) => i % 2 === 0 || i === c.length - 1).map((q) => new THREE.Vector3(q[0], 0, q[1]));
+        if (pts.length < 2) continue; g.lines.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), Math.min(240, pts.length * 2), 0.045, 5, false), g.lineM)); }
+      const pos = []; for (let a = 1; a < 6; a++) { const ph = a * Math.PI / 6, c = Math.cos(ph), sn = Math.sin(ph);
+        for (const [u, v] of segs) pos.push(u[0] * c, u[0] * sn, u[1], v[0] * c, v[0] * sn, v[1]); }
+      const gg = new THREE.BufferGeometry(); gg.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.lines.add(new THREE.LineSegments(gg, g.ghostM)); }
+    g.meters.m.set(f(st.moment * 1e3, 3)); g.meters.b.set(f(st.Beq, 2)); g.meters.t.set(f(S.T, 2));
+    S3.render();
+    const A = (x, y, z) => S3.project([x * KR, y * KR, z * KR + (ZS + 0.5) * KR]), ca = Math.cos(g.turn.rotation.z), sa = Math.sin(g.turn.rotation.z);
+    const lab = (txt, q, o) => { o = Object.assign({ a: 'center', s: 10.5 * p, c: T.ink }, o || {}); ctx.save(); ctx.font = `${o.w || 400} ${o.s}px ${T.ui}`; ctx.textAlign = o.a; ctx.textBaseline = 'middle';
+      ctx.lineJoin = 'round'; ctx.lineWidth = 3.5 * p; ctx.strokeStyle = T.surface; ctx.globalAlpha = 0.75; ctx.strokeText(txt, q[0], q[1]); ctx.globalAlpha = 1; ctx.fillStyle = o.c; ctx.fillText(txt, q[0], q[1]); ctx.restore(); };
+    lab(S.m === 'mystery' ? 'mystery metal' : METALS[S.m].name.split(' (')[0].toLowerCase(), A(0, 0, -1.25), { w: 700 });
+    lab(`B = ${f(S.B, 2)} mT`, A(-(AS - 0.6) * ca, -(AS - 0.6) * sa, ZS - 0.4), { w: 700 });
+    const ym = { m: -0.1, b: 0.03, t: 0.16 }, mlab = { m: 'magnetometer, mA·m²', b: 'Hall probe at equator, mT', t: 'thermometer, K' };
+    if (!narrow) for (const k in ym) { const y = ym[k], q = S3.project([xm3 - 0.03 * (y + 0.1) / 0.13, y, 0.03]), q2 = S3.project([xm3 - 0.03 * (y + 0.1) / 0.13 + 0.055, y, 0.03]); lab(mlab[k], [q2[0] + 4 * p, q[1]], { c: T.muted, s: 10 * p, a: 'left' }); }
+    if (!narrow) { lab('Hall probe', A(1.9 * ca, 1.9 * sa, -0.45)); lab('pickup coil', A(-1.25 * ca, -1.25 * sa, 1.6), { c: T.muted }); lab('cryostat', A(0, 0, ZS + 1.65), { c: T.muted }); lab('solenoid', A(AS * ca, AS * sa, -ZS - 0.4), { c: T.muted }); }
   }
 
   /* ---------- the graph ---------- */
@@ -369,7 +466,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   document.addEventListener('click', (e) => { if (e.target.closest('.vd-rec, .vd-clear, .vd-del')) setTimeout(drawPlot, 0); });
 
-  $('about').textContent = 'Model: an ideal type I superconductor, a sphere 10.00 mm across in the uniform field of a long solenoid. Critical temperatures and fields are from the textbook\'s Table 9.5 (to the two or three figures it gives), with Bc(T) = Bc(0)[1 − (T/Tc)²], its Equation 9.39. Below Bc the sphere is in equilibrium, so the state depends only on T and B, not on the order you change them; real samples show some hysteresis and supercooling. Because the field crowds around a sphere, the field at its equator is 1.5 times the applied field, so the field starts to get in at 2/3 of Bc (the intermediate state, drawn here as a uniform average field inside; really it is a pattern of normal and superconducting layers) and the sphere is all normal at Bc. The magnetometer reads the sphere\'s magnetic moment, m = (4π/3)R³M, and the Hall probe the field just outside the equator. Field lines are drawn at equal steps of flux, so their crowding shows the field, and are exact for this model. The perfect conductor is imaginary: a metal whose only change below Tc is zero resistance, so the flux inside it can never change. A normal metal\'s own magnetism (about 10⁻⁵ of the applied field) is left out.';
+  $('about').textContent = 'Model: an ideal type I superconductor, a sphere 10.00 mm across in the uniform field of a long solenoid. Critical temperatures and fields are from the textbook\'s Table 9.5 (to the two or three figures it gives), with Bc(T) = Bc(0)[1 − (T/Tc)²], its Equation 9.39. Below Bc the sphere is in equilibrium, so the state depends only on T and B, not on the order you change them; real samples show some hysteresis and supercooling. Because the field crowds around a sphere, the field at its equator is 1.5 times the applied field, so the field starts to get in at 2/3 of Bc (the intermediate state, drawn here as a uniform average field inside; really it is a pattern of normal and superconducting layers) and the sphere is all normal at Bc. The magnetometer reads the sphere\'s magnetic moment, m = (4π/3)R³M, and the Hall probe the field just outside the equator. Field lines are drawn at equal steps of flux, so their crowding shows the field, and are exact for this model. The perfect conductor is imaginary: a metal whose only change below Tc is zero resistance, so the flux inside it can never change. A normal metal\'s own magnetism (about 10⁻⁵ of the applied field) is left out. The 3D view draws the same field lines in the plane through the axis that faces you (the field is the same all round the axis), with fainter copies at other angles; the front of the solenoid is cut away so the inside shows, and the solenoid, cryostat and coils are not to scale with any one apparatus.';
 
   /* ---------- size, theme, start ---------- */
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(), q = pl.parentElement.getBoundingClientRect();
@@ -382,7 +479,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'meissner');
   new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe(pl.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
-  window.__sc = { S, now, setT, setB, applyPreset, redraw, sync, METALS, sample, bc };
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); draw(); }, status: () => {} });
+  window.__sc = { S, now, setT, setB, applyPreset, redraw, sync, METALS, sample, bc, G3 };
 })();
 </script>
 </body>
