@@ -1160,3 +1160,9 @@ Steve asked for the visual pass on the Race view, which was built after the pass
 - Kepler orbits and tides stay flat: their motion lies in one plane, so 3D would add nothing to the physics.
 - CORE byte identical everywhere; Node tests pass for all 23 (test_gauss_law_browser already failed before this pass); vdcheck differs only by the look ids, the two new switches, styles, tokens and screenshots.
 - For the handouts: the currents and fields and polarization notes describe the 3D view. No control renamed or moved.
+
+## Claude, 2026-10-24: visual pass on the existing 3D views (EM waves)
+
+- Steve asked for the remaining 3D views, then a visual pass on them. Magnetic force (oblique 3D view of the helix in a cut solenoid), Faraday (the generator drawn in 3D, drag to turn) and EM waves (three.js) already had 3D views, so no new builds were needed.
+- **EM waves:** the arrows are now lit solids instead of flat colour, a faint tiled floor under the wave fades into fog (only the floor is fogged, so the fields keep their full colour), and the axis of travel is a soft gold beam. Physics, controls and the 2D fallback are unchanged; vdcheck passes.
+- Magnetic force and the Faraday generator were already drawn at this standard (copper winding, lit magnets, bench), so they keep their look link from the Physics II pass and nothing else.

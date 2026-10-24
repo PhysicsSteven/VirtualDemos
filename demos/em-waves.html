@@ -466,7 +466,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const stemS = new THREE.CylinderGeometry(0.06, 0.06, 1, 10); stemS.translate(0, 0.5, 0);
     const headS = new THREE.ConeGeometry(0.11, 0.26, 14); headS.translate(0, -0.13, 0);
     function arrows(n, sg, hg, hl) {
-      const mat = new THREE.MeshBasicMaterial();
+      const mat = new THREE.MeshStandardMaterial({ roughness: 0.45, metalness: 0.1 });   /* lit, so the arrows read as solid */
       const st = new THREE.InstancedMesh(sg, mat, n), hd = new THREE.InstancedMesh(hg, mat, n);
       for (const m of [st, hd]) { m.frustumCulled = false; m.instanceMatrix.setUsage(THREE.DynamicDrawUsage); scene.add(m); }
       return { st, hd, mat, n, hl };
@@ -485,14 +485,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     const segs = (arr, opts) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(arr, 3)); const l = new THREE.LineSegments(g, new THREE.LineBasicMaterial(opts || {})); scene.add(l); return l; };
     const A = WS.AMP, LZ = WS.LZ, LW = WS.LW, zb = -A - 0.35;
+    /* light for the arrows, and a faint floor under the wave that fades into fog: it gives the scene depth and shows which way is down */
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x8a8a8a, 0.85), sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(-3, -6, 9); scene.add(hemi, sun);
+    const floorCv = document.createElement('canvas'); floorCv.width = floorCv.height = 128;
+    const floorTex = new THREE.CanvasTexture(floorCv); floorTex.wrapS = floorTex.wrapT = THREE.RepeatWrapping; floorTex.repeat.set(16, 8); floorTex.anisotropy = renderer.capabilities.getMaxAnisotropy();
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(LZ + 18, 18), new THREE.MeshBasicMaterial({ map: floorTex, transparent: true, opacity: 0.9, depthWrite: false }));
+    floor.position.set(LZ / 2, 0, BOX.z0); scene.add(floor);
+    const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, LZ + 1.25, 12).rotateZ(Math.PI / 2), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.35 }));
+    beam.position.set((BOX.x0 + LZ + 0.75) / 2, 0, 0); scene.add(beam);
     const axes = segs([BOX.x0, 0, 0, LZ + 0.75, 0, 0, 0, 0, -A * 1.1, 0, 0, A * 1.1, 0, -A * 1.1, 0, 0, A * 1.1, 0]);
     const axHead = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.3, 14), new THREE.MeshBasicMaterial());
     axHead.position.set(LZ + 0.75, 0, 0); axHead.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(1, 0, 0)); scene.add(axHead);
     const brk = segs([0.5 * LW, 0, zb, 1.5 * LW, 0, zb, 0.5 * LW, 0, zb - 0.14, 0.5 * LW, 0, zb + 0.14, 1.5 * LW, 0, zb - 0.14, 1.5 * LW, 0, zb + 0.14,
       0.5 * LW, 0, zb + 0.14, 0.5 * LW, 0, 0, 1.5 * LW, 0, zb + 0.14, 1.5 * LW, 0, 0], { transparent: true, opacity: 0.6 });
-    Object.assign(G, { ok: true, renderer, el, scene, cam, axes, axHead, brk,
+    Object.assign(G, { ok: true, renderer, el, scene, cam, axes, axHead, brk, hemi, sun, floorCv, floorTex, beam,
       eA: arrows(WS.NA, stemGeo, headGeo, 0.24), bA: arrows(WS.NA, stemGeo, headGeo, 0.24), sA: arrows(WS.NSA, stemS, headS, 0.26),
       eR: ribbon(WS.NF), bR: ribbon(WS.NF), eC: curve(WS.NF), bC: curve(WS.NF) });
+    scene.traverse((o) => { if (o.material && o !== floor) o.material.fog = false; });   /* only the floor fades into the fog */
     G.tmp = { m: new THREE.Matrix4(), q: new THREE.Quaternion(), up: new THREE.Vector3(0, 1, 0), d: new THREE.Vector3(), p: new THREE.Vector3(), s: new THREE.Vector3(), v: new THREE.Vector3() };
     renderer.setPixelRatio(dpr);
     placeGL(); theme3D(); bindOrbit();
@@ -506,6 +515,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function theme3D() {
     if (!G.ok) return;
     G.renderer.setClearColor(T.canvas);
+    G.scene.fog = new THREE.Fog(new THREE.Color(T.canvas), 12, 40);
+    { const c = G.floorCv.getContext('2d'); c.fillStyle = T.canvas; c.fillRect(0, 0, 128, 128); c.fillStyle = T.gridStrong || T.muted; c.fillRect(0, 0, 128, 2); c.fillRect(0, 0, 2, 128); G.floorTex.needsUpdate = true; }
+    G.beam.material.color.set(T.equi);
+    const dk = T.dark != null ? T.dark : /^#([0-3])/i.test(T.canvas); G.hemi.intensity = dk ? 1.1 : 0.85; G.sun.intensity = dk ? 0.8 : 0.6;
     G.eA.mat.color.set(T.pos); G.bA.mat.color.set(T.bf); G.sA.mat.color.set(T.equi);
     G.eR.material.color.set(T.pos); G.bR.material.color.set(T.bf);
     G.eC.material.color.set(T.pos); G.bC.material.color.set(T.bf);
