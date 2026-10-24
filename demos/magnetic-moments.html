@@ -281,8 +281,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     backdrop();
     /* left: the Bohr orbit seen from above at a slant, as a current loop */
     const cx = W * 0.27, cy = Hh * 0.52, R = Math.min(W * 0.2, Hh * 0.34), ry = R * 0.38;
-    lbl('Bohr orbit as a current loop', cx, 22 * p, { a: 'center', s: 12 * p, w: 700, c: T.ink });
-    lbl(`n = ${o.n}: radius ${f(b.r * 1e9, 4)} nm (drawn the same size for every n)`, cx, 40 * p, { a: 'center', s: 10.5 * p });
+    /* at phone width the two pictures are too narrow for the long labels: shorter ones, and the formulas stacked across the whole width */
+    const nar = W < 560 * p;
+    lbl(nar ? 'Bohr orbit' : 'Bohr orbit as a current loop', cx, 22 * p, { a: 'center', s: 12 * p, w: 700, c: T.ink });
+    lbl(nar ? `n = ${o.n}: r = ${f(b.r * 1e9, 4)} nm` : `n = ${o.n}: radius ${f(b.r * 1e9, 4)} nm (drawn the same size for every n)`, cx, 40 * p, { a: 'center', s: 10.5 * p });
     ctx.save(); ctx.strokeStyle = T.orbit; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.ellipse(cx, cy, R, ry, 0, 0, 7); ctx.stroke(); ctx.restore();
     /* nucleus */
     if (VG) VG.ball(ctx, cx, cy, 7 * p, '#c0432a', { glint: 1 }); else { ctx.fillStyle = T.mom; ctx.beginPath(); ctx.arc(cx, cy, 7 * p, 0, 7); ctx.fill(); }
@@ -291,21 +293,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (VG) VG.ball(ctx, ex, ey, 5.5 * p, '#2b60b5', { glint: 1 }); else { ctx.fillStyle = T.orbit; ctx.beginPath(); ctx.arc(ex, ey, 5.5 * p, 0, 7); ctx.fill(); }
     lbl('e⁻', ex + 9 * p, ey - 9 * p, { s: 11 * p, c: T.orbit });
     for (const a0 of [0.6, 2.2, 3.8, 5.3]) { const x1 = cx + R * Math.cos(a0), y1 = cy - ry * Math.sin(a0), x2 = cx + R * Math.cos(a0 - 0.25), y2 = cy - ry * Math.sin(a0 - 0.25); arrow(ctx, x1, y1, x2, y2, T.muted, 1.5 * p); }
-    lbl('current I (opposite to the electron)', cx + R * 0.72, cy + ry + 16 * p, { a: 'center', s: 10 * p });
+    lbl(nar ? 'current I' : 'current I (opposite to the electron)', cx + R * 0.72, cy + ry + 16 * p, { a: 'center', s: 10 * p });
     /* L up (electron counterclockwise seen from above), μ down */
     const Lh = Math.min(Hh * 0.3, 120 * p);
     arrow(ctx, cx, cy, cx, cy - Lh, T.orbit, 3 * p); lbl('L', cx + 8 * p, cy - Lh + 6 * p, { s: 13 * p, w: 700, c: T.orbit });
     arrow(ctx, cx, cy, cx, cy + Lh * (b.mu / MU_B / o.n) * 0.8, T.mom, 3 * p); lbl('μ', cx + 8 * p, cy + Lh * 0.8 - 4 * p, { s: 13 * p, w: 700, c: T.mom });
-    if (!S.blind) { const yy = Hh - 52 * p; lbl(`I = e/T = ${sci(b.I, 4)} A · A = πr² = ${sci(b.A, 4)} m²`, cx, yy, { a: 'center', s: 10.5 * p, m: true, c: T.ink });
+    if (!S.blind && nar) { const yy = Hh - 58 * p, o2 = { a: 'center', s: 10 * p, m: true, c: T.ink };
+      lbl(`I = e/T = ${sci(b.I, 4)} A · A = ${sci(b.A, 4)} m²`, W / 2, yy, o2);
+      lbl(`μ = IA = ${sci(b.mu, 4)} A·m² = ${f(b.mu / MU_B, 4)} μ_B`, W / 2, yy + 16 * p, o2);
+      lbl((o.l > 0 ? `θ = ${f(q.theta * 180 / Math.PI, 2)}° · ` : '') + `U = m_l μ_B B = ${f(q.U / E * 1000, 4)} meV`, W / 2, yy + 32 * p, o2); }
+    else if (!S.blind) { const yy = Hh - 52 * p; lbl(`I = e/T = ${sci(b.I, 4)} A · A = πr² = ${sci(b.A, 4)} m²`, cx, yy, { a: 'center', s: 10.5 * p, m: true, c: T.ink });
       lbl(`μ = IA = ${sci(b.mu, 4)} A·m² = ${f(b.mu / MU_B, 4)} μ_B`, cx, yy + 17 * p, { a: 'center', s: 10.5 * p, m: true, c: T.ink }); }
     /* right: vector model, L on its cone about B */
     const vx = W * 0.72, vy = Hh * 0.5, sc = Math.min(W * 0.06, Hh * 0.075);
-    lbl('Quantum picture: L on a cone about B', vx, 22 * p, { a: 'center', s: 12 * p, w: 700, c: T.ink });
-    lbl(`l = ${o.l}, m_l = ${o.m}: |L| = √(l(l+1)) ħ = ${f(Math.sqrt(o.l * (o.l + 1)), 4)} ħ, L_z = ${o.m} ħ`, vx, 40 * p, { a: 'center', s: 10.5 * p });
+    lbl(nar ? 'Quantum picture' : 'Quantum picture: L on a cone about B', vx, 22 * p, { a: 'center', s: 12 * p, w: 700, c: T.ink });
+    lbl(nar ? `l = ${o.l}, m_l = ${o.m}: L_z = ${o.m} ħ` : `l = ${o.l}, m_l = ${o.m}: |L| = √(l(l+1)) ħ = ${f(Math.sqrt(o.l * (o.l + 1)), 4)} ħ, L_z = ${o.m} ħ`, vx, 40 * p, { a: 'center', s: 10.5 * p });
     /* z axis and field */
     ctx.save(); ctx.setLineDash([4, 4]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(vx, vy + sc * 3.3); ctx.lineTo(vx, vy - sc * 3.4); ctx.stroke(); ctx.restore();
     if (o.B > 0) { for (const dx of [-2.6, 2.6]) arrow(ctx, vx + dx * sc, vy + sc * 2.6, vx + dx * sc, vy - sc * 2.6, T.field, 2 * p); lbl(`B = ${f(o.B, 1)} T`, vx + 2.6 * sc + 6 * p, vy - sc * 2.6, { s: 11 * p, c: T.field }); }
-    else lbl('no field: z is any chosen axis', vx + 1.4 * sc, vy - sc * 3.2, { s: 10 * p });
+    else lbl(nar ? 'no field' : 'no field: z is any chosen axis', vx + 1.4 * sc, vy - sc * 3.2, { s: 10 * p });
     /* allowed m levels as horizontal ticks at L_z = mħ */
     for (let m = -o.l; m <= o.l; m++) { const y = vy - m * sc; ctx.strokeStyle = m === o.m ? T.orbit : T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(vx - 6, y); ctx.lineTo(vx + 6, y); ctx.stroke(); lbl(`${m}ħ`, vx - 10 * p, y, { a: 'right', s: 9.5 * p, m: true }); }
     if (o.l > 0) {
@@ -315,9 +321,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const a = o.prec, tx = vx + rho * sc * Math.cos(a), ty = vy - zT * sc + rho * sc * tilt * Math.sin(a);
       arrow(ctx, vx, vy, tx, ty, T.orbit, 3 * p); lbl('L', tx + 8 * p, ty, { s: 13 * p, w: 700, c: T.orbit });
       const mx = vx - (tx - vx) * 0.7, my = vy - (ty - vy) * 0.7; arrow(ctx, vx, vy, mx, my, T.mom, 2.4 * p); lbl('μ', mx - 14 * p, my, { s: 13 * p, w: 700, c: T.mom });
-      if (!S.blind) lbl(`angle to z: θ = ${f(q.theta * 180 / Math.PI, 2)}°`, vx, Hh - 48 * p, { a: 'center', s: 10.5 * p, m: true, c: T.ink });
-    } else lbl('l = 0: no orbital angular momentum, no orbital moment', vx, vy + sc * 1.2, { a: 'center', s: 11 * p });
-    if (!S.blind) lbl(`U = m_l μ_B B = ${f(q.U / E * 1000, 4)} meV`, vx, Hh - 31 * p, { a: 'center', s: 10.5 * p, m: true, c: T.ink });
+      if (!S.blind && !nar) lbl(`angle to z: θ = ${f(q.theta * 180 / Math.PI, 2)}°`, vx, Hh - 48 * p, { a: 'center', s: 10.5 * p, m: true, c: T.ink });
+    } else lbl(nar ? 'l = 0: no moment' : 'l = 0: no orbital angular momentum, no orbital moment', vx, vy + sc * 1.2, { a: 'center', s: 11 * p });
+    if (!S.blind && !nar) lbl(`U = m_l μ_B B = ${f(q.U / E * 1000, 4)} meV`, vx, Hh - 31 * p, { a: 'center', s: 10.5 * p, m: true, c: T.ink });
   }
 
   // ---------- Stern–Gerlach view ----------

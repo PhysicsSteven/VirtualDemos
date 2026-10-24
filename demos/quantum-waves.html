@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage toggles-label toggles-input" lang="en">
+<html data-vd-off="root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow readout-dd-ok check check-input status plotbox-canvas wide-proj-bench wide-proj-stage toggles-label toggles-input" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -181,6 +181,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/uncertainty-principle.html" target="uncertainty-principle-worksheet">Worksheet 1: The Uncertainty Principle</a></li><li><a href="../curriculum/labs/students/energy-levels.html" target="energy-levels-worksheet">Worksheet 2: Energy Levels in a Box and a Spring</a></li><li><a href="../curriculum/labs/students/quantum-tunneling.html" target="quantum-tunneling-worksheet">Worksheet 3: Quantum Tunneling</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -261,6 +262,27 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </details>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="quantum-tunneling" data-title="Quantum Wave Packets" data-demo="quantum-waves">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <h2>Measure position</h2>
         <div class="row2">
@@ -705,7 +727,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function cohSigma() { return Math.sqrt(KIN / S.params.h); }   // √(ħ/2mω)
 
   function afterPrepare() {
-    t = 0; absL = 0; absR = 0; measured = false; acc = 0;
+    t = 0; absL = 0; absR = 0; measured = false; acc = 0; touched = false;
     prepared = { re: Float64Array.from(sim.re), im: Float64Array.from(sim.im) };
     lastObs = observe(sim, split());
     let mx = 0; for (let i = 0; i < sim.N; i++) mx = Math.max(mx, sim.re[i] * sim.re[i] + sim.im[i] * sim.im[i]);
@@ -826,8 +848,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     } else { stepSim(sim, n); t += n * sim.dt; }
     const el = performance.now() - t0;
     if (n0 >= 20 && el > 0) nsPerPt = 0.8 * nsPerPt + 0.2 * Math.max(2, el * 1e6 / (n0 * sim.N));
+    if (!touched && cfg().kind === 'scatter' && PIECES[S.preset] && nearZone() > 0.02) touched = true;
   }
   let nsPerPt = 12;
+  /* has the packet reached the step or barrier yet? R and T mean nothing before it has */
+  let touched = false;
+  function nearZone() { let near = 0; const zone = zoneFor(); for (let i = 0; i < sim.N; i++) if (sim.x[i] > zone[0] && sim.x[i] < zone[1]) near += sim.re[i] * sim.re[i] + sim.im[i] * sim.im[i]; return near * sim.dx; }
   function normSides() {
     let n = 0, wl = 0, wr = 0; const re = sim.re, im = sim.im, W = sim.W, x = sim.x, xs = split();
     for (let i = 0; i < sim.N; i++) {
@@ -1350,18 +1376,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const L = o.left + absL, Rr = o.right + absR;
       const from = S.packet.x0 < xs ? 1 : -1;
       const Rv = from > 0 ? L : Rr, Tv = from > 0 ? Rr : L;
-      if (measured) { $('rR').textContent = '—'; $('rT').textContent = '—'; }
+      /* before the packet reaches the barrier all of it is on the near side, which is not yet a reflection */
+      if (measured || !touched) { $('rR').textContent = '—'; $('rT').textContent = '—'; }
       else { $('rR').textContent = pct(Rv); $('rT').textContent = pct(Tv); }
       $('rTpw').textContent = Tpw === null ? '—' : pct(Tpw);
       $('rTavg').textContent = Tavg === null ? '—' : pct(Tavg);
       // is the packet still near the barrier?
-      let near = 0; const zone = zoneFor();
-      for (let i = 0; i < sim.N; i++) if (sim.x[i] > zone[0] && sim.x[i] < zone[1]) near += sim.re[i] * sim.re[i] + sim.im[i] * sim.im[i];
-      near *= sim.dx;
+      const near = nearZone();
       let status;
       if (measured) status = 'A position measurement interrupted the scattering. Launch the packet again to measure R and T.';
       else if (t < 1e-9) status = 'Press Play. R and T count all the probability on each side of the ' + (S.preset === 'step' ? 'step' : 'barrier') + ', including what the edges have absorbed.';
-      else if (near > 0.003 || (Tv + Rv) < 0.5) status = 'The packet is still at the ' + (S.preset === 'step' ? 'step' : 'barrier') + '; R and T are still changing.';
+      else if (!touched) status = 'The packet has not reached the ' + (S.preset === 'step' ? 'step' : 'barrier') + ' yet.';
+      else if (near > Math.max(1e-5, 0.01 * Math.min(Tv, Rv)) || (Tv + Rv) < 0.5) status = 'The packet is still at the ' + (S.preset === 'step' ? 'step' : 'barrier') + '; R and T are still changing.';
       else status = `The packet has split. Simulated T = ${pct(Tv)}, against ${pct(Tavg)} predicted for this packet and ${pct(Tpw)} for a plane wave at E₀.`;
       $('scatStatus').textContent = status;
     }
@@ -1536,7 +1562,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('reset').addEventListener('click', () => {
     if (!prepared) return;
     sim.re.set(prepared.re); sim.im.set(prepared.im);
-    t = 0; absL = 0; absR = 0; measured = false; acc = 0; ticks = [];
+    t = 0; absL = 0; absR = 0; measured = false; acc = 0; ticks = []; touched = false;
     lastObs = observe(sim, split()); psiScale = psiBase; clearHist(); computeKView(); updateReadouts(true);
   });
   const playBtn = $('play');
@@ -1669,13 +1695,52 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (now - lastRead > 140) { updateReadouts(); lastRead = now; }
     requestAnimationFrame(loop);
   }
+  // ---------- readings (tools/readings_panel.py) ----------
+  window.vdVersion = 'quantum-waves@2026-10-24';
+  const SETUP_NAME = { free: 'Free particle', step: 'Step', barrier: 'Barrier', dbar: 'Two barriers', iwell: 'Square well, infinite walls', fwell: 'Square well, finite walls', ho: 'Oscillator', dwell: 'Double well' };
+  const wsFor = (name) => (name === 'free' ? 'uncertainty-principle' : cfg_kind(name) === 'well' ? 'energy-levels' : 'quantum-tunneling');
+  function cfg_kind(name) { return PRESETS[name].kind; }
+  const SHOWQ = { 'uncertainty-principle': [['t_fs', 't (fs)'], ['dx_nm', 'Δx (nm)'], ['dp_eV_c', 'Δp (eV/c)']],
+    'quantum-tunneling': [['setup', 'setup'], ['a_nm', 'a (nm)'], ['E0_eV', 'E₀ (eV)'], ['T', 'T']], 'energy-levels': [['setup', 'well'], ['n', 'n'], ['E_eV', 'E (eV)']] };
+  window.vdWorksheet = () => wsFor(S.preset);
+  window.vdShowCols = SHOWQ[wsFor(S.preset)];
+  const g6 = (v) => +(+v).toPrecision(6);
+  window.vdReadingRow = () => {
+    const ws = wsFor(S.preset), other = (window.vdRows ? window.vdRows() : []).find((r) => r.ws !== ws);
+    if (other) return 'These readings are for another worksheet (' + other.ws.replace(/-/g, ' ') + '): export them or clear them first.';
+    window.vdShowCols = SHOWQ[ws];
+    const p = S.params, pk = S.packet, o = observe(sim, split());
+    if (ws === 'energy-levels') {
+      const base = S.preset === 'ho' ? 0 : 1;
+      if (!eig.vals.length) return 'This well has no bound states with these settings.';
+      return eig.vals.map((E, j) => ({ ws, setup: SETUP_NAME[S.preset], L_nm: S.preset === 'iwell' || S.preset === 'fwell' ? p.w : '', V0_eV: S.preset === 'fwell' || S.preset === 'dwell' ? p.h : '',
+        hbar_omega_eV: S.preset === 'ho' ? p.h : '', minima_nm: S.preset === 'dwell' ? p.g : '', n: j + base, E_eV: g6(E) }));
+    }
+    if (!o.norm || o.norm < 1e-6) return 'The packet has left the view: launch it again.';
+    if (ws === 'uncertainty-principle') {
+      if (measured) return 'A position measurement changed the packet: launch it again.';
+      return { ws, setup: SETUP_NAME[S.preset], sigma_nm: pk.sigma, E0_eV: pk.E0, t_fs: +t.toFixed(3), x_nm: +o.x.toFixed(4), dx_nm: +o.dx.toFixed(4),
+        p_eV_c: +(HBARC * o.k).toFixed(2), dp_eV_c: +(HBARC * o.dk).toFixed(3), dxdp_hbar: +(o.dx * o.dk).toFixed(4), E_eV: +o.E.toFixed(4), dE_eV: +o.dE.toFixed(4) };
+    }
+    if (measured) return 'A position measurement interrupted the scattering: launch the packet again to measure R and T.';
+    if (t < 1e-9) return 'Press Play first, and record once the packet has split.';
+    const from = pk.x0 < split() ? 1 : -1, L = o.left + absL, Rr = o.right + absR, Rv = from > 0 ? L : Rr, Tv = from > 0 ? Rr : L;
+    if (!touched) return 'The packet has not reached the ' + (S.preset === 'step' ? 'step' : 'barrier') + ' yet: play on.';
+    /* still at the barrier: what is left there must be small beside both R and T, or it would count in one of them */
+    if (nearZone() > Math.max(1e-5, 0.01 * Math.min(Tv, Rv)) || Tv + Rv < 0.5) return 'The packet is still at the ' + (S.preset === 'step' ? 'step' : 'barrier') + ': wait until it has split.';
+    return { ws, setup: SETUP_NAME[S.preset], V0_eV: p.h, a_nm: S.preset === 'step' ? '' : p.w, gap_nm: S.preset === 'dbar' ? p.g : '', E0_eV: pk.E0, sigma_nm: pk.sigma,
+      t_fs: +t.toFixed(1), R: +Rv.toPrecision(4), T: +Tv.toPrecision(4), T_plane: Tpw == null ? '' : +Tpw.toPrecision(4), T_packet: Tavg == null ? '' : +Tavg.toPrecision(4) };
+  };
+  const vdSyncShow = () => { window.vdShowCols = SHOWQ[wsFor(S.preset)]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load')); };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', vdSyncShow);
+
   window.__qw = { get frameMs() { return frameMs; }, get t() { return t; }, get obs() { return lastObs; }, get sim() { return sim; },
-    get absorbed() { return [absL, absR]; }, get Tavg() { return Tavg; }, get Tpw() { return Tpw; }, get eig() { return eig.vals; }, advance, setRunning };
+    get absorbed() { return [absL, absR]; }, get Tavg() { return Tavg; }, get Tpw() { return Tpw; }, get eig() { return eig.vals; }, advance, setRunning, applyPreset, launch, get S() { return S; } };
 
   tokens();
   const ro = new ResizeObserver(resize);
   for (const k of ['e', 'w', 'k']) ro.observe(panes[k]);
-  applyPreset('barrier');
+  { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'barrier'); }
   setRunning(running);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);

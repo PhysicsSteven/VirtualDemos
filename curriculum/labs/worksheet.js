@@ -339,7 +339,8 @@
   });
   /* Vol. 3 ch. 7 and 8 (quantum mechanics, atomic structure), kept in its own list so the chapter threads don't collide */
   const MODERN_7_8 = ['orbital-magnetic-moment', 'stern-gerlach', 'zeeman-effect' /* Atoms in a Magnetic Field demo, one per view */,
-    'periodic-table', 'x-ray-spectra' /* Shells, the Periodic Table and X Rays demo, one per view */];
+    'periodic-table', 'x-ray-spectra' /* Shells, the Periodic Table and X Rays demo, one per view */,
+    'quantum-tunneling', 'energy-levels', 'uncertainty-principle' /* Quantum Wave Packets demo, by setup */];
   MODERN.push(...MODERN_7_8); ENABLED.push(...MODERN_7_8);
   Object.assign(FROM_DEMO, {
     /* Reading | n | l | m_l | Field B (T) | Current I (A) | Area A (m²) | Moment μ = IA (A·m²) | Bohr angular momentum L (J·s) | Energy shift U (meV) */
@@ -352,6 +353,12 @@
     'periodic-table': { demo: 'Shells, the Periodic Table and X Rays (Shells)', cols: ['row', 'element', 'Z', 'configuration', 'outer_n', 'outer_electrons', 'IE_eV', null] },
     /* Reading | Target | Z | Tube voltage V (kV) | Cursor wavelength λ (pm) | Cursor energy E (keV) | 1/V (1/kV) | √E (√keV) */
     'x-ray-spectra': { demo: 'Shells, the Periodic Table and X Rays (X ray tube)', cols: ['row', 'target', 'Z', 'V_kV', 'cursor_pm', 'cursor_keV', null, null] },
+    /* Quantum Wave Packets: Reading | Setup | Height V₀ (eV) | Width a (nm) | Packet energy E₀ (eV) | Reflected R | Transmitted T | ln T */
+    'quantum-tunneling': { demo: 'Quantum Wave Packets (scattering)', cols: ['row', 'setup', 'V0_eV', 'a_nm', 'E0_eV', 'R', 'T', null] },
+    /* Reading | Well | Width L (nm) | Level spacing ħω (eV) | Level n | Energy E_n (eV) | n²/L² (1/nm²) */
+    'energy-levels': { demo: 'Quantum Wave Packets (wells)', cols: ['row', (r) => (r.V0_eV !== '' ? `${r.setup}, V₀ = ${r.V0_eV} eV` : r.setup), 'L_nm', 'hbar_omega_eV', 'n', 'E_eV', null] },
+    /* Reading | Width σ (nm) | Time t (fs) | Spread Δx (nm) | Momentum spread Δp (eV/c) | Δx·Δp (ħ) | 1/σ (1/nm) | t² (fs²) | Δx² (nm²) */
+    'uncertainty-principle': { demo: 'Quantum Wave Packets (free particle)', cols: ['row', 'sigma_nm', 't_fs', 'dx_nm', 'dp_eV_c', 'dxdp_hbar', null, null, null] },
   });
   /* ==MODERN END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

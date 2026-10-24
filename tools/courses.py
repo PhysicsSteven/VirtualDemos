@@ -187,6 +187,7 @@ HANDOUT_TOPIC = {
     # modern, Vol. 3 ch. 7 and 8
     'orbital-magnetic-moment': 'The Orbital Magnetic Moment', 'stern-gerlach': 'The Stern–Gerlach Experiment', 'zeeman-effect': 'The Zeeman Effect',
     'periodic-table': 'Shells and the Periodic Table', 'x-ray-spectra': "X Ray Spectra and Moseley's Law",
+    'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle',
 }
 
 

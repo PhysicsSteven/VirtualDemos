@@ -8577,9 +8577,14 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
+      "note": "Volume 3 sections mapped 2026-10-24. Three interactive worksheets (2026-10-24): tunneling (barrier width, packet energy, step, two barriers), energy levels (box, oscillator, finite well, beat periods) and the uncertainty principle (minimum product at launch, free spreading).",
       "title": "Quantum Wave Packets",
-      "url": "demos/quantum-waves.html"
+      "url": "demos/quantum-waves.html",
+      "handouts": [
+        "uncertainty-principle",
+        "energy-levels",
+        "quantum-tunneling"
+      ]
     },
     {
       "demo": "radioactive-decay",
