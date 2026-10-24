@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>/* in scene setup controls fade away while the run plays and come back on pause or reset */
 #tray { transition: opacity 0.35s ease, visibility 0.35s; }
 #tray.away { opacity: 0; visibility: hidden; }
@@ -91,7 +92,7 @@ table.rows input:focus { border-color: var(--accent); }
     <div class="stage" id="stage">
       <div class="scene" id="scene">
       <canvas id="can" tabindex="0" role="img" aria-label="A turntable seen from above with whatever sits on it, and beside it, from the side, the hanging mass falling as the string unwinds. Space releases, R winds the string back up, the up arrow hangs a 5 g mass and the down arrow takes off the last mass."></canvas>
-      <div class="viewbar"><button type="button" class="spin attn" id="go">Release</button><button type="button" class="spin" id="wind">Wind it back up</button></div>
+      <div class="viewbar"><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div><button type="button" class="spin attn" id="go">Release</button><button type="button" class="spin" id="wind">Wind it back up</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
       </div>
       <div class="tray" id="tray" role="group" aria-labelledby="trayTitle">
@@ -157,6 +158,7 @@ table.rows input:focus { border-color: var(--accent); }
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">3D view: drag to turn it, scroll or pinch to zoom, double click to reset. Flat shows the older drawing; both show the same motion.</p>
           <p class="hint">Blind hides moments of inertia, the predicted motion, the energies and I from the fit, leaving the timer, the masses and the settings. The Mystery object always hides its I.</p>
           <p class="hint">Model: a rigid turntable on its axle, a massless string that does not slip on the spool, a massless frictionless pulley, and (optionally) a constant friction torque at the bearing. Turntable I₀ = 2.00 × 10⁻³ kg·m². Disk 1.00 kg, radius 10.0 cm; ring 1.00 kg, radii 9.0 and 10.0 cm; two 0.200 kg masses (small cylinders, 1.5 cm radius).</p>
         </details>
@@ -260,6 +262,15 @@ table.rows input:focus { border-color: var(--accent); }
     const cx = wide ? W * 0.32 : W * 0.4, cy = Hh * 0.45, R = Math.min(wide ? W * 0.26 : W * 0.3, Hh * 0.33), sc = R / 0.13;
     const sr = Math.max(4 * p, S.r * sc), px = wide ? W * 0.72 : W * 0.8, py = cy - sr, top = cy + 20 * p, bot = Hh - 40 * p;
     const my = top + (bot - top - 40 * p) * y / H;
+    if (G3.on && g3) {   // the 3D view draws the apparatus; this canvas keeps the labels and the timer on top
+      ctx.clearRect(0, 0, W, Hh); const Q = render3(y, th, Hh), hx = XP + RP, hz = ZS - RP - 0.06 - y;
+      ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = T.ink; const ml = Q([hx + 0.03, S.r, hz - 0.02]); ctx.fillText(`${Math.round(S.m * 1000)} g`, ml[0], ml[1]);
+      ctx.fillStyle = T.accent; ctx.font = `${10.5 * p}px ${T.ui}`; const dl = Q([hx, S.r + 0.035, ZS - RP - 0.06 - H / 2]); ctx.fillText('0.500 m drop', dl[0] + 14 * p, dl[1]);
+      const msg3 = !M.moves ? 'too little torque to turn it' : S.done ? `timer: ${M.t.toFixed(3)} s for 0.500 m` : `timer: ${f(S.t, 3)} s`;
+      ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.fillStyle = T.panel; ctx.fillRect(8 * p, 42 * p, ctx.measureText(msg3).width + 12 * p, 26 * p);
+      ctx.fillStyle = T.ink; ctx.textBaseline = 'top'; ctx.fillText(msg3, 14 * p, 48 * p);
+      return;
+    }
     scenery(p, wide, px, py);
     // turntable from above: shadow, metal rim, platter
     ctx.fillStyle = T.shadow; ctx.beginPath(); ctx.arc(cx + 3 * p, cy + 5 * p, R + 5 * p, 0, 7); ctx.fill();
@@ -271,7 +282,7 @@ table.rows input:focus { border-color: var(--accent); }
       ctx.fillStyle = cg; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
       ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(cx, cy, R + 4 * p, Math.PI * 1.05, Math.PI * 1.45); ctx.stroke();
     }
-    ctx.save(); ctx.translate(cx, cy); ctx.rotate(-th);
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(th);   // clockwise on the screen: the string leaves the top of the spool towards the pulley on the right
     // degree ticks near the rim and the bolts of the hub turn with the table
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); for (let k = 0; k < 36; k++) { const a = k * Math.PI / 18, r0 = R * (k % 9 ? 0.93 : 0.88); ctx.moveTo(r0 * Math.cos(a), r0 * Math.sin(a)); ctx.lineTo(R * 0.98 * Math.cos(a), R * 0.98 * Math.sin(a)); } ctx.stroke();
     ctx.fillStyle = T.metalDark; for (let k = 0; k < 6; k++) { const a = (k + 0.5) * Math.PI / 3, rb = sr + 9 * p; ctx.beginPath(); ctx.arc(rb * Math.cos(a), rb * Math.sin(a), 1.8 * p, 0, 7); ctx.fill(); }
@@ -329,6 +340,138 @@ table.rows input:focus { border-color: var(--accent); }
     }
     $('out').innerHTML = h;
   }
+  // ---------- 3D view (three.js through demos/lib/vd3.js): the same turntable and the same motion, in perspective ----------
+  // Drag to turn the view, wheel or pinch to zoom, double click to reset. The flat view stays (Flat button, or ?view=flat).
+  // Sizes are to scale in metres where the model fixes them (platter 13 cm, spool r, disk, ring and the two masses, the 0.500 m drop);
+  // the load pieces are drawn as steel (7850 kg/m³) and the slotted masses as brass (8500 kg/m³) for their thickness. The rest is scenery.
+  const G3 = { on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, sig: '', o: { th: -0.62, ph: 1.2, zoom: 1.12 } };
+  const NO3D = 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
+  const ZT = 0.062, ZS = ZT + 0.047, XP = 0.29, RP = 0.02;   // platter top, string height, pulley axle x and radius (scenery)
+  let g3 = null;
+  function init3D() {
+    G3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); $('scene').insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.02, 30), M = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x8a8178, 0.75), sun = new THREE.DirectionalLight(0xffffff, 0.7);
+    sun.position.set(-0.8, -1.0, 2.2); sun.castShadow = true; sun.shadow.mapSize.set(1536, 1536);
+    Object.assign(sun.shadow.camera, { left: -0.6, right: 0.6, top: 0.6, bottom: -0.6, near: 0.5, far: 5 }); scene.add(hemi, sun);
+    const cyl = (r0, r1, h, n) => { const g = new THREE.CylinderGeometry(r0, r1, h, n || 32); g.rotateX(Math.PI / 2); return g; };   // along z, centred
+    const mesh = (g, m, cast, recv) => { const x = new THREE.Mesh(g, m); x.castShadow = !!cast; x.receiveShadow = !!recv; return x; };
+    // room: floor, wall, a bench whose edge the string runs over
+    const floorM = M({ roughness: 0.95 }), wallM = M({ roughness: 1 }), benchM = M({ roughness: 0.7 }), benchEdgeM = M({ roughness: 0.7 }), legM = M({ roughness: 0.4, metalness: 0.4 });
+    const floor = mesh(new THREE.PlaneGeometry(6, 6), floorM, false, true); floor.position.z = -0.78;
+    const wall = mesh(new THREE.PlaneGeometry(6, 3), wallM, false, true); wall.rotation.x = Math.PI / 2; wall.position.set(0, 0.55, 0.7);
+    const top = mesh(new THREE.BoxGeometry(0.6, 0.6, 0.035), [benchEdgeM, benchEdgeM, benchEdgeM, benchEdgeM, benchM, benchEdgeM], true, true); top.position.set(-0.03, 0.08, -0.0175);
+    scene.add(floor, wall, top);
+    for (const [x, y] of [[-0.3, -0.19], [0.24, -0.19], [-0.3, 0.35], [0.24, 0.35]]) { const l = mesh(new THREE.BoxGeometry(0.04, 0.04, 0.745), legM, true); l.position.set(x, y, -0.035 - 0.3725); scene.add(l); }
+    // turntable: column, platter (with degree ticks and the red mark, which turn with it), hub column and spool
+    const metalM = M({ roughness: 0.35, metalness: 0.55 }), darkM = M({ roughness: 0.45, metalness: 0.4 });
+    const col = mesh(cyl(0.03, 0.04, 0.05, 32), darkM, true, true); col.position.z = 0.025;
+    const table = new THREE.Group(); table.position.z = 0.05; scene.add(col, table);
+    const platCv = document.createElement('canvas'); platCv.width = platCv.height = 512; const platTex = new THREE.CanvasTexture(platCv); platTex.anisotropy = r.capabilities.getMaxAnisotropy();
+    const platTopM = M({ map: platTex, roughness: 0.32, metalness: 0.5 }), platSideM = M({ roughness: 0.3, metalness: 0.6 });
+    const plat = mesh(cyl(0.13, 0.13, 0.012, 96), [platSideM, platTopM, platSideM], true, true); plat.position.z = 0.006; table.add(plat);
+    const hubCol = mesh(cyl(0.008, 0.008, 0.04, 20), metalM, true); hubCol.position.z = 0.012 + 0.02; table.add(hubCol);
+    const strM = M({ roughness: 0.8 }), spoolCore = mesh(cyl(1, 1, 1, 40), strM, true), flangeA = mesh(cyl(1, 1, 0.002, 40), metalM, true), flangeB = mesh(cyl(1, 1, 0.002, 40), metalM, true);
+    table.add(spoolCore, flangeA, flangeB);
+    // loads, built once; only the chosen one shows
+    const objM = M({ roughness: 0.38, metalness: 0.45 }), loads = {};
+    const steelH = (m, area) => m / (7850 * area);
+    loads.disk = mesh(cyl(0.1, 0.1, steelH(1, Math.PI * 0.01), 96), objM, true, true);
+    const ringShape = new THREE.Shape(); ringShape.absarc(0, 0, 0.1, 0, 2 * Math.PI, false); const hole = new THREE.Path(); hole.absarc(0, 0, 0.09, 0, 2 * Math.PI, true); ringShape.holes.push(hole);
+    loads.ring = mesh(new THREE.ExtrudeGeometry(ringShape, { depth: steelH(1, Math.PI * (0.01 - 0.0081)), bevelEnabled: false, curveSegments: 96 }), objM, true, true);
+    loads.pair = new THREE.Group(); const pairH = steelH(0.2, Math.PI * 0.015 * 0.015); for (const s of [1, -1]) { const c = mesh(cyl(0.015, 0.015, pairH, 32), objM, true, true); c.userData.s = s; loads.pair.add(c); }
+    const pent = new THREE.Shape(); for (let k = 0; k <= 5; k++) { const a = k * 2 * Math.PI / 5; k ? pent.lineTo(0.11 * Math.cos(a), 0.11 * Math.sin(a)) : pent.moveTo(0.11, 0); }
+    loads.mystery = mesh(new THREE.ExtrudeGeometry(pent, { depth: 0.02, bevelEnabled: true, bevelThickness: 0.002, bevelSize: 0.002, bevelSegments: 2 }), objM, true, true);
+    for (const k in loads) { loads[k].visible = false; table.add(loads[k]); }
+    loads.disk.position.z = 0.012 + loads.disk.geometry.parameters.height / 2; loads.ring.position.z = 0.012; loads.mystery.position.z = 0.014;
+    loads.pair.children.forEach((c) => { c.position.z = 0.012 + pairH / 2; });
+    // the string: along the top of the bench to the pulley, over it, and down to the hanger
+    const strLineM = new THREE.LineBasicMaterial(), strG = new THREE.BufferGeometry(); strG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3 * 40), 3));
+    const string = new THREE.Line(strG, strLineM); string.frustumCulled = false; scene.add(string);
+    // the pulley on a bracket clamped to the bench edge; it turns as the string runs over it
+    const pulley = new THREE.Group(); pulley.position.set(XP, 0, ZS - RP); scene.add(pulley);
+    const wheelG = new THREE.CylinderGeometry(RP, RP, 0.008, 40); const pw = mesh(wheelG, metalM, true); pulley.add(pw);
+    const groove = mesh(new THREE.TorusGeometry(RP, 0.0018, 8, 40), darkM); groove.rotation.x = Math.PI / 2; pulley.add(groove);
+    const spokeBar = mesh(new THREE.BoxGeometry(RP * 1.6, 0.0095, 0.003), darkM); pulley.add(spokeBar); const spokeBar2 = spokeBar.clone(); spokeBar2.rotation.y = Math.PI / 2; pulley.add(spokeBar2);
+    const bracket = new THREE.Group(); scene.add(bracket);
+    const arm = mesh(new THREE.BoxGeometry(0.075, 0.006, 0.012), darkM, true); arm.position.set(0.255, 0, ZS - RP); bracket.add(arm);
+    const post = mesh(new THREE.BoxGeometry(0.012, 0.012, ZS - RP + 0.04), darkM, true); post.position.set(0.222, 0, (ZS - RP - 0.04) / 2); bracket.add(post);
+    const clamp = mesh(new THREE.BoxGeometry(0.03, 0.03, 0.06), darkM, true); clamp.position.set(0.255, 0, -0.03); bracket.add(clamp);
+    // hanger and slotted masses
+    const hanger = new THREE.Group(); scene.add(hanger);
+    const brassM = M({ roughness: 0.3, metalness: 0.7 }), steelM = M({ roughness: 0.32, metalness: 0.6 });
+    // a metre stick behind the falling mass with the two timing marks 0.500 m apart
+    const stickM = M({ roughness: 0.8 }), stick = mesh(new THREE.BoxGeometry(0.03, 0.004, 0.62), stickM, true); scene.add(stick);
+    const markM = M({ roughness: 0.6 }), marks = [0, 1].map(() => { const m = mesh(new THREE.BoxGeometry(0.06, 0.006, 0.003), markM); scene.add(m); return m; });
+    g3 = { r, el, scene, cam, hemi, sun, floorM, wallM, benchM, benchEdgeM, legM, metalM, darkM, platCv, platTex, platTopM, platSideM, table, spoolCore, flangeA, flangeB, strM, objM, loads, string, strG, strLineM, pulley, bracket, hanger, brassM, steelM, stick, stickM, marks, markM };
+    can.addEventListener('wheel', (e) => { if (!G3.on) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (!S.run) draw(); }, { grab: () => !G3.on, phMin: 0.35, phMax: 1.5, zMin: 0.6, zMax: 2.6 });
+    can.addEventListener('pointerup', () => { if (!G3.on) can.style.cursor = ''; });
+    return true;
+  }
+  function theme3() {
+    const g = g3, d = VD3.dark(), col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+    const bg = col(T.canvas, '#fbfcfd'); g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 2.2, 5);
+    g.hemi.intensity = d ? 1.0 : 0.6; g.sun.intensity = d ? 0.95 : 0.6;
+    g.floorM.color = col(T.floor, '#dde1e6'); g.wallM.color = col(T.wall, '#f1f4f7'); g.benchM.color = col(T.bench, '#e7d6ba'); g.benchEdgeM.color = col(T.benchEdge, '#b0906a'); g.legM.color = col(T.metalDark, '#5f6873');
+    g.metalM.color = col(T.metal, '#a3acb6'); g.darkM.color = col(T.metalDark, '#5f6873'); g.platSideM.color = col(T.metal, '#a3acb6'); g.strM.color = col(T.str, '#a7740b'); g.strLineM.color = col(T.str, '#a7740b');
+    g.objM.color = col(T.obj, '#2b60b5'); g.steelM.color = col(T.metal, '#a3acb6'); g.brassM.color = col(d ? '#c9a24a' : '#c79a3a', '#c79a3a'); g.stickM.color = col(d ? '#cbb27a' : '#e8d39a', '#e8d39a'); g.markM.color = col(T.accent, '#2b60b5');
+    // the platter's top: brushed metal with degree ticks (every 10°, longer every 90°) and the red reference line
+    const c = g.platCv.getContext('2d'), R = 256; c.fillStyle = T.plat; c.fillRect(0, 0, 512, 512);
+    for (let k = 0; k < 90; k++) { c.strokeStyle = k % 2 ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.05)'; c.lineWidth = 2; c.beginPath(); c.arc(R, R, 20 + k * 2.6, 0, 7); c.stroke(); }
+    c.strokeStyle = T.gridStrong; c.lineWidth = 3; c.beginPath(); for (let k = 0; k < 36; k++) { const a = k * Math.PI / 18, r0 = R * (k % 9 ? 0.93 : 0.88); c.moveTo(R + r0 * Math.cos(a), R + r0 * Math.sin(a)); c.lineTo(R + R * 0.98 * Math.cos(a), R + R * 0.98 * Math.sin(a)); } c.stroke();
+    c.strokeStyle = T.mark; c.lineWidth = 9; c.beginPath(); c.moveTo(R, R); c.lineTo(R + R * 0.95, R); c.stroke();
+    g.platTex.needsUpdate = true; G3.sig = '';
+  }
+  // the slotted masses on the hanger: rebuilt only when the pieces change
+  function hang3() {
+    const sig = S.pieces.join(','); if (G3.sig === sig) return; G3.sig = sig;
+    const h = g3.hanger; while (h.children.length) h.remove(h.children[0]);
+    const mesh = (g, m) => { const x = new THREE.Mesh(g, m); x.castShadow = true; return x; }, cyl = (r0, h0) => { const g = new THREE.CylinderGeometry(r0, r0, h0, 36); g.rotateX(Math.PI / 2); return g; };
+    const hook = mesh(new THREE.TorusGeometry(0.006, 0.0012, 8, 20, Math.PI * 1.5), g3.steelM); hook.rotation.x = Math.PI / 2; hook.position.z = -0.006; h.add(hook);
+    const RS = 0.02, area = Math.PI * RS * RS, th = (gr) => Math.max(0.002, gr / 1000 / (8500 * area));   // brass discs 4 cm across
+    let z = -0.012; const stack = [];
+    for (let i = S.pieces.length - 1; i >= 0; i--) stack.push(S.pieces[i]);   // the last one hung sits on top
+    const base = 0.004 + stack.reduce((a, gr) => a + th(gr), 0);
+    const rod = mesh(cyl(0.0022, base + 0.012), g3.steelM); rod.position.z = z - (base + 0.012) / 2 + 0.006; h.add(rod);
+    z -= 0.006;
+    stack.forEach((gr, i) => { const t = th(gr), d = mesh(cyl(RS, t * 0.94), i % 2 ? g3.steelM : g3.brassM); d.position.z = z - t / 2; h.add(d); z -= t; });
+    const plate = mesh(cyl(RS * 0.9, 0.004), g3.steelM); plate.position.z = z - 0.002; h.add(plate);
+  }
+  function render3(y, th, h) {
+    const g = g3; if (!g) return null;
+    if (G3.w !== W || G3.h !== h) { G3.w = W; G3.h = h; g.r.setSize(W, Math.max(1, h)); g.cam.aspect = W / Math.max(1, h); g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.plat, T.obj, T.bench].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    VD3.place(g.cam, G3.o, new THREE.Vector3(0.12, 0.04, -0.2), 1.95);
+    g.table.rotation.z = -th;   // the string leaves the +y side of the spool towards +x, so the table turns clockwise seen from above
+    for (const k in g.loads) g.loads[k].visible = S.obj === k;
+    g.loads.pair.children.forEach((c) => { c.position.x = 0; c.position.y = c.userData.s * S.d; });
+    const sz = ZS - 0.05;   // spool centre height on the table: the string leaves it level
+    g.spoolCore.scale.set(S.r, S.r, 0.015); g.spoolCore.position.z = sz; g.flangeA.scale.set(S.r + 0.005, S.r + 0.005, 1); g.flangeA.position.z = sz + 0.0085; g.flangeB.scale.set(S.r + 0.005, S.r + 0.005, 1); g.flangeB.position.z = sz - 0.0085;
+    g.pulley.rotation.y = y / RP; g.pulley.position.y = S.r; g.bracket.position.y = S.r;
+    const hz = ZS - RP - 0.06 - y, hx = XP + RP; g.hanger.position.set(hx, S.r, hz); hang3();
+    g.stick.position.set(hx, S.r + 0.035, ZS - RP - 0.06 - 0.25); g.marks[0].position.set(hx, S.r + 0.032, ZS - RP - 0.06); g.marks[1].position.set(hx, S.r + 0.032, ZS - RP - 0.06 - H);
+    // string: from the spool's +y side to the top of the pulley, round it, then down to the hook
+    const pos = g.strG.attributes.position; let n = 0; pos.setXYZ(n++, 0, S.r, ZS);
+    for (let k = 0; k <= 12; k++) { const a = Math.PI / 2 - k * Math.PI / 24; pos.setXYZ(n++, XP + RP * Math.cos(a), S.r, ZS - RP + RP * Math.sin(a)); }
+    pos.setXYZ(n++, hx, S.r, hz); pos.needsUpdate = true; g.strG.setDrawRange(0, n);
+    g.scene.updateMatrixWorld(); g.r.render(g.scene, g.cam);
+    const tmp = new THREE.Vector3();
+    return (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * h]; };
+  }
+  function setView(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { capStatus(NO3D); v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); if (!G3.ok) capStatus(NO3D); setView(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3) g3.el.hidden = !G3.on; can.style.cursor = G3.on ? 'grab' : '';
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    draw();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
   // ---------- controls ----------
   function sync() {
     for (const b of document.querySelectorAll('#objSeg button')) b.setAttribute('aria-pressed', String(b.dataset.o === S.obj));
@@ -426,6 +569,8 @@ table.rows input:focus { border-color: var(--accent); }
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   tokens(); new ResizeObserver(resize).observe($('scene')); wind(); renderRows(); resize();
+  /* the turntable opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
+  if (new URLSearchParams(location.search).get('view') !== 'flat' && window.VD3 && !VD3.lowPower()) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();
