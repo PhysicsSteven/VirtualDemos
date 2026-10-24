@@ -117,7 +117,7 @@ table.rows input:focus { border-color: var(--accent); }
         <div id="muRows" class="kgroup"><div class="kctl"><label for="sMs">Static friction μs</label><input type="range" id="sMs" min="0" max="1" step="0.01"><output id="oMs" for="sMs"></output></div><div class="kctl"><label for="sMk">Kinetic friction μk</label><input type="range" id="sMk" min="0" max="1" step="0.01"><output id="oMk" for="sMk"></output></div></div>
         <div class="kctl"><label for="sF">Applied force F</label><input type="range" id="sF" min="0" max="150" step="1"><output id="oF" for="sF"></output></div>
         <div class="kctl"><label for="sPhi">Angle of F above the surface</label><input type="range" id="sPhi" min="-45" max="60" step="1"><output id="oPhi" for="sPhi"></output></div>
-        <div class="kctl"><label for="sM2">Hanging mass m₂ (0 = none)</label><input type="range" id="sM2" min="0" max="10" step="0.5"><output id="oM2" for="sM2"></output></div>
+        <div class="kctl"><label for="sM2">Hanging mass m₂ (0 = none)</label><input type="range" id="sM2" min="0" max="10" step="0.5" data-unit="kg"><output id="oM2" for="sM2"></output></div>
       </div>
     </div>
 
@@ -138,7 +138,7 @@ table.rows input:focus { border-color: var(--accent); }
       <section>
         <h2>Ramp and block</h2>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Turn the knobs on the panel in the picture (or focus one and use the arrow keys).</p>
+          <p class="hint">Turn the knobs on the panel in the picture, or click a green reading and type the value you want.</p>
         </details>
         <label class="check"><input type="checkbox" id="mystery"><span>Mystery surface: hide μs and μk</span></label>
         <button type="button" class="btn" id="newMystery" hidden>New mystery surface</button>
@@ -529,7 +529,10 @@ table.rows input:focus { border-color: var(--accent); }
     const p = ps(), P = S.p, th = P.th * Math.PI / 180, fz = forces(S.p, S.v);
     const drop = P.m2 > 0 ? 1.1 : 0;                                       // room under the pulley for the hanging mass
     const sc = Math.min((w - 90 * p) / (LEN * Math.cos(th) + 0.6), (h - 40 * p) / (LEN * Math.sin(th) + 0.9 + drop));
-    const bx = x0 + 30 * p, by = y0 + h - 30 * p - drop * sc;              // bottom corner of the ramp (on a bench when a mass hangs)
+    /* in the flat view a low setup (a level floor or a shallow ramp) would leave a tall empty wall under the knob panel, so the room's
+       floor comes up and half of that spare height is floor in front of the apparatus instead */
+    const spare = h - 70 * p - sc * (LEN * Math.sin(th) + 0.9 + drop), lift = use3() ? 0 : Math.max(0, spare) * 0.5;
+    const bx = x0 + 30 * p, by = y0 + h - 30 * p - drop * sc - lift;       // bottom corner of the ramp (on a bench when a mass hangs)
     let R = (s, u) => [bx + sc * (s * Math.cos(th) - u * Math.sin(th)), by - sc * (s * Math.sin(th) + u * Math.cos(th))];
     const bs = 0.32;
     const u3 = use3(); if (g3 && !u3) g3.el.hidden = true;
@@ -647,7 +650,7 @@ table.rows input:focus { border-color: var(--accent); }
     if (S.comp && P.th > 0) {
       const [ax, ay] = len(up[0] * fz.Wpar, up[1] * fz.Wpar), [bx2, by2] = len(Math.sin(th) * fz.Wperp, -Math.cos(th) * fz.Wperp);
       arrow(cx, cy, ax, -ay, T.w, 1.6 * p, bl ? 'mg sin θ' : `mg sin θ = ${f(-fz.Wpar, 1)} N`, true);
-      arrow(cx, cy, bx2, -by2, T.w, 1.6 * p, bl ? 'mg cos θ' : `mg cos θ = ${f(fz.Wperp, 1)} N`, true);
+      arrow(cx, cy, bx2, -by2, T.w, 1.6 * p, bl ? 'mg cos θ' : `mg cos θ = ${f(fz.Wperp, 1)} N`, true, -Math.max(0, 130 * p - Math.abs(bx2)) / (15 * p));   /* on a shallow ramp its label moves aside so it does not sit on W's */
     }
     for (const [lab, col, vx, vy, side] of items) { const [dx, dy] = len(vx, vy); arrow(cx, cy, dx, -dy, col, 3.2 * p, bl ? lab : `${lab} = ${f(Math.hypot(vx, vy), 1)} N`, false, side); }
     // the net force is drawn beside the ramp axis, so it does not hide friction and tension
@@ -787,29 +790,8 @@ table.rows input:focus { border-color: var(--accent); }
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
-  /* vd-knobs: every range input inside .instr gets a knob that drives it (one step every 15° of turn, arrow keys, Page Up/Down for
-     ten steps, Home/End, mouse wheel). The input stays the source of truth, so the demo's own code is unchanged; the knob dispatches
-     'input' events and redraws its mark whenever the value changes, even when the demo sets it. */
-  (function knobs() {
-    const DEG = 15, all = [];
-    for (const inp of document.querySelectorAll('.instr input[type="range"]')) {
-      const k = document.createElement('div'), lab = document.querySelector(`label[for="${inp.id}"]`);
-      k.className = 'vdknob'; k.tabIndex = 0; k.setAttribute('role', 'slider'); k.setAttribute('aria-label', lab ? lab.textContent.trim() : inp.id);
-      k.setAttribute('aria-valuemin', inp.min); k.setAttribute('aria-valuemax', inp.max); inp.tabIndex = -1; inp.setAttribute('aria-hidden', 'true');
-      inp.insertAdjacentElement('afterend', k);
-      const st = () => +inp.step || 1, out = inp.id && document.querySelector(`output[for="${inp.id}"]`);
-      const set = (n) => { const v = Math.max(+inp.min, Math.min(+inp.max, +inp.value + n * st())), r = +(Math.round(v / st()) * st()).toFixed(6); if (r !== +inp.value) { inp.value = r; inp.dispatchEvent(new Event('input', { bubbles: true })); } };
-      let last = null, acc = 0;
-      const ang = (e) => { const r = k.getBoundingClientRect(); return Math.atan2(e.clientY - r.top - r.height / 2, e.clientX - r.left - r.width / 2) * 180 / Math.PI; };
-      k.addEventListener('pointerdown', (e) => { k.setPointerCapture(e.pointerId); last = ang(e); acc = 0; k.focus(); e.preventDefault(); });
-      k.addEventListener('pointermove', (e) => { if (last === null) return; const a = ang(e); let d = a - last; d -= 360 * Math.round(d / 360); last = a; acc += d; const n = Math.trunc(acc / DEG); if (n) { acc -= n * DEG; set(n); } });
-      const end = () => { last = null; }; k.addEventListener('pointerup', end); k.addEventListener('pointercancel', end);
-      k.addEventListener('wheel', (e) => { e.preventDefault(); set(e.deltaY < 0 ? 1 : -1); }, { passive: false });
-      k.addEventListener('keydown', (e) => { const n = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 10, PageDown: -10, Home: -1e9, End: 1e9 }[e.key]; if (!n) return; set(n); e.preventDefault(); });
-      all.push({ inp, k, out, shown: null });
-    }
-    (function show() { for (const o of all) { if (o.inp.value !== o.shown) { o.shown = o.inp.value; o.k.style.setProperty('--a', `${(Math.round((+o.inp.value - +o.inp.min) / (+o.inp.step || 1)) * DEG) % 360}deg`); o.k.setAttribute('aria-valuenow', o.inp.value); } if (o.out) o.k.setAttribute('aria-valuetext', o.out.textContent); } requestAnimationFrame(show); })();
-  })();
+  /* vd-knobs: every range input inside .instr gets a knob, and its readout takes a typed value (demos/lib/vd.js) */
+  VD.knobs();
   tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(() => draw()).observe($('instr')); applyPreset('push'); renderRows(); resize();
   /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');

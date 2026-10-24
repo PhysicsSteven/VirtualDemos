@@ -765,29 +765,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
-  /* vd-knobs: every range input inside .instr gets a knob that drives it (one step every 15° of turn, arrow keys, Page Up/Down for
-     ten steps, Home/End, mouse wheel). The input stays the source of truth, so the demo's own code is unchanged; the knob dispatches
-     'input' events and redraws its mark whenever the value changes, even when the demo sets it. */
-  (function knobs() {
-    const DEG = 15, all = [];
-    for (const inp of document.querySelectorAll('.instr input[type="range"]')) {
-      const k = document.createElement('div'), lab = document.querySelector(`label[for="${inp.id}"]`);
-      k.className = 'vdknob'; k.tabIndex = 0; k.setAttribute('role', 'slider'); k.setAttribute('aria-label', lab ? lab.textContent.trim() : inp.id);
-      k.setAttribute('aria-valuemin', inp.min); k.setAttribute('aria-valuemax', inp.max); inp.tabIndex = -1; inp.setAttribute('aria-hidden', 'true');
-      inp.insertAdjacentElement('afterend', k);
-      const st = () => +inp.step || 1, out = inp.id && document.querySelector(`output[for="${inp.id}"]`);
-      const set = (n) => { const v = Math.max(+inp.min, Math.min(+inp.max, +inp.value + n * st())), r = +(Math.round(v / st()) * st()).toFixed(6); if (r !== +inp.value) { inp.value = r; inp.dispatchEvent(new Event('input', { bubbles: true })); } };
-      let last = null, acc = 0;
-      const ang = (e) => { const r = k.getBoundingClientRect(); return Math.atan2(e.clientY - r.top - r.height / 2, e.clientX - r.left - r.width / 2) * 180 / Math.PI; };
-      k.addEventListener('pointerdown', (e) => { k.setPointerCapture(e.pointerId); last = ang(e); acc = 0; k.focus(); e.preventDefault(); });
-      k.addEventListener('pointermove', (e) => { if (last === null) return; const a = ang(e); let d = a - last; d -= 360 * Math.round(d / 360); last = a; acc += d; const n = Math.trunc(acc / DEG); if (n) { acc -= n * DEG; set(n); } });
-      const end = () => { last = null; }; k.addEventListener('pointerup', end); k.addEventListener('pointercancel', end);
-      k.addEventListener('wheel', (e) => { e.preventDefault(); set(e.deltaY < 0 ? 1 : -1); }, { passive: false });
-      k.addEventListener('keydown', (e) => { const n = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 10, PageDown: -10, Home: -1e9, End: 1e9 }[e.key]; if (!n) return; set(n); e.preventDefault(); });
-      all.push({ inp, k, out, shown: null });
-    }
-    (function show() { for (const o of all) { if (o.inp.value !== o.shown) { o.shown = o.inp.value; o.k.style.setProperty('--a', `${(Math.round((+o.inp.value - +o.inp.min) / (+o.inp.step || 1)) * DEG) % 360}deg`); o.k.setAttribute('aria-valuenow', o.inp.value); } if (o.out) o.k.setAttribute('aria-valuetext', o.out.textContent); } requestAnimationFrame(show); })();
-  })();
+  /* vd-knobs: every range input inside .instr gets a knob, and its readout takes a typed value (demos/lib/vd.js) */
+  VD.knobs();
   /* Readings for the worksheet (tools/readings_panel.py): one row per launch, recorded once the ball has come down. The values are
      the readouts at their shown precision: time in the air to the launcher's height, how far the ball and the cart moved along the
      track in that time, and where the ball passed the launcher's height relative to the launcher (+ ahead, − behind). */

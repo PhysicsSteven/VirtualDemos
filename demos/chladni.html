@@ -1856,6 +1856,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       sync();
     }
   })();
+  /* click the generator's display (or double click a knob, or type a digit on one) to type the frequency in Hz; the slider is a
+     log scale, so the typed value goes straight to setF, which puts the coarse and fine sliders where they belong */
+  VD.typeIn($('freqOut'), { get: () => S.f, seed: () => String(+S.f.toFixed(S.f < 100 ? 2 : 1)), set: (f) => { stopSweep(); setF(f); clearPreset(); },
+    min: F_MIN, max: () => D.fmax, unit: 'Hz', label: 'Frequency f', can: () => !$('freq').disabled, knobs: [...document.querySelectorAll('.knob[data-for]')] });
   /* a reading for the Readings section (tools/readings_panel.py): the plate, the drive and the frequency. The mode is the nearest
      resonance's, given only when f is within that resonance's width f/Q; the pattern itself is the student's to sketch. */
   window.vdVersion = 'chladni@2026-10-23';

@@ -837,6 +837,8 @@ table.rows input:focus { border-color: var(--accent); }
   knob('knobI', stepI);
   $('inIdown').addEventListener('click', () => stepI(-1)); $('inIup').addEventListener('click', () => stepI(1));
   knob('knobT', (n) => { const t = Math.max(0, Math.min(200, S.T + 5 * n)); if (t !== S.T) { S.T = t; upd(); } });
+  VD.typeIn($('oI'), { get: () => S.I, set: (I) => { if (I !== S.I) { S.I = I; resetCount(); upd(); } }, min: 0.05, max: 1, step: 0.05, unit: 'A', label: 'Supply current I', knobs: [$('knobI')] });
+  VD.typeIn($('oT'), { get: () => S.T, set: (t) => { if (t !== S.T) { S.T = t; upd(); } }, min: 0, max: 200, step: 5, unit: '°C', label: 'Wire temperature', knobs: [$('knobT')] });
   const CAN_LABEL = { cold: 'A cryostat holding the sample wire, its thermometer reading, and two graphs of the wire resistance against temperature: from room temperature down to 1 K, and a close view of the lowest temperatures.', bench: can.getAttribute('aria-label'), inside: 'A magnified region inside the wire: free electrons move at random among the ions and drift slowly against the current. A dashed plane counts the electrons the drift carries across it. Use the Inside the wire section of the panel to pause, step or reset the count.' };
   function setView(v) {
     S.view = v; stage.dataset.view = v; $('insideSec').hidden = v !== 'inside'; $('coldSec').hidden = v !== 'cold'; for (const b of document.querySelectorAll('[data-view]')) b.setAttribute('aria-pressed', String(b.dataset.view === v));

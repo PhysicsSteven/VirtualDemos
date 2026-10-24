@@ -388,6 +388,7 @@ table.rows input:focus { border-color: var(--accent); }
     k.addEventListener('keydown', (e) => { const step = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 10, PageDown: -10 }[e.key];
       if (step) setF(S.f + step * per); else if (e.key === 'Home') setF(5); else if (e.key === 'End') setF(200); else return; e.preventDefault(); });
   }
+  VD.typeIn($('oF'), { get: () => S.f, set: setF, min: 5, max: 200, step: 0.1, unit: 'Hz', label: 'Driver frequency f', knobs: [$('knobC'), $('knobF')] });
   $('fineF').addEventListener('click', (e) => { const b = e.target.closest('[data-df]'); if (b) setF(S.f + +b.dataset.df); });
   function addMass(g) { if (massG() + g > MAX_G) { capStatus(`The hanger holds at most ${MAX_G} g.`); return; } S.masses.push(g); changed(); }
   $('addMass').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (b && !b.dataset.dragged) addMass(+b.dataset.g); if (b) delete b.dataset.dragged; });

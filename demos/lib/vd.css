@@ -148,3 +148,15 @@
 .vd-movable .vd-grip:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
 .vd-movable.vd-dragging, .vd-movable.vd-dragging .vd-grip { cursor: grabbing; }
 .vd-movable.vd-dragging { transition: none; box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22); }
+/* A readout that takes a typed value (VD.typeIn adds these classes), so nothing changes in a demo that does not call it */
+.vd-typable { cursor: text; }
+.vd-typable:hover { text-decoration: underline dotted; text-underline-offset: 3px; }
+.vd-typable:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.vd-typable.vd-editing { display: none !important; }
+.vd-typein { display: inline-flex; align-items: center; gap: 3px; font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem; color: #7ee0a0; background: #0b1a12; border-radius: 4px; padding: 1px 4px; box-shadow: 0 0 0 2px var(--accent); white-space: nowrap; }
+.vd-typein input { font: inherit; color: inherit; background: none; border: 0; outline: 0; padding: 0; margin: 0; text-align: right; caret-color: #fff; }
+.vd-typein input.bad { color: #ff9b8f; }
+.vd-typein .vd-unit { opacity: 0.85; }
+.vd-typein .vd-pm { font: inherit; color: inherit; background: #1d3326; border: 0; border-radius: 3px; padding: 0 5px; cursor: pointer; }
+.vd-typein-note { position: fixed; z-index: 50; pointer-events: none; font-size: 0.78rem; font-weight: 600; color: #fff; background: #333c48; border-radius: 6px; padding: 3px 8px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3); white-space: nowrap; }
+@media (pointer: coarse) { .vd-typein { font-size: 16px; } }

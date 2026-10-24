@@ -5,7 +5,7 @@
      .vd-qr          the QR button: large on click, removes itself when the page is not the hosted copy it points to
      #vdReset        Reset all: reloads the page, asking first when readings would be lost
      details.plotfold  a plot folded in the sidebar is drawn when it opens (its size is zero while folded)
-   Helpers a demo calls itself: VD.projector, VD.setupCard. See demos/lib/README.md. Never change what an existing helper does:
+   Helpers a demo calls itself: VD.projector, VD.setupCard, VD.typeIn, VD.knobs. See demos/lib/README.md. Never change what an existing helper does:
    add an option or a new helper instead, and rerun tools/vdcheck.cjs on every moved demo after any edit here. */
 (function () {
   'use strict';
@@ -105,6 +105,113 @@
       ghost: function (on) { card.classList.toggle('ghost', !!on); },
       reset: function () { place(0, 0); },
     };
+  };
+
+  /* VD.typeIn(out, o): click or tap a readout (or focus it and press Enter, or just start typing) to type an exact value.
+     o = { get, set, min, max, step, unit, label, can, knobs, seed }; min, max and step may be numbers or functions. The typed value is
+     clamped to min..max and rounded to the step from min, then handed to set(v); a value that was out of range shows the range
+     for a moment. Enter or tapping away keeps it, Esc cancels. The unit is o.unit, or the text after the number in the readout.
+     Phones get the number keypad, with a ± key beside the field when the range goes below zero (the keypad has no minus). o.can() false (Blind, Mystery) leaves the
+     readout alone. o.seed() gives the starting text when the readout's own number is not in o.unit (kHz shown, Hz typed). Each element in o.knobs opens the same entry on a double click, on Enter, or on a typed digit. */
+  VD.typeIn = function (out, o) {
+    var f = function (x) { return typeof x === 'function' ? x() : x; };
+    var lab = o.label || out.getAttribute('aria-label') || 'value', unit = '', ed = null, field = null;
+    var num = function (s) { var m = String(s).replace(/[−–]/g, '-').replace(',', '.').match(/^\s*([+-]?(\d+\.?\d*|\.\d+)(e[+-]?\d+)?)(.*)$/i); return m ? { v: +m[1], rest: m[4].trim() } : null; };
+    out.classList.add('vd-typable'); out.tabIndex = 0; out.setAttribute('role', 'button');
+    out.title = 'Click to type a value';
+    out.setAttribute('aria-label', lab + ': click, or press Enter, to type a value');
+    function note(text) {
+      var n = document.createElement('div'), r = out.getBoundingClientRect();
+      n.className = 'vd-typein-note'; n.textContent = text; document.body.appendChild(n);
+      n.style.left = Math.max(4, Math.min(innerWidth - n.offsetWidth - 4, r.left + r.width / 2 - n.offsetWidth / 2)) + 'px'; n.style.top = (r.bottom + 6) + 'px';
+      setTimeout(function () { n.remove(); }, 2200);
+    }
+    function close(keep, back) {
+      if (!ed) return true;
+      if (keep) {
+        var p = num(field.value);
+        if (!p || p.rest !== '' && p.rest !== unit) { if (back) { field.classList.add('bad'); field.select(); return false; } keep = false; }
+        else {
+          var lo = +f(o.min), hi = +f(o.max), st = +f(o.step), v = p.v, r = Math.max(lo, Math.min(hi, v));
+          if (st > 0) { r = lo + Math.round((r - lo) / st) * st; if (r > hi + 1e-9) r -= st; r = +r.toFixed(6); }
+          var dp = st > 0 ? Math.max(0, Math.min(6, Math.ceil(-Math.log10(st) - 1e-9))) : null, fmt = function (x) { return (dp === null ? String(x) : x.toFixed(dp)).replace('-', '−') + (unit ? (/^(°|%)$/.test(unit) ? '' : ' ') + unit : ''); };
+          var said = v < lo || v > hi ? 'Range ' + fmt(lo) + ' to ' + fmt(hi) : Math.abs(r - v) > 1e-9 ? 'Set to ' + fmt(r) + ', in steps of ' + fmt(st) : '';
+        }
+      }
+      var e = ed; ed = null; e.remove(); out.classList.remove('vd-editing');
+      if (keep) { o.set(r); if (said) note(said); }
+      if (back) out.focus();
+      return true;
+    }
+    function open(seed) {
+      if (ed || o.can && !o.can()) return;
+      var p = num(out.textContent); if (p) unit = p.rest; if (o.unit != null) unit = o.unit;
+      ed = document.createElement('span'); ed.className = 'vd-typein';
+      field = document.createElement('input'); field.type = 'text'; field.autocomplete = 'off'; field.spellcheck = false;
+      field.setAttribute('inputmode', 'decimal'); field.setAttribute('enterkeyhint', 'done');
+      field.setAttribute('aria-label', 'Type ' + lab + (unit ? ', in ' + unit : '') + ', then press Enter');
+      field.value = seed != null ? seed : o.seed ? o.seed() : p ? String(p.v) : String(+o.get());
+      var fit = function () { field.style.width = Math.max(3, field.value.length + 0.5) + 'ch'; };
+      fit(); field.addEventListener('input', fit);
+      ed.appendChild(field);
+      if (+f(o.min) < 0) {
+        var pm = document.createElement('button'); pm.type = 'button'; pm.className = 'vd-pm'; pm.textContent = '±'; pm.tabIndex = -1; pm.setAttribute('aria-label', 'Change sign');
+        pm.addEventListener('pointerdown', function (e) { e.preventDefault(); });
+        pm.addEventListener('click', function () { var s = field.value.replace(/−/g, '-').trim(); field.value = s[0] === '-' ? s.slice(1) : '-' + s; field.focus(); });
+        ed.insertBefore(pm, field);
+      }
+      if (unit) { var u = document.createElement('span'); u.className = 'vd-unit'; u.textContent = unit; ed.appendChild(u); }
+      out.classList.add('vd-editing'); out.insertAdjacentElement('afterend', ed);
+      field.addEventListener('keydown', function (e) {
+        e.stopPropagation(); field.classList.remove('bad');
+        if (e.key === 'Enter') { close(true, true); e.preventDefault(); } else if (e.key === 'Escape') { close(false, true); e.preventDefault(); }
+      });
+      field.addEventListener('blur', function () { close(true, false); });
+      ['pointerdown', 'click', 'wheel'].forEach(function (t) { ed.addEventListener(t, function (e) { e.stopPropagation(); }); });
+      field.focus(); if (seed == null) field.select();
+    }
+    var typed = function (e) { return e.key.length === 1 && /[0-9.,\-−]/.test(e.key) && !e.ctrlKey && !e.metaKey && !e.altKey; };
+    out.addEventListener('click', function () { open(); });
+    out.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ' || e.key === 'F2') { open(); e.preventDefault(); } else if (typed(e)) { open(e.key); e.preventDefault(); }
+    });
+    (o.knobs || []).forEach(function (k) {
+      k.addEventListener('dblclick', function () { open(); });
+      k.addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === 'F2') { open(); e.preventDefault(); } else if (typed(e)) { open(e.key); e.preventDefault(); }
+      });
+    });
+    return { open: open, close: close };
+  };
+
+  /* VD.knobs(): every range input inside .instr (the instrument panel in the picture) gets a knob that drives it: one step every
+     15° of turn, arrow keys (Shift for ten steps), Page Up/Down for ten steps, Home/End, the mouse wheel (Shift for ten steps).
+     Its readout (output for the input) takes a typed value (VD.typeIn), as does the knob on a double click or a typed digit.
+     The input stays the source of truth, so the demo's own code is unchanged: the knob dispatches 'input' events and redraws
+     its mark whenever the value changes, even when the demo sets it. data-unit on the input gives the unit when the readout
+     can show a word instead of a number (such as "none" for zero). */
+  VD.knobs = function () {
+    var DEG = 15, all = [];
+    document.querySelectorAll('.instr input[type="range"]').forEach(function (inp) {
+      var k = document.createElement('div'), lab = document.querySelector('label[for="' + inp.id + '"]');
+      k.className = 'vdknob'; k.tabIndex = 0; k.setAttribute('role', 'slider'); k.setAttribute('aria-label', lab ? lab.textContent.trim() : inp.id);
+      k.setAttribute('aria-valuemin', inp.min); k.setAttribute('aria-valuemax', inp.max); inp.tabIndex = -1; inp.setAttribute('aria-hidden', 'true');
+      inp.insertAdjacentElement('afterend', k);
+      var st = function () { return +inp.step || 1; }, out = inp.id && document.querySelector('output[for="' + inp.id + '"]');
+      var put = function (v) { if (v !== +inp.value) { inp.value = v; inp.dispatchEvent(new Event('input', { bubbles: true })); } };
+      var set = function (n) { var v = Math.max(+inp.min, Math.min(+inp.max, +inp.value + n * st())); put(+(Math.round(v / st()) * st()).toFixed(6)); };
+      var last = null, acc = 0;
+      var ang = function (e) { var r = k.getBoundingClientRect(); return Math.atan2(e.clientY - r.top - r.height / 2, e.clientX - r.left - r.width / 2) * 180 / Math.PI; };
+      k.addEventListener('pointerdown', function (e) { k.setPointerCapture(e.pointerId); last = ang(e); acc = 0; k.focus(); e.preventDefault(); });
+      k.addEventListener('pointermove', function (e) { if (last === null) return; var a = ang(e), d = a - last; d -= 360 * Math.round(d / 360); last = a; acc += d; var n = Math.trunc(acc / DEG); if (n) { acc -= n * DEG; set(n); } });
+      var end = function () { last = null; }; k.addEventListener('pointerup', end); k.addEventListener('pointercancel', end);
+      k.addEventListener('wheel', function (e) { e.preventDefault(); var d = e.deltaY || e.deltaX; if (d) set((d < 0 ? 1 : -1) * (e.shiftKey ? 10 : 1)); }, { passive: false });
+      k.addEventListener('keydown', function (e) { var n = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 10, PageDown: -10, Home: -1e9, End: 1e9 }[e.key]; if (!n) return; set(e.shiftKey && Math.abs(n) === 1 ? 10 * n : n); e.preventDefault(); });
+      if (out) VD.typeIn(out, { get: function () { return +inp.value; }, set: put, min: function () { return inp.min; }, max: function () { return inp.max; }, step: st,
+        unit: inp.dataset.unit, label: lab ? lab.textContent.trim() : inp.id, can: function () { return !inp.disabled && out.getClientRects().length > 0; }, knobs: [k] });
+      all.push({ inp: inp, k: k, out: out, shown: null });
+    });
+    (function show() { all.forEach(function (o) { if (o.inp.value !== o.shown) { o.shown = o.inp.value; o.k.style.setProperty('--a', (Math.round((+o.inp.value - +o.inp.min) / (+o.inp.step || 1)) * DEG) % 360 + 'deg'); o.k.setAttribute('aria-valuenow', o.inp.value); } if (o.out) o.k.setAttribute('aria-valuetext', o.out.textContent); }); requestAnimationFrame(show); })();
   };
 
   function wire() {
