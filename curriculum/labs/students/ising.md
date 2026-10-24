@@ -41,6 +41,8 @@ $$c = \frac{N\left(\langle e^2\rangle - \langle e\rangle^2\right)}{kT^2},\qquad 
 
 The heat capacity found this way should agree with $$c = d\langle e\rangle/dT$$.
 
+The susceptibility uses $$\langle \lvert m\rvert\rangle$$ in place of $$\langle m\rangle$$, the usual form on a finite lattice: with no field a long run flips between up and down, so $$\langle m\rangle$$ averages to zero and the response $$\chi_{\text{resp}} = N\left(\langle m^2\rangle - \langle m\rangle^2\right)/kT$$ would grow in proportion to $$N$$ below $$T_c$$ from those flips instead of falling. The two are not the same quantity. Far above $$T_c$$, where the spins are nearly independent, $$\langle \lvert m\rvert\rangle^2 \approx (2/\pi)\langle m^2\rangle$$, so this $$\chi$$ is $$(1 - 2/\pi) \approx 0.363$$ times $$N\langle m^2\rangle/kT$$. Both peak near $$T_c$$ and grow with $$L$$ with the same critical exponent, which is what the size comparison below uses.
+
 **The exact solution.** Onsager solved the model with no field on an infinite lattice in 1944. Order appears below the critical temperature
 
 $$T_c = \frac{2J}{k\ln(1 + \sqrt{2})} = 2.269185\ J/k,$$

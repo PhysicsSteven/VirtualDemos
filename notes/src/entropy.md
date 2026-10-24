@@ -11,7 +11,7 @@ time: 20 to 30 minutes
 
 ## Before class
 
-Students should know heat engines, efficiency and the Carnot efficiency, and ideally have met S = Q/T for a reservoir. The demo has three views. **Free expansion**: hard disks in a box 2 by 1 units start in the left half behind a partition; the count on the left and a histogram of time spent at each count are shown once the partition is removed. **Einstein solids**: two solids of N_A and N_B oscillators share q quanta by random exchanges of one quantum at a time; Ω_A Ω_B is plotted against q_A. **Second law**: an engine or refrigerator between two reservoirs, with ΔS of each reservoir and of the universe, and an optional pairing with a Carnot partner.
+Students should know heat engines, efficiency and the Carnot efficiency, and ideally have met S = Q/T for a reservoir. The demo has three views. **Free expansion**: hard disks in a box 2 by 1 units start in the left half behind a partition; the count on the left and a histogram of time spent at each count are shown once the partition is removed. **Einstein solids**: two solids of N_A and N_B oscillators share q quanta by random exchanges of one quantum at a time; Ω_A Ω_B is plotted against q_A. **Second law**: an engine or refrigerator between two reservoirs, with ΔS of each reservoir and of the universe, and a pairing with a Carnot partner.
 
 ## Running it in class
 

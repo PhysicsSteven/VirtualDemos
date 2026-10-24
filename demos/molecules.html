@@ -524,7 +524,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function spinBox(m, x, y, w, h) {
     const p = proj(), l = S.lev.l, I = IfromB(Bv(m, 0)), wRot = HBAR * Math.sqrt(l * (l + 1)) / I, Trot1 = 2 * Math.PI * I / (HBAR * Math.SQRT2);
     const wVib = 2 * Math.PI * C_MS * 100 * nuVib(m), A = Math.sqrt(HBAR / (mu(m) * U_KG * wVib)) * 1e9, M = m.m1 + m.m2;
-    const t = (performance.now() - spinT0) / 1000, slow = 4 / Trot1, ang = l ? wRot * slow * t : 0, r = m.re + A * Math.sin(2 * Math.PI * 1.5 * t);
+    const t = (performance.now() - spinT0) / 1000, slow = 4 / Trot1, ang = l ? wRot / slow * t : 0, r = m.re + A * Math.sin(2 * Math.PI * 1.5 * t);
     if (VG) VG.box(ctx, x, y, w, h, { color: dark() ? '#1d2531' : '#2b3644', r: 8 }); else { ctx.fillStyle = '#2b3644'; ctx.fillRect(x, y, w, h); }
     const cx = x + w / 2, cy = y + 24 * p + (h - 70 * p) / 2, sc = (Math.min(w, h - 70 * p) / 2 - 14 * p) / ((m.re + A) * Math.max(m.m1, m.m2) / M);
     const ca = Math.cos(ang), sa = Math.sin(ang), dA = r * m.m2 / M * sc, dB = r * m.m1 / M * sc;

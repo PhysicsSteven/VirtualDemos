@@ -13,7 +13,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§7.3 and 7.6. Access for fre
 **Using the demo.**
 
 - An electron moves in one dimension. Positions are in nm, energies in eV and times in fs, and $$\hbar^2/2m = 0.0381$$ eV·nm².
-- The electron starts as a Gaussian wave packet of width σ, centred at $$x_0$$, with mean energy $$E_0 = \hbar^2k_0^2/2m$$. Set these on the card over the picture, then press Launch packet and Play.
+- The electron starts as a Gaussian wave packet of width σ, centred at $$x_0$$, with central wave number $$k_0$$ and $$E_0 = \hbar^2k_0^2/2m$$, the energy that goes with $$k_0$$. The packet's mean energy is a little higher, $$\langle E\rangle = E_0 + \hbar^2/8m\sigma^2$$ (0.2011 eV for E₀ = 0.20 eV and σ = 3 nm), because its spread in k adds energy; the plane wave prediction is taken at E₀. Set these on the card over the picture, then press Launch packet and Play.
 - The time dependent Schrödinger equation is solved on a grid of points 25 pm apart (40 pm for two barriers; Crank–Nicolson steps). The packet carries a spread of energies, wider for a narrow packet.
 - Probability that reaches the edges of the view is absorbed and still counted. R is all the probability on the side the packet came from, T all of it on the far side, including what the edges have absorbed.
 - The Scattering readouts also show the plane wave T at $$E_0$$ and T averaged over the packet's energies, both from the formulas.

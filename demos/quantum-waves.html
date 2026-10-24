@@ -1113,7 +1113,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (cfg().kind === 'scatter' && lastObs && lastObs.norm > 1e-6 && lastObs.E !== undefined && eY(lastObs.E) >= g.top) {
       out.push({ id: 'E', kind: 'E', cursor: 'ns-resize', seg: [g.L, eY(lastObs.E), g.R, eY(lastObs.E)],
         set: (x, e) => {
-          const v = Math.max(0, Math.min(3, +e.toFixed(3)));
+          /* the line shows ⟨E⟩ = E₀ + ħ²/8mσ² (the packet's spread in k adds energy), so take that offset off for E₀ */
+          const v = Math.max(0, Math.min(3, +(e - (lastObs.E - S.packet.E0)).toFixed(3)));
           S.packet.E0 = v; $('pE').value = v; packetOuts(); sTopCache = null; launch();
         } });
     }

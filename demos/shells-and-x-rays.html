@@ -592,14 +592,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return true;
   }
   const in3 = (e) => { const r = can.getBoundingClientRect(); return e.clientX - r.left < W3(); };
-  /* photon energies drawn from the graph's spectrum: a table of the photon number per energy, built when the target or voltage changes */
+  /* photon energies drawn from the graph's spectrum: a table of the photon number per energy, built when the target or voltage
+     changes. The continuum is binned finely (energy spectrum divided by E); each K line is one entry holding the photon number of its
+     whole peak (peak area 3h·σ√(2π), divided by E), so a narrow line is drawn as often as the graph says even when no bin centre falls
+     on it. Photons below 1 keV are left out (the tube window stops them), which also keeps the continuum divided by E finite. */
+  const E_CUT = 1000;
   function photonTable(Z, kV) {
     const k = Z + ',' + kV; if (G3.key === k) return G3.cdf; G3.key = k;
-    const E0 = kV * 1000, n = 600, cdf = []; let sum = 0;
-    for (let i = 0; i < n; i++) { const E = E0 * (i + 0.5) / n; sum += spectrum(Z, kV, E) / E; cdf.push([sum, E]); }
+    const E0 = kV * 1000, n = 2000, dE = (E0 - E_CUT) / n, cdf = []; let sum = 0;
+    for (let i = 0; i < n; i++) { const E = E_CUT + dE * (i + 0.5); sum += kramersE(Z, kV, E) / (Z * E0) / E * dE; cdf.push([sum, E, null]); }
+    for (const l of xrayLines(Z, kV)) { const sg = RES * l.E / 2.3548; sum += 3 * l.h * sg * Math.sqrt(2 * Math.PI) / l.E; cdf.push([sum, l.E, l.name]); }
     cdf.forEach((q) => { q[0] /= sum; }); return (G3.cdf = cdf);
   }
-  function pickE(cdf, u) { let a = 0, b = cdf.length - 1; while (a < b) { const m = (a + b) >> 1; if (cdf[m][0] < u) a = m + 1; else b = m; } return cdf[a][1]; }
+  function pickE(cdf, u) { let a = 0, b = cdf.length - 1; while (a < b) { const m = (a + b) >> 1; if (cdf[m][0] < u) a = m + 1; else b = m; } return cdf[a]; }
   function drawTube3(Z, kV, myst, lines) {
     const g = g3, S3 = g.S3, p = proj(), w3 = W3(), asp = w3 / Math.max(1, Hh);
     S3.size(w3, Hh); const narrow = W < 560; S3.place(G3.o, narrow ? [0, 0.01, ZT - 0.02] : [-0.02, 0.03, ZT - 0.04], (narrow ? 0.45 : 0.72) * Math.max(1, 1.45 / asp));
@@ -611,11 +616,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       g.els.put(i, XC + (XA - XC) * u * u, r0 * Math.cos(a), ZT + r0 * Math.sin(a)); }
     g.els.show(ne); g.els.done();
     /* X rays from the focal spot, out of the slanted face toward the front, each with an energy from the spectrum */
-    const cdf = photonTable(Z, kV), nx = 90, col = new THREE.Color(), kb = lines.find((l) => l.name === 'Kβ₁'), sgOf = (E) => 3 * RES * E / 2.3548;
+    const cdf = photonTable(Z, kV), nx = 90, col = new THREE.Color();
     for (let i = 0; i < nx; i++) { const life = (t * 0.7 + i / nx) % 1, gen = Math.floor(t * 0.7 + i / nx), h1 = hash(i, gen), h2 = hash(i + 91, gen), h3 = hash(i + 7, gen);
-      const E = pickE(cdf, h3), th = (h1 - 0.5) * 1.5, ph = (h2 - 0.5) * 0.9, d = 0.14 * life, dx = Math.sin(th) * Math.cos(ph) - 0.25, dy = -Math.cos(th) * Math.cos(ph), dz = Math.sin(ph), nn = Math.hypot(dx, dy, dz);
-      const ln = lines.find((l) => Math.abs(E - l.E) < sgOf(l.E));
-      col.set(ln ? (ln === kb ? T.kb : T.ka) : T.brems);
+      const ph3 = pickE(cdf, h3), th = (h1 - 0.5) * 1.5, ph = (h2 - 0.5) * 0.9, d = 0.14 * life, dx = Math.sin(th) * Math.cos(ph) - 0.25, dy = -Math.cos(th) * Math.cos(ph), dz = Math.sin(ph), nn = Math.hypot(dx, dy, dz);
+      col.set(ph3[2] ? (ph3[2] === 'Kβ₁' ? T.kb : T.ka) : T.brems);
       g.xs.put(i, XA + d * dx / nn, -0.001 + d * dy / nn, ZT + d * dz / nn, col); }
     g.xs.show(nx); g.xs.done();
     S3.render();
@@ -736,7 +740,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- about ----------
   $('aboutShells').textContent = 'Shells: each electron in an atom has four quantum numbers n, l, m_l and m_s, and no two can share all four (the Pauli exclusion principle, OpenStax Vol. 3 §8.4). So a subshell holds 2(2l + 1) electrons (2, 6, 10, 14 for s, p, d, f) and a shell 2n². Each box is one orbital (one m_l), holding at most one spin up and one spin down electron; within a subshell the boxes fill once with spin up before any pairs (Hund\'s rule). "By the n + l rule" fills subshells in order of n + l, lower n first on a tie (1s 2s 2p 3s 3p 4s 3d 4p 5s 4d 5p 6s 4f 5d 6p 7s 5f 6d 7p). "Measured ground state" is the configuration NIST lists; about twenty elements (chromium, copper, palladium, gadolinium, …) differ from the rule, and those subshells are outlined. The rows are drawn by n, not by energy. Z_eff = n√(IE/13.6 eV) treats the outer electron as if it were in a hydrogen atom with nuclear charge Z_eff, a rough estimate.';
-  $('aboutXray').textContent = 'X ray tube: electrons from a hot filament are accelerated through V and stop in the target. Slowing down in the target, they emit a continuous spectrum (bremsstrahlung) with energy per unit photon energy ∝ Z(E₀ − E) (Kramers\' law for a thick target), ending at E₀ = eV, the shortest wavelength λ_min = hc/eV (the Duane–Hunt limit). Per unit wavelength it becomes ∝ (λ/λ_min − 1)/λ³. If eV exceeds the K edge, electrons can knock out a K electron, and an L or M electron falls into the hole: Kα₁ (L₃ to K), Kα₂ (L₂ to K) and Kβ₁ (M₃ to K). The line energies and K edges are measured values; the level diagram\'s L₃, L₂ and M₃ energies are the K edge minus each line energy. Line heights are drawn, not computed: Kα₂ half of Kα₁, Kβ₁ a fifth, all growing as (U − 1)^1.6 with U = eV/E_K, which only roughly follows real tubes; Kβ₃ (beside Kβ₁), L lines and absorption in the target and the window, which removes the long wavelength end of a real spectrum, are left out. The spectrometer gives each line a width of 0.15% of its energy, enough to separate Kα₁ and Kα₂ for most targets. For elements that are not solid metals, the target is a compound of the element. The 3D picture is a glass Coolidge tube of typical proportions, not one particular tube; the electrons and X rays move slowed down for the eye, and each X ray drawn has an energy picked from the spectrum in the graph (red for a Kα photon, blue for Kβ, grey for bremsstrahlung).';
+  $('aboutXray').textContent = 'X ray tube: electrons from a hot filament are accelerated through V and stop in the target. Slowing down in the target, they emit a continuous spectrum (bremsstrahlung) with energy per unit photon energy ∝ Z(E₀ − E) (Kramers\' law for a thick target), ending at E₀ = eV, the shortest wavelength λ_min = hc/eV (the Duane–Hunt limit). Per unit wavelength it becomes ∝ (λ/λ_min − 1)/λ³. If eV exceeds the K edge, electrons can knock out a K electron, and an L or M electron falls into the hole: Kα₁ (L₃ to K), Kα₂ (L₂ to K) and Kβ₁ (M₃ to K). The line energies and K edges are measured values; the level diagram\'s L₃, L₂ and M₃ energies are the K edge minus each line energy. Line heights are drawn, not computed: Kα₂ half of Kα₁, Kβ₁ a fifth, all growing as (U − 1)^1.6 with U = eV/E_K, which only roughly follows real tubes; Kβ₃ (beside Kβ₁), L lines and absorption in the target and the window, which removes the long wavelength end of a real spectrum, are left out. The spectrometer gives each line a width of 0.15% of its energy, enough to separate Kα₁ and Kα₂ for most targets. For elements that are not solid metals, the target is a compound of the element. The 3D picture is a glass Coolidge tube of typical proportions, not one particular tube; the electrons and X rays move slowed down for the eye, and each X ray drawn has an energy picked from the spectrum in the graph, counting photons (intensity divided by energy) and each whole line peak, above a 1 keV cutoff that stands in for the window (red for a Kα photon, blue for Kβ, grey for bremsstrahlung).';
   $('aboutData').textContent = 'Data: ground configurations and first ionization energies from the NIST Atomic Spectra Database (version 5.11); ionization energies are given for Z = 1 to 103, and configurations above 103 are predicted. X ray line energies (Kα₁, Kα₂, Kβ₁) and K edges from the NIST X-Ray Transition Energies Database (Deslattes et al., Rev. Mod. Phys. 75, 35, 2003), direct measurements; targets whose values NIST interpolates or flags (P, Tc, Pm, Lu, Hf and Z above 83) are not offered, nor sodium and magnesium, whose atoms have no 3p electron for Kβ₁. hc = 1239.84198 eV·nm (CODATA 2018). Element families and the table layout are those of the Spectra Explorer.';
 
   // ---------- size, theme, start ----------

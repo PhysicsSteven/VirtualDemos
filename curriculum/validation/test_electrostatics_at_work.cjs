@@ -85,7 +85,7 @@ group('wand: agrees with the two sphere solver of Charging by Induction (to its 
     near(s.QB, w.qb1, 1e-6, `ball charge (R ${R}, gap ${gap})`); near(s.VA, w.V1, 1e-6, 'dome voltage');
     near(Math.abs(ind.sigmaPeak(s.charges, { c: D, r: a }).sigma) / ind.EPS0, w.eBall1 / 1.0001 ** 2, 2e-4, 'ball peak field'); }
 });
-group('wand: closer means an earlier spark, and the default reach (R = 15 cm, ball 35 cm from the dome) breaks down at the ball', () => {
+group('wand: closer means an earlier spark, and the default reach (R = 15 cm, ball centre 35 cm from the dome surface, 50 cm between centres, 32 cm gap) breaks down at the ball', () => {
   let prev = Infinity; for (const gap of [0.6, 0.35, 0.2, 0.1, 0.05, 0.02, 0.01, 0.002]) { const w = c.vdgWand(0.15, 0.18 + gap); assert(w.qSpark < prev, `Q_spark falls as the gap closes (${gap})`); prev = w.qSpark; }
   const w = c.vdgWand(0.15, 0.15 + 0.35); assert.strictEqual(w.sparkOn, 'ball'); near(w.qSpark / c.qMax(0.15), 0.5545, 1e-3, 'about 55% of Q_max');
   near(w.qSpark * w.V1, 245.0e3, 1e-3, 'breakdown starts at about 245 kV');

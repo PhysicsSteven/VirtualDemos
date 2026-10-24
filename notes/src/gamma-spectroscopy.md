@@ -1,7 +1,7 @@
 ---
 title: Gamma Spectroscopy
-level: Modern physics lab (pre-lab for the NaI(Tl) spectrometer)
-time: 30 to 45 minutes as a pre-lab; 15 minutes for steps 1 to 3 in lecture
+level: Modern physics lab (prelab for the NaI(Tl) spectrometer)
+time: 30 to 45 minutes as a prelab; 15 minutes for steps 1 to 3 in lecture
 ---
 ## What students should come away with
 

@@ -1,6 +1,6 @@
 ---
 title: Franck–Hertz Experiment
-level: Modern physics; Modern Physics Lab (pre-lab and analysis)
+level: Modern physics; Modern Physics Lab (prelab and analysis)
 time: 15 to 25 minutes
 ---
 ## What students should come away with
@@ -12,7 +12,7 @@ time: 15 to 25 minutes
 
 ## Before class
 
-Students should know the electron volt and the idea of discrete energy levels. The panels show the tube (cathode K, grids G1 and G2, collector A), the electron energy across the gap G1 to G2, the current against U, and the mercury levels. The controls match the lab apparatus: **Oven temperature**, the ramp of **Accelerating voltage U (G2)**, **Retarding voltage U_r** and a nanoamp current amplifier. As a pre-lab it shows what the oscilloscope or data logger trace means.
+Students should know the electron volt and the idea of discrete energy levels. The panels show the tube (cathode K, grids G1 and G2, collector A), the electron energy across the gap G1 to G2, the current against U, and the mercury levels. The controls match the lab apparatus: **Oven temperature**, the ramp of **Accelerating voltage U (G2)**, **Retarding voltage U_r** and a nanoamp current amplifier. As a prelab it shows what the oscilloscope or data logger trace means.
 
 ## Running it in class
 

@@ -21,7 +21,7 @@ Students need L = 4πR²σT_eff⁴ and (3/2)kT per particle. Three panels: lumin
 2. **Mestel cooling law.** Ideal gas ions, no freezing. At 100 Myr the curve has joined the dashed L ∝ t^(−7/5) line (slope −1.38). Work Q2 with the rail's numbers, then switch to **Coulomb liquid**: the curve moves right, because the liquid stores more heat per ion.
 3. **Crystallization begins.** A 0.8 M☉ dwarf at 6.31 Gyr: 24% of its mass is solid, but the front is only at 0.34 R. The Γ panel shows Γ = 214 at the center. Point at the dotted curve (no latent heat) and the **Delay from latent heat** readout (+712 Myr); ask Q5.
 4. **Heavier dwarfs crystallize first.** Ask Q1 before you press it. The 1.0 M☉ onset is at 1.28 Gyr and M_G ≈ 13.0, where Gaia found the Q branch pile up. Drag the mass handle and watch **Crystallization begins** and **Center freezes at** move (Q4).
-5. **Helium vs carbon/oxygen.** 3.4 times as many ions in the same mass: brighter at the same age, and Γ stays far below 175 (Q6).
+5. **Helium vs carbon/oxygen.** 3.4 times as many ions in the same mass: brighter at the same age, and Γ is about 8 times smaller, so it does not freeze within the age of the universe (Q6).
 6. **Cosmic clock.** A simulated disk 9 Gyr old. Drag the gold line and the faint end of the counts (**Faintest 1%**) moves with it. Finish with Q7: this 0.6 M☉ dwarf starts freezing at T_eff 3,887 K (**Crystallization begins**), where detailed models give about 6000 K.
 
 ## Questions
@@ -36,7 +36,7 @@ Students need L = 4πR²σT_eff⁴ and (3/2)kT per particle. Three panels: lumin
 
 **Q5.** Latent heat makes the white dwarf take longer to fade, yet at any given core temperature it is exactly as bright as without latent heat. Explain both facts.
 
-**Q6.** A 0.6 M☉ helium white dwarf fades more slowly than a carbon/oxygen one of the same mass and radius, and never crystallizes. Explain both, using the number of ions and Γ ∝ Z²/a.
+**Q6.** A 0.6 M☉ helium white dwarf fades more slowly than a carbon/oxygen one of the same mass and radius, and does not crystallize within the age of the universe. Explain both, using the number of ions and Γ ∝ Z²/a.
 
 **Q7.** With the 0.6 M☉ carbon/oxygen dwarf selected, the rail says crystallization begins at L = 3.3 × 10⁻⁵ L☉, and the radius is 8,841 km. Use L = 4πR²σT_eff⁴ to find T_eff at onset (σ = 5.67 × 10⁻⁸ W m⁻² K⁻⁴). Detailed models give about 6000 K. Which way does this page's envelope err, and why does that make the onset later and fainter?
 
