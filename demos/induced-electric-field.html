@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* Layout: the solenoid and plots on the left, the rail on the right; stacks on phones. */
 .bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; }
@@ -48,6 +49,10 @@ table.rows input:focus { border-color: var(--accent); }
 :root[data-theme="dark"] { --bfield: #8d9aab; --sol: #1c2633; --path: #e2b350; --efield: #ff7660; --cur: #d98a4c; }
 @media (max-width: 820px) { .stage { height: 760px; max-height: none; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
+.dimseg { position: absolute; top: 26px; left: 10px; z-index: 2; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+.dimseg[hidden] { display: none; }
+.dimseg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.dimseg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -70,6 +75,7 @@ table.rows input:focus { border-color: var(--accent); }
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="The end of a long solenoid, its magnetic field shown as dots or crosses, arrows for the induced electric field circling it, and a closed path that can be dragged or moved with the arrow keys. Plots of the current against time and of the electric field against distance from the axis."></canvas>
+      <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -245,9 +251,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('keydown', (e) => { const k = { ArrowRight: [1, 0], ArrowLeft: [-1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key]; if (!k) return; e.preventDefault(); S.cx = clampC(S.cx + k[0] * 0.002); S.cy = clampC(S.cy + k[1] * 0.002); changed(); });
   const clampC = (v) => Math.max(-0.09, Math.min(0.09, Math.round(v * 1e4) / 1e4));
   let drag = null;
-  can.addEventListener('pointerdown', (e) => { if (!V) return; const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, px = V.ox + S.cx * V.k, py = V.oy - S.cy * V.k;
+  can.addEventListener('pointerdown', (e) => { if (use3()) { if (!inPane(e)) return; const q = sheetHit(e); if (q && Math.hypot(q[0] - S.cx, q[1] - S.cy) <= S.pa + ext3() * 0.08) { drag = { w3: true, dx: q[0] - S.cx, dy: q[1] - S.cy }; can.setPointerCapture(e.pointerId); } return; } if (!V) return; const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, px = V.ox + S.cx * V.k, py = V.oy - S.cy * V.k;
     if (Math.hypot(x - px, y - py) <= S.pa * V.k + 14) { drag = { dx: x - px, dy: y - py }; can.setPointerCapture(e.pointerId); } });
-  can.addEventListener('pointermove', (e) => { if (!drag) return; const r = can.getBoundingClientRect(), x = e.clientX - r.left - drag.dx, y = e.clientY - r.top - drag.dy; S.cx = clampC((x - V.ox) / V.k); S.cy = clampC((V.oy - y) / V.k); changed(); });
+  can.addEventListener('pointermove', (e) => { if (!drag) return; if (drag.w3) { const q = use3() ? sheetHit(e) : null; if (q) { S.cx = clampC(q[0] - drag.dx); S.cy = clampC(q[1] - drag.dy); changed(); } return; } const r = can.getBoundingClientRect(), x = e.clientX - r.left - drag.dx, y = e.clientY - r.top - drag.dy; S.cx = clampC((x - V.ox) / V.k); S.cy = clampC((V.oy - y) / V.k); changed(); });
   can.addEventListener('pointerup', () => { drag = null; });
 
   /* a reading for the Readings section (tools/readings_panel.py); what Blind hides is left blank */
@@ -275,7 +281,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- drawing ----------
   function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
   function arrow(x0, y0, x1, y1, col, w) { const p = ps(), a = Math.atan2(y1 - y0, x1 - x0), L = Math.hypot(x1 - x0, y1 - y0), h = Math.min(6 * p, L * 0.5); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w * p; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - h * 0.6 * Math.cos(a), y1 - h * 0.6 * Math.sin(a)); ctx.stroke(); ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - h * Math.cos(a - 0.45), y1 - h * Math.sin(a - 0.45)); ctx.lineTo(x1 - h * Math.cos(a + 0.45), y1 - h * Math.sin(a + 0.45)); ctx.closePath(); ctx.fill(); }
-  function drawView(x0, y0, w, h, f) {
+  function drawFlat(x0, y0, w, h, f) {
     const p = ps(), ext = Math.max(2.4 * S.R, pathD() + S.pa + 0.008, 0.07), k = Math.min(w, h) / 2 / ext, ox = x0 + w / 2, oy = y0 + h / 2; V = { ox, oy, k };
     ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, w, h); ctx.clip();
     /* solenoid end */
@@ -336,9 +342,130 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = T.efield; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let i = 0; i <= 300; i++) { const r = rmax * i / 300, e = Ephi(r, S.R, f.dB) * u[1]; i ? ctx.lineTo(ax.X(r * 100), ax.Y(e)) : ctx.moveTo(ax.X(r * 100), ax.Y(e)); } ctx.stroke();
     if (pathD() < 1e-9) { const e = Ephi(S.pa, S.R, f.dB) * u[1]; ctx.fillStyle = T.path; ctx.beginPath(); ctx.arc(ax.X(S.pa * 100), ax.Y(e), 4.5 * p, 0, 7); ctx.fill(); }
   }
+  /* ---------- 3D: the solenoid stands upright through a glass sheet; the induced E arrows lie in the sheet, the path too.
+     Same physics calls as the flat view (Ephi, the path's centre and radius); arrows scaled to the run's largest E exactly as there.
+     The winding is drawn with fewer turns than n; B lines are drawn inside only (the ideal long solenoid has B = 0 outside). */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.4, ph: 0.72, zoom: 1 }, R: -1, top: 0.012, Ls: 0.16, pane: [0, 0, 0, 0], curPh: 0 };
+  const NARR = 220, NBL = 9;
+  let g3 = null;
+  const use3 = () => !!(G3.on && g3);
+  const ext3 = () => Math.max(2.4 * S.R, pathD() + S.pa + 0.008, 0.07);
+  function init3D() {
+    G3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); el.style.right = 'auto'; el.style.bottom = 'auto'; stage.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.003, 10), Ms = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.9), sun = new THREE.DirectionalLight(0xffffff, 0.55); sun.position.set(-0.3, -0.5, 0.8); scene.add(hemi, sun);
+    /* the glass sheet the field arrows lie in */
+    const sheetM = new THREE.MeshPhongMaterial({ transparent: true, opacity: 0.1, depthWrite: false, side: THREE.DoubleSide, shininess: 80 }), sheet = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), sheetM);
+    const edgeM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.35 }), edge = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.PlaneGeometry(1, 1)), edgeM);
+    const formerM = new THREE.MeshPhongMaterial({ transparent: true, opacity: 0.16, depthWrite: false, side: THREE.DoubleSide, color: 0xdfe8f2 }), former = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 48, 1, true).rotateX(Math.PI / 2), formerM);
+    /* the winding: a copper tube with stripes that move with the current */
+    const sc = document.createElement('canvas'); sc.width = 64; sc.height = 8; const sx = sc.getContext('2d'); sx.fillStyle = '#c47a3c'; sx.fillRect(0, 0, 64, 8); sx.fillStyle = '#f1c08f'; sx.fillRect(0, 0, 14, 8);
+    const stripe = new THREE.CanvasTexture(sc); stripe.wrapS = stripe.wrapT = THREE.RepeatWrapping;
+    const coilM = Ms({ map: stripe, roughness: 0.35, metalness: 0.3 }), coil = new THREE.Mesh(new THREE.BufferGeometry(), coilM);
+    /* B lines inside, each with arrowheads */
+    const bM = new THREE.MeshBasicMaterial({ transparent: true }), bLines = new THREE.Group();
+    for (let i = 0; i < NBL; i++) { const l = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 8).rotateX(Math.PI / 2), bM); const hs = []; for (let k = 0; k < 3; k++) { const h = new THREE.Mesh(new THREE.ConeGeometry(1, 1, 12).rotateX(Math.PI / 2), bM); hs.push(h); l.add(h); } l.userData.heads = hs; bLines.add(l); }
+    /* induced E arrows: one flat arrow shape, instanced */
+    const sh = new THREE.Shape(); sh.moveTo(-0.5, -0.1); sh.lineTo(0.12, -0.1); sh.lineTo(0.12, -0.28); sh.lineTo(0.5, 0); sh.lineTo(0.12, 0.28); sh.lineTo(0.12, 0.1); sh.lineTo(-0.5, 0.1); sh.closePath();
+    const eM = new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }), eArr = new THREE.InstancedMesh(new THREE.ShapeGeometry(sh), eM, NARR); eArr.frustumCulled = false;
+    /* the path: a dashed loop, or a copper ring with electrons */
+    const pathM = new THREE.LineDashedMaterial({ dashSize: 1, gapSize: 0.7 }), loopPts = []; for (let i = 0; i <= 96; i++) { const a = i / 96 * 2 * Math.PI; loopPts.push(new THREE.Vector3(Math.cos(a), Math.sin(a), 0)); }
+    const pathLine = new THREE.Line(new THREE.BufferGeometry().setFromPoints(loopPts), pathM);
+    const ringM = Ms({ color: 0xc47a3c, roughness: 0.35, metalness: 0.3 }), ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.035, 12, 96), ringM);
+    const elM = Ms({ roughness: 0.4 }), elec = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 10, 8), elM, 16); elec.frustumCulled = false;
+    const dirM = new THREE.MeshBasicMaterial(), dirs = [0, 1].map(() => new THREE.Mesh(new THREE.ConeGeometry(1, 1, 12), dirM));
+    scene.add(sheet, edge, former, coil, bLines, eArr, pathLine, ring, elec, ...dirs);
+    g3 = { r, el, scene, cam, hemi, sun, sheet, sheetM, edge, edgeM, former, formerM, coil, coilM, stripe, bLines, bM, eArr, eM, pathLine, pathM, ring, ringM, elec, elM, dirs, dirM, m4: new THREE.Matrix4(), q: new THREE.Quaternion(), v: new THREE.Vector3(), s: new THREE.Vector3(), ray: new THREE.Raycaster() };
+    can.addEventListener('wheel', (e) => { if (!use3() || !inPane(e)) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || !inPane(e) || !!drag, phMin: 0.25, phMax: 1.5, zMin: 0.6, zMax: 3, keys: false });
+    return true;
+  }
+  const inPane = (e) => { const b = can.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top, [x0, y0, w, h] = G3.pane; return x >= x0 && x <= x0 + w && y >= y0 && y <= y0 + h; };
+  /* where the pointer meets the sheet (z = 0), in metres */
+  function sheetHit(e) {
+    const g = g3, b = can.getBoundingClientRect(), [x0, y0, w, h] = G3.pane, nx = (e.clientX - b.left - x0) / w * 2 - 1, ny = -((e.clientY - b.top - y0) / h * 2 - 1);
+    g.ray.setFromCamera({ x: nx, y: ny }, g.cam); const o = g.ray.ray.origin, d = g.ray.ray.direction; if (Math.abs(d.z) < 1e-6) return null; const t = -o.z / d.z; return t > 0 ? [o.x + d.x * t, o.y + d.y * t] : null;
+  }
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function theme3() {
+    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fbfcfd');
+    g.scene.background = bg; g.hemi.intensity = dk ? 1.0 : 0.9; g.hemi.groundColor = col3(dk ? '#1c222a' : '#8c8a84', '#8c8a84');
+    g.sheetM.color = col3(dk ? '#1f2a38' : '#eef3f8', '#eef3f8'); g.sheetM.opacity = dk ? 0.5 : 0.45; g.edgeM.color = col3(T.muted, '#5a6575');
+    g.formerM.color = col3(dk ? '#4a5a70' : '#dfe8f2', '#dfe8f2'); g.bM.color = col3(T.bfield, '#7a8796'); g.eM.color = col3(T.efield, '#c23f2c');
+    g.pathM.color = col3(T.path, '#a7740b'); g.elM.color = col3(T.neg, '#2b60b5');
+  }
+  function coil3() {
+    const g = g3; if (G3.R === S.R) return; G3.R = S.R;
+    const R = S.R, Ls = Math.max(0.16, 8 * R), turns = 36, pts = []; G3.top = Math.max(0.012, 0.6 * R);
+    for (let i = 0; i <= turns * 40; i++) { const f = i / (turns * 40), a = f * turns * 2 * Math.PI; pts.push(new THREE.Vector3(R * Math.cos(a), R * Math.sin(a), G3.top - Ls + f * Ls)); }
+    g.coil.geometry.dispose(); g.coil.geometry = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), turns * 40, Math.max(0.0007, R * 0.06), 8, false);
+    g.stripe.repeat.set(turns * 3, 1);
+    g.former.scale.set(R * 0.96, R * 0.96, Ls); g.former.position.z = G3.top - Ls / 2; G3.Ls = Ls;
+  }
+  function render3(f) {
+    const g = g3, [x0, y0, w, h] = G3.pane;
+    if (G3.w !== w || G3.h !== h) { G3.w = w; G3.h = h; g.r.setSize(w, Math.max(1, h)); g.cam.aspect = w / Math.max(1, h); g.cam.updateProjectionMatrix(); }
+    g.el.style.left = x0 + 'px'; g.el.style.top = y0 + 'px';
+    const key = [T.canvas, T.efield, T.path].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    coil3();
+    const ext = ext3(), Ls = G3.Ls, asp = w / Math.max(1, h), span = Math.max(2.1 * ext, 2.3 * ext / asp);
+    g.sheet.scale.set(2 * ext, 2 * ext, 1); g.edge.scale.set(2 * ext, 2 * ext, 1);
+    VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0, -0.1 * ext), span / (2 * Math.tan(15 * Math.PI / 180)));
+    /* winding stripes move with the current: counterclockwise seen from above when I > 0 */
+    g.stripe.offset.x = -G3.curPh;
+    /* B lines, brightness and arrowheads from B */
+    const Bmax = MU0 * S.n * S.w.I0, rel = Bmax ? f.B / Bmax : 0, rr = S.R * 0.62;
+    g.bLines.visible = Math.abs(rel) > 0.01; g.bM.opacity = Math.min(1, 0.15 + 0.85 * Math.abs(rel));
+    g.bLines.children.forEach((l, i) => { const a = i / (NBL - 1) * 2 * Math.PI, rad = i === 0 ? 0 : rr * (i % 2 ? 1 : 0.55), th = i * 2.4;
+      l.position.set(rad * Math.cos(th), rad * Math.sin(th), G3.top - Ls / 2); l.scale.set(S.R * 0.025, S.R * 0.025, Ls * 0.98);
+      l.userData.heads.forEach((hd, k) => { hd.position.set(0, 0, 0.47 - k * 0.2); hd.scale.set(3.2, 3.2, S.R * 0.2 / (Ls * 0.98)); hd.rotation.set(rel < 0 ? Math.PI : 0, 0, 0); }); });
+    /* induced E arrows in the sheet: the same rings and lengths as the flat view */
+    const Epk = Epeak(); let n = 0;
+    if (!S.blind && Epk > 0) {
+      const rings = 7, Lmax = ext / rings * 0.95;
+      for (let j = 1; j <= rings; j++) { const rj = ext * (j - 0.35) / rings, m = 6 + 3 * j, e = Ephi(rj, S.R, f.dB), L = Lmax * Math.min(1, Math.abs(e) / Epk); if (L < ext * 0.01) continue;
+        for (let i = 0; i < m && n < NARR; i++) { const th = (i + (j % 2) * 0.5) / m * 2 * Math.PI, dir = th + (e > 0 ? Math.PI / 2 : -Math.PI / 2);
+          g.q.setFromAxisAngle(new THREE.Vector3(0, 0, 1), dir); g.v.set(rj * Math.cos(th), rj * Math.sin(th), 0.0005); g.s.set(L, L * 0.9 + ext * 0.012, 1);
+          g.m4.compose(g.v, g.q, g.s); g.eArr.setMatrixAt(n++, g.m4); } }
+    }
+    g.eArr.count = n; g.eArr.instanceMatrix.needsUpdate = true;
+    /* the path or the ring */
+    const pr = S.pa; g.pathLine.visible = !S.ring; g.ring.visible = S.ring;
+    g.pathLine.position.set(S.cx, S.cy, 0.0008); g.pathLine.scale.set(pr, pr, 1); g.pathM.dashSize = ext * 0.05 / pr; g.pathM.gapSize = ext * 0.035 / pr; g.pathLine.computeLineDistances();
+    g.ring.position.set(S.cx, S.cy, 0); g.ring.scale.set(pr, pr, pr);
+    if (S.ring && !S.blind) S.emfRel = Epk ? f.circ / (2 * Math.PI * S.R * Epk) : 0;
+    let ne = 0; if (S.ring && !S.blind) for (let i = 0; i < 16; i++) { const th = i / 16 * 2 * Math.PI - S.ringPhase, br = ext * 0.012; g.m4.makeScale(br, br, br).setPosition(S.cx + pr * Math.cos(th), S.cy + pr * Math.sin(th), 0); g.elec.setMatrixAt(ne++, g.m4); }
+    g.elec.count = ne; g.elec.instanceMatrix.needsUpdate = true;
+    g.dirM.color = col3(S.ring ? T.cur : T.path, '#a7740b');
+    g.dirs.forEach((c, k) => { const th = k ? 3 * Math.PI / 2 : Math.PI / 2, s = ext * 0.03; c.position.set(S.cx + pr * Math.cos(th), S.cy + pr * Math.sin(th), 0.001); c.scale.set(s * 0.6, s, s * 0.6); c.rotation.set(0, 0, th + Math.PI); });
+    g.r.render(g.scene, g.cam);
+    const tmp = new THREE.Vector3();
+    return (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [x0 + (tmp.x + 1) / 2 * w, y0 + (1 - tmp.y) / 2 * h, tmp.z]; };
+  }
+  function drawView3(x0, y0, w, h, f) {
+    const p = ps(); G3.pane = [x0, y0, w, h]; ctx.clearRect(x0, y0, w, h); const Q = render3(f), ext = ext3();
+    const top = Q([0, 0, G3.top + 0.004]), pl = Q([S.cx + S.pa * 0.72, S.cy + S.pa * 0.72, 0]), rl = Q([S.R * 1.1, -S.R * 0.2, -G3.Ls * 0.35]);
+    txt(f.B === 0 ? 'B = 0' : `B ${f.B > 0 ? 'up' : 'down'}, inside only`, top[0], top[1] - 30 * p, { a: 'center', s: 10, c: T.muted });
+    txt('path', pl[0] + 6 * p, pl[1] - 6 * p, { s: 10, b: 1, c: S.ring ? T.cur : T.path });
+    txt(`R = ${(S.R * 100).toFixed(1)} cm`, rl[0] + 8 * p, rl[1], { s: 9.5, c: T.muted });
+    txt(w > 480 ? 'Winding drawn with fewer turns. Arrows: the induced E in the sheet. Drag the path; drag elsewhere to turn.' : 'Drag the path; drag elsewhere to turn.', x0 + 10 * p, y0 + h - 12 * p, { s: 9, c: T.muted });
+  }
+  function setDim(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried || !window.VD3) { v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setDim(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3) g3.el.hidden = !use3();
+    for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String(b.dataset.dim === v));
+    draw();
+  }
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setDim(b.dataset.dim); });
   function draw() {
     if (!T || !W) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const p = ps(), narrow = W < 700, f = physics();
+    if (g3) g3.el.hidden = !use3();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const p = ps(), narrow = W < 700, f = physics(), drawView = use3() ? drawView3 : drawFlat;
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     const slow = 6 / window_(S.w);
     if (narrow) { const vh = Math.min(W, Hh * 0.5); drawView(0, 0, W, vh, f); const ph = (Hh - vh - 16 * p) / 2; drawIt(8 * p, vh + 4 * p, W - 8 * p, vh + ph, f); drawEr(8 * p, vh + ph + 10 * p, W - 8 * p, Hh - 8 * p, f); }
@@ -350,6 +477,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!S.playing) return;
     const tw = window_(S.w); S.t += dt * tw / 6; if (S.t > tw) S.t = 0;
     if (S.ring) S.ringPhase += dt * 2.5 * (S.emfRel || 0);
+    G3.curPh += dt * 1.2 * (S.w.I0 ? current(S.w, S.t).I / S.w.I0 : 0);
     readouts(); draw();
   }
   function resize() { dpr = window.devicePixelRatio || 1; const rc = stage.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
@@ -360,6 +488,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce) S.playing = false; upd(); });
   tokens(); new ResizeObserver(resize).observe(stage);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'outside'); resize();
+  { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
