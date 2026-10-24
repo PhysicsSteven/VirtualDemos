@@ -40,6 +40,7 @@ VIEW = {"width": 1440, "height": 900}
 #   keep_controls  True to leave buttons inside the stage visible
 OVERRIDES = {
     "spectra": {"crop": "main.bench > :first-child", "anchor": "top"},
+    "superconductors": {"wait": 1200, "crop": ".scene", "js": "document.getElementById('setupCard').style.visibility = 'hidden';"},
     "photoelectric": {"anchor": "top"},
     "nuclear-reactions": {"wait": 1500, "crop": ".pane", "js": "window.__nr.applyPreset('rxFission');"},
     "particles": {"wait": 1500, "crop": "#can", "js": "window.__pq.applyPreset('mystery'); const pn = document.getElementById('pane'); pn.style.width = Math.round(pn.clientHeight * 1.6) + 'px'; pn.style.margin = '0 auto'; window.dispatchEvent(new Event('resize'));"},

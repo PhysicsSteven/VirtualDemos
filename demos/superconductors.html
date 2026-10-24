@@ -1,0 +1,387 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Superconductors and the Meissner Effect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: its own colours, the picture, the graph and the Set up card's place */
+:root { --field: #2b60b5; --sc: #2f9e8f; --metal: #9aa3ad; --coil: #c87a4f; --crit: #d2452b; --onset: #a7740b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --field: #69a0ff; --sc: #5fd3c2; --metal: #7d8794; --coil: #e09a6f; --crit: #ff7a5c; --onset: #e2b350; } }
+:root[data-theme="dark"] { --field: #69a0ff; --sc: #5fd3c2; --metal: #7d8794; --coil: #e09a6f; --crit: #ff7a5c; --onset: #e2b350; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.scene { position: relative; flex: 1 1 auto; min-height: 400px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.plotbox { position: relative; flex: none; height: 230px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.plotbar { position: absolute; top: 6px; right: 8px; z-index: 2; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 14px; width: 270px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.setup-card .fine { display: flex; gap: 6px; align-items: center; margin-top: 4px; }
+.setup-card .fine input[type="number"] { width: 90px; font: inherit; font-size: 0.85rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; }
+.setup-card .fine span { font-size: 0.8rem; color: var(--muted); }
+@media (min-width: 821px) { .stage { min-height: 700px; } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 400px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; } .plotbox { height: 210px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Superconductors and the Meissner Effect</h1>
+      <p>Cool a metal sphere below its critical temperature in a magnetic field and the field is pushed out of it. Find the field that destroys superconductivity at each temperature.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">T in K · B in mT · moment in mA·m²</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/superconductors.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/superconductors.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h2v1h-2zM14 2h1v1h-1zM19 2h2v1h-2zM22 2h2v1h-2zM25 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM13 3h1v1h-1zM15 3h2v1h-2zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h5v1h-5zM21 4h3v1h-3zM25 4h1v1h-1zM28 4h1v1h-1zM30 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h4v1h-4zM16 5h4v1h-4zM21 5h1v1h-1zM24 5h2v1h-2zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM16 6h1v1h-1zM18 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM15 7h1v1h-1zM20 7h1v1h-1zM23 7h1v1h-1zM27 7h4v1h-4zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM13 9h1v1h-1zM15 9h2v1h-2zM18 9h1v1h-1zM21 9h3v1h-3zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h2v1h-2zM15 10h2v1h-2zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h6v1h-6zM32 10h5v1h-5zM3 11h1v1h-1zM6 11h2v1h-2zM9 11h1v1h-1zM12 11h2v1h-2zM17 11h2v1h-2zM24 11h3v1h-3zM30 11h2v1h-2zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h5v1h-5zM8 12h1v1h-1zM11 12h2v1h-2zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM3 13h1v1h-1zM6 13h2v1h-2zM9 13h2v1h-2zM12 13h3v1h-3zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM25 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM4 14h1v1h-1zM6 14h3v1h-3zM12 14h1v1h-1zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h1v1h-1zM26 14h13v1h-13zM2 15h1v1h-1zM4 15h2v1h-2zM7 15h1v1h-1zM9 15h3v1h-3zM14 15h1v1h-1zM16 15h1v1h-1zM18 15h2v1h-2zM22 15h4v1h-4zM30 15h1v1h-1zM33 15h1v1h-1zM4 16h1v1h-1zM6 16h5v1h-5zM14 16h6v1h-6zM22 16h3v1h-3zM28 16h3v1h-3zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h2v1h-2zM5 17h2v1h-2zM9 17h1v1h-1zM11 17h1v1h-1zM17 17h7v1h-7zM25 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM4 18h2v1h-2zM7 18h3v1h-3zM11 18h2v1h-2zM15 18h4v1h-4zM21 18h1v1h-1zM24 18h1v1h-1zM27 18h3v1h-3zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h2v1h-2zM9 19h2v1h-2zM12 19h3v1h-3zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM28 19h1v1h-1zM30 19h2v1h-2zM37 19h1v1h-1zM3 20h2v1h-2zM8 20h1v1h-1zM11 20h2v1h-2zM16 20h3v1h-3zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM5 21h2v1h-2zM9 21h2v1h-2zM12 21h1v1h-1zM17 21h1v1h-1zM20 21h7v1h-7zM28 21h1v1h-1zM32 21h1v1h-1zM38 21h1v1h-1zM3 22h2v1h-2zM6 22h4v1h-4zM11 22h1v1h-1zM13 22h1v1h-1zM15 22h1v1h-1zM17 22h1v1h-1zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h5v1h-5zM9 23h2v1h-2zM12 23h2v1h-2zM15 23h2v1h-2zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM5 24h1v1h-1zM7 24h2v1h-2zM10 24h3v1h-3zM15 24h3v1h-3zM20 24h1v1h-1zM22 24h3v1h-3zM26 24h1v1h-1zM28 24h8v1h-8zM37 24h2v1h-2zM3 25h1v1h-1zM6 25h2v1h-2zM10 25h1v1h-1zM12 25h1v1h-1zM14 25h5v1h-5zM21 25h5v1h-5zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM2 26h1v1h-1zM6 26h3v1h-3zM10 26h1v1h-1zM13 26h1v1h-1zM15 26h1v1h-1zM17 26h1v1h-1zM20 26h3v1h-3zM24 26h2v1h-2zM27 26h2v1h-2zM30 26h5v1h-5zM36 26h2v1h-2zM2 27h1v1h-1zM7 27h1v1h-1zM10 27h2v1h-2zM14 27h2v1h-2zM17 27h2v1h-2zM23 27h1v1h-1zM25 27h1v1h-1zM30 27h2v1h-2zM33 27h1v1h-1zM2 28h1v1h-1zM5 28h1v1h-1zM7 28h3v1h-3zM11 28h1v1h-1zM13 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h1v1h-1zM7 29h1v1h-1zM10 29h3v1h-3zM15 29h1v1h-1zM18 29h1v1h-1zM23 29h1v1h-1zM25 29h1v1h-1zM29 29h6v1h-6zM37 29h1v1h-1zM2 30h1v1h-1zM5 30h4v1h-4zM12 30h2v1h-2zM15 30h1v1h-1zM19 30h1v1h-1zM25 30h14v1h-14zM10 31h1v1h-1zM14 31h1v1h-1zM17 31h6v1h-6zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM11 32h1v1h-1zM13 32h3v1h-3zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h3v1h-3zM26 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h4v1h-4zM17 33h4v1h-4zM23 33h1v1h-1zM25 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM15 34h2v1h-2zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h10v1h-10zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h4v1h-4zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM25 35h1v1h-1zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM15 36h1v1h-1zM17 36h2v1h-2zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM13 37h1v1h-1zM15 37h3v1h-3zM21 37h3v1h-3zM28 37h3v1h-3zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h2v1h-2zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM32 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="A metal sphere in a cryostat inside a solenoid, with the magnetic field lines around and through it, a Hall probe at its equator and a magnetometer."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="The sample, its temperature and the applied field">
+        <span class="card-title">Sample in a cryostat, inside a solenoid</span>
+        <div class="pick"><label for="selM">Sample: a sphere 10.00 mm across</label><select id="selM"></select></div>
+        <div class="pick"><label for="selModel">What it does at zero resistance</label><select id="selModel">
+          <option value="sc">Superconductor (the real thing)</option>
+          <option value="pc">Perfect conductor (zero resistance only)</option></select></div>
+        <div><div class="slider-head"><label for="sT">Temperature T</label><output id="oT" class="mono" for="sT"></output></div><input type="range" id="sT" min="0.3" max="10" step="0.01">
+          <div class="fine"><input type="number" id="nT" min="0.3" max="10" step="0.01" aria-label="Temperature in kelvin"><span>K</span></div></div>
+        <div><div class="slider-head"><label for="sB">Applied field B</label><output id="oB" class="mono" for="sB"></output></div><input type="range" id="sB" min="0" max="100" step="0.05">
+          <div class="fine"><input type="number" id="nB" min="0" max="100" step="0.05" aria-label="Applied field in millitesla"><span>mT</span></div></div>
+        <button type="button" class="btn" id="newMys" hidden>New mystery sample</button>
+      </div>
+      <div class="plotbox">
+        <canvas id="plot" role="img" aria-label="Graph: the applied field against temperature with the critical field curve, or the magnetic moment against the applied field."></canvas>
+        <div class="plotbar"><div class="seg" role="group" aria-label="Graph" id="plotSeg">
+          <button type="button" data-g="phase" aria-pressed="true">B against T</button>
+          <button type="button" data-g="moment" aria-pressed="false">Moment against B</button>
+        </div></div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/meissner-effect.html" target="meissner-effect-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="meissner" aria-pressed="true">Lead, field pushed out</button>
+          <button type="button" data-p="warm" aria-pressed="false">Lead above T<sub>c</sub></button>
+          <button type="button" data-p="perfect" aria-pressed="false">Perfect conductor</button>
+          <button type="button" data-p="tin" aria-pressed="false">Critical field of tin</button>
+          <button type="button" data-p="mystery" aria-pressed="false">Mystery metal</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="meissner-effect" data-title="Superconductors and the Meissner Effect" data-demo="superconductors">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the critical field and the curves</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">B<sub>c</sub>(T) = B<sub>c</sub>(0)[1 − (T/T<sub>c</sub>)²]</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Superconductors and the Meissner effect. Runs in Node (curriculum/validation/test_superconductors.cjs).
+     Data: OpenStax University Physics Volume 3 (2016), Table 9.5, critical temperature and critical field at 0 K of the type I
+     elements, and Equation 9.39, Bc(T) = Bc(0)[1 − (T/Tc)²]. Nb (type II in practice) and Th are left out.
+     The sample is an ideal type I sphere of radius R in a uniform applied field Ba (along z). Inside it the field is uniform, B_in, and
+     the sphere is uniformly magnetized: B_in = Ba + (2/3)μ0M. Outside, the field is Ba plus that of a point dipole m = (4π/3)R³M at the
+     centre. A superconductor (equilibrium, no hysteresis):
+       Ba ≤ (2/3)Bc       Meissner state, B_in = 0, μ0M = −(3/2)Ba; the field at the equator is (3/2)Ba;
+       (2/3)Bc < Ba < Bc  intermediate state: the equator field is held at Bc, B_in = 3Ba − 2Bc (an average over normal and
+                          superconducting layers; the sphere's demagnetizing factor is 1/3);
+       Ba ≥ Bc            normal, M = 0 (a normal metal's own magnetism is far smaller and is left out).
+     A perfect conductor (zero resistance and nothing else) keeps the flux it had when its resistance vanished: B_in is frozen at
+     the applied field at the moment it was cooled through Tc, whatever the applied field does afterwards. */
+  const MU0 = 4e-7 * Math.PI * 1.00000000055;   /* T·m/A, CODATA 2018 */
+  const R_SAMPLE = 5.00e-3;                     /* m, a sphere 10.00 mm across */
+  const METALS = { /* Tc in K, Bc0 in mT, Table 9.5 */
+    Pb: { name: 'Lead (Pb)', Tc: 7.2, Bc0: 80 }, Sn: { name: 'Tin (Sn)', Tc: 3.7, Bc0: 31 }, In: { name: 'Indium (In)', Tc: 3.4, Bc0: 29 },
+    Hg: { name: 'Mercury (α Hg)', Tc: 4.2, Bc0: 41 }, Al: { name: 'Aluminum (Al)', Tc: 1.2, Bc0: 11 },
+    Ga: { name: 'Gallium (Ga)', Tc: 1.1, Bc0: 5.1 }, Zn: { name: 'Zinc (Zn)', Tc: 0.87, Bc0: 5.3 } };
+  const MYSTERY_POOL = ['Al', 'Ga', 'Hg', 'In', 'Pb', 'Sn', 'Zn'];
+  function bc(m, T) { const s = METALS[m]; return T >= s.Tc ? 0 : s.Bc0 * (1 - (T / s.Tc) * (T / s.Tc)); }   /* mT */
+  /* the sample's state; B in mT, frozen = the perfect conductor's trapped field (mT) or null while it is normal */
+  function sample(m, model, T, Ba, frozen) {
+    const s = METALS[m], cold = T < s.Tc, Bc = bc(m, T);
+    let Bin, phase;
+    if (!cold) { Bin = Ba; phase = 'normal'; }
+    else if (model === 'pc') { Bin = frozen == null ? Ba : frozen; phase = 'perfect'; }
+    else if (Ba <= 2 / 3 * Bc) { Bin = 0; phase = 'meissner'; }
+    else if (Ba < Bc) { Bin = 3 * Ba - 2 * Bc; phase = 'intermediate'; }
+    else { Bin = Ba; phase = 'normal'; }
+    const mu0M = 1.5 * (Bin - Ba);                                         /* mT */
+    const moment = 4 / 3 * Math.PI * R_SAMPLE ** 3 * mu0M * 1e-3 / MU0;    /* A·m² */
+    return { Bin, mu0M, moment, Beq: (3 * Ba - Bin) / 2, Bpole: Bin, Bc, phase, R0: phase === 'normal' ? 'normal' : 'zero' };
+  }
+  /* Stokes stream function of the field in a plane through the axis, in mT·R²: ρ = |x|/R and z/R; field lines are its contours,
+     and equal steps in it hold equal magnetic flux (Φ = 2πψ between the axis and a line) */
+  function psi(st, Ba, x, z) {
+    const rho2 = x * x, r2 = x * x + z * z;
+    if (r2 <= 1) return st.Bin * rho2 / 2;
+    return rho2 / 2 * (Ba + 2 / 3 * st.mu0M / Math.pow(r2, 1.5));
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const S = { m: 'Pb', model: 'sc', T: 4.2, B: 20, frozen: null, preset: 'meissner', mys: 'Sn', mysN: 0, blind: false, graph: 'phase' };
+  const PRESETS = {
+    meissner: { m: 'Pb', model: 'sc', T: 4.2, B: 20, frozen: null, hint: 'A lead sphere at 4.2 K (liquid helium) in a field of 20 mT. Lead is superconducting below 7.2 K, and the field lines go around it: there is no field inside. Warm it past 7.2 K and the field goes straight through; cool it again and the field is pushed back out. That expulsion is the Meissner effect.' },
+    warm: { m: 'Pb', model: 'sc', T: 9, B: 20, frozen: null, hint: 'The same lead sphere at 9 K, above its critical temperature: an ordinary metal, and the field passes straight through it. Cool it below 7.2 K and watch the field leave.' },
+    perfect: { m: 'Pb', model: 'pc', T: 9, B: 20, frozen: null, hint: 'An imaginary metal with zero resistance and nothing else. Cool it below 7.2 K in a field: the field it already holds stays trapped. Then lower the applied field to zero: currents in the surface keep the flux inside, so the sphere becomes a magnet. A real superconductor does neither.' },
+    tin: { m: 'Sn', model: 'sc', T: 2, B: 0, frozen: null, hint: 'A tin sphere at 2.00 K in zero field. Raise the field slowly: the moment grows in proportion, then falls once the field starts to get in, and reaches zero at the critical field, where tin is a normal metal again. Repeat at other temperatures.' },
+    mystery: { m: 'mystery', model: 'sc', T: 0.3, B: 0, frozen: null, hint: 'A sphere of one of the type I metals in Table 9.5, at 0.30 K (a helium 3 refrigerator). Its name is hidden. Find its critical field at several temperatures, then its Tc and Bc(0), and say which metal it is.' } };
+  const key = () => (S.m === 'mystery' ? S.mys : S.m);
+  const can = $('can'), ctx = can.getContext('2d'), pl = $('plot'), pctx = pl.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH = 0, dpr = 1, T = null;
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
+      field: g('--field'), sc: g('--sc'), metal: g('--metal'), coil: g('--coil'), crit: g('--crit'), onset: g('--onset'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+  const now = () => sample(key(), S.model, S.T, S.B, S.frozen);
+
+  /* ---------- the picture ---------- */
+  function contours(st, x0, x1, z0, z1, nx, nz, levels) {
+    /* marching squares on the stream function; returns line segments in (x, z) */
+    const g = [], dx = (x1 - x0) / nx, dz = (z1 - z0) / nz, seg = [];
+    for (let j = 0; j <= nz; j++) { const row = []; for (let i = 0; i <= nx; i++) row.push(psi(st, S.B, x0 + i * dx, z0 + j * dz)); g.push(row); }
+    for (const L of levels) for (let j = 0; j < nz; j++) for (let i = 0; i < nx; i++) {
+      const v = [g[j][i], g[j][i + 1], g[j + 1][i + 1], g[j + 1][i]], P = [[x0 + i * dx, z0 + j * dz], [x0 + (i + 1) * dx, z0 + j * dz], [x0 + (i + 1) * dx, z0 + (j + 1) * dz], [x0 + i * dx, z0 + (j + 1) * dz]];
+      const pts = [];
+      for (let e = 0; e < 4; e++) { const a = v[e], b = v[(e + 1) % 4]; if ((a < L) !== (b < L)) { const t = (L - a) / (b - a), p = P[e], q = P[(e + 1) % 4]; pts.push([p[0] + t * (q[0] - p[0]), p[1] + t * (q[1] - p[1])]); } }
+      if (pts.length === 2) seg.push(pts);
+      else if (pts.length === 4) { seg.push([pts[0], pts[1]]); seg.push([pts[2], pts[3]]); }
+    }
+    return seg;
+  }
+  function lcd(x, y, w, h, text, name) {
+    const p = proj();
+    ctx.fillStyle = T.surface; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x - 5, y - 5, w + 10, h + 22 * p, 6); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = '#1c2a22'; ctx.beginPath(); ctx.roundRect(x, y, w, h, 3); ctx.fill();
+    ctx.fillStyle = '#9ef0b8'; ctx.font = `600 ${h * 0.55}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(text, x + w - 6, y + h / 2 + 1);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(name, x + w / 2, y + h + 3);
+  }
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const p = proj(), st = now(), phone = W < 560;
+    const cx = phone ? W * 0.42 : Math.min(W * 0.36, W - 330 * p), cy = H * 0.5, R = Math.min(H * 0.13, W * 0.1), Zr = (H * 0.5 - 14) / R, Xr = Math.min(cx, W - cx) / R;
+    const X = (x) => cx + x * R, Y = (z) => cy - z * R;
+    /* solenoid windings at the sides and the cryostat */
+    const sw = Math.min(Xr - 0.4, 3.3) * R;
+    ctx.fillStyle = T.coil; for (let z = -Zr + 0.3; z < Zr - 0.2; z += 0.32) { ctx.globalAlpha = 0.75; ctx.beginPath(); ctx.arc(cx - sw, Y(z), 4 * p, 0, 7); ctx.fill(); ctx.beginPath(); ctx.arc(cx + sw, Y(z), 4 * p, 0, 7); ctx.fill(); }
+    ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1.5; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.roundRect(cx - 2.2 * R, 10, 4.4 * R, H - 20, 18); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('cryostat', cx, 16); ctx.textBaseline = 'bottom'; ctx.fillText('solenoid', cx - sw, H - 6);
+    /* field lines: equal flux steps, so their crowding shows the field; spacing set by 20 mT so weaker fields have fewer lines */
+    const levels = [], step = 0.42; for (let k = 1; k <= 30; k++) levels.push(20 * (k * step) ** 2 / 2);
+    const segs = contours(st, -Xr, Xr, -Zr, Zr, phone ? 90 : 140, phone ? 90 : 140, levels);
+    /* the field of a long solenoid is uniform inside it and nearly zero outside, so the lines stop at the windings */
+    ctx.save(); ctx.beginPath(); ctx.rect(cx - sw + 5 * p, 0, 2 * sw - 10 * p, H); ctx.clip();
+    ctx.strokeStyle = T.field; ctx.lineWidth = 1.6 * p; ctx.beginPath();
+    for (const [a, b] of segs) { ctx.moveTo(X(a[0]), Y(a[1])); ctx.lineTo(X(b[0]), Y(b[1])); }
+    ctx.stroke(); ctx.restore();
+    /* the direction of the field */
+    if (S.B > 0 || Math.abs(st.Bin) > 0) { const ax = cx - sw + 22 * p; ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 2 * p;
+      if (S.B > 0) { ctx.beginPath(); ctx.moveTo(ax, cy + 34 * p); ctx.lineTo(ax, cy - 34 * p); ctx.stroke(); ctx.beginPath(); ctx.moveTo(ax, cy - 42 * p); ctx.lineTo(ax - 6 * p, cy - 30 * p); ctx.lineTo(ax + 6 * p, cy - 30 * p); ctx.closePath(); ctx.fill();
+        ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = T.canvas; const lbl = `B = ${f(S.B, 2)} mT`, tw = ctx.measureText(lbl).width; ctx.fillRect(ax - 4 * p, cy + 40 * p, tw + 8 * p, 16 * p); ctx.fillStyle = T.ink; ctx.fillText(lbl, ax, cy + 48 * p); } }
+    /* the sphere */
+    const col = st.phase === 'normal' ? T.metal : st.phase === 'intermediate' ? T.onset : T.sc;
+    const gr = ctx.createRadialGradient(cx - R * 0.35, cy - R * 0.35, R * 0.1, cx, cy, R); gr.addColorStop(0, 'rgba(255,255,255,0.75)'); gr.addColorStop(0.45, col); gr.addColorStop(1, col);
+    ctx.globalAlpha = 0.55; ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.stroke();
+    /* the field lines inside are drawn over the sphere so they show through */
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.clip(); ctx.strokeStyle = T.field; ctx.lineWidth = 1.6 * p; ctx.beginPath();
+    for (const [a, b] of segs) if (a[0] * a[0] + a[1] * a[1] < 1.02) { ctx.moveTo(X(a[0]), Y(a[1])); ctx.lineTo(X(b[0]), Y(b[1])); }
+    ctx.stroke(); ctx.restore();
+    ctx.fillStyle = T.ink; ctx.font = `700 ${11.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(S.m === 'mystery' ? 'mystery metal' : METALS[S.m].name.split(' (')[0].toLowerCase(), cx, Y(-1.35) + 0.22 * R + 6 * p);
+    /* Hall probe at the equator, magnetometer coils above and below */
+    ctx.fillStyle = T.ink; ctx.fillRect(X(1) + 2, cy - 3 * p, 8 * p, 6 * p);
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(X(1) + 10 * p, cy); ctx.lineTo(X(1.9), cy); ctx.lineTo(X(1.9), cy + 1.4 * R); ctx.stroke();
+    for (const z of [1.35, -1.35]) { ctx.strokeStyle = T.muted; ctx.lineWidth = 2; ctx.beginPath(); ctx.ellipse(cx, Y(z), 1.25 * R, 0.22 * R, 0, 0, 7); ctx.stroke(); }
+    const lw = 118 * p, lh = 26 * p, lx = phone ? W - lw - 10 : Math.min(cx + 2.4 * R + 12, W - lw - 300 * p);
+    const mm = st.moment * 1e3;
+    lcd(Math.max(6, lx), Math.max(10, cy - 3.0 * R), lw, lh, `${f(mm, 3)}`, 'magnetometer, mA·m²');
+    lcd(Math.max(6, lx), cy + 0.6 * R, lw, lh, `${f(st.Beq, 2)}`, 'Hall probe at equator, mT');
+    lcd(Math.max(6, lx), Math.min(H - lh - 26 * p, cy + 2.2 * R), lw, lh, `${f(S.T, 2)}`, 'thermometer, K');
+  }
+
+  /* ---------- the graph ---------- */
+  function drawPlot() {
+    const p = proj(), c = pctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, PW, PH);
+    const narrow = PW < 600, mys = S.m === 'mystery', hideCurves = S.blind || mys, k = key(), s = METALS[k];
+    const L = 58 * p, Rm = 14 * p, Tp = (narrow ? 72 : 34) * p, B = 34 * p, pw = PW - L - Rm, ph = PH - Tp - B;
+    const rows = (window.vdRows ? window.vdRows() : []);
+    let xs, ys, xl, yl, series = [];
+    if (S.graph === 'phase') {
+      xs = [0, mys ? 10 : Math.max(1.5, Math.ceil(s.Tc * 1.3))]; ys = [0, mys ? 100 : Math.max(10, Math.ceil(s.Bc0 * 1.25 / 5) * 5)];
+      if (S.T > xs[1]) xs[1] = Math.ceil(S.T); if (S.B > ys[1]) ys[1] = Math.ceil(S.B / 5) * 5;
+      if (!hideCurves) { const cur = [], ons = []; for (let i = 0; i <= 120; i++) { const t = s.Tc * i / 120; cur.push([t, bc(k, t)]); ons.push([t, 2 / 3 * bc(k, t)]); }
+        series.push({ pts: cur, col: T.crit, w: 2.2, label: narrow ? 'Bc' : 'critical field Bc' }, { pts: ons, col: T.onset, w: 1.4, dash: true, label: narrow ? '(2/3)Bc' : 'field starts to get in, (2/3)Bc' }); }
+      series.push({ pts: rows.map((r) => [+r.T_K, +r.B_mT]), col: T.accent, dots: true }, { pts: [[S.T, S.B]], col: T.ink, dots: true, ring: true });
+      xl = 'temperature T (K)'; yl = 'applied B (mT)';
+    } else {
+      const bmax = mys ? 100 : Math.max(10, Math.ceil(s.Bc0 * 1.25 / 5) * 5), mom = (b) => sample(k, S.model, S.T, b, S.frozen).moment * 1e3;
+      xs = [0, Math.max(bmax, Math.ceil(S.B / 5) * 5)];
+      const curve = []; for (let i = 0; i <= 300; i++) { const b = xs[1] * i / 300; curve.push([b, mom(b)]); }
+      const lo = Math.min(-1, ...curve.map((q) => q[1]), ...rows.map((r) => +r.m_mAm2)), hi = Math.max(1, ...curve.map((q) => q[1]), ...rows.map((r) => +r.m_mAm2));
+      ys = [lo * 1.1, hi * 1.1 + (hi < 1.5 ? 0.5 : 0)];
+      if (!hideCurves) series.push({ pts: curve, col: T.crit, w: 2.2, label: `at ${f(S.T, 2)} K` });
+      series.push({ pts: rows.filter((r) => Math.abs(+r.T_K - S.T) < 1e-9).map((r) => [+r.B_mT, +r.m_mAm2]), col: T.accent, dots: true }, { pts: [[S.B, mom(S.B)]], col: T.ink, dots: true, ring: true });
+      xl = 'applied B (mT)'; yl = 'moment (mA·m²)';
+    }
+    const Xp = (v) => L + (v - xs[0]) / (xs[1] - xs[0]) * pw, Yp = (v) => Tp + ph - (v - ys[0]) / (ys[1] - ys[0]) * ph;
+    const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+    c.font = `${10.5 * p}px ${T.mono}`; c.strokeStyle = T.grid; c.fillStyle = T.muted; c.lineWidth = 1;
+    const sx = nice((xs[1] - xs[0]) / 6), sy = nice((ys[1] - ys[0]) / 4);
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (let v = Math.ceil(xs[0] / sx) * sx; v <= xs[1] + 1e-9; v += sx) { c.beginPath(); c.moveTo(Xp(v), Tp); c.lineTo(Xp(v), Tp + ph); c.stroke(); c.fillText(String(+v.toPrecision(6)).replace('-', '−'), Xp(v), Tp + ph + 4); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (let v = Math.ceil(ys[0] / sy) * sy; v <= ys[1] + 1e-9; v += sy) { c.beginPath(); c.moveTo(L, Yp(v)); c.lineTo(L + pw, Yp(v)); c.stroke(); c.fillText(String(+v.toPrecision(6)).replace('-', '−'), L - 5, Yp(v)); }
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(xl, L + pw / 2, PH - 2);
+    c.save(); c.translate(12 * p, Tp + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore();
+    c.save(); c.beginPath(); c.rect(L, Tp - 4, pw, ph + 8); c.clip();
+    for (const sr of series) {
+      if (sr.dots) { for (const q of sr.pts) { if (!isFinite(q[0]) || !isFinite(q[1])) continue; c.beginPath(); c.arc(Xp(q[0]), Yp(q[1]), (sr.ring ? 5 : 3.5) * p, 0, 7); if (sr.ring) { c.strokeStyle = sr.col; c.lineWidth = 2; c.stroke(); } else { c.fillStyle = sr.col; c.fill(); } } continue; }
+      c.strokeStyle = sr.col; c.lineWidth = sr.w * p; c.setLineDash(sr.dash ? [5, 4] : []); c.beginPath(); sr.pts.forEach((q, i) => (i ? c.lineTo(Xp(q[0]), Yp(q[1])) : c.moveTo(Xp(q[0]), Yp(q[1])))); c.stroke(); c.setLineDash([]);
+    }
+    c.restore();
+    /* legend above the plot */
+    c.font = `${10.5 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle'; let lx = L;
+    const leg = series.filter((sr) => sr.label);
+    if (hideCurves) { c.fillStyle = T.muted; c.fillText(mys ? 'Curves hidden for the mystery metal' : 'Curves hidden (Blind)', lx, (narrow ? 56 : 14) * p); }
+    for (const sr of leg) { c.strokeStyle = sr.col; c.lineWidth = 2; c.setLineDash(sr.dash ? [5, 4] : []); const ly = (narrow ? 56 : 14) * p; c.beginPath(); c.moveTo(lx, ly); c.lineTo(lx + 18 * p, ly); c.stroke(); c.setLineDash([]); c.fillStyle = T.muted; c.fillText(sr.label, lx + 22 * p, ly); lx += c.measureText(sr.label).width + 40 * p; }
+  }
+
+  /* ---------- readouts ---------- */
+  const PHASE = { normal: 'normal metal: the field goes through', meissner: 'superconducting: field pushed out', intermediate: 'intermediate: the field is getting in', perfect: 'zero resistance: holding the flux it had' };
+  function readouts() {
+    const st = now(), k = key(), mys = S.m === 'mystery', hide = '<span class="ok">hidden</span>';
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    $('out').innerHTML = dd('Magnetometer: moment m', `${f(st.moment * 1e3, 3)} mA·m²`) + dd('Hall probe at the equator', `${f(st.Beq, 2)} mT`)
+      + dd('Temperature', `${f(S.T, 2)} K`) + dd('Applied field', `${f(S.B, 2)} mT`)
+      + dd('State', PHASE[st.phase], 'wide') + dd('Resistance', st.R0 === 'zero' ? 'zero' : 'not zero (normal metal)')
+      + dd('Field inside, average', S.blind ? hide : `${f(st.Bin, 2)} mT`)
+      + dd('Critical field at this T', S.blind || mys ? hide : `${f(st.Bc, 2)} mT`)
+      + dd('Table 9.5: T<sub>c</sub>, B<sub>c</sub>(0)', mys ? hide : `${METALS[k].Tc} K, ${METALS[k].Bc0} mT`);
+  }
+  const redraw = () => { draw(); drawPlot(); readouts(); };
+
+  /* ---------- controls ---------- */
+  $('selM').innerHTML = ['Pb', 'Sn', 'In', 'Hg', 'Al'].map((m) => `<option value="${m}">${METALS[m].name}</option>`).join('') + '<option value="mystery">Mystery metal</option>';
+  function sync() {
+    $('selM').value = S.m; $('selModel').value = S.model; $('newMys').hidden = S.m !== 'mystery';
+    $('sT').value = S.T; $('nT').value = S.T.toFixed(2); $('oT').textContent = `${f(S.T, 2)} K`;
+    $('sB').value = S.B; $('nB').value = S.B.toFixed(2); $('oB').textContent = `${f(S.B, 2)} mT`;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#plotSeg button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.graph));
+  }
+  /* a perfect conductor traps the field it holds as it is cooled through Tc, and lets go of it when warmed back through */
+  function setT(t) {
+    const Tc = METALS[key()].Tc, was = S.T < Tc;
+    S.T = Math.round(Math.max(0.3, Math.min(10, t)) * 100) / 100;
+    const is = S.T < Tc;
+    if (!is) S.frozen = null; else if (!was) S.frozen = S.B;
+  }
+  function setB(b) { S.B = Math.round(Math.max(0, Math.min(100, b)) * 100) / 100; }
+  function newMystery() { let k; do { k = MYSTERY_POOL[Math.floor(Math.random() * MYSTERY_POOL.length)]; } while (k === S.mys); if (S.mysN) $('presetHint').textContent = `The last mystery metal was ${METALS[S.mys].name.toLowerCase()}.`; S.mys = k; S.mysN++; }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; Object.assign(S, { m: c.m, model: c.model, T: c.T, B: c.B, frozen: c.frozen });
+    if (k === 'mystery') newMystery();
+    if (S.model === 'pc' && S.T < METALS[key()].Tc && S.frozen == null) S.frozen = S.B;
+    $('presetHint').textContent = c.hint; sync(); redraw();
+  }
+  const custom = () => { S.preset = 'custom'; };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('selM').addEventListener('change', (e) => { S.m = e.target.value; if (S.m === 'mystery' && !S.mysN) newMystery(); S.frozen = S.model === 'pc' && S.T < METALS[key()].Tc ? S.B : null; custom(); sync(); redraw(); });
+  $('selModel').addEventListener('change', (e) => { S.model = e.target.value; S.frozen = S.T < METALS[key()].Tc ? S.B : null; custom(); sync(); redraw(); });
+  $('sT').addEventListener('input', (e) => { setT(+e.target.value); custom(); sync(); redraw(); });
+  $('nT').addEventListener('change', (e) => { if (e.target.value !== '') setT(+e.target.value); custom(); sync(); redraw(); });
+  $('sB').addEventListener('input', (e) => { setB(+e.target.value); custom(); sync(); redraw(); });
+  $('nB').addEventListener('change', (e) => { if (e.target.value !== '') setB(+e.target.value); custom(); sync(); redraw(); });
+  $('newMys').addEventListener('click', () => { newMystery(); S.frozen = null; custom(); sync(); redraw(); });
+  $('plotSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (b) { S.graph = b.dataset.g; sync(); drawPlot(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  can.addEventListener('keydown', (e) => {
+    const big = e.shiftKey;
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') setB(S.B + (e.key === 'ArrowUp' ? 1 : -1) * (big ? 1 : 0.05));
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') setT(S.T + (e.key === 'ArrowRight' ? 1 : -1) * (big ? 0.5 : 0.01));
+    else return;
+    e.preventDefault(); custom(); sync(); redraw();
+  });
+
+  /* ---------- readings for the worksheet ---------- */
+  window.vdVersion = 'superconductors@2026-10-24';
+  window.vdShowCols = [['T_K', 'T (K)'], ['B_mT', 'B (mT)'], ['m_mAm2', 'm (mA·m²)'], ['B_eq_mT', 'equator (mT)']];
+  window.vdReadingRow = () => { const st = now(); return { sample: S.m === 'mystery' ? 'mystery' : METALS[S.m].name, model: S.model === 'pc' ? 'perfect conductor' : 'superconductor',
+    T_K: S.T.toFixed(2), B_mT: S.B.toFixed(2), m_mAm2: (st.moment * 1e3).toFixed(3).replace('-0.000', '0.000'), B_eq_mT: st.Beq.toFixed(2).replace('-0.00', '0.00') }; };
+
+  document.addEventListener('click', (e) => { if (e.target.closest('.vd-rec, .vd-clear, .vd-del')) setTimeout(drawPlot, 0); });
+
+  $('about').textContent = 'Model: an ideal type I superconductor, a sphere 10.00 mm across in the uniform field of a long solenoid. Critical temperatures and fields are from the textbook\'s Table 9.5 (to the two or three figures it gives), with Bc(T) = Bc(0)[1 − (T/Tc)²], its Equation 9.39. Below Bc the sphere is in equilibrium, so the state depends only on T and B, not on the order you change them; real samples show some hysteresis and supercooling. Because the field crowds around a sphere, the field at its equator is 1.5 times the applied field, so the field starts to get in at 2/3 of Bc (the intermediate state, drawn here as a uniform average field inside; really it is a pattern of normal and superconducting layers) and the sphere is all normal at Bc. The magnetometer reads the sphere\'s magnetic moment, m = (4π/3)R³M, and the Hall probe the field just outside the equator. Field lines are drawn at equal steps of flux, so their crowding shows the field, and are exact for this model. The perfect conductor is imaginary: a metal whose only change below Tc is zero resistance, so the flux inside it can never change. A normal metal\'s own magnetism (about 10⁻⁵ of the applied field) is left out.';
+
+  /* ---------- size, theme, start ---------- */
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(), q = pl.parentElement.getBoundingClientRect();
+    W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); PW = q.width; PH = q.height; pl.width = Math.round(PW * dpr); pl.height = Math.round(PH * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); newMystery(); S.mysN = 0;
+  const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'meissner');
+  new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe(pl.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__sc = { S, now, setT, setB, applyPreset, redraw, sync, METALS, sample, bc };
+})();
+</script>
+</body>
+</html>

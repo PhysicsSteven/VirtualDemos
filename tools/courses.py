@@ -128,7 +128,7 @@ HANDOUT_TOPIC = {
     'thermal-equilibrium': 'Thermal Equilibrium', 'gas-thermometer': 'Gas Thermometer and Absolute Zero', 'thermal-expansion': 'Thermal Expansion',
     'heat-conduction': 'Heat Conduction Through Layers', 'heat-capacities-of-gases': 'Heat Capacities of Gases', 'ruchardt': "Rüchardt's Ball",
     'free-expansion': 'Free Expansion', 'einstein-solids': 'Einstein Solids', 'second-law': 'Testing the Second Law',
-    'ideal-gas': 'Gas in a Box', 'heat-engines': 'Heat Engine Cycles', 'blackbody': 'Blackbody Radiation',
+    'ideal-gas': 'Gas in a Box', 'heat-engines': 'Heat Engine Cycles', 'blackbody': 'Blackbody Radiation', 'convection': 'Cooling by Convection and Radiation',
     'velocity-addition': 'Adding Velocities Near c', 'relativistic-momentum': 'Momentum Under a Steady Force', 'relativistic-energy': "Bertozzi's Electrons",
     'photoelectric': "Photoelectric Effect and Planck's Constant",
     'compton': 'Compton Scattering',
@@ -196,6 +196,8 @@ HANDOUT_TOPIC = {
     # modern, Vol. 3 ch. 7 and 8
     'orbital-magnetic-moment': 'The Orbital Magnetic Moment', 'stern-gerlach': 'The Stern–Gerlach Experiment', 'zeeman-effect': 'The Zeeman Effect',
     'periodic-table': 'Shells and the Periodic Table', 'x-ray-spectra': "X Ray Spectra and Moseley's Law",
+    'meissner-effect': 'The Meissner Effect and the Critical Field',
+    'exoplanets': 'Finding Exoplanets',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Lasers: Threshold and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 

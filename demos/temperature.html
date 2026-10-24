@@ -65,6 +65,7 @@
           <button type="button" data-v="th" aria-pressed="false">Thermometer</button>
           <button type="button" data-v="ex" aria-pressed="false">Expansion</button>
           <button type="button" data-v="co" aria-pressed="false">Conduction</button>
+          <button type="button" data-v="cv" aria-pressed="false">Cooling</button>
         </div>
         <button type="button" class="spin attn" id="go">Start</button>
         <button type="button" class="btn" id="restart">Start over</button>
@@ -72,6 +73,7 @@
           <button type="button" data-s="1" aria-pressed="false">1×</button>
           <button type="button" data-s="10" aria-pressed="true">10×</button>
           <button type="button" data-s="60" aria-pressed="false">60×</button>
+          <button type="button" data-s="300" aria-pressed="false" id="s300" hidden>300×</button>
         </div>
         <span class="count mono" id="clock">t = 0 s</span>
       </div>
@@ -157,11 +159,24 @@
           </fieldset>
           <div><div class="slider-head"><label for="sX">Probe position</label><output id="oX" class="mono" for="sX"></output></div><input type="range" id="sX" min="0" max="1000" step="1"></div>
         </div>
+        <div class="shelf-card" id="cardCv" role="group" aria-label="The hot sphere and the air around it" hidden>
+          <span class="card-title">A hot metal sphere hanging in room air, cooling by convection and radiation</span>
+          <fieldset><legend>Sphere</legend>
+            <div class="pick"><label for="selCvM">Metal</label><select id="selCvM"></select></div>
+            <div class="pick"><label for="selCvS">Surface</label><select id="selCvS"></select></div>
+            <div><div class="slider-head"><label for="sCvD">Diameter</label><output id="oCvD" class="mono" for="sCvD"></output></div><input type="range" id="sCvD" min="2" max="8" step="0.5"></div>
+            <div><div class="slider-head"><label for="sCvT0">Starting temperature</label><output id="oCvT0" class="mono" for="sCvT0"></output></div><input type="range" id="sCvT0" min="40" max="100" step="1"></div>
+          </fieldset>
+          <fieldset><legend>Air</legend>
+            <div><div class="slider-head"><label for="sCvU">Fan: air speed</label><output id="oCvU" class="mono" for="sCvU"></output></div><input type="range" id="sCvU" min="0" max="5" step="0.5"></div>
+            <div><div class="slider-head"><label for="sCvTa">Room temperature</label><output id="oCvTa" class="mono" for="sCvTa"></output></div><input type="range" id="sCvTa" min="10" max="30" step="1"></div>
+          </fieldset>
+        </div>
       </div>
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/thermal-equilibrium.html" target="thermal-equilibrium-worksheet">Worksheet 1: Thermal Equilibrium</a></li><li><a href="../curriculum/labs/students/gas-thermometer.html" target="gas-thermometer-worksheet">Worksheet 2: Gas Thermometer and Absolute Zero</a></li><li><a href="../curriculum/labs/students/thermal-expansion.html" target="thermal-expansion-worksheet">Worksheet 3: Thermal Expansion</a></li><li><a href="../curriculum/labs/students/heat-conduction.html" target="heat-conduction-worksheet">Worksheet 4: Heat Conduction Through Layers</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/thermal-equilibrium.html" target="thermal-equilibrium-worksheet">Worksheet 1: Thermal Equilibrium</a></li><li><a href="../curriculum/labs/students/gas-thermometer.html" target="gas-thermometer-worksheet">Worksheet 2: Gas Thermometer and Absolute Zero</a></li><li><a href="../curriculum/labs/students/thermal-expansion.html" target="thermal-expansion-worksheet">Worksheet 3: Thermal Expansion</a></li><li><a href="../curriculum/labs/students/heat-conduction.html" target="heat-conduction-worksheet">Worksheet 4: Heat Conduction Through Layers</a></li><li><a href="../curriculum/labs/students/convection.html" target="convection-worksheet">Worksheet 5: Cooling by Convection and Radiation</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -208,6 +223,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
           <p class="hint" id="aboutTh"></p>
           <p class="hint" id="aboutEx"></p>
           <p class="hint" id="aboutCo"></p>
+          <p class="hint" id="aboutCv"></p>
         </details>
         </div></details>
       </section>
@@ -303,6 +319,60 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const thick = x, at = (xx) => { if (xx <= 0) return T[1]; let x0 = 0; for (let i = 0; i < L.length; i++) { const x1 = x0 + L[i].d; if (xx <= x1 + 1e-15) return T[i + 1] + (T[i + 2] - T[i + 1]) * (xx - x0) / L[i].d; x0 = x1; } return T[T.length - 2]; };
     return { R, q, P, U: 1 / R, T, layers: L, thick, at, Ts_in: T[1], Ts_out: T[T.length - 2] };
   }
+
+  /* ---- Cooling: a hot metal sphere hanging in room air loses heat by convection and by radiation ----
+     The sphere is lumped (one temperature throughout: its Biot number hD/(6k) stays below 0.001 for these metals), so
+       mc dT/dt = −hA(T − T_air) − εσA(T⁴ − T_air⁴),  A = πD², m = ρπD³/6,
+     with the room's walls at the air temperature. The film coefficient h comes from the Nusselt number Nu = hD/k_air:
+       still air, natural convection (S. W. Churchill 1983, as given in Incropera et al., Fundamentals of Heat and Mass Transfer):
+         Nu_N = 2 + 0.589 Ra^(1/4)/[1 + (0.469/Pr)^(9/16)]^(4/9),  Ra = gβ(T − T_air)D³/(να),  β = 1/T_film,  properties at T_film;
+       a fan blowing across it, forced convection (S. Whitaker 1972, same source):
+         Nu_F = 2 + (0.4 Re^(1/2) + 0.06 Re^(2/3)) Pr^0.4 (μ_air/μ_surface)^(1/4),  Re = UD/ν,  properties at T_air;
+       both together (mixed convection, the same source's rule for transverse flow over spheres): h = (h_N⁴ + h_F⁴)^(1/4), each from
+         its own Nusselt number and properties.
+     Air at 1 atm from 250 to 400 K every 25 K (the Lemmon and Jacobsen 2004 correlations for air), interpolated linearly.
+     Densities of the metals from OpenStax Vol. 1 Table 14.1, specific heats from Vol. 2 Table 1.3 (SPECIFIC above). The
+     emissivities are chosen values typical of a polished metal and of flat black paint. */
+  const SIGMA = 5.670374419e-8, G0 = 9.80665;
+  const AIR = { T: [250, 275, 300, 325, 350, 375, 400],   /* K; k in W/(m·K), μ in Pa·s, ν in m²/s, Pr */
+    k: [0.0225644, 0.0245019, 0.0263845, 0.0282168, 0.0300033, 0.0317476, 0.0334532],
+    mu: [1.60381e-5, 1.73109e-5, 1.85373e-5, 1.97215e-5, 2.08671e-5, 2.19775e-5, 2.30554e-5],
+    nu: [1.13479e-5, 1.34785e-5, 1.57497e-5, 1.81556e-5, 2.06908e-5, 2.33506e-5, 2.61308e-5],
+    Pr: [0.714711, 0.710551, 0.707064, 0.704193, 0.701902, 0.700158, 0.698932] };
+  function air(Tk, q) { const a = AIR.T, i = Math.max(0, Math.min(a.length - 2, Math.floor((Tk - a[0]) / 25))), u = (Tk - a[i]) / 25; return AIR[q][i] + (AIR[q][i + 1] - AIR[q][i]) * u; }
+  const SPHERES = { aluminum: { name: 'Aluminum', rho: 2700 }, copper: { name: 'Copper', rho: 8920 }, steel: { name: 'Iron, steel', rho: 7800 } };
+  const SURFACES = { polished: { name: 'Polished (ε = 0.05)', e: 0.05 }, black: { name: 'Black paint (ε = 0.95)', e: 0.95 } };
+  /* film coefficient and the pieces of it; T and Ta in °C, D in m, U in m/s */
+  function film(T, Ta, D, U) {
+    const Tk = cToK(T), Ta_k = cToK(Ta), Tf = (Tk + Ta_k) / 2, dT = Math.max(0, T - Ta);
+    const nuF = air(Tf, 'nu'), PrF = air(Tf, 'Pr'), Ra = G0 * (1 / Tf) * dT * D * D * D / (nuF * nuF / PrF);
+    const NuN = 2 + 0.589 * Math.pow(Ra, 0.25) / Math.pow(1 + Math.pow(0.469 / PrF, 9 / 16), 4 / 9);
+    const Re = U * D / air(Ta_k, 'nu'), PrA = air(Ta_k, 'Pr');
+    const NuF = 2 + (0.4 * Math.sqrt(Re) + 0.06 * Math.pow(Re, 2 / 3)) * Math.pow(PrA, 0.4) * Math.pow(air(Ta_k, 'mu') / air(Tk, 'mu'), 0.25);
+    const Nu = U > 0 ? Math.pow(NuN ** 4 + NuF ** 4, 0.25) : NuN;
+    /* still air: h from the film properties; with a fan, the forced part uses k at the air temperature (Whitaker) */
+    const h = U > 0 ? Math.pow((NuN * air(Tf, 'k') / D) ** 4 + (NuF * air(Ta_k, 'k') / D) ** 4, 0.25) : NuN * air(Tf, 'k') / D;
+    return { h, Ra, Re, NuN, NuF, Nu };
+  }
+  function coolRates(p, T) {
+    const A = Math.PI * p.D * p.D, f = film(T, p.Ta, p.D, p.U), Tk = cToK(T), Ta_k = cToK(p.Ta);
+    const Pc = f.h * A * (T - p.Ta), Pr = p.e * SIGMA * A * (Tk ** 4 - Ta_k ** 4);
+    return { A, Pc, Pr, h: f.h, hr: T !== p.Ta ? Pr / (A * (T - p.Ta)) : 4 * p.e * SIGMA * Ta_k ** 3, Ra: f.Ra, Re: f.Re };
+  }
+  const coolMass = (p) => p.rho * Math.PI * p.D ** 3 / 6;
+  /* temperatures on a fixed grid of step H (s), 4th order Runge–Kutta; T at any time is one more step from the grid point below */
+  const COOL_H = 1;
+  function coolStep(p, T, h) {
+    const C = coolMass(p) * p.c, d = (TT) => { const r = coolRates(p, TT); return -(r.Pc + r.Pr) / C; };
+    const k1 = d(T), k2 = d(T + h / 2 * k1), k3 = d(T + h / 2 * k2), k4 = d(T + h * k3);
+    return T + h / 6 * (k1 + 2 * k2 + 2 * k3 + k4);
+  }
+  function coolTrack(p, tEnd, track) {
+    const tr = track || [p.T0];
+    while ((tr.length - 1) * COOL_H < tEnd) tr.push(coolStep(p, tr[tr.length - 1], COOL_H));
+    return tr;
+  }
+  function coolAt(p, t, track) { const tr = coolTrack(p, t, track), i = Math.floor(t / COOL_H), r = t - i * COOL_H; return r > 1e-12 ? coolStep(p, tr[i], r) : tr[i]; }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -313,7 +383,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     eq: { a: 'aluminum', b: 'water', mA: 0.5, mB: 0.25, TA0: 90, TB0: 20, bar: 'copper', L: 0.10, t: 0, hist: [], mys: 'silver', mysN: 0 },
     th: { bath: 'ice', n: 20, Tg: 20, t: 0, mysT: 61.3, mysN: 0, hist: [] },
     ex: { kind: 'rod', rod: 'aluminum', liq: 'water', T: 20, mys: 'brass', mysN: 0 },
-    co: { build: 'house', layers: [{ mat: 'plaster', d: 13 }, { mat: 'glasswool', d: 90 }, { mat: 'brick', d: 100 }], Tin: 20, Tout: -5, fin: 'still', fout: 'wind24', A: 1, x: 0.5 } };
+    co: { build: 'house', layers: [{ mat: 'plaster', d: 13 }, { mat: 'glasswool', d: 90 }, { mat: 'brick', d: 100 }], Tin: 20, Tout: -5, fin: 'still', fout: 'wind24', A: 1, x: 0.5 },
+    cv: { metal: 'aluminum', surf: 'polished', D: 5, T0: 80, U: 0, Ta: 20, t: 0 } };
   const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
   let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
@@ -334,6 +405,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const rodKey = () => (S.ex.rod === 'mystery' ? S.ex.mys : S.ex.rod);
   const coWall = () => { const c = S.co; return { A: c.A, Tin: c.Tin, Tout: c.Tout, Rin: FILMS[c.fin].R, Rout: FILMS[c.fout].R, layers: c.layers.map((l) => ({ mat: l.mat, d: l.d / 1000 })) }; };   /* the card works in mm, the physics in m */
   const isStatic = () => S.view === 'ex' || S.view === 'co';
+  /* the cooling sphere: the card works in cm, the physics in m; the track of temperatures is kept until a setting changes */
+  const cvPar = () => { const c = S.cv; return { D: c.D / 100, U: c.U, e: SURFACES[c.surf].e, Ta: c.Ta, T0: c.T0, rho: SPHERES[c.metal].rho, c: SPECIFIC[c.metal].c }; };
+  let cvTrack = null;
+  const cvReset = () => { cvTrack = null; };
+  const cvTemp = (t) => { const p = cvPar(); if (!cvTrack) cvTrack = [p.T0]; return coolAt(p, t, cvTrack); };
   /* a colour for a temperature: blue at −30 °C through the canvas grey near 20 °C to red at 100 °C */
   function tcol(t, a = 1) {
     const s = Math.max(-1, Math.min(1, t < 20 ? (t - 20) / 50 : (t - 20) / 80)), d = dark();
@@ -553,6 +629,46 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     thermoLCD(Math.max(4, Math.min(W - 104 * p, xp - 50 * p)), Math.max(4, (rods ? wy1 + 30 * p : top + 44 * p)), 96 * p, 24 * p, `${f(tp, 2)} °C`, 'probe');
     if (VG) VG.label(ctx, rods ? 'two rods 1.00 cm across, end to end, insulated along their sides' : `${f(c.A, c.A < 1 ? 3 : 2)} m² of wall, seen edge on`, W / 2, by + 16 * p, { a: 'center', s: 11 * p });
   }
+  function drawCv() {
+    const p = proj(), c = S.cv, par = cvPar(), Tn = cvTemp(c.t), r = coolRates(par, Tn), by = scene(0.84);
+    const sx = W * 0.5, R = Math.max(8, Math.min(H * 0.16, W * 0.12) * (c.D / 8)), top = H * 0.08, sy = by - H * 0.36;
+    /* stand, boss and the thread the sphere hangs from */
+    const stx = sx + Math.min(W * 0.22, 190 * p);
+    if (VG) { VG.stand(ctx, stx, by, top, { s: p, side: 1 }); VG.boss(ctx, stx, top + 22 * p, p, { side: -1 }); VG.rod(ctx, stx - 8 * p, top + 22 * p, sx, top + 22 * p, 2.2 * p, { color: '#b4bcc6' }); }
+    ctx.strokeStyle = dark() ? '#c7ced8' : '#4a5563'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(sx, top + 22 * p); ctx.lineTo(sx, sy - R); ctx.stroke();
+    /* warm air rising off the sphere: plumes stronger and faster when hotter, swept sideways by the fan */
+    const tt = reduce ? 0 : performance.now() / 1000, dT = Math.max(0, Tn - c.Ta), lean = Math.min(1.4, c.U / 2.5);
+    if (dT > 0.05) { ctx.save(); for (let i = 0; i < 9; i++) { const ph = (tt * (0.25 + 0.03 * Math.sqrt(dT)) + i / 9) % 1, a = 0.35 * (1 - ph) * Math.min(1, dT / 30);
+      const x0 = sx + (i - 4) * R * 0.18, y0 = sy - R * 0.9, len = H * 0.32;
+      ctx.strokeStyle = tcol(Tn, a); ctx.lineWidth = 3 * p; ctx.beginPath();
+      for (let k = 0; k <= 16; k++) { const u = k / 16, yy = y0 - u * len * (1 - 0.6 * lean / 1.4), xx = x0 + Math.sin(u * 6 + ph * 6 + i) * 4 * p + u * len * lean * 0.9; if (u > ph) break; k ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); }
+      ctx.stroke(); } ctx.restore(); }
+    /* the fan on the left and its stream of air */
+    if (c.U > 0) {
+      const fx = W * 0.12, fy = sy, fr = Math.min(H * 0.12, 46 * p);
+      ctx.save(); ctx.strokeStyle = dark() ? 'rgba(200,215,230,0.45)' : 'rgba(70,95,120,0.4)'; ctx.lineWidth = 1.5 * p; ctx.setLineDash([10 * p, 10 * p]); ctx.lineDashOffset = -(tt * 40 * c.U) % 20;
+      for (let k = -2; k <= 2; k++) { const y = fy + k * fr * 0.4; ctx.beginPath(); ctx.moveTo(fx + 12 * p, y); ctx.bezierCurveTo(sx - R * 1.5, y, sx - R * 1.2, y + Math.sign(k || 1) * R * (1.2 - Math.abs(k) * 0.25), sx, y + Math.sign(k || 1) * R * (1.25 - Math.abs(k) * 0.2) * (k ? 1 : 0) + (k ? 0 : -R * 1.15)); ctx.lineTo(W * 0.95, y); ctx.stroke(); }
+      ctx.restore();
+      if (VG) { VG.rod(ctx, fx - 20 * p, fy, fx - 20 * p, by - 8 * p, 3 * p, { color: '#8a939e' }); VG.box(ctx, fx - 46 * p, by - 10 * p, 52 * p, 10 * p, { color: '#3d4754', r: 3 }); VG.box(ctx, fx - 30 * p, fy - fr, 22 * p, 2 * fr, { color: '#4a5563', r: 6 }); }
+      ctx.strokeStyle = dark() ? '#c7ced8' : '#4a5563'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.ellipse(fx, fy, 7 * p, fr, 0, 0, 7); ctx.stroke();
+      if (VG) VG.label(ctx, `fan, ${f(c.U, 1)} m/s`, fx, fy + fr + 14 * p, { a: 'center', s: 10.5 * p });
+    }
+    /* radiation: short wavy arrows outward, more of them for the black sphere */
+    const nRad = Math.round(Math.min(12, r.Pr / Math.max(1e-6, r.Pc + r.Pr) * 14));
+    for (let i = 0; i < nRad; i++) { const a = -Math.PI / 2 + (i + 0.5) / nRad * 2 * Math.PI, ph = reduce ? 0.5 : (tt * 0.6 + i * 0.37) % 1, r0 = R * (1.15 + 0.6 * ph), r1 = r0 + R * 0.35;
+      ctx.save(); ctx.globalAlpha = 0.8 * (1 - ph); ctx.strokeStyle = T.hot; ctx.lineWidth = 1.5 * p; ctx.beginPath();
+      for (let k = 0; k <= 10; k++) { const rr = r0 + (r1 - r0) * k / 10, w = Math.sin(k * 1.9) * 3 * p; const xx = sx + Math.cos(a) * rr - Math.sin(a) * w, yy = sy + Math.sin(a) * rr + Math.cos(a) * w; k ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); }
+      ctx.stroke(); ctx.restore(); }
+    /* the sphere, tinted by its temperature */
+    const col = c.surf === 'black' ? '#23272e' : SPECIFIC[c.metal].col;
+    if (VG) VG.ball(ctx, sx, sy, R, col, { matte: c.surf === 'black' }); else { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(sx, sy, R, 0, 7); ctx.fill(); }
+    ctx.fillStyle = tcol(Tn, 0.35); ctx.beginPath(); ctx.arc(sx, sy, R, 0, 7); ctx.fill();
+    /* thermocouple lead to its meter */
+    const lw = 100 * p, lh = 26 * p, lx = Math.max(6, Math.min(W - lw - 8, stx + 24 * p)), ly = top + 50 * p;
+    if (VG) VG.cable(ctx, sx + R * 0.5, sy - R * 0.6, lx, ly + lh + 16 * p, -18, { w: 2 * p, color: '#b8342a' });
+    thermoLCD(lx, ly, lw, lh, `${f(Tn, 2)} °C`, 'thermocouple');
+    if (VG) VG.label(ctx, `${SPHERES[c.metal].name.split(',')[0].toLowerCase()} sphere, ${f(c.D, 1)} cm across, ${c.surf === 'black' ? 'painted flat black' : 'polished'}; room air at ${f(c.Ta, 0)} °C`, W / 2, by + 16 * p, { a: 'center', s: 11 * p });
+  }
   function drawCurve() {
     const p = proj(), c = cctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
     if (S.blind) { c.fillStyle = T.muted; c.font = `${12 * p}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Graph hidden (Blind mode in the Lab section)', CW / 2, CH / 2); return; }
@@ -575,6 +691,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       else { const k = S.ex.liq; xs = [0, 40]; const pts = []; for (let t = 0; t <= 40; t += 0.5) pts.push([t, capH(k, t)]); ys = [Math.min(...pts.map((q) => q[1])) - 2, Math.max(...pts.map((q) => q[1])) + 2];
         series = [{ pts: [[S.ex.T, capH(k, S.ex.T)]], col: T.hot, dots: true, ring: true }, { pts: (window.vdRows ? window.vdRows() : []).filter((r) => r.setup === 'flask' && r.material === LIQUIDS[k].name).map((r) => [+r.T_C, +r.reading_mm]), col: T.accent, dots: true }];
         xl = 'bath temperature (°C)'; yl = 'level h (mm)'; }
+    } else if (S.view === 'cv') {
+      const c = S.cv, tmax = Math.max(600, Math.ceil(c.t * 1.25 / 600) * 600), pts = [], n = 240;
+      for (let i = 0; i <= n; i++) { const t = c.t * i / n; pts.push([t, cvTemp(t)]); }
+      xs = [0, tmax]; ys = [Math.min(c.Ta, c.T0) - 3, Math.max(c.Ta, c.T0) + 3];
+      const rec = (window.vdRows ? window.vdRows() : []).filter((r) => r.view === 'cooling').map((r) => [+r.t_s, +r.T_C]);
+      series = [{ pts, col: T.curve, w: 2.2 }, { pts: [[0, c.Ta], [tmax, c.Ta]], col: T.muted, dash: true, w: 1.2 }, { pts: rec, col: T.accent, dots: true }, { pts: [[c.t, cvTemp(c.t)]], col: T.hot, dots: true, ring: true }];
+      xl = 'time t (s)'; yl = 'T (°C)';
     } else {
       const w = wallState(coWall()), tot = Math.max(w.thick, 1e-6) * 1000, pts = [[0, w.Ts_in]]; let x = 0; w.layers.forEach((l, i) => { x += l.d; pts.push([x * 1000, w.T[i + 2]]); });
       xs = [0, tot]; ys = [Math.min(S.co.Tin, S.co.Tout) - 3, Math.max(S.co.Tin, S.co.Tout) + 3];
@@ -600,10 +723,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function redraw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
-    ({ eq: drawEq, th: drawTh, ex: drawEx, co: drawCo })[S.view]();
+    ({ eq: drawEq, th: drawTh, ex: drawEx, co: drawCo, cv: drawCv })[S.view]();
     drawCurve(); readouts(); clock();
   }
-  function clock() { $('clock').textContent = S.view === 'eq' ? `t = ${f(S.eq.t, 0)} s` : S.view === 'th' ? `t = ${f(S.th.t, 0)} s in this bath` : ''; }
+  function clock() { $('clock').textContent = S.view === 'eq' ? `t = ${f(S.eq.t, 0)} s` : S.view === 'th' ? `t = ${f(S.th.t, 0)} s in this bath` : S.view === 'cv' ? `t = ${f(S.cv.t, 0)} s` : ''; }
 
   // ---------- readouts ----------
   function readouts() {
@@ -627,6 +750,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         + dd('Length now', `${f(ROD_L0 * 1000 + dl, 3)} mm`) + dd('α from the table', S.blind || ex.rod === 'mystery' ? hide : `${f(EXPAND[k].a * 1e6, 1)} × 10⁻⁶ /°C`); }
       else { const k = ex.liq, hh = capH(k, ex.T); h = dd('Level above the 20 °C mark', `${f(hh, 1)} mm`) + dd('Bath temperature', `${f(ex.T, 1)} °C`) + dd('Liquid', LIQUIDS[k].name)
         + dd('Liquid volume now', S.blind ? hide : `${f(FLASK_V0 * liquidVol(k, ex.T) / 1000, 5)} mL`) + (k === 'water' ? dd('Density of water', S.blind ? hide : `${f(waterRho(ex.T), 3)} kg/m³`) : dd('β from the table', S.blind ? hide : `${f(LIQUIDS[k].b * 1e6, 0)} × 10⁻⁶ /°C`)); }
+    } else if (S.view === 'cv') {
+      const c = S.cv, par = cvPar(), Tn = cvTemp(c.t), r = coolRates(par, Tn), m = coolMass(par);
+      h = dd('Thermocouple', `${f(Tn, 2)} °C`) + dd('Time', `${f(c.t, 0)} s`) + dd('Room air', `${f(c.Ta, 0)} °C`)
+        + dd('Mass m', `${f(m * 1000, 1)} g`) + dd('Surface area A = πD²', `${f(r.A * 1e4, 2)} cm²`)
+        + dd('Heat loss by convection', S.blind ? hide : `${f(r.Pc, 3)} W`) + dd('Heat loss by radiation', S.blind ? hide : `${f(r.Pr, 3)} W`)
+        + dd('Convection coefficient h', S.blind ? hide : `${f(r.h, 2)} W/(m²·°C)`) + dd('Radiation, as a coefficient', S.blind ? hide : `${f(r.hr, 2)} W/(m²·°C)`);
     } else {
       const w = wallState(coWall()), c = S.co;
       h = dd('Heat flow P', `${f(w.P, w.P < 10 ? 3 : 1)} W`) + dd('Probe', `${f(w.at(c.x * w.thick), 2)} °C at ${f(c.x * w.thick * 1000, 1)} mm`)
@@ -642,6 +771,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   fillSel($('selBar'), CONDUCT, ['silver', 'copper', 'gold', 'aluminum', 'steel', 'stainless', 'glass']);
   fillSel($('selRod'), EXPAND, null, '<option value="mystery">Mystery rod</option>'); fillSel($('selLiq'), LIQUIDS);
   for (const id of ['selL1', 'selL2', 'selL3']) fillSel($(id), CONDUCT);
+  fillSel($('selCvM'), SPHERES); fillSel($('selCvS'), SURFACES);
   fillSel($('selFi'), FILMS, ['none', 'still']); fillSel($('selFo'), FILMS, ['none', 'wind12', 'wind24']);
   function sync() {
     const e = S.eq, th = S.th, ex = S.ex, c = S.co;
@@ -659,6 +789,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.layers.forEach((l, i) => { $(`selL${i + 1}`).value = l.mat; $(`sD${i + 1}`).value = l.d; $(`oD${i + 1}`).textContent = `${l.d} mm`; });
     $('sTi').value = c.Tin; $('oTi').textContent = `${c.Tin} °C`; $('sTo').value = c.Tout; $('oTo').textContent = `${c.Tout} °C`; $('selFi').value = c.fin; $('selFo').value = c.fout;
     $('sX').value = Math.round(c.x * 1000); const w = wallState(coWall()); $('oX').textContent = `${f(c.x * w.thick * 1000, 1)} mm in`;
+    const v = S.cv; $('selCvM').value = v.metal; $('selCvS').value = v.surf; $('sCvD').value = v.D; $('oCvD').textContent = `${f(v.D, 1)} cm`;
+    $('sCvT0').value = v.T0; $('oCvT0').textContent = `${v.T0} °C`; $('sCvU').value = v.U; $('oCvU').textContent = v.U ? `${f(v.U, 1)} m/s` : 'off (still air)'; $('sCvTa').value = v.Ta; $('oCvTa').textContent = `${v.Ta} °C`;
     for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
   }
@@ -681,19 +813,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       set: () => Object.assign(S.ex, { kind: 'flask', liq: 'water', T: 20 }) },
     wall: { view: 'co', hint: 'A house wall: 13 mm of plasterboard, 90 mm of glass wool and 100 mm of brick, with still air at 20 °C inside and a 24 km/h wind at −5 °C outside. Drag the probe through the wall: the temperature drops most across the insulation.',
       set: () => setBuild('house') } };
-  const card = { eq: 'cardEq', th: 'cardTh', ex: 'cardEx', co: 'cardCo' };
-  const UNITS = { eq: 'T in °C · mass in kg · time in s', th: 'P in kPa · T in °C · gas in mmol', ex: 'T in °C · lengths in mm', co: 'T in °C · P in W · thickness in mm' };
+  const card = { eq: 'cardEq', th: 'cardTh', ex: 'cardEx', co: 'cardCo', cv: 'cardCv' };
+  const UNITS = { eq: 'T in °C · mass in kg · time in s', th: 'P in kPa · T in °C · gas in mmol', ex: 'T in °C · lengths in mm', co: 'T in °C · P in W · thickness in mm', cv: 'T in °C · time in s · diameter in cm' };
   const LABEL = { eq: 'Two blocks in an insulated box joined by a metal bar, each with a thermometer. Space starts or pauses.', th: 'A glass bulb of gas held in a bath on a stand, joined by a tube to a pressure gauge.',
-    ex: 'A rod in a water jacket against a dial gauge, or a flask of liquid with a thin tube and a ruler, in a water bath.', co: 'A wall seen edge on, with the temperature profile drawn across it and a probe inside it.' };
+    ex: 'A rod in a water jacket against a dial gauge, or a flask of liquid with a thin tube and a ruler, in a water bath.', co: 'A wall seen edge on, with the temperature profile drawn across it and a probe inside it.',
+    cv: 'A hot metal sphere hanging from a stand in room air, with a thermocouple, warm air rising from it and a fan that can blow across it. Space starts or pauses.' };
   function setView(v) {
     S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     for (const k in card) $(card[k]).hidden = k !== v;
     if (!(window.vdRows && window.vdRows().length)) { window.vdShowCols = SHOW[v]; window.dispatchEvent(new Event('load')); }   /* the Readings section redraws its table headings on load */
     $('units').textContent = UNITS[v]; can.setAttribute('aria-label', LABEL[v]);
     const st = isStatic(); $('go').hidden = st; $('restart').hidden = st; $('speedSeg').hidden = st;
+    $('s300').hidden = v !== 'cv'; if (v !== 'cv' && S.speed === 300) S.speed = 60;
     setRun(false); sync(); redraw();
   }
-  function setRun(on) { if (isStatic()) on = false; S.run = on; const t = S.view === 'eq' ? S.eq.t : S.th.t; $('go').textContent = on ? 'Pause' : t > 0 ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); }
+  function setRun(on) { if (isStatic()) on = false; S.run = on; const t = S.view === 'eq' ? S.eq.t : S.view === 'cv' ? S.cv.t : S.th.t; $('go').textContent = on ? 'Pause' : t > 0 ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); }
   function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); if (k === 'mystery') newMystery(true); setView(c.view); }
   function newMystery(quiet) { const e = S.eq; let k; do { k = MYSTERY_POOL[Math.floor(rnd() * MYSTERY_POOL.length)]; } while (k === e.mys && MYSTERY_POOL.length > 1); if (!quiet && e.mysN) $('presetHint').textContent = `The last mystery block was ${SPECIFIC[e.mys].name.toLowerCase()}.`; e.mys = k; e.mysN++; e.t = 0; e.hist = []; }
   function newBath() { const th = S.th; if (th.mysN) th.lastMys = th.mysT; th.mysT = Math.round((25 + rnd() * 70) * 10) / 10; th.mysN++; th.t = 0; }
@@ -704,7 +838,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
   $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
   $('go').addEventListener('click', () => setRun(!S.run));
-  $('restart').addEventListener('click', () => { if (S.view === 'eq') S.eq.t = 0; else { S.th.t = 0; S.th.Tg = 20; } setRun(false); redraw(); });
+  $('restart').addEventListener('click', () => { if (S.view === 'eq') S.eq.t = 0; else if (S.view === 'cv') S.cv.t = 0; else { S.th.t = 0; S.th.Tg = 20; } setRun(false); redraw(); });
+  const cvChanged = () => { custom(); S.cv.t = 0; cvReset(); setRun(false); sync(); redraw(); };
+  $('selCvM').addEventListener('change', (e) => { S.cv.metal = e.target.value; cvChanged(); });
+  $('selCvS').addEventListener('change', (e) => { S.cv.surf = e.target.value; cvChanged(); });
+  $('sCvD').addEventListener('input', (e) => { S.cv.D = +e.target.value; cvChanged(); });
+  $('sCvT0').addEventListener('input', (e) => { S.cv.T0 = +e.target.value; cvChanged(); });
+  $('sCvU').addEventListener('input', (e) => { S.cv.U = +e.target.value; cvChanged(); });
+  $('sCvTa').addEventListener('input', (e) => { S.cv.Ta = +e.target.value; cvChanged(); });
   $('selA').addEventListener('change', (e) => { S.eq.a = e.target.value; if (S.eq.a === 'mystery') newMystery(true); eqChanged(); });
   $('selB').addEventListener('change', (e) => { S.eq.b = e.target.value; eqChanged(); });
   $('selBar').addEventListener('change', (e) => { S.eq.bar = e.target.value; eqChanged(); });
@@ -751,19 +892,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const dt = Math.min(0.1, (now - last) / 1000); last = now;
     if (S.run) {
       if (S.view === 'eq') S.eq.t += dt * S.speed;
+      else if (S.view === 'cv') S.cv.t += dt * S.speed;
       else if (S.view === 'th') { const sd = dt * S.speed; S.th.Tg = follow(S.th.Tg, bathT(), sd); S.th.t += sd; }
       redraw();
-    } else if (S.view === 'th' && !reduce && now - lastDraw > 50) { lastDraw = now; redraw(); }
+    } else if ((S.view === 'th' || S.view === 'cv') && !reduce && now - lastDraw > 50) { lastDraw = now; redraw(); }
     requestAnimationFrame(frame);
   }
 
   // ---------- readings for the worksheets (tools/readings_panel.py) ----------
   window.vdVersion = 'temperature@2026-10-24';
-  const SHEETS = { eq: 'thermal-equilibrium', th: 'gas-thermometer', ex: 'thermal-expansion', co: 'heat-conduction' };
+  const SHEETS = { eq: 'thermal-equilibrium', th: 'gas-thermometer', ex: 'thermal-expansion', co: 'heat-conduction', cv: 'convection' };
   window.vdWorksheet = () => SHEETS[S.view];
   const SHOW = { eq: [['t_s', 't (s)'], ['T_A_C', 'T_A (°C)'], ['T_B_C', 'T_B (°C)']], th: [['bath', 'bath'], ['n_mmol', 'n (mmol)'], ['P_kPa', 'P (kPa)']],
-    ex: [['material', 'sample'], ['T_C', 'T (°C)'], ['reading_mm', 'reading (mm)']], co: [['x_mm', 'probe (mm)'], ['T_probe_C', 'T (°C)'], ['P_W', 'P (W)']] };
-  const VIEWNAME = { eq: 'equilibrium', th: 'thermometer', ex: 'expansion', co: 'conduction' }, VIEWLABEL = { equilibrium: 'Equilibrium', thermometer: 'Thermometer', expansion: 'Expansion', conduction: 'Conduction' };
+    ex: [['material', 'sample'], ['T_C', 'T (°C)'], ['reading_mm', 'reading (mm)']], co: [['x_mm', 'probe (mm)'], ['T_probe_C', 'T (°C)'], ['P_W', 'P (W)']], cv: [['t_s', 't (s)'], ['T_C', 'T (°C)'], ['U_m_s', 'fan (m/s)']] };
+  const VIEWNAME = { eq: 'equilibrium', th: 'thermometer', ex: 'expansion', co: 'conduction', cv: 'cooling' }, VIEWLABEL = { equilibrium: 'Equilibrium', thermometer: 'Thermometer', expansion: 'Expansion', conduction: 'Conduction', cooling: 'Cooling' };
   window.vdShowCols = SHOW.eq;
   window.vdReadingRow = () => {
     const other = (window.vdRows ? window.vdRows() : []).find((r) => r.view !== VIEWNAME[S.view]);
@@ -775,6 +917,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       bath_T_C: th.bath === 'mys' ? '' : g6(bathT()), n_mmol: th.n, t_in_bath_s: Math.round(th.t), P_kPa: f(P, 2) }; }
     if (S.view === 'ex') { const ex = S.ex; if (ex.kind === 'rod') { const k = rodKey(); return { view: 'expansion', setup: 'rod', material: ex.rod === 'mystery' ? 'mystery' : EXPAND[k].name, T_C: ex.T, reading_mm: f(rodDL(k, ex.T), 3).replace('−', '-'), L0_m: ROD_L0 }; }
       return { view: 'expansion', setup: 'flask', material: LIQUIDS[ex.liq].name, T_C: ex.T, reading_mm: f(capH(ex.liq, ex.T), 1).replace('−', '-'), L0_m: '' }; }
+    if (S.view === 'cv') { const v = S.cv, t = Math.round(v.t); return { view: 'cooling', sphere: `${SPHERES[v.metal].name.split(',')[0]} sphere ${f(v.D, 1)} cm, ${v.surf === 'black' ? 'black' : 'polished'}`,
+      U_m_s: v.U, T_room_C: v.Ta, T0_C: v.T0, t_s: t, T_C: f(cvTemp(t), 2).replace('−', '-') }; }
     const c = S.co, w = wallState(coWall());
     return { view: 'conduction', build: c.build, layers: w.layers.map((l) => `${CONDUCT[l.mat].name.split(' (')[0]} ${g6(l.d * 1000)} mm`).join(' + '), A_m2: g6(c.A), T_in_C: c.Tin, T_out_C: c.Tout,
       film_in: c.fin, film_out: c.fout, x_mm: f(c.x * w.thick * 1000, 1), T_probe_C: f(w.at(c.x * w.thick), 2).replace('−', '-'), P_W: g6(w.P) };
@@ -785,6 +929,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('aboutTh').textContent = 'Thermometer view: an ideal gas in a glass bulb of fixed volume 1.000 L, joined to a pressure gauge that reads to 0.01 kPa. P = nRT/V, with R = 8.314462618 J/(mol·K). The bulb\'s expansion and the gas in the tube are neglected. The gas comes to the bath\'s temperature with a time constant of 12 s (a chosen value), so wait for the gauge to settle. Baths at 1 atm, on today\'s temperature scale (ITS-90): liquid nitrogen boils at 77.355 K (−195.795 °C), dry ice sublimes at −78.464 °C, ice and water is at 0.00 °C, water boils at 99.974 °C (the textbook rounds it to 100 °C). Room air is 20 °C. The mystery bath is between 25 °C and 95 °C. Real gases depart a little from PV = nRT, and different gases give slightly different readings except at low density, which is why a gas thermometer is extrapolated to zero density; this model is exactly ideal.';
   $('aboutEx').textContent = 'Expansion view. Rod: L = L₀[1 + α(T − 20 °C)], with L₀ = 1.000 m at 20.0 °C and α from the textbook\'s Table 1.2 (an average over ordinary temperatures, so the response is exactly linear here). The dial gauge reads to 0.001 mm. The picture shows the rod\'s end moving 4000 times more than it does. Flask: 5.000 mL of liquid fills a Pyrex flask (β = 9 × 10⁻⁶ /°C) to the zero mark of a tube of bore 1.00 mm at 20.0 °C. The liquid\'s volume is V₀[1 + β(T − 20 °C)] with β from Table 1.2, except water, whose volume follows its measured density (Tanaka et al., Metrologia 2001, valid from 0 to 40 °C), so water\'s β changes with temperature and turns negative below about 4 °C. The level is the extra volume divided by the tube\'s cross section, read to 0.1 mm; the tube\'s own expansion is neglected. Each reading is taken after the sample has settled at the bath\'s temperature.';
   $('aboutCo').textContent = 'Conduction view: steady heat flow (the temperatures have been held long enough for nothing to change with time). Each layer of thickness d passes P = kAΔT/d with k from the textbook\'s Table 1.5, so it has a resistance d/k per unit area (the R factor) and the layers\' resistances add. Air moving on each side carries heat to and from the surface by convection; its film resistance per unit area is the standard ASHRAE value: still indoor air on a wall 0.12 m²·°C/W, outdoor air in a 12 km/h wind 0.044, in a 24 km/h wind 0.030. "None" holds the surface at that side\'s temperature, like a stirred bath. P = AΔT/ΣR, and the temperature falls across each layer and film in proportion to its share of ΣR, in a straight line inside each layer. "Air (still, conduction only)" is air that cannot move; a real air gap also passes heat by convection and radiation, so it insulates less. Radiation through the wall is not modelled (the Blackbody demo covers radiation). The probe reads to 0.01 °C.';
+
+  $('aboutCv').textContent = 'Cooling view: a solid metal sphere hanging in a large room loses heat by convection to the air and by radiation to the walls, which are at the air\'s temperature. The sphere is small enough and conducts well enough to have one temperature throughout, so mc dT/dt = −hA(T − T_air) − εσA(T⁴ − T_air⁴), with A = πD² and m = ρπD³/6 (densities from Volume 1 Table 14.1, c from Table 1.3). The convection coefficient h is not a constant: in still air it comes from Churchill\'s correlation for natural convection from a sphere (it grows as (T − T_air)^1/4 for big spheres), and with the fan from Whitaker\'s correlation for flow across a sphere, the two combined as (h_N⁴ + h_F⁴)^1/4 (both from Incropera et al., Fundamentals of Heat and Mass Transfer). Air properties at 1 atm are from the Lemmon and Jacobsen correlations. The emissivities are chosen values typical of a polished metal (0.05) and of flat black paint (0.95). The fan\'s air is taken as smooth and steady; a real fan\'s stream is turbulent, which raises h a little. The thermocouple reads to 0.01 °C with no lag.';
 
   // ---------- size, theme, start ----------
   function resize() {
@@ -799,9 +945,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   tokens(); newBath(); S.th.mysN = 0; newRod(); S.ex.mysN = 0; newMystery(true); S.eq.mysN = 0;
   const q = new URLSearchParams(location.search), first = PRESETS[q.get('setup')] ? q.get('setup') : 'hotmetal';
   applyPreset(first);
+  if (q.get('view') === 'cv') setView('cv');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
-  window.__tp = { S, setView, applyPreset, setRun, redraw, eqNow, wallState, coWall, setBuild, sync, gasP, newMystery, newBath, newRod };
+  window.__tp = { S, cvTemp, cvReset, coolRates, cvPar, setView, applyPreset, setRun, redraw, eqNow, wallState, coWall, setBuild, sync, gasP, newMystery, newBath, newRod };
   requestAnimationFrame(frame);
 })();
 </script>

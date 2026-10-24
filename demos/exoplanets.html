@@ -91,6 +91,17 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 }
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .hint.warn { color: var(--pos); }
+.mys .mysHide { display: none; }
+/* the Readings section: this demo keeps the shared table and button rules off, so the panel brings its own */
+.vd-readings .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.vd-readings .btn { font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+.vd-readings .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.vd-readings .status { margin: 6px 0 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.vd-readings table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.vd-readings table.rows th { text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.vd-readings table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+.vd-readings .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.readout .mysOff { display: none; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
 .btn { display: inline-flex; align-items: center; justify-content: center; gap: 6px; font-weight: 700; }
@@ -176,6 +187,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/exoplanets.html" target="exoplanets-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Systems</h2>
         <div class="chips" id="presets">
@@ -187,6 +199,15 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="trappist" aria-pressed="false">TRAPPIST-1 like</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+
+      <section id="mysSec">
+        <h2>Mystery system</h2>
+        <div class="row2">
+          <button type="button" class="btn" id="mysNew">New mystery system</button>
+          <button type="button" class="btn" id="mysReveal" disabled>Reveal the planet</button>
+        </div>
+        <p class="hint" id="mysNote">A real survey star with a planet you have to find: its size, mass and orbit are hidden, the measurements are noisy, and only the star's mass and radius are given.</p>
       </section>
 
       <section>
@@ -223,7 +244,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div>
       </section>
 
-      <section>
+      <section class="mysHide">
         <h2>Planet</h2>
         <div>
           <div class="slider-head"><label for="mp">Mass M<sub>p</sub></label><output id="mpOut" class="mono" for="mp"></output></div>
@@ -238,7 +259,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </details>
       </section>
 
-      <section>
+      <section class="mysHide">
         <h2>Orbit</h2>
         <div>
           <div class="slider-head"><label for="a">Semi major axis a</label><output id="aOut" class="mono" for="a"></output></div>
@@ -281,6 +302,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div><dt>Period</dt><dd id="rP">—</dd></div>
           <div><dt>Transit duration</dt><dd id="rDur">—</dd></div>
           <div><dt>Transits?</dt><dd id="rTr">—</dd></div>
+          <div><dt>Cursor: time from mid transit</dt><dd id="rTnow">—</dd></div>
           <div><dt>Transit probability ≈ R<sub>s</sub>/a</dt><dd id="rProb">—</dd></div>
           <div><dt>M<sub>p</sub> sin i (from RV)</dt><dd id="rMsini">—</dd></div>
           <div><dt>Planet density</dt><dd id="rRho">—</dd></div>
@@ -304,10 +326,31 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <span><i class="swatch cur"></i>Now</span>
         </div>
         <details class="more"><summary>The model and its formulas</summary>
-          <p class="hint">Model: one planet and its star in a two body orbit. The planet's own light is ignored, so there is no secondary eclipse. Limb darkening is quadratic with fixed Sun like coefficients (u₁ = 0.40, u₂ = 0.26), so the true dip is a little deeper than (R<sub>p</sub>/R<sub>s</sub>)². The duration readout uses the standard approximation for eccentric orbits. Noise is white and Gaussian. In the top view the star and planet are drawn larger than scale.</p>
+          <p class="hint">Model: one planet and its star in a two body orbit. The planet's own light is ignored, so there is no secondary eclipse. Limb darkening is quadratic with fixed Sun like coefficients (u₁ = 0.40, u₂ = 0.26): the middle of the star is brighter than its average, so at the middle of a central transit the dip is 1/(1 − u₁/3 − u₂/6) = 1.215 times (R<sub>p</sub>/R<sub>s</sub>)² for a small planet (1.210 times when R<sub>p</sub>/R<sub>s</sub> = 0.2). The duration readout uses the standard approximation for eccentric orbits. Noise is white and Gaussian. With noise, the readouts and Record reading give the measurement nearest the cursor (brightness from the closely spaced set inside the transit window, else from the whole orbit set) and the time of that measurement; without noise they give the true curves at the cursor. A mystery system draws a star of 0.70 to 1.30 M☉ (radius M^0.8) and a rocky planet, a mini Neptune or a giant, with a density in that kind's range, a circular orbit 0.03 to 0.10 AU out, and an impact parameter below 0.5. In the top view the star and planet are drawn larger than scale.</p>
         </details>
         </div></details>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="exoplanets" data-title="Finding Exoplanets" data-demo="exoplanets">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
     </aside>
   </main>
 </div>
@@ -408,6 +451,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   let tau = 0;                  // time since the start of the window, s (0..Per)
   let playing = true, speed = 1, slowmo = true, showModel = true, lcMode = 'orbit';
   let raf = 0, last = null, scrub = null, dirty = true, slowNow = false;
+  let MYS = null;               /* the mystery system: { n, revealed } while it is on */
+  let sysName = 'hotj';
+  const hidden = () => MYS && !MYS.revealed;
 
   // ---------- orbit ----------
   function solveE(M, e) {
@@ -520,6 +566,15 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const OBS_T = { orbit: Array.from({ length: 260 }, (_, j) => (j + 0.5) / 260), zoom: Array.from({ length: 160 }, (_, j) => (j + 0.5) / 160) };
   const sigF = () => 1e-3 * P.noise * P.noise;    // relative flux, up to 1000 ppm
   const sigV = () => 10 * P.noise * P.noise;      // m/s, up to 10 m/s
+  /* what the instruments read near time t: with no noise, the true curves at t; with noise, the photometric measurement nearest t
+     (from the closely spaced set inside the transit window, else the whole orbit set) and the nearest radial velocity measurement */
+  function meas(t) {
+    const sf = sigF(), sv = sigV();
+    if (sf === 0 && sv === 0) return { t, f: flux(t), v: vr(state(t)), tv: t };
+    const near = (set) => { let b = set[0]; for (const o of set) if (Math.abs(o[0] - t) < Math.abs(b[0] - t)) b = o; return b; };
+    const ph = near(D.transits && Math.abs(t) <= D.zh ? D.obsZoom : D.obsOrbit), rv = near(D.obsOrbit);
+    return { t: ph[0], f: ph[1] + sf * ph[3], v: rv[2] + sv * rv[4], tv: rv[0] };
+  }
 
   // ---------- formatting ----------
   const minus = (s) => s.replace(/-/g, '−');
@@ -678,10 +733,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (P.inc > 0.05) arrow(ctx, cx, ay0, cx, ay1, T.ink, 2 * S);
     const f12 = `700 ${12 * S}px ${uiFont()}`;
     const elev = 90 - P.inc;
-    const obsTxt = P.inc <= 0.05 ? 'Earth is straight above the page' : elev < 0.05 ? 'To Earth, in this plane' : `To Earth, ${elev.toFixed(1)}° above this plane`;
+    const obsTxt = hidden() ? 'To Earth' : P.inc <= 0.05 ? 'Earth is straight above the page' : elev < 0.05 ? 'To Earth, in this plane' : `To Earth, ${elev.toFixed(1)}° above this plane`;
     label(ctx, T, obsTxt, cx, H - 14 * S, 'center', T.ink, f12);
     ctx.save(); ctx.font = `${10.5 * S}px ${mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-    ctx.fillText('star wobble ×' + comma(F), 8 * S, H - padB + 4 * S);
+    if (!hidden()) ctx.fillText('star wobble ×' + comma(F), 8 * S, H - padB + 4 * S);
     ctx.fillText('sizes not to scale', 8 * S, H - padB + 18 * S);
     ctx.restore();
   }
@@ -708,7 +763,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       ctx.stroke();
     };
     ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * S; ctx.globalAlpha = 0.6; ctx.setLineDash([4 * S, 4 * S]);
-    halfPath(false); ctx.restore();
+    if (!hidden()) halfPath(false); ctx.restore();
 
     const st = state(nowT());
     const [px, py] = sky(st), rpPx = Math.max(D.Rp * sc, 1.5 * S), behind = Math.sin(st.th) <= 0;
@@ -716,7 +771,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       ctx.fillStyle = T.planet; ctx.beginPath(); ctx.arc(px, py, rpPx, 0, TAU); ctx.fill();
       ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * S; ctx.stroke();
     };
-    if (behind) drawPlanet();
+    if (behind && !hidden()) drawPlanet();
 
     // limb darkened star
     const C = rgb(T.star), g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R0);
@@ -727,14 +782,14 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R0, 0, TAU); ctx.fill();
 
     ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * S; ctx.globalAlpha = 0.9; ctx.setLineDash([4 * S, 4 * S]);
-    halfPath(true); ctx.restore();
-    if (!behind) drawPlanet();
+    if (!hidden()) halfPath(true); ctx.restore();
+    if (!behind && !hidden()) drawPlanet();
 
     const f11 = `600 ${11 * S}px ${mono}`;
     ctx.save(); ctx.font = f11; ctx.fillStyle = T.muted; ctx.textBaseline = 'bottom'; ctx.textAlign = 'left';
-    ctx.fillText(minus(`b = ${D.b < 100 ? D.b.toFixed(2) : sig(D.b, 3)}`), 8 * S, H - 8 * S);
+    if (!hidden()) ctx.fillText(minus(`b = ${D.b < 100 ? D.b.toFixed(2) : sig(D.b, 3)}`), 8 * S, H - 8 * S);
     ctx.textAlign = 'right';
-    ctx.fillText('planet to scale with star', W - 8 * S, H - 8 * S);
+    ctx.fillText(hidden() ? 'mystery: the planet is too small to see' : 'planet to scale with star', W - 8 * S, H - 8 * S);
     ctx.restore();
     if (slowNow) label(ctx, T, 'slow motion', W - 10 * S, padT - 12 * S, 'right', T.accent, `700 ${11 * S}px ${uiFont()}`);
     if (!D.transits && P.inc > 0) {
@@ -861,7 +916,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     }
     ctx.restore();
     // K marker
-    if (D.K > 0) {
+    if (D.K > 0 && !hidden()) {
       ctx.save(); ctx.strokeStyle = T.equi; ctx.lineWidth = 1 * S; ctx.setLineDash([2 * S, 3 * S]);
       const mid = D.K * P.e * Math.cos(D.w);
       for (const v of [mid + D.K, mid - D.K]) { ctx.beginPath(); ctx.moveTo(pad.l, Y(v)); ctx.lineTo(W - pad.r, Y(v)); ctx.stroke(); }
@@ -899,6 +954,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const f = flux(nowT());
     $('rFnow').textContent = f === 1 ? '1' : minus('−' + fmtPpm((1 - f) * 1e6));
     $('insideWarn').hidden = !D.inside;
+    const now = nowT(), m = meas(now), hrs = (x) => minus(sig(x / 3600, 4)) + ' h';
+    $('rTnow').textContent = hrs(now);
+    if (P.noise > 0) {   /* with noise the readouts give the measurements nearest the cursor, as Record reading stores them */
+      $('rFnow').textContent = minus(sig((1 - m.f) * 1e6, 4)) + ' ppm drop';
+      $('rVnow').textContent = (m.v > 0 ? '+' : '') + fmtV(m.v);
+    }
+    if (hidden()) for (const id of ['rDepth', 'rK', 'rDur', 'rProb', 'rMsini', 'rRho']) { $(id).innerHTML = '<span class="ok">hidden</span>'; $(id).className = ''; }
   }
 
   // ---------- scheduling ----------
@@ -928,6 +990,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (playing) schedule();
   }
   function changed() { dirty = true; schedule(); }
+  /* bring the derived curves up to date now (the next frame would), keeping the place in the orbit */
+  function ensure() { if (dirty || !D) { const frac = D ? tau / D.Per : 0.03; derive(); tau = ((frac % 1) + 1) % 1 * D.Per; dirty = false; } }
 
   // ---------- controls ----------
   const LOG = { rs: [0.08, 3], mp: [0.1, 13 * MJ], rp: [0.3, 2.2 * RJ], a: [0.01, 5.21] };
@@ -938,7 +1002,37 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function setPressed(sel, attr, val) {
     for (const b of document.querySelectorAll(sel + ' button')) b.setAttribute('aria-pressed', String(b.dataset[attr] === val));
   }
+  function endMystery() {
+    if (!MYS) return; MYS = null; document.body.classList.remove('mys');
+    for (const k of ['ms', 'rs', 'noise']) $(k).disabled = false;
+    $('tModel').disabled = false; showModel = $('tModel').checked; $('mysReveal').disabled = true;
+    $('mysNote').textContent = 'A real survey star with a planet you have to find: its size, mass and orbit are hidden, the measurements are noisy, and only the star\'s mass and radius are given.';
+  }
+  /* a star like the Sun with one transiting planet: rocky, a mini Neptune or a giant, its density in that kind's range; edge on enough to transit (b below 0.5) */
+  function newMystery() {
+    const r = Math.random, ms = +(0.7 + 0.6 * r()).toFixed(2), rs = +Math.pow(ms, 0.8).toFixed(2);
+    const kinds = [{ rp: [1.3, 1.9], rho: [4, 7] }, { rp: [2.5, 4.5], rho: [1, 2.5] }, { rp: [8, 14], rho: [0.3, 1.5] }], k = kinds[Math.floor(r() * 3)];
+    const rp = +(k.rp[0] + (k.rp[1] - k.rp[0]) * r()).toPrecision(3), rho = k.rho[0] + (k.rho[1] - k.rho[0]) * r();
+    const mp = +(rho * 1000 * 4 / 3 * Math.PI * (rp * R_EARTH) ** 3 * G / GM_EARTH).toPrecision(3);
+    const a = +(0.03 + 0.07 * r()).toPrecision(3), b = 0.5 * r(), inc = Math.round(Math.acos(b * rs * R_SUN / (a * AU)) / DEG * 100) / 100;
+    Object.assign(P, { ms, rs, mp, rp, a, e: 0, inc, w: 90, noise: 0.12 });
+    MYS = { n: (MYS ? MYS.n : 0) + 1, revealed: false }; sysName = 'mystery';
+    document.body.classList.add('mys'); for (const id of ['ms', 'rs', 'noise']) $(id).disabled = true;
+    showModel = false; $('tModel').disabled = true; $('mysReveal').disabled = false;
+    setPressed('#presets', 'p', null); $('presetHint').textContent = 'A mystery system: see the Mystery system section.';
+    $('mysNote').textContent = `Mystery star: M = ${ms.toFixed(2)} M☉, R = ${rs.toFixed(2)} R☉. The planet's size, mass and orbit are hidden, and every measurement has noise (${sig(sigF() * 1e6, 2)} ppm in brightness, ${sig(sigV(), 2)} m/s in velocity).`;
+    syncSliders(); D = null; tau = 0; changed();
+  }
+  function revealMystery() {
+    if (!MYS) return; MYS.revealed = true; $('mysReveal').disabled = true; $('tModel').disabled = false; showModel = $('tModel').checked;
+    const rho = GM_EARTH * P.mp / G / (4 / 3 * Math.PI * (P.rp * R_EARTH) ** 3) / 1000;
+    $('mysNote').textContent = `Revealed: R_p = ${sig(P.rp)} R⊕, M_p = ${sig(P.mp)} M⊕, a = ${sig(P.a)} AU, i = ${P.inc.toFixed(2)}°, density ${sig(rho)} g/cm³. Star: M = ${P.ms.toFixed(2)} M☉, R = ${P.rs.toFixed(2)} R☉.`;
+    changed();
+  }
+  $('mysNew').addEventListener('click', newMystery);
+  $('mysReveal').addEventListener('click', revealMystery);
   function applyPreset(name) {
+    endMystery(); sysName = name;
     Object.assign(P, PRESETS[name]);
     setPressed('#presets', 'p', name);
     $('presetHint').textContent = HINTS[name];
@@ -947,7 +1041,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   for (const k of IDS) {
     $(k).addEventListener('input', (e) => {
       P[k] = LOG[k] ? +sig(fromU(k, +e.target.value), 3) : +e.target.value;
-      if (k !== 'noise') { setPressed('#presets', 'p', null); $('presetHint').textContent = 'Your own system. Pick a preset to start from a known one.'; }
+      if (k !== 'noise') { if (MYS) endMystery(); sysName = 'custom'; setPressed('#presets', 'p', null); $('presetHint').textContent = 'Your own system. Pick a preset to start from a known one.'; }
       changed();
     });
   }
@@ -955,13 +1049,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   for (const b of document.querySelectorAll('#speedSeg button')) b.addEventListener('click', () => { speed = +b.dataset.s; setPressed('#speedSeg', 's', b.dataset.s); });
   for (const b of document.querySelectorAll('#lcSeg button')) b.addEventListener('click', () => { lcMode = b.dataset.lc; setPressed('#lcSeg', 'lc', lcMode); schedule(); });
   $('tSlow').addEventListener('change', (e) => { slowmo = e.target.checked; schedule(); });
-  $('tModel').addEventListener('change', (e) => { showModel = e.target.checked; schedule(); });
+  $('tModel').addEventListener('change', (e) => { if (!hidden()) showModel = e.target.checked; schedule(); });
   function setPlaying(p) { playing = p; $('play').textContent = p ? 'Pause' : 'Play'; last = null; schedule(); }
   $('play').addEventListener('click', () => setPlaying(!playing));
   $('reset').addEventListener('click', () => { tau = 0; schedule(); });
 
   // time scrubbing
-  const setT = (t) => { tau = (((t + D.Per / 4) % D.Per) + D.Per) % D.Per; schedule(); };
+  const setT = (t) => { ensure(); tau = (((t + D.Per / 4) % D.Per) + D.Per) % D.Per; schedule(); };
   function topAt(e) {
     const r = cv.top.getBoundingClientRect();
     const x = (e.clientX - r.left - TV.cx) / TV.s, y = -(e.clientY - r.top - TV.cy) / TV.s;
@@ -993,7 +1087,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     else if (e.key === 'ArrowLeft') setT(nowT() - stepT);
     else if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
       const d = (big ? 1 : 0.1) * (e.key === 'ArrowUp' ? 1 : -1);
-      P.inc = Math.round(Math.min(90, Math.max(0, P.inc + d)) * 10) / 10; $('inc').value = P.inc;
+      if (hidden()) return;
+      P.inc = Math.round(Math.min(90, Math.max(0, P.inc + d)) * 10) / 10; $('inc').value = P.inc; sysName = 'custom';
       setPressed('#presets', 'p', null); changed();
     } else if (e.key === ' ') setPlaying(!playing);
     else return;
@@ -1026,8 +1121,20 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
 
+  // readings for the worksheet: the cursor's time and what the instruments read there
+  const SYSNAME = { hotj: 'Hot Jupiter', earth: 'Earth and Sun', jupiter: 'Jupiter and Sun', ecc: 'Eccentric planet', tilt: 'Not edge on', trappist: 'TRAPPIST-1 like', custom: 'Own system' };
+  window.vdVersion = 'exoplanets@2026-10-24';
+  window.vdShowCols = [['t_h', 't (h)'], ['drop_ppm', 'drop (ppm)'], ['v_m_s', 'v (m/s)']];
+  window.vdReadingRow = () => {
+    ensure();
+    const m = meas(nowT()), hid = hidden(), g = (x) => String(+(+x).toPrecision(4));
+    return { system: sysName === 'mystery' ? `Mystery ${MYS.n}` : SYSNAME[sysName], Ms_Msun: P.ms, Rs_Rsun: P.rs, Rp_RE: hid ? 'hidden' : g(P.rp), Mp_ME: hid ? 'hidden' : g(P.mp),
+      a_AU: hid ? 'hidden' : g(P.a), inc_deg: hid ? 'hidden' : P.inc, e: hid ? 'hidden' : P.e, noise_ppm: +(sigF() * 1e6).toPrecision(3), noise_m_s: +sigV().toPrecision(3),
+      P_d: +(D.Per / DAY).toPrecision(6), t_h: (m.t / 3600).toFixed(4), drop_ppm: ((1 - m.f) * 1e6).toFixed(1), v_m_s: m.v.toFixed(3), t_v_h: (m.tv / 3600).toFixed(4) };
+  };
+
   // exposed for testing
-  window.__exo = { P, get D() { return D; }, derive, flux, blocked, PRESETS, applyPreset };
+  window.__exo = { P, get D() { return D; }, derive, flux, blocked, PRESETS, applyPreset, meas, newMystery, revealMystery, setT: (t) => setT(t), nowT, get MYS() { return MYS; }, schedule, setPlaying };
 })();
 </script>
 </body>

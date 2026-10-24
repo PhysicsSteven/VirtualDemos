@@ -334,6 +334,17 @@
      ]
     },
     {
+     "demo": "superconductors",
+     "title": "Superconductors and the Meissner Effect",
+     "desc": "Cool a lead sphere in a magnetic field and watch the field lines leave it, unlike a mere perfect conductor; then map the critical field against temperature and identify a mystery metal.",
+     "tags": [
+      "Meissner effect",
+      "critical field",
+      "perfect diamagnet",
+      "type I superconductor"
+     ]
+    },
+    {
      "demo": "molecules",
      "title": "Molecules: Bonds and Spectra",
      "desc": "Pull a sodium ion from a chloride ion and stretch the bond of H₂ to see what holds molecules together, then climb the ladder of vibration and rotation levels and measure the infrared band of HCl to find its bond length and the stiffness of its bond.",

@@ -252,7 +252,7 @@
   const THERMO = ['heating-curve' /* States of Matter demo, Beaker view */, 'bonds-and-latent-heat' /* States of Matter demo, Atoms view */,
     'thermal-equilibrium', 'gas-thermometer', 'thermal-expansion', 'heat-conduction' /* Temperature and Heat demo, one per view */,
     'heat-capacities-of-gases', 'ruchardt' /* Heat Capacities of Gases demo */, 'free-expansion', 'einstein-solids', 'second-law' /* Entropy demo */,
-    'ideal-gas', 'heat-engines', 'blackbody'];
+    'ideal-gas', 'heat-engines', 'blackbody', 'convection' /* Temperature and Heat demo, Cooling view (2026-10-24) */];
   ENABLED.push(...THERMO);
   Object.assign(FROM_DEMO, {
     /* Reading | Time t (s) | Temperature T (°C) | Balance m (g) | Stage */
@@ -267,6 +267,8 @@
     'thermal-expansion': { demo: 'Temperature and Heat (Expansion)', cols: ['row', (r) => `${r.setup}, ${r.material}`, 'T_C', 'reading_mm', null, null] },
     /* Reading | Build and layers | Position x (mm) | Temperature T (°C) | Heat flow P (W) */
     'heat-conduction': { demo: 'Temperature and Heat (Conduction)', cols: ['row', (r) => `${r.build}: ${r.layers}`, 'x_mm', 'T_probe_C', 'P_W'] },
+    /* Reading | Sphere and air | Time t (s) | Temperature T (°C) | T − T_air (°C) | ln(T − T_air) */
+    convection: { demo: 'Temperature and Heat (Cooling)', cols: ['row', (r) => `${r.sphere}, fan ${+r.U_m_s ? r.U_m_s + ' m/s' : 'off'}, room ${r.T_room_C} °C, start ${r.T0_C} °C`, 't_s', 'T_C', null, null] },
     /* Reading | Gas and piston | Heat Q (J) | Temperature T (°C) | Volume V (L) | Pressure P (kPa) */
     'heat-capacities-of-gases': { demo: 'Heat Capacities of Gases', cols: ['row', (r) => `${r.gas}, ${r.n_mol} mol, piston ${r.piston}`, 'Q_J', 'T_C', 'V_L', 'P_kPa'] },
     /* Reading | Gas | Flask volume V (L) | Period T (s) | T² (s²) */
@@ -410,14 +412,28 @@
     /* Sample | Range | Probe frequency ν (MHz) | Method | Time or voltage reading (units) | Temperature t (°C) | B₂₀ (mT) | Scan field B_scan (mT) | Total field B (mT) */
     'spin-resonance': { demo: 'Spin Resonance', cols: ['sample', 'range', 'nu_MHz', (r) => `${r.method}, ${r.sweep}`, (r) => `${r.reading} ${r.unit}`, 'temp_C', 'B20_mT', 'Bscan_mT', 'B_mT'] },
   });
+  /* Vol. 3 §9.8, the Meissner effect (Superconductors demo, 2026-10-24) */
+  MODERN.push('meissner-effect'); ENABLED.push('meissner-effect');
+  Object.assign(FROM_DEMO, {
+    /* Reading | Sample | Temperature T (K) | Applied field B (mT) | Moment m (mA·m²) | Field at the equator (mT) | T² (K²) */
+    'meissner-effect': { demo: 'Superconductors and the Meissner Effect', cols: ['row', (r) => `${r.sample}, ${r.model}`, 'T_K', 'B_mT', 'm_mAm2', 'B_eq_mT', null] },
+  });
   /* ==MODERN END== */
+  /* ==ASTRO START== Astronomy worksheets (astro.html) and their demo column maps. */
+  const ASTRO = ['exoplanets' /* Finding Exoplanets demo, 2026-10-24 */];
+  ENABLED.push(...ASTRO);
+  Object.assign(FROM_DEMO, {
+    /* Reading | System | R_s (R☉) | R_p (R⊕) | M_p (M⊕) | Time from mid transit (h) | Brightness drop (ppm) | Star velocity (m/s) | (R_p/R_s)² (ppm) */
+    exoplanets: { demo: 'Finding Exoplanets', cols: ['row', (r) => (+r.noise_ppm ? `${r.system}, noise ${r.noise_ppm} ppm and ${r.noise_m_s} m/s` : r.system), 'Rs_Rsun', 'Rp_RE', 'Mp_ME', 't_h', 'drop_ppm', 'v_m_s', null] },
+  });
+  /* ==ASTRO END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
   const GRAPH_EVERY_TABLE = ['shear-bulk'];
-  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
+  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
   const pretty = (h) => String(h || '').replace(/\^([23])/g, (m, d) => SUP[d]).replace(/_(\d)/g, (m, d) => SUB[d]);

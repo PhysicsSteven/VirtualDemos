@@ -4709,7 +4709,8 @@
         "blackbody",
         "temperature"
       ],
-      "unit": "temperature-heat"
+      "unit": "temperature-heat",
+      "note": "Temperature and Heat: Conduction view (worksheet heat-conduction) and Cooling view (convection and radiation from a sphere, worksheet convection, 2026-10-24); Blackbody Radiation for the radiation law."
     },
     {
       "vol": 2,
@@ -5901,9 +5902,10 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "resistivity"
+        "resistivity",
+        "superconductors"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Resistivity of a wire: cold stage with superconductors (critical temperatures).",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Resistivity of a wire: cold stage with superconductors (critical temperatures). Superconductors and the Meissner Effect (2026-10-24, Claude): field expulsion from a type I sphere, a perfect conductor for contrast, Bc(T) from Table 9.5 and Equation 9.39; worksheet meissner-effect.",
       "unit": "condensed-matter"
     },
     {
@@ -7319,9 +7321,12 @@
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Astronomy module (Vol. 1 ch. 13 context: orbits, Kepler's third law, center of mass). Transit light curve with quadratic limb darkening and radial velocity curve of a two body orbit. 2026-10-24 (Claude): Mystery system (hidden planet, noisy measurements, reveal), Record reading and Export to worksheet; interactive worksheet exoplanets (transit depth against (Rp/Rs)², K against Mp, a mystery planet's radius, mass, orbit and density) with a key from real runs in TeacherKeys.",
       "title": "Finding Exoplanets",
-      "url": "demos/exoplanets.html"
+      "url": "demos/exoplanets.html",
+      "handouts": [
+        "exoplanets"
+      ]
     },
     {
       "demo": "faraday",
@@ -9182,6 +9187,28 @@
       "url": "demos/solids.html"
     },
     {
+      "demo": "superconductors",
+      "course": [
+        "modern"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "9.8",
+          "title": "Superconductivity"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). A type I sphere 10.00 mm across in a solenoid: exact field lines (uniform field plus the sphere's dipole), Meissner state, intermediate state from (2/3)Bc to Bc, normal above; a perfect conductor (zero resistance only) keeps the flux it had at cooling. Tc and Bc(0) from OpenStax Vol. 3 Table 9.5, Bc(T) from Equation 9.39; magnetometer and equator Hall probe; mystery metal. Worksheet meissner-effect with a key from real runs in TeacherKeys.",
+      "handouts": [
+        "meissner-effect"
+      ],
+      "title": "Superconductors and the Meissner Effect",
+      "url": "demos/superconductors.html"
+    },
+    {
       "demo": "sound-intensity",
       "course": [
         "acoustics"
@@ -9581,12 +9608,13 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-24 (Claude). Four views: Equilibrium (two bodies joined by a conducting bar, Q = mcΔT with Table 1.3, P = kAΔT/L with Table 1.5, exponential approach), Thermometer (constant volume ideal gas thermometer, ITS-90 fixed points, extrapolation to absolute zero), Expansion (rod and dial gauge with Table 1.2; flask and capillary, water from Tanaka et al. 2001 density), Conduction (steady flow through layers with ASHRAE air films; house wall, window, icebox, rods in series). Four worksheets with keys from real runs in TeacherKeys.",
+      "note": "New 2026-10-24 (Claude). Five views: Equilibrium (two bodies joined by a conducting bar, Q = mcΔT with Table 1.3, P = kAΔT/L with Table 1.5, exponential approach), Thermometer (constant volume ideal gas thermometer, ITS-90 fixed points, extrapolation to absolute zero), Expansion (rod and dial gauge with Table 1.2; flask and capillary, water from Tanaka et al. 2001 density), Conduction (steady flow through layers with ASHRAE air films; house wall, window, icebox, rods in series). Four worksheets with keys from real runs in TeacherKeys. Cooling view added 2026-10-24 (Claude): a hot sphere in room air cools by natural or forced convection (Churchill and Whitaker correlations, air properties from Lemmon and Jacobsen) and radiation (emissivity 0.05 or 0.95); worksheet convection with a key from real runs.",
       "handouts": [
         "thermal-equilibrium",
         "gas-thermometer",
         "thermal-expansion",
-        "heat-conduction"
+        "heat-conduction",
+        "convection"
       ],
       "title": "Temperature and Heat",
       "url": "demos/temperature.html"

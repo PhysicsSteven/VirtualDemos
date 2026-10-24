@@ -2,7 +2,7 @@
 // Temperature and Heat: equilibrium of two bodies joined by a bar, the gas thermometer, expansion, conduction through layers.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('temperature', 'C0,cToF,fToC,cToK,kToC,SPECIFIC,CONDUCT,BAR_A,eqState,BATHS,gasP,gasT,follow,EXPAND,LIQUIDS,waterRho,rodDL,liquidVol,capH,CAP_A,FILMS,wallState');
+const c = core('temperature', 'C0,cToF,fToC,cToK,kToC,SPECIFIC,CONDUCT,BAR_A,eqState,BATHS,gasP,gasT,follow,EXPAND,LIQUIDS,waterRho,rodDL,liquidVol,capH,CAP_A,FILMS,wallState,SIGMA,AIR,film,coolRates,coolMass,coolAt,coolTrack,SPHERES,SURFACES');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.max(1, Math.abs(b)) || Math.abs(a - b) <= 1e-9, `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -50,5 +50,30 @@ group('conduction: series resistances add; films; the temperature is continuous 
   near(s.Ts_in, 20 - 25 * 0.12 / R, 1e-12, 'inside surface'); near(s.T[s.T.length - 1], -5, 1e-12, 'outside air');
   near(s.at(0.013 + 0.045), (s.T[2] + s.T[3]) / 2, 1e-12, 'linear in a layer'); near(s.thick, 0.203, 1e-12, 'thickness');
   const win = c.wallState({ A: 1, Tin: 20, Tout: -5, Rin: 0.12, Rout: 0.03, layers: [{ mat: 'glass', d: 0.004 }] }); assert(win.Ts_in < 1, `window inside surface ${win.Ts_in}`);
+});
+group('cooling: Churchill natural convection tends to Nu = 2 (pure conduction) for a tiny sphere; Whitaker forced convection by hand', () => {
+  const f0 = c.film(80, 20, 1e-7, 0); near(f0.NuN, 2, 1e-3, 'Nu → 2');
+  const D = 0.05, U = 2, f = c.film(80, 20, D, U), Ta = 293.15, Ts = 353.15;
+  const air = (T, q) => { const i = Math.floor((T - 250) / 25), u = (T - 250 - 25 * i) / 25; return c.AIR[q][i] + (c.AIR[q][i + 1] - c.AIR[q][i]) * u; };
+  const Re = U * D / air(Ta, 'nu'); near(f.Re, Re, 1e-12, 'Re');
+  near(f.NuF, 2 + (0.4 * Math.sqrt(Re) + 0.06 * Math.pow(Re, 2 / 3)) * Math.pow(air(Ta, 'Pr'), 0.4) * Math.pow(air(Ta, 'mu') / air(Ts, 'mu'), 0.25), 1e-12, 'Nu_F');
+  const Tf = (Ta + Ts) / 2, Ra = 9.80665 / Tf * 60 * D ** 3 * air(Tf, 'Pr') / air(Tf, 'nu') ** 2; near(f.Ra, Ra, 1e-12, 'Ra');
+  near(f.NuN, 2 + 0.589 * Ra ** 0.25 / (1 + (0.469 / air(Tf, 'Pr')) ** (9 / 16)) ** (4 / 9), 1e-12, 'Nu_N');
+  assert(f.h > c.film(80, 20, D, 0).h, 'a fan raises h');
+});
+group('cooling: air table at 300 K matches handbook air (k 0.0264 W/(m·K), ν 15.7e-6 m²/s, Pr 0.707)', () => {
+  near(c.AIR.k[2], 0.0264, 2e-3); near(c.AIR.nu[2], 15.75e-6, 2e-3); near(c.AIR.Pr[2], 0.707, 1e-3);
+});
+group('cooling: radiation P = εσA(T⁴ − T_air⁴); its coefficient tends to 4εσT³ near the air temperature', () => {
+  const p = { D: 0.05, U: 0, e: 0.95, Ta: 20, T0: 80, rho: 2700, c: 900 }, r = c.coolRates(p, 80), A = Math.PI * 0.0025;
+  near(r.Pr, 0.95 * c.SIGMA * A * (353.15 ** 4 - 293.15 ** 4), 1e-12, 'P_rad'); near(c.coolRates(p, 20.000001).hr, 4 * 0.95 * c.SIGMA * 293.15 ** 3, 1e-5, 'h_rad');
+});
+group('cooling: energy balance, mc(T0 − T) equals the heat lost (integrated); the sphere never cools below the room', () => {
+  for (const p of [{ D: 0.05, U: 0, e: 0.05, Ta: 20, T0: 80, rho: 2700, c: 900 }, { D: 0.03, U: 3, e: 0.95, Ta: 15, T0: 95, rho: 8920, c: 387 }]) {
+    const tr = c.coolTrack(p, 3000), C = c.coolMass(p) * p.c; let Q = 0;
+    for (let i = 0; i < 3000; i++) { const a = c.coolRates(p, tr[i]), b = c.coolRates(p, tr[i + 1]); Q += (a.Pc + a.Pr + b.Pc + b.Pr) / 2; }
+    near(C * (p.T0 - tr[3000]), Q, 2e-4, 'energy'); assert(tr[3000] > p.Ta, 'above room');
+    near(c.coolAt(p, 1234.5, tr.slice()), c.coolAt(p, 1234.5), 1e-12, 'same answer however the track was built');
+  }
 });
 console.log(`${n} groups passed`);
