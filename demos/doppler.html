@@ -112,7 +112,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .chips button, .btn, .seg button, .proj { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
-  .stage { height: 86vh; min-height: 640px; }
+  .stage { height: auto; min-height: 0; grid-template-rows: auto clamp(520px, 80vh, 760px) auto; }   /* the picture row gets its own height; the Set up card follows it inside the stage */
 }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
@@ -1242,7 +1242,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // the camera frames the flat view's area: its width across, its height up the screen
   function place3() {
     const g = d3, o = orb(), m = LY.main, asp = m.w / Math.max(1, m.h), tn = Math.tan(17 * Math.PI / 180);
-    let c0 = w3(0, 0), dist = Math.max(S.view[0] / asp, S.view[1] * (D3.plane === 'ground' ? 0.8 : 1)) / (2 * tn) * 1.02;
+    let c0 = w3(0, 0), dist = Math.max(S.view[0] / asp, S.view[1] * (D3.plane === 'ground' ? 0.8 : 1)) / (2 * tn) * (asp < 1 ? 1.2 : 1.02);   /* a little more room on a tall phone pane, so the source at the edge stays in view */
     const sp = srcPos(), sw = w3(sp[0], sp[1]);
     if (D3.cam === 'src') { c0 = [sw[0], sw[1], sw[2] + (D3.plane === 'ground' ? 1.5 : 0)]; dist = D3.plane === 'ground' ? 55 : 170; }
     if (D3.cam === 'obs') {
