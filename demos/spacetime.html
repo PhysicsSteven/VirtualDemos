@@ -110,6 +110,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   input[type="range"] { min-height: 28px; }
 }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -346,13 +348,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- canvas ----------
   const cv = $('dia'), ctx = cv.getContext('2d');
   let W = 0, H = 0, dpr = 1, topPad = 50;
+  /* the world strip sits between the toolbar and the diagram: the diagram starts below it */
+  const stripH = () => (W && W < 700 ? 124 : 128) * projScale();
+  const stripTop = () => $('stageTop').offsetHeight + 14;
+  const padTop = () => stripTop() + stripH() + 14;
   function resize() {
     const r = $('stage').getBoundingClientRect();
     dpr = window.devicePixelRatio || 1;
     W = r.width; H = r.height;
     cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
     cv.style.width = W + 'px'; cv.style.height = H + 'px';
-    topPad = $('stageTop').offsetHeight + 18;
+    topPad = padTop();
     if (!userMoved) fitView();
     dirty = true;
   }
@@ -483,6 +489,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     drawEvents();
     flushEdgeLabels();
     drawFrameTag();
+    drawStrip();
   }
 
   function drawGrid(step) {
@@ -836,6 +843,135 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     text(str, 10, H - 12 * ps, moving ? C.pos : C.neg, { size: 10.5, weight: 600 });
   }
 
+  // ---------- the world strip: what the frame the diagram is drawn in sees at one moment ----------
+  /* A horizontal cut through the diagram at one display time T (the moving "now" while playing, else the selected event's time,
+     else 0), drawn on the same x scale: each clock where its worldline crosses that time, showing its proper time; the rod between
+     its two ends at that time; light from each event that has already happened, one gold dot each way at x ± (T − t_event).
+     Every position comes from the same worldlines as the diagram. The icons are not to scale, but each one is squashed along x by
+     1/γ of its speed in the drawn frame, so a moving clock looks contracted exactly as much as its length would be. */
+  function stripTime() {
+    if (nowOn) return nowT;
+    const e = evById(S.sel[S.sel.length - 1]);
+    return e ? toD(e.t, e.x)[0] : 0;
+  }
+  /* where a lab worldline (polyline) crosses display time T: { x, tau, v } with v its speed dx/dt in the drawn frame */
+  function crossAt(pts, tau, T) {
+    for (let i = 1; i < pts.length; i++) {
+      const A = toD(...pts[i - 1]), B = toD(...pts[i]);
+      if ((T - A[0]) * (T - B[0]) <= 0 && A[0] !== B[0]) {
+        const f = (T - A[0]) / (B[0] - A[0]);
+        return { x: A[1] + f * (B[1] - A[1]), tau: tau[i - 1] + f * (tau[i] - tau[i - 1]), v: (B[1] - A[1]) / (B[0] - A[0]) };
+      }
+    }
+    return null;
+  }
+  function clockFace(x, y, r, tau, col, hide) {
+    ctx.fillStyle = C.canvas; ctx.strokeStyle = col; ctx.lineWidth = 1.6 * ps;
+    ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    for (let k = 0; k < 12; k++) { const a = k * Math.PI / 6; line([x + Math.sin(a) * r * 0.78, y - Math.cos(a) * r * 0.78], [x + Math.sin(a) * r * 0.92, y - Math.cos(a) * r * 0.92], alpha(col, 0.6), 1 * ps); }
+    if (hide) { text('?', x, y + 0.5, col, { align: 'center', size: 10, weight: 600 }); return; }
+    const a = 2 * Math.PI * (tau - Math.floor(tau));   /* one turn of the hand per year of the clock's own time */
+    line([x, y], [x + Math.sin(a) * r * 0.8, y - Math.cos(a) * r * 0.8], col, 2 * ps);
+    ctx.fillStyle = col; ctx.beginPath(); ctx.arc(x, y, 1.8 * ps, 0, Math.PI * 2); ctx.fill();
+  }
+  function drawStrip() {
+    const y0 = stripTop(), h = stripH(), m = 8, x0 = m, w = W - 2 * m;
+    if (h <= 0 || w <= 40) return;
+    const T = stripTime(), moving = S.mode === 'moving', dark = /^#/.test(C.canvas) && parseInt(C.canvas.slice(1, 3), 16) < 100;
+    ctx.save();
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, y0, w, h, 10 * ps) : ctx.rect(x0, y0, w, h);
+    const bg = ctx.createLinearGradient(0, y0, 0, y0 + h);
+    bg.addColorStop(0, dark ? '#0b1220' : '#18243a'); bg.addColorStop(1, dark ? '#121c2e' : '#24334f');
+    ctx.fillStyle = bg; ctx.fill(); ctx.clip();
+    for (let i = 0; i < 70; i++) {   /* fixed sky dots, so the strip reads as space */
+      const u = (Math.sin(i * 12.9898) * 43758.5453) % 1, v = (Math.sin(i * 78.233) * 12543.123) % 1;
+      ctx.fillStyle = `rgba(255,255,255,${0.15 + 0.35 * Math.abs((u * 7) % 1)})`;
+      ctx.fillRect(x0 + Math.abs(u) * w, y0 + Math.abs(v) * h, 1.2, 1.2);
+    }
+    const ink = '#e7edf6', quiet = 'rgba(214,224,238,0.72)', gold = dark ? C.equi : '#f2c14e';
+    const cBlue = dark ? C.neg : '#7fb0ff', cRed = dark ? C.pos : '#ff8a73', cTwin = dark ? C.twin : '#c7a2ff';
+    const colOf = (k) => (k === 'home' ? cBlue : k === 'rocket' ? cRed : cTwin);
+    const yA = y0 + h - 22 * ps;   /* the x axis of the strip */
+    line([x0, yA], [x0 + w, yA], 'rgba(214,224,238,0.45)', 1 * ps);
+    const step = tickStep(), b = viewBounds();
+    for (let k = Math.ceil(b.x0 / step); k * step <= b.x1; k++) {
+      const X = sx(k * step); line([X, yA], [X, yA + (k % 5 === 0 ? 6 : 3) * ps], 'rgba(214,224,238,0.45)', 1 * ps);
+      if (k % 5 === 0 || step >= 5) { ctx.font = font(9); ctx.fillStyle = quiet; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(fmt(k * step, 0), X, yA + 7 * ps); }
+    }
+    ctx.font = font(10, 600); ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = ink;
+    const fr = moving ? 'S′' : 'S';
+    ctx.fillText(`The world at ct${moving ? '′' : ''} = ${fmt(T, 1)} yr, as ${fr} sees it`, x0 + 10 * ps, y0 + 7 * ps);
+    ctx.font = font(9); ctx.fillStyle = quiet; ctx.textAlign = 'right';
+    const note = `${nowOn ? 'moves with the now line' : 'Play to run it'} · icons not to scale, squashed by 1/γ along x`;
+    if (W >= 700) ctx.fillText(note, x0 + w - 10 * ps, y0 + 7 * ps);
+    else { ctx.textAlign = 'left'; ctx.fillText(note.replace(' · icons not to scale,', ' · icons'), x0 + 10 * ps, y0 + 20 * ps); }
+    /* light from events already passed */
+    for (const e of S.events) {
+      const [td, xd] = toD(e.t, e.x), d = T - td;
+      if (d < -1e-9) continue;
+      const fade = Math.max(0.25, 1 - d / 12);
+      if (d < 0.35) { const g = ctx.createRadialGradient(sx(xd), yA - 18 * ps, 0, sx(xd), yA - 18 * ps, (10 + 40 * d) * ps); g.addColorStop(0, alpha(gold, 0.9 * (1 - d / 0.35))); g.addColorStop(1, alpha(gold, 0)); ctx.fillStyle = g; ctx.fillRect(sx(xd) - 60 * ps, yA - 78 * ps, 120 * ps, 120 * ps); }
+      ctx.strokeStyle = alpha(gold, 0.35 * fade); ctx.lineWidth = 2 * ps;
+      line([sx(xd - d), yA - 18 * ps], [sx(xd + d), yA - 18 * ps], alpha(gold, 0.28 * fade), 2 * ps);
+      for (const s of [-1, 1]) { const X = sx(xd + s * d); ctx.fillStyle = alpha(gold, fade); ctx.beginPath(); ctx.arc(X, yA - 18 * ps, 3.4 * ps, 0, Math.PI * 2); ctx.fill(); }
+      ctx.font = font(9.5, 600); ctx.fillStyle = alpha(gold, 0.95); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+      ctx.fillText(e.id, sx(xd), yA - 24 * ps);
+    }
+    /* the rod: its two ends are the lab worldlines x = βt and x = βt + L0/γ */
+    if (S.wl.rod) {
+      const g = gammaOf(S.beta), R = 1e3;
+      const back = crossAt([[-R, -S.beta * R], [R, S.beta * R]], [0, 0], T), front = crossAt([[-R, -S.beta * R + S.L0 / g], [R, S.beta * R + S.L0 / g]], [0, 0], T);
+      if (back && front) {
+        const X1 = sx(back.x), X2 = sx(front.x), yR = yA - 9 * ps;
+        const gr = ctx.createLinearGradient(0, yR - 5 * ps, 0, yR + 5 * ps); gr.addColorStop(0, '#ffb3a6'); gr.addColorStop(1, '#b84a38');
+        ctx.fillStyle = gr; ctx.fillRect(Math.min(X1, X2), yR - 4 * ps, Math.abs(X2 - X1), 8 * ps);
+        ctx.font = font(9.5, 600); ctx.fillStyle = ink; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+        const L = Math.abs(front.x - back.x), hideL = S.blind;
+        ctx.fillText(hideL ? 'rod, ? ly' : `rod, ${fmt(L)} ly long`, (X1 + X2) / 2, yR - 6 * ps);
+      }
+    }
+    /* the clocks */
+    const r = (W < 560 ? 9 : 11) * ps, items = [];
+    for (const wl of worldlines()) {
+      const tau = properTimes(wl.pts), q = crossAt(wl.pts, tau, T);
+      if (q) items.push({ wl, q, X: sx(q.x) });
+    }
+    /* two rows of clocks, so labels of clocks close together do not overlap */
+    items.sort((a, b2) => a.X - b2.X);
+    ctx.font = font(9.5, 600);
+    const ends = [-1e9, -1e9];
+    for (const it of items) {
+      it.lab = (S.blind && it.wl.key !== 'home') ? `${it.wl.name} ?` : `${it.wl.name} ${fmt(it.q.tau, 2)} yr`;
+      const left = it.X - r, right = it.X + r + 6 * ps + ctx.measureText(it.lab).width;
+      it.row = left > ends[0] + 6 * ps ? 0 : 1; ends[it.row] = Math.max(ends[it.row], right);
+    }
+    for (const { wl, q, X, row, lab } of items) {
+      const col = colOf(wl.key);
+      {
+      const sq = Math.sqrt(Math.max(0, 1 - q.v * q.v)), yb = yA - 9 * ps;
+      ctx.save(); ctx.translate(X, yb); ctx.scale(Math.max(0.12, sq), 1);
+      if (wl.key === 'home') {
+        const g = ctx.createRadialGradient(-3 * ps, -3 * ps, 1, 0, 0, 9 * ps); g.addColorStop(0, '#cfe3ff'); g.addColorStop(1, '#2e5fa8');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, 8 * ps, 0, Math.PI * 2); ctx.fill();
+      } else {
+        const dir = q.v < 0 ? -1 : 1, L = 17 * ps;
+        ctx.scale(dir, 1);
+        ctx.fillStyle = '#e9edf3'; ctx.beginPath(); ctx.moveTo(-L, -4.5 * ps); ctx.lineTo(L * 0.55, -4.5 * ps); ctx.quadraticCurveTo(L, -2 * ps, L * 1.08, 0); ctx.quadraticCurveTo(L, 2 * ps, L * 0.55, 4.5 * ps); ctx.lineTo(-L, 4.5 * ps); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = col; ctx.fillRect(-L, -4.5 * ps, 5 * ps, 9 * ps);
+        ctx.beginPath(); ctx.moveTo(-L, -4.5 * ps); ctx.lineTo(-L - 4 * ps, -8 * ps); ctx.lineTo(-L + 6 * ps, -4.5 * ps); ctx.moveTo(-L, 4.5 * ps); ctx.lineTo(-L - 4 * ps, 8 * ps); ctx.lineTo(-L + 6 * ps, 4.5 * ps); ctx.fill();
+        ctx.fillStyle = '#5a7ea8'; ctx.beginPath(); ctx.arc(L * 0.35, 0, 2.2 * ps, 0, Math.PI * 2); ctx.fill();
+      }
+      ctx.restore();
+      const yc = yb - 13 * ps - r - row * (2 * r + 8 * ps), hide = S.blind && wl.key !== 'home';
+      line([X, yb - 8 * ps], [X, yc + r], alpha(col, 0.6), 1 * ps);
+      clockFace(X, yc, r, q.tau, col, hide);
+      ctx.font = font(9.5, 600); ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      ctx.fillText(lab, X + r + 4 * ps, yc);
+      }
+    }
+    ctx.restore();
+  }
+
   // ---------- readouts ----------
   function evById(id) { return S.events.find((e) => e.id === id); }
   function pairText(P, Q) {
@@ -1063,7 +1199,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   cv.addEventListener('pointerdown', (e) => {
     cv.focus({ preventScroll: true });
     try { cv.setPointerCapture(e.pointerId); } catch (_) {}
-    const p = pos(e); ptrs.set(e.pointerId, p);
+    const p = pos(e);
+    if (!ptrs.size && p.y > stripTop() && p.y < topPad - 6) return;   /* the world strip is only a picture */
+    ptrs.set(e.pointerId, p);
     if (ptrs.size === 2) {
       const [a, b] = [...ptrs.values()];
       drag = { type: 'pinch', d0: Math.hypot(a.x - b.x, a.y - b.y), s0: V.s, w0: unscr((a.x + b.x) / 2, (a.y + b.y) / 2) };
@@ -1195,7 +1333,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   tokens();
   new ResizeObserver(resize).observe($('stage'));
-  new ResizeObserver(() => { const tp = $('stageTop').offsetHeight + 18; if (tp !== topPad) { topPad = tp; if (!userMoved) fitView(); dirty = true; } }).observe($('stageTop'));
+  new ResizeObserver(() => { const tp = padTop(); if (tp !== topPad) { topPad = tp; if (!userMoved) fitView(); dirty = true; } }).observe($('stageTop'));
   applyPreset('cone');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
   requestAnimationFrame(loop);
