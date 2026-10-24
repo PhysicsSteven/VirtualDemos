@@ -478,7 +478,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     if (anim) { ctx.fillStyle = T.ray;
       for (const q of anim.parts) { if (q.e < 1e-4) continue; ctx.globalAlpha = Math.max(0, Math.min(1, 1 + 10 * Math.log10(q.e) / 40)); ctx.fillRect(X(q.x) - 1.5 * p, Y(q.y) - 1.5 * p, 3 * p, 3 * p); }
       ctx.globalAlpha = 1;
-      const rr = C_AIR * anim.t * sc; if (rr < Math.hypot(m.L, m.W) * sc) { const [sx, sy] = srcPos(m); ctx.save(); ctx.beginPath(); ctx.rect(X(0), Y(0), m.L * sc, m.W * sc); ctx.clip();
+      const rr = C_AIR * anim.t * sc; if (rr > 0 && rr < Math.hypot(m.L, m.W) * sc) { const [sx, sy] = srcPos(m); ctx.save(); ctx.beginPath(); ctx.rect(X(0), Y(0), m.L * sc, m.W * sc); ctx.clip();
         ctx.strokeStyle = T.ray; ctx.globalAlpha = 0.5; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(X(sx), Y(sy), rr, 0, 7); ctx.stroke(); ctx.restore(); ctx.globalAlpha = 1; }
       ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillText(`${speedTxt()}, t = ${(anim.t * 1000).toFixed(0)} ms`, ox + S.L * sc, Math.min(R.planBot + 18 * p, oy + S.W * sc + 18 * p) + 3 * p); ctx.textAlign = 'left';
     }
@@ -615,13 +615,13 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   let SLOW = 100; const speedTxt = () => (SLOW === 1 ? 'real time' : `slow motion ×1/${SLOW}`);
   $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-slow]'); if (!b) return; SLOW = +b.dataset.slow;
     for (const x of $('speedSeg').querySelectorAll('button')) x.setAttribute('aria-pressed', String(x === b)); draw(); });
-  function clap() {
+  function clap(keepCard) {
     if (anim) { stopAnim(); return; }
     S.clapped = true; if (!S.res && !S.pending) remeasure();
     if (reduce) { readouts(); draw(); return; }
     const m = model(), [sx, sy, sz] = srcPos(m), rnd = mulberry(Date.now() & 0xffff), parts = [];
     for (let i = 0; i < NPART; i++) { const cz = 2 * rnd() - 1, ph = 2 * Math.PI * rnd(), s = Math.sqrt(1 - cz * cz); parts.push({ x: sx, y: sy, z: sz, dx: s * Math.cos(ph), dy: s * Math.sin(ph), dz: cz, e: 1 }); }
-    anim = { parts, t: 0, m, rnd, wall: 0 }; card.away(true); $('go').textContent = 'Stop'; $('go').classList.remove('attn'); readouts(); draw();
+    anim = { parts, t: 0, m, rnd, wall: 0 }; if (keepCard !== true) card.away(true); $('go').textContent = 'Stop'; $('go').classList.remove('attn'); readouts(); draw();
   }
   function stopAnim() { if (!anim) return; anim = null; card.away(false); G3.dirty = true; $('go').textContent = 'Clap'; $('go').classList.add('attn'); draw(); }
   function stepAnim(dtw) {
@@ -638,7 +638,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     }
     if (!live || a.wall > 14) stopAnim();
   }
-  $('go').addEventListener('click', clap);
+  $('go').addEventListener('click', () => clap());
   let last = performance.now();
   function frame(now) { const dt = Math.min(0.05, (now - last) / 1000); last = now; if (anim) { stepAnim(dt); if (anim) draw(); } if (G3.on && G3.dirty) render3D(); requestAnimationFrame(frame); }
 
@@ -924,6 +924,8 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   /* the 3D room opens first, except with ?view=plan or on a device that asks to save data or has two cores or fewer */
   if (new URLSearchParams(location.search).get('view') !== 'plan' && window.VD3 && !VD3.lowPower()) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* one clap in slow motion on open, so the sound is already moving through the room (the Set up card stays); ?clap=0 opens it quiet */
+  if (new URLSearchParams(location.search).get('clap') !== '0' && !reduce) clap(true);
   requestAnimationFrame(frame);
 })();
 </script>
