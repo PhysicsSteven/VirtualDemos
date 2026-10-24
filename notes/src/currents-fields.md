@@ -14,6 +14,8 @@ time: 20 to 30 minutes
 
 Students should know the force on a current, F = IL × B. The demo has two scenes: **Straight wires** (a cross section, currents into or out of the page) and **Loop and solenoid** (a plane through the axis). Line spacing is exact for straight wires but only rough in the loop scene, so read B from the probe there.
 
+A **3D** button (next to Flat) shows the same field map as a sheet in space. With straight wires, the wires run through the sheet and faint copies of the field lines sit above and below it: every slice across long straight wires looks the same. In the loop scene, the sheet is the plane through the axis, the turns wrap around it (their near halves drawn faint), and faint copies of the lines turned 60° and 120° about the axis show that the field is the same in every plane through the axis. Drag to turn the view; wires, the probe and the loop are moved in the flat view. Open it directly with ?view=3d.
+
 ## Running it in class
 
 1. **One wire.** Counterclockwise circles for current out of the page. Drag the probe from 3 cm (33.3 µT) to 6 cm: B halves. **Reverse current** turns the compasses round.

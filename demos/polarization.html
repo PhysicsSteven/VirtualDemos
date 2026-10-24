@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -104,7 +105,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .stage { height: 86vh; min-height: 660px; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
+#viewSeg[hidden] { display: none; }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -128,6 +132,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" id="vBench" aria-pressed="true">Polarizer bench</button>
           <button type="button" id="vRefl" aria-pressed="false">Reflection</button>
         </div>
+        <div class="seg" role="group" aria-label="Perspective" id="viewSeg"><button type="button" data-view="flat" aria-pressed="true">Flat</button><button type="button" data-view="3d" aria-pressed="false">3D</button></div>
         <button type="button" class="btn" id="play">Pause</button>
         <button type="button" class="btn" id="reset">Reset</button>
         <span class="count mono" id="count" aria-live="polite"></span>
@@ -479,6 +484,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- layout ----------
   let LY = null;
+  /* the 3D view of the bench (three.js through demos/lib/vd3.js), set up further down */
+  const G3 = { on: false, ok: false, tried: false, loading: false, key: '', bkey: '', w: 0, h: 0, o: { th: -1.05, ph: 1.22, zoom: 1 } };
+  let g3 = null;
   function layout() {
     const ps = pscale();
     if (S.view === 'refl') {
@@ -519,7 +527,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     LY = layout();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
-    if (S.view === 'bench') { drawBench(); drawMalus(); drawN(); dividers([LY.malus, LY.nplot]); }
+    const vs = $('viewSeg'); if (vs.hidden !== (S.view !== 'bench')) vs.hidden = S.view !== 'bench';
+    if (g3) g3.el.hidden = !(G3.on && S.view === 'bench');
+    if (S.view === 'bench') { if (G3.on && g3) bench3(); else drawBench(); drawMalus(); drawN(); dividers([LY.malus, LY.nplot]); }
     else { drawRefl(); drawReflPlot(); dividers([LY.plot]); }
   }
   function dividers(boxes) {
@@ -1089,12 +1099,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
   }
   can.addEventListener('pointermove', (ev) => {
+    if (G3.on && !drag && inBench3(ev)) return;
     if (drag) { dragQ = ptr(ev); if (!dragFrame) { dragFrame = true; requestAnimationFrame(applyDrag); } return; }
     const h = handleAt(ev), id = h ? h.id : null;
     if (id !== hoverId) { hoverId = id; if (!playing) drawAll(); }
     can.style.cursor = h ? h.cursor : 'default';
   });
   can.addEventListener('pointerdown', (ev) => {
+    if (G3.on && inBench3(ev)) return;
     const h = handleAt(ev); if (!h) return;
     const [x, y] = ptr(ev);
     drag = { id: h.id, off: 0 }; hoverId = h.id;
@@ -1152,6 +1164,124 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+  // ---------- 3D view of the bench: the beam runs left to right through the elements, and the electric field is drawn along it ----------
+  // The field along the beam is E(z, t) = Re[E e^{i(kz − ωt)}] for the Jones vector E of each stretch, so a wave plate turns a flat wave
+  // into a helix where it stands. The wavelength is drawn hugely magnified (real light: about 0.5 µm). Unpolarized light is drawn as a field that
+  // wanders at random, as in the flat view. Drag the bench to turn the view; turn the elements with their sliders or in the flat view.
+  const SP = 1, RD = 0.36, AMP = 0.3, LAMD = 0.5;
+  const inBench3 = (ev) => { const r = can.getBoundingClientRect(); return LY && ev.clientY - r.top < LY.bench.h; };
+  function init3D() {
+    G3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); el.hidden = true; pane.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.05, 100);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.8), sun = new THREE.DirectionalLight(0xffffff, 0.75); sun.position.set(1, -1.5, 2);
+    scene.add(hemi, sun);
+    const M = (o) => new THREE.MeshStandardMaterial(o);
+    const railM = M({ roughness: 0.35, metalness: 0.55 }), postM = M({ roughness: 0.3, metalness: 0.6 }), rimM = M({ roughness: 0.4, metalness: 0.5 });
+    const beamM = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false }), fieldM = new THREE.LineBasicMaterial(), stalkM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.45 });
+    const NS = 64, NSEG = 5;
+    const tipG = new THREE.BufferGeometry(); tipG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NSEG * (NS + 1) * 3 * 2), 3));
+    const stG = new THREE.BufferGeometry(); stG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NSEG * NS * 2 * 3), 3));
+    const tip = new THREE.LineSegments(tipG, fieldM), stalks = new THREE.LineSegments(stG, stalkM); tip.frustumCulled = stalks.frustumCulled = false;
+    const bench = new THREE.Group(); scene.add(bench, tip, stalks);
+    g3 = { r, el, scene, cam, hemi, sun, railM, postM, rimM, beamM, fieldM, stalkM, tipG, stG, NS, NSEG, bench, beams: [], disks: [] };
+    can.addEventListener('wheel', (e) => { if (!G3.on || !inBench3(e)) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (!playing) drawAll(); }, { grab: (e) => !G3.on || !inBench3(e), phMin: 0.3, phMax: 1.6, zMin: 0.6, zMax: 2.4, keys: false });
+    can.addEventListener('pointerup', () => { if (!G3.on) can.style.cursor = 'default'; });
+    return true;
+  }
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function theme3() {
+    const g = g3, d = VD3.dark();
+    g.scene.background = col3(T.canvas, '#fbfcfd'); g.hemi.intensity = d ? 1.05 : 0.8; g.sun.intensity = d ? 0.95 : 0.75;
+    g.railM.color = col3(T.muted, '#6b7787'); g.postM.color = col3(T.gridStrong, '#c9d1db'); g.rimM.color = col3(T.ink, '#1d252f').lerp(col3(T.muted, '#6b7787'), 0.5);
+    g.beamM.color = col3(T.beam, '#e0a92a'); g.fieldM.color = g.stalkM.color = col3(T.pos, '#b0452f');
+    G3.bkey = '';
+  }
+  // the polarizer's glass: fine lines along its transmission axis, which is local z (canvas across, after the disk faces along x)
+  function glassTex(type) {
+    const cv = document.createElement('canvas'); cv.width = cv.height = 256; const c = cv.getContext('2d');
+    c.fillStyle = elColor(type); c.fillRect(0, 0, 256, 256);
+    if (type === 'pol') { c.strokeStyle = T.ink; c.globalAlpha = 0.45; c.lineWidth = 2; c.beginPath(); for (let y = 6; y < 256; y += 14) { c.moveTo(0, y); c.lineTo(256, y); } c.stroke(); }
+    return new THREE.CanvasTexture(cv);
+  }
+  // rebuilds the rail, posts, holders and beam when the elements or the theme change
+  function build3() {
+    const g = g3, n = S.els.length, len = (n + 1) * SP;
+    for (const o of g.bench.children.slice()) { g.bench.remove(o); o.traverse((x) => { if (x.geometry) x.geometry.dispose(); if (x.material && x.material.map) x.material.map.dispose(); }); }
+    const rail = new THREE.Mesh(new THREE.BoxGeometry(len + 0.3, 0.14, 0.05), g.railM); rail.position.set(len / 2, 0, -0.78); g.bench.add(rail);
+    const postG = new THREE.CylinderGeometry(0.022, 0.022, 0.78 - RD - 0.03, 16).rotateX(Math.PI / 2), footG = new THREE.BoxGeometry(0.12, 0.16, 0.04);
+    const holder = (x) => { const p = new THREE.Mesh(postG, g.postM); p.position.set(x, 0, -(0.78 + RD + 0.03) / 2); const f = new THREE.Mesh(footG, g.railM); f.position.set(x, 0, -0.74); g.bench.add(p, f); };
+    // the lamp at the left end
+    const lamp = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.13, 0.26, 32).rotateZ(Math.PI / 2), g.rimM); lamp.position.set(-0.13, 0, 0); g.bench.add(lamp); holder(-0.13);
+    g.beams = []; g.disks = [];
+    for (let j = 0; j <= n; j++) {
+      const b = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, SP, 16).rotateZ(Math.PI / 2), g.beamM.clone()); b.position.x = (j + 0.5) * SP; g.bench.add(b); g.beams.push(b);
+    }
+    S.els.forEach((e, i) => {
+      const x = (i + 1) * SP, grp = new THREE.Group(); grp.position.x = x;
+      const rim = new THREE.Mesh(new THREE.TorusGeometry(RD, 0.03, 12, 64).rotateY(Math.PI / 2), g.rimM);
+      const turn = new THREE.Group();
+      const glass = new THREE.Mesh(new THREE.CircleGeometry(RD, 64).rotateY(Math.PI / 2), new THREE.MeshStandardMaterial({ map: glassTex(e.type), transparent: true, opacity: e.type === 'pol' ? 0.5 : 0.35, side: THREE.DoubleSide, depthWrite: false, roughness: 0.2 }));
+      const axisC = e.type === 'pol' ? col3(T.ink, '#1d252f') : col3(elColor(e.type), '#7a45c0');
+      const bar = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.025, 2 * RD), new THREE.MeshStandardMaterial({ color: axisC, roughness: 0.5 })); turn.add(glass, bar);
+      if (e.type !== 'pol') { const slow = new THREE.Mesh(new THREE.BoxGeometry(0.015, 1.6 * RD, 0.012), new THREE.MeshStandardMaterial({ color: axisC, roughness: 0.5, transparent: true, opacity: 0.5 })); turn.add(slow); }
+      const tick = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.02, 0.07), g.railM); tick.position.z = RD + 0.07;   // the vertical reference, as in the flat view
+      grp.add(rim, turn, tick); g.bench.add(grp); holder(x); g.disks.push(turn);
+    });
+  }
+  function bench3() {
+    const g = g3, b = LY.bench, h = b.h, n = S.els.length, ps = pscale();
+    if (G3.w !== W || G3.h !== h) { G3.w = W; G3.h = h; g.r.setSize(W, Math.max(1, h)); g.cam.aspect = W / Math.max(1, h); g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.pos, T.beam, T.ink].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    const bkey = S.els.map((e) => e.type).join(); if (G3.bkey !== bkey) { G3.bkey = bkey; build3(); }
+    const I0 = states[0].S[0], len = (n + 1) * SP;
+    S.els.forEach((e, i) => { g.disks[i].rotation.x = e.ang * D2R; });
+    states.forEach((st, j) => { const m = g.beams[j].material; m.opacity = 0.1 + 0.5 * Math.sqrt(Math.max(0, st.S[0] / I0)); });
+    // the field along each stretch: tips joined into a curve, with stalks from the beam
+    const tp = g.tipG.attributes.position, sp = g.stG.attributes.position, k = 2 * Math.PI / LAMD, sc = AMP / Math.sqrt(I0);
+    let nt = 0, ns = 0;
+    states.forEach((st, j) => {
+      if (st.S[0] / I0 < 1e-9 || j >= g.NSEG) return;
+      let prev = null;
+      for (let q = 0; q <= g.NS; q++) {
+        const x = (j + q / g.NS) * SP, ph = phase - k * x;
+        let E = st.E;
+        if (!E) { E = randomJones(ph / OMEGA * 0.9, 0.7); for (let m = 0; m < j; m++) E = jApply(jOf(S.els[m]), E); }
+        const f = fieldAt(E, ph), Y = f[0] * sc, Z = f[1] * sc;
+        if (prev) { tp.setXYZ(nt++, ...prev); tp.setXYZ(nt++, x, Y, Z); }
+        prev = [x, Y, Z];
+        if (q < g.NS && q % 2 === 0) { sp.setXYZ(ns++, x, 0, 0); sp.setXYZ(ns++, x, Y, Z); }
+      }
+    });
+    tp.needsUpdate = true; sp.needsUpdate = true; g.tipG.setDrawRange(0, nt); g.stG.setDrawRange(0, ns);
+    VD3.place(g.cam, G3.o, new THREE.Vector3(len / 2, 0, -0.2), 0.75 * len + 1.6);
+    g.r.render(g.scene, g.cam);
+    const tmp = new THREE.Vector3(), Q = (x, y, z) => { tmp.set(x, y, z).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * h]; };
+    // this canvas keeps the names, angles and intensities on top of the 3D picture
+    ctx.clearRect(b.x, b.y, b.w, b.h);
+    S.els.forEach((e, i) => {
+      const [x, y] = Q((i + 1) * SP, 0, RD + 0.2), sel = S.sel === i;
+      label(ctx, `${i + 1} · ${ELNAME[e.type]}`, x, y - 8 * ps, sel ? T.accent : T.ink, 'center', 'middle', true);
+      label(ctx, `${e.type === 'pol' ? 'axis' : 'fast'} ${fmtDeg(e.ang, 0)}`, x, y + 6 * ps, sel ? T.accent : T.muted, 'center', 'middle');
+    });
+    states.forEach((st, j) => { const [x, y] = Q((j + 0.5) * SP, 0, -0.5); if (y < h - 30 * ps) label(ctx, j === 0 ? 'I₀' : `${fmtI(st.S[0] / I0)} I₀`, x, y, T.ink, 'center', 'middle', true); });
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(W > 560 ? 'Electric field along the beam, wavelength hugely magnified · drag to turn the view' : 'Field along the beam · drag to turn', 12 * ps, h - 7 * ps);
+  }
+  function setView3(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried || !window.VD3) v = 'flat';
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setView3(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; can.style.cursor = 'default';
+    for (const bt of document.querySelectorAll('#viewSeg button')) bt.setAttribute('aria-pressed', String(bt.dataset.view === v));
+    if (v === 'flat' && G3.tried && !G3.ok) { const bt = document.querySelector('#viewSeg [data-view="3d"]'); bt.disabled = true; bt.title = 'The 3D view needs WebGL, which this browser does not offer here.'; }
+    drawAll();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const bt = e.target.closest('[data-view]'); if (bt && !bt.disabled) setView3(bt.dataset.view); });
+
   // ---------- loop ----------
   let last = performance.now(), frameMs = 0;
   function loop(now) {
@@ -1193,6 +1323,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   ro.observe(pane);
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  if (new URLSearchParams(location.search).get('view') === '3d') setView3('3d');
   requestAnimationFrame(loop);
 })();
 </script>

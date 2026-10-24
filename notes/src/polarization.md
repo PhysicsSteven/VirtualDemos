@@ -12,7 +12,7 @@ time: 20 to 30 minutes
 
 ## Before class
 
-Students need light as a transverse electric field and components of a vector. Angles are measured from the vertical, counterclockwise as seen facing the oncoming beam; intensities are fractions of I₀. Click a disk to plot its transmission against its angle; drag it to turn it. **Reflection** switches to the Brewster view.
+Students need light as a transverse electric field and components of a vector. Angles are measured from the vertical, counterclockwise as seen facing the oncoming beam; intensities are fractions of I₀. Click a disk to plot its transmission against its angle; drag it to turn it. **Reflection** switches to the Brewster view. On the bench, **3D** (next to Flat) shows the elements on an optical rail with the electric field drawn along the beam, E(z, t) = Re[E e^(i(kz − ωt))] for each stretch: a flat wave stays in one plane, and after a quarter wave plate at 45° it becomes a helix. The drawn wavelength is hugely magnified (visible light is about 0.5 µm). Drag the bench to turn the view; turn the elements with their sliders or in the flat view. Open it directly with ?view=3d.
 
 ## Running it in class
 

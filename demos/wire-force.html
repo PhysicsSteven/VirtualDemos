@@ -74,6 +74,8 @@ table.rows input:focus { border-color: var(--accent); }
   input[type="range"] { min-height: 28px; }
 }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -241,7 +243,11 @@ table.rows input:focus { border-color: var(--accent); }
   function poles(cx, cy, gapW, h, vertical) {
     const p = ps();
     // N pole on the left, S on the right: B points right between them
-    ctx.fillStyle = T.N; ctx.fillRect(cx - gapW / 2 - 70 * p, cy - h / 2, 70 * p, h); ctx.fillStyle = T.S; ctx.fillRect(cx + gapW / 2, cy - h / 2, 70 * p, h);
+    if (window.VDGear) {   // painted steel pole pieces lit from the top left, with a bright ground face towards the gap (gear.js)
+      const VG = window.VDGear, xl = cx - gapW / 2 - 70 * p, xr = cx + gapW / 2;
+      VG.box(ctx, xl, cy - h / 2, 70 * p, h, { color: T.N, r: 4 * p, shadow: false }); VG.box(ctx, xr, cy - h / 2, 70 * p, h, { color: T.S, r: 4 * p, shadow: false });
+      for (const [x, d] of [[xl + 70 * p - 5 * p, 1], [xr, -1]]) { const g = ctx.createLinearGradient(x, 0, x + 5 * p, 0); g.addColorStop(d > 0 ? 0 : 1, 'rgba(255,255,255,0)'); g.addColorStop(d > 0 ? 1 : 0, 'rgba(255,255,255,0.35)'); ctx.fillStyle = g; ctx.fillRect(x, cy - h / 2 + 2 * p, 5 * p, h - 4 * p); }
+    } else { ctx.fillStyle = T.N; ctx.fillRect(cx - gapW / 2 - 70 * p, cy - h / 2, 70 * p, h); ctx.fillStyle = T.S; ctx.fillRect(cx + gapW / 2, cy - h / 2, 70 * p, h); }
     ctx.fillStyle = T.canvas; ctx.font = `700 ${22 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('N', cx - gapW / 2 - 35 * p, cy); ctx.fillText('S', cx + gapW / 2 + 35 * p, cy);
     ctx.strokeStyle = T.b; ctx.fillStyle = T.b; ctx.globalAlpha = 0.5; ctx.lineWidth = 1.2 * p;
     for (let y = cy - h / 2 + 16 * p; y < cy + h / 2; y += 26 * p) { ctx.beginPath(); ctx.moveTo(cx - gapW / 2 + 6 * p, y); ctx.lineTo(cx + gapW / 2 - 12 * p, y); ctx.stroke(); ctx.beginPath(); ctx.moveTo(cx + gapW / 2 - 6 * p, y); ctx.lineTo(cx + gapW / 2 - 14 * p, y - 4 * p); ctx.lineTo(cx + gapW / 2 - 14 * p, y + 4 * p); ctx.fill(); }

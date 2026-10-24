@@ -53,6 +53,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -170,7 +172,17 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
     const Y = (y) => top + (bot - top) * y / LEN;
     PIPES.forEach((P, i) => {
       const cx = colW * (i + 0.5) / 3, pw = Math.min(46 * p, colW / 9), col = T[P.id];
-      ctx.fillStyle = col; ctx.fillRect(cx - pw / 2 - 7 * p, top, 7 * p, bot - top); ctx.fillRect(cx + pw / 2, top, 7 * p, bot - top);
+      if (window.VDGear && /^#[0-9a-f]{6}$/i.test(col)) {
+        /* cut pipe: the far inner wall in shadow, then the two cut walls lit like rods */
+        const VG = window.VDGear, gi = ctx.createLinearGradient(cx - pw / 2, 0, cx + pw / 2, 0);
+        gi.addColorStop(0, VG.mix(col, '#000000', 0.55)); gi.addColorStop(0.5, VG.mix(col, '#000000', 0.3)); gi.addColorStop(1, VG.mix(col, '#000000', 0.6));
+        ctx.globalAlpha = 0.35; ctx.fillStyle = gi; ctx.fillRect(cx - pw / 2, top, pw, bot - top); ctx.globalAlpha = 1;
+        for (const x0 of [cx - pw / 2 - 7 * p, cx + pw / 2]) {
+          const g = ctx.createLinearGradient(x0, 0, x0 + 7 * p, 0);
+          g.addColorStop(0, VG.mix(col, '#000000', 0.25)); g.addColorStop(0.4, VG.mix(col, '#ffffff', 0.35)); g.addColorStop(1, VG.mix(col, '#000000', 0.3));
+          ctx.fillStyle = g; ctx.fillRect(x0, top, 7 * p, bot - top);
+        }
+      } else { ctx.fillStyle = col; ctx.fillRect(cx - pw / 2 - 7 * p, top, 7 * p, bot - top); ctx.fillRect(cx + pw / 2, top, 7 * p, bot - top); }
       ctx.fillStyle = T.ink; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(P.name, cx, top - 6 * p);
       const tt = Math.min(S.t, tf[i]), st = fall(MAG.mass, k[i], tt), y = Math.min(LEN, st.y), my = Y(y);
       // induced currents in the walls near the magnet: ⊙ / ⊗ on the two cut edges, darker where the current is larger

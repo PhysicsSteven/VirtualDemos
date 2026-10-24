@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* Layout: one canvas (straight wires in cross section, or a loop or solenoid seen side on with B along its axis plotted below); instrument rail on the right; stacks on phones. */
 :root {
@@ -131,6 +132,8 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
 @media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -155,6 +158,7 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
           <button type="button" id="scSide" aria-pressed="false">Loop and solenoid</button>
         </div>
         <button type="button" class="btn" id="ampBtn" aria-pressed="false">Amperian loop</button>
+        <div class="seg" role="group" aria-label="Perspective" id="viewSeg"><button type="button" data-view="flat" aria-pressed="true">Flat</button><button type="button" data-view="3d" aria-pressed="false">3D</button></div>
         <span class="headline mono" id="headline"></span>
       </div>
       <div class="pane" id="pane">
@@ -562,6 +566,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
   const wById = (id) => S.wires.find((w) => w.id === id);
   const wIndex = (w) => S.wires.indexOf(w) + 1;
+  /* the 3D view (three.js through demos/lib/vd3.js), set up further down; the flat view is where things are dragged */
+  const G3 = { on: false, ok: false, tried: false, loading: false, key: '', lkey: '', w: 0, h: 0, scene: '', o: { th: -1.25, ph: 0.98, zoom: 1 } };
+  let g3 = null;
 
   // ---------- canvas, theme, view ----------
   let T = null, dpr = 1, W = 0, H = 0, themeVer = 0;
@@ -1106,6 +1113,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawAll() {
     if (!T || !W || !H) return;
     ensureLayer();
+    if (G3.on && g3) { draw3(); return; }
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.drawImage(layer, 0, 0);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1266,7 +1274,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (W >= 560) label(c, 'Plane through the axis · z to the right · grid 1 cm', W - 10, Hd - 10, { size: fsz(11), weight: 400, color: T.muted, align: 'right' });
     drawLegend(c, 12, Hd - 30 * ks);
     c.restore();
-    // probe position on the plot
+    plotMarker(c, sol, turns);
+  }
+  // probe position on the axis plot under the side view
+  function plotMarker(c, sol, turns) {
+    const ks = kS();
     if (PG && S.show.probe) {
       const z = S.sprobe.z, b = axisExact(sol, z, turns), px = X(z), y = PG.Yb(b);
       c.strokeStyle = T.accent; c.lineWidth = 1; c.setLineDash([3, 3]); c.beginPath(); c.moveTo(px, PG.top); c.lineTo(px, PG.bot); c.stroke(); c.setLineDash([]);
@@ -1542,6 +1554,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     changed();
   }
   can.addEventListener('pointermove', (ev) => {
+    if (G3.on) return;
     const r = can.getBoundingClientRect();
     if (drag) { dq = [ev.clientX - r.left, ev.clientY - r.top]; if (!dFrame) { dFrame = true; requestAnimationFrame(dragApply); } return; }
     const h = hitAt(ev), id = h ? h.id : null;
@@ -1550,6 +1563,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   });
   can.addEventListener('pointerdown', (ev) => {
     can.focus({ preventScroll: true });
+    if (G3.on) return;
     const h = hitAt(ev);
     if (!h) { if (S.sel) { S.sel = null; dirty = true; } return; }
     const r = can.getBoundingClientRect(), x = wx(ev.clientX - r.left), y = wy(ev.clientY - r.top), L = S.loop;
@@ -1581,7 +1595,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('pointercancel', endDrag);
   can.addEventListener('pointerleave', () => { if (!drag && hoverId) { hoverId = null; dirty = true; } });
   can.addEventListener('dblclick', (ev) => {
-    if (S.scene !== 'wires') return;
+    if (G3.on || S.scene !== 'wires') return;
     const h = hitAt(ev); if (h && h.kind === 'w') { const w = wById(h.ref.id); if (w) setCurrent(w, -w.I); }
   });
   // keys on the drawing
@@ -1641,6 +1655,114 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const retheme = () => { tokens(); changed(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- 3D view: the same field map on a sheet in space, with the wires or the turns that make it ----------
+  // Straight wires: the map is one slice across long wires, so faint copies of its lines above and below show that every slice is the same.
+  // Loop and solenoid: the map is the plane through the axis; faint copies turned about the axis show that the field is the same in every such plane.
+  // Drag to turn the view, wheel or pinch to zoom, double click to reset. Wires, probe and loop are moved in the flat view.
+  function init3D() {
+    G3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); el.hidden = true; pane.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 0.1, 2000);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.8), sun = new THREE.DirectionalLight(0xffffff, 0.75); sun.position.set(-0.6, -1, 1.4);
+    scene.add(hemi, sun);
+    const tex = new THREE.CanvasTexture(layer); tex.anisotropy = r.capabilities.getMaxAnisotropy();
+    const sheetM = new THREE.MeshBasicMaterial({ map: tex, side: THREE.DoubleSide, transparent: true, opacity: 0.9, depthWrite: false });
+    const sheet = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), sheetM); sheet.renderOrder = 2; scene.add(sheet);
+    const edgeM = new THREE.LineBasicMaterial(), edge = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([[-0.5, -0.5], [0.5, -0.5], [0.5, 0.5], [-0.5, 0.5]].map(([x, y]) => new THREE.Vector3(x, y, 0))), edgeM); sheet.add(edge);
+    const ghostM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.3, depthWrite: false }), ghosts = new THREE.Group(); scene.add(ghosts);
+    const copperM = new THREE.MeshStandardMaterial({ roughness: 0.32, metalness: 0.45 }), outM = new THREE.MeshStandardMaterial({ roughness: 0.5 }), inM = new THREE.MeshStandardMaterial({ roughness: 0.5 });
+    const nearM = new THREE.MeshStandardMaterial({ roughness: 0.32, metalness: 0.45, transparent: true, opacity: 0.45, depthWrite: false });
+    const wires = new THREE.Group(), turns = new THREE.Group(); scene.add(wires, turns);
+    g3 = { r, el, scene, cam, hemi, sun, tex, sheet, sheetM, edgeM, ghostM, ghosts, copperM, nearM, outM, inM, wires, turns };
+    can.addEventListener('wheel', (e) => { if (!G3.on) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { dirty = true; }, { grab: () => !G3.on, phMin: 0.15, phMax: 1.55, zMin: 0.5, zMax: 3, keys: false });
+    can.addEventListener('pointerup', () => { if (!G3.on) can.style.cursor = ''; });
+    return true;
+  }
+  function theme3() {
+    const g = g3, d = VD3.dark(), col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+    g.scene.background = col(T.canvas, '#fbfcfd'); g.hemi.intensity = d ? 1.05 : 0.8; g.sun.intensity = d ? 0.95 : 0.75;
+    g.edgeM.color = col(T.gridStrong, '#c9d1db'); g.ghostM.color = col(T.bline, '#9aa7b8');
+    g.copperM.color = g.nearM.color = col('#b87333', '#b87333'); g.outM.color = col(T.fout, '#1f8a5a'); g.inM.color = col(T.fin, '#7a4fc2');
+  }
+  function clear3(grp) { for (const o of grp.children.slice()) { grp.remove(o); if (o.geometry) o.geometry.dispose(); } }
+  // polylines from the layer (pixels) to points in cm, through f(x, y) → [X, Y, Z]
+  function ghostLines(f) {
+    for (const p of lines) {
+      const pts = []; for (let k = 0; k < p.length; k += 2) pts.push(new THREE.Vector3(...f(wx(p[k]), wy(p[k + 1]))));
+      if (pts.length > 1) g3.ghosts.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), g3.ghostM));
+    }
+  }
+  // rebuilds the wires or turns and the faint line copies when the layer changes
+  function build3() {
+    const g = g3, wv = V.x1 - V.x0, hv = V.y1 - V.y0;
+    clear3(g.ghosts); clear3(g.wires); clear3(g.turns);
+    g.sheet.scale.set(wv, hv, 1);
+    if (S.scene === 'wires') {
+      g.sheet.position.set((V.x0 + V.x1) / 2, (V.y0 + V.y1) / 2, 0); g.sheet.rotation.set(0, 0, 0);
+      g.tex.repeat.set(1, 1); g.tex.offset.set(0, 0);
+      const hw = 0.32 * Math.max(wv, hv), rw = rwire() / V.s * 0.75;
+      if (S.show.lines) for (const z of [-0.6 * hw, 0.6 * hw]) ghostLines((x, y) => [x, y, z]);
+      const wireG = new THREE.CylinderGeometry(rw, rw, 2 * hw, 32).rotateX(Math.PI / 2), coneG = new THREE.ConeGeometry(rw * 1.9, rw * 3.2, 20).rotateX(Math.PI / 2);
+      for (const w of S.wires) {
+        const m = new THREE.Mesh(wireG, g.copperM); m.position.set(w.x, w.y, 0); g.wires.add(m);
+        if (!w.I) continue;
+        // chevrons along the wire point the way the current flows: up (out of the page) for I > 0
+        for (const z of [-0.75 * hw, -0.38 * hw, 0.38 * hw, 0.75 * hw]) { const c = new THREE.Mesh(coneG, w.I > 0 ? g.outM : g.inM); c.position.set(w.x, w.y, z); if (w.I < 0) c.rotation.x = Math.PI; g.wires.add(c); }
+      }
+    } else {
+      // the plane through the axis stands upright: z along x, the side view's y up
+      g.sheet.position.set((V.x0 + V.x1) / 2, 0, (V.y0 + V.y1) / 2); g.sheet.rotation.set(Math.PI / 2, 0, 0);
+      const fr = V.Hd / H; g.tex.repeat.set(1, fr); g.tex.offset.set(0, 1 - fr);
+      if (S.show.lines) for (const a of [Math.PI / 3, 2 * Math.PI / 3]) ghostLines((z, y) => [z, -y * Math.sin(a), y * Math.cos(a)]);
+      const sol = S.sol, tr = Math.max(0.06, turnR() / V.s * 0.8), ringG = new THREE.TorusGeometry(sol.R, tr, 12, 48, Math.PI).rotateY(Math.PI / 2), nearG = ringG.clone().rotateX(Math.PI);   /* far and near halves of a turn; the near half is drawn faint so the field inside shows */
+      for (const zk of solTurns(sol)) { const m = new THREE.Mesh(ringG, g.copperM), n = new THREE.Mesh(nearG, g.nearM); m.position.x = n.position.x = zk; n.renderOrder = 3; g.turns.add(m, n); }
+      // one chevron on top of each end turn: out of the page (toward −y here) for I > 0, as in the flat view
+      if (sol.I) { const coneG = new THREE.ConeGeometry(tr * 1.8, tr * 3, 16).rotateX(Math.PI / 2);
+        for (const zk of [...new Set([solTurns(sol)[0], solTurns(sol).at(-1)])]) { const c = new THREE.Mesh(coneG, sol.I > 0 ? g.outM : g.inM); c.position.set(zk, 0, sol.R); c.rotation.x = sol.I > 0 ? Math.PI / 2 : -Math.PI / 2; g.turns.add(c); } }
+    }
+    g.sheetM.opacity = S.scene === 'wires' ? 0.9 : 0.72; g.tex.needsUpdate = true;
+  }
+  function draw3() {
+    const g = g3, h = S.scene === 'wires' ? H : V.Hd;
+    if (G3.w !== W || G3.h !== h) { G3.w = W; G3.h = h; g.r.setSize(W, Math.max(1, h)); g.cam.aspect = W / Math.max(1, h); g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.bline, T.fout, T.fin].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    if (G3.lkey !== layerKey + (S.show.lines ? 1 : 0)) { G3.lkey = layerKey + (S.show.lines ? 1 : 0); build3(); }
+    if (G3.scene !== S.scene) { G3.scene = S.scene; Object.assign(G3.o, S.scene === 'wires' ? { th: -1.25, ph: 0.98, zoom: 1 } : { th: -1.15, ph: 1.12, zoom: 1 }); }
+    const ext = Math.max(V.x1 - V.x0, V.y1 - V.y0);
+    VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0, 0), (S.scene === 'wires' ? 1.4 : 1.05) * ext);
+    g.r.render(g.scene, g.cam);
+    const tmp = new THREE.Vector3(), Q = (x, y, z) => { tmp.set(x, y, z).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * h, tmp.z]; };
+    // this canvas keeps the labels (and the axis plot under the side view) on top of the 3D picture
+    ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, can.width, can.height);
+    const hp = Math.round(h * dpr); if (hp < can.height) ctx.drawImage(layer, 0, hp, can.width, can.height - hp, 0, hp, can.width, can.height - hp);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const fs = fsz(11.5);
+    if (S.scene === 'wires') {
+      const hw = 0.32 * ext, avoid = [];
+      for (const w of S.wires) { const q = Q(w.x, w.y, hw); if (q[2] < 1) label(ctx, `I_${wIndex(w)} = ${fmtI(w.I)}`, q[0], q[1] - 8 * kS(), { size: fs, fam: T.mono, color: T.ink, align: 'center', avoid }); }
+    } else {
+      const sol = S.sol, q = Q(0, 0, -sol.R * 1.25);
+      label(ctx, sol.N === 1 ? `I = ${fmtI(sol.I).replace('+', '')}, R = ${fmtCm(sol.R)}` : `N = ${sol.N}, L = ${fmtCm(sol.L)}, R = ${fmtCm(sol.R)}, I = ${fmtI(sol.I).replace('+', '')}`, q[0], q[1] + fs, { size: fs, fam: T.mono, color: T.ink, align: 'center' });
+      plotMarker(ctx, sol, solTurns(sol));
+    }
+    if (W >= 560) label(ctx, S.scene === 'wires' ? 'Drag to turn the view · move things in the flat view' : 'Near half of each turn drawn faint · drag to turn the view', W - 10, h - 10, { size: fsz(11), weight: 400, color: T.muted, align: 'right' });
+  }
+  function setView3(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried || !window.VD3) v = 'flat';
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setView3(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3) g3.el.hidden = !G3.on; can.style.cursor = G3.on ? 'grab' : '';
+    if (G3.on) { drag = null; hoverId = null; }
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    if (v === 'flat' && G3.tried && !G3.ok) { const b = document.querySelector('#viewSeg [data-view="3d"]'); b.disabled = true; b.title = 'The 3D view needs WebGL, which this browser does not offer here.'; }
+    dirty = true;
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b && !b.disabled) setView3(b.dataset.view); });
+  if (new URLSearchParams(location.search).get('view') === '3d') setView3('3d');
 
   // ---------- loop ----------
   let last = performance.now(), frameMs = 0, lastRead = 0;

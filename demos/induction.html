@@ -46,6 +46,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -724,7 +726,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (const [Sp, list] of sig) {
       const x = cx(Sp.c), r = Sp.r * sc; if (x - r > W + 20) continue;
       const grd = ctx.createRadialGradient(x - r * 0.35, cy - r * 0.35, r * 0.1, x, cy, r); grd.addColorStop(0, T.metalHi); grd.addColorStop(1, T.metal);
-      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(x, cy, r, 0, 7); ctx.fill(); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(x, cy, r, 0, 7); ctx.fill();
+      /* polished metal: a soft glint, while the rim stays light so the + and − signs near the surface keep their contrast */
+      const gl = ctx.createRadialGradient(x - r * 0.38, cy - r * 0.42, 0, x - r * 0.38, cy - r * 0.42, r * 0.34);
+      gl.addColorStop(0, 'rgba(255,255,255,0.7)'); gl.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(x, cy, r, 0, 7); ctx.fill();
+      ctx.beginPath(); ctx.arc(x, cy, r, 0, 7); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.stroke();
       ctx.font = `700 ${Math.max(10, Math.min(15, r * 0.22)) * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
       if (smax > 0) for (const [th, v] of list) { const a = Math.abs(v) / smax; if (a < 0.04) continue; ctx.globalAlpha = 0.15 + 0.85 * a; ctx.fillStyle = v > 0 ? T.pos : T.neg; ctx.fillText(v > 0 ? '+' : '−', x + (r - 9 * p) * Math.cos(th), cy - (r - 9 * p) * Math.sin(th)); }
       ctx.globalAlpha = 1;
