@@ -29,7 +29,7 @@ Add up the electric potential energy of one ion in the field of all the others t
 
 In a crystal of NaCl each Na⁺ ion has 6 Cl⁻ neighbours at the nearest neighbour distance $$r_0$$, 12 Na⁺ ions at $$\sqrt{2}\,r_0$$, 8 Cl⁻ ions at $$\sqrt{3}\,r_0$$, and so on. Its Coulomb energy is
 
-$$U_\text{coul} = -\frac{ke^2}{r_0}\left(6 - \frac{12}{\sqrt{2}} + \frac{8}{\sqrt{3}} - \cdots\right) = -\alpha\frac{ke^2}{r_0},$$
+$$U_\text{coul} = -\frac{ke^2}{r_0}\left(6 - \frac{12}{\sqrt{2} } + \frac{8}{\sqrt{3} } - \cdots\right) = -\alpha\frac{ke^2}{r_0},$$
 
 where the number $$\alpha$$ is the Madelung constant of the structure: 1.7476 for the NaCl structure and 1.7627 for the CsCl structure, with $$ke^2 = 1.440\ \text{eV·nm}$$. A short range repulsion $$A/r^n$$ keeps the ions apart. Setting $$dU/dr = 0$$ at $$r_0$$ fixes $$A$$, and the energy needed to pull one ion pair apart into free ions is
 
