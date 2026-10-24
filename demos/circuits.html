@@ -73,6 +73,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage-ctl .gap { flex: 1 1 0; }
 .tools { flex-wrap: wrap; }
 .tools button { padding: 3px 5px; display: inline-flex; align-items: center; justify-content: center; min-width: 34px; }
+.seg.tools button { padding: 3px 4px; }
 .tools svg { width: 26px; height: 20px; display: block; }
 .tools svg * { fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 .tools svg text { fill: currentColor; stroke: none; font: 700 9px var(--font-ui); }
@@ -103,6 +104,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
   border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
 }
 .chips button:hover, .btn:hover { border-color: var(--muted); }
+.starters-head { margin: 10px 0 6px; }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
@@ -209,7 +211,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   <header class="bar">
     <div>
       <h1>Circuits</h1>
-      <p id="lede">Build a circuit once and look at it three ways: its steady currents, how it changes in time after a switch flips, and how it answers a sine wave source.</p>
+      <p id="lede">Build any circuit, from Ohm's law to a transistor amplifier, and look at it three ways: its steady currents, how it changes in time after a switch flips, and how it answers a sine wave source.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">SI units · I is conventional current · ideal parts</div>
@@ -237,6 +239,9 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
           <button type="button" data-t="ind" aria-pressed="false" title="Inductor (8)" aria-label="Inductor"><svg viewBox="0 0 26 20"><path d="M1 13 H4 a2.25 3.5 0 0 1 4.5 0 a2.25 3.5 0 0 1 4.5 0 a2.25 3.5 0 0 1 4.5 0 a2.25 3.5 0 0 1 4.5 0 H25"/></svg></button>
           <button type="button" data-t="sw" aria-pressed="false" title="Switch (9)" aria-label="Switch"><svg viewBox="0 0 26 20"><path d="M1 14 H7 M7 14 L17 6 M19 14 H25"/><circle cx="7" cy="14" r="1.6"/><circle cx="19" cy="14" r="1.6"/></svg></button>
           <button type="button" data-t="sw2" aria-pressed="false" title="Two way switch (0)" aria-label="Two way switch"><svg viewBox="0 0 26 20"><path d="M1 10 H6 M6 10 L17 4.5 M19 4 H25 M19 16 H25"/><circle cx="6" cy="10" r="1.6"/><circle cx="19" cy="4" r="1.6"/><circle cx="19" cy="16" r="1.6"/></svg></button>
+          <button type="button" data-t="diode" aria-pressed="false" title="Diode (D)" aria-label="Diode"><svg viewBox="0 0 26 20"><path d="M1 10 H25 M17 4 V16"/><path class="fill" d="M9 4 L17 10 L9 16 Z"/></svg></button>
+          <button type="button" data-t="led" aria-pressed="false" title="LED, light emitting diode (E)" aria-label="LED"><svg viewBox="0 0 26 20"><path d="M1 12 H25 M15 7 V17"/><path class="fill" d="M8 7 L15 12 L8 17 Z"/><path d="M14 5 L17 2 M18 6 L21 3" style="stroke-width:1.3"/></svg></button>
+          <button type="button" data-t="bjt" aria-pressed="false" title="Junction transistor (T)" aria-label="Junction transistor"><svg viewBox="0 0 26 20"><circle cx="14" cy="10" r="7.5"/><path d="M1 10 H10 M10 5 V15 M10 7.5 L17 3.5 V0 M10 12.5 L17 16.5 V20"/><path class="fill" d="M17.4 16.8 L13.2 16.4 L15.4 13.2 Z"/></svg></button>
           <button type="button" data-t="am" aria-pressed="false" title="Ammeter (A)" aria-label="Ammeter"><svg viewBox="0 0 26 20"><path d="M1 10 H6 M20 10 H25"/><circle cx="13" cy="10" r="7"/><text x="13" y="13.4" text-anchor="middle">A</text></svg></button>
           <button type="button" data-t="vm" aria-pressed="false" title="Voltmeter (V)" aria-label="Voltmeter"><svg viewBox="0 0 26 20"><path d="M1 10 H6 M20 10 H25"/><circle cx="13" cy="10" r="7"/><text x="13" y="13.4" text-anchor="middle">V</text></svg></button>
           <button type="button" data-t="probe" aria-pressed="false" title="Scope probe: a voltmeter whose reading goes to the oscilloscope (O)" aria-label="Scope probe"><svg viewBox="0 0 26 20"><path d="M1 10 H5 M21 10 H25"/><rect x="5" y="3" width="16" height="14" rx="2"/><path d="M7.5 10 C9.5 4.8, 11 4.8, 13 10 S16.5 15.2, 18.5 10" style="stroke-width:1.3"/></svg></button>
@@ -250,7 +255,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       </div>
       <div class="panes" id="panes">
         <div class="pane" id="cPane">
-          <canvas id="can" tabindex="0" aria-label="Circuit board: a grid of connection dots with the circuit drawn on it. Keys: 1 to 9 and 0 pick a part tool (1 select, 2 wire, 3 resistor, 4 bulb, 5 battery, 6 AC source, 7 capacitor, 8 inductor, 9 switch, 0 two way switch), A ammeter, V voltmeter, O scope probe. Arrows move the cursor or the selected part, Enter places a part from the marked dot to the cursor, Tab selects the next part, plus and minus change its value, R rotates, F flips, S or Enter flips a selected switch, Delete removes, Control Z undoes, space plays or pauses, M changes the analysis mode, B switches between the schematic and the bench view."></canvas>
+          <canvas id="can" tabindex="0" aria-label="Circuit board: a grid of connection dots with the circuit drawn on it. Keys: 1 to 9 and 0 pick a part tool (1 select, 2 wire, 3 resistor, 4 bulb, 5 battery, 6 AC source, 7 capacitor, 8 inductor, 9 switch, 0 two way switch), D diode, E LED, T junction transistor, A ammeter, V voltmeter, O scope probe. Arrows move the cursor or the selected part, Enter places a part from the marked dot to the cursor, Tab selects the next part, plus and minus change its value, R rotates, F flips, S or Enter flips a selected switch, Delete removes, Control Z undoes, space plays or pauses, M changes the analysis mode, B switches between the schematic and the bench view."></canvas>
           <div class="warn" id="warn" role="status" hidden></div>
           <span class="blindtag" id="blindTag" hidden>Blind</span>
         </div>
@@ -262,7 +267,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/dc-circuits.html" target="dc-circuits-worksheet">Worksheet 1: Kirchhoff's Rules</a></li><li><a href="../curriculum/labs/students/rc-circuits.html" target="rc-circuits-worksheet">Worksheet 2: RC Time Constant</a></li><li><a href="../curriculum/labs/students/rlc-transients.html" target="rlc-transients-worksheet">Worksheet 3: RLC Oscillations</a></li><li><a href="../curriculum/labs/students/ac-circuits.html" target="ac-circuits-worksheet">Worksheet 4: AC Resonance</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/dc-circuits.html" target="dc-circuits-worksheet">Worksheet 1: Kirchhoff's Rules</a></li><li><a href="../curriculum/labs/students/rc-circuits.html" target="rc-circuits-worksheet">Worksheet 2: RC Time Constant</a></li><li><a href="../curriculum/labs/students/rlc-transients.html" target="rlc-transients-worksheet">Worksheet 3: RLC Oscillations</a></li><li><a href="../curriculum/labs/students/ac-circuits.html" target="ac-circuits-worksheet">Worksheet 4: AC Resonance</a></li><li><a href="../curriculum/labs/students/junction-transistor.html" target="junction-transistor-worksheet">Worksheet 5: A Real Diode and the Junction Transistor</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Analysis</h2>
         <div class="seg full modes" role="group" aria-label="Analysis mode" id="modeSeg">
@@ -276,6 +281,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets"></div>
+        <p class="hint starters-head">Starter circuits, from Ohm's law to the transistor</p>
+        <div class="chips" id="starters"></div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
@@ -300,6 +307,15 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
           <input type="range" id="sF" min="0" max="400" step="1" aria-label="Frequency, log scale">
         </div>
         <label class="check" id="cRin" hidden><input type="checkbox" id="kRin">Internal resistance r</label>
+        <div class="seg full" role="group" aria-label="LED colour" id="cLed" hidden>
+          <button type="button" data-c="red" aria-pressed="false">Red</button>
+          <button type="button" data-c="green" aria-pressed="false">Green</button>
+          <button type="button" data-c="blue" aria-pressed="false">Blue</button>
+        </div>
+        <div class="seg full" role="group" aria-label="Transistor type" id="cPol" hidden>
+          <button type="button" data-q="npn" aria-pressed="true">NPN</button>
+          <button type="button" data-q="pnp" aria-pressed="false">PNP</button>
+        </div>
         <div class="ctl" id="cr" hidden>
           <div class="slider-head"><label for="nr">Internal resistance r</label><span class="numu"><input type="number" id="nr" min="0.001" step="any" inputmode="decimal"> Ω</span></div>
           <input type="range" id="sr" min="0" max="36" step="1" aria-label="Internal resistance, standard values on a log scale">
@@ -526,19 +542,27 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   // ---------- parts ----------
   // types: wire, res, bulb, bat (DC source, end a is +), ac (sine source, v = V0 sin(2πft) is V_a − V_b), cap, ind,
   // sw (switch), sw2 (two way switch: common a, contact b in position 0, contact c in position 1), am, vm (end a is +),
-  // probe (a scope probe: an ideal voltmeter whose reading goes to the scope)
+  // probe (a scope probe: an ideal voltmeter whose reading goes to the scope), diode and led (end a is the anode),
+  // bjt (junction transistor: base a, collector b, emitter c; pnp true for a PNP)
   const hasRint = (e) => e.type === 'bat' && !!e.rOn && e.r > 0;
-  // a two way switch is analysed as two legs that share the common end: leg id for a–b, −id for a–c
+  // a two way switch is analysed as two legs that share the common end: leg id for a–b, −id for a–c.
+  // A transistor is two legs that share the emitter: id carries the collector current I_C from collector to emitter,
+  // −id the base current I_B from base to emitter. Together they put the right current into each of the three ends.
   function expand(els) {
     const out = [];
     for (const e of els) {
       if (e.type === 'sw2') {
         out.push({ id: e.id, type: 'leg', a: e.a, b: e.b, closed: !e.pos, el: e });
         out.push({ id: -e.id, type: 'leg', a: e.a, b: e.c, closed: !!e.pos, el: e });
+      } else if (e.type === 'bjt') {
+        out.push({ id: e.id, type: 'qc', a: e.b, b: e.c, ctl: e.a, el: e });
+        out.push({ id: -e.id, type: 'qb', a: e.a, b: e.c, ctl: e.b, el: e });
       } else out.push(e);
     }
     return out;
   }
+  const NONLINEAR = { diode: 1, led: 1, qc: 1, qb: 1, bjt: 1 };
+  const hasNonlinear = (els) => els.some((e) => NONLINEAR[e.type]);
   const conducts = (b) => !(b.type === 'vm' || b.type === 'probe' || ((b.type === 'sw' || b.type === 'leg') && !b.closed));
 
   // ---------- complex linear algebra ----------
@@ -626,7 +650,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     const list = brs.filter((b) => !samePt(b.a, b.b));
     const index = new Map(), keys = [];
     const pid = (p) => { const k = kp(p); let i = index.get(k); if (i === undefined) { i = keys.length; index.set(k, i); keys.push(k); } return i; };
-    const E = list.map((b) => { const K = kindFn(b); return { b, k: K.k, y: K.y || [0, 0], src: !!K.src, ia: pid(b.a), ib: pid(b.b) }; });
+    const E = list.map((b) => { const K = kindFn(b); return { b, k: K.k, y: K.y || [0, 0], src: !!K.src, ia: pid(b.a), ib: pid(b.b), ctl: K.ctl ? { ia: pid(K.ctl.a), ib: pid(K.ctl.b), g: K.ctl.g } : null }; });
     const inj = opts.inject ? { ia: pid(opts.inject.a), ib: pid(opts.inject.b), I: opts.inject.I } : null;
     const n = keys.length;
     // source values, per branch and column
@@ -637,6 +661,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     { const m = new Map(); for (let i = 0; i < n; i++) { const r = u0.find(i); let s = m.get(r); if (s === undefined) { s = ns++; m.set(r, s); } sn[i] = s; } }
     const u1 = makeUF(ns);
     for (const x of E) if (x.k === 'Y' || x.k === 'V' || x.k === 'I') u1.union(sn[x.ia], sn[x.ib]);
+    for (const x of E) if (x.ctl) { u1.union(sn[x.ia], sn[x.ctl.ia]); u1.union(sn[x.ia], sn[x.ctl.ib]); }
     const partOf = new Int32Array(ns), parts = [];
     {
       const m = new Map();
@@ -731,6 +756,12 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         if (i !== undefined && j !== undefined) { Ar[i * N + j] -= yr; Ai[i * N + j] -= yi; Ar[j * N + i] -= yr; Ai[j * N + i] -= yi; }
       };
       for (const xi of P.br) { const x = E[xi]; if (x.k === 'Y') addY(sn[x.ia], sn[x.ib], x.y[0], x.y[1]); }
+      // a controlled part of a branch current: g (V_p − V_q) from a to b, for the transistor's legs
+      for (const xi of P.br) {
+        const x = E[xi]; if (!x.ctl) continue;
+        const i = col.get(sn[x.ia]), j = col.get(sn[x.ib]), p = col.get(sn[x.ctl.ia]), q = col.get(sn[x.ctl.ib]), g = x.ctl.g;
+        for (const [r, sg] of [[i, 1], [j, -1]]) { if (r === undefined) continue; if (p !== undefined) Ar[r * N + p] += sg * g; if (q !== undefined) Ar[r * N + q] -= sg * g; }
+      }
       srcs.forEach((xi, m) => {
         const x = E[xi], r = k + m, i = col.get(sn[x.ia]), j = col.get(sn[x.ib]);
         if (i !== undefined) { Ar[i * N + r] += 1; Ar[r * N + i] += 1; }
@@ -762,6 +793,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         if (x.k === 'Y') {
           const dr = Vr[c][sa] - Vr[c][sb], di = Vi[c][sa] - Vi[c][sb];
           let re = x.y[0] * dr - x.y[1] * di, im = x.y[0] * di + x.y[1] * dr;
+          if (x.ctl) { const sp = sn[x.ctl.ia], sq = sn[x.ctl.ib]; re += x.ctl.g * (Vr[c][sp] - Vr[c][sq]); im += x.ctl.g * (Vi[c][sp] - Vi[c][sq]); }
           if (VR[xi]) { re -= VR[xi][0][c]; im -= VR[xi][1][c]; }
           setI(x.b.id, c, re, im);
         } else if (x.k === 'I') setI(x.b.id, c, parts[partOf[sa]].status === 'ok' ? VR[xi][0][c] : NaN, parts[partOf[sa]].status === 'ok' ? VR[xi][1][c] : NaN);
@@ -819,6 +851,121 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     return { res, ptV, ptPart, parts, warnings, injOpen, ncol };
   }
 
+  // ---------- diodes, LEDs and junction transistors ----------
+  // Diode: the Shockley equation with ideality n and a series resistance R_s, I = I_s(e^(V_j/nV_T) − 1), V = V_j + IR_s.
+  // Transistor: the Ebers–Moll model in transport form (§9.7 treats its forward active part, I_C = βI_B):
+  //   I_C = I_s(e^(V_BE/V_T) − e^(V_BC/V_T)) − (I_s/β_R)(e^(V_BC/V_T) − 1),  I_B = (I_s/β)(e^(V_BE/V_T) − 1) + (I_s/β_R)(e^(V_BC/V_T) − 1).
+  // A PNP is the same with every voltage and current reversed. All at T = 300.15 K (27 °C), the temperature the SPICE
+  // parameters are given for. Left out: reverse breakdown, junction capacitance and stored charge (so nothing here
+  // depends on frequency), the Early effect, high injection, and the transistor's base and collector resistances.
+  // Like SPICE, each junction also has GMIN in parallel, so a junction that is off is never an exact open circuit.
+  const KB_EV = 1.380649e-23 / 1.602176634e-19, T_J = 300.15, VT = KB_EV * T_J;        // V_T = kT/e = 25.865 mV
+  const GMIN = 1e-12;
+  // 1N4148 small signal silicon diode, Nexperia SPICE model: IS = 4.352 nA, N = 1.906, RS = 0.6458 Ω
+  const DIODE = { name: '1N4148', Is: 4.352e-9, n: 1.906, Rs: 0.6458 };
+  // 5 mm LEDs, Kingbright catalogue: typical forward voltage at the 20 mA test current. The model takes n = 2 and no
+  // series resistance (an assumption, not a data sheet value) and sets I_s so that 20 mA flows at that voltage.
+  const LED_N = 2, LED_IF = 0.020;
+  const LEDS = { red: { name: 'red', part: 'WP813SRC', lambda: 640, VF: 1.85 }, green: { name: 'green', part: 'WP7113ZGC', lambda: 525, VF: 3.2 },
+    blue: { name: 'blue', part: 'WP7113QBC', lambda: 470, VF: 3.3 } };
+  // 2N3904 NPN (and, mirrored, a matching PNP): Fairchild data sheet SPICE model IS = 6.734 fA, BR = 0.7371. The forward
+  // current gain β is a control: the data sheet gives h_FE 100 to 300 at I_C = 10 mA, and the model's own BF is 416.4.
+  const BJT = { name: '2N3904', Is: 6.734e-15, betaR: 0.7371 };
+  function diodeModel(e) {
+    if (e.type === 'led') { const L = LEDS[e.color] || LEDS.red; return { Is: LED_IF / Math.expm1(L.VF / (LED_N * VT)), n: LED_N, Rs: 0 }; }
+    return { Is: DIODE.Is, n: DIODE.n, Rs: DIODE.Rs };
+  }
+  // e^x, continued as a straight line above x = ln(I_LIN/I_s), where the junction current reaches I_LIN = 1 A, beyond
+  // the ratings of all three parts (they would have burned out), so that a junction straight across a battery gives a
+  // large but finite current; and its slope
+  const I_LIN = 1;
+  const expL = (x, xl) => (x < xl ? Math.exp(x) : Math.exp(xl) * (1 + x - xl));
+  const dexpL = (x, xl) => Math.exp(Math.min(x, xl));
+  // SPICE's junction voltage limiting between Newton steps (pnjlim): a step up a steep exponential is cut to a log step
+  function pnjlim(vnew, vold, vt, vcrit) {
+    if (vnew > vcrit && Math.abs(vnew - vold) > 2 * vt) {
+      if (vold > 0) { const arg = 1 + (vnew - vold) / vt; return arg > 0 ? vold + vt * Math.log(arg) : vcrit; }
+      return vt * Math.log(vnew / vt);
+    }
+    return vnew;
+  }
+  const vcritOf = (Is, nvt) => nvt * Math.log(nvt / (Math.SQRT2 * Is));
+  // diode current and slope at junction voltage vj
+  function diodeIV(d, vj) { const nvt = d.n * VT, x = vj / nvt, xl = Math.log(I_LIN / d.Is); return { I: d.Is * (expL(x, xl) - 1) + GMIN * vj, g: d.Is * dexpL(x, xl) / nvt + GMIN }; }
+  // transistor terminal currents (into collector and base, out of the emitter) and their slopes with respect to
+  // V_BE and V_CE, in the NPN sense; vbe and vbc are the junction voltages
+  function bjtIV(e, vbe, vbc) {
+    const Is = BJT.Is, bF = e.beta, bR = BJT.betaR, xF = vbe / VT, xR = vbc / VT, xl = Math.log(I_LIN / Is);
+    const eF = expL(xF, xl), eR = expL(xR, xl), gF = Is * dexpL(xF, xl) / VT, gR = Is * dexpL(xR, xl) / VT;
+    const DBE = Is / bF * (eF - 1) + GMIN * vbe, gBE = gF / bF + GMIN, DBC = Is / bR * (eR - 1) + GMIN * vbc, gBC = gR / bR + GMIN;
+    const IC = Is * (eF - eR) - DBC, IB = DBE + DBC;
+    return { IC, IB, gcc: gR + gBC, gcb: gF - gR - gBC, gbb: gBE + gBC, gbc: -gBC };
+  }
+  // fresh junction states: every junction at its critical voltage, as SPICE starts
+  function junctionStart(brs) {
+    const J = new Map();
+    for (const b of brs) {
+      if (b.type === 'diode' || b.type === 'led') { const d = diodeModel(b); J.set(b.id, { vj: vcritOf(d.Is, d.n * VT) }); }
+      else if (b.type === 'qc') J.set(b.id, { vbe: vcritOf(BJT.Is, VT), vbc: 0 });
+    }
+    return J;
+  }
+  // The linear stand in for every diode and transistor leg at the junction voltages in J: I_ab = y V_ab + y_c V_ctl − j
+  function linearize(brs, J) {
+    const lin = new Map();
+    for (const b of brs) {
+      if (b.type === 'diode' || b.type === 'led') {
+        const d = diodeModel(b), st = J.get(b.id), r = diodeIV(d, st.vj), den = 1 + r.g * d.Rs;
+        lin.set(b.id, { y: r.g / den, j: -(r.I - r.g * st.vj) / den });
+      } else if (b.type === 'qc') {
+        const e = b.el, p = e.pnp ? -1 : 1, st = J.get(b.id), r = bjtIV(e, st.vbe, st.vbc);
+        const Vbe = p * st.vbe, Vce = p * (st.vbe - st.vbc), IC = p * r.IC, IB = p * r.IB;
+        lin.set(b.id, { y: r.gcc, ctl: { a: e.a, b: e.c, g: r.gcb }, j: -(IC - r.gcc * Vce - r.gcb * Vbe), op: { Vbe, Vce, IC, IB } });
+        lin.set(-b.id, { y: r.gbb, ctl: { a: e.b, b: e.c, g: r.gbc }, j: -(IB - r.gbb * Vbe - r.gbc * Vce) });
+      }
+    }
+    return lin;
+  }
+  const linKind = (L) => ({ k: 'Y', y: [L.y, 0], src: true, ctl: L.ctl });
+  // Newton's method on a circuit with diodes or transistors: solve the linear stand in, move each junction voltage
+  // toward the result (with limiting), repeat until no junction voltage moves by more than 1e-10 V.
+  // kindLin and valLin describe every other branch, as mna takes them; J holds the junction states and is updated.
+  function newtonSolve(brs, kindLin, valLin, J, maxIt) {
+    const devs = brs.filter((b) => b.type === 'diode' || b.type === 'led' || b.type === 'qc');
+    let s = null, lin = null, conv = false, it = 0;
+    for (; it < (maxIt || 150); it++) {
+      lin = linearize(brs, J);
+      const kind = (b) => (NONLINEAR[b.type] ? linKind(lin.get(b.id)) : kindLin(b));
+      const val = (b, c) => (NONLINEAR[b.type] ? [lin.get(b.id).j, 0] : valLin(b, c));
+      s = mna(brs, kind, 1, val);
+      if (!devs.length) { conv = true; break; }
+      let move = 0, clipped = false, bad = false;
+      for (const b of devs) {
+        const st = J.get(b.id);
+        if (b.type === 'qc') {
+          const rc = s.res.get(b.id), rb = s.res.get(-b.id);
+          if (!rc.ok || !isFinite(rc.Vr[0]) || !isFinite(rb.Vr[0])) { bad = true; continue; }
+          const p = b.el.pnp ? -1 : 1, vbe = p * rb.Vr[0], vbc = p * (rb.Vr[0] - rc.Vr[0]), vc = vcritOf(BJT.Is, VT);
+          const nbe = pnjlim(vbe, st.vbe, VT, vc), nbc = pnjlim(vbc, st.vbc, VT, vc);
+          if (nbe !== vbe || nbc !== vbc) clipped = true;
+          move = Math.max(move, Math.abs(nbe - st.vbe), Math.abs(nbc - st.vbc));
+          st.vbe = nbe; st.vbc = nbc;
+        } else {
+          const r = s.res.get(b.id);
+          if (!r.ok || !isFinite(r.Vr[0])) { bad = true; continue; }
+          const d = diodeModel(b), L = lin.get(b.id), I = L.y * r.Vr[0] - L.j, vj = r.Vr[0] - d.Rs * I, nvt = d.n * VT;
+          const nv = pnjlim(vj, st.vj, nvt, vcritOf(d.Is, nvt));
+          if (nv !== vj) clipped = true;
+          move = Math.max(move, Math.abs(nv - st.vj));
+          st.vj = nv;
+        }
+      }
+      if (bad) break;
+      if (!clipped && move < 1e-10) { conv = true; break; }
+    }
+    return { s, lin, conv, it };
+  }
+
   // ---------- DC steady state: capacitors open, inductors and AC sources (zero average EMF) are plain wire ----------
   function kindDC(b) {
     switch (b.type) {
@@ -830,24 +977,38 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     }
   }
   // the DC result in the plain form the drawing uses: per branch I (a → b), V (V_a − V_b), P
+  // With diodes or transistors the DC state is found by Newton's method; if that fails from the usual start, the
+  // sources are turned up from 10% in steps (source stepping), each step starting from the last.
   function solveDC(els, opts) {
     opts = opts || {};
     const brs = expand(els).filter((b) => b.id !== opts.exclude);
     const emf = (b) => (opts.zeroEmf ? 0 : b.emf);
-    const s = mna(brs, kindDC, 1, (b) => (b.type === 'bat' ? [hasRint(b) ? emf(b) / b.r : emf(b), 0] : [0, 0]), opts);
+    const valDC = (b) => (b.type === 'bat' ? [hasRint(b) ? emf(b) / b.r : emf(b), 0] : [0, 0]);
+    let s, lin = null, conv = true, J = null;
+    if (brs.some((b) => NONLINEAR[b.type])) {
+      J = junctionStart(brs);
+      if (opts.J) for (const [k, v] of opts.J) if (J.has(k)) J.set(k, { ...v });
+      let r = newtonSolve(brs, kindDC, valDC, J);
+      if (!r.conv) {
+        J = junctionStart(brs);
+        for (let k = 1; k <= 10; k++) { const a = k / 10; r = newtonSolve(brs, kindDC, (b) => valDC(b).map((v) => v * a), J, 300); if (!r.conv) break; }
+      }
+      s = r.s; lin = r.lin; conv = r.conv;
+    } else s = mna(brs, kindDC, 1, valDC, opts);
     const res = new Map();
     for (const b of brs) {
       const r = s.res.get(b.id); if (!r) continue;
       const I = r.Ir[0], V = r.Vr[0];
       let P = 0;
-      if (b.type === 'res' || b.type === 'bulb') P = I * I * b.R; else if (b.type === 'bat') P = V * I; else if (!r.ok) P = NaN;
-      res.set(b.id, { I, V, P, ok: r.ok, part: r.part, dropped: r.dropped });
+      if (b.type === 'res' || b.type === 'bulb') P = I * I * b.R; else if (b.type === 'bat' || NONLINEAR[b.type]) P = V * I; else if (!r.ok) P = NaN;
+      res.set(b.id, { I, V, P, ok: r.ok && conv, part: r.part, dropped: r.dropped });
     }
     const ptV = new Map(); for (const [k, v] of s.ptV) ptV.set(k, v[0][0]);
-    return { res, ptV, ptPart: s.ptPart, parts: s.parts, warnings: s.warnings, injOpen: s.injOpen, brs };
+    return { res, ptV, ptPart: s.ptPart, parts: s.parts, warnings: s.warnings, injOpen: s.injOpen, brs, lin, J, conv };
   }
   // resistance seen by a battery: the rest of the circuit, every other EMF set to zero, driven by a 1 A test current
   function eqResistance(els, bat) {
+    if (hasNonlinear(els)) return NaN;     // no single resistance: it depends on the current
     const s = solveDC(els, { exclude: bat.id, zeroEmf: true, inject: { a: bat.a, b: bat.b, I: 1 } });
     if (s.injOpen) return Infinity;
     return s.ptV.get(kp(bat.a)) - s.ptV.get(kp(bat.b));
@@ -869,6 +1030,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       const r = sol.res.get(e.id); if (!r || !r.ok) continue;
       if (e.type === 'bat') { src += -e.emf * r.I; if (hasRint(e)) diss += r.I * r.I * e.r; }
       else if (e.type === 'res' || e.type === 'bulb') diss += r.I * r.I * e.R;
+      else if (e.type === 'diode' || e.type === 'led') diss += r.V * r.I;
+      else if (e.type === 'bjt') { const q = sol.res.get(-e.id); diss += r.V * r.I + (q ? q.V * q.I : NaN); }
     }
     return { src, diss };
   }
@@ -876,10 +1039,15 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   // ---------- AC steady state at one frequency: complex impedances ----------
   // Phasors use the sine convention: a phasor P stands for Im(P e^(iωt)), so a source V0 sin(ωt) has phasor V0.
   // Only the AC sources at frequency f drive; other AC sources and ideal batteries are plain wire at this frequency.
+  // Diodes and transistors are small signal: each is replaced by its slopes at the DC state op (from solveDC), the
+  // first term of a Taylor series, good while the signal across each junction stays well below V_T = 25.9 mV.
   const sameF = (a, b) => Math.abs(a - b) <= 1e-9 * Math.max(a, b);
-  function solveAC(els, f) {
+  const opFor = (els, op) => op || (hasNonlinear(els) ? solveDC(els) : null);
+  function solveAC(els, f, op) {
     const w = 2 * Math.PI * f, brs = expand(els);
+    op = opFor(els, op);
     const kind = (b) => {
+      if (NONLINEAR[b.type]) { const L = op && op.conv && op.lin && op.lin.get(b.id); return L ? { k: 'Y', y: [L.y, 0], ctl: L.ctl } : { k: 'O' }; }
       switch (b.type) {
         case 'wire': case 'am': return { k: 'Z' };
         case 'sw': case 'leg': return { k: b.closed ? 'Z' : 'O' };
@@ -902,7 +1070,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     const fs = [];
     for (const e of els) if (e.type === 'ac' && e.f > 0 && !fs.some((f) => sameF(f, e.f))) fs.push(e.f);
     fs.sort((a, b) => a - b);
-    return { dc: solveDC(els), ac: fs.map((f) => solveAC(els, f)) };
+    const dc = solveDC(els);
+    return { dc, ac: fs.map((f) => solveAC(els, f, dc)) };
   }
   // instantaneous value at time t of a branch quantity ('I' or 'V') from a spectrum, and its rms value
   function specAt(sp, id, q, t) {
@@ -918,19 +1087,20 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     return Math.sqrt(s);
   }
   // impedance seen by an AC source at frequency f: Z = V / I, I out of its + end
-  function zSeen(els, src, f) {
+  function zSeen(els, src, f, op) {
     const tmp = els.map((e) => (e.id === src.id ? { ...e, f } : e));
-    const s = solveAC(tmp, f), r = s.res.get(src.id);
+    const s = solveAC(tmp, f, opFor(els, op)), r = s.res.get(src.id);
     if (!r || !r.ok) return null;
     const Ir = -r.I[0], Ii = -r.I[1], d = Ir * Ir + Ii * Ii;
     if (!(d > 0)) return { re: Infinity, im: 0, I: [Ir, Ii] };
     return { re: (src.V0 * Ir) / d, im: (-src.V0 * Ii) / d, I: [Ir, Ii] };
   }
+  const zSeenAt = zSeen;
   // the source current against frequency on a log grid, with the frequencies where Z is real (φ = 0, resonance)
   // and, around an interior maximum of |I|, the peak and the two half power frequencies
   function resonance(els, src, fLo, fHi, n) {
     fLo = fLo || F_MIN; fHi = fHi || F_MIN * Math.pow(10, F_DEC); n = n || 241;
-    const curve = [];
+    const curve = [], op = opFor(els, null), zSeen = (a, b, f) => zSeenAt(a, b, f, op);
     for (let k = 0; k < n; k++) {
       const f = fLo * Math.pow(fHi / fLo, k / (n - 1)), z = zSeen(els, src, f);
       curve.push({ f, I: z ? Math.hypot(z.I[0], z.I[1]) : NaN, phi: z && isFinite(z.re) ? Math.atan2(z.im, z.re) : NaN, X: z ? z.im : NaN });
@@ -997,8 +1167,10 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     for (const b of brs) if ((b.type === 'bat' && !hasRint(b)) || b.type === 'ac') uv.union(S(b.a), S(b.b));
     for (const b of caps) if (!uv.union(S(b.a), S(b.b))) degC.add(b.id);
     const ui = makeUF(np);
-    for (const b of brs) if (!isZ(b) && !isO(b) && b.type !== 'ind') ui.union(S(b.a), S(b.b));
+    // (a diode or transistor may be off, so an inductor whose only other path runs through one also gets R_SPARK)
+    for (const b of brs) if (!isZ(b) && !isO(b) && b.type !== 'ind' && !NONLINEAR[b.type]) ui.union(S(b.a), S(b.b));
     for (const b of inds) if (ui.union(S(b.a), S(b.b))) degL.add(b.id);
+    if (brs.some((b) => NONLINEAR[b.type])) return buildTransientNL({ nx, si, names, brs, degC, degL, caps, inds, acs, isZ, isO });
     const kind = (b) => {
       if (isZ(b)) return { k: 'Z' };
       if (isO(b)) return { k: 'O' };
@@ -1053,6 +1225,184 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     Object.assign(sys, { A, Irow, Vrow, ptRow, UC, UL, forms, caps, inds, acs });
     return sys;
   }
+  // ---------- time domain with diodes or transistors: numerical integration ----------
+  // The circuit equations are no longer linear, so e^(At) is not available. The state is the same (capacitor charges,
+  // inductor currents, source phases); each step uses TR-BDF2 (a trapezoidal stage to t + γh, then a second order
+  // backward difference stage to t + h, γ = 2 − √2; Bank et al. 1985, Hosea and Shampine 1996), with every capacitor
+  // and inductor replaced by its stage equation and the diodes and transistors solved by Newton's method at each stage.
+  // The step size adapts so that the estimated error per step stays below 1e-6 of the largest source voltage (in
+  // each capacitor voltage) and of the largest inductor current so far (at least 1 mA). Energies are integrated by the trapezoidal rule on the stages.
+  const TR_G = 2 - Math.SQRT2, TR_A = 1 / (TR_G * (2 - TR_G)), TR_B = (1 - TR_G) * (1 - TR_G) / (TR_G * (2 - TR_G)), TR_C = (1 - TR_G) / (2 - TR_G);
+  const TR_K = (-3 * TR_G * TR_G + 4 * TR_G - 2) / (12 * (2 - TR_G));
+  const NL_RTOL = 1e-6;
+  function buildTransientNL(B) {
+    const { nx, si, names, brs, degC, degL, caps, inds, acs, isZ, isO } = B;
+    const sys = { nl: true, nx, si, names, brs, degC, degL, caps, inds, acs, J: junctionStart(brs), cache: new WeakMap() };
+    sys.Vs = Math.max(1, ...brs.filter((b) => b.type === 'bat').map((b) => Math.abs(b.emf)), ...acs.map((b) => Math.abs(b.V0)));
+    // every branch but the capacitors, inductors and AC sources is the same at each stage
+    sys.kindBase = (b) => {
+      if (isZ(b)) return { k: 'Z' };
+      if (isO(b)) return { k: 'O' };
+      switch (b.type) {
+        case 'res': case 'bulb': return { k: 'Y', y: [1 / b.R, 0] };
+        case 'bat': return hasRint(b) ? { k: 'Y', y: [1 / b.r, 0], src: true } : { k: 'V', src: true };
+        case 'ac': return { k: 'V', src: true };
+      }
+      return { k: 'O' };
+    };
+    sys.valBase = (b, sn) => {
+      if (b.type === 'bat') return [hasRint(b) ? b.emf / b.r : b.emf, 0];
+      if (b.type === 'ac') return [b.V0 * sn.get(b.id), 0];
+      return [0, 0];
+    };
+    sys.forms = [];
+    for (const b of brs) {
+      if (b.type === 'bat') { sys.forms.push({ key: 'src', id: b.id }); if (hasRint(b)) sys.forms.push({ key: 'heat', id: b.id, internal: true }); }
+      else if (b.type === 'ac') sys.forms.push({ key: 'src', id: b.id });
+      else if (b.type === 'res' || b.type === 'bulb' || b.type === 'diode' || b.type === 'led' || b.type === 'qc') sys.forms.push({ key: 'heat', id: b.id });
+      else if (b.type === 'cap' && degC.has(b.id)) sys.forms.push({ key: 'spark', id: b.id });
+      else if (b.type === 'ind' && degL.has(b.id)) sys.forms.push({ key: 'spark', id: b.id });
+    }
+    sys.UC = Array.from({ length: nx }, () => new Float64Array(nx)); sys.UL = Array.from({ length: nx }, () => new Float64Array(nx));
+    for (const b of caps) { const i = si.get('q' + b.id); sys.UC[i][i] = 1 / (2 * b.C); }
+    for (const b of inds) { const i = si.get('i' + b.id); sys.UL[i][i] = b.L / 2; }
+    const ev = nlEval(sys, zeroState(sys, 0));
+    sys.parts = ev.parts; sys.warnings = ev.warnings;
+    sys.ok = ev.ok;
+    return sys;
+  }
+  // source values sin(ωt) of each AC source at a state, moved on by tau
+  function nlSines(sys, x, tau) {
+    const m = new Map();
+    for (const b of sys.acs) { const s0 = x[sys.si.get('s' + b.id)], c0 = x[sys.si.get('c' + b.id)], w = 2 * Math.PI * b.f * tau; m.set(b.id, s0 * Math.cos(w) + c0 * Math.sin(w)); }
+    return m;
+  }
+  // branch currents and voltages, point voltages, the state's rates of change and the power of each energy form,
+  // from one solved circuit
+  function nlPack(sys, s, conv, sn) {
+    const I = new Map(), V = new Map(), pt = new Map();
+    let ok = conv;
+    for (const P of s.parts) if (P.status !== 'ok') ok = false;
+    for (const [id, r] of s.res) { I.set(id, r.Ir[0]); V.set(id, r.Vr[0]); }
+    for (const b of sys.inds) if (sys.degL.has(b.id)) I.set(b.id, I.get(b.id) - V.get(b.id) / R_SPARK);   // the coil's own current
+    for (const [k, v] of s.ptV) pt.set(k, v[0][0]);
+    const pw = sys.forms.map((F) => {
+      const b = sys.brs.find((x) => x.id === F.id), i = I.get(F.id), v = V.get(F.id);
+      if (F.key === 'src') return b.type === 'bat' ? -b.emf * i : -b.V0 * sn.get(b.id) * i;           // εI, I out of +
+      if (F.internal) return i * i * b.r;
+      if (F.key === 'spark') return b.type === 'cap' ? R_CONTACT * i * i : v * v / R_SPARK;
+      if (b.type === 'qc') return v * i + V.get(-b.id) * I.get(-b.id);
+      return v * i;
+    });
+    return { I, V, pt, pw, ok, parts: s.parts, warnings: s.warnings };
+  }
+  // the circuit at a state: capacitors as their voltages q/C, inductors as their currents
+  function nlEval(sys, x) {
+    const hit = sys.cache.get(x); if (hit) return hit;
+    const sn = nlSines(sys, x, 0), si = sys.si;
+    const kind = (b) => {
+      if (b.type === 'cap') return sys.degC.has(b.id) ? { k: 'Y', y: [1 / R_CONTACT, 0], src: true } : { k: 'V', src: true };
+      if (b.type === 'ind') return sys.degL.has(b.id) ? { k: 'Y', y: [1 / R_SPARK, 0], src: true } : { k: 'I', src: true };
+      return sys.kindBase(b);
+    };
+    const val = (b) => {
+      if (b.type === 'cap') { const q = x[si.get('q' + b.id)]; return [sys.degC.has(b.id) ? q / (R_CONTACT * b.C) : q / b.C, 0]; }
+      if (b.type === 'ind') { const i = x[si.get('i' + b.id)]; return [sys.degL.has(b.id) ? -i : i, 0]; }
+      return sys.valBase(b, sn);
+    };
+    const J = new Map([...sys.J].map(([k, v]) => [k, { ...v }]));
+    const r = newtonSolve(sys.brs, kind, val, J);
+    if (r.conv) sys.J = J;
+    const out = nlPack(sys, r.s, r.conv, sn);
+    sys.cache.set(x, out);
+    return out;
+  }
+  // one TR-BDF2 step of size h from state x (with its solved circuit e0): the new state, the error estimate as a
+  // fraction of the tolerance, the energy of each form over the step and the solved circuit at the end; null when
+  // Newton's method does not converge at a stage
+  function nlTry(sys, x, e0, h) {
+    const si = sys.si, g = TR_G * h, J = new Map([...sys.J].map(([k, v]) => [k, { ...v }]));
+    const qOf = (xx, b) => xx[si.get('q' + b.id)], iOf = (xx, b) => xx[si.get('i' + b.id)];
+    // a stage: capacitors and inductors become conductances with a history current
+    const stage = (tau, capHist, indHist) => {
+      const sn = nlSines(sys, x, tau);
+      const kind = (b) => {
+        if (b.type === 'cap') return { k: 'Y', y: [capHist.get(b.id).G, 0], src: true };
+        if (b.type === 'ind') return { k: 'Y', y: [indHist.get(b.id).G + (sys.degL.has(b.id) ? 1 / R_SPARK : 0), 0], src: true };
+        return sys.kindBase(b);
+      };
+      const val = (b) => {
+        if (b.type === 'cap') { const H = capHist.get(b.id); return [H.G * H.V, 0]; }
+        if (b.type === 'ind') return [-indHist.get(b.id).I, 0];
+        return sys.valBase(b, sn);
+      };
+      const r = newtonSolve(sys.brs, kind, val, J, 60);
+      return r.conv ? nlPack(sys, r.s, true, sn) : null;
+    };
+    const Rc = (b) => (sys.degC.has(b.id) ? R_CONTACT : 0);
+    // stage 1, trapezoidal rule to t + γh: q_γ = q + (γh/2)(i + i_γ), so i_γ = (V − V_hist)/(R + γh/2C)
+    const ch1 = new Map(), ih1 = new Map();
+    for (const b of sys.caps) { const Gc = 2 * b.C / g; ch1.set(b.id, { G: 1 / (Rc(b) + 1 / Gc), V: (qOf(x, b) + g / 2 * e0.I.get(b.id)) / b.C }); }
+    for (const b of sys.inds) { const G = g / (2 * b.L); ih1.set(b.id, { G, I: iOf(x, b) + G * e0.V.get(b.id) }); }
+    const e1 = stage(g, ch1, ih1); if (!e1) return null;
+    const xg = new Float64Array(x.length);
+    for (const b of sys.caps) xg[si.get('q' + b.id)] = qOf(x, b) + g / 2 * (e0.I.get(b.id) + e1.I.get(b.id));
+    for (const b of sys.inds) xg[si.get('i' + b.id)] = iOf(x, b) + g / (2 * b.L) * (e0.V.get(b.id) + e1.V.get(b.id));
+    // stage 2, backward difference to t + h: y₁ = a y_γ − b y + c h y′₁
+    const ch2 = new Map(), ih2 = new Map(), ch = TR_C * h;
+    for (const b of sys.caps) { const Gc = b.C / ch; ch2.set(b.id, { G: 1 / (Rc(b) + 1 / Gc), V: (TR_A * qOf(xg, b) - TR_B * qOf(x, b)) / b.C }); }
+    for (const b of sys.inds) ih2.set(b.id, { G: ch / b.L, I: TR_A * iOf(xg, b) - TR_B * iOf(x, b) });
+    const e2 = stage(h, ch2, ih2); if (!e2) return null;
+    const x1 = new Float64Array(x.length); x1[0] = 1;
+    const sn1 = nlSines(sys, x, h);
+    for (const b of sys.acs) { const w = 2 * Math.PI * b.f * h, s0 = x[si.get('s' + b.id)], c0 = x[si.get('c' + b.id)]; x1[si.get('s' + b.id)] = sn1.get(b.id); x1[si.get('c' + b.id)] = c0 * Math.cos(w) - s0 * Math.sin(w); }
+    // local error ≈ 2kh (f₀/γ − f_γ/(γ(1 − γ)) + f₁/(1 − γ)), f the rates of change at the three points
+    const est = (f0, fg, f1) => 2 * TR_K * h * (f0 / TR_G - fg / (TR_G * (1 - TR_G)) + f1 / (1 - TR_G));
+    let err = 0;
+    for (const b of sys.caps) {
+      x1[si.get('q' + b.id)] = TR_A * qOf(xg, b) - TR_B * qOf(x, b) + ch * e2.I.get(b.id);
+      const eq = est(e0.I.get(b.id), e1.I.get(b.id), e2.I.get(b.id));
+      err = Math.max(err, Math.abs(eq / b.C) / (NL_RTOL * sys.Vs));
+    }
+    for (const b of sys.inds) {
+      x1[si.get('i' + b.id)] = TR_A * iOf(xg, b) - TR_B * iOf(x, b) + ch / b.L * e2.V.get(b.id);
+      const ei = est(e0.V.get(b.id), e1.V.get(b.id), e2.V.get(b.id)) / b.L;
+      const scale = Math.max(Math.abs(iOf(x, b)), Math.abs(x1[si.get('i' + b.id)]), sys.Imax || 0, 1e-3);
+      err = Math.max(err, Math.abs(ei) / (NL_RTOL * scale));
+    }
+    if (!isFinite(err)) return null;
+    const dE = sys.forms.map((F, k) => g / 2 * (e0.pw[k] + e1.pw[k]) + (h - g) / 2 * (e1.pw[k] + e2.pw[k]));
+    return { x: x1, err, dE, e: e2, J };
+  }
+  // move a state on by H, in as many adaptive steps as the error control needs
+  function nlAdvance(P, x) {
+    const sys = P.sys, H = P.h;
+    let t = 0, xc = x, hs = Math.min(P.hs || H, H), fail = false;
+    const dE = sys.forms.map(() => 0);
+    for (let guard = 0; t < H * (1 - 1e-12) && guard < 50000; guard++) {
+      let hh = Math.min(hs, H - t);
+      if (H - t - hh < 0.05 * hh) hh = H - t;
+      const e0 = nlEval(sys, xc), r = e0.ok ? nlTry(sys, xc, e0, hh) : null;
+      if (!r || r.err > 1) {
+        hs = hh * (r ? Math.max(0.1, 0.9 * Math.pow(r.err, -1 / 3)) : 0.25);
+        if (hs < 1e-14 * Math.max(H, 1e-9)) { fail = true; break; }
+        continue;
+      }
+      sys.J = r.J; sys.cache.set(r.x, r.e);
+      for (const b of sys.inds) sys.Imax = Math.max(sys.Imax || 0, Math.abs(r.x[sys.si.get('i' + b.id)]));
+      xc = r.x; t += hh;
+      for (let k = 0; k < dE.length; k++) dE[k] += r.dE[k];
+      const grow = Math.min(4, r.err > 0 ? 0.9 * Math.pow(r.err, -1 / 3) : 4);
+      hs = hh >= hs * 0.999 ? hh * grow : Math.max(hs, hh * grow);      // a step cut short to land on H keeps the size
+    }
+    P.hs = hs;
+    return { x: xc, dE, fail };
+  }
+  // a branch's current (a → b) and voltage, and a point's voltage, at state x of a time domain system
+  const sysI = (sys, id, x) => { if (sys.nl) { const v = nlEval(sys, x).I.get(id); return v === undefined ? NaN : v; } const r = sys.Irow.get(id); return r ? dot(r, x) : NaN; };
+  const sysV = (sys, id, x) => { if (sys.nl) { const v = nlEval(sys, x).V.get(id); return v === undefined ? NaN : v; } const r = sys.Vrow.get(id); return r ? dot(r, x) : NaN; };
+  const sysPt = (sys, key, x) => { if (sys.nl) { const v = nlEval(sys, x).pt.get(key); return v === undefined ? NaN : v; } const r = sys.ptRow.get(key); return r ? dot(r, x) : NaN; };
+  const sysIds = (sys) => (sys.nl ? sys.brs.map((b) => b.id) : [...sys.Irow.keys()]);
   const quad = (M, x) => { let s = 0; for (let i = 0; i < x.length; i++) { const r = M[i]; let t = 0; for (let j = 0; j < x.length; j++) t += r[j] * x[j]; s += x[i] * t; } return s; };
   const dot = (r, x) => { let s = 0; for (let i = 0; i < x.length; i++) s += r[i] * x[i]; return s; };
   function matMul(P, Q) {
@@ -1065,6 +1415,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   // that ∫ xᵀQx dt over the step is x(t)ᵀ W x(t) exactly. Taylor series over h/2^j with ‖A‖h/2^j ≤ 1/2, then j doublings:
   // Φ(2h) = Φ(h)², W(2h) = W(h) + Φ(h)ᵀ W(h) Φ(h).
   function propagator(sys, h) {
+    if (sys.nl) return { h, nl: true, sys };
     const n = sys.nx, A = sys.A;
     let norm = 0;
     for (let j = 0; j < n; j++) { let c = 0; for (let i = 0; i < n; i++) c += Math.abs(A[i][j]); norm = Math.max(norm, c); }
@@ -1095,6 +1446,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   }
   // one step: the new state and the energy each form took over the step
   function stepWith(P, x) {
+    if (P.nl) return nlAdvance(P, x);
     const n = x.length, y = new Float64Array(n);
     for (let i = 0; i < n; i++) y[i] = dot(P.Phi[i], x);
     return { x: y, dE: P.Ws.map((W) => quad(W, x)) };
@@ -1208,6 +1560,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   }
   // natural modes of a time domain system, slowest first: rate (1/s, = −Re λ) and angular frequency (= |Im λ|)
   function naturalModes(sys) {
+    if (sys.nl) return [];         // a circuit with diodes or transistors has no fixed natural modes
     const ids = [...sys.si.keys()].filter((k) => k[0] === 'q' || k[0] === 'i').map((k) => sys.si.get(k));
     if (!ids.length) return [];
     const M = ids.map((i) => Float64Array.from(ids, (j) => sys.A[i][j]));
@@ -1221,7 +1574,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
 
   // ---------- the board ----------
   function gcd(a, b) { while (b) { const t = a % b; a = b; b = t; } return a; }
-  const endsOf = (e) => (e.type === 'sw2' ? [e.a, e.b, e.c] : [e.a, e.b]);
+  const endsOf = (e) => (e.type === 'sw2' || e.type === 'bjt' ? [e.a, e.b, e.c] : [e.a, e.b]);
   // tidy the board: drop zero length parts, split a wire wherever another part ends on it, remove duplicate wires
   function normalize(els, newId) {
     let out = els.filter((e) => !samePt(e.a, e.b));
@@ -1248,8 +1601,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     });
   }
   const DEFAULTS = { wire: {}, res: { R: 100 }, bulb: { R: 10 }, bat: { emf: 6, r: 1, rOn: false }, ac: { V0: 10, f: 1000 }, cap: { C: 100e-6 }, ind: { L: 100e-3 },
-    sw: { closed: false }, sw2: { pos: 0 }, am: {}, vm: {}, probe: {} };
-  const PREFIX = { wire: '', res: 'R', bulb: 'L', bat: 'B', ac: 'V', cap: 'C', ind: 'L', sw: 'S', sw2: 'S', am: 'A', vm: 'V', probe: 'P' };
+    sw: { closed: false }, sw2: { pos: 0 }, am: {}, vm: {}, probe: {}, diode: {}, led: { color: 'red' }, bjt: { beta: 100, pnp: false } };
+  const PREFIX = { wire: '', res: 'R', bulb: 'L', bat: 'B', ac: 'V', cap: 'C', ind: 'L', sw: 'S', sw2: 'S', am: 'A', vm: 'V', probe: 'P', diode: 'D', led: 'LED', bjt: 'Q' };
   function autoName(els, type) {
     const pre = PREFIX[type]; if (!pre) return '';
     const used = new Set(els.map((e) => e.name));
@@ -1274,7 +1627,14 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     acL: { mode: 'ac', name: 'Inductor only', ch: [['V1', 'V'], ['L1', 'I']] },
     below: { mode: 'ac', name: 'Below resonance', ch: [['V1', 'V'], ['R1', 'V'], ['L1', 'V'], ['C1', 'V'], ['R1', 'I']], chain: true },
     reso: { mode: 'ac', name: 'At resonance', ch: [['V1', 'V'], ['R1', 'V'], ['L1', 'V'], ['C1', 'V'], ['R1', 'I']], chain: true, f: 'f0' },
-    hiQ: { mode: 'ac', name: 'High Q vs low Q', ch: [['V1', 'V'], ['R1', 'I']], f: 'f0', ghostCurve: ['R1', 100, 'R1 = 100 Ω, Q = 1'] }
+    hiQ: { mode: 'ac', name: 'High Q vs low Q', ch: [['V1', 'V'], ['R1', 'I']], f: 'f0', ghostCurve: ['R1', 100, 'R1 = 100 Ω, Q = 1'] },
+    // starter circuits, in any mode
+    ohm: { mode: 'dc', name: 'Ohm\'s law' },
+    diodeIV: { mode: 'dc', name: 'Diode' },
+    leds: { mode: 'dc', name: 'LED colours' },
+    rectifier: { mode: 'time', name: 'Rectifier', ch: [['V1', 'V'], ['P1', 'V'], ['D1', 'I']], win: 0.1 },
+    tswitch: { mode: 'dc', name: 'Transistor switch' },
+    amp: { mode: 'time', name: 'Amplifier', ch: [['V1', 'V'], ['P1', 'V']], win: 0.004, start: 'dc' }
   };
   function buildPreset(name) {
     let id = 1; const out = [];
@@ -1341,6 +1701,42 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         if (name === 'lc') { W([5, 2], [5, 3]); select = add('ind', [5, 3], [5, 5], { L: 0.1, side: 'right' }); W([5, 5], [5, 6]); }
         else { select = add('res', [5, 2], [5, 4], { R: 200, name: 'R2', side: 'right' }); add('ind', [5, 4], [5, 6], { L: 0.1, name: 'L1', side: 'right' }); }
         break;
+      case 'ohm':
+        add('bat', [2, 2], [2, 5], { emf: 6 });
+        W([2, 2], [2, 1], [4, 1]); add('am', [4, 1], [6, 1]); W([6, 1], [10, 1]);
+        select = add('res', [8, 1], [8, 6], { R: 100 }); add('vm', [10, 1], [10, 6]); W([10, 6], [2, 6], [2, 5]); break;
+      case 'diodeIV':
+        select = add('bat', [1, 2], [1, 5], { emf: 2 });
+        W([1, 2], [1, 1], [2, 1]); add('am', [2, 1], [4, 1]); W([4, 1], [5, 1]); add('res', [5, 1], [7, 1], { R: 100 });
+        W([7, 1], [11, 1]); add('diode', [9, 1], [9, 6], { side: 'left' }); add('vm', [11, 1], [11, 6]); W([11, 6], [1, 6], [1, 5]); break;
+      case 'leds':
+        add('bat', [1, 2], [1, 5], { emf: 9 });
+        W([1, 2], [1, 1], [11, 1]);
+        for (const [x, color] of [[5, 'red'], [8, 'green'], [11, 'blue']]) { add('res', [x, 1], [x, 3], { R: 470 }); const d = add('led', [x, 3], [x, 6], { color }); if (color === 'red') select = d; }
+        W([11, 6], [1, 6], [1, 5]); break;
+      case 'rectifier':
+        add('ac', [1, 2], [1, 5], { V0: 10, f: 60 });
+        W([1, 2], [1, 1], [2, 1]); add('diode', [2, 1], [4, 1]); W([4, 1], [11, 1]);
+        add('sw', [6, 1], [6, 3], { closed: true, side: 'left' }); select = add('cap', [6, 3], [6, 6], { C: 100e-6, side: 'left' });
+        add('res', [9, 1], [9, 6], { R: 1000 }); add('probe', [11, 1], [11, 6]); W([11, 6], [1, 6], [1, 5]); break;
+      case 'tswitch':
+        add('bat', [1, 2], [1, 6], { emf: 9, side: 'right' });
+        W([1, 2], [1, 1], [6, 1]); add('am', [6, 1], [8, 1], { name: 'A2', side: 'up' }); W([8, 1], [9, 1]);
+        add('res', [9, 1], [9, 2], { R: 470, name: 'R_C', side: 'right' }); add('led', [9, 2], [9, 4], { color: 'red', side: 'left' });
+        add('sw', [3, 1], [3, 3], { closed: true, side: 'right' }); select = add('res', [3, 3], [3, 5], { R: 10e3, name: 'R_B', side: 'right' });
+        W([3, 5], [4, 5]); add('am', [4, 5], [6, 5], { name: 'A1', side: 'down' }); W([6, 5], [8, 5]);
+        add('bjt', [8, 5], [9, 4], { c: [9, 6], beta: 100 });
+        W([9, 4], [11, 4]); add('vm', [11, 4], [11, 6], { name: 'V_CE', side: 'right' }); W([11, 6], [9, 6]);
+        W([9, 6], [9, 7], [1, 7], [1, 6]); break;
+      case 'amp':
+        add('bat', [12, 2], [12, 6], { emf: 9, side: 'up' });
+        W([12, 2], [12, 1], [5, 1]); W([12, 6], [12, 7]);
+        add('res', [5, 1], [5, 4], { R: 68e3, name: 'R1', side: 'left' }); add('res', [5, 4], [5, 7], { R: 10e3, name: 'R2', side: 'left' });
+        W([5, 4], [7, 4]); select = add('bjt', [7, 4], [8, 3], { c: [8, 5], beta: 100, name: 'Q1' });
+        add('res', [8, 1], [8, 3], { R: 4700, name: 'R_C', side: 'right' }); add('res', [8, 5], [8, 7], { R: 470, name: 'R_E', side: 'right' });
+        W([8, 3], [10, 3]); add('probe', [10, 3], [10, 7], { name: 'P1' });
+        add('ac', [1, 4], [1, 6], { V0: 0.1, f: 1000, name: 'V1' }); W([1, 4], [2, 4]); add('cap', [2, 4], [4, 4], { C: 10e-6, side: 'up' }); W([4, 4], [5, 4]);
+        W([1, 6], [1, 7], [12, 7]); break;
       case 'acR': case 'acC': case 'acL': case 'below': case 'reso': case 'hiQ': {
         const fs = { acR: 100, acC: 200, acL: 200, below: 1000 }, Rv = name === 'hiQ' ? 10 : name === 'acR' ? 100 : 22;
         select = add('ac', [1, 2], [1, 5], { V0: 10, f: fs[name] || 1000 });
@@ -1395,7 +1791,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   }
 
   // ---------- lab tools: CSV, time cursor and step ----------
-  const VERSION = 'circuits@2026-10-22';
+  const VERSION = 'circuits@2026-10-24';
   // one CSV cell: quoted when it holds a comma, a quote or a line break
   function csvCell(t) { t = String(t == null ? '' : t); return /[",\n\r]/.test(t) ? `"${t.replace(/"/g, '""')}"` : t; }
   // a CSV file: comment lines "# key,value,...", then one header row of column names, then the rows
@@ -1461,7 +1857,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   if (typeof document === 'undefined') {
     globalThis.CIRC = { R_VALUES, RI_VALUES, C_VALUES, L_VALUES, fOfIdx, idxOfF, nearestIdx, expand, mna, solveDC, eqResistance, kclResiduals, powerBalance,
       solveAC, spectrum, specAt, specRms, zSeen, resonance, buildTransient, propagator, stepWith, storedC, storedL, zeroState, carryState, dcState,
-      eigenvalues, naturalModes, normalize, buildPreset, flipTime, PRESETS, DEFAULTS, quad, dot, kp, hasRint, R_CONTACT, R_SPARK, acReading, roundSI,
+      eigenvalues, naturalModes, normalize, buildPreset, hasNonlinear, DIODE, LEDS, BJT, VT, GMIN, diodeModel, diodeIV, bjtIV, I_LIN, sysI, sysV, sysPt, nlEval, NL_RTOL, flipTime, PRESETS, DEFAULTS, quad, dot, kp, hasRint, R_CONTACT, R_SPARK, acReading, roundSI,
       VERSION, csvCell, buildCSV, nice125Down, cursorGrid, snapTime, stepOptions, locateSample, stateAt };
     return;
   }
@@ -1475,12 +1871,19 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   const G = { cols: 13, rows: 8 };
   const inGrid = (p) => p[0] >= 0 && p[0] < G.cols && p[1] >= 0 && p[1] < G.rows;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  const TYPE = { wire: 'Wire', res: 'Resistor', bulb: 'Light bulb', bat: 'Battery', ac: 'AC source', cap: 'Capacitor', ind: 'Inductor', sw: 'Switch', sw2: 'Two way switch', am: 'Ammeter', vm: 'Voltmeter', probe: 'Scope probe' };
-  const TOOLS = ['select', 'wire', 'res', 'bulb', 'bat', 'ac', 'cap', 'ind', 'sw', 'sw2', 'am', 'vm', 'probe'];
-  const TOOL_KEYS = { 1: 'select', 2: 'wire', 3: 'res', 4: 'bulb', 5: 'bat', 6: 'ac', 7: 'cap', 8: 'ind', 9: 'sw', 0: 'sw2', a: 'am', v: 'vm', o: 'probe' };
+  const TYPE = { wire: 'Wire', res: 'Resistor', bulb: 'Light bulb', bat: 'Battery', ac: 'AC source', cap: 'Capacitor', ind: 'Inductor', sw: 'Switch', sw2: 'Two way switch', diode: 'Diode', led: 'Light emitting diode', bjt: 'Transistor', am: 'Ammeter', vm: 'Voltmeter', probe: 'Scope probe' };
+  const TOOLS = ['select', 'wire', 'res', 'bulb', 'bat', 'ac', 'cap', 'ind', 'sw', 'sw2', 'diode', 'led', 'bjt', 'am', 'vm', 'probe'];
+  const TOOL_KEYS = { 1: 'select', 2: 'wire', 3: 'res', 4: 'bulb', 5: 'bat', 6: 'ac', 7: 'cap', 8: 'ind', 9: 'sw', 0: 'sw2', d: 'diode', e: 'led', t: 'bjt', a: 'am', v: 'vm', o: 'probe' };
+  const BETA_VALUES = [20, 30, 50, 70, 100, 150, 200, 300, 400, 500];
+  // LED colours on the drawing, near each LED's wavelength
+  const LED_RGB = { red: [255, 52, 40], green: [40, 230, 90], blue: [50, 110, 255] };
+  const isDev = (e) => e.type === 'diode' || e.type === 'led' || e.type === 'bjt';
+  const threeEnds = (e) => e.type === 'sw2' || e.type === 'bjt';
   const P_FULL = 4;                  // W, a bulb at full glow
   const MODE_PRESETS = { dc: ['series', 'parallel', 'compare', 'divider', 'bridge', 'internal'], time: ['rc', 'flip', 'flash', 'rl', 'lc', 'rlc'], ac: ['acR', 'acC', 'acL', 'below', 'reso', 'hiQ'] };
   const MODE_NAMES = { dc: 'DC', time: 'In time', ac: 'AC' };
+  const STARTERS = ['ohm', 'diodeIV', 'leds', 'rectifier', 'tswitch', 'amp'];
+  const STARTER_HASH = { ohm: 'ohm', diodeIV: 'diode', leds: 'led', rectifier: 'rectifier', tswitch: 'transistor', amp: 'amplifier' };
   const HINTS = {
     series: 'One path, so the same current flows through both bulbs and both ammeters read the same. Each bulb gets only part of the battery voltage: two equal bulbs get half each, so each one dissipates a quarter of the power a single bulb would.',
     parallel: 'Each bulb is connected straight across the battery, so each gets the full 6 V and glows as brightly as a bulb on its own. The battery supplies the sum of the branch currents: A1 reads twice what A2 reads.',
@@ -1499,6 +1902,12 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     acL: 'Only an inductor. The current peaks a quarter cycle after the voltage: v<sub>L</sub> = L di/dt, so the voltage is largest where the current is changing fastest. X<sub>L</sub> = ωL grows with f, so the inductor blocks high frequencies.',
     below: 'Below f<sub>0</sub>, X<sub>C</sub> is larger than X<sub>L</sub>, so the circuit acts like a capacitor and the current leads. The voltage phasors added tip to tail land on the source: V<sub>C</sub> alone is larger than the source voltage. Drag the f marker toward f<sub>0</sub>.',
     reso: 'At f<sub>0</sub> = 1/(2π√(LC)), X<sub>L</sub> = X<sub>C</sub>. V<sub>L</sub> and V<sub>C</sub> are equal and opposite at every instant, so they cancel, Z = R and the current is in step with the source. Each of them is still Q = 4.5 times the source voltage.',
+    ohm: 'A battery drives a current through one resistor; the ammeter reads I and the voltmeter reads V across R1. Change the EMF or R1: I = V/R every time, so V/I stays equal to R. Start from here and build anything: pick a part above and drag between two dots.',
+    diodeIV: 'A 1N4148 silicon diode in series with 100 Ω. Step the EMF up from 0: almost no current flows until the diode voltage nears 0.6 V, then the current grows exponentially, about ten times for every 0.11 V (2.3nV<sub>T</sub>), so the diode voltage hardly rises while the resistor takes the rest. Flip the battery for reverse bias: only the tiny saturation current flows (§9.7).',
+    leds: 'Three LEDs, each with 470 Ω to limit its current. Shorter wavelength means more energy per photon (hc/λ = 1.94, 2.36, 2.64 eV), and the forward voltage rises with it: red 1.85 V, green and blue above 3 V (real InGaN LEDs need more than the photon energy). So the same 9 V drives less current through the blue one. Try one without its resistor.',
+    rectifier: 'The diode lets current through only when the source makes its anode positive, so the load sees only the positive half cycles, less the diode drop. With S1 closed the 100 µF capacitor charges on each peak and feeds the 1 kΩ load in between: the ripple falls about as e<sup>−t/RC</sup> over the 16.7 ms between peaks. Open S1 to see the bare half waves; raise C1 for less ripple.',
+    tswitch: 'A small base current switches a larger collector current. With S1 closed about 0.83 mA flows into the base through R_B = 10 kΩ, more than enough to saturate Q1: the LED is fully on and V<sub>CE</sub> is below 0.1 V. Open S1 and the LED goes out. Raise R_B to 100 kΩ or more and Q1 is in its forward active region, where I<sub>C</sub> = βI<sub>B</sub> (§9.7).',
+    amp: 'A common emitter amplifier. R1 and R2 hold the base near 1.1 V, so about 0.9 mA flows; C1 passes the 100 mV signal from V1 to the base without upsetting that. A small swing in V<sub>BE</sub> makes a large swing in I<sub>C</sub>, and R_C turns it into a large voltage swing at the collector, inverted. The gain is about 9.3, a little under R_C/R_E = 10 because the emitter junction itself adds about V<sub>T</sub>/I<sub>C</sub> = 30 Ω to R_E. Raise V1 to 0.5 V and the output clips (§9.7).',
     hiQ: 'R = 10 Ω gives Q = 10 and a tall, narrow peak. The gray curve is R = 100 Ω, Q = 1: a low, wide peak at the same f<sub>0</sub>. Press Sweep and watch the current through the peak; the half power width is Δf = f<sub>0</sub>/Q = R/(2πL). Then pick In time to switch the source on at t = 0 with the capacitor empty and no current: the current builds up to its steady amplitude as the transient dies away as e<sup>−Rt/2L</sup>, with time constant 2L/R = 2 ms for R = 10 Ω. Set R1 to 100 Ω and it dies away ten times faster.'
   };
   // Blind: the same setups described without the values a lab asks students to measure
@@ -1514,7 +1923,11 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     rlc: 'The same circuit with R2 in the loop. Change R2, press Reset and compare how the capacitor voltage returns to zero.',
     below: 'A series RLC circuit driven by a sine wave source. Change f and record the current; find the peak yourself.',
     reso: 'In Blind mode this setup opens at 1 kHz, not at resonance. Find the frequency where the current is largest and the phase is zero.',
-    hiQ: 'R = 10 Ω in a series RLC circuit, opening at 1 kHz in Blind mode. Find the peak and the half power frequencies, then compare with R = 100 Ω.'
+    hiQ: 'R = 10 Ω in a series RLC circuit, opening at 1 kHz in Blind mode. Find the peak and the half power frequencies, then compare with R = 100 Ω.',
+    diodeIV: 'A 1N4148 silicon diode in series with 100 Ω. Step the EMF and record the diode voltage and the current each time.',
+    leds: 'Three LEDs, each with 470 Ω to limit its current. Read each LED\'s voltage and current and compare the colours.',
+    tswitch: 'A transistor with a base resistor R_B and an LED in its collector. Change R_B and record the base current A1, the collector current A2 and V<sub>CE</sub>.',
+    amp: 'A common emitter amplifier driven by a 100 mV signal. Compare the collector voltage with the input.'
   };
   const MODE_HINTS = {
     dc: 'The steady state, a long time after every switch was set: no current through capacitors, no voltage across inductors.',
@@ -1603,6 +2016,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       case 'ind': return { key: 'L', list: L_VALUES, unit: 'mH', scale: 1e-3, label: 'Inductance L', min: 1e-6, max: 100 };
       case 'bat': return { key: 'emf', step: 0.5, max: 24, unit: 'V', label: 'EMF ε', min: 0, nmax: 1000 };
       case 'ac': return { key: 'V0', step: 0.5, max: 24, unit: 'V', label: 'Amplitude V₀', min: 0, nmax: 1000 };
+      case 'bjt': return { key: 'beta', list: BETA_VALUES, unit: '', label: 'Current gain β', min: 1, max: 5000 };
     }
     return null;
   }
@@ -1613,6 +2027,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       case 'ind': return fmtVal(e.L, 'H');
       case 'bat': return fmtE(e.emf);
       case 'ac': return `${fmtE(e.V0)} · ${fmtF(e.f)}`;
+      case 'bjt': return `β = ${e.beta}`;
+      case 'led': return (LEDS[e.color] || LEDS.red).name;
     }
     return '';
   };
@@ -1633,7 +2049,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     const m = new Map();
     if (S.mode === 'dc' && dc) for (const [id, r] of dc.res) m.set(id, { I: r.ok ? r.I : NaN, V: r.V, ok: r.ok });
     else if (S.mode === 'time' && run && run.sys && run.sys.ok) {
-      for (const [id, row] of run.sys.Irow) m.set(id, { I: dot(row, run.x), V: dot(run.sys.Vrow.get(id), run.x), ok: true });
+      for (const id of sysIds(run.sys)) m.set(id, { I: sysI(run.sys, id, run.x), V: sysV(run.sys, id, run.x), ok: true });
     } else if (S.mode === 'ac' && sp && sp.ok) {
       for (const b of sp.dc.brs) m.set(b.id, { I: specAt(sp, b.id, 'I', acT), V: specAt(sp, b.id, 'V', acT), ok: true });
     }
@@ -1642,7 +2058,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   // a node voltage now, measured from each separate circuit's reference
   function ptVolt(key) {
     if (S.mode === 'dc') return dc ? dc.ptV.get(key) : NaN;
-    if (S.mode === 'time') { const r = run && run.sys && run.sys.ok ? run.sys.ptRow.get(key) : null; return r ? dot(r, run.x) : NaN; }
+    if (S.mode === 'time') return run && run.sys && run.sys.ok && run.x ? sysPt(run.sys, key, run.x) : NaN;
     if (S.mode === 'ac' && sp && sp.ok) {
       const g = sp.ground; if (!g) return NaN;
       const comps = [[sp.dc, (P) => P, 0], ...sp.ac.map((c) => [c, null, c.w])];
@@ -1861,9 +2277,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   // a channel's value at a stored sample
   function chanAt(sys, x, ch) {
     if (!sys || !sys.ok) return NaN;
-    const row = ch.q === 'I' ? sys.Irow.get(ch.id) : sys.Vrow.get(ch.id);
-    if (!row) return NaN;
-    let v = dot(row, x);
+    let v = ch.q === 'I' ? sysI(sys, ch.id, x) : sysV(sys, ch.id, x);
     if (ch.q === 'I' && isSource(ch.id)) v = -v;              // a source's current is shown out of its + end
     return v;
   }
@@ -1922,7 +2336,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     return out;
   }
   const brById = (id) => BR.find((b) => b.id === id);
-  const brName = (b) => { if (b.type === 'leg') { const e = b.el; const lab = b.id > 0 ? (e.lb || 'position 1') : (e.lc || 'position 2'); return `${e.name} (${lab})`; } return b.name || TYPE[b.type]; };
+  const brName = (b) => { if (b.type === 'qc' || b.type === 'qb') return `${b.el.name} (${b.type === 'qc' ? 'collector to emitter' : 'base to emitter'})`; if (b.type === 'leg') { const e = b.el; const lab = b.id > 0 ? (e.lb || 'position 1') : (e.lc || 'position 2'); return `${e.name} (${lab})`; } return b.name || TYPE[b.type]; };
   function branchList() {
     return BR.filter((b) => b.type !== 'wire').map((b) => ({ b, na: netOf.get(kp(b.a)), nb: netOf.get(kp(b.b)), cond: conducts(b) }));
   }
@@ -2052,13 +2466,13 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     c.quadraticCurveTo(x + w, y + h, x + w - r, y + h); c.lineTo(x + r, y + h); c.quadraticCurveTo(x, y + h, x, y + h - r); c.lineTo(x, y + r); c.quadraticCurveTo(x, y, x + r, y); c.closePath();
   }
   // half length of each symbol along its part, and how far it reaches sideways, in grid steps
-  const HALF = { res: 0.3, bulb: 0.3, bat: 0.3, ac: 0.3, cap: 0.3, ind: 0.32, sw: 0.3, sw2: 0.3, am: 0.3, vm: 0.3, probe: 0.3, wire: 0 };
-  const SIDE = { res: 0.14, bulb: 0.25, bat: 0.3, ac: 0.25, cap: 0.28, ind: 0.16, sw: 0.27, sw2: 0.2, am: 0.25, vm: 0.25, probe: 0.24, wire: 0.05 };
-  const SIDEB = { res: 0.11, bulb: 0.24, bat: 0.33, ac: 0.3, cap: 0.2, ind: 0.2, sw: 0.21, sw2: 0.21, am: 0.31, vm: 0.31, probe: 0.3, wire: 0.05 };
+  const HALF = { res: 0.3, bulb: 0.3, bat: 0.3, ac: 0.3, cap: 0.3, ind: 0.32, sw: 0.3, sw2: 0.3, am: 0.3, vm: 0.3, probe: 0.3, diode: 0.24, led: 0.24, bjt: 0.3, wire: 0 };
+  const SIDE = { res: 0.14, bulb: 0.25, bat: 0.3, ac: 0.25, cap: 0.28, ind: 0.16, sw: 0.27, sw2: 0.2, am: 0.25, vm: 0.25, probe: 0.24, diode: 0.2, led: 0.26, bjt: 0.48, wire: 0.05 };
+  const SIDEB = { res: 0.11, bulb: 0.24, bat: 0.33, ac: 0.3, cap: 0.2, ind: 0.2, sw: 0.21, sw2: 0.21, am: 0.31, vm: 0.31, probe: 0.3, diode: 0.12, led: 0.24, bjt: 0.48, wire: 0.05 };
   const benchZ = (ge) => (ge ? clamp((ge.L / 2 - 0.12) / 0.3, 1, 1.45) : 1);
   function sideOf(e, ge) {
     if (view !== 'bench') return SIDE[e.type];
-    const z = e.type === 'wire' || e.type === 'sw2' ? 1 : benchZ(ge);
+    const z = e.type === 'wire' || threeEnds(e) ? 1 : benchZ(ge);
     if ((e.type === 'am' || e.type === 'vm' || e.type === 'probe') && ge && Math.abs(ge.dir[0]) > 0.5) return 0.37 * z;
     return SIDEB[e.type] * z;
   }
@@ -2104,6 +2518,14 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         const K1 = [e.b[0] - ux * 0.3, e.b[1] - uy * 0.3], K2 = [e.c[0] - ux * 0.3, e.c[1] - uy * 0.3];
         Object.assign(ge, { P, K1, K2, n, pts: [e.a, e.b], c: [(e.a[0] + e.b[0]) / 2, (e.a[1] + e.b[1]) / 2], upts: [e.a, P, K1, e.b], side: e.side && sv[e.side] ? sv[e.side] : [-n[0], -n[1]] });
         out.set(-e.id, { pts: [e.a, P, K2, e.c], upts: [e.a, P, K2, e.c], c: [(P[0] + K2[0]) / 2, (P[1] + K2[1]) / 2], dir: [ux, uy], L: 1, h: 0 });
+      }
+      if (e.type === 'bjt') {
+        // base a; collector b = a + u + m and emitter c = a + u − m. Points in the part's own frame (along u, along m)
+        const u = [(e.b[0] + e.c[0]) / 2 - e.a[0], (e.b[1] + e.c[1]) / 2 - e.a[1]], m = [(e.b[0] - e.c[0]) / 2, (e.b[1] - e.c[1]) / 2];
+        const P = (x, y) => [e.a[0] + u[0] * x + m[0] * y, e.a[1] + u[1] * x + m[1] * y];
+        const cPath = [e.b, P(1, 0.5), P(0.5, 0.14), P(0.5, -0.14), P(1, -0.5), e.c], bPath = [e.a, P(0.5, 0), P(0.5, -0.14), P(1, -0.5), e.c];
+        Object.assign(ge, { u, m, P, pts: cPath, upts: cPath, c: P(0.72, 0), dir: u, ang: Math.atan2(u[1], u[0]), L: 1, h: 0.3, side: e.side && sv[e.side] ? sv[e.side] : u });
+        out.set(-e.id, { pts: bPath, upts: bPath, c: P(0.5, 0), dir: u, L: 1, h: 0 });
       }
       out.set(e.id, ge);
     });
@@ -2156,12 +2578,15 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   const chOf = (id, q) => channels.find((c) => c.id === id && c.q === q);
 
   const bulbG = (e) => { const I = ivI(e.id); return isFinite(I) ? clamp(I * I * e.R / P_FULL, 0, 1) : 0; };
+  // an LED's light follows its current: full glow at the 20 mA it is specified at
+  const ledG = (e) => { const I = ivI(e.id); return isFinite(I) ? clamp(I / LED_IF, 0, 1) : 0; };
   // capacitor plate marks: up to 6 per plate, one per 1/6 of the largest source voltage
   function plateMarks(e) { const V = ivV(e.id); return isFinite(V) ? clamp(6 * Math.abs(V) / Math.max(1e-9, Vmem), 0, 6) * Math.sign(V) : 0; }
   function drawSymbol(e, ge, colA, colB, ps) {
     const s = geo.s, h = ge.h * s, cx = geo.X(ge.c[0]), cy = geo.Y(ge.c[1]);
     const ink = T.ink, lw = Math.max(1.4, Math.min(2.2, s * 0.03)) * ps;
     if (e.type === 'sw2') return drawSw2(e, ge, colA, colB, ps, lw);
+    if (e.type === 'bjt') return drawBjt(e, ge, ps, lw, false);
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(ge.ang);
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
     const lead = (x0, x1, col) => { ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x0, 0); ctx.lineTo(x1, 0); ctx.stroke(); };
@@ -2263,6 +2688,23 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       lead(-h, -rm, colA); lead(rm, h, colB);
       ctx.fillStyle = T.canvas; ctx.strokeStyle = ink; ctx.lineWidth = lw;
       ctx.beginPath(); ctx.arc(0, 0, rm, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    } else if (e.type === 'diode' || e.type === 'led') {
+      // triangle pointing from anode a to cathode b, then the bar; an LED adds two arrows for the light it gives
+      const w = Math.min(0.16 * s, h), H = 0.16 * s, gl = e.type === 'led' ? ledG(e) : 0, c = LED_RGB[e.color] || LED_RGB.red;
+      lead(-h, -w, colA); lead(w, h, colB);
+      ctx.beginPath(); ctx.moveTo(-w, -H); ctx.lineTo(w, 0); ctx.lineTo(-w, H); ctx.closePath();
+      ctx.fillStyle = e.type === 'led' ? (gl > 0.002 ? rgba(c, 0.25 + 0.75 * gl) : T.canvas) : ink; ctx.fill();
+      ctx.strokeStyle = ink; ctx.lineWidth = lw; ctx.stroke();
+      ctx.lineCap = 'butt'; ctx.lineWidth = lw * 1.3; ctx.beginPath(); ctx.moveTo(w, -H); ctx.lineTo(w, H); ctx.stroke(); ctx.lineCap = 'round';
+      if (e.type === 'led') {
+        const col = gl > 0.002 ? rgba(c, 1) : T.muted, a = 0.07 * s;
+        ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = lw * 0.8;
+        for (const x0 of [-0.04 * s, 0.07 * s]) {
+          const y0 = -H - 0.03 * s, x1 = x0 + 0.1 * s, y1 = y0 - 0.1 * s;
+          ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1, y1); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(x1 + 0.01 * s, y1 - 0.01 * s); ctx.lineTo(x1 - a * 0.55, y1 + a * 0.05); ctx.lineTo(x1 - a * 0.05, y1 + a * 0.55); ctx.closePath(); ctx.fill();
+        }
+      }
     } else if (e.type === 'probe') {
       const w = Math.min(0.26 * s, h), hh2 = 0.19 * s, col = chOf(e.id, 'V') ? chColor(chOf(e.id, 'V')) : T.neg;
       lead(-h, -w, colA); lead(w, h, colB);
@@ -2316,6 +2758,52 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       }
     }
   }
+  // a junction transistor: circle, base bar, collector and emitter; the emitter arrow points out for NPN, in for PNP.
+  // On the bench the same leads run to a TO-92 package.
+  function drawBjt(e, ge, ps, lw, bench) {
+    const X = (p) => geo.X(p[0]), Y = (p) => geo.Y(p[1]), s = geo.s, P = ge.P;
+    const ln = (pts, col, w) => { ctx.strokeStyle = col; ctx.lineWidth = w; ctx.beginPath(); pts.forEach((p, i) => (i ? ctx.lineTo(X(p), Y(p)) : ctx.moveTo(X(p), Y(p)))); ctx.stroke(); };
+    ctx.save(); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    if (bench) {
+      const w = leadW(s, ps);
+      insulated([[X(e.a), Y(e.a)], [X(P(0.36, 0)), Y(P(0.36, 0))]], benchLeadCol(e.a), w);
+      insulated([[X(e.b), Y(e.b)], [X(P(1, 0.45)), Y(P(1, 0.45))]], benchLeadCol(e.b), w);
+      insulated([[X(e.c), Y(e.c)], [X(P(1, -0.45)), Y(P(1, -0.45))]], benchLeadCol(e.c), w);
+      // the three legs, then the black package seen from above: flat face toward the base lead
+      ln([P(0.36, 0), P(0.62, 0)], shade(STEEL, -0.1), Math.max(1.4, 0.035 * s));
+      ln([P(1, 0.45), P(0.72, 0.18), P(0.62, 0.12)], shade(STEEL, -0.1), Math.max(1.4, 0.035 * s));
+      ln([P(1, -0.45), P(0.72, -0.18), P(0.62, -0.12)], shade(STEEL, -0.1), Math.max(1.4, 0.035 * s));
+      const c = P(0.64, 0), ang = Math.atan2(ge.u[1], ge.u[0]), r = 0.34 * s;
+      ctx.translate(X(c), Y(c)); ctx.rotate(ang);
+      const body = () => { ctx.beginPath(); ctx.moveTo(-0.08 * s, -r); ctx.arc(-0.08 * s, 0, r, -Math.PI / 2, Math.PI / 2); ctx.closePath(); };
+      shadowed(s, () => { body(); ctx.fillStyle = '#202326'; ctx.fill(); });
+      body(); ctx.fillStyle = roundShade(0, -r, 0, r); ctx.globalAlpha = 0.55; ctx.fill(); ctx.globalAlpha = 1;
+      body(); ctx.strokeStyle = 'rgba(0,0,0,0.6)'; ctx.lineWidth = 0.8; ctx.stroke();
+      if (s > 34) {
+        ctx.rotate(-ang);
+        ctx.fillStyle = '#c9ced4'; ctx.font = `700 ${Math.max(7, 0.095 * s)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText(e.pnp ? 'PNP' : 'NPN', 0.05 * s * Math.cos(ang), 0.05 * s * Math.sin(ang));
+      }
+      ctx.restore();
+      return;
+    }
+    ln([e.a, P(0.5, 0)], leadCol(e.a), lw); ln([e.b, P(1, 0.5)], leadCol(e.b), lw); ln([e.c, P(1, -0.5)], leadCol(e.c), lw);
+    const c = P(0.72, 0);
+    ctx.fillStyle = T.canvas; ctx.strokeStyle = T.ink; ctx.lineWidth = lw * 0.8;
+    ctx.beginPath(); ctx.arc(X(c), Y(c), 0.42 * s, 0, 2 * Math.PI); ctx.globalAlpha = 0.9; ctx.fill(); ctx.globalAlpha = 1; ctx.stroke();
+    ctx.lineCap = 'butt'; ln([P(0.5, -0.26), P(0.5, 0.26)], T.ink, lw * 2.2); ctx.lineCap = 'round';
+    ln([P(0.5, 0.12), P(1, 0.5)], T.ink, lw); ln([P(0.5, -0.12), P(1, -0.5)], T.ink, lw);
+    // emitter arrow, two thirds of the way along the emitter line
+    const A = P(0.5, -0.12), B = P(1, -0.5), dx = X(B) - X(A), dy = Y(B) - Y(A), L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L;
+    const tipT = e.pnp ? 0.42 : 0.78, tx = X(A) + dx * tipT, ty = Y(A) + dy * tipT, d = e.pnp ? -1 : 1, a = Math.max(5, 0.1 * s) * Math.min(ps, 1.3);
+    ctx.fillStyle = T.ink; ctx.beginPath(); ctx.moveTo(tx, ty);
+    ctx.lineTo(tx - d * ux * a - uy * a * 0.5, ty - d * uy * a + ux * a * 0.5); ctx.lineTo(tx - d * ux * a + uy * a * 0.5, ty - d * uy * a - ux * a * 0.5); ctx.closePath(); ctx.fill();
+    if (s > 34) {
+      ctx.fillStyle = T.muted; ctx.font = `600 ${Math.max(8, Math.min(12, s * 0.13)) * Math.min(ps, 1.25)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      for (const [t, q] of [['B', P(0.24, -0.16)], ['C', P(1.17, 0.78)], ['E', P(1.17, -0.78)]]) ctx.fillText(t, X(q), Y(q));
+    }
+    ctx.restore();
+  }
   function drawDotsPath(pts, I, ph, ps) {
     const bn = view === 'bench', sp0 = 0.25, rad = Math.max(bn ? 2.2 : 1.8, (bn ? 0.05 : 0.045) * geo.s) * Math.min(1.3, ps);
     let acc = 0;
@@ -2337,7 +2825,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       if (!conducts(b)) continue;
       const I = cleanI(ivI(b.id)); if (!isFinite(I) || !I) continue;
       const ge = GE.get(b.id); if (!ge) continue;
-      drawDotsPath(b.type === 'leg' ? ge.upts : (ge.bpts || ge.pts), I, sgn * (phase.get(b.id) || 0), ps);
+      drawDotsPath(b.type === 'leg' || b.type === 'qc' || b.type === 'qb' ? ge.upts : (ge.bpts || ge.pts), I, sgn * (phase.get(b.id) || 0), ps);
     }
     ctx.fillStyle = S.layers.elec ? T.neg : T.equi; ctx.fill();
     if (view === 'bench') { ctx.strokeStyle = T.dark ? 'rgba(0,0,0,0.6)' : 'rgba(255,255,255,0.85)'; ctx.lineWidth = 1; ctx.stroke(); }
@@ -2357,6 +2845,9 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     else if (e.type === 'ind') L.push([n(nm), v(fmtVal(e.L, 'H'))]);
     else if (e.type === 'sw') L.push([n(nm), v(e.closed ? 'closed' : 'open')]);
     else if (e.type === 'sw2') L.push(view === 'bench' ? [n(nm), v(e.pos ? (e.lc || 'position 2') : (e.lb || 'position 1'))] : [n(nm)]);
+    else if (e.type === 'diode') L.push([n(nm), v(DIODE.name)]);
+    else if (e.type === 'led') L.push([n(nm), v((LEDS[e.color] || LEDS.red).name)]);
+    else if (e.type === 'bjt') L.push([n(nm), v(`${e.pnp ? 'PNP' : 'NPN'}, β = ${e.beta}`)]);
     else if ((e.type === 'am' || e.type === 'vm') && view === 'bench' && lcdReadable(ge)) L.push([n(nm)]);
     else if (e.type === 'am' || e.type === 'vm' || e.type === 'probe') {
       const r = meterRead(e), u = e.type === 'am' ? 'A' : 'V';
@@ -2365,6 +2856,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     const small = geo.s < 34;
     if (ok && S.layers.ilabels && !small && (e.type === 'res' || e.type === 'bulb' || e.type === 'bat' || e.type === 'ac' || e.type === 'ind' || (e.type === 'sw' && e.closed)))
       L.push([{ t: (S.mode === 'ac' ? 'I rms = ' : 'I = ') + fmtSI(showI(e.id), 'A', 3), f: 'cur' }]);
+    if (ok && S.layers.ilabels && !small && (e.type === 'diode' || e.type === 'led')) L.push([{ t: (S.mode === 'ac' ? 'I rms = ' : 'I = ') + fmtSI(showI(e.id), 'A', 3), f: 'cur' }]);
+    if (ok && S.layers.ilabels && !small && e.type === 'bjt') L.push([{ t: (S.mode === 'ac' ? 'I_C rms = ' : 'I_C = ') + fmtSI(showI(e.id), 'A', 3), f: 'cur' }]);
     if (ok && e.type === 'cap' && !small) L.push([{ t: (S.mode === 'ac' ? 'V rms = ' : 'V = ') + fmtSI(Math.abs(showV(e.id)), 'V', 3), f: 'capv' }]);
     if (ok && S.layers.plabels && !small && (e.type === 'res' || e.type === 'bulb' || e.type === 'bat' || e.type === 'ac')) {
       let P;
@@ -2438,7 +2931,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     }
   }
   // which value the drawing's grip changes: the part's own value, or an AC source's frequency
-  const gripKind = (e) => (e.type === 'res' || e.type === 'bulb' || e.type === 'bat' || e.type === 'cap' || e.type === 'ind' ? 'val' : e.type === 'ac' ? 'f' : null);
+  const gripKind = (e) => (e.type === 'res' || e.type === 'bulb' || e.type === 'bat' || e.type === 'cap' || e.type === 'ind' || e.type === 'bjt' ? 'val' : e.type === 'ac' ? 'f' : null);
 
   // ---------- bench view ----------
   let view = 'schem';
@@ -2559,7 +3052,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     for (const e of els) {
       const ge = GE.get(e.id);
       if (e.type === 'wire') { insulated(toPx(ge.bpts || ge.pts), benchLeadCol(e.a), w); continue; }
-      if (e.type === 'sw2') continue;
+      if (threeEnds(e)) continue;
       const [h1, h2] = halves(ge);
       insulated(toPx(h1), benchLeadCol(e.a), w); insulated(toPx(h2), benchLeadCol(e.b), w);
     }
@@ -2859,8 +3352,36 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       ctx.fillStyle = '#050607'; ctx.beginPath(); ctx.arc(px, py, jr * 0.45, 0, 2 * Math.PI); ctx.fill();
     }
   }
+  // a small glass signal diode (1N4148): amber glass with a black band at the cathode end b
+  function benchDiode(e, ge, s) {
+    const h = ge.h * s, bl = Math.min(0.42 * s, 2 * h * 0.9), bh = bl * 0.34;
+    ctx.strokeStyle = shade(STEEL, -0.2); ctx.lineWidth = Math.max(1.4, 0.035 * s); ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(-h, 0); ctx.lineTo(h, 0); ctx.stroke();
+    const body = () => roundRect(-bl / 2, -bh / 2, bl, bh, bh / 2);
+    shadowed(s, () => { body(); ctx.fillStyle = 'rgba(214,120,60,0.82)'; ctx.fill(); });
+    ctx.save(); body(); ctx.clip();
+    ctx.fillStyle = 'rgba(70,40,25,0.55)'; ctx.fillRect(-bl * 0.3, -bh * 0.12, bl * 0.6, bh * 0.24);
+    ctx.fillStyle = '#16181b'; ctx.fillRect(bl * 0.26, -bh, bl * 0.12, 2 * bh);
+    ctx.fillStyle = roundShade(0, -bh / 2, 0, bh / 2); ctx.globalAlpha = 0.6; ctx.fillRect(-bl / 2, -bh, bl, 2 * bh); ctx.globalAlpha = 1;
+    ctx.restore();
+    body(); ctx.strokeStyle = 'rgba(0,0,0,0.4)'; ctx.lineWidth = 0.8; ctx.stroke();
+  }
+  // a 5 mm LED seen from above: a coloured dome with its flat edge on the cathode side, glowing with the current
+  function benchLed(e, ge, s) {
+    const h = ge.h * s, r = Math.min(0.2 * s, h * 0.95), c = LED_RGB[e.color] || LED_RGB.red, gl = ledG(e);
+    ctx.strokeStyle = shade(STEEL, -0.2); ctx.lineWidth = Math.max(1.4, 0.035 * s); ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(-h, 0); ctx.lineTo(h, 0); ctx.stroke();
+    const dome = () => { ctx.beginPath(); ctx.arc(0, 0, r, Math.acos(0.82), 2 * Math.PI - Math.acos(0.82)); ctx.closePath(); };
+    shadowed(s, () => { dome(); ctx.fillStyle = rgba(c.map((v) => v * 0.55 + 40), 0.9); ctx.fill(); });
+    const grd = ctx.createRadialGradient(-r * 0.25, -r * 0.25, 0, 0, 0, r);
+    grd.addColorStop(0, gl > 0.002 ? 'rgba(255,255,255,' + (0.6 + 0.4 * gl) + ')' : 'rgba(255,255,255,0.45)'); grd.addColorStop(0.35, rgba(c, 0.35 + 0.65 * gl)); grd.addColorStop(1, rgba(c.map((v) => v * 0.45), 0.9));
+    dome(); ctx.fillStyle = grd; ctx.fill();
+    dome(); ctx.strokeStyle = 'rgba(0,0,0,0.45)'; ctx.lineWidth = 0.8; ctx.stroke();
+  }
   function drawBenchPart(e, ge, ps) {
     if (e.type === 'sw2') return benchSw2(e, ge, geo.s, ps);
+    if (e.type === 'bjt') return drawBjt(e, ge, ps, 0, true);
+    if (e.type === 'diode' || e.type === 'led') { const s = geo.s * benchZ(ge); ctx.save(); ctx.translate(geo.X(ge.c[0]), geo.Y(ge.c[1])); ctx.rotate(ge.ang); (e.type === 'led' ? benchLed : benchDiode)(e, ge, s); ctx.restore(); return; }
     const s = geo.s * benchZ(ge), cx = geo.X(ge.c[0]), cy = geo.Y(ge.c[1]);
     if (e.type === 'res') { ctx.save(); ctx.translate(cx, cy); ctx.rotate(ge.ang); axialRes(-ge.h * s, ge.h * s, e.R, s); ctx.restore(); }
     else if (e.type === 'bulb') benchBulb(e, ge, s, cx, cy);
@@ -2873,10 +3394,14 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   }
   function benchOutline(id, alpha, ps) {
     const e = elById(id), ge = GE.get(id); if (!e || !ge || e.type === 'wire') return;
-    const z = e.type === 'sw2' ? 1 : benchZ(ge), s = geo.s * z, cx = geo.X(ge.c[0]), cy = geo.Y(ge.c[1]), m = 4 * ps;
+    const z = threeEnds(e) ? 1 : benchZ(ge), s = geo.s * z, cx = geo.X(ge.c[0]), cy = geo.Y(ge.c[1]), m = 4 * ps;
     ctx.save(); ctx.strokeStyle = T.accent; ctx.globalAlpha = alpha; ctx.lineWidth = 2 * ps;
     if (e.type === 'am' || e.type === 'vm' || e.type === 'probe') roundRect(cx - 0.3 * s - m, cy - 0.36 * s - m, 0.6 * s + 2 * m, 0.72 * s + 2 * m, 0.11 * s + m);
-    else if (e.type === 'sw2') {
+    else if (e.type === 'bjt') {
+      const pts = [e.a, e.b, e.c].map(([u, v]) => [geo.X(u), geo.Y(v)]), mm = 0.12 * geo.s + m;
+      const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
+      roundRect(Math.min(...xs) - mm, Math.min(...ys) - mm, Math.max(...xs) - Math.min(...xs) + 2 * mm, Math.max(...ys) - Math.min(...ys) + 2 * mm, 0.08 * geo.s + m);
+    } else if (e.type === 'sw2') {
       const pts = [e.a, e.b, e.c, [e.a[0] + ge.n[0], e.a[1] + ge.n[1]]].map(([u, v]) => [geo.X(u), geo.Y(v)]), mm = 0.17 * geo.s + m;
       const xs = pts.map((p) => p[0]), ys = pts.map((p) => p[1]);
       roundRect(Math.min(...xs) - mm, Math.min(...ys) - mm, Math.max(...xs) - Math.min(...xs) + 2 * mm, Math.max(...ys) - Math.min(...ys) + 2 * mm, 0.08 * geo.s + m);
@@ -2918,6 +3443,15 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       grd.addColorStop(0, rgba(gc, 0.85 * gl)); grd.addColorStop(0.45, rgba(gc, 0.4 * gl)); grd.addColorStop(1, rgba(gc, 0));
       ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(x, y, R, 0, 2 * Math.PI); ctx.fill();
     }
+    // LED light: a halo in the LED's colour, brighter with more current
+    for (const e of els) {
+      if (e.type !== 'led') continue;
+      const gl = ledG(e); if (gl < 0.002) continue;
+      const ge = GE.get(e.id), x = g.X(ge.c[0]), y = g.Y(ge.c[1]), R = s * (0.25 + 0.45 * gl), c = LED_RGB[e.color] || LED_RGB.red;
+      const grd = ctx.createRadialGradient(x, y, 0, x, y, R);
+      grd.addColorStop(0, rgba(c, 0.8 * gl)); grd.addColorStop(0.5, rgba(c, 0.32 * gl)); grd.addColorStop(1, rgba(c, 0));
+      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(x, y, R, 0, 2 * Math.PI); ctx.fill();
+    }
     // highlights under the circuit
     const shortIds = [];
     const stat = currentParts();
@@ -2935,7 +3469,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     }
     const hovEl = !drag && hover && hover.kind === 'el' ? hover.id : null;
     if (hovEl && !(sel && sel.kind === 'el' && sel.id === hovEl)) underlay([hovEl], T.accent, 0.16, hw);
-    if (sel && sel.kind === 'el') underlay(elById(sel.id) && elById(sel.id).type === 'sw2' ? [sel.id, -sel.id] : [sel.id], T.accent, drag && drag.kind === 'el' ? 0.45 : 0.3, hw);
+    if (sel && sel.kind === 'el') underlay(elById(sel.id) && threeEnds(elById(sel.id)) ? [sel.id, -sel.id] : [sel.id], T.accent, drag && drag.kind === 'el' ? 0.45 : 0.3, hw);
     // leads and wires
     const lw = Math.max(1.4, Math.min(2.2, s * 0.03)) * ps;
     ctx.lineCap = 'round'; ctx.lineJoin = 'round';
@@ -2943,7 +3477,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     else for (const e of els) {
       const ge = GE.get(e.id);
       if (e.type === 'wire') { ctx.strokeStyle = leadCol(e.a); ctx.lineWidth = lw; polyPx(ge.pts); ctx.stroke(); continue; }
-      if (e.type === 'sw2') continue;
+      if (threeEnds(e)) continue;
       const [h1, h2] = halves(ge);
       ctx.lineWidth = lw;
       ctx.strokeStyle = leadCol(e.a); polyPx(h1); ctx.stroke();
@@ -2972,14 +3506,14 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     // arrows: conventional current on the first lead, the Kirchhoff loop direction on the second
     const tri = Math.max(4.5, s * 0.08) * Math.min(ps, 1.3);
     if (S.layers.ilabels) for (const b of BR) {
-      if (b.type === 'wire' || b.type === 'leg' || !conducts(b)) continue;
+      if (b.type === 'wire' || b.type === 'leg' || b.type === 'qc' || b.type === 'qb' || !conducts(b)) continue;
       const I = cleanI(ivI(b.id)); if (!isFinite(I) || !I) continue;
       const m = midOf(halves(GE.get(b.id))[0]); if (m.len * s < tri * 2.2) continue;
       const sg = Math.sign(I);
       triangle(g.X(m.p[0]), g.Y(m.p[1]), m.d[0] * sg, m.d[1] * sg, tri, T.equi);
     }
     if (S.kmode === 'loop' && loopOk) for (const [id, fwd] of kLoop) {
-      const b = brById(id), ge = GE.get(id); if (!b || !ge || b.type === 'leg') continue;
+      const b = brById(id), ge = GE.get(id); if (!b || !ge || b.type === 'leg' || b.type === 'qc' || b.type === 'qb') continue;
       const m = midOf(halves(ge)[1]); if (m.len * s < tri * 2.2) continue;
       const sg = fwd ? 1 : -1;
       triangle(g.X(m.p[0]), g.Y(m.p[1]), m.d[0] * sg, m.d[1] * sg, tri, T.kir);
@@ -3445,7 +3979,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   // the Selected section: value controls and what the part is doing now
   function updateSelected() {
     const e = selEl();
-    for (const id of ['cVal', 'cF', 'cRin', 'cr', 'swBtn', 'selBtns', 'scBtns']) setHidden(id, true);
+    for (const id of ['cVal', 'cF', 'cRin', 'cr', 'swBtn', 'selBtns', 'scBtns', 'cLed', 'cPol']) setHidden(id, true);
     $('selFormula').textContent = '';
     if (!e) {
       if (sel && sel.kind === 'node') {
@@ -3469,6 +4003,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       syncInput('nVal', +(v / (vs.scale || 1)).toPrecision(6));
     }
     if (e.type === 'ac') { setHidden('cF', false); syncInput('sF', clamp(idxOfF(e.f), 0, 400)); syncInput('nF', +e.f.toPrecision(6)); }
+    if (e.type === 'led') { setHidden('cLed', false); for (const b of document.querySelectorAll('#cLed button')) b.setAttribute('aria-pressed', String(b.dataset.c === (e.color || 'red'))); }
+    if (e.type === 'bjt') { setHidden('cPol', false); for (const b of document.querySelectorAll('#cPol button')) b.setAttribute('aria-pressed', String((b.dataset.q === 'pnp') === !!e.pnp)); }
     if (e.type === 'bat') { setHidden('cRin', false); setHidden('cr', !e.rOn); $('kRin').checked = !!e.rOn; syncInput('nr', +e.r.toPrecision(6)); syncInput('sr', nearestIdx(RI_VALUES, e.r)); }
     if (e.type === 'sw' || e.type === 'sw2') {
       setHidden('swBtn', false);
@@ -3499,6 +4035,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       else if (e.type === 'vm' || e.type === 'probe') rows.push(['Reading, rms', fmtSI(Vr, 'V', 4)], ['Resistance', '∞, ideal']);
       else if (e.type === 'sw') rows.push(['State', e.closed ? 'closed' : 'open'], ['I<sub>rms</sub>', fmtSI(Ir, 'A', 4)]);
       else if (e.type === 'sw2') rows.push(['Position', e.pos ? (e.lc || 'position 2') : (e.lb || 'position 1')]);
+      else if (isDev(e)) { rows.push(...devAcRows(e, Ir, Vr)); }
       else rows.push(['I<sub>rms</sub>', fmtSI(Ir, 'A', 4)]);
       return rows;
     }
@@ -3532,9 +4069,56 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     } else if (e.type === 'sw2') {
       const I1 = cleanI(ivI(e.id)), I2 = cleanI(ivI(-e.id));
       rows.push(['Position', e.pos ? (e.lc || 'position 2') : (e.lb || 'position 1')], ['Current through the blade' + now, fmtSI(Math.abs(e.pos ? I2 : I1), 'A', 4)]);
-    } else if (e.type === 'am') rows.push(['Reading, current into +' + now, fmtSI(I, 'A', 4)], ['Voltage across', '0 V'], ['Resistance', '0 Ω, ideal'], ['Power', '0 W']);
+    } else if (isDev(e)) rows.push(...devRows(e, now));
+    else if (e.type === 'am') rows.push(['Reading, current into +' + now, fmtSI(I, 'A', 4)], ['Voltage across', '0 V'], ['Resistance', '0 Ω, ideal'], ['Power', '0 W']);
     else if (e.type === 'vm' || e.type === 'probe') rows.push(['Reading, V<sub>+</sub> − V<sub>−</sub>' + now, isFinite(V) ? fmtSI(V, 'V', 4) : '— <span class="ok">no common reference</span>'], ['Current', '0 A'], ['Resistance', '∞, ideal'], ['Power', '0 W']);
     else rows.push(['Current, |I|' + now, fmtSI(Math.abs(I), 'A', 4)], ['Voltage across', '0 V']);
+    return rows;
+  }
+  // diode, LED and transistor readouts: the values now (DC or in time)
+  function devRows(e, now) {
+    const rows = [];
+    if (e.type === 'diode' || e.type === 'led') {
+      const I = cleanI(ivI(e.id)), V = cleanV(ivV(e.id)), d = diodeModel(e);
+      rows.push(['Voltage V<sub>anode</sub> − V<sub>cathode</sub>' + now, fmtSI(V, 'V', 4)], ['Current, anode to cathode' + now, fmtSI(I, 'A', 4)], ['Power P = IV' + now, fmtSI(I * V, 'W', 4)]);
+      if (isFinite(V) && isFinite(I)) {
+        const g = diodeIV(d, V - d.Rs * I).g;
+        rows.push(['Bias', V > 0 ? 'forward' : V < 0 ? 'reverse' : 'none'], ['Slope resistance dV/dI', fmtSI(d.Rs + 1 / g, 'Ω', 4)]);
+      }
+      if (e.type === 'led') {
+        const L = LEDS[e.color] || LEDS.red;
+        rows.push(['Colour', `${L.name}, λ = ${L.lambda} nm`], ['Photon energy hc/λ', `${(1239.84198 / L.lambda).toFixed(3)} eV`], ['Light', `${Math.round(ledG(e) * 100)}% <span class="ok">of full, at ${fmtSI(LED_IF, 'A', 2)}</span>`, true]);
+        $('selFormula').innerHTML = `I = I<sub>s</sub>(e<sup>V/nV<sub>T</sub></sup> − 1) with n = ${LED_N} and I<sub>s</sub> = ${fmtSci(d.Is, 'A')}, set so that ${fmtSI(LED_IF, 'A', 2)} flows at ${L.VF} V (Kingbright ${L.part})`;
+      } else $('selFormula').innerHTML = `I = I<sub>s</sub>(e<sup>V<sub>j</sub>/nV<sub>T</sub></sup> − 1), V = V<sub>j</sub> + IR<sub>s</sub>: ${DIODE.name} with I<sub>s</sub> = 4.352 nA, n = ${DIODE.n}, R<sub>s</sub> = ${DIODE.Rs} Ω, V<sub>T</sub> = kT/e = ${fmtSI(VT, 'V', 4)}`;
+      return rows;
+    }
+    const Ic = cleanI(ivI(e.id)), Ib = cleanI(ivI(-e.id)), Vce = cleanV(ivV(e.id)), Vbe = cleanV(ivV(-e.id)), p = e.pnp ? -1 : 1;
+    rows.push(['Base current I<sub>B</sub>' + now, fmtSI(Ib, 'A', 4)], ['Collector current I<sub>C</sub>' + now, fmtSI(Ic, 'A', 4)], ['Emitter current I<sub>E</sub> = I<sub>B</sub> + I<sub>C</sub>', fmtSI(Ib + Ic, 'A', 4)]);
+    if (!S.blind) rows.push(['I<sub>C</sub>/I<sub>B</sub>', Math.abs(Ib) > 1e-12 ? (Ic / Ib).toPrecision(4) : '—']);
+    rows.push(['V<sub>BE</sub>' + now, fmtSI(Vbe, 'V', 4)], ['V<sub>CE</sub>' + now, fmtSI(Vce, 'V', 4)], ['Power I<sub>C</sub>V<sub>CE</sub> + I<sub>B</sub>V<sub>BE</sub>', fmtSI(Ic * Vce + Ib * Vbe, 'W', 4)]);
+    if (isFinite(Vbe) && isFinite(Vce)) {
+      const be = p * Vbe > 0.5, bc = p * (Vbe - Vce) > 0.5;
+      rows.push(['Region', !be && !bc ? 'cut off <span class="ok">both junctions off</span>' : be && !bc ? 'forward active <span class="ok">I<sub>C</sub> = βI<sub>B</sub></span>' : be ? 'saturated <span class="ok">both junctions on</span>' : 'reverse active', true]);
+    }
+    $('selFormula').innerHTML = `Ebers–Moll: I<sub>C</sub> ≈ βI<sub>B</sub> while the base–collector junction is off; I<sub>B</sub> = (I<sub>s</sub>/β)(e<sup>V<sub>BE</sub>/V<sub>T</sub></sup> − 1), I<sub>s</sub> = 6.734 fA (${BJT.name}). A junction counts as on above 0.5 V.${e.pnp ? ' PNP: every voltage and current is reversed.' : ''}`;
+    return rows;
+  }
+  // in AC: the small signal slopes at the DC state, and the rms values
+  function devAcRows(e, Ir, Vr) {
+    const rows = [], op = sp && sp.dc, L = op && op.lin ? op.lin.get(e.id) : null;
+    if (e.type === 'bjt') {
+      const Lb = op && op.lin ? op.lin.get(-e.id) : null, r0 = op && op.res.get(e.id), rb = op && op.res.get(-e.id);
+      rows.push(['DC I<sub>C</sub>, I<sub>B</sub>', r0 && rb ? `${fmtSI(r0.I, 'A', 4)}, ${fmtSI(rb.I, 'A', 4)}` : '—']);
+      if (L && Lb) rows.push(['g<sub>m</sub> = ∂I<sub>C</sub>/∂V<sub>BE</sub>', fmtSI(L.ctl.g, 'S', 4)], ['r<sub>π</sub> = ∂V<sub>BE</sub>/∂I<sub>B</sub>', fmtSI(1 / Lb.y, 'Ω', 4)]);
+      rows.push(['I<sub>C</sub> rms (DC and signal)', fmtSI(Ir, 'A', 4)], ['V<sub>CE</sub> rms', fmtSI(Vr, 'V', 4)]);
+      $('selFormula').innerHTML = 'Small signal: the transistor is replaced by its slopes at the DC state, g<sub>m</sub> = I<sub>C</sub>/V<sub>T</sub> in the forward active region. Good while the signal across the base–emitter junction is well below V<sub>T</sub>; In time shows the full curve.';
+    } else {
+      const r0 = op && op.res.get(e.id);
+      rows.push(['DC current', r0 ? fmtSI(r0.I, 'A', 4) : '—']);
+      if (L) rows.push(['Slope resistance dV/dI', fmtSI(1 / L.y, 'Ω', 4)]);
+      rows.push(['I<sub>rms</sub> (DC and signal)', fmtSI(Ir, 'A', 4)], ['V<sub>rms</sub>', fmtSI(Vr, 'V', 4)]);
+      $('selFormula').innerHTML = 'Small signal: the diode is replaced by its slope resistance at the DC state. Good while the signal across it is well below nV<sub>T</sub>; In time shows the full curve.';
+    }
     return rows;
   }
   function reqText(R) {
@@ -3557,7 +4141,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       rows.push([`Current from ${b.name || 'the battery'}`, r && r.ok ? fmtSI(-cleanI(r.I), 'A', 4) : '—']);
     }
     rows.push(['Power from EMFs, Σ εI', anyShort && !pb.src ? '—' : fmtSI(pb.src, 'W', 4)]);
-    rows.push(['Dissipated, Σ I<sup>2</sup>R', anyShort && !pb.diss ? '—' : fmtSI(pb.diss, 'W', 4)]);
+    rows.push([hasNonlinear(els) ? 'Dissipated, Σ IV over the parts' : 'Dissipated, Σ I<sup>2</sup>R', anyShort && !pb.diss ? '—' : fmtSI(pb.diss, 'W', 4)]);
     rows.push(['Difference', fmtSci(pb.src - pb.diss, 'W'), true]);
     rows.push(['Largest junction residual on the board', fmtSci(res, 'A'), true]);
     $('circRead').innerHTML = dl(rows);
@@ -3604,6 +4188,9 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         case 'am': how = 'ideal ammeter'; break;
         case 'sw': case 'leg': how = b.closed ? 'closed switch' : 'across the open gap'; break;
         case 'vm': case 'probe': how = 'voltmeter reading'; break;
+        case 'diode': case 'led': how = 'across the junction'; break;
+        case 'qc': how = 'V_CE'; break;
+        case 'qb': how = 'V_BE'; break;
         default: how = '';
       }
       sum += dv;
@@ -3718,6 +4305,19 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       else msg('<b>This circuit cannot be solved.</b> Check for parts joined in a way that leaves a voltage undefined.');
       return;
     }
+    if ((S.mode === 'dc' && dc && dc.conv === false) || (S.mode === 'ac' && sp && sp.dc && sp.dc.conv === false) || (S.mode === 'time' && run && run.sys && run.sys.nl && !run.sys.ok)) {
+      msg('<b>No solution found.</b> Newton\'s method did not settle on a state for the diodes and transistors here. Check for a junction joined straight across a source, or change a value.');
+      return;
+    }
+    // parts pushed past what the real ones survive
+    for (const e of els) {
+      if (!isDev(e)) continue;
+      const I = Math.abs(S.mode === 'ac' && sp && sp.dc ? (sp.dc.res.get(e.id) || {}).I : ivI(e.id));
+      if (!isFinite(I)) continue;
+      if (I >= I_LIN) { msg(`<b>${e.name}: ${fmtSI(I, 'A', 3)}.</b> A real ${e.type === 'bjt' ? 'transistor' : e.type === 'led' ? 'LED' : 'diode'} would burn out long before this; above 1 A the model's exponential is continued as a straight line. Add resistance in series.`); return; }
+      if (e.type === 'led' && I > 2 * LED_IF) { msg(`<b>${e.name}: ${fmtSI(I, 'A', 3)}.</b> That is more than twice the 20 mA this LED is specified at; a real one would soon fail. Add a series resistor.`, true); return; }
+      if (e.type === 'bjt' && I > 0.2) { msg(`<b>${e.name}: I<sub>C</sub> = ${fmtSI(I, 'A', 3)}.</b> More than the 200 mA maximum of a ${BJT.name}; a real one would overheat.`, true); return; }
+    }
     if (S.mode === 'ac' && !mainSrc()) { msg('<b>No AC source.</b> AC mode shows the response to a sine wave source: place one with the AC source tool, or pick a setup.', true); return; }
     if (S.mode === 'dc' && els.some((e) => e.type === 'ac')) { msg('<b>AC source in DC mode.</b> Its EMF averages to zero, so here it acts as a plain wire. Switch to AC or In time to see what it does.', true); return; }
     if (S.mode === 'time' && run && run.sys && run.sys.ok && (run.sys.degL.size || run.sys.degC.size)) {
@@ -3738,7 +4338,13 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       time: ` In time mode the circuit equations (Kirchhoff's rules with I = dQ/dt for capacitors and V = L dI/dt for inductors) are integrated exactly: between switch events the state moves by the matrix exponential e^(Ah), and the energies by exact integrals over each step, so there is no step size error, only rounding. Switches act instantly; a two way switch moves its blade from one contact to the other in no time. Where the ideal circuit would need an infinite current or voltage, a ${fmtR(R_CONTACT)} contact resistance or a ${fmtR(R_SPARK)} spark path stands in, and its energy is shown as lost in sparks.`,
       ac: ' AC mode is the exact steady state with complex impedances Z_R = R, Z_C = 1/(iωC), Z_L = iωL, one solution per source frequency plus the DC part, added together. Meters show rms values; the scope and phasors use peak values. Dots move with the instantaneous current, in slow motion.'
     };
-    $('model').textContent = base + m[S.mode];
+    const dev = ` Diodes follow the Shockley equation I = I_s(e^(V/nV_T) − 1) with V_T = kT/e = ${(VT * 1e3).toFixed(3)} mV at 27 °C: the ${DIODE.name} with Nexperia's SPICE values (I_s = 4.352 nA, n = 1.906, series resistance 0.6458 Ω), LEDs with n = 2 (assumed) and I_s set so that 20 mA flows at the Kingbright typical forward voltage (red 1.85 V at 640 nm, green 3.2 V at 525 nm, blue 3.3 V at 470 nm). The junction transistor is the Ebers–Moll model with the ${BJT.name} data sheet's I_s = 6.734 fA and reverse gain 0.7371, and the forward gain β you set (the data sheet gives 100 to 300 at 10 mA); a PNP is its mirror image. Left out: reverse breakdown, junction capacitance and stored charge, the Early effect, high injection and the transistor's base and collector resistances, so the parts respond at once at any frequency. SPICE's 10⁻¹² S is added across each junction. Above 1 A a junction's exponential continues as a straight line. With these parts the DC state is found by Newton's method (converged to 10⁻¹⁰ V).`;
+    const devMode = {
+      dc: '',
+      time: ' With a diode or transistor the equations are not linear, so in time they are integrated numerically: TR-BDF2 steps whose size adapts to keep the estimated error per step below 10⁻⁶ of the largest source voltage and of the largest inductor current, with Newton\'s method at each stage; energies are summed by the trapezoidal rule, so the energy check is close to zero, not exactly zero.',
+      ac: ' With a diode or transistor, AC mode is small signal: each one is replaced by its slopes at the DC state (the first term of a Taylor series), which holds while the signal across each junction is well below V_T. In time shows the full, distorted response.'
+    };
+    $('model').textContent = base + m[S.mode] + (hasNonlinear(els) ? dev + devMode[S.mode] : '');
   }
   function updateRail() {
     for (const s of document.querySelectorAll('.rail section[data-for]')) s.hidden = !s.dataset.for.split(' ').includes(S.mode);
@@ -3782,7 +4388,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     if (sel && sel.kind === 'node' && !netOf.has(sel.key)) sel = null;
     computeIV();
     kirchhoffTarget();
-    updateRail();
+    updateRail(); updateModel();
   }
   // only structural edits make a setup "edited": then its special start, flips and comparison traces stop applying
   function structural() { S.edited = true; }
@@ -3832,6 +4438,14 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     if (k > 0) out.push({ type: 'wire', a: from, b: p0 });
     const main = { type, a: p0, b: p1, main: true };
     if (type === 'sw2') { const n = sw2Side(p0, p1); main.c = [p1[0] + n[0], p1[1] + n[1]]; }
+    if (type === 'bjt') {
+      // base at p0; collector and emitter one step on and one step to each side (collector up, or left of a vertical one)
+      const n = u[0] ? [0, -1] : [-1, 0];
+      main.b = [p1[0] + n[0], p1[1] + n[1]]; main.c = [p1[0] - n[0], p1[1] - n[1]];
+      if (!inGrid(main.b) || !inGrid(main.c)) return [];
+      out.push(main);
+      return out;
+    }
     out.push(main);
     if (!samePt(p1, t)) out.push({ type: 'wire', a: p1, b: t });
     return out;
@@ -3875,12 +4489,13 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     for (const r of [true, false]) {
       const b = [e.a[0] + rot(d, r)[0], e.a[1] + rot(d, r)[1]];
       let c = null;
-      if (e.type === 'sw2') { const dc2 = [e.c[0] - e.a[0], e.c[1] - e.a[1]]; c = [e.a[0] + rot(dc2, r)[0], e.a[1] + rot(dc2, r)[1]]; if (!inGrid(c)) continue; }
+      if (threeEnds(e)) { const dc2 = [e.c[0] - e.a[0], e.c[1] - e.a[1]]; c = [e.a[0] + rot(dc2, r)[0], e.a[1] + rot(dc2, r)[1]]; if (!inGrid(c)) continue; }
       if (inGrid(b)) { pushUndo(null); structural(); e.b = b; if (c) e.c = c; delete e.side; els = normalize(els, newId); changed('edit'); live(`${label(e)} rotated.`); return; }
     }
   }
   function flipSel() {
     const e = selEl(); if (!e || e.type === 'wire') return;
+    if (e.type === 'bjt') { pushUndo(null); structural(); [e.b, e.c] = [e.c, e.b]; els = normalize(els, newId); changed('edit'); live(`${label(e)} flipped: collector and emitter swapped.`); return; }
     if (e.type === 'sw2') {
       const n = [e.c[0] - e.b[0], e.c[1] - e.b[1]], c = [e.b[0] - n[0], e.b[1] - n[1]];
       if (!inGrid(c)) return;
@@ -3909,7 +4524,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   // move every end at a dot; a two way switch keeps its shape, so a dot at one of its ends does not move on its own
   function moveNode(key, to, orig) {
     const att = orig || els.filter((e) => kp(e.a) === key || kp(e.b) === key || (e.c && kp(e.c) === key)).map((e) => [e.id, e.c && kp(e.c) === key ? 'c' : kp(e.a) === key ? 'a' : 'b']);
-    for (const [id] of att) if (elById(id).type === 'sw2') return false;
+    for (const [id] of att) if (threeEnds(elById(id))) return false;
     for (const [id, end] of att) { const e = elById(id); if (samePt(end === 'a' ? e.b : e.a, to)) return false; }
     for (const [id, end] of att) elById(id)[end] = [...to];
     return true;
@@ -3999,6 +4614,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       const ge = GE.get(e.id); if (!ge) continue;
       let d = distPoly(x, y, ge.pts);
       if (e.type === 'sw2') { d = Math.min(d, distPoly(x, y, GE.get(-e.id).pts)); d -= 0.15 * geo.s; }
+      else if (e.type === 'bjt') d = Math.min(d, distPoly(x, y, GE.get(-e.id).pts), Math.hypot(x - geo.X(ge.c[0]), y - geo.Y(ge.c[1])) - 0.42 * geo.s);
       else if (e.type !== 'wire') d = Math.min(d, Math.hypot(x - geo.X(ge.c[0]), y - geo.Y(ge.c[1])) - sideOf(e, ge) * geo.s);
       if (e.type === 'wire') d += 2;
       if (d < bd) { bd = d; best = e; }
@@ -4388,6 +5004,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       if (PART_Q[e.type]) { const [k, u] = PART_Q[e.type]; v[`${e.name}_${u}`] = +e[k].toPrecision(6); }
       else if (e.type === 'bat') { v[`${e.name}_emf_V`] = +e.emf.toPrecision(4); if (hasRint(e)) v[`${e.name}_r_ohm`] = +e.r.toPrecision(6); }
       else if (e.type === 'ac') { v[`${e.name}_V0_V`] = +e.V0.toPrecision(4); v[`${e.name}_f_Hz`] = +e.f.toPrecision(6); }
+      else if (e.type === 'bjt') v[`${e.name}_beta`] = e.beta;
       else if (withSwitches && e.type === 'sw') v[`${e.name}_state`] = e.closed ? 'closed' : 'open';
       else if (withSwitches && e.type === 'sw2') v[`${e.name}_state`] = e.pos ? (e.lc || 'position 2') : (e.lb || 'position 1');
     }
@@ -4449,9 +5066,14 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       else if (e.type === 'ac') L.push(['part', e.name, 'AC source', 'V0', +e.V0.toPrecision(4), 'V peak', 'f', +e.f.toPrecision(6), 'Hz']);
       else if (e.type === 'bat') L.push(['part', e.name, 'battery', 'emf', +e.emf.toPrecision(4), 'V', ...(hasRint(e) ? ['r', +e.r.toPrecision(6), 'ohm'] : [])]);
       else if (withSwitches && (e.type === 'sw' || e.type === 'sw2')) L.push(['part', e.name, TYPE[e.type].toLowerCase(), swTxt(e).trim()]);
+      else if (e.type === 'diode') L.push(['part', e.name, 'diode', DIODE.name]);
+      else if (e.type === 'led') L.push(['part', e.name, 'LED', (LEDS[e.color] || LEDS.red).name, (LEDS[e.color] || LEDS.red).part]);
+      else if (e.type === 'bjt') L.push(['part', e.name, (e.pnp ? 'PNP' : 'NPN') + ' transistor', 'beta', e.beta]);
     }
+    if (hasNonlinear(els)) L.push(['devices', DEVICE_LINE]);
     return L;
   }
+  const DEVICE_LINE = `diode I = Is(exp(eV/nkT) - 1) with series resistance; transistor by the Ebers-Moll transport model; T = ${T_J} K; exponentials continued linearly above ${I_LIN} A; solved by Newton's method`;
   const MODEL_LINE = 'model,ideal parts and ideal meters (ammeter 0 ohm; voltmeter and probe infinite resistance; wires and switches 0 ohm)';
   const SIGN_LINE = 'signs,V_<part> is the voltage of the end the part was drawn from minus the other end (+ minus - for sources and meters); I_<part> is the current through it from that end to the other; a source current is out of its + terminal';
   function timeCSV() {
@@ -4459,7 +5081,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     const en = ['W_sources_J', 'U_C_J', 'U_L_J', 'heat_J', 'sparks_J', 'U0_J'].filter((k) => readT.some((r) => r.cells[k] !== undefined));
     const vk = unionKeys(readT, (r) => Object.keys(r.vals)).sort((a, b) => a.localeCompare(b, 'en', { numeric: true }));
     const metaL = ['Circuits virtual apparatus, In time mode: time cursor readings (simulated data)', ['demo version', VERSION], ...circuitMeta(true),
-      MODEL_LINE + '; circuit equations integrated exactly with the matrix exponential, no step size error; switches act instantly',
+      MODEL_LINE + (run && run.sys && run.sys.nl ? `; with a diode or transistor the equations are stepped by TR-BDF2 with adaptive steps (relative error target ${NL_RTOL}); switches act instantly` : '; circuit equations integrated exactly with the matrix exponential, no step size error; switches act instantly'),
       'readings,as displayed at the time cursor: t exactly as printed (a multiple of the cursor step); channel values and energies to 4 significant figures; edited cells exported as typed',
       SIGN_LINE,
       'energies,W_sources_J work done by the sources since t = 0; U_C_J and U_L_J stored at the cursor time; heat_J heat in resistors and internal resistances since t = 0; U0_J stored at t = 0 when the setup starts charged',
@@ -4491,7 +5113,11 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     hand.columns = ['reading', 'setup', 'meter', 'I_A', 'V_V', ...rest]; hand.rows = out;
   }
   $('expT').addEventListener('click', () => { if (!readT.length) { stat('statT', 'No readings to export yet.'); return; } const txt = timeCSV(); toWorksheet(txt, () => downloadText('circuits-time-readings.csv', txt), { ...wsTime(), st: 'statT', series: wsSer.T, csvName: 'circuits-time-readings.csv' }); });
-  $('expD').addEventListener('click', () => { if (!readD.length) { stat('statD', 'No readings to export yet.'); return; } const txt = dcCSV(); toWorksheet(txt, () => downloadText('circuits-dc-readings.csv', txt), { ws: 'dc-circuits', wsName: "Kirchhoff's Rules", st: 'statD', series: wsSer.D, csvName: 'circuits-dc-readings.csv', shape: wsMeters }); });
+  /* DC readings of a circuit with a diode or a transistor (or with the page opened from that worksheet) go to the junction transistor
+     worksheet, one row per reading; the rest go to Kirchhoff's Rules, one row per meter. */
+  const wsDC = () => (hasNonlinear(els) || ['diode', 'led', 'transistor'].includes(WS_OPENED)
+    ? { ws: 'junction-transistor', wsName: 'A Real Diode and the Junction Transistor' } : { ws: 'dc-circuits', wsName: "Kirchhoff's Rules", shape: wsMeters });
+  $('expD').addEventListener('click', () => { if (!readD.length) { stat('statD', 'No readings to export yet.'); return; } const txt = dcCSV(); toWorksheet(txt, () => downloadText('circuits-dc-readings.csv', txt), { ...wsDC(), st: 'statD', series: wsSer.D, csvName: 'circuits-dc-readings.csv' }); });
   $('clearT').addEventListener('click', () => { wsSer.T = Date.now(); readT = []; renderT(); stat('statT', 'Readings cleared.'); });
   $('clearD').addEventListener('click', () => { wsSer.D = Date.now(); readD = []; renderD(); stat('statD', 'Readings cleared.'); });
   $('stepBtn').addEventListener('click', () => {
@@ -4532,6 +5158,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   let sweeping = false;
   function setSweep(on) { sweeping = on; $('sweep').setAttribute('aria-pressed', String(on)); $('sweep').textContent = on ? 'Stop sweep' : 'Sweep'; }
   $('sweep').addEventListener('click', () => { const e = mainSrc(); if (!e) return; if (!sweeping) { lastEdit = { tag: null, t: 0 }; pushUndo(null); setVal(e, 'f', F_MIN, 'sweep'); setRunning(true); } setSweep(!sweeping); });
+  for (const b of document.querySelectorAll('#cLed button')) b.addEventListener('click', () => { const e = selEl(); if (e && e.type === 'led' && e.color !== b.dataset.c) { pushUndo(null); e.color = b.dataset.c; changed('value'); live(`${e.name} is now ${b.dataset.c}.`); } });
+  for (const b of document.querySelectorAll('#cPol button')) b.addEventListener('click', () => { const e = selEl(), pnp = b.dataset.q === 'pnp'; if (e && e.type === 'bjt' && !!e.pnp !== pnp) { pushUndo(null); e.pnp = pnp; changed('value'); live(`${e.name} is now ${pnp ? 'PNP' : 'NPN'}.`); } });
   $('kRin').addEventListener('change', (ev) => { const e = selEl(); if (e && e.type === 'bat') { pushUndo(null); e.rOn = ev.target.checked; changed('value'); } });
   $('sr').addEventListener('input', (ev) => { const e = selEl(); if (e && e.type === 'bat') setVal(e, 'r', RI_VALUES[+ev.target.value]); });
   $('nr').addEventListener('change', (ev) => { const e = selEl(), v = parseFloat(ev.target.value); if (e && e.type === 'bat' && v > 0) setVal(e, 'r', clamp(v, 1e-3, 1e4)); else updateRail(); });
@@ -4694,10 +5322,12 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   // ---------- modes and setups ----------
   const stage = $('stage');
   function renderPresets() {
-    $('presets').innerHTML = MODE_PRESETS[S.mode].map((p) => `<button type="button" data-p="${p}" aria-pressed="${p === S.preset}">${PRESETS[p].name}</button>`).join('');
-    for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+    const chip = (p) => `<button type="button" data-p="${p}" aria-pressed="${p === S.preset}">${PRESETS[p].name}</button>`;
+    $('presets').innerHTML = MODE_PRESETS[S.mode].map(chip).join('');
+    $('starters').innerHTML = STARTERS.map(chip).join('');
+    for (const b of document.querySelectorAll('#presets button, #starters button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   }
-  function presetButtons() { for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); }
+  function presetButtons() { for (const b of document.querySelectorAll('#presets button, #starters button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); }
   const HASH = { dc: 'dc', time: 'transients', ac: 'ac' };
   function setHash(h) { try { if (location.hash.slice(1) !== h) history.replaceState(null, '', '#' + h); } catch (_) {} }
   function showMode() {
@@ -4736,11 +5366,11 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     presetButtons(); showPresetHint(name);
     changed('preset');
     if (S.mode !== 'dc' && !reduce && !running) setRunning(true);
-    setHash(S.mode === 'time' ? (['rc', 'flip', 'flash'].includes(name) ? 'rc' : 'transients') : HASH[S.mode]);
+    setHash(STARTER_HASH[name] || (S.mode === 'time' ? (['rc', 'flip', 'flash'].includes(name) ? 'rc' : 'transients') : HASH[S.mode]));
   }
   function fromHash() {
     const h = location.hash.slice(1).toLowerCase();
-    const map = { dc: 'series', rc: 'rc', transients: 'rlc', time: 'rc', ac: 'below' };
+    const map = { dc: 'series', rc: 'rc', transients: 'rlc', time: 'rc', ac: 'below', ohm: 'ohm', diode: 'diodeIV', led: 'leds', rectifier: 'rectifier', transistor: 'tswitch', amplifier: 'amp' };
     return map[h] || null;
   }
   // the page sets its own hash with replaceState, which fires no event: a hashchange is a link followed by the user
@@ -4790,9 +5420,11 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       Ipeak = Math.max(m, Ipeak * Math.exp(-dt / 3));
       if (Ipeak > 0) Iscale = niceUp(Ipeak);
     }
+    // with diodes or transistors the dot speed has a floor of 1 µA, so the picoamperes of a junction that is off look still
+    const dotI = hasNonlinear(els) ? Math.max(Iscale, 1e-6) : Iscale;
     if (running && Iscale > 0) for (const b of BR) {
       const I = cleanI(ivI(b.id)); if (!isFinite(I) || !I) continue;
-      phase.set(b.id, ((phase.get(b.id) || 0) + 2 * I / Iscale * dt) % 1000);
+      phase.set(b.id, ((phase.get(b.id) || 0) + 2 * I / dotI * dt) % 1000);
     }
     drawAll();
     if (S.mode !== 'dc') {

@@ -5824,9 +5824,10 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "solids"
+        "solids",
+        "circuits"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Crystals, Bands and Semiconductors (Junction view): ideal pn junction I = I₀(e^(eV/kT) − 1), depletion region and band diagram, LED photon energy and band gap; worksheet pn-junction. Junction transistor not covered.",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Crystals, Bands and Semiconductors (Junction view): ideal pn junction I = I₀(e^(eV/kT) − 1), depletion region and band diagram, LED photon energy and band gap; worksheet pn-junction. Circuits demo: real 1N4148 diode (ideality factor) and the 2N3904 junction transistor, I_C = βI_B, saturation, a common emitter amplifier; worksheet junction-transistor.",
       "unit": "condensed-matter"
     },
     {
@@ -6363,7 +6364,8 @@
     {
       "demo": "circuits",
       "course": [
-        "physics-2"
+        "physics-2",
+        "modern"
       ],
       "sections": [
         {
@@ -6455,17 +6457,23 @@
           "vol": 2,
           "sec": "15.5",
           "title": "Resonance in an AC Circuit"
+        },
+        {
+          "vol": 3,
+          "sec": "9.7",
+          "title": "Semiconductor Devices"
         }
       ],
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "One demo, several handouts. AC Chapter 15 references are going-further/later material, not required syllabus coverage. No microscopic resistivity model. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance.",
+      "note": "One demo, several handouts. AC Chapter 15 references are going-further/later material, not required syllabus coverage. No microscopic resistivity model. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance. Open builder with starter circuits (2026-10-24, Claude): 1N4148 diode, red, green and blue LEDs and a 2N3904 junction transistor (NPN or PNP), solved exactly with the Shockley and Ebers–Moll equations; Vol. 3 §9.7 transistor (I_C = βI_B) with worksheet junction-transistor.",
       "handouts": [
         "dc-circuits",
         "rc-circuits",
         "rlc-transients",
-        "ac-circuits"
+        "ac-circuits",
+        "junction-transistor"
       ],
       "title": "Circuits",
       "url": "demos/circuits.html"

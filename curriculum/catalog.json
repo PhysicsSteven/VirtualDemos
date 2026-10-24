@@ -979,7 +979,7 @@
     {
      "demo": "circuits",
      "title": "Circuits",
-     "desc": "Everything in one place: build DC circuits with batteries, bulbs and meters, charge a capacitor through a resistor, drive an RLC circuit to resonance, and watch circuits ring down on their own.",
+     "desc": "Build any circuit, from Ohm's law and voltage dividers to rectifiers and transistor amplifiers: batteries, bulbs, meters, capacitors, inductors, diodes, LEDs and junction transistors, in DC, in time or with AC.",
      "tags": [
       "circuits",
       "RC",

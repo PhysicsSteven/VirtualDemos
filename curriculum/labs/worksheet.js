@@ -88,7 +88,8 @@
     'resolution' /* Circular Apertures and Resolution, 2026-10-24 */,
     'holography' /* Holography, 2026-10-24 */,
     'thin-films', 'electron-diffraction', 'x-ray-diffraction' /* the last two: Electron Diffraction demo */, 'em-waves' /* 2026-10-24 */,
-    'double-slit', 'diffraction-grating', 'single-slit' /* the last two: Diffraction Grating demo (grating, Single slit aperture), 2026-10-24 */];
+    'double-slit', 'diffraction-grating', 'single-slit' /* the last two: Diffraction Grating demo (grating, Single slit aperture), 2026-10-24 */,
+    'junction-transistor' /* Circuits demo, diode and transistor, 2026-10-24 */];
   ENABLED.push(...PHYSICS_II);
   /* Helpers for the Physics II maps. parts: the part values a Circuits row carries (R1_ohm, C1_F, L1_H, B1_emf_V, B1_r_ohm, S1_state),
      optionally only those whose column matches a pattern. pick: the first column matching a pattern that has a value in this row
@@ -98,6 +99,7 @@
   const parts = (r, only) => Object.keys(r).map((k) => /^([A-Za-z]+\d+)_(r_ohm|emf_V|ohm|F|H|state)$/.exec(k))
     .filter((x) => x && r[x[0]] !== '' && r[x[0]] != null && (!only || only.test(x[0])))
     .map(([k, n, u]) => (u === 'state' ? `${n} ${r[k]}` : u === 'r_ohm' ? `${n} r = ${r[k]} Ω` : `${n} = ${r[k]} ${PART_UNIT[u]}`)).join(', ');
+  const ohms = (R) => (R >= 1e6 ? +(R / 1e6).toPrecision(4) + ' MΩ' : R >= 1e3 ? +(R / 1e3).toPrecision(4) + ' kΩ' : R + ' Ω');
   const pick = (re) => (r) => { const k = Object.keys(r).find((c) => re.test(c) && r[c] !== '' && r[c] != null); return k ? r[k] : ''; };
   const json = (t) => { try { return JSON.parse(t) || {}; } catch (_) { return {}; } };
   const FD_MODE = { magnet: 'magnet and coil', gen: 'generator', coils: 'two coils', rails: 'sliding bar', self: 'self inductance' };
@@ -106,6 +108,10 @@
     'rc-circuits': { demo: 'Circuits', cols: ['t_s', pick(/^V_C\d+_V$/), pick(/^I_.+_A$/), 'W_sources_J', 'U_C_J', 'heat_J'] },
     'rlc-transients': { demo: 'Circuits', cols: [(r) => [r.row, r.setup, parts(r, /_ohm$/)].filter(Boolean).join(', '), 't_s', pick(/^V_C\d+_V$/), pick(/^I_L\d+_A$/), 'U_C_J', 'U_L_J', 'heat_J'] },
     'ac-circuits': { demo: 'Circuits', cols: [(r) => [r.row, parts(r)].filter(Boolean).join(', '), 'f_Hz', 'V0_peak_V', 'Irms_A', 'phase_deg', 'P_avg_W'] },
+    /* Reading | Setup and parts | A1 current (A) | A2 current (A) | Voltmeter (V) | ln(I_A1 / 1 A) (typed) | A2/A1 (typed). One row per
+       reading; the part columns here have names such as R_B_ohm and Q1_beta, which parts() does not match. */
+    'junction-transistor': { demo: 'Circuits', cols: ['row', (r) => [r.setup, Object.keys(r).map((k) => /^(.+)_(ohm|emf_V|beta)$/.exec(k)).filter((x) => x && r[x[0]] !== '' && r[x[0]] != null)
+      .map(([k, n, u]) => (u === 'beta' ? `${n} β = ${r[k]}` : u === 'ohm' ? `${n} = ${ohms(+r[k])}` : `${n} = ${r[k]} ${PART_UNIT[u]}`)).join(', ')].filter(Boolean).join(', '), 'I_A1_A', 'I_A2_A', pick(/^V_.+_V$/), null, null] },
     capacitors: { demo: 'Capacitors and Dielectrics', cols: [(r) => [r.row, r.preset, r.battery && String(r.preset).indexOf(r.battery) < 0 ? r.battery : ''].filter(Boolean).join(', '), 'd_m', 'A_m2', 'insertion_fraction', 'C_F', 'Q_C', 'V_volts', 'U_J'] },
     'coulomb-sandbox': { demo: 'Coulomb Sandbox', cols: [(r, h) => [r.row, h['config ' + r.config], h['config ' + r.config + ' charges']].filter(Boolean).join(', '),
       'x_m', 'y_m', null, 'V_volts', 'E_V_per_m', 'E_direction_deg'] },

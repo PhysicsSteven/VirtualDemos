@@ -8,11 +8,12 @@ time: 15 to 25 minutes per mode; one class period for all three
 - Kirchhoff's rules hold in every circuit at every instant: currents into a junction equal currents out, and voltage changes around a loop add to zero.
 - Series parts share the battery voltage; parallel parts each get all of it. A real battery's terminal voltage ε − Ir falls as its current rises.
 - A capacitor's voltage and an inductor's current cannot jump; they change exponentially with τ = RC or L/R. An LC circuit oscillates at ω₀ = 1/√(LC); R damps it, critically at R = 2√(L/C). Charging a capacitor through any resistor stores half the battery's work and heats the resistor with the other half.
+- A diode passes current one way, with I growing tenfold for each 0.1 V or so; a junction transistor's small base current controls a collector current β times larger (I_C = βI_B), until the collector circuit cannot carry more and it saturates like a closed switch.
 - With a sine source, X_C = 1/(ωC) and X_L = ωL set the current and its phase; a series RLC circuit resonates at f₀ = 1/(2π√(LC)) with half power width Δf = f₀/Q.
 
 ## Before class
 
-Students should know V = IR and Q = CV; the AC part needs sines and phasors. Switching between the three modes, **DC**, **In time** and **AC**, keeps the circuit when it has something to show there. Links ending #dc, #rc, #transients or #ac open a mode.
+Students should know V = IR and Q = CV; the AC part needs sines and phasors. Switching between the three modes, **DC**, **In time** and **AC**, keeps the circuit when it has something to show there. Links ending #dc, #rc, #transients or #ac open a mode. The starter row (Ohm's law, Diode, LED colours, Half wave rectifier, Transistor switch, Amplifier) opens with #ohm, #diode, #led, #rectifier, #transistor and #amplifier. Every part can be added to any circuit, so the demo is also an open circuit builder.
 
 ## Running it in class
 
@@ -23,7 +24,8 @@ Students should know V = IR and Q = CV; the AC part needs sines and phasors. Swi
 5. **RL rise and decay**, **LC oscillation**, **RLC damping** (Q6, Q7). Change R2 with its value grip and watch ζ under Natural response.
 6. **AC: Capacitor only**, **Inductor only** (Q8): the rotating phasors beside the scope project onto the traces. **Below resonance** shows the voltage phasors tip to tail (Q9).
 7. **At resonance**, **High Q vs low Q**, **Sweep**. Then press **In time**: the same circuit is switched on at t = 0 and its current builds up over several cycles (Q10).
-8. **For a lab.** Tick **Blind: hide predictions and answers** under **Lab**: it hides f₀, Δf, Q, τ, ζ and the like, so students measure them. In time, **Step forward** moves on by the chosen **Step Δt**; click or drag on the scope to place the time cursor, which reads every channel at that instant. **Capture reading** fills a table in each mode, and **Export to worksheet** sends it to the matching student worksheet, with the circuit in the CSV header.
+8. **Diodes and transistors.** **Diode**: change the resistor and watch the diode voltage barely move while the current changes by decades (Q11). **LED colours**: red lights first, blue needs the most voltage. **Half wave rectifier**: the probe shows the smoothed output and its ripple. **Transistor switch**: raise R_B until the LED dims (Q12). **Amplifier**: the probe shows the collector swing, about ten times the input and inverted.
+9. **For a lab.** Tick **Blind: hide predictions and answers** under **Lab**: it hides f₀, Δf, Q, τ, ζ and the like, so students measure them. In time, **Step forward** moves on by the chosen **Step Δt**; click or drag on the scope to place the time cursor, which reads every channel at that instant. **Capture reading** fills a table in each mode, and **Export to worksheet** sends it to the matching student worksheet, with the circuit in the CSV header.
 
 ## Questions
 
@@ -47,11 +49,16 @@ Students should know V = IR and Q = CV; the AC part needs sines and phasors. Swi
 
 **Q10.** For the same parts find f₀, Q = (1/R)√(L/C) and the half power width, first for R = 22 Ω and then for R = 10 Ω. In High Q vs low Q (R = 10 Ω) press In time: the source is switched on at t = 0. The transient decays as e^(−Rt/2L). How long is that decay time, and about how many cycles is it?
 
+**Q11.** In Diode (2.0 V battery), the current goes from 1.7 µA at R = 1 MΩ to 1.4 mA at 1 kΩ. By how much does the diode voltage change? Why is "a silicon diode drops 0.6 to 0.7 V" a good rule of thumb?
+
+**Q12.** In Transistor switch (9 V, R_C = 470 Ω, red LED, β = 100), find I_B and I_C for R_B = 1 MΩ and for 10 kΩ, taking V_BE = 0.7 V. Why is the second I_C not 100 I_B?
+
 ## Common misconceptions
 
 - **"Current gets used up by the first bulb."** The same current comes out of a part as goes in. What the part takes is energy, q ΔV per charge.
 - **"No current flows in a circuit with a capacitor."** Charge flows onto one plate and off the other while the voltage changes. Only in the DC steady state is the current zero.
 - **"An inductor's voltage is set by its current."** It is set by how fast the current changes, V = L dI/dt: a steady current gives none, a current forced to stop suddenly gives a huge one.
+- **"A transistor makes current."** It controls it: the collector current comes from the battery, and the transistor sets how much flows, using the small base current.
 - **"The rms voltages around an AC loop must add to the source voltage."** The instantaneous voltages add, at every instant, and so do the phasors. The rms values do not, because the voltages peak at different times.
 
 ## Physics behind the demo
@@ -60,4 +67,5 @@ Students should know V = IR and Q = CV; the AC part needs sines and phasors. Swi
 - In time, the circuit equations (I = dQ/dt, V = L dI/dt) and the energies are integrated exactly between switch events (matrix exponential). Where an ideal circuit would need an infinite current or voltage, a 1 mΩ contact resistance or 1 MΩ spark path stands in.
 - AC is the exact steady state from complex impedances, per source frequency plus the DC part. Meters read rms; the scope and phasors use peak values.
 - Bulbs are fixed resistors with no thermal lag (glow ∝ power, full at 4 W); a real filament's resistance rises as it heats.
-- The time cursor is exact: between stored samples the state is carried to the cursor time by the same matrix exponential, not drawn as a straight line.
+- Diodes, LEDs and transistors use real part data: a 1N4148 diode (Shockley equation with n = 1.906 and 0.65 Ω series resistance), catalogue LEDs (forward voltage at 20 mA, n = 2 assumed) and a 2N3904 transistor (Ebers–Moll, β a setting, default 100), all at 27 °C. DC solves them by Newton's method to 10⁻¹⁰ V; AC uses the small signal model about the DC operating point; In time steps them with TR-BDF2 and adaptive steps (relative error 10⁻⁶), so with them the time stepping is very accurate but not exact. Left out: breakdown, junction capacitance, the Early effect. Junction currents above 1 A are continued linearly, since a real part would have burned out.
+- The time cursor is exact in circuits without diodes or transistors: between stored samples the state is carried to the cursor time by the same matrix exponential, not drawn as a straight line.
