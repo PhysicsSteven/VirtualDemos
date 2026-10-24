@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -61,6 +63,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
 #can { touch-action: none; outline: none; }
+#pane canvas.vd3d { position: absolute; inset: 0; pointer-events: none; }
+#can { position: relative; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
@@ -148,6 +152,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div>
         <button type="button" class="btn sq" id="zOut" aria-label="Zoom out">−</button>
         <button type="button" class="btn sq" id="zIn" aria-label="Zoom in">+</button>
+        <div class="seg" role="group" aria-label="Perspective" id="viewSeg">
+          <button type="button" data-dim="3d" aria-pressed="false">3D</button>
+          <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
+        </div>
         <span class="count mono" id="count" aria-live="off"></span>
       </div>
       <div class="pane" id="pane">
@@ -864,6 +872,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let throwing = null, hover = null, drag = null, hoverId = null, zvcGrip = null, lastDrawT = null, placedLabels = [];
   function drawAll() {
     if (!T || !W || !LPT) return;
+    if (L3.on) { updateCamera(); draw3D(); return; }
     updateCamera();
     const c = ctx, ps = projScale(), mu = S.mu, rotF = S.frame === 'rot', sys = sysNow(), [R1, R2] = radii();
     c.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -1430,6 +1439,157 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const retheme = () => { tokens(); drawAll(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+  // ---------- 3D: the effective potential as a landscape (three.js through demos/lib/vd3kit.js) ----------
+  // The rotating frame drawn as a surface whose height falls as 2Ω rises: z = −A ln(1 + (2Ω − C_L4)/s), with s = (C_L1 − C_L4)/3.
+  // 2Ω is smallest at L4 and L5, so they are the hilltops; L1, L2 and L3 are saddles (mountain passes); the two masses sit in
+  // wells, cut off at a floor. The log keeps the tiny differences between the points visible beside the deep wells; the shape and
+  // the order of heights are exact, the vertical scale is a choice. Ground where 2Ω < C (no particle with this C can reach it)
+  // takes the forbidden colour, as in the flat view. Particles ride on the surface at their exact (x, y). Flat stays the place to
+  // throw particles and drag the launch and the zero velocity curve; here a click drops a particle at rest.
+  const L3 = { on: false, S: null, mesh: null, key: '', ckey: '', dots: null, trails: null, b1: null, b2: null, marks: [], o: { th: -Math.PI / 2, ph: 0.72, zoom: 1 }, ext: 1, A: 0.1, cx: 0, cy: 0 };
+  const L3N = 170;
+  function hz(x, y) {
+    const C4 = CL.L4, sc = Math.max(CL.L1 - C4, 1e-14) / 3, d = omega2(S.mu, x, y) - C4;
+    return -L3.A * Math.min(Math.log1p(Math.max(0, isFinite(d) ? d : 1e30) / sc), 6);
+  }
+  function init3D() {
+    const S3 = VD3K.stage(pane, { before: can, fov: 34, near: 0.0005, far: 400, fogAt: [1.1, 2.1] });
+    if (!S3) return false;
+    L3.S = S3; S3.el.classList.add('vd3d');
+    const g = new THREE.BufferGeometry(), n = (L3N + 1) * (L3N + 1);
+    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3 * n), 3));
+    g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(3 * n), 3));
+    const idx = []; for (let j = 0; j < L3N; j++) for (let i = 0; i < L3N; i++) { const a = j * (L3N + 1) + i, b = a + 1, c = a + L3N + 1, d = c + 1; idx.push(a, c, b, b, c, d); }
+    g.setIndex(idx); L3.d = new Float32Array(n);
+    L3.mesh = new THREE.Mesh(g, new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.85, metalness: 0, side: THREE.DoubleSide }));
+    S3.scene.add(L3.mesh);
+    L3.trails = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ vertexColors: true, transparent: true, opacity: 0.75 }));
+    S3.scene.add(L3.trails);
+    L3.b1 = VD3K.star(S3, { r: 1, color: '#ffc34d', glow: 3.2 }); L3.b2 = new THREE.Mesh(new THREE.SphereGeometry(1, 32, 20), new THREE.MeshStandardMaterial({ color: '#c79c6e', roughness: 0.7 }));
+    S3.scene.add(L3.b1, L3.b2);
+    for (let k = 0; k < 5; k++) { const m = new THREE.Mesh(new THREE.TorusGeometry(1, 0.16, 8, 32), new THREE.MeshBasicMaterial({ color: '#d0453a' })); S3.scene.add(m); L3.marks.push(m); }
+    S3.sun.position.set(-0.8, -1.6, 2.4);
+    L3.ray = new THREE.Raycaster();
+    return true;
+  }
+  function surface3D(ext) {
+    const S3 = L3.S, pos = L3.mesh.geometry.attributes.position, half = ext * 1.35, x0 = L3.cx - half, y0 = L3.cy - half, st = 2 * half / L3N;
+    for (let j = 0, k = 0; j <= L3N; j++) for (let i = 0; i <= L3N; i++, k++) {
+      const x = x0 + i * st, y = y0 + j * st, z = hz(x, y); pos.setXYZ(k, x, y, z); L3.d[k] = omega2(S.mu, x, y);
+    }
+    pos.needsUpdate = true; L3.mesh.geometry.computeVertexNormals(); L3.mesh.geometry.computeBoundingSphere(); L3.ckey = '';
+    void S3;
+  }
+  function colour3D() {
+    const c = L3.mesh.geometry.attributes.color, pos = L3.mesh.geometry.attributes.position, dk = VD3.dark();
+    const lo = new THREE.Color(dk ? '#0f2440' : '#4a74a8'), mid = new THREE.Color(dk ? '#3a6a8a' : '#9cc0d8'), hi = new THREE.Color(dk ? '#c9b48a' : '#f3e7c9'), fb = new THREE.Color(T.forbid), q = new THREE.Color();
+    for (let k = 0; k < c.count; k++) {
+      const u = -pos.getZ(k) / L3.A / 6;   /* 0 at the hilltops, 1 at the floor; bands every 1/1.6 of a log step */
+      const v = Math.min(1, Math.pow(u, 0.7)); if (v < 0.5) q.copy(hi).lerp(mid, v * 2); else q.copy(mid).lerp(lo, v * 2 - 1);
+      if (L3.d[k] < S.C) q.lerp(fb, 0.75);
+      c.setXYZ(k, q.r, q.g, q.b);
+    }
+    c.needsUpdate = true;
+  }
+  function draw3D() {
+    const S3 = L3.S; if (!S3) return;
+    if (S.frame !== 'rot') { L3.view.set('flat'); return; }
+    S3.size(W, H);
+    const ext = Math.max(W, H) / 2 / V.s, key = [S.mu, Math.round(Math.log(ext) * 8)].join('|');
+    if (key !== L3.key || Math.hypot(V.x0 - L3.cx, V.y0 - L3.cy) > 0.12 * ext) {
+      if (key !== L3.key) L3.ext = ext;
+      L3.cx = V.x0; L3.cy = V.y0; L3.A = 0.06 * L3.ext; surface3D(L3.ext);
+      if (key !== L3.key) {   /* particle spheres sized to the view */
+        if (L3.dots) L3.S.dispose(L3.dots);
+        L3.dots = VD3K.particles(S3, { n: 900, r: L3.ext * 0.0065, seg: 8 }); S3.scene.add(L3.dots);
+      }
+      L3.key = key;
+    }
+    const ckey = S.C + '|' + T.forbid + '|' + VD3.dark() + '|' + L3.key + '|' + L3.cx;
+    if (ckey !== L3.ckey) { colour3D(); L3.ckey = ckey; }
+    const e = L3.ext, rmin = e * 0.03, [R1, R2] = radii(), sys = sysNow(), floor = -L3.A * 6;
+    L3.b1.position.set(-S.mu, 0, floor + Math.max(R1, rmin)); L3.b1.scale.setScalar(Math.max(R1, rmin));
+    L3.b2.position.set(1 - S.mu, 0, floor + Math.max(R2, rmin * 0.7)); L3.b2.scale.setScalar(Math.max(R2, rmin * 0.7));
+    L3.b2.material.color.set(sys.m2 === 'Earth' ? '#3f74c9' : sys.m2 === 'Moon' ? '#9a9a9a' : '#c79c6e');
+    L3.b1.tint(sys.m1 === 'Earth' ? '#6aa0ff' : '#ffc34d');
+    ['L1', 'L2', 'L3', 'L4', 'L5'].forEach((k, i) => { const p = LPT[k], m = L3.marks[i]; m.position.set(p.x, p.y, hz(p.x, p.y) + e * 0.004); m.scale.setScalar(e * 0.018); m.visible = S.show.lab; });
+    // particles and their trails, on the surface
+    const dz = e * 0.008, cc = new THREE.Color(); let k = 0;
+    const segs = [], cols = [];
+    for (const p of parts) {
+      cc.set(T[COLS[p.col]] || T.accent);
+      if (k < 900) { L3.dots.put(k, p.s[0], p.s[1], hz(p.s[0], p.s[1]) + dz, cc.clone()); k++; }
+      if (S.show.trail && p.n > 1) {
+        const stride = Math.max(1, Math.floor(p.n / (p.swarm ? 120 : 1500))); let prev = null;
+        for (let m = 0; m < p.n; m += stride) {
+          const j = ((p.head - p.n + m + p.cap) % p.cap) * 5, x = p.buf[j], y = p.buf[j + 1], z = hz(x, y) + dz * 0.5;
+          if (prev) { segs.push(prev[0], prev[1], prev[2], x, y, z); cols.push(cc.r, cc.g, cc.b, cc.r, cc.g, cc.b); }
+          prev = [x, y, z];
+        }
+      }
+    }
+    L3.dots.show(k); L3.dots.done();
+    const tg = L3.trails.geometry; tg.setAttribute('position', new THREE.Float32BufferAttribute(segs, 3)); tg.setAttribute('color', new THREE.Float32BufferAttribute(cols, 3)); tg.computeBoundingSphere();
+    // camera on the flat view's centre and zoom
+    const tz = Math.max(floor * 0.5, hz(V.x0, V.y0));
+    const dist = (Math.min(W, H) / 2 / V.s) / Math.tan(S3.cam.fov * Math.PI / 360) * 1.12 / Math.min(1, W / H);
+    S3.place(L3.o, [V.x0, V.y0, tz], dist);
+    S3.render();
+    overlay3D();
+  }
+  function overlay3D() {
+    const c = ctx, ps = projScale(), sys = sysNow();
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, W, H);
+    const P3 = (x, y) => L3.S.project([x, y, hz(x, y)]);
+    if (S.show.lab) for (const k of ['L1', 'L2', 'L3', 'L4', 'L5']) {
+      const p = LPT[k], q = P3(p.x, p.y); if (q[2] > 1 || q[0] < -40 || q[0] > W + 40 || q[1] < -20 || q[1] > H + 20) continue;
+      const tag = sys.tags && sys.tags[k] ? k + ' · ' + sys.tags[k] : k;
+      label(c, tag + (k === 'L4' || k === 'L5' ? ', hilltop' : ', saddle'), q[0], q[1] - 12 * ps, T.pos, 'center', 'bottom', true);
+    }
+    const f = L3.A * 6;
+    for (const [x, name] of [[-S.mu, sys.m1], [1 - S.mu, sys.m2]]) { const q = L3.S.project([x, 0, -f]); if (q[2] < 1 && q[0] > 0 && q[0] < W && q[1] > 0 && q[1] < H) label(c, name, q[0], q[1] + 16 * ps, T.ink, 'center', 'top'); }
+    c.font = `${11 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText('Height: −ln(1 + (2Ω − C_L4)/s), not to scale · forbidden ground shaded · click to drop', 10, H - 8);
+  }
+  // pointer in 3D: drag turns the view, a click drops a particle at rest in the rotating frame
+  (() => {
+    let down = null;
+    const on = () => L3.on && L3.S;
+    can.addEventListener('pointerdown', (ev) => {
+      if (!on()) return; ev.stopImmediatePropagation(); ev.preventDefault();
+      can.focus({ preventScroll: true }); const [x, y] = evXY(ev); down = { x, y, lx: x, ly: y, moved: false };
+      try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+    }, true);
+    can.addEventListener('pointermove', (ev) => {
+      if (!on()) return; ev.stopImmediatePropagation();
+      if (!down) { can.style.cursor = 'grab'; return; }
+      const [x, y] = evXY(ev);
+      if (!down.moved && Math.hypot(x - down.x, y - down.y) > 5) down.moved = true;
+      if (down.moved) { L3.o.th -= (x - down.lx) * 0.008; L3.o.ph = Math.max(0.05, Math.min(1.4, L3.o.ph - (y - down.ly) * 0.006)); down.lx = x; down.ly = y; can.style.cursor = 'grabbing'; drawAll(); }
+    }, true);
+    const up = (ev) => {
+      if (!on()) return; ev.stopImmediatePropagation();
+      const d = down; down = null; can.style.cursor = 'grab'; if (!d || d.moved || ev.type === 'pointercancel') return;
+      const r = L3.ray; r.setFromCamera({ x: d.x / W * 2 - 1, y: 1 - d.y / H * 2 }, L3.S.cam);
+      const hit = r.intersectObject(L3.mesh)[0]; if (!hit) return;
+      if (addParticle([hit.point.x, hit.point.y, 0, 0])) { custom(); if (!reduce && !playing) setPlaying(true); }
+      readouts(); drawAll();
+    };
+    can.addEventListener('pointerup', up, true); can.addEventListener('pointercancel', up, true);
+    can.addEventListener('pointerleave', (ev) => { if (on()) ev.stopImmediatePropagation(); }, true);
+    can.addEventListener('wheel', (ev) => { if (!on()) return; ev.stopImmediatePropagation(); ev.preventDefault(); zoom(Math.exp(-ev.deltaY * 0.0015)); }, { capture: true, passive: false });
+    can.addEventListener('dblclick', () => { if (on()) { L3.o.th = -Math.PI / 2; L3.o.ph = 0.72; drawAll(); } });
+  })();
+  L3.view = VD3K.view({
+    seg: '#viewSeg', init: init3D,
+    status: (m) => { $('presetHint').textContent = m; },
+    change: (v) => {
+      L3.on = v; if (L3.S) L3.S.el.style.display = v ? '' : 'none';
+      if (v && S.frame !== 'rot') setFrame('rot');
+      if (T) drawAll();
+    }
+  });
 
   // ---------- loop ----------
   // The simulated time per frame follows a smoothed frame interval, so one slow frame does not make everything lurch forward.
