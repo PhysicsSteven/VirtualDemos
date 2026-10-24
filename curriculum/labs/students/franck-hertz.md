@@ -58,7 +58,7 @@ Turn Blind on before you start.
 
 **Retarding voltage.** At 180 °C, sweep once with the retarding voltage at zero. Write down what happens to the maxima; there is nothing to record.
 
-**Neon (if time allows).** Switch to the neon tube, sweep to 80 V and mark the maxima. Watch where the glowing layers form.
+**Neon.** Switch to the neon tube, sweep to 80 V and mark the maxima. Watch where the glowing layers form.
 
 ## Data
 

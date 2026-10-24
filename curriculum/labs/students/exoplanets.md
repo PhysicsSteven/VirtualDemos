@@ -13,7 +13,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§13.4 and 13.5 (orbits and K
 **Using the demo.**
 
 - One planet orbits its star. The top view shows the orbit from above, the telescope view what a distant observer would see, and below them the star's brightness and its velocity toward or away from us (radial velocity) through one orbit. Drag the planet or either graph to move in time; Zoom on transit spreads the transit across the graph.
-- Change the star's mass and radius, the planet's mass and radius, and the orbit. The planet and orbit sliders are logarithmic.
+- Change the star's mass and radius, the planet's mass and radius, and the orbit. The star's radius, the planet's mass and radius, and the orbit's radius are on logarithmic sliders.
 - The star's middle is brighter than its edge (limb darkening, with fixed Sun like coefficients), so the dip in brightness is not exactly $$(R_p/R_s)^2$$. The planet's own light is ignored.
 - Noise adds random scatter to each measurement. With noise, the readouts and Record reading give the measurement nearest the cursor and its time; without noise, the true curves at the cursor.
 - New mystery system draws a star with a transiting planet. Its size, mass and orbit are hidden, the measurements are noisy, and only the star's mass and radius are given. Reveal the planet shows them once you have your answers. Choosing a setup or moving a slider ends the mystery.

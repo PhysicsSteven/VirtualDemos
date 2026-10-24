@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §1.3. Access for free at https
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Rod in a water jacket; Water near 4 °C (these two use the Expansion view, the subject of this worksheet); Hot metal in water; Mystery metal; Gas thermometer; House wall (the other three worksheets).
+**Setups in the demo:** Rod in a water bath; Water near 4 °C (these two use the Expansion view, the subject of this worksheet); Hot metal, cool water; Mystery block; Gas thermometer; House wall in winter (the other three worksheets; a fifth worksheet, on cooling, uses the Cooling view).
 
 **Using the demo.**
 
@@ -51,7 +51,7 @@ Hot water jackets and baths can scald, and glassware can crack when heated or co
 
 ## Procedure
 
-**The aluminum rod.** Start with the Rod in a water jacket setup. Record the gauge reading at bath temperatures from 0 °C to 100 °C, about every 10 °C.
+**The aluminum rod.** Start with the Rod in a water bath setup. Record the gauge reading at bath temperatures from 0 °C to 100 °C, about every 10 °C.
 
 **Two more rods.** Clear the readings and repeat for two other rods from the list, each in its own copy of the table.
 

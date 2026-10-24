@@ -11,7 +11,7 @@ time: 15 to 25 minutes
 
 ## Before class
 
-Students should know Faraday's law and the idea of magnetic flux. The demo shows a sphere 10.00 mm across in a cryostat inside a solenoid, with the field lines drawn exactly at equal steps of flux. Choose lead, tin, indium, mercury, aluminum or a mystery metal (Table 9.5 values), the temperature (0.30 to 10.00 K) and the applied field (0 to 100 mT). A magnetometer reads the sphere's moment and a Hall probe the field at its equator. A "perfect conductor" option shows what zero resistance alone would do. The graph shows the applied field against temperature with the critical field curve, or the moment against the field.
+Students should know Faraday's law and the idea of magnetic flux. The demo shows a sphere 10.00 mm across in a cryostat inside a solenoid, with the field lines drawn exactly at equal steps of flux. Choose lead, tin, indium, mercury, aluminum, gallium, zinc or a mystery metal (Table 9.5 values), the temperature (0.30 to 10.00 K) and the applied field (0 to 100 mT). A magnetometer reads the sphere's moment and a Hall probe the field at its equator. A "perfect conductor" option shows what zero resistance alone would do. The graph shows the applied field against temperature with the critical field curve, or the moment against the field.
 
 ## Running it in class
 

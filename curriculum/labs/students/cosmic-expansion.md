@@ -57,6 +57,8 @@ No hazards in the virtual lab.
 
 ## Procedure
 
+Turn Blind on before you start, so the readouts do not give the speeds, H or the ages.
+
 **Today, from the Milky Way.** Start with the Hubble's law today setup (Planck ΛCDM, home the Milky Way). Record the distances to A to E at t = 0, then at t = +0.1 Gyr. Export the ten rows.
 
 **From another galaxy.** Clear the readings, make any other galaxy home, and repeat at t = 0 and t = +0.1 Gyr. Send this to a new copy of the table.

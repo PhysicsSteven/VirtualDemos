@@ -55,7 +55,7 @@ No hazards in the virtual lab.
 
 **A softer repulsion.** Export, clear, set the repulsion exponent to 9 and record the energy at 0.20, 0.22, 0.23, 0.236, 0.24, 0.25 and 0.27 nm. Then turn the repulsion off and record the energy at 0.236, 0.20 and 0.15 nm. Send both to a new copy of the table.
 
-**The covalent bond of H₂.** Export, clear and choose the H₂ bond setup. Record the energy at separations from 0.040 to 0.300 nm: every 0.005 nm up to 0.100 nm, then every 0.020 nm up to 0.280 nm. Find the minimum to 0.001 nm and record it. Then switch to parallel spins and record the energy at 0.060, 0.074, 0.100 and 0.150 nm.
+**The covalent bond of H₂.** Export, clear and choose the H₂ bond setup. Record the energy at separations from 0.040 to 0.280 nm: every 0.005 nm up to 0.100 nm, then every 0.020 nm up to 0.280 nm. Find the minimum to 0.001 nm and record it. Then switch to parallel spins and record the energy at 0.060, 0.074, 0.100 and 0.150 nm.
 
 **Other molecules.** Export, clear, and for HCl, N₂ and Cl₂ find the separation with the lowest energy (to 0.001 nm) and record it, with one more reading at twice that separation.
 

@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §1.6. Access for free at https
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** House wall (the Conduction view, the subject of this worksheet); Hot metal in water; Mystery metal; Gas thermometer; Rod in a water jacket; Water near 4 °C (the other three worksheets).
+**Setups in the demo:** House wall in winter (the Conduction view, the subject of this worksheet); Hot metal, cool water; Mystery block; Gas thermometer; Rod in a water bath; Water near 4 °C (the other three worksheets; a fifth worksheet, on cooling, uses the Cooling view).
 
 **Using the demo.**
 
@@ -51,7 +51,7 @@ No hazards in the virtual lab. In a real one, the hot side of a conduction appar
 
 ## Procedure
 
-**The house wall.** Start with the House wall setup. Record a reading at the inside surface, at each boundary between layers and at the outside surface, and two or three readings inside each layer.
+**The house wall.** Start with the House wall in winter setup. Record a reading at the inside surface, at each boundary between layers and at the outside surface, and two or three readings inside each layer.
 
 **Without insulation.** Clear the readings, set the glass wool's thickness to 0 and repeat.
 

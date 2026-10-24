@@ -3,7 +3,7 @@ Student laboratory · Modern Physics
 
 Textbook: OpenStax *University Physics*, Vol. 2, §§11.3 and 11.7. Access for free at https://openstax.org/details/books/university-physics-volume-2.
 
-[Open the virtual e/m apparatus](https://physicssteven.github.io/VirtualDemos/demos/e-over-m.html)
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/e-over-m.html)
 
 <details class="about" markdown="1">
 <summary>About the demo</summary>
@@ -31,7 +31,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§11.3 and 11.7. Access for f
 
 ## Goal
 
-Measure $$e/m$$, the charge to mass ratio of the electron, the way J. J. Thomson first did in 1897: bend a beam of electrons into a circle with a known magnetic field and measure the radius.
+Measure $$e/m$$, the charge to mass ratio of the electron that J. J. Thomson first measured in 1897, by bending a beam of electrons into a circle with a known magnetic field and measuring the radius.
 
 ## Background
 

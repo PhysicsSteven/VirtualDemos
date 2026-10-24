@@ -203,7 +203,7 @@ HANDOUT_TOPIC = {
     'rotation-curves': 'Weighing a Galaxy',
     'black-holes': 'Black Holes and Lensing', 'hr-diagram': 'Stellar Lives and Cluster Ages', 'white-dwarf-cooling': 'White Dwarf Cooling and Crystallization',
     'ising': 'The Ising Phase Transition',
-    'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Lasers: Threshold and Cavity Modes', 'spin-resonance': 'Spin Resonance',
+    'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 
 

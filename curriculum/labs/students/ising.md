@@ -109,7 +109,7 @@ Keep the field at zero and the coupling ferromagnetic ($$J = +1$$) throughout.
 
 ## Uncertainty
 
-Monte Carlo readings carry a statistical error that shrinks as one over the square root of the number of independent samples, not of sweeps. Use the ± of $$\langle \lvert m\rvert\rangle$$ at $$L = 256$$ to find the uncertainty of $$\ln \langle \lvert m\rvert\rangle$$ there, and compare the scatter of your points about the line in Analysis 5 with these errors. For the Metropolis run at $$L = 128$$, how many independent samples were there, and how far would you trust its error bars (and its $$\tau_{\text{int}}$$, which is itself estimated from the same run)?
+Monte Carlo readings carry a statistical error that shrinks as one over the square root of the number of independent samples, not of sweeps. Use the ± of $$\langle \lvert m\rvert\rangle$$ at $$L = 256$$ shown in the demo's table (write it next to your reading) to find the uncertainty of $$\ln \langle \lvert m\rvert\rangle$$ there, and compare the scatter of your points about the line in Analysis 5 with these errors. For the Metropolis run at $$L = 128$$, how many independent samples were there, and how far would you trust its error bars (and its $$\tau_{\text{int}}$$, which is itself estimated from the same run)?
 
 ## Questions
 

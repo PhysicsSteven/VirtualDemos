@@ -75,7 +75,7 @@ Use the bench seed your instructor gives you (the demo starts with 2718), and tu
 
 1. Graph $$s$$ against $$f$$ for the 12 m bench and fit a straight line. From the slope find $$c$$, with its uncertainty from the slope.
 2. Compare the intercept with your reading at rest. Do the residuals show any difference between the two directions?
-3. Use the CW and CCW readings at 1000 rev/s alone: $$c = 4AD^2 \cdot 2\pi(f_\mathrm{CW} + f_\mathrm{CCW}) / (D + B)\,\lvert s_\mathrm{CW} - s_\mathrm{CCW} \rvert$$, with both speeds as positive meter readings. Does it agree with the fit?
+3. Use the CW and CCW readings at 1000 rev/s alone: $$c = \frac{4AD^2 \cdot 2\pi(f_\mathrm{CW} + f_\mathrm{CCW})}{(D + B)\,\lvert s_\mathrm{CW} - s_\mathrm{CCW} \rvert}$$, with both speeds as positive meter readings. Does it agree with the fit?
 4. Find $$c$$ from the 20 m run. By what factor did the slope grow from 12 m to 20 m? Compare with the factor $$A D^2/(D + B)$$ predicts.
 5. Compare your values of $$c$$ with the exact value. Which run gives the more precise result, and why?
 

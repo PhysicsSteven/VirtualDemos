@@ -22,7 +22,7 @@ Students should know Q = mcΔT and the idea of temperature as average kinetic en
 3. **Heat a crystal** (Atoms). Leave **Show bonds** on and colour the atoms by **Phase**. Start it and let the class watch the crystal pattern break up while the temperature holds near 66 K. Ask Q4.
 4. Keep going to boiling. Watch *Where the heat went*: on the plateaus the bond energy bar grows and the kinetic energy bar does not. Ask Q5. The sample may overheat briefly before the first vapor forms, then settle back: a real effect (superheating).
 5. **Higher pressure** (28 atm): the boiling plateau moves up (Q6).
-6. Optional: **Cool a vapor** shows condensation on the cold floor, with the temperature holding while bonds form.
+6. **Cool a vapor** shows condensation on the cold floor, with the temperature holding while bonds form.
 
 ## Questions
 

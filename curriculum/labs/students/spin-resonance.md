@@ -3,7 +3,7 @@ Student laboratory · Modern Physics
 
 Textbook: OpenStax *University Physics*, Vol. 3, §8.3. Access for free at https://openstax.org/details/books/university-physics-volume-3.
 
-[Open the virtual spin resonance apparatus](https://physicssteven.github.io/VirtualDemos/demos/spin-resonance.html)
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/spin-resonance.html)
 
 <details class="about" markdown="1">
 <summary>About the demo</summary>
@@ -116,4 +116,4 @@ Estimate how far you could move a cursor while still calling it the peak centre.
 
 ## What to hand in
 
-Prelab answers, the data table copies, the field calculations and the slow sweep check, what the empty phial and water showed, the three fitted graphs, $$g$$ and the two $$\Gamma$$ values with uncertainty, and answers to the questions. State whether you used real or virtual equipment and give the virtual seed if applicable.
+Prelab answers, the data table copies, the field calculations and the slow sweep check, what the empty phial and water showed, the three fitted graphs, $$g$$ and the two $$\Gamma$$ values with uncertainty, and answers to the questions. Identify simulated data, and give the virtual seed.

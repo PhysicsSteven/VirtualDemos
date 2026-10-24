@@ -35,7 +35,7 @@ The reaction dies out if $$k < 1$$ (subcritical), holds steady at $$k = 1$$ (cri
 ## Before the lab
 
 1. With $$k = 1.05$$, how many neutrons are there after 20 generations, starting from 1000? After 100? With $$k = 0.95$$?
-2. In the demo's sphere model no neutron is captured, so every neutron that does not escape causes a fission. If a share $$L$$ of the neutrons escape, show that $$k = \bar\nu(1 - L)$$. What share must escape at the critical size if $$\bar\nu = 2.57$$?
+2. In the demo's sphere model no neutron is captured, so every neutron that does not escape causes a fission. If a share $$L$$ of the neutrons escape, show that $$k = \bar\nu(1 - L)$$. What share must escape at the critical size if $$\bar\nu = 2.57$$ (the sphere model's value for the fast, 1.5 MeV neutrons in ²³⁵U)?
 3. A ²³⁵U sphere has density 18.9 g/cm³. What is its mass for $$R$$ = 8.0 cm?
 4. Why does the surface to volume ratio of a sphere, $$3/R$$, matter here?
 

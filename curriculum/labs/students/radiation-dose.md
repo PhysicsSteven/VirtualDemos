@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §10.7. Access for free at http
 
 **Using the demo.**
 
-- The Dose view has a γ ray point source in an open lead pot, an optional shield of lead, concrete or water just in front of it, and a dose rate meter on a bench. Choose the source (¹³⁷Cs, ⁶⁰Co, ⁹⁹ᵐTc or ¹⁸F), its activity, the distance $$r$$ to the meter, the shield and its thickness $$x$$, and the time spent at the meter. The distance scale on the bench is logarithmic.
+- The Dose view has a γ ray point source in an open lead pot, a shield of lead, concrete or water that can be put just in front of it, and a dose rate meter on a bench. Choose the source (¹³⁷Cs, ⁶⁰Co, ⁹⁹ᵐTc or ¹⁸F), its activity, the distance $$r$$ to the meter, the shield and its thickness $$x$$, and the time spent at the meter. The distance scale on the bench is logarithmic.
 - The meter reads the equivalent dose rate in µSv/h at the meter. The readouts give the absorbed dose rate in tissue, the equivalent dose rate, the dose over the chosen time (allowing for the source decaying), and how many days of average United States background radiation that dose equals.
 - The graphs show the dose rate against distance with no shield and against shield thickness at the present distance, with your recorded readings as dots and the model as a dashed line.
 - Record reading stores the source, activity, distance, shield, thickness, dose rate, time and dose. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
@@ -26,7 +26,7 @@ Measure how the dose rate from a γ ray source falls with distance and with shie
 
 ## Background
 
-The absorbed dose is the energy absorbed per kilogram of tissue, measured in grays (1 Gy = 1 J/kg; 1 rad = 0.01 Gy). Different radiations do different harm for the same absorbed dose, so the equivalent dose in sieverts is the absorbed dose times a weighting factor: 1 for γ rays and x rays, about 1 for β particles, and up to 20 for α particles (§10.7). A point source emits its γ rays equally in all directions, so they spread over a sphere of area $$4\pi r^2$$ and the dose rate falls as $$1/r^2$$. A shield removes photons from a narrow beam exponentially,
+The absorbed dose is the energy absorbed per kilogram of tissue, measured in grays (1 Gy = 1 J/kg; 1 rad = 0.01 Gy). Different radiations do different harm for the same absorbed dose, so the equivalent dose in sieverts is the absorbed dose times a weighting factor: 1 for γ rays and X rays, about 1 for β particles, and up to 20 for α particles (§10.7). A point source emits its γ rays equally in all directions, so they spread over a sphere of area $$4\pi r^2$$ and the dose rate falls as $$1/r^2$$. A shield removes photons from a narrow beam exponentially,
 
 $$\dot D = \dot D_0\, e^{-\mu x}, \qquad x_{1/2} = \frac{\ln 2}{\mu},$$
 

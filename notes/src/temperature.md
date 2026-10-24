@@ -13,7 +13,7 @@ time: 20 to 35 minutes
 
 ## Before class
 
-Students should know Q = mcΔT and the Celsius and Kelvin scales. The demo has four views: **Equilibrium** (two bodies joined by a 2.00 cm diameter conducting bar in a perfectly insulated box), **Thermometer** (a 1.000 L bulb of gas and a pressure gauge in a choice of baths), **Expansion** (a 1.000 m rod against a dial gauge, or 5.000 mL of liquid in a Pyrex flask with a 1.00 mm capillary) and **Conduction** (steady heat flow through up to three layers). All the material constants are from OpenStax University Physics Volume 2, Tables 1.2, 1.3 and 1.5. The speed buttons run the slow views faster than real time.
+Students should know Q = mcΔT and the Celsius and Kelvin scales. The demo has five views: **Equilibrium** (two bodies joined by a 2.00 cm diameter conducting bar in a perfectly insulated box), **Thermometer** (a 1.000 L bulb of gas and a pressure gauge in a choice of baths), **Expansion** (a 1.000 m rod against a dial gauge, or 5.000 mL of liquid in a Pyrex flask with a 1.00 mm capillary) **Conduction** (steady heat flow through up to three layers) and **Cooling** (a metal sphere in room air losing heat by convection and radiation, with or without a fan). All the material constants are from OpenStax University Physics Volume 2, Tables 1.2, 1.3 and 1.5. The speed buttons run the slow views faster than real time.
 
 ## Running it in class
 

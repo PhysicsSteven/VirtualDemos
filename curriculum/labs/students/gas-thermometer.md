@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§1.2 and 2.1. Access for fre
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Gas thermometer (the Thermometer view, the subject of this worksheet); Hot metal in water; Mystery metal; Rod in a water jacket; Water near 4 °C; House wall (the other three worksheets).
+**Setups in the demo:** Gas thermometer (the Thermometer view, the subject of this worksheet); Hot metal, cool water; Mystery block; Rod in a water bath; Water near 4 °C; House wall in winter (the other three worksheets; a fifth worksheet, on cooling, uses the Cooling view).
 
 **Using the demo.**
 

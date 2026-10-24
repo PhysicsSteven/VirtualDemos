@@ -60,7 +60,7 @@ A real hot plate and boiling water can burn. Use tongs or heat resistant gloves,
 
 **A second run.** Repeat the run with a different mass or heater power, and record only the times at which each stage begins and ends.
 
-**Optional: ethanol.** Boil 200 g of ethanol from 20 °C and measure its boiling point and latent heat of vaporization the same way.
+**Ethanol.** Boil 200 g of ethanol from 20 °C and measure its boiling point and latent heat of vaporization the same way.
 
 ## Data
 

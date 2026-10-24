@@ -82,7 +82,7 @@ The model's numbers are exact; the uncertainty is in the method. $$M = v^2r/G$$ 
 1. In a galaxy most of the light comes from within about 10 kpc of the center. If the visible matter were all there is, how should the speed at 20 kpc compare with the speed at 5 kpc?
 2. A flat rotation curve does not mean the galaxy turns like a solid wheel. Explain the difference, using the orbital periods at 8.2 kpc and 20 kpc in your data.
 3. Why could astronomers who measured only the bright inner parts of galaxies miss the dark matter? Use the dark matter share of $$v^2$$ at small and large $$r$$.
-4. Choose NGC 3198. Its disk and gas alone fall to about 75 km/s at 30 kpc while the measured speed stays near 150 km/s. By what factor is the mass inside 30 kpc larger than the visible mass?
+4. Choose NGC 3198. Its disk and gas alone fall to about 71 km/s at 30 kpc while the measured speed stays near 150 km/s. By what factor is the mass inside 30 kpc larger than the visible mass?
 5. A disk galaxy tilted by an angle $$i$$ from face on shows Doppler shifts of only $$v \sin i$$. What would you get for the mass of a galaxy if you forgot to correct for a tilt of 30°?
 
 ## What to hand in

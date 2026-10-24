@@ -55,7 +55,7 @@ The molar heat capacity is $$C = dQ/dT$$. For a classical solid, each atom vibra
 
 **Higher pressure.** Repeat with the Higher pressure setup (28 atm). Capture readings across the boiling plateau, and send them to the worksheet as a second copy of the table.
 
-**Optional: cooling.** Run Cool a vapor and watch the vapor condense on the cold floor. Note the temperature while it condenses, and whether the liquid freezes.
+**Cooling.** Run Cool a vapor and watch the vapor condense on the cold floor. Note the temperature while it condenses, and whether the liquid freezes.
 
 ## Data
 

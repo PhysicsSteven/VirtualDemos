@@ -23,7 +23,7 @@ Students should know B = μ₀I/(2πr), F = quB, E = λ/(2πε₀r), Faraday's l
 4. **Fast charges.** Electrons at 0.8c, the charge at 0.6c the other way. Switch to Charge's frame: the electrons move at 0.946c, not 1.4c, and are now more crowded than the ions, so the wire turns negative and pushes the electron away. Ask Q3.
 5. **Real copper wire.** To scale in speed. Switch frames: nothing visible changes, yet the force stays 2.355×10⁻²⁸ N, now electric (Q4).
 6. **Magnet and loop.** Einstein's 1905 opening example. In Magnet's frame the ring's charges are pushed by q(v × B); switch to Loop's frame and the same push is an induced E′ circling the axis. The two EMFs and −dΦ′/dt′ agree, and the plot traces the EMF as the magnet passes through. Ask Q8; then tell the class Einstein's point: the asymmetry is in the theory, not in the phenomena.
-7. **Moving point charge** and **Field transformation** (if time allows). At 0.8c the field squeezes into a pancake. A pure B field seen from a moving frame gains an E field (Q7).
+7. **Moving point charge** and **Field transformation**. At 0.8c the field squeezes into a pancake. A pure B field seen from a moving frame gains an E field (Q7).
 
 ## Questions
 

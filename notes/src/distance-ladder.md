@@ -7,7 +7,7 @@ time: 20 to 35 minutes (one rung alone takes 5 to 10)
 
 - Parallax is the ladder's only direct distance: d (pc) = 1/p (arcsec), with a reach set by the instrument's position accuracy.
 - A standard candle is an object whose luminosity we know. Comparing that with how bright it looks gives the distance through the inverse square law, written in magnitudes as m − M = 5 log₁₀(d / 10 pc).
-- Cepheids are standard candles because their period tells their luminosity (the Leavitt law). Type Ia supernovae are about 400,000 times brighter still, so they reach hundreds of Mpc.
+- Cepheids are standard candles because their period tells their luminosity (the Leavitt law). Type Ia supernovae are about 430,000 times brighter still, so they reach hundreds of Mpc.
 - Each rung is calibrated by the one below it, so an error in a low rung moves every distance above it, and with them H₀.
 - Hubble's law v = H₀d turns a redshift into a distance; 1/H₀ is a time scale of about 14 Gyr.
 

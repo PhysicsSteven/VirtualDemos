@@ -61,7 +61,7 @@ No hazards in the virtual lab.
 
 **Thresholds.** With the lines at $$kT = mc^2$$ showing, find the time at which the temperature falls to the electron's threshold and to the proton's, and write them down.
 
-**The microwave background.** Switch to the Microwave background view. Read the peak frequency of the spectrum at $$z$$ = 1090 and at $$z$$ = 0 from the graph. Then turn Blind off and write down the peak wavelength, the photon density and the time since the Big Bang at both redshifts.
+**The microwave background.** Switch to the Microwave background view and turn Blind on. Read the peak frequency of the spectrum at $$z$$ = 1090 and at $$z$$ = 0 from the graph. Then turn Blind off and write down the peak wavelength, the photon density and the time since the Big Bang at both redshifts.
 
 ## Data
 

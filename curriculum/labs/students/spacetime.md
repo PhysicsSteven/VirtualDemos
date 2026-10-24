@@ -35,7 +35,7 @@ Two observers disagree about the time and the place of an event, but they agree 
 
 $$s^2 = (ct)^2 - x^2 = (ct')^2 - (x')^2 .$$
 
-So for one event seen from frames at many speeds, a graph of $$(ct')^2$$ against $$(x')^2$$ is a straight line of slope 1 whose intercept is $$s^2$$. If $$s^2 > 0$$ the separation is timelike, and $$\sqrt{s^2}/c$$ is the proper time read by a clock that travels from the origin to the event. If $$s^2 < 0$$ it is spacelike, and $$\sqrt{-s^2}$$ is the distance between the events in the frame where they are simultaneous.
+So for one event seen from frames at many speeds, a graph of $$(ct')^2$$ against $$(x')^2$$ is a straight line of slope 1 whose intercept is $$s^2$$. If $$s^2 > 0$$ the separation is timelike, and $$\sqrt{s^2}/c$$ is the proper time read by a clock that moves at constant velocity from the origin to the event (any other path reads less, as the twins show). If $$s^2 < 0$$ it is spacelike, and $$\sqrt{-s^2}$$ is the distance between the events in the frame where they are simultaneous.
 
 A clock at rest in S that reads $$t$$ is read at time $$t' = \gamma t$$ in S′ (time dilation, §5.3). A rod of proper length $$L_0$$ moving along its length measures $$L = L_0/\gamma$$ (length contraction, §5.4). Events simultaneous in S are not simultaneous in S′ unless they are at the same place (§5.2).
 

@@ -8,13 +8,13 @@ Textbook: OpenStax *University Physics*, Vol. 3, §§7.3 and 7.6. Access for fre
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Step; Barrier, with one or two barriers (these use this worksheet); Square well and Oscillator (the energy levels worksheet); Free particle (the uncertainty principle worksheet); Double well.
+**Setups in the demo:** Step; Barrier, with one or two barriers (these use this worksheet); Square well, Oscillator and Double well (the energy levels worksheet); Free particle (the uncertainty principle worksheet).
 
 **Using the demo.**
 
 - An electron moves in one dimension. Positions are in nm, energies in eV and times in fs, and $$\hbar^2/2m = 0.0381$$ eV·nm².
 - The electron starts as a Gaussian wave packet of width σ, centred at $$x_0$$, with mean energy $$E_0 = \hbar^2k_0^2/2m$$. Set these on the card over the picture, then press Launch packet and Play.
-- The time dependent Schrödinger equation is solved on a grid of points 25 pm apart (Crank–Nicolson steps). The packet carries a spread of energies, wider for a narrow packet.
+- The time dependent Schrödinger equation is solved on a grid of points 25 pm apart (40 pm for two barriers; Crank–Nicolson steps). The packet carries a spread of energies, wider for a narrow packet.
 - Probability that reaches the edges of the view is absorbed and still counted. R is all the probability on the side the packet came from, T all of it on the far side, including what the edges have absorbed.
 - The Scattering readouts also show the plane wave T at $$E_0$$ and T averaged over the packet's energies, both from the formulas.
 - Record reading works once the packet has split. It stores the setup, the barrier height and width, the gap between two barriers, $$E_0$$, σ, the time and the measured R and T. Export to worksheet sends the readings to the Data table below. Clear starts a new series, which goes into a new copy of the table.
@@ -56,7 +56,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Barrier width.** Start with the Barrier setup. Set the height to 1.00 eV, and on the packet card set the centre to −20 nm, the width to 3 nm and the energy to 0.20 eV. (Starting far from the barrier keeps the tail of the packet from overlapping it at the start.) For barrier widths from 0.3 nm to 0.8 nm in steps of 0.1 nm, launch the packet, let it split and record a reading.
+**Barrier width.** Start with the Barrier setup. Set the height to 1.00 eV, and on the packet card set the centre to −15 nm, the width to 3 nm and the energy to 0.20 eV. (Starting far from the barrier keeps the tail of the packet from overlapping it at the start.) For barrier widths from 0.3 nm to 0.8 nm in steps of 0.1 nm, launch the packet, let it split and record a reading.
 
 **Packet energy.** Clear the readings. With the barrier 0.30 nm wide, record a reading for packet energies of 0.20, 0.40, 0.60, 0.80, 1.00, 1.20, 1.50 and 2.00 eV. Send this run to a new copy of the table.
 
@@ -85,7 +85,7 @@ Work out ln T yourself.
 
 ## Uncertainty
 
-The simulation has no noise, but it is not the plane wave the formulas describe. Compare your measured T with the plane wave value and with the value averaged over the packet, and say which the measurement follows. The grid of 25 pm also makes small numerical errors; estimate their size from the difference between the measured T and the packet average. Say why a packet that starts too close to the barrier, with its tail already through it, would give too large a T.
+The simulation has no noise, but it is not the plane wave the formulas describe. Compare your measured T with the plane wave value and with the value averaged over the packet, and say which the measurement follows. The grid also makes small numerical errors; estimate their size from the difference between the measured T and the packet average. Say why a packet that starts too close to the barrier, with its tail already through it, would give too large a T.
 
 ## Questions
 

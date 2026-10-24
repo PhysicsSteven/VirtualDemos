@@ -22,7 +22,7 @@ Students should know the electron volt and the idea of discrete energy levels. T
 4. **Why the first peak is not at 4.9 V.** The dashed lines at n × 4.89 V miss every peak by about the same amount. Drag **Contact potential U_c** to 0 and back: the curve slides, the spacing does not (Q4).
 5. **Too cold: few collisions**, then **Too hot: weak current.** Compare each with the dashed 180 °C ghost and read the mean free path and the fraction not scattered out of the beam (Q5, Q6).
 6. **Retarding voltage.** Ask the prediction in Q3, then set U_r to 0 at 180 °C and press **New sweep**. The maxima vanish.
-7. **Neon: glowing layers** (if time allows). The 18.7 eV excitations are followed by visible red and orange light, so the collision zones show up as glowing layers (Q7).
+7. **Neon: glowing layers**. The 18.7 eV excitations are followed by visible red and orange light, so the collision zones show up as glowing layers (Q7).
 
 ## Questions
 

@@ -21,7 +21,7 @@ Students should know the de Broglie relation p = h/λ, E = p²/2m for a free par
 3. **Barrier.** ⟨E⟩ = 0.30 eV, V₀ = 0.5 eV, a = 0.5 nm: once the packet splits, T ≈ 33%. Then set **Barrier width a** to 1.00 nm (Q3).
 4. **Square well.** With **Walls** on **Infinite**, it starts in the superposition of n = 1 and n = 2, sloshing with the 3.67 fs beat. Click the **n=2** level chip to drop it, leaving n = 1 alone: |ψ|² freezes and only the color turns (Q5). Click **n=2** again to bring the sloshing back.
 5. **Measure x.** In the well, press **Pause** and then **Measure x** twice; press **Play** and measure again. Press **Reset** to return to the prepared state, then **Measure 200 copies**, and let the histogram build up |ψ|² (Q7).
-6. **Oscillator** and **Double well** (if time allows). The oscillator's levels are evenly spaced, and its coherent state swings without spreading. In the double well the electron tunnels from one well to the other and back every 290 fs.
+6. **Oscillator** and **Double well**. The oscillator's levels are evenly spaced, and its coherent state swings without spreading. In the double well the electron tunnels from one well to the other and back every 290 fs.
 
 ## Questions
 

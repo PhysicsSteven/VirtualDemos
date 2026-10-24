@@ -14,7 +14,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§2.1, 2.2 and 2.4. Access fo
 
 - The box holds argon atoms (mass $$6.63\times10^{-26}$$ kg) moving in two dimensions. It is 30 nm high, and its right wall is a piston you can drag to make it from 15 to 50 nm wide. You choose the number of atoms, from 20 to 400, and the temperature, from 0.01 K to 1000 K.
 - The atoms are hard disks 0.5 nm across that bounce off each other and the walls without losing energy. Their size makes the pressure run a few percent above the ideal value, more when the box is crowded.
-- In two dimensions pressure is force per unit length of wall, in N/m (shown in mN/m), and the ideal gas law reads $$PA = NkT$$, with $$A$$ the box's area.
+- In two dimensions pressure is force per unit length of wall, in N/m (the readout picks nN/m, µN/m or mN/m; the recorded column is always in mN/m), and the ideal gas law reads $$PA = NkT$$, with $$A$$ the box's area.
 - The temperature is worked out from the atoms' kinetic energy, $$\langle \tfrac{1}{2}mv^2\rangle = kT$$ in two dimensions. The pressure is the momentum the atoms deliver to the walls per unit length per unit time, averaged over about a second on screen, so wait a few seconds after any change before recording.
 - Moving the temperature slider rescales every speed at once. One second on screen is 80 ps of the atoms' time.
 - Record reading stores the time, the number of atoms, the temperature, the box's area and width, the measured pressure, and the mean and rms speeds. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.

@@ -46,7 +46,7 @@ The **Otto cycle** models a gasoline engine: adiabatic compression by a ratio $$
 
 $$\eta_\mathrm{Otto} = 1 - r^{1-\gamma}, \qquad \ln(1 - \eta_\mathrm{Otto}) = (1 - \gamma)\ln r.$$
 
-Run backward, a cycle is a refrigerator, with coefficient of performance $$Q_c/W$$; for a Carnot cycle it is $$T_c/(T_h - T_c)$$ (§4.3).
+Run backward, a cycle is a refrigerator, with coefficient of performance $$Q_c/W$$; for a Carnot cycle it is $$T_c/(T_h - T_c)$$ (§§4.3 and 4.5).
 
 ## Before the lab
 

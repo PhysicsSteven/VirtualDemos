@@ -21,7 +21,7 @@ Students should know the energy of a magnetic dipole in a field, U = −μ·B, a
 3. **Change the range.** Switch to HI and LO. Ask the class to predict which way the peak moves before switching (Q2), then reset SENS for each range and capture all three readings. The live plot of B against ν and its slope give g.
 4. **PSR glycerine.** Same physics with protons. The scan sweeps only 3.2 mT on top of about 300 mT, a 1 % window. Read the thermometer and B₂₀ on the magnet's shroud: the total field is B_Z + B_scan.
 5. **Polystyrene vs glycerine.** Same number of hydrogen atoms per molecule, but a solid: the line is wider and lower.
-6. **Fluorine in PTFE**, then **Out of tune** if time allows. PTFE has no hydrogen; the ¹⁹F line needs a frequency about 6 % lower, on LO. "Out of tune" makes the class do what the real lab demands: turn FREQ slowly until the peak moves onto the ramp.
+6. **Fluorine in PTFE**, then **Out of tune**. PTFE has no hydrogen; the ¹⁹F line needs a frequency about 6 % lower, on LO. "Out of tune" makes the class do what the real lab demands: turn FREQ slowly until the peak moves onto the ramp.
 
 ## Questions
 

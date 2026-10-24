@@ -1,7 +1,7 @@
 # White Dwarf Cooling
 Student laboratory · Astronomy
 
-Textbook: OpenStax *University Physics*, Vol. 2, §2.3 (heat capacity and equipartition: $$\tfrac{3}{2}kT$$ per particle) and Vol. 3, §6.1 (blackbody radiation and the Stefan–Boltzmann law). Access for free at https://openstax.org/details/books/university-physics-volume-2.
+Textbook: OpenStax *University Physics*, Vol. 2, §2.3 (heat capacity and equipartition: $$\tfrac{3}{2}kT$$ per particle) and Vol. 3, §6.1 (blackbody radiation and the Stefan–Boltzmann law). Access for free at https://openstax.org/details/books/university-physics-volume-2 and https://openstax.org/details/books/university-physics-volume-3.
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/white-dwarf-cooling.html)
 

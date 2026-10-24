@@ -30,7 +30,7 @@ An electron confined to a box of width L with infinitely high walls has standing
 
 $$E_n = \frac{n^2\pi^2\hbar^2}{2mL^2}, \qquad n = 1, 2, 3, \dots$$
 
-There is no n = 0: the lowest energy is not zero. Walls of finite height let the wave leak into them, so each level lies a little lower than in the infinite box, and there are only a few levels.
+There is no n = 0: the lowest energy is not zero. Walls of finite height let the wave leak into them, so each level lies lower than in the infinite box (only a little when the walls are much higher than the level), and there are only a few levels.
 
 A harmonic oscillator has evenly spaced levels (§7.5):
 

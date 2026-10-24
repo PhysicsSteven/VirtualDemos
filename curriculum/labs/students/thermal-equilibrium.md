@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§1.1, 1.4 and 1.6. Access fo
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Hot metal in water; Mystery metal (these two use the Equilibrium view, the subject of this worksheet); Gas thermometer; Rod in a water jacket; Water near 4 °C; House wall (the other three worksheets).
+**Setups in the demo:** Hot metal, cool water; Mystery block (these two use the Equilibrium view, the subject of this worksheet); Gas thermometer; Rod in a water bath; Water near 4 °C; House wall in winter (the other three worksheets; a fifth worksheet, on cooling, uses the Cooling view).
 
 **Using the demo.**
 
@@ -17,7 +17,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§1.1, 1.4 and 1.6. Access fo
 - Each body changes temperature as $$Q = mc\,\Delta T$$, with $$c$$ from Table 1.3. A liquid sits in a can whose heat capacity is neglected.
 - The thermometers read to 0.01 °C and the clock to 1 s. The speed buttons run the clock 1, 10 or 60 times faster than real time; the clock always shows the time in the experiment.
 - Record reading stores the time and both temperatures, with the settings. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
-- Mystery metal hides the block's material and specific heat. New mystery metal picks another.
+- Mystery block hides the block's material and specific heat. New mystery block picks another.
 - Blind hides the graph and the predicted final temperature, so you can make your own.
 
 </details>
@@ -51,11 +51,11 @@ Hot metal blocks and hot water can burn. In a real lab use tongs and an insulate
 
 ## Procedure
 
-**Hot metal in water.** Start with the Hot metal in water setup. Run the clock and record both temperatures about every 20 s for the first two minutes and then about every 60 s until they agree to 0.01 °C. Send the readings to the worksheet.
+**Hot metal, cool water.** Start with the Hot metal, cool water setup. Run the clock and record both temperatures about every 20 s for the first two minutes and then about every 60 s until they agree to 0.01 °C. Send the readings to the worksheet.
 
 **A longer bar.** Clear the readings, double the bar's length and repeat. Send this run to a new copy of the table.
 
-**Mystery metal.** Pick the Mystery metal setup, run it to equilibrium and record the starting temperatures and the final temperature. Repeat with a different water mass or starting temperature to check your result.
+**Mystery block.** Pick the Mystery block setup, run it to equilibrium and record the starting temperatures and the final temperature. Repeat with a different water mass or starting temperature to check your result.
 
 ## Data
 
@@ -69,7 +69,7 @@ Record each body's material, mass and starting temperature, and the bar's materi
 
 ## Analysis
 
-1. Compare the final temperature of the Hot metal in water run with your prediction from Before the lab question 2.
+1. Compare the final temperature of the Hot metal, cool water run with your prediction from Before the lab question 2.
 2. Using your final temperature, work out the heat the aluminum lost and the heat the water gained. How well do they agree?
 3. Fit $$\ln(T_A - T_B)$$ against $$t$$. From the slope find the time constant $$\tau$$, and compare it with $$\tau$$ worked out from the formula in the Background (the bar is 2.00 cm across).
 4. Find $$\tau$$ for the longer bar the same way. By what factor did it change, and why?
