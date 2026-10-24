@@ -12,7 +12,7 @@
   /* Physics I worksheets (physics-1.html). Add a worksheet's file name here to make it interactive. */
   const PHYSICS_I = ['collisions', 'energy-sources', 'estimation-and-evidence', 'fluids', 'forces', 'impulse', 'kepler-orbits',
     'measurement-and-units', 'motion-graphs', 'pendulum', 'potential-curves', 'projectile-drag', 'rotation', 'rotational-dynamics',
-    'springs', 'stress-strain', 'viscometer', 'force-table'];
+    'springs', 'stress-strain', 'viscometer', 'force-table', 'gyroscope'];
   const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
@@ -37,6 +37,8 @@
     /* Force table setup of the Vectors demo. The handout's first data table is expected to have these columns in this order:
        Trial | m₁ (kg) | θ₁ (°) | m₂ (kg) | θ₂ (°) | m₃ (kg) | θ₃ (°) | m₄ (kg) | θ₄ (°) | Ring centered?  (more columns may follow). */
     'force-table': { demo: 'Vectors (Force table)', cols: ['trial', 'm1_kg', 'theta1_deg', 'm2_kg', 'theta2_deg', 'm3_kg', 'theta3_deg', 'm4_kg', 'theta4_deg', 'ring'] },
+    /* Trial | Wheel | Start | Tilt (°) | Spin (rpm) | d (m) | P (s) | Ω (rad/s) | 1/ω_s (s) */
+    gyroscope: { demo: 'Gyroscope Precession', cols: ['row', 'wheel', 'start', 'tilt_deg', 'spin_rpm', 'd_m', 'P_s', 'Omega_rad_per_s', 'inv_spin_s'] },
     viscometer: { demo: 'Falling Ball Viscometer', cols: ['row', (r) => [r.liquid, r.ball].filter(Boolean).join(' / '), (r) => [r.rho_liquid_kg_m3, r.rho_ball_kg_m3].filter(Boolean).join(' / '), 'tube_D_mm', 'd_mm', 't_s', 'v_m_per_s', null, null, null] },
   };
   /* ==PHYSICS II START== Physics II worksheets (physics-2.html) and their demo column maps, kept in one block. */

@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg seg inline img projshort-proj-bar-units mono bar-h1 bench pane chips-button-hover btn btn-primary btn-disabled slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas projshort-proj-bar-p" lang="en">
+<html data-vd-off="seg inline img projshort-proj-bar-units mono bar-h1 bench pane chips-button-hover btn btn-primary btn-disabled slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas projshort-proj-bar-p" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -88,6 +88,7 @@ table.rows input:focus { border-color: var(--accent); }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/gyroscope.html" target="gyroscope-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -120,7 +121,7 @@ table.rows input:focus { border-color: var(--accent); }
         <h2>Readings</h2>
         <div class="btnrow">
           <button type="button" class="btn primary" id="capture">Capture reading</button>
-          <button type="button" class="btn" id="exportCsv">Export CSV</button>
+          <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
@@ -515,12 +516,28 @@ table.rows input:focus { border-color: var(--accent); }
     if (!S.lastP) { capStatus('Release it and let the gate time at least one full turn round the post.'); return; }
     S.rows.push({ wheel: wheelKey(), start: S.push ? 'steady' : 'rest', tilt: String(S.beta), rpm: String(S.rpm), d: S.d.toFixed(2), P: S.lastP.toFixed(2) }); renderRows(); capStatus(`Row ${S.rows.length} captured.`);
   });
-  $('clearRows').addEventListener('click', () => { S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
+     them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. Clear starts
+     a new series, so the worksheet puts the next export in a new copy of its table. */
+  let wsSeries = Date.now();
+  function download(name, txt) { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} }
+  function toWorksheet(txt) {
+    const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
+    const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {};
+    lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); if (c.length > 1) meta[c[0]] = c[1]; });
+    const hand = { v: 1, demo: 'gyroscope', series: wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
+      note: 'Simulated data from the Gyroscope Precession demo.', csv: txt, csvName: 'gyroscope-readings.csv' };
+    try { localStorage.setItem('vd-handoff:gyroscope', JSON.stringify(hand)); }
+    catch (_) { download('gyroscope-readings.csv', txt); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    const n = hand.rows.length;
+    capStatus(`${n} reading${n === 1 ? '' : 's'} sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/gyroscope.html'; a.target = 'gyroscope-worksheet'; a.textContent = 'Open the worksheet';
+    a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+  }
   $('exportCsv').addEventListener('click', () => {
     if (!S.rows.length) { capStatus('No readings to export.'); return; }
-    const txt = readingsCSV(S.rows, { version: GY_VERSION });
-    try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'gyroscope-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
-    capStatus('CSV exported.');
+    toWorksheet(readingsCSV(S.rows, { version: GY_VERSION }));
   });
   function renderRows() {
     const tb = $('rowsTbl').querySelector('tbody');
