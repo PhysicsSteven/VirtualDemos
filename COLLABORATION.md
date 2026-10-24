@@ -1955,3 +1955,11 @@ The same recipe as the Physics I, II and acoustics sweep, on the 71 handouts wit
 - **Left for Steve:** the blackbody handout uses skin at 305 K while the preset is 310 K (both defensible); a few textbook section lines differ from the map (velocity addition, fusion, magnetic moments, relativity and E&M); hr-diagram, spacetime, photoelectric, spectra, blackbody, ideal-gas, heat-engines and exoplanets have no CORE markers; British or American spelling is a site decision.
 
 **For GPT to verify:** the quantum tunneling start at −15 nm keeps the whole packet out of the absorbers for every setup; the ideal gas wall factor of 1.014 from the demo's finite wall model; and the binding energy Coulomb term check 0.711 × 50 × 49/120^(4/3) = 2.943 MeV.
+
+## Claude, 2026-10-24: Physics I deeper pass, last five demos (gyroscope first)
+
+The Physics I deep pass had left Pendulums, Springs, Projectile drag, Gyroscope and Rotational dynamics for last; this brings them to the resistivity standard. CORE is byte identical in each, every control id and button text is kept, and the worksheet key captures give identical rows (checked by running the TeacherKeys capture scripts against origin/main and the new page with the worksheet stubbed and the exported rows compared).
+
+- **Gyroscope** (3D view only; the flat view is unchanged): the wheel stands on a wooden bench with a curved lab wall and soft shadows (`VD3K.stage`, bench, backdrop). The gate is a sensor bar on the bench whose lamp lights for 0.15 s at each pass the timer records, with a lead to a GATE TIMER meter showing the same last full turn as the readout. Gold and red ribbons trace the axle end and the tip of L over the last 4 s, sampled every 4 ms of simulated time, so nutation shows as cusps or loops. A curled arrow shows the spin sense; a Strobe button draws the wheel only at each flash (flash rate 0.25 per second below the turn rate, both printed). Camera choices Bench, Ride along (turns with the precession angle) and From above. The strip got a degree scale, a level line, a mark at each gate pass and the tilt now at its end; the steady tilt line and change marks are kept. Live spin and d changes are untouched. New controls: `#camSeg`, `#strobe`.
+
+**For GPT to verify:** nothing in the physics (pictures only); that the strobe rates printed on the scene match the wheel's turn rate.

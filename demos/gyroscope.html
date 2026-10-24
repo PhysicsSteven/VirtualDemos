@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
 <script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>.bench { position: relative; }
 /* the Set up card on the picture: it fades away while the run plays and comes back on pause or when the run ends */
 .setup-card { position: absolute; z-index: 3; left: 12px; top: 72px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); transition: opacity 0.35s ease, visibility 0.35s; }
@@ -48,6 +49,12 @@
 table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
 table.rows input:focus { border-color: var(--accent); }
 .plotbox { position: relative; height: 180px; }
+/* the 3D view's own bar: camera and strobe, bottom right of the picture, above the strip (its bottom is set from the strip height) */
+.cambar { position: absolute; right: 10px; bottom: 140px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; align-items: center; max-width: calc(100% - 20px); }
+.cambar[hidden] { display: none; }
+.cambar .seg button, .cambar .spin { font-size: 0.8rem; }
+@media (max-width: 420px) { .cambar .seg button, .cambar .spin { font-size: 0.74rem; padding-left: 7px; padding-right: 7px; } }
+.cambar .spin[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
 @media (max-width: 820px) {
   .bench { grid-template-columns: minmax(0, 1fr); }
@@ -78,6 +85,7 @@ table.rows input:focus { border-color: var(--accent); }
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="A spinning wheel on a horizontal axle whose far end rests on a pivot at the top of a post, drawn in perspective, with arrows for the angular momentum and the torque, and below it a trace of the axle's tilt against time. Space releases or holds, R puts it back."></canvas>
       <div class="viewbar"><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div><button type="button" class="spin attn" id="go">Release</button><button type="button" class="spin" id="back">Put back</button></div>
+      <div class="cambar" id="camBar" hidden><div class="seg" role="group" aria-label="Camera" id="camSeg"><button type="button" data-cam="bench" aria-pressed="true">Bench</button><button type="button" data-cam="ride" aria-pressed="false">Ride along</button><button type="button" data-cam="top" aria-pressed="false">From above</button></div><button type="button" class="spin" id="strobe" aria-pressed="false" title="Light the wheel with flashes 0.25 a second slower than its turns per second, so its marks seem to creep round slowly">Strobe</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -141,6 +149,7 @@ table.rows input:focus { border-color: var(--accent); }
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>More about this</summary>
           <p class="hint">3D view: drag to turn it, scroll or pinch to zoom, double click to reset. Flat shows the fixed oblique drawing; both show the same simulated motion.</p>
+          <p class="hint">In 3D, Bench looks across the bench, Ride along turns the camera round the post with the axle so the wobble stands out, and From above looks down on the precession. The gold line traces the end of the axle over the last 4 s and the red one the tip of the L arrow, so the wobble (nutation) shows as loops or cusps along the circle; the strip marks each pass of the gate with a small triangle, and the gate's lamp lights as the axle passes. Strobe shows the wheel lit by a flashing lamp whose rate is 0.25 flashes a second below the wheel's turns per second, so its marks seem to creep round once every 4 s instead of blurring (the rates are shown beside it).</p>
           <p class="hint">Blind hides the moments of inertia, L, the predicted precession rate and the fitted I_s, leaving the gate timer, the tilt and the settings.</p>
         </details>
         <details class="more"><summary>More about this</summary><p class="hint">Model: a rigid symmetric wheel on a massless axle, a frictionless pivot, the spin about the axle held constant (no friction in the wheel's bearing). The motion is computed from the exact equations for a heavy symmetric top (RK4, 0.2 ms steps), so the wobble (nutation) and the dip at release are real, not added. Solid disk I_s = ½MR²; rim heavy wheel 0.905MR²; the wheel's moment about its diameter is I_s/2.</p><p class="hint">Changing the spin or d while it runs: the change acts along the axle (a motor in the hub, or sliding the wheel along the axle), so it exerts no torque across the axle. The axle's direction and its angular momentum across the axle carry over (so with a new d its turning rates scale by I_1 old/I_1 new) and the spin takes the new value at once. The axle then wobbles about a new steady tilt: the dashed gold line on the strip, where the effective potential for the tilt is least. The gate starts timing afresh after each change. Tilt at release and the steady start apply at release only.</p></details>
@@ -233,11 +242,11 @@ table.rows input:focus { border-color: var(--accent); }
     smooth: { rpm: 1500, d: 0.1, beta: 0, push: true, hint: 'Given a sideways push at exactly the steady precession rate as it is released: no dip, no wobble. This is the motion the simple formula Ω = Mgd/(I_s ω_s) describes.' },
     tilt: { rpm: 3000, d: 0.1, beta: 20, push: false, hint: 'The axle starts 20° above level. The torque is now Mgd sin θ, smaller, but so is the horizontal part of L that it turns, so the average rate stays within 1% of Mgd/(I_s ω_s). Released from rest it wobbles between 20° and 9°.' }
   };
-  const S = { preset: 'fast', rpm: 3000, d: 0.1, beta: 0, wheel: 'disk', push: false, mystK: null, vecs: true, blind: false, run: false, fell: false, t: 0, sim: null, trace: [], marks: [], live: false, trail: [], gate: null, lastP: null, rows: [] };
+  const S = { preset: 'fast', rpm: 3000, d: 0.1, beta: 0, wheel: 'disk', push: false, mystK: null, vecs: true, blind: false, run: false, fell: false, t: 0, sim: null, trace: [], marks: [], live: false, trail: [], tip: [], gates: [], gate: null, lastP: null, rows: [] };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
-    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+    T = { canvas: g('--canvas'), surface: g('--surface') || g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
       wheel: g('--wheel'), axle: g('--axle'), post: g('--post'), Lv: g('--Lv'), tau: g('--tau'), trail: g('--trail'),
       floor: g('--floor'), floorLine: g('--floor-line'), fog: g('--fog'), fogClear: g('--fog-clear'), tyre: g('--tyre'), spoke: g('--spoke'), base: g('--base'), baseTop: g('--base-top'), metalHi: g('--metal-hi'), shadow: g('--shadow'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
@@ -247,7 +256,7 @@ table.rows input:focus { border-color: var(--accent); }
   function sci(v, n = 3) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
     return `${(v / 10 ** e).toFixed(n - 1).replace('-', '−')} × 10${String(e).split('').map((c) => SUP[c]).join('')}`; }
 
-  function reset() { S.sim = start(kNow(), S.d, S.rpm, S.beta * Math.PI / 180, S.push); S.t = 0; S.fell = false; S.live = false; S.marks = []; S.trace = []; S.trail = []; S.gate = null; S.lastP = null; setRun(false); draw(); readouts(); }
+  function reset() { S.sim = start(kNow(), S.d, S.rpm, S.beta * Math.PI / 180, S.push); S.t = 0; S.fell = false; S.live = false; S.marks = []; S.trace = []; S.trail = []; S.tip = []; S.gates = []; S.gate = null; S.lastP = null; setRun(false); draw(); readouts(); }
   // ---------- drawing: oblique view ----------
   const AZ = -0.55, EL = 0.32;
   function proj(x, y, z, cx, cy, sc) { const xr = x * Math.cos(AZ) - y * Math.sin(AZ), yr = x * Math.sin(AZ) + y * Math.cos(AZ);
@@ -267,13 +276,18 @@ table.rows input:focus { border-color: var(--accent); }
     if (G3.on && g3) {   // the 3D view draws the apparatus; this canvas keeps the labels, the strip and the timer on top
       const h3 = stripTop - 8 * p, Q = render3(s, c, e, h3, p), C = e.map((x) => x * S.d);
       ctx.clearRect(0, 0, W, h3);
+      /* text over the scene gets a halo in the background colour so it reads against the bench and the wall */
+      const halo = (txt, x, y) => { ctx.save(); ctx.lineJoin = 'round'; ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.lineWidth = 3.5 * p; ctx.strokeText(txt, x, y); ctx.restore(); ctx.fillText(txt, x, y); };
       const lab = (q, txt, col, from) => { const a = Q(q), b = Q(from), dx = a[0] - b[0], dy = a[1] - b[1], L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L;
-        ctx.fillStyle = col; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = ux > 0.3 ? 'left' : ux < -0.3 ? 'right' : 'center'; ctx.textBaseline = uy > 0.3 ? 'top' : uy < -0.3 ? 'bottom' : 'middle'; ctx.fillText(txt, a[0] + ux * 6, a[1] + uy * 6); };
-      const gq = Q([S.d + 0.035, 0, -postH]); ctx.fillStyle = T.accent; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('gate', gq[0] + 4, gq[1] + 2);
+        if (a[2] > 1) return; ctx.fillStyle = col; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = ux > 0.3 ? 'left' : ux < -0.3 ? 'right' : 'center'; ctx.textBaseline = uy > 0.3 ? 'top' : uy < -0.3 ? 'bottom' : 'middle'; halo(txt, a[0] + ux * 6, a[1] + uy * 6); };
+      const gq = Q([S.d + 0.035, 0, -postH]); ctx.fillStyle = T.accent; ctx.font = `700 ${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; if (gq[2] < 1) halo('gate', gq[0] + 4, gq[1] + 2);
       if (S.vecs && c.w3 > 0 && !S.fell) {
         const tau = cross(C, [0, 0, -MW * G]), tm = Math.hypot(...tau) || 1;
         lab(C.map((x, i) => x + e[i] * 0.16), 'L', T.Lv, C); lab(C.map((x, i) => x + tau[i] / tm * 0.09), 'τ = dL/dt', T.tau, C); lab([C[0], C[1], C[2] - 0.07], 'Mg', T.muted, C);
       }
+      const st = strobeNow(c), cb = $('camBar'); cb.style.bottom = `${Hh - h3 + 8}px`;
+      if (st) { ctx.font = `${10.5 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+        halo(`strobe ${st.fs.toFixed(2)} flashes/s · wheel ${st.f.toFixed(2)} turns/s`, W - 12, h3 - cb.offsetHeight - 14); }
     } else {
     // a tiled floor that fades into the distance, behind everything else
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, stripTop - 8 * p); ctx.clip();
@@ -339,6 +353,7 @@ table.rows input:focus { border-color: var(--accent); }
       const mg = P(C[0], C[1], C[2] - 0.07); arrow(wc, mg, T.muted, 1.5 * p, 'Mg');
     }
     }
+    if (G3.on && g3) { strip3(c, p, stripH); return; }
     // strip: tilt above horizontal against time, last 4 s
     const sx0 = 14 * p, sx1 = W - 14 * p, sy0 = Hh - stripH, sy1 = Hh - 22 * p, sm = (sy0 + sy1) / 2, span = 4, tilt = (th) => (Math.PI / 2 - th) * 180 / Math.PI;
     const eq = hiddenI() || S.fell ? NaN : tilt(steadyTilt(c));
@@ -357,6 +372,52 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.fillStyle = T.ink; ctx.font = `700 ${14 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(S.fell ? 'It fell.' : `gate: ${S.lastP ? `${S.lastP.toFixed(2)} s per turn` : S.gate != null ? 'timing a full turn…' : '—'}`, 14 * p, 50 * p);
   }
+  /* the 3D view's strip: the same trace, steady tilt line and change marks as the flat one, on a panel with a scale in degrees, the
+     level line, a small triangle at each pass of the gate and the tilt now; the gate timer sits on a chip over the scene */
+  function strip3(c, p, stripH) {
+    const span = 4, tilt = (th) => (Math.PI / 2 - th) * 180 / Math.PI, py0 = Hh - stripH - 8 * p;
+    ctx.fillStyle = T.surface; ctx.fillRect(0, py0, W, Hh - py0); ctx.fillStyle = T.line; ctx.fillRect(0, py0, W, 1);
+    ctx.font = `${10 * p}px ${T.mono}`; const now = S.trace.length ? S.trace[S.trace.length - 1][1] : S.beta, nowTxt = `${f(now, 1)}°`;
+    const sx0 = 14 * p + ctx.measureText('−90°').width + 6 * p, sx1 = W - 14 * p - ctx.measureText('−90.0°').width - 14 * p, sy0 = py0 + 14 * p, sy1 = Hh - 22 * p;
+    const eq = hiddenI() || S.fell ? NaN : tilt(steadyTilt(c));
+    const vals = S.trace.filter((q) => S.t - q[0] <= span).map((q) => q[1]).concat([S.beta], isFinite(eq) && eq > -95 ? [eq] : []);
+    const lo = Math.max(-95, Math.floor(Math.min(...vals) - 2)), hi = Math.ceil(Math.max(...vals) + 2), Y = (v) => sy1 - (sy1 - sy0) * (v - lo) / (hi - lo || 1), X = (t) => sx1 - (sx1 - sx0) * (S.t - t) / span;
+    ctx.fillStyle = T.canvas; ctx.fillRect(sx0, sy0, sx1 - sx0, sy1 - sy0);
+    const stp = [1, 2, 5, 10, 15, 30, 45].find((q) => (hi - lo) / q <= 5) || 60;
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.lineWidth = 1;
+    for (let v = Math.ceil(lo / stp) * stp; v <= hi; v += stp) { const y = Math.round(Y(v)) + 0.5; ctx.strokeStyle = v === 0 ? T.gridStrong : T.grid; ctx.beginPath(); ctx.moveTo(sx0, y); ctx.lineTo(sx1, y); ctx.stroke(); if (y < sy1 - 6 * p) { ctx.fillStyle = T.muted; ctx.fillText(`${f(v, 0)}°`, sx0 - 4 * p, y); } }
+    if (lo <= 0 && hi >= 0) { ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('level', sx0 + 4 * p, Y(0) - 1); }
+    ctx.strokeStyle = T.line; ctx.strokeRect(sx0 + 0.5, sy0 + 0.5, sx1 - sx0, sy1 - sy0);
+    ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; if (W < 420) ctx.font = `${9 * p}px ${T.mono}`;
+    ctx.fillText(`axle tilt above level (°), last ${span} s: ${f(hi, 0)} top, ${f(lo, 0)} bottom${S.marks.length && W > 640 ? ' · dashed: a change made while running' : ''}${S.gates.length && W > 900 ? ' · ▼ the axle passes the gate' : ''}`, 14 * p, sy1 + 4);
+    ctx.save(); ctx.beginPath(); ctx.rect(sx0, sy0, sx1 - sx0, sy1 - sy0); ctx.clip(); ctx.setLineDash([4 * p, 4 * p]); ctx.lineWidth = 1;
+    ctx.strokeStyle = T.muted; for (const t of S.marks) { const x = X(t); if (x < sx0) continue; ctx.beginPath(); ctx.moveTo(x, sy0); ctx.lineTo(x, sy1); ctx.stroke(); }
+    if (isFinite(eq) && eq >= lo && eq <= hi) { ctx.strokeStyle = T.trail; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(sx0, Y(eq)); ctx.lineTo(sx1, Y(eq)); ctx.stroke();
+    }
+    ctx.setLineDash([]);
+    // the gate passes along the top edge
+    ctx.fillStyle = T.accent; for (const t of S.gates) { const x = X(t); if (x < sx0 - 6 || x > sx1 + 6) continue; ctx.beginPath(); ctx.moveTo(x - 4 * p, sy0); ctx.lineTo(x + 4 * p, sy0); ctx.lineTo(x, sy0 + 6 * p); ctx.closePath(); ctx.fill(); }
+    // the trace, with a soft band down to the level line
+    const pts = S.trace.filter((q) => S.t - q[0] <= span);
+    if (pts.length > 1) {
+      const y0 = Y(Math.min(hi, Math.max(lo, 0))); ctx.beginPath(); pts.forEach(([t, v], i) => (i ? ctx.lineTo(X(t), Y(v)) : ctx.moveTo(X(t), Y(v)))); ctx.lineTo(X(pts[pts.length - 1][0]), y0); ctx.lineTo(X(pts[0][0]), y0); ctx.closePath();
+      ctx.globalAlpha = 0.12; ctx.fillStyle = T.accent; ctx.fill(); ctx.globalAlpha = 1;
+    }
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.lineJoin = 'round'; ctx.beginPath(); pts.forEach(([t, v], i) => (i ? ctx.lineTo(X(t), Y(v)) : ctx.moveTo(X(t), Y(v)))); ctx.stroke();
+    if (isFinite(eq) && eq >= lo && eq <= hi) { ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; const sl = `steady tilt ${f(eq, 1)}°`, sw = ctx.measureText(sl).width, sly = Math.max(sy0 + 12 * p, Y(eq) - 2);
+      ctx.globalAlpha = 0.85; ctx.fillStyle = T.canvas; ctx.fillRect(sx0 + 4 * p, sly - 11 * p, sw + 8, 11 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.trail; ctx.fillText(sl, sx0 + 8 * p, sly); }
+    ctx.restore();
+    // the tilt now, at the right hand end
+    const yN = Math.max(sy0 + 6 * p, Math.min(sy1 - 6 * p, Y(now))); ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(sx1, Y(now), 3.5 * p, 0, 7); ctx.fill();
+    ctx.font = `600 ${10.5 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = T.ink; ctx.fillText(nowTxt, sx1 + 7 * p, yN);
+    // the gate timer chip, as in the flat view, over the scene
+    const gt = S.fell ? 'It fell.' : `gate: ${S.lastP ? `${S.lastP.toFixed(2)} s per turn` : S.gate != null ? 'timing a full turn…' : '—'}`;
+    ctx.font = `700 ${14 * p}px ${T.mono}`; const gw = ctx.measureText(gt).width, vb = stage.querySelector('.viewbar'), vr = vb.offsetLeft + vb.offsetWidth + 8, row = vr + gw + 40 < W - 10;   /* beside the buttons where it fits, else under them */
+    const gx = row ? vr : 10, gy = row ? vb.offsetTop + (vb.offsetHeight - 22 * p) / 2 : vb.offsetTop + vb.offsetHeight + 6;
+    ctx.fillStyle = T.surface; ctx.globalAlpha = 0.92; ctx.beginPath(); ctx.roundRect(gx, gy, gw + 30, 22 * p, 6); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.stroke();
+    const lit = S.gate != null && S.t - S.gate < 0.15; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(gt, gx + 8, gy + 11 * p + 1);
+    ctx.beginPath(); ctx.arc(gx + gw + 19, gy + 11 * p, 4, 0, 7); if (lit) { ctx.fillStyle = '#ff4433'; ctx.fill(); } else { ctx.strokeStyle = T.muted; ctx.stroke(); }
+  }
   const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
   const norm = (a) => { const L = Math.hypot(...a); return a.map((x) => x / L); };
   function readouts() {
@@ -373,43 +434,63 @@ table.rows input:focus { border-color: var(--accent); }
     }
     $('out').innerHTML = h;
   }
-  // ---------- 3D view (three.js through demos/lib/vd3.js): the same apparatus and the same simulated motion, in perspective ----------
+  // ---------- 3D view (three.js through demos/lib/vd3.js and vd3kit.js): the same apparatus and the same simulated motion, on a lab bench ----------
   // Drag to turn the view, wheel or pinch to zoom, double click to reset. The flat view stays (Flat button, or ?view=flat).
-  const G3 = { on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -1.0, ph: 1.13, zoom: 1 } };
+  const G3 = { on: false, ok: false, tried: false, loading: false, tk: '', o: { th: -1.0, ph: 1.13, zoom: 1 } };
   const NO3D = 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
   let g3 = null;
   const POST_H = 0.22;   // the post's height, as in the flat view
+  const LAB_TURN = 0.57;   // the bench and the wall face the opening camera (azimuth −1.0 rad)
+  const TR_N = 1000;   // points in each 3D trace (4 s at one point per 4 ms)
+  /* camera: Bench (orbit), Ride along (turns round the post with the axle) or From above; a change of camera eases over 0.7 s */
+  const CAM = { mode: 'bench', from: null, t0: 0, pose: null };
+  const STROBE = { on: false };
   function init3D() {
     G3.tried = true;
-    const r = VD3.renderer(); if (!r) return false;
-    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
-    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); stage.insertBefore(el, can);
-    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 0.01, 20), M = (o) => new THREE.MeshStandardMaterial(o);
-    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.7), sun = new THREE.DirectionalLight(0xffffff, 0.7);
-    sun.position.set(-0.5, -0.9, 1.6); sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024);
-    Object.assign(sun.shadow.camera, { left: -0.45, right: 0.45, top: 0.45, bottom: -0.45, near: 0.5, far: 4 }); sun.shadow.radius = 4;
-    scene.add(hemi, sun);
+    const S3 = VD3K.stage(stage, { before: can, fov: 32, near: 0.01, far: 20, shadow: 0.5, fog: [1.7, 3.6] }); if (!S3) return false;
+    const { r, el, scene, cam, hemi, sun } = S3, M = (o) => new THREE.MeshStandardMaterial(o);
+    sun.position.set(-0.7, -1.0, 2.2); hemi.position.set(0, 0, 1);   /* z is up here */ sun.shadow.radius = 4; sun.shadow.bias = -0.0004; sun.shadow.mapSize.set(1024, 1024);
+    S3.onTheme((dk) => { hemi.intensity = dk ? 0.85 : 0.5; sun.intensity = dk ? 0.9 : 0.68; });   // dark tokens are deep colours, so the room is lit a little more
     const cyl = (r0, r1, h, n) => { const g = new THREE.CylinderGeometry(r0, r1, h, n || 32); g.rotateX(Math.PI / 2); return g; };   // a cylinder along z
     const unitZ = (r0, n) => { const g = cyl(r0, r0, 1, n || 16); g.translate(0, 0, 0.5); return g; };   // from z = 0 to z = 1, scaled to length
     const mesh = (g, m, cast) => { const x = new THREE.Mesh(g, m); x.castShadow = !!cast; return x; };
-    // floor tiles 0.1 m, as in the flat view, fading into fog
-    const tileCv = document.createElement('canvas'); tileCv.width = tileCv.height = 128;
-    const tileTex = new THREE.CanvasTexture(tileCv); tileTex.wrapS = tileTex.wrapT = THREE.RepeatWrapping; tileTex.repeat.set(40, 40); tileTex.anisotropy = r.capabilities.getMaxAnisotropy();
-    const floorM = M({ map: tileTex, roughness: 0.92, metalness: 0 }), floor = mesh(new THREE.PlaneGeometry(4, 4), floorM);
-    floor.position.z = -POST_H; floor.receiveShadow = true; scene.add(floor);
+    // the lab: a wooden bench top with a little grain, and a curved wall behind, turned to face the opening camera
+    const lab = new THREE.Group(); lab.rotation.z = LAB_TURN; scene.add(lab);
+    const grainCv = document.createElement('canvas'); grainCv.width = 512; grainCv.height = 512;
+    { const c = grainCv.getContext('2d'); c.fillStyle = '#fff'; c.fillRect(0, 0, 512, 512); let sd = 11; const rn = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+      for (let i = 0; i < 70; i++) { const y = rn() * 512, a = 0.03 + rn() * 0.06; c.strokeStyle = `rgba(90,60,30,${a})`; c.lineWidth = 1 + rn() * 3; c.beginPath(); c.moveTo(0, y); for (let x = 0; x <= 512; x += 32) c.lineTo(x, y + Math.sin(x / 90 + i) * 4 + (rn() - 0.5) * 2); c.stroke(); } }
+    const grain = new THREE.CanvasTexture(grainCv); grain.wrapS = grain.wrapT = THREE.RepeatWrapping; grain.repeat.set(2, 3); grain.anisotropy = r.capabilities.getMaxAnisotropy();
+    const woodM = VD3K.material(S3, { roughness: 0.82, metalness: 0, map: grain }, ['#d6c6a8', '#4a4036']);
+    const bench = VD3K.box(1.8, 1.3, 0.045, woodM, 0, 0.25, -POST_H - 0.045); bench.castShadow = false; lab.add(bench);
+    const wall = VD3K.backdrop(S3, { r: 0.92, h: 2.4, arc: Math.PI * 0.95 }); wall.position.z = -1.2; wall.receiveShadow = false; lab.add(wall);
     // cast base, post, the cup the axle rests in
     const baseM = M({ roughness: 0.5, metalness: 0.35 }), postM = M({ roughness: 0.28, metalness: 0.55 }), darkM = M({ roughness: 0.4, metalness: 0.3 });
     const base = mesh(cyl(0.068, 0.074, 0.016, 48), baseM, true); base.position.z = -POST_H + 0.008; base.receiveShadow = true;
     const post = mesh(cyl(0.0075, 0.0075, POST_H - 0.012, 24), postM, true); post.position.z = -POST_H / 2 - 0.006;
     const cup = mesh(cyl(0.013, 0.009, 0.012, 24), postM, true); cup.position.z = -0.006;
     const pin = mesh(new THREE.SphereGeometry(0.0055, 16, 12), darkM); scene.add(base, post, cup, pin);
-    // the ring the wheel centre would trace at this d, and the gate at φ = 0
+    // the ring the wheel centre would trace at this d
     const ringPts = []; for (let k = 0; k < 96; k++) ringPts.push(new THREE.Vector3(Math.cos(k / 96 * 2 * Math.PI), Math.sin(k / 96 * 2 * Math.PI), 0));
-    const ringM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.8 }), ring = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(ringPts), ringM);
-    const gateM = M({ roughness: 0.5, emissive: 0x000000 }), gate = mesh(new THREE.BoxGeometry(0.06, 0.006, 0.004), gateM); scene.add(ring, gate);
-    // trail of the wheel centre
-    const trailG = new THREE.BufferGeometry(); trailG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(400 * 3), 3));
-    const trailM = new THREE.LineBasicMaterial(), trail = new THREE.Line(trailG, trailM); trail.frustumCulled = false; scene.add(trail);
+    const ringM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.8 }), ring = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(ringPts), ringM); scene.add(ring);
+    // the gate at φ = 0: a sensor bar on the bench with a lamp that lights as the axle passes, a lead to the timer
+    const gate = new THREE.Group(), gateM = M({ roughness: 0.55, metalness: 0.2 }), gateBar = mesh(new THREE.BoxGeometry(0.06, 0.012, 0.008), gateM, true); gateBar.position.z = 0.004;
+    const eyeM = new THREE.MeshBasicMaterial(), eye = mesh(new THREE.BoxGeometry(0.008, 0.0125, 0.0015), eyeM); eye.position.z = 0.0085;
+    const ledM = M({ roughness: 0.3, metalness: 0, emissive: 0x000000 }), led = mesh(new THREE.SphereGeometry(0.0042, 16, 10), ledM); led.position.set(0.026, 0, 0.0095);
+    const beamM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.1, depthWrite: false }), beam = mesh(unitZ(0.0012, 8), beamM); beam.scale.z = POST_H;
+    gate.add(gateBar, eye, led, beam); scene.add(gate);
+    // the gate timer on the bench: the last full turn, as on the readout
+    const timer = VD3K.meter(S3, { w: 0.13, h: 0.075, label: 'GATE TIMER', sub: 'last full turn, s' }), timerAt = new THREE.Group(); timerAt.add(timer); scene.add(timerAt);
+    timerAt.rotation.z = LAB_TURN; timer.traverse((x) => { if (x.isMesh) x.receiveShadow = true; });
+    let lead = null, leadD = -1;
+    const leadM = M({ roughness: 0.6 });
+    // the traces: camera facing ribbons, fading into the background with age
+    function ribbon(n) {
+      const g = new THREE.BufferGeometry(), idx = [];
+      g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 6), 3)); g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(n * 6), 3));
+      for (let i = 0; i < n - 1; i++) { const a = 2 * i; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); }
+      g.setIndex(idx); const m = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide }), x = new THREE.Mesh(g, m); x.frustumCulled = false; x.renderOrder = 1; scene.add(x); return x;
+    }
+    const tipTr = ribbon(TR_N), lTr = ribbon(TR_N);
     // the arm: a frame whose z is the axle (columns u, v, e as in the flat view); the wheel turns about it
     const arm = new THREE.Group(); arm.matrixAutoUpdate = false; scene.add(arm);
     const axleM = M({ roughness: 0.3, metalness: 0.6 }), axle = mesh(unitZ(0.0035), axleM, true); arm.add(axle);
@@ -422,14 +503,28 @@ table.rows input:focus { border-color: var(--accent); }
     const tyre = mesh(new THREE.TorusGeometry(RW * 0.955, RW * 0.075, 14, 72), tyreM, true), rimRing = mesh(new THREE.TorusGeometry(RW * 0.86, RW * 0.04, 10, 72), rimM, true);
     const spokeG = new THREE.CylinderGeometry(0.0007, 0.0007, RW * 0.76, 6); spokeG.translate(0, RW * 0.5, 0);   // from 0.12 R to 0.88 R along y
     const spokes = new THREE.Group(); for (let k = 0; k < 16; k++) { const sp = mesh(spokeG, spokeM, true); sp.rotation.z = k * Math.PI / 8; sp.position.z = (k % 2 ? 1 : -1) * 0.002; spokes.add(sp); }
+    const valveM = M({ roughness: 0.4, metalness: 0.1 }), valve = mesh(new THREE.BoxGeometry(0.004, 0.009, 0.007), valveM); valve.position.y = RW * 0.86; spokes.add(valve);   // one mark on the rim to follow under the strobe
     const blurM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.22, side: THREE.DoubleSide, depthWrite: false }), blur = new THREE.Mesh(new THREE.CircleGeometry(RW * 0.86, 64), blurM);
     const webM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.1, side: THREE.DoubleSide, depthWrite: false }), web = new THREE.Mesh(new THREE.CircleGeometry(RW * 0.86, 64), webM);
     rim.add(tyre, rimRing, spokes, blur, web);
     const hub = mesh(cyl(0.011, 0.011, 0.022, 24), axleM, true); wheel.add(disk, rim, hub);
+    // the sense of the spin: a curled arrow round the axle just outside the wheel (right hand rule: it curls the way the fingers do with the thumb along L)
+    const spinM = M({ roughness: 0.5 }), spinA = new THREE.Group(), curl = mesh(new THREE.TorusGeometry(0.024, 0.0016, 8, 40, Math.PI * 1.45), spinM);
+    const curlHd = mesh(new THREE.ConeGeometry(0.0045, 0.012, 14), spinM), ca = Math.PI * 1.45;
+    curlHd.position.set(0.024 * Math.cos(ca), 0.024 * Math.sin(ca), 0); curlHd.rotation.z = ca;   // the cone's axis (y) along the tangent at the end of the arc
+    spinA.add(curl, curlHd); arm.add(spinA);
     // arrows for L, the torque and the weight: a shaft and a cone, scaled to length
     function arrow3() { const m = new THREE.MeshStandardMaterial({ roughness: 0.5 }), g = new THREE.Group(), sh = mesh(unitZ(0.0022, 10), m), hd = mesh(new THREE.ConeGeometry(0.0065, 0.018, 16).rotateX(Math.PI / 2), m); g.add(sh, hd); g.userData = { m, sh, hd }; scene.add(g); return g; }
     const aL = arrow3(), aT = arrow3(), aW = arrow3();
-    g3 = { r, el, scene, cam, hemi, sun, floorM, tileCv, tileTex, baseM, postM, darkM, ringM, ring, gateM, gate, trailG, trailM, trail, arm, axle, axleM, wheel, disk, diskSideM, diskFaceM, faceCv, faceTex, rim, tyreM, rimM, spokeM, spokes, blur, blurM, web, webM, aL, aT, aW };
+    g3 = { S3, r, el, scene, cam, ringM, ring, gate, gateM, eyeM, ledM, beamM, timer, leadM, tipTr, lTr, arm, axle, axleM, wheel, disk, diskSideM, diskFaceM, faceCv, faceTex, rim, tyreM, rimM, spokeM, spokes, valveM, blur, blurM, web, webM, spinA, spinM, aL, aT, aW, baseM, postM, darkM,
+      /* the timer stands to the right on a wide picture, back left on a narrow one (a phone), where the right would be cut off */
+      lead: (d, wide) => { const lk = d + (wide ? 'w' : 'n'); if (lk === leadD) return; leadD = lk; if (lead) S3.dispose(lead);
+        if (wide) timerAt.position.set(0.28, 0.16, -POST_H); else timerAt.position.set(-0.25, 0.17, -POST_H); timerAt.updateMatrixWorld(true);
+        const z = -POST_H + 0.0025, a = [d + 0.03, 0, z + 0.002], b = timerAt.localToWorld(new THREE.Vector3(wide ? -0.06 : 0.06, 0.012, 0.012)), ra = d + 0.06, via = [[ra, -0.02, z]];
+        if (wide) via.push([(ra + b.x) / 2 + 0.03, b.y / 2 - 0.04, z], [b.x - 0.02, b.y - 0.03, z]);
+        else { for (const deg of [25, 60, 95, 125]) via.push([Math.max(0.1, ra) * Math.cos(deg * Math.PI / 180) * 1.05, Math.max(0.1, ra) * Math.sin(deg * Math.PI / 180) * 1.05, z]); via.push([b.x + 0.02, b.y - 0.01, z]); }   /* round the back of the base */
+        lead = VD3K.cable(a, b, { rad: 0.0016, mat: leadM, via }); scene.add(lead); } };
+    timerAt.updateMatrixWorld(true);
     // in the flat view the wheel scrolls the page and a drag does nothing
     can.addEventListener('wheel', (e) => { if (!G3.on) e.stopImmediatePropagation(); }, { passive: true });
     VD3.orbit(can, G3.o, () => { if (!S.run) draw(); }, { grab: () => !G3.on, phMin: 0.3, phMax: 1.5, zMin: 0.6, zMax: 2.4 });
@@ -437,25 +532,24 @@ table.rows input:focus { border-color: var(--accent); }
     return true;
   }
   function theme3() {
-    const g = g3, d = VD3.dark(), col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
-    const bg = col(T.canvas, '#fbfcfd'); g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 1.2, 3);
-    g.hemi.groundColor = col(T.floor, '#eef1f4'); g.hemi.intensity = d ? 1.05 : 0.75; g.sun.intensity = d ? 1.0 : 0.7;   // dark tokens are deep colours, so the room is lit a little more
-    const c = g.tileCv.getContext('2d'); c.fillStyle = T.floor; c.fillRect(0, 0, 128, 128); c.fillStyle = T.floorLine; c.fillRect(0, 0, 128, 3); c.fillRect(0, 0, 3, 128); g.tileTex.needsUpdate = true;
+    const g = g3, col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
     g.baseM.color = col(T.base, '#4a525c'); g.postM.color = col(T.post, '#9aa6b6'); g.darkM.color = col(T.ink, '#1d252f'); g.axleM.color = col(T.axle, '#4a5563');
-    g.ringM.color = col(T.gridStrong, '#c9d1db'); g.gateM.color = col(T.accent, '#2b60b5'); g.gateM.emissive = col(T.accent, '#2b60b5').multiplyScalar(0.35); g.trailM.color = col(T.trail, '#a7740b');
-    g.diskSideM.color = col(T.wheel, '#2b60b5').multiplyScalar(0.8); g.tyreM.color = col(T.tyre, '#2b3038'); g.rimM.color = col(T.wheel, '#2b60b5'); g.spokeM.color = col(T.spoke, '#8d97a3');
-    g.blurM.color = col(T.spoke, '#8d97a3'); g.webM.color = col(T.wheel, '#2b60b5');
+    g.ringM.color = col(T.gridStrong, '#c9d1db'); g.gateM.color = col(T.tyre, '#2b3038'); g.eyeM.color = col(T.accent, '#2b60b5'); g.beamM.color = col(T.accent, '#2b60b5'); g.leadM.color = col(T.tyre, '#2b3038');
+    g.diskSideM.color = col(T.wheel, '#2b60b5').multiplyScalar(0.8); g.tyreM.color = col(T.tyre, '#2b3038'); g.rimM.color = col(T.wheel, '#2b60b5'); g.spokeM.color = col(T.spoke, '#8d97a3'); g.valveM.color = col(T.Lv, '#b0452f');
+    g.blurM.color = col(T.spoke, '#8d97a3'); g.webM.color = col(T.wheel, '#2b60b5'); g.spinM.color = col(T.Lv, '#b0452f');
     g.aL.userData.m.color = col(T.Lv, '#b0452f'); g.aT.userData.m.color = col(T.tau, '#1f8a5a'); g.aW.userData.m.color = col(T.muted, '#6b7787');
+    G3.bg = col(T.canvas, '#fbfcfd'); G3.cTip = col(T.trail, '#a7740b'); G3.cL = col(T.Lv, '#b0452f'); G3.lit = col('#ff4433', '#ff4433'); G3.unlit = col(T.muted, '#6b7787').multiplyScalar(0.6);
     G3.face = '';
   }
-  // the disk's faces: three light bars that turn with a slow spin, a soft ring when the spin is too fast to follow (as in the flat view)
+  // the disk's faces: three light bars and one red mark that turn with a slow spin (or under the strobe), a soft ring when the spin is too fast to follow
   function face3(blurred) {
     const k = blurred ? 'b' : 's'; if (G3.face === k) return; G3.face = k;
     const c = g3.faceCv.getContext('2d'), R = 128; c.clearRect(0, 0, 256, 256); c.fillStyle = T.wheel; c.fillRect(0, 0, 256, 256);
     const sh = c.createRadialGradient(R, R, R * 0.2, R, R, R); sh.addColorStop(0, 'rgba(255,255,255,0.12)'); sh.addColorStop(1, 'rgba(0,0,0,0.18)'); c.fillStyle = sh; c.fillRect(0, 0, 256, 256);
     c.strokeStyle = T.metalHi; c.lineCap = 'round';
-    if (blurred) { c.globalAlpha = 0.3; c.lineWidth = 10; c.beginPath(); c.arc(R, R, R * 0.6, 0, 7); c.stroke(); }
-    else { c.globalAlpha = 0.65; c.lineWidth = 12; c.beginPath(); for (let i = 0; i < 3; i++) { const a = i * 2 * Math.PI / 3; c.moveTo(R + R * 0.25 * Math.cos(a), R + R * 0.25 * Math.sin(a)); c.lineTo(R + R * 0.85 * Math.cos(a), R + R * 0.85 * Math.sin(a)); } c.stroke(); }
+    if (blurred) { c.globalAlpha = 0.3; c.lineWidth = 10; c.beginPath(); c.arc(R, R, R * 0.6, 0, 7); c.stroke(); c.globalAlpha = 0.18; c.strokeStyle = T.Lv; c.lineWidth = 12; c.beginPath(); c.arc(R, R, R * 0.86, 0, 7); c.stroke(); }
+    else { c.globalAlpha = 0.65; c.lineWidth = 12; c.beginPath(); for (let i = 0; i < 3; i++) { const a = i * 2 * Math.PI / 3; c.moveTo(R + R * 0.25 * Math.cos(a), R + R * 0.25 * Math.sin(a)); c.lineTo(R + R * 0.85 * Math.cos(a), R + R * 0.85 * Math.sin(a)); } c.stroke();
+      c.globalAlpha = 1; c.fillStyle = T.Lv; c.beginPath(); c.arc(R + R * 0.86 * Math.cos(Math.PI / 3), R + R * 0.86 * Math.sin(Math.PI / 3), 11, 0, 7); c.fill(); }
     c.globalAlpha = 1; g3.faceTex.needsUpdate = true;
   }
   function setArrow(a, o, dir, len) {
@@ -463,37 +557,81 @@ table.rows input:focus { border-color: var(--accent); }
     a.visible = true; a.position.set(...o); a.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(dir[0] / n, dir[1] / n, dir[2] / n));
     a.userData.sh.scale.z = len - 0.018; a.userData.hd.position.z = len - 0.009;
   }
+  // a trace of points at radius rad(d) along the recorded axle directions, as a ribbon w wide facing the camera, fading with age
+  function trace3(m, rad, w, colr, on) {
+    const pts = S.tip, n = on ? Math.min(TR_N, pts.length) : 0, g = m.geometry, P = g.attributes.position, Cc = g.attributes.color, cp = g3.cam.position, k0 = pts.length - n;
+    const c = new THREE.Color();
+    for (let i = 0; i < n; i++) {
+      const q = pts[k0 + i], qa = pts[k0 + Math.max(0, i - 1)], qb = pts[k0 + Math.min(n - 1, i + 1)], R = rad(q[4]), x = q[1] * R, y = q[2] * R, z = q[3] * R;
+      let tx = qb[1] * rad(qb[4]) - qa[1] * rad(qa[4]), ty = qb[2] * rad(qb[4]) - qa[2] * rad(qa[4]), tz = qb[3] * rad(qb[4]) - qa[3] * rad(qa[4]);
+      const vx = cp.x - x, vy = cp.y - y, vz = cp.z - z; let sx = ty * vz - tz * vy, sy = tz * vx - tx * vz, sz = tx * vy - ty * vx; const sl = Math.hypot(sx, sy, sz) || 1; sx *= w / 2 / sl; sy *= w / 2 / sl; sz *= w / 2 / sl;
+      P.setXYZ(2 * i, x - sx, y - sy, z - sz); P.setXYZ(2 * i + 1, x + sx, y + sy, z + sz);
+      const a = Math.max(0, 1 - (S.t - q[0]) / 4); c.copy(G3.bg).lerp(colr, 0.15 + 0.85 * a); Cc.setXYZ(2 * i, c.r, c.g, c.b); Cc.setXYZ(2 * i + 1, c.r, c.g, c.b);
+    }
+    P.needsUpdate = true; Cc.needsUpdate = true; g.setDrawRange(0, Math.max(0, n - 1) * 6); m.visible = n > 1;
+  }
+  const wrapPi = (a) => a - 2 * Math.PI * Math.round(a / (2 * Math.PI));
+  function camPose(s, h) {
+    const o = G3.o, S3 = g3.S3, asp = W / Math.max(1, h), fit = (d, ref) => d * Math.max(1, ref / asp) / o.zoom;
+    if (CAM.mode === 'top') return { th: o.th, ph: 0.05, d: fit(1.3, 1.0), t: [0, 0, -0.08] };
+    if (CAM.mode === 'ride') return { th: o.th + s.ph, ph: o.ph, d: fit(0.66, 1.3), t: [0.5 * S.d * Math.cos(s.ph), 0.5 * S.d * Math.sin(s.ph), -0.085] };
+    void S3; return { th: o.th, ph: o.ph, d: fit(0.78, 1.35), t: [0.03, 0, -0.07] };
+  }
   // draws the 3D scene into its canvas (width W, height h) and returns a function from a point in metres to overlay pixels
   function render3(s, c, e, h, p) {
     const g = g3; if (!g) return null;
-    if (G3.w !== W || G3.h !== h) { G3.w = W; G3.h = h; g.r.setSize(W, Math.max(1, h)); g.cam.aspect = W / Math.max(1, h); g.cam.updateProjectionMatrix(); }
-    const key = [T.canvas, T.wheel, T.floor, T.accent].join(); if (G3.key !== key) { G3.key = key; theme3(); }
-    VD3.place(g.cam, G3.o, new THREE.Vector3(0.03, 0, -0.07), 0.78);
-    g.ring.scale.set(S.d, S.d, 1); g.ring.position.z = -POST_H + 0.0008; g.gate.position.set(S.d, 0, -POST_H + 0.002);
+    g.S3.size(W, h);
+    const tk = [T.canvas, T.wheel, T.floor, T.accent].join(); if (G3.tk !== tk) { G3.tk = tk; g.S3.theme(true); theme3(); }
+    // the camera, easing from where it was when the camera choice changed
+    let ps3 = camPose(s, h);
+    if (CAM.from) { const u = reduce ? 1 : Math.min(1, (performance.now() - CAM.t0) / 700), k = u * u * (3 - 2 * u), A = CAM.from;
+      ps3 = { th: A.th + wrapPi(ps3.th - A.th) * k, ph: A.ph + (ps3.ph - A.ph) * k, d: A.d + (ps3.d - A.d) * k, t: A.t.map((x, i) => x + (ps3.t[i] - x) * k) }; if (u >= 1) CAM.from = null; }
+    CAM.pose = ps3; VD3.place(g.cam, { th: ps3.th, ph: ps3.ph, zoom: 1 }, new THREE.Vector3(...ps3.t), ps3.d);
+    g.ring.scale.set(S.d, S.d, 1); g.ring.position.z = -POST_H + 0.0008; g.gate.position.set(S.d, 0, -POST_H); g.lead(S.d, W / Math.max(1, h) > 1.2);
+    // the gate's lamp is lit for 0.15 s after the axle passes φ = 0 (the moment the timer uses)
+    const lit = S.gate != null && S.t - S.gate < 0.15 && S.t >= S.gate; g.ledM.color = lit ? G3.lit : G3.unlit; g.ledM.emissive = lit ? G3.lit : new THREE.Color(0); g.beamM.opacity = lit ? 0.35 : 0; g.gate.children[3].visible = lit;
+    g.timer.set(S.fell ? 'FELL' : S.lastP ? S.lastP.toFixed(2) : '-.--');
     // the arm frame: u = e × z (horizontal), v = e × u, e along the axle
     const u = Math.abs(e[2]) < 0.9 ? norm(cross(e, [0, 0, 1])) : [1, 0, 0], v = cross(e, u);
     g.arm.matrix.makeBasis(new THREE.Vector3(...u), new THREE.Vector3(...v), new THREE.Vector3(...e)); g.arm.matrixWorldNeedsUpdate = true;
     g.axle.scale.z = S.d + 0.03; g.wheel.position.z = S.d;
-    const blurred = c.w3 > 0 && (reduce || c.w3 > 15), spoked = S.wheel === 'rim' && S.mystK == null;
-    g.wheel.rotation.z = blurred ? 0 : c.w3 * S.t; g.disk.visible = !spoked; g.rim.visible = spoked; g.spokes.visible = !blurred; g.blur.visible = blurred;
+    const st = strobeNow(c), blurred = !st && c.w3 > 0 && (reduce || c.w3 > 15), spoked = S.wheel === 'rim' && S.mystK == null;
+    g.wheel.rotation.z = st ? st.angle : blurred ? 0 : c.w3 * S.t; g.disk.visible = !spoked; g.rim.visible = spoked; g.spokes.visible = !blurred; g.blur.visible = blurred;
     if (!spoked) face3(blurred);
-    const pos = g.trailG.attributes.position, n = reduce ? 0 : Math.min(400, S.trail.length); for (let i = 0; i < n; i++) pos.setXYZ(i, ...S.trail[S.trail.length - n + i]); pos.needsUpdate = true; g.trailG.setDrawRange(0, n);
-    const C = e.map((x) => x * S.d), show = S.vecs && c.w3 > 0 && !S.fell, tau = cross(C, [0, 0, -MW * G]);
+    const show = S.vecs && c.w3 > 0 && !S.fell;
+    g.spinA.visible = show; g.spinA.position.z = S.d + 0.016;
+    trace3(g.tipTr, (d) => d + 0.03, 0.0022, G3.cTip, !reduce); trace3(g.lTr, (d) => d + 0.16, 0.0016, G3.cL, !reduce && show);
+    const C = e.map((x) => x * S.d), tau = cross(C, [0, 0, -MW * G]);
     setArrow(g.aL, C, show ? e : [0, 0, 0], 0.16); setArrow(g.aT, C, show ? tau : [0, 0, 0], 0.09); setArrow(g.aW, C, show ? [0, 0, -1] : [0, 0, 0], 0.07);
-    g.scene.updateMatrixWorld(); g.r.render(g.scene, g.cam);
-    const tmp = new THREE.Vector3();
-    return (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * h, tmp.z]; };
+    g.S3.render();
+    return (q) => g.S3.project(q);
+  }
+  /* the strobe: flashes at f − 0.25 a second for a wheel turning f times a second, so the wheel is seen only at the flashes and its
+     marks advance 0.25 of a turn a second. The angle shown is the wheel's simulated angle at the last flash. */
+  function strobeNow(c) {
+    if (!STROBE.on || !(c.w3 > 0)) return null;
+    const f = c.w3 / (2 * Math.PI); if (f <= 0.5) return null;
+    const fs = f - 0.25, tf = Math.floor(S.t * fs) / fs; return { f, fs, angle: c.w3 * tf };
   }
   function setView(v) {
     if (v === '3d' && !G3.ok) {
       if (G3.tried) { capStatus(NO3D); v = 'flat'; }
       else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); if (!G3.ok) capStatus(NO3D); setView(G3.ok ? '3d' : 'flat'); }); } return; }
     }
-    G3.on = v === '3d'; if (g3) g3.el.hidden = !G3.on; can.style.cursor = G3.on ? 'grab' : '';
+    G3.on = v === '3d'; if (g3) g3.el.hidden = !G3.on; can.style.cursor = G3.on ? 'grab' : ''; $('camBar').hidden = !G3.on;
     for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
     draw();
   }
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
+  $('camSeg').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-cam]'); if (!b || b.dataset.cam === CAM.mode) return;
+    if (CAM.pose) { CAM.from = { th: CAM.pose.th, ph: CAM.pose.ph, d: CAM.pose.d, t: CAM.pose.t.slice() }; CAM.t0 = performance.now(); }
+    if (CAM.mode === 'ride' && S.sim) G3.o.th = wrapPi(G3.o.th + S.sim.s.ph);   /* leave Ride along where it was looking */
+    CAM.mode = b.dataset.cam; if (CAM.mode === 'ride' && S.sim) G3.o.th -= S.sim.s.ph;
+    for (const x of document.querySelectorAll('#camSeg button')) x.setAttribute('aria-pressed', String(x.dataset.cam === CAM.mode));
+    draw();
+  });
+  $('strobe').addEventListener('click', () => { STROBE.on = !STROBE.on; $('strobe').setAttribute('aria-pressed', String(STROBE.on)); draw(); });
   // ---------- controls ----------
   function sync() {
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
@@ -533,16 +671,20 @@ table.rows input:focus { border-color: var(--accent); }
       const ph0 = sim.s.ph; sim.s = rk4(sim.c, sim.s, dt / n); S.t += dt / n;
       // gate at φ = 0 (mod 2π): time between successive forward crossings
       const k0 = Math.floor(ph0 / (2 * Math.PI)), k1 = Math.floor(sim.s.ph / (2 * Math.PI));
-      if (k1 > k0) { const tc = S.t - (dt / n) * (sim.s.ph - 2 * Math.PI * k1) / (sim.s.ph - ph0); if (S.gate != null) S.lastP = Math.round((tc - S.gate) * 100) / 100; S.gate = tc; }
+      if (k1 > k0) { const tc = S.t - (dt / n) * (sim.s.ph - 2 * Math.PI * k1) / (sim.s.ph - ph0); if (S.gate != null) S.lastP = Math.round((tc - S.gate) * 100) / 100; S.gate = tc; S.gates.push(tc); }
+      /* the 3D traces: the axle's direction every 4 ms of simulated time, finer than a frame so the wobble's cusps stay sharp */
+      if (!S.tip.length || S.t - S.tip[S.tip.length - 1][0] >= 0.004) { const sn = Math.sin(sim.s.th); S.tip.push([S.t, sn * Math.cos(sim.s.ph), sn * Math.sin(sim.s.ph), Math.cos(sim.s.th), S.d]); }
       if (sim.s.th > 2.6 || sim.s.th < 0.05) { S.fell = true; setRun(false); break; }
     }
     S.trace.push([S.t, (Math.PI / 2 - sim.s.th) * 180 / Math.PI]); while (S.trace.length && S.t - S.trace[0][0] > 4.2) S.trace.shift();
+    while (S.tip.length && S.t - S.tip[0][0] > 4) S.tip.shift(); while (S.gates.length && S.t - S.gates[0] > 4.2) S.gates.shift();
     const e = [Math.sin(sim.s.th) * Math.cos(sim.s.ph), Math.sin(sim.s.th) * Math.sin(sim.s.ph), Math.cos(sim.s.th)]; S.trail.push(e.map((x) => x * S.d)); if (S.trail.length > 400) S.trail.shift();
   }
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (S.run) { advance(dt); draw(); readouts(); }
+    else if (G3.on && CAM.from) draw();   /* a change of camera eases in even while the gyroscope is held */
     requestAnimationFrame(frame);
   }
   // ---------- readings ----------
