@@ -1272,3 +1272,85 @@ The two old GPT era handouts are now interactive worksheets (MODERN block of `wo
 - **Compton** (`compton.md`, now §§6.3, 5.8, 5.9): new Blind checkbox (Model fold) hides Δλ, E′, the electron's momentum and speed and the conservation check; readings panel exports θ, λ′ (5 significant figures), T and φ. Students graph Δλ against 1 − cos θ for Mo Kα and Cs 137, get h = λC m_e c, and check momentum both ways (relativistic balances, Newton's falls 14% short at 90° for Cs).
 - `test_photoelectric_record.cjs` follows the export; `test_main_lab_controls.cjs` now toggles the Theory layer without opening its fold (it timed out on main too) and passes at both widths. vdcheck 0 problems on both demos; math check 0 problems; `courses.py --check` clean.
 - **GPT, please verify** both handouts (physics, wording, procedure states the task) and the Compton Blind and export code.
+
+## Claude, 2026-10-24: Physics I and II OpenStax gaps filled (four new demos, 22 worksheets)
+
+Steve asked to fill every remaining OpenStax gap today. This batch covers everything outside Modern Physics and Thermodynamics: the four missing sections (Vol. 3 §3.5, §4.5, §4.7; Vol. 2 §15.6), the partial wave optics sections (§4.1, §4.2, §4.6), and a worksheet with a key for every Physics I and II demo that had none. Physics I and Physics II (both units of optional optics included) now have no missing or partial section from this list, and every Physics I and II demo has a worksheet. Built by nine parallel agents with one brief; each batch reviewed here before the commit (5592252 and its rebase). Keys from real capture runs are in TeacherKeys `worksheet-keys/physics-1/` and `physics-2/`.
+
+**Michelson Interferometer (new, Vol. 3 §3.5)**
+
+- **New demo `demos/michelson.html`**, Michelson Interferometer (Vol. 3 §3.5): top view of an interferometer on an optical table beside its screen. The pattern is the exact interference of the two mirror images of the source point (rings; nearly straight fringes with M₂ tilted). Micrometer to 0.1 μm and a fringe counter; sources He–Ne red and green, mercury green, sodium D lines, white light (D65), mystery laser; 5.00 cm gas cell with pump, needle valve and gauge; air's index from Ciddor 1996, linear in pressure at 20 °C. Chosen values stated in About: equal arms at 143.2 μm (page says only between 130 and 160 μm), ideal 50:50 splitter, no cell windows, dry air 20.0 °C and 101.325 kPa, micrometer reads the mirror directly. Tests `test_michelson.cjs` (11 groups).
+- Handout `michelson.md`: λ of the red He–Ne and a mystery laser (N against Δd), n − 1 of air (N against P), white light at equal paths.
+- Key: λ = 632.55 ± 0.31 nm (expected 632.82); mystery laser 560.97 ± 0.35 nm (true 561.25); n − 1 = 2.718 × 10⁻⁴ (Ciddor 2.7181 × 10⁻⁴); scaled to 0 °C n = 1.000292 (textbook 1.000293).
+- GPT, please verify the Ciddor constants and P/T scaling, the NIST wavelengths, and the sodium fading claim (every λ²/2Δλ = 0.29 mm, visibility down to 1/3).
+
+**Circular Apertures and Resolution (new, Vol. 3 §4.5)**
+
+- **New demo** `demos/resolution.html`, Circular Apertures and Resolution (Vol. 3 §4.5). Exact Airy pattern I = I₀[2J₁(x)/x]², x = πD sin θ/λ; J₁ from Bessel's integral (trapezoid rule, about 1e‑13), tested against its zeros, which give the 1.2197 factor. Two incoherent sources add in intensity, with line profile, cursor and Rayleigh's criterion (hidden in Blind). Setups: laser and pinhole, two point sources and an iris, headlights and the eye (3.00 mm pupil, 1.30 m), Hubble (2.40 m, 2.0 million ly), 50 mm camera lens by f-number, mystery pinhole. Far field only (D²/λL ≤ 0.22 stated); no central obstruction for Hubble (stated). Tests `test_resolution.cjs` (8 groups).
+- **Handout** `resolution.md`: θ₁ against λ/D, Δθ_min against 1/D, headlight distance against pupil, mystery pinhole.
+- **Key** (TeacherKeys `worksheet-keys/physics-2/`): slope 1.2207 ± 0.0010 (theory 1.2197), Δθ against 1/D 670.5 ± 0.5 µrad·mm (1.219 λ), Rayleigh dip 73.5%, headlights 5.81 km at 3.00 mm.
+- Textbook numbers checked against OpenStax: Example 4.6 (Hubble, 2.40 m, 550 nm, 2 million ly, 0.56 ly) and ch. 4 Problem 59 (3.00 mm pupil, headlights 1.30 m). The demo could cite those numbers.
+
+**Transformers (new, Vol. 2 §15.6) and Displacement Current**
+
+- **New demo `demos/transformers.html`, "Transformers"** (§14.1, 15.6). Transformer view: AC source, iron core, primary and secondary turns, load resistor, rms meters and live v_P, v_S, i_P, i_S traces. Ideal model (Eq. 15.20 to 15.23) or real: coupled coils with μr = 4000 (chosen value), copper windings with R ∝ N², coupling k; no core loss or saturation, stated on the page. Power line view: 12 kV generator, step up to V, line R, step down to 240 V; loss P²R/V². Presets include Example 15.6 and Check Your Understanding 15.9. Tests `test_transformers.cjs` (10 groups).
+- §15.6 is now covered and stays `later` (going further) like §15.1 to 15.5; the card shows in Physics II's induction unit through §14.1.
+- **Displacement Current** gets the shared Readings section, Export to worksheet and the handout button (CORE unchanged).
+- Handouts `transformers.md` (V_S against N_S, I_P against I_S, a real transformer, line loss against 1/V²) and `displacement-current.md` (flat disk against bag, B(r) inside and outside the plates, B against I, ε₀A ΔE/Δt). Keys (TeacherKeys `worksheet-keys/physics-2/`): fits match theory to six figures; ε₀A ΔE/Δt comes out 0.34% high, as the finite difference predicts.
+- GPT, please verify the real model's equations and its ideal limit, and the power line model (sent power fixed, I = P/V).
+
+**Double slit, diffraction grating, single slit (§3.1 to 3.3, 4.1 to 4.4)**
+
+- Diffraction Grating demo gains a **Single slit** aperture (N = 1, slit width a 0.5 to 20 µm, `?aperture=single`): exact far field I = I₀[sin β/β]², dark fringes at a sin θ = mλ labelled on the wall, a dark fringe table, a light meter on caliper jaw B (I/I₀), and Compute and check for a. New CORE `slitBeta`, `darkRange`, `slitMaxBeta`; tests in `test_diffraction_grating.cjs` (8 groups, including an independent Huygens sum and the side maxima 0.0472, 0.0165, 0.0083). Slits are narrower than a teaching lab's (stated) so the pattern spreads wide enough for the 1 mm caliper. Map §4.1 and §4.2 now usable.
+- Double Slit demo gains measuring cursors A and B (predictions hidden while measuring). Both demos get the shared Readings section, Export to worksheet and handout buttons; the modern module presets are unchanged.
+- Handouts: `double-slit.md` and `diffraction-grating.md` rewritten from the GPT era files (Δy against λ, 1/d, L and λL/d; sin θ against mλ, an unknown laser, hydrogen lines, optional resolving power), new `single-slit.md` (dark fringes against m and against 1/a, meter against (sin β/β)²).
+- Keys: single slit a = 5.002 µm, λ from slope 634.7 nm (1 mm caliper step); grating 600.5 lines/mm, unknown 404.3 nm (405 nm laser), Balmer lines within 0.4%; double slit spacings 1 to 4% below λL/d, explained by the envelope pulling the fringe peaks inward (1.7% at d/a = 5).
+- GPT, please check the single slit CORE against its tests and the envelope pull figures in the double slit key.
+
+**Thin films, EM waves, electron and X ray diffraction (§3.4, 4.6, Vol. 2 ch. 16)**
+
+- Shared Readings section and Export to worksheet added to thin-films, em-waves and electron-diffraction, with handout buttons.
+- Worksheets: new `thin-films.md` (bright and dark soap film thickness against λ, MgF₂ coating, air wedge), `em-waves.md` (B₀ against E₀ for c, I against E₀² for ε₀, radiation pressure absorbed and reflected, antenna sin²θ), `x-ray-diffraction.md`; `electron-diffraction.md` rewritten from the GPT era file (row by row d and a free intercept fit, compared).
+- **Electron diffraction gains an X rays view** (fills §4.6): Cu or Mo tube at 35 kV, NaCl or LiF (200) crystal on a turntable, counter on a 2θ arm, Scan from 2° to 65°. Peak positions are exact Bragg angles of Kα₁ and Kβ₁ from X-ray Data Booklet energies; the Duane–Hunt limit is exact. Count rates, widths and background are illustrative (stated); Kα₂ and the weak lines are left out; no counting noise. New tests `test_thin-films.cjs` (7 groups), `test_electron-diffraction.cjs` (4 groups).
+- Keys (TeacherKeys `physics-2/`): soap film n = 1.330, dark/bright slope ratio 2.000; MgF₂ n = 1.3812 ± 0.0023, R(550 nm) 1.260%; wedge spacer 9.999 ± 0.003 µm; c = 2.997925 × 10⁸ m/s, ε₀ = 8.85419 × 10⁻¹²; graphite d₁ = 214.3 ± 1.1 pm, d₂ = 123.2 ± 0.2 pm (data sheet 213 and 123); Cu Kα 0.15412 ± 0.00009 nm (0.15406), Mo Kα 0.070932 nm, LiF d(200) 0.20146 nm (0.20135).
+- GPT, please verify the line wavelengths and Bragg angles in XTUBE and XTAL, the thin film phase shift rules against §3.4, and the spherical screen formula tan ψ = R sin α / (R cos α + L − R).
+
+**Cart launch, elevator, center of mass, units (Physics I)**
+
+- Three Physics I demos that had no worksheet now have one, all interactive with Export to worksheet and graphs (PHYSICS_I in worksheet.js): `relative-motion.md` (Ball Launched from a Moving Cart, §§4.3, 4.5: ball distance against cart speed gives t = 2u/g; Δx against the cart's acceleration after launch gives −½t²; frictionless incline lands in the launcher with t = 2u/(g cos θ)), `apparent-weight.md` (Elevator, §§5.2, 5.4: scale reading against acceleration gives m from the intercept and g from intercept/slope, at 60 and 90 kg; free fall reads 0, braking 2mg), `center-of-mass.md` (§9.6: x_cm against mass share on the plate; firework centre of mass on the unexploded parabola until a piece lands; boat shift against mass share, slope −L).
+- The three demos get the shared Readings section and the handout button (handout style turned back on in data-vd-off). CORE unchanged, tests pass, vdcheck 0 problems. Elevator's Lab text now says the cable snap gives up to one second of free fall (the code shortens it near the pit).
+- The units demo's handout button and map entry now link measurement-and-units and estimation-and-evidence; each worksheet names the demo as a companion to check work done by hand. No Export to worksheet: those tables hold student observations and assumptions, not demo readings.
+- Keys in TeacherKeys `worksheet-keys/physics-1/` from capture runs: g = 9.811 and 9.808 m/s² (cart), 9.820 and 9.821 m/s² (elevator, 0.1% high from the 0.1 kg rounding, explained), plate slope 0.6000 m, boat L = 4.00 m.
+- Open: elevator Set up card covers the scale graph when paused at 1280 px (older behaviour). Units worksheets now appear both on the units demo card and as activity cards.
+
+**Gravitation (Physics I §13.2, 13.6, 13.7; Vol. 3 §5.3)**
+
+- New interactive handouts: `gravity-near-earth.md` (height scan, g against 1/r² for GM; latitude scan, g_eff against cos²λ for ω, compared with WGS 84; Moon and Mars), `tides.md` (pull against 1/d² for M_Moon, mean tidal pull against 1/d³ with slope twice the pull's; Sun/Moon tide and pull ratios, spring and neap ranges, 12 h 25 min tides) and `gps-clocks.md` (gravity and speed parts against 1/r, speed part against v² for c, cancelling radius 3R/2, Pound–Rebka tower, one day run).
+- The three demos have the shared Readings section (Record refused in Blind; tides records in the Pull view, μm/s², four figures; GPS μs/day, six figures) and handout buttons. Gravity's header line now shows the chosen planet's GM and R (it was always Earth's). No CORE or physics change. Node tests gained one group each for the worksheet claims.
+- Keys (TeacherKeys `worksheet-keys/physics-1/`): GM = 3.98598 × 10¹⁴ m³/s², rotation period 23.925 ± 0.013 h, M_Moon = 7.3418 × 10²² kg, A_Sun/A_Moon = 0.459, GPS +45.718 − 7.110 = +38.608 μs/day, GM/c² = 4.43503 mm, c = 2.99793 × 10⁸ m/s.
+- GPS ground clock sits on a 6371 km sphere, not the geoid, so its gravity part is 45.72 μs/day against Ashby's 45.85; the net matches and the About says so.
+- GPT, please verify the tides claim that the mean of near and far exceeds 2GMR/d³ by about 2(R/d)², and the GPS first order rate formula and slope ratio.
+
+**Equilibrium, catenary, double pendulum (Physics I), eddy currents (Physics II)**
+
+- Readings section and Export to worksheet added to `demos/equilibrium.html`, `catenary.html`, `double-pendulum.html`, `eddy-currents.html`, each with its handout button. The double pendulum gains a readout for when copy 1 first reaches d = 0.1; catenary's V at the lowest point reads 0 (it showed 0.000000000 N). No controls renamed.
+- New interactive worksheets: `static-equilibrium` (plank support forces against load position, sign tension against 1/sin θ, ladder slip angle), `catenary` (H against 1/d, T_A − T_B against y_A − y_B), `double-pendulum` (ω² against 1/L for both modes, separation time against log₁₀ δ), `eddy-currents` (fall time against σ for both metals, against m² for copper).
+- **Physics fix:** eddy currents conductivity below −50 °C is now linear in resistivity, not in conductivity (copper at −100 °C 114 MS/m, was 201). Room temperature and liquid nitrogen values unchanged. New test group in `test_eddy_currents.cjs`.
+- Keys (TeacherKeys `physics-1/` and `physics-2/`): plank slope 294.303 N/m (theory 294.30), sign 245.240 N (245.25), catenary λg 19.6137 (19.6133), H against 1/d 1.3% low as the fuller expansion λg(Δx²/8d + d/6) explains; modes (2 − √2)g within 0.03%, mode 2 0.25% low from amplitude; eddy σ slope 0.210985 (0.21102).
+- Open for Steve: equilibrium uses g = 9.81 and catenary 9.80665 (both stated); aluminium is pure aluminium's 37.7 MS/m (alloy pipes are 25 to 35); eddy currents Set up card covers part of the speed graph after a drop (older behaviour).
+- GPT, please verify the shallow chain expansion, the normal mode formulas, the eddy current resistivity interpolation and the k = 45μ₀²m²σw/(1024a⁴) citation (Levin et al., Am. J. Phys. 74, 815, 2006).
+
+**Holography (new, Vol. 3 §4.7)**
+
+- New demo `demos/holography.html`. Record view: a reference plane wave and an object (a plane wave, one point or three points, exact cylindrical H₀(kr) waves of a 2D slice) on a 3.0 mm plate; the exact intensity magnified at the plate; a microscope with cursors and a fringe count. Reconstruct view: the plate (thin, linear emulsion, t = I/I_max, stated) lit at 400 to 700 nm along the reference or from the other side, propagated exactly by the angular spectrum (FFT, evanescent and wrapping light dropped); map of the light and of the light traced back, a screen or camera focus, an angle spectrum with a 0.05° detector. Blind hides the grating equation angles and the ray traced image positions z₀(λ₁/λ₂)cos³α. Tests `test_holography.cjs` (8 groups).
+- Handout `holography.md`: d against 1/sin(θ/2); d against λ₁; sin θ_im against λ₂; image z against 1/λ₂, plus the real image.
+- Key: λ = 633.1 ± 0.2 nm from Part 1; d = 1.4974 μm against 1.4978 μm in Part 3; image distances within one 0.05 mm focus step of the cos³α rule (the simple λ₁/λ₂ rule misses, and the key says why).
+- GPT, please verify `beamAngles` and `pointImage` against the CORE and tests, and that the dropped wrapping light never reaches the part of the map shown.
+
+**Also in this batch**
+
+- The thermo demos ideal gas, blackbody and heat engines had an unstyled handout button (their `data-vd-off` still listed the handout rules); fixed the same way as the demos above.
+- `tools/vdcheck.cjs` serves three.js from the file named by `VD_THREE` where cdnjs is blocked (cloud sessions); TeacherKeys `tools/lib.cjs` does the same from tools/vendor.
+- Map, catalog, HANDOUT_TOPIC, notes, course pages and `TEXTBOOK_GAPS.md` updated. Every Node test passes; vdcheck `--only after` 0 problems on every demo touched; math check 0 problems on every new handout; all 22 worksheets open on a local Jekyll build with their tables, answer boxes and graph, no page errors.
+
+**For Steve** (not changed): the units worksheets now show both on the units demo card and as activity cards (a redundancy question for the later pass); equilibrium uses g = 9.81 and catenary 9.80665; elevator and eddy currents Set up cards cover their graph when paused at 1280 px (older behaviour); X ray count rates are illustrative, peak positions exact; the electron diffraction thumbnail still shows electron mode.
