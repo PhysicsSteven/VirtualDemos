@@ -83,7 +83,7 @@ Keep separate trajectory and range scans. Record ball mass, diameter, drag coeff
 
 ## Uncertainty
 
-Use position/time-dot resolution and range rounding. Include launch speed uncertainty when inferring $$g$$ from a range slope; speed is squared. In a real bench, include angle and height alignment. Deterministic simulation points do not acquire random uncertainty merely by repeating them. State whether errors come from reading, numerical approximation or an unsuitable model.
+Use the resolution of the position and time dots and the rounding of the range. Include launch speed uncertainty when inferring $$g$$ from a range slope; speed is squared. In a real bench, include angle and height alignment. Deterministic simulation points do not acquire random uncertainty merely by repeating them. State whether errors come from reading, numerical approximation or an unsuitable model.
 
 ## Questions
 

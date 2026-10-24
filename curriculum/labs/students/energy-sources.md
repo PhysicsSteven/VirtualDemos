@@ -55,7 +55,7 @@ Source: EIA Table 3.1.A, 2024 annual utility scale row; reported figures are rou
 1. Show one complete share, joule conversion and average power calculation with units. Explain how you determined the year length.
 2. Compare the selected shares and calculate the unlisted remainder. Explain why small scale solar must not be added to one numerator while retaining the utility scale denominator.
 3. Draw and explain two energy conversion chains. For each, identify an energy transfer that does not reach the electrical output.
-4. Complete the hypothetical plant's input/output/rejected-energy account. State what additional evidence would be needed to estimate a real plant's efficiency or environmental impact.
+4. Complete the hypothetical plant's input, output and rejected energy account. State what additional evidence would be needed to estimate a real plant's efficiency or environmental impact.
 
 ## Uncertainty
 

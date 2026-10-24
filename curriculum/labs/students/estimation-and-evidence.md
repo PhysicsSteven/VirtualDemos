@@ -35,7 +35,7 @@ Use normal access to a classroom and measuring container. Do not waste drinking 
 
 **Practice reporting.** Use the supplied exercise values $$L = 1.24 \pm 0.01\ \text{m}$$ and $$W = 0.83 \pm 0.01\ \text{m}$$. Calculate a rectangular area, a bound from the four endpoint combinations and a sensibly rounded final report. Also evaluate $$12.4 + 0.56$$ and $$3.20 \times 0.0450$$ with the usual classroom rounding conventions, explaining the different rules. Treat these as supplied inputs, not measurements you made.
 
-**Solve and check.** For a hypothetical cart starting from rest with constant acceleration 0.80 m/s² over 2.5 m, estimate the travel time before calculating it. Write the knowns, unknown, model assumptions, governing relation, algebra, substitution and a units/limiting-case check. Compare with your first estimate; do not erase an initial estimate just because it was imperfect.
+**Solve and check.** For a hypothetical cart starting from rest with constant acceleration 0.80 m/s² over 2.5 m, estimate the travel time before calculating it. Write the knowns, unknown, model assumptions, governing relation, algebra, substitution and a units check and a limiting case check. Compare with your first estimate; do not erase an initial estimate just because it was imperfect.
 
 No simulation is required. A disagreement between estimates is a reason to inspect assumptions, not to select whichever number has more digits.
 
