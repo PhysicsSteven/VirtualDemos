@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>.bench { position: relative; }
 /* the Set up card on the picture: it fades away while the run plays and comes back on pause or when the run ends */
 .setup-card { position: absolute; z-index: 3; left: 12px; top: 56px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); transition: opacity 0.35s ease, visibility 0.35s; }
@@ -35,6 +36,10 @@
 .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--canvas); font-weight: 700; }
 .seg { display: inline-flex; flex-wrap: wrap; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .lab { font-size: 0.88rem; }
+.dimseg { position: absolute; top: 10px; right: 10px; z-index: 2; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+.dimseg[hidden] { display: none; }
+.dimseg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.dimseg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .slider-head label { font-size: 0.88rem; }
@@ -81,6 +86,7 @@ table.rows input:focus { border-color: var(--accent); }
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="Electrostatics at Work"></canvas>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
+      <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
     </div>
 
     <div class="setup-card" id="setupCard" data-for="vdg" role="group" aria-labelledby="setupTitle">
@@ -251,13 +257,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
   const MODELS = {
     vdg: 'Model: the dome is an isolated conducting sphere far from everything else, so C = 4πε₀R, V = kQ/R and the surface field is V/R. The belt delivers a constant current and nothing leaks away until the surface field reaches 3.0 MV/m (dry air at 1 atm, approximate; damp air, dust and a rough surface spark sooner). A spark is drawn as emptying the dome completely; a real one leaves a little charge. The column, base and wand are not part of the calculation.',
-    ink: 'Model: a uniform field V/gap between the plates and none outside them (no fringing); the drop is a water sphere of density 1000 kg/m³ moving at constant horizontal speed. Gravity is included. Air drag is left out: for a single drop of 60 µm in still air, Stokes drag would slow it by about a tenth over this path (an underestimate at these speeds); real printers make up for it in their charge tables. The drop charge is limited well below the Rayleigh limit, where the drop would tear itself apart. Drawn to scale, in slow motion.',
-    esp: 'Model: each particle carries the saturation charge of field charging, q = 4πε₀a²E·3κ/(κ + 2) (Pauthenier), with charging and collecting field equal (a single stage unit). Diffusion charging is left out, so the charge and the efficiency of particles below about 0.5 µm are underestimated. Drift speed w = qE·Cc/(3πηd), Stokes drag with the Cunningham slip correction (air at 20 °C: η = 1.81 × 10⁻⁵ Pa·s, mean free path 0.066 µm). Efficiency by the Deutsch equation η = 1 − exp(−wL/(us)), which assumes turbulent mixing keeps the dust spread evenly across the channel. The animation catches each particle with the Deutsch probability w·Δt/s in each time step and then draws it drifting to the nearer plate. Gravity settling is left out. The channel is not drawn to scale.'
+    ink: 'Model: a uniform field V/gap between the plates and none outside them (no fringing); the drop is a water sphere of density 1000 kg/m³ moving at constant horizontal speed. Gravity is included. Air drag is left out: for a single drop of 60 µm in still air, Stokes drag would slow it by about a tenth over this path (an underestimate at these speeds); real printers make up for it in their charge tables. The drop charge is limited well below the Rayleigh limit, where the drop would tear itself apart. Drawn to scale, in slow motion. The faint drops flying into the gutter are the uncharged jet that runs between printed drops; real drops follow each other much more closely.',
+    esp: 'Model: each particle carries the saturation charge of field charging, q = 4πε₀a²E·3κ/(κ + 2) (Pauthenier), with charging and collecting field equal (a single stage unit). Diffusion charging is left out, so the charge and the efficiency of particles below about 0.5 µm are underestimated. Drift speed w = qE·Cc/(3πηd), Stokes drag with the Cunningham slip correction (air at 20 °C: η = 1.81 × 10⁻⁵ Pa·s, mean free path 0.066 µm). Efficiency by the Deutsch equation η = 1 − exp(−wL/(us)), which assumes turbulent mixing keeps the dust spread evenly across the channel. The animation catches each particle with the Deutsch probability w·Δt/s in each time step and then draws it drifting to the nearer plate. Gravity settling is left out. The channel is not drawn to scale. The grey haze between the plates fades as exp(−wx/(us)), the concentration the Deutsch equation gives along the channel; the small dots streaming from the wire are ions, drawn only to show where the charging happens.'
   };
   function setSetup(s) {
     S.setup = s;
     for (const b of document.querySelectorAll('#setups button')) b.setAttribute('aria-pressed', String(b.dataset.s === s));
     for (const el of document.querySelectorAll('[data-for]')) el.hidden = el.dataset.for !== s;
+    $('dimSeg').hidden = s !== 'vdg';
     $('setupHint').textContent = HINTS[s]; $('blindHint').textContent = BLINDS[s]; $('modelHint').textContent = MODELS[s];
     can.setAttribute('aria-label', { vdg: 'A Van de Graaff generator: a belt in an insulating column charges a metal dome; a grounded wand stands beside it. Below, graphs of the dome voltage against time and of the field against distance from the centre.', ink: 'Side view of an ink jet printer: a nozzle, a charging electrode, two deflection plates, a gutter and the paper, with drops flying across. On the right, the paper seen face on with a millimetre ruler.', esp: 'Top view of one precipitator channel: gas carrying particles flows between two grounded plates with a charging wire down the middle; particles drift onto the plates. Below, the collection efficiency against particle diameter.' }[s]);
     upd();
@@ -389,9 +396,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function jag(x0, y0, x1, y1, n, amp) { ctx.beginPath(); ctx.moveTo(x0, y0); for (let i = 1; i < n; i++) { const f = i / n, nx = -(y1 - y0), ny = x1 - x0, L = Math.hypot(nx, ny) || 1, o = (Math.random() - 0.5) * 2 * amp; ctx.lineTo(x0 + (x1 - x0) * f + nx / L * o, y0 + (y1 - y0) * f + ny / L * o); } ctx.lineTo(x1, y1); ctx.stroke(); }
 
-  let beltPhase = 0;
+  let beltPhase = 0, inkPhase = 0, espPhase = 0;
   function drawVdg() {
     const p = ps(), narrow = W < 640, sceneH = Hh * (narrow ? 0.56 : 0.62), R = S.R / 100, Qm = qMax(R), V = sphereV(S.Q, R), frac = S.Q / Qm;
+    if (use3()) vdg3(sceneH); else {
     /* floor and bench */
     const floorY = sceneH - 14 * p; ctx.fillStyle = T.relief; ctx.fillRect(0, floorY, W, sceneH - floorY);
     const scale = Math.min((sceneH - 40 * p) / 1.55, W * 0.6 / 1.3);   /* px per metre: the 0.80 m column plus the largest dome fit */
@@ -426,6 +434,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     txt('20 cm', 14 * p + sb / 2, floorY - 22 * p, { a: 'center', c: T.muted, s: 10 });
     /* spark */
     if (S.spark > 0) { ctx.strokeStyle = T.spark; ctx.lineWidth = 2.5 * p; ctx.shadowColor = T.spark; ctx.shadowBlur = 10 * p; const a = Math.atan2(wy - domeY, wx - cx); jag(cx + Math.cos(a) * rp, domeY + Math.sin(a) * rp, wx - wr, wy, 9, 7 * p); ctx.shadowBlur = 0; }
+    }
     /* plots */
     const py = sceneH + 8 * p, ph = Hh - py - 8 * p, gw = narrow ? W - 16 * p : (W - 24 * p) / 2;
     const P1 = { x: 8 * p, y: py, w: gw, h: narrow ? ph / 2 - 4 * p : ph }, P2 = narrow ? { x: 8 * p, y: py + ph / 2 + 4 * p, w: gw, h: ph / 2 - 4 * p } : { x: 16 * p + gw, y: py, w: gw, h: ph };
@@ -458,12 +467,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ox = 12 * p - xMin * sc, oy = 30 * p + (sideH - 40 * p) * 0.68, X = (x) => ox + x * sc, Y = (y) => oy - y * sc;
     txt('Side view, to scale, slow motion', 12 * p, 22 * p, { b: 1 });
     /* nozzle and ink line */
-    ctx.fillStyle = T.belt; ctx.beginPath(); ctx.roundRect(X(xMin) - 4 * p, Y(0.0008), X(INKX0) - X(xMin) + 4 * p, 0.0016 * sc, 3 * p); ctx.fill(); txt('nozzle', X(xMin), Y(0.0008) - 8 * p, { a: 'left', c: T.muted, s: 10 });
+    if (window.VDGear && /^#[0-9a-f]{6}$/i.test(T.belt)) window.VDGear.box(ctx, X(xMin) - 4 * p, Y(0.0008), X(INKX0) - X(xMin) + 4 * p, 0.0016 * sc, { color: T.belt, r: 3 * p });
+    else { ctx.fillStyle = T.belt; ctx.beginPath(); ctx.roundRect(X(xMin) - 4 * p, Y(0.0008), X(INKX0) - X(xMin) + 4 * p, 0.0016 * sc, 3 * p); ctx.fill(); }
+    txt('nozzle', X(xMin), Y(0.0008) - 8 * p, { a: 'left', c: T.muted, s: 10 });
     /* charging electrode: a short tube around the jet */
     ctx.fillStyle = T.equi; ctx.fillRect(X(-0.005), Y(0.0007), 0.003 * sc, 0.00025 * sc); ctx.fillRect(X(-0.005), Y(-0.00045), 0.003 * sc, 0.00025 * sc);
     txt(narrow ? 'charger' : 'charging electrode', X(-0.0035), Y(-0.0007) + 10 * p, { a: 'center', c: T.muted, s: 10 });
     /* plates */
-    const pt = 0.0003 * sc; ctx.fillStyle = T.plateLo; ctx.fillRect(X(0), Y(INK.gap / 2) - pt, INK.L * sc, pt); ctx.fillStyle = T.plateHi; ctx.fillRect(X(0), Y(-INK.gap / 2), INK.L * sc, pt);
+    const pt = 0.0003 * sc, bar = (y, c) => { if (window.VDGear && /^#[0-9a-f]{6}$/i.test(c)) { const VG = window.VDGear, gr = ctx.createLinearGradient(0, y, 0, y + pt); gr.addColorStop(0, VG.mix(c, '#ffffff', 0.35)); gr.addColorStop(0.5, c); gr.addColorStop(1, VG.mix(c, '#000000', 0.3)); ctx.fillStyle = gr; } else ctx.fillStyle = c; ctx.fillRect(X(0), y, INK.L * sc, pt); };
+    bar(Y(INK.gap / 2) - pt, T.plateLo); bar(Y(-INK.gap / 2), T.plateHi);
     txt(narrow ? 'grounded' : 'grounded plate', X(INK.L / 2), Y(INK.gap / 2) - pt - 8 * p, { a: 'center', c: T.muted, s: 10 }); txt(narrow ? `+${S.PV} V` : `plate at +${S.PV} V`, X(INK.L / 2), Y(-INK.gap / 2) + pt + 10 * p, { a: 'center', c: T.plateHi, s: 10 });
     if (S.PV > 0) { ctx.strokeStyle = T.field; ctx.globalAlpha = 0.25; ctx.lineWidth = 1 * p; for (let i = 1; i < 6; i++) { const x = X(INK.L * i / 6); ctx.beginPath(); ctx.moveTo(x, Y(-INK.gap / 2) - 2 * p); ctx.lineTo(x, Y(INK.gap / 2) + 2 * p); ctx.lineTo(x - 3 * p, Y(INK.gap / 2) + 7 * p); ctx.moveTo(x, Y(INK.gap / 2) + 2 * p); ctx.lineTo(x + 3 * p, Y(INK.gap / 2) + 7 * p); ctx.stroke(); } ctx.globalAlpha = 1; }
     /* gutter: a cup whose lip is just above the straight path */
@@ -482,9 +494,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!S.blind) { ctx.strokeStyle = T.inkDrop; ctx.globalAlpha = 0.35; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(X(INKX0), Y(0)); const xEnd = r.hitsPlate ? hitX(r, S.d * 1e-6) : r.inGutter ? gx : xp; for (let i = 0; i <= 60; i++) { const x = xEnd * i / 60; ctx.lineTo(X(x), Y(r.yAt(x))); } ctx.stroke(); ctx.globalAlpha = 1; }
     /* drops in flight */
     const rad = Math.max(2 * p, S.d * 1e-6 / 2 * sc);
+    const blob = (x, y, a) => { ctx.globalAlpha = a; const gr = ctx.createRadialGradient(x - rad * 0.35, y - rad * 0.35, rad * 0.1, x, y, rad); gr.addColorStop(0, T.canvas); gr.addColorStop(0.35, T.inkDrop); gr.addColorStop(1, T.inkDrop); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(x, y, rad, 0, 7); ctx.fill(); ctx.globalAlpha = 1; };
+    /* between printed drops a continuous jet keeps running: uncharged drops fly straight into the gutter and are recycled (drawn fainter, never counted) */
+    { const r0 = inkjet(S.d * 1e-6, 0, S.v, S.PV), n = 14; for (let i = 0; i < n; i++) { const f = ((i / n + inkPhase) % 1), x = INKX0 + (gx - INKX0) * f; blob(X(x), Y(x < 0 ? 0 : r0.yAt(x)), 0.35); } }
     for (const dr of S.drops) {
       const rr = inkjet(dr.d, dr.q, dr.v, dr.V), xEnd = rr.hitsPlate ? hitX(rr, dr.d) : rr.inGutter ? gx : xp, x = INKX0 + (xEnd - INKX0) * dr.s, y = x < 0 ? 0 : rr.yAt(x);
-      ctx.fillStyle = T.inkDrop; ctx.beginPath(); ctx.arc(X(x), Y(y), rad, 0, 7); ctx.fill();
+      blob(X(x), Y(y), 1);
       if (dr.q > 0 && rad > 3 * p) txt('+', X(x), Y(y), { a: 'center', c: T.canvas, s: 8, b: 1 });
     }
     /* face view of the paper */
@@ -515,6 +530,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = T.field; ctx.globalAlpha = 0.25; ctx.lineWidth = 1 * p; for (let i = 1; i < 8; i++) { const x = Xf(i / 8); for (const sgn of [1, -1]) { ctx.beginPath(); ctx.moveTo(x, Yf(sgn * 0.92)); ctx.lineTo(x, Yf(sgn * 0.15)); ctx.lineTo(x - 3 * p, Yf(sgn * 0.15) - sgn * 5 * p); ctx.moveTo(x, Yf(sgn * 0.15)); ctx.lineTo(x + 3 * p, Yf(sgn * 0.15) - sgn * 5 * p); ctx.stroke(); } } ctx.globalAlpha = 1;
     /* gas arrows */
     txt('gas', 4 * p, yc + 22 * p, { c: T.muted, s: 10 }); txt('in →', 4 * p, yc + 36 * p, { c: T.muted, s: 10 });
+    /* the smoke's concentration along the channel, c/c₀ = exp(−w x/(u s)) (Deutsch, the same model as the efficiency): hidden in Blind like the efficiency */
+    if (!S.blind) { const gr = ctx.createLinearGradient(x0, 0, x1, 0); for (let i = 0; i <= 10; i++) gr.addColorStop(i / 10, `rgba(110,110,110,${(0.32 * Math.exp(-w * S.L * i / 10 / (S.u * S_ESP))).toFixed(3)})`); ctx.fillStyle = gr; ctx.fillRect(x0, Yf(1), x1 - x0, Yf(-1) - Yf(1)); }
+    /* ions from the corona drift out to the plates and charge the particles on the way (drawn, not to scale) */
+    ctx.fillStyle = T.field; ctx.globalAlpha = 0.55; for (let i = 0; i < 46; i++) { const fx = ((i * 0.6180339) % 1), fy = ((i * 0.381966 + espPhase) % 1), sg = i % 2 ? 1 : -1; ctx.beginPath(); ctx.arc(Xf(fx), Yf(sg * (0.06 + 0.9 * fy)), 1.2 * p, 0, 7); ctx.fill(); } ctx.globalAlpha = 1;
     /* particles */
     ctx.fillStyle = T.smoke; for (const q of S.parts) { ctx.globalAlpha = q.st === 1 ? 1 : 0.8; ctx.beginPath(); ctx.arc(Xf(q.x), Yf(q.y * 0.97), 2.2 * p, 0, 7); ctx.fill(); } ctx.globalAlpha = 1;
     /* stack with a plume as dark as the fraction that escapes */
@@ -535,6 +554,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    if (g3) g3.el.hidden = !use3();
     if (S.setup === 'vdg') drawVdg(); else if (S.setup === 'ink') drawInk(); else drawEsp();
   }
 
@@ -554,11 +574,128 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (const dr of S.drops) dr.s += dt / FLIGHT;
       for (const dr of S.drops) if (dr.s >= 1) land(dr);
       S.drops = S.drops.filter((dr) => dr.s < 1);
-      dirty = S.drops.length > 0 || S.queue.length > 0;
-    } else { espStep(reduce ? 0 : dt); dirty = !reduce; }
+      if (!reduce) inkPhase = (inkPhase + dt / FLIGHT * 0.8) % 1;   /* the recycled jet: same slow motion as the printed drops */
+      dirty = S.drops.length > 0 || S.queue.length > 0 || !reduce;
+    } else { espStep(reduce ? 0 : dt); if (!reduce) espPhase = (espPhase + dt * 0.9) % 1; dirty = !reduce; }
     roAcc += dt; if (roAcc > 0.2) { roAcc = 0; if (S.setup !== 'ink') readouts(); }
     frameAcc += dt; if (dirty && frameAcc > 1 / 40) { frameAcc = 0; draw(); }
   }
+  // ---------- the Van de Graaff in 3D (three.js through demos/lib/vd3.js); the flat picture stays (Flat button, or ?view=flat) ----------
+  /* To scale: the 0.80 m acrylic column on its motor base, the dome of radius R on top, the grounded wand on its own stand 0.35 m from the dome.
+     Red beads on the dome stand for its charge, their number in proportion to Q (60 at the breakdown charge), spread evenly over the outside;
+     the lines leave the dome radially, their number also in proportion to Q (field lines start on charge). Drag to turn the view. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.25, ph: 1.26, zoom: 1 }, R: -1, nq: -1, spark: '' };
+  const NQ3 = 60, NL3 = 40, COL3 = 0.80, BASE3 = 0.10;
+  let g3 = null;
+  const use3 = () => !!(G3.on && g3 && S.setup === 'vdg');
+  const fib = (n) => { const out = [], ga = Math.PI * (3 - Math.sqrt(5)); for (let i = 0; i < n; i++) { const z = 1 - 2 * (i + 0.5) / n, r = Math.sqrt(1 - z * z); out.push([r * Math.cos(i * ga), r * Math.sin(i * ga), z]); } return out; };
+  function init3D() {
+    G3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); el.style.right = 'auto'; el.style.bottom = 'auto'; stage.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.05, 40), Ms = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.8), sun = new THREE.DirectionalLight(0xffffff, 0.7), flash = new THREE.PointLight(0xbfd8ff, 0, 3);
+    sun.position.set(-1.2, -1.6, 3); sun.target.position.set(0.2, 0, 0.6); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+    Object.assign(sun.shadow.camera, { left: -1.3, right: 1.3, top: 1.3, bottom: -1.3, near: 0.5, far: 7 }); sun.shadow.radius = 3;
+    scene.add(hemi, sun, sun.target, flash);
+    const mesh = (g, m, cast) => { const x = new THREE.Mesh(g, m); x.castShadow = cast !== false; x.receiveShadow = true; return x; };
+    const up = (g) => { g.rotateX(Math.PI / 2); return g; };
+    const floorM = Ms({ roughness: 0.9 }), floor = mesh(new THREE.PlaneGeometry(60, 60), floorM, false); floor.position.set(0, 10, 0);
+    const baseM = Ms({ roughness: 0.5, metalness: 0.2 }), base = mesh(new THREE.BoxGeometry(0.36, 0.26, BASE3), baseM); base.position.z = BASE3 / 2;
+    const ventM = Ms({ roughness: 0.6, color: 0x1d2229 }); for (let i = 0; i < 5; i++) { const v = mesh(new THREE.BoxGeometry(0.008, 0.002, 0.05), ventM, false); v.position.set(-0.13 + i * 0.018, -0.131, BASE3 / 2); base.add(v); }
+    const acryM = Ms({ roughness: 0.08, metalness: 0, transparent: true, opacity: 0.22, depthWrite: false, color: 0xd7ecff, side: THREE.DoubleSide }), col = mesh(up(new THREE.CylinderGeometry(0.045, 0.045, COL3, 40, 1, true)), acryM, false); col.position.z = BASE3 + COL3 / 2;
+    const rubM = Ms({ roughness: 0.85 }), belt = new THREE.Group();
+    for (const x of [-0.022, 0.022]) { const b = mesh(new THREE.BoxGeometry(0.003, 0.04, COL3 - 0.04), rubM, false); b.position.set(x, 0, BASE3 + COL3 / 2); belt.add(b); }
+    const rollM = Ms({ roughness: 0.3, metalness: 0.7, color: 0xb9c0c8 });
+    for (const z of [BASE3 + 0.025, BASE3 + COL3 - 0.02]) { const ro = mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.05, 24), rollM, false); ro.position.set(0, 0, z); belt.add(ro); }
+    const domeM = Ms({ roughness: 0.22, metalness: 0.35, color: 0xe3e7ec }), dome = mesh(new THREE.SphereGeometry(1, 64, 48), domeM);
+    const neck = mesh(up(new THREE.CylinderGeometry(0.05, 0.05, 0.03, 32)), rollM); neck.position.z = BASE3 + COL3 + 0.01;
+    /* the wand: a brass ball on a wooden rod on a small base, and its earth lead */
+    const woodM = Ms({ roughness: 0.7 }), brassM = Ms({ roughness: 0.3, metalness: 0.4, color: 0xc9a24a }), wand = new THREE.Group();
+    const wBall = mesh(new THREE.SphereGeometry(0.03, 32, 24), brassM), wRod = mesh(up(new THREE.CylinderGeometry(0.008, 0.008, 1, 16)), woodM), wBase = mesh(new THREE.CylinderGeometry(0.06, 0.07, 0.015, 32).rotateX(Math.PI / 2), baseM);
+    wBase.position.z = 0.0075; wand.add(wBall, wRod, wBase);
+    const leadM = Ms({ roughness: 0.6, color: 0x2a7a3a }), lead = new THREE.Group();
+    /* charge beads, field lines, beads on the belt, the spark */
+    const qM = Ms({ roughness: 0.35, emissive: 0x000000 }), beads = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 10, 8), qM, NQ3); beads.frustumCulled = false;
+    const beltQ = new THREE.InstancedMesh(new THREE.SphereGeometry(0.004, 8, 6), qM, 24); beltQ.frustumCulled = false;
+    const lineM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.6 }), lines = new THREE.LineSegments(new THREE.BufferGeometry(), lineM); lines.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NL3 * 6), 3));
+    const sparkM = new THREE.MeshBasicMaterial({ color: 0xf4f8ff }), spark = new THREE.Mesh(new THREE.BufferGeometry(), sparkM);
+    const glowM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.35, color: 0x8fb6ff, depthWrite: false }), glow = new THREE.Mesh(new THREE.BufferGeometry(), glowM);
+    scene.add(floor, base, col, belt, dome, neck, wand, lead, beads, beltQ, lines, spark, glow);
+    g3 = { r, el, scene, cam, hemi, sun, flash, floorM, baseM, acryM, rubM, domeM, dome, woodM, wand, wBall, wRod, lead, leadM, qM, beads, beltQ, lineM, lines, spark, glow, sparkM, mat4: new THREE.Matrix4(), pts: fib(NQ3), lpts: fib(NL3) };
+    can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => { if (!use3()) return true; const b = can.getBoundingClientRect(); return e.clientY - b.top > G3.h; }, phMin: 0.6, phMax: 1.5, zMin: 0.6, zMax: 3 });
+    return true;
+  }
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function theme3() {
+    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fbfcfd');
+    g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 4, 9);
+    g.hemi.intensity = dk ? 1.0 : 0.8; g.sun.intensity = dk ? 0.85 : 0.7; g.hemi.groundColor = col3(dk ? '#2a241d' : '#8c7a60', '#8c7a60');
+    g.floorM.color = col3(dk ? '#3a3229' : '#cdbb9d', '#cdbb9d'); g.baseM.color = col3(T.belt, '#3a4250'); g.rubM.color = col3(T.belt, '#3a4250'); g.woodM.color = col3(T.wood, '#c49a6c');
+    g.qM.color = col3(T.pos, '#c0392b'); g.qM.emissive = col3(T.pos, '#c0392b').multiplyScalar(0.3); g.lineM.color = col3(T.pos, '#c0392b');
+    G3.R = -1; G3.nq = -1;
+  }
+  function geom3() {
+    const g = g3, R = S.R / 100, zd = BASE3 + COL3 + R * 0.82; if (G3.R === R) return zd; G3.R = R;
+    g.dome.scale.setScalar(R); g.dome.position.set(0, 0, zd);
+    const wx = R + 0.35, wz = zd - R * 0.2; g.wBall.position.set(wx, 0, wz); g.wand.children[2].position.x = wx; g.wRod.scale.set(1, wz - 0.03, 1); g.wRod.position.set(wx, 0, (wz - 0.03) / 2);
+    for (const m of g.lead.children.slice()) { m.geometry.dispose(); g.lead.remove(m); }
+    const cv = new THREE.CatmullRomCurve3([[wx + 0.02, 0, wz - 0.02], [wx + 0.12, 0.02, wz * 0.6], [wx + 0.14, 0.05, 0.1], [wx + 0.2, 0.08, 0.004]].map((q) => new THREE.Vector3(...q)));
+    const t = new THREE.Mesh(new THREE.TubeGeometry(cv, 40, 0.003, 8, false), g.leadM); t.castShadow = true; g.lead.add(t);
+    return zd;
+  }
+  function render3(rh) {
+    const g = g3; if (!g) return null;
+    if (G3.w !== W || G3.h !== rh) { G3.w = W; G3.h = rh; g.r.setSize(W, Math.max(1, rh)); g.cam.aspect = W / Math.max(1, rh); g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.pos, T.belt].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    const R = S.R / 100, zd = geom3(), asp = W / Math.max(1, rh), top = zd + R + 0.05, wx = R + 0.35;
+    /* frame the machine and the wand: centre between them, distance from the taller of the height and the width */
+    const cx = (wx - R) / 2 + (W < 640 ? 0 : -0.12), cz = top / 2, span = Math.max(top * 1.18, (wx + R + 0.25) / asp * 1.25);
+    VD3.place(g.cam, G3.o, new THREE.Vector3(cx, 0, cz), span / (2 * Math.tan(15 * Math.PI / 180)));
+    const dist = span / (2 * Math.tan(15 * Math.PI / 180)); g.scene.fog.near = 1.3 * dist; g.scene.fog.far = 3.2 * dist;
+    const frac = S.Q / qMax(R), nq = Math.round(NQ3 * frac), nl = Math.round(NL3 * frac);
+    const br = Math.max(0.006, R * 0.045);
+    for (let i = 0; i < nq; i++) { const q = g.pts[Math.floor(i * NQ3 / Math.max(1, nq)) % NQ3]; g.mat4.makeScale(br, br, br).setPosition(q[0] * R * 1.01, q[1] * R * 1.01, zd + q[2] * R * 1.01); g.beads.setMatrixAt(i, g.mat4); }
+    g.beads.count = nq; g.beads.instanceMatrix.needsUpdate = true;
+    const lp = g.lines.geometry.attributes.position; let k = 0;
+    for (let i = 0; i < nl; i++) { const q = g.lpts[Math.floor(i * NL3 / Math.max(1, nl)) % NL3]; if (zd + q[2] * R * 2.6 < 0.02) continue; lp.setXYZ(k++, q[0] * R * 1.03, q[1] * R * 1.03, zd + q[2] * R * 1.03); lp.setXYZ(k++, q[0] * R * 2.6, q[1] * R * 2.6, zd + q[2] * R * 2.6); }
+    g.lines.geometry.setDrawRange(0, k); lp.needsUpdate = true; g.lines.geometry.computeBoundingSphere(); g.lineM.opacity = S.blind ? 0.3 : 0.55;
+    /* charge riding up the right side of the belt while the motor runs */
+    let nb = 0; if (S.motor) for (let i = 0; i < 24; i++) { const f = ((i / 24 + beltPhase * 0.05) % 1); g.mat4.makeTranslation(0.0255, 0, BASE3 + 0.04 + f * (COL3 - 0.08)); g.beltQ.setMatrixAt(nb++, g.mat4); }
+    g.beltQ.count = nb; g.beltQ.instanceMatrix.needsUpdate = true;
+    /* the spark: a jagged path from the dome to the wand ball, redrawn for each spark */
+    const on = S.spark > 0; g.spark.visible = g.glow.visible = on; g.flash.intensity = on ? 2.5 * S.spark / 0.25 : 0;
+    if (on) { const key2 = `${S.sparks}|${S.sparkKind || ''}|${R}`; if (G3.spark !== key2) { G3.spark = key2; const wz = zd - R * 0.2, a = Math.atan2(wz - zd, wx), x0 = R * Math.cos(a), z0 = zd + R * Math.sin(a), x1 = wx - 0.03, z1 = wz, pts = [];
+        for (let i = 0; i < 14; i++) { const f = i / 13, j = i && i < 13 ? (Math.random() - 0.5) * 0.04 : 0; pts.push(new THREE.Vector3(x0 + (x1 - x0) * f + j * 0.3, (Math.random() - 0.5) * 0.02 * (i && i < 13), z0 + (z1 - z0) * f + j)); }
+        const cv = new THREE.CatmullRomCurve3(pts, false, 'catmullrom', 0.1); g.spark.geometry.dispose(); g.glow.geometry.dispose();
+        g.spark.geometry = new THREE.TubeGeometry(cv, 60, 0.0025, 6, false); g.glow.geometry = new THREE.TubeGeometry(cv, 60, 0.009, 8, false); }
+      g.flash.position.set((wx + R) / 2, 0, zd - R * 0.1); }
+    g.scene.updateMatrixWorld(); g.r.render(g.scene, g.cam);
+    const tmp = new THREE.Vector3();
+    return (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * rh, tmp.z]; };
+  }
+  function vdg3(sceneH) {
+    const p = ps(), Q = render3(sceneH); ctx.clearRect(0, 0, W, sceneH); if (!Q) return;
+    const R = S.R / 100, zd = BASE3 + COL3 + R * 0.82, wx = R + 0.35, V = sphereV(S.Q, R);
+    const d = Q([0, 0, zd]), w0 = Q([wx, 0, zd - R * 0.2 - 0.05]), b0 = Q([0, -0.13, BASE3 * 0.5]), gq = Q([wx + 0.2, 0.08, 0]);
+    txt(`R = ${S.R} cm`, d[0], d[1], { a: 'center', c: T.ink, s: 10.5, b: 1 });
+    if (!S.blind) txt(`V = ${sci(V / 1000)} kV`, d[0], Q([0, 0, zd + R])[1] - 12 * p, { a: 'center', c: T.pos, s: 11, b: 1, m: 1 });
+    txt('grounded wand', w0[0] + 10 * p, w0[1] + 8 * p, { c: T.muted, s: 10 });
+    txt('ground', gq[0] + 6 * p, gq[1], { c: T.muted, s: 9 });
+    if (W > 560) txt(`To scale. Beads stand for the dome's charge and lines leave it radially, both in proportion to Q. Drag to turn.`, W - 12 * p, sceneH - 12 * p, { a: 'right', c: T.muted, s: 9.5 });
+  }
+  function setDim(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried || !window.VD3) { v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setDim(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3) g3.el.hidden = !use3(); can.style.cursor = use3() ? 'grab' : '';
+    for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String(b.dataset.dim === v));
+    draw();
+  }
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setDim(b.dataset.dim); });
   function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
   const retheme = () => { tokens(); draw(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
@@ -567,6 +704,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce) finishAll(); draw(); });
   tokens(); new ResizeObserver(resize).observe(stage);
   const q0 = new URLSearchParams(location.search).get('setup'); setSetup(['vdg', 'ink', 'esp'].includes(q0) ? q0 : 'vdg'); resize();
+  { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now();
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();
