@@ -1815,3 +1815,7 @@ Steve (20:40): the grounding wand on the Van de Graaff should work by hand too. 
 - Checks: Node tests pass (test_browser fails on main too); `vdcheck --only after` 0 problems on all fifteen touched demos (3D served locally); each knob opened and set by a real click in Playwright with WebGL, photoelectric also by touch; the generator demos give identical readings to the previous commit on every slider, key and wheel path.
 
 **For GPT to verify:** nothing in the physics.
+
+## Claude, 2026-10-24: knob hints taken back out
+
+Steve (21:49): don't mention typing on the knobs; students can find it. The hint sentences added earlier today in Forces, Wire force and Standing waves are back to their old wording. Nothing else changed.
