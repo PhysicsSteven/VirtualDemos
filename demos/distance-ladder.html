@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -72,6 +74,9 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .stage-ctl .chips { flex: 1 1 auto; }
 #can { touch-action: none; outline: none; }
+#pane { position: relative; }
+#can { position: relative; z-index: 1; }
+#pane canvas.vd3d { position: absolute; z-index: 0; pointer-events: none; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
 .chips { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -130,6 +135,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="sn" aria-pressed="false">3 Type Ia</button>
           <button type="button" data-p="hub" aria-pressed="false">4 Hubble's law</button>
           <button type="button" data-p="all" aria-pressed="false">Whole ladder</button>
+        </div>
+        <div class="seg" role="group" aria-label="Perspective of the parallax view" id="viewSeg">
+          <button type="button" data-dim="3d" aria-pressed="false">3D</button>
+          <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
         </div>
         <button type="button" class="btn" id="play">Pause</button>
         <button type="button" class="btn" id="reset">Reset</button>
@@ -774,6 +783,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const B = wide ? [x + w * 0.48, y, w * 0.52, h] : [x, y + h * 0.44, w, h * 0.56];
     const g = (G.par = {});
     // --- top view ---
+    const phi = S.par.phi;
+    if (P3.on && P3.S) drawPar3(A, ps, g); else {
+    if (P3.S) P3.S.el.style.display = 'none';
     title('Top view of Earth’s orbit, not to scale', A[0] + 12 * ps, A[1] + 10 * ps);
     const bgY = A[1] + 44 * ps;
     for (const s of ROW) dot(A[0] + 14 * ps + s[0] * (A[2] - 28 * ps), bgY - 6 * ps + s[1] * 12 * ps, s[2] * ps, T.muted);
@@ -816,6 +828,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     text('Earth', E[0] + 13 * ps, E[1] - 11 * ps, { font: F(10.5, 700), color: T.ink, bg: T.canvas });
     g.earth = { cx, cy, R, E };
     text(`angles exaggerated: a star at ${fmtDist(S.par.d)} is ${sig(S.par.d * AU_PER_PC, 3)} AU away`, A[0] + 12 * ps, A[1] + A[3] - 12 * ps, { font: F(9.5) });
+    }
 
     // --- photos ---
     if (wide) line(B[0], B[1] + 10 * ps, B[0], B[1] + B[3] - 10 * ps, T.line, 1);
@@ -1211,6 +1224,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     G = {};
+    if (P3.S && (S.tab !== 'par' || !P3.on)) P3.S.el.style.display = 'none';
     if (S.tab === 'all') { drawLadder(0, 0, W, H, true); return; }
     const sh = 86 * ps;
     drawLadder(0, 4 * ps, W, sh, false);
@@ -1222,13 +1236,103 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else drawHub(0, y0, W, hh);
   }
 
+
+  // ---------- parallax in 3D ----------
+  // The same picture as the top view, in perspective: Earth's orbit, the Sun, the nearby star and a wall of distant background stars,
+  // with the January, July and current sight lines through the star to the wall. As in the top view the star is drawn only about two
+  // orbit radii away, so the angles are hugely exaggerated (the page says by how much); directions and the geometry are as drawn flat.
+  const P3 = { on: false, S: null, o: { th: -Math.PI / 2 - 0.42, ph: 1.12, zoom: 1 }, turn: null };
+  const DS3 = 1.9, YB3 = 5.2;   /* star and background wall distances, in orbit radii (illustrative) */
+  function initPar3() {
+    const S3 = VD3K.stage($('pane'), { before: can, fov: 34, near: 0.02, far: 400, sky: '#04060b' });
+    if (!S3) return false;
+    P3.S = S3; S3.el.classList.add('vd3d'); S3.el.style.display = 'none';
+    const sc = S3.scene;
+    S3.onTheme(() => { S3.hemi.intensity = 0.25; S3.sun.intensity = 0; });
+    sc.add(VD3K.sky(S3, { n: 1500, r: 300, seed: 5 }));
+    sc.add(VD3K.star(S3, { r: 0.13, color: '#ffd27a', glow: 4 }));
+    sc.add(new THREE.PointLight(0xffffff, 1.5, 0));
+    P3.star = VD3K.star(S3, { r: 0.05, color: '#fff1c9', glow: 6 }); P3.star.position.set(0, DS3, 0); sc.add(P3.star);
+    const ring = VD3K.ring(1, { color: '#7d8da3', opacity: 0.9, seg: 160 }); sc.add(ring);
+    sc.add(new THREE.Mesh(new THREE.CircleGeometry(1, 96), new THREE.MeshBasicMaterial({ color: '#8fa6c8', transparent: true, opacity: 0.07, depthWrite: false, side: THREE.DoubleSide })));
+    // the wall of background stars, far behind the star
+    const r = rng(79), pos = [], col = [];
+    for (let i = 0; i < 520; i++) { const b = 0.35 + 0.65 * r() * r(); pos.push((r() - 0.5) * 9, YB3 + r() * 0.4, -1.6 + 3.6 * r()); col.push(b * 0.86, b * 0.9, b); }
+    const gB = new THREE.BufferGeometry(); gB.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); gB.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+    sc.add(new THREE.Points(gB, new THREE.PointsMaterial({ size: 2.2, sizeAttenuation: false, vertexColors: true })));
+    const mk = (c, dash) => { const m = dash ? new THREE.LineDashedMaterial({ color: c, dashSize: 0.08, gapSize: 0.06 }) : new THREE.LineBasicMaterial({ color: c }); const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(0, 1, 0)]), m); sc.add(l); return l; };
+    P3.jan = mk('#ff8a7a', true); P3.jul = mk('#7fb0ff', true); P3.now = mk('#ffd27a', false);
+    const ghost = (c) => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.045, 20, 14), new THREE.MeshStandardMaterial({ color: c, roughness: 0.7, transparent: true, opacity: 0.6 })); sc.add(m); return m; };
+    P3.gJan = ghost('#ff8a7a'); P3.gJul = ghost('#7fb0ff');
+    P3.spot = new THREE.Mesh(new THREE.RingGeometry(0.09, 0.12, 32), new THREE.MeshBasicMaterial({ color: '#ffd27a', side: THREE.DoubleSide })); P3.spot.rotation.x = Math.PI / 2; sc.add(P3.spot);
+    P3.ray = new THREE.Raycaster();
+    VD3K.earth(S3, { r: 0.075 }, (pl) => { P3.earth = pl; sc.add(pl); dirty = true; });
+    can.addEventListener('pointerdown', (ev) => {
+      if (!P3.on || S.tab !== 'par' || ev.pointerType === 'touch' || !P3.A || handleAt(ev)) return;
+      const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, A = P3.A;
+      if (x < A[0] || x > A[0] + A[2] || y < A[1] || y > A[1] + A[3]) return;
+      P3.turn = { x: ev.clientX, y: ev.clientY }; can.setPointerCapture(ev.pointerId); can.style.cursor = 'grabbing';
+    });
+    can.addEventListener('pointermove', (ev) => {
+      if (!P3.turn) return;
+      P3.o.th -= (ev.clientX - P3.turn.x) * 0.008; P3.o.ph = Math.max(0.15, Math.min(1.5, P3.o.ph - (ev.clientY - P3.turn.y) * 0.006));
+      P3.turn = { x: ev.clientX, y: ev.clientY }; dirty = true;
+    });
+    const end = () => { if (P3.turn) { P3.turn = null; can.style.cursor = 'default'; } };
+    can.addEventListener('pointerup', end); can.addEventListener('pointercancel', end);
+    can.addEventListener('dblclick', (ev) => { if (P3.on && S.tab === 'par' && !handleAt(ev)) { P3.o.th = -Math.PI / 2 - 0.42; P3.o.ph = 1.12; dirty = true; } });
+    return true;
+  }
+  /* the point where the line from p through the star meets the background wall */
+  const wallHit = (p) => { const s = (YB3 - p.y) / (DS3 - p.y); return new THREE.Vector3(p.x + (0 - p.x) * s, YB3, p.z + (0 - p.z) * s); };
+  const setLine = (l, a, b) => { l.geometry.setFromPoints([a, b]); if (l.computeLineDistances) l.computeLineDistances(); };
+  function drawPar3(A, ps, g) {
+    const S3 = P3.S, el = S3.el, [ax, ay, aw, ah] = A.map(Math.round);
+    P3.A = A;
+    el.style.display = ''; el.style.left = ax + 'px'; el.style.top = ay + 'px';
+    S3.size(aw, ah);
+    ctx.clearRect(ax, ay, aw, ah);
+    const phi = S.par.phi, E = new THREE.Vector3(Math.cos(phi), Math.sin(phi), 0), Ej = new THREE.Vector3(-1, 0, 0), El = new THREE.Vector3(1, 0, 0);
+    if (P3.earth) { P3.earth.position.copy(E); P3.earth.spin(phi * 365.25); }
+    P3.gJan.position.copy(Ej); P3.gJul.position.copy(El);
+    const wn = wallHit(E);
+    setLine(P3.jan, Ej, wallHit(Ej)); setLine(P3.jul, El, wallHit(El)); setLine(P3.now, E, wn);
+    P3.spot.position.copy(wn).add(new THREE.Vector3(0, -0.02, 0));
+    const t = Math.tan(17 * DEG3), asp = aw / Math.max(1, ah), half = 3.1;
+    S3.place(P3.o, [0, 2.3, 0.3], Math.max(half / t, half / (t * asp)) * 0.95);
+    S3.render();
+    // labels in the scene
+    const pr = (v) => { const q = S3.project(v); return [q[0] + ax, q[1] + ay]; };
+    const L = (v, txt, o) => { const [px, py] = pr(v); text(txt, px + (o.dx || 0) * ps, py + (o.dy || 0) * ps, { font: F(10.5, 700), color: o.color || '#e8eef6', align: o.align || 'left', bg: '#04060b' }); return [px, py]; };
+    title('Earth’s orbit in 3D, not to scale', ax + 12 * ps, ay + 10 * ps, '#aeb9c8');
+    L(P3.star.position, S.par.star === 'custom' ? 'nearby star' : STARS[S.par.star].name, { dx: 10, dy: -10 });
+    L(new THREE.Vector3(0, 0, 0), 'Sun', { dx: 12, dy: 14, color: '#ffd27a' });
+    L(Ej, 'January', { dx: -10, align: 'right', color: '#ff8a7a' });
+    L(El, 'July', { dx: 10, color: '#7fb0ff' });
+    { const [bx, by] = pr(new THREE.Vector3(0, YB3, 2.1)); text('distant background stars', Math.min(ax + aw - 12 * ps, Math.max(ax + 12 * ps, bx)), Math.max(ay + 30 * ps, by), { font: F(10), color: '#aeb9c8', align: 'center', bg: '#04060b' }); }
+    const [ex, ey] = pr(E), hot = isHot('earth');
+    ctx.strokeStyle = '#ffd27a'; ctx.lineWidth = (hot ? 2 : 1.3) * ps; ctx.beginPath(); ctx.arc(ex, ey, (hot ? 12 : 10) * ps, 0, 2 * Math.PI); ctx.stroke();
+    text('Earth', ex + 13 * ps, ey - 11 * ps, { font: F(10.5, 700), color: '#e8eef6', bg: '#04060b' });
+    text(`angles exaggerated: a star at ${fmtDist(S.par.d)} is ${sig(S.par.d * AU_PER_PC, 3)} AU away`, ax + 12 * ps, ay + ah - 26 * ps, { font: F(9.5), color: '#aeb9c8' });
+    text('drag Earth along its orbit; drag elsewhere to turn', ax + 12 * ps, ay + ah - 12 * ps, { font: F(9.5), color: '#aeb9c8' });
+    g.earth = { cx: 0, cy: 0, R: 1, E: [ex, ey], plane: (x, y) => {
+      P3.ray.setFromCamera(new THREE.Vector2((x - ax) / aw * 2 - 1, -((y - ay) / ah) * 2 + 1), S3.cam);
+      const q = new THREE.Vector3(); return P3.ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), q) ? [q.x, q.y] : null; } };
+  }
+  const DEG3 = Math.PI / 180;
+  P3.view = VD3K.view({
+    seg: '#viewSeg', init: initPar3,
+    status: (msg) => { $('presetHint').textContent = msg; },
+    change: (on) => { P3.on = on; if (P3.S && !on) P3.S.el.style.display = 'none'; dirty = true; }
+  });
+
   // ---------- handles ----------
   function handles() {
     const out = [], ps = projScale();
     if (G.ladder) for (const r of G.ladder.rows) out.push({ id: 'rung-' + r.key, cursor: 'pointer', rect: [r.xa - 4, r.cy - Math.max(r.bh, 12 * ps) / 2 - 4, r.xb - r.xa + 8, Math.max(r.bh, 12 * ps) + 8], prio: 1, press: () => { openRung(r.key); return null; } });
     if (S.tab === 'par' && G.par) {
       const e = G.par.earth;
-      out.push({ id: 'earth', cursor: 'grab', pt: e.E, r: 9 * ps, drag: (x, y) => { S.par.phi = Math.atan2(-(y - e.cy), x - e.cx); changed(); } });
+      out.push({ id: 'earth', cursor: 'grab', pt: e.E, r: 9 * ps, drag: (x, y) => { if (e.plane) { const q = e.plane(x, y); if (q) S.par.phi = Math.atan2(q[1], q[0]); } else S.par.phi = Math.atan2(-(y - e.cy), x - e.cx); changed(); } });
       const ov = G.par.ov;
       S.par.ruler.forEach((o, k) => {
         out.push({ id: 'ruler' + k, cursor: 'ew-resize', vseg: [ov.sx(o), ov.sy - 14 * ps, ov.ry + 12 * ps],
@@ -1392,6 +1496,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const s of document.querySelectorAll('section[data-tab]')) s.hidden = s.dataset.tab !== S.tab;
     const anim = S.tab === 'par' || S.tab === 'cep' || S.tab === 'sn';
     $('play').hidden = !anim;
+    $('viewSeg').hidden = S.tab !== 'par';
     $('play').textContent = S.running ? 'Pause' : 'Play';
     $('play').classList.toggle('primary', !S.running);
     for (const id of ['calA', 'calA2']) $(id).value = S.calA;
