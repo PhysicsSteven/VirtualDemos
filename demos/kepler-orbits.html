@@ -144,6 +144,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -798,6 +800,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
 
   // ---------- main view ----------
+  const VG = window.VDGear;   // shared drawing helpers (demos/lib/gear.js); pictures only
   function drawView() {
     const T = tokens(), ps = T.ps, ctx = vctx;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -939,7 +942,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     const glow = ctx.createRadialGradient(sx, sy, sr * 0.5, sx, sy, sr * 3);
     glow.addColorStop(0, alpha(T.sun, 0.45)); glow.addColorStop(1, alpha(T.sun, 0));
     ctx.fillStyle = glow; ctx.beginPath(); ctx.arc(sx, sy, sr * 3, 0, TAU); ctx.fill();
-    ctx.fillStyle = T.sun; ctx.beginPath(); ctx.arc(sx, sy, sr, 0, TAU); ctx.fill();
+    if (VG) {   // a lit photosphere: brighter at the centre and darker towards the limb (limb darkening, drawn, not computed)
+      const ph = ctx.createRadialGradient(sx - sr * 0.2, sy - sr * 0.2, 0, sx, sy, sr);
+      ph.addColorStop(0, VG.mix(T.sun, '#ffffff', 0.7)); ph.addColorStop(0.55, T.sun); ph.addColorStop(1, VG.mix(T.sun, '#b04a00', 0.45));
+      ctx.fillStyle = ph; ctx.beginPath(); ctx.arc(sx, sy, sr, 0, TAU); ctx.fill();
+    } else { ctx.fillStyle = T.sun; ctx.beginPath(); ctx.arc(sx, sy, sr, 0, TAU); ctx.fill(); }
     // star label above the star, or below it when the semi major axis label is in the way
     const sTxt = 'star ' + S.M.toFixed(2) + ' M☉';
     ctx.font = `600 ${11 * ps}px ${T.mono}`;
@@ -976,6 +983,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       if (S.layers.vel && S.t > 0 && !b.done) arrow(ctx, px, py, px + b.vx * kpx, py - b.vy * kpx, col, 1.8 * ps, 8 * ps, T.canvas);
       ctx.beginPath(); ctx.arc(px, py, 6 * ps, 0, TAU);
       ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 2 * ps; ctx.strokeStyle = T.canvas; ctx.stroke();
+      if (VG) VG.ball(ctx, px, py, 5 * ps, col);
       // off screen indicator
       const m = 14 * ps;
       if (px < 0 || px > W || py < 0 || py > H) {

@@ -145,6 +145,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 /* projector on a short screen: let the stage shrink to fit under the header */
 @media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -894,6 +896,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       const xEnd = hx + (TQ.L + 0.04) * s;
       ctx.fillRect(0, hy - wallT / 2, hx - 8 * ps, wallT); ctx.strokeRect(-1, hy - wallT / 2 + 0.5, hx - 8 * ps + 1, wallT - 1);
       if (xEnd < W) { ctx.fillRect(xEnd, hy - wallT / 2, W - xEnd, wallT); ctx.strokeRect(xEnd + 0.5, hy - wallT / 2 + 0.5, W - xEnd, wallT - 1); }
+      // a cut wall in plan: diagonal hatching, as on an architect's drawing
+      ctx.beginPath(); ctx.rect(0, hy - wallT / 2, hx - 8 * ps, wallT); if (xEnd < W) ctx.rect(xEnd, hy - wallT / 2, W - xEnd, wallT); ctx.clip();
+      ctx.globalAlpha = 0.45; ctx.beginPath(); for (let x = -wallT; x < W + wallT; x += 6 * ps) { ctx.moveTo(x, hy + wallT / 2); ctx.lineTo(x + wallT, hy - wallT / 2); } ctx.stroke(); ctx.globalAlpha = 1;
       ctx.restore();
       // swing range and stops
       ctx.save(); ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.5; ctx.lineWidth = 1; ctx.setLineDash([2 * ps, 4 * ps]);
@@ -918,7 +923,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (door) {
       const th = Math.max(7 * ps, Math.min(15 * ps, 0.045 * s));
       ctx.fillStyle = T.relief; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps;
-      ctx.beginPath(); ctx.rect(0, -th / 2, TQ.L * s, th); ctx.fill(); ctx.stroke();
+      ctx.beginPath(); ctx.rect(0, -th / 2, TQ.L * s, th); ctx.fill();
+      { const wg = ctx.createLinearGradient(0, -th / 2, 0, th / 2); wg.addColorStop(0, '#d9b98a'); wg.addColorStop(0.5, '#c49a63'); wg.addColorStop(1, '#9c7444'); ctx.fillStyle = wg; ctx.globalAlpha = 0.85; ctx.fill(); ctx.globalAlpha = 0.25; ctx.strokeStyle = '#6b4a26'; ctx.lineWidth = 1;   // a wooden door, with grain along its length (a picture only)
+        ctx.beginPath(); for (let k = 1; k < 3; k++) { const y = -th / 2 + th * k / 3; ctx.moveTo(2, y); for (let x = 2; x < TQ.L * s - 2; x += 18) ctx.lineTo(x, y + Math.sin(x * 0.05 + k * 2) * 0.8); } ctx.stroke(); ctx.globalAlpha = 1; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps; }
+      ctx.stroke();
       // handle on both faces near the free end
       const hxp = (TQ.L - 0.07) * s;
       if (hxp > 10) {
@@ -930,6 +938,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       const hw = Math.max(9 * ps, Math.min(20 * ps, 0.035 * s)), ring = hw * 1.25;
       ctx.fillStyle = T.relief; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * ps;
       ctx.beginPath(); ctx.moveTo(ring * 0.8, -hw / 2); ctx.lineTo(TQ.L * s - hw / 2, -hw / 2);
+      { const mg = ctx.createLinearGradient(0, -ring, 0, ring); mg.addColorStop(0, '#e3e8ee'); mg.addColorStop(0.45, '#a9b3be'); mg.addColorStop(1, '#6f7a86'); ctx.fillStyle = mg; }   // chrome steel
       ctx.arc(TQ.L * s - hw / 2, 0, hw / 2, -Math.PI / 2, Math.PI / 2); ctx.lineTo(ring * 0.8, hw / 2); ctx.closePath(); ctx.fill(); ctx.stroke();
       ctx.beginPath(); ctx.arc(0, 0, ring, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
       // hex bolt head
@@ -1203,6 +1212,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       ctx.strokeStyle = col; ctx.lineWidth = 3.4 * ps; ctx.beginPath(); ctx.arc(0, 0, r - 1.7 * ps, 0, 2 * Math.PI); ctx.stroke();
       ctx.lineWidth = 1 * ps; ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(r - 3 * ps, 0); ctx.stroke();
       ctx.fillStyle = col; ctx.beginPath(); ctx.arc(r - 1.7 * ps, 0, 3 * ps, 0, 2 * Math.PI); ctx.fill();
+    }
+    if (shape === 'sphere' || shape === 'disk') {   // light from the top left, fixed in the room while the object turns (a picture only)
+      ctx.rotate(-rot); const sp = shape === 'sphere', lg = ctx.createRadialGradient(-r * 0.35, -r * 0.4, 0, 0, 0, r);
+      lg.addColorStop(0, sp ? 'rgba(255,255,255,0.45)' : 'rgba(255,255,255,0.22)'); lg.addColorStop(0.5, 'rgba(255,255,255,0)'); lg.addColorStop(1, sp ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.12)');
+      ctx.fillStyle = lg; ctx.beginPath(); ctx.arc(0, 0, r, 0, 2 * Math.PI); ctx.fill(); ctx.rotate(rot);
     }
     if (sel) { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.arc(0, 0, r + 4 * ps, 0, 2 * Math.PI); ctx.stroke(); }
     ctx.restore();

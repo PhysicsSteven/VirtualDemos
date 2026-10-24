@@ -1079,7 +1079,7 @@ Finish pass; each demo now links `look.css` and `gear.js`. Drawing only: CORE, c
 - **Library (added only):** `demos/lib/vd3.js` (`window.VD3`: load three.js once, a capped renderer, low power check, orbit, camera placement), used by room acoustics; and `.shelf-card` in `look.css`. vdcheck --full on the other ten Acoustics demos: eight pass; sound intensity passes on a rerun; Chladni differs by under 300 px in a different preset on each run (its sand animation; it does not use the new class).
 - For the handouts: Room acoustics now opens on the room in 3D (the handouts say "A plan of a room seen from above"); the controls listed above moved but kept their names and ids.
 
-## 2026-10-24 Claude: visual pass, Physics I batch 3 (fluids, forces, GPS clocks, gravity near Earth, impulse)
+## Claude, 2026-10-24: visual pass, Physics I batch 3 (fluids, forces, GPS clocks, gravity near Earth, impulse)
 
 Drawing code and the look link only; physics, CORE, control ids and names unchanged. Node tests pass (fluids 13, forces 8, impulse 4); vdcheck differs only by the vd-look and vd-gear ids, styles, tokens and screenshots.
 
@@ -1088,3 +1088,13 @@ Drawing code and the look link only; physics, CORE, control ids and names unchan
 - **GPS clocks, gravity near Earth:** a soft sheen and a lit limb on the planet (a picture only; no sun direction is modelled).
 - **Impulse:** painted wall behind the pegboard dots, the shared bench, a shaded track, cased data logger and force sensor, a cart with a gradient and contact shadow, lit wheel hubs.
 - Steve (2026-10-24): skip the visual pass on the Misc demos for now. Next: the rest of Physics I, then the 3D views (gyroscope first), then Physics II.
+
+## Claude, 2026-10-24: visual pass, Physics I batch 4 (Kepler, motion graphs, potential curves, rocket, rotation)
+
+Drawing code and the look link only; physics, CORE, control ids and names unchanged. Node tests pass (8, 7, 8, 4, 6 groups); vdcheck differs only by the vd-look and vd-gear ids, styles, tokens and screenshots. These are mostly graph demos, so the changes are small.
+
+- **Kepler:** the star is a lit photosphere, brighter at the centre (drawn, not computed); planets are shaded balls.
+- **Motion graphs:** the cart gets a contact shadow and a shaded body.
+- **Potential curves:** the ball on the track is a shaded steel ball.
+- **Rocket:** a rounded, lit body and nose, and a glow around the plume. The fuel gauge is unchanged.
+- **Rotation:** a wooden door with grain, a chrome wrench, the cut wall hatched as in a plan drawing; rolling spheres and disks lit from a fixed direction while they turn.

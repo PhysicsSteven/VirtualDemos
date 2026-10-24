@@ -118,6 +118,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -924,8 +926,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const cx = pxp + r * slope / nn, cy = Y(Ux) - r / nn;
       const hot = (drag && drag.id === 'ball') || (!drag && hoverId === 'ball');
       ctx.fillStyle = T.pos; ctx.strokeStyle = T.ink; ctx.lineWidth = (hot ? 2.6 : 1.6) * ps;
-      ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.arc(cx - r * 0.35, cy - r * 0.35, r * 0.28, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
+      if (window.VDGear) { ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.stroke(); window.VDGear.ball(ctx, cx, cy, r, T.pos); }   // a shiny steel ball (gear.js)
+      else { ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.arc(cx - r * 0.35, cy - r * 0.35, r * 0.28, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1; }
       G2.ball = [cx, cy];
     } else G2.ball = null;
     // potential grips

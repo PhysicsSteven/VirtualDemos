@@ -52,6 +52,8 @@ table.rows input:focus { border-color: var(--accent); }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -409,7 +411,9 @@ table.rows input:focus { border-color: var(--accent); }
     sensorPings(p, tx0, ty, cx - cw / 2 - 3 * p);
     // the cart: body, a reflector card facing the sensor, wheels with hubs
     ctx.fillStyle = T.ink; ctx.fillRect(cx - cw / 2 - 3 * p, ty - ch, 2 * p, ch - 2 * p);
+    if (window.VDGear) window.VDGear.shadow(ctx, cx, ty + 10 * p, cw * 0.6, 2.5 * p, 0.8);
     ctx.fillStyle = T.x; ctx.beginPath(); ctx.roundRect(cx - cw / 2, ty - ch + 4 * p, cw, ch, 4 * p); ctx.fill();
+    { const cg = ctx.createLinearGradient(0, ty - ch + 4 * p, 0, ty + 4 * p); cg.addColorStop(0, 'rgba(255,255,255,0.2)'); cg.addColorStop(0.5, 'rgba(255,255,255,0)'); cg.addColorStop(1, 'rgba(0,0,0,0.22)'); ctx.fillStyle = cg; ctx.fill(); }
     ctx.fillStyle = T.shine; ctx.fillRect(cx - cw / 2 + 4 * p, ty - ch + 6 * p, cw - 8 * p, 3 * p);
     ctx.fillStyle = T.ink; for (const dx of [-cw / 3, cw / 3]) { ctx.beginPath(); ctx.arc(cx + dx, ty + 6 * p, 4.5 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.grille; ctx.beginPath(); ctx.arc(cx + dx, ty + 6 * p, 1.6 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.ink; }
     if (!blind) {

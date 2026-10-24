@@ -52,6 +52,8 @@
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -192,6 +194,7 @@
       const k = Math.sqrt(F.thrust / 2.25e6), fk = !reduce && S.run ? 1 + 0.07 * Math.sin(amb * 41) + 0.05 * Math.sin(amb * 67 + 1) : 1;   // 2.25 MN is the largest thrust the sliders allow
       const fl = (14 + 50 * k) * p * fk, fw = rw * (0.32 + 0.25 * k);
       ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, H - 6 * p); ctx.clip();
+      { const gl = ctx.createRadialGradient(rx, ry + fl * 0.35, 0, rx, ry + fl * 0.35, fl * 0.9 + fw); gl.addColorStop(0, 'rgba(255,170,60,0.35)'); gl.addColorStop(1, 'rgba(255,170,60,0)'); ctx.fillStyle = gl; ctx.fillRect(rx - fl - fw, ry - fl * 0.6, 2 * (fl + fw), fl * 2.2); }   // glow around the plume
       ctx.fillStyle = T.flame; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.moveTo(rx - fw, ry); ctx.quadraticCurveTo(rx - fw * 1.1, ry + fl * 0.45, rx, ry + fl); ctx.quadraticCurveTo(rx + fw * 1.1, ry + fl * 0.45, rx + fw, ry); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
       ctx.fillStyle = T.flameCore; ctx.beginPath(); ctx.moveTo(rx - fw * 0.5, ry); ctx.quadraticCurveTo(rx - fw * 0.5, ry + fl * 0.3, rx, ry + fl * 0.55); ctx.quadraticCurveTo(rx + fw * 0.5, ry + fl * 0.3, rx + fw * 0.5, ry); ctx.closePath(); ctx.fill(); ctx.restore();
     }
@@ -203,6 +206,11 @@
     ctx.fillStyle = T.body; ctx.beginPath(); ctx.rect(rx - rw / 2, bodyTop, rw, by - bodyTop); ctx.fill(); ctx.stroke();
     ctx.fillStyle = T.nose; ctx.beginPath(); ctx.moveTo(rx - rw / 2, bodyTop); ctx.quadraticCurveTo(rx - rw / 2, ry - rh + 4 * p, rx, ry - rh); ctx.quadraticCurveTo(rx + rw / 2, ry - rh + 4 * p, rx + rw / 2, bodyTop); ctx.closePath(); ctx.fill(); ctx.stroke();
     ctx.fillStyle = T.flame; ctx.globalAlpha = 0.55; ctx.fillRect(rx - rw / 2 + 3 * p, ry - 3 * p - (rh - 20 * p) * fuelFrac, rw - 6 * p, (rh - 20 * p) * fuelFrac); ctx.globalAlpha = 1;
+    {   // round the body and nose: light from the left, shade on the right (a picture only)
+      const cg = ctx.createLinearGradient(rx - rw / 2, 0, rx + rw / 2, 0); cg.addColorStop(0, 'rgba(0,0,0,0.12)'); cg.addColorStop(0.28, 'rgba(255,255,255,0.4)'); cg.addColorStop(0.5, 'rgba(255,255,255,0)'); cg.addColorStop(1, 'rgba(0,0,0,0.3)');
+      ctx.fillStyle = cg; ctx.beginPath(); ctx.moveTo(rx - rw / 2, by); ctx.lineTo(rx - rw / 2, bodyTop); ctx.quadraticCurveTo(rx - rw / 2, ry - rh + 4 * p, rx, ry - rh); ctx.quadraticCurveTo(rx + rw / 2, ry - rh + 4 * p, rx + rw / 2, bodyTop); ctx.lineTo(rx + rw / 2, by); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.moveTo(rx - rw / 2, bodyTop + 0.5); ctx.lineTo(rx + rw / 2, bodyTop + 0.5); ctx.stroke(); ctx.globalAlpha = 1;
+    }
     ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; const fx = rx + rw + 3 * p, fy = ry - rh * 0.45, fw2 = ctx.measureText('fuel').width;
     ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.8; ctx.fillRect(fx - 2 * p, fy - 7 * p, fw2 + 4 * p, 14 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.muted; ctx.fillText('fuel', fx, fy);
     // status
