@@ -8958,7 +8958,10 @@
       "status": "usable",
       "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Rutherford Scattering",
-      "url": "demos/rutherford.html"
+      "url": "demos/rutherford.html",
+      "handouts": [
+        "rutherford"
+      ]
     },
     {
       "demo": "seasons",

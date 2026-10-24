@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage" lang="en">
+<html data-vd-off="root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula readout-dd-ok check check-input empty plotbox-canvas wide-proj-bench wide-proj-stage" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -141,6 +141,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/rutherford.html" target="rutherford-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -164,6 +165,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="wide big"><dt id="rDLab">Head on distance D = zZe²/4πε₀K</dt><dd id="rD">—</dd></div>
         </dl>
         <p class="hint" id="projHint"></p>
+        <label style="display:flex;align-items:center;gap:7px;font-size:0.9rem;cursor:pointer"><input type="checkbox" id="blind" style="margin:0;accent-color:var(--accent)"> Blind: hide D, the closest approach, the expected counts and the Rutherford curve</label>
       </section>
 
       <section>
@@ -257,6 +259,27 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <p class="hint" id="plotHint"></p>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="rutherford" data-title="Rutherford Scattering" data-demo="rutherford">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Model</summary><div class="foldbody">
         <details class="more"><summary>More about this</summary>
@@ -459,7 +482,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   };
 
   // ---------- state ----------
-  const S = { preset: 'one', q: 'pos', model: 'nuc', mode: 'single', target: 'au', Zc: 29, K: 7.69, b: 25, rate: 7, bm: 0.756, ft: -0.3, norm: 'sr', range: 'full', view: 75 };
+  const S = { blind: false, preset: 'one', q: 'pos', model: 'nuc', mode: 'single', target: 'au', Zc: 29, K: 7.69, b: 25, rate: 7, bm: 0.756, ft: -0.3, norm: 'sr', range: 'full', view: 75 };
   let playing = !reduce;
 
   const tgt = () => { const t = TARGETS[S.target]; if (S.target !== 'custom') return t; return { name: 'Custom', sym: '', Z: S.Zc, A: massNumber(S.Zc), n: 6.0e28 }; };
@@ -1292,7 +1315,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (plum) {
       if (S.range === 'full') curve(ruthFoil, T.muted, [5, 4], 1.4);
       curve(gauss, T.equi, [], 2);
-    } else curve(ruthBeam, T.equi, [], 2);
+    } else if (!S.blind) curve(ruthBeam, T.equi, [], 2);
     c.restore();
     if (fired === 0) { c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'middle'; c.font = `${11 * ps}px ${T.ui}`; c.fillText(`Press Play to fire ${pj().name}s`, (box.L + box.R) / 2, (box.T + box.B) / 2); }
     axesFrame(box);
@@ -1359,6 +1382,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const pFoil = tgt().n * foilT() * Math.PI * (D / 2 * 1e-15) ** 2;
     $('rFoil').innerHTML = `${(pFoil * 100).toPrecision(2)}% <span class="ok">1 in ${Math.round(1 / pFoil).toLocaleString('en-US')}</span>`;
     $('rBexp').textContent = `${(100 * (D / 2 / bmax()) ** 2).toPrecision(3)}%`;
+    if (S.blind) for (const id of ['rD', 'rRm', 'rRec', 'rBexp', 'rFoil']) $(id).textContent = 'hidden';
+    $('blind').checked = S.blind;
     if (plum) {
       const N = nLayers(), s = plumRms(), x = (Math.PI / 2) ** 2 / (s * s), lg = -x / Math.LN10;
       $('pL').textContent = N.toLocaleString('en-US');
@@ -1391,7 +1416,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (S.model === 'nuc') {
       let chi = 0, k = 0;
       for (let i = 0; i < bins.length; i++) { const e = fired * binFrac(binEdges[i], binEdges[i + 1], D, bmax()); if (e >= 5) { chi += (bins[i] - e) ** 2 / e; k++; } }
-      $('rChi').innerHTML = k >= 3 ? `${(chi / k).toFixed(2)} <span class="ok">over ${k} bins; near 1 means agreement within counting noise</span>` : '<span class="ok">needs more counts</span>';
+      $('rChi').innerHTML = S.blind ? 'hidden' : k >= 3 ? `${(chi / k).toFixed(2)} <span class="ok">over ${k} bins; near 1 means agreement within counting noise</span>` : '<span class="ok">needs more counts</span>';
     }
   }
 
@@ -1485,6 +1510,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const card = VD.setupCard($('setupCard'));
   function setPlaying(on) { playing = on; card.away(on); playBtn.textContent = on ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !on); if (on && single) single.start = performance.now() / 1000 - (single.pausedAt || 0); if (!on && single) single.pausedAt = performance.now() / 1000 - single.start; }
   playBtn.addEventListener('click', () => setPlaying(!playing));
+  $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; readouts(); countReadouts(); drawAll(); });
   $('fire').addEventListener('click', () => { if (S.mode === 'beam') fireBeam(100); else { fireSingle(); if (!playing) setPlaying(true); } });
   $('clear').addEventListener('click', () => { clearCounts(); countReadouts(); });
 
@@ -1609,6 +1635,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   }
   window.__rs = { get frameMs() { return frameMs; }, get S() { return S; }, get fired() { return fired; }, get past90() { return past90; }, get bins() { return bins; }, get throttled() { return throttled; },
     setRate(i) { S.rate = i; $('rate').value = i; readouts(); }, setPlaying, setQ, setB, handles() { return dragHandles().map((h) => ({ id: h.id, seg: h.seg })); }, fireMany(n) { for (let i = 0; i < n; i++) { if (i < n - 300) { const b = sampleB(S.model === 'nuc' ? bmax() : atomR(), Math.random()); count(S.model === 'nuc' ? deflect(b, Dnow()) : plumFoil(nLayers(), Dnow(), atomR(), Math.random)); } else beamOne(false); } countReadouts(); } };
+
+  // Readings: one row per 5° bin of the counts, for the bins the whole beam can reach (θ above the smallest angle of the beam's edge)
+  window.vdVersion = 'rutherford@2026-10-24';
+  window.vdShowCols = [['theta_deg', 'θ (°)'], ['counts', 'Counts'], ['fired', 'Fired']];
+  window.vdReadingRow = () => {
+    if (S.mode !== 'beam' || S.model !== 'nuc') return 'Switch to Beam with the nuclear atom: the worksheet records the counts in each angle bin.';
+    if (!fired) return 'Fire some alphas first.';
+    const thMin = deflect(bmax(), Dnow()), out = [];
+    for (let i = 0; i < bins.length; i++) {
+      if (binEdges[i] < thMin) continue;
+      out.push({ target: tgt().name, K_MeV: S.K.toFixed(2), fired: String(fired), bmax_fm: bmax().toPrecision(4),
+        theta1_deg: (binEdges[i] * 180 / Math.PI).toFixed(0), theta2_deg: (binEdges[i + 1] * 180 / Math.PI).toFixed(0),
+        theta_deg: ((binEdges[i] + binEdges[i + 1]) * 90 / Math.PI).toFixed(1), counts: String(bins[i]),
+        dOmega_sr: (2 * Math.PI * (Math.cos(binEdges[i]) - Math.cos(binEdges[i + 1]))).toPrecision(4) });
+    }
+    return out;
+  };
 
   tokens();
   const ro = new ResizeObserver(() => resize());

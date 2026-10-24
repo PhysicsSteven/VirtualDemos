@@ -134,6 +134,7 @@ HANDOUT_TOPIC = {
     'franck-hertz': 'Franck–Hertz Experiment',
     'spacetime': 'Spacetime Diagrams and the Lorentz Transformation',
     'speed-of-light': 'Speed of Light with a Rotating Mirror',
+    'rutherford': 'Rutherford Scattering',
     'household-wiring': 'Household Wiring and Electrical Safety',
     'van-de-graaff': 'Van de Graaff Generator',
     'ink-jet-printer': 'Ink Jet Printer',

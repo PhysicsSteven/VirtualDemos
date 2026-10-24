@@ -257,7 +257,7 @@
   const MODERN = [];
   /* Vol. 3 ch. 5 (relativity) and ch. 6 (photons and matter waves) */
   MODERN.push('velocity-addition', 'relativistic-momentum', 'relativistic-energy' /* Velocity, Momentum and Energy Near c demo, one per view */);
-  MODERN.push('photoelectric', 'compton', 'franck-hertz', 'spacetime', 'speed-of-light');
+  MODERN.push('photoelectric', 'compton', 'franck-hertz', 'spacetime', 'speed-of-light', 'rutherford');
   Object.assign(FROM_DEMO, {
     /* Reading | Launch speed u′ (c) | Probe time A to B Δt (s) | Ground speed u (c) | u − u′ (c) | 1 − uu′/c² */
     'velocity-addition': { demo: 'Velocity, Momentum and Energy Near c (Adding velocities)', cols: ['row', 'u_prime_c', 'probe_dt_s', null, null, null] },
@@ -275,6 +275,8 @@
     spacetime: { demo: 'Spacetime Diagrams', cols: ['row', 'event', 'beta', 'ct', 'x', 'ctp', 'xp', null, null] },
     /* Reading | Direction | Signed speed f (rev/s) | Micrometer reading s (mm) | D (m) | B (m) */
     'speed-of-light': { demo: 'Speed of Light', cols: ['row', 'direction', 'signed_rev_per_s', 'micrometer_mm', 'D_m', 'B_m'] },
+    /* Reading | Target and beam | Angle θ (°) | Counts N | Solid angle ΔΩ (sr) | N/ΔΩ (1/sr) | ln sin(θ/2) | ln(N/ΔΩ) */
+    rutherford: { demo: 'Rutherford Scattering', cols: ['row', (r) => `${r.target}, ${r.K_MeV} MeV, ${r.fired} fired, b max ${r.bmax_fm} fm`, 'theta_deg', 'counts', 'dOmega_sr', null, null, null] },
   });
   ENABLED.push(...MODERN);
   Object.assign(FROM_DEMO, {
