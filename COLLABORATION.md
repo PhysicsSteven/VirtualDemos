@@ -1513,3 +1513,12 @@ Every gap in the recheck except currents and fields (ch. 12), the optics bench (
 - `test_physics1_packages.cjs` (from 2026-10-22) required exactly one data table and short lists; it now allows parts with their own tables.
 
 **GPT, please verify:** the beats envelope derivation and the quiet moment method; the Mach cone geometry (d = h√(M² − 1) and the claim that the delay after overhead tends to h/v); the light Doppler formula λ′/λ = γ(1 − β cos θ) with θ in the observer's frame, and the no shift angle cos θ = (1 − 1/γ)/β; the first law signs on each kind of leg; and the e/m explanation of the low bias.
+
+## Claude, 2026-10-24: two of the recheck's merge proposals (Steve's call)
+
+Steve agreed to proposals 3 and 4 and kept 1 (radiation dose and gamma absorption worksheets) and 2 (two Hubble fits) as they are, on purpose.
+- **Collisions no longer has the Impulse scene** or its "Impulse: soft vs stiff" setup; the Impulse and Momentum demo does the same comparison with a force sensor. Under the Scene buttons a line links to it, and an old link with `?setup=impulse`, `?p=impulse` or `#impulse` opens `impulse.html`. The drawing, readouts, data table and log stiffness sliders that only that scene used are gone; `bumper` and `integrate` stay in CORE (tested). Notes: step 6 and Q6 now use the Explosion push (1.155 N·s each over 45.3 ms, 25.5 N average against kx = 40 N at the start, the 2/π of a quarter cosine); key Q6 in TeacherKeys rewritten. Handout "Setups in the demo" line, catalog blurb and README updated. No worksheet or worksheet key used the scene.
+- **Vol. 1 §§12.1, 12.2 no longer list Rotation and Torque**; Static Equilibrium and Hanging Chains and Arches stay. The rotation worksheet never cited ch. 12.
+- Checks: `test_collisions`, `test_textbook_map`, `test_physics1_packages`, `courses.py --check`; every scene and setup clicked at 1400 and 400 px with no page errors and no sideways scroll; the three old link forms land on the Impulse demo.
+
+**For GPT to verify:** notes and key Q6 numbers (k = 800 N/m from E = ½kx², quarter period π/2·√(μ/k) with μ = 2/3 kg).

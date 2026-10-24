@@ -65,11 +65,11 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>In every collision the bodies push on each other with equal and opposite forces for the same time, so the momentum one gains the other loses. Total momentum is conserved, elastic or not.</li>
 <li>Kinetic energy is kept only when e = 1. The loss is ½μ(1 − e²)v_rel², with μ = m₁m₂/(m₁ + m₂): only the energy of motion relative to the center of mass can be lost, and when the bodies stick (e = 0) all of it goes.</li>
 <li>In the center of mass frame the bodies arrive with equal and opposite momenta and leave with them reversed and scaled by e.</li>
-<li>Impulse J = ∫F dt = Δp. For the same change in momentum, a longer contact time means a smaller peak force.</li>
+<li>Impulse J = ∫F dt = Δp, and the two bodies get equal and opposite impulses. (The force during contact, and soft against stiff bumpers, are in the Impulse and Momentum demo.)</li>
 <li>In two dimensions momentum is a vector and each component is conserved. For equal masses, an elastic collision with a target at rest sends the two off at 90° to each other.</li>
 </ul>
 <h2>Before class</h2>
-<p>Students should know p = mv, kinetic energy and Newton's third law. The <strong>Scene</strong> buttons pick <strong>1D track</strong>, <strong>2D table</strong>, <strong>Explosion</strong>, <strong>Newton's cradle</strong> or <strong>Impulse</strong>; each preset loads one. Drag the round grip on a velocity arrow to set a velocity and the square grips to change a mass, the stored energy or a bumper's stiffness, or use the sliders. The bars show momentum and energy (outline before, filled after). <strong>0.25×</strong> and <strong>0.1×</strong> slow the playback; <strong>Reduce motion</strong> starts every setup paused.</p>
+<p>Students should know p = mv, kinetic energy and Newton's third law. The <strong>Scene</strong> buttons pick <strong>1D track</strong>, <strong>2D table</strong>, <strong>Explosion</strong>, or <strong>Newton's cradle</strong>; each preset loads one. Drag the round grip on a velocity arrow to set a velocity and the square grips to change a mass or the stored energy, or use the sliders. The bars show momentum and energy (outline before, filled after). <strong>0.25×</strong> and <strong>0.1×</strong> slow the playback; <strong>Reduce motion</strong> starts every setup paused.</p>
 <p>For a measurement lab, the 1D track and the Explosion have two photogates (<strong>Gate A position</strong>, <strong>Gate B position</strong>, or drag the gate grips). Each cart carries a 5.0 cm flag; a gate shows the time its beam is blocked, to 0.1 ms, and the speed flag length ÷ Δt. <strong>Place gates for this run</strong> puts them where each cart passes one before and after the collision. When a run has played to the end, <strong>Capture reading</strong> stores the masses and the four velocities u₁, u₂, v₁′, v₂′; <strong>Export to worksheet</strong> sends the rows to the student worksheet's Data table. The plot under the table fits a line to the rows: <strong>p′ vs p</strong> (slope 1), <strong>Separation vs approach</strong> (slope e) or <strong>K lost vs ½μu²</strong> (slope 1 − e²), with residuals; <strong>Show data table</strong> lists the points. <strong>Blind: hide predictions and answers</strong> (in the Lab section) hides the Results panel, the predicted values on the drawing, the after bars and the setup hints, and swaps the e slider for <strong>Bumper</strong> A to D, each with a fixed e for students to measure.</p>
 <h2>Running it in class</h2>
 <ol>
@@ -78,7 +78,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>Heavy hits light.</strong> Ask how fast the light cart leaves (Q3). The 4.0 kg cart slows only to 0.62 m/s; the 0.5 kg cart leaves at 1.42 m/s. Swap the masses and the light cart bounces back.</li>
 <li><strong>Explosion.</strong> From rest, the spring's 1.00 J pushes for 45.3 ms. The 2 kg piece leaves at −0.58 m/s and the 1 kg piece at 1.15 m/s: equal and opposite momenta, but K₁/K₂ = 0.5. Then <strong>Gun and bullet</strong> (Q4).</li>
 <li><strong>Glancing 2D collision: 90°.</strong> Puck 1 leaves at 0.50 m/s at −60°, puck 2 at 0.87 m/s at 30°. Change <strong>Impact parameter b</strong>: the angle stays 90° (Q5). Show the momentum triangle.</li>
-<li><strong>Impulse: soft vs stiff.</strong> Same carts, speeds and e. The areas under F(t) are equal (0.800 N·s), but the stiff bumper peaks at 26.2 N in 44.7 ms and the soft one at 4.54 N over 258 ms (Q6).</li>
+<li><strong>Impulse.</strong> Back in <strong>Explosion</strong>, each piece gets 1.15 N·s, equal and opposite, over the 45.3 ms push (Q6). For the force against time during a collision, and soft against stiff bumpers, open the Impulse and Momentum demo.</li>
 <li><strong>Newton's cradle</strong> (scene button). Pull back one ball, then two. The lower pane asks what would happen if n balls came out and shows that only n = k keeps the energy (Q7).</li>
 </ol>
 <h2>Questions</h2>
@@ -92,7 +92,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 
 <div class="q"><p><strong>Q5.</strong> Explain why: two equal mass pucks collide elastically, with one at rest. Using p₁ = p₁′ + p₂′ and energy conservation, show that the two pucks leave at right angles, whatever the impact parameter. Then set <strong>Coefficient of restitution e</strong> to 0.5 in <strong>Glancing 2D collision: 90°</strong>. Is the angle now more or less than 90°?</p></div>
 
-<div class="q"><p><strong>Q6.</strong> In <strong>Impulse: soft vs stiff</strong>, a 0.50 kg cart arrives at 1.0 m/s and rebounds with e = 0.60. Find the impulse from each bumper. Contact lasts 44.7 ms (stiff) and 258 ms (soft): find each average force. Use this to explain how an air bag protects a driver.</p></div>
+<div class="q"><p><strong>Q6.</strong> In <strong>Explosion</strong>, the spring (compressed 5.0 cm, storing 1.00 J) pushes the 2.0 kg and 1.0 kg pieces apart for 45.3 ms. Find the impulse on each piece from its velocity, and the average force on each. Find the spring's force at the start, kx, from E = ½kx². Why is the average force smaller?</p></div>
 
 <div class="q"><p><strong>Q7.</strong> In <strong>Newton's cradle</strong>, one ball comes in at speed v. Why can't two balls go out at v/2 each? Check both momentum and kinetic energy. Use the chart in the lower pane, then test with <strong>Balls pulled back</strong> set to 2.</p></div>
 <h2>Common misconceptions</h2>
@@ -107,7 +107,6 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>2D table: smooth hard discs with no spin and no table edges. The impulse J = (1 + e)μ(v₁ − v₂)·n acts along the line of centers n at contact; the velocity components along the contact tangent do not change.</li>
 <li>Explosion: an ideal massless spring, compressed 5 cm and held by a thread, is released. Its force is internal, so momentum stays MV, and E = ½μv_rel². The pieces move in simple harmonic motion relative to each other for a quarter period.</li>
 <li>Newton's cradle: 0.25 kg balls on 30 cm strings, each a full pendulum; a collision is an instant elastic exchange of velocity between touching neighbors, one pair at a time. A real cradle slowly fades and mixes.</li>
-<li>Impulse: each bumper is a massless spring and damper in parallel, F = kx + cx′, with c = 2ζ√(km) and ζ set by e alone. It can push but not pull, so contact ends when F reaches zero. F(t) is the exact solution of m x″ + c x′ + k x = 0, so the peak force scales as √k and the contact time as 1/√k.</li>
 </ul>
 <h2>Going further</h2>
 <ul>

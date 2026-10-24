@@ -2742,7 +2742,6 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "rotation",
         "catenary",
         "equilibrium"
       ],
@@ -2761,7 +2760,6 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "rotation",
         "catenary",
         "equilibrium"
       ],
@@ -9008,22 +9006,12 @@
           "vol": 1,
           "sec": "11.3",
           "title": "Conservation of Angular Momentum"
-        },
-        {
-          "vol": 1,
-          "sec": "12.1",
-          "title": "Conditions for Static Equilibrium"
-        },
-        {
-          "vol": 1,
-          "sec": "12.2",
-          "title": "Examples of Static Equilibrium"
         }
       ],
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Door, rolling race, spinner and seesaw; partial static equilibrium examples, no stress/strain model. Short activity authorized; lecture role retained pending Steve’s review. A short OpenStax-aligned student activity and private guide now exist; lecture-demo role retained.",
+      "note": "Door, rolling race, spinner and seesaw. Its seesaw is a torque example; Vol. 1 §§12.1, 12.2 go to Static Equilibrium (Steve, 2026-10-24). Short activity authorized; lecture role retained pending Steve’s review. A short OpenStax-aligned student activity and private guide now exist; lecture-demo role retained.",
       "title": "Rotation and Torque",
       "url": "demos/rotation.html",
       "handouts": [

@@ -649,7 +649,7 @@
     {
      "demo": "collisions",
      "title": "Collisions and Momentum",
-     "desc": "Crash carts on an air track and pucks on an air table: momentum is always conserved, kinetic energy only when the bounce is elastic. Also an explosion, Newton's cradle, and why a soft bumper lowers the peak force for the same impulse.",
+     "desc": "Crash carts on an air track and pucks on an air table: momentum is always conserved, kinetic energy only when the bounce is elastic. Also an explosion and Newton's cradle.",
      "tags": [
       "momentum",
       "coefficient of restitution",

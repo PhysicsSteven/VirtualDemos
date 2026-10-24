@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§9.1–9.6. Access for free 
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Elastic, equal masses; Perfectly inelastic; Heavy hits light; Explosion; Glancing 2D collision: 90°; Impulse: soft vs stiff.
+**Setups in the demo:** Elastic, equal masses; Perfectly inelastic; Heavy hits light; Explosion; Glancing 2D collision: 90°.
 
 **Using the demo.**
 
