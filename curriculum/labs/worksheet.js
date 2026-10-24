@@ -94,7 +94,8 @@
     'holography' /* Holography, 2026-10-24 */,
     'thin-films', 'electron-diffraction', 'x-ray-diffraction' /* the last two: Electron Diffraction demo */, 'em-waves' /* 2026-10-24 */,
     'double-slit', 'diffraction-grating', 'single-slit' /* the last two: Diffraction Grating demo (grating, Single slit aperture), 2026-10-24 */,
-    'junction-transistor' /* Circuits demo, diode and transistor, 2026-10-24 */];
+    'junction-transistor' /* Circuits demo, diode and transistor, 2026-10-24 */,
+    'ac-reactance', 'ac-power' /* Circuits demo, AC mode, Vol. 2 §§15.1, 15.2 and 15.4, 2026-10-24 */];
   ENABLED.push(...PHYSICS_II);
   /* Helpers for the Physics II maps. parts: the part values a Circuits row carries (R1_ohm, C1_F, L1_H, B1_emf_V, B1_r_ohm, S1_state),
      optionally only those whose column matches a pattern. pick: the first column matching a pattern that has a value in this row
@@ -113,6 +114,10 @@
     'rc-circuits': { demo: 'Circuits', cols: ['t_s', pick(/^V_C\d+_V$/), pick(/^I_.+_A$/), 'W_sources_J', 'U_C_J', 'heat_J'] },
     'rlc-transients': { demo: 'Circuits', cols: [(r) => [r.row, r.setup, parts(r, /_ohm$/)].filter(Boolean).join(', '), 't_s', pick(/^V_C\d+_V$/), pick(/^I_L\d+_A$/), 'U_C_J', 'U_L_J', 'heat_J'] },
     'ac-circuits': { demo: 'Circuits', cols: [(r) => [r.row, parts(r)].filter(Boolean).join(', '), 'f_Hz', 'V0_peak_V', 'Irms_A', 'phase_deg', 'P_avg_W'] },
+    /* Reading and parts | f | V_rms | I_rms | Phase | 1/f (typed) | X = V_rms/I_rms (typed) */
+    'ac-reactance': { demo: 'Circuits', cols: [(r) => [r.row, parts(r)].filter(Boolean).join(', '), 'f_Hz', 'Vrms_source_V', 'Irms_A', 'phase_deg', null, null] },
+    /* Reading and parts | f | V_rms | I_rms | Phase | P_ave | C switched in (typed) | I_rms sin φ (typed) */
+    'ac-power': { demo: 'Circuits', cols: [(r) => [r.row, parts(r)].filter(Boolean).join(', '), 'f_Hz', 'Vrms_source_V', 'Irms_A', 'phase_deg', 'P_avg_W', null, null] },
     /* Reading | Setup and parts | A1 current (A) | A2 current (A) | Voltmeter (V) | ln(I_A1 / 1 A) (typed) | A2/A1 (typed). One row per
        reading; the part columns here have names such as R_B_ohm and Q1_beta, which parts() does not match. */
     'junction-transistor': { demo: 'Circuits', cols: ['row', (r) => [r.setup, Object.keys(r).map((k) => /^(.+)_(ohm|emf_V|beta)$/.exec(k)).filter((x) => x && r[x[0]] !== '' && r[x[0]] != null)

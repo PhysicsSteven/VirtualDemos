@@ -267,7 +267,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/dc-circuits.html" target="dc-circuits-worksheet">Worksheet 1: Kirchhoff's Rules</a></li><li><a href="../curriculum/labs/students/rc-circuits.html" target="rc-circuits-worksheet">Worksheet 2: RC Time Constant</a></li><li><a href="../curriculum/labs/students/rlc-transients.html" target="rlc-transients-worksheet">Worksheet 3: RLC Oscillations</a></li><li><a href="../curriculum/labs/students/ac-circuits.html" target="ac-circuits-worksheet">Worksheet 4: AC Resonance</a></li><li><a href="../curriculum/labs/students/junction-transistor.html" target="junction-transistor-worksheet">Worksheet 5: A Real Diode and the Junction Transistor</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/dc-circuits.html" target="dc-circuits-worksheet">Worksheet 1: Kirchhoff's Rules</a></li><li><a href="../curriculum/labs/students/rc-circuits.html" target="rc-circuits-worksheet">Worksheet 2: RC Time Constant</a></li><li><a href="../curriculum/labs/students/rlc-transients.html" target="rlc-transients-worksheet">Worksheet 3: RLC Oscillations</a></li><li><a href="../curriculum/labs/students/ac-circuits.html" target="ac-circuits-worksheet">Worksheet 4: AC Resonance</a></li><li><a href="../curriculum/labs/students/junction-transistor.html" target="junction-transistor-worksheet">Worksheet 5: A Real Diode and the Junction Transistor</a></li><li><a href="../curriculum/labs/students/ac-reactance.html" target="ac-reactance-worksheet">Worksheet 6: Reactance and Phase</a></li><li><a href="../curriculum/labs/students/ac-power.html" target="ac-power-worksheet">Worksheet 7: Power in an AC Circuit</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Analysis</h2>
         <div class="seg full modes" role="group" aria-label="Analysis mode" id="modeSeg">
@@ -281,6 +281,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets"></div>
+        <p class="hint starters-head" id="extrasHead" hidden></p>
+        <div class="chips" id="extras" hidden></div>
         <p class="hint starters-head">Starter circuits, from Ohm's law to the transistor</p>
         <div class="chips" id="starters"></div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
@@ -417,6 +419,20 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         </div>
         <dl class="readout" id="acRead"></dl>
         <p class="hint" id="acHint">The frequency slider is logarithmic and snaps to f<sub>0</sub> when it gets close. You can also drag the f marker on the resonance curve.</p>
+      </section>
+
+      <section data-for="ac">
+        <h2>Graphs</h2>
+        <div class="seg full" role="group" aria-label="Graph against frequency" id="rSeg">
+          <button type="button" data-r="I" aria-pressed="true">Current</button>
+          <button type="button" data-r="P" aria-pressed="false">Power</button>
+          <button type="button" data-r="X" aria-pressed="false">Reactance</button>
+        </div>
+        <div class="seg full" role="group" aria-label="Second graph" id="zSeg">
+          <button type="button" data-z="tri" aria-pressed="true">Impedance triangle</button>
+          <button type="button" data-z="p" aria-pressed="false">Power in time</button>
+        </div>
+        <details class="more"><summary>More about this</summary><p class="hint">The graph against frequency shows the rms current from the source, the average power it delivers, or the impedance |Z| it sees with the reactance of every capacitor and inductor (X<sub>C</sub> = 1/(2πfC), X<sub>L</sub> = 2πfL) on logarithmic scales. Power in time shows p = vi into the selected part, or out of the source when no part is selected, over two periods, with its average.</p></details>
       </section>
 
       <section data-for="ac">
@@ -1628,6 +1644,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     below: { mode: 'ac', name: 'Below resonance', ch: [['V1', 'V'], ['R1', 'V'], ['L1', 'V'], ['C1', 'V'], ['R1', 'I']], chain: true },
     reso: { mode: 'ac', name: 'At resonance', ch: [['V1', 'V'], ['R1', 'V'], ['L1', 'V'], ['C1', 'V'], ['R1', 'I']], chain: true, f: 'f0' },
     hiQ: { mode: 'ac', name: 'High Q vs low Q', ch: [['V1', 'V'], ['R1', 'I']], f: 'f0', ghostCurve: ['R1', 100, 'R1 = 100 Ω, Q = 1'] },
+    outlet: { mode: 'ac', name: 'Wall outlet', ch: [['V1', 'V'], ['L1', 'I']] },
+    pfactor: { mode: 'ac', name: 'Power factor', ch: [['V1', 'V'], ['V1', 'I']] },
     // starter circuits, in any mode
     ohm: { mode: 'dc', name: 'Ohm\'s law' },
     diodeIV: { mode: 'dc', name: 'Diode' },
@@ -1737,6 +1755,18 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
         W([8, 3], [10, 3]); add('probe', [10, 3], [10, 7], { name: 'P1' });
         add('ac', [1, 4], [1, 6], { V0: 0.1, f: 1000, name: 'V1' }); W([1, 4], [2, 4]); add('cap', [2, 4], [4, 4], { C: 10e-6, side: 'up' }); W([4, 4], [5, 4]);
         W([1, 6], [1, 7], [12, 7]); break;
+      // 120 V rms at 60 Hz (peak 120√2 V): a 100 W bulb (144 Ω), and a coil load (10 Ω, 50 mH) with a capacitor that switches in across it
+      case 'outlet':
+        add('ac', [1, 2], [1, 5], { V0: 120 * Math.SQRT2, f: 60 });
+        W([1, 2], [1, 1], [2, 1]); add('am', [2, 1], [4, 1]); W([4, 1], [11, 1]);
+        add('vm', [7, 1], [7, 6]); select = add('bulb', [11, 1], [11, 6], { R: 144 }); W([11, 6], [1, 6], [1, 5]); break;
+      case 'pfactor':
+        add('ac', [1, 2], [1, 5], { V0: 120 * Math.SQRT2, f: 60 });
+        W([1, 2], [1, 1], [2, 1]); add('am', [2, 1], [4, 1]); W([4, 1], [8, 1]);
+        add('sw', [6, 1], [6, 3], { closed: false, side: 'left' }); add('cap', [6, 3], [6, 6], { C: 100e-6, side: 'left' });
+        add('am', [8, 1], [10, 1]); W([10, 1], [11, 1]);
+        add('res', [11, 1], [11, 3], { R: 10 }); select = add('ind', [11, 3], [11, 6], { L: 0.05 });
+        W([11, 6], [1, 6], [1, 5]); break;
       case 'acR': case 'acC': case 'acL': case 'below': case 'reso': case 'hiQ': {
         const fs = { acR: 100, acC: 200, acL: 200, below: 1000 }, Rv = name === 'hiQ' ? 10 : name === 'acR' ? 100 : 22;
         select = add('ac', [1, 2], [1, 5], { V0: 10, f: fs[name] || 1000 });
@@ -1883,6 +1913,9 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   const MODE_PRESETS = { dc: ['series', 'parallel', 'compare', 'divider', 'bridge', 'internal'], time: ['rc', 'flip', 'flash', 'rl', 'lc', 'rlc'], ac: ['acR', 'acC', 'acL', 'below', 'reso', 'hiQ'] };
   const MODE_NAMES = { dc: 'DC', time: 'In time', ac: 'AC' };
   const STARTERS = ['ohm', 'diodeIV', 'leds', 'rectifier', 'tswitch', 'amp'];
+  // a second row of AC setups: household power (OpenStax Vol. 2 §§15.1 and 15.4)
+  const EXTRAS = { ac: { head: 'AC power at 60 Hz, 120 V rms', list: ['outlet', 'pfactor'] } };
+  const EXTRA_HASH = { outlet: 'outlet', pfactor: 'powerfactor' };
   const STARTER_HASH = { ohm: 'ohm', diodeIV: 'diode', leds: 'led', rectifier: 'rectifier', tswitch: 'transistor', amp: 'amplifier' };
   const HINTS = {
     series: 'One path, so the same current flows through both bulbs and both ammeters read the same. Each bulb gets only part of the battery voltage: two equal bulbs get half each, so each one dissipates a quarter of the power a single bulb would.',
@@ -1908,6 +1941,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     rectifier: 'The diode lets current through only when the source makes its anode positive, so the load sees only the positive half cycles, less the diode drop. With S1 closed the 100 µF capacitor charges on each peak and feeds the 1 kΩ load in between: the ripple falls about as e<sup>−t/RC</sup> over the 16.7 ms between peaks. Open S1 to see the bare half waves; raise C1 for less ripple.',
     tswitch: 'A small base current switches a larger collector current. With S1 closed about 0.83 mA flows into the base through R_B = 10 kΩ, more than enough to saturate Q1: the LED is fully on and V<sub>CE</sub> is below 0.1 V. Open S1 and the LED goes out. Raise R_B to 100 kΩ or more and Q1 is in its forward active region, where I<sub>C</sub> = βI<sub>B</sub> (§9.7).',
     amp: 'A common emitter amplifier. R1 and R2 hold the base near 1.1 V, so about 0.9 mA flows; C1 passes the 100 mV signal from V1 to the base without upsetting that. A small swing in V<sub>BE</sub> makes a large swing in I<sub>C</sub>, and R_C turns it into a large voltage swing at the collector, inverted. The gain is about 9.3, a little under R_C/R_E = 10 because the emitter junction itself adds about V<sub>T</sub>/I<sub>C</sub> = 30 Ω to R_E. Raise V1 to 0.5 V and the output clips (§9.7).',
+    outlet: 'A North American outlet: 120 V rms at 60 Hz, so the peak is V<sub>0</sub> = 120√2 = 169.7 V. The bulb is a 100 W bulb, modelled as its hot resistance, 144 Ω (a real filament has much less resistance when cold). The meters read rms values: 0.8333 A and 120 V, and V<sub>rms</sub>I<sub>rms</sub> = 100 W is the average power. Pick Power in time under Graphs: p = vi swings between 0 and 200 W twice each cycle, at 120 Hz, and never goes negative.',
+    pfactor: 'A coil load (R = 10 Ω, L = 50 mH, a simple model of a motor) on 120 V rms at 60 Hz. X<sub>L</sub> = 18.85 Ω, so the current lags by 62.1°, the power factor is 0.469 and the source must supply 5.624 A for 316.3 W. A2 reads the load current, A1 the source current. Close S1 to put C1 = 100 µF across the load: the capacitor\'s current, which leads, cancels most of the coil\'s lagging current, so A1 falls to 2.673 A and the power factor rises to 0.986, while the load still takes 316.3 W. With C = X<sub>L</sub>/(ω(R<sup>2</sup> + X<sub>L</sub><sup>2</sup>)) = 109.8 µF the power factor would be exactly 1.',
     hiQ: 'R = 10 Ω gives Q = 10 and a tall, narrow peak. The gray curve is R = 100 Ω, Q = 1: a low, wide peak at the same f<sub>0</sub>. Press Sweep and watch the current through the peak; the half power width is Δf = f<sub>0</sub>/Q = R/(2πL). Then pick In time to switch the source on at t = 0 with the capacitor empty and no current: the current builds up to its steady amplitude as the transient dies away as e<sup>−Rt/2L</sup>, with time constant 2L/R = 2 ms for R = 10 Ω. Set R1 to 100 Ω and it dies away ten times faster.'
   };
   // Blind: the same setups described without the values a lab asks students to measure
@@ -1921,13 +1956,18 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     rl: 'When S1 connects the battery the current through L1 rises; later S1 flips by itself and shorts the coil. Read the rise and the decay with the time cursor.',
     lc: 'C1 starts charged to 10 V, as after a long time with S1 on charge; at t = 0 it is connected to the inductor. Measure the period with the time cursor.',
     rlc: 'The same circuit with R2 in the loop. Change R2, press Reset and compare how the capacitor voltage returns to zero.',
+    acR: 'A resistor alone on a sine wave source. Change f, record the meters and the phase, and compare the traces.',
+    acC: 'A capacitor alone on a sine wave source. Change f, record the meters and the phase, and watch which trace peaks first.',
+    acL: 'An inductor alone on a sine wave source. Change f, record the meters and the phase, and watch which trace peaks first.',
     below: 'A series RLC circuit driven by a sine wave source. Change f and record the current; find the peak yourself.',
     reso: 'In Blind mode this setup opens at 1 kHz, not at resonance. Find the frequency where the current is largest and the phase is zero.',
     hiQ: 'R = 10 Ω in a series RLC circuit, opening at 1 kHz in Blind mode. Find the peak and the half power frequencies, then compare with R = 100 Ω.',
     diodeIV: 'A 1N4148 silicon diode in series with 100 Ω. Step the EMF and record the diode voltage and the current each time.',
     leds: 'Three LEDs, each with 470 Ω to limit its current. Read each LED\'s voltage and current and compare the colours.',
     tswitch: 'A transistor with a base resistor R_B and an LED in its collector. Change R_B and record the base current A1, the collector current A2 and V<sub>CE</sub>.',
-    amp: 'A common emitter amplifier driven by a 100 mV signal. Compare the collector voltage with the input.'
+    amp: 'A common emitter amplifier driven by a 100 mV signal. Compare the collector voltage with the input.',
+    outlet: 'A wall outlet, 120 V rms at 60 Hz, with a 100 W bulb modelled as its hot resistance. Record the meters and the average power, and compare the peak and rms values.',
+    pfactor: 'A coil load (a resistor and an inductor in series) on 120 V rms at 60 Hz. A2 reads the load current, A1 the source current. Record them, the phase and the power with S1 open, then close S1 and change C1.'
   };
   const MODE_HINTS = {
     dc: 'The steady state, a long time after every switch was set: no current through capacitors, no voltage across inductors.',
@@ -1937,7 +1977,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
 
   // ---------- state ----------
   let els = [], nextId = 1, sel = null, tool = 'select', running = !reduce;
-  const S = { mode: 'dc', preset: 'series', edited: false, kmode: 'loop', chain: false, blind: false, dtab: false,
+  const S = { mode: 'dc', preset: 'series', edited: false, kmode: 'loop', chain: false, blind: false, dtab: false, rPlot: 'I', zPlot: 'tri',
     layers: { elec: false, ilabels: true, vcolor: false, vlabels: false, plabels: false, field: true } };
   let channels = [];                        // scope channels: { id, q: 'V' or 'I' }
   const undoStack = [], redoStack = [];
@@ -1976,7 +2016,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   const fmtR = (v) => fmtVal(v, 'Ω');
   const fmtE = (v) => `${(+v.toPrecision(4)).toString()} V`;
   const fmtF = (f) => fmtSI(f, 'Hz', 3);
-  const fmtDeg = (r) => `${(r * 180 / Math.PI).toFixed(1).replace('-', '−')}°`;
+  const fmtDeg = (r) => `${(r * 180 / Math.PI).toFixed(1).replace(/^-0\.0$/, '0.0').replace('-', '−')}°`;
   function fmtTime(s, sig) { if (Math.abs(s) >= 120) return `${sigStr(s / 60, sig || 3)} min`; return fmtSI(s, 's', sig || 3); }
   const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
   function fmtSci(v, unit) {
@@ -2883,12 +2923,32 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       const bw = Math.max(...widths) + 2 * pad, bh = lines.length * lh + 2 * pad;
       const cx = geo.X(ge.c[0]), cy = geo.Y(ge.c[1]), [sx, sy] = ge.side, ext = sideOf(e, ge) * s + 5 * ps + (e.type === 'cap' ? 0.1 * s : 0);
       let bx, by, align;
-      const place = (sx, sy) => {
-        if (Math.abs(sy) >= Math.abs(sx)) { bx = cx - bw / 2; by = sy < 0 ? cy - ext - bh : cy + ext; align = 'center'; }
-        else { by = cy - bh / 2; if (sx < 0) { bx = cx - ext - bw; align = 'right'; } else { bx = cx + ext; align = 'left'; } }
+      const place = (sx, sy, d) => {
+        const ex = d == null ? ext : d;
+        if (Math.abs(sy) >= Math.abs(sx)) { bx = cx - bw / 2; by = sy < 0 ? cy - ex - bh : cy + ex; align = 'center'; }
+        else { by = cy - bh / 2; if (sx < 0) { bx = cx - ex - bw; align = 'right'; } else { bx = cx + ex; align = 'left'; } }
         return bx >= 2 && bx + bw <= dims[0] - 2 && by >= 2 && by + bh <= dims[1] - 2;
       };
       if (!place(sx, sy)) { const b0 = [bx, by, align]; if (!place(-sx, -sy)) [bx, by, align] = b0; }
+      // where that lands on another label or covers another part's centre (narrow phones), the first clear spot of: the other
+      // side, then (for an upright part or a transistor) below or above it, slid sideways to stay on the board
+      const hits = () => labelBoxes.some(({ box: [x, y, w, h] }) => bx < x + w && bx + bw > x && by < y + h && by + bh > y);
+      const inBox = (u, v) => { const x = geo.X(u), y = geo.Y(v); return x > bx && x < bx + bw && y > by && y < by + bh; };
+      const onPart = () => els.some((o) => {
+        if (o === e || o.type === 'wire') return false; const g = GE.get(o.id); if (!g) return false;
+        if (inBox(g.c[0], g.c[1])) return true;
+        if (!(o.a && o.b)) return false;
+        const L = Math.hypot(o.b[0] - o.a[0], o.b[1] - o.a[1]) || 1, h = (HALF[o.type] || 0.3) / L;
+        return [-h, h].some((k) => inBox(g.c[0] + k * (o.b[0] - o.a[0]), g.c[1] + k * (o.b[1] - o.a[1])));
+      });
+      const clear = () => !hits() && !onPart();
+      if (!clear()) {
+        const b0 = [bx, by, align], horiz = e.a && e.b && Math.abs(e.b[0] - e.a[0]) >= Math.abs(e.b[1] - e.a[1]);
+        const half = e.a && e.b && e.type !== 'bjt' ? Math.hypot(e.b[0] - e.a[0], e.b[1] - e.a[1]) * s / 2 + 4 * ps : ext;
+        const tries = [[-sx, -sy, ext], ...(horiz && e.type !== 'bjt' ? [] : [[0, 1, half], [0, -1, half]])];
+        const ok = tries.some(([x, y, d]) => { const fit = place(x, y, d); if (align === 'center') bx = clamp(bx, 2, dims[0] - bw - 2); return (fit || (align === 'center' && by >= 2 && by + bh <= dims[1] - 2)) && clear(); });
+        if (!ok) [bx, by, align] = b0;
+      }
       bx = clamp(bx, 2, dims[0] - bw - 2); by = clamp(by, 2, dims[1] - bh - 2);
       ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.86; roundRect(bx, by, bw, bh, 4 * ps); ctx.fill(); ctx.globalAlpha = 1;
       ctx.textBaseline = 'middle';
@@ -3857,6 +3917,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     rGeo = null;
     if (!src) { text(c, 'Add an AC source to see the resonance curve.', W / 2, H / 2, fs, T.muted, 'center'); return; }
     if (!reso) return;
+    if (S.rPlot === 'P' || S.rPlot === 'X') { drawRespAlt(c, W, H, ps, fs, src); return; }
     const L0 = 46 * Math.min(ps, 1.25), Rm = 14, top = 34 * Math.min(ps, 1.25), bot = 30 * Math.min(ps, 1.25);
     const x0 = L0, x1 = W - Rm, y0 = top, y1 = H - bot;
     const lf0 = Math.log10(F_MIN), lf1 = lf0 + F_DEC;
@@ -3920,11 +3981,14 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       text(c, txt, xx, y0 + 4 + fs * 0.65, fs * 0.9, T.accent, 'left', 400, T.mono);
     }
     // the frequency marker: drag it
+    const z = zSeen(els, src, src.f);
+    fMarker(c, src, X, y0, y1, z ? Math.max(y0, Y(Math.hypot(z.I[0], z.I[1]) / Math.SQRT2)) : null, W, fs, ps);
+  }
+  function fMarker(c, src, X, y0, y1, yDot, W, fs, ps) {
     const fx = X(src.f), hot = (rDrag || rHover);
     c.strokeStyle = T.accent; c.lineWidth = (hot ? 2.4 : 1.6) * Math.min(ps, 1.3);
     c.beginPath(); c.moveTo(fx, y0); c.lineTo(fx, y1); c.stroke();
-    const z = zSeen(els, src, src.f);
-    if (z) { const I = Math.hypot(z.I[0], z.I[1]) / Math.SQRT2; c.fillStyle = T.surface; c.strokeStyle = T.equi; c.lineWidth = 2; c.beginPath(); c.arc(fx, Math.max(y0, Y(I)), 4.5 * Math.min(ps, 1.3), 0, 2 * Math.PI); c.fill(); c.stroke(); }
+    if (yDot != null && isFinite(yDot)) { c.fillStyle = T.surface; c.strokeStyle = T.equi; c.lineWidth = 2; c.beginPath(); c.arc(fx, yDot, 4.5 * Math.min(ps, 1.3), 0, 2 * Math.PI); c.fill(); c.stroke(); }
     const tag = `f = ${fmtF(src.f)}`;
     c.font = `700 ${fs * 0.92}px ${T.mono}`; const tw = c.measureText(tag).width + 26;
     const tx = clamp(fx - tw / 2, 2, W - tw - 2), ty = y0 - fs * 1.55;
@@ -3935,11 +3999,174 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     rGeo.tag = [tx, ty, tw, fs * 1.35];
   }
 
+  // the frequency graph's other two choices: average power from the source, or |Z| and each part's reactance (log scales)
+  function drawRespAlt(c, W, H, ps, fs, src) {
+    const kind = S.rPlot, k1 = Math.min(ps, 1.25);
+    const L0 = 52 * k1, Rm = 14, top = 34 * k1, bot = 30 * k1;
+    const x0 = L0, x1 = W - Rm, y0 = top, y1 = H - bot;
+    const lf0 = Math.log10(F_MIN), lf1 = lf0 + F_DEC;
+    const X = (f) => x0 + (Math.log10(f) - lf0) / (lf1 - lf0) * (x1 - x0);
+    rGeo = { x0, x1, y0, y1, X, inv: (x) => Math.pow(10, lf0 + (x - x0) / (x1 - x0) * (lf1 - lf0)) };
+    const z0 = zSeen(els, src, src.f), blind = S.blind;
+    const Pof = (I0, phi) => 0.5 * src.V0 * I0 * Math.cos(phi);
+    // the curves: [points [f, y], colour, label]
+    const curves = [];
+    if (!blind && kind === 'P') curves.push([reso.curve.map((p) => [p.f, Pof(p.I, p.phi)]), T.equi, null]);
+    if (!blind && kind === 'X') {
+      const fsx = reso.curve.map((p) => p.f);
+      for (const e of els) {
+        if (e.type === 'cap' && e.C > 0) curves.push([fsx.map((f) => [f, 1 / (2 * Math.PI * f * e.C)]), T.capq, `X_${e.name || 'C'} = 1/(2πfC)`]);
+        if (e.type === 'ind' && e.L > 0) curves.push([fsx.map((f) => [f, 2 * Math.PI * f * e.L]), T.indq, `X_${e.name || 'L'} = 2πfL`]);
+      }
+      curves.push([reso.curve.map((p) => [p.f, src.V0 / p.I]), T.equi, `|Z| seen by ${src.name || 'the source'}`]);
+    }
+    const pts = readings.map((r) => [Number(r.f), Number(kind === 'P' ? r.P : r.Z)]).filter(([f, v]) => inBandF(f) && isFinite(v) && (kind === 'P' ? v >= 0 : v > 0));
+    let yNow = NaN;
+    if (z0 && isFinite(z0.re)) { const I0 = Math.hypot(z0.I[0], z0.I[1]); yNow = kind === 'P' ? Pof(I0, Math.atan2(z0.im, z0.re)) : src.V0 / I0; }
+    let Y, ticks;
+    if (kind === 'P') {
+      let m = 0; for (const [p] of curves) for (const q of p) if (isFinite(q[1])) m = Math.max(m, q[1]);
+      for (const p of pts) m = Math.max(m, p[1]); if (isFinite(yNow)) m = Math.max(m, yNow);
+      const topP = fineUp(m * 1.08) || 1, [uf] = unitScale(topP, 'W');
+      Y = (v) => y1 - v / topP * (y1 - y0);
+      ticks = [0, 2, 4].map((j) => [Y(topP * j / 4), sigStr(topP * j / 4 / uf, 3)]);
+      text(c, 'P', x0, 12 * k1, fs, T.ink, 'left', 700);
+      subText(c, `_avg from ${src.name || 'the source'} against f (${unitScale(topP, 'W')[1]})`, x0 + 8, 12 * k1, fs, T.ink, 'left', 700);
+    } else {
+      let lo = Infinity, hi = 0;
+      const take = (v) => { if (isFinite(v) && v > 0) { lo = Math.min(lo, v); hi = Math.max(hi, v); } };
+      for (const [p] of curves) for (const q of p) take(q[1]);
+      for (const p of pts) take(p[1]); take(yNow);
+      if (!(hi > 0)) { lo = 1; hi = 1e3; }
+      let d1 = Math.ceil(Math.log10(hi) + 1e-9), d0 = Math.floor(Math.log10(lo) - 1e-9);
+      if (d1 - d0 < 2) { d0 = d1 - 2; } if (d1 - d0 > 8) d0 = d1 - 8;
+      Y = (v) => y1 - (Math.log10(v) - d0) / (d1 - d0) * (y1 - y0);
+      ticks = []; for (let d = d0; d <= d1; d++) if ((d1 - d) % Math.ceil((d1 - d0) / 4) === 0) ticks.push([Y(Math.pow(10, d)), fmtSI(Math.pow(10, d), 'Ω', 1)]);
+      text(c, '|Z| and reactances against f, log scales', x0, 12 * k1, fs, T.ink, 'left', 700);
+    }
+    c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath();
+    for (let d = lf0; d <= lf1 + 1e-9; d++) for (const m of [1, 2, 3, 4, 5, 6, 7, 8, 9]) { const f = m * Math.pow(10, d); if (Math.log10(f) > lf1 + 1e-9) break; const x = Math.round(X(f)) + 0.5; c.moveTo(x, y0); c.lineTo(x, y1); }
+    for (const [y] of ticks) { const yy = Math.round(y) + 0.5; c.moveTo(x0, yy); c.lineTo(x1, yy); }
+    c.stroke();
+    c.strokeStyle = T.gridStrong; c.strokeRect(x0 + 0.5, y0 + 0.5, x1 - x0, y1 - y0);
+    for (let d = lf0; d <= lf1 + 1e-9; d++) { const f = Math.pow(10, d); text(c, f >= 1000 ? `${f / 1000}k` : `${f}`, X(f), y1 + 10 * k1, fs * 0.92, T.muted, 'center', 400, T.mono); }
+    text(c, 'f (Hz)', x1, y1 + 22 * k1, fs * 0.92, T.muted, 'right', 400, T.mono);
+    for (const [y, t] of ticks) text(c, t, x0 - 5, y, fs * 0.92, T.muted, 'right', 400, T.mono);
+    c.save(); c.beginPath(); c.rect(x0, y0 - 2, x1 - x0, y1 - y0 + 4); c.clip();
+    // half power: P_max/2, with the band and Q where the resistance the source sees is the same across it (a series loop)
+    const pk = blind ? null : reso.peak;
+    if (kind === 'P' && pk) {
+      const zp = zSeen(els, src, pk.f), Pmax = zp ? Pof(Math.hypot(zp.I[0], zp.I[1]), Math.atan2(zp.im, zp.re)) : NaN;
+      if (isFinite(Pmax) && Pmax > 0) {
+        const z1 = pk.f1 && zSeen(els, src, pk.f1), z2 = pk.f2 && zSeen(els, src, pk.f2);
+        const sameR = z1 && z2 && Math.abs(z1.re - zp.re) <= 1e-9 * Math.abs(zp.re) && Math.abs(z2.re - zp.re) <= 1e-9 * Math.abs(zp.re);
+        if (sameR) { c.fillStyle = withA(T.accent, 0.1); c.fillRect(X(pk.f1), y0, X(pk.f2) - X(pk.f1), y1 - y0); }
+        c.setLineDash([4, 4]); c.strokeStyle = T.accent; c.globalAlpha = 0.7; c.beginPath(); c.moveTo(x0, Y(Pmax / 2)); c.lineTo(x1, Y(Pmax / 2)); c.stroke(); c.setLineDash([]); c.globalAlpha = 1;
+        subText(c, 'P_max/2, half power', x0 + 6, Y(Pmax / 2) - 9, fs * 0.88, T.accent, 'left', 400);
+        if (sameR) {
+          const txt = `Δf = ${fmtF(pk.bw)}, Q = ${sigStr(pk.Q, 3)}`;
+          c.font = `${fs * 0.9}px ${T.mono}`; const tw = c.measureText(txt).width, xx = clamp(X(pk.f) + 8, x0 + 4, x1 - tw - 4);
+          haloBox(c, xx - 3, y0 + 4, tw + 6, fs * 1.3, withA(T.surface, 0.85));
+          text(c, txt, xx, y0 + 4 + fs * 0.65, fs * 0.9, T.accent, 'left', 400, T.mono);
+        }
+      }
+    }
+    if (!blind && kind === 'X') for (const f0 of reso.zeros) {
+      const x = X(f0); if (x < x0 || x > x1) continue;
+      c.setLineDash([2, 4]); c.strokeStyle = T.muted; c.beginPath(); c.moveTo(x, y0); c.lineTo(x, y1); c.stroke(); c.setLineDash([]);
+      subText(c, `f_0 = ${fmtF(f0)}`, x + 4, y0 + 10, fs * 0.88, T.muted, x > x1 - 110 ? 'right' : 'left');
+    }
+    const used = [];
+    curves.forEach(([p, col, lab], i) => {
+      const main = i === curves.length - 1 || kind === 'P';
+      c.strokeStyle = col; c.lineWidth = (main ? 2.2 : 1.8) * Math.min(ps, 1.3); c.beginPath(); let pen = false;
+      for (const [f, v] of p) { if (!isFinite(v) || (kind === 'X' && !(v > 0))) { pen = false; continue; } const x = X(f), y = Y(v); pen ? c.lineTo(x, y) : c.moveTo(x, y); pen = true; }
+      c.stroke();
+      if (!lab) return;
+      // the label where the curve is inside the axes, as far right as it fits and clear of the labels already placed
+      c.font = `700 ${fs * 0.88}px ${T.ui}`; const lw = c.measureText(lab.replace(/_/g, '')).width;
+      for (let j = p.length - 1; j >= 0; j -= 6) {
+        const [f, v] = p[j], x = X(f) - lw - 6, y = Y(v) - 9;
+        if (!(v > 0) || x < x0 + 4 || y < y0 + 8 || y > y1 - 8 || used.some((u) => Math.abs(u - y) < fs * 1.2)) continue;
+        haloBox(c, x - 2, y - fs * 0.6, lw + 4, fs * 1.2, withA(T.surface, 0.8));
+        subText(c, lab, x, y, fs * 0.88, col, 'left', 700); used.push(y); break;
+      }
+    });
+    c.strokeStyle = T.ink; c.lineWidth = 1.4;
+    for (const [f, v] of pts) { const x = X(f), y = Y(v), q = 3.2 * Math.min(ps, 1.3); if (x < x0 - 1 || x > x1 + 1) continue; c.strokeRect(x - q, y - q, 2 * q, 2 * q); }
+    c.restore();
+    if (pts.length || blind) {
+      const q = 3.2 * Math.min(ps, 1.3), lab = pts.length ? 'your readings' + (kind === 'X' ? ', |Z|' : '') : 'Blind: capture readings to plot them here';
+      c.font = `400 ${fs * 0.88}px ${T.ui}`; const lw = c.measureText(lab).width, lx = x1 - lw - 6, ly = y1 - 12 - (kind === 'X' ? 0 : 0);
+      haloBox(c, lx - 2 * q - 10, ly - fs * 0.65, lw + 2 * q + 14, fs * 1.3, withA(T.surface, 0.85));
+      c.strokeStyle = T.ink; if (pts.length) c.strokeRect(lx - 2 * q - 6, ly - q, 2 * q, 2 * q);
+      text(c, lab, lx, ly, fs * 0.88, T.muted, 'left');
+    }
+    fMarker(c, src, X, y0, y1, isFinite(yNow) && (kind === 'P' || yNow > 0) ? clamp(Y(yNow), y0, y1) : null, W, fs, ps);
+  }
+
+  // ---------- power in time: p = v·i for the selected part, or what the source delivers ----------
+  const P_PARTS = ['res', 'bulb', 'cap', 'ind', 'ac', 'diode', 'led'];
+  function powerPart() { const e = selEl(); return e && P_PARTS.includes(e.type) ? e : mainSrc(); }
+  // the average over a long time: the DC product plus ½(a·a′ + b·b′) for each frequency's sin and cos parts
+  function avgPower(id, src) {
+    const d = sp.dc.res.get(id); let p = d ? d.V * d.I : 0;
+    for (const c of sp.ac) { const r = c.res.get(id); if (!r) return NaN; p += 0.5 * (r.V[0] * r.I[0] + r.V[1] * r.I[1]); }
+    return src ? -p : p;
+  }
+  function drawPowerT(c, W, H) {
+    const ps = projScale(), fs = fs0(), k1 = Math.min(ps, 1.25), src = mainSrc(), e = src && powerPart();
+    if (!e) { text(c, 'Power in time', 12, 12 * k1, fs, T.ink, 'left', 700); text(c, 'Add an AC source.', W / 2, H / 2, fs, T.muted, 'center'); return; }
+    const isSrc = e.type === 'ac', nm = e.name || TYPE[e.type];
+    text(c, isSrc ? `Power in time: p = vi out of ${nm}` : `Power in time: p = vi into ${nm}`, 12, 12 * k1, fs, T.ink, 'left', 700);
+    if (!sp || !sp.ok || !sp.ac.length) { text(c, 'No steady state to show.', W / 2, H / 2, fs, T.muted, 'center'); return; }
+    const T0 = 1 / src.f, N = 240, vs = [], is = [], pw = [];
+    for (let k = 0; k <= N; k++) { const t = 2 * T0 * k / N, v = specAt(sp, e.id, 'V', t), i = specAt(sp, e.id, 'I', t) * (isSrc ? -1 : 1); vs.push(v); is.push(i); pw.push(v * i); }
+    const Pav = avgPower(e.id, isSrc);
+    if (!pw.every(isFinite)) { text(c, 'No steady state to show.', W / 2, H / 2, fs, T.muted, 'center'); return; }
+    const mP = Math.max(...pw.map(Math.abs), Math.abs(Pav)) || 1, mV = Math.max(...vs.map(Math.abs)) || 1, mI = Math.max(...is.map(Math.abs)) || 1;
+    const top = fineUp(mP * 1.05), [uf, uu] = unitScale(top, 'W');
+    const x0 = 50 * k1, x1 = W - 12, y0 = 30 * k1, y1 = H - 30 * k1, ym = (y0 + y1) / 2;
+    const X = (t) => x0 + t / (2 * T0) * (x1 - x0), Y = (p) => ym - p / top * (y1 - y0) / 2;
+    c.strokeStyle = T.grid; c.lineWidth = 1; c.beginPath();
+    for (let j = 0; j <= 8; j++) { const x = Math.round(x0 + j * (x1 - x0) / 8) + 0.5; c.moveTo(x, y0); c.lineTo(x, y1); }
+    for (let j = 0; j <= 4; j++) { const y = Math.round(y0 + j * (y1 - y0) / 4) + 0.5; c.moveTo(x0, y); c.lineTo(x1, y); }
+    c.stroke(); c.strokeStyle = T.gridStrong; c.strokeRect(x0 + 0.5, y0 + 0.5, x1 - x0, y1 - y0);
+    c.beginPath(); c.moveTo(x0, Math.round(ym) + 0.5); c.lineTo(x1, Math.round(ym) + 0.5); c.stroke();
+    for (const j of [-1, 0, 1]) text(c, sigStr(j * top / uf, 3).replace('-', '−'), x0 - 5, Y(j * top), fs * 0.92, T.muted, 'right', 400, T.mono);
+    text(c, uu, x0 - 5, y0 - 10 * k1, fs * 0.92, T.muted, 'right', 400, T.mono);
+    text(c, '0', X(0), y1 + 10 * k1, fs * 0.92, T.muted, 'center', 400, T.mono);
+    text(c, 'T', X(T0), y1 + 10 * k1, fs * 0.92, T.muted, 'center', 400, T.mono);
+    text(c, `2T, T = ${fmtTime(T0, 4)}`, x1, y1 + 10 * k1, fs * 0.92, T.muted, 'right', 400, T.mono);
+    // energy into the part shaded above zero, energy it gives back below
+    const pc = T.kir;
+    for (const sgn of [1, -1]) {
+      c.beginPath(); c.moveTo(X(0), ym);
+      pw.forEach((p, k) => c.lineTo(X(2 * T0 * k / N), Y(sgn > 0 ? Math.max(p, 0) : Math.min(p, 0))));
+      c.lineTo(X(2 * T0), ym); c.closePath(); c.fillStyle = withA(sgn > 0 ? pc : T.neg, 0.16); c.fill();
+    }
+    const trace = (arr, sc, col, w, dash) => { c.strokeStyle = col; c.lineWidth = w; c.setLineDash(dash || []); c.beginPath(); arr.forEach((v, k) => { const x = X(2 * T0 * k / N), y = Y(v * sc); k ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke(); c.setLineDash([]); };
+    const sv = 0.8 * top / mV, si = 0.8 * top / mI;
+    trace(vs, sv, withA(T.muted, 0.8), 1.4 * Math.min(ps, 1.3));
+    trace(is, si, withA(T.muted, 0.8), 1.4 * Math.min(ps, 1.3), [5, 4]);
+    trace(pw, 1, pc, 2.4 * Math.min(ps, 1.3));
+    c.setLineDash([6, 4]); c.strokeStyle = T.accent; c.lineWidth = 1.6; c.beginPath(); c.moveTo(x0, Y(Pav)); c.lineTo(x1, Y(Pav)); c.stroke(); c.setLineDash([]);
+    const avTxt = `average ${fmtSI(Pav, 'W', 4)}`;
+    c.font = `600 ${fs * 0.9}px ${T.mono}`; const aw = c.measureText(avTxt).width, ay = Y(Pav) + (Pav >= 0 ? -10 : 10);
+    haloBox(c, x1 - aw - 9, ay - fs * 0.65, aw + 6, fs * 1.3, withA(T.surface, 0.85)); text(c, avTxt, x1 - aw - 6, ay, fs * 0.9, T.accent, 'left', 600, T.mono);
+    // where the circuit is now
+    const tn = ((acT % (2 * T0)) + 2 * T0) % (2 * T0), kn = Math.round(tn / (2 * T0) * N);
+    c.fillStyle = pc; c.beginPath(); c.arc(X(tn), Y(pw[kn]), 4 * Math.min(ps, 1.3), 0, 2 * Math.PI); c.fill();
+    const lg = 'p = vi   ·   v solid, i dashed, each scaled to fit';
+    text(c, lg, x0 + 6, y0 + 10 * k1, fs * 0.84, T.muted, 'left');
+  }
+
   // ---------- impedance triangle ----------
   function drawZ() {
     const P = panes.z, c = P.ctx, [W, H] = P.dims; if (!W || !H) return;
     c.setTransform(dpr, 0, 0, dpr, 0, 0);
     c.fillStyle = T.surface; c.fillRect(0, 0, W, H);
+    if (S.zPlot === 'p') { drawPowerT(c, W, H); return; }
     const ps = projScale(), fs = fs0(), src = mainSrc();
     text(c, 'Impedance triangle', 12, 12 * Math.min(ps, 1.25), fs, T.ink, 'left', 700);
     if (!src) { text(c, 'Add an AC source.', W / 2, H / 2, fs, T.muted, 'center'); return; }
@@ -4024,8 +4251,9 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
       if (!sp || !sp.ok) return [['Steady state', '—']];
       const Ir = specRms(sp, e.id, 'I'), Vr = specRms(sp, e.id, 'V'), f = sp.ac.length ? sp.ac[0].f : 0, w = 2 * Math.PI * f;
       if (res) { rows.push(['V<sub>rms</sub>', fmtSI(Vr, 'V', 4)], ['I<sub>rms</sub>', fmtSI(Ir, 'A', 4)], ['Average power, I<sub>rms</sub><sup>2</sup>R', fmtSI(Ir * Ir * e.R, 'W', 4)], ['V and I', 'in phase']); $('selFormula').innerHTML = `V<sub>rms</sub> = I<sub>rms</sub>R = ${fmtSI(Ir, 'A', 3)} × ${fmtR(e.R)}`; }
-      else if (e.type === 'cap') { const X = 1 / (w * e.C); rows.push(['X<sub>C</sub> = 1/(ωC)', f ? fmtSI(X, 'Ω', 4) : '∞', false, 'c-cap'], ['V<sub>rms</sub>', fmtSI(Vr, 'V', 4), false, 'c-cap'], ['I<sub>rms</sub>', fmtSI(Ir, 'A', 4)], ['Current', 'leads V by 90°']); if (f) $('selFormula').innerHTML = `X<sub>C</sub> = 1/(2π × ${fmtF(f)} × ${fmtVal(e.C, 'F')}) = ${fmtSI(X, 'Ω', 3)}`; }
-      else if (e.type === 'ind') { const X = w * e.L; rows.push(['X<sub>L</sub> = ωL', fmtSI(X, 'Ω', 4), false, 'c-ind'], ['V<sub>rms</sub>', fmtSI(Vr, 'V', 4), false, 'c-ind'], ['I<sub>rms</sub>', fmtSI(Ir, 'A', 4)], ['Current', 'lags V by 90°']); $('selFormula').innerHTML = `X<sub>L</sub> = 2π × ${fmtF(f)} × ${fmtVal(e.L, 'H')} = ${fmtSI(X, 'Ω', 3)}`; }
+      /* Blind keeps the meters and hides the reactance and the phase, which the Reactance and Phase worksheet measures */
+      else if (e.type === 'cap') { const X = 1 / (w * e.C); if (S.blind) rows.push(['V<sub>rms</sub>', fmtSI(Vr, 'V', 4), false, 'c-cap'], ['I<sub>rms</sub>', fmtSI(Ir, 'A', 4)]); else { rows.push(['X<sub>C</sub> = 1/(ωC)', f ? fmtSI(X, 'Ω', 4) : '∞', false, 'c-cap'], ['V<sub>rms</sub>', fmtSI(Vr, 'V', 4), false, 'c-cap'], ['I<sub>rms</sub>', fmtSI(Ir, 'A', 4)], ['Current', 'leads V by 90°']); if (f) $('selFormula').innerHTML = `X<sub>C</sub> = 1/(2π × ${fmtF(f)} × ${fmtVal(e.C, 'F')}) = ${fmtSI(X, 'Ω', 3)}`; } }
+      else if (e.type === 'ind') { const X = w * e.L; if (S.blind) rows.push(['V<sub>rms</sub>', fmtSI(Vr, 'V', 4), false, 'c-ind'], ['I<sub>rms</sub>', fmtSI(Ir, 'A', 4)]); else { rows.push(['X<sub>L</sub> = ωL', fmtSI(X, 'Ω', 4), false, 'c-ind'], ['V<sub>rms</sub>', fmtSI(Vr, 'V', 4), false, 'c-ind'], ['I<sub>rms</sub>', fmtSI(Ir, 'A', 4)], ['Current', 'lags V by 90°']); $('selFormula').innerHTML = `X<sub>L</sub> = 2π × ${fmtF(f)} × ${fmtVal(e.L, 'H')} = ${fmtSI(X, 'Ω', 3)}`; } }
       else if (e.type === 'ac') {
         const z = zSeen(els, e, e.f);
         rows.push(['V<sub>rms</sub> = V<sub>0</sub>/√2', fmtSI(e.V0 / Math.SQRT2, 'V', 4)], ['I<sub>rms</sub> out of +', fmtSI(Ir, 'A', 4)]);
@@ -5174,6 +5402,17 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   $('clearAll').addEventListener('click', () => { if (!els.length) return; pushUndo(null); els = []; sel = null; channels = []; ghosts = []; S.preset = null; structural(); presetButtons(); S.hintKey = null; $('presetHint').textContent = 'An empty board. Pick a part above the drawing to start, or choose a setup.'; changed('edit'); });
   $('toSelect').addEventListener('click', () => setTool('select'));
   for (const b of document.querySelectorAll('#kSeg button')) b.addEventListener('click', () => { S.kmode = b.dataset.k; kPick = null; kirchhoffTarget(); updateRail(); });
+  function plotButtons() {
+    for (const b of document.querySelectorAll('#rSeg button')) b.setAttribute('aria-pressed', String(b.dataset.r === S.rPlot));
+    for (const b of document.querySelectorAll('#zSeg button')) b.setAttribute('aria-pressed', String(b.dataset.z === S.zPlot));
+    $('rCan').setAttribute('aria-label', S.rPlot === 'P' ? 'Average power from the AC source against frequency on a log scale. Drag the f marker, or use the left and right arrows, to change the frequency.'
+      : S.rPlot === 'X' ? 'The impedance the AC source sees and the reactance of each capacitor and inductor against frequency, both on log scales. Drag the f marker, or use the left and right arrows, to change the frequency.'
+      : 'Resonance curve: rms current from the AC source against frequency on a log scale. Drag the f marker, or use the left and right arrows, to change the frequency.');
+    $('zCan').setAttribute('aria-label', S.zPlot === 'p' ? 'Power in time: p = vi for the selected part, or out of the source, over two periods, with its average.'
+      : 'Impedance triangle: the resistance R and reactance X that the source sees, the impedance Z and the phase angle.');
+  }
+  for (const b of document.querySelectorAll('#rSeg button')) b.addEventListener('click', () => { S.rPlot = b.dataset.r; plotButtons(); drawAll(); });
+  for (const b of document.querySelectorAll('#zSeg button')) b.addEventListener('click', () => { S.zPlot = b.dataset.z; plotButtons(); drawAll(); });
   function stepLoop(dir) {
     const all = allLoops(); if (!all.length) return;
     const k = kLoop ? loopKey(kLoop) : '', i = all.findIndex((L) => loopKey(L) === k);
@@ -5250,6 +5489,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     };
     for (const q of r.parts) row.parts[q.name] = numStr(roundSI(q.Vrms, 4));
     for (const e of els) if (e.name && PART_Q[e.type]) { const [k, u] = PART_Q[e.type]; row.vals[e.name] = { v: +e[k].toPrecision(6), u, k }; }
+    for (const e of els) if (e.name && e.type === 'sw') { row.sw = row.sw || {}; row.sw[e.name] = e.closed ? 'closed' : 'open'; }
     readings.push(row); renderRows();
     live(`Reading ${readings.length} captured: f = ${row.f} Hz, I rms = ${row.I} mA, phase ${row.phi} degrees.`);
   }
@@ -5280,8 +5520,11 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     for (const r of readings) { for (const n of Object.keys(r.parts)) if (!pn.includes(n)) pn.push(n); for (const n of Object.keys(r.vals)) if (!vn.includes(n)) vn.push(n); }
     const nsort = (a, b) => a.localeCompare(b, 'en', { numeric: true }); pn.sort(nsort); vn.sort(nsort);
     const unitOf = (n) => { const r = readings.find((q) => q.vals[n]); return r.vals[n].u; };
-    return buildCSV(L, ['row', 'source', 'f_Hz', 'V0_peak_V', 'Vrms_source_V', 'Irms_A', 'phase_deg', 'Z_ohm', 'P_avg_W', ...pn.map((n) => `Vrms_${n}_V`), ...vn.map((n) => `${n}_${unitOf(n)}`)],
-      readings.map((r, i) => [i + 1, r.src, r.f, r.V0, r.Vs, scaleStr(r.I, 1e-3), r.phi, r.Z, r.P, ...pn.map((n) => r.parts[n] ?? ''), ...vn.map((n) => (r.vals[n] ? r.vals[n].v : ''))]));
+    /* switches only add columns when a reading has one, so the readings of circuits without switches are as before */
+    const sn = []; for (const r of readings) for (const n of Object.keys(r.sw || {})) if (!sn.includes(n)) sn.push(n);
+    sn.sort(nsort); if (sn.length) L.push('switch columns,<switch>_state is the switch position when the reading was taken');
+    return buildCSV(L, ['row', 'source', 'f_Hz', 'V0_peak_V', 'Vrms_source_V', 'Irms_A', 'phase_deg', 'Z_ohm', 'P_avg_W', ...pn.map((n) => `Vrms_${n}_V`), ...vn.map((n) => `${n}_${unitOf(n)}`), ...sn.map((n) => `${n}_state`)],
+      readings.map((r, i) => [i + 1, r.src, r.f, r.V0, r.Vs, scaleStr(r.I, 1e-3), r.phi, r.Z, r.P, ...pn.map((n) => r.parts[n] ?? ''), ...vn.map((n) => (r.vals[n] ? r.vals[n].v : '')), ...sn.map((n) => (r.sw && r.sw[n]) || '')]));
   }
   // the captured AC readings as points (f in Hz, I rms in A) for the resonance axes
   function readingPoints() {
@@ -5312,7 +5555,14 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     const a = document.createElement('a'); a.href = '../curriculum/labs/students/' + ws + '.html'; a.target = ws + '-worksheet'; a.textContent = 'Open the worksheet';
     a.style.color = 'var(--accent)'; st.appendChild(a);
   }
-  $('expTab').addEventListener('click', () => { if (!readings.length) { live('No readings to export yet.'); return; } const txt = readingsCSV(); toWorksheet(txt, () => downloadText('circuits-ac-readings.csv', txt), { wsName: 'AC Resonance', series: wsSer.A }); });
+  /* AC readings go to the worksheet whose link opened the page (Reactance and Phase, or Power in an AC Circuit), or to the power
+     worksheet from its two setups; otherwise to AC Resonance */
+  function wsAC() {
+    if (WS_OPENED === 'reactance') return { ws: 'ac-reactance', wsName: 'Reactance and Phase' };
+    if (['power', 'outlet', 'powerfactor'].includes(WS_OPENED) || S.preset === 'outlet' || S.preset === 'pfactor') return { ws: 'ac-power', wsName: 'Power in an AC Circuit' };
+    return { wsName: 'AC Resonance' };
+  }
+  $('expTab').addEventListener('click', () => { if (!readings.length) { live('No readings to export yet.'); return; } const txt = readingsCSV(); toWorksheet(txt, () => downloadText('circuits-ac-readings.csv', txt), { ...wsAC(), series: wsSer.A }); });
   $('clearTab').addEventListener('click', () => { wsSer.A = Date.now(); readings = []; renderRows(); live('Readings cleared.'); });
   renderRows(); renderT(); renderD();
   const toggle = (id, key) => $(id).addEventListener('change', (ev) => { S.layers[key] = ev.target.checked; if (key === 'elec') dotKey(); updateRail(); });
@@ -5325,9 +5575,12 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     const chip = (p) => `<button type="button" data-p="${p}" aria-pressed="${p === S.preset}">${PRESETS[p].name}</button>`;
     $('presets').innerHTML = MODE_PRESETS[S.mode].map(chip).join('');
     $('starters').innerHTML = STARTERS.map(chip).join('');
-    for (const b of document.querySelectorAll('#presets button, #starters button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+    const ex = EXTRAS[S.mode];
+    $('extrasHead').hidden = $('extras').hidden = !ex;
+    $('extrasHead').textContent = ex ? ex.head : ''; $('extras').innerHTML = ex ? ex.list.map(chip).join('') : '';
+    for (const b of document.querySelectorAll('#presets button, #extras button, #starters button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   }
-  function presetButtons() { for (const b of document.querySelectorAll('#presets button, #starters button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); }
+  function presetButtons() { for (const b of document.querySelectorAll('#presets button, #extras button, #starters button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); }
   const HASH = { dc: 'dc', time: 'transients', ac: 'ac' };
   function setHash(h) { try { if (location.hash.slice(1) !== h) history.replaceState(null, '', '#' + h); } catch (_) {} }
   function showMode() {
@@ -5366,11 +5619,12 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     presetButtons(); showPresetHint(name);
     changed('preset');
     if (S.mode !== 'dc' && !reduce && !running) setRunning(true);
-    setHash(STARTER_HASH[name] || (S.mode === 'time' ? (['rc', 'flip', 'flash'].includes(name) ? 'rc' : 'transients') : HASH[S.mode]));
+    setHash(STARTER_HASH[name] || EXTRA_HASH[name] || (S.mode === 'time' ? (['rc', 'flip', 'flash'].includes(name) ? 'rc' : 'transients') : HASH[S.mode]));
   }
   function fromHash() {
     const h = location.hash.slice(1).toLowerCase();
-    const map = { dc: 'series', rc: 'rc', transients: 'rlc', time: 'rc', ac: 'below', ohm: 'ohm', diode: 'diodeIV', led: 'leds', rectifier: 'rectifier', transistor: 'tswitch', amplifier: 'amp' };
+    const map = { dc: 'series', rc: 'rc', transients: 'rlc', time: 'rc', ac: 'below', ohm: 'ohm', diode: 'diodeIV', led: 'leds', rectifier: 'rectifier', transistor: 'tswitch', amplifier: 'amp',
+      reactance: 'acC', outlet: 'outlet', power: 'outlet', powerfactor: 'pfactor' };
     return map[h] || null;
   }
   // the page sets its own hash with replaceState, which fires no event: a hashchange is a link followed by the user

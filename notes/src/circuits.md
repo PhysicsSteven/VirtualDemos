@@ -53,6 +53,10 @@ Students should know V = IR and Q = CV; the AC part needs sines and phasors. Swi
 
 **Q12.** In Transistor switch (9 V, R_C = 470 Ω, red LED, β = 100), find I_B and I_C for R_B = 1 MΩ and for 10 kΩ, taking V_BE = 0.7 V. Why is the second I_C not 100 I_B?
 
+**Q13.** Wall outlet: the outlet is 120 V rms at 60 Hz and the bulb is 144 Ω. Find the peak voltage, the rms current and the average power. Under Graphs pick Power in time: what are the largest and smallest values of p = vi, and how many times per second does p repeat?
+
+**Q14.** Power factor: the load is 10 Ω in series with 50 mH on 120 V rms at 60 Hz. Find the power factor, the source current and the average power with S1 open. What capacitance across the load makes the power factor exactly 1, and what is the source current then? Close S1 and check with C1 = 100 µF.
+
 ## Common misconceptions
 
 - **"Current gets used up by the first bulb."** The same current comes out of a part as goes in. What the part takes is energy, q ΔV per charge.

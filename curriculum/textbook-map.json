@@ -6528,13 +6528,15 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "One demo, several handouts. Vol. 2 ch. 15 (AC sources, simple AC circuits, RLC with AC, power, resonance) is the Physics II AC circuits unit (Steve, 2026-10-24). No microscopic resistivity model. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance. Open builder with starter circuits (2026-10-24, Claude): 1N4148 diode, red, green and blue LEDs and a 2N3904 junction transistor (NPN or PNP), solved exactly with the Shockley and Ebers–Moll equations; Vol. 3 §9.7 transistor (I_C = βI_B) with worksheet junction-transistor.",
+      "note": "One demo, several handouts. Vol. 2 ch. 15 (AC sources, simple AC circuits, RLC with AC, power, resonance) is the Physics II AC circuits unit (Steve, 2026-10-24). No microscopic resistivity model. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance. Open builder with starter circuits (2026-10-24, Claude): 1N4148 diode, red, green and blue LEDs and a 2N3904 junction transistor (NPN or PNP), solved exactly with the Shockley and Ebers–Moll equations; Vol. 3 §9.7 transistor (I_C = βI_B) with worksheet junction-transistor. AC additions (2026-10-24, Claude): graphs of average power and of |Z| and reactances against frequency, power in time p = vi, Wall outlet and Power factor setups; worksheets ac-reactance (§§15.1, 15.2) and ac-power (§§15.1, 15.4).",
       "handouts": [
         "dc-circuits",
         "rc-circuits",
         "rlc-transients",
         "ac-circuits",
-        "junction-transistor"
+        "junction-transistor",
+        "ac-reactance",
+        "ac-power"
       ],
       "title": "Circuits",
       "url": "demos/circuits.html"
