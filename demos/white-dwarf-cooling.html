@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -58,7 +60,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
-#can { touch-action: none; outline: none; }
+#can { touch-action: none; outline: none; position: relative; z-index: 1; }
+#pane canvas.vd3d { position: absolute; z-index: 0; pointer-events: none; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
@@ -123,6 +126,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div class="seg" role="group" aria-label="Cooling plot shows">
           <button type="button" id="yL" aria-pressed="true">Luminosity</button>
           <button type="button" id="yT" aria-pressed="false">Core T</button>
+        </div>
+        <div class="seg" role="group" aria-label="Perspective" id="viewSeg">
+          <button type="button" data-dim="3d" aria-pressed="false">3D</button>
+          <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
         </div>
         <span class="count mono" id="count" aria-live="off"></span>
       </div>
@@ -903,18 +910,79 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.stroke();
   }
 
+  // ---------- 3D cutaway of the star (three.js through demos/lib/vd3kit.js) ----------
+  // The whole star with a quarter cut away, seen with an orthographic camera so it lines up with the labels drawn over it.
+  // The surface glows in the blackbody colour of T_eff; both cut faces show the same radial layers as the flat slice: the
+  // liquid (brighter when the core is hot), the crystal core with its lattice out to the model's freezing radius, and the front.
+  const W3 = { on: false, S: null, cam: null, shell: null, faces: [], tex: null, cv: null, key: '' };
+  function init3D() {
+    const S3 = VD3K.stage($('pane'), { before: can });
+    if (!S3) return false;
+    W3.S = S3; S3.el.classList.add('vd3d');
+    W3.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.1, 50);
+    const pc = Math.PI / 2 + 0.25, ps0 = pc - 1.75 * Math.PI;   /* the missing quarter is centred on phi = pc, toward the camera */
+    W3.shell = new THREE.Mesh(new THREE.SphereGeometry(1, 72, 48, ps0, 1.5 * Math.PI), new THREE.MeshStandardMaterial({ roughness: 0.6, metalness: 0, side: THREE.DoubleSide }));
+    W3.cv = document.createElement('canvas'); W3.cv.width = W3.cv.height = 384; W3.tex = new THREE.CanvasTexture(W3.cv);
+    const fm = new THREE.MeshStandardMaterial({ map: W3.tex, roughness: 0.9, metalness: 0, side: THREE.DoubleSide, emissive: 0xffffff, emissiveMap: W3.tex, emissiveIntensity: 0.7 });
+    const g = new THREE.Group(); g.add(W3.shell);
+    for (const ph of [ps0, ps0 + 1.5 * Math.PI]) { const f = new THREE.Mesh(new THREE.CircleGeometry(1, 72, -Math.PI / 2, Math.PI), fm); f.rotation.y = Math.PI + ph; g.add(f); }
+    S3.scene.add(g); W3.g = g;
+    const d = new THREE.Vector3(-Math.cos(pc), 0, Math.sin(pc)).add(new THREE.Vector3(0, 0.55, 0)).normalize().multiplyScalar(10);
+    W3.cam.position.copy(d); W3.cam.lookAt(0, 0, 0);
+    S3.sun.position.copy(d.clone().add(new THREE.Vector3(-4, 6, 2)));
+    return true;
+  }
+  function faceTexture(fsFrac, heat, comp) {
+    const c = W3.cv.getContext('2d'), n = W3.cv.width, h = n / 2;
+    c.clearRect(0, 0, n, n);
+    /* a fixed warm palette, the same in both themes: it is the inside of a star, not page chrome */
+    const rg = c.createRadialGradient(h, h, 0, h, h, h);
+    rg.addColorStop(0, T.liquid); rg.addColorStop(0.75, '#b5532a'); rg.addColorStop(1, '#5c2414');
+    c.fillStyle = '#3a1a12'; c.beginPath(); c.arc(h, h, h, 0, 2 * Math.PI); c.fill();
+    c.globalAlpha = 0.45 + 0.55 * heat; c.fillStyle = rg; c.beginPath(); c.arc(h, h, h, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1;
+    const rs = fsFrac * h;
+    if (rs > 0.5) {
+      c.save(); c.beginPath(); c.arc(h, h, rs, 0, 2 * Math.PI); c.fillStyle = T.solid; c.globalAlpha = 0.85; c.fill(); c.globalAlpha = 1; c.clip();
+      const a = 13; c.fillStyle = '#e8f6ff'; c.globalAlpha = 0.7;
+      for (let row = -30; row <= 30; row++) { const y = h + row * a * 0.866, off = row % 2 ? a / 2 : 0; for (let x = off - a; x < n + a; x += a) { c.beginPath(); c.arc(x, y, 2.2, 0, 2 * Math.PI); c.fill(); } }
+      c.restore();
+      if (fsFrac < 0.999) { c.strokeStyle = '#e8f6ff'; c.lineWidth = 4; c.beginPath(); c.arc(h, h, rs, 0, 2 * Math.PI); c.stroke(); }
+    }
+    W3.tex.needsUpdate = true; void comp;
+  }
+  // draws the cutaway at (cx, cy) with radius Rpx, inside the square box the 2D canvas has cleared
+  function render3D(nw, cx, cy, Rpx, half, rsFrac) {
+    const S3 = W3.S, sz = Math.round(2 * half), el = S3.el;
+    el.style.left = Math.round(cx - half) + 'px'; el.style.top = Math.round(cy - half) + 'px';
+    S3.size(sz, sz); S3.theme();
+    const k = sz / 2 / Rpx; Object.assign(W3.cam, { left: -k, right: k, top: k, bottom: -k }); W3.cam.updateProjectionMatrix();
+    const [r, g, b] = bbRGB(clamp(nw.Teff, 1000, 60000)), col = new THREE.Color(r / 255, g / 255, b / 255);
+    W3.shell.material.color.copy(col); W3.shell.material.emissive.copy(col).multiplyScalar(0.55);
+    const heat = clamp((Math.log10(nw.Tc) - 6) / 2, 0, 1), key = [rsFrac.toFixed(3), heat.toFixed(2), S.comp, T.liquid, T.canvas].join('|');
+    if (key !== W3.key) { faceTexture(rsFrac, heat, S.comp); W3.key = key; }
+    S3.scene.updateMatrixWorld(); S3.r.render(S3.scene, W3.cam);
+  }
+
   // ---------- slice and coupling profile ----------
   const R05 = () => structure(0.5).R;
   function drawSlice(nw) {
     const c = ctx, p = LY.slice, ps = PS, s = sel.s, ci = sel.ci;
     // wide: disk on the left, Γ profile on the right; narrow: disk on top, profile below
     const split = LY.wide ? Math.round(p.x + p.w * 0.5) : p.x + p.w, dh = LY.wide ? p.h : Math.round(p.h * 0.48);
-    const Rmax = Math.max(30, Math.min((split - p.x) / 2 - 14 * ps, dh - 64 * ps));
-    const cx = p.x + (split - p.x) / 2, cy = p.y + 30 * ps + Rmax + 6 * ps;
+    const on3 = W3.on && W3.S;
+    const Rmax = on3 ? Math.max(30, Math.min((split - p.x) / 2 - 14 * ps, (dh - 50 * ps) / 2)) : Math.max(30, Math.min((split - p.x) / 2 - 14 * ps, dh - 64 * ps));
+    const cx = p.x + (split - p.x) / 2, cy = on3 ? p.y + 36 * ps + Rmax : p.y + 30 * ps + Rmax + 6 * ps;
     const Rpx = s.R / R05() * Rmax, rE = REARTH / R05() * Rmax;
     GEO.slice = { cx, cy, Rmax, Rpx };
     c.fillStyle = T.ink; c.font = `600 ${11.5 * PS}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
     c.fillText('Slice through the star', p.x + 12 * ps, p.y + 22 * ps);
+    const ms = nw.fs * s.M, rs = radiusAtMass(s, ms) / s.R * Rpx;
+    if (on3) {
+      const half = Math.min(Rmax + 10 * ps, (split - p.x) / 2 - 2);
+      c.clearRect(cx - half, cy - half, 2 * half, 2 * half);
+      render3D(nw, cx, cy, Rpx, half, Rpx > 0 ? rs / Rpx : 0);
+      c.strokeStyle = T.muted; c.setLineDash([4, 4]); c.lineWidth = 1.2 * ps; c.beginPath(); c.arc(cx, cy, rE, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
+    } else {
     // liquid core: warm, brighter when hot
     const heat = clamp((Math.log10(nw.Tc) - 6) / 2, 0, 1);
     c.save(); c.beginPath(); c.arc(cx, cy, Rpx, Math.PI, 2 * Math.PI); c.closePath(); c.clip();
@@ -922,7 +990,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     rg.addColorStop(0, T.liquid); rg.addColorStop(1, T.canvas);
     c.fillStyle = rg; c.globalAlpha = 0.35 + 0.5 * heat; c.fillRect(cx - Rpx, cy - Rpx, 2 * Rpx, Rpx); c.globalAlpha = 1;
     // solid core
-    const ms = nw.fs * s.M, rs = radiusAtMass(s, ms) / s.R * Rpx;
     if (rs > 0.5) {
       c.beginPath(); c.arc(cx, cy, rs, Math.PI, 2 * Math.PI); c.closePath();
       c.fillStyle = T.solid; c.globalAlpha = 0.5; c.fill(); c.globalAlpha = 1;
@@ -945,6 +1012,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     // base line, Earth for scale
     c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.beginPath(); c.moveTo(cx - Rmax - 6, cy + 0.5); c.lineTo(cx + Rmax + 6, cy + 0.5); c.stroke();
     c.strokeStyle = T.muted; c.setLineDash([4, 4]); c.lineWidth = 1.2 * ps; c.beginPath(); c.arc(cx, cy, rE, Math.PI, 2 * Math.PI); c.stroke(); c.setLineDash([]);
+    }
     // mass handle on the surface
     const ang = -Math.PI * 0.28, hx = cx + Rpx * Math.cos(ang), hy = cy + Rpx * Math.sin(ang), hot = isHot('mass');
     GEO.slice.handle = [hx, hy];
@@ -952,7 +1020,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     c.fillStyle = T.canvas; c.strokeStyle = T.accent; c.lineWidth = (hot ? 2.4 : 1.8) * ps; c.beginPath(); c.arc(hx, hy, (hot ? 7 : 5.5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke();
     // labels
     c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top';
-    c.fillText(`R = ${Math.round(s.R / 1000).toLocaleString('en-US')} km`, cx, cy + 5 * ps);
+    c.fillText(`R = ${Math.round(s.R / 1000).toLocaleString('en-US')} km` + (on3 ? ' · quarter cut away' : ''), cx, on3 ? cy + Rmax + 4 * ps : cy + 5 * ps);
     label(c, 'Earth', cx - rE * 0.74, cy - rE * 0.74 - 2 * ps, T.muted, 'right', 'bottom', false, 10);
     label(c, `M = ${S.M.toFixed(2)} M☉`, hx + 9 * ps, hy - 6 * ps, T.accent, 'left', 'bottom', true, 10.5);
     const comp = COMPS[S.comp].short;
@@ -1094,6 +1162,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     frame(c, box);
   }
 
+  W3.view = VD3K.view({
+    seg: '#viewSeg', init: init3D,
+    status: () => {},
+    change: (v) => { W3.on = v; if (W3.S) W3.S.el.style.display = v ? '' : 'none'; dirty = true; if (typeof drawAll === 'function' && T) drawAll(); }
+  });
   function drawAll() {
     if (!T || !LY || !sel) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
