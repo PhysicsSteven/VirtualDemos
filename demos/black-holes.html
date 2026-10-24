@@ -990,6 +990,50 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     return { m, ps, Rh, cx, cy, K, xr, X: (r) => cx + Rh + K * Math.log(1 + Math.max(0, r - 1) / 0.5), R: (x) => 1 + 0.5 * (Math.exp((x - cx - Rh) / K) - 1) };
   }
 
+  // ---------- the static observer's own sky (near view porthole) ----------
+  // A fisheye of the whole sky from the observer at r, centred on the hole: distance from the centre ∝ the local angle α, so the rim is
+  // straight away from the hole. Pixels with α ≤ α_c fall in (the shadow); the rest take the sky direction from the same exact
+  // Schwarzschild table as the Ray traced view, built at the observer's r.
+  let port = null;
+  function ensurePort(rr, dpx) {
+    const n = Math.max(24, Math.round(dpx)), key = rr.toPrecision(4) + '|' + n + '|' + T.skyRGB.join(',');
+    if (port && port.key === key) return port;
+    if (!CUBE_T) CUBE_T = cubeTextures();
+    const tb = buildTable(rr, 360), k = Math.PI / (n / 2), texel = (Math.PI / 2) / CUBE, nL = Math.log2(CUBE);
+    const off = document.createElement('canvas'); off.width = off.height = n;
+    const oc = off.getContext('2d'), id = oc.createImageData(n, n), buf = id.data, out = [0, 0, 0], o3 = [0, 0, 0], ph = [0, 0];
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const dx = i + 0.5 - n / 2, dy = n / 2 - j - 0.5, rp = Math.hypot(dx, dy), a = rp * k, q = 4 * (j * n + i);
+      if (a > Math.PI) continue;
+      buf[q + 3] = 255;
+      if (a <= tb.ac) continue;
+      const cx = rp > 0 ? dx / rp : 1, cy = rp > 0 ? dy / rp : 0;
+      lookPhi(tb, a, ph);
+      const P = ph[0], s = Math.sin(P), x = s * cx, y = s * cy, z = Math.cos(P);
+      dirToFace(x, y, z, o3);
+      const lod = Math.log2(k * Math.max(Math.abs(ph[1]), Math.abs(s) / Math.max(a, 1e-6), 1e-3) / texel);
+      sampleTex(CUBE_T[o3[0]], (o3[1] + 1) / 2 * CUBE, (o3[2] + 1) / 2 * CUBE, lod, out);
+      if (lod > nL - 3) { const w = Math.min(1, (lod - nL + 3) / 2); for (let c = 0; c < 3; c++) out[c] += w * (CUBE_MEAN[c] - out[c]); }
+      buf[q] = T.skyRGB[0] + out[0]; buf[q + 1] = T.skyRGB[1] + out[1]; buf[q + 2] = T.skyRGB[2] + out[2];
+    }
+    oc.putImageData(id, 0, 0);
+    port = { key, off, ac: tb.ac };
+    return port;
+  }
+  function drawPort(c, g, rr) {
+    const m = g.m, ps = g.ps, Rp = Math.round(Math.max(34, Math.min(70 * ps, m.w * 0.15, m.h * 0.17)));
+    const px = m.x + m.w - Rp - 14 * ps, py = m.y + Rp + 30 * ps, P = ensurePort(rr, 2 * Rp * Math.min(dpr, 2));
+    c.save(); c.beginPath(); c.arc(px, py, Rp, 0, 2 * Math.PI); c.clip();
+    c.imageSmoothingEnabled = true; c.drawImage(P.off, px - Rp, py - Rp, 2 * Rp, 2 * Rp); c.restore();
+    c.strokeStyle = T.skyMuted; c.lineWidth = 1.2 * ps; c.beginPath(); c.arc(px, py, Rp, 0, 2 * Math.PI); c.stroke();
+    const re = P.ac / Math.PI * Rp;
+    c.strokeStyle = T.skyGold; c.setLineDash([3, 3]); c.lineWidth = 1 * ps; c.beginPath(); c.arc(px, py, re, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
+    const deg = P.ac * 180 / Math.PI, sk = { bg: T.sky, ps };
+    label(c, 'your whole sky, hole at the center', px, py - Rp - 9 * ps, T.skyInk, { ...sk, align: 'center', size: 10 });
+    label(c, `shadow radius ${deg < 10 ? deg.toFixed(2) : deg.toFixed(1)}°`, px, py + Rp + 11 * ps, T.skyGold, { ...sk, align: 'center', bold: true });
+    label(c, 'rim: straight away from the hole', px, py + Rp + 27 * ps, T.skyMuted, { ...sk, align: 'center', size: 9.5 });
+  }
+
   // ---------- drawing ----------
   let clockFar = 0, clockNear = 0, wavePhase = 0, hoverRay = null, hoverAlpha = NaN;
   function drawAll() {
@@ -1387,6 +1431,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     label(c, `${fmtMass(Mv)}: r_{s} = ${fmtLen(rs)}`, m.x + 10 * ps, m.y + 14 * ps, T.skyInk, sk);
     label(c, 'radial scale compressed; nothing drawn inside the horizon', m.x + 10 * ps, m.y + 32 * ps, T.skyMuted, { ...sk, size: 10 });
     label(c, 'background stars: illustrative', m.x + 10 * ps, m.y + 48 * ps, T.skyMuted, { ...sk, size: 10 });
+    if (m.w >= 470) drawPort(c, g, r);   /* too crowded on a phone: the pane is the axis, clocks and person */
     c.restore();
   }
   function drawNearPlots() {
