@@ -127,6 +127,8 @@ HANDOUT_TOPIC = {
     'free-expansion': 'Free Expansion', 'einstein-solids': 'Einstein Solids', 'second-law': 'Testing the Second Law',
     'ideal-gas': 'Gas in a Box', 'heat-engines': 'Heat Engine Cycles', 'blackbody': 'Blackbody Radiation',
     'velocity-addition': 'Adding Velocities Near c', 'relativistic-momentum': 'Momentum Under a Steady Force', 'relativistic-energy': "Bertozzi's Electrons",
+    'photoelectric': "Photoelectric Effect and Planck's Constant",
+    'compton': 'Compton Scattering',
     'household-wiring': 'Household Wiring and Electrical Safety',
     'van-de-graaff': 'Van de Graaff Generator',
     'ink-jet-printer': 'Ink Jet Printer',

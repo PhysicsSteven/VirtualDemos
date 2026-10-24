@@ -1,61 +1,91 @@
-# Photoelectric Effect — Measuring Planck's Constant
-**Student edition · 75–90 minutes · calculus based introductory physics**  
-[Open simulation](https://physicssteven.github.io/VirtualDemos/demos/photoelectric.html)
+# Photoelectric Effect: Measuring Planck's Constant
+Student laboratory · Modern Physics
 
-## Research question
-Can measurements of stopping potential versus photon frequency recover Planck's constant independently of light intensity?
+Textbook: OpenStax *University Physics*, Vol. 3, §6.2. Access for free at https://openstax.org/details/books/university-physics-volume-3.
 
-## Objectives
-Calculate photon energy, work function and stopping potential; construct a linear fit to estimate $$h$$; distinguish photon flux from photon energy; identify limits of a simplified current–voltage model.
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/photoelectric.html)
 
-## Prelab
-Derive $$eV_{\rm stop}=hf-\phi$$, with $$V_{\rm stop}$$ the **positive magnitude** of the negative retarding collector voltage. Explain why the slope of $$V_{\rm stop}$$ versus $$f$$ is $$h/e$$ and the intercept is $$-\phi/e$$. Convert a wavelength in nm to $$f$$ in Hz and $$E$$ in eV. Predict what happens to stopping voltage when power doubles at fixed wavelength.
+<details class="about" markdown="1">
+<summary>About the demo</summary>
 
-## Controls and apparatus
-The demo has **Measure h**, **Stopping voltage**, and **UV on zinc** presets, plus wavelength, light power, metal and collector voltage controls. **Record V₀** saves the positive magnitude of the negative collector voltage you set; it adds no random noise. First lower the collector voltage until the meter just reaches 0.00 nA. The demo warns if a recorded point still has current. **Export CSV** saves wavelength, frequency, stopping voltage magnitude, metal, power and meter reading. Wavelength steps are 1 nm, collector voltage steps are 0.01 V, and power is in µW. Turn off **Theory line and answers** during measurement to hide the theoretical endpoint and model curve.
+**Setups in the demo:** Blue on sodium; Red light, no luck; Brighter, not faster; Stopping voltage; UV on zinc; Measure h (this one records six sodium points for you, so don't use it for your own data).
 
-## Part A — Threshold (15 min)
-1. Select a metal with a low work function, such as Cs (2.14 eV). Hold power fixed.
-2. Sweep wavelength from longer to shorter values until photoelectrons first appear. Record the threshold interval.
-3. Calculate $$\lambda_{\rm threshold}=hc/\phi$$ and compare to the observed interval.
-4. Change power at a wavelength below threshold. Explain why higher photon count does not create emission in the one photon model.
+**Using the demo.**
 
-## Part B — Determine h (35 min)
-1. Select **Cs** manually and press **Clear points**; keep Cs fixed. **Measure h** instead selects sodium and automatically adds six points using the same 0.01 V stopping search, so do not use it for a fresh Cs dataset. Turn off **Theory line and answers**.
-2. Choose at least **eight** distinct wavelengths that are clearly above threshold (250, 275, 300, 325, 350, 400, 450 and 500 nm). Record actual wavelength, calculated frequency, and stopping potential magnitude. Avoid any wavelength that does not emit electrons.
-3. For each wavelength, vary negative collector voltage until the displayed current first rounds to zero. Record the last nonzero and first zero settings as a bracket. Rounding to zero is not proof of exactly zero model current. If the interface gives the stopping voltage directly, record that value separately as a theory assisted check; do not silently treat it as independently measured.
-4. Set the collector to the first zero current voltage in your bracket and press **Record V₀**. The recorded value is $$-V_{\rm collector}$$, without added noise. Repeat for each wavelength, then use **Export CSV**. Preserve the bracket endpoints in your manual table because they are not exported. Inspect the exported meter readings and discard or remeasure points recorded before zero current.
-5. Plot $$V_{\rm stop}$$ (V) against $$f$$ (Hz). Fit $$V_{\rm stop}=mf+b$$. Compute $$h_{\rm fit}=e\cdot m$$ and $$\phi_{\rm fit}=-e\cdot b$$, reporting $$\phi$$ in eV. Compare with accepted $$h$$ and the chosen metal's displayed $$\phi$$.
+- Light of one wavelength, from 100 to 800 nm in 1 nm steps, falls on a clean metal plate in a vacuum tube. The mercury line buttons pick the five lines of a mercury lamp (365, 405, 436, 546 and 577 nm). Light power runs from 0 to 100 µW.
+- The metals and their work functions are cesium 2.14 eV, potassium 2.30 eV, sodium 2.28 eV, calcium 2.87 eV, zinc 4.33 eV, copper 4.70 eV and platinum 5.65 eV.
+- The collector voltage $$V$$ runs from −6 to +4 V in 0.01 V steps; a negative voltage pushes electrons back towards the plate. The picoammeter reads the current to 0.01 nA. One absorbed photon in a thousand frees an electron.
+- The current falls in a straight line from its full value at $$V = 0$$ to zero at the stopping voltage. This simple shape is the model's choice; real tubes give a rounder curve, but the stopping voltage means the same thing.
+- **Record V₀** saves the collector voltage you have set, as a positive stopping voltage, with the wavelength, frequency, metal, power and the meter reading. Lower the voltage until the meter just reads 0.00 nA first: it warns you if the current had not reached zero. **Export to worksheet** sends the points to the Data table below; **Clear points** starts a new series, which goes into a new copy of the table.
+- Untick **Theory line and answers** (in the Layers fold) to hide the model's $$K_\mathrm{max}$$, $$V_0$$ and the fitted $$h$$ while you measure.
 
-| $$\lambda$$ (nm) | $$f$$ (Hz) | $$V_{\rm stop}$$ from $$I$$–$$V$$ (V) | $$V_{\rm stop}$$ recorded (V) | Estimated uncertainty (V) |
-|---|---|---|---|---|
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
-| | | | | |
+</details>
 
-## Part C — Intensity versus stopping voltage (15 min)
-At a fixed emitting wavelength, repeat the current–voltage measurement for three light power settings. Compare saturation current, stopping voltage and photon rate. Make a two column claim/evidence table distinguishing intensity effects from frequency effects.
+## Goal
 
-## Model limitations
-The source uses a simplified linear retarding voltage response,
+Measure the stopping voltage of photoelectrons at several frequencies of light, and find Planck's constant and the work function of two metals from the slope and intercept.
 
-$$I(V)=I_{\rm sat}\cdot\max\left(0,\ 1+\frac{V}{K_{\rm max}}\right)$$
+## Background
 
-for negative $$V$$, with $$K_{\rm max}$$ numerically in eV and $$V$$ in volts. This is not a universal experimental photocurrent curve; its shape depends on electron energy/angle distributions and electrode geometry. The endpoint (stopping voltage) remains a useful teaching model. Repeated recording at identical settings returns identical values. Resolution and the rounded current display, rather than random recording scatter, limit this measurement. Use each bracket midpoint for a separate estimate and its half width as a resolution bound; a rectangular uncertainty model gives standard uncertainty equal to the half width divided by $$\sqrt{3}$$. Treat the wavelength step consistently and discuss shared systematic effects. Do not estimate voltage uncertainty from repeat scatter alone.
+Einstein's photon picture (§6.2): light of frequency $$f$$ arrives in photons of energy $$hf$$. A photon absorbed at the surface of a metal gives all its energy to one electron, which needs at least the work function $$\phi$$ to escape. The fastest electrons leave with
 
-For $$\lambda=400\ \text{nm}$$ on Cs, use three powers such as 20, 40 and 80 µW, return $$V$$ to 0 to read saturation current, then bracket stopping again. Record $$\lambda$$, power, $$I_{\rm sat}$$, last nonzero $$V$$ and first zero $$V$$.
+$$K_\mathrm{max} = hf - \phi .$$
+
+A negative collector voltage makes the electrons climb a potential hill. The current stops when even the fastest cannot climb it, at the stopping voltage $$V_0$$ where $$eV_0 = K_\mathrm{max}$$, so
+
+$$V_0 = \frac{h}{e}\,f - \frac{\phi}{e}.$$
+
+A graph of $$V_0$$ against $$f$$ is a straight line with slope $$h/e$$ and intercept $$-\phi/e$$. No electrons leave at all below the threshold frequency $$f_0 = \phi/h$$, however bright the light. Brighter light sends more photons per second, so it raises the current but not $$V_0$$.
+
+## Before the lab
+
+1. Find the frequency and the photon energy (in eV) of light of wavelength 405 nm.
+2. Predict the stopping voltage for cesium ($$\phi = 2.14$$ eV) at 405 nm.
+3. Find the threshold wavelength for cesium and for zinc ($$\phi = 4.33$$ eV).
+4. The light power is doubled at a fixed wavelength. What happens to the number of photons per second, the current at $$V = 0$$, and the stopping voltage?
+
+## Safety
+
+None for the virtual apparatus. A real mercury lamp gives off ultraviolet light: never look into it, and keep its shield in place.
+
+## Procedure
+
+Untick **Theory line and answers** before you start.
+
+**Threshold.** With sodium, find the longest wavelength, to the nearest nanometre, at which any current flows. Then set a wavelength 20 nm longer and turn the power up to full: does any current flow? Write your findings in the answer boxes below Analysis 1.
+
+**Cesium.** Choose cesium and a power of 40 µW. At 250 nm, 300 nm and each of the five mercury lines, lower the collector voltage until the meter just reads 0.00 nA, and record the stopping voltage. Note the last voltage that still gave a current too: the stopping voltage lies between the two.
+
+**Zinc.** Clear the points and choose zinc. Do the same at 150, 175, 200, 225, 250 and 275 nm. Send this run to a new copy of the table.
+
+**Brightness.** Clear the points, choose cesium at 405 nm, and find the stopping voltage at powers of 10, 40 and 100 µW. Note the current at $$V = 0$$ for each power as well. Send this run to a third copy of the table.
+
+## Data
+
+| Reading | Metal | Wavelength $$\lambda$$ (nm) | Frequency $$f$$ (10¹⁴ Hz) | Stopping voltage $$V_0$$ (V) | Meter at $$V_0$$ (nA) |
+|---|---|---|---|---|---|
+| | | | | | |
+| | | | | | |
+| | | | | | |
+
+## Analysis
+
+1. What threshold wavelength did you find for sodium, and what threshold frequency does it give? Compare with $$\phi/h$$ for sodium ($$\phi = 2.28$$ eV). What happened at full power beyond the threshold?
+2. Graph $$V_0$$ against $$f$$ for cesium. From the slope find Planck's constant $$h$$, and from the intercept the work function $$\phi$$ in eV.
+3. Do the same for zinc. Do the two metals give the same slope? Should they?
+4. In the brightness run, how did the current at $$V = 0$$ and the stopping voltage depend on the power? What would a classical wave picture of light predict?
+
+## Uncertainty
+
+Each stopping voltage lies between the last voltage that gave a current and the first that gave none, 0.01 V apart. Estimate how this step limits the uncertainty of each $$V_0$$, and compare it with the scatter of your points about the line (the residuals). How does it limit your $$h$$?
 
 ## Questions
-1. What is the physical meaning of a negative fitted intercept?
-2. Why does frequency change the stopping potential but power does not?
-3. How do uncertainties in $$\lambda$$ and $$V$$ propagate into $$h$$?
-4. What experimental effects might broaden the apparent stopping point?
-5. Why would using wavelengths below threshold spoil the regression?
 
-## Submission
-Threshold estimate, eight point data table, linear regression and residuals, $$h$$ and $$\phi$$ with units, intensity comparison, and limitations discussion.
+1. What does the negative intercept of the $$V_0$$ against $$f$$ graph mean physically?
+2. Why does the frequency change the stopping voltage while the power does not?
+3. Millikan set out in 1916 to disprove Einstein's equation and ended up measuring $$h$$ from it to within 0.5%. Why was the result so convincing?
+4. Why would including a wavelength beyond the threshold spoil the straight line fit?
+
+## What to hand in
+
+Prelab answers, the threshold, the table copies with their graphs and fits, $$h$$ and both work functions with uncertainties, the brightness comparison, and answers to the questions. Identify simulated data.

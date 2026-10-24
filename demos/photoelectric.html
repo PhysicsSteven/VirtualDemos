@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark bar-div-firstchild stage-canvas-focusvisible spin spin-attn formula btnrow seg seg-button seg-button-on inline readout-wide readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled slider-head-output toggles-label toggles-input key key-span swatch projshort-proj-stage phone-chips-button" lang="en">
+<html data-vd-off="root-4 auto-dark dark bar-div-firstchild stage-canvas-focusvisible spin spin-attn formula btnrow seg seg-button seg-button-on inline readout-wide readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled slider-head-output toggles-label toggles-input key key-span swatch projshort-proj-stage phone-chips-button" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -129,6 +129,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/photoelectric.html" target="photoelectric-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -196,7 +197,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="btn primary" id="record">Record V₀</button>
           <button type="button" class="btn" id="clear">Clear points</button>
         </div>
-        <button type="button" class="btn" id="csv" style="margin-top:8px">Export CSV</button>
+        <button type="button" class="btn" id="csv" style="margin-top:8px">Export to worksheet</button>
         <p class="hint" id="recMsg" aria-live="polite"></p>
         <dl class="readout">
           <div><dt>h from slope</dt><dd id="rH">—</dd></div>
@@ -955,7 +956,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     $('rN').textContent = S.pow > 0 ? sci(photonRate(), 2) : '0';
     $('rI').textContent = fmtI(current(S.V));
     const fit = fitLine();
-    if (fit) {
+    if (fit && !layers.theory) { $('rH').textContent = 'hidden'; $('rPhiFit').textContent = 'hidden'; }
+    else if (fit) {
       const h = fit.m * QE / 1e14;
       $('rH').textContent = sci(h) + ' J·s';
       $('rPhiFit').textContent = (-fit.b).toFixed(2) + ' eV';
@@ -1004,20 +1006,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (let k = 0; k <= 600; k++) { const V = -k / 100; if (current(V) * 1e9 < 0.005) return V; }
     return -6;
   }
+  /* Export to worksheet: the recorded points go to the worksheet (vd-handoff:photoelectric), or to a CSV file where storage is
+     blocked. Clear points starts a new series, which the worksheet puts in a new copy of its table. */
+  let wsSeries = Date.now();
   function exportCSV() {
     if (!points.length) { $('recMsg').textContent = 'No points to export yet.'; return; }
-    const rows = ['wavelength_nm,frequency_Hz,stopping_voltage_V,metal,light_power_uW,meter_reading_nA'];
-    for (const p of points) rows.push([p.lam, (p.f * 1e14).toExponential(6), p.k.toFixed(2), p.metal, p.pow, p.I.toFixed(2)].join(','));
-    const a = document.createElement('a');
-    a.href = URL.createObjectURL(new Blob([rows.join('\n') + '\n'], { type: 'text/csv' }));
-    a.download = 'photoelectric-stopping-voltages.csv'; document.body.appendChild(a); a.click(); a.remove();
+    const columns = ['row', 'wavelength_nm', 'frequency_Hz', 'stopping_voltage_V', 'metal', 'light_power_uW', 'meter_reading_nA'];
+    const data = points.map((p, i) => [String(i + 1), String(p.lam), (p.f * 1e14).toExponential(6), p.k.toFixed(2), p.metal, String(p.pow), p.I.toFixed(2)]);
+    const txt = ['# Photoelectric Effect virtual apparatus: recorded stopping voltages (simulated data)', columns.join(',')].concat(data.map((r) => r.join(','))).join('\n') + '\n';
+    const hand = { v: 1, demo: 'photoelectric', series: wsSeries, sent: new Date().toISOString(), columns, rows: data, note: 'Simulated data from the Photoelectric Effect demo.', csv: txt, csvName: 'photoelectric-stopping-voltages.csv' };
+    try { localStorage.setItem('vd-handoff:photoelectric', JSON.stringify(hand)); }
+    catch (_) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })); a.download = hand.csvName; document.body.appendChild(a); a.click(); a.remove();
+      $('recMsg').textContent = 'This browser blocks storage, so the points were saved as a CSV file instead.'; return; }
+    $('recMsg').textContent = `${points.length} point${points.length === 1 ? '' : 's'} sent to the worksheet. `;
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/photoelectric.html'; a.target = 'photoelectric-worksheet'; a.textContent = 'Open the worksheet';
+    a.style.color = 'var(--accent)'; $('recMsg').appendChild(a);
   }
   function applyPreset(name) {
     const p = PRESETS[name];
     Object.assign(S, { lam: p.lam, pow: p.pow, metal: p.metal, V: p.V });
     electrons = []; photons = [];
     if (p.auto) {
-      points = [];
+      points = []; wsSeries = Date.now();
       for (const l of [250, 300, 350, 400, 450, 500]) { S.lam = l; S.V = measuredStop(); record(); }
       S.lam = p.lam; S.V = p.V; $('recMsg').textContent = 'Six stopping voltages found the way a student would: the least negative setting, in 0.01 V steps, where the meter reads 0.00 nA.';
     }
@@ -1044,10 +1054,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('pow').addEventListener('input', (e) => { S.pow = +e.target.value; changed(); });
   $('volt').addEventListener('input', (e) => { S.V = +e.target.value; changed(); });
   $('record').addEventListener('click', record);
-  $('clear').addEventListener('click', () => { points = []; $('recMsg').textContent = ''; changed(); });
+  $('clear').addEventListener('click', () => { points = []; wsSeries = Date.now(); $('recMsg').textContent = ''; changed(); });
   $('tPhotons').addEventListener('change', (e) => { layers.photons = e.target.checked; drawApp(); });
   $('tTheory').addEventListener('change', (e) => { layers.theory = e.target.checked; dirtyCharts = true; updateReadouts(); });
   $('csv').addEventListener('click', exportCSV);
+  window.vdReadings = () => points.length;
   const playBtn = $('play');
   function setRunning(r) { running = r; playBtn.textContent = r ? 'Pause' : 'Play'; playBtn.classList.toggle('primary', !r); last = performance.now(); }
   playBtn.addEventListener('click', () => setRunning(!running));

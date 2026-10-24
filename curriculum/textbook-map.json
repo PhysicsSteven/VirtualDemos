@@ -6411,7 +6411,10 @@
       "status": "usable",
       "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Compton Scattering",
-      "url": "demos/compton.html"
+      "url": "demos/compton.html",
+      "handouts": [
+        "compton"
+      ]
     },
     {
       "demo": "coulomb-sandbox",
@@ -8094,7 +8097,10 @@
       "status": "usable",
       "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Photoelectric Effect",
-      "url": "demos/photoelectric.html"
+      "url": "demos/photoelectric.html",
+      "handouts": [
+        "photoelectric"
+      ]
     },
     {
       "demo": "polarization",

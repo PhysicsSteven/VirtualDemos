@@ -191,6 +191,7 @@
   const MODERN = [];
   /* Vol. 3 ch. 5 (relativity) and ch. 6 (photons and matter waves) */
   MODERN.push('velocity-addition', 'relativistic-momentum', 'relativistic-energy' /* Velocity, Momentum and Energy Near c demo, one per view */);
+  MODERN.push('photoelectric', 'compton');
   Object.assign(FROM_DEMO, {
     /* Reading | Launch speed u′ (c) | Probe time A to B Δt (s) | Ground speed u (c) | u − u′ (c) | 1 − uu′/c² */
     'velocity-addition': { demo: 'Velocity, Momentum and Energy Near c (Adding velocities)', cols: ['row', 'u_prime_c', 'probe_dt_s', null, null, null] },
@@ -198,6 +199,10 @@
     'relativistic-momentum': { demo: 'Velocity, Momentum and Energy Near c (Steady force)', cols: ['row', 't_ns', 'x_m', 'v_c', null, null] },
     /* Reading | Voltage V (MV) | Flight time t (ns) | Bend radius r (cm) | Speed v (c) | v² (c²) | γ | pc (MeV) */
     'relativistic-energy': { demo: 'Velocity, Momentum and Energy Near c (Electron flight)', cols: ['row', 'V_MV', 't_ns', 'r_cm', null, null, null, null] },
+    /* Reading | Metal | Wavelength λ (nm) | Frequency f (10¹⁴ Hz) | Stopping voltage V₀ (V) | Meter at V₀ (nA) */
+    photoelectric: { demo: 'Photoelectric Effect', cols: ['row', 'metal', 'wavelength_nm', (r) => (+r.frequency_Hz / 1e14).toFixed(4), 'stopping_voltage_V', 'meter_reading_nA'] },
+    /* Reading | Angle θ (°) | 1 − cos θ | Scattered wavelength λ′ (pm) | Shift Δλ (pm) | Electron energy T (keV) | Electron angle φ (°) */
+    compton: { demo: 'Compton Scattering', cols: ['row', 'theta_deg', null, 'lamP_pm', null, 'T_keV', 'phi_deg'] },
   });
   ENABLED.push(...MODERN);
   Object.assign(FROM_DEMO, {
