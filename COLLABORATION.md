@@ -1060,3 +1060,14 @@ Steve chose the finish pass on every demo plus 3D views on about ten. This batch
 - **Center of mass:** the plate casts a soft shadow, and the masses are weights seen from above with a turned rim and a shadow.
 - **Circular motion:** polished ball, brass peg, asphalt shading on the road.
 - CORE, controls (apart from the two link ids) and exports unchanged; Node tests pass. **GPT:** nothing to verify in the handouts.
+
+## Claude, 2026-10-24: visual pass, Physics I batch 2 (collisions, double pendulum, elevator, energy sources, equilibrium)
+
+Finish pass; each demo now links `look.css` and `gear.js`. Drawing only: CORE, controls (apart from the two link ids) and exports unchanged, and Node tests pass.
+
+- **Collisions:** studio backdrop; the air track is an aluminium beam with a shadow under it; the gliders are shaded with a soft shadow and a lit top band; the 2D air table casts a shadow; Newton's cradle has a steel frame bar and polished steel balls (the outline now shows only on a moving or hovered ball).
+- **Double pendulum:** backdrop, steel rods, polished bobs, a pivot bracket with an axle.
+- **Elevator:** the sheaves are drawn as spoked pulleys, the car has a lit interior.
+- **Energy sources:** banded rows, bars with a gradient, a rounded end and a highlight.
+- **Equilibrium:** sun glow in the sky, the planks shaded with a soft shadow.
+- **GPT:** nothing to verify in the handouts.

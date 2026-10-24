@@ -57,6 +57,8 @@ table.rows input:focus { border-color: var(--accent); }
 .chips button:disabled { opacity: 0.45; cursor: default; }
 @media (max-width: 820px) { .chips button { min-height: 36px; } }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -248,6 +250,7 @@ table.rows input:focus { border-color: var(--accent); }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    const VG = window.VDGear;
     const p = ps(), wide = W > 620, st = now(), top = 56 * p, bot = Hh - 16 * p;
     const shaftW = wide ? Math.min(W * 0.36, 260 * p) : W - 32 * p, shaftH = wide ? bot - top : (Hh - top) * 0.55, sx = 16 * p, sc = shaftH / (TOP * FLOOR + FLOOR + 1);
     const yS = (y) => top + shaftH - (y + 0.5) * sc;
@@ -283,12 +286,14 @@ table.rows input:focus { border-color: var(--accent); }
     // machine beam with the drive sheave over the car and a second sheave over the counterweight; they turn as the rope moves
     ctx.fillStyle = T.slab; ctx.fillRect(shL, ropeTop - rS - 6 * p, shR - shL, 4 * p);
     ctx.strokeStyle = T.cable; ctx.lineWidth = 1.5 * p; if (!S.snapped && cwW > 4) { ctx.beginPath(); ctx.moveTo(carRopeX, ropeTop - rS); ctx.lineTo(cwX, ropeTop - rS); ctx.stroke(); }
-    for (const xs of cwW > 4 ? [carRopeX, cwX] : [carRopeX]) { ctx.save(); ctx.translate(xs, ropeTop); ctx.rotate(-yc * sc / rS); ctx.fillStyle = T.door; ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(0, 0, rS, 0, 7); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-rS, 0); ctx.lineTo(rS, 0); ctx.moveTo(0, -rS); ctx.lineTo(0, rS); ctx.stroke(); ctx.restore(); }
+    for (const xs of cwW > 4 ? [carRopeX, cwX] : [carRopeX]) { if (VG) { VG.pulley(ctx, xs, ropeTop, rS, { angle: -yc * sc / rS }); continue; } ctx.save(); ctx.translate(xs, ropeTop); ctx.rotate(-yc * sc / rS); ctx.fillStyle = T.door; ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(0, 0, rS, 0, 7); ctx.fill(); ctx.stroke(); ctx.beginPath(); ctx.moveTo(-rS, 0); ctx.lineTo(rS, 0); ctx.moveTo(0, -rS); ctx.lineTo(0, rS); ctx.stroke(); ctx.restore(); }
     // cable
     if (!S.snapped) { ctx.strokeStyle = T.cable; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(carRopeX, ropeTop); ctx.lineTo(carRopeX, cy); ctx.stroke(); }
     else { ctx.strokeStyle = T.cable; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(carRopeX, ropeTop); ctx.lineTo(carRopeX + 6 * p, top + 20 * p); ctx.stroke(); }
     // the car: frame, back wall panels, ceiling light, handrail, doors on the landing side
-    ctx.fillStyle = T.carWall; ctx.fillRect(cx, cy, cw, ch);
+    { const cg = ctx.createLinearGradient(cx, 0, cx + cw, 0); cg.addColorStop(0, VG ? VG.mix(T.carWall, '#000000', 0.08) : T.carWall); cg.addColorStop(0.5, VG ? VG.mix(T.carWall, '#ffffff', 0.12) : T.carWall); cg.addColorStop(1, VG ? VG.mix(T.carWall, '#000000', 0.1) : T.carWall);
+      ctx.fillStyle = cg; ctx.fillRect(cx, cy, cw, ch);
+      if (VG) { const lg = ctx.createRadialGradient(cx + cw / 2, cy + 6 * p, 0, cx + cw / 2, cy + 6 * p, ch * 0.9); lg.addColorStop(0, VG.dark() ? 'rgba(255,240,200,0.12)' : 'rgba(255,250,230,0.5)'); lg.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = lg; ctx.fillRect(cx, cy, cw, ch); } }
     ctx.strokeStyle = T.car; ctx.lineWidth = 1; ctx.beginPath(); for (let i = 1; i < 4; i++) { ctx.moveTo(cx + cw * i / 4, cy + 6 * p); ctx.lineTo(cx + cw * i / 4, cy + ch - 4 * p); } ctx.stroke();
     ctx.fillStyle = T.window; ctx.fillRect(cx + cw * 0.3, cy + 4 * p, cw * 0.4, 2 * p);
     ctx.strokeStyle = T.rail; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx + 8 * p, cy + ch * 0.55); ctx.lineTo(cx + cw - 8 * p, cy + ch * 0.55); ctx.stroke();

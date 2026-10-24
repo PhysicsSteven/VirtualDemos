@@ -51,6 +51,8 @@ table.rows input:focus { border-color: var(--accent); }
 @media (max-width: 820px) { .chips button { min-height: 36px; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -229,7 +231,12 @@ table.rows input:focus { border-color: var(--accent); }
     for (let e = lo; e <= hi; e++) { const x = X(10 ** e); ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, top - 6 * p); ctx.lineTo(x, top + rowH * R.length); ctx.stroke(); ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; if ((e - lo) % Math.max(1, Math.ceil((hi - lo) * 70 * p / (x1 - x0))) === 0) ctx.fillText(massText(10 ** e), x, top + rowH * R.length + 4 * p); }
     R.forEach((r, i) => {
       const y = top + i * rowH, col = T[r.col];
-      icon(r.ic, 14 * p + icS / 2, y + rowH / 2, icS); ctx.fillStyle = col; ctx.globalAlpha = 0.85; ctx.fillRect(x0, y + rowH * 0.15, S.blind ? 0 : Math.max(2, X(r.kg) - x0), rowH * 0.7); ctx.globalAlpha = 1;
+      if (i % 2 === 0) { ctx.fillStyle = T.grid; ctx.globalAlpha = 0.35; ctx.fillRect(0, y, W, rowH); ctx.globalAlpha = 1; }   /* banded rows */
+      icon(r.ic, 14 * p + icS / 2, y + rowH / 2, icS);
+      { const bw = S.blind ? 0 : Math.max(2, X(r.kg) - x0), by = y + rowH * 0.15, bh = rowH * 0.7, VG = window.VDGear, base = /^#[0-9a-f]{6}$/i.test(col) ? col : null;
+        if (bw > 0) { const bg = ctx.createLinearGradient(0, by, 0, by + bh); bg.addColorStop(0, VG && base ? VG.mix(base, '#ffffff', 0.25) : col); bg.addColorStop(1, VG && base ? VG.mix(base, '#000000', 0.12) : col);
+          ctx.fillStyle = bg; ctx.globalAlpha = 0.92; ctx.beginPath(); ctx.roundRect(x0, by, bw, bh, [0, Math.min(4 * p, bh / 2), Math.min(4 * p, bh / 2), 0]); ctx.fill(); ctx.globalAlpha = 1;
+          ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.fillRect(x0, by + 1, Math.max(0, bw - 4 * p), Math.max(1, bh * 0.12)); } }
       ctx.fillStyle = T.ink; ctx.font = `${11 * p}px ${T.ui}`; ctx.textBaseline = 'middle';
       if (lab) { ctx.textAlign = 'right'; ctx.fillText(r.n, x0 - 8 * p, y + rowH / 2); ctx.textAlign = 'left'; if (!S.blind) ctx.fillText(massText(r.kg), Math.min(X(r.kg) + 6 * p, x1 - 70 * p), y + rowH / 2); }
       else { ctx.textAlign = 'left'; ctx.fillText(`${r.n}${S.blind ? '' : `: ${massText(r.kg)}`}`, x0 + 4 * p, y + rowH / 2); }

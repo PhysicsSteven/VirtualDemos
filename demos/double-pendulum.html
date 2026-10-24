@@ -119,6 +119,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 @media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -740,6 +742,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const ctx = ctxs.p, g = pGeom(), ls = g.ls;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (window.VDGear) window.VDGear.backdrop(ctx, W, H);
     const y = shownState(), simple = S.mode === 'simple';
     // reach circle and vertical through the pivot
     ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.setLineDash([4, 5]);
@@ -756,8 +759,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (simple) drawSimple(ctx, g, y, lw);
     else drawDouble(ctx, g, y, lw);
     // pivot
-    ctx.fillStyle = T.wire; ctx.fillRect(g.cx - 14 * ls, g.cy - 4 * ls, 28 * ls, 3 * ls);
-    ctx.beginPath(); ctx.arc(g.cx, g.cy, 3.2 * ls, 0, TAU); ctx.fill();
+    if (window.VDGear) { window.VDGear.box(ctx, g.cx - 16 * ls, g.cy - 12 * ls, 32 * ls, 9 * ls, { r: 2 * ls, shadow: false }); window.VDGear.screw(ctx, g.cx, g.cy, 3.6 * ls); }
+    else { ctx.fillStyle = T.wire; ctx.fillRect(g.cx - 14 * ls, g.cy - 4 * ls, 28 * ls, 3 * ls); ctx.beginPath(); ctx.arc(g.cx, g.cy, 3.2 * ls, 0, TAU); ctx.fill(); }
     // grips last
     for (const h of dragHandles()) {
       const hot = (drag && drag.id === h.id) || (!drag && hoverId === h.id);
@@ -819,6 +822,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       }
     }
     if (S.layers.arcs) arcLabel(ctx, g.cx, g.cy, Math.min(48 * ls, 0.35 * g.sc * L), wrapPi(y[0]), `θ = ${deg(wrapPi(y[0]), 0)}`, T.neg, ls);
+    const VG = window.VDGear;
+    if (VG) { VG.rod(ctx, g.cx, g.cy, b.x1, b.y1, lw * 0.75, { color: '#a9b2bd' }); VG.ball(ctx, b.x1, b.y1, rb, T.neg); return; }
     ctx.strokeStyle = T.wire; ctx.lineWidth = lw;
     ctx.beginPath(); ctx.moveTo(g.cx, g.cy); ctx.lineTo(b.x1, b.y1); ctx.stroke();
     ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(b.x1, b.y1, rb, 0, TAU); ctx.fill();
@@ -867,10 +872,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       arcLabel(ctx, g.cx, g.cy, rA, wrapPi(y[0]), 'θ₁', T.neg, ls);
       arcLabel(ctx, b.x1, b.y1, rB, wrapPi(y[1]), 'θ₂', T.pos, ls);
     }
-    ctx.strokeStyle = T.wire; ctx.lineWidth = lw;
-    ctx.beginPath(); ctx.moveTo(g.cx, g.cy); ctx.lineTo(b.x1, b.y1); ctx.lineTo(b.x2, b.y2); ctx.stroke();
-    ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(b.x1, b.y1, bobR(p.m1, ls, g.sc, p.L1), 0, TAU); ctx.fill();
-    ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(b.x2, b.y2, bobR(p.m2, ls, g.sc, p.L2), 0, TAU); ctx.fill();
+    const VG = window.VDGear;
+    if (VG) { VG.rod(ctx, g.cx, g.cy, b.x1, b.y1, lw * 0.75, { color: '#a9b2bd' }); VG.rod(ctx, b.x1, b.y1, b.x2, b.y2, lw * 0.75, { color: '#a9b2bd' });
+      VG.ball(ctx, b.x1, b.y1, bobR(p.m1, ls, g.sc, p.L1), T.neg); VG.ball(ctx, b.x2, b.y2, bobR(p.m2, ls, g.sc, p.L2), T.pos); }
+    else { ctx.strokeStyle = T.wire; ctx.lineWidth = lw;
+      ctx.beginPath(); ctx.moveTo(g.cx, g.cy); ctx.lineTo(b.x1, b.y1); ctx.lineTo(b.x2, b.y2); ctx.stroke();
+      ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(b.x1, b.y1, bobR(p.m1, ls, g.sc, p.L1), 0, TAU); ctx.fill();
+      ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(b.x2, b.y2, bobR(p.m2, ls, g.sc, p.L2), 0, TAU); ctx.fill(); }
     if (drag && drag.y && (drag.id === 'b1' || drag.id === 'b2')) {
       ctx.font = `600 ${11 * ls}px ${T.mono}`;
       halo(ctx, `θ₁ = ${deg(drag.y[0], 0)}   θ₂ = ${deg(drag.y[1], 0)}`, g.cx, g.H - 16 * ls, T.accent, 'center', 'bottom', ls);

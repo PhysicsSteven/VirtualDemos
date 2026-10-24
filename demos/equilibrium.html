@@ -43,6 +43,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -192,7 +194,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const BRICK_ALT = Array.from({ length: 97 }, () => rng() < 0.4);
   const PLANK_GRAIN = Array.from({ length: 6 }, () => { const a = rng() * 0.7; return [0.2 + rng() * 0.6, a, a + 0.15 + rng() * 0.3]; });
   function verdict(msg) { const p = ps(); ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.panel; ctx.fillRect(8 * p, 8 * p, Math.min(W - 16 * p, ctx.measureText(msg).width + 12 * p), 26 * p); ctx.fillStyle = T.ink; ctx.fillText(msg, 14 * p, 14 * p); }
-  function sky(y1) { const g = ctx.createLinearGradient(0, 0, 0, y1); g.addColorStop(0, T.sky); g.addColorStop(1, T.skyLow); ctx.fillStyle = g; ctx.fillRect(0, 0, W, y1); }
+  function sky(y1) { const g = ctx.createLinearGradient(0, 0, 0, y1); g.addColorStop(0, T.sky); g.addColorStop(1, T.skyLow); ctx.fillStyle = g; ctx.fillRect(0, 0, W, y1);
+    const VG = window.VDGear; if (VG) { const sun = ctx.createRadialGradient(W * 0.85, y1 * 0.1, 0, W * 0.85, y1 * 0.1, Math.max(W, y1) * 0.6); sun.addColorStop(0, VG.dark() ? 'rgba(190,210,255,0.08)' : 'rgba(255,246,220,0.7)'); sun.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = sun; ctx.fillRect(0, 0, W, y1); } }
   function grass(y0) {
     const p = ps(); ctx.fillStyle = T.grass; ctx.fillRect(0, y0, W, H - y0);
     ctx.strokeStyle = T.grassDark; ctx.lineWidth = 1.2 * p; ctx.beginPath();
@@ -209,7 +212,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.restore();
   }
   function woodPlank(x, y, w, h) {
-    ctx.fillStyle = T.beam; ctx.fillRect(x, y, w, h);
+    { const VG = window.VDGear, wg = ctx.createLinearGradient(0, y, 0, y + h); wg.addColorStop(0, VG ? VG.mix(T.beam, '#ffffff', 0.22) : T.beam); wg.addColorStop(1, VG ? VG.mix(T.beam, '#000000', 0.12) : T.beam);
+      ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.22)'; ctx.shadowBlur = 6 * ps(); ctx.shadowOffsetY = 3 * ps(); ctx.fillStyle = wg; ctx.fillRect(x, y, w, h); ctx.restore(); }
     ctx.strokeStyle = T.grain; ctx.lineWidth = 1; ctx.beginPath(); for (const [gy, a, b] of PLANK_GRAIN) { ctx.moveTo(x + a * w, y + gy * h); ctx.lineTo(x + b * w, y + gy * h); } ctx.stroke();
     ctx.fillStyle = T.woodDark; ctx.fillRect(x, y + h - 1.5 * ps(), w, 1.5 * ps()); ctx.fillRect(x, y, 2 * ps(), h); ctx.fillRect(x + w - 2 * ps(), y, 2 * ps(), h);
   }
