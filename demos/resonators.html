@@ -56,7 +56,10 @@ html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
 :root[data-projector="on"] body { font-size: 1.25rem; }
 .units { color: var(--muted); font-size: 0.8rem; }
-.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--paper); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--paper); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+/* the setup of each resonator on a shelf under the picture (lean sidebar): the rail keeps readouts, readings and notes */
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf > .air-card { flex: 0 1 240px; }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .count { margin-left: auto; font-size: 0.88rem; font-weight: 600; white-space: nowrap; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
@@ -126,10 +129,14 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
   table.rows button { min-height: 36px; min-width: 32px; }
   html, body { height: auto; }
   .stage { height: 86vh; min-height: 620px; }
+  .stage:has(> .shelf) { height: auto; } .stage:has(> .shelf) > .pane { height: 76vh; min-height: 560px; }
   .count { margin-left: 0; }
   .vol input { width: 110px; }
 }
 @media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+
+/* with the shelf under it the picture keeps its room (a stage at least 760 px tall); on a short screen the page scrolls instead of squeezing it */
+@media (min-width: 821px) { .stage:has(> .shelf) { min-height: 760px; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -174,6 +181,133 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
       <div class="pane" id="pane">
         <canvas id="can" tabindex="0" aria-label="Resonator drawing. Resonance tube: drag the water surface or use up and down (shift for 1 cm steps), Enter captures a reading. Pipe: drag the right end of the pipe or use left and right, up and down change the mode. String: drag the pluck grip to pull the string and let go to pluck; left and right move the pluck point, Enter plucks. Bottle: drag the water surface or use up and down, Enter starts or stops blowing. Space pauses."></canvas>
       </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" data-show="tube" role="group" aria-label="The resonance tube">
+          <span class="card-title">The resonance tube and the source</span>
+          <div>
+            <div class="slider-head"><label for="fork">Source frequency f</label><output id="forkOut" class="mono" for="fork"></output></div>
+            <input type="range" id="fork" min="250" max="1000" step="1" value="512">
+          </div>
+          <div class="chips wide" id="forks" aria-label="Tuning forks">
+            <button type="button" data-f="256">256</button><button type="button" data-f="320">320</button><button type="button" data-f="384">384</button><button type="button" data-f="440">440</button><button type="button" data-f="512">512 Hz</button>
+          </div>
+          <div>
+            <div class="slider-head"><label for="water">Water surface below the top</label><output id="waterOut" class="mono" for="water"></output></div>
+            <input type="range" id="water" min="0.020" max="0.980" step="0.001" value="0.100">
+          </div>
+          <div>
+            <div class="slider-head"><label for="tdia">Tube inner diameter</label><output id="tdiaOut" class="mono" for="tdia"></output></div>
+            <input type="range" id="tdia" min="2.0" max="6.0" step="0.1" value="3.2">
+          </div>
+          <div>
+            <div class="slider-head"><label for="tq">Tube quality factor Q</label><output id="tqOut" class="mono" for="tq"></output></div>
+            <input type="range" id="tq" min="10" max="80" step="1" value="30">
+          </div>
+        </div>
+        <div class="shelf-card" data-show="open closed" role="group" aria-label="The pipe">
+          <span class="card-title">The pipe</span>
+          <div>
+            <div class="slider-head"><label for="plen">Length L</label><output id="plenOut" class="mono" for="plen"></output></div>
+            <input type="range" id="plen" min="0.10" max="1.20" step="0.01" value="0.60">
+          </div>
+          <div>
+            <div class="slider-head"><label for="pdia">Inner diameter</label><output id="pdiaOut" class="mono" for="pdia"></output></div>
+            <input type="range" id="pdia" min="1.0" max="8.0" step="0.1" value="3.0">
+          </div>
+          <div>
+            <div class="slider-head"><label for="pk">Resonance number</label><output id="pkOut" class="mono" for="pk"></output></div>
+            <input type="range" id="pk" min="1" max="8" step="1" value="1">
+          </div>
+          <div class="inline">
+            <span class="lab">Sound</span>
+            <div class="seg" role="group" aria-label="Pipe sound" id="psndSeg">
+              <button type="button" data-s="mode" aria-pressed="true">This mode</button>
+              <button type="button" data-s="all" aria-pressed="false">All modes</button>
+            </div>
+          </div>
+        </div>
+        <div class="shelf-card" data-show="string" role="group" aria-label="The string and the pluck">
+          <span class="card-title">The string and the pluck</span>
+          <div class="inline">
+            <label class="lab" for="sPreset">Typical string</label>
+            <select id="sPreset">
+              <option value="">Your own</option>
+              <option value="gE4">Guitar high E (steel 0.25 mm)</option>
+              <option value="gE2">Guitar low E (wound)</option>
+              <option value="vA">Violin A</option>
+              <option value="cC">Cello C (wound)</option>
+            </select>
+          </div>
+          <div>
+            <div class="slider-head"><label for="sLen">Length L</label><output id="sLenOut" class="mono" for="sLen"></output></div>
+            <input type="range" id="sLen" min="0.20" max="1.20" step="0.001" value="0.648">
+          </div>
+          <div>
+            <div class="slider-head"><label for="sTen">Tension T</label><output id="sTenOut" class="mono" for="sTen"></output></div>
+            <input type="range" id="sTen" min="10" max="200" step="0.1" value="72.6">
+          </div>
+          <div>
+            <div class="slider-head"><label for="sMu">Linear density μ</label><output id="sMuOut" class="mono" for="sMu"></output></div>
+            <input type="range" id="sMu" min="-1" max="1.5" step="0.001" value="-0.4">
+          </div>
+          <div>
+            <div class="slider-head"><label for="sPos">Pluck point x₀</label><output id="sPosOut" class="mono" for="sPos"></output></div>
+            <input type="range" id="sPos" min="2" max="118" step="1" value="24">
+          </div>
+          <div class="chips wide" id="posChips">
+            <button type="button" data-q="60">L/2</button><button type="button" data-q="40">L/3</button><button type="button" data-q="30">L/4</button><button type="button" data-q="24">L/5</button><button type="button" data-q="12">L/10</button>
+          </div>
+          <div>
+            <div class="slider-head"><label for="sW">Finger width w</label><output id="sWOut" class="mono" for="sW"></output></div>
+            <input type="range" id="sW" min="0" max="4" step="0.1" value="0">
+          </div>
+          <div>
+            <div class="slider-head"><label for="sTau">Decay time τ₁</label><output id="sTauOut" class="mono" for="sTau"></output></div>
+            <input type="range" id="sTau" min="0.3" max="6" step="0.1" value="2">
+          </div>
+          <div class="wide btnrow">
+            <button type="button" class="btn primary" id="pluckBtn">Pluck</button>
+          </div>
+          <div class="inline wide">
+            <span class="lab">Spectrum of</span>
+            <div class="seg" role="group" aria-label="Spectrum of" id="specSeg">
+              <button type="button" data-s="shape" aria-pressed="true">String shape bₙ</button>
+              <button type="button" data-s="force" aria-pressed="false">Bridge force n·bₙ</button>
+            </div>
+          </div>
+          <label class="check"><input type="checkbox" id="showModes">Show the first six modes</label>
+        </div>
+        <div class="shelf-card" data-show="bottle" role="group" aria-label="The bottle">
+          <span class="card-title">The bottle</span>
+          <div>
+            <div class="slider-head"><label for="bVol">Body volume</label><output id="bVolOut" class="mono" for="bVol"></output></div>
+            <input type="range" id="bVol" min="0.25" max="2.00" step="0.01" value="0.75">
+          </div>
+          <div>
+            <div class="slider-head"><label for="bFill">Water</label><output id="bFillOut" class="mono" for="bFill"></output></div>
+            <input type="range" id="bFill" min="0" max="90" step="1" value="0">
+          </div>
+          <div>
+            <div class="slider-head"><label for="bNeck">Neck length</label><output id="bNeckOut" class="mono" for="bNeck"></output></div>
+            <input type="range" id="bNeck" min="2" max="15" step="0.1" value="8">
+          </div>
+          <div>
+            <div class="slider-head"><label for="bDia">Neck inner diameter</label><output id="bDiaOut" class="mono" for="bDia"></output></div>
+            <input type="range" id="bDia" min="1.0" max="4.0" step="0.1" value="1.9">
+          </div>
+          <div class="btnrow wide">
+            <button type="button" class="btn" id="blow" aria-pressed="false">Blow across the top</button>
+            <button type="button" class="btn" id="pour" aria-pressed="false">Pour in water</button>
+          </div>
+        </div>
+        <div class="shelf-card air-card" data-show="pipe bottle" role="group" aria-label="The air">
+          <span class="card-title">The air</span>
+          <div>
+            <div class="slider-head"><label for="temp">Air temperature</label><output id="tempOut" class="mono" for="temp"></output></div>
+            <input type="range" id="temp" min="-10" max="40" step="0.5" value="20">
+          </div>
+        </div>
+      </div>
     </div>
 
     <aside class="rail">
@@ -193,10 +327,6 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
 
       <section data-show="pipe bottle">
         <h2>Air</h2>
-        <div>
-          <div class="slider-head"><label for="temp">Air temperature</label><output id="tempOut" class="mono" for="temp"></output></div>
-          <input type="range" id="temp" min="-10" max="40" step="0.5" value="20">
-        </div>
         <dl class="readout">
           <div><dt>Speed of sound c</dt><dd id="rC">—</dd></div>
           <div><dt>Wavelength at the note</dt><dd id="rLam">—</dd></div>
@@ -209,25 +339,6 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
       <!-- resonance tube -->
       <section data-show="tube">
         <h2>Resonance tube</h2>
-        <div>
-          <div class="slider-head"><label for="fork">Source frequency f</label><output id="forkOut" class="mono" for="fork"></output></div>
-          <input type="range" id="fork" min="250" max="1000" step="1" value="512">
-        </div>
-        <div class="chips" id="forks" aria-label="Tuning forks">
-          <button type="button" data-f="256">256</button><button type="button" data-f="320">320</button><button type="button" data-f="384">384</button><button type="button" data-f="440">440</button><button type="button" data-f="512">512 Hz</button>
-        </div>
-        <div>
-          <div class="slider-head"><label for="water">Water surface below the top</label><output id="waterOut" class="mono" for="water"></output></div>
-          <input type="range" id="water" min="0.020" max="0.980" step="0.001" value="0.100">
-        </div>
-        <div>
-          <div class="slider-head"><label for="tdia">Tube inner diameter</label><output id="tdiaOut" class="mono" for="tdia"></output></div>
-          <input type="range" id="tdia" min="2.0" max="6.0" step="0.1" value="3.2">
-        </div>
-        <div>
-          <div class="slider-head"><label for="tq">Tube quality factor Q</label><output id="tqOut" class="mono" for="tq"></output></div>
-          <input type="range" id="tq" min="10" max="80" step="1" value="30">
-        </div>
         <dl class="readout">
           <div><dt>Level in the tube</dt><dd id="rLevel">—</dd></div>
           <div id="rNextBox"><dt>Nearest resonance</dt><dd id="rNext">—</dd></div>
@@ -276,25 +387,6 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
       <!-- open and closed pipes -->
       <section data-show="open closed">
         <h2>Pipe</h2>
-        <div>
-          <div class="slider-head"><label for="plen">Length L</label><output id="plenOut" class="mono" for="plen"></output></div>
-          <input type="range" id="plen" min="0.10" max="1.20" step="0.01" value="0.60">
-        </div>
-        <div>
-          <div class="slider-head"><label for="pdia">Inner diameter</label><output id="pdiaOut" class="mono" for="pdia"></output></div>
-          <input type="range" id="pdia" min="1.0" max="8.0" step="0.1" value="3.0">
-        </div>
-        <div>
-          <div class="slider-head"><label for="pk">Resonance number</label><output id="pkOut" class="mono" for="pk"></output></div>
-          <input type="range" id="pk" min="1" max="8" step="1" value="1">
-        </div>
-        <div class="inline">
-          <span class="lab">Sound</span>
-          <div class="seg" role="group" aria-label="Pipe sound" id="psndSeg">
-            <button type="button" data-s="mode" aria-pressed="true">This mode</button>
-            <button type="button" data-s="all" aria-pressed="false">All modes</button>
-          </div>
-        </div>
         <dl class="readout">
           <div><dt>This mode</dt><dd id="rPf">—</dd></div>
           <div><dt>Effective length</dt><dd id="rPleff">—</dd></div>
@@ -309,28 +401,6 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
       <!-- strings -->
       <section data-show="string">
         <h2>String</h2>
-        <div class="inline">
-          <label class="lab" for="sPreset">Typical string</label>
-          <select id="sPreset">
-            <option value="">Your own</option>
-            <option value="gE4">Guitar high E (steel 0.25 mm)</option>
-            <option value="gE2">Guitar low E (wound)</option>
-            <option value="vA">Violin A</option>
-            <option value="cC">Cello C (wound)</option>
-          </select>
-        </div>
-        <div>
-          <div class="slider-head"><label for="sLen">Length L</label><output id="sLenOut" class="mono" for="sLen"></output></div>
-          <input type="range" id="sLen" min="0.20" max="1.20" step="0.001" value="0.648">
-        </div>
-        <div>
-          <div class="slider-head"><label for="sTen">Tension T</label><output id="sTenOut" class="mono" for="sTen"></output></div>
-          <input type="range" id="sTen" min="10" max="200" step="0.1" value="72.6">
-        </div>
-        <div>
-          <div class="slider-head"><label for="sMu">Linear density μ</label><output id="sMuOut" class="mono" for="sMu"></output></div>
-          <input type="range" id="sMu" min="-1" max="1.5" step="0.001" value="-0.4">
-        </div>
         <dl class="readout">
           <div><dt>f₁ = (1/2L)√(T/μ)</dt><dd id="rSf1">—</dd></div>
           <div><dt>Wave speed √(T/μ)</dt><dd id="rSv">—</dd></div>
@@ -342,59 +412,15 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
 
       <section data-show="string">
         <h2>Pluck</h2>
-        <div>
-          <div class="slider-head"><label for="sPos">Pluck point x₀</label><output id="sPosOut" class="mono" for="sPos"></output></div>
-          <input type="range" id="sPos" min="2" max="118" step="1" value="24">
-        </div>
-        <div class="chips" id="posChips">
-          <button type="button" data-q="60">L/2</button><button type="button" data-q="40">L/3</button><button type="button" data-q="30">L/4</button><button type="button" data-q="24">L/5</button><button type="button" data-q="12">L/10</button>
-        </div>
-        <div>
-          <div class="slider-head"><label for="sW">Finger width w</label><output id="sWOut" class="mono" for="sW"></output></div>
-          <input type="range" id="sW" min="0" max="4" step="0.1" value="0">
-        </div>
-        <div>
-          <div class="slider-head"><label for="sTau">Decay time τ₁</label><output id="sTauOut" class="mono" for="sTau"></output></div>
-          <input type="range" id="sTau" min="0.3" max="6" step="0.1" value="2">
-        </div>
-        <button type="button" class="btn primary" id="pluckBtn">Pluck</button>
         <dl class="readout">
           <div class="wide"><dt>Missing harmonics (node at the pluck point)</dt><dd id="rMissing">—</dd></div>
         </dl>
-        <div class="inline">
-          <span class="lab">Spectrum of</span>
-          <div class="seg" role="group" aria-label="Spectrum of" id="specSeg">
-            <button type="button" data-s="shape" aria-pressed="true">String shape bₙ</button>
-            <button type="button" data-s="force" aria-pressed="false">Bridge force n·bₙ</button>
-          </div>
-        </div>
-        <label class="check"><input type="checkbox" id="showModes">Show the first six modes</label>
-        <p class="hint" id="exHint"></p>
+        <details class="more"><summary>About the pluck and the bow</summary><p class="hint" id="exHint"></p></details>
       </section>
 
       <!-- bottle -->
       <section data-show="bottle">
         <h2>Bottle</h2>
-        <div>
-          <div class="slider-head"><label for="bVol">Body volume</label><output id="bVolOut" class="mono" for="bVol"></output></div>
-          <input type="range" id="bVol" min="0.25" max="2.00" step="0.01" value="0.75">
-        </div>
-        <div>
-          <div class="slider-head"><label for="bFill">Water</label><output id="bFillOut" class="mono" for="bFill"></output></div>
-          <input type="range" id="bFill" min="0" max="90" step="1" value="0">
-        </div>
-        <div>
-          <div class="slider-head"><label for="bNeck">Neck length</label><output id="bNeckOut" class="mono" for="bNeck"></output></div>
-          <input type="range" id="bNeck" min="2" max="15" step="0.1" value="8">
-        </div>
-        <div>
-          <div class="slider-head"><label for="bDia">Neck inner diameter</label><output id="bDiaOut" class="mono" for="bDia"></output></div>
-          <input type="range" id="bDia" min="1.0" max="4.0" step="0.1" value="1.9">
-        </div>
-        <div class="btnrow">
-          <button type="button" class="btn" id="blow" aria-pressed="false">Blow across the top</button>
-          <button type="button" class="btn" id="pour" aria-pressed="false">Pour in water</button>
-        </div>
         <dl class="readout">
           <div class="wide"><dt>Helmholtz: f = (c/2π)√(A / V L_eff)</dt><dd id="rBf">—</dd></div>
           <div><dt>Air volume V</dt><dd id="rBV">—</dd></div>
@@ -693,8 +719,14 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
     ctx.globalAlpha = 1;
     // glass tube with water
     ctx.fillStyle = T.water; ctx.globalAlpha = 0.55; ctx.fillRect(tx, yW, tw, bot - yW); ctx.globalAlpha = 1;
-    ctx.strokeStyle = T.glass; ctx.lineWidth = 2 * ls;
-    ctx.beginPath(); ctx.moveTo(tx, top); ctx.lineTo(tx, bot); ctx.lineTo(tx + tw, bot); ctx.lineTo(tx + tw, top); ctx.stroke();
+    /* the glass tube, walls seen edge on with a highlight, a rim at the open top and a base it stands in */
+    { const Gm = window.VDGear.mix, gw = 4 * ls;
+      for (const x of [tx - gw, tx + tw]) { const gg = ctx.createLinearGradient(x, 0, x + gw, 0); gg.addColorStop(0, Gm(T.glass, '#000000', 0.15)); gg.addColorStop(0.5, Gm(T.glass, '#ffffff', 0.55)); gg.addColorStop(1, T.glass);
+        ctx.fillStyle = gg; ctx.globalAlpha = 0.9; ctx.fillRect(x, top, gw, bot - top); ctx.globalAlpha = 1; }
+      ctx.strokeStyle = T.glass; ctx.lineWidth = 1; ctx.strokeRect(tx - gw + 0.5, top + 0.5, tw + 2 * gw - 1, bot - top + 2 * ls);
+      ctx.fillStyle = Gm(T.glass, '#ffffff', 0.3); ctx.fillRect(tx - gw - 1.5 * ls, top - 2 * ls, tw + 2 * gw + 3 * ls, 3 * ls);
+      ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 1.5 * ls; ctx.beginPath(); ctx.moveTo(tx + 4 * ls, top + 8 * ls); ctx.lineTo(tx + 4 * ls, bot - 8 * ls); ctx.stroke();
+      window.VDGear.box(ctx, tx - gw - 8 * ls, bot, tw + 2 * gw + 16 * ls, 9 * ls, { r: 2 * ls }); }
     // meniscus
     ctx.strokeStyle = T.water; ctx.lineWidth = 2 * ls; ctx.beginPath(); ctx.moveTo(tx + 1, yW - 3 * ls); ctx.quadraticCurveTo(cx, yW + 3 * ls, tx + tw - 1, yW - 3 * ls); ctx.stroke();
     // standing wave in the air column, drawn across the tube: pressure (red) and displacement (blue), amplitude ∝ response
@@ -1272,7 +1304,7 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
   }
   function showSections() {
     const keys = [S.view, S.view === 'pipe' ? S.pm : ''];
-    for (const sec of document.querySelectorAll('.rail section[data-show]')) {
+    for (const sec of document.querySelectorAll('.rail section[data-show], .shelf-card[data-show]')) {
       const list = sec.dataset.show.split(' ');
       sec.hidden = !list.some((k) => keys.includes(k));
     }

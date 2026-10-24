@@ -31,6 +31,11 @@
 .gen .gen-btns { display: grid; grid-template-columns: auto auto; gap: 4px; }
 .gen .gen-btns .btn { background: #39414d; color: #e3e8ef; border-color: #4a5462; padding: 4px 10px; font-size: 0.82rem; }
 @media (max-width: 820px) { .gen { flex: 1 1 100%; } .gen .gen-btns .btn { min-height: 36px; } }
+/* the setup of each view on the shelf under the picture (lean sidebar): the rail keeps readouts, tables and notes */
+.shelf { align-items: stretch; }
+.shelf > .gen { flex: 0 1 460px; }
+.shelf-card .pair:not([hidden]) { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 6px 16px; }
+.shelf-card .toggles { display: flex; flex-wrap: wrap; gap: 4px 14px; }
 /* folded rail sections: secondary options behind their heading (layout redesign, as in springs) */
 .rail details.more > p + p { margin-top: 6px; }
 </style>
@@ -124,8 +129,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
   .stage { height: 80vh; min-height: 600px; }
+  .stage:has(> .shelf) { height: auto; } .stage:has(> .shelf) > .pane { height: 70vh; min-height: 480px; }
   .count { margin-left: 0; }
 }
+
+/* with the shelf under it the picture keeps its room (a stage at least 760 px tall); on a short screen the page scrolls instead of squeezing it */
+@media (min-width: 821px) { .stage:has(> .shelf) { min-height: 760px; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -167,8 +176,144 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <div class="pane" id="pane">
         <canvas id="can" tabindex="0" aria-label="Wave drawing. Space plays or pauses. Two waves view: up and down arrows change A₁, left and right change A₂. String and air column views: digits 1 to 8 pick a harmonic and left and right arrows step through them; with a pluck the arrows move the pluck point and height, with the driver they change the drive frequency. Beats view: left and right change f₂ − f₁, up and down change A₂. Levitation view: up and down change the drive amplitude, left and right move the reflector, Enter drops a bead, Delete clears them. Drag the grips to change amplitudes, lengths and frequencies."></canvas>
       </div>
-      <div class="shelf" id="shelf" hidden>
-        <div class="gen" role="group" aria-labelledby="genTitle">
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardWaves" role="group" aria-label="The two waves">
+          <span class="card-title">The two waves</span>
+          <div>
+            <div class="slider-head"><label for="wA1">Amplitude A₁ (moving right)</label><output id="wA1Out" class="mono" for="wA1"></output></div>
+            <input type="range" id="wA1" min="0" max="2" step="0.05" value="1">
+          </div>
+          <div>
+            <div class="slider-head"><label for="wA2">Amplitude A₂ (moving left)</label><output id="wA2Out" class="mono" for="wA2"></output></div>
+            <input type="range" id="wA2" min="0" max="2" step="0.05" value="1">
+          </div>
+          <div>
+            <div class="slider-head"><label for="wF1">Frequency f₁</label><output id="wF1Out" class="mono" for="wF1"></output></div>
+            <input type="range" id="wF1" min="0.25" max="2" step="0.05" value="1">
+          </div>
+          <div>
+            <div class="slider-head"><label for="wF2">Frequency f₂</label><output id="wF2Out" class="mono" for="wF2"></output></div>
+            <input type="range" id="wF2" min="0.25" max="2" step="0.05" value="1">
+          </div>
+          <div class="toggles wide">
+            <label><input type="checkbox" id="wEnv" checked>Envelope</label>
+            <label><input type="checkbox" id="wMarks" checked>Nodes N, antinodes A</label>
+          </div>
+        </div>
+        <div class="shelf-card" id="cardString" role="group" aria-label="The string" hidden>
+          <span class="card-title">The string</span>
+          <div class="wide">
+            <div class="seg" role="group" aria-label="String motion" id="strMode">
+              <button type="button" data-m="harm" aria-pressed="true">Harmonic</button>
+              <button type="button" data-m="pluck" aria-pressed="false">Pluck</button>
+              <button type="button" data-m="drive" aria-pressed="false">Driven</button>
+            </div>
+          </div>
+          <div>
+            <div class="slider-head"><label for="sL">Length L</label><output id="sLOut" class="mono" for="sL"></output></div>
+            <input type="range" id="sL" min="0.3" max="1" step="0.001" value="0.648">
+          </div>
+          <div>
+            <div class="slider-head"><label for="sT">Tension T</label><output id="sTOut" class="mono" for="sT"></output></div>
+            <input type="range" id="sT" min="10" max="150" step="0.5" value="70">
+          </div>
+          <div>
+            <div class="slider-head"><label for="sMu">Linear density μ</label><output id="sMuOut" class="mono" for="sMu"></output></div>
+            <input type="range" id="sMu" min="0.3" max="15" step="0.01" value="6.14">
+          </div>
+          <div id="harmBlock" class="wide">
+            <div class="chips harm" id="sHarm" role="group" aria-label="Harmonic number"></div>
+          </div>
+          <div id="pluckBlock" class="wide pair" hidden>
+            <div>
+              <div class="slider-head"><label for="pD">Pluck point d</label><output id="pDOut" class="mono" for="pD"></output></div>
+              <input type="range" id="pD" min="0.05" max="0.95" step="0.01" value="0.5">
+            </div>
+            <div>
+              <div class="slider-head"><label for="pH">Pluck height h</label><output id="pHOut" class="mono" for="pH"></output></div>
+              <input type="range" id="pH" min="-10" max="10" step="0.1" value="6">
+            </div>
+          </div>
+          <div id="dQBlock" hidden>
+            <div>
+              <div class="slider-head"><label for="dQ">Quality factor Q of mode 1</label><output id="dQOut" class="mono" for="dQ"></output></div>
+              <input type="range" id="dQ" min="10" max="300" step="1" value="30">
+            </div>
+          </div>
+        </div>
+        <div class="shelf-card" id="cardPipe" role="group" aria-label="The air column" hidden>
+          <span class="card-title">The air column</span>
+          <div class="wide">
+            <div class="seg" role="group" aria-label="Pipe ends" id="pipeKind">
+              <button type="button" data-k="oo" aria-pressed="false">Both ends open</button>
+              <button type="button" data-k="oc" aria-pressed="true">One end closed</button>
+            </div>
+          </div>
+          <div class="chips harm wide" id="pHarm" role="group" aria-label="Harmonic number"></div>
+          <div>
+            <div class="slider-head"><label for="aL">Length L</label><output id="aLOut" class="mono" for="aL"></output></div>
+            <input type="range" id="aL" min="0.1" max="2" step="0.005" value="0.6">
+          </div>
+          <div>
+            <div class="slider-head"><label for="aD">Inner diameter 2r</label><output id="aDOut" class="mono" for="aD"></output></div>
+            <input type="range" id="aD" min="5" max="60" step="0.5" value="15">
+          </div>
+          <div>
+            <div class="slider-head"><label for="aT">Air temperature</label><output id="aTOut" class="mono" for="aT"></output></div>
+            <input type="range" id="aT" min="-10" max="40" step="0.5" value="20">
+          </div>
+          <label class="check"><input type="checkbox" id="aEnd">End correction 0.6 r at each open end</label>
+        </div>
+        <div class="shelf-card" id="cardBeats" role="group" aria-label="The two notes" hidden>
+          <span class="card-title">The two notes</span>
+          <div>
+            <div class="slider-head"><label for="bF1">Frequency f₁</label><output id="bF1Out" class="mono" for="bF1"></output></div>
+            <input type="range" id="bF1" min="100" max="1000" step="1" value="440">
+          </div>
+          <div>
+            <div class="slider-head"><label for="bDf">Difference f₂ − f₁</label><output id="bDfOut" class="mono" for="bDf"></output></div>
+            <input type="range" id="bDf" min="-20" max="20" step="0.1" value="3">
+          </div>
+          <div>
+            <div class="slider-head"><label for="bA2">Amplitude A₂ / A₁</label><output id="bA2Out" class="mono" for="bA2"></output></div>
+            <input type="range" id="bA2" min="0" max="1" step="0.01" value="1">
+          </div>
+        </div>
+        <div class="shelf-card" id="cardLev" role="group" aria-label="The levitator" hidden>
+          <span class="card-title">The levitator and the bead</span>
+          <div>
+            <div class="slider-head"><label for="lP">Drive amplitude p₀</label><output id="lPOut" class="mono" for="lP"></output></div>
+            <input type="range" id="lP" min="0" max="6000" step="10" value="2000">
+          </div>
+          <div>
+            <div class="slider-head"><label for="lH">Reflector distance H</label><output id="lHOut" class="mono" for="lH"></output></div>
+            <input type="range" id="lH" min="3" max="40" step="0.001" value="17.16">
+          </div>
+          <div class="chips wide">
+            <button type="button" class="btn" id="lTune">Tune H to resonance</button>
+            <button type="button" class="btn" id="lDrop">Drop a bead</button>
+            <button type="button" class="btn" id="lClear">Clear beads</button>
+          </div>
+          <span class="lab wide">Bead</span>
+          <div class="chips wide" id="lMat" role="group" aria-label="Bead material">
+            <button type="button" data-m="eps" aria-pressed="true">Foam polystyrene, 30 kg/m³</button>
+            <button type="button" data-m="water" aria-pressed="false">Water droplet, 998 kg/m³</button>
+            <button type="button" data-m="ps" aria-pressed="false">Solid polystyrene, 1050 kg/m³</button>
+          </div>
+          <div>
+            <div class="slider-head"><label for="lA">Bead radius a</label><output id="lAOut" class="mono" for="lA"></output></div>
+            <input type="range" id="lA" min="0.1" max="2.5" step="0.01" value="0.75">
+          </div>
+          <div>
+            <div class="slider-head"><label for="lF">Drive frequency f</label><output id="lFOut" class="mono" for="lF"></output></div>
+            <input type="range" id="lF" min="20" max="60" step="0.1" value="40">
+          </div>
+          <div>
+            <div class="slider-head"><label for="lT">Air temperature</label><output id="lTOut" class="mono" for="lT"></output></div>
+            <input type="range" id="lT" min="-10" max="40" step="0.5" value="20">
+          </div>
+        </div>
+        <div class="gen" id="genBox" role="group" aria-labelledby="genTitle" hidden>
           <div class="gen-top"><span class="gen-title" id="genTitle">Function generator, drive frequency f</span><output id="dFOut" class="gen-lcd" for="dF"></output></div>
           <div class="gen-knobs">
             <div class="knobwrap"><div class="knob" data-for="dF" data-per="1" data-out="dFOut" role="slider" tabindex="0" aria-label="Drive frequency f, coarse knob, 1 Hz a click"><span class="knob-mark"></span></div><span>Coarse</span></div>
@@ -197,22 +342,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <!-- two traveling waves -->
       <section id="secWaves">
         <h2>Two traveling waves</h2>
-        <div>
-          <div class="slider-head"><label for="wA1">Amplitude A₁ (moving right)</label><output id="wA1Out" class="mono" for="wA1"></output></div>
-          <input type="range" id="wA1" min="0" max="2" step="0.05" value="1">
-        </div>
-        <div>
-          <div class="slider-head"><label for="wA2">Amplitude A₂ (moving left)</label><output id="wA2Out" class="mono" for="wA2"></output></div>
-          <input type="range" id="wA2" min="0" max="2" step="0.05" value="1">
-        </div>
-        <div>
-          <div class="slider-head"><label for="wF1">Frequency f₁</label><output id="wF1Out" class="mono" for="wF1"></output></div>
-          <input type="range" id="wF1" min="0.25" max="2" step="0.05" value="1">
-        </div>
-        <div>
-          <div class="slider-head"><label for="wF2">Frequency f₂</label><output id="wF2Out" class="mono" for="wF2"></output></div>
-          <input type="range" id="wF2" min="0.25" max="2" step="0.05" value="1">
-        </div>
         <dl class="readout">
           <div><dt>Wavelength λ₁</dt><dd id="rwL1">—</dd></div>
           <div><dt>Wavelength λ₂</dt><dd id="rwL2">—</dd></div>
@@ -221,10 +350,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>Standing wave ratio</dt><dd id="rwSWR">—</dd></div>
           <div><dt>Standing / traveling part</dt><dd id="rwParts">—</dd></div>
         </dl>
-        <div class="toggles">
-          <label><input type="checkbox" id="wEnv" checked>Envelope</label>
-          <label><input type="checkbox" id="wMarks" checked>Nodes N, antinodes A</label>
-        </div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">y₁ = A₁ sin(k₁x − ω₁t), y₂ = A₂ sin(k₂x + ω₂t), both at v = 2 m/s. With A₁ ≠ A₂ the sum is a standing wave of amplitude 2·min(A) plus a traveling wave of amplitude |A₁ − A₂|. The standing wave ratio is the largest over the smallest amplitude along x, (A₁ + A₂)/|A₁ − A₂|.</p>
         </details>
@@ -233,41 +358,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <!-- string -->
       <section id="secString" hidden>
         <h2>String with fixed ends</h2>
-        <div class="seg" role="group" aria-label="String motion" id="strMode">
-          <button type="button" data-m="harm" aria-pressed="true">Harmonic</button>
-          <button type="button" data-m="pluck" aria-pressed="false">Pluck</button>
-          <button type="button" data-m="drive" aria-pressed="false">Driven</button>
-        </div>
-        <div>
-          <div class="slider-head"><label for="sL">Length L</label><output id="sLOut" class="mono" for="sL"></output></div>
-          <input type="range" id="sL" min="0.3" max="1" step="0.001" value="0.648">
-        </div>
-        <div>
-          <div class="slider-head"><label for="sT">Tension T</label><output id="sTOut" class="mono" for="sT"></output></div>
-          <input type="range" id="sT" min="10" max="150" step="0.5" value="70">
-        </div>
-        <div>
-          <div class="slider-head"><label for="sMu">Linear density μ</label><output id="sMuOut" class="mono" for="sMu"></output></div>
-          <input type="range" id="sMu" min="0.3" max="15" step="0.01" value="6.14">
-        </div>
-        <div id="harmBlock">
-          <div class="chips harm" id="sHarm" role="group" aria-label="Harmonic number"></div>
-        </div>
-        <div id="pluckBlock" hidden>
-          <div>
-            <div class="slider-head"><label for="pD">Pluck point d</label><output id="pDOut" class="mono" for="pD"></output></div>
-            <input type="range" id="pD" min="0.05" max="0.95" step="0.01" value="0.5">
-          </div>
-          <div>
-            <div class="slider-head"><label for="pH">Pluck height h</label><output id="pHOut" class="mono" for="pH"></output></div>
-            <input type="range" id="pH" min="-10" max="10" step="0.1" value="6">
-          </div>
-        </div>
         <div id="driveBlock" hidden>
-          <div>
-            <div class="slider-head"><label for="dQ">Quality factor Q of mode 1</label><output id="dQOut" class="mono" for="dQ"></output></div>
-            <input type="range" id="dQ" min="10" max="300" step="1" value="30">
-          </div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Drag the string anywhere to pull it into a triangle, then let go. bₙ = 2hL² sin(nπd/L) / (n²π² d(L − d)).</p>
           <p class="hint">A driver at x = L/20 pushes with F₀ cos(2πft), F₀ = 0.25 N. Set the drive frequency f with the Coarse and Fine knobs of the function generator under the picture or its slider (0.1 Hz steps), or drag the red marker on the plot to sweep it.</p>
@@ -284,24 +375,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <!-- air column -->
       <section id="secPipe" hidden>
         <h2>Air column</h2>
-        <div class="seg" role="group" aria-label="Pipe ends" id="pipeKind">
-          <button type="button" data-k="oo" aria-pressed="false">Both ends open</button>
-          <button type="button" data-k="oc" aria-pressed="true">One end closed</button>
-        </div>
-        <div class="chips harm" id="pHarm" role="group" aria-label="Harmonic number"></div>
-        <div>
-          <div class="slider-head"><label for="aL">Length L</label><output id="aLOut" class="mono" for="aL"></output></div>
-          <input type="range" id="aL" min="0.1" max="2" step="0.005" value="0.6">
-        </div>
-        <div>
-          <div class="slider-head"><label for="aD">Inner diameter 2r</label><output id="aDOut" class="mono" for="aD"></output></div>
-          <input type="range" id="aD" min="5" max="60" step="0.5" value="15">
-        </div>
-        <div>
-          <div class="slider-head"><label for="aT">Air temperature</label><output id="aTOut" class="mono" for="aT"></output></div>
-          <input type="range" id="aT" min="-10" max="40" step="0.5" value="20">
-        </div>
-        <label class="check"><input type="checkbox" id="aEnd">End correction 0.6 r at each open end</label>
         <dl class="readout">
           <div><dt>Sound speed v</dt><dd id="raV">—</dd></div>
           <div><dt>Acoustic length</dt><dd id="raLe">—</dd></div>
@@ -317,18 +390,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <!-- beats -->
       <section id="secBeats" hidden>
         <h2>Beats</h2>
-        <div>
-          <div class="slider-head"><label for="bF1">Frequency f₁</label><output id="bF1Out" class="mono" for="bF1"></output></div>
-          <input type="range" id="bF1" min="100" max="1000" step="1" value="440">
-        </div>
-        <div>
-          <div class="slider-head"><label for="bDf">Difference f₂ − f₁</label><output id="bDfOut" class="mono" for="bDf"></output></div>
-          <input type="range" id="bDf" min="-20" max="20" step="0.1" value="3">
-        </div>
-        <div>
-          <div class="slider-head"><label for="bA2">Amplitude A₂ / A₁</label><output id="bA2Out" class="mono" for="bA2"></output></div>
-          <input type="range" id="bA2" min="0" max="1" step="0.01" value="1">
-        </div>
         <dl class="readout">
           <div><dt>Frequency f₂</dt><dd id="rbF2">—</dd></div>
           <div><dt>Pitch heard (f₁ + f₂)/2</dt><dd id="rbFm">—</dd></div>
@@ -343,37 +404,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <!-- acoustic levitation -->
       <section id="secLev" hidden>
         <h2>Acoustic levitation</h2>
-        <div>
-          <div class="slider-head"><label for="lP">Drive amplitude p₀</label><output id="lPOut" class="mono" for="lP"></output></div>
-          <input type="range" id="lP" min="0" max="6000" step="10" value="2000">
-        </div>
-        <div>
-          <div class="slider-head"><label for="lH">Reflector distance H</label><output id="lHOut" class="mono" for="lH"></output></div>
-          <input type="range" id="lH" min="3" max="40" step="0.001" value="17.16">
-        </div>
-        <div class="chips">
-          <button type="button" class="btn" id="lTune">Tune H to resonance</button>
-          <button type="button" class="btn" id="lDrop">Drop a bead</button>
-          <button type="button" class="btn" id="lClear">Clear beads</button>
-        </div>
-        <h3>Bead</h3>
-        <div class="chips" id="lMat" role="group" aria-label="Bead material">
-          <button type="button" data-m="eps" aria-pressed="true">Foam polystyrene, 30 kg/m³</button>
-          <button type="button" data-m="water" aria-pressed="false">Water droplet, 998 kg/m³</button>
-          <button type="button" data-m="ps" aria-pressed="false">Solid polystyrene, 1050 kg/m³</button>
-        </div>
-        <div>
-          <div class="slider-head"><label for="lA">Bead radius a</label><output id="lAOut" class="mono" for="lA"></output></div>
-          <input type="range" id="lA" min="0.1" max="2.5" step="0.01" value="0.75">
-        </div>
-        <div>
-          <div class="slider-head"><label for="lF">Drive frequency f</label><output id="lFOut" class="mono" for="lF"></output></div>
-          <input type="range" id="lF" min="20" max="60" step="0.1" value="40">
-        </div>
-        <div>
-          <div class="slider-head"><label for="lT">Air temperature</label><output id="lTOut" class="mono" for="lT"></output></div>
-          <input type="range" id="lT" min="-10" max="40" step="0.5" value="20">
-        </div>
         <dl class="readout">
           <div><dt>Wavelength λ = c/f</dt><dd id="rlLam">—</dd></div>
           <div><dt>Node spacing λ/2</dt><dd id="rlNode">—</dd></div>
@@ -1034,12 +1064,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       plot(X(0), X(L), (px) => Y(-env(px)), T.muted, 1.2 * ls, [5 * ls, 4 * ls], 2);
     }
     const strFn = (px) => Y(yAt(invX(px)));
-    plot(X(0), X(L), strFn, T.ink, 3 * ls, null, 1.5);
+    /* a wound guitar string (phosphor bronze): a dark core line with a light highlight along it */
+    const Gm = window.VDGear.mix, dk = window.VDGear.dark(), bronze = dk ? '#d6b27a' : '#a27a3e';
+    plot(X(0), X(L), strFn, Gm(bronze, '#000000', dk ? 0.15 : 0.35), 3.4 * ls, null, 1.5);
+    plot(X(0), X(L), (px) => strFn(px) - 0.8 * ls, Gm(bronze, '#ffffff', dk ? 0.45 : 0.4), 1.1 * ls, null, 1.5);
     ctx.restore();
-    // nut and bridge
-    ctx.fillStyle = T.tubeEdge;
-    ctx.fillRect(X(0) - 5 * ls, mid - 14 * ls, 5 * ls, 28 * ls);
-    ctx.beginPath(); ctx.moveTo(X(L), mid); ctx.lineTo(X(L) + 9 * ls, mid + 16 * ls); ctx.lineTo(X(L) - 9 * ls, mid + 16 * ls); ctx.closePath(); ctx.fill();
+    // nut and bridge: a bone nut on the end of a rosewood neck, a bone saddle on a rosewood bridge
+    {
+      const bone = dk ? '#d9d0bb' : '#efe7d4', wood = dk ? '#6b4630' : '#5a3a26', nx = X(0), bxL = X(L);
+      const g1 = ctx.createLinearGradient(0, mid - 16 * ls, 0, mid + 16 * ls); g1.addColorStop(0, Gm(wood, '#ffffff', 0.15)); g1.addColorStop(1, Gm(wood, '#000000', 0.3));
+      ctx.fillStyle = g1; ctx.beginPath(); ctx.roundRect(nx - 22 * ls, mid - 10 * ls, 17 * ls, 20 * ls, 3 * ls); ctx.fill();
+      const g2 = ctx.createLinearGradient(nx - 6 * ls, 0, nx, 0); g2.addColorStop(0, Gm(bone, '#000000', 0.15)); g2.addColorStop(1, bone);
+      ctx.fillStyle = g2; ctx.beginPath(); ctx.roundRect(nx - 6 * ls, mid - 14 * ls, 6 * ls, 28 * ls, 1.5 * ls); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = g1; ctx.beginPath(); ctx.roundRect(bxL - 16 * ls, mid + 7 * ls, 32 * ls, 10 * ls, 3 * ls); ctx.fill();
+      ctx.fillStyle = bone; ctx.beginPath(); ctx.moveTo(bxL - 2 * ls, mid); ctx.lineTo(bxL + 2 * ls, mid); ctx.lineTo(bxL + 5 * ls, mid + 8 * ls); ctx.lineTo(bxL - 5 * ls, mid + 8 * ls); ctx.closePath(); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.stroke();
+    }
     // nodes and antinodes of a harmonic
     if (s.mode === 'harm') {
       for (let m = 0; m <= s.n; m++) {
@@ -1191,10 +1230,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         ctx.beginPath(); ctx.arc(Math.max(x0 + 2, Math.min(x1 - 2, sx)), py, 1.9 * ls, 0, TAU); ctx.fill();
       }
     }
-    // walls and ends
-    ctx.strokeStyle = T.tubeEdge; ctx.lineWidth = 3 * ls;
-    ctx.beginPath(); ctx.moveTo(x0, ty0); ctx.lineTo(x1, ty0); ctx.moveTo(x0, ty1); ctx.lineTo(x1, ty1); ctx.stroke();
-    if (p.kind === 'oc') { ctx.fillStyle = T.tubeEdge; ctx.fillRect(x0 - 7 * ls, ty0 - 1.5 * ls, 7 * ls, th + 3 * ls); }
+    // walls and ends: a clear acrylic tube, its walls seen edge on, and a rubber stopper in a closed end
+    {
+      const Gm = window.VDGear.mix, wt = 5 * ls, edge = T.tubeEdge;
+      for (const [ya, yb] of [[ty0 - wt, ty0], [ty1, ty1 + wt]]) { const g = ctx.createLinearGradient(0, ya, 0, yb);
+        g.addColorStop(0, Gm(edge, '#ffffff', 0.25)); g.addColorStop(0.5, Gm(edge, '#ffffff', 0.6)); g.addColorStop(1, Gm(edge, '#000000', 0.1));
+        ctx.fillStyle = g; ctx.globalAlpha = 0.85; ctx.fillRect(x0, ya, x1 - x0, yb - ya); ctx.globalAlpha = 1;
+        ctx.strokeStyle = edge; ctx.lineWidth = 1; ctx.strokeRect(x0 + 0.5, ya + 0.5, x1 - x0 - 1, yb - ya - 1); }
+      ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 1.2 * ls; ctx.beginPath(); ctx.moveTo(x0 + 6 * ls, ty0 + 3 * ls); ctx.lineTo(x1 - 6 * ls, ty0 + 3 * ls); ctx.stroke();
+      if (p.kind === 'oc') { const g = ctx.createLinearGradient(x0 - 12 * ls, 0, x0 + 2 * ls, 0); g.addColorStop(0, '#2a2f36'); g.addColorStop(0.6, '#4a515b'); g.addColorStop(1, '#363c44');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(x0 - 12 * ls, ty0 - wt - 2 * ls, 12 * ls, th + 2 * wt + 4 * ls, 3 * ls); ctx.fill(); }
+    }
     if (p.endc) {
       for (const xe of p.kind === 'oo' ? [-dl, L + dl] : [L + dl]) { ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ls; ctx.setLineDash([3 * ls, 3 * ls]); ctx.beginPath(); ctx.moveTo(X(xe), ty0 - 8 * ls); ctx.lineTo(X(xe), ty1 + 8 * ls); ctx.stroke(); ctx.setLineDash([]); }
     }
@@ -1387,14 +1433,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     ctx.restore();
     // transducer: a stepped horn ending in the flat face at z = H
-    ctx.fillStyle = T.tubeEdge;
+    /* a Langevin transducer: machined aluminium body and horn (cylinders, shaded across), the flat radiating face at z = H */
+    const Gr = window.VDGear, alu = '#a9b2bc';
     const bodyW = faceW * 0.46, yb0 = top + 18 * ls, yb1 = yT - 22 * ls;
-    ctx.fillRect(cx - bodyW / 2, yb0, bodyW, Math.max(4, yb1 - yb0));
-    ctx.beginPath(); ctx.moveTo(cx - bodyW / 2, yb1); ctx.lineTo(cx + bodyW / 2, yb1); ctx.lineTo(bx1, yT - 7 * ls); ctx.lineTo(bx0, yT - 7 * ls); ctx.closePath(); ctx.fill();
-    ctx.fillRect(bx0, yT - 7 * ls, faceW, 7 * ls);
-    // reflector
+    Gr.rod(ctx, cx, yb0, cx, Math.max(yb0 + 4, yb1), bodyW / 2, { color: '#7d8794' });
+    for (let i = 1; i < 4; i++) { const yy = yb0 + (yb1 - yb0) * i / 4; ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx - bodyW / 2, yy); ctx.lineTo(cx + bodyW / 2, yy); ctx.stroke(); }
+    { const g = ctx.createLinearGradient(bx0, 0, bx1, 0); g.addColorStop(0, Gr.mix(alu, '#000000', 0.35)); g.addColorStop(0.35, Gr.mix(alu, '#ffffff', 0.45)); g.addColorStop(0.55, alu); g.addColorStop(1, Gr.mix(alu, '#000000', 0.45));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(cx - bodyW / 2, yb1); ctx.lineTo(cx + bodyW / 2, yb1); ctx.lineTo(bx1, yT - 7 * ls); ctx.lineTo(bx0, yT - 7 * ls); ctx.closePath(); ctx.fill();
+      ctx.fillRect(bx0, yT - 7 * ls, faceW, 7 * ls); ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.strokeRect(bx0 + 0.5, yT - 7 * ls + 0.5, faceW - 1, 7 * ls - 1); }
+    // reflector: a polished steel plate
     const rw = appW * 0.92;
-    ctx.fillRect(cx - rw / 2, yR, rw, 11 * ls);
+    { const g = ctx.createLinearGradient(0, yR, 0, yR + 11 * ls); g.addColorStop(0, Gr.mix(alu, '#ffffff', 0.5)); g.addColorStop(0.4, alu); g.addColorStop(1, Gr.mix(alu, '#000000', 0.45));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(cx - rw / 2, yR, rw, 11 * ls, 2 * ls); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+      Gr.screw(ctx, cx - rw / 2 + 7 * ls, yR + 5.5 * ls, 2.6 * ls); Gr.screw(ctx, cx + rw / 2 - 7 * ls, yR + 5.5 * ls, 2.6 * ls); }
     // panels: amplitudes, then potentials
     frame(aL, yT, aR, yR); frame(uL, yT, uR, yR);
     // z ticks between the levitator and the amplitude panel
@@ -1568,7 +1619,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function setView(v) {
     S.view = v;
     for (const b of $('viewSeg').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
-    $('secWaves').hidden = v !== 'waves'; $('secString').hidden = v !== 'string'; $('shelf').hidden = v !== 'string' || $('driveBlock').hidden; $('secPipe').hidden = v !== 'pipe'; $('secBeats').hidden = v !== 'beats'; $('secLev').hidden = v !== 'lev';
+    $('secWaves').hidden = v !== 'waves'; $('secString').hidden = v !== 'string'; $('genBox').hidden = v !== 'string' || $('driveBlock').hidden;
+    for (const [c, k] of [['cardWaves', 'waves'], ['cardString', 'string'], ['cardPipe', 'pipe'], ['cardBeats', 'beats'], ['cardLev', 'lev']]) $(c).hidden = v !== k; $('secPipe').hidden = v !== 'pipe'; $('secBeats').hidden = v !== 'beats'; $('secLev').hidden = v !== 'lev';
     $('modelHint').textContent = MODEL[v];
     buildKey(); updateReadouts(); soundRebuild();
     t = 0; holdSpan = null;
@@ -1581,8 +1633,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function setStrMode(m) {
     S.s.mode = m;
     for (const b of $('strMode').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.m === m));
-    $('harmBlock').hidden = m !== 'harm'; $('pluckBlock').hidden = m !== 'pluck'; $('driveBlock').hidden = m !== 'drive';
-    $('shelf').hidden = $('secString').hidden || m !== 'drive';
+    $('harmBlock').hidden = m !== 'harm'; $('pluckBlock').hidden = m !== 'pluck'; $('driveBlock').hidden = m !== 'drive'; $('dQBlock').hidden = m !== 'drive';
+    $('genBox').hidden = $('secString').hidden || m !== 'drive';
     t = 0;
     if (m === 'drive') { if (D) restDriven(D); }
     buildKey(); updateReadouts(); buildTables(); soundRebuild();

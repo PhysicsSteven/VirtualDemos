@@ -58,7 +58,12 @@ html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
 :root[data-projector="on"] body { font-size: 1.25rem; }
 .units { color: var(--muted); font-size: 0.8rem; }
-.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--warm); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+.stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--warm); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+/* the synthesizer's controls on a shelf under the picture (lean sidebar): the rail keeps readouts, tables and notes */
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 10px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card .checks { display: flex; flex-wrap: wrap; gap: 4px 16px; }
+.shelf > .synth { flex: 0 1 400px; }
+.shelf-card .piano { margin-top: 2px; }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.88rem; font-weight: 600; white-space: nowrap; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
@@ -134,10 +139,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
   .stage { height: 92vh; min-height: 720px; }
+  .stage:has(> .shelf) { height: auto; } .stage:has(> .shelf) > .pane { height: 84vh; min-height: 640px; }
   .count { margin-left: 0; }
   .vol input { width: 110px; }
 }
 @media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+
+/* with the shelf under it the picture keeps its room (a stage at least 760 px tall); on a short screen the page scrolls instead of squeezing it */
+@media (min-width: 821px) { .stage:has(> .shelf) { min-height: 760px; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -173,6 +182,39 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <div class="pane" id="pane">
         <canvas id="can" tabindex="0" aria-label="Harmonic synthesizer. Left and right arrows select a harmonic, up and down change its amplitude by 0.05 (with Shift by 0.01), the bracket keys [ and ] turn its phase by 15 degrees, 0 or Delete silences it, Space pauses the ladder. Drag the bars to set amplitudes, the dials to set phases, the spectrum dots to set levels in dB, and the end of the period bracket on the waveform to change the fundamental."></canvas>
       </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card synth" role="group" aria-label="The fundamental">
+          <span class="card-title">Fundamental</span>
+          <div>
+            <div class="slider-head"><label for="f1">Fundamental f₁</label><output id="f1Out" class="mono" for="f1"></output></div>
+            <input type="range" id="f1" min="-36" max="12" step="0.01" value="-12">
+          </div>
+          <div class="piano wide" id="piano" role="group" aria-label="Piano keyboard, C3 to C5, equal temperament"></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="Harmonics and phases">
+          <span class="card-title">Harmonics and phases</span>
+          <div class="wide">
+            <label class="lab" for="morph">Compare instruments</label>
+            <div>
+              <output id="morphOut" class="morph-out" for="morph"></output>
+              <input type="range" id="morph" min="0" max="4" step="0.01" value="4">
+              <div class="mticks" id="mticks" aria-hidden="true"></div>
+            </div>
+            <details class="more"><summary>About this instrument</summary><p class="hint" id="morphHint"></p></details>
+          </div>
+          <div class="chips wide">
+            <button type="button" class="btn" id="pure">Pure tone</button>
+            <button type="button" class="btn" id="allOn">All equal</button>
+            <button type="button" class="btn" id="randPh">Randomize phases</button>
+            <button type="button" class="btn" id="zeroPh">All phases zero</button>
+          </div>
+          <div class="wide checks">
+            <label class="check"><input type="checkbox" id="mute1">Remove harmonic 1 (the fundamental)</label>
+            <label class="check"><input type="checkbox" id="mute2">Also remove harmonic 2</label>
+            <label class="check"><input type="checkbox" id="showDials" checked>Phase dials under the bars</label>
+          </div>
+        </div>
+      </div>
     </div>
 
     <aside class="rail">
@@ -190,23 +232,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
-      <section>
-        <h2><label for="morph">Compare instruments</label></h2>
-        <div>
-          <output id="morphOut" class="morph-out" for="morph"></output>
-          <input type="range" id="morph" min="0" max="4" step="0.01" value="4">
-          <div class="mticks" id="mticks" aria-hidden="true"></div>
-        </div>
-        <p class="hint" id="morphHint"></p>
-      </section>
 
       <section>
         <h2>Fundamental</h2>
-        <div>
-          <div class="slider-head"><label for="f1">Fundamental f₁</label><output id="f1Out" class="mono" for="f1"></output></div>
-          <input type="range" id="f1" min="-36" max="12" step="0.01" value="-12">
-        </div>
-        <div class="piano" id="piano" role="group" aria-label="Piano keyboard, C3 to C5, equal temperament"></div>
         <dl class="readout">
           <div><dt>Period T₁ = 1/f₁</dt><dd id="rT1">—</dd></div>
           <div><dt>Harmonic 16 at</dt><dd id="rF16">—</dd></div>
@@ -218,12 +246,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
       <section>
         <h2>Harmonics</h2>
-        <div class="chips">
-          <button type="button" class="btn" id="pure">Pure tone</button>
-          <button type="button" class="btn" id="allOn">All equal</button>
-        </div>
-        <label class="check"><input type="checkbox" id="mute1">Remove harmonic 1 (the fundamental)</label>
-        <label class="check"><input type="checkbox" id="mute2">Also remove harmonic 2</label>
         <dl class="readout">
           <div><dt>Waveform repeats every</dt><dd id="rRep">—</dd></div>
           <div><dt>Pitch from the period</dt><dd id="rPitch">—</dd></div>
@@ -236,11 +258,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
       <section>
         <h2>Phase</h2>
-        <div class="chips">
-          <button type="button" class="btn" id="randPh">Randomize phases</button>
-          <button type="button" class="btn" id="zeroPh">All phases zero</button>
-        </div>
-        <label class="check"><input type="checkbox" id="showDials" checked>Phase dials under the bars</label>
         <dl class="readout">
           <div><dt>Peak / RMS</dt><dd id="rCrest">—</dd></div>
           <div><dt>RMS (bar units)</dt><dd id="rRms">—</dd></div>
