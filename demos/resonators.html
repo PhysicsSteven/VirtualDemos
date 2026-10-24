@@ -939,7 +939,17 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
   function drawString() {
     const g = stringGeom(); G.str = g; G.decay = decayFactors(drawRealT()); G.decayReal = decayFactors(ST.tr);
     const { L0, R0, X, yc, amp } = g, bow = S.ex === 'bow';
-    // nut and bridge
+    // the board the string is stretched over, seen from above, with a sound hole; nut and bridge
+    { const Gr = window.VDGear, dk = Gr.dark(), bt = yc - 34 * ls, bh = 68 * ls, x0 = L0 - 26 * ls, x1 = R0 + 26 * ls;
+      Gr.shadow(ctx, (x0 + x1) / 2, bt + bh + 2, (x1 - x0) * 0.5, 4 * ls, 0.7);
+      const bg = ctx.createLinearGradient(0, bt, 0, bt + bh); bg.addColorStop(0, dk ? '#4a3a26' : '#d9b98a'); bg.addColorStop(0.5, dk ? '#3d2f1f' : '#caa676'); bg.addColorStop(1, dk ? '#33281a' : '#b8935f');
+      ctx.fillStyle = bg; rrect(x0, bt, x1 - x0, bh, 6 * ls); ctx.fill();
+      ctx.save(); rrect(x0, bt, x1 - x0, bh, 6 * ls); ctx.clip(); ctx.strokeStyle = dk ? 'rgba(0,0,0,0.25)' : 'rgba(120,80,40,0.18)'; ctx.lineWidth = 1;
+      for (let i = 0; i < 9; i++) { const y = bt + bh * (i + 0.5) / 9; ctx.beginPath(); ctx.moveTo(x0, y); for (let x = x0; x <= x1; x += 24 * ls) ctx.lineTo(x, y + Math.sin(x * 0.013 + i * 1.7) * 2 * ls); ctx.stroke(); }
+      ctx.restore();
+      const hx = L0 + (R0 - L0) * 0.68, hr = Math.min(bh * 0.36, (R0 - L0) * 0.06);
+      const hg = ctx.createRadialGradient(hx - hr * 0.3, yc - hr * 0.3, hr * 0.2, hx, yc, hr); hg.addColorStop(0, dk ? '#0b0906' : '#3a2a18'); hg.addColorStop(1, dk ? '#000000' : '#1c140b');
+      ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(hx, yc, hr, 0, 7); ctx.fill(); ctx.strokeStyle = dk ? '#6b5636' : '#8a6a3e'; ctx.lineWidth = 2 * ls; ctx.stroke(); }
     ctx.fillStyle = T.wood; ctx.strokeStyle = T.woodEdge; ctx.lineWidth = 1;
     rrect(L0 - 14 * ls, yc - 26 * ls, 14 * ls, 52 * ls, 3 * ls); ctx.fill(); ctx.stroke();
     rrect(R0, yc - 26 * ls, 14 * ls, 52 * ls, 3 * ls); ctx.fill(); ctx.stroke();
@@ -949,11 +959,12 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
       for (const sg of [1, -1]) for (let i = 0; i <= 100; i++) { const s = i / 100, y = yc - sg * amp * 4 * s * (1 - s); i ? ctx.lineTo(X(s), y) : ctx.moveTo(X(s), y); }
       ctx.stroke(); ctx.setLineDash([]);
     }
-    // the string
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 2.4 * ls; ctx.lineJoin = 'round'; ctx.beginPath();
-    const steps = Math.min(400, Math.round((R0 - L0) / 2));
-    for (let i = 0; i <= steps; i++) { const s = i / steps, y = yc - amp * stringNow(s); i ? ctx.lineTo(X(s), y) : ctx.moveTo(X(s), y); }
-    ctx.stroke();
+    // the string: a steel string with its shadow on the board and a highlight along it
+    const steps = Math.min(400, Math.round((R0 - L0) / 2)), sPath = (dy) => { ctx.beginPath(); for (let i = 0; i <= steps; i++) { const s = i / steps, y = yc - amp * stringNow(s) + dy; i ? ctx.lineTo(X(s), y) : ctx.moveTo(X(s), y); } };
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = 'rgba(0,0,0,0.22)'; ctx.lineWidth = 2.4 * ls; sPath(4 * ls); ctx.stroke();
+    ctx.strokeStyle = window.VDGear.dark() ? '#c9d0d9' : '#5d6670'; ctx.lineWidth = 2.8 * ls; sPath(0); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.65)'; ctx.lineWidth = 0.9 * ls; sPath(-0.7 * ls); ctx.stroke();
     // pluck point and its grip
     const p = ST.hold ? ST.hold.p : sP(), xp = X(p);
     if (!bow) {
@@ -1052,16 +1063,33 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
       ctx.lineTo(cx - rb, base - 6 * ls); ctx.quadraticCurveTo(cx - rb, base, cx - rb + 6 * ls, base); ctx.lineTo(cx + rb - 6 * ls, base); ctx.quadraticCurveTo(cx + rb, base, cx + rb, base - 6 * ls);
       ctx.lineTo(cx + rb, bodyTop); ctx.bezierCurveTo(cx + rb, neckBot + (bodyTop - neckBot) * 0.3, cx + ra, neckBot + (bodyTop - neckBot) * 0.6, cx + ra, neckBot); ctx.lineTo(cx + ra, mouth);
     };
+    // the bench it stands on, and the glass: tinted, darker at the edges where the light goes through more of it
+    const Gr = window.VDGear, Gm = Gr.mix, dk = Gr.dark();
+    Gr.bench(ctx, cx - g.bw * 0.46, base, g.bw * 0.92, 18 * ls, 12 * ls);
+    Gr.shadow(ctx, cx, base + 1, rb * 1.15, 4 * ls, 0.9);
+    ctx.save(); path(); ctx.closePath();
+    { const gl = ctx.createLinearGradient(cx - rb, 0, cx + rb, 0), tint = dk ? '120,170,150' : '90,140,120';
+      gl.addColorStop(0, `rgba(${tint},0.30)`); gl.addColorStop(0.18, `rgba(${tint},0.08)`); gl.addColorStop(0.6, `rgba(${tint},0.06)`); gl.addColorStop(1, `rgba(${tint},0.32)`);
+      ctx.fillStyle = gl; ctx.fill(); }
+    ctx.restore();
     // air in the body: compressed when the neck plug is pushed in (slowed oscillation)
     const blow = S.blowing, osc = blow ? Math.cos(th) : 0;
     ctx.save(); path(); ctx.closePath(); ctx.clip();
     ctx.fillStyle = osc > 0 ? T.pos : T.neg; ctx.globalAlpha = Math.abs(osc) * 0.16; ctx.fillRect(cx - rb, neckBot, 2 * rb, base - neckBot); ctx.globalAlpha = 1;
-    ctx.fillStyle = T.water; ctx.globalAlpha = 0.6; ctx.fillRect(cx - rb, yW, 2 * rb, base - yW); ctx.globalAlpha = 1;
+    { const wg = ctx.createLinearGradient(0, yW, 0, base); wg.addColorStop(0, Gm(T.water, '#ffffff', 0.2)); wg.addColorStop(1, Gm(T.water, '#000000', 0.15));
+      ctx.fillStyle = wg; ctx.globalAlpha = 0.7; ctx.fillRect(cx - rb, yW, 2 * rb, base - yW); ctx.globalAlpha = 1;
+      if (S.fill > 0) { ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 1.2 * ls; ctx.beginPath(); ctx.moveTo(cx - rb, yW + 1); ctx.lineTo(cx + rb, yW + 1); ctx.stroke(); } }
     // the plug of air in the neck, moving in and out
     const dy = osc * Math.min(10 * ls, (neckBot - mouth) * 0.18);
     ctx.fillStyle = T.accent; ctx.globalAlpha = 0.28; ctx.fillRect(cx - ra, mouth + dy, 2 * ra, neckBot - mouth); ctx.globalAlpha = 1;
     ctx.restore();
     ctx.strokeStyle = T.glass; ctx.lineWidth = 2.6 * ls; path(); ctx.stroke();
+    // highlights down the glass, from the light at the top left
+    ctx.strokeStyle = dk ? 'rgba(220,240,235,0.35)' : 'rgba(255,255,255,0.85)'; ctx.lineCap = 'round';
+    ctx.lineWidth = 3.5 * ls; ctx.beginPath(); ctx.moveTo(cx - rb * 0.72, bodyTop + 10 * ls); ctx.lineTo(cx - rb * 0.72, base - 16 * ls); ctx.stroke();
+    ctx.lineWidth = 1.6 * ls; ctx.beginPath(); ctx.moveTo(cx - rb * 0.55, bodyTop + 16 * ls); ctx.lineTo(cx - rb * 0.55, bodyTop + (base - bodyTop) * 0.45); ctx.stroke();
+    if (neckBot - mouth > 30 * ls) { ctx.lineWidth = 1.6 * ls; ctx.beginPath(); ctx.moveTo(cx - ra * 0.5, mouth + 8 * ls); ctx.lineTo(cx - ra * 0.5, neckBot - 6 * ls); ctx.stroke(); }
+    ctx.lineCap = 'butt';
     // lip
     ctx.lineWidth = 4 * ls; ctx.beginPath(); ctx.moveTo(cx - ra - 3 * ls, mouth); ctx.lineTo(cx - ra, mouth); ctx.moveTo(cx + ra, mouth); ctx.lineTo(cx + ra + 3 * ls, mouth); ctx.stroke();
     // neck plug arrows
