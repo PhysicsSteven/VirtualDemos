@@ -121,6 +121,7 @@ HANDOUT_TOPIC = {
     'two-speaker': 'Two Speaker Interference', 'ultrasound': 'Ultrasound Echoes and Doppler Flow', 'sound-intensity': 'Sound Intensity and Decibels',
     'room-acoustics': 'Reverberation Time', 'anechoic-chamber': 'Anechoic Chamber',
     'force-table': 'Force Table',
+    'vectors': 'Components, Sums and Products',
     'static-equilibrium': 'Support Forces and Cable Tension', 'catenary': 'Tension in a Hanging Chain',
     'double-pendulum': 'Normal Modes and Chaos', 'eddy-currents': 'Eddy Current Braking',
     'heating-curve': 'Heating Curve and Latent Heat', 'bonds-and-latent-heat': 'Bonds, Temperature and Latent Heat',

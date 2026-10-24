@@ -15,7 +15,8 @@
     'springs', 'stress-strain', 'viscometer', 'force-table', 'gyroscope', 'circular-motion', 'rocket',
     'gravity-near-earth', 'tides', 'gps-clocks' /* gravitation, Vol. 1 ch. 13, 2026-10-24 */,
     'relative-motion', 'apparent-weight', 'center-of-mass' /* cart launch, elevator, center of mass demos, 2026-10-24 */,
-    'static-equilibrium', 'catenary', 'double-pendulum' /* Static Equilibrium, Hanging Chains and Arches, Pendulums and Chaos demos, 2026-10-24 */];
+    'static-equilibrium', 'catenary', 'double-pendulum' /* Static Equilibrium, Hanging Chains and Arches, Pendulums and Chaos demos, 2026-10-24 */,
+    'vectors' /* components, sums, differences and products, Vectors demo, 2026-10-24 */];
   const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
@@ -46,6 +47,8 @@
     /* Force table setup of the Vectors demo. The handout's first data table is expected to have these columns in this order:
        Trial | m₁ (kg) | θ₁ (°) | m₂ (kg) | θ₂ (°) | m₃ (kg) | θ₃ (°) | m₄ (kg) | θ₄ (°) | Ring centered?  (more columns may follow). */
     'force-table': { demo: 'Vectors (Force table)', cols: ['trial', 'm1_kg', 'theta1_deg', 'm2_kg', 'theta2_deg', 'm3_kg', 'theta3_deg', 'm4_kg', 'theta4_deg', 'ring'] },
+    /* Vector setups of the Vectors demo: Trial | Setup | A_x | A_y | B_x | B_y | Result x | Result y | Magnitude | Angle (the results are the student's) */
+    vectors: { demo: 'Vectors', cols: ['trial', 'setup', 'A_x', 'A_y', 'B_x', 'B_y', null, null, null, null] },
     /* Trial | Wheel | Start | Tilt (°) | Spin (rpm) | d (m) | P (s) | Ω (rad/s) | 1/ω_s (s) */
     gyroscope: { demo: 'Gyroscope Precession', cols: ['row', 'wheel', 'start', 'tilt_deg', 'spin_rpm', 'd_m', 'P_s', 'Omega_rad_per_s', 'inv_spin_s'] },
     /* Trial | Setup | r (m) | μs | θ (°) | tan θ | m (kg) | v (m/s) | v² (m²/s²) | Outcome */

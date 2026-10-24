@@ -110,7 +110,7 @@
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/force-table.html" target="force-table-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/force-table.html" target="force-table-worksheet">Worksheet 1: Force Table</a></li><li><a href="../curriculum/labs/students/vectors.html" target="vectors-worksheet">Worksheet 2: Components, Sums and Products</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -137,6 +137,15 @@
         <label class="check"><input type="checkbox" id="showComp" checked><span>Show components</span></label>
         <dl class="readout" id="vecOut"></dl>
         <p class="formula" id="vecFormula"></p>
+        <h2>Record</h2>
+        <div class="btns">
+          <button type="button" class="btn" id="vecCapture">Record these vectors</button>
+          <button type="button" class="btn" id="vecExport">Export to worksheet</button>
+          <button type="button" class="btn" id="vecClear">Clear</button>
+        </div>
+        <p class="capstatus" id="vecStatus" role="status"></p>
+        <div class="scroll"><table class="fttbl" id="vecTbl"><thead><tr><th>#</th><th>Setup</th><th>A</th><th>B</th><th></th></tr></thead><tbody></tbody></table></div>
+        <details class="more"><summary>More about this</summary><p class="hint">Record keeps the setup and the components of the vectors you set, nothing computed from them, so the worksheet gets only what you chose; the results are yours to work out. Export to worksheet sends the recorded rows to the Vectors worksheet; Clear starts a new series there.</p></details>
       </section>
 
       <section id="secRiver" hidden>
@@ -625,22 +634,47 @@
     return lines.join('\n') + '\n';
   }
   function downloadCSV(txt) { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'force-table-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} }
-  function toWorksheet(txt, fallback) {
+  function toWorksheet(txt, fallback, o) {
+    o = o || {}; const ws = o.ws || 'force-table', say = o.status || capStatus;
     const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
     const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {};
     lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); if (c.length > 1) meta[c[0]] = c[1]; });
-    const hand = { v: 1, demo: 'vectors', series: FT.series, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
-      note: `Simulated data from the Force table setup of the Vectors and Relative Motion demo (g = ${G_FT} m/s², pulley friction up to ${meta.pulley_friction_max_g} g of weight).`, csv: txt, csvName: 'force-table-readings.csv' };
-    try { localStorage.setItem('vd-handoff:force-table', JSON.stringify(hand)); }
-    catch (_) { fallback(); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
-    const n = hand.rows.length, url = '../curriculum/labs/students/force-table.html';
-    capStatus(`${n} setup${n === 1 ? '' : 's'} sent to the worksheet. `);
-    /* the force table worksheet may not be published yet: link it only if it is there */
+    const hand = { v: 1, demo: 'vectors', series: o.series || FT.series, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
+      note: o.note || `Simulated data from the Force table setup of the Vectors and Relative Motion demo (g = ${G_FT} m/s², pulley friction up to ${meta.pulley_friction_max_g} g of weight).`, csv: txt, csvName: o.csvName || 'force-table-readings.csv' };
+    try { localStorage.setItem('vd-handoff:' + ws, JSON.stringify(hand)); }
+    catch (_) { fallback(); say('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    const n = hand.rows.length, url = `../curriculum/labs/students/${ws}.html`, el = $(o.statusId || 'capStatus');
+    say(`${n} ${o.what || 'setup'}${n === 1 ? '' : 's'} sent to the worksheet. `);
+    /* the worksheet may not be published yet: link it only if it is there */
     fetch(url, { method: 'HEAD' }).then((r) => {
-      if (r.ok) { const a = document.createElement('a'); a.href = url; a.target = 'force-table-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a); }
-      else $('capStatus').appendChild(document.createTextNode('The force table worksheet is not published yet; the readings wait in this browser until it is.'));
+      if (r.ok) { const a = document.createElement('a'); a.href = url; a.target = ws + '-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; el.appendChild(a); }
+      else el.appendChild(document.createTextNode('The worksheet is not published yet; the readings wait in this browser until it is.'));
     }).catch(() => {});
   }
+  // recorded vectors and Export to worksheet (worksheet vectors): only the vectors the student set, nothing computed from them
+  const VEC = { rows: [], series: 1 }, VEC_VERSION = 'vectors-record@2026-10-24', SETUP_NAME = { comp: 'Components', add: 'Adding', sub: 'Subtracting', prod: 'Products' };
+  const vecStatus = (t) => { $('vecStatus').textContent = t; };
+  const num = (v) => String(+v.toFixed(1)).replace('-', '−');
+  function renderVecRows() {
+    const tb = $('vecTbl').querySelector('tbody'), v2 = (v) => (v ? `(${num(v[0])}, ${num(v[1])})` : '—');
+    tb.innerHTML = VEC.rows.length ? VEC.rows.map((r, i) => `<tr><td>${i + 1}</td><td>${SETUP_NAME[r.p]}</td><td>${v2(r.A)}</td><td>${v2(r.B)}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="5">No vectors recorded yet.</td></tr>';
+  }
+  $('vecCapture').addEventListener('click', () => { VEC.rows.push({ p: S.preset, A: S.A.slice(), B: S.B ? S.B.slice() : null }); renderVecRows(); vecStatus(`Row ${VEC.rows.length} recorded (${SETUP_NAME[S.preset]}).`); });
+  $('vecTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { VEC.rows.splice(+b.dataset.del, 1); renderVecRows(); } });
+  $('vecClear').addEventListener('click', () => { VEC.rows = []; VEC.series++; renderVecRows(); vecStatus('Cleared. The next export starts a new series.'); });
+  function vecCSV() {
+    const head = [['version', VEC_VERSION], ['units', 'grid squares'], ['note', 'components as set; B for Adding is the vector itself, not where its tip sits']];
+    const lines = head.map((h) => '# ' + h.map(csvCell).join(',')).concat(['trial,setup,A_x,A_y,B_x,B_y']);
+    VEC.rows.forEach((r, i) => lines.push([i + 1, SETUP_NAME[r.p], +r.A[0].toFixed(1), +r.A[1].toFixed(1), r.B ? +r.B[0].toFixed(1) : '', r.B ? +r.B[1].toFixed(1) : ''].map(csvCell).join(',')));
+    return lines.join('\n') + '\n';
+  }
+  $('vecExport').addEventListener('click', () => {
+    if (!VEC.rows.length) { vecStatus('Nothing to export. Record a row first.'); return; }
+    const txt = vecCSV();
+    toWorksheet(txt, () => { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'vectors-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} },
+      { ws: 'vectors', series: VEC.series, status: vecStatus, statusId: 'vecStatus', what: 'row', csvName: 'vectors-readings.csv', note: 'Vectors set in the Vectors and Relative Motion demo (components in grid squares, as set by the student).' });
+  });
   $('exportCsv').addEventListener('click', () => { if (!FT.rows.length) { capStatus('No setups to export. Record one first.'); return; } const txt = readingsCSV(); toWorksheet(txt, () => downloadCSV(txt)); });
 
   // ---------- force table in 3D (three.js r128 from cdnjs, loaded the first time the 3D view opens) ----------
@@ -1015,7 +1049,7 @@
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
-  tokens(); new ResizeObserver(resize).observe(stage); renderRows();
+  tokens(); new ResizeObserver(resize).observe(stage); renderRows(); renderVecRows();
   const q0 = (() => { try { return new URLSearchParams(location.search).get('setup'); } catch (_) { return null; } })();
   /* the table opens in 3D where WebGL works, unless the page asks for the top view (?view=top) or the device asks to save data */
   try {
