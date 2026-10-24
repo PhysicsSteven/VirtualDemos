@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled" lang="en">
+<html data-vd-off="root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -101,6 +101,15 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   html, body { height: auto; }
   .stage { height: 86vh; min-height: 680px; }
 }
+/* the Readings section: this demo keeps the shared table and button rules off, so the panel brings its own */
+.vd-readings .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.vd-readings .btn { font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; cursor: pointer; }
+.vd-readings .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.vd-readings .status { margin: 6px 0 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.vd-readings table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.vd-readings table.rows th { text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.vd-readings table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+.vd-readings .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -135,6 +144,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/rotation-curves.html" target="rotation-curves-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -148,6 +158,27 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="rotation-curves" data-title="Galaxy Rotation Curves" data-demo="rotation-curves">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <h2 id="selTitle">At the selected radius</h2>
         <div>
@@ -1310,6 +1341,28 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (now - lastRead > 150) { $('clock').innerHTML = clockTxt(); lastRead = now; }
     requestAnimationFrame(loop);
   }
+  // readings for the worksheet: the speed and the masses at the selected radius, and the Doppler reading in the edge on view
+  const SETUP_NAME = { sun: 'Solar system', vis: 'Visible matter only', halo: 'Add a dark matter halo', mw: 'Milky Way', dop: 'Measure with Doppler', n3198: 'NGC 3198' };
+  window.vdVersion = 'rotation-curves@2026-10-24';
+  window.vdShowCols = [['r', 'r'], ['v_km_s', 'v (km/s)'], ['M_dyn', 'M(<r)']];
+  window.vdReadingRow = () => {
+    const g = (x, n) => String(+x.toPrecision(n)), name = SETUP_NAME[S.preset] || (S.sys === 'sun' ? 'Solar system' : 'Own galaxy model');
+    if (S.sys === 'sun') {
+      const a = S.rsAU, v = vPlanet(a);
+      return { setup: name, r: a.toFixed(3), r_unit: 'AU', v_km_s: v.toFixed(3), v_vis: '', M_dyn: (v * v * a / G_AU).toFixed(5), M_vis: '', dm_pct: '', period: g(periodYr(a), 5), period_unit: 'yr', line: '', shift: '', v_shift: '' };
+    }
+    const P = S.P, r = S.rs, p = parts2(P, r), v2 = p.b + p.d + p.g + p.h, v = Math.sqrt(v2);
+    const row = { setup: name, r: r.toFixed(2), r_unit: 'kpc', v_km_s: v.toFixed(2), v_vis: Math.sqrt(p.b + p.d + p.g).toFixed(2), M_dyn: mDyn(v, r).toExponential(3), M_vis: mVisible(P, r).toExponential(3),
+      dm_pct: P.h.on ? (100 * p.h / v2).toFixed(1) : '0', period: periodMyr(r, v).toFixed(1), period_unit: 'Myr', line: '', shift: '', v_shift: '' };
+    if (S.view === 'edge') {
+      const ha = S.line === 'ha', ls = lineSetup(), vt = r < ls.Rout ? terminalV(vAt, r, ls.Rout, 1500) : NaN;
+      row.line = ha ? 'Hα 656.28 nm' : '21 cm';
+      if (isFinite(vt)) Object.assign(row, { shift: ha ? `+${dopplerNm(vt, LAMBDA_HA).toFixed(4)} nm` : `−${(F_HI * vt / C_KMS * 1000).toFixed(1)} kHz`, v_shift: vt.toFixed(2) });
+      else row.shift = 'no emission';
+    }
+    return row;
+  };
+
   window.__rc = { get frameMs() { return frameMs; }, get S() { return S; }, get PV() { return PV; }, setPlaying, applyPreset, vAt: (r) => vAt(r),
     handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt, seg: h.seg, ring: h.ring })); } };
 

@@ -8122,9 +8122,12 @@
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Astronomy module, gravitation unit. 2026-10-24 (Claude): Record reading and Export to worksheet; interactive worksheet lagrange-points (L1 and L2 against Hill's distance, L2 growth time, L4 libration period against μ^(−1/2), Routh's limit, a comet's Jacobi constant and Tisserand parameter across close passes of Jupiter) with a key from real runs in TeacherKeys.",
       "title": "Lagrange Points",
-      "url": "demos/lagrange-points.html"
+      "url": "demos/lagrange-points.html",
+      "handouts": [
+        "lagrange-points"
+      ]
     },
     {
       "demo": "lasers",
@@ -8301,9 +8304,12 @@
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Astronomy module, sky unit. 2026-10-24 (Claude): Record reading and Export to worksheet; interactive worksheet moon-phases (elongation against time for the synodic month, lit fraction against (1 − cos E)/2, moonrise against elongation, eclipse seasons from the drift of the line of nodes) with a key from real runs in TeacherKeys.",
       "title": "Moon Phases",
-      "url": "demos/moon-phases.html"
+      "url": "demos/moon-phases.html",
+      "handouts": [
+        "moon-phases"
+      ]
     },
     {
       "demo": "motion-graphs",
@@ -9022,9 +9028,12 @@
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Astronomy module, galaxies and cosmology unit. 2026-10-24 (Claude): Record reading and Export to worksheet; interactive worksheet rotation-curves (the Sun's mass from v² against 1/r, the Milky Way's mass inside r against the visible mass, 21 cm and Hα Doppler speeds) with a key from real runs in TeacherKeys.",
       "title": "Galaxy Rotation Curves",
-      "url": "demos/rotation-curves.html"
+      "url": "demos/rotation-curves.html",
+      "handouts": [
+        "rotation-curves"
+      ]
     },
     {
       "demo": "rotational-dynamics",
@@ -9104,9 +9113,12 @@
       "role": "demo",
       "beyond_book": true,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Astronomy module, sky unit. 2026-10-24 (Claude): Record reading and Export to worksheet; interactive worksheet seasons (noon altitude against declination, insolation against 1/r² with no tilt, the yearly swing from tilt against distance, the June solstice by latitude) with a key from real runs in TeacherKeys.",
       "title": "Reasons for Seasons",
-      "url": "demos/seasons.html"
+      "url": "demos/seasons.html",
+      "handouts": [
+        "seasons"
+      ]
     },
     {
       "demo": "shells-and-x-rays",

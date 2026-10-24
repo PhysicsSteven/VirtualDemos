@@ -198,6 +198,9 @@ HANDOUT_TOPIC = {
     'periodic-table': 'Shells and the Periodic Table', 'x-ray-spectra': "X Ray Spectra and Moseley's Law",
     'meissner-effect': 'The Meissner Effect and the Critical Field',
     'exoplanets': 'Finding Exoplanets',
+    # astro, 2026-10-24
+    'seasons': 'Sunlight Through the Year', 'moon-phases': 'Phases and the Lunar Month', 'lagrange-points': 'Orbits Near the Lagrange Points',
+    'rotation-curves': 'Weighing a Galaxy',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Lasers: Threshold and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 

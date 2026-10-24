@@ -436,10 +436,19 @@
   /* ==MODERN END== */
   /* ==ASTRO START== Astronomy worksheets (astro.html) and their demo column maps. */
   const ASTRO = ['exoplanets' /* Finding Exoplanets demo, 2026-10-24 */];
+  ASTRO.push('seasons', 'moon-phases', 'lagrange-points', 'rotation-curves'); /* the sky, gravitation and galaxy demos, 2026-10-24 */
   ENABLED.push(...ASTRO);
   Object.assign(FROM_DEMO, {
     /* Reading | System | R_s (R☉) | R_p (R⊕) | M_p (M⊕) | Time from mid transit (h) | Brightness drop (ppm) | Star velocity (m/s) | (R_p/R_s)² (ppm) */
     exoplanets: { demo: 'Finding Exoplanets', cols: ['row', (r) => (+r.noise_ppm ? `${r.system}, noise ${r.noise_ppm} ppm and ${r.noise_m_s} m/s` : r.system), 'Rs_Rsun', 'Rp_RE', 'Mp_ME', 't_h', 'drop_ppm', 'v_m_s', null] },
+    /* Reading | Date | Day of the year | φ (°) | ε (°) | δ (°) | Noon Sun altitude (°) | Day length (h) | r (AU) | Q (W/m²) | (1 AU/r)² */
+    seasons: { demo: 'Reasons for Seasons', cols: ['row', 'date', 'day', 'lat_deg', 'tilt_deg', 'dec_deg', 'alt_deg', 'day_h', 'r_AU', 'Q_W_m2', null] },
+    /* Reading | Time from start (d) | Days since new moon | E (°) | Illuminated (%) | Moonrise | Highest | Moonset (h) | Nodes from Sun line (°) | Sun to nearest node (°) | β (°) | Eclipse | (1 − cos E)/2 (%) */
+    'moon-phases': { demo: 'Moon Phases', cols: ['row', 't_d', 'days', 'E_deg', 'lit_pct', 'rise_h', 'transit_h', 'set_h', 'node_deg', 'node_dist_deg', 'beta_deg', 'eclipse', null] },
+    /* Reading | μ | L1 from m₂ (a) | L2 from m₂ (a) | L2 growth time ×e (P) | L4 | L4 libration period (P) | t (P) | C | Perihelion | Aphelion (a) | Period (P) | Tisserand T | (μ/3)^(1/3) | μ^(−1/2) */
+    'lagrange-points': { demo: 'Lagrange Points', cols: ['row', 'mu', 'L1_a', 'L2_a', 'L2_efold_P', (r) => (r.L4 === 'stable' ? 'stable' : r.L4 ? `unstable, grows ×e in ${r.L4_efold_P} P` : ''), 'L4_lib_P', 't_P', 'C', 'peri_a', 'apo_a', 'T_P', 'tiss', null, null] },
+    /* Reading | Setup | r (kpc, or AU) | v (km/s) | Visible alone (km/s) | M(<r) = v²r/G (M☉) | Visible mass inside r (M☉) | Dark matter share of v² (%) | Period (Myr, or yr) | Line | Shift of the edge | Speed from the shift (km/s) | 1/r | v² */
+    'rotation-curves': { demo: 'Galaxy Rotation Curves', cols: ['row', 'setup', 'r', 'v_km_s', 'v_vis', 'M_dyn', 'M_vis', 'dm_pct', 'period', 'line', 'shift', 'v_shift', null, null] },
   });
   /* ==ASTRO END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
