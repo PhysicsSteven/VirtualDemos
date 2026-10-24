@@ -161,6 +161,8 @@ HANDOUT_TOPIC = {
     'binding-energy': 'The Curve of Binding Energy',
     'gamma-spectroscopy': 'Calibrating a Detector', 'gamma-absorption': 'Absorbing Gamma Rays',
     'hubble-law': 'Measuring the Hubble Constant',
+    'lattice-energy': 'Lattice Energy of Ionic Crystals', 'energy-bands': 'Energy Bands', 'semiconductor-doping': 'Carriers in Doped Silicon',
+    'pn-junction': 'The pn Junction and LEDs',
     'cosmic-expansion': "Hubble's Law and the Age of the Universe", 'thermal-history': 'Thermal History of the Universe', 'big-bang-helium': 'Helium from the First Three Minutes',
     'molecular-bonds': 'Ionic and Covalent Bonds', 'hcl-spectrum': 'The Infrared Spectrum of HCl',
 }

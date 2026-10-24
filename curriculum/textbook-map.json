@@ -5635,9 +5635,11 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "status": "usable",
+      "demos": [
+        "solids"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Crystals, Bands and Semiconductors (Crystal view): NaCl and CsCl structures in 3D, the Madelung sum by shells and by neutral cubes, lattice energy α ke²/r₀ (1 − 1/n) for the 20 salts of Table 9.2; worksheet lattice-energy.",
       "unit": "condensed-matter"
     },
     {
@@ -5667,9 +5669,11 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "status": "usable",
+      "demos": [
+        "solids"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Crystals, Bands and Semiconductors (Bands view): N model atoms in a tight binding chain, levels splitting into bands against spacing, filling with 1 to 4 electrons per atom (metal or insulator), Table 9.4 gaps; worksheet energy-bands.",
       "unit": "condensed-matter"
     },
     {
@@ -5682,9 +5686,11 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "status": "usable",
+      "demos": [
+        "solids"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Crystals, Bands and Semiconductors (Doping view): Si, Ge, GaAs carriers against temperature from charge neutrality, donors and acceptors in silicon, Fermi level, freeze out, extrinsic and intrinsic regions; worksheet semiconductor-doping.",
       "unit": "condensed-matter"
     },
     {
@@ -5697,9 +5703,11 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "status": "usable",
+      "demos": [
+        "solids"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Crystals, Bands and Semiconductors (Junction view): ideal pn junction I = I₀(e^(eV/kT) − 1), depletion region and band diagram, LED photon energy and band gap; worksheet pn-junction. Junction transistor not covered.",
       "unit": "condensed-matter"
     },
     {
@@ -8654,6 +8662,46 @@
       ],
       "title": "Shells, the Periodic Table and X Rays",
       "url": "demos/shells-and-x-rays.html"
+    },
+    {
+      "demo": "solids",
+      "course": [
+        "modern"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "9.3",
+          "title": "Bonding in Crystalline Solids"
+        },
+        {
+          "vol": 3,
+          "sec": "9.5",
+          "title": "Band Theory of Solids"
+        },
+        {
+          "vol": 3,
+          "sec": "9.6",
+          "title": "Semiconductors and Doping"
+        },
+        {
+          "vol": 3,
+          "sec": "9.7",
+          "title": "Semiconductor Devices"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). Four views: Crystal (3D NaCl and CsCl lattices, Madelung sum by shells and Evjen neutral cubes, Ewald α, lattice energies of 20 alkali halides against Table 9.2), Bands (tight binding chain of N model atoms, s and p bands against spacing, filling and metal or insulator verdict), Doping (Si, Ge, GaAs carriers from charge neutrality with Sze and Ng Nc, Nv; P, As, Sb, B, Al, Ga in Si; freeze out, extrinsic, intrinsic), Junction (ideal diode I = I₀(e^(eV/kT) − 1) with I₀ ∝ n_i², abrupt junction depletion and band diagram, LED colours). Readings and Export to worksheet in every view but LED; Blind. Four worksheets with keys from real demo runs.",
+      "handouts": [
+        "lattice-energy",
+        "energy-bands",
+        "semiconductor-doping",
+        "pn-junction"
+      ],
+      "title": "Crystals, Bands and Semiconductors",
+      "url": "demos/solids.html"
     },
     {
       "demo": "sound-intensity",

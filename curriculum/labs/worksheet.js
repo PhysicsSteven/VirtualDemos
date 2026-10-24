@@ -211,7 +211,8 @@
   const MODERN_9_11 = ['radioactive-decay', 'decay-chains' /* Radioactive Decay demo: one step setups, chains */, 'binding-energy',
     'gamma-spectroscopy', 'gamma-absorption' /* Gamma Spectroscopy demo */, 'hubble-law' /* Cosmic Distance Ladder, rung 4 */,
     'molecular-bonds', 'hcl-spectrum' /* Molecules: Bonds and Spectra demo */,
-    'cosmic-expansion', 'thermal-history', 'big-bang-helium' /* The Big Bang and the Early Universe demo */];
+    'cosmic-expansion', 'thermal-history', 'big-bang-helium' /* The Big Bang and the Early Universe demo */,
+    'lattice-energy', 'energy-bands', 'semiconductor-doping', 'pn-junction' /* Crystals, Bands and Semiconductors demo */];
   MODERN.push(...MODERN_9_11); ENABLED.push(...MODERN_9_11);
   Object.assign(FROM_DEMO, {
     /* Reading | Setup and N₀ | Time t | Parents left N | N/N₀ | ln(N/N₀) */
@@ -236,6 +237,15 @@
     'thermal-history': { demo: 'The Big Bang and the Early Universe (Thermal history)', cols: ['row', 't_s', 'T_K', 'kT_eV', null, null] },
     /* Reading | Freeze out kT_f (MeV) | Lifetime τ (s) | Deuterium time t_D (s) | Neutrons at freeze out | Neutrons left at t_D | Helium nuclei | 1/kT_f | ln(n/p) | Y */
     'big-bang-helium': { demo: 'The Big Bang and the Early Universe (Helium)', cols: ['row', 'kTf_MeV', 'tau_s', 'tD_s', 'n_f', 'n_D', 'He', null, null, null] },
+    /* Reading | Salt | Structure | r0 (nm) | n | α | Table U (kJ/mol) | U per ion pair (eV) | (1 − 1/n)/r0 (1/nm) */
+    'lattice-energy': { demo: 'Crystals, Bands and Semiconductors (Crystal)', cols: ['row', 'salt', 'structure', 'r0_nm', 'n', 'alpha', 'U_table_kJ_mol', null, null] },
+    /* Reading | Atoms N | Spacing d (nm) | Lowest s level (eV) | Highest s level (eV) | Lowest p level (eV) | Width w (eV) | Gap (eV) | ln(w / 1 eV) */
+    'energy-bands': { demo: 'Crystals, Bands and Semiconductors (Bands)', cols: ['row', 'N', 'd_nm', 's_low_eV', 's_high_eV', 'p_low_eV', null, null, null] },
+    /* Reading | Sample | T (K) | n (cm⁻³) | p (cm⁻³) | 1/T (1/K) | ln(n / 1 cm⁻³) | ln n − 1.5 ln T */
+    'semiconductor-doping': { demo: 'Crystals, Bands and Semiconductors (Doping)', cols: ['row', (r) => [r.material, +r.ND_cm3 ? `${r.donor} ${r.ND_cm3} cm⁻³` : '', +r.NA_cm3 ? `${r.acceptor} ${r.NA_cm3} cm⁻³` : ''].filter(Boolean).join(', ') + (+r.ND_cm3 || +r.NA_cm3 ? '' : ', undoped'),
+      'T_K', 'n_cm3', 'p_cm3', null, null, null] },
+    /* Reading | T (K) | V (V) | I (A) | ln(I / 1 A) */
+    'pn-junction': { demo: 'Crystals, Bands and Semiconductors (Junction)', cols: ['row', 'T_K', 'V_V', 'I_A', null] },
   });
   /* ==MODERN END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

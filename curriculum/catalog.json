@@ -300,6 +300,17 @@
      ]
     },
     {
+     "demo": "solids",
+     "title": "Crystals, Bands and Semiconductors",
+     "desc": "Add up every ion in a salt crystal to find its lattice energy, squeeze a chain of atoms until its levels spread into bands, dope silicon and warm it from 20 K to 800 K, then measure a pn junction's current and the colours of LEDs.",
+     "tags": [
+      "Madelung constant",
+      "energy bands",
+      "doping",
+      "pn junction"
+     ]
+    },
+    {
      "demo": "molecules",
      "title": "Molecules: Bonds and Spectra",
      "desc": "Pull a sodium ion from a chloride ion and stretch the bond of H₂ to see what holds molecules together, then climb the ladder of vibration and rotation levels and measure the infrared band of HCl to find its bond length and the stiffness of its bond.",
