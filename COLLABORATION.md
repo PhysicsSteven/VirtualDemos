@@ -1098,3 +1098,12 @@ Drawing code and the look link only; physics, CORE, control ids and names unchan
 - **Potential curves:** the ball on the track is a shaded steel ball.
 - **Rocket:** a rounded, lit body and nose, and a glow around the plume. The fuel gauge is unchanged.
 - **Rotation:** a wooden door with grain, a chrome wrench, the cut wall hatched as in a plan drawing; rolling spheres and disks lit from a fixed direction while they turn.
+
+## Claude, 2026-10-24: visual pass, Physics I batch 5 (rotational dynamics, stress strain, tides, viscometer, vectors)
+
+Drawing code and the look link only; physics, CORE, control ids and names unchanged. Node tests pass (stress strain 6, tides 3, viscometer 6, vectors 8); vdcheck differs only by the vd-look and vd-gear ids, styles, tokens and screenshots.
+
+- **Rotational dynamics:** brushed platter (the light catches two sectors that stay fixed in the room while the table turns), a lit rim, and a shaded spool.
+- **Tides:** Earth lightly shaded as a globe (kept pale so the arrows read); the Moon's lit half fades towards the terminator and its limb darkens. Which half is lit is unchanged.
+- **Stress strain, viscometer, vectors:** these already had finished scenery or are graphs, so they get the look link only (stage shadow, frosted cards).
+- Physics I finish pass is now complete except the gyroscope, which gets its 3D view next, and units, which the distances zoom already covers.

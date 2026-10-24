@@ -133,6 +133,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -392,6 +394,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   function body(ctx, x, y, r, lit, dark, outline) {   // lit from the right (+x)
     ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fillStyle = dark; ctx.fill();
     ctx.beginPath(); ctx.arc(x, y, r, -Math.PI / 2, Math.PI / 2); ctx.closePath(); ctx.fillStyle = lit; ctx.fill();
+    if (r > 6 * PS) {   // a round body: the light fades towards the terminator, and the limb darkens (a picture only; the lit half stays the lit half)
+      let g = ctx.createLinearGradient(x, 0, x + r * 0.45, 0); g.addColorStop(0, 'rgba(0,0,0,0.22)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fill();
+      g = ctx.createRadialGradient(x + r * 0.35, y - r * 0.3, 0, x, y, r); g.addColorStop(0, 'rgba(255,255,255,0.18)'); g.addColorStop(0.7, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(0,0,0,0.18)');
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.fillStyle = g; ctx.fill();
+    }
     if (outline) { ctx.beginPath(); ctx.arc(x, y, r, 0, 2 * Math.PI); ctx.strokeStyle = outline; ctx.lineWidth = PS; ctx.stroke(); }
   }
   function pill(ctx, x, y, text, fill, ink, align) {
@@ -466,6 +473,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
     // Earth
     ctx.beginPath(); ctx.arc(cx, cy, Rp, 0, 2 * Math.PI); ctx.fillStyle = T.ocean; ctx.globalAlpha = 0.28; ctx.fill(); ctx.globalAlpha = 1;
+    { const g = ctx.createRadialGradient(cx - Rp * 0.35, cy - Rp * 0.4, 0, cx, cy, Rp); g.addColorStop(0, 'rgba(255,255,255,0.3)'); g.addColorStop(0.6, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(0,30,80,0.12)'); ctx.fillStyle = g; ctx.fill(); }   // a globe, lightly shaded so the arrows stay clear
     ctx.strokeStyle = T.ocean; ctx.lineWidth = 1.5 * PS; ctx.stroke();
 
     // arrows at 16 points on the surface

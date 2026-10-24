@@ -69,6 +69,8 @@ table.rows input:focus { border-color: var(--accent); }
   .chips button, .btn, .proj, .spin, .seg button { min-height: 36px; }
 }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -264,6 +266,11 @@ table.rows input:focus { border-color: var(--accent); }
     const rg = ctx.createLinearGradient(cx - R, cy - R, cx + R, cy + R); rg.addColorStop(0, T.metalHi); rg.addColorStop(0.5, T.metal); rg.addColorStop(1, T.metalDark);
     ctx.fillStyle = rg; ctx.beginPath(); ctx.arc(cx, cy, R + 5 * p, 0, 7); ctx.fill();
     ctx.fillStyle = T.plat; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill(); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5; ctx.stroke();
+    if (ctx.createConicGradient) {   // brushed platter: the light catches two opposite sectors, fixed in the room while the table turns (a picture only)
+      const cg = ctx.createConicGradient(-Math.PI / 4, cx, cy); for (const [o, al] of [[0, 0.16], [0.12, 0], [0.38, 0], [0.5, 0.16], [0.62, 0], [0.88, 0], [1, 0.16]]) cg.addColorStop(o, `rgba(255,255,255,${al})`);
+      ctx.fillStyle = cg; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 7); ctx.fill();
+      ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(cx, cy, R + 4 * p, Math.PI * 1.05, Math.PI * 1.45); ctx.stroke();
+    }
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(-th);
     // degree ticks near the rim and the bolts of the hub turn with the table
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); for (let k = 0; k < 36; k++) { const a = k * Math.PI / 18, r0 = R * (k % 9 ? 0.93 : 0.88); ctx.moveTo(r0 * Math.cos(a), r0 * Math.sin(a)); ctx.lineTo(R * 0.98 * Math.cos(a), R * 0.98 * Math.sin(a)); } ctx.stroke();
@@ -280,6 +287,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.fillStyle = T.str; ctx.beginPath(); ctx.arc(0, 0, sr, 0, 7); ctx.fill();
     ctx.strokeStyle = T.grain; ctx.lineWidth = 1; for (let rr = sr - 2 * p; rr > 3 * p; rr -= 2.5 * p) { ctx.beginPath(); ctx.arc(0, 0, rr, 0, 7); ctx.stroke(); }
     ctx.restore();
+    { const hg = ctx.createRadialGradient(cx - sr * 0.4, cy - sr * 0.4, 0, cx, cy, sr + 3 * p); hg.addColorStop(0, 'rgba(255,255,255,0.35)'); hg.addColorStop(0.6, 'rgba(255,255,255,0)'); hg.addColorStop(1, 'rgba(0,0,0,0.25)'); ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(cx, cy, sr + 3 * p, 0, 7); ctx.fill(); }   // the spool lit from the top left
     ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(cx, cy, 3 * p, 0, 7); ctx.fill();
     // string to the pulley; the pulley turns as the string runs over it
     ctx.strokeStyle = T.str; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(cx, py); ctx.lineTo(px, py); ctx.stroke();
