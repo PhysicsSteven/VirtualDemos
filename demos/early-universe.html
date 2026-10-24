@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>The Big Bang and the Early Universe</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,6 +22,7 @@
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
 .pane { position: relative; flex: 1 1 auto; min-height: 420px; }
 .pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; }
+.pane canvas.vd3d { pointer-events: none; }
 .curvebox { position: relative; flex: none; height: 210px; border-top: 1px solid var(--line); }
 .curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
@@ -68,6 +71,10 @@
         <div class="seg" role="group" aria-label="Playback speed" id="speedSeg">
           <button type="button" data-s="1" aria-pressed="true">1×</button>
           <button type="button" data-s="4" aria-pressed="false">4×</button>
+        </div>
+        <div class="seg" role="group" aria-label="Perspective of the expansion view" id="dimSeg">
+          <button type="button" data-dim="3d" aria-pressed="false">3D</button>
+          <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
         </div>
         <span class="count mono" id="clock"></span>
       </div>
@@ -469,6 +476,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let exGeom = null;
   function drawEx() {
     const p = proj(), a = aNow(), h0 = homeG();
+    if (E3.on && E3.S && a > 0) { drawEx3(p, a, h0); return; }
     space(0, 0, W, H);
     const pxPerMpc = Math.min(W, H) * 0.5 / (W < 560 ? 300 : 230), cx = W * (W < 560 ? 0.5 : 0.42), cy = H * 0.5;
     exGeom = { pxPerMpc, cx, cy, a };
@@ -708,7 +716,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   // ---------- frame ----------
-  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); ({ ex: drawEx, th: drawTh, bbn: drawBbn, cmb: drawCmb })[S.view]();
+  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); if (E3.S) E3.S.el.style.display = S.view === 'ex' && E3.on && aNow() > 0 ? '' : 'none'; ({ ex: drawEx, th: drawTh, bbn: drawBbn, cmb: drawCmb })[S.view]();
     cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH); ({ ex: curveEx, th: curveTh, bbn: curveBbn, cmb: curveCmb })[S.view](); readouts(); clock(); }
   function clock() { $('clock').textContent = S.view === 'ex' ? `t = ${f(S.ex.tau, 2)} Gyr from today` : S.view === 'th' ? `t = ${tWords(Math.pow(10, S.th.logt))}` : S.view === 'bbn' ? `t = ${tWords(bbnT())}` : `z = ${S.cmb.z}`; }
 
@@ -768,6 +776,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function setView(v) {
     S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     $('cardEx').hidden = v !== 'ex'; $('cardTh').hidden = v !== 'th'; $('cardBbn').hidden = v !== 'bbn'; $('cardCmb').hidden = v !== 'cmb';
+    $('dimSeg').hidden = v !== 'ex';
     $('speedSeg').hidden = v === 'th'; $('go').hidden = v === 'th'; $('restart').hidden = v === 'th';
     $('units').textContent = { ex: 'distances in Mpc · time in Gyr', th: 'T in K · kT in eV · t in s', bbn: 'time in s · kT in MeV', cmb: 'T in K · frequency in GHz' }[v];
     can.setAttribute('aria-label', { ex: 'A patch of the universe full of galaxies, drawn to a fixed ruler in megaparsecs. Click a galaxy to watch from it. Space plays or pauses.', th: 'The temperature of the universe against time since the Big Bang, on logarithmic scales, with the book\'s eras and the temperatures at which kT equals the rest energy of particles.', bbn: 'A box of 2000 neutrons and protons, with meters for the time, kT and the counts. Space plays or pauses.', cmb: 'The blackbody spectrum of the radiation at the chosen redshift, with today\'s spectrum and the COBE FIRAS points. Space plays or pauses.' }[v]);
@@ -804,6 +813,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('keydown', (e) => { if (e.key === ' ' && S.view !== 'th') { $('go').click(); e.preventDefault(); } if (e.key === 'h' && S.view === 'ex') { S.ex.home = [0, 0]; redraw(); } });
   can.addEventListener('click', (e) => {
     if (S.view !== 'ex' || !exGeom || exGeom.a <= 0) return;
+    if (E3.on && E3.S) { E3.pick(e); return; }
     const r = can.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top, h0 = homeG(), sc = exGeom.a * exGeom.pxPerMpc, st = exGeom.stride || 1;
     const gx = h0.x + (mx - exGeom.cx) / sc, gy = h0.y - (my - exGeom.cy) / sc; let best = null, bd = 14 * proj();
     for (let i = Math.floor(gx / CELL) - 2; i <= Math.floor(gx / CELL) + 2; i++) for (let j = Math.floor(gy / CELL) - 2; j <= Math.floor(gy / CELL) + 2; j++) {
@@ -852,6 +862,111 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('aboutBbn').textContent = 'Helium: 2000 nucleons (a simulated sample; each run is random). Until freeze out, weak reactions keep neutrons and protons in equilibrium, n/p = e^(−Δmc²/kT) with Δmc² = 1.293 MeV (PDG). At kT_f the ratio freezes; then free neutrons decay, n → p + e⁻ + ν̄, with lifetime τ = 878.4 s (PDG 2024), until deuterium can survive photodisintegration at t_D, and then the demo puts every pair of remaining neutrons, with two protons, into a helium 4 nucleus, so Y = 2(n/p)/(1 + n/p). The times come from the Thermal history clock. Simplifications, all stated: freeze out is sudden (the weak reactions really fade over a second or so and keep turning neutrons into protons), t_D is set by hand (about 180 s, kT ≈ 80 keV), and the traces of deuterium, helium 3 and lithium 7 are ignored. With kT_f = 0.8 MeV the model gives Y ≈ 0.27; the observed primordial value is Y_p = 0.245 ± 0.004 (Aver, Olive and Skillman 2015), which full network calculations reproduce.';
   $('aboutCmb').textContent = 'Microwave background: the radiation left from decoupling at z ≈ 1090 (Planck 2018: z* = 1089.9), when the universe was about 3000 K. Each photon\'s wavelength stretches by the same factor (1 + z), and a blackbody at T stretched that way is exactly a blackbody at T/(1 + z), so the spectrum keeps its shape and T = T₀(1 + z) with T₀ = 2.7255 K (Fixsen 2009). Wien\'s law λ_max T = 2.898 × 10⁻³ m·K (§11.7; per unit frequency the peak is at ν = 58.79 GHz × T/K); photon density (2ζ(3)/π²)(kT/ħc)³ = 411 per cm³ today. The squares are the COBE FIRAS monopole spectrum (Fixsen et al. 1996, Table 4, from NASA LAMBDA): column 2 is a 2.725 K blackbody plus the measured residual, and the error bars (in kJy/sr) are far too small to see on the main graph, so the right panel shows the residuals. For blackbodies at everyday temperatures, see the Blackbody Radiation demo.';
 
+
+  // ---------- expansion in 3D ----------
+  // The same galaxies in a block of space around home, now in three dimensions: layers above and below the flat view's plane get
+  // their own jittered comoving positions, and the galaxies of the flat view (the marked ones and home among them) keep theirs in the
+  // middle layer, so every distance read off the panel is the same as in Flat. The whole block is scaled by a(t): proper position
+  // = a × comoving position. Shown is a ball of proper radius RV3 around home, thinned when it would hold too many galaxies.
+  const RV3 = 330, E3 = { on: false, S: null, o: { th: -Math.PI / 2 - 0.55, ph: 1.05, zoom: 1 }, key: '', down: null };
+  function glowTex() {
+    const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d'), r = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(0.25, 'rgba(255,255,255,0.5)'); r.addColorStop(1, 'rgba(255,255,255,0)'); g.fillStyle = r; g.fillRect(0, 0, 64, 64);
+    return new THREE.CanvasTexture(c);
+  }
+  function init3D() {
+    const S3 = VD3K.stage($('pane'), { before: can, fov: 38, near: 1, far: 6000, sky: '#04060b' });
+    if (!S3) return false;
+    E3.S = S3; S3.el.classList.add('vd3d');
+    S3.scene.add(VD3K.sky(S3, { n: 1400, r: 4000, seed: 3 }));
+    E3.g = new THREE.Group(); S3.scene.add(E3.g);
+    E3.mat = new THREE.PointsMaterial({ size: 15, map: glowTex(), vertexColors: true, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending });
+    E3.pts = new THREE.Points(new THREE.BufferGeometry(), E3.mat); E3.g.add(E3.pts);
+    E3.arr = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: '#ffc878', transparent: true, opacity: 0.5 })); E3.g.add(E3.arr);
+    E3.ruler = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-50, -0.8 * RV3, 0), new THREE.Vector3(50, -0.8 * RV3, 0)]), new THREE.LineBasicMaterial({ color: '#dbe6f5' }));
+    S3.scene.add(E3.ruler);
+    VD3.orbit(can, E3.o, redraw, { grab: () => !(E3.on && S.view === 'ex'), phMin: 0.1, phMax: 2.9, zMin: 0.5, zMax: 2.5, keys: true });
+    can.addEventListener('pointerdown', (e) => { E3.down = [e.clientX, e.clientY]; });
+    return true;
+  }
+  /* comoving position (Mpc today) of galaxy (i, j) in layer k, relative to home; layer 0 is the flat view's galaxies */
+  function pos3(i, j, k, h0) {
+    if (k === 0) { const g = galaxyAt(i, j); return [g.x - h0.x, g.y - h0.y, 0, g.kind]; }
+    const jj = j + 7919 * k;
+    return [(i + 0.8 * (hash2(i, jj, 1) - 0.5)) * CELL - h0.x, (j + 0.8 * (hash2(i, jj, 2) - 0.5)) * CELL - h0.y, (k + 0.8 * (hash2(i, jj, 6) - 0.5)) * CELL, hash2(i, jj, 3)];
+  }
+  function build3D(a, h0) {
+    const Rc = RV3 / a, n = Math.ceil(Rc / CELL) + 1, s = Math.max(1, Math.ceil(Math.cbrt(4.19 * n * n * n / 6000)));
+    const key = [S.ex.home.join(','), n, s].join('|');
+    if (key === E3.key) return;
+    E3.key = key;
+    const hi = Math.round(h0.x / CELL), hj = Math.round(h0.y / CELL), P = [], C = [], A = [];
+    for (let i = hi - n; i <= hi + n; i++) for (let j = hj - n; j <= hj + n; j++) for (let k = -n; k <= n; k++) {
+      if (((i % s) + s) % s || ((j % s) + s) % s || ((k % s) + s) % s) continue;
+      const [x, y, z, kind] = pos3(i, j, k, h0); if (x * x + y * y + z * z > Rc * Rc) continue;
+      if (k === 0 && i === S.ex.home[0] && j === S.ex.home[1]) continue;
+      P.push(x, y, z); if (kind < 0.62) C.push(0.78, 0.85, 1); else C.push(1, 0.89, 0.72);
+      if (!(i % (3 * s)) && !(j % (3 * s)) && !(k % (3 * s)) && x * x + y * y + z * z < 0.8 * Rc * Rc) A.push(x, y, z);
+    }
+    const g = E3.pts.geometry; g.setAttribute('position', new THREE.Float32BufferAttribute(P, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(C, 3)); g.computeBoundingSphere();
+    E3.base = Float32Array.from(A);
+    E3.arr.geometry.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(A.length * 2), 3));
+  }
+  function drawEx3(p, a, h0) {
+    const S3 = E3.S; S3.size(W, H);
+    build3D(a, h0);
+    E3.g.scale.setScalar(a);
+    const early = a < 1 / 21, showV = S.ex.arrows && !S.blind, fac = Hof(X().m, a) / HUBBLE_GYR * 2;
+    E3.mat.opacity = early ? 0.4 : 1;
+    // velocity arrows: the distance moved in 2 Gyr at today's speed v = H d, as in the flat view
+    const b = E3.base, buf = E3.arr.geometry.attributes.position;
+    for (let q = 0; q < b.length / 3; q++) { const x = b[3 * q], y = b[3 * q + 1], z = b[3 * q + 2]; buf.setXYZ(2 * q, x, y, z); buf.setXYZ(2 * q + 1, x * (1 + fac), y * (1 + fac), z * (1 + fac)); }
+    buf.needsUpdate = true; E3.arr.visible = showV;
+    S3.place(E3.o, [0, 0, 0], RV3 * 2.35 * Math.max(1, 1.2 / (W / H)));
+    S3.fog(RV3 * 1.4 / E3.o.zoom, RV3 * 3.6 / E3.o.zoom);
+    S3.render();
+    const pr = (x, y, z) => S3.project([x, y, z]);
+    E3.mk = [];
+    MARKED.forEach(([nm, i, j]) => {
+      const g = galaxyAt(i, j), X0 = (g.x - h0.x) * a, Y0 = (g.y - h0.y) * a, [x, y, d] = pr(X0, Y0, 0); if (d > 1 || x < -10 || x > W + 10 || y < -10 || y > H + 10) return;
+      if (showV) { const [x2, y2] = pr(X0 * (1 + fac), Y0 * (1 + fac), 0); ctx.strokeStyle = '#ffc878'; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x2, y2); ctx.stroke(); ctx.fillStyle = '#ffc878'; ctx.beginPath(); ctx.arc(x2, y2, 2.4 * p, 0, 7); ctx.fill(); }
+      ctx.strokeStyle = '#8fd0ff'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(x, y, 9 * p, 0, 7); ctx.stroke();
+      txt(ctx, nm, x + 11 * p, y - 10 * p, { c: '#cfe9ff', s: 12, w: 700, ui: true });
+    });
+    const [cx, cy] = pr(0, 0, 0);
+    ctx.fillStyle = 'rgba(255,240,220,0.9)'; ctx.beginPath(); ctx.arc(cx, cy, 3 * p, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(cx, cy, 11 * p, 0, 7); ctx.stroke(); ctx.beginPath(); ctx.arc(cx, cy, 15 * p, 0, 7); ctx.stroke();
+    txt(ctx, S.ex.home[0] === 0 && S.ex.home[1] === 0 ? 'home: the Milky Way' : 'home: the galaxy you chose', cx, cy + 26 * p, { c: '#ffffff', a: 'center', s: 10.5, ui: true, w: 700 });
+    const [rx, ry] = pr(0, -0.8 * RV3, 0);
+    txt(ctx, '100 Mpc', rx, ry + 12 * p, { c: '#dbe6f5', a: 'center', s: 10.5 });
+    if (early) txt(ctx, 'z > 20: before the first galaxies; the dots mark where the matter is', W / 2, 18 * p, { c: '#ffd9a0', a: 'center', s: 10.5, ui: true });
+    if (showV) txt(ctx, 'arrows: distance moved in 2 Gyr at today\'s speed', W - 12 * p, H - 22 * p, { c: '#ffc878', a: 'right', s: 9.5, ui: true });
+    txt(ctx, W < 560 ? 'drag to turn' : 'drag to turn · click a galaxy in the middle layer to watch from it', 12 * p, H - 8 * p, { c: '#9fb0c6', s: 9.5, ui: true, b: 'bottom' });
+    // the survey: distances from home to A to E (Mpc), as in the flat view
+    const narrow = W < 560, pw = (narrow ? 150 : 178) * p, ph = (narrow ? 104 : 140) * p, px = W - pw - 10 * p, py = 10 * p;
+    if (VG) VG.panel(ctx, px, py, pw, ph, { fill: 'rgba(8,12,22,0.82)', r: 8 });
+    txt(ctx, `${MODEL_NAME[S.ex.model]}  t = ${f(S.ex.tau, 2)} Gyr`, px + 10 * p, py + 13 * p, { c: '#dbe6f5', s: narrow ? 9.5 : 10.5, w: 700 });
+    MARKED.forEach(([nm, i, j], k) => { const d = properDist(a, galaxyAt(i, j), h0), y = py + (narrow ? 30 : 34) * p + k * (narrow ? 15 : 20) * p;
+      txt(ctx, `${nm}`, px + 12 * p, y, { c: '#8fd0ff', s: narrow ? 10 : 11, w: 700 }); txt(ctx, `${f(d, 2)} Mpc`, px + pw - 10 * p, y, { c: '#8ef0b0', s: narrow ? 10 : 11.5, a: 'right', w: 600 }); });
+    exGeom = { a, pxPerMpc: 1, cx, cy, stride: 1 };
+  }
+  /* a click picks the nearest galaxy of the middle layer (the flat view's galaxies) on screen */
+  E3.pick = (e) => {
+    if (E3.down && Math.hypot(e.clientX - E3.down[0], e.clientY - E3.down[1]) > 5) return;
+    const r = can.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top, a = aNow(), h0 = homeG(), n = Math.ceil(RV3 / a / CELL) + 1;
+    const hi = Math.round(h0.x / CELL), hj = Math.round(h0.y / CELL); let best = null, bd = 14 * proj();
+    for (let i = hi - n; i <= hi + n; i++) for (let j = hj - n; j <= hj + n; j++) {
+      const g = galaxyAt(i, j), [x, y, d] = E3.S.project([(g.x - h0.x) * a, (g.y - h0.y) * a, 0]); if (d > 1) continue;
+      const dd = Math.hypot(x - mx, y - my); if (dd < bd) { bd = dd; best = [i, j]; }
+    }
+    if (best) { S.ex.home = best; S.preset = 'custom'; sync(); redraw(); }
+  };
+  E3.view = VD3K.view({
+    seg: '#dimSeg', init: init3D,
+    status: (msg) => { $('presetHint').textContent = msg; },
+    change: (on) => { E3.on = on; can.style.cursor = on ? 'grab' : ''; if (typeof redraw === 'function' && T) redraw(); }
+  });
+
   // ---------- size, theme, start ----------
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }
   const retheme = () => { tokens(); redraw(); };
@@ -862,7 +977,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'exToday');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
-  window.__eu = { S, setView, applyPreset, setRun, redraw, sync, advance, bbnTrace, buildExpansion, X, aNow, K: () => K };
+  window.__eu = { S, setView, applyPreset, setRun, redraw, sync, advance, bbnTrace, buildExpansion, X, aNow, K: () => K, E3 };
   requestAnimationFrame(frame);
 })();
 </script>
