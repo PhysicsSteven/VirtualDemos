@@ -105,6 +105,7 @@
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/orbital-magnetic-moment.html" target="orbital-magnetic-moment-worksheet">Worksheet 1: The Orbital Magnetic Moment</a></li><li><a href="../curriculum/labs/students/stern-gerlach.html" target="stern-gerlach-worksheet">Worksheet 2: The Stern–Gerlach Experiment</a></li><li><a href="../curriculum/labs/students/zeeman-effect.html" target="zeeman-effect-worksheet">Worksheet 3: The Zeeman Effect</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -261,7 +262,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       orbit: g('--orbit'), mom: g('--mom'), field: g('--field'), pi: g('--pi'), sp: g('--sp'), sm: g('--sm'), atom: g('--atom'), mono: g('--font-mono'), ui: g('--font-ui') };
   }
   const atomKey = () => (S.sg.atom === 'mystery' ? S.sg.mys : S.sg.atom);
-  const lbl = (s, x, y, o = {}) => { if (VG) VG.label(ctx, s, x, y, o); else { ctx.fillStyle = o.c || T.muted; ctx.font = `${o.s || 11}px ${T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y); } };
+  /* keep a label inside the canvas: shift it in from the edge, and shrink it if it is wider than the canvas (phone widths) */
+  const fitLbl = (s, x, o, Wc) => { const cs = getComputedStyle(document.documentElement), face = o.m ? cs.getPropertyValue('--font-mono') : cs.getPropertyValue('--font-ui');
+    let size = o.s || 10.5; ctx.save(); ctx.font = `${o.w || 400} ${size}px ${face}`; let w = ctx.measureText(s).width; ctx.restore();
+    if (w > Wc - 8) { size *= (Wc - 8) / w; w = Wc - 8; }
+    const a = o.a || 'left', left = a === 'center' ? x - w / 2 : a === 'right' ? x - w : x;
+    return [x + Math.max(4 - left, Math.min(0, Wc - 4 - (left + w))), size === (o.s || 10.5) ? o : { ...o, s: size }]; };
+  const lbl = (s, x, y, o = {}) => { if (VG) { const [x2, o2] = fitLbl(String(s), x, o, W); VG.label(ctx, s, x2, y, o2); } else { ctx.fillStyle = o.c || T.muted; ctx.font = `${o.s || 11}px ${T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y); } };
   function arrow(c, x1, y1, x2, y2, col, w) {
     const a = Math.atan2(y2 - y1, x2 - x1), hd = 7 + w * 1.5; c.strokeStyle = col; c.fillStyle = col; c.lineWidth = w; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2 - Math.cos(a) * hd * 0.8, y2 - Math.sin(a) * hd * 0.8); c.stroke();
     c.beginPath(); c.moveTo(x2, y2); c.lineTo(x2 - hd * Math.cos(a - 0.4), y2 - hd * Math.sin(a - 0.4)); c.lineTo(x2 - hd * Math.cos(a + 0.4), y2 - hd * Math.sin(a + 0.4)); c.closePath(); c.fill();
@@ -369,14 +376,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.font = `${10 * p}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
     const step = niceStep(half * 1000 / 2.5); for (let v = -Math.floor(half * 1000 / step) * step; v <= half * 1000 + 1e-12; v += step) { const y = by + boxH / 2 - v / 1000 * zpx; c.fillRect(bx - 4, y, 4, 1); c.fillText(String(+v.toFixed(4)).replace('-', '−'), bx - 6, y); }
     c.save(); c.translate(12 * p, by + boxH / 2); c.rotate(-Math.PI / 2); c.textAlign = 'center'; c.fillText('z on the screen (mm)', 0, 0); c.restore();
-    c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('face of the screen (the beam is a ribbon 0.80 mm long)', bx + boxW / 2, by + boxH + 6);
+    c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(CW < 600 ? 'face of the screen' : 'face of the screen (the beam is a ribbon 0.80 mm long)', bx + boxW / 2, by + boxH + 6);
     /* profile: counts along z */
     const px0 = bx + boxW + 50 * p, pw = CW - px0 - 16 * p, nb = 120, hist = new Array(nb).fill(0);
     for (const d of s.dots) { const k = Math.floor((d.z + half) / (2 * half) * nb); if (k >= 0 && k < nb) hist[k]++; }
     const hmax = Math.max(1, ...hist);
     c.strokeStyle = T.line; c.strokeRect(px0, by, pw, boxH);
     c.fillStyle = T.atom; for (let k = 0; k < nb; k++) { const y = by + boxH - (k + 1) * boxH / nb, w = hist[k] / hmax * (pw - 6); c.fillRect(px0, y, w, boxH / nb + 0.5); }
-    c.fillStyle = T.muted; c.textAlign = 'center'; c.fillText(`atoms counted along z (${s.dots.length} so far)`, px0 + pw / 2, by + boxH + 6);
+    c.fillStyle = T.muted; c.textAlign = 'center'; c.fillText(CW < 600 ? 'count along z' : `atoms counted along z (${s.dots.length} so far)`, px0 + pw / 2, by + boxH + 6);
     /* cursor */
     const yC = by + boxH / 2 - s.cur * zpx; c.strokeStyle = T.accent; c.lineWidth = 1.5; c.beginPath(); c.moveTo(bx, yC); c.lineTo(px0 + pw, yC); c.stroke();
     c.fillStyle = T.accent; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(`cursor z = ${f(s.cur * 1000, 4)} mm`, px0 + 6, yC - 2);
@@ -620,7 +627,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'bohr');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
-  window.__mm = { S, setView, applyPreset, setRun, redraw, sync, sampleAtom, spotCentres, clearScreen, newAtom };
+  window.__mm = { S, setView, applyPreset, setRun, redraw, sync, sampleAtom, spotCentres, clearScreen, newAtom, zeeman };
   requestAnimationFrame(frame);
 })();
 </script>

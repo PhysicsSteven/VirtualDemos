@@ -320,6 +320,22 @@
     /* Reading | Event | B (T) | r₊ (cm) | r₋ (cm) | Opening angle θ (°) | p₊ (MeV/c) | p₋ (MeV/c) | M if π⁺π⁻ (MeV/c²) | M if pπ⁻ (MeV/c²) | Parent */
     'invariant-mass': { demo: 'Particles, Quarks and Conservation Laws (Detector)', cols: ['row', 'event', 'B_T', 'r_plus_cm', 'r_minus_cm', 'theta_deg', null, null, null, null, null] },
   });
+  /* Vol. 3 ch. 7 and 8 (quantum mechanics, atomic structure), kept in its own list so the chapter threads don't collide */
+  const MODERN_7_8 = ['orbital-magnetic-moment', 'stern-gerlach', 'zeeman-effect' /* Atoms in a Magnetic Field demo, one per view */,
+    'periodic-table', 'x-ray-spectra' /* Shells, the Periodic Table and X Rays demo, one per view */];
+  MODERN.push(...MODERN_7_8); ENABLED.push(...MODERN_7_8);
+  Object.assign(FROM_DEMO, {
+    /* Reading | n | l | m_l | Field B (T) | Current I (A) | Area A (m²) | Moment μ = IA (A·m²) | Bohr angular momentum L (J·s) | Energy shift U (meV) */
+    'orbital-magnetic-moment': { demo: 'Atoms in a Magnetic Field (Orbit)', cols: ['row', 'n', 'l', 'm_l', 'B_T', 'I_A', 'A_m2', null, 'L_Bohr_J_s', 'U_meV'] },
+    /* Reading | Atoms | Mass M (u) | Field gradient dB/dz (T/m) | Speed v (m/s) | Drift L₂ (cm) | Cursor z (mm) | 1/v² (s²/m²) */
+    'stern-gerlach': { demo: 'Atoms in a Magnetic Field (Stern–Gerlach)', cols: ['row', 'atom', 'mass_u', 'G_T_per_m', 'v_m_s', 'L2_cm', 'cursor_mm', null] },
+    /* Reading | Line | Field B (T) | Seen | Cursor shift Δλ (pm) | Energy shift ΔE (μeV) */
+    'zeeman-effect': { demo: 'Atoms in a Magnetic Field (Zeeman effect)', cols: ['row', 'line', 'B_T', (r) => `${r.look} the field`, 'cursor_pm', null] },
+    /* Reading | Element | Z | Configuration | Outer shell n | Electrons in outer shell | Ionization energy IE (eV) | Z_eff */
+    'periodic-table': { demo: 'Shells, the Periodic Table and X Rays (Shells)', cols: ['row', 'element', 'Z', 'configuration', 'outer_n', 'outer_electrons', 'IE_eV', null] },
+    /* Reading | Target | Z | Tube voltage V (kV) | Cursor wavelength λ (pm) | Cursor energy E (keV) | 1/V (1/kV) | √E (√keV) */
+    'x-ray-spectra': { demo: 'Shells, the Periodic Table and X Rays (X ray tube)', cols: ['row', 'target', 'Z', 'V_kV', 'cursor_pm', 'cursor_keV', null, null] },
+  });
   /* ==MODERN END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
