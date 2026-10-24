@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>.bench { position: relative; }
 /* the Set up card on the picture: it fades away while the run plays and comes back on pause or when the run ends */
 .setup-card { position: absolute; z-index: 3; left: 12px; top: 72px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); transition: opacity 0.35s ease, visibility 0.35s; }
@@ -54,6 +55,8 @@ table.rows input:focus { border-color: var(--accent); }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -73,7 +76,7 @@ table.rows input:focus { border-color: var(--accent); }
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="A spinning wheel on a horizontal axle whose far end rests on a pivot at the top of a post, drawn in perspective, with arrows for the angular momentum and the torque, and below it a trace of the axle's tilt against time. Space releases or holds, R puts it back."></canvas>
-      <div class="viewbar"><button type="button" class="spin attn" id="go">Release</button><button type="button" class="spin" id="back">Put back</button></div>
+      <div class="viewbar"><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div><button type="button" class="spin attn" id="go">Release</button><button type="button" class="spin" id="back">Put back</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -134,6 +137,7 @@ table.rows input:focus { border-color: var(--accent); }
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>More about this</summary>
+          <p class="hint">3D view: drag to turn it, scroll or pinch to zoom, double click to reset. Flat shows the fixed oblique drawing; both show the same simulated motion.</p>
           <p class="hint">Blind hides the moments of inertia, L, the predicted precession rate and the fitted I_s, leaving the gate timer, the tilt and the settings.</p>
         </details>
         <details class="more"><summary>More about this</summary><p class="hint">Model: a rigid symmetric wheel on a massless axle, a frictionless pivot, the spin about the axle held constant (no friction in the wheel's bearing). The motion is computed from the exact equations for a heavy symmetric top (RK4, 0.2 ms steps), so the wobble (nutation) and the dip at release are real, not added. Solid disk I_s = ½MR²; rim-heavy wheel 0.905MR²; the wheel's moment about its diameter is I_s/2.</p></details>
@@ -236,6 +240,17 @@ table.rows input:focus { border-color: var(--accent); }
     const p = ps(), stripH = Math.min(120, Hh * 0.22) * p, sceneH = Hh - stripH - 10, sc = Math.min(W, sceneH * 1.25) / 0.5, cx = W / 2, cy = 60 * p + sceneH * 0.32;
     const { s, c } = S.sim, e = [Math.sin(s.th) * Math.cos(s.ph), Math.sin(s.th) * Math.sin(s.ph), Math.cos(s.th)], P = (x, y, z) => proj(x, y, z, cx, cy, sc);
     const postH = 0.22, stripTop = Hh - stripH;
+    if (G3.on && g3) {   // the 3D view draws the apparatus; this canvas keeps the labels, the strip and the timer on top
+      const h3 = stripTop - 8 * p, Q = render3(s, c, e, h3, p), C = e.map((x) => x * S.d);
+      ctx.clearRect(0, 0, W, h3);
+      const lab = (q, txt, col, from) => { const a = Q(q), b = Q(from), dx = a[0] - b[0], dy = a[1] - b[1], L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L;
+        ctx.fillStyle = col; ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = ux > 0.3 ? 'left' : ux < -0.3 ? 'right' : 'center'; ctx.textBaseline = uy > 0.3 ? 'top' : uy < -0.3 ? 'bottom' : 'middle'; ctx.fillText(txt, a[0] + ux * 6, a[1] + uy * 6); };
+      const gq = Q([S.d + 0.035, 0, -postH]); ctx.fillStyle = T.accent; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('gate', gq[0] + 4, gq[1] + 2);
+      if (S.vecs && c.w3 > 0 && !S.fell) {
+        const tau = cross(C, [0, 0, -MW * G]), tm = Math.hypot(...tau) || 1;
+        lab(C.map((x, i) => x + e[i] * 0.16), 'L', T.Lv, C); lab(C.map((x, i) => x + tau[i] / tm * 0.09), 'τ = dL/dt', T.tau, C); lab([C[0], C[1], C[2] - 0.07], 'Mg', T.muted, C);
+      }
+    } else {
     // a tiled floor that fades into the distance, behind everything else
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, stripTop - 8 * p); ctx.clip();
     ctx.fillStyle = T.floor; ctx.fillRect(0, 0, W, stripTop);
@@ -299,6 +314,7 @@ table.rows input:focus { border-color: var(--accent); }
       arrow(wc, P(...C.map((x, i) => x + tau[i] / tmag * 0.09)), T.tau, 2.5 * p, 'τ = dL/dt');
       const mg = P(C[0], C[1], C[2] - 0.07); arrow(wc, mg, T.muted, 1.5 * p, 'Mg');
     }
+    }
     // strip: tilt above horizontal against time, last 4 s
     const sx0 = 14 * p, sx1 = W - 14 * p, sy0 = Hh - stripH, sy1 = Hh - 22 * p, sm = (sy0 + sy1) / 2, span = 4, tilt = (th) => (Math.PI / 2 - th) * 180 / Math.PI;
     const vals = S.trace.filter((q) => S.t - q[0] <= span).map((q) => q[1]).concat([S.beta]);
@@ -326,6 +342,127 @@ table.rows input:focus { border-color: var(--accent); }
     }
     $('out').innerHTML = h;
   }
+  // ---------- 3D view (three.js through demos/lib/vd3.js): the same apparatus and the same simulated motion, in perspective ----------
+  // Drag to turn the view, wheel or pinch to zoom, double click to reset. The flat view stays (Flat button, or ?view=flat).
+  const G3 = { on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -1.0, ph: 1.13, zoom: 1 } };
+  const NO3D = 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
+  let g3 = null;
+  const POST_H = 0.22;   // the post's height, as in the flat view
+  function init3D() {
+    G3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); stage.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 0.01, 20), M = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.7), sun = new THREE.DirectionalLight(0xffffff, 0.7);
+    sun.position.set(-0.5, -0.9, 1.6); sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024);
+    Object.assign(sun.shadow.camera, { left: -0.45, right: 0.45, top: 0.45, bottom: -0.45, near: 0.5, far: 4 }); sun.shadow.radius = 4;
+    scene.add(hemi, sun);
+    const cyl = (r0, r1, h, n) => { const g = new THREE.CylinderGeometry(r0, r1, h, n || 32); g.rotateX(Math.PI / 2); return g; };   // a cylinder along z
+    const unitZ = (r0, n) => { const g = cyl(r0, r0, 1, n || 16); g.translate(0, 0, 0.5); return g; };   // from z = 0 to z = 1, scaled to length
+    const mesh = (g, m, cast) => { const x = new THREE.Mesh(g, m); x.castShadow = !!cast; return x; };
+    // floor tiles 0.1 m, as in the flat view, fading into fog
+    const tileCv = document.createElement('canvas'); tileCv.width = tileCv.height = 128;
+    const tileTex = new THREE.CanvasTexture(tileCv); tileTex.wrapS = tileTex.wrapT = THREE.RepeatWrapping; tileTex.repeat.set(40, 40); tileTex.anisotropy = r.capabilities.getMaxAnisotropy();
+    const floorM = M({ map: tileTex, roughness: 0.92, metalness: 0 }), floor = mesh(new THREE.PlaneGeometry(4, 4), floorM);
+    floor.position.z = -POST_H; floor.receiveShadow = true; scene.add(floor);
+    // cast base, post, the cup the axle rests in
+    const baseM = M({ roughness: 0.5, metalness: 0.35 }), postM = M({ roughness: 0.28, metalness: 0.55 }), darkM = M({ roughness: 0.4, metalness: 0.3 });
+    const base = mesh(cyl(0.068, 0.074, 0.016, 48), baseM, true); base.position.z = -POST_H + 0.008; base.receiveShadow = true;
+    const post = mesh(cyl(0.0075, 0.0075, POST_H - 0.012, 24), postM, true); post.position.z = -POST_H / 2 - 0.006;
+    const cup = mesh(cyl(0.013, 0.009, 0.012, 24), postM, true); cup.position.z = -0.006;
+    const pin = mesh(new THREE.SphereGeometry(0.0055, 16, 12), darkM); scene.add(base, post, cup, pin);
+    // the ring the wheel centre would trace at this d, and the gate at φ = 0
+    const ringPts = []; for (let k = 0; k < 96; k++) ringPts.push(new THREE.Vector3(Math.cos(k / 96 * 2 * Math.PI), Math.sin(k / 96 * 2 * Math.PI), 0));
+    const ringM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.8 }), ring = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(ringPts), ringM);
+    const gateM = M({ roughness: 0.5, emissive: 0x000000 }), gate = mesh(new THREE.BoxGeometry(0.06, 0.006, 0.004), gateM); scene.add(ring, gate);
+    // trail of the wheel centre
+    const trailG = new THREE.BufferGeometry(); trailG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(400 * 3), 3));
+    const trailM = new THREE.LineBasicMaterial(), trail = new THREE.Line(trailG, trailM); trail.frustumCulled = false; scene.add(trail);
+    // the arm: a frame whose z is the axle (columns u, v, e as in the flat view); the wheel turns about it
+    const arm = new THREE.Group(); arm.matrixAutoUpdate = false; scene.add(arm);
+    const axleM = M({ roughness: 0.3, metalness: 0.6 }), axle = mesh(unitZ(0.0035), axleM, true); arm.add(axle);
+    const wheel = new THREE.Group(); arm.add(wheel);
+    const faceCv = document.createElement('canvas'); faceCv.width = faceCv.height = 256; const faceTex = new THREE.CanvasTexture(faceCv);
+    const diskSideM = M({ roughness: 0.4, metalness: 0.25 }), diskFaceM = M({ map: faceTex, roughness: 0.42, metalness: 0.2 });
+    const disk = new THREE.Mesh(cyl(RW, RW, 0.012, 72), [diskSideM, diskFaceM, diskFaceM]); disk.castShadow = true;
+    const rim = new THREE.Group();
+    const tyreM = M({ roughness: 0.75, metalness: 0 }), rimM = M({ roughness: 0.35, metalness: 0.4 }), spokeM = M({ roughness: 0.3, metalness: 0.6 });
+    const tyre = mesh(new THREE.TorusGeometry(RW * 0.955, RW * 0.075, 14, 72), tyreM, true), rimRing = mesh(new THREE.TorusGeometry(RW * 0.86, RW * 0.04, 10, 72), rimM, true);
+    const spokeG = new THREE.CylinderGeometry(0.0007, 0.0007, RW * 0.76, 6); spokeG.translate(0, RW * 0.5, 0);   // from 0.12 R to 0.88 R along y
+    const spokes = new THREE.Group(); for (let k = 0; k < 16; k++) { const sp = mesh(spokeG, spokeM, true); sp.rotation.z = k * Math.PI / 8; sp.position.z = (k % 2 ? 1 : -1) * 0.002; spokes.add(sp); }
+    const blurM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.22, side: THREE.DoubleSide, depthWrite: false }), blur = new THREE.Mesh(new THREE.CircleGeometry(RW * 0.86, 64), blurM);
+    const webM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.1, side: THREE.DoubleSide, depthWrite: false }), web = new THREE.Mesh(new THREE.CircleGeometry(RW * 0.86, 64), webM);
+    rim.add(tyre, rimRing, spokes, blur, web);
+    const hub = mesh(cyl(0.011, 0.011, 0.022, 24), axleM, true); wheel.add(disk, rim, hub);
+    // arrows for L, the torque and the weight: a shaft and a cone, scaled to length
+    function arrow3() { const m = new THREE.MeshStandardMaterial({ roughness: 0.5 }), g = new THREE.Group(), sh = mesh(unitZ(0.0022, 10), m), hd = mesh(new THREE.ConeGeometry(0.0065, 0.018, 16).rotateX(Math.PI / 2), m); g.add(sh, hd); g.userData = { m, sh, hd }; scene.add(g); return g; }
+    const aL = arrow3(), aT = arrow3(), aW = arrow3();
+    g3 = { r, el, scene, cam, hemi, sun, floorM, tileCv, tileTex, baseM, postM, darkM, ringM, ring, gateM, gate, trailG, trailM, trail, arm, axle, axleM, wheel, disk, diskSideM, diskFaceM, faceCv, faceTex, rim, tyreM, rimM, spokeM, spokes, blur, blurM, web, webM, aL, aT, aW };
+    // in the flat view the wheel scrolls the page and a drag does nothing
+    can.addEventListener('wheel', (e) => { if (!G3.on) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (!S.run) draw(); }, { grab: () => !G3.on, phMin: 0.3, phMax: 1.5, zMin: 0.6, zMax: 2.4 });
+    can.addEventListener('pointerup', () => { if (!G3.on) can.style.cursor = ''; });
+    return true;
+  }
+  function theme3() {
+    const g = g3, d = VD3.dark(), col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+    const bg = col(T.canvas, '#fbfcfd'); g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 1.2, 3);
+    g.hemi.groundColor = col(T.floor, '#eef1f4'); g.hemi.intensity = d ? 1.05 : 0.75; g.sun.intensity = d ? 1.0 : 0.7;   // dark tokens are deep colours, so the room is lit a little more
+    const c = g.tileCv.getContext('2d'); c.fillStyle = T.floor; c.fillRect(0, 0, 128, 128); c.fillStyle = T.floorLine; c.fillRect(0, 0, 128, 3); c.fillRect(0, 0, 3, 128); g.tileTex.needsUpdate = true;
+    g.baseM.color = col(T.base, '#4a525c'); g.postM.color = col(T.post, '#9aa6b6'); g.darkM.color = col(T.ink, '#1d252f'); g.axleM.color = col(T.axle, '#4a5563');
+    g.ringM.color = col(T.gridStrong, '#c9d1db'); g.gateM.color = col(T.accent, '#2b60b5'); g.gateM.emissive = col(T.accent, '#2b60b5').multiplyScalar(0.35); g.trailM.color = col(T.trail, '#a7740b');
+    g.diskSideM.color = col(T.wheel, '#2b60b5').multiplyScalar(0.8); g.tyreM.color = col(T.tyre, '#2b3038'); g.rimM.color = col(T.wheel, '#2b60b5'); g.spokeM.color = col(T.spoke, '#8d97a3');
+    g.blurM.color = col(T.spoke, '#8d97a3'); g.webM.color = col(T.wheel, '#2b60b5');
+    g.aL.userData.m.color = col(T.Lv, '#b0452f'); g.aT.userData.m.color = col(T.tau, '#1f8a5a'); g.aW.userData.m.color = col(T.muted, '#6b7787');
+    G3.face = '';
+  }
+  // the disk's faces: three light bars that turn with a slow spin, a soft ring when the spin is too fast to follow (as in the flat view)
+  function face3(blurred) {
+    const k = blurred ? 'b' : 's'; if (G3.face === k) return; G3.face = k;
+    const c = g3.faceCv.getContext('2d'), R = 128; c.clearRect(0, 0, 256, 256); c.fillStyle = T.wheel; c.fillRect(0, 0, 256, 256);
+    const sh = c.createRadialGradient(R, R, R * 0.2, R, R, R); sh.addColorStop(0, 'rgba(255,255,255,0.12)'); sh.addColorStop(1, 'rgba(0,0,0,0.18)'); c.fillStyle = sh; c.fillRect(0, 0, 256, 256);
+    c.strokeStyle = T.metalHi; c.lineCap = 'round';
+    if (blurred) { c.globalAlpha = 0.3; c.lineWidth = 10; c.beginPath(); c.arc(R, R, R * 0.6, 0, 7); c.stroke(); }
+    else { c.globalAlpha = 0.65; c.lineWidth = 12; c.beginPath(); for (let i = 0; i < 3; i++) { const a = i * 2 * Math.PI / 3; c.moveTo(R + R * 0.25 * Math.cos(a), R + R * 0.25 * Math.sin(a)); c.lineTo(R + R * 0.85 * Math.cos(a), R + R * 0.85 * Math.sin(a)); } c.stroke(); }
+    c.globalAlpha = 1; g3.faceTex.needsUpdate = true;
+  }
+  function setArrow(a, o, dir, len) {
+    const n = Math.hypot(...dir); if (!(n > 0) || len <= 0.02) { a.visible = false; return; }
+    a.visible = true; a.position.set(...o); a.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(dir[0] / n, dir[1] / n, dir[2] / n));
+    a.userData.sh.scale.z = len - 0.018; a.userData.hd.position.z = len - 0.009;
+  }
+  // draws the 3D scene into its canvas (width W, height h) and returns a function from a point in metres to overlay pixels
+  function render3(s, c, e, h, p) {
+    const g = g3; if (!g) return null;
+    if (G3.w !== W || G3.h !== h) { G3.w = W; G3.h = h; g.r.setSize(W, Math.max(1, h)); g.cam.aspect = W / Math.max(1, h); g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.wheel, T.floor, T.accent].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    VD3.place(g.cam, G3.o, new THREE.Vector3(0.03, 0, -0.07), 0.78);
+    g.ring.scale.set(S.d, S.d, 1); g.ring.position.z = -POST_H + 0.0008; g.gate.position.set(S.d, 0, -POST_H + 0.002);
+    // the arm frame: u = e × z (horizontal), v = e × u, e along the axle
+    const u = Math.abs(e[2]) < 0.9 ? norm(cross(e, [0, 0, 1])) : [1, 0, 0], v = cross(e, u);
+    g.arm.matrix.makeBasis(new THREE.Vector3(...u), new THREE.Vector3(...v), new THREE.Vector3(...e)); g.arm.matrixWorldNeedsUpdate = true;
+    g.axle.scale.z = S.d + 0.03; g.wheel.position.z = S.d;
+    const blurred = c.w3 > 0 && (reduce || c.w3 > 15), spoked = S.wheel === 'rim' && S.mystK == null;
+    g.wheel.rotation.z = blurred ? 0 : c.w3 * S.t; g.disk.visible = !spoked; g.rim.visible = spoked; g.spokes.visible = !blurred; g.blur.visible = blurred;
+    if (!spoked) face3(blurred);
+    const pos = g.trailG.attributes.position, n = reduce ? 0 : Math.min(400, S.trail.length); for (let i = 0; i < n; i++) pos.setXYZ(i, ...S.trail[S.trail.length - n + i]); pos.needsUpdate = true; g.trailG.setDrawRange(0, n);
+    const C = e.map((x) => x * S.d), show = S.vecs && c.w3 > 0 && !S.fell, tau = cross(C, [0, 0, -MW * G]);
+    setArrow(g.aL, C, show ? e : [0, 0, 0], 0.16); setArrow(g.aT, C, show ? tau : [0, 0, 0], 0.09); setArrow(g.aW, C, show ? [0, 0, -1] : [0, 0, 0], 0.07);
+    g.scene.updateMatrixWorld(); g.r.render(g.scene, g.cam);
+    const tmp = new THREE.Vector3();
+    return (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * h, tmp.z]; };
+  }
+  function setView(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { capStatus(NO3D); v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); if (!G3.ok) capStatus(NO3D); setView(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3) g3.el.hidden = !G3.on; can.style.cursor = G3.on ? 'grab' : '';
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    draw();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
   // ---------- controls ----------
   function sync() {
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
@@ -428,6 +565,8 @@ table.rows input:focus { border-color: var(--accent); }
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   tokens(); new ResizeObserver(resize).observe(stage); applyPreset('fast'); renderRows(); resize();
+  /* the gyroscope opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
+  if (new URLSearchParams(location.search).get('view') !== 'flat' && window.VD3 && !VD3.lowPower()) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();

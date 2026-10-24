@@ -12,7 +12,7 @@ time: 15 to 30 minutes
 
 ## Before class
 
-Students need L = Iω as a vector along the spin axis (right hand rule) and τ = r × F. The view is oblique, from above and in front: the pivot is at the top of the post, the wheel spins on the axle, and the arrows show L (red, along the axle), the torque r × Mg (green, horizontal and perpendicular to the axle) and Mg. A gate on the floor times each full turn of the axle round the post. The **Mystery wheel** has the same mass and radius but hides I_s; **Blind** hides I_s, L and the predicted rate.
+Students need L = Iω as a vector along the spin axis (right hand rule) and τ = r × F. The gyroscope opens in 3D (drag to turn the view, scroll or pinch to zoom, double click to reset; the **Flat** button, or `?view=flat`, gives the fixed oblique view, which also opens on devices that ask to save data or lack WebGL). Both views show the same simulated motion: the pivot is at the top of the post, the wheel spins on the axle, and the arrows show L (red, along the axle), the torque r × Mg (green, horizontal and perpendicular to the axle) and Mg. A gate on the floor times each full turn of the axle round the post. The **Mystery wheel** has the same mass and radius but hides I_s; **Blind** hides I_s, L and the predicted rate.
 
 ## Running it in class
 

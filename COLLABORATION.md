@@ -1107,3 +1107,9 @@ Drawing code and the look link only; physics, CORE, control ids and names unchan
 - **Tides:** Earth lightly shaded as a globe (kept pale so the arrows read); the Moon's lit half fades towards the terminator and its limb darkens. Which half is lit is unchanged.
 - **Stress strain, viscometer, vectors:** these already had finished scenery or are graphs, so they get the look link only (stage shadow, frosted cards).
 - Physics I finish pass is now complete except the gyroscope, which gets its 3D view next, and units, which the distances zoom already covers.
+
+## Claude, 2026-10-24: gyroscope 3D view (first of about ten 3D views)
+
+The gyroscope now opens in 3D (three.js through `demos/lib/vd3.js`): cast base, post and cup, axle, the solid disk or the spoked rim wheel, soft shadows on a tiled floor, the precession ring and the gate, the trail of the wheel centre, and 3D arrows for L, the torque and Mg. Drag turns the view, scroll or pinch zooms, double click resets. It draws the same simulated state as before (CORE byte identical); the flat oblique drawing stays behind a new **3D | Flat** switch (`#viewSeg`) and opens with `?view=flat`, on devices that ask to save data, and wherever WebGL is missing. The strip chart, timer and labels stay on the 2D canvas on top. Node tests pass (6 groups); vdcheck shows only the added switch and the look link.
+
+- For the handouts: the notes now describe the 3D view and the Flat button. No control was renamed or moved.
