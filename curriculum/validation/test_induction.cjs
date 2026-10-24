@@ -2,7 +2,7 @@
 // Charging by Induction: two conducting spheres and a point charge solved with Kelvin images.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('induction', 'EPS0,K,image,solve,sigma,potentialAt');
+const c = core('induction', 'EPS0,K,image,solve,sigma,sigma3,sigmaPeak,potentialAt,E_BREAK');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -29,6 +29,71 @@ group('equal spheres in contact share charge equally; an isolated sphere alone h
   near(s.QA / nC, 5, 1e-6);
   const one = c.solve({ q0: 0, x0: null, A, B: { c: 1e3, r: 0.05 }, QA: 10 * nC, QB: 0, wire: false, gA: false, gB: false });
   near(one.VA, c.K * 10 * nC / 0.05, 1e-3 * one.VA);
+});
+
+// ---- the rod's tip anywhere in the plane (the spheres worked by hand) ----
+const tipAt = (D, ang, Sp = A) => [Sp.c + D * Math.cos(ang), D * Math.sin(ang)];
+group('rod off the axis: a lone grounded sphere still carries −q R/D, whatever the direction', () => {
+  for (const ang of [Math.PI, 2.2, 1.6, 0.9, -2.5]) {
+    const [x0, y0] = tipAt(0.1, ang), s = c.solve({ q0: 10 * nC, x0, y0, A, B: { c: 50, r: 0.05 }, QA: 0, QB: 0, wire: false, gA: true, gB: false });
+    near(s.QA / nC, -5, 1e-6, 'angle ' + ang);
+  }
+});
+group('rod off the axis: joined spheres are one equipotential everywhere on both surfaces (3D points), and Gauss gives each charge', () => {
+  const B2 = { c: 0.13, r: 0.03 }, [x0, y0] = tipAt(0.08, 2.0), s = c.solve({ q0: -12 * nC, x0, y0, A, B: B2, QA: 2 * nC, QB: 0, wire: true, gA: false, gB: false });
+  near((s.QA + s.QB) / nC, 2, 1e-9, 'total kept');
+  let worst = 0;
+  for (const Sp of [A, B2]) for (const th of [0.3, 1.2, 2.5]) for (const ph of [0, 0.8, 1.5]) {
+    const n = [Math.cos(th), Math.sin(th) * Math.cos(ph), Math.sin(th) * Math.sin(ph)], e = 1 + 1e-7;
+    worst = Math.max(worst, Math.abs(c.potentialAt(s.charges, Sp.c + Sp.r * n[0] * e, Sp.r * n[1] * e, Sp.r * n[2] * e) - s.VA));
+  }
+  console.log('   largest departure from one potential on the surfaces:', worst.toExponential(2), 'V of', s.VA.toFixed(1), 'V');
+  assert(worst < 1e-3 * Math.abs(s.VA));
+  for (const [Sp, Q] of [[A, s.QA], [B2, s.QB]]) {
+    let tot = 0; const N = 400, M = 400;
+    for (let i = 0; i < N; i++) for (let j = 0; j < M; j++) { const th = Math.PI * (i + 0.5) / N, ph = 2 * Math.PI * (j + 0.5) / M; tot += c.sigma3(s.charges, Sp, Math.cos(th), Math.sin(th) * Math.cos(ph), Math.sin(th) * Math.sin(ph)) * Sp.r * Sp.r * Math.sin(th) * (Math.PI / N) * (2 * Math.PI / M); }
+    near(tot / nC, Q / nC, 2e-3 * Math.max(1, Math.abs(Q / nC)), 'Gauss');
+  }
+});
+group('rod off the axis: a rod above the line and its mirror image below give the same charges; σ is mirror symmetric', () => {
+  const B2 = { c: 0.12, r: 0.05 }, st = (y) => ({ q0: 10 * nC, x0: 0.03, y0: y, A, B: B2, QA: 0, QB: 0, wire: false, gA: true, gB: false });
+  const u = c.solve(st(0.09)), d = c.solve(st(-0.09)); near(u.QA, d.QA, 1e-20); near(u.QB, d.QB, 1e-20);
+  near(c.sigma(u.charges, A, 1.1), c.sigma(d.charges, A, -1.1), 1e-15);
+  near(c.sigma3(u.charges, B2, 0.3, 0.5, Math.sqrt(1 - 0.34)), c.sigma3(u.charges, B2, 0.3, 0.5, -Math.sqrt(1 - 0.34)), 1e-15);
+});
+group('the largest |σ| lies in the plane of the drawing: a search over the whole sphere finds nothing larger', () => {
+  const B2 = { c: 0.1005, r: 0.05 };
+  for (const [x0, y0, wire, gA] of [[-0.06, 0, true, false], [-0.02, 0.06, true, false], [0.05, 0.09, false, true], [0.02, -0.08, true, true]]) {
+    const s = c.solve({ q0: 20 * nC, x0, y0, A, B: B2, QA: 0, QB: 0, wire, gA, gB: false });
+    for (const Sp of [A, B2]) {
+      const pk = Math.abs(c.sigmaPeak(s.charges, Sp).sigma); let m = 0;
+      for (let i = 0; i <= 90; i++) for (let j = 0; j < 90; j++) { const th = Math.PI * i / 90, ph = 2 * Math.PI * j / 90; m = Math.max(m, Math.abs(c.sigma3(s.charges, Sp, Math.cos(th), Math.sin(th) * Math.cos(ph), Math.sin(th) * Math.sin(ph)))); }
+      assert(m <= pk * (1 + 2e-4), `sphere at ${Sp.c}: whole sphere ${m}, plane ${pk}`);
+    }
+  }
+});
+group('touching, solved 0.5 mm apart and joined: within 2 % of true point contact for B = 1 cm, 0.25 % from 3 cm up', () => {
+  /* the shared charge at true contact (gap → 0), from the image series run to 10⁻¹⁵ with no cap on its length */
+  const contact = (a, b, g) => {
+    const run = (rs, ro, dist) => { let q = rs, x = 0, inS = true; const o = { s: rs, o: 0 };
+      for (let k = 0; k < 5e6 && Math.abs(q) >= 1e-15 * rs; k++) { if (inS) { const dd = dist - x; q = -q * ro / dd; x = dist - ro * ro / dd; o.o += q; } else { const dd = x; q = -q * rs / dd; x = rs * rs / dd; o.s += q; } inS = !inS; }
+      return o; };
+    const u = run(a, b, a + b + g), w = run(b, a, a + b + g); return (u.o + w.s) / (u.s + w.o + u.o + w.s);
+  };
+  for (const [rB, tol] of [[0.01, 0.02], [0.03, 2.5e-3], [0.05, 1e-9], [0.07, 2.5e-3], [0.1, 2.5e-3]]) {
+    const demo = c.solve({ q0: 0, x0: null, A, B: { c: 0.05 + 5e-4 + rB, r: rB }, QA: 10 * nC, QB: 0, wire: true, gA: false, gB: false }).QB / nC;
+    const same = 10 * contact(0.05, rB, 5e-4), point = 10 * contact(0.05, rB, 1e-8);
+    console.log(`   rB = ${Math.round(rB * 100)} cm: B gets ${demo.toFixed(5)} nC (demo), ${point.toFixed(5)} nC at true contact: ${(100 * (demo - point) / point).toFixed(2)} %`);
+    near(demo, same, 1e-6, 'series converged at 0.5 mm'); assert(Math.abs(demo - point) <= tol * point);
+  }
+});
+group('field at the surface: σ/ε0 next to a 20 nC tip 1 cm away passes air breakdown; at 10 nC and 5 cm it does not', () => {
+  const B2 = { c: 0.1005, r: 0.05 }, E = (q, d) => Math.abs(c.sigmaPeak(c.solve({ q0: q * nC, x0: -0.05 - d, y0: 0, A, B: B2, QA: 0, QB: 0, wire: true, gA: false, gB: false }).charges, A).sigma) / c.EPS0;
+  const e1 = E(20, 0.01), e2 = E(10, 0.05); console.log('   20 nC at 1 cm:', (e1 / 1e6).toFixed(2), 'MV/m; 10 nC at 5 cm:', (e2 / 1e6).toFixed(3), 'MV/m');
+  assert(e1 > c.E_BREAK && e2 < c.E_BREAK);
+  /* a lone grounded sphere: σ at the near point is −q(D² − R²)/(4πR(D − R)³) */
+  const D = 0.1, s = c.solve({ q0: 10 * nC, x0: -D, y0: 0, A, B: { c: 50, r: 0.05 }, QA: 0, QB: 0, wire: false, gA: true, gB: false });
+  near(c.sigma(s.charges, A, Math.PI), -10 * nC * (D * D - 0.0025) / (4 * Math.PI * 0.05 * (D - 0.05) ** 3), 1e-3 * 9.5e-7);
 });
 
 // ---- Conductor shapes (2D cross-sections), boundary element solver ----

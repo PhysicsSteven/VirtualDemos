@@ -10,13 +10,13 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§5.1, 5.2 and 6.4. Access fo
 
 **Using the demo.**
 
-- Two metal spheres on insulating stands, A (radius 5 cm) and B, and a charged rod whose tip can be brought near A. The spheres can touch or be pulled apart, joined, and grounded. Each setup has a sequence of steps (Next step, Start over); changing a control leaves the steps and lets you arrange the apparatus yourself. Changing a control keeps the charges the spheres already have.
-- The marks on each sphere show the surface charge density; the readouts give the net charge on each sphere and its potential, as an electrometer would. Record reading stores the setup, the rod's charge and distance, B's radius, the gap, the connections, both net charges and $$R/(R+d)$$; Export to worksheet sends the readings here.
+- Two metal spheres on insulating stands, A (radius 5 cm) and B, and a charged rod: glass rubbed with silk (positive) or rubber rubbed with fur (negative). Everything works by hand on the picture: drag the rod anywhere near the spheres, slide either sphere along the bench (pushed together, they touch), and touch a sphere with the ground wand to ground it. The colour on each sphere and the marks around it change as you move things, and moving dots show electrons flowing through the contact, a wire or the ground lead (drawn slowed down). Each setup also has a sequence of steps (Next step, Start over) that moves the apparatus for you; changing anything yourself leaves the steps. Changing a control keeps the charges the spheres already have.
+- The colour on each sphere and the marks around it show the surface charge density; the readouts give the net charge on each sphere and its potential, as an electrometer would. Record reading stores the setup, the rod's charge and distance, B's radius, the gap, the connections, both net charges and $$R/(R+d)$$; Export to worksheet sends the readings here.
 - Blind hides the net charges and potentials, leaving the marks. Keep it off for this lab.
 
 **What the demo models.**
 
-- Perfect conductors, the rod's tip as a point charge, $$k = 1/(4\pi\varepsilon_0)$$. A grounded sphere is held at zero potential; a sphere on its own stand keeps its net charge; joined spheres share one potential. The charges are found exactly with Kelvin's image charges, including the pull of each sphere on the other's charge.
+- Perfect conductors, the rod's charge as a point charge at its tip, $$k = 1/(4\pi\varepsilon_0)$$. A grounded sphere is held at zero potential; a sphere on its own stand keeps its net charge; joined spheres share one potential. The charges are found exactly with Kelvin's image charges at every position, including the pull of each sphere on the other's charge. Touching spheres are solved 0.5 mm apart. The bench, stands, wand and leads are left out of the electrostatics. The readouts also give the strongest field at each sphere's surface; above about $$3 \times 10^6\ \text{V/m}$$ air would spark.
 
 </details>
 

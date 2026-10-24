@@ -27,6 +27,11 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .stepbar { position: absolute; left: 10px; right: 10px; bottom: 10px; z-index: 2; display: flex; gap: 10px; align-items: center; flex-wrap: wrap; background: color-mix(in srgb, var(--canvas) 88%, transparent); border: 1px solid var(--line); border-radius: 8px; padding: 8px 10px; }
 .stepbar p { margin: 0; flex: 1 1 260px; font-size: 0.92rem; }
+.rodcard { position: absolute; left: 10px; top: 10px; z-index: 2; display: flex; gap: 6px; align-items: center; flex-wrap: wrap; background: color-mix(in srgb, var(--canvas) 88%, transparent); border: 1px solid var(--line); border-radius: 8px; padding: 5px 7px; font-size: 0.84rem; }
+.rodcard span { font-weight: 700; color: var(--muted); font-size: 0.76rem; letter-spacing: 0.05em; text-transform: uppercase; padding: 0 2px; }
+.rodcard button { font: inherit; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 9px; cursor: pointer; }
+.rodcard button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.rodcard button:disabled { opacity: 0.45; cursor: default; }
 .blindtag { position: absolute; right: 10px; top: 10px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
 .chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
@@ -40,7 +45,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 @media (max-width: 820px) {
   html, body { height: auto; }
   .bench { grid-template-columns: minmax(0, 1fr); }
-  .stage { min-height: 0; height: 480px; max-height: 85vh; }
+  .stage { min-height: 0; height: 560px; max-height: 88vh; }
   .chips button, .proj, .spin { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
 }
@@ -67,6 +72,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="Two metal spheres on insulating stands, a charged rod on the left and a ground connection. The plus and minus marks around each sphere show its surface charge density: darker marks mean more charge per area."></canvas>
+      <div class="rodcard" id="rodCard" role="group" aria-label="Charged rod"><span>Rod</span><button type="button" id="rodGlass" aria-pressed="false" title="A glass rod rubbed with silk: it is left positive">Glass +</button><button type="button" id="rodRubber" aria-pressed="false" title="A hard rubber rod rubbed with fur: it is left negative">Rubber −</button><button type="button" id="rodAway" title="Carry the rod far away">Put down</button></div>
       <div class="stepbar"><p id="stepText"></p><button type="button" class="spin attn" id="next">Next step</button><button type="button" class="spin" id="restart">Start over</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
@@ -92,9 +98,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div><div class="slider-head"><label for="sD">Rod tip distance from sphere A</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="1" max="30" step="0.5"></div>
         <div><div class="slider-head"><label for="sG">Gap between the spheres</label><output id="oG" for="sG"></output></div><input type="range" id="sG" min="0.05" max="40" step="0.05"></div>
         <div><div class="slider-head"><label for="sRB">Radius of sphere B</label><output id="oRB" for="sRB"></output></div><input type="range" id="sRB" min="1" max="10" step="0.5"></div>
-        <label class="check"><input type="checkbox" id="wire"><span>Spheres touching (connected)</span></label>
+        <label class="check"><input type="checkbox" id="wire"><span>Spheres touching (connected), or joined by a thin wire</span></label>
         <label class="check"><input type="checkbox" id="gA"><span>Ground sphere A</span></label>
         <label class="check"><input type="checkbox" id="gB"><span>Ground sphere B</span></label>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Everything here can be done by hand on the picture: drag the rod anywhere (off the left edge puts it down), slide sphere A or B along the bench (push them together to touch), and drag the ground wand onto a sphere to ground it and off again to disconnect it. Arrow keys on the picture move the rod's tip by 1 mm (Shift: 1 cm).</p>
+        </details>
       </section>
 
       <section id="shapeSec" hidden>
@@ -167,7 +176,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides the net charges and potentials; the marks on the spheres stay, as an electroscope or a charge probe would show. In Conductor shapes, Blind hides the summary readouts, the E = 0 labels and the exact curve; the field lines, marks, graph and probe stay.</p></details>
-        <p class="hint" id="modelSph">Model: two perfectly conducting spheres on ideal insulating stands and the rod's tip as a point charge, solved exactly with Kelvin image charges (a thin wire or contact makes the spheres one conductor; ground holds a sphere at zero potential). The marks are drawn from the surface charge density in the plane of the drawing: their darkness is in proportion to the density, and their sign is its sign. Real charge sits as a tiny excess or shortage of electrons; only electrons move.</p>
+        <p class="hint" id="modelSph">Model: two perfectly conducting spheres on ideal insulating stands, and the rod's charge as a point charge at its very tip, anywhere in the plane through the spheres' centres. Solved exactly with Kelvin image charges at every position as you move things (every image lies in that plane). Touching spheres are solved 0.5 mm apart and joined, so they are one conductor (B's share of a shared charge is within 2 % of true point contact for a 1 cm sphere B, and within 0.25 % from 3 cm up); a thin wire joins them the same way, its own charge neglected. A grounded sphere is held at zero potential, the potential far away. The bench, the stands, the wand, the leads and the rest of the rod are left out of the electrostatics: only their connections count. The colour on each sphere is the exact σ on the side facing you, full colour at ±1 µC/m² (its strength goes as the square root of |σ|); the + and − marks show σ around the rim in the plane of the drawing, darker for more charge per area. Real charge sits as a tiny excess or shortage of electrons, and only electrons move: each moving dot stands for 0.25 nC of electrons (1.6 × 10⁹), drawn slowed down (in metal the charge settles in far less than a microsecond), and the colour eases to the new σ in about half a second for the same reason. The guided steps move the rod and B at a steady hand's pace. The largest field at each surface is σ/ε₀ where |σ| is largest around the rim; where it passes air's breakdown field, about 3 × 10⁶ V/m (OpenStax Vol. 2, Table 8.1), the picture marks where a spark would start but does not model the spark.</p>
         <p class="hint" id="modelPol" hidden>Model (Attracting a neutral insulator): a solid ball of radius 2.00 cm, uniform and linear with the dielectric constant of OpenStax Vol. 2, Table 8.1 (metal: a perfect conductor), and the rod's tip as a point charge on the line through the ball's centre. The field and the force are the exact solution as a series of Legendre polynomials; the force is the sum of every multipole term, not only the induced dipole. The ball sits on a 2.00 cm insulating post on the pan; the balance, the post and the rest of the rod are left out of the electrostatics. The balance converts force to mass with g = 9.81 m/s² and reads to 0.01 mg. The molecules are drawn huge and their stretch is exaggerated; the + and − marks show the bound (or, in metal, free) surface charge density. At the smallest gap and 20 nC the field at a metal ball's surface stays below air's breakdown field, 3 × 10⁶ V/m.</p>
         <p class="hint" id="modelShape" hidden>Model (Conductor shapes): a 2D cross-section. Each conductor is very long along the line of sight, so every field lies in the plane of the picture; the point charge becomes a line charge λ (charge per length, seen end on) and the conductor's net charge is per length too. The conductor is a perfect conductor, isolated, with the net charge per length you set (zero: neutral); its potential comes out of the solution. Solved by a boundary element method: the surface is cut into straight panels (the readout gives how many), each with a uniform σ; the potential is set equal at every panel's midpoint and the total charge is fixed, and one dense linear solve gives every σ. The field anywhere is then the exact field of those panel charges plus E₀ and λ, so E = 0 inside the metal and the cavity is not imposed: it comes out of the solution, and the readouts report what is left (the numerical error). Convergence, checked in the test file: doubling the panels changes the largest σ by less than 0.1 %, and the circle matches the exact σ = 2ε₀E₀ cos θ to better than 0.01 % of 2ε₀E₀. The teardrop's point is rounded to 1.5 mm and the box's corners to 3 mm (outside) and 1 mm (cavity): at a perfectly sharp point σ grows without limit. Field lines are traced from positive charges and from where the field enters the picture, one line per equal amount of flux. The probe compares σ on the nearest panel with ε₀E⊥ just outside it; with uniform σ on each panel they agree to within about 1 % of the largest σ.</p>
         </div></details>
@@ -179,19 +188,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 <script>
 (() => {
   // ==CORE START==
-  // Electrostatics of two conducting spheres A and B on the x axis and a point charge q0 (the rod's tip), solved with Kelvin image charges.
+  // Electrostatics of two conducting spheres A and B with centres on the x axis and a point charge q0 (the rod's tip) anywhere in the
+  // plane z = 0, solved with Kelvin image charges. Every image lies in that plane too, so a charge is { q, x, y } (z = 0).
   const EPS0 = 8.8541878188e-12, K = 1 / (4 * Math.PI * EPS0);
-  // image of a point charge q at x in a grounded sphere (centre c, radius r): q' = −q r/d at c + (r²/d) toward the charge
-  function image(q, x, c, r) { const d = x - c, dd = Math.abs(d); return { q: -q * r / dd, x: c + Math.sign(d) * r * r / dd }; }
+  // image of a point charge q at (x, y) in a grounded sphere (centre (c, 0), radius r): q' = −q r/d, on the line from the centre to the
+  // charge, at distance r²/d from the centre
+  function image(q, x, y, c, r) { const dx = x - c, dd2 = dx * dx + y * y, dd = Math.sqrt(dd2), k = r * r / dd2; return { q: -q * r / dd, x: c + k * dx, y: k * y }; }
   // all images produced in both spheres (kept at zero potential) by a list of seed charges outside them; the chain bounces until the charges are negligible
   function chain(seeds, A, B, into) {
     const out = [];
     for (const s of seeds) {
       for (const first of [A, B]) {
         if (s.inside === first.id) continue;
-        let cur = { q: s.q, x: s.x }, sph = first;
+        let cur = { q: s.q, x: s.x, y: s.y || 0 }, sph = first;
         for (let k = 0; k < 400; k++) {
-          const im = image(cur.q, cur.x, sph.c, sph.r); out.push({ ...im, inside: sph.id });
+          const im = image(cur.q, cur.x, cur.y, sph.c, sph.r); out.push({ ...im, inside: sph.id });
           if (Math.abs(im.q) < 1e-13 * Math.abs(s.q)) break;
           cur = im; sph = sph === A ? B : A;
         }
@@ -200,13 +211,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return into ? into.concat(out) : out;
   }
   const chargeIn = (list, id) => list.reduce((s, c) => s + (c.inside === id ? c.q : 0), 0);
-  // Solve for the charges on A and B. state: { q0, x0 (null: no rod), A: {c, r}, B: {c, r}, QA, QB, wire, gA, gB }:
+  // Solve for the charges on A and B. state: { q0, x0 (null: no rod), y0 (default 0), A: {c, r}, B: {c, r}, QA, QB, wire, gA, gB }:
   //   a grounded sphere is at zero potential; a wire makes VA = VB with QA + QB fixed; otherwise each sphere keeps its total.
   function solve(st) {
     const A = { id: 'A', ...st.A }, B = { id: 'B', ...st.B };
-    const rod = st.x0 == null ? [] : [{ q: st.q0, x: st.x0, inside: null }];
+    const rod = st.x0 == null ? [] : [{ q: st.q0, x: st.x0, y: st.y0 || 0, inside: null }];
     const base = chain(rod, A, B);                                       // both spheres grounded, with the rod
-    const unit = (S) => { const seed = { q: S.r / K, x: S.c, inside: S.id }; return [seed, ...chain([seed], A, B)]; };   // sphere S at 1 V, the other at 0
+    const unit = (S) => { const seed = { q: S.r / K, x: S.c, y: 0, inside: S.id }; return [seed, ...chain([seed], A, B)]; };   // sphere S at 1 V, the other at 0
     const uA = unit(A), uB = unit(B);
     const QA0 = chargeIn(base, 'A'), QB0 = chargeIn(base, 'B');
     const CAA = chargeIn(uA, 'A'), CBA = chargeIn(uA, 'B'), CAB = chargeIn(uB, 'A'), CBB = chargeIn(uB, 'B');
@@ -220,14 +231,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const charges = [...rod, ...base, ...uA.map((c) => ({ ...c, q: c.q * VA })), ...uB.map((c) => ({ ...c, q: c.q * VB }))];
     return { VA, VB, QA: QA0 + CAA * VA + CAB * VB, QB: QB0 + CBA * VA + CBB * VB, charges };
   }
-  // surface charge density just outside a sphere at angle th (from +x), in the plane: σ = ε0 E·n
-  function sigma(charges, S, th) {
-    const px = S.c + S.r * Math.cos(th) * 1.0001, py = S.r * Math.sin(th) * 1.0001;
-    let ex = 0, ey = 0;
-    for (const c of charges) { const dx = px - c.x, dy = py, r3 = (dx * dx + dy * dy) ** 1.5; ex += K * c.q * dx / r3; ey += K * c.q * dy / r3; }
-    return EPS0 * (ex * Math.cos(th) + ey * Math.sin(th));
+  // surface charge density just outside sphere S where its outward unit normal is (nx, ny, nz): σ = ε0 E·n (exact for the image charges)
+  function sigma3(charges, S, nx, ny, nz) {
+    const px = S.c + S.r * nx * 1.0001, py = S.r * ny * 1.0001, pz = S.r * nz * 1.0001;
+    let en = 0;
+    for (const c of charges) { const dx = px - c.x, dy = py - (c.y || 0), r3 = (dx * dx + dy * dy + pz * pz) ** 1.5; en += K * c.q * (dx * nx + dy * ny + pz * nz) / r3; }
+    return EPS0 * en;
   }
-  function potentialAt(charges, x, y) { let v = 0; for (const c of charges) v += K * c.q / Math.hypot(x - c.x, y); return v; }
+  // the same in the plane of the drawing, at angle th from +x
+  const sigma = (charges, S, th) => sigma3(charges, S, Math.cos(th), Math.sin(th), 0);
+  function potentialAt(charges, x, y, z = 0) { let v = 0; for (const c of charges) v += K * c.q / Math.hypot(x - c.x, y - (c.y || 0), z); return v; }
+  // the largest |σ| on sphere S around the circle in the drawing plane (n angles) and where it is; the field just outside is σ/ε0.
+  // Every charge lies in this plane, so σ is mirror symmetric about it and its largest value is found on it in every case tried in the tests.
+  function sigmaPeak(charges, S, n = 720) {
+    let best = 0, th0 = 0;
+    for (let i = 0; i < n; i++) { const th = 2 * Math.PI * i / n, s = sigma(charges, S, th); if (Math.abs(s) > Math.abs(best)) { best = s; th0 = th; } }
+    return { sigma: best, th: th0 };
+  }
+  // dry air at 1 atm breaks down near 3 × 10⁶ V/m (its dielectric strength, OpenStax University Physics Vol. 2, Table 8.1; approximate)
+  const E_BREAK = 3e6;
 
   // ---- Conductor shapes in a plane (2D cross-sections of long conductors), solved with a boundary element method ----
   // The surface is cut into straight panels, each with a uniform surface charge density σ. The unknowns are the σ of every panel and the
@@ -523,7 +545,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* Conductor shapes (2D): shape, E0 in N/C, line charge lam in nC/m at distance ld (cm) left of the conductor, net charge lamC in nC/m, probe in metres */
     shape: 'circle', E0: 1000, lam: 0, ld: 2, lamC: 0, probe: [0.025, 0], sys: null, ssol: null, chk: null, lines: null, lineKey: '',
     /* Attracting a neutral insulator: ball material, rod lowered or raised, rod charge (nC), target gap and shown gap (cm), the force taken off by Tare (N) */
-    pb: 'polystyrene', prod: false, pq: 20, ps: 3, pv: 25, tare: 0, myst: null, pol: null };
+    pb: 'polystyrene', prod: false, pq: 20, ps: 3, pv: 25, tare: 0, myst: null, pol: null,
+    /* worked by hand: A's centre (m), the rod's direction from A's centre, which rod, the ground wand, motion, electrons in flight, σ shading, camera */
+    xA: 0, ang: Math.PI, kind: 'glass', wand: { on: null, th: 0, p: null }, glide: null, dots: [], flow: { gA: 0, gB: 0, AB: 0 }, shade: { A: {}, B: {} }, cam: null, drag: null, view: null };
   const STEPS = {
     induce: [
       ['Two neutral metal spheres touch, so they are one conductor. No net charge anywhere.', (s) => Object.assign(s, { rod: false, gap: 0.05, wire: true, gA: false, gB: false, QA: 0, QB: 0, rB: 5 })],
@@ -567,7 +591,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       pos: g('--pos'), neg: g('--neg'), field: g('--field'), equi: g('--equi'), onCharge: g('--on-charge'), metal: g('--metal'), metalHi: g('--metal-hi'), rod: g('--rod'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const f = (v, d = 2) => (Math.abs(v) < 0.5 * 10 ** -d ? (0).toFixed(d) : v.toFixed(d)).replace('-', '−');
-  function geomSI() { const A = { c: 0, r: 0.05 }, B = { c: 0.05 + S.gap * CM + S.rB * CM, r: S.rB * CM }; return { A, B, x0: S.rod ? -0.05 - S.d * CM : null }; }
   // ---- Conductor shapes (2D) ----
   const sysCache = {};
   /* induced field of a set of panel coefficients at a list of points, as a flat array [ex0, ey0, ex1, ...] */
@@ -646,8 +669,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function compute() {
     if (S.preset === 'shapes') { computeShapes(); return; }
     if (S.preset === 'polar') { computePolar(); return; }
-    const g = geomSI(), sol = solve({ q0: S.q * NC, x0: g.x0, A: g.A, B: g.B, QA: S.QA, QB: S.QB, wire: S.wire, gA: S.gA, gB: S.gB });
-    S.sol = sol; S.QA = sol.QA; S.QB = sol.QB;   // the charge each sphere now holds carries into the next change of connections
+    computeSpheres();
   }
 
   // the visible window in metres and the map to the canvas (above the step bar)
@@ -921,50 +943,374 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     VG.label(ctx, `${S.pb === 'mystery' ? 'Mystery insulator' : sol.m.name} ball, 2.00 cm radius${W > 520 ? ' · side view to scale' : ''} · molecules drawn huge`, 10 * p, 14 * p, { s: 10 * p });
   }
+  // ---- The three sphere setups: a scene on a bench, worked by hand ----
+  /* world coordinates in metres: x along the bench, y up, the spheres' centres at y = 0 and the bench top at Y_BENCH */
+  const R_A = 0.05, Y_BENCH = -0.2, ROD_L = 0.34, ROD_GRIP = 0.1, ROD_R = 0.006, WAND_TIP = 0.025, WAND_L = 0.11, MIN_TIP = 0.01;
+  const TOUCH = 0.05, QDOT = 0.25 * NC, SIG_FULL = 1e-6, SG = 44, B_SHOW = 25;
+  const sphPreset = () => S.preset !== 'shapes' && S.preset !== 'polar';
+  function geomSI() {
+    const A = { c: S.xA, r: R_A }, rB = S.rB * CM, B = { c: S.xA + R_A + S.gap * CM + rB, r: rB }, D = R_A + S.d * CM;
+    return { A, B, x0: S.rod ? A.c + D * Math.cos(S.ang) : null, y0: S.rod ? D * Math.sin(S.ang) : 0 };
+  }
+  /* the rod's tip at a world point: sets the distance d from A's surface and the direction from A's centre */
+  function setTip(x, y) { const dx = x - S.xA; S.d = Math.hypot(dx, y) / CM - 5; S.ang = Math.atan2(y, dx); }
+  /* keep the tip outside both spheres by at least MIN_TIP (1 cm, the slider's least d), pushing it out from the centre it is too near */
+  function fixTip() {
+    if (!S.rod) return;
+    const g = geomSI(); let x = g.x0, y = g.y0, moved = false;
+    for (const Sp of [g.A, g.B]) { const dx = x - Sp.c, dd = Math.hypot(dx, y), m = Sp.r + MIN_TIP; if (dd < m - 1e-12) { const ux = dd > 1e-9 ? dx / dd : -1, uy = dd > 1e-9 ? y / dd : 0; x = Sp.c + ux * m; y = uy * m; moved = true; } }
+    if (y < Y_BENCH + 0.02) { y = Y_BENCH + 0.02; moved = true; }
+    if (moved) setTip(x, y);
+  }
+  /* the rod's body runs from the tip away from the line between the centres */
+  function rodDir(g) {
+    const px = Math.min(Math.max(g.x0, g.A.c), g.B.c), dx = g.x0 - px, dy = g.y0, m = Math.hypot(dx, dy);
+    return m > 1e-6 ? [dx / m, dy / m] : [0, 1];
+  }
+  /* free electrons that flowed: charge into a sphere through its ground lead (gA, gB), or from A to B (AB); one dot per QDOT of electrons */
+  function flow(dA, dB) {
+    const add = (k, q) => {
+      if (!q) return; S.flow[k] += q; let n = 0;
+      while (Math.abs(S.flow[k]) >= QDOT && n < 60) { const sg = Math.sign(S.flow[k]); S.flow[k] -= sg * QDOT; S.dots.push({ k, dir: -sg, t: -n * 0.04 }); n++; }
+      if (S.dots.length > 160) S.dots.splice(0, S.dots.length - 160);
+    };
+    const j = S.wire;
+    if (S.gA && S.gB) { add('gA', dA); add('gB', dB); }
+    else if (S.gA) { add('gA', dA + (j ? dB : 0)); if (j) add('AB', dB); }
+    else if (S.gB) { add('gB', dB + (j ? dA : 0)); if (j) add('AB', -dA); }
+    else if (j) add('AB', dB);
+  }
+  /* σ over the side of each sphere that faces the viewer, on an SG × SG grid across its disc (the exact σ at each point) */
+  function shadeGrid(charges, Sp) {
+    let qm = 0; for (const c of charges) qm = Math.max(qm, Math.abs(c.q));
+    const use = charges.filter((c) => Math.abs(c.q) > 1e-9 * qm), g = new Float32Array(SG * SG);
+    for (let j = 0; j < SG; j++) for (let i = 0; i < SG; i++) {
+      let u = (i + 0.5) / SG * 2 - 1, v = 1 - (j + 0.5) / SG * 2; const r2 = u * u + v * v;
+      if (r2 > 1) { const m = Math.sqrt(r2); u /= m; v /= m; }
+      g[j * SG + i] = sigma3(use, Sp, u, v, Math.sqrt(Math.max(0, 1 - u * u - v * v)));
+    }
+    return g;
+  }
+  function rimSigma(charges, Sp) { const a = new Float32Array(48); for (let i = 0; i < 48; i++) a[i] = sigma(charges, Sp, 2 * Math.PI * i / 48); return a; }
+  function computeSpheres() {
+    fixTip();
+    const g = geomSI(), inA = S.QA, inB = S.QB, sol = solve({ q0: S.q * NC, x0: g.x0, y0: g.y0, A: g.A, B: g.B, QA: S.QA, QB: S.QB, wire: S.wire, gA: S.gA, gB: S.gB });
+    S.sol = sol; S.QA = sol.QA; S.QB = sol.QB;   // the charge each sphere now holds carries into the next change of connections
+    flow(sol.QA - inA, sol.QB - inB);
+    sol.peakA = sigmaPeak(sol.charges, g.A); sol.peakB = sigmaPeak(sol.charges, g.B);
+    for (const [id, Sp] of [['A', g.A], ['B', g.B]]) {
+      const sh = S.shade[id], tgt = shadeGrid(sol.charges, Sp), rim = rimSigma(sol.charges, Sp);
+      sh.tgt = tgt; sh.rimT = rim; if (!sh.cur || reduceMotion) { sh.cur = Float32Array.from(tgt); sh.rim = Float32Array.from(rim); }
+    }
+    kick();
+  }
+
+  /* ---- the camera: follows the apparatus, eases when something changes, holds still while you drag ---- */
+  function viewTarget() {
+    const g = geomSI(), gl = S.glide;
+    let L = g.A.c - g.A.r - 0.05, R = g.A.c + g.A.r + 0.12;
+    if (S.gap <= B_SHOW) R = Math.max(R, g.B.c + g.B.r + 0.05);
+    if (S.rod && !(gl && gl.rodOut)) { const D = R_A + (gl && gl.dTo != null ? gl.dTo : S.d) * CM, tx = g.A.c + D * Math.cos(S.ang); L = Math.min(L, tx - 0.07); R = Math.max(R, tx + 0.07); }
+    if (R - L < 0.36) { const c = (L + R) / 2; L = c - 0.18; R = c + 0.18; }
+    if (R - L > 0.8) R = L + 0.8;
+    const Tp = S.rod && !(gl && gl.rodOut) ? Math.max(0.15, Math.min(0.4, g.y0 + 0.07)) : 0.15;
+    return { L, R, T: Tp };
+  }
+  function sphView() {
+    const p = ps(), sb = document.querySelector('.stepbar'), Hu = Math.max(220, (sb ? sb.offsetTop : H) - 6 * p);
+    if (!S.cam) S.cam = viewTarget();
+    const { L, R } = S.cam, top = S.cam.T || 0.15, benchPx = Hu - 22 * p;
+    const sc = Math.min(W / (R - L), (benchPx - (W < 620 ? 112 : 46) * p) / (top - Y_BENCH)), cx = (L + R) / 2;
+    const X = (x) => W / 2 + (x - cx) * sc, Y = (y) => benchPx - (y - Y_BENCH) * sc;
+    return { sc, X, Y, inv: (px, py) => [cx + (px - W / 2) / sc, Y_BENCH + (benchPx - py) / sc], x0: cx - W / 2 / sc, x1: cx + W / 2 / sc, benchPx, Hu, yTop: Y_BENCH + benchPx / sc };
+  }
+  /* the ground terminal on the bench, at the right of the view, and where the wand rests on it */
+  const terminal = (v) => [v.x1 - Math.min(0.06, 60 / v.sc), Y_BENCH];
+  const wandRest = (v) => { const t = terminal(v); return [t[0] - 0.09, Y_BENCH + 0.035]; };
+  /* where the wand's tip is now, and which way its handle points */
+  function wandPose(v, g) {
+    const w = S.wand;
+    if (w.on) { const Sp = w.on === 'A' ? g.A : g.B; return { tip: [Sp.c + Sp.r * Math.cos(w.th), Sp.r * Math.sin(w.th)], dir: [Math.cos(w.th), Math.sin(w.th)] }; }
+    const tip = w.p || wandRest(v); let best = null;
+    for (const Sp of [g.A, g.B]) { const d = Math.hypot(tip[0] - Sp.c, tip[1]); if (!best || d - Sp.r < best.d) best = { d: d - Sp.r, Sp }; }
+    let dx = tip[0] - best.Sp.c, dy = tip[1]; if (best.d > 0.08) { dx = 0.55; dy = 1; }
+    dy = Math.max(dy, 0.6 * Math.abs(dx)); const m = Math.hypot(dx, dy); return { tip, dir: [dx / m, dy / m] };
+  }
+  /* where a step or a check box puts the wand on a sphere: towards the earth terminal on the right, clear of B when B is close */
+  const wandTh = (id) => (id === 'B' || S.gap > 12 ? 0.9 : 1.65);
+  /* put the wand on a sphere (grounding it) at the point nearest (x, y), or take it off */
+  function wandTo(id, x, y) {
+    const w = S.wand, g = geomSI();
+    if (w.on && w.on !== id) S['g' + w.on] = false;
+    if (id) { const Sp = id === 'A' ? g.A : g.B; w.on = id; w.th = Math.atan2(y, x - Sp.c); w.p = null; S['g' + id] = true; }
+    else w.on = null;
+  }
+
+  /* ---- motion: the guided steps move the rod, sphere B and the wand at a hand's pace; the physics is solved at every frame ---- */
+  let raf = 0, last = 0;
+  function kick() { if (!raf && sphPreset()) { last = 0; raf = requestAnimationFrame(frame); } }
+  function frame(t) {
+    raf = 0; if (!sphPreset()) return;
+    t = performance.now(); const dt = last ? Math.min(0.05, (t - last) / 1000) : 0.016; last = t;
+    let busy = false;
+    const gl = S.glide;
+    if (gl) {
+      const mv = (k, to, v) => { if (to == null) return true; const d = to - S[k]; if (Math.abs(d) <= v * dt) { S[k] = to; return true; } S[k] += Math.sign(d) * v * dt; return false; };
+      let done = true;
+      if (gl.gapTo != null) { const was = S.gap; done = mv('gap', gl.gapTo, 40) && done; if (S.gap < 0.1 && gl.flags.wire) S.wire = true; else if (was < 0.1 && S.gap >= 0.1) S.wire = false; }
+      if (gl.dTo != null) done = mv('d', gl.dTo, 60) && done;
+      if (gl.wand) { gl.wand.k = Math.min(1, gl.wand.k + dt / 0.7); if (gl.wand.k < 1) done = false; }
+      if (done) endGlide(); else computeSpheres();
+      busy = true;
+    }
+    for (const d of S.dots) d.t += dt / 0.8;
+    S.dots = S.dots.filter((d) => d.t < 1);
+    if (S.dots.length) busy = true;
+    const kk = 1 - Math.exp(-dt / 0.15);
+    for (const id of ['A', 'B']) {
+      const sh = S.shade[id]; if (!sh.cur) continue; let diff = 0;
+      for (let i = 0; i < sh.cur.length; i++) { const e = sh.tgt[i] - sh.cur[i]; sh.cur[i] += e * kk; diff = Math.max(diff, Math.abs(e)); }
+      for (let i = 0; i < 48; i++) sh.rim[i] += (sh.rimT[i] - sh.rim[i]) * kk;
+      if (diff > 2e-9) busy = true; else { sh.cur.set(sh.tgt); sh.rim.set(sh.rimT); }
+    }
+    if (!S.drag) {
+      const tv = viewTarget(), c = S.cam; if (!c) S.cam = tv;
+      else { const e = Math.max(Math.abs(tv.L - c.L), Math.abs(tv.R - c.R), Math.abs(tv.T - c.T)), k = 1 - Math.exp(-dt / 0.35); if (e > 1e-4) { c.L += (tv.L - c.L) * k; c.R += (tv.R - c.R) * k; c.T += (tv.T - c.T) * k; busy = true; } else Object.assign(c, tv); }
+    }
+    draw(); if (gl) { sync(); readouts(); }
+    if (busy && !raf) raf = requestAnimationFrame(frame);
+  }
+  /* finish the motion at once (a new step, or Record) and set the connections the step asked for */
+  function endGlide() {
+    const gl = S.glide; if (!gl) return; S.glide = null;
+    if (gl.gapTo != null) S.gap = gl.gapTo;
+    if (gl.dTo != null) S.d = gl.dTo;
+    if (gl.rodOut) { S.rod = false; S.d = gl.dBack; }
+    if (gl.wand && gl.wand.to) { const g = geomSI(), Sp = gl.wand.to === 'A' ? g.A : g.B, th = wandTh(gl.wand.to); wandTo(gl.wand.to, Sp.c + Math.cos(th), Math.sin(th)); }
+    if (gl.wand && !gl.wand.to) S.wand.p = null;
+    Object.assign(S, gl.flags);
+    computeSpheres(); sync(); draw(); readouts();
+  }
+  /* turn the jump a step makes into a motion from the arrangement before it (prev) */
+  function planGlide(prev) {
+    const to = { gap: S.gap, rod: S.rod, d: S.d, gA: S.gA, gB: S.gB, wire: S.wire }, gl = { flags: { wire: to.wire, gA: to.gA, gB: to.gB } };
+    let any = false;
+    if (Math.abs(to.gap - prev.gap) > 1e-9) { gl.gapTo = to.gap; S.gap = prev.gap; S.wire = to.wire && prev.gap < 0.1; any = true; }
+    if (to.rod && !prev.rod) { gl.dTo = to.d; S.d = Math.max(to.d + 20, 40); S.ang = Math.PI; any = true; }
+    if (!to.rod && prev.rod) { S.rod = true; gl.rodOut = true; gl.dTo = Math.max(prev.d + 25, 45); gl.dBack = prev.d; S.d = prev.d; any = true; }
+    for (const id of ['A', 'B']) {
+      if (to['g' + id] && !prev['g' + id]) { S['g' + id] = false; const v = sphView(), w = wandPose(v, geomSI()); gl.wand = { to: id, from: w.tip, k: 0 }; if (S.wand.on && S.wand.on !== id) wandTo(null); any = true; }
+      if (!to['g' + id] && prev['g' + id] && S.wand.on === id) { const v = sphView(), w = wandPose(v, geomSI()); wandTo(null); S.wand.p = null; gl.wand = { to: null, from: w.tip, k: 0 }; any = true; }
+    }
+    if (any) S.glide = gl;
+  }
+
+  /* ---- drawing ---- */
+  const rgb = (c) => { const m = /^#([0-9a-f]{6})$/i.exec(c || ''); if (!m) return [128, 128, 128]; const n = parseInt(m[1], 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+  const shadeAlpha = (sg) => Math.min(1, Math.sqrt(Math.abs(sg) / SIG_FULL));
+  let shadeCan = null;
+  function drawShade(id, x, y, r) {
+    const sh = S.shade[id]; if (!sh.cur) return;
+    if (!shadeCan) { shadeCan = document.createElement('canvas'); shadeCan.width = shadeCan.height = SG; }
+    const sx = shadeCan.getContext('2d'), im = sx.createImageData(SG, SG), P = rgb(T.pos), N = rgb(T.neg);
+    for (let k = 0; k < SG * SG; k++) { const v = sh.cur[k], c = v > 0 ? P : N, a = shadeAlpha(v); im.data[4 * k] = c[0]; im.data[4 * k + 1] = c[1]; im.data[4 * k + 2] = c[2]; im.data[4 * k + 3] = Math.round(235 * a); }
+    sx.putImageData(im, 0, 0);
+    ctx.save(); ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.clip(); ctx.imageSmoothingEnabled = true; ctx.imageSmoothingQuality = 'high'; ctx.drawImage(shadeCan, x - r, y - r, 2 * r, 2 * r);
+    /* the metal's sheen stays on top of the colour */
+    const gl = ctx.createRadialGradient(x - r * 0.38, y - r * 0.42, 0, x - r * 0.38, y - r * 0.42, r * 0.36); gl.addColorStop(0, 'rgba(255,255,255,0.55)'); gl.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = gl; ctx.fillRect(x - r, y - r, 2 * r, 2 * r);
+    const sd = ctx.createRadialGradient(x - r * 0.3, y - r * 0.3, r * 0.4, x, y, r * 1.02); sd.addColorStop(0, 'rgba(0,0,0,0)'); sd.addColorStop(1, 'rgba(0,0,0,0.28)');
+    ctx.fillStyle = sd; ctx.fillRect(x - r, y - r, 2 * r, 2 * r); ctx.restore();
+  }
+  /* a point along a polyline, t from 0 to 1 by length */
+  function along(pts, t) {
+    let L = 0; const seg = []; for (let i = 1; i < pts.length; i++) { const l = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); seg.push(l); L += l; }
+    let s = Math.max(0, Math.min(1, t)) * L;
+    for (let i = 0; i < seg.length; i++) { if (s <= seg[i] || i === seg.length - 1) { const f = seg[i] ? Math.min(1, s / seg[i]) : 0; return [pts[i][0] + f * (pts[i + 1][0] - pts[i][0]), pts[i][1] + f * (pts[i + 1][1] - pts[i][1])]; } s -= seg[i]; }
+    return pts[pts.length - 1];
+  }
+  const bez = (a, b, c, d, n = 16) => { const o = []; for (let i = 0; i <= n; i++) { const t = i / n, u = 1 - t; o.push([u * u * u * a[0] + 3 * u * u * t * b[0] + 3 * u * t * t * c[0] + t * t * t * d[0], u * u * u * a[1] + 3 * u * u * t * b[1] + 3 * u * t * t * c[1] + t * t * t * d[1]]); } return o; };
+  function drawSpheres() {
+    const p = ps(), v = sphView(), g = geomSI(), sol = S.sol, X = v.X, Y = v.Y, sc = v.sc, dk = VG.dark();
+    VG.backdrop(ctx, W, H);
+    VG.bench(ctx, 0, v.benchPx, W, 16 * p, 12 * p);
+    const paths = {}, wp = wandPose(v, g);
+    /* the ground terminal and the leads from it */
+    const [tx, ty] = terminal(v), TX = X(tx), TY = Y(ty);
+    const leadTo = (pt, sag) => { const a = [TX, TY - 14 * p], d = [X(pt[0]), Y(pt[1])], low = v.benchPx - 4 * p; return bez(a, [a[0] - 30 * p, low + sag * 0.1], [d[0] + 8 * p, Math.max(d[1], low - sag * 0.3)], d, 24); };
+    /* the stands: insulating acrylic posts on bases */
+    for (const Sp of [g.A, g.B]) {
+      const x = X(Sp.c); if (x > W + 60 || (Sp === g.B && S.gap > B_SHOW)) continue;
+      VG.stand(ctx, x, v.benchPx - 2 * p, Y(-Sp.r) + 2, { s: Math.max(0.6, Math.min(1.2, sc / 1100)), rod: dk ? '#7d93a3' : '#cfe0ea', color: dk ? '#2b3440' : '#3a4553' });
+    }
+    VG.box(ctx, TX - 16 * p, TY - 16 * p, 32 * p, 16 * p, { color: dk ? '#2e3742' : '#3a4553', r: 3 });
+    ctx.fillStyle = '#3fa34d'; ctx.beginPath(); ctx.arc(TX, TY - 16 * p, 4.5 * p, 0, 7); ctx.fill(); ctx.fillStyle = '#e2c83a'; ctx.beginPath(); ctx.arc(TX, TY - 16 * p, 2.2 * p, 0, 7); ctx.fill();
+    VG.plate(ctx, 'earth', TX, TY - 7 * p, { s: 7 * p });
+    /* the joining wire, when the spheres are joined but apart */
+    if (S.wire && S.gap >= 0.1) {
+      const a = [X(g.A.c), Y(g.A.r)], b = [X(g.B.c), Y(g.B.r)], top = Math.min(a[1], b[1]) - Math.min(60 * p, 0.04 * sc + 20 * p);
+      const pts = bez(a, [a[0], top], [b[0], top], b, 24); VG.cable(ctx, a[0], a[1], b[0], b[1], 0, {}); ctx.save(); ctx.strokeStyle = dk ? '#c58a4a' : '#b36a2a'; ctx.lineWidth = 1.6 * p; ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.stroke(); ctx.restore();
+      paths.AB = [[X(g.A.c), Y(0)], ...pts, [X(g.B.c), Y(0)]];
+    } else if (S.wire) paths.AB = [[X(g.A.c), Y(0)], [X(g.A.c + g.A.r), Y(0)], [X(g.B.c), Y(0)]];
+    /* clip leads for a sphere grounded while the wand is on the other one */
+    for (const id of ['A', 'B']) {
+      if (!S['g' + id] || S.wand.on === id) continue;
+      const Sp = id === 'A' ? g.A : g.B, at = [Sp.c + Sp.r * Math.cos(-0.6), Sp.r * Math.sin(-0.6)], pts = leadTo(at, 30 * p);
+      ctx.save(); ctx.strokeStyle = '#3fa34d'; ctx.lineWidth = 2.2 * p; ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.stroke(); ctx.restore();
+      paths['g' + id] = [...pts, [X(Sp.c), Y(0)]];
+    }
+    /* the spheres */
+    const smax = Math.max(1e-30, ...[...S.shade.A.rim || [], ...S.shade.B.rim || []].map(Math.abs));
+    for (const [id, Sp] of [['A', g.A], ['B', g.B]]) {
+      const x = X(Sp.c), y = Y(0), r = Sp.r * sc; if (x - r > W + 20) continue;
+      if (id === 'B' && S.gap > B_SHOW) continue;
+      VG.ball(ctx, x, y, r, /^#[0-9a-f]{6}$/i.test(T.metal) ? T.metal : '#c9d1db', { glint: 0.9 });
+      drawShade(id, x, y, r);
+      ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.strokeStyle = dk ? 'rgba(255,255,255,0.18)' : 'rgba(20,30,45,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+      const rim = S.shade[id].rim;
+      ctx.font = `700 ${Math.max(10, Math.min(15, r * 0.22)) * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      if (rim) for (let i = 0; i < 48; i++) { const th = 2 * Math.PI * i / 48, a = Math.abs(rim[i]) / smax; if (a < 0.04) continue; ctx.globalAlpha = 0.2 + 0.8 * a; ctx.fillStyle = rim[i] > 0 ? T.pos : T.neg; ctx.fillText(rim[i] > 0 ? '+' : '−', x + (r + 9 * p) * Math.cos(th), y - (r + 9 * p) * Math.sin(th)); }
+      ctx.globalAlpha = 1;
+      /* the sphere's name and (unless Blind) its net charge, under it beside the stand */
+      VG.label(ctx, id, x - 8 * p, y + r + 24 * p, { a: 'right', s: 13 * p, w: 700, c: T.ink });
+      if (!S.blind) { const Q = id === 'A' ? sol.QA : sol.QB; VG.label(ctx, `${f(Q / NC, 2)} nC`, x + 8 * p, y + r + 24 * p, { a: 'left', s: 12 * p, w: 600, m: true, c: T.ink }); }
+      /* where the field at the surface passes air's breakdown field */
+      const pk = id === 'A' ? sol.peakA : sol.peakB;
+      if (pk && Math.abs(pk.sigma) / EPS0 > E_BREAK) {
+        const px = x + r * Math.cos(pk.th), py = y - r * Math.sin(pk.th); ctx.save(); ctx.shadowColor = '#b8a6ff'; ctx.shadowBlur = 14 * p; ctx.fillStyle = 'rgba(184,166,255,0.85)'; ctx.beginPath(); ctx.arc(px, py, 5 * p, 0, 7); ctx.fill(); ctx.restore();
+        const lx = px + Math.cos(pk.th) * 14 * p, ly = py - Math.sin(pk.th) * 14 * p + (Math.sin(pk.th) < -0.3 ? 26 : -22) * p;
+        VG.label(ctx, 'over 3 MV/m: air would spark', Math.max(6 * p, Math.min(W - 6 * p, lx)), ly, { a: Math.cos(pk.th) < -0.3 ? 'right' : Math.cos(pk.th) > 0.3 ? 'left' : 'center', s: 10 * p, w: 600, c: T.ink });
+      }
+    }
+    if (S.gap > B_SHOW || X(g.B.c - g.B.r) > W) { const t = `B is ${f(S.gap, 0)} cm away →`; VG.label(ctx, t, W - 10 * p, Y(0), { a: 'right', s: 11 * p, c: T.muted }); }
+    /* the rod: glass rubbed with silk (positive) or rubber rubbed with fur (negative); its charge is a point at the very tip */
+    if (g.x0 != null) {
+      const [ux, uy] = rodDir(g), t0 = [X(g.x0), Y(g.y0)], rw = Math.max(3.5 * p, ROD_R * sc), Lp = ROD_L * sc, e = [t0[0] + ux * Lp, t0[1] - uy * Lp], gp = [t0[0] + ux * (ROD_L - ROD_GRIP) * sc, t0[1] - uy * (ROD_L - ROD_GRIP) * sc];
+      const glass = S.kind === 'glass', base = glass ? (dk ? '#7fa3b4' : '#bcd9e4') : (dk ? '#5a5862' : '#2c2b30');
+      ctx.save(); ctx.lineCap = 'round';
+      VG.rod(ctx, t0[0] + ux * rw, t0[1] - uy * rw, gp[0], gp[1], rw, { color: base });
+      ctx.globalAlpha = glass ? 0.85 : 1; ctx.fillStyle = base; ctx.beginPath(); ctx.arc(t0[0] + ux * rw, t0[1] - uy * rw, rw, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+      VG.rod(ctx, gp[0], gp[1], e[0], e[1], rw * 1.35, { color: dk ? '#6b4f33' : '#8a6a3c' });
+      /* the charge at the tip: a glow and its sign */
+      if (S.q) {
+        const col = S.q > 0 ? T.pos : T.neg, k = Math.min(1, Math.abs(S.q) / 20), gl = ctx.createRadialGradient(t0[0], t0[1], 0, t0[0], t0[1], (10 + 14 * k) * p);
+        gl.addColorStop(0, S.q > 0 ? 'rgba(255,118,96,0.55)' : 'rgba(105,160,255,0.55)'); gl.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(t0[0], t0[1], (10 + 14 * k) * p, 0, 7); ctx.fill();
+        ctx.fillStyle = col; ctx.beginPath(); ctx.arc(t0[0], t0[1], 2.6 * p, 0, 7); ctx.fill();
+        ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; const n = Math.max(1, Math.round(4 * k));
+        for (let i = 0; i < n; i++) { const a = Math.atan2(-uy, ux) + Math.PI / 2 + (i - (n - 1) / 2) * 0.5; ctx.fillText(S.q > 0 ? '+' : '−', t0[0] + Math.cos(a) * 12 * p + ux * 8 * p, t0[1] + Math.sin(a) * 12 * p - uy * 8 * p); }
+      }
+      ctx.restore();
+      /* its name, beside the rod a little way back from the tip, kept clear of the rod card */
+      const nx = uy, ny = ux, side = ny > 0.2 || (Math.abs(ny) <= 0.2 && nx > 0) ? 1 : -1, bx = t0[0] + ux * 0.1 * sc + side * nx * 22 * p, by = t0[1] - uy * 0.1 * sc + side * ny * 22 * p;
+      VG.label(ctx, `${glass ? 'glass' : 'rubber'} rod ${S.q > 0 ? '+' : ''}${S.q} nC`.replace('-', '−'), Math.min(W - 110 * p, Math.max(6 * p, bx)), Math.min(v.benchPx - 10 * p, Math.max((W < 620 ? 124 : 62) * p, by)), { s: 11 * p, w: 600, c: T.ink });
+      /* the distance d from the tip to A's surface, drawn along the line to A's centre */
+      const ax = X(g.A.c + g.A.r * Math.cos(S.ang)), ay = Y(g.A.r * Math.sin(S.ang));
+      if (Math.hypot(ax - t0[0], ay - t0[1]) > 18 * p) {
+        ctx.save(); ctx.strokeStyle = T.muted; ctx.setLineDash([3 * p, 3 * p]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(t0[0], t0[1]); ctx.lineTo(ax, ay); ctx.stroke(); ctx.restore();
+        const mx = (t0[0] + ax) / 2, my = (t0[1] + ay) / 2, off = Math.abs(Math.sin(S.ang)) > 0.6 ? [-34 * p * Math.sign(Math.cos(S.ang) || 1), 0] : [0, 12 * p];
+        VG.label(ctx, `d = ${f(S.d, 1)} cm`, mx + off[0], my + off[1], { a: 'center', s: 10.5 * p, m: true, c: T.ink });
+      }
+    }
+    /* the ground wand: an insulating handle with a metal tip, on a lead to the earth terminal */
+    {
+      let tip = wp.tip, dir = wp.dir; const gw = S.glide && S.glide.wand;
+      if (gw) { const v2 = S.glide.wand, k = 0.5 - 0.5 * Math.cos(Math.PI * v2.k), toP = v2.to ? (() => { const Sp = v2.to === 'A' ? g.A : g.B, th = wandTh(v2.to); return [Sp.c + Sp.r * Math.cos(th), Sp.r * Math.sin(th)]; })() : wandRest(v); tip = [v2.from[0] + (toP[0] - v2.from[0]) * k, v2.from[1] + (toP[1] - v2.from[1]) * k]; }
+      const T0 = [X(tip[0]), Y(tip[1])], m1 = [T0[0] + dir[0] * WAND_TIP * sc, T0[1] - dir[1] * WAND_TIP * sc], m2 = [T0[0] + dir[0] * WAND_L * sc, T0[1] - dir[1] * WAND_L * sc];
+      const lead = leadTo([tip[0] + dir[0] * WAND_L, tip[1] + dir[1] * WAND_L], 40 * p);
+      ctx.save(); ctx.strokeStyle = '#3fa34d'; ctx.lineWidth = 2.2 * p; ctx.beginPath(); lead.forEach((q, i) => (i ? ctx.lineTo(q[0], q[1]) : ctx.moveTo(q[0], q[1]))); ctx.stroke(); ctx.restore();
+      VG.rod(ctx, T0[0], T0[1], m1[0], m1[1], Math.max(1.6 * p, 0.0025 * sc), { color: '#c0c7d0' });
+      VG.rod(ctx, m1[0], m1[1], m2[0], m2[1], Math.max(3.5 * p, 0.007 * sc), { color: '#c23f2c' });
+      ctx.fillStyle = '#c0c7d0'; ctx.beginPath(); ctx.arc(T0[0], T0[1], Math.max(2 * p, 0.003 * sc), 0, 7); ctx.fill();
+      if (S.wand.on) paths['g' + S.wand.on] = [...lead, m1, T0, [X(S.wand.on === 'A' ? g.A.c : g.B.c), Y(0)]];
+      if (!S.wand.on && !gw && !S.wand.p && W > 520) VG.label(ctx, 'ground wand', T0[0] - 4 * p, T0[1] + 12 * p, { a: 'right', s: 10 * p, c: T.muted });
+    }
+    /* electrons on the move (drawn slowed down) */
+    for (const d of S.dots) {
+      if (d.t < 0) continue; const pts = paths[d.k]; if (!pts) continue;
+      const q = along(pts, d.dir > 0 ? d.t : 1 - d.t), a = Math.min(1, 4 * Math.min(d.t, 1 - d.t) + 0.2);
+      ctx.save(); ctx.globalAlpha = a; ctx.shadowColor = T.neg; ctx.shadowBlur = 6 * p; ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(q[0], q[1], 3 * p, 0, 7); ctx.fill();
+      ctx.shadowBlur = 0; ctx.strokeStyle = dk ? 'rgba(255,255,255,0.7)' : '#ffffff'; ctx.lineWidth = 1; ctx.stroke(); ctx.restore();
+    }
+    /* key: the colour scale for σ, and what a moving dot is */
+    const narrow = W < 620, kw = narrow ? Math.min(200 * p, W - 40 * p) : Math.min(200 * p, W * 0.42), kx = W - kw - 18 * p, ky = narrow ? 58 * p : 14 * p;
+    VG.panel(ctx, kx - 8 * p, ky - 4 * p, kw + 16 * p, 52 * p, { r: 8 });
+    const bar = ctx.createLinearGradient(kx, 0, kx + kw, 0), P = rgb(T.pos), N = rgb(T.neg);
+    const tickAt = (sg) => 0.5 + 0.5 * Math.sign(sg) * shadeAlpha(sg);
+    for (let i = 0; i <= 20; i++) { const u = i / 20, a = Math.abs(2 * u - 1), c = u > 0.5 ? P : N; bar.addColorStop(u, `rgba(${c[0]},${c[1]},${c[2]},${0.92 * a})`); }
+    ctx.fillStyle = bar; ctx.fillRect(kx, ky + 12 * p, kw, 7 * p); ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(kx, ky + 12 * p, kw, 7 * p);
+    VG.label(ctx, 'surface charge density σ, µC/m²', kx, ky + 5 * p, { s: 9.5 * p, c: T.muted });
+    for (const sg of [-1e-6, -2.5e-7, 0, 2.5e-7, 1e-6]) { const u = tickAt(sg); VG.label(ctx, sg === 0 ? '0' : `${sg > 0 ? '+' : '−'}${Math.abs(sg) < 1e-6 ? '0.25' : '1'}`, kx + u * kw, ky + 26 * p, { a: 'center', s: 9 * p, m: true, c: T.muted }); }
+    ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(kx + 4 * p, ky + 39 * p, 3 * p, 0, 7); ctx.fill();
+    VG.label(ctx, `electrons, 1 dot = ${f(QDOT / NC, 2)} nC, slowed`, kx + 12 * p, ky + 39 * p, { s: 9 * p, c: T.muted });
+    if (W > 760 && (S.step <= 0 && !S.drag)) VG.label(ctx, 'Drag the rod, either sphere, or the ground wand', (330 * p + kx) / 2, 26 * p, { a: 'center', s: 10.5 * p, c: T.muted });
+    S.view = v; S.paths = paths; S.wandAt = { tip: wp.tip, dir: wp.dir };
+  }
+
+  /* ---- working the apparatus by hand ---- */
+  function hitSphere(v, g, px, py) {
+    for (const [id, Sp] of [['A', g.A], ['B', g.B]]) {
+      if (id === 'B' && S.gap > B_SHOW) continue;
+      const x = v.X(Sp.c), y = v.Y(0), r = Sp.r * v.sc;
+      if (Math.hypot(px - x, py - y) < r || (Math.abs(px - x) < 14 && py > y + r && py < v.benchPx)) return id;
+    }
+    return null;
+  }
+  const segDist = (px, py, a, b) => { const dx = b[0] - a[0], dy = b[1] - a[1], t = Math.max(0, Math.min(1, ((px - a[0]) * dx + (py - a[1]) * dy) / (dx * dx + dy * dy || 1))); return Math.hypot(px - a[0] - t * dx, py - a[1] - t * dy); };
+  function pickUp(px, py) {
+    const v = sphView(), g = geomSI(), w = wandPose(v, g), p = ps();
+    const wt = [v.X(w.tip[0]), v.Y(w.tip[1])], we = [wt[0] + w.dir[0] * WAND_L * v.sc, wt[1] - w.dir[1] * WAND_L * v.sc];
+    if (segDist(px, py, wt, we) < 12 * p) return { what: 'wand', off: [wt[0] - px, wt[1] - py] };
+    if (g.x0 != null) { const [ux, uy] = rodDir(g), t0 = [v.X(g.x0), v.Y(g.y0)], e = [t0[0] + ux * ROD_L * v.sc, t0[1] - uy * ROD_L * v.sc]; if (segDist(px, py, t0, e) < 12 * p) return { what: 'rod', off: [t0[0] - px, t0[1] - py] }; }
+    const id = hitSphere(v, g, px, py); if (id) { const Sp = id === 'A' ? g.A : g.B; return { what: id, off: [v.X(Sp.c) - px, 0] }; }
+    return null;
+  }
+  function dragTo(px, py) {
+    const dr = S.drag, v = S.view || sphView(), [wx, wy] = v.inv(px + dr.off[0], py + dr.off[1]);
+    endGlide(); own();
+    if (dr.what === 'rod') { S.rod = true; setTip(Math.max(v.x0 - 0.1, wx), Math.min(v.yTop, Math.max(Y_BENCH + 0.02, wy))); dr.away = wx < v.x0 + 0.01; }
+    else if (dr.what === 'wand') {
+      const g = geomSI(); let hit = null;
+      for (const [id, Sp] of [['A', g.A], ['B', g.B]]) { if (id === 'B' && S.gap > B_SHOW) continue; if (Math.hypot(wx - Sp.c, wy) < Sp.r + 0.004) hit = id; }
+      if (hit) { if (S.wand.on !== hit) { if (S.wand.on) wandTo(null); } wandTo(hit, wx, wy); }
+      else { if (S.wand.on) { S['g' + S.wand.on] = false; wandTo(null); } S.wand.p = [Math.min(v.x1 - 0.01, Math.max(v.x0 + 0.01, wx)), Math.min(v.yTop - 0.02, Math.max(Y_BENCH + 0.01, wy))]; }
+    } else {
+      const g = geomSI(), tip = g.x0 != null ? [g.x0, g.y0] : null, was = S.gap;
+      if (dr.what === 'A') {
+        const bc = g.B.c; let xa = Math.min(0.25, Math.max(-0.25, wx)), gap = (bc - g.B.r - (xa + R_A)) / CM;
+        if (gap < 0.3) { gap = TOUCH; xa = bc - g.B.r - R_A - TOUCH * CM; }
+        if (gap > 40) { gap = 40; xa = bc - g.B.r - R_A - 40 * CM; }
+        if (tip && Math.hypot(tip[0] - xa, tip[1]) < R_A + MIN_TIP) return;
+        S.xA = xa; S.gap = gap; if (tip) setTip(tip[0], tip[1]);
+      } else {
+        let gap = (wx - g.B.r - (g.A.c + R_A)) / CM; if (gap < 0.3) gap = TOUCH; gap = Math.min(40, gap);
+        const bc = g.A.c + R_A + gap * CM + g.B.r; if (tip && Math.hypot(tip[0] - bc, tip[1]) < g.B.r + MIN_TIP) return;
+        S.gap = gap;
+      }
+      if (S.gap < 0.1) S.wire = true; else if (was < 0.1) S.wire = false;
+    }
+    update();
+  }
+  function letGo() {
+    const dr = S.drag; S.drag = null; if (!dr) return;
+    if (dr.what === 'rod' && dr.away) { S.rod = false; S.ang = Math.PI; S.d = Math.min(30, Math.max(1, Math.round(S.d * 2) / 2)); update(); }
+    if (dr.what === 'wand' && !S.wand.on) { S.wand.p = null; update(); }
+    kick();
+  }
+  function pickRod(kind) {
+    endGlide(); own(); S.kind = kind; const m = Math.abs(S.q) || 10; S.q = kind === 'glass' ? m : -m;
+    if (!S.rod) { S.rod = true; S.ang = Math.PI; if (!reduceMotion) { const dTo = S.d; S.d = Math.max(dTo + 20, 40); S.glide = { dTo, flags: { wire: S.wire, gA: S.gA, gB: S.gB } }; } }
+    update();
+  }
+  function putRodDown() {
+    endGlide(); own(); if (!S.rod) return;
+    if (reduceMotion) { S.rod = false; update(); return; }
+    S.glide = { dTo: Math.max(S.d + 25, 45), rodOut: true, dBack: Math.min(30, Math.max(1, S.d)), flags: { wire: S.wire, gA: S.gA, gB: S.gB } }; update();
+  }
   function draw() {
     if (S.preset === 'polar') { if (!T || !W || !S.pol) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawPolar(); return; }
     if (S.preset === 'shapes') { if (!T || !W || !S.ssol) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); drawShapes(); return; }
     if (!T || !W || !S.sol) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    const p = ps(), g = geomSI(), sol = S.sol;
-    // view: from the rod tip (or a bit left of A) to B's far side, clipped so B far away runs off to the right
-    const left = Math.min(-0.09, (g.x0 ?? -0.09) - 0.03), right = Math.max(0.2, Math.min(g.B.c + g.B.r + 0.03, 0.55));
-    const sc = Math.min((W - 40 * p) / (right - left), (H - 150 * p) / 0.2), cx = (x) => 20 * p + (x - left) * sc, cy = H * 0.42;
-    // stands and ground
-    for (const [Sp, gnd, lab] of [[g.A, S.gA, 'A'], [g.B, S.gB, 'B']]) {
-      const x = cx(Sp.c); if (x > W + 50) continue;
-      ctx.fillStyle = T.gridStrong; ctx.fillRect(x - 3 * p, cy + Sp.r * sc, 6 * p, H - 90 * p - (cy + Sp.r * sc)); ctx.fillRect(x - 24 * p, H - 92 * p, 48 * p, 6 * p);
-      if (gnd) { const gx = x + Sp.r * sc * 0.7, gy = cy + Sp.r * sc * 0.7; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx + 30 * p, gy + 20 * p); ctx.lineTo(gx + 30 * p, H - 104 * p); ctx.stroke();
-        for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.moveTo(gx + 30 * p - (14 - 5 * i) * p, H - 104 * p + i * 5 * p); ctx.lineTo(gx + 30 * p + (14 - 5 * i) * p, H - 104 * p + i * 5 * p); ctx.stroke(); }
-        ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText('to ground', gx + 36 * p, H - 112 * p); }
-    }
-    if (S.wire && S.gap > 0.5) { ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(cx(g.A.c), cy - g.A.r * sc); ctx.quadraticCurveTo(cx((g.A.c + g.B.c) / 2), cy - 0.1 * sc, cx(g.B.c), cy - g.B.r * sc); ctx.stroke(); }
-    // spheres with their surface charge
-    const sig = [[g.A, []], [g.B, []]];
-    let smax = 0;
-    for (const s of sig) for (let i = 0; i < 48; i++) { const th = 2 * Math.PI * i / 48, v = sigma(sol.charges, s[0], th); s[1].push([th, v]); smax = Math.max(smax, Math.abs(v)); }
-    for (const [Sp, list] of sig) {
-      const x = cx(Sp.c), r = Sp.r * sc; if (x - r > W + 20) continue;
-      const grd = ctx.createRadialGradient(x - r * 0.35, cy - r * 0.35, r * 0.1, x, cy, r); grd.addColorStop(0, T.metalHi); grd.addColorStop(1, T.metal);
-      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(x, cy, r, 0, 7); ctx.fill();
-      /* polished metal: a soft glint, while the rim stays light so the + and − signs near the surface keep their contrast */
-      const gl = ctx.createRadialGradient(x - r * 0.38, cy - r * 0.42, 0, x - r * 0.38, cy - r * 0.42, r * 0.34);
-      gl.addColorStop(0, 'rgba(255,255,255,0.7)'); gl.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(x, cy, r, 0, 7); ctx.fill();
-      ctx.beginPath(); ctx.arc(x, cy, r, 0, 7); ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.stroke();
-      ctx.font = `700 ${Math.max(10, Math.min(15, r * 0.22)) * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      if (smax > 0) for (const [th, v] of list) { const a = Math.abs(v) / smax; if (a < 0.04) continue; ctx.globalAlpha = 0.15 + 0.85 * a; ctx.fillStyle = v > 0 ? T.pos : T.neg; ctx.fillText(v > 0 ? '+' : '−', x + (r - 9 * p) * Math.cos(th), cy - (r - 9 * p) * Math.sin(th)); }
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.fillText(Sp === g.A ? 'A' : 'B', x, cy - r - 12 * p);
-      if (!S.blind) { ctx.font = `600 ${12 * p}px ${T.mono}`; ctx.fillText(`${f((Sp === g.A ? sol.QA : sol.QB) / NC, 2)} nC`, x, cy + r + 14 * p); }
-    }
-    if (g.B.c - g.B.r > right) { ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(`B is ${f(S.gap, 0)} cm away →`, W - 14 * p, cy); }
-    // rod
-    if (g.x0 != null) {
-      const tx = cx(g.x0); ctx.fillStyle = T.rod; ctx.beginPath(); ctx.moveTo(tx, cy); ctx.lineTo(tx - 14 * p, cy - 8 * p); ctx.lineTo(-10, cy - 8 * p); ctx.lineTo(-10, cy + 8 * p); ctx.lineTo(tx - 14 * p, cy + 8 * p); ctx.closePath(); ctx.fill();
-      ctx.fillStyle = S.q >= 0 ? T.pos : T.neg; ctx.font = `700 ${13 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-      for (let i = 0; i < 4; i++) ctx.fillText(S.q >= 0 ? '+' : '−', tx - 10 * p - i * 16 * p, cy - 16 * p);
-      ctx.fillStyle = T.ink; ctx.font = `600 ${11.5 * p}px ${T.ui}`; ctx.fillText(`rod ${S.q > 0 ? '+' : ''}${S.q} nC`.replace('-', '−'), Math.max(50 * p, tx - 40 * p), cy + 24 * p);
-    }
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawSpheres();
   }
   const REG = ['outside the conductor', 'inside the metal', 'in the empty cavity'];
   // a small number in plain scientific notation, e.g. 3.1 × 10⁻⁴
@@ -1011,12 +1357,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     let h;
     if (S.blind) h = '<div class="wide"><dt>Net charges and potentials</dt><dd class="ok">hidden in Blind: read the marks</dd></div>';
     else h = dd('Net charge on A', `${f(sol.QA / NC, 3)} nC`) + dd('Net charge on B', `${f(sol.QB / NC, 3)} nC`) + dd('Potential of A', `${f(sol.VA, 0)} V`) + dd('Potential of B', `${f(sol.VB, 0)} V`) + dd('A + B', `${f((sol.QA + sol.QB) / NC, 3)} nC`, true);
+    /* the strongest field just outside each sphere, σ/ε₀ at the point of largest |σ|, against air's breakdown field */
+    const ef = (pk) => { const E = Math.abs(pk.sigma) / EPS0; return `${f(E / 1e6, 2)} MV/m${E > E_BREAK ? ' (above 3 MV/m: air would spark)' : ''}`; };
+    h += dd('Largest field at A\'s surface', ef(sol.peakA), true) + (S.gap > B_SHOW ? '' : dd('Largest field at B\'s surface', ef(sol.peakB), true));
+    if (S.rod) h += dd('Rod tip to A\'s surface d', `${f(S.d, 2)} cm${Math.abs(Math.sin(S.ang)) > 1e-3 ? `, ${f(180 - Math.abs(S.ang) * 180 / Math.PI, 0)}° off the line of centres` : ''}`, true);
     $('out').innerHTML = h;
   }
   function sync() {
     $('rodOn').checked = S.rod; $('sQ').value = S.q; $('oQ').textContent = `${S.q > 0 ? '+' : ''}${S.q} nC`.replace('-', '−'); $('sD').value = S.d; $('oD').textContent = `${f(S.d, 1)} cm`;
     $('sG').value = S.gap; $('oG').textContent = S.gap < 0.1 ? 'touching' : `${f(S.gap, 1)} cm`; $('sRB').value = S.rB; $('oRB').textContent = `${f(S.rB, 1)} cm`;
     $('wire').checked = S.wire; $('gA').checked = S.gA; $('gB').checked = S.gB;
+    $('rodCard').hidden = !sphPreset(); $('rodGlass').setAttribute('aria-pressed', String(S.rod && S.kind === 'glass')); $('rodRubber').setAttribute('aria-pressed', String(S.rod && S.kind === 'rubber')); $('rodAway').disabled = !S.rod;
     const sh = S.preset === 'shapes', pol = S.preset === 'polar';
     $('appSec').hidden = sh || pol; $('shapeSec').hidden = !sh; $('polSec').hidden = !pol; $('modelSph').hidden = sh || pol; $('modelShape').hidden = !sh; $('modelPol').hidden = !pol;
     for (const b of document.querySelectorAll('#ballChips button')) b.setAttribute('aria-pressed', String(b.dataset.b === S.pb));
@@ -1032,20 +1383,39 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('next').disabled = S.step < 0 || S.step >= st.length - 1; $('next').classList.toggle('attn', !$('next').disabled);
   }
   function update() { compute(); sync(); draw(); readouts(); if (S.preset === 'polar' && S.pv !== pTarget()) pKick(); }
-  function goStep(k) { S.step = k; STEPS[S.preset][k][1](S); update(); }
+  function goStep(k) {
+    endGlide();
+    const prev = { gap: S.gap, rod: S.rod, d: S.d, gA: S.gA, gB: S.gB, wire: S.wire };
+    S.step = k; STEPS[S.preset][k][1](S);
+    if (sphPreset()) {
+      if (k === 0) { S.xA = 0; S.ang = Math.PI; S.dots = []; S.flow = { gA: 0, gB: 0, AB: 0 }; S.wand = { on: null, th: 0, p: null }; S.kind = S.q < 0 ? 'rubber' : 'glass'; S.shade = { A: {}, B: {} }; S.cam = null; }
+      else if (!reduceMotion) planGlide(prev);
+      if (S.gA && !S.wand.on) wandTo('A', S.xA + Math.cos(wandTh('A')), Math.sin(wandTh('A'))); else if (S.gB && !S.wand.on) { const b = geomSI().B; wandTo('B', b.c + Math.cos(wandTh('B')), Math.sin(wandTh('B'))); }
+    }
+    update();
+  }
   function applyPreset(p) { S.preset = p; $('presetHint').textContent = HINT[p]; goStep(0); }
   $('next').addEventListener('click', () => goStep(Math.min(S.step + 1, STEPS[S.preset].length - 1)));
   $('restart').addEventListener('click', () => goStep(0));
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   const own = () => { S.step = -1; };
-  $('rodOn').addEventListener('change', (e) => { S.rod = e.target.checked; own(); update(); });
-  $('sQ').addEventListener('input', (e) => { S.q = +e.target.value; own(); update(); });
-  $('sD').addEventListener('input', (e) => { S.d = +e.target.value; own(); update(); });
-  $('sG').addEventListener('input', (e) => { S.gap = +e.target.value; if (S.gap >= 0.1) S.wire = false; else S.wire = true; own(); update(); });
-  $('sRB').addEventListener('input', (e) => { S.rB = +e.target.value; own(); update(); });
-  $('wire').addEventListener('change', (e) => { S.wire = e.target.checked; own(); update(); });
-  $('gA').addEventListener('change', (e) => { S.gA = e.target.checked; own(); update(); });
-  $('gB').addEventListener('change', (e) => { S.gB = e.target.checked; own(); update(); });
+  $('rodOn').addEventListener('change', (e) => { endGlide(); S.rod = e.target.checked; own(); update(); });
+  $('sQ').addEventListener('input', (e) => { endGlide(); S.q = +e.target.value; if (S.q) S.kind = S.q > 0 ? 'glass' : 'rubber'; own(); update(); });
+  $('sD').addEventListener('input', (e) => { endGlide(); S.d = +e.target.value; own(); update(); });
+  /* touching joins the spheres; pulling them out of contact parts them (a thin wire joined far apart stays joined) */
+  $('sG').addEventListener('input', (e) => { endGlide(); const was = S.gap; S.gap = +e.target.value; if (S.gap < 0.1) S.wire = true; else if (was < 0.1) S.wire = false; own(); update(); });
+  $('sRB').addEventListener('input', (e) => { endGlide(); S.rB = +e.target.value; own(); update(); });
+  $('wire').addEventListener('change', (e) => { endGlide(); S.wire = e.target.checked; own(); update(); });
+  /* the wand goes onto a sphere that is grounded here, unless it is already on the other one (then a clip lead is drawn) */
+  for (const id of ['A', 'B']) $('g' + id).addEventListener('change', (e) => {
+    endGlide(); S['g' + id] = e.target.checked; own();
+    if (e.target.checked && !S.wand.on) { const g = geomSI(), Sp = id === 'A' ? g.A : g.B, th = wandTh(id); wandTo(id, Sp.c + Math.cos(th), Math.sin(th)); }
+    if (!e.target.checked && S.wand.on === id) { wandTo(null); S.wand.p = null; }
+    update();
+  });
+  $('rodGlass').addEventListener('click', () => pickRod('glass'));
+  $('rodRubber').addEventListener('click', () => pickRod('rubber'));
+  $('rodAway').addEventListener('click', putRodDown);
   /* Readings for the worksheet (tools/readings_panel.py): the apparatus as it stands and the net charges on A and B (as an electrometer
      would read them), from the exact image charge solution. R/(R + d) is sphere A's radius over the distance from its centre to the rod tip. */
   window.vdVersion = 'induction@2026-10-24';
@@ -1057,10 +1427,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const o = S.pol; if (!o.stable) return 'Wait for the balance to settle: the rod is still moving.';
       return { setup: 'neutral ball on a balance', ball: S.pb === 'mystery' ? 'Mystery insulator' : o.m.name, q_rod_nC: S.prod ? S.pq : '', gap_cm: S.prod ? S.ps : 'rod raised', balance_mg: (o.mg === 0 ? 0 : o.mg).toFixed(2) };
     }
+    if (S.glide) return 'Wait until the rod, the spheres and the wand stop moving.';
     const sol = S.sol, r6 = (v) => +(+v).toPrecision(6), nc = (Q) => (Math.abs(Q / NC) < 5e-7 ? 0 : r6(Q / NC));   /* charges to 10⁻⁶ nC: below that is rounding in the solution */
-    return { setup: SETUP[S.preset], step: S.step >= 0 ? `${S.step + 1} of ${STEPS[S.preset].length}` : 'own arrangement', q_rod_nC: S.preset === 'contact' ? '' : S.q, d_cm: S.preset === 'contact' ? '' : S.d, rB_cm: S.rB, gap_cm: S.gap < 0.1 ? 'touching' : S.gap,
-      rod: S.rod ? 'present' : 'removed', connections: [S.wire ? 'A and B joined' : '', S.gA ? 'A grounded' : '', S.gB ? 'B grounded' : ''].filter(Boolean).join(', ') || 'none',
-      QA_nC: nc(sol.QA), QB_nC: nc(sol.QB), R_over_R_plus_d: S.preset === 'contact' ? '' : r6(5 / (5 + S.d)), VA_V: r6(sol.VA), VB_V: r6(sol.VB) };
+    return { setup: SETUP[S.preset], step: S.step >= 0 ? `${S.step + 1} of ${STEPS[S.preset].length}` : 'own arrangement', q_rod_nC: S.preset === 'contact' ? '' : S.q, d_cm: S.preset === 'contact' ? '' : r6(S.d), rB_cm: S.rB, gap_cm: S.gap < 0.1 ? 'touching' : S.gap,
+      rod: S.rod ? 'present' : 'removed', rod_kind: S.preset === 'contact' ? '' : S.kind === 'glass' ? 'glass (rubbed with silk)' : 'rubber (rubbed with fur)', connections: [S.wire ? 'A and B joined' : '', S.gA ? 'A grounded' : '', S.gB ? 'B grounded' : ''].filter(Boolean).join(', ') || 'none',
+      QA_nC: nc(sol.QA), QB_nC: nc(sol.QB), R_over_R_plus_d: S.preset === 'contact' ? '' : r6(5 / (5 + S.d)), VA_V: r6(sol.VA), VB_V: r6(sol.VB),
+      rod_angle_deg: S.preset === 'contact' || !S.rod ? '' : r6(180 - Math.abs(S.ang) * 180 / Math.PI) };
   };
   window.vdWorksheet = () => (S.preset === 'polar' ? 'neutral-attraction' : 'induction');
   for (const b of document.querySelectorAll('#ballChips button')) b.addEventListener('click', () => {
@@ -1072,6 +1444,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sQp').addEventListener('input', (e) => { S.pq = +e.target.value; own(); update(); });
   $('sS').addEventListener('input', (e) => { S.ps = +e.target.value; own(); update(); });
   $('tare').addEventListener('click', () => { compute(); S.tare = S.pol.F; update(); });
+  window.__ind = { geom: () => geomSI(), moving: () => !!S.glide || !!S.dots.length, finish: () => { endGlide(); S.dots = []; for (const id of ['A', 'B']) { const sh = S.shade[id]; if (sh.cur) { sh.cur.set(sh.tgt); sh.rim.set(sh.rimT); } } S.cam = viewTarget(); draw(); }, get S() { return S; }, pickUp, dragTo: (px, py) => dragTo(px, py), grab: (px, py) => { S.drag = pickUp(px, py); return S.drag && S.drag.what; }, letGo };
   window.__pol = { set: (o) => { Object.assign(S, o); S.step = -1; update(); }, settle: () => { S.pv = pTarget(); update(); }, get S() { return S; } };
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
   for (const b of document.querySelectorAll('#shapeChips button')) b.addEventListener('click', () => { S.shape = b.dataset.s; own(); update(); });
@@ -1084,6 +1457,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const v = shapeView(); S.probe = [Math.min(v.x1, Math.max(v.x0, x)), Math.min(v.y1, Math.max(v.y0, y))]; draw(); readouts();
   }
   let dragging = false;
+  const at = (e) => { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  can.addEventListener('pointerdown', (e) => { if (!sphPreset()) return; const [px, py] = at(e), hit = pickUp(px, py); if (!hit) return; e.preventDefault(); S.drag = hit; try { can.setPointerCapture(e.pointerId); } catch (_) {} can.style.cursor = 'grabbing'; dragTo(px, py); });
+  can.addEventListener('pointermove', (e) => { if (!sphPreset()) return; const [px, py] = at(e); if (S.drag) dragTo(px, py); else can.style.cursor = pickUp(px, py) ? 'grab' : ''; });
+  for (const ev of ['pointerup', 'pointercancel']) can.addEventListener(ev, () => { if (S.drag) { letGo(); can.style.cursor = ''; } });
   can.addEventListener('pointerdown', (e) => { if (S.preset !== 'shapes') return; dragging = true; try { can.setPointerCapture(e.pointerId); } catch (_) {} const r = can.getBoundingClientRect(); setProbe(...shapeView().inv(e.clientX - r.left, e.clientY - r.top)); });
   can.addEventListener('pointermove', (e) => { if (!dragging || S.preset !== 'shapes') return; const r = can.getBoundingClientRect(); setProbe(...shapeView().inv(e.clientX - r.left, e.clientY - r.top)); });
   const stopDrag = () => { dragging = false; };
@@ -1091,6 +1468,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('keydown', (e) => {
     if (S.preset === 'polar') { if (!S.prod || (e.key !== 'ArrowUp' && e.key !== 'ArrowDown')) return; e.preventDefault();
       S.ps = Math.round(Math.min(DI_GAP_MAX, Math.max(DI_GAP_MIN, S.ps + (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 1 : 0.1))) * 10) / 10; own(); update(); return; }
+    if (sphPreset()) {
+      /* arrow keys move the rod's tip by 1 mm (Shift: 1 cm) */
+      const k = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key]; if (!k || !S.rod) return;
+      e.preventDefault(); endGlide(); const g = geomSI(), st = (e.shiftKey ? 10 : 1) * 0.001; setTip(g.x0 + k[0] * st, g.y0 + k[1] * st); own(); update(); return;
+    }
     if (S.preset !== 'shapes') return;
     const k = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key]; if (!k) return;
     e.preventDefault(); const st = (e.shiftKey ? 5 : 1) * 0.001; setProbe(S.probe[0] + k[0] * st, S.probe[1] + k[1] * st);
