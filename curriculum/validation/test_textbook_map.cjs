@@ -41,9 +41,11 @@ for (const c of map.courses) {
 const p1 = map.courses.find(c => c.id === 'physics-1');
 assert(p1.units.findIndex(u => u.id === 'gravitation') < p1.units.findIndex(u => u.id === 'equilibrium-elasticity'));
 const p2 = map.courses.find(c => c.id === 'physics-2');
-const p2opt = p2.units.slice(p2.units.findIndex(u => u.id === 'maxwell-waves') + 1);   /* basic optics, then wave optics (2026-10-24) */
-assert.deepEqual(p2opt.map(u => u.id), ['optional-optics', 'optional-wave-optics']);
-assert(p2opt.every(u => u.requirement === 'optional' && u.sections.every(r => r.vol === 3)));
+const p2opt = p2.units.slice(p2.units.findIndex(u => u.id === 'maxwell-waves') + 1);   /* optics, then wave optics; nothing optional (Steve, 2026-10-24) */
+assert.deepEqual(p2opt.map(u => u.id), ['optics', 'wave-optics']);
+assert(p2opt.every(u => u.requirement === 'required' && u.sections.every(r => r.vol === 3)));
+assert(map.courses.every(c => c.units.every(u => u.requirement !== 'optional')));
+assert(p2.units.findIndex(u => u.id === 'ac-circuits') === p2.units.findIndex(u => u.id === 'maxwell-waves') - 1);
 assert(demos.get('magnetic-force').sections.some(s => s.vol === 2 && s.sec === '11.6'));
 assert(['needs-handout', 'usable'].includes(demos.get('springs').status));
 for (const name of ['currents-fields', 'em-waves', 'catenary', 'relativity-em']) assert.equal(demos.get(name).role, 'demo');

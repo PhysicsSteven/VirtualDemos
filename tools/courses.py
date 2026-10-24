@@ -24,7 +24,7 @@ BOOK_URL = {1: 'https://openstax.org/details/books/university-physics-volume-1',
             3: 'https://openstax.org/details/books/university-physics-volume-3'}
 BLURB = {
     'physics-1': ('Mechanics and oscillations', 'Measurement and vectors through oscillations, in the order of the course schedule. OpenStax University Physics Volume 1.'),
-    'physics-2': ('Electricity and magnetism', 'Charges and fields through Maxwell’s equations and electromagnetic waves, with basic and wave optics at the end if time allows. OpenStax University Physics Volume 2, and Volume 3 for optics.'),
+    'physics-2': ('Electricity and magnetism', 'Charges and fields through Maxwell’s equations and electromagnetic waves, then AC circuits, light and geometric optics, and wave optics. OpenStax University Physics Volume 2, and Volume 3 for optics.'),
     'acoustics': ('Waves and sound', 'Waves on strings, the speed of sound, resonance, musical tones and the Doppler effect, then two demos beyond the textbook. OpenStax University Physics Volume 1, chapters 16 and 17.'),
     'thermo': ('Heat and the laws of thermodynamics', 'Temperature and heat, phase changes, the kinetic theory of gases, and the first and second laws with engines and entropy. OpenStax University Physics Volume 2, chapters 1 to 4.'),
     'modern': ('Relativity, quanta, atoms and nuclei', 'Relativity, photons and matter waves, quantum mechanics, atoms, solids, nuclei, particles and cosmology. OpenStax University Physics Volume 3, chapters 5 to 11.'),
@@ -250,6 +250,9 @@ def course_page(course, m, cards, notes):
     jump, units = [], []
     n_demo, n_activity = set(), set()
     first_unit = {}   # each demo gets one full card, in the first unit that uses it; later units link to it in one line
+    # a standalone worksheet already linked from a demo card on this page gets no second card of its own (units, 2026-10-24)
+    on_cards = {h for u in course['units'] for x in u['sections'] for d in secs[(x['vol'], x['sec'])]['demos']
+                if d in demos and cid in demos[d]['course'] and d in cards for h in demos[d].get('handouts', [])}
     for u in course['units']:
         us = [secs[(x['vol'], x['sec'])] for x in u['sections']]
         ukeys = {(s['vol'], s['sec']) for s in us}
@@ -258,7 +261,8 @@ def course_page(course, m, cards, notes):
             if d not in names and d in demos and cid in demos[d]['course'] and d in cards:
                 names.append(d)
         activity_names = list(dict.fromkeys(a for s in sorted(us, key=sec_key) for a in s.get('activities', [])
-                                            if a in activities and cid in activities[a]['course']))
+                                            if a in activities and cid in activities[a]['course']
+                                            and not set(activities[a].get('handouts', [])) <= on_cards))
         n_demo.update(names)
         n_activity.update(activity_names)
         covered = sum(1 for s in us if s['status'] == 'usable')

@@ -28,7 +28,7 @@
     "layout": "One long page per course; cards link directly to existing demos and public student handouts.",
     "urls": "Keep all demo URLs and QR codes unchanged.",
     "keys": "Instructor guides and answers remain private in PhysicsSteven/TeacherKeys.",
-    "scope": "Required Physics I and II first; basic optics optional; other material later.",
+    "scope": "Physics I and II cover their whole chapters; nothing is marked optional, since the site supplements whatever the lessons do (Steve, 2026-10-24). Other material sits in modules.",
     "status_meanings": {
       "usable": "Existing activity can be surfaced in this role; not a release certification or full-section coverage claim.",
       "needs-handout": "Existing lab apparatus needs a current textbook-aligned student handout and private guide.",
@@ -41,7 +41,7 @@
     "exam_metadata": "Course metadata may later hold exam_boundaries; omitted for now.",
     "activities": "Optional activities array contains standalone worksheet/reading resources, distinct from the real-demo catalog. Sections reference activities by id; render both section.demos and section.activities, filtering course membership and deduplicating within a unit.",
     "acoustics": "Acoustics (2026-10-23, Steve) is a module, not a syllabus course: Vol 1 ch 16 and 17 plus a Beyond the textbook unit that lists demos directly (unit.demos). Its units use requirement module. A section shared with another course keeps its unit there and names its acoustics unit in unit_in.",
-    "modules": "Thermodynamics and Modern Physics (2026-10-24, Steve) are modules like Acoustics: Thermodynamics is Vol 2 ch 1 to 4, Modern Physics is Vol 3 ch 5 to 11 (relativity through cosmology). Their units use requirement module and follow the textbook chapters. Wave optics (Vol 3 ch 3 and 4) is a second optional unit at the end of Physics II (Steve, 2026-10-24). Demos from Misc that serve these sections moved into them; demos from other courses that serve a section here also list the module.",
+    "modules": "Thermodynamics and Modern Physics (2026-10-24, Steve) are modules like Acoustics: Thermodynamics is Vol 2 ch 1 to 4, Modern Physics is Vol 3 ch 5 to 11 (relativity through cosmology). Their units use requirement module and follow the textbook chapters. Physics II ends with AC circuits (Vol 2 ch 15, before ch 16), light and geometric optics (Vol 3 ch 1 and 2) and wave optics (Vol 3 ch 3 and 4); none is optional (Steve, 2026-10-24). Demos from Misc that serve these sections moved into them; demos from other courses that serve a section here also list the module.",
     "astro": "Astronomy (2026-10-24, Steve) is a module like the others: every astronomy demo, in four units (sky, gravitation and orbits from Vol 1 ch 13, stars, galaxies and cosmology from Vol 3 10.6, 11.6, 11.7). Demos stay in their other courses too. Demos with no section here are listed in unit.demos, which may also hold a demo whose sections belong to another course (e-over-m in Modern). Ising moved to Thermodynamics (Beyond the textbook) and e-over-m to Modern Physics; Misc keeps only bz-reaction and dna, under one heading."
   },
   "courses": [
@@ -790,6 +790,37 @@
           ]
         },
         {
+          "id": "ac-circuits",
+          "title": "Alternating current circuits",
+          "requirement": "required",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "15.1"
+            },
+            {
+              "vol": 2,
+              "sec": "15.2"
+            },
+            {
+              "vol": 2,
+              "sec": "15.3"
+            },
+            {
+              "vol": 2,
+              "sec": "15.4"
+            },
+            {
+              "vol": 2,
+              "sec": "15.5"
+            },
+            {
+              "vol": 2,
+              "sec": "15.6"
+            }
+          ]
+        },
+        {
           "id": "maxwell-waves",
           "title": "Maxwell’s equations and electromagnetic waves",
           "requirement": "required",
@@ -817,9 +848,9 @@
           ]
         },
         {
-          "id": "optional-optics",
-          "title": "If time allows: basic optics",
-          "requirement": "optional",
+          "id": "optics",
+          "title": "Light and geometric optics",
+          "requirement": "required",
           "sections": [
             {
               "vol": 3,
@@ -884,9 +915,9 @@
           ]
         },
         {
-          "id": "optional-wave-optics",
-          "title": "If time allows: wave optics",
-          "requirement": "optional",
+          "id": "wave-optics",
+          "title": "Wave optics",
+          "requirement": "required",
           "sections": [
             {
               "vol": 3,
@@ -1640,7 +1671,9 @@
       ],
       "requirement": "required",
       "status": "usable",
-      "demos": [],
+      "demos": [
+        "units"
+      ],
       "unit": "measurements-vectors",
       "note": "Covered by the standalone worksheet estimation-and-evidence; no demo apparatus is claimed. Original student work, private guide, and reference/source checks completed 2026-10-22; classroom acceptance remains open.",
       "activities": [
@@ -4088,13 +4121,13 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "huygens",
         "speed-of-light"
       ],
-      "unit": "optional-optics",
+      "unit": "optics",
       "note": "Huygens's Principle (2026-10-23, Claude): the race view gives v = c/n and transit times for Table 1.1 materials, with Example 1.1 and Check Your Understanding 1.1. Foucault's rotating mirror method is the Speed of Light demo (Modern Physics module; worksheet speed-of-light). (OpenStax recheck 2026-10-24, Claude)"
     },
     {
@@ -4106,13 +4139,13 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "optics-bench",
         "huygens"
       ],
-      "unit": "optional-optics",
+      "unit": "optics",
       "note": "Huygens's Principle: wavelet construction of reflection (worksheet huygens). (OpenStax recheck 2026-10-24, Claude)"
     },
     {
@@ -4124,13 +4157,13 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "optics-bench",
         "huygens"
       ],
-      "unit": "optional-optics",
+      "unit": "optics",
       "note": "Huygens's Principle: wavelet construction of refraction and Snell's law (worksheet huygens). (OpenStax recheck 2026-10-24, Claude)"
     },
     {
@@ -4142,13 +4175,13 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "optics-bench",
         "huygens"
       ],
-      "unit": "optional-optics",
+      "unit": "optics",
       "note": "Huygens's Principle: wavelet construction of total internal reflection (worksheet huygens). (OpenStax recheck 2026-10-24, Claude)"
     },
     {
@@ -4160,12 +4193,12 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "optics-bench"
       ],
-      "unit": "optional-optics",
+      "unit": "optics",
       "note": "Optics Bench (2026-10-23, Claude): a glass element can be crown, flint, fused silica, water or diamond with Sellmeier dispersion; the editor gives n from 400 to 700 nm and the prism's spread of colors at minimum deviation (white light on the Prism setup)."
     },
     {
@@ -4177,12 +4210,12 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "huygens"
       ],
-      "unit": "optional-optics",
+      "unit": "optics",
       "note": "Huygens's Principle (2026-10-23, Claude): wavelet construction, reflection, refraction and Snell's law (Example 1.6), total internal reflection, and spreading through an opening (sound through a doorway)."
     },
     {
@@ -4194,12 +4227,12 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "polarization"
       ],
-      "unit": "optional-optics"
+      "unit": "optics"
     },
     {
       "vol": 3,
@@ -4210,12 +4243,12 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "optics-bench"
       ],
-      "unit": "optional-optics"
+      "unit": "optics"
     },
     {
       "vol": 3,
@@ -4226,12 +4259,12 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "optics-bench"
       ],
-      "unit": "optional-optics"
+      "unit": "optics"
     },
     {
       "vol": 3,
@@ -4242,12 +4275,12 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "optics-bench"
       ],
-      "unit": "optional-optics",
+      "unit": "optics",
       "note": "Optics bench: Refracting surface element (exact Snell rays vs paraxial n1/do + n2/di = (n2 - n1)/R, m = -n1 di/(n2 do)) and Apparent depth preset. Added by Claude 2026-10-23."
     },
     {
@@ -4259,12 +4292,12 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "optics-bench"
       ],
-      "unit": "optional-optics"
+      "unit": "optics"
     },
     {
       "vol": 3,
@@ -4275,12 +4308,12 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "the-eye"
       ],
-      "unit": "optional-optics",
+      "unit": "optics",
       "note": "The Eye (2026-10-23, Claude): accommodation and the near and far points of a simplified eye, nearsighted and farsighted eyes, and glasses prescribed as in Examples 2.8 (−3.51 D) and 2.9 (+3.24 D)."
     },
     {
@@ -4292,12 +4325,12 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "optics-bench"
       ],
-      "unit": "optional-optics",
+      "unit": "optics",
       "note": "Converging lens with screen illustrates camera image formation; optional lecture demo, not a complete camera laboratory."
     },
     {
@@ -4309,12 +4342,12 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "optics-bench"
       ],
-      "unit": "optional-optics"
+      "unit": "optics"
     },
     {
       "vol": 3,
@@ -4325,12 +4358,12 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "optics-bench"
       ],
-      "unit": "optional-optics",
+      "unit": "optics",
       "note": "Optics bench: Microscope preset (m_obj, M_eye = 25 cm/f_eye, net M measured from traced rays and the -(16 cm)(25 cm)/(f_obj f_eye) estimate) and Telescope with M = -f_obj/f_eye measured. Added by Claude 2026-10-23."
     },
     {
@@ -4967,13 +5000,14 @@
       "chapter": 15,
       "chapter_title": "Alternating-Current Circuits",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "circuits"
-      ]
+      ],
+      "unit": "ac-circuits"
     },
     {
       "vol": 2,
@@ -4982,13 +5016,14 @@
       "chapter": 15,
       "chapter_title": "Alternating-Current Circuits",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "circuits"
-      ]
+      ],
+      "unit": "ac-circuits"
     },
     {
       "vol": 2,
@@ -4997,13 +5032,14 @@
       "chapter": 15,
       "chapter_title": "Alternating-Current Circuits",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "circuits"
-      ]
+      ],
+      "unit": "ac-circuits"
     },
     {
       "vol": 2,
@@ -5012,13 +5048,14 @@
       "chapter": 15,
       "chapter_title": "Alternating-Current Circuits",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "circuits"
-      ]
+      ],
+      "unit": "ac-circuits"
     },
     {
       "vol": 2,
@@ -5027,13 +5064,14 @@
       "chapter": 15,
       "chapter_title": "Alternating-Current Circuits",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "circuits"
-      ]
+      ],
+      "unit": "ac-circuits"
     },
     {
       "vol": 2,
@@ -5042,14 +5080,15 @@
       "chapter": 15,
       "chapter_title": "Alternating-Current Circuits",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "transformers"
       ],
-      "note": "Transformers (2026-10-24, Claude): ideal transformer (Equations 15.20 to 15.23, Example 15.6, Check Your Understanding 15.9), a real coupled coil model, and a power line showing the I²R loss against transmission voltage. Like sections 15.1 to 15.5 (Circuits), going further material for Physics II; the demo's card sits in the induction unit through section 14.1."
+      "note": "Transformers (2026-10-24, Claude): ideal transformer (Equations 15.20 to 15.23, Example 15.6, Check Your Understanding 15.9), a real coupled coil model, and a power line showing the I²R loss against transmission voltage. Physics II AC circuits unit (Steve, 2026-10-24); the demo's card sits in the induction unit through section 14.1.",
+      "unit": "ac-circuits"
     },
     {
       "vol": 3,
@@ -5060,13 +5099,13 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "double-slit"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Double slit: fringes from photons, electrons or buckyballs, slit separation d and width a.",
-      "unit": "optional-wave-optics"
+      "unit": "wave-optics"
     },
     {
       "vol": 3,
@@ -5077,14 +5116,14 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "double-slit",
         "diffraction-grating"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Double slit fringe positions and intensity; the grating plot gives the two slit pattern with N = 2.",
-      "unit": "optional-wave-optics"
+      "unit": "wave-optics"
     },
     {
       "vol": 3,
@@ -5095,13 +5134,13 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "diffraction-grating"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Diffraction grating: far field pattern of N slits, I ∝ [sin(Nφ)/sin φ]² times the single slit envelope.",
-      "unit": "optional-wave-optics"
+      "unit": "wave-optics"
     },
     {
       "vol": 3,
@@ -5112,13 +5151,13 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "thin-films"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Thin films: soap and oil films, the black film, air wedge, Newton's rings, anti reflection coatings.",
-      "unit": "optional-wave-optics"
+      "unit": "wave-optics"
     },
     {
       "vol": 3,
@@ -5129,13 +5168,13 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "michelson"
       ],
       "note": "Michelson Interferometer (2026-10-24, Claude): exact two point source fringes (circular, or straight with M2 tilted), fringe counting against mirror travel for λ, a 5.00 cm gas cell pumped out for n − 1 of air (Ciddor 1996, linear in pressure), white light at equal paths, sodium doublet fading. Worksheet michelson with a key from a real run in TeacherKeys.",
-      "unit": "optional-wave-optics"
+      "unit": "wave-optics"
     },
     {
       "vol": 3,
@@ -5146,14 +5185,14 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "diffraction-grating",
         "double-slit"
       ],
       "note": "Single slit (2026-10-24, Claude): the diffraction grating demo's Single slit aperture (N = 1, slit width a from 0.5 to 20 µm) puts the exact far field pattern on the wall, with dark fringes at a sin θ = mλ measured by caliper; worksheet single-slit (dark fringe positions against m and against 1/a, slit width from the slope). The double slit demo's One slit setup shows the same pattern built up one particle at a time.",
-      "unit": "optional-wave-optics"
+      "unit": "wave-optics"
     },
     {
       "vol": 3,
@@ -5164,13 +5203,13 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "diffraction-grating"
       ],
       "note": "Single slit intensity (2026-10-24, Claude): in the grating demo's Single slit aperture the plot and the wall show I = I₀[sin β/β]², β = πa sin θ/λ, and a light meter on caliper jaw B reads I/I₀; worksheet single-slit Part 3 compares meter readings with [sin β/β]² across the middle band and the first side band (side maxima 0.0472, 0.0165, 0.0083).",
-      "unit": "optional-wave-optics"
+      "unit": "wave-optics"
     },
     {
       "vol": 3,
@@ -5181,14 +5220,14 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "double-slit",
         "diffraction-grating"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Finite slit width a: orders on an envelope zero are missing (both demos).",
-      "unit": "optional-wave-optics"
+      "unit": "wave-optics"
     },
     {
       "vol": 3,
@@ -5199,13 +5238,13 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "diffraction-grating"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Gratings of 100 to 1000 lines/mm, CD and DVD, lamps and lasers; measure a spot to find λ.",
-      "unit": "optional-wave-optics"
+      "unit": "wave-optics"
     },
     {
       "vol": 3,
@@ -5216,13 +5255,13 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "resolution"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Circular Apertures and Resolution demo (2026-10-24): exact Airy pattern, first dark ring, Rayleigh criterion; pinhole and screen, two sources, the eye and headlights, Hubble, a camera lens, mystery pinhole.",
-      "unit": "optional-wave-optics"
+      "unit": "wave-optics"
     },
     {
       "vol": 3,
@@ -5233,13 +5272,13 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "electron-diffraction"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Electron Diffraction demo, X rays view (added 2026-10-24): a Bragg spectrometer with a rotating crystal and the counter at 2θ; Cu or Mo tube at 35 kV, NaCl or LiF (200) planes; peaks at the exact Bragg angles of Kα₁ and Kβ₁ (X-ray Data Booklet energies) in every order, count rates illustrative. Worksheet x-ray-diffraction. The electron view is Bragg's law with electrons on graphite.",
-      "unit": "optional-wave-optics"
+      "unit": "wave-optics"
     },
     {
       "vol": 3,
@@ -5250,13 +5289,13 @@
       "course": [
         "physics-2"
       ],
-      "requirement": "optional",
+      "requirement": "required",
       "status": "usable",
       "demos": [
         "holography"
       ],
       "note": "Holography (2026-10-24, Claude): recording a reference plane wave with a plane wave or point objects on a thin linear plate, fringe spacing λ/(2 sin(θ/2)), and reconstruction by exact angular spectrum propagation (virtual image, real image, zero order, another wavelength). Two dimensional slice. Worksheet holography with a key from a real run in TeacherKeys.",
-      "unit": "optional-wave-optics"
+      "unit": "wave-optics"
     },
     {
       "vol": 3,
@@ -6489,7 +6528,7 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "One demo, several handouts. AC Chapter 15 references are going-further/later material, not required syllabus coverage. No microscopic resistivity model. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance. Open builder with starter circuits (2026-10-24, Claude): 1N4148 diode, red, green and blue LEDs and a 2N3904 junction transistor (NPN or PNP), solved exactly with the Shockley and Ebers–Moll equations; Vol. 3 §9.7 transistor (I_C = βI_B) with worksheet junction-transistor.",
+      "note": "One demo, several handouts. Vol. 2 ch. 15 (AC sources, simple AC circuits, RLC with AC, power, resonance) is the Physics II AC circuits unit (Steve, 2026-10-24). No microscopic resistivity model. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance. Open builder with starter circuits (2026-10-24, Claude): 1N4148 diode, red, green and blue LEDs and a 2N3904 junction transistor (NPN or PNP), solved exactly with the Shockley and Ebers–Moll equations; Vol. 3 §9.7 transistor (I_C = βI_B) with worksheet junction-transistor.",
       "handouts": [
         "dc-circuits",
         "rc-circuits",
@@ -9667,7 +9706,7 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-24 (Claude). Transformer view: AC source, primary and secondary turns, load resistor, live traces of v_P, v_S, i_P, i_S; ideal model (OpenStax Equations 15.20 to 15.23) or a real one (coupled coils with μr = 4000 core, copper windings, coupling k; no saturation or core loss). Power line view: 12 kV generator, step up to V, line resistance R, step down to 240 V; loss I²R = P²R/V². Chapter 15 is going further material, as for Circuits; the card shows under the induction unit through section 14.1.",
+      "note": "New 2026-10-24 (Claude). Transformer view: AC source, primary and secondary turns, load resistor, live traces of v_P, v_S, i_P, i_S; ideal model (OpenStax Equations 15.20 to 15.23) or a real one (coupled coils with μr = 4000 core, copper windings, coupling k; no saturation or core loss). Power line view: 12 kV generator, step up to V, line resistance R, step down to 240 V; loss I²R = P²R/V². Its card shows under the induction unit through section 14.1; §15.6 sits in the AC circuits unit (Steve, 2026-10-24).",
       "handouts": [
         "transformers"
       ],
@@ -9763,6 +9802,11 @@
           "vol": 1,
           "sec": "1.6",
           "title": "Significant Figures"
+        },
+        {
+          "vol": 1,
+          "sec": "1.7",
+          "title": "Solving Problems in Physics"
         }
       ],
       "role": "demo",

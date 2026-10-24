@@ -1461,3 +1461,11 @@ Map fixes (no demo, handout or key changed):
 **For GPT to verify:** that each added mapping is real (the demo has the named setup and the worksheet cites the section).
 
 Report for Steve (sections with no worksheet behind them, thin coverage, redundancies with merge proposals) is an artifact; the main open items are a worksheet set for the Magnetic Fields of Currents demo (Vol. 2 §§12.1 to 12.6) and one for geometric optics on the Optics Bench (Vol. 3 §§2.1 to 2.8).
+
+## Claude, 2026-10-24: nothing optional on Physics II, an AC circuits unit, and one card per units worksheet
+
+Steve: none of the units are optional; the site supplements whatever the lessons do.
+- Physics II units `optional-optics` and `optional-wave-optics` are now `optics` ("Light and geometric optics") and `wave-optics`, both required; their sections' requirement is `required`. The map policy and the Physics II blurb say so.
+- Vol. 2 ch. 15 (§§15.1 to 15.6) moves from `later` to a new Physics II unit `ac-circuits` ("Alternating current circuits"), between inductance and Maxwell's equations. Circuits and Transformers notes updated; the ac-circuits handout's Textbook line drops "optional: going further".
+- Units worksheets showed twice on Physics I: once on the Units demo card (its `handouts`) and again as standalone activity cards (the sections' `activities`). `tools/courses.py` now skips an activity card when every handout it links is already on a demo card on that page; the Units demo is also mapped to §1.7 so its card lists that section. The Sources of Energy reading still has its own card (the demo has no handout).
+- `test_textbook_map.cjs` checks that no unit is optional and that AC circuits comes just before Maxwell's equations.

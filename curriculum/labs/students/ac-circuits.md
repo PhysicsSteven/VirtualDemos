@@ -1,7 +1,7 @@
 # AC Circuits and Resonance
 Student laboratory · Physics II
 
-Textbook: OpenStax *University Physics*, Vol. 2, §§15.1–15.5 (optional: going further beyond the required PHYS 202 sequence). Access for free at https://openstax.org/details/books/university-physics-volume-2.
+Textbook: OpenStax *University Physics*, Vol. 2, §§15.1–15.5. Access for free at https://openstax.org/details/books/university-physics-volume-2.
 
 [Open the virtual Circuits bench](https://physicssteven.github.io/VirtualDemos/demos/circuits.html#ac)
 
