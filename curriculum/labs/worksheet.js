@@ -148,7 +148,7 @@
     'anechoic-chamber': { demo: 'Room Acoustics', cols: ['row', roomWalls, 'band_Hz', 'r_m', null, 'L_dB'] },
   });
   /* ==ACOUSTICS END== */
-  /* ==THERMO START== Thermodynamics worksheets (demos on the Misc page) and their demo column maps. */
+  /* ==THERMO START== Thermodynamics worksheets (thermo.html) and their demo column maps. */
   const THERMO = ['heating-curve' /* States of Matter demo, Beaker view */, 'bonds-and-latent-heat' /* States of Matter demo, Atoms view */];
   ENABLED.push(...THERMO);
   Object.assign(FROM_DEMO, {

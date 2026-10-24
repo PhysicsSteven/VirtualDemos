@@ -20,6 +20,9 @@ the two assistants share context. Log what you change there when you finish.
 - Writing: plain, precise teaching language. No hyphens in compound modifiers ("time constant", "white dwarf", "charge density").
 - Textbook: OpenStax University Physics (Vol 1 mechanics, Vol 2 E&M, Vol 3 optics/modern). Physics I = Vol 1 ch 1–15; Physics II
   (PHYS 202) syllabus is in `COLLABORATION.md`. `curriculum/textbook-map.json` maps every section to demos and activities.
+- Modules (textbook chapters, not a syllabus): Acoustics = Vol 1 ch 16–17, Thermodynamics (`thermo.html`) = Vol 2 ch 1–4, Modern
+  Physics (`modern.html`) = Vol 3 ch 5–11. Wave optics (Vol 3 ch 3–4) is Physics II's second optional unit. A demo may sit in
+  several courses or modules (list each in its `course`); Misc is what is left (`later`). Moving a demo is a map change only.
 - Commits end with the attribution lines the session gives you. Commit and push when a piece of work is finished and checked.
 
 ## Demos

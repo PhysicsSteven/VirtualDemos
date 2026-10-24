@@ -40,7 +40,8 @@
     "optional_duration": "duration_minutes may be added after review; absent until estimated.",
     "exam_metadata": "Course metadata may later hold exam_boundaries; omitted for now.",
     "activities": "Optional activities array contains standalone worksheet/reading resources, distinct from the real-demo catalog. Sections reference activities by id; render both section.demos and section.activities, filtering course membership and deduplicating within a unit.",
-    "acoustics": "Acoustics (2026-10-23, Steve) is a module, not a syllabus course: Vol 1 ch 16 and 17 plus a Beyond the textbook unit that lists demos directly (unit.demos). Its units use requirement module. A section shared with another course keeps its unit there and names its acoustics unit in unit_in."
+    "acoustics": "Acoustics (2026-10-23, Steve) is a module, not a syllabus course: Vol 1 ch 16 and 17 plus a Beyond the textbook unit that lists demos directly (unit.demos). Its units use requirement module. A section shared with another course keeps its unit there and names its acoustics unit in unit_in.",
+    "modules": "Thermodynamics and Modern Physics (2026-10-24, Steve) are modules like Acoustics: Thermodynamics is Vol 2 ch 1 to 4, Modern Physics is Vol 3 ch 5 to 11 (relativity through cosmology). Their units use requirement module and follow the textbook chapters. Wave optics (Vol 3 ch 3 and 4) is a second optional unit at the end of Physics II (Steve, 2026-10-24). Demos from Misc that serve these sections moved into them; demos from other courses that serve a section here also list the module. Astronomy demos star-slice and distance-ladder stay on Misc as well."
   },
   "courses": [
     {
@@ -880,6 +881,61 @@
               "sec": "2.8"
             }
           ]
+        },
+        {
+          "id": "optional-wave-optics",
+          "title": "If time allows: wave optics",
+          "requirement": "optional",
+          "sections": [
+            {
+              "vol": 3,
+              "sec": "3.1"
+            },
+            {
+              "vol": 3,
+              "sec": "3.2"
+            },
+            {
+              "vol": 3,
+              "sec": "3.3"
+            },
+            {
+              "vol": 3,
+              "sec": "3.4"
+            },
+            {
+              "vol": 3,
+              "sec": "3.5"
+            },
+            {
+              "vol": 3,
+              "sec": "4.1"
+            },
+            {
+              "vol": 3,
+              "sec": "4.2"
+            },
+            {
+              "vol": 3,
+              "sec": "4.3"
+            },
+            {
+              "vol": 3,
+              "sec": "4.4"
+            },
+            {
+              "vol": 3,
+              "sec": "4.5"
+            },
+            {
+              "vol": 3,
+              "sec": "4.6"
+            },
+            {
+              "vol": 3,
+              "sec": "4.7"
+            }
+          ]
         }
       ]
     },
@@ -966,6 +1022,385 @@
           "demos": [
             "chladni",
             "acoustic-levitation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "thermo",
+      "title": "Thermodynamics",
+      "metadata": {},
+      "units": [
+        {
+          "id": "temperature-heat",
+          "title": "Temperature and heat",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "1.1"
+            },
+            {
+              "vol": 2,
+              "sec": "1.2"
+            },
+            {
+              "vol": 2,
+              "sec": "1.3"
+            },
+            {
+              "vol": 2,
+              "sec": "1.4"
+            },
+            {
+              "vol": 2,
+              "sec": "1.5"
+            },
+            {
+              "vol": 2,
+              "sec": "1.6"
+            }
+          ]
+        },
+        {
+          "id": "kinetic-theory",
+          "title": "The kinetic theory of gases",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "2.1"
+            },
+            {
+              "vol": 2,
+              "sec": "2.2"
+            },
+            {
+              "vol": 2,
+              "sec": "2.3"
+            },
+            {
+              "vol": 2,
+              "sec": "2.4"
+            }
+          ]
+        },
+        {
+          "id": "first-law",
+          "title": "The first law of thermodynamics",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "3.1"
+            },
+            {
+              "vol": 2,
+              "sec": "3.2"
+            },
+            {
+              "vol": 2,
+              "sec": "3.3"
+            },
+            {
+              "vol": 2,
+              "sec": "3.4"
+            },
+            {
+              "vol": 2,
+              "sec": "3.5"
+            },
+            {
+              "vol": 2,
+              "sec": "3.6"
+            }
+          ]
+        },
+        {
+          "id": "second-law",
+          "title": "The second law of thermodynamics",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 2,
+              "sec": "4.1"
+            },
+            {
+              "vol": 2,
+              "sec": "4.2"
+            },
+            {
+              "vol": 2,
+              "sec": "4.3"
+            },
+            {
+              "vol": 2,
+              "sec": "4.4"
+            },
+            {
+              "vol": 2,
+              "sec": "4.5"
+            },
+            {
+              "vol": 2,
+              "sec": "4.6"
+            },
+            {
+              "vol": 2,
+              "sec": "4.7"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "modern",
+      "title": "Modern Physics",
+      "metadata": {},
+      "units": [
+        {
+          "id": "relativity",
+          "title": "Relativity",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 3,
+              "sec": "5.1"
+            },
+            {
+              "vol": 3,
+              "sec": "5.2"
+            },
+            {
+              "vol": 3,
+              "sec": "5.3"
+            },
+            {
+              "vol": 3,
+              "sec": "5.4"
+            },
+            {
+              "vol": 3,
+              "sec": "5.5"
+            },
+            {
+              "vol": 3,
+              "sec": "5.6"
+            },
+            {
+              "vol": 3,
+              "sec": "5.7"
+            },
+            {
+              "vol": 3,
+              "sec": "5.8"
+            },
+            {
+              "vol": 3,
+              "sec": "5.9"
+            }
+          ]
+        },
+        {
+          "id": "photons-matter-waves",
+          "title": "Photons and matter waves",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 3,
+              "sec": "6.1"
+            },
+            {
+              "vol": 3,
+              "sec": "6.2"
+            },
+            {
+              "vol": 3,
+              "sec": "6.3"
+            },
+            {
+              "vol": 3,
+              "sec": "6.4"
+            },
+            {
+              "vol": 3,
+              "sec": "6.5"
+            },
+            {
+              "vol": 3,
+              "sec": "6.6"
+            }
+          ]
+        },
+        {
+          "id": "quantum-mechanics",
+          "title": "Quantum mechanics",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 3,
+              "sec": "7.1"
+            },
+            {
+              "vol": 3,
+              "sec": "7.2"
+            },
+            {
+              "vol": 3,
+              "sec": "7.3"
+            },
+            {
+              "vol": 3,
+              "sec": "7.4"
+            },
+            {
+              "vol": 3,
+              "sec": "7.5"
+            },
+            {
+              "vol": 3,
+              "sec": "7.6"
+            }
+          ]
+        },
+        {
+          "id": "atomic-structure",
+          "title": "Atomic structure",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 3,
+              "sec": "8.1"
+            },
+            {
+              "vol": 3,
+              "sec": "8.2"
+            },
+            {
+              "vol": 3,
+              "sec": "8.3"
+            },
+            {
+              "vol": 3,
+              "sec": "8.4"
+            },
+            {
+              "vol": 3,
+              "sec": "8.5"
+            },
+            {
+              "vol": 3,
+              "sec": "8.6"
+            }
+          ]
+        },
+        {
+          "id": "condensed-matter",
+          "title": "Condensed matter physics",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 3,
+              "sec": "9.1"
+            },
+            {
+              "vol": 3,
+              "sec": "9.2"
+            },
+            {
+              "vol": 3,
+              "sec": "9.3"
+            },
+            {
+              "vol": 3,
+              "sec": "9.4"
+            },
+            {
+              "vol": 3,
+              "sec": "9.5"
+            },
+            {
+              "vol": 3,
+              "sec": "9.6"
+            },
+            {
+              "vol": 3,
+              "sec": "9.7"
+            },
+            {
+              "vol": 3,
+              "sec": "9.8"
+            }
+          ]
+        },
+        {
+          "id": "nuclear",
+          "title": "Nuclear physics",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 3,
+              "sec": "10.1"
+            },
+            {
+              "vol": 3,
+              "sec": "10.2"
+            },
+            {
+              "vol": 3,
+              "sec": "10.3"
+            },
+            {
+              "vol": 3,
+              "sec": "10.4"
+            },
+            {
+              "vol": 3,
+              "sec": "10.5"
+            },
+            {
+              "vol": 3,
+              "sec": "10.6"
+            },
+            {
+              "vol": 3,
+              "sec": "10.7"
+            }
+          ]
+        },
+        {
+          "id": "particles-cosmology",
+          "title": "Particle physics and cosmology",
+          "requirement": "module",
+          "sections": [
+            {
+              "vol": 3,
+              "sec": "11.1"
+            },
+            {
+              "vol": 3,
+              "sec": "11.2"
+            },
+            {
+              "vol": 3,
+              "sec": "11.3"
+            },
+            {
+              "vol": 3,
+              "sec": "11.4"
+            },
+            {
+              "vol": 3,
+              "sec": "11.5"
+            },
+            {
+              "vol": 3,
+              "sec": "11.6"
+            },
+            {
+              "vol": 3,
+              "sec": "11.7"
+            }
           ]
         }
       ]
@@ -4028,12 +4463,13 @@
       "chapter": 1,
       "chapter_title": "Temperature and Heat",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "unit": "temperature-heat"
     },
     {
       "vol": 2,
@@ -4042,12 +4478,13 @@
       "chapter": 1,
       "chapter_title": "Temperature and Heat",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "unit": "temperature-heat"
     },
     {
       "vol": 2,
@@ -4056,12 +4493,13 @@
       "chapter": 1,
       "chapter_title": "Temperature and Heat",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "unit": "temperature-heat"
     },
     {
       "vol": 2,
@@ -4070,13 +4508,14 @@
       "chapter": 1,
       "chapter_title": "Temperature and Heat",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "states-of-matter"
-      ]
+      ],
+      "unit": "temperature-heat"
     },
     {
       "vol": 2,
@@ -4085,13 +4524,14 @@
       "chapter": 1,
       "chapter_title": "Temperature and Heat",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "states-of-matter"
-      ]
+      ],
+      "unit": "temperature-heat"
     },
     {
       "vol": 2,
@@ -4100,13 +4540,14 @@
       "chapter": 1,
       "chapter_title": "Temperature and Heat",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "blackbody"
-      ]
+      ],
+      "unit": "temperature-heat"
     },
     {
       "vol": 2,
@@ -4115,13 +4556,14 @@
       "chapter": 2,
       "chapter_title": "The Kinetic Theory of Gases",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "ideal-gas"
-      ]
+      ],
+      "unit": "kinetic-theory"
     },
     {
       "vol": 2,
@@ -4130,13 +4572,14 @@
       "chapter": 2,
       "chapter_title": "The Kinetic Theory of Gases",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "ideal-gas"
-      ]
+      ],
+      "unit": "kinetic-theory"
     },
     {
       "vol": 2,
@@ -4145,13 +4588,14 @@
       "chapter": 2,
       "chapter_title": "The Kinetic Theory of Gases",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "ideal-gas"
-      ]
+      ],
+      "unit": "kinetic-theory"
     },
     {
       "vol": 2,
@@ -4160,13 +4604,14 @@
       "chapter": 2,
       "chapter_title": "The Kinetic Theory of Gases",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "ideal-gas"
-      ]
+      ],
+      "unit": "kinetic-theory"
     },
     {
       "vol": 2,
@@ -4175,13 +4620,14 @@
       "chapter": 3,
       "chapter_title": "The First Law of Thermodynamics",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "heat-engines"
-      ]
+      ],
+      "unit": "first-law"
     },
     {
       "vol": 2,
@@ -4190,13 +4636,14 @@
       "chapter": 3,
       "chapter_title": "The First Law of Thermodynamics",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "heat-engines"
-      ]
+      ],
+      "unit": "first-law"
     },
     {
       "vol": 2,
@@ -4205,13 +4652,14 @@
       "chapter": 3,
       "chapter_title": "The First Law of Thermodynamics",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "heat-engines"
-      ]
+      ],
+      "unit": "first-law"
     },
     {
       "vol": 2,
@@ -4220,13 +4668,14 @@
       "chapter": 3,
       "chapter_title": "The First Law of Thermodynamics",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "heat-engines"
-      ]
+      ],
+      "unit": "first-law"
     },
     {
       "vol": 2,
@@ -4235,12 +4684,13 @@
       "chapter": 3,
       "chapter_title": "The First Law of Thermodynamics",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "unit": "first-law"
     },
     {
       "vol": 2,
@@ -4249,13 +4699,14 @@
       "chapter": 3,
       "chapter_title": "The First Law of Thermodynamics",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "heat-engines"
-      ]
+      ],
+      "unit": "first-law"
     },
     {
       "vol": 2,
@@ -4264,12 +4715,13 @@
       "chapter": 4,
       "chapter_title": "The Second Law of Thermodynamics",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "unit": "second-law"
     },
     {
       "vol": 2,
@@ -4278,13 +4730,14 @@
       "chapter": 4,
       "chapter_title": "The Second Law of Thermodynamics",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "heat-engines"
-      ]
+      ],
+      "unit": "second-law"
     },
     {
       "vol": 2,
@@ -4293,13 +4746,14 @@
       "chapter": 4,
       "chapter_title": "The Second Law of Thermodynamics",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "heat-engines"
-      ]
+      ],
+      "unit": "second-law"
     },
     {
       "vol": 2,
@@ -4308,12 +4762,13 @@
       "chapter": 4,
       "chapter_title": "The Second Law of Thermodynamics",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "unit": "second-law"
     },
     {
       "vol": 2,
@@ -4322,13 +4777,14 @@
       "chapter": 4,
       "chapter_title": "The Second Law of Thermodynamics",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "heat-engines"
-      ]
+      ],
+      "unit": "second-law"
     },
     {
       "vol": 2,
@@ -4337,13 +4793,14 @@
       "chapter": 4,
       "chapter_title": "The Second Law of Thermodynamics",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "heat-engines"
-      ]
+      ],
+      "unit": "second-law"
     },
     {
       "vol": 2,
@@ -4352,12 +4809,13 @@
       "chapter": 4,
       "chapter_title": "The Second Law of Thermodynamics",
       "course": [
-        "later"
+        "thermo"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "unit": "second-law"
     },
     {
       "vol": 2,
@@ -4455,14 +4913,15 @@
       "chapter": 3,
       "chapter_title": "Interference",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "optional",
       "status": "usable",
       "demos": [
         "double-slit"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Double slit: fringes from photons, electrons or buckyballs, slit separation d and width a."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Double slit: fringes from photons, electrons or buckyballs, slit separation d and width a.",
+      "unit": "optional-wave-optics"
     },
     {
       "vol": 3,
@@ -4471,15 +4930,16 @@
       "chapter": 3,
       "chapter_title": "Interference",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "optional",
       "status": "usable",
       "demos": [
         "double-slit",
         "diffraction-grating"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Double slit fringe positions and intensity; the grating plot gives the two slit pattern with N = 2."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Double slit fringe positions and intensity; the grating plot gives the two slit pattern with N = 2.",
+      "unit": "optional-wave-optics"
     },
     {
       "vol": 3,
@@ -4488,14 +4948,15 @@
       "chapter": 3,
       "chapter_title": "Interference",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "optional",
       "status": "usable",
       "demos": [
         "diffraction-grating"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Diffraction grating: far field pattern of N slits, I ∝ [sin(Nφ)/sin φ]² times the single slit envelope."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Diffraction grating: far field pattern of N slits, I ∝ [sin(Nφ)/sin φ]² times the single slit envelope.",
+      "unit": "optional-wave-optics"
     },
     {
       "vol": 3,
@@ -4504,14 +4965,15 @@
       "chapter": 3,
       "chapter_title": "Interference",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "optional",
       "status": "usable",
       "demos": [
         "thin-films"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Thin films: soap and oil films, the black film, air wedge, Newton's rings, anti reflection coatings."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Thin films: soap and oil films, the black film, air wedge, Newton's rings, anti reflection coatings.",
+      "unit": "optional-wave-optics"
     },
     {
       "vol": 3,
@@ -4520,12 +4982,13 @@
       "chapter": 3,
       "chapter_title": "Interference",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "optional",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet. Candidate: a Michelson view (fringe count against mirror travel) in the thin films demo."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet. Candidate: a Michelson view (fringe count against mirror travel) in the thin films demo.",
+      "unit": "optional-wave-optics"
     },
     {
       "vol": 3,
@@ -4534,15 +4997,16 @@
       "chapter": 4,
       "chapter_title": "Diffraction",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "optional",
       "status": "needs-feature",
       "demos": [
         "double-slit",
         "diffraction-grating"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: the single slit envelope appears inside the double slit and grating patterns; there is no single slit setup on its own."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: the single slit envelope appears inside the double slit and grating patterns; there is no single slit setup on its own.",
+      "unit": "optional-wave-optics"
     },
     {
       "vol": 3,
@@ -4551,14 +5015,15 @@
       "chapter": 4,
       "chapter_title": "Diffraction",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "optional",
       "status": "needs-feature",
       "demos": [
         "diffraction-grating"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: the grating plot includes the [sin β/β]² envelope; no single slit intensity setup on its own."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: the grating plot includes the [sin β/β]² envelope; no single slit intensity setup on its own.",
+      "unit": "optional-wave-optics"
     },
     {
       "vol": 3,
@@ -4567,15 +5032,16 @@
       "chapter": 4,
       "chapter_title": "Diffraction",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "optional",
       "status": "usable",
       "demos": [
         "double-slit",
         "diffraction-grating"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Finite slit width a: orders on an envelope zero are missing (both demos)."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Finite slit width a: orders on an envelope zero are missing (both demos).",
+      "unit": "optional-wave-optics"
     },
     {
       "vol": 3,
@@ -4584,14 +5050,15 @@
       "chapter": 4,
       "chapter_title": "Diffraction",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "optional",
       "status": "usable",
       "demos": [
         "diffraction-grating"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Gratings of 100 to 1000 lines/mm, CD and DVD, lamps and lasers; measure a spot to find λ."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Gratings of 100 to 1000 lines/mm, CD and DVD, lamps and lasers; measure a spot to find λ.",
+      "unit": "optional-wave-optics"
     },
     {
       "vol": 3,
@@ -4600,12 +5067,13 @@
       "chapter": 4,
       "chapter_title": "Diffraction",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "optional",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet. Candidate: an Airy disk and Rayleigh criterion setup (the eye or optics bench)."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet. Candidate: an Airy disk and Rayleigh criterion setup (the eye or optics bench).",
+      "unit": "optional-wave-optics"
     },
     {
       "vol": 3,
@@ -4614,14 +5082,15 @@
       "chapter": 4,
       "chapter_title": "Diffraction",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "optional",
       "status": "needs-feature",
       "demos": [
         "electron-diffraction"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: electron diffraction uses Bragg's law 2d sin θ = λ on graphite with electrons, not X rays."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: electron diffraction uses Bragg's law 2d sin θ = λ on graphite with electrons, not X rays.",
+      "unit": "optional-wave-optics"
     },
     {
       "vol": 3,
@@ -4630,12 +5099,13 @@
       "chapter": 4,
       "chapter_title": "Diffraction",
       "course": [
-        "later"
+        "physics-2"
       ],
-      "requirement": "later",
+      "requirement": "optional",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "unit": "optional-wave-optics"
     },
     {
       "vol": 3,
@@ -4644,15 +5114,16 @@
       "chapter": 5,
       "chapter_title": "Relativity",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "spacetime",
         "speed-of-light"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: light stays at 45° for every observer; speed of light bench measures c."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: light stays at 45° for every observer; speed of light bench measures c.",
+      "unit": "relativity"
     },
     {
       "vol": 3,
@@ -4661,14 +5132,15 @@
       "chapter": 5,
       "chapter_title": "Relativity",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "spacetime"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: Relativity of simultaneity preset."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: Relativity of simultaneity preset.",
+      "unit": "relativity"
     },
     {
       "vol": 3,
@@ -4677,15 +5149,16 @@
       "chapter": 5,
       "chapter_title": "Relativity",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "spacetime",
         "gps-clocks"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: Time dilation preset and twin paradox; GPS clocks gives the speed part of the clock rate difference."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: Time dilation preset and twin paradox; GPS clocks gives the speed part of the clock rate difference.",
+      "unit": "relativity"
     },
     {
       "vol": 3,
@@ -4694,15 +5167,16 @@
       "chapter": 5,
       "chapter_title": "Relativity",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "spacetime",
         "relativity-em"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: Length contraction preset; relativity and EM uses contraction of the charge spacing."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: Length contraction preset; relativity and EM uses contraction of the charge spacing.",
+      "unit": "relativity"
     },
     {
       "vol": 3,
@@ -4711,15 +5185,16 @@
       "chapter": 5,
       "chapter_title": "Relativity",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "spacetime",
         "relativity-em"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: events transformed between observers on a Minkowski diagram; relativity and EM transforms E and B."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: events transformed between observers on a Minkowski diagram; relativity and EM transforms E and B.",
+      "unit": "relativity"
     },
     {
       "vol": 3,
@@ -4728,12 +5203,13 @@
       "chapter": 5,
       "chapter_title": "Relativity",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet. Candidate: velocity addition on the spacetime diagram."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet. Candidate: velocity addition on the spacetime diagram.",
+      "unit": "relativity"
     },
     {
       "vol": 3,
@@ -4742,14 +5218,15 @@
       "chapter": 5,
       "chapter_title": "Relativity",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "doppler"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Doppler effect: light mode with the exact relativistic shift, including the transverse 1/γ redshift."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Doppler effect: light mode with the exact relativistic shift, including the transverse 1/γ redshift.",
+      "unit": "relativity"
     },
     {
       "vol": 3,
@@ -4758,14 +5235,15 @@
       "chapter": 5,
       "chapter_title": "Relativity",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "needs-feature",
       "demos": [
         "compton"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: Compton scattering uses exact relativistic kinematics for the recoil electron; no dedicated momentum activity."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: Compton scattering uses exact relativistic kinematics for the recoil electron; no dedicated momentum activity.",
+      "unit": "relativity"
     },
     {
       "vol": 3,
@@ -4774,15 +5252,16 @@
       "chapter": 5,
       "chapter_title": "Relativity",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "needs-feature",
       "demos": [
         "compton",
         "binding-energy"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: Compton (E/mc² of the collision) and binding energy (mass defect, E = mc²); no dedicated activity."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: Compton (E/mc² of the collision) and binding energy (mass defect, E = mc²); no dedicated activity.",
+      "unit": "relativity"
     },
     {
       "vol": 3,
@@ -4791,14 +5270,15 @@
       "chapter": 6,
       "chapter_title": "Photons and Matter Waves",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "blackbody"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Planck spectrum, Wien and Stefan–Boltzmann laws."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Planck spectrum, Wien and Stefan–Boltzmann laws.",
+      "unit": "photons-matter-waves"
     },
     {
       "vol": 3,
@@ -4807,14 +5287,15 @@
       "chapter": 6,
       "chapter_title": "Photons and Matter Waves",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "photoelectric"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Stopping voltage against frequency; h from the slope."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Stopping voltage against frequency; h from the slope.",
+      "unit": "photons-matter-waves"
     },
     {
       "vol": 3,
@@ -4823,14 +5304,15 @@
       "chapter": 6,
       "chapter_title": "Photons and Matter Waves",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "compton"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Wavelength shift, electron recoil and the momentum triangle."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Wavelength shift, electron recoil and the momentum triangle.",
+      "unit": "photons-matter-waves"
     },
     {
       "vol": 3,
@@ -4839,16 +5321,17 @@
       "chapter": 6,
       "chapter_title": "Photons and Matter Waves",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "spectra",
         "franck-hertz",
         "rutherford"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Spectra: Bohr model of hydrogen and NIST lines; Franck–Hertz: quantized excitation; Rutherford: the nuclear atom."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Spectra: Bohr model of hydrogen and NIST lines; Franck–Hertz: quantized excitation; Rutherford: the nuclear atom.",
+      "unit": "photons-matter-waves"
     },
     {
       "vol": 3,
@@ -4857,14 +5340,15 @@
       "chapter": 6,
       "chapter_title": "Photons and Matter Waves",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "electron-diffraction"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Electron diffraction: λ = h/p from ring radii at several voltages."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Electron diffraction: λ = h/p from ring radii at several voltages.",
+      "unit": "photons-matter-waves"
     },
     {
       "vol": 3,
@@ -4873,14 +5357,15 @@
       "chapter": 6,
       "chapter_title": "Photons and Matter Waves",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "double-slit"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Single particles build up fringes; a which slit detector removes them."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Single particles build up fringes; a which slit detector removes them.",
+      "unit": "photons-matter-waves"
     },
     {
       "vol": 3,
@@ -4889,15 +5374,16 @@
       "chapter": 7,
       "chapter_title": "Quantum Mechanics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "quantum-waves",
         "hydrogen-orbitals"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: ψ and |ψ|² of a packet; measurement collapses it."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: ψ and |ψ|² of a packet; measurement collapses it.",
+      "unit": "quantum-mechanics"
     },
     {
       "vol": 3,
@@ -4906,14 +5392,15 @@
       "chapter": 7,
       "chapter_title": "Quantum Mechanics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "quantum-waves"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: Δx and Δp of the packet, minimum product at launch."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: Δx and Δp of the packet, minimum product at launch.",
+      "unit": "quantum-mechanics"
     },
     {
       "vol": 3,
@@ -4922,14 +5409,15 @@
       "chapter": 7,
       "chapter_title": "Quantum Mechanics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "quantum-waves"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: the packet evolves under the time dependent Schrödinger equation."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: the packet evolves under the time dependent Schrödinger equation.",
+      "unit": "quantum-mechanics"
     },
     {
       "vol": 3,
@@ -4938,14 +5426,15 @@
       "chapter": 7,
       "chapter_title": "Quantum Mechanics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "quantum-waves"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: energy eigenstates in a box."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: energy eigenstates in a box.",
+      "unit": "quantum-mechanics"
     },
     {
       "vol": 3,
@@ -4954,14 +5443,15 @@
       "chapter": 7,
       "chapter_title": "Quantum Mechanics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "quantum-waves"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: oscillator eigenstates."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: oscillator eigenstates.",
+      "unit": "quantum-mechanics"
     },
     {
       "vol": 3,
@@ -4970,14 +5460,15 @@
       "chapter": 7,
       "chapter_title": "Quantum Mechanics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "quantum-waves"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: tunnelling through a barrier, reflected and transmitted parts."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: tunnelling through a barrier, reflected and transmitted parts.",
+      "unit": "quantum-mechanics"
     },
     {
       "vol": 3,
@@ -4986,15 +5477,16 @@
       "chapter": 8,
       "chapter_title": "Atomic Structure",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "hydrogen-orbitals",
         "spectra"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Hydrogen orbitals up to n = 6 with radial probability; spectra shows the lines."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Hydrogen orbitals up to n = 6 with radial probability; spectra shows the lines.",
+      "unit": "atomic-structure"
     },
     {
       "vol": 3,
@@ -5003,12 +5495,13 @@
       "chapter": 8,
       "chapter_title": "Atomic Structure",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "unit": "atomic-structure"
     },
     {
       "vol": 3,
@@ -5017,14 +5510,15 @@
       "chapter": 8,
       "chapter_title": "Atomic Structure",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "needs-feature",
       "demos": [
         "spin-resonance"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: electron spin resonance measures g for DPPH; spin itself is not the subject of an activity."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: electron spin resonance measures g for DPPH; spin itself is not the subject of an activity.",
+      "unit": "atomic-structure"
     },
     {
       "vol": 3,
@@ -5033,12 +5527,13 @@
       "chapter": 8,
       "chapter_title": "Atomic Structure",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet (spectra has a periodic table to pick elements, but no shell filling)."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet (spectra has a periodic table to pick elements, but no shell filling).",
+      "unit": "atomic-structure"
     },
     {
       "vol": 3,
@@ -5047,14 +5542,15 @@
       "chapter": 8,
       "chapter_title": "Atomic Structure",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "needs-feature",
       "demos": [
         "spectra"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: spectra covers optical emission and absorption lines; no X ray spectra (Moseley)."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: spectra covers optical emission and absorption lines; no X ray spectra (Moseley).",
+      "unit": "atomic-structure"
     },
     {
       "vol": 3,
@@ -5063,14 +5559,15 @@
       "chapter": 8,
       "chapter_title": "Atomic Structure",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "lasers"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Stimulated emission, population inversion, threshold, cavity modes."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Stimulated emission, population inversion, threshold, cavity modes.",
+      "unit": "atomic-structure"
     },
     {
       "vol": 3,
@@ -5079,12 +5576,13 @@
       "chapter": 9,
       "chapter_title": "Condensed Matter Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "unit": "condensed-matter"
     },
     {
       "vol": 3,
@@ -5093,12 +5591,13 @@
       "chapter": 9,
       "chapter_title": "Condensed Matter Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "unit": "condensed-matter"
     },
     {
       "vol": 3,
@@ -5107,12 +5606,13 @@
       "chapter": 9,
       "chapter_title": "Condensed Matter Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "unit": "condensed-matter"
     },
     {
       "vol": 3,
@@ -5121,14 +5621,15 @@
       "chapter": 9,
       "chapter_title": "Condensed Matter Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "resistivity"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Resistivity of a wire: free electron density, drift speed and Fermi speed (Inside the wire)."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Resistivity of a wire: free electron density, drift speed and Fermi speed (Inside the wire).",
+      "unit": "condensed-matter"
     },
     {
       "vol": 3,
@@ -5137,12 +5638,13 @@
       "chapter": 9,
       "chapter_title": "Condensed Matter Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "unit": "condensed-matter"
     },
     {
       "vol": 3,
@@ -5151,12 +5653,13 @@
       "chapter": 9,
       "chapter_title": "Condensed Matter Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "unit": "condensed-matter"
     },
     {
       "vol": 3,
@@ -5165,12 +5668,13 @@
       "chapter": 9,
       "chapter_title": "Condensed Matter Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "unit": "condensed-matter"
     },
     {
       "vol": 3,
@@ -5179,14 +5683,15 @@
       "chapter": 9,
       "chapter_title": "Condensed Matter Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "resistivity"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Resistivity of a wire: cold stage with superconductors (critical temperatures)."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Resistivity of a wire: cold stage with superconductors (critical temperatures).",
+      "unit": "condensed-matter"
     },
     {
       "vol": 3,
@@ -5195,15 +5700,16 @@
       "chapter": 10,
       "chapter_title": "Nuclear Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "binding-energy",
         "rutherford"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Binding energy: chart of nuclides from AME2020 masses; Rutherford: scattering from a small nucleus."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Binding energy: chart of nuclides from AME2020 masses; Rutherford: scattering from a small nucleus.",
+      "unit": "nuclear"
     },
     {
       "vol": 3,
@@ -5212,14 +5718,15 @@
       "chapter": 10,
       "chapter_title": "Nuclear Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "binding-energy"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Curve of binding energy and the liquid drop model."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Curve of binding energy and the liquid drop model.",
+      "unit": "nuclear"
     },
     {
       "vol": 3,
@@ -5228,15 +5735,16 @@
       "chapter": 10,
       "chapter_title": "Nuclear Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "usable",
       "demos": [
         "radioactive-decay",
         "gamma-spectroscopy"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Random decays and half life, carbon 14, decay chains; gamma spectra of real sources."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Random decays and half life, carbon 14, decay chains; gamma spectra of real sources.",
+      "unit": "nuclear"
     },
     {
       "vol": 3,
@@ -5245,12 +5753,13 @@
       "chapter": 10,
       "chapter_title": "Nuclear Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "unit": "nuclear"
     },
     {
       "vol": 3,
@@ -5259,15 +5768,16 @@
       "chapter": 10,
       "chapter_title": "Nuclear Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "needs-feature",
       "demos": [
         "binding-energy",
         "energy-sources"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: energy released from the binding energy curve; energy sources uses 200 MeV per fission. No chain reaction activity."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: energy released from the binding energy curve; energy sources uses 200 MeV per fission. No chain reaction activity.",
+      "unit": "nuclear"
     },
     {
       "vol": 3,
@@ -5276,15 +5786,16 @@
       "chapter": 10,
       "chapter_title": "Nuclear Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "needs-feature",
       "demos": [
         "binding-energy",
         "star-slice"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: energy released from the binding energy curve; star slice shows burning shells. No reaction rate activity."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: energy released from the binding energy curve; star slice shows burning shells. No reaction rate activity.",
+      "unit": "nuclear"
     },
     {
       "vol": 3,
@@ -5293,14 +5804,15 @@
       "chapter": 10,
       "chapter_title": "Nuclear Physics",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "needs-feature",
       "demos": [
         "gamma-spectroscopy"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: gamma spectroscopy measures lead attenuation; no dose or biological effects."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: gamma spectroscopy measures lead attenuation; no dose or biological effects.",
+      "unit": "nuclear"
     },
     {
       "vol": 3,
@@ -5309,12 +5821,13 @@
       "chapter": 11,
       "chapter_title": "Particle Physics and Cosmology",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "unit": "particles-cosmology"
     },
     {
       "vol": 3,
@@ -5323,12 +5836,13 @@
       "chapter": 11,
       "chapter_title": "Particle Physics and Cosmology",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "unit": "particles-cosmology"
     },
     {
       "vol": 3,
@@ -5337,12 +5851,13 @@
       "chapter": 11,
       "chapter_title": "Particle Physics and Cosmology",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "unit": "particles-cosmology"
     },
     {
       "vol": 3,
@@ -5351,15 +5866,16 @@
       "chapter": 11,
       "chapter_title": "Particle Physics and Cosmology",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "needs-feature",
       "demos": [
         "magnetic-force",
         "gamma-spectroscopy"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: cyclotron motion in charges in magnetic fields; a NaI(Tl) scintillation detector in gamma spectroscopy."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: cyclotron motion in charges in magnetic fields; a NaI(Tl) scintillation detector in gamma spectroscopy.",
+      "unit": "particles-cosmology"
     },
     {
       "vol": 3,
@@ -5368,12 +5884,13 @@
       "chapter": 11,
       "chapter_title": "Particle Physics and Cosmology",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "unit": "particles-cosmology"
     },
     {
       "vol": 3,
@@ -5382,14 +5899,15 @@
       "chapter": 11,
       "chapter_title": "Particle Physics and Cosmology",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "needs-feature",
       "demos": [
         "distance-ladder"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: Hubble's law fitted to galaxy redshifts; no cosmological model."
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: Hubble's law fitted to galaxy redshifts; no cosmological model.",
+      "unit": "particles-cosmology"
     },
     {
       "vol": 3,
@@ -5398,12 +5916,13 @@
       "chapter": 11,
       "chapter_title": "Particle Physics and Cosmology",
       "course": [
-        "later"
+        "modern"
       ],
-      "requirement": "later",
+      "requirement": "module",
       "status": "missing",
       "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "unit": "particles-cosmology"
     }
   ],
   "demos": [
@@ -5812,7 +6331,8 @@
     {
       "demo": "energy-sources",
       "course": [
-        "physics-1"
+        "physics-1",
+        "modern"
       ],
       "sections": [
         {
@@ -6082,7 +6602,8 @@
     {
       "demo": "gps-clocks",
       "course": [
-        "physics-1"
+        "physics-1",
+        "modern"
       ],
       "sections": [
         {
@@ -6615,7 +7136,8 @@
     {
       "demo": "resistivity",
       "course": [
-        "physics-2"
+        "physics-2",
+        "modern"
       ],
       "sections": [
         {
@@ -6799,7 +7321,8 @@
     {
       "demo": "magnetic-force",
       "course": [
-        "physics-2"
+        "physics-2",
+        "modern"
       ],
       "sections": [
         {
@@ -7301,7 +7824,7 @@
     {
       "demo": "binding-energy",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -7359,7 +7882,8 @@
     {
       "demo": "blackbody",
       "course": [
-        "later"
+        "thermo",
+        "modern"
       ],
       "sections": [
         {
@@ -7412,7 +7936,7 @@
     {
       "demo": "compton",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -7441,7 +7965,7 @@
     {
       "demo": "diffraction-grating",
       "course": [
-        "later"
+        "physics-2"
       ],
       "sections": [
         {
@@ -7485,7 +8009,8 @@
     {
       "demo": "distance-ladder",
       "course": [
-        "later"
+        "later",
+        "modern"
       ],
       "sections": [
         {
@@ -7517,7 +8042,8 @@
     {
       "demo": "doppler",
       "course": [
-        "acoustics"
+        "acoustics",
+        "modern"
       ],
       "sections": [
         {
@@ -7549,7 +8075,8 @@
     {
       "demo": "double-slit",
       "course": [
-        "later"
+        "physics-2",
+        "modern"
       ],
       "sections": [
         {
@@ -7612,7 +8139,8 @@
     {
       "demo": "electron-diffraction",
       "course": [
-        "later"
+        "physics-2",
+        "modern"
       ],
       "sections": [
         {
@@ -7649,7 +8177,7 @@
     {
       "demo": "franck-hertz",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -7668,7 +8196,7 @@
     {
       "demo": "gamma-spectroscopy",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -7697,7 +8225,7 @@
     {
       "demo": "heat-engines",
       "course": [
-        "later"
+        "thermo"
       ],
       "sections": [
         {
@@ -7769,7 +8297,7 @@
     {
       "demo": "hydrogen-orbitals",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -7793,7 +8321,7 @@
     {
       "demo": "ideal-gas",
       "course": [
-        "later"
+        "thermo"
       ],
       "sections": [
         {
@@ -7853,7 +8381,7 @@
     {
       "demo": "lasers",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -7885,7 +8413,7 @@
     {
       "demo": "photoelectric",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -7904,7 +8432,7 @@
     {
       "demo": "quantum-waves",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -7948,7 +8476,7 @@
     {
       "demo": "radioactive-decay",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -7967,7 +8495,7 @@
     {
       "demo": "relativity-em",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -8206,7 +8734,7 @@
     {
       "demo": "rutherford",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -8243,7 +8771,7 @@
     {
       "demo": "spacetime",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -8282,7 +8810,7 @@
     {
       "demo": "spectra",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -8311,7 +8839,7 @@
     {
       "demo": "speed-of-light",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -8335,7 +8863,7 @@
     {
       "demo": "spin-resonance",
       "course": [
-        "later"
+        "modern"
       ],
       "sections": [
         {
@@ -8424,7 +8952,8 @@
     {
       "demo": "star-slice",
       "course": [
-        "later"
+        "later",
+        "modern"
       ],
       "sections": [
         {
@@ -8443,7 +8972,7 @@
     {
       "demo": "thin-films",
       "course": [
-        "later"
+        "physics-2"
       ],
       "sections": [
         {
@@ -8507,7 +9036,7 @@
     {
       "demo": "states-of-matter",
       "course": [
-        "later"
+        "thermo"
       ],
       "sections": [
         {

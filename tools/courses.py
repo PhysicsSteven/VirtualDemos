@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the course pages (physics-1.html, physics-2.html) and the course tiles on index.html
+"""Build the course pages (physics-1.html, physics-2.html, and the acoustics.html, thermo.html and modern.html modules), misc.html and the course tiles on index.html
 from curriculum/textbook-map.json.
 
     python3 tools/courses.py          # write the pages and update index.html
@@ -24,9 +24,12 @@ BOOK_URL = {1: 'https://openstax.org/details/books/university-physics-volume-1',
             3: 'https://openstax.org/details/books/university-physics-volume-3'}
 BLURB = {
     'physics-1': ('Mechanics and oscillations', 'Measurement and vectors through oscillations, in the order of the course schedule. OpenStax University Physics Volume 1.'),
-    'physics-2': ('Electricity and magnetism', 'Charges and fields through Maxwell’s equations and electromagnetic waves, with basic optics at the end if time allows. OpenStax University Physics Volume 2, and Volume 3 for optics.'),
+    'physics-2': ('Electricity and magnetism', 'Charges and fields through Maxwell’s equations and electromagnetic waves, with basic and wave optics at the end if time allows. OpenStax University Physics Volume 2, and Volume 3 for optics.'),
     'acoustics': ('Waves and sound', 'Waves on strings, the speed of sound, resonance, musical tones and the Doppler effect, then two demos beyond the textbook. OpenStax University Physics Volume 1, chapters 16 and 17.'),
+    'thermo': ('Heat and the laws of thermodynamics', 'Temperature and heat, phase changes, the kinetic theory of gases, and the first and second laws with engines and entropy. OpenStax University Physics Volume 2, chapters 1 to 4.'),
+    'modern': ('Relativity, quanta, atoms and nuclei', 'Relativity, photons and matter waves, quantum mechanics, atoms, solids, nuclei, particles and cosmology. OpenStax University Physics Volume 3, chapters 5 to 11.'),
 }
+MODULES = {'acoustics', 'thermo', 'modern'}   # modules follow the textbook chapters, not a course schedule
 TILE_START, TILE_END = '<!-- COURSES START (tools/courses.py) -->', '<!-- COURSES END -->'
 esc = html.escape
 
@@ -46,7 +49,7 @@ def CATALOG_DATA():
 
 
 MISC = {'id': 'misc', 'title': 'Misc.', 'sub': 'Everything else',
-        'lede': 'Astronomy, modern physics, thermodynamics, optics and more: every demo that is not part of a course yet. These will become their own courses later.'}
+        'lede': 'Astronomy, statistical physics, molecules and more: every demo that is not part of a course or module yet. These will become their own courses later.'}
 
 
 def misc_names(m):
@@ -253,7 +256,7 @@ def course_page(course, m, cards, notes):
     if n_activity:
         facts += f'<li><span><strong>{len(n_activity)}</strong> worksheets and readings</span></li>'
     return page_shell(title, BLURB[cid][0], lede, facts, ''.join(jump), '\n'.join(units),
-                      ('Units follow the textbook chapters.' if cid == 'acoustics' else 'Units follow the course schedule.')
+                      ('Units follow the textbook chapters.' if cid in MODULES else 'Units follow the course schedule.')
                       + ' Section numbers are volume:section in OpenStax University Physics. A demo can appear in more than one unit. Sections with no activity yet are listed under each unit.')
 
 

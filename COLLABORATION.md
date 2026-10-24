@@ -1229,3 +1229,13 @@ The Atoms view's About text, the bonds and latent heat handout's About section a
 - Acoustics handouts keep their citations as they are: Steve uses a different acoustics text loosely, and the module serves a class taught every couple of years.
 - Magnetism in matter key: the Part 3 note now says the remanent field after Demagnetize, and the "B when I last crossed 0" readout, depend on the run's history (the iron model has hysteresis), so another run gives a slightly different number. No answer depends on it.
 - String density: the procedure stays as written; the key already explains that with 1 g mass steps the tension scan's resonance is broad, so μ from that scan comes out about 0.5% high.
+
+## Claude, 2026-10-24: Thermodynamics and Modern Physics modules
+
+Steve asked for two new modules next to Acoustics, with the demos that fit OpenStax pulled out of Misc. Misc itself was not otherwise touched (Steve: no Misc work yet).
+
+- **Thermodynamics** (`thermo.html`, course `thermo`): Vol. 2 ch. 1 to 4, one unit per chapter (Temperature and heat; The kinetic theory of gases; The first law; The second law). Demos: states of matter, blackbody, gas in a box, heat engine cycles.
+- **Modern Physics** (`modern.html`, course `modern`): Vol. 3 ch. 5 to 11, one unit per chapter (Relativity through Particle physics and cosmology). 25 demos: everything from Misc mapped to these chapters, plus demos from other courses that already serve a section here (GPS clocks, energy sources, resistivity, charges in magnetic fields, Doppler). Star slice and the distance ladder are also kept on Misc's astronomy list.
+- **Wave optics** (Vol. 3 ch. 3 and 4, Steve's choice): a second optional unit at the end of Physics II, "If time allows: wave optics" (double slit, diffraction grating, thin films, electron diffraction). Steve plans overlapping modules later (an Optics module may follow), so a demo can sit in two places.
+- Moving a demo is a map change only (`course` lists in `textbook-map.json`): no demo, handout, notes or key path changed, so every link and QR code stays valid; no redirect pages. Home page now has six tiles; Misc keeps 14 demos (astronomy, e/m, DNA, Ising, BZ). `tools/courses.py` gains BLURB entries and a `MODULES` set; `test_textbook_map.cjs` accepts the new courses and checks Physics II's two optional units; `TEXTBOOK_GAPS.md` gap tables regenerated (26 missing sections: 3 in Physics II wave optics, 6 in Thermodynamics, 16 in Modern Physics, and Vol. 2 §15.6 still later). CLAUDE.md notes the modules.
+- Checked: `courses.py --check`, map contract test, every local link on the seven course pages and the home page resolves, no sideways scroll at 1280 and 390 px, light and dark.

@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Thermodynamics · Virtual Physics Demos</title>
+<meta name="description" content="Thermodynamics: Temperature and heat, phase changes, the kinetic theory of gases, and the first and second laws with engines and entropy. OpenStax University Physics Volume 2, chapters 1 to 4.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #e9edf2;
+  --surface: #f8fafc;
+  --canvas: #fcfdfe;
+  --ink: #17202b;
+  --muted: #5a6575;
+  --line: #d3d9e2;
+  --grid: #dde3ea;
+  --pos: #c23f2c;
+  --neg: #2b60b5;
+  --equi: #a7740b;
+  --accent: #2b60b5;
+  --shadow: 0 1px 2px rgb(23 32 43 / 0.06), 0 8px 24px -12px rgb(23 32 43 / 0.25);
+  --font-ui: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+    --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+    --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0d1218; --surface: #151c25; --canvas: #10161e; --ink: #e3e8ef; --muted: #96a2b2;
+  --line: #283241; --grid: #18212c; --pos: #ff7660; --neg: #69a0ff; --equi: #e2b350; --accent: #69a0ff;
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 10px 28px -12px rgb(0 0 0 / 0.7);
+  color-scheme: dark;
+}
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-padding-top: 76px; }
+body { margin: 0; background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 16px; line-height: 1.5; }
+[hidden] { display: none !important; }
+a { color: inherit; }
+.wrap { max-width: 1240px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+/* Header: graph paper, like the demo canvases */
+.hero {
+  border-bottom: 1px solid var(--line);
+  background-color: var(--canvas);
+  background-image:
+    linear-gradient(var(--grid) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+  background-size: 32px 32px;
+  background-position: -1px -1px;
+}
+.hero .wrap { position: relative; padding-top: 56px; padding-bottom: 44px; }
+.art { position: absolute; right: 16px; top: 50%; translate: 0 -50%; width: min(34%, 380px); height: auto; overflow: visible; }
+.art .orbit { fill: none; stroke: var(--muted); stroke-width: 1.5; }
+.art .axis { stroke: var(--line); stroke-width: 1.5; stroke-dasharray: 4 5; }
+.art .sweep { fill: color-mix(in srgb, var(--equi) 26%, transparent); stroke: var(--equi); stroke-width: 1.2; }
+.art .sun { fill: var(--equi); }
+.art .glow { fill: color-mix(in srgb, var(--equi) 22%, transparent); }
+.art .planet { fill: var(--neg); }
+.art .vel { stroke: var(--pos); stroke-width: 2.5; stroke-linecap: round; fill: none; }
+.art .head { fill: var(--pos); }
+.eyebrow { margin: 0 0 14px; font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.04em; color: var(--muted); }
+.eyebrow b { color: var(--accent); font-weight: 600; }
+h1 { margin: 0; font-size: clamp(2.1rem, 5vw, 3.2rem); line-height: 1.08; letter-spacing: -0.02em; text-wrap: balance; }
+.lede { margin: 14px 0 0; max-width: 56ch; font-size: 1.15rem; color: var(--muted); text-wrap: pretty; }
+.facts { display: flex; flex-wrap: wrap; gap: 8px 22px; margin: 22px 0 0; padding: 0; list-style: none; font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+.facts li { display: flex; align-items: center; gap: 8px; }
+.facts li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--dot, var(--accent)); }
+.facts li:nth-child(2) { --dot: var(--pos); }
+.facts li:nth-child(3) { --dot: var(--equi); }
+.facts a { color: var(--accent); font-weight: 600; text-decoration: underline; text-underline-offset: 3px; }
+.facts strong { color: var(--ink); font-weight: 600; }
+
+/* Toolbar: filter and subject links, stays on screen while scrolling */
+.tools {
+  position: sticky; top: 0; z-index: 5;
+  background: color-mix(in srgb, var(--bg) 88%, transparent);
+  -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--line);
+}
+.tools .wrap { display: flex; align-items: center; gap: 10px 18px; padding-top: 10px; padding-bottom: 10px; }
+.filter { position: relative; flex: 0 1 300px; min-width: 0; }
+.filter svg { position: absolute; left: 11px; top: 50%; translate: 0 -50%; width: 16px; height: 16px; color: var(--muted); pointer-events: none; }
+.filter input {
+  width: 100%; font: inherit; font-size: 0.95rem; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 8px 34px 8px 34px;
+}
+.filter input::placeholder { color: var(--muted); }
+.filter input::-webkit-search-cancel-button { display: none; }
+.filter kbd {
+  position: absolute; right: 8px; top: 50%; translate: 0 -50%;
+  font-family: var(--font-mono); font-size: 0.72rem; color: var(--muted);
+  border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; line-height: 1.5; pointer-events: none;
+}
+.filter input:not(:placeholder-shown) + kbd { display: none; }
+.clear {
+  position: absolute; right: 5px; top: 50%; translate: 0 -50%;
+  font: inherit; font-size: 0.8rem; font-weight: 700; color: var(--muted);
+  background: none; border: 0; border-radius: 5px; padding: 3px 7px; cursor: pointer;
+}
+.clear:hover { color: var(--ink); }
+.jump { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; min-width: 0; flex: 1 1 auto; }
+.jump a {
+  display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap;
+  font-size: 0.88rem; font-weight: 700; text-decoration: none; color: var(--ink);
+  padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface);
+}
+.jump a:hover { border-color: var(--accent); color: var(--accent); }
+.n { font-family: var(--font-mono); font-size: 0.75em; font-weight: 400; color: var(--muted); font-variant-numeric: tabular-nums; }
+.status { margin: 20px 0 -12px; font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); }
+.status:empty { display: none; }
+
+/* Subjects and cards */
+main { padding-top: 12px; padding-bottom: 48px; }
+.subject { padding-top: 36px; }
+.subject h2 {
+  display: flex; align-items: baseline; gap: 10px; margin: 0 0 16px;
+  font-size: 1.35rem; letter-spacing: -0.01em;
+}
+.subject h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.subject h2 .n { font-size: 0.8rem; }
+/* Click a subject heading to fold its cards away; the sections below move up. Remembered per browser. */
+.fold { all: unset; display: inline-flex; align-items: baseline; gap: 10px; cursor: pointer; border-radius: 6px; }
+.fold:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
+.fold::before { content: ""; width: 0.5em; height: 0.5em; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted);
+  transform: translateY(-0.15em) rotate(45deg); transition: transform 0.15s ease; align-self: center; }
+.fold:hover::before { border-color: var(--ink); }
+.subject.collapsed .fold::before { transform: rotate(-45deg); }
+.subject.collapsed .grid { display: none; }
+.subject.collapsed h2 { margin-bottom: 0; color: var(--muted); }
+.subject.collapsed { padding-top: 22px; }
+.searching .subject.collapsed .grid { display: grid; }
+.searching .subject.collapsed h2 { margin-bottom: 16px; color: inherit; }
+@media (prefers-reduced-motion: reduce) { .fold::before { transition: none; } }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 272px), 1fr)); gap: 18px; margin: 0; padding: 0; list-style: none; }
+.grid > li { display: flex; min-width: 0; }
+.card {
+  display: flex; flex-direction: column; width: 100%;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden;
+  text-decoration: none; color: inherit;
+  transition: border-color 0.15s, box-shadow 0.2s, translate 0.2s;
+}
+.thumb { display: block; aspect-ratio: 16 / 10; background: var(--canvas); border-bottom: 1px solid var(--line); overflow: hidden; }
+.thumb img { display: block; width: 100%; height: 100%; object-fit: cover; transition: scale 0.35s ease; }
+.body { display: flex; flex-direction: column; gap: 6px; padding: 14px 16px 16px; flex: 1; }
+.card h3 { margin: 0; font-size: 1.12rem; line-height: 1.25; }
+.card p { margin: 0; color: var(--muted); font-size: 0.93rem; text-wrap: pretty; }
+.tags { display: flex; flex-wrap: wrap; gap: 5px; margin: auto 0 0; padding: 8px 0 0; list-style: none; }
+.tags li {
+  font-family: var(--font-mono); font-size: 0.7rem; line-height: 1.4; color: var(--muted);
+  background: var(--canvas); border: 1px solid var(--line); border-radius: 5px; padding: 2px 6px;
+}
+.card:hover { border-color: var(--accent); box-shadow: var(--shadow); translate: 0 -2px; }
+.card:hover .thumb img { scale: 1.03; }
+.card:hover h3 { color: var(--accent); }
+.card:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; border-color: var(--accent); }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.filter input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; border-color: var(--accent); }
+.empty { margin: 48px 0 0; padding: 28px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 12px; }
+.empty button { font: inherit; font-weight: 700; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+
+footer { border-top: 1px solid var(--line); margin-top: 24px; }
+footer .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 8px 24px; padding-top: 22px; padding-bottom: max(28px, env(safe-area-inset-bottom, 0px)); color: var(--muted); font-size: 0.9rem; }
+footer p { margin: 0; }
+footer a { color: var(--accent); text-underline-offset: 3px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .thumb img { transition: none; }
+  .card:hover { translate: none; }
+  .card:hover .thumb img { scale: none; }
+}
+@media (max-width: 700px) {
+  html { scroll-padding-top: 116px; }
+  .hero .wrap { padding-top: 36px; padding-bottom: 30px; }
+  .art { display: none; }
+  .lede { font-size: 1.05rem; }
+  .tools .wrap { flex-wrap: wrap; }
+  .filter { flex: 1 1 100%; }
+  .filter kbd { display: none; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+    .subject { padding-top: 28px; }
+}
+
+/* course pages */
+.eyebrow a { color: var(--accent); font-weight: 600; text-underline-offset: 3px; }
+.jump a.opt { border-style: dashed; }
+.how { margin: 22px 0 0; max-width: 75ch; color: var(--muted); font-size: 0.92rem; }
+.unit { padding-top: 34px; }
+.unit h2 { display: flex; align-items: baseline; gap: 10px; margin: 0; font-size: 1.4rem; letter-spacing: -0.01em; }
+.unit h2::after { content: ""; flex: 1; align-self: center; height: 1px; background: var(--line); }
+.meta { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 4px 0 14px; font-family: var(--font-mono); font-size: 0.78rem; color: var(--muted); }
+.unit.optional { margin-top: 30px; padding: 24px 18px 18px; border: 1px dashed var(--line); border-radius: 14px; }
+.optnote { margin: 0 0 4px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.04em; text-transform: uppercase; color: var(--equi); }
+.list { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 520px), 1fr)); gap: 14px; margin: 0; padding: 0; list-style: none; }
+.item { display: grid; grid-template-columns: 200px 1fr; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.item .pic { display: block; border-right: 1px solid var(--line); }
+.item .thumb { height: 100%; aspect-ratio: auto; border-bottom: 0; }
+.item .thumb img { min-height: 125px; }
+.item .body { padding: 12px 14px 14px; gap: 5px; }
+.item h3 { margin: 0; font-size: 1.08rem; line-height: 1.25; }
+.item h3 a { text-decoration: none; }
+.item h3 a:hover { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
+.item p { margin: 0; color: var(--muted); font-size: 0.9rem; text-wrap: pretty; }
+.kind { display: flex; flex-wrap: wrap; gap: 6px; }
+.role, .flag { font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; border-radius: 5px; padding: 1px 6px; }
+.role-lab { background: var(--accent); color: var(--canvas); }
+.role-demo { border: 1px solid var(--line); color: var(--muted); }
+.flag { border: 1px dashed var(--equi); color: var(--equi); text-transform: none; letter-spacing: 0; }
+.secs { display: flex; flex-direction: column; gap: 2px; margin: 4px 0 0; padding: 0; list-style: none; font-size: 0.82rem; }
+.sec { font-family: var(--font-mono); font-size: 0.74rem; color: var(--accent); margin-right: 4px; }
+.links { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: auto !important; padding-top: 8px; font-size: 0.88rem; }
+.links a { color: var(--accent); font-weight: 700; text-underline-offset: 3px; min-height: 28px; display: inline-flex; align-items: center; }
+.links a.go { color: var(--canvas); background: var(--accent); border-radius: 7px; padding: 4px 12px; text-decoration: none; min-height: 36px; }
+.also { grid-column: 1 / -1; color: var(--muted); font-size: 0.92rem; padding: 4px 2px; }
+.also a { font-weight: 700; }
+.also .where, .also .where a { font-weight: 400; }
+.none { color: var(--muted); padding: 18px; border: 1px dashed var(--line); border-radius: 12px; }
+.gaps { margin-top: 12px; font-size: 0.9rem; }
+.gaps summary { cursor: pointer; color: var(--muted); font-weight: 700; min-height: 32px; display: flex; align-items: center; gap: 8px; }
+.gaps ul { margin: 6px 0 0; padding: 0; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 380px), 1fr)); gap: 3px 22px; }
+.gaps li { display: flex; align-items: baseline; gap: 4px; }
+.st { margin-left: auto; padding-left: 10px; white-space: nowrap; font-family: var(--font-mono); font-size: 0.7rem; color: var(--muted); }
+.st-needs-feature { color: var(--equi); }
+.more { margin: 40px 0 0; color: var(--muted); }
+.more a { color: var(--accent); font-weight: 700; }
+@media (max-width: 700px) {
+  html { scroll-padding-top: 64px; }
+  .item { grid-template-columns: 1fr; }
+  .item .pic { border-right: 0; border-bottom: 1px solid var(--line); }
+  .item .thumb { aspect-ratio: 16 / 10; height: auto; }
+  .jump { flex-basis: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; margin: 0 -16px; padding: 0 16px; }
+  .gaps li { flex-wrap: wrap; }
+  .st { margin-left: 0; }
+}
+
+</style>
+</head>
+<body>
+<!-- Generated by tools/courses.py from curriculum/textbook-map.json. Edit the map or the script, not this file. -->
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow"><a href="index.html">Virtual Physics Demos</a> · <b>Heat and the laws of thermodynamics</b></p>
+    <h1>Thermodynamics</h1>
+    <p class="lede">Temperature and heat, phase changes, the kinetic theory of gases, and the first and second laws with engines and entropy. OpenStax University Physics Volume 2, chapters 1 to 4.</p>
+    <ul class="facts"><li><span><strong>4</strong> units</span></li><li><span><strong>4</strong> demos and labs</span></li><li><span>Free textbook: <a href="https://openstax.org/details/books/university-physics-volume-2">University Physics Volume 2</a></span></li></ul>
+  </div>
+</header>
+<nav class="tools" aria-label="Sections">
+  <div class="wrap"><ul class="jump"><li><a href="#temperature-heat">Temperature and heat</a></li><li><a href="#kinetic-theory">The kinetic theory of gases</a></li><li><a href="#first-law">The first law of thermodynamics</a></li><li><a href="#second-law">The second law of thermodynamics</a></li></ul></div>
+</nav>
+<main class="wrap">
+  <p class="how">Units follow the textbook chapters. Section numbers are volume:section in OpenStax University Physics. A demo can appear in more than one unit. Sections with no activity yet are listed under each unit.</p>
+  <section class="unit" id="temperature-heat" aria-labelledby="temperature-heat-h">
+    
+    <h2 id="temperature-heat-h">Temperature and heat</h2>
+    <p class="meta"><span>Vol 2 · Ch. 1</span><span>3 of 6 sections with an activity</span></p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/states-of-matter.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/states-of-matter-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/states-of-matter-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-lab">Lab</span></p>
+          <h3><a href="demos/states-of-matter.html">States of Matter</a></h3>
+          <p>Heat a crystal of argon atoms under a piston and watch the bonds between them break: the temperature holds still while it melts and again while it boils, because the heat goes into the bonds. A beaker view heats ice to steam with the textbook's specific and latent heats.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:1.4</span> Heat Transfer, Specific Heat, and Calorimetry</li><li><span class="sec">2:1.5</span> Phase Changes</li></ul>
+          <p class="links"><a class="go" href="demos/states-of-matter.html">Open demo</a> <a href="curriculum/labs/students/heating-curve.html">Worksheet 1: Heating Curve and Latent Heat</a> <a href="curriculum/labs/students/bonds-and-latent-heat.html">Worksheet 2: Bonds, Temperature and Latent Heat</a> <a href="notes/states-of-matter.html">Notes</a></p>
+        </div>
+      </li>
+      <li class="item">
+        <a class="pic" href="demos/blackbody.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/blackbody-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/blackbody-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/blackbody.html">Blackbody Radiation</a></h3>
+          <p>Explore thermal emission across temperatures, test Planck’s spectrum, Wien’s displacement law and Stefan–Boltzmann scaling, and connect the results to visible color.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:1.6</span> Mechanisms of Heat Transfer</li></ul>
+          <p class="links"><a class="go" href="demos/blackbody.html">Open demo</a> <a href="notes/blackbody.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+    <details class="gaps">
+      <summary>Sections without a full activity <span class="n">3</span></summary>
+      <ul><li><span class="sec">2:1.1</span> Temperature and Thermal Equilibrium<span class="st st-missing">no activity yet</span></li><li><span class="sec">2:1.2</span> Thermometers and Temperature Scales<span class="st st-missing">no activity yet</span></li><li><span class="sec">2:1.3</span> Thermal Expansion<span class="st st-missing">no activity yet</span></li></ul>
+    </details>
+  </section>
+  <section class="unit" id="kinetic-theory" aria-labelledby="kinetic-theory-h">
+    
+    <h2 id="kinetic-theory-h">The kinetic theory of gases</h2>
+    <p class="meta"><span>Vol 2 · Ch. 2</span><span>4 of 4 sections with an activity</span></p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/ideal-gas.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/ideal-gas-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/ideal-gas-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/ideal-gas.html">Gas in a Box</a></h3>
+          <p>Watch pressure and temperature emerge from molecules hitting the walls, speeds relax to Maxwell-Boltzmann, and a moving piston heat the gas.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:2.1</span> Molecular Model of an Ideal Gas</li><li><span class="sec">2:2.2</span> Pressure, Temperature, and RMS Speed</li><li><span class="sec">2:2.3</span> Heat Capacity and Equipartition of Energy</li><li><span class="sec">2:2.4</span> Distribution of Molecular Speeds</li></ul>
+          <p class="links"><a class="go" href="demos/ideal-gas.html">Open demo</a> <a href="notes/ideal-gas.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+  </section>
+  <section class="unit" id="first-law" aria-labelledby="first-law-h">
+    
+    <h2 id="first-law-h">The first law of thermodynamics</h2>
+    <p class="meta"><span>Vol 2 · Ch. 3</span><span>5 of 6 sections with an activity</span></p>
+    <ul class="list">
+      <li class="item">
+        <a class="pic" href="demos/heat-engines.html" tabindex="-1" aria-hidden="true"><picture class="thumb"><source srcset="thumbs/heat-engines-dark.webp" media="(prefers-color-scheme: dark)"><img src="thumbs/heat-engines-light.webp" alt="" width="640" height="400" loading="lazy" decoding="async"></picture></a>
+        <div class="body">
+          <p class="kind"><span class="role role-demo">Demo</span></p>
+          <h3><a href="demos/heat-engines.html">Heat Engine Cycles</a></h3>
+          <p>Run an ideal gas around Carnot, Otto, Diesel, Stirling and Brayton cycles, or drag your own: the PV loop's area is the net work, a T–S diagram shows the heat, and no engine beats the Carnot limit. Reverse it for a refrigerator.</p>
+          <ul class="secs" aria-label="Textbook sections"><li><span class="sec">2:3.1</span> Thermodynamic Systems</li><li><span class="sec">2:3.2</span> Work, Heat, and Internal Energy</li><li><span class="sec">2:3.3</span> First Law of Thermodynamics</li><li><span class="sec">2:3.4</span> Thermodynamic Processes</li><li><span class="sec">2:3.6</span> Adiabatic Processes for an Ideal Gas</li></ul>
+          <p class="links"><a class="go" href="demos/heat-engines.html">Open demo</a> <a href="notes/heat-engines.html">Notes</a></p>
+        </div>
+      </li>
+    </ul>
+    <details class="gaps">
+      <summary>Sections without a full activity <span class="n">1</span></summary>
+      <ul><li><span class="sec">2:3.5</span> Heat Capacities of an Ideal Gas<span class="st st-missing">no activity yet</span></li></ul>
+    </details>
+  </section>
+  <section class="unit" id="second-law" aria-labelledby="second-law-h">
+    
+    <h2 id="second-law-h">The second law of thermodynamics</h2>
+    <p class="meta"><span>Vol 2 · Ch. 4</span><span>4 of 7 sections with an activity</span></p>
+    <ul class="list">
+      <li class="also">Also used in this unit: <a href="demos/heat-engines.html">Heat Engine Cycles</a> <span class="where">(card under <a href="#first-law">The first law of thermodynamics</a>; 2:4.2, 2:4.3, 2:4.5, 2:4.6)</span></li>
+    </ul>
+    <details class="gaps">
+      <summary>Sections without a full activity <span class="n">3</span></summary>
+      <ul><li><span class="sec">2:4.1</span> Reversible and Irreversible Processes<span class="st st-missing">no activity yet</span></li><li><span class="sec">2:4.4</span> Statements of the Second Law of Thermodynamics<span class="st st-missing">no activity yet</span></li><li><span class="sec">2:4.7</span> Entropy on a Microscopic Scale<span class="st st-missing">no activity yet</span></li></ul>
+    </details>
+  </section>
+  <p class="more"><a href="index.html">Back to all courses</a></p>
+</main>
+<footer>
+  <div class="wrap">
+    <p>© 2026 Steven Anderson. All rights reserved. Free to use for teaching and learning; see the <a href="LICENSE.html">terms of use</a>.</p>
+    <p><a href="https://github.com/PhysicsSteven/VirtualDemos">Source on GitHub</a></p>
+  </div>
+</footer>
+</body>
+</html>

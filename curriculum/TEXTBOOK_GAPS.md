@@ -10,7 +10,7 @@ For each course unit, join its `{vol,sec}` references to section records. Render
 
 Claude integration: `validation/requests/standalone-course-activities.patch` is a tested proposal for the current `tools/courses.py`. Its in-memory render passed, including direct activity links and unchanged Physics II output. The generator and generated course pages are not edited on this branch; apply/adapt the patch (`git apply --unidiff-zero`) and regenerate before claiming the standalone cards are live.
 
-Physics I follows the syllabus (Ch. 13 before Ch. 12, then fluids and oscillations). Required Physics II ends at Maxwell and EM waves; Vol. 3 Ch. 1–2 optics remains optional. Durations and exam boundaries remain unpopulated. Deferred material keeps its existing later assignment.
+Physics I follows the syllabus (Ch. 13 before Ch. 12, then fluids and oscillations). Required Physics II ends at Maxwell and EM waves; Vol. 3 Ch. 1–2 (basic optics) and Ch. 3–4 (wave optics) are optional. Durations and exam boundaries remain unpopulated. Thermodynamics (Vol. 2 ch. 1 to 4) and Modern Physics (Vol. 3 ch. 5 to 11) are modules like Acoustics (2026-10-24); other deferred material keeps its later assignment.
 
 ## Status meanings
 
@@ -22,38 +22,36 @@ All 85 course sections have an explicit scoped mapping: 27 real demos, 12 full l
 
 ## Every unmapped section
 
-Regenerated from `textbook-map.json` on 2026-10-24 (Claude). Every section of Volumes 1, 2 and 3 now has a record (99, 95 and 76). Physics I, Physics II and Acoustics have no missing section; all gaps are in material tagged later.
+Regenerated from `textbook-map.json` on 2026-10-24 (Claude), after the Thermodynamics and Modern Physics modules were made and wave optics joined Physics II. Every section of Volumes 1, 2 and 3 has a record (99, 95 and 76). Physics I, required Physics II and Acoustics have no missing section. Thermodynamics is Vol. 2 ch. 1 to 4, Modern Physics is Vol. 3 ch. 5 to 11, and Physics II's optional wave optics unit is Vol. 3 ch. 3 and 4; the only gap still tagged later is Vol. 2 §15.6.
 
 | Course / priority | Volume | Section | Exact textbook title | Status |
 |---|---:|---|---|---|
-| later | 2 | 1.1 | Temperature and Thermal Equilibrium | missing |
-| later | 2 | 1.2 | Thermometers and Temperature Scales | missing |
-| later | 2 | 1.3 | Thermal Expansion | missing |
-| later | 2 | 1.4 | Heat Transfer, Specific Heat, and Calorimetry | missing |
-| later | 2 | 1.5 | Phase Changes | missing |
-| later | 2 | 3.5 | Heat Capacities of an Ideal Gas | missing |
-| later | 2 | 4.1 | Reversible and Irreversible Processes | missing |
-| later | 2 | 4.4 | Statements of the Second Law of Thermodynamics | missing |
-| later | 2 | 4.7 | Entropy on a Microscopic Scale | missing |
+| thermo | 2 | 1.1 | Temperature and Thermal Equilibrium | missing |
+| thermo | 2 | 1.2 | Thermometers and Temperature Scales | missing |
+| thermo | 2 | 1.3 | Thermal Expansion | missing |
+| thermo | 2 | 3.5 | Heat Capacities of an Ideal Gas | missing |
+| thermo | 2 | 4.1 | Reversible and Irreversible Processes | missing |
+| thermo | 2 | 4.4 | Statements of the Second Law of Thermodynamics | missing |
+| thermo | 2 | 4.7 | Entropy on a Microscopic Scale | missing |
 | later | 2 | 15.6 | Transformers | missing |
-| later | 3 | 3.5 | The Michelson Interferometer | missing |
-| later | 3 | 4.5 | Circular Apertures and Resolution | missing |
-| later | 3 | 4.7 | Holography | missing |
-| later | 3 | 5.6 | Relativistic Velocity Transformation | missing |
-| later | 3 | 8.2 | Orbital Magnetic Dipole Moment of the Electron | missing |
-| later | 3 | 8.4 | The Exclusion Principle and the Periodic Table | missing |
-| later | 3 | 9.1 | Types of Molecular Bonds | missing |
-| later | 3 | 9.2 | Molecular Spectra | missing |
-| later | 3 | 9.3 | Bonding in Crystalline Solids | missing |
-| later | 3 | 9.5 | Band Theory of Solids | missing |
-| later | 3 | 9.6 | Semiconductors and Doping | missing |
-| later | 3 | 9.7 | Semiconductor Devices | missing |
-| later | 3 | 10.4 | Nuclear Reactions | missing |
-| later | 3 | 11.1 | Introduction to Particle Physics | missing |
-| later | 3 | 11.2 | Particle Conservation Laws | missing |
-| later | 3 | 11.3 | Quarks | missing |
-| later | 3 | 11.5 | The Standard Model | missing |
-| later | 3 | 11.7 | Evolution of the Early Universe | missing |
+| physics-2 | 3 | 3.5 | The Michelson Interferometer | missing |
+| physics-2 | 3 | 4.5 | Circular Apertures and Resolution | missing |
+| physics-2 | 3 | 4.7 | Holography | missing |
+| modern | 3 | 5.6 | Relativistic Velocity Transformation | missing |
+| modern | 3 | 8.2 | Orbital Magnetic Dipole Moment of the Electron | missing |
+| modern | 3 | 8.4 | The Exclusion Principle and the Periodic Table | missing |
+| modern | 3 | 9.1 | Types of Molecular Bonds | missing |
+| modern | 3 | 9.2 | Molecular Spectra | missing |
+| modern | 3 | 9.3 | Bonding in Crystalline Solids | missing |
+| modern | 3 | 9.5 | Band Theory of Solids | missing |
+| modern | 3 | 9.6 | Semiconductors and Doping | missing |
+| modern | 3 | 9.7 | Semiconductor Devices | missing |
+| modern | 3 | 10.4 | Nuclear Reactions | missing |
+| modern | 3 | 11.1 | Introduction to Particle Physics | missing |
+| modern | 3 | 11.2 | Particle Conservation Laws | missing |
+| modern | 3 | 11.3 | Quarks | missing |
+| modern | 3 | 11.5 | The Standard Model | missing |
+| modern | 3 | 11.7 | Evolution of the Early Universe | missing |
 
 ## Partial section mappings
 
@@ -82,7 +80,7 @@ Regenerated from `textbook-map.json` on 2026-10-24 (Claude). Every section of Vo
 
 ## Optional optics gaps
 
-None: Volume 3 sections 1.1, 1.5, 1.6 and 2.5 were mapped on 2026-10-23 (huygens, optics-bench, the-eye).
+Basic optics (ch. 1 and 2): none; Volume 3 sections 1.1, 1.5, 1.6 and 2.5 were mapped on 2026-10-23 (huygens, optics-bench, the-eye). Wave optics (ch. 3 and 4, optional unit since 2026-10-24): §3.5 The Michelson Interferometer, §4.5 Circular Apertures and Resolution, §4.7 Holography are missing; §4.1, §4.2 and §4.6 are partial (table above).
 
 ## Sources and scope
 
