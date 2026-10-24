@@ -5641,8 +5641,10 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Lecture demo: ball on a string (cut it: straight line), car on a flat curve (top speed √(μs g r)), banked curve (ideal speed, allowed range), vertical loop (energy, N, leaves the track below √(gr) at the top); FBD to scale; Blind. Cars and loop shown slowed down. 2026-10-22: setup Speeding up or braking (formerly the separate Speeding Up on a Curve demo; its URL redirects here): tangential and centripetal acceleration, total acceleration, slip when √(a_t² + (v²/r)²) > μs g.",
-      "handouts": [],
+      "note": "New 2026-10-22 (Claude). Lecture demo: ball on a string (cut it: straight line), car on a flat curve (top speed √(μs g r)), banked curve (ideal speed, allowed range), vertical loop (energy, N, leaves the track below √(gr) at the top); FBD to scale; Blind. Cars and loop shown slowed down. 2026-10-22: setup Speeding up or braking (formerly the separate Speeding Up on a Curve demo; its URL redirects here): tangential and centripetal acceleration, total acceleration, slip when √(a_t² + (v²/r)²) > μs g. 2026-10-24: student worksheet circular-motion (limits found by trial with Blind on: flat curve top speed, banked curve ideal speed, least speed round a loop) with the shared Readings section.",
+      "handouts": [
+        "circular-motion"
+      ],
       "title": "Circular Motion",
       "url": "demos/circular-motion.html"
     },

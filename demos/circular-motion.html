@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg formula chips-button btnrow inline status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-stage img projshort-proj-bar-units mono bar-h1 bench pane chips-button-hover btn btn-primary btn-disabled slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas projshort-proj-bar-p" lang="en">
+<html data-vd-off="formula chips-button inline empty plotbox-canvas wide-proj-stage img projshort-proj-bar-units mono bar-h1 bench pane chips-button-hover slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas projshort-proj-bar-p" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -87,6 +87,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/circular-motion.html" target="circular-motion-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -114,6 +115,27 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <dl class="readout" id="out"></dl>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="circular-motion" data-title="Circular Motion" data-demo="circular-motion">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
@@ -178,7 +200,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     speed: { v: 0, r: 60, m: 1200, mu: 0.7, b: 0, at: 2, hint: 'Speeding up or braking on the curve: the acceleration now has a part along the road, a_t, as well as v²/r toward the centre. The total is not toward the centre, and the road\'s grip must supply all of it, so a car that is speeding up or braking slides off at a lower speed than one cruising. Set a_t negative to brake.' },
     loop: { v: 9, r: 1.5, m: 0.5, mu: 0, b: 0, hint: 'A ball rolling without friction inside a loop (treated as sliding, so no rotational energy). It slows as it climbs. At the top gravity and the track both point to the center; below v = √(gr) there, gravity alone is too much and the ball falls away. That needs v ≥ √(5gr) at the bottom.' }
   };
-  const S = { preset: 'string', v: 3, r: 1, m: 0.5, mu: 0, b: 0, at: 2, ts: 0, ang: 0, run: !reduce, cut: null, slid: null, fell: null, blind: false };
+  const S = { preset: 'string', v: 3, r: 1, m: 0.5, mu: 0, b: 0, at: 2, ts: 0, ang: 0, angVel: 0, run: !reduce, cut: null, slid: null, fell: null, blind: false };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -229,7 +251,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const th = S.ang, ux = loopView ? Math.sin(th) : Math.cos(th), uy = loopView ? Math.cos(th) : -Math.sin(th);   // loop: angle from the bottom
     const free = S.cut || S.slid || S.fell;
     if (free) { x = free.x + free.vx * free.t; y = free.y + free.vy * free.t + (free.g ? 0.5 * free.g * free.t * free.t : 0); vx = free.vx; vy = free.vy + (free.g ? free.g * free.t : 0); }
-    else { x = cx + R * ux; y = cy + R * uy; vx = loopView ? Math.cos(th) : -Math.sin(th); vy = loopView ? -Math.sin(th) : -Math.cos(th); }
+    else { x = cx + R * ux; y = cy + R * uy; vx = loopView ? Math.cos(th) : -Math.sin(th); vy = loopView ? -Math.sin(th) : -Math.cos(th); if (loopView && S.angVel < 0) { vx = -vx; vy = -vy; } }   /* sliding back down */
     if (!free) { const vm = Math.hypot(vx, vy); vx /= vm; vy /= vm; }
     if (u3) {   // the 3D view draws the road, the car and its arrows; this canvas keeps their labels, the status line and the free body diagram
       const R3 = render3((x - cx) / R * S.r, -(y - cy) / R * S.r, Math.atan2(-vy, vx), sw, wide ? H : sh, !free && !bl), lab = (q, t, c) => { const a = R3.Q(q); ctx.font = `700 ${12 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; const w = ctx.measureText(t).width + 6 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.8; ctx.fillRect(a[0] + 4 * p, a[1] - 8 * p, w, 16 * p); ctx.globalAlpha = 1; ctx.fillStyle = c; ctx.fillText(t, a[0] + 7 * p, a[1]); };
@@ -494,19 +516,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const SL = [['sAt', 'at', (v) => `${f(v, 1)} m/s²`], ['sV', 'v', (v) => `${f(v, 1)} m/s`], ['sR', 'r', (v) => `${f(v, 1)} m`], ['sM', 'm', (v) => (v < 10 ? `${f(v, 1)} kg` : `${f(v, 0)} kg`)], ['sMu', 'mu', (v) => f(v, 2)], ['sB', 'b', (v) => `${f(v, 1)}°`]];
   function sync() {
     const P = S.preset;
-    for (const [id, k, fmt] of SL) { $(id).value = S[k]; $('o' + id.slice(1)).textContent = fmt(S[k]); }
-    $('sR').max = P === 'string' || P === 'loop' ? 3 : 100; $('sR').step = P === 'string' || P === 'loop' ? 0.1 : 1;
+    /* the ranges first, then the values: a value set before its range changes is clamped to the old range */
+    $('sR').min = P === 'string' || P === 'loop' ? 0.5 : 1; $('sR').max = P === 'string' || P === 'loop' ? 3 : 100; $('sR').step = P === 'string' || P === 'loop' ? 0.1 : 1;
     $('sM').max = P === 'string' || P === 'loop' ? 2 : 2000; $('sM').min = P === 'string' || P === 'loop' ? 0.1 : 500; $('sM').step = P === 'string' || P === 'loop' ? 0.1 : 50;
     $('sV').max = P === 'string' ? 10 : P === 'loop' ? 15 : 40;
     $('lV').textContent = P === 'loop' ? 'Speed at the bottom v₀' : P === 'speed' ? 'Starting speed v₀' : 'Speed v';
     $('sV').min = P === 'speed' ? 0 : 1;
+    for (const [id, k, fmt] of SL) { $(id).value = S[k]; $('o' + id.slice(1)).textContent = fmt(S[k]); }
     $('atRow').hidden = P !== 'speed';
     $('muRow').hidden = !(P === 'flat' || P === 'bank' || P === 'speed'); $('bankRow').hidden = P !== 'bank';
     $('cut').textContent = P === 'string' ? 'Cut the string' : P === 'loop' ? 'Launch again' : 'Steady';
     $('cut').hidden = !(P === 'string');
   }
   for (const [id, k] of SL) $(id).addEventListener('input', (e) => { S[k] = +e.target.value; restart(); });
-  function restart() { S.cut = S.slid = S.fell = null; S.ts = 0; S.ang = S.preset === 'loop' || S.preset === 'speed' ? 0 : S.ang; sync(); draw(); readouts(); }
+  function restart() { S.cut = S.slid = S.fell = null; S.ts = 0; S.ang = S.preset === 'loop' || S.preset === 'speed' ? 0 : S.ang; S.angVel = S.v / S.r; sync(); draw(); readouts(); }
   function applyPreset(k) { const c = PRESETS[k]; S.preset = k; Object.assign(S, { v: c.v, r: c.r, m: c.m, mu: c.mu, b: c.b, at: c.at != null ? c.at : S.at }); S.ang = 0; $('presetHint').textContent = c.hint;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === k)); restart(); }
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
@@ -534,8 +557,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         let w = S.v / S.r;
         if (S.preset === 'loop') { const q = situation(); w = q.stalls ? 0 : q.v / S.r; }
         if (S.preset === 'speed') { const ts = situation().tSlip; S.ts += dt * slow; if (ts != null && S.ts >= ts) S.ts = ts; S.ang = situation().th; if (ts != null && S.ts >= ts) release('slid'); w = 0; }
+        else if (S.preset === 'loop' && S.v * S.v <= 2 * G * S.r) {
+          /* too slow to pass the side of the loop: it stops below that height and slides back and forth like a pendulum of length r,
+             φ'' = −(g/r) sin φ (semi-implicit Euler, 1 ms steps, held to the turning angle that energy conservation gives) */
+          const turn = Math.acos(1 - S.v * S.v / (2 * G * S.r)), tt = dt * slow, n = Math.max(1, Math.ceil(tt / 0.001)), h = tt / n;
+          for (let i = 0; i < n; i++) { S.angVel -= G / S.r * Math.sin(S.ang) * h; S.ang += S.angVel * h; }
+          S.ang = Math.max(-turn, Math.min(turn, S.ang));
+        }
         else S.ang += w * dt * slow;
-        if (S.preset === 'loop') { const q = situation(); if (q.stalls || q.N < 0) { release('fell'); S.fell.path = false; } }
+        if (S.preset === 'loop' && S.v * S.v > 2 * G * S.r) { const q = situation(); if (q.stalls || q.N < 0) { release('fell'); S.fell.path = false; } }
         if (S.preset === 'flat' || S.preset === 'bank') { if (!situation().ok) release('slid'); }
         if (S.preset === 'speed' && S.ts > 0 && situation().v === 0 && S.at < 0) { /* stopped: hold */ }
         if (S.preset !== 'speed' && S.ang > 2 * Math.PI) S.ang -= 2 * Math.PI;
@@ -545,6 +575,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     requestAnimationFrame(frame);
   }
   can.addEventListener('keydown', (e) => { if (e.key === ' ') $('play').click(); else if (e.key === 'c' || e.key === 'C') $('cut').click(); else return; e.preventDefault(); });
+  /* Readings for the worksheet (tools/readings_panel.py): the settings and what happens with them. The outcome is the model's, the same
+     thing the picture shows: the car holds the curve or slides off, the ball goes round the loop, leaves the track or slides back. */
+  const r6 = (v) => +(+v).toPrecision(6);
+  window.vdVersion = 'circular-motion@2026-10-24';
+  window.vdShowCols = [['setup', 'setup'], ['r_m', 'r (m)'], ['v_m_s', 'v (m/s)'], ['outcome', 'outcome']];
+  window.vdReadingRow = () => {
+    const P = S.preset, q = situation(), row = (setup, v, outcome) => ({ setup, r_m: S.r, mu_s: P === 'loop' ? '' : S.mu, bank_deg: P === 'bank' ? S.b : '',
+      tan_theta: P === 'bank' ? r6(Math.tan(S.b * Math.PI / 180)) : '', m_kg: S.m, v_m_s: v, v2_m2_s2: r6(v * v), outcome });
+    if (P === 'flat') return row('flat curve', S.v, q.ok ? 'holds the curve' : 'slides off');
+    if (P === 'bank') return row('banked curve', S.v, !q.ok ? 'slides off' : Math.abs(q.f) < 1e-9 * S.m * G ? 'holds, no friction needed' : `holds, friction ${q.f > 0 ? 'down' : 'up'} the slope`);
+    if (P === 'loop') { const v2 = S.v * S.v, gr = G * S.r; return row('vertical loop', S.v, v2 >= 5 * gr - 1e-9 ? 'goes round' : v2 <= 2 * gr ? 'stops and slides back' : 'leaves the track'); }
+    return 'Readings are recorded in the flat curve, banked curve and vertical loop setups.';
+  };
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); });
   $('rmToggle').checked = reduce;
   $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; try { sessionStorage.setItem('vd-cm-motion', reduce ? 'reduce' : 'full'); } catch (_) {} if (reduce) { S.run = false; $('play').textContent = 'Play'; } });
