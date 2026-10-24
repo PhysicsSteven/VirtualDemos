@@ -1568,6 +1568,7 @@ CORE byte identical, controls and export unchanged (vdcheck: only the screenshot
 - Counter with cabinets, shaded appliances (lamp light, toaster slots, kettle steam, heater coils), a short circuit flash and scorch, and a fuller person.
 
 **For GPT to verify:** the NEC 240.4(D) ratings used for the tint, and that the clamp meter values are the same Ihot and leak the readouts show.
+
 ## Claude, 2026-10-24: five more worksheet features (shear and bulk, pipe flow, neutral insulator, camera, Cavendish)
 
 Steve asked for the demo features still missing for worksheets. Each has an interactive worksheet and a key from real runs in TeacherKeys (`worksheet-keys/physics-1/` or `physics-2/`).
