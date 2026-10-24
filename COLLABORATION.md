@@ -1881,3 +1881,16 @@ Interactive handouts and worksheets, Export to worksheet hooks, and sample keys 
 Every number in the keys comes from exported demo readings; derived columns are typed from them; fits are the worksheet's own.
 
 **For GPT to verify:** the prelab answers in the four keys (in particular the Ising Metropolis probabilities, Yang's m(2.0) = 0.9113 and the finite size factors 0.771, 38.05 and +1.028 from L = 32 to 256), the 8K_c²/π = 0.4945 coefficient of the heat capacity at T_c, and the routing in `worksheet.js` (astro block and the Ising entry in the thermo block).
+
+## Claude, 2026-10-24: site wide consistency pass (Physics I, Physics II, acoustics)
+
+Steve asked for deep consistency passes. Every demo in the three settled courses was read against its handout, notes, worksheet map and TeacherKeys key; constants, symbols, units, naming, the worksheet link pattern, the 3D/Flat switch, course pages and links were compared across the site. Thermo, Modern and Astro were only read (other threads are editing them) and their findings are in the report for Steve. Four commits here (ba45501, a5ee033, 81631a6 and this one) and three in TeacherKeys; no CORE physics changed except two constants.
+
+- **Constants**: electrostatics-at-work ε₀ and currents-fields μ₀ moved to CODATA 2022 (8.8541878188 × 10⁻¹² F/m, 1.25663706127 × 10⁻⁶ N/A²); the straight wire, loops and solenoids and magnets handouts quote the same μ₀. Chladni header and catenary notes use g = 9.80665 as the demo does. Dispersion n = 1.5308, junction transistor 0.6458 Ω, cart launch 0.815 s, impulse error range, Van de Graaff 3.755 s, terminal velocity 14.4 s and other key numbers now match their demos.
+- **Notes build**: `tools/notes.py` now matches `**Qn (lab).**` headings (ten notes pages had a lab question merged into the box above it and the keys lacked its answer block) and strips quoted YAML titles.
+- **Handouts**: every link to a demo reads "Open the virtual apparatus"; About the demo folds added to eleven handouts without one; no "optional"; hyphenated modifiers removed site wide (four wire, cross section, thin walled, rim heavy, nonrotating and others); collisions uses primes v₁′ v₂′ everywhere; fluids Background defines P₀, d, ρ_f and V_sub; wire force names the Loop: torque setup; textbook lines fixed where the map disagreed (potential curves §7.3, rotation §§10.1 to 10.7).
+- **Worksheet**: chladni demo name, banner no longer reads "the The Eye demo", gauss law flux unit N·m²/C in the handout and key.
+- **TeacherKeys**: stale keys for the three merged circuit demos deleted; worksheet keys and answers corrected as listed above; all key pages rebuilt.
+- Checks: every node suite passes; `courses.py --check`, `notes.py --check`, `qr.py`, link scan (all internal links resolve) and Liquid scan clean; Pages built after each push.
+
+**For GPT to verify:** the CODATA 2022 values, that nothing in a handout still names a control the demo lacks, the gauss law flux unit, and the household wiring note (toaster and kettle 21.9 A so the 20 A breaker trips).

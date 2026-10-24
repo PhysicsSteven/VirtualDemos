@@ -17,7 +17,7 @@ Students need Ohm's law, power P = IV = I²R = V²/R, and series and parallel re
 
 ## Running it in class
 
-1. **A lamp.** 0.83 A, the same in hot and neutral, none in the ground. Add the toaster and the kettle: 21.5 A on a 15 A breaker. Ask: is anything broken? The breaker trips after 2 s. Change to 12 gauge and 20 A: it holds.
+1. **A lamp.** 0.83 A, the same in hot and neutral, none in the ground. Add the toaster and the kettle: 21.5 A on a 15 A breaker. Ask: is anything broken? The breaker trips after 2 s. Change to 12 gauge and 20 A: the wire is now rated for it, but the toaster and kettle still draw 21.9 A, so the 20 A breaker trips too; drop the kettle and it holds.
 2. **The wrong breaker.** 14 gauge wire on a 30 A breaker with the toaster, kettle and heater: the breaker holds (about 33 A), but the heat in the wire is 8.6 W per metre, nearly five times the 1.8 W/m at 15 A. This is why the breaker is matched to the wire.
 3. **Short circuit.** About 350 A for 15 m of 14 gauge wire. Shorten the run: the current goes up.
 4. **Worn cord, grounded case.** The ground wire carries about 350 A and the breaker trips at once; the person in parallel gets only about 0.2 mA, for an instant.

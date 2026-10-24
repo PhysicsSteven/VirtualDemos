@@ -62,7 +62,7 @@ For a real electrostatics bench, follow the instructor's high voltage and discha
 
 ## Data
 
-| Geometry/distribution | Charge positions or $$r$$ (m) | $$Q_{\rm enc}$$ (C) | Numerical flux (N m²/C) | Predicted flux (N m²/C) | $$E$$ (N/C), if used | Numerical status/evaluations |
+| Geometry/distribution | Charge positions or $$r$$ (m) | $$Q_{\rm enc}$$ (C) | Numerical flux (N·m²/C) | Predicted flux (N·m²/C) | $$E$$ (N/C), if used | Numerical status/evaluations |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 | | | | | | | |
