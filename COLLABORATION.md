@@ -1030,3 +1030,9 @@ Moved onto `demos/lib`: bz-reaction, dna, e-over-m, electron-diffraction, hydrog
 - These demos had the shared `rail-details-more-*` and `rail-details-fold-*` rules switched off in `data-vd-off` (they had no folds when moved); those tokens are removed so the folds use the shared styles.
 - Sidebars: about 102,000 px in total, now about 60,000 (gamma spectroscopy 9157 to 4087). Tests pass; no page errors and no sideways scroll at 1366, 400 and 360 px (three.js served locally for the check). None of the Misc demos has a handout yet, so none has the handout button.
 - Seen, not changed: gamma spectroscopy's readings table is wider than the sidebar (as on main).
+
+## Claude, 2026-10-24: Set up cards on Rutherford and Quantum Waves (Steve asked)
+
+- **Rutherford:** Kinetic energy K (`ke`) and Impact parameter b (`bb`) move from the Projectile and One alpha sections onto a Set up card on the picture ("Set up the alpha, then press Play"). The card fades while the alphas fly and comes back on Pause (`VD.setupCard`); b hides in Beam mode, as before. The page now opens paused, so the card is there to set up first; Play or Fire again starts it. Dragging b on the picture still works while it runs.
+- **Quantum Waves:** the Wave packet section (Center x₀, Width σ, Energy E₀, Direction, Launch packet) moves onto a Set up card on the picture ("Set up the packet, then press Launch packet"), and that section leaves the sidebar; its note on the Gaussian packet joins the Measurements note. The card fades while the packet evolves and comes back on Pause. The page now opens paused. On phones the card sits under the picture.
+- Control names and ids unchanged. Rutherford tests pass; checked at 1366, 400 and 360 px, light and dark, with no page errors or sideways scroll.
