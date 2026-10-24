@@ -67,6 +67,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>A finer grating (more lines per mm, smaller d) spreads the orders wider and allows fewer of them; an order exists only if mλ/d ≤ 1.</li>
 <li>Measuring the spot position y at distance L gives θ = arctan(y/L) and then λ = d sin θ/m. The shortcut λ ≈ dy/(mL) fails at the angles a real grating gives.</li>
 <li>A gas lamp's lines repeat in every order, which is how a spectrograph identifies elements in a lamp or a star.</li>
+<li>One slit alone (the <strong>Single slit</strong> aperture) gives a broad middle band with dark fringes at a sin θ = mλ and faint side bands, I = I₀[sin β/β]²; a narrower slit spreads the pattern wider.</li>
 </ul>
 <h2>Before class</h2>
 <p>Students should know wave superposition and path difference (the double slit). 600 lines/mm means d = 1.667 µm. In <strong>Measure</strong> mode the <strong>Orders</strong> table is hidden so students can find the wavelength themselves. On the bench students can drag the grating to change L, turn its knob to rotate it, and drag the caliper jaws on the wall; the arrow keys move the selected jaw by 1 mm (A and B choose the jaw).</p>
@@ -78,6 +79,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li><strong>White light rainbows and overlapping orders.</strong> At 300 lines/mm each order is a spectrum with violet inside and the center stays white. The second and third orders overlap. Q4.</li>
 <li><strong>Hydrogen lamp spectrum.</strong> The four Balmer lines repeat in every order. Use the wavelength chips above the <strong>Orders</strong> table to read each line's position. For astronomy, this is the pattern a spectrograph records from a star or nebula. Try the <strong>Na</strong> lamp for Q6.</li>
 <li><strong>CD as a grating.</strong> The track pitch of a CD acts as a 625 lines/mm grating; press <strong>DVD</strong> to compare. Q7. If time allows, set <strong>Illuminated slits N</strong> to 5 and choose <strong>0 to 1st order</strong> on the plot: between orders there are N − 1 zeros and N − 2 small maxima, and the orders sharpen as N grows.</li>
+<li><strong>Single slit.</strong> Switch <strong>Aperture</strong> to <strong>Single slit</strong> (or open the demo with <code>?aperture=single</code>). With the He-Ne laser and a = 5.0 µm the dark fringes sit 12.8, 26.2, 41.1 cm … from the center at L = 1 m and the middle band is twice as wide as the side bands. Narrow the slit and the pattern spreads; below a = λ (try 0.5 µm) there is no dark fringe at all. In <strong>Measure</strong> the light meter on jaw B reads I/I₀. Q8.</li>
 </ol>
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> Predict: the red He-Ne laser (632.8 nm) shines through 600 lines/mm and makes spots up to m = ±2. You swap in a 1000 lines/mm grating. Do the first order spots move in or out? How many orders will you see now?</p></div>
@@ -93,6 +95,8 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <div class="q"><p><strong>Q6.</strong> The sodium D lines are at 589.0 and 589.6 nm. A grating separates two lines when the resolving power mN is at least λ/Δλ. How many illuminated slits are needed in first order? On a 600 lines/mm grating the 1 mm beam lights 600 slits: will the lines separate in first order, in second order? Choose the <strong>Na</strong> lamp and its 589 nm chip, set <strong>Illuminated slits N</strong>, and check the note under the <strong>Orders</strong> table.</p></div>
 
 <div class="q"><p><strong>Q7.</strong> A 650 nm laser reflected from a CD gives first order spots at 24.0° from the straight through beam. Find the track pitch d. A DVD has d = 0.74 µm. At what angle is its first order, and why does it have no second order?</p></div>
+
+<div class="q"><p><strong>Q8.</strong> With the single slit, a = 5.0 µm and the He-Ne laser, where is the first dark fringe at L = 1.00 m? Predict what the light meter on jaw B reads at the first side maximum, and where that maximum is. What happens to the pattern when a is cut to 2.0 µm, and to 0.5 µm?</p></div>
 <h2>Common misconceptions</h2>
 <ul>
 <li><strong>"More lines per mm gives more orders."</strong> It gives fewer: d is smaller, so mλ/d reaches 1 at a smaller m. The orders that remain are spread wider.</li>
@@ -105,6 +109,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <li>Spot positions are exact: sin θₘ = sin θᵢ + mλ/d and yₘ = L tan θₘ on a flat wall square to the beam. Turning the grating sets θᵢ; the simple formulas apply only with the turn at 0°.</li>
 <li>The plot is the far field pattern of N slits of width a: I ∝ [sin(Nφ)/sin φ]² × [sin β/β]², with φ = πd(sin θ − sin θᵢ)/λ and β = πa(sin θ − sin θᵢ)/λ, scaled so the central peak is 1. Whole numbers of d/a make orders missing.</li>
 <li>On the wall each order carries power in proportion to the slit envelope; obliquity factors are left out. Spot widths include the beam width and diffraction spread but have a minimum size in pixels, so spot brightness is not to scale. Fine structure such as the 0.6 nm sodium doublet is far too small to see on the wall (about 0.4 mm at L = 1 m); the resolving power is reported in the note under the <strong>Orders</strong> table.</li>
+<li>Single slit (N = 1): I = I₀[sin β/β]² with β = πa(sin θ − sin θᵢ)/λ, dark fringes at a(sin θ − sin θᵢ) = mλ, side maxima where tan β = β (0.0472, 0.0165, 0.0083 of the center). Slits of 0.5 to 20 µm keep the pattern wide enough for the caliper; L ≫ a²/λ (under 1 mm), so the far field formula holds at every L. For slits a few wavelengths wide the scalar formula is itself an approximation.</li>
 <li>Lamp light passes a slit and a lens to make a parallel beam. A real lamp is too faint to project; in lab you look through the grating. Lines are NIST air wavelengths on a log brightness scale; white light is CIE D65 from 400 to 700 nm.</li>
 </ul>
 <h2>Going further</h2>

@@ -12,7 +12,10 @@
   /* Physics I worksheets (physics-1.html). Add a worksheet's file name here to make it interactive. */
   const PHYSICS_I = ['collisions', 'energy-sources', 'estimation-and-evidence', 'fluids', 'forces', 'impulse', 'kepler-orbits',
     'measurement-and-units', 'motion-graphs', 'pendulum', 'potential-curves', 'projectile-drag', 'rotation', 'rotational-dynamics',
-    'springs', 'stress-strain', 'viscometer', 'force-table', 'gyroscope', 'circular-motion', 'rocket'];
+    'springs', 'stress-strain', 'viscometer', 'force-table', 'gyroscope', 'circular-motion', 'rocket',
+    'gravity-near-earth', 'tides', 'gps-clocks' /* gravitation, Vol. 1 ch. 13, 2026-10-24 */,
+    'relative-motion', 'apparent-weight', 'center-of-mass' /* cart launch, elevator, center of mass demos, 2026-10-24 */,
+    'static-equilibrium', 'catenary', 'double-pendulum' /* Static Equilibrium, Hanging Chains and Arches, Pendulums and Chaos demos, 2026-10-24 */];
   const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
@@ -29,6 +32,12 @@
       'scale_in_air_W_N', 'scale_T_N', 'Q_m3_s'] },
     forces: { demo: 'Forces and Friction', cols: ['row', 'm_kg', 'theta_deg', null, (r, h) => (r.t_gate_s ? h.gate_distance_m || '' : ''), 't_gate_s', 'a_m_per_s2', null] },
     'kepler-orbits': { demo: 'Kepler Orbits', cols: [both('row', 'preset'), 'M_Msun', 'ruler_d12_AU', 'a_AU', 'timer_T_yr', 'a3_AU3', 'T2_yr2'] },
+    /* Reading | Planet | Height h (km) | Latitude (°) | r (Mm) | Gravity alone GM/r² (m/s²) | Effective g (m/s²) | Real Earth at sea level (m/s²) | 1/r² (1/Mm²) | cos² of latitude */
+    'gravity-near-earth': { demo: 'Gravity Near Earth', cols: ['row', (r) => r.planet + (r.rotation === 'off' ? ', not rotating' : ''), 'h_km', 'lat_deg', 'r_Mm', 'g_grav_m_s2', 'g_eff_m_s2', 'g_wgs84_m_s2', null, null] },
+    /* Reading | Moon's distance d (Earth radii) | Pull at Earth's centre (μm/s²) | Tidal pull, near side (μm/s²) | Tidal pull, far side (μm/s²) | Mean of near and far (μm/s²) | 1/d² (d in Earth radii) | 1/d³ (d in Earth radii) */
+    tides: { demo: 'Tides', cols: ['row', 'd_RE', 'pull_um_s2', 'tidal_near_um_s2', 'tidal_far_um_s2', null, null, null] },
+    /* Reading | Second clock | r (km) | Speed v (km/s) | Gravity part (μs/day) | Speed part (μs/day) | Net gain (μs/day) | 1/r (1/Mm) | v² (km²/s²) */
+    'gps-clocks': { demo: 'GPS Clocks and Relativity', cols: ['row', (r) => r.second_clock + (r.ground_turns === 'no' ? ', ground clock at rest' : ''), 'r_km', 'v_km_s', 'grav_us_per_day', 'speed_us_per_day', 'net_us_per_day', null, null] },
     'motion-graphs': { demo: 'Motion Graphs', cols: ['row', 't_s', 'x_m', null, null] },
     'projectile-drag': { demo: 'Projectile Range', cols: ['shot', 'v0_m_per_s', 'launch_angle_deg', 'launch_height_m', 'air_resistance', 't_s', 'x_m', 'y_m', 'range_m'] },
     'rotational-dynamics': { demo: 'Rotational Dynamics', cols: ['load', 'm_kg', 'r_m', '#drop_height_m', 't_s', 'a_m_per_s2', 'alpha_rad_per_s2', 'tau_N_m'] },
@@ -44,6 +53,26 @@
     /* Trial | Gravity | m_dry (kg) | m_fuel (kg) | u (m/s) | Burn rate (kg/s) | Burn time (s) | ln(m0/m_dry) | Lift off at (s) | v at cutoff (m/s) | Height at cutoff (m) */
     rocket: { demo: 'Rocket Propulsion', cols: ['row', 'gravity', 'm_dry_kg', 'm_fuel_kg', 'u_m_s', 'b_kg_s', 't_burn_s', 'ln_m0_over_mdry', 't_liftoff_s', 'v_cutoff_m_s', 'y_cutoff_m'] },
     viscometer: { demo: 'Falling Ball Viscometer', cols: ['row', (r) => [r.liquid, r.ball].filter(Boolean).join(' / '), (r) => [r.rho_liquid_kg_m3, r.rho_ball_kg_m3].filter(Boolean).join(' / '), 'tube_D_mm', 'd_mm', 't_s', 'v_m_per_s', null, null, null] },
+    /* Trial | Track | v (m/s) | u (m/s) | a (m/s²) | θ (°) | Time in the air t (s) | Ball moves (m) | Cart moves (m) | Δx (cm) | Lands */
+    'relative-motion': { demo: 'Ball Launched from a Moving Cart', cols: ['row', 'track', 'v_m_s', 'u_m_s', 'a_cart_m_s2', 'incline_deg', 't_air_s', 'ball_moves_m', 'cart_moves_m', 'dx_cm', 'lands'] },
+    /* Reading | Stage of the ride | m (kg) | a, up + (m/s²) | v, up + (m/s) | N (N) | Scale reading R (kg) */
+    'apparent-weight': { demo: 'Elevator: Apparent Weight', cols: ['row', 'stage', 'm_kg', 'a_m_s2', 'v_m_s', 'N_N', 'scale_kg'] },
+    /* Reading | Setup and masses | f | t (s) | CM x (m) | CM y (m) | Unexploded x (m) | Unexploded y (m) | Walked (m) | Boat moved (m) */
+    'center-of-mass': { demo: 'Center of Mass', cols: ['row', (r) => (r.masses ? `${r.setup}: ${r.masses}` : r.setup), 'f', 't_s', 'x_cm_m', 'y_cm_m', 'x_whole_m', 'y_whole_m', 'walked_m', 'boat_m'] },
+    /* Trial | Setup | Load position x (m) | Cable height h (m) | Cable angle θ (°) | 1/sin θ | F₁ (N) | F₂ (N) | T (N) | H_x (N) | H_y (N) */
+    'static-equilibrium': { demo: 'Static Equilibrium', cols: ['row',
+      (r) => (r.setup === 'plank' ? `plank${r.tips ? ', ' + r.tips : ''}` : r.setup === 'sign' ? 'sign'
+        : r.setup === 'ladder' ? `ladder at ${r.theta_deg}°, person ${r.f_up} of the way up: ${r.slips}`
+        : `seesaw: ${r.m1_kg} kg at ${r.x1_m} m, ${r.m2_kg} kg at ${r.x2_m} m`),
+      'x_m', 'h_m', (r) => (r.setup === 'sign' ? r.theta_deg : ''), null, 'F1_N', 'F2_N', 'T_N', 'Hx_N', 'Hy_N'] },
+    /* Reading | S (m) | y_A (m) | y_B (m) | Sag d (m) | H (N) | T_A (N) | T_B (N) | 1/d | y_A − y_B | T_A − T_B */
+    catenary: { demo: 'Hanging Chains and Arches', cols: [(r) => `${r.row}${r.shape === 'arch' ? ', arch' : ''}`,
+      'S_m', 'yA_m', 'yB_m', 'sag_m', 'H_N', 'TA_N', 'TB_N', null, null, null] },
+    /* Trial | Start | L (m) | Measured period T (s) | 1/L | ω² | log₁₀ δ | Time to separate t_d (s) */
+    'double-pendulum': { demo: 'Pendulums and Chaos', cols: ['row',
+      (r) => (r.start === 'simple pendulum' ? `simple pendulum, θ₀ = ${r.theta1_0_deg}°` : `${r.start}, θ₁ = ${r.theta1_0_deg}°, θ₂ = ${r.theta2_0_deg}°`
+        + (+r.m1_kg !== 1 || +r.m2_kg !== 1 ? `, m₁ = ${r.m1_kg} kg, m₂ = ${r.m2_kg} kg` : '') + (+r.copies > 1 ? `, ${r.copies} copies` : '')),
+      (r) => (r.L2_m === '' || r.L2_m == null || +r.L2_m === +r.L1_m ? r.L1_m : `${r.L1_m} and ${r.L2_m}`), 'T_s', null, null, 'log10_delta', 't_sep_s'] },
   };
   /* ==PHYSICS II START== Physics II worksheets (physics-2.html) and their demo column maps, kept in one block. */
   const PHYSICS_II = ['ac-circuits', 'capacitors', 'coulomb-sandbox', 'dc-circuits', 'faraday', 'gauss-law', 'magnetic-force', 'rc-circuits',
@@ -52,7 +81,14 @@
     /* Physics II demos with the shared Readings section (tools/readings_panel.py) */
     'household-wiring', 'van-de-graaff', 'ink-jet-printer', 'precipitator' /* the last three: Electrostatics at Work */,
     'magnetism-in-matter', 'induced-electric-field', 'induction-at-work', 'magnets-oersted', 'huygens', 'dispersion', 'the-eye',
-    'induction' /* Charging by Induction, 2026-10-24 */];
+    'induction' /* Charging by Induction, 2026-10-24 */,
+    'eddy-currents' /* Eddy Currents: Magnet in a Pipe, 2026-10-24 */,
+    'michelson' /* Michelson Interferometer, 2026-10-24 */,
+    'transformers', 'displacement-current' /* 2026-10-24 */,
+    'resolution' /* Circular Apertures and Resolution, 2026-10-24 */,
+    'holography' /* Holography, 2026-10-24 */,
+    'thin-films', 'electron-diffraction', 'x-ray-diffraction' /* the last two: Electron Diffraction demo */, 'em-waves' /* 2026-10-24 */,
+    'double-slit', 'diffraction-grating', 'single-slit' /* the last two: Diffraction Grating demo (grating, Single slit aperture), 2026-10-24 */];
   ENABLED.push(...PHYSICS_II);
   /* Helpers for the Physics II maps. parts: the part values a Circuits row carries (R1_ohm, C1_F, L1_H, B1_emf_V, B1_r_ohm, S1_state),
      optionally only those whose column matches a pattern. pick: the first column matching a pattern that has a value in this row
@@ -89,6 +125,15 @@
     'string-density': { demo: 'Linear Density of a String', cols: ['row', '#string', 'L_m', 'm_kg', 'T_N', 'n', 'inv_n2', 'f_Hz'] },
     /* Trial | Setup | Rod charge (nC) | d (cm) | Radius of B (cm) | Gap (cm) | Connections | Q_A (nC) | Q_B (nC) | R/(R + d) */
     induction: { demo: 'Charging by Induction', cols: ['row', (r) => `${r.setup}, rod ${r.rod}`, 'q_rod_nC', 'd_cm', 'rB_cm', 'gap_cm', 'connections', 'QA_nC', 'QB_nC', 'R_over_R_plus_d'] },
+    /* Reading | Setup | λ₀ (nm) | Thickness t (nm) | Reflectance R (%) | Probe x (mm) | Order m (typed) */
+    'thin-films': { demo: 'Thin Film Interference', cols: ['row', (r) => `${r.view}, n ${r.n1} / ${r.nf} / ${r.n2}${+r.theta_deg ? `, θ₁ = ${r.theta_deg}°` : ''}${r.h_um ? `, spacer ${r.h_um} µm` : ''}${r.lens_R_m ? `, lens R = ${r.lens_R_m} m` : ''}`,
+      'lambda_nm', 't_nm', 'R_pct', (r) => r.x_mm || r.r_mm || '', null] },
+    /* Reading | Tool | Meter reading V (kV) | Wavelength λ (pm) | D₁ (mm) | D₂ (mm) */
+    'electron-diffraction': { demo: 'Electron Diffraction', cols: [(r) => (r.simulated === 'yes' ? `${r.row} (simulated)` : r.row), (r) => (r.tool === 'arc' ? 'ruler (arc)' : 'caliper (chord)'), 'meter_kV', 'lambda_pm', 'D1_mm', 'D2_mm'] },
+    /* Reading | Tube and crystal | Crystal angle θ (°) | Count rate (1/s) | Line, Order m, sin θ (typed) */
+    'x-ray-diffraction': { demo: 'Electron Diffraction (X ray Bragg spectrometer)', cols: ['row', (r) => `${r.tube} tube, ${r.crystal} crystal`, 'theta_deg', 'rate_per_s', null, null, null] },
+    /* Reading | f (Hz) | E₀ (V/m) | B₀ (T) | E₀² (typed) | I (W/m²) | pressure absorbed (Pa) | pressure reflected (Pa) */
+    'em-waves': { demo: 'Electromagnetic Waves', cols: [both('row', 'setup'), 'f_Hz', 'E0_V_per_m', 'B0_T', null, 'I_W_per_m2', 'p_abs_Pa', 'p_refl_Pa'] },
     /* Trial | Setup | Hot current (A) | Neutral current (A) | Ground current (A) | Current through the person (mA) | Outlet voltage (V) | Power (W) | Wire heat (W/m) | Protection */
     'household-wiring': { demo: 'Household Wiring', cols: ['row', 'setup', 'I_hot_A', 'I_neutral_A', 'I_ground_A', 'I_body_mA', 'V_outlet_V', 'P_W', 'heat_W_per_m', 'protection'] },
     /* Trial | Dome radius R (cm) | Belt current I (μA) | Capacitance C (pF) | Highest voltage (kV) | Time to spark (s) | Spark energy (J) | Sparks counted | Running time (s) */
@@ -106,10 +151,31 @@
     'huygens': { demo: "Huygens's Principle", cols: ['row', 'view', 'medium1', 'n1', 'medium2', 'n2', 'L_m', 't_ns', 'th1_deg', 'th2_deg', 's1v1', 's2v2', 'a_lambda', 'dark_deg'] },
     dispersion: { demo: 'Optics Bench', cols: ['row', 'element', 'material', 'lam_nm', 'n', 'dev_deg'] },
     'the-eye': { demo: 'The Eye', cols: ['row', 'eye', 'glasses_D', 'd_cm', 'seen', 'blur_mm', 'NP_cm', 'FP_cm', 'P_D', 'di_cm', 'rx_far_D', 'rx_near_D'] },
+    /* Reading | Setup | λ (nm) | D (mm) | Screen distance L (m) | Cursor x (mm) | Separation Δθ (µrad) | Intensity at the cursor I/I₀ | θ₁ = x/L (µrad) | λ/D (µrad) | 1/D (1/mm) */
+    resolution: { demo: 'Circular Apertures and Resolution', cols: ['row', 'setup', 'lam_nm', 'D_mm', 'L_m', 'x_mm', 'sep_urad', 'I_rel', null, null, null] },
+    /* Reading | λ (nm) | a (mm) | d (mm) | L (m) | Hits | Cursor B − A (mm) | Spacings n, Δy, 1/d, λL/d (typed) */
+    'double-slit': { demo: 'Double Slit', cols: ['row', 'lam_nm', 'a_mm', 'd_mm', 'L_m', 'hits', 'BA_mm', null, null, null, null] },
+    /* Reading | Source | λ (nm) | Lines per mm | Order m | L (m) | y (cm) | sin θ, mλ (typed) */
+    'diffraction-grating': { demo: 'Diffraction Grating', cols: ['row', 'source', 'lam_nm', 'lines_per_mm', 'm', 'L_m', 'y_cm', null, null] },
+    /* Reading | λ (nm) | a (µm) | L (m) | Dark fringe m | y (cm) | I/I₀ at B | sin θ, 1/a, β, (sin β/β)² (typed) */
+    'single-slit': { demo: 'Diffraction Grating (single slit)', cols: ['row', 'lam_nm', 'a_um', 'L_m', 'm', 'y_cm', 'I_rel', null, null, null, null] },
     /* Trial | View | Light in | Elements | θ (°) | I/I₀ after each element | I/I₀ out | Light out | θᵢ (°) | n₁ | n₂ | R_s | R_p | R */
     polarization: { demo: 'Polarization', cols: ['row', 'view', 'light_in', 'elements', 'theta_deg', 'I_each', 'I_out', 'light_out', 'thi_deg', 'n1', 'n2', 'Rs', 'Rp', 'R'] },
     /* Scan | Harmonic n | f (Hz) | Amplitude (mm) | L (m) | T (N) | μ (g/m); the harmonic number of a driven peak is the student's */
     'standing-waves': { demo: 'Standing Waves', cols: [both('row', 'mode'), 'n', 'f_Hz', 'amp_mm', 'L_m', 'T_N', 'mu_g_per_m'] },
+    /* Reading | Setup | λ₁ (nm) | Angle between the beams θ (°) | Fringe periods N | Span Δx (μm) | d (μm) | 1/sin(θ/2) | λ₂ (nm) | Image beam angle (°) | sin of it | Sharpest image z (mm) | 1/λ₂ (1/μm) */
+    holography: { demo: 'Holography', cols: ['row', (r) => `${String(r.object).replace('plane wave at ', 'plane ').replace(', middle at', ', middle')}, ref ${r.thr_deg}°${r.view === 'reconstruct' ? `, lit ${r.thi_deg}°` : ''}`.replace(/-/g, '−'),
+      'lam1_nm', 'angle_between_deg', 'N_periods', 'span_um', null, null, 'lam2_nm', (r) => (r.view === 'reconstruct' && r.object && /plane/.test(r.object) ? r.det_deg : ''), null,
+      (r) => (r.view === 'reconstruct' && r.object && !/plane/.test(r.object) ? r.z_screen_mm : ''), null] },
+    /* Trial | Pipe | T (°C) | m (A·m²) | m² (typed) | w (mm) | σ (MS/m) | Fall time t (s) */
+    'eddy-currents': { demo: 'Eddy Currents: Magnet in a Pipe', cols: ['row', 'pipe', 'T_C', 'm_A_m2', null, 'w_mm', 'sigma_MS_m', 't_s'] },
+    /* Reading | Light source | Micrometer reading (μm) | Mirror displacement Δd (μm, typed) | Cell pressure P (kPa) | Fringe count N */
+    michelson: { demo: 'Michelson Interferometer', cols: ['row', 'source', 'reading_um', null, 'P_kPa', 'N'] },
+    /* Reading | Setup | N_P | N_S | V_P (V) | V_S (V) | I_P (A) | I_S (A) | Load or line R (Ω) | Power in (W) | Power out (W) | Line loss (W) | 1/V_S² (typed) */
+    transformers: { demo: 'Transformers', cols: ['row', (r) => (r.view === 'power line' ? 'power line' : [r.model, r.k !== '' && r.k != null ? `k = ${r.k}` : '', `${r.f_Hz} Hz`, `${r.core} core`].filter(Boolean).join(', ')),
+      'Np', 'Ns', 'Vp_V', 'Vs_V', 'Ip_A', 'Is_A', 'R_ohm', 'Pin_W', 'Pout_W', 'P_loss_W', null] },
+    /* Reading | t (µs) | I (µA) | E (V/m) | r (cm) | Where | Surface | I_c (µA) | I_d (µA) | B (pT) | 2πrB (T·m) | 1/r (1/m) (typed) */
+    'displacement-current': { demo: 'Displacement Current', cols: ['row', 't_us', 'I_uA', 'E_V_per_m', 'r_cm', 'where', 'surface', 'Ic_uA', 'Id_uA', 'B_pT', 'circ_T_m', null] },
   });
   /* ==PHYSICS II END== */
   /* ==ACOUSTICS START== Acoustics worksheets (acoustics.html) and their demo column maps. */

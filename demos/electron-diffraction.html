@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles swatch phone-chips-button pane-canvas" lang="en">
+<html data-vd-off="root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas wide-proj-bench wide-proj-stage pane toggles swatch phone-chips-button pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -61,6 +61,11 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 #p3d { grid-column: 1; grid-row: 1; background: var(--room); }
 #pGeo { grid-column: 1; grid-row: 2; border-top: 1px solid var(--room-line); }
 #pScr { grid-column: 2; grid-row: 1 / span 2; border-left: 1px solid var(--room-line); }
+#pX { grid-column: 1 / -1; grid-row: 1 / -1; background: var(--room); }
+#xr { touch-action: none; outline: none; }
+#xr:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+#edStatus, .vd-readings .status { margin: 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.vd-readings .twrap { max-height: 170px; overflow: auto; }
 #p3d canvas, #scr, #geo { touch-action: none; outline: none; }
 #p3d canvas:focus-visible, #scr:focus-visible, #geo:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .tip { position: absolute; left: 8px; bottom: 6px; margin: 0; font-size: 0.76rem; color: var(--room-ink); background: color-mix(in srgb, var(--room) 80%, transparent); padding: 2px 6px; border-radius: 4px; pointer-events: none; max-width: calc(100% - 16px); }
@@ -121,6 +126,8 @@ table.rows tr.sim td.n { color: var(--pos); }
   #p3d { grid-row: 1; }
   #pScr { grid-column: 1; grid-row: 2; border-left: 0; border-top: 1px solid var(--room-line); }
   #pGeo { grid-row: 3; }
+  .panes.xmode { grid-template-rows: 560px; }
+  #pX { grid-row: 1; }
 }
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 @media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
@@ -145,20 +152,24 @@ table.rows tr.sim td.n { color: var(--pos); }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="stage-ctl">
-        <div class="seg" role="group" aria-label="Measuring tool">
+        <div class="seg" role="group" aria-label="What goes through the crystal">
+          <button type="button" id="bElec" aria-pressed="true" title="The electron diffraction tube">Electrons</button>
+          <button type="button" id="bXray" aria-pressed="false" title="An X ray Bragg spectrometer with a rotating crystal">X rays</button>
+        </div>
+        <div class="seg e-only" role="group" aria-label="Measuring tool">
           <button type="button" id="tArc" aria-pressed="true" title="A flexible ruler laid on the glass: measures the arc">Ruler</button>
           <button type="button" id="tChord" aria-pressed="false" title="A vernier caliper held in front: measures the chord">Caliper</button>
         </div>
-        <div class="seg" role="group" aria-label="Ring being measured">
+        <div class="seg e-only" role="group" aria-label="Ring being measured">
           <button type="button" id="ring1" aria-pressed="true">Inner D₁</button>
           <button type="button" id="ring2" aria-pressed="false">Outer D₂</button>
         </div>
-        <div class="seg" role="group" aria-label="Lower view">
+        <div class="seg e-only" role="group" aria-label="Lower view">
           <button type="button" id="vGeo" aria-pressed="true">Cones</button>
           <button type="button" id="vLat" aria-pressed="false">Lattice</button>
         </div>
-        <button type="button" class="btn" id="sweep" aria-pressed="false" title="Sweep the voltage slowly between 2.5 and 5 kV">Sweep V</button>
-        <button type="button" class="btn" id="play">Pause</button>
+        <button type="button" class="btn e-only" id="sweep" aria-pressed="false" title="Sweep the voltage slowly between 2.5 and 5 kV">Sweep V</button>
+        <button type="button" class="btn e-only" id="play">Pause</button>
         <span class="count mono" id="status" aria-live="off"></span>
       </div>
       <div class="panes">
@@ -169,6 +180,9 @@ table.rows tr.sim td.n { color: var(--pos); }
         <div class="pane" id="pScr">
           <canvas id="scr" tabindex="0" aria-label="Close up of the fluorescent screen seen from the front, with the measuring tool. Drag the two marks of the ruler, or the two caliper jaws, onto the ring on each side of the central spot. Keys: 1 or 2 picks the ring, A or B picks the mark or jaw, left and right move it, with shift for bigger steps."></canvas>
         </div>
+        <div class="pane" id="pX" hidden>
+          <canvas id="xr" tabindex="0" aria-label="X ray Bragg spectrometer seen from above: the X ray tube, the crystal on a turntable at the angle θ to the beam, the counter on an arm at 2θ, and the count rate against θ. Drag the counter arm or the crystal to turn them, or drag along the graph. Keys: left and right change θ by 0.05°, with shift by 1°."></canvas>
+        </div>
         <div class="pane" id="pGeo">
           <canvas id="geo" tabindex="0" role="img" aria-label="Cross section through the tube axis: the graphite, the two cones of diffracted electrons and where they meet the spherical screen. Or a graphite sheet with the two sets of lattice rows."></canvas>
         </div>
@@ -176,6 +190,7 @@ table.rows tr.sim td.n { color: var(--pos); }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/electron-diffraction.html" target="electron-diffraction-worksheet">Worksheet 1: Electron Diffraction and de Broglie Waves</a></li><li><a href="../curriculum/labs/students/x-ray-diffraction.html" target="x-ray-diffraction-worksheet">Worksheet 2: X Ray Diffraction</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -189,7 +204,7 @@ table.rows tr.sim td.n { color: var(--pos); }
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
-      <section>
+      <section class="e-only">
         <h2>High voltage supply</h2>
         <div>
           <div class="slider-head"><label for="volt">Accelerating voltage</label><output id="voltOut" class="mono" for="volt"></output></div>
@@ -205,7 +220,7 @@ table.rows tr.sim td.n { color: var(--pos); }
         </details>
       </section>
 
-      <section>
+      <section class="e-only">
         <h2>Bar magnet</h2>
         <div>
           <div class="slider-head"><label for="mag">Distance from the beam</label><output id="magOut" class="mono" for="mag"></output></div>
@@ -223,7 +238,7 @@ table.rows tr.sim td.n { color: var(--pos); }
         </details>
       </section>
 
-      <section>
+      <section class="e-only">
         <h2>Measuring the rings</h2>
         <dl class="readout" id="liveOut"></dl>
         <p class="hint" id="toolHint"></p>
@@ -233,13 +248,15 @@ table.rows tr.sim td.n { color: var(--pos); }
         </div>
       </section>
 
-      <section>
+      <section class="e-only">
         <h2>Readings</h2>
         <div class="btnrow">
           <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="expWs">Export to worksheet</button>
           <button type="button" class="btn" id="expTab">Export CSV</button>
           <button type="button" class="btn" id="clearTab">Clear</button>
         </div>
+        <p class="status" id="edStatus" aria-live="polite"></p>
         <p class="note" id="simNote" hidden></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>Meter kV</th><th>D₁ mm</th><th>D₂ mm</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
@@ -262,7 +279,63 @@ table.rows tr.sim td.n { color: var(--pos); }
         <dl class="readout" id="fitOut"></dl>
       </section>
 
-      <section>
+      <section class="x-only" id="secX" hidden>
+        <h2>X ray Bragg spectrometer</h2>
+        <p class="hint">X rays from a tube run at 35 kV are reflected by a crystal on a turntable. The counter sits on an arm at 2θ, so it catches the rays that leave the planes at the same glancing angle θ as they came in.</p>
+        <div class="inline">
+          <span class="lab">Tube anode</span>
+          <div class="seg" role="group" aria-label="X ray tube anode">
+            <button type="button" id="xCu" aria-pressed="true">Copper</button>
+            <button type="button" id="xMo" aria-pressed="false">Molybdenum</button>
+          </div>
+        </div>
+        <div class="inline">
+          <span class="lab">Crystal</span>
+          <div class="seg" role="group" aria-label="Crystal">
+            <button type="button" id="xNaCl" aria-pressed="true">NaCl</button>
+            <button type="button" id="xLiF" aria-pressed="false">LiF</button>
+          </div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="xTheta">Crystal angle θ</label><output id="xThetaOut" class="mono" for="xTheta"></output></div>
+          <input type="range" id="xTheta" min="2" max="65" step="0.05" value="10">
+        </div>
+        <dl class="readout">
+          <div><dt>Counter at 2θ</dt><dd id="x2Theta">—</dd></div>
+          <div><dt>Count rate</dt><dd id="xRate">—</dd></div>
+        </dl>
+        <div class="btnrow">
+          <button type="button" class="btn" id="xScan" aria-pressed="false">Scan θ from 2° to 65°</button>
+          <button type="button" class="btn" id="xClearTrace">Clear the graph</button>
+        </div>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">2d sin θ = mλ</p>
+          <p class="hint">Peaks come at the exact Bragg angles of the copper or molybdenum Kα₁ and Kβ₁ lines (X-ray Data Booklet energies: Cu 8047.78 and 8905.29 eV, Mo 17 479.34 and 19 608.3 eV, so λ = hc/E) reflected by the (200) planes of the crystal (2d = 0.5640 nm for NaCl, 0.4027 nm for LiF), in every order m that fits below 65°. The count rates are illustrative, not computed from first principles: the line heights, the 0.12° (standard deviation) width of each peak, the fall with order, the smooth background from the continuous spectrum (Kramers's law, starting at the shortest wavelength hc/eV = 0.0354 nm) and a steady background of 4 counts per second. Kα₂, the weaker lines and absorption edges are left out, and the rate shown is the expected one: a real counter's counts scatter by about their square root.</p>
+        </details>
+      </section>
+
+      <!-- vd-readings --><section class="vd-readings" data-ws="x-ray-diffraction" data-title="Electron Diffraction (X ray Bragg spectrometer)" data-demo="electron-diffraction">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section class="e-only">
         <details class="fold"><summary>Instrument</summary><div class="foldbody">
         <div class="inline">
           <label class="lab" for="seed">Tube seed</label>
@@ -393,6 +466,31 @@ table.rows tr.sim td.n { color: var(--pos); }
     });
     return out;
   }
+  // ----- X ray Bragg spectrometer (rotating crystal, detector at 2θ). Wavelengths in nm. -----
+  // hc = 1239.841984 eV nm (exact SI constants). Line energies: X-ray Data Booklet (LBNL), Table 1-2 (Bearden):
+  // Cu Kα1 8047.78 eV, Kβ1 8905.29 eV; Mo Kα1 17479.34 eV, Kβ1 19608.3 eV. Crystal 2d spacings of the (200) planes,
+  // X-ray Data Booklet crystal table: NaCl 0.5640 nm, LiF 0.4027 nm. Kα2 and the weaker lines are left out.
+  const HC_EV_NM = 1239.841984;
+  const XTUBE = { Cu: { Ka: HC_EV_NM / 8047.78, Kb: HC_EV_NM / 8905.29, amp: [2500, 500], cont: 120 },
+    Mo: { Ka: HC_EV_NM / 17479.34, Kb: HC_EV_NM / 19608.3, amp: [1500, 300], cont: 200 } };
+  const XTAL = { NaCl: { d: 0.5640 / 2 }, LiF: { d: 0.4027 / 2 } };
+  const XRAY = { kV: 35, sig: 0.12, ord: [0, 1, 0.3, 0.12, 0.06, 0.04, 0.03, 0.025, 0.02], bg: 4, absorb: 0.2 };
+  const lambdaMin = (kV) => HC_EV_NM / (kV * 1000);   // Duane–Hunt limit, nm
+  function braggTheta(lam, d, m) { const s = m * lam / (2 * d); return s > 0 && s < 1 ? Math.asin(s) * 180 / Math.PI : NaN; }   // degrees
+  // expected count rate (1/s) with the crystal at th degrees. Peak angles are exact Bragg angles; the heights, the 0.12° (sigma)
+  // peak width, the fall with order, the Kramers continuum (x − 1)/x² with x = λ/λmin, its soft end cut by exp(−(λ/0.2 nm)³)
+  // and the background are illustrative, chosen to look like a teaching spectrometer.
+  function xrayRate(th, tube, xtal) {
+    const T = XTUBE[tube], d = XTAL[xtal].d, lm = lambdaMin(XRAY.kV), s = Math.sin(th * Math.PI / 180);
+    let r = XRAY.bg;
+    for (let m = 1; m < XRAY.ord.length; m++) {
+      const f = XRAY.ord[m];
+      [T.Ka, T.Kb].forEach((lam, k) => { const tb = braggTheta(lam, d, m); if (isFinite(tb)) { const u = (th - tb) / XRAY.sig; r += f * T.amp[k] * Math.exp(-0.5 * u * u); } });
+      const x = 2 * d * s / m / lm;
+      if (x > 1) r += f * T.cont * 4 * (x - 1) / (x * x) * Math.exp(-Math.pow(x * lm / XRAY.absorb, 3));
+    }
+    return r;
+  }
   // ==CORE END==
 
   const $ = (id) => document.getElementById(id);
@@ -461,16 +559,16 @@ table.rows tr.sim td.n { color: var(--pos); }
 
   // ---------- canvases ----------
   const dpr = () => Math.min(2, window.devicePixelRatio || 1);
-  const cans = { scr: $('scr'), geo: $('geo'), plot: $('plot'), flat: $('flat') };
+  const cans = { scr: $('scr'), geo: $('geo'), plot: $('plot'), flat: $('flat'), xr: $('xr') };
   const ctxs = {}; for (const k in cans) ctxs[k] = cans[k].getContext('2d');
-  const dims = { scr: [0, 0], geo: [0, 0], plot: [0, 0], flat: [0, 0], gl: [0, 0] };
+  const dims = { scr: [0, 0], geo: [0, 0], plot: [0, 0], flat: [0, 0], xr: [0, 0], gl: [0, 0] };
   function sizeCanvas(k) {
     const c = cans[k], p = c.parentElement, w = p.clientWidth, h = p.clientHeight, d = dpr();
     if (!w || !h) { dims[k] = [0, 0]; return; }
     c.width = Math.round(w * d); c.height = Math.round(h * d); dims[k] = [w, h];
   }
   function resize() {
-    for (const k of ['scr', 'geo', 'plot', 'flat']) sizeCanvas(k);
+    for (const k of ['scr', 'geo', 'plot', 'flat', 'xr']) sizeCanvas(k);
     if (G.ready) { const p = $('p3d'); dims.gl = [p.clientWidth, p.clientHeight]; G.renderer.setPixelRatio(dpr()); G.renderer.setSize(dims.gl[0], dims.gl[1], false); G.dirty = true; }
     scrImg.key = ''; dirtyAll();
   }
@@ -1311,7 +1409,180 @@ table.rows tr.sim td.n { color: var(--pos); }
     document.querySelectorAll('#presets button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.p === p)));
     syncUI(); liveOuts(); renderTable(); dirtyAll();
   }
-  document.querySelectorAll('#presets button').forEach((b) => b.addEventListener('click', () => applyPreset(b.dataset.p)));
+  document.querySelectorAll('#presets button').forEach((b) => b.addEventListener('click', () => { if (X.on) setBeam(false); applyPreset(b.dataset.p); }));
+
+  // ---------- X rays: a Bragg spectrometer with a rotating crystal ----------
+  const X = { on: false, tube: 'Cu', xtal: 'NaCl', th: 10, trace: new Map(), scan: false, dirty: true, drag: null, geo: null };
+  const XNAME = { Cu: 'copper', Mo: 'molybdenum' };
+  const xRateNow = () => Math.round(xrayRate(X.th, X.tube, X.xtal));
+  function xMark() { X.trace.set(Math.round(X.th * 20), xRateNow()); }
+  function setXTheta(v, keepScan) {
+    v = clamp(Math.round(v * 20) / 20, 2, 65); if (!keepScan && X.scan) setXScan(false);
+    X.th = v; $('xTheta').value = v; xMark(); xOuts(); X.dirty = true;
+  }
+  function xOuts() {
+    $('xThetaOut').textContent = `${X.th.toFixed(2)}°`; $('x2Theta').textContent = `${(2 * X.th).toFixed(2)}°`; $('xRate').textContent = `${xRateNow()} counts/s`;
+    $('xCu').setAttribute('aria-pressed', String(X.tube === 'Cu')); $('xMo').setAttribute('aria-pressed', String(X.tube === 'Mo'));
+    $('xNaCl').setAttribute('aria-pressed', String(X.xtal === 'NaCl')); $('xLiF').setAttribute('aria-pressed', String(X.xtal === 'LiF'));
+    $('xScan').setAttribute('aria-pressed', String(X.scan)); $('xScan').textContent = X.scan ? 'Stop the scan' : 'Scan θ from 2° to 65°';
+    $('status').innerHTML = X.on ? `${xRateNow()} <small>counts/s at θ = ${X.th.toFixed(2)}°</small>` : $('status').innerHTML;
+  }
+  function setXScan(on) { X.scan = on; if (on && X.th >= 64.99) setXTheta(2, true); xOuts(); }
+  function setXSource(tube, xtal) { X.tube = tube || X.tube; X.xtal = xtal || X.xtal; X.trace = new Map(); xMark(); xOuts(); X.dirty = true; }
+  function setBeam(xray) {
+    X.on = xray;
+    $('bElec').setAttribute('aria-pressed', String(!xray)); $('bXray').setAttribute('aria-pressed', String(xray));
+    document.querySelectorAll('.e-only').forEach((e) => { e.hidden = xray; });
+    document.querySelectorAll('.x-only').forEach((e) => { e.hidden = !xray; });
+    const rd = document.querySelector('.vd-readings'); if (rd) { rd.hidden = !xray; const h = rd.querySelector('h2'); if (h) h.textContent = 'X ray readings'; }
+    for (const id of ['p3d', 'pScr', 'pGeo']) $(id).hidden = xray;
+    $('pX').hidden = !xray; document.querySelector('.panes').classList.toggle('xmode', xray);
+    if (!xray && X.scan) setXScan(false);
+    if (xray && S.sweep) setSweep(false);
+    resize(); if (xray) { xMark(); xOuts(); } else status();
+    X.dirty = true;
+  }
+  function xGeom() {
+    const [W, H] = dims.xr, ps = labScale(W, H), wide = W > H * 1.15;
+    const app = wide ? { x: 0, y: 0, w: W * 0.52, h: H } : { x: 0, y: 0, w: W, h: H * 0.6 };
+    const plot = wide ? { x: W * 0.52 + 14 * ps, y: 34 * ps, w: W * 0.48 - 30 * ps, h: H - 80 * ps } : { x: 46 * ps, y: H * 0.6 + 30 * ps, w: W - 62 * ps, h: H * 0.4 - 70 * ps };
+    if (wide) { plot.x += 34 * ps; plot.w -= 34 * ps; }
+    const cy = app.y + app.h * 0.75, R = Math.min(app.w * (wide ? 0.38 : 0.34), (cy - app.y - 80 * ps) / 1.18), cx = app.x + app.w * 0.55;
+    return { W, H, ps, wide, app, plot, R, cx, cy };
+  }
+  const xPlotX = (g, th) => g.plot.x + (th - 0) / 65 * g.plot.w;
+  function xMax() { let m = 100; X.trace.forEach((r) => { if (r > m) m = r; }); const p = Math.pow(10, Math.floor(Math.log10(m))); for (const s of [1, 1.5, 2, 2.5, 3, 4, 5, 6, 8, 10]) if (m * 1.08 <= s * p) return s * p; return 10 * p; }
+  function drawXray() {
+    const [W, H] = dims.xr; if (!W || !H) return;
+    const ctx = ctxs.xr, d = dpr(), g = xGeom(), ps = g.ps; ctx.setTransform(d, 0, 0, d, 0, 0);
+    ctx.fillStyle = T.room; ctx.fillRect(0, 0, W, H);
+    const th = X.th * Math.PI / 180, rate = xRateNow(), glowA = Math.min(1, rate / 1500);
+    const { cx, cy, R } = g;
+    // goniometer: turntable with a 2θ scale every 10°
+    ctx.strokeStyle = T.roomLine; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cx, cy, R * 1.04, Math.PI, 2 * Math.PI); ctx.stroke();
+    ctx.fillStyle = T.roomInk; ctx.font = `${9.5 * ps}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (let a = 0; a <= 150; a += 10) { const r = a * Math.PI / 180, x0 = cx + Math.cos(r) * R * 1.04, y0 = cy - Math.sin(r) * R * 1.04;
+      ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(cx + Math.cos(r) * R * (a % 30 ? 1.0 : 0.97), cy - Math.sin(r) * R * (a % 30 ? 1.0 : 0.97)); ctx.stroke();
+      if (a % 30 === 0) ctx.fillText(`${a}°`, cx + Math.cos(r) * R * 1.14, cy - Math.sin(r) * R * 1.14); }
+    ctx.beginPath(); ctx.arc(cx, cy, R * 0.2, 0, 2 * Math.PI); ctx.fillStyle = 'rgba(255,255,255,0.04)'; ctx.fill(); ctx.stroke();
+    // tube on the left, collimator, incident beam along +x
+    const tx = Math.max(g.app.x + 14 * ps, cx - R * 1.6), tw = Math.min(70 * ps, cx - R * 0.55 - tx - 26 * ps), beamCol = '#b99cff';
+    const tubeW = Math.max(36 * ps, tw);
+    ctx.fillStyle = 'rgba(190,210,230,0.12)'; ctx.strokeStyle = T.roomInk; ctx.lineWidth = 1.2;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(tx, cy - 16 * ps, tubeW, 32 * ps, 14 * ps) : ctx.rect(tx, cy - 16 * ps, tubeW, 32 * ps); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = X.tube === 'Cu' ? '#c8783e' : '#9aa3ad'; ctx.fillRect(tx + tubeW * 0.55, cy - 9 * ps, 7 * ps, 18 * ps);
+    ctx.fillStyle = T.roomInk; ctx.font = `600 ${10 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText(`${X.tube} tube, 35 kV`, tx, cy - 20 * ps);
+    const colX = tx + tubeW + 10 * ps;
+    ctx.fillStyle = T.roomInk; ctx.fillRect(colX, cy - 12 * ps, 4 * ps, 9 * ps); ctx.fillRect(colX, cy + 3 * ps, 4 * ps, 9 * ps);
+    ctx.strokeStyle = beamCol; ctx.globalAlpha = 0.9; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(tx + tubeW * 0.55 + 7 * ps, cy); ctx.lineTo(cx, cy); ctx.stroke();
+    // straight through (dashed) and the reflected beam to the counter at 2θ
+    ctx.globalAlpha = 0.45; ctx.lineWidth = 1; ctx.setLineDash([4, 4]); ctx.strokeStyle = T.roomInk; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + R * 0.95, cy); ctx.stroke(); ctx.setLineDash([]);
+    const ux = Math.cos(2 * th), uy = -Math.sin(2 * th);
+    ctx.globalAlpha = 0.15 + 0.85 * glowA; ctx.strokeStyle = beamCol; ctx.lineWidth = (1 + 3 * glowA) * ps; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + ux * R * 0.8, cy + uy * R * 0.8); ctx.stroke(); ctx.globalAlpha = 1;
+    // crystal: a slab whose face makes θ with the beam, with its planes
+    const cxl = R * 0.34, cyl = 7 * ps, ca = Math.cos(th), sa = -Math.sin(th);
+    ctx.save(); ctx.translate(cx, cy); ctx.transform(ca, sa, -sa, ca, 0, 0);
+    ctx.fillStyle = 'rgba(200,225,255,0.22)'; ctx.strokeStyle = '#cfe3ff'; ctx.lineWidth = 1.2; ctx.fillRect(-cxl, 0, 2 * cxl, cyl * 2); ctx.strokeRect(-cxl, 0, 2 * cxl, cyl * 2);
+    ctx.strokeStyle = 'rgba(207,227,255,0.55)'; ctx.lineWidth = 0.8; for (let k = 1; k < 4; k++) { ctx.beginPath(); ctx.moveTo(-cxl, k * cyl / 2); ctx.lineTo(cxl, k * cyl / 2); ctx.stroke(); }
+    ctx.restore();
+    // angle marks
+    ctx.strokeStyle = RC[0]; ctx.lineWidth = 1.4; ctx.beginPath(); ctx.arc(cx, cy, R * 0.5, -th, 0); ctx.stroke();
+    ctx.strokeStyle = RC[1]; ctx.beginPath(); ctx.arc(cx, cy, R * 0.66, -2 * th, 0); ctx.stroke();
+    ctx.font = `600 ${10.5 * ps}px ${T.mono}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    halo(ctx, `θ = ${X.th.toFixed(2)}°`, cx + Math.cos(th / 2) * R * 0.5 + 6 * ps, cy - Math.sin(th / 2) * R * 0.5 + 9 * ps, RC[0], 'left', ps);
+    halo(ctx, `2θ = ${(2 * X.th).toFixed(2)}°`, cx + Math.cos(th) * R * 0.66 + 8 * ps, cy - Math.sin(th) * R * 0.66, RC[1], 'left', ps);
+    // counter arm and Geiger tube at 2θ
+    const ex = cx + ux * R * 0.84, ey = cy + uy * R * 0.84, hot = X.drag === 'arm';
+    ctx.strokeStyle = T.roomInk; ctx.globalAlpha = 0.5; ctx.lineWidth = 5 * ps; ctx.beginPath(); ctx.moveTo(cx + ux * R * 0.22, cy + uy * R * 0.22); ctx.lineTo(ex, ey); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.save(); ctx.translate(ex, ey); ctx.rotate(-2 * th);
+    ctx.fillStyle = '#3c4652'; ctx.strokeStyle = hot ? T.accent : T.roomInk; ctx.lineWidth = hot ? 2 : 1.2; ctx.fillRect(0, -7 * ps, 34 * ps, 14 * ps); ctx.strokeRect(0, -7 * ps, 34 * ps, 14 * ps);
+    ctx.fillStyle = '#d23d2c'; ctx.globalAlpha = 0.3 + 0.7 * glowA; ctx.beginPath(); ctx.arc(30 * ps, 0, 3 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.restore();
+    // the counter's display
+    const bx = g.app.x + 12 * ps, by = g.app.y + 12 * ps;
+    ctx.fillStyle = '#170e02'; ctx.fillRect(bx, by, 132 * ps, 40 * ps);
+    ctx.fillStyle = '#ffb43c'; ctx.font = `600 ${18 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.fillText(String(rate), bx + 88 * ps, by + 21 * ps);
+    ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = '#e8b77a'; ctx.textAlign = 'left'; ctx.fillText('counts/s', bx + 92 * ps, by + 22 * ps);
+    ctx.fillStyle = T.roomInk; ctx.font = `${10 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(`${XNAME[X.tube]} anode · ${X.xtal} (200) crystal`, bx, by + 46 * ps);
+    // the graph: count rate against θ
+    const P = g.plot, ym = xMax(), Y = (r) => P.y + P.h - r / ym * P.h;
+    ctx.strokeStyle = T.roomLine; ctx.lineWidth = 1; ctx.font = `${9.5 * ps}px ${T.mono}`; ctx.fillStyle = T.roomInk;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let a = 0; a <= 65; a += 5) { const x = Math.round(xPlotX(g, a)) + 0.5; ctx.beginPath(); ctx.moveTo(x, P.y); ctx.lineTo(x, P.y + P.h); ctx.stroke(); if (a % 10 === 0 || g.wide) ctx.fillText(String(a), x, P.y + P.h + 3); }
+    const st = ym / 5; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let r = 0; r <= ym + 1e-9; r += st) { const y = Math.round(Y(r)) + 0.5; ctx.beginPath(); ctx.moveTo(P.x, y); ctx.lineTo(P.x + P.w, y); ctx.stroke(); ctx.fillText(String(Math.round(r)), P.x - 4, y); }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText('crystal angle θ (°)', P.x + P.w, P.y + P.h + 16 * ps);
+    ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.font = `600 ${10.5 * ps}px ${T.ui}`; ctx.fillText('Count rate (1/s) against θ', P.x, P.y - 6 * ps);
+    const keys = [...X.trace.keys()].sort((a, b) => a - b);
+    ctx.save(); ctx.beginPath(); ctx.rect(P.x, P.y - 2, P.w, P.h + 4); ctx.clip();
+    ctx.strokeStyle = beamCol; ctx.lineWidth = 1.6 * ps; ctx.beginPath();
+    keys.forEach((k, i) => { const x = xPlotX(g, k / 20), y = Y(X.trace.get(k)); if (i && k - keys[i - 1] > 1) ctx.moveTo(x, y); else if (i) ctx.lineTo(x, y); else ctx.moveTo(x, y); });
+    ctx.stroke();
+    if (keys.length < 400) { ctx.fillStyle = beamCol; keys.forEach((k) => { ctx.beginPath(); ctx.arc(xPlotX(g, k / 20), Y(X.trace.get(k)), 1.8 * ps, 0, 2 * Math.PI); ctx.fill(); }); }
+    const mx = xPlotX(g, X.th); ctx.strokeStyle = RC[0]; ctx.lineWidth = 1.2; ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.moveTo(mx, P.y); ctx.lineTo(mx, P.y + P.h); ctx.stroke(); ctx.setLineDash([]);
+    ctx.restore();
+    if (keys.length < 3) { ctx.fillStyle = T.roomInk; ctx.font = `${10.5 * ps}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('Turn the crystal, or scan, to trace the spectrum', P.x + P.w / 2, P.y + P.h / 2); }
+    X.geo = g;
+  }
+  // dragging: the counter arm (sets 2θ), the crystal (sets θ) or along the graph
+  function xHit(e) {
+    const g = X.geo; if (!g) return null;
+    const r = cans.xr.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+    if (x >= g.plot.x - 6 && x <= g.plot.x + g.plot.w + 6 && y >= g.plot.y - 6 && y <= g.plot.y + g.plot.h + 6) return { id: 'plot', x, y };
+    const dx = x - g.cx, dy = g.cy - y, rr = Math.hypot(dx, dy);
+    if (rr > g.R * 0.45 && rr < g.R * 1.3 && dy > -10) return { id: 'arm', x, y };
+    if (rr <= g.R * 0.45) return { id: 'crystal', x, y };
+    return null;
+  }
+  function xDragTo(id, x, y) {
+    const g = X.geo; if (!g) return;
+    if (id === 'plot') { setXTheta((x - g.plot.x) / g.plot.w * 65); return; }
+    const a = Math.atan2(g.cy - y, x - g.cx) * 180 / Math.PI;
+    setXTheta(id === 'arm' ? a / 2 : a);
+  }
+  cans.xr.addEventListener('pointerdown', (e) => { const h = xHit(e); if (!h) return; X.drag = h.id; cans.xr.setPointerCapture(e.pointerId); cans.xr.focus(); e.preventDefault(); xDragTo(h.id, h.x, h.y); });
+  cans.xr.addEventListener('pointermove', (e) => {
+    if (X.drag) { const r = cans.xr.getBoundingClientRect(); xDragTo(X.drag, e.clientX - r.left, e.clientY - r.top); return; }
+    const h = xHit(e); cans.xr.style.cursor = h ? (h.id === 'plot' ? 'ew-resize' : 'grab') : 'default';
+  });
+  const xEnd = () => { if (X.drag) { X.drag = null; X.dirty = true; } };
+  cans.xr.addEventListener('pointerup', xEnd); cans.xr.addEventListener('pointercancel', xEnd);
+  cans.xr.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { setXTheta(X.th + (e.key === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 1 : 0.05)); e.preventDefault(); }
+  });
+  $('bElec').addEventListener('click', () => setBeam(false)); $('bXray').addEventListener('click', () => setBeam(true));
+  $('xCu').addEventListener('click', () => setXSource('Cu')); $('xMo').addEventListener('click', () => setXSource('Mo'));
+  $('xNaCl').addEventListener('click', () => setXSource(null, 'NaCl')); $('xLiF').addEventListener('click', () => setXSource(null, 'LiF'));
+  $('xTheta').addEventListener('input', (e) => setXTheta(+e.target.value));
+  $('xScan').addEventListener('click', () => setXScan(!X.scan));
+  $('xClearTrace').addEventListener('click', () => { X.trace = new Map(); xMark(); X.dirty = true; });
+  // X ray readings for the shared Readings section (worksheet x-ray-diffraction)
+  window.vdVersion = 'electron-diffraction@2026-10-24';
+  window.vdShowCols = [['tube', 'Tube'], ['crystal', 'Crystal'], ['theta_deg', 'θ (°)'], ['rate_per_s', 'Rate (1/s)']];
+  window.vdReadingRow = () => (X.on ? { tube: X.tube, crystal: X.xtal, theta_deg: X.th.toFixed(2), two_theta_deg: (2 * X.th).toFixed(2), rate_per_s: xRateNow(), tube_kV: XRAY.kV }
+    : 'Switch to X rays to record a reading here; electron readings use Capture reading.');
+
+  // ---------- electron readings to the worksheet (electron-diffraction), like the shared section's Export to worksheet ----------
+  let edSeries = 0;
+  function exportWorksheet() {
+    const say = (m) => { $('edStatus').textContent = m; };
+    if (!S.rows.length) { say('No readings to export.'); return; }
+    if (!edSeries) edSeries = Date.now();
+    const cols = ['row', 'simulated', 'tool', 'meter_kV', 'D1_mm', 'D2_mm', 'lambda_pm'];
+    const rows = S.rows.map((r, i) => { const lam = lambdaDB(parseFloat(r.V) * 1000, S.rel); return [String(i + 1), r.sim ? 'yes' : 'no', r.tool, r.V, r.D1, r.D2, isFinite(lam) ? (lam * 1e12).toFixed(3) : '']; });
+    const txt = csvTable(), name = `electron-diffraction-readings-seed${inst.seed}.csv`;
+    const hand = { v: 1, demo: 'electron-diffraction', series: edSeries, sent: new Date().toISOString(), columns: cols, rows, meta: { seed: String(inst.seed) },
+      note: `Simulated data from the Electron Diffraction demo, tube seed ${inst.seed}; λ ${S.rel ? 'relativistic' : 'not relativistic'}, from the meter reading.`, csv: txt, csvName: name };
+    try { localStorage.setItem('vd-handoff:electron-diffraction', JSON.stringify(hand)); }
+    catch (_) { download(name, txt); say('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    say(`${rows.length} reading${rows.length === 1 ? '' : 's'} sent to the worksheet. `);
+    const l = document.createElement('a'); l.href = '../curriculum/labs/students/electron-diffraction.html'; l.target = 'electron-diffraction-worksheet'; l.textContent = 'Open the worksheet'; l.style.color = 'var(--accent)';
+    $('edStatus').appendChild(l);
+  }
+  $('expWs').addEventListener('click', exportWorksheet);
+  $('clearTab').addEventListener('click', () => { edSeries = Date.now(); $('edStatus').textContent = 'Readings cleared.'; });
 
   // ---------- projector, theme ----------
   const projBtn = $('proj');
@@ -1323,13 +1594,13 @@ table.rows tr.sim td.n { color: var(--pos); }
   }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
-  const retheme = () => { tokens(); dirtyAll(); fitAndPlot(); };
+  const retheme = () => { tokens(); dirtyAll(); fitAndPlot(); X.dirty = true; };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   // ---------- loop ----------
   const dirty = { scr: true, geo: true, flat: true };
-  function dirtyAll() { dirty.scr = dirty.geo = dirty.flat = true; G.dirty = true; drawPlot(); }
+  function dirtyAll() { dirty.scr = dirty.geo = dirty.flat = true; G.dirty = true; if (typeof X !== 'undefined') X.dirty = true; drawPlot(); }
   let last = performance.now(), frameMs = 0, last3D = 0, lastMove = 0;
   function loop(now) {
     const dt = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
@@ -1341,7 +1612,12 @@ table.rows tr.sim td.n { color: var(--pos); }
       meterClock += dt; if (meterClock > 0.5) { meterClock = 0; meterN++; }
     }
     const mv = meterReading(S.V * 1000, inst.seed, meterN);
-    if (mv !== meterShown) { meterShown = mv; $('meter').firstChild.textContent = mv.toFixed(2); G.panelDirty = true; G.dirty = true; dirty.flat = true; status(); }
+    if (mv !== meterShown) { meterShown = mv; $('meter').firstChild.textContent = mv.toFixed(2); G.panelDirty = true; G.dirty = true; dirty.flat = true; if (!X.on) status(); }
+    if (X.on) {
+      if (X.scan) { const th = X.th + 4 * dt; if (th >= 65) { setXTheta(65, true); setXScan(false); } else { for (let a = Math.round(X.th * 20) + 1; a <= Math.round(th * 20); a++) X.trace.set(a, Math.round(xrayRate(a / 20, X.tube, X.xtal))); setXTheta(th, true); } }
+      if (X.dirty) { drawXray(); X.dirty = false; }
+      frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0); requestAnimationFrame(loop); return;
+    }
     if (dirty.scr) { scrImg.stale = false; drawScreen(); dirty.scr = !!scrImg.stale; }
     if (dirty.geo) { drawGeo(); dirty.geo = false; }
     if (G.ready) {
@@ -1350,7 +1626,7 @@ table.rows tr.sim td.n { color: var(--pos); }
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
     requestAnimationFrame(loop);
   }
-  window.__ed = { get frameMs() { return frameMs; }, S, get inst() { return inst; }, setV, setMag, setTool, setRing, setSide, applyPreset, capture, fits, csvTable, scrHandles, trueD, markD, delta, get gl() { return G.ready; }, setPlaying,
+  window.__ed = { get frameMs() { return frameMs; }, S, get inst() { return inst; }, setV, setMag, setTool, setRing, setSide, applyPreset, capture, fits, csvTable, scrHandles, trueD, markD, delta, get gl() { return G.ready; }, setPlaying, placeMarks: (off) => { placeMarks(off); marksChanged(); }, X, setBeam, setXTheta, setXSource, setXScan, exportWorksheet,
     pickScreen() { if (!G.ready) return null; const r = G.el.getBoundingClientRect(), o = {}; for (const p of G.pick) { const v = new THREE.Vector3(); p.grip.getWorldPosition(v); v.project(G.cam); o[p.id] = [r.left + (v.x + 1) / 2 * r.width, r.top + (1 - v.y) / 2 * r.height]; } return o; },
     scrToClient(h) { const r = cans.scr.getBoundingClientRect(); return [r.left + h.pt[0], r.top + h.pt[1]]; } };
 
@@ -1359,7 +1635,7 @@ table.rows tr.sim td.n { color: var(--pos); }
   const use3D = init3D();
   if (!use3D) { cans.flat.hidden = false; $('tip').textContent = 'Drag the kV knob or the bar magnet up and down.'; }
   const ro = new ResizeObserver(() => resize());
-  for (const id of ['p3d', 'pScr', 'pGeo']) ro.observe($(id));
+  for (const id of ['p3d', 'pScr', 'pGeo', 'pX']) ro.observe($(id));
   ro.observe(cans.plot.parentElement);
   resize();
   applyPreset('raise');

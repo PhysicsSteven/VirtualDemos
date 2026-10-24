@@ -1,0 +1,574 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Michelson Interferometer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --table: #2c333c; --table-hole: #1b2027; --frost: #10141a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --table: #20262e; --table-hole: #0e1217; --frost: #07090c; } }
+:root[data-theme="dark"] { --table: #20262e; --table-hole: #0e1217; --frost: #07090c; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden auto; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .lab { font-size: 0.8rem; color: var(--muted); }
+#srcSeg { flex-wrap: wrap; max-width: 100%; }
+.views { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); flex: 1 1 auto; min-height: 380px; }
+.pane { position: relative; min-height: 0; }
+.pane + .pane { border-left: 1px solid var(--line); }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; touch-action: pan-y; }
+.pane .tag { position: absolute; left: 10px; top: 8px; z-index: 1; font-size: 0.74rem; font-weight: 700; color: #c3ccd8; pointer-events: none; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf .shelf-card { flex: 1 1 250px; display: flex; flex-direction: column; gap: 7px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); min-width: 0; }
+.shelf-card > .card-title { font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.shelf-card .row .btn { padding: 4px 8px; font-size: 0.82rem; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.shelf-card .big { font-family: var(--font-mono); font-size: 1.05rem; font-weight: 600; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .shelf .shelf-card { flex: 1 1 100%; } .views { grid-template-columns: minmax(0, 1fr); min-height: 0; } .pane { height: 300px; } .pane + .pane { border-left: 0; border-top: 1px solid var(--line); height: 340px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Michelson Interferometer</h1>
+      <p>Split a beam in two, send the halves to two mirrors and bring them back together. Move one mirror and count the fringes to measure a wavelength, or pump the air out of a cell to measure its index of refraction.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">λ in nm · mirror in μm · P in kPa</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/michelson.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/michelson.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM15 2h2v1h-2zM19 2h2v1h-2zM22 2h3v1h-3zM26 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h2v1h-2zM14 3h1v1h-1zM20 3h2v1h-2zM23 3h2v1h-2zM27 3h1v1h-1zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM16 4h1v1h-1zM21 4h3v1h-3zM26 4h1v1h-1zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h1v1h-1zM17 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM17 7h2v1h-2zM20 7h1v1h-1zM24 7h1v1h-1zM27 7h4v1h-4zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM14 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM21 9h2v1h-2zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM14 10h4v1h-4zM20 10h1v1h-1zM22 10h9v1h-9zM32 10h5v1h-5zM2 11h1v1h-1zM4 11h4v1h-4zM13 11h2v1h-2zM17 11h2v1h-2zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h2v1h-2zM8 12h1v1h-1zM10 12h4v1h-4zM16 12h1v1h-1zM19 12h2v1h-2zM22 12h2v1h-2zM25 12h2v1h-2zM28 12h2v1h-2zM32 12h3v1h-3zM36 12h3v1h-3zM5 13h3v1h-3zM11 13h3v1h-3zM15 13h2v1h-2zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM6 14h1v1h-1zM8 14h2v1h-2zM11 14h1v1h-1zM14 14h1v1h-1zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h5v1h-5zM30 14h9v1h-9zM3 15h1v1h-1zM7 15h1v1h-1zM10 15h2v1h-2zM14 15h1v1h-1zM18 15h2v1h-2zM22 15h4v1h-4zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM5 16h2v1h-2zM8 16h3v1h-3zM14 16h2v1h-2zM17 16h3v1h-3zM22 16h2v1h-2zM27 16h5v1h-5zM33 16h3v1h-3zM38 16h1v1h-1zM2 17h1v1h-1zM4 17h1v1h-1zM9 17h6v1h-6zM16 17h10v1h-10zM31 17h4v1h-4zM37 17h1v1h-1zM3 18h1v1h-1zM6 18h4v1h-4zM13 18h6v1h-6zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h2v1h-2zM29 18h1v1h-1zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM4 19h1v1h-1zM6 19h2v1h-2zM9 19h2v1h-2zM12 19h1v1h-1zM14 19h2v1h-2zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h3v1h-3zM26 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM3 20h4v1h-4zM8 20h1v1h-1zM11 20h1v1h-1zM13 20h2v1h-2zM16 20h3v1h-3zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h2v1h-2zM5 21h1v1h-1zM14 21h1v1h-1zM16 21h2v1h-2zM20 21h5v1h-5zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM4 22h10v1h-10zM15 22h3v1h-3zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h6v1h-6zM31 22h2v1h-2zM34 22h3v1h-3zM3 23h3v1h-3zM10 23h1v1h-1zM13 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM4 24h2v1h-2zM8 24h2v1h-2zM12 24h2v1h-2zM15 24h3v1h-3zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h5v1h-5zM33 24h3v1h-3zM37 24h2v1h-2zM2 25h1v1h-1zM6 25h2v1h-2zM11 25h1v1h-1zM15 25h1v1h-1zM17 25h2v1h-2zM21 25h2v1h-2zM25 25h1v1h-1zM29 25h1v1h-1zM31 25h4v1h-4zM37 25h1v1h-1zM2 26h5v1h-5zM8 26h1v1h-1zM11 26h1v1h-1zM15 26h3v1h-3zM20 26h9v1h-9zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h1v1h-1zM4 27h1v1h-1zM11 27h1v1h-1zM14 27h1v1h-1zM17 27h2v1h-2zM23 27h1v1h-1zM25 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM4 28h1v1h-1zM6 28h1v1h-1zM8 28h4v1h-4zM13 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM27 28h3v1h-3zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM5 29h1v1h-1zM10 29h1v1h-1zM12 29h3v1h-3zM18 29h1v1h-1zM23 29h1v1h-1zM29 29h1v1h-1zM31 29h4v1h-4zM37 29h2v1h-2zM2 30h1v1h-1zM4 30h2v1h-2zM7 30h2v1h-2zM10 30h2v1h-2zM13 30h2v1h-2zM16 30h1v1h-1zM19 30h1v1h-1zM25 30h4v1h-4zM30 30h7v1h-7zM38 30h1v1h-1zM10 31h2v1h-2zM13 31h2v1h-2zM16 31h8v1h-8zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h1v1h-1zM15 32h3v1h-3zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM13 33h8v1h-8zM23 33h3v1h-3zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h4v1h-4zM16 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h10v1h-10zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM13 35h3v1h-3zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM15 36h4v1h-4zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM17 37h1v1h-1zM21 37h3v1h-3zM28 37h3v1h-3zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM13 38h1v1h-1zM15 38h3v1h-3zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <span class="lab">Light</span>
+        <div class="seg" role="group" aria-label="Light source" id="srcSeg">
+          <button type="button" data-s="red" aria-pressed="true">Red He–Ne</button>
+          <button type="button" data-s="green" aria-pressed="false">Green He–Ne</button>
+          <button type="button" data-s="hg" aria-pressed="false">Mercury green</button>
+          <button type="button" data-s="na" aria-pressed="false">Sodium</button>
+          <button type="button" data-s="white" aria-pressed="false">White light</button>
+          <button type="button" data-s="mystery" aria-pressed="false">Mystery laser</button>
+        </div>
+      </div>
+      <div class="views">
+        <div class="pane" id="paneTop">
+          <span class="tag">Top view (drag the micrometer drum to turn it)</span>
+          <canvas id="can" tabindex="0" role="img" aria-label="Top view of a Michelson interferometer on an optical table: a light source, a beam splitter, a compensator plate, a movable mirror on a micrometer stage, a fixed mirror, an optional gas cell and a screen. Arrow keys turn the micrometer."></canvas>
+        </div>
+        <div class="pane" id="paneScr">
+          <span class="tag" id="scrTag">The screen, 80 mm across</span>
+          <canvas id="scr" role="img" aria-label="The fringes on the screen."></canvas>
+        </div>
+      </div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" role="group" aria-label="The movable mirror and the fringe counter">
+          <span class="card-title">Movable mirror M₁ and fringe counter</span>
+          <div><div class="slider-head"><label for="sM">Micrometer (mirror position)</label><output id="oM" class="mono" for="sM"></output></div><input type="range" id="sM" min="0" max="1000" step="0.1"></div>
+          <div class="row" role="group" aria-label="Turn the micrometer">
+            <button type="button" class="btn" data-n="-10">−10</button><button type="button" class="btn" data-n="-1">−1</button><button type="button" class="btn" data-n="-0.1">−0.1</button>
+            <button type="button" class="btn" data-n="0.1">+0.1</button><button type="button" class="btn" data-n="1">+1</button><button type="button" class="btn" data-n="10">+10</button><span class="lab">μm</span>
+          </div>
+          <div class="row"><span class="lab">Counter</span><span class="big" id="oN">0</span><button type="button" class="btn" id="zero">Zero the counter</button></div>
+          <span class="lab" id="zeroNote"></span>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The fixed mirror">
+          <span class="card-title">Fixed mirror M₂: tilt screws</span>
+          <div><div class="slider-head"><label for="sTx">Tilt left and right</label><output id="oTx" class="mono" for="sTx"></output></div><input type="range" id="sTx" min="-1.5" max="1.5" step="0.05"></div>
+          <div><div class="slider-head"><label for="sTy">Tilt up and down</label><output id="oTy" class="mono" for="sTy"></output></div><input type="range" id="sTy" min="-1.5" max="1.5" step="0.05"></div>
+          <div class="row"><button type="button" class="btn" id="square">Square it up (no tilt)</button></div>
+        </div>
+        <div class="shelf-card" role="group" aria-label="The gas cell">
+          <span class="card-title">Gas cell, 5.00 cm long, in the fixed arm</span>
+          <label class="check"><input type="checkbox" id="cellIn"><span>Cell in the beam</span></label>
+          <div class="seg" role="group" aria-label="Valves" id="valveSeg">
+            <button type="button" data-v="pump" aria-pressed="false">Pump out</button>
+            <button type="button" data-v="closed" aria-pressed="true">Closed</button>
+            <button type="button" data-v="vent" aria-pressed="false">Let air in</button>
+          </div>
+          <div class="row"><span class="lab">Gauge</span><span class="big" id="oP">101.3 kPa</span></div>
+          <div class="row"><button type="button" class="btn" id="newMystery">New mystery laser</button></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/michelson.html" target="michelson-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="hene" aria-pressed="true">Measure λ, red He–Ne</button>
+          <button type="button" data-p="mystery" aria-pressed="false">Mystery laser</button>
+          <button type="button" data-p="cell" aria-pressed="false">Air in a gas cell</button>
+          <button type="button" data-p="tilt" aria-pressed="false">Tilted mirror</button>
+          <button type="button" data-p="white" aria-pressed="false">White light</button>
+          <button type="button" data-p="sodium" aria-pressed="false">Sodium doublet</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="michelson" data-title="Michelson Interferometer" data-demo="michelson">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the wavelength and n − 1 predictions</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="about1"></p>
+          <p class="hint" id="about2"></p>
+          <p class="hint" id="about3"></p>
+          <p class="hint" id="about4"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Michelson Interferometer. Everything here runs in Node (curriculum/validation/test_michelson.cjs).
+     OpenStax University Physics Volume 3 (2016), section 3.5: moving one mirror by d changes the path difference by 2d, so
+     N fringes pass for 2d = Nλ; a cell of length L in one arm changes it by 2L(n − 1) when it is pumped out.
+     Air's index: P. E. Ciddor, "Refractive index of air: new equations for the visible and near infrared," Applied Optics 35,
+     1566 (1996), equation 1, for standard dry air (15 °C, 101.325 kPa, 450 ppm CO2):
+     10⁸ (n − 1) = 5 792 105/(238.0185 − σ²) + 167 917/(57.362 − σ²), with σ = 1/λ in vacuum, in μm⁻¹. It agrees with Edlén's
+     1966 formula to 5 parts in 10⁵. At other pressures and temperatures n − 1 is taken in proportion to the density of an ideal
+     gas, P/T: linear in pressure at constant temperature. (Lorentz–Lorenz and air's compressibility change this by less than
+     5 parts in 10⁴ between vacuum and 1 atm.)
+     Spectral lines, in standard air, from the NIST Atomic Spectra Database: neon (He–Ne laser) 632.816 nm and 543.365 nm,
+     mercury 546.074 nm, sodium D2 588.995 nm and D1 589.592 nm (D2 twice as strong). White light has the CIE D65 spectrum. */
+  const T_STD = 288.15, P_STD = 101.325;                               /* K, kPa */
+  const ROOM = { T: 20.0, P: 101.325 };                                /* °C, kPa: the room air (dry), chosen values */
+  function nm1Std(lamVacNm) { const s2 = 1e6 / (lamVacNm * lamVacNm); return (5792105 / (238.0185 - s2) + 167917 / (57.362 - s2)) * 1e-8; }
+  function nm1Air(lamVacNm, PkPa, TC) { return nm1Std(lamVacNm) * (PkPa / P_STD) * (T_STD / (TC + 273.15)); }
+  function vacFromStdAir(lamAirNm) { let v = lamAirNm; for (let i = 0; i < 6; i++) v = lamAirNm * (1 + nm1Std(v)); return v; }
+  const nRoom = (lam) => 1 + nm1Air(lam, ROOM.P, ROOM.T);
+  const lamInRoom = (lam) => lam / nRoom(lam);                          /* the wavelength in the room's air, nm */
+  const SOURCES = {
+    red: { name: 'He–Ne laser, red', lines: [{ lam: vacFromStdAir(632.816), w: 1 }] },
+    green: { name: 'He–Ne laser, green', lines: [{ lam: vacFromStdAir(543.365), w: 1 }] },
+    hg: { name: 'Mercury lamp, green line', lines: [{ lam: vacFromStdAir(546.074), w: 1 }] },
+    na: { name: 'Sodium lamp, D lines', lines: [{ lam: vacFromStdAir(588.995), w: 2 }, { lam: vacFromStdAir(589.592), w: 1 }] },
+    white: { name: 'White light', white: true },
+    mystery: { name: 'Mystery laser', lines: null } };
+  /* The layout, unfolded about the beam splitter (metres). The diverging lens brings the beam to a point a = 30 mm before the
+     beam splitter; the arms are 100 mm long when the micrometer reads M0 (equal paths); the screen is 150 mm from the beam
+     splitter and 80 mm across. Each mirror makes an image of that point, and the screen sees two point sources: S1 behind M1 on
+     the axis, and S2 behind M2, which moves sideways when M2 is tilted. The pattern is exactly that of two points. The beam
+     splitter and compensator are taken as identical plates, so both beams pass the same glass. */
+  const GEO = { a: 0.030, L0: 0.100, b: 0.150, half: 0.040, cellL: 0.0500, M0: 143.2, beamW: 0.050 };
+  const ARCMIN = Math.PI / 180 / 60;
+  function images(dUm, txArcmin, tyArcmin) {
+    const d = dUm * 1e-6, tx = txArcmin * ARCMIN, ty = tyArcmin * ARCMIN;
+    const z1 = GEO.a + 2 * (GEO.L0 + d) + GEO.b, Mz = GEO.b + GEO.L0, R = GEO.L0 + GEO.a, Qz = Mz - R;
+    const n = [Math.sin(tx) * Math.cos(ty), Math.sin(ty), Math.cos(tx) * Math.cos(ty)], k = 2 * (-R * n[2]);   /* reflect Q across the mirror plane */
+    return { S1: [0, 0, z1], S2: [-k * n[0], -k * n[1], Qz - k * n[2]] };
+  }
+  /* geometric path difference (m) at screen point (x, y): |P − S1| − |P − S2|, written to keep its precision */
+  function geoDiff(im, x, y) {
+    const a = im.S1, b = im.S2, ax = x - a[0], ay = y - a[1], bx = x - b[0], by = y - b[1];
+    const r1 = ax * ax + ay * ay + a[2] * a[2], r2 = bx * bx + by * by + b[2] * b[2];
+    return (r1 - r2) / (Math.sqrt(r1) + Math.sqrt(r2));
+  }
+  /* optical path difference (m) for vacuum wavelength lam: the arms are in room air; the cell (in the M2 arm) holds air at P */
+  function opd(g, lam, cell, PkPa) {
+    const nr = nRoom(lam);
+    return nr * g - (cell ? 2 * GEO.cellL * (1 + nm1Air(lam, PkPa, ROOM.T) - nr) : 0);
+  }
+  /* two beams of equal strength: I = (1 + cos 2π·OPD/λ)/2 for each line, lines added by strength (an ideal 50:50 splitter that
+     gives both beams the same phase, so equal paths are bright) */
+  function monoI(lines, g, cell, P) {
+    let s = 0, w = 0;
+    for (const l of lines) { s += l.w * (1 + Math.cos(2 * Math.PI * opd(g, l.lam, cell, P) / (l.lam * 1e-9))); w += l.w; }
+    return s / (2 * w);
+  }
+  /* the fringe order at the screen's centre (continuous): OPD/λ for one line. For two lines it is the phase of the summed
+     fringe, arg Σ w e^{2πi·OPD/λ}, which stays continuous because one line is stronger: a counter follows it. */
+  function order(lines, g, cell, P) {
+    const l0 = lines[0], o0 = opd(g, l0.lam, cell, P) / (l0.lam * 1e-9);
+    if (lines.length === 1) return o0;
+    let re = 0, im = 0;
+    for (const l of lines) { const ph = 2 * Math.PI * (opd(g, l.lam, cell, P) / (l.lam * 1e-9) - o0); re += l.w * Math.cos(ph); im += l.w * Math.sin(ph); }
+    return o0 + Math.atan2(im, re) / (2 * Math.PI);
+  }
+  /* a counter (photodiode at the centre) counts each bright fringe that passes, whichever way */
+  const fringesPassed = (o1, o2) => Math.abs(Math.floor(o2) - Math.floor(o1));
+  /* white light: CIE D65 times the CIE 1931 colour matching functions (Wyman, Sloan and Shirley 2013 fit), 380 to 780 nm in
+     5 nm bands. Each band's fringe is averaged over the band's width in 1/λ (the factor sin x/x), so the sum does not alias. */
+  const D65_10 = [49.9755, 54.6482, 82.7549, 91.486, 93.4318, 86.6823, 104.865, 117.008, 117.812, 114.861, 115.923, 108.811, 109.354, 107.802,
+    104.79, 107.689, 104.405, 104.046, 100, 96.3342, 95.788, 88.6856, 90.0062, 89.5991, 87.6987, 83.2886, 83.6992, 80.0268, 80.2146, 82.2778,
+    78.2842, 69.7213, 71.6091, 74.349, 61.604, 69.8856, 75.087, 63.5927, 46.4182, 66.8054, 63.3828];
+  const d65 = (l) => { const f = (l - 380) / 10, i = Math.max(0, Math.min(39, Math.floor(f))), u = f - i; return D65_10[i] * (1 - u) + D65_10[i + 1] * u; };
+  const gl = (x, mu, s1, s2) => { const t = (x - mu) / (x < mu ? s1 : s2); return Math.exp(-0.5 * t * t); };
+  const cie = (l) => [1.056 * gl(l, 599.8, 37.9, 31.0) + 0.362 * gl(l, 442.0, 16.0, 26.7) - 0.065 * gl(l, 501.1, 20.4, 26.2),
+    0.821 * gl(l, 568.8, 46.9, 40.5) + 0.286 * gl(l, 530.9, 16.3, 31.1), 1.217 * gl(l, 437.0, 11.8, 36.0) + 0.681 * gl(l, 459.0, 26.0, 13.8)];
+  function whiteBands(step = 5) {
+    const B = []; let Y = 0;
+    for (let l = 380; l <= 780 + 1e-9; l += step) { const c = cie(l), s = d65(l) * step; B.push({ lam: l, sig: 1e9 / l, dsig: 1e9 * step / (l * l), x: s * c[0], y: s * c[1], z: s * c[2] }); Y += s * c[1]; }
+    let X = 0, Z = 0; for (const b of B) { b.x /= Y; b.y /= Y; b.z /= Y; X += b.x; Z += b.z; }
+    return { B, Xw: X, Zw: Z };
+  }
+  const sinc = (x) => (Math.abs(x) < 1e-8 ? 1 : Math.sin(x) / x);
+  function whiteXYZ(W, g, cell, P) {
+    let X = 0, Y = 0, Z = 0;
+    for (const b of W.B) { const o = opd(g, b.lam, cell, P), f = (1 + sinc(Math.PI * o * b.dsig) * Math.cos(2 * Math.PI * o * b.sig)) / 2; X += b.x * f; Y += b.y * f; Z += b.z * f; }
+    return [X, Y, Z];
+  }
+  /* the same, fast: OPD is linear in g (OPD = n·g − C), so the per wavelength constants are worked out once per picture */
+  function lineCoefs(lines, cell, P) { let w = 0; for (const l of lines) w += l.w; return lines.map((l) => { const C = -opd(0, l.lam, cell, P), k = 2 * Math.PI / (l.lam * 1e-9); return { a: nRoom(l.lam) * k, b: C * k, w: l.w / w }; }); }
+  function monoFast(cf, g) { let s = 0; for (const c of cf) s += c.w * (1 + Math.cos(c.a * g - c.b)); return s / 2; }
+  function bandCoefs(W, cell, P) { return W.B.map((b) => ({ n: nRoom(b.lam), C: -opd(0, b.lam, cell, P), sig: b.sig, dsig: b.dsig, x: b.x, y: b.y, z: b.z })); }
+  function whiteFast(bc, g) { let X = 0, Y = 0, Z = 0; for (const b of bc) { const o = b.n * g - b.C, f = (1 + sinc(Math.PI * o * b.dsig) * Math.cos(2 * Math.PI * o * b.sig)) / 2; X += b.x * f; Y += b.y * f; Z += b.z * f; } return [X, Y, Z]; }
+  /* the cell's valves: the pump takes the pressure down exponentially (time constant 4 s) to 2 Pa; the needle valve lets air in
+     at 1.0 kPa/s, slowing over the last 2 kPa (time constant 2 s) */
+  const VALVE = { pumpTau: 4, floor: 0.002, ventRate: 1.0, ventSoft: 2.0 };
+  function valveStep(P, mode, dt) {
+    if (mode === 'pump') return Math.max(VALVE.floor, P * Math.exp(-dt / VALVE.pumpTau));
+    if (mode === 'vent') { const gap = ROOM.P - P; if (gap <= 0) return ROOM.P; if (gap > VALVE.ventSoft) { const lin = P + VALVE.ventRate * dt; if (ROOM.P - lin >= VALVE.ventSoft) return lin; dt -= (gap - VALVE.ventSoft) / VALVE.ventRate; P = ROOM.P - VALVE.ventSoft; }
+      return ROOM.P - (ROOM.P - P) * Math.exp(-dt * VALVE.ventRate / VALVE.ventSoft); }
+    return P;
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VG = window.VDGear;
+  const WHITE = whiteBands(5);
+  const S = { preset: 'hene', src: 'red', mysLam: 600, mysN: 0, m: 200, tx: 0, ty: 0, cell: false, P: ROOM.P, valve: 'closed',
+    N: 0, ord: 0, zeroAt: 200, blind: false };
+  const can = $('can'), ctx = can.getContext('2d'), scr = $('scr'), sctx = scr.getContext('2d');
+  let W = 0, H = 0, SW = 0, SH = 0, dpr = 1, T = null;
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const dark = () => (VG ? VG.dark() : false);
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), accent: g('--accent'),
+      table: g('--table'), hole: g('--table-hole'), frost: g('--frost'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+
+  // ---------- the state's physics ----------
+  const lines = () => (S.src === 'mystery' ? [{ lam: S.mysLam, w: 1 }] : SOURCES[S.src].lines);
+  const isWhite = () => S.src === 'white';
+  const dUm = () => S.m - GEO.M0;
+  const im = () => images(dUm(), S.tx, S.ty);
+  const centreOrder = () => (isWhite() ? 0 : order(lines(), geoDiff(im(), 0, 0), S.cell, S.P));
+  /* every change goes through here, so the counter sees each fringe that passes; rebase skips the count (a new source, the
+     cell put in or taken out: a counter cannot follow those) */
+  function update(fn, rebase) {
+    const before = S.ord; fn(); const after = centreOrder();
+    if (!rebase && !isWhite()) S.N += fringesPassed(before, after);
+    S.ord = after; redraw();
+  }
+  function zeroCounter() { S.N = 0; S.zeroAt = S.m; S.ord = centreOrder(); redraw(); }
+
+  // ---------- colours of light ----------
+  const gam = (v) => (v <= 0.0031308 ? 12.92 * v : 1.055 * Math.pow(v, 1 / 2.4) - 0.055);
+  function xyzToLin(X, Y, Z) {
+    X *= 0.95047 / WHITE.Xw; Z *= 1.08883 / WHITE.Zw;
+    return [3.2404542 * X - 1.5371385 * Y - 0.4985314 * Z, -0.9692660 * X + 1.8760108 * Y + 0.0415560 * Z, 0.0556434 * X - 0.2040259 * Y + 1.0572252 * Z];
+  }
+  function specLin(l) { /* a spectral colour at full brightness (desaturated into sRGB) */
+    const c = cie(l); let [r, g, b] = xyzToLin(c[0] * WHITE.Xw / 0.95047, c[1], c[2] * WHITE.Zw / 1.08883);
+    const mn = Math.min(r, g, b); if (mn < 0) { r -= mn; g -= mn; b -= mn; }
+    const mx = Math.max(r, g, b) || 1; return [r / mx, g / mx, b / mx];
+  }
+  function lightCss(a = 1) {
+    if (isWhite()) return `rgba(255,250,236,${a})`;
+    const c = specLin(lines()[0].lam).map((v) => Math.round(255 * gam(v)));
+    return `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+  }
+
+  // ---------- the fringe pattern ----------
+  const PAT = document.createElement('canvas'), pctx = PAT.getContext('2d'); let patN = 0, patImg = null;
+  function renderPattern() {
+    const white = isWhite(), N = white ? 170 : 260, ss = white ? 1 : 2;
+    if (patN !== N) { patN = N; PAT.width = PAT.height = N; patImg = pctx.createImageData(N, N); }
+    const data = patImg.data, I = im(), h = GEO.half, cell = S.cell, P = S.P, L = lines(), w2 = 2 / (GEO.beamW * GEO.beamW);
+    const mono = !white ? specLin(L[0].lam) : null, cf = white ? bandCoefs(WHITE, cell, P) : lineCoefs(L, cell, P);
+    /* without tilt the pattern depends only on the radius: compute a fine radial profile once and look it up */
+    const radial = S.tx === 0 && S.ty === 0, rmax = h * Math.SQRT2, NR = 4096; let prof = null;
+    if (radial) {
+      prof = new Float32Array((NR + 1) * 3);
+      for (let i = 0; i <= NR; i++) { const r = rmax * i / NR, g = geoDiff(I, r, 0);
+        if (white) { const c = whiteFast(cf, g); prof[3 * i] = c[0]; prof[3 * i + 1] = c[1]; prof[3 * i + 2] = c[2]; } else prof[3 * i] = monoFast(cf, g); }
+    }
+    for (let j = 0; j < N; j++) for (let i = 0; i < N; i++) {
+      let a0 = 0, a1 = 0, a2 = 0;
+      for (let sj = 0; sj < ss; sj++) for (let si = 0; si < ss; si++) {
+        const x = (-1 + 2 * (i + (si + 0.5) / ss) / N) * h, y = (1 - 2 * (j + (sj + 0.5) / ss) / N) * h, env = Math.exp(-w2 * (x * x + y * y));
+        if (radial) { const u = Math.hypot(x, y) / rmax * NR, k = Math.min(NR - 1, Math.floor(u)), t = u - k;
+          if (white) { for (let c = 0; c < 3; c++) { const v = (prof[3 * k + c] * (1 - t) + prof[3 * (k + 1) + c] * t) * env; if (c === 0) a0 += v; else if (c === 1) a1 += v; else a2 += v; } }
+          else a0 += (prof[3 * k] * (1 - t) + prof[3 * (k + 1)] * t) * env; }
+        else { const g = geoDiff(I, x, y); if (white) { const c = whiteFast(cf, g); a0 += c[0] * env; a1 += c[1] * env; a2 += c[2] * env; } else a0 += monoFast(cf, g) * env; }
+      }
+      const o = 4 * (j * N + i), n = ss * ss;
+      let r, g, b;
+      if (white) { const lin = xyzToLin(a0 / n, a1 / n, a2 / n); r = lin[0]; g = lin[1]; b = lin[2]; const mn = Math.min(r, g, b), Y = a1 / n; if (mn < 0 && Y > 0) { const k = Y / (Y - mn); r = Y + k * (r - Y); g = Y + k * (g - Y); b = Y + k * (b - Y); } }
+      else { const v = a0 / n; r = v * mono[0]; g = v * mono[1]; b = v * mono[2]; }
+      data[o] = 255 * gam(Math.max(0, Math.min(1, r))); data[o + 1] = 255 * gam(Math.max(0, Math.min(1, g))); data[o + 2] = 255 * gam(Math.max(0, Math.min(1, b))); data[o + 3] = 255;
+    }
+    pctx.putImageData(patImg, 0, 0);
+  }
+
+  // ---------- drawing: the screen ----------
+  function drawScreen() {
+    if (!T || !SW) return;
+    const c = sctx, p = proj(); c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const bg = c.createLinearGradient(0, 0, 0, SH); bg.addColorStop(0, dark() ? '#0b0f14' : '#1e242c'); bg.addColorStop(1, dark() ? '#06080b' : '#14181e'); c.fillStyle = bg; c.fillRect(0, 0, SW, SH);
+    const side = Math.max(60, Math.min(SW - 36, SH - 70 * p)), x0 = (SW - side) / 2, y0 = Math.max(28, (SH - side) / 2 - 10 * p);
+    /* the screen's frame and frosted face */
+    c.save(); c.shadowColor = 'rgba(0,0,0,0.6)'; c.shadowBlur = 18; c.fillStyle = '#2b323c'; c.beginPath(); c.roundRect(x0 - 8, y0 - 8, side + 16, side + 16, 8); c.fill(); c.restore();
+    c.fillStyle = '#05070a'; c.fillRect(x0, y0, side, side);
+    c.imageSmoothingEnabled = true; c.imageSmoothingQuality = 'high'; c.drawImage(PAT, x0, y0, side, side);
+    const fr = c.createRadialGradient(x0 + side * 0.3, y0 + side * 0.25, 0, x0 + side / 2, y0 + side / 2, side * 0.8); fr.addColorStop(0, 'rgba(255,255,255,0.05)'); fr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = fr; c.fillRect(x0, y0, side, side);
+    /* the detector's pinhole at the centre */
+    c.strokeStyle = 'rgba(255,255,255,0.55)'; c.lineWidth = 1; const cx = x0 + side / 2, cy = y0 + side / 2;
+    c.beginPath(); c.arc(cx, cy, 4, 0, 7); c.stroke(); c.beginPath(); c.moveTo(cx - 9, cy); c.lineTo(cx - 5, cy); c.moveTo(cx + 5, cy); c.lineTo(cx + 9, cy); c.moveTo(cx, cy - 9); c.lineTo(cx, cy - 5); c.moveTo(cx, cy + 5); c.lineTo(cx, cy + 9); c.stroke();
+    /* a millimetre scale along the bottom edge */
+    const yb = y0 + side + 14, mm = side / 80; c.strokeStyle = 'rgba(220,228,238,0.7)'; c.fillStyle = 'rgba(220,228,238,0.8)'; c.font = `${10 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (let k = -40; k <= 40; k += 5) { const x = cx + k * mm, big = k % 20 === 0; c.beginPath(); c.moveTo(x, yb - 6); c.lineTo(x, yb - (big ? 0 : 3)); c.stroke();
+      if (big) { c.textAlign = k === -40 ? 'left' : k === 40 ? 'right' : 'center'; c.fillText(k === 40 ? '40 mm' : `${k}`.replace('-', '−'), x, yb + 2); } }
+    /* the counter's display */
+    const lw = 92 * p, lh = 26 * p;
+    if (VG) { VG.lcd(c, x0 + side - lw - 6, y0 + 6, lw, lh, isWhite() ? '— —' : String(S.N)); }
+    c.fillStyle = 'rgba(220,228,238,0.75)'; c.font = `${10 * p}px ${T.ui}`; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillText('fringes counted', x0 + side - 6, y0 + 8 + lh);
+  }
+
+  // ---------- drawing: the top view ----------
+  function drawTop(now) {
+    if (!T || !W) return;
+    const c = ctx, p = proj(), d = dark(); c.setTransform(dpr, 0, 0, dpr, 0, 0);
+    /* the optical table: anodised breadboard with a 25 mm grid of tapped holes */
+    c.fillStyle = T.table; c.fillRect(0, 0, W, H);
+    const xmin = -330, xmax = 250, ymin = -175, ymax = 185, k = Math.min((W - 20) / (xmax - xmin), (H - 30) / (ymax - ymin));
+    const ox = (W - (xmax - xmin) * k) / 2 - xmin * k, oy = 24 + (H - 30 - (ymax - ymin) * k) / 2 - ymin * k;
+    const X = (x) => ox + x * k, Y = (y) => oy + y * k;
+    c.fillStyle = T.hole; for (let gx = Math.ceil((xmin - 60) / 25) * 25; gx <= xmax + 60; gx += 25) for (let gy = Math.ceil((ymin - 60) / 25) * 25; gy <= ymax + 60; gy += 25) { const px = X(gx), py = Y(gy); if (px > -3 && px < W + 3 && py > -3 && py < H + 3) { c.beginPath(); c.arc(px, py, Math.max(1.2, 2.2 * k), 0, 7); c.fill(); } }
+    const vg = c.createRadialGradient(W * 0.45, H * 0.4, 0, W * 0.45, H * 0.4, Math.max(W, H) * 0.8); vg.addColorStop(0, 'rgba(255,255,255,0.05)'); vg.addColorStop(1, 'rgba(0,0,0,0.25)'); c.fillStyle = vg; c.fillRect(0, 0, W, H);
+    const lab = (s, x, y, a = 'center') => { c.save(); c.font = `${10.5 * p}px ${T.ui}`; c.textAlign = a; c.textBaseline = 'middle'; c.fillStyle = 'rgba(214,222,232,0.85)'; c.fillText(s, x, y); c.restore(); };
+    const exag = 40, mOff = dUm() * 1e-3 * exag;            /* the mirror's travel is drawn 40 times larger */
+    const m1x = 100 + mOff, m2y = -100, scrY = 150;
+    const tiltDraw = S.tx * ARCMIN * 600;                    /* M2's tilt drawn 600 times larger */
+    /* beams: the true widths of the diverging beam (focus 30 mm before the splitter, radius 50 mm at the screen) */
+    const halfW = (dist) => Math.max(0.6, dist * GEO.beamW / (GEO.a + 2 * GEO.L0 + GEO.b));   /* mm at a path distance (mm) from the focus */
+    const glow = lightCss(0.32), core = lightCss(0.85);
+    c.save(); if (d) c.globalCompositeOperation = 'lighter';
+    const band = (x1, y1, w1, x2, y2, w2) => { const L = Math.hypot(x2 - x1, y2 - y1) || 1, nx = -(y2 - y1) / L, ny = (x2 - x1) / L;
+      c.beginPath(); c.moveTo(X(x1 + nx * w1), Y(y1 + ny * w1)); c.lineTo(X(x2 + nx * w2), Y(y2 + ny * w2)); c.lineTo(X(x2 - nx * w2), Y(y2 - ny * w2)); c.lineTo(X(x1 - nx * w1), Y(y1 - ny * w1)); c.closePath(); c.fill(); };
+    /* the laser's narrow beam to the lens, then cones: focus at x = −30 */
+    c.fillStyle = core; band(-232, 0, 0.9, -48, 0, 0.9);
+    c.fillStyle = glow;
+    const f0 = -30; band(-48, 0, 0.9, f0, 0, 0.3);
+    band(f0, 0, 0.3, m1x, 0, halfW(m1x - f0)); band(f0, 0, 0.3, 0, 0, halfW(30));
+    band(0, 0, halfW(30), 0, m2y, halfW(30 - m2y));
+    band(0, m2y, halfW(30 - m2y), 0, scrY, halfW(30 - m2y + (scrY - m2y)));
+    band(m1x, 0, halfW(m1x - f0), 0, 0, halfW(2 * m1x - f0));
+    band(0, 0, halfW(2 * m1x - f0), 0, scrY, halfW(2 * m1x - f0 + scrY));
+    c.fillStyle = core; c.fillRect(X(-0.6), Y(0), Math.max(1, 1.2 * k), Y(scrY) - Y(0));
+    if (!reduce && !isWhite()) { /* a faint shimmer moving along the beams */
+      c.strokeStyle = lightCss(0.5); c.lineWidth = Math.max(1, 1.2 * k); c.setLineDash([3, 9]); c.lineDashOffset = -((now || 0) / 40) % 12;
+      c.beginPath(); c.moveTo(X(-232), Y(0)); c.lineTo(X(m1x), Y(0)); c.moveTo(X(0), Y(0)); c.lineTo(X(0), Y(m2y)); c.stroke(); c.setLineDash([]); }
+    c.restore();
+    /* the source */
+    const white = isWhite();
+    if (VG) { VG.box(c, X(-318), Y(-22), (white ? 80 : 88) * k, 44 * k, { color: white ? '#5a5f68' : '#2d3e57', r: 6 * k }); }
+    else { c.fillStyle = '#2d3e57'; c.fillRect(X(-318), Y(-22), 88 * k, 44 * k); }
+    if (!white) { if (VG) VG.rod(c, X(-232), Y(0), X(-226), Y(0), 7 * k, { color: '#9aa4b0' }); }
+    c.save(); c.fillStyle = lightCss(1); c.shadowColor = lightCss(0.9); c.shadowBlur = 10; c.beginPath(); c.arc(X(-226), Y(0), 2.5 * k, 0, 7); c.fill(); c.restore();
+    if (VG) VG.plate(c, S.src === 'mystery' ? 'laser ?' : S.src === 'red' || S.src === 'green' ? 'He–Ne laser' : S.src === 'hg' ? 'Hg lamp + filter' : S.src === 'na' ? 'Na lamp' : 'white lamp', X(-274), Y(0), { s: Math.max(7, Math.min(10, 7 * k)) });
+    /* the diverging lens on a post holder */
+    c.save(); c.translate(X(-48), Y(0)); c.fillStyle = 'rgba(180,215,235,0.55)'; c.strokeStyle = 'rgba(220,240,255,0.8)'; c.lineWidth = 1;
+    c.beginPath(); c.moveTo(-3 * k, -12 * k); c.lineTo(3 * k, -12 * k); c.quadraticCurveTo(0.6 * k, 0, 3 * k, 12 * k); c.lineTo(-3 * k, 12 * k); c.quadraticCurveTo(-0.6 * k, 0, -3 * k, -12 * k); c.fill(); c.stroke(); c.restore();
+    lab('lens', X(-48), Y(-22));
+    /* the beam splitter (half silvered face toward the source) and the compensator, both at 45° */
+    const plate = (cx, cy, half, coated) => { c.save(); c.translate(X(cx), Y(cy)); c.rotate(-Math.PI / 4);
+      c.fillStyle = 'rgba(170,205,225,0.45)'; c.strokeStyle = 'rgba(225,240,250,0.85)'; c.lineWidth = 1; c.beginPath(); c.rect(-half * k, -2.2 * k, 2 * half * k, 4.4 * k); c.fill(); c.stroke();
+      if (coated) { c.strokeStyle = 'rgba(235,235,240,0.95)'; c.lineWidth = Math.max(1.5, 1.2 * k); c.beginPath(); c.moveTo(-half * k, -2.2 * k); c.lineTo(half * k, -2.2 * k); c.stroke(); } c.restore(); };
+    plate(0, 0, 18, true); plate(26, 0, 14, false);
+    lab('beam splitter', X(-34), Y(30), 'center'); lab('compensator', X(30), Y(26), 'center');
+    /* M1 on its stage, the micrometer behind it */
+    if (VG) { VG.box(c, X(m1x + 4), Y(-30), 26 * k, 60 * k, { color: '#4a5566', r: 3 * k }); VG.box(c, X(112), Y(-40), 70 * k, 80 * k, { color: '#3a4350', r: 4 * k, shadow: false }); VG.box(c, X(m1x + 4), Y(-30), 26 * k, 60 * k, { color: '#55627a', r: 3 * k, shadow: false }); }
+    c.fillStyle = '#d9e2ec'; c.fillRect(X(m1x), Y(-16), 4 * k, 32 * k); c.fillStyle = 'rgba(255,255,255,0.75)'; c.fillRect(X(m1x), Y(-16), 1.2 * k, 32 * k);
+    lab('M₁', X(m1x + 2), Y(-26));
+    const mbx = 186, mby = 0;   /* the micrometer: barrel, thimble with its scale */
+    if (VG) { VG.rod(c, X(mbx - 8), Y(mby), X(mbx + 10), Y(mby), 6 * k, { color: '#b4bcc6' }); VG.rod(c, X(mbx + 10), Y(mby), X(mbx + 40), Y(mby), 10 * k, { color: '#c9cfd6' }); }
+    else { c.fillStyle = '#c9cfd6'; c.fillRect(X(mbx + 10), Y(mby - 10), 30 * k, 20 * k); }
+    /* thimble divisions: 50 per turn, one division = 1 μm; the visible face shows the ticks moving as it turns */
+    c.save(); c.beginPath(); c.rect(X(mbx + 10), Y(mby - 10), 30 * k, 20 * k); c.clip(); c.strokeStyle = 'rgba(30,36,44,0.75)'; c.lineWidth = 1;
+    const turn = S.m / 50, frac = turn - Math.floor(turn);
+    for (let i = 0; i < 50; i++) { const a = (i / 50 - frac) * 2 * Math.PI, s = Math.sin(a); if (Math.cos(a) < 0) continue; const yy = Y(mby) + s * 10 * k; c.beginPath(); c.moveTo(X(mbx + 10), yy); c.lineTo(X(mbx + 10) + (i % 5 === 0 ? 9 : 5) * k, yy); c.stroke(); }
+    c.restore(); lab(`${f(S.m, 1)} μm`, X(mbx + 25), Y(mby + 22)); lab('micrometer', X(mbx + 25), Y(mby - 20));
+    /* M2 on a kinematic mount with two tilt screws, the gas cell between it and the splitter */
+    c.save(); c.translate(X(0), Y(m2y)); c.rotate(tiltDraw);
+    if (VG) { VG.box(c, -34 * k, -30 * k, 68 * k, 22 * k, { color: '#4a5566', r: 3 * k }); VG.screw(c, -24 * k, -19 * k, 3.6 * k); VG.screw(c, 24 * k, -19 * k, 3.6 * k); }
+    c.fillStyle = '#d9e2ec'; c.fillRect(-16 * k, -8 * k, 32 * k, 4 * k); c.fillStyle = 'rgba(255,255,255,0.75)'; c.fillRect(-16 * k, -4.6 * k, 32 * k, 1.2 * k); c.restore();
+    lab('M₂ (fixed, tilt screws)', X(48), Y(m2y - 18), 'left');
+    if (S.cell) {
+      const y1 = -25, y2 = -75; c.save(); c.fillStyle = 'rgba(190,220,235,0.22)'; c.strokeStyle = 'rgba(210,232,245,0.8)'; c.lineWidth = 1;
+      c.beginPath(); c.roundRect(X(-12), Y(y2), 24 * k, (y1 - y2) * k, 3 * k); c.fill(); c.stroke();
+      c.fillStyle = 'rgba(225,240,250,0.65)'; c.fillRect(X(-13), Y(y2) - 1.5 * k, 26 * k, 3 * k); c.fillRect(X(-13), Y(y1) - 1.5 * k, 26 * k, 3 * k);
+      c.restore(); lab('gas cell, 5.00 cm', X(-18), Y(-50), 'right');
+      /* hose to the pump, the gauge */
+      if (VG) { VG.cable(c, X(-12), Y(-58), X(-150), Y(-125), 10 * k, { color: '#2a2f36', w: 4 * k }); VG.box(c, X(-230), Y(-158), 82 * k, 50 * k, { color: '#3b4656', r: 5 * k });
+        VG.plate(c, S.valve === 'pump' ? 'pump: on' : S.valve === 'vent' ? 'needle valve: open' : 'valves closed', X(-189), Y(-147), { s: Math.max(6.5, Math.min(9, 6.5 * k)) });
+        VG.lcd(c, X(-222), Y(-138), 66 * k, 20 * k, `${f(S.P, 1)} kPa`); }
+    }
+    /* the screen and the counter's detector */
+    if (VG) VG.box(c, X(-44), Y(scrY), 88 * k, 9 * k, { color: '#c8ccd2', r: 2 * k });
+    c.fillStyle = 'rgba(255,255,255,0.75)'; c.fillRect(X(-40), Y(scrY), 80 * k, 2 * k);
+    lab('screen', X(-52), Y(scrY + 5), 'right');
+    if (VG) { VG.cable(c, X(0), Y(scrY + 9), X(80), Y(scrY + 18), 10 * k, { color: '#20262e', w: 2.5 * k }); VG.box(c, X(80), Y(scrY + 4), 74 * k, 28 * k, { color: '#34404e', r: 4 * k }); VG.lcd(c, X(84), Y(scrY + 8), 66 * k, 20 * k, isWhite() ? '——' : String(S.N)); }
+    lab('fringe counter', X(117), Y(scrY - 6));
+    lab(W < 520 ? 'to scale, but mirror travel ×40, tilt ×600' : 'drawn to scale; the mirror travel is drawn 40 times larger and the tilt 600 times', 10, H - 10, 'left');
+  }
+  function redraw() { renderPattern(); drawTop(performance.now()); drawScreen(); readouts(); }
+
+  // ---------- readouts and controls ----------
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    const L = lines(), hideLam = S.blind || S.src === 'mystery';
+    let h = dd('Light', S.src === 'mystery' ? 'Mystery laser' : SOURCES[S.src].name, 'wide');
+    if (!isWhite()) h += dd('Wavelength in the room\'s air', hideLam ? '<span class="ok">hidden: measure it</span>' : L.map((l) => `${f(lamInRoom(l.lam), 3)} nm`).join(', '), 'wide');
+    h += dd('Micrometer', `${f(S.m, 1)} μm`) + dd('Fringes counted', isWhite() ? '— (white light)' : `${S.N}`)
+      + dd('Counter zeroed at', `${f(S.zeroAt, 1)} μm`) + dd('Cell', S.cell ? `in, ${f(S.P, 1)} kPa` : 'out of the beam');
+    if (S.cell) h += dd('n − 1 of the air in the cell', S.blind ? '<span class="ok">hidden: measure it</span>' : `${f(nm1Air(L ? L[0].lam : 550, S.P, ROOM.T) * 1e4, 4)} × 10⁻⁴`, 'wide');
+    h += dd('Room air', `dry, ${f(ROOM.T, 1)} °C, ${f(ROOM.P, 3)} kPa`, 'wide');
+    $('out').innerHTML = h;
+    $('oN').textContent = isWhite() ? '—' : String(S.N); $('oP').textContent = `${f(S.P, 1)} kPa`; $('zeroNote').textContent = `Counting since ${f(S.zeroAt, 1)} μm.`;
+  }
+  function sync() {
+    $('sM').value = S.m; $('oM').textContent = `${f(S.m, 1)} μm`;
+    $('sTx').value = S.tx; $('oTx').textContent = `${f(S.tx, 2)}′`; $('sTy').value = S.ty; $('oTy').textContent = `${f(S.ty, 2)}′`;
+    $('cellIn').checked = S.cell;
+    for (const b of document.querySelectorAll('#srcSeg button')) b.setAttribute('aria-pressed', String(b.dataset.s === S.src));
+    for (const b of document.querySelectorAll('#valveSeg button')) { b.setAttribute('aria-pressed', String(b.dataset.v === S.valve)); b.disabled = !S.cell; }
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    $('newMystery').hidden = S.src !== 'mystery';
+  }
+  const PRESETS = {
+    hene: { src: 'red', m: 500, tx: 0, ty: 0, cell: false, hint: 'A red He–Ne laser (632.816 nm in standard air). Zero the counter, turn the micrometer, and note the reading each time the counter reaches 20, 40, 60, … fringes. Each fringe is half a wavelength of mirror travel: 2Δd = Nλ.' },
+    mystery: { src: 'mystery', m: 500, tx: 0, ty: 0, cell: false, hint: 'A laser of unknown wavelength somewhere in the visible. Measure it the same way. New mystery laser picks another.' },
+    cell: { src: 'red', m: 500, tx: 0, ty: 0, cell: true, hint: 'A 5.00 cm cell in the fixed arm, full of room air. Pump it out, zero the counter, then let air back in and count the fringes as the pressure rises: N = 2L(n − 1)/λ, with n − 1 in proportion to the pressure.' },
+    tilt: { src: 'red', m: 150, tx: 0.5, ty: 0, cell: false, hint: 'M₂ tilted by half a minute of arc. Near equal paths the two images of the source sit side by side, and the fringes are nearly straight lines. Away from equal paths they curve into arcs of off centre rings.' },
+    white: { src: 'white', m: 150, tx: 0.5, ty: 0, cell: false, hint: 'White light makes fringes only within about a micrometre of equal paths, where each colour\'s fringes still line up. Find the straight fringes with the red laser first, then switch to white light and turn the micrometer slowly.' },
+    sodium: { src: 'na', m: 200, tx: 0, ty: 0, cell: false, hint: 'Sodium\'s two yellow lines, 0.597 nm apart. Their fringes drift in and out of step, so the rings fade and come back every 0.29 mm of mirror travel.' } };
+  function applyPreset(key) {
+    const p = PRESETS[key]; S.preset = key; S.valve = 'closed';
+    if (p.src === 'mystery' && !S.mysN) newMystery(true);
+    update(() => { S.src = p.src; S.m = p.m; S.tx = p.tx; S.ty = p.ty; S.cell = p.cell; S.P = ROOM.P; }, true);
+    $('presetHint').textContent = p.hint; zeroCounter(); sync(); redraw();
+  }
+  function newMystery(silent) {
+    if (S.mysN && !silent) $('presetHint').textContent = `The last mystery laser was ${f(lamInRoom(S.mysLam), 1)} nm in the room's air.`;
+    S.mysLam = Math.round(4500 + Math.random() * 2300) / 10; S.mysN++;
+  }
+  const custom = () => { S.preset = 'custom'; };
+  function setMic(v) { const m = Math.max(0, Math.min(1000, Math.round(v * 10) / 10)); update(() => { S.m = m; }); sync(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('srcSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (!b || b.dataset.s === S.src) return; custom(); if (b.dataset.s === 'mystery' && !S.mysN) newMystery(true); update(() => { S.src = b.dataset.s; }, true); zeroCounter(); sync(); });
+  $('sM').addEventListener('input', (e) => { custom(); setMic(+e.target.value); });
+  for (const b of document.querySelectorAll('[data-n]')) b.addEventListener('click', () => { custom(); setMic(S.m + +b.dataset.n); });
+  $('zero').addEventListener('click', () => zeroCounter());
+  $('sTx').addEventListener('input', (e) => { custom(); update(() => { S.tx = +e.target.value; }); sync(); });
+  $('sTy').addEventListener('input', (e) => { custom(); update(() => { S.ty = +e.target.value; }); sync(); });
+  $('square').addEventListener('click', () => { custom(); update(() => { S.tx = 0; S.ty = 0; }); sync(); });
+  $('cellIn').addEventListener('change', (e) => { custom(); update(() => { S.cell = e.target.checked; if (!S.cell) S.valve = 'closed'; }, true); sync(); });
+  $('valveSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (!b || !S.cell) return; S.valve = b.dataset.v; custom(); sync(); redraw(); });
+  $('newMystery').addEventListener('click', () => { newMystery(false); update(() => {}, true); zeroCounter(); });
+  /* turn the micrometer in the picture: drag along the drum, or the wheel over it; arrow keys when the picture has focus */
+  let drag = null;
+  const overMic = (e) => { const r = can.getBoundingClientRect(), x = (e.clientX - r.left) / r.width; return x > 0.66; };
+  can.addEventListener('pointerdown', (e) => { if (!overMic(e)) return; drag = { y: e.clientY, x: e.clientX, m: S.m }; can.setPointerCapture(e.pointerId); e.preventDefault(); });
+  can.addEventListener('pointermove', (e) => { if (!drag) return; custom(); setMic(drag.m + ((e.clientY - drag.y) - (e.clientX - drag.x)) * (e.shiftKey ? 1 : 0.1)); });
+  for (const ev of ['pointerup', 'pointercancel']) can.addEventListener(ev, () => { drag = null; });
+  can.addEventListener('wheel', (e) => { if (!overMic(e)) return; e.preventDefault(); custom(); setMic(S.m + (e.deltaY > 0 ? -1 : 1) * (e.shiftKey ? 1 : 0.1)); }, { passive: false });
+  can.addEventListener('keydown', (e) => { const s = e.shiftKey ? 1 : 0.1; if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { custom(); setMic(S.m + s); e.preventDefault(); } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { custom(); setMic(S.m - s); e.preventDefault(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; readouts(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
+
+  // ---------- the clock: only the valves change things by themselves ----------
+  let last = performance.now(), lastDraw = 0;
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.cell && S.valve !== 'closed') { const P1 = valveStep(S.P, S.valve, dt); if (P1 !== S.P) update(() => { S.P = P1; }); }
+    else if (!reduce && !isWhite() && now - lastDraw > 60) { lastDraw = now; drawTop(now); }
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- readings for the worksheet (tools/readings_panel.py) ----------
+  window.vdVersion = 'michelson@2026-10-24';
+  window.vdShowCols = [['reading_um', 'micrometer (μm)'], ['N', 'N'], ['P_kPa', 'P (kPa)']];
+  window.vdReadingRow = () => ({
+    source: S.src === 'mystery' ? 'mystery laser' : SOURCES[S.src].name, reading_um: f(S.m, 1), zeroed_at_um: f(S.zeroAt, 1),
+    P_kPa: S.cell ? f(S.P, 1) : '', N: isWhite() ? '' : S.N, cell: S.cell ? 'in' : 'out', tilt_lr_arcmin: S.tx, tilt_ud_arcmin: S.ty,
+    T_room_C: ROOM.T, cell_L_cm: S.cell ? 5.00 : '' });
+
+  // ---------- about ----------
+  $('about1').textContent = 'The light comes to a point 30 mm before the beam splitter (a laser through a short diverging lens, or a lamp through a pinhole). The splitter sends half of it to the movable mirror M₁ and half to the fixed mirror M₂; each comes back and half of each reaches the screen, 150 mm from the splitter. The arms are 100 mm long. Each mirror makes an image of the point, so the screen sees two point sources, one behind the other on the axis, 2d apart when M₁ is d farther than M₂. The pattern drawn is exactly that of two equal coherent points: bright where the paths differ by a whole number of wavelengths. Seen this way the fringes are circles. Tilting M₂ moves its image sideways; near equal paths the fringes become nearly straight lines. The compensator is a plate identical to the splitter, so both beams pass the same glass. The splitter is taken as an ideal 50:50 one that gives both beams the same phase, so equal paths are bright. The brightness falls off toward the edge of the screen as a beam 50 mm in radius would (the same for both beams).';
+  $('about2').textContent = 'The micrometer reads the mirror\'s position directly, to 0.1 μm (in a real instrument a lever reduces the micrometer\'s motion so that one division is 1 μm), with no backlash. The arms are equal at a reading between 130 and 160 μm. The fringe counter is a photodiode at the screen\'s centre: it adds one for each bright fringe that passes, whichever way it moves, like a real one. It cannot follow a new light source or the cell being put in or taken out, so those do not count. With two lines (sodium) it follows the combined fringe. White light fringes cannot be counted.';
+  $('about3').textContent = 'Light: the lasers and lamp lines are treated as perfectly sharp (a He–Ne laser\'s coherence length is tens of centimetres, far longer than the 1 mm of travel here). Wavelengths are from the NIST Atomic Spectra Database, given in standard air: He–Ne red 632.816 nm, He–Ne green 543.365 nm, mercury green 546.074 nm, sodium D2 588.995 nm and D1 589.592 nm (D2 twice as bright). In the room\'s air (dry, 20.0 °C, 101.325 kPa, chosen values) each is a little longer. The mystery laser is between 450 and 680 nm. White light has the CIE D65 spectrum from 380 to 780 nm, seen through the CIE 1931 colour matching functions (the Wyman, Sloan and Shirley fit); each 5 nm band is averaged over its width so that distant fringes wash out to white as they should.';
+  $('about4').textContent = 'Gas cell: 5.00 cm long inside, in the arm to M₂. Its windows add the same path whether it is full or empty, so they are left out. Air\'s index from Ciddor (Applied Optics, 1996) for dry air with 450 ppm CO₂: n − 1 = 2.7653 × 10⁻⁴ at 632.99 nm (vacuum wavelength), 15 °C and 101.325 kPa, which agrees with Edlén\'s 1966 formula to 5 parts in 10⁵. At other pressures n − 1 is scaled in proportion to the density of an ideal gas, P/T: linear in pressure at constant temperature (good to better than 5 parts in 10⁴). The cell stays at the room\'s 20.0 °C. The gauge reads to 0.1 kPa. The pump takes the cell to 2 Pa (time constant 4 s); the needle valve lets air in at 1.0 kPa/s, slowing over the last 2 kPa. Rays cross the cell within 6° of the axis, so the extra path in the cell is taken as 2L(n − 1) across the whole screen.';
+
+  // ---------- size, theme, start ----------
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('paneTop').getBoundingClientRect(), q = $('paneScr').getBoundingClientRect();
+    W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    SW = q.width; SH = q.height; scr.width = Math.round(SW * dpr); scr.height = Math.round(SH * dpr); redraw();
+  }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); newMystery(true); S.mysN = 1;
+  const q = new URLSearchParams(location.search), first = PRESETS[q.get('setup')] ? q.get('setup') : 'hene';
+  applyPreset(first);
+  new ResizeObserver(resize).observe($('paneTop')); new ResizeObserver(resize).observe($('paneScr')); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__mi = { S, applyPreset, update, zeroCounter, setMic, sync, redraw, newMystery, centreOrder, lamInRoom, nm1Air, SOURCES, GEO, ROOM,
+    setP: (P) => { update(() => { S.P = P; }); sync(); } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

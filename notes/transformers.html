@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Transformers: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Transformers</h1><ul class="meta"><li><a href="../demos/transformers.html">Open the demo</a></li><li>Intro physics (mutual inductance, AC, power transmission)</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A transformer works only on changing current: the changing flux in the shared iron core makes the same voltage per turn in both coils, so V_S/V_P = N_S/N_P.</li>
+<li>Power in equals power out in an ideal transformer, so raising the voltage lowers the current by the same factor: I_S/I_P = N_P/N_S. A load R on the secondary looks like (N_P/N_S)²R to the source.</li>
+<li>With no load an ideal transformer draws nothing; a real one draws a small magnetizing current a quarter cycle behind the voltage, which takes almost no power. Loading the secondary pulls more current into the primary (Lenz's law).</li>
+<li>A line carrying power P at voltage V carries I = P/V and loses I²R = P²R/V². Transformers make high voltage transmission possible, and high voltage is what keeps the loss small.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know Faraday's law and rms values. The demo has two views. <strong>Transformer</strong>: an AC source, a laminated iron core, a primary and a secondary coil with adjustable turns, and a load resistor, with rms meters and an oscilloscope of v_P, v_S, i_P and i_S (each trace scaled to its own peak). The model is either the textbook's <strong>ideal</strong> transformer or a <strong>real</strong> one (coupled coils on a core of relative permeability 4000, copper windings, adjustable coupling k; no core loss or saturation). <strong>Power line</strong>: a 12 kV generator, an ideal step up to the transmission voltage, a line of resistance R, an ideal step down to 240 V and a town.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Step down, 120 V to 12 V.</strong> Ask Q1 first. 400 and 40 turns, 10 Ω load: 12.00 V, 1.200 A, and the primary draws 120.0 mA; 14.40 W in and out. Slide the secondary turns and watch V_S follow.</li>
+<li><strong>Step up, 12 V to 120 V.</strong> The same transformer turned round: ten times the voltage, a tenth of the current.</li>
+<li><strong>Doorbell transformer.</strong> Q2 (OpenStax Check Your Understanding 15.9). Turn Blind on to hide the ratios and the resistance the source sees.</li>
+<li><strong>Real transformer, no load.</strong> Q4. The primary still draws 89.05 mA, almost 90° behind the voltage, and takes only 15.6 mW. Add a 10 Ω load: the primary current rises and moves toward the voltage's phase, and V_S sags to 11.70 V.</li>
+<li><strong>Utility pole, 12 kV to 240 V</strong> and then <strong>Power line.</strong> Q3 (OpenStax Example 15.6), then Q5: drag the transmission voltage and watch the loss curve fall as 1/V².</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> A transformer steps 120 V down to 12 V with 400 turns on the primary and a 10 Ω load on the secondary. Predict the secondary turns, the secondary and primary currents, the power in and out, and the resistance the source sees.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> OpenStax Check Your Understanding 15.9: line voltage 110 V is stepped down to 9.0 V to deliver 0.50 A to a doorbell. Find N_P/N_S, the primary current, and the resistance the 110 V source sees.</p></div>
+
+<div class="q"><p><strong>Q3.</strong> OpenStax Example 15.6: a utility pole transformer steps 12 kV down to 240 V, and the line to it has a resistance of 200 Ω. With 2.0 A in the primary, find the turns ratio, the secondary current and the power lost in the line. What would the line lose carrying the same power at 240 V?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In <strong>Real transformer, no load</strong>, nothing is connected to the secondary, yet the primary draws about 89 mA from the 120 V source. Why does it draw a current, why does that current lag the voltage by almost 90°, and how much power does it take?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> A station sends 10 MW down a line whose two wires have 10 Ω in all. Find the share of the power lost at 69 kV and at 765 kV.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> The peak field in the bench core is 0.70 T at 120 V, 60 Hz on 400 turns, whatever the load. Why does the load not change it? What happens to it if the same transformer is run at 50 Hz?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A step up transformer makes energy."</strong> It raises the voltage only by lowering the current; the power out is never more than the power in.</li>
+<li><strong>"A transformer works on DC."</strong> A steady current makes a steady flux, and a steady flux induces nothing.</li>
+<li><strong>"An unloaded transformer draws its full rated current."</strong> An ideal one draws none; a real one draws a small magnetizing current that is almost all reactive.</li>
+<li><strong>"High voltage lines lose less because high voltage is more efficient."</strong> The loss is I²R; high voltage helps only because it lowers I for the same power.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li><strong>Ideal.</strong> V_S = (N_S/N_P)V_P in phase with V_P, I_S = V_S/R, I_P = (N_S/N_P)I_S; the core flux is Φ = V_P/(jωN_P), so the peak field is B = √2 V_P/(ωN_P A).</li>
+<li><strong>Real.</strong> L = μ_r μ₀N²A/l for each coil, M = k√(L_P L_S), R = ρ_Cu N²(turn length)/(copper area) with each winding given the same copper area (so the referred resistances are equal). Bench core: A = 16 cm², l = 0.36 m, turns 0.22 m, 3.0 cm² copper per winding; pole core: A = 225 cm², l = 1.2 m, turns 0.80 m, 30 cm² copper. Solved exactly in steady AC; tested so that P_in = P_out + copper loss and so that it tends to the ideal model as k → 1, R → 0 and μ_r → ∞. Real distribution transformers have k above 0.999; at k = 0.98 the leakage is large enough to see easily.</li>
+<li><strong>Not modelled.</strong> Hysteresis and eddy current loss in the core, saturation (the readout flags peak fields above 1.6 T), winding capacitance, and three phase wiring on the line.</li>
+<li><strong>Line.</strong> I = P/V, loss I²R, delivered P − I²R at V − IR; the town transformer has the fixed ratio V : 240 V, so the houses see 240(1 − PR/V²). Line inductance and capacitance are neglected.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>Faraday's Law</strong> (two coils setup) for mutual inductance and with <strong>Circuits</strong> (AC) for reactance and power factor.</li>
+<li>Homework: the 10 Ω line in Q5 is about 59 km of a pair of 2.0 cm aluminum wires. How long could the line be at 765 kV for the same 2.1% loss as at 69 kV?</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

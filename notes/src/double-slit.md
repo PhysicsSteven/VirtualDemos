@@ -21,6 +21,7 @@ Students should know two slit interference for light (d sin θ = mλ, spacing λ
 2. **One slit.** Slit 2 is closed. The fringes are gone and the single slit pattern remains. Point to a position that was dark with both slits open: it now gets hits (Q3). Click slit 2 on the drawing to open it again.
 3. **Which slit detector on.** Every electron is now recorded at slit 1 or slit 2, and the hits are colored by slit. The fringes vanish. Lower **Detector efficiency η** to 50% and let the screen fill again (Q4).
 4. **Light, red laser.** The same experiment with single photons, as in G. I. Taylor's faint light experiment. Read the **Predicted pattern** readouts: fringes 2.6 mm apart and nine bright fringes inside the central envelope (Q6).
+   To measure rather than read, tick **Cursors on the screen** under **Measure**: the predictions hide, and students put cursors A and B on bright fringes −3 and +3 and divide B − A by 6. The falling envelope pulls each fringe peak about 1.7% toward the center here (d/a = 5), so a careful measurement comes out slightly below λL/d. This is the double slit worksheet.
 5. **Buckyballs (Arndt 1999 style, grating).** A molecule of 60 carbon atoms at 220 m/s has λ = 2.5 pm. With d = 2a the second order falls on an envelope zero and is missing (Q5).
 6. **Change the momentum.** Back with electrons, lower **Accelerating voltage** from 50 kV to 12.5 kV and predict the new fringe spacing before reading it (Q7).
 

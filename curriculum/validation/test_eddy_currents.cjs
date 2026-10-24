@@ -29,4 +29,12 @@ group('Lenz: rings above a falling N-down magnet circulate clockwise seen from a
 group('conductivity: copper at 20 °C, colder conducts better; liquid nitrogen about 7×', () => {
   const cu = c.PIPES[0]; near(c.sigmaAt(cu, 20), 5.96e7, 1e-12); assert(c.sigmaAt(cu, 0) > c.sigmaAt(cu, 20)); near(c.sigmaAt(cu, -196) / 5.96e7, 7.2, 1e-12); assert.equal(c.sigmaAt(c.PIPES[2], 20), 0);
 });
+group('conductivity below −50 °C: continuous at −50 °C, resistivity a straight line in T down to −196 °C (both metals)', () => {
+  for (const P of c.PIPES.slice(0, 2)) {
+    near(c.sigmaAt(P, -50 - 1e-9), c.sigmaAt(P, -50), 1e-9, P.name + ' at −50 °C');
+    near(1 / c.sigmaAt(P, -123), 0.5 * (1 / c.sigmaAt(P, -50) + 1 / c.sigmaAt(P, -196)), 1e-12, P.name + ' midpoint');
+    near(1 / c.sigmaAt(P, -50) - 1 / c.sigmaAt(P, -100), 1 / c.sigmaAt(P, -100) - 1 / c.sigmaAt(P, -150), 1e-9, P.name + ' equal steps');
+    let prev = c.sigmaAt(P, 100); for (let T = 99; T >= -196; T--) { const s = c.sigmaAt(P, T); assert(s > prev, P.name + ' colder conducts better at ' + T); prev = s; }
+  }
+});
 console.log(`${n} eddy-currents test groups passed`);

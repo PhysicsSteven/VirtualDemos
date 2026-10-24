@@ -1,0 +1,637 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Transformers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --vp: #c2412d; --vs: #2b60b5; --ip: #b4730a; --is: #2f8a4e; --flux: #8a5cd6; --copper: #c4773b; --heat: #e0662d; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --vp: #ff7a5c; --vs: #74b0ff; --ip: #f0b44a; --is: #66d38c; --flux: #b597ff; --copper: #e0955a; --heat: #ff8a4d; } }
+:root[data-theme="dark"] { --vp: #ff7a5c; --vs: #74b0ff; --ip: #f0b44a; --is: #66d38c; --flux: #b597ff; --copper: #e0955a; --heat: #ff8a4d; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.pane { position: relative; flex: 1 1 auto; min-height: 400px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; touch-action: pan-y; }
+.pane canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.curvebox { position: relative; flex: none; height: 210px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card > .wide { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card [hidden] { display: none !important; }
+.rail details.more > p + p { margin-top: 6px; }
+.readout .warn { color: var(--heat); }
+@media (max-width: 820px) { .pane { min-height: 0; height: 400px; flex: none; } .curvebox { height: 200px; } }
+@media (max-width: 520px) { .pane { height: 360px; } .curvebox { height: 230px; } }
+@media (min-width: 821px) { .stage { min-height: 780px; } :root[data-projector="on"] .stage { overflow-y: auto; } :root[data-projector="on"] .pane { flex: none; height: 56vh; min-height: 360px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Transformers</h1>
+      <p>Two coils on one iron core: the alternating current in the primary makes a changing flux, and the flux makes a voltage in the secondary. Change the turns, load it, make it real, then send power down a long line.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">rms values · SI units</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/transformers.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/transformers.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM14 2h1v1h-1zM21 2h4v1h-4zM27 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h3v1h-3zM15 3h2v1h-2zM20 3h2v1h-2zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h3v1h-3zM21 4h1v1h-1zM23 4h2v1h-2zM27 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM18 5h2v1h-2zM22 5h2v1h-2zM25 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h3v1h-3zM15 6h1v1h-1zM18 6h1v1h-1zM21 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM13 7h2v1h-2zM17 7h2v1h-2zM25 7h1v1h-1zM27 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h1v1h-1zM17 9h1v1h-1zM19 9h2v1h-2zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h7v1h-7zM15 10h3v1h-3zM21 10h1v1h-1zM23 10h4v1h-4zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM2 11h3v1h-3zM9 11h1v1h-1zM11 11h3v1h-3zM15 11h1v1h-1zM18 11h1v1h-1zM20 11h1v1h-1zM23 11h3v1h-3zM28 11h2v1h-2zM31 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h1v1h-1zM4 12h5v1h-5zM11 12h8v1h-8zM20 12h4v1h-4zM25 12h2v1h-2zM29 12h1v1h-1zM31 12h3v1h-3zM36 12h1v1h-1zM38 12h1v1h-1zM3 13h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM13 13h2v1h-2zM18 13h5v1h-5zM24 13h2v1h-2zM29 13h1v1h-1zM31 13h8v1h-8zM5 14h2v1h-2zM8 14h1v1h-1zM11 14h2v1h-2zM16 14h3v1h-3zM25 14h2v1h-2zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM3 15h5v1h-5zM12 15h2v1h-2zM15 15h1v1h-1zM17 15h2v1h-2zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h1v1h-1zM5 16h1v1h-1zM7 16h2v1h-2zM10 16h4v1h-4zM15 16h3v1h-3zM20 16h3v1h-3zM27 16h3v1h-3zM31 16h2v1h-2zM34 16h3v1h-3zM38 16h1v1h-1zM2 17h2v1h-2zM5 17h1v1h-1zM10 17h1v1h-1zM12 17h3v1h-3zM21 17h1v1h-1zM23 17h3v1h-3zM29 17h2v1h-2zM32 17h2v1h-2zM35 17h3v1h-3zM2 18h1v1h-1zM6 18h4v1h-4zM11 18h1v1h-1zM14 18h4v1h-4zM19 18h3v1h-3zM23 18h3v1h-3zM27 18h1v1h-1zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h1v1h-1zM6 19h1v1h-1zM9 19h1v1h-1zM12 19h1v1h-1zM15 19h2v1h-2zM19 19h1v1h-1zM24 19h1v1h-1zM29 19h1v1h-1zM35 19h2v1h-2zM3 20h2v1h-2zM6 20h1v1h-1zM8 20h1v1h-1zM10 20h1v1h-1zM13 20h1v1h-1zM15 20h2v1h-2zM18 20h2v1h-2zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h3v1h-3zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM3 21h5v1h-5zM9 21h10v1h-10zM20 21h3v1h-3zM24 21h1v1h-1zM26 21h2v1h-2zM29 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM2 22h1v1h-1zM8 22h4v1h-4zM13 22h1v1h-1zM16 22h1v1h-1zM18 22h2v1h-2zM21 22h1v1h-1zM25 22h2v1h-2zM28 22h8v1h-8zM4 23h1v1h-1zM6 23h1v1h-1zM11 23h1v1h-1zM13 23h2v1h-2zM17 23h1v1h-1zM19 23h1v1h-1zM21 23h2v1h-2zM24 23h2v1h-2zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM2 24h1v1h-1zM5 24h1v1h-1zM7 24h2v1h-2zM12 24h2v1h-2zM16 24h2v1h-2zM23 24h1v1h-1zM25 24h2v1h-2zM29 24h5v1h-5zM35 24h1v1h-1zM38 24h1v1h-1zM3 25h1v1h-1zM6 25h2v1h-2zM9 25h2v1h-2zM12 25h1v1h-1zM15 25h1v1h-1zM20 25h3v1h-3zM28 25h1v1h-1zM30 25h2v1h-2zM33 25h4v1h-4zM2 26h1v1h-1zM5 26h1v1h-1zM8 26h1v1h-1zM11 26h1v1h-1zM17 26h1v1h-1zM19 26h1v1h-1zM22 26h3v1h-3zM26 26h1v1h-1zM32 26h1v1h-1zM2 27h4v1h-4zM7 27h1v1h-1zM9 27h2v1h-2zM12 27h4v1h-4zM20 27h2v1h-2zM24 27h2v1h-2zM27 27h1v1h-1zM29 27h2v1h-2zM34 27h2v1h-2zM2 28h2v1h-2zM7 28h2v1h-2zM11 28h2v1h-2zM14 28h2v1h-2zM17 28h1v1h-1zM24 28h1v1h-1zM26 28h1v1h-1zM28 28h3v1h-3zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM10 29h1v1h-1zM13 29h1v1h-1zM16 29h1v1h-1zM18 29h1v1h-1zM21 29h1v1h-1zM24 29h2v1h-2zM28 29h2v1h-2zM31 29h3v1h-3zM35 29h2v1h-2zM38 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM10 30h2v1h-2zM14 30h4v1h-4zM21 30h2v1h-2zM26 30h2v1h-2zM30 30h7v1h-7zM38 30h1v1h-1zM10 31h2v1h-2zM14 31h3v1h-3zM19 31h6v1h-6zM26 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h3v1h-3zM14 32h1v1h-1zM16 32h6v1h-6zM25 32h2v1h-2zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h2v1h-2zM14 33h1v1h-1zM16 33h1v1h-1zM18 33h1v1h-1zM21 33h3v1h-3zM25 33h1v1h-1zM27 33h4v1h-4zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h2v1h-2zM15 34h1v1h-1zM18 34h1v1h-1zM20 34h1v1h-1zM22 34h2v1h-2zM25 34h2v1h-2zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM14 35h2v1h-2zM22 35h5v1h-5zM29 35h1v1h-1zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM16 36h1v1h-1zM19 36h2v1h-2zM24 36h2v1h-2zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h3v1h-3zM16 37h2v1h-2zM19 37h1v1h-1zM24 37h1v1h-1zM26 37h1v1h-1zM28 37h1v1h-1zM31 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h1v1h-1zM14 38h3v1h-3zM18 38h1v1h-1zM21 38h2v1h-2zM25 38h2v1h-2zM30 38h1v1h-1zM32 38h2v1h-2zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="tr" aria-pressed="true">Transformer</button>
+          <button type="button" data-v="line" aria-pressed="false">Power line</button>
+        </div>
+        <button type="button" class="spin" id="go">Pause</button>
+        <span class="count mono" id="clock">slowed: one cycle every 2 s</span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="An AC source drives the primary coil of an iron core transformer; the secondary coil feeds a load resistor. Space pauses or plays the animation."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" role="img" aria-label="Oscilloscope traces of the primary and secondary voltages and currents."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardTr" role="group" aria-label="The transformer, its source and its load">
+          <span class="card-title">Transformer on the bench: an AC source drives the primary, a resistor loads the secondary</span>
+          <div><div class="slider-head"><label for="sVp">Source voltage V<sub>P</sub> (rms)</label><output id="oVp" class="mono" for="sVp"></output></div><input type="range" id="sVp" min="0" step="1"></div>
+          <div><div class="slider-head"><label for="sF">Frequency f</label><output id="oF" class="mono" for="sF"></output></div><input type="range" id="sF" min="0" step="1"></div>
+          <div><div class="slider-head"><label for="sNp">Primary turns N<sub>P</sub></label><output id="oNp" class="mono" for="sNp"></output></div><input type="range" id="sNp" min="0" step="1"></div>
+          <div><div class="slider-head"><label for="sNs">Secondary turns N<sub>S</sub></label><output id="oNs" class="mono" for="sNs"></output></div><input type="range" id="sNs" min="0" step="1"></div>
+          <div><div class="slider-head"><label for="sRL">Load resistance R</label><output id="oRL" class="mono" for="sRL"></output></div><input type="range" id="sRL" min="0" step="1"></div>
+          <div class="wide">
+            <span class="lab">Core</span>
+            <div class="seg" role="group" aria-label="Core" id="coreSeg">
+              <button type="button" data-c="bench" aria-pressed="true">Bench</button>
+              <button type="button" data-c="pole" aria-pressed="false">Utility pole</button>
+            </div>
+          </div>
+          <div class="wide">
+            <span class="lab">Model</span>
+            <div class="seg" role="group" aria-label="Model" id="modelSeg">
+              <button type="button" data-m="ideal" aria-pressed="true">Ideal</button>
+              <button type="button" data-m="real" aria-pressed="false">Real core and windings</button>
+            </div>
+          </div>
+          <div id="kWrap" hidden><div class="slider-head"><label for="sK">Coupling k</label><output id="oK" class="mono" for="sK"></output></div><input type="range" id="sK" min="0.900" max="1" step="0.001"></div>
+        </div>
+        <div class="shelf-card" id="cardLine" role="group" aria-label="The power line" hidden>
+          <span class="card-title">From the power station to a town: 12 kV generator, step up, a long line, step down to 240 V</span>
+          <div><div class="slider-head"><label for="sP">Power sent P</label><output id="oP" class="mono" for="sP"></output></div><input type="range" id="sP" min="0" step="1"></div>
+          <div><div class="slider-head"><label for="sVT">Transmission voltage V</label><output id="oVT" class="mono" for="sVT"></output></div><input type="range" id="sVT" min="0" step="1"></div>
+          <div><div class="slider-head"><label for="sRline">Line resistance R (both wires)</label><output id="oRline" class="mono" for="sRline"></output></div><input type="range" id="sRline" min="0" step="1"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/transformers.html" target="transformers-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="stepdown" aria-pressed="true">Step down, 120 V to 12 V</button>
+          <button type="button" data-p="stepup" aria-pressed="false">Step up, 12 V to 120 V</button>
+          <button type="button" data-p="doorbell" aria-pressed="false">Doorbell transformer</button>
+          <button type="button" data-p="pole" aria-pressed="false">Utility pole, 12 kV to 240 V</button>
+          <button type="button" data-p="real" aria-pressed="false">Real transformer, no load</button>
+          <button type="button" data-p="line" aria-pressed="false">Power line</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="transformers" data-title="Transformers" data-demo="transformers">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the ratios, the powers and the loss curve</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="aboutTr"></p>
+          <p class="hint" id="aboutReal"></p>
+          <p class="hint" id="aboutLine"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Transformers. Everything here runs in Node (curriculum/validation/test_transformers.cjs).
+     OpenStax University Physics Volume 2 (2016), section 15.6: an ideal transformer has all the flux in the core and no losses, so
+     v_S/v_P = N_S/N_P (Equations 15.20 and 15.21), i_S v_S = i_P v_P, and I_S/I_P = N_P/N_S (Equation 15.23); a load R on the
+     secondary looks like (N_P/N_S)² R to the source. Resistivities from its Table 9.1 (copper 1.68e-8, aluminum 2.65e-8 ohm m).
+     mu0 from CODATA 2022. All voltages and currents are rms phasors {re, im}; the source voltage is the phase reference. */
+  const MU0 = 1.25663706127e-6, RHO_CU = 1.68e-8, RHO_AL = 2.65e-8;
+  const cx = (re, im = 0) => ({ re, im });
+  const cadd = (a, b) => cx(a.re + b.re, a.im + b.im), csub = (a, b) => cx(a.re - b.re, a.im - b.im);
+  const cmul = (a, b) => cx(a.re * b.re - a.im * b.im, a.re * b.im + a.im * b.re);
+  const cdiv = (a, b) => { const d = b.re * b.re + b.im * b.im; return cx((a.re * b.re + a.im * b.im) / d, (a.im * b.re - a.re * b.im) / d); };
+  const cabs = (a) => Math.hypot(a.re, a.im), carg = (a) => Math.atan2(a.im, a.re);
+  /* Cores for the real model (chosen values, typical of laminated silicon steel; stated on the page). A: core cross section (m²),
+     l: mean magnetic path (m), mur: relative permeability (no saturation, hysteresis or eddy currents are modelled), turn: mean
+     length of one turn (m), Acu: copper cross section given to each winding (m²). Each winding fills the same copper area, so a
+     winding of N turns has R = rho_Cu N² turn / Acu and inductance L = mur mu0 N² A / l. */
+  const CORES = { bench: { name: 'Bench core', A: 16e-4, l: 0.36, mur: 4000, turn: 0.22, Acu: 3.0e-4 },
+    pole: { name: 'Utility pole core', A: 225e-4, l: 1.2, mur: 4000, turn: 0.80, Acu: 3.0e-3 } };
+  const windingL = (core, N) => core.mur * MU0 * N * N * core.A / core.l;
+  const windingR = (core, N) => RHO_CU * N * N * core.turn / core.Acu;
+  /* p: { Vp (rms, V), f (Hz), Np, Ns, RL (ohm; Infinity for no load), model: 'ideal' | 'real', k (coupling, real only), core } */
+  function solve(p) {
+    const w = 2 * Math.PI * p.f, core = CORES[p.core] || CORES.bench, open = !isFinite(p.RL), Vp = cx(p.Vp);
+    let Ip, Is, Vs, Rp = 0, Rs = 0, Lp = Infinity, Ls = Infinity, M = Infinity, flux;
+    if (p.model !== 'real') {
+      const n = p.Ns / p.Np; Vs = cx(n * p.Vp); Is = open ? cx(0) : cx(n * p.Vp / p.RL); Ip = cx(n * Is.re);
+      flux = cdiv(Vp, cx(0, w * p.Np));                       /* v_P = N_P dPhi/dt: Phi lags v_P by 90° */
+    } else {
+      Lp = windingL(core, p.Np); Ls = windingL(core, p.Ns); M = p.k * Math.sqrt(Lp * Ls); Rp = windingR(core, p.Np); Rs = windingR(core, p.Ns);
+      /* coupled coils: V_P = (R_P + jwL_P) I_P − jwM I_S and jwM I_P = (R_S + jwL_S + R) I_S, with I_S the current out to the load */
+      if (open) { Ip = cdiv(Vp, cx(Rp, w * Lp)); Is = cx(0); Vs = cmul(cx(0, w * M), Ip); }
+      else {
+        const Z2 = cx(Rs + p.RL, w * Ls), Zin = cadd(cx(Rp, w * Lp), cdiv(cx(w * w * M * M), Z2));
+        Ip = cdiv(Vp, Zin); Is = cdiv(cmul(cx(0, w * M), Ip), Z2); Vs = cmul(cx(p.RL), Is);
+      }
+      flux = cdiv(csub(cmul(cx(Lp), Ip), cmul(cx(M), Is)), cx(p.Np));   /* flux linking the primary, per turn */
+    }
+    const Pin = Vp.re * Ip.re + Vp.im * Ip.im, Pout = open ? 0 : cabs(Is) ** 2 * p.RL, Pcu = cabs(Ip) ** 2 * Rp + cabs(Is) ** 2 * Rs;
+    const Bpk = Math.SQRT2 * cabs(flux) / core.A;
+    return { Vp, Vs, Ip, Is, Pin, Pout, Pcu, eff: Pin > 0 ? Pout / Pin : NaN, Zin: cabs(Ip) > 0 ? p.Vp / cabs(Ip) : Infinity,
+      Bpk, flux, Rp, Rs, Lp, Ls, M, w };
+  }
+  /* instantaneous value of an rms phasor X at time t: sqrt2 |X| cos(wt + arg X) */
+  const inst = (X, w, t) => Math.SQRT2 * cabs(X) * Math.cos(w * t + carg(X));
+  /* Power line: the station sends P at the transmission voltage V (after an ideal step up from its 12 kV generator), so the line
+     carries I = P/V and loses I²R (R for both wires together); the town receives P − I²R at V − IR, and an ideal step down (ratio
+     V : 240 V) feeds the houses. Line and load are taken as resistive (the line's inductance and capacitance are neglected). The
+     line cannot do it when IR reaches V, which is the same as I²R reaching P. */
+  const V_GEN = 12000, V_HOUSE = 240;
+  function line(P, V, R) {
+    const I = P / V, loss = I * I * R, ok = loss < P;
+    return { I, Igen: P / V_GEN, loss, frac: loss / P, delivered: P - loss, Vend: V - I * R, Vhouse: V_HOUSE * (V - I * R) / V, ok };
+  }
+  /* resistance per km of a pair of aluminum wires 2.0 cm across, for the length readout */
+  const PAIR_OHM_PER_KM = 2 * RHO_AL * 1000 / (Math.PI * 0.01 * 0.01);
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VG = window.VDGear;
+  const LISTS = {
+    Vp: [1, 2, 3, 5, 6, 9, 10, 12, 15, 20, 24, 30, 48, 50, 100, 110, 115, 120, 200, 220, 230, 240, 277, 400, 480, 600, 1000, 2400, 4160, 7200, 12000, 13800, 20000],
+    f: [10, 25, 50, 60, 100, 200, 400, 1000],
+    N: (() => { const a = []; for (let n = 5; n <= 50; n += 5) a.push(n); for (let n = 60; n <= 500; n += 10) a.push(n); for (let n = 550; n <= 1000; n += 50) a.push(n); for (let n = 1100; n <= 5000; n += 100) a.push(n); return a; })(),
+    RL: [0.5, 1, 1.5, 2, 2.4, 3, 4, 5, 6, 8, 10, 12, 15, 18, 20, 25, 30, 40, 50, 60, 80, 100, 120, 150, 200, 250, 300, 400, 500, 1000, 2000, 5000, 10000, 100000, Infinity],
+    P: [1000, 2000, 5000, 10000, 24000, 50000, 100000, 250000, 500000, 1e6, 2e6, 5e6, 1e7, 2e7, 5e7, 1e8, 2e8, 5e8, 1e9],
+    VT: [240, 2400, 4160, 12000, 13800, 24000, 34500, 69000, 115000, 138000, 230000, 345000, 500000, 765000],
+    Rline: [0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500],
+  };
+  const S = { view: 'tr', preset: 'stepdown', run: true, blind: false, phase: 0,
+    tr: { Vp: 120, f: 60, Np: 400, Ns: 40, RL: 10, model: 'ideal', k: 0.98, core: 'bench' },
+    ln: { P: 24000, VT: 12000, R: 200 } };
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
+  let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const dark = () => (VG ? VG.dark() : false);
+  const g6 = (v) => +(+v).toPrecision(6);
+  const PFX = [[-9, 'n'], [-6, 'µ'], [-3, 'm'], [0, ''], [3, 'k'], [6, 'M'], [9, 'G']];
+  /* v with a metric prefix and d significant figures: 0.12 A -> "120.0 mA" */
+  function si(v, u, d = 4) {
+    if (!isFinite(v)) return '—'; if (v === 0) return `0 ${u}`;
+    const a = Math.abs(v); let b = PFX[0]; for (const q of PFX) if (a >= 10 ** q[0] * 0.99995) b = q;
+    return `${(v / 10 ** b[0]).toPrecision(d).replace('-', '−')} ${b[1]}${u}`;
+  }
+  const ohms = (r) => (isFinite(r) ? si(r, 'Ω', 3).replace(/\.0+ /, ' ').replace(/(\.\d*?)0+ /, '$1 ') : 'none (open)');
+  const plainNum = (v, d = 4) => (isFinite(v) ? (+v.toPrecision(d)).toLocaleString('en-US').replace(/,/g, ' ') : '—');
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
+      vp: g('--vp'), vs: g('--vs'), ip: g('--ip'), is: g('--is'), flux: g('--flux'), copper: g('--copper'), heat: g('--heat'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+  const trNow = () => solve(S.tr);
+  const lnNow = () => line(S.ln.P, S.ln.VT, S.ln.R);
+
+  // ---------- drawing helpers ----------
+  function txt(s, x, y, o = {}) {
+    ctx.save(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.w || 600} ${(o.s || 12) * proj()}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle';
+    ctx.fillText(s, x, y); ctx.restore();
+  }
+  function meter(x, y, w, h, text, name, col) {
+    if (VG) { VG.box(ctx, x - 5, y - 5, w + 10, h + 20, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text, col ? { color: col } : {}); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
+    else txt(`${name}: ${text}`, x, y + h / 2, { m: true });
+  }
+  function arrow(x1, y1, x2, y2, w, col, alpha = 1) {
+    const a = Math.atan2(y2 - y1, x2 - x1), h = Math.max(6, w * 2.4);
+    ctx.save(); ctx.globalAlpha = alpha; ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - Math.cos(a) * h * 0.8, y2 - Math.sin(a) * h * 0.8); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - Math.cos(a - 0.45) * h, y2 - Math.sin(a - 0.45) * h); ctx.lineTo(x2 - Math.cos(a + 0.45) * h, y2 - Math.sin(a + 0.45) * h); ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+  /* a wire as a polyline, with charge dots that slide back and forth along it (AC): shift is the dots' displacement in px */
+  function wire(pts, col, shift, wdt = 3) {
+    ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round'; ctx.strokeStyle = dark() ? '#c98b52' : '#a8622d'; ctx.lineWidth = wdt * proj();
+    ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = 1; ctx.stroke();
+    if (shift != null) {
+      const segs = []; let L = 0; for (let i = 1; i < pts.length; i++) { const l = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]); segs.push([L, l, pts[i - 1], pts[i]]); L += l; }
+      const gap = 22 * proj(); ctx.fillStyle = col;
+      for (let s = ((shift % gap) + gap) % gap; s < L; s += gap) { const sg = segs.find((q) => s >= q[0] && s <= q[0] + q[1]); if (!sg) continue; const u = (s - sg[0]) / (sg[1] || 1);
+        ctx.beginPath(); ctx.arc(sg[2][0] + (sg[3][0] - sg[2][0]) * u, sg[2][1] + (sg[3][1] - sg[2][1]) * u, 2.6 * proj(), 0, 7); ctx.fill(); }
+    }
+    ctx.restore();
+  }
+  /* a coil wound round a vertical limb: loops drawn as front arcs over the limb, back arcs behind */
+  function coil(cxp, y0, y1, limbW, n, front) {
+    const rx = limbW / 2 + 7 * proj(), dy = (y1 - y0) / n, base = T.copper;
+    ctx.save(); ctx.lineCap = 'round';
+    for (let i = 0; i < n; i++) {
+      const y = y0 + (i + 0.5) * dy, th = Math.max(1.6, Math.min(5, dy * 0.75));
+      if (!front) { ctx.strokeStyle = VG ? VG.mix(base, '#000000', 0.45) : base; ctx.lineWidth = th; ctx.beginPath(); ctx.ellipse(cxp, y, rx, th * 0.9, 0, Math.PI, 2 * Math.PI); ctx.stroke(); }
+      else {
+        const g = ctx.createLinearGradient(0, y - th, 0, y + th); g.addColorStop(0, VG ? VG.mix(base, '#ffffff', 0.45) : base); g.addColorStop(0.5, base); g.addColorStop(1, VG ? VG.mix(base, '#000000', 0.35) : base);
+        ctx.strokeStyle = g; ctx.lineWidth = th; ctx.beginPath(); ctx.ellipse(cxp, y, rx, th * 0.9, 0, 0, Math.PI); ctx.stroke();
+      }
+    }
+    ctx.restore();
+  }
+  const drawnTurns = (N) => Math.max(6, Math.min(34, Math.round(4 + 8.5 * Math.log10(N))));
+
+  // ---------- transformer view ----------
+  function drawTr() {
+    const p = proj(), r = trNow(), tr = S.tr, w = r.w, ph = S.phase, by = Math.round(H * 0.84);
+    if (VG) { VG.wall(ctx, 0, 0, W, by); VG.bench(ctx, 0, by, W, 14, Math.max(14, H - by - 2)); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    const tt = ph / w;   /* the time shown: the animation's phase, in seconds of the real waveform */
+    /* core: a square frame of laminated steel standing on the bench */
+    const narrow = W < 560, cw = Math.min(W * (narrow ? 0.38 : 0.34), 330 * p), chh = Math.min(by - 100 * p, cw * 0.95), cx0 = W / 2 - cw / 2, cy0 = by - chh - 6, limb = cw * 0.17;
+    if (VG) VG.shadow(ctx, W / 2, by, cw * 0.62, 7);
+    const steel = dark() ? '#4c5664' : '#5d6878';
+    const fillSteel = (x, y, ww, hh, vertical) => {
+      const g = vertical ? ctx.createLinearGradient(x, 0, x + ww, 0) : ctx.createLinearGradient(0, y, 0, y + hh);
+      g.addColorStop(0, VG ? VG.mix(steel, '#ffffff', 0.25) : steel); g.addColorStop(0.5, steel); g.addColorStop(1, VG ? VG.mix(steel, '#000000', 0.35) : steel);
+      ctx.fillStyle = g; ctx.fillRect(x, y, ww, hh);
+      ctx.save(); ctx.strokeStyle = 'rgba(0,0,0,0.22)'; ctx.lineWidth = 1; ctx.beginPath();
+      if (vertical) for (let xx = x + 3; xx < x + ww; xx += 3.5) { ctx.moveTo(xx, y); ctx.lineTo(xx, y + hh); } else for (let yy = y + 3; yy < y + hh; yy += 3.5) { ctx.moveTo(x, yy); ctx.lineTo(x + ww, yy); }
+      ctx.stroke(); ctx.restore();
+    };
+    fillSteel(cx0, cy0, cw, limb, false); fillSteel(cx0, cy0 + chh - limb, cw, limb, false);
+    fillSteel(cx0, cy0 + limb, limb, chh - 2 * limb, true); fillSteel(cx0 + cw - limb, cy0 + limb, limb, chh - 2 * limb, true);
+    /* flux in the core: a glow and arrows round the frame, both following Phi(t) */
+    const phiN = r.Bpk > 0 ? Math.cos(w * tt + carg(r.flux)) : 0, mid = limb / 2;
+    const path = [[cx0 + mid, cy0 + chh - mid], [cx0 + mid, cy0 + mid], [cx0 + cw - mid, cy0 + mid], [cx0 + cw - mid, cy0 + chh - mid], [cx0 + mid, cy0 + chh - mid]];
+    if (r.Bpk > 0) {
+      ctx.save(); ctx.globalAlpha = 0.18 + 0.32 * Math.abs(phiN); ctx.strokeStyle = T.flux; ctx.lineWidth = limb * 0.55; ctx.lineJoin = 'round';
+      ctx.beginPath(); path.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath(); ctx.stroke(); ctx.restore();
+      const dir = Math.sign(phiN) || 1, len = Math.max(10, limb * 0.9) * Math.abs(phiN);
+      if (len > 4) for (const [ax, ay, ux, uy] of [[cx0 + mid, cy0 + chh / 2, 0, -1], [W / 2, cy0 + mid, 1, 0], [cx0 + cw - mid, cy0 + chh / 2, 0, 1], [W / 2, cy0 + chh - mid, -1, 0]])
+        arrow(ax - dir * ux * len / 2, ay - dir * uy * len / 2, ax + dir * ux * len / 2, ay + dir * uy * len / 2, 2.4 * p, '#ffffff', 0.85);
+    }
+    if (VG) VG.label(ctx, `laminated iron core, ${tr.core === 'pole' ? '15 cm × 15 cm' : '4 cm × 4 cm'} · peak B ${si(r.Bpk, 'T', 3)}`, W / 2, cy0 - 10 * p, { a: 'center', s: 10.5 * p, c: r.Bpk > 1.6 ? T.heat : undefined });
+    /* coils */
+    const y0 = cy0 + limb + 6 * p, y1 = cy0 + chh - limb - 6 * p, xl = cx0 + limb / 2, xr = cx0 + cw - limb / 2;
+    coil(xl, y0, y1, limb, drawnTurns(tr.Np), false); coil(xr, y0, y1, limb, drawnTurns(tr.Ns), false);
+    fillSteel(cx0, cy0 + limb, limb, chh - 2 * limb, true); fillSteel(cx0 + cw - limb, cy0 + limb, limb, chh - 2 * limb, true);
+    if (r.Bpk > 0) { ctx.save(); ctx.globalAlpha = 0.18 + 0.32 * Math.abs(phiN); ctx.fillStyle = T.flux; ctx.fillRect(cx0 + limb * 0.22, cy0 + limb, limb * 0.56, chh - 2 * limb); ctx.fillRect(cx0 + cw - limb * 0.78, cy0 + limb, limb * 0.56, chh - 2 * limb); ctx.restore(); }
+    coil(xl, y0, y1, limb, drawnTurns(tr.Np), true); coil(xr, y0, y1, limb, drawnTurns(tr.Ns), true);
+    txt(`N_P = ${tr.Np}`, cx0 + limb + 20 * p, cy0 + chh / 2 - 9 * p, { a: 'left', s: 11, c: T.ink });
+    txt(`N_S = ${tr.Ns}`, cx0 + cw - limb - 20 * p, cy0 + chh / 2 + 9 * p, { a: 'right', s: 11, c: T.ink });
+    if (VG && !narrow) VG.label(ctx, 'not every turn drawn', W / 2, cy0 + chh / 2 + 28 * p, { a: 'center', s: 9.5 * p });
+    /* source on the left, load on the right */
+    const ex = limb / 2 + 7 * p, srcW = Math.min(110 * p, cx0 - 30 * p), srcX = Math.max(8 * p, cx0 - srcW - (narrow ? 14 : 44) * p), srcY = by - 70 * p;
+    const ldW = Math.min(90 * p, W - (cx0 + cw) - 30 * p), ldX = Math.min(W - ldW - 8 * p, cx0 + cw + (narrow ? 14 : 44) * p);
+    /* currents as sliding dots: amplitude scaled per circuit so both show */
+    const ampPx = (I) => (cabs(I) > 0 ? 12 * p * Math.min(1.6, 0.6 + 0.25 * Math.log10(1 + cabs(I) * 100)) : 0);
+    const shP = reduce ? null : ampPx(r.Ip) * Math.sin(w * tt + carg(r.Ip)) * 1.6, shS = reduce ? null : ampPx(r.Is) * Math.sin(w * tt + carg(r.Is)) * 1.6;
+    const topP = [[srcX + srcW / 2 - 18 * p, srcY], [srcX + srcW / 2 - 18 * p, y0 - 18 * p], [xl - ex, y0 - 18 * p], [xl - ex, y0 + 4]];
+    const botP = [[xl - ex, y1 - 4], [xl - ex, by - 22 * p], [srcX + srcW / 2 + 18 * p, by - 22 * p], [srcX + srcW / 2 + 18 * p, srcY + 4 * p]];
+    wire(topP, T.ip, shP); wire(botP, T.ip, shP);
+    const lcx = ldX + ldW / 2;
+    const topS = [[xr + ex, y0 + 4], [xr + ex, y0 - 18 * p], [lcx, y0 - 18 * p], [lcx, by - 104 * p]];
+    const botS = [[lcx, by - 20 * p], [lcx, by - 12 * p], [xr + ex + 10 * p, by - 12 * p], [xr + ex, y1 - 4]];
+    wire(topS, T.is, isFinite(tr.RL) ? shS : null); wire(botS, T.is, isFinite(tr.RL) ? shS : null);
+    /* the AC source: a generator case with a sine on its face */
+    if (VG) { VG.box(ctx, srcX, srcY, srcW, 62 * p, { color: dark() ? '#36414f' : '#3f4a58', r: 7 }); VG.plate(ctx, 'AC source', srcX + srcW / 2, srcY + 54 * p, { s: 8 * p }); }
+    else { ctx.fillStyle = T.line; ctx.fillRect(srcX, srcY, srcW, 62 * p); }
+    ctx.save(); ctx.strokeStyle = '#8ef0b0'; ctx.lineWidth = 2 * p; ctx.beginPath();
+    for (let i = 0; i <= 40; i++) { const u = i / 40, xx = srcX + srcW * 0.2 + srcW * 0.6 * u, yy = srcY + 26 * p - 12 * p * Math.sin(2 * Math.PI * u * 1.5 + (reduce ? 0 : -w * tt)); i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); }
+    ctx.stroke(); ctx.restore();
+    for (const dx of [-18, 18]) { ctx.fillStyle = dx < 0 ? '#c2412d' : '#1b1f25'; ctx.beginPath(); ctx.arc(srcX + srcW / 2 + dx * p, srcY + 2 * p, 4.5 * p, 0, 7); ctx.fill(); }
+    /* the load: a ceramic power resistor on two posts, glowing with the power it takes */
+    if (isFinite(tr.RL)) {
+      const ry = by - 104 * p, rh = 84 * p, rw = Math.min(30 * p, ldW * 0.5);
+      if (VG) { VG.rod(ctx, lcx, by - 12 * p, lcx, ry + rh, 2.5 * p, { color: '#b8c0ca' }); VG.shadow(ctx, lcx, by, rw, 4); }
+      const g = ctx.createLinearGradient(lcx - rw / 2, 0, lcx + rw / 2, 0); g.addColorStop(0, '#a99f8a'); g.addColorStop(0.35, '#efe8d8'); g.addColorStop(1, '#8b826e');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(lcx - rw / 2, ry, rw, rh, 5); ctx.fill();
+      ctx.strokeStyle = 'rgba(80,60,40,0.35)'; ctx.lineWidth = 1; for (let i = 1; i < 7; i++) { ctx.beginPath(); ctx.moveTo(lcx - rw / 2 + 2, ry + rh * i / 7); ctx.lineTo(lcx + rw / 2 - 2, ry + rh * i / 7); ctx.stroke(); }
+      const inst2 = Math.cos(w * tt + carg(r.Is)) ** 2, heat = Math.min(1, Math.log10(1 + r.Pout) / 4);
+      ctx.save(); ctx.globalAlpha = heat * (reduce ? 0.5 : 0.25 + 0.5 * inst2); ctx.shadowColor = T.heat; ctx.shadowBlur = 18 * p; ctx.fillStyle = T.heat; ctx.beginPath(); ctx.roundRect(lcx - rw / 2, ry, rw, rh, 5); ctx.fill(); ctx.restore();
+      txt(`R = ${ohms(tr.RL)}`, lcx, ry + rh + 6 * p, { a: 'center', bl: 'top', s: 11 });
+    } else {
+      txt('no load (open)', lcx, by - 60 * p, { a: 'center', s: 11, c: T.muted });
+      ctx.fillStyle = T.muted; ctx.beginPath(); ctx.arc(lcx, by - 104 * p, 4 * p, 0, 7); ctx.arc(lcx, by - 20 * p, 4 * p, 0, 7); ctx.fill();
+    }
+    /* meters (rms) */
+    const mw = Math.min(104 * p, (cx0 - 16 * p)), mh = 22 * p, my = 14 * p;
+    if (mw > 60) {
+      meter(8 * p, my, mw, mh, si(cabs(r.Vp), 'V', 4), 'V_P', '#ff9c84');
+      meter(8 * p, my + mh + 30 * p, mw, mh, si(cabs(r.Ip), 'A', 4), 'I_P', '#ffd27a');
+      meter(W - mw - 8 * p, my, mw, mh, si(cabs(r.Vs), 'V', 4), 'V_S', '#9cc8ff');
+      meter(W - mw - 8 * p, my + mh + 30 * p, mw, mh, si(cabs(r.Is), 'A', 4), 'I_S', '#8ef0b0');
+    }
+    if (VG) VG.label(ctx, tr.model === 'real' ? `real model · k = ${tr.k.toFixed(3)}` : 'ideal transformer', W / 2, cy0 - 26 * p, { a: 'center', s: 11 * p, w: 700 });
+  }
+
+  // ---------- power line view ----------
+  function drawLine() {
+    const p = proj(), L = lnNow(), ln = S.ln, hz = Math.round(H * 0.6), tt = S.phase;
+    if (VG) VG.outdoors(ctx, W, H, hz, { sun: 0.85 }); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    const narrow = W < 560, gy = hz + (H - hz) * 0.55;
+    /* power station: building, chimney with a puff */
+    const sx = 10 * p, sw = Math.min(120 * p, W * 0.17);
+    if (VG) { VG.box(ctx, sx, gy - 70 * p, sw, 70 * p, { color: dark() ? '#4a4f57' : '#8a8f97', r: 3 }); VG.box(ctx, sx + sw * 0.62, gy - 120 * p, sw * 0.18, 52 * p, { color: dark() ? '#5b5f66' : '#a2a6ad', r: 2, shadow: false }); }
+    ctx.fillStyle = dark() ? 'rgba(200,210,225,0.18)' : 'rgba(255,255,255,0.75)'; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(sx + sw * 0.71 + i * 9 * p, gy - 128 * p - i * 10 * p, (7 + i * 3) * p, 0, 7); ctx.fill(); }
+    txt('power station', sx + sw / 2, gy + 8 * p, { a: 'center', bl: 'top', s: 10.5, c: T.ink });
+    txt('12 kV', sx + sw / 2, gy - 40 * p, { a: 'center', s: 11, c: '#ffffff', m: true });
+    /* transformers: boxes with cooling fins and bushings */
+    const xfmr = (x, label, sub) => {
+      const bw = 34 * p, bh = 40 * p;
+      if (VG) VG.box(ctx, x - bw / 2, gy - bh, bw, bh, { color: dark() ? '#5d6b5c' : '#7d8c7b', r: 3 });
+      ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; for (let i = 1; i < 6; i++) { ctx.beginPath(); ctx.moveTo(x - bw / 2 + i * bw / 6, gy - bh + 6 * p); ctx.lineTo(x - bw / 2 + i * bw / 6, gy - 4 * p); ctx.stroke(); }
+      for (const d of [-8, 8]) { ctx.fillStyle = '#c9b48c'; ctx.fillRect(x + d * p - 2.5 * p, gy - bh - 12 * p, 5 * p, 12 * p); }
+      txt(label, x, gy + 8 * p, { a: 'center', bl: 'top', s: 10.5 }); if (sub) txt(sub, x, gy + 22 * p, { a: 'center', bl: 'top', s: 10, c: T.muted, m: true });
+    };
+    const xUp = sx + sw + 34 * p, xDown = W - Math.min(150 * p, W * 0.25);
+    xfmr(xUp, narrow ? 'step up' : 'step up', `${si(ln.VT, 'V', 3)}`); xfmr(xDown, 'step down', '240 V');
+    /* towers and the line */
+    const n = narrow ? 3 : 5, tx = (i) => xUp + 30 * p + (xDown - xUp - 60 * p) * (i + 0.5) / n, th = Math.min(120 * p, (gy - 30) * 0.7), armY = gy - th;
+    const glow = L.ok ? Math.min(1, Math.sqrt(L.frac) * 1.5) : 1;
+    for (let i = 0; i < n; i++) {
+      const x = tx(i); ctx.save(); ctx.strokeStyle = dark() ? '#9aa6b6' : '#5a6575'; ctx.lineWidth = 1.6 * p;
+      ctx.beginPath(); ctx.moveTo(x - 14 * p, gy); ctx.lineTo(x - 3 * p, armY); ctx.lineTo(x + 3 * p, armY); ctx.lineTo(x + 14 * p, gy);
+      for (let k = 1; k < 5; k++) { const yy = gy - th * k / 5, hw = 14 * p - 11 * p * k / 5, yn = gy - th * (k - 1) / 5, hn = 14 * p - 11 * p * (k - 1) / 5; ctx.moveTo(x - hn, yn); ctx.lineTo(x + hw, yy); ctx.moveTo(x + hn, yn); ctx.lineTo(x - hw, yy); }
+      ctx.moveTo(x - 20 * p, armY); ctx.lineTo(x + 20 * p, armY); ctx.stroke(); ctx.restore();
+    }
+    const wires = [-16, 16];
+    for (const d of wires) {
+      const pts = [[xUp + d * 0.5 * p, gy - 52 * p]]; for (let i = 0; i < n; i++) pts.push([tx(i) + d * p, armY]); pts.push([xDown + d * 0.5 * p, gy - 52 * p]);
+      for (let i = 1; i < pts.length; i++) {
+        const [x1, y1] = pts[i - 1], [x2, y2] = pts[i], sag = 14 * p;
+        ctx.save(); ctx.strokeStyle = dark() ? '#c8ced6' : '#30363e'; ctx.lineWidth = 1.8 * p; ctx.beginPath(); ctx.moveTo(x1, y1); ctx.quadraticCurveTo((x1 + x2) / 2, (y1 + y2) / 2 + 2 * sag, x2, y2); ctx.stroke();
+        if (glow > 0.01) { ctx.globalAlpha = glow; ctx.strokeStyle = T.heat; ctx.shadowColor = T.heat; ctx.shadowBlur = 10 * p * glow; ctx.lineWidth = (1.6 + 2.5 * glow) * p; ctx.stroke(); }
+        ctx.restore();
+      }
+    }
+    /* the town: houses whose windows glow with the power each receives (in proportion to V_house²) */
+    const hx0 = xDown + 26 * p, nh = Math.max(1, Math.floor((W - hx0 - 6 * p) / (34 * p))), bright = L.ok ? Math.max(0, (L.Vhouse / V_HOUSE) ** 2) : 0;
+    for (let i = 0; i < nh; i++) {
+      const x = hx0 + i * 34 * p, y = gy - (i % 2 ? 4 : 0) * p, hw = 26 * p, hh = 22 * p;
+      ctx.fillStyle = dark() ? '#4b4f58' : '#e6dccb'; ctx.fillRect(x, y - hh, hw, hh);
+      ctx.fillStyle = dark() ? '#7a3f35' : '#b5523f'; ctx.beginPath(); ctx.moveTo(x - 3 * p, y - hh); ctx.lineTo(x + hw / 2, y - hh - 14 * p); ctx.lineTo(x + hw + 3 * p, y - hh); ctx.fill();
+      ctx.save(); ctx.fillStyle = `rgba(255,214,110,${0.15 + 0.85 * bright})`; if (bright > 0.2) { ctx.shadowColor = '#ffd66e'; ctx.shadowBlur = 8 * p * bright; }
+      ctx.fillRect(x + 4 * p, y - hh + 6 * p, 7 * p, 7 * p); ctx.fillRect(x + hw - 11 * p, y - hh + 6 * p, 7 * p, 7 * p); ctx.restore();
+    }
+    if (nh) txt('town', hx0 + nh * 17 * p, gy + 8 * p, { a: 'center', bl: 'top', s: 10.5 });
+    /* the line's current: dots oscillating along the first wire */
+    if (!reduce && L.ok) {
+      const amp = 10 * p * Math.min(1.5, 0.5 + 0.2 * Math.log10(1 + L.I)), sh = amp * Math.sin(tt);
+      ctx.fillStyle = T.ip; for (let x = xUp + 20 * p + ((sh % 30) + 30) % 30; x < xDown - 20 * p; x += 30 * p) { const u = (x - xUp) / (xDown - xUp); ctx.beginPath(); ctx.arc(x, armY + 6 * p + 10 * p * Math.sin(Math.PI * ((u * n) % 1)), 2 * p, 0, 7); ctx.fill(); }
+    }
+    /* an energy panel: sent, lost in the line, delivered */
+    const pw = Math.min(W - 20 * p, 460 * p), px = (W - pw) / 2, py = 12 * p, phh = 70 * p;
+    if (VG) VG.panel(ctx, px, py, pw, phh); else { ctx.fillStyle = T.surface; ctx.fillRect(px, py, pw, phh); }
+    txt(`Line current I = P/V = ${si(L.I, 'A', 4)}`, px + 12 * p, py + 16 * p, { s: 11.5, m: true });
+    const bx = px + 12 * p, bw = pw - 24 * p, bY = py + 32 * p, bH = 14 * p;
+    if (!L.ok) txt('IR would exceed V: this line cannot deliver that power', px + 12 * p, bY + bH / 2, { s: 11.5, c: T.heat });
+    else if (S.blind) txt('loss hidden in Blind', px + 12 * p, bY + bH / 2, { s: 11.5, c: T.muted });
+    else {
+      const lw = Math.max(L.frac > 0 ? 1.5 : 0, bw * L.frac);
+      ctx.fillStyle = T.is; ctx.fillRect(bx, bY, bw - lw, bH); ctx.fillStyle = T.heat; ctx.fillRect(bx + bw - lw, bY, lw, bH);
+      txt(`delivered ${si(L.delivered, 'W', 4)}`, bx, bY + bH + 11 * p, { s: 10.5, c: T.is, w: 700 });
+      txt(`lost as heat ${si(L.loss, 'W', 4)} (${(100 * L.frac).toPrecision(3)}%)`, bx + bw, bY + bH + 11 * p, { s: 10.5, c: T.heat, w: 700, a: 'right' });
+    }
+  }
+
+  // ---------- the lower panel: oscilloscope, or loss against voltage ----------
+  function drawCurve() {
+    const c = cctx, p = proj(); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
+    if (!CW) return;
+    if (S.view === 'tr') return drawScope(c, p);
+    drawLoss(c, p);
+  }
+  function drawScope(c, p) {
+    const r = trNow(), w = r.w, t0 = S.phase / w, narrow = CW < 560;
+    const boxes = narrow ? [[8, 6, CW - 16, CH / 2 - 9], [8, CH / 2 + 3, CW - 16, CH / 2 - 9]] : [[8, 6, CW / 2 - 12, CH - 12], [CW / 2 + 4, 6, CW / 2 - 12, CH - 12]];
+    const sets = [[['v_P', r.Vp, T.vp], ['v_S', r.Vs, T.vs]], [['i_P', r.Ip, T.ip], ['i_S', r.Is, T.is]]], units = ['V', 'A'];
+    sets.forEach((set, k) => {
+      const [x, y, bw, bh] = boxes[k]; c.fillStyle = dark() ? '#0b1310' : '#f3f7f4'; c.beginPath(); c.roundRect(x, y, bw, bh, 8); c.fill();
+      c.strokeStyle = T.grid; c.lineWidth = 1; for (let i = 1; i < 8; i++) { c.beginPath(); c.moveTo(x + bw * i / 8, y); c.lineTo(x + bw * i / 8, y + bh); c.stroke(); }
+      for (let i = 1; i < 4; i++) { c.beginPath(); c.moveTo(x, y + bh * i / 4); c.lineTo(x + bw, y + bh * i / 4); c.stroke(); }
+      c.strokeStyle = T.gridStrong; c.beginPath(); c.moveTo(x, y + bh / 2); c.lineTo(x + bw, y + bh / 2); c.stroke();
+      /* each trace is scaled to its own peak, so phases can be compared; the legend gives the peaks */
+      set.forEach(([nm, X, col], j) => {
+        const pk = Math.SQRT2 * cabs(X);
+        if (pk === 0) return;
+        c.strokeStyle = col; c.lineWidth = 2 * p; c.beginPath();
+        for (let i = 0; i <= 240; i++) { const u = i / 240, tt = t0 - 2 / (w / (2 * Math.PI)) * (1 - u), v = inst(X, w, tt) / pk, xx = x + bw * u, yy = y + bh / 2 - v * (bh / 2 - 8) * (j ? 0.78 : 0.92); i ? c.lineTo(xx, yy) : c.moveTo(xx, yy); }
+        c.stroke();
+      });
+      c.font = `600 ${10.5 * p}px ${T.mono}`; const labs = set.map(([nm, X]) => `${nm} peak ${si(Math.SQRT2 * cabs(X), units[k], 4)}`), lw = Math.max(...labs.map((t) => c.measureText(t).width)) + 12;
+      c.fillStyle = dark() ? 'rgba(11,19,16,0.85)' : 'rgba(243,247,244,0.88)'; c.beginPath(); c.roundRect(x + 4, y + 4, lw, 2 * 14 * p + 6, 5); c.fill();
+      labs.forEach((t, j) => { c.fillStyle = set[j][2]; c.textBaseline = 'top'; c.textAlign = 'left'; c.fillText(t, x + 10, y + 8 + j * 14 * p); });
+      c.fillStyle = T.muted; c.font = `${10 * p}px ${T.ui}`; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText(bw < 360 ? 'two cycles, each trace to its own peak' : 'two cycles · each trace scaled to its own peak', x + bw - 6, y + bh - 4);
+    });
+  }
+  function drawLoss(c, p) {
+    const ln = S.ln, L0 = 70 * p, R0 = CW - 16 * p, top = 26 * p, bot = CH - 30 * p, x0 = Math.log10(200), x1 = Math.log10(1e6), y0 = -6, y1 = 2;
+    const X = (v) => L0 + (R0 - L0) * (Math.log10(v) - x0) / (x1 - x0), Y = (pc) => bot - (bot - top) * (Math.log10(pc) - y0) / (y1 - y0);
+    c.strokeStyle = T.line; c.lineWidth = 1; c.strokeRect(L0 + 0.5, top + 0.5, R0 - L0, bot - top);
+    c.fillStyle = T.muted; c.font = `${10 * p}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'top';
+    for (const [v, t] of [[1e3, '1 kV'], [1e4, '10 kV'], [1e5, '100 kV'], [1e6, '1 MV']]) { c.fillText(t, X(v), bot + 4 * p); c.strokeStyle = T.grid; c.beginPath(); c.moveTo(X(v), top); c.lineTo(X(v), bot); c.stroke(); }
+    c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (let e = y0; e <= y1; e += 2) { c.fillText(`${10 ** e >= 1 ? 10 ** e : '10' + String(e).replace('-', '⁻').replace('6', '⁶').replace('4', '⁴').replace('2', '²')} %`, L0 - 4 * p, Y(10 ** e)); c.strokeStyle = T.grid; c.beginPath(); c.moveTo(L0, Y(10 ** e)); c.lineTo(R0, Y(10 ** e)); c.stroke(); }
+    c.fillStyle = T.ink; c.font = `700 ${11 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText(`Share of the power lost in the line against transmission voltage (log scales), P = ${si(ln.P, 'W', 3)}, R = ${ohms(ln.R)}`, L0, top - 6 * p);
+    c.fillStyle = T.muted; c.font = `${10 * p}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('transmission voltage V', (L0 + R0) / 2, bot + 16 * p);
+    if (S.blind) { c.fillText('hidden in Blind', (L0 + R0) / 2, (top + bot) / 2); return; }
+    c.save(); c.beginPath(); c.rect(L0, top, R0 - L0, bot - top); c.clip(); c.strokeStyle = T.heat; c.lineWidth = 2.5 * p; c.beginPath();
+    for (let i = 0; i <= 200; i++) { const v = 10 ** (x0 + (x1 - x0) * i / 200), pc = Math.min(100, 100 * ln.P * ln.R / (v * v)); i ? c.lineTo(X(v), Y(pc)) : c.moveTo(X(v), Y(pc)); }
+    c.stroke();
+    c.setLineDash([4 * p, 4 * p]); c.strokeStyle = T.gridStrong; c.beginPath(); c.moveTo(L0, Y(100)); c.lineTo(R0, Y(100)); c.stroke(); c.setLineDash([]);
+    const L = lnNow(), pc = L.ok ? 100 * L.frac : 100; c.fillStyle = T.heat; c.beginPath(); c.arc(X(ln.VT), Y(Math.max(1e-6, pc)), 5.5 * p, 0, 7); c.fill(); c.restore();
+    c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillText('the loss falls as 1/V²: ten times the voltage, a hundredth of the loss', R0 - 6 * p, top + 4 * p);
+  }
+
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (S.view === 'tr') drawTr(); else drawLine();
+    drawCurve();
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, bl = S.blind;
+    let h = '';
+    if (S.view === 'tr') {
+      const r = trNow(), tr = S.tr;
+      h += dd('V<sub>P</sub> (source)', si(cabs(r.Vp), 'V', 4)) + dd('V<sub>S</sub> (secondary)', si(cabs(r.Vs), 'V', 4));
+      h += dd('I<sub>P</sub>', si(cabs(r.Ip), 'A', 4)) + dd('I<sub>S</sub>', si(cabs(r.Is), 'A', 4));
+      if (bl) h += '<div class="wide"><dt>Ratios, powers, efficiency</dt><dd class="ok">hidden in Blind</dd></div>';
+      else {
+        h += dd('N<sub>S</sub>/N<sub>P</sub>', plainNum(tr.Ns / tr.Np, 4)) + dd('V<sub>S</sub>/V<sub>P</sub>', plainNum(cabs(r.Vs) / cabs(r.Vp), 4));
+        h += dd('I<sub>P</sub>/I<sub>S</sub>', cabs(r.Is) > 0 ? plainNum(cabs(r.Ip) / cabs(r.Is), 4) : '—') + dd('Phase of v<sub>S</sub> from v<sub>P</sub>', `${(carg(r.Vs) * 180 / Math.PI).toFixed(1).replace('-', '−')}°`);
+        h += dd('Phase of i<sub>P</sub> from v<sub>P</sub>', cabs(r.Ip) > 0 ? `${(carg(r.Ip) * 180 / Math.PI).toFixed(1).replace('-', '−')}°` : '—');
+        h += dd('Power in', si(r.Pin, 'W', 4)) + dd('Power out', si(r.Pout, 'W', 4));
+        h += dd('Efficiency', isFinite(r.eff) ? `${(100 * r.eff).toFixed(2)}%` : '—') + dd('Source sees |V<sub>P</sub>/I<sub>P</sub>|', ohms(r.Zin));
+      }
+      h += dd('Peak field in the core', `${si(r.Bpk, 'T', 3)}${r.Bpk > 1.6 ? ' <span class="warn">(a real core saturates)</span>' : ''}`, 'wide');
+      if (tr.model === 'real') h += dd('Windings', `R<sub>P</sub> ${si(r.Rp, 'Ω', 3)}, R<sub>S</sub> ${si(r.Rs, 'Ω', 3)}; L<sub>P</sub> ${si(r.Lp, 'H', 3)}, L<sub>S</sub> ${si(r.Ls, 'H', 3)}`, 'wide');
+    } else {
+      const L = lnNow(), ln = S.ln;
+      h += dd('Line current I = P/V', si(L.I, 'A', 4)) + dd('Generator current (12 kV)', si(L.Igen, 'A', 4));
+      if (bl) h += '<div class="wide"><dt>Loss, delivered power, town voltage</dt><dd class="ok">hidden in Blind</dd></div>';
+      else if (!L.ok) h += dd('Line', '<span class="warn">IR exceeds V: it cannot carry this power</span>', 'wide');
+      else {
+        h += dd('Line loss I²R', si(L.loss, 'W', 4)) + dd('Share lost', `${(100 * L.frac).toPrecision(4)}%`);
+        h += dd('Delivered', si(L.delivered, 'W', 4)) + dd('Voltage in the houses', si(L.Vhouse, 'V', 4));
+      }
+      h += dd('R as aluminum wire', `${plainNum(ln.R / PAIR_OHM_PER_KM, 3)} km of a pair of 2.0 cm wires`, 'wide');
+    }
+    $('out').innerHTML = h;
+  }
+
+  // ---------- controls ----------
+  const nearest = (list, v) => { let b = 0; list.forEach((x, i) => { if (Math.abs(Math.log((x === Infinity ? 1e12 : x) / (v === Infinity ? 1e12 : v))) < Math.abs(Math.log((list[b] === Infinity ? 1e12 : list[b]) / (v === Infinity ? 1e12 : v)))) b = i; }); return b; };
+  const STEPPED = [['sVp', 'Vp', () => S.tr.Vp, (v) => { S.tr.Vp = v; }, (v) => si(v, 'V', 3).replace('.00 ', ' ').replace(/\.0 /, ' ')],
+    ['sF', 'f', () => S.tr.f, (v) => { S.tr.f = v; }, (v) => `${v} Hz`],
+    ['sNp', 'N', () => S.tr.Np, (v) => { S.tr.Np = v; }, (v) => `${v} turns`],
+    ['sNs', 'N', () => S.tr.Ns, (v) => { S.tr.Ns = v; }, (v) => `${v} turns`],
+    ['sRL', 'RL', () => S.tr.RL, (v) => { S.tr.RL = v; }, ohms],
+    ['sP', 'P', () => S.ln.P, (v) => { S.ln.P = v; }, (v) => si(v, 'W', 3).replace(/\.0+ /, ' ')],
+    ['sVT', 'VT', () => S.ln.VT, (v) => { S.ln.VT = v; }, (v) => si(v, 'V', 3).replace(/\.0+ /, ' ')],
+    ['sRline', 'Rline', () => S.ln.R, (v) => { S.ln.R = v; }, ohms]];
+  function sync() {
+    for (const [id, list, get, , fmt] of STEPPED) { const L = LISTS[list], el = $(id); el.max = L.length - 1; el.value = nearest(L, get()); $('o' + id.slice(1)).textContent = fmt(get()); }
+    $('sK').value = S.tr.k; $('oK').textContent = S.tr.k.toFixed(3); $('kWrap').hidden = S.tr.model !== 'real';
+    for (const b of document.querySelectorAll('#coreSeg button')) b.setAttribute('aria-pressed', String(b.dataset.c === S.tr.core));
+    for (const b of document.querySelectorAll('#modelSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.tr.model));
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    $('cardTr').hidden = S.view !== 'tr'; $('cardLine').hidden = S.view !== 'line';
+    $('go').textContent = S.run && !reduce ? 'Pause' : 'Play';
+    $('clock').textContent = reduce ? 'still picture (Reduce motion)' : S.view === 'tr' ? `slowed: one cycle of ${S.tr.f} Hz every 2 s` : 'slowed: one cycle every 2 s';
+    $('can').setAttribute('aria-label', S.view === 'tr' ? 'An AC source drives the primary coil of an iron core transformer; the secondary coil feeds a load resistor. Space pauses or plays the animation.'
+      : 'A power station, a step up transformer, a transmission line on towers, a step down transformer and a town. Space pauses or plays the animation.');
+    $('curve').setAttribute('aria-label', S.view === 'tr' ? 'Oscilloscope traces of the primary and secondary voltages and currents.' : 'Graph of the share of power lost in the line against transmission voltage, on log scales.');
+  }
+  const redraw = () => { draw(); readouts(); };
+  const PRESETS = {
+    stepdown: { view: 'tr', tr: { Vp: 120, f: 60, Np: 400, Ns: 40, RL: 10, model: 'ideal', core: 'bench' }, hint: 'A 10 to 1 step down transformer: 120 V on 400 turns gives 12 V on 40 turns. The 10 Ω load takes 1.2 A, and the primary draws a tenth of that, 0.12 A: 14.4 W in, 14.4 W out.' },
+    stepup: { view: 'tr', tr: { Vp: 12, f: 60, Np: 50, Ns: 500, RL: 1000, model: 'ideal', core: 'bench' }, hint: 'The same idea backwards: ten times the turns gives ten times the voltage, 120 V, and the primary current is ten times the secondary current. A transformer raises voltage only by lowering current.' },
+    doorbell: { view: 'tr', tr: { Vp: 110, f: 60, Np: 550, Ns: 45, RL: 18, model: 'ideal', core: 'bench' }, hint: 'OpenStax Check Your Understanding 15.9: line voltage 110 V stepped down to 9.0 V to deliver 0.50 A to a doorbell (here 550 and 45 turns and an 18 Ω bell). Find the turns ratio, the primary current and the resistance the 110 V source sees.' },
+    pole: { view: 'tr', tr: { Vp: 12000, f: 60, Np: 2500, Ns: 50, RL: 2.4, model: 'ideal', core: 'pole' }, hint: 'OpenStax Example 15.6: a utility pole transformer steps 12 kV down to 240 V (50 to 1). A 2.4 Ω load takes 100 A at 240 V, 24 kW, while the line side carries only 2.0 A.' },
+    real: { view: 'tr', tr: { Vp: 120, f: 60, Np: 400, Ns: 40, RL: Infinity, model: 'real', k: 0.98, core: 'bench' }, hint: 'A real transformer with nothing connected: the primary still draws a magnetizing current, a quarter cycle behind the voltage, so it takes almost no power. Add a load and watch the primary current grow and swing into step with the voltage.' },
+    line: { view: 'line', ln: { P: 24000, VT: 12000, R: 200 }, hint: 'OpenStax Example 15.6 again: 24 kW sent at 12 kV down a 200 Ω line is 2.0 A and loses (2.0 A)²(200 Ω) = 800 W. Send it at 240 V instead and the line would need 100 A and lose 2 MW, more than the power sent. Then try a long line at 345 kV.' },
+  };
+  function setView(v) { S.view = v; sync(); redraw(); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; if (c.tr) Object.assign(S.tr, { k: 0.98 }, c.tr); if (c.ln) Object.assign(S.ln, c.ln);
+    $('presetHint').textContent = c.hint; S.view = c.view; sync(); redraw();
+  }
+  const custom = () => { S.preset = 'custom'; sync(); redraw(); };
+  for (const [id, list, , set] of STEPPED) $(id).addEventListener('input', (e) => { set(LISTS[list][+e.target.value]); custom(); });
+  $('sK').addEventListener('input', (e) => { S.tr.k = +e.target.value; custom(); });
+  $('coreSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (b) { S.tr.core = b.dataset.c; custom(); } });
+  $('modelSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { S.tr.model = b.dataset.m; custom(); } });
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('go').addEventListener('click', () => { if (reduce) { reduce = false; $('rmToggle').checked = false; S.run = true; } else S.run = !S.run; sync(); redraw(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; sync(); redraw(); });
+
+  // ---------- the clock: the phase advances one cycle every 2 s, whatever the frequency ----------
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.run && !reduce) { S.phase = (S.phase + Math.PI * dt) % (2 * Math.PI * 1000); draw(); }
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- readings for the worksheet (tools/readings_panel.py) ----------
+  window.vdVersion = 'transformers@2026-10-24';
+  window.vdShowCols = [['Ns', 'N_S'], ['Vs_V', 'V_S (V)'], ['Is_A', 'I_S (A)']];
+  window.vdReadingRow = () => {
+    if (S.view === 'tr') {
+      const r = trNow(), tr = S.tr; window.vdShowCols = [['Ns', 'N_S'], ['Vs_V', 'V_S (V)'], ['Is_A', 'I_S (A)']];
+      return { view: 'transformer', model: tr.model, k: tr.model === 'real' ? tr.k : '', core: tr.core, f_Hz: tr.f, Np: tr.Np, Ns: tr.Ns, Vp_V: g6(cabs(r.Vp)), Vs_V: g6(cabs(r.Vs)),
+        Ip_A: g6(cabs(r.Ip)), Is_A: g6(cabs(r.Is)), R_ohm: isFinite(tr.RL) ? tr.RL : 'open', Pin_W: g6(r.Pin), Pout_W: g6(r.Pout), P_loss_W: '', B_peak_T: g6(r.Bpk) };
+    }
+    const L = lnNow(), ln = S.ln; window.vdShowCols = [['Vs_V', 'V (V)'], ['Is_A', 'I (A)'], ['P_loss_W', 'loss (W)']];
+    return { view: 'power line', model: 'ideal', k: '', core: '', f_Hz: '', Np: '', Ns: '', Vp_V: V_GEN, Vs_V: ln.VT, Ip_A: g6(L.Igen), Is_A: g6(L.I), R_ohm: ln.R,
+      Pin_W: ln.P, Pout_W: L.ok ? g6(L.delivered) : 'not possible', P_loss_W: L.ok ? g6(L.loss) : 'not possible', B_peak_T: '', V_house_V: L.ok ? g6(L.Vhouse) : '' };
+  };
+
+  // ---------- about ----------
+  $('aboutTr').textContent = 'Transformer view, ideal model (OpenStax University Physics Vol. 2, §15.6): all the flux stays in the core, so the same changing flux passes through every turn of both coils, and nothing is lost (no winding resistance, no hysteresis or eddy currents in the core). Then V_S/V_P = N_S/N_P, the power in equals the power out, I_P/I_S = N_S/N_P, and a load R on the secondary looks like (N_P/N_S)²R to the source. With no load, the ideal transformer draws no current at all. Every value shown is rms except the oscilloscope peaks; each trace is scaled to its own peak so you can compare phases. The peak field in the core is B = √2 V_P/(ωN_PA), which the source voltage, frequency and primary turns fix whatever the load; a real silicon steel core saturates near 1.5 to 1.8 T, which this model does not, so the readout flags fields above 1.6 T. The animation is slowed to one cycle every 2 s.';
+  $('aboutReal').textContent = 'Real model: the two coils are coupled inductors, L = μ_r μ₀N²A/l with μ_r = 4000 (a chosen value typical of transformer steel), and mutual inductance M = k√(L_P L_S), so a coupling k below 1 lets some flux miss the other coil (leakage). Each winding is copper (ρ = 1.68 × 10⁻⁸ Ω·m, Table 9.1) filling the same cross section, so R = ρN²(turn length)/(copper area) and R_P/R_S = (N_P/N_S)². Bench core: 4 cm × 4 cm, magnetic path 0.36 m, turns 0.22 m long, 3.0 cm² of copper per winding. Utility pole core: 15 cm × 15 cm, path 1.2 m, turns 0.80 m, 30 cm² of copper per winding. The circuit is solved exactly for steady AC: V_P = (R_P + jωL_P)I_P − jωM I_S and jωM I_P = (R_S + jωL_S + R)I_S. Core losses, saturation and the winding capacitance are not modelled.';
+  $('aboutLine').textContent = 'Power line view: the station\'s generator runs at 12 kV (as in OpenStax Figure 15.20). An ideal step up transformer raises it to the transmission voltage V and sends power P, so the line carries I = P/V and turns I²R into heat, where R is the resistance of both wires together; the town receives P − I²R at V − IR, and an ideal step down transformer (ratio V : 240 V) feeds the houses, so their voltage sags when the line drop is large. Line and load are taken as purely resistive; the line\'s inductance and capacitance, and the three phase wiring real lines use, are left out. If IR would reach V (the same as I²R reaching P), no current at that voltage can deliver P, and the demo says so. The length readout is for two aluminum wires 2.0 cm across (ρ = 2.65 × 10⁻⁸ Ω·m, Table 9.1).';
+
+  // ---------- size, theme, start ----------
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect();
+    W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); draw();
+  }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const q = new URLSearchParams(location.search), first = PRESETS[q.get('setup')] ? q.get('setup') : 'stepdown';
+  S.phase = 0.6; applyPreset(first);
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__tf = { S, applyPreset, setView, sync, redraw, solve, line, trNow, lnNow };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

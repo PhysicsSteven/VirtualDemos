@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark app stage-canvas-focusvisible spin spin-attn formula btnrow readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles-label toggles-input key key-span readout-big-dd swatch pane-canvas" lang="en">
+<html data-vd-off="root-4 auto-dark dark app stage-canvas-focusvisible spin spin-attn formula readout-dd-ok check check-input empty plotbox-canvas wide-proj-bench wide-proj-stage pane toggles-label toggles-input key key-span readout-big-dd swatch pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -143,10 +143,11 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
 
   <main class="bench">
     <div class="stage" id="stage">
-      <canvas id="view" tabindex="0" role="application" aria-label="Diffraction grating lab. Top: intensity across the wall. Middle: the wall seen face on with a meter stick. Bottom: the bench from above with the laser, the grating and the wall. Drag the grating up or down to change the distance L, turn its round knob to rotate it, and drag the grip on its face to change the number of illuminated slits. Keys: up and down arrows change L, brackets rotate the grating, plus and minus change N. In measure mode, A and B pick a caliper jaw and left and right arrows move it."></canvas>
+      <canvas id="view" tabindex="0" role="application" aria-label="Diffraction grating lab. Top: intensity across the wall. Middle: the wall seen face on with a meter stick. Bottom: the bench from above with the laser, the grating and the wall. Drag the grating up or down to change the distance L, turn its round knob to rotate it, and drag the grip on its face to change the number of illuminated slits. Keys: up and down arrows change L, brackets rotate the grating, plus and minus change N (with the single slit, its width a). In measure mode, A and B pick a caliper jaw and left and right arrows move it."></canvas>
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/diffraction-grating.html" target="diffraction-grating-worksheet">Worksheet 1: Diffraction Grating</a></li><li><a href="../curriculum/labs/students/single-slit.html" target="single-slit-worksheet">Worksheet 2: Single Slit Diffraction</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -172,7 +173,15 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
       </section>
 
       <section>
-        <h2>Grating</h2>
+        <h2 id="gratHead">Grating</h2>
+        <div class="inline">
+          <span class="lab">Aperture</span>
+          <div class="seg" role="group" aria-label="Aperture" id="apSeg">
+            <button type="button" data-ap="grating" aria-pressed="true">Grating</button>
+            <button type="button" data-ap="single" aria-pressed="false">Single slit</button>
+          </div>
+        </div>
+        <div id="gratBox">
         <div class="chips small" id="grats">
           <button type="button" data-g="100" aria-pressed="false">100</button>
           <button type="button" data-g="300" aria-pressed="false">300</button>
@@ -193,12 +202,18 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
           <div class="slider-head"><label for="sDA">Slit spacing over slit width, d/a</label><output id="oDA" class="mono" for="sDA"></output></div>
           <input type="range" id="sDA" min="1.1" max="6" step="0.1" value="3.5">
         </div>
+        </div>
+        <div id="slitBox" hidden>
+          <div class="slider-head"><label for="sA">Slit width a</label><output id="oA" class="mono" for="sA"></output></div>
+          <input type="range" id="sA" min="0.5" max="20" step="0.1" value="5">
+        </div>
         <div>
           <div class="slider-head"><label for="sRot">Grating turned by</label><output id="oRot" class="mono" for="sRot"></output></div>
           <input type="range" id="sRot" min="-30" max="30" step="0.5" value="0">
         </div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Whole numbers of d/a make orders go missing: the zero of one slit's pattern lands on a bright order. Turning the grating uses d(sin θ<sub>m</sub> − sin θ<sub>i</sub>) = mλ, angles from the grating's normal.</p>
+          <p class="hint">Single slit swaps the grating for one slit of width a (N = 1): the pattern is [sin β/β]² alone, with dark fringes where a sin θ = mλ. The slits here are a few micrometres wide so the pattern spreads across the wall; a slit ten times wider gives the same pattern ten times smaller.</p>
         </details>
       </section>
 
@@ -214,7 +229,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
       </section>
 
       <section id="ordSec">
-        <h2>Orders</h2>
+        <h2 id="ordHead">Orders</h2>
         <div class="chips small" id="refChips" role="group" aria-label="Wavelength for the table"></div>
         <table class="orders" id="ordTable" aria-live="polite"></table>
         <p class="note" id="ordNote"></p>
@@ -231,11 +246,12 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
         </div>
         <div id="measBox" hidden>
         <details class="more"><summary>More about this</summary>
-          <p class="hint" style="margin-bottom: 8px;">Drag the caliper jaws A and B on the wall onto two spots (m = 0 and m = 1). Then enter L, y and m, and compute.</p>
+          <p class="hint" style="margin-bottom: 8px;">Drag the caliper jaws A and B on the wall onto two spots (m = 0 and m = 1). Then enter L, y and m, and compute. With a single slit, put A on the center of the bright middle band (0 on the stick) and B on the dark fringe m. The light meter rides on jaw B: a small detector that reads the intensity there as a fraction of the center's.</p>
         </details>
           <dl class="readout" style="margin-bottom: 8px;">
             <div><dt>Caliper B − A</dt><dd id="rCal">—</dd></div>
-            <div><dt>Grating</dt><dd id="rGr">—</dd></div>
+            <div><dt id="rGrLab">Grating</dt><dd id="rGr">—</dd></div>
+            <div id="meterRow" class="wide" hidden><dt>Light meter at jaw B, I / I₀</dt><dd id="rMeter">—</dd></div>
           </dl>
           <div class="inline" style="margin-bottom: 8px;">
             <span class="lab">Find</span>
@@ -257,6 +273,27 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
         </div>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="diffraction-grating" data-title="Diffraction Grating" data-demo="diffraction-grating">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="inline">
@@ -281,6 +318,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
         <details class="fold"><summary>Model</summary><div class="foldbody">
           <p class="hint">Positions are exact: sin θ<sub>m</sub> = sin θ<sub>i</sub> + mλ/d and y<sub>m</sub> = L tan θ<sub>m</sub> on a flat wall square to the beam. The plot is the far field pattern of N slits of width a: I ∝ [sin(Nφ)/sin φ]² × [sin β/β]² with φ = πd(sin θ − sin θ<sub>i</sub>)/λ and β = πa(sin θ − sin θ<sub>i</sub>)/λ, scaled so the central peak is 1.</p>
           <p class="hint">On the wall each order carries power in proportion to the slit envelope; obliquity factors are left out. A spot is as wide as the beam plus its diffraction spread, but never drawn smaller than a few pixels, so its brightness is not to scale. The laser, lamps and grating holder are not to scale; L, y and the angles are.</p>
+          <p class="hint">Single slit: I = I₀[sin β/β]², β = πa(sin θ − sin θ<sub>i</sub>)/λ, the same far field formula with N = 1, and dark fringes at a(sin θ − sin θ<sub>i</sub>) = mλ. The far field needs L much larger than a²/λ, under 1 mm for every slit here, so it holds at every L on the bench. For a slit only a few wavelengths wide this scalar formula is itself an approximation (it leaves out the polarization of the light).</p>
           <p class="hint">Lamp light passes a slit and a lens to make a parallel beam (a real lamp is too faint to project; in lab you look through the grating). Line data: NIST Handbook of Basic Atomic Spectroscopic Data (J. E. Sansonetti and W. C. Martin), strong neutral lines from 380 to 750 nm, air wavelengths; brightness on a log scale so weak lines stay visible. White light: the CIE D65 daylight spectrum (CIE 15:2004) from 400 to 700 nm. Colors from the CIE 1931 color matching functions (Wyman, Sloan and Shirley fit) in sRGB.</p>
         </div></details>
       </section>
@@ -355,6 +393,17 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
   // small angle versus exact wavelength from a measured spot: tan θ = y/L, d sin θ = mλ
   function lamFromSpot(y, L, m, d) { const th = Math.atan2(y, L); return { th, exact: d * Math.sin(th) / m, small: d * y / (m * L) }; }
   function dFromSpot(y, L, m, lam) { const th = Math.atan2(y, L); return { th, exact: m * lam / Math.sin(th), small: m * lam * L / y }; }
+  // Single slit of width a (N = 1): I/I₀ = [sin β/β]² with β = πa(sin θ − sin θ_i)/λ, which is intensity(sd, lam, a, a, 1).
+  // Dark fringes where a(sin θ − sin θ_i) = mλ, m = ±1, ±2, …: the same geometry as the orders, so orderInfo(m, lam, a, alpha, L)
+  // places them and lamFromSpot and dFromSpot (with a in place of d) invert them.
+  const slitBeta = (sd, lam, a) => PI * a * sd / lam;
+  function darkRange(lam, a, alpha) { const r = orderRange(lam, a, alpha); return { lo: Math.min(r.lo, 0) + 0, hi: Math.max(r.hi, 0) + 0 }; }
+  // β of the k-th side maximum (k = 1, 2, …): the root of tan β = β between kπ and (k + ½)π, by Newton's method on sin β − β cos β
+  function slitMaxBeta(k) {
+    let b = (k + 0.5) * PI - 1 / ((k + 0.5) * PI);
+    for (let i = 0; i < 60; i++) { const nb = b - (Math.sin(b) - b * Math.cos(b)) / (b * Math.sin(b)); if (Math.abs(nb - b) < 1e-14) return nb; b = nb; }
+    return b;
+  }
   // ==CORE END==
 
   const $ = (id) => document.getElementById(id);
@@ -405,8 +454,11 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
   const S = {
     src: 'hene', unknown: false, unknownLam: 632.8, lpm: 600, grat: '600', dA: 3.5, N: 600, alpha: 0, L: 1.0,
     frameL: 1.2, mode: 'explore', zoom: false, env: true, angles: true, haze: !reduce, refIdx: 0,
-    jawA: 0, jawB: 0.2, jaw: 'B', find: 'lam', preset: 'red600'
+    jawA: 0, jawB: 0.2, jaw: 'B', find: 'lam', preset: 'red600',
+    ap: 'grating', aw: 5                         // aperture: the grating, or one slit of width aw (µm)
   };
+  const single = () => S.ap === 'single';
+  const nSl = () => (single() ? 1 : S.N);         // slits lit: one for the single slit
   const PRESETS = {
     red600:   { src: 'hene', lpm: 600, grat: '600', L: 1.0, frameL: 1.2, N: 600, dA: 3.5, alpha: 0, mode: 'explore', zoom: false,
                 hint: 'Two orders on each side. A third order would need sin θ = 3λ/d = 3 × 632.8 nm / 1.667 µm = 1.14, which is impossible, so it does not exist.' },
@@ -498,9 +550,9 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
   const refLam = () => { const l = refList(); return l[Math.min(S.refIdx, l.length - 1)]; };
 
   function physics() {
-    const d = dOf(S.lpm), al = S.alpha * DEG, comps = components();
+    const one = single(), d = one ? S.aw * 1e-6 : dOf(S.lpm), al = S.alpha * DEG, comps = components();
     for (const c of comps) {
-      const lam = c.lam * 1e-9, r = orderRange(lam, d, al);
+      const lam = c.lam * 1e-9, r = one ? { lo: 1, hi: 0 } : orderRange(lam, d, al);
       c.rgb = spectralRGB(c.lam); c.lin = linRGB(c.lam);
       c.orders = [];
       for (let m = r.lo; m <= r.hi; m++) {
@@ -510,7 +562,8 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
       }
       c.range = r;
     }
-    PH = { d, a: d / S.dA, al, comps, slit: isSlit(), wmax: Math.max(...comps.map((c) => c.w)) };
+    // single slit: d is the slit width too (N = 1, so the intensity does not depend on the spacing)
+    PH = { d, a: one ? d : d / S.dA, al, comps, single: one, slit: isSlit(), wmax: Math.max(...comps.map((c) => c.w)) };
     buildFace();
     buildPlot();
     buildBeams();
@@ -553,6 +606,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
   }
   function spotMode() {
     // exact pattern when the central fringe's half width (to its first zero) is at least 3 px
+    if (PH.single) return 'exact';
     const lmin = Math.min(...PH.comps.map((c) => c.lam)) * 1e-9;
     return S.L * lmin / (S.N * PH.d * Math.cos(PH.al)) * s >= 3 ? 'exact' : 'spots';
   }
@@ -570,7 +624,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
     for (const c of PH.comps) {
       const lam = c.lam * 1e-9, L = S.L, lin = c.lin;
       if (mode === 'exact') {
-        const N = S.N;
+        const N = nSl();
         for (let col = 0; col < Wc; col++) {
           let acc = 0;
           for (let k = 0; k < 3; k++) {
@@ -603,14 +657,14 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
     }
     let mx = 0;
     for (let i = 0; i < colRGB.length; i++) { if (colRGB[i] < 0) colRGB[i] = 0; mx = Math.max(mx, colRGB[i]); }
-    faceGain = mx > 0 ? (PH.slit ? 3.6 : 2.6) / mx : 0;
+    faceGain = mx > 0 ? (PH.single ? 7 : PH.slit ? 3.6 : 2.6) / mx : 0;   // single slit: bright enough to show the faint side bands
     // vertical profile: a round spot for a laser, a tall slit image for lamps and white light
     const V = new Float32Array(Hr), mid = (Hr - 1) / 2;
     if (PH.slit) {
       const half = Hr * 0.36;
       for (let r = 0; r < Hr; r++) { const e = Math.abs(r - mid) - half; V[r] = e <= 0 ? 1 : Math.exp(-0.5 * (e / (2.2 * ps)) ** 2); }
     } else {
-      const sv = Math.max(minSig, S.N * PH.d * Math.cos(PH.al) / 4 * s);
+      const sv = Math.max(minSig, nSl() * PH.d * Math.cos(PH.al) / 4 * s);
       for (let r = 0; r < Hr; r++) V[r] = Math.exp(-0.5 * ((r - mid) / sv) ** 2);
     }
     if (!faceCv) { faceCv = document.createElement('canvas'); bloomCv = document.createElement('canvas'); wallCv = document.createElement('canvas'); }
@@ -643,13 +697,21 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
     return (sd.continuum || sd.lamp) ? [refLam()] : sd.lines.map((r) => r[0]);
   }
   function zoomRange() {                                         // wall range (m) from just before order 0 to just past order 1
-    const d = PH.d, lam = refLam() * 1e-9, o0 = orderInfo(0, lam, d, PH.al, S.L), o1 = orderInfo(1, lam, d, PH.al, S.L);
+    const d = PH.d, lam = refLam() * 1e-9, o0 = orderInfo(0, lam, d, PH.al, S.L);
+    if (PH.single) {                                             // single slit: from the center to the third dark fringe (or the last one)
+      const hi = Math.min(3, darkRange(lam, d, PH.al).hi);
+      const ok = []; for (let m = 1; m <= hi; m++) { const o = orderInfo(m, lam, d, PH.al, S.L); if (o.onScreen) ok.push(o); }
+      if (!ok.length) return null;
+      const span = ok[ok.length - 1].y - o0.y;
+      return [o0.y - 0.12 * span, ok[ok.length - 1].y + 0.12 * span];
+    }
+    const o1 = orderInfo(1, lam, d, PH.al, S.L);
     if (!o1.exists || !o1.onScreen) return null;
     const span = o1.y - o0.y;
     return [o0.y - 0.12 * span, o1.y + 0.12 * span];
   }
   function buildPlot() {
-    const Wc = Math.max(1, Math.round(W)), { d, a, al } = PH, N = S.N, L = S.L;
+    const Wc = Math.max(1, Math.round(W)), { d, a, al } = PH, N = nSl(), L = S.L;
     const zr = S.zoom ? zoomRange() : null;
     const yOf = zr ? (px) => zr[0] + (zr[1] - zr[0]) * px / Wc : (px) => Yw(px);
     const K = zr ? 10 : 6;
@@ -666,7 +728,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
         v[col] = mx;
       }
       // a principal maximum narrower than a pixel is still drawn at its full height
-      const r = orderRange(lam, d, al);
+      const r = PH.single ? { lo: 1, hi: 0 } : orderRange(lam, d, al);
       for (let m = r.lo; m <= r.hi; m++) {
         const o = orderInfo(m, lam, d, al, L);
         if (!o.onScreen) continue;
@@ -704,6 +766,20 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
         if (!o.exists || !o.onScreen || o.env < 1e-4) continue;
         const [x1, y1] = beamEnd(o);
         beams.push({ x0: cx, y0: G.yG, x1, y1, rgb: c.rgb, a: base * wr * Math.sqrt(o.env) * (o.m === 0 ? 1 : 0.9), w: 1 });
+      }
+      if (PH.single) {
+        // single slit: a fan of rays across the bright middle band, and one ray to each side maximum (tan β = β)
+        const lam = c.lam * 1e-9, si = -Math.sin(PH.al), rays = [];
+        for (let j = -4; j <= 4; j++) rays.push(j * 0.2 * PI);
+        for (let k = 1; k <= 8; k++) { const b = slitMaxBeta(k); rays.push(b, -b); }
+        for (const b of rays) {
+          const sn = si + b * lam / (PI * PH.d);
+          if (Math.abs(sn) >= 1) continue;
+          const psi = Math.asin(sn) + PH.al;
+          if (Math.abs(psi) >= PI / 2 - 1e-3) continue;
+          const [x1, y1] = beamEnd({ y: S.L * Math.tan(psi) });
+          beams.push({ x0: cx, y0: G.yG, x1, y1, rgb: c.rgb, a: base * wr * Math.sqrt(sinc2(b)) * (Math.abs(b) < PI ? 0.75 : 1), w: 1 });
+        }
       }
     }
     // squared length and direction from the grating, for the haze
@@ -837,7 +913,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
       ctx.strokeStyle = rgbStr(st.rgb, 0.95); ctx.lineWidth = 1.3 * ps; ctx.stroke();
     }
     ctx.globalCompositeOperation = 'source-over';
-    if (S.env) {
+    if (S.env && !PH.single) {                          // a single slit's pattern is its own envelope
       ctx.beginPath(); let pen = false;
       for (let c = 0; c < Wc; c++) {
         const v = env[c];
@@ -852,6 +928,10 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
     const lamTxt = S.unknown ? 'λ = ?' : (plotLams().length > 1 ? plotLams().map((l) => Math.round(l)).join(', ') + ' nm' : 'λ = ' + fmtNm(plotLams()[0]));
     let title = `I / I₀ across the wall · far field · N = ${S.N} · ${lamTxt}`;
     if (S.zoom) title = zr ? `I / I₀ zoomed: order 0 to order 1 · N = ${S.N} · ${S.N - 1} zeros between` : 'No first order to zoom on';
+    if (PH.single) {
+      title = `I / I₀ across the wall · far field · single slit, a = ${S.aw.toFixed(1)} µm · ${lamTxt}`;
+      if (S.zoom) title = zr ? `I / I₀ zoomed: center to dark fringe ${Math.min(3, darkRange(refLam() * 1e-9, PH.d, PH.al).hi)} · a = ${S.aw.toFixed(1)} µm` : 'No dark fringe to zoom on: the slit is narrower than λ';
+    }
     ctx.font = `600 ${10.5 * ps}px ` + monoFont(); ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
     ctx.fillStyle = T.muted;
     let tt = title;
@@ -864,7 +944,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
       const a = X(zr[0]), b = X(zr[1]), yb = G.face.y0 + 3;
       ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ps; ctx.beginPath();
       ctx.moveTo(a, yb + 6 * ps); ctx.lineTo(a, yb); ctx.lineTo(b, yb); ctx.lineTo(b, yb + 6 * ps); ctx.stroke();
-      if (S.N > Wc / 6) tag('lower N to see the zeros', (x0 + x1) / 2, top + hgt * 0.45, T.muted, T, { size: 10 });
+      if (!PH.single && S.N > Wc / 6) tag('lower N to see the zeros', (x0 + x1) / 2, top + hgt * 0.45, T.muted, T, { size: 10 });
     }
   }
 
@@ -924,7 +1004,32 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
     for (let m = r.lo; m <= r.hi; m++) { const o = orderInfo(m, lam, PH.d, PH.al, S.L); o.env = envelope(m, S.dA); o.missing = isMissing(m, S.dA); out.push(o); }
     return { lam, out, r };
   }
+  // single slit: the dark fringes m = ±1, ±2, … of the reference wavelength (a sin θ = mλ at normal incidence)
+  function refDarks() {
+    const lam = refLam() * 1e-9, r = darkRange(lam, PH.d, PH.al), out = [];
+    for (let m = r.lo; m <= r.hi; m++) if (m) out.push(orderInfo(m, lam, PH.d, PH.al, S.L));
+    return { lam, out, r };
+  }
+  function drawDarkLabels(T) {
+    const ps = projScale(), { out } = refDarks(), y = G.lit.y0 + 1 * ps;
+    const spaced = out.filter((o) => o.onScreen && X(o.y) > 20 && X(o.y) < W - 20).sort((p, q) => Math.abs(p.m) - Math.abs(q.m) || p.m - q.m);
+    const taken = [];
+    for (const o of spaced) {
+      const x = X(o.y), txt = `m=${minus(o.m)}`;
+      ctx.font = `600 ${9.5 * ps}px ` + monoFont();
+      const hw = ctx.measureText(txt).width / 2 + 7 * ps;
+      if (taken.some(([a, b]) => x + hw > a && x - hw < b)) continue;
+      taken.push([x - hw, x + hw]);
+      tag(txt, x, y, T.gold, T, { size: 9.5, base: 'top', alpha: 0.9 });
+    }
+    const ly = G.lit.y1 - 9 * ps;
+    if (!out.length) tag('no dark fringe: the slit is narrower than λ', W / 2, ly, T.muted, T, { size: 9.5 });
+    const offR = out.filter((o) => o.onScreen && X(o.y) >= W - 20), offL = out.filter((o) => o.onScreen && X(o.y) <= 20);
+    if (offR.length) tag(`dark m ≥ ${offR[0].m} off view →`, W - 12 * ps, ly, T.muted, T, { size: 9.5, align: 'right' });
+    if (offL.length) tag(`← dark m ≤ ${minus(offL[offL.length - 1].m)} off view`, 12 * ps, ly, T.muted, T, { size: 9.5, align: 'left' });
+  }
   function drawFaceLabels(T) {
+    if (PH.single) { drawDarkLabels(T); return; }
     const ps = projScale(), { out } = refOrders(), y = G.lit.y0 + 1 * ps, sd = srcDef();
     // label the orders nearest the center first, then outward while there is room
     const spaced = out.filter((o) => o.onScreen && X(o.y) > 20 && X(o.y) < W - 20).sort((p, q) => Math.abs(p.m) - Math.abs(q.m) || p.m - q.m);
@@ -1120,8 +1225,13 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
     // the grating film in the window, with a faint rainbow sheen
     const film = half * 0.62, sh = ctx.createLinearGradient(-film, 0, film, 0);
     ['#7b5cff', '#3f8cff', '#2cd0c9', '#57d66a', '#f2d03a', '#ff8a3a', '#ff4a6a'].forEach((c, i) => sh.addColorStop(i / 6, c));
-    ctx.globalAlpha = 0.5; ctx.fillStyle = sh; ctx.fillRect(-film, -2 * ps, 2 * film, 4 * ps); ctx.globalAlpha = 1;
-    ctx.fillStyle = 'rgba(20, 24, 28, 0.55)'; ctx.fillRect(-film, -0.6 * ps, 2 * film, 1.2 * ps);
+    if (PH.single) {                                             // single slit: a blackened slide with one slit in the middle
+      ctx.fillStyle = '#15181c'; ctx.fillRect(-film, -2 * ps, 2 * film, 4 * ps);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.12)'; ctx.fillRect(-film, -2 * ps, 2 * film, 0.8 * ps);
+    } else {
+      ctx.globalAlpha = 0.5; ctx.fillStyle = sh; ctx.fillRect(-film, -2 * ps, 2 * film, 4 * ps); ctx.globalAlpha = 1;
+      ctx.fillStyle = 'rgba(20, 24, 28, 0.55)'; ctx.fillRect(-film, -0.6 * ps, 2 * film, 1.2 * ps);
+    }
     // the illuminated patch: N slits (drawn wider than life, on a log scale)
     const nl = nLen();
     ctx.globalCompositeOperation = 'lighter';
@@ -1134,10 +1244,11 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
   }
   const gratHalf = () => 36 * projScale();
   // drawn half length of the lit patch on the grating: log scale from N = 2 to 3000
-  const nLen = () => { const ps = projScale(), t = (Math.log10(S.N) - Math.log10(2)) / (Math.log10(3000) - Math.log10(2)); return (2 + 21 * t) * ps; };
+  const nLen = () => { if (single()) return 1.2 * projScale(); const ps = projScale(), t = (Math.log10(S.N) - Math.log10(2)) / (Math.log10(3000) - Math.log10(2)); return (2 + 21 * t) * ps; };
   const nFromLen = (len) => { const ps = projScale(), t = clamp((len / ps - 2) / 21, 0, 1); return Math.pow(10, Math.log10(2) + t * (Math.log10(3000) - Math.log10(2))); };
 
   function drawTopLabels(T) {
+    if (PH.single) { drawTopLabelsSingle(T); return; }
     const ps = projScale(), { out, lam } = refOrders(), measure = S.mode === 'measure';
     // L along the meter stick
     const msx = cx - 56 * ps - 13 * ps;
@@ -1187,6 +1298,45 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
     tag(`N = ${S.N} slits lit`, cx - 12 * ps, G.yG + 15 * ps, T.muted, T, { size: 9.5, align: 'right' });
   }
 
+  function drawTopLabelsSingle(T) {
+    const ps = projScale(), { out, lam, r } = refDarks(), measure = S.mode === 'measure';
+    const msx = cx - 56 * ps - 13 * ps;
+    tag('L = ' + S.L.toFixed(2) + ' m', msx - 26 * ps, (G.yS + G.yG) / 2, T.ink, T, { size: 10.5, align: 'right' });
+    ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(msx - 2 * ps, G.yG); ctx.lineTo(cx - gratHalf() + 2 * ps, G.yG); ctx.stroke();
+    // angle arcs to the dark fringes 1, 2, 3
+    if (S.angles && !measure) {
+      const pos = out.filter((o) => o.m > 0 && o.onScreen).slice(0, 3), placed = [], labels = [];
+      let lastAng = 0, k = 0;
+      for (const o of pos) {
+        const ang = Math.atan2(G.yS - G.yG, X(o.y) - cx), axis = -PI / 2;
+        if (Math.abs(ang - lastAng) < 7 * DEG && k) continue;
+        const rr = Math.min((G.yG - G.yS) * (0.42 + 0.2 * k), (90 + 60 * k) * ps);
+        if (rr < 18 * ps) break;
+        ctx.strokeStyle = T.gold; ctx.lineWidth = 1.3 * ps; ctx.globalAlpha = 0.9;
+        ctx.setLineDash([4 * ps, 3 * ps]); ctx.beginPath(); ctx.moveTo(cx, G.yG); ctx.lineTo(cx + Math.cos(ang) * rr * 1.08, G.yG + Math.sin(ang) * rr * 1.08); ctx.stroke(); ctx.setLineDash([]);
+        ctx.beginPath(); ctx.arc(cx, G.yG, rr, axis, ang, ang < axis); ctx.stroke(); ctx.globalAlpha = 1;
+        const lx = cx + Math.cos(ang) * rr, ly = G.yG + Math.sin(ang) * rr;
+        labels.push([`dark θ${sub(o.m)} = ${fmtDeg(o.psi)}`, Math.min(lx + 7 * ps, W - 120 * ps), ly]);
+        lastAng = ang; k++;
+      }
+      for (const [txt, lx, ly] of labels) tag(txt, lx, freeSpot(txt, lx, ly, { size: 10, align: 'left' }, placed), T.gold, T, { size: 10, align: 'left' });
+    }
+    // y₁: center to the first dark fringe
+    const o1 = out.find((o) => o.m === 1);
+    if (!measure && o1 && o1.onScreen && X(o1.y) < W - 10 && S.alpha === 0) {
+      const xa = cx, xb = X(o1.y), yy = G.yS + 9 * ps;
+      ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.8; ctx.lineWidth = ps; ctx.beginPath();
+      ctx.moveTo(xa, yy - 4 * ps); ctx.lineTo(xa, yy + 4 * ps); ctx.moveTo(xa, yy); ctx.lineTo(xb, yy); ctx.moveTo(xb, yy - 4 * ps); ctx.lineTo(xb, yy + 4 * ps); ctx.stroke();
+      ctx.globalAlpha = 1;
+      tag('y₁ = ' + fmtCm(o1.y), clamp((xa + xb) / 2, 50 * ps, W - 50 * ps), yy + 4 * ps, T.ink, T, { size: 10, base: 'top' });
+    }
+    const lamT = S.unknown ? 'this laser' : fmtNm(lam * 1e9), nxt = r.hi + 1;
+    const msg = S.alpha === 0 ? `no dark m = ±${nxt} for ${lamT}: ${nxt}λ/a = ${(nxt * lam / PH.d).toFixed(2)} > 1`
+                              : `no dark m = ${nxt} for ${lamT}: sin θ would be ${sinThetaM(nxt, lam, PH.d, PH.al).toFixed(2)}`;
+    if (!measure || !S.unknown) tag(msg, W - 10 * ps, H - 12 * ps, T.muted, T, { size: 9.5, align: 'right', base: 'bottom' });
+    tag(`single slit · a = ${S.aw.toFixed(1)} µm`, cx - 12 * ps, G.yG + 15 * ps, T.muted, T, { size: 9.5, align: 'right' });
+  }
+
   // ---------- drag handles ----------
   // Grating body: drag up or down to change L. Round knob: turn the grating. Grip on its face: illuminated slits N.
   // Caliper jaws A and B on the wall (measure mode). Values snap to the matching slider's min, max and step.
@@ -1208,7 +1358,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
         setAlpha(sliderSnap($('sRot'), a));
       } });
     const nl = nLen() + 5 * ps;
-    out.push({ id: 'N', type: 'grip', at: [cx - tx * nl, G.yG - ty * nl], axis: [tx, ty], cursor: Math.abs(S.alpha) < 22.5 ? 'ew-resize' : 'nwse-resize',
+    if (!single()) out.push({ id: 'N', type: 'grip', at: [cx - tx * nl, G.yG - ty * nl], axis: [tx, ty], cursor: Math.abs(S.alpha) < 22.5 ? 'ew-resize' : 'nwse-resize',
       set: (x, y) => { const t = -((x - cx) * tx + (y - G.yG) * ty) - 5 * ps; setN(Math.round(nFromLen(Math.max(0, t)))); } });
     if (S.mode === 'measure') {
       for (const id of ['A', 'B']) {
@@ -1284,6 +1434,13 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
   function setL(v) { if (v === S.L) return; S.L = v; $('sL').value = v; changed(); }
   function setAlpha(v) { if (v === S.alpha) return; S.alpha = v; $('sRot').value = v; changed(); }
   function setN(v) { v = Math.round(clamp(v, 2, 3000)); if (v === S.N) return; S.N = v; $('sN').value = Math.log10(v); changed(); }
+  function setAw(v) { v = sliderSnap($('sA'), v); if (v === S.aw) return; S.aw = v; $('sA').value = v; changed(); }
+  function setAperture(ap, quiet) {
+    S.ap = ap;
+    for (const b of document.querySelectorAll('[data-ap]')) b.setAttribute('aria-pressed', String(b.dataset.ap === ap));
+    $('gratBox').hidden = ap === 'single'; $('slitBox').hidden = ap !== 'single';
+    if (!quiet) changed();
+  }
   function setJaw(id, v) {
     const lim = Yw(W - 10), lo = Yw(10);
     v = clamp(v, lo, lim);
@@ -1325,6 +1482,9 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
   }
   function updateRail() {
     const d = dOf(S.lpm), sd = srcDef();
+    $('gratHead').textContent = single() ? 'Single slit' : 'Grating';
+    $('ordHead').textContent = single() ? 'Dark fringes' : 'Orders';
+    $('oA').textContent = `${S.aw.toFixed(1)} µm` + (S.unknown ? '' : ` · a/λ = ${(S.aw * 1000 / refLam()).toFixed(2)}`);
     const gname = S.grat === 'cd' ? ' (CD)' : S.grat === 'dvd' ? ' (DVD)' : '';
     $('oLpm').textContent = (Math.abs(S.lpm - Math.round(S.lpm)) < 1e-6 ? S.lpm.toFixed(0) : S.lpm.toFixed(1)) + gname + ' · d = ' + (d * 1e6).toFixed(3) + ' µm';
     $('oN').textContent = `N = ${S.N} · beam ${(S.N * d * Math.cos(S.alpha * DEG) * 1e3).toFixed(S.N * d < 1e-3 ? 3 : 2)} mm`;
@@ -1353,6 +1513,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
     const hide = S.mode === 'measure';
     $('ordTable').hidden = $('ordNote').hidden = hide; $('ordHidden').hidden = !hide;
     if (hide) return;
+    if (single()) { updateDarks(); return; }
     const d = dOf(S.lpm), al = S.alpha * DEG, lamNm = refLam(), lam = lamNm * 1e-9, r = orderRange(lam, d, al), rows = [];
     const sym = S.alpha === 0;
     rows.push('<tr><th>m</th><th>θ</th><th>y</th><th>I / I₀</th></tr>');
@@ -1375,13 +1536,47 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
     if (!sym) note += ' θ is measured from the straight through beam; from the grating normal subtract the turn.';
     $('ordNote').innerHTML = note;
   }
+  // single slit: the dark fringes a sin θ = mλ in the table, and the side maxima in the note
+  function updateDarks() {
+    const a = S.aw * 1e-6, al = S.alpha * DEG, lamNm = refLam(), lam = lamNm * 1e-9, r = darkRange(lam, a, al), rows = [], sym = S.alpha === 0;
+    rows.push('<tr><th>dark m</th><th>θ</th><th>y</th><th>sin θ</th></tr>');
+    for (let m = sym ? 1 : r.lo; m <= r.hi; m++) {
+      if (!m) continue;
+      const o = orderInfo(m, lam, a, al, S.L), mm = sym ? '±' + m : minus(m);
+      if (!o.onScreen) { rows.push(`<tr class="no"><td>${mm}</td><td>${fmtDeg(o.psi)}</td><td colspan="2" class="why">misses the wall</td></tr>`); continue; }
+      rows.push(`<tr><td>${mm}</td><td>${fmtDeg(o.psi)}</td><td>${minus((o.y * 100).toFixed(1))}</td><td>${minus(Math.sin(o.psi).toFixed(4))}</td></tr>`);
+    }
+    const nx = r.hi + 1;
+    rows.push(`<tr class="no"><td>${sym ? '±' : ''}${nx}</td><td>—</td><td colspan="2" class="why">does not exist</td></tr>`);
+    $('ordTable').innerHTML = rows.join('');
+    const side = [1, 2, 3].map((k) => sinc2(slitMaxBeta(k)).toFixed(4)).join(', ');
+    let note = r.hi < 1
+      ? `For ${fmtNm(lamNm)}: no dark fringe at all, since λ/a = ${(lam / a).toFixed(3)} &gt; 1. A slit narrower than λ spreads its light over the whole half space.`
+      : `For ${fmtNm(lamNm)}: dark fringes where a sin θ = mλ, up to <b>m = ${r.hi}</b> (${r.hi}λ/a = ${(r.hi * lam / a).toFixed(3)}; ${nx}λ/a = ${(nx * lam / a).toFixed(3)} &gt; 1).`;
+    note += ` The middle band is twice as wide as the side bands. Side maxima (tan β = β) reach I / I₀ = ${side}.`;
+    if (!sym) note += ' θ is measured from the straight through beam.';
+    $('ordNote').innerHTML = note;
+  }
+  // the light meter on jaw B (single slit, one wavelength): [sin β/β]² there
+  function meterAtB() {
+    const sd = srcDef();
+    if (!single() || sd.continuum || sd.lamp || (sd.lines && sd.lines.length !== 1)) return null;
+    const lam = (S.unknown ? S.unknownLam : sd.lines[0][0]) * 1e-9, al = S.alpha * DEG, th = Math.atan2(S.jawB, S.L) - al;
+    if (Math.abs(th) >= PI / 2) return 0;
+    return intensity(Math.sin(th) + Math.sin(al), lam, S.aw * 1e-6, S.aw * 1e-6, 1);
+  }
   function trueLams() { return PH ? PH.comps.map((c) => c.lam) : []; }
   function updateMeasure() {
     const on = S.mode === 'measure';
     $('measBox').hidden = !on;
     if (!on) return;
     $('rCal').textContent = fmtCm(S.jawB - S.jawA);
-    $('rGr').textContent = (S.lpm % 1 ? S.lpm.toFixed(1) : S.lpm.toFixed(0)) + ' /mm';
+    $('rGrLab').textContent = single() ? 'Slit width' : 'Grating';
+    $('rGr').textContent = single() ? S.aw.toFixed(1) + ' µm' : (S.lpm % 1 ? S.lpm.toFixed(1) : S.lpm.toFixed(0)) + ' /mm';
+    const mt = meterAtB();
+    $('meterRow').hidden = !single();
+    $('rMeter').textContent = mt == null ? 'needs a single wavelength' : mt.toFixed(4);
+    for (const b of document.querySelectorAll('[data-find]')) b.textContent = b.dataset.find === 'lam' ? (single() ? 'λ from a' : 'λ from d') : (single() ? 'a from λ' : 'd from λ');
     const dBtn = document.querySelector('[data-find="d"]');
     dBtn.disabled = S.unknown || !!srcDef().continuum;
     if (dBtn.disabled && S.find === 'd') setFind('lam');
@@ -1396,7 +1591,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
   function check() {
     const L = parseFloat($('inL').value), yc = parseFloat($('inY').value), m = parseInt($('inM').value, 10), box = $('result');
     if (!(L > 0) || !(yc > 0) || !(m >= 1)) { box.innerHTML = '<p>Enter L in metres, y in centimetres (both positive) and a whole order number m ≥ 1.</p>'; return; }
-    const y = yc / 100, d = dOf(S.lpm), sd = srcDef();
+    const one = single(), D = one ? 'a' : 'd', y = yc / 100, d = one ? S.aw * 1e-6 : dOf(S.lpm), sd = srcDef();
     let html = '';
     if (S.find === 'lam') {
       if (sd.continuum) { box.innerHTML = '<p>White light contains every wavelength, so there is no single answer. Pick a laser or a lamp line.</p>'; return; }
@@ -1404,11 +1599,11 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
       const truth = trueLams().reduce((b, l) => (Math.abs(l - ex) < Math.abs(b - ex) ? l : b), trueLams()[0]);
       const good = Math.abs(ex - truth) / truth < 0.01;
       html += row('θ = arctan(y/L)', fmtDeg(r.th));
-      html += row('Exact: λ = d sin θ / m', fmtNm(ex) + ' (' + pct(ex, truth) + ')', good ? 'good' : 'bad');
-      html += row('Small angle: λ ≈ d y / (m L)', fmtNm(sm) + ' (' + pct(sm, truth) + ')', Math.abs(sm - truth) / truth < 0.01 ? 'good' : 'bad');
+      html += row(`Exact: λ = ${D} sin θ / m`, fmtNm(ex) + ' (' + pct(ex, truth) + ')', good ? 'good' : 'bad');
+      html += row(`Small angle: λ ≈ ${D} y / (m L)`, fmtNm(sm) + ' (' + pct(sm, truth) + ')', Math.abs(sm - truth) / truth < 0.01 ? 'good' : 'bad');
       html += row(PH.comps.length > 1 ? 'Nearest true line' : 'True wavelength', fmtNm(truth));
       const o = orderInfo(m, truth * 1e-9, d, S.alpha * DEG, S.L);
-      if (o.exists && o.onScreen) html += row(`True y${sub(m)} at L = ${S.L.toFixed(2)} m`, fmtCm(o.y));
+      if (o.exists && o.onScreen) html += row(`True ${one ? 'dark ' : ''}y${sub(m)} at L = ${S.L.toFixed(2)} m`, fmtCm(o.y));
       if (S.unknown) {
         const key = Object.keys(SOURCES).find((k) => SOURCES[k].lines && SOURCES[k].lines.length === 1 && SOURCES[k].lines[0][0] === truth);
         S.unknown = false; if (key) S.src = key;
@@ -1417,12 +1612,12 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
     } else {
       const lam = refLam() * 1e-9, r = dFromSpot(y, L, m, lam), ex = r.exact * 1e6, sm = r.small * 1e6, truth = d * 1e6;
       html += row('θ = arctan(y/L)', fmtDeg(r.th));
-      html += row('Exact: d = mλ / sin θ', ex.toFixed(3) + ' µm (' + pct(ex, truth) + ')', Math.abs(ex - truth) / truth < 0.01 ? 'good' : 'bad');
-      html += row('Small angle: d ≈ mλL / y', sm.toFixed(3) + ' µm (' + pct(sm, truth) + ')', Math.abs(sm - truth) / truth < 0.01 ? 'good' : 'bad');
-      html += row('True d', truth.toFixed(3) + ' µm = ' + (1 / (truth * 1e-3)).toFixed(0) + ' lines/mm');
+      html += row(`Exact: ${D} = mλ / sin θ`, ex.toFixed(3) + ' µm (' + pct(ex, truth) + ')', Math.abs(ex - truth) / truth < 0.01 ? 'good' : 'bad');
+      html += row(`Small angle: ${D} ≈ mλL / y`, sm.toFixed(3) + ' µm (' + pct(sm, truth) + ')', Math.abs(sm - truth) / truth < 0.01 ? 'good' : 'bad');
+      html += row('True ' + D, truth.toFixed(3) + ' µm' + (one ? '' : ' = ' + (1 / (truth * 1e-3)).toFixed(0) + ' lines/mm'));
       html += row('Using λ', fmtNm(refLam()));
     }
-    if (S.alpha !== 0) html += '<p>The grating is turned, so tan θ = y/L and d sin θ = mλ no longer apply as written. Set the turn to 0° for this measurement.</p>';
+    if (S.alpha !== 0) html += '<p>The ' + (one ? 'slit' : 'grating') + ' is turned, so tan θ = y/L and d sin θ = mλ no longer apply as written. Set the turn to 0° for this measurement.</p>';
     else html += '<p>The small angle form uses sin θ ≈ tan θ ≈ y/L. It is only good to 1% below about 8°; at larger angles the exact form is needed.</p>';
     box.innerHTML = html;
     syncSourceChips(); dirty = true; schedule(); updateRail();
@@ -1451,6 +1646,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
       let l; do { l = UNKNOWN_SET[Math.floor(Math.random() * UNKNOWN_SET.length)]; } while (UNKNOWN_SET.length > 1 && l === S.unknownLam && Math.random() < 0.8);
       S.src = 'unknown'; S.unknown = true; S.unknownLam = l;
     } else { S.src = p.src; S.unknown = false; }
+    setAperture('grating', true);
     S.refIdx = p.src === 'white' ? 1 : 0; S.lpm = p.lpm; S.grat = p.grat; S.L = p.L; S.frameL = p.frameL; S.N = p.N; S.dA = p.dA; S.alpha = p.alpha;
     $('sL').value = S.L; $('sN').value = Math.log10(S.N); $('sDA').value = S.dA; $('sRot').value = S.alpha; $('sLpm').value = Math.round(S.lpm);
     for (const b of document.querySelectorAll('#grats button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.grat));
@@ -1468,6 +1664,8 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
   $('sLpm').addEventListener('input', (e) => { const v = +e.target.value; const g = Object.keys(GRATS).find((k) => Math.abs(GRATS[k] - v) < 1e-9 && k !== 'cd'); setLpm(v, g || (v === 625 ? 'cd' : null)); });
   $('sN').addEventListener('input', (e) => { S.N = Math.round(Math.pow(10, +e.target.value)); changed(); });
   $('sDA').addEventListener('input', (e) => { S.dA = +e.target.value; changed(); });
+  $('sA').addEventListener('input', (e) => { S.aw = +e.target.value; changed(); });
+  for (const b of document.querySelectorAll('[data-ap]')) b.addEventListener('click', () => { if (b.dataset.ap !== S.ap) { setAperture(b.dataset.ap, true); setZoom(S.zoom); changed(); } });
   $('sRot').addEventListener('input', (e) => { S.alpha = +e.target.value; changed(); });
   $('sL').addEventListener('input', (e) => { S.L = +e.target.value; changed(); });
   for (const b of document.querySelectorAll('[data-mode]')) b.addEventListener('click', () => setMode(b.dataset.mode));
@@ -1521,6 +1719,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
     const k = e.key, big = e.shiftKey;
     if (k === 'ArrowUp' || k === 'ArrowDown') setL(sliderSnap($('sL'), S.L + (k === 'ArrowUp' ? -1 : 1) * (big ? 0.1 : 0.01)));
     else if (k === '[' || k === ']') setAlpha(sliderSnap($('sRot'), S.alpha + (k === ']' ? 1 : -1) * (big ? 5 : 0.5)));
+    else if (single() && (k === '+' || k === '=' || k === '-' || k === '_' || k === '−')) setAw(S.aw + ((k === '+' || k === '=') ? 1 : -1) * (big ? 1 : 0.1));
     else if (k === '+' || k === '=' || k === '-' || k === '_' || k === '−') setN(S.N * ((k === '+' || k === '=') ? (big ? 2 : 1.25) : (big ? 0.5 : 0.8)) + ((k === '+' || k === '=') ? 1 : 0));
     else if (S.mode === 'measure' && (k === 'a' || k === 'A' || k === 'b' || k === 'B')) { S.jaw = k.toUpperCase(); schedule(); }
     else if (S.mode === 'measure' && (k === 'ArrowLeft' || k === 'ArrowRight')) {
@@ -1541,7 +1740,25 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
     draw(dt);
     if (animating()) schedule(); else last = 0;
   }
-  window.__dg = { S, physics: () => PH, handles: () => handles(), scale: () => s, frameTime: (rebuild) => { const t0 = performance.now(); for (let i = 0; i < 20; i++) { if (rebuild) dirty = true; draw(0.016); } return (performance.now() - t0) / 20; } };
+  // ---------- readings (the shared Readings section): one row per caliper reading, in Measure ----------
+  const sig4 = (v) => String(Number(v.toPrecision(4)));
+  window.vdVersion = 'diffraction-grating@2026-10-24';
+  window.vdWorksheet = () => (single() ? 'single-slit' : 'diffraction-grating');
+  window.vdShowCols = [['source', 'Source'], ['m', 'm'], ['L_m', 'L (m)'], ['y_cm', 'y (cm)']];
+  window.vdReadingRow = () => {
+    if (S.mode !== 'measure') return 'Switch to Measure and put the caliper on the wall first: jaw A on the center, jaw B on the spot or dark fringe.';
+    const prev = window.vdRows ? window.vdRows() : [];
+    if (prev.length && prev[0].aperture !== S.ap) return `These readings are from the ${prev[0].aperture === 'single' ? 'single slit' : 'grating'}. Export or clear them first.`;
+    const sd = srcDef(), one = sd.lines && sd.lines.length === 1;
+    const lam = S.unknown ? '?' : one ? String(sd.lines[0][0]) : '';
+    const mIn = parseInt($('inM').value, 10), base = { aperture: S.ap, source: S.unknown ? 'Unknown laser' : sd.name, lam_nm: lam };
+    const tail = { turn_deg: String(S.alpha), L_m: S.L.toFixed(2), A_cm: (S.jawA * 100).toFixed(1), B_cm: (S.jawB * 100).toFixed(1), y_cm: ((S.jawB - S.jawA) * 100).toFixed(1) };
+    if (!single()) return Object.assign(base, { lines_per_mm: String(Math.round(S.lpm * 10) / 10), d_um: (dOf(S.lpm) * 1e6).toFixed(4), N: String(S.N), m: Number.isFinite(mIn) ? String(mIn) : '' }, tail);
+    const mt = meterAtB();
+    /* the dark fringe number goes in only when jaw B sits on a dark fringe (the meter reads below 0.001) */
+    return Object.assign(base, { a_um: S.aw.toFixed(1), m: mt != null && mt < 1e-3 && Number.isFinite(mIn) ? String(mIn) : '' }, tail, { I_rel: mt == null ? '' : sig4(mt) });
+  };
+  window.__dg = { S, physics: () => PH, handles: () => handles(), scale: () => s, setAperture, setAw, setJaw, setL, setMode, applyPreset, update: () => { dirty = true; layout(); schedule(); updateRail(); }, frameTime: (rebuild) => { const t0 = performance.now(); for (let i = 0; i < 20; i++) { if (rebuild) dirty = true; draw(0.016); } return (performance.now() - t0) / 20; } };
 
   // ---------- sizing ----------
   function resize() {
@@ -1574,6 +1791,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
   new ResizeObserver(resize).observe(stage);
   resize();
   applyPreset('red600');
+  try { if (new URLSearchParams(location.search).get('aperture') === 'single') setAperture('single'); } catch (_) {}
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; schedule(); });
 })();
 </script>

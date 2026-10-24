@@ -1,0 +1,802 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Holography</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css. The two pictures are a darkened optics room in both themes (laser light is
+   easiest to see on black), so they keep their own fixed colours; everything around them follows the theme. */
+:root { --room: #0b0f15; --room-ink: #dfe6ef; --room-muted: #8d99a8; --room-line: #253041; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.pane { position: relative; flex: 1 1 auto; min-height: 400px; background: var(--room); }
+.pane canvas, .scopebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: pan-y; }
+.scopebox { position: relative; flex: none; height: 230px; border-top: 1px solid var(--line); background: var(--room); }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { align-self: stretch; flex: 1 1 520px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.shelf-card fieldset { border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px 8px; margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.shelf-card legend { font-size: 0.78rem; font-weight: 700; color: var(--muted); padding: 0 4px; }
+.shelf-card .seg { flex-wrap: wrap; }
+.shelf-card [hidden] { display: none !important; }
+.holo-note { font-size: 0.8rem; color: var(--muted); margin: 0; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 400px; flex: none; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 560px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 430px; } .stage.rc .pane { height: 290px; } .scopebox { height: 330px; } }
+@media (min-width: 821px) { .stage { min-height: 760px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Holography</h1>
+      <p>Record the interference of a reference beam and the light from an object on a plate, then light the developed plate again and watch it rebuild the object's wave: a virtual image, a real image and the light that goes straight through.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">λ in nm · x and z in mm · angles in degrees</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/holography.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/holography.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM14 2h3v1h-3zM19 2h1v1h-1zM21 2h2v1h-2zM27 2h1v1h-1zM29 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM20 3h2v1h-2zM24 3h3v1h-3zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h3v1h-3zM15 4h1v1h-1zM18 4h3v1h-3zM23 4h2v1h-2zM26 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h5v1h-5zM20 5h1v1h-1zM26 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM15 6h2v1h-2zM19 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h3v1h-3zM18 7h2v1h-2zM21 7h2v1h-2zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM21 9h3v1h-3zM25 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h4v1h-4zM14 10h2v1h-2zM17 10h2v1h-2zM21 10h2v1h-2zM25 10h2v1h-2zM31 10h5v1h-5zM38 10h1v1h-1zM3 11h2v1h-2zM6 11h1v1h-1zM11 11h1v1h-1zM13 11h2v1h-2zM20 11h2v1h-2zM23 11h2v1h-2zM26 11h5v1h-5zM34 11h4v1h-4zM4 12h5v1h-5zM10 12h2v1h-2zM14 12h4v1h-4zM21 12h1v1h-1zM23 12h3v1h-3zM28 12h4v1h-4zM33 12h2v1h-2zM2 13h1v1h-1zM4 13h2v1h-2zM7 13h1v1h-1zM10 13h2v1h-2zM13 13h1v1h-1zM15 13h5v1h-5zM21 13h6v1h-6zM30 13h2v1h-2zM33 13h2v1h-2zM36 13h2v1h-2zM8 14h1v1h-1zM11 14h2v1h-2zM14 14h1v1h-1zM16 14h1v1h-1zM19 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM2 15h1v1h-1zM6 15h2v1h-2zM9 15h1v1h-1zM12 15h2v1h-2zM15 15h4v1h-4zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM4 16h1v1h-1zM6 16h1v1h-1zM8 16h3v1h-3zM12 16h1v1h-1zM14 16h4v1h-4zM19 16h1v1h-1zM22 16h1v1h-1zM25 16h2v1h-2zM29 16h1v1h-1zM31 16h7v1h-7zM2 17h1v1h-1zM5 17h1v1h-1zM7 17h1v1h-1zM10 17h1v1h-1zM12 17h3v1h-3zM16 17h2v1h-2zM19 17h4v1h-4zM24 17h1v1h-1zM26 17h1v1h-1zM30 17h2v1h-2zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h1v1h-1zM4 18h2v1h-2zM7 18h2v1h-2zM10 18h2v1h-2zM14 18h1v1h-1zM20 18h1v1h-1zM24 18h1v1h-1zM26 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM3 19h4v1h-4zM13 19h1v1h-1zM15 19h1v1h-1zM18 19h1v1h-1zM21 19h2v1h-2zM25 19h1v1h-1zM27 19h1v1h-1zM29 19h2v1h-2zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h1v1h-1zM8 20h3v1h-3zM12 20h3v1h-3zM18 20h3v1h-3zM22 20h2v1h-2zM25 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM2 21h2v1h-2zM6 21h1v1h-1zM9 21h1v1h-1zM12 21h1v1h-1zM16 21h1v1h-1zM19 21h1v1h-1zM23 21h1v1h-1zM25 21h2v1h-2zM28 21h1v1h-1zM31 21h1v1h-1zM36 21h2v1h-2zM3 22h2v1h-2zM6 22h1v1h-1zM8 22h3v1h-3zM16 22h2v1h-2zM19 22h1v1h-1zM21 22h6v1h-6zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h3v1h-3zM6 23h1v1h-1zM11 23h1v1h-1zM13 23h2v1h-2zM16 23h4v1h-4zM22 23h1v1h-1zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM5 24h1v1h-1zM7 24h3v1h-3zM11 24h2v1h-2zM14 24h1v1h-1zM17 24h2v1h-2zM20 24h1v1h-1zM22 24h4v1h-4zM29 24h1v1h-1zM32 24h5v1h-5zM5 25h2v1h-2zM9 25h1v1h-1zM12 25h1v1h-1zM15 25h3v1h-3zM21 25h3v1h-3zM26 25h1v1h-1zM28 25h3v1h-3zM32 25h3v1h-3zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h3v1h-3zM6 26h3v1h-3zM14 26h3v1h-3zM18 26h1v1h-1zM22 26h1v1h-1zM25 26h2v1h-2zM28 26h2v1h-2zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h3v1h-3zM12 27h3v1h-3zM20 27h2v1h-2zM24 27h2v1h-2zM27 27h4v1h-4zM34 27h2v1h-2zM4 28h6v1h-6zM11 28h2v1h-2zM14 28h1v1h-1zM17 28h1v1h-1zM19 28h3v1h-3zM24 28h2v1h-2zM27 28h3v1h-3zM31 28h4v1h-4zM36 28h1v1h-1zM4 29h1v1h-1zM13 29h1v1h-1zM15 29h1v1h-1zM17 29h10v1h-10zM33 29h2v1h-2zM36 29h3v1h-3zM2 30h2v1h-2zM5 30h1v1h-1zM7 30h3v1h-3zM11 30h3v1h-3zM15 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM26 30h1v1h-1zM29 30h6v1h-6zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h3v1h-3zM14 31h1v1h-1zM16 31h1v1h-1zM18 31h1v1h-1zM20 31h1v1h-1zM23 31h1v1h-1zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h6v1h-6zM17 32h3v1h-3zM22 32h1v1h-1zM25 32h1v1h-1zM27 32h2v1h-2zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h4v1h-4zM16 33h2v1h-2zM19 33h2v1h-2zM24 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h3v1h-3zM14 34h2v1h-2zM17 34h1v1h-1zM20 34h1v1h-1zM24 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM13 35h2v1h-2zM18 35h1v1h-1zM21 35h3v1h-3zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM14 36h1v1h-1zM16 36h1v1h-1zM18 36h2v1h-2zM22 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM15 37h1v1h-1zM19 37h2v1h-2zM23 37h3v1h-3zM28 37h2v1h-2zM32 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h2v1h-2zM16 38h2v1h-2zM19 38h1v1h-1zM21 38h6v1h-6zM29 38h1v1h-1zM32 38h2v1h-2zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="rec" aria-pressed="true">Record</button>
+          <button type="button" data-v="rc" aria-pressed="false">Reconstruct</button>
+        </div>
+        <span class="count mono" id="status"></span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="The recording, seen from above: a reference beam and the light from the object meet on a photographic plate. A magnified view shows the interference fringes at the plate."></canvas>
+      </div>
+      <div class="scopebox" id="scopebox"><canvas id="scope" tabindex="0" role="img" aria-label="The developed plate under a microscope, with two cursors."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardRec" role="group" aria-label="The recording">
+          <span class="card-title">Recording: a laser beam split into a reference beam and an object beam, meeting on the plate (3.0 mm wide)</span>
+          <div class="wide">
+            <span class="lab">Laser</span>
+            <div class="seg" role="group" aria-label="Laser" id="laserSeg">
+              <button type="button" data-l="633" aria-pressed="true">633 nm red</button>
+              <button type="button" data-l="532" aria-pressed="false">532 nm green</button>
+              <button type="button" data-l="473" aria-pressed="false">473 nm blue</button>
+              <button type="button" data-l="405" aria-pressed="false">405 nm violet</button>
+            </div>
+          </div>
+          <div><div class="slider-head"><label for="sThr">Reference beam angle θ<sub>r</sub></label><output id="oThr" class="mono" for="sThr"></output></div><input type="range" id="sThr" min="0" max="30" step="0.5"></div>
+          <div><div class="slider-head"><label for="sK">Beam ratio (reference to object)</label><output id="oK" class="mono" for="sK"></output></div><input type="range" id="sK" min="1" max="20" step="1"></div>
+          <div class="wide">
+            <span class="lab">Object</span>
+            <div class="seg" role="group" aria-label="Object" id="objSeg">
+              <button type="button" data-o="plane" aria-pressed="true">Plane wave (a mirror)</button>
+              <button type="button" data-o="one" aria-pressed="false">One point</button>
+              <button type="button" data-o="three" aria-pressed="false">Three points</button>
+            </div>
+          </div>
+          <div id="boxTho"><div class="slider-head"><label for="sTho">Object beam angle θ<sub>o</sub></label><output id="oTho" class="mono" for="sTho"></output></div><input type="range" id="sTho" min="-30" max="30" step="0.5"></div>
+          <div id="boxZo" hidden><div class="slider-head"><label for="sZo">Object distance from the plate</label><output id="oZo" class="mono" for="sZo"></output></div><input type="range" id="sZo" min="12" max="24" step="0.5"></div>
+          <fieldset><legend>Microscope on the developed plate</legend>
+            <div><div class="slider-head"><label for="sFov">Field of view</label><output id="oFov" class="mono" for="sFov"></output></div><input type="range" id="sFov" min="0" max="100" step="1"></div>
+            <div><div class="slider-head"><label for="sXc">Centre of the view</label><output id="oXc" class="mono" for="sXc"></output></div><input type="range" id="sXc" min="-1500" max="1500" step="0.5"></div>
+          </fieldset>
+          <fieldset><legend>Cursors (drag them in the microscope)</legend>
+            <div><div class="slider-head"><label for="sCa">Cursor A</label><output id="oCa" class="mono" for="sCa"></output></div><input type="range" id="sCa" min="-1500" max="1500" step="0.01"></div>
+            <div><div class="slider-head"><label for="sCb">Cursor B</label><output id="oCb" class="mono" for="sCb"></output></div><input type="range" id="sCb" min="-1500" max="1500" step="0.01"></div>
+          </fieldset>
+        </div>
+        <div class="shelf-card" id="cardRc" role="group" aria-label="The reconstruction" hidden>
+          <span class="card-title">Reconstruction: light the developed plate again, without the object</span>
+          <p class="holo-note wide" id="holoNote"></p>
+          <div><div class="slider-head"><label for="sL2">Wavelength of the light λ<sub>2</sub></label><output id="oL2" class="mono" for="sL2"></output></div><input type="range" id="sL2" min="400" max="700" step="1"></div>
+          <div class="wide">
+            <span class="lab">Light the plate</span>
+            <div class="seg" role="group" aria-label="Direction of the light" id="sideSeg">
+              <button type="button" data-s="same" aria-pressed="true">Along the reference beam (θ<sub>r</sub>)</button>
+              <button type="button" data-s="other" aria-pressed="false">From the other side (−θ<sub>r</sub>)</button>
+            </div>
+          </div>
+          <div><div class="slider-head"><label for="sZs">Screen or camera focus z</label><output id="oZs" class="mono" for="sZs"></output></div><input type="range" id="sZs" min="-32" max="32" step="0.05"></div>
+          <div><div class="slider-head"><label for="sDet">Detector angle</label><output id="oDet" class="mono" for="sDet"></output></div><input type="range" id="sDet" min="-80" max="80" step="0.01"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/holography.html" target="holography-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="beams" aria-pressed="true">Two beams</button>
+          <button type="button" data-p="grating" aria-pressed="false">Plane wave hologram</button>
+          <button type="button" data-p="point" aria-pressed="false">Record a point</button>
+          <button type="button" data-p="virtual" aria-pressed="false">Virtual image</button>
+          <button type="button" data-p="real" aria-pressed="false">Real image</button>
+          <button type="button" data-p="color" aria-pressed="false">Another color</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="holography" data-title="Holography" data-demo="holography">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the predicted fringe spacing, beam angles and image positions</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="aboutRec"></p>
+          <p class="hint" id="aboutRc"></p>
+          <p class="hint" id="aboutSimple"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Holography in a two dimensional slice (x along the plate, z along the light). Everything here runs in Node
+     (curriculum/validation/test_holography.cjs). OpenStax University Physics Volume 3, section 4.7.
+     The slice: every "point" of the object is really a bright line perpendicular to the slice, so its wave is cylindrical,
+     exactly the Hankel function H0(kr) (the 2D Green's function), and the plate is a strip PLATE_W wide. The plate is thin (it
+     records only what reaches the plane z = 0) and its emulsion is linear: the developed plate's amplitude transmittance is
+     taken proportional to the exposure, t(x) = I(x)/I_max. A real plate is linear over only part of its range. */
+  const TAU = 2 * Math.PI, RAD = Math.PI / 180, PLATE_W = 3e-3, WINDOW = 28e-3;
+  /* H0^(1)(x) = J0(x) + i Y0(x) from its asymptotic series (Abramowitz and Stegun 9.2.7 to 9.2.10). Here kr is at least 5 × 10⁴,
+     where four terms are exact to far better than 1 part in 10¹². Returns [re, im]. */
+  function hankel0(x) {
+    const a = Math.sqrt(2 / (Math.PI * x)), ix = 1 / x;
+    const P = 1 - (9 / 128) * ix * ix + (11025 / 98304) * ix * ix * ix * ix, Q = -0.125 * ix + (225 / 3072) * ix * ix * ix;
+    const ph = x - Math.PI / 4, c = Math.cos(ph), s = Math.sin(ph);
+    return [a * (P * c - Q * s), a * (P * s + Q * c)];
+  }
+  /* The recording. p = { lam1 (m), thr (reference angle, degrees), obj: { kind: 'plane', tho } or { kind: 'points', pts: [{ x, z }] }
+     with z < 0 (the object is on the side the light comes from), K (beam ratio: reference intensity over object intensity at the
+     plate's centre) }. The reference is a unit plane wave. Each object point gets the same amplitude at the plate's centre, and
+     together they give intensity 1/K there (their amplitudes add as if incoherent: each 1/√(nK)). */
+  function recording(p) {
+    const k = TAU / p.lam1, sr = Math.sin(p.thr * RAD), cr = Math.cos(p.thr * RAD), o = p.obj;
+    const plane = o.kind === 'plane', so = plane ? Math.sin(o.tho * RAD) : 0, co = plane ? Math.cos(o.tho * RAD) : 1;
+    const pts = plane ? [] : o.pts.map((q) => { const h = hankel0(k * Math.hypot(q.x, q.z)); return { x: q.x, z: q.z, a: 1 / (Math.sqrt(o.pts.length * p.K) * Math.hypot(h[0], h[1])) }; });
+    const ao = 1 / Math.sqrt(p.K);
+    /* the object wave at (x, z), z ≤ 0 near the plate */
+    function obj(x, z = 0) {
+      if (plane) { const ph = k * (so * x + co * z); return [ao * Math.cos(ph), ao * Math.sin(ph)]; }
+      let re = 0, im = 0; for (const q of pts) { const h = hankel0(k * Math.hypot(x - q.x, z - q.z)); re += q.a * h[0]; im += q.a * h[1]; } return [re, im];
+    }
+    function ref(x, z = 0) { const ph = k * (sr * x + cr * z); return [Math.cos(ph), Math.sin(ph)]; }
+    function intensity(x, z = 0) { const a = ref(x, z), b = obj(x, z), re = a[0] + b[0], im = a[1] + b[1]; return re * re + im * im; }
+    /* largest |sin| of the object light reaching the plate */
+    const sMax = plane ? Math.abs(so) : Math.max(...pts.map((q) => Math.max(Math.abs(PLATE_W / 2 - q.x), Math.abs(-PLATE_W / 2 - q.x)) / Math.hypot(PLATE_W / 2 + Math.abs(q.x), q.z)));
+    return { p, k, sr, so, plane, pts, ref, obj, intensity, sMax };
+  }
+  /* fringe spacing on the plate for two plane waves at angles a and b to the plate's normal, and in space for an angle θ between them */
+  const fringePlate = (lam, a, b) => lam / Math.abs(Math.sin(a * RAD) - Math.sin(b * RAD));
+  const fringeSpace = (lam, theta) => lam / (2 * Math.sin(theta * RAD / 2));
+  /* positions of the bright fringes (maxima of I) between x1 and x2 on the plate, found on a fine grid and refined by a parabola */
+  function maxima(rec, x1, x2) {
+    const lo = Math.min(x1, x2), hi = Math.max(x1, x2), n = Math.min(400000, Math.max(200, Math.ceil((hi - lo) / 2e-8))), h = (hi - lo) / n, out = [];
+    let a = rec.intensity(lo - h), b = rec.intensity(lo);
+    for (let i = 1; i <= n + 1; i++) {
+      const c = rec.intensity(lo + i * h);
+      if (b > a && b >= c) { const den = a - 2 * b + c, d = den ? 0.5 * (a - c) / den : 0, x = lo + (i - 1 + d) * h; if (x >= lo && x <= hi) out.push(x); }
+      a = b; b = c;
+    }
+    return out;
+  }
+  /* in place radix 2 FFT of (re, im), length a power of 2; inv = true for the inverse (with the 1/N) */
+  const TW = {};
+  function fft(re, im, inv) {
+    const n = re.length; let tw = TW[n];
+    if (!tw) { tw = TW[n] = { c: new Float64Array(n / 2), s: new Float64Array(n / 2) }; for (let i = 0; i < n / 2; i++) { tw.c[i] = Math.cos(TAU * i / n); tw.s[i] = Math.sin(TAU * i / n); } }
+    for (let i = 1, j = 0; i < n; i++) { let bit = n >> 1; for (; j & bit; bit >>= 1) j ^= bit; j ^= bit; if (i < j) { let t = re[i]; re[i] = re[j]; re[j] = t; t = im[i]; im[i] = im[j]; im[j] = t; } }
+    const sg = inv ? 1 : -1;
+    for (let len = 2; len <= n; len <<= 1) {
+      const half = len >> 1, step = n / len;
+      for (let i = 0; i < n; i += len) for (let j = 0, t = 0; j < half; j++, t += step) {
+        const wr = tw.c[t], wi = sg * tw.s[t], a = i + j, b = a + half, xr = re[b] * wr - im[b] * wi, xi = re[b] * wi + im[b] * wr;
+        re[b] = re[a] - xr; im[b] = im[a] - xi; re[a] += xr; im[a] += xi;
+      }
+    }
+    if (inv) for (let i = 0; i < n; i++) { re[i] /= n; im[i] /= n; }
+  }
+  /* The reconstruction. The developed plate (t = I/I_max inside the strip, opaque outside) is lit by a unit plane wave of wavelength
+     lam2 at angle thi. The light just past the plate is u(x) = t(x) e^{i k2 sin(thi) x}; its plane wave spectrum (one FFT over a
+     window WINDOW wide) gives the light at any distance z, forward (z > 0) or traced back (z < 0, where the light seems to come
+     from), exactly: each plane wave e^{i(kx x + kz z)} with kz = √(k2² − kx²). Evanescent waves (|kx| > k2) are dropped: they die
+     within a few wavelengths of the plate and no eye or screen sees them. The sample spacing is chosen so the finest fringes are
+     sampled more than twice per period (no aliasing). A plane wave that would leave the window at distance z is dropped instead of
+     wrapping round to the other side (the FFT window is periodic); none reaches the part of the picture shown. */
+  function reconstruct(rec, lam2, thi) {
+    const si = Math.sin(thi * RAD), fmax = Math.abs(si) / lam2 + Math.max(Math.abs(rec.sr) + rec.sMax, 2 * rec.sMax) / rec.p.lam1;
+    let N = 1 << 15; while (WINDOW / N > 1 / (2.2 * fmax) && N < (1 << 19)) N <<= 1;
+    const dx = WINDOW / N, k2 = TAU / lam2, re = new Float64Array(N), im = new Float64Array(N), I = new Float64Array(N);
+    let Imax = 0;
+    for (let n = 0; n < N; n++) { const x = (n - N / 2) * dx; if (Math.abs(x) <= PLATE_W / 2) { I[n] = rec.intensity(x); if (I[n] > Imax) Imax = I[n]; } }
+    for (let n = 0; n < N; n++) { const x = (n - N / 2) * dx; if (I[n]) { const t = I[n] / Imax, ph = k2 * si * x; re[n] = t * Math.cos(ph); im[n] = t * Math.sin(ph); } }
+    fft(re, im, false);
+    /* bin m holds kx = 2π m'/WINDOW with m' = m (m < N/2) or m − N; x was measured from the window's centre, so undo that shift */
+    const kx = new Float64Array(N), kz = new Float64Array(N);
+    for (let m = 0; m < N; m++) {
+      const mm = m < N / 2 ? m : m - N; kx[m] = TAU * mm / WINDOW; kz[m] = k2 * k2 > kx[m] * kx[m] ? Math.sqrt(k2 * k2 - kx[m] * kx[m]) : -1;
+      if (mm & 1) { re[m] = -re[m]; im[m] = -im[m]; }   /* the factor e^{iπ m'} from the centring (N/2 samples) */
+    }
+    return { rec, lam2, thi, si, N, dx, k2, Ar: re, Ai: im, kx, kz, Imax };
+  }
+  /* the light at distance z (m) behind the plate (negative: traced back), as intensity |U|² on the window's N samples (x from
+     −WINDOW/2), in units of the light falling on the plate. Uses scratch arrays held by R. */
+  function fieldAt(R, z) {
+    const N = R.N; if (!R.wr) { R.wr = new Float64Array(N); R.wi = new Float64Array(N); R.out = new Float64Array(N); }
+    const wr = R.wr, wi = R.wi, edge = WINDOW / 2 - PLATE_W / 2 - 1e-3;
+    for (let m = 0; m < N; m++) {
+      const kz = R.kz[m]; if (kz < 0) { wr[m] = 0; wi[m] = 0; continue; }
+      if (Math.abs(z * R.kx[m] / kz) > edge) { wr[m] = 0; wi[m] = 0; continue; }   /* would leave the window before reaching z */
+      const c = Math.cos(kz * z), s = Math.sin(kz * z), mm = m < N / 2 ? m : m - N, sg = mm & 1 ? -1 : 1;
+      wr[m] = sg * (R.Ar[m] * c - R.Ai[m] * s); wi[m] = sg * (R.Ar[m] * s + R.Ai[m] * c);
+    }
+    fft(wr, wi, true);
+    const out = R.out; for (let n = 0; n < N; n++) out[n] = wr[n] * wr[n] + wi[n] * wi[n];
+    return out;
+  }
+  /* the same for a run of planes z0, z0 + dz, z0 + 2dz, ... (the map): each step multiplies the spectrum by e^{i kz dz}, so no
+     sines are needed after the first plane. Returns next(), which gives the next plane's intensity (one inverse FFT each). */
+  function sweep(R, z0, dz) {
+    const N = R.N, pr = new Float64Array(N), pi = new Float64Array(N), sr = new Float64Array(N), si = new Float64Array(N), wr = new Float64Array(N), wi = new Float64Array(N), out = new Float64Array(N);
+    for (let m = 0; m < N; m++) { const kz = R.kz[m]; if (kz < 0) continue; const mm = m < N / 2 ? m : m - N, sg = mm & 1 ? -1 : 1;
+      pr[m] = sg * (R.Ar[m] * Math.cos(kz * z0) - R.Ai[m] * Math.sin(kz * z0)); pi[m] = sg * (R.Ar[m] * Math.sin(kz * z0) + R.Ai[m] * Math.cos(kz * z0)); sr[m] = Math.cos(kz * dz); si[m] = Math.sin(kz * dz); }
+    let z = z0; const edge = WINDOW / 2 - PLATE_W / 2 - 1e-3;
+    return { next() {
+      for (let m = 0; m < N; m++) { const kz = R.kz[m]; if (kz < 0 || Math.abs(z * R.kx[m] / kz) > edge) { wr[m] = 0; wi[m] = 0; } else { wr[m] = pr[m]; wi[m] = pi[m]; }
+        const a = pr[m] * sr[m] - pi[m] * si[m]; pi[m] = pr[m] * si[m] + pi[m] * sr[m]; pr[m] = a; }
+      fft(wr, wi, true); for (let n = 0; n < N; n++) out[n] = wr[n] * wr[n] + wi[n] * wi[n]; const zz = z; z += dz; return { z: zz, I: out };
+    } };
+  }
+  /* the light leaving the plate as a function of angle: the fraction of the power falling on the plate (PLATE_W wide; power counted
+     as the flow through the plate, |A|² cos θ for each plane wave) carried by plane waves with sin θ between s and s + ds, summed over each bin. Returns { s0, ds, P } for bins of sin θ from −1 to 1. */
+  function angular(R, bins) {
+    const P = new Float64Array(bins), ds = 2 / bins, N = R.N, norm = R.dx * R.dx / (WINDOW * PLATE_W * Math.cos(R.thi * RAD));
+    for (let m = 0; m < N; m++) { if (R.kz[m] < 0) continue; const s = R.kx[m] / R.k2, b = Math.min(bins - 1, Math.floor((s + 1) / ds)); P[b] += (R.Ar[m] * R.Ar[m] + R.Ai[m] * R.Ai[m]) * norm * R.kz[m] / R.k2; }
+    return { s0: -1, ds, P };
+  }
+  /* power (fraction of the light on the plate) entering a detector that accepts angles θc ± w/2 (degrees) */
+  function detector(R, thc, w) {
+    const a = Math.sin((thc - w / 2) * RAD), b = Math.sin((thc + w / 2) * RAD), N = R.N, norm = R.dx * R.dx / (WINDOW * PLATE_W * Math.cos(R.thi * RAD)); let p = 0;
+    for (let m = 0; m < N; m++) { if (R.kz[m] < 0) continue; const s = R.kx[m] / R.k2; if (s >= a && s < b) p += (R.Ar[m] * R.Ar[m] + R.Ai[m] * R.Ai[m]) * norm * R.kz[m] / R.k2; }
+    return p;
+  }
+  /* What thin hologram theory predicts. Plane wave object: the three beams leave at sin θ = sin θi (zero order),
+     sin θi + μ(sin θo − sin θr) (the image, a copy of the object wave when μ = 1 and θi = θr) and sin θi − μ(sin θo − sin θr)
+     (the conjugate), with μ = λ2/λ1. These are the grating equation for the recorded fringes, exact for a thin plate. */
+  function beamAngles(lam1, thr, tho, lam2, thi) {
+    const mu = lam2 / lam1, si = Math.sin(thi * RAD), d = Math.sin(tho * RAD) - Math.sin(thr * RAD);
+    const ang = (s) => (Math.abs(s) <= 1 ? Math.asin(s) / RAD : NaN);
+    return { zero: thi, image: ang(si + mu * d), conj: ang(si - mu * d), mu };
+  }
+  /* Point object at (x0, z0 < 0): where its images are, by tracing the rays that leave the plate's centre and their neighbours (exact
+     ray optics for the tangential focus, the only kind a 2D slice has). σ = +1 the image term (virtual: the rays diverge and seem to
+     come from behind the plate), σ = −1 the conjugate term (it converges to a real image when its rays meet in front of the plate).
+     Returns { x, z, alpha } (z < 0 virtual, z > 0 real) or null when that light does not leave the plate (evanescent). */
+  function pointImage(lam1, thr, q, lam2, thi, sg) {
+    const mu = lam2 / lam1, r = Math.hypot(q.x, q.z), zo = -q.z, s = sg * (-mu * q.x / r) + Math.sin(thi * RAD) - sg * mu * Math.sin(thr * RAD);
+    if (Math.abs(s) >= 1) return null;
+    const c = Math.sqrt(1 - s * s), Z = -sg * c * c * c * r * r * r / (mu * zo * zo);
+    return { x: Z * s / c, z: Z, alpha: Math.asin(s) / RAD };
+  }
+  /* the light leaving the plate per angle bin: power fraction (as in angular) in bins of width w degrees from lo to hi */
+  function angleHist(R, lo, hi, w) {
+    const n = Math.max(1, Math.round((hi - lo) / w)), P = new Float64Array(n), N = R.N, norm = R.dx * R.dx / (WINDOW * PLATE_W * Math.cos(R.thi * RAD));
+    for (let m = 0; m < N; m++) { if (R.kz[m] < 0) continue; const th = Math.asin(Math.max(-1, Math.min(1, R.kx[m] / R.k2))) / RAD; if (th < lo || th >= hi) continue;
+      P[Math.min(n - 1, Math.floor((th - lo) / w))] += (R.Ar[m] * R.Ar[m] + R.Ai[m] * R.Ai[m]) * norm * R.kz[m] / R.k2; }
+    return P;
+  }
+  /* the object points of each kind, for an object distance zo (m): one point on the axis, or three at different depths */
+  function objectPoints(kind, zo) {
+    return kind === 'one' ? [{ x: 0, z: -zo }] : [{ x: -0.8e-3, z: -(zo - 6e-3) }, { x: 0, z: -zo }, { x: 0.9e-3, z: -(zo + 6e-3) }];
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const S = { view: 'rec', preset: 'beams', blind: false,
+    rec: { lam1: 633, thr: 15, K: 4, obj: 'plane', tho: -15, zo: 20 },
+    mic: { fov: 20e-6, xc: 0, a: -5e-6, b: 5e-6 },
+    rc: { lam2: 633, side: 'same', zs: -20, det: 0 } };
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const can = $('can'), ctx = can.getContext('2d'), sco = $('scope'), sctx = sco.getContext('2d');
+  let W = 0, H = 0, SW = 0, SH = 0, dpr = 1, T = null;
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace(/^-(0\.?0*)$/, '$1').replace('-', '−'));
+  const plain = (v, d) => (+v).toFixed(d).replace(/^-(0\.?0*)$/, '$1');
+  const g6 = (v) => +(+v).toPrecision(6);
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { room: g('--room'), ink: g('--room-ink'), muted: g('--room-muted'), line: g('--room-line'), accent: '#ffb547', mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+  /* a display colour for a wavelength (for drawing only; after Bruton's approximation of the spectrum) */
+  function lamRGB(nm) {
+    let r = 0, g = 0, b = 0;
+    if (nm < 440) { r = (440 - nm) / 60; b = 1; } else if (nm < 490) { g = (nm - 440) / 50; b = 1; } else if (nm < 510) { g = 1; b = (510 - nm) / 20; }
+    else if (nm < 580) { r = (nm - 510) / 70; g = 1; } else if (nm < 645) { r = 1; g = (645 - nm) / 65; } else r = 1;
+    const fall = nm < 420 ? 0.45 + 0.55 * (nm - 380) / 40 : nm > 680 ? 0.45 + 0.55 * (750 - nm) / 70 : 1;
+    const lift = (c) => Math.round(255 * Math.pow(Math.min(1, Math.max(0, c * fall)) * 0.85 + 0.15, 0.8));
+    return [lift(r), lift(g), lift(b)];
+  }
+  const rgba = (c, a) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
+  /* intensity 0..1 to a glow in a laser's colour: black, the colour, then white at the top */
+  function glow(c, t) { t = Math.max(0, Math.min(1, t)); if (t < 0.75) { const u = t / 0.75; return [c[0] * u, c[1] * u, c[2] * u]; } const u = (t - 0.75) / 0.25; return [c[0] + (255 - c[0]) * u, c[1] + (255 - c[1]) * u, c[2] + (255 - c[2]) * u]; }
+
+  // ---------- the hologram and its reconstruction ----------
+  let REC = null, RECON = null, MAP = null, SCREEN = null, HIST = null;
+  const recParams = () => { const r = S.rec; return { lam1: r.lam1 * 1e-9, thr: r.thr, K: r.K, obj: r.obj === 'plane' ? { kind: 'plane', tho: r.tho } : { kind: 'points', pts: objectPoints(r.obj, r.zo * 1e-3) } }; };
+  function rebuildRec() { REC = recording(recParams()); RECON = null; MAP = null; SCREEN = null; HIST = null; fr.cache = null; }
+  const thi = () => (S.rc.side === 'same' ? S.rec.thr : -S.rec.thr);
+  function ensureRecon() {
+    if (RECON) return RECON;
+    RECON = reconstruct(REC, S.rc.lam2 * 1e-9, thi());
+    /* the map's columns are computed coarse first (every 8th), then the gaps, so it appears at once and sharpens */
+    const Z0 = -32e-3, DZ = 0.25e-3, cols = 257, rows = 200, passes = [[0, 8], [4, 8], [2, 4], [1, 2]];
+    MAP = { passes, pass: 0, sw: null, col: 0, z0: Z0, dz: DZ, cols, rows, xr: 9e-3, data: new Float32Array(cols * rows), have: new Uint8Array(cols), done: 0, max: 0, img: null };
+    SCREEN = null; HIST = angleHist(RECON, -90, 90, 0.1);
+    return RECON;
+  }
+  /* one more column of the map (the light at one distance z), binned into rows across x */
+  function mapStep() {
+    const M = MAP; if (!M || M.done >= M.cols) return false;
+    if (!M.sw || M.col >= M.cols) { const [o, st] = M.passes[M.pass++]; M.col = o; M.step = st; M.sw = sweep(RECON, M.z0 + o * M.dz, st * M.dz); }
+    const R = RECON, { I } = M.sw.next(), N = R.N, c = M.col, rows = M.rows, bin = 2 * M.xr / rows;
+    M.col += M.step;
+    for (let j = 0; j < rows; j++) {
+      const x0 = M.xr - (j + 1) * bin, n0 = Math.max(0, Math.round(x0 / R.dx + N / 2)), n1 = Math.min(N, Math.round((x0 + bin) / R.dx + N / 2)); let s = 0;
+      for (let n = n0; n < n1; n++) s += I[n];
+      const v = n1 > n0 ? s / (n1 - n0) : 0; M.data[c * rows + j] = v; if (v > M.max) M.max = v;
+    }
+    M.have[c] = 1; M.done++; M.img = null; return true;
+  }
+  function screenNow() {
+    if (SCREEN && SCREEN.z === S.rc.zs) return SCREEN;
+    const R = ensureRecon(), I = fieldAt(R, S.rc.zs * 1e-3), N = R.N, lim = 9e-3; let best = 0, bi = N / 2;
+    for (let n = 0; n < N; n++) { const x = (n - N / 2) * R.dx; if (Math.abs(x) <= lim && I[n] > best) { best = I[n]; bi = n; } }
+    /* refine the brightest point by a parabola through it and its neighbours */
+    const a = I[bi - 1], b = I[bi], c = I[bi + 1], den = a - 2 * b + c, d = den ? 0.5 * (a - c) / den : 0;
+    SCREEN = { z: S.rc.zs, I: Float64Array.from(I), N, dx: R.dx, peakX: (bi - N / 2 + d) * R.dx, peakI: b };
+    return SCREEN;
+  }
+  const detPower = () => detector(ensureRecon(), S.rc.det, 0.05);
+
+  // ---------- fringe count between the cursors ----------
+  const fr = { cache: null };
+  function cursorFringes() {
+    const key = `${S.mic.a}|${S.mic.b}`; if (fr.cache && fr.cache.key === key) return fr.cache;
+    const lo = Math.min(S.mic.a, S.mic.b), hi = Math.max(S.mic.a, S.mic.b), mx = maxima(REC, lo - 5e-8, hi + 5e-8);   /* a bright fringe within 0.05 μm of a cursor counts */
+    fr.cache = { key, M: mx.length, span: hi - lo }; return fr.cache;
+  }
+
+  // ---------- drawing helpers ----------
+  function txt(c, s, x, y, o = {}) { const p = proj(); c.font = `${o.bold ? '600 ' : ''}${(o.size || 11) * p}px ${o.mono === false ? T.ui : T.mono}`; c.fillStyle = o.color || T.ink; c.textAlign = o.align || 'left'; c.textBaseline = o.base || 'alphabetic'; c.fillText(s, x, y); }
+  function label(c, s, x, y, o = {}) { const p = proj(), sz = (o.size || 11) * p; c.font = `${o.bold ? '600 ' : ''}${sz}px ${T.mono}`; const w = c.measureText(s).width, al = o.align || 'left', cw = c.canvas.width / dpr;
+    let x0 = al === 'center' ? x - w / 2 : al === 'right' ? x - w : x; x0 = Math.max(6, Math.min(cw - w - 6, x0));
+    c.fillStyle = 'rgba(11,15,21,0.78)'; c.fillRect(x0 - 4, y - sz, w + 8, sz + 6); txt(c, s, x0, y, Object.assign({}, o, { align: 'left' })); }
+  function arrow(c, x1, y1, x2, y2, col, w = 2) { const a = Math.atan2(y2 - y1, x2 - x1), h = 8 * proj(); c.strokeStyle = col; c.fillStyle = col; c.lineWidth = w; c.beginPath(); c.moveTo(x1, y1); c.lineTo(x2 - h * 0.7 * Math.cos(a), y2 - h * 0.7 * Math.sin(a)); c.stroke();
+    c.beginPath(); c.moveTo(x2, y2); c.lineTo(x2 - h * Math.cos(a - 0.4), y2 - h * Math.sin(a - 0.4)); c.lineTo(x2 - h * Math.cos(a + 0.4), y2 - h * Math.sin(a + 0.4)); c.closePath(); c.fill(); }
+  function room(c, w, h) {
+    const g = c.createLinearGradient(0, 0, 0, h); g.addColorStop(0, '#0e131b'); g.addColorStop(1, '#090c11'); c.fillStyle = g; c.fillRect(0, 0, w, h);
+    c.fillStyle = 'rgba(160,175,195,0.07)'; const s = 25 * proj(); for (let y = s / 2; y < h; y += s) for (let x = s / 2; x < w; x += s) { c.beginPath(); c.arc(x, y, 1.6, 0, TAU); c.fill(); }   /* breadboard holes, 25 mm pitch in look only */
+  }
+  /* the photographic plate in its holder, standing across the beams at z = 0 */
+  function plateGlass(c, x, y0, y1, developed) {
+    const p = proj(), w = 7 * p;
+    c.fillStyle = developed ? 'rgba(120,128,140,0.55)' : 'rgba(170,205,225,0.28)'; c.fillRect(x - w / 2, y0, w, y1 - y0);
+    if (developed) { c.fillStyle = 'rgba(30,34,40,0.6)'; for (let y = y0; y < y1; y += 2.5 * p) c.fillRect(x - w / 2, y, w, 1.1 * p); }
+    c.strokeStyle = 'rgba(210,225,240,0.75)'; c.lineWidth = 1; c.strokeRect(x - w / 2 + 0.5, y0 + 0.5, w - 1, y1 - y0 - 1);
+    c.fillStyle = '#3a4554'; c.fillRect(x - w / 2 - 4 * p, y0 - 10 * p, w + 8 * p, 10 * p); c.fillRect(x - w / 2 - 4 * p, y1, w + 8 * p, 10 * p);
+    c.fillStyle = '#5a687a'; c.fillRect(x - w / 2 - 4 * p, y0 - 10 * p, w + 8 * p, 2 * p); c.fillRect(x - w / 2 - 4 * p, y1, w + 8 * p, 2 * p);
+  }
+  /* a plane beam of light as a band of the laser colour with wavefronts, arriving at the plate (sx, y0..y1) at angle th (degrees, + travels toward +x) */
+  function beamBand(c, col, sx, y0, y1, th, len, sc, lamNm, phase, name) {
+    const a = th * RAD, ux = Math.cos(a), uy = -Math.sin(a), p = proj();   /* screen: z to the right, x up */
+    const back = (x, y) => [x - ux * len, y - uy * len];
+    const [ax, ay] = back(sx, y0), [bx, by] = back(sx, y1);
+    const g = c.createLinearGradient(ax, (ay + by) / 2, sx, (y0 + y1) / 2); g.addColorStop(0, rgba(col, 0.05)); g.addColorStop(1, rgba(col, 0.28));
+    c.fillStyle = g; c.beginPath(); c.moveTo(ax, ay); c.lineTo(sx, y0); c.lineTo(sx, y1); c.lineTo(bx, by); c.closePath(); c.fill();
+    /* wavefronts, drawn 2000 times farther apart than they are */
+    const sp = lamNm * 1e-6 * 2000 * sc; c.strokeStyle = rgba(col, 0.5); c.lineWidth = 1;
+    c.save(); c.beginPath(); c.moveTo(ax, ay); c.lineTo(sx, y0); c.lineTo(sx, y1); c.lineTo(bx, by); c.closePath(); c.clip();
+    const n = Math.ceil(len / sp) + 2, off = ((phase % 1) + 1) % 1;
+    for (let i = 0; i < n; i++) { const d = (i + off) * sp, cx0 = sx - ux * d, cy0 = (y0 + y1) / 2 - uy * d, hx = -uy * (y1 - y0), hy = ux * (y1 - y0); c.beginPath(); c.moveTo(cx0 - hx, cy0 - hy); c.lineTo(cx0 + hx, cy0 + hy); c.stroke(); }
+    c.restore();
+    if (name) { const [lx, ly] = back(sx, y0 + (y1 - y0) * 0.5); label(c, name, lx + ux * len * 0.25, ly + uy * len * 0.25 - 10 * p, { color: rgba(col, 1), size: 10.5 }); }
+  }
+
+  // ---------- Record view ----------
+  let phase = 0;
+  function recLayout() {
+    const p = proj(), wide = W >= 640, m = 14 * p;
+    if (wide) { const iw = Math.min(W * 0.4, H - 2 * m), slice = { x: 0, y: 0, w: W - iw - 2 * m, h: H }; return { slice, inset: { x: W - iw - m, y: (H - iw) / 2, w: iw, h: iw } }; }
+    const ih = Math.min(H * 0.46, W - 2 * m); return { slice: { x: 0, y: 0, w: W, h: H - ih - m }, inset: { x: m, y: H - ih - m * 0.6, w: W - 2 * m, h: ih } };
+  }
+  function drawRec() {
+    room(ctx, W, H);
+    const L = recLayout(), sl = L.slice, p = proj(), r = S.rec, col = lamRGB(r.lam1);
+    /* the slice: z from −30 mm to +4 mm across, x up; one scale both ways */
+    const zL = -31e-3, zR = 4e-3, sc = Math.min((sl.w - 30 * p) / (zR - zL), (sl.h - 50 * p) / 12e-3), Z = (z) => sl.x + 15 * p + (z - zL) * sc, X = (x) => sl.y + sl.h / 2 - x * sc;
+    const pz = Z(0), y0 = X(PLATE_W / 2), y1 = X(-PLATE_W / 2);
+    beamBand(ctx, col, pz, y0, y1, r.thr, (pz - sl.x) * 1.4, sc, r.lam1, reduce ? 0 : phase, `reference ${f(r.thr, 1)}°`);
+    if (r.obj === 'plane') beamBand(ctx, col, pz, y0, y1, r.tho, (pz - sl.x) * 1.4, sc, r.lam1, reduce ? 0 : phase * 1.0, `object ${f(r.tho, 1)}°`);
+    else {
+      for (const q of objectPoints(r.obj, r.zo * 1e-3)) {
+        const qx = Z(q.z), qy = X(q.x), sp = r.lam1 * 1e-6 * 2000 * sc;
+        ctx.save(); ctx.beginPath(); ctx.moveTo(qx, qy); ctx.lineTo(pz, y0); ctx.lineTo(pz, y1); ctx.closePath(); ctx.fillStyle = rgba(col, 0.13); ctx.fill(); ctx.clip();
+        ctx.strokeStyle = rgba(col, 0.45); ctx.lineWidth = 1; const off = reduce ? 0 : ((phase % 1) + 1) % 1, rmax = Math.hypot(pz - qx, Math.max(Math.abs(y0 - qy), Math.abs(y1 - qy)));
+        for (let k = 0; (k + off) * sp < rmax; k++) { ctx.beginPath(); ctx.arc(qx, qy, (k + off) * sp, -0.6, 0.6); ctx.stroke(); }
+        ctx.restore();
+        const g = ctx.createRadialGradient(qx, qy, 0, qx, qy, 9 * p); g.addColorStop(0, 'rgba(255,255,255,0.95)'); g.addColorStop(0.35, rgba(col, 0.9)); g.addColorStop(1, rgba(col, 0));
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(qx, qy, 9 * p, 0, TAU); ctx.fill();
+      }
+      const q0 = objectPoints(r.obj, r.zo * 1e-3)[0]; label(ctx, r.obj === 'one' ? `object point, ${f(r.zo, 1)} mm from the plate` : 'three object points', Z(q0.z), X(q0.x) - 16 * p, { color: rgba(col, 1), size: 10.5 });
+    }
+    plateGlass(ctx, pz, y0, y1, false);
+    label(ctx, 'plate', pz, y1 + 26 * p, { align: 'center', size: 10.5 });
+    /* scale bar */
+    const bar = 5e-3 * sc, bx = sl.x + sl.w - bar - 16 * p, by = 40 * p; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx + bar, by); ctx.moveTo(bx, by - 4); ctx.lineTo(bx, by + 4); ctx.moveTo(bx + bar, by - 4); ctx.lineTo(bx + bar, by + 4); ctx.stroke();
+    txt(ctx, '5 mm', bx + bar / 2, by - 6 * p, { align: 'center', size: 10, color: T.muted });
+    txt(ctx, sl.w < 560 ? 'seen from above · wavefronts 2000× too far apart' : 'seen from above · wavefronts drawn 2000× farther apart than they are', sl.x + 12 * p, 20 * p, { size: 10, color: T.muted });
+    drawInset(L.inset);
+  }
+  /* the light at the plate, magnified: exact |R + O|² in a 12 μm square ending at the plate, and the developed plate beside it */
+  const inset = { key: '', img: null };
+  function drawInset(b) {
+    const p = proj(), r = S.rec, col = lamRGB(r.lam1), half = 6e-6, nx = 140, nz = Math.round(140 * b.w / b.h);
+    const key = `${r.lam1}|${r.thr}|${r.K}|${r.obj}|${r.tho}|${r.zo}|${nz}`;
+    if (inset.key !== key) {
+      const img = new ImageData(nz, nx), zw = 2 * half * b.w / b.h, z0 = -zw * 0.82; let mx = 0; const v = new Float64Array(nz * nx);
+      for (let j = 0; j < nx; j++) for (let i = 0; i < nz; i++) { const z = z0 + (i + 0.5) / nz * zw, x = half - (j + 0.5) / nx * 2 * half; v[j * nz + i] = z <= 0 ? REC.intensity(x, z) : -1; if (v[j * nz + i] > mx) mx = v[j * nz + i]; }
+      for (let k = 0; k < nz * nx; k++) { const t = v[k]; let c; if (t < 0) { const x = half - (Math.floor(k / nz) + 0.5) / nx * 2 * half, tt = REC.intensity(x) / mx; c = [40 + 150 * (1 - tt), 44 + 150 * (1 - tt), 50 + 150 * (1 - tt)]; } else c = glow(col, t / mx);
+        img.data[4 * k] = c[0]; img.data[4 * k + 1] = c[1]; img.data[4 * k + 2] = c[2]; img.data[4 * k + 3] = 255; }
+      inset.key = key; inset.img = img; inset.z0 = z0; inset.zw = zw;
+    }
+    const oc = document.createElement('canvas'); oc.width = inset.img.width; oc.height = inset.img.height; oc.getContext('2d').putImageData(inset.img, 0, 0);
+    ctx.save(); ctx.beginPath(); ctx.roundRect ? ctx.roundRect(b.x, b.y, b.w, b.h, 10 * p) : ctx.rect(b.x, b.y, b.w, b.h); ctx.clip();
+    ctx.imageSmoothingEnabled = true; ctx.drawImage(oc, b.x, b.y, b.w, b.h); ctx.restore();
+    ctx.strokeStyle = 'rgba(220,230,240,0.55)'; ctx.lineWidth = 1.2; ctx.strokeRect(b.x + 0.5, b.y + 0.5, b.w - 1, b.h - 1);
+    const pzx = b.x + (-inset.z0) / inset.zw * b.w; ctx.strokeStyle = 'rgba(230,240,250,0.9)'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(pzx, b.y); ctx.lineTo(pzx, b.y + b.h); ctx.stroke();
+    label(ctx, 'at the plate, magnified: 12 μm top to bottom', b.x + 8 * p, b.y + 18 * p, { size: 10 });
+    label(ctx, 'developed', pzx + 4 * p, b.y + b.h - 10 * p, { size: 9.5, color: T.muted });
+    /* the beams' directions */
+    const cy = b.y + b.h / 2, cx = b.x + b.w * 0.3, Lr = Math.min(b.w, b.h) * 0.22;
+    const dir = (th) => [Math.cos(th * RAD), -Math.sin(th * RAD)], dr = dir(r.thr);
+    arrow(ctx, cx - dr[0] * Lr, cy - dr[1] * Lr - b.h * 0.22, cx, cy - b.h * 0.22, 'rgba(255,255,255,0.85)', 1.6); label(ctx, 'reference', cx - dr[0] * Lr, cy - dr[1] * Lr - b.h * 0.22 - 8 * p, { size: 9.5, align: 'center' });
+    if (r.obj === 'plane') { const d2 = dir(r.tho); arrow(ctx, cx - d2[0] * Lr, cy - d2[1] * Lr + b.h * 0.22, cx, cy + b.h * 0.22, 'rgba(255,255,255,0.85)', 1.6); label(ctx, 'object', cx - d2[0] * Lr, cy - d2[1] * Lr + b.h * 0.22 + 16 * p, { size: 9.5, align: 'center' }); }
+    if (!S.blind && r.obj === 'plane' && Math.abs(r.thr - r.tho) > 0.2) {
+      const d = fringePlate(r.lam1 * 1e-9, r.thr, r.tho), py = b.h / (2 * half);
+      if (d * py > 12 * p) { const y0 = cy - d * py / 2, y1 = cy + d * py / 2, xx = pzx + 12 * p; ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(xx, y0); ctx.lineTo(xx, y1); ctx.moveTo(xx - 4, y0); ctx.lineTo(xx + 4, y0); ctx.moveTo(xx - 4, y1); ctx.lineTo(xx + 4, y1); ctx.stroke(); }
+      label(ctx, `d = ${f(d * 1e6, 3)} μm`, pzx - 8 * p, b.y + b.h - 10 * p, { align: 'right', size: 10.5, color: T.accent });
+    }
+  }
+  /* the microscope: the developed plate's transmittance across the field of view, its profile, and the two cursors */
+  function drawMicroscope() {
+    const c = sctx, w = SW, h = SH, p = proj(), m = S.mic, r = S.rec, col = lamRGB(r.lam1);
+    c.fillStyle = '#0a0d12'; c.fillRect(0, 0, w, h);
+    const nb = w < 560 ? 20 * p : 0, left = 12 * p, right = w - 12 * p, top = 24 * p, curveH = (h - top - 40 * p - nb) * 0.55, stripY = top + curveH + 14 * p, stripH = h - stripY - 26 * p - nb, xw = right - left;
+    const xa = m.xc - m.fov / 2, X = (x) => left + (x - xa) / m.fov * xw;
+    /* transmittance t = I/I_max: each pixel column averages enough samples to see every fringe it holds */
+    const npx = Math.max(2, Math.round(xw)), per = m.fov / npx, sub = Math.max(1, Math.min(48, Math.ceil(per / 0.06e-6))); let imax = 0;
+    const mean = new Float64Array(npx), lo = new Float64Array(npx), hi = new Float64Array(npx);
+    for (let i = 0; i < npx; i++) { let s = 0, a = Infinity, b = -Infinity; for (let k = 0; k < sub; k++) { const x = xa + (i + (k + 0.5) / sub) * per; const v = Math.abs(x) <= PLATE_W / 2 ? REC.intensity(x) : 0; s += v; if (v < a) a = v; if (v > b) b = v; } mean[i] = s / sub; lo[i] = a; hi[i] = b; if (b > imax) imax = b; }
+    const top0 = Math.pow(1 + 1 / Math.sqrt(r.K), 2) * (r.obj === 'plane' ? 1 : 1.25), ymax = Math.max(imax, top0) * 1.05, Y = (v) => top + curveH - v / ymax * curveH;
+    c.fillStyle = rgba(col, 0.18); c.beginPath(); for (let i = 0; i < npx; i++) c.lineTo(left + i + 0.5, Y(hi[i])); for (let i = npx - 1; i >= 0; i--) c.lineTo(left + i + 0.5, Y(lo[i])); c.closePath(); c.fill();
+    c.strokeStyle = rgba(col, 1); c.lineWidth = 1.4; c.beginPath(); for (let i = 0; i < npx; i++) { const yy = Y(sub > 3 ? mean[i] : hi[i]); i ? c.lineTo(left + i + 0.5, yy) : c.moveTo(left + i + 0.5, yy); } c.stroke();
+    c.strokeStyle = 'rgba(200,210,225,0.25)'; c.lineWidth = 1; c.beginPath(); c.moveTo(left, Y(0)); c.lineTo(right, Y(0)); c.stroke();
+    txt(c, 'light falling on the plate, I(x)', left, 16 * p, { size: 10.5, color: T.muted });
+    const im = c.createImageData(npx, 1); for (let i = 0; i < npx; i++) { const t = mean[i] / (ymax / 1.05), g = 30 + 200 * (1 - t); im.data[4 * i] = g; im.data[4 * i + 1] = g + 4; im.data[4 * i + 2] = g + 10; im.data[4 * i + 3] = 255; }
+    const oc = document.createElement('canvas'); oc.width = npx; oc.height = 1; oc.getContext('2d').putImageData(im, 0, 0); c.imageSmoothingEnabled = false; c.drawImage(oc, left, stripY, xw, stripH); c.imageSmoothingEnabled = true;
+    c.strokeStyle = 'rgba(200,210,225,0.4)'; c.strokeRect(left + 0.5, stripY + 0.5, xw - 1, stripH - 1);
+    txt(c, w < 560 ? 'developed plate (dark where more light fell)' : 'developed plate under the microscope (dark where more light fell)', left, stripY - 3 * p, { size: 9.5, color: T.muted });
+    if (sub >= 40 && per > 1.2e-6) label(c, 'fringes too fine to see at this field of view: zoom in', w / 2, stripY + stripH / 2 + 4 * p, { align: 'center', size: 10 });
+    /* scale: ticks along the strip in μm */
+    const step = niceStep(m.fov / 6); c.strokeStyle = 'rgba(200,210,225,0.6)'; c.lineWidth = 1;
+    for (let x = Math.ceil(xa / step) * step; x <= xa + m.fov; x += step) { const px = X(x); if (px < left + 18 * p || px > right - 18 * p) continue; c.beginPath(); c.moveTo(px, stripY + stripH); c.lineTo(px, stripY + stripH + 5 * p); c.stroke(); txt(c, fmtUm(x), px, stripY + stripH + 16 * p, { size: 9.5, align: 'center', color: T.muted }); }
+    /* the cursors */
+    for (const [k, nm, cc] of [['a', 'A', '#ffb547'], ['b', 'B', '#6fd3ff']]) { const px = X(m[k]); if (px < left - 1 || px > right + 1) continue; c.strokeStyle = cc; c.lineWidth = 1.6; c.setLineDash([5, 3]); c.beginPath(); c.moveTo(px, top - 4 * p); c.lineTo(px, stripY + stripH); c.stroke(); c.setLineDash([]); label(c, nm, px, top + 6 * p, { align: 'center', color: cc, size: 10.5, bold: true }); }
+    const cf = cursorFringes(); label(c, `B − A = ${f(Math.abs(m.b - m.a) * 1e6, 2)} μm · ${cf.M} bright fringe${cf.M === 1 ? '' : 's'} from A to B`, right, w < 560 ? h - 6 * p : 16 * p, { align: 'right', size: 10.5, color: '#ffe2b0' });
+  }
+  function niceStep(v) { const e = Math.pow(10, Math.floor(Math.log10(v))), n = v / e; return (n < 1.5 ? 1 : n < 3.5 ? 2 : n < 7.5 ? 5 : 10) * e; }
+  const fmtUm = (x) => { const u = x * 1e6; return Math.abs(u) >= 1000 ? `${f(u / 1000, Math.abs(u) % 1000 ? 2 : 0)} mm` : `${f(u, Math.abs(u) < 10 && u % 1 ? 1 : 0)} μm`; };
+
+  // ---------- Reconstruct view ----------
+  function rcGeom() {
+    const p = proj(), m = { l: 14 * p, r: 14 * p, t: 30 * p, b: 30 * p }, zr = 32e-3, sx = (W - m.l - m.r) / (2 * zr), xr = MAP ? MAP.xr : 9e-3, sy = Math.min((H - m.t - m.b) / (2 * xr), 2 * sx), top = m.t + (H - m.t - m.b - 2 * xr * sy) / 2;   /* stretched across at most 2×; on a narrow screen the map is centred */
+    return { Z: (z) => m.l + (z + zr) * sx, X: (x) => top + (xr - x) * sy, sx, sy, m, zr, xr };
+  }
+  function mapImage() {
+    const M = MAP; if (M.img) return M.img;
+    const oc = document.createElement('canvas'); oc.width = M.cols; oc.height = M.rows; const c2 = oc.getContext('2d'), im = c2.createImageData(M.cols, M.rows), col = lamRGB(S.rc.lam2);
+    const top = M.max || 1;
+    const near = new Int32Array(M.cols); for (let i = 0; i < M.cols; i++) { let b = -1; for (let d = 0; d < M.cols && b < 0; d++) { if (i - d >= 0 && M.have[i - d]) b = i - d; else if (i + d < M.cols && M.have[i + d]) b = i + d; } near[i] = b; }
+    for (let i = 0; i < M.cols; i++) for (let j = 0; j < M.rows; j++) { const k = 4 * (j * M.cols + i); if (near[i] < 0) { im.data[k + 3] = 0; continue; }
+      const v = M.data[near[i] * M.rows + j], t = v > 0 ? (Math.log10(v / top) + 3.2) / 3.2 : 0, g = glow(col, t); im.data[k] = g[0]; im.data[k + 1] = g[1]; im.data[k + 2] = g[2]; im.data[k + 3] = 255; }
+    c2.putImageData(im, 0, 0); M.img = oc; return oc;
+  }
+  function drawRc() {
+    room(ctx, W, H); ensureRecon();
+    const G = rcGeom(), p = proj(), r = S.rec, col = lamRGB(S.rc.lam2), M = MAP;
+    const zpx0 = G.Z(M.z0 - M.dz / 2), zpx1 = G.Z(M.z0 + (M.cols - 0.5) * M.dz);
+    const crop = G.xr / M.xr, r0 = M.rows * (1 - crop) / 2;
+    ctx.imageSmoothingEnabled = true; ctx.drawImage(mapImage(), 0, r0, M.cols, M.rows * crop, zpx0, G.X(G.xr), zpx1 - zpx0, G.X(-G.xr) - G.X(G.xr));
+    /* the traced back half: where the light seems to come from */
+    const pz = G.Z(0); ctx.fillStyle = 'rgba(11,15,21,0.32)'; ctx.fillRect(zpx0, G.X(G.xr), pz - zpx0, G.X(-G.xr) - G.X(G.xr));
+    ctx.strokeStyle = 'rgba(200,210,225,0.35)'; ctx.setLineDash([4, 4]); ctx.strokeRect(zpx0 + 0.5, G.X(G.xr) + 0.5, pz - zpx0 - 1, G.X(-G.xr) - G.X(G.xr) - 1); ctx.setLineDash([]);
+    label(ctx, 'traced back: where the light seems to come from', zpx0 + 6 * p, G.X(G.xr) + 16 * p, { size: 10 });
+    if (W >= 560) label(ctx, 'light leaving the plate', pz + 12 * p, G.X(G.xr) + 16 * p, { size: 10 });
+    /* the light falling on the plate, from the left */
+    const a = thi() * RAD, L = 46 * p, y0 = G.X(PLATE_W / 2), y1 = G.X(-PLATE_W / 2), ym = (y0 + y1) / 2;
+    arrow(ctx, pz - L * Math.cos(a) - 16 * p, ym + L * Math.sin(a), pz - 16 * p, ym, rgba(col, 1), 3);
+    label(ctx, `λ₂ = ${S.rc.lam2} nm at ${f(thi(), 1)}°`, pz - L - 16 * p, ym + L * Math.sin(a) + (thi() >= 0 ? 18 : -10) * p, { align: 'right', size: 10.5, color: rgba(col, 1) });
+    plateGlass(ctx, pz, y0, y1, true);
+    /* where the object was, and (Blind off) where thin hologram ray tracing puts the images */
+    if (r.obj !== 'plane') for (const q of objectPoints(r.obj, r.zo * 1e-3)) {
+      const qx = G.Z(q.z), qy = G.X(q.x); ctx.strokeStyle = 'rgba(255,255,255,0.75)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(qx, qy, 5 * p, 0, TAU); ctx.stroke();
+      if (!S.blind) for (const sg of [1, -1]) { const im = pointImage(r.lam1 * 1e-9, r.thr, q, S.rc.lam2 * 1e-9, thi(), sg); if (!im || Math.abs(im.z) > G.zr || Math.abs(im.x) > G.xr) continue;
+        const ix = G.Z(im.z), iy = G.X(im.x); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(ix - 7 * p, iy); ctx.lineTo(ix + 7 * p, iy); ctx.moveTo(ix, iy - 7 * p); ctx.lineTo(ix, iy + 7 * p); ctx.stroke(); }
+    }
+    if (r.obj !== 'plane') { const q = objectPoints(r.obj, r.zo * 1e-3)[r.obj === 'one' ? 0 : 2]; label(ctx, '○ where the object was' + (S.blind ? '' : ' · + predicted images'), zpx0 + 6 * p, G.X(G.xr) + 34 * p, { size: 10, color: T.muted }); }
+    /* the screen or camera focus */
+    const zs = G.Z(S.rc.zs * 1e-3); ctx.strokeStyle = '#ffffff'; ctx.lineWidth = 1.4; ctx.setLineDash([6, 4]); ctx.beginPath(); ctx.moveTo(zs, G.X(G.xr)); ctx.lineTo(zs, G.X(-G.xr)); ctx.stroke(); ctx.setLineDash([]);
+    label(ctx, S.rc.zs < 0 ? `camera focused ${f(-S.rc.zs, 2)} mm behind the plate` : `screen ${f(S.rc.zs, 2)} mm past the plate`, zs, G.X(-G.xr) + 20 * p, { align: S.rc.zs > 18 ? 'right' : S.rc.zs < -18 ? 'left' : 'center', size: 10.5, color: '#fff' });
+    if (Math.abs(G.sy / G.sx - 1) > 0.05) label(ctx, W < 560 ? `up: ${f(G.sy / G.sx, 2)}× scale` : `across the plate (up) drawn ${f(G.sy / G.sx, 2)}× the scale along the light`, W - 14 * p, G.X(-G.xr) - 8 * p, { align: 'right', size: 9.5, color: T.muted });
+    txt(ctx, 'z (mm) →', W - 14 * p, Math.max(18 * p, G.X(G.xr) - 10 * p), { align: 'right', size: 10, color: T.muted });
+    for (let z = -30; z <= 30; z += 10) if (Math.abs(G.Z(z * 1e-3) - (W - 40 * p)) > 30 * p) txt(ctx, String(z).replace('-', '−'), G.Z(z * 1e-3), Math.max(18 * p, G.X(G.xr) - 10 * p), { align: 'center', size: 9.5, color: T.muted });
+  }
+  /* the screen profile and the light's angles */
+  function drawRcScope() {
+    const c = sctx, w = SW, h = SH, p = proj(), col = lamRGB(S.rc.lam2); c.fillStyle = '#0a0d12'; c.fillRect(0, 0, w, h);
+    const narrow = w < 640, A = narrow ? { x: 0, y: 0, w, h: h / 2 } : { x: 0, y: 0, w: w * 0.5, h }, B = narrow ? { x: 0, y: h / 2, w, h: h / 2 } : { x: w * 0.5, y: 0, w: w * 0.5, h };
+    /* screen */
+    const sc = screenNow(), l = A.x + 12 * p, rr = A.x + A.w - 10 * p, t = A.y + 26 * p, b = A.y + A.h - 22 * p, xr = 9e-3, X = (x) => l + (x + xr) / (2 * xr) * (rr - l);
+    let mx = sc.peakI || 1; const Y = (v) => b - Math.sqrt(v / mx) * (b - t);
+    c.strokeStyle = 'rgba(200,210,225,0.25)'; c.beginPath(); c.moveTo(l, b); c.lineTo(rr, b); c.stroke();
+    c.strokeStyle = rgba(col, 1); c.lineWidth = 1.2; c.beginPath(); const npx = Math.round(rr - l);
+    for (let i = 0; i < npx; i++) { const x0 = -xr + i / npx * 2 * xr, n0 = Math.round(x0 / sc.dx + sc.N / 2), n1 = Math.round((x0 + 2 * xr / npx) / sc.dx + sc.N / 2); let v = 0; for (let n = n0; n < n1; n++) if (sc.I[n] > v) v = sc.I[n]; i ? c.lineTo(l + i, Y(v)) : c.moveTo(l + i, Y(v)); }
+    c.stroke();
+    txt(c, S.rc.zs < 0 ? `camera focused at z = ${f(S.rc.zs, 2)} mm (√ scale)` : `screen at z = ${f(S.rc.zs, 2)} mm (√ scale)`, l, A.y + 16 * p, { size: 10.5, color: T.muted });
+    for (let x = -8; x <= 8; x += 4) txt(c, `${String(x).replace('-', '−')}`, X(x * 1e-3), b + 14 * p, { size: 9.5, align: 'center', color: T.muted });
+    txt(c, 'x (mm)', rr, b + 14 * p, { size: 9.5, align: 'right', color: T.muted });
+    /* zoom on the brightest point: ±40 μm */
+    const zw = Math.min(A.w * 0.36, 170 * p), zh = (b - t) * 0.62, zx = rr - zw, zy = t, half = 40e-6;
+    c.fillStyle = 'rgba(16,22,30,0.92)'; c.fillRect(zx, zy, zw, zh); c.strokeStyle = 'rgba(200,210,225,0.4)'; c.strokeRect(zx + 0.5, zy + 0.5, zw - 1, zh - 1);
+    c.strokeStyle = rgba(col, 1); c.lineWidth = 1.4; c.beginPath();
+    for (let i = 0; i <= 120; i++) { const x = sc.peakX - half + i / 120 * 2 * half, fn = x / sc.dx + sc.N / 2, n = Math.floor(fn), u = fn - n, v = sc.I[n] * (1 - u) + sc.I[n + 1] * u, yy = zy + zh - 4 - v / mx * (zh - 14 * p); i ? c.lineTo(zx + i / 120 * zw, yy) : c.moveTo(zx, yy); }
+    c.stroke(); txt(c, 'brightest point ±40 μm', zx + 4 * p, zy + 11 * p, { size: 9, color: T.muted });
+    c.strokeStyle = '#fff'; c.setLineDash([3, 3]); c.beginPath(); c.moveTo(X(sc.peakX), t); c.lineTo(X(sc.peakX), b); c.stroke(); c.setLineDash([]);
+    /* angles */
+    const l2 = B.x + 12 * p, r2 = B.x + B.w - 12 * p, t2 = B.y + 26 * p, b2 = B.y + B.h - 22 * p, TH = (a) => l2 + (a + 90) / 180 * (r2 - l2), lg = (v) => (v > 1e-7 ? (Math.log10(v) + 7) / 7 : 0), Y2 = (v) => b2 - lg(v) * (b2 - t2);
+    c.strokeStyle = 'rgba(200,210,225,0.12)'; for (let e = -6; e <= 0; e += 2) { c.beginPath(); c.moveTo(l2, Y2(Math.pow(10, e))); c.lineTo(r2, Y2(Math.pow(10, e))); c.stroke(); }
+    c.fillStyle = rgba(col, 0.85); for (let i = 0; i < HIST.length; i++) { const v = HIST[i]; if (v <= 1e-7) continue; const x0 = TH(-90 + i * 0.1); c.fillRect(x0, Y2(v), Math.max(1, TH(0.1) - TH(0)), b2 - Y2(v)); }
+    txt(c, 'light leaving the plate per 0.1° (fraction, log scale)', l2, B.y + 16 * p, { size: 10.5, color: T.muted });
+    for (let a = -90; a <= 90; a += 30) txt(c, `${String(a).replace('-', '−')}°`, TH(a), b2 + 14 * p, { size: 9.5, align: 'center', color: T.muted });
+    txt(c, '10⁻⁶', l2 + 2, Y2(1e-6) - 3, { size: 9, color: T.muted }); txt(c, '1', l2 + 2, Y2(1) + 10, { size: 9, color: T.muted });
+    if (!S.blind && S.rec.obj === 'plane') { const ba = beamAngles(S.rec.lam1 * 1e-9, S.rec.thr, S.rec.tho, S.rc.lam2 * 1e-9, thi());
+      for (const [k, nm] of [['zero', 'zero order'], ['image', 'image'], ['conj', 'conjugate']]) { if (!isFinite(ba[k])) continue; const x = TH(ba[k]); c.strokeStyle = T.accent; c.beginPath(); c.moveTo(x, t2 + 4); c.lineTo(x, t2 + 14); c.stroke(); txt(c, nm, x, t2 + 2, { size: 9, align: 'center', color: T.accent }); } }
+    const dx = TH(S.rc.det); c.strokeStyle = '#fff'; c.lineWidth = 1.4; c.setLineDash([5, 3]); c.beginPath(); c.moveTo(dx, t2); c.lineTo(dx, b2); c.stroke(); c.setLineDash([]);
+    /* zoom: ±1° around the detector, 0.01° bins */
+    const zw2 = Math.min(B.w * 0.36, 170 * p), zh2 = (b2 - t2) * 0.62, zx2 = l2 + 4 * p, zy2 = t2 + 10 * p, Z1 = angleHist(RECON, S.rc.det - 1, S.rc.det + 1, 0.01); let zm = 0; for (const v of Z1) if (v > zm) zm = v;
+    c.fillStyle = 'rgba(16,22,30,0.92)'; c.fillRect(zx2, zy2, zw2, zh2); c.strokeStyle = 'rgba(200,210,225,0.4)'; c.strokeRect(zx2 + 0.5, zy2 + 0.5, zw2 - 1, zh2 - 1);
+    c.fillStyle = rgba(col, 1); for (let i = 0; i < Z1.length; i++) { const hh = zm > 0 ? Z1[i] / zm * (zh2 - 16 * p) : 0; c.fillRect(zx2 + i / Z1.length * zw2, zy2 + zh2 - 2 - hh, Math.max(1, zw2 / Z1.length), hh); }
+    const sl0 = zx2 + (0.5 - 0.025) * zw2, sl1 = zx2 + (0.5 + 0.025) * zw2; c.fillStyle = 'rgba(255,255,255,0.18)'; c.fillRect(sl0, zy2, sl1 - sl0, zh2);
+    txt(c, `detector slit, ${f(S.rc.det, 2)}° ± 1° shown`, zx2 + 4 * p, zy2 + 11 * p, { size: 9, color: T.muted });
+  }
+
+  function redraw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (S.view === 'rec') { drawRec(); drawMicroscope(); } else { drawRc(); drawRcScope(); }
+    readouts();
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>', r = S.rec;
+    let h = '';
+    if (S.view === 'rec') {
+      const cf = cursorFringes();
+      h = dd('Laser λ₁', `${r.lam1} nm`) + dd('Reference angle θᵣ', `${f(r.thr, 1)}°`)
+        + (r.obj === 'plane' ? dd('Object beam angle θₒ', `${f(r.tho, 1)}°`) + dd('Angle between the beams', `${f(Math.abs(r.thr - r.tho), 1)}°`) : dd('Object', r.obj === 'one' ? `one point, ${f(r.zo, 1)} mm away` : `three points, ${f(r.zo - 6, 1)} to ${f(r.zo + 6, 1)} mm`) + dd('Beam ratio', `${r.K} : 1`))
+        + dd('Cursor A', `${f(S.mic.a * 1e6, 2)} μm`) + dd('Cursor B', `${f(S.mic.b * 1e6, 2)} μm`)
+        + dd('Span B − A', `${f(Math.abs(S.mic.b - S.mic.a) * 1e6, 2)} μm`) + dd('Bright fringes from A to B', String(cf.M))
+        + (r.obj === 'plane' ? dd('Fringe spacing on the plate, λ₁/|sin θᵣ − sin θₒ|', S.blind ? hide : Math.abs(r.thr - r.tho) < 0.01 ? 'no fringes (beams parallel)' : `${f(fringePlate(r.lam1 * 1e-9, r.thr, r.tho) * 1e6, 4)} μm`, 'wide')
+          + dd('Fringe visibility 2√K/(1 + K)', S.blind ? hide : f(2 * Math.sqrt(r.K) / (1 + r.K), 3)) : '');
+    } else {
+      const sc = screenNow(), P = detPower();
+      h = dd('Light λ₂', `${S.rc.lam2} nm`) + dd('Light on the plate at', `${f(thi(), 1)}°`)
+        + dd(S.rc.zs < 0 ? 'Camera focused at z' : 'Screen at z', `${f(S.rc.zs, 2)} mm`) + dd('Brightest point: x', `${f(sc.peakX * 1e3, 4)} mm`)
+        + dd('Brightest point: intensity', `${f(sc.peakI, 3)} × the light on the plate`, 'wide')
+        + dd('Detector at', `${f(S.rc.det, 2)}°`) + dd('Into the detector (0.05° slit)', `${f(P * 100, 4)} % of the light on the plate`);
+      if (r.obj === 'plane') { const ba = beamAngles(r.lam1 * 1e-9, r.thr, r.tho, S.rc.lam2 * 1e-9, thi()), ang = (v) => (isFinite(v) ? `${f(v, 2)}°` : 'none: it cannot leave the plate');
+        h += dd('Image beam (grating equation)', S.blind ? hide : ang(ba.image)) + dd('Conjugate beam', S.blind ? hide : ang(ba.conj)) + dd('Straight through', `${f(ba.zero, 2)}°`); }
+      else { const q = objectPoints(r.obj, r.zo * 1e-3)[r.obj === 'one' ? 0 : 1], show = (sg) => { const im = pointImage(r.lam1 * 1e-9, r.thr, q, S.rc.lam2 * 1e-9, thi(), sg); return !im ? 'none: that light cannot leave the plate' : `z = ${f(im.z * 1e3, 2)} mm, x = ${f(im.x * 1e3, 3)} mm ${im.z < 0 ? '(virtual)' : '(real)'}`; };
+        h += dd(r.obj === 'one' ? 'Image of the point, predicted' : 'Image of the middle point, predicted', S.blind ? hide : show(1), 'wide') + dd('Conjugate image, predicted', S.blind ? hide : show(-1), 'wide'); }
+    }
+    $('out').innerHTML = h;
+  }
+
+  // ---------- controls ----------
+  const FOV_MIN = 5e-6, FOV_MAX = 3e-3, fovFrom = (v) => FOV_MIN * Math.pow(FOV_MAX / FOV_MIN, v / 100), fovTo = (fv) => 100 * Math.log(fv / FOV_MIN) / Math.log(FOV_MAX / FOV_MIN);
+  function sync() {
+    const r = S.rec, m = S.mic, rc = S.rc;
+    for (const b of document.querySelectorAll('#laserSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.l === r.lam1));
+    for (const b of document.querySelectorAll('#objSeg button')) b.setAttribute('aria-pressed', String(b.dataset.o === r.obj));
+    $('sThr').value = r.thr; $('oThr').textContent = `${f(r.thr, 1)}°`; $('sK').value = r.K; $('oK').textContent = `${r.K} : 1`;
+    $('sTho').value = r.tho; $('oTho').textContent = `${f(r.tho, 1)}°`; $('sZo').value = r.zo; $('oZo').textContent = r.obj === 'three' ? `${f(r.zo, 1)} mm (middle point)` : `${f(r.zo, 1)} mm`;
+    $('boxTho').hidden = r.obj !== 'plane'; $('boxZo').hidden = r.obj === 'plane';
+    $('sFov').value = fovTo(m.fov); $('oFov').textContent = fmtUm(m.fov); $('sXc').value = m.xc * 1e6; $('oXc').textContent = `${f(m.xc * 1e6, 1)} μm`;
+    $('sCa').value = m.a * 1e6; $('oCa').textContent = `${f(m.a * 1e6, 2)} μm`; $('sCb').value = m.b * 1e6; $('oCb').textContent = `${f(m.b * 1e6, 2)} μm`;
+    $('sL2').value = rc.lam2; $('oL2').textContent = `${rc.lam2} nm`; $('sZs').value = rc.zs; $('oZs').textContent = `${f(rc.zs, 2)} mm`; $('sDet').value = rc.det; $('oDet').textContent = `${f(rc.det, 2)}°`;
+    for (const b of document.querySelectorAll('#sideSeg button')) b.setAttribute('aria-pressed', String(b.dataset.s === rc.side));
+    $('holoNote').textContent = `The plate holds the hologram made in the Record view: ${r.lam1} nm, reference at ${f(r.thr, 1)}°, ${r.obj === 'plane' ? `a plane object wave at ${f(r.tho, 1)}°` : r.obj === 'one' ? `one point ${f(r.zo, 1)} mm away` : `three points ${f(r.zo - 6, 1)} to ${f(r.zo + 6, 1)} mm away`}. Change it there.`;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  const PRESETS = {
+    beams: { view: 'rec', hint: 'Two plane waves from the same 633 nm laser, each 15° from the plate\'s normal on opposite sides (30° between them). Where they meet they make bright and dark fringes, planes that bisect the angle between the beams; the plate records where those planes cut it. Zoom the microscope in, put the cursors on two bright fringes and count the fringes between them. The spacing is d = λ/(2 sin(θ/2)) for an angle θ between the beams.',
+      set: () => { Object.assign(S.rec, { lam1: 633, thr: 15, K: 1, obj: 'plane', tho: -15 }); Object.assign(S.mic, { fov: 20e-6, xc: 0 }); } },
+    grating: { view: 'rc', hint: 'The simplest hologram: the object wave is a plane wave straight on (θo = 0, from a mirror), the reference comes in at 25°, both 633 nm. The plate records straight fringes, d = λ/sin 25° = 1.498 μm apart: a diffraction grating. Light it again along the reference and three beams leave it: straight through, the image beam (a copy of the object wave, straight on) and the conjugate. Find each with the detector. Then change the wavelength: the image beam swings, as the grating equation says.',
+      set: () => { Object.assign(S.rec, { lam1: 633, thr: 25, K: 4, obj: 'plane', tho: 0 }); Object.assign(S.rc, { lam2: 633, side: 'same', zs: 10, det: 0 }); } },
+    point: { view: 'rec', hint: 'One point of the object, 20 mm in front of the plate, lit by the same 633 nm laser; the reference beam comes in at 20°. The light from the point spreads as a circular wave, so the fringes on the plate are curved and crowd together toward one side: a piece of an off axis zone plate. Zoom in at different places on the plate and compare the spacing.',
+      set: () => { Object.assign(S.rec, { lam1: 633, thr: 20, K: 4, obj: 'one', zo: 20 }); Object.assign(S.mic, { fov: 40e-6, xc: 0 }); } },
+    virtual: { view: 'rc', hint: 'The point hologram lit by the reference beam alone (the object is gone). Behind the plate the light is traced back: a camera focused 20 mm behind the plate sees a sharp point exactly where the object was. That is the virtual image. Move the camera focus and watch the point blur. The beam straight through and the conjugate beam go off at other angles.',
+      set: () => { Object.assign(S.rec, { lam1: 633, thr: 20, K: 4, obj: 'one', zo: 20 }); Object.assign(S.rc, { lam2: 633, side: 'same', zs: -20, det: 0 }); } },
+    real: { view: 'rc', hint: 'The same hologram lit from the other side of the normal, at −20°. Now the conjugate wave is a copy of the object wave run backwards: it converges to a real image 20 mm past the plate, where a screen catches a sharp point. The image beam goes off steeply instead.',
+      set: () => { Object.assign(S.rec, { lam1: 633, thr: 20, K: 4, obj: 'one', zo: 20 }); Object.assign(S.rc, { lam2: 633, side: 'other', zs: 20, det: 0 }); } },
+    color: { view: 'rc', hint: 'Three points at 14, 20 and 26 mm recorded at 633 nm, viewed with 450 nm light. The fringes are the same, but each bends the shorter wavelength less, so the images come out farther from the plate (about 633/450 times as far) and shifted sideways. A white light source would smear the image into a rainbow, which is why a thin hologram is viewed with the laser it was made with.',
+      set: () => { Object.assign(S.rec, { lam1: 633, thr: 20, K: 4, obj: 'three', zo: 20 }); Object.assign(S.rc, { lam2: 450, side: 'same', zs: -28, det: 0 }); } },
+  };
+  function centreCursors() { const r = S.rec; let d = r.obj === 'plane' && Math.abs(r.thr - r.tho) > 0.05 ? fringePlate(r.lam1 * 1e-9, r.thr, r.tho) : 2e-6; S.mic.a = S.mic.xc - Math.min(S.mic.fov * 0.35, 3 * d); S.mic.b = S.mic.xc + Math.min(S.mic.fov * 0.35, 3 * d); }
+  const UNITS = { rec: 'λ in nm · plate positions in μm · angles in degrees', rc: 'λ in nm · z and x in mm · angles in degrees' };
+  const LABEL = { rec: 'The recording, seen from above: a reference beam and the light from the object meet on a photographic plate. A magnified view shows the interference fringes at the plate.',
+    rc: 'The developed plate lit again. A map shows the light leaving the plate and, behind it, the light traced back to where it seems to come from, with the screen or camera focus marked.' };
+  function setView(v) {
+    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('stage').classList.toggle('rc', v === 'rc'); $('cardRec').hidden = v !== 'rec'; $('cardRc').hidden = v !== 'rc'; $('units').textContent = UNITS[v]; can.setAttribute('aria-label', LABEL[v]);
+    sco.setAttribute('aria-label', v === 'rec' ? 'The developed plate under a microscope, with two cursors A and B.' : 'Left: the light across the screen or camera focus. Right: how much light leaves the plate at each angle, with the detector.');
+    if (!(window.vdRows && window.vdRows().length)) { window.vdShowCols = SHOW[v]; window.dispatchEvent(new Event('load')); }
+    sync(); later();
+  }
+  /* reconstruction work can take a moment: say so, then draw */
+  let pending = 0;
+  function later() { $('status').textContent = S.view === 'rc' && !RECON ? 'computing the light…' : ''; cancelAnimationFrame(pending); pending = requestAnimationFrame(() => requestAnimationFrame(() => { redraw(); status(); })); }
+  function status() { if (S.view !== 'rc' || !MAP) { $('status').textContent = ''; return; } $('status').textContent = MAP.done < MAP.cols ? `map ${Math.round(100 * MAP.done / MAP.cols)}%` : `computed on ${RECON.N} points, ${f(RECON.dx * 1e9, 0)} nm apart`; }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); rebuildRec(); centreCursors(); setView(c.view); }
+  const custom = () => { S.preset = 'custom'; };
+  const recChanged = () => { custom(); rebuildRec(); sync(); later(); };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
+  $('laserSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-l]'); if (b) { S.rec.lam1 = +b.dataset.l; recChanged(); } });
+  $('objSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-o]'); if (b) { S.rec.obj = b.dataset.o; recChanged(); } });
+  $('sThr').addEventListener('input', (e) => { S.rec.thr = +e.target.value; recChanged(); });
+  $('sK').addEventListener('input', (e) => { S.rec.K = +e.target.value; recChanged(); });
+  $('sTho').addEventListener('input', (e) => { S.rec.tho = +e.target.value; recChanged(); });
+  $('sZo').addEventListener('input', (e) => { S.rec.zo = +e.target.value; recChanged(); });
+  $('sFov').addEventListener('input', (e) => { S.mic.fov = fovFrom(+e.target.value); sync(); later(); });
+  $('sXc').addEventListener('input', (e) => { S.mic.xc = +e.target.value * 1e-6; sync(); later(); });
+  $('sCa').addEventListener('input', (e) => { S.mic.a = +e.target.value * 1e-6; sync(); later(); });
+  $('sCb').addEventListener('input', (e) => { S.mic.b = +e.target.value * 1e-6; sync(); later(); });
+  const rcChanged = () => { custom(); RECON = null; MAP = null; SCREEN = null; sync(); later(); };
+  $('sL2').addEventListener('input', (e) => { S.rc.lam2 = +e.target.value; rcChanged(); });
+  $('sideSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.rc.side = b.dataset.s; rcChanged(); } });
+  $('sZs').addEventListener('input', (e) => { S.rc.zs = +e.target.value; sync(); later(); });
+  $('sDet').addEventListener('input', (e) => { S.rc.det = +e.target.value; sync(); later(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; inset.key = ''; redraw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
+  /* drag in the pictures: the cursors (or pan) in the microscope; the screen plane in the map; the detector in the angle plot */
+  let drag = null;
+  const local = (el, e) => { const r = el.getBoundingClientRect(); return [(e.clientX - r.left) / r.width * (el === can ? W : SW), (e.clientY - r.top) / r.height * (el === can ? H : SH)]; };
+  sco.addEventListener('pointerdown', (e) => {
+    const [x, y] = local(sco, e), p = proj();
+    if (S.view === 'rec') { const left = 12 * p, xw = SW - 24 * p, X = (v) => left + (v - (S.mic.xc - S.mic.fov / 2)) / S.mic.fov * xw;
+      const da = Math.abs(X(S.mic.a) - x), db = Math.abs(X(S.mic.b) - x); drag = da < 10 * p && da <= db ? { k: 'a', left, xw } : db < 10 * p ? { k: 'b', left, xw } : { k: 'pan', x0: x, xc0: S.mic.xc, xw }; }
+    else { const narrow = SW < 640, inB = narrow ? y > SH / 2 : x > SW / 2; if (!inB) return; const bx = narrow ? 0 : SW / 2, bw = narrow ? SW : SW / 2; drag = { k: 'det', l: bx + 12 * p, r: bx + bw - 12 * p }; }
+    sco.setPointerCapture(e.pointerId); moveDrag(e);
+  });
+  function moveDrag(e) {
+    if (!drag) return; const [x] = local(sco, e);
+    if (drag.k === 'a' || drag.k === 'b') { const v = S.mic.xc - S.mic.fov / 2 + (x - drag.left) / drag.xw * S.mic.fov; S.mic[drag.k] = Math.round(Math.max(-PLATE_W / 2, Math.min(PLATE_W / 2, v)) * 1e8) / 1e8; }
+    else if (drag.k === 'pan') { S.mic.xc = Math.max(-PLATE_W / 2, Math.min(PLATE_W / 2, drag.xc0 - (x - drag.x0) / drag.xw * S.mic.fov)); }
+    else if (drag.k === 'det') { if (!drag.fine) S.rc.det = Math.round(Math.max(-80, Math.min(80, -90 + (x - drag.l) / (drag.r - drag.l) * 180)) * 100) / 100; }
+    sync(); later();
+  }
+  sco.addEventListener('pointermove', moveDrag); for (const ev of ['pointerup', 'pointercancel']) sco.addEventListener(ev, () => { drag = null; });
+  can.addEventListener('pointerdown', (e) => { if (S.view !== 'rc') return; const G = rcGeom(), [x] = local(can, e); const z = (x - G.m.l) / G.sx - G.zr; if (Math.abs(z) > G.zr) return; drag = { k: 'zs' }; can.setPointerCapture(e.pointerId); S.rc.zs = Math.round(z * 1e3 * 20) / 20; sync(); later(); });
+  can.addEventListener('pointermove', (e) => { if (!drag || drag.k !== 'zs') return; const G = rcGeom(), [x] = local(can, e); S.rc.zs = Math.round(Math.max(-32, Math.min(32, ((x - G.m.l) / G.sx - G.zr) * 1e3)) * 20) / 20; sync(); later(); });
+  for (const ev of ['pointerup', 'pointercancel']) can.addEventListener(ev, () => { drag = null; });
+  sco.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; const s = e.key === 'ArrowLeft' ? -1 : 1;
+    if (S.view === 'rec') { S.mic.b += s * (e.shiftKey ? 0.1 : 0.01) * 1e-6; } else S.rc.det = Math.round((S.rc.det + s * (e.shiftKey ? 0.1 : 0.01)) * 100) / 100;
+    sync(); later(); e.preventDefault();
+  });
+
+  // ---------- the clock: wavefronts move in the Record view; the map fills in the Reconstruct view ----------
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.view === 'rec' && !reduce) { phase += dt * 0.8; if (T && W) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawRec(); } }
+    if (S.view === 'rc' && MAP && MAP.done < MAP.cols) { const t0 = performance.now(); let n = 0; while (mapStep() && performance.now() - t0 < 14) n++; if (T && W) { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); drawRc(); } status(); }
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- readings for the worksheet (tools/readings_panel.py) ----------
+  window.vdVersion = 'holography@2026-10-24';
+  const SHOW = { rec: [['setup', 'setup'], ['N_periods', 'N'], ['span_um', 'Δx (μm)']], rc: [['lam2_nm', 'λ₂ (nm)'], ['det_deg', 'detector (°)'], ['z_screen_mm', 'z (mm)']] };
+  window.vdShowCols = SHOW.rec;
+  const SETUPNAME = { beams: 'two beams', grating: 'plane wave hologram', point: 'point', virtual: 'point', real: 'point', color: 'three points' };
+  window.vdReadingRow = () => {
+    const r = S.rec, objName = r.obj === 'plane' ? `plane wave at ${g6(r.tho)}°` : r.obj === 'one' ? `one point at ${g6(r.zo)} mm` : `three points, middle at ${g6(r.zo)} mm`;
+    const base = { view: S.view === 'rec' ? 'record' : 'reconstruct', setup: S.preset === 'custom' ? 'custom' : SETUPNAME[S.preset], lam1_nm: r.lam1, thr_deg: g6(r.thr), object: objName,
+      angle_between_deg: r.obj === 'plane' ? g6(Math.abs(r.thr - r.tho)) : '', beam_ratio: r.K };
+    if (S.view === 'rec') { const cf = cursorFringes(); return Object.assign(base, { xA_um: plain(S.mic.a * 1e6, 2), xB_um: plain(S.mic.b * 1e6, 2), span_um: plain(Math.abs(S.mic.b - S.mic.a) * 1e6, 2), bright_fringes: cf.M, N_periods: Math.max(0, cf.M - 1) }); }
+    const sc = screenNow();
+    return Object.assign(base, { lam2_nm: S.rc.lam2, thi_deg: g6(thi()), z_screen_mm: plain(S.rc.zs, 2), peak_x_mm: plain(sc.peakX * 1e3, 4), peak_I: g6(sc.peakI), det_deg: plain(S.rc.det, 2), det_power_pct: g6(detPower() * 100) });
+  };
+
+  // ---------- about ----------
+  $('aboutRec').textContent = 'Record view. A laser beam is split in two: the reference beam (a plane wave at angle θ_r) goes straight to the plate, and the object beam lights the object, whose scattered light also reaches the plate. Where the two overlap they interfere, and the plate records the intensity I(x) = |R + O|² along its surface (OpenStax University Physics Volume 3, section 4.7). Everything shown at the plate is computed exactly: the reference is a plane wave, a plane object wave comes from a mirror, and each object point sends out the exact cylindrical wave of the two dimensional slice (the Hankel function H₀(kr)). The beam ratio is the reference intensity over the object intensity at the plate\'s centre. For two plane waves the fringes on the plate are λ/|sin θ_r − sin θ_o| apart, which is λ/(2 sin(θ/2)) when the plate bisects the angle θ between the beams. The microscope shows the developed plate with its transmittance (light where little light fell); the curve above it is I(x). The cursors read to 0.01 μm, and the count is of the bright fringes (maxima of I) from cursor A to cursor B, counting one within 0.05 μm outside a cursor (a cursor set by eye on a bright fringe). The view of the beams is not to scale except for the angles and the positions of the object points; its wavefronts are drawn 2000 times farther apart than they are.';
+  $('aboutRc').textContent = 'Reconstruct view. The developed plate, with the object gone, is lit by a plane wave of wavelength λ₂ along the reference direction or from the other side of the normal. Just past the plate the light is u(x) = t(x) times the illuminating wave. It is split into plane waves with one FFT (the angular spectrum) and each plane wave is carried to any distance z exactly; behind the plate (z < 0) the same plane waves are traced back, which is what a camera focused there would see. The map shows the result between z = −32 and +32 mm, on a log scale (each colour step is a factor of 10, three steps shown). Waves too steep to leave the plate (evanescent) are dropped; so is light that would leave the 28 mm computing window before reaching z, rather than letting it wrap round, and none of it reaches the part shown. The detector takes the light leaving within ±0.025° of its angle, as a fraction of the light falling on the plate (counting the flow through the plate). Predicted image positions come from tracing the rays that leave the plate\'s centre and their neighbours (exact ray optics, the tangential focus); predicted beam angles from the grating equation sin θ = sin θ_i ± (λ₂/λ₁)(sin θ_o − sin θ_r).';
+  $('aboutSimple').textContent = 'What is simplified: the demo is a two dimensional slice, so each "point" is a bright line perpendicular to the slice and the plate is a strip 3.0 mm wide; a real hologram is two dimensional and also stores the third direction. The plate is thin: it records only the light at its surface, so it acts as a grating that works at any wavelength (a thick plate would also select the wavelength and angle, as white light holograms do). The emulsion is linear: the amplitude transmittance is proportional to the light that fell on it, t = I/I_max (a positive transparency); a real emulsion is linear only over part of its range. The plate does not change the phase of the light, and the beams are perfectly coherent and steady during the exposure.';
+
+  // ---------- size, theme, start ----------
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = $('scopebox').getBoundingClientRect();
+    W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    SW = c.width; SH = c.height; sco.width = Math.round(SW * dpr); sco.height = Math.round(SH * dpr); inset.key = ''; redraw();
+  }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const q = new URLSearchParams(location.search), first = PRESETS[q.get('setup')] ? q.get('setup') : 'beams';
+  applyPreset(first);
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe($('scopebox')); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__ho = { S, setView, applyPreset, sync, redraw, rebuildRec, ensureRecon, screenNow, detPower, cursorFringes, finishMap: () => { ensureRecon(); while (mapStep()); redraw(); status(); },
+    get REC() { return REC; }, get RECON() { return RECON; }, maxima: (a, b) => maxima(REC, a, b), recChanged, rcChanged };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

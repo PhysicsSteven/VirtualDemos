@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas wide-proj-bench wide-proj-stage btn-primary readout-big-dd swatch projshort-proj-stage" lang="en">
+<html data-vd-off="root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas wide-proj-bench wide-proj-stage btn-primary readout-big-dd swatch projshort-proj-stage" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -104,6 +104,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 /* projector on a short screen: let the stage shrink to fit under the header */
 @media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
+/* Readings section (tools/readings_panel.py): this demo turns some of the shared button, status and table rules off, so the section brings its own */
+.vd-readings .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.vd-readings .btn { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.vd-readings .btn:hover { border-color: var(--muted); }
+.vd-readings .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.vd-readings .status { margin: 6px 0 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.vd-readings .twrap { position: relative; max-height: 200px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+.vd-readings table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+.vd-readings table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.vd-readings table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+.vd-readings .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 820px) { .vd-readings .btn { min-height: 36px; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -137,6 +149,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/catenary.html" target="catenary-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -213,6 +226,27 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <p class="hint" id="semiHint" hidden>Semicircle (qualitative): blocks in a half circle of the same span, with the dashed chain shape of the same span and rise. Hooke's rule: the arch stands if a hanging chain loaded like the arch fits inside the blocks. The dashed curve is a uniform chain, not the exact thrust line of these blocks, so read the red stretches as where the push wants to leave thin blocks. Heyman found that a semicircular arch needs a thickness of about 0.11 of its radius to stand.</p>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="catenary" data-title="Hanging Chains and Arches" data-demo="catenary">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Plot data</summary><div class="foldbody">
         <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
@@ -1153,8 +1187,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         ['Supports hold up (vertical)', `${fN(VA)} + ${fN(VB)}`, true], ['Weight λgS', fN(w * K.S)]]);
       const s1 = sOfF(S.f[0]), s2 = sOfF(S.f[1]), pf = pieceForces(K, s1, s2, S.lam);
       const sum = Math.hypot(...pf.sum), scale = Math.max(Math.hypot(...pf.F1), Math.hypot(...pf.F2));
+      const tiny = (v) => (v <= 1e-9 * scale ? 0 : v);   /* a piece ending at the lowest point: V there is 0, not a rounding remainder */
       $('fbdBox').innerHTML = dl([['Piece length', fm(pf.len)], ['Its weight W', fN(Math.abs(pf.W[1]))],
-        ['End 1 (H, V)', `${fN(Math.abs(pf.F1[0]))}, ${fN(Math.abs(pf.F1[1]))}`, true], ['End 2 (H, V)', `${fN(Math.abs(pf.F2[0]))}, ${fN(Math.abs(pf.F2[1]))}`, true],
+        ['End 1 (H, V)', `${fN(Math.abs(pf.F1[0]))}, ${fN(tiny(Math.abs(pf.F1[1])))}`, true], ['End 2 (H, V)', `${fN(Math.abs(pf.F2[0]))}, ${fN(tiny(Math.abs(pf.F2[1])))}`, true],
         ['V₂ − V₁ (signed)', fN(pf.F2[1] + pf.F1[1])], ['Net force', sum <= 1e-9 * scale ? '0 N' : fN(sum)]]);
     }
     // parabola
@@ -1179,6 +1214,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
   }
   const gwOk = () => !K.taut && Math.abs(K.dy) < 0.02 && lowest(K).inside;
+
+  // ---------- readings (Record reading, Export to worksheet: the Readings section) ----------
+  // One row per Record: the supports, the length and λ as set, and the sag and forces from the exact catenary (forces to 5 significant figures, lengths to 1 mm).
+  const s5 = (v) => +v.toPrecision(5), mm = (v) => +(Math.abs(v) < 5e-4 ? 0 : v).toFixed(3);
+  window.vdVersion = 'catenary@2026-10-24';
+  window.vdReadingRow = () => {
+    if (K.taut) return 'The chain is taut: no finite tension can hold it straight. Give it some slack, then record.';
+    const w = S.lam * G, lo = lowest(K);
+    return { shape: arch() ? 'arch' : 'hanging', lambda_kg_m: S.lam, xA_m: mm(S.A[0]), yA_m: mm(disp(S.A[1])), xB_m: mm(S.B[0]), yB_m: mm(disp(S.B[1])), S_m: +S.S.toFixed(2),
+      sag_m: mm(sagOf(K).d), a_m: mm(K.a), H_N: s5(w * K.a), TA_N: s5(w * Math.hypot(K.a, K.sA)), TB_N: s5(w * Math.hypot(K.a, K.sB)),
+      T_lowest_N: s5(w * Math.hypot(K.a, lo.s)), VA_N: s5(-w * K.sA), VB_N: s5(w * K.sB), weight_N: s5(w * K.S) };
+  };
+  window.vdShowCols = [['S_m', 'S (m)'], ['sag_m', 'd (m)'], ['H_N', 'H (N)'], ['TA_N', 'T_A (N)'], ['TB_N', 'T_B (N)']];
 
   // ---------- text alternatives and the data tables ----------
   let dataOpen = false, dataLast = 0, dataTimer = 0;

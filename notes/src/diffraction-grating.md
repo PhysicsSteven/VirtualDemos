@@ -10,6 +10,7 @@ time: 15 to 30 minutes
 - A finer grating (more lines per mm, smaller d) spreads the orders wider and allows fewer of them; an order exists only if mλ/d ≤ 1.
 - Measuring the spot position y at distance L gives θ = arctan(y/L) and then λ = d sin θ/m. The shortcut λ ≈ dy/(mL) fails at the angles a real grating gives.
 - A gas lamp's lines repeat in every order, which is how a spectrograph identifies elements in a lamp or a star.
+- One slit alone (the **Single slit** aperture) gives a broad middle band with dark fringes at a sin θ = mλ and faint side bands, I = I₀[sin β/β]²; a narrower slit spreads the pattern wider.
 
 ## Before class
 
@@ -23,6 +24,7 @@ Students should know wave superposition and path difference (the double slit). 6
 4. **White light rainbows and overlapping orders.** At 300 lines/mm each order is a spectrum with violet inside and the center stays white. The second and third orders overlap. Q4.
 5. **Hydrogen lamp spectrum.** The four Balmer lines repeat in every order. Use the wavelength chips above the **Orders** table to read each line's position. For astronomy, this is the pattern a spectrograph records from a star or nebula. Try the **Na** lamp for Q6.
 6. **CD as a grating.** The track pitch of a CD acts as a 625 lines/mm grating; press **DVD** to compare. Q7. If time allows, set **Illuminated slits N** to 5 and choose **0 to 1st order** on the plot: between orders there are N − 1 zeros and N − 2 small maxima, and the orders sharpen as N grows.
+7. **Single slit.** Switch **Aperture** to **Single slit** (or open the demo with `?aperture=single`). With the He-Ne laser and a = 5.0 µm the dark fringes sit 12.8, 26.2, 41.1 cm … from the center at L = 1 m and the middle band is twice as wide as the side bands. Narrow the slit and the pattern spreads; below a = λ (try 0.5 µm) there is no dark fringe at all. In **Measure** the light meter on jaw B reads I/I₀. Q8.
 
 ## Questions
 
@@ -40,6 +42,8 @@ Students should know wave superposition and path difference (the double slit). 6
 
 **Q7.** A 650 nm laser reflected from a CD gives first order spots at 24.0° from the straight through beam. Find the track pitch d. A DVD has d = 0.74 µm. At what angle is its first order, and why does it have no second order?
 
+**Q8.** With the single slit, a = 5.0 µm and the He-Ne laser, where is the first dark fringe at L = 1.00 m? Predict what the light meter on jaw B reads at the first side maximum, and where that maximum is. What happens to the pattern when a is cut to 2.0 µm, and to 0.5 µm?
+
 ## Common misconceptions
 
 - **"More lines per mm gives more orders."** It gives fewer: d is smaller, so mλ/d reaches 1 at a smaller m. The orders that remain are spread wider.
@@ -52,6 +56,7 @@ Students should know wave superposition and path difference (the double slit). 6
 - Spot positions are exact: sin θₘ = sin θᵢ + mλ/d and yₘ = L tan θₘ on a flat wall square to the beam. Turning the grating sets θᵢ; the simple formulas apply only with the turn at 0°.
 - The plot is the far field pattern of N slits of width a: I ∝ [sin(Nφ)/sin φ]² × [sin β/β]², with φ = πd(sin θ − sin θᵢ)/λ and β = πa(sin θ − sin θᵢ)/λ, scaled so the central peak is 1. Whole numbers of d/a make orders missing.
 - On the wall each order carries power in proportion to the slit envelope; obliquity factors are left out. Spot widths include the beam width and diffraction spread but have a minimum size in pixels, so spot brightness is not to scale. Fine structure such as the 0.6 nm sodium doublet is far too small to see on the wall (about 0.4 mm at L = 1 m); the resolving power is reported in the note under the **Orders** table.
+- Single slit (N = 1): I = I₀[sin β/β]² with β = πa(sin θ − sin θᵢ)/λ, dark fringes at a(sin θ − sin θᵢ) = mλ, side maxima where tan β = β (0.0472, 0.0165, 0.0083 of the center). Slits of 0.5 to 20 µm keep the pattern wide enough for the caliper; L ≫ a²/λ (under 1 mm), so the far field formula holds at every L. For slits a few wavelengths wide the scalar formula is itself an approximation.
 - Lamp light passes a slit and a lens to make a parallel beam. A real lamp is too faint to project; in lab you look through the grating. Lines are NIST air wavelengths on a log brightness scale; white light is CIE D65 from 400 to 700 nm.
 
 ## Going further

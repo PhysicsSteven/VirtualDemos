@@ -1028,6 +1028,18 @@
       "magnetic braking",
       "terminal speed"
      ]
+    },
+    {
+     "demo": "transformers",
+     "title": "Transformers",
+     "desc": "Two coils on an iron core: change the turns and the load and watch V_S/V_P follow N_S/N_P on live traces, switch to a real core with leakage and winding resistance, then send power down a long line and see the I²R loss fall as 1/V².",
+     "tags": [
+      "transformer",
+      "turns ratio",
+      "mutual inductance",
+      "power transmission",
+      "I²R loss"
+     ]
     }
    ]
   },
@@ -1247,6 +1259,28 @@
      ]
     },
     {
+     "demo": "holography",
+     "title": "Holography",
+     "desc": "Record the fringes a reference beam and an object's light make on a plate, measure their spacing under a microscope, then light the developed plate again and find the virtual image, the real image and the straight through beam, computed exactly; change the color and watch the images move.",
+     "tags": [
+      "holography",
+      "interference",
+      "fringe spacing",
+      "virtual and real images"
+     ]
+    },
+    {
+     "demo": "michelson",
+     "title": "Michelson Interferometer",
+     "desc": "Split a laser beam, send the halves to two mirrors and recombine them: count fringes as a micrometer moves one mirror to measure a wavelength, pump the air out of a gas cell to measure its index of refraction, and find equal paths with white light fringes.",
+     "tags": [
+      "interference",
+      "Michelson interferometer",
+      "wavelength",
+      "index of refraction of air"
+     ]
+    },
+    {
      "demo": "diffraction-grating",
      "title": "Diffraction Grating",
      "desc": "Shine lasers, an RGB module, white light or H, He, Ne, Hg and Na lamps through gratings from 100 to 1000 lines/mm, a CD or a DVD. See the orders land on the wall, overlapping rainbows and missing orders, then measure a spot with calipers to find the wavelength.",
@@ -1255,6 +1289,17 @@
       "d sin θ = mλ",
       "spectra",
       "measure wavelength"
+     ]
+    },
+    {
+     "demo": "resolution",
+     "title": "Circular Apertures and Resolution",
+     "desc": "Light through a round hole makes an Airy pattern, computed exactly. Measure its first dark ring on a screen, then bring two point sources together until they blur into one: Rayleigh's criterion for an iris, the eye and a car's headlights, the Hubble telescope and a camera lens stopped down.",
+     "tags": [
+      "Airy pattern",
+      "θ = 1.22 λ/D",
+      "Rayleigh criterion",
+      "resolving power"
      ]
     }
    ]

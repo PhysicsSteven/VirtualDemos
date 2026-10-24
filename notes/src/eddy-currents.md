@@ -35,5 +35,5 @@ time: 10 to 20 minutes
 ## Physics behind the demo
 
 - The magnet as a point dipole on the pipe's axis in a thin-walled pipe gives drag F = kv with k = 45μ₀²m²σw/(1024a⁴) (Levin and coworkers, Am. J. Phys. 2006); exact fall with linear drag. A real magnet that nearly fills the pipe falls at the same order of speed but not exactly this one.
-- NdFeB magnet 12.7 mm × 12.7 mm, 12.2 g, m = 1.6 A·m² by default; pipe inner radius 9.5 mm; copper 59.6 MS/m and aluminium 37.7 MS/m at 20 °C, linear in temperature, measured ratios at 77 K. Air drag ignored.
+- NdFeB magnet 12.7 mm × 12.7 mm, 12.2 g, m = 1.6 A·m² by default; pipe inner radius 9.5 mm; copper 59.6 MS/m and aluminium 37.7 MS/m at 20 °C, resistivity linear in temperature down to the measured ratios at 77 K. Air drag ignored.
 - Wall currents are drawn from the induced emf around each ring, ε = −v dΦ/dz, darker where it is larger.

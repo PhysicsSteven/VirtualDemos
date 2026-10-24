@@ -3,6 +3,8 @@ Student activity · Physics I foundations
 
 Textbook: OpenStax *University Physics*, Vol. 1, §§1.5–1.7. Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
+Companion demo: [Units, Scales and Estimates](https://physicssteven.github.io/VirtualDemos/demos/units.html). Its Fermi estimates tab works three other questions with low and high factors, and its Significant figures tab shows the rounding conventions for sums and products. Make your own estimate and roundings first, then compare the method.
+
 ## Goal
 
 Build an order of magnitude estimate, distinguish uncertainty from rounding and present a solution that another student can check.

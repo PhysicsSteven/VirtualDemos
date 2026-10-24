@@ -3,6 +3,8 @@ Student activity · Physics I foundations
 
 Textbook: OpenStax *University Physics*, Vol. 1, §§1.1–1.4. Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
+Companion demo: [Units, Scales and Estimates](https://physicssteven.github.io/VirtualDemos/demos/units.html). Do the conversions and dimensional checks by hand first, then check the length and speed conversions in its Convert units tab and compare the dimensions of familiar formulas in its Dimensional analysis tab; its Scale of things tab helps with the powers of ten sketch. It does not replace your own measurements.
+
 ## Goal
 
 Turn an everyday measurement into a defensible physical statement. Use SI units, conversion factors and dimensions to check calculations before trusting a numerical answer.

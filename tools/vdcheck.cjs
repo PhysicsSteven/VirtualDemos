@@ -63,6 +63,8 @@ async function context(browser, w, h, theme, motion) {
   await ctx.clock.install({ time: T0 });
   await ctx.clock.pauseAt(new Date(T0.getTime() + 1000));
   await ctx.route(/fonts\.(googleapis|gstatic)\.com/, (r) => r.abort());
+  /* where cdnjs is blocked (cloud sessions), VD_THREE names a local three.min.js r128 to serve instead */
+  if (process.env.VD_THREE) await ctx.route(/cdnjs\.cloudflare\.com\/ajax\/libs\/three\.js\//, (r) => r.fulfill({ path: process.env.VD_THREE }));
   return ctx;
 }
 async function openPage(ctx, base, demo, problems, label) {

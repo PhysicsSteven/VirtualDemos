@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg chips chips-button seg img projshort-proj-bar-units mono bar-h1 bench pane chips-button-hover chips-button-on btn btn-primary btn-disabled slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas projshort-proj-bar-p" lang="en">
+<html data-vd-off="chips chips-button seg img projshort-proj-bar-units mono bar-h1 bench pane chips-button-hover chips-button-on btn btn-primary btn-disabled slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas projshort-proj-bar-p" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -80,6 +80,7 @@ table.rows input:focus { border-color: var(--accent); }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/center-of-mass.html" target="center-of-mass-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setup</h2>
         <div class="seg" role="group" aria-label="Setup" id="modeSeg">
@@ -120,6 +121,27 @@ table.rows input:focus { border-color: var(--accent); }
         </details>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="center-of-mass" data-title="Center of Mass" data-demo="center-of-mass">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
@@ -317,6 +339,33 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1; for (let k = -4; k <= 4; k++) { ctx.beginPath(); ctx.moveTo(X(k), wl + 30 * p); ctx.lineTo(X(k), wl + 38 * p); ctx.stroke(); ctx.fillText(`${k} m`, X(k), wl + 50 * p); }
     if (!S.blind) { const cm = (S.pm * b.xp + S.bm * b.xb) / (S.pm + S.bm); cross(X(cm), wl - 90 * p, T.cm); ctx.strokeStyle = T.cm; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(X(cm), wl - 80 * p); ctx.lineTo(X(cm), wl + 28 * p); ctx.stroke(); ctx.setLineDash([]); }
   }
+  /* Readings for the worksheet (tools/readings_panel.py): the readouts of the current setup at this moment. f is the share of the
+     total mass in mass 2 (plate, two masses), in the front piece (firework) or in the person (boat). Positions in metres to 1 mm. */
+  window.vdVersion = CM_VERSION;
+  const SHOW = { plate: [['setup', 'setup'], ['f', 'f'], ['x_cm_m', 'x_cm'], ['y_cm_m', 'y_cm']], fire: [['t_s', 't (s)'], ['x_cm_m', 'x_cm'], ['y_cm_m', 'y_cm'], ['x_whole_m', 'unexploded x']],
+    boat: [['f', 'f'], ['walked_m', 'walked (m)'], ['boat_m', 'boat moved (m)'], ['x_cm_m', 'x_cm']] };
+  const mm = (v) => f(v, 3).replace('−', '-');
+  window.vdShowCols = SHOW.plate;
+  $('modeSeg').addEventListener('click', () => { if (!(window.vdRows && window.vdRows().length)) { window.vdShowCols = SHOW[S.mode]; window.dispatchEvent(new Event('load')); } });   /* the Readings section redraws its headings on load */
+  window.vdReadingRow = () => {
+    if (S.blind) return 'Blind hides the centre of mass: turn Blind off to record readings.';
+    window.vdShowCols = SHOW[S.mode];
+    if (S.mode === 'plate') {
+      const C = centre(S.ms), m2 = S.ms[1] ? S.ms[1].m : 0;
+      return { setup: 'plate', masses: S.ms.map((a) => `${a.m.toFixed(1)} kg (${a.x.toFixed(2)}, ${a.y.toFixed(2)})`).join(', '), M_kg: f(C.M, 1), f: S.ms.length === 2 ? f(m2 / C.M, 4) : '', t_s: '',
+        x_cm_m: mm(C.x), y_cm_m: mm(C.y), x_whole_m: '', y_whole_m: '', walked_m: '', boat_m: '' };
+    }
+    if (S.mode === 'fire') {
+      const F = FW(), s = S.t - F.tTop, pa = s > 0 ? F.at(F.a, s) : F.whole(S.t), pb = s > 0 ? F.at(F.b, s) : pa, wh = F.whole(Math.min(S.t, F.tWhole));
+      return { setup: `firework, ${S.kick} m/s at ${S.ang}°`, masses: '', M_kg: '', f: S.ratio.toFixed(2), t_s: f(S.t, 2),
+        x_cm_m: mm(S.ratio * pa.x + (1 - S.ratio) * pb.x), y_cm_m: mm(S.ratio * pa.y + (1 - S.ratio) * pb.y), x_whole_m: mm(wh.x), y_whole_m: mm(wh.y), walked_m: '', boat_m: '',
+        front_lands_m: mm(F.at(F.a, F.a.tLand).x), back_lands_m: mm(F.at(F.b, F.b.tLand).x) };
+    }
+    const b = boatState(), M = S.pm + S.bm;
+    return { setup: 'boat', masses: `person ${S.pm} kg, boat ${S.bm} kg`, M_kg: M, f: f(S.pm / M, 4), t_s: f(S.t, 2), x_cm_m: mm((S.pm * b.xp + S.bm * b.xb) / M), y_cm_m: '',
+      x_whole_m: '', y_whole_m: '', walked_m: f(b.s, 2), boat_m: mm(b.xb) };
+  };
+  window.__cm = { S, upd, FW };   /* for the worksheet key's capture script */
   function init() { sync(); readouts(); }
   function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; Hh = r.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); }
   const retheme = () => { tokens(); draw(); };

@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage" lang="en">
+<html data-vd-off="root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula readout-dd-ok check check-input empty plotbox-canvas wide-proj-bench wide-proj-stage" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -129,6 +129,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/double-slit.html" target="double-slit-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -184,6 +185,25 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
+        <h2>Measure</h2>
+        <label class="check"><input type="checkbox" id="meas">Cursors on the screen</label>
+        <div id="curBox" hidden>
+          <div>
+            <div class="slider-head"><label for="cA">Cursor A</label><output id="cAOut" class="mono" for="cA"></output></div>
+            <input type="range" id="cA" min="-1" max="1" step="0.002" value="-0.2">
+          </div>
+          <div>
+            <div class="slider-head"><label for="cB">Cursor B</label><output id="cBOut" class="mono" for="cB"></output></div>
+            <input type="range" id="cB" min="-1" max="1" step="0.002" value="0.2">
+          </div>
+          <dl class="readout"><div class="wide big"><dt>Cursor B − A</dt><dd id="rBA">—</dd></div></dl>
+        </div>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Two cursors across the screen and the histogram, for measuring fringe positions. Drag a cursor, or press anywhere on the screen or the histogram to bring the nearer one there. Put them on the centers of two bright fringes several fringes apart and divide B − A by the number of spacings between them. The predicted pattern, its marks and the curve are hidden while the cursors are on.</p>
+        </details>
+      </section>
+
+      <section>
         <h2>Which slit detector</h2>
         <label class="check"><input type="checkbox" id="det">Detector at the slits</label>
         <div id="etaRow">
@@ -212,7 +232,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
       <section>
         <h2>Predicted pattern</h2>
-        <dl class="readout">
+        <p class="hint" id="predHidden" hidden>Hidden while you measure. Turn the cursors off to see the predictions.</p>
+        <dl class="readout" id="predDl">
           <div class="wide big"><dt>Fringe spacing Δy ≈ λL/d</dt><dd id="rDy">—</dd></div>
           <div class="wide list"><dt>Bright fringes, sin θ = mλ/d, m = 1, 2, 3</dt><dd id="rMax">—</dd></div>
           <div class="wide list"><dt>Dark fringes, sin θ = (m + ½)λ/d, m = 0, 1, 2</dt><dd id="rMin">—</dd></div>
@@ -234,6 +255,27 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </details>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="double-slit" data-title="Double Slit" data-demo="double-slit">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
@@ -446,7 +488,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- state ----------
   const S = { preset: 'electron', kind: 'electron', src: Math.log10(50000), a: 0.2e-6, d: 1e-6, L: 0.35, open: [true, true],
-    det: false, eta: 1, rate: 5, Y: 15e-6 };
+    det: false, eta: 1, rate: 5, Y: 15e-6, meas: false, cA: -3e-6, cB: 3e-6 };
   const show = { curve: true, marks: true, env: false, color: true };
   let phys = null, pat = null, mix = null, pred = null, streaming = !reduce;
 
@@ -470,6 +512,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     flights = [];
     histDirty = true;
     physReadouts();
+    curReadouts();
     drawFormula();
   }
   function fitY() {
@@ -1153,6 +1196,53 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (view3d) drawApparatus3D(ps); else { v3 = null; drawApparatus(ps); }
     drawScreen(ps);
     drawHist(ps);
+    if (S.meas) drawCursors(ps);
+  }
+  // ---------- measuring cursors: horizontal lines across the screen and the histogram ----------
+  function curStep() { return 0.002 * S.Y; }
+  function fmtCur(v) {
+    const tk = yTicks(), st = curStep() / tk.f, dg = Math.max(0, Math.min(6, -Math.floor(Math.log10(st) + 1e-9)));
+    return `${(v / tk.f).toFixed(dg).replace('-', '−')} ${tk.u}`;
+  }
+  function drawCursors(ps) {
+    const s = LY.scr, h = LY.hist, x0 = s.x - 4 * ps, x1 = h.x + h.w;
+    for (const id of ['A', 'B']) {
+      const v = id === 'A' ? S.cA : S.cB;
+      if (Math.abs(v) > S.Y) continue;
+      const py = Math.round(yPx(v)) + 0.5, hot = (drag && drag.id === 'c' + id) || hoverId === 'c' + id;
+      ctx.strokeStyle = T.accent; ctx.lineWidth = (hot ? 2 : 1.3) * ps;
+      ctx.beginPath(); ctx.moveTo(x0, py); ctx.lineTo(x1, py); ctx.stroke();
+      // the grip: a tab on the histogram's right edge with the cursor's letter
+      const gx = x1 - 9 * ps;
+      ctx.fillStyle = T.canvas; ctx.lineWidth = (hot ? 2 : 1.5) * ps;
+      roundRect(gx - 9 * ps, py - 7 * ps, 18 * ps, 14 * ps, 4 * ps); ctx.fill(); ctx.stroke();
+      label(id, gx, py + 0.5, T.accent, 'center', 'middle', 10.5, T.mono);
+    }
+    const mid = (Math.max(-S.Y, Math.min(S.Y, S.cA)) + Math.max(-S.Y, Math.min(S.Y, S.cB))) / 2;
+    const txt = 'B − A = ' + fmtCur(S.cB - S.cA), py = yPx(mid);
+    ctx.font = `${10.5 * ps}px ${T.mono}`;
+    const w = ctx.measureText(txt).width, bx = h.x + h.w / 2;
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; roundRect(bx - w / 2 - 5 * ps, py - 9 * ps, w + 10 * ps, 18 * ps, 4 * ps); ctx.fill(); ctx.globalAlpha = 1;
+    label(txt, bx, py + 0.5, T.accent, 'center', 'middle', 10.5, T.mono);
+  }
+  function setCursor(id, y) {
+    const st = curStep(), v = Math.max(-S.Y, Math.min(S.Y, Math.round(y / st) * st));
+    if (id === 'A') S.cA = +v.toPrecision(10); else S.cB = +v.toPrecision(10);
+    curReadouts();
+  }
+  function curReadouts() {
+    if (!LY) return;
+    $('curBox').hidden = !S.meas; $('predDl').hidden = S.meas; $('predHidden').hidden = !S.meas;
+    $('cA').value = S.cA / S.Y; $('cB').value = S.cB / S.Y;
+    $('cAOut').textContent = fmtCur(S.cA); $('cBOut').textContent = fmtCur(S.cB); $('rBA').textContent = fmtCur(S.cB - S.cA);
+  }
+  // the cursor a press at (x, y) on the screen or the histogram picks: the nearer one
+  function curAt(x, y) {
+    if (!S.meas || !LY) return null;
+    const s = LY.scr, h = LY.hist, ps = projScale();
+    if (x < s.x - 40 * ps || x > h.x + h.w + 4 || y < s.y - 6 || y > s.y + s.h + 6) return null;
+    const dA = Math.abs(y - yPx(S.cA)), dB = Math.abs(y - yPx(S.cB));
+    return { id: dA < dB ? 'cA' : 'cB', cursor: 'ns-resize' };
   }
 
   function label(txt, x, y, color, align = 'left', base = 'alphabetic', size = 11.5, font) {
@@ -1392,7 +1482,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     recent = keep;
     // predicted maxima marks on both edges
-    if (show.marks) {
+    if (show.marks && !S.meas) {
       ctx.fillStyle = T.equi;
       const tri = 6 * ps;
       const mark = (y, faint) => {
@@ -1442,7 +1532,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     for (let b = 0; b < ny; b++) { if (histCounts[b] > maxC) maxC = histCounts[b]; if (expBins[b] > maxE) maxE = expBins[b]; }
     const total = nHits;
     // scale: the larger of the data and the prediction, eased so it does not jump
-    const target = Math.max(4, 1.12 * Math.max(maxC, maxE * total * (show.curve || show.env ? 1 : 0)));
+    const target = Math.max(4, 1.12 * Math.max(maxC, maxE * total * ((show.curve || show.env) && !S.meas ? 1 : 0)));
     hx = target > hx || reduce ? target : hx + (target - hx) * 0.08;   // with reduced motion the axis jumps instead of gliding
     const X = (c) => hs.x + Math.min(1, c / hx) * hs.w;
     // grid ticks on counts
@@ -1469,14 +1559,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     ctx.lineTo(hs.x, hs.y); ctx.stroke(); ctx.globalAlpha = 1;
     // marks for maxima
-    if (show.marks && S.open[0] && S.open[1] && (!S.det || S.eta < 0.98)) {
+    if (show.marks && !S.meas && S.open[0] && S.open[1] && (!S.det || S.eta < 0.98)) {
       ctx.strokeStyle = T.equi; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
       const ln = (y, faint) => { if (Math.abs(y) > S.Y) return; const py = yPx(y); ctx.globalAlpha = faint ? 0.25 : 0.55; ctx.beginPath(); ctx.moveTo(hs.x, py); ctx.lineTo(hs.x + hs.w, py); ctx.stroke(); };
       ln(0); for (const m of pred.maxima) { ln(m.y, m.missing); ln(-m.y, m.missing); }
       ctx.setLineDash([]); ctx.globalAlpha = 1;
     }
     // envelope: the no interference pattern doubled, which touches the fringe peaks
-    if (show.env && total > 0 && pat.F12 > 0) {
+    if (show.env && !S.meas && total > 0 && pat.F12 > 0) {
       const scale = total / mix.F;
       ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([5, 4]); ctx.beginPath();
       for (let b = 0; b < ny; b++) {
@@ -1488,7 +1578,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       ctx.stroke(); ctx.setLineDash([]);
     }
     // prediction: expected hits per bin for this many hits
-    if (show.curve && total > 0) {
+    if (show.curve && !S.meas && total > 0) {
       ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * ps; ctx.lineJoin = 'round'; ctx.beginPath();
       for (let b = 0; b < ny; b++) {
         const px = X(expBins[b] * total), py = hs.y + hs.h - (b + 0.5) * bh;
@@ -1616,7 +1706,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function applyPreset(name) {
     const p = PRESETS[name];
     Object.assign(S, { kind: p.kind, src: p.src, a: p.a, d: p.d, L: p.L, open: p.open.slice(), det: p.det, eta: p.eta, rate: p.rate });
-    markPreset(name); syncSliders(); fitY(); rebuild(false);
+    markPreset(name); syncSliders(); fitY(); S.cA = -0.2 * S.Y; S.cB = 0.2 * S.Y; rebuild(false);
   }
   function custom() { markPreset(null); $('presetHint').textContent = 'Your own setup. Pick a preset to return to a known experiment.'; }
   // set a or d (meters) keeping the slits apart: a ≤ 0.9 d
@@ -1656,6 +1746,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   $('fire1').addEventListener('click', () => fire(1));
   $('fire10').addEventListener('click', () => fire(10));
   $('clear').addEventListener('click', () => { flights = []; clearHits(); });
+  $('meas').addEventListener('change', (e) => { S.meas = e.target.checked; histDirty = true; curReadouts(); });
+  for (const id of ['A', 'B']) $('c' + id).addEventListener('input', (e) => setCursor(id, +e.target.value * S.Y));
   $('tCurve').addEventListener('change', (e) => { show.curve = e.target.checked; });
   $('tMarks').addEventListener('change', (e) => { show.marks = e.target.checked; });
   $('tEnv').addEventListener('change', (e) => { show.env = e.target.checked; });
@@ -1674,6 +1766,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   function handleAt(ev) {
     if (!LY) return null;
     const r = can.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top;
+    const cu = curAt(x, y); if (cu) return cu;
     if (view3d) return handleAt3D(x, y, ev.pointerType === 'touch');
     const g = appGeom(), ps = projScale(), tol = 7 * ps * (ev.pointerType === 'touch' ? 2 : 1);
     if (Math.abs(x - g.xb) > g.thick / 2 + tol + 8 * ps) return null;
@@ -1690,6 +1783,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     return best;
   }
   function applyDrag(py) {
+    if (drag.id === 'cA' || drag.id === 'cB') { setCursor(drag.id[1], (1 - (py - LY.scr.y) / LY.scr.h) * 2 * S.Y - S.Y); return; }
     const g = appGeom();
     const off = view3d && v3 ? plateY(py) / v3.bs : (g.cy - py) / g.bs;   // meters from the center line
     if (drag.id === 'd1' || drag.id === 'd2') setGeom('d', 2 * Math.abs(off));
@@ -1721,6 +1815,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const r = can.getBoundingClientRect();
     drag = { id: h.id, x0: ev.clientX - r.left, y0: ev.clientY - r.top, moved: false, yaw0: cam.yaw, pitch0: cam.pitch };
     if (h.id === 'rot') can.style.cursor = 'grabbing';
+    if (h.id[0] === 'c') { drag.moved = true; applyDrag(drag.y0); }
     try { can.setPointerCapture(ev.pointerId); } catch (_) {}
     ev.preventDefault();
   });
@@ -1782,7 +1877,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (now - lastRead > 140) { countReadouts(); lastRead = now; }
     requestAnimationFrame(loop);
   }
-  window.__ds = { get frameMs() { return frameMs; }, get n() { return nHits; }, get S() { return S; }, get pat() { return pat; }, get pred() { return pred; },
+  // ---------- readings (the shared Readings section): the setup and the two cursors ----------
+  const mm = (v) => String(Number((v * 1e3).toPrecision(6)));
+  window.vdVersion = 'double-slit@2026-10-24';
+  window.vdShowCols = [['lam_nm', 'λ (nm)'], ['d_mm', 'd (mm)'], ['hits', 'Hits'], ['BA_mm', 'B − A (mm)']];
+  window.vdReadingRow = () => {
+    if (!S.meas) return 'Turn on the cursors (Measure) and put them on two bright fringes first.';
+    const p = source();
+    return { particle: { photon: 'photons', electron: 'electrons', c60: 'C60' }[S.kind], lam_nm: String(Number((p.lam * 1e9).toPrecision(6))),
+      a_mm: mm(S.a), d_mm: mm(S.d), L_m: String(S.L), slits: S.open[0] && S.open[1] ? 'both' : S.open[0] ? '1 only' : S.open[1] ? '2 only' : 'none',
+      detector: S.det ? Math.round(S.eta * 100) + '%' : 'off', hits: String(nHits), A_mm: mm(S.cA), B_mm: mm(S.cB), BA_mm: mm(S.cB - S.cA) };
+  };
+  window.__ds = { setCursor, setMeas(on) { $('meas').checked = on; S.meas = on; histDirty = true; curReadouts(); }, hits() { return Array.from(hitY.subarray(0, nHits)); }, applyPreset, set(k, v) { S[k] = v; custom(); syncSliders(); rebuild(false); }, fit() { fitY(); rebuild(false); gridAlloc(LY.scr.w, LY.scr.h); },
+    get frameMs() { return frameMs; }, get n() { return nHits; }, get S() { return S; }, get pat() { return pat; }, get pred() { return pred; },
     geom() { const g = appGeom(); return { xb: g.xb, slits: g.slits }; }, get view3d() { return view3d; }, setView, cam,
     geom3() { if (!v3 || !v3.P) return null; const xf = -B3.th; return { slits: v3.slits.map((sl) => ({ c: v3.P(xf, sl.c, 0), hi: v3.P(xf, sl.hi, 0), lo: v3.P(xf, sl.lo, 0) })), box: v3.box }; }, setRate(i) { S.rate = i; $('rate').value = i; physReadouts(); }, setStreaming, fire, commitMany(n) { for (let i = 0; i < n; i++) { const h = draw1(); if (h) commit(h, false); } } };
 

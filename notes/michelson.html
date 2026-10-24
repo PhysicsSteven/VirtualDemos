@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Michelson Interferometer: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Michelson Interferometer</h1><ul class="meta"><li><a href="../demos/michelson.html">Open the demo</a></li><li>Physics II, wave optics (OpenStax Vol. 3 §3.5)</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Two beams from one source interfere when they meet again; moving one mirror by d changes the path difference by 2d, so N fringes pass for 2d = Nλ. Counting fringes turns a micrometer into a ruler marked in half wavelengths.</li>
+<li>Gas in one arm adds 2L(n − 1) of optical path. Pumping out a 5.00 cm cell of air passes about 43 fringes of red light, and the count grows in proportion to the pressure: n − 1 of a gas is proportional to its density.</li>
+<li>The fringes are rings because light off the axis has path difference 2d cos θ; a tilted mirror makes nearly straight fringes near equal paths.</li>
+<li>White light makes fringes only within a micrometre or so of equal paths, which is how the position of equal paths is found.</li>
+</ul>
+<h2>Before class</h2>
+<p>The demo shows a top view of the interferometer on an optical table (source focused to a point 30 mm before the beam splitter, compensator, M₁ on a micrometer stage, M₂ with tilt screws, an optional gas cell with pump, needle valve and gauge) and, beside it, the screen. The micrometer reads to 0.1 μm and a fringe counter (a photodiode at the screen's centre) counts each bright fringe that passes. Sources: red and green He–Ne lasers, the mercury green line, the sodium D lines, white light and a mystery laser. The room's air is dry, 20.0 °C and 101.325 kPa; air's index is from Ciddor (1996).</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Measure λ, red He–Ne.</strong> Ask Q1. Zero the counter and turn the micrometer up 31.6 μm: 100 fringes pass.</li>
+<li><strong>Mystery laser.</strong> Students measure the wavelength from the fringe count; New mystery laser picks another.</li>
+<li><strong>Air in a gas cell.</strong> Ask Q2. Pump out the cell (about 30 s), zero the counter, and let air in: the count reaches 43 at room pressure, one fringe every 2.36 kPa.</li>
+<li><strong>Tilted mirror</strong>, then <strong>White light.</strong> Ask Q3. Turn the micrometer until the red fringes are straight, then switch to white light and look for the coloured fringes; the white one is at 143.2 μm.</li>
+<li><strong>Sodium doublet.</strong> Ask Q4. Turn the micrometer up from 200 μm and watch the rings fade near 290 μm and come back.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> How far must the mirror move for 100 fringes of 632.8 nm light to pass the centre?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> The textbook gives n = 1.000293 for air at 0 °C. How many fringes pass when a 5.00 cm cell of air at 20 °C and 1 atm is pumped out, with 632.8 nm light? What should a graph of count against pressure look like?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Why do white light fringes appear only near equal paths, and why is the centre one white?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Sodium's two lines are 588.995 nm and 589.592 nm. How far does the mirror move between fadings of the rings, and why do they not disappear completely?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> As M₁ moves to make the arms more unequal, do rings come out of the centre or sink into it? Why are there more rings across the screen when the arms are very unequal?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Moving the mirror by λ moves one fringe."</strong> The light goes there and back: one fringe for every λ/2 of mirror travel.</li>
+<li><strong>"The gas changes the wavelength of the laser."</strong> It changes the wavelength inside the gas, λ/n, so the cell holds more wavelengths; the laser's own wavelength is unchanged.</li>
+<li><strong>"Equal paths can be found with the laser."</strong> A laser's fringes look the same at any setting (only the ring size changes); white light finds equal paths.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Each mirror makes an image of the source point, so the screen sees two coherent points 2d apart along the axis; the pattern is computed exactly from |P − S₁| − |P − S₂| for every point on the screen, with an ideal 50:50 splitter that gives both beams the same phase. Tilting M₂ reflects its image sideways.</li>
+<li>Air: Ciddor's 1996 formula for standard dry air (n − 1 = 2.7653 × 10⁻⁴ at 632.99 nm, 15 °C, 101.325 kPa), scaled with P/T; linear in pressure at constant temperature. Wavelengths from the NIST Atomic Spectra Database, given in standard air.</li>
+<li>White light: the CIE D65 spectrum through the CIE 1931 colour matching functions; each 5 nm band is averaged over its width so distant fringes wash out to white.</li>
+<li>The lasers are perfectly sharp; the cell's windows are left out (they add the same path full or empty).</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>LIGO's interferometers have 4 km arms and sense changes near 10⁻¹⁸ m by measuring power, not counting fringes.</li>
+<li>Pair with <strong>Thin Film Interference</strong> (§3.4): the same 2d path difference, without the separate arms.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

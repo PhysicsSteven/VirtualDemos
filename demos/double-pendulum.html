@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas wide-proj-bench wide-proj-stage readout-big-dd swatch projshort-proj-stage" lang="en">
+<html data-vd-off="root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas wide-proj-bench wide-proj-stage readout-big-dd swatch projshort-proj-stage" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -118,6 +118,18 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 /* projector on a short screen: let the stage shrink to fit under the header */
 @media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
+/* Readings section (tools/readings_panel.py): this demo turns some of the shared button, status and table rules off, so the section brings its own */
+.vd-readings .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.vd-readings .btn { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.vd-readings .btn:hover { border-color: var(--muted); }
+.vd-readings .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.vd-readings .status { margin: 6px 0 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.vd-readings .twrap { position: relative; max-height: 200px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+.vd-readings table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+.vd-readings table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.vd-readings table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+.vd-readings .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 820px) { .vd-readings .btn { min-height: 36px; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -156,6 +168,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/double-pendulum.html" target="double-pendulum-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -264,6 +277,27 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <p class="formula mono" id="mFormula"></p>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="double-pendulum" data-title="Pendulums and Chaos" data-demo="double-pendulum">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Plot data</summary><div class="foldbody">
         <button type="button" class="btn" id="dataBtn" aria-expanded="false" aria-controls="dataWrap">Show data table</button>
@@ -577,6 +611,17 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (budgetMs && performance.now() - t0 > budgetMs) { r.lag = true; break; }
     }
     trimList(r.up); trimList(r.down);
+  }
+  // the first time copy 1's distance d from copy 0 reaches SEP_D, between the two samples that straddle it (log d interpolated linearly in t)
+  const SEP_D = 0.1;
+  function sepTime(r) {
+    const a = r.sep;
+    if (r.N < 2 || !a.length || a[0][1] >= SEP_D) return NaN;
+    for (let i = 1; i < a.length; i++) if (a[i][1] >= SEP_D) {
+      const [t0, d0] = a[i - 1], [t1, d1] = a[i];
+      return t0 + (t1 - t0) * Math.log(SEP_D / d0) / Math.log(d1 / d0);
+    }
+    return NaN;
   }
   function thinSep() { R.sep = R.sep.filter((_, i) => i % 2 === 0); }
   function trimList(a) { if (a.length > 40) a.splice(0, a.length - 40); }
@@ -1218,7 +1263,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (isFinite(ly.lam)) lam = `${sig(ly.lam, 2)} s⁻¹`;
     $('lyapBox').innerHTML = row('λ estimate', lam) + row('after', `${sig(ly.tsum, 3)} s`) +
       row('e-folding time 1/λ', isFinite(ly.lam) && ly.lam > 0.02 ? `${sig(1 / ly.lam, 2)} s` : '—') +
-      row('d, copy 1', r.N > 1 ? fmtSci(sepNow(), 1) : '—');
+      row('d, copy 1', r.N > 1 ? fmtSci(sepNow(), 1) : '—') +
+      row(`Copy 1 reaches d = ${SEP_D}`, r.N > 1 ? (isFinite(sepTime(r)) ? `t = ${sepTime(r).toFixed(2)} s` : 'not yet') : '—', true);
     $('measBox').innerHTML = row('θ₁', deg(wrapPi(y[0])), false, 'c-1') + row('θ₂', deg(wrapPi(y[1])), false, 'c-2') +
       row('ω₁', `${sig(y[2], 3)} rad/s`) + row('ω₂', `${sig(y[3], 3)} rad/s`) +
       row('Energy E', fJ(r.E0)) + row('Energy drift', r.E0 > 0 ? `${fmtSci(drift)} <span class="ok">of E</span>` : '—') +
@@ -1633,6 +1679,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (now - lastRead > 150) { updateReadouts(); updateClock(); renderData(); lastRead = now; }
     requestAnimationFrame(loop);
   }
+  // ---------- readings (Record reading, Export to worksheet: the Readings section) ----------
+  // One row per Record: the settings, how the run started, the measured θ₁ period (the readout's value, once the last crossings agree to 1 %),
+  // and for two or more copies the start difference δ and the time copy 1 first reaches d = 0.1.
+  window.vdVersion = 'double-pendulum@2026-10-24';
+  window.vdReadingRow = () => {
+    if (S.mode === 'simple') {
+      const r = Rs, mp = measuredPeriod(r);
+      return { start: 'simple pendulum', L1_m: r.p.L, theta1_0_deg: +(r.y0[0] / DEG).toFixed(1), g_m_s2: +r.p.g.toFixed(5), t_s: +r.t.toFixed(2), T_s: mp && mp.ok ? +mp.T.toPrecision(4) : '' };
+    }
+    const r = R, p = r.p, y0 = r.y0, nm = normalModes(p), mp = measuredPeriod(r), ts = sepTime(r);
+    const still = y0[2] === 0 && y0[3] === 0 && y0[0] !== 0, near = (q) => Math.abs(y0[1] / y0[0] - q) < 1e-9 * Math.max(1, Math.abs(q));
+    const start = still && near(nm.r1) ? 'mode 1' : still && near(nm.r2) ? 'mode 2' : still ? 'released from rest' : 'moving start';
+    return { start, theta1_0_deg: +(y0[0] / DEG).toFixed(2), theta2_0_deg: +(y0[1] / DEG).toFixed(2), m1_kg: p.m1, m2_kg: p.m2, L1_m: p.L1, L2_m: p.L2, g_m_s2: +p.g.toFixed(5),
+      t_s: +r.t.toFixed(2), T_s: mp && mp.ok ? +mp.T.toPrecision(4) : '', copies: r.N, log10_delta: r.N > 1 ? S.logd : '', delta_rad: r.N > 1 ? +r.dlt.toPrecision(3) : '',
+      t_sep_s: r.N > 1 && isFinite(ts) ? +ts.toFixed(2) : '' };
+  };
+  window.vdShowCols = [['start', 'Start'], ['L1_m', 'L₁ (m)'], ['T_s', 'T (s)'], ['log10_delta', 'log δ'], ['t_sep_s', 't_d (s)']];
   window.__dp = { get frameMs() { return frameMs; }, get R() { return R; }, get Rs() { return Rs; }, get PC() { return PC; }, S, advance, setRunning, applyPreset,
     energyDrift() { if (S.mode === 'simple') return Math.abs(simpleE(Rs.p, Rs.I.y) - Rs.E0) / Rs.E0; return Math.abs(dpEnergy(R.p, R.copies[0].y).E - R.E0) / R.E0; } };
 

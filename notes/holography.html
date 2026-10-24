@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Holography: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Holography</h1><ul class="meta"><li><a href="../demos/holography.html">Open the demo</a></li><li>Intro physics (wave optics: interference, gratings, holograms)</li><li>20 to 35 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A hologram is a recording of interference: a reference beam and the light from the object, from one laser, make fringes on the plate. For two plane waves with an angle θ between them the fringes are d = λ/(2 sin(θ/2)) apart, about a micrometre, which is why the setup must be still to a fraction of a wavelength and why it needs a laser.</li>
+<li>The developed plate is a grating. Lit by the reference beam alone, it sends out three beams: straight through (the zero order), a copy of the object wave (the virtual image, seen where the object was) and the conjugate wave (which can focus into a real image).</li>
+<li>The diffracted light follows the grating equation, so a different color is bent through a different angle and the images move: a thin hologram needs the light it was made with.</li>
+<li>The off axis reference keeps the three beams apart, so the image can be seen on its own.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know two slit interference (§3.1) and the diffraction grating (§4.4). The demo has two views. <strong>Record</strong> shows the beams meeting on a plate 3.0 mm wide, an exact magnified picture of the light in a 12 μm patch at the plate, and a microscope on the developed plate with two cursors. <strong>Reconstruct</strong> lights the developed plate again (at any wavelength from 400 to 700 nm, along the reference or from the other side) and computes exactly where the light goes: a map of the light leaving the plate and of the same light traced back behind it, a screen or camera focus, and a detector for the angles. It is a two dimensional slice (each object point is a bright line across it), the plate is thin and its emulsion linear; the About text says so.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Two beams.</strong> Ask Q1. Zoom the microscope in and put the cursors ten fringes apart: 12.22 μm, so d = 1.222 μm at 30°. Change the angle between the beams and watch the fringes crowd together.</li>
+<li><strong>Record a point.</strong> Ask Q2. The fringes are curved, and closer together on one side: a piece of a zone plate.</li>
+<li><strong>Plane wave hologram.</strong> Ask Q3. Switch to Reconstruct: the angle plot shows three peaks, at 25° (straight through), 0° (the image beam) and 57.7° (the conjugate). Move the wavelength and watch the image beam swing.</li>
+<li><strong>Virtual image</strong>, then <strong>Real image.</strong> Ask Q4. Move the camera focus through −20 mm and the point sharpens and fades; light the plate from the other side and a screen 20 mm in front of the plate catches a sharp real point.</li>
+<li><strong>Another color.</strong> Ask Q5. The three images move out to about 633/450 times their distance, and sideways.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Two beams of 633 nm light cross with 30° between them. How far apart are the bright fringes on a plate that bisects the angle? What happens to the spacing as the angle grows to 60°?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Why must a hologram's setup be still to a small fraction of a wavelength during the exposure, when an ordinary photograph only needs the camera still to a fraction of a millimetre?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> A plate records a plane object wave straight on and a 633 nm reference at 25°. Find the fringe spacing and the angles of the three beams that leave the plate when it is lit at 25° with 633 nm light, and the image beam's angle with 450 nm light.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Lit by the reference beam, the point hologram gives a virtual image 20 mm behind the plate. Lit from the other side of the normal, where does the real image form, and why?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The point hologram, made at 633 nm, is lit with 450 nm light. Roughly how far behind the plate is the image now? Why is a thin hologram lit with white light blurred into a rainbow?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"A hologram is a picture of the object."</strong> Under a microscope it is only fringes, about a micrometre apart; nothing on it looks like the object. The image is rebuilt by diffraction.</li>
+<li><strong>"The image is on the plate."</strong> The virtual image is where the object was, behind the plate; a camera has to focus there to see it sharp.</li>
+<li><strong>"Any light will do to view it."</strong> A thin hologram bends each color differently, so it needs the light it was made with; white light holograms are thick (volume) holograms that pick out one color.</li>
+<li><strong>"A piece of a hologram shows a piece of the object."</strong> Every part of the plate receives light from every point of the object, so a piece still shows the whole object, from fewer directions and with less sharpness.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li><strong>Recording.</strong> The reference is a unit plane wave e^{ik(x sin θr + z cos θr)}; a plane object wave is the same at θo; each object point sends out the exact cylindrical wave of the slice, H₀(kr) (computed from its asymptotic series, exact to better than 1 part in 10¹² for kr above 5 × 10⁴). The beam ratio sets the object intensity at the plate's centre to 1/K of the reference's. The plate records I(x) = |R + O|².</li>
+<li><strong>The developed plate.</strong> Thin (only the light at its surface counts) and linear: amplitude transmittance t = I/I_max. No phase change.</li>
+<li><strong>Reconstruction.</strong> u(x) = t(x) e^{ik₂ x sin θi} is sampled finely enough that the finest fringes have more than two samples each (131 072 or more points in a 28 mm window), split into plane waves with one FFT and carried to any z by e^{i k_z z}, forward or traced back. Evanescent waves are dropped, and so is any plane wave that would leave the window before reaching z (none reaches the part shown).</li>
+<li><strong>Predictions shown when Blind is off.</strong> Beam angles from the grating equation sin θ = sin θi ± (λ₂/λ₁)(sin θo − sin θr). Image positions from tracing the rays from the plate's centre and their neighbours: the image lies at z₀(λ₁/λ₂) cos³α along a beam tilted by α, which the exact light confirms to within 0.05 mm.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>Diffraction Grating</strong> (the developed plane wave hologram is one) and <strong>Thin Film Interference</strong>.</li>
+<li>Homework: a hologram is recorded with 633 nm light and viewed with 532 nm light at the same angle. Use the grating equation to find how much the image beam turns when the object beam was straight on and the reference at 30°.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

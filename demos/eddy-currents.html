@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg chips chips-button btnrow seg seg-button seg-button-on inline readout readout-wide readout-dt readout-dd-ok status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-stage img projshort-proj-bar-units mono bar-h1 bench pane chips-button-hover chips-button-on btn btn-primary btn-disabled slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas projshort-proj-bar-p" lang="en">
+<html data-vd-off="chips chips-button btnrow seg seg-button seg-button-on inline readout readout-wide readout-dt readout-dd-ok status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-stage img projshort-proj-bar-units mono bar-h1 bench pane chips-button-hover chips-button-on btn btn-primary btn-disabled slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas projshort-proj-bar-p" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -52,6 +52,18 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
   .proj, .spin { min-height: 36px; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
+/* Readings section (tools/readings_panel.py): this demo turns some of the shared button, status and table rules off, so the section brings its own */
+.vd-readings .btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
+.vd-readings .btn { font: inherit; font-size: 0.88rem; font-weight: 700; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
+.vd-readings .btn:hover { border-color: var(--muted); }
+.vd-readings .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
+.vd-readings .status { margin: 6px 0 0; font-size: 0.82rem; color: var(--muted); min-height: 1.2em; }
+.vd-readings .twrap { position: relative; max-height: 200px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+.vd-readings table.rows { width: 100%; border-collapse: collapse; font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+.vd-readings table.rows th { position: sticky; top: 0; background: var(--surface); text-align: left; font-weight: 700; color: var(--muted); padding: 4px 6px; border-bottom: 1px solid var(--line); }
+.vd-readings table.rows td { padding: 2px 6px; border-bottom: 1px solid var(--grid); }
+.vd-readings .sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+@media (max-width: 820px) { .vd-readings .btn { min-height: 36px; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -87,6 +99,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/eddy-currents.html" target="eddy-currents-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Magnet and pipes</h2>
         <label class="check"><input type="checkbox" id="tCur" checked><span>Show the induced currents in the walls</span></label>
@@ -101,12 +114,33 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
         </details>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="eddy-currents" data-title="Eddy Currents: Magnet in a Pipe" data-demo="eddy-currents">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides the drag constant, the terminal speed and the predicted fall times and the heat, leaving the clock and the timer for each pipe. Time how long each magnet takes and work out its steady speed.</p></details>
-        <details class="more"><summary>More about this</summary><p class="hint">Model: the magnet as a point dipole on the pipe's axis and a thin-walled pipe (w much less than a), which gives a drag force in proportion to speed with the constant k above (Levin and coworkers, Am. J. Phys. 2006). A real magnet that nearly fills the pipe falls at the same order of speed but not exactly this one. The magnet does not touch the wall; air drag is ignored.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Model: the magnet as a point dipole on the pipe's axis and a thin-walled pipe (w much less than a), which gives a drag force in proportion to speed with the constant k above (Levin and coworkers, Am. J. Phys. 2006). A real magnet that nearly fills the pipe falls at the same order of speed but not exactly this one. The magnet does not touch the wall; air drag is ignored. Conductivity follows ρ = ρ₂₀[1 + α(T − 20 °C)] down to −50 °C; below that the resistivity is taken as a straight line in T to the measured value at −196 °C (7.2 times the 20 °C value for copper, 8 for aluminium).</p></details>
         </div></details>
       </section>
     </aside>
@@ -117,20 +151,21 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 (() => {
   // ==CORE START==
   const G = 9.81, MU0 = 1.25663706127e-6, LEN = 1.0, ED_VERSION = 'eddy-currents@2026-10-22';
-  const MAG = { mass: 0.0122 };     // magnet mass (kg): NdFeB, 7500 kg/m³, 12.7 mm by 12.7 mm
+  const MAG = { mass: 0.0122 };     // magnet mass (kg): NdFeB, about 7600 kg/m³, 12.7 mm by 12.7 mm
   // conductivity at 20 °C (S/m) and temperature coefficient of resistivity (1/K), linear; copper at 77 K uses its measured ratio
   const PIPES = [
     { id: 'cu', name: 'Copper', sigma20: 5.96e7, alpha: 0.00393 },
     { id: 'al', name: 'Aluminium', sigma20: 3.77e7, alpha: 0.00429 },
     { id: 'pvc', name: 'Plastic (PVC)', sigma20: 0, alpha: 0 }
   ];
-  // resistivity ρ(T) = ρ20 [1 + α (T − 20)] above about −50 °C; at liquid nitrogen temperature use the measured ratio ρ(293 K)/ρ(77 K) ≈ 7.2 for copper and 8 for aluminium, interpolated linearly in between
+  // resistivity ρ(T) = ρ20 [1 + α (T − 20)] above about −50 °C; at liquid nitrogen temperature use the measured ratio ρ(293 K)/ρ(77 K) ≈ 7.2 for copper and 8 for aluminium,
+  // with ρ (not σ) linear in T in between, as it nearly is for these metals down to 77 K
   function sigmaAt(P, T) {
     if (!P.sigma20) return 0;
     const lin = (t) => P.sigma20 / (1 + P.alpha * (t - 20)), cold = P.sigma20 * (P.id === 'cu' ? 7.2 : 8);
     if (T >= -50) return lin(T);
-    const f = (T + 196) / (146), s50 = lin(-50);   // linear between −196 °C and −50 °C in conductivity
-    return cold + (s50 - cold) * f;
+    const f = (T + 196) / 146, r50 = 1 / lin(-50), rc = 1 / cold;   /* resistivity linear between −196 °C and −50 °C */
+    return 1 / (rc + (r50 - rc) * f);
   }
   const dragK = (m, sigma, w, a) => 45 * MU0 * MU0 * m * m * sigma * w / (1024 * a ** 4);   // N·s/m
   // exact motion with linear drag from rest: v = vT (1 − e^(−t/τ)), y = vT (t − τ (1 − e^(−t/τ))); free fall when k = 0
@@ -237,6 +272,16 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
     }
     $('out').innerHTML = h;
   }
+  // ---------- readings (Record reading, Export to worksheet: the Readings section) ----------
+  // One row per metal pipe whose magnet has reached the bottom: the settings, the pipe's conductivity and its timer (0.01 s), as shown. Blind leaves these.
+  // The plastic pipe is left out: its magnet falls freely, and its timer is there to compare with √(2L/g).
+  window.vdVersion = ED_VERSION;
+  window.vdReadingRow = () => {
+    const tf = tFall(), done = PIPES.map((P, i) => i).filter((i) => PIPES[i].sigma20 > 0 && S.t >= tf[i]);
+    if (!done.length) return 'Drop the magnets and let them reach the bottom of the metal pipes first: each pipe\'s timer stops when its magnet does.';
+    return done.map((i) => ({ pipe: PIPES[i].name, T_C: S.T, m_A_m2: S.m, w_mm: S.w, sigma_MS_m: +(sigmaAt(PIPES[i], S.T) / 1e6).toFixed(1), L_m: LEN, t_s: +tf[i].toFixed(2) }));
+  };
+  window.vdShowCols = [['pipe', 'Pipe'], ['T_C', 'T (°C)'], ['m_A_m2', 'm (A·m²)'], ['t_s', 't (s)']];
   function sync() { $('sM').value = S.m; $('oM').textContent = `${f(S.m, 2)} A·m²`; $('sW').value = S.w; $('oW').textContent = `${f(S.w, 1)} mm`; $('sT').value = S.T; $('oT').textContent = `${S.T} °C`; }
   const restart = () => { S.t = 0; S.run = false; $('drop').textContent = 'Drop all three'; sync(); draw(); readouts(); };
   $('sM').addEventListener('input', (e) => { S.m = +e.target.value; restart(); });
@@ -264,6 +309,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
   tokens(); new ResizeObserver(resize).observe(stage); restart(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
+  window.__ed = { S, restart, sync, draw, readouts, tFall };   /* for the worksheet key capture: set S.t and redraw */
 })();
 </script>
 </body>

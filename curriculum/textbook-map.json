@@ -3788,7 +3788,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "faraday"
+        "faraday",
+        "transformers"
       ],
       "unit": "induction"
     },
@@ -4914,9 +4915,11 @@
         "later"
       ],
       "requirement": "later",
-      "status": "missing",
-      "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "status": "usable",
+      "demos": [
+        "transformers"
+      ],
+      "note": "Transformers (2026-10-24, Claude): ideal transformer (Equations 15.20 to 15.23, Example 15.6, Check Your Understanding 15.9), a real coupled coil model, and a power line showing the I²R loss against transmission voltage. Like sections 15.1 to 15.5 (Circuits), going further material for Physics II; the demo's card sits in the induction unit through section 14.1."
     },
     {
       "vol": 3,
@@ -4997,9 +5000,11 @@
         "physics-2"
       ],
       "requirement": "optional",
-      "status": "missing",
-      "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet. Candidate: a Michelson view (fringe count against mirror travel) in the thin films demo.",
+      "status": "usable",
+      "demos": [
+        "michelson"
+      ],
+      "note": "Michelson Interferometer (2026-10-24, Claude): exact two point source fringes (circular, or straight with M2 tilted), fringe counting against mirror travel for λ, a 5.00 cm gas cell pumped out for n − 1 of air (Ciddor 1996, linear in pressure), white light at equal paths, sodium doublet fading. Worksheet michelson with a key from a real run in TeacherKeys.",
       "unit": "optional-wave-optics"
     },
     {
@@ -5012,12 +5017,12 @@
         "physics-2"
       ],
       "requirement": "optional",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "double-slit",
-        "diffraction-grating"
+        "diffraction-grating",
+        "double-slit"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: the single slit envelope appears inside the double slit and grating patterns; there is no single slit setup on its own.",
+      "note": "Single slit (2026-10-24, Claude): the diffraction grating demo's Single slit aperture (N = 1, slit width a from 0.5 to 20 µm) puts the exact far field pattern on the wall, with dark fringes at a sin θ = mλ measured by caliper; worksheet single-slit (dark fringe positions against m and against 1/a, slit width from the slope). The double slit demo's One slit setup shows the same pattern built up one particle at a time.",
       "unit": "optional-wave-optics"
     },
     {
@@ -5030,11 +5035,11 @@
         "physics-2"
       ],
       "requirement": "optional",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "diffraction-grating"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: the grating plot includes the [sin β/β]² envelope; no single slit intensity setup on its own.",
+      "note": "Single slit intensity (2026-10-24, Claude): in the grating demo's Single slit aperture the plot and the wall show I = I₀[sin β/β]², β = πa sin θ/λ, and a light meter on caliper jaw B reads I/I₀; worksheet single-slit Part 3 compares meter readings with [sin β/β]² across the middle band and the first side band (side maxima 0.0472, 0.0165, 0.0083).",
       "unit": "optional-wave-optics"
     },
     {
@@ -5082,9 +5087,11 @@
         "physics-2"
       ],
       "requirement": "optional",
-      "status": "missing",
-      "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet. Candidate: an Airy disk and Rayleigh criterion setup (the eye or optics bench).",
+      "status": "usable",
+      "demos": [
+        "resolution"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Circular Apertures and Resolution demo (2026-10-24): exact Airy pattern, first dark ring, Rayleigh criterion; pinhole and screen, two sources, the eye and headlights, Hubble, a camera lens, mystery pinhole.",
       "unit": "optional-wave-optics"
     },
     {
@@ -5097,11 +5104,11 @@
         "physics-2"
       ],
       "requirement": "optional",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
         "electron-diffraction"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: electron diffraction uses Bragg's law 2d sin θ = λ on graphite with electrons, not X rays.",
+      "note": "Volume 3 mapping (2026-10-24, Claude). Electron Diffraction demo, X rays view (added 2026-10-24): a Bragg spectrometer with a rotating crystal and the counter at 2θ; Cu or Mo tube at 35 kV, NaCl or LiF (200) planes; peaks at the exact Bragg angles of Kα₁ and Kβ₁ (X-ray Data Booklet energies) in every order, count rates illustrative. Worksheet x-ray-diffraction. The electron view is Bragg's law with electrons on graphite.",
       "unit": "optional-wave-optics"
     },
     {
@@ -5114,9 +5121,11 @@
         "physics-2"
       ],
       "requirement": "optional",
-      "status": "missing",
-      "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet.",
+      "status": "usable",
+      "demos": [
+        "holography"
+      ],
+      "note": "Holography (2026-10-24, Claude): recording a reference plane wave with a plane wave or point objects on a thin linear plate, fringe spacing λ/(2 sin(θ/2)), and reconstruction by exact angular spectrum propagation (virtual image, real image, zero order, another wavelength). Two dimensional slice. Worksheet holography with a key from a real run in TeacherKeys.",
       "unit": "optional-wave-optics"
     },
     {
@@ -6144,7 +6153,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-23 (Claude). Cart on a track fires a ball perpendicular to the track: lands in the launcher at constant cart speed and on a frictionless incline, misses when the cart speeds up or brakes after launch. Ground or cart frame, velocity and acceleration vectors with components, strobe images, position graph; Blind pauses at the top for predictions.",
-      "handouts": [],
+      "handouts": [
+        "relative-motion"
+      ],
       "title": "Ball Launched from a Moving Cart",
       "url": "demos/cart-launch.html"
     },
@@ -6169,6 +6180,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "Specialized equilibrium of a hanging chain/arch. Does not replace a general free-body-diagram or equilibrium activity.",
+      "handouts": [
+        "catenary"
+      ],
       "title": "Hanging Chains and Arches",
       "url": "demos/catenary.html"
     },
@@ -6188,7 +6202,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-22 (Claude). Masses on a plate (drag, add, remove, set mass), exploding firework (mass split, explosion speed and direction) and walking on a boat (masses); CM marker and coordinates; Blind hides the CM.",
-      "handouts": [],
+      "handouts": [
+        "center-of-mass"
+      ],
       "title": "Center of Mass",
       "url": "demos/center-of-mass.html"
     },
@@ -6598,7 +6614,11 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Diffraction beyond the two syllabi; Volume 3 sections mapped 2026-10-24.",
+      "note": "Diffraction beyond the two syllabi; Volume 3 sections mapped 2026-10-24. Single slit aperture, Readings and Export to worksheet added 2026-10-24 (Claude); worksheets diffraction-grating and single-slit with keys from real runs in TeacherKeys.",
+      "handouts": [
+        "diffraction-grating",
+        "single-slit"
+      ],
       "title": "Diffraction Grating",
       "url": "demos/diffraction-grating.html"
     },
@@ -6622,8 +6642,10 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Lecture demo: RC charging of ideal circular parallel plates (no fringing), Amperian loop movable along the wire and into the gap, flat disk or bag surface, conduction and displacement current through it, B(r) inside and outside the plates. Quasistatic; real fields are picotesla.",
-      "handouts": [],
+      "note": "New 2026-10-22 (Claude). Lecture demo: RC charging of ideal circular parallel plates (no fringing), Amperian loop movable along the wire and into the gap, flat disk or bag surface, conduction and displacement current through it, B(r) inside and outside the plates. Quasistatic; real fields are picotesla. Readings and Export to worksheet added 2026-10-24 (worksheet displacement-current).",
+      "handouts": [
+        "displacement-current"
+      ],
       "title": "Displacement Current",
       "url": "demos/displacement-current.html"
     },
@@ -6712,6 +6734,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "Small-angle pendulum comparison is relevant; nonlinear double-pendulum chaos is an extension beyond this section.",
+      "handouts": [
+        "double-pendulum"
+      ],
       "title": "Pendulums and Chaos",
       "url": "demos/double-pendulum.html"
     },
@@ -6751,7 +6776,10 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Interference and single-particle extension; Volume 3 sections mapped 2026-10-24.",
+      "note": "Interference and single-particle extension; Volume 3 sections mapped 2026-10-24. Measuring cursors, Readings and Export to worksheet added 2026-10-24 (Claude); worksheet double-slit (fringe spacing against λ, 1/d and λL/d) with a key from a real run in TeacherKeys.",
+      "handouts": [
+        "double-slit"
+      ],
       "title": "Double Slit, One Particle at a Time",
       "url": "demos/double-slit.html"
     },
@@ -6824,7 +6852,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-22 (Claude). Lecture demo: NdFeB magnet dropped through copper, aluminium and PVC pipes side by side; drag k = 45 μ0² m² σ w/(1024 a⁴) (point dipole, thin wall), exact fall with linear drag, induced wall currents with Lenz sense, heat, liquid nitrogen cooling; Blind.",
-      "handouts": [],
+      "handouts": [
+        "eddy-currents"
+      ],
       "title": "Eddy Currents: Magnet in a Pipe",
       "url": "demos/eddy-currents.html"
     },
@@ -6849,7 +6879,11 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
+      "note": "Volume 3 sections mapped 2026-10-24. 2026-10-24: X rays view (Bragg spectrometer, rotating NaCl or LiF crystal, Cu or Mo tube) for §4.6; Export to worksheet for the electron readings; worksheets electron-diffraction (ring diameters against λ = h/p for the graphite spacings) and x-ray-diffraction (sin θ against order for the Cu and Mo lines and the LiF spacing).",
+      "handouts": [
+        "electron-diffraction",
+        "x-ray-diffraction"
+      ],
       "title": "Electron Diffraction",
       "url": "demos/electron-diffraction.html"
     },
@@ -6898,7 +6932,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-22 (Claude). Person on a scale in an elevator; rides between floors with set acceleration and top speed; scale reading, N and mg arrows, scale and velocity graphs; Cable snaps (free fall, then safety brakes); Blind hides the scale for predictions.",
-      "handouts": [],
+      "handouts": [
+        "apparent-weight"
+      ],
       "title": "Elevator: Apparent Weight",
       "url": "demos/elevator.html"
     },
@@ -6937,7 +6973,10 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Plane wave E and B, energy and radiation pressure examples, the spectrum and a dipole antenna. The charging capacitor apparatus for displacement current is the displacement current demo (2026-10-22), mapped with it to 16.1. Lecture demo; no lab requested.",
+      "note": "Plane wave E and B, energy and radiation pressure examples, the spectrum and a dipole antenna. The charging capacitor apparatus for displacement current is the displacement current demo (2026-10-22), mapped with it to 16.1. 2026-10-24: student worksheet em-waves (B₀ against E₀ for c, I against E₀² for ε₀, radiation pressure against I, sunlight, laser and radio, the dipole pattern) with the shared Readings section.",
+      "handouts": [
+        "em-waves"
+      ],
       "title": "Electromagnetic Waves",
       "url": "demos/em-waves.html"
     },
@@ -7027,7 +7066,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-22 (Claude). Lecture demo: seesaw balance, plank support forces and tipping, sign with strut, cable tension and hinge force, ladder with wall push, floor friction and the slipping angle. Rigid uniform members, massless cables, frictionless hinge and wall.",
-      "handouts": [],
+      "handouts": [
+        "static-equilibrium"
+      ],
       "title": "Static Equilibrium",
       "url": "demos/equilibrium.html"
     },
@@ -7374,7 +7415,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-22 (Claude). Ground clock vs a second clock in orbit or on a tower; gravity and speed parts of the rate difference, net μs/day, light travel distance, the cancelling radius, Schwarzschild radii; clocks run 1 h per second; Blind.",
-      "handouts": [],
+      "handouts": [
+        "gps-clocks"
+      ],
       "title": "GPS Clocks and Relativity",
       "url": "demos/gps-clocks.html"
     },
@@ -7394,7 +7437,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-22 (Claude). g against height from sea level to geostationary orbit, latitude and rotation, Earth/Moon/Mars, spring scale reading, near surface line and its error, orbit speed and period; Blind.",
-      "handouts": [],
+      "handouts": [
+        "gravity-near-earth"
+      ],
       "title": "Gravity Near Earth",
       "url": "demos/gravity-near-earth.html"
     },
@@ -9132,7 +9177,10 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Wave optics beyond the optional basic-optics scope; Volume 3 sections mapped 2026-10-24.",
+      "note": "Wave optics beyond the optional basic-optics scope; Volume 3 sections mapped 2026-10-24. 2026-10-24: student worksheet thin-films (thinnest bright and dark soap films against wavelength, quarter wave coating, air wedge fringes) with the shared Readings section.",
+      "handouts": [
+        "thin-films"
+      ],
       "title": "Thin Film Interference",
       "url": "demos/thin-films.html"
     },
@@ -9152,6 +9200,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "Vol. 1 §13.6 lecture illustration of differential gravitational acceleration and equilibrium tides. Ideal ocean, circular coplanar source orbits, no basin dynamics; not a quantitative real-tide forecast. Promoted only for this direct syllabus topic.",
+      "handouts": [
+        "tides"
+      ],
       "title": "Tides",
       "url": "demos/tides.html"
     },
@@ -9282,7 +9333,10 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-22 (Claude). Tabs: Scale of things (Zoom through: true size models from the observable universe to a proton, Fly in / Fly out; or a log ruler), Convert units (exact factor chains), Dimensional analysis (exponent sliders for five formulas, Show the answer), Significant figures (two measurements and an operation), Fermi estimates (three questions with low/high factors); Blind hides the results.",
-      "handouts": [],
+      "handouts": [
+        "measurement-and-units",
+        "estimation-and-evidence"
+      ],
       "title": "Units, Scales and Estimates",
       "url": "demos/units.html"
     },
@@ -9431,6 +9485,99 @@
       ],
       "title": "Force on a Current",
       "url": "demos/wire-force.html"
+    },
+    {
+      "demo": "transformers",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "14.1",
+          "title": "Mutual Inductance"
+        },
+        {
+          "vol": 2,
+          "sec": "15.6",
+          "title": "Transformers"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). Transformer view: AC source, primary and secondary turns, load resistor, live traces of v_P, v_S, i_P, i_S; ideal model (OpenStax Equations 15.20 to 15.23) or a real one (coupled coils with μr = 4000 core, copper windings, coupling k; no saturation or core loss). Power line view: 12 kV generator, step up to V, line resistance R, step down to 240 V; loss I²R = P²R/V². Chapter 15 is going further material, as for Circuits; the card shows under the induction unit through section 14.1.",
+      "handouts": [
+        "transformers"
+      ],
+      "title": "Transformers",
+      "url": "demos/transformers.html"
+    },
+    {
+      "demo": "resolution",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "4.5",
+          "title": "Circular Apertures and Resolution"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). Exact Airy pattern I = I0[2J1(x)/x]^2 (J1 from Bessel's integral, tested against its tabulated zeros), first dark ring at sin θ = 1.2197 λ/D, two incoherent sources and Rayleigh's criterion with a line profile and cursor. Setups: laser through a pinhole onto a screen, two point sources and an iris, headlights and the eye (3.00 mm pupil, 1.30 m, textbook Chapter 4 problem), Hubble (2.40 m, 2.0 million ly, textbook example), a 50 mm camera lens by f-number, mystery pinhole. Worksheet resolution with a key from a real run in TeacherKeys.",
+      "handouts": [
+        "resolution"
+      ],
+      "title": "Circular Apertures and Resolution",
+      "url": "demos/resolution.html"
+    },
+    {
+      "demo": "michelson",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "3.5",
+          "title": "The Michelson Interferometer"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). Top view of an interferometer on an optical table and the screen it lights: exact two point source fringes from the mirrors' images of the source (circles; nearly straight lines with M2 tilted). Micrometer to 0.1 μm and a fringe counter for λ (He–Ne red and green, mercury green, mystery laser); 5.00 cm gas cell with pump and needle valve for n − 1 of air (Ciddor 1996, linear in pressure at 20 °C); white light (D65) fringes at equal paths; sodium doublet fading every 0.29 mm. Worksheet michelson with a key from a real run in TeacherKeys.",
+      "handouts": [
+        "michelson"
+      ],
+      "title": "Michelson Interferometer",
+      "url": "demos/michelson.html"
+    },
+    {
+      "demo": "holography",
+      "course": [
+        "physics-2"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "4.7",
+          "title": "Holography"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). Record view: a reference plane wave and a plane wave or one or three object points (exact cylindrical waves of a 2D slice) on a thin plate; the exact |R + O|² magnified at the plate and under a microscope with cursors; fringe spacing λ/|sin θr − sin θo| = λ/(2 sin(θ/2)) for symmetric beams. Reconstruct view: the developed plate (t ∝ I, linear emulsion) lit along the reference or from the other side at any wavelength from 400 to 700 nm, propagated exactly by the angular spectrum: map of the light and of the light traced back, screen or camera focus, detector for the beam angles. Virtual image, real image, zero order; images move and scale with wavelength. Worksheet holography with a key from a real run in TeacherKeys.",
+      "handouts": [
+        "holography"
+      ],
+      "title": "Holography",
+      "url": "demos/holography.html"
     }
   ],
   "activities": [

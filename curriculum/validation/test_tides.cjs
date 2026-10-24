@@ -2,7 +2,7 @@
 // Legacy physics boundary extracted in memory; no demo HTML modifications.
 const assert=require('node:assert/strict'),vm=require('node:vm');const {readDemo}=require('./demo_source.cjs');
 const source=readDemo('tides').match(/\/\/ PHYSICS-BEGIN([\s\S]*?)\/\/ PHYSICS-END/);assert(source);
-const ctx={};vm.runInNewContext(source[1]+'\nglobalThis.c={G,M_MOON,M_SUN,M_EARTH,R_EARTH,D_MOON,D_SUN,pullAt,tidalAt,tidalAxial,tidalPerp,tideAmp,height,dailyRange};',ctx);const c=ctx.c;let n=0;
+const ctx={};vm.runInNewContext(source[1]+'\nglobalThis.c={G,M_MOON,M_SUN,M_EARTH,R_EARTH,D_MOON,D_SUN,pullAt,tidalAt,tidalAxial,tidalPerp,tideAmp,height,dailyRange,exactNear,exactFar,sunMoonTide,sunMoonPull};',ctx);const c=ctx.c;let n=0;
 function group(name,f){f();n++;console.log('PASS',name);}
 const near=(a,b,t=1e-10)=>assert(Math.abs(a-b)<=t*Math.max(1e-12,Math.abs(b)),`${a} != ${b}`);
 group('tidal acceleration is Newtonian acceleration minus the center acceleration, with axial stretch/transverse compression',()=>{
@@ -23,5 +23,12 @@ group('ideal equilibrium ocean harmonic gives spring/neap ranges and agrees with
  const Am=c.tideAmp(c.M_MOON,c.D_MOON),As=c.tideAmp(c.M_SUN,c.D_SUN);
  near(c.dailyRange(0,Am,As),1.5*(Am+As));near(c.dailyRange(Math.PI/2,Am,As),1.5*Math.abs(Am-As));
  for(const phi of [0,.3,1.1,Math.PI/2]){let lo=Infinity,hi=-Infinity;for(let i=0;i<50000;i++){const h=c.height(i*2*Math.PI/50000,phi,Am,As);lo=Math.min(lo,h);hi=Math.max(hi,h);}near(hi-lo,c.dailyRange(phi,Am,As),1e-7);}
+});
+group('worksheet claims: mean of near and far is the formula times 1/(1 − R²/d²)² (0.1% at 40 R_E); near/far ≈ 1 + 3R/d; Sun/Moon tide 0.46, pull 179',()=>{
+ const M=c.M_MOON,R=c.R_EARTH;
+ for(const k of [40,60.34,120]){const d=k*R,m=(c.exactNear(M,d)+c.exactFar(M,d))/2;near(m,c.tidalAxial(M,d)/(1-1/(k*k))**2,1e-9);
+  const q=c.exactNear(M,d)/c.exactFar(M,d);assert(Math.abs(q-(1+3/k))<5/(k*k),`near/far ${q} at ${k}`);}
+ const r40=(c.exactNear(M,40*R)+c.exactFar(M,40*R))/2/c.tidalAxial(M,40*R)-1;assert(r40>0.00124&&r40<0.00126,String(r40));
+ near(c.sunMoonTide(c.D_MOON),0.4596,1e-3);near(c.sunMoonPull(c.D_MOON),178.9,1e-3);
 });
 console.log(`${n} tides test groups passed (ideal equilibrium model, not coastal predictions)`);
