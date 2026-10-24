@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
 <script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>/* in scene setup controls fade away while the run plays and come back on pause or reset */
 #tray { transition: opacity 0.35s ease, visibility 0.35s; }
 #tray.away { opacity: 0; visibility: hidden; }
@@ -91,7 +92,7 @@ table.rows input:focus { border-color: var(--accent); }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="scene" id="scene">
-      <canvas id="can" tabindex="0" role="img" aria-label="A turntable seen from above with whatever sits on it, and beside it, from the side, the hanging mass falling as the string unwinds. Space releases, R winds the string back up, the up arrow hangs a 5 g mass and the down arrow takes off the last mass."></canvas>
+      <canvas id="can" tabindex="0" role="img" aria-label="A turntable with whatever sits on it and the hanging mass falling as the string unwinds from the spool: in the flat view the table from above and the mass from the side, in the 3D view a lab bench with light gates 0.500 m apart, a timer and a screen drawing ω against time. Space releases, R winds the string back up, the up arrow hangs a 5 g mass and the down arrow takes off the last mass."></canvas>
       <div class="viewbar"><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div><button type="button" class="spin attn" id="go">Release</button><button type="button" class="spin" id="wind">Wind it back up</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
       </div>
@@ -158,7 +159,7 @@ table.rows input:focus { border-color: var(--accent); }
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>The model and its formulas</summary>
-          <p class="hint">3D view: drag to turn it, scroll or pinch to zoom, double click to reset. Flat shows the older drawing; both show the same motion.</p>
+          <p class="hint">3D view: drag to turn it, scroll or pinch to zoom, double click to reset. The camera follows the hanging mass down. The timer starts as the mass leaves the start gate and stops when the bottom of the hanger reaches the stop gate, 0.500 m lower; the screen behind the turntable draws ω against time for the same run. The turntable, spool, loads, slotted masses and the drop are to scale; the string is drawn thicker than a real thread. Flat shows the older drawing; both show the same motion.</p>
           <p class="hint">Blind hides moments of inertia, the predicted motion, the energies and I from the fit, leaving the timer, the masses and the settings. The Mystery object always hides its I.</p>
           <p class="hint">Model: a rigid turntable on its axle, a massless string that does not slip on the spool, a massless frictionless pulley, and (optionally) a constant friction torque at the bearing. Turntable I₀ = 2.00 × 10⁻³ kg·m². Disk 1.00 kg, radius 10.0 cm; ring 1.00 kg, radii 9.0 and 10.0 cm; two 0.200 kg masses (small cylinders, 1.5 cm radius).</p>
         </details>
@@ -262,15 +263,7 @@ table.rows input:focus { border-color: var(--accent); }
     const cx = wide ? W * 0.32 : W * 0.4, cy = Hh * 0.45, R = Math.min(wide ? W * 0.26 : W * 0.3, Hh * 0.33), sc = R / 0.13;
     const sr = Math.max(4 * p, S.r * sc), px = wide ? W * 0.72 : W * 0.8, py = cy - sr, top = cy + 20 * p, bot = Hh - 40 * p;
     const my = top + (bot - top - 40 * p) * y / H;
-    if (G3.on && g3) {   // the 3D view draws the apparatus; this canvas keeps the labels and the timer on top
-      ctx.clearRect(0, 0, W, Hh); const Q = render3(y, th, Hh), hx = XP + RP, hz = ZS - RP - 0.06 - y;
-      ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillStyle = T.ink; const ml = Q([hx + 0.03, S.r, hz - 0.02]); ctx.fillText(`${Math.round(S.m * 1000)} g`, ml[0], ml[1]);
-      ctx.fillStyle = T.accent; ctx.font = `${10.5 * p}px ${T.ui}`; const dl = Q([hx, S.r + 0.035, ZS - RP - 0.06 - H / 2]); ctx.fillText('0.500 m drop', dl[0] + 14 * p, dl[1]);
-      const msg3 = !M.moves ? 'too little torque to turn it' : S.done ? `timer: ${M.t.toFixed(3)} s for 0.500 m` : `timer: ${f(S.t, 3)} s`;
-      ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.fillStyle = T.panel; ctx.fillRect(8 * p, 42 * p, ctx.measureText(msg3).width + 12 * p, 26 * p);
-      ctx.fillStyle = T.ink; ctx.textBaseline = 'top'; ctx.fillText(msg3, 14 * p, 48 * p);
-      return;
-    }
+    if (G3.on && g3) { draw3(M, tt, y, p); return; }   // the 3D view draws the apparatus; this canvas keeps the labels and the timer on top
     scenery(p, wide, px, py);
     // turntable from above: shadow, metal rim, platter
     ctx.fillStyle = T.shadow; ctx.beginPath(); ctx.arc(cx + 3 * p, cy + 5 * p, R + 5 * p, 0, 7); ctx.fill();
@@ -340,42 +333,50 @@ table.rows input:focus { border-color: var(--accent); }
     }
     $('out').innerHTML = h;
   }
-  // ---------- 3D view (three.js through demos/lib/vd3.js): the same turntable and the same motion, in perspective ----------
+  // ---------- 3D view (three.js through demos/lib/vd3.js and the shared kit vd3kit.js): the same turntable and the same motion, in perspective ----------
   // Drag to turn the view, wheel or pinch to zoom, double click to reset. The flat view stays (Flat button, or ?view=flat).
-  // Sizes are to scale in metres where the model fixes them (platter 13 cm, spool r, disk, ring and the two masses, the 0.500 m drop);
-  // the load pieces are drawn as steel (7850 kg/m³) and the slotted masses as brass (8500 kg/m³) for their thickness. The rest is scenery.
-  const G3 = { on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, sig: '', o: { th: -0.62, ph: 1.2, zoom: 1.12 } };
+  // Sizes are to scale in metres where the model fixes them (platter 13 cm, spool r, disk, ring and the two masses, the 0.500 m drop
+  // between the light gates, the rule behind it); the load pieces are drawn as steel (7850 kg/m³) and the slotted masses as brass
+  // (8500 kg/m³) for their thickness. The string is drawn thicker than a real thread. The bench, stand, timer and screen are scenery.
+  // The camera follows the hanging mass down; every number on the timer, the screen and the labels comes from motion() above.
+  const G3 = { on: false, ok: false, tried: false, loading: false, w: 0, h: 0, sig: '', rr: 0, hb: -0.02, tr: '', o: { th: -1.2, ph: 1.12, zoom: 1.1 } };
   const NO3D = 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
   const ZT = 0.062, ZS = ZT + 0.047, XP = 0.29, RP = 0.02;   // platter top, string height, pulley axle x and radius (scenery)
+  const Z0 = ZS - RP - 0.06, HX = XP + RP, FLOOR = -0.9;      // the hook's height at rest, the line the mass falls down, the floor
+  const L0 = 0.55, PITCH = 0.0014, RSTR = 0.0007, ZB = ZS - 0.0068;   // string wound on at the start (m), turns' pitch, drawn string radius, bottom of the winding
   let g3 = null;
   function init3D() {
     G3.tried = true;
-    const r = VD3.renderer(); if (!r) return false;
-    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
-    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); $('scene').insertBefore(el, can);
-    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.02, 30), M = (o) => new THREE.MeshStandardMaterial(o);
-    const hemi = new THREE.HemisphereLight(0xffffff, 0x8a8178, 0.75), sun = new THREE.DirectionalLight(0xffffff, 0.7);
-    sun.position.set(-0.8, -1.0, 2.2); sun.castShadow = true; sun.shadow.mapSize.set(1536, 1536);
-    Object.assign(sun.shadow.camera, { left: -0.6, right: 0.6, top: 0.6, bottom: -0.6, near: 0.5, far: 5 }); scene.add(hemi, sun);
+    const st = VD3K.stage($('scene'), { before: can, fov: 30, near: 0.02, far: 20, shadow: 0.9 }); if (!st) return false;
+    const { scene } = st, K = VD3K, M = (o) => new THREE.MeshStandardMaterial(o), mat = (o, c) => K.material(st, o, c);
+    st.sun.position.set(-1.1, -0.35, 2.4); st.sun.shadow.bias = -0.0004; st.sun.shadow.mapSize.set(1024, 1024);
     const cyl = (r0, r1, h, n) => { const g = new THREE.CylinderGeometry(r0, r1, h, n || 32); g.rotateX(Math.PI / 2); return g; };   // along z, centred
     const mesh = (g, m, cast, recv) => { const x = new THREE.Mesh(g, m); x.castShadow = !!cast; x.receiveShadow = !!recv; return x; };
-    // room: floor, wall, a bench whose edge the string runs over
-    const floorM = M({ roughness: 0.95 }), wallM = M({ roughness: 1 }), benchM = M({ roughness: 0.7 }), benchEdgeM = M({ roughness: 0.7 }), legM = M({ roughness: 0.4, metalness: 0.4 });
-    const floor = mesh(new THREE.PlaneGeometry(6, 6), floorM, false, true); floor.position.z = -0.78;
-    const wall = mesh(new THREE.PlaneGeometry(6, 3), wallM, false, true); wall.rotation.x = Math.PI / 2; wall.position.set(0, 0.55, 0.7);
-    const top = mesh(new THREE.BoxGeometry(0.6, 0.6, 0.035), [benchEdgeM, benchEdgeM, benchEdgeM, benchEdgeM, benchM, benchEdgeM], true, true); top.position.set(-0.03, 0.08, -0.0175);
-    scene.add(floor, wall, top);
-    for (const [x, y] of [[-0.3, -0.19], [0.24, -0.19], [-0.3, 0.35], [0.24, 0.35]]) { const l = mesh(new THREE.BoxGeometry(0.04, 0.04, 0.745), legM, true); l.position.set(x, y, -0.035 - 0.3725); scene.add(l); }
-    // turntable: column, platter (with degree ticks and the red mark, which turn with it), hub column and spool
-    const metalM = M({ roughness: 0.35, metalness: 0.55 }), darkM = M({ roughness: 0.45, metalness: 0.4 });
-    const col = mesh(cyl(0.03, 0.04, 0.05, 32), darkM, true, true); col.position.z = 0.025;
-    const table = new THREE.Group(); table.position.z = 0.05; scene.add(col, table);
-    const platCv = document.createElement('canvas'); platCv.width = platCv.height = 512; const platTex = new THREE.CanvasTexture(platCv); platTex.anisotropy = r.capabilities.getMaxAnisotropy();
-    const platTopM = M({ map: platTex, roughness: 0.32, metalness: 0.5 }), platSideM = M({ roughness: 0.3, metalness: 0.6 });
-    const plat = mesh(cyl(0.13, 0.13, 0.012, 96), [platSideM, platTopM, platSideM], true, true); plat.position.z = 0.006; table.add(plat);
+    const box = (w, d, h, m, x, y, z) => K.box(w, d, h, m, x, y, z);
+    // room: floor and a curved wall behind; a lab bench (worktop on a cabinet) whose right hand end the string runs over
+    const floor = mesh(new THREE.PlaneGeometry(8, 8), mat({ roughness: 0.95 }, ['#d6dbe1', '#1d2530']), false, true); floor.position.z = FLOOR;
+    const wall = K.backdrop(st, { r: 2.3, h: 2.6, arc: Math.PI * 0.9 }); const wallG = new THREE.Group(); wallG.add(wall); wallG.position.set(-0.2, -0.6, FLOOR); scene.add(floor, wallG);
+    const topM = mat({ roughness: 0.75 }, ['#d2bf9f', '#3d342a']), edgeM = mat({ roughness: 0.7 }, ['#a98c66', '#4a3d2e']);
+    const top = mesh(new THREE.BoxGeometry(1.67, 0.77, 0.035), [edgeM, edgeM, edgeM, edgeM, topM, edgeM], true, true); top.position.set(-0.565, 0.065, -0.0175); scene.add(top);
+    const cabM = mat({ roughness: 0.6, metalness: 0.15 }, ['#66727f', '#323b47']), cabDk = mat({ roughness: 0.7 }, ['#3b434d', '#151a20']), handM = mat({ roughness: 0.3, metalness: 0.7 }, ['#d9dee4', '#8d97a3']);
+    scene.add(box(1.57, 0.7, -0.035 - FLOOR - 0.08, cabM, -0.565, 0.07, FLOOR + 0.08), box(1.53, 0.64, 0.08, cabDk, -0.565, 0.08, FLOOR));
+    for (let i = 0; i < 3; i++) {   // a stack of drawers at the right hand end of the front, cupboard doors further left
+      const z = -0.06 - i * 0.255; scene.add(box(0.4, 0.008, 0.235, cabM, 0.0, -0.284, z - 0.235), box(0.12, 0.016, 0.012, handM, 0.0, -0.291, z - 0.05));
+    }
+    for (const x of [-0.5, -0.95]) scene.add(box(0.43, 0.008, 0.7, cabM, x, -0.284, -0.79), box(0.012, 0.016, 0.12, handM, x + (x > -0.7 ? -0.18 : 0.18), -0.291, -0.3));
+    // turntable: a heavy base and column, the platter (strobe sectors and degree marks that turn with it), hub and spool
+    const metalM = mat({ roughness: 0.32, metalness: 0.6 }, ['#b4bcc6', '#7d8792']), darkM = mat({ roughness: 0.45, metalness: 0.4 }, ['#47505b', '#2c333c']);
+    const base = mesh(cyl(0.085, 0.09, 0.014, 48), darkM, true, true); base.position.z = 0.007;
+    const col = mesh(cyl(0.022, 0.026, 0.036, 32), metalM, true, true); col.position.z = 0.014 + 0.018;
+    const table = new THREE.Group(); table.position.z = 0.05; scene.add(base, col, table);
+    const platCv = document.createElement('canvas'); platCv.width = platCv.height = 1024; const platTex = new THREE.CanvasTexture(platCv); platTex.anisotropy = st.r.capabilities.getMaxAnisotropy();
+    const sideCv = document.createElement('canvas'); sideCv.width = 1024; sideCv.height = 32; const sideTex = new THREE.CanvasTexture(sideCv);
+    const platTopM = M({ map: platTex, roughness: 0.38, metalness: 0.35 }), platSideM = M({ map: sideTex, roughness: 0.35, metalness: 0.4 });
+    const plat = mesh(cyl(0.13, 0.13, 0.012, 128), [platSideM, platTopM, platSideM], true, true); plat.position.z = 0.006; table.add(plat);
     const hubCol = mesh(cyl(0.008, 0.008, 0.04, 20), metalM, true); hubCol.position.z = 0.012 + 0.02; table.add(hubCol);
-    const strM = M({ roughness: 0.8 }), spoolCore = mesh(cyl(1, 1, 1, 40), strM, true), flangeA = mesh(cyl(1, 1, 0.002, 40), metalM, true), flangeB = mesh(cyl(1, 1, 0.002, 40), metalM, true);
-    table.add(spoolCore, flangeA, flangeB);
+    const hubCap = mesh(cyl(0.016, 0.018, 0.006, 32), darkM, true); hubCap.position.z = 0.015; table.add(hubCap);
+    const spoolCore = mesh(cyl(1, 1, 1, 40), metalM, true), flangeA = mesh(cyl(1, 1, 0.002, 48), darkM, true), flangeB = mesh(cyl(1, 1, 0.002, 48), darkM, true);
+    const flMark = mesh(new THREE.BoxGeometry(1, 0.003, 0.0006), M({ color: 0xffffff, roughness: 0.5 })); table.add(spoolCore, flangeA, flangeB, flMark);
     // loads, built once; only the chosen one shows
     const objM = M({ roughness: 0.38, metalness: 0.45 }), loads = {};
     const steelH = (m, area) => m / (7850 * area);
@@ -388,48 +389,76 @@ table.rows input:focus { border-color: var(--accent); }
     for (const k in loads) { loads[k].visible = false; table.add(loads[k]); }
     loads.disk.position.z = 0.012 + loads.disk.geometry.parameters.height / 2; loads.ring.position.z = 0.012; loads.mystery.position.z = 0.014;
     loads.pair.children.forEach((c) => { c.position.z = 0.012 + pairH / 2; });
-    // the string: along the top of the bench to the pulley, over it, and down to the hanger
-    const strLineM = new THREE.LineBasicMaterial(), strG = new THREE.BufferGeometry(); strG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3 * 40), 3));
-    const string = new THREE.Line(strG, strLineM); string.frustumCulled = false; scene.add(string);
-    // the pulley on a bracket clamped to the bench edge; it turns as the string runs over it
-    const pulley = new THREE.Group(); pulley.position.set(XP, 0, ZS - RP); scene.add(pulley);
-    const wheelG = new THREE.CylinderGeometry(RP, RP, 0.008, 40); const pw = mesh(wheelG, metalM, true); pulley.add(pw);
+    // a curved arrow round the front of the platter for the sense of turning (fixed in the room)
+    const arrowM = M({ roughness: 0.4 }), arc = mesh(new THREE.TorusGeometry(0.152, 0.0022, 8, 48, 0.9), arrowM); arc.rotation.z = -Math.PI / 2 - 0.45; arc.position.z = ZT + 0.004;
+    const head = mesh(new THREE.ConeGeometry(0.007, 0.02, 16), arrowM), ah = -Math.PI / 2 - 0.45; head.position.set(0.152 * Math.cos(ah), 0.152 * Math.sin(ah), ZT + 0.004);
+    head.rotation.z = ah + Math.PI;   /* the cone points along +y; turned by ah + π it points along the clockwise tangent at angle ah */
+    scene.add(arc, head);
+    // the string: wound on the spool (a helix that shortens as it unwinds), across to the pulley, over it and down to the hook
+    const strM = M({ roughness: 0.8 }), coil = mesh(new THREE.BufferGeometry(), strM, true); scene.add(coil);
+    const segG = new THREE.CylinderGeometry(RSTR, RSTR, 1, 6), segA = mesh(segG, strM, true), segC = mesh(segG, strM, true);
+    const rig = new THREE.Group(); scene.add(rig);   // everything on the line of the string, shifted to y = r
+    const over = mesh(new THREE.TorusGeometry(RP, RSTR, 6, 16, Math.PI / 2), strM); over.rotation.x = Math.PI / 2; over.position.set(XP, 0, ZS - RP);
+    rig.add(segA, segC, over);
+    // the pulley on a bracket clamped to the bench end; it turns as the string runs over it
+    const pulley = new THREE.Group(); pulley.position.set(XP, 0, ZS - RP); rig.add(pulley);
+    const pw = mesh(new THREE.CylinderGeometry(RP, RP, 0.008, 40), metalM, true); pulley.add(pw);
     const groove = mesh(new THREE.TorusGeometry(RP, 0.0018, 8, 40), darkM); groove.rotation.x = Math.PI / 2; pulley.add(groove);
     const spokeBar = mesh(new THREE.BoxGeometry(RP * 1.6, 0.0095, 0.003), darkM); pulley.add(spokeBar); const spokeBar2 = spokeBar.clone(); spokeBar2.rotation.y = Math.PI / 2; pulley.add(spokeBar2);
-    const bracket = new THREE.Group(); scene.add(bracket);
-    const arm = mesh(new THREE.BoxGeometry(0.075, 0.006, 0.012), darkM, true); arm.position.set(0.255, 0, ZS - RP); bracket.add(arm);
-    const post = mesh(new THREE.BoxGeometry(0.012, 0.012, ZS - RP + 0.04), darkM, true); post.position.set(0.222, 0, (ZS - RP - 0.04) / 2); bracket.add(post);
-    const clamp = mesh(new THREE.BoxGeometry(0.03, 0.03, 0.06), darkM, true); clamp.position.set(0.255, 0, -0.03); bracket.add(clamp);
+    rig.add(box(0.075, 0.006, 0.012, darkM, 0.255, 0.008, ZS - RP - 0.006), box(0.012, 0.012, ZS - RP + 0.04, darkM, 0.222, 0.008, -0.04), box(0.03, 0.05, 0.07, darkM, 0.262, 0.008, -0.06));
     // hanger and slotted masses
     const hanger = new THREE.Group(); scene.add(hanger);
     const brassM = M({ roughness: 0.3, metalness: 0.7 }), steelM = M({ roughness: 0.32, metalness: 0.6 });
-    // a metre stick behind the falling mass with the two timing marks 0.500 m apart
-    const stickM = M({ roughness: 0.8 }), stick = mesh(new THREE.BoxGeometry(0.03, 0.004, 0.62), stickM, true); scene.add(stick);
-    const markM = M({ roughness: 0.6 }), marks = [0, 1].map(() => { const m = mesh(new THREE.BoxGeometry(0.06, 0.006, 0.003), markM); scene.add(m); return m; });
-    g3 = { r, el, scene, cam, hemi, sun, floorM, wallM, benchM, benchEdgeM, legM, metalM, darkM, platCv, platTex, platTopM, platSideM, table, spoolCore, flangeA, flangeB, strM, objM, loads, string, strG, strLineM, pulley, bracket, hanger, brassM, steelM, stick, stickM, marks, markM };
+    // the light gates on a stand from the floor: start where the hanger hangs at rest, stop 0.500 m lower; a rule between them
+    const gates = new THREE.Group(); rig.add(gates);
+    const gateM = mat({ roughness: 0.5, metalness: 0.2 }, ['#28323d', '#1c232b']), SX = HX + 0.13;
+    gates.add(K.rod([SX, 0.03, FLOOR + 0.02], [SX, 0.03, Z0 + 0.08], 0.006, metalM), box(0.22, 0.13, 0.02, darkM, SX + 0.03, 0.03, FLOOR));
+    const mkGate = () => {
+      const g = new THREE.Group();
+      g.add(box(0.1, 0.012, 0.024, gateM, 0.015, -0.042, -0.012), box(0.1, 0.012, 0.024, gateM, 0.015, 0.042, -0.012), box(0.016, 0.096, 0.024, gateM, 0.068, 0, -0.012));
+      g.add(K.rod([0.076, 0, 0], [SX - HX, 0.03, 0], 0.004, metalM), box(0.022, 0.022, 0.03, darkM, SX - HX, 0.03, -0.015));
+      const ledM = new THREE.MeshStandardMaterial({ color: 0x333333, emissive: 0x000000, roughness: 0.3 }), led = mesh(new THREE.SphereGeometry(0.0045, 16, 10), ledM); led.position.set(0.068, -0.03, 0.013); g.add(led);
+      const beamM = new THREE.MeshBasicMaterial({ color: 0xff3a2a, transparent: true, opacity: 0.25, depthWrite: false }), beam = new THREE.Mesh(new THREE.CylinderGeometry(0.0008, 0.0008, 0.072, 6), beamM); g.add(beam);
+      g.userData = { ledM, beamM }; gates.add(g); return g;
+    };
+    const gate0 = mkGate(), gate1 = mkGate();
+    const rule = K.ruler(st, { len: 0.6, from: 0, to: 60, unit: 'cm', step: 1, w: 0.03 }), ruleIn = new THREE.Group(), ruleG = new THREE.Group();
+    ruleIn.add(rule); ruleIn.rotation.x = Math.PI / 2; ruleG.add(ruleIn); ruleG.rotation.y = Math.PI / 2; gates.add(ruleG);
+    const ruleArms = [0, 1].map(() => { const a = new THREE.Group(); a.add(K.rod([0.016, 0.06, 0], [SX - HX, 0.03, 0], 0.003, metalM)); gates.add(a); return a; });
+    // the timer on the bench, wired to the stand; the screen of a data logger behind the turntable draws ω against t
+    const timer = K.meter(st, { w: 0.17, h: 0.1, label: 'TIMER', sub: 'start gate to stop gate', text: '0.000 s' }), timerG = new THREE.Group(); timerG.add(timer); timerG.position.set(-0.22, -0.2, 0); timerG.rotation.z = -0.2; scene.add(timerG);
+    const trCv = document.createElement('canvas'); trCv.width = 768; trCv.height = 480; const trTex = new THREE.CanvasTexture(trCv); trTex.anisotropy = st.r.capabilities.getMaxAnisotropy();
+    const scr = new THREE.Group(); scr.position.set(-0.05, 0.25, 0); scr.rotation.z = -0.3; scene.add(scr);
+    scr.add(box(0.07, 0.05, 0.008, darkM, 0, 0, 0), box(0.012, 0.012, 0.03, darkM, 0, 0.01, 0.008), box(0.29, 0.016, 0.185, darkM, 0, 0, 0.022));
+    const screen = new THREE.Mesh(new THREE.PlaneGeometry(0.274, 0.171), new THREE.MeshBasicMaterial({ map: trTex, toneMapped: false })); screen.rotation.x = Math.PI / 2; screen.position.set(0, -0.0085, 0.1145); scr.add(screen);
+    const wire = { m: M({ roughness: 0.6, color: 0x23282f }), mesh: null };
+    g3 = { st, r: st.r, el: st.el, scene, cam: st.cam, metalM, darkM, platCv, platTex, sideCv, sideTex, table, spoolCore, flangeA, flangeB, flMark, strM, objM, loads, arrowM, coil, segA, segC, rig, pulley, hanger, brassM, steelM, gates, gate0, gate1, ruleG, ruleArms, timer, trCv, trTex, wire, f: K.follow({ x: 0.12, y: 0, z: -0.12 }, 0.08) };
+    st.onTheme(theme3);
     can.addEventListener('wheel', (e) => { if (!G3.on) e.stopImmediatePropagation(); }, { passive: true });
-    VD3.orbit(can, G3.o, () => { if (!S.run) draw(); }, { grab: () => !G3.on, phMin: 0.35, phMax: 1.5, zMin: 0.6, zMax: 2.6 });
+    VD3.orbit(can, G3.o, () => { if (!S.run) draw(); }, { grab: () => !G3.on, phMin: 0.35, phMax: 1.5, zMin: 0.55, zMax: 2.6 });
     can.addEventListener('pointerup', () => { if (!G3.on) can.style.cursor = ''; });
     return true;
   }
-  function theme3() {
-    const g = g3, d = VD3.dark(), col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
-    const bg = col(T.canvas, '#fbfcfd'); g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 2.2, 5);
-    g.hemi.intensity = d ? 1.0 : 0.6; g.sun.intensity = d ? 0.95 : 0.6;
-    g.floorM.color = col(T.floor, '#dde1e6'); g.wallM.color = col(T.wall, '#f1f4f7'); g.benchM.color = col(T.bench, '#e7d6ba'); g.benchEdgeM.color = col(T.benchEdge, '#b0906a'); g.legM.color = col(T.metalDark, '#5f6873');
-    g.metalM.color = col(T.metal, '#a3acb6'); g.darkM.color = col(T.metalDark, '#5f6873'); g.platSideM.color = col(T.metal, '#a3acb6'); g.strM.color = col(T.str, '#a7740b'); g.strLineM.color = col(T.str, '#a7740b');
-    g.objM.color = col(T.obj, '#2b60b5'); g.steelM.color = col(T.metal, '#a3acb6'); g.brassM.color = col(d ? '#c9a24a' : '#c79a3a', '#c79a3a'); g.stickM.color = col(d ? '#cbb27a' : '#e8d39a', '#e8d39a'); g.markM.color = col(T.accent, '#2b60b5');
-    // the platter's top: brushed metal with degree ticks (every 10°, longer every 90°) and the red reference line
-    const c = g.platCv.getContext('2d'), R = 256; c.fillStyle = T.plat; c.fillRect(0, 0, 512, 512);
-    for (let k = 0; k < 90; k++) { c.strokeStyle = k % 2 ? 'rgba(255,255,255,0.10)' : 'rgba(0,0,0,0.05)'; c.lineWidth = 2; c.beginPath(); c.arc(R, R, 20 + k * 2.6, 0, 7); c.stroke(); }
-    c.strokeStyle = T.gridStrong; c.lineWidth = 3; c.beginPath(); for (let k = 0; k < 36; k++) { const a = k * Math.PI / 18, r0 = R * (k % 9 ? 0.93 : 0.88); c.moveTo(R + r0 * Math.cos(a), R + r0 * Math.sin(a)); c.lineTo(R + R * 0.98 * Math.cos(a), R + R * 0.98 * Math.sin(a)); } c.stroke();
-    c.strokeStyle = T.mark; c.lineWidth = 9; c.beginPath(); c.moveTo(R, R); c.lineTo(R + R * 0.95, R); c.stroke();
-    g.platTex.needsUpdate = true; G3.sig = '';
+  function theme3(dk) {
+    const g = g3, col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+    g.strM.color = col(T.str, '#a7740b'); g.objM.color = col(T.obj, '#2b60b5'); g.steelM.color = col(dk ? '#9aa4b0' : '#b9c1ca', '#b9c1ca'); g.brassM.color = col(dk ? '#c9a24a' : '#c79a3a', '#c79a3a');
+    g.arrowM.color = col(T.accent, '#2b60b5'); g.arrowM.emissive = col(T.accent, '#2b60b5').multiplyScalar(dk ? 0.35 : 0.1);
+    // the platter's top: brushed metal, a ring of 24 strobe sectors near the rim, degree marks (every 10°, longer every 90°) and the red reference line
+    const c = g.platCv.getContext('2d'), N = 1024, R = N / 2; c.fillStyle = T.plat; c.fillRect(0, 0, N, N);
+    for (let k = 0; k < 170; k++) { c.strokeStyle = k % 2 ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.05)'; c.lineWidth = 3; c.beginPath(); c.arc(R, R, 30 + k * 2.75, 0, 7); c.stroke(); }
+    for (let k = 0; k < 24; k++) { c.fillStyle = k % 2 ? (dk ? '#dfe5ec' : '#f4f6f8') : (dk ? '#141a21' : '#1f262e'); c.beginPath(); c.moveTo(R, R); c.arc(R, R, R * 0.985, k * Math.PI / 12, (k + 1) * Math.PI / 12); c.closePath(); c.fill(); }
+    c.fillStyle = T.plat; c.beginPath(); c.arc(R, R, R * 0.885, 0, 7); c.fill();
+    for (let k = 0; k < 120; k++) { c.strokeStyle = k % 2 ? 'rgba(255,255,255,0.09)' : 'rgba(0,0,0,0.05)'; c.lineWidth = 3; c.beginPath(); c.arc(R, R, 30 + k * 3.7, 0, 7); c.stroke(); }
+    c.strokeStyle = dk ? '#c9d1db' : '#3a434e'; c.lineWidth = 4; c.beginPath(); for (let k = 0; k < 36; k++) { const a = k * Math.PI / 18, r0 = R * (k % 9 ? 0.83 : 0.76); c.moveTo(R + r0 * Math.cos(a), R + r0 * Math.sin(a)); c.lineTo(R + R * 0.87 * Math.cos(a), R + R * 0.87 * Math.sin(a)); } c.stroke();
+    c.strokeStyle = T.mark; c.lineWidth = 16; c.lineCap = 'round'; c.beginPath(); c.moveTo(R + 40, R); c.lineTo(R + R * 0.86, R); c.stroke(); c.lineCap = 'butt';
+    g.platTex.needsUpdate = true;
+    const s = g.sideCv.getContext('2d'); for (let k = 0; k < 24; k++) { s.fillStyle = k % 2 ? (dk ? '#dfe5ec' : '#f4f6f8') : (dk ? '#141a21' : '#1f262e'); s.fillRect(k * 1024 / 24, 0, 1024 / 24 + 1, 32); } g.sideTex.needsUpdate = true;
+    G3.sig = ''; G3.tr = '';
   }
-  // the slotted masses on the hanger: rebuilt only when the pieces change
+  // the slotted masses on the hanger: rebuilt only when the pieces change; the gates follow the hanger's bottom
   function hang3() {
     const sig = S.pieces.join(','); if (G3.sig === sig) return; G3.sig = sig;
-    const h = g3.hanger; while (h.children.length) h.remove(h.children[0]);
+    const h = g3.hanger; while (h.children.length) { const x = h.children[0]; h.remove(x); if (x.geometry) x.geometry.dispose(); }
     const mesh = (g, m) => { const x = new THREE.Mesh(g, m); x.castShadow = true; return x; }, cyl = (r0, h0) => { const g = new THREE.CylinderGeometry(r0, r0, h0, 36); g.rotateX(Math.PI / 2); return g; };
     const hook = mesh(new THREE.TorusGeometry(0.006, 0.0012, 8, 20, Math.PI * 1.5), g3.steelM); hook.rotation.x = Math.PI / 2; hook.position.z = -0.006; h.add(hook);
     const RS = 0.02, area = Math.PI * RS * RS, th = (gr) => Math.max(0.002, gr / 1000 / (8500 * area));   // brass discs 4 cm across
@@ -440,27 +469,106 @@ table.rows input:focus { border-color: var(--accent); }
     z -= 0.006;
     stack.forEach((gr, i) => { const t = th(gr), d = mesh(cyl(RS, t * 0.94), i % 2 ? g3.steelM : g3.brassM); d.position.z = z - t / 2; h.add(d); z -= t; });
     const plate = mesh(cyl(RS * 0.9, 0.004), g3.steelM); plate.position.z = z - 0.002; h.add(plate);
+    G3.hb = z - 0.004;   // the hanger's bottom below the hook: the start gate's beam sits there at rest, the stop gate 0.500 m lower
+    const zs = Z0 + G3.hb; g3.gate0.position.set(HX, 0, zs); g3.gate1.position.set(HX, 0, zs - H);
+    g3.ruleG.position.set(HX, 0.056, zs); g3.ruleArms[0].position.set(HX, 0, zs - 0.08); g3.ruleArms[1].position.set(HX, 0, zs - 0.45);
   }
-  function render3(y, th, h) {
-    const g = g3; if (!g) return null;
-    if (G3.w !== W || G3.h !== h) { G3.w = W; G3.h = h; g.r.setSize(W, Math.max(1, h)); g.cam.aspect = W / Math.max(1, h); g.cam.updateProjectionMatrix(); }
-    const key = [T.canvas, T.plat, T.obj, T.bench].join(); if (G3.key !== key) { G3.key = key; theme3(); }
-    VD3.place(g.cam, G3.o, new THREE.Vector3(0.12, 0.04, -0.2), 1.95);
+  // the winding on the spool: a helix of L0 of string at radius r, built once for each spool; drawn up to the turns still on it
+  function coil3() {
+    if (G3.rr === S.r) return; G3.rr = S.r;
+    const R = S.r, N = L0 / (2 * Math.PI * R), seg = Math.ceil(N * 40);
+    class Helix extends THREE.Curve { getPoint(u, v = new THREE.Vector3()) { const s = u * N, a = -2 * Math.PI * s; return v.set(R * Math.cos(a), R * Math.sin(a), s * PITCH); } }
+    g3.coil.geometry.dispose(); g3.coil.geometry = new THREE.TubeGeometry(new Helix(), seg, RSTR, 6, false); g3.coil.userData = { N, seg };
+    // a wire from the timer along the bench to the top of the stand
+    if (g3.wire.mesh) g3.st.dispose(g3.wire.mesh);
+    g3.wire.mesh = VD3K.cable([-0.2, -0.16, 0.03], [HX + 0.13, S.r + 0.03, Z0 + 0.08], { via: [[-0.22, -0.1, 0.003], [-0.22, 0.36, 0.003], [0.2, 0.36, 0.003], [0.268, 0.24, -0.004], [HX + 0.13, S.r + 0.03, Z0 + 0.14]], mat: g3.wire.m, rad: 0.0018 });
+    g3.scene.add(g3.wire.mesh);
+  }
+  const seg3 = (m, a, b) => { const d = new THREE.Vector3().subVectors(b, a), len = d.length() || 1e-6; m.position.copy(a).addScaledVector(d, 0.5); m.scale.set(1, len, 1); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); };
+  // ω and v against t on the logger's screen, drawn from motion(): redrawn only when the time shown changes
+  function trace3(M, tt) {
+    const sig = [S.run ? Math.floor(tt * 8) : tt.toFixed(3), S.done, hidden(), M.t, M.alpha, S.r].join('|'); if (G3.tr === sig) return; G3.tr = sig;
+    const c = g3.trCv.getContext('2d'), Wd = 768, Ht = 480, mono = T.mono || 'monospace', ui = T.ui || 'sans-serif';
+    c.fillStyle = '#0d151e'; c.fillRect(0, 0, Wd, Ht); c.fillStyle = '#9fb3c8'; c.font = `700 36px ${ui}`; c.textBaseline = 'top'; c.textAlign = 'left'; c.fillText('ω of the table against time', 28, 18);
+    const L = 100, Rr = Wd - 30, T0 = 74, B = Ht - 74;
+    c.strokeStyle = 'rgba(160,180,200,0.35)'; c.lineWidth = 2; c.strokeRect(L, T0, Rr - L, B - T0);
+    if (hidden() || !M.moves) {
+      c.fillStyle = '#c8d6e4'; c.font = `26px ${ui}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+      c.fillText(!M.moves ? 'too little torque: the table stays still' : S.blind ? 'hidden in Blind: time the drop instead' : 'hidden for the Mystery object', (L + Rr) / 2, (T0 + B) / 2);
+      g3.trTex.needsUpdate = true; return;
+    }
+    const nice = (v) => { const e = 10 ** Math.floor(Math.log10(v)), q = v / e; return (q <= 1 ? 1 : q <= 2 ? 2 : q <= 5 ? 5 : 10) * e; };
+    const wEnd = M.alpha * M.t, tStep = nice(M.t / 4), wStep = nice(wEnd / 4), tMax = Math.ceil(M.t / tStep * 1.0001) * tStep, wMax = Math.ceil(wEnd / wStep * 1.0001) * wStep;
+    const PX = (t) => L + (Rr - L) * t / tMax, PY = (w) => B - (B - T0) * w / wMax;
+    c.font = `26px ${mono}`; c.fillStyle = '#9fb3c8'; c.strokeStyle = 'rgba(160,180,200,0.16)';
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (let t = 0; t <= tMax + 1e-9; t += tStep) { c.beginPath(); c.moveTo(PX(t), T0); c.lineTo(PX(t), B); c.stroke(); c.fillText(+t.toFixed(3) + '', PX(t), B + 8); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (let w = 0; w <= wMax + 1e-9; w += wStep) { c.beginPath(); c.moveTo(L, PY(w)); c.lineTo(Rr, PY(w)); c.stroke(); c.fillText(+w.toFixed(3) + '', L - 10, PY(w)); }
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText('t (s)', (L + Rr) / 2, Ht - 4); c.save(); c.translate(26, (T0 + B) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText('ω (rad/s)', 0, 0); c.restore();
+    c.strokeStyle = 'rgba(120,200,255,0.35)'; c.setLineDash([8, 8]); c.beginPath(); c.moveTo(PX(0), PY(0)); c.lineTo(PX(M.t), PY(wEnd)); c.stroke(); c.setLineDash([]);
+    c.strokeStyle = '#6fd3ff'; c.lineWidth = 5; c.beginPath(); c.moveTo(PX(0), PY(0)); c.lineTo(PX(tt), PY(M.alpha * tt)); c.stroke();
+    c.fillStyle = '#ffffff'; c.beginPath(); c.arc(PX(tt), PY(M.alpha * tt), 8, 0, 7); c.fill();
+    c.fillStyle = '#8ef0b0'; c.font = `600 30px ${mono}`; c.textAlign = 'right'; c.textBaseline = 'top';
+    c.fillText(`ω ${f(M.alpha * tt, 2)} rad/s`, Rr - 12, T0 + 12); c.fillStyle = '#c8d6e4'; c.fillText(`v = ωr ${f(M.a * tt * 100, 1)} cm/s`, Rr - 12, T0 + 50);
+    g3.trTex.needsUpdate = true;
+  }
+  function render3(M, tt, y, th) {
+    const g = g3, st = g.st; st.size(W, Hh);
     g.table.rotation.z = -th;   // the string leaves the +y side of the spool towards +x, so the table turns clockwise seen from above
     for (const k in g.loads) g.loads[k].visible = S.obj === k;
     g.loads.pair.children.forEach((c) => { c.position.x = 0; c.position.y = c.userData.s * S.d; });
     const sz = ZS - 0.05;   // spool centre height on the table: the string leaves it level
-    g.spoolCore.scale.set(S.r, S.r, 0.015); g.spoolCore.position.z = sz; g.flangeA.scale.set(S.r + 0.005, S.r + 0.005, 1); g.flangeA.position.z = sz + 0.0085; g.flangeB.scale.set(S.r + 0.005, S.r + 0.005, 1); g.flangeB.position.z = sz - 0.0085;
-    g.pulley.rotation.y = y / RP; g.pulley.position.y = S.r; g.bracket.position.y = S.r;
-    const hz = ZS - RP - 0.06 - y, hx = XP + RP; g.hanger.position.set(hx, S.r, hz); hang3();
-    g.stick.position.set(hx, S.r + 0.035, ZS - RP - 0.06 - 0.25); g.marks[0].position.set(hx, S.r + 0.032, ZS - RP - 0.06); g.marks[1].position.set(hx, S.r + 0.032, ZS - RP - 0.06 - H);
-    // string: from the spool's +y side to the top of the pulley, round it, then down to the hook
-    const pos = g.strG.attributes.position; let n = 0; pos.setXYZ(n++, 0, S.r, ZS);
-    for (let k = 0; k <= 12; k++) { const a = Math.PI / 2 - k * Math.PI / 24; pos.setXYZ(n++, XP + RP * Math.cos(a), S.r, ZS - RP + RP * Math.sin(a)); }
-    pos.setXYZ(n++, hx, S.r, hz); pos.needsUpdate = true; g.strG.setDrawRange(0, n);
-    g.scene.updateMatrixWorld(); g.r.render(g.scene, g.cam);
-    const tmp = new THREE.Vector3();
-    return (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * h]; };
+    g.spoolCore.scale.set(S.r - RSTR, S.r - RSTR, 0.015); g.spoolCore.position.z = sz;
+    g.flangeA.scale.set(S.r + 0.006, S.r + 0.006, 1); g.flangeA.position.z = sz + 0.0085; g.flangeB.scale.set(S.r + 0.006, S.r + 0.006, 1); g.flangeB.position.z = sz - 0.0085;
+    g.flMark.scale.set(S.r + 0.005, 1, 1); g.flMark.position.set((S.r + 0.005) / 2, 0, sz + 0.0098);
+    coil3(); hang3();
+    // turns still on the spool; the string leaves the top of the winding on the +y side
+    const n = Math.max(0, (L0 - y) / (2 * Math.PI * S.r)), cu = g.coil.userData, shown = Math.max(1, Math.ceil(n / cu.N * cu.seg));
+    g.coil.geometry.setDrawRange(0, shown * 36); g.coil.position.set(0, 0, ZB); g.coil.rotation.z = Math.PI / 2 + 2 * Math.PI * n;
+    g.rig.position.y = S.r; g.pulley.rotation.y = y / RP;
+    const hz = Z0 - y; g.hanger.position.set(HX, S.r, hz);
+    seg3(g.segA, new THREE.Vector3(0, 0, ZB + n * PITCH), new THREE.Vector3(XP, 0, ZS)); seg3(g.segC, new THREE.Vector3(HX, 0, ZS - RP), new THREE.Vector3(HX, 0, hz));
+    // light gates: start lights as the run begins, stop when the hanger's bottom reaches its beam (the end of the 0.500 m)
+    const on0 = M.moves && (S.t > 0 || S.done), on1 = S.done;
+    for (const [gt, on, c] of [[g.gate0, on0, 0x3ddc84], [g.gate1, on1, 0xff4433]]) { const u = gt.userData; u.ledM.emissive.setHex(on ? c : 0x000000); u.ledM.color.setHex(on ? c : 0x3a3f46); u.beamM.opacity = on ? 0.75 : 0.22; }
+    const lk = S.run ? Math.floor(tt * 20) : ['x', tt, M.moves, S.done].join();   /* while running, the timer's face is redrawn 20 times a simulated second (each texture upload costs on slow devices) */
+    if (G3.lk !== lk) { G3.lk = lk; g.timer.set(!M.moves ? '- - -' : `${S.done ? M.t.toFixed(3) : f(tt, 3)} s`); }
+    trace3(M, tt);
+    // the camera frames the turntable and the hanging mass, and moves down with the mass as it falls
+    const narrow = W / Math.max(1, Hh) < 1, fr = y / H, tx = (narrow ? 0.07 : 0.15) + 0.03 * fr, tz = -0.09 - 0.12 * fr;
+    g.f.to(tx, 0.02, tz, true);   /* y(t) is already smooth, so the camera rides with it directly; Wind it back up puts it straight back */
+    st.place(G3.o, g.f.at, st.fit(1.72, narrow ? 1.3 : 1.15));
+    st.render();
+    return (q) => st.project(q);
+  }
+  // labels drawn over the 3D view, on small panels so they read over the bench and the wall
+  function draw3(M, tt, y, p) {
+    ctx.clearRect(0, 0, W, Hh); const Q = render3(M, tt, y, y / S.r), hz = Z0 - y;
+    const tag = (txt, q, o = {}) => {
+      const [x, yy, z] = Q(q); if (z > 1 || x < -40 || x > W + 40 || yy < 56 * p || yy > Hh - 10 * p) return;   /* not under the buttons */
+      ctx.font = `${o.b ? 700 : 600} ${(o.s || 11.5) * p}px ${T.ui}`; const w = ctx.measureText(txt).width + 10 * p, h = 18 * p;
+      let x0 = o.al === 'right' ? x - w : o.al === 'center' ? x - w / 2 : x; x0 = Math.max(4, Math.min(W - w - 4, x0));
+      ctx.fillStyle = T.panel; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(x0, yy - h / 2, w, h, 5 * p) : ctx.rect(x0, yy - h / 2, w, h); ctx.fill();
+      ctx.fillStyle = o.c || T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(txt, x0 + 5 * p, yy + 0.5 * p);
+    };
+    const zs = Z0 + G3.hb;
+    tag(`m = ${Math.round(S.m * 1000)} g`, [HX - 0.03, S.r - 0.03, hz - 0.01], { b: 1, al: 'right' });
+    { // the 0.500 m between the two beams, as a dimension line beside the stand
+      const a = Q([HX + 0.165, S.r + 0.03, zs]), b = Q([HX + 0.165, S.r + 0.03, zs - H]);
+      if (a[2] < 1 && b[2] < 1) {
+        const ah = 6 * p, dx = b[0] - a[0], dy = b[1] - a[1], L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L;
+        ctx.strokeStyle = T.accent; ctx.fillStyle = T.accent; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]);
+        for (const q of [a, b]) { ctx.moveTo(q[0] - 7 * p, q[1]); ctx.lineTo(q[0] + 7 * p, q[1]); } ctx.stroke();
+        for (const [q, s] of [[a, 1], [b, -1]]) { ctx.beginPath(); ctx.moveTo(q[0], q[1]); ctx.lineTo(q[0] + s * ux * ah * 1.6 - uy * ah * 0.6, q[1] + s * uy * ah * 1.6 + ux * ah * 0.6); ctx.lineTo(q[0] + s * ux * ah * 1.6 + uy * ah * 0.6, q[1] + s * uy * ah * 1.6 - ux * ah * 0.6); ctx.fill(); }
+      }
+    }
+    tag('start gate', [HX + 0.18, S.r + 0.03, zs], {}); tag('stop gate', [HX + 0.18, S.r + 0.03, zs - H], {});
+    tag('0.500 m drop', [HX + 0.175, S.r + 0.03, zs - H / 2], { c: T.accent, b: 1 });
+    if (W > 560) tag(`spool r = ${f(S.r * 100, 1)} cm`, [-0.02, -0.03, ZS + 0.035], { al: 'right' });
+    tag(hidden() ? 'ω' : `ω = ${f(M.alpha * tt, 2)} rad/s`, [0.152 * Math.cos(-2.1), 0.152 * Math.sin(-2.1), ZT], { c: T.accent, b: 1, al: 'right' });
+    const msg3 = !M.moves ? 'too little torque to turn it' : S.done ? `timer: ${M.t.toFixed(3)} s for 0.500 m` : `timer: ${f(S.t, 3)} s`;
+    ctx.font = `700 ${14 * p}px ${T.mono}`; const mw = ctx.measureText(msg3).width + 16 * p, by = Hh - 34 * p;
+    ctx.fillStyle = T.panel; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(10 * p, by, mw, 24 * p, 6 * p) : ctx.rect(10 * p, by, mw, 24 * p); ctx.fill();
+    ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(msg3, 18 * p, by + 12.5 * p);
   }
   function setView(v) {
     if (v === '3d' && !G3.ok) {
