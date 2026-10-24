@@ -6705,7 +6705,7 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "Discrete charges and probe V/E. Extended distributions and conducting-surface equilibrium are not general models here. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance.",
+      "note": "Discrete charges and probe V/E. Extended distributions and conducting-surface equilibrium are not general models here. Student/private instructor material aligned on 2026-10-22; source and numerical checks only, not browser/classroom acceptance. Potential energy readout (2026-10-24, Claude): U = Σ kq_iq_j/r_ij of the point charges and the work qV to bring +1 nC to the probe, both hidden in Blind; worksheet part for §7.1.",
       "handouts": [
         "coulomb-sandbox"
       ],

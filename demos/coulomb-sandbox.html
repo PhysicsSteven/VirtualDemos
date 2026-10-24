@@ -212,6 +212,15 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <p class="hint" id="bodyModel" hidden>Model: a rod, ring or disk carries its charge Q spread uniformly, and V and E are the exact integrals of k dq/r: closed forms for the rod, and complete elliptic integrals for the ring and the disk off their axis (on the axis these reduce to the textbook formulas). Within 1.2 mm of a body its charge is treated as a line or sheet of uniformly charged balls 1.2 mm in radius, integrated numerically to 1 part in 10¹⁰.</p>
       </section>
 
+      <section>
+        <h2>Potential energy</h2>
+        <dl class="readout">
+          <div class="big"><dt>U of the charges, Σ kq<sub>i</sub>q<sub>j</sub>/r<sub>ij</sub></dt><dd id="rU">—</dd></div>
+          <div><dt>Work to bring +1 nC from far away to the probe</dt><dd id="rW">—</dd></div>
+        </dl>
+        <details class="more"><summary>More about this</summary><p class="hint">U is the work needed to assemble the charges from far apart, one pair at a time: U = Σ kq<sub>i</sub>q<sub>j</sub>/r<sub>ij</sub> over every pair. It is negative when attraction wins. Bringing a charge q from far away to the probe takes work qV, and U grows by exactly that much when the charge is put there. Point charges only: rods, rings and disks are left out. Blind hides both values.</p></details>
+      </section>
+
       <section id="limitsSec" hidden>
         <h2>Textbook formulas</h2>
         <p class="hint" id="limWhat"></p>
@@ -234,7 +243,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind" autocomplete="off">Blind: hide predictions and answers</label>
-        <details class="more"><summary>More about this</summary><p class="hint">Blind hides the field lines, the equipotentials, the potential shading, the 3D landscape and the field map data table. The charges, the grid and the probe stay, so students map the field from probe readings.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Blind hides the field lines, the equipotentials, the potential shading, the 3D landscape, the field map data table and the potential energy readouts. The charges, the grid and the probe stay, so students map the field from probe readings.</p></details>
         </div></details>
       </section>
 
@@ -514,6 +523,18 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     }
     return v * C_V + vb;
   }
+  // Electric potential energy of the point charges (OpenStax Vol 2, 7.1): U = Σ over pairs k q_i q_j / r_ij, in joules. The model
+  // balls are uniformly charged and do not overlap (charges are kept apart), so each pair interacts exactly as two points. The
+  // energy each ball holds within itself does not change as charges move and is left out. Rods, rings and disks are not included:
+  // returns null when any charged body is present.
+  function potentialEnergy(list) {
+    let u = 0;
+    for (let i = 0; i < list.length; i++) {
+      const a = list[i]; if (!a.q) continue; if (a.kind) return null;
+      for (let j = i + 1; j < list.length; j++) { const b = list[j]; if (!b.q || b.kind) continue; u += a.q * b.q / Math.hypot(a.x - b.x, a.y - b.y); }
+    }
+    return u * C_V * 1e-9;   /* nC²·V·cm per nC per cm → J: (q_i in nC)(k q_j / r in V) × 1e-9 */
+  }
   function fieldAt(list, x, y) { // V/m
     let ex = 0, ey = 0, bx = 0, by = 0;
     for (const c of list) {
@@ -536,6 +557,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const snap01 = (v) => nz(Math.round(v * 10) / 10);          // 0.1 cm grid
   const roundV = (v) => nz(Math.abs(v) >= 1000 ? Math.round(v / 10) * 10 : Math.round(v));
   const roundE = (e) => e >= 1e6 ? Math.round(e / 1e4) * 1e4 : e >= 1e5 ? Math.round(e / 1e3) * 1e3 : e >= 1e3 ? Math.round(e / 100) * 100 : Math.round(e);
+  function fmtJ(u) { return u ? minus((u * 1e6).toPrecision(4) + ' μJ') : '0 μJ'; }   /* joules shown in μJ, 4 significant figures */
   function fmtV(v) { const r = roundV(v); return minus(Math.abs(v) >= 1000 ? (r / 1000).toFixed(2) + ' kV' : r + ' V'); }
   function fmtE(e) {
     const r = roundE(e);
@@ -1413,6 +1435,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const anyBody = charges.some((c) => c.kind);
     if (bodyModel.hidden === anyBody) bodyModel.hidden = bodyHint.hidden = !anyBody;
     updateLimits();
+    const U = potentialEnergy(charges);
+    $('rU').innerHTML = blind ? 'hidden in Blind' : U === null ? 'point charges only' : charges.filter((c) => c.q).length >= 2 ? fmtJ(U) : '0 μJ (no pairs)';
+    $('rW').innerHTML = blind ? 'hidden in Blind' : probe && charges.some((c) => c.q) ? fmtJ(1e-9 * potential(probe.x, probe.y)) : '—';
     if (!probe || !charges.some((c) => c.q)) { rV.textContent = rE.textContent = rDir.textContent = rPos.textContent = '—'; return; }
     const [ex, ey] = field(probe.x, probe.y), m = Math.hypot(ex, ey);
     rV.textContent = fmtV(potential(probe.x, probe.y));
@@ -1937,7 +1962,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   charges = PRESETS.dipole();
   setBlind(false); setReduce(reduceMotion, false);
   window.__cs = { get rows() { return rows; }, get configs() { return configs; }, get probe() { return probe; }, get sel() { return sel; }, get view() { return view; },
-    get charges() { return charges; }, get orbit() { return orbit; }, csv: () => readingsCsv(rows, configs), probeReading, potentialAt, fieldAt, bodyAt, bodyLimits };
+    get charges() { return charges; }, get orbit() { return orbit; }, potentialEnergy, csv: () => readingsCsv(rows, configs), probeReading, potentialAt, fieldAt, bodyAt, bodyLimits };
   new ResizeObserver(resize).observe(stage);
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(markBase);

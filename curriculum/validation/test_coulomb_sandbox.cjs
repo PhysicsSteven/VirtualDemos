@@ -184,6 +184,13 @@ test('bodies in the sandbox: superposition with points, map frame, probe reading
  assert(!b.readingsCsv([],[{name:'Dipole',charges:pts}]).includes('model_bodies'));
  assert.notEqual(b.chargeKey([ring]),b.chargeKey([disk]));assert.equal(b.chargeKey(pts),'-3,0,2;3,1,-1');
 });
+test('potential energy: pair sum, work qV to bring a charge in, bodies left out',()=>{
+ const pe=core('coulomb-sandbox','potentialEnergy,potentialAt');
+ close(pe.potentialEnergy([{x:-3,y:0,q:2},{x:3,y:0,q:-2}]),k*2e-9*-2e-9/.06,1e-12,1e-18);
+ const tri=[{x:0,y:0,q:1},{x:4,y:0,q:-2},{x:0,y:3,q:3}];close(pe.potentialEnergy(tri),k*1e-18*(1*-2/.04+1*3/.03+-2*3/.05),1e-12,1e-18);
+ const two=tri.slice(0,2),q3=tri[2];close(pe.potentialEnergy(tri)-pe.potentialEnergy(two),q3.q*1e-9*pe.potentialAt(two,q3.x,q3.y),1e-10,1e-18);
+ assert.equal(pe.potentialEnergy([{x:0,y:0,q:1}]),0);assert.equal(pe.potentialEnergy([{x:0,y:0,q:1,kind:'rod',size:4,ang:0},{x:2,y:2,q:1}]),null);
+});
 if(process.argv.includes('--strict-core')){
  // Independent check at a point inside the core: the field must equal the numerical -dV/dx there.
  c.set([{x:0,y:0,q:1}]);const x=.05,h=1e-5,expected=-(c.potential(x+h,0)-c.potential(x-h,0))/(2*h*.01);
