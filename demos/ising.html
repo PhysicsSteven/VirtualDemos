@@ -864,7 +864,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   let LG = null;
   function latGeom() {
     const [W, H] = dims.lat, ps = labelScale(W, H);
-    const top = 28 * ps, thermW = 70 * ps, hbarH = 54 * ps, pad = 12;
+    const top = 40 * ps, thermW = 70 * ps, hbarH = 58 * ps, pad = 18;
     const side = Math.max(40, Math.floor(Math.min(W - 2 * pad - thermW, H - top - hbarH - 6)));
     const x0 = Math.round(pad + Math.max(0, (W - 2 * pad - thermW - side) / 2));
     const y0 = Math.round(top + Math.max(0, (H - top - hbarH - 6 - side) / 2));
@@ -897,6 +897,72 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctx.font = font.replace(/[\d.]+px/, (fs * 0.75).toFixed(1) + 'px'); ctx.fillText(b, x + w, y + fs * 0.3); ctx.font = font;
   }
   function pill(ctx, x, y, w, h, r) { ctx.beginPath(); if (ctx.roundRect) ctx.roundRect(x, y, w, h, r); else ctx.rect(x, y, w, h); }
+  /* the sample sits inside a field coil: copper windings round the frame, and current arrows whose size and direction follow h
+     (counterclockwise current makes the field point out of the page, the direction of up spins); a picture only */
+  function drawCoil(ctx, x, y, side, ps) {
+    const o = 7 * ps, w = 6 * ps, X0 = x - o - w, Y0 = y - o - w, S2 = side + 2 * (o + w);
+    ctx.save();
+    const cu = ctx.createLinearGradient(X0, Y0, X0 + S2, Y0 + S2); cu.addColorStop(0, '#d79a5a'); cu.addColorStop(0.5, '#b8733a'); cu.addColorStop(1, '#8d5426');
+    ctx.strokeStyle = cu; ctx.lineWidth = w; ctx.strokeRect(X0 + w / 2, Y0 + w / 2, S2 - w, S2 - w);
+    ctx.strokeStyle = 'rgba(60,30,10,0.35)'; ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (let t = 0; t < S2; t += 4 * ps) {
+      ctx.moveTo(X0 + t, Y0); ctx.lineTo(X0 + t + 2 * ps, Y0 + w);
+      ctx.moveTo(X0 + t, Y0 + S2 - w); ctx.lineTo(X0 + t + 2 * ps, Y0 + S2);
+      ctx.moveTo(X0, Y0 + t); ctx.lineTo(X0 + w, Y0 + t + 2 * ps);
+      ctx.moveTo(X0 + S2 - w, Y0 + t); ctx.lineTo(X0 + S2, Y0 + t + 2 * ps);
+    }
+    ctx.stroke();
+    const a = Math.abs(S.h) / H_MAX;
+    if (a > 0.005) {
+      /* counterclockwise on screen for h > 0 */
+      const dir = S.h > 0 ? 1 : -1, len = (7 + 9 * a) * ps, col = S.h > 0 ? T.up : T.down;
+      const mids = [[X0 + S2 / 2, Y0 + w / 2, -dir, 0], [X0 + w / 2, Y0 + S2 / 2, 0, dir], [X0 + S2 / 2, Y0 + S2 - w / 2, dir, 0], [X0 + S2 - w / 2, Y0 + S2 / 2, 0, -dir]];
+      ctx.fillStyle = col; ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.2;
+      for (const [mx, my, ux, uy] of mids) {
+        ctx.beginPath(); ctx.moveTo(mx + ux * len, my + uy * len); ctx.lineTo(mx - ux * len * 0.4 - uy * len * 0.55, my - uy * len * 0.4 + ux * len * 0.55);
+        ctx.lineTo(mx - ux * len * 0.4 + uy * len * 0.55, my - uy * len * 0.4 - ux * len * 0.55); ctx.closePath(); ctx.fill(); ctx.stroke();
+      }
+    }
+    ctx.restore();
+  }
+  /* a magnifier over one corner of the sample: the 7 × 7 spins under it drawn as arrows (up spins amber ↑, down navy ↓) */
+  function drawLoupe(ctx, g, ps) {
+    if (g.ls < 150) return;
+    const L = lat.L, s = lat.s, n = 7, r = Math.min(56 * ps, g.ls * 0.16), cxp = g.lx + g.ls - r - 10 * ps, cyp = g.ly + g.ls - r - 10 * ps;
+    const per = g.ls / L, ci = Math.floor((cxp - g.lx) / per), cj = Math.floor((cyp - g.ly) / per), cell = (2 * r * 0.8) / n;
+    ctx.save();
+    ctx.beginPath(); ctx.arc(cxp, cyp, r, 0, 2 * Math.PI); ctx.fillStyle = T.canvas; ctx.fill(); ctx.clip();
+    ctx.lineWidth = Math.max(1.4, cell * 0.12); ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+    for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) {
+      const x = ((ci + i - 3) % L + L) % L, y = ((cj + j - 3) % L + L) % L, up = s[y * L + x] > 0;
+      const shownUp = S.stagger ? up !== !!((x + y) & 1) : up;
+      const px = cxp + (i - 3) * cell, py = cyp + (j - 3) * cell, c = shownUp ? T.up : T.down, d = up ? -1 : 1, hl = cell * 0.36;
+      ctx.fillStyle = c; ctx.globalAlpha = 0.18; ctx.fillRect(px - cell / 2, py - cell / 2, cell, cell); ctx.globalAlpha = 1;
+      ctx.strokeStyle = c; ctx.beginPath(); ctx.moveTo(px, py - d * hl); ctx.lineTo(px, py + d * hl);
+      ctx.moveTo(px - hl * 0.55, py + d * hl * 0.35); ctx.lineTo(px, py + d * hl); ctx.lineTo(px + hl * 0.55, py + d * hl * 0.35); ctx.stroke();
+    }
+    ctx.restore();
+    ctx.save();
+    ctx.strokeStyle = '#3a4554'; ctx.lineWidth = 4 * ps; ctx.beginPath(); ctx.arc(cxp, cyp, r, 0, 2 * Math.PI); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(cxp, cyp, r - 2.5 * ps, Math.PI * 1.05, Math.PI * 1.6); ctx.stroke();
+    ctx.restore();
+  }
+  /* a magnetometer above the sample reads the magnetization per spin (staggered for the antiferromagnet) */
+  function drawMagnetometer(ctx, g, ps) {
+    const m = S.J > 0 ? lat.M / lat.N : lat.Ms / lat.N, txt = (S.J > 0 ? 'm ' : 'mₛ ') + fmtNum(m, 3);
+    const w = 92 * ps, h = 20 * ps, x = g.lx + g.ls + 3 - w, y = g.ly - 13 * ps - h;
+    ctx.font = `600 ${11 * ps}px ${T.mono}`;
+    const used = g.lx - 3 + ctx.measureText(`${lat.L} × ${lat.L} = ${(lat.N).toLocaleString('en-US')} spins, periodic${S.stagger ? ' · staggered colors' : ''}`).width;
+    if (x < used + 8 * ps) return;
+    ctx.save();
+    ctx.fillStyle = '#081109'; pill(ctx, x, y, w, h, 3); ctx.fill();
+    ctx.font = `600 ${12 * ps}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    ctx.shadowColor = 'rgba(142,240,176,0.55)'; ctx.shadowBlur = 6; ctx.fillStyle = '#8ef0b0'; ctx.fillText(txt, x + w - 6 * ps, y + h / 2 + 1);
+    ctx.restore();
+    ctx.font = `600 ${9.5 * ps}px ${T.ui}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    if (x - 6 * ps - ctx.measureText('magnetometer').width > used + 8 * ps) ctx.fillText('magnetometer', x - 6 * ps, y + h / 2);
+  }
   function drawLattice() {
     const ctx = cx.lat, g = latGeom(), ps = g.ps;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -907,14 +973,17 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const L = lat.L, sideDev = g.side * dpr, per = Math.floor(sideDev / L), dside = per >= 1 && per * L >= 0.85 * sideDev ? per * L : Math.round(sideDev);
     const dx = Math.round(g.x0 * dpr + (sideDev - dside) / 2), dy = Math.round(g.y0 * dpr + (sideDev - dside) / 2);
     g.lx = dx / dpr; g.ly = dy / dpr; g.ls = dside / dpr;
+    drawCoil(ctx, g.lx, g.ly, g.ls, ps);
     ctx.save(); ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = T.frame; ctx.fillRect(dx - 3 * dpr, dy - 3 * dpr, dside + 6 * dpr, dside + 6 * dpr);
     ctx.imageSmoothingEnabled = false; ctx.drawImage(off, dx, dy, dside, dside);
     ctx.restore();
+    drawLoupe(ctx, g, ps);
+    drawMagnetometer(ctx, g, ps);
     // size label and color key above the lattice
     const f = (sz, w) => `${w || 400} ${sz * ps}px ${T.mono}`;
     ctx.font = f(11, 600); ctx.fillStyle = T.muted; ctx.textBaseline = 'alphabetic'; ctx.textAlign = 'left';
-    ctx.fillText(`${L} × ${L} = ${(L * L).toLocaleString('en-US')} spins, periodic${S.stagger ? ' · staggered colors' : ''}`, g.lx - 3, g.ly - 9 * ps);
+    ctx.fillText(`${L} × ${L} = ${(L * L).toLocaleString('en-US')} spins, periodic${S.stagger ? ' · staggered colors' : ''}`, g.lx - 3, g.ly - 19 * ps);
     // thermometer
     const tx = g.tx, tw = g.tw, y0 = g.ty0, y1 = g.ty1;
     const grad = ctx.createLinearGradient(0, y1, 0, y0); grad.addColorStop(0, T.neg); grad.addColorStop(1, T.pos);
