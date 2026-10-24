@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>.rail details.more > p + p { margin-top: 6px; }
 </style>
 <title>Sound Waves and the Speed of Sound</title>
@@ -79,6 +80,10 @@ details.more[open] summary { margin-bottom: 6px; }
   .card.away { opacity: 1; }
   .card .btn, .card .chips button { min-height: 36px; }
 }
+.lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 8px; }
+.lanes label { display: flex; align-items: center; gap: 5px; font-size: 0.78rem; color: var(--muted); min-width: 0; }
+.lanes select { flex: 1; min-width: 0; font: inherit; font-size: 0.8rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 5px; padding: 2px 3px; }
+@media (max-width: 820px) { .lanes select { min-height: 32px; } .stage[data-view="race"] .scene { height: 620px; max-height: 88vh; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -101,11 +106,14 @@ details.more[open] summary { margin-bottom: 6px; }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="scene" id="scene">
-        <canvas id="can" tabindex="0" role="img" aria-label="Sound wave view: a tube of air drawn as dots that swing left and right, with graphs of displacement and pressure along the tube below. Time of flight view: a clap at the left, two microphones on a bench, and the two microphone traces with the timer. Space pauses; in the time of flight view, C claps."></canvas>
+        <canvas id="can" tabindex="0" role="img" aria-label="Sound wave view: a tube of air drawn as dots that swing left and right, with graphs of displacement and pressure along the tube below. Time of flight view: a clap at the left, two microphones on a bench, and the two microphone traces with the timer. Race view: lanes of different materials, all struck at the start at the same instant, with a person for scale; the board lists each lane's speed and arrival time. Space pauses; in the time of flight view, C claps; in the race view, Space strikes."></canvas>
         <div class="viewbar">
-          <div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-v="wave" aria-pressed="true">Sound wave</button><button type="button" data-v="tof" aria-pressed="false">Time of flight</button></div>
+          <div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-v="wave" aria-pressed="true">Sound wave</button><button type="button" data-v="tof" aria-pressed="false">Time of flight</button><button type="button" data-v="race" aria-pressed="false">Race</button></div>
+          <div class="seg" role="group" aria-label="3D or flat" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
+          <div class="seg" role="group" aria-label="Camera" id="camSeg" hidden><button type="button" data-cam="near" aria-pressed="true">At the start</button><button type="button" data-cam="course" aria-pressed="false">Whole course</button></div>
           <button type="button" class="spin" id="play">Pause</button>
           <button type="button" class="spin attn" id="clap" hidden>Clap</button>
+          <button type="button" class="spin attn" id="strike" hidden>Strike</button>
         </div>
         <div class="mic" id="micA" role="slider" tabindex="0" aria-label="Clap to microphone A" aria-valuemin="0.1" aria-valuemax="1" title="Drag microphone A" hidden></div>
         <div class="mic" id="micB" role="slider" tabindex="0" aria-label="Distance between the microphones d" aria-valuemin="0.1" aria-valuemax="3" title="Drag microphone B" hidden></div>
@@ -131,6 +139,23 @@ details.more[open] summary { margin-bottom: 6px; }
           <input type="range" id="sD" min="0.1" max="3" step="0.01">
           <div class="fine"><button type="button" class="btn" id="Dm">d −1 cm</button><button type="button" class="btn" id="Dp">d +1 cm</button></div>
         </div>
+        <div class="raceOnly" hidden>
+          <div class="slider-head"><span>Course length L</span></div>
+          <div class="chips" id="course" role="group" aria-label="Course length L"><button type="button" data-l="100">100 m</button><button type="button" data-l="1000">1 km</button><button type="button" data-l="10000">10 km</button></div>
+        </div>
+        <div class="raceOnly" hidden>
+          <div class="slider-head"><span>Playback</span></div>
+          <div class="chips" id="pace" role="group" aria-label="Playback speed"><button type="button" data-k="1">Real time</button><button type="button" data-k="0.1">10× slower</button><button type="button" data-k="0.01">100× slower</button><button type="button" data-k="0.001">1000× slower</button></div>
+        </div>
+        <div class="raceOnly" hidden>
+          <div class="slider-head"><span>Lanes</span></div>
+          <div class="lanes" id="lanes">
+            <label><span>1</span><select id="lane1" aria-label="Lane 1 material"></select></label><label><span>2</span><select id="lane2" aria-label="Lane 2 material"></select></label>
+            <label><span>3</span><select id="lane3" aria-label="Lane 3 material"></select></label><label><span>4</span><select id="lane4" aria-label="Lane 4 material"></select></label>
+            <label><span>5</span><select id="lane5" aria-label="Lane 5 material"></select></label><label><span>6</span><select id="lane6" aria-label="Lane 6 material"></select></label>
+          </div>
+          <div class="btnrow"><button type="button" class="btn" id="newMystery">New mystery material</button></div>
+        </div>
         <div class="chips" id="gases" role="group" aria-label="Gas">
           <button type="button" data-g="air" aria-pressed="true">Air</button>
           <button type="button" data-g="helium" aria-pressed="false">Helium</button>
@@ -155,6 +180,7 @@ details.more[open] summary { margin-bottom: 6px; }
           <button type="button" data-p="clap" aria-pressed="false">Time a clap, 1.00 m apart</button>
           <button type="button" data-p="cold" aria-pressed="false">A cold day, −10 °C</button>
           <button type="button" data-p="unknown" aria-pressed="false">Unknown gas</button>
+          <button type="button" data-p="race" aria-pressed="false">Race through materials</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
         <details class="more"><summary>More about this</summary>
@@ -246,6 +272,51 @@ details.more[open] summary { margin-bottom: 6px; }
     rows.forEach((r, i) => L.push([i + 1, r.gas, r.T, r.xA, r.d, r.dt, r.samples].map(csvCell).join(',')));
     return L.join('\n') + '\n';
   }
+  /* The race (Race view): a sharp tap on a steel plate starts a pulse in every lane at the same instant, and each pulse runs the
+     course length L at its material's speed of sound, so it arrives at t = L/v. Air, helium and argon use the ideal gas above at
+     the card's temperature; every other speed is a measured value at the conditions given, from these sources:
+       OS  OpenStax University Physics Vol 1, Table 17.1 (gases at 0 °C, liquids at 20 °C)
+       CP  OpenStax College Physics §17.7, table of the ultrasound properties of media (the values the Ultrasound demo uses)
+       ET  The Engineering ToolBox, "Solids and Metals: Speed of Sound", longitudinal (bulk) column
+       EV  Evident (Olympus), "Material Sound Velocities" (longitudinal velocities used in ultrasonic thickness gauging)
+     Solids carry the bulk longitudinal speed, since the tap is short compared with the lane's width. In a thin rod (or for
+     wavelengths longer than the rod is wide) a solid carries sound at √(Y/ρ), which is slower: Table 17.1's 5120 m/s for
+     aluminum is that thin rod speed (ET lists rolled aluminum at 6420 m/s bulk and 5000 m/s in a thin rod). */
+  const LANE_W = 3;   /* m, the width and height of every lane (chosen) */
+  const SOURCES = { model: 'the ideal gas model of this demo, at the temperature on the card', OS: 'OpenStax University Physics Vol 1, Table 17.1',
+    CP: 'OpenStax College Physics §17.7, ultrasound properties of media', ET: 'The Engineering ToolBox, Solids and Metals: Speed of Sound (longitudinal)',
+    EV: 'Evident (Olympus), Material Sound Velocities' };
+  const MATERIALS = [
+    { id: 'air', name: 'Air (dry)', phase: 'gas', gas: 'air', src: 'model' },
+    { id: 'helium', name: 'Helium', phase: 'gas', gas: 'helium', src: 'model' },
+    { id: 'argon', name: 'Argon', phase: 'gas', gas: 'argon', src: 'model' },
+    { id: 'co2', name: 'Carbon dioxide', phase: 'gas', v: 259, cond: '0 °C', src: 'OS' },
+    { id: 'oxygen', name: 'Oxygen', phase: 'gas', v: 316, cond: '0 °C', src: 'OS' },
+    { id: 'hydrogen', name: 'Hydrogen', phase: 'gas', v: 1290, cond: '0 °C', src: 'OS' },
+    { id: 'ethanol', name: 'Ethanol', phase: 'liquid', v: 1160, cond: '20 °C', src: 'OS' },
+    { id: 'mercury', name: 'Mercury', phase: 'liquid', v: 1450, cond: '20 °C', src: 'OS' },
+    { id: 'water', name: 'Fresh water', phase: 'liquid', v: 1480, cond: '20 °C', src: 'OS' },
+    { id: 'seawater', name: 'Sea water', phase: 'liquid', v: 1540, cond: '20 °C', src: 'OS' },
+    { id: 'blood', name: 'Blood', phase: 'liquid', v: 1570, cond: 'in the body', src: 'CP' },
+    { id: 'glycerin', name: 'Glycerin', phase: 'liquid', v: 1920, cond: 'room temperature', src: 'EV' },
+    { id: 'cork', name: 'Cork', phase: 'solid', v: 518, src: 'ET' },
+    { id: 'lead', name: 'Lead (rolled)', phase: 'solid', v: 1960, src: 'ET' },
+    { id: 'gold', name: 'Gold (hard drawn)', phase: 'solid', v: 3240, src: 'ET' },
+    { id: 'concrete', name: 'Concrete', phase: 'solid', v: 3700, src: 'ET' },
+    { id: 'bone', name: 'Bone', phase: 'solid', v: 4080, src: 'CP' },
+    { id: 'brick', name: 'Brick', phase: 'solid', v: 4200, src: 'ET' },
+    { id: 'copper', name: 'Copper (annealed)', phase: 'solid', v: 4760, src: 'ET' },
+    { id: 'pyrex', name: 'Glass (Pyrex)', phase: 'solid', v: 5640, src: 'ET' },
+    { id: 'steel', name: 'Steel (1% carbon)', phase: 'solid', v: 5940, src: 'ET' },
+    { id: 'granite', name: 'Granite', phase: 'solid', v: 5950, src: 'ET' },
+    { id: 'aluminum', name: 'Aluminum (rolled)', phase: 'solid', v: 6420, src: 'ET' },
+    { id: 'beryllium', name: 'Beryllium', phase: 'solid', v: 12900, src: 'EV' },
+    { id: 'diamond', name: 'Diamond', phase: 'solid', v: 18000, src: 'EV' }
+  ];
+  const materialById = (id) => MATERIALS.find((m) => m.id === id) || null;
+  const materialSpeed = (m, tC) => (m.gas ? soundSpeed(GASES[m.gas], tC) : m.v);
+  /* how far the pulse has gone t after the tap: v t, until it reaches the end of the course */
+  const raceFront = (v, t, L) => Math.min(Math.max(0, v * t), L);
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -253,20 +324,23 @@ details.more[open] summary { margin-bottom: 6px; }
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const newUnknown = () => ({ name: 'Unknown gas', gamma: UNKNOWN_GAMMAS[Math.floor(Math.random() * 3)], M: Math.round((UNKNOWN_M[0] + Math.random() * (UNKNOWN_M[1] - UNKNOWN_M[0])) * 1e4) / 1e4 });
   const S = { view: 'wave', gas: 'air', unknown: newUnknown(), tC: 20, f: 500, s: 1.0, xA: 0.5, d: 1.0, blind: false, running: true, t: 0, preset: 'wave', rows: [], series: 0,
-    clap: null, last: null };
+    clap: null, last: null,
+    lanes: ['air', 'helium', 'water', 'concrete', 'steel', 'diamond'], mystery: '', L: 1000, pace: 1, race: { t: 0, run: false, done: false, n: 0 }, dim: '3d', cam: 'near' };
   const PRESETS = {
     wave: { view: 'wave', gas: 'air', tC: 20, f: 500, s: 1.0, hint: 'A 500 Hz tone in air at 20 °C: v = 343.2 m/s, so λ = v/f = 0.686 m and almost three wavelengths fit in the 2 m tube. The displacement is largest where the dots are evenly spaced; the pressure is largest where they bunch up, a quarter wavelength further on.' },
     helium: { view: 'wave', gas: 'helium', tC: 20, f: 500, s: 1.0, hint: 'The same 500 Hz in helium: v = 1007 m/s, so the wavelength is 2.01 m, nearly three times longer. Helium is so light that the same swing of the gas gives only about 40% of the pressure (Δp_max goes as ρv).' },
     clap: { view: 'tof', gas: 'air', tC: 20, xA: 0.5, d: 1.0, hint: 'A clap 0.50 m from microphone A, with B 1.00 m beyond it. The recorder starts timing when the sound reaches A and stops when it reaches B: Δt ≈ d/v = 2.914 ms. Change d, clap again and record each; Δt against d gives a straight line with slope 1/v.' },
     cold: { view: 'tof', gas: 'air', tC: -10, xA: 0.5, d: 1.0, hint: 'The same bench at −10 °C: v = 325.2 m/s, about 18 m/s slower than at 20 °C. Over 1 m that adds 0.16 ms, about 8 samples at 48 kHz: well within what the timer can see.' },
-    unknown: { view: 'tof', gas: 'unknown', tC: 20, xA: 0.5, d: 1.0, hint: 'An unknown gas fills the room: its speed of sound is hidden. Time the clap at several spacings and find v from the slope. New unknown gas picks another.' }
+    unknown: { view: 'tof', gas: 'unknown', tC: 20, xA: 0.5, d: 1.0, hint: 'An unknown gas fills the room: its speed of sound is hidden. Time the clap at several spacings and find v from the slope. New unknown gas picks another.' },
+    race: { view: 'race', gas: 'air', tC: 20, L: 1000, pace: 1, lanes: ['air', 'helium', 'water', 'concrete', 'steel', 'diamond'], hint: 'Six lanes 1 km long, all tapped at the same instant, in real time. The pulse in diamond arrives after 0.0556 s and the one in steel after 0.168 s, when the sound in air has gone only 58 m; air takes 2.91 s. Change the lanes, the course or the playback speed, then strike again. A mystery material hides its name and speed: time it and look it up.' }
   };
   const gasNow = () => (S.gas === 'unknown' ? S.unknown : GASES[S.gas]);
   const hideV = () => S.blind || S.gas === 'unknown';
-  $('modelHint').textContent = `Model: an ideal gas at 101325 Pa, so v = √(γRT/M) and ρ = PM/(RT); dry air has γ = 1.400 and M = 28.96 g/mol, helium and argon γ = 5/3 with M = 4.003 and 39.95 g/mol; an unknown gas has γ = 1.3, 1.4 or 5/3 and M between 4 and 60 g/mol. Humidity and the small departures of real gases from the ideal gas are left out. The wave is a plane harmonic wave of small amplitude, s = s_max cos(kx − ωt) with Δp = ρvω s_max sin(kx − ωt), and no loss. The drawing slows the motion to one cycle every 2 s and exaggerates the displacement (the scale is on the picture). Time of flight: the clap and the microphones are on one line; a two channel recorder samples at ${FS / 1000} kHz (chosen), its clock starts at a random point of a sample at each clap, and each channel triggers on the first sample at or after the sound arrives, so Δt is a whole number of samples (1 sample = 20.83 μs). The drawn pulse (2 kHz, dying away in 0.25 ms, falling off as 1/r) is chosen. Simulated data.`;
+  $('modelHint').textContent = `Model: an ideal gas at 101325 Pa, so v = √(γRT/M) and ρ = PM/(RT); dry air has γ = 1.400 and M = 28.96 g/mol, helium and argon γ = 5/3 with M = 4.003 and 39.95 g/mol; an unknown gas has γ = 1.3, 1.4 or 5/3 and M between 4 and 60 g/mol. Humidity and the small departures of real gases from the ideal gas are left out. The wave is a plane harmonic wave of small amplitude, s = s_max cos(kx − ωt) with Δp = ρvω s_max sin(kx − ωt), and no loss. The drawing slows the motion to one cycle every 2 s and exaggerates the displacement (the scale is on the picture). Time of flight: the clap and the microphones are on one line; a two channel recorder samples at ${FS / 1000} kHz (chosen), its clock starts at a random point of a sample at each clap, and each channel triggers on the first sample at or after the sound arrives, so Δt is a whole number of samples (1 sample = 20.83 μs). The drawn pulse (2 kHz, dying away in 0.25 ms, falling off as 1/r) is chosen. Race: a tap on a steel plate starts a short pulse in every lane at the same instant; each lane is ${LANE_W} m wide and the pulse runs its length L at the material's speed of sound, arriving at t = L/v, with no loss or spreading. Air, helium and argon follow the ideal gas model at the card's temperature; the other speeds are measured values at the stated conditions (they do not follow the temperature on the card): gases at 0 °C and liquids at 20 °C from OpenStax University Physics Vol 1, Table 17.1; blood and bone from OpenStax College Physics §17.7; cork, lead, gold, concrete, brick, copper, Pyrex, steel, granite and aluminum from The Engineering ToolBox (longitudinal waves in bulk); glycerin, beryllium and diamond from Evident (Olympus) Material Sound Velocities. Real samples vary by several percent with composition and temperature; some older tables give diamond 12000 m/s. Solids carry the bulk speed because the pulse is short compared with the lane's width; in a thin rod a solid carries sound at √(Y/ρ), slower (Table 17.1's 5120 m/s for aluminum is that thin rod speed). Solids also carry slower shear waves; only the fastest, longitudinal pulse is shown. The people are 1.75 m tall. Simulated data.`;
 
   function applyPreset(name) { const c = PRESETS[name]; S.preset = name; S.view = c.view; if (c.gas === 'unknown' && S.gas !== 'unknown') S.unknown = newUnknown(); S.gas = c.gas; S.tC = c.tC;
-    if (c.f) { S.f = c.f; S.s = c.s; } if (c.d) { S.xA = c.xA; S.d = c.d; } S.clap = null; S.last = null; upd(); }
+    if (c.f) { S.f = c.f; S.s = c.s; } if (c.d) { S.xA = c.xA; S.d = c.d; } if (c.lanes) { S.lanes = c.lanes.slice(); S.L = c.L; S.pace = c.pace; }
+    S.clap = null; S.last = null; raceReset(); if (S.view === 'race') want3(); upd(); }
   const can = $('can'), ctx = can.getContext('2d'), scene = $('scene'), card = $('card'), GEO = {};
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -285,19 +359,22 @@ details.more[open] summary { margin-bottom: 6px; }
     for (const b of document.querySelectorAll('#gases button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.gas));
     for (const e of document.querySelectorAll('.waveOnly')) e.hidden = S.view !== 'wave';
     for (const e of document.querySelectorAll('.tofOnly')) e.hidden = S.view !== 'tof';
+    for (const e of document.querySelectorAll('.raceOnly')) e.hidden = S.view !== 'race';
+    $('stage').dataset.view = S.view;
     $('micA').hidden = $('micB').hidden = $('clap').hidden = S.view !== 'tof'; $('play').hidden = S.view !== 'wave';
-    $('newUnknown').hidden = S.gas !== 'unknown';
+    $('newUnknown').hidden = S.gas !== 'unknown' || S.view === 'race'; $('gases').hidden = S.view === 'race';
+    syncRace();
     for (const [id, v, txt] of [['micA', S.xA, `${S.xA.toFixed(2)} m from the clap`], ['micB', S.d, `d = ${S.d.toFixed(2)} m`]]) { $(id).setAttribute('aria-valuenow', v.toFixed(2)); $(id).setAttribute('aria-valuetext', txt); }
     $('presetHint').textContent = S.preset ? PRESETS[S.preset].hint : '';
     $('record').disabled = S.view !== 'tof';
     fade();
   }
   /* the card fades while a clap is in flight; in the sound wave view it stays, since f is changed while the wave runs */
-  function fade() { card.classList.toggle('away', !reduce && S.view === 'tof' && !!S.clap); }
-  const changed = () => { S.preset = ''; S.last = null; upd(); };
+  function fade() { card.classList.toggle('away', !reduce && ((S.view === 'tof' && !!S.clap) || (S.view === 'race' && S.race.run))); }
+  const changed = () => { S.preset = ''; S.last = null; if (S.view === 'race') raceReset(); upd(); };
   function upd() { sync(); readouts(); draw(); fit(); }
   $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
-  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b) { S.view = b.dataset.v; S.clap = null; upd(); } });
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b) { S.view = b.dataset.v; S.clap = null; raceReset(); if (S.view === 'race') want3(); upd(); } });
   $('gases').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (!b) return; const was = S.gas; S.gas = b.dataset.g;
     if (was === 'unknown' && S.gas !== 'unknown') capStatus(`The unknown gas had v = ${soundSpeed(S.unknown, S.tC).toFixed(1)} m/s at ${S.tC} °C (γ = ${sig(S.unknown.gamma, 4)}, M = ${(S.unknown.M * 1000).toFixed(1)} g/mol).`);
     changed(); });
@@ -334,7 +411,7 @@ details.more[open] summary { margin-bottom: 6px; }
   function finishClap() { const c = S.clap; S.last = { ...c, t: c.tEnd }; S.clap = null; sync(); readouts(); draw(); }
   $('clap').addEventListener('click', clap);
   can.addEventListener('keydown', (e) => {
-    if (e.key === ' ') { if (S.view === 'wave') $('play').click(); else clap(); }
+    if (e.key === ' ') { if (S.view === 'wave') $('play').click(); else if (S.view === 'race') strike(); else clap(); }
     else if ((e.key === 'c' || e.key === 'C') && S.view === 'tof') clap();
     else return;
     e.preventDefault();
@@ -345,6 +422,7 @@ details.more[open] summary { margin-bottom: 6px; }
     const dd = (a, val, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${val}</dd></div>`;
     let h = dd('Gas', unk ? 'unknown' : g.name) + dd('Temperature', `${S.tC} °C (${kelvin(S.tC).toFixed(2)} K)`);
     h += dd('Speed of sound v = √(γRT/M)', hideV() ? HID : `${Wv.v.toFixed(1)} m/s`) + dd('Density ρ = PM/RT', unk ? HID : `${Wv.rho.toFixed(4)} kg/m³`);
+    if (S.view === 'race') { $('out').innerHTML = raceReadouts(dd, HID); return; }
     if (S.view === 'wave') {
       h += dd('Frequency f', `${S.f} Hz`) + dd('Wavelength λ = v/f', hideV() ? HID : `${Wv.lambda.toFixed(3)} m`);
       h += dd('Displacement amplitude s_max', `${S.s.toFixed(1)} μm`) + dd('Pressure amplitude Δp_max = ρvω s_max', unk ? HID : `${sig(Wv.dpMax, 3)} Pa`);
@@ -537,21 +615,370 @@ details.more[open] summary { margin-bottom: 6px; }
   const SLOWNESS = () => { const c = S.clap || S.last, v = c ? c.v : soundSpeed(gasNow(), S.tC), xB = c ? c.xA + c.d : S.xA + S.d; return (xB + 0.1) / v / 2; };
   function draw() {
     if (!T || !W) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); window.VDGear.backdrop(ctx, W, Hh);
-    if (S.view === 'wave') drawWave(); else drawTof();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (S.view === 'race' && R3.on) { ctx.clearRect(0, 0, W, Hh); drawRace3(); return; }
+    window.VDGear.backdrop(ctx, W, Hh);
+    if (S.view === 'wave') drawWave(); else if (S.view === 'tof') drawTof(); else drawRaceFlat();
   }
 
+  // ---------- the race through materials ----------
+  const Gr = window.VDGear;
+  /* how each material is drawn (pictures only): colour, and for solids roughness, metalness and a surface pattern */
+  const LOOK = {
+    air: { c: '#dce9f3' }, helium: { c: '#f4e6c4' }, argon: { c: '#ddd3f2' }, co2: { c: '#e2e4e6' }, oxygen: { c: '#d3e3fb' }, hydrogen: { c: '#f6dcdc' },
+    ethanol: { c: '#d6ebf3', op: 0.4 }, mercury: { c: '#c3c8cf', op: 1, metal: 0.5, rough: 0.2 }, water: { c: '#3b8fd4', op: 0.55 }, seawater: { c: '#2a7b93', op: 0.62 },
+    blood: { c: '#8c1424', op: 0.86 }, glycerin: { c: '#e9efcf', op: 0.45 },
+    cork: { c: '#b4875a', rough: 0.95, pat: 'grain' }, lead: { c: '#6f757e', rough: 0.55, metal: 0.35 }, gold: { c: '#e0b440', rough: 0.3, metal: 0.5 },
+    concrete: { c: '#a9a59d', rough: 0.95, pat: 'grain' }, bone: { c: '#e9e0c9', rough: 0.7, pat: 'grain' }, brick: { c: '#a4492f', rough: 0.9, pat: 'brick' },
+    copper: { c: '#cf8052', rough: 0.32, metal: 0.5 }, pyrex: { c: '#bfe2e8', op: 0.5, rough: 0.08 }, steel: { c: '#a3adb7', rough: 0.38, metal: 0.45 },
+    granite: { c: '#8d8781', rough: 0.6, pat: 'speckle' }, aluminum: { c: '#d3d9e0', rough: 0.32, metal: 0.45 }, beryllium: { c: '#979ea6', rough: 0.4, metal: 0.4 },
+    diamond: { c: '#e8f7ff', op: 0.55, rough: 0.02, glow: 1 }, mystery: { c: '#7d8592', rough: 0.8, pat: 'mystery' }
+  };
+  const lookOf = (l) => LOOK[l.mystery ? 'mystery' : l.id] || LOOK.mystery;
+  function newMystery() { const pool = MATERIALS.filter((m) => m.id !== S.mystery); return pool[Math.floor(Math.random() * pool.length)].id; }
+  /* the lanes in use, in order: material, speed now, and whether it is the mystery material */
+  function lanesNow() {
+    const out = [];
+    S.lanes.forEach((id, slot) => { if (!id) return; const mystery = id === 'mystery', m = materialById(mystery ? S.mystery : id); if (!m) return;
+      out.push({ slot, id: m.id, m, mystery, name: mystery ? 'Mystery material' : m.name, v: materialSpeed(m, S.tC) }); });
+    return out;
+  }
+  const SRC_SHORT = { model: 'ideal gas model', OS: 'textbook Table 17.1', CP: 'College Physics §17.7', ET: 'Engineering ToolBox', EV: 'Evident' };
+  const raceEnd = () => { const ls = lanesNow(); return ls.length ? Math.max(...ls.map((l) => S.L / l.v)) : 0; };
+  function raceReset() { S.race = { t: 0, run: false, done: false, n: 0 }; }
+  function strike() {
+    if (S.view !== 'race') return;
+    if (!lanesNow().length) { capStatus('Choose a material for at least one lane.'); return; }
+    S.race = { t: 0, run: true, done: false, n: 0, k: 0 };
+    if (reduce) { finishRace(); return; }
+    sync(); readouts(); draw();
+  }
+  function finishRace() { S.race.t = raceEnd(); S.race.run = false; S.race.done = true; S.race.n = lanesNow().length; sync(); readouts(); draw(); }
+  function raceTick(dt) {
+    S.race.t += dt * S.pace;
+    const ls = lanesNow(), n = ls.filter((l) => S.L / l.v <= S.race.t).length;
+    if (S.race.t >= raceEnd()) { finishRace(); return; }
+    if (n !== S.race.n || ++S.race.k % 4 === 0) { S.race.n = n; readouts(); }
+    draw();
+  }
+  $('strike').addEventListener('click', strike);
+  const laneSel = (i) => $('lane' + (i + 1));
+  function initLanes() {
+    const head = { gas: 'Gases', liquid: 'Liquids', solid: 'Solids' };
+    let h = '<option value="">(empty)</option>';
+    for (const ph of ['gas', 'liquid', 'solid']) h += `<optgroup label="${head[ph]}">` + MATERIALS.filter((m) => m.phase === ph).map((m) => `<option value="${m.id}">${m.name}</option>`).join('') + '</optgroup>';
+    h += '<option value="mystery">Mystery material</option>';
+    for (let i = 0; i < 6; i++) { const el = laneSel(i); el.innerHTML = h; el.addEventListener('change', () => { S.lanes[i] = el.value; raceReset(); changed(); }); }
+  }
+  $('course').addEventListener('click', (e) => { const b = e.target.closest('[data-l]'); if (b) { S.L = +b.dataset.l; raceReset(); changed(); } });
+  $('pace').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) { S.pace = +b.dataset.k; S.preset = ''; sync(); readouts(); draw(); } });
+  $('newMystery').addEventListener('click', () => {
+    const was = materialById(S.mystery); S.mystery = newMystery();
+    if (!S.lanes.includes('mystery')) { const k = S.lanes.indexOf(''); S.lanes[k < 0 ? 5 : k] = 'mystery'; }
+    capStatus(`The last mystery material was ${was.name.toLowerCase()}, v = ${Math.round(materialSpeed(was, S.tC))} m/s. A new one is in its lane.`);
+    raceReset(); changed();
+  });
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setDim(b.dataset.dim); });
+  $('camSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-cam]'); if (!b) return; S.cam = b.dataset.cam; Object.assign(R3.o, S.cam === 'near' ? R3.home : R3.homeC); sync(); draw(); });
+  function syncRace() {
+    const race = S.view === 'race', on3 = race && R3.on;
+    $('strike').hidden = $('dimSeg').hidden = !race; $('camSeg').hidden = !on3;
+    $('strike').textContent = S.race.run ? 'Racing…' : S.race.done ? 'Strike again' : 'Strike';
+    for (const b of document.querySelectorAll('#course button')) b.setAttribute('aria-pressed', String(+b.dataset.l === S.L));
+    for (const b of document.querySelectorAll('#pace button')) b.setAttribute('aria-pressed', String(+b.dataset.k === S.pace));
+    for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String(b.dataset.dim === (R3.on ? '3d' : 'flat')));
+    for (const b of document.querySelectorAll('#camSeg button')) b.setAttribute('aria-pressed', String(b.dataset.cam === S.cam));
+    for (let i = 0; i < 6; i++) laneSel(i).value = S.lanes[i] || '';
+    if (g3) g3.el.hidden = !on3;
+    can.style.touchAction = on3 ? 'none' : ''; can.style.cursor = on3 ? 'grab' : '';
+  }
+  const fmtT = (t) => (t < 1 ? `${(t * 1000).toPrecision(4)} ms` : `${t.toPrecision(4)} s`);
+  const fmtL = (L) => (L >= 1000 ? `${L / 1000} km` : `${L} m`);
+  const paceText = () => (S.pace === 1 ? 'real time' : `shown ${Math.round(1 / S.pace)}× slower`);
+  function raceReadouts(dd, HID) {
+    const ls = lanesNow(), R = S.race, air = soundSpeed(GASES.air, S.tC);
+    let h = dd('Course length L', fmtL(S.L)) + dd('Race clock t', `${fmtT(R.t)} <span class="ok">(${paceText()})</span>`) + dd('Temperature (air, helium, argon)', `${S.tC} °C`);
+    for (const l of ls) {
+      const tA = S.L / l.v, arrived = R.t >= tA && (R.run || R.done), hide = S.blind || l.mystery;
+      const src = l.mystery ? '' : ` <span class="ok">${l.m.cond ? l.m.cond + ', ' : ''}${SRC_SHORT[l.m.src]}</span>`;
+      const v = hide ? HID.replace(/hidden[^<]*/, l.mystery ? 'hidden: mystery' : 'hidden in Blind') : `${l.v < 1000 ? l.v.toFixed(1) : Math.round(l.v)} m/s${src}`;
+      const fin = arrived ? `arrived at ${fmtT(tA)}` : hide ? (R.run ? 'on its way' : 'strike to time it') : `L/v = ${fmtT(tA)}`;
+      h += dd(`Lane ${l.slot + 1}: ${l.name}`, `${v}<br><span class="ok">${fin}</span>`, true);
+    }
+    if (!ls.length) h += dd('Lanes', '<span class="ok">Choose a material for at least one lane.</span>', true);
+    else {
+      const first = Math.min(...ls.map((l) => S.L / l.v));
+      h += dd('Sound in air when the first pulse arrives', S.blind ? HID.replace(/hidden[^<]*/, 'hidden in Blind') : `${(air * first).toFixed(1)} m of the ${fmtL(S.L)}`, true);
+    }
+    return h;
+  }
+
+  /* drawing shared by both race views: the race clock at the top left and the board of lanes at the bottom left */
+  const barBottom = () => { const vb = document.querySelector('.viewbar').getBoundingClientRect(); return vb.bottom - scene.getBoundingClientRect().top + 8; };
+  function raceClock(p) {
+    const R = S.race, y = barBottom();
+    Gr.panel(ctx, 10 * p, y, 196 * p, 44 * p, { r: 8 * p });
+    txt(R.t > 0 || R.run ? `t = ${fmtT(R.t)}` : 't = 0', 20 * p, y + 17 * p, { s: 15, b: 1, m: 1 });
+    txt(R.run ? paceText() : R.done ? `all arrived · ${paceText()}` : `press Strike · ${paceText()}`, 20 * p, y + 34 * p, { s: 9.5, c: T.muted });
+  }
+  function boardH(n, p) { return (24 + 17 * Math.max(1, n)) * p; }
+  function raceBoard(ls, p) {
+    const narrow = W < 620, w = Math.min(W - 20 * p, (narrow ? 340 : 430) * p), h = boardH(ls.length, p), x = 10 * p, y = Hh - h - 10 * p, R = S.race;
+    Gr.panel(ctx, x, y, w, h, { r: 8 * p });
+    const cV = x + w * (narrow ? 0.6 : 0.62), cT = x + w - 10 * p;
+    txt('lane', x + 10 * p, y + 12 * p, { s: 9, c: T.muted }); txt('v (m/s)', cV, y + 12 * p, { s: 9, c: T.muted, a: 'right' }); txt('arrives', cT, y + 12 * p, { s: 9, c: T.muted, a: 'right' });
+    if (!ls.length) txt('No lanes: choose materials on the card', x + 10 * p, y + 31 * p, { s: 10.5, c: T.muted });
+    ls.forEach((l, i) => {
+      const yy = y + (29 + i * 17) * p, k = lookOf(l), tA = S.L / l.v, arrived = (R.run || R.done) && R.t >= tA, hide = S.blind || l.mystery;
+      ctx.fillStyle = k.c; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x + 10 * p, yy - 5 * p, 10 * p, 10 * p, 2 * p); ctx.fill(); ctx.stroke();
+      let nm = `${l.slot + 1}  ${l.name}`; ctx.font = `${10.5 * p}px ${T.ui}`; while (nm.length > 6 && ctx.measureText(nm).width > cV - x - 70 * p) nm = nm.slice(0, -2) + '…';
+      txt(nm, x + 26 * p, yy, { s: 10.5, b: arrived ? 1 : 0 });
+      txt(hide ? '?' : l.v < 1000 ? l.v.toFixed(1) : String(Math.round(l.v)), cV, yy, { s: 10.5, m: 1, a: 'right', c: T.muted });
+      txt(arrived ? fmtT(tA) : R.run ? '…' : '—', cT, yy, { s: 10.5, m: 1, b: 1, a: 'right', c: arrived ? T.ink : T.muted });
+    });
+  }
+
+  /* flat view: the lanes stacked one above the other, their lengths to scale, with the pulse in each */
+  function drawRaceFlat() {
+    const p = ps(), ls = lanesNow(), n = ls.length, L = S.L, R = S.race, dk = Gr.dark();
+    const x0 = 22 * p, x1 = W - 22 * p, ppm = (x1 - x0) / L, top = barBottom() + 58 * p, bH = boardH(n, p);
+    const avail = Hh - top - bH - 96 * p, lh = Math.max(14 * p, Math.min(30 * p, avail / Math.max(1, n) - 8 * p)), gap = 8 * p;
+    const started = R.run || R.done, trail = L * 0.04;
+    ls.forEach((l, i) => {
+      const y = top + i * (lh + gap), k = lookOf(l), ph = l.mystery ? 'solid' : l.m.phase;
+      let g = ctx.createLinearGradient(0, y, 0, y + lh);
+      g.addColorStop(0, Gr.mix(k.c, '#ffffff', 0.25)); g.addColorStop(1, Gr.mix(k.c, '#000000', ph === 'gas' ? 0.08 : 0.22));
+      ctx.globalAlpha = ph === 'gas' ? 0.75 : 1; ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(x0, y, x1 - x0, lh, 4 * p); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = dk ? 'rgba(255,255,255,0.18)' : 'rgba(30,40,55,0.25)'; ctx.lineWidth = 1; ctx.stroke();
+      if (started) {
+        const f = raceFront(l.v, R.t, L), xf = x0 + f * ppm, xs = x0 + Math.max(0, f - trail) * ppm;
+        g = ctx.createLinearGradient(xs, 0, xf, 0); g.addColorStop(0, 'rgba(255,170,40,0)'); g.addColorStop(1, 'rgba(255,170,40,0.85)');
+        ctx.fillStyle = g; ctx.fillRect(xs, y, Math.max(0, xf - xs), lh);
+        ctx.fillStyle = '#ffdf8a'; ctx.fillRect(xf - 1.5 * p, y - 2 * p, 3 * p, lh + 4 * p);
+      }
+      const light = ph === 'gas' || ['ethanol', 'glycerin', 'pyrex', 'diamond', 'bone', 'concrete', 'aluminum', 'mercury'].includes(l.mystery ? '' : l.id);
+      txt(`${l.slot + 1}  ${l.name}`, x0 + 8 * p, y + lh / 2, { s: Math.min(11, lh / p * 0.5), b: 1, c: light ? '#1d2733' : '#f4f6f8' });
+    });
+    /* the scale along the course */
+    const ay = top + n * (lh + gap) + 4 * p;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, ay); ctx.lineTo(x1, ay); ctx.stroke();
+    for (let k = 0; k <= 10; k++) { const x = x0 + k * L / 10 * ppm; ctx.beginPath(); ctx.moveTo(x, ay); ctx.lineTo(x, ay + (k % 5 ? 4 : 8) * p); ctx.stroke();
+      if (k % 5 === 0) txt(k ? fmtL(k * L / 10) : '0', x, ay + 16 * p, { a: k === 10 ? 'right' : k ? 'center' : 'left', s: 9.5, m: 1, c: T.muted }); }
+    /* the person, to scale on this drawing, and enlarged beside it */
+    const px = PERSON_H * ppm, cy = ay + 52 * p, cx = x0 + 40 * p, rr = 24 * p;
+    ctx.fillStyle = T.ink; ctx.fillRect(x0 - 0.5, ay - Math.max(0.6, px), 1, Math.max(0.6, px));
+    ctx.strokeStyle = T.muted; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(x0, ay + 2 * p); ctx.lineTo(cx - rr * 0.7, cy - rr * 0.7); ctx.stroke(); ctx.setLineDash([]);
+    Gr.panel(ctx, cx - rr, cy - rr, rr * 2, rr * 2, { r: rr });
+    const sp = rr * 1.5 / LANE_W;   /* enlarged: the lane's 3 m end fills 3/4 of the circle */
+    ctx.fillStyle = ls.length ? lookOf(ls[0]).c : T.grid; ctx.fillRect(cx - 2 * p, cy + rr * 0.75 - LANE_W * sp, LANE_W * sp * 0.6, LANE_W * sp);
+    drawPerson2(cx - 12 * p, cy + rr * 0.75, PERSON_H * sp);
+    const pxs = px < 1 ? px.toFixed(2) : px.toFixed(1);
+    if (W < 620) { txt(`a ${PERSON_H} m person is ${pxs} px tall`, cx + rr + 8 * p, cy - 7 * p, { s: 9.5, c: T.muted }); txt('at this scale (shown enlarged)', cx + rr + 8 * p, cy + 7 * p, { s: 9.5, c: T.muted }); }
+    else txt(`a ${PERSON_H} m person is ${pxs} px tall at this scale (shown enlarged)`, cx + rr + 8 * p, cy, { s: 9.5, c: T.muted });
+    raceClock(p); raceBoard(ls, p);
+  }
+  function drawPerson2(x, yb, h) {
+    ctx.save(); ctx.fillStyle = T.ink; ctx.strokeStyle = T.ink; ctx.lineCap = 'round'; ctx.lineWidth = Math.max(1, h * 0.09);
+    const hy = yb - h * 0.93; ctx.beginPath(); ctx.arc(x, hy, h * 0.07, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(x, hy + h * 0.08); ctx.lineTo(x, yb - h * 0.48); ctx.moveTo(x, yb - h * 0.48); ctx.lineTo(x - h * 0.07, yb); ctx.moveTo(x, yb - h * 0.48); ctx.lineTo(x + h * 0.07, yb);
+    ctx.moveTo(x, hy + h * 0.16); ctx.lineTo(x - h * 0.1, yb - h * 0.5); ctx.moveTo(x, hy + h * 0.16); ctx.lineTo(x + h * 0.1, yb - h * 0.5); ctx.stroke(); ctx.restore();
+  }
+
+  // ---------- the race in 3D (three.js through demos/lib/vd3.js) ----------
+  // Drag to turn the view, wheel or pinch to zoom, double click to reset. The flat view stays (Flat button, or ?view=flat).
+  const R3 = { on: false, ok: false, tried: false, loading: false, key: '', sig: '', w: 0, h: 0, o: { th: -1.95, ph: 1.34, zoom: 1 } };
+  R3.home = { th: -1.95, ph: 1.34, zoom: 1 }; R3.homeC = { th: -2.1, ph: 0.98, zoom: 1 };
+  const NO3D = 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
+  const PERSON_H = 1.75;   /* m, the height of the people drawn for scale (chosen) */
+  const LANE_GAP = 5;      /* m between the centres of neighbouring lanes (chosen) */
+  let g3 = null;
+  function want3() { if (S.dim === '3d' && !R3.on) setDim('3d'); }
+  function setDim(v) {
+    S.dim = v;
+    if (v === '3d' && !R3.ok) {
+      if (R3.tried) { capStatus(NO3D); v = 'flat'; }
+      else { if (!R3.loading) { R3.loading = true; VD3.load((ok) => { R3.loading = false; R3.ok = ok && init3D(); if (!R3.ok) capStatus(NO3D); setDim(R3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    R3.on = v === '3d'; sync(); draw();
+  }
+  function init3D() {
+    R3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); el.hidden = true; scene.insertBefore(el, can);
+    const sc = new THREE.Scene(), cam = new THREE.PerspectiveCamera(38, 1, 0.1, 60000), M = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xe6efff, 0x6d7d55, 0.75), sun = new THREE.DirectionalLight(0xfff3df, 0.95);
+    sun.position.set(-20, -45, 60); sun.target.position.set(6, 6, 0); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+    Object.assign(sun.shadow.camera, { left: -30, right: 30, top: 30, bottom: -30, near: 10, far: 160 }); sun.shadow.radius = 3; sun.shadow.bias = -0.0005;
+    sc.add(hemi, sun, sun.target);
+    // the ground: grass in a canvas texture that repeats every 6 m, out to the horizon
+    const grassCv = document.createElement('canvas'); grassCv.width = grassCv.height = 256;
+    const grassTex = new THREE.CanvasTexture(grassCv); grassTex.wrapS = grassTex.wrapT = THREE.RepeatWrapping; grassTex.anisotropy = r.capabilities.getMaxAnisotropy();
+    const groundM = M({ map: grassTex, roughness: 1, metalness: 0 }), ground = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), groundM); ground.receiveShadow = true; sc.add(ground);
+    const skyCv = document.createElement('canvas'); skyCv.width = 4; skyCv.height = 256; const skyTex = new THREE.CanvasTexture(skyCv); sc.background = skyTex;
+    sc.fog = new THREE.Fog(0xdde8f2, 500, 4000);
+    // the people for scale: one with a sledgehammer at the steel plate, one listening at the finish
+    const striker = person(0x2f5d8a, 0x2b2f36), listener = person(0x8a3b2f, 0x2b2f36); sc.add(striker.g, listener.g);
+    const hammer = new THREE.Group(), steelM = M({ color: 0xa9b2bc, roughness: 0.4, metalness: 0.45 }), woodM = M({ color: 0x9c7348, roughness: 0.8 });
+    steelM.userData.keep = true;   // shared with the lanes' fittings: build3 must not dispose of it
+    const handle = new THREE.Mesh(new THREE.CylinderGeometry(0.018, 0.022, 0.9, 10).rotateX(Math.PI / 2), woodM); handle.position.z = 0.45; handle.castShadow = true;
+    const head = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.1, 0.1), steelM); head.position.z = 0.9; head.castShadow = true; hammer.add(handle, head);
+    striker.g.add(hammer); hammer.position.set(0.32, 0, 1.0);
+    const dyn = new THREE.Group(); sc.add(dyn);
+    g3 = { r, el, sc, cam, hemi, sun, grassCv, grassTex, groundM, ground, skyCv, skyTex, striker, listener, hammer, steelM, dyn, M, lanes: [], tex: {} };
+    can.addEventListener('wheel', (e) => { if (!(S.view === 'race' && R3.on)) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, R3.o, () => { if (!S.race.run) draw(); }, { grab: () => !(S.view === 'race' && R3.on), phMin: 0.35, phMax: 1.5, zMin: 0.25, zMax: 4 });
+    can.addEventListener('pointerup', () => { if (!(S.view === 'race' && R3.on)) can.style.cursor = ''; });
+    return true;
+  }
+  /* a person 1.75 m tall standing at the origin facing +x: legs, body, arms, head (a picture only) */
+  function person(shirt, trousers) {
+    const g = new THREE.Group(), M = (c, r) => new THREE.MeshStandardMaterial({ color: c, roughness: r || 0.8 });
+    const skin = M(0xd6a27c, 0.7), top = M(shirt), legs = M(trousers), shoes = M(0x1d1f23, 0.6);
+    const limb = (a, b, r0, r1, m) => { const d = new THREE.Vector3().subVectors(b, a), c = new THREE.Mesh(new THREE.CylinderGeometry(r1, r0, d.length(), 12), m);
+      c.position.copy(a).addScaledVector(d, 0.5); c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.clone().normalize()); c.castShadow = true; g.add(c); return c; };
+    const V = (x, y, z) => new THREE.Vector3(x, y, z);
+    for (const s of [-1, 1]) { limb(V(0, s * 0.1, 0.06), V(0, s * 0.1, 0.88), 0.06, 0.08, legs); const sh = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.1, 0.07), shoes); sh.position.set(0.05, s * 0.1, 0.035); sh.castShadow = true; g.add(sh); }
+    limb(V(0, 0, 0.86), V(0, 0, 1.44), 0.15, 0.19, top);
+    limb(V(0, 0, 1.44), V(0, 0, 1.52), 0.05, 0.05, skin);
+    const hd = new THREE.Mesh(new THREE.SphereGeometry(0.115, 20, 14), skin); hd.position.set(0, 0, PERSON_H - 0.115); hd.castShadow = true; g.add(hd);
+    const arms = []; for (const s of [-1, 1]) arms.push(limb(V(0, s * 0.21, 1.4), V(0.3, s * 0.06, 1.0), 0.045, 0.055, top));
+    return { g, arms };
+  }
+  function theme3() {
+    const g = g3, d = VD3.dark();
+    let c = g.skyCv.getContext('2d'), gr = c.createLinearGradient(0, 0, 0, 256);
+    const sky0 = d ? '#0a1424' : '#6fa6dc', sky1 = d ? '#1b2c44' : '#d9e8f5';
+    gr.addColorStop(0, sky0); gr.addColorStop(0.5, d ? '#14233a' : '#a9cbec'); gr.addColorStop(1, sky1); c.fillStyle = gr; c.fillRect(0, 0, 4, 256); g.skyTex.needsUpdate = true;
+    g.sc.fog.color = new THREE.Color(sky1);
+    c = g.grassCv.getContext('2d'); c.fillStyle = d ? '#33462b' : '#86ad63'; c.fillRect(0, 0, 256, 256);
+    let seed = 11; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    for (let i = 0; i < 2600; i++) { c.fillStyle = rnd() < 0.5 ? (d ? 'rgba(60,85,50,0.5)' : 'rgba(110,150,80,0.55)') : (d ? 'rgba(20,30,18,0.5)' : 'rgba(90,125,60,0.5)'); c.fillRect(rnd() * 256, rnd() * 256, 2 + rnd() * 3, 1 + rnd() * 2); }
+    g.grassTex.needsUpdate = true;
+    g.hemi.intensity = d ? 0.55 : 0.8; g.sun.intensity = d ? 0.45 : 0.95; g.hemi.color = new THREE.Color(d ? 0x9fb4d8 : 0xe6efff);
+    R3.sig = '';   // rebuild the lanes, whose glass and liquids are lit differently
+  }
+  /* a canvas texture for a solid's surface, one cell 3 m long, repeated along the lane */
+  function patTex(kind, base) {
+    const key = kind + base; if (g3.tex[key]) return g3.tex[key];
+    const cv = document.createElement('canvas'); cv.width = cv.height = 128; const c = cv.getContext('2d'); c.fillStyle = base; c.fillRect(0, 0, 128, 128);
+    let seed = 5; const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    if (kind === 'brick') { c.fillStyle = 'rgba(230,220,205,0.75)'; for (let r = 0; r < 8; r++) { c.fillRect(0, r * 16, 128, 2); for (let k = 0; k < 3; k++) c.fillRect(((k * 48 + (r % 2) * 24) % 128), r * 16, 2, 16); } }
+    else if (kind === 'mystery') { c.fillStyle = 'rgba(255,255,255,0.25)'; c.font = '700 54px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('?', 64, 66); c.strokeStyle = 'rgba(0,0,0,0.2)'; c.lineWidth = 4; c.strokeRect(2, 2, 124, 124); }
+    else { const n = kind === 'speckle' ? 1600 : 900; for (let i = 0; i < n; i++) { const q = rnd(); c.fillStyle = kind === 'speckle' ? (q < 0.4 ? 'rgba(30,25,25,0.55)' : q < 0.8 ? 'rgba(230,220,215,0.55)' : 'rgba(150,90,80,0.5)') : (q < 0.5 ? 'rgba(0,0,0,0.12)' : 'rgba(255,255,255,0.14)'); c.fillRect(rnd() * 128, rnd() * 128, 1 + rnd() * 2.5, 1 + rnd() * 2.5); } }
+    const t = new THREE.CanvasTexture(cv); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.anisotropy = g3.r.capabilities.getMaxAnisotropy(); g3.tex[key] = t; return t;
+  }
+  /* (re)builds the lanes, the plate, the marks every tenth of the course and the finish for these lanes and this course */
+  function build3() {
+    const g = g3, M = g.M, ls = lanesNow(), L = S.L, n = Math.max(1, ls.length), yMax = (n - 1) * LANE_GAP, d = VD3.dark();
+    g.dyn.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material && !o.material.userData.keep) [].concat(o.material).forEach((m) => m.dispose()); });
+    g.dyn.clear(); g.lanes = [];
+    const span = yMax + LANE_W + 2, ext = Math.max(4000, 3 * L);
+    g.ground.scale.set(L + 2 * ext, span + 2 * ext, 1); g.ground.position.set(L / 2, yMax / 2, 0); g.grassTex.repeat.set((L + 2 * ext) / 6, (span + 2 * ext) / 6);
+    const add = (geo, mat, x, y, z, cast) => { const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z); m.castShadow = !!cast; m.receiveShadow = true; g.dyn.add(m); return m; };
+    // a gravel strip under the lanes, so they sit on a prepared bed
+    add(new THREE.PlaneGeometry(L + 6, span + 4), M({ color: d ? 0x3a3a36 : 0xb9b2a2, roughness: 1 }), L / 2, yMax / 2, 0.01);
+    const glowCol = new THREE.Color(0xffa62b);
+    ls.forEach((l, i) => {
+      const y = i * LANE_GAP, k = lookOf(l), ph = l.mystery ? 'solid' : l.m.phase, col = new THREE.Color(k.c), H = LANE_W;
+      if (ph === 'gas') {
+        // a glass tube 3 m across, filled with the gas, on low saddles every tenth of the course
+        const tube = new THREE.CylinderGeometry(H / 2, H / 2, L, 48, 1, true); tube.rotateZ(Math.PI / 2);
+        add(tube, M({ color: col, transparent: true, opacity: d ? 0.28 : 0.32, roughness: 0.08, metalness: 0.1, side: THREE.DoubleSide, depthWrite: false }), L / 2, y, H / 2 + 0.15);
+        const ringG = new THREE.TorusGeometry(H / 2 + 0.03, 0.05, 8, 40); ringG.rotateY(Math.PI / 2);
+        for (let q = 0; q <= 10; q++) { add(ringG, g.steelM, q * L / 10, y, H / 2 + 0.15, true); add(new THREE.BoxGeometry(0.3, H * 0.8, 0.3), g.steelM, q * L / 10, y, 0.15, true); }
+      } else if (ph === 'liquid') {
+        // a glass trough with the liquid in it
+        add(new THREE.BoxGeometry(L, H, H * 0.9), M({ color: col, transparent: k.op < 1, opacity: k.op, roughness: k.rough == null ? 0.1 : k.rough, metalness: k.metal || 0, depthWrite: k.op >= 1 }), L / 2, y, H * 0.45, k.op >= 1);
+        const glass = M({ color: 0xdfeff5, transparent: true, opacity: 0.22, roughness: 0.05, depthWrite: false });
+        for (const s of [-1, 1]) add(new THREE.BoxGeometry(L, 0.06, H), glass, L / 2, y + s * (H / 2 + 0.03), H / 2);
+        add(new THREE.BoxGeometry(L, H + 0.12, 0.08), g.steelM, L / 2, y, 0.04);
+      } else {
+        const mat = M({ color: k.pat ? 0xffffff : col, roughness: k.rough == null ? 0.6 : k.rough, metalness: k.metal || 0, transparent: !!k.op, opacity: k.op || 1, depthWrite: !k.op });
+        if (k.pat) { const t = patTex(k.pat, k.c).clone(); t.needsUpdate = true; t.repeat.set(L / H, 1); mat.map = t; }
+        if (k.glow) mat.emissive = new THREE.Color(0x335566);
+        add(new THREE.BoxGeometry(L, H, H), mat, L / 2, y, H / 2, !k.op);
+      }
+      // the pulse: a bright front and a fading glow behind it
+      const wakeM = new THREE.MeshBasicMaterial({ color: glowCol, transparent: true, opacity: 0.16, depthWrite: false, blending: THREE.AdditiveBlending });
+      const frontM = new THREE.MeshBasicMaterial({ color: 0xffe2a0, transparent: true, opacity: 0.95, depthWrite: false, blending: THREE.AdditiveBlending });
+      const box = new THREE.BoxGeometry(1, H + 0.35, H + 0.35); box.translate(0.5, 0, 0);
+      const wake = add(box, wakeM, 0, y, H / 2), front = add(box.clone(), frontM, 0, y, H / 2); wake.receiveShadow = front.receiveShadow = false;
+      g.lanes.push({ wake, front, y });
+    });
+    // the steel plate the hammer strikes, across the start of every lane, and the finish gantry
+    add(new THREE.BoxGeometry(0.25, span, LANE_W + 0.6), g.steelM, -0.125, yMax / 2, (LANE_W + 0.6) / 2, true);
+    const postM = M({ color: d ? 0xd0d4da : 0xf2f3f5, roughness: 0.5 });
+    for (const yy of [-LANE_W / 2 - 1.5, yMax + LANE_W / 2 + 1.5]) add(new THREE.BoxGeometry(0.4, 0.4, 7), postM, L, yy, 3.5, true);
+    const flagCv = document.createElement('canvas'); flagCv.width = 256; flagCv.height = 32; const fc = flagCv.getContext('2d');
+    for (let a = 0; a < 32; a++) for (let b = 0; b < 4; b++) { fc.fillStyle = (a + b) % 2 ? '#111' : '#f5f5f5'; fc.fillRect(a * 8, b * 8, 8, 8); }
+    const flagT = new THREE.CanvasTexture(flagCv);
+    add(new THREE.BoxGeometry(0.3, span + 3.4, 1.0), M({ map: flagT, roughness: 0.7 }), L, yMax / 2, 6.6, true);
+    // a white line across the course every tenth of L, and a marker post beside lane 1
+    const lineM = M({ color: 0xf4f4f0, roughness: 0.9 }), tw = Math.max(0.25, L / 4000);
+    for (let q = 1; q < 10; q++) { add(new THREE.BoxGeometry(tw, span + 4, 0.03), lineM, q * L / 10, yMax / 2, 0.02); add(new THREE.BoxGeometry(0.2, 0.2, 2.2), postM, q * L / 10, -LANE_W / 2 - 2.5, 1.1, true); }
+    g.striker.g.position.set(-1.2, 0, 0); g.listener.g.position.set(L + 2, -LANE_W / 2 - 3.5, 0); g.listener.g.rotation.z = Math.PI;
+  }
+  /* draws the 3D scene; returns a function from a point in metres to overlay pixels [x, y, in front] */
+  function render3() {
+    const g = g3, ls = lanesNow(), L = S.L, R = S.race, n = Math.max(1, ls.length), yMax = (n - 1) * LANE_GAP;
+    if (R3.w !== W || R3.h !== Hh) { R3.w = W; R3.h = Hh; g.r.setSize(W, Math.max(1, Hh)); g.cam.aspect = W / Math.max(1, Hh); g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.ink, VD3.dark()].join(); if (R3.key !== key) { R3.key = key; theme3(); }
+    const sigNow = [ls.map((l) => (l.mystery ? 'm' + l.id : l.id)).join(), L].join('|'); if (R3.sig !== sigNow) { R3.sig = sigNow; build3(); }
+    const near = S.cam === 'near', tgt = near ? new THREE.Vector3(10, yMax / 2 + 2, 1.4) : new THREE.Vector3(L / 2, yMax / 2, 0), rr = (near ? 34 + yMax * 0.5 : 0.85 * L + 60) * Math.max(1, 1.3 / g.cam.aspect);
+    VD3.place(g.cam, R3.o, tgt, rr);
+    const dist = rr / R3.o.zoom; g.cam.near = Math.max(0.05, Math.min(dist / 300, 5)); g.cam.far = Math.max(8000, 5 * L + dist * 2); g.cam.updateProjectionMatrix();
+    g.sc.fog.near = Math.max(400, 1.2 * L, dist * 1.5); g.sc.fog.far = Math.max(5000, 6 * L, dist * 6);
+    const started = R.run || R.done, trail = Math.min(L * 0.02, 60);
+    ls.forEach((l, i) => {
+      const o = g.lanes[i]; if (!o) return; const f = raceFront(l.v, R.t, L), on = started && f > 0;
+      o.wake.visible = o.front.visible = on; if (!on) return;
+      const a = Math.max(0, f - trail); o.wake.position.x = a; o.wake.scale.x = Math.max(0.01, f - a);
+      const th = Math.max(0.3, dist / 400); o.front.position.x = Math.max(0, f - th); o.front.scale.x = Math.min(f, th);
+    });
+    // the hammer: raised before the strike, on the plate once it has struck
+    g.hammer.rotation.y = started ? 0.62 : -0.5;
+    g.r.render(g.sc, g.cam);
+    const tmp = new THREE.Vector3();
+    return (x, y, z) => { tmp.set(x, y, z).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * Hh, tmp.z < 1 && tmp.z > -1]; };
+  }
+  /* labels drawn over the 3D view: lane names at the start, the fronts, the distances, the people, the clock and the board */
+  function drawRace3() {
+    const P = render3(); if (!P) return;
+    const p = ps(), ls = lanesNow(), L = S.L, R = S.race, n = Math.max(1, ls.length), started = R.run || R.done;
+    const tag = (s, x, y, o = {}) => { ctx.font = `${o.b ? '700 ' : ''}${(o.s || 10) * p}px ${T.ui}`; const w = ctx.measureText(s).width + 10 * p, h = 16 * p;
+      ctx.fillStyle = o.bg || (Gr.dark() ? 'rgba(15,21,29,0.78)' : 'rgba(255,255,255,0.82)'); ctx.beginPath(); ctx.roundRect(x - (o.a === 'left' ? 0 : w / 2), y - h / 2, w, h, 4 * p); ctx.fill();
+      txt(s, x - (o.a === 'left' ? -5 * p : 0), y, { a: o.a === 'left' ? 'left' : 'center', s: o.s || 10, b: o.b, c: o.c }); };
+    /* distances along the course beside lane 1, skipping any that would crowd the one before */
+    let lastX = -1e9, lastY = -1e9;
+    for (let q = 1; q <= 10; q++) { const [x, y, ok] = P(q * L / 10, -LANE_W / 2 - 2.5, 2.5); if (!ok || x < 0 || x > W || y < 0 || y > Hh) continue;
+      if (Math.hypot(x - lastX, y - lastY) < 46 * p) continue; lastX = x; lastY = y; tag(q === 10 ? `finish, ${fmtL(L)}` : fmtL(q * L / 10), x, y, { s: 9, b: q === 10 }); }
+    /* lane names at the start */
+    ls.forEach((l, i) => { const [x, y, ok] = P(-0.5, i * LANE_GAP, LANE_W + 1.1); if (ok && x > -40 && x < W + 40) tag(`${l.slot + 1} ${l.name}`, x, y, { s: 9.5, b: 1 }); });
+    /* the fronts: a marker above each pulse, with its lane number */
+    if (started) ls.forEach((l, i) => { const f = raceFront(l.v, R.t, L), [x, y, ok] = P(f, i * LANE_GAP, LANE_W + 0.6); if (!ok || x < 0 || x > W || y < 0 || y > Hh) return;
+      ctx.fillStyle = '#ffb02e'; ctx.beginPath(); ctx.arc(x, y - 8 * p, 7 * p, 0, 7); ctx.fill(); txt(String(l.slot + 1), x, y - 8 * p, { a: 'center', s: 9, b: 1, c: '#2a1a00' }); });
+    /* the people */
+    const [sx, sy, sok] = P(-1.2, 0, PERSON_H + 0.35); if (sok && sx > 0 && sx < W) tag(`${PERSON_H} m tall`, sx, sy - 6 * p, { s: 9 });
+    const [lx, ly, lok] = P(L + 2, -LANE_W / 2 - 3.5, PERSON_H + 0.35); if (lok && lx > 0 && lx < W && S.cam === 'course') tag('listener', lx, ly - 26 * p, { s: 9 });
+    raceClock(p); raceBoard(ls, p);
+    if (W >= 620) Gr.label(ctx, 'drag to turn · scroll or pinch to zoom · double click to reset', W - 12 * p, Hh - 12 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
+  }
   function tick(dt) {
     if (S.view === 'wave') { if (S.running && !reduce) { S.t += dt; draw(); } }
-    else if (S.clap) { S.clap.t += dt * SLOWNESS(); if (S.clap.t >= S.clap.tEnd) finishClap(); else draw(); }
+    else if (S.view === 'tof') { if (S.clap) { S.clap.t += dt * SLOWNESS(); if (S.clap.t >= S.clap.tEnd) finishClap(); else draw(); } }
+    else if (S.race.run) raceTick(dt);
   }
   function resize() { dpr = window.devicePixelRatio || 1; const rc = scene.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); fit(); }
   const retheme = () => { tokens(); draw(); fit(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
-  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce && S.clap) finishClap(); fade(); draw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce && S.clap) finishClap(); if (reduce && S.race.run) finishRace(); fade(); draw(); });
   tokens(); new ResizeObserver(resize).observe(scene); new ResizeObserver(() => draw()).observe(card);
+  /* the Race view opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
+  if (new URLSearchParams(location.search).get('view') === 'flat' || !window.VD3 || VD3.lowPower()) S.dim = 'flat';
+  S.mystery = newMystery(); initLanes();
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'wave'); renderRows(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;

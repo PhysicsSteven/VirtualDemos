@@ -3,7 +3,7 @@
 // microphones with a 48 kHz recorder (OpenStax Vol 1 §17.1, §17.2).
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('sound-waves', 'R_GAS,T0K,P_ATM,GASES,FS,soundSpeed,gasDensity,wave,displacement,pressure,timerReading,clapSignal,fitLine,readingsCSV');
+const c = core('sound-waves', 'R_GAS,T0K,P_ATM,GASES,FS,soundSpeed,gasDensity,wave,displacement,pressure,timerReading,clapSignal,fitLine,readingsCSV,LANE_W,SOURCES,MATERIALS,materialById,materialSpeed,raceFront');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -49,5 +49,26 @@ group('fit of Δt against d gives back v; CSV columns', () => {
   near(1000 / F.b, v, 3e-3); assert(Math.abs(F.a) < 0.03);
   const csv = c.readingsCSV([{ gas: 'Air (dry)', T: '20', xA: '0.50', d: '1.00', dt: '2.9167', samples: '140' }], { version: 'x' }).split('\n');
   assert(csv.includes('row,gas,T_C,xA_m,d_m,dt_ms,samples') && csv.includes('1,Air (dry),20,0.50,1.00,2.9167,140'));
+});
+group('race: every material has a cited speed, the textbook values are kept, t = L/v', () => {
+  const ids = new Set(); const OS = { co2: 259, oxygen: 316, hydrogen: 1290, ethanol: 1160, mercury: 1450, water: 1480, seawater: 1540 };
+  for (const m of c.MATERIALS) {
+    assert(!ids.has(m.id), 'duplicate ' + m.id); ids.add(m.id); assert(c.SOURCES[m.src], 'source for ' + m.id); assert(['gas', 'liquid', 'solid'].includes(m.phase));
+    const v = c.materialSpeed(m, 20); assert(v > 200 && v < 20000, m.id);
+    if (m.gas) assert.strictEqual(m.src, 'model'); else assert(Number.isInteger(m.v) && m.v > 0);
+    if (OS[m.id]) { assert.strictEqual(m.v, OS[m.id], m.id); assert.strictEqual(m.src, 'OS'); }
+  }
+  assert.strictEqual(c.MATERIALS.length, 25);
+  /* gases in the model follow the temperature; measured values do not */
+  near(c.materialSpeed(c.materialById('air'), 20), 343.23, 1e-4); near(c.materialSpeed(c.materialById('air'), -10), 325.2, 1e-4);
+  assert.strictEqual(c.materialSpeed(c.materialById('steel'), -10), c.materialSpeed(c.materialById('steel'), 40));
+  /* bulk values: steel 5940, aluminum 6420 (not Table 17.1's thin rod 5120), bone and blood as in the Ultrasound demo */
+  assert.strictEqual(c.materialById('steel').v, 5940); assert.strictEqual(c.materialById('aluminum').v, 6420);
+  assert.strictEqual(c.materialById('bone').v, 4080); assert.strictEqual(c.materialById('blood').v, 1570);
+  /* the front moves at v and stops at the end of the course */
+  const v = c.materialById('diamond').v, L = 1000; near(c.raceFront(v, 0.02, L), 360, 1e-12); assert.strictEqual(c.raceFront(v, L / v + 0.1, L), L); assert.strictEqual(c.raceFront(v, -1, L), 0);
+  /* the preset's numbers: steel over 1 km in 0.168 s, when air has gone 58 m; air takes 2.91 s, diamond 0.0556 s */
+  const air = c.materialSpeed(c.materialById('air'), 20), tS = L / 5940; near(tS, 0.16835, 1e-4); near(air * tS, 57.8, 2e-3); near(L / air, 2.9135, 1e-4); near(L / v, 0.05556, 1e-3);
+  assert.strictEqual(c.LANE_W, 3);
 });
 console.log(`${n} groups passed`);
