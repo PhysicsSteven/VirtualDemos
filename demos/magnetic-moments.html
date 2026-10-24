@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>Atoms in a Magnetic Field</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -64,6 +66,7 @@
           <button type="button" data-v="sg" aria-pressed="false">Stern–Gerlach</button>
           <button type="button" data-v="zee" aria-pressed="false">Zeeman effect</button>
         </div>
+        <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <button type="button" class="spin attn" id="go">Start</button>
         <button type="button" class="btn" id="restart">Clear the screen</button>
         <span class="count mono" id="clock"></span>
@@ -342,6 +345,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const sgHalf = () => { const c = spotCentres(), zmax = c.band != null ? c.band : Math.max(0, ...c.list.map((q) => Math.abs(q.z))); return Math.max(0.08e-3, zmax * 1.6 + SG_SLIT); };
   function drawSg() {
+    if (use3()) { drawSg3(); return; }
     const p = proj(), s = S.sg, a = ATOMS[atomKey()], c = spotCentres();
     backdrop();
     const y0 = Hh * 0.5, xO = W * 0.06, xS1 = W * 0.2, xS2 = W * 0.28, xM0 = W * 0.36, Lpx = W * 0.22, xM1 = xM0 + Lpx, xScr = Math.min(W * 0.93, xM1 + Lpx * (0.1 + s.L2 / 3.5 * 0.45));
@@ -370,6 +374,94 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else for (const q of c.list) path(q.z, T.atom, 0.85);
     lbl(`sideways scale: ${f(70 * p / zpx * 1000, 3)} mm per ${f(70 * p, 0)} px (stretched; along the beam to scale only roughly)`, W * 0.5, Hh - 18 * p, { a: 'center', s: 10 * p });
     lbl(a.imagined ? a.name : S.sg.atom === 'mystery' ? 'mystery atoms, ground level unknown' : `${a.name.split(',')[0].toLowerCase()} atoms, ground level ${a.term}`, W * 0.5, 22 * p, { a: 'center', s: 11.5 * p, w: 700, c: T.ink });
+  }
+  // ---------- the Stern–Gerlach bench in 3D (three.js through lib/vd3.js and lib/vd3kit.js); Flat keeps the side view (or ?view=flat) ----------
+  /* Along the beam to scale (magnet 3.50 cm, the drift as set); across it stretched, as in the flat view, so the split shows:
+     the screen's half height sgHalf() is drawn 12 mm, and the 0.80 mm ribbon 20 mm. The deposit on the glass is the same
+     atoms as the screen face below, so the plate shows the split that the chart counts. */
+  const G3 = { o: { th: -Math.PI / 2 + 0.75, ph: 1.2, zoom: 1 }, key: '', n: 0 };
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d() && S.view === 'sg');
+  const ZB3 = 0.05, HZ = 0.012, HX = 0.01;   /* beam height; drawn half height of the screen window and half length of the ribbon (m) */
+  function init3D() {
+    const S3 = VD3K.stage($('pane'), { before: can, shadow: 0.2, fov: 30, fogAt: [1.8, 3.4] }); if (!S3) return false;
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
+    sc.add(VD3K.bench(S3, { w: 1.6, d: 1.2, y: 0.15 }), VD3K.backdrop(S3, { r: 0.7, h: 0.6, y: -0.25 }));
+    const steel = M({ roughness: 0.4, metalness: 0.4 }, ['#b9c0c8', '#77808a']), dark3 = M({ roughness: 0.5, metalness: 0.2 }, ['#6a7583', '#4b5460']);
+    /* the vacuum tube's rail */
+    const rail = VD3K.box(1, 0.03, 0.006, steel, 0, 0, 0); sc.add(rail);
+    /* the oven: a box with a glowing mouth */
+    const oven = VD3K.box(0.024, 0.028, 0.03, dark3, -0.07, 0, ZB3 - 0.015); sc.add(oven, VD3K.rod([-0.07, 0, 0.006], [-0.07, 0, ZB3 - 0.015], 0.003, steel));
+    const mouthM = new THREE.MeshBasicMaterial({ color: 0xff8030 }), mouth = mesh(new THREE.PlaneGeometry(0.012, 0.016), mouthM); mouth.rotation.y = Math.PI / 2; mouth.position.set(-0.0579, 0, ZB3); sc.add(mouth);
+    /* two slits */
+    const slitM = M({ roughness: 0.5, metalness: 0.4 }, ['#59636f', '#8b95a3']);
+    for (const x of [-0.045, -0.025]) { sc.add(VD3K.box(0.0015, 0.022, 0.014, slitM, x, 0, ZB3 + 0.0008), VD3K.box(0.0015, 0.022, 0.014, slitM, x, 0, ZB3 - 0.0148), VD3K.rod([x, 0.012, 0.006], [x, 0.012, ZB3 - 0.015], 0.0015, steel)); }
+    /* the magnet: a knife edge north pole above, a grooved south pole below, on an iron yoke behind */
+    const nM = M({ roughness: 0.45, metalness: 0.3 }, ['#b23a2e', '#c0473a']), sM = M({ roughness: 0.45, metalness: 0.3 }, ['#3a5fae', '#4a6fbe']), yokeM = M({ roughness: 0.6, metalness: 0.5 }, ['#6b737c', '#4d545c']);
+    const L1 = SG_L1;
+    const knife = new THREE.Shape(); knife.moveTo(-0.012, 0.016); knife.lineTo(0.012, 0.016); knife.lineTo(0.0012, 0.0016); knife.lineTo(-0.0012, 0.0016); knife.closePath();
+    const nPole = mesh(new THREE.ExtrudeGeometry(knife, { depth: L1, bevelEnabled: false }), nM, true); nPole.rotation.y = Math.PI / 2; nPole.rotation.order = 'YXZ'; nPole.rotation.x = 0;
+    const groove = new THREE.Shape(); groove.moveTo(-0.012, -0.016); groove.lineTo(0.012, -0.016); groove.lineTo(0.012, -0.0016); groove.lineTo(0.004, -0.0016); groove.lineTo(0.0025, -0.0045); groove.lineTo(-0.0025, -0.0045); groove.lineTo(-0.004, -0.0016); groove.lineTo(-0.012, -0.0016); groove.closePath();
+    const sPole = mesh(new THREE.ExtrudeGeometry(groove, { depth: L1, bevelEnabled: false }), sM, true);
+    /* the shapes are drawn in (y, z) of the cross section: turn them so the extrusion runs along x */
+    for (const p of [nPole, sPole]) { p.geometry.rotateY(Math.PI / 2); p.geometry.rotateX(Math.PI / 2); p.geometry.rotateX(0); p.position.set(0, 0, ZB3); p.geometry.computeVertexNormals(); }
+    nPole.rotation.set(0, 0, 0); sPole.rotation.set(0, 0, 0);
+    sc.add(nPole, sPole);
+    sc.add(VD3K.box(L1, 0.008, 0.044, yokeM, L1 / 2, 0.016, ZB3 - 0.022));
+    sc.add(VD3K.rod([L1 / 2, 0.022, 0.006], [L1 / 2, 0.022, ZB3 - 0.025], 0.004, steel));
+    /* the glass screen, its face a canvas with the deposit */
+    const cv = document.createElement('canvas'); cv.width = 512; cv.height = 512; const tex = new THREE.CanvasTexture(cv);
+    const plate = new THREE.Group(), glassM = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.15, metalness: 0, transparent: true, opacity: 0.92, side: THREE.DoubleSide });
+    const face = mesh(new THREE.PlaneGeometry(0.03, 0.03), glassM); face.rotation.set(Math.PI / 2, -Math.PI / 2, 0, 'YXZ'); face.position.x = -0.0002; plate.add(face);
+    const edge = mesh(new THREE.BoxGeometry(0.0012, 0.031, 0.031), M({ roughness: 0.1, transparent: true, opacity: 0.4 }, ['#c5d4df', '#9fb3c4'])); edge.position.x = 0.0007; plate.add(edge);
+    const clamp = VD3K.rod([0.003, 0, -0.016], [0.003, 0, -ZB3 + 0.006], 0.0015, steel); plate.add(clamp);
+    plate.position.z = ZB3; sc.add(plate);
+    /* the beam: one thin sheet per spot, or a fan for classical magnets */
+    const beamM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.4, side: THREE.DoubleSide, depthWrite: false });
+    const sheets = new THREE.Group(); sc.add(sheets);
+    g3 = { S3, rail, mouthM, plate, cv, tex, beamM, sheets, key: '' };
+    VD3.orbit(can, G3.o, () => { if (use3()) redraw(); }, { grab: () => !use3(), phMin: 0.35, phMax: 1.45, zMin: 0.6, zMax: 3 });
+    can.style.touchAction = ''; can.style.cursor = '';
+    return true;
+  }
+  function sheet(zEnd, xScr, zs) {
+    const n = 24, pos = [], idx = [], s = S.sg, zM = zEnd * (SG_L1 / 2) / (SG_L1 / 2 + s.L2 / 100);
+    const pts = [[-0.058, 0]]; pts.push([0, 0]); for (let i = 1; i <= n; i++) { const t = i / n; pts.push([SG_L1 * t, zM * t * t]); } pts.push([xScr, zEnd]);
+    pts.forEach(([x, z], i) => { const hw = i === 0 ? 0.004 : HX; pos.push(x, -hw, ZB3 + z * zs, x, hw, ZB3 + z * zs); if (i) { const a = 2 * i - 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } });
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setIndex(idx); return new THREE.Mesh(g, g3.beamM);
+  }
+  function drawSg3() {
+    const g = g3, S3 = g.S3, s = S.sg, a = ATOMS[atomKey()], c = spotCentres(), p = proj();
+    S3.size(W, Hh);
+    const xScr = SG_L1 + s.L2 / 100, asp = W / Math.max(1, Hh), dist = 0.2 * Math.max(1, 1.5 / asp) + 0.6 * s.L2 / 100;
+    S3.place(G3.o, [0.012 + 0.6 * s.L2 / 100, 0, ZB3 - 0.004], dist);
+    g.plate.position.x = xScr; g.rail.scale.x = xScr + 0.095; g.rail.position.x = (xScr - 0.085) / 2;
+    const glow = Math.min(1, (s.T - 300) / 1300); g.mouthM.color.setRGB(1, (140 - 60 * glow) / 255, 40 / 255).multiplyScalar(0.35 + 0.65 * glow);
+    const half = sgHalf(), zs = HZ / half;
+    const k = [half, s.L2, s.G, s.T, s.sel, s.v, atomKey(), T.atom].join();
+    if (g.key !== k) { g.key = k; for (const m of g.sheets.children.slice()) { m.geometry.dispose(); g.sheets.remove(m); }
+      g.beamM.color.set(T.atom);
+      if (c.band != null) for (let i = -4; i <= 4; i++) g.sheets.add(sheet(c.band * i / 4, xScr, zs)); else for (const q of c.list) g.sheets.add(sheet(q.z, xScr, zs));
+      g.beamM.opacity = c.band != null ? 0.12 : 0.35; G3.n = -1; }
+    /* the deposit on the glass, drawn with the same stretch */
+    if (G3.n !== s.dots.length) { G3.n = s.dots.length;
+      const cx = g.cv.getContext('2d'), N = 512, dk = dark(); cx.fillStyle = dk ? 'rgba(40,55,70,0.9)' : 'rgba(225,235,242,0.9)'; cx.fillRect(0, 0, N, N);
+      cx.strokeStyle = dk ? 'rgba(200,215,230,0.5)' : 'rgba(80,95,110,0.5)'; cx.lineWidth = 2; cx.strokeRect(1, 1, N - 2, N - 2);
+      const px = N / 2 / 0.015, col = dk ? 'rgba(250,235,195,0.8)' : 'rgba(45,35,25,0.75)'; cx.fillStyle = col;
+      for (const d of s.dots) { const x = N / 2 + d.x / (SG_LEN / 2) * HX * px, y = N / 2 - d.z * zs * px; if (y < 0 || y > N) continue; cx.fillRect(x - 2.5, y - 2.5, 5, 5); }
+      g.tex.needsUpdate = true; }
+    S3.render();
+    const Q = (q) => S3.project(q);
+    const lab = (t, q, o) => { o = Object.assign({ a: 'center', s: 10.5 * p, c: T.ink }, o || {});   /* a soft halo so the label reads over the apparatus */
+      ctx.save(); ctx.font = `400 ${o.s}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round'; ctx.lineWidth = 3.5 * p; ctx.strokeStyle = T.surface; ctx.globalAlpha = 0.75; ctx.strokeText(t, q[0], q[1]); ctx.restore();
+      lbl(t, q[0], q[1], o); };
+    lab(`oven ${s.T} K`, Q([-0.07, -0.014, ZB3 - 0.04]));
+    lab('slits', Q([-0.035, 0, ZB3 + 0.016]));
+    lab(`magnet ${f(SG_L1 * 100, 2)} cm, dB/dz = ${s.G} T/m`, Q([SG_L1 / 2, 0, ZB3 + 0.03]));
+    if (s.L2 < 8) { lab('N (knife edge)', Q([SG_L1 / 2, -0.016, ZB3 + 0.011]), { c: T.ink }); lab('S (groove)', Q([SG_L1 / 2, -0.016, ZB3 - 0.011]), { c: T.ink }); }
+    lab(s.L2 > 0 ? `glass screen, drift ${s.L2} cm` : 'glass screen', Q([xScr, 0, ZB3 + 0.021]));
+    lbl(a.imagined ? a.name : S.sg.atom === 'mystery' ? 'mystery atoms, ground level unknown' : `${a.name.split(',')[0].toLowerCase()} atoms, ground level ${a.term}`, W * 0.5, 22 * p, { a: 'center', s: 11.5 * p, w: 700, c: T.ink });
+    lbl(`along the beam to scale; across it stretched (${f(half * 1000, 3)} mm drawn as 12 mm) so the split shows`, W * 0.5, Hh - 18 * p, { a: 'center', s: 10 * p });
   }
   /* screen face (lower canvas): the deposit, with the cursor */
   function drawSgScreen() {
@@ -467,6 +559,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   function redraw() {
     if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh);
+    if (g3) g3.S3.el.hidden = !use3(); $('dimSeg').hidden = S.view !== 'sg';
     if (S.view === 'orbit') { drawOrbit(); drawFan(); } else if (S.view === 'sg') { drawSg(); drawSgScreen(); } else { drawZee(); drawSpectrum(); }
     readouts(); clock();
   }
@@ -633,6 +726,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'bohr');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => redraw(), status: () => {} });
   window.__mm = { S, setView, applyPreset, setRun, redraw, sync, sampleAtom, spotCentres, clearScreen, newAtom, zeeman };
   requestAnimationFrame(frame);
 })();
