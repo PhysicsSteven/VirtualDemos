@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -90,6 +92,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 
 .viewbar { position: absolute; top: 10px; right: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+.viewbar.low { top: auto; bottom: 10px; }
+/* the 3D orbit sits under the orbit canvas, which keeps the labels and takes every pointer */
+.pane.orbit canvas.vd3d { pointer-events: none; }
+.pane.orbit.space { background: #04060b; }
 .seg { display: inline-flex; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .seg button {
   font: inherit; font-size: 0.86rem; font-weight: 700; color: var(--muted); background: none; border: 0;
@@ -174,6 +180,16 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
             <button type="button" data-s="45" aria-pressed="false">45 d/s</button>
           </div>
           <button type="button" class="btn" id="reset">Reset</button>
+        </div>
+        <div class="viewbar low">
+          <div class="seg" role="group" aria-label="Camera" id="camSeg">
+            <button type="button" data-cam="orbit" aria-pressed="true">Whole orbit</button>
+            <button type="button" data-cam="earth" aria-pressed="false">Follow Earth</button>
+          </div>
+          <div class="seg" role="group" aria-label="Perspective" id="viewSeg">
+            <button type="button" data-dim="3d" aria-pressed="false">3D</button>
+            <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
+          </div>
         </div>
       </div>
       <div class="pane earth">
@@ -434,11 +450,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // In projector mode labels grow by --canvas-scale, but a small pane (a short projector screen) cannot take
   // that much: cap the scale by the pane's smaller side so the drawing keeps its room.
   const paneScale = (ps, W, H, d = 240) => Math.min(ps, Math.max(1, Math.min(W, H) / d));
-  function begin(k, C) {
+  function begin(k, C, clear) {
     const ctx = ctxs[k], { W, H } = size[k];
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, W, H);
-    ctx.fillStyle = C.canvas; ctx.fillRect(0, 0, W, H);
+    if (!clear) { ctx.fillStyle = C.canvas; ctx.fillRect(0, 0, W, H); }
     return [ctx, W, H];
   }
   function paneTitle(ctx, C, text, x, y) {
@@ -499,15 +515,138 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     return [-r * Math.cos(lam), -r * Math.sin(lam), 0];
   }
 
+  // ---------- 3D orbit (three.js through demos/lib/vd3kit.js) ----------
+  // The same orbit, dates and tilt as the flat drawing, seen from the same direction (view.yaw, view.el), so every label the
+  // orbit canvas draws on top lines up. Earth carries NASA's Blue Marble image and is lit by a lamp at the Sun, so the day and
+  // night halves are real lighting. The globe is turned so it is local noon on the observer's meridian (longitude 92.6° W,
+  // a picture choice), and the blue ring is the observer's latitude circle: the lit share of that ring is the day length.
+  // Sun and Earth are drawn far larger than to scale; the orbit and its dates are the model's.
+  const OBS_LON = -92.6 * DEG, ER3 = 0.1, SUN3 = 0.12;
+  const SPACE = { canvas: 'rgba(5,8,14,0.78)', ink: '#e3e8ef', muted: '#9aa7b8', relief: '#2a3442', gridStrong: '#3a4656', pos: '#ff7660', accent: '#69a0ff', sun: '#f5c451' };
+  const T3 = { S: null, on: false, cam: 'orbit', earth: null, tiltG: null, spinG: null, ring: null, pin: null, ghosts: [], ghostMat: null, exag: null, line: null, disc: null, follow: null, tries: 0 };
+  const spinFor = (T, eps) => { const lam = orbitAt(T).lam; return Math.atan2(Math.sin(lam) * Math.cos(eps), Math.cos(lam)) - OBS_LON; };
+  function init3D() {
+    const S3 = VD3K.stage(cv.orbit.parentElement, { before: cv.orbit, fov: 30, near: 0.005, far: 3000, sky: '#04060b' });
+    if (!S3) return false;
+    T3.S = S3; S3.el.classList.add('vd3d');
+    const sc = S3.scene;
+    sc.add(VD3K.sky(S3, { n: 2600, r: 1200, seed: 11, milky: true }));
+    sc.add(VD3K.star(S3, { r: SUN3, color: '#ffd27a', glow: 4.2 }));
+    sc.add(new THREE.PointLight(0xffffff, 2.1, 0));
+    S3.onTheme(() => { S3.hemi.intensity = 0.04; S3.sun.intensity = 0; });
+    T3.tiltG = new THREE.Group(); sc.add(T3.tiltG);
+    const axisM = new THREE.MeshBasicMaterial({ color: '#d9e2ee' });
+    T3.tiltG.add(VD3K.rod([0, 0, -1.45 * ER3], [0, 0, 1.45 * ER3], ER3 * 0.022, axisM));
+    T3.ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.022, 8, 120), new THREE.MeshStandardMaterial({ color: '#5b98ff', roughness: 0.5 }));
+    T3.tiltG.add(T3.ring);
+    T3.pin = new THREE.Mesh(new THREE.SphereGeometry(ER3 * 0.09, 16, 12), new THREE.MeshBasicMaterial({ color: '#7fb0ff' }));
+    T3.ghostMat = new THREE.MeshStandardMaterial({ roughness: 0.9, metalness: 0, transparent: true, opacity: 0.55 });
+    T3.follow = VD3K.follow({ x: 0, y: 0, z: 0 }, 0.18);
+    VD3K.earth(S3, { r: ER3, seg: 64 }, (pl) => {
+      T3.earth = pl; T3.tiltG.add(pl); T3.spinG = pl.ball.parent; T3.spinG.add(T3.pin);
+      for (let i = 0; i < 4; i++) {
+        const g = new THREE.Group(), sp = new THREE.Group(), m = new THREE.Mesh(pl.ball.geometry, T3.ghostMat);
+        m.rotation.x = Math.PI / 2; sp.add(m); g.add(sp, VD3K.rod([0, 0, -1.6 * ER3], [0, 0, 1.6 * ER3], ER3 * 0.04, axisM));
+        g.scale.setScalar(0.72); g.sp = sp; sc.add(g); T3.ghosts.push(g);
+      }
+      schedule();
+    });
+    return true;
+  }
+  function orbit3D() {
+    const sc = T3.S.scene;
+    if (T3.line) { T3.S.dispose(T3.line); T3.S.dispose(T3.disc); }
+    const pts = [];
+    for (let i = 0; i <= 240; i++) { const h = helioNu(2 * Math.PI * i / 240); pts.push(new THREE.Vector3(h[0], h[1], h[2])); }
+    T3.line = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: '#7d8da3', transparent: true, opacity: 0.85 }));
+    const shape = new THREE.Shape(pts.map((v) => new THREE.Vector2(v.x, v.y)));
+    T3.disc = new THREE.Mesh(new THREE.ShapeGeometry(shape, 1), new THREE.MeshBasicMaterial({ color: '#8fa6c8', transparent: true, opacity: 0.07, depthWrite: false, side: THREE.DoubleSide }));
+    sc.add(T3.disc, T3.line); T3.exag = layers.exag;
+  }
+  function render3D() {
+    const S3 = T3.S, { W, H } = size.orbit;
+    if (!S3 || !W || !H) return;
+    S3.size(W, H);
+    if (T3.exag !== layers.exag) orbit3D();
+    const eps = S.tilt * DEG, hE = helio(S.T), ph = S.lat * DEG;
+    const near = T3.cam === 'earth';
+    // Following Earth, the camera keeps its angle to the sunlight (75° round from the Sun side, plus any turn the reader adds),
+    // so as the year runs the axis is seen swinging toward and away from the Sun.
+    const yaw = near ? -(orbitAt(S.T).lam + 75 * DEG + (-view.yaw - Math.PI / 2)) - Math.PI / 2 : view.yaw;
+    const o = { th: Math.atan2(-Math.cos(yaw), -Math.sin(yaw)), ph: Math.PI / 2 - view.el, zoom: 1 };
+    const t = Math.tan(S3.cam.fov * DEG / 2), asp = W / H, ps = paneScale(parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--canvas-scale')) || 1, W, H, 300);
+    if (near) {
+      T3.follow.to(hE[0], hE[1], hE[2], T3.snap); T3.snap = false;
+      S3.place(o, T3.follow.at, ER3 * 9 / Math.min(1, asp));
+    } else {
+      const rx = layers.exag ? 1.36 : 1.08, half = Math.max(rx / (t * asp), (rx * Math.sin(view.el) + 0.22) / t);
+      const top = (W < 560 * ps ? 48 : 64) * ps, bot = (W < 560 * ps ? (W < 470 ? 110 : 60) : 26) * ps, k = H / Math.max(1, H - top - bot);
+      T3.follow.to(0, 0, 0, true);
+      S3.place(o, [0, 0, 0], half * 1.04 * k);
+      S3.cam.setViewOffset(W, H, 0, (bot - top) / 2, W, H);
+    }
+    if (near) S3.cam.clearViewOffset();
+    T3.tiltG.position.set(hE[0], hE[1], hE[2]); T3.tiltG.rotation.x = -eps;
+    T3.ring.scale.set(ER3 * 1.004 * Math.cos(ph), ER3 * 1.004 * Math.cos(ph), ER3 * (near ? 0.6 : 1.4));
+    T3.ring.position.z = ER3 * Math.sin(ph);
+    T3.pin.position.set(ER3 * Math.cos(ph) * Math.cos(OBS_LON), ER3 * Math.cos(ph) * Math.sin(OBS_LON), ER3 * Math.sin(ph)).multiplyScalar(1.01);
+    if (T3.earth) T3.earth.spin(spinFor(S.T, eps));
+    if (T3.earth && !T3.ghostMat.map && T3.earth.ball.material.map) { T3.ghostMat.map = T3.earth.ball.material.map; T3.ghostMat.needsUpdate = true; }
+    if (T3.earth && !T3.earth.ball.material.map && T3.tries++ < 120) requestAnimationFrame(schedule);   // the image is still decoding
+    T3.ghosts.forEach((g, i) => {
+      const s = SEASONS[i], h = helio(s.T);
+      g.visible = layers.seasons && !near && Math.abs(wrapT(S.T) - s.T) >= 4;
+      g.position.set(h[0], h[1], h[2]); g.rotation.x = -eps; g.sp.rotation.z = spinFor(s.T, eps);
+    });
+    T3.disc.visible = !near;
+    S3.render();
+  }
+  function map3D() {
+    const S3 = T3.S, { H } = size.orbit, h = helio(S.T);
+    const d = S3.cam.position.distanceTo(new THREE.Vector3(h[0], h[1], h[2]));
+    const eR = Math.max(9, ER3 / (d * Math.tan(S3.cam.fov * DEG / 2)) * H / 2);
+    return { R: 0, ox: 0, oy: 0, eR, dir: null, proj: (x, y, z) => S3.project([x, y, z]) };
+  }
+  // words over the 3D picture: the N at each axis tip and the season names under the faded Earths
+  function labels3D(ctx, C, M) {
+    const ps = C.ps, eps = S.tilt * DEG, n = [0, Math.sin(eps), Math.cos(eps)];
+    const tip = (T, k) => { const h = helio(T); return M.proj(h[0] + n[0] * k, h[1] + n[1] * k, h[2] + n[2] * k); };
+    ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.lineJoin = 'round';
+    const put = (txt, x, y, font, col) => { ctx.font = font; ctx.strokeStyle = 'rgba(4,6,11,0.85)'; ctx.lineWidth = 3 * ps; ctx.strokeText(txt, x, y); ctx.fillStyle = col; ctx.fillText(txt, x, y); };
+    const near = T3.cam === 'earth';
+    if (layers.seasons && !near) {
+      for (const s of SEASONS) {
+        if (Math.abs(wrapT(S.T) - s.T) < 4) continue;
+        const h = helio(s.T), p = M.proj(...h), q = tip(s.T, ER3 * 0.72 * 1.95);
+        if (q[2] < 1) put('N', q[0], q[1], `700 ${9.5 * ps}px ${C.ui}`, C.muted);
+        // under the Earth, or on its Sun side at the ends of the orbit (clear of the month names), as in the flat view
+        const pS = M.proj(0, 0, 0), vx = pS[0] - p[0], vy = pS[1] - p[1];
+        if (Math.abs(vx) > 1.5 * Math.abs(vy)) { ctx.textAlign = vx > 0 ? 'left' : 'right'; put(s.name, p[0] + Math.sign(vx) * (M.eR * 0.72 + 8 * ps), p[1] + M.eR * 0.72 + 4 * ps, `${10 * ps}px ${C.mono}`, C.muted); ctx.textAlign = 'center'; }
+        else put(s.name, p[0], p[1] + M.eR * 0.72 + 14 * ps, `${10 * ps}px ${C.mono}`, C.muted);
+      }
+    }
+    const q = tip(S.T, near ? ER3 * 1.62 : ER3 * 2.05);
+    if (q[2] < 1 && q[1] > 52 * ps) put('N', q[0], q[1], `700 ${(near ? 14 : 11) * ps}px ${C.ui}`, C.ink);
+    if (near) {
+      const W = size.orbit.W, y0 = W < 560 * ps ? size.orbit.H - (W < 470 ? 140 : 92) * ps : 86 * ps;
+      ctx.textAlign = 'left';
+      put('Blue ring: your latitude, ' + fmtLat(S.lat) + '.', 12, y0, `${10.5 * ps}px ${C.mono}`, '#9cc0ff');
+      put('Its lit part is your day; the dot is you at noon.', 12, y0 + 16 * ps, `${10.5 * ps}px ${C.mono}`, '#9cc0ff');
+    }
+    ctx.restore();
+  }
+
   function drawOrbit() {
-    const C = tokens();
-    const [ctx, W, H] = begin('orbit', C);
+    const on3 = T3.on && T3.S;
+    const C = on3 ? Object.assign(tokens(), SPACE) : tokens();
+    const [ctx, W, H] = begin('orbit', C, on3);
     if (!W || !H) return;
     const ps = C.ps = paneScale(C.ps, W, H, 300);
-    const M = orbitMapping(); OM = M;
+    const M = on3 ? map3D() : orbitMapping(); OM = M;
     const { R, eR, proj, dir } = M;
 
     // orbital plane and orbit
+    if (!on3) {
     ctx.save();
     ctx.beginPath();
     for (let i = 0; i <= 180; i++) { const p = proj(...helioNu(2 * Math.PI * i / 180)); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }
@@ -515,11 +654,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     ctx.globalAlpha = 0.45; ctx.fillStyle = C.relief; ctx.fill(); ctx.globalAlpha = 1;
     ctx.strokeStyle = C.gridStrong; ctx.lineWidth = 1.5 * ps; ctx.stroke();
     ctx.restore();
+    }
 
     // month ticks
     ctx.save(); ctx.font = `${10.5 * ps}px ${C.mono}`; ctx.fillStyle = C.muted; ctx.strokeStyle = C.muted; ctx.lineWidth = 1 * ps;
     ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    for (let m = 0; m < 12; m++) {
+    for (let m = 0; m < (on3 && T3.cam === 'earth' ? 0 : 12); m++) {
       const h = helio(MSTART[m]), a = proj(h[0] * 0.97, h[1] * 0.97, 0), b = proj(h[0] * 1.03, h[1] * 1.03, 0);
       ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
       if (layers.months) {
@@ -552,6 +692,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     }
 
     // Sun to Earth line
+    if (on3) { const k = SUN3 / Math.hypot(hE[0], hE[1]), a = proj(hE[0] * k, hE[1] * k, 0); pS[0] = a[0]; pS[1] = a[1]; }
     ctx.save(); ctx.strokeStyle = C.muted; ctx.lineWidth = 1 * ps; ctx.setLineDash([4 * ps, 4 * ps]);
     ctx.beginPath(); ctx.moveTo(pS[0], pS[1]); ctx.lineTo(pE[0], pE[1]); ctx.stroke(); ctx.restore();
 
@@ -566,7 +707,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     }
     items.push({ d: pE[2], draw: () => drawEarthDot(ctx, C, M, S.T, pE, eR, 1, null) });
     items.sort((a, b) => b.d - a.d);
-    for (const it of items) it.draw();
+    if (on3) labels3D(ctx, C, M); else for (const it of items) it.draw();
 
     // distance label near Earth
     ctx.save(); ctx.font = `600 ${11.5 * ps}px ${C.mono}`;
@@ -575,12 +716,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     ctx.restore();
 
     // header text
-    const hy = W < 560 * ps ? H - 58 * ps : 0;
+    const hy = W < 560 * ps ? H - (on3 && W < 470 ? 104 : 58) * ps : 0;
     paneTitle(ctx, C, 'Orbit', 12, hy + 20 * ps);
     ctx.save(); ctx.fillStyle = C.ink; ctx.font = `600 ${16 * ps}px ${C.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
     ctx.fillText(dateOf(S.T), 12, hy + 38 * ps);
     ctx.font = `${11 * ps}px ${C.mono}`; ctx.fillStyle = C.muted;
-    ctx.fillText('day ' + (Math.floor(wrapT(S.T)) + 1), 12, hy + 52 * ps);
+    ctx.fillText('day ' + (Math.floor(wrapT(S.T)) + 1) + (on3 && hy ? ' · Sun and Earth not to scale' : ''), 12, hy + 52 * ps);
+    if (on3 && !hy) ctx.fillText('Sun and Earth not to scale', 12, 68 * ps);
     ctx.restore();
   }
 
@@ -965,6 +1107,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       last = now;
     } else last = null;
     if (yearDirty) { buildYear(); yearDirty = false; }
+    if (T3.on) render3D();
     drawOrbit(); drawEarth(); drawSky(); drawChart(); updatePanel();
     if (S.running) schedule();
   }
@@ -991,7 +1134,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
   $('reset').addEventListener('click', () => {
     Object.assign(S, { T: todayT(), tilt: 23.44, lat: 32.5, dist: false });
-    view.yaw = -90 * DEG; view.el = 24 * DEG;
+    view.yaw = -90 * DEG; view.el = 24 * DEG; setCam('orbit');
     $('tDist').checked = false; setChart('day'); setPreset(null); yearDirty = true; setRunning(!reduce);
   });
   $('day').addEventListener('input', (e) => { setT(+e.target.value - 0.5); });
@@ -1109,6 +1252,22 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // theme changes
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', schedule); } catch (_) {}
   new MutationObserver(schedule).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector', 'class', 'style'] });
+
+  // 3D | Flat, and the camera in 3D
+  function setCam(c) {
+    T3.cam = c; T3.snap = true;
+    for (const b of document.querySelectorAll('#camSeg button')) b.setAttribute('aria-pressed', String(b.dataset.cam === c));
+    schedule();
+  }
+  for (const b of document.querySelectorAll('#camSeg button')) b.addEventListener('click', () => setCam(b.dataset.cam));
+  VD3K.view({
+    seg: '#viewSeg', init: init3D,
+    status: (m) => { $('presetHint').textContent = m; },
+    change: (on) => {
+      T3.on = on; if (T3.S) T3.S.el.style.display = on ? '' : 'none';
+      $('camSeg').hidden = !on; cv.orbit.parentElement.classList.toggle('space', on); schedule();
+    }
+  });
 
   // ---------- boot ----------
   new ResizeObserver(resize).observe(stage);
