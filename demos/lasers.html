@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -55,7 +57,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
-#can { touch-action: none; outline: none; }
+#can { touch-action: none; outline: none; position: relative; z-index: 1; }
+#pane { position: relative; }
+.lz3 { position: absolute; left: 0; top: 0; z-index: 0; }
+.pane:not([data-view="laser"]) .lz3, .stage:has(.pane:not([data-view="laser"])) .dimseg { display: none; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
@@ -119,6 +124,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" id="vLevels" aria-pressed="false">Energy levels</button>
           <button type="button" id="vModes" aria-pressed="false">Modes</button>
         </div>
+        <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <span class="count mono" id="count"></span>
       </div>
       <div class="pane" id="pane" data-view="laser">
@@ -895,6 +901,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     boxDividers([L.scene, L.trace, L.out, L.inv]);
   }
   function drawCavity(box) {
+    if (use3()) { drawCavity3(box); return; }
     const c = ctx, g = cavGeom(), ps = g.ps; clip(box);
     title(c, box, `${P.m.name} laser, ${P.m.key === 'nd' ? 'four level' : 'three level'}`, `cavity 10 cm, rod 1 cm; drawn photons follow log q`);
     const { xL, xR, cy, rodH, rx0, rx1, mh } = g;
@@ -948,6 +955,123 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     label(c, `${fmtPow(po)} out`, box.x + box.w - 10 * ps, cy - rodH * 0.22 - 12 * ps, T.pos, 'right', 'middle', true, 11);
     label(c, lamTxt, box.x + box.w - 10 * ps, cy + rodH * 0.22 + 12 * ps, T.pos, 'right', 'middle', false, 10);
     LBOX = null;
+    c.restore();
+  }
+  // ---------- the cavity in 3D (three.js through lib/vd3.js and lib/vd3kit.js), Laser view only; Flat keeps the drawing (or ?view=flat) ----------
+  /* To scale: mirrors 10 cm apart, a 1 cm rod, a mode 0.5 mm in radius (CAV). The rod's diameter (5 mm) and the mounts are drawn.
+     The photons are the same tokens the flat cavity draws (their number follows log q); the beam brightens with the circulating power. */
+  const G3 = { o: { th: -Math.PI / 2 + 0.18, ph: 1.2, zoom: 1 }, rect: '', med: '' };
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d() && S.view === 'laser');
+  const OL_3 = 0.1;
+  const ZB = 0.06, XM0 = -CAV.L / 2, XM1 = CAV.L / 2, RROD = 0.0025;   /* beam height above the rail, the mirror positions (m) */
+  function init3D() {
+    const S3 = VD3K.stage(pane, { before: can, shadow: 0.25, fov: 28, fogAt: [1.8, 3.4] }); if (!S3) return false;
+    S3.el.className = 'lz3';
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c);
+    const mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
+    const alongX = (r, len, n) => { const g = new THREE.CylinderGeometry(r, r, len, n || 24); g.rotateZ(Math.PI / 2); return g; };
+    sc.add(VD3K.bench(S3, { w: 2, d: 1.4, y: 0.2 }), VD3K.backdrop(S3, { r: 0.9, h: 0.7, y: -0.4 }));
+    /* an optical breadboard with its tapped holes, and a rail */
+    const board = M({ roughness: 0.55, metalness: 0.35 }, ['#59616b', '#3a4049']); sc.add(VD3K.box(0.34, 0.16, 0.008, board, 0.04, 0, 0));
+    const holeM = new THREE.MeshBasicMaterial({ color: 0x1b1f24 });
+    for (let i = 0; i < 13; i++) for (let j = 0; j < 6; j++) { const h = new THREE.Mesh(new THREE.CircleGeometry(0.0017, 10), holeM); h.position.set(-0.13 + i * 0.025 + 0.04 - 0.0, -0.0625 + j * 0.025, 0.0081); sc.add(h); }
+    const rail = M({ roughness: 0.35, metalness: 0.7 }, ['#aab2bb', '#6d7680']); sc.add(VD3K.box(0.3, 0.02, 0.008, rail, 0.03, 0, 0.008));
+    /* two mirror mounts on posts: a plate, two adjusters, the mirror in a ring */
+    const anod = M({ roughness: 0.45, metalness: 0.3 }, ['#2b333d', '#20262e']), steel = M({ roughness: 0.3, metalness: 0.8 }, ['#c4cad1', '#8d96a0']);
+    const mount = (x, face) => { const g = new THREE.Group();
+      g.add(VD3K.box(0.016, 0.03, 0.006, anod, 0, 0, 0.016), VD3K.rod([0, 0, 0.022], [0, 0, ZB - 0.016], 0.004, steel));
+      g.add(VD3K.box(0.006, 0.034, 0.034, anod, 0, 0, ZB - 0.017));
+      for (const [y, z] of [[0.012, 0.012], [-0.012, -0.012]]) g.add(VD3K.rod([-0.003 * face, y, ZB + z], [-0.014 * face, y, ZB + z], 0.0018, steel));
+      const ring = mesh(new THREE.TorusGeometry(0.0062, 0.0014, 10, 32), steel); ring.rotation.y = Math.PI / 2; ring.position.set(0.004 * face, 0, ZB); g.add(ring);
+      g.position.x = x; return g; };
+    sc.add(mount(XM0 - 0.004, -1), mount(XM1 + 0.004, 1));
+    const backM = M({ roughness: 0.1, metalness: 1 }, ['#d6dbe0', '#c3c9d0']), back = mesh(new THREE.CircleGeometry(0.0062, 32), backM); back.rotation.y = Math.PI / 2; back.position.set(XM0, 0, ZB);
+    const outM = M({ roughness: 0.05, metalness: 0.3, transparent: true, opacity: 0.6, side: THREE.DoubleSide }, ['#b6c9dc', '#7c96b2']), out = mesh(new THREE.CircleGeometry(0.0062, 32), outM); out.rotation.y = -Math.PI / 2; out.position.set(XM1, 0, ZB);
+    sc.add(back, out);
+    /* the rod (1 cm long) in a copper holder, and the pump under it */
+    const rodM = new THREE.MeshStandardMaterial({ roughness: 0.15, metalness: 0, transparent: true, opacity: 0.75, emissive: 0x000000 }), rod = mesh(alongX(RROD, CAV.l, 32), rodM); rod.position.set(0, 0, ZB);
+    const cu = M({ roughness: 0.35, metalness: 0.85 }, ['#c07a4a', '#9a6040']);
+    const holder = new THREE.Group(); holder.add(VD3K.box(0.016, 0.026, 0.009, cu, 0, 0, ZB - RROD - 0.009 - 0.0005), VD3K.rod([0, 0, 0.016], [0, 0, ZB - RROD - 0.009], 0.004, steel), VD3K.box(0.016, 0.03, 0.006, anod, 0, 0, 0.016));
+    const pumpM = new THREE.MeshStandardMaterial({ roughness: 0.4, emissive: 0x000000, color: 0x8a929c }), pump = new THREE.Group();
+    const diode = []; for (let i = 0; i < 4; i++) { const d = mesh(new THREE.BoxGeometry(0.0022, 0.012, 0.0016), pumpM); d.position.set(-0.0038 + i * 0.0025, 0, ZB - RROD - 0.0018); pump.add(d); diode.push(d); }
+    const lampM = new THREE.MeshStandardMaterial({ roughness: 0.1, transparent: true, opacity: 0.7, emissive: 0x000000, color: 0xdfe6ef }), lamp = mesh(alongX(0.0016, CAV.l * 1.2, 16), lampM); lamp.position.set(0, -0.0065, ZB);
+    const pumpLight = new THREE.PointLight(0xffffff, 0, 0.05); pumpLight.position.set(0, -0.004, ZB - 0.003);
+    sc.add(rod, holder, pump, lamp, pumpLight);
+    /* the mode inside the cavity and the output beam, 0.5 mm in radius */
+    const beamM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }), beam = mesh(alongX(CAV.w, CAV.L, 16), beamM); beam.position.set(0, 0, ZB); beam.renderOrder = 3;
+    const haloM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }), halo = mesh(alongX(CAV.w * 3, CAV.L + OL_3, 16), haloM); halo.position.set(OL_3 / 2, 0, ZB); halo.renderOrder = 2; sc.add(halo);
+    const outBeamM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false }), OL = 0.1, outBeam = mesh(alongX(CAV.w, OL, 16), outBeamM); outBeam.position.set(XM1 + OL / 2, 0, ZB); outBeam.renderOrder = 3;
+    /* a power meter head where the beam lands, with its display */
+    const head = new THREE.Group(); head.add(VD3K.rod([0, 0, 0.016], [0, 0, ZB - 0.01], 0.004, steel), VD3K.box(0.016, 0.03, 0.006, anod, 0, 0, 0.016));
+    const can3 = mesh(alongX(0.012, 0.012, 32), anod); can3.position.set(0, 0, ZB); head.add(can3);
+    const disc = mesh(new THREE.CircleGeometry(0.009, 32), M({ roughness: 0.9 }, ['#15181c', '#15181c'])); disc.rotation.y = -Math.PI / 2; disc.position.set(-0.0061, 0, ZB); head.add(disc);
+    head.position.x = XM1 + OL + 0.006; sc.add(head);
+    const meter = VD3K.meter(S3, { label: 'POWER METER', sub: '', w: 0.06, h: 0.036 }); meter.position.set(XM1 + 0.06, 0.08, meter.position.z); sc.add(meter);
+    sc.add(VD3K.cable([XM1 + OL + 0.012, 0, ZB - 0.004], [XM1 + 0.06, 0.065, 0.01], { via: [[XM1 + OL + 0.02, 0.012, 0.03], [XM1 + OL + 0.01, 0.05, 0.004]] }));
+    /* photons: short bright dashes */
+    const phM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.95, depthWrite: false }), phG = alongX(0.0007, 0.005, 6);
+    const ph = new THREE.InstancedMesh(phG, phM, 140); ph.frustumCulled = false; ph.count = 0; ph.renderOrder = 4; sc.add(ph);
+    const spM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.8, depthWrite: false }), sp = new THREE.InstancedMesh(alongX(0.0004, 0.003, 6), spM, 40); sp.frustumCulled = false; sp.count = 0; sp.renderOrder = 4; sc.add(sp);
+    g3 = { S3, haloM, rodM, pumpM, diode, lampM, lamp, pump, pumpLight, beamM, outBeamM, outM, meter, phM, ph, spM, sp, m4: new THREE.Matrix4(), q4: new THREE.Quaternion(), v: new THREE.Vector3(), one: new THREE.Vector3(1, 1, 1) };
+    can.addEventListener('wheel', (e) => { if (!in3(e)) e.stopImmediatePropagation(); }, { passive: true });
+    can.addEventListener('dblclick', (e) => { if (!in3(e)) e.stopImmediatePropagation(); });
+    VD3.orbit(can, G3.o, () => { if (use3()) drawAll(); }, { grab: (e) => !in3(e) || !!handleAt(e), phMin: 0.4, phMax: 1.45, zMin: 0.6, zMax: 3 });
+    can.style.touchAction = ''; can.style.cursor = '';
+    return true;
+  }
+  function in3(e) { if (!use3() || !LY || !LY.scene) return false; const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, b = LY.scene; return x >= b.x && x <= b.x + b.w && y >= b.y + 36 && y <= b.y + b.h; }
+  function render3(box) {
+    const g = g3, S3 = g.S3, el = S3.el, nd = S.med === 'nd';
+    const k = [box.x, box.y, box.w, box.h].join(); if (G3.rect !== k) { G3.rect = k; Object.assign(el.style, { left: box.x + 'px', top: box.y + 'px', width: box.w + 'px', height: box.h + 'px' }); }
+    S3.size(box.w, box.h);
+    const asp = box.w / Math.max(1, box.h), dist = 0.33 * Math.max(1, 1.6 / asp);
+    S3.place(G3.o, [0.05, 0.01, 0.045], dist);
+    if (G3.med !== S.med) { G3.med = S.med;
+      g.rodM.color.set(nd ? '#c9b6d9' : '#d0465a'); g.lamp.visible = !nd; g.pump.visible = nd;
+      const lc = new THREE.Color(nd ? '#e8463c' : '#d93a2e'); g.beamM.color.copy(lc); g.outBeamM.color.copy(lc); g.haloM.color.copy(lc); g.phM.color.copy(lc); g.spM.color.set(nd ? '#e8463c' : '#d93a2e'); }
+    /* the rod glows with its upper level population; the pump with the pump rate */
+    const u = Math.max(0, upper(P, sim.N)) / Math.max(1, upper(P, P.Nth)), wf = S.W / MEDIA[S.med].Wmax;
+    g.rodM.emissive.set(nd ? '#8a5ab8' : '#c0203a').multiplyScalar(0.08 + 0.45 * Math.min(1.3, u) / 1.3);
+    const pc = new THREE.Color(nd ? T.accent : '#d6e4ff').multiplyScalar(0.1 + 0.9 * wf);
+    g.pumpM.emissive.copy(pc); g.lampM.emissive.copy(pc); g.pumpLight.color.set(nd ? T.accent : '#cfe0ff'); g.pumpLight.intensity = 0.6 * wf;
+    /* the beam: circulating power on a log scale, output in proportion to P_out */
+    const po = pOut(P, sim.q), pref = Math.max(1e-3, pOut(P, steadyIdeal(P, MEDIA[S.med].Wmax).q)), bA = po <= 1e-9 ? 0 : Math.min(1, 0.12 + 0.88 * Math.sqrt(po / pref));
+    const nT = nTarget(sim.q); g.beamM.opacity = nT ? 0.12 + 0.5 * nT / 60 : 0; g.outBeamM.opacity = 0.75 * bA; g.haloM.opacity = 0.16 * Math.max(bA, nT / 60);
+    g.outM.opacity = 0.35 + 0.55 * (S.R - 0.8) / 0.2;
+    g.meter.set(fmtPow(po));
+    /* photon tokens, from the flat cavity's coordinates */
+    const cg = cavGeom(), X = (px) => XM0 + (px - cg.xL) / (cg.xR - cg.xL) * (XM1 - XM0), Rr = (py) => py / (cg.rodH * 0.35) * CAV.w * 0.9;
+    let n = 0;
+    const put = (mesh, i, x, y, z, ux, uz) => { g.v.set(ux, 0, uz).normalize(); g.q4.setFromUnitVectors(new THREE.Vector3(1, 0, 0), g.v); g.m4.compose(new THREE.Vector3(x, y, z), g.q4, g.one); mesh.setMatrixAt(i, g.m4); };
+    for (const t of toks) { if (n >= 140) break; const r = Rr(t.y); put(g.ph, n++, X(t.x), r * 0.6, ZB + r * 0.8, 1, 0); }
+    for (const t of leaving) { if (n >= 140) break; const x = XM1 + (t.x - cg.xR) / (cg.xR - cg.xL) * (XM1 - XM0); if (x > XM1 + OL_3) continue; put(g.ph, n++, x, 0, ZB + Rr(t.y) * 0.3, 1, 0); }
+    g.ph.count = n; g.ph.instanceMatrix.needsUpdate = true;
+    let m = 0;
+    for (const t of sponts) { if (m >= 40) break; const s = (clock - t.t0) * 0.04; put(g.sp, m++, X(t.x) + t.ux * s, 0, ZB + Math.max(-RROD, Math.min(RROD, Rr(t.y) * 2)) * 0 + t.uy * s, t.ux, t.uy); }
+    g.sp.count = m; g.sp.instanceMatrix.needsUpdate = true;
+    S3.render();
+    return (q) => { const r = S3.project(q); return [box.x + r[0], box.y + r[1]]; };
+  }
+  function drawCavity3(box) {
+    const c = ctx, ps = PS; c.clearRect(box.x, box.y, box.w, box.h);
+    const Q = render3(box); clip(box);
+    title(c, box, `${P.m.name} laser, ${P.m.key === 'nd' ? 'four level' : 'three level'}`, box.w > 520 * ps ? 'to scale: mirrors 10 cm apart, rod 1 cm long, beam 0.5 mm in radius; drawn photons follow log q' : 'to scale; drawn photons follow log q');
+    const po = pOut(P, sim.q), a = Q([XM0, 0, ZB + 0.024]), b = Q([XM1, 0, ZB + 0.024]), r = Q([0, 0, ZB + RROD + 0.004]), o = Q([XM1 + 0.094, 0, ZB - 0.016]), pp = Q([0, -0.014, ZB - 0.016]);
+    label(c, 'mirror, R = 1', a[0], a[1] - 8 * ps, T.muted, 'center', 'bottom', false, 10);
+    label(c, `output mirror R = ${S.R.toFixed(3)}`, b[0], b[1] - 8 * ps, T.ink, 'center', 'bottom', true, 10);
+    label(c, `${P.m.name} rod`, r[0], r[1] - 6 * ps, T.equi, 'center', 'bottom', true, 10);
+    label(c, P.m.key === 'nd' ? '808 nm diodes' : 'flash lamp', pp[0], pp[1] + 6 * ps, S.med === 'nd' ? T.accent : T.elec, 'center', 'top', false, 9.5);
+    label(c, `${fmtPow(po)} out, ${P.m.key === 'nd' ? '1064 nm (infrared, drawn red)' : '694.3 nm'}`, Math.min(o[0], box.x + box.w - 10 * ps), o[1] + 4 * ps, T.pos, 'right', 'top', true, 10);
+    /* the pump track stays a handle on the picture */
+    const g = cavGeom(), ty = g.trackY, wf = S.W / MEDIA[S.med].Wmax, pumpCol = S.med === 'nd' ? T.accent : T.elec, x0 = g.rx0, x1 = g.rx1;
+    c.strokeStyle = T.gridStrong; c.lineWidth = 3 * ps; c.lineCap = 'round'; c.beginPath(); c.moveTo(x0, ty); c.lineTo(x1, ty); c.stroke();
+    c.strokeStyle = pumpCol; c.beginPath(); c.moveTo(x0, ty); c.lineTo(x0 + (x1 - x0) * wf, ty); c.stroke(); c.lineCap = 'butt';
+    const xth = x0 + (x1 - x0) * Math.min(1, P.Wth / MEDIA[S.med].Wmax);
+    c.strokeStyle = T.ink; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(xth, ty - 6 * ps); c.lineTo(xth, ty + 6 * ps); c.stroke();
+    gripBars(c, x0 + (x1 - x0) * wf, ty, pumpCol, 'pump', false);
+    label(c, `pump W = ${(S.W / P.Wth).toFixed(2)} W_th`, x1 + 12 * ps, ty, pumpCol, 'left', 'middle', true, 10);
+    if (x1 - x0 > 120 * ps) label(c, 'threshold', xth, ty + 14 * ps, T.ink, 'center', 'middle', false, 9.5);
     c.restore();
   }
   let trGeom = null;
@@ -1441,7 +1565,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const g = cavGeom(), m = MEDIA[S.med];
       out.push({ id: 'pump', cursor: 'ew-resize', pt: [g.rx0 + (g.rx1 - g.rx0) * S.W / m.Wmax, g.trackY], set: (x) => setW((x - g.rx0) / (g.rx1 - g.rx0) * m.Wmax) });
       const rx = g.xR + 16 * g.ps, rt = g.cy - g.mh / 2, rb = g.cy + g.mh / 2;
-      out.push({ id: 'refl', cursor: 'ns-resize', pt: [rx, rb - (S.R - 0.8) / 0.199 * (rb - rt)], set: (x, y) => setR(0.8 + (rb - y) / (rb - rt) * 0.199) });
+      if (!use3()) out.push({ id: 'refl', cursor: 'ns-resize', pt: [rx, rb - (S.R - 0.8) / 0.199 * (rb - rt)], set: (x, y) => setR(0.8 + (rb - y) / (rb - rt) * 0.199) });
       for (const w of ['out', 'inv']) {
         const cg = cvGeom[w]; if (!cg) continue;
         const st = steadySeed(P, S.W), xNow = pAbs(P, S.W, st.N);
@@ -1570,6 +1694,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   setPlaying(!reduce);
   { const q = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[q] ? q : 'relax'); }
   if (reduce) { clock = 1.0; drawAll(); }
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => { if (g3) g3.S3.el.hidden = !on; drawAll(); }, status: (m) => { const st = document.querySelector('.status'); if (st) st.textContent = m; } });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
 })();
