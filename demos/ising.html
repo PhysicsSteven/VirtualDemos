@@ -1,35 +1,15 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html lang="en">
+<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane btn-disabled toggles swatch phone-chips-button pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<style>
-*, *::before, *::after { box-sizing: border-box; }
-:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
-body { margin: 0; }
-img { max-width: 100%; }
-[hidden] { display: none !important; }
-/* vd-qr */
-.vd-qr { display: none; }
-@media (min-width: 821px) {
-  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
-}
-.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
-.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
-.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
-.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
-.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
-/* /vd-qr */
-/* vd-reset */
-.vd-reset { white-space: nowrap; }
-/* /vd-reset */
-</style>
 <title>Ising Model</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
 <style>
 /* Layout: the spin lattice with its thermometer and field bar on the left of the stage, live plots on the right;
    instrument rail on the right; stacks on phones. Spins are amber (up) and navy (down). */
@@ -71,24 +51,7 @@ img { max-width: 100%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
 :root[data-projector="on"] body { font-size: 1.25rem; }
-.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
-
-.app {
-  height: 100%; display: flex; flex-direction: column; gap: 12px;
-  padding-block: 14px;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-}
-.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
-.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
-.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
-.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
-.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
-.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
-.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
-
-.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
 .stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.86rem; font-weight: 600; white-space: nowrap; text-align: right; }
@@ -101,53 +64,23 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .pcan { position: relative; flex: 1; min-height: 0; }
 #lat { touch-action: none; outline: none; cursor: crosshair; }
 #lat:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
-
-.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
-.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
-.rail section + section { border-top: 1px solid var(--line); }
-.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
-.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
-
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chips button, .btn {
-  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
-  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
-}
-.chips button:hover, .btn:hover { border-color: var(--muted); }
-.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
 .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 .btn:disabled { opacity: 0.45; cursor: not-allowed; }
 .btn.small { font-size: 0.8rem; padding: 3px 8px; }
-.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .seg button:disabled { opacity: 0.4; cursor: not-allowed; }
 .seg.full { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; }
 .seg.full button { padding: 4px 6px; white-space: nowrap; }
-.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 .inline .lab { font-size: 0.88rem; }
 select { font: inherit; font-size: 0.85rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; }
-
-.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-.slider-head label { font-size: 0.88rem; }
-.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .slider-scale { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
-
-.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
-.readout div { min-width: 0; }
-.readout dt { font-size: 0.78rem; color: var(--muted); }
-.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
-.readout .big dd { font-size: 1.2rem; }
-.readout .wide { grid-column: 1 / -1; }
 .readout .theory dd { color: var(--muted); font-weight: 400; font-size: 0.92rem; }
 .toggles { display: grid; grid-template-columns: 1fr; gap: 6px 10px; }
-.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
 .toggles input, .check input { accent-color: var(--accent); margin: 0; }
-.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
-.key span { display: flex; align-items: center; gap: 8px; }
 .sq { flex: none; width: 13px; height: 13px; border-radius: 2px; border: 1px solid var(--frame); }
 .sq.up { background: var(--up); } .sq.down { background: var(--down); } .sq.clu { background: linear-gradient(135deg, color-mix(in srgb, var(--up) 40%, var(--clu)) 50%, color-mix(in srgb, var(--down) 40%, var(--clu)) 50%); }
 .swatch { flex: none; width: 22px; height: 0; border-top: 2px solid var(--ink); }
@@ -156,7 +89,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .progress { height: 8px; border-radius: 4px; background: var(--grid-strong); overflow: hidden; }
 .progress i { display: block; height: 100%; width: 0; background: var(--accent); }
 .note { margin: 0; font-size: 0.82rem; color: var(--pos); }
-.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
 .twrap { overflow-x: auto; }
 table.rows { width: 100%; border-collapse: collapse; font-size: 0.7rem; }
 #result { gap: 6px 12px; }
@@ -181,17 +113,15 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   input[type="range"] { min-height: 28px; }
   table.rows button { min-height: 36px; min-width: 32px; }
   html, body { height: auto; }
-  .app { height: auto; }
   .bench { grid-template-columns: minmax(0, 1fr); }
   .stage { min-height: 0; }
   .panes { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto 360px; }
   #pLat { height: min(calc(100vw - 24px), 640px); }
   #pPlot { border-left: 0; border-top: 1px solid var(--line); }
-  .rail { overflow: visible; }
   .count { margin-left: 0; width: 100%; text-align: left; }
 }
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
-@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
+@media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } }
 </style>
 </head>
 <body>
@@ -203,9 +133,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     </div>
     <div class="bar-right">
       <div class="units mono">J = 1, k<sub>B</sub> = 1 · T in J/k<sub>B</sub> · h in J · time in sweeps</div>
-      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><script>(function(b){var base=new WeakMap(),rec=false;function data(t){var n=0;Array.prototype.forEach.call(t.rows,function(r){if(r.parentNode.tagName==='THEAD'||r.parentNode.tagName==='TFOOT')return;if(r.cells.length>1||(r.cells.length===1&&r.cells[0].colSpan<2))n++;});return n;}function snap(){document.querySelectorAll('table').forEach(function(t){base.set(t,data(t));});}window.addEventListener('load',function(){setTimeout(snap,400);});document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('button');if(!x||x===b)return;var s=x.textContent.trim();if(/^(capture|record|add to table|add point|keep trace|pin this)/i.test(s))rec=true;else if(/^clear/i.test(s))rec=false;},true);function lost(){if(typeof window.vdReadings==='function')return Number(window.vdReadings())||0;var n=0;document.querySelectorAll('table').forEach(function(t){n+=Math.max(0,data(t)-(base.has(t)?base.get(t):0));});return n||(rec?-1:0);}b.vdLost=lost;b.addEventListener('click',function(){var n=lost();if(n&&!window.confirm('Reset all clears '+(n>1?'the '+n+' readings':n===1?'the reading':'the readings')+' you recorded. '+'Export them first if you need them. Reset anyway?'))return;document.querySelectorAll('input,select,textarea,form').forEach(function(e){e.setAttribute('autocomplete','off');});location.reload();});})(document.currentScript.previousElementSibling);</script><!-- /vd-reset -->
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
-      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/ising.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 37 37" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/ising.html" shape-rendering="crispEdges"><rect width="37" height="37" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h2v1h-2zM14 2h2v1h-2zM18 2h1v1h-1zM20 2h2v1h-2zM25 2h1v1h-1zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM14 3h1v1h-1zM16 3h2v1h-2zM19 3h2v1h-2zM24 3h1v1h-1zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h2v1h-2zM18 4h1v1h-1zM21 4h4v1h-4zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h2v1h-2zM19 5h1v1h-1zM21 5h2v1h-2zM24 5h3v1h-3zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM14 6h2v1h-2zM18 6h6v1h-6zM25 6h2v1h-2zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h1v1h-1zM17 7h3v1h-3zM22 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM10 9h2v1h-2zM13 9h1v1h-1zM16 9h3v1h-3zM20 9h1v1h-1zM23 9h4v1h-4zM2 10h1v1h-1zM4 10h5v1h-5zM12 10h2v1h-2zM15 10h2v1h-2zM19 10h1v1h-1zM21 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h5v1h-5zM2 11h1v1h-1zM4 11h1v1h-1zM7 11h1v1h-1zM9 11h1v1h-1zM13 11h1v1h-1zM15 11h1v1h-1zM19 11h7v1h-7zM28 11h2v1h-2zM31 11h2v1h-2zM34 11h1v1h-1zM2 12h1v1h-1zM4 12h5v1h-5zM10 12h1v1h-1zM15 12h3v1h-3zM20 12h1v1h-1zM22 12h3v1h-3zM27 12h2v1h-2zM30 12h1v1h-1zM32 12h2v1h-2zM5 13h2v1h-2zM10 13h1v1h-1zM12 13h2v1h-2zM15 13h1v1h-1zM22 13h2v1h-2zM25 13h2v1h-2zM30 13h3v1h-3zM34 13h1v1h-1zM3 14h1v1h-1zM8 14h4v1h-4zM13 14h1v1h-1zM16 14h2v1h-2zM19 14h1v1h-1zM24 14h1v1h-1zM27 14h1v1h-1zM29 14h3v1h-3zM33 14h1v1h-1zM4 15h1v1h-1zM6 15h2v1h-2zM11 15h5v1h-5zM18 15h1v1h-1zM20 15h4v1h-4zM25 15h1v1h-1zM33 15h2v1h-2zM3 16h2v1h-2zM7 16h4v1h-4zM12 16h1v1h-1zM14 16h1v1h-1zM16 16h2v1h-2zM19 16h1v1h-1zM22 16h1v1h-1zM27 16h2v1h-2zM31 16h3v1h-3zM3 17h3v1h-3zM7 17h1v1h-1zM9 17h2v1h-2zM12 17h3v1h-3zM17 17h2v1h-2zM21 17h5v1h-5zM27 17h3v1h-3zM31 17h2v1h-2zM3 18h1v1h-1zM5 18h2v1h-2zM8 18h2v1h-2zM11 18h2v1h-2zM15 18h1v1h-1zM17 18h1v1h-1zM19 18h1v1h-1zM21 18h1v1h-1zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h3v1h-3zM34 18h1v1h-1zM3 19h1v1h-1zM7 19h1v1h-1zM10 19h1v1h-1zM12 19h1v1h-1zM15 19h1v1h-1zM18 19h8v1h-8zM27 19h3v1h-3zM31 19h3v1h-3zM3 20h2v1h-2zM7 20h6v1h-6zM14 20h1v1h-1zM17 20h3v1h-3zM23 20h2v1h-2zM27 20h1v1h-1zM29 20h2v1h-2zM32 20h2v1h-2zM2 21h1v1h-1zM4 21h1v1h-1zM9 21h1v1h-1zM14 21h1v1h-1zM17 21h2v1h-2zM20 21h5v1h-5zM26 21h1v1h-1zM29 21h6v1h-6zM2 22h1v1h-1zM5 22h1v1h-1zM7 22h2v1h-2zM13 22h1v1h-1zM17 22h3v1h-3zM24 22h4v1h-4zM29 22h3v1h-3zM33 22h2v1h-2zM2 23h2v1h-2zM5 23h1v1h-1zM7 23h1v1h-1zM9 23h3v1h-3zM13 23h1v1h-1zM16 23h1v1h-1zM18 23h4v1h-4zM23 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM32 23h1v1h-1zM34 23h1v1h-1zM2 24h1v1h-1zM4 24h3v1h-3zM8 24h5v1h-5zM14 24h2v1h-2zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM33 24h1v1h-1zM2 25h1v1h-1zM5 25h2v1h-2zM9 25h1v1h-1zM13 25h2v1h-2zM16 25h2v1h-2zM21 25h1v1h-1zM23 25h2v1h-2zM31 25h3v1h-3zM2 26h1v1h-1zM4 26h1v1h-1zM7 26h2v1h-2zM10 26h2v1h-2zM16 26h1v1h-1zM18 26h2v1h-2zM22 26h1v1h-1zM24 26h8v1h-8zM33 26h2v1h-2zM10 27h7v1h-7zM18 27h1v1h-1zM21 27h2v1h-2zM24 27h3v1h-3zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM2 28h7v1h-7zM11 28h4v1h-4zM16 28h2v1h-2zM19 28h1v1h-1zM22 28h5v1h-5zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h5v1h-5zM16 29h2v1h-2zM22 29h5v1h-5zM30 29h5v1h-5zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM10 30h1v1h-1zM15 30h2v1h-2zM19 30h2v1h-2zM22 30h1v1h-1zM24 30h1v1h-1zM26 30h6v1h-6zM33 30h2v1h-2zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM16 31h1v1h-1zM18 31h1v1h-1zM20 31h4v1h-4zM26 31h2v1h-2zM30 31h5v1h-5zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h6v1h-6zM22 32h3v1h-3zM28 32h2v1h-2zM32 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h4v1h-4zM16 33h1v1h-1zM18 33h1v1h-1zM20 33h4v1h-4zM27 33h1v1h-1zM30 33h3v1h-3zM2 34h7v1h-7zM10 34h1v1h-1zM15 34h1v1h-1zM19 34h1v1h-1zM21 34h1v1h-1zM24 34h4v1h-4zM29 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/ising.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 37 37" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/ising.html" shape-rendering="crispEdges"><rect width="37" height="37" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h2v1h-2zM14 2h2v1h-2zM18 2h1v1h-1zM20 2h2v1h-2zM25 2h1v1h-1zM28 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM14 3h1v1h-1zM16 3h2v1h-2zM19 3h2v1h-2zM24 3h1v1h-1zM28 3h1v1h-1zM34 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h2v1h-2zM18 4h1v1h-1zM21 4h4v1h-4zM26 4h1v1h-1zM28 4h1v1h-1zM30 4h3v1h-3zM34 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h2v1h-2zM19 5h1v1h-1zM21 5h2v1h-2zM24 5h3v1h-3zM28 5h1v1h-1zM30 5h3v1h-3zM34 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM14 6h2v1h-2zM18 6h6v1h-6zM25 6h2v1h-2zM28 6h1v1h-1zM30 6h3v1h-3zM34 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM14 7h1v1h-1zM17 7h3v1h-3zM22 7h1v1h-1zM28 7h1v1h-1zM34 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h7v1h-7zM10 9h2v1h-2zM13 9h1v1h-1zM16 9h3v1h-3zM20 9h1v1h-1zM23 9h4v1h-4zM2 10h1v1h-1zM4 10h5v1h-5zM12 10h2v1h-2zM15 10h2v1h-2zM19 10h1v1h-1zM21 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h5v1h-5zM2 11h1v1h-1zM4 11h1v1h-1zM7 11h1v1h-1zM9 11h1v1h-1zM13 11h1v1h-1zM15 11h1v1h-1zM19 11h7v1h-7zM28 11h2v1h-2zM31 11h2v1h-2zM34 11h1v1h-1zM2 12h1v1h-1zM4 12h5v1h-5zM10 12h1v1h-1zM15 12h3v1h-3zM20 12h1v1h-1zM22 12h3v1h-3zM27 12h2v1h-2zM30 12h1v1h-1zM32 12h2v1h-2zM5 13h2v1h-2zM10 13h1v1h-1zM12 13h2v1h-2zM15 13h1v1h-1zM22 13h2v1h-2zM25 13h2v1h-2zM30 13h3v1h-3zM34 13h1v1h-1zM3 14h1v1h-1zM8 14h4v1h-4zM13 14h1v1h-1zM16 14h2v1h-2zM19 14h1v1h-1zM24 14h1v1h-1zM27 14h1v1h-1zM29 14h3v1h-3zM33 14h1v1h-1zM4 15h1v1h-1zM6 15h2v1h-2zM11 15h5v1h-5zM18 15h1v1h-1zM20 15h4v1h-4zM25 15h1v1h-1zM33 15h2v1h-2zM3 16h2v1h-2zM7 16h4v1h-4zM12 16h1v1h-1zM14 16h1v1h-1zM16 16h2v1h-2zM19 16h1v1h-1zM22 16h1v1h-1zM27 16h2v1h-2zM31 16h3v1h-3zM3 17h3v1h-3zM7 17h1v1h-1zM9 17h2v1h-2zM12 17h3v1h-3zM17 17h2v1h-2zM21 17h5v1h-5zM27 17h3v1h-3zM31 17h2v1h-2zM3 18h1v1h-1zM5 18h2v1h-2zM8 18h2v1h-2zM11 18h2v1h-2zM15 18h1v1h-1zM17 18h1v1h-1zM19 18h1v1h-1zM21 18h1v1h-1zM24 18h2v1h-2zM27 18h1v1h-1zM29 18h3v1h-3zM34 18h1v1h-1zM3 19h1v1h-1zM7 19h1v1h-1zM10 19h1v1h-1zM12 19h1v1h-1zM15 19h1v1h-1zM18 19h8v1h-8zM27 19h3v1h-3zM31 19h3v1h-3zM3 20h2v1h-2zM7 20h6v1h-6zM14 20h1v1h-1zM17 20h3v1h-3zM23 20h2v1h-2zM27 20h1v1h-1zM29 20h2v1h-2zM32 20h2v1h-2zM2 21h1v1h-1zM4 21h1v1h-1zM9 21h1v1h-1zM14 21h1v1h-1zM17 21h2v1h-2zM20 21h5v1h-5zM26 21h1v1h-1zM29 21h6v1h-6zM2 22h1v1h-1zM5 22h1v1h-1zM7 22h2v1h-2zM13 22h1v1h-1zM17 22h3v1h-3zM24 22h4v1h-4zM29 22h3v1h-3zM33 22h2v1h-2zM2 23h2v1h-2zM5 23h1v1h-1zM7 23h1v1h-1zM9 23h3v1h-3zM13 23h1v1h-1zM16 23h1v1h-1zM18 23h4v1h-4zM23 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM32 23h1v1h-1zM34 23h1v1h-1zM2 24h1v1h-1zM4 24h3v1h-3zM8 24h5v1h-5zM14 24h2v1h-2zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM33 24h1v1h-1zM2 25h1v1h-1zM5 25h2v1h-2zM9 25h1v1h-1zM13 25h2v1h-2zM16 25h2v1h-2zM21 25h1v1h-1zM23 25h2v1h-2zM31 25h3v1h-3zM2 26h1v1h-1zM4 26h1v1h-1zM7 26h2v1h-2zM10 26h2v1h-2zM16 26h1v1h-1zM18 26h2v1h-2zM22 26h1v1h-1zM24 26h8v1h-8zM33 26h2v1h-2zM10 27h7v1h-7zM18 27h1v1h-1zM21 27h2v1h-2zM24 27h3v1h-3zM30 27h1v1h-1zM32 27h1v1h-1zM34 27h1v1h-1zM2 28h7v1h-7zM11 28h4v1h-4zM16 28h2v1h-2zM19 28h1v1h-1zM22 28h5v1h-5zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM2 29h1v1h-1zM8 29h1v1h-1zM10 29h5v1h-5zM16 29h2v1h-2zM22 29h5v1h-5zM30 29h5v1h-5zM2 30h1v1h-1zM4 30h3v1h-3zM8 30h1v1h-1zM10 30h1v1h-1zM15 30h2v1h-2zM19 30h2v1h-2zM22 30h1v1h-1zM24 30h1v1h-1zM26 30h6v1h-6zM33 30h2v1h-2zM2 31h1v1h-1zM4 31h3v1h-3zM8 31h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM16 31h1v1h-1zM18 31h1v1h-1zM20 31h4v1h-4zM26 31h2v1h-2zM30 31h5v1h-5zM2 32h1v1h-1zM4 32h3v1h-3zM8 32h1v1h-1zM10 32h1v1h-1zM12 32h6v1h-6zM22 32h3v1h-3zM28 32h2v1h-2zM32 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h4v1h-4zM16 33h1v1h-1zM18 33h1v1h-1zM20 33h4v1h-4zM27 33h1v1h-1zM30 33h3v1h-3zM2 34h7v1h-7zM10 34h1v1h-1zM15 34h1v1h-1zM19 34h1v1h-1zM21 34h1v1h-1zM24 34h4v1h-4zM29 34h1v1h-1zM31 34h1v1h-1zM33 34h1v1h-1z"/></svg></button><!-- /vd-qr -->
     </div>
   </header>
 

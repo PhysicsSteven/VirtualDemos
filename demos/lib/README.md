@@ -127,7 +127,34 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 | two-speaker | 2026-10-23 | batch 4 (Acoustics) |
 | ultrasound | 2026-10-23 | batch 4 (Acoustics) |
 | wave-power | 2026-10-23 | batch 4 (Acoustics) |
+| binding-energy | 2026-10-24 | batch 5 (Misc) |
+| black-holes | 2026-10-24 | batch 5 (Misc) |
+| blackbody | 2026-10-24 | batch 5 (Misc) |
+| compton | 2026-10-24 | batch 5 (Misc) |
+| diffraction-grating | 2026-10-24 | batch 5 (Misc) |
+| distance-ladder | 2026-10-24 | batch 5 (Misc) |
+| double-slit | 2026-10-24 | batch 5 (Misc) |
+| exoplanets | 2026-10-24 | batch 5 (Misc) |
+| franck-hertz | 2026-10-24 | batch 5 (Misc) |
+| gamma-spectroscopy | 2026-10-24 | batch 5 (Misc) |
+| heat-engines | 2026-10-24 | batch 5 (Misc) |
+| hr-diagram | 2026-10-24 | batch 5 (Misc) |
+| ideal-gas | 2026-10-24 | batch 5 (Misc) |
+| ising | 2026-10-24 | batch 5 (Misc) |
+| lagrange-points | 2026-10-24 | batch 5 (Misc) |
+| lasers | 2026-10-24 | batch 5 (Misc) |
+| moon-phases | 2026-10-24 | batch 5 (Misc) |
+| photoelectric | 2026-10-24 | batch 5 (Misc) |
+| quantum-waves | 2026-10-24 | batch 5 (Misc) |
+| radioactive-decay | 2026-10-24 | batch 5 (Misc) |
+| rotation-curves | 2026-10-24 | batch 5 (Misc) |
+| rutherford | 2026-10-24 | batch 5 (Misc) |
+| seasons | 2026-10-24 | batch 5 (Misc) |
+| spacetime | 2026-10-24 | batch 5 (Misc) |
+| spectra | 2026-10-24 | batch 5 (Misc) |
+| thin-films | 2026-10-24 | batch 5 (Misc) |
+| white-dwarf-cooling | 2026-10-24 | batch 5 (Misc) |
 
 ## Being moved
 
-Batch 5 (Misc without three.js), from 2026-10-24 00:20: binding-energy, black-holes, blackbody, compton, diffraction-grating, distance-ladder, double-slit, exoplanets, franck-hertz, gamma-spectroscopy, heat-engines, hr-diagram, ideal-gas, ising, lagrange-points, lasers, moon-phases, photoelectric, quantum-waves, radioactive-decay, rotation-curves, rutherford, seasons, spacetime, spectra, thin-films, white-dwarf-cooling.
+Nothing at the moment.
