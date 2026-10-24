@@ -1679,11 +1679,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // ---------- 3D view of the rolling race (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
   /* Metres, z up. Each lane is a board D long at angle β, the boards side by side; each object has its real radius R and turns by
      s/R as it rolls (the block slides without turning), at the distance s the model gives. The camera looks across the boards so the
-     whole race shows. The other scenes stay flat. Click an object or its name to select its lane; drag elsewhere to turn the view,
+     whole race shows. The torque, spin and seesaw scenes are below. Click an object or its name to select its lane; drag elsewhere to turn the view,
      wheel or pinch to zoom, double click to reset. */
-  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.22, ph: 1.08, zoom: 1 } };
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.22, ph: 1.08, zoom: 1 },
+    ot: { th: -Math.PI / 2 + 0.5, ph: 0.72, zoom: 1 }, os: { th: -Math.PI / 2 + 0.3, ph: 0.85, zoom: 1 }, oe: { th: -Math.PI / 2 + 0.18, ph: 1.25, zoom: 1 } };
   let g3 = null;
-  const use3 = () => !!(G3.on && g3) && S.scene === 'roll';
+  const use3 = () => !!(G3.on && g3);
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
   function init3D() {
     G3.tried = true;
@@ -1700,10 +1701,31 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     /* a stripe texture so rolling shows on a ball */
     const stc = document.createElement('canvas'); stc.width = 256; stc.height = 128; const sx = stc.getContext('2d'); sx.fillStyle = '#ffffff'; sx.fillRect(0, 0, 256, 128); sx.fillStyle = '#d0d4da'; for (let i = 0; i < 4; i++) sx.fillRect(i * 64, 0, 32, 128);
     const stripeT = new THREE.CanvasTexture(stc);
-    scene.add(floor, wall, ramp, objs);
-    g3 = { rd, el, scene, cam, hemi, sun, floorM, wallM, boardM, railM, legM, lineM, ramp, objs, stripeT, sig: '' };
+    const rollG = new THREE.Group(); rollG.add(ramp, objs);
+    const tqG = new THREE.Group(), tqFix = new THREE.Group(), tqBody = new THREE.Group(); tqG.add(tqFix, tqBody);
+    const spG = new THREE.Group(), spFix = new THREE.Group(), spBody = new THREE.Group(); spG.add(spFix, spBody);
+    const seG = new THREE.Group(), seFix = new THREE.Group(), seBeam = new THREE.Group(); seG.add(seFix, seBeam);
+    scene.add(floor, wall, rollG, tqG, spG, seG);
+    const shaftG = new THREE.CylinderGeometry(1, 1, 1, 10).translate(0, 0.5, 0), headG = new THREE.ConeGeometry(1, 1, 16).translate(0, 0.5, 0); shaftG.userData.keep = headG.userData.keep = true;
+    const top = (o) => new THREE.MeshBasicMaterial(Object.assign({ depthTest: false, transparent: true }, o));
+    const doorM = M({ roughness: 0.7 }), steelM = M({ roughness: 0.35, metalness: 0.7 }), chromeM = M({ roughness: 0.2, metalness: 0.9 }), plateM = M({ roughness: 0.6, metalness: 0.5 }), wallTqM = M({ roughness: 0.95 });
+    const iceM = M({ roughness: 0.15, metalness: 0.05 }), suitM = M({ roughness: 0.6 }), bootM = M({ roughness: 0.5 }), skinM = M({ roughness: 0.7 }), hairM = M({ roughness: 0.8 }), massM = M({ roughness: 0.35, metalness: 0.5 }), tableM = M({ roughness: 0.7 });
+    const fulcM = M({ roughness: 0.8 }), postM = M({ roughness: 0.7 }), blockM = [0, 1, 2].map(() => M({ roughness: 0.55 })), blockTopM = [0, 1, 2].map(() => top({}));
+    const accentTopM = top({}), negTopM = top({}), posTopM = top({}), equiLineM = new THREE.LineDashedMaterial({ dashSize: 0.03, gapSize: 0.02, depthTest: false, transparent: true });
+    const loaM = new THREE.LineDashedMaterial({ dashSize: 0.04, gapSize: 0.03, depthTest: false, transparent: true, opacity: 0.8 }), rightM = new THREE.LineBasicMaterial({ depthTest: false, transparent: true });
+    const ghostM = new THREE.LineDashedMaterial({ dashSize: 0.04, gapSize: 0.03 }), refM = new THREE.LineDashedMaterial({ dashSize: 0.04, gapSize: 0.04, transparent: true, opacity: 0.7 });
+    g3 = { rd, el, scene, cam, hemi, sun, floorM, wallM, boardM, railM, legM, lineM, ramp, objs, stripeT, sig: '', wall, rollG, tqG, tqFix, tqBody, spG, spFix, spBody, seG, seFix, seBeam,
+      shaftG, headG, Y: new THREE.Vector3(0, 1, 0), ray: new THREE.Raycaster(), doorM, steelM, chromeM, plateM, wallTqM, iceM, suitM, bootM, skinM, hairM, massM, tableM, fulcM, postM, blockM, blockTopM,
+      accentTopM, negTopM, posTopM, equiLineM, loaM, rightM, ghostM, refM, tqSig: '', spSig: '', seSig: '' };
+    g3.rArr = arr3(negTopM, true); g3.fArr = arr3(posTopM, true); g3.tauArr = arr3(accentTopM, true);
+    g3.loa = line3(loaM, 2); g3.arm = line3(equiLineM, 2); g3.rightA = line3(rightM, 3); tqG.add(g3.rArr, g3.fArr, g3.tauArr, g3.loa, g3.arm, g3.rightA);
+    g3.spRef = line3(refM, 2); spG.add(g3.spRef);
     view.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
-    VD3.orbit(view, G3.o, () => { if (use3()) dirty = true; }, { grab: (e) => !use3() || !!handleAt(e), phMin: 0.3, phMax: 1.55, zMin: 0.5, zMax: 3, keys: false });
+    const grab = (sc) => (e) => !use3() || S.scene !== sc || !!handleAt(e), ch = () => { if (use3()) dirty = true; };
+    VD3.orbit(view, G3.o, ch, { grab: grab('roll'), phMin: 0.3, phMax: 1.55, zMin: 0.5, zMax: 3, keys: false });
+    VD3.orbit(view, G3.ot, ch, { grab: grab('torque'), phMin: 0.05, phMax: 1.45, zMin: 0.5, zMax: 3, keys: false });
+    VD3.orbit(view, G3.os, ch, { grab: grab('spin'), phMin: 0.05, phMax: 1.5, zMin: 0.5, zMax: 3, keys: false });
+    VD3.orbit(view, G3.oe, ch, { grab: grab('seesaw'), phMin: 0.4, phMax: 1.55, zMin: 0.5, zMax: 3, keys: false });
     return true;
   }
   function theme3() {
@@ -1711,6 +1733,14 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     g.scene.background = col3(T.canvas, '#ffffff'); g.floorM.color = col3(dk ? '#2a2620' : '#e2ddd3', '#e2ddd3'); g.wallM.color = col3(dk ? '#1c222b' : '#eef1f5', '#eef1f5');
     g.boardM.color = col3(dk ? '#6e5a42' : '#c9a97c', '#c9a97c'); g.railM.color = col3(dk ? '#8b95a3' : '#9aa6b6', '#9aa6b6'); g.legM.color = col3(dk ? '#4a3c2c' : '#8a6d4a', '#8a6d4a'); g.lineM.color = col3(T.ink, '#17202b');
     g.hemi.intensity = dk ? 0.5 : 0.62; g.sun.intensity = dk ? 0.75 : 0.85; g.sig = '';
+    g.doorM.color = col3(dk ? '#9a7650' : '#c49a63', '#c49a63'); g.steelM.color = col3('#9aa3ad', '#9aa3ad'); g.chromeM.color = col3('#d5dbe2', '#d5dbe2'); g.plateM.color = col3(dk ? '#59626d' : '#b9c1cb', '#b9c1cb');
+    g.wallTqM.color = col3(dk ? '#3a4250' : '#e9e4da', '#e9e4da'); g.iceM.color = col3(dk ? '#3c5a70' : '#e4f1fa', '#e4f1fa'); g.suitM.color = col3(dk ? '#6a7fc4' : '#3d56a6', '#3d56a6');
+    g.bootM.color = col3('#f2f2f2', '#f2f2f2'); g.skinM.color = col3('#e2b393', '#e2b393'); g.hairM.color = col3('#4a3426', '#4a3426'); g.massM.color = col3(T.pos, '#c23f2c'); g.tableM.color = col3(dk ? '#5a6370' : '#c8ced6', '#c8ced6');
+    g.fulcM.color = col3(dk ? '#5b6573' : '#9aa4b1', '#9aa4b1'); g.postM.color = col3(dk ? '#4a5260' : '#b8bfc9', '#b8bfc9');
+    [T.pos, T.neg, T.equi].forEach((c, i) => { g.blockM[i].color = col3(c, '#888888'); g.blockTopM[i].color = col3(c, '#888888'); });
+    g.accentTopM.color = col3(T.accent, '#2a64c8'); g.negTopM.color = col3(T.neg, '#2a64c8'); g.posTopM.color = col3(T.pos, '#c23f2c'); g.equiLineM.color = col3(T.equi, '#a7740b');
+    g.loaM.color = col3(T.muted, '#5d6a7c'); g.rightM.color = col3(T.equi, '#a7740b'); g.ghostM.color = col3(T.neg, '#2a64c8'); g.refM.color = col3(T.muted, '#5d6a7c');
+    g.tqSig = g.spSig = g.seSig = '';
   }
   const laneW = () => Math.max(0.14, 2.4 * Math.max(...RO.lanes.map((o) => o.R)) + 0.06);
   /* rebuilds the boards and objects when the lanes, β or D change */
@@ -1747,7 +1777,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     g.el.hidden = false; Object.assign(g.el.style, { width: W0 + 'px', height: H0 + 'px' });
     if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; g.cam.updateProjectionMatrix(); }
     const key = [T.canvas, T.ink, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
-    build3();
+    build3(); show3('roll'); g.cam.clearViewOffset(); g.cam.near = 0.02; g.cam.far = 100;
     const b = RO.beta * DEG, D = RO.D, cb = Math.cos(b), sb = Math.sin(b), n = RO.lanes.length, wl = laneW(), TH = 0.02;
     const results = RO.lanes.map((o) => rollAt(o, b, D, RO.t)), order = results.map((r, i) => [r.T, i]).sort((p, q) => p[0] - q[0]), place = []; order.forEach(([, i], j) => { place[i] = j + 1; });
     /* a point s along lane k, height u above the board, in world coordinates */
@@ -1777,6 +1807,315 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (W >= 600) label(ctx, 'drag to turn, wheel to zoom', W - 12 * ps, H - 18 * ps, T.muted, 'right', 'middle', 10);
     void foot;
   }
+  /* ---------- 3D torque, spin and seesaw scenes ----------
+     Metres, z up, the same state as the flat drawings. Torque: the door (2 m tall, hinge on the z axis) or the wrench on its bolt, turned by
+     φ; r, F, the line of action and the lever arm r⊥ are drawn in the horizontal plane at the push height (the handle, or the wrench), on
+     top of the picture, and the torque shows as a curved arrow round the pivot and as the vector τ = r × F along the axis (up is ccw from
+     above, length in proportion to τ, full scale = L × 50 N). Spin: a skater, arms out to the masses at radius r, or a 1 m turntable with
+     the masses on it, turned by φ; the masses are steel at their real size. Seesaw: the beam of the flat view seen from the front, its
+     blocks the same sizes, weight arrows 4 cm per kg. */
+  const mesh3 = (geo, m, cast = true, recv = true) => { const x = new THREE.Mesh(geo, m); x.castShadow = cast; x.receiveShadow = recv; return x; };
+  function clear3(grp) { while (grp.children.length) { const c = grp.children.pop(); c.traverse((m) => { if (m.geometry && !m.geometry.userData.keep) m.geometry.dispose(); }); } }
+  function arr3(mat, top) {
+    const gr = new THREE.Group(), a = new THREE.Mesh(g3.shaftG, mat), b = new THREE.Mesh(g3.headG, mat); gr.add(a, b);
+    if (top) { for (const m of [a, b]) m.renderOrder = 20; }
+    return gr;
+  }
+  function setArr3(gr, o, v, r, hl) {
+    const L = v.length(); gr.visible = L > 1e-6; if (!gr.visible) return;
+    const h = Math.min(hl, 0.45 * L), [sh, hd] = gr.children;
+    sh.scale.set(r, L - h, r); hd.position.set(0, L - h, 0); hd.scale.set(2.8 * r, h, 2.8 * r);
+    gr.position.copy(o); gr.quaternion.setFromUnitVectors(g3.Y, v.clone().divideScalar(L));
+  }
+  function line3(mat, n) { const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(3 * n), 3)); const l = new THREE.Line(geo, mat); l.renderOrder = 19; l.frustumCulled = false; return l; }
+  function setLine3(l, pts) { const p = l.geometry.attributes.position; pts.forEach((q, i) => p.setXYZ(i, q[0], q[1], q[2])); l.geometry.setDrawRange(0, pts.length); p.needsUpdate = true; l.computeLineDistances(); }
+  /* a curved arrow round the z axis: radius R, tube t, ±1.5 rad about +x, head at +1.5 rad (counterclockwise); mirror with scale.y = −1 */
+  function curl3(R, t, mat) {
+    const gr = new THREE.Group(), pts = [];
+    for (let i = 0; i <= 30; i++) { const a = -1.5 + 2.6 * i / 30; pts.push(new THREE.Vector3(R * Math.cos(a), R * Math.sin(a), 0)); }
+    const tube = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 30, t, 6), mat), hd = new THREE.Mesh(g3.headG, mat), ae = 1.1;
+    hd.scale.set(t * 3, R * 0.4, t * 3); hd.position.set(R * Math.cos(ae), R * Math.sin(ae), 0); hd.quaternion.setFromUnitVectors(g3.Y, new THREE.Vector3(-Math.sin(ae), Math.cos(ae), 0));
+    for (const m of [tube, hd]) { m.renderOrder = 20; } gr.add(tube, hd); return gr;
+  }
+  /* sizes the renderer to the view pane, frames the spheres [x, y, z, r] between the controls and the bottom text as seen from the angles
+     in o, renders, and returns a projector from metres to the canvas */
+  function frame3(o, balls, botPx) {
+    const g = g3, dk = VD3.dark(), [W, H] = dims.v, W0 = Math.max(1, Math.round(W)), H0 = Math.max(1, Math.round(H));
+    g.el.hidden = false; Object.assign(g.el.style, { width: W0 + 'px', height: H0 + 'px' });
+    if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; }
+    const key = [T.canvas, T.ink, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    const top = ctlH + 6, bot = botPx, f = Math.max(0.3, (H0 - top - bot) / H0);
+    g.cam.setViewOffset(W0, H0, 0, -(top - bot) / 2, W0, H0);
+    const st = Math.sin(o.th), ct = Math.cos(o.th), sp = Math.sin(o.ph), cp = Math.cos(o.ph), b = [Infinity, -Infinity, Infinity, -Infinity];
+    let cx = 0, cy = 0, cz = 0;
+    for (const [x, y, z] of balls) { cx += x; cy += y; cz += z; }
+    cx /= balls.length; cy /= balls.length; cz /= balls.length;
+    for (const [x, y, z, r] of balls) {
+      const u = -st * (x - cx) + ct * (y - cy), w = -cp * ct * (x - cx) - cp * st * (y - cy) + sp * (z - cz);
+      b[0] = Math.min(b[0], u - r); b[1] = Math.max(b[1], u + r); b[2] = Math.min(b[2], w - r); b[3] = Math.max(b[3], w + r);
+    }
+    const mu = (b[0] + b[1]) / 2, mw = (b[2] + b[3]) / 2;
+    const target = new THREE.Vector3(cx - st * mu - cp * ct * mw, cy + ct * mu - cp * st * mw, cz + sp * mw);
+    const tv = Math.tan(g.cam.fov * Math.PI / 360), half = Math.max((b[3] - b[2]) / 2 / (tv * f), (b[1] - b[0]) / 2 / (tv * g.cam.aspect));
+    const dist = half * 1.12 + Math.max(b[1] - b[0], b[3] - b[2]) * 0.5;
+    VD3.place(g.cam, o, target, dist); g.cam.near = Math.max(0.01, dist / 100); g.cam.far = dist * 6 + 30; g.cam.updateProjectionMatrix();
+    g.scene.updateMatrixWorld(); g.rd.render(g.scene, g.cam);
+    const v = new THREE.Vector3();
+    return (x, y, z) => { v.set(x, y, z).project(g.cam); return [(v.x + 1) / 2 * W0, (1 - v.y) / 2 * H0]; };
+  }
+  /* the point on the horizontal plane z = z0 (or the vertical plane y = 0 when z0 is null) under the canvas point (x, y) */
+  function hit3(x, y, z0) {
+    const g = g3; g.ray.setFromCamera({ x: x / G3.w * 2 - 1, y: 1 - y / G3.h * 2 }, g.cam);
+    const pl = z0 === null ? new THREE.Plane(new THREE.Vector3(0, 1, 0), 0) : new THREE.Plane(new THREE.Vector3(0, 0, 1), -z0);
+    return g.ray.ray.intersectPlane(pl, new THREE.Vector3());
+  }
+  function show3(name) { for (const k of ['roll', 'tq', 'sp', 'se']) g3[k + 'G'].visible = k === name; g3.wall.visible = name !== 'tq'; }
+  function start2D() { const [W, H] = dims.v, ctx = ctxV; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); return [ctx, W, H, projScale()]; }
+
+  /* torque */
+  function buildTq() {
+    const g = g3, door = TQ.obj === 'door', L = TQ.L, sig = TQ.obj + L; if (g.tqSig === sig) return; g.tqSig = sig;
+    clear3(g.tqFix); clear3(g.tqBody);
+    if (door) {
+      const wt = 0.12, wh = 0.9;   /* the wall cut away below the handle, as in a plan, so the swing shows on both sides */
+      for (const [x0, x1] of [[-1.2 * L - 0.4, -0.03], [L + 0.04, 2.2 * L + 0.4]]) { const w = mesh3(new THREE.BoxGeometry(x1 - x0, wt, wh), g.wallTqM); w.position.set((x0 + x1) / 2, 0, wh / 2); g.tqFix.add(w); }
+      for (const z of [0.3, 1.72]) { const hg = mesh3(new THREE.CylinderGeometry(0.014, 0.014, 0.1, 10).rotateX(Math.PI / 2), g.steelM); hg.position.set(0, 0, z); g.tqFix.add(hg); }
+      const slab = mesh3(new THREE.BoxGeometry(L, 0.04, 2.0), g.doorM); slab.position.set(L / 2, 0, 1.0); g.tqBody.add(slab);
+      const xh = L - 0.07;
+      for (const sg of [-1, 1]) {
+        const neck = mesh3(new THREE.CylinderGeometry(0.01, 0.01, 0.05, 8), g.steelM); neck.position.set(xh, sg * 0.045, 1.0); g.tqBody.add(neck);
+        const lev = mesh3(new THREE.CylinderGeometry(0.01, 0.01, 0.12, 8).rotateZ(Math.PI / 2), g.steelM); lev.position.set(xh - 0.05, sg * 0.07, 1.0); g.tqBody.add(lev);
+      }
+    } else {
+      const plate = mesh3(new THREE.BoxGeometry(2.3 * L + 0.06, 2.3 * L + 0.06, 0.02), g.plateM); plate.position.z = 0.01; g.tqFix.add(plate);
+      const bolt = mesh3(new THREE.CylinderGeometry(0.022, 0.022, 0.026, 6).rotateX(Math.PI / 2), g.steelM); bolt.position.z = 0.033; g.tqFix.add(bolt);
+      const hw = Math.max(0.018, Math.min(0.04, 0.11 * L)), ring = mesh3(new THREE.TorusGeometry(0.033, 0.011, 10, 32), g.chromeM); ring.position.z = 0.04; g.tqBody.add(ring);
+      const arm = mesh3(new THREE.BoxGeometry(L - 0.04, hw, 0.01), g.chromeM); arm.position.set(0.04 + (L - 0.04) / 2, 0, 0.04); g.tqBody.add(arm);
+      const end = mesh3(new THREE.CylinderGeometry(hw / 2, hw / 2, 0.01, 16).rotateX(Math.PI / 2), g.chromeM); end.position.set(L, 0, 0.04); g.tqBody.add(end);
+    }
+    const R0 = door ? 0.16 : 0.07, t = door ? 0.009 : 0.004;
+    g.tqCurl = curl3(R0, t, g.accentTopM); g.tqFix.add(g.tqCurl);
+  }
+  function drawTorque3D() {
+    const g = g3, door = TQ.obj === 'door', L = TQ.L; show3('tq'); buildTq();
+    const zp = door ? 1.0 : 0.047, [phi] = doorState(), cph = Math.cos(phi), sph = Math.sin(phi);
+    g.tqBody.rotation.z = phi;
+    const fAng = TQ.mode === 'room' ? TQ.th * DEG : phi + TQ.th * DEG, rel = fAng - phi;
+    const Pw = [TQ.r * cph, TQ.r * sph], u = [Math.cos(fAng), Math.sin(fAng)], kF = L / 50, flen = TQ.F * kF;
+    const tau = torqueOf(TQ.r, TQ.F, rel), rperp = leverArm(TQ.r, rel), V = (x, y, z) => new THREE.Vector3(x, y, z);
+    const tipW = [Pw[0] + u[0] * flen, Pw[1] + u[1] * flen], wid = door ? 0.012 : 0.004;
+    setArr3(g.rArr, V(0, 0, zp), V(Pw[0], Pw[1], 0), wid * 0.8, door ? 0.06 : 0.02);
+    setArr3(g.fArr, V(Pw[0], Pw[1], zp), V(u[0] * flen, u[1] * flen, 0), wid, door ? 0.08 : 0.026);
+    const d = Pw[0] * u[0] + Pw[1] * u[1], foot = [Pw[0] - u[0] * d, Pw[1] - u[1] * d], big = 3 * L;
+    g.loa.visible = TQ.F > 0; if (g.loa.visible) setLine3(g.loa, [[Pw[0] - u[0] * big, Pw[1] - u[1] * big, zp], [Pw[0] + u[0] * big, Pw[1] + u[1] * big, zp]]);
+    const showArm = TQ.F > 0 && rperp > 0.012 * L;
+    g.arm.visible = g.rightA.visible = showArm;
+    if (showArm) {
+      setLine3(g.arm, [[0, 0, zp], [foot[0], foot[1], zp]]);
+      const al = Math.hypot(foot[0], foot[1]), q = 0.05 * L, e1 = [-foot[0] / al * q, -foot[1] / al * q], sg = d >= 0 ? 1 : -1, e2 = [u[0] * q * sg, u[1] * q * sg];
+      setLine3(g.rightA, [[foot[0] + e1[0], foot[1] + e1[1], zp], [foot[0] + e1[0] + e2[0], foot[1] + e1[1] + e2[1], zp], [foot[0] + e2[0], foot[1] + e2[1], zp]]);
+    }
+    g.tqCurl.visible = Math.abs(tau) > 1e-9; g.tqCurl.position.z = zp; g.tqCurl.rotation.z = phi + Math.PI; g.tqCurl.scale.y = tau > 0 ? 1 : -1;
+    const ztop = door ? 2.06 : 0.06, tl = (door ? 0.9 : 0.3) * tau / (L * 50);
+    setArr3(g.tauArr, V(0, 0, ztop), V(0, 0, tl), door ? 0.014 : 0.005, door ? 0.08 : 0.025);
+    const balls = [[0, 0, 0, 0.05 * L]]; for (let i = 0; i < 8; i++) balls.push([1.12 * L * Math.cos(i * Math.PI / 4), 1.12 * L * Math.sin(i * Math.PI / 4), zp, 0.05 * L]);
+    if (door) balls.push([0, 0, 2.2, 0.05], [L, 0, 2.0, 0.05]);
+    g.sun.position.set(-1.5, -2.5, 5); g.sun.target.position.set(L / 2, 0, 0);
+    const Q = frame3(G3.ot, balls, 46 * projScale()), [ctx, W, H, ps] = start2D();
+
+    const P = Q(Pw[0], Pw[1], zp), tip = Q(tipW[0], tipW[1], zp), O = Q(0, 0, zp);
+    if (showArm && Math.abs(Math.sin(rel)) < 0.985) {
+      const fq = Q(foot[0], foot[1], zp), mx = (O[0] + fq[0]) / 2, my = (O[1] + fq[1]) / 2, al = Math.hypot(fq[0] - O[0], fq[1] - O[1]) || 1, nx = -(fq[1] - O[1]) / al, ny = (fq[0] - O[0]) / al;
+      const side = nx * (tip[0] - mx) + ny * (tip[1] - my) > 0 ? -1 : 1;
+      sideLabel(ctx, 'r⊥ = ' + fx(rperp, 2) + ' m', mx, my, nx * side, ny * side, 10 * ps, T.equi);
+    }
+    /* θ, from r to F, drawn on the screen at the push point */
+    if (TQ.F > 0 && TQ.r > 0) {
+      const bq = Q(Pw[0] + cph * 0.1 * L, Pw[1] + sph * 0.1 * L, zp), fq = Q(Pw[0] + u[0] * 0.1 * L, Pw[1] + u[1] * 0.1 * L, zp);
+      const a0 = Math.atan2(bq[1] - P[1], bq[0] - P[0]), a1 = Math.atan2(fq[1] - P[1], fq[0] - P[0]);
+      let da = a1 - a0; da = Math.atan2(Math.sin(da), Math.cos(da));
+      ctx.save(); ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.arc(P[0], P[1], 20 * ps, a0, a0 + da, da < 0); ctx.stroke(); ctx.restore();
+      const am = a0 + da / 2; label(ctx, 'θ', P[0] + Math.cos(am) * 31 * ps, P[1] + Math.sin(am) * 31 * ps, T.ink, 'center', 'middle', 12);
+    }
+    if (TQ.F > 0) {
+      ctx.font = `600 ${12 * ps}px ${T.mono}`;
+      const ftxt = 'F = ' + fx(TQ.F, 1) + ' N', right = tip[0] >= P[0], w = ctx.measureText(ftxt).width;
+      const lx = right ? Math.min(tip[0] + 10 * ps, W - 6 - w) : Math.max(tip[0] - 10 * ps, 6 + w);
+      label(ctx, ftxt, lx, Math.max(ctlH + 14 * ps, Math.min(H - 52 * ps, tip[1] + (tip[1] < P[1] ? -10 : 12) * ps)), T.pos, right ? 'left' : 'right', 'middle', 12);
+    }
+    if (TQ.r > 0.001) {
+      const txt = Math.abs(Math.sin(rel)) >= 0.985 && TQ.F > 0 ? 'r = r⊥ = ' + fx(TQ.r, 2) + ' m' : 'r = ' + fx(TQ.r, 2) + ' m';
+      const side = Math.sin(rel) >= 0 ? -1 : 1, nw = [-sph * side, cph * side], lq = Q(cph * 0.35 * TQ.r + nw[0] * 0.09 * L, sph * 0.35 * TQ.r + nw[1] * 0.09 * L, zp);
+      label(ctx, txt, lq[0], lq[1], T.neg, 'center', 'middle', 11.5);
+    }
+    {
+      const txt = 'τ = ' + s3(tau) + ' N·m' + (Math.abs(tau) < 1e-9 ? '' : tau > 0 ? ', ccw' : ', cw');
+      const tq = Q(0, 0, ztop + Math.max(0, tl)), base = Q(0, 0, ztop);
+      label(ctx, txt, Math.min(W - 8, Math.max(8, tq[0])), Math.max(ctlH + 14 * ps, Math.min(tq[1], base[1]) - 10 * ps), T.accent, tq[0] > W - 120 * ps ? 'right' : tq[0] < 120 * ps ? 'left' : 'center', 'bottom', 12);
+    }
+    const I = rodI(TQ.m, TQ.L);
+    ctx.save(); ctx.font = `${11.5 * ps}px ${T.mono}`; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+    const thd = Math.atan2(Math.sin(rel), Math.cos(rel)) / DEG;
+    const l1 = `τ = rF sin θ = ${fx(TQ.r, 2)} × ${fx(TQ.F, 1)} × sin ${fx(thd, 0)}° = ${s3(tau)} N·m`;
+    const l2 = `α = τ / I = ${s3(tau)} / ${f3(I)} = ${s3(tau / I)} rad/s²`;
+    const fitFont = (txt) => { let sz = 11.5 * ps; ctx.font = `${sz}px ${T.mono}`; while (ctx.measureText(txt).width > W - 24 && sz > 8) { sz -= 0.5; ctx.font = `${sz}px ${T.mono}`; } };
+    fitFont(l1); ctx.fillText(l1, 12, H - 30 * ps);
+    fitFont(l2); ctx.fillText(l2, 12, H - 12 * ps);
+    ctx.restore();
+    handlesNow = [
+      { id: 'app', pt: P, col: T.neg, cursor: 'move', set: (x, y) => {
+        const q = hit3(x, y, zp); if (!q) return; const [ph] = doorState();
+        setTq('r', snap('tR', q.x * Math.cos(ph) + q.y * Math.sin(ph)));
+      } },
+      { id: 'tip', pt: tip, col: T.pos, cursor: 'crosshair', prio: 2, set: (x, y) => {
+        const q = hit3(x, y, zp); if (!q) return; const [ph] = doorState(), px = TQ.r * Math.cos(ph), py = TQ.r * Math.sin(ph);
+        const dx = q.x - px, dy = q.y - py, ang = Math.atan2(dy, dx) - (TQ.mode === 'room' ? 0 : ph);
+        setTq('F', snap('tF', Math.hypot(dx, dy) / (TQ.L / 50)), true); setTq('th', snap('tTh', Math.atan2(Math.sin(ang), Math.cos(ang)) / DEG));
+      } }
+    ];
+    drawGrips(ctx);
+  }
+
+  /* spin */
+  const STEEL = 7850;
+  function buildSp() {
+    const g = g3, sk = SP.look === 'skater', sig = SP.look + SP.m; if (g.spSig === sig) return; g.spSig = sig;
+    clear3(g.spFix); clear3(g.spBody); g.arms = []; g.masses = [];
+    if (sk) {
+      const ice = mesh3(new THREE.CircleGeometry(2.2, 64), g.iceM, false, true); ice.position.z = 0.001; g.spFix.add(ice);
+      for (const sg of [-1, 1]) {
+        const leg = mesh3(new THREE.CylinderGeometry(0.065, 0.055, 0.85, 12).rotateX(Math.PI / 2), g.suitM); leg.position.set(sg * 0.09, 0, 0.49); g.spBody.add(leg);
+        const boot = mesh3(new THREE.BoxGeometry(0.1, 0.26, 0.09), g.bootM); boot.position.set(sg * 0.09, 0.03, 0.08); g.spBody.add(boot);
+        const blade = mesh3(new THREE.BoxGeometry(0.01, 0.3, 0.03), g.steelM); blade.position.set(sg * 0.09, 0.03, 0.017); g.spBody.add(blade);
+      }
+      const torso = mesh3(new THREE.CylinderGeometry(0.2, 0.15, 0.6, 20).rotateX(Math.PI / 2), g.suitM); torso.scale.set(1, 0.6, 1); torso.position.z = 1.17; g.spBody.add(torso);
+      const head = mesh3(new THREE.SphereGeometry(0.1, 20, 14), g.skinM); head.position.z = 1.6; g.spBody.add(head);
+      const nose = mesh3(new THREE.ConeGeometry(0.02, 0.05, 8), g.skinM); nose.position.set(0, 0.11, 1.6); g.spBody.add(nose);
+      const hair = mesh3(new THREE.SphereGeometry(0.104, 20, 10, 0, 2 * Math.PI, 0, Math.PI / 2).rotateX(Math.PI / 2), g.hairM); hair.position.set(0, -0.01, 1.62); g.spBody.add(hair);
+      for (const sg of [-1, 1]) { const a = mesh3(new THREE.CylinderGeometry(0.035, 0.035, 1, 10).rotateZ(Math.PI / 2).translate(0.5, 0, 0), g.suitM); a.position.set(sg * 0.17, 0, 1.38); a.scale.x = sg; g.arms.push(a); g.spBody.add(a); }
+      const R = Math.cbrt(3 * SP.m / (4 * Math.PI * STEEL));
+      for (let i = 0; i < 2; i++) { const s = mesh3(new THREE.SphereGeometry(R, 24, 16), g.massM); g.masses.push(s); g.spBody.add(s); }
+    } else {
+      const floorDisk = mesh3(new THREE.CylinderGeometry(0.18, 0.24, 0.1, 24).rotateX(Math.PI / 2), g.steelM); floorDisk.position.z = 0.05; g.spFix.add(floorDisk);
+      const disk = mesh3(new THREE.CylinderGeometry(1.0, 1.0, 0.04, 72).rotateX(Math.PI / 2), g.tableM); disk.position.z = 0.12; g.spBody.add(disk);
+      for (let i = 0; i < 4; i++) { const sp = mesh3(new THREE.BoxGeometry(0.97, 0.025, 0.006), g.steelM); sp.position.set(0.485, 0, 0.143); const pv = new THREE.Group(); pv.rotation.z = i * Math.PI / 2; pv.add(sp); g.spBody.add(pv); }
+      const side = Math.cbrt(SP.m / STEEL);
+      for (let i = 0; i < 2; i++) { const s = mesh3(new THREE.BoxGeometry(side, side, side), g.massM); s.userData.h = 0.146 + side / 2; g.masses.push(s); g.spBody.add(s); }
+    }
+    g.spCurl = curl3(0.55, 0.012, g.accentTopM); g.spFix.add(g.spCurl);
+  }
+  function drawSpin3D() {
+    const g = g3, sk = SP.look === 'skater'; show3('sp'); buildSp();
+    const zh = sk ? 1.38 : g.masses[0].userData.h, phi = SP.phi, w = spinW(), rr = sk ? Math.max(SP.r, 0.2) : SP.r;
+    g.spBody.rotation.z = phi;
+    if (sk) { for (const a of g.arms) a.scale.set(Math.sign(a.scale.x) * (rr - 0.17), 1, 1); }
+    g.masses[0].position.set(SP.r, 0, zh); g.masses[1].position.set(-SP.r, 0, zh);
+    g.spCurl.visible = Math.abs(w) > 1e-9; g.spCurl.position.z = sk ? 1.95 : 0.6; g.spCurl.rotation.z = -Math.PI / 2; g.spCurl.scale.y = w > 0 ? 1 : -1;
+    g.spRef.visible = true; setLine3(g.spRef, [[0, 0, zh], [1.0, 0, zh]]);
+    const rmax = Math.max(1.0, SP.r + 0.1), balls = [[0, 0, 0, 0.1], [0, 0, sk ? 2.05 : 0.65, 0.1]];
+    for (let i = 0; i < 8; i++) balls.push([rmax * Math.cos(i * Math.PI / 4), rmax * Math.sin(i * Math.PI / 4), zh, 0.08]);
+    g.sun.position.set(-1.5, -2, 5); g.sun.target.position.set(0, 0, 0);
+    const Q = frame3(G3.os, balls, 40 * projScale()), [ctx, W, H, ps] = start2D();
+    const c = Math.cos(phi), sn = Math.sin(phi), at = (r, a) => Q(r * Math.cos(a), r * Math.sin(a), zh);
+    ctx.save(); SP.trail.forEach(([ph, r], i) => { const [x, y] = at(r, ph); ctx.globalAlpha = 0.08 + 0.5 * i / SP.trail.length; ctx.fillStyle = T.pos; ctx.beginPath(); ctx.arc(x, y, 3.5 * ps, 0, 2 * Math.PI); ctx.fill(); }); ctx.restore();
+    {
+      const txt = 'ω = ' + fx(w, 2) + ' rad/s', zc = sk ? 1.95 : 0.6, q = Q(0.55 * Math.cos(-0.4), 0.55 * Math.sin(-0.4), zc);
+      ctx.font = `600 ${11.5 * ps}px ${T.mono}`;
+      label(ctx, txt, clampX(ctx, txt, q[0] + 10 * ps, 6, W - 8), Math.max(ctlH + 14 * ps, q[1]), T.accent, 'left', 'middle', 11.5);
+    }
+    const m1 = at(SP.r, phi), m2 = at(SP.r, phi + Math.PI);
+    {
+      const off = 0.16, ox = -sn * off, oy = c * off, a = Q(ox, oy, zh), b = Q(SP.r * c + ox, SP.r * sn + oy, zh);
+      if (Math.hypot(b[0] - a[0], b[1] - a[1]) > 30 * ps) {
+        const t1 = Q(ox * 0.75, oy * 0.75, zh), t2 = Q(ox * 1.25, oy * 1.25, zh), t3 = Q(SP.r * c + ox * 0.75, SP.r * sn + oy * 0.75, zh), t4 = Q(SP.r * c + ox * 1.25, SP.r * sn + oy * 1.25, zh);
+        ctx.save(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps; ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.moveTo(t1[0], t1[1]); ctx.lineTo(t2[0], t2[1]); ctx.moveTo(t3[0], t3[1]); ctx.lineTo(t4[0], t4[1]); ctx.stroke(); ctx.restore();
+        const lq = Q(SP.r * c / 2 + ox * 1.6, SP.r * sn / 2 + oy * 1.6, zh);
+        label(ctx, 'r', lq[0], lq[1], T.ink, 'center', 'middle', 12);
+      }
+    }
+    ctx.font = `${10.5 * ps}px ${T.mono}`; ctx.fillStyle = T.ink; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    ctx.fillText('two masses of ' + fx(SP.m, 1) + ' kg at r = ' + fx(SP.r, 2) + ' m', 12 * ps, H - 10 * ps);
+    ctx.textAlign = 'right';
+    ctx.fillText('L = Iω = ' + f3(spinNowI()) + ' × ' + fx(w, 2) + ' = ' + f3(SP.L) + ' kg·m²/s', W - 12 * ps, W < 520 ? H - 28 * ps : H - 10 * ps);
+    const setR = (x, y) => { const q = hit3(x, y, zh); if (q) setSpin('r', snap('sR', Math.hypot(q.x, q.y))); };
+    handlesNow = [
+      { id: 'm1', pt: m1, rad: 8 * ps, col: T.pos, cursor: 'move', set: setR },
+      { id: 'm2', pt: m2, rad: 8 * ps, col: T.pos, cursor: 'move', set: setR }
+    ];
+    drawGrips(ctx);
+  }
+
+  /* seesaw */
+  function buildSe() {
+    const g = g3, sig = [SE.Lb, SE.h].join(); if (g.seSig === sig) return; g.seSig = sig;
+    clear3(g.seFix); clear3(g.seBeam); g.blocks = []; g.wArr = [];
+    const sh = new THREE.Shape(); sh.moveTo(-0.32, 0); sh.lineTo(0.32, 0); sh.lineTo(0, SE.h); sh.closePath();
+    const tri = mesh3(new THREE.ExtrudeGeometry(sh, { depth: 0.4, bevelEnabled: false }).rotateX(Math.PI / 2).translate(0, 0.2, 0), g.fulcM); g.seFix.add(tri);
+    g.posts = [];
+    for (const sg of [-1, 1]) { const p = mesh3(new THREE.BoxGeometry(0.08, 0.08, 1), g.postM); p.position.x = sg * (SE.Lb / 2 - 0.12); g.posts.push(p); g.seFix.add(p); }
+    const beam = mesh3(new THREE.BoxGeometry(SE.Lb, 0.36, 0.07), g.doorM); g.seBeam.add(beam);
+    const unit = new THREE.BoxGeometry(1, 1, 1); unit.userData.keep = true;
+    for (let i = 0; i < 3; i++) { const b = mesh3(unit, g.blockM[i]); g.blocks.push(b); g.seBeam.add(b); const a = arr3(g.blockTopM[i], true); g.wArr.push(a); g.seFix.add(a); }
+    const eg = new THREE.EdgesGeometry(unit); eg.userData.keep = true;
+    g.ghost = new THREE.LineSegments(eg, g.ghostM); g.seBeam.add(g.ghost);
+    g.seCurl = curl3(0.22, 0.008, g.accentTopM); g.seFix.add(g.seCurl);
+  }
+  function drawSeesaw3D() {
+    const g = g3; show3('se'); buildSe();
+    const half = SE.Lb / 2, bt = 0.07, phi = seesawPhi(), c = Math.cos(phi), sn = Math.sin(phi), h = SE.h, cols = [T.pos, T.neg, T.equi];
+    const P = (x, up, y) => [x * c - up * sn, y || 0, h + x * sn + up * c];
+    g.seBeam.position.set(0, 0, h); g.seBeam.rotation.set(0, -phi, 0);
+    for (const p of g.posts) { p.visible = SE.held; p.scale.z = h - bt / 2; p.position.z = (h - bt / 2) / 2; }
+    const ms = SE.ms, xb = balanceX(ms, 1);
+    ms.forEach((q, i) => {
+      const b = g.blocks[i], a = g.wArr[i], sd = 0.16 + 0.07 * Math.sqrt(q.m);
+      b.visible = q.m > 0; if (!b.visible) { a.visible = false; return; }
+      b.scale.set(sd, sd, sd); b.position.set(q.x, 0, bt / 2 + sd / 2);
+      const ctr = P(q.x, bt / 2 + sd / 2);
+      setArr3(a, new THREE.Vector3(ctr[0], ctr[1], ctr[2]), new THREE.Vector3(0, 0, -0.04 * q.m), 0.012, 0.06);
+    });
+    const ghostOn = SE.held && isFinite(xb) && Math.abs(xb) <= half + 1e-9 && Math.abs(xb - ms[1].x) > 0.005 && ms[1].m > 0;
+    g.ghost.visible = ghostOn;
+    if (ghostOn) { const sd = 0.16 + 0.07 * Math.sqrt(ms[1].m); g.ghost.scale.set(sd, sd, sd); g.ghost.position.set(xb, 0, bt / 2 + sd / 2); g.ghost.computeLineDistances(); }
+    const net = seesawTorque(liveMasses(), phi);
+    g.seCurl.visible = Math.abs(net) > 1e-9; g.seCurl.position.set(0, -0.24, h);
+    g.seCurl.rotation.set(Math.PI / 2, 0, Math.PI / 2); g.seCurl.scale.set(1, net > 0 ? 1 : -1, 1);   /* round the pivot axis, centred on the top, ccw as seen from the front */
+    const balls = [[-half, 0, h, 0.3], [half, 0, h, 0.3], [0, 0, 0, 0.2], [0, 0, h + 1.1, 0.2], [-half, 0, 0, 0.1], [half, 0, 0, 0.1]];
+    g.sun.position.set(-1.5, -3, 5); g.sun.target.position.set(0, 0, 0);
+    const Q = frame3(G3.oe, balls, 40 * projScale()), [ctx, W, H, ps] = start2D(), QP = (x, up, y) => Q(...P(x, up, y));
+    /* ruler on the front face */
+    ctx.font = `${10 * ps}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.strokeStyle = T.ink; ctx.lineWidth = 1;
+    for (let x = -2; x <= 2.001; x += 0.5) {
+      if (Math.abs(x) > half + 1e-9) continue;
+      const major = Math.abs(x % 1) < 1e-9, a = QP(x, bt / 2, -0.181), b = QP(x, bt / 2 - (major ? 0.05 : 0.03), -0.181);
+      ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke();
+      if (major) { const l = QP(x, -bt / 2 - 0.03, -0.181); ctx.fillText(fx(x, 0), l[0], l[1]); }
+    }
+    if (ghostOn && W >= 560) {
+      const sd = 0.16 + 0.07 * Math.sqrt(ms[1].m), q = QP(xb, bt / 2 + sd + 0.1);
+      ctx.font = `600 ${10 * ps}px ${T.mono}`; const gw = ctx.measureText('B balances here').width;
+      label(ctx, 'B balances here', Math.max(gw / 2 + 6, Math.min(W - gw / 2 - 6, q[0])), q[1], T.neg, 'center', 'middle', 10);
+    }
+    handlesNow = [];
+    ms.forEach((q, i) => {
+      if (q.m <= 0) return;
+      const sd = 0.16 + 0.07 * Math.sqrt(q.m), sel = i === SE.sel, ctr = QP(q.x, bt / 2 + sd / 2, -sd / 2 - 0.002), mid = QP(q.x, bt / 2 + sd / 2);
+      ctx.font = `700 ${11 * ps}px ${T.mono}`; ctx.fillStyle = '#ffffff'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(q.id, ctr[0], ctr[1]);
+      if (sel) { const e = QP(q.x - sd / 2, bt / 2 + sd, -sd / 2), f = QP(q.x + sd / 2, bt / 2, -sd / 2); ctx.save(); ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * ps; ctx.setLineDash([3 * ps, 3 * ps]); ctx.strokeRect(Math.min(e[0], f[0]) - 3 * ps, Math.min(e[1], f[1]) - 3 * ps, Math.abs(f[0] - e[0]) + 6 * ps, Math.abs(f[1] - e[1]) + 6 * ps); ctx.restore(); }
+      const t = QP(q.x, bt / 2 + sd + 0.06), tq = -G * q.m * q.x * c;
+      label(ctx, fx(q.m, 1) + ' kg', t[0], t[1] - 6 * ps, cols[i], 'center', 'bottom', 10.5);
+      if (W >= 560) label(ctx, s3(tq) + ' N·m', t[0], t[1] - 21 * ps, T.muted, 'center', 'bottom', 10);
+      const e2 = QP(q.x + sd / 2, bt / 2 + sd / 2), rad = Math.max(8 * ps, Math.abs(e2[0] - mid[0]));
+      handlesNow.push({ id: 'b' + i, pt: mid, rad, col: cols[i], cursor: 'ew-resize', noGrip: true, set: (x, y) => {
+        const p = hit3(x, y, null); if (!p) return; const ph = seesawPhi(), dx = p.x, dy = p.z - SE.h;
+        SE.sel = i; setSee('x' + i, snap(['eXA', 'eXB', 'eXC'][i], dx * Math.cos(ph) + dy * Math.sin(ph)));
+      }, down: () => { SE.sel = i; } });
+    });
+    const gq = Q(0, -0.2, 0);
+    label(ctx, 'net τ = ' + s3(net) + ' N·m' + (Math.abs(net) < 1e-9 ? ', balanced' : net > 0 ? ', ccw' : ', cw'), gq[0], Math.min(H - 14 * ps, gq[1] + 10 * ps), T.accent, 'center', 'top', 12);
+    if (!SE.held && SE.tip && !SE.tip.none && SE.t >= SE.tip.tEnd) label(ctx, 'touched down after ' + fx(SE.tip.tHit, 2) + ' s', W / 2, ctlH + 14 * ps, T.ink, 'center', 'middle', 11.5);
+    drawGrips(ctx);
+  }
   function setView3(v) {
     G3.want = v === '3d';
     if (v === '3d' && !G3.ok) {
@@ -1792,11 +2131,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (!T) tokens();
     { const c = $('ctl'); ctlH = c.offsetTop + c.offsetHeight; }
     if (!dims.v[0] || !dims.v[1]) return;
-    const sc = S.scene; if (g3 && !use3()) g3.el.hidden = true; $('viewSeg').hidden = sc !== 'roll';
-    if (sc === 'torque') { drawTorque(); drawTorqueCharts(); }
+    const sc = S.scene; if (g3 && !use3()) g3.el.hidden = true; $('viewSeg').hidden = false;
+    if (sc === 'torque') { if (use3()) drawTorque3D(); else drawTorque(); drawTorqueCharts(); }
     else if (sc === 'roll') { if (use3()) drawRoll3D(); else drawRoll(); drawRollCharts(); }
-    else if (sc === 'spin') { drawSpin(); drawSpinCharts(); }
-    else { drawSeesaw(); drawSeesawCharts(); }
+    else if (sc === 'spin') { if (use3()) drawSpin3D(); else drawSpin(); drawSpinCharts(); }
+    else { if (use3()) drawSeesaw3D(); else drawSeesaw(); drawSeesawCharts(); }
   }
 
   // ---------- setters shared by sliders, drags and keys ----------
