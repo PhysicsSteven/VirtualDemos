@@ -4543,11 +4543,12 @@
         "thermo"
       ],
       "requirement": "module",
-      "status": "usable",
+      "status": "needs-feature",
       "demos": [
         "blackbody"
       ],
-      "unit": "temperature-heat"
+      "unit": "temperature-heat",
+      "note": "Partial (2026-10-24, Claude): blackbody covers radiation (Stefan–Boltzmann, Wien); there is no conduction or convection activity."
     },
     {
       "vol": 2,

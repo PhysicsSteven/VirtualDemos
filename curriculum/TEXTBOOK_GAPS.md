@@ -63,6 +63,7 @@ Regenerated from `textbook-map.json` on 2026-10-24 (Claude), after the Thermodyn
 | 2 / 11.2 | magnetic-force | Uniform imposed field; field-line exploration is limited. |
 | 2 / 11.3 | magnetic-force | See the activity entry. |
 | 2 / 14.2 | circuits, faraday | Lumped inductors and fixed coil model, not every inductor geometry. |
+| 2 / 1.6 | blackbody | Partial: radiation only (Stefan–Boltzmann, Wien); no conduction or convection activity. |
 | 3 / 2.3 | optics-bench | Basic refraction supported; general curved-surface image formation needs review. |
 | 3 / 2.8 | optics-bench | Instrument examples require review before section-complete labeling. |
 | 3 / 4.1 | double-slit, diffraction-grating | Partial: the single slit envelope appears inside the double slit and grating patterns; there is no single slit setup on its own. |
