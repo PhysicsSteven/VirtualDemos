@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>:root { box-sizing: border-box; } /* the html element, which vd.css only sizes this way along with root-2 */
 :root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); }
 [hidden] { display: none !important; }
@@ -2711,11 +2712,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const ptr = new Map(); let drag = null, pinch = null;
     const stopAuto = () => { orbit.user = true; };
     el.addEventListener('pointerdown', (e) => {
-      el.focus({ preventScroll: true }); stopAuto();
+      if (e.pointerType === 'touch' && !e.isPrimary) return;   /* two fingers: VD3.touch below */
+      el.focus({ preventScroll: true }); if (e.pointerType !== 'touch') stopAuto();
       ptr.set(e.pointerId, { x: e.clientX, y: e.clientY });
       try { el.setPointerCapture(e.pointerId); } catch (_) {}
       if (ptr.size === 2) { const q = [...ptr.values()]; pinch = { d: Math.hypot(q[0].x - q[1].x, q[0].y - q[1].y) }; drag = null; return; }
-      drag = { x: e.clientX, y: e.clientY, moved: 0 }; el.classList.add('dragging');
+      drag = { x: e.clientX, y: e.clientY, moved: 0, touch: e.pointerType === 'touch' }; if (!drag.touch) el.classList.add('dragging');   /* one finger on a phone scrolls the page; a tap still probes */
     });
     el.addEventListener('pointermove', (e) => {
       if (ptr.has(e.pointerId)) ptr.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -2727,6 +2729,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       if (drag && ptr.has(e.pointerId)) {
         const dx = e.clientX - drag.x, dy = e.clientY - drag.y, k = 0.0085 / Math.sqrt(orbit.zoom);
         drag.moved += Math.abs(dx) + Math.abs(dy); drag.x = e.clientX; drag.y = e.clientY;
+        if (drag.touch) return;
         orbit.az -= dx * k; orbit.pol = clamp(orbit.pol - dy * k, 0.06, Math.PI - 0.06);
         if (drag.moved > 4) hoverHide();   // no label while rotating
         schedule(); return;
@@ -2745,6 +2748,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
     el.addEventListener('wheel', (e) => { e.preventDefault(); stopAuto(); orbit.zoom = clamp(orbit.zoom * Math.exp(-e.deltaY * 0.0016), zMin(), ZMAX); chartsDirty = true; schedule(); }, { passive: false });
     el.addEventListener('dblclick', () => { reset3D(); });
+    /* phones: one finger scrolls the page, two fingers turn and pinch */
+    if (window.VD3) VD3.touch(el, { move: (dx, dy, f) => { stopAuto(); hoverHide(); const k = 0.0085 / Math.sqrt(orbit.zoom); orbit.az -= dx * k; orbit.pol = clamp(orbit.pol - dy * k, 0.06, Math.PI - 0.06); orbit.zoom = clamp(orbit.zoom * f, zMin(), ZMAX); chartsDirty = true; schedule(); } });
     el.addEventListener('keydown', (e) => {
       if (!S.D) return;
       const k = e.key;

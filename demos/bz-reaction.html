@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* Layout: the vessel (beaker, dish or flow reactor) on the left; two plots stacked on the right; instrument rail on the right; stacks on narrow screens. */
 :root {
@@ -1981,7 +1982,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- pointer: orbit the 3D portrait ----------
   cans.B.addEventListener('pointerdown', (ev) => {
-    if (S.mode !== 'beaker' || !G.ready) return;
+    if (S.mode !== 'beaker' || !G.ready || ev.pointerType === 'touch') return;   /* touches: VD3.touch below */
     G.drag = { x: ev.clientX, y: ev.clientY, az: G.az, el: G.el }; try { cans.B.setPointerCapture(ev.pointerId); } catch (_) {}
     cans.B.style.cursor = 'grabbing'; ev.preventDefault();
   });
@@ -1992,6 +1993,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   });
   const endB = () => { G.drag = null; };
   cans.B.addEventListener('pointerup', endB); cans.B.addEventListener('pointercancel', endB);
+  /* phones: one finger scrolls the page, two fingers turn the portrait (other modes keep the canvas as before) */
+  if (window.VD3) VD3.touch(cans.B, { grab: () => S.mode !== 'beaker' || !G.ready,
+    move: (dx, dy) => { if (S.mode !== 'beaker' || !G.ready) return; G.az -= dx * 0.01; G.el = clamp(G.el + dy * 0.01, -1.3, 1.45); G.dirty = true; } });
 
   // ---------- pointer: the dish ----------
   function dishXY(ev) { const r = cans.A.getBoundingClientRect(), g = DS.geo; return [(ev.clientX - r.left - g.ox) / g.k / (DS.n - 1) - 0.5 / (DS.n - 1), (ev.clientY - r.top - g.oy) / g.k / (DS.n - 1) - 0.5 / (DS.n - 1)]; }

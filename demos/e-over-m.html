@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* Layout: the apparatus in 3D in a darkened room across the top of the stage, the view through the front coil onto the mirrored scale below it; instrument rail on the right; stacks on phones. */
 :root {
@@ -906,11 +907,12 @@ table.rows tr.sim td.n { color: var(--equi); }
     const pointers = new Map(); let mode = null;
     const pinch = () => { const p = [...pointers.values()]; return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y); };
     el.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch' && !e.isPrimary) return;   /* two fingers: VD3.touch below */
       el.focus(); pointers.set(e.pointerId, { x: e.clientX, y: e.clientY }); el.setPointerCapture(e.pointerId);
       if (pointers.size === 2) { glDrag = null; mode = { type: 'pinch', d0: pinch(), z0: orbit.zoom }; return; }
       const p = pickAt(e);
       if (p) { glDrag = { id: p.id, x0: e.clientX, y0: e.clientY, v0: p.id === 'V' ? S.V : p.id === 'I' ? S.I : p.id === 'tilt' ? S.tilt : S.eye }; mode = null; G.dirty = true; return; }
-      mode = { type: 'orbit', lx: e.clientX, ly: e.clientY }; el.style.cursor = 'grabbing';
+      mode = { type: 'orbit', lx: e.clientX, ly: e.clientY, touch: e.pointerType === 'touch' }; el.style.cursor = 'grabbing';   /* one finger on a phone scrolls the page */
     });
     let q = null, qf = false;
     el.addEventListener('pointermove', (e) => {
@@ -925,6 +927,7 @@ table.rows tr.sim td.n { color: var(--equi); }
         return;
       }
       if (mode && mode.type === 'orbit') {
+        if (mode.touch) return;
         orbit.theta -= (e.clientX - mode.lx) * 0.006; orbit.phi = clamp(orbit.phi - (e.clientY - mode.ly) * 0.006, 0.3, 1.55);
         mode.lx = e.clientX; mode.ly = e.clientY; G.dirty = true; return;
       }
@@ -938,6 +941,8 @@ table.rows tr.sim td.n { color: var(--equi); }
     el.addEventListener('pointerleave', () => { if (glHover) { glHover = null; G.dirty = true; } });
     el.addEventListener('wheel', (e) => { e.preventDefault(); orbit.zoom = clamp(orbit.zoom * Math.exp(e.deltaY * 0.0012), 0.4, 2.2); G.dirty = true; }, { passive: false });
     el.addEventListener('dblclick', resetView);
+    /* phones: one finger scrolls the page (or drags a knob, the tilt or the eye), two fingers turn and pinch */
+    if (window.VD3) VD3.touch(el, { grab: (e) => !!pickAt(e), move: (dx, dy, k) => { orbit.theta -= dx * 0.006; orbit.phi = clamp(orbit.phi - dy * 0.006, 0.3, 1.55); orbit.zoom = clamp(orbit.zoom / k, 0.4, 2.2); G.dirty = true; } });
     el.addEventListener('keydown', benchKeys);
     el.style.cursor = 'grab';
   }

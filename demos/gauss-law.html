@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* Layout: the z = 0 slice through a Gaussian surface and its charges (plus an E(r) plot in symmetry mode) on the left; instrument rail on the right; stacks on phones. */
 :root {
@@ -2902,7 +2903,7 @@ void main() {
     } else { const p = onPlane(ev, h.plane); if (p) h.set(p); }
   }
   oCan.addEventListener('pointerdown', (ev) => {
-    if (!G3.ready) return;
+    if (!G3.ready || (ev.pointerType === 'touch' && !ev.isPrimary)) return;   /* two fingers: VD3.touch below */
     oCan.focus({ preventScroll: true });
     ptr3.set(ev.pointerId, [ev.clientX, ev.clientY]);
     try { oCan.setPointerCapture(ev.pointerId); } catch (_) {}
@@ -2916,7 +2917,7 @@ void main() {
       } else { userPause(); drag = { id: h.id, kind: h.kind }; }
       o3 = { type: 'h', h };
       oCan.style.cursor = h.cursor === 'grab' ? 'grabbing' : h.cursor;
-    } else { o3 = { type: 'orbit', lx: ev.clientX, ly: ev.clientY, moved: 0 }; oCan.style.cursor = 'grabbing'; }
+    } else { o3 = { type: 'orbit', lx: ev.clientX, ly: ev.clientY, moved: 0, touch: ev.pointerType === 'touch' }; oCan.style.cursor = 'grabbing'; }   /* one finger on a phone scrolls the page */
   });
   oCan.addEventListener('pointermove', (ev) => {
     if (!G3.ready) return;
@@ -2925,13 +2926,14 @@ void main() {
     if (o3 && o3.type === 'h') { o3ev = ev; if (!o3Frame) { o3Frame = true; requestAnimationFrame(apply3); } return; }
     if (o3 && o3.type === 'orbit') {
       const dx = ev.clientX - o3.lx, dy = ev.clientY - o3.ly; o3.lx = ev.clientX; o3.ly = ev.clientY; o3.moved += Math.abs(dx) + Math.abs(dy);
+      if (o3.touch) return;
       orbit.th -= dx * 0.008; orbit.ph = clamp(orbit.ph - dy * 0.008, 0.12, 1.75); return;
     }
     const h = hit3(ev); hoverId = h ? h.id : null; oCan.style.cursor = h ? h.cursor : 'grab';
   });
   const end3 = (ev) => {
     ptr3.delete(ev.pointerId);
-    if (o3 && o3.type === 'orbit' && o3.moved < 4 && mode === 'flux' && F.sel) { F.sel = null; updateReadouts(); }
+    if (o3 && o3.type === 'orbit' && o3.moved < 4 && ev.type === 'pointerup' && mode === 'flux' && F.sel) { F.sel = null; updateReadouts(); }
     if (o3 && o3.type === 'h') { if (o3ev) apply3(); drag = null; hoverId = null; markNum(); }
     if (!ptr3.size || (o3 && o3.type === 'pinch')) o3 = null;
     oCan.style.cursor = 'grab';
@@ -2941,6 +2943,8 @@ void main() {
   oCan.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });
   oCan.addEventListener('wheel', (e) => { e.preventDefault(); orbit.zoom = clamp(orbit.zoom * Math.exp(e.deltaY * 0.0012), 0.55, 2.2); }, { passive: false });
   oCan.addEventListener('dblclick', () => { Object.assign(orbit, ORBIT0); });
+  /* phones: one finger scrolls the page (or drags a handle), two fingers turn and pinch */
+  if (window.VD3) VD3.touch(oCan, { grab: (ev) => !G3.ready || !!hit3(ev), move: (dx, dy, k) => { orbit.th -= dx * 0.008; orbit.ph = clamp(orbit.ph - dy * 0.008, 0.12, 1.75); orbit.zoom = clamp(orbit.zoom / k, 0.55, 2.2); } });
   oCan.addEventListener('keydown', (e) => {
     const k = e.key;
     if (k === '[' || k === ']') { orbit.th += (k === ']' ? -1 : 1) * 0.12; e.preventDefault(); return; }

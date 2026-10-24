@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* Layout: a 3D lab bench across the top of the stage, the oscilloscope and the chart recorder below it; instrument rail on the right; stacks on phones. */
 :root {
@@ -1210,12 +1211,13 @@ table.rows td.b { font-size: 0.76rem; }
     const pointers = new Map(); let mode = null;
     const pinch = () => { const p = [...pointers.values()]; return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y); };
     el.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch' && !e.isPrimary) return;   /* two fingers: VD3.touch below */
       el.focus(); pointers.set(e.pointerId, { x: e.clientX, y: e.clientY }); el.setPointerCapture(e.pointerId);
       if (pointers.size === 2) { glDrag = null; mode = { type: 'pinch', d0: pinch(), z0: orbit.zoom }; return; }
       const p = pickAt(e);
       if (p && (p.id === 'sens' || p.id === 'freq')) { glDrag = { id: p.id, y0: e.clientY, v0: knobVal[p.id]() }; mode = null; G.dirty = true; return; }
       if (p) { mode = { type: 'click', id: p.id }; return; }
-      mode = { type: 'orbit', lx: e.clientX, ly: e.clientY }; el.style.cursor = 'grabbing';
+      mode = { type: 'orbit', lx: e.clientX, ly: e.clientY, touch: e.pointerType === 'touch' }; el.style.cursor = 'grabbing';   /* one finger on a phone scrolls the page */
     });
     let q = null, qf = false;
     el.addEventListener('pointermove', (e) => {
@@ -1228,13 +1230,14 @@ table.rows td.b { font-size: 0.76rem; }
         return;
       }
       if (mode && mode.type === 'orbit') {
+        if (mode.touch) return;
         orbit.theta -= (e.clientX - mode.lx) * 0.006; orbit.phi = clamp(orbit.phi - (e.clientY - mode.ly) * 0.006, 0.25, 1.45);
         mode.lx = e.clientX; mode.ly = e.clientY; G.dirty = true; return;
       }
       if (e.pointerType === 'mouse' && !mode) { const p = pickAt(e), id = p ? p.id : null; if (id !== glHover) { glHover = id; G.dirty = true; } el.style.cursor = p ? p.cursor : 'grab'; }
     });
     const end = (e) => {
-      if (mode && mode.type === 'click') { const p = pickAt(e); if (p && p.id === mode.id) clickPart(p.id); }
+      if (mode && mode.type === 'click' && e.type === 'pointerup') { const p = pickAt(e); if (p && p.id === mode.id) clickPart(p.id); }
       pointers.delete(e.pointerId); if (pointers.size < 2 && mode && mode.type === 'pinch') mode = null;
       if (!pointers.size) { mode = null; if (glDrag) { glDrag = null; G.dirty = true; } el.style.cursor = 'grab'; }
     };
@@ -1242,6 +1245,8 @@ table.rows td.b { font-size: 0.76rem; }
     el.addEventListener('pointerleave', () => { if (glHover) { glHover = null; G.dirty = true; } });
     el.addEventListener('wheel', (e) => { e.preventDefault(); orbit.zoom = clamp(orbit.zoom * Math.exp(e.deltaY * 0.0012), 0.35, 2.2); G.dirty = true; }, { passive: false });
     el.addEventListener('dblclick', () => { orbit.theta = -Math.PI / 2 - 0.12; orbit.phi = 1.02; orbit.zoom = 1; G.dirty = true; });
+    /* phones: one finger scrolls the page (or turns the SENS screw or FREQ knob; a tap still clicks a part), two fingers turn and pinch */
+    if (window.VD3) VD3.touch(el, { grab: (e) => { const p = pickAt(e); return !!(p && (p.id === 'sens' || p.id === 'freq')); }, move: (dx, dy, k) => { orbit.theta -= dx * 0.006; orbit.phi = clamp(orbit.phi - dy * 0.006, 0.25, 1.45); orbit.zoom = clamp(orbit.zoom / k, 0.35, 2.2); G.dirty = true; } });
     el.addEventListener('keydown', benchKeys);
     el.style.cursor = 'grab';
   }
