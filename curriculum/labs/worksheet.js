@@ -278,7 +278,8 @@
     'gamma-spectroscopy', 'gamma-absorption' /* Gamma Spectroscopy demo */, 'hubble-law' /* Cosmic Distance Ladder, rung 4 */,
     'molecular-bonds', 'hcl-spectrum' /* Molecules: Bonds and Spectra demo */,
     'cosmic-expansion', 'thermal-history', 'big-bang-helium' /* The Big Bang and the Early Universe demo */,
-    'lattice-energy', 'energy-bands', 'semiconductor-doping', 'pn-junction' /* Crystals, Bands and Semiconductors demo */];
+    'lattice-energy', 'energy-bands', 'semiconductor-doping', 'pn-junction' /* Crystals, Bands and Semiconductors demo */,
+    'particle-reactions', 'quark-model', 'invariant-mass' /* Particles, Quarks and Conservation Laws demo */];
   MODERN.push(...MODERN_9_11); ENABLED.push(...MODERN_9_11);
   Object.assign(FROM_DEMO, {
     /* Reading | Setup and N₀ | Time t | Parents left N | N/N₀ | ln(N/N₀) */
@@ -312,6 +313,12 @@
       'T_K', 'n_cm3', 'p_cm3', null, null, null] },
     /* Reading | T (K) | V (V) | I (A) | ln(I / 1 A) */
     'pn-junction': { demo: 'Crystals, Bands and Semiconductors (Junction)', cols: ['row', 'T_K', 'V_V', 'I_A', null] },
+    /* Reading | Reaction | Beam | Charge Q before → after | Baryon number B | L_e | L_μ | L_τ | Strangeness S | Energy to spare (MeV) | My prediction | Verdict */
+    'particle-reactions': { demo: 'Particles, Quarks and Conservation Laws (Reactions)', cols: ['row', 'reaction', 'beam', 'Q', 'B', 'Le', 'Lmu', 'Ltau', 'S', 'spare_MeV', 'prediction', 'verdict'] },
+    /* Reading | Quarks | Spin J | Charge Q (e) | Baryon number B | Strangeness S | Isospin I₃ | Hadron | Mass (MeV/c²) */
+    'quark-model': { demo: 'Particles, Quarks and Conservation Laws (Quarks)', cols: ['row', 'quarks', 'J', 'Q', 'B', 'S', 'I3', 'hadron', 'mass_MeV'] },
+    /* Reading | Event | B (T) | r₊ (cm) | r₋ (cm) | Opening angle θ (°) | p₊ (MeV/c) | p₋ (MeV/c) | M if π⁺π⁻ (MeV/c²) | M if pπ⁻ (MeV/c²) | Parent */
+    'invariant-mass': { demo: 'Particles, Quarks and Conservation Laws (Detector)', cols: ['row', 'event', 'B_T', 'r_plus_cm', 'r_minus_cm', 'theta_deg', null, null, null, null, null] },
   });
   /* ==MODERN END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

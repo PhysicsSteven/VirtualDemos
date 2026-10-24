@@ -41,6 +41,7 @@ VIEW = {"width": 1440, "height": 900}
 OVERRIDES = {
     "spectra": {"crop": "main.bench > :first-child", "anchor": "top"},
     "photoelectric": {"anchor": "top"},
+    "particles": {"wait": 1500, "crop": "#can", "js": "window.__pq.applyPreset('mystery'); const pn = document.getElementById('pane'); pn.style.width = Math.round(pn.clientHeight * 1.6) + 'px'; pn.style.margin = '0 auto'; window.dispatchEvent(new Event('resize'));"},
     "molecules": {"wait": 1200, "js": "window.__mo.applyPreset('band');"},
     "relativistic-motion": {"wait": 1200, "anchor": "top", "js": "window.__rm.S.vel.t = 4.0; window.__rm.redraw();"},
     "holography": {"wait": 9000, "crop": "#pane", "js": "window.__ho && window.__ho.applyPreset('real'); setTimeout(() => window.__ho && window.__ho.finishMap(), 300)"},

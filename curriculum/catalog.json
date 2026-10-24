@@ -277,6 +277,17 @@
      ]
     },
     {
+     "demo": "particles",
+     "title": "Particles, Quarks and Conservation Laws",
+     "desc": "The Standard Model and its particles with PDG 2024 data; test decays and collisions against the conservation laws and name the force that drives them; build hadrons from coloured quarks and predict the Ω⁻; then fit tracks in a bubble chamber and weigh a K⁰ or Λ⁰ from its decay.",
+     "tags": [
+      "Standard Model",
+      "conservation laws",
+      "quarks",
+      "invariant mass"
+     ]
+    },
+    {
      "demo": "early-universe",
      "title": "The Big Bang and the Early Universe",
      "desc": "Watch every galaxy move away from every other as space stretches and time the distances to find Hubble's law and the age of the universe. Follow the temperature from the first instant to today, make the helium of the first three minutes, and stretch the glow of decoupling into the 2.7 K microwave background.",
