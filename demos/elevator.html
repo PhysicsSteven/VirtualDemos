@@ -493,15 +493,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
   /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
-  /* something happens on open: the car rides up to floor 10 and back, unless Reduce motion is on. The first touch of a control puts it
-     back at rest on the ground floor, the way the page opened, so every exercise starts there */
-  let auto = 0;
-  setTimeout(() => { if (!reduce && !S.segs.length && auto === 0) { auto = 1; start('10'); } }, 900);
-  const backDown = setInterval(() => { if (auto === 1 && !moving() && S.segs.length) { auto = 2; start('0'); } if (auto === 2 && !moving()) { auto = 3; clearInterval(backDown); } }, 400);
-  for (const ev of ['pointerdown', 'keydown', 'click', 'input']) document.addEventListener(ev, (e) => {
-    if (auto === -1 || e.target === can) return; const was = auto; auto = -1; clearInterval(backDown);
-    if (was >= 1) { S.segs = []; S.y0 = 0; S.v0 = 0; S.t = 0; S.clock = 0; S.hist = []; S.snapped = false; S.paused = false; $('tripHint').textContent = 'The car starts at rest on the ground floor.'; syncBtns(); draw(); readouts(); }
-  }, { capture: true });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now();
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();

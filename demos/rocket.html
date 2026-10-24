@@ -489,10 +489,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   tokens(); new ResizeObserver(resize).observe(stage); applyPreset('space'); resize();
   /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
-  /* something happens on open: the rocket lights its engine once, unless Reduce motion is on or someone has already started */
-  let touched = false, auto = false;
-  for (const ev of ['pointerdown', 'keydown', 'click', 'input']) document.addEventListener(ev, () => { touched = true; if (auto) { auto = false; restart(); } }, { capture: true });
-  setTimeout(() => { if (!touched && !reduce && !S.run && S.t === 0) { auto = true; setRun(true); } }, 900);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();

@@ -806,10 +806,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const hp =(location.hash || '').slice(1); setPreset(PRESETS[hp] ? hp : 'steady'); resize();
   /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
-  /* something happens on open: the steady cart rolls in and fires once, unless Reduce motion is on or someone has already started */
-  let touched = false, auto = false;
-  for (const ev of ['pointerdown', 'keydown', 'click', 'input']) document.addEventListener(ev, () => { touched = true; if (auto) { auto = false; reset(); } }, { capture: true });
-  setTimeout(() => { if (!touched && !reduce && !S.running && S.t < 0 && S.preset === 'steady') { auto = true; launch(); } }, 900);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now();
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();
