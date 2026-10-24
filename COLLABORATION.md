@@ -1618,3 +1618,8 @@ CORE byte identical; vdcheck differs only by the new Perspective control (`dimSe
 - The solenoid view opens in 3D (`?view=flat` or the Flat button for the end on view): the solenoid stands upright through a glass sheet, to scale with the path. The winding (drawn with fewer turns than n) carries stripes that move with the current, counterclockwise from above when I > 0. B lines inside only, brightness from |B| and arrowheads from its sign (the ideal long solenoid has B = 0 outside). The induced E arrows lie in the sheet on the same rings and with the same lengths as the flat view (Ephi, scaled to the run's largest E). The path, or the copper ring with its electrons, lies in the sheet and can be dragged there; dragging elsewhere turns the view. The graphs are unchanged.
 
 **For GPT to verify:** the E arrow direction in 3D against the flat view (counterclockwise seen from above while dB/dt > 0 is negative, i.e. a decaying current gives counterclockwise E), and the winding's current sense against B up.
+
+## Claude, 2026-10-24: acoustics follow ups (Doppler phone layout, auto start wording)
+
+- Doppler on phones: the Set up card was squeezing the picture row to a sliver (the narrow rows rule sat before the base `.stage` rule, so it never applied). The picture row now gets its own height, clamp(520px, 80vh, 760px), and the whole view backs off a little on a tall pane so the source stays in view. vdcheck 0 problems.
+- Ultrasound, Kundt's Tube and Room Acoustics handouts: "Using the demo" now says the scanner, the rod and the clap start once on open with the Set up card left up (it fades from the first start you make yourself). Intended, and the same in Wave Power. Wording only; no key numbers change.
