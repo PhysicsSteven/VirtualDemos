@@ -6433,8 +6433,10 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Lecture demo: two metal spheres and a charged rod tip (point charge), exact Kelvin image solution; step through charging by induction, by grounding, and by contact; surface charge marks from σ; net charges and potentials. Conductors only.",
-      "handouts": [],
+      "note": "New 2026-10-22 (Claude). Lecture demo: two metal spheres and a charged rod tip (point charge), exact Kelvin image solution; step through charging by induction, by grounding, and by contact; surface charge marks from σ; net charges and potentials. Conductors only. 2026-10-24: student worksheet induction (charging by grounding against rod distance and charge, two spheres by induction, sharing by contact against a long wire) with the shared Readings section.",
+      "handouts": [
+        "induction"
+      ],
       "title": "Charging by Induction",
       "url": "demos/induction.html"
     },
