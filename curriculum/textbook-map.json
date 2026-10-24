@@ -4073,9 +4073,10 @@
         "later"
       ],
       "requirement": "later",
-      "status": "missing",
-      "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "status": "usable",
+      "demos": [
+        "states-of-matter"
+      ]
     },
     {
       "vol": 2,
@@ -4087,9 +4088,10 @@
         "later"
       ],
       "requirement": "later",
-      "status": "missing",
-      "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+      "status": "usable",
+      "demos": [
+        "states-of-matter"
+      ]
     },
     {
       "vol": 2,
@@ -8501,6 +8503,34 @@
       "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
       "title": "White Dwarf Cooling",
       "url": "demos/white-dwarf-cooling.html"
+    },
+    {
+      "demo": "states-of-matter",
+      "course": [
+        "later"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "1.4",
+          "title": "Heat Transfer, Specific Heat, and Calorimetry"
+        },
+        {
+          "vol": 2,
+          "sec": "1.5",
+          "title": "Phase Changes"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). Atoms view: 432 argon atoms (Lennard-Jones, epsilon/k = 120 K, sigma = 0.34 nm, Rahman 1964) under a constant pressure piston, heated from the floor; heating curve against heat added, bond energy, where the heat went (KE, U, P dV), phase shares by q6 bond order; 3D and flat slice views. Beaker view: ice or ethanol heated at constant power, data from OpenStax Vol 2 Tables 1.3 and 1.4, balance and thermometer. Two worksheets with keys from real runs in TeacherKeys.",
+      "handouts": [
+        "heating-curve",
+        "bonds-and-latent-heat"
+      ],
+      "title": "States of Matter",
+      "url": "demos/states-of-matter.html"
     }
   ],
   "activities": [

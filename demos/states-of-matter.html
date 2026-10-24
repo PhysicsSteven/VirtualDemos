@@ -1,0 +1,948 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<title>States of Matter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --solid: #2f6fd0; --liquid: #10958f; --vapor: #d9682b; --hot: #d2452b; --cold: #2f7fd6; --ke: #d9682b; --pe: #6a4fc4; --work: #2f8a4e; --curve: #17202b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --solid: #6ea4ff; --liquid: #3fd0c6; --vapor: #ff9a5c; --hot: #ff7a5c; --cold: #74b0ff; --ke: #ff9a5c; --pe: #a991ff; --work: #66d38c; --curve: #e3e8ef; } }
+:root[data-theme="dark"] { --solid: #6ea4ff; --liquid: #3fd0c6; --vapor: #ff9a5c; --hot: #ff7a5c; --cold: #74b0ff; --ke: #ff9a5c; --pe: #a991ff; --work: #66d38c; --curve: #e3e8ef; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.pane { flex: 1 1 auto; min-height: 380px; }
+.pane canvas { width: 100%; height: 100%; outline: none; }
+#three { position: absolute; inset: 0; }
+#three canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+#can { z-index: 1; }
+.curvebox { position: relative; flex: none; height: 190px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { align-self: stretch; flex: 1 1 520px; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); align-content: start; gap: 6px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.twrap { position: relative; max-height: 190px; overflow: auto; border: 1px solid var(--line); border-radius: 6px; background: var(--canvas); }
+table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); background: transparent; color: var(--ink); border: 1px solid transparent; border-radius: 4px; padding: 1px 3px; }
+.legend { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 0.8rem; color: var(--muted); }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; vertical-align: -1px; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 400px; flex: none; } .curvebox { height: 170px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 360px; } }
+@media (min-width: 821px) { .stage { min-height: 760px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>States of Matter</h1>
+      <p>Heat a crystal of argon atoms and watch the bonds between them. While it melts or boils the temperature stops rising: the heat goes into pulling the atoms apart.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">T in K · heat in kJ/mol · time in ns</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/states-of-matter.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/states-of-matter.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM14 2h1v1h-1zM16 2h4v1h-4zM23 2h1v1h-1zM25 2h2v1h-2zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h3v1h-3zM16 3h1v1h-1zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h3v1h-3zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM13 4h2v1h-2zM17 4h2v1h-2zM23 4h1v1h-1zM25 4h2v1h-2zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM15 5h1v1h-1zM17 5h3v1h-3zM24 5h1v1h-1zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h1v1h-1zM17 6h3v1h-3zM21 6h2v1h-2zM25 6h1v1h-1zM27 6h2v1h-2zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM14 7h3v1h-3zM19 7h1v1h-1zM24 7h1v1h-1zM27 7h4v1h-4zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h3v1h-3zM14 9h2v1h-2zM17 9h1v1h-1zM19 9h5v1h-5zM26 9h1v1h-1zM28 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h1v1h-1zM13 10h1v1h-1zM17 10h2v1h-2zM24 10h2v1h-2zM27 10h3v1h-3zM32 10h5v1h-5zM2 11h1v1h-1zM6 11h2v1h-2zM9 11h1v1h-1zM12 11h3v1h-3zM16 11h2v1h-2zM20 11h1v1h-1zM22 11h1v1h-1zM25 11h1v1h-1zM31 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM4 12h1v1h-1zM6 12h7v1h-7zM17 12h5v1h-5zM23 12h1v1h-1zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h1v1h-1zM4 13h2v1h-2zM10 13h2v1h-2zM16 13h2v1h-2zM20 13h4v1h-4zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM7 14h6v1h-6zM14 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h13v1h-13zM2 15h2v1h-2zM7 15h1v1h-1zM9 15h1v1h-1zM11 15h2v1h-2zM14 15h1v1h-1zM16 15h1v1h-1zM18 15h1v1h-1zM22 15h1v1h-1zM24 15h2v1h-2zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h1v1h-1zM5 16h1v1h-1zM8 16h4v1h-4zM14 16h1v1h-1zM17 16h2v1h-2zM20 16h1v1h-1zM22 16h2v1h-2zM27 16h4v1h-4zM32 16h4v1h-4zM38 16h1v1h-1zM2 17h1v1h-1zM5 17h1v1h-1zM11 17h3v1h-3zM16 17h3v1h-3zM21 17h3v1h-3zM25 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h2v1h-2zM6 18h1v1h-1zM8 18h1v1h-1zM11 18h1v1h-1zM15 18h3v1h-3zM20 18h3v1h-3zM24 18h1v1h-1zM26 18h2v1h-2zM29 18h4v1h-4zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM5 19h1v1h-1zM10 19h1v1h-1zM12 19h1v1h-1zM15 19h4v1h-4zM23 19h3v1h-3zM30 19h2v1h-2zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h1v1h-1zM8 20h1v1h-1zM11 20h2v1h-2zM14 20h2v1h-2zM22 20h3v1h-3zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM3 21h3v1h-3zM7 21h1v1h-1zM9 21h1v1h-1zM11 21h3v1h-3zM16 21h1v1h-1zM18 21h1v1h-1zM20 21h1v1h-1zM23 21h2v1h-2zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h7v1h-7zM10 22h1v1h-1zM12 22h1v1h-1zM14 22h1v1h-1zM19 22h1v1h-1zM24 22h1v1h-1zM26 22h4v1h-4zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h3v1h-3zM6 23h2v1h-2zM9 23h1v1h-1zM12 23h2v1h-2zM18 23h2v1h-2zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h1v1h-1zM8 24h1v1h-1zM12 24h2v1h-2zM17 24h1v1h-1zM19 24h1v1h-1zM22 24h3v1h-3zM26 24h1v1h-1zM28 24h8v1h-8zM37 24h2v1h-2zM2 25h2v1h-2zM5 25h3v1h-3zM10 25h1v1h-1zM12 25h2v1h-2zM15 25h1v1h-1zM17 25h7v1h-7zM25 25h1v1h-1zM28 25h2v1h-2zM32 25h3v1h-3zM37 25h1v1h-1zM4 26h1v1h-1zM6 26h3v1h-3zM12 26h1v1h-1zM14 26h1v1h-1zM17 26h2v1h-2zM21 26h1v1h-1zM24 26h2v1h-2zM27 26h2v1h-2zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h1v1h-1zM5 27h3v1h-3zM9 27h1v1h-1zM11 27h3v1h-3zM16 27h2v1h-2zM20 27h1v1h-1zM22 27h2v1h-2zM25 27h1v1h-1zM30 27h1v1h-1zM33 27h1v1h-1zM2 28h1v1h-1zM8 28h4v1h-4zM14 28h1v1h-1zM17 28h2v1h-2zM21 28h1v1h-1zM26 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h3v1h-3zM10 29h1v1h-1zM13 29h2v1h-2zM17 29h1v1h-1zM21 29h3v1h-3zM29 29h6v1h-6zM38 29h1v1h-1zM2 30h1v1h-1zM4 30h1v1h-1zM6 30h1v1h-1zM8 30h1v1h-1zM10 30h4v1h-4zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h11v1h-11zM10 31h3v1h-3zM14 31h1v1h-1zM17 31h2v1h-2zM20 31h3v1h-3zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM14 32h4v1h-4zM20 32h1v1h-1zM22 32h3v1h-3zM26 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM13 33h3v1h-3zM17 33h2v1h-2zM23 33h3v1h-3zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h1v1h-1zM16 34h1v1h-1zM20 34h2v1h-2zM24 34h2v1h-2zM27 34h8v1h-8zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM14 35h1v1h-1zM16 35h3v1h-3zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM12 36h1v1h-1zM14 36h2v1h-2zM20 36h1v1h-1zM24 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM18 37h1v1h-1zM22 37h2v1h-2zM26 37h1v1h-1zM28 37h1v1h-1zM30 37h1v1h-1zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h1v1h-1zM16 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="atoms" aria-pressed="true">Atoms</button>
+          <button type="button" data-v="beaker" aria-pressed="false">Beaker</button>
+        </div>
+        <button type="button" class="spin attn" id="go">Start</button>
+        <button type="button" class="btn" id="restart">Start over</button>
+        <div class="seg" role="group" aria-label="Simulation speed" id="speedSeg">
+          <button type="button" data-s="1" aria-pressed="false">1×</button>
+          <button type="button" data-s="2" aria-pressed="false">2×</button>
+          <button type="button" data-s="4" aria-pressed="true">4×</button>
+        </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg">
+          <button type="button" data-d="3d" aria-pressed="false">3D</button>
+          <button type="button" data-d="flat" aria-pressed="true">Flat</button>
+        </div>
+        <span class="count mono" id="clock">t = 0.000 ns</span>
+      </div>
+      <div class="pane" id="pane">
+        <div id="three" hidden></div>
+        <canvas id="can" tabindex="0" role="img" aria-label="Argon atoms in a column under a weighted piston, with a heater in the floor. Space starts or pauses."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" role="img" aria-label="The heating curve: temperature against the heat added, drawn as the run goes."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardAtoms" role="group" aria-label="The heater and the piston">
+          <span class="card-title">Heater and piston</span>
+          <div class="wide">
+            <span class="lab">Heater</span>
+            <div class="seg" role="group" aria-label="Heater" id="heatSeg">
+              <button type="button" data-h="1" aria-pressed="true">Heat</button>
+              <button type="button" data-h="0" aria-pressed="false">Off</button>
+              <button type="button" data-h="-1" aria-pressed="false">Cool</button>
+            </div>
+            <label class="check"><input type="checkbox" id="showBonds" checked><span>Show bonds</span></label>
+            <span class="lab">Colour atoms by</span>
+            <div class="seg" role="group" aria-label="Colour atoms by" id="colorSeg">
+              <button type="button" data-c="speed" aria-pressed="true">Speed</button>
+              <button type="button" data-c="phase" aria-pressed="false">Phase</button>
+            </div>
+          </div>
+          <div>
+            <div class="slider-head"><label for="sPow">Heater power</label><output id="oPow" class="mono" for="sPow"></output></div>
+            <input type="range" id="sPow" min="1" max="8" step="0.5" value="4">
+          </div>
+          <div>
+            <div class="slider-head"><label for="sPres">Pressure on the piston</label><output id="oPres" class="mono" for="sPres"></output></div>
+            <input type="range" id="sPres" min="15" max="30" step="1" value="17">
+          </div>
+          <div class="legend wide" id="legend"></div>
+        </div>
+        <div class="shelf-card" id="cardBeaker" role="group" aria-label="The sample and the hot plate" hidden>
+          <span class="card-title">Sample and hot plate</span>
+          <div class="wide">
+            <span class="lab">Substance</span>
+            <div class="seg" role="group" aria-label="Substance" id="subSeg">
+              <button type="button" data-sub="water" aria-pressed="true">Water</button>
+              <button type="button" data-sub="ethanol" aria-pressed="false">Ethanol</button>
+            </div>
+          </div>
+          <div>
+            <div class="slider-head"><label for="sMass">Sample mass</label><output id="oMass" class="mono" for="sMass"></output></div>
+            <input type="range" id="sMass" min="50" max="400" step="10" value="200">
+          </div>
+          <div>
+            <div class="slider-head"><label for="sWatt">Heater power</label><output id="oWatt" class="mono" for="sWatt"></output></div>
+            <input type="range" id="sWatt" min="100" max="1000" step="50" value="500">
+          </div>
+          <div>
+            <div class="slider-head"><label for="sT0">Starting temperature</label><output id="oT0" class="mono" for="sT0"></output></div>
+            <input type="range" id="sT0" min="-40" max="-5" step="1" value="-20">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/heating-curve.html" target="heating-curve-worksheet">Worksheet 1: Heating Curve and Latent Heat</a></li><li><a href="../curriculum/labs/students/bonds-and-latent-heat.html" target="bonds-and-latent-heat-worksheet">Worksheet 2: Bonds, Temperature and Latent Heat</a></li></ul></details><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="crystal" aria-pressed="true">Heat a crystal</button>
+          <button type="button" data-p="cooker" aria-pressed="false">Higher pressure</button>
+          <button type="button" data-p="vapor" aria-pressed="false">Cool a vapor</button>
+          <button type="button" data-p="ice" aria-pressed="false">Ice to steam</button>
+          <button type="button" data-p="ethanol" aria-pressed="false">Boil ethanol</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section>
+        <h2>Readings</h2>
+        <div class="btnrow">
+          <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="exportCsv">Export to worksheet</button>
+          <button type="button" class="btn" id="clearRows">Clear</button>
+        </div>
+        <p class="status" id="capStatus" aria-live="polite"></p>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead></thead><tbody></tbody></table></div>
+      </section>
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the heating curve and the energy split</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="aboutAtoms"></p>
+          <p class="hint" id="aboutBeaker"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* States of Matter. Two models, both runnable in Node (curriculum/validation/test_states-of-matter.cjs).
+
+     Atoms: molecular dynamics of N argon atoms with the Lennard-Jones pair potential U(r) = 4ε[(σ/r)^12 − (σ/r)^6], cut off at
+     r = 2.5σ and shifted so U is zero there. Argon parameters ε/k = 120 K, σ = 0.34 nm, m = 39.948 u (A. Rahman, Phys. Rev. 136,
+     A405, 1964). The sample repeats sideways (periodic in x and y), sits on a hard floor and is held down by a frictionless piston
+     of mass M pressed with a constant force, so the pressure is fixed. The floor attracts the atoms weakly (a 9-3 wall potential of
+     strength 2ε, like a solid surface), so the liquid wets the heater instead of lifting off it on a layer of vapor. Velocity Verlet with time step 0.005 τ, τ = σ√(m/ε).
+     The heater puts energy into the atoms within 2.5σ of the floor (scaling their motion relative to their own mean), so heat
+     flows up through the sample as in a pot on a stove. Everything is in reduced units inside: lengths σ, energies ε, time τ.
+     The enthalpy H = KE + U + PV (+ the piston's kinetic energy) changes only by the heat added: dH = dQ at constant pressure. */
+  const AR = { epsK: 120, sigmaNm: 0.34, massU: 39.948 };
+  const KB = 1.380649e-23, NA = 6.02214076e23, AMU = 1.66053906660e-27;
+  const EPS_J = AR.epsK * KB, TAU_PS = AR.sigmaNm * 1e-9 * Math.sqrt(AR.massU * AMU / EPS_J) * 1e12;
+  const KJMOL = EPS_J * NA / 1000;                                  /* 1 ε per atom in kJ/mol */
+  const ATM = EPS_J / Math.pow(AR.sigmaNm * 1e-9, 3) / 101325;      /* 1 ε/σ³ in atm */
+  const POW = KJMOL / (TAU_PS / 1000);                              /* 1 ε per τ per atom in kJ/mol per ns */
+  const MD_RC = 2.5, MD_DT = 0.005, MD_HALF = [];
+  for (let dz = -1; dz <= 1; dz++) for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) if ((dz * 3 + dy) * 3 + dx > 0) MD_HALF.push([dx, dy, dz]);
+  function mdRandom(seed) { let s = seed >>> 0 || 1; return () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return (s + 0.5) / 4294967296; }; }
+  /* a new sample: kind 'crystal' (an fcc slab on the floor, nc unit cells) or 'vapor' (atoms spread through the column), at T0 (ε/k),
+     piston pressure P (ε/σ³) */
+  function mdMake(o) {
+    const nc = o.nc || [6, 6, 3], a = o.a || 1.572, N = 4 * nc[0] * nc[1] * nc[2], rnd = mdRandom(o.seed || 7);
+    const S = { N, nc, Lx: nc[0] * a, Ly: nc[1] * a, Hmax: o.Hmax || 200, P: o.P, M: o.M || 100, ew: o.ew == null ? 2 : o.ew, zh: 2.5, dt: MD_DT,
+      x: new Float64Array(N), y: new Float64Array(N), z: new Float64Array(N), vx: new Float64Array(N), vy: new Float64Array(N), vz: new Float64Array(N),
+      ax: new Float64Array(N), ay: new Float64Array(N), az: new Float64Array(N), pe: 0, Q: 0, t: 0, h: 0, vh: 0, ah: 0 };
+    if (o.kind === 'vapor') {
+      const A = S.Lx * S.Ly, h = Math.min(S.Hmax - 1, Math.max(20, N * o.T0 / (o.P * A))), per = 16, layers = Math.ceil(N / per), dz = (h - 1) / layers;
+      for (let i = 0; i < N; i++) { const l = Math.floor(i / per), k = i % per; S.x[i] = ((k % 4) + 0.5 + 0.3 * (l % 2)) * S.Lx / 4; S.y[i] = (Math.floor(k / 4) + 0.5) * S.Ly / 4; S.z[i] = 0.5 + (l + 0.5) * dz; }
+      S.h = h;
+    } else {
+      const B = [[0, 0, 0], [0.5, 0.5, 0], [0.5, 0, 0.5], [0, 0.5, 0.5]]; let k = 0;
+      for (let i = 0; i < nc[0]; i++) for (let j = 0; j < nc[1]; j++) for (let l = 0; l < nc[2]; l++) for (const b of B) {
+        S.x[k] = (i + b[0] + 0.25) * a; S.y[k] = (j + b[1] + 0.25) * a; S.z[k] = 0.9 + (l + b[2]) * a; k++; }
+      S.h = 0.9 + (nc[2] - 0.5) * a + 0.8;
+    }
+    const g = () => Math.sqrt(-2 * Math.log(rnd())) * Math.cos(2 * Math.PI * rnd());
+    for (let i = 0; i < N; i++) { S.vx[i] = g(); S.vy[i] = g(); S.vz[i] = g(); }
+    let mx = 0, my = 0, mz = 0; for (let i = 0; i < N; i++) { mx += S.vx[i]; my += S.vy[i]; mz += S.vz[i]; } mx /= N; my /= N; mz /= N;
+    let K = 0; for (let i = 0; i < N; i++) { S.vx[i] -= mx; S.vy[i] -= my; S.vz[i] -= mz; K += S.vx[i] ** 2 + S.vy[i] ** 2 + S.vz[i] ** 2; }
+    const sc = Math.sqrt(3 * N * o.T0 / K); for (let i = 0; i < N; i++) { S.vx[i] *= sc; S.vy[i] *= sc; S.vz[i] *= sc; }
+    mdForces(S); return S;
+  }
+  function mdForces(S) {
+    const { N, x, y, z, ax, ay, az, Lx, Ly } = S, rc2 = MD_RC * MD_RC, ic = 1 / (rc2 * rc2 * rc2), shift = 4 * (ic * ic - ic), hx = Lx / 2, hy = Ly / 2;
+    const Hc = S.h + 0.01, nx = Math.max(3, Math.floor(Lx / MD_RC)), ny = Math.max(3, Math.floor(Ly / MD_RC)), nz = Math.max(1, Math.floor(Hc / MD_RC));
+    if (!S.head || S.head.length < nx * ny * nz) { S.head = new Int32Array(nx * ny * (Math.ceil(S.Hmax / MD_RC) + 2)); S.next = new Int32Array(N); }
+    const head = S.head, next = S.next; head.fill(-1, 0, nx * ny * nz);
+    for (let i = 0; i < N; i++) {
+      let cx = Math.floor(x[i] / Lx * nx), cy = Math.floor(y[i] / Ly * ny), cz = Math.floor(z[i] / Hc * nz);
+      cx = cx < 0 ? 0 : cx >= nx ? nx - 1 : cx; cy = cy < 0 ? 0 : cy >= ny ? ny - 1 : cy; cz = cz < 0 ? 0 : cz >= nz ? nz - 1 : cz;
+      const c = (cz * ny + cy) * nx + cx; next[i] = head[c]; head[c] = i; ax[i] = 0; ay[i] = 0; az[i] = 0;
+    }
+    let pe = 0;
+    /* the floor attracts weakly, as a solid surface does: a 9-3 wall potential ew[(2/15)(σ/z)^9 − (σ/z)^3], cut and shifted at z = 3σ */
+    const ew = S.ew, wsh = ew * (2 / 15 / 19683 - 1 / 27);
+    for (let i = 0; i < N; i++) { const zi = z[i] < 0.4 ? 0.4 : z[i]; if (zi < 3) { const i3 = 1 / (zi * zi * zi), i9 = i3 * i3 * i3; pe += ew * (2 / 15 * i9 - i3) - wsh; az[i] += ew * (1.2 * i9 - 3 * i3) / zi; } }
+    const pair = (i, j) => {
+      let rx = x[i] - x[j], ry = y[i] - y[j]; const rz = z[i] - z[j];
+      if (rx > hx) rx -= Lx; else if (rx < -hx) rx += Lx; if (ry > hy) ry -= Ly; else if (ry < -hy) ry += Ly;
+      const r2 = rx * rx + ry * ry + rz * rz; if (r2 >= rc2) return;
+      const ir2 = 1 / r2, ir6 = ir2 * ir2 * ir2, f = 24 * ir2 * ir6 * (2 * ir6 - 1);
+      ax[i] += f * rx; ay[i] += f * ry; az[i] += f * rz; ax[j] -= f * rx; ay[j] -= f * ry; az[j] -= f * rz; pe += 4 * ir6 * (ir6 - 1) - shift;
+    };
+    for (let cz = 0; cz < nz; cz++) for (let cy = 0; cy < ny; cy++) for (let cx = 0; cx < nx; cx++) {
+      const c = (cz * ny + cy) * nx + cx;
+      for (let i = head[c]; i >= 0; i = next[i]) for (let j = next[i]; j >= 0; j = next[j]) pair(i, j);
+      for (const [dx, dy, dz] of MD_HALF) {
+        const Z = cz + dz; if (Z < 0 || Z >= nz) continue;
+        const d = (Z * ny + (cy + dy + ny) % ny) * nx + (cx + dx + nx) % nx;
+        for (let i = head[c]; i >= 0; i = next[i]) for (let j = head[d]; j >= 0; j = next[j]) pair(i, j);
+      }
+    }
+    S.pe = pe; S.ah = -S.P * Lx * Ly / S.M;
+  }
+  function mdKE(S) { let k = 0; for (let i = 0; i < S.N; i++) k += S.vx[i] ** 2 + S.vy[i] ** 2 + S.vz[i] ** 2; return k / 2; }
+  /* one time step with heater power pw (ε per τ per atom; negative cools). Returns the heat added in this step (ε). */
+  function mdStep(S, pw) {
+    const { N, dt, x, y, z, vx, vy, vz, ax, ay, az, Lx, Ly, M } = S, hs = dt / 2;
+    for (let i = 0; i < N; i++) {
+      vx[i] += hs * ax[i]; vy[i] += hs * ay[i]; vz[i] += hs * az[i]; x[i] += dt * vx[i]; y[i] += dt * vy[i]; z[i] += dt * vz[i];
+      if (x[i] < 0) x[i] += Lx; else if (x[i] >= Lx) x[i] -= Lx; if (y[i] < 0) y[i] += Ly; else if (y[i] >= Ly) y[i] -= Ly;
+    }
+    S.vh += hs * S.ah; S.h += dt * S.vh; if (S.h > S.Hmax) { S.h = 2 * S.Hmax - S.h; S.vh = -Math.abs(S.vh); }
+    /* the floor and the piston are hard: elastic collisions, the piston with its mass M */
+    for (let i = 0; i < N; i++) {
+      if (z[i] < 0) { z[i] = -z[i]; vz[i] = -vz[i]; }
+      if (z[i] > S.h) { const ua = vz[i], up = S.vh; vz[i] = ((1 - M) * ua + 2 * M * up) / (1 + M); S.vh = ((M - 1) * up + 2 * ua) / (1 + M); z[i] = 2 * S.h - z[i]; }
+    }
+    mdForces(S);
+    for (let i = 0; i < N; i++) { vx[i] += hs * ax[i]; vy[i] += hs * ay[i]; vz[i] += hs * az[i]; }
+    S.vh += hs * S.ah; S.t += dt;
+    let dQ = 0;
+    if (pw) {
+      let n = 0, mx = 0, my = 0, mz = 0;
+      for (let i = 0; i < N; i++) if (z[i] < S.zh) { n++; mx += vx[i]; my += vy[i]; mz += vz[i]; }
+      if (n >= 2) {
+        mx /= n; my /= n; mz /= n; let K = 0;
+        for (let i = 0; i < N; i++) if (z[i] < S.zh) K += (vx[i] - mx) ** 2 + (vy[i] - my) ** 2 + (vz[i] - mz) ** 2;
+        K /= 2;
+        if (K > 0) {
+          dQ = Math.max(-0.5 * K, Math.min(pw * N * dt, 0.5 * K)); const s = Math.sqrt(1 + dQ / K);
+          for (let i = 0; i < N; i++) if (z[i] < S.zh) { vx[i] = mx + (vx[i] - mx) * s; vy[i] = my + (vy[i] - my) * s; vz[i] = mz + (vz[i] - mz) * s; }
+        }
+      }
+    }
+    S.Q += dQ; return dQ;
+  }
+  /* enthalpy H = KE + U + P·A·h + ½ M vh² (ε); U includes the pull of the floor */
+  function mdEnthalpy(S) { return mdKE(S) + S.pe + S.P * S.Lx * S.Ly * S.h + 0.5 * S.M * S.vh * S.vh; }
+  /* temperature from the kinetic energy (ε/k): KE = (3/2) N kT */
+  function mdTemp(S) { return 2 * mdKE(S) / (3 * S.N); }
+  /* bonds: pairs closer than rb (default 1.5σ, the first minimum of the liquid's pair distribution); calls f(i, j, r) for each */
+  function mdBonds(S, f, rb) {
+    const { N, x, y, z, Lx, Ly } = S, r2b = (rb || 1.5) ** 2; let n = 0;
+    for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+      const dz = z[j] - z[i]; if (dz * dz >= r2b) continue;
+      let dx = x[j] - x[i], dy = y[j] - y[i]; dx -= Lx * Math.round(dx / Lx); dy -= Ly * Math.round(dy / Ly);
+      const r2 = dx * dx + dy * dy + dz * dz; if (r2 < r2b) { n++; if (f) f(i, j, Math.sqrt(r2), dx, dy, dz); }
+    }
+    return n;
+  }
+  /* each atom's phase: 0 solid, 1 liquid, 2 vapor. Vapor: 3 neighbours or fewer within 1.5σ. Solid: at least 5 neighbours whose local
+     bond order (q6, P. R. ten Wolde, M. J. Ruiz-Montero and D. Frenkel, J. Chem. Phys. 104, 9932, 1996) matches its own (normalized
+     dot product above 0.6). Everything else is liquid. */
+  const Q6F = [1, 1, 2, 6, 24, 120, 720, 5040, 40320, 362880, 3628800, 39916800, 479001600], Q6N = [0, 1, 2, 3, 4, 5, 6].map((m) => Math.sqrt(Q6F[6 - m] / Q6F[6 + m]));
+  function mdPhases(S) {
+    const N = S.N, re = new Float64Array(N * 7), im = new Float64Array(N * 7), nb = Array.from({ length: N }, () => []);
+    mdBonds(S, (i, j, r, dx, dy, dz) => {
+      nb[i].push(j); nb[j].push(i);
+      const c = dz / r, c2 = c * c, ux = dx / r, uy = dy / r;
+      const P = [(231 * c2 * c2 * c2 - 315 * c2 * c2 + 105 * c2 - 5) / 16, 21 / 8 * c * (33 * c2 * c2 - 30 * c2 + 5), 105 / 16 * (33 * c2 * c2 - 18 * c2 + 1),
+        315 / 8 * c * (11 * c2 - 3), 945 / 16 * (11 * c2 - 1), 10395 / 8 * c, 10395 / 16];
+      let er = 1, ei = 0;
+      for (let m = 0; m <= 6; m++) {
+        const v = Q6N[m] * P[m], sg = m % 2 ? -1 : 1;
+        re[i * 7 + m] += v * er; im[i * 7 + m] += v * ei; re[j * 7 + m] += sg * v * er; im[j * 7 + m] += sg * v * ei;
+        const nr = er * ux - ei * uy; ei = er * uy + ei * ux; er = nr;
+      }
+    });
+    const len = new Float64Array(N), ph = new Uint8Array(N);
+    for (let i = 0; i < N; i++) { let s = re[i * 7] ** 2 + im[i * 7] ** 2; for (let m = 1; m <= 6; m++) s += 2 * (re[i * 7 + m] ** 2 + im[i * 7 + m] ** 2); len[i] = Math.sqrt(s) || 1; }
+    for (let i = 0; i < N; i++) {
+      if (nb[i].length <= 3) { ph[i] = 2; continue; }
+      let c = 0;
+      for (const j of nb[i]) { let d = re[i * 7] * re[j * 7] + im[i * 7] * im[j * 7]; for (let m = 1; m <= 6; m++) d += 2 * (re[i * 7 + m] * re[j * 7 + m] + im[i * 7 + m] * im[j * 7 + m]); if (d / (len[i] * len[j]) > 0.6) c++; }
+      ph[i] = c >= 5 ? 0 : 1;
+    }
+    return ph;
+  }
+
+  /* Beaker: a sample on a hot plate, heated at constant power, perfectly insulated, open to the air at 1 atm, so the vapor leaves.
+     Data: OpenStax University Physics Volume 2, Table 1.3 (specific heats: ice 2090, water 4186, ethanol 2450 J/kg·°C) and Table 1.4
+     (melting and boiling points and latent heats at 1 atm). */
+  const SUBSTANCES = {
+    water: { name: 'Water', solid: 'ice', Tm: 0, Tb: 100, cS: 2090, cL: 4186, Lf: 334e3, Lv: 2256e3, rhoL: 1000, rhoS: 917 },
+    ethanol: { name: 'Ethanol', solid: 'solid ethanol', Tm: -114, Tb: 78.3, cS: null, cL: 2450, Lf: 104e3, Lv: 854e3, rhoL: 789, rhoS: null },
+  };
+  /* the stages of the heating curve from T0 (°C) for m kg: { kind 'warm' | 'melt' | 'boil', phase, Q0, Q1 (J), T0, T1 (°C) } */
+  function stages(sub, m, T0) {
+    const s = SUBSTANCES[sub], out = []; let Q = 0;
+    const add = (kind, phase, dQ, Ta, Tb) => { out.push({ kind, phase, Q0: Q, Q1: Q + dQ, T0: Ta, T1: Tb }); Q += dQ; };
+    if (T0 < s.Tm) { add('warm', 'solid', m * s.cS * (s.Tm - T0), T0, s.Tm); add('melt', 'solid and liquid', m * s.Lf, s.Tm, s.Tm); }
+    const Tl = Math.max(T0, s.Tm); add('warm', 'liquid', m * s.cL * (s.Tb - Tl), Tl, s.Tb);
+    add('boil', 'liquid and vapor', m * s.Lv, s.Tb, s.Tb);
+    return out;
+  }
+  /* the state after heat Q (J): temperature (°C), masses (kg) of solid and liquid in the beaker and of vapor that has left, the stage */
+  function beakerState(sub, m, T0, Q) {
+    const s = SUBSTANCES[sub], st = stages(sub, m, T0), solid0 = T0 < s.Tm;
+    const r = { T: T0, mS: solid0 ? m : 0, mL: solid0 ? 0 : m, mV: 0, stage: 0, kind: st[0].kind, done: false };
+    if (Q <= 0) return r;
+    for (let i = 0; i < st.length; i++) {
+      const g = st[i]; if (Q > g.Q1 && i < st.length - 1) continue;
+      const f = Math.min(1, (Q - g.Q0) / (g.Q1 - g.Q0)); r.stage = i; r.kind = g.kind;
+      if (g.kind === 'warm') { r.T = g.T0 + f * (g.T1 - g.T0); r.mS = g.phase === 'solid' ? m : 0; r.mL = g.phase === 'solid' ? 0 : m; }
+      else if (g.kind === 'melt') { r.T = g.T0; r.mS = m * (1 - f); r.mL = m * f; }
+      else { r.T = g.T0; r.mS = 0; r.mL = m * (1 - f); r.mV = m * f; r.done = f >= 1; }
+      return r;
+    }
+    return r;
+  }
+
+  const SM_VERSION = '2026-10-24';
+  const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
+  /* readings from the Beaker view: rows { t, T, m } as shown (strings) */
+  function beakerCSV(rows, meta) {
+    const L = ['# States of Matter, Beaker view: captured readings (simulated data)', `# demo version,${SM_VERSION}`, `# substance,${meta.substance}`,
+      `# sample mass_g,${meta.m0}`, `# heater power_W,${meta.P}`, `# starting temperature_C,${meta.T0}`,
+      '# model,"constant heater power into a perfectly insulated sample at 1 atm; data from OpenStax University Physics Vol 2 Tables 1.3 and 1.4; the vapor leaves the open beaker"',
+      '# rounding,"t to 1 s, T to 0.1 C, balance to 0.1 g"', '# noise,none', 'row,t_s,T_C,m_g'];
+    rows.forEach((r, i) => L.push([i + 1, r.t, r.T, r.m].map(csvCell).join(',')));
+    return L.join('\n') + '\n';
+  }
+  /* readings from the Atoms view: rows { t, Q, T, U, s, l, v } as shown (strings) */
+  function atomsCSV(rows, meta) {
+    const L = ['# States of Matter, Atoms view: captured readings (simulated data)', `# demo version,${SM_VERSION}`, `# atoms,${meta.N}`, `# piston pressure_atm,${meta.P}`,
+      '# model,"argon atoms, Lennard-Jones potential (epsilon/k = 120 K, sigma = 0.34 nm) cut at 2.5 sigma; velocity Verlet; constant pressure piston; heater in the floor"',
+      '# averaging,"T and U are averages over the last 0.02 ns, the phase shares over about the last 0.1 ns"', '# noise,"none added; the averages still fluctuate because the sample is small"',
+      'row,t_ns,Q_kJ_per_mol,T_K,U_kJ_per_mol,solid_pct,liquid_pct,vapor_pct'];
+    rows.forEach((r, i) => L.push([i + 1, r.t, r.Q, r.T, r.U, r.s, r.l, r.v].map(csvCell).join(',')));
+    return L.join('\n') + '\n';
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const NM = AR.sigmaNm, KJK = KJMOL / AR.epsK;   /* σ in nm; kJ/mol per kelvin of kT (= R/1000) */
+  const PRESETS = {
+    crystal: { view: 'atoms', kind: 'crystal', T0: 40, Patm: 17, heat: 1, pow: 4,
+      hint: 'A crystal of 432 argon atoms at 40 K, under a piston pressing down with 17 atm. The heater in the floor adds heat at a steady rate. The temperature climbs, holds still while the crystal melts, climbs again, and holds still again while the liquid boils and the vapor pushes the piston up.' },
+    cooker: { view: 'atoms', kind: 'crystal', T0: 40, Patm: 28, heat: 1, pow: 4,
+      hint: 'The same crystal with 28 atm on the piston. Pressure hardly changes where it melts, but the liquid has to get hotter before its vapor can push the piston up, so it boils at a higher temperature, as water does in a pressure cooker.' },
+    vapor: { view: 'atoms', kind: 'vapor', T0: 160, Patm: 17, heat: -1, pow: 4,
+      hint: 'Argon vapor at 160 K under 17 atm, with the floor cooling it. The vapor condenses into a liquid on the cold floor, giving out its latent heat while the temperature holds still. A small liquid sample can cool well below its freezing point before a crystal forms (supercooling), so watch the phase shares.' },
+    ice: { view: 'beaker', sub: 'water', m: 200, W: 500, T0: -20,
+      hint: '200 g of ice at −20 °C in an open beaker on a 500 W hot plate, all standing on a balance (tared, so it reads the sample only). Record the temperature and the balance reading as the ice warms, melts, the water warms, and then boils away.' },
+    ethanol: { view: 'beaker', sub: 'ethanol', m: 200, W: 500, T0: 20,
+      hint: '200 g of ethanol at 20 °C on the same hot plate. It boils at 78.3 °C, and its latent heat of vaporization is 854 kJ/kg, less than half of water\'s 2256 kJ/kg, so it boils away much sooner.' },
+  };
+  const S = { view: 'atoms', preset: 'crystal', run: false, speed: 4, dim: 'flat', heat: 1, pow: 4, Patm: 17, bonds: true, color: 'speed', blind: false,
+    md: null, kind: 'crystal', T0: 40, base: null, W: 0, avg: null, hist: [], ph: null, phAvg: [1, 0, 0], frame: 0, lastHist: 0, perStep: 0.5,
+    bk: { sub: 'water', m: 200, W: 500, T0: -20, t: 0, hist: [] }, rows: { atoms: [], beaker: [] }, series: { atoms: 0, beaker: 0 } };
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
+  let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
+      solid: g('--solid'), liquid: g('--liquid'), vapor: g('--vapor'), hot: g('--hot'), cold: g('--cold'), ke: g('--ke'), pe: g('--pe'), work: g('--work'), curve: g('--curve'),
+      mono: g('--font-mono'), ui: g('--font-ui') };
+    sprites = null;
+  }
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const dark = () => (window.VDGear ? VDGear.dark() : false);
+
+  // ---------- the atoms ----------
+  const pwOf = () => S.heat * S.pow / POW;                     /* heater power in ε per τ per atom */
+  const Pred = () => S.Patm / ATM;                             /* piston pressure in ε/σ³ */
+  function newSample() {
+    S.md = mdMake({ kind: S.kind, T0: S.T0 / AR.epsK, P: Pred() });
+    const md = S.md, T0 = S.T0 / AR.epsK;                    /* settle the piston and the atoms, holding the temperature at T0 */
+    for (let i = 0; i < 600; i++) { mdStep(md, 0); if (i % 20 === 19) { const s = Math.sqrt(T0 / mdTemp(md)); for (let k = 0; k < md.N; k++) { md.vx[k] *= s; md.vy[k] *= s; md.vz[k] *= s; } } }
+    md.Q = 0; md.t = 0; S.W = 0;
+    S.base = { ke: mdKE(md) / md.N, pe: md.pe / md.N, h: md.h };
+    S.avg = { T: mdTemp(md), ke: mdKE(md) / md.N, pe: md.pe / md.N, h: md.h };
+    S.ph = mdPhases(md); S.phAvg = shares(S.ph); S.nb = mdBonds(md); S.hist = []; S.lastHist = -1; pushHist();
+  }
+  const shares = (ph) => { const c = [0, 0, 0]; for (const p of ph) c[p]++; return c.map((v) => v / ph.length); };
+  function pushHist() { const md = S.md; S.hist.push({ t: md.t * TAU_PS / 1000, Q: md.Q / md.N * KJMOL, T: S.avg.T * AR.epsK, U: S.avg.pe * KJMOL }); S.lastHist = md.t; }
+  function advanceAtoms(n) {
+    const md = S.md, pw = pwOf(), A = md.Lx * md.Ly, a = md.dt / 10;      /* averages over about 10 τ = 0.02 ns */
+    for (let k = 0; k < n; k++) {
+      const h0 = md.h; mdStep(md, pw); S.W += md.P * A * (md.h - h0);
+      const ke = mdKE(md) / md.N; S.avg.ke += (ke - S.avg.ke) * a; S.avg.T = 2 * S.avg.ke / 3; S.avg.pe += (md.pe / md.N - S.avg.pe) * a; S.avg.h += (md.h - S.avg.h) * a;
+      if (md.t - S.lastHist >= 2) pushHist();
+    }
+  }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b, c = '') => `<div class="${c}"><dt>${a}</dt><dd>${b}</dd></div>`;
+    if (S.view === 'atoms') {
+      const md = S.md, av = S.avg, p = S.phAvg.map((v) => Math.round(100 * v));
+      $('out').innerHTML = dd('Temperature T', `${f(av.T * AR.epsK, 1)} K`) + dd('Heat added Q', `${f(md.Q / md.N * KJMOL, 2)} kJ/mol`)
+        + dd('Kinetic energy', `${f(av.ke * KJMOL, 2)} kJ/mol`) + dd('Bond energy U', `${f(av.pe * KJMOL, 2)} kJ/mol`)
+        + dd('Bonds per atom', f(2 * S.nb / md.N, 1)) + dd('Column height', `${f(av.h * NM, 1)} nm`)
+        + dd('Solid · liquid · vapor', `${p[0]} · ${p[1]} · ${p[2]} %`, 'wide')
+        + dd('Pressure', `${S.Patm} atm`) + dd('Heater', S.heat ? `${S.heat > 0 ? '+' : '−'}${f(S.pow, 1)} kJ/(mol·ns)` : 'off');
+    } else {
+      const b = S.bk, s = SUBSTANCES[b.sub], st = beakerState(b.sub, b.m / 1000, b.T0, b.W * b.t), what = beakerWhat(st);
+      $('out').innerHTML = dd('Temperature T', `${f(st.T, 1)} °C`) + dd('Balance', `${f((st.mS + st.mL) * 1000, 1)} g`)
+        + dd('Time t', `${f(b.t, 0)} s`) + dd('Heat supplied Pt', `${f(b.W * b.t / 1000, 1)} kJ`)
+        + dd('In the beaker', what, 'wide') + dd('Substance', s.name) + dd('Heater power P', `${b.W} W`);
+    }
+  }
+  function beakerWhat(st) {
+    const s = SUBSTANCES[S.bk.sub];
+    if (st.done) return 'empty: it has all boiled away';
+    return { warm: st.mS > 0 ? `${s.solid} warming` : 'liquid warming', melt: `${s.solid} melting at ${s.Tm} °C`, boil: `boiling at ${s.Tb} °C` }[st.kind];
+  }
+
+  // ---------- drawing: shared ----------
+  let sprites = null;
+  const SPRITES = 24;
+  function speedColor(u) {                                    /* u from 0 (slow) to 1 (fast): blue, white, orange red */
+    const a = [47, 111, 208], b = [235, 238, 242], c = [214, 66, 36], t = Math.max(0, Math.min(1, u));
+    const p = t < 0.5 ? a : b, q = t < 0.5 ? b : c, k = t < 0.5 ? t * 2 : (t - 0.5) * 2;
+    return '#' + p.map((v, i) => Math.round(v + (q[i] - v) * k).toString(16).padStart(2, '0')).join('');
+  }
+  function sprite(color, r) {
+    const c = document.createElement('canvas'), s = Math.ceil(r * 2 + 2); c.width = c.height = Math.ceil(s * dpr);
+    const x = c.getContext('2d'); x.scale(dpr, dpr);
+    if (window.VDGear) VDGear.ball(x, s / 2, s / 2, r, color, { glint: 0.7 }); else { x.fillStyle = color; x.beginPath(); x.arc(s / 2, s / 2, r, 0, 7); x.fill(); }
+    return { c, s };
+  }
+  function makeSprites(r) {
+    sprites = { r, speed: [], phase: [] };
+    for (let i = 0; i < SPRITES; i++) sprites.speed.push(sprite(speedColor(i / (SPRITES - 1)), r));
+    for (const c of [T.solid, T.liquid, T.vapor]) sprites.phase.push(sprite(c, r));
+  }
+  function atomColorIndex(i) {                                 /* speed relative to the typical speed at 3 kT, mapped to 0..1 */
+    const md = S.md, v2 = md.vx[i] ** 2 + md.vy[i] ** 2 + md.vz[i] ** 2, ref = 3 * 1.4;   /* 1.4 ε/k = 168 K reads as hot */
+    return Math.max(0, Math.min(1, Math.sqrt(v2 / ref) * 0.75));
+  }
+
+  const SLICE = 0.5 / AR.sigmaNm;                              /* the flat view's slice: 0.5 nm thick */
+  /* where the column sits in the picture (flat view): px per σ and the visible height in σ */
+  function frameAtoms() {
+    const p = proj(), md = S.md, top = Math.max(12, Math.min(40, S.avg.h + 1.5)), padT = 34 * p, padB = 64 * p;
+    const sc = Math.min((H - padT - padB) / top, (W * 0.5) / md.Lx), x0 = Math.max(18 * p, W * 0.32 - md.Lx * sc / 2), y0 = H - padB;
+    return { sc, x0, y0, top };
+  }
+  function drawAtomsFlat() {
+    const p = proj(), md = S.md, fr = frameAtoms(), { sc, x0, y0, top } = fr, colW = md.Lx * sc;
+    if (window.VDGear) { VDGear.backdrop(ctx, W, H, { horizon: 0.8 }); VDGear.bench(ctx, 0, y0 + 26 * p, W, 10 * p, 12 * p); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    /* the heater block under the floor: its glow follows the heater */
+    const on = S.heat !== 0, hb = 26 * p, glow = S.heat > 0 ? T.hot : T.cold;
+    if (window.VDGear) VDGear.box(ctx, x0 - 10 * p, y0, colW + 20 * p, hb, { color: dark() ? '#3a4552' : '#4a5665', r: 4 });
+    else { ctx.fillStyle = T.muted; ctx.fillRect(x0 - 10 * p, y0, colW + 20 * p, hb); }
+    ctx.save(); ctx.globalAlpha = on ? 0.9 : 0.25; ctx.fillStyle = on ? glow : T.muted; ctx.fillRect(x0, y0 + 2 * p, colW, 4 * p); ctx.restore();
+    if (on) { const g = ctx.createLinearGradient(0, y0, 0, y0 - 3 * sc); g.addColorStop(0, S.heat > 0 ? 'rgba(255,110,60,0.28)' : 'rgba(80,150,255,0.28)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(x0, y0 - 3 * sc, colW, 3 * sc); }
+    /* glass column, clipped to the visible height */
+    const yTop = y0 - top * sc;
+    ctx.save(); ctx.fillStyle = dark() ? 'rgba(150,190,230,0.05)' : 'rgba(170,200,230,0.12)'; ctx.fillRect(x0, yTop, colW, top * sc);
+    ctx.strokeStyle = dark() ? 'rgba(170,200,230,0.35)' : 'rgba(90,120,150,0.45)'; ctx.lineWidth = 1.5 * p;
+    ctx.beginPath(); ctx.moveTo(x0, yTop); ctx.lineTo(x0, y0); ctx.moveTo(x0 + colW, yTop); ctx.lineTo(x0 + colW, y0); ctx.stroke(); ctx.restore();
+    /* atoms, back to front (y is depth) */
+    const r = Math.max(1.6, (S.bonds ? 0.3 : 0.48) * sc);   /* ball and stick with bonds, space filling without */
+    if (!sprites || Math.abs(sprites.r - r) > 0.25) makeSprites(r);
+    const X = (i) => x0 + md.x[i] * sc, Z = (i) => y0 - md.z[i] * sc, inSlice = (i) => Math.abs(md.y[i] - md.Ly / 2) < SLICE / 2;
+    const order = S.order && S.order.length === md.N ? S.order : (S.order = Array.from({ length: md.N }, (_, i) => i));
+    order.sort((i, j) => (inSlice(i) - inSlice(j)) || md.y[j] - md.y[i]);
+    ctx.save(); ctx.beginPath(); ctx.rect(x0, yTop - r, colW, top * sc + r); ctx.clip();
+    if (S.bonds) {                                           /* bonds in five strengths, one path each (closer pairs are bound more strongly) */
+      const bk = [[], [], [], [], []];
+      mdBonds(md, (i, j, rr) => {
+        if (Math.abs(md.x[j] - md.x[i]) > md.Lx / 2 || !inSlice(i) || !inSlice(j)) return;   /* bonds within the slice, not across the repeat */
+        bk[Math.round(4 * Math.max(0, Math.min(1, (1.5 - rr) / 0.38)))].push(i, j);
+      });
+      ctx.lineCap = 'butt'; const rgb = dark() ? '200,190,255' : '90,70,170';
+      bk.forEach((L, k) => { if (!L.length) return; const s = k / 4;
+        ctx.strokeStyle = `rgba(${rgb},${(0.15 + 0.6 * s).toFixed(2)})`; ctx.lineWidth = Math.max(0.8, sc * (0.06 + 0.1 * s)); ctx.beginPath();
+        for (let n = 0; n < L.length; n += 2) { ctx.moveTo(X(L[n]), Z(L[n])); ctx.lineTo(X(L[n + 1]), Z(L[n + 1])); } ctx.stroke(); });
+    }
+    for (const i of order) {                                  /* the slice in full colour, the rest faint and smaller */
+      const k = S.color === 'phase' && S.ph ? sprites.phase[S.ph[i]] : sprites.speed[Math.round(atomColorIndex(i) * (SPRITES - 1))];
+      if (inSlice(i)) { ctx.globalAlpha = 1; ctx.drawImage(k.c, X(i) - k.s / 2, Z(i) - k.s / 2, k.s, k.s); }
+      else { ctx.globalAlpha = 0.13; ctx.drawImage(k.c, X(i) - k.s * 0.35, Z(i) - k.s * 0.35, k.s * 0.7, k.s * 0.7); }
+    }
+    ctx.globalAlpha = 1; ctx.restore();
+    /* the piston and its weights */
+    const hp = md.h;
+    if (hp <= top + 0.5) drawPiston(x0, y0 - hp * sc, colW, sc, p);
+    else {
+      ctx.fillStyle = T.muted; ctx.font = `${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText('↑ piston', x0 + colW / 2, yTop + 4 * p); ctx.fillText(`${f(hp * NM, 1)} nm up`, x0 + colW / 2, yTop + 19 * p);
+    }
+    labelsAtoms(x0, y0, colW, sc, p);
+  }
+  function drawPiston(x, y, w, sc, p) {
+    const t = Math.max(6 * p, 0.7 * sc), steel = dark() ? '#7d8896' : '#9aa4b0';
+    if (window.VDGear) { VDGear.box(ctx, x - 2 * p, y - t, w + 4 * p, t, { color: steel, r: 2, shadow: false }); VDGear.rod(ctx, x + w / 2, y - t, x + w / 2, y - t - 24 * p, 3 * p); }
+    else { ctx.fillStyle = steel; ctx.fillRect(x, y - t, w, t); }
+    const n = Math.round((S.Patm - 10) / 4), dw = Math.min(w * 0.8, 70 * p), dh = 6 * p;     /* one slotted weight per 4 atm above 10 */
+    for (let k = 0; k < n; k++) { const yy = y - t - 24 * p - k * (dh + 1); if (window.VDGear) VDGear.slotted(ctx, x + w / 2, yy, dw, dh); else { ctx.fillStyle = T.muted; ctx.fillRect(x + w / 2 - dw / 2, yy - dh, dw, dh); } }
+  }
+  function labelsAtoms(x0, y0, colW, sc, p) {
+    const L = (s, x, y, o) => (window.VDGear ? VDGear.label(ctx, s, x, y, Object.assign({ s: 11 * p }, o || {})) : null);
+    if (W > 640) L(`${S.md.N} argon atoms · a slice 0.5 nm thick in front, the rest faint · the sample repeats sideways`, 14 * p, 16 * p, {});
+    if (W > 640) L(`heater in the floor${S.heat ? (S.heat > 0 ? ' · heating' : ' · cooling') : ' · off'} · piston at ${S.Patm} atm`, 14 * p, 31 * p, {});
+    /* scale bar: 1 nm */
+    const bx = x0 + colW + 16 * p, by = y0 - 8 * p; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * p;
+    ctx.beginPath(); ctx.moveTo(bx, by); ctx.lineTo(bx, by - sc / NM); ctx.moveTo(bx - 3 * p, by); ctx.lineTo(bx + 3 * p, by); ctx.moveTo(bx - 3 * p, by - sc / NM); ctx.lineTo(bx + 3 * p, by - sc / NM); ctx.stroke();
+    L('1 nm', bx + 6 * p, by - sc / NM / 2, {});
+    drawSplit(p);
+  }
+  /* where the heat went since the start: motion (kinetic), bonds (potential) and pushing the piston (PΔV) */
+  function drawSplit(p) {
+    if (S.blind) return;
+    const md = S.md, Q = md.Q / md.N * KJMOL, k = (S.avg.ke - S.base.ke) * KJMOL, u = (S.avg.pe - S.base.pe) * KJMOL, w = S.W / md.N * KJMOL;
+    const bw = Math.max(Math.min(250 * p, W * 0.36), Math.min(170 * p, W * 0.5)), x = W - bw - 16 * p, y = 16 * p, rowH = 26 * p, h = rowH * 4 + 34 * p;
+    if (window.VDGear) VDGear.panel(ctx, x - 10 * p, y - 6 * p, bw + 20 * p, h); else { ctx.fillStyle = T.surface; ctx.fillRect(x - 10 * p, y - 6 * p, bw + 20 * p, h); }
+    ctx.fillStyle = T.ink; ctx.font = `700 ${11.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText(bw < 220 * p ? 'Where the heat went' : 'Where the heat went (kJ/mol)', x, y);
+    const max = Math.max(1, Math.abs(Q), Math.abs(k), Math.abs(u), Math.abs(w)), mid = x + 86 * p, span = bw - 86 * p - 44 * p;
+    const rows = [['Heat in Q', Q, T.curve], ['Motion KE', k, T.ke], ['Bonds U', u, T.pe], ['Piston PΔV', w, T.work]];
+    rows.forEach(([lab, v, c], i) => {
+      const yy = y + 22 * p + i * rowH, zero = mid + (Q < 0 ? span : 0) * 0.0;
+      ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textBaseline = 'middle'; ctx.fillText(lab, x, yy + 7 * p);
+      const len = Math.abs(v) / max * span; ctx.fillStyle = c; ctx.globalAlpha = 0.85; ctx.fillRect(v >= 0 ? zero : zero, yy + 1 * p, len, 12 * p); ctx.globalAlpha = 1;
+      ctx.fillStyle = T.ink; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillText(f(v, 2), x + bw, yy + 7 * p); ctx.textAlign = 'left';
+    });
+  }
+
+  // ---------- drawing: the beaker ----------
+  const bub = [];
+  function drawBeaker() {
+    const b = S.bk, s = SUBSTANCES[b.sub], st = beakerState(b.sub, b.m / 1000, b.T0, b.W * b.t);
+    const p = Math.min(proj() * Math.max(1, Math.min(1.45, (H - 70) / 300)), (W * 0.64 - 12) / 252), benchY = H - 40 * p;   /* and shrinks to fit a phone */   /* the apparatus grows to fill a tall picture */
+    if (window.VDGear) { VDGear.backdrop(ctx, W, H, { horizon: 0.78 }); VDGear.bench(ctx, 0, benchY, W, 12 * p, 14 * p); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    const cx = Math.min(W * 0.36, W / 2), balW = 230 * p, balH = 40 * p, plW = 180 * p, plH = 30 * p;
+    const by = benchY - balH, py = by - plH;
+    /* balance */
+    if (window.VDGear) { VDGear.box(ctx, cx - balW / 2, by, balW, balH, { color: dark() ? '#c9ced6' : '#e4e8ee', r: 6 }); VDGear.lcd(ctx, cx - balW / 2 + 12 * p, by + 9 * p, 92 * p, 22 * p, `${f((st.mS + st.mL) * 1000, 1)} g`);
+      VDGear.label(ctx, 'balance (tared)', cx + balW / 2 - 10 * p, by + balH / 2, { a: 'right', s: 10.5 * p, c: '#3a4552' }); }
+    /* hot plate */
+    const on = b.t > 0 && !st.done && S.run;
+    if (window.VDGear) { VDGear.box(ctx, cx - plW / 2, py, plW, plH, { color: dark() ? '#3a4552' : '#4a5665', r: 5, shadow: false });
+      VDGear.lcd(ctx, cx - plW / 2 + 10 * p, py + 6 * p, 64 * p, 18 * p, `${b.W} W`, { color: '#ffb36b' }); }
+    ctx.fillStyle = on ? T.hot : (dark() ? '#56606e' : '#8a94a2'); ctx.globalAlpha = on ? 0.95 : 0.8; ctx.fillRect(cx - plW / 2 + 12 * p, py - 4 * p, plW - 24 * p, 4 * p); ctx.globalAlpha = 1;
+    /* beaker: 600 mL, drawn to scale (8.5 cm wide inside) */
+    const bwid = 120 * p, bh = 160 * p, bx = cx - bwid / 2, bt = py - 4 * p - bh, mlPerPx = 600 / (bh * 0.88);
+    const volL = st.mL / s.rhoL * 1e6, volS = s.rhoS ? st.mS / s.rhoS * 1e6 : 0;
+    const liqH = (volL + (st.mS > 0 && st.mL > 0 ? volS * s.rhoS / s.rhoL : 0)) / mlPerPx;    /* floating ice displaces its own mass of water */
+    const floor = py - 4 * p - 3 * p;
+    /* contents */
+    if (st.mL > 0) {
+      const g = ctx.createLinearGradient(0, floor - liqH, 0, floor); const c = b.sub === 'water' ? ['rgba(120,180,235,0.55)', 'rgba(70,140,215,0.7)'] : ['rgba(235,215,140,0.45)', 'rgba(215,185,90,0.6)'];
+      g.addColorStop(0, c[0]); g.addColorStop(1, c[1]); ctx.fillStyle = g; ctx.fillRect(bx + 3 * p, floor - liqH, bwid - 6 * p, liqH);
+      ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.fillRect(bx + 3 * p, floor - liqH, bwid - 6 * p, 1.5 * p);
+    }
+    if (st.mS > 0) {                                         /* ice cubes: a packed heap that shrinks as it melts */
+      const n = Math.max(1, Math.ceil(12 * st.mS / (b.m / 1000))), side = 26 * p * Math.cbrt(Math.min(1, st.mS / (b.m / 1000) * 12 / n));
+      const surf = st.mL > 0 ? floor - liqH : floor;
+      for (let k = 0; k < n; k++) {
+        const col = k % 4, row = Math.floor(k / 4), x = bx + 10 * p + col * (bwid - 20 * p) / 4 + (row % 2) * 6 * p, y = st.mL > 0 ? surf - side * 0.15 - row * side * 0.2 : floor - side - row * side * 0.95;
+        ctx.save(); ctx.translate(x + side / 2, y + side / 2); ctx.rotate(((k * 37) % 17 - 8) * 0.03);
+        const g = ctx.createLinearGradient(-side / 2, -side / 2, side / 2, side / 2); g.addColorStop(0, 'rgba(240,250,255,0.95)'); g.addColorStop(1, 'rgba(170,205,235,0.85)');
+        ctx.fillStyle = g; ctx.strokeStyle = 'rgba(120,160,200,0.8)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(-side / 2, -side / 2, side, side, 3 * p); ctx.fill(); ctx.stroke(); ctx.restore();
+      }
+    }
+    /* bubbles while it boils, from the bottom */
+    if (st.kind === 'boil' && !st.done && st.mL > 0 && S.run && !reduce) {
+      if (bub.length < 40 && Math.random() < 0.6) bub.push({ x: bx + 8 * p + Math.random() * (bwid - 16 * p), y: floor, r: (1.5 + Math.random() * 3) * p, v: (30 + Math.random() * 40) * p });
+    }
+    for (let k = bub.length - 1; k >= 0; k--) { const u = bub[k]; if (u.y < floor - liqH + 2 || st.mL <= 0) { bub.splice(k, 1); continue; }
+      ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(u.x, u.y, u.r, 0, 7); ctx.stroke(); }
+    if (st.kind === 'boil' && !st.done && st.mL > 0) {          /* vapor leaving the open top */
+      ctx.save(); for (let k = 0; k < 5; k++) { const ph = (performance.now() / 1400 + k / 5) % 1, x = bx + bwid * (0.25 + 0.12 * k), y = bt - ph * 60 * p;
+        ctx.globalAlpha = 0.35 * (1 - ph); ctx.fillStyle = dark() ? '#c9d4e0' : '#ffffff'; ctx.beginPath(); ctx.arc(x + Math.sin(ph * 6 + k) * 6 * p, y, (6 + ph * 14) * p, 0, 7); ctx.fill(); }
+      ctx.restore(); }
+    /* glass */
+    ctx.save(); const bot = floor + 3 * p, rr = 9 * p;
+    const body = () => { ctx.beginPath(); ctx.moveTo(bx, bt + 4 * p); ctx.lineTo(bx, bot - rr); ctx.quadraticCurveTo(bx, bot, bx + rr, bot); ctx.lineTo(bx + bwid - rr, bot); ctx.quadraticCurveTo(bx + bwid, bot, bx + bwid, bot - rr); ctx.lineTo(bx + bwid, bt + 4 * p); };
+    ctx.fillStyle = dark() ? 'rgba(170,200,230,0.07)' : 'rgba(205,225,245,0.28)'; body(); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = dark() ? 'rgba(200,220,240,0.75)' : 'rgba(80,110,140,0.8)'; ctx.lineWidth = 2.2 * p; ctx.lineJoin = 'round';
+    body(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(bx - 7 * p, bt); ctx.quadraticCurveTo(bx - 2 * p, bt, bx, bt + 4 * p); ctx.moveTo(bx + bwid, bt + 4 * p); ctx.lineTo(bx + bwid + 2 * p, bt); ctx.stroke();   /* rim and spout */
+    const sheen = ctx.createLinearGradient(bx, 0, bx + bwid, 0); sheen.addColorStop(0, 'rgba(255,255,255,0)'); sheen.addColorStop(0.12, dark() ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.55)'); sheen.addColorStop(0.2, 'rgba(255,255,255,0)');
+    sheen.addColorStop(0.86, 'rgba(255,255,255,0)'); sheen.addColorStop(0.92, dark() ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.35)'); sheen.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = sheen; ctx.fillRect(bx + 2 * p, bt + 8 * p, bwid - 4 * p, bh - 18 * p);
+    ctx.fillStyle = dark() ? 'rgba(220,230,240,0.75)' : 'rgba(60,80,100,0.75)'; ctx.font = `${9.5 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';   /* mL marks on the left */
+    for (let v = 100; v <= 500; v += 100) { const y = floor - v / mlPerPx; ctx.fillRect(bx + 4 * p, y, 12 * p, 1.2 * p); ctx.fillRect(bx + 4 * p, y - 0.5 / mlPerPx * 100, 6 * p, 1); ctx.fillText(`${v}`, bx + 19 * p, y); }
+    ctx.fillText('mL', bx + 19 * p, floor - 560 / mlPerPx);
+    ctx.restore();
+    /* thermometer probe from a stand on the right */
+    const sx = bx + bwid + 70 * p;
+    if (window.VDGear) { VDGear.stand(ctx, sx, benchY, bt - 50 * p, { side: 1 }); VDGear.boss(ctx, sx, bt - 30 * p, p); }
+    const tipY = st.mL > 0 || st.mS > 0 ? floor - 14 * p : floor - 14 * p;
+    if (window.VDGear) { VDGear.rod(ctx, sx, bt - 30 * p, bx + bwid * 0.8, bt - 30 * p, 2.5 * p); VDGear.rod(ctx, bx + bwid * 0.8, bt - 30 * p, bx + bwid * 0.8, tipY, 2.2 * p, { color: '#c7ced6' }); }
+    else { ctx.strokeStyle = T.muted; ctx.beginPath(); ctx.moveTo(bx + bwid * 0.8, bt - 30 * p); ctx.lineTo(bx + bwid * 0.8, tipY); ctx.stroke(); }
+    if (window.VDGear) { VDGear.box(ctx, sx + 14 * p, bt - 70 * p, 108 * p, 40 * p, { color: '#3a4552', r: 5 }); VDGear.lcd(ctx, sx + 22 * p, bt - 62 * p, 92 * p, 24 * p, `${f(st.T, 1)} °C`);
+      VDGear.label(ctx, 'thermometer', sx + 68 * p, bt - 78 * p, { a: 'center', s: 10.5 * p }); }
+    /* timer */
+    const tx = 16 * p, ty = 16 * p;
+    if (window.VDGear) { VDGear.box(ctx, tx, ty, 120 * p, 40 * p, { color: '#3a4552', r: 5 }); VDGear.lcd(ctx, tx + 8 * p, ty + 8 * p, 104 * p, 24 * p, `${f(b.t, 0)} s`); }
+    else { ctx.fillStyle = T.ink; ctx.fillText(`${f(b.t, 0)} s`, tx, ty + 20); }
+    if (window.VDGear && W > 600) VDGear.label(ctx, `${s.name}, ${b.m} g · open beaker at 1 atm · ${b.W} W hot plate`, tx + 2 * p, ty + 54 * p, { a: 'left', s: 11 * p });
+  }
+
+  // ---------- the heating curve ----------
+  function drawCurve() {
+    const p = proj(); cctx.setTransform(dpr, 0, 0, dpr, 0, 0); cctx.fillStyle = T.canvas; cctx.fillRect(0, 0, CW, CH);
+    if (S.blind) { cctx.fillStyle = T.muted; cctx.font = `${12 * p}px ${T.ui}`; cctx.textAlign = 'center'; cctx.textBaseline = 'middle'; cctx.fillText('Heating curve hidden (Blind mode in the Lab section)', CW / 2, CH / 2); return; }
+    let pts, xl, yl, y2l = null, X, Y, Y2;
+    if (S.view === 'atoms') { pts = S.hist; X = (q) => q.Q; Y = (q) => q.T; Y2 = (q) => q.U; xl = 'heat added Q (kJ/mol)'; yl = 'T (K)'; y2l = 'bond energy U (kJ/mol)'; }
+    else {
+      const b = S.bk, st = stages(b.sub, b.m / 1000, b.T0), end = st[st.length - 1].Q1 / b.W; pts = [];
+      const tt = [0]; st.forEach((g) => tt.push(g.Q1 / b.W)); for (let k = 0; k <= 80; k++) tt.push(Math.min(b.t, end) * k / 80);
+      tt.filter((t) => t <= b.t).sort((a, c) => a - c).forEach((t) => { const s = beakerState(b.sub, b.m / 1000, b.T0, b.W * t); pts.push({ t, T: s.T, m: (s.mS + s.mL) * 1000 }); });
+      pts.push(Object.assign({ t: Math.min(b.t, end) }, (() => { const s = beakerState(b.sub, b.m / 1000, b.T0, b.W * Math.min(b.t, end)); return { T: s.T, m: (s.mS + s.mL) * 1000 }; })()));
+      X = (q) => q.t; Y = (q) => q.T; Y2 = (q) => q.m; xl = 'time t (s)'; yl = 'T (°C)'; y2l = 'balance (g)';
+    }
+    const L = 52 * p, R = 58 * p, Tp = 12 * p, B = 30 * p, pw = CW - L - R, ph = CH - Tp - B;
+    if (pts.length < 1 || pw < 40) return;
+    let x0 = Math.min(0, ...pts.map(X)), x1 = Math.max(...pts.map(X)), y0 = Math.min(...pts.map(Y)), y1 = Math.max(...pts.map(Y)), u0 = Math.min(...pts.map(Y2)), u1 = Math.max(...pts.map(Y2));
+    if (S.view === 'atoms') { x1 = Math.max(x1, 1); y0 = Math.min(y0, 30); y1 = Math.max(y1, 80); u0 = Math.floor(u0); u1 = Math.max(Math.ceil(u1), u0 + 2); }
+    else { x1 = Math.max(x1, 60); y0 = Math.min(y0, S.bk.T0 - 5); y1 = Math.max(y1, SUBSTANCES[S.bk.sub].Tb + 10); u0 = 0; u1 = Math.max(u1, S.bk.m); }
+    const nice = (a, b, n) => { const st = Math.pow(10, Math.floor(Math.log10((b - a) / n))), m = [1, 2, 5, 10].find((k) => (b - a) / (k * st) <= n) * st; return m; };
+    const ys = nice(y0, y1, 5); y0 = Math.floor(y0 / ys) * ys; y1 = Math.ceil(y1 / ys) * ys; const xs = nice(x0, x1, 6); x0 = Math.floor(x0 / xs) * xs; x1 = Math.ceil(x1 / xs) * xs;
+    if (u1 - u0 < 1e-9) u1 = u0 + 1;
+    const px = (v) => L + (v - x0) / (x1 - x0) * pw, py = (v) => Tp + ph - (v - y0) / (y1 - y0) * ph, pu = (v) => Tp + ph - (v - u0) / (u1 - u0) * ph;
+    cctx.strokeStyle = T.grid; cctx.lineWidth = 1; cctx.fillStyle = T.muted; cctx.font = `${10.5 * p}px ${T.mono}`;
+    cctx.textAlign = 'right'; cctx.textBaseline = 'middle';
+    for (let v = y0; v <= y1 + 1e-9; v += ys) { cctx.beginPath(); cctx.moveTo(L, py(v)); cctx.lineTo(L + pw, py(v)); cctx.stroke(); cctx.fillText(f(v, ys < 1 ? 1 : 0), L - 5 * p, py(v)); }
+    cctx.textAlign = 'center'; cctx.textBaseline = 'top';
+    for (let v = x0; v <= x1 + 1e-9; v += xs) { cctx.beginPath(); cctx.moveTo(px(v), Tp); cctx.lineTo(px(v), Tp + ph); cctx.stroke(); cctx.fillText(f(v, xs < 1 ? 1 : 0), px(v), Tp + ph + 4 * p); }
+    cctx.font = `${11 * p}px ${T.ui}`; cctx.fillText(xl, L + pw / 2, Tp + ph + 16 * p);
+    cctx.save(); cctx.translate(12 * p, Tp + ph / 2); cctx.rotate(-Math.PI / 2); cctx.fillStyle = T.curve; cctx.fillText(yl, 0, -4 * p); cctx.restore();
+    cctx.save(); cctx.translate(CW - 10 * p, Tp + ph / 2); cctx.rotate(Math.PI / 2); cctx.fillStyle = S.view === 'atoms' ? T.pe : T.accent; cctx.fillText(y2l, 0, -4 * p); cctx.restore();
+    cctx.textAlign = 'left'; cctx.textBaseline = 'middle'; cctx.font = `${10.5 * p}px ${T.mono}`; cctx.fillStyle = S.view === 'atoms' ? T.pe : T.accent;
+    cctx.fillText(f(u1, 1), L + pw + 4 * p, pu(u1)); cctx.fillText(f(u0, 1), L + pw + 4 * p, pu(u0));
+    const line = (fy, c, w) => { cctx.strokeStyle = c; cctx.lineWidth = w; cctx.lineJoin = 'round'; cctx.beginPath(); pts.forEach((q, i) => (i ? cctx.lineTo(px(X(q)), fy(q)) : cctx.moveTo(px(X(q)), fy(q)))); cctx.stroke(); };
+    line((q) => pu(Y2(q)), S.view === 'atoms' ? T.pe : T.accent, 1.5 * p);
+    line((q) => py(Y(q)), T.curve, 2.2 * p);
+    const q = pts[pts.length - 1]; cctx.fillStyle = T.curve; cctx.beginPath(); cctx.arc(px(X(q)), py(Y(q)), 3.5 * p, 0, 7); cctx.fill();
+  }
+
+  // ---------- 3D view of the atoms ----------
+  const G3 = { ok: false, loading: false, dirty: true };
+  const orb = { th: -1.15, ph: 1.2, zoom: 1 };
+  function init3D() {
+    const r = VD3.renderer({ alpha: true }); if (!r) return false;
+    const el = r.domElement; $('three').appendChild(el); el.setAttribute('tabindex', '0'); el.setAttribute('aria-label', 'The atoms in 3D: drag to turn, wheel or pinch to zoom, double click to reset.');
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 0.5, 2000);
+    const shadows = !VD3.lowPower(); r.shadowMap.enabled = shadows; r.shadowMap.type = THREE.PCFSoftShadowMap;
+    scene.add(new THREE.HemisphereLight(0xf4f7ff, 0x6a5a48, 1.05), new THREE.AmbientLight(0xffffff, 0.25));
+    const sun = new THREE.DirectionalLight(0xffffff, 1.0); sun.position.set(-20, -30, 60); sun.castShadow = shadows; sun.shadow.mapSize.set(1024, 1024);
+    Object.assign(sun.shadow.camera, { left: -14, right: 14, top: 14, bottom: -14, near: 1, far: 200 }); scene.add(sun, sun.target);
+    const md = S.md, cap = md.N * 8;
+    const atomMat = new THREE.MeshStandardMaterial({ roughness: 0.32, metalness: 0.05 });
+    const atoms = new THREE.InstancedMesh(new THREE.SphereGeometry(0.46, 18, 12), atomMat, md.N); atoms.castShadow = shadows; atoms.receiveShadow = shadows;
+    atoms.instanceMatrix.setUsage(THREE.DynamicDrawUsage); atoms.setColorAt(0, new THREE.Color(1, 1, 1)); scene.add(atoms);
+    const bondMat = new THREE.MeshStandardMaterial({ roughness: 0.5, metalness: 0.0, transparent: true, opacity: 0.7 });
+    const bonds = new THREE.InstancedMesh(new THREE.CylinderGeometry(1, 1, 1, 6, 1, true), bondMat, cap); bonds.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+    bonds.setColorAt(0, new THREE.Color(1, 1, 1)); scene.add(bonds);
+    /* heater floor, glass walls, piston with weights */
+    /* the heater: a hot plate whose coil glows when it heats (orange) or cools (blue) */
+    const coil = (glow) => { const c = document.createElement('canvas'); c.width = c.height = 256; const x = c.getContext('2d');
+      x.fillStyle = glow ? '#000' : '#7d8794'; x.fillRect(0, 0, 256, 256); x.strokeStyle = glow ? '#fff' : '#5b6470'; x.lineWidth = 9; x.lineCap = 'round';
+      x.beginPath(); for (let k = 0; k < 5; k++) { const a = 22 + k * 21; x.rect(a, a, 256 - 2 * a, 256 - 2 * a); } x.stroke();
+      const t = new THREE.CanvasTexture(c); t.anisotropy = 4; return t; };
+    const floorMat = new THREE.MeshStandardMaterial({ map: coil(false), emissiveMap: coil(true), emissive: 0x000000, roughness: 0.45, metalness: 0.35 });
+    const side = new THREE.MeshStandardMaterial({ color: 0x8a939e, roughness: 0.4, metalness: 0.4 });
+    const floor = new THREE.Mesh(new THREE.BoxGeometry(md.Lx + 2, md.Ly + 2, 1.2), [side, side, side, side, floorMat, side]); floor.position.z = -0.6; floor.receiveShadow = shadows; scene.add(floor);
+    const body = new THREE.MeshStandardMaterial({ color: 0x3c4552, roughness: 0.55, metalness: 0.25 });
+    const base = new THREE.Mesh(new THREE.BoxGeometry(md.Lx + 6, md.Ly + 6, 2.2), body); base.position.z = -2.3; base.castShadow = shadows; base.receiveShadow = shadows; scene.add(base);
+    const knob = new THREE.Mesh(new THREE.CylinderGeometry(0.7, 0.7, 0.5, 24), new THREE.MeshStandardMaterial({ color: 0xe9ecef, roughness: 0.4 }));
+    knob.position.set(md.Lx / 2 + 1.2, -(md.Ly / 2 + 3.25), -2.3); scene.add(knob);
+    const lamp = new THREE.Mesh(new THREE.SphereGeometry(0.28, 12, 8), new THREE.MeshStandardMaterial({ color: 0x333333, emissive: 0x000000 }));
+    lamp.position.set(md.Lx / 2 - 0.6, -(md.Ly / 2 + 3.05), -1.9); scene.add(lamp);
+    const glow = new THREE.PointLight(0xff7a3c, 0, 9, 2); glow.position.z = 1; scene.add(glow);
+    /* the bench under it */
+    const benchCv = document.createElement('canvas'); benchCv.width = benchCv.height = 256; { const x = benchCv.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, 256, 256); x.strokeStyle = 'rgba(0,0,0,0.07)'; x.lineWidth = 2; x.strokeRect(0, 0, 256, 256); }
+    const benchTex = new THREE.CanvasTexture(benchCv); benchTex.wrapS = benchTex.wrapT = THREE.RepeatWrapping; benchTex.repeat.set(30, 30);
+    const benchMat = new THREE.MeshStandardMaterial({ map: benchTex, roughness: 0.9, metalness: 0 });
+    const bench = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), benchMat); bench.position.z = -3.4; bench.receiveShadow = shadows; scene.add(bench);
+    const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xcfe3f5, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.1, side: THREE.DoubleSide, depthWrite: false });
+    const glass = new THREE.Mesh(new THREE.BoxGeometry(md.Lx, md.Ly, 1, 1, 1, 1), glassMat); scene.add(glass);
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(md.Lx, md.Ly, 1)), new THREE.LineBasicMaterial({ color: 0x8fb3d6, transparent: true, opacity: 0.5 })); scene.add(edges);
+    const steel = new THREE.MeshStandardMaterial({ color: 0xc9d1da, roughness: 0.35, metalness: 0.45 });
+    const piston = new THREE.Group(), plate = new THREE.Mesh(new THREE.BoxGeometry(md.Lx + 0.6, md.Ly + 0.6, 0.8), steel); plate.position.z = 0.4; plate.castShadow = shadows; piston.add(plate);
+    const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 4, 16), steel); rod.rotation.x = Math.PI / 2; rod.position.z = 2.8; piston.add(rod);
+    const brass = new THREE.MeshStandardMaterial({ color: 0xd2a84e, roughness: 0.38, metalness: 0.45 }), wts = [];
+    for (let k = 0; k < 6; k++) { const w = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, 0.7, 32), brass); w.rotation.x = Math.PI / 2; w.position.z = 1.6 + k * 0.78; w.castShadow = shadows; piston.add(w); wts.push(w); }
+    scene.add(piston);
+    VD3.orbit(el, orb, () => { G3.dirty = true; }, { phMin: 0.25, phMax: 1.5, zMin: 0.35, zMax: 3 });
+    el.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
+    Object.assign(G3, { r, el, scene, cam, atoms, bonds, cap, floorMat, lamp, glow, benchMat, glass, edges, piston, wts, sun, hemi: scene.children[0], m4: new THREE.Matrix4(), q: new THREE.Quaternion(), v: new THREE.Vector3(), s: new THREE.Vector3(), up: new THREE.Vector3(0, 1, 0), col: new THREE.Color() });
+    theme3D(); return true;
+  }
+  function theme3D() {
+    if (!G3.ok && !G3.scene) return;
+    const d = VD3.dark(), bg = new THREE.Color(d ? 0x10161e : 0xeef1f5); G3.scene.background = bg; G3.scene.fog = new THREE.Fog(bg, 60, 260);
+    G3.benchMat.color.set(d ? 0x2a323d : 0xdfe4ea);
+  }
+  function draw3D() {
+    const md = S.md, g = G3, half = { x: md.Lx / 2, y: md.Ly / 2 };
+    const rect = $('three').getBoundingClientRect(); if (rect.width < 2) return;
+    if (g.w !== rect.width || g.h !== rect.height) { g.w = rect.width; g.h = rect.height; g.r.setSize(rect.width, rect.height, false); g.cam.aspect = rect.width / rect.height; g.cam.updateProjectionMatrix(); }
+    const ka = S.bonds ? 0.3 / 0.46 : 1;
+    for (let i = 0; i < md.N; i++) {
+      g.m4.makeScale(ka, ka, ka).setPosition(md.x[i] - half.x, md.y[i] - half.y, md.z[i]); g.atoms.setMatrixAt(i, g.m4);
+      if (S.color === 'phase' && S.ph) g.col.set([T.solid, T.liquid, T.vapor][S.ph[i]]); else g.col.set(speedColor(atomColorIndex(i)));
+      g.atoms.setColorAt(i, g.col);
+    }
+    g.atoms.instanceMatrix.needsUpdate = true; g.atoms.instanceColor.needsUpdate = true;
+    let n = 0;
+    if (S.bonds) mdBonds(md, (i, j, rr, dx, dy, dz) => {
+      if (n >= g.cap || Math.abs(md.x[j] - md.x[i]) > half.x || Math.abs(md.y[j] - md.y[i]) > half.y) return;
+      const s = Math.max(0, Math.min(1, (1.5 - rr) / 0.38));
+      g.v.set(dx / rr, dy / rr, dz / rr); g.q.setFromUnitVectors(g.up, g.v); g.s.set(0.035 + 0.055 * s, rr, 0.035 + 0.055 * s);
+      g.m4.compose(new THREE.Vector3(md.x[i] + dx / 2 - half.x, md.y[i] + dy / 2 - half.y, md.z[i] + dz / 2), g.q, g.s); g.bonds.setMatrixAt(n, g.m4);
+      g.col.set(dark() ? '#bdb2ff' : '#8a78dc').multiplyScalar(0.55 + 0.5 * s); g.bonds.setColorAt(n, g.col); n++;
+    });
+    g.bonds.count = n; g.bonds.instanceMatrix.needsUpdate = true; if (g.bonds.instanceColor) g.bonds.instanceColor.needsUpdate = true;
+    const top = Math.max(12, Math.min(60, S.avg.h + 2));
+    g.glass.scale.z = Math.max(1, md.h); g.glass.position.z = md.h / 2; g.edges.scale.z = Math.max(1, md.h); g.edges.position.z = md.h / 2;
+    g.piston.position.z = md.h; const nw = Math.round((S.Patm - 10) / 4); g.wts.forEach((w, k) => { w.visible = k < nw; });
+    const gl = S.heat ? 0.35 + 0.65 * S.pow / 8 : 0, hot = S.heat > 0 ? 0xff5a1f : 0x3f8cff;   /* the coil glows with the heater setting */
+    g.floorMat.emissive.set(gl ? hot : 0x000000); g.floorMat.emissiveIntensity = gl; g.lamp.material.emissive.set(gl ? hot : 0x000000);
+    g.glow.color.set(S.heat > 0 ? 0xff7a3c : 0x5c9cff); g.glow.intensity = gl * 1.6;
+    const hv = Math.min(60, S.avg.h), need = Math.max((hv + 9) / 0.575, 19 / (0.575 * g.cam.aspect));   /* fit the column and its weights (tan 16° = 0.287) */
+    const tgt = { x: 0, y: 0, z: hv * 0.48 + 1.2 }; VD3.place(g.cam, orb, tgt, need * 1.05);
+    g.sun.position.set(-20, -30, top + 50); g.sun.target.position.set(0, 0, top * 0.3);
+    g.r.render(g.scene, g.cam);
+  }
+  const NO3D = 'This browser could not open the 3D view, so the flat view is shown.';
+  function setDim(d) {
+    if (d === '3d' && !G3.ok) {
+      if (!G3.loading && window.VD3) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); if (!G3.ok) capStatus(NO3D); setDim(G3.ok ? '3d' : 'flat'); }); }
+      return;
+    }
+    S.dim = d; for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String(b.dataset.d === d));
+    const three = S.view === 'atoms' && d === '3d'; $('three').hidden = !three; can.style.pointerEvents = three ? 'none' : '';
+    redraw();
+  }
+
+  // ---------- frame ----------
+  function redraw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (S.view === 'atoms') {
+      if (S.dim === '3d' && G3.ok) { ctx.clearRect(0, 0, W, H); draw3D(); drawSplit(proj()); }
+      else drawAtomsFlat();
+    } else drawBeaker();
+    drawCurve(); readouts(); clock();
+  }
+  function clock() { $('clock').textContent = S.view === 'atoms' ? `t = ${f(S.md.t * TAU_PS / 1000, 3)} ns` : `t = ${f(S.bk.t, 0)} s`; }
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.run) {
+      if (S.view === 'atoms') {
+        const want = 8 * S.speed, budget = 14, n = Math.max(2, Math.min(want, Math.floor(budget / Math.max(0.05, S.perStep))));
+        const t0 = performance.now(); advanceAtoms(n); S.perStep += ((performance.now() - t0) / n - S.perStep) * 0.1;
+        if (++S.frame % 8 === 0) { S.ph = mdPhases(S.md); const sh = shares(S.ph); S.phAvg = S.phAvg.map((v, k) => v + (sh[k] - v) * 0.25); }
+        S.nb = mdBonds(S.md);
+      } else {
+        const b = S.bk, end = stages(b.sub, b.m / 1000, b.T0).slice(-1)[0].Q1 / b.W;
+        b.t = Math.min(end, b.t + dt * BEAKER_SPEED[S.speed]);
+        for (const u of bub) u.y -= u.v * dt;
+        if (b.t >= end) setRun(false);
+      }
+      redraw();
+    } else if (S.view === 'beaker' && bub.length) { bub.length = 0; redraw(); }
+    requestAnimationFrame(frame);
+  }
+  const BEAKER_SPEED = { 1: 5, 2: 20, 4: 50 };
+  function speedLabels() {
+    for (const b of document.querySelectorAll('#speedSeg button')) b.textContent = S.view === 'atoms' ? `${b.dataset.s}×` : `${BEAKER_SPEED[b.dataset.s]}×`;
+  }
+
+  // ---------- controls ----------
+  function setRun(on) { S.run = on; $('go').textContent = on ? 'Pause' : (S.view === 'atoms' ? S.md.t > 0 : S.bk.t > 0) ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); redraw(); }
+  function setView(v) {
+    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('cardAtoms').hidden = v !== 'atoms'; $('cardBeaker').hidden = v !== 'beaker'; $('dimSeg').hidden = v !== 'atoms';
+    $('units').textContent = v === 'atoms' ? 'T in K · heat in kJ/mol · time in ns' : 'T in °C · mass in g · time in s';
+    can.setAttribute('aria-label', v === 'atoms' ? 'Argon atoms in a column under a weighted piston, with a heater in the floor. Space starts or pauses.'
+      : 'A beaker on a hot plate standing on a balance, with a thermometer in the sample. Space starts or pauses.');
+    setRun(false); speedLabels(); setDim(S.dim); renderRows(); legend();
+  }
+  function legend() {
+    $('legend').innerHTML = S.color === 'phase' ? `<span><i style="background:var(--solid)"></i>solid</span><span><i style="background:var(--liquid)"></i>liquid</span><span><i style="background:var(--vapor)"></i>vapor</span>`
+      : '<span><i style="background:#2f6fd0"></i>slow</span><span><i style="background:#ebeef2;border:1px solid var(--line)"></i>typical</span><span><i style="background:#d64224"></i>fast</span>';
+  }
+  function sync() {
+    $('sPow').value = S.pow; $('oPow').textContent = `${f(S.pow, 1)} kJ/mol per ns`; $('sPres').value = S.Patm; $('oPres').textContent = `${S.Patm} atm`;
+    const b = S.bk, s = SUBSTANCES[b.sub]; $('sMass').value = b.m; $('oMass').textContent = `${b.m} g`; $('sWatt').value = b.W; $('oWatt').textContent = `${b.W} W`;
+    const lo = b.sub === 'water' ? -40 : 0, hi = b.sub === 'water' ? -5 : 60; $('sT0').min = lo; $('sT0').max = hi; $('sT0').value = b.T0; $('oT0').textContent = `${b.T0} °C`;
+    $('sT0').previousElementSibling.querySelector('label').textContent = b.sub === 'water' ? 'Starting temperature (ice)' : 'Starting temperature (liquid)';
+    for (const x of document.querySelectorAll('#heatSeg button')) x.setAttribute('aria-pressed', String(+x.dataset.h === S.heat));
+    for (const x of document.querySelectorAll('#colorSeg button')) x.setAttribute('aria-pressed', String(x.dataset.c === S.color));
+    for (const x of document.querySelectorAll('#subSeg button')) x.setAttribute('aria-pressed', String(x.dataset.sub === b.sub));
+    for (const x of document.querySelectorAll('#speedSeg button')) x.setAttribute('aria-pressed', String(+x.dataset.s === S.speed));
+    for (const x of document.querySelectorAll('#presets button')) x.setAttribute('aria-pressed', String(x.dataset.p === S.preset));
+    $('showBonds').checked = S.bonds;
+  }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint;
+    if (c.view === 'atoms') { Object.assign(S, { kind: c.kind, T0: c.T0, Patm: c.Patm, heat: c.heat, pow: c.pow }); newSample(); }
+    else { Object.assign(S.bk, { sub: c.sub, m: c.m, W: c.W, T0: c.T0, t: 0 }); }
+    sync(); setView(c.view);
+  }
+  function restart() { if (S.view === 'atoms') newSample(); else S.bk.t = 0; bub.length = 0; setRun(false); }
+  const custom = () => { S.preset = 'custom'; sync(); };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-d]'); if (b) setDim(b.dataset.d); });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
+  $('heatSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-h]'); if (b) { S.heat = +b.dataset.h; custom(); redraw(); } });
+  $('colorSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (b) { S.color = b.dataset.c; sync(); legend(); redraw(); } });
+  $('subSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-sub]'); if (b) { S.bk.sub = b.dataset.sub; S.bk.T0 = b.dataset.sub === 'water' ? -20 : 20; S.bk.t = 0; custom(); setRun(false); } });
+  $('showBonds').addEventListener('change', (e) => { S.bonds = e.target.checked; redraw(); });
+  $('sPow').addEventListener('input', (e) => { S.pow = +e.target.value; custom(); redraw(); });
+  $('sPres').addEventListener('input', (e) => { S.Patm = +e.target.value; if (S.md) S.md.P = Pred(); custom(); redraw(); });
+  $('sMass').addEventListener('input', (e) => { S.bk.m = +e.target.value; S.bk.t = 0; custom(); setRun(false); });
+  $('sWatt').addEventListener('input', (e) => { S.bk.W = +e.target.value; S.bk.t = 0; custom(); setRun(false); });
+  $('sT0').addEventListener('input', (e) => { S.bk.T0 = +e.target.value; S.bk.t = 0; custom(); setRun(false); });
+  $('go').addEventListener('click', () => setRun(!S.run));
+  $('restart').addEventListener('click', restart);
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; bub.length = 0; redraw(); });
+
+  // ---------- readings ----------
+  function capStatus(m) { $('capStatus').textContent = m; }
+  const COLS = { atoms: ['#', 'Q (kJ/mol)', 'T (K)', 'U (kJ/mol)', 'S·L·V %'], beaker: ['#', 't (s)', 'T (°C)', 'm (g)'] };
+  $('capture').addEventListener('click', () => {
+    if (S.view === 'atoms') {
+      const md = S.md, p = S.phAvg.map((v) => String(Math.round(100 * v)));
+      S.rows.atoms.push({ t: f(md.t * TAU_PS / 1000, 3), Q: f(md.Q / md.N * KJMOL, 2), T: f(S.avg.T * AR.epsK, 1), U: f(S.avg.pe * KJMOL, 2), s: p[0], l: p[1], v: p[2], P: S.Patm });
+    } else {
+      const b = S.bk, st = beakerState(b.sub, b.m / 1000, b.T0, b.W * b.t);
+      S.rows.beaker.push({ t: f(b.t, 0), T: f(st.T, 1), m: f((st.mS + st.mL) * 1000, 1), sub: b.sub, m0: b.m, W: b.W, T0: b.T0 });
+    }
+    renderRows(); capStatus(`Row ${S.rows[S.view].length} captured.`);
+  });
+  $('clearRows').addEventListener('click', () => { S.rows[S.view] = []; S.series[S.view] = Date.now(); renderRows(); capStatus('Readings cleared.'); });
+  window.vdReadings = () => S.rows.atoms.length + S.rows.beaker.length;
+  const SHEET = { atoms: 'bonds-and-latent-heat', beaker: 'heating-curve' };
+  $('exportCsv').addEventListener('click', () => {
+    const v = S.view, rows = S.rows[v]; if (!rows.length) { capStatus('No readings to export.'); return; }
+    let txt, note;
+    if (v === 'atoms') { txt = atomsCSV(rows, { N: S.md.N, P: [...new Set(rows.map((r) => r.P))].join(' and ') }); note = `Simulated data from the States of Matter demo, Atoms view (${S.md.N} argon atoms).`; }
+    else { const r0 = rows[rows.length - 1], s = SUBSTANCES[r0.sub]; txt = beakerCSV(rows, { substance: s.name, m0: r0.m0, P: r0.W, T0: r0.T0 }); note = `Simulated data from the States of Matter demo, Beaker view (${s.name}, ${r0.m0} g, ${r0.W} W).`; }
+    const lines = txt.trim().split('\n').filter((l) => l[0] !== '#'), split = (l) => l.split(',');
+    if (!S.series[v]) S.series[v] = Date.now();
+    const sheet = SHEET[v], hand = { v: 1, demo: 'states-of-matter', series: S.series[v], sent: new Date().toISOString(), columns: split(lines[0]), rows: lines.slice(1).map(split), note, csv: txt, csvName: `${sheet}-readings.csv` };
+    try { localStorage.setItem(`vd-handoff:${sheet}`, JSON.stringify(hand)); }
+    catch (_) {
+      try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = hand.csvName; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {}
+      capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return;
+    }
+    capStatus(`${rows.length} reading${rows.length === 1 ? '' : 's'} sent to the worksheet. `);
+    const a = document.createElement('a'); a.href = `../curriculum/labs/students/${sheet}.html`; a.target = `${sheet}-worksheet`; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
+  });
+  function renderRows() {
+    const v = S.view, rows = S.rows[v], tb = $('rowsTbl').querySelector('tbody');
+    $('rowsTbl').querySelector('thead').innerHTML = `<tr>${COLS[v].map((c) => `<th>${c}</th>`).join('')}<th><span class="sr">Delete</span></th></tr>`;
+    tb.innerHTML = rows.length ? rows.map((r, i) => `<tr><td>${i + 1}</td>${(v === 'atoms' ? [r.Q, r.T, r.U, `${r.s} · ${r.l} · ${r.v}`] : [r.t, r.T, r.m]).map((c) => `<td class="mono">${c}</td>`).join('')}<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : `<tr><td class="empty" colspan="${COLS[v].length + 1}">No readings yet. Start the run and capture a reading every so often.</td></tr>`;
+  }
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows[S.view].splice(+b.dataset.del, 1); renderRows(); } });
+
+  // ---------- about ----------
+  $('aboutAtoms').textContent = `Atoms view: ${432} argon atoms that attract each other at a distance and repel when they touch (the Lennard-Jones potential, with argon's bond strength ε/k = 120 K and size σ = 0.34 nm, cut off at 0.85 nm). Newton's second law moves every atom in steps of ${f(MD_DT * TAU_PS * 1000, 1)} fs. The sample repeats sideways, so an atom leaving one side comes back in at the other, as if it were part of a wide sheet. A free piston presses down with a fixed pressure, and the heater adds energy to the atoms touching the floor. Temperature is the average kinetic energy of the atoms (KE = 3/2 kT per atom); the bond energy U is their potential energy, negative because bound atoms have less energy than separated ones. The heat added equals the change in KE + U + PV: the first law at constant pressure. The run lasts nanoseconds, so the heater is far stronger than a stove. This sample is only a few nanometres thick and its bonds are cut off at 0.85 nm, so it melts and boils at lower temperatures than a flask of real argon would (83.8 K and 87.3 K at 1 atm), but the shape of the heating curve, and where the heat goes, are the same. A small sample can also overheat for a moment before the first vapor forms, then settle back to the boiling plateau; real liquids do this too (superheating). Temperatures and energies on screen are averages over the last 0.02 ns. The flat view shows a slice 0.5 nm thick through the middle of the sample, with the atoms behind it faint; the 3D view shows them all.`;
+  $('aboutBeaker').textContent = 'Beaker view: a sample heated at a constant power P in a perfectly insulated beaker open to the air at 1 atm, so all of the heat goes into the sample (none into the glass or the room) and the vapor leaves. Specific heats and latent heats are from OpenStax University Physics Volume 2, Tables 1.3 and 1.4: ice 2090 J/kg·°C, water 4186, ethanol 2450; water melts at 0 °C with Lf = 334 kJ/kg and boils at 100 °C with Lv = 2256 kJ/kg; ethanol boils at 78.3 °C with Lv = 854 kJ/kg. Each stage takes heat Q = mcΔT or Q = mL, delivered at Q = Pt. Evaporation below the boiling point is neglected. The balance is tared, so it reads the sample only.';
+
+  // ---------- size, theme, start ----------
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect();
+    W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); sprites = null; redraw();
+  }
+  const retheme = () => { tokens(); if (G3.scene) theme3D(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); applyPreset('crystal');
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  const q = new URLSearchParams(location.search);
+  if (q.get('view') === '3d' || (q.get('view') !== 'flat' && window.VD3 && !VD3.lowPower())) setDim('3d');
+  /* test hook: run the atoms n steps without drawing (phases refreshed every 200 steps), then draw once */
+  const fast = (n) => { for (let k = 0; k < n; k += 200) { advanceAtoms(Math.min(200, n - k)); S.ph = mdPhases(S.md); const sh = shares(S.ph); S.phAvg = S.phAvg.map((v, j) => v + (sh[j] - v) * 0.5); } S.nb = mdBonds(S.md); redraw(); };
+  window.__sm = { S, mdStep, setView, applyPreset, setRun, redraw, setDim, fast };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

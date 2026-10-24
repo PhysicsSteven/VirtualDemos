@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>States of Matter: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>States of Matter</h1><ul class="meta"><li><a href="../demos/states-of-matter.html">Open the demo</a></li><li>Thermodynamics; intro physics (heat, phase changes, latent heat)</li><li>15 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Temperature measures the average kinetic energy of the particles. During a phase change the temperature holds still, so the heat must go somewhere else: into the bonds (potential energy) and into pushing back the surroundings.</li>
+<li>Melting loosens the bonds; boiling breaks nearly all of them. That is why the latent heat of vaporization is several times the latent heat of fusion.</li>
+<li>At constant pressure the heat added equals ΔKE + ΔU + PΔV: the first law, which the demo's <em>Where the heat went</em> panel adds up live.</li>
+<li>With a steady heater, Q = Pt, so a heating curve of temperature against time is also a curve against heat. Slopes give specific heats (dT/dt = P/mc); plateau lengths give latent heats (Q = mL).</li>
+<li>A higher pressure raises the boiling temperature.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know Q = mcΔT and the idea of temperature as average kinetic energy. The demo has two views. <strong>Atoms</strong> is a molecular dynamics simulation of 432 argon atoms under a piston with a heater in the floor; <strong>Beaker</strong> is an ideal heating curve for water or ethanol on a hot plate and a balance. Setups: <strong>Heat a crystal</strong>, <strong>Higher pressure</strong>, <strong>Cool a vapor</strong> (Atoms) and <strong>Ice to steam</strong>, <strong>Boil ethanol</strong> (Beaker). On a slow computer choose <strong>Flat</strong> instead of <strong>3D</strong>. For a lab style run, tick <strong>Blind</strong> to hide the heating curve and the energy split.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Ice to steam</strong> (Beaker). Ask Q1, then press <strong>Start</strong> at the fastest speed. Point to the thermometer stuck at 0 °C while the cubes shrink, and the balance falling only once it boils.</li>
+<li>Read the curve. Ask Q2 about the two slopes and Q3 about the plateau lengths, then check with the timer.</li>
+<li><strong>Heat a crystal</strong> (Atoms). Leave <strong>Show bonds</strong> on and colour the atoms by <strong>Phase</strong>. Start it and let the class watch the crystal pattern break up while the temperature holds near 66 K. Ask Q4.</li>
+<li>Keep going to boiling. Watch <em>Where the heat went</em>: on the plateaus the bond energy bar grows and the kinetic energy bar does not. Ask Q5. The sample may overheat briefly before the first vapor forms, then settle back: a real effect (superheating).</li>
+<li><strong>Higher pressure</strong> (28 atm): the boiling plateau moves up (Q6).</li>
+<li>Optional: <strong>Cool a vapor</strong> shows condensation on the cold floor, with the temperature holding while bonds form.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Predict: 200 g of ice at −20 °C sits on a 500 W hot plate. Sketch the temperature against time until it has all boiled away, and say which stage lasts longest.</p></div>
+
+<div class="q"><p><strong>Q2.</strong> In the same run, which sloping part is steeper, the ice warming or the water warming, and by what factor? Use c_ice = 2090 and c_water = 4186 J/(kg·°C).</p></div>
+
+<div class="q"><p><strong>Q3.</strong> How long does each stage of the Ice to steam run last? Use L_f = 334 kJ/kg and L_v = 2256 kJ/kg. Check with the timer.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> While the crystal melts, the temperature holds still but the heater keeps adding heat. Where does the heat go? Use the bond energy readout and the bonds on screen.</p></div>
+
+<div class="q"><p><strong>Q5.</strong> In the Atoms view, boiling takes about four times the heat per mole of melting. Explain why, using the number of neighbours an atom has in the solid, the liquid and the vapor. What else does the heat do while the sample boils?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Why does the boiling temperature go up at 28 atm, while the melting temperature hardly changes?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Heat and temperature are the same thing."</strong> On a plateau heat goes in and the temperature does not change.</li>
+<li><strong>"Boiling water gets hotter if you turn the heat up."</strong> At a fixed pressure it boils faster at the same temperature.</li>
+<li><strong>"Particles stop moving in a solid."</strong> They vibrate, and at the melting point they move as fast on average as in the liquid at that temperature.</li>
+<li><strong>"Bonds store energy that is released when they break."</strong> Breaking bonds takes energy; forming them releases it (condensing steam burns).</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<p>Atoms: 432 atoms with the Lennard-Jones potential and argon's parameters, ε/k = 120 K, σ = 0.34 nm, m = 39.948 u (Rahman 1964), cut off and shifted at 2.5σ = 0.85 nm; velocity Verlet, time step 0.005τ ≈ 11 fs (τ = 2.15 ps). Periodic sideways, a 9-3 attractive floor (strength 2ε) and a free piston at constant pressure; the heater rescales the motion of atoms within 2.5σ of the floor. Enthalpy H = KE + U + PV changes only by the heat added (checked in curriculum/validation/test_states-of-matter.cjs). Phases from neighbour counts and the q6 bond order (ten Wolde, Ruiz-Montero and Frenkel 1996). The thin film and the cutoff make the model melt (about 66 K) and boil (about 112 to 115 K at 17 atm) lower than a flask of real argon would; readouts average over 0.02 ns. Beaker: an exact piecewise heating curve at constant power with no heat losses and no evaporation below the boiling point, using the textbook's c and L values (OpenStax University Physics Vol. 2, Tables 1.3 and 1.4); the vapor leaves the open beaker. Run speeds are faster than real time; the timer shows experiment time.</p><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

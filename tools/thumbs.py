@@ -53,6 +53,7 @@ OVERRIDES = {
     "two-speaker": {"wait": 1200, "js": "document.querySelector('#viewSeg [data-v=waves]').click();"},
     "ultrasound": {"wait": 1200, "js": "document.getElementById('run').click();"},
     "string-density": {"wait": 1200, "js": "document.querySelector('#presets [data-p=third]').click();"},
+    "states-of-matter": {"wait": 2500, "crop": ".pane", "js": "window.__sm.fast(16000); window.__sm.setRun(false);"},
     "pendulum": {"wait": 2600, "js": "const s = document.getElementById('sA'); s.value = 35; s.dispatchEvent(new Event('input')); document.getElementById('go').click();"},
     "rotational-dynamics": {"wait": 1800, "js": "document.querySelector('#objSeg [data-o=pair]').click(); document.getElementById('go').click();"},
     "gyroscope": {"wait": 1500, "js": "document.getElementById('go').click();"},

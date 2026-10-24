@@ -118,6 +118,7 @@ HANDOUT_TOPIC = {
     'two-speaker': 'Two Speaker Interference', 'ultrasound': 'Ultrasound Echoes and Doppler Flow', 'sound-intensity': 'Sound Intensity and Decibels',
     'room-acoustics': 'Reverberation Time', 'anechoic-chamber': 'Anechoic Chamber',
     'force-table': 'Force Table',
+    'heating-curve': 'Heating Curve and Latent Heat', 'bonds-and-latent-heat': 'Bonds, Temperature and Latent Heat',
     'household-wiring': 'Household Wiring and Electrical Safety',
     'van-de-graaff': 'Van de Graaff Generator',
     'ink-jet-printer': 'Ink Jet Printer',

@@ -651,6 +651,17 @@
    "title": "Thermodynamics",
    "demos": [
     {
+     "demo": "states-of-matter",
+     "title": "States of Matter",
+     "desc": "Heat a crystal of argon atoms under a piston and watch the bonds between them break: the temperature holds still while it melts and again while it boils, because the heat goes into the bonds. A beaker view heats ice to steam with the textbook's specific and latent heats.",
+     "tags": [
+      "phase changes",
+      "latent heat",
+      "heating curve",
+      "molecular dynamics"
+     ]
+    },
+    {
      "demo": "blackbody",
      "title": "Blackbody Radiation",
      "desc": "Explore thermal emission across temperatures, test Planck’s spectrum, Wien’s displacement law and Stefan–Boltzmann scaling, and connect the results to visible color.",

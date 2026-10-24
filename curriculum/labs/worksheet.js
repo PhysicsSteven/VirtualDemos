@@ -148,11 +148,21 @@
     'anechoic-chamber': { demo: 'Room Acoustics', cols: ['row', roomWalls, 'band_Hz', 'r_m', null, 'L_dB'] },
   });
   /* ==ACOUSTICS END== */
+  /* ==THERMO START== Thermodynamics worksheets (demos on the Misc page) and their demo column maps. */
+  const THERMO = ['heating-curve' /* States of Matter demo, Beaker view */, 'bonds-and-latent-heat' /* States of Matter demo, Atoms view */];
+  ENABLED.push(...THERMO);
+  Object.assign(FROM_DEMO, {
+    /* Reading | Time t (s) | Temperature T (°C) | Balance m (g) | Stage */
+    'heating-curve': { demo: 'States of Matter (Beaker)', cols: ['row', 't_s', 'T_C', 'm_g', null] },
+    /* Reading | Heat added Q (kJ/mol) | Temperature T (K) | Bond energy U (kJ/mol) | Solid (%) | Liquid (%) | Vapor (%) */
+    'bonds-and-latent-heat': { demo: 'States of Matter (Atoms)', cols: ['row', 'Q_kJ_per_mol', 'T_K', 'U_kJ_per_mol', 'solid_pct', 'liquid_pct', 'vapor_pct'] },
+  });
+  /* ==THERMO END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
-  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
+  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
   const pretty = (h) => String(h || '').replace(/\^([23])/g, (m, d) => SUP[d]).replace(/_(\d)/g, (m, d) => SUB[d]);
