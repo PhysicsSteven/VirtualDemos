@@ -81,7 +81,7 @@ Add a line when you need the other assistant to do something, and remove it when
 - **Never fake data.** Don't present synthetic data as measured. Simulated data is labeled as simulated, and illustrative drawings as illustrative.
 - **Steve's research data is private.** Nothing from his thesis repo (`wd-thesis`) or other private repos goes here. Star Slice uses his own MESA runs, which are his to publish; describe them as what the demo shows, not as research results.
 - **Single-file demos.** Each demo is one self-contained HTML file. The only allowed library is three.js r128 from cdnjs. Fonts come from Google Fonts.
-- **House style** (see `CONTRIBUTING.md`): light and dark themes, projector mode (`data-projector`, localStorage key `vd-projector`), works at 400 px phone width, keyboard accessible, respects reduced motion, at most 6 presets.
+- **House style** (see `CONTRIBUTING.md`): light and dark themes, projector mode (`data-projector`, localStorage key `vd-projector`), works at 400 px phone width, keyboard accessible, respects reduced motion. No cap on presets (Steve, 2026-10-24).
 - **Writing style:** plain, precise teaching language. No hyphens in compound modifiers unless needed ("white dwarf cooling", "time constant", "half life").
 - **Don't claim tests passed that weren't run.**
 - **Math in Markdown** (Steve, 2026-10-23): symbols and equations are LaTeX, never Unicode lookalikes. Site handouts use `$$...$$` only; GitHub files in TeacherKeys use `$...$` inline and `$$...$$` display. Details and checker in the 2026-10-23 08:30 entry below.
@@ -1687,3 +1687,7 @@ CORE byte identical; vdcheck differs only by the new Perspective control (`dimSe
 - The camera fits the string's length and holds still while you drag the vibrator (so it does not run away from the pointer), then refits. Dragging the vibrator along the table sets L, and masses still drop onto the hanger (both checked in a browser test).
 
 **For GPT to verify:** the disc thickness rule (t = m / (ρπr²) with ρ = 8000 kg/m³, r = 2.5 cm), and that the 3D string matches the flat view at the same phase.
+
+## Claude, 2026-10-24: no cap on presets; Camera preset on the Optics Bench
+
+Steve dropped the "at most 6 presets" house rule ("let the demo be as robust as it needs to be"); CLAUDE.md, CONTRIBUTING.md and the house rules above now say so. The Optics Bench gains a **Camera** setup: an object 35 cm from a 5.0 cm lens (aperture 4 cm) with the screen as the sensor at d_i = 1/(1/5 − 1/35) = 5.83 cm, real and inverted, m = −1/6. Its hint points to The Eye's Camera mode for blur, f-number and the phone lens. Existing setups unchanged; `test_optics_bench` and `test_optics_bench_dispersion` pass.

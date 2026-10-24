@@ -162,6 +162,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div class="chips" id="presets">
           <button type="button" data-p="converging" aria-pressed="true">Converging lens</button>
           <button type="button" data-p="magnifier" aria-pressed="false">Magnifier</button>
+          <button type="button" data-p="camera" aria-pressed="false">Camera</button>
           <button type="button" data-p="concave" aria-pressed="false">Concave mirror</button>
           <button type="button" data-p="telescope" aria-pressed="false">Telescope</button>
           <button type="button" data-p="prism" aria-pressed="false">Prism</button>
@@ -408,6 +409,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   const PRESETS = {
     converging: () => [mk('object', -22, 0, { h: 3, rays: 9, spread: 11, rot: -5.5 }), mk('lens', 8, 0, { f: 10, ap: 12 }), mk('screen', 23, 0, { h: 10 })],
+    camera:     () => [mk('object', -35, 0, { h: 5, rays: 9, spread: 3.3, rot: -8.1 }), mk('lens', 0, 0, { f: 5, ap: 4 }), mk('screen', 5.83, 0, { h: 4 })],
     magnifier:  () => [mk('object', -2, 0, { h: 2, rays: 9, spread: 40, rot: -10 }), mk('lens', 4, 0, { f: 12, ap: 12 })],
     concave:    () => [mk('object', -16, 0, { h: 3, rays: 9, spread: 7.5, rot: -5.6 }), mk('mirror', 14, 0, { R: 24, ap: 8 })],
     telescope:  () => [mk('beam', -22, 0, { w: 6, rays: 7, rot: 3 }), mk('lens', -14, 0, { f: 16, ap: 10 }), mk('lens', 7, 0, { f: 5, ap: 8 })],
@@ -423,7 +425,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
   // what each preset should show: [center x, center y, width, height] in cm
   const FRAMES = {
-    converging: [1, 0, 54, 22], magnifier: [3, 0, 34, 18], concave: [-2, 0, 41, 18],
+    converging: [1, 0, 54, 22], camera: [-12, 0, 52, 14], magnifier: [3, 0, 34, 18], concave: [-2, 0, 41, 18],
     telescope: [-4, 0, 44, 18], prism: [0, 0, 50, 22], tir: [0, 0, 36, 24],
     microscope: [-2, 0, 40, 17], surface: [3, 0, 50, 14], depth: [-2, 0, 32, 16]
   };
@@ -1918,6 +1920,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const PRESET_HINTS = {
     prism: 'Click the prism and choose a real material to see its true dispersion; the editor lists n from 400 to 700 nm and the spread of colors at minimum deviation.',
     converging: 'For a diverging lens, click the lens and choose Diverging.',
+    camera: 'A camera: a 5.0 cm lens makes a real, inverted, smaller image of an object 35 cm away on the sensor (the screen) 5.83 cm behind it. Move the object closer and the sensor must move back to stay in focus. For blur, the f-number and a phone lens, use the Camera mode of The Eye.',
     microscope: 'A 2 cm objective and a 5 cm eyepiece, tube length 16 cm. The object sits 2.25 cm from the objective, just outside its F.',
     surface: 'The curved end of a glass rod (n = 1.50, R = +4 cm) with a 3 cm aperture. Shrink the aperture to bring the traced image to the paraxial one.',
     depth: 'A fish in water (n = 1.33) seen through a flat surface, here standing upright: the eye is on the right, in air.'

@@ -36,7 +36,7 @@ the two assistants share context. Log what you change there when you finish.
 - Physics lives between `// ==CORE START==` and `// ==CORE END==` and must run in Node. Never put a `//` comment mid line before code
   (use `/* */`). Tests: `curriculum/validation/test_<demo>.cjs` using `core('<demo>', 'fn,...')` from `demo_source.cjs`.
 - House style: light and dark themes via CSS tokens (in `:root`, the dark `@media` block and `[data-theme=dark]`), projector mode,
-  400 px and 360 px phones with no sideways scroll, keyboard access, Reduce motion, Blind mode for predictions, at most 6 presets.
+  400 px and 360 px phones with no sideways scroll, keyboard access, Reduce motion, Blind mode for predictions. No cap on presets (Steve, 2026-10-24): add as many as the demo needs.
 - Keep existing control names: handouts refer to them. Add, don't rename.
 - Check visually (Playwright/Chromium is installed) at desktop and phone width, light and dark, and look at the screenshots.
 

@@ -18,7 +18,7 @@ Every demo in this collection follows the same house style, so the site reads as
 - **3D:** only when the demo truly benefits. Use three.js r128 from cdnjs with Z up and hand written orbit controls, as in the Coulomb Sandbox. No other libraries.
 - **Phones:** must work at about 400px wide with no horizontal page scroll.
 - **Opening state:** the demo opens working and interesting, either running or with a meaningful picture drawn. If it animates and `prefers-reduced-motion` is set, it starts paused with a visible Play button.
-- **Controls:** Play/Pause and Reset where there is animation, a time speed control where useful, and 3 to 6 presets for the most teachable scenarios, each with a one sentence hint about what to look for. Interactive canvases are focusable, and arrow keys nudge a selected object where it makes sense.
+- **Controls:** Play/Pause and Reset where there is animation, a time speed control where useful, and presets for the teachable scenarios (as many as the demo needs; Steve dropped the old cap of 6 on 2026-10-24), each with a one sentence hint about what to look for. Interactive canvases are focusable, and arrow keys nudge a selected object where it makes sense.
 
 ## Projector mode
 
