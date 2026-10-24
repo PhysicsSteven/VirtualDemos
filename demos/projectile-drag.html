@@ -166,6 +166,8 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
   :root[data-projector="on"] .pane.main { min-height: 340px; }
 }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -807,6 +809,10 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
   }
 
   // ---------- flight view ----------
+  /* fixed scenery: cloud places (fractions of the picture) and grass tufts; decoration only */
+  const CLOUDS = [[0.18, 0.16, 1.0], [0.52, 0.09, 0.75], [0.7, 0.26, 1.15], [0.36, 0.33, 0.6]];
+  const STARS = Array.from({ length: 70 }, (_, i) => { const f = (k) => { const a = Math.sin(i * k) * 43758.5453; return a - Math.floor(a); }; return [f(12.9898), f(78.233), 0.25 + 0.55 * f(37.719)]; });
+  const GRASS = Array.from({ length: 140 }, (_, i) => { const a = Math.sin(i * 12.9898) * 43758.5453, r = a - Math.floor(a), b = Math.sin(i * 78.233) * 12345.678, q = b - Math.floor(b); return [(i + r) / 140, 2 + 3 * q, (r - 0.5) * 2.4]; });
   let viewHandles = [], viewHover = null, viewDrag = null;
   function drawView() {
     const ctx = vctx, W = VW, H = VH;
@@ -831,16 +837,32 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     const s = Math.max(1e-6, Math.min((W - padL - padR) / xs, (H - padT - padB) / ys));
     L = { ox: padL, oy: H - padB, s, ps };
 
-    // sky, far hills, ground
+    // sky with a low sun glow and a few still clouds, two ranges of hills, then the field (scenery only)
+    const G = window.VDGear, dk = G && G.dark();
     const sky = ctx.createLinearGradient(0, 0, 0, L.oy);
     sky.addColorStop(0, T.skyTop); sky.addColorStop(1, T.skyBot);
     ctx.fillStyle = sky; ctx.fillRect(0, 0, W, L.oy);
+    { const sun = ctx.createRadialGradient(W * 0.86, L.oy * 0.12, 0, W * 0.86, L.oy * 0.12, Math.max(W, L.oy) * 0.55);
+      sun.addColorStop(0, dk ? 'rgba(190,210,255,0.10)' : 'rgba(255,246,220,0.85)'); sun.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = sun; ctx.fillRect(0, 0, W, L.oy); }
+    ctx.save();
+    if (dk) { ctx.fillStyle = '#dfe8ff'; for (const [u, v, a] of STARS) { ctx.globalAlpha = a; ctx.fillRect(u * W, v * L.oy * 0.8, 1.3, 1.3); } }
+    else { ctx.globalAlpha = 0.6; ctx.fillStyle = '#ffffff'; ctx.beginPath();   /* each cloud is one path, so its puffs do not overlap in alpha */
+      for (const [u, v, k] of CLOUDS) { const cx = u * W, cy = v * L.oy, cw = k * 70 * ps;
+        for (const [dx, dy, rr] of [[-0.5, 0.1, 0.32], [-0.15, -0.12, 0.42], [0.25, -0.02, 0.36], [0.55, 0.12, 0.26]]) { ctx.moveTo(cx + dx * cw + rr * cw, cy + dy * cw); ctx.ellipse(cx + dx * cw, cy + dy * cw, rr * cw, rr * cw * 0.72, 0, 0, 2 * Math.PI); }
+        ctx.rect(cx - 0.75 * cw, cy + 0.05 * cw, 1.45 * cw, 0.2 * cw); }
+      ctx.fill('nonzero'); }
+    ctx.restore();
+    const ridge = (amp, f1, f2, ph, fill) => { ctx.fillStyle = fill; ctx.beginPath(); ctx.moveTo(0, L.oy);
+      for (let px = 0; px <= W + 8; px += 6) { const u = px / Math.max(W, 1); ctx.lineTo(px, L.oy - (amp + amp * 0.9 * Math.sin(u * f1 + ph) + amp * 0.55 * Math.sin(u * f2 + 2 * ph)) * ps); }
+      ctx.lineTo(W, L.oy); ctx.closePath(); ctx.fill(); };
+    ridge(18, 4.3, 11.7, 1.9, G ? G.mix(/^#[0-9a-f]{6}$/i.test(T.hill) ? T.hill : '#c9dcc4', /^#[0-9a-f]{6}$/i.test(T.skyBot) ? T.skyBot : '#f4f8fc', 0.45) : T.hill);
     ctx.fillStyle = T.hill; ctx.beginPath(); ctx.moveTo(0, L.oy);
     for (let px = 0; px <= W + 8; px += 8) {
       const u = px / Math.max(W, 1);
       ctx.lineTo(px, L.oy - (10 + 9 * Math.sin(u * 7.1 + 0.6) + 6 * Math.sin(u * 17.3 + 2.1)) * ps);
     }
     ctx.lineTo(W, L.oy); ctx.closePath(); ctx.fill();
+    { const haze = ctx.createLinearGradient(0, L.oy - 30 * ps, 0, L.oy); haze.addColorStop(0, 'rgba(255,255,255,0)'); haze.addColorStop(1, dk ? 'rgba(120,140,170,0.08)' : 'rgba(255,255,255,0.35)'); ctx.fillStyle = haze; ctx.fillRect(0, L.oy - 30 * ps, W, 30 * ps); }
 
     const step = niceStep(64 * ps / s);
     ctx.lineWidth = 1; ctx.strokeStyle = T.gridStrong; ctx.globalAlpha = 0.55; ctx.beginPath();
@@ -850,8 +872,13 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     ctx.strokeStyle = T.gridStrong; ctx.beginPath();
     ctx.moveTo(Math.round(L.ox) + 0.5, 0); ctx.lineTo(Math.round(L.ox) + 0.5, L.oy); ctx.stroke();
 
-    ctx.fillStyle = T.earth; ctx.fillRect(0, L.oy, W, H - L.oy);
-    ctx.fillStyle = T.turf; ctx.fillRect(0, L.oy, W, 4 * ps);
+    { const eg = ctx.createLinearGradient(0, L.oy, 0, H); eg.addColorStop(0, T.earth); eg.addColorStop(1, G ? G.mix(/^#[0-9a-f]{6}$/i.test(T.earth) ? T.earth : '#e6dfd0', '#000000', dk ? 0.3 : 0.08) : T.earth);
+      ctx.fillStyle = eg; ctx.fillRect(0, L.oy, W, H - L.oy); }
+    { const tg = ctx.createLinearGradient(0, L.oy, 0, L.oy + 5 * ps); tg.addColorStop(0, T.turf); tg.addColorStop(1, G ? G.mix(/^#[0-9a-f]{6}$/i.test(T.turf) ? T.turf : '#6fa35a', '#000000', 0.3) : T.turf);
+      ctx.fillStyle = tg; ctx.fillRect(0, L.oy, W, 5 * ps);
+      /* grass tufts along the edge */
+      ctx.strokeStyle = T.turf; ctx.lineWidth = 1; ctx.beginPath();
+      for (const [u, hgt, lean] of GRASS) { const x = u * W; ctx.moveTo(x, L.oy + 1); ctx.lineTo(x + lean * ps, L.oy - hgt * ps); } ctx.stroke(); }
     ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.6; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, L.oy + 0.5); ctx.lineTo(W, L.oy + 0.5); ctx.stroke(); ctx.globalAlpha = 1;
 
     ctx.font = `${11 * ps}px ` + mono; ctx.fillStyle = T.muted;
@@ -913,17 +940,22 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     // launcher: tower, angle, barrel, v₀ arrow
     const [lx, ly] = toPx(0, P.h);
     if (P.h > 0) {
-      const tw = 9 * ps;
-      ctx.fillStyle = T.relief; ctx.strokeStyle = T.muted; ctx.lineWidth = ps;
+      /* a concrete platform: lit left face, darker right, a rim at the top */
+      const tw = 9 * ps, cg = ctx.createLinearGradient(lx - tw, 0, lx + tw, 0);
+      cg.addColorStop(0, G ? G.mix(/^#[0-9a-f]{6}$/i.test(T.relief) ? T.relief : '#dfe5ec', '#ffffff', 0.3) : T.relief); cg.addColorStop(1, G ? G.mix(/^#[0-9a-f]{6}$/i.test(T.relief) ? T.relief : '#dfe5ec', '#000000', 0.25) : T.relief);
+      ctx.fillStyle = cg; ctx.strokeStyle = T.muted; ctx.lineWidth = ps;
       ctx.fillRect(lx - tw, ly, 2 * tw, L.oy - ly); ctx.strokeRect(lx - tw + 0.5, ly + 0.5, 2 * tw - 1, L.oy - ly - 0.5);
+      ctx.fillStyle = T.muted; ctx.fillRect(lx - tw - 2 * ps, ly, 2 * tw + 4 * ps, 2.5 * ps);
     }
     const th = P.th * DEG, ca = Math.cos(th), sa = Math.sin(th);
     ctx.save();
     ctx.strokeStyle = T.muted; ctx.lineWidth = ps; ctx.setLineDash([3 * ps, 3 * ps]);
     ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 60 * ps, ly); ctx.stroke(); ctx.setLineDash([]);
     ctx.beginPath(); ctx.arc(lx, ly, 26 * ps, -th, 0); ctx.stroke();
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 7 * ps; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 22 * ps * ca, ly - 22 * ps * sa); ctx.stroke();
+    /* the launcher: a steel barrel on a pivot block */
+    if (G) { G.rod(ctx, lx, ly, lx + 24 * ps * ca, ly - 24 * ps * sa, 3.6 * ps, { color: '#5d6876' }); ctx.fillStyle = '#2a3038'; ctx.beginPath(); ctx.arc(lx + 24 * ps * ca, ly - 24 * ps * sa, 3.6 * ps, 0, 7); ctx.fill(); G.screw(ctx, lx, ly, 4.2 * ps); }
+    else { ctx.strokeStyle = T.ink; ctx.lineWidth = 7 * ps; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 22 * ps * ca, ly - 22 * ps * sa); ctx.stroke(); }
     ctx.fillStyle = T.muted; ctx.font = `600 ${11 * ps}px ` + mono; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(fmtDeg(P.th), lx + 30 * ps, ly + 6 * ps);
     ctx.restore();

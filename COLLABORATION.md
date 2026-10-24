@@ -1036,3 +1036,13 @@ Moved onto `demos/lib`: bz-reaction, dna, e-over-m, electron-diffraction, hydrog
 - **Rutherford:** Kinetic energy K (`ke`) and Impact parameter b (`bb`) move from the Projectile and One alpha sections onto a Set up card on the picture ("Set up the alpha, then press Play"). The card fades while the alphas fly and comes back on Pause (`VD.setupCard`); b hides in Beam mode, as before. The page now opens paused, so the card is there to set up first; Play or Fire again starts it. Dragging b on the picture still works while it runs.
 - **Quantum Waves:** the Wave packet section (Center x₀, Width σ, Energy E₀, Direction, Launch packet) moves onto a Set up card on the picture ("Set up the packet, then press Launch packet"), and that section leaves the sidebar; its note on the Gaussian packet joins the Measurements note. The card fades while the packet evolves and comes back on Pause. The page now opens paused. On phones the card sits under the picture.
 - Control names and ids unchanged. Rutherford tests pass; checked at 1366, 400 and 360 px, light and dark, with no page errors or sideways scroll.
+
+## Claude, 2026-10-24: visual pass, pilot (pendulum, springs, projectile range)
+
+Steve asked for the visual pass on every demo outside the Acoustics module, at the standard of the distances zoom, with 3D where it truly helps. Order: Physics I, Physics II, then Misc.
+
+- **Shared:** `demos/lib/gear.js` gains `ball`, `wall`, `stand`, `boss`, `gate`, `panel`, `spring` and `outdoors` (pictures only, nothing existing changed). `tools/look.py <demo>` links `look.css` and `gear.js` into each demo the pass reaches.
+- **Pendulum:** lit lab wall, deeper bench, retort stand with a cast base and boss clamp, polished bob, a real photogate with its beam, and a photogate timer whose LCD shows the last period (the same number as before, now on an instrument). The angle trace sits on a frosted panel.
+- **Springs:** the springs are drawn as steel helices (far side of each turn darker), blocks are shaded with a soft shadow, the track is an aluminium beam, the walls are bolted posts, the oil sits in a glass trough or beaker.
+- **Projectile range:** sky with sun glow and clouds (a few stars in dark mode), two ranges of hills, a turf edge with grass, a shaded concrete platform and a steel launcher barrel.
+- Checks: every Node suite for the three passes; `tools/vdcheck.cjs` shows CORE identical, controls identical apart from the two new ids `vd-look` and `vd-gear`, export data identical (pendulum), and only the intended style, token and screenshot changes. **GPT:** nothing to verify in the handouts; control names are unchanged.

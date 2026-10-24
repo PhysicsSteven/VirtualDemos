@@ -39,6 +39,8 @@ The Acoustics module look is in the library too: `look.css` (depth, quieter seco
 
 `vd3.js` (`window.VD3`) is for a demo that adds a three.js view beside its flat one: `VD3.load(cb)` loads three.js r128 from cdnjs the first time a 3D view opens; `VD3.renderer()` gives a WebGL renderer with its pixel ratio capped (or null, so the demo keeps its flat view); `VD3.lowPower()` says when to open the flat view first; `VD3.orbit(el, o, onChange, opt)` turns, zooms and resets a z up camera kept in `o = { th, ph, zoom }` (drag, wheel, pinch, double click, comma and period), with `opt.grab(e)` to take a pointer for a drag on the apparatus; `VD3.place(cam, o, target, r)` puts the camera there. Room acoustics uses it (2026-10-24); the force table, Chladni and levitation still have their own copies and can switch when next edited.
 
+The site wide visual pass (from 2026-10-24) links the same two files into every demo it reaches (`python3 tools/look.py <demo>`), and redraws the demo's apparatus with `VDGear`. Helpers added for it: `ball` (shaded sphere), `wall` (lit lab wall), `stand` (retort stand), `boss` (boss head clamp), `gate` (photogate), `panel` (frosted panel for a trace drawn on the canvas), `spring` (helical coil), `outdoors` (sky and field). The pass changes only drawing and the look link: CORE, controls and exports stay as they were, which `tools/vdcheck.cjs` confirms (its only differences are the two new ids `vd-look` and `vd-gear`, the look's styles and tokens, and the screenshots).
+
 Phase two helpers (presets, step buttons, readings, Export to worksheet) are added when a demo is being edited anyway, each behind the same checks. Pendulum uses `VD.setupCard`; other demos with a Set up card switch to it when they are next edited.
 
 ## Rules
@@ -167,5 +169,7 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 | star-slice | 2026-10-24 | batch 6 (three.js), built from tools/star-slice/star-slice.template.html |
 
 ## Being moved
+
+Visual pass (Claude, from 2026-10-24): Physics I, then Physics II, demo by demo; drawing code and the look link only. Misc waits for the layout thread's sidebar folds.
 
 Nothing at the moment. Every demo is on the library except the redirect pages (nonuniform-circular, and circuit-builder, transient-circuits, rc-circuits, ac-circuits, which open the matching mode of Circuits).

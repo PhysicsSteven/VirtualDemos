@@ -129,6 +129,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 @media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -859,22 +861,45 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     };
     ctx.lineJoin = 'round'; ctx.lineCap = 'round';
     if (o.hot) { path(); ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = o.lw + 7 * ps; ctx.stroke(); ctx.globalAlpha = 1; }
-    path(); ctx.strokeStyle = o.col || T.wire; ctx.lineWidth = o.lw; ctx.stroke();
+    /* a steel helix: the far half of each turn darker and thinner, the near half lit, with a glint along the top */
+    const col = o.col || T.wire, pt = (i) => { const tau = i / M, ph = 2 * Math.PI * o.n * tau - Math.PI / 2;
+      const al = lead + (Lc - 2 * tilt * r) * tau + tilt * r * (Math.sin(ph) + 1), pe = r * Math.cos(ph); return [ax + ux * al + nx * pe, ay + uy * al + ny * pe, Math.sin(ph)]; };
+    const seg = (front, w, c) => { ctx.strokeStyle = c; ctx.lineWidth = w; ctx.beginPath();
+      for (let i = 0; i < M; i++) { const a = pt(i), b = pt(i + 1); if ((a[2] + b[2] > 0) !== front) continue; ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); } ctx.stroke(); };
+    const G = window.VDGear, dk = G ? G.mix(/^#[0-9a-f]{6}$/i.test(col) ? col : '#3b4655', '#000000', 0.45) : col;
+    seg(false, o.lw * 0.85, dk);
+    ctx.strokeStyle = col; ctx.lineWidth = o.lw; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax + ux * lead, ay + uy * lead); ctx.lineTo(pt(0)[0], pt(0)[1]); ctx.moveTo(pt(M)[0], pt(M)[1]); ctx.lineTo(bx, by); ctx.stroke();
+    seg(true, o.lw, col);
+    if (o.lw > 1.4) { ctx.save(); ctx.globalAlpha = 0.55; ctx.translate(-nx * o.lw * 0.22, -ny * o.lw * 0.22); seg(true, Math.max(0.6, o.lw * 0.3), '#ffffff'); ctx.restore(); }
   }
   const springLW = (k) => (1.1 + 0.75 * Math.log10(Math.max(k, 0.5))) * projScale();
-  function wallH(ctx, x, y0, y1, side) {          // a hatched wall, the hatching on the far side
-    const ps = projScale(), d = side * 10 * ps;
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y1); ctx.stroke();
-    ctx.lineWidth = 1 * ps; ctx.strokeStyle = T.muted; ctx.beginPath();
-    for (let y = y0 + 4 * ps; y < y1; y += 8 * ps) { ctx.moveTo(x, y); ctx.lineTo(x + d, y - 7 * ps); }
-    ctx.stroke();
+  function wallH(ctx, x, y0, y1, side) {          // a steel mounting post bolted to the bench, on the far side of x
+    const ps = projScale(), w = 12 * ps, x0 = side < 0 ? x - w : x, G = window.VDGear;
+    if (!G) return;
+    G.box(ctx, x0, y0, w, y1 - y0 + 4 * ps, { color: T.wire, r: 2.5 * ps, shadow: false });
+    for (const yy of [y0 + 8 * ps, y1 - 8 * ps]) G.screw(ctx, x0 + w / 2, yy, 2.6 * ps);
   }
-  function wallV(ctx, y, x0, x1) {
+  function wallV(ctx, y, x0, x1) {                 // a steel bracket fixed to the ceiling, its face at y
+    const ps = projScale(), h = 12 * ps, G = window.VDGear;
+    if (!G) return;
+    G.box(ctx, x0, y - h, x1 - x0, h, { color: T.wire, r: 2.5 * ps, shadow: false });
+    for (const xx of [x0 + 10 * ps, x1 - 10 * ps]) G.screw(ctx, xx, y - h / 2, 2.6 * ps);
+  }
+  /* the air track the cart rides on: an aluminium beam with a lit top edge */
+  function rail(ctx, x0, x1, y) {
+    const ps = projScale(), G = window.VDGear, h = 7 * ps;
+    if (!G) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke(); return; }
+    const gr = ctx.createLinearGradient(0, y, 0, y + h); gr.addColorStop(0, G.dark() ? '#9aa6b4' : '#e7ebf0'); gr.addColorStop(0.35, G.dark() ? '#6b7684' : '#aeb7c2'); gr.addColorStop(1, G.dark() ? '#3c4550' : '#7d8794');
+    ctx.fillStyle = gr; ctx.fillRect(x0, y, x1 - x0, h); ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.fillRect(x0, y + h - 1, x1 - x0, 1);
+  }
+  /* a glass trough or beaker of oil: walls with a highlight, oil darker towards the bottom, a bright meniscus line */
+  function tank(ctx, x0, x1, yTop, yBot, oilTop, oa, open) {
     const ps = projScale();
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
-    ctx.lineWidth = 1 * ps; ctx.strokeStyle = T.muted; ctx.beginPath();
-    for (let x = x0 + 4 * ps; x < x1; x += 8 * ps) { ctx.moveTo(x, y); ctx.lineTo(x + 7 * ps, y - 10 * ps); }
-    ctx.stroke();
+    if (oa > 0) { const gr = ctx.createLinearGradient(0, oilTop, 0, yBot); gr.addColorStop(0, T.oil); gr.addColorStop(1, window.VDGear ? window.VDGear.mix(/^#[0-9a-f]{6}$/i.test(T.oil) ? T.oil : '#c99a1e', '#000000', 0.35) : T.oil);
+      ctx.fillStyle = gr; ctx.globalAlpha = oa; ctx.fillRect(x0, oilTop, x1 - x0, yBot - oilTop); ctx.globalAlpha = Math.min(1, oa + 0.3); ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.fillRect(x0, oilTop, x1 - x0, 1); ctx.globalAlpha = 1; }
+    ctx.fillStyle = T.muted; ctx.globalAlpha = 0.07; ctx.fillRect(x0, yTop, x1 - x0, yBot - yTop); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.beginPath(); ctx.moveTo(x0, yTop); ctx.lineTo(x0, yBot); ctx.lineTo(x1, yBot); ctx.lineTo(x1, yTop); ctx.stroke();
+    ctx.strokeStyle = 'rgba(255,255,255,0.6)'; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(x0 + 3 * ps, yTop + 3 * ps); ctx.lineTo(x0 + 3 * ps, yBot - 3 * ps); ctx.stroke();
   }
   const blockSide = (m) => (30 + 22 * Math.cbrt(m)) * Math.min(projScale(), 1.2);
 
@@ -886,6 +911,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const ctx = ctxs.c, ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (window.VDGear) window.VDGear.backdrop(ctx, W, H);
     cHandles = [];
     const st = stateAt(t), g = lastSeg();
     if (S.sys === 'coupled') drawCoupled(ctx, W, H, st, g, ps);
@@ -902,8 +928,12 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function drawBlock(ctx, x, y, side, id, label, col) {
     const ps = projScale(), hot = isHot(id);
     if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.22; roundRect(ctx, x - side / 2 - 5 * ps, y - side / 2 - 5 * ps, side + 10 * ps, side + 10 * ps, 7 * ps); ctx.fill(); ctx.globalAlpha = 1; }
-    ctx.fillStyle = T.block; ctx.strokeStyle = col || T.ink; ctx.lineWidth = (hot ? 2.4 : 1.6) * ps;
-    roundRect(ctx, x - side / 2, y - side / 2, side, side, 4 * ps); ctx.fill(); ctx.stroke();
+    { const G = window.VDGear, bc = /^#[0-9a-f]{6}$/i.test(T.block) ? T.block : '#cdd6e1', gr = ctx.createLinearGradient(x - side / 2, y - side / 2, x + side / 2, y + side / 2);
+      gr.addColorStop(0, G ? G.mix(bc, '#ffffff', 0.35) : bc); gr.addColorStop(0.5, bc); gr.addColorStop(1, G ? G.mix(bc, '#000000', 0.22) : bc);
+      ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.22)'; ctx.shadowBlur = 8 * ps; ctx.shadowOffsetY = 3 * ps; ctx.fillStyle = gr; roundRect(ctx, x - side / 2, y - side / 2, side, side, 4 * ps); ctx.fill(); ctx.restore();
+      ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 1; roundRect(ctx, x - side / 2 + 1.5, y - side / 2 + 1.5, side - 3, side - 3, 3 * ps); ctx.stroke(); }
+    ctx.strokeStyle = col || T.ink; ctx.lineWidth = (hot ? 2.4 : 1.2) * ps; ctx.globalAlpha = hot || col ? 1 : 0.55;
+    roundRect(ctx, x - side / 2, y - side / 2, side, side, 4 * ps); ctx.stroke(); ctx.globalAlpha = 1;
     ctx.fillStyle = T.ink; ctx.font = `600 ${Math.min(11.5 * ps, side * 0.19)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(label, x, y);
     cHandles.push({ id, box: [x - side / 2, y - side / 2, side, side], cursor: held ? 'grabbing' : 'grab', mass: true });
@@ -977,10 +1007,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     // track, oil trough, ruler
     const tx0 = X(-Av) - side / 2 - 6 * ps, tx1 = X(Av) + side / 2 + 6 * ps;
     const oa = oilAlpha();
-    if (oa > 0) { ctx.fillStyle = T.oil; ctx.globalAlpha = oa; ctx.fillRect(tx0, trackY + 4 * ps, tx1 - tx0, troughH - 6 * ps); ctx.globalAlpha = 1; }
-    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.beginPath();
-    ctx.moveTo(tx0, trackY + 2 * ps); ctx.lineTo(tx0, trackY + troughH - 2 * ps); ctx.lineTo(tx1, trackY + troughH - 2 * ps); ctx.lineTo(tx1, trackY + 2 * ps); ctx.stroke();
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(pad + dx, trackY); ctx.lineTo(W - pad - dx, trackY); ctx.stroke();
+    tank(ctx, tx0, tx1, trackY + 2 * ps, trackY + troughH - 2 * ps, trackY + 4 * ps, oa);
+    rail(ctx, pad + dx, W - pad - dx, trackY - 2 * ps);
     // the oil's grip: drag up for more damping
     { const gx = tx1 + 12 * ps, gy = trackY + troughH / 2;
       springGrip(ctx, Math.min(W - 10 * ps, gx), gy, 'b', true, -1, [tx0, trackY, Math.min(W - 2, gx + 10 * ps) - tx0, troughH]);
@@ -1116,8 +1144,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     // beaker of oil around the block's range
     const bkTop = Y(-Av) - side / 2 - 6 * ps, bkBot = Math.min(H - 6 * ps, Y(Av) + side / 2 + 8 * ps), bkL = bx - side / 2 - 12 * ps, bkR = bx + side / 2 + 12 * ps;
     const oa = oilAlpha();
-    if (oa > 0) { ctx.fillStyle = T.oil; ctx.globalAlpha = oa; ctx.fillRect(bkL, bkTop + 8 * ps, bkR - bkL, bkBot - bkTop - 8 * ps); ctx.globalAlpha = 1; }
-    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.beginPath(); ctx.moveTo(bkL, bkTop); ctx.lineTo(bkL, bkBot); ctx.lineTo(bkR, bkBot); ctx.lineTo(bkR, bkTop); ctx.stroke();
+    tank(ctx, bkL, bkR, bkTop, bkBot, bkTop + 8 * ps, oa);
     springGrip(ctx, bkR + 12 * ps, (bkTop + bkBot) / 2, 'b', true, -1, [bkR - 4 * ps, bkTop, 26 * ps, bkBot - bkTop]);
     ctx.fillStyle = T.muted; ctx.font = `${fs * 0.85}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
     ctx.fillText(S.p.b > 0 ? 'oil' : 'no oil', bx, bkBot - 3 * ps);
@@ -1174,10 +1201,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctx.setLineDash([]);
     // oil and track
     const tx0 = c1 - Av * s - side / 2 - 6 * ps, tx1 = c2 + Av * s + side / 2 + 6 * ps, oa = oilAlpha();
-    if (oa > 0) { ctx.fillStyle = T.oil; ctx.globalAlpha = oa; ctx.fillRect(tx0, trackY + 4 * ps, tx1 - tx0, troughH - 6 * ps); ctx.globalAlpha = 1; }
-    ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps; ctx.beginPath();
-    ctx.moveTo(tx0, trackY + 2 * ps); ctx.lineTo(tx0, trackY + troughH - 2 * ps); ctx.lineTo(tx1, trackY + troughH - 2 * ps); ctx.lineTo(tx1, trackY + 2 * ps); ctx.stroke();
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(wl, trackY); ctx.lineTo(wr, trackY); ctx.stroke();
+    tank(ctx, tx0, tx1, trackY + 2 * ps, trackY + troughH - 2 * ps, trackY + 4 * ps, oa);
+    rail(ctx, wl, wr, trackY - 2 * ps);
     springGrip(ctx, (c1 + c2) / 2, trackY + troughH / 2 + 1 * ps, 'b', true, -1, [tx0, trackY, tx1 - tx0, troughH]);
     for (const [c, xv] of [[c1, st.x1], [c2, st.x2]]) {
       ruler(ctx, 0, (v) => c + v * s, trackY + troughH + 4 * ps, -Av, Av, s, ps, true);
