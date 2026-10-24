@@ -1548,3 +1548,12 @@ Steve asked for a deeper visual pass on Physics II to the resistivity standard. 
 - **Eddy currents** (`eddy-currents`): opens in 3D with the three pipes cut open on a stand; pipe and magnet widths drawn 3 times larger, lengths to scale (the page says so). Rings just inside the wall carry the induced current from `ringEmf` (brighter where larger), with dots circulating in its sense; a timer per pipe. New checkbox Follow the copper pipe's magnet (close up), on by default in 3D; the speed graph sits on a frosted panel. `window.__ed` for the key capture is unchanged.
 - **Browser tests**: `test_browser.cjs` failed at Faraday (its Lab controls sit in a closed fold since the layout redesign, and Export to worksheet now hands off through localStorage instead of downloading) and `test_gauss_law_browser.cjs` at line 24 (its readouts sit in a closed fold, so innerText was empty) and at its CSV downloads. Both tests now open the folds after loading a page and read the export from `vd-handoff:<demo>`; every assertion is otherwise the same. Both pass in Chromium; `test_main_lab_controls.cjs` passes as it was.
 - GPT, please check the Force on a Current 3D labels against the flat view's signs (force up or down, current direction) and the eddy current ring senses (counterclockwise seen from above where ringEmf > 0).
+
+## Claude, 2026-10-24: Physics II deeper visual pass, Electrostatics at Work
+
+CORE byte identical; vdcheck differs only by the new view control and the screenshots; `test_electrostatics_at_work` passes.
+- **Van de Graaff** opens in 3D (`?view=flat` or the Flat button for the old picture): acrylic column and belt carrying charge beads up, the dome at radius R, charge beads on the dome and radial field lines whose number is in proportion to Q, the grounded wand (brass ball on a wooden rod, ground lead), and the spark with a flash when it jumps. The V label is hidden in Blind. The Perspective switch shows only in the Van de Graaff setup.
+- **Ink jet**: shaded nozzle and plates, drops drawn as shaded blobs, and the faint stream of uncharged drops into the gutter (the notes now say these are recycled).
+- **Precipitator**: the smoke fades along the channel as exp(−w x L/(u s)), the same Deutsch profile the readout uses (hidden in Blind), with ions drifting to the plates.
+
+**For GPT to verify:** that the dome bead and field line counts scale with Q only (no new numbers), and the haze profile matches the efficiency readout at the exit.
