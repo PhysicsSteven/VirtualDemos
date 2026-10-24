@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -156,7 +157,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   <main class="bench">
     <div class="stage" id="stage" data-view="pull">
       <div class="pane main">
-        <canvas id="main" tabindex="0" role="application" aria-label="Main view. In the pull view, drag the Moon left or right to change its distance; arrow keys change the distance. In the ocean view, drag the Moon around its orbit or drag the city around Earth; left and right arrows move the Moon a day, up and down arrows change the time by 15 minutes. Space plays or pauses."></canvas>
+        <canvas id="main" tabindex="0" role="application" aria-label="Main view. In the pull view, drag the Moon left or right to change its distance; arrow keys change the distance. In the ocean view, drag the Moon around its orbit or drag the city around Earth; left and right arrows move the Moon a day, up and down arrows change the time by 15 minutes. Space plays or pauses. In the 3D picture, drag anywhere else to turn the view; the wheel or a pinch zooms."></canvas>
       </div>
       <div class="pane plot">
         <canvas id="plot" tabindex="0" role="application" aria-label="Plot. In the pull view it shows how the pull and the tidal pull grow as the Moon comes closer; drag the marker to change the distance. In the ocean view it shows the city's water level over two days and the daily tidal range over a month; drag the day marker to change the Moon's phase."></canvas>
@@ -183,6 +184,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <div class="seg full" role="group" aria-label="View" id="viewSeg">
           <button type="button" data-v="pull" aria-pressed="true">Pull on Earth</button>
           <button type="button" data-v="bulge" aria-pressed="false">Ocean bulges</button>
+        </div>
+        <div class="seg" role="group" aria-label="Picture" id="view3Seg">
+          <span class="seglabel">Picture</span>
+          <button type="button" data-view="3d" aria-pressed="false">3D</button>
+          <button type="button" data-view="flat" aria-pressed="true">Flat</button>
         </div>
         <div class="seg full" role="group" aria-label="Arrows" id="arrowSeg">
           <button type="button" data-a="total" aria-pressed="false">Total pull</button>
@@ -471,6 +477,29 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- pull view ----------
   // arrow scales: pull arrows 0.30 R on screen at today's pull; tidal arrows 30 times longer per m/s²
   const PULL_REF = G * M_MOON / (D_MOON * D_MOON), TID_MAG = 30;
+  // values at the near side, center and far side, at the lower right
+  function pullRows(ctx, w, h, tidal, d, nearA, farA) {
+    const sc = tidal ? 1e-6 : 1e-5, unit = tidal ? '× 10⁻⁶ m/s²' : '× 10⁻⁵ m/s²';
+    const rows = tidal
+      ? [['near side', Math.hypot(...nearA)], ['far side', Math.hypot(...farA)], ['sides', Math.hypot(...tidalAt(M_MOON, d, 0, R_EARTH))]]
+      : [['near side', Math.hypot(...nearA)], ['center', G * M_MOON / (d * d)], ['far side', Math.hypot(...farA)]];
+    ctx.font = font(400, 11); ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
+    const rx = w - 14 * PS; let ry = h - 14 * PS;
+    ctx.fillStyle = T.muted; ctx.fillText(unit, rx, ry); ry -= 16 * PS;
+    for (let i = rows.length - 1; i >= 0; i--) {
+      ctx.fillStyle = T.ink; ctx.fillText(rows[i][0] + '  ' + (rows[i][1] / sc).toFixed(3), rx, ry); ry -= 16 * PS;
+    }
+    ctx.fillStyle = T.ink; ctx.font = font(700, 11, 'ui'); ctx.fillText(tidal ? 'Tidal pull' : 'Pull', rx, ry);
+  }
+  function pullCaption(tidal) {
+    const ctx = V.main.ctx, w = V.main.W;
+    if (tidal) caption(ctx, w, 'Tidal pull: each point minus the center',
+      'Stretched along the Earth–Moon line, squeezed across it',
+      'Arrows ' + TID_MAG + '× longer per m/s² than in the total view; distance not to scale');
+    else caption(ctx, w, "The Moon's total pull on Earth",
+      'Every arrow points at the Moon; the near side is pulled a little harder',
+      'Arrows exaggerated; distance not to scale (Earth and Moon sizes are)');
+  }
   function pullGeo() {
     const w = V.main.W, h = V.main.H;
     const top = 64 * PS, bot = h - 40 * PS, cy = (top + bot) / 2;
@@ -535,20 +564,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
       ctx.fillText('squeezed in', cx, cy - Rp - 8 * PS);
     }
-    // values at the near side, center and far side
-    {
-      const sc = tidal ? 1e-6 : 1e-5, unit = tidal ? '× 10⁻⁶ m/s²' : '× 10⁻⁵ m/s²';
-      const rows = tidal
-        ? [['near side', Math.hypot(...nearA)], ['far side', Math.hypot(...farA)], ['sides', Math.hypot(...tidalAt(M_MOON, d, 0, R_EARTH))]]
-        : [['near side', Math.hypot(...nearA)], ['center', G * M_MOON / (d * d)], ['far side', Math.hypot(...farA)]];
-      ctx.font = font(400, 11); ctx.textAlign = 'right'; ctx.textBaseline = 'bottom';
-      const rx = w - 14 * PS; let ry = h - 14 * PS;
-      ctx.fillStyle = T.muted; ctx.fillText(unit, rx, ry); ry -= 16 * PS;
-      for (let i = rows.length - 1; i >= 0; i--) {
-        ctx.fillStyle = T.ink; ctx.fillText(rows[i][0] + '  ' + (rows[i][1] / sc).toFixed(3), rx, ry); ry -= 16 * PS;
-      }
-      ctx.fillStyle = T.ink; ctx.font = font(700, 11, 'ui'); ctx.fillText(tidal ? 'Tidal pull' : 'Pull', rx, ry);
-    }
+    pullRows(ctx, w, h, tidal, d, nearA, farA);
 
     // the Moon, with a drag grip
     body(ctx, mx, cy, mr, T.lit, T.unlit, T.muted);
@@ -563,12 +579,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.muted; ctx.font = font(400, 10.5); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
     ctx.fillText('= ' + sci(sv, 1) + ' m/s²', sx + sl + 8 * PS, sy2);
 
-    if (tidal) caption(ctx, w, 'Tidal pull: each point minus the center',
-      'Stretched along the Earth–Moon line, squeezed across it',
-      'Arrows ' + TID_MAG + '× longer per m/s² than in the total view; distance not to scale');
-    else caption(ctx, w, "The Moon's total pull on Earth",
-      'Every arrow points at the Moon; the near side is pulled a little harder',
-      'Arrows exaggerated; distance not to scale (Earth and Moon sizes are)');
+    pullCaption(tidal);
   }
 
   // ---------- bulge view ----------
@@ -597,6 +608,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       i ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
     }
     ctx.closePath();
+  }
+  function bulgeCaption(g) {
+    const ctx = V.main.ctx, w = V.main.W, pm = phiM();
+    const exag = (g.kh / (g.Rp / R_EARTH));
+    const capY = caption(ctx, w, 'Ocean bulges, seen from above the North Pole',
+      'Ocean height exaggerated ' + (exag / 1e6).toFixed(1) + ' million times; Moon distance not to scale',
+      S.sun ? 'Moon and Sun tides together' : "Moon's tide only");
+    if (S.sun) {
+      const c2 = Math.cos(2 * pm);
+      if (c2 > 0.9) pill(ctx, 12 * PS, capY + 2 * PS, 'Spring tide: bulges line up', T.pos, T.onCharge, 'left');
+      else if (c2 < -0.9) pill(ctx, 12 * PS, capY + 2 * PS, 'Neap tide: bulges at right angles', T.neg, T.onCharge, 'left');
+    }
   }
   function drawBulge() {
     const v = V.main, ctx = v.ctx, g = bulgeGeo(), { w, h, cx, cy, Rp, Ro, mr } = g;
@@ -683,15 +706,274 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (mly < 70 * PS || mly > h - 10 * PS) { ctx.textAlign = 'left'; clampText(ctx, 'Moon', mx + mr + 12 * PS, my, w, 4 * PS); }
     else clampText(ctx, 'Moon', mlx, mly, w, 4 * PS);
 
-    const exag = (g.kh / (Rp / R_EARTH));
-    const capY = caption(ctx, w, 'Ocean bulges, seen from above the North Pole',
-      'Ocean height exaggerated ' + (exag / 1e6).toFixed(1) + ' million times; Moon distance not to scale',
-      S.sun ? 'Moon and Sun tides together' : "Moon's tide only");
-    if (S.sun) {
-      const c2 = Math.cos(2 * pm);
-      if (c2 > 0.9) pill(ctx, 12 * PS, capY + 2 * PS, 'Spring tide: bulges line up', T.pos, T.onCharge, 'left');
-      else if (c2 < -0.9) pill(ctx, 12 * PS, capY + 2 * PS, 'Neap tide: bulges at right angles', T.neg, T.onCharge, 'left');
+    bulgeCaption(g);
+  }
+
+  // ---------- 3D views (three.js through demos/lib/vd3.js); the flat views stay (Flat button, or ?view=flat) ----------
+  /* Lengths in Earth radii, z along Earth's axis (north up), sunlight along −x (the Sun is off to +x).
+     Pull view: the Moon on the +x axis. The arrows sit at 46 points over the whole globe, in rings 0°, 30°, ... 180° from the Moon's
+     direction. pullAt and tidalAt work in a plane through the Earth–Moon line; the pull is symmetric about that line, so a point at
+     distance ρ from it gets the plane result at (x, ρ), turned about the line to the point. Arrow scales are the flat view's.
+     Ocean view: the water surface is 1 + 0.2 + k [A_Moon P2(cos θ_Moon) + A_Sun P2(cos θ_Sun)] Earth radii, θ the angle from the point
+     under each body. That is the flat view's equilibrium tide (the flat view is its equator), with the same exaggeration k.
+     The Moon's size is to scale, its distance is not. Drag to turn the view, wheel or pinch to zoom, double click to reset. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0,
+    op: { th: -Math.PI / 2, ph: 1.2, zoom: 1 }, ob: { th: -Math.PI / 2, ph: 0.66, zoom: 1 } };
+  let g3 = null, P3 = null;
+  const use3 = () => !!(G3.on && g3);
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  const MOON_R = 0.273, ORBIT3 = 1.9;
+  const BALLS_B = [[0, 0, 0, 1.45], [3.0, 1.5, 0, 0.1], [3.0, -1.5, 0, 0.1]];
+  for (let i = 0; i < 16; i++) BALLS_B.push([2.05 * Math.cos(i * Math.PI / 8), 2.05 * Math.sin(i * Math.PI / 8), 0, 0.15]);
+  const moonX3 = (dR) => 2.62 + (dR - DMIN) / (DMAX - DMIN) * 1.9;   /* not to scale, as in the flat view */
+  const PTS3 = [];
+  for (const [deg, n] of [[0, 1], [30, 6], [60, 10], [90, 12], [120, 10], [150, 6], [180, 1]]) {
+    const t = deg * Math.PI / 180;
+    for (let i = 0; i < n; i++) { const p = 2 * Math.PI * i / n; PTS3.push([Math.cos(t), Math.sin(t) * Math.cos(p), Math.sin(t) * Math.sin(p)]); }
+  }
+  function init3D() {
+    G3.tried = true;
+    const rd = VD3.renderer(); if (!rd) return false;
+    const el = rd.domElement; el.setAttribute('aria-hidden', 'true'); el.style.pointerEvents = 'none';
+    V.main.el.parentElement.insertBefore(el, V.main.el);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.1, 200);
+    const M = (o) => new THREE.MeshStandardMaterial(o), B = (o) => new THREE.MeshBasicMaterial(o);
+    const amb = new THREE.AmbientLight(0xffffff, 0.34), sun = new THREE.DirectionalLight(0xffffff, 1.0); sun.position.set(10, 0, 1.5); scene.add(amb, sun);
+    const upZ = (g) => g.rotateX(Math.PI / 2);
+    const shaft = new THREE.CylinderGeometry(1, 1, 1, 8).translate(0, 0.5, 0), head = new THREE.ConeGeometry(1, 1, 14).translate(0, 0.5, 0);
+    const mkArrow = (mat) => { const gr = new THREE.Group(); gr.add(new THREE.Mesh(shaft, mat), new THREE.Mesh(head, mat)); return gr; };
+    const ring = (r, n, mat) => { const pts = []; for (let i = 0; i <= n; i++) { const a = 2 * Math.PI * i / n; pts.push(new THREE.Vector3(r * Math.cos(a), r * Math.sin(a), 0)); } const l = new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), mat); l.computeLineDistances(); return l; };
+    const curve = (n, mat) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.Float32BufferAttribute(new Float32Array(3 * (n + 1)), 3)); return new THREE.Line(g, mat); };
+    /* lines of latitude and longitude, every 30° */
+    const gridM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.22 });
+    const grid = (r) => {
+      const gr = new THREE.Group();
+      for (let k = 0; k < 6; k++) { const l = ring(r, 96, gridM); l.rotation.set(Math.PI / 2, 0, k * Math.PI / 6, 'ZXY'); gr.add(l); }
+      for (const lat of [-60, -30, 0, 30, 60]) { const c = Math.cos(lat * Math.PI / 180), l = ring(r * c, 96, gridM); l.position.z = r * Math.sin(lat * Math.PI / 180); gr.add(l); }
+      return gr;
+    };
+
+    /* pull view */
+    const grpP = new THREE.Group();
+    const earthPM = M({ transparent: true, opacity: 0.32, roughness: 0.6, depthWrite: false }), earthP = new THREE.Mesh(upZ(new THREE.SphereGeometry(1, 64, 40)), earthPM);
+    const gridP = grid(1.0);
+    const dotM = B({}), dotG = new THREE.SphereGeometry(0.022, 10, 8), mTot = M({ roughness: 0.5 }), mTid = M({ roughness: 0.5 }), arrP = [];
+    for (const [x, y, z] of PTS3) { const d = new THREE.Mesh(dotG, dotM); d.position.set(x, y, z); grpP.add(d); const a = mkArrow(mTot); arrP.push(a); grpP.add(a); }
+    const cenM = M({ roughness: 0.5, depthTest: false }), cenArr = mkArrow(cenM); cenArr.renderOrder = 10; cenArr.children.forEach((m) => { m.renderOrder = 10; });
+    const cenDot = new THREE.Mesh(new THREE.SphereGeometry(0.035, 12, 10), B({ depthTest: false })); cenDot.renderOrder = 11;
+    const moonM = M({ roughness: 0.95 }), moonP = new THREE.Mesh(new THREE.SphereGeometry(MOON_R, 40, 28), moonM);
+    const lineM = new THREE.LineDashedMaterial({ dashSize: 0.08, gapSize: 0.08, transparent: true, opacity: 0.7 });
+    const lineEM = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 0, 0)]), lineM);
+    grpP.add(earthP, gridP, cenArr, cenDot, moonP, lineEM);
+
+    /* ocean view */
+    const grpB = new THREE.Group();
+    const earthBM = M({ roughness: 0.9 }), earthB = new THREE.Mesh(upZ(new THREE.SphereGeometry(1, 64, 40)), earthBM);
+    const gridB = grid(1.004);
+    const og = upZ(new THREE.SphereGeometry(1, 120, 72)), U = og.attributes.position.array.slice();
+    const oceanM = M({ transparent: true, opacity: 0.55, roughness: 0.75, metalness: 0 }), ocean = new THREE.Mesh(og, oceanM);
+    const eqM = new THREE.LineBasicMaterial(), eqLine = curve(180, eqM);
+    const seaM = new THREE.LineDashedMaterial({ dashSize: 0.03, gapSize: 0.045, transparent: true, opacity: 0.8 }), sea = ring(1.2, 180, seaM);
+    const eachMM = new THREE.LineDashedMaterial({ dashSize: 0.09, gapSize: 0.06 }), eachSM = new THREE.LineDashedMaterial({ dashSize: 0.09, gapSize: 0.06 });
+    const eachM = curve(180, eachMM), eachS = curve(180, eachSM);
+    const cityM = B({}), stalk = new THREE.Mesh(shaft, cityM), cityDot = new THREE.Mesh(new THREE.SphereGeometry(0.045, 16, 12), cityM);
+    const orbitM = new THREE.LineDashedMaterial({ dashSize: 0.05, gapSize: 0.08, transparent: true, opacity: 0.6 }), orbit = ring(ORBIT3, 180, orbitM);
+    const moonB = new THREE.Mesh(new THREE.SphereGeometry(MOON_R, 40, 28), moonM);
+    const rayM = M({ roughness: 0.6, emissiveIntensity: 0.6 }), rays = [];
+    for (const y of [-1.5, -0.75, 0.75, 1.5]) { const a = mkArrow(rayM), v = new THREE.Vector3(-0.62, 0, 0); setArrow(a, new THREE.Vector3(3.0, y, 0), v, 0.009, 0.09); rays.push(a); grpB.add(a); }
+    /* Earth's spin, west to east: counterclockwise seen from above the North Pole */
+    const spinM = B({ transparent: true, opacity: 0.6 }), spinPts = [];
+    for (let i = 0; i <= 24; i++) { const a = 0.15 * Math.PI + i / 24 * 0.75 * Math.PI; spinPts.push(new THREE.Vector3(0.32 * Math.cos(a), 0.32 * Math.sin(a), 1.16)); }
+    const spin = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(spinPts), 24, 0.012, 6), spinM);
+    const spinHead = new THREE.Mesh(head, spinM), ae = 0.9 * Math.PI;
+    spinHead.position.set(0.32 * Math.cos(ae), 0.32 * Math.sin(ae), 1.16); spinHead.scale.set(0.035, 0.08, 0.035);
+    spinHead.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(-Math.sin(ae), Math.cos(ae), 0));
+    grpB.add(earthB, gridB, ocean, eqLine, sea, eachM, eachS, stalk, cityDot, orbit, moonB, spin, spinHead);
+    scene.add(grpP, grpB);
+    g3 = { rd, el, scene, cam, amb, sun, gridM, grpP, earthPM, dotM, mTot, mTid, arrP, cenM, cenArr, cenDot, moonM, moonP, lineM, lineEM,
+      grpB, earthBM, gridB, og, U, oceanM, ocean, eqM, eqLine, seaM, eachMM, eachSM, eachM, eachS, cityM, stalk, cityDot, orbitM, moonB, rayM, spinM,
+      ray: new THREE.Raycaster(), plane: new THREE.Plane(new THREE.Vector3(0, 0, 1), 0) };
+    const cv = V.main.el;
+    if (V.main.W < 0.9 * V.main.H) { G3.op.th = Math.PI; G3.op.ph = 0.95; }   /* a tall phone picture: look from beyond the far side, so the Moon sits above Earth */
+    cv.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    const grab = (view) => (e) => !use3() || S.view !== view || !!hit(mainHandles(), local(cv, e), e);
+    VD3.orbit(cv, G3.op, () => { if (use3()) requestDraw(); }, { grab: grab('pull'), phMin: 0.25, phMax: 1.57, zMin: 0.6, zMax: 3, keys: false });
+    VD3.orbit(cv, G3.ob, () => { if (use3()) requestDraw(); }, { grab: grab('bulge'), phMin: 0.05, phMax: 1.5, zMin: 0.6, zMax: 3, keys: false });
+    return true;
+  }
+  const _q = { y: null, v: null };
+  function setArrow(gr, o, v, r, hl) {
+    const L = v.length(); gr.visible = L > 1e-4; if (!gr.visible) return;
+    if (!_q.y) { _q.y = new THREE.Vector3(0, 1, 0); _q.v = new THREE.Vector3(); }
+    const h = Math.min(hl, 0.45 * L), [sh, hd] = gr.children;
+    sh.scale.set(r, L - h, r); hd.position.set(0, L - h, 0); hd.scale.set(2.9 * r, h, 2.9 * r);
+    gr.position.copy(o); gr.quaternion.setFromUnitVectors(_q.y, _q.v.copy(v).divideScalar(L));
+  }
+  function theme3() {
+    const g = g3, dk = VD3.dark();
+    g.scene.background = col3(T.canvas, '#fcfdfe');
+    g.gridM.color = col3(T.ink, '#1d2836'); g.earthPM.color = col3(T.ocean, '#4f8fd6'); g.dotM.color = col3(T.ink, '#1d2836');
+    g.mTot.color = col3(T.field, '#1d2836'); g.mTid.color = col3(T.pos, '#c23f2c'); g.cenM.color = col3(T.accent, '#2a64c8'); g.cenDot.material.color = col3(T.accent, '#2a64c8');
+    g.moonM.color = col3(T.lit, '#f1e8c8'); g.lineM.color = col3(T.muted, '#5d6a7c');
+    g.earthBM.color = col3(T.earth, '#c9d8c0'); g.oceanM.color = col3(T.ocean, '#4f8fd6'); g.oceanM.opacity = dk ? 0.62 : 0.45;
+    g.eqM.color = col3(T.ocean, '#4f8fd6'); g.seaM.color = col3(T.muted, '#5d6a7c');
+    g.eachMM.color = col3(T.pos, '#c23f2c'); g.eachSM.color = col3(T.equi, '#a7740b'); g.cityM.color = col3(T.accent, '#2a64c8');
+    g.orbitM.color = col3(T.muted, '#5d6a7c'); g.rayM.color = col3(T.equi, '#a7740b'); g.rayM.emissive = col3(T.equi, '#a7740b'); g.spinM.color = col3(T.ink, '#1d2836');
+    g.amb.intensity = dk ? 0.4 : 0.72; g.sun.intensity = dk ? 0.85 : 0.6;
+  }
+  /* sizes the renderer to the main pane, frames the spheres [x, y, z, r] below the caption as seen from the angles in o, renders, and sets P3 */
+  function render3(o, balls) {
+    const g = g3, v = V.main, W0 = Math.max(1, Math.round(v.W)), H0 = Math.max(1, Math.round(v.H)), dk = VD3.dark();
+    g.el.hidden = false;
+    if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; }
+    const key = [T.canvas, T.ocean, T.earth, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    const top = 66 * PS, bot = 22 * PS, f = Math.max(0.3, (H0 - top - bot) / H0);
+    g.cam.setViewOffset(W0, H0, 0, -(top - bot) / 2, W0, H0);
+    const st = Math.sin(o.th), ct = Math.cos(o.th), sp = Math.sin(o.ph), cp = Math.cos(o.ph), b = [Infinity, -Infinity, Infinity, -Infinity];
+    for (const [x, y, z, r] of balls) {
+      const u = -st * x + ct * y, w2 = -cp * ct * x - cp * st * y + sp * z;   /* along the screen's right and up */
+      b[0] = Math.min(b[0], u - r); b[1] = Math.max(b[1], u + r); b[2] = Math.min(b[2], w2 - r); b[3] = Math.max(b[3], w2 + r);
     }
+    const mu = (b[0] + b[1]) / 2, mw = (b[2] + b[3]) / 2, target = new THREE.Vector3(-st * mu - cp * ct * mw, ct * mu - cp * st * mw, sp * mw);
+    const tv = Math.tan(g.cam.fov * Math.PI / 360), dist = Math.max((b[3] - b[2]) / 2 / (tv * f), (b[1] - b[0]) / 2 / (tv * g.cam.aspect)) + 0.6;
+    VD3.place(g.cam, o, target, dist); g.cam.far = dist * 3 + 20; g.cam.updateProjectionMatrix();
+    g.scene.updateMatrixWorld(); g.rd.render(g.scene, g.cam);
+    const p = new THREE.Vector3();
+    P3 = (x, y, z) => { p.set(x, y, z).project(g.cam); return [(p.x + 1) / 2 * W0, (1 - p.y) / 2 * H0, p.z]; };
+  }
+  /* screen radius of a sphere of radius r at (x, y, z) */
+  function rad3(x, y, z, r) {
+    const c = new THREE.Vector3().setFromMatrixColumn(g3.cam.matrixWorld, 0).multiplyScalar(r), a = P3(x, y, z), b = P3(x + c.x, y + c.y, z + c.z);
+    return Math.hypot(b[0] - a[0], b[1] - a[1]);
+  }
+  /* angle about Earth's axis of the point in the equatorial plane under the pointer, or null */
+  function planeAngle(p) {
+    const g = g3; g.ray.setFromCamera({ x: p.x / G3.w * 2 - 1, y: 1 - p.y / G3.h * 2 }, g.cam);
+    const hitP = g.ray.ray.intersectPlane(g.plane, new THREE.Vector3());
+    return hitP ? Math.atan2(hitP.y, hitP.x) : null;
+  }
+  function drawPull3() {
+    const v = V.main, ctx = v.ctx, w = v.W, h = v.H, g = g3, d = dM(), tidal = S.arrows === 'tidal';
+    g.grpP.visible = true; g.grpB.visible = false;
+    const k = 0.30 / PULL_REF * (tidal ? TID_MAG : 1), mx = moonX3(S.dR), o = new THREE.Vector3(), a3 = new THREE.Vector3();
+    PTS3.forEach(([x, y, z], i) => {
+      const rho = Math.hypot(y, z), a = tidal ? tidalAt(M_MOON, d, x * R_EARTH, rho * R_EARTH) : pullAt(M_MOON, d, x * R_EARTH, rho * R_EARTH);
+      const cy = rho > 1e-9 ? y / rho : 0, cz = rho > 1e-9 ? z / rho : 0, ar = g.arrP[i];
+      setArrow(ar, o.set(x, y, z), a3.set(k * a[0], k * a[1] * cy, k * a[1] * cz), 0.011, 0.075);
+      for (const m of ar.children) m.material = tidal ? g.mTid : g.mTot;
+    });
+    g.cenArr.visible = !tidal;
+    if (!tidal) setArrow(g.cenArr, o.set(0, 0, 0), a3.set(k * pullAt(M_MOON, d, 0, 0)[0], 0, 0), 0.016, 0.09);
+    g.moonP.position.set(mx, 0, 0); g.lineEM.scale.x = mx; g.lineEM.computeLineDistances();
+    g.gridM.opacity = 0.12; render3(G3.op, [[0, 0, 0, 1.4], [moonX3(DMIN), 0, 0, 0.4], [moonX3(DMAX), 0, 0, 0.4]]);
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+    const nearA = tidal ? tidalAt(M_MOON, d, R_EARTH, 0) : pullAt(M_MOON, d, R_EARTH, 0);
+    const farA = tidal ? tidalAt(M_MOON, d, -R_EARTH, 0) : pullAt(M_MOON, d, -R_EARTH, 0);
+    ctx.font = font(700, 11, 'ui'); ctx.fillStyle = T.muted; ctx.textBaseline = 'top';
+    const [nx, ny] = P3(1, 0, 0), [fx, fy] = P3(-1 + Math.min(0, k * farA[0]), 0, 0), [c0x, c0y] = P3(0, 0, 0);
+    ctx.textAlign = 'left'; clampText(ctx, 'near side', nx + 4 * PS, ny + 8 * PS, w, 4 * PS);
+    ctx.textAlign = 'right'; clampText(ctx, 'far side', fx - 4 * PS, fy + 8 * PS, w, 4 * PS);
+    if (tidal) { const [sx, sy] = P3(0, 0, 1.06); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText('squeezed in', sx, sy - 8 * PS); }
+    ctx.fillStyle = T.accent; ctx.font = font(tidal ? 600 : 700, tidal ? 10.5 : 11, 'ui'); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText(tidal ? 'center: zero' : 'center', c0x, c0y + 8 * PS);
+
+    pullRows(ctx, w, h, tidal, d, nearA, farA);
+
+    const [qx, qy] = P3(mx, 0, 0), mr = rad3(mx, 0, 0, MOON_R);
+    const hot = (dragM && dragM.id === 'moonD') || (!dragM && hoverM === 'moonD');
+    grip(ctx, qx, qy, mr + 7 * PS, hot || focusMain, T.accent);
+    ctx.fillStyle = T.accent; ctx.font = font(700, 12, 'ui'); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    clampText(ctx, '◂ Moon ▸', qx, qy - mr - 12 * PS, w, 4 * PS);
+    /* below the Moon, or beside it when the Moon sits above Earth */
+    const side = qy < c0y - rad3(0, 0, 0, 1) - mr, dx0 = side ? qx + mr + 12 * PS : qx, dy0 = side ? qy - 14 * PS : qy + mr + 12 * PS;
+    ctx.fillStyle = T.muted; ctx.font = font(600, 11); ctx.textBaseline = 'top'; if (side) ctx.textAlign = 'left';
+    clampText(ctx, 'd = ' + S.dR.toFixed(1) + ' Earth radii', dx0, dy0, w, 4 * PS);
+    ctx.font = font(400, 10.5);
+    clampText(ctx, fmtKm(d / 1000) + ' km', dx0, dy0 + 15 * PS, w, 4 * PS);
+
+    /* scale bar: an arrow at Earth's distance, square to the line of sight */
+    const sv = tidal ? 1e-6 : 2e-5, sl = sv * k * rad3(0, 0, 0, 1), sx = 14 * PS, sy2 = h - 18 * PS;
+    arrow(ctx, sx, sy2, sx + sl, sy2, tidal ? T.pos : T.field, 2 * PS, 8 * PS);
+    ctx.fillStyle = T.muted; ctx.font = font(400, 10.5); ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+    ctx.fillText('= ' + sci(sv, 1) + ' m/s² at Earth', sx + sl + 8 * PS, sy2);
+    pullCaption(tidal);
+  }
+  function drawBulge3() {
+    const v = V.main, ctx = v.ctx, w = v.W, h = v.H, g = g3, gg = bulgeGeo();
+    const kh = gg.kh / gg.Rp, base = gg.base / gg.Rp, pm = phiM(), am = Am(), as = As(), ac = phiC(S.hour), cm = Math.cos(pm), sm = Math.sin(pm);
+    g.grpP.visible = false; g.grpB.visible = true;
+    /* the water surface over the whole globe */
+    const U = g.U, pos = g.og.attributes.position;
+    for (let i = 0; i < U.length; i += 3) {
+      const ux = U[i], uy = U[i + 1], uz = U[i + 2], r = 1 + base + kh * (am * P2(ux * cm + uy * sm) + as * P2(ux));
+      pos.array[i] = ux * r; pos.array[i + 1] = uy * r; pos.array[i + 2] = uz * r;
+    }
+    pos.needsUpdate = true; g.og.computeVertexNormals(); g.og.computeBoundingSphere();
+    const fill = (line, fn) => { const p = line.geometry.attributes.position; for (let j = 0; j <= 180; j++) { const a = 2 * Math.PI * j / 180, r = 1.003 * (1 + base + kh * fn(a)); p.setXYZ(j, r * Math.cos(a), r * Math.sin(a), 0); } p.needsUpdate = true; line.geometry.computeBoundingSphere(); line.computeLineDistances(); };
+    fill(g.eqLine, (a) => height(a, pm, am, as));
+    g.eachM.visible = g.eachS.visible = S.sun && S.each;
+    if (g.eachM.visible) { fill(g.eachM, (a) => am * P2(Math.cos(a - pm))); fill(g.eachS, (a) => as * P2(Math.cos(a))); }
+    g.gridB.rotation.z = ac;
+    const rc = 1 + base + kh * height(ac, pm, am, as), ca = Math.cos(ac), sa = Math.sin(ac);
+    setArrowShaft(g.stalk, ca, sa, rc - 1);
+    g.cityDot.position.set(rc * ca, rc * sa, 0);
+    g.moonB.position.set(ORBIT3 * cm, ORBIT3 * sm, 0);
+    g.gridM.opacity = 0.22; render3(G3.ob, BALLS_B);
+
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+    const [ox, oy] = P3(0, 0, 0);
+    ctx.font = font(700, 11, 'ui'); ctx.fillStyle = T.equi; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    { const [sx, sy] = P3(2.7, -1.5, 0); ctx.textBaseline = 'top'; clampText(ctx, 'Sunlight', sx, sy + 8 * PS, w, 4 * PS); }
+    { const [nx, ny] = P3(0, 0, 1.16); ctx.fillStyle = T.ink; ctx.globalAlpha = 0.8; ctx.font = font(600, 10.5, 'ui'); ctx.textBaseline = 'top'; ctx.fillText('N', nx, ny + 3 * PS); ctx.globalAlpha = 1; }
+    /* the city */
+    const [qx, qy] = P3(rc * ca, rc * sa, 0), hotC = (dragM && dragM.id === 'city') || (!dragM && hoverM === 'city');
+    grip(ctx, qx, qy, 11 * PS, hotC, T.accent);
+    const [lx0, ly0] = P3((rc + 0.16) * ca, (rc + 0.16) * sa, 0), dx = lx0 - ox, dy = ly0 - oy, dl = Math.hypot(dx, dy) || 1;
+    const lxx = qx + dx / dl * 22 * PS, lyy = qy + dy / dl * 22 * PS;
+    ctx.fillStyle = T.accent; ctx.font = font(700, 11.5, 'ui'); ctx.textBaseline = 'middle';
+    ctx.textAlign = Math.abs(dx / dl) < 0.3 ? 'center' : dx > 0 ? 'left' : 'right';
+    clampText(ctx, 'City ' + fmtHM(S.hour), lxx, lyy, w, 4 * PS);
+    /* the Moon */
+    const [mx, my] = P3(ORBIT3 * cm, ORBIT3 * sm, 0), mr = rad3(ORBIT3 * cm, ORBIT3 * sm, 0, MOON_R);
+    const hotM = (dragM && dragM.id === 'moon') || (!dragM && hoverM === 'moon');
+    grip(ctx, mx, my, mr + 7 * PS, hotM || focusMain, T.accent);
+    const ex = mx - ox, ey = my - oy, el = Math.hypot(ex, ey) || 1;
+    ctx.fillStyle = T.accent; ctx.font = font(700, 11.5, 'ui'); ctx.textBaseline = 'middle';
+    ctx.textAlign = Math.abs(ex / el) < 0.3 ? 'center' : ex > 0 ? 'left' : 'right';
+    clampText(ctx, 'Moon', mx + ex / el * (mr + 16 * PS), my + ey / el * (mr + 16 * PS), w, 4 * PS);
+    bulgeCaption(gg);
+  }
+  /* a shaft from Earth's surface out to r = 1 + len along (ca, sa, 0) */
+  function setArrowShaft(m, ca, sa, len) {
+    m.visible = len > 1e-4; if (!m.visible) return;
+    m.position.set(ca, sa, 0); m.scale.set(0.012, len, 0.012); m.rotation.set(0, 0, Math.atan2(sa, ca) - Math.PI / 2);
+  }
+  function handles3() {
+    if (S.view === 'pull') {
+      const [qx, qy] = P3(moonX3(S.dR), 0, 0);
+      return [{ id: 'moonD', cursor: 'ew-resize', pt: [qx, qy], r: rad3(moonX3(S.dR), 0, 0, MOON_R) + 6 * PS,
+        set: (p) => { const a = P3(moonX3(DMIN), 0, 0), b = P3(moonX3(DMAX), 0, 0), ux = b[0] - a[0], uy = b[1] - a[1];
+          setDist(DMIN + ((p.x - a[0]) * ux + (p.y - a[1]) * uy) / (ux * ux + uy * uy || 1) * (DMAX - DMIN)); } }];
+    }
+    const gg = bulgeGeo(), pm = phiM(), ac = phiC(S.hour), rc = 1 + gg.base / gg.Rp + gg.kh / gg.Rp * height(ac, pm, Am(), As());
+    const [mx, my] = P3(ORBIT3 * Math.cos(pm), ORBIT3 * Math.sin(pm), 0), [qx, qy] = P3(rc * Math.cos(ac), rc * Math.sin(ac), 0);
+    return [
+      { id: 'moon', cursor: 'grab', pt: [mx, my], r: rad3(ORBIT3 * Math.cos(pm), ORBIT3 * Math.sin(pm), 0, MOON_R) + 6 * PS,
+        set: (p) => { const a = planeAngle(p); if (a !== null) setPhase(mod(a, 2 * Math.PI) / (2 * Math.PI) * P_SYN); } },
+      { id: 'city', cursor: 'grab', pt: [qx, qy], r: 10 * PS,
+        set: (p) => { const a = planeAngle(p); if (a !== null) setHour(Math.round(mod(12 + a * 12 / Math.PI, 24) / 0.05) * 0.05); } }
+    ];
+  }
+  function setView3(v) {
+    G3.want = v === '3d';
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { G3.want = false; v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setView3(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; V.main.el.style.cursor = use3() ? 'grab' : 'default'; if (g3 && !G3.on) g3.el.hidden = true;
+    for (const b of document.querySelectorAll('#view3Seg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    hoverM = null; requestDraw();
   }
 
   // ---------- plots ----------
@@ -967,7 +1249,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       S.hour = mod(S.hour + dh, 24); S.tp = mod(S.tp + dh / 24, P_SYN);
     } else last = 0;
     T = tokens(); PS = pscale();
-    if (V.main.W && V.main.H) { if (S.view === 'pull') drawPull(); else drawBulge(); }
+    if (V.main.W && V.main.H) {
+      if (use3()) { if (S.view === 'pull') drawPull3(); else drawBulge3(); }
+      else { if (g3) g3.el.hidden = true; if (S.view === 'pull') drawPull(); else drawBulge(); }
+    }
     if (V.plot.W && V.plot.H) { if (S.view === 'pull') drawDistPlot(); else drawBulgePlots(); }
     updatePanel();
     frameMs = performance.now() - t0;
@@ -1019,6 +1304,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let dragM = null, hoverM = null, dragP = null, hoverP = null, focusMain = false, focusPlot = false;
   const local = (el, ev) => { const r = el.getBoundingClientRect(); return { x: ev.clientX - r.left, y: ev.clientY - r.top }; };
   function mainHandles() {
+    if (use3() && P3) return handles3();
     if (S.view === 'pull') {
       const g = pullGeo();
       return [{ id: 'moonD', cursor: 'ew-resize', pt: [g.mx, g.cy], r: g.mr + 6 * PS,
@@ -1081,10 +1367,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         return;
       }
       const h = hit(handlesFn(), p, ev), id = h ? h.id : null;
-      el.style.cursor = h ? h.cursor : 'default';
+      el.style.cursor = h ? h.cursor : el === V.main.el && use3() ? 'grab' : 'default';
       if (setHover(id)) requestDraw();
     });
-    const end = () => { if (!getDrag()) return; setDragV(null); el.style.cursor = 'default'; requestDraw(); };
+    const end = () => { if (!getDrag()) return; setDragV(null); el.style.cursor = el === V.main.el && use3() ? 'grab' : 'default'; requestDraw(); };
     el.addEventListener('pointerup', end);
     el.addEventListener('pointercancel', end);
     el.addEventListener('pointerleave', () => { if (!getDrag() && setHover(null)) requestDraw(); });
@@ -1185,11 +1471,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- boot ----------
   new ResizeObserver(resize).observe($('stage'));
   setView(S.view);
+  $('view3Seg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView3(b.dataset.view); });
+  G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();
+  if (G3.want) setView3('3d');
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(requestDraw);
 
   // exposed for testing
-  window.__tides = { S, applyPreset, setView, setArrows, frameMs: () => frameMs, findHighs, cityLevelAt, mainHandles, plotHandles,
+  window.__tides = { S, applyPreset, setView, setView3, setArrows, frameMs: () => frameMs, findHighs, cityLevelAt, mainHandles, plotHandles,
     phys: { G, M_MOON, M_SUN, M_EARTH, R_EARTH, D_MOON, D_SUN, LUNAR_DAY, pullAt, tidalAt, tidalAxial, tidalPerp, exactNear, exactFar, tideAmp, height, dailyRange, sunMoonTide, sunMoonPull } };
 })();
 </script>
