@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>Heat Capacities of Gases</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,6 +22,8 @@
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
 .pane { position: relative; flex: 1 1 auto; min-height: 400px; }
 .pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; }
+.pane .cap3d { position: absolute; left: 10px; bottom: 6px; margin: 0; font-size: 0.78rem; color: var(--muted); pointer-events: none; }
+.pane .cap3d:empty { display: none; }
 .curvebox { position: relative; flex: none; height: 190px; border-top: 1px solid var(--line); }
 .curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
@@ -68,9 +72,11 @@
           <button type="button" data-s="1" aria-pressed="true">1×</button>
           <button type="button" data-s="5" aria-pressed="false">5×</button>
         </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <span class="count mono" id="clock">t = 0 s</span>
       </div>
       <div class="pane" id="pane">
+        <p class="cap3d" id="cap3d"></p>
         <canvas id="can" tabindex="0" role="img" aria-label="A gas in a cylinder under a piston, with an electric heater at the bottom, a thermometer and a meter for the heat delivered. Space starts or pauses."></canvas>
       </div>
       <div class="curvebox"><canvas id="curve" role="img" aria-label="Graph: temperature against heat delivered, or the ball's height against time."></canvas></div>
@@ -302,6 +308,120 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (VG) VG.cable(ctx, fx + tubeW / 2 + 14 * p, eqY, lx - 6, H * 0.1 + 14 * p, 30, { w: 2.5 * p });
     if (VG) { VG.label(ctx, `${S.ru.gas === 'air' ? 'dry air' : GASES[S.ru.gas].name.split(',')[0].toLowerCase()}, ${S.ru.V} L flask`, fx, by + 16 * p, { a: 'center', s: 10.5 * p }); VG.label(ctx, 'swing drawn 3 times larger', fx + tubeW + 16 * p, tubeTop + 10 * p, { s: 10 * p }); }
   }
+  // ---------- 3D view: the same apparatus to scale, in metres ----------
+  /* Pictures only, from the same state as the flat view. Heat a gas: the cylinder 10.0 cm across, its gas column at the model's
+     height, the piston and pin, the heater coil, a mm rule, the three meters, and a column whose height is the heat delivered, split
+     by equipartition into motion through space, rotation, vibration and work. Molecules are a picture (their number is not the
+     model's), each coloured by its own speed, faster ones redder, all speeding up as √T. Rüchardt: a flask of the chosen volume
+     (a sphere of volume V), the 16 mm tube, the ball (its swing drawn 3 times larger, as in the flat view) and the photogate. */
+  let G3 = null, on3d = false;
+  const o3 = { th: -Math.PI / 2 + 0.38, ph: 1.28, zoom: 1 };
+  const BASE = 0.04;
+  function init3() {
+    const S3 = VD3K.stage($('pane'), { before: can, shadow: 0.7, fov: 30, far: 30 });
+    if (!S3) return false;
+    const steel = VD3K.material(S3, { roughness: 0.4, metalness: 0.35 }, ['#b4bcc6', '#8a939e']), dark3 = VD3K.material(S3, { roughness: 0.6, metalness: 0.2 }, ['#3d4754', '#2e3640']);
+    S3.scene.add(VD3K.bench(S3, { w: 6, d: 4, y: 0.8 }), VD3K.backdrop(S3, { r: 2.2, y: 1.0 }));
+    /* --- heat a gas --- */
+    const heat = new THREE.Group();
+    const hTop = heatState(gasKey(), S.heat.n, 'P', heatState(gasKey(), S.heat.n, 'P', 0).C * (T_CUTOUT - T0C)).h;
+    heat.add(VD3K.box(0.17, 0.17, BASE, dark3, 0, 0, 0));
+    const tube = VD3K.glass(S3, { r: CYL_D / 2, len: 1, axis: 'z', ends: false, opacity: 0.16 }); heat.add(tube);
+    const gasM = new THREE.MeshStandardMaterial({ color: '#d8e6f2', transparent: true, opacity: 0.22, depthWrite: false, roughness: 0.9 });
+    const gas = new THREE.Mesh(new THREE.CylinderGeometry(CYL_D / 2 * 0.97, CYL_D / 2 * 0.97, 1, 40), gasM); gas.geometry.rotateX(Math.PI / 2); gas.geometry.translate(0, 0, 0.5); gas.position.z = BASE; gas.renderOrder = 1; heat.add(gas);
+    const piston = VD3K.rod([0, 0, 0], [0, 0, 0.016], CYL_D / 2 * 0.97, steel), prod = VD3K.rod([0, 0, 0.016], [0, 0, 0.07], 0.005, steel);
+    const pin = VD3K.rod([-0.085, 0, 0.008], [0.085, 0, 0.008], 0.004, VD3K.material(S3, { roughness: 0.35, metalness: 0.6 }, ['#c9a24a', '#a8873a']));
+    const pG = new THREE.Group(); pG.add(piston, prod, pin); heat.add(pG);
+    const pts = []; for (let i = 0; i <= 160; i++) { const a = i / 160 * Math.PI * 2 * 2.6, rr = 0.012 + 0.026 * i / 160; pts.push(new THREE.Vector3(rr * Math.cos(a), rr * Math.sin(a), BASE + 0.006)); }
+    const coilM = new THREE.MeshStandardMaterial({ color: '#5b6370', roughness: 0.5, metalness: 0.4 });
+    heat.add(new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 200, 0.0018, 6, false), coilM));
+    const rule = VD3K.ruler(S3, { len: 0.6, to: 600, unit: 'mm', step: 10, w: 0.03, wood: true }); const ruleG = new THREE.Group(); ruleG.add(rule); ruleG.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(new THREE.Vector3(0, 0, 1), new THREE.Vector3(-1, 0, 0), new THREE.Vector3(0, -1, 0)));
+    ruleG.position.set(-0.075, -0.035, BASE); heat.add(ruleG);   /* the rule stands up beside the cylinder, its 0 at the cylinder floor, printed side to the front */
+    const atoms = VD3K.particles(S3, { n: MOL.length * 3, r: 0.0042, seg: 8 }); heat.add(atoms);
+    /* meters on a rack */
+    const rack = VD3K.box(0.2, 0.02, 0.36, dark3, 0.26, 0.04, 0); heat.add(rack);
+    const mT = VD3K.meter(S3, { label: 'THERMOMETER', w: 0.17, h: 0.085, tilt: 0 }), mQ = VD3K.meter(S3, { label: 'HEAT DELIVERED', w: 0.17, h: 0.085, tilt: 0 }), mH = VD3K.meter(S3, { label: 'PISTON HEIGHT', w: 0.17, h: 0.085, tilt: 0 });
+    mT.position.set(0.26, 0.01, 0.30); mQ.position.set(0.26, 0.01, 0.195); mH.position.set(0.26, 0.01, 0.09); heat.add(mT, mQ, mH);
+    heat.add(VD3K.cable([0.17, 0.01, 0.30], [0.04, 0, BASE + 0.1], { sag: 0.03 }), VD3K.cable([0.17, 0.01, 0.195], [0.07, 0, 0.02], { sag: 0.04, color: 0xb8382a }));
+    /* where the heat went: a column, full height (0.42 m) at the heater's cut out */
+    const colG = new THREE.Group(); colG.position.set(0.47, 0.02, 0); heat.add(colG);
+    const seg = ['trans', 'rot', 'vib', 'work'].map((k) => { const m = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.07, 1), new THREE.MeshStandardMaterial({ roughness: 0.6 })); m.geometry.translate(0, 0, 0.5); m.castShadow = true; colG.add(m);
+      const lab = VD3K.label(' ', { size: 0.022, color: '#ffffff', bg: 'rgba(20,26,34,0.72)' }); colG.add(lab); return { k, m, lab }; });
+    const colTitle = VD3K.label('where the heat went', { size: 0.02, color: '#7d8898' }); colG.add(colTitle);
+    const glass = VD3K.glass(S3, { r: 0.04, len: 0.42, axis: 'z', ends: false, opacity: 0.08 }); glass.position.z = 0.21; colG.add(glass);
+    /* --- Rüchardt --- */
+    const ru = new THREE.Group();
+    const flask = VD3K.bulb(S3, { r: 1, opacity: 0.2 }); ru.add(flask);
+    const neckT = VD3K.glass(S3, { r: TUBE_D / 2, len: 0.5, axis: 'z', ends: false, opacity: 0.25 }); ru.add(neckT);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(1, 0.25, 12, 40), VD3K.material(S3, { roughness: 0.9 }, ['#a87d4f', '#6e5236'])); ru.add(ring);
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(TUBE_D / 2 * 0.98, 24, 16), VD3K.material(S3, { roughness: 0.25, metalness: 0.8 }, ['#c3cad3', '#9aa4b0'])); ball.castShadow = true; ru.add(ball);
+    const gateM = VD3K.material(S3, { roughness: 0.5 }, ['#2f3a46', '#2a333e']), gate = new THREE.Group();
+    gate.add(VD3K.box(0.012, 0.03, 0.04, gateM, -0.025, 0, -0.02), VD3K.box(0.012, 0.03, 0.04, gateM, 0.025, 0, -0.02), VD3K.box(0.062, 0.03, 0.01, gateM, 0, 0, -0.03));
+    const led = new THREE.Mesh(new THREE.SphereGeometry(0.004, 12, 8), new THREE.MeshBasicMaterial({ color: '#ff3030' })); led.position.set(-0.025, -0.017, 0.012); gate.add(led); ru.add(gate);
+    const mP = VD3K.meter(S3, { label: 'PERIOD OF THE LAST SWING', w: 0.18, h: 0.09, tilt: 0 }), mN = VD3K.meter(S3, { label: 'SWINGS TIMED', w: 0.18, h: 0.09, tilt: 0 });
+    const rack2 = VD3K.box(0.21, 0.02, 0.26, dark3, 0.3, 0.04, 0); ru.add(rack2, mP, mN); mP.position.set(0.3, 0.01, 0.2); mN.position.set(0.3, 0.01, 0.09);
+    const gCab = { m: null };
+    S3.scene.add(heat, ru);
+    G3 = { S: S3, heat, ru, tube, gas, gasM, pG, pin, coilM, atoms, mT, mQ, mH, seg, colTitle, flask, neckT, ring, ball, gate, led, mP, mN, gCab, hTop, glass };
+    S3.orbit(S3.el, o3, () => redraw(), { zMin: 0.5, zMax: 3 });
+    return true;
+  }
+  function render3() {
+    const g = G3, S3 = g.S, r = $('pane').getBoundingClientRect(), p = proj();
+    S3.size(r.width, r.height);
+    const heatV = S.view === 'heat';
+    g.heat.visible = heatV; g.ru.visible = !heatV;
+    let tgt, dist;
+    if (heatV) {
+      const s = hs(), h = S.heat, gs = GASES[gasKey()];
+      const hTop = heatState(gasKey(), h.n, 'P', heatState(gasKey(), h.n, 'P', 0).C * (T_CUTOUT - T0C)).h, wallH = hTop + 0.03;
+      g.tube.scale.set(1, wallH, 1); g.tube.position.z = BASE + wallH / 2;
+      g.gas.scale.z = s.h; const warm = Math.max(0, Math.min(1, (s.T - T0C) / 180)); g.gasM.color.setRGB(0.82 + 0.15 * warm, 0.88 - 0.25 * warm, 0.95 - 0.5 * warm); g.gasM.opacity = 0.18 + 0.12 * warm;
+      g.pG.position.z = BASE + s.h; g.pin.visible = h.mode === 'V';
+      const on = S.run && h.Q < heatState(gasKey(), h.n, h.mode, 0).C * (T_CUTOUT - T0C);
+      g.coilM.emissive = new THREE.Color(on ? '#ff5a1f' : '#000000'); g.coilM.emissiveIntensity = on ? 0.9 : 0; g.coilM.color.set(on ? '#ff8a5a' : '#5b6370');
+      /* molecules: positions from the flat view's picture, inside the gas column */
+      const Tk = s.T + C0, R0 = CYL_D / 2 * 0.82, ar = 0.0042;
+      let k = 0;
+      MOL.forEach((m, i) => {
+        const dep = Math.sin(i * 2.399) * 0.8, xx = (m.x * 2 - 1) * R0 * Math.sqrt(1 - dep * dep), yy = dep * R0, zz = BASE + 0.012 + m.y * Math.max(0.001, s.h - 0.03);
+        const c = VD3K.heat(Math.hypot(m.vx, m.vy) / 0.72 * Math.sqrt(Tk / 293) * 0.55);
+        const q = gs.cvR - 1.5 > 1.05 ? 1 + 0.15 * Math.sin(m.a * 5) : 1, dx = Math.cos(m.a) * ar * 1.4 * q, dz = Math.sin(m.a) * ar * 1.4 * q;
+        if (gs.shape === 'mono') g.atoms.put(k++, xx, yy, zz, c);
+        else if (gs.shape === 'linear') { g.atoms.put(k++, xx - dx, yy, zz - dz, c); g.atoms.put(k++, xx + dx, yy, zz + dz, c); }
+        else if (gs.shape === 'linear3') { g.atoms.put(k++, xx - 1.7 * dx, yy, zz - 1.7 * dz, c); g.atoms.put(k++, xx, yy, zz, c); g.atoms.put(k++, xx + 1.7 * dx, yy, zz + 1.7 * dz, c); }
+        else { g.atoms.put(k++, xx, yy, zz, c); g.atoms.put(k++, xx + Math.cos(m.a + 0.9) * ar * 1.6, yy, zz + Math.sin(m.a + 0.9) * ar * 1.6, c); g.atoms.put(k++, xx + Math.cos(m.a - 0.9 + Math.PI) * ar * 1.6, yy, zz + Math.sin(m.a - 0.9 + Math.PI) * ar * 1.6, c); }
+      });
+      g.atoms.show(k); g.atoms.done();
+      g.mT.set(`${f(s.T, 2)} °C`); g.mQ.set(`${f(h.Q, 1)} J`); g.mH.set(`${f(s.h * 1000, 1)} mm`);
+      /* the column */
+      const Qcut = heatState(gasKey(), h.n, h.mode, 0).C * (T_CUTOUT - T0C), sp = split(gasKey(), h.n, h.mode, s.T - T0C), tot = Math.max(1e-12, sp.trans + sp.rot + sp.vib + sp.work);
+      const col = { trans: T.trans, rot: T.rot, vib: T.vib, work: T.work }, name = { trans: 'motion through space', rot: 'rotation', vib: 'vibration', work: 'work on the piston' };
+      let z = 0; const full = 0.42 * h.Q / Qcut;
+      g.seg.forEach((q) => {
+        const share = sp[q.k] / tot, hh = full * share; q.m.visible = hh > 1e-5 && !S.blind; q.m.scale.z = Math.max(1e-5, hh); q.m.position.z = z; q.m.material.color.set(col[q.k]);
+        q.lab.visible = q.m.visible && share > 0.001; if (q.lab.visible) { q.lab.set(`${name[q.k]}: ${f(100 * share, 1)}%`); q.lab.position.set(0.045 + q.lab.scale.x / 2, -0.03, z + hh / 2); }
+        z += hh;
+      });
+      g.colTitle.visible = !S.blind; g.colTitle.position.set(0, -0.03, 0.45); g.glass.visible = !S.blind;
+      tgt = [0.2, 0, 0.25]; dist = 1.3;
+    } else {
+      const rr = ruchardt(S.ru.gas, S.ru.V / 1000), x = S.ru.dropped ? ballX(rr, S.ru.x0, S.ru.t) : 0;
+      const rad = Math.cbrt(3 * S.ru.V / 1000 / (4 * Math.PI)), top = 2 * rad + 0.006, len = 0.5, eq = top + len * 0.45;
+      g.flask.scale.setScalar(rad); g.flask.position.set(0, 0, rad + 0.006);
+      g.ring.scale.set(rad * 0.35, rad * 0.35, rad * 0.35); g.ring.position.set(0, 0, 0.012);
+      g.neckT.position.set(0, 0, top + len / 2 - 0.005);
+      const bz = eq + x * 3; g.ball.position.set(0, 0, bz);
+      g.gate.position.set(0, 0, eq + 0.02); g.led.material.color.set(Math.abs(bz - eq) < TUBE_D / 2 ? '#ff3030' : '#5a1a1a');
+      g.mP.set(S.ru.lastPeriod ? `${f(S.ru.lastPeriod, 4)} s` : '—'); g.mN.set(`${S.ru.swings.length}`);
+      tgt = [0.12, 0, Math.max(0.2, (top + len) * 0.5)]; dist = Math.max(1.1, (top + len) * 2.1);
+    }
+    S3.place(o3, tgt, S3.fit(dist));
+    S3.render();
+  }
+  const view3 = VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { $('cap3d').textContent = m; },
+    change: (on) => { on3d = on; if (G3) G3.S.el.hidden = !on; can.hidden = on; $('cap3d').textContent = on ? VD3.turnText('Drag to turn, scroll to zoom. Molecules are a picture: each is coloured by its speed, faster ones redder.') : ''; redraw(); } });
+
   function drawCurve() {
     const p = proj(), c = cctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
     if (S.blind) { c.fillStyle = T.muted; c.font = `${12 * p}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Graph hidden (Blind mode in the Lab section)', CW / 2, CH / 2); return; }
@@ -329,7 +449,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const s of lines) { c.strokeStyle = s.col; c.lineWidth = 2.2 * p; c.beginPath(); s.pts.forEach((q, i) => (i ? c.lineTo(X(q[0]), Y(q[1])) : c.moveTo(X(q[0]), Y(q[1])))); c.stroke(); }
     c.restore();
   }
-  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); (S.view === 'heat' ? drawHeat : drawRu)(); drawCurve(); readouts(); clock(); }
+  function redraw() { if (!T || !W) return; if (on3d && G3) render3(); else { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); (S.view === 'heat' ? drawHeat : drawRu)(); } drawCurve(); readouts(); clock(); }
   function clock() { $('clock').textContent = `t = ${f(S.view === 'heat' ? S.heat.t : S.ru.t, S.view === 'heat' ? 0 : 2)} s`; }
 
   // ---------- readouts ----------
