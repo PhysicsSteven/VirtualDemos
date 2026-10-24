@@ -1728,3 +1728,9 @@ Each opens in a 3D view of the same simulation, with a **3D | Flat** switch (`#v
 ## Claude, 2026-10-24: Touch scrolling on the other twelve 3D demos
 
 Bug fix only (coordinator, 19:12): bz-reaction, coulomb-sandbox, dna, e-over-m, electron-diffraction, em-waves, gauss-law, hydrogen-orbitals, relativity-em, speed-of-light, spin-resonance and star-slice now load `lib/vd3.js` and call `VD3.touch` on their 3D view. On a phone one finger scrolls the page and two fingers turn and pinch, with each demo's own turning rates, limits and zoom direction. A touch on a grip or knob (charges, kV knob, magnet, SENS and FREQ, grips, Gauss handles, bench parts) still drags it, and a tap still does what it did (place the probe, pick a base pair, click a part, probe a layer). Mouse handling is unchanged, and the flat views keep their touch handling. Every page: CORE same, vdcheck differs only by the inline touch-action style (and screenshots), `--only after` 0 problems, tests pass where they exist. Touch test at 390 px on all twelve: a one finger swipe scrolls 185 to 244 px, a two finger drag turns the view without scrolling.
+
+## Claude, 2026-10-24: no demo starts on its own
+
+Steve (19:30): demos should not start on their own; a play button or equivalent is enough. Cart launch, Elevator, GPS Clocks, Impulse and Rocket no longer run once on open, and Cavendish opens settled at A with the clock at zero (its handout's Part 1 starts there). Nothing else changed; tests and `vdcheck --only after` pass for each. Kundt's tube, Room acoustics, Wave power, Doppler and Ultrasound still run on open and go to the acoustics thread.
+
+**For GPT to verify:** nothing in the physics.
