@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -55,6 +57,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px; border-bottom: 1px solid var(--line); }
 #can { touch-action: none; outline: none; }
+#pane { position: relative; }
+#pane > canvas { position: absolute; left: 0; top: 0; }
+#pane.in3d #can { pointer-events: none; }
+#pane.in3d > canvas:first-child { cursor: grab; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
@@ -136,6 +142,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-col="ba" aria-pressed="true">B/A</button>
           <button type="button" data-col="hl" aria-pressed="false">Half life</button>
         </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <label class="check" id="allRow"><input type="checkbox" id="showAll" checked> Unstable too</label>
         <button type="button" class="btn" id="play">Pause</button>
       </div>
@@ -484,9 +491,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.view === 'curve') drawCurve();
     else if (S.view === 'ldm') drawLdm();
     else if (S.view === 'shell') drawShell();
+    else if (use3()) drawChart3();
     else drawChart();
     flushLabels();
     drawTip();
+    pane.classList.toggle('in3d', use3());
+    if (G3.st) G3.st.el.style.visibility = use3() ? 'visible' : 'hidden';
   }
   function cursorLine(box) {
     const x = box.X(S.sel.A), c = ctx, ps = PS;
@@ -747,6 +757,122 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const n = get(Z, N + Z); return n && (n.A > 1 || n.Z === 1) ? n : null;
   }
 
+  // ---------- the chart in 3D (three.js through demos/lib/vd3kit.js); Flat button or ?view=flat for the flat chart ----------
+  /* Each measured nuclide is a column standing on its square of the chart (N across, Z back), as tall as its binding energy per
+     nucleon above a floor at BASE MeV (stated on the picture, like a graph whose axis starts above zero): 1 MeV per nucleon is HZ squares
+     of height for every column, so the ridge along the valley of stability, its peak near iron and nickel and the slopes down to the
+     drip lines are the measured B/A and nothing else. Nuclides below BASE (only the lightest) lie flat on the floor. Stable nuclides
+     carry a dark cap. The magic numbers are strips on the floor, with the N = Z line and the liquid drop valley. */
+  const G3 = { st: null, view: null, o: { th: -1.05, ph: 0.86, zoom: 1 }, key: '', cols: null, caps: null, sel: null, selLab: null, valley: null };
+  const HZ = 16, BASE = 7;   /* squares of column height per MeV of B/A, and the B/A at the floor */
+  const colH = (n) => Math.max(0.06, (n.ba - BASE) * HZ);
+  const use3 = () => !!(S.view === 'chart' && G3.view && G3.view.is3d() && G3.st);
+  function init3() {
+    const st = VD3K.stage(pane, { before: can, fov: 30, near: 1, far: 2000 }); if (!st) return false;
+    G3.st = st; const sc = st.scene;
+    st.sun.position.set(-120, -260, 300); st.sun.target.position.set(80, 55, 0);
+    const floorM = VD3K.material(st, { roughness: 0.95, metalness: 0 }, ['#e8ecf1', '#1a222c']);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(200, 140), floorM); floor.position.set(80, 55, -0.02); sc.add(floor);
+    /* chart grid every 10 on the floor */
+    const gp = []; for (let v = 0; v <= 170; v += 10) gp.push(new THREE.Vector3(v - 0.5, -0.5, 0), new THREE.Vector3(v - 0.5, 117.5, 0));
+    for (let v = 0; v <= 118; v += 10) gp.push(new THREE.Vector3(-0.5, v - 0.5, 0), new THREE.Vector3(169.5, v - 0.5, 0));
+    const gridM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.35 }); st.onTheme((dk) => gridM.color.set(dk ? '#3a4656' : '#b9c3cf'));
+    sc.add(new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints(gp), gridM));
+    /* magic number strips */
+    const magM = new THREE.MeshBasicMaterial({ color: T.pos, transparent: true, opacity: 0.16, depthWrite: false });
+    st.onTheme(() => magM.color.set(T.pos));
+    for (const m of MAGIC) { if (m < 8) continue;
+      const a = new THREE.Mesh(new THREE.PlaneGeometry(1, 118), magM); a.position.set(m, 58.5, 0.01); sc.add(a);
+      const b = new THREE.Mesh(new THREE.PlaneGeometry(170, 1), magM); b.position.set(84.5, m, 0.012); sc.add(b); }
+    /* N = Z, dashed, and the liquid drop valley in gold, both on the floor */
+    const nz = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0.05), new THREE.Vector3(118, 118, 0.05)]), new THREE.LineDashedMaterial({ dashSize: 2, gapSize: 2, transparent: true, opacity: 0.7 }));
+    nz.computeLineDistances(); st.onTheme(() => nz.material.color.set(T.muted)); sc.add(nz);
+    G3.valley = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ linewidth: 2 })); st.onTheme(() => G3.valley.material.color.set(T.equi)); sc.add(G3.valley);
+    /* the columns and the caps of stable nuclides */
+    const colM = new THREE.MeshStandardMaterial({ roughness: 0.55, metalness: 0.05, color: 0xffffff });
+    G3.cols = new THREE.InstancedMesh(new THREE.BoxGeometry(0.9, 0.9, 1), colM, PLOTTED.length);
+    const stab = PLOTTED.filter((n) => n.st === 1);
+    G3.caps = new THREE.InstancedMesh(new THREE.BoxGeometry(0.94, 0.94, 0.35), new THREE.MeshStandardMaterial({ roughness: 0.4, metalness: 0.2, color: 0xffffff }), stab.length);
+    const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), Sv = new THREE.Vector3(), P = new THREE.Vector3();
+    PLOTTED.forEach((n, i) => { const h = colH(n); Sv.set(1, 1, h); P.set(n.N, n.Z, h / 2); M.compose(P, Q, Sv); G3.cols.setMatrixAt(i, M); });
+    stab.forEach((n, i) => { const h = colH(n); M.makeTranslation(n.N, n.Z, h + 0.17); G3.caps.setMatrixAt(i, M); });
+    G3.cols.instanceMatrix.needsUpdate = true; G3.caps.instanceMatrix.needsUpdate = true;
+    st.onTheme((dk) => G3.caps.material.color.set(dk ? '#e8edf3' : '#1d2733'));
+    sc.add(G3.cols, G3.caps);
+    /* the selected nuclide: a lit column outline and a label above it */
+    G3.sel = new THREE.Mesh(new THREE.BoxGeometry(1.5, 1.5, 1), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.45, depthWrite: false }));
+    st.onTheme(() => G3.sel.material.color.set(T.accent)); sc.add(G3.sel);
+    G3.selLab = VD3K.label('', { size: 4.2, bg: 'rgba(20,28,38,0.82)', color: '#ffffff' }); sc.add(G3.selLab);
+    /* labels: axes, magic numbers and the height scale */
+    const lab = (t, x, y, z, o) => { const L = VD3K.label(t, Object.assign({ size: 3.2, color: '#ffffff' }, o || {})); L.position.set(x, y, z); sc.add(L); return L; };
+    const labs = [];
+    for (let v = 0; v <= 160; v += 20) labs.push(lab(String(v), v, -5, 0.5));
+    for (let v = 20; v <= 110; v += 20) labs.push(lab(String(v), -6, v, 0.5));
+    labs.push(lab('neutron number N →', 150, -10, 0.5, { size: 3.6 }), lab('proton number Z →', -9, 104, 0.5, { size: 3.6 }));
+    for (const m of [28, 50, 82, 126]) labs.push(lab('N ' + m, m, 121, 0.5, { size: 3 }));
+    for (const m of [20, 28, 50, 82]) labs.push(lab('Z ' + m, 174, m, 0.5, { size: 3 }));
+    /* height scale: a post at the back left corner with a tick every 2 MeV per nucleon */
+    const postM = VD3K.material(st, { roughness: 0.5 }, ['#7d8896', '#8d99a8']);
+    const PX = 168, PY = 112;
+    sc.add(VD3K.rod([PX, PY, 0], [PX, PY, (9 - BASE) * HZ], 0.35, postM));
+    for (let e = BASE; e <= 9; e += 1) { sc.add(VD3K.rod([PX - 1.2, PY, (e - BASE) * HZ], [PX + 1.2, PY, (e - BASE) * HZ], 0.18, postM)); labs.push(lab(e + (e === 9 ? ' MeV per nucleon' : ' MeV'), PX + (e === 9 ? 13 : 5), PY, (e - BASE) * HZ, { size: 3 })); }
+    st.onTheme((dk) => labs.forEach((L) => L.material.color.set(dk ? '#c3cdd8' : '#3a4554')));
+    G3.labs = labs;
+    st.orbit(st.el, G3.o, () => drawAll(), { phMin: 0.15, phMax: 1.45, zMin: 0.55, zMax: 4 });
+    /* click a column to select it; hover shows the same tip as the flat chart */
+    let down = null;
+    st.el.addEventListener('pointerdown', (e) => { down = [e.clientX, e.clientY]; can.focus({ preventScroll: true }); });
+    st.el.addEventListener('pointerup', (e) => {
+      if (!down || Math.hypot(e.clientX - down[0], e.clientY - down[1]) > 5) { down = null; return; }
+      down = null; const [px, py] = pos(e), n = hit3(px, py);
+      if (n) { S.sel = n; custom(); tip = { n, x: px, y: py }; readouts(); drawAll(); }
+    });
+    st.el.addEventListener('pointermove', (e) => { if (e.buttons) return; const [px, py] = pos(e), n = hit3(px, py); st.el.style.cursor = n ? 'pointer' : 'grab'; const was = tip && tip.n; tip = n ? { n, x: px, y: py } : null; if (n !== was || n) drawAll(); });
+    st.el.addEventListener('pointerleave', () => { if (tip) { tip = null; drawAll(); } });
+    return true;
+  }
+  const ray = { rc: null, v: null };
+  function hit3(px, py) {
+    if (!G3.st || !G3.cols) return null;
+    if (!ray.rc) { ray.rc = new THREE.Raycaster(); ray.v = new THREE.Vector2(); }
+    ray.v.set(px / W * 2 - 1, -(py / Hh) * 2 + 1); ray.rc.setFromCamera(ray.v, G3.st.cam);
+    const h = ray.rc.intersectObject(G3.cols, false)[0];
+    return h && h.instanceId != null ? PLOTTED[h.instanceId] : null;
+  }
+  function drawChart3() {
+    const st = G3.st, c = ctx, ps = PS;
+    ctx.clearRect(0, 0, W, Hh); CHART = null; BOX = null;
+    st.size(W, Hh);
+    const key = S.col + '|' + T.seq0 + T.seq1 + T.ink + T.line + S.c.join(',') + S.on.join('');
+    if (key !== G3.key) {
+      G3.key = key; const col = new THREE.Color();
+      PLOTTED.forEach((n, i) => {
+        const css = S.col === 'ba' ? seq((n.ba - 6.8) / (8.8 - 6.8)) : n.st === 1 ? T.ink : n.lg === null ? T.line : seq((n.lg + 3) / 23);
+        col.setStyle(css); G3.cols.setColorAt(i, col);
+      });
+      G3.cols.instanceColor.needsUpdate = true;
+      const pts = []; for (let A = 2; A <= 280; A++) { const Z = z0(A, S.c, S.on); if (A - Z <= 170 && Z <= 118) pts.push(new THREE.Vector3(A - Z, Z, 0.08)); }
+      G3.valley.geometry.dispose(); G3.valley.geometry = new THREE.BufferGeometry().setFromPoints(pts);
+    }
+    const s = S.sel, h = colH(s);
+    G3.sel.scale.set(1, 1, h + 0.6); G3.sel.position.set(s.N, s.Z, (h + 0.6) / 2);
+    G3.selLab.set(`${nm(s)}  ${s.ba.toFixed(3)} MeV`); G3.selLab.position.set(s.N, s.Z, h + 6);
+    st.place(G3.o, new THREE.Vector3(80, 50, 6), st.fit(285, 1.5));
+    st.render();
+    /* words on top: the title and the colour key, as on the flat chart */
+    c.font = `600 ${11.5 * ps}px ${T.mono}`; c.fillStyle = T.ink; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText(S.col === 'ba' ? 'Chart of nuclides in 3D: height is B/A, colour too' : 'Chart of nuclides in 3D: height is B/A, colour is half life', 14 * ps, 10 * ps);
+    c.font = `${10 * ps}px ${T.mono}`; c.fillStyle = T.muted;
+    const sub = `height above ${BASE} MeV per nucleon, ${HZ} squares per MeV · dark caps: stable · drag to turn, click a column`;
+    if (W >= 640) c.fillText(sub, 14 * ps, 28 * ps);
+    else { const k = sub.indexOf(' · dark'); c.fillText(sub.slice(0, k), 14 * ps, 28 * ps); c.fillText(sub.slice(k + 3), 14 * ps, 42 * ps); }
+    const kx = 14 * ps, ky = (W >= 640 ? 54 : 66) * ps, kw = Math.min(170 * ps, W * 0.4), kh = 10 * ps;
+    for (let i = 0; i < 60; i++) { c.fillStyle = seq(i / 59); c.fillRect(kx + kw * i / 60, ky, kw / 60 + 0.5, kh); }
+    c.strokeStyle = T.gridStrong; c.lineWidth = 1; c.strokeRect(kx + 0.5, ky + 0.5, kw, kh);
+    c.fillStyle = T.muted; c.textBaseline = 'top';
+    c.textAlign = 'left'; c.fillText(S.col === 'ba' ? '6.8' : '1 ms', kx, ky + kh + 4 * ps); c.textAlign = 'right'; c.fillText(S.col === 'ba' ? '8.8 MeV' : '10²⁰ s', kx + kw, ky + kh + 4 * ps);
+  }
+
   // ---------- tooltip ----------
   let tip = null;   // { n, x, y }
   function drawTip() {
@@ -784,6 +910,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return `${s.toExponential(1)} s`;
   }
   function nearest(px, py, tol) {
+    if (S.view === 'chart' && use3()) return hit3(px, py);
     if (S.view === 'chart') return chartHit(px, py);
     let best = null, bd = tol * tol;
     for (const p of PTS) { const d = (p.x - px) ** 2 + (p.y - py) ** 2; if (d < bd) { bd = d; best = p.n; } }
@@ -851,7 +978,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const b of document.querySelectorAll('[data-col]')) b.setAttribute('aria-pressed', String(b.dataset.col === S.col));
     for (const b of document.querySelectorAll('[data-r]')) b.setAttribute('aria-pressed', String(b.dataset.r === (S.rx || 'none')));
     for (const i of document.querySelectorAll('#termToggles input')) i.checked = !!S.on[+i.dataset.t];
-    $('zoomSeg').hidden = S.view !== 'curve'; $('axisSeg').hidden = S.view !== 'shell'; $('colorSeg').hidden = S.view !== 'chart';
+    $('zoomSeg').hidden = S.view !== 'curve'; $('axisSeg').hidden = S.view !== 'shell'; $('colorSeg').hidden = S.view !== 'chart'; $('dimSeg').hidden = S.view !== 'chart';
+    if (S.view === 'chart' && !G3.view && window.VD3K) G3.view = VD3K.view({ seg: '#dimSeg', init: init3, change: () => drawAll(), status: () => {} });   /* three.js loads the first time the chart opens */
     $('allRow').hidden = !(S.view === 'curve' || S.view === 'shell'); $('showAll').checked = S.all;
     $('arrows').checked = S.arrows;
     $('play').hidden = S.view !== 'curve' || !(S.rx || S.arrows);
