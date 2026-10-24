@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 .rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
@@ -125,6 +127,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   .stage { grid-template-rows: 350px 580px 270px; }
 }
 
+/* the 3D view: the apparatus gets more of the stage; the flat layout above is unchanged */
+.stage-ctl .dimseg button { padding: 3px 10px; font-size: 0.84rem; }
+@media (min-width: 1061px) { .stage[data-dim="3d"] { grid-template-columns: minmax(0, 62fr) minmax(0, 38fr); grid-template-rows: minmax(0, 62fr) minmax(0, 38fr); } }
+@media (max-width: 1060px) { .stage[data-dim="3d"] { grid-template-rows: 460px 620px 270px; } }
+@media (max-width: 820px) { .stage[data-dim="3d"] { grid-template-rows: 430px 580px 270px; } }
 /* projector on a short screen: let the stage shrink to fit under the header */
 @media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
@@ -156,6 +163,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="reset">Reset</button>
           <button type="button" class="btn swb" id="swBtn" aria-pressed="false" aria-label="Stopwatch: press to start or stop">Stopwatch <span class="mono" id="swRead">0.00 s</span></button>
+          <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
           <span class="tclock mono" id="tclock">t = 0<small id="rateTag">real time</small></span>
         </div>
       </div>
@@ -911,9 +919,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const ctx = ctxs.c, ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
-    if (window.VDGear) window.VDGear.backdrop(ctx, W, H);
     cHandles = [];
     const st = stateAt(t), g = lastSeg();
+    if (use3()) { drawScene3(ctx, W, H, st, g, ps); return; }
+    if (window.VDGear) window.VDGear.backdrop(ctx, W, H);
     if (S.sys === 'coupled') drawCoupled(ctx, W, H, st, g, ps);
     else if (S.vert) drawVertical(ctx, W, H, st, g, ps);
     else drawHorizontal(ctx, W, H, st, g, ps);
@@ -1243,6 +1252,445 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         faceArrows(ctx, bxx, by, side, fl, vl, false, true);
       }
     }
+  }
+
+  // ---------- the apparatus in 3D (three.js through lib/vd3.js and lib/vd3kit.js); Flat keeps the drawing above (or ?view=flat) ----------
+  /* The same motion on a lab bench: an air track with a steel block, helical springs whose coils spread and close up with x, a clamp
+     stand for the hanging spring, a motor and Scotch yoke for the drive (the yoke moves exactly as X_w cos ωt), an oil trough with a vane
+     or a jar of oil for damping, a rule with the peak hold, and a chart recorder: the paper carries x against time away from the pen.
+     Lengths and positions are to scale in metres, and the block is a steel block of the size its mass would have; the arrows, the
+     coil count and the wire thickness are not to scale. Words and grips are drawn on the flat canvas on top. */
+  const G3 = { o: { th: -Math.PI / 2 + 0.2, ph: 0.98, zoom: 1 }, tgt: null, dist: 0, snap: true, ruleKey: ['', ''], themeKey: '', lay: '' };
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d());
+  const RHO_STEEL = 7850;                       // kg/m³: the block's size in 3D
+  const TZ3 = 0.075, YT3 = -0.065, YR3 = -0.13, YP3 = 0.06, LP3 = 0.28, ZP3 = 0.045;   // track top, oil trough, rule, chart paper (m)
+  const blockDims = (m) => { const a = Math.cbrt(m / RHO_STEEL / 1.04); return [1.3 * a, a, 0.8 * a]; };    // length along the track, width, height
+  const canDims = (m) => { const dd = Math.cbrt(m / RHO_STEEL / (Math.PI / 4 * 1.15)); return [1.15 * dd, dd]; };   // a steel cylinder: height, diameter
+  function rulerCm(Av3, cap) {                   // the rule's half length (cm) and tick step (cm), labels every 10 ticks
+    const step = nice(Math.max(Av3, 0.05) * 200 / 50), half = Math.ceil(Av3 * 100 / (10 * step) - 1e-9) * 10 * step;
+    return { step, half: cap ? Math.min(half, Math.max(10 * step, Math.floor(cap / (10 * step)) * 10 * step)) : half };
+  }
+  /* a helical spring along local +x from 0 to len: coil radius R, wire radius wr, n turns; the coils never pass solid */
+  function coil3(n, mat) {
+    const SEG = 18, RAD = 7, N = n * SEG + 1, pos = new Float32Array(N * RAD * 3), nor = new Float32Array(N * RAD * 3), idx = [];
+    for (let i = 0; i < N - 1; i++) for (let j = 0; j < RAD; j++) { const a = i * RAD + j, b = i * RAD + (j + 1) % RAD; idx.push(a, a + RAD, b, b, a + RAD, b + RAD); }
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('normal', new THREE.BufferAttribute(nor, 3)); geo.setIndex(idx);
+    const grp = new THREE.Group(), wire = new THREE.Mesh(geo, mat); wire.castShadow = true; wire.frustumCulled = false;
+    const endG = new THREE.CylinderGeometry(1, 1, 0.005, 20); endG.rotateZ(Math.PI / 2);
+    const e0 = new THREE.Mesh(endG, mat), e1 = new THREE.Mesh(endG, mat); grp.add(wire, e0, e1);
+    let lastK = '';
+    grp.set = (len, R, wr) => {
+      len = Math.max(len, n * 2 * wr * 1.05 + 0.004);
+      const k = `${len.toFixed(5)}|${R}|${wr}`; if (k === lastK) return; lastK = k;
+      const w = 2 * Math.PI * n;
+      for (let i = 0; i < N; i++) {
+        const u = i / (N - 1), a = w * u, ca = Math.cos(a), sa = Math.sin(a);
+        let tx = len, ty = -R * w * sa, tz = R * w * ca; const tl = Math.hypot(tx, ty, tz); tx /= tl; ty /= tl; tz /= tl;
+        const ny = -ca, nz = -sa, bx = ty * nz - tz * ny, by = -tx * nz, bz = tx * ny;
+        for (let j = 0; j < RAD; j++) {
+          const v = j / RAD * 2 * Math.PI, cv = Math.cos(v), sv = Math.sin(v), ox = sv * bx, oy = cv * ny + sv * by, oz = cv * nz + sv * bz, q = (i * RAD + j) * 3;
+          pos[q] = len * u + wr * ox; pos[q + 1] = R * ca + wr * oy; pos[q + 2] = R * sa + wr * oz; nor[q] = ox; nor[q + 1] = oy; nor[q + 2] = oz;
+        }
+      }
+      geo.attributes.position.needsUpdate = true; geo.attributes.normal.needsUpdate = true;
+      e0.scale.set(1, R * 0.8, R * 0.8); e1.scale.set(1, R * 0.8, R * 0.8); e1.position.x = len;
+    };
+    return grp;
+  }
+  /* an arrow along local direction dir from o: a shaft and a cone */
+  function arrow3(mat) {
+    const g = new THREE.Group(), sh = new THREE.Mesh(new THREE.CylinderGeometry(0.0024, 0.0024, 1, 10), mat), hd = new THREE.Mesh(new THREE.ConeGeometry(0.0062, 1, 14), mat);
+    g.add(sh, hd); const up = new THREE.Vector3(0, 1, 0), dv = new THREE.Vector3();
+    g.set = (o, dir, L) => {
+      const a = Math.abs(L); g.visible = a > 0.005; if (!g.visible) return;
+      const hl = Math.min(0.016, a * 0.55); dv.copy(dir).multiplyScalar(Math.sign(L));
+      g.position.copy(o); g.quaternion.setFromUnitVectors(up, dv);
+      sh.scale.y = a - hl; sh.position.y = (a - hl) / 2; hd.scale.y = hl; hd.position.y = a - hl / 2;
+    };
+    return g;
+  }
+  /* a line whose points change every frame */
+  function line3(n, mat, segs) {
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3));
+    const l = segs ? new THREE.LineSegments(g, mat) : new THREE.Line(g, mat); l.frustumCulled = false;
+    l.put = (pts) => { const a = g.attributes.position.array; let k = 0; for (const p of pts) { if (k >= n) break; a[3 * k] = p[0]; a[3 * k + 1] = p[1]; a[3 * k + 2] = p[2]; k++; } g.setDrawRange(0, k); g.attributes.position.needsUpdate = true; if (mat.isLineDashedMaterial) l.computeLineDistances(); };
+    return l;
+  }
+  /* a flat ribbon on the chart paper through points [a, b] of the paper plane, mapped to the scene by P(a, b) */
+  function ribbon3(n, mat) {
+    const g = new THREE.BufferGeometry(), pos = new Float32Array(n * 2 * 3), idx = [];
+    for (let i = 0; i < n - 1; i++) idx.push(2 * i, 2 * i + 1, 2 * i + 2, 2 * i + 1, 2 * i + 3, 2 * i + 2);
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setIndex(idx);
+    const m = new THREE.Mesh(g, mat); m.frustumCulled = false; m.renderOrder = 3;
+    m.put = (pts, P, w) => {
+      const k = Math.min(n, pts.length);
+      for (let i = 0; i < k; i++) {
+        const p0 = pts[Math.max(0, i - 1)], p1 = pts[Math.min(k - 1, i + 1)]; let da = p1[0] - p0[0], db = p1[1] - p0[1]; const dl = Math.hypot(da, db) || 1; da /= dl; db /= dl;
+        const A = P(pts[i][0] - db * w / 2, pts[i][1] + da * w / 2), B = P(pts[i][0] + db * w / 2, pts[i][1] - da * w / 2);
+        pos.set(A, 6 * i); pos.set(B, 6 * i + 3);
+      }
+      g.setDrawRange(0, Math.max(0, (k - 1) * 6)); g.attributes.position.needsUpdate = true;
+    };
+    return m;
+  }
+  function init3D() {
+    const S3 = VD3K.stage(panes.c, { before: cans.c, shadow: 0.9, fov: 30, fogAt: [1.8, 3.6] }); if (!S3) return false;
+    S3.el.style.zIndex = '0';
+    S3.sun.position.set(0.5, -1.1, 2.4); S3.onTheme((dk) => { S3.hemi.intensity = dk ? 0.95 : 0.7; S3.sun.intensity = dk ? 0.85 : 0.68; });
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), Std = (o) => new THREE.MeshStandardMaterial(o);
+    const mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = cast !== false; x.receiveShadow = true; return x; };
+    const unitBox = new THREE.BoxGeometry(1, 1, 1), alongX = (r) => { const gg = new THREE.CylinderGeometry(r, r, 1, 20); gg.rotateZ(Math.PI / 2); return gg; }, upZ = (r, nn) => { const gg = new THREE.CylinderGeometry(r, r, 1, nn || 20); gg.rotateX(Math.PI / 2); return gg; };
+    sc.add(VD3K.bench(S3, { w: 3.2, d: 2.2, y: 0.3 }), VD3K.backdrop(S3, { r: 1.7, h: 2.4, y: -0.95, arc: Math.PI * 0.75 }));
+    const alu = M({ roughness: 0.42, metalness: 0.25 }, ['#d9dfe6', '#9aa5b1']), dark = M({ roughness: 0.6, metalness: 0.15 }, ['#4a5564', '#66717f']);
+    const steel = M({ roughness: 0.35, metalness: 0.35 }, ['#c4ccd5', '#a9b3be']), wood = M({ roughness: 0.8, metalness: 0 }, ['#b8946a', '#5d4a35']);
+    const wireA = M({ roughness: 0.3, metalness: 0.4, side: THREE.DoubleSide }, ['#6f7a88', '#c7cfd9']), wireB = M({ roughness: 0.3, metalness: 0.4, side: THREE.DoubleSide }, ['#6f7a88', '#c7cfd9']);
+    const wireC = Std({ roughness: 0.32, metalness: 0.35, side: THREE.DoubleSide }), goldM = Std({ roughness: 0.4, metalness: 0.3 });
+    const blockM = M({ roughness: 0.34, metalness: 0.2 }, ['#aeb7c2', '#a3aebb']), b1M = Std({ roughness: 0.45, metalness: 0.15 }), b2M = Std({ roughness: 0.45, metalness: 0.15 });
+    const glassM = M({ transparent: true, opacity: 0.2, roughness: 0.08, metalness: 0.1, side: THREE.DoubleSide, depthWrite: false }, ['#cfe3f0', '#9fc4dc']);
+    const oilM = Std({ transparent: true, roughness: 0.15, metalness: 0, depthWrite: false }), paperM = M({ roughness: 0.95, metalness: 0 }, ['#fbfaf3', '#202833']);
+    const xM = Std({ roughness: 0.4, metalness: 0.1 }), fM = Std({ roughness: 0.45 }), vM = Std({ roughness: 0.45 }), peakM = Std({ roughness: 0.4, metalness: 0.3 });
+    const traceM = [new THREE.MeshBasicMaterial({ side: THREE.DoubleSide }), new THREE.MeshBasicMaterial({ side: THREE.DoubleSide })];
+    const gridLM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.55 }), timeLM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.75 });
+    const eqLM = new THREE.LineDashedMaterial({ dashSize: 0.008, gapSize: 0.006, transparent: true, opacity: 0.8 }), circLM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.85 });
+    const circDM = new THREE.LineDashedMaterial({ dashSize: 0.01, gapSize: 0.008, transparent: true, opacity: 0.6 }), armLM = new THREE.LineBasicMaterial(), shadLM = new THREE.LineDashedMaterial({ dashSize: 0.006, gapSize: 0.005 });
+    const laserLM = new THREE.LineBasicMaterial({ color: 0xe0342a, transparent: true, opacity: 0.75 }), gBrLM = new THREE.LineBasicMaterial();
+    /* the air track on two feet, the fixed posts */
+    const track = mesh(unitBox, alu), feet = [0, 1].map(() => mesh(unitBox, dark)), posts = [0, 1].map(() => mesh(unitBox, dark));
+    const trackGroove = mesh(unitBox, dark, false);
+    sc.add(track, trackGroove, ...feet, ...posts);
+    /* the axis frame: local x along the motion from the fixed end of the spring, local z up (track) or to the right (hanging) */
+    const AX = new THREE.Group(); sc.add(AX);
+    const spA = coil3(18, wireA), spB = coil3(14, wireB), spC = coil3(14, wireC);
+    const blkA = mesh(unitBox, blockM), blkB = mesh(unitBox, b2M), canG = new THREE.CylinderGeometry(0.5, 0.5, 1, 40); canG.rotateZ(Math.PI / 2);
+    const can = mesh(canG, blockM), hook = mesh(new THREE.TorusGeometry(0.006, 0.0012, 8, 20), steel); hook.rotation.y = Math.PI / 2;
+    const arrows = [arrow3(fM), arrow3(vM), arrow3(fM), arrow3(vM)];
+    const vane = () => { const gg = new THREE.Group(), arm = mesh(unitBox, dark), plate = mesh(unitBox, dark); gg.add(arm, plate); gg.arm = arm; gg.plate = plate; return gg; };
+    const vanes = [vane(), vane()];
+    const pen = () => { const gg = new THREE.Group(), post = mesh(unitBox, dark), arm = mesh(unitBox, dark), nib = mesh(unitBox, dark), tip = mesh(new THREE.SphereGeometry(0.0025, 10, 8), xM); gg.add(post, arm, nib, tip); Object.assign(gg, { post, arm, nib, tip }); return gg; };
+    const pens = [pen(), pen()];
+    const laser = mesh(unitBox, dark), beam = line3(2, laserLM);
+    /* the reference circle */
+    const circ = new THREE.Group(), ringNow = VD3K.ring(1, { seg: 96 }), ringFull = VD3K.ring(1, { seg: 96, dashed: true });
+    ringNow.material = circLM; ringFull.material = circDM; ringFull.computeLineDistances(); ringNow.rotation.x = Math.PI / 2; ringFull.rotation.x = Math.PI / 2;
+    const cArm = line3(2, armLM), cShadow = line3(2, shadLM), cDot = mesh(new THREE.SphereGeometry(0.0055, 16, 12), xM, false);
+    circ.add(ringNow, ringFull); AX.add(spA, spB, spC, blkA, blkB, can, hook, ...arrows, ...vanes, ...pens, laser, circ, cArm, cShadow, cDot);
+    /* the drive: motor, crank wheel, Scotch yoke, rod and the moving end plate, in the axis frame */
+    const DRV = new THREE.Group(), wheelG = new THREE.CylinderGeometry(1, 1, 0.006, 48);
+    const motor = mesh(new THREE.CylinderGeometry(0.03, 0.03, 0.05, 28), dark), wheel = mesh(wheelG, goldM), hub = mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.012, 14), steel);
+    const pin = mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.03, 12), steel), yoke = mesh(unitBox, goldM), rod = mesh(alongX(0.0028), steel), plate = mesh(unitBox, goldM), ped = mesh(unitBox, dark);
+    DRV.add(motor, wheel, hub, pin, yoke, rod, plate, ped); AX.add(DRV);
+    /* the oil: a glass trough in front of the track, or a glass jar round the hanging block */
+    const trough = mesh(unitBox, glassM, false), troughOil = mesh(unitBox, oilM, false), jar = VD3K.glass(S3, { r: 1, len: 1, axis: 'z', ends: false }), jarBase = mesh(upZ(1, 40), glassM, false), jarOil = mesh(upZ(1, 40), oilM, false);
+    trough.renderOrder = 2; troughOil.renderOrder = 1; jarOil.renderOrder = 1;
+    sc.add(trough, troughOil, jar, jarBase, jarOil);
+    /* the clamp stand */
+    const standBase = mesh(unitBox, dark), standRod = mesh(upZ(0.0065), steel), boss = mesh(unitBox, dark), standArm = mesh(alongX(0.005), steel);
+    sc.add(standBase, standRod, boss, standArm);
+    /* the rules (two for two blocks): an outer frame along the motion with 0 at equilibrium, an inner tilt; the bar shows x */
+    const mkRule = () => { const outer = new THREE.Group(), inner = new THREE.Group(), bar = mesh(unitBox, xM, false), pk = [0, 1].map(() => mesh(new THREE.ConeGeometry(0.0045, 0.01, 12), peakM, false)); pk.forEach((c) => { c.rotation.x = -Math.PI / 2; }); inner.add(bar, ...pk); outer.add(inner); sc.add(outer); return { outer, inner, bar, pk, rule: null }; };
+    const rules = [mkRule(), mkRule()], ruleBlock = mesh(unitBox, wood);
+    sc.add(ruleBlock);
+    /* the chart recorder: a board, a roller, the paper, its grid and the traces */
+    const board = mesh(unitBox, wood), paper = mesh(new THREE.PlaneGeometry(1, 1), paperM, false), roller = mesh(alongX(0.011), steel);
+    const grid = line3(80, gridLM, true), tlines = line3(40, timeLM, true), traces = [ribbon3(400, traceM[0]), ribbon3(400, traceM[1])];
+    sc.add(board, paper, roller, grid, tlines, ...traces);
+    const eqLines = [line3(2, eqLM), line3(2, eqLM)], unst = line3(2, eqLM), bracket = line3(6, gBrLM, true);
+    sc.add(...eqLines, unst, bracket);
+    g3 = { S3, AX, track, trackGroove, feet, posts, spA, spB, spC, blkA, blkB, can, hook, arrows, vanes, pens, laser, beam, circ, ringNow, ringFull, cArm, cShadow, cDot, DRV, motor, wheel, hub, pin, yoke, rod, plate, ped,
+      trough, troughOil, jar, jarBase, jarOil, standBase, standRod, boss, standArm, rules, ruleBlock, board, paper, roller, grid, tlines, traces, eqLines, unst, bracket,
+      mats: { wireA, wireB, wireC, goldM, blockM, b1M, b2M, oilM, xM, fM, vM, peakM, traceM, gridLM, timeLM, eqLM, circLM, circDM, armLM, shadLM, gBrLM }, v: new THREE.Vector3(), up: new THREE.Vector3() };
+    sc.add(beam);
+    /* the flat view keeps the page's own wheel, double click and keys; in 3D a drag off the apparatus turns the view */
+    cans.c.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    cans.c.addEventListener('dblclick', (e) => { if (!use3()) e.stopImmediatePropagation(); });
+    cans.c.addEventListener('keydown', (e) => { if (!use3() && [',', '.', '-', '=', '+'].includes(e.key)) e.stopImmediatePropagation(); });
+    VD3.orbit(cans.c, G3.o, () => { if (use3()) drawAll(); }, { grab: (e) => !use3() || !!cHit(e), phMin: 0.45, phMax: 1.45, zMin: 0.6, zMax: 3.2 });
+    return true;
+  }
+  function theme3() {
+    const m = g3.mats, k = [T.equi, T.xcol, T.pos, T.neg, T.oil, T.vcol, T.gridStrong, T.muted, T.accent, T.canvas].join();
+    if (G3.themeKey === k) return; G3.themeKey = k;
+    const c = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+    m.goldM.color = c(T.equi, '#a7740b'); m.oilM.color = c(T.oil, '#c99a1e'); m.xM.color = c(T.xcol, '#7a45c0'); m.fM.color = c(T.pos, '#c23f2c'); m.vM.color = c(T.vcol, '#1d8a5a');
+    m.peakM.color = c(T.equi, '#a7740b'); m.b1M.color = c(T.pos, '#c23f2c'); m.b2M.color = c(T.neg, '#2b60b5');
+    m.traceM[0].color = c(T.xcol, '#7a45c0'); m.gridLM.color = c(T.gridStrong, '#cfd7e1'); m.timeLM.color = c(T.muted, '#5a6575'); m.eqLM.color = c(T.muted, '#5a6575');
+    m.circLM.color = c(T.muted, '#5a6575'); m.circDM.color = c(T.gridStrong, '#cfd7e1'); m.armLM.color = c(T.xcol, '#7a45c0'); m.shadLM.color = c(T.xcol, '#7a45c0'); m.gBrLM.color = c(T.equi, '#a7740b');
+  }
+  /* put a unit box between two corners */
+  const boxAt = (o, x0, x1, y0, y1, z0, z1) => { o.scale.set(Math.max(1e-4, Math.abs(x1 - x0)), Math.max(1e-4, Math.abs(y1 - y0)), Math.max(1e-4, Math.abs(z1 - z0))); o.position.set((x0 + x1) / 2, (y0 + y1) / 2, (z0 + z1) / 2); };
+  function rule3(i, half, neg, step, place) {     /* a rule from −neg to +half cm about equilibrium, rebuilt only when its range changes */
+    const R = g3.rules[i], key = `${half}|${neg}|${step}`;
+    if (G3.ruleKey[i] !== key) {
+      G3.ruleKey[i] = key; if (R.rule) g3.S3.dispose(R.rule);
+      R.rule = VD3K.ruler(g3.S3, { len: (half + neg) / 100, from: -neg, to: half, step, unit: 'cm', w: 0.032 }); R.rule.position.x += -neg / 100; R.inner.add(R.rule);
+    }
+    place(R); R.outer.visible = true; return R;
+  }
+  function drawScene3(ctx, W, H, st, g, ps) {
+    const R3 = g3, S3 = R3.S3, cp = S.sys === 'coupled', vert = !cp && S.vert, drv = S.sys === 'driven', fs = fsOf(W), m = S.p.m, AX = R3.AX;
+    S3.size(W, H); theme3();
+    const L0 = LNAT[ori()], d = vert ? m * G / S.p.k : 0;
+    const [bl, bw, bh] = vert ? (() => { const [hh, dd] = canDims(m); return [hh, dd, dd]; })() : blockDims(m);
+    const Rc = vert ? clamp(bw * 0.38, 0.008, 0.016) : clamp(bh * 0.42, 0.0075, 0.013), wr = (k) => clamp(0.0006 + 0.00045 * Math.log10(Math.max(k, 1)), 0.0006, Rc * 0.25);
+    const rc = rulerCm(Av, cp ? 100 * (L0 + bl) / 2 - 1 : 0), half = rc.half / 100;
+    const Xw = drv ? S.p.F0 / S.p.k : 0, xw = drv ? Xw * Math.cos(st.th) : 0, Lr = Math.max(0.07, Xw + 0.04), Rw = Xw + 0.014;
+    const lay = `${ori()}|${drv}`; if (lay !== G3.lay) { if (G3.lay && G3.lay[0] !== lay[0]) { G3.o.ph = vert ? 1.3 : 0.98; G3.o.th = -Math.PI / 2 + (vert ? 0.12 : 0.2); G3.o.zoom = 1; } G3.lay = lay; G3.snap = true; }
+    const V = R3.v, Lp = (x, y, z) => { V.set(x, y, z); AX.localToWorld(V); return S3.project(V); }, Q = (p) => S3.project(p);
+    const xa = cp ? st.x1 : st.x, xeq = L0 + d + bl / 2;          /* block (1) centre at equilibrium, axis frame */
+    let zTop = 0, xs = 0, box;                                     /* hanging: the spring's top; the stand rod's x */
+    /* ---- frame and fixed parts ---- */
+    if (vert) { zTop = 0.07 + half + bl + L0 + d; xs = -(bw / 2 + 0.16); AX.rotation.set(0, Math.PI / 2, 0); AX.position.set(0, 0, zTop); }
+    else if (cp) { AX.rotation.set(0, 0, 0); AX.position.set(-(1.5 * L0 + bl), 0, TZ3 + bh / 2); }
+    else { AX.rotation.set(0, 0, 0); AX.position.set(-xeq, 0, TZ3 + bh / 2); }
+    AX.updateMatrixWorld(true);
+    const wx = (lx) => AX.position.x + lx;                         /* track: world x of an axis frame x */
+    const onTrack = !vert;
+    const xc2 = xeq + L0 + bl, wallR = xc2 + bl / 2 + L0;
+    let tx0 = 0, tx1 = 0;
+    if (onTrack) {
+      const left = -0.03, right = cp ? wallR + 0.03 : xeq + half + bl / 2 + 0.06;
+      tx0 = wx(left); tx1 = wx(right);
+      boxAt(R3.track, tx0, tx1, -0.022, 0.022, TZ3 - 0.03, TZ3); boxAt(R3.trackGroove, tx0 + 0.002, tx1 - 0.002, -0.004, 0.004, TZ3, TZ3 + 0.0006);
+      R3.feet.forEach((f, i) => boxAt(f, (i ? tx1 - 0.05 : tx0 + 0.02), (i ? tx1 - 0.02 : tx0 + 0.05), -0.045, 0.045, 0, TZ3 - 0.03));
+      R3.posts[0].visible = !drv; boxAt(R3.posts[0], wx(-0.016), wx(0), -0.03, 0.03, 0, TZ3 + bh / 2 + 0.03);
+      R3.posts[1].visible = cp; boxAt(R3.posts[1], wx(wallR), wx(wallR + 0.016), -0.03, 0.03, 0, TZ3 + bh / 2 + 0.03);
+    }
+    R3.track.visible = R3.trackGroove.visible = onTrack; R3.feet.forEach((f) => { f.visible = onTrack; }); if (!onTrack) R3.posts.forEach((p) => { p.visible = false; });
+    /* ---- the springs and blocks ---- */
+    const xb1 = xeq + xa;
+    R3.spA.position.set(xw, 0, 0); R3.spA.set(xb1 - bl / 2 - xw, Rc, wr(S.p.k));
+    const blk = vert ? R3.can : R3.blkA; R3.can.visible = vert; R3.blkA.visible = !vert; R3.blkA.material = cp ? R3.mats.b1M : R3.mats.blockM;
+    blk.position.set(xb1, 0, 0); blk.scale.set(bl, bw, bh);
+    R3.hook.visible = vert; R3.hook.position.set(xb1 - bl / 2 - 0.004, 0, 0);
+    R3.spB.visible = R3.spC.visible = R3.blkB.visible = cp;
+    let xb2 = 0;
+    if (cp) {
+      xb2 = xc2 + st.x2;
+      R3.spC.position.set(xb1 + bl / 2, 0, 0); R3.spC.set(xb2 - xb1 - bl, Rc * 0.85, wr(Math.max(S.p.kc, 1)));
+      R3.mats.wireC.color.set(S.p.kc > 0 ? T.equi : T.gridStrong);
+      R3.spB.position.set(xb2 + bl / 2, 0, 0); R3.spB.set(wallR - xb2 - bl / 2, Rc, wr(S.p.k2));
+      R3.blkB.position.set(xb2, 0, 0); R3.blkB.scale.set(bl, bw, bh);
+    }
+    const hot = (id, mat) => { if (mat.emissive) mat.emissive.set(isHot(id) ? T.accent : '#000000').multiplyScalar(isHot(id) ? 0.35 : 0); };
+    hot('k', R3.mats.wireA); hot('k2', R3.mats.wireB); hot('kc', R3.mats.wireC); hot(cp ? 'm1' : 'mass', cp ? R3.mats.b1M : R3.mats.blockM); hot('m2', R3.mats.b2M); hot('b', R3.mats.oilM); hot('F0', R3.mats.goldM);
+    /* ---- the drive ---- */
+    R3.DRV.visible = drv && !cp;
+    if (drv && !cp) {
+      const th = st.th, px = -Lr + Xw * Math.cos(th), pz = Xw * Math.sin(th);
+      R3.wheel.position.set(-Lr, 0.026, 0); R3.wheel.scale.set(Rw, 1, Rw); R3.hub.position.set(-Lr, 0.03, 0);
+      R3.motor.position.set(-Lr, 0.058, 0); R3.pin.position.set(px, 0.012, pz);
+      boxAt(R3.yoke, px - 0.004, px + 0.004, -0.004, 0.004, -Rw - 0.006, Rw + 0.006);
+      R3.rod.scale.set(Lr, 1, 1); R3.rod.position.set(xw - Lr / 2, 0, 0);
+      boxAt(R3.plate, xw - 0.006, xw, -0.024, 0.024, -0.024, 0.024);
+      const pedLen = vert ? -xs - 0.006 : TZ3 + bh / 2;
+      boxAt(R3.ped, -Lr - 0.022, -Lr + 0.022, 0.035, 0.08, -pedLen, -0.03);
+    }
+    /* ---- the stand (hanging) ---- */
+    for (const o of [R3.standBase, R3.standRod, R3.boss, R3.standArm]) o.visible = vert;
+    if (vert) {
+      const zArm = drv ? zTop + Lr : zTop + 0.012, zRod = zArm + 0.06;
+      boxAt(R3.standBase, xs - 0.07, xs + 0.09, -0.07, 0.07, 0, 0.012);
+      R3.standRod.scale.set(1, 1, zRod); R3.standRod.position.set(xs, 0, zRod / 2);
+      boxAt(R3.boss, xs - 0.014, xs + 0.014, -0.014, 0.014, zArm - 0.014, zArm + 0.014);
+      R3.standArm.visible = !drv; R3.standArm.scale.set(-xs + 0.004, 1, 1); R3.standArm.position.set(xs / 2 + 0.002, 0, zArm);
+    }
+    /* ---- the oil ---- */
+    const oa = oilAlpha(); R3.mats.oilM.opacity = Math.min(0.85, oa * 1.1);
+    R3.trough.visible = onTrack; R3.troughOil.visible = onTrack && oa > 0;
+    R3.jar.visible = R3.jarBase.visible = vert; R3.jarOil.visible = vert && oa > 0;
+    R3.vanes.forEach((vn, i) => { vn.visible = onTrack && (i === 0 || cp); });
+    if (onTrack) {
+      const lo = wx(xeq - half - bl / 2 - 0.02), hi = wx((cp ? xc2 : xeq) + half + bl / 2 + 0.02);
+      boxAt(R3.trough, lo, hi, YT3 - 0.022, YT3 + 0.022, 0.002, TZ3 - 0.016); boxAt(R3.troughOil, lo + 0.002, hi - 0.002, YT3 - 0.02, YT3 + 0.02, 0.004, TZ3 - 0.028);
+      const zb = 0.014 - (TZ3 + bh / 2);
+      [[xb1], [xb2]].forEach(([xb], i) => { const vn = R3.vanes[i]; if (!vn.visible) return; vn.position.set(xb, 0, 0); boxAt(vn.arm, -0.002, 0.002, YT3, -bw / 2, -0.002, 0.002); boxAt(vn.plate, -0.016, 0.016, YT3 - 0.001, YT3 + 0.001, zb, 0.002); });
+    }
+    let jarR = 0, jarH = 0;
+    if (vert) {
+      jarR = bw / 2 + 0.024; const zHi = zTop - L0 - d + half + 0.015; jarH = zHi + 0.03;
+      R3.jar.scale.set(jarR, jarH, jarR); R3.jar.position.set(0, 0, jarH / 2); R3.jarBase.scale.set(jarR, jarR, 0.006); R3.jarBase.position.set(0, 0, 0.003);
+      R3.jarOil.scale.set(jarR * 0.96, jarR * 0.96, zHi - 0.006); R3.jarOil.position.set(0, 0, 0.006 + (zHi - 0.006) / 2);
+    }
+    /* ---- the rules, the x bar and the peak hold ---- */
+    R3.rules[1].outer.visible = false; R3.ruleBlock.visible = onTrack;
+    const neg = onTrack && !cp ? Math.min(rc.half, Math.floor(L0 * 90 / (10 * rc.step)) * 10 * rc.step) : rc.half;
+    const placeH = (cx) => (R) => { R.outer.rotation.set(0, 0, 0); R.outer.position.set(cx, YR3, 0.012); R.inner.rotation.set(0.42, 0, 0); };
+    const zEq = vert ? zTop - L0 - d - bl / 2 : 0, xr = jarR + 0.03;
+    const ruleObjs = [];
+    if (vert) ruleObjs.push(rule3(0, rc.half, rc.half, rc.step, (R) => { R.outer.rotation.set(0, Math.PI / 2, 0); R.outer.position.set(xr, -0.01, zEq); R.inner.rotation.set(Math.PI / 2, 0, 0); }));
+    else { ruleObjs.push(rule3(0, rc.half, neg, rc.step, placeH(wx(xeq)))); if (cp) ruleObjs.push(rule3(1, rc.half, rc.half, rc.step, placeH(wx(xc2)))); }
+    if (onTrack) { const lo = wx(xeq) - neg / 100 - 0.02, hi = wx(cp ? xc2 : xeq) + half + 0.02; boxAt(R3.ruleBlock, lo, hi, YR3 + 0.004, YR3 + 0.024, 0, 0.011); }
+    ruleObjs.forEach((R, i) => {
+      const xv = i ? st.x2 : xa; R.bar.material = i ? R3.mats.b2M : (cp ? R3.mats.b1M : R3.mats.xM);
+      boxAt(R.bar, Math.min(0, xv), Math.max(0, xv), -0.0045, 0.0005, 0.003, 0.0042); R.bar.visible = Math.abs(xv) > 0.0005;
+      R.pk.forEach((c, j) => { c.visible = i === 0 && peak > 0.0005; c.position.set((j ? 1 : -1) * peak, 0.01, 0.008); });
+    });
+    /* ---- equilibrium marks ---- */
+    if (vert) { R3.eqLines[0].put([[xr - 0.02, 0, zEq], [-jarR - 0.012, 0, zEq]]); R3.unst.put([[-bw / 2 - 0.03, 0, zTop - L0], [bw / 2 + 0.02, 0, zTop - L0]]); }
+    else { R3.eqLines[0].put([[wx(xeq), 0, TZ3 + 0.004], [wx(xeq), 0, TZ3 + 0.17]]); if (cp) R3.eqLines[1].put([[wx(xc2), 0, TZ3 + 0.004], [wx(xc2), 0, TZ3 + 0.17]]); }
+    R3.eqLines[1].visible = cp; R3.unst.visible = vert;
+    R3.bracket.visible = vert && !drv;
+    const brX = -(jarR + 0.025);
+    if (vert && !drv) { const z0 = zTop - L0, z1 = zTop - L0 - d; R3.bracket.put([[brX, 0, z0], [brX, 0, z1], [brX - 0.006, 0, z0], [brX + 0.006, 0, z0], [brX - 0.006, 0, z1], [brX + 0.006, 0, z1]]); }
+    /* ---- force and velocity arrows ---- */
+    const showA = S.layers.arrows, LA = 0.09, Fref = S.p.k * Av, vref = w0() * Av;
+    const ax1 = R3.up.set(1, 0, 0);
+    const putArrows = (j, xb, a, v) => {
+      const fl = clamp(m * a / Fref, -1.6, 1.6) * LA, vl = clamp(v / vref, -1.6, 1.6) * LA, y = -bw / 2 - 0.006;
+      R3.arrows[j].set(new THREE.Vector3(xb + Math.sign(fl) * bl / 2, y, -0.25 * bh), ax1, fl); R3.arrows[j + 1].set(new THREE.Vector3(xb + Math.sign(vl) * bl / 2, y, 0.25 * bh), ax1, vl);
+      return [fl, vl];
+    };
+    R3.arrows.forEach((a) => { a.visible = false; });
+    let fv = null;
+    if (showA) { if (cp) { putArrows(0, xb1, st.a1, st.v1); putArrows(2, xb2, st.a2, st.v2); } else fv = putArrows(0, xb1, st.a, st.v); }
+    /* ---- the reference circle ---- */
+    const ph = !cp && !g.drive && g.sys === 'single' && !held ? phasor(g) : null, circOn = S.layers.circle && !S.blind && !!ph;
+    R3.circ.visible = R3.cArm.visible = R3.cShadow.visible = R3.cDot.visible = circOn;
+    let circInfo = null;
+    if (circOn) {
+      const sT = t - g.t0, Rn = ph.R * Math.exp(-g.beta * sT), ang = ph.wd * sT + ph.phi, cz = (vert ? xr + 0.04 : bh / 2 + 0.04) + ph.R;
+      R3.circ.position.set(xeq, 0, cz); R3.ringNow.scale.setScalar(Math.max(Rn, 1e-4)); R3.ringFull.scale.setScalar(ph.R); R3.ringFull.visible = g.beta > 0;
+      const p = [xeq + Rn * Math.cos(ang), 0, cz + Rn * Math.sin(ang)];
+      R3.cArm.put([[xeq, 0, cz], p]); R3.cShadow.put([p, [p[0], 0, vert ? bw / 2 : bh / 2]]); R3.cDot.position.set(...p);
+      circInfo = { top: Lp(xeq, 0, cz + ph.R), cz };
+    }
+    /* ---- the chart recorder ---- */
+    const Twin = clamp(view.L * 0.6, 1, 24), vp = LP3 / Twin, t0s = held ? t : Math.max(segs[0].t0, t - Twin, 0);
+    let Pmap, pw0, pw1;
+    if (vert) {
+      const yb = 0.075, zc = zEq; pw0 = zc - half - 0.03; pw1 = zc + half + 0.03;
+      Pmap = (a, b) => [-b, yb - 0.0012, zc - a];        /* a: x (down), b: age along the paper (m) */
+      boxAt(R3.board, -LP3 - 0.02, 0.03, yb, yb + 0.012, 0, pw1 + 0.01);
+      R3.paper.rotation.set(Math.PI / 2, 0, 0); R3.paper.scale.set(LP3 + 0.04, pw1 - pw0, 1); R3.paper.position.set(-LP3 / 2 + 0.005, yb - 0.0006, (pw0 + pw1) / 2);
+      R3.roller.visible = false;
+    } else {
+      const xe1 = wx(xeq), xe2 = wx(cp ? xc2 : xeq); pw0 = xe1 - half - 0.03; pw1 = xe2 + half + 0.03;
+      Pmap = (a, b) => [a, YP3 + 0.012 + b, ZP3 + 0.0012];
+      boxAt(R3.board, pw0 - 0.02, pw1 + 0.02, YP3, YP3 + LP3 + 0.03, 0, ZP3);
+      R3.paper.rotation.set(0, 0, 0); R3.paper.scale.set(pw1 - pw0, LP3 + 0.02, 1); R3.paper.position.set((pw0 + pw1) / 2, YP3 + 0.012 + LP3 / 2, ZP3 + 0.0006);
+      R3.roller.visible = true; R3.roller.scale.set(pw1 - pw0 + 0.02, 1, 1); R3.roller.position.set((pw0 + pw1) / 2, YP3 + 0.006, ZP3 + 0.004);
+    }
+    /* grid along x every gstep, and lines across at whole multiples of tstep of time that move with the paper */
+    const gstep = nice(half * 100 / 2.5) / 100, gl = [], tl = [], tlab = [];
+    const ctrs = vert ? [0] : cp ? [wx(xeq), wx(xc2)] : [wx(xeq)];
+    for (const c0 of ctrs) for (let k = -Math.floor(half / gstep + 1e-9); k <= Math.floor(half / gstep + 1e-9); k++) { const a = vert ? k * gstep : c0 + k * gstep; gl.push(Pmap(a, 0), Pmap(a, LP3)); }
+    const tstep = nice(Twin / 4), aLo = vert ? zEq - pw1 : pw0, aHi = vert ? zEq - pw0 : pw1;
+    for (let tk = Math.floor(t / tstep) * tstep; tk > t - Twin - 1e-9 && tl.length < 38; tk -= tstep) {
+      if (tk < 0) break; const age = (t - tk) * vp; tl.push(Pmap(aLo, age), Pmap(aHi, age));
+      tlab.push([tk, age]);
+    }
+    R3.grid.put(gl); R3.tlines.put(tl);
+    const nS = 360, seriesOf = (key, c0) => { const out = []; if (held || t - t0s <= 0) return out; for (let i = 0; i <= nS; i++) { const ti = t0s + (t - t0s) * i / nS, s1 = stateAt(ti); out.push([c0 + s1[key], (t - ti) * vp]); } return out; };
+    R3.mats.traceM[0].color.set(cp ? T.pos : T.xcol); R3.mats.traceM[1].color.set(T.neg);
+    R3.traces[0].put(seriesOf(cp ? 'x1' : 'x', vert ? 0 : wx(xeq)), Pmap, 0.0024); R3.traces[1].visible = cp; if (cp) R3.traces[1].put(seriesOf('x2', wx(xc2)), Pmap, 0.0024);
+    /* the pens (track) or a laser spot (hanging) */
+    R3.pens.forEach((pn, i) => { pn.visible = onTrack && (i === 0 || cp); });
+    R3.laser.visible = R3.beam.visible = vert;
+    if (onTrack) [[xb1, 0], [xb2, 1]].forEach(([xb, i]) => {
+      const pn = R3.pens[i]; if (!pn.visible) return; pn.position.set(xb, 0, 0);
+      const zt = bh / 2, za = zt + 0.016, yEnd = YP3 + 0.012, zp = ZP3 + 0.0015 - (TZ3 + bh / 2);
+      boxAt(pn.post, -0.002, 0.002, -0.002, 0.002, zt, za + 0.002); boxAt(pn.arm, -0.0015, 0.0015, 0, yEnd, za - 0.0015, za + 0.0015); boxAt(pn.nib, -0.0012, 0.0012, yEnd - 0.0012, yEnd + 0.0012, zp + 0.002, za);
+      pn.tip.position.set(0, yEnd, zp + 0.0015); pn.tip.material = i ? R3.mats.b2M : (cp ? R3.mats.b1M : R3.mats.xM);
+    });
+    if (vert) { boxAt(R3.laser, xb1 - 0.006, xb1 + 0.006, bw / 2 - 0.002, bw / 2 + 0.01, -0.006, 0.006); const zm = zTop - xb1; R3.beam.put([[0, bw / 2 + 0.01, zm], [0, 0.0735, zm]]); }
+    /* ---- the camera: frame the whole apparatus ---- */
+    let ex;
+    if (vert) { const cr = circOn ? circInfo.cz + ph.R + 0.02 : xr + 0.12; ex = { x0: xs - 0.1, x1: Math.max(cr, 0.12), y0: -0.04, y1: 0.04, z0: 0, z1: zTop + (drv ? Lr + 0.06 : 0.05) }; }
+    else { const zt = circOn ? TZ3 + bh / 2 + circInfo.cz + ph.R + 0.02 : TZ3 + 0.18; ex = { x0: Math.min(tx0 - 0.02, drv ? wx(-Lr - Rw - 0.03) : 0), x1: tx1 + 0.02, y0: YR3 - 0.07, y1: YP3 + LP3 * 0.7, z0: 0, z1: Math.max(zt, TZ3 + 0.12) }; }
+    const asp = W / Math.max(1, H), tv = Math.tan(15 * Math.PI / 180), el = Math.PI / 2 - G3.o.ph;
+    const wB = ex.x1 - ex.x0, hB = (ex.z1 - ex.z0) * Math.cos(el) + (ex.y1 - ex.y0) * Math.sin(el);
+    const room = H / Math.max(1, H - ctlH - 10), dist = Math.max(wB / 2 / (tv * asp), hB * room / 2 / tv) * (vert ? 1.0 : 0.97);
+    const tg = [(ex.x0 + ex.x1) / 2, (ex.y0 + ex.y1) / 2 - (vert ? 0 : 0.04), (ex.z0 + ex.z1) / 2 + (room - 1) * 0.5 * hB / Math.cos(el) * 0.9];
+    if (!G3.tgt) G3.tgt = VD3K.follow({ x: tg[0], y: tg[1], z: tg[2] }, 0.12);
+    const snap = G3.snap || reduce; G3.snap = false;
+    const at = G3.tgt.to(tg[0], tg[1], tg[2], snap); G3.dist = snap || !G3.dist ? dist : G3.dist + (dist - G3.dist) * 0.12;
+    S3.place(G3.o, [at.x, at.y, at.z], G3.dist);
+    S3.render();
+    /* ---- words and grips on top ---- */
+    ctx.clearRect(0, 0, W, H);
+    const narrow = W < 520, top = ctlH + fs * (narrow ? 1.2 : 2.4), ylim = (y) => Math.max(top, Math.min(H - 6 * ps, y));
+    const bbox = (pts) => { const xs2 = pts.map((p) => p[0]), ys2 = pts.map((p) => p[1]); const x0 = Math.min(...xs2), y0 = Math.min(...ys2); return [x0, y0, Math.max(...xs2) - x0, Math.max(...ys2) - y0]; };
+    const corners = (xb) => { const o = []; for (const a of [-1, 1]) for (const b of [-1, 1]) for (const c of [-1, 1]) o.push(Lp(xb + a * bl / 2, b * bw / 2, c * bh / 2)); return o; };
+    /* dragging a block: its pointer position along the motion, from the projected axis */
+    const P0 = Lp(xeq, 0, 0), P1 = Lp(xeq + 0.1, 0, 0), Pc2 = cp ? Lp(xc2, 0, 0) : null, ddx = P1[0] - P0[0], ddy = P1[1] - P0[1], dd2 = ddx * ddx + ddy * ddy || 1;
+    sg = { kind: '3d', s: Math.sqrt(dd2) / 0.1, toM: (p, id) => { const o = id === 'm2' ? Pc2 : P0; return ((p[0] - o[0]) * ddx + (p[1] - o[1]) * ddy) / dd2 * 0.1; } };
+    /* the chart */
+    if (!narrow) {
+      const far = vert ? Q(Pmap(aLo - 0.03, LP3 - 0.004)) : Q(Pmap(pw1, LP3 + 0.01)), al = vert ? 'left' : 'right', fx0 = vert ? Math.max(8, far[0]) : Math.min(W - 8, far[0]);
+      ctx.textBaseline = 'alphabetic';
+      labelBox(ctx, vert ? 'Chart, x against time' : 'Chart: x against time', fx0, ylim(far[1] - 6 * ps - fs * 1.1), al, T.muted, fs * 0.8, 600);
+      labelBox(ctx, vert ? `paper at ${sig(vp * 100, 2)} cm/s` : `x to scale, paper at ${sig(vp * 100, 2)} cm/s`, fx0, ylim(far[1] - 6 * ps), al, T.muted, fs * 0.8, 400);
+    }
+    { ctx.font = `${fs * 0.78}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = vert ? 'center' : 'left'; ctx.textBaseline = 'middle';
+      for (const [tk, age] of tlab) { if (age < 0.02) continue; const q = vert ? Q(Pmap(aLo - 0.014, age)) : Q(Pmap(pw1 + 0.006, age)); if (q[1] > top && q[0] < W - 30) ctx.fillText(`${+tk.toFixed(3)} s`, q[0], q[1]); } }
+    /* springs: k labels and grips */
+    const kLabel = S.unk ? 'k = ? (unknown)' : `k = ${sig(S.p.k, 3)} N/m`;
+    if (vert) {
+      const ya = zTop - xw, yb2 = zTop - (xb1 - bl / 2), my = ya - 0.28 * (ya - yb2), q = Q([Rc + 0.012, 0, my]), gx = q[0] + 12 * ps;
+      const qa = Q([0, 0, ya]), qb = Q([0, 0, yb2]);
+      springGrip(ctx, gx, q[1], 'k', false, 1, [qa[0] - 12 * ps, Math.min(qa[1], qb[1]), gx - qa[0] + 24 * ps, Math.abs(qb[1] - qa[1])]);
+      labelBox(ctx, kLabel, gx + 14 * ps, q[1] + fs * 0.35, 'left', T.ink, fs, 600);
+    } else {
+      const sp = (x0, x1, id, lab, col, dy) => { const mx = (x0 + x1) / 2, q = Lp(mx, 0, Rc + 0.006), qa = Lp(x0, 0, 0), qb = Lp(x1, 0, 0), gy = q[1] - 12 * ps;
+        springGrip(ctx, q[0], gy, id, true, -1, [Math.min(qa[0], qb[0]), gy - 11 * ps, Math.abs(qb[0] - qa[0]), qa[1] + 12 * ps - (gy - 11 * ps)]);
+        labelBox(ctx, lab, q[0], ylim(gy - 16 * ps - (dy || 0)), 'center', col, fs, cp ? 700 : 600); };
+      sp(xw, xb1 - bl / 2, 'k', cp ? `k₁ = ${sig(S.p.k, 3)}` : kLabel, T.ink);
+      if (cp) { sp(xb1 + bl / 2, xb2 - bl / 2, 'kc', `k_c = ${sig(S.p.kc, 3)} N/m`, T.equi, 0); sp(xb2 + bl / 2, wallR, 'k2', `k₂ = ${sig(S.p.k2, 3)}`, T.ink); }
+    }
+    /* blocks: hold boxes, mass grip, labels */
+    const bb1 = bbox(corners(xb1));
+    cHandles.push({ id: cp ? 'm1' : 'mass', box: bb1, cursor: held ? 'grabbing' : 'grab', mass: true });
+    if (cp) { const bb2 = bbox(corners(xb2)); cHandles.push({ id: 'm2', box: bb2, cursor: held ? 'grabbing' : 'grab', mass: true }); massTab(ctx, bb2[0] + bb2[2] / 2, bb2[1] - 12 * ps, -1, true);
+      ctx.fillStyle = T.muted; ctx.font = `${fs * 0.88}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText(narrow ? `m = ${fx(S.p.m, 2)} kg each` : `k₁ = ${sig(S.p.k, 3)}, k₂ = ${sig(S.p.k2, 3)} N/m, m = ${fx(S.p.m, 2)} kg each`, W / 2, ctlH + 4 * ps);
+      for (const [xb, col, lab, xv] of [[xb1, T.pos, 'x_1', st.x1], [xb2, T.neg, 'x_2', st.x2]]) { const q = Q([wx(xb), YR3 - 0.03, 0.004]); labelBox(ctx, `${lab} = ${cm(xv)}`, clamp(q[0], 40 * ps, W - 40 * ps), ylim(q[1] + fs * 0.9), 'center', col, fs, 700); }
+    } else if (vert) { massTab(ctx, bb1[0] + bb1[2] / 2, bb1[1] + bb1[3] + 12 * ps, 1, true); labelBox(ctx, `${fx(S.p.m, 2)} kg`, bb1[0] + bb1[2] / 2 + 14 * ps, bb1[1] + bb1[3] + 16 * ps, 'left', T.ink, fs * 0.92, 600); }
+    else { massTab(ctx, bb1[0] + bb1[2] / 2, bb1[1] - 12 * ps, -1, true); const q = Lp(xb1, -bw / 2, -bh / 2 - 0.03); labelBox(ctx, `${fx(S.p.m, 2)} kg`, q[0], q[1] + fs * 0.4, 'center', T.ink, fs * 0.92, 600); }
+    if (fv && !cp) { ctx.font = `700 ${10.5 * Math.min(ps, 1.25)}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      for (const [L, z, col, lab] of [[fv[0], -0.25 * bh, T.pos, 'F'], [fv[1], 0.25 * bh, T.vcol, 'v']]) { if (Math.abs(L) < 0.012) continue; const q = Lp(xb1 + Math.sign(L) * (bl / 2 + Math.abs(L) + 0.008), -bw / 2 - 0.006, z); ctx.fillStyle = col; ctx.fillText(lab, q[0], q[1]); } }
+    /* the rule: x along it, equilibrium */
+    if (vert) {
+      const q = Q([xr, -0.01, zEq - xa]), q0 = Q([xr, -0.01, zEq]);
+      const qx = Q([xr, -0.01, zEq + half + 0.012]); labelBox(ctx, `x = ${cm(xa)}`, qx[0], ylim(qx[1] - 4 * ps), 'center', T.xcol, fs, 700); void q;
+      const qe0 = Q([-jarR - 0.012, 0, zEq]); labelBox(ctx, 'equilibrium', qe0[0] - 4 * ps, qe0[1] + fs * 0.35, 'right', T.muted, fs * 0.85, 400);
+            if (!drv) { const qa = Q([brX, 0, zTop - L0]), qb = Q([brX, 0, zTop - L0 - d]), roomy = qb[1] - qa[1] > fs * 2.6, ym = roomy ? (qa[1] + qb[1]) / 2 : qa[1] + fs * 1.3;
+        labelBox(ctx, `stretch mg/k = ${cm(d)}`, qa[0] - 8 * ps, Math.min(ym + fs * 0.35, qe0[1] - fs * 1.3), 'right', T.equi, fs * 0.88, 600); }
+    } else if (!cp) {
+      const q = Q([wx(xb1), YR3 - 0.03, 0.004]); labelBox(ctx, `x = ${cm(xa)}`, clamp(q[0], 40 * ps, W - 40 * ps), ylim(q[1] + fs * 0.9), 'center', T.xcol, fs, 700);
+    }
+    if (!vert && !cp) { const qe = Q([wx(xeq), 0, TZ3 + 0.17]); ctx.textBaseline = 'alphabetic'; labelBox(ctx, 'equilibrium', qe[0], ylim(qe[1] - 4 * ps), 'center', T.muted, fs * 0.85, 400); }
+    /* the oil and its grip */
+    if (onTrack) {
+      const qe = Q([wx((cp ? xc2 : xeq) + half + bl / 2 + 0.02), YT3 - 0.022, TZ3 * 0.45]), gx = Math.min(W - 12 * ps, qe[0] + 14 * ps), lo = Q([wx(xeq - half - bl / 2), YT3 - 0.022, TZ3 - 0.02]);
+      springGrip(ctx, gx, qe[1], 'b', true, -1, [lo[0], Math.min(lo[1], qe[1]) - 6 * ps, gx + 10 * ps - lo[0], Math.abs(qe[1] - lo[1]) + 16 * ps]);
+      ctx.fillStyle = T.muted; ctx.font = `${fs * 0.85}px ${T.ui}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      const ql = Q([wx(xeq - half - bl / 2 - 0.03), YT3 - 0.022, TZ3 * 0.45]); if (ql[0] > 50 * ps) ctx.fillText(S.p.b > 0 ? 'oil' : 'no oil', ql[0], ql[1]);
+    } else {
+      const qr = Q([-jarR - 0.004, -jarR * 0.4, jarH * 0.2]), gx = qr[0] - 14 * ps, qt = Q([0, 0, jarH]), qb = Q([0, 0, 0]);
+      springGrip(ctx, gx, qr[1], 'b', true, -1, [gx - 12 * ps, Math.min(qt[1], qr[1] - 20 * ps), 24 * ps, Math.abs(qb[1] - qt[1]) * 0.5]);
+      ctx.fillStyle = T.muted; ctx.font = `${fs * 0.85}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+      ctx.fillText(S.p.b > 0 ? 'oil' : 'no oil', qb[0], Math.min(H - fs - 2, qb[1] + 4 * ps));
+    }
+    /* the drive and its grip */
+    if (drv && !cp) {
+      const qw = Lp(-Lr, 0, Rw + 0.012);
+      if (vert) { const qq = Lp(-Lr, 0, Rw + 0.02); grip(ctx, qq[0] + 10 * ps, qq[1], isHot('F0'), false); cHandles.push({ id: 'F0', box: [qq[0] - 2 * ps, qq[1] - 11 * ps, 24 * ps, 22 * ps], cursor: 'ew-resize', param: 'F0', axis: 'x', dir: 1 });
+        if (!S.unk) labelBox(ctx, `X_w = ${cm(Xw, 2)}`, qq[0] + 24 * ps, qq[1] + fs * 0.35, 'left', T.equi, fs * 0.88, 600); }
+      else { const gy = qw[1] - 12 * ps; grip(ctx, qw[0], gy, isHot('F0'), true); cHandles.push({ id: 'F0', box: [qw[0] - 11 * ps, gy - 12 * ps, 22 * ps, 24 * ps], cursor: 'ns-resize', param: 'F0', axis: 'y', dir: -1 });
+        if (!S.unk) labelBox(ctx, `wall moves ±X_w = ±${cm(Xw, 2)}`, Math.max(8 * ps, qw[0] - 30 * ps), ylim(gy - 16 * ps), 'left', T.equi, fs * 0.9, 600); }
+    }
+    /* the reference circle's words, or why there is none */
+    if (S.layers.circle && !S.blind && !cp && !g.drive && g.sys === 'single' && !held && !ph) {
+      const q = Lp(xeq, 0, (vert ? bw / 2 + 0.08 : bh / 2 + 0.06)); ctx.fillStyle = T.muted; ctx.font = `${fs * 0.85}px ${T.ui}`; ctx.textAlign = vert ? 'left' : 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText('ζ ≥ 1: no oscillation, so no reference circle', vert ? Math.min(q[0], W - 250 * ps) : q[0], ylim(q[1]));
+    }
+    if (circInfo) {
+      const lab = g.beta > 0 ? 'angle ω_d t + φ, radius shrinks as e^(−bt/2m)' : 'angle ω_0 t + φ, radius A', wl = richWidth(ctx, lab, fs * 0.85, 400);
+      const q = vert ? Lp(xeq - ph.R, 0, circInfo.cz) : circInfo.top;
+      ctx.textBaseline = 'alphabetic'; labelBox(ctx, lab, clamp(q[0], wl / 2 + 6, W - wl / 2 - 6), ylim(q[1] - 8 * ps), 'center', T.muted, fs * 0.85, 400);
+    }
+    if (!narrow && !cp) { ctx.fillStyle = T.muted; ctx.font = `${fs * 0.78}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText(`${vert ? 'Steel cylinder' : 'Steel block'} to scale for ${fx(m, 2)} kg. Drag it to pull it; drag elsewhere to turn the view.`, 10 * ps, ctlH + 4 * ps); }
   }
 
   // ---------- plots against time ----------
@@ -2077,6 +2525,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   }
   const along = (ev) => {
     const r = cans.c.getBoundingClientRect();
+    if (sg.kind === '3d') return [ev.clientX - r.left, ev.clientY - r.top];
     return sg.kind === 'v' ? ev.clientY - r.top : ev.clientX - r.left;
   };
   function beginHold(id, ev) {
@@ -2280,6 +2729,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   renderRows();
   setRunning(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => {
+    if (g3) g3.S3.el.style.display = on ? '' : 'none';
+    $('stage').dataset.dim = on ? '3d' : 'flat'; cans.c.style.touchAction = on ? 'pan-y' : ''; cans.c.style.cursor = '';
+    G3.snap = true; requestAnimationFrame(resize);
+  }, status: (msg) => capStatus(msg) });
   requestAnimationFrame(loop);
 })();
 </script>
