@@ -235,10 +235,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         if (s === 1) Fshow = F;
       }
     }
-    /* the laser sits beside the scale: in to the mirror and back out to the scale, nearly along the same line */
+    /* the laser sits beside the scale: in to the mirror and back out towards the scale */
     const mx = cx, my = cy, ex = wide ? pw + 6 * p : W - 64 * p, ly = my + 14 * p;
     ctx.strokeStyle = T.laser; ctx.lineWidth = 1.6 * p; ctx.globalAlpha = 0.9;
-    ctx.beginPath(); ctx.moveTo(ex - 26 * p, ly); ctx.lineTo(mx, my); ctx.lineTo(ex, my); ctx.stroke(); ctx.globalAlpha = 1;
+    /* reflected by the drawn mirror (its normal along the beam, turned by EXAG × θ), so the outgoing ray turns by twice the drawn angle */
+    const lx = ex - 26 * p, dl = Math.hypot(mx - lx, my - ly), dx = (mx - lx) / dl, dy = (my - ly) / dl, nx = Math.cos(ang), ny = Math.sin(ang), dn = dx * nx + dy * ny;
+    const rx = dx - 2 * dn * nx, ry = dy - 2 * dn * ny, oy = my + ry * (ex - mx) / rx;
+    ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(mx, my); ctx.lineTo(ex, oy); ctx.stroke(); ctx.globalAlpha = 1;
     VG.box(ctx, ex - 30 * p, ly - 6 * p, 26 * p, 12 * p, { color: '#2e353f', r: 3, shadow: false }); txt(ctx, 'laser', ex - 17 * p, ly + 15 * p, { a: 'center', s: 9, c: T.muted });
     txt(ctx, 'top view, to scale · beam turn drawn ×20 · drag a large sphere to swing it', 12 * p, H - 14 * p, { s: 9.5, c: T.muted });
     if (DR.on) dragHint();
