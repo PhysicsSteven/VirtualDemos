@@ -270,7 +270,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
             <div class="slider-head"><label for="bF1">Frequency f₁</label><output id="bF1Out" class="mono" for="bF1"></output></div>
             <input type="range" id="bF1" min="100" max="1000" step="1" value="440">
           </div>
-          <div>
+          <div id="bDfRow">
             <div class="slider-head"><label for="bDf">Difference f₂ − f₁</label><output id="bDfOut" class="mono" for="bDf"></output></div>
             <input type="range" id="bDf" min="-20" max="20" step="0.1" value="3">
           </div>
@@ -278,6 +278,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
             <div class="slider-head"><label for="bA2">Amplitude A₂ / A₁</label><output id="bA2Out" class="mono" for="bA2"></output></div>
             <input type="range" id="bA2" min="0" max="1" step="0.01" value="1">
           </div>
+          <label class="check"><input type="checkbox" id="bMyst">Mystery tone: f₂ hidden</label>
         </div>
         <div class="shelf-card" id="cardLev" role="group" aria-label="The levitator" hidden>
           <span class="card-title">The levitator and the bead</span>
@@ -661,7 +662,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     w: { A1: 1, A2: 1, f1: 1, f2: 1, env: true, marks: true },
     s: { L: 0.648, T: 70, mu: 6.14, mode: 'harm', n: 1, d: 0.5, h: 6, f: 60, Q: 30 },
     p: { kind: 'oc', n: 1, L: 0.6, D: 15, Tc: 20, endc: false },
-    b: { f1: 440, df: 3, a2: 1 },
+    b: { f1: 440, df: 3, a2: 1, myst: null },   /* myst: the hidden f₂ (Hz) of a mystery tone, or null */
     l: { p0: 2000, gap: 17.16, mat: 'eps', a: 0.75, f: 40, Tc: 20 }
   };
   let running = !reduce, t = 0, frameMs = 0;
@@ -678,7 +679,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       hint: 'A string plucked at the middle is symmetric about the center, so every even harmonic, which has a node there, is missing. Drag the pluck point toward the bridge, as a guitarist does for a brighter tone, and the high harmonics come back.' },
     closed: { view: 'pipe', set: () => Object.assign(S.p, { kind: 'oc', n: 1, L: 0.6, D: 15, Tc: 20, endc: true }),
       hint: 'A pipe closed at one end has a displacement node at the closed end and an antinode at the open end, so it holds an odd number of quarter wavelengths: f = n v/4L with n = 1, 3, 5, ... A clarinet, about 0.6 m long and closed at the reed, comes close: v/4L ≈ 142 Hz against its lowest note D3 at 147 Hz.' },
-    beats: { view: 'beats', set: () => Object.assign(S.b, { f1: 440, df: 3, a2: 1 }),
+    beats: { view: 'beats', set: () => { Object.assign(S.b, { f1: 440, df: 3, a2: 1 }); setMyst(false); },
       hint: 'Tones at 440 and 443 Hz drift in and out of step, so the loudness swells and fades 3 times a second: f_beat = |f₁ − f₂|. Musicians tune by ear this way, adjusting until the beats slow down and stop.' }
   };
   let presetId = 'standing';
@@ -1323,7 +1324,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // long window: band the signal fills, the envelope, the beat period
     // a sweep: the window spans whole beat periods, so the envelope stands still and the playhead sweeps across
     let wl = 2;
-    if (beatHold) wl = beatHold;
+    const myst = b.myst !== null;
+    if (myst) wl = 4;   /* a mystery tone: a fixed 4 s window, so the count of beats in it is the student's to read */
+    else if (beatHold) wl = beatHold;
     else if (df > 0) {
       const Tb = 1 / df;
       if (Tb >= 4) wl = 4;
@@ -1354,7 +1357,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.restore();
     // beat bracket between the loud moments just before the playhead
     let bx0 = null, bx1 = null;
-    if (df > 0) {
+    if (myst) { /* no bracket: the beat period is to be measured from the time axis */ }
+    else if (df > 0) {
       const Tb = 1 / df;
       let ta = Math.ceil(tl0 / Tb - 1e-6) * Tb;
       if (drag && drag.id === 'beat' && drag.ta !== undefined) ta = drag.ta;
@@ -1373,7 +1377,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
     } else tag('f₁ = f₂: no beats, the loudness stays constant', Lp + 8 * ls, cA + 8 * ls, T.accent, 'left', 'top', true, 10.5);
     // titles and ticks
-    tag(pick([`Close up: f₁ = ${f1.toFixed(1)} Hz and f₂ = ${f2.toFixed(1)} Hz`, `f₁ = ${f1.toFixed(1)} Hz, f₂ = ${f2.toFixed(1)} Hz`], Rp - Lp), Lp, aA - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
+    const f2t = myst ? 'the mystery tone' : `f₂ = ${f2.toFixed(1)} Hz`;
+    tag(pick([`Close up: f₁ = ${f1.toFixed(1)} Hz and ${f2t}`, `f₁ = ${f1.toFixed(1)} Hz, ${f2t}`], Rp - Lp), Lp, aA - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
     tag('Their sum', Lp, bA - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
     tag(pick([`Sum over ${wl.toFixed(wl < 1 ? 2 : 1)} s, with its envelope; the red playhead sweeps across`, `Sum over ${wl.toFixed(wl < 1 ? 2 : 1)} s, with its envelope`], Rp - Lp), Lp, cA - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
     // close up time ticks (ms from the playhead)
@@ -1585,7 +1590,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     aL: [() => S.p.L, (v) => { S.p.L = v; }, (v) => v.toFixed(3) + ' m'],
     aD: [() => S.p.D, (v) => { S.p.D = v; }, (v) => v.toFixed(1) + ' mm'],
     aT: [() => S.p.Tc, (v) => { S.p.Tc = v; }, (v) => v.toFixed(1) + ' °C'],
-    bF1: [() => S.b.f1, (v) => { S.b.f1 = v; }, (v) => v.toFixed(0) + ' Hz'],
+    bF1: [() => S.b.f1, (v) => { S.b.f1 = v; if (S.b.myst !== null) S.b.df = S.b.myst - v; }, (v) => v.toFixed(0) + ' Hz'],
     bDf: [() => S.b.df, (v) => { S.b.df = v; }, (v) => (v > 0 ? '+' : '') + v.toFixed(1) + ' Hz'],
     bA2: [() => S.b.a2, (v) => { S.b.a2 = v; }, (v) => v.toFixed(2)],
     lP: [() => S.l.p0, (v) => { S.l.p0 = v; }, (v) => v.toFixed(0) + ' Pa'],
@@ -1722,10 +1727,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('raFLab').textContent = `Frequency f${sub(p.n)}`; $('raF').textContent = pF(p.n).toFixed(1) + ' Hz';
     $('raLamLab').textContent = `Wavelength λ = ${p.kind === 'oo' ? '2L' : '4L'}/${p.n}`; $('raLam').textContent = ((p.kind === 'oo' ? 2 : 4) * pLe() / p.n).toFixed(3) + ' m';
     const b = S.b, f2 = b.f1 + b.df;
-    $('rbF2').textContent = f2.toFixed(1) + ' Hz';
-    $('rbFm').textContent = ((b.f1 + f2) / 2).toFixed(2) + ' Hz';
-    $('rbFb').textContent = Math.abs(b.df).toFixed(1) + ' Hz';
-    $('rbTb').textContent = Math.abs(b.df) > 0 ? fmtT(1 / Math.abs(b.df)) : '∞';
+    const hideB = b.myst !== null;
+    $('rbF2').textContent = hideB ? 'hidden: mystery tone' : f2.toFixed(1) + ' Hz';
+    $('rbFm').textContent = hideB ? 'hidden' : ((b.f1 + f2) / 2).toFixed(2) + ' Hz';
+    $('rbFb').textContent = hideB ? 'hidden: measure it' : Math.abs(b.df).toFixed(1) + ' Hz';
+    $('rbTb').textContent = hideB ? 'hidden: measure it' : Math.abs(b.df) > 0 ? fmtT(1 / Math.abs(b.df)) : '∞';
     levReadouts();
     soundHintText();
   }
@@ -1776,6 +1782,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lev: 'A 40 kHz transducer and a reflector hold a standing sound wave. Small beads float just below its pressure nodes, half a wavelength apart, and fall if the sound is too weak. Why the nodes? See the end of the Acoustic levitation panel.'
   };
   function markPreset(id) { presetId = id; for (const b of $('presets').querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.p === id)); $('presetHint').textContent = id ? PRESETS[id].hint : VIEW_HINT[S.view]; }
+  /* Mystery tone: f₂ is drawn at random from 425.0 to 455.0 Hz (0.1 Hz steps) and hidden; f₁ stays adjustable, so it can be tuned
+     against the mystery tone by ear and by the beats. Turning it off shows f₂. */
+  function setMyst(on) {
+    const b = S.b;
+    if (on) { b.myst = Math.round(4250 + Math.random() * 300) / 10; b.df = b.myst - b.f1; }
+    else if (b.myst !== null) { b.myst = null; b.df = Math.round(b.df * 10) / 10; }   /* f₂ stays where it was, even beyond the slider's ±20 Hz */
+    $('bMyst').checked = on; $('bDfRow').hidden = on; syncSliders(); updateReadouts(); soundUpdate(); if (!running) drawAll();
+  }
+  $('bMyst').addEventListener('change', (e) => setMyst(e.target.checked));
   function applyPreset(id) {
     const P = PRESETS[id]; P.set();
     markPreset(id);
@@ -1857,7 +1872,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (v === 'pipe' && lr) { const ns = pipeNs(), i = ns.indexOf(S.p.n); setPipeN(ns[Math.max(0, Math.min(ns.length - 1, i + lr))]); }
     else if (v === 'pipe' && up) nudge('aL', up * big);
     else if (v === 'pipe' && /^[1-8]$/.test(e.key)) setPipeN(pipeNs()[+e.key - 1]);
-    else if (v === 'beats' && lr) nudge('bDf', lr * big);
+    else if (v === 'beats' && lr) nudge(S.b.myst !== null ? 'bF1' : 'bDf', lr * big);
     else if (v === 'beats' && up) nudge('bA2', up * big);
     else if (v === 'lev' && up) nudge('lP', up * big * 10);
     else if (v === 'lev' && lr) nudge('lH', lr * big * 10);
@@ -1977,7 +1992,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     requestAnimationFrame(loop);
   }
   window.__sw = { get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get D() { return D; }, get handles() { return handles; },
-    setRunning, applyPreset, setView, get curveMax() { return curveMax; }, get beads() { return beads; }, lev, stepBeads, setMat, tuneLev };
+    setRunning, applyPreset, setView, setMyst, get curveMax() { return curveMax; }, get beads() { return beads; }, lev, stepBeads, setMat, tuneLev };
 
   tokens();
   { const L = lev(); S.l.gap = +(4 * L.lam / 2 * 1e3).toFixed(3); }
