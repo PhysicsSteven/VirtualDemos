@@ -10,10 +10,6 @@ try{for(const width of [1440,390]){
 const page=await browser.newPage({viewport:{width,height:900},reducedMotion:'reduce'}),errors=[];page.on('pageerror',e=>errors.push(e.message));await page.route('https://fonts.**',r=>r.abort());
 const open=slug=>page.goto(`http://127.0.0.1:${server.address().port}/demos/${slug}.html`),slider=async(id,v)=>page.locator('#'+id).evaluate((el,v)=>{el.value=String(v);el.dispatchEvent(new Event('input',{bubbles:true}));},v);
 const check=async(name)=>{assert.deepEqual(errors,[]);assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));console.log('PASS',name,width);};
-await open('rc-circuits');await page.click('[data-p="charge"]');await slider('sEps',10);await page.click('#reset');await page.uncheck('#tMarks');await page.uncheck('#tPred');
-await page.evaluate(()=>{window.__rc.setRunning(false);window.__rc.go(1);}); // deterministic test sampling, absent from student UI
-let rc=await page.evaluate(()=>window.__rc.state());assert(Math.abs(rc.VC-10*(1-Math.exp(-1)))<1e-10);assert.match(await page.locator('#mVC').innerText(),/6.321/);
-await page.click('#swSeg [data-m="discharge"]');const after=await page.evaluate(()=>window.__rc.state());assert.equal(after.Q,rc.Q);assert(after.I<0);await check('RC controls/readout and charge continuity');
 await open('faraday');await page.click('[data-p="gen"]');assert.equal(await page.locator('#labStep').count(),1);
 await page.evaluate(()=>{window.__fd.setRunning(false);window.__fd.go(.101);});const fg=await page.evaluate(()=>({phi:window.__fd.circ.phi,t:window.__fd.W.t}));assert(Math.abs(fg.phi-.002*Math.cos(6.3*fg.t))<1e-12);
 await page.click('[data-p="rails"]');await page.evaluate(()=>{window.__fd.setRunning(false);window.__fd.go(.3);});assert(Math.abs(await page.evaluate(()=>window.__fd.circ.emf)+.2)<1e-10);await check('Faraday generator/rails readings with merged lab controls');

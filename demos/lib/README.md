@@ -166,4 +166,4 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 
 ## Being moved
 
-Nothing at the moment. Every demo is on the library except the redirect pages (nonuniform-circular, circuit-builder, transient-circuits) and the two older circuit pages kept for now (rc-circuits, ac-circuits).
+Nothing at the moment. Every demo is on the library except the redirect pages (nonuniform-circular, and circuit-builder, transient-circuits, rc-circuits, ac-circuits, which open the matching mode of Circuits).

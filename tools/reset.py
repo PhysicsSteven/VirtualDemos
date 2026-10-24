@@ -36,7 +36,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 TEMPLATES = {"star-slice": ROOT / "tools" / "star-slice" / "star-slice.template.html"}
-SKIP = {"nonuniform-circular", "circuit-builder", "transient-circuits"}  # redirects (to circular-motion.html#speed and circuits.html)
+SKIP = {"nonuniform-circular", "circuit-builder", "transient-circuits", "rc-circuits", "ac-circuits"}  # redirects (to circular-motion.html#speed and circuits.html)
 
 CSS = """/* vd-reset */
 .vd-reset { white-space: nowrap; }

@@ -60,16 +60,6 @@ const server=http.createServer((req,res)=>{
       assert(!/NaN|Infinity/.test(await page.locator('#meas').innerText()));
       assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.deepEqual(errors,[]);
       console.log('PASS capacitor fixed voltage/charge controls and layout',mobile?'phone':'desktop');
-      await page.goto(base+'/demos/ac-circuits.html');await page.waitForFunction(()=>window.__ac);
-      assert.equal(await page.evaluate(()=>window.__ac.running),false);
-      await page.click('[data-p="below"]');await page.click('#toF0');
-      const ac=await page.evaluate(()=>({Z:window.__ac.c.Z,R:window.__ac.c.R,phi:window.__ac.c.phi}));
-      assert(Math.abs(ac.Z-ac.R)<1e-8);assert(Math.abs(ac.phi)<1e-8);
-      await page.click('#modeSeg [data-m="trans"]');
-      const initial=await page.evaluate(()=>window.__ac.stateNow());assert(Math.abs(initial.i)<1e-8);
-      assert(!/NaN|Infinity/.test(await page.locator('#mZ').innerText()));
-      assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));assert.deepEqual(errors,[]);
-      console.log('PASS AC exact resonance and transient controls and layout',mobile?'phone':'desktop');
       await page.close();
     }
   }finally{await browser.close();server.close();}

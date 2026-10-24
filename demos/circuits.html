@@ -1261,7 +1261,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   const PRESETS = {
     series: { mode: 'dc', name: 'Series bulbs' }, parallel: { mode: 'dc', name: 'Parallel bulbs' }, compare: { mode: 'dc', name: 'Series vs parallel' },
     divider: { mode: 'dc', name: 'Voltage divider' }, bridge: { mode: 'dc', name: 'Wheatstone bridge' }, internal: { mode: 'dc', name: 'Internal resistance' },
-    rc: { mode: 'time', name: 'RC charging', ch: [['C1', 'V'], ['R1', 'V'], ['R1', 'I']], win: 6 },
+    rc: { mode: 'time', name: 'RC charging', ch: [['C1', 'V'], ['R1', 'V'], ['R1', 'I']], win: 6, ghosts: [['R1', 33e3, 'R1 = 33 kΩ, τ = 3.3 s']] },
     flip: { mode: 'time', name: 'Flip mid way', ch: [['C1', 'V'], ['R1', 'V'], ['R1', 'I']], win: 6, flip: { sw: 'S1', tau: ['R1', 'C1', 1] } },
     flash: { mode: 'time', name: 'Camera flash', ch: [['C1', 'V'], ['C1', 'I']], win: 60, flip: { sw: 'S1', tau: ['R1', 'C1', 5] } },
     rl: { mode: 'time', name: 'RL rise and decay', ch: [['L1', 'I'], ['L1', 'V'], ['R1', 'V']], win: 0.12, flip: { sw: 'S1', tau: ['L1', 'R1', 5] } },
@@ -1486,7 +1486,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     divider: 'Two resistors in series share the battery voltage in proportion to their resistances: V<sub>out</sub> = ε R<sub>2</sub>/(R<sub>1</sub> + R<sub>2</sub>) = 12 V × 1.0/3.2 = 3.75 V. Change R1 and watch the voltmeter.',
     bridge: 'The meter G joins the two midpoints. When R1/R3 = R2/R4 they sit at the same voltage and no current flows through G, whatever the battery. R4 is selected: move it away from 330 Ω and current appears in G.',
     internal: 'A real battery is an EMF ε in series with an internal resistance r, so its terminal voltage is ε − Ir. Lower the load R: the current rises and the terminal voltage falls. Close S1 to short the battery: I = ε/r = 9 A and the terminal voltage is zero.',
-    rc: 'The two way switch S1 connects the battery. V<sub>C</sub> climbs fast at first and then ever slower: at t = τ = RC it has made 63% of the climb, after 5τ it is within 1% of ε. The current does the opposite, starting at ε/R and dying away. Click S1 at any time to discharge the capacitor through R1.',
+    rc: 'The two way switch S1 connects the battery. V<sub>C</sub> climbs fast at first and then ever slower: at t = τ = RC it has made 63% of the climb, after 5τ it is within 1% of ε. The current does the opposite, starting at ε/R and dying away. The gray trace is the same run with R1 = 33 kΩ, so τ = 3.3 s instead of 1.0 s: the same shape, stretched. Click S1 at any time to discharge the capacitor through R1.',
     flip: 'S1 flips by itself at t = τ, when V<sub>C</sub> has reached 63% of ε. The discharge is a new exponential that starts from that 63%, not from ε, with the same τ. The current reverses: it now runs out of the capacitor\'s + plate.',
     flash: 'Charge slowly through R1 (τ₁ = R1·C1 = 10 s); S1 flips by itself after 5τ₁ and dumps the charge through the bulb, the flash tube (τ₂ = 10 Ω × 1000 µF = 10 ms). The same 72 mJ comes out a thousand times faster, so the peak power is a thousand times larger. A defibrillator works the same way.',
     rl: 'The inductor opposes any change in its current: when S1 connects the battery the current rises toward ε/R with τ = L/R = 10 ms instead of jumping. After 5τ S1 flips by itself and shorts the coil: the current keeps flowing the same way and dies away with the same τ, while the inductor voltage reverses.',
@@ -1497,7 +1497,7 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     acL: 'Only an inductor. The current peaks a quarter cycle after the voltage: v<sub>L</sub> = L di/dt, so the voltage is largest where the current is changing fastest. X<sub>L</sub> = ωL grows with f, so the inductor blocks high frequencies.',
     below: 'Below f<sub>0</sub>, X<sub>C</sub> is larger than X<sub>L</sub>, so the circuit acts like a capacitor and the current leads. The voltage phasors added tip to tail land on the source: V<sub>C</sub> alone is larger than the source voltage. Drag the f marker toward f<sub>0</sub>.',
     reso: 'At f<sub>0</sub> = 1/(2π√(LC)), X<sub>L</sub> = X<sub>C</sub>. V<sub>L</sub> and V<sub>C</sub> are equal and opposite at every instant, so they cancel, Z = R and the current is in step with the source. Each of them is still Q = 4.5 times the source voltage.',
-    hiQ: 'R = 10 Ω gives Q = 10 and a tall, narrow peak. The gray curve is R = 100 Ω, Q = 1: a low, wide peak at the same f<sub>0</sub>. Press Sweep and watch the current through the peak; the half power width is Δf = f<sub>0</sub>/Q = R/(2πL).'
+    hiQ: 'R = 10 Ω gives Q = 10 and a tall, narrow peak. The gray curve is R = 100 Ω, Q = 1: a low, wide peak at the same f<sub>0</sub>. Press Sweep and watch the current through the peak; the half power width is Δf = f<sub>0</sub>/Q = R/(2πL). Then pick In time to switch the source on at t = 0 with the capacitor empty and no current: the current builds up to its steady amplitude as the transient dies away as e<sup>−Rt/2L</sup>, with time constant 2L/R = 2 ms for R = 10 Ω. Set R1 to 100 Ω and it dies away ten times faster.'
   };
   // Blind: the same setups described without the values a lab asks students to measure
   const BLIND_HINTS = {

@@ -65,6 +65,24 @@ test('circuits time: exact RC/RL solutions, source work and heat integrals',()=>
   }
  }
 });
+/* moved from test_ac_circuits.cjs and test_rc_circuits.cjs when the old AC and RC pages became redirects to Circuits */
+test('circuits time: AC source switched on at t = 0 from rest agrees with independent RK4 integration',()=>{
+ function rk4(R,L,C,w,V,t,steps){let q=0,i=0,h=t/steps;const f=(time,q,i)=>[i,(V*Math.sin(w*time)-R*i-q/C)/L];for(let j=0;j<steps;j++){const t0=j*h,A=f(t0,q,i),B=f(t0+h/2,q+h*A[0]/2,i+h*A[1]/2),D=f(t0+h/2,q+h*B[0]/2,i+h*B[1]/2),E=f(t0+h,q+h*D[0],i+h*D[1]);q+=h*(A[0]+2*B[0]+2*D[0]+E[0])/6;i+=h*(A[1]+2*B[1]+2*D[1]+E[1])/6;}return {q,i};}
+ const base=c.buildPreset('hiQ').els,L=base.find(e=>e.type==='ind').L,C=base.find(e=>e.type==='cap').C;
+ for(const f of [1000,1/(2*Math.PI*Math.sqrt(L*C))])for(const R of [0,10,200,1000]){
+  /* R = 0 at f0: exact resonance with no damping, the amplitude grows without bound but stays finite at any time */
+  const els=base.map(e=>e.type==='res'?(R?{...e,R}:{id:e.id,type:'wire',a:e.a,b:e.b}):e.type==='ac'?{...e,f}:e),src=els.find(e=>e.type==='ac'),ind=els.find(e=>e.type==='ind'),cap=els.find(e=>e.type==='cap'),sys=c.buildTransient(els);assert(sys.ok);
+  const x0=c.zeroState(sys);close(x0[sys.si.get('q'+cap.id)],0,0,0);close(x0[sys.si.get('i'+ind.id)],0,0,0);
+  for(const t of [.0005,.002,3.25/f]){const x=c.stepWith(c.propagator(sys,t),x0).x,ref=rk4(R,L,C,2*Math.PI*f,src.V0,t,40000);
+   close(x[sys.si.get('q'+cap.id)],ref.q,1e-7,1e-12);close(x[sys.si.get('i'+ind.id)],ref.i,1e-7,1e-10);}
+ }
+});
+test('circuits time: RC charging setup compares τ = RC = 1.0 s with the 33 kΩ trace, τ = 3.3 s',()=>{
+ const els=c.buildPreset('rc').els,R=els.find(e=>e.name==='R1').R,C=els.find(e=>e.name==='C1').C,g=c.PRESETS.rc.ghosts;
+ assert.equal(g.length,1);assert.equal(g[0][0],'R1');close(R*C,1);close(g[0][1]*C,3.3);
+ for(const Rg of [R,g[0][1]]){const e2=els.map(e=>e.name==='R1'?{...e,R:Rg}:e),sys=c.buildTransient(e2),cap=e2.find(e=>e.name==='C1'),emf=e2.find(e=>e.type==='bat').emf;
+  const x=c.stepWith(c.propagator(sys,Rg*C),c.zeroState(sys)).x;close(x[sys.si.get('q'+cap.id)]/C,emf*(1-Math.exp(-1)),1e-6);}
+});
 test('circuits time: LC conservation and RLC damping on both sides of critical',()=>{
  const L=.1,C=1e-5,V=10,q0=C*V,w0=1/Math.sqrt(L*C);
  for(const R of [0,20,50,100,190,198,200,202,210,1000]){
