@@ -596,7 +596,7 @@ table.rows input:focus { border-color: var(--accent); }
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
   tokens(); new ResizeObserver(resize).observe(scene); new ResizeObserver(() => draw()).observe(shelf);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'amp'); renderRows(); resize();
-  /* the vibrator runs on open so the wave is already travelling (the Set up card stays until the first Start); ?run=0 opens it stopped */
+  /* the vibrator opens stopped (the Set up card stays until the first Start); ?run=1 starts it on open for a link */
   const run0 = new URLSearchParams(location.search).get('run');
   if (run0 === '1') setRun(true, false);   /* otherwise it opens still until Start the vibrator (Steve: no demo starts on its own) */
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);

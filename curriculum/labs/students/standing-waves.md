@@ -5,6 +5,28 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§16.1–16.3, 16.5, 16.6 and
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/standing-waves.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Two waves make a standing wave; Harmonics of a string; Find the resonances; Pluck at the middle; Beats. The demo opens on Two waves make a standing wave. This handout uses Find the resonances (the **String** view with **Driven** chosen) and Beats (the **Beats** view).
+
+**Using the demo.**
+
+- String view: a string with fixed ends, drawn **Flat** or in **3D** on a sonometer. The card under the picture has **Harmonic**, **Pluck** and **Driven**; **Length L**, 0.300 to 1.000 m in 1 mm steps; **Tension T**, 10 to 150 N in 0.5 N steps; **Linear density μ**, 0.30 to 15.00 g/m. The string setups use a guitar's low E string, L = 0.648 m, T = 70 N, μ = 6.14 g/m, so f₁ = 82.4 Hz. Grips on the picture change lengths and amplitudes.
+- In Driven, the function generator under the picture sets the **Drive frequency f** with its **Coarse** (1 Hz a click) and **Fine** (0.1 Hz a click) knobs or its slider, from 0.25 f₁ to 8.75 f₁ in 0.1 Hz steps; dragging the red marker on the response plot sweeps it. **Quality factor Q of mode 1** runs from 10 to 300 (30 in the setup). Readouts: **Wave speed v = √(T/μ)**, **Fundamental f₁ = v/2L**, the steady amplitude with the damping time 2/γ, and a table of the harmonics.
+- **Record reading** works in the String view with Harmonic or Driven. It stores the mode, the harmonic number (left blank in Driven for you to fill in from the antinodes you count), the frequency, the steady amplitude in mm (Driven), L, T, μ and Q. **Export to worksheet** fills the Data table in order: Scan (the row and mode), n, f, Amplitude, L, T, μ.
+- Beats view: two pure tones. **Frequency f₁**, 100 to 1000 Hz in 1 Hz steps; **Difference f₂ − f₁**, −20 to 20 Hz in 0.1 Hz steps; **Amplitude A₂ / A₁**. The two upper strips zoom in on about five cycles of each tone and of their sum at the playhead; the long strip shows the band the sum fills, its envelope (dashed) and a bracket labelled T_beat between two loud moments. Readouts: **Frequency f₂**, **Pitch heard (f₁ + f₂)/2**, **Beat frequency \|f₁ − f₂\|** and **Beat period**. With **Sound** on both tones play.
+- **Mystery tone: f₂ hidden** draws a new f₂ at random between 425.0 and 455.0 Hz and hides the difference slider, f₂, the pitch heard, the beat frequency and the beat period; the T_beat bracket goes away and the long strip becomes a fixed 4 s window with a time axis, so the beats in it are yours to count. Ticking it again draws a new f₂; unticking it shows f₂.
+
+**What the demo models.**
+
+- An ideal flexible string: small amplitude, fixed ends, no stiffness, so $$v = \sqrt{\frac{T}{\mu}},\qquad f_n = \frac{n}{2L}\sqrt{\frac{T}{\mu}}.$$ Harmonic and pluck motion have no damping, and the pluck is a sum of 200 modes. Up and down displacement is exaggerated; in 3D the string is drawn three times thicker than a 1.2 mm guitar string and the hanging mass is $$m = T/g$$ with $$g = 9.80665\ \text{m/s}^2$$.
+- The driven string is a point force $$F_0\cos(2\pi f t)$$ with $$F_0 = 0.25\ \text{N}$$ at $$x = L/20$$, with the same damping rate $$\gamma = \omega_1/Q$$ for every mode, solved exactly with 40 modes, transients included. Each peak has a full width at half power of $$\gamma/2\pi$$ in Hz, and the amplitude needs a few damping times $$2/\gamma$$ (116 ms at Q = 30 in the setup) to settle; the response plot is the steady state amplitude against f.
+- Beats: two pure tones added, nothing else, $$y = A_1\cos(2\pi f_1 t) + A_2\cos(2\pi f_2 t),$$ with the loudness envelope $$\sqrt{A_1^2 + A_2^2 + 2A_1A_2\cos 2\pi(f_2 - f_1)t},$$ which repeats every $$1/|f_1 - f_2|$$.
+- The readings are simulated: computed from this model, not measured.
+
+</details>
+
 ## Goal
 
 Measure the resonance frequencies of a stretched string and test their dependence on harmonic number, length, tension and linear density. Then use beats to measure an unknown frequency.
@@ -50,7 +72,7 @@ On a real vibrating string bench, secure the string and hanging masses, keep han
 
 **Length check.** Keep tension and density fixed. Measure the fundamental at three lengths. Test whether $$f_1$$ is proportional to $$1/L$$.
 
-**Beats.** Use two pure tones. First check the method with tones of 440 Hz and 443 Hz: count the quiet moments in a 4 s stretch of the sum, read the times of the first and last, and find $$f_{\rm beat}$$. Then turn on the mystery tone, whose frequency $$f_2$$ is hidden. Change $$f_1$$ until the beats are slowest, by ear or by eye. Then choose six whole number values of $$f_1$$, three below that point and three above it, each giving between 3 and 25 quiet moments in the 4 s strip. For each, measure $$f_{\rm beat}$$ as before and record it in the Beats table. Reveal $$f_2$$ only after the analysis.
+**Beats.** Use two pure tones. First check the method with tones of 440 Hz and 443 Hz: the strip then spans two beat periods, so count its quiet moments, read the times of the first and last, and find $$f_{\rm beat}$$. Then turn on the mystery tone, whose frequency $$f_2$$ is hidden; the strip now shows a fixed 4 s stretch. Change $$f_1$$ until the beats are slowest, by ear or by eye. Then choose six whole number values of $$f_1$$, three below that point and three above it, each giving between 3 and 25 quiet moments in the 4 s strip. For each, measure $$f_{\rm beat}$$ as before and record it in the Beats table. Reveal $$f_2$$ only after the analysis.
 
 **Using the virtual apparatus.** Use the driven string (Find the resonances). A peak needs a few damping times to build up, so let the amplitude settle before you read it. Record a reading at each peak: it records the drive frequency, the steady amplitude and the string's settings, and leaves the harmonic number for you to fill in from the antinodes you count. Send each scan to the worksheet before clearing, so each scan gets its own copy of the Data table. Repeated readings of the same deterministic response are not independent trials.
 

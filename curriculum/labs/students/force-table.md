@@ -5,6 +5,29 @@ Textbook: OpenStax *University Physics*, Vol. 1, §2.3 and §5.1. Access for fre
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/vectors.html?setup=table)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Components; Adding; Subtracting; Dot and cross products; River crossing; Force table. This handout uses **Force table**, which the link above opens; the first four setups go with the Vectors worksheet.
+
+**Using the demo.**
+
+- The picture is the force table from above (**Top view**) or in **3D**; it opens in 3D where the browser can draw it, and there you drag on empty space to turn the view, scroll or pinch to zoom and double click to put the view back. In either view, drag a pulley around the rim to change its string's angle. Keys on the picture: 1 to 4 picks a string, the left and right arrows turn its pulley by 1° (with Shift by 10°), the up and down arrows change its mass by 1 g (with Shift by 10 g), and P pulls or replaces the centre pin.
+- **Strings on the table** chooses 2, 3 or 4 strings. Each string has **Mass on string n, with its hanger** (0.010 to 0.500 kg in 1 g steps) and **Angle of string n** (0° to 359° in 1° steps); the buttons on the picture add or take off 1 g or 10 g from the chosen string. **Pulley friction, up to the weight of** runs from 0 to 5 g in steps of 0.5 g and opens at 1 g.
+- **Show the forces as arrows** draws each string's pull on the ring; **Show the sum tip to tail** draws the forces head to tail. **Pull the pin** takes the centre pin out to see where the ring comes to rest without it. **Set the last string to the equilibrant** sets the last string by calculation, rounded to the nearest gram and degree, so it gives the answer away; it is disabled in Blind.
+- **Record this setup** stores every string's mass and angle, whether the ring is centered and the pulley friction. **Export to worksheet** sends the recorded setups to this handout's Data table in order: trial, $$m_1$$ to $$m_4$$ in kg, $$\theta_1$$ to $$\theta_4$$ in degrees and whether the ring was centered. **Clear** starts a new series. The CSV copy also records $$g$$ and the friction setting.
+- Blind hides the table of forces and components, the net force and the equilibrant; the ring still shows whether it is centered, and with the pin out, whether it comes to rest off centre, without saying which way.
+
+**What the demo models.**
+
+- Each string pulls the ring with its tension, which for a hanging mass at rest is its weight: $$F_i = m_i g$$ with $$g = 9.81\ \mathrm{m/s^2}$$, components $$F_{ix} = F_i\cos\theta_i$$ and $$F_{iy} = F_i\sin\theta_i$$, angles counterclockwise from the 0° mark. The equilibrant of the other strings is $$\vec E = -\sum \vec F_i$$, reported as a force, an angle and the mass $$E/g$$.
+- Pulley friction lets each string's tension differ from its hanging weight by up to the amount set (given as the weight of that many grams; a chosen value, not a measured one), so the ring centers over a small range of masses and angles, as on a real table. At 0 the pulleys are ideal and the ring centers only when the weights cancel exactly.
+- Model: massless strings, a light ring that slides freely on the table, and every string taken to point at the pin, ignoring the ring's few millimetres of play. The table's sizes are chosen: strings leave the table 20 cm from the centre, the ring is 4 cm across (to the middle of its 3 mm wire) and the pin is 8 mm across, so an unbalanced ring rests against the pin with its centre 14.5 mm toward the net pull.
+- With the pin pulled, the ring is pulled toward the pulleys by the hanging weights and can rest only where those pulls add to zero, the weighted geometric median of the pulleys (where the hangers hang lowest). It is shown sliding slowly along the net pull and stopping at the first place the pulley friction can hold it; when one string outweighs the rest it runs toward the rim and is stopped there, as a real ring would be when a hanger reaches the floor.
+- The 3D view is drawn to the same scale on a table 36 cm across; each hanger drops by as much as the ring moves toward its pulley. A hanger is drawn as 50 g with brass slotted masses (density 8500 kg/m³) making up the rest; the split is a picture, only the total matters. The table is simulated: whether the ring centers comes from the model above, so an unchanged setup gives the same result every time.
+
+</details>
+
 ## Goal
 
 Predict the force that balances two or three given forces, by a scale drawing and by components, and test the prediction on a force table.

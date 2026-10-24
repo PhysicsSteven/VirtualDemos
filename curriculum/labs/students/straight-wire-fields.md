@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §12.1 to §12.3 and §12.5. Ac
 
 **Using the demo.** Long straight wires cross the page; a dot means current out of the page and a cross means current into it. Drag a wire, the probe or the Amperian loop; click a wire to set its current. The Probe section gives the field at the probe and its direction, the Force between currents section gives the force per meter between two wires, and the Amperian loop (circle or rectangle, either direction) shows the current through it and the numerical value of $$\oint \vec B\cdot d\vec l$$ around it. Positions are in centimeters, to 0.1 cm.
 
-**What the demo models.** Each wire is infinitely long and thin, with field $$\mu_0 I/(2\pi r)$$ circling it, and the field of several wires is the vector sum. The force per meter on a wire is $$I\,\hat z\times\vec B$$ from the others' field. The demo does not use Ampère's law to find $$\oint \vec B\cdot d\vec l$$: it adds up $$\vec B\cdot d\vec l$$ around the loop numerically (adaptive Gauss and Kronrod quadrature, relative error below $$10^{-10}$$). $$\mu_0 = 1.25663706212\times10^{-6}\ \mathrm{T\cdot m/A}$$ (CODATA 2018). Simulated data.
+**What the demo models.** Each wire is infinitely long and thin, with field $$\mu_0 I/(2\pi r)$$ circling it, and the field of several wires is the vector sum. The force per meter on a wire is $$I\,\hat z\times\vec B$$ from the others' field. The demo does not use Ampère's law to find $$\oint \vec B\cdot d\vec l$$: it adds up $$\vec B\cdot d\vec l$$ around the loop numerically (adaptive Gauss and Kronrod quadrature, relative error below $$10^{-10}$$). $$\mu_0 = 1.25663706127\times10^{-6}\ \mathrm{T\cdot m/A}$$ (CODATA 2022). Simulated data.
 
 </details>
 

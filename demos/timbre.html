@@ -225,8 +225,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="square" aria-pressed="false">Square wave</button>
           <button type="button" data-p="saw" aria-pressed="true">Sawtooth wave</button>
           <button type="button" data-p="triangle" aria-pressed="false">Triangle wave</button>
-          <button type="button" data-p="clarinet" aria-pressed="false">Clarinet-like</button>
-          <button type="button" data-p="flute" aria-pressed="false">Flute-like</button>
+          <button type="button" data-p="clarinet" aria-pressed="false">Like a clarinet</button>
+          <button type="button" data-p="flute" aria-pressed="false">Like a flute</button>
           <button type="button" data-p="missing" aria-pressed="false">Missing fundamental</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
@@ -472,8 +472,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
   // ---------- instrument slider ----------
   const INST_HINT = {
-    flute: 'Flute-like: nearly a sine wave, a strong fundamental and a few weak harmonics.',
-    clarinet: 'Clarinet-like: odd harmonics strong, even ones weak, as in the low register of a clarinet, whose bore acts roughly like a pipe closed at the reed.',
+    flute: 'Like a flute: nearly a sine wave, a strong fundamental and a few weak harmonics.',
+    clarinet: 'Like a clarinet: odd harmonics strong, even ones weak, as in the low register of a clarinet, whose bore acts roughly like a pipe closed at the reed.',
     oboe: 'Oboe-like: a weak fundamental, the strongest partials at harmonics 3 and 4 and a slow fall above: a nasal, reedy tone.',
     trumpet: 'Trumpet-like: many strong harmonics that fall off slowly, as when a trumpet plays loudly: a bright, brassy tone.',
     bowed: 'Bowed string-like: every harmonic, aₙ = 1/n, the sawtooth. The force a bowed string puts on the bridge is close to a sawtooth.'

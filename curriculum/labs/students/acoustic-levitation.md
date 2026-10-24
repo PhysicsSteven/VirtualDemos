@@ -3,6 +3,30 @@ Student laboratory · Acoustics
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/acoustic-levitation.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Hold a bead; Stack of beads; Too heavy: steel falls; Move with phase; Water droplet; Single emitter and reflector. The demo opens on Stack of beads. Each setup puts the drive at 10 V, the phase at 0 and the bead radius at 0.75 mm, except that Too heavy: steel falls uses 12 V and Single emitter and reflector 20 V.
+
+**Using the demo.**
+
+- The picture is a 40 kHz levitator: two bowls of ultrasound speakers facing each other, or in the last setup one emitter over a flat reflector. The views above the picture are **3D field**, **Trap pockets**, **Slice** and **Flat**; on the Slice and Flat views the colors show **Pressure \|p\|** or **Potential U**. The handout uses Slice. The plot beside the picture is the trap potential U plus gravity along the axis, with the traps and the beads marked.
+- Controls: **Drive voltage (peak to peak)**, 0 to 20 V in 0.1 V steps; **Top bowl phase Δφ**, −720° to 720° in 1° steps, with **Sweep the phase** (which reads **Stop the sweep** while the sweep runs) and **Phase to 0**; the bead material chips **Foam polystyrene, 30 kg/m³**, **Water, 998 kg/m³** and **Steel, 7850 kg/m³**; **Bead radius a**, 0.20 to 2.50 mm in 0.05 mm steps; **Fill the traps**, **Add a bead** and **Clear**. Dragging a trap ring on the picture up or down also moves the traps (it sets the phase), clicking a ring drops a bead in it, and the gold microphone can be dragged. In the single emitter setup the phase controls are disabled.
+- Readouts under Trapping: the wavelength λ, the plane wave node spacing λ/2, the trap spacing at the centre, the largest \|p\| on the axis, **Largest upward push F<sub>max</sub>**, **Weight less buoyancy W**, **F<sub>max</sub> / W**, **Holds above** (the drive at which this bead would hold) and **Beads held / fallen**, with a table of the traps on the axis near the centre: position z, the offset trap − node and the depth ΔU. The status line above the picture says whether the bead holds or falls.
+- **Record this setup** stores one row: setup and material, bead radius, drive, phase (left blank for one emitter, which has no phase control), the tracked trap, F<sub>max</sub>/W and holds or falls, with the traps near the centre in the notes. The tracked trap is the one nearest the centre on the first record, then the one nearest the last recorded position, so it follows one trap as the phase moves it.
+- **Export to worksheet** fills the Data table's seven columns in order: setup and material, radius, drive, phase, tracked trap z, F<sub>max</sub>/W, notes. Read the weight from the readouts.
+
+**What the demo models.**
+
+- Air at 20 °C and 1 atm: $$c = 331.3\sqrt{1 + 20/273.15}\ \text{m/s} = 343.2\ \text{m/s},\qquad \rho_0 = 1.204\ \text{kg/m}^3,$$ so at 40 kHz $$\lambda = c/f = 8.58\ \text{mm}$$ and the plane wave node spacing is $$\lambda/2 = 4.29\ \text{mm}$$.
+- The levitator follows TinyLev (Marzo, Barnes and Drinkwater, 2017): 72 transducers of 10 mm diameter, 36 in each bowl in rings of 6, 12 and 18 on a sphere of radius 60 mm. Each is a piston in its far field, $$p = P_0 V\,D(\theta)\,\frac{e^{i(kd + \varphi)}}{d},$$ and the field is the sum over all 72 in free space: the bowls do not reflect sound and there is no nonlinear acoustics. Because the sound meets the axis at angles θ, the phase along the axis advances at $$k\langle\cos\theta\rangle$$ near the centre, so the traps there are $$\lambda/(2\langle\cos\theta\rangle) = 4.76\ \text{mm}$$ apart, closing toward λ/2 away from the centre, and a phase step moves them by $$\Delta z = \Delta\varphi/(2k_{\rm axis})$$. In the single emitter setup the reflector is rigid and infinite, replaced by the emitter's mirror image.
+- Calibration, illustrative: $$P_0 = 0.30\ \text{Pa}\cdot\text{m}$$ per volt peak to peak, from the Murata MA40S4S data sheet. Real arrays fall short of this, so a real levitator needs more drive than shown here.
+- Force: Gor'kov's potential for a small sphere, $$U = K_1|p|^2 - K_2|\nabla p|^2,\qquad K_1 = \frac{\pi a^3 f_1}{3\rho_0 c^2},\qquad K_2 = \frac{\pi a^3 f_2}{2\rho_0\omega^2},$$ with $$f_1 = 1 - \rho_0 c^2/K_p$$ and $$f_2 = 2(\rho_p - \rho_0)/(2\rho_p + \rho_0)$$. It holds for $$ka \ll 1$$ in an inviscid fluid; the page warns above $$a = \lambda/10$$ and calls the numbers unreliable above $$\lambda/5$$. Bulk moduli: foam 3 MPa (a rough figure), water 2.19 GPa, steel 160 GPa. A trap is a minimum of $$U + Wz$$ along the axis; its depth is the energy needed to lift the bead over the lower of the two barriers beside it.
+- Beads are rigid spheres that move only along the axis and pass through each other, with $$\left(m + \tfrac12\rho_0 V\right)\frac{dv}{dt} = -\frac{dU}{dz} - W + \text{drag}$$ (Schiller and Naumann drag) and $$W$$ the weight less buoyancy. Acoustic streaming and heating are left out. Bead motion is shown 20 times slower than real.
+- The readings are simulated: computed values from this model, not measurements.
+
+</details>
+
 ## Goal
 
 Find how a standing sound wave holds a small bead, how the traps move with phase, and how much drive is needed to lift different materials.

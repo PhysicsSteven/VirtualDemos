@@ -3,7 +3,29 @@ Student activity · Physics I foundations
 
 Textbook: OpenStax *University Physics*, Vol. 1, §§1.5–1.7. Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
-Companion demo: [Units, Scales and Estimates](https://physicssteven.github.io/VirtualDemos/demos/units.html). Its Fermi estimates tab works three other questions with low and high factors, and its Significant figures tab shows the rounding conventions for sums and products. Make your own estimate and roundings first, then compare the method.
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/units.html)
+
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Tabs in the demo:** Scale of things; Convert units; Dimensional analysis; Significant figures; Fermi estimates. This handout uses the last two; the first three go with the Measuring, Converting and Checking Units handout. The page opens on Scale of things, so choose the tab you need.
+
+**Using the demo.**
+
+- **Significant figures**: enter two measurements as you would write them (the tab opens with 12.07 × 0.0350) and choose ×, ÷, + or −. The table gives each number's significant figures and decimal places, and the line below gives the calculator value, the rule applied (keep so many significant figures, or so many decimal places) and the rounded result. A decimal point makes trailing zeros significant; 1500 with no decimal point is ambiguous and is taken as 2 figures here.
+- **Fermi estimates**: choose a **Question** (**Heartbeats**, **Walk the equator** or **Air per day**). Each factor has a low and a high value that you adjust to your own estimates; the demo opens with typical values, such as 60 to 100 heartbeats per minute and 70 to 90 years in a lifetime, and marks exact factors like 1440 minutes per day. The answer is the product, given as a range and to the nearest power of ten.
+- There is no Record or Export in this demo: the Data table is filled from your own estimates and the supplied exercise.
+- Blind hides the results (the rounded answer, the estimate and the other tabs' answers) so you can work first.
+
+**What the demo models.**
+
+- Multiplying or dividing: keep as many significant figures as the least precise factor. Adding or subtracting: keep as many decimal places as the least precise term. The calculator value is shown to 12 figures before the rule is applied, and a result with many figures is written as a power of ten (470 kept to 2 figures is written 4.7 × 10²).
+- A Fermi estimate is the product of its factors: $$\text{low} = \prod_i \text{low}_i,\qquad \text{high} = \prod_i \text{high}_i,$$ and the order of magnitude is the power of ten nearest the geometric middle $$\sqrt{\text{low}\times\text{high}}$$. In the Walk the equator question the distance is 40,075 km and the speed and hours factors are entered as their reciprocals, since the question divides by them.
+- The low and high values are assumptions you choose, not measurements; the demo does no sampling and reports no statistical interval. Nothing in this demo is a reading.
+
+</details>
+
+The demo's Fermi estimates tab works three other questions with low and high factors, and its Significant figures tab shows the rounding conventions for sums and products. Make your own estimate and roundings first, then compare the method.
 
 ## Goal
 

@@ -3,7 +3,30 @@ Student activity · Physics I foundations
 
 Textbook: OpenStax *University Physics*, Vol. 1, §§1.1–1.4. Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
-Companion demo: [Units, Scales and Estimates](https://physicssteven.github.io/VirtualDemos/demos/units.html). Do the conversions and dimensional checks by hand first, then check the length and speed conversions in its Convert units tab and compare the dimensions of familiar formulas in its Dimensional analysis tab; its Scale of things tab helps with the powers of ten sketch. It does not replace your own measurements.
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/units.html)
+
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Tabs in the demo:** Scale of things; Convert units; Dimensional analysis; Significant figures; Fermi estimates. This handout uses the first three; Significant figures and Fermi estimates go with the Estimating and Reporting handout.
+
+**Using the demo.**
+
+- The page opens on **Scale of things**. **Zoom through** flies from the observable universe down to one carbon atom in the DNA of your fingertip and on into a proton, with every object drawn at its true size and each power of ten taking the same scroll; **Ruler** is a logarithmic ruler of the same sizes, each tick ten times the one before, over about 42 powers of ten. Scroll or pinch on the picture, drag up and down, use the arrow keys, press **Fly in** or **Fly out**, move the **Width of the view** slider, or pick a stop under **Go to**.
+- **Convert units**: choose a **Quantity** (length, speed, mass, energy or time), a **Value** and its units **from** and **to**. The chain shows each exact factor, so you can see which units cancel. There is no area quantity.
+- **Dimensional analysis**: choose a **Question** (the period of a pendulum, a mass on a spring, the speed of a wave on a string, the period of a circular orbit, or the time to fall a height), set the **power of** each variable with its slider (−2 to 3 in steps of 0.5) until the dimensions [M L T] on the left match the answer's, then press **Show the answer**. Variables that do not appear in the answer get exponent 0.
+- There is no Record or Export in this demo: the Data table is filled from your own measurements and working.
+- Blind hides the results (the converted value, the dimension check, the rounded answer, the estimate and the object names on the ruler and in the zoom) so you can work first.
+
+**What the demo models.**
+
+- A conversion is a chain of factors through SI, each factor equal to 1: $$\text{value in new units} = \text{value}\times\frac{\text{SI units per old unit}}{\text{SI units per new unit}}.$$ The factors are the exact legal definitions, except where marked: 1 in = 0.0254 m, 1 ft = 0.3048 m, 1 mi = 1609.344 m, 1 lb = 0.45359237 kg, 1 cal = 4.184 J, 1 kWh = 3.6 × 10⁶ J, 1 h = 3600 s, 1 year = 31 557 600 s, and 1 km/h = 1000/3600 m/s.
+- Dimensions are kept as the powers of M, L and T: a length is [0 1 0], a speed [0 1 −1], an acceleration [0 1 −2], a force [1 1 −2]. The demo guesses the answer is a product of powers of the chosen quantities and solves for the powers that make the dimensions match; a pure number in front (like 2π) cannot be found this way, so the answer states it separately.
+- Sizes on the ruler and in the zoom are typical or approximate values, marked ≈ or about; ranges in nature are wide (a human hair is 20 to 180 μm). The named values come from the demo's Sources and approximations fold: proton radius 0.84075 fm (CODATA 2022), carbon 12 charge radius 2.4702 fm (Angeli and Marinova 2013), Mount Everest 8,849 m, planet positions for 23 October 2026 from the JPL approximate orbital elements, the Sun 26,670 ly from the centre of the Milky Way (GRAVITY 2019), the observable universe 8.8 × 10²⁶ m across; light travel distances use c = 299,792,458 m/s exactly. Nothing in this demo is a reading: it computes from exact factors and tabulated sizes.
+
+</details>
+
+Do the conversions and dimensional checks by hand first, then check the length and speed conversions in the demo's Convert units tab and compare the dimensions of familiar formulas in its Dimensional analysis tab; its Scale of things tab helps with the powers of ten sketch. It does not replace your own measurements.
 
 ## Goal
 

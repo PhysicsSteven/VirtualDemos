@@ -3,6 +3,30 @@ Student reading and data activity · Physics I
 
 Textbook: OpenStax *University Physics*, Vol. 1, §8.5, with power from §7.4. Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/energy-sources.html)
+
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Charge a phone, about 15 Wh; Run a 1 kW heater for an hour; A household for a day, about 30 kWh; 1 kW nonstop for a year. The page opens at 30 kWh delivered as electricity.
+
+**Using the demo.**
+
+- The picture is a bar chart on a logarithmic scale (each grid line is ten times the last) of the mass of each source needed to deliver the chosen energy: uranium 235 (fissioned), natural gas, gasoline, food fat, coal, dry wood, sugar, TNT, a lithium ion battery, water falling through the dam and air through a wind turbine, sorted from least mass to most, each bar labelled with its mass.
+- **Energy delivered** runs from 1 Wh to 10,000 MWh; the four chips set it to the examples above. **Delivered as electricity (heat engines convert only part of the heat)** is on when the page opens, with **Power station efficiency (heat to electricity)** from 20% to 60%, opening at 35%; with it off, the energy is delivered as heat and fuels need no engine.
+- Under Renewables: **Dam height (water falls through)** from 10 to 300 m, **Wind speed** from 3 to 20 m/s and **Average sunlight on a panel, day and night** from 50 to 300 W/m² (opening at 100 m, 10 m/s and 200 W/m²).
+- Readouts: Energy delivered in MJ; As heat from a heat engine; Uranium 235 vs coal, per kilogram; Solar panel area to collect it in one day; Gasoline volume (0.74 kg/L); Water volume through the dam.
+- Blind hides the masses and areas and keeps the sources in a fixed order, so the class can rank them first. There is no Record or Export: the Data table in this handout is filled from the EIA table it cites, not from the demo.
+
+**What the demo models.**
+
+- 1 kWh = 3.6 MJ. The mass of a fuel or of uranium needed to deliver energy $$E$$ as electricity is $$m = \frac{E}{(\text{energy per kg})\,\eta},$$ with $$\eta$$ the power station efficiency; delivered as heat, or from a battery, $$m = E/(\text{energy per kg})$$.
+- Typical energy per kilogram (higher heating values, which vary by sample): natural gas 55 MJ, gasoline 46 MJ, coal 27 MJ, dry wood 18 MJ, food fat 37.7 MJ and sugar 16.7 MJ (9 and 4 kcal/g), TNT 4.184 MJ (by definition), lithium ion cells 0.7 MJ (about 200 Wh/kg), uranium 235 fully fissioned 8.2 × 10⁷ MJ (200 MeV per fission, times Avogadro's number per 0.235 kg).
+- Hydro: $$gh$$ per kilogram of water at 90% turbine efficiency, with $$g = 9.81\ \mathrm{m/s^2}$$. Wind: the kinetic energy $$\tfrac12 v^2$$ per kilogram of air through the rotor, at the Betz limit 16/27. Solar: $$A = \frac{E}{(\text{sunlight})\times 0.20\times 86400\ \text{s}}$$ for a panel of 20% efficiency over one day at the average sunlight you set (it depends on place and season).
+- The demo's values are typical figures from its own table, not measurements, and it uses no generation statistics. The EIA figures in this handout (Electric Power Annual, Table 3.1.A, the 2024 row) come from the handout's Data table and the teaching snapshot, not from the demo.
+
+</details>
+
 ## Goal
 
 Use published energy data to compare electricity sources, distinguish energy from power and explain an energy conversion chain without confusing electricity with a primary resource.

@@ -3,6 +3,31 @@ Student laboratory · Acoustics
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/chladni.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo** (the Presets chips)**:** First pattern; A cross; Rings on a circle; Sweep and listen; Square: classic star; High mode. The demo opens on First pattern: a 1.00 mm steel square on the wave driver at its center, Q = 50.
+
+**Using the demo.**
+
+- The picture is the plate seen from above with sand on it (**Sand**) or in **3D**, with the frequency response plot beside or below it; the red line on the plot is the drive frequency and can be dragged. **Sprinkle fresh sand** puts the sand back, and the brass drive post can be dragged to move the drive point.
+- The function generator sets **Frequency f** with its **Coarse** and **Fine** knobs (fine, 1 cent a click), two sliders, **◀ Previous resonance** and **Next resonance ▶**, which jump to the exact peak, and **Sweep up** at 1 or 4 semitones per second. Keys on the picture: left and right arrows change f by one cent (ten with Shift), up and down jump between resonances.
+- Set up the plate and driver: **Shape** (Square, Circle), **Metal** (Steel, Aluminum), **Thickness h** from 0.5 to 2 mm in 0.05 mm steps, **Drive point** (Center, Off center, Edge), **Driver** (Wave driver, Point force) with its **Driver setting x₀** or **Drive force F₀**, and **Modal Q (damping)** from 10 to 1000. Changing the shape, metal or thickness keeps the frequency where it is.
+- Readouts: under Drive, the peak acceleration \|a\| on the plate in g, the grains on the plate, the post motion, the driver force and the **Nearest resonance**, with its mode label, how far f is detuned from it and its width f/Q; under Plate, the plate mass, its lowest flexural mode and the bending wavelength at f. The Display fold adds **Nodal lines** and **Where \|a\| &gt; g** overlays and switches the plot between **Response** and **Chladni's law**.
+- **Record reading** stores the shape, metal, thickness, drive point, driver, Q, frequency, peak \|a\| and the nearest mode, which is named only when f is within f/Q of that resonance and is blank otherwise. **Export to worksheet** fills the Data table's columns in order: Scan (the row number with the drive point, driver and Q), Shape, Material, Thickness, Mode, Frequency; the sketch column is yours.
+
+**What the demo models.**
+
+- Thin plate (Kirchhoff–Love) theory, $$D\nabla^4 w = -\rho h\,\frac{\partial^2 w}{\partial t^2},\qquad D = \frac{Eh^3}{12(1 - \nu^2)},$$ for small, linear motion of a flat, uniform, isotropic plate with every edge free. It is good while the bending wavelength is long compared with the thickness ($$kh$$ well below 1, shown under Plate).
+- The plate is 24 cm across, as in common teaching kits: a 24 cm square or a circle of radius 12 cm. Steel: $$E = 200$$ GPa, $$\rho = 7850$$ kg/m³, $$\nu = 0.30$$; aluminum: $$E = 69$$ GPa, $$\rho = 2700$$ kg/m³, $$\nu = 0.33$$. Every frequency scales as $$f \propto \frac{h}{\ell^2}\sqrt{\frac{E}{\rho(1 - \nu^2)}}$$ with $$\ell$$ the side or the radius.
+- Circle: the exact free edge solution, $$w = \left[J_n(\lambda r/a) + C\,I_n(\lambda r/a)\right]\cos n\theta,$$ with the frequency equation solved to 12 digits. Square: no closed form; Rayleigh–Ritz with Legendre polynomials up to degree 30 in x and in y (961 terms), converged to better than 1 part in a million for every mode shown.
+- Two drives. **Point force** is an ideal force $$F_0\cos(2\pi f t)$$ on the free plate, so its peaks are the plate's own modes. **Wave driver** is a voice coil bolted to the plate: its coil pushes on its own moving mass $$m_d = 50$$ g (an estimate) and on the plate, so the plate with that mass at the post has its own resonances, between those of a free plate and those of a plate pinned at the post. Full drive is a coil force of 17 N and the post never moves more than 3.5 mm; these figures are estimates from PASCO's published amplitudes, not measurements.
+- Damping: every mode has the same Q (50 in the presets, a model choice), so each peak has width $$f/Q$$, and the response is the sum over all computed modes. The sand's mass does not load the plate.
+- Sand is a picture, not a granular simulation. Where the acceleration amplitude $$|a|$$ exceeds $$g = 9.81\ \text{m/s}^2$$ the plate throws a grain off once a cycle, and a drift toward smaller $$|a|$$ stands in for grains bouncing off the tilted, moving surface; where $$|a| < g$$ a grain stays put, and grains that pass the edge fall off. Air is not modeled, so very light powder, which real air currents carry to the antinodes, is not shown.
+- The readings are simulated: model results, not measurements.
+
+</details>
+
 ## Goal
 
 Find the resonances of a vibrating plate, relate the observed sand patterns to nodal lines, and test how resonance frequency changes with plate thickness.

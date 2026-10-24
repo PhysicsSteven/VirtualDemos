@@ -5,6 +5,28 @@ Textbook: OpenStax *University Physics*, Vol. 1, §2.1, §2.2, §2.4, §4.1 and 
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/vectors.html?setup=comp)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Components; Adding; Subtracting; Dot and cross products; River crossing; Force table. This handout uses the first four (the link above opens **Components**). Force table goes with the Force Table worksheet, and River crossing is not used here.
+
+**Using the demo.**
+
+- The picture is a grid with the vectors drawn from the origin, at least 11 squares from the origin each way. Drag a vector's tip to change it. Keys on the picture: 1 or 2 picks $$\vec A$$ or $$\vec B$$, and the arrow keys move its tip by one grid step (with Shift by a tenth).
+- **Snap tips to the grid** is on when the page opens, so every component is a whole number of squares; with it off, tips move in tenths of a square. **Show components** draws each vector's shadows on the axes. In Adding, **Draw B** chooses **Head to tail** (B's tail on A's head) or **From the origin**; the sum is the same either way.
+- The readouts under Vectors change with the setup. Components: $$A_x$$ and $$A_y$$ to 2 decimals, $$|A|$$ to 3 decimals and θ from +x to 0.1°. Adding: $$\vec A$$, $$\vec B$$, $$\vec R = \vec A + \vec B$$, $$|R|$$, $$|A| + |B|$$ and θ of $$\vec R$$. Subtracting: $$\vec A - \vec B$$, $$|\vec A - \vec B|$$ and $$\vec B - \vec A$$. Dot and cross products: the angle φ between them, $$\vec A\cdot\vec B$$, $$|A||B|\cos\varphi$$, $$(\vec A\times\vec B)_z$$, $$|A||B|\sin\varphi$$ and $$(\vec B\times\vec A)_z$$.
+- **Record these vectors** stores the setup and the components of the vectors you set, nothing computed from them, so the worksheet gets only what you chose. **Export to worksheet** sends trial, setup, $$A_x$$, $$A_y$$, $$B_x$$ and $$B_y$$ to the first six columns of this handout's Data table in order; the result columns stay yours. **Clear** starts a new series. The Dot and cross products setup is written as Products in the recorded rows.
+- Blind hides every computed result (components, magnitudes, angles, sums, products and the resultant arrow) and leaves the vectors you set and the grid, so you can work them out and then check.
+
+**What the demo models.**
+
+- $$A_x = A\cos\theta,\qquad A_y = A\sin\theta,\qquad A = \sqrt{A_x^2 + A_y^2},$$ with θ measured counterclockwise from +x and given from 0° to 360°.
+- $$R_x = A_x + B_x,\qquad R_y = A_y + B_y;\qquad (\vec A - \vec B)_x = A_x - B_x,\qquad (\vec A - \vec B)_y = A_y - B_y.$$
+- $$\vec A\cdot\vec B = A_xB_x + A_yB_y = AB\cos\varphi,\qquad (\vec A\times\vec B)_z = A_xB_y - A_yB_x,$$ positive out of the page; φ is found from the dot product, from 0° to 180°.
+- The grid squares carry no unit, and the demo works in a plane only, so every cross product is along $$z$$. Nothing is measured: the results are exact arithmetic on the components you set, rounded only for display.
+
+</details>
+
 ## Goal
 
 Find the components, magnitude and direction of a vector, add and subtract vectors by components, use a difference of two vectors to find a displacement and an average acceleration, and compute the scalar and vector products of two vectors.

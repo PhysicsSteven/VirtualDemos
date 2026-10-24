@@ -5,6 +5,28 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§17.7 and 17.8. Access for f
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/doppler.html)
 
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Ambulance passing; Source at rest, observer moving; Mach 1: the sound barrier; Supersonic jet: Mach cone; Redshift and blueshift; Transverse Doppler. The last two are Light setups and go with the Doppler Effect for Light worksheet; this handout uses **Sound**. In Supersonic jet: Mach cone the source starts 200 m left of the centre of the view and 70 m above it at Mach 2 with f = 300 Hz, the observer stands 90 m left of centre and 70 m below, and the setup plays at 1/16 speed.
+
+**Using the demo.**
+
+- The picture shows the crests spreading from the source as circles, each centred where the source was when it emitted it, and the observer; below it is a plot of the received frequency f′ over time. **3D** shows the same simulation with each crest as a sphere, and **Flat** is the slice through them (the ground for the ambulance, the upright plane of the flight for the jet). Everything is to scale. The clock above the picture gives t to 0.01 s, and the Time fold's **Playback speed** runs from 1/32 to 4 times real: slow motion only slows the drawing, and the audio always plays the real pitch.
+- Drag the source or the observer to move them, and the round grip at the tip of an arrow to set that velocity. The card beside the picture holds the same values as sliders: for the source, **Mach number v<sub>s</sub>/v** (0 to 2.5), **Direction** and **Emitted frequency f** (100 to 1500 Hz in 10 Hz steps); for the observer, **Speed v<sub>o</sub>/v** (0 to 0.9) and **Direction**. **Restart** runs the setup again from its start.
+- Readouts under What the observer hears: **Received frequency f′**, **f′/f**, the **Angle θ at emission**, when the sound now arriving left the source, and, from Mach 1 up, the **Mach cone half angle**. When the cone reaches the observer the picture flashes "boom" and a red line marks that moment on the f′ plot.
+- **Record reading** stores the sound arriving now: which one moves, the emitted frequency, the part of that velocity along the line from where the sound left the source to the observer (the only part that shifts the frequency), whether it approaches or recedes, f′, f′/f and the angle θ. It refuses a reading while no sound has reached the observer, while two sounds arrive at once (supersonic), and in Light.
+- **Export to worksheet** fills the Data table in order: Scan, Motion, Emitted f₀, Speed (the part along the line), Direction, Observed f, f/f₀.
+
+**What the demo models.**
+
+- A point source in still, uniform air with $$v = 343\ \text{m/s}$$ (dry air at 20 °C). The medium picks out a frame, so only for sound does it matter which one moves.
+- The received frequency comes from the geometry of the crests: the program finds the emission time whose crest reaches the observer now and uses $$f' = f\,\frac{v - \vec v_o\cdot\hat n}{v - \vec v_s\cdot\hat n},$$ where $$\hat n$$ points from where the source was when it emitted this sound to where the observer is now (the dashed line on the drawing). For an observer at rest this is $$f' = \frac{f}{1 - (v_s/v)\cos\theta}.$$
+- From Mach 1 up the crests touch two lines through the source, the Mach cone, with half angle $$\sin\theta_c = v/v_s.$$ Inside the cone two sounds arrive at once, one of them heard backward and drawn dashed at \|f′\| on the plot. A real aircraft is not a point: its nose and tail shocks give two booms close together.
+- Each drawn circle is one crest, or at high frequency every nth crest (the Time fold says which); loudness falls as 1/r in the audio but is not drawn. The readings are simulated: computed from this model, not measured.
+
+</details>
+
 ## Goal
 
 Measure how the observed frequency of sound changes when a source moves relative to a stationary observer, and distinguish source motion from observer motion. Then time a sonic boom to measure the angle of a Mach cone.

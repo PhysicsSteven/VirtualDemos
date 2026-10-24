@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §12.4 and §12.6. Access for f
 
 **Using the demo.** The winding is seen cut through its axis: dots are current coming out of the page and crosses current going in. Number of turns, Length, Radius and Current set the winding; drag the grips to change the radius and length, drag the probe, or click the plot below the picture to put the probe on the axis. The readouts give the field at the probe (along the axis and away from it), the field at the center and, for more than one turn, at an end of the winding.
 
-**What the demo models.** Each turn is a circular loop, and its field everywhere is the exact Biot and Savart result (in closed form with complete elliptic integrals). A winding of $$N$$ turns is $$N$$ such loops spread evenly along the length $$L$$, so the turn density is exactly $$n = N/L$$; the field is the sum over the turns. The wire has no thickness. $$\mu_0 = 1.25663706212\times10^{-6}\ \mathrm{T\cdot m/A}$$ (CODATA 2018). Simulated data.
+**What the demo models.** Each turn is a circular loop, and its field everywhere is the exact Biot and Savart result (in closed form with complete elliptic integrals). A winding of $$N$$ turns is $$N$$ such loops spread evenly along the length $$L$$, so the turn density is exactly $$n = N/L$$; the field is the sum over the turns. The wire has no thickness. $$\mu_0 = 1.25663706127\times10^{-6}\ \mathrm{T\cdot m/A}$$ (CODATA 2022). Simulated data.
 
 </details>
 

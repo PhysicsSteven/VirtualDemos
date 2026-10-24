@@ -19,7 +19,7 @@ Students should know frequency, period and the harmonics of a string or pipe. Br
 
 1. **Sawtooth wave** (the opening state, A3 = 220 Hz). Play it, then press **Pure tone** and back. Point out the three views: one bar per harmonic, one line per partial in the spectrum, one vibrating mode per harmonic on the ladder. Ask Q2.
 2. **Square wave**, then **Triangle wave**. Both have only odd harmonics; listen to how much mellower the triangle is. Tick **Ideal shape** off and on to see the 16 harmonic sum against the infinite series, with the ripple at the jumps (Q3 first part).
-3. **Clarinet-like**. Switch the ladder to **Closed pipe**: the even modes are crossed out. Ask Q3.
+3. **Like a clarinet**. Switch the ladder to **Closed pipe**: the even modes are crossed out. Ask Q3.
 4. **Compare instruments**. Keep f₁ fixed and drag the slider slowly from Flute to Bowed string. Name what changes at each stop: the flute is nearly a sine, the clarinet's even bars drop out, the oboe's fundamental is weaker than harmonics 3 and 4, the trumpet keeps many strong harmonics. The pitch readout never moves: only the mix of harmonics, and so the tone color, changes. The spectra are illustrative, and real instruments also differ in their attacks.
 5. **Missing fundamental**. Ask Q1 before playing. Play it, tick and untick **Remove harmonic 1 (the fundamental)**, then **Also remove harmonic 2**: the bracket still reads 4.55 ms and the pitch stays A3. Then set only harmonics 2, 4, 6, 8 with the bars (Q4).
 6. **Randomize phases** on the **Sawtooth wave**, several times, with sound on. The waveform and **Peak / RMS** change; the spectrum, the RMS and the sound barely do (Q5). Try again at f₁ = 55 Hz (drag the slider to A1).
