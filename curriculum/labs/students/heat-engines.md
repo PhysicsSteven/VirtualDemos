@@ -1,6 +1,6 @@
 # Heat Engine Cycles: Student Lab Starter
 
-**Simulation:** [Open](../../demos/heat-engines.html) (from curriculum/labs/students use repository link instead: https://physicssteven.github.io/VirtualDemos/demos/heat-engines.html)
+**Simulation:** [Open](../../../demos/heat-engines.html) (from curriculum/labs/students use repository link instead: https://physicssteven.github.io/VirtualDemos/demos/heat-engines.html)
 
 **Research question:** Compare simulated engine efficiency with the Carnot upper bound.
 

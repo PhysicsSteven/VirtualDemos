@@ -95,7 +95,6 @@ OVERRIDES = {
     "ideal-gas": {"wait": 2500},
     "magnetic-force": {"wait": 5000},
     "quantum-waves": {"click": ['[data-p="barrier"]'], "wait": 3000},
-    "circuit-builder": {"click": ['[data-v="bench"]', '[data-p="compare"]'], "wait": 1500},
     "gauss-law": {"click": ['[data-p="outside"]', '#tPatch'], "wait": 1500},
     "black-holes": {"click": ['[data-p="ring"]'], "wait": 2500},
     "doppler": {"click": ['[data-p="jet"]'], "wait": 9000},

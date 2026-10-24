@@ -1,6 +1,6 @@
 # Gamma Spectroscopy: Student Lab Starter
 
-**Simulation:** [Open](../../demos/gamma-spectroscopy.html) (from curriculum/labs/students use repository link instead: https://physicssteven.github.io/VirtualDemos/demos/gamma-spectroscopy.html)
+**Simulation:** [Open](../../../demos/gamma-spectroscopy.html) (from curriculum/labs/students use repository link instead: https://physicssteven.github.io/VirtualDemos/demos/gamma-spectroscopy.html)
 
 **Research question:** Calibrate detector channel against photon energy and identify unknown lines.
 

@@ -1,6 +1,6 @@
 # Diffraction Grating: Student Lab Starter
 
-**Simulation:** [Open](../../demos/diffraction-grating.html) (from curriculum/labs/students use repository link instead: https://physicssteven.github.io/VirtualDemos/demos/diffraction-grating.html)
+**Simulation:** [Open](../../../demos/diffraction-grating.html) (from curriculum/labs/students use repository link instead: https://physicssteven.github.io/VirtualDemos/demos/diffraction-grating.html)
 
 **Research question:** Infer wavelength from diffraction angles.
 

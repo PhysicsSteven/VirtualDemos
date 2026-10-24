@@ -1,6 +1,6 @@
 # Gas in a Box: Student Lab Starter
 
-**Simulation:** [Open](../../demos/ideal-gas.html) (from curriculum/labs/students use repository link instead: https://physicssteven.github.io/VirtualDemos/demos/ideal-gas.html)
+**Simulation:** [Open](../../../demos/ideal-gas.html) (from curriculum/labs/students use repository link instead: https://physicssteven.github.io/VirtualDemos/demos/ideal-gas.html)
 
 **Research question:** Test the two dimensional ideal gas equation of state.
 

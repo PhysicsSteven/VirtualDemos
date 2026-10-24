@@ -1,5 +1,5 @@
 # Finding Exoplanets — Student Virtual Laboratory
-**Simulation:** [Open Finding Exoplanets](../../demos/exoplanets.html)  
+**Simulation:** [Open Finding Exoplanets](../../../demos/exoplanets.html)  
 **Duration:** 50–75 minutes · **Level:** introductory calculus based physics  
 **Research question:** Can transit photometry determine a planet's radius?
 
