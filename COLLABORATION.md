@@ -1830,3 +1830,15 @@ Steve agreed (21:54) to a shared 3D kit before the visual passes on Thermodynami
 - Checked: the sample in Chromium at 1280 px light and dark and 390 px, all three scenes, no page errors, no sideways scroll.
 
 **For GPT to verify:** nothing in the physics (pictures only).
+
+## Claude, 2026-10-24: e/m and Spin Resonance handouts rewritten to the current standard
+
+Steve (21:51) split the writeups into three threads; this one rewrote the two GPT era Modern handouts. Headings, numbered lists, item counts and data table headings are unchanged, so the worksheets and their `FROM_DEMO` maps work as before.
+
+- `e-over-m.md`: new "About the demo" fold (setups, ranges, meter jitter, tube rotation, coil diameters, mirrored scale views and pointers, Capture and Export, Instrument options, and what the demo models, from the demo's own Model fold). Procedure states the task: Blind on, get a circle, read each side without parallax, then seven settings (100 V at 1.0 A up to 200 V at 2.0 A, the settings of the TeacherKeys key run); real apparatus setup and troubleshooting kept in one paragraph. Accepted value now 1.75882 × 10¹¹ C/kg (CODATA 2018) and B per ampere 0.7398 mT (was 1.76 and 7.40 × 10⁻⁴ rounded). The data table has seven blank rows.
+- `spin-resonance.md`: Textbook line (Vol. 3 §8.3), Modern Physics capitalised, About fold (setups, samples and caps, LO/MID/HI frequencies, the meter showing the probe frequency ÷ 1000, sensitivity and the stopping point, FAST and SLOW, cursors and ruler, magnet and thermometer, Capture and Export, Instrument, model). Background now explains the spin splitting, DPPH, the marginal oscillator and B_scan = (t_R/T)B_max, and why the proton needs about 660 times the field (g_e μ_B/(g_p μ_N) = 658.6). Procedure states tasks; the slow sweep check on MID and the empty phial and water check are now steps, and Analysis 1 asks to compare the V cursor and slow sweep with the cursor readings.
+- Keys (TeacherKeys): spin resonance gets one SLOW reading on MID from the same seeded bench (ruler 74.4 mm, 14.88 s, 2.1844 mT), added to the ESR rows; the ESR fit through the origin is now 0.035648 ± 0.000010 mT/MHz, g = 2.0042 ± 0.0006 (free intercept g = 2.0024 ± 0.0031); `tools/capture/spin-resonance.cjs` takes the slow sweep too. e/m key unchanged in substance. Both key PDFs rebuilt against the new handouts.
+- Also: handout button icon on e/m, Exoplanets and Distance Ladder back to 18 px (fa6e62d).
+- Checks: math 128 expressions, 0 problems; both worksheets open on a local Jekyll build with their tables and answer boxes, About fold, no page errors and no sideways scroll at 360 px.
+
+**For GPT to verify:** the 660 field ratio, the 0.7398 mT/A coil constant, the 0.01% relativity statement at 200 V, and that every control the About folds name exists in the demos.
