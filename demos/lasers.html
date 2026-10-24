@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled toggles toggles-label toggles-input swatch" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled toggles toggles-label toggles-input swatch" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -135,7 +135,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="three" aria-pressed="false">Three level vs four level</button>
           <button type="button" data-p="modes" aria-pressed="false">Cavity modes of a He–Ne laser</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <!-- Processes view -->
@@ -159,7 +159,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="wide"><dt>Stimulated over spontaneous in thermal light, 1/(e<sup>hν/kT</sup> − 1)</dt><dd id="rSS">—</dd></div>
           <div class="wide"><dt>A₂₁/B₂₁ = 8πhν³/c³</dt><dd id="rAB">—</dd></div>
         </dl>
-        <p class="formula">B₁₂ = B₂₁ (equal degeneracies)<br>absorption: B₁₂ρ(ν) N₁ · stimulated: B₂₁ρ(ν) N₂ · spontaneous: A₂₁ N₂</p>
         <div>
           <div class="slider-head"><label for="pw">Pump light, W/A₂₁</label><output id="pwOut" class="mono" for="pw"></output></div>
           <input type="range" id="pw" min="-2" max="2" step="0.001" value="0">
@@ -167,7 +166,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <dl class="readout">
           <div class="wide"><dt>Pumped two level atom, N₂/N₁ = W/(W + A₂₁)</dt><dd id="rPump">—</dd></div>
         </dl>
-        <p class="hint">Pump light at the transition frequency drives absorption and stimulated emission at the same rate W per atom, so dN₂/dt = W(N₁ − N₂) − A₂₁N₂. However hard you pump, N₂ only approaches N₁: the medium becomes transparent, never amplifying. Lasers need a third or fourth level. Here kT ≪ hν is assumed for the pumped atom.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">B₁₂ = B₂₁ (equal degeneracies)<br>absorption: B₁₂ρ(ν) N₁ · stimulated: B₂₁ρ(ν) N₂ · spontaneous: A₂₁ N₂</p>
+          <p class="hint">Pump light at the transition frequency drives absorption and stimulated emission at the same rate W per atom, so dN₂/dt = W(N₁ − N₂) − A₂₁N₂. However hard you pump, N₂ only approaches N₁: the medium becomes transparent, never amplifying. Lasers need a third or fourth level. Here kT ≪ hν is assumed for the pumped atom.</p>
+        </details>
         <p class="hint" id="transHint"></p>
       </section>
 
@@ -229,10 +231,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch nr"></i>Fast decay, no light (or no laser light)</span>
           <span><i class="swatch las"></i>Laser transition</span>
         </div>
-        <p class="hint">Ruby (Cr³⁺ in Al₂O₃): pumped into the broad ⁴T₂ and ⁴T₁ bands by green and violet light, which relax in well under a microsecond to the ²E level. ²E lives about 3 ms and lases to the ground state ⁴A₂ on the R₁ line, 694.3 nm. The lower level is the ground state, so more than half of all Cr³⁺ ions must be excited.</p>
-        <p class="hint">Nd:YAG (Nd³⁺ in Y₃Al₅O₁₂): pumped at 808 nm into ⁴F₅/₂, which decays quickly to ⁴F₃/₂ (lifetime about 230 µs). Lasing at 1064 nm ends on ⁴I₁₁/₂, about 2100 cm⁻¹ (0.26 eV) above the ground state. At 300 K the Boltzmann factor leaves only <span id="ndLow">4 × 10⁻⁵</span> of the ions there, and it empties in nanoseconds, so any excited ion is already an inversion.</p>
-        <p class="hint">Helium neon: electrons in the discharge excite helium to its metastable 2¹S₀ level (20.62 eV). A collision hands the energy to neon 3s₂ (Paschen notation; 2p⁵5s, 20.66 eV), the 0.05 eV gap made up by the atoms' kinetic energy. 3s₂ lases at 632.8 nm to 2p₄ (2p⁵3p, 18.70 eV), which decays fast to the 1s levels (2p⁵3s); those empty mainly by collisions with the tube wall, which is why the tube is narrow. Other lines: 3.39 µm (3s₂ to 3p₄) and 1.15 µm (2s₂ to 2p₄, fed from helium 2³S₁ at 19.82 eV).</p>
-        <p class="hint">Wavelengths are the usual values in air. Level energies: NIST Atomic Spectra Database (He, Ne); W. Koechner, Solid State Laser Engineering (ruby, Nd:YAG). Energy axes are to scale except across the break in the helium neon diagram.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Ruby (Cr³⁺ in Al₂O₃): pumped into the broad ⁴T₂ and ⁴T₁ bands by green and violet light, which relax in well under a microsecond to the ²E level. ²E lives about 3 ms and lases to the ground state ⁴A₂ on the R₁ line, 694.3 nm. The lower level is the ground state, so more than half of all Cr³⁺ ions must be excited.</p>
+          <p class="hint">Nd:YAG (Nd³⁺ in Y₃Al₅O₁₂): pumped at 808 nm into ⁴F₅/₂, which decays quickly to ⁴F₃/₂ (lifetime about 230 µs). Lasing at 1064 nm ends on ⁴I₁₁/₂, about 2100 cm⁻¹ (0.26 eV) above the ground state. At 300 K the Boltzmann factor leaves only <span id="ndLow">4 × 10⁻⁵</span> of the ions there, and it empties in nanoseconds, so any excited ion is already an inversion.</p>
+          <p class="hint">Helium neon: electrons in the discharge excite helium to its metastable 2¹S₀ level (20.62 eV). A collision hands the energy to neon 3s₂ (Paschen notation; 2p⁵5s, 20.66 eV), the 0.05 eV gap made up by the atoms' kinetic energy. 3s₂ lases at 632.8 nm to 2p₄ (2p⁵3p, 18.70 eV), which decays fast to the 1s levels (2p⁵3s); those empty mainly by collisions with the tube wall, which is why the tube is narrow. Other lines: 3.39 µm (3s₂ to 3p₄) and 1.15 µm (2s₂ to 2p₄, fed from helium 2³S₁ at 19.82 eV).</p>
+          <p class="hint">Wavelengths are the usual values in air. Level energies: NIST Atomic Spectra Database (He, Ne); W. Koechner, Solid State Laser Engineering (ruby, Nd:YAG). Energy axes are to scale except across the break in the helium neon diagram.</p>
+        </details>
       </section>
 
       <!-- Modes view -->
@@ -258,13 +262,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="wide"><dt>Half wavelengths in the cavity, q = 2L/λ</dt><dd id="rQi">—</dd></div>
           <div class="wide"><dt>Band above threshold</dt><dd id="rBand">—</dd></div>
         </dl>
-        <p class="formula">ν<sub>q</sub> = q c/2L · Δν<sub>D</sub> = ν₀ √(8kT ln2/Mc²)</p>
-        <p class="hint">Neon at 400 K (M = 20.18 u), λ = 632.991 nm in vacuum. A mode lases where the gain exceeds the loss. Doppler broadening is inhomogeneous: each mode draws on its own group of atoms, so several modes lase at once. Mode heights are illustrative, proportional to how far the gain is above threshold; real modes compete and the bars ignore hole burning and the Lamb dip.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">ν<sub>q</sub> = q c/2L · Δν<sub>D</sub> = ν₀ √(8kT ln2/Mc²)</p>
+          <p class="hint">Neon at 400 K (M = 20.18 u), λ = 632.991 nm in vacuum. A mode lases where the gain exceeds the loss. Doppler broadening is inhomogeneous: each mode draws on its own group of atoms, so several modes lase at once. Mode heights are illustrative, proportional to how far the gain is above threshold; real modes compete and the bars ignore hole burning and the Lamb dip.</p>
+        </details>
       </section>
 
       <section>
-        <h2>Model</h2>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
         <p class="hint" id="modelHint"></p>
+        </div></details>
       </section>
     </aside>
   </main>

@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg button-focusvisible slider-head slider-head-label readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane slider-head-output toggles-label toggles-input key key-span readout-big-dd swatch pane-canvas" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg button-focusvisible slider-head slider-head-label readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane slider-head-output toggles-label toggles-input key key-span readout-big-dd swatch pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -182,7 +182,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="tata" aria-pressed="false">TATA box</button>
           <button type="button" data-p="gc" aria-pressed="false">GC rich</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -214,11 +214,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section>
         <h2>The two strands</h2>
         <div class="duplex" id="duplex" aria-label="Duplex sequence. Click a letter to select that base pair."></div>
-        <p class="hint">Strand 1 on top, 5′ to 3′; strand 2 under it runs 3′ to 5′, antiparallel. Click a letter to select its base pair.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Strand 1 on top, 5′ to 3′; strand 2 under it runs 3′ to 5′, antiparallel. Click a letter to select its base pair.</p>
+        </details>
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="inline">
           <span class="lab">Color by</span>
           <div class="seg" role="group" aria-label="Color by" id="colorSeg">
@@ -234,7 +236,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <label><input type="checkbox" id="tEnds" checked>5′ and 3′ ends</label>
         </div>
         <div class="key" id="key"></div>
-        <p class="hint">Drag to turn, scroll or pinch to zoom, double click to go back to the whole molecule. Hover an atom for its name; click to select its base pair. With the view focused, arrow keys turn it, + and − zoom, S spins.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag to turn, scroll or pinch to zoom, double click to go back to the whole molecule. Hover an atom for its name; click to select its base pair. With the view focused, arrow keys turn it, + and − zoom, S spins.</p>
+        </details>
+        </div></details>
       </section>
 
       <section>
@@ -260,7 +265,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           </div>
         </div>
         <p class="hint" id="tmHint"></p>
-        <p class="hint">Rise and twist are measured back from the built coordinates. Groove widths are the closest phosphorus to phosphorus distance across each groove minus 5.8 Å, twice the phosphate van der Waals radius (El Hassan and Calladine), measured along the phosphate helices of this model.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Rise and twist are measured back from the built coordinates. Groove widths are the closest phosphorus to phosphorus distance across each groove minus 5.8 Å, twice the phosphate van der Waals radius (El Hassan and Calladine), measured along the phosphate helices of this model.</p>
+        </details>
       </section>
 
       <section>
@@ -288,9 +295,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
       <section>
         <h2>About the model</h2>
-        <p class="hint"><b>Coordinates.</b> Every atom is placed from the A and B DNA fiber models of Arnott and coworkers, refined against X ray fiber diffraction: cylindrical coordinates (r, φ, z) for each atom of each nucleotide, as tabulated in the fd_helix routine of the Nucleic Acid Builder (D. A. Case, AmberTools/AmberClassic), which cites Fuller et al., J. Mol. Biol. 12, 60 (1965) and Arnott, Campbell Smith and Chandrasekaran, CRC Handbook of Biochemistry and Molecular Biology, 3rd ed., Nucleic Acids vol. II, 411 (1976). Pair k is turned by k times the twist and raised by k times the rise; strand 2 is the image of strand 1 under a twofold axis through each pair, which makes the strands antiparallel. B form: 3.38 Å and 36.0° per pair, 10 pairs per turn. A form: 2.56 Å and 32.7°, 11 pairs per turn.</p>
-        <p class="hint"><b>Approximations.</b> The helix is uniform: every step has the same rise and twist, and every A·T or G·C pair the same shape. Real DNA varies from step to step with sequence (roll, twist, propeller twist, groove width), and crystal structures in the Protein Data Bank, such as the Dickerson dodecamer (PDB 1BNA), differ from this model by up to a few ångströms. Hydrogen atoms are not placed, so hydrogen bonds are shown between donor and acceptor atoms (N or O), and space filling spheres are heavy atoms only. Z DNA is not offered: the fiber table used here has no Z form. The cartoon is a drawing aid: a tube through the phosphorus atoms and a slab for each base.</p>
-        <p class="hint"><b>Other numbers.</b> Space filling radii are Bondi's van der Waals radii (J. Phys. Chem. 68, 441, 1964): C 1.70, N 1.55, O 1.52, P 1.80 Å. Molar mass sums the nucleotide residues (dA 313.21, dC 289.18, dG 329.21, dT 304.20 g/mol) minus 61.96 g/mol per strand for strands with no 5′ phosphate, as in this model. T<sub>m</sub> uses the unified nearest neighbor parameters of SantaLucia, PNAS 95, 1460 (1998), with the salt correction ΔS += 0.368 (N − 1) ln[Na<sup>+</sup>], total strand concentration 0.5 µM, and no magnesium. It is an estimate for a two state transition of short duplexes.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint"><b>Coordinates.</b> Every atom is placed from the A and B DNA fiber models of Arnott and coworkers, refined against X ray fiber diffraction: cylindrical coordinates (r, φ, z) for each atom of each nucleotide, as tabulated in the fd_helix routine of the Nucleic Acid Builder (D. A. Case, AmberTools/AmberClassic), which cites Fuller et al., J. Mol. Biol. 12, 60 (1965) and Arnott, Campbell Smith and Chandrasekaran, CRC Handbook of Biochemistry and Molecular Biology, 3rd ed., Nucleic Acids vol. II, 411 (1976). Pair k is turned by k times the twist and raised by k times the rise; strand 2 is the image of strand 1 under a twofold axis through each pair, which makes the strands antiparallel. B form: 3.38 Å and 36.0° per pair, 10 pairs per turn. A form: 2.56 Å and 32.7°, 11 pairs per turn.</p>
+          <p class="hint"><b>Approximations.</b> The helix is uniform: every step has the same rise and twist, and every A·T or G·C pair the same shape. Real DNA varies from step to step with sequence (roll, twist, propeller twist, groove width), and crystal structures in the Protein Data Bank, such as the Dickerson dodecamer (PDB 1BNA), differ from this model by up to a few ångströms. Hydrogen atoms are not placed, so hydrogen bonds are shown between donor and acceptor atoms (N or O), and space filling spheres are heavy atoms only. Z DNA is not offered: the fiber table used here has no Z form. The cartoon is a drawing aid: a tube through the phosphorus atoms and a slab for each base.</p>
+          <p class="hint"><b>Other numbers.</b> Space filling radii are Bondi's van der Waals radii (J. Phys. Chem. 68, 441, 1964): C 1.70, N 1.55, O 1.52, P 1.80 Å. Molar mass sums the nucleotide residues (dA 313.21, dC 289.18, dG 329.21, dT 304.20 g/mol) minus 61.96 g/mol per strand for strands with no 5′ phosphate, as in this model. T<sub>m</sub> uses the unified nearest neighbor parameters of SantaLucia, PNAS 95, 1460 (1998), with the salt correction ΔS += 0.368 (N − 1) ln[Na<sup>+</sup>], total strand concentration 0.5 µM, and no magnesium. It is an estimate for a two state transition of short duplexes.</p>
+        </details>
       </section>
     </aside>
   </main>

@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody app stage-canvas-focusvisible spin formula btnrow seg seg-button inline readout-wide readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench btn btn-primary btn-disabled slider-head-output toggles-label toggles-input readout-big-dd projshort-proj-stage phone-chips-button pane-canvas" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg app stage-canvas-focusvisible spin formula btnrow seg seg-button inline readout-wide readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench btn btn-primary btn-disabled slider-head-output toggles-label toggles-input readout-big-dd projshort-proj-stage phone-chips-button pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -119,7 +119,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="dilute" aria-pressed="false">Dilute gas</button>
           <button type="button" data-p="cold" aria-pressed="false">Near absolute zero</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -134,7 +134,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>Mean speed</dt><dd id="rMean">—</dd></div>
           <div><dt>rms speed</dt><dd id="rRms">—</dd></div>
         </dl>
-        <p class="hint">T comes from the kinetic energy: in two dimensions the average is ⟨KE⟩ = kT. P measured is the momentum the molecules deliver to the walls, per unit wall length per unit time, averaged over about a second. In 2D, pressure is force per length (N/m).</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">T comes from the kinetic energy: in two dimensions the average is ⟨KE⟩ = kT. P measured is the momentum the molecules deliver to the walls, per unit wall length per unit time, averaged over about a second. In 2D, pressure is force per length (N/m).</p>
+        </details>
       </section>
 
       <section>
@@ -159,7 +161,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-m="equal" aria-pressed="true">Equal speeds</button>
           <button type="button" data-m="thermal" aria-pressed="false">Random (thermal)</button>
         </div>
-        <p class="hint">Moving the temperature slider rescales every speed at once. Picking a start restarts the gas.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Moving the temperature slider rescales every speed at once. Picking a start restarts the gas.</p>
+        </details>
       </section>
 
       <section>
@@ -172,11 +176,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="slider-head"><label for="sIn">Piston top speed</label><output id="sOut" class="mono" for="sIn">300 m/s</output></div>
           <input type="range" id="sIn" min="25" max="1000" step="25" value="300">
         </div>
-        <p class="hint">Drag the right wall, or use the arrow keys on the box. A molecule bouncing off a wall that moves toward it comes back faster. For a slow squeeze of this 2D gas, T × A stays about constant. Pull the wall out faster than the molecules move and the gas barely cools.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag the right wall, or use the arrow keys on the box. A molecule bouncing off a wall that moves toward it comes back faster. For a slow squeeze of this 2D gas, T × A stays about constant. Pull the wall out faster than the molecules move and the gas barely cools.</p>
+        </details>
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tColor" checked>Color by speed</label>
           <label><input type="checkbox" id="tTrail" checked>Tracer trail</label>
@@ -190,7 +196,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch trail"></i>Tracer path; click a molecule to follow it</span>
           <span><i class="swatch wall"></i>Piston, the movable right wall</span>
         </div>
-        <p class="hint">Molecules are hard disks 0.5 nm across, a bit larger than real argon (about 0.34 nm), drawn at that size or larger. Their finite size makes P run a few percent above NkT/A, more when the box is crowded.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Molecules are hard disks 0.5 nm across, a bit larger than real argon (about 0.34 nm), drawn at that size or larger. Their finite size makes P run a few percent above NkT/A, more when the box is crowded.</p>
+        </details>
+        </div></details>
       </section>
     </aside>
   </main>

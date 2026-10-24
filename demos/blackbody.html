@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark proj proj-body app spin spin-attn formula btnrow seg seg-button inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage phone-bench btn btn-primary btn-disabled slider-head-output toggles-label toggles-input readout-big-dd projshort-proj-stage pane-canvas" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark proj proj-body app spin spin-attn formula btnrow seg seg-button inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage phone-bench btn btn-primary btn-disabled slider-head-output toggles-label toggles-input readout-big-dd projshort-proj-stage pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -178,7 +178,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="rigel" aria-pressed="false">Rigel</button>
           <button type="button" data-p="cmb" aria-pressed="false">Cosmic background</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -191,7 +191,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="slider-head"><label for="rad">Star radius R</label><output id="radOut" class="mono" for="rad"></output></div>
           <input type="range" id="rad" min="0" max="1000" step="1" value="400">
         </div>
-        <p class="hint">Both sliders are logarithmic. Drag the peak on the chart, or focus the chart and use <kbd>↑</kbd> <kbd>↓</kbd>.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Both sliders are logarithmic. Drag the peak on the chart, or focus the chart and use <kbd>↑</kbd> <kbd>↓</kbd>.</p>
+        </details>
       </section>
 
       <section>
@@ -206,7 +208,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="wide"><dt>Luminosity L = 4πR²σT⁴</dt><dd id="rL">—</dd></div>
           <div class="wide"><dt>Visible share, 380 to 750 nm</dt><dd id="rVis">—</dd></div>
         </dl>
-        <p class="hint">Doubling T multiplies the flux by 16 and halves the peak wavelength.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Doubling T multiplies the flux by 16 and halves the peak wavelength.</p>
+        </details>
       </section>
 
       <section>
@@ -216,11 +220,13 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" class="btn" id="unpin">Clear pins</button>
         </div>
         <div class="pins" id="pins"></div>
-        <p class="hint">Pin up to 3 curves. Try the Sun against Betelgeuse with a log B axis: the cool star is fainter at every wavelength per square meter.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Pin up to 3 curves. Try the Sun against Betelgeuse with a log B axis: the cool star is fainter at every wavelength per square meter.</p>
+        </details>
       </section>
 
       <section>
-        <h2>Layers</h2>
+        <details class="fold"><summary>Layers</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tRJ">Rayleigh-Jeans</label>
           <label><input type="checkbox" id="tBand" checked>Visible band</label>
@@ -228,16 +234,21 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <label><input type="checkbox" id="tLock">Lock axes</label>
         </div>
         <p class="hint" id="rjHint">Rayleigh-Jeans is the classical prediction, 2ckT/λ⁴. It matches at long wavelengths but grows without limit at short ones: the ultraviolet catastrophe. Planck fixed it by letting light carry energy only in quanta hf.</p>
-        <p class="hint">Lock the axes, then raise T: the whole curve grows, and the area under it grows as T⁴.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Lock the axes, then raise T: the whole curve grows, and the area under it grows as T⁴.</p>
+        </details>
+        </div></details>
       </section>
 
       <section>
         <h2>Why no green stars?</h2>
-        <p class="hint">A Planck curve is broad. When its peak sits in the green, near 5000 to 6000 K, it still sends out nearly as much red and blue light, and the eye sees the mix as white. No temperature gives a spectrum narrow enough to look green, so the color scale runs red, orange, yellow, white, blue and skips green entirely.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">A Planck curve is broad. When its peak sits in the green, near 5000 to 6000 K, it still sends out nearly as much red and blue light, and the eye sees the mix as white. No temperature gives a spectrum narrow enough to look green, so the color scale runs red, orange, yellow, white, blue and skips green entirely.</p>
+        </details>
       </section>
 
       <section>
-        <h2>Key</h2>
+        <details class="fold"><summary>Key</summary><div class="foldbody">
         <div class="key">
           <span><i class="swatch cur"></i>Current temperature</span>
           <span><i class="swatch p0"></i><i class="swatch p1"></i><i class="swatch p2"></i>Pinned curves</span>
@@ -245,7 +256,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <span><i class="swatch eye"></i>Eye response, CIE 1931</span>
           <span><i class="swatch band"></i>Visible light, 380 to 750 nm</span>
         </div>
-        <p class="hint">Model: ideal blackbodies. Real stars have absorption lines and are classified by them; T here is the effective temperature. Colors use an analytic fit to the CIE 1931 observer (Wyman, Sloan and Shirley 2013) and sRGB with a D65 white point, so a 6500 K body shows as white. Each swatch is scaled to full brightness; your screen and eye adaptation change what you see.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">Model: ideal blackbodies. Real stars have absorption lines and are classified by them; T here is the effective temperature. Colors use an analytic fit to the CIE 1931 observer (Wyman, Sloan and Shirley 2013) and sRGB with a D65 white point, so a 6500 K body shows as white. Each swatch is scaled to full brightness; your screen and eye adaptation change what you see.</p>
+        </details>
+        </div></details>
       </section>
     </aside>
   </main>

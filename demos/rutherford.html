@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -136,7 +136,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="plum" aria-pressed="false">Plum pudding</button>
           <button type="button" data-p="al" aria-pressed="false">Aluminum, high energy</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -252,16 +252,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Model</h2>
-        <p class="hint">Pure Coulomb force, nonrelativistic: repulsion for the alpha, attraction for the antialpha. The trajectory is the exact hyperbola (for attraction, the branch that wraps around the nucleus), and the projectile moves along it on the exact timing (Kepler's equation for a hyperbola). The nucleus is held fixed. The recoil readout shows the lab angle and closest approach when it is free to move: at the same b the angle changes by under 1% even for aluminum, and the closest approach grows by about 2% for gold and up to 15% for aluminum. The strong force is not simulated, only flagged; neither is annihilation, which ends any antialpha that reaches the nucleus. The antialpha is the antimatter partner of the alpha, with the same mass; only the sign of its charge is changed here.</p>
-        <p class="hint">Why not a negative ion? An O⁻ or H⁻ ion holds its extra electron by only about 1.5 or 0.75 eV, so it loses that electron in the first atomic layers of the foil, and at MeV energies it is stripped further and reaches the nuclei positive. At the nucleus only the net charge counts, so a real negative projectile has to be a bare negative particle, like an antiproton or a negative muon.</p>
-        <p class="hint">Beam mode is a 3D beam: impact parameters are spread evenly over a disk, so their density grows as b, and each track is drawn in its own plane of scattering. The detector ring stands for Geiger and Marsden's zinc sulfide screen and microscope, which really sat centimeters away. Each alpha is scattered by one nucleus; the many distant, small deflections in a real foil are left out.</p>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Pure Coulomb force, nonrelativistic: repulsion for the alpha, attraction for the antialpha. The trajectory is the exact hyperbola (for attraction, the branch that wraps around the nucleus), and the projectile moves along it on the exact timing (Kepler's equation for a hyperbola). The nucleus is held fixed. The recoil readout shows the lab angle and closest approach when it is free to move: at the same b the angle changes by under 1% even for aluminum, and the closest approach grows by about 2% for gold and up to 15% for aluminum. The strong force is not simulated, only flagged; neither is annihilation, which ends any antialpha that reaches the nucleus. The antialpha is the antimatter partner of the alpha, with the same mass; only the sign of its charge is changed here.</p>
+          <p class="hint">Why not a negative ion? An O⁻ or H⁻ ion holds its extra electron by only about 1.5 or 0.75 eV, so it loses that electron in the first atomic layers of the foil, and at MeV energies it is stripped further and reaches the nuclei positive. At the nucleus only the net charge counts, so a real negative projectile has to be a bare negative particle, like an antiproton or a negative muon.</p>
+          <p class="hint">Beam mode is a 3D beam: impact parameters are spread evenly over a disk, so their density grows as b, and each track is drawn in its own plane of scattering. The detector ring stands for Geiger and Marsden's zinc sulfide screen and microscope, which really sat centimeters away. Each alpha is scattered by one nucleus; the many distant, small deflections in a real foil are left out.</p>
+        </details>
         <div class="key">
           <span><i class="swatch alpha"></i>Alpha or antialpha path</span>
           <span><i class="swatch asym"></i>Asymptotes and closest approach</span>
           <span><i class="swatch dot"></i>Nucleus (to scale, at least a few pixels)</span>
           <span><i class="swatch pn"></i>Protons and neutrons, radius 0.85 fm, packed at random; their jostling is only for the eye. In the antialpha, antiprotons are blue.</span>
         </div>
+        </div></details>
       </section>
     </aside>
   </main>

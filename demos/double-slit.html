@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -138,7 +138,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="one" aria-pressed="false">One slit</button>
           <button type="button" data-p="which" aria-pressed="false">Which slit detector on</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -178,7 +178,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="btn" id="slit1" aria-pressed="true">Slit 1 open</button>
           <button type="button" class="btn" id="slit2" aria-pressed="true">Slit 2 open</button>
         </div>
-        <p class="hint">On the drawing: drag a slit up or down to change d, drag its outer edge to change a, and click a slit to close or open it. Any change clears the screen, since old hits came from a different setup.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">On the drawing: drag a slit up or down to change d, drag its outer edge to change a, and click a slit to close or open it. Any change clears the screen, since old hits came from a different setup.</p>
+        </details>
       </section>
 
       <section>
@@ -188,7 +190,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="slider-head"><label for="eta">Detector efficiency η</label><output id="etaOut" class="mono" for="eta"></output></div>
           <input type="range" id="eta" min="0" max="100" step="1" value="100">
         </div>
-        <p class="hint">An idealized detector: when it fires, it records which slit the particle went through and does nothing else. That record alone removes the interference: those particles form the sum of two single slit patterns. It fires for a fraction η of the particles, so the pattern is η(I₁ + I₂) + (1 − η)I₁₂ and the fringe contrast drops to 1 − η.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">An idealized detector: when it fires, it records which slit the particle went through and does nothing else. That record alone removes the interference: those particles form the sum of two single slit patterns. It fires for a fraction η of the particles, so the pattern is η(I₁ + I₂) + (1 − η)I₁₂ and the fringe contrast drops to 1 − η.</p>
+        </details>
       </section>
 
       <section>
@@ -201,7 +205,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>Detected</dt><dd id="rN">0</dd></div>
           <div><dt>In the last second</dt><dd id="rRate">0</dd></div>
         </dl>
-        <p class="hint">Only one particle is in the apparatus at a time in a real single particle experiment, and each one is detected at one point. With a few dozen hits the screen looks random. The pattern shows up only after hundreds to thousands.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Only one particle is in the apparatus at a time in a real single particle experiment, and each one is detected at one point. With a few dozen hits the screen looks random. The pattern shows up only after hundreds to thousands.</p>
+        </details>
       </section>
 
       <section>
@@ -214,18 +220,22 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>Bright fringes in central envelope ≈ 2d/a − 1</dt><dd id="rNb">—</dd></div>
           <div class="wide"><dt>Far field check (d + a)²/λL</dt><dd id="rFF">—</dd></div>
         </dl>
-        <p class="hint">Positions are y = L tan θ, measured from the center of the screen. The orders that land exactly on an envelope zero are missing. The falling envelope pulls each actual peak slightly toward the center, most visibly when d/a is small.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Positions are y = L tan θ, measured from the center of the screen. The orders that land exactly on an envelope zero are missing. The falling envelope pulls each actual peak slightly toward the center, most visibly when d/a is small.</p>
+        </details>
       </section>
 
       <section>
         <h2>Intensity on the screen</h2>
-        <p class="formula">I(θ) = I₀ · cos²(πd sin θ/λ) · [sin β/β]², β = πa sin θ/λ</p>
         <div class="fwrap"><canvas id="fCan" aria-label="The two factors of the double slit intensity and their product, for the current wavelength and slits."></canvas></div>
-        <p class="hint">The first factor is two slit interference: fringes spaced λL/d. The second is the diffraction of each slit: a broad envelope whose first zero sits at sin θ = λ/a. The pattern is their product, so the envelope sets how bright each fringe can be.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">I(θ) = I₀ · cos²(πd sin θ/λ) · [sin β/β]², β = πa sin θ/λ</p>
+          <p class="hint">The first factor is two slit interference: fringes spaced λL/d. The second is the diffraction of each slit: a broad envelope whose first zero sits at sin θ = λ/a. The pattern is their product, so the envelope sets how bright each fringe can be.</p>
+        </details>
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tCurve" checked>Predicted curve</label>
           <label><input type="checkbox" id="tMarks" checked>Maxima marks</label>
@@ -247,8 +257,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch mark"></i>Predicted bright fringes</span>
           <span><i class="swatch dot s1"></i><i class="swatch dot s2" style="margin-left:-8px"></i>Recorded at slit 1 or slit 2</span>
         </div>
-        <p class="hint">3D view: the slits are long, so each one sends out a cylindrical wave and the fringes are lines across the screen. The slits keep their true ratio of width to spacing. Drag the empty bench, or press [ and ], to turn it; the 3D view button or V switches to the top view.</p>
-        <p class="hint">Model: a monochromatic plane wave falls on two slits, and the screen pattern is the paraxial Fresnel calculation, which matches the formula above in the far field. Each hit is drawn at random from that pattern; its position along the slits is just spread out for display. Slits are drawn enlarged and L is not to scale. Hits count only if they land on the screen shown.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">3D view: the slits are long, so each one sends out a cylindrical wave and the fringes are lines across the screen. The slits keep their true ratio of width to spacing. Drag the empty bench, or press [ and ], to turn it; the 3D view button or V switches to the top view.</p>
+          <p class="hint">Model: a monochromatic plane wave falls on two slits, and the screen pattern is the paraxial Fresnel calculation, which matches the formula above in the far field. Each hit is drawn at random from that pattern; its position along the slits is just spread out for display. Slits are drawn enlarged and L is not to scale. Hits count only if they land on the screen shown.</p>
+        </details>
+        </div></details>
       </section>
     </aside>
   </main>

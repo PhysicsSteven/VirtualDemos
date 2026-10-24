@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow button-focusvisible input slider-head slider-head-label readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage slider-head-output readout-big-dd phone-chips-button" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow button-focusvisible input slider-head slider-head-label readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage slider-head-output readout-big-dd phone-chips-button" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -201,7 +201,7 @@ select:disabled { opacity: 0.5; }
           <button type="button" data-p="4fxyz" aria-pressed="false">4f<sub>xyz</sub></button>
           <button type="button" data-p="mix" aria-pressed="false">1s + 2p<sub>z</sub></button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -248,11 +248,13 @@ select:disabled { opacity: 0.5; }
           <div><dt>Swing of ⟨r⟩</dt><dd id="rDip">—</dd></div>
           <div class="wide small"><dt>Electric dipole</dt><dd id="rRule">—</dd></div>
         </dl>
-        <p class="hint">ψ = (ψ<sub>A</sub> e<sup>−iE<sub>A</sub>t/ħ</sup> + ψ<sub>B</sub> e<sup>−iE<sub>B</sub>t/ħ</sup>)/√2, evolved exactly. The two parts interfere, and the pattern repeats once per beat period. Colors drop the common phase e<sup>−iE<sub>A</sub>t/ħ</sup>, which nothing can measure.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">ψ = (ψ<sub>A</sub> e<sup>−iE<sub>A</sub>t/ħ</sup> + ψ<sub>B</sub> e<sup>−iE<sub>B</sub>t/ħ</sup>)/√2, evolved exactly. The two parts interfere, and the pattern repeats once per beat period. Colors drop the common phase e<sup>−iE<sub>A</sub>t/ħ</sup>, which nothing can measure.</p>
+        </details>
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="inline">
           <span class="lab">Points</span>
           <div class="seg" role="group" aria-label="Number of points" id="countSeg">
@@ -297,13 +299,16 @@ select:disabled { opacity: 0.5; }
         <p class="hint" id="viewHint">Drag to orbit, scroll or pinch to zoom, double click to reset. With the cloud focused, arrow keys orbit and + and − zoom. Hover the radial plot to see that radius as a shell. While the cloud turns, fresh random positions keep replacing old ones, a twentieth of the cloud each second.</p>
         <p class="hint" id="cutHint"><b>Cutaway</b> removes the eighth of the cloud facing you, like a slice cut from a cake. The three cut faces show |ψ|² in those planes through the nucleus. Nodes are dark there: radial nodes as arcs, angular nodes as lines through the nucleus, outlined when Nodal lines is on.</p>
         <p class="hint" id="measHint"><b>Measure</b> starts from an empty atom and finds the electron one position at a time, each drawn at random from |ψ|² (inverse CDF in r and θ, rejection sampling in φ and for a superposition). Each find flashes, and the finds build up the cloud.</p>
+        </div></details>
       </section>
 
       <section>
         <h2>About the model</h2>
-        <p class="hint">Exact solutions of the Schrödinger equation for one electron and a point nucleus: ψ = R<sub>nl</sub>(r) Y<sub>lm</sub>(θ, φ), with R from associated Laguerre polynomials and Y from associated Legendre functions with the Condon–Shortley phase. Spin, fine structure and the Lamb shift are left out.</p>
-        <p class="hint">Distances use the Bohr radius a₀ for an infinitely heavy nucleus. Energies use 13.598 eV, the measured value for hydrogen, which includes the small correction for the moving proton.</p>
-        <p class="hint">The Bohr model puts the electron on a circle of radius n²a₀. Here the electron has no orbit, only a probability cloud, and the energies still come out as −13.6 eV/n². Compare with the Bohr model in <a href="spectra.html">Spectra Explorer</a>.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Exact solutions of the Schrödinger equation for one electron and a point nucleus: ψ = R<sub>nl</sub>(r) Y<sub>lm</sub>(θ, φ), with R from associated Laguerre polynomials and Y from associated Legendre functions with the Condon–Shortley phase. Spin, fine structure and the Lamb shift are left out.</p>
+          <p class="hint">Distances use the Bohr radius a₀ for an infinitely heavy nucleus. Energies use 13.598 eV, the measured value for hydrogen, which includes the small correction for the moving proton.</p>
+          <p class="hint">The Bohr model puts the electron on a circle of radius n²a₀. Here the electron has no orbit, only a probability cloud, and the energies still come out as −13.6 eV/n². Compare with the Bohr model in <a href="spectra.html">Spectra Explorer</a>.</p>
+        </details>
       </section>
     </aside>
   </main>

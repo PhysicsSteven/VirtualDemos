@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles swatch phone-chips-button pane-canvas" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles swatch phone-chips-button pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -191,7 +191,7 @@ table.rows td.b { font-size: 0.76rem; }
           <button type="button" data-p="ptfe" aria-pressed="false">Fluorine in PTFE</button>
           <button type="button" data-p="tune" aria-pressed="false">Out of tune</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -228,7 +228,9 @@ table.rows td.b { font-size: 0.76rem; }
           <div class="slider-head"><label for="temp">Thermometer t</label><output id="tempOut" class="mono" for="temp"></output></div>
           <input type="range" id="temp" min="15" max="30" step="0.1" value="21">
         </div>
-        <p class="formula">B<sub>Z</sub> = B<sub>20</sub>[1 − (t − 20)·7.5×10⁻⁴]<br>B = B<sub>Z</sub> + B<sub>scan</sub></p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">B<sub>Z</sub> = B<sub>20</sub>[1 − (t − 20)·7.5×10⁻⁴]<br>B = B<sub>Z</sub> + B<sub>scan</sub></p>
+        </details>
       </section>
 
       <section>
@@ -257,7 +259,9 @@ table.rows td.b { font-size: 0.76rem; }
           <span><i class="swatch cur"></i>Cursors A, B and V</span>
           <span><i class="swatch held"></i>Held CH2 trace</span>
         </div>
-        <p class="hint">Triggered on CH1 falling: the ramp starts about 2 divisions in. Put A at the start of the ramp and B on the peak, then t<sub>R</sub> = ΔT and B<sub>scan</sub> = (t<sub>R</sub>/40 ms)·B<sub>max</sub>. Or put V on CH1 at the time of the peak: B<sub>scan</sub> = V<sub>R</sub>·B<sub>max</sub>/1 V.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Triggered on CH1 falling: the ramp starts about 2 divisions in. Put A at the start of the ramp and B on the peak, then t<sub>R</sub> = ΔT and B<sub>scan</sub> = (t<sub>R</sub>/40 ms)·B<sub>max</sub>. Or put V on CH1 at the time of the peak: B<sub>scan</sub> = V<sub>R</sub>·B<sub>max</sub>/1 V.</p>
+        </details>
       </section>
 
       <section>
@@ -269,14 +273,16 @@ table.rows td.b { font-size: 0.76rem; }
         </div>
         <p class="note" id="capNote" hidden></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>Sample</th><th>Meter kHz</th><th>Reading</th><th>B mT</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Capture stores the meter reading and your own cursor or ruler measurement, never the true field. You can edit both. B<sub>max</sub> = 3.67 mT for ESR, 3.2 mT for the PSR scan.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Capture stores the meter reading and your own cursor or ruler measurement, never the true field. You can edit both. B<sub>max</sub> = 3.67 mT for ESR, 3.2 mT for the PSR scan.</p>
+        </details>
         <div class="plotbox"><canvas id="plot" role="img" aria-label="Plot of B against frequency from your readings, with a least squares line through the origin."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <div class="key" id="plotKey"></div>
       </section>
 
       <section>
-        <h2>Instrument</h2>
+        <details class="fold"><summary>Instrument</summary><div class="foldbody">
         <div class="inline">
           <label class="lab" for="seed">Instrument seed</label>
           <span><input type="number" class="seed" id="seed" min="1" max="99999" step="1" value="4127"> <button type="button" class="btn" id="newSeed">New</button></span>
@@ -285,16 +291,20 @@ table.rows td.b { font-size: 0.76rem; }
           <label><input type="checkbox" id="blind"> Blind: hide the expected answer and accepted values</label>
           <label id="expectRow"><input type="checkbox" id="expect"> Show expected resonance (instructor check)</label>
         </div>
-        <p class="hint">Noise and small instrument offsets are simulated and fixed by the seed: the exact LO, MID and HI frequencies, B<sub>20</sub>, room temperature and the SENS thresholds. Share the seed so a class works on the same bench.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Noise and small instrument offsets are simulated and fixed by the seed: the exact LO, MID and HI frequencies, B<sub>20</sub>, room temperature and the SENS thresholds. Share the seed so a class works on the same bench.</p>
+        </details>
+        </div></details>
       </section>
 
       <section>
-        <h2>Model</h2>
-        <p class="hint">The bench is modeled on the common spin resonance teaching kit used in many modern physics labs: a console with a marginal oscillator and frequency meter, a cell mount with scan coils on steel cores, an electron probe, a proton probe and a permanent Zeeman magnet.</p>
-        <p class="hint">Exact: hν = gμ<sub>B</sub>B with g = 2.0036 held fixed for DPPH; ν = (γ/2π)B with 42.577478 MHz/T for ¹H (free proton, CODATA 2018) and 40.0776 MHz/T for ¹⁹F (γ = 25.18148×10⁷ rad s⁻¹ T⁻¹, IUPAC 2001). h, μ<sub>B</sub> and μ<sub>N</sub> are CODATA values. Chemical shielding, tens of ppm, is far below this instrument's resolution and is neglected.</p>
-        <p class="hint">Idealized: the scan current ramps exactly linearly (FAST: 40 ms ramp, 1 ms flyback, repeating at 20 Hz; SLOW: one 25 s ramp); the field is uniform over the sample; the scan field adds to the magnet field; the earth's field and stray fields are left out. The flyback is too quick for the detector, so no peak is drawn there. The magnet follows the maker's temperature law B<sub>Z</sub> = B<sub>20</sub>[1 − (t − 20)·7.5×10⁻⁴]. The probe coil is taken at right angles to the field.</p>
-        <p class="hint">Modeled, not computed from first principles: the line shapes are Lorentzians in field with illustrative widths (full width at half maximum: DPPH 0.25 mT, glycerine and water 0.05 mT, polystyrene 0.25 mT for the dipolar broadening of a solid, PTFE 0.20 mT, the plastic coil former 0.30 mT). Heights are chosen to resemble a real trace and scale with the number of spins in the coil; water is weaker than glycerine because its slow relaxation saturates.</p>
-        <p class="hint">The marginal oscillator is a behavioral model: the gain grows as (1 + ε)/(ε + 1 − s/s<sub>th</sub>) with ε = 0.08, the LED dims above 0.85 s<sub>th</sub>, oscillation stops at the threshold s<sub>th</sub>, and the noise rises with the gain and sharply just below the threshold. The frequency meter jitters by one count. All noise is simulated.</p>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
+          <p class="hint">The bench is modeled on the common spin resonance teaching kit used in many modern physics labs: a console with a marginal oscillator and frequency meter, a cell mount with scan coils on steel cores, an electron probe, a proton probe and a permanent Zeeman magnet.</p>
+          <p class="hint">Exact: hν = gμ<sub>B</sub>B with g = 2.0036 held fixed for DPPH; ν = (γ/2π)B with 42.577478 MHz/T for ¹H (free proton, CODATA 2018) and 40.0776 MHz/T for ¹⁹F (γ = 25.18148×10⁷ rad s⁻¹ T⁻¹, IUPAC 2001). h, μ<sub>B</sub> and μ<sub>N</sub> are CODATA values. Chemical shielding, tens of ppm, is far below this instrument's resolution and is neglected.</p>
+          <p class="hint">Idealized: the scan current ramps exactly linearly (FAST: 40 ms ramp, 1 ms flyback, repeating at 20 Hz; SLOW: one 25 s ramp); the field is uniform over the sample; the scan field adds to the magnet field; the earth's field and stray fields are left out. The flyback is too quick for the detector, so no peak is drawn there. The magnet follows the maker's temperature law B<sub>Z</sub> = B<sub>20</sub>[1 − (t − 20)·7.5×10⁻⁴]. The probe coil is taken at right angles to the field.</p>
+          <p class="hint">Modeled, not computed from first principles: the line shapes are Lorentzians in field with illustrative widths (full width at half maximum: DPPH 0.25 mT, glycerine and water 0.05 mT, polystyrene 0.25 mT for the dipolar broadening of a solid, PTFE 0.20 mT, the plastic coil former 0.30 mT). Heights are chosen to resemble a real trace and scale with the number of spins in the coil; water is weaker than glycerine because its slow relaxation saturates.</p>
+          <p class="hint">The marginal oscillator is a behavioral model: the gain grows as (1 + ε)/(ε + 1 − s/s<sub>th</sub>) with ε = 0.08, the LED dims above 0.85 s<sub>th</sub>, oscillation stops at the threshold s<sub>th</sub>, and the noise rises with the gain and sharply just below the threshold. The frequency meter jitters by one count. All noise is simulated.</p>
+        </div></details>
       </section>
     </aside>
   </main>

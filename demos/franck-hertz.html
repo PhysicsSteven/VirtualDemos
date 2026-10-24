@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow inline readout-dd-ok status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage toggles toggles-label toggles-input" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow inline readout-dd-ok status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage toggles toggles-label toggles-input" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -135,7 +135,7 @@ sub, sup { line-height: 0; }
           <button type="button" data-p="ne" aria-pressed="false">Neon: glowing layers</button>
           <button type="button" data-p="first" aria-pressed="false">Why the first peak is not at 4.9 V</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -181,7 +181,9 @@ sub, sup { line-height: 0; }
           <div><dt>Energy at G2 with no collisions, e(U − U<sub>c</sub>)</dt><dd id="rEmax">—</dd></div>
           <div><dt>Excitations per electron</dt><dd id="rNx">—</dd></div>
         </dl>
-        <p class="hint">The sweep records the current as U ramps up, like the slow ramp in the lab. Move U yourself and a point is recorded wherever you stop. Changing the oven, U<sub>r</sub> or U<sub>c</sub> starts a fresh curve; the last one stays as a dashed ghost.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The sweep records the current as U ramps up, like the slow ramp in the lab. Move U yourself and a point is recorded wherever you stop. Changing the oven, U<sub>r</sub> or U<sub>c</sub> starts a fresh curve; the last one stays as a dashed ghost.</p>
+        </details>
       </section>
 
       <section>
@@ -203,11 +205,13 @@ sub, sup { line-height: 0; }
       </section>
 
       <section>
-        <h2>Model</h2>
-        <p class="hint">Energy is exact: an electron at distance x past the control grid G1 has its starting energy plus e(U − U<sub>c</sub>)x/L, minus every amount it has given to atoms. The path is drawn straight; the electron moves in a uniform field over the gap L (8 mm for the mercury tube, 5 mm for neon, typical values).</p>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
         <p class="hint" id="modelGas"></p>
-        <p class="hint">Once above threshold, an electron excites an atom after a random distance with mean λ = 1/nσ<sub>x</sub>. σ<sub>x</sub> is effective: elastic collisions make the real path zigzag, so an electron meets far more atoms per millimeter of progress than a straight path would. Elastic collisions are otherwise left out of the energy (each costs only 2m/M of E, 5 × 10⁻⁶ for mercury). They do two things kept here: the electrons reach G2 moving in random directions, so one with energy E gets past U<sub>r</sub> with chance 1 − eU<sub>r</sub>/E, and a fraction is scattered out of the beam, e^(−nσ<sub>s</sub>L), σ<sub>s</sub> = 5.3 × 10⁻²² m² (effective).</p>
-        <p class="hint">Electrons start with thermal energy from a 1100 K oxide cathode plus a 0.5 eV spread standing for potential differences across the cathode and grid meshes. The current entering the gap rises with U as u<sup>3/2</sup>/(1 + u<sup>3/2</sup>), u = (U − U<sub>c</sub>)/U<sub>s</sub>, U<sub>s</sub> = 8 V for mercury and 20 V for neon: space charge limits it at low U (Child's law), the control grid G1 at high U. It sets the rising baseline only, but it pulls each maximum slightly toward higher U. The nA scale resembles a typical tube; amplifier noise is 0.02 nA rms. Ionization is left out.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Energy is exact: an electron at distance x past the control grid G1 has its starting energy plus e(U − U<sub>c</sub>)x/L, minus every amount it has given to atoms. The path is drawn straight; the electron moves in a uniform field over the gap L (8 mm for the mercury tube, 5 mm for neon, typical values).</p>
+          <p class="hint">Once above threshold, an electron excites an atom after a random distance with mean λ = 1/nσ<sub>x</sub>. σ<sub>x</sub> is effective: elastic collisions make the real path zigzag, so an electron meets far more atoms per millimeter of progress than a straight path would. Elastic collisions are otherwise left out of the energy (each costs only 2m/M of E, 5 × 10⁻⁶ for mercury). They do two things kept here: the electrons reach G2 moving in random directions, so one with energy E gets past U<sub>r</sub> with chance 1 − eU<sub>r</sub>/E, and a fraction is scattered out of the beam, e^(−nσ<sub>s</sub>L), σ<sub>s</sub> = 5.3 × 10⁻²² m² (effective).</p>
+          <p class="hint">Electrons start with thermal energy from a 1100 K oxide cathode plus a 0.5 eV spread standing for potential differences across the cathode and grid meshes. The current entering the gap rises with U as u<sup>3/2</sup>/(1 + u<sup>3/2</sup>), u = (U − U<sub>c</sub>)/U<sub>s</sub>, U<sub>s</sub> = 8 V for mercury and 20 V for neon: space charge limits it at low U (Child's law), the control grid G1 at high U. It sets the rising baseline only, but it pulls each maximum slightly toward higher U. The nA scale resembles a typical tube; amplifier noise is 0.02 nA rms. Ionization is left out.</p>
+        </details>
         <p class="hint" id="modelVapor">Vapor pressure of mercury from Huber, Laesecke and Friend, Ind. Eng. Chem. Res. 45, 7351 (2006), with the vapor in equilibrium with liquid mercury at the oven temperature. Energy levels from the NIST Handbook of Basic Atomic Spectroscopic Data (Sansonetti and Martin), as in the NIST Atomic Spectra Database.</p>
         <div class="key">
           <span><i class="swatch data"></i>Recorded current</span>
@@ -218,6 +222,7 @@ sub, sup { line-height: 0; }
           <span><i class="swatch uv"></i>Mercury 253.7 nm UV (invisible, drawn violet)</span>
           <span><i class="swatch glow"></i>Neon red and orange glow</span>
         </div>
+        </div></details>
       </section>
     </aside>
   </main>

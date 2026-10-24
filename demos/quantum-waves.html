@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage toggles-label toggles-input" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage toggles-label toggles-input" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -157,7 +157,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="ho" aria-pressed="false">Oscillator</button>
           <button type="button" data-p="dwell" aria-pressed="false">Double well</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section id="potSec">
@@ -184,7 +184,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section id="levelSec">
         <h2>Energy eigenstates</h2>
         <div class="chips" id="levels"></div>
-        <p class="hint">Pick one level for a stationary state, or two or more for a superposition. You can also click the level lines in the energy diagram.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Pick one level for a stationary state, or two or more for a superposition. You can also click the level lines in the energy diagram.</p>
+        </details>
         <table class="lv-table" id="lvTable"></table>
         <dl class="readout">
           <div class="wide"><dt id="beatLab">Beat period h/ΔE</dt><dd id="rBeat">—</dd></div>
@@ -213,7 +215,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           </div>
         </div>
         <button type="button" class="btn primary" id="launch">Launch packet</button>
-        <p class="hint">A Gaussian packet ψ ∝ exp(−(x − x₀)²/4σ² + ik₀x). At launch Δx = σ and Δp = ħ/2σ, the smallest product allowed.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">A Gaussian packet ψ ∝ exp(−(x − x₀)²/4σ² + ik₀x). At launch Δx = σ and Δp = ħ/2σ, the smallest product allowed.</p>
+        </details>
       </section>
 
       <section>
@@ -229,7 +233,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>Total probability</dt><dd id="rNorm">—</dd></div>
           <div><dt>1× speed</dt><dd id="rSpeed">—</dd></div>
         </dl>
-        <p class="hint">Δx and Δp are standard deviations. Once a packet splits into reflected and transmitted parts, Δx spans both pieces, so the product grows far above ħ/2.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Δx and Δp are standard deviations. Once a packet splits into reflected and transmitted parts, Δx spans both pieces, so the product grows far above ħ/2.</p>
+        </details>
       </section>
 
       <section id="scatSec">
@@ -242,7 +248,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </dl>
         <p class="formula mono" id="formula"></p>
         <p class="hint" id="scatStatus"></p>
-        <p class="hint">A plane wave has one energy. The packet carries a spread of energies, and T depends on energy, so the packet's T is the average of T(E) over its energy distribution. A broad packet (large σ) has a narrow spread and comes closest to T(E₀).</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">A plane wave has one energy. The packet carries a spread of energies, and T depends on energy, so the packet's T is the average of T(E) over its energy distribution. A broad packet (large σ) has a narrow spread and comes closest to T(E₀).</p>
+        </details>
       </section>
 
       <section>
@@ -256,11 +264,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>Last result</dt><dd id="rLast">—</dd></div>
           <div><dt>Copies measured</dt><dd id="rCopies">0</dd></div>
         </dl>
-        <p class="hint">Measure x picks a position at random with probability |ψ|² and collapses ψ to a narrow packet there, standing in for a detector of finite resolution; then it spreads again. Measure 200 copies measures 200 identically prepared electrons at this same moment without touching this one; the histogram builds up |ψ|².</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Measure x picks a position at random with probability |ψ|² and collapses ψ to a narrow packet there, standing in for a detector of finite resolution; then it spreads again. Measure 200 copies measures 200 identically prepared electrons at this same moment without touching this one; the histogram builds up |ψ|².</p>
+        </details>
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tRe">Re ψ</label>
           <label><input type="checkbox" id="tIm">Im ψ</label>
@@ -275,8 +285,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch im"></i>Im ψ</span>
           <span><i class="swatch hist"></i>Histogram of measured positions</span>
         </div>
-        <p class="hint">Color shows the phase of ψ, as on the color wheel: a packet moving right winds through the colors in one order, one moving left in the other order, and a standing wave has blocks of one color that flip by half a turn at each node.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Color shows the phase of ψ, as on the color wheel: a packet moving right winds through the colors in one order, one moving left in the other order, and a standing wave has blocks of one color that flip by half a turn at each node.</p>
+        </details>
         <p class="hint" id="modelHint"></p>
+        </div></details>
       </section>
     </aside>
   </main>

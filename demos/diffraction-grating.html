@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark app stage-canvas-focusvisible spin spin-attn formula btnrow readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles-label toggles-input key key-span readout-big-dd swatch pane-canvas" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark app stage-canvas-focusvisible spin spin-attn formula btnrow readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles-label toggles-input key key-span readout-big-dd swatch pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -157,7 +157,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
           <button type="button" data-p="hydrogen" aria-pressed="false">Hydrogen lamp spectrum</button>
           <button type="button" data-p="cd" aria-pressed="false">CD as a grating</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -197,7 +197,9 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
           <div class="slider-head"><label for="sRot">Grating turned by</label><output id="oRot" class="mono" for="sRot"></output></div>
           <input type="range" id="sRot" min="-30" max="30" step="0.5" value="0">
         </div>
-        <p class="hint">Whole numbers of d/a make orders go missing: the zero of one slit's pattern lands on a bright order. Turning the grating uses d(sin θ<sub>m</sub> − sin θ<sub>i</sub>) = mλ, angles from the grating's normal.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Whole numbers of d/a make orders go missing: the zero of one slit's pattern lands on a bright order. Turning the grating uses d(sin θ<sub>m</sub> − sin θ<sub>i</sub>) = mλ, angles from the grating's normal.</p>
+        </details>
       </section>
 
       <section>
@@ -206,7 +208,9 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
           <div class="slider-head"><label for="sL">Grating to wall L</label><output id="oL" class="mono" for="sL"></output></div>
           <input type="range" id="sL" min="0.1" max="3" step="0.01" value="1">
         </div>
-        <p class="hint">On the bench: drag the grating up or down to change L, turn its round knob to rotate it, and drag the grip on its face to light more or fewer slits. Keys on the bench: ↑ ↓ for L, [ ] to turn, + − for N.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">On the bench: drag the grating up or down to change L, turn its round knob to rotate it, and drag the grip on its face to light more or fewer slits. Keys on the bench: ↑ ↓ for L, [ ] to turn, + − for N.</p>
+        </details>
       </section>
 
       <section id="ordSec">
@@ -226,7 +230,9 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
           </div>
         </div>
         <div id="measBox" hidden>
+        <details class="more"><summary>More about this</summary>
           <p class="hint" style="margin-bottom: 8px;">Drag the caliper jaws A and B on the wall onto two spots (m = 0 and m = 1). Then enter L, y and m, and compute.</p>
+        </details>
           <dl class="readout" style="margin-bottom: 8px;">
             <div><dt>Caliper B − A</dt><dd id="rCal">—</dd></div>
             <div><dt>Grating</dt><dd id="rGr">—</dd></div>
@@ -252,7 +258,7 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="inline">
           <span class="lab">Plot</span>
           <div class="seg" role="group" aria-label="Plot range">
@@ -265,14 +271,18 @@ table.orders tr.no td.why { text-align: left; font-family: var(--font-ui); font-
           <label><input type="checkbox" id="tAng" checked>Angles</label>
           <label><input type="checkbox" id="tHaze" checked>Drifting haze</label>
         </div>
-        <p class="hint">Zoom the plot with a few slits (try N = 5): between two bright orders there are N − 1 zeros and N − 2 small maxima. With hundreds of slits the orders become sharp spikes.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Zoom the plot with a few slits (try N = 5): between two bright orders there are N − 1 zeros and N − 2 small maxima. With hundreds of slits the orders become sharp spikes.</p>
+        </details>
+        </div></details>
       </section>
 
       <section>
-        <h2>Model</h2>
-        <p class="hint">Positions are exact: sin θ<sub>m</sub> = sin θ<sub>i</sub> + mλ/d and y<sub>m</sub> = L tan θ<sub>m</sub> on a flat wall square to the beam. The plot is the far field pattern of N slits of width a: I ∝ [sin(Nφ)/sin φ]² × [sin β/β]² with φ = πd(sin θ − sin θ<sub>i</sub>)/λ and β = πa(sin θ − sin θ<sub>i</sub>)/λ, scaled so the central peak is 1.</p>
-        <p class="hint">On the wall each order carries power in proportion to the slit envelope; obliquity factors are left out. A spot is as wide as the beam plus its diffraction spread, but never drawn smaller than a few pixels, so its brightness is not to scale. The laser, lamps and grating holder are not to scale; L, y and the angles are.</p>
-        <p class="hint">Lamp light passes a slit and a lens to make a parallel beam (a real lamp is too faint to project; in lab you look through the grating). Line data: NIST Handbook of Basic Atomic Spectroscopic Data (J. E. Sansonetti and W. C. Martin), strong neutral lines from 380 to 750 nm, air wavelengths; brightness on a log scale so weak lines stay visible. White light: the CIE D65 daylight spectrum (CIE 15:2004) from 400 to 700 nm. Colors from the CIE 1931 color matching functions (Wyman, Sloan and Shirley fit) in sRGB.</p>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
+          <p class="hint">Positions are exact: sin θ<sub>m</sub> = sin θ<sub>i</sub> + mλ/d and y<sub>m</sub> = L tan θ<sub>m</sub> on a flat wall square to the beam. The plot is the far field pattern of N slits of width a: I ∝ [sin(Nφ)/sin φ]² × [sin β/β]² with φ = πd(sin θ − sin θ<sub>i</sub>)/λ and β = πa(sin θ − sin θ<sub>i</sub>)/λ, scaled so the central peak is 1.</p>
+          <p class="hint">On the wall each order carries power in proportion to the slit envelope; obliquity factors are left out. A spot is as wide as the beam plus its diffraction spread, but never drawn smaller than a few pixels, so its brightness is not to scale. The laser, lamps and grating holder are not to scale; L, y and the angles are.</p>
+          <p class="hint">Lamp light passes a slit and a lens to make a parallel beam (a real lamp is too faint to project; in lab you look through the grating). Line data: NIST Handbook of Basic Atomic Spectroscopic Data (J. E. Sansonetti and W. C. Martin), strong neutral lines from 380 to 750 nm, air wavelengths; brightness on a log scale so weak lines stay visible. White light: the CIE D65 daylight spectrum (CIE 15:2004) from 400 to 700 nm. Colors from the CIE 1931 color matching functions (Wyman, Sloan and Shirley fit) in sRGB.</p>
+        </div></details>
       </section>
     </aside>
   </main>

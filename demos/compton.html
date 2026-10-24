@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled toggles toggles-label toggles-input swatch" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled toggles toggles-label toggles-input swatch" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -133,7 +133,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="kn" aria-pressed="false">Klein–Nishina: forward peaking</button>
           <button type="button" data-p="edge" aria-pressed="false">Compton edge</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -176,13 +176,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
       <section>
         <h2>Conservation check</h2>
-        <p class="formula">p = p′ + p<sub>e</sub> (two components)<br>E + m<sub>e</sub>c² = E′ + √(p<sub>e</sub>²c² + m<sub>e</sub>²c⁴)</p>
         <dl class="readout">
           <div><dt>Momentum along the beam</dt><dd id="cX">—</dd></div>
           <div><dt>Momentum across it</dt><dd id="cY">—</dd></div>
           <div class="wide"><dt>Energy, before minus after</dt><dd id="cE">—</dd></div>
         </dl>
-        <p class="hint">E′ comes from the shift formula, φ from the cot φ formula and p<sub>e</sub> from T. Adding the vectors back up leaves only rounding error, about one part in 10¹⁶.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">p = p′ + p<sub>e</sub> (two components)<br>E + m<sub>e</sub>c² = E′ + √(p<sub>e</sub>²c² + m<sub>e</sub>²c⁴)</p>
+          <p class="hint">E′ comes from the shift formula, φ from the cot φ formula and p<sub>e</sub> from T. Adding the vectors back up leaves only rounding error, about one part in 10¹⁶.</p>
+        </details>
       </section>
 
       <section>
@@ -194,16 +196,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Model</h2>
-        <p class="hint">The electron is free and at rest. Exact relativistic kinematics; the photon and the electron move in one plane, drawn here. In a real target the electrons are bound by a few eV to keV and moving, which broadens the shifted line (the Doppler width), and photons scattered by the atom as a whole keep their wavelength (the unshifted line).</p>
-        <p class="hint">Wave packets: the drawn wavelengths keep the ratio λ′/λ to scale, but λ itself is not to scale (a 70 pm wave is far too small to see). The electron moves at its true speed relative to the photons.</p>
-        <p class="hint">Photon colors: visible light is drawn in its true color. X rays and gamma rays have no color, so they use a false color scale: the incoming photon is blue and the scattered photon shifts toward red in proportion to Δλ, reaching red at the largest possible shift, 2λ<sub>C</sub> at 180°. Because Δλ depends only on the angle, a given angle gives the same color at every energy.</p>
-        <p class="hint">Angular distribution: the Klein–Nishina formula for unpolarized photons on free electrons, summed over final polarizations. Photons are sampled from it by rejection.</p>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The electron is free and at rest. Exact relativistic kinematics; the photon and the electron move in one plane, drawn here. In a real target the electrons are bound by a few eV to keV and moving, which broadens the shifted line (the Doppler width), and photons scattered by the atom as a whole keep their wavelength (the unshifted line).</p>
+          <p class="hint">Wave packets: the drawn wavelengths keep the ratio λ′/λ to scale, but λ itself is not to scale (a 70 pm wave is far too small to see). The electron moves at its true speed relative to the photons.</p>
+          <p class="hint">Photon colors: visible light is drawn in its true color. X rays and gamma rays have no color, so they use a false color scale: the incoming photon is blue and the scattered photon shifts toward red in proportion to Δλ, reaching red at the largest possible shift, 2λ<sub>C</sub> at 180°. Because Δλ depends only on the angle, a given angle gives the same color at every energy.</p>
+          <p class="hint">Angular distribution: the Klein–Nishina formula for unpolarized photons on free electrons, summed over final polarizations. Photons are sampled from it by rejection.</p>
+        </details>
         <div class="key">
           <span><i class="swatch inc"></i>Incoming photon, momentum p</span>
           <span><i class="swatch out"></i>Scattered photon, p′</span>
           <span><i class="swatch ele"></i>Recoil electron, p<sub>e</sub></span>
         </div>
+        </div></details>
       </section>
     </aside>
   </main>

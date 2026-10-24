@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark proj proj-body app spin spin-attn formula btnrow seg seg-button inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage phone-bench pane btn btn-primary btn-disabled slider-head-output toggles-label toggles-input readout-big-dd projshort-proj-stage pane-canvas" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark proj proj-body app spin spin-attn formula btnrow seg seg-button inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage phone-bench pane btn btn-primary btn-disabled slider-head-output toggles-label toggles-input readout-big-dd projshort-proj-stage pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -167,7 +167,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="eclipse" aria-pressed="false">Eclipse season</button>
           <button type="button" data-p="sid" aria-pressed="false">Sidereal vs synodic</button>
         </div>
-        <p class="hint" id="presetHint">Pick a setup, or drag the Moon around its orbit and watch the view from Earth change.</p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint">Pick a setup, or drag the Moon around its orbit and watch the view from Earth change.</p></details>
       </section>
 
       <section>
@@ -200,8 +200,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div><dt>Highest ≈</dt><dd id="rTransit">—</dd></div>
           <div><dt>Moonset ≈</dt><dd id="rSet">—</dd></div>
         </dl>
-        <p class="hint">Lit fraction f = (1 − cos E)/2, where E is the Moon's angle from the Sun as seen from Earth.</p>
-        <p class="hint"><strong>Not Earth's shadow.</strong> A common idea is that phases come from Earth's shadow falling on the Moon. They do not. The Sun always lights half the Moon; we see different amounts of that lit half. Earth's shadow points away from the Sun and reaches the Moon only at full moon, during a lunar eclipse.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Lit fraction f = (1 − cos E)/2, where E is the Moon's angle from the Sun as seen from Earth.</p>
+          <p class="hint"><strong>Not Earth's shadow.</strong> A common idea is that phases come from Earth's shadow falling on the Moon. They do not. The Sun always lights half the Moon; we see different amounts of that lit half. Earth's shadow points away from the Sun and reaches the Moon only at full moon, during a lunar eclipse.</p>
+        </details>
       </section>
 
       <section>
@@ -210,7 +212,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="slider-head"><label for="hour">Observer's local time</label><output id="hourOut" class="mono" for="hour">18:00</output></div>
           <input type="range" id="hour" min="0" max="24" step="0.25" value="18">
         </div>
-        <p class="hint">Rise and set times are approximate: an observer on the equator at an equinox, with the Moon on the celestial equator. Latitude and the Moon's tilted orbit shift real times by an hour or more, and the Moon rises about 50 minutes later each day.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Rise and set times are approximate: an observer on the equator at an equinox, with the Moon on the celestial equator. Latitude and the Moon's tilted orbit shift real times by an hour or more, and the Moon rises about 50 minutes later each day.</p>
+        </details>
       </section>
 
       <section>
@@ -233,22 +237,25 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
             <div><dt>Elapsed</dt><dd id="rElapsed">—</dd></div>
             <div class="wide"><dt>Node line drift against the stars</dt><dd id="rDrift">—</dd></div>
           </dl>
+        <details class="more"><summary>More about this</summary>
           <p class="hint">The Moon's orbit is tilted 5.1° to the ecliptic, so most new and full moons pass above or below the Sun line. An eclipse needs a new or full moon close to a node: the Sun within about 15 to 18° of a node for a solar eclipse, about 11° for an umbral lunar eclipse. The Sun passes a node every 173.3 days, giving two eclipse seasons a year. The nodes slide westward, once around in 18.6 years, so seasons come about 19 days earlier each year.</p>
+        </details>
         </div>
       </section>
 
       <section>
-        <h2>Layers</h2>
+        <details class="fold"><summary>Layers</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tShadow" checked>Earth's shadow</label>
           <label><input type="checkbox" id="tRing" checked>Phase ring</label>
           <label><input type="checkbox" id="tArc" checked>Elongation</label>
           <label><input type="checkbox" id="tSid">Sidereal vs synodic</label>
         </div>
+        </div></details>
       </section>
 
       <section>
-        <h2>Key</h2>
+        <details class="fold"><summary>Key</summary><div class="foldbody">
         <div class="key">
           <span><i class="swatch sun"></i>Sunlight, from the right</span>
           <span><i class="swatch face"></i>The half of the Moon that faces Earth</span>
@@ -256,8 +263,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <span><i class="swatch nodes"></i>Line of nodes (eclipse view)</span>
           <span><i class="swatch star"></i>Fixed star direction (sidereal)</span>
         </div>
-        <p class="hint">Model: circular orbits at steady rates, so phases are evenly spaced (the real Moon runs up to about 14 hours early or late). Sizes and distances are not to scale; the real Moon is about 30 Earth diameters away. In the view from Earth the terminator is drawn upright; in the real sky it tilts as the Moon crosses the sky. In the Southern Hemisphere the picture flips left to right.</p>
-        <p class="hint"><kbd>←</kbd> <kbd>→</kbd> move the Moon a day, <kbd>Shift</kbd> for a tenth. <kbd>Space</kbd> plays or pauses.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">Model: circular orbits at steady rates, so phases are evenly spaced (the real Moon runs up to about 14 hours early or late). Sizes and distances are not to scale; the real Moon is about 30 Earth diameters away. In the view from Earth the terminator is drawn upright; in the real sky it tilts as the Moon crosses the sky. In the Southern Hemisphere the picture flips left to right.</p>
+          <p class="hint"><kbd>←</kbd> <kbd>→</kbd> move the Moon a day, <kbd>Shift</kbd> for a tenth. <kbd>Space</kbd> plays or pauses.</p>
+        </details>
+        </div></details>
       </section>
     </aside>
   </main>

@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage slider-head-output swatch phone-chips-button" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage slider-head-output swatch phone-chips-button" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -164,7 +164,7 @@ select { font: inherit; font-size: 0.82rem; color: var(--ink); background: var(-
           <button type="button" data-p="fridge" aria-pressed="false">Run it backward: refrigerator</button>
           <button type="button" data-p="own" aria-pressed="false">Build your own cycle</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -197,7 +197,9 @@ select { font: inherit; font-size: 0.82rem; color: var(--ink); background: var(-
           <div class="slider-head"><label for="nIn">Amount of gas n</label><output id="nOut" class="mono" for="nIn">1.00 mol</output></div>
           <input type="range" id="nIn" min="0.1" max="2" step="0.05" value="1">
         </div>
-        <p class="hint">C<sub>v</sub> = 3/2 R for a monatomic gas like helium or argon, and 5/2 R for a diatomic gas like air near room temperature (the molecules rotate, but do not yet vibrate). C<sub>p</sub> = C<sub>v</sub> + R and γ = C<sub>p</sub>/C<sub>v</sub>. Changing n keeps the temperatures and pressures and scales the volumes, so every energy scales with n while η stays the same.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">C<sub>v</sub> = 3/2 R for a monatomic gas like helium or argon, and 5/2 R for a diatomic gas like air near room temperature (the molecules rotate, but do not yet vibrate). C<sub>p</sub> = C<sub>v</sub> + R and γ = C<sub>p</sub>/C<sub>v</sub>. Changing n keeps the temperatures and pressures and scales the volumes, so every energy scales with n while η stays the same.</p>
+        </details>
       </section>
 
       <section>
@@ -209,7 +211,9 @@ select { font: inherit; font-size: 0.82rem; color: var(--ink); background: var(-
           <button type="button" class="btn" id="delC">Remove corner</button>
         </div>
         <p class="flag" id="legFlag" hidden></p>
-        <p class="hint">Q &gt; 0 is heat into the gas. W &gt; 0 is work done by the gas on the piston (it expands). ΔU = n C<sub>v</sub> ΔT. The three columns are worked out separately: W from the area under the path, Q from the heat capacity for that process (C<sub>p</sub> at constant pressure, C<sub>v</sub> at constant volume, T ΔS on an isotherm, zero on an adiabat). The first law ΔU = Q − W then checks out on every row. Pick a process in any row to rebuild that leg; adding or removing a corner acts on the selected corner (1 to 6 on the keyboard, or click it).</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Q &gt; 0 is heat into the gas. W &gt; 0 is work done by the gas on the piston (it expands). ΔU = n C<sub>v</sub> ΔT. The three columns are worked out separately: W from the area under the path, Q from the heat capacity for that process (C<sub>p</sub> at constant pressure, C<sub>v</sub> at constant volume, T ΔS on an isotherm, zero on an adiabat). The first law ΔU = Q − W then checks out on every row. Pick a process in any row to rebuild that leg; adding or removing a corner acts on the selected corner (1 to 6 on the keyboard, or click it).</p>
+        </details>
       </section>
 
       <section>
@@ -226,7 +230,7 @@ select { font: inherit; font-size: 0.82rem; color: var(--ink); background: var(-
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tIso" checked>Isotherms</label>
           <label><input type="checkbox" id="tAdi">Adiabats</label>
@@ -246,15 +250,17 @@ select { font: inherit; font-size: 0.82rem; color: var(--ink); background: var(-
           <div class="legend-bar"></div>
           <div class="legend-scale mono"><span id="lgLo">300 K</span><span>gas temperature</span><span id="lgHi">500 K</span></div>
         </div>
+        </div></details>
       </section>
 
       <section class="model">
-        <h2>Model</h2>
-        <p class="hint"><b>Heat and work</b> are the two ways energy crosses into or out of the gas. Work is the gas pushing the piston: W = ∫P dV, the area under the path on the PV diagram, positive while the gas expands and negative while it is squeezed. Heat flows through the cylinder wall because of a temperature difference: Q = ∫T dS, the area under the path on the T–S diagram, positive while the gas's entropy goes up.</p>
-        <p class="hint"><b>Why the enclosed area is the net work.</b> Internal energy depends only on the state; for an ideal gas U = n C<sub>v</sub> T. Around a closed cycle the gas returns to its starting temperature, so ΔU = 0 and the net heat in equals the net work out. Along the top of the loop the gas pushes the piston out at high pressure; along the bottom the piston pushes it back in at lower pressure. Work out minus work in is the area between the two paths. Clockwise on the PV diagram the gas does net work (an engine); counterclockwise work must be put in (a refrigerator or heat pump).</p>
-        <p class="hint"><b>Why no engine beats Carnot.</b> Entropy also depends only on the state, so over one cycle the gas gives off exactly the entropy it takes in. Heat Q<sub>in</sub> brings in entropy of at least Q<sub>in</sub>/T<sub>max</sub>, since the gas is never hotter than T<sub>max</sub>. Giving that entropy off at temperatures no lower than T<sub>min</sub> takes heat Q<sub>out</sub> ≥ Q<sub>in</sub> T<sub>min</sub>/T<sub>max</sub>. So W = Q<sub>in</sub> − Q<sub>out</sub> ≤ Q<sub>in</sub>(1 − T<sub>min</sub>/T<sub>max</sub>). The Carnot cycle takes in all its heat at T<sub>max</sub> and gives it all off at T<sub>min</sub>, so it reaches the limit; any other path takes in some heat below T<sub>max</sub> or gives some off above T<sub>min</sub>. On the T–S diagram the Carnot cycle is the rectangle that fills the band between the two temperatures.</p>
-        <p class="hint"><b>Approximations.</b> Ideal gas with constant heat capacities. Every process is quasistatic, slow enough that the gas stays uniform and follows the drawn path. The Otto, Diesel and Brayton cycles are air standard models: the same gas goes around again, burning fuel is heat added and exhaust plus fresh intake is heat removed. Real air has γ falling toward about 1.3 at combustion temperatures, and real engines lose to friction and fast, irreversible steps, so real efficiencies are well below these. Where the temperature changes while heat flows (isobaric and isochoric legs), a reversible version would need a series of reservoirs matched to the gas; the drawing shows one hot side and one cold side. The Stirling regenerator is ideal: it gives back exactly the heat it stored.</p>
-        <p class="hint"><b>How the cycle stays closed.</b> Each process is a power law P V<sup>k</sup> = constant, with k = 0 (isobaric), 1 (isothermal), γ (adiabatic) or infinite (isochoric). Each corner is where two neighboring curves cross, so dragging a corner slides its two neighbors along their other curves. Entropy is S = n C<sub>v</sub> ln(T/300 K) + n R ln(V/V<sub>0</sub>), with V<sub>0</sub> the volume at 300 K and 100 kPa; only differences in S matter.</p>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
+          <p class="hint"><b>Heat and work</b> are the two ways energy crosses into or out of the gas. Work is the gas pushing the piston: W = ∫P dV, the area under the path on the PV diagram, positive while the gas expands and negative while it is squeezed. Heat flows through the cylinder wall because of a temperature difference: Q = ∫T dS, the area under the path on the T–S diagram, positive while the gas's entropy goes up.</p>
+          <p class="hint"><b>Why the enclosed area is the net work.</b> Internal energy depends only on the state; for an ideal gas U = n C<sub>v</sub> T. Around a closed cycle the gas returns to its starting temperature, so ΔU = 0 and the net heat in equals the net work out. Along the top of the loop the gas pushes the piston out at high pressure; along the bottom the piston pushes it back in at lower pressure. Work out minus work in is the area between the two paths. Clockwise on the PV diagram the gas does net work (an engine); counterclockwise work must be put in (a refrigerator or heat pump).</p>
+          <p class="hint"><b>Why no engine beats Carnot.</b> Entropy also depends only on the state, so over one cycle the gas gives off exactly the entropy it takes in. Heat Q<sub>in</sub> brings in entropy of at least Q<sub>in</sub>/T<sub>max</sub>, since the gas is never hotter than T<sub>max</sub>. Giving that entropy off at temperatures no lower than T<sub>min</sub> takes heat Q<sub>out</sub> ≥ Q<sub>in</sub> T<sub>min</sub>/T<sub>max</sub>. So W = Q<sub>in</sub> − Q<sub>out</sub> ≤ Q<sub>in</sub>(1 − T<sub>min</sub>/T<sub>max</sub>). The Carnot cycle takes in all its heat at T<sub>max</sub> and gives it all off at T<sub>min</sub>, so it reaches the limit; any other path takes in some heat below T<sub>max</sub> or gives some off above T<sub>min</sub>. On the T–S diagram the Carnot cycle is the rectangle that fills the band between the two temperatures.</p>
+          <p class="hint"><b>Approximations.</b> Ideal gas with constant heat capacities. Every process is quasistatic, slow enough that the gas stays uniform and follows the drawn path. The Otto, Diesel and Brayton cycles are air standard models: the same gas goes around again, burning fuel is heat added and exhaust plus fresh intake is heat removed. Real air has γ falling toward about 1.3 at combustion temperatures, and real engines lose to friction and fast, irreversible steps, so real efficiencies are well below these. Where the temperature changes while heat flows (isobaric and isochoric legs), a reversible version would need a series of reservoirs matched to the gas; the drawing shows one hot side and one cold side. The Stirling regenerator is ideal: it gives back exactly the heat it stored.</p>
+          <p class="hint"><b>How the cycle stays closed.</b> Each process is a power law P V<sup>k</sup> = constant, with k = 0 (isobaric), 1 (isothermal), γ (adiabatic) or infinite (isochoric). Each corner is where two neighboring curves cross, so dragging a corner slides its two neighbors along their other curves. Entropy is S = n C<sub>v</sub> ln(T/300 K) + n R ln(V/V<sub>0</sub>), with V<sub>0</sub> the volume at 300 K and 100 kPa; only differences in S matter.</p>
+        </div></details>
       </section>
     </aside>
   </main>

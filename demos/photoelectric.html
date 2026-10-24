@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark bar-div-firstchild stage-canvas-focusvisible spin spin-attn formula btnrow seg seg-button seg-button-on inline readout-wide readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled slider-head-output toggles-label toggles-input key key-span swatch projshort-proj-stage phone-chips-button" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark bar-div-firstchild stage-canvas-focusvisible spin spin-attn formula btnrow seg seg-button seg-button-on inline readout-wide readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled slider-head-output toggles-label toggles-input key key-span swatch projshort-proj-stage phone-chips-button" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -139,7 +139,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="zinc" aria-pressed="false">UV on zinc</button>
           <button type="button" data-p="planck" aria-pressed="false">Measure h</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -171,7 +171,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="slider-head"><label for="volt">Collector voltage V</label><output id="voltOut" class="mono" for="volt"></output></div>
           <input type="range" id="volt" min="-6" max="4" step="0.01" value="0">
         </div>
-        <p class="hint">Negative V pushes electrons back toward the metal. The voltage that just stops the fastest ones is the stopping voltage V₀, and eV₀ = K<sub>max</sub>.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Negative V pushes electrons back toward the metal. The voltage that just stops the fastest ones is the stopping voltage V₀, and eV₀ = K<sub>max</sub>.</p>
+        </details>
       </section>
 
       <section>
@@ -200,16 +202,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>h from slope</dt><dd id="rH">—</dd></div>
           <div><dt>φ from intercept</dt><dd id="rPhiFit">—</dd></div>
         </dl>
-        <p class="hint">Record V₀ at several wavelengths. The points fall on a straight line of K<sub>max</sub> against f: the slope is h, and the intercept is the work function. Record V₀ saves the collector voltage you have set, so lower V until the meter just reads 0.00 nA first. The error bars are the ±0.01 V step of the voltage control. Untick <b>Theory line and answers</b> to hide the model's K<sub>max</sub> and V₀ while you measure.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Record V₀ at several wavelengths. The points fall on a straight line of K<sub>max</sub> against f: the slope is h, and the intercept is the work function. Record V₀ saves the collector voltage you have set, so lower V until the meter just reads 0.00 nA first. The error bars are the ±0.01 V step of the voltage control. Untick <b>Theory line and answers</b> to hide the model's K<sub>max</sub> and V₀ while you measure.</p>
+        </details>
       </section>
 
       <section>
-        <h2>Layers</h2>
+        <details class="fold"><summary>Layers</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tPhotons" checked>Photons</label>
           <label><input type="checkbox" id="tTheory" checked>Theory line and answers</label>
         </div>
-        <p class="hint">Model: each absorbed photon frees at most one electron, with a kinetic energy spread evenly between 0 and K<sub>max</sub>. One electron per thousand photons (quantum efficiency 0.1%). Electron speeds on screen are slowed enormously; the fastest real ones move at hundreds of km/s.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="hint">Model: each absorbed photon frees at most one electron, with a kinetic energy spread evenly between 0 and K<sub>max</sub>. One electron per thousand photons (quantum efficiency 0.1%). Electron speeds on screen are slowed enormously; the fastest real ones move at hundreds of km/s.</p>
+        </details>
+        </div></details>
       </section>
     </aside>
   </main>

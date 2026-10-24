@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -153,7 +153,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="ldm" aria-pressed="false">The liquid drop model</button>
           <button type="button" data-p="magic" aria-pressed="false">Magic numbers</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -172,8 +172,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>Mass per nucleon M/A</dt><dd id="rMA">—</dd></div>
           <div><dt>Half life</dt><dd id="rHL">—</dd></div>
         </dl>
-        <p class="formula">B = Z Δ(¹H) + N Δ(n) − Δ(A, Z)</p>
-        <p class="hint">Click any point. Left and right keys step A, up and down step Z along the same A. The slider picks the most tightly bound measured nucleus of that A.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">B = Z Δ(¹H) + N Δ(n) − Δ(A, Z)</p>
+          <p class="hint">Click any point. Left and right keys step A, up and down step Z along the same A. The slider picks the most tightly bound measured nucleus of that A.</p>
+        </details>
       </section>
 
       <section>
@@ -201,7 +203,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
       <section>
         <h2>Liquid drop model</h2>
-        <p class="formula">B = a<sub>V</sub>A − a<sub>S</sub>A<sup>2/3</sup> − a<sub>C</sub>Z(Z−1)/A<sup>1/3</sup> − a<sub>A</sub>(N−Z)²/A ± a<sub>P</sub>/A<sup>1/2</sup></p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">B = a<sub>V</sub>A − a<sub>S</sub>A<sup>2/3</sup> − a<sub>C</sub>Z(Z−1)/A<sup>1/3</sup> − a<sub>A</sub>(N−Z)²/A ± a<sub>P</sub>/A<sup>1/2</sup></p>
+        </details>
         <div class="toggles" id="termToggles">
           <label><input type="checkbox" data-t="0" checked><i class="swatch band b-vol"></i>Volume</label>
           <label><input type="checkbox" data-t="1" checked><i class="swatch band b-surf"></i>Surface</label>
@@ -222,10 +226,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Data and model</h2>
-        <p class="hint">Masses: AME2020, M. Wang et al., Chinese Physics C 45, 030003 (2021), taken from the NUBASE2020 table (F. G. Kondev et al., Chinese Physics C 45, 030001) as shipped with the pynucastro package. Only ground states with measured masses are shown (2550 nuclides); the 1008 values AME2020 estimates from systematics are left out. Stable and naturally occurring nuclides are those NUBASE2020 lists as stable or with a natural abundance.</p>
-        <p class="hint">Binding energies use atomic mass excesses, so the electrons are counted with the protons. This leaves the electrons' own binding in B, at most 0.8 MeV in total for uranium, a 0.04% effect. Q values are for nuclei at rest in their ground states.</p>
+        <details class="fold"><summary>Data and model</summary><div class="foldbody">
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Masses: AME2020, M. Wang et al., Chinese Physics C 45, 030003 (2021), taken from the NUBASE2020 table (F. G. Kondev et al., Chinese Physics C 45, 030001) as shipped with the pynucastro package. Only ground states with measured masses are shown (2550 nuclides); the 1008 values AME2020 estimates from systematics are left out. Stable and naturally occurring nuclides are those NUBASE2020 lists as stable or with a natural abundance.</p>
+          <p class="hint">Binding energies use atomic mass excesses, so the electrons are counted with the protons. This leaves the electrons' own binding in B, at most 0.8 MeV in total for uranium, a 0.04% effect. Q values are for nuclei at rest in their ground states.</p>
+        </details>
         <div class="key" id="viewKey"></div>
+        </div></details>
       </section>
     </aside>
   </main>

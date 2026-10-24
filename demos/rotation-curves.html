@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -145,7 +145,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="dop" aria-pressed="false">Measure with Doppler</button>
           <button type="button" data-p="n3198" aria-pressed="false">NGC 3198</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -222,7 +222,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div><dt>Visible mass, total</dt><dd id="mVisTot">—</dd></div>
           <div><dt id="mHaloLab">Halo mass inside the plot</dt><dd id="mHalo">—</dd></div>
         </dl>
-        <p class="hint">Drag the round handle on each component's curve: sideways changes its size, up and down its mass (or density for the halo).</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag the round handle on each component's curve: sideways changes its size, up and down its mass (or density for the halo).</p>
+        </details>
       </section>
 
       <section id="secPlot">
@@ -273,7 +275,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       </section>
 
       <section>
-        <h2>Key and model</h2>
+        <details class="fold"><summary>Key and model</summary><div class="foldbody">
         <div class="key">
           <span><i class="swatch tot"></i>Total, with the halo</span>
           <span><i class="swatch vis"></i>Visible matter only (bulge, disk, gas)</span>
@@ -285,9 +287,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <span><i class="swatch dat"></i>Measured (approximate values)</span>
           <span><i class="swatch spec"></i>Read from the spectrum (edge on view)</span>
         </div>
-        <p class="formula">Disk (Freeman 1970): v² = 2GM y²[I₀(y)K₀(y) − I₁(y)K₁(y)]/R<sub>d</sub>, y = R/2R<sub>d</sub><br>Bulge: v² = GMr/(r + a)²<br>Pseudo isothermal: v² = 4πGρ₀r<sub>c</sub>²[1 − (r<sub>c</sub>/r) arctan(r/r<sub>c</sub>)]<br>NFW: v² = 4πGρ<sub>s</sub>r<sub>s</sub>³[ln(1 + x) − x/(1 + x)]/r, x = r/r<sub>s</sub></p>
-        <p class="hint">Circular orbits in the midplane. The disks are infinitely thin, the bulge and halo are spheres, and the speeds add in quadrature because their potentials add. The modified Bessel functions are computed from their integral forms to about 15 digits. The gas disk is modeled as exponential, while real neutral hydrogen is flatter and often thin in the center. Visible masses include helium for the gas.</p>
-        <p class="hint">The galaxy is an illustration: its stars are drawn from the model's mass distribution and move at the model's speeds; bulge stars are drawn on circles too, though real ones move on random orbits. In the edge on view each sightline through the disk collects gas at many radii, so the line spreads toward zero; its outer edge comes from the tangent point and gives v(r). Shifts use Δλ/λ = v/c, a line width of 10 km/s is added, and the galaxy's own recession is removed.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">Disk (Freeman 1970): v² = 2GM y²[I₀(y)K₀(y) − I₁(y)K₁(y)]/R<sub>d</sub>, y = R/2R<sub>d</sub><br>Bulge: v² = GMr/(r + a)²<br>Pseudo isothermal: v² = 4πGρ₀r<sub>c</sub>²[1 − (r<sub>c</sub>/r) arctan(r/r<sub>c</sub>)]<br>NFW: v² = 4πGρ<sub>s</sub>r<sub>s</sub>³[ln(1 + x) − x/(1 + x)]/r, x = r/r<sub>s</sub></p>
+          <p class="hint">Circular orbits in the midplane. The disks are infinitely thin, the bulge and halo are spheres, and the speeds add in quadrature because their potentials add. The modified Bessel functions are computed from their integral forms to about 15 digits. The gas disk is modeled as exponential, while real neutral hydrogen is flatter and often thin in the center. Visible masses include helium for the gas.</p>
+          <p class="hint">The galaxy is an illustration: its stars are drawn from the model's mass distribution and move at the model's speeds; bulge stars are drawn on circles too, though real ones move on random orbits. In the edge on view each sightline through the disk collects gas at many radii, so the line spreads toward zero; its outer edge comes from the tangent point and gives v(r). Shifts use Δλ/λ = v/c, a line width of 10 km/s is added, and the galaxy's own recession is removed.</p>
+        </details>
+        </div></details>
       </section>
     </aside>
   </main>

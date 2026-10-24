@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane btn-disabled toggles swatch phone-chips-button pane-canvas" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane btn-disabled toggles swatch phone-chips-button pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -178,7 +178,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" data-p="hyst" aria-pressed="false">Hysteresis</button>
           <button type="button" data-p="af" aria-pressed="false">Antiferromagnet</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -220,7 +220,9 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
             <button type="button" data-j="-1" aria-pressed="false">Antiferro, J = −1</button>
           </div>
         </div>
-        <p class="hint">Drag the thermometer and the field bar on the lattice too. H = −J Σ s<sub>i</sub>s<sub>j</sub> − h Σ s<sub>i</sub>, the first sum over nearest neighbor pairs.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Drag the thermometer and the field bar on the lattice too. H = −J Σ s<sub>i</sub>s<sub>j</sub> − h Σ s<sub>i</sub>, the first sum over nearest neighbor pairs.</p>
+        </details>
       </section>
 
       <section>
@@ -271,12 +273,14 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <button type="button" class="btn" id="clear">Clear</button>
         </div>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>T, L</th><th>⟨|m|⟩</th><th>⟨e⟩</th><th>c</th><th>χ</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Errors are one standard error. ⟨|m|⟩ and ⟨e⟩: blocking analysis of the correlated series (Flyvbjerg and Petersen), taking the largest error over levels with at least 32 blocks, which errs on the large side. c = N(⟨e²⟩ − ⟨e⟩²)/T² and χ = N(⟨m²⟩ − ⟨|m|⟩²)/T: jackknife over 20 blocks. τ<sub>int</sub> is the integrated autocorrelation time. With J = −1 the order parameter is m<sub>s</sub>.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Errors are one standard error. ⟨|m|⟩ and ⟨e⟩: blocking analysis of the correlated series (Flyvbjerg and Petersen), taking the largest error over levels with at least 32 blocks, which errs on the large side. c = N(⟨e²⟩ − ⟨e⟩²)/T² and χ = N(⟨m²⟩ − ⟨|m|⟩²)/T: jackknife over 20 blocks. τ<sub>int</sub> is the integrated autocorrelation time. With J = −1 the order parameter is m<sub>s</sub>.</p>
+        </details>
         <label class="check"><input type="checkbox" id="blind">Blind: hide the exact results</label>
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
           <label id="exactRow"><input type="checkbox" id="exact" checked>Exact results (h = 0)</label>
           <label><input type="checkbox" id="clu">Show the last Wolff cluster</label>
@@ -289,16 +293,18 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <span id="keyOns"><i class="swatch"></i>Onsager, infinite lattice</span>
           <span id="keyKau"><i class="swatch dash"></i>exact for this L × L (Kaufman)</span>
         </div>
+        </div></details>
       </section>
 
       <section>
-        <h2>Model</h2>
-        <p class="hint">Exact model, sampled: an L × L square lattice with periodic edges, H = −J Σ s<sub>i</sub>s<sub>j</sub> − h Σ s<sub>i</sub>. Monte Carlo draws configurations with probability ∝ exp(−E/T); averages over a finite run carry the statistical errors shown. No error estimate can see states a run never visits: below T<sub>c</sub> with h ≠ 0 the reversed state is metastable and may not be reached for a very long time. Random numbers: xoshiro128**, fixed by the seed.</p>
-        <p class="hint">Updates: Metropolis picks sites at random and flips a spin with probability min(1, e<sup>−ΔE/T</sup>), ΔE = 2s(JS + h) with S the sum of its four neighbors. Heat bath sets a spin up with probability 1/(1 + e<sup>−2(JS + h)/T</sup>), visiting the even sites, then the odd ones; sites of one color share no bond. Every step obeys detailed balance. Wolff grows a cluster through satisfied bonds, each added with probability 1 − e<sup>−2|J|/T</sup>, and flips it; it needs h = 0.</p>
-        <p class="hint">Time: one sweep is N single spin steps; for Wolff, a fixed number of clusters chosen so that about N spins flip (held fixed while a measurement averages, since stopping at exactly N flips would bias the averages). Sweeps are not seconds. Metropolis and heat bath mimic a lattice trading energy with a heat bath, but only the averages, not the speed, are physical; Wolff dynamics has no physical meaning at all.</p>
-        <p class="hint">Finite size: a finite lattice has no sharp transition. The peaks of c and χ are rounded and shifted, and ⟨|m|⟩ stays above zero above T<sub>c</sub> (about N<sup>−1/2</sup>). χ uses ⟨|m|⟩, the usual finite lattice form; above T<sub>c</sub> it is (1 − 2/π) times N⟨m²⟩/T.</p>
-        <p class="hint">Exact curves, h = 0 only: Onsager (1944) e and c, and the spontaneous magnetization m = (1 − sinh<sup>−4</sup>(2/T))<sup>1/8</sup> (Yang 1952), for the infinite lattice; T<sub>c</sub> = 2/ln(1 + √2). Dashed: Kaufman's (1949) exact partition function of the L × L lattice. No exact χ is known, so none is drawn. With J = −1 the same curves hold with m<sub>s</sub> in place of m.</p>
-        <p class="hint">Hysteresis: the loop is not an equilibrium property. Its width depends on the sweep rate, L and T; in equilibrium below T<sub>c</sub>, m would jump at h = 0.</p>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
+          <p class="hint">Exact model, sampled: an L × L square lattice with periodic edges, H = −J Σ s<sub>i</sub>s<sub>j</sub> − h Σ s<sub>i</sub>. Monte Carlo draws configurations with probability ∝ exp(−E/T); averages over a finite run carry the statistical errors shown. No error estimate can see states a run never visits: below T<sub>c</sub> with h ≠ 0 the reversed state is metastable and may not be reached for a very long time. Random numbers: xoshiro128**, fixed by the seed.</p>
+          <p class="hint">Updates: Metropolis picks sites at random and flips a spin with probability min(1, e<sup>−ΔE/T</sup>), ΔE = 2s(JS + h) with S the sum of its four neighbors. Heat bath sets a spin up with probability 1/(1 + e<sup>−2(JS + h)/T</sup>), visiting the even sites, then the odd ones; sites of one color share no bond. Every step obeys detailed balance. Wolff grows a cluster through satisfied bonds, each added with probability 1 − e<sup>−2|J|/T</sup>, and flips it; it needs h = 0.</p>
+          <p class="hint">Time: one sweep is N single spin steps; for Wolff, a fixed number of clusters chosen so that about N spins flip (held fixed while a measurement averages, since stopping at exactly N flips would bias the averages). Sweeps are not seconds. Metropolis and heat bath mimic a lattice trading energy with a heat bath, but only the averages, not the speed, are physical; Wolff dynamics has no physical meaning at all.</p>
+          <p class="hint">Finite size: a finite lattice has no sharp transition. The peaks of c and χ are rounded and shifted, and ⟨|m|⟩ stays above zero above T<sub>c</sub> (about N<sup>−1/2</sup>). χ uses ⟨|m|⟩, the usual finite lattice form; above T<sub>c</sub> it is (1 − 2/π) times N⟨m²⟩/T.</p>
+          <p class="hint">Exact curves, h = 0 only: Onsager (1944) e and c, and the spontaneous magnetization m = (1 − sinh<sup>−4</sup>(2/T))<sup>1/8</sup> (Yang 1952), for the infinite lattice; T<sub>c</sub> = 2/ln(1 + √2). Dashed: Kaufman's (1949) exact partition function of the L × L lattice. No exact χ is known, so none is drawn. With J = −1 the same curves hold with m<sub>s</sub> in place of m.</p>
+          <p class="hint">Hysteresis: the loop is not an equilibrium property. Its width depends on the sweep rate, L and T; in equilibrium below T<sub>c</sub>, m would jump at h = 0.</p>
+        </div></details>
       </section>
     </aside>
   </main>

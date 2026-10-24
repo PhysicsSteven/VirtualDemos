@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas wide-proj-bench wide-proj-stage pane readout-big-dd swatch projshort-proj-stage" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas wide-proj-bench wide-proj-stage pane readout-big-dd swatch projshort-proj-stage" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -165,7 +165,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="route" aria-pressed="false">Route to chaos</button>
           <button type="button" data-p="fly" aria-pressed="false">Butterfly effect</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -180,7 +180,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="slider-head"><label for="sF">Stoichiometric factor f</label><output id="oF" class="mono" for="sF"></output></div>
           <input type="range" id="sF" min="0.3" max="3" step="0.01">
         </div>
-        <p class="hint" data-for="beaker">f is the number of bromide ions made per oxidized catalyst ion reduced. Drag the f line on the lower plot too. The beaker oscillates only between the two Hopf points.</p>
 
         <div class="seg full grid2" role="group" aria-label="Dish medium" id="medSeg" data-for="dish">
           <button type="button" data-d="excite" aria-pressed="true">Excitable</button>
@@ -252,9 +251,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="btn" id="halfWave">Broken wave</button>
           <button type="button" class="btn" id="cited">Cited values</button>
         </div>
-        <p class="hint" data-for="dish" data-med="excite osc">Drag across a blue wave to cut it; the dashed ring shows how wide. Each free end curls into a spiral. Drag the probe (ringed cross) to measure there. Smaller D gives smaller patterns but a coarser grid relative to them.</p>
-        <p class="hint" data-for="dish" data-med="gf">Every point of this dish runs the flow reactor's chemistry, fed and drained at k<sub>f</sub>. At 3.5 × 10⁻⁴ s⁻¹ each spot alone would be chaotic; watch what diffusion does to that.</p>
-        <p class="hint" data-for="dish" data-med="toy"><b>Toy model, not BZ chemistry:</b> three made up species that eat each other in a cycle. It makes BZ like spirals, which is why it is often shown as "the BZ reaction", but it has no chemistry in it.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint" data-for="beaker">f is the number of bromide ions made per oxidized catalyst ion reduced. Drag the f line on the lower plot too. The beaker oscillates only between the two Hopf points.</p>
+          <p class="hint" data-for="dish" data-med="excite osc">Drag across a blue wave to cut it; the dashed ring shows how wide. Each free end curls into a spiral. Drag the probe (ringed cross) to measure there. Smaller D gives smaller patterns but a coarser grid relative to them.</p>
+          <p class="hint" data-for="dish" data-med="gf">Every point of this dish runs the flow reactor's chemistry, fed and drained at k<sub>f</sub>. At 3.5 × 10⁻⁴ s⁻¹ each spot alone would be chaotic; watch what diffusion does to that.</p>
+          <p class="hint" data-for="dish" data-med="toy"><b>Toy model, not BZ chemistry:</b> three made up species that eat each other in a cycle. It makes BZ like spirals, which is why it is often shown as "the BZ reaction", but it has no chemistry in it.</p>
+        </details>
 
         <div class="ctl" data-for="flow">
           <div class="slider-head"><label for="sKf">Flow rate k<sub>f</sub></label><output id="oKf" class="mono" for="sKf"></output></div>
@@ -281,18 +283,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
 
       <section>
-        <h2>Time and display</h2>
+        <details class="fold"><summary>Time and display</summary><div class="foldbody">
         <div class="ctl">
           <div class="slider-head"><label for="sRate">Simulation speed</label><output id="oRate" class="mono" for="sRate"></output></div>
           <input type="range" id="sRate" min="0" max="5" step="1">
         </div>
         <div class="key" id="keyBox"></div>
         <p class="hint mono" id="perf"></p>
+        </div></details>
       </section>
 
       <section class="model">
-        <h2>Model</h2>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
         <div class="hint" id="modelHint"></div>
+        </div></details>
       </section>
     </aside>
   </main>

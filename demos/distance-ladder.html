@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark bar-div-firstchild stage-canvas-focusvisible spin spin-attn formula btnrow seg readout-dd-ok status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage toggles toggles-label toggles-input projshort-proj-stage phone-chips-button" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark bar-div-firstchild stage-canvas-focusvisible spin spin-attn formula btnrow seg readout-dd-ok status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage toggles toggles-label toggles-input projshort-proj-stage phone-chips-button" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -142,7 +142,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     <aside class="rail">
       <section>
         <h2 id="rungTitle">Rung 1: parallax</h2>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <!-- ===== parallax ===== -->
@@ -211,18 +211,20 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="wide"><dt>Recorded for this galaxy</dt><dd id="cRecList" class="list">none yet</dd></div>
           <div class="wide big"><dt>Mean distance of recorded Cepheids</dt><dd id="cMean">—</dd></div>
         </dl>
-        <p class="formula">M<sub>V</sub> = −2.43 (log₁₀P − 1) + a<br>m − M = 5 log₁₀(d / 10 pc)</p>
         <div>
           <div class="slider-head"><label for="calA">Leavitt law zero point a</label><output id="calAOut" class="mono" for="calA"></output></div>
           <input type="range" id="calA" min="-4.35" max="-3.75" step="0.01" value="-4.05">
         </div>
-        <p class="hint">Slope and zero point a = −4.05 from Benedict et al. (2007), who measured Hubble Space Telescope parallaxes of ten Milky Way Cepheids: rung 1 calibrating rung 2. Moving a moves every Cepheid distance, and everything above it.</p>
         <h2>Inverse square law</h2>
         <div>
           <div class="slider-head"><label for="isr">Distance, in units of the first square</label><output id="isrOut" class="mono" for="isr"></output></div>
           <input type="range" id="isr" min="1" max="4" step="0.01" value="2">
         </div>
-        <p class="hint">The same light spreads over an area that grows as d², so the flux is F = L/4πd². Twice as far means a quarter of the flux, which is 5 log₁₀2 = 1.51 magnitudes fainter.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">M<sub>V</sub> = −2.43 (log₁₀P − 1) + a<br>m − M = 5 log₁₀(d / 10 pc)</p>
+          <p class="hint">Slope and zero point a = −4.05 from Benedict et al. (2007), who measured Hubble Space Telescope parallaxes of ten Milky Way Cepheids: rung 1 calibrating rung 2. Moving a moves every Cepheid distance, and everything above it.</p>
+          <p class="hint">The same light spreads over an area that grows as d², so the flux is F = L/4πd². Twice as far means a quarter of the flux, which is 5 log₁₀2 = 1.51 magnitudes fainter.</p>
+        </details>
       </section>
 
       <!-- ===== type Ia ===== -->
@@ -233,7 +235,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="slider-head"><label for="snM">Assumed peak absolute M</label><output id="snMOut" class="mono" for="snM"></output></div>
           <input type="range" id="snM" min="-19.8" max="-18.8" step="0.01" value="-19.3">
         </div>
-        <p class="hint">About −19.3 in the B band, set by supernovae in galaxies whose distances come from Cepheids. Real analyses also correct for the light curve width (brighter ones fade more slowly) and color; this demo skips both.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">About −19.3 in the B band, set by supernovae in galaxies whose distances come from Cepheids. Real analyses also correct for the light curve width (brighter ones fade more slowly) and color; this demo skips both.</p>
+        </details>
         <dl class="readout">
           <div><dt>Your peak m</dt><dd id="sm">—</dd></div>
           <div><dt>m − M</dt><dd id="sMu">—</dd></div>
@@ -267,27 +271,32 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <input type="range" id="snM2" min="-19.8" max="-18.8" step="0.01" value="-19.3">
         </div>
         <label class="check"><input type="checkbox" id="link" checked> Supernova calibration follows the Cepheids</label>
-        <p class="hint">The supernova peak M is measured in galaxies with Cepheid distances, so shifting a shifts it by the same amount. A calibration 0.1 mag too bright makes every distance 4.7% too large and H₀ 4.5% too small.</p>
         <h2>Selected galaxy</h2>
         <dl class="readout">
           <div><dt>Distance</dt><dd id="gD">—</dd></div>
           <div><dt>Catalog z</dt><dd id="gZ">—</dd></div>
           <div class="wide"><dt>Your comb: z = Δλ/λ, v ≈ cz</dt><dd id="gComb">—</dd></div>
         </dl>
-        <p class="hint">Measured values today: about 67 to 68 km/s/Mpc from the cosmic microwave background with the standard cosmological model (Planck 2018: 67.4 ± 0.5), and about 73 from the Cepheid and supernova ladder (SH0ES, Riess et al. 2022: 73.0 ± 1.0). Other ladder calibrations, such as the tip of the red giant branch, give values near 70. Why they differ is not settled.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The supernova peak M is measured in galaxies with Cepheid distances, so shifting a shifts it by the same amount. A calibration 0.1 mag too bright makes every distance 4.7% too large and H₀ 4.5% too small.</p>
+          <p class="hint">Measured values today: about 67 to 68 km/s/Mpc from the cosmic microwave background with the standard cosmological model (Planck 2018: 67.4 ± 0.5), and about 73 from the Cepheid and supernova ladder (SH0ES, Riess et al. 2022: 73.0 ± 1.0). Other ladder calibrations, such as the tip of the red giant branch, give values near 70. Why they differ is not settled.</p>
+        </details>
       </section>
 
       <!-- ===== overview ===== -->
       <section data-tab="all" hidden>
         <h2>Reading the ladder</h2>
-        <p class="hint">Bars show roughly where each method works well; the faded ends are where it still works with larger errors. Where two bars overlap, the same objects can be measured both ways, and that overlap is how the farther method is calibrated.</p>
-        <p class="hint">An error in a low rung carries up to every rung above it. That is why so much effort goes into parallaxes of nearby Cepheids.</p>
-        <p class="hint">The ringed dots are your current measurements from each rung. Click a bar to open that rung.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Bars show roughly where each method works well; the faded ends are where it still works with larger errors. Where two bars overlap, the same objects can be measured both ways, and that overlap is how the farther method is calibrated.</p>
+          <p class="hint">An error in a low rung carries up to every rung above it. That is why so much effort goes into parallaxes of nearby Cepheids.</p>
+          <p class="hint">The ringed dots are your current measurements from each rung. Click a bar to open that rung.</p>
+        </details>
       </section>
 
       <section>
-        <h2>Model</h2>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
         <p class="hint" id="modelText"></p>
+        </div></details>
       </section>
     </aside>
   </main>

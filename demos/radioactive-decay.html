@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn rail formula btnrow inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas wide-proj-bench wide-proj-stage toggles-label toggles-input swatch projshort-proj-stage" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn rail formula btnrow inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas wide-proj-bench wide-proj-stage toggles-label toggles-input swatch projshort-proj-stage" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -189,7 +189,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="bi210" aria-pressed="false">Two step chain</button>
           <button type="button" data-p="te132" aria-pressed="false">Short daughter, long parent</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -200,7 +200,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-n="1600" aria-pressed="false">1,600</button>
           <button type="button" data-n="10000" aria-pressed="false">10,000</button>
         </div>
-        <p class="hint">Each run is a new random sample. The dashed curves are what you expect on average; the band shows the typical spread, ±1σ. Compare 100 nuclei with 10,000: the relative spread shrinks as 1/√N.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Each run is a new random sample. The dashed curves are what you expect on average; the band shows the typical spread, ±1σ. Compare 100 nuclei with 10,000: the relative spread shrinks as 1/√N.</p>
+        </details>
       </section>
 
       <section>
@@ -225,7 +227,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <dl class="readout">
           <div class="wide"><dt id="rSurvLab">Parents alive one half life ago that are still alive</dt><dd id="rSurv">—</dd></div>
         </dl>
-        <p class="hint">σ = √(N₀f(1 − f)), where f is the expected fraction. For f small this is close to √N. The last line is the memoryless property at work: whatever their age, about half the survivors go in each half life.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">σ = √(N₀f(1 − f)), where f is the expected fraction. For f small this is close to √N. The last line is the memoryless property at work: whatever their age, about half the survivors go in each half life.</p>
+        </details>
       </section>
 
       <section>
@@ -240,7 +244,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt id="fMeanLab">Mean age at decay</dt><dd id="fMean">—</dd></div>
           <div><dt>Expected mean life τ</dt><dd id="fTau">—</dd></div>
         </dl>
-        <p class="hint">No one can say when a given nucleus will decay. A nucleus that has survived 3 half lives is no more likely to decay next than a fresh one: its chance of decaying within the next half life is still exactly 50%.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">No one can say when a given nucleus will decay. A nucleus that has survived 3 half lives is no more likely to decay next than a fresh one: its chance of decaying within the next half life is still exactly 50%.</p>
+        </details>
         <p class="sr" aria-live="polite" id="fLive"></p>
       </section>
 
@@ -273,11 +279,13 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <dl class="readout">
           <div class="wide"><dt>Dating the grid from its count</dt><dd id="dGrid">—</dd></div>
         </dl>
-        <p class="hint">N₀ is the carbon 14 a living sample has. The method assumes the atmospheric carbon 14 level was the same in the past; real dates are corrected with a calibration curve.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">N₀ is the carbon 14 a living sample has. The method assumes the atmospheric carbon 14 level was the same in the past; real dates are corrected with a calibration curve.</p>
+        </details>
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tExp" checked>Expected</label>
           <label><input type="checkbox" id="tBand" checked>±1σ band</label>
@@ -294,6 +302,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch tri"></i>Age at decay of a followed nucleus</span>
         </div>
         <p class="hint" id="modelHint">Model: each step of length Δt, every nucleus draws one random number and changes with the exact probability for that time, p = 1 − e<sup>−λΔt</sup>. For a chain the step uses the Bateman probabilities, so a parent can even pass through the daughter within one step. The sample therefore follows the expected curves at any step size.</p>
+        </div></details>
       </section>
     </aside>
   </main>

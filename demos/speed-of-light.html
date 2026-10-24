@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles toggles-label toggles-input swatch phone-chips-button pane-canvas" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles toggles-label toggles-input swatch phone-chips-button pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -181,7 +181,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
           <button type="button" data-p="long" aria-pressed="false">Longer path (D = 20 m)</button>
           <button type="button" data-p="measure" aria-pressed="false">Measure c</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -194,7 +194,9 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
           <div class="wide"><dt>Speed meter</dt><dd><span class="vfd" id="tach">1000<small>rev/s</small></span></dd></div>
         </dl>
         <dl class="readout" id="truth"></dl>
-        <p class="hint">The meter counts mirror revolutions and jitters by a few rev/s, like a real one. CW and CCW move the image in opposite directions.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The meter counts mirror revolutions and jitters by a few rev/s, like a real one. CW and CCW move the image in opposite directions.</p>
+        </details>
       </section>
 
       <section>
@@ -211,7 +213,9 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
           <div><dt>A, S to L2</dt><dd id="aOut">—</dd></div>
           <div><dt>L1 to L2 = A + f₁</dt><dd id="l12Out">—</dd></div>
         </dl>
-        <p class="formula">f₁ = 48 mm, f₂ = 252 mm<br>L2 focuses S onto MF: 1/f₂ = 1/A + 1/(D + B)</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">f₁ = 48 mm, f₂ = 252 mm<br>L2 focuses S onto MF: 1/f₂ = 1/A + 1/(D + B)</p>
+        </details>
       </section>
 
       <section>
@@ -228,7 +232,9 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
         <div class="toggles">
           <label><input type="checkbox" id="digits" checked> Show the micrometer reading in digits</label>
         </div>
-        <p class="hint">Read the sleeve (whole and half millimeters), add the thimble division times 0.01 mm, and estimate the next digit. The image jitters by a few micrometers (simulated), so center the crosshair on the middle of the spot, not its edge.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Read the sleeve (whole and half millimeters), add the thimble division times 0.01 mm, and estimate the next digit. The image jitters by a few micrometers (simulated), so center the crosshair on the middle of the spot, not its edge.</p>
+        </details>
       </section>
 
       <section>
@@ -240,9 +246,11 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
         </div>
         <p class="note" id="simNote" hidden></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>Dir</th><th>Meter rev/s</th><th>Micrometer</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Capture stores the direction, the speed meter reading and your micrometer reading, never the true shift. You can edit them. The fit uses rows taken at the bench's current D and B.</p>
         <div>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Capture stores the direction, the speed meter reading and your micrometer reading, never the true shift. You can edit them. The fit uses rows taken at the bench's current D and B.</p>
           <p class="hint" style="margin-bottom:4px">Your measured distances, used for c (filled from the bench; edit to use your own tape measure values):</p>
+        </details>
           <div class="dist">
             <label>D (m)<input id="eD" type="number" step="0.01" inputmode="decimal"></label>
             <label>B (m)<input id="eB" type="number" step="0.001" inputmode="decimal"></label>
@@ -255,7 +263,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
       </section>
 
       <section>
-        <h2>Instrument</h2>
+        <details class="fold"><summary>Instrument</summary><div class="foldbody">
         <div class="inline">
           <label class="lab" for="seed">Bench seed</label>
           <span><input type="number" class="seed" id="seed" min="1" max="99999" step="1" value="2718"> <button type="button" class="btn" id="newSeed">New</button></span>
@@ -265,16 +273,20 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
           <label id="truthRow"><input type="checkbox" id="showTrue"> Show the true image center (instructor check)</label>
           <label><input type="checkbox" id="labels" checked> Labels on the 3D bench</label>
         </div>
-        <p class="hint">The rest position of the image, the image jitter and the speed meter jitter are simulated and fixed by the seed. Share the seed so a class works on the same bench.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The rest position of the image, the image jitter and the speed meter jitter are simulated and fixed by the seed. Share the seed so a class works on the same bench.</p>
+        </details>
+        </div></details>
       </section>
 
       <section>
-        <h2>Model</h2>
-        <p class="hint">The layout follows the common rotating mirror teaching kit used in many modern physics labs: laser, lens L1, beam splitter with a measuring microscope, lens L2, a motor driven mirror MR, and a concave fixed mirror MF several meters away.</p>
-        <p class="hint">Exact within the model: light takes Δt = 2D/c out and back. The mirror turns Δθ = ωΔt, with ω = 2π × (rev/s). A mirror turned by Δθ turns the reflected beam by 2Δθ, so the image of S on MF moves 2DΔθ, and L2 forms an image of that at the microscope with magnification A/(D + B). The shift is Δs′ = 4AD²ω / c(D + B), so c = 4AD²ω / (D + B)Δs′. With CW and CCW readings, Δs′ = |s<sub>CW</sub> − s<sub>CCW</sub>| and ω = 2π(f<sub>CW</sub> + f<sub>CCW</sub>); or measure one direction against the reading at rest. The fit uses the slope k of reading against signed speed: c = 8πAD² / (D + B)k.</p>
-        <p class="hint">A is set by the focus condition 1/f₂ = 1/A + 1/(D + B): for D = 12 m and B = 0.5 m, A = 0.2572 m. c = 299 792 458 m/s exactly (SI). Air (n ≈ 1.000 29) would slow the light to c/n, a 0.03 % change, far below this method's resolution of about 1 %, so the light travels at c here.</p>
-        <p class="hint">Idealized: thin lenses without aberration; a perfect point source S at the focus of L1; MF exactly at the image of S; the mirror reaches the set speed at once and holds it; MR is aligned so the beam meets MF. Light comes back only while the turning mirror sweeps the beam across MF, so the real image is a train of short flashes that looks steady; it is drawn as a steady spot here. The image has a Gaussian profile, about 50 µm across, chosen to look like a real spot.</p>
-        <p class="hint">Simulated, from the seed: the rest position of the image, its jitter (standard deviation 2 µm, from air currents and vibration), and the speed meter jitter (0.15 %). The 3D mirror is drawn turning slowly; at 1000 rev/s it would be a blur. In slow motion, time is slowed so the 80 ns flight lasts 3 s and the mirror's turn is drawn larger by the stated factor; the path D is not to scale in any view.</p>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
+          <p class="hint">The layout follows the common rotating mirror teaching kit used in many modern physics labs: laser, lens L1, beam splitter with a measuring microscope, lens L2, a motor driven mirror MR, and a concave fixed mirror MF several meters away.</p>
+          <p class="hint">Exact within the model: light takes Δt = 2D/c out and back. The mirror turns Δθ = ωΔt, with ω = 2π × (rev/s). A mirror turned by Δθ turns the reflected beam by 2Δθ, so the image of S on MF moves 2DΔθ, and L2 forms an image of that at the microscope with magnification A/(D + B). The shift is Δs′ = 4AD²ω / c(D + B), so c = 4AD²ω / (D + B)Δs′. With CW and CCW readings, Δs′ = |s<sub>CW</sub> − s<sub>CCW</sub>| and ω = 2π(f<sub>CW</sub> + f<sub>CCW</sub>); or measure one direction against the reading at rest. The fit uses the slope k of reading against signed speed: c = 8πAD² / (D + B)k.</p>
+          <p class="hint">A is set by the focus condition 1/f₂ = 1/A + 1/(D + B): for D = 12 m and B = 0.5 m, A = 0.2572 m. c = 299 792 458 m/s exactly (SI). Air (n ≈ 1.000 29) would slow the light to c/n, a 0.03 % change, far below this method's resolution of about 1 %, so the light travels at c here.</p>
+          <p class="hint">Idealized: thin lenses without aberration; a perfect point source S at the focus of L1; MF exactly at the image of S; the mirror reaches the set speed at once and holds it; MR is aligned so the beam meets MF. Light comes back only while the turning mirror sweeps the beam across MF, so the real image is a train of short flashes that looks steady; it is drawn as a steady spot here. The image has a Gaussian profile, about 50 µm across, chosen to look like a real spot.</p>
+          <p class="hint">Simulated, from the seed: the rest position of the image, its jitter (standard deviation 2 µm, from air currents and vibration), and the speed meter jitter (0.15 %). The 3D mirror is drawn turning slowly; at 1000 rev/s it would be a blur. In slow motion, time is slowed so the 80 ns flight lasts 3 s and the mirror's turn is drawn larger by the stated factor; the path D is not to scale in any view.</p>
+        </div></details>
       </section>
     </aside>
   </main>

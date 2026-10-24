@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane-canvas" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -142,7 +142,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="ar" aria-pressed="false">Anti reflection coating</button>
           <button type="button" data-p="oil" aria-pressed="false">Oil on water</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -181,7 +181,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
             <button type="button" data-q="p" aria-pressed="false">p</button>
           </div>
         </div>
-        <p class="hint">θ₁ is measured in the top medium. s means the electric field is perpendicular to the plane of incidence, p means it lies in it; at normal incidence they are the same. The indices are taken as the same at every wavelength (no dispersion) and the film absorbs nothing.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">θ₁ is measured in the top medium. s means the electric field is perpendicular to the plane of incidence, p means it lies in it; at normal incidence they are the same. The indices are taken as the same at every wavelength (no dispersion) and the film absorbs nothing.</p>
+        </details>
       </section>
 
       <section>
@@ -221,7 +223,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
             <button type="button" data-g="10" aria-pressed="false">10×</button>
           </div>
         </div>
-        <p class="hint">Color model: the reflectance spectrum times CIE illuminant D65 (tabulated every 10 nm, interpolated linearly), integrated against the CIE 1931 2° color matching functions in the analytic fit of Wyman, Sloan and Shirley (2013), 380 to 780 nm, then converted to sRGB. A flat spectrum comes out exactly neutral. Gain 1× is true brightness against black, with a perfect mirror as white; a film reflects only a few percent, so 3× or 10× brightens it. Colors outside sRGB are desaturated and those too bright are scaled down.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Color model: the reflectance spectrum times CIE illuminant D65 (tabulated every 10 nm, interpolated linearly), integrated against the CIE 1931 2° color matching functions in the analytic fit of Wyman, Sloan and Shirley (2013), 380 to 780 nm, then converted to sRGB. A flat spectrum comes out exactly neutral. Gain 1× is true brightness against black, with a perfect mirror as white; a film reflects only a few percent, so 3× or 10× brightens it. Colors outside sRGB are desaturated and those too bright are scaled down.</p>
+        </details>
       </section>
 
       <section>
@@ -233,7 +237,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="wide"><dt>R at the quarter wave, ((n₁n₂ − n<sub>f</sub>²)/(n₁n₂ + n<sub>f</sub>²))²</dt><dd id="rQR">—</dd></div>
         </dl>
         <button type="button" class="btn" id="setQW">Set t to a quarter wave of λ₀</button>
-        <p class="hint">With n₁ &lt; n<sub>f</sub> &lt; n₂ both reflections flip, so the shifts cancel and only the path counts: a quarter wave film puts ray 2 half a cycle behind ray 1. If n<sub>f</sub>² = n₁n₂ the two reflections are equally strong and cancel completely at λ₀. MgF₂ (1.38) is used because it is durable, though √1.52 = 1.23 would be ideal on glass.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">With n₁ &lt; n<sub>f</sub> &lt; n₂ both reflections flip, so the shifts cancel and only the path counts: a quarter wave film puts ray 2 half a cycle behind ray 1. If n<sub>f</sub>² = n₁n₂ the two reflections are equally strong and cancel completely at λ₀. MgF₂ (1.38) is used because it is durable, though √1.52 = 1.23 would be ideal on glass.</p>
+        </details>
       </section>
 
       <section id="patSec">
@@ -262,21 +268,23 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
               <button type="button" data-f="0.5" aria-pressed="false">√ depth</button>
             </div>
           </div>
-          <p class="hint" style="margin-top:10px">t = t<sub>top</sub> + (t<sub>bottom</sub> − t<sub>top</sub>)(y/h)<sup>p</sup>, with y the depth. Linear (p = 1) is a simple wedge with evenly spaced bands. √ depth (p = ½) is the shape of a film draining under gravity between rigid surfaces, which squeezes the first colors into a thin strip at the top. Play drains the film: the profile thins as 1/√time, sped up. The black film at the top is far thinner than λ, so the path adds almost nothing and the single π shift makes the two reflections cancel. Real black films are a stable layer a few nm to about 30 nm thick that grows down from the top.</p>
         </div>
         <div id="wedgeRows">
           <div>
             <div class="slider-head"><label for="hw">Spacer thickness h</label><output id="hwOut" class="mono" for="hw"></output></div>
             <input type="range" id="hw" min="1" max="40" step="0.5" value="10">
           </div>
-          <p class="hint" style="margin-top:10px">Two 50 mm glass slides touch at the left and are held apart by a spacer (a hair or a strip of foil) at the right. The gap grows linearly, t = x h/L, so the fringes are evenly spaced: one fringe for each λ/2 of extra gap (λ/2n<sub>f</sub> in general), Δx = λL/(2n<sub>f</sub>h). Drag the spacer in the side view.</p>
         </div>
         <div id="newtonRows">
           <div>
             <div class="slider-head"><label for="rl">Lens radius of curvature R</label><output id="rlOut" class="mono" for="rl"></output></div>
             <input type="range" id="rl" min="0.5" max="5" step="0.1" value="1">
           </div>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint" style="margin-top:10px">t = t<sub>top</sub> + (t<sub>bottom</sub> − t<sub>top</sub>)(y/h)<sup>p</sup>, with y the depth. Linear (p = 1) is a simple wedge with evenly spaced bands. √ depth (p = ½) is the shape of a film draining under gravity between rigid surfaces, which squeezes the first colors into a thin strip at the top. Play drains the film: the profile thins as 1/√time, sped up. The black film at the top is far thinner than λ, so the path adds almost nothing and the single π shift makes the two reflections cancel. Real black films are a stable layer a few nm to about 30 nm thick that grows down from the top.</p>
+          <p class="hint" style="margin-top:10px">Two 50 mm glass slides touch at the left and are held apart by a spacer (a hair or a strip of foil) at the right. The gap grows linearly, t = x h/L, so the fringes are evenly spaced: one fringe for each λ/2 of extra gap (λ/2n<sub>f</sub> in general), Δx = λL/(2n<sub>f</sub>h). Drag the spacer in the side view.</p>
           <p class="hint" style="margin-top:10px">A convex lens rests on a flat plate. The gap is t = R − √(R² − r²) ≈ r²/2R, so the rings crowd together outward. With an air gap the center is dark and dark rings sit at r = √(mλR/n<sub>f</sub>), m = 0, 1, 2, at normal incidence.</p>
+        </details>
         </div>
         <dl class="readout" id="patRead">
           <div class="wide"><dt id="pLab1">—</dt><dd id="pVal1">—</dd></div>
@@ -286,12 +294,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
       <section>
         <h2>Reflectance formula</h2>
-        <p class="formula">r = (r₁₂ + r₂₃e<sup>2iβ</sup>) / (1 + r₁₂r₂₃e<sup>2iβ</sup>)<br>β = 2π n<sub>f</sub> t cos θ<sub>t</sub> / λ, R = |r|²</p>
-        <p class="hint">This is the exact single layer (Airy) result: it sums every reflection inside the film, not just the first two. r₁₂ and r₂₃ are the Fresnel coefficients of the two surfaces for the chosen polarization (unpolarized light averages s and p). Keeping only the first two reflections gives r ≈ r₁₂ + (1 − r₁₂²)r₂₃e<sup>2iβ</sup>, which is very close when each surface reflects only a few percent.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">r = (r₁₂ + r₂₃e<sup>2iβ</sup>) / (1 + r₁₂r₂₃e<sup>2iβ</sup>)<br>β = 2π n<sub>f</sub> t cos θ<sub>t</sub> / λ, R = |r|²</p>
+          <p class="hint">This is the exact single layer (Airy) result: it sums every reflection inside the film, not just the first two. r₁₂ and r₂₃ are the Fresnel coefficients of the two surfaces for the chosen polarization (unpolarized light averages s and p). Keeping only the first two reflections gives r ≈ r₁₂ + (1 − r₁₂²)r₂₃e<sup>2iβ</sup>, which is very close when each surface reflects only a few percent.</p>
+        </details>
       </section>
 
       <section>
-        <h2>Display</h2>
+        <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
           <label><input type="checkbox" id="tTwo" checked>First two only</label>
           <label><input type="checkbox" id="tBare" checked>No film</label>
@@ -303,7 +313,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <span><i class="swatch lam"></i>Wavelength λ₀ used in the wave picture</span>
           <span><i class="swatch r1"></i><i class="swatch r2"></i>Ray 1 (top surface) and ray 2 (bottom surface)</span>
         </div>
-        <p class="hint">In the ray drawing the film is drawn far thicker than scale (the drawn thickness grows as the cube root of t). Rays are at their true angles, except that below 20° they are drawn at 20° so they can be told apart. The dotted line from where ray 2 leaves the film to ray 1 is a line of equal phase: from there on both rays travel the same distance, so the extra path is n<sub>f</sub>(AB + BC) inside the film minus n₁ times the stretch of ray 1 before that line, which works out to 2n<sub>f</sub>t cos θ<sub>t</sub>. The phase shifts shown are those of s polarization (or p if chosen); beyond Brewster's angle the p reflection loses its π shift. The wave picture shows the first two reflections only. The reflected waves are drawn side by side for clarity; in reality they overlap.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">In the ray drawing the film is drawn far thicker than scale (the drawn thickness grows as the cube root of t). Rays are at their true angles, except that below 20° they are drawn at 20° so they can be told apart. The dotted line from where ray 2 leaves the film to ray 1 is a line of equal phase: from there on both rays travel the same distance, so the extra path is n<sub>f</sub>(AB + BC) inside the film minus n₁ times the stretch of ray 1 before that line, which works out to 2n<sub>f</sub>t cos θ<sub>t</sub>. The phase shifts shown are those of s polarization (or p if chosen); beyond Brewster's angle the p reflection loses its π shift. The wave picture shows the first two reflections only. The reflected waves are drawn side by side for clarity; in reality they overlap.</p>
+        </details>
+        </div></details>
       </section>
     </aside>
   </main>

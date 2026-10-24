@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles swatch phone-chips-button pane-canvas" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles swatch phone-chips-button pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -177,7 +177,7 @@ table.rows tr.sim td.n { color: var(--equi); }
           <button type="button" data-p="helix" aria-pressed="false">Tilt the tube: a helix</button>
           <button type="button" data-p="measure" aria-pressed="false">Measure e/m</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -194,7 +194,9 @@ table.rows tr.sim td.n { color: var(--equi); }
           <div><dt>Voltmeter</dt><dd><span class="meter" id="mV">200.0<small>V</small></span></dd></div>
           <div><dt>Ammeter</dt><dd><span class="meter" id="mI">1.500<small>A</small></span></dd></div>
         </dl>
-        <p class="hint">Constant voltage supply 0 to 200 V on the anode, constant current supply up to 3.5 A through both coils in series. Heater 6.3 V, fixed: the cathode glows and the lamps behind the scale are on. Read the meters, not the sliders: the meters are what go in your table.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Constant voltage supply 0 to 200 V on the anode, constant current supply up to 3.5 A through both coils in series. Heater 6.3 V, fixed: the cathode glows and the lamps behind the scale are on. Read the meters, not the sliders: the meters are what go in your table.</p>
+        </details>
       </section>
 
       <section>
@@ -212,8 +214,10 @@ table.rows tr.sim td.n { color: var(--equi); }
           <div><dt>B/I at the center</dt><dd id="kOut">—</dd></div>
           <div class="wide"><dt>B at the center, from the ammeter</dt><dd id="bOut">—</dd></div>
         </dl>
-        <p class="formula">N = 130 turns per coil, spacing = a<br>B = (4/5)<sup>3/2</sup> μ₀NI/a</p>
-        <p class="hint">a is the mean radius of the winding: half the average of your inner and outer diameters. The manual gives R = 158 mm; measuring it yourself is a check.</p>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">N = 130 turns per coil, spacing = a<br>B = (4/5)<sup>3/2</sup> μ₀NI/a</p>
+          <p class="hint">a is the mean radius of the winding: half the average of your inner and outer diameters. The manual gives R = 158 mm; measuring it yourself is a check.</p>
+        </details>
       </section>
 
       <section>
@@ -232,7 +236,9 @@ table.rows tr.sim td.n { color: var(--equi); }
           <span><i class="swatch refl"></i>Its reflection in the mirrored scale</span>
           <span><i class="swatch ptr"></i>Your reading pointers L and R</span>
         </div>
-        <p class="hint">Move your eye until the beam covers its own reflection, then set the pointer on the beam. Do the left side, then move your eye and do the right side.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Move your eye until the beam covers its own reflection, then set the pointer on the beam. Do the left side, then move your eye and do the right side.</p>
+        </details>
       </section>
 
       <section>
@@ -243,7 +249,9 @@ table.rows tr.sim td.n { color: var(--equi); }
           <button type="button" class="btn" id="clearTab">Clear</button>
         </div>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>V</th><th>I (A)</th><th>r L cm</th><th>r R cm</th><th>e/m</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
-        <p class="hint">Capture stores the meter readings and your two pointer readings, never the true radius. You can edit them. e/m is per row in 10¹¹ C/kg with r = (r L + r R)/2. Rows marked with an asterisk were filled by the procedure (simulated readings).</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Capture stores the meter readings and your two pointer readings, never the true radius. You can edit them. e/m is per row in 10¹¹ C/kg with r = (r L + r R)/2. Rows marked with an asterisk were filled by the procedure (simulated readings).</p>
+        </details>
         <div class="plotbox"><canvas id="plot" role="img" aria-label="Plot of 2V against (B r) squared from your readings, with a least squares line through the origin. The slope is e/m."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <div class="key">
@@ -253,7 +261,7 @@ table.rows tr.sim td.n { color: var(--equi); }
       </section>
 
       <section>
-        <h2>Instrument</h2>
+        <details class="fold"><summary>Instrument</summary><div class="foldbody">
         <div class="inline">
           <label class="lab" for="seed">Instrument seed</label>
           <span><input type="number" class="seed" id="seed" min="1" max="99999" step="1" value="2718"> <button type="button" class="btn" id="newSeed">New</button></span>
@@ -264,15 +272,19 @@ table.rows tr.sim td.n { color: var(--equi); }
           <label><input type="checkbox" id="blind"> Blind: hide the accepted value and the true radius</label>
           <label id="truthRow"><input type="checkbox" id="truth"> Show the true beam edges (instructor check)</label>
         </div>
-        <p class="hint">The meter jitter and the beam flicker are simulated and fixed by the seed. Share the seed so a class sees the same numbers.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The meter jitter and the beam flicker are simulated and fixed by the seed. Share the seed so a class sees the same numbers.</p>
+        </details>
+        </div></details>
       </section>
 
       <section>
-        <h2>Model</h2>
-        <p class="hint">The apparatus follows the PASCO SE-9629 manual: two coils of N = 130 turns with radius R = 158 mm (spacing taken equal to R, the Helmholtz condition), a bulb with helium at low pressure, an electron gun with a 6.3 V heater and up to 200 V on the anode, a constant current supply up to 3.5 A for the coils, a socket that turns the tube by up to 30° either way, and a mirrored scale on one coil. The deflection plates are drawn but not wired. The manual quotes e/m = 1.75 × 10¹¹ C/kg as the accepted value.</p>
-        <p class="hint">Exact within the model: each electron leaves the gun with kinetic energy eV and moves under F = −e v × B. With B uniform the path is a circle, r = mv/(eB), so e/m = 2V/(B²r²). e/m = 1.75882001076 × 10¹¹ C/kg and μ₀ are CODATA 2018 values.</p>
-        <p class="hint">Computed, when the coil field is on: B everywhere from the exact field of two circular loops (complete elliptic integrals), and the path from a step by step integration. Off the center the field is a little weaker, so circles come out a little larger than the center field predicts and e/m from the center field comes out low, by about 0.1% for small circles up to about 1% for a 5 cm circle. The earth's field option adds 2 × 10⁻⁵ T, about the horizontal part of the earth's field in the southern US, along the coil axis.</p>
-        <p class="hint">Idealized: each coil is one loop at its mean radius; electrons are treated without relativity (at 200 V that changes r by about 0.01%); the gun is a point 5 cm below the center of a 6.5 cm radius bulb; the scale is 8.5 cm behind the beam and your eye 30 cm in front of it. In a real tube the electrons lose a little energy in the anode and in collisions with helium, so the real e/m comes out high; that is not simulated. The meter jitter (about 0.2 V and 2 mA) and the flicker of the beam edges (up to about 1 mm) are simulated. The moving dots only show the direction of travel, not the speed.</p>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
+          <p class="hint">The apparatus follows the PASCO SE-9629 manual: two coils of N = 130 turns with radius R = 158 mm (spacing taken equal to R, the Helmholtz condition), a bulb with helium at low pressure, an electron gun with a 6.3 V heater and up to 200 V on the anode, a constant current supply up to 3.5 A for the coils, a socket that turns the tube by up to 30° either way, and a mirrored scale on one coil. The deflection plates are drawn but not wired. The manual quotes e/m = 1.75 × 10¹¹ C/kg as the accepted value.</p>
+          <p class="hint">Exact within the model: each electron leaves the gun with kinetic energy eV and moves under F = −e v × B. With B uniform the path is a circle, r = mv/(eB), so e/m = 2V/(B²r²). e/m = 1.75882001076 × 10¹¹ C/kg and μ₀ are CODATA 2018 values.</p>
+          <p class="hint">Computed, when the coil field is on: B everywhere from the exact field of two circular loops (complete elliptic integrals), and the path from a step by step integration. Off the center the field is a little weaker, so circles come out a little larger than the center field predicts and e/m from the center field comes out low, by about 0.1% for small circles up to about 1% for a 5 cm circle. The earth's field option adds 2 × 10⁻⁵ T, about the horizontal part of the earth's field in the southern US, along the coil axis.</p>
+          <p class="hint">Idealized: each coil is one loop at its mean radius; electrons are treated without relativity (at 200 V that changes r by about 0.01%); the gun is a point 5 cm below the center of a 6.5 cm radius bulb; the scale is 8.5 cm behind the beam and your eye 30 cm in front of it. In a real tube the electrons lose a little energy in the anode and in collisions with helium, so the real e/m comes out high; that is not simulated. The meter jitter (about 0.2 V and 2 mA) and the flicker of the beam edges (up to about 1 mm) are simulated. The moving dots only show the direction of travel, not the speed.</p>
+        </div></details>
       </section>
     </aside>
   </main>

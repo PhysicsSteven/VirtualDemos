@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled" lang="en">
+<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -141,7 +141,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="sgr" aria-pressed="false">Sagittarius A*</button>
           <button type="button" data-p="m87" aria-pressed="false">M87*</button>
         </div>
-        <p class="hint" id="presetHint"></p>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
@@ -156,7 +156,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div><dt>ISCO 3 r<sub>s</sub></dt><dd id="rIsco">—</dd></div>
           <div class="wide" id="objRow" hidden><dt id="objLab">Seen from Earth</dt><dd id="rObj" class="list">—</dd></div>
         </dl>
-        <p class="hint">For scale: 10 M<sub>sun</sub> gives r<sub>s</sub> = 29.5 km, Sagittarius A* (4.3 × 10⁶ M<sub>sun</sub>) 0.085 AU, M87* (6.5 × 10⁹ M<sub>sun</sub>) 128 AU. r<sub>s</sub> grows in proportion to M.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">For scale: 10 M<sub>sun</sub> gives r<sub>s</sub> = 29.5 km, Sagittarius A* (4.3 × 10⁶ M<sub>sun</sub>) 0.085 AU, M87* (6.5 × 10⁹ M<sub>sun</sub>) 128 AU. r<sub>s</sub> grows in proportion to M.</p>
+        </details>
       </section>
 
       <section id="secLens">
@@ -174,7 +176,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div><dt>At the lens, R<sub>E</sub> = θ<sub>E</sub>D<sub>L</sub></dt><dd id="rRE">—</dd></div>
           <div><dt>Crossing time t<sub>E</sub> at 200 km/s</dt><dd id="rtE">—</dd></div>
         </dl>
-        <p class="hint">The angles in the picture are in units of θ<sub>E</sub>, so the picture itself depends only on where the source is. The mass and distances set what θ<sub>E</sub> is in arcseconds.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">The angles in the picture are in units of θ<sub>E</sub>, so the picture itself depends only on where the source is. The mass and distances set what θ<sub>E</sub> is in arcseconds.</p>
+        </details>
       </section>
 
       <section id="secSrc">
@@ -230,7 +234,9 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="wide"><dt>Einstein ring for a source straight behind: exact; thin lens √(2r<sub>s</sub>/r<sub>o</sub>)</dt><dd id="rER">—</dd></div>
           <div class="wide"><dt>Galaxy true direction from straight behind</dt><dd id="rGal">—</dd></div>
         </dl>
-        <p class="hint">Every pixel's light ray is followed backward with the exact Schwarzschild orbit equation d²u/dφ² = −u + (3/2) r<sub>s</sub>u², u = 1/r. Rays with impact parameter below b<sub>c</sub> fall into the hole: that is the shadow. Rays just above b<sub>c</sub> circle the photon sphere and pile up thin copies of the whole sky at the shadow's edge.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Every pixel's light ray is followed backward with the exact Schwarzschild orbit equation d²u/dφ² = −u + (3/2) r<sub>s</sub>u², u = 1/r. Rays with impact parameter below b<sub>c</sub> fall into the hole: that is the shadow. Rays just above b<sub>c</sub> circle the photon sphere and pile up thin copies of the whole sky at the shadow's edge.</p>
+        </details>
       </section>
 
       <section id="secNear" hidden>
@@ -249,18 +255,23 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="wide"><dt>Same person at the horizon</dt><dd id="rTidH">—</dd></div>
         </dl>
         <p class="flag" id="verdict"></p>
-        <p class="hint">A static observer hovers at fixed r with a rocket and compares clocks with someone far away. The tidal stretch is for a person falling feet first; in general relativity it is exactly 2GML/r³ along the fall, the same as Newton's estimate, and half that as a squeeze sideways.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">A static observer hovers at fixed r with a rocket and compares clocks with someone far away. The tidal stretch is for a person falling feet first; in general relativity it is exactly 2GML/r³ along the fall, the same as Newton's estimate, and half that as a squeeze sideways.</p>
+        </details>
       </section>
 
       <section>
-        <h2>Model</h2>
+        <details class="fold"><summary>Model</summary><div class="foldbody">
         <p class="hint" id="modelHint"></p>
         <div class="key" id="key"></div>
+        </div></details>
       </section>
 
       <section>
         <h2>Controls</h2>
-        <p class="hint">With the drawing focused, <kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> move the source or the observer (<kbd>Shift</kbd> for bigger steps), <kbd>Space</kbd> plays or pauses, <kbd>V</kbd> changes the view, <kbd>G</kbd> changes the source shape, <kbd>R</kbd> resets the setup.</p>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">With the drawing focused, <kbd>←</kbd> <kbd>→</kbd> <kbd>↑</kbd> <kbd>↓</kbd> move the source or the observer (<kbd>Shift</kbd> for bigger steps), <kbd>Space</kbd> plays or pauses, <kbd>V</kbd> changes the view, <kbd>G</kbd> changes the source shape, <kbd>R</kbd> resets the setup.</p>
+        </details>
       </section>
     </aside>
   </main>
