@@ -8672,7 +8672,10 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
+      "note": "Volume 3 sections mapped 2026-10-24. Readings, Blind and Export to worksheet added 2026-10-24 (Claude); worksheet relativity-em (net line charge against γᵤβᵤβᵥ, F′/F against γᵤ) with a key from a real run in TeacherKeys.",
+      "handouts": [
+        "relativity-em"
+      ],
       "title": "Magnetism from Relativity",
       "url": "demos/relativity-em.html"
     },

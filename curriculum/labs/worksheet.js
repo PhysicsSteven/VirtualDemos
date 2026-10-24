@@ -263,7 +263,7 @@
   const MODERN = [];
   /* Vol. 3 ch. 5 (relativity) and ch. 6 (photons and matter waves) */
   MODERN.push('velocity-addition', 'relativistic-momentum', 'relativistic-energy' /* Velocity, Momentum and Energy Near c demo, one per view */);
-  MODERN.push('photoelectric', 'compton', 'franck-hertz', 'spacetime', 'speed-of-light', 'rutherford', 'spectra', 'wave-particle-duality' /* Double Slit demo */);
+  MODERN.push('photoelectric', 'compton', 'franck-hertz', 'spacetime', 'speed-of-light', 'rutherford', 'spectra', 'wave-particle-duality' /* Double Slit demo */, 'relativity-em');
   Object.assign(FROM_DEMO, {
     /* Reading | Launch speed u′ (c) | Probe time A to B Δt (s) | Ground speed u (c) | u − u′ (c) | 1 − uu′/c² */
     'velocity-addition': { demo: 'Velocity, Momentum and Energy Near c (Adding velocities)', cols: ['row', 'u_prime_c', 'probe_dt_s', null, null, null] },
@@ -286,6 +286,8 @@
     /* Reading | Source | Air wavelength λ (nm) | Upper level n | 1/n² | Vacuum wavelength (nm) | 1/λ in vacuum (1/µm) */
     /* Reading | Setup | Voltage V (kV) | Detector η (%) | B − A (µm) | Hits at A | Hits at B | Wavelength λ (pm) | 1/(pc) (1/MeV) | Contrast */
     'wave-particle-duality': { demo: 'Double Slit', cols: ['row', (r) => `${r.particle}, a ${+(r.a_mm * 1000).toPrecision(6)} µm, d ${+(r.d_mm * 1000).toPrecision(6)} µm, L ${r.L_m} m${r.v_m_s ? `, ${r.v_m_s} m/s` : ''}, ${r.hits} hits, window ${r.w_um} µm`, 'V_kV', 'eta_pct', 'BA_um', 'nA', 'nB', null, null, null] },
+    /* Reading | Setup | Electron drift βᵥ | Charge speed βᵤ | F in the lab (N) | F′ in the charge's frame (N) | Net λ′ in the charge's frame (µC/m) | γᵤ | γᵤβᵤβᵥ | F′/F */
+    'relativity-em': { demo: 'Magnetism from Relativity', cols: ['row', (r) => `${r.charge}, r = ${r.r_cm} cm`, 'v', 'u', 'F_N', 'Fp_N', 'lamp_uC_m', null, null, null] },
     spectra: { demo: 'Spectra Explorer', cols: ['row', (r) => (r.ion ? `${r.source} ${r.ion}` : r.source), 'lambda_nm', null, null, null, null] },
   });
   ENABLED.push(...MODERN);

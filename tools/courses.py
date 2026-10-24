@@ -137,6 +137,7 @@ HANDOUT_TOPIC = {
     'rutherford': 'Rutherford Scattering',
     'spectra': 'The Hydrogen Spectrum and the Rydberg Constant',
     'wave-particle-duality': 'Wave and Particle Duality',
+    'relativity-em': 'Magnetism from Relativity',
     'household-wiring': 'Household Wiring and Electrical Safety',
     'van-de-graaff': 'Van de Graaff Generator',
     'ink-jet-printer': 'Ink Jet Printer',

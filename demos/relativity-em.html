@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg readout-dd-ok check status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage bench phone-bench pane btn-disabled readout-dd toggles toggles-label toggles-input readout-big-dd swatch" lang="en">
+<html data-vd-off="root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula seg readout-dd-ok check empty plotbox-canvas wide-proj-bench wide-proj-stage bench phone-bench pane readout-dd toggles toggles-label toggles-input readout-big-dd swatch" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -113,7 +113,7 @@ input[type="range"]:disabled { opacity: 0.45; }
 .fcard h3 small { font-weight: 400; color: var(--muted); font-size: 0.78rem; }
 .fcard.chg h3 { border-left-color: var(--frame); }
 .fcard.now { box-shadow: 0 0 0 2px var(--frame); }
-.rows { margin: 0; padding: 6px 10px 8px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 3px 10px; font-size: 0.84rem; }
+dl.rows { margin: 0; padding: 6px 10px 8px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 3px 10px; font-size: 0.84rem; }
 .rows dt { color: var(--muted); }
 .rows dd { margin: 0; text-align: right; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 0.82rem; overflow-wrap: anywhere; }
 .rows .em dd { font-weight: 600; }
@@ -219,6 +219,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/relativity-em.html" target="relativity-em-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Scenarios</h2>
         <div class="chips" id="presets">
@@ -294,6 +295,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div class="wide ok"><dt>The whole run, on q's own clock τ</dt><dd id="rRun">—</dd></div>
           <div class="wide"><dt>The same run on each frame's clock</dt><dd id="rClocks">—</dd></div>
         </dl>
+        <label class="check"><input type="checkbox" id="blind">Blind: hide F′/F, γᵤ and the density note</label>
         <details class="more"><summary>More about this</summary>
           <p class="hint">A sideways push is largest in the frame where the particle is at rest: F′ = γᵤF. Sideways momentum is the same in both frames, but the charge's clock runs slow in the lab, so the lab sees that momentum delivered over a γᵤ times longer time. The path is computed separately in each frame, and the distance from the wire against the charge's own clock τ comes out the same.</p>
           <p class="hint">B does not vanish in the charge's frame: there the ions and electrons both move, at different speeds, so the wire still carries a current. In the lab E = 0 at q, so E² − c²B² is negative, and since it is the same in every frame, no observer sees a purely electric field there.</p>
@@ -423,6 +425,27 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </details>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="relativity-em" data-title="Magnetism from Relativity" data-demo="relativity-em">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Key</summary><div class="foldbody">
         <div class="key">
@@ -710,7 +733,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const LAM0 = 1e-6, QX = 1e-9, A_CU = 1e-6;
   const S = {
     view: 'wire', scale: 'fast', frame: 'lab',
-    v: 0.5, u: 0.5, lock: true, qs: -1, r: 2, I: 1, kx: 3,
+    v: 0.5, u: 0.5, lock: true, qs: -1, r: 2, I: 1, kx: 3, blind: false,
     bp: 0.8, layers: { lines: true, rings: true, surf: true, mlines: true },
     mscale: 'slow', mv: 1, mb: 0.6, mz: -9,
     xb: 0.6, xE: [0, 0, 0], xB: [0, 0, 1]
@@ -902,6 +925,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       $('rRatio').textContent = L.F === 0 ? 'no force' : (Q.F / L.F).toFixed(4);
       $('rGu').textContent = gu.toFixed(4);
     }
+    if (S.blind) { $('rRatio').textContent = 'hidden (Blind)'; $('rGu').textContent = 'hidden (Blind)'; $('propHint').textContent = ''; }
     ensureRun();
     if (real) { $('rRun').textContent = 'not set free: in a nanosecond it would move about 10⁻¹⁶ m'; $('rClocks').textContent = '—'; }
     else {
@@ -1840,6 +1864,18 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   requestAnimationFrame(loop);
 
   // hooks for automated checks
+  // ---------- readings (the shared Readings section): the wire at the moment of release, in both frames ----------
+  $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; refresh(); });
+  window.vdVersion = 'relativity-em@2026-10-24';
+  window.vdShowCols = [['v', 'βᵥ'], ['u', 'βᵤ'], ['F_N', 'F (N)'], ['Fp_N', 'F′ (N)']];
+  window.vdReadingRow = () => {
+    if (S.view !== 'wire') return 'Readings are taken in the Wire view.';
+    if (S.scale === 'real') return 'Readings are taken with Speeds near c. For the copper wire, write the readouts in the worksheet.';
+    const P = wp(), L = wireForce(P.lam0, P.v, P.u, P.q, P.r, 0), Q = wireForce(P.lam0, P.v, P.u, P.q, P.r, P.u);
+    const n = (x) => String(+x.toPrecision(4));
+    return { charge: P.q < 0 ? 'electron' : 'positron', r_cm: S.r.toFixed(1), v: P.v.toFixed(2), u: P.u.toFixed(2),
+      F_N: n(L.F), Fp_N: n(Q.F), lamp_uC_m: n(Q.lamNet * 1e6), E_lab_V_m: n(L.Ez), B_lab_T: n(L.By), Ep_V_m: n(Q.Ez), Bp_T: n(Q.By) };
+  };
   window.__relem = { S, freezeBoost: (fr) => { S.frame = 'charge'; syncControls(); boost.active = true; boost.rate = 0; boost.phi = fr * Math.atanh(targetF()); dirty = true; }, pause: () => { if (playing) togglePlay(); }, setTau: (fr) => { ensureRun(); RUN.tau = fr * RUN.tauEnd; RUN.hold = 0; dirty = true; }, run: () => RUN, applyPreset, setFrame, wp, frame: () => fCur, boosting: () => boost.active, frameMs: () => frameMs, handles: () => handles.map((h) => ({ id: h.id, x: h.s[0], y: h.s[1] })), core: { wireForce, wireInFrame, boostFields, movingCharge } };
 })();
 </script>
