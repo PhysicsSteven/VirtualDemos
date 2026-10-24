@@ -12,7 +12,7 @@ time: 20 to 35 minutes
 
 ## Before class
 
-Students should know the de Broglie relation p = h/λ, E = p²/2m for a free particle and the idea that |ψ|² is a probability density. Units are nm, eV and fs, with ħ²/2m = 0.0381 eV·nm² for the electron and h = 4.136 eV·fs. The top panel shows V(x), ⟨E⟩ and the levels; the lower panel shows |ψ|² colored by the phase of ψ. Use **¼×** speed and **Pause** at the key moments.
+Students should know the de Broglie relation p = h/λ, E = p²/2m for a free particle and the idea that |ψ|² is a probability density. Units are nm, eV and fs, with ħ²/2m = 0.0381 eV·nm² for the electron and h = 4.136 eV·fs. The top panel shows V(x), ⟨E⟩ and the levels; the lower panel shows |ψ|² colored by the phase of ψ, and its **3D** switch draws ψ itself as a ribbon around the x axis (Re ψ up, Im ψ toward the viewer), so a moving packet is a helix whose turns are the de Broglie wavelength and an eigenstate is a shape that only turns. Use **¼×** speed and **Pause** at the key moments.
 
 ## Running it in class
 

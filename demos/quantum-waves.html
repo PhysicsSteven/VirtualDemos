@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -54,6 +56,9 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage { position: relative; min-height: 520px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: minmax(0, 44fr) minmax(0, 56fr); }
 .stage.k-on { grid-template-rows: minmax(0, 36fr) minmax(0, 40fr) minmax(0, 24fr); }
 .pane + .pane { border-top: 1px solid var(--line); }
+.wctl { position: absolute; top: 6px; left: 50%; transform: translateX(-50%); z-index: 2; }
+#wPane.in3d #wCan { pointer-events: none; }
+#wPane.in3d > canvas:first-child { cursor: grab; }
 #eCan { touch-action: none; outline: none; }
 #eCan:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .stage-ctl { position: absolute; top: 10px; left: 10px; right: 10px; z-index: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; pointer-events: none; }
@@ -152,6 +157,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </div>
       <div class="pane" id="wPane">
         <canvas id="wCan" aria-label="Wave function: probability density |ψ|² filled and colored by the phase of ψ."></canvas>
+        <div class="wctl"><div class="seg" role="group" aria-label="Perspective of the wave function" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div></div>
       </div>
       <div class="pane" id="kPane" hidden>
         <canvas id="kCan" aria-label="Momentum space: probability density |φ(k)|² against wave number k."></canvas>
@@ -1147,8 +1153,65 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   // ---------- wave function pane ----------
+  /* ψ in 3D: x along the axis, Re ψ up and Im ψ toward the viewer, so a moving packet is a twisting ribbon (a helix whose turns are
+     the wavelength). The ribbon runs from the axis out to ψ and takes the same phase colours as the flat picture; |ψ| is its
+     distance from the axis. Only the picture: ψ is the simulation's, sampled at 600 points across the view. */
+  const G3 = { st: null, view: null, o: { th: -1.25, ph: 1.12, zoom: 1 }, rib: null, edge: null, pot: null, potKey: '', axis: null, n: 600 };
+  const use3 = () => !!(G3.view && G3.view.is3d() && G3.st);
+  function init3() {
+    const st = VD3K.stage($('wPane'), { before: cans.w, fov: 30, near: 0.5, far: 1000 }); if (!st) return false;
+    G3.st = st; const sc = st.scene, n = G3.n;
+    const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 2 * 3), 3)); g.setAttribute('color', new THREE.BufferAttribute(new Float32Array(n * 2 * 3), 3));
+    const idx = []; for (let i = 0; i < n - 1; i++) { const a = 2 * i; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } g.setIndex(idx);
+    G3.rib = new THREE.Mesh(g, new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.DoubleSide, transparent: true, opacity: 0.85, depthWrite: false })); G3.rib.frustumCulled = false; sc.add(G3.rib);
+    const eg = new THREE.BufferGeometry(); eg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3));
+    G3.edge = new THREE.Line(eg, new THREE.LineBasicMaterial({ color: 0xffffff })); G3.edge.frustumCulled = false; st.onTheme((dk) => G3.edge.material.color.set(dk ? '#e8edf3' : '#1d2733')); sc.add(G3.edge);
+    G3.axis = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x888888 })); sc.add(G3.axis);
+    G3.pot = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.45, side: THREE.DoubleSide, depthWrite: false })); st.onTheme(() => G3.pot.material.color.set(T.potEdge || '#6b7786')); sc.add(G3.pot);
+    G3.lab = []; for (const t of ['Re ψ', 'Im ψ', 'x']) { const L = VD3K.label(t, { size: 1.6, color: '#ffffff', bg: 'rgba(20,28,38,0.78)' }); sc.add(L); G3.lab.push(L); }
+    st.orbit(st.el, G3.o, () => drawAll(), { phMin: 0.1, phMax: 1.55, zMin: 0.4, zMax: 3 });
+    return true;
+  }
+  function drawWave3(W, H) {
+    const st = G3.st, n = G3.n, x0 = view[0], x1 = view[1], span = x1 - x0, ctx = ctxs.w, ps = projScale();
+    st.size(W, H);
+    let mx = 0; for (let i = 0; i < sim.N; i++) mx = Math.max(mx, sim.re[i] * sim.re[i] + sim.im[i] * sim.im[i]);
+    /* the same scale rule as the flat picture */
+    const target = Math.max(0.5 * psiBase, 1.2 * mx);
+    psiScale = mx * 1.02 > psiScale ? 1.1 * mx : running ? psiScale + (target - psiScale) * 0.05 : target;
+    const dk = isDark(), A = span * 0.16 / Math.sqrt(psiScale), pos = G3.rib.geometry.attributes.position.array, col = G3.rib.geometry.attributes.color.array, ed = G3.edge.geometry.attributes.position.array, C = new THREE.Color();
+    for (let c = 0; c < n; c++) {
+      const xv = x0 + span * c / (n - 1), f = (xv - sim.xmin) / sim.dx, i = Math.floor(f), u = f - i;
+      let pr = 0, pi = 0; if (i >= 0 && i < sim.N - 1) { pr = sim.re[i] * (1 - u) + sim.re[i + 1] * u; pi = sim.im[i] * (1 - u) + sim.im[i + 1] * u; }
+      const k = 6 * c; pos[k] = xv; pos[k + 1] = 0; pos[k + 2] = 0; pos[k + 3] = xv; pos[k + 4] = -pi * A; pos[k + 5] = pr * A;
+      { let h = Math.atan2(pi, pr) / (2 * Math.PI); if (h < 0) h += 1; C.setHSL(h, dk ? 0.78 : 0.82, dk ? 0.6 : 0.5); } col[k] = col[k + 3] = C.r; col[k + 1] = col[k + 4] = C.g; col[k + 2] = col[k + 5] = C.b;
+      ed[3 * c] = xv; ed[3 * c + 1] = -pi * A; ed[3 * c + 2] = pr * A;
+    }
+    G3.rib.geometry.attributes.position.needsUpdate = true; G3.rib.geometry.attributes.color.needsUpdate = true; G3.edge.geometry.attributes.position.needsUpdate = true;
+    const yt = curTop(), key = x0 + '|' + x1 + '|' + yt + '|' + S.preset + '|' + Vf(0) + '|' + Vf(x0 / 3) + '|' + Vf(x1 / 3);
+    if (key !== G3.potKey) {
+      G3.potKey = key; const P = [], hz = span * 0.16, yb = hz * 1.1;
+      G3.axis.geometry.dispose(); G3.axis.geometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(x0, 0, 0), new THREE.Vector3(x1, 0, 0)]);
+      /* the potential as a wall behind the ribbon, its height V on the energy diagram's scale */
+      for (let c = 0; c < n - 1; c++) { const xa = x0 + span * c / (n - 1), xb = x0 + span * (c + 1) / (n - 1), va = Math.min(Vf(xa), 2 * yt) / yt * hz, vb = Math.min(Vf(xb), 2 * yt) / yt * hz;
+        if (va <= 0 && vb <= 0) continue; P.push(xa, yb, -hz, xb, yb, -hz, xb, yb, vb - hz, xa, yb, -hz, xb, yb, vb - hz, xa, yb, va - hz); }
+      G3.pot.geometry.dispose(); G3.pot.geometry = new THREE.BufferGeometry(); G3.pot.geometry.setAttribute('position', new THREE.Float32BufferAttribute(P, 3));
+      G3.lab[0].position.set(x0, 0, hz * 1.15); G3.lab[1].position.set(x0, -hz * 1.15, 0); G3.lab[2].position.set(x1 + span * 0.03, 0, 0);
+    }
+    st.place(G3.o, new THREE.Vector3((x0 + x1) / 2, 0, 0), span * 1.25 * Math.max(1, 1.6 * H / W));
+    st.render();
+    ctx.clearRect(0, 0, W, H);
+    ctx.fillStyle = T.ink; ctx.font = `600 ${11 * ps}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const ty = W < 700 ? 44 * ps : 10 * ps;
+    ctx.fillText(W < 560 ? 'ψ in 3D: Re up, Im toward you' : 'ψ in 3D: Re ψ up, Im ψ toward you, colour is the phase', 12 * ps, ty);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * ps}px ${T.mono}`;
+    ctx.fillText(W < 560 ? 'colour: phase · |ψ|: distance from the axis' : `|ψ| is the distance from the axis · grey wall: V(x) · x from ${f1(x0)} to ${f1(x1)} nm · drag to turn`, 12 * ps, ty + 16 * ps);
+  }
+  const f1 = (v) => (Math.round(v * 10) / 10).toString().replace('-', '−');
   function drawWave() {
     const [W, H] = dims.w; if (!W || !H || !sim) return;
+    $('wPane').classList.toggle('in3d', use3()); if (G3.st) G3.st.el.style.visibility = use3() ? 'visible' : 'hidden';
+    if (use3()) { ctxs.w.setTransform(dpr, 0, 0, dpr, 0, 0); drawWave3(W, H); return; }
     const ctx = ctxs.w, ps = projScale(), p = pads(W);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
@@ -1746,6 +1809,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   setRunning(running);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
+  if (window.VD3K) G3.view = VD3K.view({ seg: '#dimSeg', init: init3, change: () => drawAll(), status: () => {}, start: 'flat' });
 })();
 </script>
 </body>
