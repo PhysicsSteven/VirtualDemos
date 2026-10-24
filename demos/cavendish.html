@@ -203,13 +203,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = ps(), wide = W > 640, a = aOf(S.t), th = S.th;
     /* the balance, top view, to scale except the beam's turn */
     const span = 0.2, pw = wide ? W * 0.56 : W, sc = Math.min(pw * 0.86 / span, (H - 80 * p) / span), cx = wide ? pw * 0.5 : W * 0.5, cy = 46 * p + (H - 60 * p) / 2;
-    const X = (x) => cx + x * sc, Y = (y) => cy - y * sc, rs = sphereR(CAV.m), RL = sphereR(CAV.M);
+    const X = (x) => cx + x * sc, Y = (y) => cy - y * sc, rs = sphereR(CAV.m), RL = sphereR(CAV.M); V2 = { cx, cy, sc };
     /* the table under the balance */
     ctx.fillStyle = VG.dark() ? 'rgba(255,255,255,0.03)' : 'rgba(40,30,20,0.04)'; ctx.beginPath(); ctx.arc(cx, cy, 0.098 * sc, 0, 7); ctx.fill();
     /* the swivel frame and the large spheres */
     const big = largeSpheres(a);
     ctx.strokeStyle = VG.dark() ? '#56606c' : '#9aa3ad'; ctx.lineWidth = 5 * p; ctx.beginPath(); ctx.moveTo(X(big[0][0]), Y(big[0][1])); ctx.lineTo(X(big[1][0]), Y(big[1][1])); ctx.stroke();
     VG.screw(ctx, cx, cy, 5 * p);
+    if (DR.on) { ctx.save(); ctx.globalAlpha = 0.35; for (const [bx, by] of largeSpheres(DR.a)) VG.ball(ctx, X(bx), Y(by), RL * sc, '#6f7a86', { glint: 0.3 }); ctx.restore(); }
     for (const [bx, by] of big) { VG.shadow(ctx, X(bx) + 4 * p, Y(by) + RL * sc * 0.9, RL * sc, RL * sc * 0.3, 0.6); VG.ball(ctx, X(bx), Y(by), RL * sc, '#6f7a86', { glint: 0.5 }); }
     /* the case: a box with glass walls around the beam */
     const cw = CAV.l + rs + 0.006, ch = rs + 0.005, ang = -th * EXAG;
@@ -239,13 +240,48 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = T.laser; ctx.lineWidth = 1.6 * p; ctx.globalAlpha = 0.9;
     ctx.beginPath(); ctx.moveTo(ex - 26 * p, ly); ctx.lineTo(mx, my); ctx.lineTo(ex, my); ctx.stroke(); ctx.globalAlpha = 1;
     VG.box(ctx, ex - 30 * p, ly - 6 * p, 26 * p, 12 * p, { color: '#2e353f', r: 3, shadow: false }); txt(ctx, 'laser', ex - 17 * p, ly + 15 * p, { a: 'center', s: 9, c: T.muted });
-    txt(ctx, 'top view, to scale · beam turn drawn ×20', 12 * p, H - 14 * p, { s: 9.5, c: T.muted });
+    txt(ctx, 'top view, to scale · beam turn drawn ×20 · drag a large sphere to swing it', 12 * p, H - 14 * p, { s: 9.5, c: T.muted });
+    if (DR.on) dragHint();
     if (Fshow) txt(ctx, `pull on each small sphere: ${f(Fshow * 1e9, 2)} nN`, 12 * p, H - 30 * p, { s: 9.5, m: 1, c: T.force, b: 1 });
     txt(ctx, 'A', X(largeSpheres(frameAngle('A'))[0][0]) + RL * sc + 6 * p, Y(largeSpheres(frameAngle('A'))[0][1]) - RL * sc, { s: 10, c: T.muted, b: 1 });
     txt(ctx, 'B', X(largeSpheres(frameAngle('B'))[1][0]) + RL * sc + 6 * p, Y(largeSpheres(frameAngle('B'))[1][1]) - RL * sc, { s: 10, c: T.muted, b: 1 });
     drawScale(wide ? pw + 40 * p : W - 58 * p, wide ? W - 16 * p : W - 6 * p, 60 * p, H - 30 * p, my);
     drawChart();
   }
+  // ---------- grabbing a large sphere: drag it round and let go; the frame then swings to the nearest of A, Away and B ----------
+  /* The model's frame only rests at A, Away or B and takes CAV.swing = 5 s of clock time to get there, so dragging moves a see through
+     copy; letting go starts the same swing as the Position buttons, which keeps the motion and every reading the same either way. */
+  const DR = { on: false, i: 0, a: 0, id: null };
+  let V2 = null;
+  function rayOf(e) { const r = can.getBoundingClientRect(); g3.ray.setFromCamera({ x: (e.clientX - r.left) / r.width * 2 - 1, y: -(e.clientY - r.top) / r.height * 2 + 1 }, g3.cam); return g3.ray; }
+  function modelXY(e) {
+    if (use3()) { const hit = new THREE.Vector3(); return rayOf(e).ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), hit) ? [hit.x, hit.y] : null; }
+    if (!V2) return null; const r = can.getBoundingClientRect(); return [(e.clientX - r.left - V2.cx) / V2.sc, (V2.cy - (e.clientY - r.top)) / V2.sc];
+  }
+  function pickBig(e) {
+    if (use3()) { const h = rayOf(e).intersectObjects(g3.frame.children.filter((o) => o.geometry && o.geometry.type === 'SphereGeometry')); if (!h.length) return -1; const x = h[0].object.position.x; return x > 0 ? 0 : 1; }
+    const q = modelXY(e); if (!q) return -1; const big = largeSpheres(aOf(S.t)), RL = sphereR(CAV.M);
+    for (let i = 0; i < 2; i++) if (Math.hypot(q[0] - big[i][0], q[1] - big[i][1]) < RL * 1.15) return i;
+    return -1;
+  }
+  function dragAngle(e) {
+    const q = modelXY(e); if (!q) return DR.a; let a = Math.atan2(q[1], q[0]) - (DR.i ? Math.PI : 0);
+    a = Math.PI / 2 + Math.atan2(Math.sin(a - Math.PI / 2), Math.cos(a - Math.PI / 2));
+    return Math.min(frameAngle('B'), Math.max(frameAngle('A'), a));
+  }
+  const nearestPos = (a) => ['A', 'away', 'B'].reduce((b, q) => (Math.abs(frameAngle(q) - a) < Math.abs(frameAngle(b) - a) ? q : b), 'A');
+  function dragHint() { const p = ps(), q = nearestPos(DR.a); txt(ctx, `let go to swing the large spheres to ${q === 'away' ? 'Away' : 'position ' + q} (5 s of clock time)`, 12 * p, H - 46 * p, { s: 10, c: T.ink, b: 1 }); }
+  can.addEventListener('pointerdown', (e) => {
+    if (DR.on || (e.pointerType === 'mouse' && e.button !== 0)) return; const i = pickBig(e); if (i < 0) return;
+    DR.on = true; DR.i = i; DR.id = e.pointerId; DR.a = aOf(S.t); try { can.setPointerCapture(e.pointerId); } catch (_) {}
+    e.preventDefault(); e.stopImmediatePropagation(); draw();
+  });
+  can.addEventListener('pointermove', (e) => {
+    if (DR.on && e.pointerId === DR.id) { DR.a = dragAngle(e); draw(); return; }
+    if (!use3() && e.pointerType === 'mouse') can.style.cursor = pickBig(e) >= 0 ? 'grab' : '';
+  });
+  const dragEnd = (e) => { if (!DR.on || e.pointerId !== DR.id) return; DR.on = false; swingTo(nearestPos(DR.a)); all(); };
+  can.addEventListener('pointerup', dragEnd); can.addEventListener('pointercancel', (e) => { if (DR.on && e.pointerId === DR.id) { DR.on = false; draw(); } });
   // ---------- 3D view of the balance (three.js through demos/lib/vd3.js); the flat top view stays (Flat button, or ?view=flat) ----------
   /* Metres, z up, the fibre on the z axis: the same balance as the top view, to scale, with the beam's turn drawn ×20 as there. The fibre
      (really about 25 µm) is drawn 0.8 mm thick so it shows. The laser sits beside the scale's line; the reflected ray is drawn from the
@@ -255,7 +291,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let g3 = null;
   const use3 = () => !!(G3.on && g3);
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
-  const MIRROR_Z = 0.012, LASER = [0.1, -0.03, MIRROR_Z];
+  /* the mirror rides on the fibre's stem above the beam, higher than the tops of the large spheres (31.6 mm), so the light clears them at every frame angle */
+  const MIRROR_Z = 0.042, LASER = [0.1, -0.03, MIRROR_Z];
   function init3D() {
     G3.tried = true;
     const rd = VD3.renderer(); if (!rd) return false;
@@ -281,14 +318,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const caseG = new THREE.BoxGeometry(2 * cw, 2 * ch, 2 * cz), cbox = mesh(caseG, glassM, false, false);
     const edgeM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.55 }), cedge = new THREE.LineSegments(new THREE.EdgesGeometry(caseG), edgeM);
     const caseBase = mesh(new THREE.BoxGeometry(2 * cw + 0.004, 2 * ch + 0.004, 0.003), steelM); caseBase.position.z = -cz - 0.0015;
-    const tubeH = 0.11, tube = mesh(upZ(new THREE.CylinderGeometry(0.007, 0.007, tubeH, 24, 1, true)), glassM, false, false); tube.position.z = cz + tubeH / 2;
+    const tubeH = 0.11, tube = mesh(upZ(new THREE.CylinderGeometry(0.009, 0.009, tubeH, 24, 1, true)), glassM, false, false); tube.position.z = cz + tubeH / 2;
     const clamp = mesh(new THREE.BoxGeometry(0.03, 0.02, 0.012), steelM); clamp.position.z = cz + tubeH + 0.006;
     const fibreM = M({ roughness: 0.4, metalness: 0.6 }), fibre = mesh(upZ(new THREE.CylinderGeometry(0.0004, 0.0004, cz + tubeH, 6)), fibreM, false, false); fibre.position.z = (cz + tubeH) / 2;
     /* the beam, the small spheres and the mirror, turned by ×20 the twist */
     const beam = new THREE.Group();
     const rod = mesh(new THREE.CylinderGeometry(0.0012, 0.0012, 2 * CAV.l, 10).rotateZ(Math.PI / 2), steelM); beam.add(rod);
     for (const s of [1, -1]) { const b = mesh(new THREE.SphereGeometry(rs, 24, 16), leadM); b.position.x = s * CAV.l; beam.add(b); }
-    const mirM = M({ roughness: 0.05, metalness: 1 }), mir = mesh(new THREE.BoxGeometry(0.0012, 0.014, 0.012), mirM); mir.position.z = MIRROR_Z; beam.add(mir);
+    const mirM = M({ roughness: 0.05, metalness: 1 }), mir = mesh(new THREE.BoxGeometry(0.0012, 0.012, 0.010), mirM); mir.position.z = MIRROR_Z; beam.add(mir);
     const holder = mesh(upZ(new THREE.CylinderGeometry(0.001, 0.001, MIRROR_Z, 6)).translate(0, 0, MIRROR_Z / 2), steelM); beam.add(holder);
     /* the laser and its two rays */
     const laserM = M({ roughness: 0.5, metalness: 0.2 }), laser = mesh(new THREE.BoxGeometry(0.04, 0.014, 0.014), laserM); laser.position.set(LASER[0] + 0.02, LASER[1], LASER[2]);
@@ -298,16 +335,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* force arrows on the small spheres */
     const fM = new THREE.MeshBasicMaterial({ depthTest: false, transparent: true }), shaftG = new THREE.CylinderGeometry(1, 1, 1, 8).translate(0, 0.5, 0), headG = new THREE.ConeGeometry(1, 1, 12).translate(0, 0.5, 0);
     const farr = [0, 1].map(() => { const gr = new THREE.Group(), a = new THREE.Mesh(shaftG, fM), b = new THREE.Mesh(headG, fM); a.renderOrder = b.renderOrder = 10; gr.add(a, b); return gr; });
-    scene.add(table, post, lpost, frame, cbox, cedge, caseBase, tube, clamp, fibre, beam, laser, rayIn, rayOut, ...farr);
-    g3 = { rd, el, scene, cam, hemi, sun, tableM, steelM, leadM, glassM, edgeM, fibreM, laserM, rayM, fM, frame, beam, bigs, rayIn, rayOut, farr, Y: new THREE.Vector3(0, 1, 0) };
+    /* where the large spheres sit in A and in B: rings on the table under each */
+    const markM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.5, depthWrite: false }), marks = [];
+    for (const q of ['A', 'B']) for (const [x, y] of largeSpheres(frameAngle(q))) { const m = new THREE.Mesh(new THREE.RingGeometry(RL * 0.92, RL, 48), markM); m.position.set(x, y, zTab + 0.0004); marks.push(m); }
+    /* a see through copy of the frame that follows the pointer while a large sphere is dragged */
+    const ghostM = new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.32, depthWrite: false, roughness: 0.6 }), ghost = frame.clone();
+    ghost.traverse((o) => { if (o.isMesh) { o.material = ghostM; o.castShadow = false; } }); ghost.visible = false;
+    scene.add(table, post, lpost, frame, ghost, ...marks, cbox, cedge, caseBase, tube, clamp, fibre, beam, laser, rayIn, rayOut, ...farr);
+    g3 = { markM, ghostM, ghost, ray: new THREE.Raycaster(), rd, el, scene, cam, hemi, sun, tableM, steelM, leadM, glassM, edgeM, fibreM, laserM, rayM, fM, frame, beam, bigs, rayIn, rayOut, farr, Y: new THREE.Vector3(0, 1, 0) };
     can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
-    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.1, phMax: 1.5, zMin: 0.5, zMax: 4, keys: false });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || pickBig(e) >= 0, phMin: 0.1, phMax: 1.5, zMin: 0.5, zMax: 4, keys: false });
     return true;
   }
   function theme3() {
     const g = g3, dk = VD3.dark();
     g.scene.background = col3(T.canvas, '#ffffff'); g.tableM.color = col3(dk ? '#3a3128' : '#b89a74', '#b89a74'); g.steelM.color = col3('#a7b0ba', '#a7b0ba'); g.leadM.color = col3(T.lead, '#6f7a86');
-    g.edgeM.color = col3(dk ? '#a9d2ee' : '#5a8fb4', '#5a8fb4'); g.fibreM.color = col3(dk ? '#e6ebf0' : '#4a525c', '#4a525c'); g.laserM.color = col3('#2e353f', '#2e353f'); g.rayM.color = col3(T.laser, '#e0322a'); g.fM.color = col3(T.force, '#2b60b5');
+    g.edgeM.color = col3(dk ? '#a9d2ee' : '#5a8fb4', '#5a8fb4'); g.fibreM.color = col3(dk ? '#e6ebf0' : '#4a525c', '#4a525c'); g.laserM.color = col3('#2e353f', '#2e353f'); g.rayM.color = col3(T.laser, '#e0322a'); g.fM.color = col3(T.force, '#2b60b5'); g.markM.color = col3(T.muted, '#8a929c'); g.ghostM.color = col3(T.lead, '#6f7a86');
     g.hemi.intensity = dk ? 0.55 : 0.7; g.sun.intensity = dk ? 0.7 : 0.8;
   }
   function ray3(m, a, b) { const v = new THREE.Vector3(b[0] - a[0], b[1] - a[1], b[2] - a[2]), L = v.length(); m.position.set(a[0], a[1], a[2]); m.scale.set(1, L, 1); m.quaternion.setFromUnitVectors(g3.Y, v.divideScalar(L)); }
@@ -316,7 +359,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; }
     const key = [T.canvas, T.lead, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
     g.el.hidden = false;
-    g.frame.rotation.z = a; g.beam.rotation.z = ang;
+    g.frame.rotation.z = a; g.beam.rotation.z = ang; g.ghost.visible = DR.on; if (DR.on) g.ghost.rotation.z = DR.a;
     /* the light: from the laser to the mirror, then reflected by the drawn mirror (normal along the beam) */
     const mz = MIRROR_Z, inA = [LASER[0], LASER[1], LASER[2]], d = new THREE.Vector3(-LASER[0], -LASER[1], mz - LASER[2]).normalize(), n = new THREE.Vector3(Math.cos(ang), Math.sin(ang), 0);
     const r = d.clone().sub(n.clone().multiplyScalar(2 * d.dot(n))), out = [r.x * 0.3, r.y * 0.3, mz + r.z * 0.3];
@@ -340,11 +383,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
     const RL = sphereR(CAV.M);
-    for (const q of ['A', 'B']) { const sp = largeSpheres(frameAngle(q))[q === 'A' ? 0 : 1], s = Q(sp[0] * 1.45, sp[1] * 1.45, -RL - 0.017); txt(ctx, q, s[0], s[1], { s: 10, c: T.muted, b: 1, a: 'center' }); }   /* on the table, beyond each position */
+    for (const q of ['A', 'B']) for (const sp of largeSpheres(frameAngle(q))) { const k = (Math.hypot(sp[0], sp[1]) + RL + 0.008) / Math.hypot(sp[0], sp[1]), s = Q(sp[0] * k, sp[1] * k, -RL - 0.017); txt(ctx, q, s[0], s[1], { s: 10, c: T.muted, b: 1, a: 'center' }); }   /* on the table, beside each ring */
+    if (DR.on) dragHint();
     { const lq = Q(LASER[0] + 0.02, LASER[1], LASER[2] - 0.012); txt(ctx, 'laser', lq[0], lq[1] + 8 * p, { a: 'center', s: 9, c: T.muted }); }
     { const oq = Q(out[0], out[1], out[2]); if (oq[0] > 0 && oq[0] < W) txt(ctx, 'to the scale, 5.000 m', Math.min(oq[0], (wide ? pw : W - 70 * p) - 4 * p), oq[1] - 12 * p, { a: 'right', s: 9, c: T.laser, b: 1 }); }
     { const fq = Q(0, 0, 0.09); txt(ctx, 'fibre', fq[0] + 10 * p, fq[1], { s: 9, c: T.muted }); }
-    txt(ctx, '3D, to scale · beam turn drawn ×20 · drag to turn', 12 * p, H - 14 * p, { s: 9.5, c: T.muted });
+    txt(ctx, '3D, to scale · beam turn drawn ×20 · drag a large sphere to swing it, elsewhere to turn', 12 * p, H - 14 * p, { s: 9.5, c: T.muted });
     if (!S.blind && fl[0] > 1e-13) txt(ctx, `pull on each small sphere: ${f(fl[0] * 1e9, 2)} nN`, 12 * p, H - 30 * p, { s: 9.5, m: 1, c: T.force, b: 1 });
     const myq = Q(0, 0, MIRROR_Z);
     drawScale(wide ? pw + 40 * p : W - 58 * p, wide ? W - 16 * p : W - 6 * p, 60 * p, H - 30 * p, myq[1]);
@@ -432,7 +476,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdShowCols = [['spheres', 'Spheres'], ['t_s', 't (s)'], ['S_cm', 'Spot (cm)']];
   window.vdReadingRow = () => (S.t < S.ts + CAV.swing ? 'Wait until the large spheres have finished swinging.' : { spheres: S.pos === 'away' ? 'away' : S.pos, t_s: clockR(), S_cm: spotR().toFixed(1) });
   /* for the key's capture script and tests */
-  window.__cav = { advance: (dt) => { advance(dt); all(); }, toTurn: () => { S.stopAtTurn = true; let n = 0; while (S.stopAtTurn && n++ < 1e5) advance(DT); S.stopAtTurn = false; all(); }, swingTo: (q) => { swingTo(q); all(); }, get S() { return S; } };
+  window.__cav = { pick: (x, y) => pickBig({ clientX: x, clientY: y }), centre: () => { if (!use3()) return [V2.cx, V2.cy]; const v = new THREE.Vector3(0, 0, 0).project(g3.cam); return [(v.x + 1) / 2 * W, (1 - v.y) / 2 * H]; }, advance: (dt) => { advance(dt); all(); }, toTurn: () => { S.stopAtTurn = true; let n = 0; while (S.stopAtTurn && n++ < 1e5) advance(DT); S.stopAtTurn = false; all(); }, swingTo: (q) => { swingTo(q); all(); }, get S() { return S; } };
   let last = performance.now();
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
