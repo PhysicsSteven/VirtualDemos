@@ -2,7 +2,7 @@
 // Resistivity of a Wire: R = ρL/A, ρ(T), the fits for ρ and α, the CSV.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('resistivity', 'RS_VERSION,MATS,GAUGES,rhoAt,area,resistance,sig,fitLine,readingsCSV,QE,ME,FREE,nFromAlloy,driftSpeed,currentDensity,fermiSpeed,collisionTime,transitTime,electronRate,netCrossings,BOX,slabCount,DRIFT_SLOW,RANDOM_SLOW,bgJ5,bgShape,COLD,T_MIN,T_ROOM,rhoCold');
+const c = core('resistivity', 'RS_VERSION,MATS,GAUGES,rhoAt,area,resistance,sig,fitLine,readingsCSV,QE,ME,FREE,nFromAlloy,driftSpeed,currentDensity,fermiSpeed,collisionTime,transitTime,electronRate,netCrossings,BOX,slabCount,DRIFT_SLOW,RANDOM_SLOW,bgJ5,bgShape,COLD,T_MIN,T_ROOM,rhoCold,MAG,MAG_LEN,DOT_E,magDots,dotRate,WIRE_A,WIRE_B,potential');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -89,5 +89,24 @@ group('cold stage (9.6): Bloch–Grüneisen, Matthiessen, critical temperatures'
   assert.equal(c.rhoCold('lead', 7.18, 100), 0); assert(c.rhoCold('lead', 7.20, 100) > 0); assert.equal(c.rhoCold('ybco', 91.9, 1), 0); near(c.rhoCold('ybco', 300, 1), 2.5e-6, 1e-12);
   assert(c.rhoCold('copper', c.T_MIN, 30) > 0, 'copper never superconducts');
   assert.equal(c.COLD.lead.tc, 7.19); assert.equal(c.COLD.tin.tc, 3.72); assert.equal(c.COLD.aluminum.tc, 1.20);
+});
+group('wire view: dots in the magnified piece, their rate through the ring, the potential along the wire', () => {
+  /* dots = n A × 2.5 mm / 1e17: copper 0.644 mm about 690, nichrome 0.160 mm about 44; four times the area, four times the dots */
+  assert.equal(c.magDots(c.FREE.copper.n, 0.644), Math.round(8.47e28 * c.area(0.644) * 2.5e-3 / 1e17)); assert.equal(c.magDots(c.FREE.copper.n, 0.644), 690);
+  assert.equal(c.magDots(c.FREE.nichrome.n, 0.16), 44);
+  near(c.magDots(c.FREE.copper.n, 0.644) / c.magDots(c.FREE.copper.n, 0.322), 4, 5e-3);
+  /* whole dots: the counted rate, magDots × v_d / MAG_LEN, is within 1.2% of I/(e × 1e17) for every metal and gauge */
+  for (const k in c.FREE) for (const [, dm] of c.GAUGES) near(c.magDots(c.FREE[k].n, dm) * c.driftSpeed(0.2, c.FREE[k].n, c.area(dm)) / c.MAG_LEN, c.dotRate(0.2), 0.012, `whole dots ${k} ${dm}`);
+  /* the rate through the ring is (dots per volume) × A × v_d, the same for every gauge and metal: I/(e × 1e17) */
+  for (const k in c.FREE) for (const [, dm] of c.GAUGES) { const A = c.area(dm), dens = c.FREE[k].n / c.DOT_E; near(dens * A * c.driftSpeed(0.2, c.FREE[k].n, A), c.dotRate(0.2), 1e-12, `${k} ${dm}`); }
+  near(c.dotRate(0.2), 12.48, 1e-3);
+  /* the counter: carrying evenly spaced dots one full piece length moves every dot across the ring once */
+  const us = Array.from({ length: 50 }, (_, i) => (i + 0.5) * c.MAG_LEN / 50); assert.equal(c.netCrossings(us, 0, -c.MAG_LEN, c.MAG_LEN / 2, c.MAG_LEN), 50);
+  /* in real time the magnified dots move at MAG v_d: nichrome 0.405 mm at 0.2 A, about 2.2 cm/s on the magnified scale */
+  near(c.MAG * c.driftSpeed(0.2, c.FREE.nichrome.n, c.area(0.405)), 0.02194, 2e-3);
+  /* V(x) falls evenly to zero at the far end, and the drop between the clips is I R(L) */
+  const M = c.MATS.nichrome; assert.equal(c.potential(M, c.WIRE_B, 0.405, 20, 0.2), 0);
+  near(c.potential(M, 0, 0.405, 20, 0.2) - c.potential(M, 0.5, 0.405, 20, 0.2), 0.2 * c.resistance(M, 0.5, 0.405, 20), 1e-12);
+  near((c.potential(M, 0, 0.405, 20, 0.2) - c.potential(M, 0.3, 0.405, 20, 0.2)) / 0.3, 0.2 * M.rho / c.area(0.405), 1e-12, 'slope E = ρI/A');
 });
 console.log(`${n} resistivity test groups passed`);

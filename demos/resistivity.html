@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>.rail details.more > p + p { margin-top: 6px; }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 .rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
@@ -50,8 +51,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
 table.rows input:focus { border-color: var(--accent); }
 .plotbox { position: relative; height: 190px; }
-@media (max-width: 820px) { .stage[data-view="inside"] { height: 520px; max-height: none; } .stage[data-view="cold"] { height: 600px; max-height: none; } }
+@media (max-width: 820px) { .stage[data-view="inside"] { height: 520px; max-height: none; } .stage[data-view="cold"] { height: 600px; max-height: none; } .stage[data-view="bench"] { height: 580px; max-height: none; } }
 .viewseg { position: absolute; top: 8px; right: 8px; z-index: 3; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+/* 3D or flat, for the wire view only */
+.dimseg { position: absolute; top: 8px; left: 8px; z-index: 3; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+.stage:not([data-view="bench"]) .dimseg { display: none; }
+@media (max-width: 520px) { .dimseg { top: 48px; } }
 @media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 420px; } }
 /* the supply: knobs for the current and the wire's temperature, over the supply in the picture */
 .supply { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); z-index: 2; display: flex; align-items: center; gap: 14px; padding: 6px 12px; border-radius: 10px; background: #2c3542; color: #e3e8ef; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); }
@@ -91,16 +96,17 @@ table.rows input:focus { border-color: var(--accent); }
   </header>
 
   <main class="bench">
-    <div class="stage" id="stage">
-      <canvas id="can" tabindex="0" role="application" aria-label="A wire stretched along a metre rule with a fixed clip at zero and a sliding clip. An ammeter reads the current and a voltmeter the voltage between the clips. Drag the sliding clip, or use the left and right arrow keys."></canvas>
+    <div class="stage" id="stage" data-view="bench">
+      <canvas id="can" tabindex="0" role="application" aria-label="A wire stretched along a metre rule with a fixed clip at zero and a sliding clip, and a voltmeter on the clips. Above it, a piece of the wire magnified 200 times with its free electrons drifting in real time, and a graph of the potential along the wire. Drag the sliding clip, or use the left and right arrow keys."></canvas>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
       <div class="supply" id="supply" role="group" aria-labelledby="supTitle">
         <span class="sup-title" id="supTitle">Supply</span>
         <div class="knobwrap"><div class="knob" id="knobI" role="slider" tabindex="0" aria-label="Supply current I" aria-valuemin="0.05" aria-valuemax="1"><span class="knob-mark"></span></div><output class="sup-lcd" id="oI"></output></div>
         <div class="knobwrap"><div class="knob" id="knobT" role="slider" tabindex="0" aria-label="Wire temperature" aria-valuemin="0" aria-valuemax="200"><span class="knob-mark"></span></div><output class="sup-lcd" id="oT"></output></div>
       </div>
+      <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
       <div class="seg viewseg" role="group" aria-label="View" id="views">
-        <button type="button" data-view="bench" aria-pressed="true">Bench</button>
+        <button type="button" data-view="bench" aria-pressed="true">Wire</button>
         <button type="button" data-view="inside" aria-pressed="false">Inside the wire</button>
         <button type="button" data-view="cold" aria-pressed="false">Cold stage</button>
       </div>
@@ -119,7 +125,8 @@ table.rows input:focus { border-color: var(--accent); }
         <div class="inline"><span class="lab">Gauge</span>
           <div class="seg" role="group" aria-label="Wire diameter" id="gauges"></div></div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">On the bench: drag the sliding clip to set the <b>Length between the clips L</b> (left and right arrows, 5 mm; Shift 5 cm), and turn the supply's knobs for the <b>Supply current I</b> (0.05 A a click) and the <b>Wire temperature</b> (5 °C a click). The slider and step buttons below set L exactly.</p>
+          <p class="hint">In the <b>Wire</b> view: drag the sliding clip to set the <b>Length between the clips L</b> (left and right arrows, 5 mm; Shift 5 cm), and turn the supply's knobs for the <b>Supply current I</b> (0.05 A a click) and the <b>Wire temperature</b> (5 °C a click). The slider and step buttons below set L exactly.</p>
+          <p class="hint">In 3D, drag anywhere else to turn the view, scroll or pinch to zoom, and double click to go back. The wire on the rule is drawn 5 times thicker than it is, so it can be seen; the magnified piece above it is to scale.</p>
         </details>
         <div><div class="slider-head"><label for="sL">Length between the clips L</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="0.05" max="1" step="0.005"></div>
         <div class="btnrow"><button type="button" class="btn" id="Lm">L −5 mm</button><button type="button" class="btn" id="Lp">L +5 mm</button></div>
@@ -131,6 +138,10 @@ table.rows input:focus { border-color: var(--accent); }
         <dl class="readout" id="out"></dl>
         <details class="more"><summary>The model and its formulas</summary>
           <p class="formula">R = V/I · R = ρL/A · ρ(T) = ρ₂₀[1 + α(T − 20 °C)]</p>
+        </details>
+        <details class="more"><summary>The magnified wire and the potential</summary>
+          <p class="hint">Above the wire is a 2.5 mm piece of it, magnified 200 times and shown in real time. Each dot stands for 10¹⁷ free electrons, spread evenly through the metal, so a wire with four times the area holds four times as many dots along the same length. The rings on its cut end are the four gauges, to the same scale. The dots move at the drift speed v_d = I/(nqA): a thick wire carries the same current with more electrons, each moving more slowly, so the dots cross the ring at I/(e × 10¹⁷) per second whatever the gauge (to within about 1%, since the dots come in whole numbers). Real electrons also move at random, much faster; that motion carries no net current and is left out here (see Inside the wire).</p>
+          <p class="hint">The graph is the potential along the wire, measured from its far end. A steady current makes it fall evenly, by IρL/A over any length L, so the slope is the field E = ρI/A: steeper in a thin wire or a high resistivity alloy. The voltmeter reads the drop between its two clips. Its scale is the next 1, 2 or 5 × 10ⁿ volts; the dashed lines are the other three gauges at the same current, cut off where they leave the scale.</p>
         </details>
       </section>
 
@@ -146,13 +157,13 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" class="btn" id="inReset">Reset count</button>
         </div>
         <label class="check"><input type="checkbox" id="inRandom" checked><span>Show random motion</span></label>
-        <label class="check"><input type="checkbox" id="rmotion"><span>Reduce motion</span></label>
+        <label class="check"><input type="checkbox" id="inFollow"><span>Follow the marked electron along the wire</span></label>
         <p class="status" id="inLive" aria-live="polite"></p>
         <dl class="readout" id="inOut"></dl>
         <dl class="readout" id="inCount"></dl>
         <p class="hint" id="nHint"></p>
         <details class="more"><summary>The model and its formulas</summary>
-          <p class="hint">Choose <b>Inside the wire</b> above the picture to see the free electrons in a magnified piece of this wire.</p>
+          <p class="hint">Choose <b>Inside the wire</b> above the picture to see the free electrons in a magnified piece of this wire. With <b>Follow the marked electron</b>, the view travels with the circled electron, so the ions stream past it: its zigzag is the random motion, and its slow creep to the left is the drift.</p>
           <p class="formula">I = nqAv_d · J = I/A = nqv_d · transit time = L/v_d</p>
           <p class="hint">Model: free electrons in a metal (OpenStax 9.2). The drift speed v_d = I/(nqA) uses the free electron density n above; n does not change with temperature here (thermal expansion changes it by under 0.3%). The random speed is the Fermi speed v_F = ħ(3π²n)^⅓/m of the free electron model, and the mean time between collisions is τ = m/(ne²ρ), so it follows ρ(T). Electrons move in a 3D random direction and are drawn projected onto the page; ions are drawn on a square grid at the mean atomic spacing (copper's real lattice is face centred cubic). The region repeats at its edges, standing for a piece deep inside the wire. The counter counts electrons carried across the dashed plane by the drift; random motion carries electrons across both ways equally on average and is left out of the count. The electrons sit at random positions, so the count scatters about n v_d t × (2 nm × 0.3 nm) like any count; after the drift has carried the electrons one full region width (4 nm), every one has crossed exactly once.</p>
         </details>
@@ -209,8 +220,9 @@ table.rows input:focus { border-color: var(--accent); }
       <section>
         <details class="fold"><summary>Lab</summary><div class="foldbody">
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <label class="check"><input type="checkbox" id="rmotion"><span>Reduce motion</span></label>
         <details class="more"><summary>The model and its formulas</summary>
-          <p class="hint">Blind hides ρ, α, the wire's resistance per metre, and ρ and α from the fits, leaving the meters, the rule and the settings. The Mystery wire always hides its own values. Inside the wire, Blind also hides J, v_d, the transit time, I/e, the expected count and the collision time; the count, the drift so far and the real time stay, so v_d can be measured.</p>
+          <p class="hint">Blind hides ρ, α, the wire's resistance per metre, and ρ and α from the fits, leaving the meters, the rule and the settings. The Mystery wire always hides its own values. Inside the wire, Blind also hides J, v_d, the transit time, I/e, the expected count and the collision time; the count, the drift so far and the real time stay, so v_d can be measured. In the Wire view, Blind hides the drift speed, the expected dot rate and the slope E of the potential (the Mystery wire hides E too).</p>
           <p class="hint">Model: R = ρL/A with ρ linear in temperature; the voltmeter is ideal (four-wire, so the clips and leads add nothing) and the current is set by a constant current supply. Resistivities are handbook values at 20 °C; real alloys vary by a few percent.</p>
         </details>
         </div></details>
@@ -298,6 +310,12 @@ table.rows input:focus { border-color: var(--accent); }
     const rho0 = m.rho293 / rrr, A = (m.rho293 - rho0) / bgShape(T_ROOM, m.theta);
     return rho0 + A * bgShape(Tk, m.theta);
   }
+  /* ---- The wire view: a magnified piece of the wire, and the potential along it ---- */
+  const MAG = 200, MAG_LEN = 2.5e-3, DOT_E = 1e17;   /* magnification; real length of wire shown (m); free electrons each dot stands for */
+  const magDots = (n, dmm) => Math.round(n * area(dmm) * MAG_LEN / DOT_E);   /* dots in the piece: n A × length / DOT_E */
+  const dotRate = (I) => I / (QE * DOT_E);   /* dots through any cross section per second: (n/DOT_E) A v_d = I/(e DOT_E), for every gauge */
+  const WIRE_A = -0.02, WIRE_B = 1.02;   /* the wire's ends on the rule (m), where the supply leads join; the current flows toward +x */
+  const potential = (M, x, dmm, T, I) => I * resistance(M, WIRE_B - x, dmm, T);   /* V(x) measured from the far end */
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -309,7 +327,7 @@ table.rows input:focus { border-color: var(--accent); }
   let W = 0, H = 0, dpr = 1, T = null, geo = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
-      wire: g('--wire'), meter: g('--meter'), clip: g('--clip'), e: g('--ecol'), pos: g('--pos'), neg: g('--neg'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
+      wire: g('--wire'), meter: g('--meter'), clip: g('--clip'), e: g('--ecol'), pos: g('--pos'), neg: g('--neg'), equi: g('--equi'), mono: g('--font-mono') || 'monospace', ui: g('--font-ui') || 'sans-serif' }; }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const SUP = { '-': '⁻', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' };
   function sci(v, n) { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); if (e >= -2 && e < 4) return sig(v, n).replace('-', '−');
@@ -320,34 +338,342 @@ table.rows input:focus { border-color: var(--accent); }
 
   function draw() {
     if (!T || !W) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (!use3()) { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
     if (S.view === 'inside') { drawInside(); return; }
     if (S.view === 'cold') { drawCold(); return; }
-    const p = ps(), x0 = 40 * p, x1 = W - 40 * p, X = (l) => x0 + (x1 - x0) * l, y = H * 0.62;
-    geo = { X, x0, x1, y };
-    // metre rule
-    ctx.fillStyle = T.grid; ctx.fillRect(x0 - 8 * p, y + 8 * p, x1 - x0 + 16 * p, 26 * p);
-    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-    for (let i = 0; i <= 100; i++) { const h = i % 10 === 0 ? 12 : i % 5 === 0 ? 8 : 4; ctx.fillRect(X(i / 100) - 0.5, y + 8 * p, 1, h * p); if (i % 10 === 0) ctx.fillText(`${i}`, X(i / 100), y + 21 * p); }
-    ctx.textAlign = 'left'; ctx.fillText('cm', x1 + 10 * p, y + 21 * p);
-    // wire
-    ctx.strokeStyle = T.wire; ctx.lineWidth = Math.max(1.5, d() * 4) * p; ctx.beginPath(); ctx.moveTo(x0 - 20 * p, y); ctx.lineTo(x1 + 20 * p, y); ctx.stroke();
-    // clips
-    const clip = (x, lab) => { ctx.fillStyle = T.clip; ctx.fillRect(x - 5 * p, y - 22 * p, 10 * p, 26 * p); ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(lab, x, y - 26 * p); };
-    clip(X(0), 'fixed clip'); clip(X(S.L), `L = ${(S.L * 100).toFixed(1)} cm`);
-    // current flow: supply leads at the ends; voltmeter leads on the clips
-    const my = 80 * p, meter = (cx, label, val) => { ctx.fillStyle = T.meter; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.fillRect(cx - 80 * p, my - 30 * p, 160 * p, 56 * p); ctx.strokeRect(cx - 80 * p, my - 30 * p, 160 * p, 56 * p);
-      ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(label, cx, my - 26 * p); ctx.fillStyle = T.ink; ctx.font = `700 ${18 * p}px ${T.mono}`; ctx.fillText(val, cx, my - 6 * p); };
-    const vx = (X(0) + X(S.L)) / 2;
-    ctx.strokeStyle = T.e; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(X(0), y - 22 * p); ctx.lineTo(X(0), my + 10 * p); ctx.lineTo(vx - 80 * p, my + 10 * p); ctx.moveTo(X(S.L), y - 22 * p); ctx.lineTo(X(S.L), my + 10 * p); ctx.lineTo(vx + 80 * p, my + 10 * p); ctx.stroke();
-    meter(Math.max(x0 + 80 * p, Math.min(x1 - 80 * p, vx)), 'voltmeter across the clips', `${vShown()} V`);
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x0 - 20 * p, y); ctx.lineTo(x0 - 20 * p, H - 24 * p); ctx.lineTo(x1 + 20 * p, H - 24 * p); ctx.lineTo(x1 + 20 * p, y); ctx.stroke();
-    /* the supply itself is the knob panel over this spot */
+    if (use3()) { drawBench3(); return; }
+    drawBenchFlat();
   }
+
+  // ---------- the wire view: the wire on its rule, a piece of it magnified 200 times, the potential along it, the voltmeter ----------
+  const VG = window.VDGear;
+  const potAt = (x) => potential(M(), x, d(), S.T, S.I);
+  /* the graph's scale: the next 1, 2 or 5 × 10ⁿ volts above the potential at the wire's start */
+  const niceUp = (v) => { const e = 10 ** Math.floor(Math.log10(v)), m = v / e; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 5 ? 5 : 10) * e; };
+  const potScale = () => niceUp(potAt(WIRE_A) * 1.02);
+  /* the other gauges' potential lines, for comparison: where each starts (x on the rule, V), cut off at the top of the scale */
+  function ghostLines(vs) {
+    return GAUGES.map(([, dm], i) => { if (i === S.g) return null; const v = potential(M(), WIRE_A, dm, S.T, S.I);
+      return v > vs ? { dm, x: WIRE_B - (WIRE_B - WIRE_A) * vs / v, v: vs, cut: true } : { dm, x: WIRE_A, v, cut: false }; }).filter(Boolean);
+  }
+  /* the magnified piece: dots at random places through its volume (u along it in real metres, r a fraction of the radius, angle th),
+     all carried along at the drift speed. MG.s is the shift so far; the ring is the plane at the middle of the piece. */
+  const MG = { u: [], r: [], th: [], N: 0, s: 0, t: 0, count: 0, flash: 0, key: '' };
+  function magReset() {
+    MG.key = `${S.mat}|${S.g}|${S.I}`; MG.N = magDots(nFree(), d()); MG.u = []; MG.r = []; MG.th = [];
+    for (let i = 0; i < MG.N; i++) { MG.u.push(Math.random() * MAG_LEN); MG.r.push(Math.sqrt(Math.random())); MG.th.push(Math.random() * 2 * Math.PI); }
+    MG.s = 0; MG.t = 0; MG.count = 0; MG.flash = 0;
+  }
+  const magEnsure = () => { if (MG.key !== `${S.mat}|${S.g}|${S.I}`) magReset(); };
+  function magStep(dt) {   /* dt: real seconds, shown in real time */
+    magEnsure();
+    const ds = -vdNow() * dt, c = netCrossings(MG.u, MG.s, MG.s + ds, MAG_LEN / 2, MAG_LEN);
+    MG.count += c; MG.s += ds; MG.t += dt; MG.flash = c ? 1 : Math.max(0, MG.flash - dt * 2.5);
+  }
+  const magPos = (i) => wrap(MG.u[i] + MG.s, MAG_LEN) / MAG_LEN;   /* 0 at the left end of the piece, 1 at the right */
+  const SUPN = (k) => String(k).split('').map((c) => SUP[c]).join('');
+  function magLines() {   /* the words under the magnified piece */
+    const per = MG.t > 3 ? `${sig(MG.count / MG.t, 3)} per s` : '…';
+    const a = `${MG.count} dots through the ring in ${MG.t.toFixed(1)} s: ${per}`, b = `each dot is 10${SUPN(Math.log10(DOT_E))} electrons`;
+    return [a, S.blind ? b : `${b}; I/(e × 10${SUPN(Math.log10(DOT_E))}) = ${sig(dotRate(S.I), 3)} per s`];
+  }
+  const vdText = () => (S.blind ? 'drift speed: hidden' : `drift v_d = ${sig(vdNow() * 1e3, 3)} mm/s`);
+  const magTitle = `Magnified ${MAG}×, in real time: ${MAG_LEN * 1e3} mm of the wire`;
+  function txt(s, x, y, o = {}) { ctx.save(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.w || 400} ${(o.s || 11.5) * ps()}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); ctx.restore(); }
+  function arrowH(xa, xb, y, col, p) {   /* a small arrow from xa to xb */
+    const dir = Math.sign(xb - xa); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = 1.8 * p; ctx.beginPath(); ctx.moveTo(xa, y); ctx.lineTo(xb - dir * 6 * p, y); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(xb, y); ctx.lineTo(xb - dir * 8 * p, y - 4 * p); ctx.lineTo(xb - dir * 8 * p, y + 4 * p); ctx.closePath(); ctx.fill();
+  }
+  /* the drop between the clips on the potential graph: a bracket at x between the heights ya and yb, and its label */
+  function dropBracket(x, ya, yb, p, right) {
+    const s = right ? 1 : -1; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(x - s * 4 * p, ya); ctx.lineTo(x, ya); ctx.lineTo(x, yb); ctx.lineTo(x - s * 4 * p, yb); ctx.stroke();
+    txt(`ΔV = ${vShown()} V`, x + s * 6 * p, (ya + yb) / 2, { w: 700, a: right ? 'left' : 'right', m: true, s: 11.5 });
+    txt('the voltmeter', x + s * 6 * p, (ya + yb) / 2 + 14 * p, { c: T.muted, a: right ? 'left' : 'right', s: 10 });
+  }
+  function drawBenchFlat() {
+    const p = ps(), x0 = 46 * p, x1 = W - 46 * p, sc = x1 - x0, X = (l) => x0 + sc * l, Lx = X(S.L), narrow = W < 560;
+    VG.backdrop(ctx, W, H);
+    const yW = H - 150 * p, top = (narrow ? 90 : 50) * p;
+    geo = { X, x0, x1, y: yW, toL: (e) => (local(e) - x0) / sc, near: () => true };
+    VG.bench(ctx, 0, H - 58 * p, W, H - 58 * p - (yW - 124 * p), 58 * p);
+    /* the magnified piece, its words above and below */
+    magEnsure();
+    const Rg = (dm) => dm * 1e-3 * MAG / 2 * sc, R = Rg(d()), Rmax = Rg(GAUGES[0][1]), hl = MAG_LEN * MAG / 2 * sc, cx = X(0.5), cy = top + 22 * p + Rmax;
+    ctx.save(); ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.45; ctx.lineWidth = 1; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath();
+    ctx.moveTo(cx - hl, cy + R); ctx.lineTo(cx - 1.5 * p, yW); ctx.moveTo(cx + hl, cy + R); ctx.lineTo(cx + 1.5 * p, yW); ctx.stroke(); ctx.restore();
+    drawMagFlat(cx, cy, hl, R, Rg, p);
+    txt(magTitle, narrow ? 10 * p : cx - hl, top + 8 * p, { w: 700, s: narrow ? 10.5 : 12 });
+    const ml = magLines();
+    if (narrow) { txt(ml[0], 10 * p, cy + Rmax + 12 * p, { s: 10 }); txt(ml[1], 10 * p, cy + Rmax + 25 * p, { s: 10, c: T.muted }); }
+    else { txt(ml[0], cx, cy + Rmax + 12 * p, { a: 'center', s: 11 }); txt(ml[1], cx, cy + Rmax + 26 * p, { a: 'center', s: 10.5, c: T.muted }); }
+    if (narrow) txt(vdText(), W - 10 * p, top + 24 * p, { a: 'right', s: 10, c: T.neg, w: 700 });
+    else { const xr = cx + hl + Math.max(3 * p, R * 0.3) + 8 * p; txt(vdText(), xr, cy - 8 * p, { s: 11, c: T.neg, w: 700 }); txt('electrons drift ←, current I →', xr, cy + 8 * p, { s: 10.5, c: T.muted }); }
+    /* the potential along the wire, on the same horizontal scale as the rule */
+    const pTop = cy + Rmax + (narrow ? 50 : 38) * p, pBot = yW - 128 * p;
+    if (pBot - pTop > 64 * p) {
+      VG.panel(ctx, 8 * p, pTop, W - 16 * p, pBot - pTop);
+      const vs = potScale(), yA = pTop + 28 * p, yB = pBot - 12 * p, Y = (v) => yB - (yB - yA) * v / vs, xa = X(WIRE_A), xb = X(WIRE_B), V0 = potAt(0), VL = potAt(S.L);
+      txt('Potential along the wire', 16 * p, pTop + 13 * p, { w: 700, s: 12 });
+      if (!hidden() && !narrow) txt(`slope E = ρI/A = ${sci(S.I * resistance(M(), 1, d(), S.T), 3)} V/m`, W - 16 * p, pTop + 13 * p, { a: 'right', s: 10.5, c: T.muted, m: true });
+      ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(xa, yB); ctx.lineTo(xb, yB); ctx.moveTo(xa, yA); ctx.lineTo(xa, yB); ctx.stroke();
+      txt(`${sci(vs, 2)} V`, xa - 4 * p, yA, { a: 'right', s: 9.5, c: T.muted, m: true }); txt('0', xa - 4 * p, yB, { a: 'right', s: 9.5, c: T.muted, m: true });
+      ctx.save(); ctx.strokeStyle = T.grid; ctx.setLineDash([2 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(xa, yA); ctx.lineTo(xb, yA); ctx.stroke(); ctx.restore();
+      const g = ctx.createLinearGradient(0, Y(potAt(WIRE_A)), 0, yB); g.addColorStop(0, VG.mix(T.accent, T.canvas, 0.55)); g.addColorStop(1, VG.mix(T.accent, T.canvas, 0.92));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(xa, yB); ctx.lineTo(xa, Y(potAt(WIRE_A))); ctx.lineTo(xb, yB); ctx.closePath(); ctx.fill();
+      ctx.save(); ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.75; ctx.lineWidth = 1.1 * p; ctx.setLineDash([5 * p, 4 * p]);
+      for (const q of ghostLines(vs)) { ctx.beginPath(); ctx.moveTo(X(q.x), Y(q.v)); ctx.lineTo(xb, yB); ctx.stroke(); }
+      ctx.restore();
+      for (const q of ghostLines(vs)) txt(`${q.dm.toFixed(3)} mm`, X(q.x) + (q.cut ? 4 : 6) * p, Y(q.v) + (q.cut ? 7 : -1) * p, { s: 9, c: T.muted, bl: q.cut ? 'top' : 'bottom' });
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 2.2 * p; ctx.beginPath(); ctx.moveTo(xa, Y(potAt(WIRE_A))); ctx.lineTo(xb, yB); ctx.stroke();
+      ctx.save(); ctx.strokeStyle = T.clip; ctx.lineWidth = 1.2 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath();
+      ctx.moveTo(X(0), yB); ctx.lineTo(X(0), Y(V0)); ctx.moveTo(Lx, yB); ctx.lineTo(Lx, Y(VL)); ctx.moveTo(X(0), Y(V0)); ctx.lineTo(Lx + 12 * p, Y(V0)); ctx.moveTo(Lx - 12 * p, Y(VL)); ctx.lineTo(Lx + 12 * p, Y(VL)); ctx.stroke(); ctx.restore();
+      for (const [x, v] of [[X(0), V0], [Lx, VL]]) { ctx.fillStyle = T.clip; ctx.beginPath(); ctx.arc(x, Y(v), 3.5 * p, 0, 7); ctx.fill(); }
+      const right = Lx < W - 150 * p; dropBracket(right ? Lx + 12 * p : Lx - 12 * p, Y(V0), Y(VL), p, right);
+    }
+    /* the rule */
+    const rg = ctx.createLinearGradient(0, yW + 6 * p, 0, yW + 32 * p); rg.addColorStop(0, VG.dark() ? '#596372' : '#e9edf1'); rg.addColorStop(1, VG.dark() ? '#3d4550' : '#c9d0d8');
+    ctx.fillStyle = rg; ctx.fillRect(x0 - 10 * p, yW + 6 * p, sc + 20 * p, 26 * p); ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; ctx.strokeRect(x0 - 10 * p + 0.5, yW + 6 * p + 0.5, sc + 20 * p - 1, 26 * p - 1);
+    ctx.fillStyle = VG.dark() ? '#e3e8ef' : '#2a313b'; ctx.font = `${9.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    const every = narrow ? 20 : 10;
+    for (let i = 0; i <= 100; i++) { const h = i % 10 === 0 ? 11 : i % 5 === 0 ? 7 : 4; if (narrow && i % 5) continue; ctx.fillRect(X(i / 100) - 0.5, yW + 6 * p, 1, h * p); if (i % every === 0) ctx.fillText(`${i}`, X(i / 100), yW + 19 * p); }
+    ctx.textAlign = 'left'; ctx.fillText('cm', x1 + 12 * p, yW + 19 * p);
+    /* terminal posts at the ends, the supply leads from them, the wire */
+    const pa = X(WIRE_A) - 6 * p, pb = X(WIRE_B) + 6 * p;
+    VG.cable(ctx, pa, yW + 4 * p, W / 2 - 70 * p, H - 30 * p, 40 * p, { color: '#b8382a', w: 3 * p }); VG.cable(ctx, pb, yW + 4 * p, W / 2 + 70 * p, H - 30 * p, 40 * p, { color: '#20262e', w: 3 * p });
+    for (const x of [pa, pb]) { VG.rod(ctx, x, yW - 9 * p, x, yW + 8 * p, 4.5 * p, { color: '#c9a24a' }); VG.screw(ctx, x, yW - 9 * p, 4 * p); }
+    VG.rod(ctx, X(WIRE_A), yW, X(WIRE_B), yW, (0.55 + d() * 2.2) * p, { color: T.wire });
+    arrowH(X(0.03), X(0.03) + 34 * p, yW - 12 * p, T.pos, p); txt('I', X(0.03) + 40 * p, yW - 12 * p, { c: T.pos, w: 700, s: 11 });
+    /* the voltmeter and its leads to the clips */
+    const dw = 150 * p, dh = 60 * p, dmx = Math.max(10 * p, Math.min(W - 10 * p - dw, (X(0) + Lx) / 2 - dw / 2)), dmy = yW - 116 * p;
+    VG.cable(ctx, dmx + dw * 0.3, dmy + dh, X(0), yW - 14 * p, 26 * p, { color: '#b8382a', w: 2.4 * p }); VG.cable(ctx, dmx + dw * 0.7, dmy + dh, Lx, yW - 14 * p, 26 * p, { color: '#20262e', w: 2.4 * p });
+    VG.box(ctx, dmx, dmy, dw, dh, { color: '#2f3a46' }); VG.lcd(ctx, dmx + 10 * p, dmy + 9 * p, dw - 20 * p, 28 * p, `${vShown()} V`);
+    VG.plate(ctx, 'voltmeter', dmx + dw / 2, dmy + dh - 12 * p, { s: 8 * p });
+    for (const [f, c] of [[0.3, '#b8382a'], [0.7, '#20262e']]) { ctx.fillStyle = c; ctx.beginPath(); ctx.arc(dmx + dw * f, dmy + dh - 2 * p, 3.5 * p, 0, 7); ctx.fill(); }
+    /* clips */
+    const clip = (x) => { VG.box(ctx, x - 6 * p, yW - 17 * p, 12 * p, 21 * p, { color: '#2b60b5', r: 3 * p, shadow: false }); ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.fillRect(x - 0.6 * p, yW - 3 * p, 1.2 * p, 7 * p); };
+    clip(X(0)); clip(Lx);
+    txt('fixed clip', X(0), yW + 44 * p, { a: 'center', s: 10.5, c: T.muted });
+    txt(`L = ${(S.L * 100).toFixed(1)} cm`, Lx, yW + 44 * p, { a: Lx < X(0) + 90 * p ? 'left' : 'center', w: 700, s: 11.5 });
+  }
+  function drawMagFlat(cx, cy, hl, R, Rg, p) {
+    const xa = cx - hl, xb = cx + hl, ex = Math.max(3 * p, R * 0.3), d0 = VG.dark();
+    /* body: a glassy view of the metal, shaded across */
+    let g = ctx.createLinearGradient(0, cy - R, 0, cy + R); g.addColorStop(0, VG.mix(T.wire, '#ffffff', 0.45)); g.addColorStop(0.4, T.wire); g.addColorStop(1, VG.mix(T.wire, '#000000', 0.4));
+    ctx.save(); ctx.globalAlpha = d0 ? 0.32 : 0.26; ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(xb, cy, ex, R, 0, -Math.PI / 2, Math.PI / 2); ctx.lineTo(xa, cy + R); ctx.lineTo(xa, cy - R); ctx.closePath(); ctx.fill(); ctx.restore();
+    ctx.strokeStyle = VG.mix(T.wire, '#000000', 0.15); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(xa, cy - R); ctx.lineTo(xb, cy - R); ctx.moveTo(xa, cy + R); ctx.lineTo(xb, cy + R); ctx.stroke();
+    ctx.beginPath(); ctx.ellipse(xb, cy, ex, R, 0, 0, 7); ctx.stroke();
+    /* electrons: back ones fainter and smaller */
+    const idx = MG.u.map((_, i) => i).sort((a, b) => Math.sin(MG.th[a]) - Math.sin(MG.th[b])), re = Math.max(1.6, 2.4 * p);
+    ctx.fillStyle = T.neg;
+    for (const i of idx) { const z = Math.sin(MG.th[i]), x = xa + magPos(i) * 2 * hl, y = cy - MG.r[i] * R * Math.cos(MG.th[i]);
+      ctx.globalAlpha = 0.45 + 0.55 * (z + 1) / 2; ctx.beginPath(); ctx.arc(x, y, re * (0.8 + 0.2 * (z + 1) / 2), 0, 7); ctx.fill(); }
+    ctx.globalAlpha = 1;
+    /* the counting ring at the middle */
+    ctx.strokeStyle = T.accent; ctx.lineWidth = (1.6 + 2.4 * MG.flash) * p; ctx.beginPath(); ctx.ellipse(cx, cy, ex * 1.05, R * 1.06, 0, 0, 7); ctx.stroke();
+    /* the cut end: the metal's cross section, with the four gauges outlined to the same scale */
+    g = ctx.createRadialGradient(xa - ex * 0.3, cy - R * 0.3, 0, xa, cy, R); g.addColorStop(0, VG.mix(T.wire, '#ffffff', 0.35)); g.addColorStop(1, VG.mix(T.wire, '#000000', 0.2));
+    ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(xa, cy, ex, R, 0, 0, 7); ctx.fill();
+    for (const [, dm] of GAUGES) { const r = Rg(dm), on = Math.abs(dm - d()) < 1e-9; if (on) continue; ctx.save(); ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = 1; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.ellipse(xa, cy, ex * r / R, r, 0, 0, 7); ctx.stroke(); ctx.restore(); }
+    ctx.strokeStyle = VG.mix(T.wire, '#000000', 0.35); ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.ellipse(xa, cy, ex, R, 0, 0, 7); ctx.stroke();
+    const ax = xa - Math.max(ex, Rg(GAUGES[0][1]) * 0.3) - 8 * p, at = `A = ${sig(area(d()) * 1e6, 3)} mm²`;
+    if (ax > 90 * p) txt(at, ax, cy, { a: 'right', s: 10.5, w: 700, m: true }); else txt(at, 10 * p, cy + Rg(GAUGES[0][1]) + 38 * p, { s: 10, w: 700, m: true });
+  }
+
+  // ---------- the wire view in 3D (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
+  /* Drag a clip or the wire to set L; drag anywhere else to turn, wheel or pinch to zoom, double click to reset. This canvas keeps the words on top. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.2, ph: 1.08, zoom: 1 }, leads: '', wall: '' };
+  const NO3D = 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
+  const ZW = 0.012, ZM = 0.31, YWALL = 0.035, HWALL = 0.17, WIRE_X = 5;   /* wire height, magnifier axis height, the potential wall's place and full height (m); the wire is drawn WIRE_X times thicker */
+  const MLEN = MAG_LEN * MAG;   /* the magnified piece's length in the scene (m) */
+  let g3 = null;
+  const use3 = () => !!(G3.on && g3 && S.view === 'bench');
+  function init3D() {
+    G3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); stage.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.02, 20), Ms = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.75), sun = new THREE.DirectionalLight(0xffffff, 0.75);
+    sun.position.set(0.2, -0.7, 1.7); sun.target.position.set(0.5, 0, 0); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+    Object.assign(sun.shadow.camera, { left: -0.9, right: 0.9, top: 0.9, bottom: -0.9, near: 0.3, far: 4 }); sun.shadow.radius = 3;
+    scene.add(hemi, sun, sun.target);
+    const mesh = (g, m, cast) => { const x = new THREE.Mesh(g, m); x.castShadow = !!cast; return x; };
+    const alongX = (rad, len, n, open) => { const g = new THREE.CylinderGeometry(rad, rad, len, n || 24, 1, !!open); g.rotateZ(Math.PI / 2); return g; };
+    const upZ = (rad, len, n) => { const g = new THREE.CylinderGeometry(rad, rad, len, n || 20); g.rotateX(Math.PI / 2); return g; };
+    /* bench top */
+    const benchM = Ms({ roughness: 0.85, metalness: 0 }), bench = mesh(new THREE.PlaneGeometry(5, 4), benchM); bench.position.set(0.5, 0.4, 0); bench.receiveShadow = true;
+    /* steel rule with its printed scale; the canvas spans x from −0.03 to 1.03 */
+    const ruleCv = document.createElement('canvas'); ruleCv.width = 2048; ruleCv.height = 72; const ruleTex = new THREE.CanvasTexture(ruleCv); ruleTex.anisotropy = r.capabilities.getMaxAnisotropy();
+    const ruleTopM = Ms({ map: ruleTex, roughness: 0.45, metalness: 0.25 }), ruleSideM = Ms({ roughness: 0.4, metalness: 0.5 });
+    const rule = new THREE.Mesh(new THREE.BoxGeometry(1.06, 0.036, 0.003), [ruleSideM, ruleSideM, ruleSideM, ruleSideM, ruleTopM, ruleSideM]); rule.position.set(0.5, -0.032, 0.0015); rule.receiveShadow = true;
+    /* the wire between brass posts */
+    const wireM = Ms({ roughness: 0.32, metalness: 0.75 }), wire = mesh(alongX(1, WIRE_B - WIRE_A, 20), wireM, true); wire.position.set((WIRE_A + WIRE_B) / 2, 0, ZW);
+    const brassM = Ms({ roughness: 0.3, metalness: 0.8, color: 0xc9a24a }), posts = [WIRE_A - 0.01, WIRE_B + 0.01].map((x) => { const m = mesh(upZ(0.0065, 0.024), brassM, true); m.position.set(x, 0, 0.012); return m; });
+    /* clips: a body over the wire and a knife edge that touches it */
+    const clipM = Ms({ roughness: 0.35, metalness: 0.45 }), edgeM = Ms({ roughness: 0.25, metalness: 0.9, color: 0xd8dde3 });
+    const mkClip = () => { const g = new THREE.Group(), b = mesh(new THREE.BoxGeometry(0.012, 0.024, 0.012), clipM, true), e = mesh(new THREE.BoxGeometry(0.002, 0.026, 0.006), edgeM, true), s = mesh(upZ(0.0035, 0.008), clipM, true);
+      b.position.z = ZW + 0.009; e.position.z = ZW + 0.002; s.position.set(0, -0.006, ZW + 0.019); g.add(b, e, s); return g; };
+    const clipA = mkClip(), clipB = mkClip();
+    /* the voltmeter: a case tilted back on the bench, its face a canvas texture */
+    const dmCv = document.createElement('canvas'); dmCv.width = 512; dmCv.height = 300; const dmTex = new THREE.CanvasTexture(dmCv);
+    const dmBodyM = Ms({ roughness: 0.55, metalness: 0.1 }), dmFaceM = new THREE.MeshStandardMaterial({ map: dmTex, roughness: 0.5, metalness: 0.05 });
+    const dm = new THREE.Group(), dmBody = mesh(new THREE.BoxGeometry(0.16, 0.035, 0.094), dmBodyM, true), dmFace = new THREE.Mesh(new THREE.PlaneGeometry(0.15, 0.088), dmFaceM);
+    dmFace.rotation.x = Math.PI / 2; dmFace.position.y = -0.0181; dm.add(dmBody, dmFace); dm.rotation.x = -0.55; dm.position.z = 0.047;
+    /* the potential along the wire: a thin wall behind it whose top edge is V(x) */
+    const wallG = new THREE.BufferGeometry(); wallG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(9), 3));
+    const wallM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.3, side: THREE.DoubleSide, depthWrite: false }), wall = new THREE.Mesh(wallG, wallM);
+    const lineG = (n) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); return g; };
+    const edgeLM = new THREE.LineBasicMaterial(), wallEdge = new THREE.Line(lineG(2), edgeLM);
+    const tickLM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.9 }), wallTicks = new THREE.LineSegments(lineG(8), tickLM);
+    const scaleLM = new THREE.LineDashedMaterial({ dashSize: 0.01, gapSize: 0.008, transparent: true, opacity: 0.55 }), wallScale = new THREE.Line(lineG(2), scaleLM), ghosts = new THREE.LineSegments(lineG(6), scaleLM);
+    const dotM2 = Ms({ roughness: 0.4 }), tipA = mesh(new THREE.SphereGeometry(0.004, 14, 10), dotM2), tipB = mesh(new THREE.SphereGeometry(0.004, 14, 10), dotM2);
+    /* the magnified piece: a glassy cylinder of unit radius, scaled to the gauge; dots inside; a ring at its middle; the cut end */
+    const mag = new THREE.Group(); mag.position.set(0.5, 0, ZM);
+    const shellM = Ms({ transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false, roughness: 0.25, metalness: 0.5 }), shell = mesh(alongX(1, MLEN, 64, true), shellM);
+    const capM = Ms({ roughness: 0.45, metalness: 0.3, side: THREE.DoubleSide }), cap = mesh(new THREE.CircleGeometry(1, 64).rotateY(-Math.PI / 2), capM); cap.position.x = -MLEN / 2;
+    const farM = Ms({ transparent: true, opacity: 0.25, side: THREE.DoubleSide, depthWrite: false, roughness: 0.3, metalness: 0.5 }), far = mesh(new THREE.CircleGeometry(1, 64).rotateY(Math.PI / 2), farM); far.position.x = MLEN / 2;
+    const ringG = new THREE.TorusGeometry(1, 0.03, 10, 72).rotateY(Math.PI / 2), ringM = Ms({ roughness: 0.4, emissive: 0x000000 }), ring = mesh(ringG, ringM);
+    const circ = (n) => { const pts = []; for (let k = 0; k < n; k++) pts.push(new THREE.Vector3(0, Math.cos(k / n * 2 * Math.PI), Math.sin(k / n * 2 * Math.PI))); return new THREE.BufferGeometry().setFromPoints(pts); };
+    const gaugeLM = new THREE.LineDashedMaterial({ dashSize: 0.004, gapSize: 0.003, transparent: true, opacity: 0.8 }), gaugeRings = GAUGES.map(([, dm0]) => { const l = new THREE.LineLoop(circ(96), gaugeLM); l.computeLineDistances(); l.scale.setScalar(dm0 * 1e-3 * MAG / 2); l.position.x = -MLEN / 2 - 0.0008; mag.add(l); return l; });
+    const dotG = new THREE.SphereGeometry(0.0027, 10, 8), dotM = Ms({ roughness: 0.35, metalness: 0.1, emissive: 0x000000 }), dots = new THREE.InstancedMesh(dotG, dotM, 900); dots.frustumCulled = false;
+    mag.add(shell, cap, far, ring, dots);
+    /* dashed lines from the magnified piece down to the 2.5 mm it shows, marked on the wire by a small ring */
+    const zoomLM = new THREE.LineDashedMaterial({ dashSize: 0.012, gapSize: 0.01, transparent: true, opacity: 0.5 }), zoom = new THREE.LineSegments(lineG(4), zoomLM);
+    const markM = Ms({ roughness: 0.4, emissive: 0x000000 }), mark = mesh(new THREE.TorusGeometry(1, 0.25, 8, 32).rotateY(Math.PI / 2), markM); mark.position.set(0.5, 0, ZW);
+    /* leads: built as tubes when L changes */
+    const redM = Ms({ roughness: 0.6, color: 0xb8382a }), blackM = Ms({ roughness: 0.6, color: 0x23282f });
+    const leads = new THREE.Group();
+    scene.add(bench, rule, wire, ...posts, clipA, clipB, dm, wall, wallEdge, wallTicks, wallScale, ghosts, tipA, tipB, mag, zoom, mark, leads);
+    g3 = { r, el, scene, cam, hemi, sun, benchM, ruleCv, ruleTex, ruleTopM, ruleSideM, wireM, wire, clipM, clipA, clipB, dm, dmBodyM, dmCv, dmTex, wallG, wallM, wall, wallEdge, edgeLM, wallTicks, tickLM, wallScale, ghosts, scaleLM, dotM2, tipA, tipB,
+      mag, shell, shellM, cap, capM, farM, far, ring, ringM, gaugeRings, gaugeLM, dots, dotM, zoom, zoomLM, mark, markM, redM, blackM, leads, mat4: new THREE.Matrix4(), lcd: '' };
+    /* the flat view and the other views keep the page's own wheel and pointer behaviour */
+    can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || (geo && geo.near(e)), phMin: 0.35, phMax: 1.42, zMin: 0.6, zMax: 3 });
+    can.addEventListener('pointerup', () => { if (!use3()) can.style.cursor = ''; });
+    return true;
+  }
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function theme3() {
+    const g = g3, dk = VD3.dark();
+    const bg = col3(T.canvas, '#fbfcfd'); g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 2.2, 4.5);
+    g.hemi.intensity = dk ? 0.95 : 0.62; g.sun.intensity = dk ? 0.85 : 0.6; g.hemi.groundColor = col3(dk ? '#2a241d' : '#8c7a60', '#8c7a60');
+    g.benchM.color = col3(dk ? '#3a3229' : '#cdbb9d', '#cdbb9d'); g.ruleSideM.color = col3(dk ? '#59626e' : '#b9c1ca', '#b9c1ca');
+    g.wireM.color = col3(T.wire, '#b06a2c'); g.clipM.color = col3('#2b60b5', '#2b60b5'); g.dmBodyM.color = col3('#2f3a46', '#2f3a46');
+    g.wallM.color = col3(T.accent, '#2b60b5'); g.edgeLM.color = col3(T.accent, '#2b60b5'); g.tickLM.color = col3(T.clip, '#2b60b5'); g.scaleLM.color = col3(T.muted, '#5a6575'); g.dotM2.color = col3(T.clip, '#2b60b5');
+    g.shellM.color = col3(T.wire, '#b06a2c'); g.capM.color = col3(T.wire, '#b06a2c'); g.capM.emissive = col3(T.wire, '#b06a2c').multiplyScalar(0.35); g.farM.color = col3(T.wire, '#b06a2c'); g.gaugeLM.color = col3(T.muted, '#5a6575');
+    g.ringM.color = col3(T.accent, '#2b60b5'); g.dotM.color = col3(T.neg, '#2b60b5'); g.dotM.emissive = col3(T.neg, '#2b60b5').multiplyScalar(0.35);
+    g.zoomLM.color = col3(T.muted, '#5a6575'); g.markM.color = col3(T.accent, '#2b60b5');
+    /* the printed scale on the rule */
+    const c = g.ruleCv.getContext('2d'), w = 2048, h = 72, X = (l) => (l + 0.03) / 1.06 * w;
+    c.fillStyle = dk ? '#59626e' : '#e4e8ec'; c.fillRect(0, 0, w, h); c.fillStyle = dk ? '#e9edf2' : '#1f262f'; c.font = '600 22px "JetBrains Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'bottom';
+    for (let i = 0; i <= 1000; i++) { const tall = i % 100 === 0 ? 30 : i % 50 === 0 ? 22 : i % 10 === 0 ? 15 : 7; if (i % 10 && i % 2) continue; c.fillRect(X(i / 1000) - (i % 100 ? 0.8 : 1.4), 0, i % 100 ? 1.6 : 2.8, tall); if (i % 100 === 0) c.fillText(`${i / 10}`, X(i / 1000), h - 4); }
+    c.textAlign = 'left'; c.fillText('cm', X(1.004), h - 4); g.ruleTex.needsUpdate = true;
+    g.lcd = ''; G3.leads = ''; G3.wall = '';
+  }
+  function tube(pts, m) { const cv = new THREE.CatmullRomCurve3(pts.map((q) => new THREE.Vector3(...q))); return new THREE.Mesh(new THREE.TubeGeometry(cv, 48, 0.0022, 8, false), m); }
+  function dmX() { return Math.max(0.12, Math.min(0.88, S.L / 2)); }
+  function leads3() {
+    const k = `${S.L}`; if (G3.leads === k) return; G3.leads = k;
+    const g = g3; for (const m of g.leads.children.slice()) { m.geometry.dispose(); g.leads.remove(m); }
+    const x = dmX(), jy = -0.205, jz = 0.012;
+    g.leads.add(tube([[0, -0.006, ZW + 0.023], [0, -0.03, ZW + 0.05], [x * 0.4 - 0.02, -0.12, 0.004], [x - 0.035, jy + 0.012, jz]], g.redM));
+    g.leads.add(tube([[S.L, -0.006, ZW + 0.023], [S.L, -0.03, ZW + 0.05], [(S.L + x) / 2 + 0.02, -0.12, 0.004], [x + 0.035, jy + 0.012, jz]], g.blackM));
+    g.leads.add(tube([[WIRE_A - 0.01, 0, 0.022], [WIRE_A - 0.04, -0.04, 0.03], [0.2, -0.36, 0.003], [0.38, -0.62, 0.003]], g.redM));
+    g.leads.add(tube([[WIRE_B + 0.01, 0, 0.022], [WIRE_B + 0.04, -0.04, 0.03], [0.8, -0.36, 0.003], [0.62, -0.62, 0.003]], g.blackM));
+    for (const m of g.leads.children) m.castShadow = true;
+    g.dm.position.x = x; g.dm.position.y = -0.2;
+  }
+  function lcd3() {
+    const t = `${vShown()} V`; if (g3.lcd === t) return; g3.lcd = t;
+    const c = g3.dmCv.getContext('2d'), w = 512, h = 300; c.fillStyle = '#2f3a46'; c.fillRect(0, 0, w, h);
+    VG.lcd(c, 28, 28, w - 56, 120, t, { font: '600 80px "JetBrains Mono", ui-monospace, monospace' });
+    c.fillStyle = 'rgba(230,236,243,0.8)'; c.font = '700 30px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('VOLTMETER', w / 2, 196);
+    c.font = '22px "Atkinson Hyperlegible", sans-serif'; c.fillStyle = 'rgba(230,236,243,0.6)'; c.fillText('across the clips', w / 2, 232);
+    for (const [f, k] of [[0.3, '#b8382a'], [0.7, '#15191e']]) { c.fillStyle = k; c.beginPath(); c.arc(w * f, 272, 16, 0, 7); c.fill(); }
+    g3.dmTex.needsUpdate = true;
+  }
+  function wall3() {
+    const vs = potScale(), k = [vs, potAt(WIRE_A), S.L, S.g].join(); if (G3.wall === k) return; G3.wall = k;
+    const g = g3, Z = (v) => ZW + HWALL * v / vs, set = (geo, arr) => { geo.attributes.position.array.set(arr); geo.attributes.position.needsUpdate = true; geo.computeBoundingSphere(); };
+    set(g.wallG, [WIRE_A, YWALL, ZW, WIRE_B, YWALL, ZW, WIRE_A, YWALL, Z(potAt(WIRE_A))]);
+    set(g.wallEdge.geometry, [WIRE_A, YWALL, Z(potAt(WIRE_A)), WIRE_B, YWALL, ZW]);
+    const za = Z(potAt(0)), zb = Z(potAt(S.L));
+    set(g.wallTicks.geometry, [0, YWALL, ZW, 0, YWALL, za, S.L, YWALL, ZW, S.L, YWALL, zb, 0, YWALL, za, S.L + 0.03, YWALL, za, S.L, YWALL, zb, S.L + 0.03, YWALL, zb]);
+    set(g.wallScale.geometry, [WIRE_A, YWALL, Z(vs), WIRE_B, YWALL, Z(vs)]); g.wallScale.computeLineDistances();
+    set(g.ghosts.geometry, ghostLines(vs).flatMap((q) => [q.x, YWALL, Z(q.v), WIRE_B, YWALL, ZW])); g.ghosts.computeLineDistances();
+    g.tipA.position.set(0, YWALL, za); g.tipB.position.set(S.L, YWALL, zb);
+  }
+  function render3(h) {
+    const g = g3; if (!g) return null;
+    if (G3.w !== W || G3.h !== h) { G3.w = W; G3.h = h; g.r.setSize(W, Math.max(1, h)); g.cam.aspect = W / Math.max(1, h); g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.wire, T.accent, T.neg].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    const asp = W / Math.max(1, h), dist = 1.75 * Math.max(1, 1.45 / asp);
+    VD3.place(g.cam, G3.o, new THREE.Vector3(0.5, -0.06, asp < 1 ? 0.17 : 0.13), dist);
+    g.scene.fog.near = 1.25 * dist / G3.o.zoom; g.scene.fog.far = 2.6 * dist / G3.o.zoom;
+    const rw = d() * 1e-3 * WIRE_X / 2; g.wire.scale.set(1, rw, rw); g.mark.scale.setScalar(rw * 2.2);
+    g.clipA.position.x = 0; g.clipB.position.x = S.L; leads3(); lcd3(); wall3();
+    /* the magnified piece */
+    magEnsure();
+    const R = d() * 1e-3 * MAG / 2; g.shell.scale.set(1, R, R); g.cap.scale.setScalar(R); g.far.scale.setScalar(R); g.ring.scale.setScalar(R * 1.06);
+    g.gaugeRings.forEach((l, i) => { l.visible = i !== S.g; });
+    g.ringM.emissive = col3(T.accent, '#2b60b5').multiplyScalar(0.15 + 0.6 * MG.flash);
+    const n = Math.min(MG.N, 900); for (let i = 0; i < n; i++) { g.mat4.makeTranslation(-MLEN / 2 + magPos(i) * MLEN, MG.r[i] * R * 0.96 * Math.cos(MG.th[i]), MG.r[i] * R * 0.96 * Math.sin(MG.th[i])); g.dots.setMatrixAt(i, g.mat4); }
+    g.dots.count = n; g.dots.instanceMatrix.needsUpdate = true;
+    const zp = g.zoom.geometry.attributes.position; zp.array.set([0.5 - MLEN / 2, 0, ZM - R, 0.5 - 0.00125, 0, ZW, 0.5 + MLEN / 2, 0, ZM - R, 0.5 + 0.00125, 0, ZW]); zp.needsUpdate = true; g.zoom.geometry.computeBoundingSphere(); g.zoom.computeLineDistances();
+    g.scene.updateMatrixWorld(); g.r.render(g.scene, g.cam);
+    const tmp = new THREE.Vector3();
+    return (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * h, tmp.z]; };
+  }
+  /* the words over the 3D picture */
+  function drawBench3() {
+    const p = ps(), Q = render3(H); ctx.clearRect(0, 0, W, H); if (!Q) return;
+    const narrow = W < 560, R = d() * 1e-3 * MAG / 2, Rmax = GAUGES[0][1] * 1e-3 * MAG / 2;
+    const a = Q([0, 0, ZW]), b = Q([1, 0, ZW]);
+    geo = { toL: (e) => { const r0 = can.getBoundingClientRect(), x = e.clientX - r0.left, y = e.clientY - r0.top, dx = b[0] - a[0], dy = b[1] - a[1]; return ((x - a[0]) * dx + (y - a[1]) * dy) / (dx * dx + dy * dy); },
+      near: (e) => { const r0 = can.getBoundingClientRect(), x = e.clientX - r0.left, y = e.clientY - r0.top, dx = b[0] - a[0], dy = b[1] - a[1], t = ((x - a[0]) * dx + (y - a[1]) * dy) / (dx * dx + dy * dy);
+        if (t < -0.04 || t > 1.04) return false; const c = Q([S.L, 0, ZW]); if (Math.hypot(x - c[0], y - c[1]) < 26) return true; return Math.abs((x - a[0]) * dy - (y - a[1]) * dx) / Math.hypot(dx, dy) < 14; } };
+    const halo = (s, q, o) => { ctx.save(); ctx.lineWidth = 4; ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.lineJoin = 'round'; ctx.font = `${o.w || 400} ${(o.s || 11.5) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.strokeText(s, q[0], q[1]); ctx.restore(); txt(s, q[0], q[1], o); };
+    /* the magnified piece */
+    const mt = Q([0.5 - MLEN / 2, 0, ZM + Rmax + 0.03]), mb = Q([0.5, 0, ZM - Rmax - 0.02]), me = Q([0.5 + MLEN / 2 + 0.02, 0, ZM]), mc = Q([0.5 - MLEN / 2 - R * 0.2 - 0.015, 0, ZM]);
+    halo(magTitle, [narrow ? 10 * p : mt[0], narrow ? 96 * p : mt[1]], { w: 700, s: narrow ? 10.5 : 12 });
+    const ml = magLines();
+    if (narrow) { halo(ml[0], [10 * p, 112 * p], { s: 10 }); halo(ml[1], [10 * p, 126 * p], { s: 10, c: T.muted }); halo(vdText(), [10 * p, 140 * p], { s: 10, c: T.neg, w: 700 }); }
+    else { halo(ml[0], [mb[0], mb[1] + 8 * p], { a: 'center', s: 11 }); halo(ml[1], [mb[0], mb[1] + 22 * p], { a: 'center', s: 10.5, c: T.muted }); halo(vdText(), [me[0], me[1] - 8 * p], { s: 11, c: T.neg, w: 700 }); halo('electrons drift ←, current I →', [me[0], me[1] + 8 * p], { s: 10.5, c: T.muted }); }
+    { const at = `A = ${sig(area(d()) * 1e6, 3)} mm²`; if (mc[0] > 90 * p) halo(at, mc, { a: 'right', s: 10.5, w: 700, m: true }); else halo(at, [10 * p, 154 * p], { s: 10, w: 700, m: true }); }
+    /* the potential wall */
+    const vs = potScale(), Z = (v) => ZW + HWALL * v / vs, wa = Q([WIRE_A, YWALL, Z(potAt(WIRE_A))]), ws = Q([WIRE_B, YWALL, Z(vs)]);
+    halo('Potential along the wire', [wa[0], wa[1] - 12 * p], { w: 700, s: 11.5, c: T.accent });
+    if (!narrow) for (const q of ghostLines(vs)) { const gq = Q([q.x, YWALL, Z(q.v)]); halo(`${q.dm.toFixed(3)} mm`, [gq[0] + 4 * p, gq[1] + (q.cut ? 8 : -6) * p], { s: 9, c: T.muted }); } halo(`${sci(vs, 2)} V`, [ws[0] + 4 * p, ws[1]], { s: 9.5, c: T.muted, m: true });
+    const ta = Q([S.L + 0.03, YWALL, Z(potAt(0))]), tb = Q([S.L + 0.03, YWALL, Z(potAt(S.L))]), right = ta[0] < W - 140 * p;
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(ta[0], ta[1]); ctx.lineTo(tb[0], tb[1]); ctx.stroke();
+    halo(`ΔV = ${vShown()} V`, [ta[0] + (right ? 6 : -6) * p, (ta[1] + tb[1]) / 2], { w: 700, a: right ? 'left' : 'right', m: true });
+    /* the clips and the rule */
+    const ca = Q([0, -0.06, 0]), cb = Q([S.L, -0.06, 0]);
+    halo('fixed clip', [ca[0], ca[1] + 6 * p], { a: 'center', s: 10.5, c: T.muted }); halo(`L = ${(S.L * 100).toFixed(1)} cm`, [cb[0], cb[1] + (S.L < 0.12 ? 20 : 6) * p], { a: 'center', w: 700 });
+    if (!narrow) halo(`The wire on the rule is drawn ${WIRE_X} times thicker than it is; the magnified piece is to scale. Drag a clip to set L, drag elsewhere to turn.`, [12 * p, H - 76 * p], { s: 10, c: T.muted });
+  }
+  function setDim(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried || !window.VD3) { capStatus(NO3D); v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); if (!G3.ok) capStatus(NO3D); setDim(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3) g3.el.hidden = !use3(); can.style.cursor = use3() ? 'grab' : '';
+    for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String(b.dataset.dim === v));
+    draw();
+  }
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setDim(b.dataset.dim); });
+  /* the wire view runs in real time, unless Reduce motion is on */
+  const BL = { raf: 0, last: 0 };
+  function benchFrame(ts) {
+    BL.raf = 0; if (S.view !== 'bench' || $('rmotion').checked) return;
+    const dt = BL.last ? Math.min(0.1, (ts - BL.last) / 1000) : 0; BL.last = ts;
+    if (dt > 0) magStep(dt); draw(); BL.raf = requestAnimationFrame(benchFrame);
+  }
+  function benchLoop() { if (S.view === 'bench' && !$('rmotion').checked && !BL.raf) { BL.last = 0; BL.raf = requestAnimationFrame(benchFrame); } }
 
   // ---------- inside the wire ----------
   const nFree = () => FREE[S.mat].n, vdNow = () => driftSpeed(S.I, nFree(), area(d()));
-  const EL = { xs: [], ys: [], dx: [], dy: [], s: 0, t: 0, count: 0, trail: [], playing: true, last: 0, raf: 0, N: 0 };
+  const EL = { xs: [], ys: [], dx: [], dy: [], s: 0, t: 0, count: 0, trail: [], trailU: [], ux: 0, uy: 0, playing: true, last: 0, raf: 0, N: 0 };   /* ux, uy: the marked electron's random path, not wrapped (nm) */
   const BW = BOX.w * 1e9, BH = BOX.h * 1e9;   /* nm */
   function isoDir() { const z = 2 * Math.random() - 1, ph = 2 * Math.PI * Math.random(), r = Math.sqrt(1 - z * z); return [r * Math.cos(ph), r * Math.sin(ph)]; }
   function resetElectrons() {
@@ -355,7 +681,10 @@ table.rows input:focus { border-color: var(--accent); }
     for (let i = 0; i < N; i++) { EL.xs.push(Math.random() * BW); EL.ys.push(Math.random() * BH); const [a, b] = isoDir(); EL.dx.push(a); EL.dy.push(b); }
     resetCount();
   }
-  function resetCount() { EL.s = 0; EL.t = 0; EL.count = 0; EL.trail = []; countOut(); }
+  function resetCount() {   /* the drift so far is folded into the positions, so nothing jumps */
+    for (let i = 0; i < EL.xs.length; i++) EL.xs[i] = wrap(EL.xs[i] + EL.s, BW);
+    EL.s = 0; EL.t = 0; EL.count = 0; EL.trail = []; EL.trailU = []; EL.ux = EL.xs[0] || 0; EL.uy = EL.ys[0] || 0; countOut();
+  }
   const wrap = (v, w) => v - w * Math.floor(v / w);
   function stepInside(dt) {   /* dt: seconds on screen */
     const ds = -vdNow() * 1e9 * dt / DRIFT_SLOW;   /* nm; electrons move toward −x, against the current */
@@ -363,6 +692,7 @@ table.rows input:focus { border-color: var(--accent); }
     if ($('inRandom').checked) {
       const dtr = dt / RANDOM_SLOW, step = fermiSpeed(nFree()) * 1e9 * dtr, pc = 1 - Math.exp(-dtr / collisionTime(nFree(), rhoAt(M(), S.T)));
       for (let i = 0; i < EL.N; i++) {
+        if (i === 0) { EL.ux += EL.dx[0] * step; EL.uy += EL.dy[0] * step; }
         EL.xs[i] = wrap(EL.xs[i] + EL.dx[i] * step, BW); EL.ys[i] = wrap(EL.ys[i] + EL.dy[i] * step, BH);
         if (Math.random() < pc) { const [a, b] = isoDir(); EL.dx[i] = a; EL.dy[i] = b; }
       }
@@ -370,6 +700,7 @@ table.rows input:focus { border-color: var(--accent); }
     const px = wrap(EL.xs[0] + EL.s, BW), py = EL.ys[0], q = EL.trail[EL.trail.length - 1];
     if (q && (Math.abs(px - q[0]) > BW / 2 || Math.abs(py - q[1]) > BH / 2)) EL.trail.push(null);
     EL.trail.push([px, py]); if (EL.trail.length > 240) EL.trail.splice(0, EL.trail.length - 240);
+    EL.trailU.push([EL.ux + EL.s, EL.uy]); if (EL.trailU.length > 240) EL.trailU.splice(0, EL.trailU.length - 240);
   }
   function frame(ts) {
     EL.raf = 0; if (S.view !== 'inside' || !EL.playing) return;
@@ -405,6 +736,7 @@ table.rows input:focus { border-color: var(--accent); }
     const notes = [
       [T.ink, `Net electrons carried across the dashed plane: ${EL.count} in ${fmtTime(EL.t)} of real time. Drift so far: ${sig(-EL.s, 3)} nm to the left.`],
       [T.muted, `Not to one time scale: the drift is shown 10⁶ times slower than real (1 s on screen is 1 μs), the random motion 10¹⁵ times slower. Compared with the drift, the real random motion is 10⁹ times faster than it looks here.`]];
+    if ($('inFollow').checked) notes.push([T.ink, `Following the marked electron: the ions stream past it. Its zigzag is its random motion; its slow creep to the left, ${sig(-EL.s, 3)} nm so far, is the drift.`]);
     if (!S.blind) notes.push([T.muted, `One electron drifting the ${S.L.toFixed(3)} m between the clips would take ${fmtTime(transitTime(S.L, vdNow()))}; the change in field that starts the current crosses it in about L/c = ${fmtTime(S.L / C0)}.`]);
     ctx.font = `${11.5 * p}px ${T.ui}`; let bottomText = 50 * p; for (const [, t] of notes) bottomText = wrapText(t, 0, bottomText, mw, lh, true);
     const availH = Math.max(60, H - y - 10 * p - bottomText), bw = Math.min(mw, 2 * availH), bh = bw / 2, bx = (W - bw) / 2, by = y + 8 * p, sc = bw / BW;
@@ -412,14 +744,24 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.save(); ctx.globalAlpha = 0.12; ctx.fillStyle = T.wire; ctx.fillRect(bx, by, bw, bh); ctx.restore();
     ctx.save(); ctx.beginPath(); ctx.rect(bx, by, bw, bh); ctx.clip();
     const a = Math.cbrt(FREE[S.mat].perAtom / nFree()) * 1e9, ri = Math.max(1.5, Math.min(6 * p, 0.05 * sc));
-    ctx.fillStyle = T.muted; ctx.globalAlpha = 0.28; for (let gx = a / 2; gx < BW; gx += a) for (let gy = a / 2; gy < BH; gy += a) { ctx.beginPath(); ctx.arc(bx + gx * sc, by + gy * sc, ri, 0, 7); ctx.fill(); }
+    /* Follow: the view's centre rides with the marked electron (world point cx, cy in nm), so the lattice streams past; the region repeats, so every image is drawn */
+    const fol = $('inFollow').checked && EL.N > 0, cxw = fol ? EL.ux + EL.s : BW / 2, cyw = fol ? EL.uy : BH / 2, SX = (x) => bx + bw / 2 + (x - cxw) * sc, SY = (y) => by + bh / 2 + (y - cyw) * sc;
+    ctx.fillStyle = T.muted; ctx.globalAlpha = 0.28;
+    if (fol) { const gx0 = a / 2 + a * Math.floor((cxw - BW / 2) / a) - a, gy0 = a / 2 + a * Math.floor((cyw - BH / 2) / a) - a;
+      for (let gx = gx0; gx < cxw + BW / 2 + a; gx += a) for (let gy = gy0; gy < cyw + BH / 2 + a; gy += a) { ctx.beginPath(); ctx.arc(SX(gx), SY(gy), ri, 0, 7); ctx.fill(); } }
+    else for (let gx = a / 2; gx < BW; gx += a) for (let gy = a / 2; gy < BH; gy += a) { ctx.beginPath(); ctx.arc(bx + gx * sc, by + gy * sc, ri, 0, 7); ctx.fill(); }
     ctx.globalAlpha = 1;
-    if (EL.trail.length > 1) { ctx.strokeStyle = T.e; ctx.lineWidth = 1.5 * p; ctx.beginPath(); let pen = false; for (const q of EL.trail) { if (!q) { pen = false; continue; } const X = bx + q[0] * sc, Y = by + q[1] * sc; if (pen) ctx.lineTo(X, Y); else ctx.moveTo(X, Y); pen = true; } ctx.stroke(); }
+    if (fol && EL.trailU.length > 1) { ctx.strokeStyle = T.e; ctx.lineWidth = 1.5 * p; ctx.beginPath(); EL.trailU.forEach((q, k) => { if (k) ctx.lineTo(SX(q[0]), SY(q[1])); else ctx.moveTo(SX(q[0]), SY(q[1])); }); ctx.stroke(); }
+    else if (!fol && EL.trail.length > 1) { ctx.strokeStyle = T.e; ctx.lineWidth = 1.5 * p; ctx.beginPath(); let pen = false; for (const q of EL.trail) { if (!q) { pen = false; continue; } const X = bx + q[0] * sc, Y = by + q[1] * sc; if (pen) ctx.lineTo(X, Y); else ctx.moveTo(X, Y); pen = true; } ctx.stroke(); }
     ctx.fillStyle = T.neg; const re = 2.6 * p;
-    for (let i = 0; i < EL.N; i++) { ctx.beginPath(); ctx.arc(bx + wrap(EL.xs[i] + EL.s, BW) * sc, by + EL.ys[i] * sc, re, 0, 7); ctx.fill(); }
-    if (EL.N) { ctx.strokeStyle = T.e; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(bx + wrap(EL.xs[0] + EL.s, BW) * sc, by + EL.ys[0] * sc, re + 3 * p, 0, 7); ctx.stroke(); }
+    const ex = (i) => (fol ? bx + wrap(EL.xs[i] + EL.s - cxw + BW / 2, BW) * sc : bx + wrap(EL.xs[i] + EL.s, BW) * sc), ey = (i) => (fol ? by + wrap(EL.ys[i] - cyw + BH / 2, BH) * sc : by + EL.ys[i] * sc);
+    for (let i = 0; i < EL.N; i++) { ctx.beginPath(); ctx.arc(ex(i), ey(i), re, 0, 7); ctx.fill(); }
+    if (EL.N) { const mx = fol ? bx + bw / 2 : ex(0), my = fol ? by + bh / 2 : ey(0); ctx.strokeStyle = T.e; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(mx, my, re + 3 * p, 0, 7); ctx.stroke(); }
     ctx.restore();
-    ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * p; ctx.setLineDash([6 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(bx + bw / 2, by - 4 * p); ctx.lineTo(bx + bw / 2, by + bh + 4 * p); ctx.stroke(); ctx.setLineDash([]);
+    /* the counting plane, fixed in the metal (one image per region width) */
+    ctx.strokeStyle = T.equi || T.accent; ctx.lineWidth = 2 * p; ctx.setLineDash([6 * p, 4 * p]); ctx.beginPath();
+    for (let k = -2; k <= 2; k++) { const xp = fol ? SX(BW / 2 + k * BW) : (k ? -1 : bx + bw / 2); if (xp >= bx && xp <= bx + bw) { ctx.moveTo(xp, by - 4 * p); ctx.lineTo(xp, by + bh + 4 * p); } }
+    ctx.stroke(); ctx.setLineDash([]);
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(bx + 0.5, by + 0.5, bw - 1, bh - 1);
     /* scale bar and arrows */
     let yb = by + bh + 14 * p;
@@ -498,27 +840,29 @@ table.rows input:focus { border-color: var(--accent); }
   const CAN_LABEL = { cold: 'A cryostat holding the sample wire, its thermometer reading, and two graphs of the wire resistance against temperature: from room temperature down to 1 K, and a close view of the lowest temperatures.', bench: can.getAttribute('aria-label'), inside: 'A magnified region inside the wire: free electrons move at random among the ions and drift slowly against the current. A dashed plane counts the electrons the drift carries across it. Use the Inside the wire section of the panel to pause, step or reset the count.' };
   function setView(v) {
     S.view = v; stage.dataset.view = v; $('insideSec').hidden = v !== 'inside'; $('coldSec').hidden = v !== 'cold'; for (const b of document.querySelectorAll('[data-view]')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
-    can.setAttribute('aria-label', CAN_LABEL[v]); draw(); if (v === 'inside') runLoop(); if (v === 'cold') coldLoop();
+    if (g3) g3.el.hidden = !use3(); can.style.cursor = use3() ? 'grab' : '';
+    can.setAttribute('aria-label', CAN_LABEL[v]); draw(); if (v === 'inside') runLoop(); if (v === 'cold') coldLoop(); if (v === 'bench') benchLoop();
   }
   for (const b of document.querySelectorAll('[data-view]')) b.addEventListener('click', () => setView(b.dataset.view));
   $('inPlay').addEventListener('click', () => setPlaying(!EL.playing));
   $('inStep').addEventListener('click', () => { for (let k = 0; k < 20; k++) stepInside(0.05); draw(); countOut(); });
   $('inReset').addEventListener('click', () => { resetCount(); draw(); });
-  $('inRandom').addEventListener('change', () => { EL.trail = []; draw(); });
+  $('inRandom').addEventListener('change', () => { EL.trail = []; EL.trailU = []; draw(); });
+  $('inFollow').addEventListener('change', () => { EL.trail = []; EL.trailU = []; draw(); });
   function reducePref() {
     try { const s = sessionStorage.getItem('vd-resistivity-reduce-motion'); if (s === 'on' || s === 'off') return s === 'on'; } catch (_) {}
     try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; }
   }
   $('rmotion').addEventListener('change', (e) => {
     const on = e.target.checked; try { sessionStorage.setItem('vd-resistivity-reduce-motion', on ? 'on' : 'off'); } catch (_) {}
-    setPlaying(!on); $('inLive').textContent = on ? 'Reduce motion on: paused. Press Play or Step 1 s to move on.' : 'Reduce motion off.';
+    setPlaying(!on); $('inLive').textContent = on ? 'Reduce motion on: paused. Press Play or Step 1 s to move on.' : 'Reduce motion off.'; if (!on) benchLoop(); else draw();
   });
   for (const b of document.querySelectorAll('[data-plot]')) b.addEventListener('click', () => { S.plot = b.dataset.plot; sync(); fit(); });
   let drag = false;
   const local = (e) => { const r = can.getBoundingClientRect(); return e.clientX - r.left; };
-  const setL = (px) => { S.L = Math.max(0.05, Math.min(1, Math.round(((px - geo.x0) / (geo.x1 - geo.x0)) * 200) / 200)); upd(); };
-  can.addEventListener('pointerdown', (e) => { if (!geo || S.view !== 'bench') return; can.focus(); drag = true; can.setPointerCapture(e.pointerId); setL(local(e)); });
-  can.addEventListener('pointermove', (e) => { if (drag) setL(local(e)); });
+  const setL = (e) => { S.L = Math.max(0.05, Math.min(1, Math.round(geo.toL(e) * 200) / 200)); upd(); };
+  can.addEventListener('pointerdown', (e) => { if (!geo || S.view !== 'bench' || !geo.near(e)) return; can.focus(); drag = true; can.setPointerCapture(e.pointerId); setL(e); });
+  can.addEventListener('pointermove', (e) => { if (drag) setL(e); });
   can.addEventListener('pointerup', () => { drag = false; }); can.addEventListener('pointercancel', () => { drag = false; });
   can.addEventListener('keydown', (e) => { if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return; e.preventDefault(); S.L = Math.max(0.05, Math.min(1, +(S.L + (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 0.05 : 0.005)).toFixed(3))); upd(); });
 
@@ -682,10 +1026,11 @@ table.rows input:focus { border-color: var(--accent); }
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   $('rmotion').checked = reducePref(); EL.playing = !$('rmotion').checked; setPlaying(EL.playing);
-  document.addEventListener('visibilitychange', () => { if (!document.hidden) runLoop(); });
+  document.addEventListener('visibilitychange', () => { if (!document.hidden) { runLoop(); benchLoop(); } });
   resetElectrons();
   tokens(); new ResizeObserver(resize).observe(stage); coldSync(); upd(); renderRows(); resize();
-  { const v0 = new URLSearchParams(location.search).get('view'); if (v0 === 'cold' || v0 === 'inside') setView(v0); }
+  { const v0 = new URLSearchParams(location.search).get('view'); if (v0 === 'cold' || v0 === 'inside') setView(v0); else benchLoop();
+    G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
 })();
 </script>
