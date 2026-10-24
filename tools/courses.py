@@ -132,6 +132,7 @@ HANDOUT_TOPIC = {
     'photoelectric': "Photoelectric Effect and Planck's Constant",
     'compton': 'Compton Scattering',
     'franck-hertz': 'Franck–Hertz Experiment',
+    'spacetime': 'Spacetime Diagrams and the Lorentz Transformation',
     'household-wiring': 'Household Wiring and Electrical Safety',
     'van-de-graaff': 'Van de Graaff Generator',
     'ink-jet-printer': 'Ink Jet Printer',

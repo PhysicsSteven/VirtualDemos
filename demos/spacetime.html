@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark bar-div-firstchild spin spin-attn formula btnrow seg seg-button inline readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage phone-bench pane btn btn-disabled slider-head-output toggles-label toggles-input projshort-proj-stage phone-chips-button pane-canvas" lang="en">
+<html data-vd-off="root-4 auto-dark dark bar-div-firstchild spin spin-attn formula seg seg-button inline readout-dd-ok check check-input empty plotbox-canvas wide-proj-bench wide-proj-stage phone-bench pane btn slider-head-output toggles-label toggles-input projshort-proj-stage phone-chips-button pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -143,6 +143,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/spacetime.html" target="spacetime-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Scenarios</h2>
         <div class="chips" id="presets">
@@ -168,6 +169,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <div><dt>Axis tilt, tan θ = |β|</dt><dd id="rTilt">—</dd></div>
           <div><dt>Clock rate 1/γ</dt><dd id="rInv">—</dd></div>
         </dl>
+        <div class="toggles"><label><input type="checkbox" id="blind">Blind: hide γ, the intervals, and the clock, twin and rod results</label></div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">S′ moves along x at speed v. Its ct′ axis is its own worldline, tilted by an angle whose tangent is β; its x′ axis tilts by the same angle, so the light line always bisects them.</p>
         </details>
@@ -228,6 +230,27 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         <p class="hint" id="twinNote">Each tick on a worldline is one year on that clock, so wider spacing means a slower clock in this frame. The twin flies out at β and back at −β.</p>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="spacetime" data-title="Spacetime Diagrams" data-demo="spacetime">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Layers</summary><div class="foldbody">
         <div class="toggles">
@@ -282,7 +305,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   const LETTERS = 'ABCDEFGHJKLMNPQRSUVWXYZ';
   const MAXEV = 10;
   const S = {
-    beta: 0, mode: 'both', events: [], sel: [],
+    beta: 0, mode: 'both', events: [], sel: [], blind: false,
     wl: { home: false, rocket: false, twin: false, rod: false },
     names: { home: 'Home', rocket: 'Rocket', twin: 'Twin' },
     Tend: 10, L0: 5, rodT: 2,
@@ -742,7 +765,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     for (const p of [A, B, Cp]) { ctx.fillStyle = C.ink; ctx.beginPath(); ctx.arc(p[0], p[1], 3.5 * ps, 0, Math.PI * 2); ctx.fill(); }
     const mS = [(A[0] + B[0]) / 2, (A[1] + B[1]) / 2], mP = [(A[0] + Cp[0]) / 2, (A[1] + Cp[1]) / 2];
     const below = mP[1] < mS[1];
-    text(`${fmt(S.L0 / g)} ly in S`, mS[0], mS[1] + (below ? 13 : -13) * ps, C.neg, { align: 'center', size: 11, weight: 600 });
+    text(S.blind ? '? ly in S' : `${fmt(S.L0 / g)} ly in S`, mS[0], mS[1] + (below ? 13 : -13) * ps, C.neg, { align: 'center', size: 11, weight: 600 });
     text(`${fmt(S.L0)} ly in S′`, mP[0], mP[1] + (below ? -13 : 13) * ps, C.pos, { align: 'center', size: 11, weight: 600 });
     const top = rodCorners(S.Tend + 1)[1];
     void top;
@@ -865,7 +888,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       const [tp, xp] = boost(cur.t, cur.x, b);
       $('rEv').textContent = cur.id;
       $('rEvS').textContent = `(${fmt(cur.t)}, ${fmt(cur.x)})`;
-      $('rEvP').textContent = `(${fmt(tp)}, ${fmt(xp)})`;
+      $('rEvP').textContent = `(${fmt(tp, 3)}, ${fmt(xp, 3)})`;
       $('rEvS2').textContent = `${fmt(cur.t * cur.t - cur.x * cur.x)} in S  ·  ${fmt(tp * tp - xp * xp)} in S′`;
     } else {
       for (const id of ['rEv', 'rEvS', 'rEvP', 'rEvS2']) $(id).textContent = '—';
@@ -896,8 +919,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     $('rRocket').textContent = S.wl.rocket ? `${fmt(T / g)} yr` : 'off';
     $('rTwin').textContent = S.wl.twin ? `${fmt(T / g)} yr` : 'off';
     $('rRod').textContent = S.wl.rod ? `${fmt(S.L0 / g)}, ${fmt(S.L0)} ly` : 'off';
+    if (S.blind) {
+      for (const id of ['rGamma', 'rInv', 'rEvS2', 'rDs2', 'rType', 'rExtra', 'rRocket', 'rTwin', 'rRod']) if ($(id).textContent !== '—' && $(id).textContent !== 'off') $(id).textContent = 'hidden';
+      if (P && Q) { vd.textContent = 'Blind is on: work out the separation and the order yourself.'; vd.className = 'verdict'; }
+    }
     const tn = $('twinNote');
-    if (S.wl.twin && Math.abs(b) > 0.004) {
+    if (S.wl.twin && Math.abs(b) > 0.004 && !S.blind) {
       const Th = T / 2, xT = b * Th;
       tn.textContent = `Home ages ${fmt(T)} yr, the twin ${fmt(T / g)} yr. At the turnaround the twin's line of simultaneity swings across the home worldline, from home time ${fmt(Th - b * xT)} to ${fmt(Th + b * xT)} yr. That jump, caused by changing frames, is where the missing home years go.`;
     } else {
@@ -989,6 +1016,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   // ---------- controls ----------
   for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; changed(); });
   $('beta').addEventListener('input', (e) => { S.beta = +e.target.value; if (reduce) phiD = targetPhi(); changed(); });
   $('tend').addEventListener('input', (e) => { S.Tend = +e.target.value; changed(); });
   $('rodL').addEventListener('input', (e) => { S.L0 = +e.target.value; changed(); });
@@ -1153,6 +1181,17 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (dirty) { dirty = false; draw(); }
     requestAnimationFrame(loop);
   }
+
+  // Readings: the last selected event, in S and in S′, at the current β
+  window.__st = { S, applyPreset, changed, select };
+  window.vdVersion = 'spacetime@2026-10-24';
+  window.vdShowCols = [['event', 'Event'], ['beta', 'β'], ['ctp', 'ct′'], ['xp', 'x′']];
+  window.vdReadingRow = () => {
+    const e = evById(S.sel[S.sel.length - 1]);
+    if (!e) return 'Select an event first: click it on the diagram or in the Events list.';
+    const [tp, xp] = boost(e.t, e.x, S.beta);
+    return { event: e.id, beta: fmt(S.beta).replace('−', '-'), ct: fmt(e.t).replace('−', '-'), x: fmt(e.x).replace('−', '-'), ctp: fmt(tp, 3).replace('−', '-'), xp: fmt(xp, 3).replace('−', '-') };
+  };
 
   tokens();
   new ResizeObserver(resize).observe($('stage'));

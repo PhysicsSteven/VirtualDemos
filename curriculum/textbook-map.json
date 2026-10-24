@@ -9127,7 +9127,10 @@
       "status": "usable",
       "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Spacetime Diagrams",
-      "url": "demos/spacetime.html"
+      "url": "demos/spacetime.html",
+      "handouts": [
+        "spacetime"
+      ]
     },
     {
       "demo": "spectra",
