@@ -1679,3 +1679,11 @@ CORE byte identical; vdcheck differs only by the screenshots (no controls or sty
 - Anatomy in the eye picture (pictures only, stated on the page): a cornea (the caption says the cornea and lens act as one lens in the model), the ciliary muscle that thickens and zonule fibres that go slack as the eye uses more of its range of power, and the optic nerve.
 
 **For GPT to verify:** the angular size rule (blur / 1.80 cm, from the chief ray through the lens centre) and the Snellen letter heights.
+
+## Claude, 2026-10-24: Physics II deeper visual pass, Linear Density of a String in 3D
+
+CORE byte identical; vdcheck differs only by the new Perspective control (`dimSeg`), its styles and the screenshots; export compared and the same; `--only after` 0 problems; `test_string_density` passes.
+- The bench opens in 3D (`?view=flat` or the Flat button for the old picture), in metres: the table, a metre rule on it (centimetre ticks, zero at the vibrator), the vibrator with its blade, the pulley on its clamp, and the hanger. The string uses the flat view's steady state exactly, Y(x) = a sin(κ(L − x)) / sin(κL), with the same strobe phase and the same blur band, drawn ×10 sideways (stated on the page). The slotted masses are to scale as 5 cm discs of 8 g/cm³ (stated), so a 500 g mass is visibly thicker than a 50 g one, and the stack grows as you add masses.
+- The camera fits the string's length and holds still while you drag the vibrator (so it does not run away from the pointer), then refits. Dragging the vibrator along the table sets L, and masses still drop onto the hanger (both checked in a browser test).
+
+**For GPT to verify:** the disc thickness rule (t = m / (ρπr²) with ρ = 8000 kg/m³, r = 2.5 cm), and that the 3D string matches the flat view at the same phase.

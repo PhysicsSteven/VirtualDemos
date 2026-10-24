@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>.rail details.more > p + p { margin-top: 6px; }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 .rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
@@ -85,6 +86,9 @@ table.rows input:focus { border-color: var(--accent); }
 .vhandle:hover, .vhandle.drag { box-shadow: 0 0 0 2px var(--accent); }
 .vhandle:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .ghost { position: fixed; z-index: 50; pointer-events: none; transform: translate(-50%, -50%); opacity: 0.85; }
+.dimseg { position: absolute; top: 10px; right: 10px; z-index: 2; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
+.dimseg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+.dimseg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .droptag { position: absolute; z-index: 2; transform: translate(-50%, 0); font-size: 0.75rem; font-weight: 700; color: var(--canvas); background: var(--accent); border-radius: 5px; padding: 2px 7px; pointer-events: none; }
 @media (max-width: 820px) {
   .stage { height: auto; max-height: none; display: flex; flex-direction: column; }
@@ -119,6 +123,7 @@ table.rows input:focus { border-color: var(--accent); }
       <div class="scene" id="scene">
         <canvas id="can" tabindex="0" role="img" aria-label="A string on a lab table, from a vibrator on the left to a pulley at the table's edge on the right, with a hanger of slotted masses below the pulley. A metre rule runs under the string. Left and right arrows change the driver frequency by 0.1 Hz (with Shift, 1 Hz); up adds a 1 g mass, down takes off the last mass; space pauses."></canvas>
         <div class="viewbar"><button type="button" class="spin" id="play">Pause</button></div>
+        <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <div class="vhandle" id="vib" role="slider" tabindex="0" aria-label="Length L, vibrator to pulley" aria-valuemin="0.5" aria-valuemax="2" aria-valuenow="1.2" title="Drag the vibrator to change L"><span class="grip" aria-hidden="true">⇆</span></div>
         <span class="droptag" id="dropTag" hidden>Drop on the hanger</span>
         <span class="blindtag" id="blindTag" hidden>Blind</span>
@@ -405,9 +410,9 @@ table.rows input:focus { border-color: var(--accent); }
   can.addEventListener('click', (e) => { if (onStack(e)) { S.masses.pop(); changed(); } });
   /* drag the vibrator along the table to set L; it is a slider for the keyboard */
   const vib = $('vib');
-  vib.addEventListener('pointerdown', (e) => { vib.setPointerCapture(e.pointerId); vib.classList.add('drag'); vib.dataset.dx = String(e.clientX - (can.getBoundingClientRect().left + GEO.vx)); vib.focus(); e.preventDefault(); });
-  vib.addEventListener('pointermove', (e) => { if (!vib.classList.contains('drag')) return; const x = e.clientX - can.getBoundingClientRect().left - +vib.dataset.dx; setL((GEO.px - x) / GEO.ppm); });
-  const vEnd = () => vib.classList.remove('drag'); vib.addEventListener('pointerup', vEnd); vib.addEventListener('pointercancel', vEnd);
+  vib.addEventListener('pointerdown', (e) => { vib.setPointerCapture(e.pointerId); vib.classList.add('drag'); vib.dataset.dx = String(e.clientX - (can.getBoundingClientRect().left + GEO.vx)); if (use3()) vib.dataset.off = String(hit3x(e) + S.L); vib.focus(); e.preventDefault(); });
+  vib.addEventListener('pointermove', (e) => { if (!vib.classList.contains('drag')) return; if (use3()) { const hx = hit3x(e); if (hx != null) setL(+vib.dataset.off - hx); return; } const x = e.clientX - can.getBoundingClientRect().left - +vib.dataset.dx; setL((GEO.px - x) / GEO.ppm); });
+  const vEnd = () => { vib.classList.remove('drag'); if (use3()) draw(); }; vib.addEventListener('pointerup', vEnd); vib.addEventListener('pointercancel', vEnd);
   vib.addEventListener('keydown', (e) => { const step = { ArrowLeft: 0.01, ArrowUp: 0.01, ArrowRight: -0.01, ArrowDown: -0.01, PageUp: 0.1, PageDown: -0.1 }[e.key];
     if (step) setL(S.L + step); else if (e.key === 'Home') setL(0.5); else if (e.key === 'End') setL(2); else return; e.preventDefault(); });
   $('takeLast').addEventListener('click', () => { S.masses.pop(); changed(); });
@@ -539,6 +544,7 @@ table.rows input:focus { border-color: var(--accent); }
   function txt(s, x, y, o = {}) { const p = ps(); ctx.fillStyle = o.c || T.ink; ctx.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle'; ctx.fillText(s, x, y); }
   function draw() {
     if (!T || !W) return;
+    if (use3()) { draw3(); return; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const p = ps(), narrow = W < 620;
     const shelfR = shelf.getBoundingClientRect(), overlay = getComputedStyle(shelf).position === 'absolute', sceneTop = can.getBoundingClientRect().top;
     /* q: apparatus scale, larger on a big screen so the bench fills the picture */
@@ -590,6 +596,130 @@ table.rows input:focus { border-color: var(--accent); }
     txt(`sideways motion drawn ×${Math.round(yScale / ppm)}, slowed as by a strobe`, W - 10 * p, Hh - 10 * p, { a: 'right', s: 9, c: T.muted });
   }
 
+  /* ---------- 3D view: the bench in metres, z up, the string in the x z plane from the vibrator (x = −L) to the top of the pulley (x = 0) ---------- */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', rkey: '', mkey: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.14, ph: 1.36, zoom: 1 }, fitL: 0 };
+  const SH = 0.10, PR = 0.025, EX3 = 10, CLIP3 = 0.25, N3 = 160, DISC_R = 0.025, DISC_RHO = 8000, Z_HOOK = -0.20;   /* string height, pulley radius, drawn ×10, masses as 5 cm discs of 8 g/cm³ */
+  let g3 = null;
+  const use3 = () => !!(G3.on && g3);
+  function tube3(n, r, R) {   /* a tube of n segments along x whose rings can be moved up and down */
+    const pos = new Float32Array((n + 1) * (R + 1) * 3), nor = new Float32Array(pos.length), idx = [];
+    for (let i = 0; i <= n; i++) for (let j = 0; j <= R; j++) { const a = j / R * 2 * Math.PI, k = (i * (R + 1) + j) * 3; nor[k] = 0; nor[k + 1] = Math.cos(a); nor[k + 2] = Math.sin(a); }
+    for (let i = 0; i < n; i++) for (let j = 0; j < R; j++) { const a = i * (R + 1) + j, b = a + R + 1; idx.push(a, b, a + 1, b, b + 1, a + 1); }
+    const geo = new THREE.BufferGeometry(); geo.setAttribute('position', new THREE.BufferAttribute(pos, 3)); geo.setAttribute('normal', new THREE.BufferAttribute(nor, 3)); geo.setIndex(idx);
+    geo.set = (xs, zs) => { for (let i = 0; i <= n; i++) for (let j = 0; j <= R; j++) { const k = (i * (R + 1) + j) * 3; pos[k] = xs[i]; pos[k + 1] = r * nor[k + 1]; pos[k + 2] = zs[i] + r * nor[k + 2]; }
+      geo.attributes.position.needsUpdate = true; geo.computeBoundingSphere(); };
+    return geo;
+  }
+  function init3D() {
+    G3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); Object.assign(el.style, { position: 'absolute', left: '0px', top: '0px' }); scene.insertBefore(el, can);
+    const sc = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.05, 50), Ms = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.85), sun = new THREE.DirectionalLight(0xffffff, 0.65); sun.position.set(-2, -3, 5); sc.add(hemi, sun);
+    const alongY = (geo) => geo.rotateX(Math.PI / 2);   /* a cylinder's axis from y to the y axis of the bench (depth) */
+    /* table, with its edge just short of the pulley */
+    const woodM = Ms({ roughness: 0.75 }), table = new THREE.Mesh(new THREE.BoxGeometry(2.6, 0.4, 0.035), woodM); table.position.set(-1.3 - 0.012, 0.08, -0.0175);
+    /* metre rule lying on the table in front of the string, zero at the vibrator */
+    const ruleCan = document.createElement('canvas'); ruleCan.width = 2048; ruleCan.height = 64; const ruleTex = new THREE.CanvasTexture(ruleCan);
+    const rule = new THREE.Mesh(new THREE.BoxGeometry(1, 0.03, 0.003), [Ms({ color: 0xd9c98f }), Ms({ color: 0xd9c98f }), Ms({ color: 0xd9c98f }), Ms({ color: 0xd9c98f }), Ms({ map: ruleTex, roughness: 0.6 }), Ms({ color: 0xd9c98f })]);
+    /* pulley on a rod clamped to the table's edge */
+    const metalM = Ms({ roughness: 0.35, metalness: 0.5 }), hiM = Ms({ roughness: 0.3, metalness: 0.6 });
+    const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.005, 0.005, SH - PR + 0.04, 16).rotateX(Math.PI / 2), metalM); rod.position.set(0, 0.03, (SH - PR - 0.04) / 2);
+    const clampB = new THREE.Mesh(new THREE.BoxGeometry(0.03, 0.05, 0.06), Ms({ color: 0x3b4656, roughness: 0.5 })); clampB.position.set(0.003, 0.03, -0.02);
+    const wheel = new THREE.Mesh(alongY(new THREE.CylinderGeometry(PR, PR, 0.01, 40)), hiM); wheel.position.set(0, 0, SH - PR);
+    const axle = new THREE.Mesh(alongY(new THREE.CylinderGeometry(0.004, 0.004, 0.06, 12)), metalM); axle.position.set(0, 0.025, SH - PR);
+    /* vibrator: a box on the table with its blade rising to the string */
+    const vib3 = new THREE.Group(), boxM = Ms({ color: 0x3b4656, roughness: 0.45 });   /* about the size of a lab string vibrator */
+    const body = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.08, 0.075), boxM); body.position.set(-0.012, 0, 0.0375);
+    const plate = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.06, 0.002), Ms({ color: 0x9aa4b0, roughness: 0.4, metalness: 0.4 })); plate.position.set(-0.012, -0.0405, 0.04); plate.rotation.x = Math.PI / 2;
+    const blade = new THREE.Mesh(new THREE.BoxGeometry(0.004, 0.012, 1), hiM); vib3.add(body, plate, blade);
+    /* the string: the vibrating part, the blur band a real eye sees, and the part over the pulley down to the hanger */
+    const strM = Ms({ roughness: 0.5 }), sGeo = tube3(N3, 0.0018, 6), str = new THREE.Mesh(sGeo, strM);
+    const envPos = new Float32Array((N3 + 1) * 2 * 3), envIdx = []; for (let i = 0; i < N3; i++) { const a = 2 * i; envIdx.push(a, a + 2, a + 1, a + 1, a + 2, a + 3); }
+    const envGeo = new THREE.BufferGeometry(); envGeo.setAttribute('position', new THREE.BufferAttribute(envPos, 3)); envGeo.setIndex(envIdx);
+    const envM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.2, side: THREE.DoubleSide, depthWrite: false }), env = new THREE.Mesh(envGeo, envM);
+    const dp = []; for (let i = 0; i <= 16; i++) { const a = Math.PI / 2 * (1 - i / 16); dp.push(new THREE.Vector3(PR * Math.cos(a), 0, SH - PR + PR * Math.sin(a))); } dp.push(new THREE.Vector3(PR, 0, Z_HOOK + 0.01));
+    const down = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(dp, false, 'catmullrom', 0.1), 40, 0.0014, 6, false), strM);
+    const hook = new THREE.Mesh(new THREE.TorusGeometry(0.006, 0.0012, 8, 20, Math.PI * 1.5).rotateX(Math.PI / 2).rotateY(Math.PI / 2), metalM); hook.position.set(PR, 0, Z_HOOK + 0.004);
+    const hanger = new THREE.Group(); hanger.position.set(PR, 0, Z_HOOK);
+    sc.add(table, rule, rod, clampB, wheel, axle, vib3, str, env, down, hook, hanger);
+    g3 = { r, el, sc, cam, hemi, woodM, ruleCan, ruleTex, rule, vib3, blade, strM, sGeo, envM, envPos, envGeo, hanger, metalM, steelM: Ms({ color: 0xa9b1bb, roughness: 0.35, metalness: 0.55 }), brassM: Ms({ color: 0xc9a040, roughness: 0.35, metalness: 0.55 }), xs: new Float32Array(N3 + 1), zs: new Float32Array(N3 + 1), stack: [0, 0], base: 0 };
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || onStack(e), phMin: 0.7, phMax: 1.5, zMin: 0.7, zMax: 3, keys: false });
+    return true;
+  }
+  /* the metre rule's face: centimetre ticks and every 10 cm labelled, for the rule's length L */
+  function rule3() {
+    const g = g3, c = g.ruleCan, x = c.getContext('2d'), L = S.L, dk = VD3.dark(); x.fillStyle = dk ? '#4d4630' : '#f1e3b5'; x.fillRect(0, 0, c.width, c.height);
+    x.fillStyle = dk ? '#e8e2cf' : '#2a2a2a'; x.font = '600 22px sans-serif'; x.textAlign = 'center'; x.textBaseline = 'top';
+    for (let i = 0; i <= Math.round(L * 100); i++) { const X = i / (L * 100) * c.width, big = i % 10 === 0, mid = i % 5 === 0; x.fillRect(Math.min(c.width - 3, X), c.height - (big ? 30 : mid ? 20 : 12), 2.5, 40); if (big && i > 0 && i < Math.round(L * 100) - 3) x.fillText(String(i / 100), X, 4); }
+    g.ruleTex.needsUpdate = true; g.rule.scale.x = L; g.rule.position.set(-L / 2, -0.035, 0.0015);
+  }
+  /* slotted masses on the hanger, to scale: the hanger (a rod and a base) and each disc's thickness from its mass */
+  function hanger3() {
+    const g = g3, H = g.hanger; while (H.children.length) { const o = H.children.pop(); o.geometry.dispose(); }
+    const th = S.masses.map((m) => m / 1000 / (DISC_RHO * Math.PI * DISC_R * DISC_R)), tot = th.reduce((a, b) => a + b, 0), len = Math.max(0.10, tot + 0.03);
+    const rodH = new THREE.Mesh(new THREE.CylinderGeometry(0.0025, 0.0025, len, 10).rotateX(Math.PI / 2), g.metalM); rodH.position.z = -len / 2; H.add(rodH);
+    const base = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.004, 32).rotateX(Math.PI / 2), g.metalM); base.position.z = -len - 0.002; H.add(base);
+    let z = -len; S.masses.forEach((m, i) => { const brass = !!document.querySelector(`#addMass [data-g="${m}"].brass`), d = new THREE.Mesh(new THREE.CylinderGeometry(DISC_R, DISC_R, Math.max(th[i] - 0.0002, 0.0002), 36).rotateX(Math.PI / 2), brass ? g.brassM : g.steelM);
+      d.position.z = z + th[i] / 2; H.add(d); z += th[i]; });
+    g.stack = [Z_HOOK - len, Z_HOOK - len + tot]; g.base = Z_HOOK - len - 0.004;
+  }
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function draw3() {
+    const g = g3, p = ps(), narrow = W < 620, overlay = getComputedStyle(shelf).position === 'absolute', shelfR = shelf.getBoundingClientRect(), cr = can.getBoundingClientRect();
+    if (G3.w !== W || G3.h !== Hh) { G3.w = W; G3.h = Hh; g.r.setSize(W, Hh); }
+    const key = [T.canvas, T.wood, T.string, T.env].join(); if (G3.key !== key) { G3.key = key; G3.rkey = ''; const dk = VD3.dark(); g.sc.background = col3(T.canvas, '#fbfcfd');
+      g.hemi.groundColor = col3(dk ? '#1c222a' : '#8c8a84', '#8c8a84'); g.woodM.color = col3(T.wood, '#d8bf98'); g.strM.color = g.envM.color = col3(T.string, '#b4532a'); }
+    const rk = S.L.toFixed(3) + VD3.dark(); if (G3.rkey !== rk) { G3.rkey = rk; rule3(); }
+    const mk = S.masses.join(); if (G3.mkey !== mk) { G3.mkey = mk; hanger3(); }
+    /* the camera follows the string's length, but holds still while the vibrator is being dragged */
+    if (!G3.fitL || !vib.classList.contains('drag')) G3.fitL = S.L;
+    const asp = W / Math.max(1, Hh), fitW = G3.fitL + 0.5, d = Math.max(fitW / (2 * Math.tan(15 * Math.PI / 180) * asp), 0.8 / (2 * Math.tan(15 * Math.PI / 180)));
+    g.cam.aspect = asp; VD3.place(g.cam, G3.o, new THREE.Vector3(-G3.fitL / 2 + 0.03, 0, 0), d);
+    const wantY = overlay ? Math.min(Hh * 0.5, shelfR.top - cr.top - 120 * p) : Hh * 0.46; g.cam.setViewOffset(W, Hh, 0, Hh / 2 - wantY, W, Hh); g.cam.updateProjectionMatrix();
+    /* the string: the same steady state as the flat view, Y(x) = a sin(κ(L − x)) / sin(κL), seen through a slow strobe */
+    const mu = muNow(), Tn = Tnow(), k = kappa(S.f, Tn, mu), den = csin([k[0] * S.L, k[1] * S.L]), c = Math.cos(S.phase), s = Math.sin(S.phase), cl = (v) => Math.max(-CLIP3, Math.min(CLIP3, v));
+    for (let i = 0; i <= N3; i++) { const x = S.L * i / N3, Y = cmul([DRIVE_A, 0], cdiv(csin([k[0] * (S.L - x), k[1] * (S.L - x)]), den)), amp = Math.hypot(Y[0], Y[1]) * EX3;
+      g.xs[i] = x - S.L; g.zs[i] = SH + cl(reduce ? 0 : (Y[0] * c - Y[1] * s) * EX3);
+      const e = cl(amp); g.envPos.set([x - S.L, 0.0005, SH + e, x - S.L, 0.0005, SH - e], i * 6); }
+    g.sGeo.set(g.xs, g.zs); g.envGeo.attributes.position.needsUpdate = true; g.envGeo.computeBoundingSphere();
+    g.vib3.position.x = -S.L; const bz = g.zs[0]; g.blade.scale.z = bz - 0.075 + 0.003; g.blade.position.set(0, 0, (bz + 0.072) / 2);
+    g.r.render(g.sc, g.cam);
+    /* labels and hit areas on the flat canvas over the 3D view */
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh);
+    const v = new THREE.Vector3(), Q = (x, y, z) => { v.set(x, y, z).project(g.cam); return [(v.x + 1) / 2 * W, (1 - v.y) / 2 * Hh]; };
+    const box = (pts) => { const P = pts.map((q) => Q(...q)), xs = P.map((q) => q[0]), ys = P.map((q) => q[1]); return { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) }; };
+    const vb = box([[-S.L - 0.047, -0.04, 0], [-S.L + 0.023, -0.04, 0.075], [-S.L - 0.047, 0.04, 0.075], [-S.L + 0.023, 0.04, 0]]);
+    Object.assign(vib.style, { left: `${vb.x0}px`, top: `${vb.y0}px`, width: `${vb.x1 - vb.x0}px`, height: `${vb.y1 - vb.y0}px` });
+    if (overlay) { const gr = shelf.querySelector('.gen').getBoundingClientRect(), cx = gr.left - cr.left + gr.width * 0.75, cy = gr.top - cr.top, [tx, ty] = Q(-S.L - 0.047, 0.02, 0.02);
+      ctx.strokeStyle = T.box; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(cx, cy); ctx.bezierCurveTo(cx, cy - 40 * p, tx - 30 * p, ty + 40 * p, tx, ty); ctx.stroke(); }
+    { const [x, y] = Q(-S.L - 0.012, -0.04, 0); txt('vibrator', x, y + 10 * p, { a: 'center', s: 9, c: T.muted }); }
+    { const [x, y] = Q(-S.L / 2, -0.06, -0.035); txt(`L = ${S.L.toFixed(2)} m`, x, y + 12 * p, { a: 'center', s: 11, b: 1 }); }
+    const sb = box([[PR - DISC_R, 0, g.stack[0]], [PR + DISC_R, 0, g.stack[1] + 0.004]]), hb = box([[PR - DISC_R, 0, Z_HOOK + 0.02], [PR + DISC_R, 0, g.base]]);
+    GEO.stack = { x0: sb.x0 - 6 * p, x1: sb.x1 + 6 * p, y0: sb.y0 - 4 * p, y1: sb.y1 + 4 * p };
+    GEO.drop = { x0: hb.x0 - 50 * p, x1: Math.min(W, hb.x1 + 50 * p), y0: Q(PR, 0, SH - PR)[1], y1: Math.min(Hh, hb.y1 + 40 * p) };
+    if (GEO.dropOn) { ctx.strokeStyle = T.accent; ctx.lineWidth = (GEO.dropOn === 2 ? 3 : 1.5) * p; ctx.setLineDash([5 * p, 4 * p]); ctx.beginPath(); ctx.roundRect(hb.x0 - 10 * p, hb.y0 - 4 * p, hb.x1 - hb.x0 + 20 * p, hb.y1 - hb.y0 + 10 * p, 6 * p); ctx.stroke(); ctx.setLineDash([]); }
+    const lx = hb.x1 + 10 * p, ly = Math.min(Hh - 30 * p, hb.y1 - 6 * p), right = lx + 70 * p > W;
+    txt(`${massG()} g`, right ? hb.x0 - 10 * p : lx, ly, { a: right ? 'right' : 'left', s: 11, b: 1, m: 1 });
+    txt(`T = ${Tn.toFixed(3)} N`, right ? hb.x0 - 10 * p : lx, ly + 14 * p, { a: right ? 'right' : 'left', s: 10, m: 1, c: T.muted });
+    { const ny = overlay ? 54 * p : Hh - 23 * p; txt(`sideways motion drawn ×${EX3}, slowed as by a strobe`, W - 12 * p, ny, { a: 'right', s: 9, c: T.muted }); txt('masses drawn as 5 cm discs of 8 g/cm³', W - 12 * p, ny + 13 * p, { a: 'right', s: 9, c: T.muted }); }
+  }
+  /* where a pointer meets the vertical plane of the string, as a bench x (m) */
+  function hit3x(e) {
+    const b = can.getBoundingClientRect(), rc = new THREE.Raycaster(), pt = new THREE.Vector3();
+    rc.setFromCamera(new THREE.Vector2((e.clientX - b.left) / b.width * 2 - 1, 1 - (e.clientY - b.top) / b.height * 2), g3.cam);
+    return rc.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), pt) ? pt.x : null;
+  }
+  function setDim(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried || !window.VD3) { v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setDim(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3) g3.el.hidden = !use3();
+    for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String(b.dataset.dim === v));
+    can.style.cursor = ''; draw();
+  }
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setDim(b.dataset.dim); });
   function tick(dt) { if (S.running && !reduce) { S.phase = (S.phase + dt * TAU * 0.7) % TAU; draw(); } }
   function resize() { dpr = window.devicePixelRatio || 1; const rc = scene.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); drawResp(); fit(); }
   const retheme = () => { tokens(); draw(); drawResp(); fit(); };
@@ -599,6 +729,7 @@ table.rows input:focus { border-color: var(--accent); }
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
   tokens(); new ResizeObserver(resize).observe(scene); new ResizeObserver(() => draw()).observe(shelf);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'sweep'); renderRows(); resize();
+  { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
