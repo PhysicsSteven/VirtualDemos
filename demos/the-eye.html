@@ -59,7 +59,7 @@ table.rows input:focus { border-color: var(--accent); }
   <header class="bar">
     <div>
       <h1>The Eye</h1>
-      <p>The eye focuses by changing the power of its lens. Move an object near and far and watch the eye accommodate, find the near and far points of normal, nearsighted, farsighted and older eyes, and prescribe the glasses that correct them.</p>
+      <p>The eye focuses by changing the power of its lens. Move an object near and far and watch the eye accommodate, find the near and far points of normal, nearsighted, farsighted and older eyes, and prescribe the glasses that correct them. Switch to Camera to see how a camera focuses instead, by moving its lens.</p>
     </div>
     <div class="bar-right">
       <div class="units mono">P in diopters, 1 D = 1 m⁻¹</div>
@@ -76,8 +76,22 @@ table.rows input:focus { border-color: var(--accent); }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/the-eye.html" target="the-eye-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/the-eye.html" target="the-eye-worksheet">Worksheet 1: The Eye</a></li><li><a href="../curriculum/labs/students/camera.html" target="camera-worksheet">Worksheet 2: The Camera</a></li></ul></details><!-- /vd-handout -->
       <section>
+        <div class="seg" role="group" aria-label="Instrument" id="modeSeg"><button type="button" data-m="eye" aria-pressed="true">Eye</button><button type="button" data-m="camera" aria-pressed="false">Camera</button></div>
+      </section>
+
+      <section id="camSec" hidden>
+        <h2>Camera</h2>
+        <div class="seg" role="group" aria-label="Camera" id="camSeg"><button type="button" data-c="slr" aria-pressed="true">50 mm lens</button><button type="button" data-c="phone" aria-pressed="false">Phone camera</button></div>
+        <div id="nRow"><div class="slider-head"><span>Aperture (f-number)</span></div><div class="seg" role="group" aria-label="f-number" id="nSeg"><button type="button" data-n="2" aria-pressed="true">f/2</button><button type="button" data-n="4" aria-pressed="false">f/4</button><button type="button" data-n="8" aria-pressed="false">f/8</button><button type="button" data-n="16" aria-pressed="false">f/16</button></div></div>
+        <div><div class="slider-head"><label for="sDc">Object distance from the lens</label><output id="oDc" for="sDc"></output></div><input type="range" id="sDc" min="0" max="101" step="1"></div>
+        <div><div class="slider-head"><label for="sDs">Lens to sensor distance</label><output id="oDs" for="sDs"></output></div><input type="range" id="sDs" min="0" max="7000" step="1"></div>
+        <p><button type="button" class="btn" id="af">Autofocus</button></p>
+        <details class="more"><summary>More about this</summary><p class="hint" id="camHint"></p></details>
+      </section>
+
+      <section id="presetSec">
         <h2>Setups</h2>
         <div class="chips" id="presets">
           <button type="button" data-p="normal" aria-pressed="true">Normal eye, near point</button>
@@ -90,7 +104,7 @@ table.rows input:focus { border-color: var(--accent); }
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
-      <section>
+      <section id="eyeSec">
         <h2>Eye</h2>
         <div class="seg" role="group" aria-label="Eye" id="eyeSeg">
           <button type="button" data-e="normal" aria-pressed="true">Normal</button>
@@ -101,7 +115,7 @@ table.rows input:focus { border-color: var(--accent); }
         <div><div class="slider-head"><label for="sD">Object distance from the eye</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0" max="101" step="1"></div>
       </section>
 
-      <section>
+      <section id="glassSec">
         <h2>Glasses, 1.50 cm in front of the eye</h2>
         <label class="check"><input type="checkbox" id="wear"><span>Wear glasses</span></label>
         <div><div class="slider-head"><label for="sPg">Power of the glasses</label><output id="oPg" for="sPg"></output></div><input type="range" id="sPg" min="-8" max="8" step="0.01"></div>
@@ -141,6 +155,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <details class="more"><summary>The model and its formulas</summary>
           <p class="hint">Blind hides whether the image is sharp, the blur, the eye's power and the prescriptions the buttons would give (the buttons still set the glasses). Predict first: can this eye see the object sharply? What power of glasses does it need?</p>
           <p class="hint">Model: the cornea and lens act as one thin lens of power P, and the retina is a fixed 1.80 cm behind it (a simplified eye, chosen to match OpenStax Example 2.7, where an image at the near point forms 1.8 cm behind the lens). Accommodation sets P anywhere between the eye's relaxed power, which focuses its far point, and its strongest power, which focuses its near point: P = 1/d_o + 1/d_i (OpenStax Eq. 2.24). The eye picks the power that brings the image closest to the retina. Normal eye: near point 25 cm, far point at infinity. Nearsighted: far point 30.0 cm (Example 2.8). Farsighted: near point 1.00 m (Example 2.9). Older: far point at infinity, near point 2.00 m. The ranges of accommodation, 4.0 D for the young eyes and 0.5 D for the older one, are chosen typical values. Glasses are a thin lens 1.50 cm in front of the eye, as in the examples; the light is followed through both lenses exactly (thin lenses, paraxial). The pupil is 4.0 mm across; the blur is the size of the spot on the retina, and an image counts as sharp when the spot is under 0.02 mm (a chosen limit, a few cone spacings).</p>
+          <p class="hint">Camera model: one thin lens of focal length f with a round aperture of diameter f/N in its plane, focused by moving the lens (or the sensor) along the axis. Light from an object point at distance d converges to d_i given by 1/d + 1/d_i = 1/f; on a sensor a distance d_s behind the lens it makes a blur spot of diameter (f/N)|1 − d_s(1/f − 1/d)|. The 50 mm lens has a full frame sensor 36 mm wide with 6.0 µm pixels; the phone has f = 5.00 mm (as in OpenStax §2.6), f/1.8 and a 5.6 mm wide sensor with 1.4 µm pixels; these sensor and aperture values are typical ones, not from the textbook. The picture counts as sharp when the blur spot is at most two pixels across, a common choice. The photo blurs the scene by about the spot's size (drawn with a smooth blur, not the exact disk); real lenses add aberrations and diffraction, which are left out.</p>
         </details>
         </div></details>
       </section>
@@ -181,15 +196,42 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      or the image of an object at dObj (from the eye) at the near point */
   const rxFar = (FP, s = GLASS_GAP) => -1 / (FP - s);
   const rxNear = (NP, dObj = 0.25, s = GLASS_GAP) => 1 / (dObj - s) - 1 / (NP - s);
+  /* ---- Camera: a thin lens focused by changing the lens to sensor distance d_s ---- */
+  const CAMERAS = {
+    slr: { name: '50 mm lens, full frame', f: 0.050, N: [2, 4, 8, 16], pix: 6.0e-6, sensorW: 0.036, dsMin: 0.050 },
+    phone: { name: 'Phone camera', f: 0.005, N: [1.8], pix: 1.4e-6, sensorW: 0.0056, dsMin: 0.005 }
+  };
+  const CAM_SHARP_PX = 2;
+  /* image distance (Infinity when d = f; negative: no real image) */
+  const camImage = (d, f) => { const Vi = 1 / f - (isFinite(d) ? 1 / d : 0); return Vi === 0 ? Infinity : 1 / Vi; };
+  /* blur spot diameter on the sensor, m */
+  const camBlur = (d, f, N, ds) => (f / N) * Math.abs(1 - ds * (1 / f - (isFinite(d) ? 1 / d : 0)));
+  /* the range of object distances whose blur spot is at most c across (depth of field), with the lens set at d_s; far = Infinity past the hyperfocal point */
+  function camDepth(f, N, ds, c) {
+    /* the blur is at most c when 1/d lies between 1/f − (1 + k)/d_s and 1/f − (1 − k)/d_s, with k = c/(f/N) */
+    const k = c / (f / N), lo = 1 / f - (1 + k) / ds, hi = 1 / f - (1 - k) / ds;
+    return { near: hi > 0 ? 1 / hi : NaN, far: lo > 0 ? 1 / lo : Infinity };
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
-  const $ = (id) => document.getElementById(id);
+  const $ = (id) => document.getElementById(id), VG = window.VDGear;
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   /* object distance slider: 0 to 100 is 10 cm to 10 m on a log scale; 101 is far away */
   const dOf = (v) => (v >= 101 ? Infinity : 0.1 * 10 ** (v / 50));
   const vOf = (d) => (!isFinite(d) ? 101 : Math.max(0, Math.min(100, Math.round(50 * Math.log10(d / 0.1)))));
-  const S = { eye: 'normal', d: 0.25, wear: false, Pg: 0, P: null, blind: false, preset: 'normal' };
+  const S = { eye: 'normal', d: 0.25, wear: false, Pg: 0, P: null, blind: false, preset: 'normal',
+    /* Camera: which camera, its f-number, the object distance (m) and the lens to sensor distance (m) */
+    mode: 'eye', cam: 'slr', N: 2, dc: 2, ds: 0.050 };
+  const CAM_UNIT = { slr: 1e-6, phone: 1e-7 }, CAM_MAX = { slr: 7000, phone: 3000 };   /* the focus slider's step (1 µm or 0.1 µm) and range */
+  const camOf = () => CAMERAS[S.cam];
+  function camState() {
+    const c = camOf(), di = camImage(S.dc, c.f), blur = camBlur(S.dc, c.f, S.N, S.ds), px = blur / c.pix;
+    return { c, di, blur, px, sharp: px <= CAM_SHARP_PX, dof: camDepth(c.f, S.N, S.ds, CAM_SHARP_PX * c.pix) };
+  }
+  const fmtMM = (m) => `${(m * 1000).toFixed(S.cam === 'phone' ? 4 : 3)} mm`;
+  const CAM_HINT = { slr: 'A 50 mm lens on a full frame camera. Focusing moves the lens away from the sensor: by 0 mm for a distant object, by 1.28 mm for one 2 m away, by 5.6 mm for one at 50 cm. A smaller aperture (larger f-number) makes the blur spots smaller, so more distances look sharp at once.',
+    phone: 'OpenStax §2.6: a phone lens of f = 5.00 mm. A selfie at 50 cm focuses 5.05 mm behind the lens, a person 5 m away at 5.005 mm: the whole focusing range is a few hundredths of a millimetre. Many phones still move the lens that little with a tiny motor; others keep it fixed and rely on the large depth of field.' };
   const PRESETS = {
     normal: { eye: 'normal', d: 0.25, wear: false, Pg: 0, hint: 'An object at the near point, 25 cm: the eye is at its strongest. Move the object closer than 25 cm: the eye cannot add more power and the image blurs. Move it far away: the eye relaxes.' },
     myopia: { eye: 'myopia', d: Infinity, wear: false, Pg: 0, hint: 'This eye has its far point at 30.0 cm. Even fully relaxed it is too strong for distant light, which focuses in front of the retina. Bring the object closer than 30 cm and it becomes sharp.' },
@@ -221,7 +263,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('sD').value = vOf(S.d); $('oD').textContent = fmtD(S.d); $('wear').checked = S.wear; $('sPg').value = S.Pg; $('oPg').textContent = fmtP(S.Pg); $('sPg').disabled = !S.wear;
     $('presetHint').textContent = S.preset ? PRESETS[S.preset].hint : '';
   }
-  function upd() { sync(); readouts(); draw(); }
+  function syncCam() {
+    const cam = S.mode === 'camera';
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === S.mode));
+    $('camSec').hidden = !cam; $('presetSec').hidden = cam; $('eyeSec').hidden = cam; $('glassSec').hidden = cam;
+    for (const b of document.querySelectorAll('#camSeg button')) b.setAttribute('aria-pressed', String(b.dataset.c === S.cam));
+    for (const b of document.querySelectorAll('#nSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.n === S.N));
+    $('nRow').hidden = S.cam === 'phone';
+    const c = camOf(), u = CAM_UNIT[S.cam]; $('sDs').max = CAM_MAX[S.cam]; $('sDs').value = Math.round((S.ds - c.dsMin) / u); $('oDs').textContent = fmtMM(S.ds);
+    $('sDc').value = vOf(S.dc); $('oDc').textContent = fmtD(S.dc); $('camHint').textContent = CAM_HINT[S.cam]; $('af').disabled = S.blind;
+    document.querySelector('.units').textContent = cam ? 'distances in mm behind the lens, object on a log scale' : 'P in diopters, 1 D = 1 m⁻¹';
+    window.vdShowCols = cam ? [['camera', 'Camera'], ['d_cm', 'Object (cm)'], ['ds_mm', 'd_s (mm)'], ['blur_px', 'Blur (px)']] : [['eye', 'Eye'], ['glasses_D', 'Glasses (D)'], ['d_cm', 'Object (cm)'], ['seen', 'Seen']];
+  }
+  function upd() { sync(); syncCam(); readouts(); draw(); }
   const changed = () => { S.preset = ''; upd(); };
   $('presets').addEventListener('click', (e) => { const b = e.target.closest('[data-p]'); if (b) applyPreset(b.dataset.p); });
   $('eyeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-e]'); if (b) { S.eye = b.dataset.e; changed(); } });
@@ -231,10 +285,25 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('rxFar').addEventListener('click', () => { const st = state(); S.wear = true; S.Pg = isFinite(st.FP) && st.FP > 0 ? +rxFar(st.FP).toFixed(2) : 0; changed(); });
   $('rxNear').addEventListener('click', () => { const st = state(); S.wear = true; S.Pg = st.NP > 0.25 ? +rxNear(st.NP).toFixed(2) : 0; changed(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; upd(); });
+  $('modeSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { S.mode = b.dataset.m; upd(); } });
+  $('camSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (!b) return; S.cam = b.dataset.c; const c = camOf(); S.N = c.N[0]; S.ds = c.dsMin; upd(); });
+  $('nSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-n]'); if (b) { S.N = +b.dataset.n; upd(); } });
+  $('sDc').addEventListener('input', (e) => { S.dc = dOf(+e.target.value); upd(); });
+  $('sDs').addEventListener('input', (e) => { S.ds = camOf().dsMin + +e.target.value * CAM_UNIT[S.cam]; upd(); });
+  /* autofocus: the lens moves to where the image is sharpest within its travel */
+  $('af').addEventListener('click', () => { const c = camOf(), di = camImage(S.dc, c.f), u = CAM_UNIT[S.cam];
+    const v = di > 0 && isFinite(di) ? Math.round((di - c.dsMin) / u) : 0; S.ds = c.dsMin + Math.max(0, Math.min(CAM_MAX[S.cam], v)) * u; upd(); });
+  window.vdWorksheet = () => (S.mode === 'camera' ? 'camera' : 'the-eye');
+  window.__eye = { set: (o) => { Object.assign(S, o); upd(); }, get S() { return S; } };
   /* a reading for the Readings section (tools/readings_panel.py); what Blind hides is left blank */
   window.vdVersion = EYE_VERSION;
   window.vdShowCols = [['eye', 'Eye'], ['glasses_D', 'Glasses (D)'], ['d_cm', 'Object (cm)'], ['seen', 'Seen']];
   window.vdReadingRow = () => {
+    if (S.mode === 'camera') {
+      const q = camState();
+      return { camera: q.c.name, f_mm: +(q.c.f * 1000).toFixed(2), N: S.N, d_cm: isFinite(S.dc) ? +(S.dc * 100).toFixed(1) : 'far away', ds_mm: +(S.ds * 1000).toFixed(S.cam === 'phone' ? 4 : 3),
+        blur_um: +(q.blur * 1e6).toFixed(1), blur_px: +q.px.toFixed(1), di_mm: S.blind ? '' : q.di > 0 && isFinite(q.di) ? +(q.di * 1000).toFixed(4) : 'none' };
+    }
     const st = state(), b = S.blind, sharp = st.img.blur < SHARP, fp = st.FP;
     return { eye: EYES[S.eye].name, glasses_D: S.wear ? S.Pg : '', d_cm: isFinite(S.d) ? +(S.d * 100).toFixed(1) : 'far away',
       seen: b ? '' : sharp ? 'sharp' : 'blurred', blur_mm: b ? '' : +(st.img.blur * 1000).toFixed(3), NP_cm: +(st.NP * 100).toFixed(1),
@@ -242,9 +311,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       di_cm: b ? '' : !isFinite(st.img.di) ? 'infinity' : st.img.di < 0 ? 'none' : +(st.img.di * 100).toFixed(3),
       rx_far_D: b ? '' : isFinite(fp) && fp > 0 ? +rxFar(fp).toFixed(2) : 0, rx_near_D: b ? '' : st.NP > 0.25 ? +rxNear(st.NP).toFixed(2) : 0 };
   };
-  can.addEventListener('keydown', (e) => { const d = { ArrowRight: -1, ArrowUp: 1, ArrowLeft: 1, ArrowDown: -1 }[e.key]; if (!d) return; e.preventDefault(); S.d = dOf(Math.max(0, Math.min(101, vOf(S.d) + d))); changed(); });
+  can.addEventListener('keydown', (e) => { const d = { ArrowRight: -1, ArrowUp: 1, ArrowLeft: 1, ArrowDown: -1 }[e.key]; if (!d) return; e.preventDefault();
+    if (S.mode === 'camera') { S.dc = dOf(Math.max(0, Math.min(101, vOf(S.dc) + d))); upd(); return; }
+    S.d = dOf(Math.max(0, Math.min(101, vOf(S.d) + d))); changed(); });
 
+  function readoutsCam() {
+    const q = camState(), dd = (a, v, w, c) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd${c ? ` class="${c}"` : ''}>${v}</dd></div>`, HID = '<span class="ok">hidden in Blind</span>';
+    let h = dd('Blur spot on the sensor', `${(q.blur * 1e6).toFixed(1)} µm = ${q.px.toFixed(1)} pixels${q.sharp && !S.blind ? ': sharp' : ''}`, true, q.sharp || S.blind ? '' : 'warn');
+    h += dd('Focal length', `${(q.c.f * 1000).toFixed(2)} mm`) + dd('Aperture', `f/${S.N} = ${(q.c.f / S.N * 1000).toFixed(2)} mm`);
+    h += dd('Lens to sensor d_s', fmtMM(S.ds)) + dd('Object distance', fmtD(S.dc));
+    h += dd('Image distance from 1/d + 1/d_i = 1/f', S.blind ? HID : q.di > 0 && isFinite(q.di) ? fmtMM(q.di) : 'no real image', true);
+    const df = q.dof; h += dd('Sharp from … to … (blur ≤ 2 pixels)', S.blind ? HID : isNaN(df.near) ? 'nothing is sharp at this setting' : `${fmtD(df.near)} to ${fmtD(df.far)}`, true);
+    $('out').innerHTML = h;
+  }
   function readouts() {
+    if (S.mode === 'camera') { readoutsCam(); return; }
     const st = state(), dd = (a, v, w, c) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd${c ? ` class="${c}"` : ''}>${v}</dd></div>`, HID = '<span class="ok">hidden in Blind</span>', hide = S.blind;
     const sharp = st.img.blur < SHARP;
     let h = dd('Seen', hide ? HID : sharp ? 'sharp' : `blurred: spot ${(st.img.blur * 1000).toFixed(2)} mm across`, true, hide || sharp ? '' : 'warn');
@@ -310,9 +391,94 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!S.blind) { const b = st.img.blur * k; ctx.fillStyle = st.img.blur < SHARP ? T.np : T.pos; ctx.fillRect(xR - 3 * p, cy - Math.max(b, 3 * p) / 2, 6 * p, Math.max(b, 3 * p)); }
     txt('enlarged view of the eye: lens to retina 1.80 cm, pupil 4.0 mm', x0 + 8 * p, y0 + h - 12 * p, { s: 9, c: T.muted });
   }
+  /* ---------- camera drawing ---------- */
+  function drawScaleCam(x0, x1, y, q) {
+    const p = ps(), lo = Math.log10(0.05), hi = Math.log10(20), X = (d) => (!isFinite(d) ? x0 : x1 - (Math.log10(d) - lo) / (hi - lo) * (x1 - x0 - 24 * p));
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+    for (const [d, l] of [[0.1, '10 cm'], [0.25, '25 cm'], [1, '1 m'], [10, '10 m']]) { const x = X(d); ctx.beginPath(); ctx.moveTo(x, y - 4 * p); ctx.lineTo(x, y + 4 * p); ctx.stroke(); txt(l, x, y + 14 * p, { a: 'center', s: 9, c: T.muted }); }
+    txt('∞', x0, y + 14 * p, { a: 'center', s: 11, c: T.muted }); txt('distance from the lens (log scale)', (x0 + x1) / 2, y + 28 * p, { a: 'center', s: 9, c: T.muted });
+    /* the distances in focus at this setting (blur at most two pixels) */
+    if (!S.blind && !isNaN(q.dof.near)) {
+      const xa = X(Math.max(0.05, q.dof.near)), xb = X(q.dof.far);
+      ctx.fillStyle = T.np; ctx.globalAlpha = 0.2; ctx.fillRect(Math.min(xa, xb), y - 10 * p, Math.abs(xa - xb), 20 * p); ctx.globalAlpha = 1;
+      txt('in focus', (xa + xb) / 2, y - 18 * p, { a: 'center', s: 9, c: T.np, b: 1 });
+    }
+    /* the camera */
+    const cx = x1 + 2 * p; VG.box(ctx, cx - 9 * p, y - 7 * p, 18 * p, 14 * p, { color: '#2e353f', r: 3, shadow: false }); ctx.fillStyle = '#5b6370'; ctx.beginPath(); ctx.arc(cx - 9 * p, y, 4 * p, 0, 7); ctx.fill();
+    txt('camera', cx, y - 18 * p, { a: 'center', s: 9, c: T.muted });
+    const xo = X(S.dc); ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(xo, y); ctx.lineTo(xo, y - 30 * p); ctx.stroke(); ctx.beginPath(); ctx.moveTo(xo, y - 36 * p); ctx.lineTo(xo - 5 * p, y - 28 * p); ctx.lineTo(xo + 5 * p, y - 28 * p); ctx.fill();
+    txt(`object, ${fmtD(S.dc)}`, Math.max(x0 + 40 * p, Math.min(x1 - 60 * p, xo)), y - 46 * p, { a: 'center', s: 10, b: 1 });
+  }
+  /* the scene the camera looks at: a test chart, drawn once per theme and size */
+  let scene = null, sceneKey = '';
+  function sceneCanvas(w, h) {
+    const key = [w, h, VG.dark()].join('|'); if (scene && sceneKey === key) return scene;
+    const c = document.createElement('canvas'); c.width = w; c.height = h; const g = c.getContext('2d');
+    const sky = g.createLinearGradient(0, 0, 0, h); sky.addColorStop(0, '#9cc6ec'); sky.addColorStop(1, '#e6f0f8'); g.fillStyle = sky; g.fillRect(0, 0, w, h);
+    g.fillStyle = '#6f9a5a'; g.fillRect(0, h * 0.78, w, h * 0.22);
+    /* a Siemens star: fine detail at its centre shows blur first */
+    const sx = w * 0.32, sy = h * 0.46, R = h * 0.34; g.fillStyle = '#f4f4f0'; g.beginPath(); g.arc(sx, sy, R * 1.04, 0, 7); g.fill();
+    g.fillStyle = '#1d232b'; for (let i = 0; i < 18; i++) { const a0 = i * Math.PI / 9; g.beginPath(); g.moveTo(sx, sy); g.arc(sx, sy, R, a0, a0 + Math.PI / 18); g.closePath(); g.fill(); }
+    /* a block of text and bars */
+    g.fillStyle = '#f4f4f0'; g.fillRect(w * 0.62, h * 0.16, w * 0.32, h * 0.58); g.fillStyle = '#1d232b';
+    g.font = `700 ${Math.round(h * 0.16)}px Atkinson Hyperlegible, sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('f/N', w * 0.78, h * 0.3);
+    for (let i = 0; i < 7; i++) g.fillRect(w * 0.65 + i * w * 0.04, h * 0.45, w * 0.02, h * 0.24);
+    scene = c; sceneKey = key; return c;
+  }
+  function drawCamera(x0, y0, w, h, q) {
+    const p = ps(), c = q.c, f = c.f, A = f / S.N, wide = w > 620, hc = wide ? h : h * 0.56, cy = y0 + hc * 0.5;
+    const span = c.dsMin * 1.18 + (S.cam === 'phone' ? 0.0003 : 0.007), k = Math.min((wide ? w * 0.5 : w * 0.8) / span, hc * 0.62 / Math.max(A * 1.6, c.sensorW * 0.5));
+    const xL = x0 + (wide ? 70 : 60) * p, xS = xL + S.ds * k, hb = Math.max(A * 0.8, c.sensorW * 0.36) * k;
+    /* body and barrel (pictures only) */
+    ctx.save(); ctx.globalAlpha = 0.45; VG.box(ctx, xS - 0.2 * f * k, cy - hb - 10 * p, 0.2 * f * k + 26 * p, 2 * hb + 20 * p, { color: '#2e353f', r: 6, shadow: false }); ctx.restore();
+    ctx.fillStyle = VG.dark() ? '#3a4552' : '#4a5563'; ctx.fillRect(xL - 6 * p, cy - A / 2 * k - 12 * p, xS - 0.2 * f * k - xL + 6 * p, 6 * p); ctx.fillRect(xL - 6 * p, cy + A / 2 * k + 6 * p, xS - 0.2 * f * k - xL + 6 * p, 6 * p);
+    /* aperture blades and the lens */
+    ctx.fillStyle = '#1d232b'; ctx.fillRect(xL - 2 * p, cy - A / 2 * k - 10 * p, 4 * p, 10 * p); ctx.fillRect(xL - 2 * p, cy + A / 2 * k, 4 * p, 10 * p);
+    ctx.fillStyle = T.lensc; ctx.globalAlpha = 0.8; ctx.beginPath(); ctx.ellipse(xL, cy, 6 * p, A / 2 * k, 0, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+    txt(`lens f = ${(f * 1000).toFixed(f < 0.01 ? 2 : 0)} mm`, x0 + 8 * p, cy - A / 2 * k - 22 * p, { s: 10, b: 1 });
+    txt(`aperture f/${S.N}: ${(A * 1000).toFixed(A < 0.005 ? 2 : 1)} mm`, x0 + 8 * p, cy + A / 2 * k + 24 * p, { s: 9, c: T.muted });
+    /* rays from the object point on the axis, across the aperture */
+    const Vin = isFinite(S.dc) ? -1 / S.dc : 0, Vout = Vin + 1 / f; ctx.strokeStyle = T.ray; ctx.lineWidth = 1.4 * p;
+    for (const hp of [-1, -0.5, 0, 0.5, 1]) {
+      const y = hp * A / 2, sIn = -y * Vin, xs = x0 + 4 * p, sOut = -y * Vout, yS = y + sOut * S.ds;
+      ctx.beginPath(); ctx.moveTo(xs, cy - (y + sIn * (xs - xL) / k) * k); ctx.lineTo(xL, cy - y * k); ctx.lineTo(xS, cy - yS * k); ctx.stroke();
+      if (q.di > S.ds && q.di < S.ds * 1.3 && hp) { ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(xS, cy - yS * k); ctx.lineTo(xL + q.di * k, cy); ctx.stroke(); ctx.setLineDash([]); }
+    }
+    /* sensor and blur spot */
+    const sh = c.sensorW / 2 * k; ctx.fillStyle = '#4c6f3b'; ctx.fillRect(xS, cy - sh, 4 * p, 2 * sh); txt('sensor', xS + 8 * p, cy - sh + 8 * p, { s: 9, c: T.ink, b: 1 });
+    { const b = Math.max(q.blur * k, 2 * p); ctx.fillStyle = q.sharp ? T.np : T.pos; ctx.fillRect(xS - 2 * p, cy - b / 2, 8 * p, b); }
+    /* dimension: lens to sensor */
+    const ydim = cy + hb + (wide ? 26 : 34) * p; ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(xL, ydim); ctx.lineTo(xS, ydim); ctx.moveTo(xL, ydim - 4 * p); ctx.lineTo(xL, ydim + 4 * p); ctx.moveTo(xS, ydim - 4 * p); ctx.lineTo(xS, ydim + 4 * p); ctx.stroke();
+    txt(`d_s = ${fmtMM(S.ds)}`, (xL + xS) / 2, ydim + 12 * p, { a: 'center', s: 10, m: 1 });
+    /* the photo: what the sensor records */
+    const pw = wide ? Math.min(w * 0.36, 340 * p) : w * 0.62, ph = pw * 2 / 3, px0 = wide ? x0 + w - pw - 16 * p : x0 + (w - pw) / 2, py0 = wide ? y0 + 30 * p : y0 + hc + 22 * p;
+    const sc = sceneCanvas(Math.round(pw * dpr), Math.round(ph * dpr)), sig = q.blur / c.sensorW * pw / 2.4;
+    ctx.save(); ctx.beginPath(); ctx.rect(px0, py0, pw, ph); ctx.clip(); if (sig > 0.15) ctx.filter = `blur(${sig.toFixed(2)}px)`;
+    ctx.drawImage(sc, px0 - 2 * sig, py0 - 2 * sig, pw + 4 * sig, ph + 4 * sig); ctx.restore(); ctx.filter = 'none';
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(px0, py0, pw, ph);
+    txt('what the sensor records (reduced)', px0, py0 - 10 * p, { s: 10, c: T.muted, b: 1 });
+    /* a 1:1 crop of the star's centre: one screen pixel per sensor pixel, so blur of a few pixels shows */
+    const cw = Math.min(110 * p, pw * 0.36), cxp = px0 + pw - cw - 6 * p, cyp = py0 + ph - cw - 6 * p, Rs = 0.34 * (c.sensorW / c.pix) * 2 / 3, sg = q.px / 2.4;
+    ctx.save(); ctx.beginPath(); ctx.rect(cxp, cyp, cw, cw); ctx.clip(); ctx.fillStyle = '#f4f4f0'; ctx.fillRect(cxp, cyp, cw, cw);
+    if (sg > 0.15) ctx.filter = `blur(${Math.min(40, sg).toFixed(2)}px)`;
+    ctx.fillStyle = '#1d232b'; const ox = cxp + cw / 2, oy = cyp + cw / 2;
+    for (let i = 0; i < 18; i++) { const a0 = i * Math.PI / 9; ctx.beginPath(); ctx.moveTo(ox, oy); ctx.arc(ox, oy, Math.min(Rs, 3 * cw), a0, a0 + Math.PI / 18); ctx.closePath(); ctx.fill(); }
+    ctx.restore(); ctx.filter = 'none'; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.strokeRect(cxp, cyp, cw, cw);
+    ctx.fillStyle = 'rgba(20,24,30,0.75)'; ctx.fillRect(cxp, cyp, 50 * p, 15 * p); txt('1:1 crop', cxp + 5 * p, cyp + 8 * p, { s: 9, b: 1, c: '#ffffff' });
+    txt(`blur ${(q.blur * 1e6).toFixed(1)} µm, ${q.px.toFixed(1)} px`, px0 + pw, py0 + ph + 12 * p, { a: 'right', s: 10, m: 1, c: S.blind ? T.ink : q.sharp ? T.np : T.pos });
+  }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    if (S.mode === 'camera') {
+      const p = ps(), q = camState(), topH = Math.max(130 * p, Hh * 0.28);
+      drawScaleCam(24 * p, W - 30 * p, topH * 0.62, q);
+      ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, topH); ctx.lineTo(W, topH); ctx.stroke();
+      drawCamera(0, topH, W, Hh - topH, q);
+      if (!S.blind) txt(q.sharp ? 'sharp' : 'blurred', 12 * p, topH + 16 * p, { s: 13, b: 1, c: q.sharp ? T.np : T.pos });
+      txt('enlarged view of the camera, to scale', 12 * p, Hh - 12 * p, { s: 9, c: T.muted });
+      return;
+    }
     const p = ps(), st = state(), topH = Math.max(130 * p, Hh * 0.3);
     drawScale(24 * p, W - 30 * p, topH * 0.62, st);
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, topH); ctx.lineTo(W, topH); ctx.stroke();

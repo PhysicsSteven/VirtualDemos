@@ -96,6 +96,7 @@
     'magnetism-in-matter', 'induced-electric-field', 'induction-at-work', 'magnets-oersted', 'huygens', 'dispersion', 'the-eye',
     'induction' /* Charging by Induction, 2026-10-24 */,
     'neutral-attraction' /* Attracting a neutral insulator setup of Charging by Induction, 2026-10-24 */,
+    'camera' /* Camera mode of The Eye, 2026-10-24 */,
     'eddy-currents' /* Eddy Currents: Magnet in a Pipe, 2026-10-24 */,
     'michelson' /* Michelson Interferometer, 2026-10-24 */,
     'transformers', 'displacement-current' /* 2026-10-24 */,
@@ -189,6 +190,8 @@
     'mirrors-refraction': { demo: 'Optics Bench', cols: ['row', 'element', 'n1', 'n2', 'R_cm', 'f_cm', 'do_cm', 'di_cm', 'm', 'image', null, null] },
     /* Trial | Setup | f or objective f (cm) | Eyepiece f (cm) | Separation (cm) | dₒ (cm) | dᵢ (cm) | m | M | Image | 1/dₒ, 1/dᵢ (typed) */
     'lenses-instruments': { demo: 'Optics Bench', cols: ['row', 'setup', 'f_cm', 'f_eye_cm', 'sep_cm', 'do_cm', 'di_cm', 'm', 'M', 'image', null, null] },
+    /* Reading | Camera | N | d (cm) | d_s (mm) | Blur (µm) | Blur (pixels) | 1/d | 1/d_s | d_i (the last three are the student's) */
+    camera: { demo: 'The Eye (Camera)', cols: ['row', 'camera', 'N', 'd_cm', 'ds_mm', 'blur_um', 'blur_px', null, null, null] },
     'the-eye': { demo: 'The Eye', cols: ['row', 'eye', 'glasses_D', 'd_cm', 'seen', 'blur_mm', 'NP_cm', 'FP_cm', 'P_D', 'di_cm', 'rx_far_D', 'rx_near_D'] },
     /* Reading | Setup | λ (nm) | D (mm) | Screen distance L (m) | Cursor x (mm) | Separation Δθ (µrad) | Intensity at the cursor I/I₀ | θ₁ = x/L (µrad) | λ/D (µrad) | 1/D (1/mm) */
     resolution: { demo: 'Circular Apertures and Resolution', cols: ['row', 'setup', 'lam_nm', 'D_mm', 'L_m', 'x_mm', 'sep_urad', 'I_rel', null, null, null] },

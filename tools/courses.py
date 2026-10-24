@@ -155,7 +155,7 @@ HANDOUT_TOPIC = {
     'huygens': "Huygens's Principle",
     'dispersion': 'Dispersion',
     'mirrors-refraction': 'Mirrors and Refracting Surfaces', 'lenses-instruments': 'Lenses and Optical Instruments',
-    'the-eye': 'The Eye',
+    'the-eye': 'The Eye', 'camera': 'The Camera',
     'resolution': 'Circular Apertures and Resolution',
     'double-slit': "Young's Double Slit", 'diffraction-grating': 'Diffraction Grating', 'single-slit': 'Single Slit Diffraction',
     'thin-films': 'Thin Film Interference', 'electron-diffraction': 'Electron Diffraction and de Broglie Waves',

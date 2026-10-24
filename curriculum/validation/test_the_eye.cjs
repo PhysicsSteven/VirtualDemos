@@ -35,4 +35,13 @@ group('Example 2.9: near point 1.00 m, reading at 25 cm needs +3.24 D; image 98.
   const H = c.eyeRange(c.EYES.hyper); assert(c.eyeImage(V, c.accommodate(V, H)).blur < 1e-15);
   const O = c.eyeRange(c.EYES.older), Po = c.rxNear(2.00, 0.25), Vo = c.vergenceAtEye(0.25, Po); near(Po, 1 / 0.235 - 1 / 1.985, 1e-12); assert(c.eyeImage(Vo, c.accommodate(Vo, O)).blur < 1e-15);
 });
+const cam = core('the-eye', 'CAMERAS,camImage,camBlur,camDepth');
+group('camera: OpenStax §2.6 phone example (5.05 mm and 5.005 mm); blur zero at focus and A|1 − d_s/d_i| otherwise; depth of field limits have blur exactly c', () => {
+  const f = cam.CAMERAS.phone.f; near(cam.camImage(0.5, f) * 1000, 5.0505, 1e-4); near(cam.camImage(5, f) * 1000, 5.005, 1e-3); assert.strictEqual(cam.camImage(Infinity, f), f);
+  const L = cam.CAMERAS.slr; for (const d of [0.5, 2, Infinity]) assert(cam.camBlur(d, L.f, 2, cam.camImage(d, L.f)) < 1e-15);
+  near(cam.camBlur(0.5, f, 1.8, f), (f / 1.8) * f / cam.camImage(0.5, f) * (cam.camImage(0.5, f) / f - 1), 1e-12);
+  const c = 12e-6, ds = cam.camImage(2, L.f), dof = cam.camDepth(L.f, 8, ds, c);
+  near(cam.camBlur(dof.near, L.f, 8, ds), c, 1e-12); near(cam.camBlur(dof.far, L.f, 8, ds), c, 1e-12); assert(dof.near < 2 && dof.far > 2);
+  const hyp = cam.camDepth(L.f, 8, L.f, c); near(hyp.near, L.f * L.f / (8 * c), 1e-9); assert.strictEqual(hyp.far, Infinity);
+});
 console.log(`${n} groups passed`);

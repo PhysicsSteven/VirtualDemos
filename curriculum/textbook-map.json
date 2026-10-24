@@ -4327,10 +4327,11 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
+        "the-eye",
         "optics-bench"
       ],
       "unit": "optics",
-      "note": "Converging lens with screen illustrates camera image formation; optional lecture demo, not a complete camera laboratory."
+      "note": "The Eye, Camera mode (2026-10-24, Claude): a 50 mm lens and the textbook's 5.00 mm phone lens focused by moving the lens; blur spot on the sensor, 1:1 crop, depth of field and f-number; worksheet camera. Optics bench converging lens with screen also illustrates image formation."
     },
     {
       "vol": 3,
@@ -9636,14 +9637,20 @@
           "vol": 3,
           "sec": "2.5",
           "title": "The Eye"
+        },
+        {
+          "vol": 3,
+          "sec": "2.6",
+          "title": "The Camera"
         }
       ],
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-23 (Claude). Lecture demo: a simplified eye (thin lens, retina 1.80 cm behind it) accommodating within its range of power; near and far points of normal, nearsighted, farsighted and older eyes; glasses 1.50 cm in front of the eye and the prescriptions of Examples 2.8 and 2.9; blur spot on the retina; Blind.",
+      "note": "New 2026-10-23 (Claude). Lecture demo: a simplified eye (thin lens, retina 1.80 cm behind it) accommodating within its range of power; near and far points of normal, nearsighted, farsighted and older eyes; glasses 1.50 cm in front of the eye and the prescriptions of Examples 2.8 and 2.9; blur spot on the retina; Blind. 2026-10-24: Camera mode (50 mm lens and phone camera, focusing by lens to sensor distance, blur and depth of field) with worksheet camera.",
       "handouts": [
-        "the-eye"
+        "the-eye",
+        "camera"
       ],
       "title": "The Eye",
       "url": "demos/the-eye.html"
