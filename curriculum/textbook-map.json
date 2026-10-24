@@ -2783,7 +2783,7 @@
         "stress-strain"
       ],
       "unit": "equilibrium-elasticity",
-      "note": "Stress and Strain: tensile test of a wire, Young's modulus from a fit, yield, permanent set, fracture. Bulk and shear moduli not covered."
+      "note": "Stress and Strain: tensile test of a wire, Young's modulus from a fit, yield, permanent set, fracture (worksheet stress-strain); Shear and Bulk tests with the Table 12.1 moduli: shear modulus of blocks, bulk modulus of liquids in a piston cell and of a metal cube with a strain gauge (worksheet shear-bulk)."
     },
     {
       "vol": 1,
@@ -9523,9 +9523,10 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "Student/private instructor package written 2026-10-22; elastic fits, diameter scaling and permanent-set yield bracket. Core/reference checks passed. Fixed by Claude 2026-10-22: the fitted Y is hidden for the Mystery material as well as in Blind.",
+      "note": "Student/private instructor package written 2026-10-22; elastic fits, diameter scaling and permanent-set yield bracket. Core/reference checks passed. Fixed by Claude 2026-10-22: the fitted Y is hidden for the Mystery material as well as in Blind. 2026-10-24 (Claude): Shear and Bulk tests (OpenStax Table 12.1 moduli): a bonded 5 cm cube in a shear press with a displacement sensor, and a piston cell holding a liquid or a metal cube with a strain gauge; worksheet shear-bulk.",
       "handouts": [
-        "stress-strain"
+        "stress-strain",
+        "shear-bulk"
       ],
       "title": "Stress and Strain",
       "url": "demos/stress-strain.html"

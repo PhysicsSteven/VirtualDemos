@@ -16,7 +16,8 @@
     'gravity-near-earth', 'tides', 'gps-clocks' /* gravitation, Vol. 1 ch. 13, 2026-10-24 */,
     'relative-motion', 'apparent-weight', 'center-of-mass' /* cart launch, elevator, center of mass demos, 2026-10-24 */,
     'static-equilibrium', 'catenary', 'double-pendulum' /* Static Equilibrium, Hanging Chains and Arches, Pendulums and Chaos demos, 2026-10-24 */,
-    'vectors' /* components, sums, differences and products, Vectors demo, 2026-10-24 */];
+    'vectors' /* components, sums, differences and products, Vectors demo, 2026-10-24 */,
+    'shear-bulk' /* Shear and Bulk tests of the Stress and Strain demo, 2026-10-24 */];
   const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
@@ -46,6 +47,10 @@
     springs: { demo: 'Springs', cols: ['row', 'm_kg', 'A_m', 'T_zero_crossings_s', 'N_oscillations', 't_stopwatch_s', 'T_squared_s2'],
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.omega_drive_rad_per_s !== ''), cols: ['row', 'm_kg', 'k_N_per_m', 'b_kg_per_s', 'F0_N', 'omega_drive_rad_per_s', 'A_m', null, null] }] },
     'stress-strain': { demo: 'Stress and Strain', cols: ['row', 'd_mm', '#wire_length_m', 'm_kg', 'dL_mm', null, null] },
+    /* Shear: Reading | Block | F (kN) | Δx (µm) | F/A | Δx/L₀. Bulk series (every row a bulk test) go to the second table:
+       Reading | Sample | F (kN) | Piston Δx (mm) | Strain gauge (µε) | Δp | −ΔV/V₀ */
+    'shear-bulk': { demo: 'Stress and Strain', cols: ['row', 'sample', 'F_kN', 'shear_dx_um', null, null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.test === 'bulk'), cols: ['row', 'sample', 'F_kN', 'piston_dx_mm', 'gauge_strain_ue', null, null] }] },
     /* Force table setup of the Vectors demo. The handout's first data table is expected to have these columns in this order:
        Trial | m₁ (kg) | θ₁ (°) | m₂ (kg) | θ₂ (°) | m₃ (kg) | θ₃ (°) | m₄ (kg) | θ₄ (°) | Ring centered?  (more columns may follow). */
     'force-table': { demo: 'Vectors (Force table)', cols: ['trial', 'm1_kg', 'theta1_deg', 'm2_kg', 'theta2_deg', 'm3_kg', 'theta3_deg', 'm4_kg', 'theta4_deg', 'ring'] },
@@ -407,6 +412,8 @@
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
+  /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
+  const GRAPH_EVERY_TABLE = ['shear-bulk'];
   GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
@@ -604,7 +611,7 @@ details.about[open] > summary { margin-bottom: 8px; }
     R.removeRow = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Remove the last added row', hidden: true, on: { click: () => { dropRow(R); changed(); } } });
     const after = el('div', { class: 'ws tex2jax_ignore' }, [el('div', { class: 'ws-btns' }, [addRow, R.removeRow]),
       el('div', { class: 'ws-notes' }, [el('label', { text: R.label ? 'Settings and notes for this copy' : 'Settings and notes for this table' }), withPrint(R.notes)])]);
-    if (GRAPHS.indexOf(SLUG) >= 0 && T.index === 0) graphBox(T, R, after);
+    if (GRAPHS.indexOf(SLUG) >= 0 && (T.index === 0 || GRAPH_EVERY_TABLE.indexOf(SLUG) >= 0)) graphBox(T, R, after);
     if (existing) {
       /* the original table can go once a copy exists (when a later copy is the one to keep) */
       R.after = after;
@@ -830,7 +837,7 @@ details.about[open] > summary { margin-bottom: 8px; }
 
   /* ---------- graphs ---------- */
   addEventListener('resize', () => replot());
-  function replot() { if (GRAPHS.indexOf(SLUG) < 0 || plotFrame) return; plotFrame = requestAnimationFrame(() => { plotFrame = 0; tables[0] && tables[0].runs.forEach((R) => R.graph && drawPlot(tables[0], R)); }); }
+  function replot() { if (GRAPHS.indexOf(SLUG) < 0 || plotFrame) return; plotFrame = requestAnimationFrame(() => { plotFrame = 0; (GRAPH_EVERY_TABLE.indexOf(SLUG) >= 0 ? tables : tables.slice(0, 1)).forEach((T) => T && T.runs.forEach((R) => R.graph && drawPlot(T, R))); }); }
   function graphBox(T, R, after) {
     R.axes = { x: '', y: '' };
     const pick = (k, label) => {

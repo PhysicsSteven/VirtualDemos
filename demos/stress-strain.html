@@ -70,10 +70,10 @@ table.rows input:focus { border-color: var(--accent); }
   <header class="bar">
     <div>
       <h1>Stress and Strain</h1>
-      <p>Hang a load on a long thin wire and read how much it stretches. Stress F/A over strain ΔL/L is Young's modulus, as long as the wire springs back. Load it past its yield point and it stays longer; keep going and it breaks.</p>
+      <p id="lede">Hang a load on a long thin wire and read how much it stretches. Stress F/A over strain ΔL/L is Young's modulus, as long as the wire springs back. Load it past its yield point and it stays longer; keep going and it breaks.</p>
     </div>
     <div class="bar-right">
-      <div class="units mono">wire 2.000 m long · g = 9.81 m/s²</div>
+      <div class="units mono" id="unitsLine">wire 2.000 m long · g = 9.81 m/s²</div>
       <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
       <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/stress-strain.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/stress-strain.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM14 2h2v1h-2zM17 2h5v1h-5zM25 2h1v1h-1zM27 2h1v1h-1zM29 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM16 3h3v1h-3zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h2v1h-2zM14 4h1v1h-1zM17 4h10v1h-10zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM14 5h5v1h-5zM20 5h2v1h-2zM25 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM15 6h3v1h-3zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM16 7h3v1h-3zM20 7h3v1h-3zM24 7h1v1h-1zM28 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM13 9h3v1h-3zM17 9h7v1h-7zM25 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h4v1h-4zM14 10h2v1h-2zM17 10h1v1h-1zM20 10h2v1h-2zM23 10h3v1h-3zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h2v1h-2zM6 11h2v1h-2zM9 11h2v1h-2zM12 11h2v1h-2zM15 11h2v1h-2zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h1v1h-1zM31 11h1v1h-1zM34 11h4v1h-4zM3 12h3v1h-3zM7 12h2v1h-2zM10 12h1v1h-1zM12 12h1v1h-1zM15 12h1v1h-1zM18 12h1v1h-1zM22 12h4v1h-4zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h6v1h-6zM9 13h2v1h-2zM12 13h1v1h-1zM16 13h1v1h-1zM19 13h1v1h-1zM23 13h3v1h-3zM30 13h2v1h-2zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM10 14h3v1h-3zM14 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM3 15h1v1h-1zM7 15h1v1h-1zM9 15h2v1h-2zM12 15h2v1h-2zM16 15h4v1h-4zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM4 16h1v1h-1zM7 16h2v1h-2zM11 16h2v1h-2zM14 16h4v1h-4zM20 16h1v1h-1zM22 16h2v1h-2zM25 16h2v1h-2zM28 16h2v1h-2zM31 16h1v1h-1zM33 16h5v1h-5zM4 17h2v1h-2zM7 17h1v1h-1zM13 17h1v1h-1zM15 17h3v1h-3zM21 17h4v1h-4zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM4 18h1v1h-1zM6 18h3v1h-3zM10 18h3v1h-3zM15 18h2v1h-2zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM6 19h1v1h-1zM11 19h1v1h-1zM14 19h3v1h-3zM20 19h2v1h-2zM25 19h1v1h-1zM27 19h1v1h-1zM29 19h3v1h-3zM33 19h3v1h-3zM37 19h1v1h-1zM5 20h5v1h-5zM15 20h1v1h-1zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h6v1h-6zM3 21h1v1h-1zM5 21h1v1h-1zM9 21h1v1h-1zM12 21h1v1h-1zM16 21h4v1h-4zM21 21h3v1h-3zM26 21h1v1h-1zM28 21h1v1h-1zM30 21h2v1h-2zM36 21h2v1h-2zM2 22h1v1h-1zM4 22h2v1h-2zM7 22h2v1h-2zM10 22h2v1h-2zM14 22h3v1h-3zM19 22h1v1h-1zM22 22h5v1h-5zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h1v1h-1zM5 23h3v1h-3zM9 23h1v1h-1zM11 23h1v1h-1zM15 23h4v1h-4zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM4 24h2v1h-2zM8 24h1v1h-1zM10 24h2v1h-2zM13 24h1v1h-1zM16 24h4v1h-4zM22 24h1v1h-1zM25 24h1v1h-1zM27 24h1v1h-1zM29 24h1v1h-1zM33 24h4v1h-4zM3 25h1v1h-1zM11 25h2v1h-2zM15 25h1v1h-1zM17 25h1v1h-1zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM5 26h1v1h-1zM7 26h2v1h-2zM11 26h2v1h-2zM15 26h2v1h-2zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h1v1h-1zM5 27h1v1h-1zM7 27h1v1h-1zM9 27h1v1h-1zM11 27h1v1h-1zM15 27h2v1h-2zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h7v1h-7zM34 27h2v1h-2zM8 28h1v1h-1zM10 28h1v1h-1zM13 28h2v1h-2zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h2v1h-2zM27 28h3v1h-3zM31 28h4v1h-4zM36 28h1v1h-1zM5 29h1v1h-1zM9 29h1v1h-1zM11 29h4v1h-4zM19 29h2v1h-2zM23 29h2v1h-2zM26 29h1v1h-1zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h2v1h-2zM8 30h1v1h-1zM11 30h2v1h-2zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h3v1h-3zM10 31h3v1h-3zM14 31h3v1h-3zM18 31h3v1h-3zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h4v1h-4zM15 32h4v1h-4zM20 32h1v1h-1zM22 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM12 33h1v1h-1zM16 33h2v1h-2zM23 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM14 34h2v1h-2zM17 34h2v1h-2zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM13 35h1v1h-1zM16 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM13 36h2v1h-2zM17 36h1v1h-1zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM13 37h1v1h-1zM15 37h1v1h-1zM17 37h9v1h-9zM28 37h2v1h-2zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM12 38h1v1h-1zM16 38h1v1h-1zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
@@ -87,6 +87,7 @@ table.rows input:focus { border-color: var(--accent); }
       <div class="viewbar">
         <button type="button" class="spin" id="unload">Take all the load off</button>
         <button type="button" class="spin" id="fresh">New wire</button>
+        <button type="button" class="spin" id="release" hidden>Release the press</button>
       </div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
       </div>
@@ -95,11 +96,33 @@ table.rows input:focus { border-color: var(--accent); }
         <div class="pieces" id="addMass"></div>
         <div class="tray-foot"><button type="button" class="btn" id="takeLast">Take off the last mass</button><span class="masslist" id="massNow"></span></div>
       </div>
+      <div class="tray" id="press" role="group" aria-labelledby="pressTitle" hidden>
+        <div class="tray-title" id="pressTitle">Press force: turn the screw</div>
+        <div><div class="slider-head"><label for="sF">Force F on the load cell</label><output id="oF" for="sF"></output></div><input type="range" id="sF" min="0" max="50" step="0.5" value="0"></div>
+      </div>
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/stress-strain.html" target="stress-strain-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/stress-strain.html" target="stress-strain-worksheet">Worksheet 1: Young's Modulus</a></li><li><a href="../curriculum/labs/students/shear-bulk.html" target="shear-bulk-worksheet">Worksheet 2: Shear and Bulk Moduli</a></li></ul></details><!-- /vd-handout -->
       <section>
+        <h2>Test</h2>
+        <div class="chips" id="tests" role="group" aria-label="Test">
+          <button type="button" data-t="tension" aria-pressed="true">Tension (Young's modulus)</button>
+          <button type="button" data-t="shear" aria-pressed="false">Shear</button>
+          <button type="button" data-t="bulk" aria-pressed="false">Bulk (squeeze)</button>
+        </div>
+      </section>
+
+      <section id="sbSec" hidden>
+        <h2 id="sbHead">Block</h2>
+        <p class="tray-title" id="sbLiqHead" hidden>Liquids: in the piston cell</p>
+        <div class="chips" id="sbLiq" hidden></div>
+        <p class="tray-title" id="sbSolHead">Solids</p>
+        <div class="chips" id="sbSol"></div>
+        <p class="hint" id="sbHint"></p>
+      </section>
+
+      <section id="wireSec">
         <h2>Wire</h2>
         <div class="chips" id="mats">
           <button type="button" data-m="steel" aria-pressed="true">Mild steel</button>
@@ -112,12 +135,16 @@ table.rows input:focus { border-color: var(--accent); }
       </section>
 
       <section>
-        <h2>Load</h2>
+        <h2 id="loadHead">Load</h2>
         <dl class="readout" id="out"></dl>
-        <label class="check"><input type="checkbox" id="zoom"><span>Graph: zoom in on the elastic part</span></label>
-        <details class="more"><summary>The model and its formulas</summary>
+        <label class="check" id="zoomRow"><input type="checkbox" id="zoom"><span>Graph: zoom in on the elastic part</span></label>
+        <details class="more" id="tenMore"><summary>The model and its formulas</summary>
           <p class="hint">Hang slotted masses from the tray under the wire; up and down arrows on the picture add or take off 0.1 kg (Shift: 1 kg).</p>
           <p class="formula">stress σ = F/A · strain ε = ΔL/L · Y = σ/ε (elastic)</p>
+        </details>
+        <details class="more" id="sbMore" hidden><summary>The model and its formulas</summary>
+          <p class="hint" id="sbHow"></p>
+          <p class="formula" id="sbFormula"></p>
         </details>
       </section>
 
@@ -129,15 +156,15 @@ table.rows input:focus { border-color: var(--accent); }
           <button type="button" class="btn" id="clearRows">Clear</button>
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
-        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th>m (kg)</th><th>ΔL (mm)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
+        <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Captured readings</caption><thead><tr><th>#</th><th id="th1">m (kg)</th><th id="th2">ΔL (mm)</th><th><span class="sr">Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Capture stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire's diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).</p>
+          <p class="hint" id="capHow">Capture stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire's diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).</p>
         </details>
         <details class="plotfold"><summary>Plot and fit</summary><div class="foldbody">
-        <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Load against extension for the captured rows, with a least squares line and residuals."></canvas></div>
+        <div class="plotbox"><canvas id="fitCan" role="img" aria-label="Load against extension (or force against displacement or strain) for the captured rows, with a least squares line and residuals."></canvas></div>
         <dl class="readout" id="fitOut"></dl>
         <button type="button" class="btn" id="fitTblBtn" aria-expanded="false" aria-controls="fitWrap">Show data table</button>
-        <div class="twrap" id="fitWrap" hidden><table class="rows" id="fitTbl"><caption class="sr">Plotted points</caption><thead><tr><th>ΔL (mm)</th><th>F (N)</th><th>fit (N)</th><th>resid. (N)</th></tr></thead><tbody></tbody></table></div>
+        <div class="twrap" id="fitWrap" hidden><table class="rows" id="fitTbl"><caption class="sr">Plotted points</caption><thead><tr><th id="ft1">ΔL (mm)</th><th id="ft2">F (N)</th><th>fit (N)</th><th>resid. (N)</th></tr></thead><tbody></tbody></table></div>
         </div></details>
       </section>
 
@@ -147,6 +174,8 @@ table.rows input:focus { border-color: var(--accent); }
         <details class="more"><summary>The model and its formulas</summary>
           <p class="hint">Blind hides Young's modulus, the yield and breaking stresses, the stress and strain readouts, the material curve and Y from the fit, leaving the load, the diameter and the dial gauge. The Mystery metal is always blind about its own properties.</p>
           <p class="hint">Model: an idealized stress against strain curve: straight to the yield stress, then hardening up to the tensile strength, breaking at the fracture strain; unloading follows a line parallel to the elastic one, leaving a permanent stretch. Values are typical for each metal; real samples vary. Necking, creep and the wire's own weight are ignored.</p>
+          <p class="hint">Shear and Bulk tests: linear elastic only, with the shear and bulk moduli of OpenStax University Physics Vol. 1, Table 12.1 (approximate values; the Mystery metal is the tension test's alloy and the Mystery liquid is made up). Shear: a 5.00 cm cube bonded between two steel plates, its base held and its top plate pushed sideways; the block shears uniformly (bending and the plates' own give are ignored). Bulk: a rigid steel cell with a 4.00 cm bore; a liquid fills it 10.00 cm deep under the piston, or a 2.000 cm metal cube with a strain gauge sits in oil inside it. The pressure rise is F/A of the piston, and ΔV/V₀ = −Δp/B exactly in the model; real liquids stiffen slightly as the pressure rises, which the model leaves out. Stresses stay at or below 20 MPa, where these metals stay elastic in shear (lead is left out of the shear test because it would flow); real glass and granite are brittle and could crack near the top of that range. Squeezing from every side, as in the bulk test, does not make a metal yield.</p>
+          <p class="hint">Blind in Shear and Bulk hides the moduli, the stress and strain readouts and the material line, leaving the load cell and the displacement or strain readings.</p>
         </details>
         </div></details>
       </section>
@@ -201,6 +230,47 @@ table.rows input:focus { border-color: var(--accent); }
     rows.forEach((r, i) => { const m = cellNum(r.m); L.push([i + 1, r.m, r.d, r.dL, isFinite(m) ? +(m * G).toPrecision(6) : ''].map(csvCell).join(',')); });
     return L.join('\n') + '\n';
   }
+  /* Shear and bulk tests (2026-10-24). Moduli from OpenStax University Physics Vol. 1, Table 12.1 (approximate elastic moduli, Pa).
+     The Mystery metal is the tension test's titanium-like alloy (Y 110 GPa): S and B are chosen to go with that Y for a Poisson's ratio
+     near 0.31. The Mystery liquid is made up. Both stay hidden. */
+  const SB_MATS = {
+    aluminium: { name: 'Aluminum', S: 2.5e10, B: 7.5e10 },
+    brass: { name: 'Brass', S: 3.5e10, B: 6.0e10 },
+    copper: { name: 'Copper', S: 4.4e10, B: 14.0e10 },
+    steel: { name: 'Steel', S: 7.5e10, B: 16.0e10 },
+    lead: { name: 'Lead', S: 0.6e10, B: 4.1e10 },
+    glass: { name: 'Crown glass', S: 2.5e10, B: 5.0e10 },
+    granite: { name: 'Granite', S: 2.0e10, B: 4.5e10 },
+    mystery: { name: 'Mystery metal', S: 4.2e10, B: 10.0e10, hidden: true },
+    water: { name: 'Water', B: 0.22e10, liquid: true },
+    ethanol: { name: 'Ethanol', B: 0.09e10, liquid: true },
+    acetone: { name: 'Acetone', B: 0.07e10, liquid: true },
+    glycerin: { name: 'Glycerin', B: 0.45e10, liquid: true },
+    mercury: { name: 'Mercury', B: 2.5e10, liquid: true },
+    mysteryLiquid: { name: 'Mystery liquid', B: 0.13e10, liquid: true, hidden: true }
+  };
+  const SHEAR_SOLIDS = ['aluminium', 'brass', 'copper', 'steel', 'glass', 'granite', 'mystery'];   // no lead: it would flow at these stresses
+  const BULK_LIQUIDS = ['water', 'ethanol', 'acetone', 'glycerin', 'mercury', 'mysteryLiquid'];
+  const BULK_SOLIDS = ['aluminium', 'copper', 'steel', 'lead', 'glass', 'mystery'];
+  // shear block: a cube of edge SH_L; the top face (area SH_L²) is pushed sideways by F while the base is held
+  const SH_L = 0.05, SH_A = SH_L * SH_L, SH_FMAX = 50e3;
+  // bulk cell: bore CELL_D, liquid column CELL_H under the piston; a solid cube of edge CUBE_A with a strain gauge on one face
+  const CELL_D = 0.04, CELL_H = 0.1, CUBE_A = 0.02, CELL_A = Math.PI * CELL_D * CELL_D / 4, BULK_FMAX = 24e3;
+  const shearDx = (F, S) => F * SH_L / (S * SH_A);                       // Δx = (F/A) L / S, OpenStax eq. 12.43
+  const bulkDp = (F) => F / CELL_A;                                        // pressure rise in the cell
+  const volStrain = (F, B) => -bulkDp(F) / B;                              // ΔV/V₀ = −Δp/B, eq. 12.39 (taken as exact in the model)
+  const pistonDx = (F, B) => -CELL_H * volStrain(F, B);                    // the piston follows the liquid's volume: ΔV = −A Δx
+  const cubeStrain = (F, B) => Math.cbrt(1 + volStrain(F, B)) - 1;         // an edge of the cube: (a/a₀)³ = V/V₀
+  function sbCSV(rows, meta) {
+    const L = ['# Stress and Strain shear and bulk tests: captured readings (simulated data)', `# demo version,${meta.version}`, `# samples,${csvCell(meta.material)}`,
+      `# shear_block_edge_cm,${SH_L * 100}`, `# shear_face_area_cm2,${SH_A * 1e4}`, `# cell_bore_cm,${CELL_D * 100}`, `# cell_piston_area_cm2,${+(CELL_A * 1e4).toPrecision(6)}`,
+      `# liquid_column_cm,${CELL_H * 100}`, `# cube_edge_cm,${CUBE_A * 100}`,
+      '# model,"linear elastic; moduli from OpenStax University Physics Vol. 1 Table 12.1"',
+      '# rounding,"force to 0.01 kN, shear displacement to 0.1 um, piston to 0.001 mm, strain gauge to 0.1 microstrain"', '# noise,none',
+      'row,test,sample,F_kN,shear_dx_um,piston_dx_mm,gauge_strain_ue'];
+    rows.forEach((r, i) => L.push([i + 1, r.test, r.name, r.F, r.dx || '', r.pdx || '', r.ue || ''].map(csvCell).join(',')));
+    return L.join('\n') + '\n';
+  }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -211,7 +281,8 @@ table.rows input:focus { border-color: var(--accent); }
     aluminium: 'An aluminium alloy: Y about 70 GPa, so it stretches almost three times as much as steel under the same stress, but it breaks soon after it yields.',
     mystery: 'An unknown metal. Find its Young\'s modulus from your readings, then load it until it yields. Its properties stay hidden.'
   };
-  const S = { pieces: [], zoom: false, mat: 'steel', d: 0.5, m: 0, ep: 0, broke: false, blind: false, path: [[0, 0]], rows: [] };
+  const S = { pieces: [], zoom: false, mat: 'steel', d: 0.5, m: 0, ep: 0, broke: false, blind: false, path: [[0, 0]], rows: [],
+    test: 'tension', sbMat: { shear: 'aluminium', bulk: 'water' }, F: 0, sbRows: [] };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, H = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -248,6 +319,7 @@ table.rows input:focus { border-color: var(--accent); }
   // ---------- drawing ----------
   function draw() {
     if (!T || !W) return;
+    if (S.test !== 'tension') { drawSB(); return; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const p = ps(), q = now(), wide = W > 640, colW = wide ? Math.min(260 * p, W * 0.34) : W, colH = wide ? H : H * 0.55;
     // beam, wire, load, gauge
@@ -287,7 +359,7 @@ table.rows input:focus { border-color: var(--accent); }
     { const st = niceStep(eMax * 100 / 5); for (let v = 0; v <= eMax * 100 + 1e-9; v += st) ctx.fillText(`${f(v, st < 0.1 ? 2 : st < 1 ? 1 : 0)}%`, X(v / 100), gy1 + 4 * p); }
     ctx.fillText('strain ε = ΔL/L', (gx0 + gx1) / 2, gy1 + 18 * p);
     ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; for (let i = 0; i <= 4; i++) ctx.fillText(`${f(sMax * i / 4 / 1e6, 0)}`, gx0 - 4 * p, Y(sMax * i / 4));
-    ctx.save(); ctx.translate(14 * p, (gy0 + gy1) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillText('stress σ (MPa)', 0, 0); ctx.restore();
+    ctx.save(); ctx.translate(gx0 - 44 * p, (gy0 + gy1) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillText('stress σ (MPa)', 0, 0); ctx.restore();
     ctx.save(); ctx.beginPath(); ctx.rect(gx0, gy0, gx1 - gx0, gy1 - gy0); ctx.clip();
     if (!hidden()) {   // the material's curve
       ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 2 * p; ctx.setLineDash([6 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(Mm.sy / Mm.Y), Y(Mm.sy));
@@ -344,6 +416,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   // ---------- readouts ----------
   function readouts() {
+    if (S.test !== 'tension') { readoutsSB(); return; }
     const q = now(), Mm = M(), dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
     let h = dd('Load F = mg', `${f(S.m * G, 2)} N`) + dd('Area A = πd²/4', `${f(q.A * 1e6, 4)} mm²`) + dd('Extension ΔL (dial)', `${f(q.dL * 1000, 3)} mm`);
     if (hidden()) h += '<div class="wide"><dt>Stress, strain, Y, yield and strength</dt><dd class="ok">hidden: work them out</dd></div>';
@@ -353,42 +426,52 @@ table.rows input:focus { border-color: var(--accent); }
 
   // ---------- readings ----------
   function capStatus(m) { $('capStatus').textContent = m; }
-  $('capture').addEventListener('click', () => { if (S.broke) { capStatus('The wire has broken.'); return; } const q = now(); S.rows.push({ m: S.m.toFixed(1), d: S.d.toFixed(2), dL: (q.dL * 1000).toFixed(3), mat: S.mat, wire: S.wire }); renderRows(); capStatus(`Row ${S.rows.length} captured.`); });
-  $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); S.rows = []; renderRows(); capStatus('Readings cleared.'); });
+  $('capture').addEventListener('click', () => { if (S.test !== 'tension') { captureSB(); return; } if (S.broke) { capStatus('The wire has broken.'); return; } const q = now(); S.rows.push({ m: S.m.toFixed(1), d: S.d.toFixed(2), dL: (q.dL * 1000).toFixed(3), mat: S.mat, wire: S.wire }); renderRows(); capStatus(`Row ${S.rows.length} captured.`); });
+  $('clearRows').addEventListener('click', () => { wsSeries = Date.now(); if (S.test === 'tension') S.rows = []; else S.sbRows = []; renderRows(); capStatus('Readings cleared.'); });
   /* Export to worksheet: the readings go to the student worksheet through localStorage (same site), and the worksheet offers to put
      them in its Data table. The CSV travels with them, and is downloaded here instead if this browser blocks storage. Clear starts
      a new series, so the worksheet puts the next export in a new copy of its table. */
   let wsSeries = Date.now();
-  function toWorksheet(txt, fallback) {
+  function toWorksheet(txt, fallback, slug = 'stress-strain') {
     const cells = (l) => { const o = []; let c = '', q = false; for (let i = 0; i < l.length; i++) { const h = l[i]; if (q) { if (h === '"' && l[i + 1] === '"') { c += h; i++; } else if (h === '"') q = false; else c += h; } else if (h === '"') q = true; else if (h === ',') { o.push(c); c = ''; } else c += h; } o.push(c); return o; };
     const lines = txt.trim().split('\n'), data = lines.filter((l) => l && l[0] !== '#'), meta = {};
     lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); if (c.length > 1) meta[c[0]] = c[1]; });
     const hand = { v: 1, demo: 'stress-strain', series: wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
-      note: 'Simulated data from the Stress and Strain demo.', csv: txt, csvName: 'stress-strain-readings.csv' };
-    try { localStorage.setItem('vd-handoff:stress-strain', JSON.stringify(hand)); }
+      note: 'Simulated data from the Stress and Strain demo.', csv: txt, csvName: `${slug}-readings.csv` };
+    try { localStorage.setItem('vd-handoff:' + slug, JSON.stringify(hand)); }
     catch (_) { fallback(); capStatus('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
     const n = hand.rows.length;
     capStatus(`${n} reading${n === 1 ? '' : 's'} sent to the worksheet. `);
-    const a = document.createElement('a'); a.href = '../curriculum/labs/students/stress-strain.html'; a.target = 'stress-strain-worksheet'; a.textContent = 'Open the worksheet';
+    const a = document.createElement('a'); a.href = `../curriculum/labs/students/${slug}.html`; a.target = `${slug}-worksheet`; a.textContent = 'Open the worksheet';
     a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
   }
   $('exportCsv').addEventListener('click', () => {
+    if (S.test !== 'tension') {
+      if (!S.sbRows.length) { capStatus('No readings to export.'); return; }
+      const txt = sbCSV(S.sbRows, { version: SS_VERSION, material: [...new Set(S.sbRows.map((r) => r.name))].join('; ') });
+      toWorksheet(txt, () => { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'shear-bulk-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} }, 'shear-bulk');
+      return;
+    }
     if (!S.rows.length) { capStatus('No readings to export.'); return; }
     const mats = [...new Set(S.rows.map((r) => MATS[r.mat].name))].join('; ');
     const txt = readingsCSV(S.rows, { version: SS_VERSION, material: mats });
     toWorksheet(txt, () => { try { const u = URL.createObjectURL(new Blob([txt], { type: 'text/csv' })), a = document.createElement('a'); a.href = u; a.download = 'stress-strain-readings.csv'; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(u), 1000); } catch (_) {} });
   });
   function renderRows() {
+    if (S.test !== 'tension') { renderRowsSB(); return; }
+    $('th1').textContent = 'm (kg)'; $('th2').textContent = 'ΔL (mm)';
     const tb = $('rowsTbl').querySelector('tbody');
     tb.innerHTML = S.rows.length ? S.rows.map((r, i) => `<tr title="${MATS[r.mat].name}, d = ${r.d} mm"><td>${i + 1}</td><td><input data-i="${i}" data-f="m" value="${r.m}" aria-label="mass, row ${i + 1}"></td><td><input data-i="${i}" data-f="dL" value="${r.dL}" aria-label="extension, row ${i + 1}"></td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
       : '<tr><td class="empty" colspan="4">No readings yet. Set a load, then capture.</td></tr>';
     fit();
   }
-  $('rowsTbl').addEventListener('change', (e) => { const el = e.target; if (el.dataset.f) { S.rows[+el.dataset.i][el.dataset.f] = el.value.trim(); fit(); } });
-  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows.splice(+b.dataset.del, 1); renderRows(); } });
+  $('rowsTbl').addEventListener('change', (e) => { const el = e.target; if (el.dataset.f) { (S.test === 'tension' ? S.rows : S.sbRows)[+el.dataset.i][el.dataset.f] = el.value.trim(); fit(); } });
+  $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { (S.test === 'tension' ? S.rows : S.sbRows).splice(+b.dataset.del, 1); renderRows(); } });
   $('fitTblBtn').addEventListener('click', () => { const o = $('fitWrap').hidden; $('fitWrap').hidden = !o; $('fitTblBtn').setAttribute('aria-expanded', String(o)); $('fitTblBtn').textContent = o ? 'Hide data table' : 'Show data table'; });
   const fitCan = $('fitCan'), fctx = fitCan.getContext('2d');
   function fit() {
+    if (S.test !== 'tension') { fitSB(); return; }
+    $('ft1').textContent = 'ΔL (mm)'; $('ft2').textContent = 'F (N)';
     const rows = S.rows.filter((r) => r.wire === S.wire);
     const pts = rows.map((r) => [cellNum(r.dL), cellNum(r.m) * G]).filter(([a, b]) => isFinite(a) && isFinite(b));
     const F = pts.length >= 2 ? fitLine(pts.map((q) => q[0] / 1000), pts.map((q) => q[1])) : null;
@@ -403,21 +486,277 @@ table.rows input:focus { border-color: var(--accent); }
     $('fitTbl').querySelector('tbody').innerHTML = pts.map(([x, y], i) => `<tr><td>${x}</td><td>${y.toFixed(2)}</td><td>${F ? (F.a + F.b * x / 1000).toFixed(2) : '—'}</td><td>${F ? F.res[i].toFixed(3) : '—'}</td></tr>`).join('');
     drawFit(pts, F);
   }
-  function drawFit(pts, F) {
+  function drawFit(pts, F, lab = ['ΔL (mm)', 'F (N)'], xs = 1000) {
     const r = fitCan.getBoundingClientRect(), w = r.width, h = r.height; if (!w || !T) return;
     fitCan.width = Math.round(w * dpr); fitCan.height = Math.round(h * dpr); fctx.setTransform(dpr, 0, 0, dpr, 0, 0); fctx.fillStyle = T.canvas; fctx.fillRect(0, 0, w, h);
     const L = 40, Rr = w - 8, top = 8, mainB = h - 62, resT = h - 50, resB = h - 18;
     fctx.strokeStyle = T.line; fctx.strokeRect(L + 0.5, top + 0.5, Rr - L, mainB - top); fctx.strokeRect(L + 0.5, resT + 0.5, Rr - L, resB - resT);
-    fctx.fillStyle = T.muted; fctx.font = `10px ${T.mono}`; fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText('ΔL (mm)', (L + Rr) / 2, resB + 3);
-    fctx.save(); fctx.translate(10, (top + mainB) / 2); fctx.rotate(-Math.PI / 2); fctx.fillText('F (N)', 0, 0); fctx.restore();
+    fctx.fillStyle = T.muted; fctx.font = `10px ${T.mono}`; fctx.textAlign = 'center'; fctx.textBaseline = 'top'; fctx.fillText(lab[0], (L + Rr) / 2, resB + 3);
+    fctx.save(); fctx.translate(10, (top + mainB) / 2); fctx.rotate(-Math.PI / 2); fctx.fillText(lab[1], 0, 0); fctx.restore();
     if (!pts.length) return;
     const xh = Math.max(...pts.map((q) => q[0]), 1e-6), yh = Math.max(...pts.map((q) => q[1]), 1e-6), PX = (x) => L + (Rr - L) * x / (xh * 1.08), PY = (y) => mainB - (mainB - top) * y / (yh * 1.1);
     fctx.textAlign = 'right'; fctx.textBaseline = 'middle'; fctx.fillText(f(yh, 0), L - 3, PY(yh)); fctx.fillText('0', L - 3, PY(0));
-    if (F) { fctx.strokeStyle = T.accent; fctx.lineWidth = 1.5; fctx.beginPath(); fctx.moveTo(PX(0), PY(F.a)); fctx.lineTo(PX(xh), PY(F.a + F.b * xh / 1000)); fctx.stroke(); }
+    if (F) { fctx.strokeStyle = T.accent; fctx.lineWidth = 1.5; fctx.beginPath(); fctx.moveTo(PX(0), PY(F.a)); fctx.lineTo(PX(xh), PY(F.a + F.b * xh / xs)); fctx.stroke(); }
     fctx.fillStyle = T.s; for (const [x, y] of pts) { fctx.beginPath(); fctx.arc(PX(x), PY(y), 3.2, 0, 7); fctx.fill(); }
     if (F) { const m = Math.max(...F.res.map(Math.abs), 1e-6), RY = (v) => (resT + resB) / 2 - (resB - resT) / 2 * 0.85 * v / m; fctx.strokeStyle = T.gridStrong; fctx.beginPath(); fctx.moveTo(L, RY(0)); fctx.lineTo(Rr, RY(0)); fctx.stroke();
       fctx.fillStyle = T.s; pts.forEach(([x], i) => { fctx.beginPath(); fctx.arc(PX(x), RY(F.res[i]), 2.6, 0, 7); fctx.fill(); }); }
   }
+
+  // ---------- shear and bulk tests (2026-10-24) ----------
+  const VG = window.VDGear;
+  const EX_SH = 100, EX_LIQ = 20, EX_SOL = 1000;   // how much larger the drawing makes the shear, the liquid's squeeze and the cube's shrink
+  const SB_LEDE = {
+    tension: $('lede').textContent,
+    shear: 'Push the top of a bonded block sideways while its base is held. Shear stress F/A over shear strain Δx/L is the shear modulus S. The block leans but keeps its volume.',
+    bulk: 'Squeeze a liquid, or a metal cube in oil, from every side at once. The pressure rise Δp over the fraction of volume lost, −ΔV/V₀, is the bulk modulus B. Liquids give way far more than metals.'
+  };
+  const SB_UNITS = { tension: $('unitsLine').textContent, shear: 'block 5.00 cm cube · top face 25.00 cm²', bulk: `cell bore 4.00 cm · piston ${(CELL_A * 1e4).toFixed(2)} cm² · liquid 10.00 cm deep · cube 2.000 cm` };
+  const SB_COLOR = { aluminium: '#c3cad3', brass: '#d2ad52', copper: '#c7774a', steel: '#8d9aab', lead: '#7d8590', glass: '#b9dde6', granite: '#9b9590', mystery: '#9a93ad',
+    water: '#5aa0e0', ethanol: '#a9cfe8', acetone: '#c4dbe9', glycerin: '#e3cf8f', mercury: '#b8c0c8', mysteryLiquid: '#6fc2b0' };
+  const sbM = () => SB_MATS[S.sbMat[S.test]];
+  const sbHidden = () => S.blind || !!sbM().hidden;
+  const sbMode = () => (S.test === 'shear' ? 'shear' : sbM().liquid ? 'liquid' : 'solid');
+  const fmax = () => (S.test === 'shear' ? SH_FMAX : BULK_FMAX);
+  /* the readings as the instruments show them (rounded), and the stress and strain they stand for */
+  function sbNow() {
+    const m = sbM(), F = S.F, mode = sbMode();
+    if (mode === 'shear') { const dx = Math.round(shearDx(F, m.S) * 1e7) / 10; return { mode, F, dx, stress: F / SH_A, strain: dx * 1e-6 / SH_L, exact: shearDx(F, m.S) / SH_L }; }
+    if (mode === 'liquid') { const pdx = Math.round(pistonDx(F, m.B) * 1e6) / 1000; return { mode, F, pdx, stress: bulkDp(F), strain: pdx / 1000 / CELL_H, exact: -volStrain(F, m.B) }; }
+    const ue = Math.round(cubeStrain(F, m.B) * 1e7) / 10; return { mode, F, ue, stress: bulkDp(F), strain: -((1 + ue * 1e-6) ** 3 - 1), exact: -volStrain(F, m.B) };
+  }
+  function setForce(kN) {
+    S.F = Math.max(0, Math.min(fmax(), Math.round(kN * 2) / 2 * 1000));
+    const q = sbNow(); S.sbMax = Math.max(S.sbMax || 0, q.exact);
+    $('sF').value = S.F / 1000; $('oF').textContent = `${f(S.F / 1000, 2)} kN`; draw(); readouts();
+  }
+  function sbChips() {
+    const chip = (k) => `<button type="button" data-sb="${k}" aria-pressed="${S.sbMat[S.test] === k}">${SB_MATS[k].name}</button>`;
+    const bulk = S.test === 'bulk';
+    $('sbLiq').innerHTML = bulk ? BULK_LIQUIDS.map(chip).join('') : ''; $('sbLiq').hidden = !bulk; $('sbLiqHead').hidden = !bulk;
+    $('sbSol').innerHTML = (bulk ? BULK_SOLIDS : SHEAR_SOLIDS).map(chip).join(''); $('sbSolHead').textContent = 'Solids: a cube with a strain gauge, in oil'; $('sbSolHead').hidden = !bulk;
+    $('sbHead').textContent = bulk ? 'Sample' : 'Block';
+    const m = sbM(), mod = S.test === 'shear' ? m.S : m.B;
+    $('sbHint').textContent = m.hidden ? `${m.name}: its ${S.test === 'shear' ? 'shear' : 'bulk'} modulus stays hidden. Find it from your readings.`
+      : `${m.name}: ${S.test === 'shear' ? 'S' : 'B'} = ${f(mod / 1e9, mod < 1e10 ? 1 : 0)} GPa (OpenStax Vol. 1, Table 12.1).`;
+  }
+  function setTest(t) {
+    S.test = t; S.F = 0; S.sbMax = 0;
+    for (const b of document.querySelectorAll('#tests button')) b.setAttribute('aria-pressed', String(b.dataset.t === t));
+    const ten = t === 'tension';
+    $('tray').hidden = !ten; $('press').hidden = ten; $('wireSec').hidden = !ten; $('sbSec').hidden = ten; $('zoomRow').hidden = !ten;
+    $('tenMore').hidden = !ten; $('sbMore').hidden = ten; $('unload').hidden = !ten; $('fresh').hidden = !ten; $('release').hidden = ten;
+    $('lede').textContent = SB_LEDE[t]; $('unitsLine').textContent = SB_UNITS[t];
+    $('sF').max = fmax() / 1000;
+    if (!ten) {
+      sbChips();
+      $('sbHow').textContent = t === 'shear' ? 'Turn the screw to push the top plate sideways; the load cell reads the force and the displacement sensor reads how far the top plate moves (to 0.1 µm). Up and down arrows on the picture change the force by 0.5 kN (Shift: 5 kN).'
+        : 'The press pushes the piston into the sealed cell; the load cell reads the force. For a liquid the dial gauge reads how far the piston moves (to 0.001 mm); for a metal cube in oil the strain gauge on its face reads the change in edge length per length (to 0.1 microstrain). Up and down arrows change the force by 0.5 kN (Shift: 5 kN).';
+      $('sbFormula').textContent = t === 'shear' ? 'shear stress F/A · shear strain Δx/L · S = (F/A)/(Δx/L)' : 'Δp = F/A · ΔV/V₀ = −Δx/h₀ (liquid) or (1 + Δa/a₀)³ − 1 ≈ 3 Δa/a₀ (cube) · B = −Δp/(ΔV/V₀)';
+      $('capHow').textContent = t === 'shear' ? 'Capture stores the force and the top plate displacement for the block now in the press. The fit is a straight line of F against Δx for the rows from this block; S = slope × L / A.'
+        : 'Capture stores the force and the piston or strain gauge reading for the sample now in the cell. The fit is a straight line of F against the reading for the rows from this sample: B = slope × h₀ / A for a liquid, and B ≈ slope / (3A) per unit strain for the cube.';
+      $('sF').value = 0; $('oF').textContent = '0.00 kN'; $('pressTitle').textContent = t === 'shear' ? 'Shear press: turn the screw' : 'Press on the cell piston';
+    } else $('capHow').textContent = 'Capture stores the hanging mass and the dial gauge reading (to 0.001 mm), with the wire\'s diameter. The fit is a straight line of the load F = mg against ΔL; Y = slope × L / A. Use only loads below the yield point. The fit uses the rows from the wire now hanging; New wire starts afresh (the CSV keeps every row).';
+    resize(); readouts(); renderRows();
+  }
+  function readoutsSB() {
+    const q = sbNow(), m = sbM(), dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+    let h = dd('Force F (load cell)', `${f(q.F / 1000, 2)} kN`);
+    if (q.mode === 'shear') h += dd('Top plate moves Δx', `${f(q.dx, 1)} µm`) + dd('Top face area A', '25.00 cm²') + dd('Block height L', '5.000 cm');
+    else if (q.mode === 'liquid') h += dd('Piston moves Δx', `${f(q.pdx, 3)} mm`) + dd('Piston area A', `${f(CELL_A * 1e4, 3)} cm²`) + dd('Liquid column h₀', '10.000 cm');
+    else h += dd('Strain gauge Δa/a₀', `${f(q.ue, 1)} µε`) + dd('Piston area A', `${f(CELL_A * 1e4, 3)} cm²`) + dd('Cube edge a₀', '2.000 cm');
+    if (sbHidden()) h += '<div class="wide"><dt>Stress, strain and modulus</dt><dd class="ok">hidden: work them out</dd></div>';
+    else if (q.mode === 'shear') h += dd('Shear stress F/A', `${f(q.stress / 1e6, 3)} MPa`) + dd('Shear strain Δx/L', q.strain.toExponential(3).replace('-', '−')) + dd('Shear modulus S', `${f(m.S / 1e9, 1)} GPa`, true);
+    else h += dd('Pressure rise Δp = F/A', `${f(q.stress / 1e6, 3)} MPa`) + dd('Volume strain ΔV/V₀', (-q.strain).toExponential(3).replace('-', '−')) + dd('Bulk modulus B', `${f(m.B / 1e9, m.B < 1e10 ? 2 : 0)} GPa`, true);
+    $('out').innerHTML = h;
+  }
+  function captureSB() {
+    const q = sbNow(), k = S.sbMat[S.test];
+    S.sbRows.push({ test: S.test, key: k, name: SB_MATS[k].name, F: (q.F / 1000).toFixed(2), dx: q.dx != null ? q.dx.toFixed(1) : '', pdx: q.pdx != null ? q.pdx.toFixed(3) : '', ue: q.ue != null ? q.ue.toFixed(1) : '' });
+    renderRows(); capStatus(`Row ${S.sbRows.length} captured.`); draw();
+  }
+  const rowReading = (r) => (r.dx !== '' ? `${r.dx} µm` : r.pdx !== '' ? `${r.pdx} mm` : `${r.ue} µε`);
+  function renderRowsSB() {
+    $('th1').textContent = 'F (kN)'; $('th2').textContent = 'Reading';
+    const tb = $('rowsTbl').querySelector('tbody');
+    tb.innerHTML = S.sbRows.length ? S.sbRows.map((r, i) => `<tr title="${r.name}, ${r.test}"><td>${i + 1}</td><td>${r.F}</td><td>${rowReading(r)}</td><td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('')
+      : '<tr><td class="empty" colspan="4">No readings yet. Set a force, then capture.</td></tr>';
+    fit();
+  }
+  function fitSB() {
+    const k = S.sbMat[S.test], mode = sbMode(), rows = S.sbRows.filter((r) => r.test === S.test && r.key === k);
+    const xOf = (r) => cellNum(mode === 'shear' ? r.dx : mode === 'liquid' ? r.pdx : r.ue), xs = mode === 'liquid' ? 1000 : 1e6;
+    const pts = rows.map((r) => [mode === 'solid' ? -xOf(r) : xOf(r), cellNum(r.F) * 1000]).filter(([a, b]) => isFinite(a) && isFinite(b));
+    const Fi = pts.length >= 2 ? fitLine(pts.map((q) => q[0] / xs), pts.map((q) => q[1])) : null;
+    const xl = mode === 'shear' ? 'Δx (µm)' : mode === 'liquid' ? 'Δx (mm)' : '−Δa/a₀ (µε)';
+    $('ft1').textContent = xl; $('ft2').textContent = 'F (N)';
+    let h;
+    if (!Fi) h = `<div class="wide"><dt>Fit</dt><dd class="ok">Capture at least two rows with ${SB_MATS[k].name} in the ${S.test === 'shear' ? 'press' : 'cell'}. The fit uses only rows from the sample now loaded.</dd></div>`;
+    else {
+      const mod = mode === 'shear' ? Fi.b * SH_L / SH_A : mode === 'liquid' ? Fi.b * CELL_H / CELL_A : Fi.b / (3 * CELL_A), se = mod * Fi.seB / Fi.b;
+      const sl = mode === 'shear' ? `${f(Fi.b / 1e6, 2)}${isFinite(Fi.seB) ? ` ± ${f(Fi.seB / 1e6, 2)}` : ''} N/µm` : mode === 'liquid' ? `${f(Fi.b / 1000, 2)}${isFinite(Fi.seB) ? ` ± ${f(Fi.seB / 1000, 2)}` : ''} N/mm` : `${f(Fi.b / 1e6, 2)}${isFinite(Fi.seB) ? ` ± ${f(Fi.seB / 1e6, 2)}` : ''} N/µε`;
+      const name = mode === 'shear' ? 'S = slope × L / A' : mode === 'liquid' ? 'B = slope × h₀ / A' : 'B ≈ slope / (3A)';
+      h = `<div><dt>Slope</dt><dd>${sl}</dd></div><div><dt>Intercept</dt><dd>${f(Fi.a, 1)} N</dd></div>`;
+      h += sbHidden() ? `<div class="wide"><dt>${name}</dt><dd class="ok">hidden: work it out</dd></div>` : `<div class="wide"><dt>${name}</dt><dd>${f(mod / 1e9, mod < 1e10 ? 3 : 1)}${isFinite(se) ? ` ± ${f(se / 1e9, mod < 1e10 ? 3 : 1)}` : ''} GPa</dd></div>`;
+    }
+    $('fitOut').innerHTML = h;
+    $('fitTbl').querySelector('tbody').innerHTML = pts.map(([x, y], i) => `<tr><td>${x}</td><td>${y.toFixed(0)}</td><td>${Fi ? (Fi.a + Fi.b * x / xs).toFixed(1) : '—'}</td><td>${Fi ? Fi.res[i].toFixed(2) : '—'}</td></tr>`).join('');
+    drawFit(pts, Fi, [xl, 'F (N)'], xs);
+  }
+
+  /* drawing: the press and the sample on a bench on the left (or top), stress against strain on the right (or below) */
+  function drawSB() {
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const p = ps(), wide = W > 640, colW = wide ? Math.min(W * 0.52, 520 * p) : W, colH = wide ? H : H * 0.6, q = sbNow(), mode = q.mode, m = sbM();
+    $('press').style.width = wide ? `${colW - 20}px` : '';
+    const trayH = getComputedStyle($('press')).position === 'absolute' ? $('press').offsetHeight + 16 : 0;
+    // wall and floor as in the tension test, then a bench
+    const fy = colH - 10 * p; ctx.fillStyle = T.wall; ctx.fillRect(0, 0, wide ? colW : W, fy);
+    ctx.strokeStyle = T.wallLine; ctx.lineWidth = 1; const kw = 56 * p, kh = 28 * p, ww = wide ? colW : W;
+    for (let r = 0, y = fy - kh; y > -kh; y -= kh, r++) { ctx.beginPath(); ctx.moveTo(0, Math.round(y) + 0.5); ctx.lineTo(ww, Math.round(y) + 0.5); for (let x = (r % 2) * kw / 2; x < ww; x += kw) { ctx.moveTo(Math.round(x) + 0.5, y); ctx.lineTo(Math.round(x) + 0.5, y + kh); } ctx.stroke(); }
+    ctx.fillStyle = T.floor; ctx.fillRect(0, fy, ww, colH - fy);
+    const by = colH - trayH - 34 * p, cx = ww / 2;
+    VG.bench(ctx, 6 * p, by, ww - 12 * p, 16 * p, 18 * p);
+    if (mode === 'shear') drawShear(p, cx, by, ww, q, m); else drawCell(p, cx, by, ww, q, m, mode);
+    // readings strip at the top left
+    ctx.fillStyle = T.ink; ctx.font = `700 ${16 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    const ry = (wide ? 44 : 56) * p; ctx.fillText(`F = ${f(q.F / 1000, 2)} kN   ` + (mode === 'shear' ? `Δx = ${f(q.dx, 1)} µm` : mode === 'liquid' ? `Δx = ${f(q.pdx, 3)} mm` : `Δa/a₀ = ${f(q.ue, 1)} µε`), 12 * p, ry);
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.ui}`;
+    ctx.fillText(mode === 'shear' ? `load cell 0.01 kN · displacement sensor 0.1 µm · lean drawn ${EX_SH} times larger` : mode === 'liquid' ? `load cell 0.01 kN · dial gauge 0.001 mm · squeeze drawn ${EX_LIQ} times larger` : `load cell 0.01 kN · strain gauge 0.1 µε · shrink drawn ${EX_SOL} times larger`, 12 * p, ry + 22 * p);
+    sbGraph(p, wide, colW, colH, q, m);
+  }
+  function arrow(x0, y0, x1, y1, col, w) {
+    const L = Math.hypot(x1 - x0, y1 - y0); if (L < 2) return; const ux = (x1 - x0) / L, uy = (y1 - y0) / L, hd = Math.min(L * 0.5, w * 3.4);
+    ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x1 - ux * hd * 0.8, y1 - uy * hd * 0.8); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x1 - ux * hd - uy * hd * 0.55, y1 - uy * hd + ux * hd * 0.55); ctx.lineTo(x1 - ux * hd + uy * hd * 0.55, y1 - uy * hd - ux * hd * 0.55); ctx.closePath(); ctx.fill();
+  }
+  function texture(k, x0, y0, w, h) {   // speckles for granite, a sheen for glass
+    if (k === 'granite') { let sd = 7; const rnd = () => ((sd = (sd * 16807) % 2147483647) / 2147483647); for (let i = 0; i < 90; i++) { ctx.fillStyle = ['#3d3a38', '#e8e2da', '#b47b62'][i % 3]; ctx.globalAlpha = 0.55; ctx.fillRect(x0 + rnd() * w, y0 + rnd() * h, 2.2, 2.2); } ctx.globalAlpha = 1; }
+  }
+  function drawShear(p, cx, by, ww, q, m) {
+    const k = S.sbMat.shear, bs = Math.max(70 * p, Math.min(ww * 0.4, (by - 170 * p) * 0.72)), pl = 12 * p;
+    const sx = (q.dx * 1e-6) * EX_SH * bs / SH_L, x0 = cx - bs / 2 + 10 * p, yb = by - pl, yt = yb - bs;
+    // base plate bolted to the bench, with a stop on its right that holds the block's base
+    VG.box(ctx, x0 - 34 * p, yb, bs + 88 * p, pl, { color: '#6b7684', r: 2 });
+    for (const bx of [x0 - 24 * p, x0 + bs + 44 * p]) VG.screw(ctx, bx, yb + pl / 2, 3.2 * p);
+    VG.box(ctx, x0 + bs, yb - 18 * p, 14 * p, 18 * p, { color: '#56616d', r: 2, shadow: false });
+    // the block: a parallelogram, with a grid that shows each small square turning into a rhombus
+    const P = (u, v) => [x0 + u * bs + v * sx, yb - v * bs];
+    ctx.save(); ctx.beginPath(); ctx.moveTo(...P(0, 0)); ctx.lineTo(...P(1, 0)); ctx.lineTo(...P(1, 1)); ctx.lineTo(...P(0, 1)); ctx.closePath();
+    ctx.fillStyle = SB_COLOR[k]; ctx.globalAlpha = k === 'glass' ? 0.75 : 1; ctx.fill(); ctx.globalAlpha = 1; ctx.clip();
+    const sh = ctx.createLinearGradient(x0, yt, x0 + bs, yb); sh.addColorStop(0, 'rgba(255,255,255,0.35)'); sh.addColorStop(0.5, 'rgba(255,255,255,0)'); sh.addColorStop(1, 'rgba(0,0,0,0.22)'); ctx.fillStyle = sh; ctx.fillRect(x0 - bs, yt - 5, bs * 3, bs + 10);
+    texture(k, x0 - 2, yt, bs + Math.abs(sx) + 4, bs);
+    ctx.strokeStyle = 'rgba(0,0,0,0.28)'; ctx.lineWidth = 1;
+    for (let i = 1; i < 5; i++) { ctx.beginPath(); ctx.moveTo(...P(i / 5, 0)); ctx.lineTo(...P(i / 5, 1)); ctx.moveTo(...P(0, i / 5)); ctx.lineTo(...P(1, i / 5)); ctx.stroke(); }
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(0,0,0,0.5)'; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.moveTo(...P(0, 0)); ctx.lineTo(...P(1, 0)); ctx.lineTo(...P(1, 1)); ctx.lineTo(...P(0, 1)); ctx.closePath(); ctx.stroke();
+    // the original outline, dashed, so the lean shows against it
+    ctx.setLineDash([4 * p, 3 * p]); ctx.strokeStyle = T.muted; ctx.strokeRect(x0, yt, bs, bs); ctx.setLineDash([]);
+    // top plate riding on the block
+    VG.box(ctx, x0 - 6 * p + sx, yt - pl, bs + 12 * p, pl, { color: '#6b7684', r: 2, shadow: false });
+    // the screw jack on the left: a post, a load cell and a screw with a handwheel
+    const jy = yt - pl / 2, lcW = 34 * p, postX = Math.max(14 * p, x0 - 120 * p);
+    VG.box(ctx, postX - 8 * p, jy - 16 * p, 16 * p, by - jy + 16 * p, { color: '#4b5562', r: 2 });
+    VG.rod(ctx, postX + 8 * p, jy, x0 - 6 * p + sx - lcW, jy, 3.5 * p, { color: '#b8c0ca' });
+    VG.box(ctx, x0 - 6 * p + sx - lcW, jy - 11 * p, lcW, 22 * p, { color: '#2f6fb0', r: 3, shadow: false });
+    VG.plate(ctx, 'load cell', x0 - 6 * p + sx - lcW / 2, jy + 16 * p, { s: 7 * p, c: T.muted });
+    ctx.fillStyle = '#4b5562'; ctx.beginPath(); ctx.ellipse(postX - 12 * p, jy, 4 * p, 15 * p, 0, 0, 7); ctx.fill();
+    VG.lcd(ctx, postX - 10 * p, jy - 58 * p, 86 * p, 22 * p, `${f(q.F / 1000, 2)} kN`);
+    // displacement sensor on the right, its probe on the top plate
+    const sxp = x0 + bs + 6 * p + sx, ex = Math.min(ww - 30 * p, x0 + bs + 110 * p);
+    VG.box(ctx, ex - 4 * p, jy - 14 * p, 12 * p, by - jy + 14 * p, { color: '#4b5562', r: 2 });
+    VG.box(ctx, ex - 40 * p, jy - 7 * p, 36 * p, 14 * p, { color: '#39424d', r: 3, shadow: false });
+    VG.rod(ctx, sxp, jy, ex - 40 * p, jy, 1.8 * p, { color: '#d9dee5' });
+    VG.lcd(ctx, ex - 82 * p, jy - 58 * p, 94 * p, 22 * p, `${f(q.dx, 1)} µm`);
+    VG.label(ctx, ww > 480 ? 'displacement sensor' : 'sensor', ex - 22 * p, jy + 16 * p, { a: 'center', s: 9.5 * p });
+    // forces: F on the top plate, and the equal and opposite push of the stop on the base
+    if (q.F > 0) { const aL = 18 * p + 46 * p * q.F / SH_FMAX; arrow(x0 + bs * 0.2 + sx, yt - pl - 12 * p, x0 + bs * 0.2 + sx + aL, yt - pl - 12 * p, T.pl, 3 * p); arrow(x0 + bs * 0.8, yb + pl + 12 * p, x0 + bs * 0.8 - aL, yb + pl + 12 * p, T.pl, 3 * p);
+      VG.label(ctx, 'F', x0 + bs * 0.2 + sx + aL + 6 * p, yt - pl - 12 * p, { c: T.pl, w: 700, s: 12 * p }); VG.label(ctx, '−F', x0 + bs * 0.8 - aL - 18 * p, yb + pl + 12 * p, { c: T.pl, w: 700, s: 12 * p }); }
+    VG.label(ctx, `L = 5.00 cm`, x0 - 8 * p, yb - bs / 2, { a: 'right', s: 10 * p });
+    VG.label(ctx, m.hidden ? '?' : m.name, x0 + bs / 2 + sx / 2, yb - bs / 2, { a: 'center', s: 11 * p, w: 700, c: '#1d2733' });
+  }
+  function drawCell(p, cx, by, ww, q, m, mode) {
+    const k = S.sbMat.bulk, liquid = mode === 'liquid', bw = Math.max(60 * p, Math.min(ww * 0.24, 120 * p)), wt = bw * 0.42, ow = bw + 2 * wt;
+    const crossY = Math.max((ww > 480 ? 104 : 122) * p, by - Math.min(330 * p, (by - 190 * p) * 0.85) - 110 * p), cellTop = Math.max(crossY + 92 * p, by - Math.min(330 * p, (by - 190 * p) * 0.85)), bot = by - 14 * p, colTop0 = cellTop + (bot - cellTop) * 0.22, hcol = bot - colTop0;
+    const squeeze = liquid ? (q.pdx / 1000 / CELL_H) * EX_LIQ : 0, pistY = colTop0 + hcol * squeeze;
+    const xL = cx - ow / 2, xi = cx - bw / 2;
+    // press frame: two columns and a crosshead
+    for (const px of [xL - 26 * p, xL + ow + 14 * p]) VG.rod(ctx, px + 6 * p, by, px + 6 * p, crossY, 6 * p, { color: '#9aa4b0' });
+    VG.box(ctx, xL - 40 * p, crossY - 22 * p, ow + 80 * p, 22 * p, { color: '#4b5562', r: 3 });
+    VG.box(ctx, cx - 18 * p, crossY, 36 * p, 18 * p, { color: '#39424d', r: 2, shadow: false });
+    // cell body (cut away to show the bore)
+    VG.box(ctx, xL, cellTop, ow, bot - cellTop + 14 * p, { color: '#5d6875', r: 4 });
+    const fill = liquid ? SB_COLOR[k] : '#d8b866';
+    ctx.fillStyle = T.canvas; ctx.fillRect(xi, cellTop, bw, bot - cellTop);
+    ctx.save(); ctx.globalAlpha = liquid ? (k === 'mercury' ? 0.95 : 0.7) : 0.45; ctx.fillStyle = fill; ctx.fillRect(xi, pistY, bw, bot - pistY); ctx.restore();
+    if (liquid) {   // molecules, evenly spread through the column: they crowd together as it is squeezed
+      ctx.fillStyle = k === 'mercury' ? 'rgba(60,66,74,0.55)' : 'rgba(20,50,90,0.35)'; let sd = 3; const rnd = () => ((sd = (sd * 16807) % 2147483647) / 2147483647);
+      for (let i = 0; i < 70; i++) { const u = rnd(), v = rnd(); ctx.beginPath(); ctx.arc(xi + 4 * p + u * (bw - 8 * p), pistY + 3 * p + v * (bot - pistY - 6 * p), 1.7 * p, 0, 7); ctx.fill(); }
+    } else {   // the metal cube in oil, with its strain gauge, and the pressure pressing on each face
+      const a0 = bw * 0.62, a = a0 * (1 + (q.ue * 1e-6) * EX_SOL), ccx = cx, ccy = bot - a0 / 2 - 8 * p;
+      VG.box(ctx, ccx - a / 2, ccy - a / 2, a, a, { color: SB_COLOR[k], r: 1.5, shadow: false });
+      ctx.setLineDash([3 * p, 2 * p]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.strokeRect(ccx - a0 / 2, ccy - a0 / 2, a0, a0); ctx.setLineDash([]);
+      ctx.strokeStyle = '#c0392b'; ctx.lineWidth = 1.1 * p; ctx.beginPath(); for (let i = 0; i <= 6; i++) { const yy = ccy - a * 0.18 + i * a * 0.06; ctx.moveTo(ccx - a * 0.18, yy); ctx.lineTo(ccx + a * 0.18, yy); } ctx.stroke();
+      VG.cable(ctx, ccx + a * 0.18, ccy - a * 0.18, xi + bw + wt + 30 * p, colTop0 + 6 * p, -18 * p, { w: 1.4 * p, color: '#a33' });
+      if (q.F > 0) { const aL = 6 * p + 16 * p * q.F / BULK_FMAX; for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) { const ex = ccx + dx * (a / 2 + 2 * p), ey = ccy + dy * (a / 2 + 2 * p); arrow(ex + dx * aL, ey + dy * aL, ex, ey, T.pl, 2 * p); } }
+      // strain indicator on the bench
+      const sx0 = Math.min(ww - 110 * p, xL + ow + 40 * p);
+      VG.box(ctx, sx0, by - 48 * p, 100 * p, 48 * p, { color: '#2e353f', r: 5 });
+      VG.lcd(ctx, sx0 + 6 * p, by - 42 * p, 88 * p, 22 * p, `${f(q.ue, 1)} µε`);
+      VG.plate(ctx, 'strain indicator', sx0 + 50 * p, by - 10 * p, { s: 7 * p });
+      VG.cable(ctx, xi + bw + wt + 30 * p, colTop0 + 6 * p, sx0 + 4 * p, by - 30 * p, 30 * p, { w: 1.6 * p, color: '#a33' });
+      VG.label(ctx, m.hidden ? '?' : m.name, ccx, ccy - a0 / 2 - 22 * p, { a: 'center', bl: 'bottom', s: 10 * p, w: 700, c: '#1d2733' });
+    }
+    // piston and rod up to the load cell under the crosshead
+    VG.box(ctx, xi + 1, pistY - 16 * p, bw - 2, 16 * p, { color: '#8b96a3', r: 2, shadow: false });
+    VG.rod(ctx, cx, pistY - 16 * p, cx, crossY + 48 * p, 7 * p, { color: '#b8c0ca' });
+    VG.box(ctx, cx - 20 * p, crossY + 18 * p, 40 * p, 30 * p, { color: '#2f6fb0', r: 3, shadow: false });
+    const lx = Math.max(4 * p, xL - 96 * p); VG.lcd(ctx, lx, crossY + 22 * p, 82 * p, 22 * p, `${f(q.F / 1000, 2)} kN`);
+    VG.label(ctx, 'load cell', lx + 41 * p, crossY + 54 * p, { a: 'center', s: 9.5 * p });
+    // pressure arrows on the bore walls (the liquid or oil pushes outward everywhere)
+    if (q.F > 0) { const aL = 4 * p + 12 * p * q.F / BULK_FMAX; for (let i = 1; i <= 3; i++) { const yy = pistY + (bot - pistY) * i / 4; arrow(xi + 6 * p, yy, xi + 6 * p - aL, yy, T.pl, 1.6 * p); arrow(xi + bw - 6 * p, yy, xi + bw - 6 * p + aL, yy, T.pl, 1.6 * p); } }
+    if (liquid) {   // dial gauge on the right column, its plunger on a collar of the piston rod
+      const gx = Math.min(ww - 52 * p, xL + ow + 64 * p), gy = crossY + 70 * p, collarY = pistY - 40 * p;
+      VG.rod(ctx, cx, collarY, gx, collarY, 2 * p, { color: '#9aa4b0' });
+      VG.rod(ctx, gx, gy + 18 * p, gx, collarY, 1.6 * p, { color: '#e3e7ec' });
+      ctx.fillStyle = T.metal; ctx.beginPath(); ctx.arc(gx, gy, 20 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.gaugeFace; ctx.beginPath(); ctx.arc(gx, gy, 17 * p, 0, 7); ctx.fill();
+      const am = -Math.PI / 2 + 2 * Math.PI * (q.pdx % 1); ctx.strokeStyle = T.needle; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(gx, gy); ctx.lineTo(gx + 15 * p * Math.cos(am), gy + 15 * p * Math.sin(am)); ctx.stroke();
+      VG.lcd(ctx, gx - 46 * p, gy - 50 * p, 92 * p, 22 * p, `${f(q.pdx, 3)} mm`);
+      if (ww > 480) VG.label(ctx, 'h₀ = 10.00 cm', xi - wt - 6 * p, (colTop0 + bot) / 2, { a: 'right', s: 10 * p });
+    }
+    VG.label(ctx, liquid ? (m.hidden ? 'mystery liquid' : m.name) : 'oil', cx, pistY + 6 * p, { a: 'center', bl: 'top', s: 10 * p, w: 700, c: '#1d2733' });
+  }
+  function sbGraph(p, wide, colW, colH, q, m) {
+    const gx0 = wide ? colW + 58 * p : 58 * p, gx1 = W - 16 * p, gy0 = wide ? 64 * p : colH + 30 * p, gy1 = H - 40 * p, mode = q.mode;
+    const mod = mode === 'shear' ? m.S : m.B, sMax = 22e6;
+    const eFull = fmax() / (mode === 'shear' ? SH_A : CELL_A) / mod, eMax = sbHidden() ? Math.max((S.sbMax || 0) * 1.25, 1e-6) : eFull * 1.12;
+    const pw = Math.floor(Math.log10(eMax)), sc = 10 ** -pw;
+    const X = (e) => gx0 + (gx1 - gx0) * e / eMax, Y = (s) => gy1 - (gy1 - gy0) * s / sMax;
+    ctx.fillStyle = T.canvas; ctx.fillRect(gx0, gy0, gx1 - gx0, gy1 - gy0); ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(gx0 + 0.5, gy0 + 0.5, gx1 - gx0, gy1 - gy0);
+    ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    { const st = niceStep(eMax * sc / 5); for (let v = 0; v <= eMax * sc + 1e-12; v += st) ctx.fillText(f(v, st < 0.1 ? 2 : st < 1 ? 1 : 0), X(v / sc), gy1 + 4 * p); }
+    const sup = String(pw).replace('-', '⁻').replace(/\d/g, (d) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[d]);
+    ctx.fillText(`${mode === 'shear' ? 'shear strain Δx/L' : 'volume strain −ΔV/V₀'} (× 10${sup})`, (gx0 + gx1) / 2, gy1 + 18 * p);
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; for (let v = 0; v <= 20; v += 5) ctx.fillText(String(v), gx0 - 4 * p, Y(v * 1e6));
+    ctx.save(); ctx.translate(gx0 - 44 * p, (gy0 + gy1) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.fillText(mode === 'shear' ? 'shear stress F/A (MPa)' : 'pressure rise Δp (MPa)', 0, 0); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(gx0, gy0, gx1 - gx0, gy1 - gy0); ctx.clip();
+    if (!sbHidden()) { ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 2 * p; ctx.setLineDash([6 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(sMax / mod), Y(sMax)); ctx.stroke(); ctx.setLineDash([]);
+      ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.fillText(`slope = ${mode === 'shear' ? 'S' : 'B'}`, X(eFull * 0.55) + 8 * p, Y(eFull * 0.55 * mod)); }
+    // captured rows of this sample, then the loading line to where it is now
+    const kk = S.sbMat[S.test];
+    for (const r of S.sbRows.filter((r) => r.test === S.test && r.key === kk)) {
+      const F = cellNum(r.F) * 1000, st = F / (mode === 'shear' ? SH_A : CELL_A), e = mode === 'shear' ? cellNum(r.dx) * 1e-6 / SH_L : mode === 'liquid' ? cellNum(r.pdx) / 1000 / CELL_H : -((1 + cellNum(r.ue) * 1e-6) ** 3 - 1);
+      ctx.strokeStyle = T.s; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(X(e), Y(st), 5 * p, 0, 7); ctx.stroke();
+    }
+    ctx.strokeStyle = T.s; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(X(0), Y(0)); ctx.lineTo(X(q.exact), Y(q.stress)); ctx.stroke();
+    ctx.fillStyle = T.s; ctx.beginPath(); ctx.arc(X(q.exact), Y(q.stress), 5 * p, 0, 7); ctx.fill();
+    ctx.restore();
+  }
+  for (const b of document.querySelectorAll('#tests button')) b.addEventListener('click', () => setTest(b.dataset.t));
+  $('sbSec').addEventListener('click', (e) => { const b = e.target.closest('[data-sb]'); if (!b) return; S.sbMat[S.test] = b.dataset.sb; S.F = 0; S.sbMax = 0; sbChips(); setForce(0); fit(); });
+  $('sF').addEventListener('input', (e) => setForce(+e.target.value));
+  $('release').addEventListener('click', () => setForce(0));
+  window.__ss = { setTest, setForce, mat: (k) => { S.sbMat[S.test] = k; S.F = 0; S.sbMax = 0; sbChips(); setForce(0); fit(); }, now: sbNow, get S() { return S; } };
 
   // ---------- controls and boot ----------
   for (const b of document.querySelectorAll('#mats button')) b.addEventListener('click', () => { S.mat = b.dataset.m; newWire(); fit(); });
@@ -430,7 +769,8 @@ table.rows input:focus { border-color: var(--accent); }
   $('unload').addEventListener('click', () => { S.pieces = []; setLoad(0); });
   $('fresh').addEventListener('click', () => { newWire(); fit(); });
   $('zoom').addEventListener('change', (e) => { S.zoom = e.target.checked; draw(); });
-  can.addEventListener('keydown', (e) => { if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { { const was = S.m; setLoad(Math.round((S.m + (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 1 : 0.1)) * 10) / 10); const d = Math.round((S.m - was) * 10) / 10; if (d > 0) S.pieces.push(d); else if (d < 0) S.pieces = []; sync(); } e.preventDefault(); } });
+  can.addEventListener('keydown', (e) => { if (S.test !== 'tension' && (e.key === 'ArrowUp' || e.key === 'ArrowDown')) { setForce(S.F / 1000 + (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 5 : 0.5)); e.preventDefault(); return; }
+    if (e.key === 'ArrowUp' || e.key === 'ArrowDown') { { const was = S.m; setLoad(Math.round((S.m + (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 1 : 0.1)) * 10) / 10); const d = Math.round((S.m - was) * 10) / 10; if (d > 0) S.pieces.push(d); else if (d < 0) S.pieces = []; sync(); } e.preventDefault(); } });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); fit(); });
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); fit(); }
   const retheme = () => { tokens(); draw(); fit(); };
