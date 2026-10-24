@@ -7019,9 +7019,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Dedicated modern lab manual alignment paused.",
+      "note": "Interactive worksheet e-over-m (2026-10-24, Claude): Export to worksheet sends the meter and pointer readings only (radii converted from cm to mm); key from a seeded run in TeacherKeys.",
       "title": "e/m of the Electron",
-      "url": "demos/e-over-m.html"
+      "url": "demos/e-over-m.html",
+      "handouts": [
+        "e-over-m"
+      ]
     },
     {
       "demo": "early-universe",

@@ -1,5 +1,7 @@
 # Charge to Mass Ratio of the Electron
-Student laboratory · modern physics
+Student laboratory · Modern Physics
+
+Textbook: OpenStax *University Physics*, Vol. 2, §§11.3 and 11.7. Access for free at https://openstax.org/details/books/university-physics-volume-2.
 
 [Open the virtual e/m apparatus](https://physicssteven.github.io/VirtualDemos/demos/e-over-m.html)
 
@@ -55,17 +57,17 @@ The accelerating voltage is high enough to hurt you. Make and change connections
 
 **Take data.** Record $$U$$ from the voltmeter, $$I$$ from the ammeter and both radius readings. Then change the voltage or the current and repeat. Take at least five settings, spread out as far as the tube allows (the whole circle must stay inside the bulb). Settings from 100 V at 1.0 A to 120 V at 1.4 A work well.
 
-**Using the virtual apparatus.** The virtual apparatus models the same coils and tube. Write down the **Instrument seed** and turn on **Blind**. Click **Clear** to empty the table. Set the voltage and current with the sliders or the knobs, but record the values the meters show. To read a side, drag **Your eye, left or right** until the beam and its reflection line up, then drag pointer L (or R) onto the beam; **Zoom left** and **Zoom right** help. Click **Capture reading** for each setting and **Export CSV** at the end. The virtual scale reads in cm and the voltage is labelled V; convert to the units of the table.
+**Using the virtual apparatus.** The virtual apparatus models the same coils and tube, with simulated meter jitter and beam flicker fixed by an instrument seed. Note the seed and hide the accepted value and the true radius (Blind) before you start. Set the voltage and current, and record the values the meters show, not the settings. To read a side, move your eye until the beam covers its own reflection, then set the pointer for that side on the beam; zoom in on each side to read it closely. Capture a reading at each setting. When you have finished, send the readings to the worksheet: they fill the voltage, current and two radius columns of the Data table (the virtual scale reads in cm and is converted to mm), and the other columns are yours. The demo also works out $$e/m$$ for each reading and fits a line; do your own calculation and fit first, then compare.
 
 ## Data
 
-| Trial | $$U$$ (V) | $$I$$ (A) | $$r$$ left (mm) | $$r$$ right (mm) | $$r$$ (mm) | $$B$$ (mT) | $$e/m$$ (C/kg) | % error |
-|---|---|---|---|---|---|---|---|---|
-| 1 | | | | | | | | |
-| 2 | | | | | | | | |
-| 3 | | | | | | | | |
-| 4 | | | | | | | | |
-| 5 | | | | | | | | |
+| Trial | $$U$$ (V) | $$I$$ (A) | $$r$$ left (mm) | $$r$$ right (mm) | $$r$$ (mm) | $$B$$ (mT) | $$e/m$$ (C/kg) | % error | $$B^2r^2$$ ($$10^{-9}$$ T²m²) | $$2U$$ (V) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | | |
+| | | | | | | | | | | |
+| | | | | | | | | | | |
+| | | | | | | | | | | |
+| | | | | | | | | | | |
 
 ## Analysis
 

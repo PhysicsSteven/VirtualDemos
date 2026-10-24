@@ -167,6 +167,7 @@ table.rows tr.sim td.n { color: var(--equi); }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/e-over-m.html" target="e-over-m-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -245,9 +246,11 @@ table.rows tr.sim td.n { color: var(--equi); }
         <h2>Readings</h2>
         <div class="btnrow">
           <button type="button" class="btn primary" id="capture">Capture reading</button>
+          <button type="button" class="btn" id="expWs">Export to worksheet</button>
           <button type="button" class="btn" id="expTab">Export CSV</button>
           <button type="button" class="btn" id="clearTab">Clear</button>
         </div>
+        <p class="hint" id="wsStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="tbl"><thead><tr><th>#</th><th>V</th><th>I (A)</th><th>r L cm</th><th>r R cm</th><th>e/m</th><th><span hidden>Delete</span></th></tr></thead><tbody></tbody></table></div>
         <details class="more"><summary>More about this</summary>
           <p class="hint">Capture stores the meter readings and your two pointer readings, never the true radius. You can edit them. e/m is per row in 10¹¹ C/kg with r = (r L + r R)/2. Rows marked with an asterisk were filled by the procedure (simulated readings).</p>
@@ -1036,7 +1039,30 @@ table.rows tr.sim td.n { color: var(--equi); }
   $('resetView').addEventListener('click', resetView);
   $('capture').addEventListener('click', capture);
   $('expTab').addEventListener('click', () => download(`e-over-m-readings-seed${S.seed}.csv`, csvTable()));
-  $('clearTab').addEventListener('click', () => { S.rows = []; renderTable(); });
+  $('clearTab').addEventListener('click', () => { if (S.rows.length) WS.series++; S.rows = []; renderTable(); $('wsStatus').textContent = ''; });
+  /* Export to worksheet (worksheet e-over-m): the meter readings and the two pointer readings only, as captured or edited; nothing
+     computed from them. Each Clear starts a new series, which goes into a new copy of the Data table. */
+  const WS = { series: 1 };
+  function wsCsv() {
+    const L = ['# e/m of the Electron virtual apparatus (simulated data)', `# instrument seed,${S.seed}`, `# blind,${S.blind ? 'on' : 'off'}`, 'row,source,V_volts,I_amps,r_left_cm,r_right_cm'];
+    S.rows.forEach((r, i) => L.push([i + 1, r.sim ? 'procedure (simulated readings)' : 'student', r.V, r.I, r.rl, r.rr].join(',')));
+    return L.join('\n') + '\n';
+  }
+  $('expWs').addEventListener('click', () => {
+    const say = (t) => { $('wsStatus').textContent = t; }, el = $('wsStatus');
+    if (!S.rows.length) { say('Capture some readings first.'); return; }
+    const txt = wsCsv(), lines = txt.trim().split('\n'), data = lines.filter((l) => l[0] !== '#'), meta = {};
+    lines.filter((l) => l[0] === '#').forEach((l) => { const c = l.replace(/^#\s*/, '').split(','); if (c.length > 1) meta[c[0]] = c[1]; });
+    const hand = { v: 1, demo: 'e-over-m', series: WS.series, sent: new Date().toISOString(), columns: data[0].split(','), rows: data.slice(1).map((l) => l.split(',')), meta,
+      note: `Simulated data from the e/m of the Electron demo, instrument seed ${S.seed}${S.blind ? ', Blind on' : ''}. Meter readings as shown; radii read with the pointers on the mirrored scale.`, csv: txt, csvName: `e-over-m-readings-seed${S.seed}.csv` };
+    try { localStorage.setItem('vd-handoff:e-over-m', JSON.stringify(hand)); }
+    catch (_) { download(hand.csvName, txt); say('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
+    const n = hand.rows.length, url = '../curriculum/labs/students/e-over-m.html';
+    say(`${n} reading${n === 1 ? '' : 's'} sent to the worksheet. `);
+    fetch(url, { method: 'HEAD' }).then((r) => {
+      if (r.ok) { const a = document.createElement('a'); a.href = url; a.target = 'e-over-m-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; el.appendChild(a); }
+    }).catch(() => {});
+  });
   $('coilField').addEventListener('change', (e) => { S.uniform = !e.target.checked; changed(); });
   $('earth').addEventListener('change', (e) => { S.earth = +e.target.value; changed(); });
   $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; if (S.blind) { S.truth = false; $('truth').checked = false; } syncUI(); fitAndPlot(); dirtyAll(); });

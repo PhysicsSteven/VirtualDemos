@@ -284,7 +284,7 @@
   /* Vol. 3 ch. 5 (relativity) and ch. 6 (photons and matter waves) */
   MODERN.push('velocity-addition', 'relativistic-momentum', 'relativistic-energy' /* Velocity, Momentum and Energy Near c demo, one per view */);
   MODERN.push('photoelectric', 'compton', 'franck-hertz', 'spacetime', 'speed-of-light', 'rutherford', 'spectra', 'wave-particle-duality' /* Double Slit demo */, 'relativity-em',
-    'doppler-light' /* Doppler demo, Light; typed, readings record sound only (Vol. 3 §5.7, 2026-10-24) */);
+    'doppler-light' /* Doppler demo, Light; typed, readings record sound only (Vol. 3 §5.7, 2026-10-24) */, 'e-over-m' /* e/m of the Electron, 2026-10-24 */);
   Object.assign(FROM_DEMO, {
     /* Reading | Launch speed u′ (c) | Probe time A to B Δt (s) | Ground speed u (c) | u − u′ (c) | 1 − uu′/c² */
     'velocity-addition': { demo: 'Velocity, Momentum and Energy Near c (Adding velocities)', cols: ['row', 'u_prime_c', 'probe_dt_s', null, null, null] },
@@ -308,6 +308,8 @@
     /* Reading | Setup | Voltage V (kV) | Detector η (%) | B − A (µm) | Hits at A | Hits at B | Wavelength λ (pm) | 1/(pc) (1/MeV) | Contrast */
     'wave-particle-duality': { demo: 'Double Slit', cols: ['row', (r) => `${r.particle}, a ${+(r.a_mm * 1000).toPrecision(6)} µm, d ${+(r.d_mm * 1000).toPrecision(6)} µm, L ${r.L_m} m${r.v_m_s ? `, ${r.v_m_s} m/s` : ''}, ${r.hits} hits, window ${r.w_um} µm`, 'V_kV', 'eta_pct', 'BA_um', 'nA', 'nB', null, null, null] },
     /* Reading | Setup | Electron drift βᵥ | Charge speed βᵤ | F in the lab (N) | F′ in the charge's frame (N) | Net λ′ in the charge's frame (µC/m) | γᵤ | γᵤβᵤβᵥ | F′/F */
+    /* Trial | U (V) | I (A) | r left (mm) | r right (mm) | r (mm) | B (mT) | e/m (C/kg) | % error | B²r² | 2U; the demo's scale reads in cm */
+    'e-over-m': { demo: 'e/m of the Electron', cols: ['row', 'V_volts', 'I_amps', (r) => (10 * r.r_left_cm).toFixed(1), (r) => (10 * r.r_right_cm).toFixed(1), null, null, null, null, null, null] },
     'relativity-em': { demo: 'Magnetism from Relativity', cols: ['row', (r) => `${r.charge}, r = ${r.r_cm} cm`, 'v', 'u', 'F_N', 'Fp_N', 'lamp_uC_m', null, null, null] },
     spectra: { demo: 'Spectra Explorer', cols: ['row', (r) => (r.ion ? `${r.source} ${r.ion}` : r.source), 'lambda_nm', null, null, null, null] },
   });

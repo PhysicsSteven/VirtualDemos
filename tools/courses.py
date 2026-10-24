@@ -140,6 +140,7 @@ HANDOUT_TOPIC = {
     'wave-particle-duality': 'Wave and Particle Duality',
     'relativity-em': 'Magnetism from Relativity',
     'doppler-light': 'Doppler Effect for Light',
+    'e-over-m': 'Charge to Mass Ratio of the Electron',
     'household-wiring': 'Household Wiring and Electrical Safety',
     'van-de-graaff': 'Van de Graaff Generator',
     'ink-jet-printer': 'Ink Jet Printer',
