@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -57,7 +59,9 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
-#can { touch-action: none; outline: none; }
+#can { touch-action: none; outline: none; position: relative; z-index: 1; }
+#pane { position: relative; }
+.rs3 { position: absolute; left: 0; top: 0; z-index: 0; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
@@ -130,6 +134,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <button type="button" class="btn" id="fire">Fire again</button>
         <button type="button" class="btn" id="clear" hidden>Clear</button>
         <button type="button" class="btn" id="v3d" aria-pressed="false" title="Tilt the scene: the ring of impact parameter b and the cone of outgoing directions">3D view</button>
+        <div class="seg dimseg" role="group" aria-label="Beam picture" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="false">Chamber</button><button type="button" data-dim="flat" aria-pressed="true">Close up</button></div>
         <span class="count mono" id="count" aria-live="off"></span>
       </div>
       <div class="pane" id="pane">
@@ -815,6 +820,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   function drawScene() {
+    if (g3) g3.S3.el.hidden = !use3();
+    if (use3()) { drawChamber3(); return; }
     const g = sceneGeom(), c = ctx, ps = g.ps, s = g.s, D = Ds(), cm = camM();   // D signed here
     c.save(); c.beginPath(); c.rect(s.x, s.y, s.w, s.h); c.clip();
     // beam axis
@@ -843,6 +850,97 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       label(c, `${t.sym ? t.name.toLowerCase() : 'this'} nucleus at this scale: ${px.toPrecision(2)} px across`, s.x + s.w - 10 * ps, s.y + s.h - 16 * ps, T.muted, 'right', 'middle');
     }
     drawScaleBar(g);
+    c.restore();
+  }
+  // ---------- the Geiger and Marsden chamber in 3D, Beam mode (three.js through lib/vd3.js and lib/vd3kit.js) ----------
+  /* Chamber | Close up: the lab scale picture of the same run. The source in its lead block, the beam through a slit, the gold
+     leaf, the zinc sulfide screen round it and a microscope. Each flash is one of the alphas counted (the same flashes as the
+     close up's ring), at its final angle θ on the side it left; the screen is drawn 1.2 cm from the foil. Sizes drawn. */
+  const G3 = { o: { th: -Math.PI / 2 + 0.45, ph: 0.78, zoom: 1 }, rect: '' };
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d() && S.mode === 'beam');
+  const RS3 = 0.012, ZS = 0.02, HS = 0.006;   /* screen radius, beam height, screen band height (m) */
+  function init3D() {
+    const S3 = VD3K.stage(pane, { before: can, shadow: 0.12, fov: 30, near: 0.003, far: 4, fogAt: [2, 4] }); if (!S3) return false;
+    S3.el.className = 'rs3';
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
+    sc.add(VD3K.bench(S3, { w: 0.8, d: 0.6, y: 0.05 }));
+    const brass = M({ roughness: 0.35, metalness: 0.8 }, ['#c9a24a', '#a8873c']), leadM = M({ roughness: 0.7, metalness: 0.25 }, [T.lead || '#6e7378', T.lead || '#4c5156']), steel = M({ roughness: 0.3, metalness: 0.8 }, ['#c4cad1', '#8d96a0']);
+    /* the chamber floor and a glass wall round it, so the inside shows */
+    sc.add(mesh(new THREE.CylinderGeometry(0.03, 0.031, 0.004, 64).rotateX(Math.PI / 2).translate(0, 0, 0.002), M({ roughness: 0.6, metalness: 0.3 }, ['#d8c08a', '#6b5a34']), true));
+    const wall = VD3K.glass(S3, { r: 0.03, len: 0.036, axis: 'z', ends: false, opacity: 0.12 }); wall.position.z = 0.022; sc.add(wall);
+    const rim = mesh(new THREE.TorusGeometry(0.03, 0.0012, 8, 64), brass); rim.position.z = 0.04; sc.add(rim);
+    /* the source: radon in a glass tube in a lead block, the bore toward the foil */
+    const src = new THREE.Group(); src.add(VD3K.box(0.012, 0.012, 0.014, leadM, 0, 0, ZS - 0.007));
+    const glowM = new THREE.MeshBasicMaterial({ color: 0xffffff }), dot = mesh(new THREE.SphereGeometry(0.0012, 12, 8), glowM); dot.position.set(0.003, 0, ZS); src.add(dot);
+    src.position.x = -0.022; sc.add(src);
+    const slit = new THREE.Group(); slit.add(VD3K.box(0.0015, 0.004, 0.012, leadM, 0, 0.0028, ZS - 0.006), VD3K.box(0.0015, 0.004, 0.012, leadM, 0, -0.0028, ZS - 0.006)); slit.position.x = -0.0145; sc.add(slit);
+    const beamM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.45, depthWrite: false }), beam = mesh(new THREE.CylinderGeometry(0.0005, 0.0005, 0.016, 10).rotateZ(Math.PI / 2), beamM); beam.position.set(-0.008, 0, ZS); beam.renderOrder = 3; sc.add(beam);
+    /* the gold leaf on a small frame */
+    const leafM = new THREE.MeshStandardMaterial({ roughness: 0.35, metalness: 0.6, emissive: 0x3a2800, side: THREE.DoubleSide }), leaf = mesh(new THREE.PlaneGeometry(0.006, 0.008, 6, 6), leafM);
+    const lp = leaf.geometry.attributes.position; for (let i = 0; i < lp.count; i++) lp.setZ(i, 0.00012 * Math.sin(lp.getX(i) * 2600 + lp.getY(i) * 1900)); leaf.geometry.computeVertexNormals();
+    leaf.rotation.set(Math.PI / 2, Math.PI / 2, 0); leaf.position.set(0, 0, ZS); sc.add(leaf);
+    sc.add(VD3K.rod([0, 0, 0.004], [0, 0, ZS - 0.003], 0.0005, steel));
+    /* the zinc sulfide screen: a band round the foil, open where the beam comes in */
+    const scrM = new THREE.MeshStandardMaterial({ roughness: 0.9, metalness: 0, side: THREE.DoubleSide, transparent: true, opacity: 0.85 });
+    const scr = mesh(new THREE.CylinderGeometry(RS3, RS3, HS, 96, 1, true, Math.PI / 2 + 0.35, 2 * Math.PI - 0.7).rotateX(Math.PI / 2), scrM); scr.position.z = ZS; sc.add(scr);
+    /* the microscope that looks at the screen (Geiger and Marsden counted flashes by eye), on an arm round the chamber */
+    const scope = new THREE.Group(), tubeM = M({ roughness: 0.4, metalness: 0.5 }, ['#3b4552', '#2b333d']);
+    const body = mesh(new THREE.CylinderGeometry(0.0022, 0.0022, 0.022, 20).rotateZ(Math.PI / 2), tubeM, true); body.position.x = RS3 + 0.012; scope.add(body);
+    const eye = mesh(new THREE.CylinderGeometry(0.003, 0.003, 0.004, 20).rotateZ(Math.PI / 2), tubeM, true); eye.position.x = RS3 + 0.025; scope.add(eye);
+    scope.add(VD3K.box(0.03, 0.003, 0.002, steel, RS3 + 0.012, 0, 0.004)); scope.add(VD3K.rod([RS3 + 0.012, 0, 0.006], [RS3 + 0.012, 0, ZS - 0.002], 0.0008, steel));
+    scope.position.z = 0; body.position.z = ZS; eye.position.z = ZS; scope.rotation.z = 0.96; sc.add(scope);
+    /* flashes on the screen */
+    const ftex = (() => { const cv = document.createElement('canvas'); cv.width = cv.height = 64; const c = cv.getContext('2d'), gr = c.createRadialGradient(32, 32, 0, 32, 32, 32); gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.3, 'rgba(255,255,255,0.6)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, 64, 64); return new THREE.CanvasTexture(cv); })();
+    const pool = []; for (let i = 0; i < 120; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: ftex, transparent: true, depthWrite: false, opacity: 0 })); sp.renderOrder = 5; sc.add(sp); pool.push(sp); }
+    /* the scale of angles printed on the chamber floor */
+    const cv = document.createElement('canvas'); cv.width = cv.height = 1024; const tex = new THREE.CanvasTexture(cv);
+    const dial = new THREE.Mesh(new THREE.RingGeometry(0.018, 0.029, 96), new THREE.MeshStandardMaterial({ map: tex, transparent: true, roughness: 0.7 })); dial.position.z = 0.0041; sc.add(dial);
+    g3 = { S3, beamM, glowM, leafM, scrM, pool, cv, tex, key: '' };
+    can.addEventListener('wheel', (e) => { if (!in3(e)) e.stopImmediatePropagation(); }, { passive: true });
+    can.addEventListener('dblclick', (e) => { if (!in3(e)) e.stopImmediatePropagation(); });
+    VD3.orbit(can, G3.o, () => { if (use3()) drawAll(); }, { grab: (e) => !in3(e), phMin: 0.3, phMax: 1.4, zMin: 0.6, zMax: 3 });
+    can.style.touchAction = ''; can.style.cursor = '';
+    return true;
+  }
+  function in3(e) { if (!use3() || !LY) return false; const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, s = LY.scene; return x >= s.x && x <= s.x + s.w && y >= s.y && y <= s.y + s.h; }
+  function theme3() {
+    const g = g3, k = [T.dark, T.zns, T.znsBand, T.gold, T.alpha].join(); if (g.key === k) return; g.key = k;
+    g.beamM.color.set(T.alpha); g.glowM.color.set(T.alpha); g.leafM.color.set(T.gold); g.scrM.color.set(T.znsBand);
+    for (const sp of g.pool) sp.material.color.set(T.zns);
+    const c = g.cv.getContext('2d'), N = 1024, cx = N / 2, r1 = N / 2, r0 = r1 * 0.018 / 0.029;
+    c.clearRect(0, 0, N, N); c.fillStyle = T.dark ? 'rgba(60,52,30,0.0)' : 'rgba(0,0,0,0)'; c.fillRect(0, 0, N, N);
+    c.strokeStyle = c.fillStyle = T.dark ? '#f1e3b5' : '#3a2e10'; c.font = '600 34px "JetBrains Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    for (let d = -170; d <= 170; d += 10) { const a = d * Math.PI / 180, l = d % 30 ? 24 : 48; c.lineWidth = d % 30 ? 2 : 4; c.beginPath(); c.moveTo(cx + Math.cos(a) * r1, cx - Math.sin(a) * r1); c.lineTo(cx + Math.cos(a) * (r1 - l), cx - Math.sin(a) * (r1 - l)); c.stroke();
+      if (d % 30 === 0) c.fillText(String(Math.abs(d)) + '°', cx + Math.cos(a) * (r1 - 90), cx - Math.sin(a) * (r1 - 90)); }
+    void r0; g.tex.needsUpdate = true;
+  }
+  function render3(s) {
+    const g = g3, S3 = g.S3, el = S3.el;
+    const k = [s.x, s.y, s.w, s.h].join(); if (G3.rect !== k) { G3.rect = k; Object.assign(el.style, { left: s.x + 'px', top: s.y + 'px', width: s.w + 'px', height: s.h + 'px' }); }
+    S3.size(s.w, s.h); theme3();
+    const asp = s.w / Math.max(1, s.h), dist = 0.16 * Math.max(1, 1.2 / asp);
+    S3.place(G3.o, [-0.004, 0, 0.014], dist);
+    const now = performance.now() / 1000; let n = 0;
+    for (const fl of flashes) { const age = now - fl.t; if (age > 0.6 || n >= g.pool.length) continue; const sp = g.pool[n++], a = fl.sg * fl.th, z = ZS + fl.r * HS * 0.9, sz = 0.0012 + 0.0016 * Math.exp(-age / 0.08);
+      sp.position.set(RS3 * 0.985 * Math.cos(a), RS3 * 0.985 * Math.sin(a), z); sp.scale.set(sz, sz, 1); sp.material.opacity = Math.exp(-age / 0.16); }
+    for (; n < g.pool.length; n++) g.pool[n].material.opacity = 0;
+    S3.render();
+    return (q) => { const r = S3.project(q); return [s.x + r[0], s.y + r[1]]; };
+  }
+  function drawChamber3() {
+    const s = LY.scene, c = ctx, ps = projScale(); c.clearRect(s.x, s.y, s.w, s.h);
+    const Q = render3(s);
+    c.save(); c.beginPath(); c.rect(s.x, s.y, s.w, s.h); c.clip();
+    const lab = (txt, q, col, al, bl) => label(c, txt, q[0], q[1], col, al || 'center', bl || 'middle', false);
+    lab('source in lead', Q([-0.022, 0, ZS + 0.01]), T.ink, 'center', 'bottom');
+    lab(`${tgt().name.toLowerCase()} leaf`, Q([0, -0.004, ZS - 0.006]), T.ink, 'center', 'top');
+    lab('ZnS screen', Q([RS3 * Math.cos(-0.5), RS3 * Math.sin(-0.5), ZS + HS]), T.muted, 'center', 'bottom');
+    lab('microscope', Q([(RS3 + 0.025) * Math.cos(0.96), (RS3 + 0.025) * Math.sin(0.96), ZS + 0.005]), T.muted, 'center', 'bottom');
+    c.fillStyle = T.muted; c.font = `${10.5 * ps}px ${T.mono}`; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText('the chamber: each flash is one alpha counted,', s.x + 10 * ps, s.y + 10 * ps);
+    c.fillText('at its final angle θ (screen drawn 1.2 cm from the foil)', s.x + 10 * ps, s.y + 25 * ps);
+    c.textBaseline = 'bottom'; if (s.w > 420) c.fillText(VD3.turnText('Drag to turn, wheel to zoom. Close up shows the paths near one nucleus.'), s.x + 10 * ps, s.y + s.h - 10 * ps);
     c.restore();
   }
   function drawScaleBar(g) {
@@ -1433,7 +1531,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('zRow').hidden = S.target !== 'custom'; $('zc').value = S.Zc;
     $('secSingle').hidden = S.mode !== 'single'; $('bbRow').hidden = S.mode !== 'single'; $('secBeam').hidden = S.mode !== 'beam'; $('secPlot').hidden = S.mode !== 'beam';
     $('clear').hidden = S.mode !== 'beam';
-    $('v3d').hidden = !v3Active(); $('v3Hint').hidden = !(v3.on && v3Active());
+    $('v3d').hidden = !v3Active(); $('dimSeg').hidden = S.mode !== 'beam'; $('v3Hint').hidden = !(v3.on && v3Active());
     $('fire').textContent = S.mode === 'beam' ? 'Fire 100' : 'Fire again';
     $('rate').value = S.rate; $('bm').value = S.bm; $('ft').value = S.ft;
     $('nSr').setAttribute('aria-pressed', String(S.norm === 'sr')); $('nBin').setAttribute('aria-pressed', String(S.norm === 'bin'));
@@ -1527,7 +1625,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const xr = (g.s.x + 30 * ps - g.cx) / g.sc, t = P3(g, cm.M, xr, S.b, 0), y0 = P3(g, cm.M, xr, 0, 0)[1], y1 = P3(g, cm.M, xr, 1, 0)[1];
       out.push({ id: 'b', cursor: 'ns-resize', seg: [t[0] - 16 * ps, t[1], t[0] + 50 * ps], set: (fm) => setB(fm), fromY: (Y) => (Y - y0) / (y1 - y0) });
     } else if (S.mode === 'single') out.push({ id: 'b', cursor: 'ns-resize', seg: [g.s.x, g.cy - S.b * g.sc, g.s.x + 70 * ps, g.cy - S.b * g.sc], set: (fm) => setB(fm) });
-    else if (S.model === 'nuc') { const y = g.cy - bmax() * g.sc; out.push({ id: 'bm', cursor: 'ns-resize', seg: [g.s.x, y, g.s.x + 110 * ps, y], set: (fm) => setBm(Math.abs(fm)) }); }
+    else if (S.model === 'nuc' && !use3()) { const y = g.cy - bmax() * g.sc; out.push({ id: 'bm', cursor: 'ns-resize', seg: [g.s.x, y, g.s.x + 110 * ps, y], set: (fm) => setBm(Math.abs(fm)) }); }
     return out;
   }
   function setBm(fm) {
@@ -1662,6 +1760,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   applyPreset('one');
   setPlaying(false);
   if (reduce && single) single.pausedAt = single.dur * 0.62;   // a meaningful still picture: the alpha just past closest approach
+  view3 = VD3K.view({ seg: '#dimSeg', start: 'flat', init: init3D, change: () => drawAll(), status: (m) => { const st = document.querySelector('.status'); if (st) st.textContent = m; } });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
 })();
