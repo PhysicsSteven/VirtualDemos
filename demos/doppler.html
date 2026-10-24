@@ -1193,7 +1193,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     can.addEventListener('wheel', (e) => { if (!on3() || e.offsetY > LY.main.y + LY.main.h) e.stopImmediatePropagation(); }, { passive: true });
     for (const o of [D3.oG, D3.oS]) {
       VD3.orbit(can, o, () => { if (!playing) drawAll(); }, { keys: false, phMin: 0.25, phMax: 1.5, zMin: 0.45, zMax: 3,
-        grab: (e) => o !== orb() || !on3() || !!handleAt(e) || e.offsetY > LY.main.y + LY.main.h });
+        grab: (e) => o !== orb() || !on3() || !!drag || !!handleAt(e) || e.offsetY > LY.main.y + LY.main.h });
     }
     return true;
   }

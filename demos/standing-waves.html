@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <script>/* the Air column and Levitation views moved to their own demos (2026-10-24): old links to them open Resonators or Acoustic Levitation */ (function () { var q = location.search + location.hash; if (/[?&#](view|v)=lev\b|#lev(itation)?\b/i.test(q)) location.replace('acoustic-levitation.html'); else if (/[?&#](view|v)=pipe\b|#pipe\b|[?&#]p(reset)?=closed\b/i.test(q)) location.replace('resonators.html'); })();</script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
@@ -164,6 +165,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-v="string" aria-pressed="false">String</button>
           <button type="button" data-v="beats" aria-pressed="false">Beats</button>
         </div>
+        <div class="seg" role="group" aria-label="3D or flat" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <button type="button" class="btn" id="play">Pause</button>
         <button type="button" class="btn" id="reset">Reset</button>
         <div class="seg" role="group" aria-label="Speed" id="speedSeg">
@@ -585,7 +587,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   const MODEL = {
     waves: 'Ideal waves on a long string with no loss, both moving at v = 2 m/s. Amplitudes in cm, drawn larger than true scale.',
-    string: 'Ideal flexible string: small amplitude, fixed ends, no stiffness. Harmonic and pluck motion have no damping, so the energy stays constant; the pluck is a sum of 200 modes. The driven string is a point force at x = L/20 with the same damping rate γ = ω₁/Q for every mode, solved exactly with 40 modes, transients included. Up and down displacement is exaggerated.',
+    string: 'Ideal flexible string: small amplitude, fixed ends, no stiffness. Harmonic and pluck motion have no damping, so the energy stays constant; the pluck is a sum of 200 modes. The driven string is a point force at x = L/20 with the same damping rate γ = ω₁/Q for every mode, solved exactly with 40 modes, transients included. Up and down displacement is exaggerated. The 3D view shows the same motion on a sonometer, sideways in the plane of the box top and magnified by the factor printed under it; lengths along the string are to scale, and the hanging mass is m = T/g with g = 9.80665 m/s². The string is drawn three times thicker than a 1.2 mm guitar string.',
     beats: 'Two pure tones added; nothing else. The close up strips show about five cycles; the long strip is too dense to resolve single cycles, so it shows the band the signal fills.'
   };
 
@@ -870,7 +872,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawString() {
     const s = S.s, L = s.L, f1 = sF(1);
     const Lp = 50 * ls, Rp = W - 26 * ls, top = 12 * ls, bot = H - 30 * ls;
-    const splitY = top + (bot - top) * 0.56;
+    const splitY = top + (bot - top) * (on3() ? 0.62 : 0.56);
     const sTop = top + 26 * ls, sBot = splitY - 34 * ls;
     const span = holdSpan || Math.max(0.3, L * 1.04);
     const X = (x) => Lp + x / span * (Rp - Lp), invX = (px) => (px - Lp) / (Rp - Lp) * span;
@@ -879,6 +881,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const mid = (sTop + sBot) / 2, half = (sBot - sTop) / 2;
     const Y = (ym) => mid - ym * 1e3 / ymax * half;   // ym in m
     const invYmm = (py) => (mid - py) / half * ymax;
+    if (on3()) {
+      S3.rect = { x: 0, y: 0, w: W, h: Math.round(splitY + 4 * ls) };
+      drawString3(S3.rect, stringTitle(W - 70 * ls));
+      if (s.mode === 'drive') drawResonance(Lp, Rp, splitY + 30 * ls, bot); else drawBars(Lp, Rp, splitY + 30 * ls, bot);
+      return;
+    }
     vGrid(Lp, Rp, 0, span, sTop, sBot);
     // y ticks in mm
     const st = nice(ymax / 2.2);
@@ -946,13 +954,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.beginPath(); ctx.arc(xd, y0, 3.5 * ls, 0, TAU); ctx.fill();
     }
     // title
-    let title;
-    if (s.mode === 'harm') title = pick([`Harmonic n = ${s.n}:  f${sub(s.n)} = ${s.n} v/2L = ${sF(s.n).toFixed(1)} Hz,  λ${sub(s.n)} = 2L/${s.n} = ${(2 * L / s.n).toFixed(3)} m`,
-      `n = ${s.n}:  f${sub(s.n)} = ${sF(s.n).toFixed(1)} Hz,  λ${sub(s.n)} = ${(2 * L / s.n).toFixed(3)} m`], Rp - Lp);
-    else if (s.mode === 'pluck') title = pluckDrag ? pick([`Pulled to h = ${s.h.toFixed(1)} mm at d = ${(s.d * L).toFixed(3)} m: let go`, `h = ${s.h.toFixed(1)} mm, d = ${fracName(s.d)}: let go`], Rp - Lp)
-      : pick([`Plucked at d = ${(s.d * L).toFixed(3)} m (${fracName(s.d)}), sum of ${PLUCK_N} modes`, `Plucked at d = ${fracName(s.d)}`], Rp - Lp);
-    else title = pick([`Driven at f = ${s.f.toFixed(1)} Hz  (f/f₁ = ${(s.f / f1).toFixed(3)})`, `Driven at ${s.f.toFixed(1)} Hz`], Rp - Lp);
-    tag(title, Lp, sTop - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
+    tag(stringTitle(Rp - Lp), Lp, sTop - 5 * ls, T.ink, 'left', 'bottom', true, 11.5);
     if (s.mode === 'drive') tag('dashed: steady state envelope', Rp, sTop + 4 * ls, T.muted, 'right', 'top', false, 10);
     // handles: bridge (length), and the string itself (pluck)
     handles.push({ id: 'bridge', cursor: 'ew-resize', color: T.tubeEdge, seg: [X(L), sTop + 4 * ls, X(L), sBot - 4 * ls], grip: [X(L), mid + 30 * ls < sBot - 10 * ls ? mid + 30 * ls : mid - 30 * ls],
@@ -967,6 +969,232 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // lower panel
     if (s.mode === 'drive') drawResonance(Lp, Rp, splitY + 30 * ls, bot);
     else drawBars(Lp, Rp, splitY + 30 * ls, bot);
+  }
+  // ---------- String view in 3D (three.js through demos/lib/vd3.js): a sonometer on the bench ----------
+  // The same string and the same motion as the flat view. The string runs over a fixed bridge at x = 0 and a sliding bridge at
+  // x = L, then over a pulley to a hanging mass m = T/g, which sets the tension. Its motion is drawn sideways, in the plane of the
+  // box top, magnified ×K (the flat view draws it up and down); the shaded band is where the string moves, as the eye sees it.
+  // Lengths along the string are to scale. Drag to turn, wheel or pinch to zoom, double click to reset. ?view=flat starts flat.
+  const S3 = { want: true, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, rect: null, K: 10, o: { th: -Math.PI / 2 - 0.14, ph: 0.98, zoom: 1 } };
+  const NO3D = 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
+  const BOX = { x0: -0.14, x1: 1.12, w: 0.17, h: 0.085 }, BR = 0.032, Z0 = BOX.h + BR, PUL = 1.175, NSEG = 220, RS = 8, RSTR = 0.0018;
+  let s3 = null;
+  const on3 = () => S3.want && S3.ok && S.view === 'string';
+  function init3() {
+    S3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); el.style.inset = 'auto'; el.style.left = '0px'; el.style.top = '0px'; el.hidden = true; pane.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.02, 30);
+    const M = (o) => new THREE.MeshStandardMaterial(Object.assign({ roughness: 0.6, metalness: 0 }, o));
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x8a8070, 0.75), sun = new THREE.DirectionalLight(0xffffff, 0.75);
+    sun.position.set(-0.6, -1.1, 2.2); sun.castShadow = true; sun.shadow.mapSize.set(2048, 1024); sun.shadow.radius = 4; sun.shadow.bias = -0.0005;
+    Object.assign(sun.shadow.camera, { left: -1, right: 1, top: 0.6, bottom: -0.6, near: 0.5, far: 5 }); sun.target.position.set(0.5, 0, 0);
+    scene.add(hemi, sun, sun.target);
+    const mesh = (g, m, cast, recv) => { const x = new THREE.Mesh(g, m); x.castShadow = !!cast; x.receiveShadow = !!recv; return x; };
+    const box = (w, d, h) => new THREE.BoxGeometry(w, d, h);
+    // bench, with a canvas wood grain
+    const woodCv = document.createElement('canvas'); woodCv.width = 512; woodCv.height = 128; const woodTex = new THREE.CanvasTexture(woodCv);
+    const benchM = M({ map: woodTex, roughness: 0.75 }), bench = mesh(box(2.1, 0.8, 0.04), benchM, false, true); bench.position.set(0.1, 0.16, -0.02); scene.add(bench);
+    const floorM = M({ roughness: 0.95 });
+    // the sonometer: a hollow maple box with a sound hole, two hardwood bridges, a hitch pin and a pulley on a bracket
+    const boxCv = document.createElement('canvas'); boxCv.width = 1024; boxCv.height = 128; const boxTex = new THREE.CanvasTexture(boxCv);
+    const boxM = M({ map: boxTex, roughness: 0.5 }), sideM = M({ roughness: 0.55 });
+    const sbox = mesh(box(BOX.x1 - BOX.x0, BOX.w, BOX.h), [sideM, sideM, sideM, sideM, boxM, sideM], true, true); sbox.position.set((BOX.x0 + BOX.x1) / 2, 0, BOX.h / 2); scene.add(sbox);
+    const holeM = new THREE.MeshBasicMaterial({ color: 0x140c06 }), hole = new THREE.Mesh(new THREE.CircleGeometry(0.028, 40), holeM); hole.position.set(0.5, 0.0, BOX.h + 0.0005); scene.add(hole);
+    const brM = M({ roughness: 0.45 }), brG = new THREE.ExtrudeGeometry((() => { const sh = new THREE.Shape(); sh.moveTo(-0.012, 0); sh.lineTo(0.012, 0); sh.lineTo(0.0015, BR); sh.lineTo(-0.0015, BR); sh.closePath(); return sh; })(), { depth: 0.06, bevelEnabled: false });
+    brG.rotateX(Math.PI / 2); brG.translate(0, 0.03, BOX.h);
+    const nut = mesh(brG, brM, true, true), bridge = mesh(brG, brM, true, true); scene.add(nut, bridge);
+    const metal = M({ color: 0xc4ccd6, roughness: 0.3, metalness: 0.3 }), darkMetal = M({ color: 0x3a414a, roughness: 0.45, metalness: 0.2 });
+    const pin = mesh(new THREE.CylinderGeometry(0.005, 0.005, 0.03, 12).rotateX(Math.PI / 2), metal, true); pin.position.set(-0.1, 0, BOX.h + 0.015); scene.add(pin);
+    const brk = mesh(box(0.05, 0.05, 0.012), darkMetal, true); brk.position.set(PUL - 0.02, 0, BOX.h + 0.006); scene.add(brk);
+    const post = mesh(box(0.012, 0.012, Z0 - BOX.h), darkMetal, true); post.position.set(PUL, -0.02, BOX.h + (Z0 - BOX.h) / 2 - 0.012); scene.add(post);
+    const pul = mesh(new THREE.CylinderGeometry(0.025, 0.025, 0.012, 32), metal, true); pul.position.set(PUL, 0, Z0 - 0.025); scene.add(pul);
+    // the string: a tube rebuilt each frame, wound bronze; fixed runs to the hitch pin and down to the hanger
+    const strM = M({ roughness: 0.3, metalness: 0.35 });
+    const sg = new THREE.BufferGeometry(), nv = (NSEG + 1) * RS;
+    sg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(nv * 3), 3)); sg.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(nv * 3), 3));
+    const idx = []; for (let i = 0; i < NSEG; i++) for (let j = 0; j < RS; j++) { const a = i * RS + j, b = i * RS + (j + 1) % RS, c = a + RS, d = b + RS; idx.push(a, c, b, b, c, d); }
+    sg.setIndex(idx); const str = mesh(sg, strM, true); str.frustumCulled = false; scene.add(str);
+    const seg = (m) => { const g = new THREE.CylinderGeometry(RSTR, RSTR, 1, 8).translate(0, 0.5, 0); const x = mesh(g, m, true); scene.add(x); return x; };
+    const hitch = seg(strM), back = seg(strM), drop = seg(strM);
+    // hanger and slotted masses: 1 kg discs 2 cm thick, then one thinner disc for the rest, so the stack is m = T/g
+    const hangM = M({ color: 0xaab3be, roughness: 0.35, metalness: 0.3 }), discM = M({ color: 0xc9a24a, roughness: 0.35, metalness: 0.35 });
+    const hook = mesh(new THREE.CylinderGeometry(0.003, 0.003, 1, 8).rotateX(Math.PI / 2).translate(0, 0, -0.5), hangM, true); scene.add(hook);
+    const discs = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.045, 0.045, 1, 40).rotateX(Math.PI / 2), discM, 20); discs.castShadow = true; scene.add(discs);
+    // where the string moves: a soft band between the two extremes, and the release shape of a pluck
+    const bandM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.22, side: THREE.DoubleSide, depthWrite: false });
+    const bg = new THREE.BufferGeometry(); bg.setAttribute('position', new THREE.BufferAttribute(new Float32Array((NSEG + 1) * 6), 3));
+    const bi = []; for (let i = 0; i < NSEG; i++) { const a = 2 * i; bi.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } bg.setIndex(bi);
+    const band = new THREE.Mesh(bg, bandM); band.frustumCulled = false; band.renderOrder = 2; scene.add(band);
+    const ghostM = new THREE.LineDashedMaterial({ dashSize: 0.01, gapSize: 0.008, transparent: true, opacity: 0.8 });
+    const gg = new THREE.BufferGeometry(); gg.setAttribute('position', new THREE.BufferAttribute(new Float32Array((NSEG + 1) * 3), 3));
+    const ghost = new THREE.Line(gg, ghostM); ghost.frustumCulled = false; scene.add(ghost);
+    // node markers (rings around the string) and the driver: a vibrator box beside the string with its arm clipped on at L/20
+    const nodeM = M({ roughness: 0.4, emissive: 0x000000 }), nodes = [];
+    for (let k = 0; k < 9; k++) { const n = mesh(new THREE.TorusGeometry(0.006, 0.0016, 10, 24).rotateY(Math.PI / 2), nodeM); scene.add(n); nodes.push(n); }
+    const drvM = M({ color: 0x2c333c, roughness: 0.5, metalness: 0.2 }), drv = mesh(box(0.05, 0.05, 0.05), drvM, true, true), arm = mesh(new THREE.CylinderGeometry(0.0025, 0.0025, 1, 10).translate(0, 0.5, 0), metal, true);
+    const clip = mesh(new THREE.SphereGeometry(0.0045, 12, 10), metal, true); scene.add(drv, arm, clip);
+    // a metre stick along the front edge of the box top
+    const rulCv = document.createElement('canvas'); rulCv.width = 2048; rulCv.height = 96; const rulTex = new THREE.CanvasTexture(rulCv); rulTex.anisotropy = r.capabilities.getMaxAnisotropy();
+    const rul = mesh(box(1.0, 0.032, 0.004), [M({ color: 0xd8c690 }), M({ color: 0xd8c690 }), M({ color: 0xd8c690 }), M({ color: 0xd8c690 }), M({ map: rulTex, roughness: 0.6 }), M({ color: 0xd8c690 })], true, true);
+    rul.position.set(0.5, -BOX.w / 2 + 0.02, BOX.h + 0.002); scene.add(rul);
+    s3 = { r, el, scene, cam, hemi, sun, woodCv, woodTex, benchM, floorM, boxCv, boxTex, boxM, sideM, brM, nut, bridge, str, sg, strM, hitch, back, drop, hook, discs, hangM,
+      band, bg, bandM, ghost, gg, ghostM, nodes, nodeM, drv, arm, clip, rulCv, rulTex };
+    // the wheel scrolls the page in the flat view and over the plot below; a drag that starts on a grip moves that grip
+    const below = (e) => e.offsetY > (S3.rect ? S3.rect.h : 0);
+    can.addEventListener('wheel', (e) => { if (!on3() || below(e)) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, S3.o, () => { if (!running) drawAll(); }, { phMin: 0.3, phMax: 1.45, zMin: 0.6, zMax: 3, grab: (e) => !on3() || below(e) || !!drag || !!handleAt(e) });
+    return true;
+  }
+  function theme3() {
+    const g = s3, d = VD3.dark(), col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+    const bg = col(T.canvas, '#fbfcfd'); g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 2.5, 7);
+    g.hemi.intensity = d ? 0.95 : 0.75; g.sun.intensity = d ? 0.9 : 0.75;
+    g.floorM.color = d ? new THREE.Color('#141a22') : new THREE.Color('#e6e9ed');
+    let c = g.woodCv.getContext('2d'); c.fillStyle = d ? '#3a3229' : '#d9c3a0'; c.fillRect(0, 0, 512, 128);
+    for (let i = 0; i < 70; i++) { c.strokeStyle = `rgba(${d ? '0,0,0' : '120,80,40'},${0.05 + 0.06 * Math.abs(Math.sin(i * 7.3))})`; c.lineWidth = 1 + (i % 3); c.beginPath(); const y = (i * 37) % 128; c.moveTo(0, y); for (let x = 0; x <= 512; x += 32) c.lineTo(x, y + 3 * Math.sin(x * 0.02 + i)); c.stroke(); }
+    g.woodTex.needsUpdate = true;
+    c = g.boxCv.getContext('2d'); const mp = d ? '#8a6a44' : '#d4a86a'; c.fillStyle = mp; c.fillRect(0, 0, 1024, 128);
+    for (let i = 0; i < 40; i++) { c.strokeStyle = `rgba(110,70,30,${0.06 + 0.05 * Math.abs(Math.sin(i * 3.1))})`; c.lineWidth = 2; c.beginPath(); const y = (i * 29) % 128; c.moveTo(0, y); for (let x = 0; x <= 1024; x += 40) c.lineTo(x, y + 2 * Math.sin(x * 0.013 + i * 0.7)); c.stroke(); }
+    g.boxTex.needsUpdate = true; g.sideM.color = new THREE.Color(d ? '#6e5236' : '#b98a52'); g.brM.color = new THREE.Color(d ? '#4a3626' : '#5a3a26');
+    g.strM.color = new THREE.Color(d ? '#e8c590' : '#c9974c'); g.strM.emissive = new THREE.Color(d ? '#3a2a10' : '#2a1a05');
+    g.bandM.color = col(T.accent, '#2b60b5'); g.ghostM.color = col(T.muted, '#5a6575'); g.nodeM.color = col(T.equi, '#a7740b'); g.nodeM.emissive = col(T.equi, '#a7740b').multiplyScalar(0.35);
+    c = g.rulCv.getContext('2d'); c.fillStyle = '#e9d9a4'; c.fillRect(0, 0, 2048, 96); c.fillStyle = '#2a2a2a'; c.font = '600 30px ' + T.mono; c.textAlign = 'center';
+    for (let k = 0; k <= 100; k++) { const x = 4 + k * 2040 / 100, h = k % 10 === 0 ? 40 : k % 5 === 0 ? 28 : 18; c.fillRect(x - 1, 0, 2, h); if (k % 10 === 0 && k > 0 && k < 100) c.fillText(String(k / 100), x, 78); }
+    c.fillText('0', 24, 78); c.fillText('1 m', 2000, 78);
+    g.rulTex.needsUpdate = true;
+  }
+  const v3 = (x, y, z) => new THREE.Vector3(x, y, z);
+  function cyl(m, a, b) {   // a cylinder of unit length along +y, from point a to point b
+    const d = b.clone().sub(a), L = d.length(); m.position.copy(a); m.quaternion.setFromUnitVectors(v3(0, 1, 0), d.normalize()); m.scale.set(1, Math.max(1e-6, L), 1);
+  }
+  // the string's displacement (m) at x (m) now, its band (the extremes it reaches) and the release shape
+  function str3(xm) {
+    const s = S.s;
+    if (s.mode === 'harm') return stringY(xm);
+    if (s.mode === 'pluck' && pluckDrag) return triangle(xm, s.h * 1e-3, s.d * s.L, s.L);
+    return sineSeries(strCoef, strCoefN, PI * xm / s.L);
+  }
+  function render3(rect) {
+    const g = s3, s = S.s, L = s.L;
+    if (S3.w !== rect.w || S3.h !== rect.h) { S3.w = rect.w; S3.h = rect.h; g.r.setSize(rect.w, Math.max(1, rect.h)); g.cam.aspect = rect.w / Math.max(1, rect.h); g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.accent, T.equi].join(); if (S3.key !== key) { S3.key = key; theme3(); }
+    // frame the whole sonometer and the hanging mass
+    const asp = rect.w / Math.max(1, rect.h), tn = Math.tan(15 * PI / 180), narrow = asp < 2, dist = Math.max((narrow ? L * 1.15 + 0.12 : 1.42) / asp, narrow ? 0.2 : 0.6) / (2 * tn);
+    VD3.place(g.cam, S3.o, v3(narrow ? L / 2 : 0.53, 0.0, narrow ? 0.06 : -0.02), dist);
+    // magnification: the largest swing about 7 cm on the box top
+    let K;
+    if (s.mode === 'drive') { ensureCurve(); K = Math.max(1, nice(0.07 / Math.max(1e-9, curveMax))); if (K > 0.07 / Math.max(1e-9, curveMax) * 1.4) K /= 2; }
+    else K = 10;
+    S3.K = K;
+    prepareStringCoef();
+    const pos = g.sg.attributes.position.array, nor = g.sg.attributes.normal.array, bp = g.bg.attributes.position.array, gp = g.gg.attributes.position.array;
+    let env = null;
+    if (s.mode === 'harm') env = (x) => 5e-3 * Math.abs(Math.sin(s.n * PI * x / L));
+    else if (s.mode === 'drive') {
+      const gr = new Float64Array(D.M + 1), gi = new Float64Array(D.M + 1); for (let n = 1; n <= D.M; n++) { gr[n] = D.Gr[n]; gi[n] = D.Gi[n]; }
+      env = (x) => { const th = PI * x / L; return Math.hypot(sineSeries(gr, D.M, th), sineSeries(gi, D.M, th)); };
+    }
+    let prev = null;
+    for (let i = 0; i <= NSEG; i++) {
+      const x = L * i / NSEG, y = K * str3(x);
+      const nx = L * Math.min(NSEG, i + 1) / NSEG, px = L * Math.max(0, i - 1) / NSEG;
+      const ty = (K * str3(nx) - (prev === null ? y : prev)) / Math.max(1e-9, nx - px);   // slope dy/dx, for the ring's tilt
+      prev = y;
+      const tl = Math.hypot(1, ty), ax = -ty / tl, ay = 1 / tl;   // unit normal in the x–y plane
+      for (let j = 0; j < RS; j++) {
+        const a = 2 * PI * j / RS, cy = Math.cos(a), cz = Math.sin(a), o = (i * RS + j) * 3;
+        const nxv = ax * cy, nyv = ay * cy, nzv = cz;
+        pos[o] = x + RSTR * nxv; pos[o + 1] = y + RSTR * nyv; pos[o + 2] = Z0 + RSTR * nzv; nor[o] = nxv; nor[o + 1] = nyv; nor[o + 2] = nzv;
+      }
+      const e = env ? K * env(x) : 0, o2 = i * 6;
+      bp[o2] = x; bp[o2 + 1] = -e; bp[o2 + 2] = Z0 - 0.0005; bp[o2 + 3] = x; bp[o2 + 4] = e; bp[o2 + 5] = Z0 - 0.0005;
+      const rel = s.mode === 'pluck' ? K * triangle(x, s.h * 1e-3, s.d * L, L) : 0; gp[i * 3] = x; gp[i * 3 + 1] = rel; gp[i * 3 + 2] = Z0;
+    }
+    g.sg.attributes.position.needsUpdate = g.sg.attributes.normal.needsUpdate = true; g.sg.computeBoundingSphere();
+    g.band.visible = !!env; g.bg.attributes.position.needsUpdate = true;
+    g.ghost.visible = s.mode === 'pluck' && !pluckDrag; g.gg.attributes.position.needsUpdate = true; g.ghost.computeLineDistances();
+    // bridges, fixed runs of string, hanger and masses
+    g.nut.position.x = 0; g.bridge.position.x = L;
+    cyl(g.hitch, v3(-0.1, 0, BOX.h + 0.028), v3(0, 0, Z0)); cyl(g.back, v3(L, 0, Z0), v3(PUL, 0, Z0));
+    const m = s.T / G_N, hookTop = Z0 - 0.025, hz = -0.16;
+    cyl(g.drop, v3(PUL + 0.025, 0, hookTop), v3(PUL + 0.025, 0, hz));
+    g.hook.position.set(PUL + 0.025, 0, hz); g.hook.scale.set(1, 1, 0.012 + 0.02 * Math.ceil(m) + 0.02);
+    const mtx = new THREE.Matrix4(), q = new THREE.Quaternion(); let z = hz - 0.012, n = 0;
+    for (let k = 0; k < Math.floor(m) && n < 19; k++, n++) { mtx.compose(v3(PUL + 0.025, 0, z - 0.0095), q, v3(1, 1, 0.019)); g.discs.setMatrixAt(n, mtx); z -= 0.02; }
+    const rest = m - Math.floor(m);
+    if (rest > 0.01) { mtx.compose(v3(PUL + 0.025, 0, z - rest * 0.01), q, v3(1, 1, Math.max(0.002, rest * 0.02 - 0.001))); g.discs.setMatrixAt(n++, mtx); z -= rest * 0.02; }
+    g.discs.count = n; g.discs.instanceMatrix.needsUpdate = true; S3.massZ = z;
+    // node rings for a single harmonic
+    g.nodes.forEach((nd, k) => { nd.visible = s.mode === 'harm' && k <= s.n; if (nd.visible) nd.position.set(k * L / s.n, 0, Z0); });
+    // the driver beside the string at L/20, its arm moving with the string there
+    const dOn = s.mode === 'drive'; g.drv.visible = g.arm.visible = g.clip.visible = dOn;
+    if (dOn) {
+      const xd = DRIVE_XD * L, yd = K * str3(xd);
+      g.drv.position.set(xd, BOX.w / 2 + 0.035, BOX.h + 0.025);
+      cyl(g.arm, v3(xd, BOX.w / 2 + 0.01, Z0), v3(xd, yd, Z0)); g.clip.position.set(xd, yd, Z0);
+    }
+    g.scene.updateMatrixWorld(); g.r.render(g.scene, g.cam);
+  }
+  const proj3 = (x, y, z) => { const t = v3(x, y, z).project(s3.cam), R = S3.rect; return [R.x + (t.x + 1) / 2 * R.w, R.y + (1 - t.y) / 2 * R.h]; };
+  // pane pixels to the point (x, y) in the horizontal plane of the string
+  function unproj3(px, py) {
+    const R = S3.rect, nd = new THREE.Vector2((px - R.x) / R.w * 2 - 1, -((py - R.y) / R.h) * 2 + 1), rc = new THREE.Raycaster();
+    s3.cam.updateMatrixWorld(); rc.setFromCamera(nd, s3.cam);
+    const hit = new THREE.Vector3(); return rc.ray.intersectPlane(new THREE.Plane(v3(0, 0, 1), -Z0), hit) ? [hit.x, hit.y] : null;
+  }
+  // drawn by drawString in place of the flat string panel: the 3D picture, its labels and its grips
+  function drawString3(rect, title) {
+    const s = S.s, L = s.L, K = S3.K;
+    ctx.clearRect(rect.x, rect.y, rect.w, rect.h);
+    render3(rect);
+    if (s.mode === 'harm') {
+      const sp = proj3(L / s.n, 0, Z0)[0] - proj3(0, 0, Z0)[0];
+      if (Math.abs(sp) > 26 * ls) for (let k = 0; k < s.n; k++) {
+        const pa = proj3((k + 0.5) * L / s.n, K * 5e-3, Z0); tag('A', pa[0], pa[1] - 8 * ls, T.muted, 'center', 'bottom', false, 10);
+        if (k > 0) { const pn = proj3(k * L / s.n, -0.02, Z0); tag('N', pn[0], pn[1] + 6 * ls, T.equi, 'center', 'top', true, 10); }
+      }
+    }
+    const pb = proj3(L, -0.03, BOX.h + BR + 0.01), pm = proj3(PUL + 0.025, 0, S3.massZ - 0.01);
+    const bAl = pb[0] > rect.w - 90 * ls ? 'right' : pb[0] < 90 * ls ? 'left' : 'center';
+    tag(`bridge, L = ${L.toFixed(3)} m`, bAl === 'right' ? Math.min(pb[0], rect.w - 8 * ls) : pb[0], pb[1] + 26 * ls, T.ink, bAl, 'top', true, 10.5);
+    tag(`m = T/g = ${(s.T / G_N).toFixed(2)} kg`, pm[0] - 14 * ls, pm[1], T.ink, 'right', 'top', true, 10.5);
+    if (s.mode === 'drive') { const pd = proj3(DRIVE_XD * L, BOX.w / 2 + 0.035, BOX.h + 0.055); tag('driver', pd[0], pd[1] - 4 * ls, T.pos, 'center', 'bottom', true, 10); }
+    tag(title, 50 * ls, rect.y + 12 * ls, T.ink, 'left', 'top', true, 11.5);
+    const note = `sideways motion drawn ×${K >= 1000 ? K.toExponential(0) : K}${s.mode !== 'pluck' ? ', band: where the string moves' : ', dashed: the release shape'} · lengths to scale · drag to turn`;
+    tag(pick([note, `motion ×${K} · drag to turn`], rect.w - 70 * ls, 10, false), rect.w - 12 * ls, rect.y + rect.h - 8 * ls, T.muted, 'right', 'bottom', false, 10);
+    // grips: the sliding bridge, and the string (to pluck it) unless it is driven
+    const b0 = proj3(L, -0.03, BOX.h), b1 = proj3(L, -0.03, BOX.h + BR);
+    handles.push({ id: 'bridge', cursor: 'ew-resize', color: T.tubeEdge, seg: [b0[0], b0[1], b1[0], b1[1]], grip: [b1[0], b1[1] + 14 * ls],
+      set: (mx, my) => { const w = unproj3(mx, my); if (w) setSlider('sL', w[0]); } });
+    if (s.mode !== 'drive') {
+      const xg = s.mode === 'pluck' ? s.d * L : L / 2, gp = proj3(xg, K * str3(xg), Z0);
+      handles.push({ id: 'string', cursor: 'grab', color: T.accent, pt: gp,
+        start: () => { startPluck(); }, set: (mx, my) => { const w = unproj3(mx, my); if (w) setPluckFromPointer(w[0] / L, w[1] / K * 1e3); } });
+    }
+  }
+  function setView3(want) {
+    S3.want = want;
+    if (want && !S3.ok && S.view === 'string') {
+      if (S3.tried) S3.want = false;
+      else if (!S3.loading) { S3.loading = true; VD3.load((ok) => { S3.loading = false; S3.ok = ok && init3(); if (!S3.ok) { S3.want = false; $('modelHint').textContent = NO3D; } sync3(); drawAll(); }); }
+    }
+    sync3(); drawAll();
+  }
+  function sync3() {
+    $('dimSeg').hidden = S.view !== 'string';
+    for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String((b.dataset.dim === '3d') === S3.want));
+    if (s3) s3.el.hidden = !on3();
+  }
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setView3(b.dataset.dim === '3d'); });
+  function stringTitle(maxW) {
+    const s = S.s, L = s.L, f1 = sF(1);
+    if (s.mode === 'harm') return pick([`Harmonic n = ${s.n}:  f${sub(s.n)} = ${s.n} v/2L = ${sF(s.n).toFixed(1)} Hz,  λ${sub(s.n)} = 2L/${s.n} = ${(2 * L / s.n).toFixed(3)} m`,
+      `n = ${s.n}:  f${sub(s.n)} = ${sF(s.n).toFixed(1)} Hz,  λ${sub(s.n)} = ${(2 * L / s.n).toFixed(3)} m`], maxW);
+    if (s.mode === 'pluck') return pluckDrag ? pick([`Pulled to h = ${s.h.toFixed(1)} mm at d = ${(s.d * L).toFixed(3)} m: let go`, `h = ${s.h.toFixed(1)} mm, d = ${fracName(s.d)}: let go`], maxW)
+      : pick([`Plucked at d = ${(s.d * L).toFixed(3)} m (${fracName(s.d)}), sum of ${PLUCK_N} modes`, `Plucked at d = ${fracName(s.d)}`], maxW);
+    return pick([`Driven at f = ${s.f.toFixed(1)} Hz  (f/f₁ = ${(s.f / f1).toFixed(3)})`, `Driven at ${s.f.toFixed(1)} Hz`], maxW);
   }
   function fracName(d) {
     const fr = [[1, 2], [1, 3], [2, 3], [1, 4], [3, 4], [1, 5], [2, 5], [3, 5], [4, 5], [1, 6], [5, 6], [1, 8], [3, 8], [5, 8], [7, 8], [1, 10], [3, 10], [7, 10], [9, 10]];
@@ -1193,6 +1421,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     buildKey(); updateReadouts(); soundRebuild();
     t = 0; holdSpan = null;
     if (v === 'string' && S.s.mode === 'drive') restDriven(D);
+    if (v === 'string' && S3.want && !S3.ok && !S3.tried) setView3(true); else sync3();
     drawAll();
   }
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; setView(b.dataset.v); markPreset(null); });
@@ -1328,7 +1557,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('pointermove', (ev) => {
     if (drag) { dragTo(ev); return; }
     const h = handleAt(ev); hoverId = h ? h.id : null;
-    can.style.cursor = h ? h.cursor : 'default';
+    can.style.cursor = h ? h.cursor : on3() && S3.rect && ev.offsetY < S3.rect.h ? 'grab' : 'default';
     if (!running) drawAll();
   });
   can.addEventListener('pointerdown', (ev) => {
@@ -1473,7 +1702,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.view === 'string' && S.s.mode === 'drive' && snd.on && now - lastSnd > 150) { soundUpdate(); lastSnd = now; }
     requestAnimationFrame(loop);
   }
-  window.__sw = { get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get D() { return D; }, get handles() { return handles; },
+  window.__sw = { get o3() { return S3.o; }, get frameMs() { return frameMs; }, get t() { return t; }, get S() { return S; }, get D() { return D; }, get handles() { return handles; },
     setRunning, applyPreset, setView, setMyst, get curveMax() { return curveMax; } };
 
   tokens();
@@ -1517,7 +1746,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
   const ro = new ResizeObserver(resize);
   ro.observe(pane);
+  S3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();
   applyPreset('standing');
+  sync3();
   setRunning(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
