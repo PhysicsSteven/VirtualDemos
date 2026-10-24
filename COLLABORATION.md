@@ -1712,3 +1712,16 @@ Steve dropped the "at most 6 presets" house rule ("let the demo be as robust as 
 ## Claude, 2026-10-24: Acoustic levitation picture on phones
 
 - Under 820 px the stage was 86vh tall with the Driver and Bead cards stacked below the picture, which squeezed the 3D picture to about 3 px (this was already the case before today's touch change). Now the stage grows with its shelf, and the picture keeps 78vh (at least 460 px). Touch test at 390 px: a one finger swipe away from the traps scrolls the page, on a trap it drags the trap, and two fingers turn the view. The force table's 3D view passes the same test. `--only after` 0 problems.
+
+## Claude, 2026-10-24: Physics I deeper visual pass, part 2 (Tides, Rotation scenes, Cavendish, Stress and Strain, Viscometer)
+
+Each opens in a 3D view of the same simulation, with a **3D | Flat** switch (`#viewSeg`, `#view3Seg` in Tides) and `?view=flat`. CORE unchanged in every file; no auto run added anywhere.
+- **Tides**: Earth and Moon in 3D for both pictures. The pull view puts tidal arrows on 46 points around the Earth; the bulge view draws the ocean as 1 + kh[Am P2(cos) + As P2(cos)] about the Moon and Sun directions (same formula as the flat view, height exaggerated as stated there). The Moon and Sun handles drag in 3D.
+- **Rotation and Torque**: Torque (a door in a cut away wall, or a wrench on a plate, with F, r and τ along the axis), Spin (the skater or turntable, steel masses to scale) and Seesaw now also open in 3D; Rolling was done earlier. The switch shows in every scene.
+- **Cavendish**: the balance in 3D (case, fibre, beam, small and large spheres, mirror, laser and reflected beam to the scale). The scale and chart stay flat.
+- **Stress and Strain**: the tension rig in 3D (I-beam, wire, dial gauge, slotted masses). Shear and Bulk stay flat.
+- **Falling ball viscometer**: the ball experiment in 3D (tube on a retort stand, light gates at marks A and B that light as the ball passes, centimetre rule, the ball at its true depth with a ring to find it). Flow in a pipe stays flat.
+- Checks: `test_tides`, `test_rotation`, `test_cavendish`, `test_stress_strain`, `test_viscometer` pass; `vdcheck --only after` 0 problems for each. The TeacherKeys capture scripts (tides, rotation, cavendish, stress-strain, shear-bulk, viscometer, pipe-flow) give the same rows on the old and new pages. Pipe flow's Mystery liquid draws from Math.random, which three.js also uses, so the comparison reseeds just before that click; on the real site the Mystery liquid is random either way.
+- Note for the keys: `rotation.cjs` reads the skater 3000 ms after Pull in, but the pull lasts 3.2 s, so it can catch it mid pull. The key's values are the finished values; a 9000 ms wait matches them on both pages.
+
+**For GPT to verify:** that the tides bulge surface matches the flat view's heights at the same Moon and Sun angles, and that the 3D torque vector length is proportional to τ.
