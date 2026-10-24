@@ -321,7 +321,7 @@ table.rows td.b { font-size: 0.76rem; }
   // ==CORE START==
   // Pure physics and instrument model; no DOM. Imported by node tests.
   const H_PLANCK = 6.62607015e-34;       // J s, exact
-  const MU_B = 9.2740100657e-24;         // J/T, CODATA 2018
+  const MU_B = 9.2740100657e-24;         // J/T, CODATA 2022
   const MU_N = 5.0507837461e-27;         // J/T, CODATA 2018
   const G_DPPH = 2.0036;
   const GAMMA_H = 42.577478e6;           // Hz/T, free proton gamma/2pi, CODATA 2018
@@ -1114,7 +1114,7 @@ table.rows td.b { font-size: 0.76rem; }
     const x = G.mag.x; x.fillStyle = '#9aa1a8'; x.fillRect(0, 0, 360, 380);
     x.fillStyle = '#20252b'; x.textAlign = 'center'; x.font = '700 34px sans-serif'; x.fillText('ZEEMAN', 180, 70); x.fillText('MAGNET', 180, 112);
     x.fillStyle = '#f4f4ee'; x.fillRect(30, 150, 300, 150); x.fillStyle = '#20252b'; x.font = '700 30px sans-serif'; x.fillText('B20', 180, 195);
-    x.font = '700 40px "JetBrains Mono", monospace'; x.fillText(`${(inst.B20 * 1e3).toFixed(1)} mT`, 180, 248); x.font = '22px sans-serif'; x.fillText('at 20 °C', 180, 284);
+    x.font = '700 40px "JetBrains Mono", monospace'; x.fillText(`${(inst.B20 * 1e3).toFixed(2)} mT`, 180, 248); x.font = '22px sans-serif'; x.fillText('at 20 °C', 180, 284);
     x.font = '24px sans-serif'; x.fillText('−0.075 % per °C', 180, 345);
     G.mag.t.needsUpdate = true;
   }
@@ -1293,7 +1293,7 @@ table.rows td.b { font-size: 0.76rem; }
     led(-48.5, 11.5, '#ff3020', o.led);
     // cell mount
     if (!psr) { rect(-26, 4, 5, 12, '#b8733a'); rect(-3, 4, 5, 12, '#b8733a'); rect(-30, 8.5, 6, 3, '#8d949b'); rect(1, 8.5, 6, 3, '#8d949b'); }
-    else { rect(-25, 1, 9, 19, '#9aa1a8'); rect(-8, 1, 9, 19, '#9aa1a8'); rect(-25, 1, 26, 2.6, '#9aa1a8'); ctx.fillStyle = '#20252b'; ctx.font = `700 ${1.5 * s}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('B₂₀', X(-20.5), Y(17)); ctx.fillText(`${(inst.B20 * 1e3).toFixed(1)} mT`, X(-20.5), Y(15)); }
+    else { rect(-25, 1, 9, 19, '#9aa1a8'); rect(-8, 1, 9, 19, '#9aa1a8'); rect(-25, 1, 26, 2.6, '#9aa1a8'); ctx.fillStyle = '#20252b'; ctx.font = `700 ${1.5 * s}px ${T.ui}`; ctx.textAlign = 'center'; ctx.fillText('B₂₀', X(-20.5), Y(17)); ctx.fillText(`${(inst.B20 * 1e3).toFixed(2)} mT`, X(-20.5), Y(15)); }
     rect(-15.5, 7, 7, 6, psr ? '#6a5a7e' : '#56677a'); ctx.fillStyle = SAMPLES[S.cfg][sample()].cap; ctx.fillRect(X(-13), Y(10.8), 2 * s, 1.6 * s);
     // cell mount control box
     rect(6, 0, 13, 5, '#3a4a5a'); led(16.5, 2.5, S.sweep === 'fast' || slow.running ? '#40ff70' : '#ff3020', 1);
@@ -1369,7 +1369,7 @@ table.rows td.b { font-size: 0.76rem; }
     $('sens').value = S.sens[S.cfg]; $('sensOut').textContent = `${S.sens[S.cfg].toFixed(2)} turns`;
     $('freq').value = S.dial; $('freqOut').textContent = `dial ${S.dial.toFixed(3)}`;
     $('temp').value = S.temp; $('tempOut').textContent = `${S.temp.toFixed(1)} °C`;
-    $('b20').textContent = `B₂₀ = ${(inst.B20 * 1e3).toFixed(1)} mT`;
+    $('b20').textContent = `B₂₀ = ${(inst.B20 * 1e3).toFixed(2)} mT`;
     $('bz').textContent = `${(BZ() * 1e3).toFixed(2)} mT`;
     document.querySelectorAll('#samples button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.s === sample())));
     $('sampleHint').textContent = SAMPLE_HINT[S.cfg][sample()];
