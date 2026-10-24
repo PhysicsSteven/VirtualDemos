@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>/* Function generator on an instrument shelf under the picture (the string-density pieces: knob with role slider, 12° a click,
    the mark angle derived from the value). The knobs turn the demo's own range inputs, shown under them for exact steps (Steve). */
 .shelf { display: flex; flex-wrap: wrap; align-items: flex-end; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
@@ -1603,7 +1604,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // orbit: drag to turn, wheel or pinch to zoom
     const pointers = new Map(); let mode = null;
     const pinch = () => { const p = [...pointers.values()]; return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) || 1; };
-    el.addEventListener('pointerdown', (e) => { el.setPointerCapture(e.pointerId); pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    el.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') return;   /* touches: VD3.touch below */
+      el.setPointerCapture(e.pointerId); pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (pointers.size === 2) mode = { type: 'pinch', d0: pinch(), z0: orbit.zoom }; else mode = { type: 'orbit', lx: e.clientX, ly: e.clientY }; el.style.cursor = 'grabbing'; });
     el.addEventListener('pointermove', (e) => {
       if (!pointers.has(e.pointerId)) return; pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
@@ -1614,6 +1616,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
     el.addEventListener('wheel', (e) => { e.preventDefault(); orbit.zoom = clamp(orbit.zoom / Math.exp(e.deltaY * 0.0012), 0.4, 2.5); glDirty = true; }, { passive: false });
     el.addEventListener('dblclick', () => { orbit.theta = -Math.PI / 2 - 0.5; orbit.phi = 0.95; orbit.zoom = 1; glDirty = true; });
+    /* phones: one finger scrolls the page, two fingers turn and pinch */
+    if (window.VD3) VD3.touch(el, { move: (dx, dy, k) => { orbit.theta -= dx * 0.008; orbit.phi = clamp(orbit.phi - dy * 0.008, 0.05, 1.5); orbit.zoom = clamp(orbit.zoom / k, 0.4, 2.5); glDirty = true; } });
     el.addEventListener('keydown', keyNav);
     el.style.cursor = 'grab';
     glTheme(); glBuild(); glResize();

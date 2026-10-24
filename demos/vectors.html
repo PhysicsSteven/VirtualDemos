@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* Layout: a grid with draggable vectors on the left; the instrument rail on the right. */
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
@@ -892,24 +893,28 @@
     };
     const pinch = () => { const p = [...pointers.values()]; return Math.hypot(p[0].x - p[1].x, p[0].y - p[1].y) || 1; };
     el.addEventListener('pointerdown', (e) => {
+      if (e.pointerType === 'touch' && !e.isPrimary) return;   /* two fingers: VD3.touch below */
       el.focus(); el.setPointerCapture(e.pointerId); pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (pointers.size === 2) { mode = { type: 'pinch', d0: pinch(), z0: orb.zoom }; return; }
       const hit = pick(e);
       if (hit && hit.kind === 'pulley') { mode = { type: 'pulley', i: hit.i }; FT.sel = hit.i; el.style.cursor = 'grabbing'; ftSet(); return; }
       if (hit && hit.kind === 'hanger') { FT.sel = hit.i; ftSet(); }
-      mode = { type: 'orbit', lx: e.clientX, ly: e.clientY }; el.style.cursor = 'grabbing';
+      mode = { type: 'orbit', lx: e.clientX, ly: e.clientY, touch: e.pointerType === 'touch' }; el.style.cursor = 'grabbing';   /* one finger on a phone scrolls the page instead of turning */
     });
     el.addEventListener('pointermove', (e) => {
       if (!pointers.has(e.pointerId)) { const h = pick(e); el.style.cursor = h ? (h.kind === 'pulley' ? 'grab' : 'pointer') : 'grab'; return; }
       pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (mode && mode.type === 'pinch' && pointers.size === 2) { orb.zoom = clamp(mode.z0 * pinch() / mode.d0, 0.5, 2.6); glDirty = true; return; }
       if (mode && mode.type === 'pulley') { const a = angleAt(e); if (a !== null && a !== FT.s[mode.i].a) { FT.s[mode.i].a = a; ftSet(); } return; }
-      if (mode && mode.type === 'orbit') { orb.th -= (e.clientX - mode.lx) * 0.008; orb.ph = clamp(orb.ph - (e.clientY - mode.ly) * 0.008, 0.02, 1.4); mode.lx = e.clientX; mode.ly = e.clientY; glDirty = true; }
+      if (mode && mode.type === 'orbit' && !mode.touch) { orb.th -= (e.clientX - mode.lx) * 0.008; orb.ph = clamp(orb.ph - (e.clientY - mode.ly) * 0.008, 0.02, 1.4); mode.lx = e.clientX; mode.ly = e.clientY; glDirty = true; }
     });
     const up = (e) => { pointers.delete(e.pointerId); mode = pointers.size ? mode : null; el.style.cursor = 'grab'; };
     el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
     el.addEventListener('wheel', (e) => { e.preventDefault(); orb.zoom = clamp(orb.zoom * Math.exp(-e.deltaY * 0.0012), 0.5, 2.6); glDirty = true; }, { passive: false });
     el.addEventListener('dblclick', () => { orb.th = -1.2; orb.ph = 0.92; orb.zoom = 1; glDirty = true; });
+    /* phones: one finger scrolls the page (or drags a pulley), two fingers turn and pinch */
+    if (window.VD3) VD3.touch(el, { grab: (e) => { const h = pick(e); return !!(h && h.kind === 'pulley'); },
+      move: (dx, dy, k) => { orb.th -= dx * 0.008; orb.ph = clamp(orb.ph - dy * 0.008, 0.02, 1.4); orb.zoom = clamp(orb.zoom * k, 0.5, 2.6); glDirty = true; } });
     el.addEventListener('keydown', (e) => { if (e.key === ',' || e.key === '.') { orb.th += e.key === ',' ? 0.12 : -0.12; glDirty = true; e.preventDefault(); return; } ftKey(e); });
   }
   function setFtView(v) {

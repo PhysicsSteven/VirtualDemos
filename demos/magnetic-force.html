@@ -2812,6 +2812,8 @@ details.hall[open] > summary { margin-bottom: 8px; }
   ro.observe(pane);
   resize();
   applyPreset('circle');
+  /* the page opens on the 3D view of the same circle (Steve, 2026-10-24); ?view=flat opens the top view. Choosing a setup goes back to the top view, where the ruler works */
+  { const v0 = new URLSearchParams(location.search).get('view'); if (v0 !== 'flat' && v0 !== 'top') { S.f.view3d = true; rebuild(false); } }
   setPlaying(!reduce);
   if (reduce) stillFrame();
   renderTable();

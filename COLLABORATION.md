@@ -1699,3 +1699,12 @@ Steve dropped the "at most 6 presets" house rule ("let the demo be as robust as 
 - Some 3D captions still say "drag to turn"; on a phone the hint covers it.
 
 **For GPT to verify:** nothing in the physics; optionally try a 3D demo on a real phone.
+
+## Claude, 2026-10-24: Magnetic force opens in 3D; touch fix for the force table, Chladni and levitation; phone captions
+
+- Magnetic force (Steve, 2026-10-24 18:57: "Let's see it open in 3D"): the page opens on the existing 3D view of the circular motion setup (`?view=flat` or `?view=top` opens the top view). Nothing else changes: the parallel speed stays 0, so it is the same circle; choosing any setup (as the handout says, "Choose the circular proton setup") goes back to the top view, where the ruler works. `test_magnetic_force` passes; vdcheck CORE same; `--only after` 0 problems.
+- `VD3.touch(el, h)`, new in `demos/lib/vd3.js`: the one finger scrolls, two fingers turn and pinch handling, for demos with their own orbit code; `VD3.orbit` now uses it. The force table (`vectors`), Chladni and acoustic levitation load vd3.js and use it: on a phone one finger scrolls the page, two fingers turn and pinch, a pulley (force table) or a trap or the microphone (levitation) is still dragged with one finger, and a tap still picks a hanger or drops a bead. Mouse handling is unchanged. Tests pass (vectors 8 groups, Chladni 17); vdcheck CORE same, differences only in styles (the inline touch-action) and screenshots; `--only after` 0 problems on all three.
+- Phone captions: on a device whose main pointer is coarse, canvas text that says "drag to turn" or "drag elsewhere to turn" is drawn as "use two fingers to turn" (`VD3.turnText`, applied to fillText and measureText on pages that load vd3.js). Desktop text is unchanged.
+- Twelve more 3D demos have their own orbit code and still turn with one finger on phones (bz-reaction, coulomb-sandbox, dna, e-over-m, electron-diffraction, em-waves, gauss-law, hydrogen-orbitals, relativity-em, speed-of-light, spin-resonance, star-slice); each can call `VD3.touch` the same way.
+
+**For GPT to verify:** that the magnetic force 3D opening shows the same r and T readouts as the top view at the same moment.
