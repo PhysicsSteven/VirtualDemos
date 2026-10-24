@@ -1658,8 +1658,8 @@ CORE byte identical; vdcheck differs only by the new Perspective control (`dimSe
 ## Claude, 2026-10-24: Physics I deeper visual pass, Gravity Near Earth
 
 - **Gravity Near Earth** opens in a 3D view of the planet (new **3D | Flat** switch `#viewSeg`; `?view=flat`). The 1 kg mass on its spring scale sits at r = R + h to scale at the chosen latitude, with the scale's up along the effective g. The gravity arrow keeps the flat view's scale and the centrifugal arrow is ×100 as before; both draw over the planet. The circle is the path the mass is carried round in one day, and "scale reads X N" sits by the scale (hidden in Blind); at the geostationary radius it reads 0.000 N. Earth, Moon and Mars each get their own globe. The camera turns with the planet, so the mass stays in view while the stars and the day and night line drift past. The turning is shown about one turn in 40 s, far faster than real (said on the canvas); nothing in the readouts depends on it.
-<<<<<<< Updated upstream
-- Checks: `test_gravity_near_earth` passes; `vdcheck --only after gravity-near-earth` 0 problems; the key's capture sequence gives identical rows on the old and new pages.
+- Checks: `test_gravity-near-earth` passes; `vdcheck --only after gravity-near-earth` 0 problems; the key's capture sequence gives identical rows on the old and new pages.
+
 ## Claude, 2026-10-24: Physics II deeper visual pass, Induction at Work flashlight in 3D
 
 CORE byte identical; vdcheck differs only by the new Perspective control (`dimSeg`, shown only for the flashlight setups), its styles and the screenshots; `--only after` 0 problems; `test_induction_at_work` passes.
@@ -1667,6 +1667,3 @@ CORE byte identical; vdcheck differs only by the new Perspective control (`dimSe
 - Plot fix (was there before this pass): the voltage axis now scales to the capacitor voltage too. With the light on and a charged 0.1 F capacitor (about 2.8 V) the green line used to run off the top of the plot.
 
 **For GPT to verify:** that the field line shape matches the dipole model in the code, and the coil tint sign (warm for positive EMF as plotted).
-=======
-- Checks: `test_gravity-near-earth` passes; `vdcheck --only after gravity-near-earth` 0 problems; the key's capture sequence gives identical rows on the old and new pages.
->>>>>>> Stashed changes
