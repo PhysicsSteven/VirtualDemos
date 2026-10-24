@@ -148,7 +148,7 @@ HANDOUT_TOPIC = {
     'magnets-oersted': "Magnets and Oersted's Compass",
     'straight-wire-fields': 'Fields and Forces of Straight Wires', 'loops-solenoids': 'Fields of Loops and Solenoids',
     'magnetism-in-matter': 'Magnetism in Matter',
-    'induced-electric-field': 'Induced Electric Field',
+    'induced-electric-field': 'Induced Electric Fields',
     'induction-at-work': 'Induction at Work',
     'transformers': 'Transformers and Power Lines',
     'displacement-current': 'Displacement Current',

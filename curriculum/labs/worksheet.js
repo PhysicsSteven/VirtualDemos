@@ -184,7 +184,7 @@
     /* Trial | Core | Turns per cm | Current I (A) | B₀ (T) | B (T) | B − B₀ (T) | Notes */
     'magnetism-in-matter': { demo: 'Magnetism in Matter', cols: ['row', 'material', 'n_per_cm', 'I_A', 'B0_T', 'B_T', 'Bm_T', 'notes'] },
     /* Trial | Current | Time t (ms) | dB/dt (T/s) | Path radius (cm) | Centre from the axis (cm) | Flux Φ (Wb) | −dΦ/dt (V) | ∮E·dl (V) | E on the path (V/m) */
-    'induced-electric-field': { demo: 'Induced Electric Field', cols: ['row', 'current', 't_ms', 'dBdt_T_s', 'path_r_cm', 'path_d_cm', 'Phi_Wb', 'emf_V', 'circ_V', 'E_V_per_m'] },
+    'induced-electric-field': { demo: 'Induced Electric Fields', cols: ['row', 'current', 't_ms', 'dBdt_T_s', 'path_r_cm', 'path_d_cm', 'Phi_Wb', 'emf_V', 'circ_V', 'E_V_per_m'] },
     'induction-at-work': { demo: 'Induction at Work', cols: ['row', 'f_Hz', 'stroke_cm', 'C_F', 'light', 't_s', 'emf_peak_V', 'Vc_V', 'E_hand_J', 'E_cap_J', 'E_heat_J', 'E_diode_J', 'E_led_J'] },
     'magnets-oersted': { demo: 'Magnetic Fields of Currents', cols: ['row', 'experiment', 'gap_cm', 'facing', 'force', 'F_rel', 'I_A', 'h_cm', 'BE_uT', 'Bw_uT', 'angle_deg', 'tan'] },
     /* Trial | Setup | I₁ | I₂ | d | Probe (x, y) | r | B | Direction | F/L on wire 1 | Loop | Current through it | Circulation | 1/r, 1/d (typed) */

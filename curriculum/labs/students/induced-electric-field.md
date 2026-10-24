@@ -1,4 +1,4 @@
-# Induced Electric Field
+# Induced Electric Fields
 Student laboratory · Physics II
 
 Textbook: OpenStax *University Physics*, Vol. 2, §13.4. Access for free at https://openstax.org/details/books/university-physics-volume-2.

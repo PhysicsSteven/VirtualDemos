@@ -1893,7 +1893,9 @@ Steve asked for deep consistency passes. Every demo in the three settled courses
 - **TeacherKeys**: stale keys for the three merged circuit demos deleted; worksheet keys and answers corrected as listed above; all key pages rebuilt.
 - Checks: every node suite passes; `courses.py --check`, `notes.py --check`, `qr.py`, link scan (all internal links resolve) and Liquid scan clean; Pages built after each push.
 
-**For GPT to verify:** the CODATA 2022 values, that nothing in a handout still names a control the demo lacks, the gauss law flux unit, and the household wiring note (toaster and kettle 21.9 A so the 20 A breaker trips).
+- Late additions from the Physics II check: induction notes use D for the distance from the sphere's centre (D = r + d, the demo reads d from the surface) and give the contact shares as 7.13 and 2.87 nC (CORE 7.12503 and 2.87497); "cross section" in the induction demo; the Induced Electric Fields handout, label, worksheet name and key now carry the demo's plural title; the induction worksheet key lost a stray empty second table.
+
+**For GPT to verify:** the CODATA 2022 values, that nothing in a handout still names a control the demo lacks, the gauss law flux unit, the household wiring note (toaster and kettle 21.9 A so the 20 A breaker trips), and the induction image charge statement with D.
 
 ## Claude, 2026-10-24: deeper visual pass on the Thermo module
 
