@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>/* in scene setup controls fade away while the run plays and come back on pause or reset */
 #tray { transition: opacity 0.35s ease, visibility 0.35s; }
 #tray.away { opacity: 0; visibility: hidden; }
@@ -99,7 +100,7 @@ table.rows input:focus { border-color: var(--accent); }
       <canvas id="can" tabindex="0" role="img" aria-label="A tall glass tube of liquid with two timing marks 0.200 m apart and a ball falling through it, with the gate timer. Space drops the ball, R takes it out."></canvas>
       <div class="viewbar"><button type="button" class="spin attn" id="go">Drop the ball</button><button type="button" class="spin" id="back">Take it out</button>
         <button type="button" class="spin attn" id="collect" hidden>Start collecting</button><button type="button" class="spin" id="empty" hidden>Empty the cylinder</button>
-        <div class="seg" role="group" aria-label="Playback speed" id="speedSeg"><button type="button" data-s="1" aria-pressed="true">×1</button><button type="button" data-s="10" aria-pressed="false">×10</button><button type="button" data-s="100" aria-pressed="false">×100</button></div></div>
+        <div class="seg" role="group" aria-label="Playback speed" id="speedSeg"><button type="button" data-s="1" aria-pressed="true">×1</button><button type="button" data-s="10" aria-pressed="false">×10</button><button type="button" data-s="100" aria-pressed="false">×100</button></div><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
       </div>
       <div class="tray" id="tray" role="group" aria-labelledby="trayTitle">
@@ -368,9 +369,12 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function draw() {
     if (!T || !W) return;
+    if (g3d && !use3()) g3d.el.hidden = true;
     if (S.exp === 'pipe') { drawPipe(); return; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
-    const p = ps(), top = (W < 560 ? 104 : 70) * p, bot = Hh - 30 * p, sc = (bot - top) / (LTUBE + 0.03), tw = Math.max(46 * p, Math.min(W * 0.32, S.D * sc)), cx = W * 0.42;
+    const p = ps();
+    if (use3()) draw3D(); else {
+    const vb = document.querySelector('#scene .viewbar'), top = Math.max(70 * p, (vb ? vb.offsetTop + vb.offsetHeight : 0) + 44 * p), bot = Hh - 30 * p, sc = (bot - top) / (LTUBE + 0.03), tw = Math.max(46 * p, Math.min(W * 0.32, S.D * sc)), cx = W * 0.42;
     const yOf = (z) => top + 0.03 * sc + z * sc;
     scenery(p, top, cx, tw, yOf);
     // glass body, then the liquid with a concave meniscus, darker toward the walls
@@ -398,13 +402,133 @@ table.rows input:focus { border-color: var(--accent); }
     const r = Math.max(3 * p, dm() / 2 * sc), y = yOf(Math.max(0, Math.min(LTUBE, depth())));
     ctx.fillStyle = ballFill(cx, y, r); ctx.beginPath(); ctx.arc(cx, y, r, 0, 7); ctx.fill();
     ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`tube ${S.D * 1000} mm wide, to scale`, cx, yOf(LTUBE) + 6 * p);
+    }
     // timer
     ctx.fillStyle = T.ink; ctx.font = `700 ${15 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-    const tx = 14 * p, ty = 54 * p;
+    const vb = document.querySelector('#scene .viewbar'), tx = 14 * p, ty = Math.max(54 * p, vb ? vb.offsetTop + vb.offsetHeight + 10 : 0);
     let txt = 'timer: —'; if (S.t1 != null) txt = S.done ? `timer: ${S.gate.dt.toFixed(2)} s from A to B` : `timer: ${(S.t - S.t1).toFixed(2)} s`;
     ctx.fillText(txt, tx, ty); ctx.font = `${12 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.fillText(`t = ${S.t.toFixed(2)} s since release${S.speed > 1 ? `, shown ×${S.speed}` : ''}`, tx, ty + 20 * p);
     if (up()) { ctx.fillStyle = T.mark; ctx.fillText('lighter than the liquid: it rises', tx, ty + 38 * p); }
   }
+  // ---------- 3D view of the falling ball tube (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
+  /* Metres, z up, the bench top at z = 0. The tube, its liquid column (0.45 m), the marks at 15 cm and 35 cm and the ball are to scale and
+     the ball sits at the depth the model gives; a ring is drawn round it on the screen so a 1 mm ball still shows. Each light gate lights
+     while the ball is inside its beam. The stand, clamps and beaker are scenery. Only the falling ball is in 3D; Flow in a pipe stays
+     flat. Drag to turn the view, wheel or pinch to zoom, double click to reset. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.4, ph: 1.32, zoom: 1 } };
+  let g3d = null;
+  const use3 = () => !!(G3.on && g3d) && S.exp === 'ball';
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  const ZB = 0.012, ZS = ZB + LTUBE;   /* the liquid's bottom and surface */
+  function init3D() {
+    G3.tried = true;
+    const rd = VD3.renderer(); if (!rd) return false;
+    rd.shadowMap.enabled = true; rd.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = rd.domElement; el.setAttribute('aria-hidden', 'true'); Object.assign(el.style, { position: 'absolute', left: '0', top: '0', pointerEvents: 'none' }); $('scene').insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.01, 20), M = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x8a8170, 0.65), sun = new THREE.DirectionalLight(0xffffff, 0.8); sun.position.set(-0.5, -0.9, 1.4); sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024);
+    Object.assign(sun.shadow.camera, { left: -0.5, right: 0.5, top: 0.7, bottom: -0.3, near: 0.3, far: 4 }); sun.shadow.bias = -0.0006; scene.add(hemi, sun);
+    const mesh = (geo, m, cast = true, recv = true) => { const x = new THREE.Mesh(geo, m); x.castShadow = cast; x.receiveShadow = recv; return x; };
+    const upZ = (g) => g.rotateX(Math.PI / 2);
+    const benchM = M({ roughness: 0.8 }), bench = mesh(new THREE.BoxGeometry(2.4, 1.0, 0.04), benchM, false, true); bench.position.set(0, 0.2, -0.02);
+    const wallM = M({ roughness: 0.95 }), wall = mesh(new THREE.PlaneGeometry(2.4, 1.4), wallM, false, true); wall.rotation.x = Math.PI / 2; wall.position.set(0, 0.45, 0.7);
+    const standM = M({ roughness: 0.5, metalness: 0.5 }), darkM = M({ roughness: 0.55, metalness: 0.5 });
+    const glassM = new THREE.MeshPhysicalMaterial({ color: 0xdff1fb, transparent: true, opacity: 0.22, roughness: 0.05, metalness: 0, depthWrite: false, side: THREE.DoubleSide });
+    const liqM = new THREE.MeshStandardMaterial({ transparent: true, opacity: 0.55, roughness: 0.2, depthWrite: false });
+    const tubeG = new THREE.Group(), stand = new THREE.Group(), beaker = new THREE.Group();
+    const markM = new THREE.MeshBasicMaterial(), gateM = M({ roughness: 0.5 }), ledOff = new THREE.MeshBasicMaterial({ color: 0x5a2420 }), ledOn = new THREE.MeshBasicMaterial({ color: 0xff3b2f });
+    const ballM = M({ roughness: 0.25, metalness: 0.6 }), ball = mesh(new THREE.SphereGeometry(1, 24, 16), ballM);
+    const rc = document.createElement('canvas'); rc.width = 64; rc.height = 1024; const rulerT = new THREE.CanvasTexture(rc), rulerM = M({ map: rulerT, roughness: 0.8 });
+    scene.add(bench, wall, tubeG, stand, beaker, ball);
+    g3d = { rd, el, scene, cam, hemi, sun, benchM, wallM, standM, darkM, glassM, liqM, markM, gateM, ledOff, ledOn, ballM, ball, rc, rulerT, rulerM, tubeG, stand, beaker, mesh, upZ, sig: '', leds: [] };
+    can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.3, phMax: 1.55, zMin: 0.6, zMax: 4, keys: false });
+    return true;
+  }
+  /* the tube, marks, gates, ruler, stand and beaker, rebuilt when the tube's width changes */
+  function build3() {
+    const g = g3d, sig = String(S.D); if (g.sig === sig) return; g.sig = sig;
+    for (const grp of [g.tubeG, g.stand, g.beaker]) while (grp.children.length) { const c = grp.children.pop(); c.traverse((m) => { if (m.geometry) m.geometry.dispose(); }); }
+    const { mesh, upZ } = g, R = S.D / 2, t = 0.0025, H = LTUBE + 0.03 + ZB;
+    const glass = mesh(upZ(new THREE.CylinderGeometry(R + t, R + t, H, 48, 1, true)).translate(0, 0, H / 2), g.glassM, false, false);
+    const foot = mesh(upZ(new THREE.CylinderGeometry(R + 0.012, R + 0.016, ZB, 48)).translate(0, 0, ZB / 2), g.glassM, false, false);
+    const liq = mesh(upZ(new THREE.CylinderGeometry(R - 0.0005, R - 0.0005, LTUBE, 48)).translate(0, 0, ZB + LTUBE / 2), g.liqM, false, false);
+    const lip = mesh(new THREE.TorusGeometry(R + t, 0.0015, 8, 48), g.glassM, false, false); lip.position.z = H;
+    g.tubeG.add(foot, liq, glass, lip);
+    g.leds = [];
+    for (const z of [MARK1, MARK2]) {
+      const ring = mesh(new THREE.TorusGeometry(R + t + 0.0004, 0.0009, 6, 64), g.markM, false, false); ring.position.z = ZS - z; g.tubeG.add(ring);
+      /* a light gate: a U bracket round the tube with its LED on the side towards us */
+      const gate = new THREE.Group(); gate.position.z = ZS - z;
+      for (const sy of [-1, 1]) { const arm = mesh(new THREE.BoxGeometry(0.05, 0.008, 0.014), g.gateM); arm.position.set(-0.012, sy * (R + t + 0.008), 0); gate.add(arm); }
+      const back = mesh(new THREE.BoxGeometry(0.01, 2 * (R + t + 0.012), 0.014), g.gateM); back.position.set(-0.035, 0, 0); gate.add(back);
+      const led = mesh(new THREE.SphereGeometry(0.0028, 10, 8), g.ledOff, false, false); led.position.set(-0.02, -(R + t + 0.0125), 0.003); gate.add(led); g.leds.push(led);
+      g.tubeG.add(gate);
+    }
+    /* a ruler beside the tube, 0 at the liquid's surface, as in the flat view */
+    const ruler = mesh(new THREE.PlaneGeometry(0.03, 0.47), g.rulerM, false, true); ruler.rotation.x = Math.PI / 2; ruler.position.set(R + t + 0.022, -0.004, ZS - 0.225); g.tubeG.add(ruler);
+    /* the stand: base, rod, two boss heads and clamps */
+    const rx = -R - 0.11;
+    const base = mesh(new THREE.BoxGeometry(0.16, 0.11, 0.012), g.darkM); base.position.set(rx - 0.03, 0.02, 0.006); g.stand.add(base);
+    const rod = mesh(upZ(new THREE.CylinderGeometry(0.006, 0.006, 0.6, 12)).translate(0, 0, 0.3), g.standM); rod.position.set(rx, 0.02, 0.012); g.stand.add(rod);
+    for (const z of [0.04, 0.42]) {
+      const zz = ZS - z, boss = mesh(new THREE.BoxGeometry(0.022, 0.022, 0.022), g.darkM); boss.position.set(rx, 0.02, zz); g.stand.add(boss);
+      const arm = mesh(new THREE.CylinderGeometry(0.004, 0.004, -rx - R - 0.006, 10).rotateZ(Math.PI / 2), g.standM); arm.position.set((rx - R - 0.006) / 2, 0.01, zz); g.stand.add(arm);
+      const jaw = mesh(new THREE.TorusGeometry(R + t + 0.003, 0.003, 8, 32, Math.PI * 1.3), g.darkM); jaw.rotation.z = Math.PI * 0.35; jaw.position.z = zz; g.stand.add(jaw);
+    }
+    /* a spare beaker of the liquid */
+    const bw = 0.04, bh = 0.07, bx = 0.24;
+    const bglass = mesh(upZ(new THREE.CylinderGeometry(bw, bw, bh, 40, 1, true)).translate(0, 0, bh / 2), g.glassM, false, false), bliq = mesh(upZ(new THREE.CylinderGeometry(bw - 0.002, bw - 0.002, bh * 0.6, 40)).translate(0, 0, bh * 0.3), g.liqM, false, false);
+    g.beaker.add(bliq, bglass); g.beaker.position.set(bx, 0.06, 0);
+  }
+  function theme3() {
+    const g = g3d, dk = VD3.dark();
+    g.scene.background = col3(T.wall, '#eef1f4'); g.benchM.color = col3(T.bench, '#c8a67a'); g.wallM.color = col3(T.wall, '#eef1f4'); g.standM.color = col3(T.stand, '#a3acb6'); g.darkM.color = col3(T.standDark, '#5f6873');
+    g.markM.color = col3(T.mark, '#c23f2c'); g.gateM.color = col3(dk ? '#2b323b' : '#3a424c', '#3a424c');
+    const c = g.rc.getContext('2d'); c.fillStyle = dk ? '#d8d2bf' : '#f6f1df'; c.fillRect(0, 0, 64, 1024); c.fillStyle = '#2a2a2a'; c.strokeStyle = '#2a2a2a';
+    for (let k = 0; k <= 46; k++) { const y = 1024 * (0.005 + k / 100) / 0.47, L = k % 10 === 0 ? 30 : k % 5 === 0 ? 20 : 11; c.lineWidth = k % 10 === 0 ? 3 : 2; c.beginPath(); c.moveTo(0, y); c.lineTo(L, y); c.stroke(); if (k % 10 === 0) { c.font = '700 18px monospace'; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(String(k), 62, y); } }
+    g.rulerT.needsUpdate = true;
+    g.hemi.intensity = dk ? 0.55 : 0.7; g.sun.intensity = dk ? 0.7 : 0.8; g.sig = '';
+  }
+  function draw3D() {
+    const g = g3d, dk = VD3.dark(), p = ps(), W0 = Math.max(1, Math.round(W)), H0 = Math.max(1, Math.round(Hh));
+    g.el.hidden = false; Object.assign(g.el.style, { width: W0 + 'px', height: H0 + 'px' });
+    if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; }
+    const key = [T.wall, T.mark, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    build3();
+    g.liqM.color = col3(S.myst ? T.fluid : T.liq[S.fluid], '#d9b44a'); g.beaker.visible = W >= 640;
+    g.ballM.color = col3(S.ball === 'glass' ? T.ballGlass : S.ball === 'nylon' ? T.ballNylon : T.ball, '#9aa3ad');
+    g.ballM.metalness = S.ball === 'steel' ? 0.7 : 0.05; g.ballM.transparent = S.ball === 'glass'; g.ballM.opacity = S.ball === 'glass' ? 0.75 : 1;
+    const R = S.D / 2, rb = dm() / 2, z = ZS - Math.max(0, Math.min(LTUBE, depth()));
+    g.ball.scale.setScalar(rb); g.ball.position.set(0, 0, z);
+    [MARK1, MARK2].forEach((zm, i) => { g.leds[i].material = Math.abs(depth() - zm) < rb + 0.0015 ? g.ledOn : g.ledOff; });
+    const top = (W < 560 ? 104 : 70) * p, bot = 30 * p, f2 = Math.max(0.3, (H0 - top - bot) / H0), tv = Math.tan(g.cam.fov * Math.PI / 360);
+    g.cam.setViewOffset(W0, H0, (0.5 - 0.42) * W0, -(top - bot) / 2, W0, H0);
+    VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0, ZS / 2 + 0.01), Math.max(0.27 / (tv * f2), 0.16 / (tv * g.cam.aspect)) + 0.2);
+    g.cam.updateProjectionMatrix(); g.scene.updateMatrixWorld(); g.rd.render(g.scene, g.cam);
+    const v = new THREE.Vector3(), Q = (x, y, zz) => { v.set(x, y, zz).project(g.cam); return [(v.x + 1) / 2 * W0, (1 - v.y) / 2 * H0]; };
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, Hh);
+    ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.mark; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (const [zm, lab] of [[MARK1, 'mark A'], [MARK2, 'mark B']]) {
+      const q = Q(-R - 0.03, -0.01, ZS - zm), tw = ctx.measureText(lab).width, x = q[0] - 8 * p;
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(x - tw - 4 * p, q[1] - 7 * p, tw + 8 * p, 14 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.mark; ctx.fillText(lab, x, q[1]);
+    }
+    { const q = Q(R + 0.04, -0.004, ZS + 0.012); ctx.fillStyle = T.muted; ctx.textAlign = 'left'; ctx.fillText('cm', q[0], q[1]); }
+    const bq = Q(0, 0, z), br = Math.hypot(...((a, b) => [a[0] - b[0], a[1] - b[1]])(Q(0, 0, z + rb), bq));
+    ctx.save(); ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(bq[0], bq[1], Math.max(7 * p, br + 4 * p), 0, 7); ctx.stroke(); ctx.restore();
+    { const q = Q(0, -R, 0); ctx.fillStyle = T.muted; ctx.font = `${9 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(`tube ${S.D * 1000} mm wide, ball ${S.d} mm, to scale`, q[0], Math.min(Hh - 14 * p, q[1] + 6 * p)); }
+  }
+  function setView(v) {
+    G3.want = v === '3d';
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { G3.want = false; v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setView(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3d && !use3()) g3d.el.hidden = true;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    draw();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
   function readouts() {
     if (S.exp === 'pipe') { pReadouts(); return; }
     const fl = FL(), d = dm(), vt = terminal(d, rhoB(), fl, S.D), dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
@@ -570,6 +694,7 @@ table.rows input:focus { border-color: var(--accent); }
     for (const b of document.querySelectorAll('#expSeg button')) b.setAttribute('aria-pressed', String(b.dataset.x === x));
     $('pipeSec').hidden = !pipe; $('ballSec').hidden = pipe; $('tray').hidden = pipe; $('valveTray').hidden = !pipe;
     $('go').hidden = pipe; $('back').hidden = pipe; $('collect').hidden = !pipe; $('empty').hidden = !pipe;
+    $('viewSeg').hidden = pipe;
     $('lede').textContent = LEDE[x]; $('unitsLine').textContent = UNITS[x];
     $('formula').textContent = pipe ? 'Poiseuille: Q = ΔP πr⁴/(8ηL) · Reynolds number N_R = ρvD/η · turbulent: ΔP = f (L/D) ρv²/2' : 'Stokes: F = 6πηrv · v_t = 2(ρ_b − ρ_f)g r²/(9η)';
     $('capHow').textContent = pipe ? 'Capture stores the cylinder volume (1 mL), the stopwatch time (0.01 s), the pressure gauge (0.1 Pa) and what the dye is doing, with the liquid, pipe and valve setting. The fit uses the rows for this liquid and pipe: the slope of log ΔP against log Q for the three lowest and the three highest flows, and η from a line through the origin of ΔP against Q for the three lowest.'
@@ -764,6 +889,7 @@ table.rows input:focus { border-color: var(--accent); }
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   tokens(); new ResizeObserver(resize).observe($('scene')); sync(); reset(); renderRows(); resize();
+  G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();
