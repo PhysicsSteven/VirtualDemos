@@ -47,7 +47,7 @@ One kWh is energy: 3.6 × 10⁶ J. One MWh is 1000 kWh. A source's annual genera
 
 ## Safety
 
-This is a reading/calculation activity. Do not inspect live electrical equipment or take measurements at generating facilities.
+This is a reading and calculation activity. Do not inspect live electrical equipment or take measurements at generating facilities.
 
 ## Procedure
 
@@ -83,7 +83,7 @@ Source: EIA Table 3.1.A, 2024 annual utility scale row; reported figures are rou
 
 ## Uncertainty
 
-The table is a dated statistical release with rounded values and may be revised. It is not a laboratory data set with a supplied independent error bar for every row. Do not invent confidence intervals. Distinguish source rounding, year/scope mismatch and uncertainty in an interpretation. Report appropriate significant figures; annual means conceal hourly and seasonal variation.
+The table is a dated statistical release with rounded values and may be revised. It is not a laboratory data set with a supplied independent error bar for every row. Do not invent confidence intervals. Distinguish source rounding, year or scope mismatch and uncertainty in an interpretation. Report appropriate significant figures; annual means conceal hourly and seasonal variation.
 
 ## Questions
 
@@ -94,4 +94,4 @@ The table is a dated statistical release with rounded values and may be revised.
 
 ## What to hand in
 
-Preactivity answers, source/year/scope statement, completed table and calculations, two conversion chain diagrams, the hypothetical plant energy account, uncertainty discussion and question answers. Cite the EIA table and distinguish published data from hypothetical assumptions.
+Preactivity answers, source, year and scope statement, completed table and calculations, two conversion chain diagrams, the hypothetical plant energy account, uncertainty discussion and question answers. Cite the EIA table and distinguish published data from hypothetical assumptions.

@@ -1,9 +1,9 @@
 # Reading a Potential Energy Diagram
 Student activity · Physics I · lecture demonstration
 
-Textbook: OpenStax *University Physics*, Vol. 1, §§7.1, 8.1–8.4. Access for free at https://openstax.org/details/books/university-physics-volume-1.
+Textbook: OpenStax *University Physics*, Vol. 1, §§7.1, 7.3 and 8.1–8.4. Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
-[Open the demonstration](https://physicssteven.github.io/VirtualDemos/demos/potential-curves.html)
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/potential-curves.html)
 
 <details class="about" markdown="1">
 <summary>About the demo</summary>

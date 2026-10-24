@@ -84,7 +84,7 @@ In the Power line rows, $$V_P$$ is the 12 kV generator, $$V_S$$ is the transmiss
 
 ## Uncertainty
 
-The meters read to four significant figures, and the ideal model has no other uncertainty, so your slopes in Analysis 1, 2 and 4 should match the predictions closely; say how closely, using the standard errors of your fits. The real model rests on stated choices (core permeability, wire, coupling) that a real transformer would only approximate: name one that would most change your Part 2 results, and in which direction.
+The meters show four significant figures and the recorded readings carry six, and the ideal model has no other uncertainty, so your slopes in Analysis 1, 2 and 4 should match the predictions closely; say how closely, using the standard errors of your fits. The real model rests on stated choices (core permeability, wire, coupling) that a real transformer would only approximate: name one that would most change your Part 2 results, and in which direction.
 
 ## Questions
 

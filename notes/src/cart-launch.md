@@ -17,7 +17,7 @@ Students need projectile motion with x and y treated separately. The demo shows 
 ## Running it in class
 
 1. **Predict first.** Turn on Blind and choose **Steady cart** (1.2 m/s, launch speed 4.0 m/s). Ask: does the ball land in front of the cart, behind it, or in it? Press **Launch**; it pauses at the top for votes, then **Resume**.
-2. **Steady cart.** The ball lands back in the launcher. It is in the air 0.816 s and both the ball and the cart move 0.979 m. Turn on **Velocity vectors**: the ball's vₓ arrow stays the same length as the cart's arrow the whole time, while v_y shrinks, reverses and grows. The strobe lines are all vertical, and the two lines on the graph lie on top of each other.
+2. **Steady cart.** The ball lands back in the launcher. It is in the air 0.815 s and both the ball and the cart move 0.979 m. Turn on **Velocity vectors**: the ball's vₓ arrow stays the same length as the cart's arrow the whole time, while v_y shrinks, reverses and grows. The strobe lines are all vertical, and the two lines on the graph lie on top of each other.
 3. **Watch from the cart.** Switch to **The cart**: the ball goes straight up and down, exactly as with **Cart at rest**.
 4. **Cart speeds up** (1.5 m/s² from the moment of launch): the cart moves 1.477 m while the ball moves 0.979 m, so the ball comes down 0.50 m behind the launcher and lands on the track. **Cart brakes** (−1.5 m/s²): the cart stops after 0.48 m and the ball lands ahead. In the cart's view with **Acceleration vectors** on, the ball's acceleration relative to the cart tilts backward or forward.
 5. **Frictionless incline** (15°, launched perpendicular to the track): the cart speeds up down the slope, yet the ball lands in the launcher again. Discuss why with Q4.

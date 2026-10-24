@@ -74,7 +74,7 @@ Record planet, drag setting and the number of oscillations timed. Keep length, m
 ## Analysis
 
 1. Fit $$T^2$$ against $$L$$ with a free intercept. Infer $$g$$ and inspect residuals. Explain what length zero error would do to the intercept on a real bench.
-2. Estimate the finite amplitude bias using the first correction above. State whether it matters at your precision; optionally correct your inferred $$g$$ using that factor.
+2. Estimate the finite amplitude bias using the first correction above. State whether it matters at your precision, then correct your inferred $$g$$ by that factor and give the corrected value.
 3. Compare the mass trials without claiming that identical rounded readings prove exact independence in nature.
 4. Plot $$T$$ against $$\theta_0$$. Compare with the small angle prediction and calculate the fractional period increase at each angle. Decide what angle range satisfies a stated tolerance, such as 1%.
 5. Compare rod and bob periods. Explain the result using moment of inertia and gravitational torque rather than total mass alone.

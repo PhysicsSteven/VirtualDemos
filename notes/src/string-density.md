@@ -18,7 +18,7 @@ Students need v = fλ and the idea of a standing wave on a string with fixed end
 ## Running it in class
 
 1. **Sweep the frequency, 200 g.** String B, L = 1.20 m, 200 g hanging (the 50 g hanger counts). Raise **Driver frequency f** with the slider, then use **−0.1 Hz** and **+0.1 Hz** to find the largest amplitude. Resonances near 16.8, 33.7, 50.5, 67.4 and 84.2 Hz, with 1 to 5 loops. **Record this reading** at each, then plot **f against n**.
-2. **Third harmonic.** Three loops at 50.5 Hz. Point out that the vibrator end barely moves (0.50 mm) while the antinodes swing about 9 mm: the end is very nearly a node. Step 1 Hz away and the amplitude drops to about 0.3 of the peak; 0.1 Hz away it is still 96%.
+2. **Third harmonic.** Three loops at 50.5 Hz. Point out that the vibrator end barely moves (0.50 mm) while the antinodes swing about 9 mm: the end is very nearly a node. Step 1 Hz away and the amplitude drops to about 0.3 of the peak; 0.1 Hz away it is still 95%.
 3. **Add masses at 60 Hz.** Start with the hanger alone and use the **Add** buttons. Patterns of 7, 6, 5, 4, 3 and 2 loops appear near 52, 71, 102, 159, 282 and 635 g. The **Response** plot shows how sharp each peak is in mass. Plot **T against 1/n²**.
 4. **Unknown string.** Students measure μ by either method and check it against a classmate who used the other one.
 

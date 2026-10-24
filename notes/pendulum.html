@@ -95,8 +95,9 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <h2>Questions</h2>
 <div class="q"><p><strong>Q1.</strong> Predict the period of a 0.25 m pendulum on Earth, and of a 1.00 m pendulum on the Moon (g = 1.62 m/s²).</p></div>
 
-<div class="q"><p><strong>Q2.</strong> Why does the mass cancel? Use Newton's second law along the arc.</p>
-<p><strong>Q3 (lab).</strong> Your T² against L fit gives g slightly low (about 9.78 m/s² with 8° releases). Is that a random or a systematic error? What causes it and how would you reduce it?</p></div>
+<div class="q"><p><strong>Q2.</strong> Why does the mass cancel? Use Newton's second law along the arc.</p></div>
+
+<div class="q"><p><strong>Q3 (lab).</strong> Your T² against L fit gives g slightly low (about 9.78 m/s² with 8° releases). Is that a random or a systematic error? What causes it and how would you reduce it?</p></div>
 
 <div class="q"><p><strong>Q4.</strong> How long would a pendulum have to be for its swing (half a period) to take exactly 1 s? Why were clock pendulums about that length?</p></div>
 
@@ -128,7 +129,7 @@ footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line);
 <h2>Physics behind the demo</h2>
 <ul>
 <li>θ'' = −(g/ℓ) sin θ (ℓ = L for a point bob, 2L/3 for a uniform rod about its end), integrated with fourth order Runge–Kutta in 1 ms steps; the exact period is T₀ (2/π) K(sin(θ₀/2)) with K the complete elliptic integral.</li>
-<li>Point bob, massless inextensible string, frictionless pivot. Air drag (optional) is a small force in proportion to speed.</li>
+<li>Point bob, massless inextensible string, frictionless pivot. Air drag, when switched on, is a small force in proportion to speed.</li>
 <li>The photogate interpolates each crossing of the bottom and reports the time between every second crossing, to 0.001 s.</li>
 <li>Exact period and Double pendulum scenes: point masses on rigid massless rods, frictionless pivots, no air drag, uniform g; angles from straight down. The exact nonlinear equations (from the Lagrangian) are integrated with an adaptive Dormand–Prince 5(4) method at a tolerance of 10⁻¹¹ per step; <strong>Energy drift</strong> shows how well energy stays fixed.</li>
 <li>Exact period scene: θ″ = −(g/L) sin θ (point bob on a rigid massless rod, so it can go over the top), exact period T = 4√(L/g) K(sin(θ₀/2)), with K from the arithmetic–geometric mean.</li>

@@ -32,13 +32,13 @@ Infer liquid density from pressure, test Archimedes' principle and compare conti
 
 ## Background
 
-At depth $$h$$ in a liquid of density $$\rho$$ (§14.1), gauge pressure is
+At depth $$d$$ in a liquid of density $$\rho$$ (§14.1), the absolute pressure is the atmospheric pressure $$P_0$$ plus the gauge pressure $$\rho gd$$:
 
-$$P-P_{atm}=\rho gh.$$
+$$P=P_0+\rho gd.$$
 
-The buoyant force equals the weight of displaced liquid (§14.4):
+The buoyant force equals the weight of displaced liquid, of density $$\rho_f$$ and volume $$V_{sub}$$, the submerged volume (§14.4):
 
-$$F_B=\rho gV_{displaced}.$$
+$$F_B=\rho_f gV_{sub}.$$
 
 For steady incompressible flow (§§14.5–14.6),
 

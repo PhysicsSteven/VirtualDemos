@@ -48,7 +48,7 @@ OUT = ROOT / "notes"
 DEMOS = ROOT / "demos"
 INDEX = ROOT / "index.html"
 
-Q_RE = re.compile(r"^\*\*Q(\d+)\.\*\*", re.M)
+Q_RE = re.compile(r"^\*\*Q(\d+)(?: \([^)]*\))?\.\*\*", re.M)   # **Qn.** or **Qn (lab).**
 
 CSS = r"""
 :root {

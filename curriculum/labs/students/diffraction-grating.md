@@ -58,7 +58,7 @@ Start from the Red laser through 600 lines/mm setup, switch to Measure and set $
 
 **Part 3: the hydrogen spectrum.** Pick the Hydrogen lamp spectrum setup, switch to Measure and set $$L = 0.50$$ m. Measure the first order position of each of the four visible lines (red, cyan, blue and violet). Send the readings.
 
-**Part 4 (optional): resolving power.** Back in Explore, choose the sodium lamp. The two D lines land less than half a millimetre apart, too close to see on the wall, but the note under the table of orders gives the resolving power for the lit slits and the smallest wavelength difference it separates. Change the number of lit slits and find the fewest that still separate the D lines in first order.
+**Part 4: resolving power.** Back in Explore, choose the sodium lamp. The two D lines land less than half a millimetre apart, too close to see on the wall, but the note under the table of orders gives the resolving power for the lit slits and the smallest wavelength difference it separates. Change the number of lit slits and find the fewest that still separate the D lines in first order.
 
 ## Data
 
@@ -81,7 +81,7 @@ Fill in $$\sin\theta = y/\sqrt{y^2 + L^2}$$ and, for the known lasers, $$m\lambd
 2. For one Part 1 reading, find $$\lambda$$ with the small angle form $$\lambda \approx yd/(mL)$$ and with the exact form. By what percentage is the small angle form off, and why?
 3. For Part 2, find the unknown wavelength from each reading with $$\lambda = d\sin\theta/m$$, using your $$d$$ from Analysis 1. Average them and give an uncertainty. Then use Compute and check. Which laser was it?
 4. For Part 3, find the wavelength of each hydrogen line. Compare them with the Balmer formula, $$1/\lambda = R_H(1/4 - 1/n^2)$$ with $$R_H = 1.097 \times 10^7\ \mathrm{m^{-1}}$$, for $$n$$ = 3, 4, 5 and 6.
-5. (Optional) For Part 4, compare the fewest slits that separate the D lines with your prediction from Before the lab question 4. How wide is the lit patch of the grating then? Why would the second order need only half as many slits?
+5. For Part 4, compare the fewest slits that separate the D lines with your prediction from Before the lab question 4. How wide is the lit patch of the grating then? Why would the second order need only half as many slits?
 
 ## Uncertainty
 

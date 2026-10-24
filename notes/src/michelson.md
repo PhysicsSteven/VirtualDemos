@@ -12,7 +12,7 @@ time: 15 to 30 minutes
 
 ## Before class
 
-The demo shows a top view of the interferometer on an optical table (source focused to a point 30 mm before the beam splitter, compensator, M₁ on a micrometer stage, M₂ with tilt screws, an optional gas cell with pump, needle valve and gauge) and, beside it, the screen. The micrometer reads to 0.1 μm and a fringe counter (a photodiode at the screen's centre) counts each bright fringe that passes. Sources: red and green He–Ne lasers, the mercury green line, the sodium D lines, white light and a mystery laser. The room's air is dry, 20.0 °C and 101.325 kPa; air's index is from Ciddor (1996).
+The demo shows a top view of the interferometer on an optical table (source focused to a point 30 mm before the beam splitter, compensator, M₁ on a micrometer stage, M₂ with tilt screws, a gas cell with pump, needle valve and gauge) and, beside it, the screen. The micrometer reads to 0.1 μm and a fringe counter (a photodiode at the screen's centre) counts each bright fringe that passes. Sources: red and green He–Ne lasers, the mercury green line, the sodium D lines, white light and a mystery laser. The room's air is dry, 20.0 °C and 101.325 kPa; air's index is from Ciddor (1996).
 
 ## Running it in class
 

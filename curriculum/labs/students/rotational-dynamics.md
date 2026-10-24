@@ -17,7 +17,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§10.2 and 10.5–10.8. Acces
 **What the demo models.**
 
 - $$mg - T = ma$$; $$Tr - \tau_f = I\alpha$$; $$a = \alpha r$$
-- Model: a rigid turntable on its axle, a massless string that does not slip on the spool, a massless frictionless pulley, and (optionally) a constant friction torque at the bearing. Turntable $$I_0 = 2.00\times10^{-3}\ \text{kg}\,\text{m}^2$$. Disk 1.00 kg, radius 10.0 cm; ring 1.00 kg, radii 9.0 and 10.0 cm; two 0.200 kg masses (small cylinders, 1.5 cm radius).
+- Model: a rigid turntable on its axle, a massless string that does not slip on the spool, a massless frictionless pulley, and, when switched on, a constant friction torque at the bearing. Turntable $$I_0 = 2.00\times10^{-3}\ \text{kg}\,\text{m}^2$$. Disk 1.00 kg, radius 10.0 cm; ring 1.00 kg, radii 9.0 and 10.0 cm; two 0.200 kg masses (small cylinders, 1.5 cm radius).
 
 </details>
 
@@ -27,9 +27,9 @@ Measure a turntable's rotational inertia and bearing friction, then determine an
 
 ## Background
 
-A hanging mass $$m$$ pulls a string wound around a spool of radius $$r$$. Let $$a$$ be its downward acceleration, $$\alpha$$ the table's angular acceleration, and $$F_s$$ the string tension. With no slip,
+A hanging mass $$m$$ pulls a string wound around a spool of radius $$r$$. Let $$a$$ be its downward acceleration, $$\alpha$$ the table's angular acceleration, and $$T$$ the string tension. With no slip,
 
-$$\begin{gathered} mg-F_s=ma, \\[4pt] F_s r-\tau_f=I\alpha, \\[4pt] a=\alpha r. \end{gathered}$$
+$$\begin{gathered} mg-T=ma, \\[4pt] T r-\tau_f=I\alpha, \\[4pt] a=\alpha r. \end{gathered}$$
 
 For a drop from rest through height $$h$$ with constant acceleration,
 
@@ -65,7 +65,7 @@ Use the measured total rotating inertia, not just the added object's inertia. Th
 
 ## Data
 
-| Series/load | $$m$$ (kg) | $$r$$ (m) | $$h$$ (m) | $$t$$ (s) | $$a$$ (m/s²) | $$\alpha$$ (rad/s²) | $$\tau$$ (N m) |
+| Series/load | $$m$$ (kg) | $$r$$ (m) | $$h$$ (m) | $$t$$ (s) | $$a$$ (m/s²) | $$\alpha$$ (rad/s²) | $$\tau$$ (N·m) |
 |---|---|---|---|---|---|---|---|
 | | | | | | | | |
 | | | | | | | | |

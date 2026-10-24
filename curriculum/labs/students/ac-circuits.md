@@ -24,7 +24,7 @@ Measure how current depends on frequency in a series RLC circuit. Use the resona
 
 ## Background
 
-This optional activity follows Chapter 15. A resistor, inductor and capacitor affect alternating current differently (§15.2). The inductor's reactance grows with frequency, while the capacitor's falls:
+This activity follows Chapter 15. A resistor, inductor and capacitor affect alternating current differently (§15.2). The inductor's reactance grows with frequency, while the capacitor's falls:
 
 $$\begin{gathered} X_L=2\pi fL, \\[4pt] X_C=\frac{1}{2\pi fC}. \end{gathered}$$
 

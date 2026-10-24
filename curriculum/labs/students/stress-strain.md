@@ -36,7 +36,7 @@ Below yield, stress is proportional to strain: $$\sigma = Y\epsilon$$. Therefore
 
 $$Y=\text{slope}\,\frac{L}{A}.$$
 
-Use metres for extension when applying that formula. After yielding, unloading can leave a permanent extension. A wire that has already yielded is not the same initial specimen as a fresh wire. This model uses an idealized engineering stress–strain curve with smooth hardening; it does not model necking or every behavior of a real alloy. Shear and bulk moduli are the subject of Worksheet 2, Shear and Bulk Moduli, on the same demo.
+Use metres for extension when applying that formula. After yielding, unloading can leave a permanent extension. A wire that has already yielded is not the same initial specimen as a fresh wire. This model uses an idealized engineering stress strain curve with smooth hardening; it does not model necking or every behavior of a real alloy. Shear and bulk moduli are the subject of Worksheet 2, Shear and Bulk Moduli, on the same demo.
 
 ## Before the lab
 

@@ -25,11 +25,11 @@ Test momentum conservation with measured velocities and distinguish momentum con
 
 Choose one positive direction for both carts. With negligible external impulse (§9.3),
 
-$$m_1u_1+m_2u_2=m_1v_1+m_2v_2.$$
+$$m_1u_1+m_2u_2=m_1v_1'+m_2v_2'.$$
 
 Here $$u$$ denotes velocity before the collision and $$v$$ after it. Kinetic energy is conserved only in an elastic collision (§9.4). The coefficient of restitution compares separation speed with approach speed:
 
-$$e=\frac{v_2-v_1}{u_1-u_2}.$$
+$$e=\frac{v_2'-v_1'}{u_1-u_2}.$$
 
 For a one dimensional collision, reduced mass $$\mu = m_1m_2/(m_1+m_2)$$ gives
 
@@ -57,7 +57,7 @@ Keep fingers out of real cart bumpers and catch carts before they leave the trac
 
 ## Data
 
-| Run/bumper | $$m_1$$ (kg) | $$m_2$$ (kg) | $$u_1$$ (m/s) | $$u_2$$ (m/s) | $$v_1$$ (m/s) | $$v_2$$ (m/s) |
+| Run/bumper | $$m_1$$ (kg) | $$m_2$$ (kg) | $$u_1$$ (m/s) | $$u_2$$ (m/s) | $$v_1'$$ (m/s) | $$v_2'$$ (m/s) |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 | | | | | | | |

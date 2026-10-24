@@ -817,7 +817,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- 3D view: the bench in perspective, projected by hand ----------
   // World units are schematic: x along the beam (slits at x = 0), y across the slits (up, as in the other panels),
   // z along the slits. The slits keep their true ratio of a to d; L is not to scale.
-  let view3d = true, v3 = null;
+  let view3d = new URLSearchParams(location.search).get('view') !== 'flat', v3 = null;   /* ?view=flat opens the flat view, as on the other 3D demos */
   const cam = { yaw: 0.95, pitch: 0.5, user: false };
   const B3 = { xs: -2.05, xnd: -1.35, xl: 2.55, hp: 1.45, zp: 0.52, th: 0.07, zsl: 0.36, hs: 1.55, floor: -2.1 };
   const LAB = { ink: '#e6ebf1', muted: '#a3afbe', halo: 'rgba(6,9,13,0.78)' };

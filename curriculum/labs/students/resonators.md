@@ -1,6 +1,8 @@
 # Resonance Tube: Speed of Sound
 Student laboratory · Acoustics
 
+Textbook: OpenStax *University Physics*, Vol. 1, §§17.2 and 17.4. Access for free at https://openstax.org/details/books/university-physics-volume-1.
+
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/resonators.html)
 
 <details class="about" markdown="1">
@@ -66,7 +68,7 @@ With real equipment, secure the glass tube and adjust the water slowly. Keep wat
 2. Record the midpoint as your chosen length. Continue downward and find the next resonances.
 3. Number them from the top. If you skip one, keep its order number in mind rather than calling the next peak the second.
 4. Repeat the placements, typing the mode number $$k$$ for each repeated reading, then use a second source frequency without changing temperature or tube diameter.
-5. If time allows, repeat selected resonances at a different temperature or compare how the peak width changes with damping.
+5. Repeat two of the resonances at a second temperature, and compare how the peak width changes when the damping is changed.
 
 **Using the virtual apparatus.** Choose **Resonance tube, find c**, set 20 °C, diameter 3.2 cm and 512 Hz, record the **Reading seed** and select **Blind**. Clear the readings. Move **Water surface below the top** to each maximum and press **Capture reading**. Correct the editable $$k$$ column if needed. Send the 512 Hz readings to the worksheet before clearing, then repeat at 640 Hz using **Source frequency f** and send those, so each frequency gets its own copy of the Data table. The captured length includes a small simulated meniscus reading error. Use the swept level trace as a visual guide if sound is unavailable.
 

@@ -13,7 +13,7 @@ time: 20 to 45 minutes
 
 ## Before class
 
-Students should know β = 10 log(I/I₀) and that intensity falls as 1/r² from a point source (the Sound Intensity and Decibels demo). The picture is a plan view of the room with the loudspeaker and the microphone on its centre line; the Set up card holds the room's size, its walls (hard, absorbing panels, or wedges), the floor and the microphone distance. Under **Measure**, **Reverberation time** shows the decay of a clap and **Level against distance** the steady level of a 10 mW noise source. **Clap** plays the clap in slow motion (×1/100): each dot is a ray of sound, and it fades as the surfaces absorb it. The **Absorption coefficients** fold lists the α of every surface in the chosen octave band.
+Students should know β = 10 log(I/I₀) and that intensity falls as 1/r² from a point source (the Sound Intensity and Decibels demo). The picture is a 3D view of the room (Plan shows the floor plan) with the loudspeaker and the microphone on its centre line; the Set up card holds the room's size, its walls (hard, absorbing panels, or wedges), the floor and the microphone distance. Under **Measure**, **Reverberation time** shows the decay of a clap and **Level against distance** the steady level of a 10 mW noise source. **Clap** plays the clap in slow motion (×1/100): each dot is a ray of sound, and it fades as the surfaces absorb it. The **Absorption coefficients** fold lists the α of every surface in the chosen octave band.
 
 ## Running it in class
 

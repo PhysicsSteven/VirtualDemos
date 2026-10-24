@@ -1,9 +1,9 @@
 # Torque, Rolling and Angular Momentum
 Student activity · Physics I · lecture demonstration
 
-Textbook: OpenStax *University Physics*, Vol. 1, §§10.1 to 10.4, 10.6–10.7 and 11.1–11.3. Access for free at https://openstax.org/details/books/university-physics-volume-1.
+Textbook: OpenStax *University Physics*, Vol. 1, §§10.1 to 10.7 and 11.1–11.3. Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
-[Open the demonstration](https://physicssteven.github.io/VirtualDemos/demos/rotation.html)
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/rotation.html)
 
 <details class="about" markdown="1">
 <summary>About the demo</summary>

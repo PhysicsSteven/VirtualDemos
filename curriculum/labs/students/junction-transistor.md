@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §9.7 (Semiconductor Devices). 
 
 **Using the demo.**
 
-- The diode is a 1N4148 small signal silicon diode, modelled with the maker's published values: $$I = I_s\left(e^{eV/nkT} - 1\right)$$ with $$I_s = 4.352$$ nA, ideality factor $$n = 1.906$$ and a series resistance of 0.65 Ω, at 27 °C (300.15 K, the temperature the maker gives the values for). Reverse breakdown (above 100 V) is left out.
+- The diode is a 1N4148 small signal silicon diode, modelled with the maker's published values: $$I = I_s\left(e^{eV/nkT} - 1\right)$$ with $$I_s = 4.352$$ nA, ideality factor $$n = 1.906$$ and a series resistance of 0.6458 Ω, at 27 °C (300.15 K, the temperature the maker gives the values for). Reverse breakdown (above 100 V) is left out.
 - The transistor is a 2N3904 NPN silicon transistor (PNP is an option), modelled with the Ebers–Moll equations. Its current gain $$\beta$$ is a setting of the part (100 unless you change it); the data sheet gives 100 to 300 at a collector current of 10 mA. The base–collector and base–emitter junctions both follow the diode law, so the model saturates when the collector voltage falls too low, as a real transistor does.
 - LEDs use catalogue forward voltages at 20 mA (red 1.85 V, green 3.2 V, blue 3.3 V), with an assumed ideality factor of 2.
 - The circuit is solved exactly for the diode and transistor equations (Newton's method, to better than 10⁻¹⁰ V). Meters are ideal.

@@ -77,7 +77,7 @@ For the Exact period and Double pendulum scenes in an intro class, steps 1, 2, 4
 ## Physics behind the demo
 
 - θ'' = −(g/ℓ) sin θ (ℓ = L for a point bob, 2L/3 for a uniform rod about its end), integrated with fourth order Runge–Kutta in 1 ms steps; the exact period is T₀ (2/π) K(sin(θ₀/2)) with K the complete elliptic integral.
-- Point bob, massless inextensible string, frictionless pivot. Air drag (optional) is a small force in proportion to speed.
+- Point bob, massless inextensible string, frictionless pivot. Air drag, when switched on, is a small force in proportion to speed.
 - The photogate interpolates each crossing of the bottom and reports the time between every second crossing, to 0.001 s.
 - Exact period and Double pendulum scenes: point masses on rigid massless rods, frictionless pivots, no air drag, uniform g; angles from straight down. The exact nonlinear equations (from the Lagrangian) are integrated with an adaptive Dormand–Prince 5(4) method at a tolerance of 10⁻¹¹ per step; **Energy drift** shows how well energy stays fixed.
 - Exact period scene: θ″ = −(g/L) sin θ (point bob on a rigid massless rod, so it can go over the top), exact period T = 4√(L/g) K(sin(θ₀/2)), with K from the arithmetic–geometric mean.

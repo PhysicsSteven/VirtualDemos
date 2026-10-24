@@ -34,7 +34,7 @@ so a material with a larger $$B_C$$ spreads colors more. A rainbow is dispersion
 
 ## Before the lab
 
-1. Crown glass has $$n = 1.5309$$ at 400 nm and $$n = 1.5131$$ at 700 nm. Find the speed of each color in the glass. Which arrives first through a 1.00 m block, and by how much?
+1. Crown glass has $$n = 1.5308$$ at 400 nm and $$n = 1.5131$$ at 700 nm. Find the speed of each color in the glass. Which arrives first through a 1.00 m block, and by how much?
 2. Find the minimum deviation of a 60° prism with $$n = 1.5167$$.
 3. Show that a 60° prism of diamond ($$n \approx 2.42$$) has no minimum deviation: light cannot get through it symmetrically. What happens to the light instead?
 4. Why do we see a rainbow's red on the outside and violet on the inside, if water bends violet more?

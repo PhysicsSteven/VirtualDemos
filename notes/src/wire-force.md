@@ -20,7 +20,7 @@ Students should know the right hand rule for F = qv × B. All views are from abo
 2. **Wire at an angle to B.** At 30° the force halves (8.0 mN); at 0° it vanishes.
 3. **Loop: torque.** 20 turns, 1.0 A, 4 cm × 4 cm, 0.20 T: μ = 32 mA·m², largest torque 6.4 mN·m. Release it: it swings about μ ∥ B and settles, like a compass needle.
 4. **DC motor.** With the commutator it keeps turning. Watch the torque readout rise and fall twice per turn.
-5. Lab: capture the balance reading at six currents from −3 A to +3 A and fit for B; repeat with the Mystery magnet.
+5. Lab: capture the balance reading at seven currents from −3 A to +3 A, including zero, and fit for B; repeat with the Mystery magnet.
 
 ## Questions
 

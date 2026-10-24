@@ -28,7 +28,7 @@ In 1820 Oersted found that a current in a wire moves a compass needle. A long st
 
 $$B_{\text{wire}} = \frac{\mu_0 I}{2\pi h}$$
 
-at a distance $$h$$, circling the wire (right hand rule), with $$\mu_0 = 4\pi\times10^{-7}\ \mathrm{T\cdot m/A}$$. With the wire running north and south just above the needle, its field at the needle points east or west, at right angles to Earth's horizontal field $$B_E$$. The needle settles along the sum of the two, at an angle $$\theta$$ from north with
+at a distance $$h$$, circling the wire (right hand rule), with $$\mu_0 = 4\pi\times10^{-7}\ \mathrm{T\cdot m/A}$$ ($$1.25663706127\times10^{-6}$$, CODATA 2022, the value the demo uses). With the wire running north and south just above the needle, its field at the needle points east or west, at right angles to Earth's horizontal field $$B_E$$. The needle settles along the sum of the two, at an angle $$\theta$$ from north with
 
 $$\tan\theta = \frac{B_{\text{wire}}}{B_E}.$$
 

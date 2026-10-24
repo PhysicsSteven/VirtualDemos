@@ -240,7 +240,7 @@
     timbre: { demo: 'Timbre and Harmonics', cols: [(r) => `run ${r.run}, ${r.preset}`, 'n', 'f_Hz', 'rel_amplitude', 'level_dB', 'phase_deg', 'notes'] },
     'acoustic-levitation': { demo: 'Acoustic Levitation', cols: ['setup_material', 'radius_mm', 'drive_Vpp', 'phase_deg', 'tracked_trap_z_mm', 'Fmax_over_W', 'notes'] },
     /* Scan | Shape | Material | Thickness h (mm) | Mode/pattern | Frequency f (Hz) | Nodal sketch or description */
-    chladni: { demo: 'Chladni Patterns', cols: [(r) => `${r.row}, ${r.drive} drive, ${r.driver}, Q = ${r.Q}`, 'shape', 'material', 'h_mm', 'mode', 'f_Hz', null] },
+    chladni: { demo: 'Chladni Plates', cols: [(r) => `${r.row}, ${r.drive} drive, ${r.driver}, Q = ${r.Q}`, 'shape', 'material', 'h_mm', 'mode', 'f_Hz', null] },
     /* Scan | Motion | Emitted f₀ (Hz) | Speed (m/s) | Direction | Observed f (Hz) | f/f₀; Speed is the part along the line of sight */
     doppler: { demo: 'Doppler Effect', cols: ['row', (r) => (r.motion === 'both' ? `both: source ${r.vs_line_m_s} m/s, observer ${r.vo_line_m_s} m/s along the line` : r.motion),
       'f0_Hz', 'speed_m_s', 'direction', 'f_obs_Hz', 'ratio'] },
@@ -1027,7 +1027,7 @@ details.about[open] > summary { margin-bottom: 8px; }
     const t = new Date(h.sent).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }), n = h.rows.length;
     const src = h.demo + ':' + (h.series || ''), target = route(h).T.runs.find((R) => R.source === src);
     handBox.innerHTML = '';
-    handBox.appendChild(el('p', {}, [el('strong', { text: `New readings from the ${MAP.demo} demo: ` }), `${n} row${n === 1 ? '' : 's'}, sent ${t}.`]));
+    handBox.appendChild(el('p', {}, [el('strong', { text: `New readings from ${/^The /.test(MAP.demo) ? '' : 'the '}${MAP.demo} demo: ` }), `${n} row${n === 1 ? '' : 's'}, sent ${t}.`]));
     handBox.appendChild(el('div', { class: 'ws-btns' }, [
       el('button', { type: 'button', class: 'ws-btn ws-main', text: target ? 'Update my table with these readings' : 'Put these readings in my table', on: { click: () => takeHand(h) } }),
       el('button', { type: 'button', class: 'ws-btn', text: 'Download them as CSV', on: { click: () => download(h.csvName || SLUG + '-readings.csv', h.csv || '', 'text/csv') } }),
@@ -1052,7 +1052,7 @@ details.about[open] > summary { margin-bottom: 8px; }
     let R = dT.runs.find((x) => x.source === src);
     if (!R) {
       R = dT.runs[0].removed || filled(dT.runs[0]) ? addRun(dT) : dT.runs[0];
-      if (R.label && !R.label.value) R.label.wsSet(`Readings from the ${MAP.demo} demo`);
+      if (R.label && !R.label.value) R.label.wsSet(`Readings from ${/^The /.test(MAP.demo) ? '' : 'the '}${MAP.demo} demo`);
       R.source = src;
       if (R.wrap) typeset(R.wrap);
     }
@@ -1064,7 +1064,7 @@ details.about[open] > summary { margin-bottom: 8px; }
     for (let i = h.rows.length; i < R.rows.length; i++) get.forEach((g, c) => { if (g && R.rows[i].cells[c]) R.rows[i].cells[c].wsSet(''); });
     if (h.note && R.notes.value.indexOf(h.note) < 0) R.notes.wsSet(R.notes.value ? R.notes.value + '\n' + h.note : h.note);
     received = h.sent; handBox.hidden = true; save(); replot();
-    setStatus(`${h.rows.length} readings from the ${MAP.demo} demo are in your table.`);
+    setStatus(`${h.rows.length} readings from ${/^The /.test(MAP.demo) ? '' : 'the '}${MAP.demo} demo are in your table.`);
     (R.wrap || R.table).scrollIntoView({ block: 'nearest' });
   }
   window.addEventListener('storage', (e) => { if (e.key === HKEY) checkHand(); });

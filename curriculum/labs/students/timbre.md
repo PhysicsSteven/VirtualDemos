@@ -1,6 +1,8 @@
 # Timbre and Harmonics
 Student laboratory · Acoustics
 
+Textbook: OpenStax *University Physics*, Vol. 1, §§17.4 and 17.5. Access for free at https://openstax.org/details/books/university-physics-volume-1.
+
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/timbre.html)
 
 <details class="about" markdown="1">

@@ -10,7 +10,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §3.5 (with §1.1 for the index
 
 **Using the demo.**
 
-- The top view shows the interferometer on an optical table: a light source focused to a point just before the beam splitter, the compensator plate, the movable mirror M₁ on a micrometer stage, the fixed mirror M₂ with two tilt screws, an optional gas cell 5.00 cm long in the M₂ arm, and the screen. The second picture is the screen itself, 80 mm across, with a millimetre scale.
+- The top view shows the interferometer on an optical table: a light source focused to a point just before the beam splitter, the compensator plate, the movable mirror M₁ on a micrometer stage, the fixed mirror M₂ with two tilt screws, a gas cell 5.00 cm long in the M₂ arm, and the screen. The second picture is the screen itself, 80 mm across, with a millimetre scale.
 - The micrometer reads the mirror's position to 0.1 μm. Turn it with its slider, the step buttons, by dragging the drum in the picture, or with the arrow keys.
 - A fringe counter (a photodiode at the centre of the screen) adds one for each bright fringe that passes, whichever way it moves. Zero the counter starts it again and remembers the micrometer reading. A new light source, or putting the cell in or taking it out, cannot be counted.
 - The gas cell has a pump and a needle valve. Pump out takes it to 2 Pa; Let air in lets air back at about 1 kPa/s; Closed stops either. The gauge reads to 0.1 kPa.
@@ -66,7 +66,7 @@ A real He–Ne laser is class II or IIIa: never look into the beam or its reflec
 
 **Part 3: The index of refraction of air.** Clear the readings and pick the Air in a gas cell setup (red He–Ne). Pump the cell out until the gauge reads 0.0 kPa and close the valves. Zero the counter, then let air in. Each time the counter reaches 5, 10, 15, … fringes, close the valve and record the pressure, then let air in again. Send the run to a new copy of the table. Then let the cell fill to room pressure (101.3 kPa) and write down the total count.
 
-**Part 4: White light and equal paths (optional).** Pick the Tilted mirror setup and turn the micrometer until the fringes are straight, evenly spaced lines. Switch to white light and turn the micrometer slowly, in 0.1 μm steps, until coloured fringes appear. Record the reading where the centre fringe is white, and describe the colours on each side.
+**Part 4: White light and equal paths.** Pick the Tilted mirror setup and turn the micrometer until the fringes are straight, evenly spaced lines. Switch to white light and turn the micrometer slowly, in 0.1 μm steps, until coloured fringes appear. Record the reading where the centre fringe is white, and describe the colours on each side.
 
 ## Data
 
