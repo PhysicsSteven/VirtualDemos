@@ -1,7 +1,7 @@
 # Heat Engine Cycles
 Student laboratory · Thermodynamics
 
-Textbook: OpenStax *University Physics*, Vol. 2, §§3.4 to 3.6 and 4.2 to 4.5. Access for free at https://openstax.org/details/books/university-physics-volume-2.
+Textbook: OpenStax *University Physics*, Vol. 2, §§3.1 to 3.6 and 4.2 to 4.5. Access for free at https://openstax.org/details/books/university-physics-volume-2.
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/heat-engines.html)
 
@@ -22,11 +22,21 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§3.4 to 3.6 and 4.2 to 4.5. 
 
 ## Goal
 
-Measure the efficiency of the Carnot and Otto cycles as their settings change, compare them with the textbook formulas, and run a cycle backward as a refrigerator.
+Check the first law of thermodynamics on every leg of a cycle, measure the efficiency of the Carnot and Otto cycles as their settings change, compare them with the textbook formulas, and run a cycle backward as a refrigerator.
 
 ## Background
 
-An engine takes heat $$Q_\mathrm{in}$$ from a hot source, does net work $$W$$ and gives heat $$Q_\mathrm{out}$$ to a cold one; over a whole cycle $$W = Q_\mathrm{in} - Q_\mathrm{out}$$ (§4.2). Its efficiency is
+**The first law** (§§3.1 to 3.3). The gas in the cylinder is the system. When its volume changes, it does work on the piston,
+
+$$W = \int_{V_1}^{V_2} P\,dV,$$
+
+the area under its path on the PV diagram: positive when it expands, negative when it is compressed, and $$W = P\,\Delta V$$ at constant pressure. Heat $$Q$$ is energy that flows in because of a temperature difference, positive into the gas. The internal energy of an ideal gas depends only on its temperature, $$U = nC_VT$$, with $$C_V = \tfrac{5}{2}R$$ for a diatomic gas and $$\tfrac{3}{2}R$$ for a monatomic one. The first law is energy conservation for the gas:
+
+$$\Delta U = Q - W.$$
+
+$$\Delta U$$ depends only on the end states, but $$W$$ and $$Q$$ depend on the path between them. On each kind of leg one term is simple: at constant volume $$W = 0$$; at constant pressure $$Q = nC_P\Delta T$$ with $$C_P = C_V + R$$; at constant temperature $$\Delta U = 0$$, so $$Q = W = nRT\ln(V_2/V_1)$$; on an adiabat $$Q = 0$$, so $$W = -\Delta U$$.
+
+**Cycles.** An engine takes heat $$Q_\mathrm{in}$$ from a hot source, does net work $$W$$ and gives heat $$Q_\mathrm{out}$$ to a cold one; over a whole cycle $$W = Q_\mathrm{in} - Q_\mathrm{out}$$ (§4.2). Its efficiency is
 
 $$\eta = \frac{W}{Q_\mathrm{in}}.$$
 
@@ -44,12 +54,15 @@ Run backward, a cycle is a refrigerator, with coefficient of performance $$Q_c/W
 2. Find the Otto efficiency for $$r = 8$$ with air ($$\gamma = 7/5$$).
 3. Sketch $$\ln(1 - \eta)$$ against $$\ln r$$ for the Otto cycle. What is the slope?
 4. Find the COP of a Carnot refrigerator between 250 K and 320 K.
+5. One mole of a diatomic ideal gas expands at a constant 250 kPa from 12.0 L to 30.0 L. Find its starting and final temperatures, then $$W$$, $$\Delta U$$ and $$Q$$.
 
 ## Safety
 
 No hazards in the virtual lab. Real engines get hot and have moving parts.
 
 ## Procedure
+
+**First law, leg by leg.** Use the diatomic gas, 1.00 mol, run as an engine. Take the rectangular cycle of two constant pressure and two constant volume legs. Read the pressure and volume of each corner from the PV diagram, and find each corner's temperature from $$PV = nRT$$ (check it against the temperature shown when the gas is at that corner). For each leg, work out $$W$$, $$Q$$ and $$\Delta U$$ by hand from the rules in the Background, and only then compare with the demo's energy for that leg. Then take the Carnot cycle between 500 K and 300 K and do the same for its four legs: read the corner volumes from the PV diagram for the two isotherms, and use the two temperatures for the two adiabats. Record all eight legs in the First law table.
 
 **Carnot.** Pick Carnot cycle. Keep $$T_c$$ at 300 K and record a reading for $$T_h$$ from 400 K to 1200 K in steps of 100 K.
 
@@ -69,6 +82,19 @@ No hazards in the virtual lab. Real engines get hot and have moving parts.
 | | | | | | | | | | |
 | | | | | | | | | | |
 
+**First law.** One row for each leg, rectangle first, then Carnot. Energies in kJ.
+
+| Leg | Process | $$P$$ start, end (kPa) | $$V$$ start, end (L) | $$T$$ start, end (K) | $$W$$ by hand | $$Q$$ by hand | $$\Delta U$$ by hand | $$Q - W$$ | Demo's $$Q$$, $$W$$, $$\Delta U$$ |
+|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
+
 ## Analysis
 
 1. For every reading, check that $$W_\mathrm{net} = Q_\mathrm{in} - Q_\mathrm{out}$$.
@@ -76,6 +102,8 @@ No hazards in the virtual lab. Real engines get hot and have moving parts.
 3. For the Otto readings, plot $$\ln(1 - \eta)$$ against $$\ln r$$. From the slope find $$\gamma$$ for each gas.
 4. For the refrigerator readings, find each COP and compare with $$T_c/(T_h - T_c)$$.
 5. Compare the Stirling engine's efficiency with and without the regenerator, and with the Carnot efficiency for its two temperatures.
+6. In the First law table, check $$\Delta U = Q - W$$ on every leg, and that $$\Delta U$$ adds to zero around each cycle while $$W$$ and $$Q$$ do not. Show that the net work of the rectangle is its area on the PV diagram.
+7. Two corners of the rectangle have the same temperature. Find $$W$$, $$Q$$ and $$\Delta U$$ for going from one to the other along each of the two routes around the rectangle (one route runs two legs backward, which reverses the sign of each term). Which of the three is the same for both routes, and why?
 
 ## Uncertainty
 
@@ -87,6 +115,7 @@ The energies are shown to several significant figures and the model has no noise
 2. Why does raising the compression ratio make a gasoline engine more efficient, and what limits how high it can go?
 3. A heat pump delivers more heat to a house than the electrical energy it uses. Does that break the first law?
 4. Why does the regenerator raise the Stirling engine's efficiency?
+5. In the Carnot cycle the two adiabats do equal and opposite work. Why, and why does the net work come only from the isotherms?
 
 ## What to hand in
 
