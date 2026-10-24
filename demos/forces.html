@@ -73,6 +73,8 @@ table.rows input:focus { border-color: var(--accent); }
   .chips button, .btn, .proj, .spin { min-height: 36px; }
 }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -375,6 +377,7 @@ table.rows input:focus { border-color: var(--accent); }
     // lab wall and floor behind everything; a bench when a mass hangs
     const top = R(LEN, 0), floorY = by + drop * sc, sx1 = x0 + w;
     ctx.fillStyle = T.wall; ctx.fillRect(x0, 0, w, floorY);
+    if (window.VDGear) window.VDGear.wall(ctx, x0, 0, w, floorY, { color: T.wall, tile: 0 });
     ctx.strokeStyle = T.wallLine; ctx.lineWidth = 1;
     const bh = 24 * p, bw = 52 * p;
     for (let r = 0, y = floorY - 6 * p; y > 0; r++, y -= bh) { ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(sx1, y); for (let x = x0 + (r % 2 ? bw / 2 : 0); x < sx1; x += bw) { ctx.moveTo(x, y); ctx.lineTo(x, y - bh); } ctx.stroke(); }
@@ -414,10 +417,11 @@ table.rows input:focus { border-color: var(--accent); }
       const cl = R(LEN - 0.03, -0.05); ctx.strokeStyle = T.metal; ctx.lineWidth = 5 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(pc[0], pc[1]); ctx.lineTo(cl[0], cl[1]); ctx.stroke(); ctx.lineCap = 'butt';
       ctx.fillStyle = T.metal; ctx.strokeStyle = T.metalDark; ctx.lineWidth = 1; ctx.fillRect(cl[0] - 5 * p, cl[1] - 5 * p, 10 * p, 10 * p); ctx.strokeRect(cl[0] - 5 * p, cl[1] - 5 * p, 10 * p, 10 * p);
       // the pulley turns as the string runs over it: angle = (distance moved) / (radius, 0.09 m)
-      ctx.save(); ctx.translate(pc[0], pc[1]); ctx.rotate(S.s / 0.09);
+      if (window.VDGear) window.VDGear.pulley(ctx, pc[0], pc[1], pr, { angle: S.s / 0.09 });
+      else { ctx.save(); ctx.translate(pc[0], pc[1]); ctx.rotate(S.s / 0.09);
       ctx.fillStyle = T.surface; ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(0, 0, pr, 0, 7); ctx.fill(); ctx.stroke();
       ctx.strokeStyle = T.metalDark; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(0, 0, pr * 0.78, 0, 7); for (let i = 0; i < 5; i++) { const a = i * 2 * Math.PI / 5; ctx.moveTo(Math.cos(a) * pr * 0.2, Math.sin(a) * pr * 0.2); ctx.lineTo(Math.cos(a) * pr * 0.78, Math.sin(a) * pr * 0.78); } ctx.stroke();
-      ctx.fillStyle = T.metalDark; ctx.beginPath(); ctx.arc(0, 0, pr * 0.2, 0, 7); ctx.fill(); ctx.restore();
+      ctx.fillStyle = T.metalDark; ctx.beginPath(); ctx.arc(0, 0, pr * 0.2, 0, 7); ctx.fill(); ctx.restore(); }
       // hanger with slotted masses, filling the same square as before
       const hs = Math.min(0.32, 0.12 + 0.025 * P.m2) * sc, nd = Math.max(1, Math.min(8, Math.round(P.m2))), hk = Math.min(hs * 0.25, 6 * p), dz = (hs - hk - 2 * p) / nd;
       ctx.strokeStyle = T.metalDark; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(hangX, hy + hk / 2, hk / 2, -Math.PI / 2, Math.PI / 2, true); ctx.moveTo(hangX, hy + hk); ctx.lineTo(hangX, hy + hs); ctx.stroke();
@@ -428,7 +432,8 @@ table.rows input:focus { border-color: var(--accent); }
     // block
     ctx.save(); ctx.translate(c[0], c[1]); ctx.rotate(-th);
     const e = bs / 2 * sc;
-    ctx.fillStyle = T.wood; ctx.fillRect(-e, -e, 2 * e, 2 * e); grain(-e, -e, 2 * e, 2 * e, 6, 0.4);
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 7 * p; ctx.shadowOffsetY = 2 * p; ctx.fillStyle = T.wood; ctx.fillRect(-e, -e, 2 * e, 2 * e); ctx.restore(); grain(-e, -e, 2 * e, 2 * e, 6, 0.4);
+    { const lg = ctx.createLinearGradient(-e, -e, e, e); lg.addColorStop(0, 'rgba(255,255,255,0.22)'); lg.addColorStop(1, 'rgba(0,0,0,0.12)'); ctx.fillStyle = lg; ctx.fillRect(-e, -e, 2 * e, 2 * e); }
     ctx.strokeStyle = T.grain; ctx.globalAlpha = 0.45; ctx.lineWidth = 1; ctx.strokeRect(-e + 3 * p, -e + 3 * p, 2 * e - 6 * p, 2 * e - 6 * p); ctx.globalAlpha = 1;
     ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5; ctx.strokeRect(-e, -e, 2 * e, 2 * e);
     ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';

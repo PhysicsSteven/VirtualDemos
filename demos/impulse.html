@@ -81,6 +81,8 @@ table.rows input:focus { border-color: var(--accent); }
 .instr { left: 420px; top: 8px; }
 @media (max-width: 820px) { .instr { position: static; margin: 0; max-width: none; justify-content: center; } }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -214,6 +216,7 @@ table.rows input:focus { border-color: var(--accent); }
   const HINT = { stiff: 'A stiff spring: a short, tall force spike.', soft: 'A soft spring: a long, low force. Same bounciness as the stiff one.', clay: 'Clay: the cart barely bounces back (e = 0.10), so the impulse is smaller.' };
   const S = { bump: 'stiff', m: 0.5, v0: 0.6, rate: 1000, speed: 0.05, t: 0, run: false, done: false, blind: false, rows: [], pts: null };
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
+  const VG = window.VDGear;   // shared equipment drawing (demos/lib/gear.js); the plain shapes stay as a fallback
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
@@ -271,10 +274,12 @@ table.rows input:focus { border-color: var(--accent); }
     // track: 0.40 m shown, bumper face at x = 0
     const ty = 150 * p, x1 = W - 60 * p, sc = (x1 - 40 * p) / 0.42, X = (x) => x1 - 40 * p + x * sc;
     // lab bench under the track, a faint pegboard wall behind
-    ctx.fillStyle = T.wallDot; for (let yy = 56 * p; yy < ty - 20 * p; yy += 16 * p) for (let xx = 16 * p; xx < W - 8 * p; xx += 16 * p) { ctx.fillRect(xx, yy, 2 * p, 2 * p); }
-    ctx.fillStyle = T.bench; ctx.fillRect(0, ty + 10 * p, W, 36 * p); ctx.fillStyle = T.benchEdge; ctx.fillRect(0, ty + 10 * p, W, 3 * p);
+    if (VG) { VG.wall(ctx, 0, 0, W, ty + 10 * p, { tile: 0 }); ctx.fillStyle = T.wallDot; ctx.globalAlpha = 0.6; for (let yy = 56 * p; yy < ty - 20 * p; yy += 16 * p) for (let xx = 16 * p; xx < W - 8 * p; xx += 16 * p) { ctx.fillRect(xx, yy, 2 * p, 2 * p); } ctx.globalAlpha = 1; VG.bench(ctx, 0, ty + 13 * p, W, 3 * p, 33 * p, { top: T.benchEdge, front: T.bench }); }
+    else { ctx.fillStyle = T.wallDot; for (let yy = 56 * p; yy < ty - 20 * p; yy += 16 * p) for (let xx = 16 * p; xx < W - 8 * p; xx += 16 * p) { ctx.fillRect(xx, yy, 2 * p, 2 * p); }
+      ctx.fillStyle = T.bench; ctx.fillRect(0, ty + 10 * p, W, 36 * p); ctx.fillStyle = T.benchEdge; ctx.fillRect(0, ty + 10 * p, W, 3 * p); }
     // aluminium track with a ruler along its face (1 cm marks, longer every 5 cm, measured from the bumper's resting face) and an end stop at the left
-    ctx.fillStyle = T.track; ctx.fillRect(16 * p, ty, x1 + 34 * p - 16 * p, 10 * p);
+    { const tg = ctx.createLinearGradient(0, ty, 0, ty + 10 * p); tg.addColorStop(0, T.metal); tg.addColorStop(0.35, T.track); tg.addColorStop(1, T.metalDark); ctx.fillStyle = tg; }
+    ctx.fillRect(16 * p, ty, x1 + 34 * p - 16 * p, 10 * p);
     ctx.fillStyle = T.metal; ctx.fillRect(16 * p, ty + 2 * p, x1 + 34 * p - 16 * p, 2 * p);
     ctx.strokeStyle = T.canvas; ctx.lineWidth = 1; ctx.globalAlpha = 0.8; ctx.beginPath();
     for (let k = 0; ; k++) { const xx = X(-k / 100); if (xx < 22 * p) break; const len = k % 10 === 0 ? 5 * p : k % 5 === 0 ? 4 * p : 2.5 * p; if (sc / 100 < 3 * p && k % 5) continue; ctx.moveTo(xx + 0.5, ty + 10 * p); ctx.lineTo(xx + 0.5, ty + 10 * p - len); }
@@ -283,12 +288,12 @@ table.rows input:focus { border-color: var(--accent); }
     // force sensor clamped to the track, its cable running to a data logger on the bench
     const lx = x1 - 84 * p, ly = ty + 18 * p, lw = 92 * p, lh = 24 * p;
     ctx.strokeStyle = T.metalDark; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(x1 + 28 * p, ty - 26 * p); ctx.bezierCurveTo(x1 + 52 * p, ty - 20 * p, x1 + 48 * p, ly + lh * 0.5, lx + lw, ly + lh * 0.5); ctx.stroke();
-    ctx.fillStyle = T.logger; ctx.fillRect(lx, ly, lw, lh); ctx.fillStyle = T.lcd; ctx.fillRect(lx + 5 * p, ly + 5 * p, lw * 0.5, lh - 10 * p);
+    if (VG) VG.box(ctx, lx, ly, lw, lh, { color: /^#[0-9a-f]{6}$/i.test(T.logger) ? T.logger : undefined, r: 3 * p }); else { ctx.fillStyle = T.logger; ctx.fillRect(lx, ly, lw, lh); } ctx.fillStyle = T.lcd; ctx.fillRect(lx + 5 * p, ly + 5 * p, lw * 0.5, lh - 10 * p);
     ctx.strokeStyle = T.logger; ctx.lineWidth = 1; ctx.beginPath(); for (let i = 0; i <= 12; i++) { const xx = lx + 7 * p + (lw * 0.5 - 4 * p) * i / 12, yy = ly + lh - 8 * p - (i > 5 && i < 9 ? (i === 7 ? 6 : 3) * p : 0); i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); } ctx.stroke();
     const ledOn = S.run && (reduce || Math.floor(performance.now() / 400) % 2 === 0); ctx.fillStyle = ledOn ? T.led : T.metalDark; ctx.beginPath(); ctx.arc(lx + lw * 0.68, ly + lh / 2, 2.5 * p, 0, 7); ctx.fill();
     ctx.fillStyle = T.metal; for (let i = 0; i < 2; i++) { ctx.fillRect(lx + lw * 0.78 + i * 8 * p, ly + lh / 2 - 3 * p, 5 * p, 6 * p); }
     ctx.fillStyle = T.metalDark; ctx.fillRect(x1 + 2 * p, ty - 8 * p, 30 * p, 8 * p);
-    ctx.fillStyle = T.sensor; ctx.fillRect(x1 + 6 * p, ty - 46 * p, 22 * p, 46 * p);
+    if (VG) VG.box(ctx, x1 + 6 * p, ty - 46 * p, 22 * p, 46 * p, { color: /^#[0-9a-f]{6}$/i.test(T.sensor) ? T.sensor : undefined, r: 2 * p, shadow: false }); else { ctx.fillStyle = T.sensor; ctx.fillRect(x1 + 6 * p, ty - 46 * p, 22 * p, 46 * p); }
     ctx.fillStyle = T.metal; ctx.fillRect(x1 + 2 * p, ty - 24 * p, 4 * p, 12 * p);
     ctx.fillStyle = T.lcd; ctx.beginPath(); ctx.arc(x1 + 17 * p, ty - 38 * p, 2 * p, 0, 7); ctx.fill();
     // the bumper: its face sits where the model puts it (pushed in by x while the cart touches it)
@@ -314,12 +319,15 @@ table.rows input:focus { border-color: var(--accent); }
     }
     // the cart: body with a darker top rail and a mass label; wheels with hubs and spokes that turn as it rolls
     const cw = 70 * p, ch = 30 * p, cxr = X(cs.x), rW = 6 * p;
+    if (VG) VG.shadow(ctx, cxr - cw / 2, ty + 1 * p, cw * 0.55, 3 * p, 0.8);
     ctx.fillStyle = T.cart; ctx.beginPath(); ctx.moveTo(cxr - cw + 4 * p, ty - ch - 8 * p); ctx.lineTo(cxr - 4 * p, ty - ch - 8 * p); ctx.quadraticCurveTo(cxr, ty - ch - 8 * p, cxr, ty - ch - 4 * p); ctx.lineTo(cxr, ty - 8 * p); ctx.lineTo(cxr - cw, ty - 8 * p); ctx.lineTo(cxr - cw, ty - ch - 4 * p); ctx.quadraticCurveTo(cxr - cw, ty - ch - 8 * p, cxr - cw + 4 * p, ty - ch - 8 * p); ctx.closePath(); ctx.fill();
+    { const cg = ctx.createLinearGradient(0, ty - ch - 8 * p, 0, ty - 8 * p); cg.addColorStop(0, 'rgba(255,255,255,0.22)'); cg.addColorStop(0.5, 'rgba(255,255,255,0)'); cg.addColorStop(1, 'rgba(0,0,0,0.2)'); ctx.fillStyle = cg; ctx.fill(); }
     ctx.fillStyle = T.cartTop; ctx.globalAlpha = 0.5; ctx.fillRect(cxr - cw + 3 * p, ty - ch - 6 * p, cw - 6 * p, 4 * p); ctx.fillRect(cxr - cw + 3 * p, ty - 12 * p, cw - 6 * p, 2 * p); ctx.globalAlpha = 1;
     ctx.fillStyle = T.metalDark; ctx.fillRect(cxr - 1 * p, ty - ch * 0.75 - 8 * p, 2 * p, ch * 0.5);
     for (const wx of [cxr - cw + 12 * p, cxr - 12 * p]) {
       ctx.save(); ctx.translate(wx, ty - rW); ctx.rotate((cxr - X(-GAP)) / rW);
       ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(0, 0, rW, 0, 7); ctx.fill(); ctx.fillStyle = T.metal; ctx.beginPath(); ctx.arc(0, 0, rW * 0.6, 0, 7); ctx.fill();
+      if (VG) { ctx.rotate(-(cxr - X(-GAP)) / rW); const hg = ctx.createRadialGradient(-rW * 0.3, -rW * 0.3, 0, 0, 0, rW); hg.addColorStop(0, 'rgba(255,255,255,0.35)'); hg.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(0, 0, rW, 0, 7); ctx.fill(); ctx.rotate((cxr - X(-GAP)) / rW); }
       ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.beginPath(); for (let i = 0; i < 3; i++) { const a = i * Math.PI / 3; ctx.moveTo(-Math.cos(a) * rW * 0.6, -Math.sin(a) * rW * 0.6); ctx.lineTo(Math.cos(a) * rW * 0.6, Math.sin(a) * rW * 0.6); } ctx.stroke();
       ctx.restore();
     }

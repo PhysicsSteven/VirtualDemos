@@ -51,6 +51,8 @@ table.rows input:focus { border-color: var(--accent); }
 @media (max-width: 820px) { .chips button { min-height: 36px; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -206,7 +208,9 @@ table.rows input:focus { border-color: var(--accent); }
     for (const poly of LAND) { ctx.beginPath(); poly.forEach(([a, c], i) => { const x = cx + Rp * c * Math.cos(rot + a), y = cy - Rp * c * Math.sin(rot + a); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); }); ctx.closePath(); ctx.fill(); }
     ctx.fillStyle = T.ice; ctx.globalAlpha = 0.85; ctx.beginPath(); ctx.arc(cx, cy, Rp * Math.cos(80 * Math.PI / 180), 0, 7); ctx.fill(); ctx.globalAlpha = 1;
     const sh = ctx.createRadialGradient(cx, cy, Rp * 0.6, cx, cy, Rp * 1.02); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, T.shade); ctx.fillStyle = sh; ctx.fillRect(cx - Rp, cy - Rp, 2 * Rp, 2 * Rp);
+    { const sg = ctx.createRadialGradient(cx - Rp * 0.4, cy - Rp * 0.45, 0, cx - Rp * 0.4, cy - Rp * 0.45, Rp * 0.75); sg.addColorStop(0, 'rgba(255,255,255,0.28)'); sg.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = sg; ctx.fillRect(cx - Rp, cy - Rp, 2 * Rp, 2 * Rp); }   // sunlit sheen from the top left (a picture only; no sun direction is modelled)
     ctx.restore();
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = Math.max(1, Rp * 0.012); ctx.beginPath(); ctx.arc(cx, cy, Rp, Math.PI * 0.95, Math.PI * 1.55); ctx.stroke();
   }
   // a satellite with its solar panels along its direction of travel, tangent to the orbit
   function satellite(x, y, th) {

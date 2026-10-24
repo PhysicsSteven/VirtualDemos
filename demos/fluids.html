@@ -130,6 +130,8 @@ table.rows button:hover { color: var(--pos); }
 /* projector on a short screen: let the stage shrink to fit under the header */
 @media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -736,17 +738,26 @@ table.rows button:hover { color: var(--pos); }
   }
   const liqCol = () => T.liq[S.liq];
   function fillLiquid(ctx, path, col) {
-    ctx.fillStyle = col || liqCol(); ctx.globalAlpha = T.la; path(); ctx.fill(); ctx.globalAlpha = 1;
+    /* the liquid: a little lighter near the top and deeper below, as light fades with depth (drawing only) */
+    const VG = window.VDGear, c = col || liqCol(), Hc = ctx.canvas.height / (dpr || 1);
+    if (VG && /^#[0-9a-f]{6}$/i.test(c)) { const g = ctx.createLinearGradient(0, 0, 0, Hc); g.addColorStop(0, VG.mix(c, '#ffffff', 0.18)); g.addColorStop(1, VG.mix(c, '#000000', 0.18)); ctx.fillStyle = g; }
+    else ctx.fillStyle = c;
+    ctx.globalAlpha = T.la; path(); ctx.fill(); ctx.globalAlpha = 1;
   }
-  function glassWalls(ctx, x0, yTop, x1, yBot, lw) {   // an open topped container
-    ctx.strokeStyle = T.wire; ctx.lineWidth = lw; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
-    ctx.beginPath(); ctx.moveTo(x0, yTop); ctx.lineTo(x0, yBot); ctx.lineTo(x1, yBot); ctx.lineTo(x1, yTop); ctx.stroke();
+  function glassWalls(ctx, x0, yTop, x1, yBot, lw) {   // an open topped container: thick glass, a dark edge, a highlight down the left wall
+    ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    const path = () => { ctx.beginPath(); ctx.moveTo(x0, yTop); ctx.lineTo(x0, yBot); ctx.lineTo(x1, yBot); ctx.lineTo(x1, yTop); };
+    if (window.VDGear) { ctx.strokeStyle = window.VDGear.dark() ? 'rgba(170,200,230,0.12)' : 'rgba(150,185,215,0.25)'; ctx.lineWidth = lw * 2.6; path(); ctx.stroke(); }
+    ctx.strokeStyle = T.wire; ctx.lineWidth = lw; path(); ctx.stroke();
+    if (window.VDGear && yBot - yTop > 12) { ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = Math.max(1, lw * 0.45); ctx.beginPath(); ctx.moveTo(x0 + lw * 1.6, yTop + 6); ctx.lineTo(x0 + lw * 1.6, yBot - 6); ctx.stroke(); }
   }
   function surfaceLine(ctx, x0, x1, y, lw) {
     ctx.strokeStyle = liqCol(); ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
+    if (window.VDGear) { ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = Math.max(0.8, lw * 0.4); ctx.beginPath(); ctx.moveTo(x0, y - lw * 0.4); ctx.lineTo(x1, y - lw * 0.4); ctx.stroke(); }
   }
   function hatchFloor(ctx, x0, x1, y) {
     const ps = projScale();
+    if (window.VDGear) { const W = ctx.canvas.width / (dpr || 1), Hc = ctx.canvas.height / (dpr || 1); window.VDGear.bench(ctx, 0, y + 6 * ps, W, 6 * ps, Math.max(4 * ps, Hc - y - 6 * ps)); return; }
     ctx.strokeStyle = T.ink; ctx.lineWidth = 1.6 * ps; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke();
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * ps; ctx.beginPath();
     for (let x = x0 + 4 * ps; x < x1; x += 9 * ps) { ctx.moveTo(x, y); ctx.lineTo(x - 7 * ps, y + 7 * ps); }
@@ -755,8 +766,12 @@ table.rows button:hover { color: var(--pos); }
   // a round dial gauge: 270° sweep from 0 to max
   function dial(ctx, cx, cy, r, val, max, unit, ls, col) {
     const ps = projScale(), a0 = Math.PI * 0.75, sweep = Math.PI * 1.5, ang = (v) => a0 + clamp(v / max, 0, 1.02) * sweep;
+    if (window.VDGear) {   /* a chromed bezel and a slightly domed face */
+      const bz = ctx.createLinearGradient(cx - r, cy - r, cx + r, cy + r); bz.addColorStop(0, '#eef1f4'); bz.addColorStop(0.5, '#9aa4b0'); bz.addColorStop(1, '#5c6674');
+      ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 6 * ps; ctx.shadowOffsetY = 2 * ps; ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(cx, cy, r + 3.5 * ps, 0, 2 * Math.PI); ctx.fill(); ctx.restore(); }
     ctx.fillStyle = T.canvas; ctx.strokeStyle = T.wire; ctx.lineWidth = 2 * ps;
     ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill(); ctx.stroke();
+    if (window.VDGear) { const gl = ctx.createRadialGradient(cx - r * 0.4, cy - r * 0.5, 0, cx - r * 0.4, cy - r * 0.5, r * 1.1); gl.addColorStop(0, 'rgba(255,255,255,0.25)'); gl.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = gl; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 2 * Math.PI); ctx.fill(); }
     const st = nice(max / 5);
     ctx.font = `${Math.max(8, r * 0.17)}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps;
@@ -1068,7 +1083,9 @@ table.rows button:hover { color: var(--pos); }
       beakerInfo = { x: (bxl + bxr) / 2, y: (bfloor + Y(0)) / 2, top: bfloor - BEAKER.H * sc, Wc: rhoF() * G * Vc };
     }
     // the block
-    ctx.fillStyle = blockColor(q.rho); ctx.strokeStyle = isHot('block') ? T.accent : T.ink; ctx.lineWidth = (isHot('block') ? 2.4 : 1.5) * ps;
+    { const bc = blockColor(q.rho), VG = window.VDGear, hex = /^#[0-9a-f]{6}$/i.test(bc);
+      if (VG && hex) { const bg = ctx.createLinearGradient(bx0, by0, bx1, by1); bg.addColorStop(0, VG.mix(bc, '#ffffff', 0.25)); bg.addColorStop(1, VG.mix(bc, '#000000', 0.18)); ctx.fillStyle = bg; } else ctx.fillStyle = bc; }
+    ctx.strokeStyle = isHot('block') ? T.accent : T.ink; ctx.lineWidth = (isHot('block') ? 2.4 : 1.5) * ps;
     ctx.fillRect(bx0, by0, bx1 - bx0, by1 - by0); ctx.strokeRect(bx0, by0, bx1 - bx0, by1 - by0);
     // tint the submerged part
     if (b.s > 0) { ctx.fillStyle = liqCol(); ctx.globalAlpha = 0.22; ctx.fillRect(bx0, Y(bs.zb + b.s), bx1 - bx0, by1 - Y(bs.zb + b.s)); ctx.globalAlpha = 1; surfaceLine(ctx, bx0, bx1, yS, 1.2 * ps); }
@@ -1487,6 +1504,7 @@ table.rows button:hover { color: var(--pos); }
     const [W, H] = dims.s; if (!W || !H) return;
     const ctx = ctxs.s; ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (window.VDGear) window.VDGear.wall(ctx, 0, 0, W, H, { tile: 0 });
     handles = [];
     ctx.lineCap = 'round';
     if (S.scene === 'press') drawPress(ctx, W, H);

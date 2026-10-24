@@ -170,6 +170,6 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 
 ## Being moved
 
-Visual pass (Claude, from 2026-10-24): Physics I, then Physics II, demo by demo; drawing code and the look link only. Misc waits for the layout thread's sidebar folds.
+Visual pass (Claude, from 2026-10-24): Physics I, then Physics II, demo by demo; drawing code and the look link only. Misc is skipped for now (Steve, 2026-10-24).
 
 Nothing at the moment. Every demo is on the library except the redirect pages (nonuniform-circular, and circuit-builder, transient-circuits, rc-circuits, ac-circuits, which open the matching mode of Circuits).

@@ -51,6 +51,8 @@ table.rows input:focus { border-color: var(--accent); }
 @media (max-width: 820px) { .chips button { min-height: 36px; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -210,7 +212,9 @@ table.rows input:focus { border-color: var(--accent); }
       ctx.fillStyle = T.ice; ctx.globalAlpha = 0.8; ctx.fillRect(cx - Rp, cy - Rp, 2 * Rp, Rp * (1 - Math.sin(1.35))); ctx.globalAlpha = 1;
     }
     const sh = ctx.createRadialGradient(cx - Rp * 0.2, cy - Rp * 0.2, Rp * 0.55, cx, cy, Rp * 1.05); sh.addColorStop(0, 'rgba(0,0,0,0)'); sh.addColorStop(1, T.shade); ctx.fillStyle = sh; ctx.fillRect(cx - Rp, cy - Rp, 2 * Rp, 2 * Rp);
+    { const sg = ctx.createRadialGradient(cx - Rp * 0.4, cy - Rp * 0.45, 0, cx - Rp * 0.4, cy - Rp * 0.45, Rp * 0.75); sg.addColorStop(0, 'rgba(255,255,255,0.28)'); sg.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = sg; ctx.fillRect(cx - Rp, cy - Rp, 2 * Rp, 2 * Rp); }   // sunlit sheen from the top left (a picture only; no sun direction is modelled)
     ctx.restore();
+    ctx.strokeStyle = 'rgba(255,255,255,0.25)'; ctx.lineWidth = Math.max(1, Rp * 0.012); ctx.beginPath(); ctx.arc(cx, cy, Rp, Math.PI * 0.95, Math.PI * 1.55); ctx.stroke();
   }
   // a small icon beside the mass, standing with local "up" pointing away from the centre
   function placeIcon(cx, cy, r, la, sc) {
