@@ -10,6 +10,8 @@ const server=http.createServer((req,res)=>{
   if(!file.startsWith(root+path.sep)){res.writeHead(403).end();return;}
   fs.readFile(file,(err,b)=>{if(err){res.writeHead(404).end();return;}res.setHeader('Content-Type',{'.html':'text/html','.css':'text/css','.js':'text/javascript'}[path.extname(file)]||'text/plain');res.end(b);});
 });
+/* Lab sections and other secondary controls sit in closed folds since the layout redesign (2026-10-23); open them so the steps below can reach their controls. */
+const openFolds=(page)=>page.evaluate(()=>document.querySelectorAll('details').forEach(d=>{d.open=true;}));
 (async()=>{
   await new Promise(r=>server.listen(0,'127.0.0.1',r));const base=`http://127.0.0.1:${server.address().port}`;
   const name=process.env.BROWSER||'firefox',browser=await playwright[name].launch({headless:true});
@@ -20,7 +22,7 @@ const server=http.createServer((req,res)=>{
       page.on('pageerror',e=>errors.push(e.message));
       // Fonts are decorative; avoid dependence on an external font server.
       await page.route('https://fonts.**',r=>r.abort());
-      await page.goto(base+'/demos/gauss-law.html');
+      await page.goto(base+'/demos/gauss-law.html');await openFolds(page);
       await page.waitForFunction(()=>window.__gl&&window.__gl.num!==null);
       assert.equal(await page.evaluate(()=>window.__gl.running),false);
       for(const shape of ['sphere','box','cyl','free']){
@@ -30,7 +32,7 @@ const server=http.createServer((req,res)=>{
       assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Gauss horizontal overflow');
       assert.deepEqual(errors,[]);await page.screenshot({path:path.join(out,`${name}-gauss-${mobile?'phone':'desktop'}.png`),fullPage:true});
       console.log('PASS existing Gauss shape controls, numerical readout and layout',mobile?'phone dark':'desktop light');
-      await page.goto(base+'/demos/faraday.html');await page.waitForFunction(()=>window.__fd&&window.__fd.circ);
+      await page.goto(base+'/demos/faraday.html');await openFolds(page);await page.waitForFunction(()=>window.__fd&&window.__fd.circ);
       assert.equal(await page.evaluate(()=>window.__fd.running),false);
       await page.click('[data-p="gen"]');await page.click('#labStep');
       await page.fill('#labDuration','0.1');await page.click('#labAdvance');await page.click('#labCapture');
@@ -42,13 +44,13 @@ const server=http.createServer((req,res)=>{
       const ftext=fs.readFileSync(await ftrace.path(),'utf8');assert.equal(ftext.trim().split('\n').filter(l=>!l.startsWith('#')).length,103);assert.match(ftext,/^# demo version,faraday@/m);assert(ftext.includes('interval_midpoint_s'));
       await page.click('[data-p="rails"]');await page.fill('#labDuration','0.3');await page.click('#labAdvance');await page.click('#labCapture');
       const rail=await page.evaluate(()=>({emf:window.__fd.circ.emf,I:window.__fd.circ.I}));assert(Math.abs(rail.emf+.2)<1e-10);assert(Math.abs(rail.I+.2/.47)<1e-10);
-      const [fcsv]=await Promise.all([page.waitForEvent('download'),page.click('#labExport')]);assert.equal(fs.readFileSync(await fcsv.path(),'utf8').trim().split('\n').filter(l=>!l.startsWith('#')).length,3);
+      await page.click('#labExport');/* Export to worksheet hands the notebook CSV to the worksheet through localStorage (a download only when storage is blocked) */const fhand=await page.evaluate(()=>JSON.parse(localStorage.getItem('vd-handoff:faraday')));assert.equal(fhand.csv.trim().split('\n').filter(l=>!l.startsWith('#')).length,3);
       await page.click('[data-p="gen"]');assert.equal(await page.evaluate(()=>window.__fd.W.ke),0);
       assert.equal(await page.locator('#mPk').isVisible(),false);await page.uncheck('#labBlind');assert.equal(await page.locator('#mPk').isVisible(),true);
       assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'Faraday horizontal overflow');assert.deepEqual(errors,[]);
       await page.screenshot({path:path.join(out,`${name}-faraday-${mobile?'phone':'desktop'}.png`),fullPage:true});
       console.log('PASS Faraday deterministic stepping, generator/rail readings, CSV, reset, theory hiding and layout',mobile?'phone dark':'desktop light');
-      await page.goto(base+'/demos/capacitors.html');await page.waitForFunction(()=>window.__cap);
+      await page.goto(base+'/demos/capacitors.html');await openFolds(page);await page.waitForFunction(()=>window.__cap);
       await page.click('[data-p="apartV"]');await page.evaluate(()=>window.__cap.setRunning(false));
       const cap0=await page.evaluate(()=>window.__cap.state());
       await page.locator('#sD').evaluate(el=>{el.value='2';el.dispatchEvent(new Event('input',{bubbles:true}));});

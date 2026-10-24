@@ -12,7 +12,7 @@ console.log('Source',process.env.DEMO_REF||'working tree','browser',await browse
 try{for(const [width,scheme] of [[1440,'light'],[390,'dark']]){
   const page=await browser.newPage({viewport:{width,height:900},colorScheme:scheme,reducedMotion:'reduce',acceptDownloads:true}),errors=[];
   page.on('pageerror',e=>errors.push(e.message));await page.route('https://fonts.**',r=>r.abort());
-  await page.goto(`http://127.0.0.1:${server.address().port}/demos/gauss-law.html`);await page.waitForFunction(()=>window.__gl&&window.__gl.num);
+  await page.goto(`http://127.0.0.1:${server.address().port}/demos/gauss-law.html`);await page.evaluate(()=>document.querySelectorAll('details').forEach(d=>{d.open=true;}));/* the readouts sit in closed folds since the layout redesign; open them so innerText reads them */await page.waitForFunction(()=>window.__gl&&window.__gl.num);
   const text=id=>page.locator('#'+id).innerText(),gl=f=>page.evaluate(f);
   const setXY=async(x,y)=>{if(x!==undefined){await page.fill('#qX',String(x));await page.press('#qX','Enter');}if(y!==undefined){await page.fill('#qY',String(y));await page.press('#qY','Enter');}await page.evaluate(()=>window.__gl.computeNum());};
   await page.click('[data-p="inside"]');await page.evaluate(()=>window.__gl.setRunning(false));await page.click('#qList li');
@@ -37,20 +37,20 @@ try{for(const [width,scheme] of [[1440,'light'],[390,'dark']]){
   // capture and export, with and without the predicted flux
   await setXY(3,0.5);await page.click('#capture');await page.click('[data-s="box"]');await page.evaluate(()=>window.__gl.computeNum());await page.click('#capture');
   assert.equal(await page.locator('#tbl tbody tr').count(),2);assert.match(await page.locator("#tbl tbody").innerText(),/225\.8818/);
-  let [dl]=await Promise.all([page.waitForEvent('download'),page.click('#expTab')]);let csv=fs.readFileSync(await dl.path(),'utf8');
+  /* Export to worksheet hands the CSV to the worksheet through localStorage (a download only when storage is blocked) */const exp=async()=>{await page.click('#expTab');return page.evaluate(()=>JSON.parse(localStorage.getItem('vd-handoff:gauss-law')).csv);};let csv=await exp();
   let lines=csv.trim().split('\n').filter(l=>!l.startsWith('#')),head=lines[0].split(',');assert.equal(lines.length,3);
   const col=(row,name)=>row.match(/("[^"]*"|[^,]*)(,|$)/g).map(s=>s.replace(/,$/,''))[head.indexOf(name)];
   assert(head.includes('flux_predicted_Q_enc_over_eps0_N_m2_per_C'));assert.equal(col(lines[1],'radius_m'),'0.06');assert.equal(col(lines[1],'tolerance_met'),'yes');
   assert(Math.abs(+col(lines[1],'flux_numerical_N_m2_per_C')-2*K)<1e-9*K);assert.equal(col(lines[1],'charges_q_C_x_m_y_m'),'"2.000e-9 0.03 0.005"');
   assert.equal(col(lines[2],'surface'),'box');assert(Math.abs(+col(lines[2],'flux_numerical_N_m2_per_C')-2*K)<1e-9*K);assert.match(csv,/not a rigorous bound/);assert.match(csv,/0\.0003 m/);
   await page.uncheck('#tPred');assert(await page.locator('#mGrow').isHidden());assert.doesNotMatch(await text('headline'),/Φ/);assert(await page.locator('#tbl th.pred').isHidden());
-  [dl]=await Promise.all([page.waitForEvent('download'),page.click('#expTab')]);csv=fs.readFileSync(await dl.path(),'utf8');assert.doesNotMatch(csv.split('\n').find(l=>l.startsWith('row,')),/predicted|residual/);
+  csv=await exp();assert.doesNotMatch(csv.split('\n').find(l=>l.startsWith('row,')),/predicted|residual/);
   await page.check('#tPred');
   // an exhausted panel budget is reported in the rail, the table and the CSV
   await page.click('[data-s="sphere"]');await setXY(5.9,0);await page.evaluate(()=>window.__gl.setMaxPanels(10));
   assert.equal(await gl(()=>window.__gl.num.converged),false);assert(await page.locator('#tolFlag').isVisible());assert.match(await text('tolFlag'),/tolerance not met/);
   await page.click('#capture');assert.equal(await page.locator('#tbl tbody tr.warn').count(),1);
-  [dl]=await Promise.all([page.waitForEvent('download'),page.click('#expTab')]);lines=fs.readFileSync(await dl.path(),'utf8').trim().split('\n').filter(l=>!l.startsWith('#'));assert.equal(col(lines[3],'tolerance_met'),'no');
+  lines=(await exp()).trim().split('\n').filter(l=>!l.startsWith('#'));assert.equal(col(lines[3],'tolerance_met'),'no');
   await page.evaluate(()=>window.__gl.setMaxPanels(300));assert(await page.locator('#tolFlag').isHidden());
   // symmetry: field at the center of a ball and on a charged conductor's surface
   await page.click('[data-p="ball"]');await page.evaluate(()=>{window.__gl.setRunning(false);window.__gl.setSym('r',0);});
