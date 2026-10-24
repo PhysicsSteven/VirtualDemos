@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -52,6 +54,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
 .units { color: var(--muted); font-size: 0.8rem; }
 .stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
+#pane { position: relative; }
+#pane canvas.cyl3 { position: absolute; pointer-events: none; }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.86rem; font-weight: 600; min-width: 0; overflow-wrap: anywhere; text-align: right; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
@@ -146,6 +150,7 @@ select { font: inherit; font-size: 0.82rem; color: var(--ink); background: var(-
           <button type="button" data-s="1" aria-pressed="true">Normal</button>
           <button type="button" data-s="2" aria-pressed="false">Fast</button>
         </div>
+        <div class="seg" role="group" aria-label="Cylinder picture" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <span class="count" id="count" aria-live="off"></span>
       </div>
       <div class="pane" id="pane">
@@ -791,7 +796,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     LY = layout(W, Hh); drawAll();
   }
   function layout(W, H) {
-    const ps = PS, cylH = Math.round(104 * ps);
+    const ps = PS, cylH = Math.round((on3d ? (W >= 680 ? 176 : 150) : 104) * ps);
     if (W >= 680) {
       const lw = Math.round(W * 0.6), tsH = Math.round(H * 0.55);
       return { wide: true, pv: { x: 0, y: 0, w: lw, h: H - cylH }, cyl: { x: 0, y: H - cylH, w: lw, h: cylH },
@@ -993,6 +998,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const MOL = Array.from({ length: 34 }, (_, i) => ({ u: ((i * 0.618034) % 1), v: ((i * 0.754878 + 0.27) % 1), a: i * 2.39996 }));
   function drawCyl(box, st) {
     if (!G) return;
+    if (on3d && C3) { if (C3.S.el.hidden) C3.S.el.hidden = false; render3(box, st); return; }
     const c = ctx, ps = PS, X = G.X, L = st.L;
     const x0 = X(0), xE = X(ax.V), xp = X(st.V);
     const yc0 = box.y + 20 * ps, sh = 17 * ps, yc1 = box.y + box.h - sh - 12 * ps, ys0 = yc1 + 6 * ps, ys1 = ys0 + sh, hc = yc1 - yc0;
@@ -1054,6 +1060,100 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.font = `${10.5 * ps}px ${T.mono}`; const tw = c.measureText(wt).width;
     label(wt, clampN(xp + pw / 2, box.x + tw / 2 + 6, box.x + box.w - tw / 2 - 6), box.y + 9 * ps, L.t === 'V' ? T.muted : (L.W > 0 ? T.work : T.ink), 'center', 'middle', { size: 10.5, halo: false });
   }
+
+  // ---------- 3D cylinder: the same piston, lined up with the volume axis ----------
+  /* Pictures only. An orthographic camera looks at the cylinder from the front and a little above, scaled so the piston face sits
+     under the current volume on the PV axis, as in the flat strip. Under the cylinder is whatever it touches on this leg: the hot
+     reservoir (glowing), the cold one, an insulating pad, or the regenerator. The heat arrows are drawn thicker for a larger |Q|. */
+  let C3 = null, on3d = false;
+  const R3 = 0.06;
+  function init3() {
+    const S = VD3K.stage(pane, { shadow: 0.7 });
+    if (!S) return false;
+    S.el.classList.add('cyl3'); S.el.hidden = true;
+    const cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 20);
+    const steel = VD3K.material(S, { roughness: 0.4, metalness: 0.35 }, ['#b4bcc6', '#8a939e']);
+    const glass = VD3K.glass(S, { r: R3, len: 1.065, axis: 'x', ends: false, opacity: 0.18 }); glass.position.set(0.5175, 0, 0);
+    const head = VD3K.rod([-0.035, 0, 0], [-0.012, 0, 0], R3 * 1.12, steel);
+    const gasM = new THREE.MeshStandardMaterial({ color: '#c06040', transparent: true, opacity: 0.42, roughness: 0.8, depthWrite: false });
+    const gas = new THREE.Mesh(new THREE.CylinderGeometry(R3 * 0.96, R3 * 0.96, 1, 40, 1, true), gasM);
+    gas.geometry.rotateZ(-Math.PI / 2); gas.geometry.translate(0.5, 0, 0); gas.renderOrder = 1;
+    const piston = VD3K.rod([0, 0, 0], [0.02, 0, 0], R3 * 0.97, steel), rod = VD3K.rod([0, 0, 0], [1, 0, 0], 0.011, steel);
+    rod.geometry.translate(0, 0.5, 0); rod.position.set(0, 0, 0);
+    const stops = new THREE.Group();
+    for (const dx of [-0.014, 0.022]) for (const zz of [1, -1]) { const b = new THREE.Mesh(new THREE.BoxGeometry(0.012, 0.03, 0.03), steel); b.position.set(dx, 0, zz * (R3 + 0.01)); stops.add(b); }
+    const mol = VD3K.particles(S, { n: MOL.length, r: 0.0055, color: '#30363e' });
+    const blockM = new THREE.MeshStandardMaterial({ color: '#c2401f', roughness: 0.7 });
+    const block = new THREE.Mesh(new THREE.BoxGeometry(1.1, 0.13, 0.04), blockM); block.position.set(0.5, 0, -R3 - 0.025); block.receiveShadow = true;
+    const arrows = [];
+    for (let k = 0; k < 3; k++) {
+      const m = new THREE.MeshBasicMaterial({ color: '#c23f2c' }), g = new THREE.Group();
+      const shaft = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 12), m), cone = new THREE.Mesh(new THREE.ConeGeometry(1, 1, 16), m);
+      shaft.geometry.rotateX(Math.PI / 2); cone.geometry.rotateX(Math.PI / 2);
+      const dots = VD3K.particles(S, { n: 3, r: 1, color: '#ffffff', seg: 8 });
+      g.add(shaft, cone, dots); g.renderOrder = 3; S.scene.add(g); arrows.push({ g, shaft, cone, m, dots });
+    }
+    const top = VD3K.label(' ', { color: '#ffffff', size: 1, font: '"JetBrains Mono", ui-monospace, monospace' });
+    const bot = VD3K.label(' ', { color: '#ffffff', size: 1, font: '"JetBrains Mono", ui-monospace, monospace' });
+    S.scene.add(glass, head, gas, piston, rod, stops, mol, block, top, bot);
+    S.sun.position.set(0.6, -1.6, 2.4); S.sun.target.position.set(0.5, 0, 0);
+    C3 = { S, cam, gas, gasM, piston, rod, stops, mol, block, blockM, arrows, top, bot };
+    return true;
+  }
+  function render3(box, st) {
+    const g = C3, St = g.S, ps = PS, L = st.L;
+    const el = St.el; el.style.left = box.x + 'px'; el.style.top = box.y + 'px';
+    St.size(box.w, box.h);
+    const px0 = G.X(0) - box.x, span = Math.max(40, G.X(ax.V) - G.X(0)), u = 1 / span;
+    /* front view tilted 18° down; world x = V / Vmax, so x = 0 lands under V = 0 and x = 1 under the right end of the axis */
+    const tilt = 0.22, zc = -0.018, cam = g.cam;
+    cam.left = -px0 * u; cam.right = (box.w - px0) * u; cam.top = box.h / 2 * u; cam.bottom = -box.h / 2 * u; cam.updateProjectionMatrix();
+    cam.position.set(0, -5 * Math.cos(tilt), zc + 5 * Math.sin(tilt)); cam.up.set(0, 0, 1); cam.lookAt(0, 0, zc);
+    const xp = st.V / ax.V;
+    g.gas.scale.x = Math.max(0.001, xp); g.gasM.color.set(mix(T.neg, T.pos, tempFrac(st.T)));
+    g.piston.position.x = xp + 0.01; g.rod.position.x = xp + 0.02; g.rod.scale.y = Math.min(0.24, 46 * ps * u + 0.04);
+    g.stops.visible = L.t === 'V'; g.stops.position.x = xp;
+    g.mol.visible = !!S.mol;
+    if (g.mol.visible) {
+      const pad = 0.012, mc = VD3.dark() ? '#c9d2dc' : '#30363e';
+      MOL.forEach((m, i) => { const yy = Math.sin(i * 2.1) * R3 * 0.6, zz = (m.v - 0.5) * 2 * R3 * 0.75 * Math.sqrt(1 - (yy / R3) ** 2); g.mol.put(i, pad + m.u * Math.max(0, xp - 2 * pad), yy, zz, mc); });
+      g.mol.show(MOL.length); g.mol.done();
+    }
+    /* what the cylinder touches */
+    const tiny = 1e-9 * sum.scale, insul = L.t === 'S';
+    let col = T.muted, txt = '';
+    if (insul) { txt = 'insulated: no heat flows, Q = 0'; g.blockM.color.set(VD3.dark() ? '#9a958a' : '#ece6da'); g.blockM.emissive.set('#000000'); }
+    else if (L.regen) { col = T.equi; txt = L.Q > 0 ? 'regenerator hands its stored heat back' : 'regenerator soaks up heat'; g.blockM.color.set('#b98a2a'); g.blockM.emissive.set('#5a3a00'); }
+    else if (L.side > 0) { col = T.pos; txt = `hot reservoir${L.t === 'T' ? ' at ' + fT(L.T1) : ''}: heat flows ${L.Q > 0 ? 'into' : 'out of'} the gas`; g.blockM.color.set('#d0532a'); g.blockM.emissive.set('#ff4a10'); g.blockM.emissiveIntensity = 0.32 + 0.06 * Math.sin(performance.now() / 300); }
+    else if (L.side < 0) { col = T.neg; txt = `cold reservoir${L.t === 'T' ? ' at ' + fT(L.T1) : ''}: heat flows ${L.Q > 0 ? 'into' : 'out of'} the gas`; g.blockM.color.set('#8fbaf0'); g.blockM.emissive.set('#1d4fa0'); g.blockM.emissiveIntensity = 0.3; }
+    else { g.blockM.color.set('#8a939e'); g.blockM.emissive.set('#000000'); }
+    /* heat arrows through the cylinder floor, thicker for a larger share of the biggest |Q| or |W| in the cycle */
+    const showQ = !insul && Math.abs(L.Q) > tiny, n = xp > 0.35 ? 3 : xp > 0.15 ? 2 : 1, t = performance.now() / 1000;
+    const frac = showQ ? Math.min(1, Math.abs(L.Q) / sum.scale) : 0, rad = 0.0025 + 0.0075 * Math.sqrt(frac), up = L.Q > 0;
+    const zA = -R3 - 0.005, zB = -R3 * 0.15;
+    g.arrows.forEach((a, k) => {
+      a.g.visible = showQ && k < n; if (!a.g.visible) return;
+      a.m.color.set(col);
+      const x = xp * (k + 1) / (n + 1), z0 = up ? zA - 0.02 : zB, z1 = up ? zB : zA - 0.02, len = Math.abs(z1 - z0), dir = Math.sign(z1 - z0), head = Math.min(0.03, len * 0.4);
+      a.g.position.set(x, -R3 * 1.05, 0);
+      a.shaft.scale.set(rad, rad, len - head); a.shaft.position.z = z0 + dir * (len - head) / 2;
+      a.cone.scale.set(rad * 2, rad * 2, head); a.cone.position.z = z1 - dir * head / 2; a.cone.rotation.x = dir > 0 ? 0 : Math.PI;
+      const sc = rad * 0.7; a.dots.scale.setScalar(sc);   /* the pool is scaled, so its positions are given in units of sc */
+      for (let j = 0; j < 3; j++) { const f = ((playing ? t * 0.9 : 0) + j / 3) % 1; a.dots.put(j, 0, -rad * 1.2 / sc, (z0 + dir * f * (len - head)) / sc); }
+      a.dots.show(3); a.dots.done();
+    });
+    /* the two lines of text, the same as the flat strip */
+    let wt = L.t === 'V' ? 'piston held still: W = 0' : L.b.V > L.a.V ? 'gas pushes the piston out: W > 0  →' : '←  piston pushes the gas in: W < 0';
+    const fh = 13 * ps * u;
+    const put = (lab, text, x, z, c) => { lab.set(text); const a = lab.scale.x / lab.scale.y; lab.scale.set(a * fh, fh, 1); lab.material.color.set(c); lab.position.set(x, 0, z); };
+    put(g.top, wt, xp, R3 + 0.012 + fh * 0.9, L.t === 'V' ? T.muted : (L.W > 0 ? T.work : T.ink));
+    const wTop = g.top.scale.x; g.top.position.x = Math.min(cam.right - wTop / 2 - 0.01, Math.max(cam.left + wTop / 2 + 0.01, xp));
+    put(g.bot, txt || ' ', 0.5, -R3 - 0.05 - fh * 0.9, insul ? T.muted : col);
+    const wBot = g.bot.scale.x; g.bot.position.x = Math.min(cam.right - wBot / 2 - 0.01, Math.max(cam.left + wBot / 2 + 0.01, 0.5));
+    St.theme(); St.scene.updateMatrixWorld(); St.r.render(St.scene, cam);
+  }
+  VD3K.view({ seg: '#dimSeg', init: init3, status: () => {},
+    change: (on) => { on3d = on; if (C3) C3.S.el.hidden = !on; if (W) { LY = layout(W, Hh); drawAll(); } } });
 
   // ---------- T–S diagram ----------
   let tsCache = null;
