@@ -257,7 +257,7 @@
   const MODERN = [];
   /* Vol. 3 ch. 5 (relativity) and ch. 6 (photons and matter waves) */
   MODERN.push('velocity-addition', 'relativistic-momentum', 'relativistic-energy' /* Velocity, Momentum and Energy Near c demo, one per view */);
-  MODERN.push('photoelectric', 'compton');
+  MODERN.push('photoelectric', 'compton', 'franck-hertz');
   Object.assign(FROM_DEMO, {
     /* Reading | Launch speed u′ (c) | Probe time A to B Δt (s) | Ground speed u (c) | u − u′ (c) | 1 − uu′/c² */
     'velocity-addition': { demo: 'Velocity, Momentum and Energy Near c (Adding velocities)', cols: ['row', 'u_prime_c', 'probe_dt_s', null, null, null] },
@@ -269,6 +269,8 @@
     photoelectric: { demo: 'Photoelectric Effect', cols: ['row', 'metal', 'wavelength_nm', (r) => (+r.frequency_Hz / 1e14).toFixed(4), 'stopping_voltage_V', 'meter_reading_nA'] },
     /* Reading | Angle θ (°) | 1 − cos θ | Scattered wavelength λ′ (pm) | Shift Δλ (pm) | Electron energy T (keV) | Electron angle φ (°) */
     compton: { demo: 'Compton Scattering', cols: ['row', 'theta_deg', null, 'lamP_pm', null, 'T_keV', 'phi_deg'] },
+    /* Reading | Gas and settings | Peak order n | Peak voltage U_n (V) | Spacing to the previous peak (V) */
+    'franck-hertz': { demo: 'Franck–Hertz Experiment', cols: ['row', (r) => `${r.gas === 'Neon' ? 'Neon' : `Mercury, ${r.T_C} °C`}, retarding ${r.Ur_V} V, contact ${r.Uc_V} V`, 'n', 'U_V', null] },
   });
   ENABLED.push(...MODERN);
   Object.assign(FROM_DEMO, {

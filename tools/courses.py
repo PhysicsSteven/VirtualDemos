@@ -131,6 +131,7 @@ HANDOUT_TOPIC = {
     'velocity-addition': 'Adding Velocities Near c', 'relativistic-momentum': 'Momentum Under a Steady Force', 'relativistic-energy': "Bertozzi's Electrons",
     'photoelectric': "Photoelectric Effect and Planck's Constant",
     'compton': 'Compton Scattering',
+    'franck-hertz': 'Franck–Hertz Experiment',
     'household-wiring': 'Household Wiring and Electrical Safety',
     'van-de-graaff': 'Van de Graaff Generator',
     'ink-jet-printer': 'Ink Jet Printer',

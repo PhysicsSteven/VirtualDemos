@@ -7425,7 +7425,10 @@
       "status": "usable",
       "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Franck–Hertz Experiment",
-      "url": "demos/franck-hertz.html"
+      "url": "demos/franck-hertz.html",
+      "handouts": [
+        "franck-hertz"
+      ]
     },
     {
       "demo": "gamma-spectroscopy",

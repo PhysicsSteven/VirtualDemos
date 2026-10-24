@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow inline readout-dd-ok status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage toggles toggles-label toggles-input" lang="en">
+<html data-vd-off="root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula inline readout-dd-ok empty plotbox-canvas wide-proj-bench wide-proj-stage toggles toggles-label toggles-input" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -125,6 +125,7 @@ sub, sup { line-height: 0; }
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/franck-hertz.html" target="franck-hertz-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -194,6 +195,7 @@ sub, sup { line-height: 0; }
         </div>
         <label class="check"><input type="checkbox" id="snap" checked> Snap to the nearest maximum</label>
         <label class="check"><input type="checkbox" id="guides"> Show lines at n · E<sub>exc</sub>/e</label>
+        <label class="check"><input type="checkbox" id="blind"> Blind: hide the spacings, the fit and the NIST value</label>
         <dl class="readout">
           <div class="wide list"><dt>Peaks marked, U<sub>n</sub></dt><dd id="rMarks">—</dd></div>
           <div class="wide list"><dt>Spacings U<sub>n</sub> − U<sub>n−1</sub></dt><dd id="rGaps">—</dd></div>
@@ -204,6 +206,27 @@ sub, sup { line-height: 0; }
         <p class="hint" id="measureHint"></p>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="franck-hertz" data-title="Franck–Hertz Experiment" data-demo="franck-hertz">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Model</summary><div class="foldbody">
         <p class="hint" id="modelGas"></p>
@@ -395,7 +418,7 @@ sub, sup { line-height: 0; }
   };
 
   // ---------- state ----------
-  const S = { preset: 'hg', gas: 'hg', TC: 180, U: 0, Ur: 1.5, Uc: 2.0, fast: false, measure: false, guides: false, snap: true, marks: [] };
+  const S = { preset: 'hg', gas: 'hg', TC: 180, U: 0, Ur: 1.5, Uc: 2.0, fast: false, measure: false, guides: false, snap: true, blind: false, marks: [] };
   let playing = !reduce, sweeping = false;
   const G = () => GAS[S.gas];
   let TP = tubeParams(G(), S.TC);
@@ -884,13 +907,14 @@ sub, sup { line-height: 0; }
     $('temp').value = S.TC;
     $('rEmax').textContent = `${Math.max(0, S.U - S.Uc).toFixed(2)} eV`;
     $('refLab').textContent = hg ? 'NIST: 6³P₁ level' : 'NIST: 2p⁵3p levels';
-    $('rRef').textContent = hg ? `${g.levels[0].toFixed(3)} eV` : '18.38–18.97 eV';
+    $('rRef').textContent = S.blind ? 'hidden' : hg ? `${g.levels[0].toFixed(3)} eV` : '18.38–18.97 eV';
     $('modelGas').textContent = hg
       ? 'Mercury: an excitation goes to 6s6p ³P₁ at 4.887 eV (39 412.300 cm⁻¹), which decays in 125 ns by emitting the 253.7 nm line (253.65 nm in air). The nearby ³P₀ (4.667 eV) and ³P₂ (5.461 eV) levels are left out.'
       : 'Neon: an excitation goes to one of the ten 2p⁵3p levels (18.38 to 18.97 eV), chosen at random among those the electron can reach, and removes exactly that energy. These decay to 2p⁵3s with red, orange and yellow light. The 2p⁵3s levels (16.62 to 16.85 eV) are left out. The tube holds about 10 hPa of neon.';
     for (const [id, on] of [['gHg', hg], ['gNe', !hg]]) $(id).setAttribute('aria-pressed', String(on));
     $('measure').setAttribute('aria-pressed', String(S.measure));
-    $('guides').checked = S.guides; $('snap').checked = S.snap;
+    if (S.blind) S.guides = false;
+    $('guides').checked = S.guides; $('guides').disabled = S.blind; $('snap').checked = S.snap; $('blind').checked = S.blind;
     $('spSlow').setAttribute('aria-pressed', String(!S.fast)); $('spFast').setAttribute('aria-pressed', String(S.fast));
     liveReadouts();
   }
@@ -909,6 +933,7 @@ sub, sup { line-height: 0; }
     $('rMarks').textContent = m.length ? m.map((u) => u.toFixed(2)).join(', ') + ' V' : '—';
     $('rGaps').textContent = m.length > 1 ? m.slice(1).map((u, i) => (u - m[i]).toFixed(2)).join(', ') + ' V' : '—';
     const f = m.length >= 2 ? linfit(m.map((_, i) => i + 1), m, G().read) : null;
+    if (S.blind) { for (const id of ['rGaps', 'rFit', 'rU0']) $(id).textContent = m.length > 1 ? 'hidden' : '—'; $('measureHint').textContent = MEASURE_HINT; return; }
     if (!f) { $('rFit').textContent = '—'; $('rU0').textContent = '—'; }
     else {
       const d = hg ? 2 : 1;
@@ -936,6 +961,7 @@ sub, sup { line-height: 0; }
   $('clearMarks').addEventListener('click', () => { S.marks = []; lastMarks = []; marksReadout(); });
   $('snap').addEventListener('change', (e) => { S.snap = e.target.checked; });
   $('guides').addEventListener('change', (e) => { S.guides = e.target.checked; });
+  $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; readouts(); marksReadout(); });
   $('spSlow').addEventListener('click', () => { S.fast = false; readouts(); });
   $('spFast').addEventListener('click', () => { S.fast = true; readouts(); });
   function setGas(id) { if (S.gas === id) return; custom(); S.gas = id; const g = G(); S.Ur = g.Ur; S.Uc = g.Uc; ghost = null; data = null; parts = []; flashes = []; S.U = 0; paramsChanged(); readouts(); newSweep(); }
@@ -1100,6 +1126,15 @@ sub, sup { line-height: 0; }
   }
   window.__fh = { get frameMs() { return frameMs; }, get S() { return S; }, get data() { return data; }, get sweeping() { return sweeping; }, get playing() { return playing; }, get yTop() { return yTop; }, get TP() { return TP; },
     handles() { return dragHandles().map((h) => ({ id: h.id, seg: h.seg })); }, applyPreset, markAt, setUManual, setPlaying };
+
+  // Readings: one row per marked peak, in order of voltage, with the settings of the curve they were marked on
+  window.vdVersion = 'franck-hertz@2026-10-24';
+  window.vdShowCols = [['n', 'n'], ['U_V', 'Uₙ (V)'], ['T_C', 'Oven (°C)'], ['Ur_V', 'Uᵣ (V)']];
+  window.vdReadingRow = () => {
+    const m = S.marks.slice().sort((a, b) => a - b), hg = S.gas === 'hg';
+    if (!m.length) return 'Mark the maxima first: press Mark peaks and click each one in order.';
+    return m.map((u, i) => ({ gas: hg ? 'Mercury' : 'Neon', T_C: hg ? String(S.TC) : '20', Ur_V: S.Ur.toFixed(1), Uc_V: S.Uc.toFixed(1), n: String(i + 1), U_V: u.toFixed(2) }));
+  };
 
   tokens();
   newData();

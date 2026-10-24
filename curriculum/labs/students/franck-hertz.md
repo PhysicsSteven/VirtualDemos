@@ -1,83 +1,93 @@
 # Franck–Hertz Experiment
-Student laboratory · modern physics
+Student laboratory · Modern Physics
 
-[Open the virtual Franck–Hertz apparatus](https://physicssteven.github.io/VirtualDemos/demos/franck-hertz.html)
+Textbook: OpenStax *University Physics*, Vol. 3, §6.4. Access for free at https://openstax.org/details/books/university-physics-volume-3.
+
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/franck-hertz.html)
+
+<details class="about" markdown="1">
+<summary>About the demo</summary>
+
+**Setups in the demo:** Mercury tube at 180 °C; Measure the peak spacing; Too cold: few collisions; Too hot: weak current; Neon: glowing layers; Why the first peak is not at 4.9 V.
+
+**Using the demo.**
+
+- Electrons leave a hot cathode, are accelerated by the voltage $$U$$ between the cathode and the grid G2 through mercury vapor (or neon), and must then climb a small retarding voltage $$U_r$$ to reach the collector. The plot shows the collector current $$I$$ against $$U$$.
+- The mercury tube sits in an oven, from 100 to 210 °C, which sets the vapor pressure (Huber, Laesecke and Friend, 2006). The neon tube is sealed at room temperature.
+- Each electron is followed across the tube. Once it has more than the excitation energy it hits an atom after a random distance and loses exactly that energy (mercury: the 6s6p ³P₁ level, NIST). The curve is a fresh random sample every sweep, with 0.02 nA of amplifier noise, so two sweeps never match exactly.
+- The electrons gain $$e(U - U_c)$$, not $$eU$$: the contact potential $$U_c$$ between the cathode and the grid metal shifts every peak.
+- Mark peaks lets you click the maxima on the curve; with Snap on, a mark moves to the top of a parabola through the smoothed curve nearby. Record reading stores every marked peak, in order, with the gas, oven temperature, $$U_r$$ and $$U_c$$. Export to worksheet sends the readings to the Data table below; Clear (under Readings) starts a new series, which goes into a new copy of the table.
+- Blind (in the Measure section) hides the spacings, the fitted energy, the intercept and the NIST value, and turns off the lines at $$n \cdot E_\mathrm{exc}/e$$.
+
+</details>
 
 ## Goal
 
-Find the energy needed to excite a mercury atom by measuring the spacing between repeated peaks in the collector current.
+Measure the voltages of the repeated maxima in the collector current of a Franck–Hertz tube and find from their spacing the energy a mercury atom can take from an electron.
 
 ## Background
 
-Electrons accelerate through a vapor on their way to a collector. Most of the time they keep gaining energy. Once an electron has enough energy, it can excite an atom and lose a fixed amount of energy in the collision.
+Bohr's model (§6.4) says an atom can only hold certain energies, so it can only absorb certain amounts of energy. Franck and Hertz tested this in 1914 with electrons in mercury vapor. An electron with less than the first excitation energy $$\Delta E$$ bounces off mercury atoms elastically and loses almost nothing (a mercury atom is about 366 000 times heavier than an electron). Once its kinetic energy passes $$\Delta E$$, it soon excites an atom and loses exactly $$\Delta E$$.
 
-A small retarding voltage before the collector rejects electrons that arrive with too little energy. The current therefore falls when many electrons have just lost energy. As the accelerating voltage rises, the pattern repeats.
+Just after such a collision the electron has too little energy left to climb the retarding voltage, so the current falls. Raising $$U$$ further lets the electron gain $$\Delta E$$ again before G2; the current rises until a second collision becomes possible, and so on. The maxima are therefore spaced by $$\Delta E/e$$:
 
-If neighboring peaks are separated by $$\Delta U$$, the excitation energy is approximately
+$$U_n = U_0 + n\,\frac{\Delta E}{e},$$
 
-$$\Delta E=e\Delta U.$$
-
-The first peak need not occur at $$\Delta E/e$$. Contact potentials and the electrons' starting energies shift the whole pattern. We allow for an offset by fitting
-
-$$U_n=a+n\Delta U.$$
-
-The excited atom can release its energy as a photon with wavelength
-
-$$\lambda=\frac{hc}{\Delta E}.$$
+where $$U_0$$ collects every shift common to all peaks (the contact potential, the electrons' starting energies, the retarding voltage). A graph of $$U_n$$ against $$n$$ is a straight line whose slope gives $$\Delta E$$. The excited atom gives the energy back as a photon of wavelength $$\lambda = hc/\Delta E$$, with $$hc = 1239.84$$ eV·nm.
 
 ## Before the lab
 
-1. Why is peak spacing more useful than the position of the first peak?
-2. What role does the retarding voltage play?
-3. If $$\Delta U$$ is measured in volts, how do you express $$\Delta E$$ in electron volts and in joules?
+1. An electron starts from rest and is accelerated through 4.9 V. What is its kinetic energy in eV and in joules?
+2. Why is the spacing between maxima a better measure of $$\Delta E$$ than the voltage of the first maximum?
+3. What does the retarding voltage do? What would you expect the curve to look like with $$U_r = 0$$?
+4. If $$\Delta E = 4.9$$ eV, what wavelength of light does the excited atom give off? Could you see it?
 
 ## Safety
 
-The real apparatus has high voltage and a hot oven. Follow the department's warm up and operating procedure. Do not touch the hot tube or change connections while powered. Do not open or attempt to repair a sealed mercury tube.
+None for the virtual apparatus. A real tube runs in an oven near 180 °C and holds mercury: do not touch the oven, and never open or repair a tube.
 
 ## Procedure
 
-**Take a current curve.** Use the department's mercury tube temperature and voltage settings. Let the oven stabilize, then sweep the accelerating voltage slowly while recording collector current. Keep temperature, contact potential and retarding voltage fixed during a sweep.
+Turn Blind on before you start.
 
-1. Find at least five consecutive clear maxima. Record each voltage and number the peaks in order.
-2. Estimate a voltage interval within which you would place each maximum.
-3. Acquire a second curve and repeat the measurements.
-4. Change the contact potential if the apparatus allows it, and take a separate curve.
-5. Compare the normal retarding voltage with zero retarding voltage.
-6. Compare a cooler and a hotter vapor setting within the apparatus limits. Record how the current and peak visibility change.
+**Mercury at 180 °C.** Start with the Mercury tube at 180 °C setup and let the sweep finish. Mark every maximum you can find, in order from the lowest voltage, and record the peaks. Note $$U_r$$ and $$U_c$$.
 
-**Using the virtual apparatus.** Start with **Mercury tube at 180 °C** and write down **Retarding voltage Ur** and **Contact potential Uc**. Press **New sweep** and let the curve finish. Select **Mark peaks**, keep **Snap to the nearest maximum** on, and click the maxima in order. Leave **Show lines at n · E_exc/e** off until analysis. Record the marked voltages by hand and save a screenshot; this demo has no CSV export. Use **Too cold: few collisions** and **Too hot: weak current** for the temperature comparison. If time allows, compare **Neon: glowing layers** too.
+**Contact potential.** Clear the readings, raise the contact potential by 1.0 V and sweep again. Mark and record the maxima. Send this run to a new copy of the table.
+
+**Temperature.** Clear the readings, put the contact potential back, and set the oven to 120 °C. Sweep, mark and record the maxima, and send them to a third copy of the table. Write down how the dips compare with those at 180 °C.
+
+**Retarding voltage.** At 180 °C, sweep once with the retarding voltage at zero. Write down what happens to the maxima; there is nothing to record.
+
+**Neon (if time allows).** Switch to the neon tube, sweep to 80 V and mark the maxima. Watch where the glowing layers form.
 
 ## Data
 
-| Run and settings | Peak order $$n$$ | Peak $$U$$ (V) | Reading uncertainty (V) | Spacing to next peak (V) |
+| Reading | Gas and settings | Peak order $$n$$ | Peak voltage $$U_n$$ (V) | Spacing to the previous peak (V) |
 |---|---|---|---|---|
-| | 1 | | | |
-| | 2 | | | |
-| | 3 | | | |
 | | | | | |
-
-Use at least five rows per mercury run. Keep changed settings in separate runs.
+| | | | | |
+| | | | | |
 
 ## Analysis
 
-1. Calculate the neighboring peak spacings and their mean.
-2. Plot peak voltage against peak order. Fit a line with an intercept. Use its slope to find $$\Delta E$$ and its uncertainty.
-3. Repeat the fit without the first peak. Does the result change appreciably?
-4. Calculate the photon wavelength and compare it with the mercury reference after recording your result.
-5. Compare the slopes and intercepts of the different contact potential runs. Then explain the changes caused by retarding voltage and temperature.
+1. For the 180 °C run, find the spacings between neighbouring maxima and their mean.
+2. Graph $$U_n$$ against $$n$$ and fit a straight line. From the slope find $$\Delta E$$ in eV, with its uncertainty. Find the wavelength of the light the atoms give off and compare with the mercury line at 253.7 nm (the 6s6p ³P₁ level at 4.887 eV).
+3. Fit the run with the higher contact potential. Which changed, the slope or the intercept, and by how much?
+4. Fit the 120 °C run. Compare its slope with the 180 °C one. Why are the dips shallower in the colder tube?
+5. Repeat the 180 °C fit without the first peak. Does the slope change by more than its uncertainty?
 
 ## Uncertainty
 
-Use the peak position intervals, variation between sweeps and the fit uncertainty to judge the precision of $$\Delta U$$. Check how much the first peak changes the fitted slope. Adjacent spacings share a peak reading, so they are not all independent. The relative wavelength uncertainty is approximately the relative uncertainty in $$\Delta U$$ when $$h$$, $$c$$ and $$e$$ are treated as known.
+Each peak is read from a noisy curve: estimate how far you could move a mark before the curve is clearly no longer at its maximum, and compare with the scatter of your points about the line. Neighbouring spacings share a peak, so the mean spacing is not more precise than the fit. Which uncertainty limits your $$\Delta E$$?
 
 ## Questions
 
-1. Why can an inelastic collision reduce the collected current even though the electron continues moving?
-2. Why might the repeated peaks become much less clear when the retarding voltage is zero?
-3. Why can both a very cold and a very hot mercury tube give poor results?
-4. Does this experiment measure an excitation energy or an ionization energy? Explain.
+1. Why does an inelastic collision lower the collector current even though the electron keeps moving towards G2?
+2. Why did the maxima disappear with no retarding voltage?
+3. A colder tube has fewer atoms in the way. How does that change how far past the threshold an electron travels before its collision, and so the spacing?
+4. Is $$\Delta E$$ an excitation energy or the ionization energy (10.44 eV for mercury)? How do you know?
+5. What does this experiment show that Bohr's model needs, and that a classical atom would not give?
 
 ## What to hand in
 
-Prelab answers, current curves or screenshots, the peak table, the graph and fit, excitation energy and photon wavelength with uncertainty, the comparison runs, and answers to the questions. Identify any simulated data.
+Prelab answers, the table copies with their graphs and fits, $$\Delta E$$ and the wavelength with uncertainties, the comparison of the three runs, your notes on $$U_r = 0$$ and on neon, and answers to the questions. Identify simulated data.
