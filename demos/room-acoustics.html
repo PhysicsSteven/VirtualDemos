@@ -64,9 +64,17 @@ table.mat th, table.mat td { text-align: left; padding: 2px 4px; border-bottom: 
 table.mat td.num { font-family: var(--font-mono); text-align: right; }
 @media (max-width: 820px) { main.bench .stage { height: auto; max-height: none; } .scene { position: relative; inset: auto; height: 520px; max-height: 85vh; } .rack { position: static; margin: 8px; width: auto; max-height: none; } }
 /* folded rail sections and long hints (layout redesign) */
+/* the 3D room: a WebGL canvas over the plan's part of the picture, with HTML tags for r and the level */
+.stage canvas.gl { z-index: 1; cursor: grab; }
+.viewbar .seg { background: var(--canvas); }
+.viewbar .seg button { font-size: 0.8rem; padding: 4px 10px; }
+.tag3 { position: absolute; z-index: 2; transform: translate(-50%, -100%); pointer-events: none; font-family: var(--font-mono); font-size: 0.72rem; color: var(--ink); background: color-mix(in srgb, var(--canvas) 82%, transparent); border-radius: 4px; padding: 1px 5px; white-space: nowrap; }
+.tag3.big { font-size: 0.9rem; font-weight: 700; transform: translate(-50%, 6px); }
+:root[data-projector="on"] .tag3 { font-size: 0.9rem; } :root[data-projector="on"] .tag3.big { font-size: 1.1rem; }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
+<script src="lib/vd3.js"></script>
 </head>
 <body>
 <div class="app">
@@ -87,7 +95,8 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     <div class="stage" id="stage">
       <div class="scene" id="scene">
       <canvas id="can" tabindex="0" role="application" aria-label="Plan view of a room with a loudspeaker and a microphone on its centre line, and under it a graph: the decay of a clap, or the sound level against distance. Drag the microphone to change its distance r from the speaker. Left and right arrows move it by 0.1 m (with Shift, 1 m); C claps."></canvas>
-      <div class="viewbar"><button type="button" class="spin attn" id="go">Clap</button></div>
+      <div class="viewbar"><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D room</button><button type="button" data-view="plan" aria-pressed="true">Plan</button></div><button type="button" class="spin attn" id="go">Clap</button></div>
+      <div class="tag3" id="tagR" hidden></div><div class="tag3 big" id="tagL" hidden></div>
       </div>
       <div class="rack" id="rack" role="group" aria-label="Set up the room">
         <span class="rack-title">Set up</span>
@@ -131,7 +140,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
         <div class="seg" role="group" aria-label="What to measure" id="modeSeg"><button type="button" data-mode="decay" aria-pressed="true">Reverberation time</button><button type="button" data-mode="level" aria-pressed="false">Level against distance</button></div>
         <div class="inline"><span class="lab">Octave band</span></div>
         <div class="seg" role="group" aria-label="Octave band (Hz)" id="bandSeg"></div>
-        <p class="hint" id="modeHint"></p>
+        <details class="more"><summary>How to measure</summary><p class="hint" id="modeHint"></p></details>
       </section>
 
       <section>
@@ -158,7 +167,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
         </div>
         <p class="status" id="capStatus" aria-live="polite"></p>
         <div class="twrap"><table class="rows" id="rowsTbl"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
-        <p class="hint" id="readHint"></p>
+        <details class="more"><summary>What a reading stores</summary><p class="hint" id="readHint"></p></details>
       </section>
 
       <section>
@@ -396,8 +405,8 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   function regions() {
     const p = ps(), rk = $('rack'), abs = getComputedStyle(rk).position === 'absolute';
     const x0 = abs ? rk.offsetLeft + rk.offsetWidth + 16 * p : 14 * p, x1 = W - 14 * p;
-    const gh = Math.max(150 * p, H * 0.36), planTop = 52 * p, planBot = H - gh - 34 * p;
-    return { p, x0, x1, planTop, planBot, gx0: x0 + 44 * p, gx1: x1 - 6 * p, gy0: H - gh + 4 * p, gy1: H - 30 * p };
+    const gh = Math.max(150 * p, H * 0.36), ty = x1 - x0 < 520 * p ? 66 * p : 24 * p, planTop = ty + 28 * p, planBot = H - gh - 34 * p;   /* on a narrow picture the title goes under the view buttons */
+    return { p, x0, x1, ty, planTop, planBot, gx0: x0 + 44 * p, gx1: x1 - 6 * p, gy0: H - gh + 4 * p, gy1: H - 30 * p };
   }
   function draw() {
     if (!T || !W) return;
@@ -405,6 +414,8 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     const rk = $('rack'); if (getComputedStyle(rk).position === 'absolute') { rk.style.left = `${10 * ps()}px`; rk.style.top = `${10 * ps()}px`; }
     const R = regions(), m = model();
     drawPlan(R, m);
+    if (G3.on && g3) { const t = R.planTop - 2 * R.p; g3.rect = { x: R.x0, y: t, w: Math.max(80, Math.round(R.x1 - R.x0)), h: Math.max(80, Math.round(R.planBot + 8 * R.p - t)) };
+      Object.assign(g3.el.style, { left: `${g3.rect.x}px`, top: `${t}px`, width: `${g3.rect.w}px`, height: `${g3.rect.h}px` }); G3.dirty = true; }
     if (S.mode === 'decay') drawDecay(R); else drawLevel(R, m);
   }
   function drawPlan(R, m) {
@@ -413,12 +424,34 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     const X = (x) => ox + (x + d) * sc, Y = (y) => oy + (y + d) * sc;   /* free space coordinates to the picture */
     geo = { X, Y, sc, m, d };
     ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
-    ctx.fillText(`Plan view: ${f(S.L, 1)} m × ${f(S.W, 1)} m, ${f(S.H, 1)} m high`, R.x0, 24 * p);
+    const in3 = G3.on && g3;
+    ctx.fillText(`${in3 ? 'The room' : 'Plan view'}: ${f(S.L, 1)} m × ${f(S.W, 1)} m, ${f(S.H, 1)} m high`, R.x0, R.ty);
     ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`;
-    ctx.fillText(S.walls === 'wedges' ? `free space between the wedge tips ${f(m.L, 2)} × ${f(m.W, 2)} × ${f(m.H, 2)} m` : `floor: ${MATERIALS[S.floor].name.toLowerCase()}`, R.x0, 40 * p);
+    ctx.fillText(S.walls === 'wedges' ? `free space between the wedge tips ${f(m.L, 2)} × ${f(m.W, 2)} × ${f(m.H, 2)} m` : `floor: ${MATERIALS[S.floor].name.toLowerCase()}`, R.x0, R.ty + 16 * p);
+    if (in3) { geo = null; ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'right';
+      ctx.fillText(anim ? `slow motion ×1/${SLOW}, t = ${(anim.t * 1000).toFixed(0)} ms` : 'drag to turn · drag the microphone to change r', R.x1, R.planBot + 22 * p); ctx.textAlign = 'left'; return; }
     /* floor and walls */
-    ctx.fillStyle = T.floorc; ctx.fillRect(ox, oy, S.L * sc, S.W * sc);
-    ctx.strokeStyle = S.walls === 'wedges' ? T.foam : T.brick; ctx.lineWidth = 6 * p; ctx.strokeRect(ox - 3 * p, oy - 3 * p, S.L * sc + 6 * p, S.W * sc + 6 * p);
+    const Gm = window.VDGear.mix, dk = window.VDGear.dark(), rw = S.L * sc, rh = S.W * sc, rnd = mulberry(5), wt = 8 * p;
+    ctx.save(); ctx.shadowColor = dk ? 'rgba(0,0,0,0.5)' : 'rgba(20,30,45,0.22)'; ctx.shadowBlur = 18 * p; ctx.shadowOffsetY = 6 * p;
+    ctx.fillStyle = T.floorc; ctx.fillRect(ox - wt, oy - wt, rw + 2 * wt, rh + 2 * wt); ctx.restore();
+    /* the floor: concrete, carpet, or an audience seated 2 per m² (rows 1 m apart, a centre aisle drawn clear, as in the 3D room) */
+    const fl = S.walls === 'wedges' ? 'wedges' : S.floor, fc = fl === 'carpet' ? Gm(T.floorc, dk ? '#3a4152' : '#7d8597', 0.4) : fl === 'audience' ? Gm(T.floorc, dk ? '#5a4634' : '#b58c62', 0.45) : T.floorc;
+    ctx.fillStyle = fc; ctx.fillRect(ox, oy, rw, rh);
+    ctx.save(); ctx.beginPath(); ctx.rect(ox, oy, rw, rh); ctx.clip();
+    if (fl === 'audience') { const [sx0] = srcPos(m);
+      for (let x = 0.6; x <= S.L - 0.3; x += 1) for (let y = 0.25; y < S.W; y += 0.5) { if (Math.abs(y - S.W / 2) <= 0.55 || x <= sx0 + 0.8) continue;
+        ctx.fillStyle = Gm(fc, '#000000', 0.3); ctx.fillRect(X(x) + 0.05 * sc, Y(y) - 0.22 * sc, 0.2 * sc, 0.44 * sc);
+        ctx.fillStyle = ['#2f4f7f', '#8a3b3b', '#3d6b4a', '#6a5a8a', '#2a2a2a', '#b08a3a'][Math.floor(rnd() * 6)]; ctx.beginPath(); ctx.arc(X(x), Y(y), 0.16 * sc, 0, 7); ctx.fill(); } }
+    else { const n = Math.min(1800, Math.round(rw * rh / (30 * p * p)));
+      for (let i = 0; i < n; i++) { ctx.fillStyle = Gm(fc, rnd() < 0.5 ? '#000000' : '#ffffff', 0.08 + 0.1 * rnd()); ctx.fillRect(ox + rnd() * rw, oy + rnd() * rh, 1.5 * p, 1.5 * p); } }
+    ctx.restore();
+    /* the walls, 0.25 m thick in the picture's scale at least 8 px: painted brickwork, courses drawn as mortar lines */
+    const wc = S.walls === 'wedges' ? Gm(T.wallc, '#000000', 0.15) : T.brick;
+    ctx.fillStyle = wc; ctx.beginPath(); ctx.rect(ox - wt, oy - wt, rw + 2 * wt, rh + 2 * wt); ctx.rect(ox, oy + rh, rw, -rh); ctx.fill('evenodd');
+    ctx.strokeStyle = Gm(wc, dk ? '#000000' : '#ffffff', 0.35); ctx.lineWidth = 1; ctx.beginPath();
+    for (let x = ox - wt + 0.225 * sc; x < ox + rw + wt; x += Math.max(6 * p, 0.225 * sc)) { ctx.moveTo(x, oy - wt); ctx.lineTo(x, oy); ctx.moveTo(x, oy + rh); ctx.lineTo(x, oy + rh + wt); }
+    for (let y = oy + 0.225 * sc; y < oy + rh; y += Math.max(6 * p, 0.225 * sc)) { ctx.moveTo(ox - wt, y); ctx.lineTo(ox, y); ctx.moveTo(ox + rw, y); ctx.lineTo(ox + rw + wt, y); }
+    ctx.stroke(); ctx.strokeStyle = Gm(wc, '#000000', 0.3); ctx.strokeRect(ox - wt + 0.5, oy - wt + 0.5, rw + 2 * wt - 1, rh + 2 * wt - 1);
     if (S.walls === 'wedges') {
       /* a row of wedges along each wall, their tips at depth d */
       const tooth = Math.max(6 * p, Math.min(d * sc * 0.55, 18 * p)), D = d * sc;
@@ -432,7 +465,7 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
       ctx.setLineDash([3 * p, 3 * p]); ctx.strokeStyle = T.gridStrong; ctx.strokeRect(X(0), Y(0), m.L * sc, m.W * sc); ctx.setLineDash([]);
     }
     for (const q of m.panels) {   /* panels drawn on their wall */
-      ctx.fillStyle = T.panel; const t = 5 * p;
+      ctx.fillStyle = T.panel; const t = Math.max(5 * p, 0.05 * sc);
       if (q.wall === 0) ctx.fillRect(X(q.u0), Y(0), (q.u1 - q.u0) * sc, t); else if (q.wall === 2) ctx.fillRect(X(q.u0), Y(m.W) - t, (q.u1 - q.u0) * sc, t);
       else if (q.wall === 3) ctx.fillRect(X(0), Y(q.u0), t, (q.u1 - q.u0) * sc); else ctx.fillRect(X(m.L) - t, Y(q.u0), t, (q.u1 - q.u0) * sc);
     }
@@ -450,10 +483,17 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     }
     /* loudspeaker, microphone and r */
     const [sx, sy] = srcPos(m), mx = sx + S.r;
+    ctx.fillStyle = Gm(T.mic, T.canvas, 0.88); ctx.strokeStyle = Gm(T.mic, T.canvas, 0.55); ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.arc(X(mx), Y(sy), 0.5 * sc, 0, 7); ctx.fill(); ctx.stroke(); ctx.setLineDash([]);
     ctx.strokeStyle = T.muted; ctx.setLineDash([4 * p, 3 * p]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(X(sx), Y(sy)); ctx.lineTo(X(mx), Y(sy)); ctx.stroke(); ctx.setLineDash([]);
     ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.fillText(`r = ${f(S.r, 2)} m`, X(sx + S.r / 2), Y(sy) - 8 * p);
-    ctx.fillStyle = T.spk; ctx.fillRect(X(sx) - 9 * p, Y(sy) - 9 * p, 12 * p, 18 * p); ctx.beginPath(); ctx.moveTo(X(sx) + 3 * p, Y(sy) - 5 * p); ctx.lineTo(X(sx) + 11 * p, Y(sy) - 12 * p); ctx.lineTo(X(sx) + 11 * p, Y(sy) + 12 * p); ctx.lineTo(X(sx) + 3 * p, Y(sy) + 5 * p); ctx.fill();
-    ctx.fillStyle = T.mic; ctx.beginPath(); ctx.arc(X(mx), Y(sy), 7 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(X(mx), Y(sy), 3 * p, 0, 7); ctx.stroke();
+    /* the source seen from above: a dodecahedron loudspeaker on a tripod; the microphone on its stand, in its 0.5 m receiver sphere */
+    const legs = (cx, cy, rl) => { ctx.strokeStyle = Gm(T.spk, T.canvas, 0.35); ctx.lineWidth = 1.5 * p; ctx.beginPath(); for (let k = 0; k < 3; k++) { const a = k * 2.094 + 0.5; ctx.moveTo(cx, cy); ctx.lineTo(cx + rl * Math.cos(a), cy + rl * Math.sin(a)); } ctx.stroke(); };
+    const sr = Math.max(9 * p, 0.2 * sc), pent = (cx, cy, r, a0) => { ctx.beginPath(); for (let k = 0; k < 5; k++) { const a = a0 + k * 1.2566; ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a)); } ctx.closePath(); };
+    legs(X(sx), Y(sy), Math.max(14 * p, 0.3 * sc));
+    ctx.fillStyle = T.spk; pent(X(sx), Y(sy), sr, -Math.PI / 2); ctx.fill(); ctx.strokeStyle = Gm(T.spk, T.canvas, 0.45); ctx.lineWidth = 1; pent(X(sx), Y(sy), sr * 0.5, Math.PI / 2); ctx.stroke();
+    ctx.beginPath(); for (let k = 0; k < 5; k++) { const a = Math.PI / 2 + k * 1.2566, b = -Math.PI / 2 + (k + 0.5) * 1.2566 + 0.6283; ctx.moveTo(X(sx) + sr * 0.5 * Math.cos(a), Y(sy) + sr * 0.5 * Math.sin(a)); ctx.lineTo(X(sx) + sr * Math.cos(b - 1.2566 * 0), Y(sy) + sr * Math.sin(b)); } ctx.stroke();
+    legs(X(mx), Y(sy), Math.max(12 * p, 0.3 * sc));
+    ctx.fillStyle = T.mic; ctx.beginPath(); ctx.arc(X(mx), Y(sy), 6 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(X(mx), Y(sy), 2.5 * p, 0, 7); ctx.stroke();
     if (S.mode === 'level') { ctx.fillStyle = T.ink; ctx.font = `700 ${14 * p}px ${T.mono}`; ctx.fillText(S.res ? `${f(S.res.Ldb, 1)} dB` : '…', X(mx), Y(sy) + 24 * p); }
     ctx.textAlign = 'left';
   }
@@ -569,16 +609,16 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
     if (b.dataset.step === 'N') S.nPanels = Math.max(0, Math.min(40, S.nPanels + d)); else S.r = Math.max(0.5, Math.min(rMax(model()), Math.round((S.r + d) * 20) / 20)); changed(); });
 
   // ---------- the clap, in slow motion: 1500 rays drawn on the plan, by the same rules as the measurement ----------
-  let anim = null; const SLOW = 100, NPART = 1500;
+  let anim = null; const SLOW = 100, NPART = 1500, card = VD.setupCard($('rack'));
   function clap() {
     if (anim) { stopAnim(); return; }
     S.clapped = true; if (!S.res && !S.pending) remeasure();
     if (reduce) { readouts(); draw(); return; }
     const m = model(), [sx, sy, sz] = srcPos(m), rnd = mulberry(Date.now() & 0xffff), parts = [];
     for (let i = 0; i < NPART; i++) { const cz = 2 * rnd() - 1, ph = 2 * Math.PI * rnd(), s = Math.sqrt(1 - cz * cz); parts.push({ x: sx, y: sy, z: sz, dx: s * Math.cos(ph), dy: s * Math.sin(ph), dz: cz, e: 1 }); }
-    anim = { parts, t: 0, m, rnd, wall: 0 }; $('rack').classList.add('away'); $('rack').inert = true; $('go').textContent = 'Stop'; $('go').classList.remove('attn'); readouts(); draw();
+    anim = { parts, t: 0, m, rnd, wall: 0 }; card.away(true); $('go').textContent = 'Stop'; $('go').classList.remove('attn'); readouts(); draw();
   }
-  function stopAnim() { if (!anim) return; anim = null; $('rack').classList.remove('away'); $('rack').inert = false; $('go').textContent = 'Clap'; $('go').classList.add('attn'); draw(); }
+  function stopAnim() { if (!anim) return; anim = null; card.away(false); G3.dirty = true; $('go').textContent = 'Clap'; $('go').classList.add('attn'); draw(); }
   function stepAnim(dtw) {
     const a = anim, m = a.m, dist = C_AIR * dtw / SLOW, alphaAt = surfaceAlpha(m); a.t += dtw / SLOW; a.wall += dtw; let live = 0;
     for (const q of a.parts) {
@@ -595,18 +635,239 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   }
   $('go').addEventListener('click', clap);
   let last = performance.now();
-  function frame(now) { const dt = Math.min(0.05, (now - last) / 1000); last = now; if (anim) { stepAnim(dt); if (anim) draw(); } requestAnimationFrame(frame); }
+  function frame(now) { const dt = Math.min(0.05, (now - last) / 1000); last = now; if (anim) { stepAnim(dt); if (anim) draw(); } if (G3.on && G3.dirty) render3D(); requestAnimationFrame(frame); }
 
   // drag the microphone along the centre line
   let drag = false; const local = (e) => { const r = can.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
   can.addEventListener('pointerdown', (e) => { if (!geo || anim) return; const [x, y] = local(e), [sx, sy] = srcPos(geo.m);
-    if (Math.hypot(x - geo.X(sx + S.r), y - geo.Y(sy)) < 24 * ps()) { drag = true; $('rack').classList.add('ghost'); can.setPointerCapture(e.pointerId); } });
+    if (Math.hypot(x - geo.X(sx + S.r), y - geo.Y(sy)) < 24 * ps()) { drag = true; card.ghost(true); can.setPointerCapture(e.pointerId); } });
   can.addEventListener('pointermove', (e) => { if (!drag) return; const [x] = local(e), sx = srcPos(geo.m)[0], X0 = geo.X(0);
     S.r = Math.max(0.5, Math.min(rMax(geo.m), Math.round(((x - X0) / geo.sc - sx) * 20) / 20)); changed(); });
-  const endDrag = () => { drag = false; $('rack').classList.remove('ghost'); }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
-  can.addEventListener('keydown', (e) => { if (e.key === 'c' || e.key === 'C' || e.key === ' ') clap();
+  const endDrag = () => { drag = false; card.ghost(false); }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  function keyNav(e) { if (e.key === 'c' || e.key === 'C' || e.key === ' ') clap();
     else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { S.r = Math.max(0.5, Math.min(rMax(model()), Math.round((S.r + (e.key === 'ArrowRight' ? 1 : -1) * (e.shiftKey ? 1 : 0.1)) * 20) / 20)); changed(); }
-    else return; e.preventDefault(); });
+    else return; e.preventDefault(); }
+  can.addEventListener('keydown', keyNav);
+
+  // ---------- the room in 3D (three.js r128, loaded the first time the 3D view opens) ----------
+  /* The same room as the plan, to scale in metres, seen from outside with the two nearest walls left out: painted brick walls and
+     ceiling, the floor's material (concrete, carpet, or an audience seated 2 per m², rows 1 m apart, with a centre aisle drawn
+     clear), the panels where the model hangs them, or wedges on all six surfaces with a wire net floor at their tips. The source
+     is drawn as a dodecahedron loudspeaker, the usual omnidirectional source for room acoustics (ISO 3382), and the microphone
+     with the 0.5 m receiver sphere the rays are counted in. During a clap the same 1500 rays as on the plan move through it. */
+  const G3 = { on: false, ok: false, tried: false, loading: false, dirty: true, key: '' };
+  const orb3 = { th: -1.15, ph: 0.98, zoom: 1 };
+  let g3 = null, drag3 = false;
+  const NO3D = 'The 3D room needs three.js from cdnjs.cloudflare.com and WebGL; the plan works without them.';
+  const hex = (c, fb) => (/^#[0-9a-f]{6}$/i.test(c) ? c : fb);
+  function init3D() {
+    G3.tried = true;
+    const renderer = window.VD3 && VD3.renderer(); if (!renderer) return false;
+    const el = renderer.domElement; el.className = 'gl'; el.tabIndex = 0; el.hidden = true;
+    el.setAttribute('role', 'application');
+    el.setAttribute('aria-label', 'The room in 3D, with the loudspeaker and the microphone on its centre line. Drag the microphone to change r; drag elsewhere to turn the view, scroll or pinch to zoom, double click to reset the view. Left and right arrows move the microphone by 0.1 m (with Shift, 1 m), comma and period turn the view, C claps.');
+    $('scene').insertBefore(el, $('scene').querySelector('.viewbar'));
+    const shadows = !VD3.lowPower(); renderer.shadowMap.enabled = shadows; renderer.shadowMap.type = THREE.PCFSoftShadowMap; renderer.localClippingEnabled = true;
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 0.1, 400);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x8a8278, 0.72), amb = new THREE.AmbientLight(0xffffff, 0.3); scene.add(hemi, amb);
+    const sun = new THREE.DirectionalLight(0xfff3e4, 0.62); sun.castShadow = shadows; sun.shadow.mapSize.set(2048, 2048); sun.shadow.bias = -0.0005; sun.shadow.normalBias = 0.02; sun.shadow.radius = 3; scene.add(sun, sun.target);
+    const fill = new THREE.DirectionalLight(0xdfe8ff, 0.22); scene.add(fill);
+    const room = new THREE.Group(), kit = new THREE.Group(); scene.add(room, kit);
+    g3 = { renderer, el, scene, cam, sun, fill, hemi, room, kit, shadows, faces: [], rect: null, w: 0, h: 0, ray: new THREE.Raycaster() };
+    VD3.orbit(el, orb3, () => { G3.dirty = true; }, { phMin: 0.18, phMax: 1.42, zMin: 0.6, zMax: 3.2, grab: grabMic });
+    el.addEventListener('pointermove', moveMic); el.addEventListener('pointerup', endMic); el.addEventListener('pointercancel', endMic);
+    el.addEventListener('keydown', keyNav);
+    return true;
+  }
+  function canvasTex(w, h, paint, sx, sy) {   /* a repeating texture whose tile is sx by sy metres */
+    const c = document.createElement('canvas'); c.width = w; c.height = h; paint(c.getContext('2d'), w, h);
+    const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(1 / sx, 1 / sy); t.anisotropy = 4; return t;
+  }
+  const speckle = (g, w, h, n, cols, s, rnd) => { for (let i = 0; i < n; i++) { g.fillStyle = cols[i % cols.length]; g.globalAlpha = 0.25 + 0.5 * rnd(); g.fillRect(rnd() * w, rnd() * h, s * (0.5 + rnd()), s * (0.5 + rnd())); } g.globalAlpha = 1; };
+  function brickTex(paint, dk) {   /* painted brickwork: 4 bricks of 225 mm by 8 courses of 75 mm, mortar 10 mm, the paint over both */
+    const Gm = window.VDGear.mix, rnd = mulberry(7);
+    return canvasTex(288, 192, (g, w, h) => {
+      g.fillStyle = Gm(paint, '#000000', dk ? 0.28 : 0.12); g.fillRect(0, 0, w, h);
+      for (let r = 0; r < 8; r++) for (let k = -1; k < 4; k++) {
+        const x = k * 72 + (r % 2 ? 36 : 0); g.fillStyle = Gm(paint, rnd() < 0.5 ? '#ffffff' : '#000000', 0.04 * rnd()); g.fillRect(x + 1.5, r * 24 + 1.5, 69, 21);
+      }
+      speckle(g, w, h, 500, [Gm(paint, '#000000', 0.12), Gm(paint, '#ffffff', 0.15)], 1.5, rnd);
+    }, 0.9, 0.6);
+  }
+  function floorTex(kind, dk) {
+    const Gm = window.VDGear.mix, rnd = mulberry(11);
+    if (kind === 'carpet') { const base = dk ? '#3a4152' : '#7d8597';
+      return canvasTex(128, 128, (g, w, h) => { g.fillStyle = base; g.fillRect(0, 0, w, h); speckle(g, w, h, 2600, [Gm(base, '#000000', 0.25), Gm(base, '#ffffff', 0.18)], 1, rnd); }, 0.5, 0.5); }
+    if (kind === 'audience') { const base = dk ? '#5a4634' : '#b58c62';   /* a wooden floor, planks 150 mm wide */
+      return canvasTex(256, 256, (g, w, h) => { for (let i = 0; i < 8; i++) { g.fillStyle = Gm(base, i % 2 ? '#000000' : '#ffffff', 0.05 + 0.06 * rnd()); g.fillRect(0, i * 32, w, 32);
+        g.fillStyle = Gm(base, '#000000', 0.3); g.fillRect(0, i * 32, w, 1.5); g.fillRect(((i * 97) % 200) + 20, i * 32, 1.5, 32); }
+        speckle(g, w, h, 300, [Gm(base, '#000000', 0.2)], 1.2, rnd); }, 1.2, 1.2); }
+    const base = dk ? '#3b4048' : '#b9bcc0';   /* concrete */
+    return canvasTex(256, 256, (g, w, h) => { g.fillStyle = base; g.fillRect(0, 0, w, h); speckle(g, w, h, 3200, [Gm(base, '#000000', 0.18), Gm(base, '#ffffff', 0.2), Gm(base, '#6b5d4f', 0.2)], 1.6, rnd); }, 2, 2);
+  }
+  function quad(o, u, v, mat) {   /* a rectangle from corner o along u and v, facing u × v, with uv in metres */
+    const a = Math.hypot(...u), c = Math.hypot(...v), P = [o, o.map((q, i) => q + u[i]), o.map((q, i) => q + u[i] + v[i]), o.map((q, i) => q + v[i])];
+    const g = new THREE.BufferGeometry(), idx = [0, 1, 2, 0, 2, 3], UV = [[0, 0], [a, 0], [a, c], [0, c]];
+    g.setAttribute('position', new THREE.Float32BufferAttribute(idx.flatMap((i) => P[i]), 3)); g.setAttribute('uv', new THREE.Float32BufferAttribute(idx.flatMap((i) => UV[i]), 2));
+    g.computeVertexNormals(); const me = new THREE.Mesh(g, mat); me.receiveShadow = true; return me;
+  }
+  /* a wedge: a prism on a 1 × 1 base with its ridge 1 up along x (scaled to the tile and the wedge depth) */
+  function wedgeGeom() {
+    const A = [-0.5, -0.5, 0], B = [0.5, -0.5, 0], C = [0.5, 0.5, 0], D = [-0.5, 0.5, 0], E = [-0.5, 0, 1], F = [0.5, 0, 1];
+    const tri = [A, B, F, A, F, E, C, D, E, C, E, F, A, E, D, B, C, F], g = new THREE.BufferGeometry();
+    g.setAttribute('position', new THREE.Float32BufferAttribute(tri.flat(), 3)); g.computeVertexNormals(); return g;
+  }
+  function clearGroup(gr) {
+    gr.traverse((o) => { if (o.geometry) o.geometry.dispose(); if (o.material) [].concat(o.material).forEach((q) => { if (q.map) q.map.dispose(); q.dispose(); }); });
+    while (gr.children.length) gr.remove(gr.children[0]);
+  }
+  function build3D() {
+    const dk = VD3.dark(), key = JSON.stringify(opts()) + dk; if (key === G3.key) return; G3.key = key;
+    const m = model(), d = S.walls === 'wedges' ? S.wedge : 0, L = S.L, Wd = S.W, Hh = S.H, Gm = window.VDGear.mix, { room, kit } = g3;
+    clearGroup(room); clearGroup(kit);
+    const bg = hex(T.canvas, dk ? '#10161e' : '#fcfdfe'); g3.scene.background = new THREE.Color(bg);
+    g3.hemi.intensity = dk ? 0.5 : 0.6; g3.sun.intensity = dk ? 0.3 : 0.34; g3.fill.intensity = dk ? 0.2 : 0.26;
+    const shade = (o) => { o.castShadow = g3.shadows; o.receiveShadow = g3.shadows; return o; };
+    const paint = dk ? Gm(hex(T.brick, '#8f5f49'), '#ffffff', 0.12) : Gm(hex(T.brick, '#b9846a'), '#ffffff', 0.62);
+    const wallMat = new THREE.MeshStandardMaterial({ map: brickTex(paint, dk), roughness: 0.9 });
+    const hardMat = new THREE.MeshStandardMaterial({ color: dk ? 0x2a2f36 : 0x8f949a, roughness: 0.9 });
+    const floorMat = new THREE.MeshStandardMaterial({ map: floorTex(S.walls === 'wedges' ? 'concrete' : S.floor, dk), roughness: S.floor === 'concrete' ? 0.6 : 0.95 });
+    const slabMat = new THREE.MeshStandardMaterial({ color: dk ? 0x2b323b : 0xd5d9de, roughness: 0.95 });
+    /* the six inner surfaces, each facing into the room, and with it whatever is on it */
+    const F6 = [[[L, 0, 0], [-L, 0, 0], [0, 0, Hh]], [[L, Wd, 0], [0, -Wd, 0], [0, 0, Hh]], [[0, Wd, 0], [L, 0, 0], [0, 0, Hh]], [[0, 0, 0], [0, Wd, 0], [0, 0, Hh]],
+      [[0, 0, 0], [L, 0, 0], [0, Wd, 0]], [[0, Wd, Hh], [L, 0, 0], [0, -Wd, 0]]];
+    const NRM = [[0, 1, 0], [-1, 0, 0], [0, -1, 0], [1, 0, 0], [0, 0, 1], [0, 0, -1]];
+    g3.faces = F6.map(([o, u, v], i) => { const gr = new THREE.Group(); gr.add(quad(o, u, v, d ? hardMat : i === 4 ? floorMat : wallMat)); room.add(gr); return gr; });
+    /* wall thickness, 0.25 m, seen as a rim on the far walls; a 0.2 m slab under the floor */
+    const T_W = 0.25, slab = (sx, sy, sz, x, y, z, gr) => { const b = new THREE.Mesh(new THREE.BoxGeometry(sx, sy, sz), slabMat); b.receiveShadow = g3.shadows; b.position.set(x, y, z); gr.add(b); };
+    const e = 0.01;   /* the slabs sit just outside the inner surfaces, so the two never fight for the same pixels */
+    slab(L + 2 * T_W, T_W, Hh, L / 2, -T_W / 2 - e, Hh / 2, g3.faces[0]); slab(L + 2 * T_W, T_W, Hh, L / 2, Wd + T_W / 2 + e, Hh / 2, g3.faces[2]);
+    slab(T_W, Wd, Hh, -T_W / 2 - e, Wd / 2, Hh / 2, g3.faces[3]); slab(T_W, Wd, Hh, L + T_W / 2 + e, Wd / 2, Hh / 2, g3.faces[1]);
+    slab(L + 2 * T_W + 2 * e, Wd + 2 * T_W + 2 * e, 0.2, L / 2, Wd / 2, -0.1 - e, room);
+    const edges = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(L, Wd, Hh)), new THREE.LineBasicMaterial({ color: hex(T.gridStrong, '#cfd7e1'), transparent: true, opacity: 0.55 }));
+    edges.position.set(L / 2, Wd / 2, Hh / 2); room.add(edges);
+    if (S.walls === 'panels') {   /* 50 mm fabric covered panels on the walls (no wedges here, so free space = the room) */
+      const pm = new THREE.MeshStandardMaterial({ color: hex(T.panel, '#3f8f6b'), roughness: 0.97 }), t = 0.05;
+      for (const q of m.panels) { const c = (q.u0 + q.u1) / 2, z = (q.z0 + q.z1) / 2;
+        const b = shade(new THREE.Mesh(new THREE.BoxGeometry(q.wall % 2 ? t : PANEL_W, q.wall % 2 ? PANEL_W : t, PANEL_H), pm));
+        if (q.wall === 0) b.position.set(c, t / 2, z); else if (q.wall === 2) b.position.set(c, Wd - t / 2, z); else if (q.wall === 3) b.position.set(t / 2, c, z); else b.position.set(L - t / 2, c, z);
+        g3.faces[q.wall].add(b); }
+    }
+    if (d) {   /* wedges tile every surface, alternate tiles turned a quarter turn, as in a real chamber */
+      const S6 = F6.map(([, u, v]) => Math.hypot(...u) * Math.hypot(...v)).reduce((a, b) => a + b, 0), b0 = Math.max(Math.min(0.5, Math.max(0.15, 0.7 * d)), Math.sqrt(S6 / 9000));
+      const wm = new THREE.MeshStandardMaterial({ color: hex(T.foam, '#6d7a8c'), roughness: 1, flatShading: true, side: THREE.DoubleSide }), geo = wedgeGeom();
+      const M = new THREE.Matrix4(), X = new THREE.Vector3(), Y = new THREE.Vector3(), Z = new THREE.Vector3();
+      F6.forEach(([o, u, v], i) => {
+        const a = Math.hypot(...u), c = Math.hypot(...v), nu = Math.max(1, Math.round(a / b0)), nv = Math.max(1, Math.round(c / b0)), bu = a / nu, bv = c / nv;
+        const U = u.map((q) => q / a), V = v.map((q) => q / c), N = NRM[i], im = new THREE.InstancedMesh(geo, wm, nu * nv); let k = 0;
+        for (let iu = 0; iu < nu; iu++) for (let iv = 0; iv < nv; iv++) {
+          const turn = (iu + iv) % 2, p = o.map((q, j) => q + U[j] * (iu + 0.5) * bu + V[j] * (iv + 0.5) * bv);
+          if (turn) { X.set(...V).multiplyScalar(bv); Y.set(...U).multiplyScalar(-bu); } else { X.set(...U).multiplyScalar(bu); Y.set(...V).multiplyScalar(bv); }
+          Z.set(...N).multiplyScalar(d); M.makeBasis(X, Y, Z).setPosition(p[0], p[1], p[2]); im.setMatrixAt(k++, M);
+        }
+        im.receiveShadow = g3.shadows; g3.faces[i].add(im);
+      });
+      /* the wire net floor at the wedge tips, 0.25 m mesh */
+      const pts = [], step = 0.25; for (let x = d; x <= L - d + 1e-6; x += step) pts.push(x, d, d, x, Wd - d, d); for (let y = d; y <= Wd - d + 1e-6; y += step) pts.push(d, y, d, L - d, y, d);
+      const ng = new THREE.BufferGeometry(); ng.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+      room.add(new THREE.LineSegments(ng, new THREE.LineBasicMaterial({ color: dk ? 0x8a96a6 : 0x2c333c, transparent: true, opacity: 0.5 })));
+    }
+    if (S.walls !== 'wedges' && S.floor === 'audience') {   /* 2 people per m²: seats 0.5 m apart in rows 1 m apart, facing the source */
+      const seats = []; for (let x = 0.6; x <= L - 0.3; x += 1) for (let y = 0.25; y < Wd; y += 0.5) if (Math.abs(y - Wd / 2) > 0.55 && x > srcPos(m)[0] + 0.8) seats.push([x, y]);
+      const wood = new THREE.MeshStandardMaterial({ color: dk ? 0x6b4a2e : 0x8b5a32, roughness: 0.7 }), cloth = new THREE.MeshStandardMaterial({ roughness: 0.9 }), skin = new THREE.MeshStandardMaterial({ roughness: 0.75 });
+      const parts = [[new THREE.BoxGeometry(0.44, 0.44, 0.04), wood, 0, 0.45], [new THREE.BoxGeometry(0.04, 0.44, 0.42), wood, 0.2, 0.68], [new THREE.CylinderGeometry(0.15, 0.18, 0.6, 10), cloth, 0.04, 0.78], [new THREE.SphereGeometry(0.1, 12, 8), skin, 0.02, 1.2]];
+      const CL = [0x2f4f7f, 0x8a3b3b, 0x3d6b4a, 0x6a5a8a, 0x2a2a2a, 0xb08a3a, 0x7a7f86, 0x9c5a3c], SK = [0xf1c7a4, 0xd9a57e, 0xa8714f, 0x7a4b33, 0xe8b894];
+      const rnd = mulberry(3), M = new THREE.Matrix4(), col = new THREE.Color();
+      parts.forEach(([geo, mat, dx, z], pi) => { if (pi === 2) geo.rotateX(Math.PI / 2);
+        const im = new THREE.InstancedMesh(geo, mat, seats.length);
+        seats.forEach(([x, y], k) => { M.makeTranslation(x + dx, y, z); im.setMatrixAt(k, M); if (pi >= 2) { col.setHex(pi === 2 ? CL[Math.floor(rnd() * CL.length)] : SK[Math.floor(rnd() * SK.length)]); im.setColorAt(k, col); } });
+        shade(im); room.add(im); });
+    }
+    /* source: a dodecahedron loudspeaker on a tripod; microphone: a measuring microphone on a stand, and its receiver sphere */
+    const [sx, sy, sz] = srcPos(m).map((q) => q + d), metal = new THREE.MeshStandardMaterial({ color: 0x9aa3ad, metalness: 0.6, roughness: 0.35 });
+    const blk = new THREE.MeshStandardMaterial({ color: dk ? 0x3c4552 : 0x2c333c, metalness: 0.3, roughness: 0.45 });
+    const dod = shade(new THREE.Mesh(new THREE.DodecahedronGeometry(0.2), new THREE.MeshStandardMaterial({ color: dk ? 0x9fb0c4 : 0x4a5563, metalness: 0.25, roughness: 0.4, flatShading: true })));
+    dod.position.set(sx, sy, sz); kit.add(dod);
+    const stand = (x, y, z0, z1, gr) => { const pole = shade(new THREE.Mesh(new THREE.CylinderGeometry(0.015, 0.015, z1 - z0, 10), metal)); pole.rotation.x = Math.PI / 2; pole.position.set(x, y, (z0 + z1) / 2); gr.add(pole);
+      for (let k = 0; k < 3; k++) { const a = k * 2.094 + 0.5, A = new THREE.Vector3(x, y, z0 + 0.32), B = new THREE.Vector3(x + 0.3 * Math.cos(a), y + 0.3 * Math.sin(a), z0), dir = B.clone().sub(A);
+        const leg = shade(new THREE.Mesh(new THREE.CylinderGeometry(0.01, 0.01, dir.length(), 6), blk)); leg.position.copy(A).add(B).multiplyScalar(0.5);
+        leg.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir.normalize()); gr.add(leg); } };
+    stand(sx, sy, d, sz - 0.18, kit);
+    const mic = new THREE.Group(); stand(0, 0, d - sz, -0.1, mic);
+    const cap = shade(new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.016, 0.2, 14), metal)); cap.rotation.x = Math.PI / 2; mic.add(cap);
+    const tip = new THREE.Mesh(new THREE.SphereGeometry(0.03, 14, 10), new THREE.MeshStandardMaterial({ color: hex(T.mic, '#c23f2c'), roughness: 0.5 })); tip.position.z = 0.1; mic.add(tip);
+    const sph = new THREE.Mesh(new THREE.SphereGeometry(0.5, 32, 18), new THREE.MeshBasicMaterial({ color: hex(T.mic, '#c23f2c'), transparent: true, opacity: dk ? 0.1 : 0.08, depthWrite: false }));
+    mic.add(sph); kit.add(mic);
+    const ln = new THREE.BufferGeometry(); ln.setAttribute('position', new THREE.Float32BufferAttribute([0, 0, 0, 1, 0, 0], 3));
+    const rLine = new THREE.Line(ln, new THREE.LineDashedMaterial({ color: hex(T.muted, '#5a6575'), dashSize: 0.12, gapSize: 0.08 })); rLine.computeLineDistances(); kit.add(rLine);
+    /* the clap: the rays as points, and the direct wavefront clipped to the free space */
+    const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NPART * 3), 3)); pg.setAttribute('color', new THREE.BufferAttribute(new Float32Array(NPART * 3), 3));
+    const pts = new THREE.Points(pg, new THREE.PointsMaterial({ size: Math.max(0.06, Math.hypot(L, Wd) / 110), vertexColors: true, sizeAttenuation: true, transparent: true, depthWrite: false }));
+    pts.frustumCulled = false; kit.add(pts);
+    const clip = [[1, 0, 0, -d], [-1, 0, 0, L - d], [0, 1, 0, -d], [0, -1, 0, Wd - d], [0, 0, 1, -d], [0, 0, -1, Hh - d]].map(([a, b, c, e]) => new THREE.Plane(new THREE.Vector3(a, b, c), e));
+    const front = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 24), new THREE.MeshBasicMaterial({ color: hex(T.ray, '#2b60b5'), transparent: true, opacity: 0.13, depthWrite: false, side: THREE.DoubleSide, clippingPlanes: clip }));
+    front.position.set(sx, sy, sz); kit.add(front);
+    Object.assign(g3, { mic, rLine, pts, front, src: [sx, sy, sz], d, bg: new THREE.Color(bg), rayC: new THREE.Color(hex(T.ray, '#2b60b5')) });
+    /* light from above the room, its shadows sized to it */
+    const R2 = Math.hypot(L, Wd); g3.sun.position.set(L * 0.35, -Wd * 0.4, Hh + R2 * 1.2); g3.sun.target.position.set(L / 2, Wd / 2, 0);
+    Object.assign(g3.sun.shadow.camera, { left: -R2 * 0.75, right: R2 * 0.75, top: R2 * 0.75, bottom: -R2 * 0.75, near: 0.5, far: R2 * 4 }); g3.sun.shadow.camera.updateProjectionMatrix();
+    g3.fill.position.set(-L, Wd * 2, Hh * 2);
+  }
+  function render3D() {
+    if (!g3 || !g3.rect) return; G3.dirty = false; build3D();
+    const { renderer, cam, rect } = g3, L = S.L, Wd = S.W, Hh = S.H;
+    if (g3.w !== rect.w || g3.h !== rect.h) { g3.w = rect.w; g3.h = rect.h; renderer.setSize(rect.w, rect.h, false); }
+    cam.aspect = rect.w / rect.h; cam.updateProjectionMatrix();
+    const diag = Math.hypot(L, Wd, Hh), tgt = new THREE.Vector3(L / 2, Wd / 2, Hh * 0.3), fk = G3.key + rect.w + 'x' + rect.h;
+    if (g3.fitKey !== fk) {   /* the distance at which the whole room fills about 88 % of the view from the opening angles */
+      g3.fitKey = fk; let r = diag * 1.6; const o = { th: -1.15, ph: 0.98, zoom: 1 }, v = new THREE.Vector3();
+      for (let it = 0; it < 3; it++) { VD3.place(cam, o, tgt, r); cam.updateMatrixWorld(); let mx = 0;
+        for (let k = 0; k < 8; k++) { v.set(k & 1 ? L + 0.25 : -0.25, k & 2 ? Wd + 0.25 : -0.25, k & 4 ? Hh : -0.2).project(cam); mx = Math.max(mx, Math.abs(v.x), Math.abs(v.y)); }
+        r *= 1 + (mx / 0.88 - 1) * 0.9; }
+      g3.dist = r; }
+    VD3.place(cam, orb3, tgt, g3.dist);
+    const c = cam.position, hide = [c.y < 0, c.x > L, c.y > Wd, c.x < 0, c.z < 0, c.z > Hh];
+    g3.faces.forEach((g, i) => { g.visible = !hide[i]; });
+    const [sx, sy, sz] = g3.src, mx = sx + S.r; g3.mic.position.set(mx, sy, sz);
+    g3.rLine.scale.set(S.r, 1, 1); g3.rLine.position.set(sx, sy, sz);
+    const d = g3.d, pa = g3.pts.geometry.attributes, on = !!anim;
+    g3.pts.visible = on;
+    if (on) { const P = pa.position.array, C = pa.color.array; let k = 0;
+      for (const q of anim.parts) { const al = q.e < 1e-4 ? 0 : Math.max(0, Math.min(1, 1 + 10 * Math.log10(q.e) / 40));
+        P[k] = q.x + d; P[k + 1] = q.y + d; P[k + 2] = q.z + d;
+        C[k] = g3.bg.r + (g3.rayC.r - g3.bg.r) * al; C[k + 1] = g3.bg.g + (g3.rayC.g - g3.bg.g) * al; C[k + 2] = g3.bg.b + (g3.rayC.b - g3.bg.b) * al; k += 3; }
+      pa.position.needsUpdate = true; pa.color.needsUpdate = true; }
+    const rr = on ? C_AIR * anim.t : 0; g3.front.visible = on && rr > 0.05 && rr < diag; if (g3.front.visible) g3.front.scale.setScalar(rr);
+    renderer.render(g3.scene, cam);
+    /* the tags: r over the middle of its line, and the level under the microphone */
+    const tagAt = (el, x, y, z, txt) => { const v = new THREE.Vector3(x, y, z).project(cam); el.hidden = !txt || v.z > 1;
+      if (!el.hidden) { el.textContent = txt; el.style.left = `${rect.x + (v.x + 1) / 2 * rect.w}px`; el.style.top = `${rect.y + (1 - v.y) / 2 * rect.h}px`; } };
+    tagAt($('tagR'), sx + S.r / 2, sy, sz + 0.35, `r = ${f(S.r, 2)} m`);
+    tagAt($('tagL'), mx, sy, d, S.mode === 'level' ? (S.res ? `${f(S.res.Ldb, 1)} dB` : '…') : '');
+  }
+  /* drag the microphone along the centre line in 3D: the point of the line nearest the pointer's ray */
+  function micRay(e) { const r = g3.el.getBoundingClientRect(); g3.ray.setFromCamera({ x: (e.clientX - r.left) / r.width * 2 - 1, y: 1 - (e.clientY - r.top) / r.height * 2 }, g3.cam); return g3.ray.ray; }
+  function grabMic(e) {
+    if (anim || !g3.mic) return false; const r = g3.el.getBoundingClientRect(), v = g3.mic.position.clone().project(g3.cam);
+    if (Math.hypot(e.clientX - r.left - (v.x + 1) / 2 * r.width, e.clientY - r.top - (1 - v.y) / 2 * r.height) > 28 * ps()) return false;
+    drag3 = true; g3.el.setPointerCapture(e.pointerId); card.ghost(true); g3.el.style.cursor = 'ew-resize'; return true;
+  }
+  function moveMic(e) {
+    if (!drag3) return; const [sx, sy, sz] = g3.src, on = new THREE.Vector3();
+    micRay(e).distanceSqToSegment(new THREE.Vector3(sx, sy, sz), new THREE.Vector3(sx + 40, sy, sz), null, on);
+    S.r = Math.max(0.5, Math.min(rMax(model()), Math.round((on.x - sx) * 20) / 20)); changed();
+  }
+  function endMic() { if (!drag3) return; drag3 = false; card.ghost(false); g3.el.style.cursor = 'grab'; }
+  function setView(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { capStatus(NO3D); v = 'plan'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); if (!G3.ok) capStatus(NO3D); setView(G3.ok ? '3d' : 'plan'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3) g3.el.hidden = !G3.on; if (!G3.on) { $('tagR').hidden = true; $('tagL').hidden = true; }
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    G3.dirty = true; draw();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
 
   // ---------- readings ----------
   const capStatus = (m) => { $('capStatus').textContent = m; };
@@ -649,12 +910,14 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; readouts(); draw(); });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce) stopAnim(); });
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); }
-  const retheme = () => { tokens(); draw(); };
+  const retheme = () => { tokens(); G3.key = ''; draw(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   tokens(); new ResizeObserver(resize).observe($('scene'));
   const hashP = location.hash.slice(1); applyPreset(PRESETS[hashP] ? hashP : 'bare'); resize();
+  /* the 3D room opens first, except with ?view=plan or on a device that asks to save data or has two cores or fewer */
+  if (new URLSearchParams(location.search).get('view') !== 'plan' && window.VD3 && !VD3.lowPower()) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();

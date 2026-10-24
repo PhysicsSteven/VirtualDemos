@@ -37,6 +37,8 @@ Called by the demo:
 
 The Acoustics module look is in the library too: `look.css` (depth, quieter secondary text, the instrument finish) and `gear.js` (`window.VDGear`, canvas drawing for lab equipment). `tools/look.py` links both into the module's demos, just before `</head>`; edit them here and run `tools/vdcheck.cjs` on the module.
 
+`vd3.js` (`window.VD3`) is for a demo that adds a three.js view beside its flat one: `VD3.load(cb)` loads three.js r128 from cdnjs the first time a 3D view opens; `VD3.renderer()` gives a WebGL renderer with its pixel ratio capped (or null, so the demo keeps its flat view); `VD3.lowPower()` says when to open the flat view first; `VD3.orbit(el, o, onChange, opt)` turns, zooms and resets a z up camera kept in `o = { th, ph, zoom }` (drag, wheel, pinch, double click, comma and period), with `opt.grab(e)` to take a pointer for a drag on the apparatus; `VD3.place(cam, o, target, r)` puts the camera there. Room acoustics uses it (2026-10-24); the force table, Chladni and levitation still have their own copies and can switch when next edited.
+
 Phase two helpers (presets, step buttons, readings, Export to worksheet) are added when a demo is being edited anyway, each behind the same checks. Pendulum uses `VD.setupCard`; other demos with a Set up card switch to it when they are next edited.
 
 ## Rules
