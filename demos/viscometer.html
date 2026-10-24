@@ -494,7 +494,7 @@ table.rows input:focus { border-color: var(--accent); }
     const g = g3d, dk = VD3.dark(), p = ps(), W0 = Math.max(1, Math.round(W)), H0 = Math.max(1, Math.round(Hh));
     g.el.hidden = false; Object.assign(g.el.style, { width: W0 + 'px', height: H0 + 'px' });
     if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; }
-    const key = [T.wall, T.mark, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    const tk = [T.wall, T.mark, dk].join(); if (G3.key !== tk) { G3.key = tk; theme3(); }
     build3();
     g.liqM.color = col3(S.myst ? T.fluid : T.liq[S.fluid], '#d9b44a'); g.beaker.visible = W >= 640;
     g.ballM.color = col3(S.ball === 'glass' ? T.ballGlass : S.ball === 'nylon' ? T.ballNylon : T.ball, '#9aa3ad');
