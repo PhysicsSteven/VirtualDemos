@@ -129,7 +129,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/double-slit.html" target="double-slit-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/double-slit.html" target="double-slit-worksheet">Worksheet 1: Young's Double Slit</a></li><li><a href="../curriculum/labs/students/wave-particle-duality.html" target="wave-particle-duality-worksheet">Worksheet 2: Wave and Particle Duality</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -159,6 +159,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div class="wide"><dt>Momentum p</dt><dd id="rP">—</dd></div>
         </dl>
         <p class="hint" id="srcHint"></p>
+        <label class="check"><input type="checkbox" id="blind">Blind: hide λ, speed, momentum and the predictions</label>
       </section>
 
       <section>
@@ -488,7 +489,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- state ----------
   const S = { preset: 'electron', kind: 'electron', src: Math.log10(50000), a: 0.2e-6, d: 1e-6, L: 0.35, open: [true, true],
-    det: false, eta: 1, rate: 5, Y: 15e-6, meas: false, cA: -3e-6, cB: 3e-6 };
+    det: false, eta: 1, rate: 5, Y: 15e-6, meas: false, cA: -3e-6, cB: 3e-6, blind: false };
   const show = { curve: true, marks: true, env: false, color: true };
   let phys = null, pat = null, mix = null, pred = null, streaming = !reduce;
 
@@ -1232,7 +1233,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function curReadouts() {
     if (!LY) return;
-    $('curBox').hidden = !S.meas; $('predDl').hidden = S.meas; $('predHidden').hidden = !S.meas;
+    $('curBox').hidden = !S.meas; $('predDl').hidden = S.meas || S.blind; $('predHidden').hidden = !(S.meas || S.blind);
+    $('predHidden').textContent = S.blind ? 'Hidden while Blind is on.' : 'Hidden while you measure. Turn the cursors off to see the predictions.';
     $('cA').value = S.cA / S.Y; $('cB').value = S.cB / S.Y;
     $('cAOut').textContent = fmtCur(S.cA); $('cBOut').textContent = fmtCur(S.cB); $('rBA').textContent = fmtCur(S.cB - S.cA);
   }
@@ -1482,7 +1484,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.globalAlpha = 1; ctx.globalCompositeOperation = 'source-over';
     recent = keep;
     // predicted maxima marks on both edges
-    if (show.marks && !S.meas) {
+    if (show.marks && !S.meas && !S.blind) {
       ctx.fillStyle = T.equi;
       const tri = 6 * ps;
       const mark = (y, faint) => {
@@ -1532,7 +1534,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let b = 0; b < ny; b++) { if (histCounts[b] > maxC) maxC = histCounts[b]; if (expBins[b] > maxE) maxE = expBins[b]; }
     const total = nHits;
     // scale: the larger of the data and the prediction, eased so it does not jump
-    const target = Math.max(4, 1.12 * Math.max(maxC, maxE * total * ((show.curve || show.env) && !S.meas ? 1 : 0)));
+    const target = Math.max(4, 1.12 * Math.max(maxC, maxE * total * ((show.curve || show.env) && !S.meas && !S.blind ? 1 : 0)));
     hx = target > hx || reduce ? target : hx + (target - hx) * 0.08;   // with reduced motion the axis jumps instead of gliding
     const X = (c) => hs.x + Math.min(1, c / hx) * hs.w;
     // grid ticks on counts
@@ -1559,14 +1561,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     ctx.lineTo(hs.x, hs.y); ctx.stroke(); ctx.globalAlpha = 1;
     // marks for maxima
-    if (show.marks && !S.meas && S.open[0] && S.open[1] && (!S.det || S.eta < 0.98)) {
+    if (show.marks && !S.meas && !S.blind && S.open[0] && S.open[1] && (!S.det || S.eta < 0.98)) {
       ctx.strokeStyle = T.equi; ctx.lineWidth = 1; ctx.setLineDash([2, 4]);
       const ln = (y, faint) => { if (Math.abs(y) > S.Y) return; const py = yPx(y); ctx.globalAlpha = faint ? 0.25 : 0.55; ctx.beginPath(); ctx.moveTo(hs.x, py); ctx.lineTo(hs.x + hs.w, py); ctx.stroke(); };
       ln(0); for (const m of pred.maxima) { ln(m.y, m.missing); ln(-m.y, m.missing); }
       ctx.setLineDash([]); ctx.globalAlpha = 1;
     }
     // envelope: the no interference pattern doubled, which touches the fringe peaks
-    if (show.env && !S.meas && total > 0 && pat.F12 > 0) {
+    if (show.env && !S.meas && !S.blind && total > 0 && pat.F12 > 0) {
       const scale = total / mix.F;
       ctx.strokeStyle = T.muted; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([5, 4]); ctx.beginPath();
       for (let b = 0; b < ny; b++) {
@@ -1578,7 +1580,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.stroke(); ctx.setLineDash([]);
     }
     // prediction: expected hits per bin for this many hits
-    if (show.curve && !S.meas && total > 0) {
+    if (show.curve && !S.meas && !S.blind && total > 0) {
       ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * ps; ctx.lineJoin = 'round'; ctx.beginPath();
       for (let b = 0; b < ny; b++) {
         const px = X(expBins[b] * total), py = hs.y + hs.h - (b + 0.5) * bh;
@@ -1661,6 +1663,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       $('rX').textContent = `720 u = ${(M_C60 * 1e24).toFixed(3)} × 10⁻²⁴ kg`;
     }
     $('rP').textContent = `${sci(p.p)} kg·m/s`;
+    if (S.blind) { if (S.kind !== 'photon') { $('rLam').textContent = 'hidden (Blind)'; $('rX').textContent = 'hidden (Blind)'; } $('rP').textContent = 'hidden (Blind)'; }
     $('srcHint').textContent = f.hint;
     $('rDy').textContent = fmtLen(pred.dy, 3);
     $('rMax').textContent = fmtList(pred.maxima.slice(0, 3));
@@ -1701,13 +1704,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function markPreset(name) {
     S.preset = name;
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
-    if (name && PRESETS[name]) $('presetHint').textContent = PRESETS[name].hint;
+    if (name && PRESETS[name]) $('presetHint').textContent = presetHint(name);
   }
   function applyPreset(name) {
     const p = PRESETS[name];
     Object.assign(S, { kind: p.kind, src: p.src, a: p.a, d: p.d, L: p.L, open: p.open.slice(), det: p.det, eta: p.eta, rate: p.rate });
     markPreset(name); syncSliders(); fitY(); S.cA = -0.2 * S.Y; S.cB = 0.2 * S.Y; rebuild(false);
   }
+  /* Blind leaves the de Broglie wavelength out of the setup notes */
+  function presetHint(name) { const h = PRESETS[name].hint; return S.blind && PRESETS[name].kind !== 'photon' ? h.replace(/, λ = [\d.]+ pm([,.])/, '$1') : h; }
   function custom() { markPreset(null); $('presetHint').textContent = 'Your own setup. Pick a preset to return to a known experiment.'; }
   // set a or d (meters) keeping the slits apart: a ≤ 0.9 d
   function setGeom(key, v) {
@@ -1746,6 +1751,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('fire1').addEventListener('click', () => fire(1));
   $('fire10').addEventListener('click', () => fire(10));
   $('clear').addEventListener('click', () => { flights = []; clearHits(); });
+  $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; histDirty = true; dotsDirty = true; physReadouts(); curReadouts(); if (S.preset && PRESETS[S.preset]) $('presetHint').textContent = presetHint(S.preset); });
   $('meas').addEventListener('change', (e) => { S.meas = e.target.checked; histDirty = true; curReadouts(); });
   for (const id of ['A', 'B']) $('c' + id).addEventListener('input', (e) => setCursor(id, +e.target.value * S.Y));
   $('tCurve').addEventListener('change', (e) => { show.curve = e.target.checked; });
@@ -1881,12 +1887,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const mm = (v) => String(Number((v * 1e3).toPrecision(6)));
   window.vdVersion = 'double-slit@2026-10-24';
   window.vdShowCols = [['lam_nm', 'λ (nm)'], ['d_mm', 'd (mm)'], ['hits', 'Hits'], ['BA_mm', 'B − A (mm)']];
+  /* light goes to the Young's double slit worksheet, electrons and molecules to the wave and particle one */
+  window.vdWorksheet = () => (S.kind === 'photon' ? 'double-slit' : 'wave-particle-duality');
   window.vdReadingRow = () => {
-    if (!S.meas) return 'Turn on the cursors (Measure) and put them on two bright fringes first.';
-    const p = source();
+    if (!S.meas) return 'Turn on the cursors (Measure) and put them on two fringes first.';
+    const p = source(), w = S.Y / 100;
+    /* hits within w/2 of each cursor: a window of 1/200 of the screen range */
+    const near = (c) => { let n = 0; for (let i = 0; i < nHits; i++) if (Math.abs(hitY[i] - c) <= w / 2) n++; return String(n); };
+    const um = (v) => String(Number((v * 1e6).toPrecision(6)));
     return { particle: { photon: 'photons', electron: 'electrons', c60: 'C60' }[S.kind], lam_nm: String(Number((p.lam * 1e9).toPrecision(6))),
       a_mm: mm(S.a), d_mm: mm(S.d), L_m: String(S.L), slits: S.open[0] && S.open[1] ? 'both' : S.open[0] ? '1 only' : S.open[1] ? '2 only' : 'none',
-      detector: S.det ? Math.round(S.eta * 100) + '%' : 'off', hits: String(nHits), A_mm: mm(S.cA), B_mm: mm(S.cB), BA_mm: mm(S.cB - S.cA) };
+      detector: S.det ? Math.round(S.eta * 100) + '%' : 'off', hits: String(nHits), A_mm: mm(S.cA), B_mm: mm(S.cB), BA_mm: mm(S.cB - S.cA),
+      V_kV: S.kind === 'electron' ? String(Number((Math.pow(10, S.src) / 1000).toPrecision(4))) : '', v_m_s: S.kind === 'c60' ? String(Math.round(S.src)) : '',
+      eta_pct: String(S.det ? Math.round(S.eta * 100) : 0), BA_um: um(S.cB - S.cA), nA: near(S.cA), nB: near(S.cB), w_um: um(w) };
   };
   window.__ds = { setCursor, setMeas(on) { $('meas').checked = on; S.meas = on; histDirty = true; curReadouts(); }, hits() { return Array.from(hitY.subarray(0, nHits)); }, applyPreset, set(k, v) { S[k] = v; custom(); syncSliders(); rebuild(false); }, fit() { fitY(); rebuild(false); gridAlloc(LY.scr.w, LY.scr.h); },
     get frameMs() { return frameMs; }, get n() { return nHits; }, get S() { return S; }, get pat() { return pat; }, get pred() { return pred; },

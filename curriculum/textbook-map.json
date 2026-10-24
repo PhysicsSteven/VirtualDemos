@@ -6914,7 +6914,8 @@
       "status": "usable",
       "note": "Interference and single-particle extension; Volume 3 sections mapped 2026-10-24. Measuring cursors, Readings and Export to worksheet added 2026-10-24 (Claude); worksheet double-slit (fringe spacing against λ, 1/d and λL/d) with a key from a real run in TeacherKeys.",
       "handouts": [
-        "double-slit"
+        "double-slit",
+        "wave-particle-duality"
       ],
       "title": "Double Slit, One Particle at a Time",
       "url": "demos/double-slit.html"

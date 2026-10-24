@@ -136,6 +136,7 @@ HANDOUT_TOPIC = {
     'speed-of-light': 'Speed of Light with a Rotating Mirror',
     'rutherford': 'Rutherford Scattering',
     'spectra': 'The Hydrogen Spectrum and the Rydberg Constant',
+    'wave-particle-duality': 'Wave and Particle Duality',
     'household-wiring': 'Household Wiring and Electrical Safety',
     'van-de-graaff': 'Van de Graaff Generator',
     'ink-jet-printer': 'Ink Jet Printer',
