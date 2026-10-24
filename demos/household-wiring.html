@@ -68,7 +68,7 @@ table.rows input:focus { border-color: var(--accent); }
 
   <main class="bench">
     <div class="stage" id="stage">
-      <canvas id="can" tabindex="0" role="img" aria-label="A wall with the service panel on the left and three wires, hot, neutral and ground, running to an outlet over a kitchen counter with appliances. A person may stand beside the toaster."></canvas>
+      <canvas id="can" tabindex="0" role="img" aria-label="A wall cut open, with the service panel on the left and three wires, hot, neutral and ground, running to an outlet over a kitchen counter with appliances. A person may stand beside the toaster."></canvas>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -163,7 +163,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>More about this</summary><p class="hint">Blind hides the currents, the effect on the person and whether the protection will act, until a device actually trips. Predict first: will the breaker trip? The GFCI? What does the person feel?</p></details>
-        <details class="more"><summary>More about this</summary><p class="hint">Model: all four appliances are resistors, R = (120 V)²/P from their ratings (a lamp filament's resistance is lower when cold; that is left out). With only resistors the rms currents follow Ohm's and Kirchhoff's rules exactly, solved for the whole circuit including the copper wires (ρ = 1.68 × 10⁻⁸ Ω·m at 20 °C; 14 gauge is 1.628 mm across, 12 gauge 2.053 mm). The source is an ideal 120 V; the neutral and ground are bonded together at the panel. A fault contact is 0.10 Ω (a chosen value). The person's resistance is hand to feet including the skin, 200 kΩ dry or 10.0 kΩ wet (OpenStax §10.6), and the floor and earth path back to the panel is taken as zero, which makes the shock current as large as it can be. Effects of current (OpenStax §10.6): sensation from 1 mA; apparently harmless below 5 mA; sustained muscle contraction from 5 to 30 mA and above; above 300 mA through the heart, death may occur. The breaker trips at once above 10 times its rating (magnetic trip) and after 2 s of any lesser overload (a chosen delay: real breakers carry a modest overload for seconds to minutes). The GFCI trips when the hot and neutral currents differ by more than 5 mA (OpenStax). Charges in an AC circuit move back and forth; the dots are drawn swinging, slowed down, with a swing that grows with the current.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Model: all four appliances are resistors, R = (120 V)²/P from their ratings (a lamp filament's resistance is lower when cold; that is left out). With only resistors the rms currents follow Ohm's and Kirchhoff's rules exactly, solved for the whole circuit including the copper wires (ρ = 1.68 × 10⁻⁸ Ω·m at 20 °C; 14 gauge is 1.628 mm across, 12 gauge 2.053 mm). The source is an ideal 120 V; the neutral and ground are bonded together at the panel. A fault contact is 0.10 Ω (a chosen value). The person's resistance is hand to feet including the skin, 200 kΩ dry or 10.0 kΩ wet (OpenStax §10.6), and the floor and earth path back to the panel is taken as zero, which makes the shock current as large as it can be. Effects of current (OpenStax §10.6): sensation from 1 mA; apparently harmless below 5 mA; sustained muscle contraction from 5 to 30 mA and above; above 300 mA through the heart, death may occur. The breaker trips at once above 10 times its rating (magnetic trip) and after 2 s of any lesser overload (a chosen delay: real breakers carry a modest overload for seconds to minutes). The GFCI trips when the hot and neutral currents differ by more than 5 mA (OpenStax). Charges in an AC circuit move back and forth; the dots are drawn swinging, slowed down, with a swing that grows with the current. The picture: the wall is cut open along the cable (studs, panel and receptacle not to scale). The two clamp meters show the same rms currents as the readouts, one around the hot wire and one around hot and neutral together, which reads their difference as a GFCI does. A wire reddens when its current is above its rating, 15 A for 14 gauge and 20 A for 12 gauge copper (NEC 240.4(D)), growing with I² up to twice the rating; the tint shows the overload, not a temperature. Blind hides the meters and the tint.</p></details>
         </div></details>
       </section>
     </aside>
@@ -313,74 +313,201 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.flow; const gap = 26 * p;
     for (let s = gap / 2; s < L; s += gap) { let d = s + off; if (d < 0 || d > L) continue; for (const [A, B, l0, l] of segs) if (d <= l0 + l) { const f = (d - l0) / l; ctx.beginPath(); ctx.arc(A[0] + (B[0] - A[0]) * f, A[1] + (B[1] - A[1]) * f, 2.6 * p, 0, 7); ctx.fill(); break; } }
   }
+  const GR = window.VDGear;
+  /* NEC 240.4(D): 14 gauge copper is protected at 15 A at most, 12 gauge at 20 A. Used only to tint the wires: heat goes as I², so a wire
+     glows from (I/I_rated)² = 1 (no tint) to 4, twice its rated current (full tint). The tint is not a temperature. */
+  const WIRE_RATED = { 14: 15, 12: 20 }, RED = '#ff3b12';
+  const overheat = (I) => Math.max(0, Math.min(1, ((Math.abs(I) / WIRE_RATED[S.gauge]) ** 2 - 1) / 3));
+  const pathOf = (pts) => { ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); };
+  /* an insulated conductor: dark edge, its colour, a highlight; heat (0 to 1) reddens it and makes it glow */
+  function cond(pts, col, w, heat) {
+    const p = ps(); ctx.save(); ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+    if (heat > 0) { ctx.shadowColor = RED; ctx.shadowBlur = 16 * p * heat; }
+    ctx.strokeStyle = 'rgba(0,0,0,0.5)'; ctx.lineWidth = (w + 1.6) * p; pathOf(pts); ctx.stroke(); ctx.shadowBlur = 0;
+    ctx.strokeStyle = heat > 0 ? GR.mix(col, RED, 0.3 + 0.6 * heat) : col; ctx.lineWidth = w * p; pathOf(pts); ctx.stroke();
+    ctx.translate(-0.5 * p, -0.6 * p); ctx.strokeStyle = 'rgba(255,255,255,0.3)'; ctx.lineWidth = Math.max(0.8, w * 0.28) * p; pathOf(pts); ctx.stroke(); ctx.restore();
+  }
+  /* a clamp meter: jaws (an ellipse rx by ry) around the wires at (jx, jy), the body with its display at (bx, by) */
+  function clampMeter(jx, jy, rx, ry, bx, by, text, name) {
+    const p = ps(), bw = 54 * p, bh = 62 * p;
+    ctx.save(); ctx.strokeStyle = '#2a2f36'; ctx.lineWidth = 4 * p; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(jx + (bx + bw / 2 > jx + 20 * p ? rx : 0), jy + (bx + bw / 2 > jx + 20 * p ? 0 : ry)); ctx.lineTo(bx + bw / 2, by + 4 * p); ctx.stroke();
+    ctx.lineWidth = 3.4 * p; ctx.strokeStyle = '#d9a21e'; ctx.beginPath(); ctx.ellipse(jx, jy, rx, ry, 0, 0, 7); ctx.stroke();
+    ctx.lineWidth = 1 * p; ctx.strokeStyle = 'rgba(0,0,0,0.5)'; ctx.beginPath(); ctx.ellipse(jx, jy, rx + 1.7 * p, ry + 1.7 * p, 0, 0, 7); ctx.stroke(); ctx.restore();
+    GR.box(ctx, bx, by, bw, bh, { color: '#d9a21e', r: 7 * p });
+    ctx.fillStyle = '#2a2f36'; ctx.beginPath(); ctx.roundRect(bx + 4 * p, by + 4 * p, bw - 8 * p, bh - 8 * p, 5 * p); ctx.fill();
+    GR.lcd(ctx, bx + 7 * p, by + 9 * p, bw - 14 * p, 17 * p, text, { font: `600 ${10.5 * p}px ${T.mono}` });
+    GR.plate(ctx, 'A~', bx + bw / 2, by + 36 * p, { s: 8 * p });
+    ctx.fillStyle = '#555c66'; ctx.beginPath(); ctx.arc(bx + bw / 2, by + 48 * p, 5.5 * p, 0, 7); ctx.fill(); GR.screw(ctx, bx + bw / 2, by + 48 * p, 2.6 * p);
+    txt(name, bx + bw / 2, by + bh + 10 * p, { a: 'center', s: 9.5, c: T.muted });
+  }
   function draw() {
     if (!T || !W) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const p = ps(), r = now(), narrow = W < 620;
-    ctx.fillStyle = T.wall; ctx.fillRect(0, 0, W, Hh);
-    const floorY = Hh - 26 * p, counterY = floorY - 140 * p;
-    ctx.fillStyle = T.relief; ctx.fillRect(0, floorY, W, Hh - floorY);
-    ctx.strokeStyle = T.wallLine; ctx.lineWidth = 1; for (let yy = counterY - 96 * p; yy < counterY; yy += 24 * p) { ctx.beginPath(); ctx.moveTo(0, yy); ctx.lineTo(narrow ? W * 0.82 : W * 0.72, yy); ctx.stroke(); }   /* tiled backsplash */
-    /* earth symbol at the far right of the floor */
-    /* panel */
-    const px = 14 * p, py = 22 * p, pw = narrow ? 70 * p : 92 * p, ph = 128 * p;
-    ctx.fillStyle = T.panel; ctx.beginPath(); ctx.roundRect(px, py, pw, ph, 6 * p); ctx.fill(); ctx.fillStyle = T.panelHi; ctx.fillRect(px + 8 * p, py + 22 * p, pw - 16 * p, ph - 30 * p);
-    txt('panel', px + pw / 2, py + 11 * p, { a: 'center', c: T.canvas, s: 10, b: 1 });
-    /* breaker handle */
-    const bx = px + pw / 2 - 14 * p, by = py + 34 * p, trippedBreaker = S.tripped.startsWith('breaker');
-    ctx.fillStyle = T.hot; ctx.fillRect(bx, by, 28 * p, 40 * p); ctx.fillStyle = trippedBreaker ? T.pos : T.metal; ctx.fillRect(bx + 8 * p, trippedBreaker ? by + 22 * p : by + 4 * p, 12 * p, 14 * p);
-    txt(`${S.rating} A`, px + pw / 2, by + 52 * p, { a: 'center', s: 10, b: 1 }); txt(trippedBreaker ? 'tripped' : 'on', px + pw / 2, by + 66 * p, { a: 'center', s: 9, c: trippedBreaker ? T.pos : T.muted });
-    /* bond and earth */
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const p = ps(), r = now(), narrow = W < 620, dk = GR.dark(), hide = S.blind && !S.tripped;
+    const floorY = Hh - 26 * p, counterY = floorY - 140 * p, cW = narrow ? W * 0.82 : W * 0.72;
+    /* wall, tiled backsplash, floor */
+    GR.wall(ctx, 0, 0, W, floorY, { color: T.wall, tile: 0 });
+    ctx.fillStyle = GR.mix(T.wall, dk ? '#000000' : '#ffffff', dk ? 0.12 : 0.35); ctx.fillRect(0, counterY - 96 * p, cW, 96 * p);
+    ctx.strokeStyle = T.wallLine; ctx.lineWidth = 1; ctx.beginPath();
+    for (let i = 0, yy = counterY - 96 * p; yy < counterY; yy += 24 * p, i++) { ctx.moveTo(0, yy); ctx.lineTo(cW, yy); for (let xx = (i % 2) * 24 * p; xx < cW; xx += 48 * p) { ctx.moveTo(xx, yy); ctx.lineTo(xx, Math.min(counterY, yy + 24 * p)); } }
+    ctx.stroke();
+    let g = ctx.createLinearGradient(0, floorY, 0, Hh); g.addColorStop(0, GR.mix(T.counter, '#000000', dk ? 0.35 : 0.2)); g.addColorStop(1, GR.mix(T.counter, '#000000', dk ? 0.55 : 0.4));
+    ctx.fillStyle = g; ctx.fillRect(0, floorY, W, Hh - floorY); ctx.strokeStyle = 'rgba(0,0,0,0.18)'; ctx.beginPath(); for (let xx = 30 * p; xx < W; xx += 90 * p) { ctx.moveTo(xx, floorY); ctx.lineTo(xx - 14 * p, Hh); } ctx.stroke();
+    ctx.fillStyle = GR.mix(T.wall, '#000000', dk ? 0.3 : 0.12); ctx.fillRect(0, floorY - 7 * p, W, 7 * p);   /* baseboard */
+    /* the panel, door open: bus bars, breakers, neutral and ground bars */
+    const px = 14 * p, py = 22 * p, pw = (narrow ? 78 : 104) * p, ph = 150 * p, trippedBreaker = S.tripped.startsWith('breaker');
+    GR.rod(ctx, px + pw * 0.3, 0, px + pw * 0.3, py + 2 * p, 7 * p, { color: '#7d8794' });
+    GR.box(ctx, px, py, pw, ph, { color: GR.mix(T.panel, '#000000', 0.05), r: 4 * p });
+    GR.plate(ctx, 'panel', px + pw / 2, py + 9 * p, { s: 8 * p });
+    const ix = px + 6 * p, iy = py + 17 * p, iw = pw - 12 * p, ih = ph - 23 * p;
+    ctx.fillStyle = dk ? '#323a45' : '#4d5562'; ctx.beginPath(); ctx.roundRect(ix, iy, iw, ih, 3 * p); ctx.fill();
+    const cx = ix + iw / 2, bw = (iw - 30 * p) / 2, bh = 14 * p, rowY = (i) => iy + 6 * p + i * 18 * p;
+    for (const dxb of [-4 * p, 1.5 * p]) GR.rod(ctx, cx + dxb + 1.25 * p, iy + 3 * p, cx + dxb + 1.25 * p, rowY(3) + bh + 3 * p, 1.6 * p, { color: '#c08a4a' });
+    for (let i = 0; i < 4; i++) for (const side of [-1, 1]) {
+      const x0 = side < 0 ? cx - 5 * p - bw : cx + 5 * p, ours = side > 0 && i === 0;
+      ctx.globalAlpha = ours ? 1 : 0.6; ctx.fillStyle = '#1d2126'; ctx.strokeStyle = 'rgba(255,255,255,0.22)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x0, rowY(i), bw, bh, 2 * p); ctx.fill(); ctx.stroke();
+      const hw = Math.min(10 * p, bw * 0.35), hpos = ours && trippedBreaker ? 0.5 : side > 0 ? 0.78 : 0.22;
+      ctx.fillStyle = ours && trippedBreaker ? T.pos : '#3a414b'; ctx.fillRect(x0 + bw * hpos - hw / 2, rowY(i) + 3 * p, hw, bh - 6 * p); ctx.globalAlpha = 1;
+      if (ours) { ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.roundRect(x0 - 1.5 * p, rowY(i) - 1.5 * p, bw + 3 * p, bh + 3 * p, 3 * p); ctx.stroke();
+        if (bw > 22 * p) txt(String(S.rating), x0 + bw * 0.3, rowY(i) + bh / 2, { a: 'center', s: 8, b: 1, c: '#e6eaef' }); }
+    }
+    const nbY = iy + ih - 26 * p, gbY = iy + ih - 13 * p;
+    for (const [yy, col] of [[nbY, '#c9ced6'], [gbY, '#c9ced6']]) { GR.rod(ctx, ix + 6 * p, yy, ix + iw - 6 * p, yy, 2.6 * p, { color: col }); for (let xx = ix + 12 * p; xx < ix + iw - 8 * p; xx += 9 * p) GR.screw(ctx, xx, yy, 1.6 * p); }
+    cond([[ix + 7 * p, nbY], [ix + 7 * p, gbY]], T.gnd, 2.2, 0);   /* the bond */
+    /* the circuit's three wires leave the panel's side and run through the wall as one cable */
+    const xs = px + pw, yH = rowY(0) + bh / 2, yN = yH + 11 * p, yG = yH + 22 * p, tx = cx + 5 * p + bw;
+    const ox = narrow ? W * 0.7 : W * 0.46, oy = counterY - 84 * p, xH = ox + 11 * p, xN = ox, xG = ox - 11 * p;
+    const heatH = hide ? 0 : overheat(r.Ihot), heatN = hide ? 0 : overheat(r.Ineu), heatG = hide ? 0 : overheat(r.Ignd);
+    const hotPath = [[tx, yH], [xs, yH], [xH, yH], [xH, oy]], neuPath = [[ix + iw - 8 * p, nbY], [ix + iw - 3 * p, nbY - 4 * p], [ix + iw - 3 * p, yN], [xs, yN], [xN, yN], [xN, oy]], gndPath = [[ix + iw - 10 * p, gbY], [ix + iw - 1 * p, gbY - 4 * p], [ix + iw - 1 * p, yG], [xs, yG], [xG, yG], [xG, oy]];
+    /* earth: the bonded bars to a ground rod below the panel */
     const gx = px + pw / 2, gy = py + ph + 12 * p; ctx.strokeStyle = T.gnd; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(gx, py + ph); ctx.lineTo(gx, gy); for (let i = 0; i < 3; i++) { ctx.moveTo(gx - (9 - 3 * i) * p, gy + i * 4 * p); ctx.lineTo(gx + (9 - 3 * i) * p, gy + i * 4 * p); } ctx.stroke();
-    txt('neutral and ground bonded, earthed', px, gy + 20 * p, { s: 9, c: T.muted });
-    /* outlet */
-    const ox = narrow ? W * 0.7 : W * 0.46, oy = counterY - 70 * p;
-    const yH = py + 40 * p, yN = py + 60 * p, yG = py + 80 * p, xs = px + pw;
-    const hotPath = [[xs, yH], [ox - 12 * p, yH], [ox - 12 * p, oy]], neuPath = [[xs, yN], [ox, yN], [ox, oy]], gndPath = [[xs, yG], [ox + 12 * p, yG], [ox + 12 * p, oy]];
-    wire(gndPath, S.ground ? T.gnd : T.grid, 3.5); if (!S.ground) { ctx.strokeStyle = T.pos; ctx.lineWidth = 2 * p; const cx = (xs + ox) / 2; ctx.beginPath(); ctx.moveTo(cx - 6 * p, yG - 6 * p); ctx.lineTo(cx + 6 * p, yG + 6 * p); ctx.moveTo(cx + 6 * p, yG - 6 * p); ctx.lineTo(cx - 6 * p, yG + 6 * p); ctx.stroke(); }
-    wire(neuPath, T.neutral, 3.5, true); wire(hotPath, T.hot, 3.5);
-    if (!narrow) { txt('hot', xs + 8 * p, yH - 9 * p, { s: 10, c: T.muted }); txt('neutral', xs + 8 * p, yN - 9 * p, { s: 10, c: T.muted }); txt(S.ground ? 'ground' : 'ground (broken)', xs + 8 * p, yG - 9 * p, { s: 10, c: S.ground ? T.muted : T.pos }); }
-    txt(`${S.len} m of ${S.gauge} gauge copper`, (xs + ox) / 2, yH - 22 * p, { a: 'center', s: 10, c: T.muted });
+    txt(`${S.rating} A breaker: ${trippedBreaker ? 'tripped' : 'on'}`, px, gy + 22 * p, { s: 10, b: 1, c: trippedBreaker ? T.pos : T.ink });
+    txt('neutral and ground bonded, earthed', px, gy + 36 * p, { s: 9, c: T.muted });
+    /* the wall cut open along the cable's route: cavity, studs, then the cable */
+    const top = yH - 20 * p, bot = yG + 18 * p, open = [[xs + 2 * p, top], [ox + 32 * p, top], [ox + 32 * p, oy + 6 * p], [ox - 32 * p, oy + 6 * p], [ox - 32 * p, bot], [xs + 2 * p, bot]];
+    ctx.save(); pathOf(open); ctx.closePath(); ctx.fillStyle = GR.mix(T.wall, '#000000', dk ? 0.5 : 0.32); ctx.fill(); ctx.clip();
+    const wood = dk ? '#6a5236' : '#d2ad74'; ctx.fillStyle = wood;
+    for (let xx = xs + 46 * p; xx < ox - 40 * p; xx += 62 * p) ctx.fillRect(xx, top, 11 * p, bot - top);
+    for (const xx of [ox - 32 * p, ox + 21 * p]) ctx.fillRect(xx, top, 11 * p, oy + 6 * p - top);
+    ctx.fillRect(xs, top, ox + 32 * p - xs, 7 * p);   /* top plate */
+    ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 8 * p; pathOf(open); ctx.closePath(); ctx.stroke(); ctx.restore();
+    ctx.strokeStyle = GR.mix(T.wall, '#ffffff', 0.4); ctx.lineWidth = 1.5 * p; pathOf(open); ctx.closePath(); ctx.stroke();
+    /* the outlet box behind the plate */
+    ctx.fillStyle = '#3d6fc8'; ctx.beginPath(); ctx.roundRect(ox - 21 * p, oy - 10 * p, 42 * p, 20 * p, 3 * p); ctx.fill();
+    /* the cable's jacket (NM cable: white for 14 gauge, yellow for 12 gauge), stripped inside the box */
+    ctx.save(); ctx.globalAlpha = dk ? 0.35 : 0.55; ctx.strokeStyle = S.gauge === 12 ? '#e6c84a' : '#f2f0ea'; ctx.lineWidth = 30 * p; ctx.lineJoin = 'round';
+    pathOf([[xs + 4 * p, yN], [xN, yN], [xN, oy - 12 * p]]); ctx.stroke(); ctx.restore();
+    cond(gndPath, S.ground ? T.gnd : T.grid, 3.4, heatG);
+    if (!S.ground) { ctx.strokeStyle = T.pos; ctx.lineWidth = 2.2 * p; const bx = (xs + ox) / 2; ctx.beginPath(); ctx.moveTo(bx - 6 * p, yG - 6 * p); ctx.lineTo(bx + 6 * p, yG + 6 * p); ctx.moveTo(bx + 6 * p, yG - 6 * p); ctx.lineTo(bx - 6 * p, yG + 6 * p); ctx.stroke(); }
+    cond(neuPath, T.neutral, 3.6, heatN); cond(hotPath, T.hot, 3.6, heatH);
     flow(hotPath, r.Ihot, 1); flow(neuPath, r.Ineu, -1); if (S.ground) flow(gndPath, r.Ignd, -1);
-    /* outlet plate */
-    ctx.fillStyle = T.canvas; ctx.strokeStyle = T.line; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.roundRect(ox - 22 * p, oy, 44 * p, 52 * p, 5 * p); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = T.muted; for (const yy of [oy + 12 * p, oy + 32 * p]) { ctx.fillRect(ox - 9 * p, yy, 3 * p, 8 * p); ctx.fillRect(ox + 6 * p, yy, 3 * p, 9 * p); ctx.beginPath(); ctx.arc(ox, yy + 13 * p, 2 * p, 0, 7); ctx.fill(); }
-    if (S.gfci) { const tg = S.tripped === 'GFCI'; ctx.fillStyle = tg ? T.pos : T.accent; ctx.fillRect(ox - 12 * p, oy + 23 * p, 24 * p, 6 * p); txt(tg ? 'GFCI tripped' : 'GFCI', ox + 26 * p, oy + 26 * p, { s: 9, b: 1, c: tg ? T.pos : T.accent }); }
-    /* counter */
-    ctx.fillStyle = T.counter; ctx.fillRect(0, counterY, narrow ? W * 0.82 : W * 0.72, 10 * p); ctx.fillStyle = T.wallLine; ctx.fillRect(0, counterY + 10 * p, narrow ? W * 0.82 : W * 0.72, floorY - counterY - 10 * p);
-    /* appliances along the counter, cords to the outlet */
-    const order = ['lamp', 'toaster', 'kettle', 'heater'].filter((k) => S.loads.includes(k)), cW = narrow ? W * 0.82 : W * 0.72, slotW = Math.min((narrow ? 74 : 110) * p, (cW - 20 * p) / Math.max(1, order.length)), x0a = Math.max(S.touch ? (narrow ? 84 : 120) * p : 16 * p, Math.min(ox - 30 * p - slotW * order.length, cW - 20 * p - slotW * order.length));
-    let toasterPos = null;
+    txt(`${S.len} m of ${S.gauge} gauge copper in the wall`, (xs + ox) / 2, top - 10 * p, { a: 'center', s: 10, c: T.muted });
+    if (!narrow) { let lx = xs + 10 * p; const ly = bot + 14 * p;
+      for (const [nm, col] of [['hot', T.hot], ['neutral', T.neutral], [S.ground ? 'ground' : 'ground (broken)', S.ground ? T.gnd : T.pos]]) {
+        ctx.fillStyle = col; ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(lx, ly - 3 * p, 14 * p, 6 * p, 3 * p); ctx.fill(); ctx.stroke();
+        txt(nm, lx + 18 * p, ly, { s: 10, c: nm.includes('broken') ? T.pos : T.muted }); lx += (ctx.measureText(nm).width / p + 34) * p; } }
+    /* clamp meters: one around the hot wire, one around hot and neutral together (it reads their difference, as a GFCI does) */
+    const m1x = narrow ? xs + 0.5 * (ox - xs) : xs + 0.62 * (ox - xs);
+    clampMeter(m1x, yH, 3 * p, 7 * p, m1x - 27 * p, bot + 30 * p, hide ? '- - -' : amps(r.Ihot), 'on the hot wire');
+    const m2y = yG + Math.max(16 * p, (oy - yG) * 0.32);
+    clampMeter((xH + xN) / 2, m2y, 11 * p, 3.4 * p, Math.min(ox + 48 * p, W - 60 * p), m2y - 8 * p, hide ? '- - -' : amps(r.leak), narrow ? 'hot − neutral' : 'hot minus neutral');
+    /* the receptacle: cover plate, two faces, GFCI buttons */
+    ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 6 * p; ctx.shadowOffsetY = 2 * p; ctx.fillStyle = dk ? '#d9d6cf' : '#fbfaf6'; ctx.beginPath(); ctx.roundRect(ox - 24 * p, oy - 2 * p, 48 * p, 74 * p, 4 * p); ctx.fill(); ctx.restore();
+    ctx.strokeStyle = 'rgba(0,0,0,0.18)'; ctx.lineWidth = 1; ctx.stroke();
+    for (const fy of [oy + 16 * p, oy + 54 * p]) {
+      ctx.fillStyle = dk ? '#e6e2d8' : '#f3efe4'; ctx.strokeStyle = 'rgba(0,0,0,0.2)'; ctx.beginPath(); ctx.roundRect(ox - 14 * p, fy - 11 * p, 28 * p, 22 * p, 9 * p); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = '#2a2f36'; ctx.fillRect(ox - 8 * p, fy - 7 * p, 2.6 * p, 10 * p); ctx.fillRect(ox + 5.4 * p, fy - 6 * p, 2.6 * p, 8 * p);
+      ctx.beginPath(); ctx.arc(ox, fy + 6 * p, 2.4 * p, Math.PI, 0); ctx.lineTo(ox + 2.4 * p, fy + 8.5 * p); ctx.lineTo(ox - 2.4 * p, fy + 8.5 * p); ctx.closePath(); ctx.fill();
+    }
+    GR.screw(ctx, ox, oy + 35 * p, 2 * p);
+    if (S.gfci) { const tg = S.tripped === 'GFCI';
+      ctx.fillStyle = '#2a2f36'; ctx.beginPath(); ctx.roundRect(ox - 16 * p, oy + 30 * p, 13 * p, 9 * p, 2 * p); ctx.fill(); txt('TEST', ox - 9.5 * p, oy + 34.5 * p, { a: 'center', s: 5, b: 1, c: '#e6eaef' });
+      ctx.fillStyle = tg ? T.pos : '#f3efe4'; ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.beginPath(); ctx.roundRect(ox + 3 * p, oy + (tg ? 28 : 30) * p, 13 * p, (tg ? 11 : 9) * p, 2 * p); ctx.fill(); ctx.stroke(); txt('RESET', ox + 9.5 * p, oy + 34.5 * p, { a: 'center', s: 5, b: 1, c: tg ? '#ffffff' : '#2a2f36' });
+      txt(tg ? 'GFCI tripped' : 'GFCI', ox - 28 * p, oy + 6 * p, { a: 'right', s: 9.5, b: 1, c: tg ? T.pos : T.accent }); }
+    /* counter and cabinets */
+    const front = GR.mix(T.counter, '#000000', 0.12);
+    GR.bench(ctx, 0, counterY, cW, 6 * p, 10 * p, { top: T.counter, front });
+    const cab = GR.mix(T.counter, dk ? '#000000' : '#ffffff', dk ? 0.25 : 0.45), doors = Math.max(2, Math.round(cW / (86 * p))), dw = cW / doors;
+    ctx.fillStyle = GR.mix(cab, '#000000', 0.5); ctx.fillRect(0, floorY - 12 * p, cW - 6 * p, 12 * p);
+    for (let i = 0; i < doors; i++) { const x0 = i * dw + 3 * p, y0 = counterY + 14 * p, h = floorY - 16 * p - y0;
+      g = ctx.createLinearGradient(0, y0, 0, y0 + h); g.addColorStop(0, GR.mix(cab, '#ffffff', 0.08)); g.addColorStop(1, GR.mix(cab, '#000000', 0.1));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(x0, y0, dw - 6 * p, h, 2 * p); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.14)'; ctx.lineWidth = 1; ctx.stroke();
+      ctx.beginPath(); ctx.roundRect(x0 + 8 * p, y0 + 8 * p, dw - 22 * p, h - 16 * p, 2 * p); ctx.stroke();
+      GR.rod(ctx, x0 + (i % 2 ? 14 * p : dw - 20 * p), y0 + 10 * p, x0 + (i % 2 ? 14 * p : dw - 20 * p), y0 + 30 * p, 1.6 * p, { color: '#9aa4b0' }); }
+    /* appliances along the counter, cords to the lower face */
+    const order = ['lamp', 'toaster', 'kettle', 'heater'].filter((k) => S.loads.includes(k)), slotW = Math.min((narrow ? 74 : 110) * p, (cW - 20 * p) / Math.max(1, order.length)), x0a = Math.max(S.touch ? (narrow ? 84 : 120) * p : 16 * p, Math.min(ox - 30 * p - slotW * order.length, cW - 20 * p - slotW * order.length));
+    const plugX = ox, plugY = oy + 60 * p; let toasterPos = null;
     order.forEach((k, i) => {
-      const ax = x0a + slotW * (i + 0.5), ay = counterY;
-      ctx.strokeStyle = T.hot; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(ax, ay - 8 * p); ctx.quadraticCurveTo(ax, oy + 70 * p, ox, oy + 44 * p); ctx.stroke();
-      const P = r.loadP[k] || 0, glow = Math.min(1, P / APPS[k].P);
-      if (k === 'lamp') { ctx.fillStyle = T.metal; ctx.fillRect(ax - 3 * p, ay - 46 * p, 6 * p, 46 * p); ctx.fillStyle = T.muted; ctx.fillRect(ax - 14 * p, ay - 4 * p, 28 * p, 4 * p); ctx.fillStyle = glow > 0.1 ? T.lit : T.panelHi; ctx.globalAlpha = 0.4 + 0.6 * glow; ctx.beginPath(); ctx.moveTo(ax - 22 * p, ay - 46 * p); ctx.lineTo(ax + 22 * p, ay - 46 * p); ctx.lineTo(ax + 12 * p, ay - 74 * p); ctx.lineTo(ax - 12 * p, ay - 74 * p); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1; }
-      else if (k === 'toaster') { ctx.fillStyle = T.metal; ctx.beginPath(); ctx.roundRect(ax - 26 * p, ay - 36 * p, 52 * p, 36 * p, 7 * p); ctx.fill(); ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * p; ctx.stroke(); ctx.fillStyle = T.hot; ctx.fillRect(ax - 14 * p, ay - 38 * p, 10 * p, 4 * p); ctx.fillRect(ax + 4 * p, ay - 38 * p, 10 * p, 4 * p); ctx.fillStyle = T.glow; ctx.globalAlpha = glow * 0.8; ctx.fillRect(ax - 14 * p, ay - 34 * p, 28 * p, 3 * p); ctx.globalAlpha = 1; toasterPos = [ax, ay - 18 * p];
-        if (S.fault === 'case') txt(narrow ? 'worn cord' : 'worn cord: hot touches the case', ax + 30 * p, ay - 44 * p, { a: 'left', s: 9, c: T.pos, b: 1 }); }
-      else if (k === 'kettle') { ctx.fillStyle = T.metal; ctx.beginPath(); ctx.moveTo(ax - 18 * p, ay); ctx.lineTo(ax - 14 * p, ay - 40 * p); ctx.lineTo(ax + 14 * p, ay - 40 * p); ctx.lineTo(ax + 18 * p, ay); ctx.closePath(); ctx.fill(); ctx.strokeStyle = T.muted; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.arc(ax + 18 * p, ay - 22 * p, 9 * p, -1.2, 1.2); ctx.stroke(); if (glow > 0.1 && !reduce) { ctx.strokeStyle = T.panelHi; ctx.lineWidth = 2 * p; ctx.beginPath(); for (let j = 0; j < 3; j++) { ctx.moveTo(ax - 6 * p + j * 6 * p, ay - 46 * p); ctx.quadraticCurveTo(ax - 2 * p + j * 6 * p + 4 * p * Math.sin(S.phase), ay - 56 * p, ax - 6 * p + j * 6 * p, ay - 66 * p); } ctx.stroke(); } }
-      else { ctx.fillStyle = T.metal; ctx.beginPath(); ctx.roundRect(ax - 22 * p, ay - 50 * p, 44 * p, 50 * p, 5 * p); ctx.fill(); ctx.strokeStyle = T.glow; ctx.globalAlpha = 0.3 + 0.7 * glow; ctx.lineWidth = 2 * p; for (let j = 0; j < 4; j++) { ctx.beginPath(); ctx.moveTo(ax - 14 * p, ay - 40 * p + j * 9 * p); ctx.lineTo(ax + 14 * p, ay - 40 * p + j * 9 * p); ctx.stroke(); } ctx.globalAlpha = 1; }
-      txt(`${APPS[k].name}`, ax, counterY + 22 * p, { a: 'center', s: 10 }); txt(`${(r.loadP[k] || 0).toFixed(0)} W`, ax, counterY + 36 * p, { a: 'center', s: 10, m: 1, c: T.muted });
+      const ax = x0a + slotW * (i + 0.5), ay = counterY - 3 * p;
+      GR.cable(ctx, ax + 10 * p, ay - 6 * p, plugX, plugY, 26 * p, { color: T.hot, w: 2.2 * p, dx1: 20 * p, dx2: -10 * p });
     });
-    if (S.fault === 'short') { const sx = ox - 6 * p, sy = oy + 60 * p; ctx.strokeStyle = r.Ihot > 0 ? T.pos : T.muted; ctx.lineWidth = 2.5 * p; ctx.beginPath(); ctx.moveTo(sx - 8 * p, sy - 8 * p); ctx.lineTo(sx + 4 * p, sy); ctx.lineTo(sx - 4 * p, sy + 4 * p); ctx.lineTo(sx + 8 * p, sy + 12 * p); ctx.stroke(); txt('hot touches neutral', sx + 14 * p, sy + 2 * p, { s: 9, b: 1, c: T.pos }); }
-    /* ground wire to the toaster case */
-    if (toasterPos && S.ground) { ctx.strokeStyle = T.gnd; ctx.lineWidth = 1.5 * p; ctx.setLineDash([4 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(toasterPos[0] + 26 * p, toasterPos[1]); ctx.quadraticCurveTo(ox + 30 * p, oy + 80 * p, ox + 12 * p, oy + 50 * p); ctx.stroke(); ctx.setLineDash([]); }
-    /* person */
+    ctx.fillStyle = '#2a2f36'; ctx.beginPath(); ctx.roundRect(plugX - 9 * p, plugY - 9 * p, 18 * p, 14 * p, 3 * p); ctx.fill();
+    order.forEach((k, i) => {
+      const ax = x0a + slotW * (i + 0.5), ay = counterY - 3 * p, P = r.loadP[k] || 0, glow = Math.min(1, P / APPS[k].P);
+      if (k === 'lamp') {
+        GR.shadow(ctx, ax, ay, 18 * p, 3 * p); GR.box(ctx, ax - 15 * p, ay - 5 * p, 30 * p, 5 * p, { color: '#5b6470', r: 2 * p, shadow: false }); GR.rod(ctx, ax, ay - 5 * p, ax, ay - 48 * p, 2.4 * p, { color: '#b9c1cb' });
+        if (glow > 0.05) { g = ctx.createRadialGradient(ax, ay - 52 * p, 0, ax, ay - 52 * p, 70 * p); g.addColorStop(0, `rgba(255,214,110,${0.55 * glow})`); g.addColorStop(1, 'rgba(255,214,110,0)'); ctx.fillStyle = g; ctx.fillRect(ax - 70 * p, ay - 122 * p, 140 * p, 140 * p); }
+        g = ctx.createLinearGradient(ax - 22 * p, 0, ax + 22 * p, 0); const sh = glow > 0.1 ? T.lit : T.panelHi; g.addColorStop(0, GR.mix(sh, '#000000', 0.15)); g.addColorStop(0.4, GR.mix(sh, '#ffffff', 0.35 * glow)); g.addColorStop(1, GR.mix(sh, '#000000', 0.25));
+        ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(ax - 22 * p, ay - 46 * p); ctx.lineTo(ax + 22 * p, ay - 46 * p); ctx.lineTo(ax + 12 * p, ay - 74 * p); ctx.lineTo(ax - 12 * p, ay - 74 * p); ctx.closePath(); ctx.fill();
+      } else if (k === 'toaster') {
+        GR.shadow(ctx, ax, ay, 30 * p, 4 * p);
+        g = ctx.createLinearGradient(ax - 26 * p, 0, ax + 26 * p, 0); g.addColorStop(0, GR.mix(T.metal, '#000000', 0.2)); g.addColorStop(0.3, GR.mix(T.metal, '#ffffff', 0.45)); g.addColorStop(1, GR.mix(T.metal, '#000000', 0.3));
+        ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(ax - 26 * p, ay - 36 * p, 52 * p, 36 * p, 8 * p); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1; ctx.stroke();
+        ctx.fillStyle = '#1d2126'; ctx.fillRect(ax - 16 * p, ay - 37 * p, 11 * p, 4 * p); ctx.fillRect(ax + 5 * p, ay - 37 * p, 11 * p, 4 * p); ctx.fillRect(ax + 26 * p, ay - 26 * p, 4 * p, 7 * p);
+        if (glow > 0.05) { ctx.save(); ctx.shadowColor = T.glow; ctx.shadowBlur = 12 * p * glow; ctx.fillStyle = T.glow; ctx.globalAlpha = glow; ctx.fillRect(ax - 15 * p, ay - 36.5 * p, 9 * p, 2.5 * p); ctx.fillRect(ax + 6 * p, ay - 36.5 * p, 9 * p, 2.5 * p); ctx.restore(); }
+        toasterPos = [ax, ay - 18 * p];
+        if (S.fault === 'case') { ctx.strokeStyle = T.pos; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(ax + 16 * p, ay - 4 * p); ctx.lineTo(ax + 20 * p, ay - 10 * p); ctx.lineTo(ax + 17 * p, ay - 12 * p); ctx.lineTo(ax + 22 * p, ay - 18 * p); ctx.stroke();
+          txt(narrow ? 'worn cord' : 'worn cord: hot touches the case', ax - 20 * p, counterY + 58 * p, { a: 'left', s: 9.5, c: T.pos, b: 1 }); }
+      } else if (k === 'kettle') {
+        GR.shadow(ctx, ax, ay, 22 * p, 3.5 * p);
+        g = ctx.createLinearGradient(ax - 18 * p, 0, ax + 18 * p, 0); g.addColorStop(0, GR.mix(T.metal, '#000000', 0.25)); g.addColorStop(0.35, GR.mix(T.metal, '#ffffff', 0.5)); g.addColorStop(1, GR.mix(T.metal, '#000000', 0.35));
+        ctx.fillStyle = '#2a2f36'; ctx.fillRect(ax - 19 * p, ay - 4 * p, 38 * p, 4 * p);
+        ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(ax - 18 * p, ay - 4 * p); ctx.lineTo(ax - 14 * p, ay - 40 * p); ctx.lineTo(ax + 14 * p, ay - 40 * p); ctx.lineTo(ax + 18 * p, ay - 4 * p); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(ax - 15 * p, ay - 30 * p); ctx.lineTo(ax - 27 * p, ay - 38 * p); ctx.lineTo(ax - 25 * p, ay - 40 * p); ctx.lineTo(ax - 14 * p, ay - 36 * p); ctx.fill();
+        ctx.strokeStyle = '#2a2f36'; ctx.lineWidth = 3.5 * p; ctx.beginPath(); ctx.arc(ax + 18 * p, ay - 22 * p, 10 * p, -1.3, 1.3); ctx.stroke();
+        if (glow > 0.1 && !reduce) { ctx.strokeStyle = dk ? 'rgba(220,230,240,0.35)' : 'rgba(255,255,255,0.85)'; ctx.lineWidth = 2.5 * p; ctx.beginPath(); for (let j = 0; j < 3; j++) { ctx.moveTo(ax - 26 * p + j * 5 * p, ay - 44 * p); ctx.quadraticCurveTo(ax - 22 * p + j * 5 * p + 4 * p * Math.sin(S.phase + j), ay - 56 * p, ax - 26 * p + j * 5 * p, ay - 68 * p); } ctx.stroke(); }
+      } else {
+        GR.box(ctx, ax - 22 * p, ay - 52 * p, 44 * p, 52 * p, { color: GR.mix(T.metal, '#000000', 0.35), r: 5 * p });
+        ctx.fillStyle = '#1d2126'; ctx.fillRect(ax - 16 * p, ay - 44 * p, 32 * p, 34 * p);
+        ctx.save(); ctx.strokeStyle = T.glow; ctx.globalAlpha = 0.25 + 0.75 * glow; ctx.shadowColor = T.glow; ctx.shadowBlur = 10 * p * glow; ctx.lineWidth = 2.4 * p; for (let j = 0; j < 4; j++) { ctx.beginPath(); ctx.moveTo(ax - 13 * p, ay - 39 * p + j * 8 * p); ctx.lineTo(ax + 13 * p, ay - 39 * p + j * 8 * p); ctx.stroke(); } ctx.restore();
+        ctx.strokeStyle = 'rgba(160,170,180,0.6)'; ctx.lineWidth = 1 * p; ctx.beginPath(); for (let xx = ax - 16 * p; xx <= ax + 16 * p; xx += 4 * p) { ctx.moveTo(xx, ay - 44 * p); ctx.lineTo(xx, ay - 10 * p); } ctx.stroke();
+      }
+      txt(`${APPS[k].name}`, ax, counterY + 30 * p, { a: 'center', s: 10 }); txt(`${(r.loadP[k] || 0).toFixed(0)} W`, ax, counterY + 44 * p, { a: 'center', s: 10, m: 1, c: T.muted });
+    });
+    if (S.fault === 'short') { const sx = (xH + xN) / 2, sy = oy - 22 * p, live = r.Ihot > 0;
+      if (live) { g = ctx.createRadialGradient(sx, sy, 0, sx, sy, 26 * p); g.addColorStop(0, 'rgba(255,240,200,0.95)'); g.addColorStop(0.4, 'rgba(255,170,60,0.5)'); g.addColorStop(1, 'rgba(255,120,30,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sx, sy, 26 * p, 0, 7); ctx.fill(); }
+      else { g = ctx.createRadialGradient(sx, sy, 0, sx, sy, 10 * p); g.addColorStop(0, 'rgba(20,15,10,0.85)'); g.addColorStop(1, 'rgba(20,15,10,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(sx, sy, 10 * p, 0, 7); ctx.fill(); }
+      ctx.strokeStyle = live ? '#fff4d0' : T.pos; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xN, sy - 6 * p); ctx.lineTo(sx + 2 * p, sy - 1 * p); ctx.lineTo(sx - 2 * p, sy + 2 * p); ctx.lineTo(xH, sy + 7 * p); ctx.stroke();
+      txt('hot touches neutral', ox - 38 * p, sy, { a: 'right', s: 9.5, b: 1, c: T.pos }); }
+    /* ground wire in the toaster's cord, case to the plug */
+    if (toasterPos && S.ground) { ctx.strokeStyle = T.gnd; ctx.lineWidth = 1.5 * p; ctx.setLineDash([4 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(toasterPos[0] + 26 * p, toasterPos[1]); ctx.quadraticCurveTo(plugX - 20 * p, plugY + 30 * p, plugX - 4 * p, plugY); ctx.stroke(); ctx.setLineDash([]); }
+    /* person, about 1.75 m tall beside a 0.9 m counter */
     if (S.touch && toasterPos) {
-      /* a person about 1.75 m tall beside a 0.9 m counter */
-      const fx = Math.max(26 * p, toasterPos[0] - (narrow ? 58 : 72) * p), hy = floorY - 255 * p;
-      ctx.fillStyle = T.skin; ctx.beginPath(); ctx.arc(fx, hy, 15 * p, 0, 7); ctx.fill();
-      ctx.fillStyle = T.shirt; ctx.beginPath(); ctx.roundRect(fx - 17 * p, hy + 18 * p, 34 * p, 92 * p, 9 * p); ctx.fill();
-      ctx.strokeStyle = T.shirt; ctx.lineWidth = 9 * p; ctx.lineCap = 'round'; ctx.beginPath(); ctx.moveTo(fx + 12 * p, hy + 32 * p); ctx.lineTo(fx + 30 * p, hy + 90 * p); ctx.lineTo(toasterPos[0] - 26 * p, toasterPos[1] - 4 * p); ctx.stroke();
-      ctx.strokeStyle = T.hot; ctx.lineWidth = 11 * p; ctx.beginPath(); ctx.moveTo(fx - 8 * p, hy + 108 * p); ctx.lineTo(fx - 10 * p, floorY); ctx.moveTo(fx + 8 * p, hy + 108 * p); ctx.lineTo(fx + 10 * p, floorY); ctx.stroke();
-      if (S.skin === 'wet') { ctx.fillStyle = T.accent; for (const [dx, dy] of [[-4, -8], [3, -2], [-1, 5]]) { ctx.beginPath(); ctx.arc(toasterPos[0] - 26 * p + dx * p, toasterPos[1] - 4 * p + dy * p, 2 * p, 0, 7); ctx.fill(); } }
-      const body = [[toasterPos[0] - 26 * p, toasterPos[1] - 4 * p], [fx + 30 * p, hy + 90 * p], [fx + 12 * p, hy + 32 * p], [fx, hy + 70 * p], [fx, floorY]]; flow(body, r.Ibody, 1);
-      const bI = r.Ibody, hide = S.blind && !S.tripped;
+      const fx = Math.max(26 * p, toasterPos[0] - (narrow ? 58 : 72) * p), hy = floorY - 255 * p, hand = [toasterPos[0] - 26 * p, toasterPos[1] - 4 * p];
+      const pants = dk ? '#26303f' : '#33415a', shirt = T.shirt;
+      ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+      ctx.strokeStyle = GR.mix(shirt, '#000000', 0.3); ctx.lineWidth = 9 * p; ctx.beginPath(); ctx.moveTo(fx - 11 * p, hy + 32 * p); ctx.lineTo(fx - 14 * p, hy + 98 * p); ctx.stroke();   /* far arm */
+      ctx.strokeStyle = pants; ctx.lineWidth = 13 * p; ctx.beginPath(); ctx.moveTo(fx - 7 * p, hy + 106 * p); ctx.lineTo(fx - 9 * p, floorY - 8 * p); ctx.moveTo(fx + 7 * p, hy + 106 * p); ctx.lineTo(fx + 10 * p, floorY - 8 * p); ctx.stroke();
+      ctx.fillStyle = '#1d2126'; for (const dx of [-9, 10]) { ctx.beginPath(); ctx.ellipse(fx + (dx + 4) * p, floorY - 4 * p, 10 * p, 4.5 * p, 0, 0, 7); ctx.fill(); }
+      g = ctx.createLinearGradient(fx - 18 * p, 0, fx + 18 * p, 0); g.addColorStop(0, GR.mix(shirt, '#000000', 0.25)); g.addColorStop(0.4, GR.mix(shirt, '#ffffff', 0.15)); g.addColorStop(1, GR.mix(shirt, '#000000', 0.3));
+      ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(fx - 18 * p, hy + 20 * p, 36 * p, 92 * p, [12 * p, 12 * p, 5 * p, 5 * p]); ctx.fill();
+      ctx.fillStyle = T.skin; ctx.fillRect(fx - 4 * p, hy + 12 * p, 8 * p, 10 * p);
+      GR.ball(ctx, fx, hy, 15 * p, T.skin, { matte: true });
+      ctx.fillStyle = dk ? '#2b2119' : '#3b2a1e'; ctx.beginPath(); ctx.arc(fx, hy - 2 * p, 15.5 * p, Math.PI * 1.02, Math.PI * 2.05); ctx.quadraticCurveTo(fx + 4 * p, hy - 8 * p, fx - 15 * p, hy); ctx.fill();
+      const elbow = [fx + 30 * p, hy + 86 * p];
+      ctx.strokeStyle = shirt; ctx.lineWidth = 9.5 * p; ctx.beginPath(); ctx.moveTo(fx + 12 * p, hy + 30 * p); ctx.lineTo(elbow[0], elbow[1]); ctx.stroke();
+      ctx.strokeStyle = T.skin; ctx.lineWidth = 7.5 * p; ctx.beginPath(); ctx.moveTo(elbow[0], elbow[1]); ctx.lineTo(hand[0], hand[1]); ctx.stroke(); ctx.lineCap = 'butt';
+      if (S.skin === 'wet') { ctx.fillStyle = T.accent; for (const [dx, dy] of [[-4, -8], [3, -2], [-1, 5]]) { ctx.beginPath(); ctx.arc(hand[0] + dx * p, hand[1] + dy * p, 2 * p, 0, 7); ctx.fill(); } }
+      flow([hand, elbow, [fx + 12 * p, hy + 32 * p], [fx, hy + 70 * p], [fx, floorY]], r.Ibody, 1);
+      const bI = r.Ibody;
       txt(hide ? 'through the person: ?' : `through the person: ${amps(bI)}`, Math.max(fx, 90 * p), hy - 28 * p, { a: 'center', s: 11, b: 1, c: bI >= 5e-3 ? T.pos : T.ink });
     }
     /* status banner */
     const by0 = floorY + (Hh - floorY) / 2;
-    if (S.tripped) txt(`Power off: ${S.tripped}`, W - 12 * p, by0, { a: 'right', b: 1, s: 12, c: T.pos });
-    else if (!(S.blind)) txt(`hot ${amps(r.Ihot)}`, W - 12 * p, by0, { a: 'right', b: 1, s: 12 });
+    const banner = S.tripped ? `Power off: ${S.tripped}` : !S.blind ? `hot ${amps(r.Ihot)}` : '';
+    if (banner) { ctx.font = `700 ${12 * p}px ${T.ui}`; const bwid = ctx.measureText(banner).width + 16 * p;
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.roundRect(W - 8 * p - bwid, by0 - 9 * p, bwid, 18 * p, 5 * p); ctx.fill(); ctx.globalAlpha = 1;
+      txt(banner, W - 16 * p, by0, { a: 'right', b: 1, s: 12, c: S.tripped ? T.pos : T.ink }); }
   }
 
   function tick(dt) { S.phase += dt * 2 * Math.PI * 0.8; const was = S.tripped; checkTrips(dt); if (S.tripped !== was || S.over > 0) readouts(); if (!reduce || S.tripped !== was) draw(); }

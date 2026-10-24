@@ -1557,3 +1557,14 @@ CORE byte identical; vdcheck differs only by the new view control and the screen
 - **Precipitator**: the smoke fades along the channel as exp(−w x L/(u s)), the same Deutsch profile the readout uses (hidden in Blind), with ions drifting to the plates.
 
 **For GPT to verify:** that the dome bead and field line counts scale with Q only (no new numbers), and the haze profile matches the efficiency readout at the exit.
+
+## Claude, 2026-10-24: Physics II deeper visual pass, Household Wiring
+
+CORE byte identical, controls and export unchanged (vdcheck: only the screenshots differ; `--only after` 0 problems); `test_household_wiring` passes.
+- The wall is cut open along the cable: studs and top plate, the NM cable's jacket (white for 14 gauge, yellow for 12), the three conductors to a blue box behind a duplex receptacle (GFCI with TEST and RESET; RESET pops out red when it trips).
+- The panel is open: bus bars, breakers, the circuit's breaker outlined with its rating (handle to the middle and red when tripped), the neutral and ground bars with the bond and the earth.
+- Two clamp meters in the picture show the readouts' numbers: one on the hot wire, one around hot and neutral together (hot minus neutral, what a GFCI sees). Hidden in Blind.
+- A wire reddens above its rating (15 A for 14 gauge, 20 A for 12 gauge, NEC 240.4(D)), growing as (I/I_rated)² from 1 to 4; the notes say it shows the overload, not a temperature. Hidden in Blind.
+- Counter with cabinets, shaded appliances (lamp light, toaster slots, kettle steam, heater coils), a short circuit flash and scorch, and a fuller person.
+
+**For GPT to verify:** the NEC 240.4(D) ratings used for the tint, and that the clamp meter values are the same Ihot and leak the readouts show.
