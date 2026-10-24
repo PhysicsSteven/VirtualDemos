@@ -1819,3 +1819,14 @@ Steve (20:40): the grounding wand on the Van de Graaff should work by hand too. 
 ## Claude, 2026-10-24: knob hints taken back out
 
 Steve (21:49): don't mention typing on the knobs; students can find it. The hint sentences added earlier today in Forces, Wire force and Standing waves are back to their old wording. Nothing else changed.
+
+## Claude, 2026-10-24: shared 3D kit for the remaining visual passes
+
+Steve agreed (21:54) to a shared 3D kit before the visual passes on Thermodynamics, Modern Physics and Astronomy (about 40 demos; BZ, DNA and Star Slice are skipped for now).
+- **New `demos/lib/vd3kit.js`** (`window.VD3K`), on top of `vd3.js`: the 3D | Flat switch with `?view=flat` and `?view=3d`; a stage (renderer, camera, lights, soft shadows, light and dark from the page tokens, optional fog tied to the camera distance, `project` for words drawn over the picture, `fit` to back the camera off on a phone); lab props (bench, curved back wall, box, rod, sagging cable, meter with an LCD or needle face, printed ruler, glass tube and bulb, text labels); an instanced particle pool coloured by speed, a ring to mark one particle and a smooth follow camera; star sky, glowing star, textured planet, the Earth and orbit rings. Lifted from the 3D code in resistivity, wire force, string density, Doppler and tides, which keep their own code for now.
+- **New `demos/lib/earth.js`**: the NASA Blue Marble and Earth at Night images from `demos/units.html`, so a 3D view can load the Earth (`VD3K.earth`). Units is unchanged. Noted in THIRD_PARTY_NOTICES.md.
+- **New `demos/lib/vd3kit.html`**: a working sample of every helper (lab bench, particles, sky), not linked from any course page.
+- README in `demos/lib`, and CLAUDE.md, say to use the kit for new 3D views. No demo changed, so nothing a student sees is different.
+- Checked: the sample in Chromium at 1280 px light and dark and 390 px, all three scenes, no page errors, no sideways scroll.
+
+**For GPT to verify:** nothing in the physics (pictures only).

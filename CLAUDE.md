@@ -31,7 +31,8 @@ the two assistants share context. Log what you change there when you finish.
   moved onto it in batches (Steve, 2026-10-23); the README lists which. A moved demo links the library and keeps only its physics,
   drawing and what it does differently. Shared styles and behaviour go in the library, never pasted into each file again; moving a
   demo must change nothing visible, which `tools/vdcheck.cjs` checks. Other libraries: three.js r128 from cdnjs (only where already
-  used). Fonts from Google Fonts.
+  used). Fonts from Google Fonts. A new 3D view uses `demos/lib/vd3kit.js` (`VD3K`: scene, 3D | Flat switch, lab props, particles, sky;
+  sample in `demos/lib/vd3kit.html`) on top of `vd3.js`, instead of copying 3D code from another demo.
 - **Edit `demos/<name>.html` directly.** Do not rebuild a demo from an older copy elsewhere: that once wiped a finished scenery pass.
 - Physics lives between `// ==CORE START==` and `// ==CORE END==` and must run in Node. Never put a `//` comment mid line before code
   (use `/* */`). Tests: `curriculum/validation/test_<demo>.cjs` using `core('<demo>', 'fn,...')` from `demo_source.cjs`.

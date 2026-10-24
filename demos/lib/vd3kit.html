@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>3D kit samples</title>
+<meta name="robots" content="noindex">
+<!-- A working sample of every helper in vd3kit.js, for threads building a 3D view. Not linked from any course page. -->
+<link rel="stylesheet" href="vd.css">
+<script src="vd.js"></script>
+<script src="vd3.js"></script>
+<script src="vd3kit.js"></script>
+<style>
+  :root { --canvas: #fbfcfd; --ink: #1f262f; --muted: #5a6575; --accent: #2b60b5; --line: #d8dee6; --bg: #eef1f5; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --canvas: #121820; --ink: #e6ebf2; --muted: #98a3b3; --accent: #7ea2ff; --line: #2c3644; --bg: #0d1218; } }
+  :root[data-theme="dark"] { --canvas: #121820; --ink: #e6ebf2; --muted: #98a3b3; --accent: #7ea2ff; --line: #2c3644; --bg: #0d1218; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 15px/1.5 system-ui, sans-serif; }
+  main { max-width: 1100px; margin: 0 auto; padding: 16px; display: grid; gap: 10px; }
+  .bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+  .seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+  .seg button { border: 0; background: var(--canvas); color: var(--ink); padding: 6px 12px; font: inherit; cursor: pointer; }
+  .seg button[aria-pressed="true"] { background: var(--accent); color: var(--canvas); }
+  #stage { position: relative; height: min(70vh, 560px); background: var(--canvas); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+  #stage canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+  #flat { display: grid; place-items: center; height: 100%; color: var(--muted); }
+  #status { color: var(--muted); font-size: 0.9rem; min-height: 1.2em; }
+</style>
+</head>
+<body>
+<main>
+  <h1 style="margin:0;font-size:1.3rem">3D kit samples</h1>
+  <div class="bar">
+    <div class="seg" id="sceneSeg"><button data-scene="lab" aria-pressed="true">Lab bench</button><button data-scene="gas" aria-pressed="false">Particles</button><button data-scene="sky" aria-pressed="false">Sky</button></div>
+    <div class="seg" id="dimSeg" role="group" aria-label="Perspective"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+  </div>
+  <div id="stage"><div id="flat">The flat view of a demo goes here.</div></div>
+  <div id="status"></div>
+</main>
+<script>
+(() => {
+  const stage = document.getElementById('stage'), flat = document.getElementById('flat');
+  let S = null, scene = new URLSearchParams(location.search).get('scene') || 'lab', groups = {}, gas = null, meter = null, earth = null, follow = null, mark = null, t0 = performance.now();
+  const o = { th: -Math.PI / 2 + 0.35, ph: 1.05, zoom: 1 };
+  function init() {
+    S = VD3K.stage(stage, { shadow: 0.9, far: 2000, fogAt: [1.25, 2.6] }); if (!S) return false;
+    /* lab bench */
+    const lab = new THREE.Group(), steel = VD3K.material(S, { roughness: 0.35, metalness: 0.6 }, ['#9aa4b0', '#6f7884']);
+    lab.add(VD3K.bench(S, { w: 4, d: 3, y: 0.3 }), VD3K.backdrop(S, { r: 1.6, y: -0.2 }));
+    const rule = VD3K.ruler(S, { len: 0.5, to: 50 }); rule.position.x -= 0.25; rule.position.y = -0.12; lab.add(rule);
+    const tube = VD3K.glass(S, { r: 0.03, len: 0.32, axis: 'x' }); tube.position.set(0, 0.04, 0.09); lab.add(tube);
+    lab.add(VD3K.rod([-0.17, 0.04, 0], [-0.17, 0.04, 0.09], 0.006, steel), VD3K.rod([0.17, 0.04, 0], [0.17, 0.04, 0.09], 0.006, steel));
+    meter = VD3K.meter(S, { label: 'VOLTMETER', sub: 'across the tube' }); meter.position.set(-0.08, -0.32, 0); lab.add(meter);
+    const needle = VD3K.meter(S, { kind: 'needle', label: 'mA' }); needle.position.set(0.14, -0.32, 0); lab.add(needle); groups.needle = needle;
+    lab.add(VD3K.cable([-0.17, 0.04, 0.09], [-0.11, -0.3, 0.02], { color: 0xb8382a }), VD3K.cable([0.17, 0.04, 0.09], [-0.05, -0.3, 0.02]));
+    const lab1 = VD3K.label('neon tube', { size: 0.025, color: '#2b60b5' }); lab1.position.set(0, 0.04, 0.15); lab.add(lab1);
+    const bulb = VD3K.bulb(S, { r: 0.04 }); bulb.position.set(0.3, 0.1, 0.04); lab.add(bulb);
+    groups.lab = lab;
+    /* particles in a glass box, coloured by speed, one followed */
+    const gasG = new THREE.Group(); gasG.add(VD3K.bench(S, { w: 4, d: 3 }));
+    const boxM = VD3K.material(S, { transparent: true, opacity: 0.12, depthWrite: false, side: THREE.DoubleSide }, ['#9fc4dc', '#6f9cbc']);
+    gasG.add(VD3K.box(0.4, 0.3, 0.3, boxM, 0, 0, 0));
+    gas = VD3K.particles(S, { n: 400, r: 0.006 }); gasG.add(gas); mark = VD3K.marker(S, { r: 0.014 }); gasG.add(mark);
+    gas.st = Array.from({ length: 400 }, () => ({ p: [Math.random() * 0.38 - 0.19, Math.random() * 0.28 - 0.14, 0.01 + Math.random() * 0.28], v: [0, 1, 2].map(() => (Math.random() - 0.5) * 0.3) }));
+    follow = VD3K.follow({ x: 0, y: 0, z: 0.15 }, 0.06);
+    groups.gas = gasG;
+    /* sky: stars, the Sun, the Earth on an orbit ring */
+    const sky = new THREE.Group(); sky.add(VD3K.sky(S, { r: 900, milky: true }), VD3K.star(S, { r: 0.4, glow: 7 }), VD3K.ring(3, { dashed: true }));
+    VD3K.earth(S, { r: 0.25, tilt: 23.44 * Math.PI / 180, night: true }, (e) => { earth = e; sky.add(e); });
+    const lab2 = VD3K.label('Sun', { size: 0.25, color: '#e6ebf2', bg: 'rgba(20,24,30,0.6)' }); lab2.position.set(0, 0, 0.8); sky.add(lab2);
+    groups.sky = sky;
+    Object.values(groups).forEach((g) => { if (g.isObject3D && g !== needle) S.scene.add(g); });
+    S.orbit(S.el, o, () => {}, { zMin: 0.4, zMax: 3 }); S.el.tabIndex = 0;
+    return true;
+  }
+  function pick(s) {
+    scene = s; document.querySelectorAll('#sceneSeg button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.scene === s)));
+    if (!S) return; for (const k of ['lab', 'gas', 'sky']) groups[k].visible = k === s;
+    S.sky = s === 'sky'; S.key = '';
+  }
+  document.getElementById('sceneSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-scene]'); if (b) pick(b.dataset.scene); });
+  const view = VD3K.view({ seg: '#dimSeg', init, status: (m) => { document.getElementById('status').textContent = m; },
+    change: (on) => { if (S) S.el.hidden = !on; flat.hidden = on; if (on) pick(scene); } });
+  function frame(now) {
+    requestAnimationFrame(frame);
+    if (!S || !view.is3d()) return;
+    const t = (now - t0) / 1000; S.size(stage.clientWidth, stage.clientHeight);
+    if (scene === 'sky') { S.scene.background = new THREE.Color('#05070c'); S.scene.fog = null; }
+    else S.theme();
+    if (scene === 'lab') { meter.set(`${(4.887 * (1 + 0.02 * Math.sin(t))).toFixed(3)} V`); groups.needle.set(0.5 + 0.4 * Math.sin(t * 0.7), `${(5 + 4 * Math.sin(t * 0.7)).toFixed(1)} mA`); S.place(o, [0, -0.05, 0.08], S.fit(1.3)); }
+    if (scene === 'gas') {
+      let vmax = 0.3; gas.st.forEach((q, i) => { for (let k = 0; k < 3; k++) { q.p[k] += q.v[k] / 60; const lo = [-0.19, -0.14, 0.01][k], hi = [0.19, 0.14, 0.29][k]; if (q.p[k] < lo || q.p[k] > hi) q.v[k] *= -1; }
+        gas.put(i, q.p[0], q.p[1], q.p[2], VD3K.heat(Math.hypot(...q.v) / vmax)); });
+      gas.show(400); gas.done(); const f = gas.st[0].p; mark.at(f[0], f[1], f[2]); follow.to(f[0] * 0.5, f[1] * 0.5, f[2]); S.place(o, follow.at, S.fit(1.6));
+    }
+    if (scene === 'sky') { if (earth) { earth.position.set(3 * Math.cos(t * 0.2), 3 * Math.sin(t * 0.2), 0); earth.spin(t); } S.place(o, [0, 0, 0], S.fit(11)); }
+    S.scene.updateMatrixWorld(); S.r.render(S.scene, S.cam);
+  }
+  requestAnimationFrame(frame);
+  window.__kit = { pick, view: () => view };
+})();
+</script>
+</body>
+</html>
