@@ -1782,7 +1782,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const h = handleAt(x, y, ev.pointerType === 'touch');
     if (h) {
       if (h.click) { const cgs = [5, 10, 20, 50, 100], i = cgs.indexOf(S.coarse), E = elecGeom(benchGeom()); setCoarse(cgs[(i + (x < E.cg.x ? cgs.length - 1 : 1)) % cgs.length]); ev.preventDefault(); return; }
-      drag = { id: h.id, y, v: h.val ? h.val() : 0 }; hoverId = h.id; try { can.setPointerCapture(ev.pointerId); } catch (_) {} ev.preventDefault(); return;
+      drag = { id: h.id, y, v: h.val ? h.val() : 0 }; hoverId = h.id; try { can.setPointerCapture(ev.pointerId); } catch (_) {} ev.preventDefault(); VD.tap(ev); return;
     }
     if (inPlot(x, y)) {
       const M = mcaGeom(), ch = Math.max(0, Math.min(S.N - 1, Math.floor(M.invX(x))));
@@ -1791,7 +1791,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       drag = { id: 'new', a: ch, b: ch }; try { can.setPointerCapture(ev.pointerId); } catch (_) {} ev.preventDefault();
     }
   });
-  function endDrag() {
+  function endDrag(ev) {
+    /* a click or tap on the HV or fine gain knob that did not turn it types the value, through the sidebar slider behind it */
+    if (drag && (drag.id === 'hv' || drag.id === 'fn') && ev && ev.type === 'pointerup' && VD.tap(ev, true)) {
+      const id = drag.id; drag = null; VD.knobAt($(id === 'hv' ? 'hv' : 'fine'), ev.clientX, ev.clientY, { unit: id === 'hv' ? 'V' : '', back: can }); return;
+    }
     if (drag && drag.id === 'new') {
       const a = Math.min(drag.a, drag.b), b = Math.max(drag.a, drag.b);
       if (b - a >= 6) { if (rois.length >= 8) rois.shift(); rois.push({ a, b }); roiSel = rois.length - 1; }

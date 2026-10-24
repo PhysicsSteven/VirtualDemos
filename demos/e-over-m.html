@@ -911,7 +911,7 @@ table.rows tr.sim td.n { color: var(--equi); }
       el.focus(); pointers.set(e.pointerId, { x: e.clientX, y: e.clientY }); el.setPointerCapture(e.pointerId);
       if (pointers.size === 2) { glDrag = null; mode = { type: 'pinch', d0: pinch(), z0: orbit.zoom }; return; }
       const p = pickAt(e);
-      if (p) { glDrag = { id: p.id, x0: e.clientX, y0: e.clientY, v0: p.id === 'V' ? S.V : p.id === 'I' ? S.I : p.id === 'tilt' ? S.tilt : S.eye }; mode = null; G.dirty = true; return; }
+      if (p) { glDrag = { id: p.id, x0: e.clientX, y0: e.clientY, v0: p.id === 'V' ? S.V : p.id === 'I' ? S.I : p.id === 'tilt' ? S.tilt : S.eye }; mode = null; G.dirty = true; VD.tap(e); return; }
       mode = { type: 'orbit', lx: e.clientX, ly: e.clientY, touch: e.pointerType === 'touch' }; el.style.cursor = 'grabbing';   /* one finger on a phone scrolls the page */
     });
     let q = null, qf = false;
@@ -935,7 +935,9 @@ table.rows tr.sim td.n { color: var(--equi); }
     });
     const end = (e) => {
       pointers.delete(e.pointerId); if (pointers.size < 2 && mode && mode.type === 'pinch') mode = null;
+      const knob = glDrag && (glDrag.id === 'V' || glDrag.id === 'I') && e.type === 'pointerup' && VD.tap(e, true) ? glDrag.id : null;
       if (!pointers.size) { mode = null; if (glDrag) { glDrag = null; G.dirty = true; } el.style.cursor = 'grab'; }
+      if (knob) typeKnob(knob, e.clientX, e.clientY, el);   /* a click or tap on a knob that did not turn it: type the value */
     };
     el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
     el.addEventListener('pointerleave', () => { if (glHover) { glHover = null; G.dirty = true; } });
@@ -990,12 +992,14 @@ table.rows tr.sim td.n { color: var(--equi); }
   }
   function flatHit(e) { if (!flatGeom) return null; const r = cans.flat.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, tol = 6 * (e.pointerType === 'touch' ? 2 : 1); let best = null, bd = Infinity; for (const h of flatGeom) { const dd = Math.hypot(x - h.x, y - h.y) - h.r; if (dd < tol && dd < bd) { bd = dd; best = h; } } return best; }
   let qFl = null, qFlF = false;
-  cans.flat.addEventListener('pointerdown', (e) => { const h = flatHit(e); if (!h) return; cans.flat.setPointerCapture(e.pointerId); flatDrag = { id: h.id, y0: e.clientY, v0: h.id === 'V' ? S.V : S.I }; dirty.flat = true; });
+  cans.flat.addEventListener('pointerdown', (e) => { const h = flatHit(e); if (!h) return; cans.flat.setPointerCapture(e.pointerId); flatDrag = { id: h.id, y0: e.clientY, v0: h.id === 'V' ? S.V : S.I }; dirty.flat = true; VD.tap(e); });
   cans.flat.addEventListener('pointermove', (e) => {
     if (flatDrag) { qFl = e.clientY; if (qFlF) return; qFlF = true; requestAnimationFrame(() => { qFlF = false; if (!flatDrag || qFl === null) return; const dy = flatDrag.y0 - qFl; if (flatDrag.id === 'V') setV(flatDrag.v0 + dy * 0.5); else setI(flatDrag.v0 + dy * 0.005); qFl = null; }); return; }
     const h = flatHit(e), id = h ? h.id : null; if (id !== flatHot) { flatHot = id; dirty.flat = true; } cans.flat.style.cursor = h ? 'ns-resize' : 'default';
   });
-  const endFlat = () => { if (flatDrag) { flatDrag = null; dirty.flat = true; } };
+  const endFlat = (e) => { const knob = flatDrag && e && e.type === 'pointerup' && VD.tap(e, true) ? flatDrag.id : null; if (flatDrag) { flatDrag = null; dirty.flat = true; } if (knob) typeKnob(knob, e.clientX, e.clientY, cans.flat); };
+  /* a click or tap on the V or I knob (without turning it) types its value, through the sidebar slider behind it */
+  function typeKnob(id, x, y, back) { VD.knobAt($(id === 'V' ? 'vSl' : 'iSl'), x, y, { unit: id === 'V' ? 'V' : 'A', back }); }
   cans.flat.addEventListener('pointerup', endFlat); cans.flat.addEventListener('pointercancel', endFlat);
   cans.flat.addEventListener('keydown', benchKeys);
 

@@ -1350,7 +1350,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       el.setPointerCapture(e.pointerId);
       if (pointers.size === 2) { endQDrag(); mode = { type: 'pinch', d0: pinchDist(), z0: orbit.zoom }; return; }
       if (onKnob3D(e)) {
-        startQDrag(e); mode = { type: 'q' }; el.style.cursor = 'ns-resize'; return;
+        startQDrag(e); mode = { type: 'q' }; el.style.cursor = 'ns-resize'; VD.tap(e); return;
       }
       setRay(e);
       const h = hitSphere();
@@ -1405,7 +1405,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       if (mode && mode.type === 'orbit' && mode.moved < 5 && e.pointerType !== 'mouse' && e.type === 'pointerup') {
         setRay(e); const p = hitSurface(); if (p) { probe = { x: snap01(p.x), y: snap01(p.y) }; markOver(); }
       }
-      if (mode && mode.type === 'q') endQDrag();
+      if (mode && mode.type === 'q') { endQDrag(); if (e.type === 'pointerup' && VD.tap(e, true)) typeQ(e, el); }
       pointers.delete(e.pointerId);
       if (pointers.size < 2 && mode && mode.type === 'pinch') mode = null;
       if (!pointers.size) { mode = null; el.style.cursor = 'grab'; }
@@ -1548,6 +1548,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       qQueued = null; flashTag();
     });
   }
+  /* a click or tap on the selected charge's knob that did not turn it: type its value, through the Selected charge slider */
+  function typeQ(e, back) { if (sel) VD.knobAt(qIn, e.clientX, e.clientY, { text: () => qOut.textContent, back }); }
   function endQDrag() {
     if (!qDrag) return;
     qDrag = null; qQueued = null; flashTag(700); markOver();
@@ -1613,7 +1615,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     if (onKnob(e)) {
       startQDrag(e); hoverKnob = true;
       over.setPointerCapture(e.pointerId); over.style.cursor = 'ns-resize';
-      e.preventDefault(); return;
+      e.preventDefault(); VD.tap(e); return;
     }
     const p = eventW(e), c = hit(p);
     if (c) {
@@ -1646,6 +1648,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     }
   });
   const endDrag = (e) => {
+    if (qDrag && e.type === 'pointerup' && VD.tap(e, true)) typeQ(e, over);
     drag = null; endQDrag();
     hoverKnob = e.pointerType === 'mouse' && onKnob(e);
     over.style.cursor = hoverKnob ? 'ns-resize' : 'crosshair'; markOver();

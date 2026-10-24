@@ -1215,7 +1215,7 @@ table.rows td.b { font-size: 0.76rem; }
       el.focus(); pointers.set(e.pointerId, { x: e.clientX, y: e.clientY }); el.setPointerCapture(e.pointerId);
       if (pointers.size === 2) { glDrag = null; mode = { type: 'pinch', d0: pinch(), z0: orbit.zoom }; return; }
       const p = pickAt(e);
-      if (p && (p.id === 'sens' || p.id === 'freq')) { glDrag = { id: p.id, y0: e.clientY, v0: knobVal[p.id]() }; mode = null; G.dirty = true; return; }
+      if (p && (p.id === 'sens' || p.id === 'freq')) { glDrag = { id: p.id, y0: e.clientY, v0: knobVal[p.id]() }; mode = null; G.dirty = true; VD.tap(e); return; }
       if (p) { mode = { type: 'click', id: p.id }; return; }
       mode = { type: 'orbit', lx: e.clientX, ly: e.clientY, touch: e.pointerType === 'touch' }; el.style.cursor = 'grabbing';   /* one finger on a phone scrolls the page */
     });
@@ -1239,7 +1239,10 @@ table.rows td.b { font-size: 0.76rem; }
     const end = (e) => {
       if (mode && mode.type === 'click' && e.type === 'pointerup') { const p = pickAt(e); if (p && p.id === mode.id) clickPart(p.id); }
       pointers.delete(e.pointerId); if (pointers.size < 2 && mode && mode.type === 'pinch') mode = null;
+      const knob = glDrag && e.type === 'pointerup' && VD.tap(e, true) ? glDrag.id : null;
       if (!pointers.size) { mode = null; if (glDrag) { glDrag = null; G.dirty = true; } el.style.cursor = 'grab'; }
+      /* a click or tap on the SENS screw or FREQ knob that did not turn it: type the setting, through the sidebar slider behind it */
+      if (knob) VD.knobAt($(knob), e.clientX, e.clientY, { unit: knob === 'sens' ? 'turns' : '', label: knob === 'sens' ? 'SENS screw' : 'FREQ dial', back: el });
     };
     el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
     el.addEventListener('pointerleave', () => { if (glHover) { glHover = null; G.dirty = true; } });
@@ -1314,12 +1317,13 @@ table.rows td.b { font-size: 0.76rem; }
     ctx.fillText('3D view needs WebGL: a flat drawing of the bench', W - 8, 6);
   }
   function flatHit(e) { if (!flatGeom) return null; const r = cans.flat.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, tol = 6 * (e.pointerType === 'touch' ? 2 : 1); let best = null, bd = Infinity; for (const h of flatGeom) { const dd = Math.hypot(x - h.x, y - h.y) - h.r; if (dd < tol && dd < bd) { bd = dd; best = h; } } return best; }
-  cans.flat.addEventListener('pointerdown', (e) => { const h = flatHit(e); if (!h) return; cans.flat.setPointerCapture(e.pointerId); if (h.drag) flatDrag = { id: h.id, y0: e.clientY, v0: knobVal[h.id]() }; else clickPart(h.id); dirty.flat = true; });
+  cans.flat.addEventListener('pointerdown', (e) => { const h = flatHit(e); if (!h) return; cans.flat.setPointerCapture(e.pointerId); if (h.drag) { flatDrag = { id: h.id, y0: e.clientY, v0: knobVal[h.id]() }; VD.tap(e); } else clickPart(h.id); dirty.flat = true; });
   cans.flat.addEventListener('pointermove', (e) => {
     if (flatDrag) { const dy = flatDrag.y0 - e.clientY; if (flatDrag.id === 'sens') setSens(flatDrag.v0 + dy * 0.015); else setDial(flatDrag.v0 + dy * 0.006); return; }
     const h = flatHit(e), id = h ? h.id : null; if (id !== flatHot) { flatHot = id; dirty.flat = true; } cans.flat.style.cursor = h ? (h.drag ? 'ns-resize' : 'pointer') : 'default';
   });
-  const endFlat = () => { if (flatDrag) { flatDrag = null; dirty.flat = true; } };
+  const endFlat = (e) => { const knob = flatDrag && e && e.type === 'pointerup' && VD.tap(e, true) ? flatDrag.id : null; if (flatDrag) { flatDrag = null; dirty.flat = true; }
+    if (knob) VD.knobAt($(knob), e.clientX, e.clientY, { unit: knob === 'sens' ? 'turns' : '', label: knob === 'sens' ? 'SENS screw' : 'FREQ dial', back: cans.flat }); };
   cans.flat.addEventListener('pointerup', endFlat); cans.flat.addEventListener('pointercancel', endFlat);
   cans.flat.addEventListener('keydown', benchKeys);
 

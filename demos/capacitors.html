@@ -2246,9 +2246,14 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     } else v0 = h.id === 'cV' ? S.cb.V : nearestIdx(CVALS, S.cb.C[+h.id.slice(1)]);
     drag = { id: h.id, axis: h.axis, x0: ev.clientX - r.left, y0: ev.clientY - r.top, v0, s: Math.sqrt(S.g.A) * 100, ax: lay ? (h.id === 'd' ? lay.ey : lay.ex) : [30, 0] };
     try { cans.d.setPointerCapture(ev.pointerId); } catch (_) {}
-    cans.d.style.cursor = h.cursor; ev.preventDefault();
+    cans.d.style.cursor = h.cursor; ev.preventDefault(); VD.tap(ev);
   });
-  const endDrag = () => { if (!drag) return; drag = null; hoverId = null; syncSliders(); updateReadouts(); };
+  const endDrag = (ev) => {
+    if (!drag) return;
+    const knob = drag.id === 'V' && S.view === 'single' && ev && ev.type === 'pointerup' && VD.tap(ev, true);
+    drag = null; hoverId = null; syncSliders(); updateReadouts();
+    if (knob) VD.knobAt($('sV'), ev.clientX, ev.clientY, { unit: 'V', back: cans.d });   /* a click or tap on the supply knob that did not turn it: type the voltage */
+  };
   cans.d.addEventListener('pointerup', endDrag);
   cans.d.addEventListener('pointercancel', endDrag);
   cans.d.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });

@@ -1161,7 +1161,7 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
           const s0 = screenOf(o), s1 = screenOf(o.clone().add(ax.multiplyScalar(0.1)));
           glDrag.ax = [(s1[0] - s0[0]) * 10, (s1[1] - s0[1]) * 10];
         }
-        mode = null; G.dirty = true; return;
+        mode = null; G.dirty = true; VD.tap(e); return;
       }
       mode = { type: 'orbit', lx: e.clientX, ly: e.clientY, touch: e.pointerType === 'touch' }; el.style.cursor = 'grabbing';   /* one finger on a phone scrolls the page */
     });
@@ -1191,7 +1191,9 @@ table.rows tr.sim td { background: color-mix(in srgb, var(--equi) 9%, transparen
     });
     const end = (e) => {
       pointers.delete(e.pointerId); if (pointers.size < 2 && mode && mode.type === 'pinch') mode = null;
+      const knob = glDrag && glDrag.id === 'knob' && e.type === 'pointerup' && VD.tap(e, true);
       if (!pointers.size) { mode = null; if (glDrag) { glDrag = null; G.dirty = true; dirtyAll(); } el.style.cursor = 'grab'; }
+      if (knob) VD.knobAt($('speed'), e.clientX, e.clientY, { unit: 'rev/s', back: el });   /* a click or tap on the speed knob that did not turn it: type the speed */
     };
     el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
     el.addEventListener('pointerleave', () => { if (glHover) { glHover = null; G.dirty = true; } });

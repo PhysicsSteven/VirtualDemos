@@ -1718,15 +1718,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const sync = () => { const v = +inp.value; k.setAttribute('aria-valuemin', inp.min); k.setAttribute('aria-valuemax', inp.max); k.setAttribute('aria-valuenow', inp.value);
         if (out) k.setAttribute('aria-valuetext', out.textContent); k.firstChild.style.transform = `rotate(${((v / per) * KNOB_DEG) % 360}deg)`; };
       const set = (v) => { const was = inp.value; inp.value = String(Math.min(+inp.max, Math.max(+inp.min, v))); if (inp.value !== was) inp.dispatchEvent(new Event('input', { bubbles: true })); sync(); };
-      let last = null, acc = 0;
-      const ang = (e) => { const r = k.getBoundingClientRect(); return Math.atan2(e.clientY - r.top - r.height / 2, e.clientX - r.left - r.width / 2) * 180 / Math.PI; };
-      k.addEventListener('pointerdown', (e) => { k.setPointerCapture(e.pointerId); last = ang(e); acc = 0; k.focus(); e.preventDefault(); });
-      k.addEventListener('pointermove', (e) => { if (last === null) return; const a = ang(e); let d = a - last; d -= 360 * Math.round(d / 360); last = a; acc += d;
-        const n = Math.trunc(acc / KNOB_DEG); if (n) { acc -= n * KNOB_DEG; set(+inp.value + n * per); } });
-      const end = () => { last = null; }; k.addEventListener('pointerup', end); k.addEventListener('pointercancel', end);
-      k.addEventListener('wheel', (e) => { e.preventDefault(); set(+inp.value + (e.deltaY < 0 ? per : -per)); }, { passive: false });
-      k.addEventListener('keydown', (e) => { const n = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 10, PageDown: -10 }[e.key];
-        if (n) set(+inp.value + n * per); else if (e.key === 'Home') set(+inp.min); else if (e.key === 'End') set(+inp.max); else return; e.preventDefault(); });
+      VD.knob(k, { deg: KNOB_DEG, turn: (n) => set(+inp.value + n * per), home: () => set(+inp.min), end: () => set(+inp.max) });
       /* the demo also changes the value itself (presets, sweeps, dragging on the plot): follow its readout */
       if (out) new MutationObserver(sync).observe(out, { childList: true, characterData: true, subtree: true });
       sync();

@@ -1117,9 +1117,15 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const r = appC.getBoundingClientRect();
     drag = { id: h.id, a: Math.atan2(ev.clientY - r.top - h.y, ev.clientX - r.left - h.x), f: knobFrac(h.id) };
     try { appC.setPointerCapture(ev.pointerId); } catch (_) {}
-    appC.style.cursor = 'grabbing';
+    appC.style.cursor = 'grabbing'; VD.tap(ev);
   });
-  const endDrag = () => { if (!drag) return; drag = null; hoverId = null; appC.style.cursor = 'default'; };
+  const endDrag = (ev) => {
+    if (!drag) return;
+    const id = ev && ev.type === 'pointerup' && VD.tap(ev, true) ? drag.id : null;
+    drag = null; hoverId = null; appC.style.cursor = 'default';
+    /* a click or tap on a knob that did not turn it: type the value, through the sidebar slider behind it */
+    if (id) VD.knobAt($(id), ev.clientX, ev.clientY, { unit: { lam: 'nm', pow: 'µW', volt: 'V' }[id], back: appC });
+  };
   appC.addEventListener('pointerup', endDrag);
   appC.addEventListener('pointercancel', endDrag);
   appC.addEventListener('pointerleave', () => { if (!drag) hoverId = null; });

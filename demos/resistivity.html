@@ -824,15 +824,7 @@ table.rows input:focus { border-color: var(--accent); }
   /* knobs: one click every KNOB_DEG of turn; the mark's angle is the value in clicks, so it always shows the setting */
   const KNOB_DEG = 15;
   function knobShow(id, clicks, text, v) { const k = $(id); k.setAttribute('aria-valuenow', String(v)); k.setAttribute('aria-valuetext', text); k.firstChild.style.transform = `rotate(${(clicks * KNOB_DEG) % 360}deg)`; }
-  function knob(id, step) {
-    const k = $(id); let last = null, acc = 0;
-    const ang = (e) => { const r = k.getBoundingClientRect(); return Math.atan2(e.clientY - r.top - r.height / 2, e.clientX - r.left - r.width / 2) * 180 / Math.PI; };
-    k.addEventListener('pointerdown', (e) => { k.setPointerCapture(e.pointerId); last = ang(e); acc = 0; k.focus(); e.preventDefault(); });
-    k.addEventListener('pointermove', (e) => { if (last === null) return; const a = ang(e); let d = a - last; d -= 360 * Math.round(d / 360); last = a; acc += d; const n = Math.trunc(acc / KNOB_DEG); if (n) { acc -= n * KNOB_DEG; step(n); } });
-    const end = () => { last = null; }; k.addEventListener('pointerup', end); k.addEventListener('pointercancel', end);
-    k.addEventListener('wheel', (e) => { e.preventDefault(); step(e.deltaY < 0 ? 1 : -1); }, { passive: false });
-    k.addEventListener('keydown', (e) => { const n = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 5, PageDown: -5, Home: -1e3, End: 1e3 }[e.key]; if (!n) return; step(n); e.preventDefault(); });
-  }
+  const knob = (id, step) => VD.knob($(id), { deg: KNOB_DEG, turn: step, page: 5, home: () => step(-1e3), end: () => step(1e3) });
   const stepI = (n) => { const I = Math.max(0.05, Math.min(1, +(S.I + 0.05 * n).toFixed(2))); if (I !== S.I) { S.I = I; resetCount(); upd(); } };
   knob('knobI', stepI);
   $('inIdown').addEventListener('click', () => stepI(-1)); $('inIup').addEventListener('click', () => stepI(1));

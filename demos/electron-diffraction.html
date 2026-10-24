@@ -1228,7 +1228,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       el.focus(); pointers.set(e.pointerId, { x: e.clientX, y: e.clientY }); el.setPointerCapture(e.pointerId);
       if (pointers.size === 2) { glDrag = null; mode = { type: 'pinch', d0: pinch(), z0: orbit.zoom }; return; }
       const p = pickAt(e);
-      if (p) { if (p.id === 'mag' && S.mag.r >= MAG.rmax) setMag(60); glDrag = { id: p.id, y0: e.clientY, v0: dragVal[p.id]() }; mode = null; G.dirty = true; return; }
+      if (p) { if (p.id === 'mag' && S.mag.r >= MAG.rmax) setMag(60); glDrag = { id: p.id, y0: e.clientY, v0: dragVal[p.id]() }; mode = null; G.dirty = true; VD.tap(e); return; }
       mode = { type: 'orbit', lx: e.clientX, ly: e.clientY, touch: e.pointerType === 'touch' }; el.style.cursor = 'grabbing';   /* one finger on a phone scrolls the page */
     });
     let q = null, qf = false;
@@ -1250,7 +1250,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     });
     const end = (e) => {
       pointers.delete(e.pointerId); if (pointers.size < 2 && mode && mode.type === 'pinch') mode = null;
+      const knob = glDrag && glDrag.id === 'kv' && e.type === 'pointerup' && VD.tap(e, true);
       if (!pointers.size) { mode = null; if (glDrag) { glDrag = null; G.dirty = true; } el.style.cursor = 'grab'; }
+      if (knob) typeKv(e.clientX, e.clientY, el);   /* a click or tap on the kV knob that did not turn it: type the value */
     };
     el.addEventListener('pointerup', end); el.addEventListener('pointercancel', end);
     el.addEventListener('pointerleave', () => { if (glHover) { glHover = null; G.dirty = true; } });
@@ -1305,12 +1307,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillText('3D view needs WebGL: a flat drawing of the tube', W - 8, 6); ctx.globalAlpha = 1;
   }
   function flatHit(e) { if (!flatGeom) return null; const r = cans.flat.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, tol = 6 * (e.pointerType === 'touch' ? 2 : 1); let best = null, bd = Infinity; for (const h of flatGeom) { const dd = Math.hypot(x - h.x, y - h.y) - h.r; if (dd < tol && dd < bd) { bd = dd; best = h; } } return best; }
-  cans.flat.addEventListener('pointerdown', (e) => { const h = flatHit(e); if (!h) return; cans.flat.setPointerCapture(e.pointerId); flatDrag = { id: h.id, y0: e.clientY, v0: dragVal[h.id]() }; dirty.flat = true; });
+  cans.flat.addEventListener('pointerdown', (e) => { const h = flatHit(e); if (!h) return; cans.flat.setPointerCapture(e.pointerId); flatDrag = { id: h.id, y0: e.clientY, v0: dragVal[h.id]() }; dirty.flat = true; VD.tap(e); });
   cans.flat.addEventListener('pointermove', (e) => {
     if (flatDrag) { const dy = flatDrag.y0 - e.clientY; if (flatDrag.id === 'kv') setV(flatDrag.v0 + dy * 0.008); else setMag(flatDrag.v0 + dy * 0.6); return; }
     const h = flatHit(e), id = h ? h.id : null; if (id !== flatHot) { flatHot = id; dirty.flat = true; } cans.flat.style.cursor = h ? 'ns-resize' : 'default';
   });
-  const endFlat = () => { if (flatDrag) { flatDrag = null; dirty.flat = true; } };
+  const endFlat = (e) => { const knob = flatDrag && flatDrag.id === 'kv' && e && e.type === 'pointerup' && VD.tap(e, true); if (flatDrag) { flatDrag = null; dirty.flat = true; } if (knob) typeKv(e.clientX, e.clientY, cans.flat); };
+  /* a click or tap on the kV knob (without turning it) types the voltage, through the sidebar slider behind it */
+  function typeKv(x, y, back) { VD.knobAt($('volt'), x, y, { unit: 'kV', back }); }
   cans.flat.addEventListener('pointerup', endFlat); cans.flat.addEventListener('pointercancel', endFlat);
   cans.flat.addEventListener('keydown', benchKeys);
 

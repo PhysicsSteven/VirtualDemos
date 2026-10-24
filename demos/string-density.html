@@ -377,17 +377,7 @@ table.rows input:focus { border-color: var(--accent); }
   const setF = (v) => { const f = Math.min(200, Math.max(5, Math.round(v * 10) / 10)); if (f !== S.f) { S.f = f; changed(); } };
   /* the function generator's knobs: one click every KNOB_DEG of turn, 1 Hz (coarse) or 0.1 Hz (fine); the mark shows f */
   const KNOB_DEG = 12;
-  for (const [id, per] of [['knobC', 1], ['knobF', 0.1]]) {
-    const k = $(id); let last = null, acc = 0;
-    const ang = (e) => { const r = k.getBoundingClientRect(); return Math.atan2(e.clientY - r.top - r.height / 2, e.clientX - r.left - r.width / 2) * 180 / PI; };
-    k.addEventListener('pointerdown', (e) => { k.setPointerCapture(e.pointerId); last = ang(e); acc = 0; k.focus(); e.preventDefault(); });
-    k.addEventListener('pointermove', (e) => { if (last === null) return; const a = ang(e); let d = a - last; d -= 360 * Math.round(d / 360); last = a; acc += d;
-      const n = Math.trunc(acc / KNOB_DEG); if (n) { acc -= n * KNOB_DEG; setF(S.f + n * per); } });
-    const end = () => { last = null; }; k.addEventListener('pointerup', end); k.addEventListener('pointercancel', end);
-    k.addEventListener('wheel', (e) => { e.preventDefault(); setF(S.f + (e.deltaY < 0 ? per : -per)); }, { passive: false });
-    k.addEventListener('keydown', (e) => { const step = { ArrowRight: 1, ArrowUp: 1, ArrowLeft: -1, ArrowDown: -1, PageUp: 10, PageDown: -10 }[e.key];
-      if (step) setF(S.f + step * per); else if (e.key === 'Home') setF(5); else if (e.key === 'End') setF(200); else return; e.preventDefault(); });
-  }
+  for (const [id, per] of [['knobC', 1], ['knobF', 0.1]]) VD.knob($(id), { deg: KNOB_DEG, turn: (n) => setF(S.f + n * per), home: () => setF(5), end: () => setF(200) });
   VD.typeIn($('oF'), { get: () => S.f, set: setF, min: 5, max: 200, step: 0.1, unit: 'Hz', label: 'Driver frequency f', knobs: [$('knobC'), $('knobF')] });
   $('fineF').addEventListener('click', (e) => { const b = e.target.closest('[data-df]'); if (b) setF(S.f + +b.dataset.df); });
   function addMass(g) { if (massG() + g > MAX_G) { capStatus(`The hanger holds at most ${MAX_G} g.`); return; } S.masses.push(g); changed(); }
