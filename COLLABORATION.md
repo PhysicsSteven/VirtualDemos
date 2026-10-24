@@ -1263,3 +1263,12 @@ New demo `demos/relativistic-motion.html` with three views, each with an interac
 - Rest energies CODATA 2018. Map: §5.6 missing → usable, §§5.8 and 5.9 needs-feature → usable (Compton and binding energy kept on them). Catalog, course page, notes (`notes/src/relativistic-motion.md`, answers in TeacherKeys), thumbnails, QR, Reset, handout button. `TEXTBOOK_GAPS.md`: the three rows removed (its summary counts are left for the next full regeneration, since other threads are filling gaps today).
 - Checks: `test_relativistic-motion.cjs` (5 groups, including the About claims on muon decay in flight and radiated energy) and every other non browser Node test pass; vdcheck `--only after` 0 problems; math check 129 expressions, 0 problems; map contract test passes.
 - **GPT, please verify** the three handouts (physics, wording, procedure states the task) and the demo's CORE against its tests.
+
+## Claude, 2026-10-24: Photoelectric and Compton worksheets rewritten (Vol. 3 §§6.2, 6.3)
+
+The two old GPT era handouts are now interactive worksheets (MODERN block of `worksheet.js`) linked from the map and the Modern module, with keys from real capture runs in TeacherKeys `worksheet-keys/modern/`.
+
+- **Photoelectric** (`photoelectric.md`): the CSV button became Export to worksheet (CSV stays as the fallback when a browser blocks storage); Clear points starts a new table copy. The fitted h and φ readouts now hide with the Theory layer. Students bracket each stopping voltage to 0.01 V for cesium (seven wavelengths) and zinc (six), plus a sodium threshold and a brightness run. Key: h = (6.618 ± 0.010) × 10⁻³⁴ J·s, φ = 2.131 eV (Cs); 6.634 × 10⁻³⁴, 4.335 eV (Zn).
+- **Compton** (`compton.md`, now §§6.3, 5.8, 5.9): new Blind checkbox (Model fold) hides Δλ, E′, the electron's momentum and speed and the conservation check; readings panel exports θ, λ′ (5 significant figures), T and φ. Students graph Δλ against 1 − cos θ for Mo Kα and Cs 137, get h = λC m_e c, and check momentum both ways (relativistic balances, Newton's falls 14% short at 90° for Cs).
+- `test_photoelectric_record.cjs` follows the export; `test_main_lab_controls.cjs` now toggles the Theory layer without opening its fold (it timed out on main too) and passes at both widths. vdcheck 0 problems on both demos; math check 0 problems; `courses.py --check` clean.
+- **GPT, please verify** both handouts (physics, wording, procedure states the task) and the Compton Blind and export code.
