@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -56,7 +58,9 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
-#can { touch-action: none; outline: none; }
+#can { touch-action: none; outline: none; position: relative; z-index: 1; }
+#pane { position: relative; }
+.fh3 { position: absolute; left: 0; top: 0; z-index: 0; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
@@ -119,6 +123,7 @@ sub, sup { line-height: 0; }
         <button type="button" class="btn" id="play">Pause</button>
         <button type="button" class="btn" id="again">New sweep</button>
         <button type="button" class="btn" id="measure" aria-pressed="false">Mark peaks</button>
+        <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <span class="count mono" id="count" aria-live="off"></span>
       </div>
       <div class="pane" id="pane">
@@ -580,6 +585,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const T_MIN = 100, T_MAX = 210;
   function drawTube(p, now) {
+    if (use3()) { drawTube3(p, now); return; }
     const c = ctx, g = tubeGeom(), ps = g.ps, hg = S.gas === 'hg';
     c.save(); c.beginPath(); c.rect(p.x, p.y, p.w, p.h); c.clip();
     title(c, p, hg ? 'Tetrode tube with mercury vapor' : 'Tetrode tube with neon');
@@ -1025,6 +1031,124 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S.marks.push(u); lastMarks.push(u); marksReadout(); return true;
   }
 
+  // ---------- the tube in 3D (three.js through lib/vd3.js and lib/vd3kit.js); Flat keeps the drawing above (or ?view=flat) ----------
+  /* The oven, the tetrode, its supply and the collector's electrometer on a bench. Electrons, excitation flashes and the glow
+     are the same ones the flat tube shows (parts, flashes, hist); only the picture changes. Words stay on the canvas on top. */
+  const G3 = { o: { th: -Math.PI / 2 + 0.32, ph: 1.12, zoom: 1 }, rect: null, glowKey: '' };
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d());
+  const TX = { k: -0.082, g1: -0.068, g2: 0.052 };
+  TX.a = TX.g2 + GAP * (TX.g2 - TX.g1);
+  const TZ = 0.072, TR = 0.019;   /* tube axis height and glass radius (m, drawn; the real G1 to G2 gap is 8 mm) */
+  const sx3 = (s) => s <= 1 ? TX.g1 + s * (TX.g2 - TX.g1) : TX.g2 + (s - 1) / GAP * (TX.a - TX.g2);
+  const hash = (v) => { const s = Math.sin(v * 12.9898) * 43758.5453; return s - Math.floor(s); };
+  function glowTex() {
+    const cv = document.createElement('canvas'); cv.width = cv.height = 64; const c = cv.getContext('2d'), gr = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.35, 'rgba(255,255,255,0.55)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, 64, 64);
+    return new THREE.CanvasTexture(cv);
+  }
+  function init3D() {
+    const S3 = VD3K.stage(pane, { before: can, shadow: 0.4, fov: 28, fogAt: [1.6, 3.2] }); if (!S3) return false;
+    S3.el.className = 'fh3';
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
+    sc.add(VD3K.bench(S3, { w: 3, d: 2, y: 0.3 }), VD3K.backdrop(S3, { r: 1.2, h: 0.9, y: -0.55 }));
+    /* the oven: a metal box with its front cut away, warm inside in step with the temperature */
+    const oven = new THREE.Group(), steel = M({ roughness: 0.5, metalness: 0.25 }, ['#b8c0c9', '#56606b']);
+    const inner = M({ roughness: 0.9, metalness: 0, emissive: 0x000000, side: THREE.DoubleSide }, ['#d9c7b4', '#3a3029']);
+    const OW = 0.26, OD = 0.09, OH = 0.13;
+    oven.add(VD3K.box(OW, 0.006, OH, steel, 0, OD / 2, 0), VD3K.box(OW, OD, 0.006, steel, 0, 0, OH - 0.006), VD3K.box(OW, OD, 0.006, steel, 0, 0, 0));
+    oven.add(VD3K.box(0.006, OD, OH, steel, -OW / 2, 0, 0), VD3K.box(0.006, OD, OH, steel, OW / 2, 0, 0));
+    const lining = mesh(new THREE.PlaneGeometry(OW - 0.014, OH - 0.014), inner); lining.rotation.x = Math.PI / 2; lining.position.set(0, OD / 2 - 0.004, OH / 2); oven.add(lining);
+    const coilM = M({ roughness: 0.5, metalness: 0.3, emissive: 0x000000 }, ['#8a5a3a', '#6a4a30']);
+    for (let k = 0; k < 9; k++) { const c = mesh(new THREE.TorusGeometry(0.006, 0.0012, 6, 16), coilM); c.rotation.y = Math.PI / 2; c.position.set(-0.1 + k * 0.025, OD / 2 - 0.012, 0.012); oven.add(c); }
+    const thermoWell = VD3K.rod([0.1, 0.02, OH], [0.1, 0.02, OH + 0.05], 0.003, M({ roughness: 0.3, metalness: 0.7 }, ['#c9ced4', '#7c848e']));
+    oven.add(thermoWell);
+    sc.add(oven);
+    /* the tube: glass, a cathode with its heater, two mesh grids and the collector plate */
+    const tube = new THREE.Group(); tube.position.z = TZ;
+    const glass = VD3K.glass(S3, { r: TR, len: 0.2, axis: 'x', opacity: 0.2 }); tube.add(glass);
+    const metal = M({ roughness: 0.35, metalness: 0.8 }, ['#7f8893', '#9aa4b0']), nickel = M({ roughness: 0.3, metalness: 0.85 }, ['#b3bac2', '#c7ced6']);
+    const heatM = new THREE.MeshBasicMaterial({ color: 0xff8a3a }), heater = mesh(new THREE.CylinderGeometry(0.0035, 0.0035, 0.016, 12), heatM); heater.position.x = TX.k - 0.003; tube.add(heater);
+    const cath = mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.004, 24), metal); cath.rotation.z = Math.PI / 2; cath.position.x = TX.k; tube.add(cath);
+    const grid = (x) => { const g = new THREE.Group(), ring = mesh(new THREE.TorusGeometry(TR * 0.8, 0.0009, 6, 40), nickel); ring.rotation.y = Math.PI / 2; g.add(ring);
+      for (let k = -3; k <= 3; k++) { const w = mesh(new THREE.CylinderGeometry(0.00035, 0.00035, 2 * TR * 0.8 * Math.cos(Math.asin(k / 4)), 4), nickel); w.position.z = k * TR * 0.2; w.rotation.x = 0; g.add(w); const w2 = w.clone(); w2.rotation.x = Math.PI / 2; w2.position.set(0, k * TR * 0.2, 0); g.add(w2); }
+      g.position.x = x; return g; };
+    tube.add(grid(TX.g1), grid(TX.g2));
+    const anodeM = M({ roughness: 0.4, metalness: 0.7, emissive: 0x000000 }, ['#6d757f', '#8a939e']), anode = mesh(new THREE.CylinderGeometry(TR * 0.72, TR * 0.72, 0.002, 32), anodeM); anode.rotation.z = Math.PI / 2; anode.position.x = TX.a; tube.add(anode);
+    const drop = mesh(new THREE.SphereGeometry(0.006, 20, 10), M({ roughness: 0.08, metalness: 1 }, ['#c8ccd2', '#d8dce2'])); drop.scale.set(1.4, 1, 0.35); drop.position.set((TX.g1 + TX.g2) / 2, 0, -TR + 0.0025); tube.add(drop);
+    /* pins out of the left end and a stand under each end */
+    for (const y of [-0.006, 0, 0.006]) tube.add(VD3K.rod([-0.1, y, 0], [-0.118, y, 0], 0.0007, nickel));
+    sc.add(tube);
+    const stand = M({ roughness: 0.6, metalness: 0.2 }, ['#3b4552', '#2b333d']);
+    for (const x of [-0.075, 0.075]) { sc.add(VD3K.rod([x, 0, 0.006], [x, 0, TZ - TR], 0.0022, stand)); sc.add(VD3K.box(0.022, 0.03, 0.006, stand, x, 0, 0.006)); }
+    /* the glow from excitations: thin slices across the gap, one per bin of the excitation histogram */
+    const NB = 64, slices = [];
+    for (let i = 0; i < NB; i++) { const m = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }), d = new THREE.Mesh(new THREE.CircleGeometry(TR * 0.86, 28), m); d.rotation.y = Math.PI / 2; d.renderOrder = 3; tube.add(d); slices.push(d); }
+    /* electrons and flashes */
+    const dots = VD3K.particles(S3, { n: 60, r: 0.0015, color: '#2b60b5', emissive: '#10306a' }); tube.add(dots);
+    const tex = glowTex(), flashPool = [];
+    for (let i = 0; i < 48; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0 })); sp.renderOrder = 4; tube.add(sp); flashPool.push(sp); }
+    /* the supply and the electrometer, with their leads */
+    const mU = VD3K.meter(S3, { label: 'U  (G2 to K)', sub: 'supply', w: 0.085, h: 0.052 }), mI = VD3K.meter(S3, { label: 'I  collector', sub: 'electrometer', w: 0.085, h: 0.052 });
+    mU.position.set(-0.13, -0.095, mU.position.z); mI.position.set(0.13, -0.095, mI.position.z); sc.add(mU, mI);
+    sc.add(VD3K.cable([-0.118, 0, TZ], [-0.13, -0.085, 0.02], { color: 0xb8382a, via: [[-0.15, -0.02, TZ - 0.01], [-0.16, -0.08, 0.006]] }));
+    sc.add(VD3K.cable([TX.a, 0, TZ + TR], [0.13, -0.085, 0.02], { color: 0x23282f, via: [[TX.a + 0.02, 0.0, OH + 0.02], [0.15, -0.05, 0.05], [0.15, -0.1, 0.01]] }));
+    g3 = { S3, oven, inner, coilM, heatM, glass, anodeM, drop, slices, dots, flashPool, mU, mI, thermoWell };
+    can.addEventListener('wheel', (e) => { if (!in3(e)) e.stopImmediatePropagation(); }, { passive: true });
+    can.addEventListener('dblclick', (e) => { if (!in3(e)) e.stopImmediatePropagation(); });
+    VD3.orbit(can, G3.o, () => { if (use3()) drawAll(); }, { grab: (e) => !in3(e) || !!handleAt(...pos(e), e.pointerType === 'touch'), phMin: 0.4, phMax: 1.45, zMin: 0.6, zMax: 2.6 });
+    can.style.touchAction = ''; can.style.cursor = '';
+    return true;
+  }
+  function in3(e) { if (!use3() || !LY) return false; const [x, y] = pos(e), p = LY.tube; return x >= p.x && x <= p.x + p.w && y >= p.y + 36 && y <= p.y + p.h; }
+  function render3(p, now) {
+    const g = g3, S3 = g.S3, hg = S.gas === 'hg', el = S3.el;
+    const k = [p.x, p.y, p.w, p.h].join(); if (G3.rect !== k) { G3.rect = k; Object.assign(el.style, { left: p.x + 'px', top: p.y + 'px', width: p.w + 'px', height: p.h + 'px' }); }
+    S3.size(p.w, p.h);
+    const asp = p.w / Math.max(1, p.h), dist = 0.5 * Math.max(1, 1.5 / asp);
+    S3.place(G3.o, [0.005, -0.03, hg ? 0.06 : 0.07], dist);
+    /* the oven and its heater coil glow with the temperature (neon runs cold, so no oven) */
+    g.oven.visible = hg; g.thermoWell.visible = hg; g.drop.visible = hg;
+    const f = hg ? (S.TC - T_MIN) / (T_MAX - T_MIN) : 0;
+    g.inner.emissive.setRGB(0.18 * f, 0.07 * f, 0.02 * f); g.coilM.emissive.setRGB(0.25 + 0.55 * f, 0.08 + 0.12 * f, 0.02);
+    if (!hg) g.coilM.emissive.setRGB(0, 0, 0);
+    /* glow slices from the excitation histogram */
+    const col = new THREE.Color(hg ? T.uv : T.glow);
+    let mx = 0; if (hist && S.U - S.Uc > 0) for (const v of hist) mx = Math.max(mx, v);
+    const cur = G().Isat * envelope(G(), S.U - S.Uc) * TP.trans, bright = Math.min(1, 0.25 + cur / 5);
+    g.slices.forEach((d, i) => {
+      d.position.x = sx3((i + 0.5) / g.slices.length);
+      let a = 0; if (mx > 0) { const j = Math.min(hist.length - 1, Math.floor((i + 0.5) / g.slices.length * hist.length)); a = hist[j] / mx; }
+      d.material.color.copy(col); d.material.opacity = a < 0.02 ? 0 : (hg ? 0.16 : 0.34) * a * bright;
+    });
+    /* electrons: the same particles as the flat tube, each at its own angle round the axis */
+    let n = 0; for (const q of parts) { const x = sx3(q.s), r = q.y * TR * 0.78, an = hash(q.e.E0 * 97.1 + q.y * 13.7) * Math.PI; g.dots.put(n++, x, r * Math.sin(an), r * Math.cos(an)); if (n >= 60) break; }
+    g.dots.show(n); g.dots.done();
+    let m = 0;
+    for (const fl of flashes) { const age = now - fl.t; if (age > 0.7 || age < 0 || m >= g.flashPool.length) continue; const sp = g.flashPool[m++], r = fl.y * TR * 0.78, an = hash(fl.s * 51.3 + fl.y * 7.1) * Math.PI, kk = 1 - age / 0.7, sz = 0.004 + 0.012 * age;
+      sp.position.set(sx3(fl.s), r * Math.sin(an), r * Math.cos(an)); sp.scale.set(sz, sz, 1); sp.material.color.copy(col); sp.material.opacity = 0.85 * kk; }
+    for (; m < g.flashPool.length; m++) g.flashPool[m].material.opacity = 0;
+    g.anodeM.emissive.copy(new THREE.Color(T.neg)).multiplyScalar(now - colPulse < 0.12 ? 0.6 : 0);
+    g.mU.set(`${S.U.toFixed(2)} V`); g.mI.set(`${currentNow().toFixed(2)} nA`);
+    S3.render();
+    return (q) => { const r = S3.project([q[0], q[1], q[2]]); return [p.x + r[0], p.y + r[1]]; };
+  }
+  function drawTube3(p, now) {
+    const c = ctx, ps = p.ps, hg = S.gas === 'hg';
+    c.clearRect(p.x, p.y, p.w, p.h);
+    const Q = render3(p, now);
+    c.save(); c.beginPath(); c.rect(p.x, p.y, p.w, p.h); c.clip();
+    title(c, p, hg ? 'Tetrode tube with mercury vapor, in its oven' : 'Tetrode tube with neon');
+    c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'top';
+    c.fillText((hg ? 'violet: 253.7 nm UV, invisible to the eye' : 'orange: the glow seen through the glass') + (p.w > 540 * ps ? ` · tube drawn larger than its ${G().L * 1000} mm gap` : ''), p.x + 12 * ps, p.y + 25 * ps);
+    const top = (x) => Q([x, 0, TZ + TR + 0.004]);
+    { const qk = top(TX.k), q1 = top(TX.g1), near = Math.abs(qk[0] - q1[0]) < 22 * ps;
+      for (const [s, x] of [[near ? 'K G1' : 'K', near ? TX.g1 : TX.k], ...(near ? [] : [['G1', TX.g1]]), ['G2', TX.g2], ['A', TX.a]]) { const q = top(x); label(c, s, q[0], q[1] - 6 * ps, T.ink, near && s === 'K G1' ? 'right' : 'center', 'bottom', true, ps); } }
+    if (S.U - S.Uc <= 0) { const q = Q([(TX.g1 + TX.g2) / 2, 0, TZ - TR - 0.008]); label(c, 'U below U_c: no electron gets through', q[0], q[1], T.muted, 'center', 'top', false, ps); }
+    if (hg) drawThermo(tubeGeom());
+    c.restore();
+  }
+
   // ---------- dragging on the drawing ----------
   let drag = null, hoverId = null;
   function dragHandles() {
@@ -1145,6 +1269,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   resize();
   applyPreset('hg');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => { if (g3) g3.S3.el.hidden = !on; drawAll(); }, status: (m) => { const st = document.querySelector('.status'); if (st) st.textContent = m; } });
   requestAnimationFrame(loop);
 })();
 </script>
