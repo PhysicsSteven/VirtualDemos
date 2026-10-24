@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="root-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg root-4 auto-dark dark html proj-body app bar-div-firstchild stage-canvas-focusvisible spin spin-attn rail rail-section rail-section-section rail-h2 formula chips-button btnrow inline input slider-head slider-head-label readout-wide readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench phone-html phone-app phone-rail phone-input wide-proj-stage bench phone-bench pane chips-button-hover btn-disabled slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas" lang="en">
+<html data-vd-off="root-2 root-4 auto-dark dark html proj-body app bar-div-firstchild stage-canvas-focusvisible spin spin-attn rail rail-section rail-section-section rail-h2 formula chips-button inline input slider-head slider-head-label readout-wide readout-dd-ok check check-input empty plotbox-canvas wide-proj-bench phone-html phone-app phone-rail phone-input wide-proj-stage bench phone-bench pane chips-button-hover slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -276,6 +276,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
               <div><dt>Wavelength</dt><dd id="hL">—</dd></div>
               <div><dt>Region</dt><dd id="hReg">—</dd></div>
             </dl>
+            <label class="hint" style="display:flex;align-items:center;gap:7px;cursor:pointer"><input type="checkbox" id="blind" style="margin:0"> Blind: hide the photon energy and wavelength the model predicts</label>
             <p class="hint" id="hHint">An electron can only sit on certain energy levels, E = −13.6 eV / n². When it drops from a higher level to a lower one, it emits a photon carrying exactly the energy difference. Click an arrow.</p>
           </div>
         </div>
@@ -290,6 +291,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/spectra.html" target="spectra-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section class="card">
         <h2>Mode</h2>
         <div class="seg" role="group" aria-label="Mode" id="modeSeg" style="align-self: flex-start;">
@@ -339,6 +341,27 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
         </details>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="spectra" data-title="Spectra Explorer" data-demo="spectra">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section class="card">
         <h2>Data</h2>
         <p class="src">Line data: NIST Handbook of Basic Atomic Spectroscopic Data (J. E. Sansonetti and W. C. Martin), strong lines tables, air wavelengths from 300 to 1000 nm, for the 99 elements from hydrogen to einsteinium. Public domain. <span class="mono">physics.nist.gov/PhysRefData/Handbook</span></p>
@@ -410,7 +433,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
 
   // ---------- state ----------
   const S = { a: 'H', b: 'Ne', mode: 'explore', view: 'visible', display: 'emission', ion: 'all', mark: null, pickTop: false,
-              guesses: new Set(), mystery: null, kind: 'gas', checked: null, series: 2, ni: 3 };
+              guesses: new Set(), mystery: null, kind: 'gas', checked: null, series: 2, ni: 3, blind: false };
   const $ = (id) => document.getElementById(id);
   const has = (sym) => Array.isArray(DATA[sym]);
   const range = () => (S.view === 'visible' ? [380, 750] : [300, 1000]);
@@ -628,24 +651,29 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
 
   // ---------- hover ----------
   let shownA = [], shownB = [];
+  // the last line read from the top strip (by a click, a tap or the keyboard), for Record reading; NIST precision, trailing zeros dropped
+  let picked = null;
+  const nmText = (nm) => String(+nm.toFixed(5));
   function hookHover(cv, tip, get) {
     const show = (e) => {
       const r = cv.getBoundingClientRect(), x = e.clientX - r.left, [l0, l1] = range();
       const nm = l0 + x / r.width * (l1 - l0), tol = 5 / r.width * (l1 - l0);
       let best = null;
       for (const L of get()) { const d = Math.abs(L.nm - nm); if (d < tol && (!best || d < Math.abs(best.nm - nm) || (d === Math.abs(best.nm - nm) && L.b > best.b))) best = L; }
-      if (!best) { tip.hidden = true; return; }
+      if (!best) { tip.hidden = true; return null; }
       place(best, x, r.width);
+      return best;
     };
     const place = (best, x, w) => {
       const label = S.mode === 'mystery' && cv.id === 'cA' && !S.revealed ? 'unknown' : `${best.sym} ${ionName(best.ion)}`;
-      tip.textContent = `${best.nm.toFixed(2)} nm · ${label} · intensity ${best.inten || 'n/a'}${best.p ? ' · persistent' : ''}`;
+      if (cv.id === 'cA') picked = best;
+      tip.textContent = `${nmText(best.nm)} nm · ${label} · intensity ${best.inten || 'n/a'}${best.p ? ' · persistent' : ''}`;
       tip.hidden = false;
       const tw = tip.offsetWidth;
       tip.style.left = Math.min(w - tw, Math.max(0, x - tw / 2)) + 'px';
       tip.style.top = (cv.offsetTop - tip.offsetHeight - 4) + 'px';
     };
-    cv.addEventListener('pointermove', (e) => { kbd = -1; show(e); });
+    cv.addEventListener('pointermove', (e) => { kbd = -1; const keep = picked; show(e); picked = keep; });
     cv.addEventListener('pointerdown', (e) => { kbd = -1; show(e); });
     cv.addEventListener('pointerleave', () => { tip.hidden = true; });
     // keyboard: step through the lines in view, Enter marks one (as a click on its row in the table does)
@@ -719,8 +747,8 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
       S.checked = null; $('result').textContent = '';
     } else if (S.mode === 'compare') {
       if (S.pickTop) S.a = sym; else S.b = sym;
-      S.mark = null;
-    } else { S.a = sym; S.mark = null; }
+      S.mark = null; picked = null;
+    } else { S.a = sym; S.mark = null; picked = null; }
     render();
   }
 
@@ -728,7 +756,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
   const POOL = ['H', 'He', 'Li', 'Na', 'K', 'Ca', 'Sr', 'Ba', 'Cu', 'Ne', 'Ar', 'Kr', 'Xe', 'Hg', 'Cd', 'Zn', 'Tl', 'In', 'Cs', 'Rb', 'Mg', 'O', 'N'];
   const STAR = ['H', 'Na', 'Mg', 'Ca', 'Fe'];
   function newMystery() {
-    S.guesses = new Set(); S.checked = null; S.revealed = false;
+    S.guesses = new Set(); S.checked = null; S.revealed = false; picked = null;
     if (S.kind === 'star') S.mystery = STAR.slice();
     else {
       const n = 2 + (Math.random() < 0.45 ? 1 : 0), pick = [];
@@ -840,8 +868,8 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
     const L = hLine(S.ni, S.series);
     const region = L.air < 380 ? (L.air < 200 ? 'far ultraviolet' : 'ultraviolet') : L.air > 750 ? 'infrared' : 'visible';
     $('hTr').textContent = `${S.ni} → ${S.series}`;
-    $('hE').textContent = L.eV.toFixed(2) + ' eV';
-    $('hL').textContent = L.air < 200 ? `${L.vac.toFixed(1)} nm (vacuum)` : `${L.air.toFixed(2)} nm`;
+    $('hE').textContent = S.blind ? 'hidden' : L.eV.toFixed(2) + ' eV';
+    $('hL').textContent = S.blind ? 'hidden' : L.air < 200 ? `${L.vac.toFixed(1)} nm (vacuum)` : `${L.air.toFixed(2)} nm`;
     $('hReg').textContent = region;
     const names = { 1: 'Lyman', 2: 'Balmer', 3: 'Paschen' };
     let msg = `1/λ = R<sub>H</sub>(1/${S.series}² − 1/${S.ni}²). ${names[S.series]} lines all end on n = ${S.series}. Levels n = 4 to 8 bunch up just below 0 eV.`;
@@ -875,7 +903,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
       if (S.mark != null && Math.abs(S.mark - L.nm) < 0.005) tr.className = 'on';
       tr.tabIndex = 0;
       tr.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); tr.click(); } });
-      tr.addEventListener('click', () => { S.mark = (S.mark != null && Math.abs(S.mark - L.nm) < 0.005) ? null : L.nm; render(); });
+      tr.addEventListener('click', () => { picked = L; S.mark = (S.mark != null && Math.abs(S.mark - L.nm) < 0.005) ? null : L.nm; render(); });
       tb.appendChild(tr);
     }
   }
@@ -1262,13 +1290,22 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
   for (const b of document.querySelectorAll('[data-v]')) b.addEventListener('click', () => { S.view = b.dataset.v; render(); });
   for (const b of document.querySelectorAll('[data-i]')) b.addEventListener('click', () => { S.ion = b.dataset.i; render(); });
   for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => {
-    S.mode = b.dataset.m; S.mark = null; S.pickTop = false;
+    S.mode = b.dataset.m; S.mark = null; picked = null; S.pickTop = false;
     if (S.mode === 'mystery' && !S.mystery) newMystery(); else render();
   });
   for (const b of document.querySelectorAll('#mysteryKind button')) b.addEventListener('click', () => { S.kind = b.dataset.k; newMystery(); });
-  $('swap').addEventListener('click', () => { [S.a, S.b] = [S.b, S.a]; S.mark = null; render(); });
+  $('swap').addEventListener('click', () => { [S.a, S.b] = [S.b, S.a]; S.mark = null; picked = null; render(); });
   $('pickA').addEventListener('click', () => { S.pickTop = !S.pickTop; render(); });
   $('check').addEventListener('click', () => check(false));
+  $('blind').addEventListener('change', (e) => { S.blind = e.target.checked; render(); });
+  // Readings: the line last read from the top strip, as NIST lists it (air wavelength)
+  window.vdVersion = 'spectra@2026-10-24';
+  window.vdShowCols = [['source', 'Source'], ['lambda_nm', 'λ air (nm)'], ['ion', 'Ion']];
+  window.vdReadingRow = () => {
+    if (!picked) return 'Click or tap a line in the top spectrum first, so its readout shows.';
+    const myst = S.mode === 'mystery' && !S.revealed;
+    return { source: myst ? 'Mystery' : `${BY[picked.sym][2]}`, ion: myst ? '' : ionName(picked.ion), lambda_nm: nmText(picked.nm), intensity: String(picked.inten || '') };
+  };
   $('reveal').addEventListener('click', () => check(true));
   $('newMystery').addEventListener('click', newMystery);
 
@@ -1278,7 +1315,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
     if (e.target.closest && e.target.closest('input')) return;
     const z = BY[S.a][0] + (e.key === 'ArrowRight' ? 1 : -1);
     const next = EL.find((x) => x[0] === z);
-    if (next && has(next[1])) { S.a = next[1]; S.mark = null; render(); e.preventDefault(); }
+    if (next && has(next[1])) { S.a = next[1]; S.mark = null; picked = null; render(); e.preventDefault(); }
   });
 
   // projector mode

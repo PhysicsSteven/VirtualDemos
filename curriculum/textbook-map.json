@@ -9167,7 +9167,10 @@
       "status": "usable",
       "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Spectra Explorer",
-      "url": "demos/spectra.html"
+      "url": "demos/spectra.html",
+      "handouts": [
+        "spectra"
+      ]
     },
     {
       "demo": "speed-of-light",

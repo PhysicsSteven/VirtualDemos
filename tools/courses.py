@@ -135,6 +135,7 @@ HANDOUT_TOPIC = {
     'spacetime': 'Spacetime Diagrams and the Lorentz Transformation',
     'speed-of-light': 'Speed of Light with a Rotating Mirror',
     'rutherford': 'Rutherford Scattering',
+    'spectra': 'The Hydrogen Spectrum and the Rydberg Constant',
     'household-wiring': 'Household Wiring and Electrical Safety',
     'van-de-graaff': 'Van de Graaff Generator',
     'ink-jet-printer': 'Ink Jet Printer',
