@@ -95,7 +95,9 @@
     'thin-films', 'electron-diffraction', 'x-ray-diffraction' /* the last two: Electron Diffraction demo */, 'em-waves' /* 2026-10-24 */,
     'double-slit', 'diffraction-grating', 'single-slit' /* the last two: Diffraction Grating demo (grating, Single slit aperture), 2026-10-24 */,
     'junction-transistor' /* Circuits demo, diode and transistor, 2026-10-24 */,
-    'ac-reactance', 'ac-power' /* Circuits demo, AC mode, Vol. 2 §§15.1, 15.2 and 15.4, 2026-10-24 */];
+    'ac-reactance', 'ac-power' /* Circuits demo, AC mode, Vol. 2 §§15.1, 15.2 and 15.4, 2026-10-24 */,
+    'straight-wire-fields', 'loops-solenoids' /* Magnetic Fields of Currents, 2026-10-24 */,
+    'mirrors-refraction', 'lenses-instruments' /* Optics Bench, 2026-10-24 */];
   ENABLED.push(...PHYSICS_II);
   /* Helpers for the Physics II maps. parts: the part values a Circuits row carries (R1_ohm, C1_F, L1_H, B1_emf_V, B1_r_ohm, S1_state),
      optionally only those whose column matches a pattern. pick: the first column matching a pattern that has a value in this row
@@ -164,8 +166,16 @@
     'induced-electric-field': { demo: 'Induced Electric Field', cols: ['row', 'current', 't_ms', 'dBdt_T_s', 'path_r_cm', 'path_d_cm', 'Phi_Wb', 'emf_V', 'circ_V', 'E_V_per_m'] },
     'induction-at-work': { demo: 'Induction at Work', cols: ['row', 'f_Hz', 'stroke_cm', 'C_F', 'light', 't_s', 'emf_peak_V', 'Vc_V', 'E_hand_J', 'E_cap_J', 'E_heat_J', 'E_diode_J', 'E_led_J'] },
     'magnets-oersted': { demo: 'Magnetic Fields of Currents', cols: ['row', 'experiment', 'gap_cm', 'facing', 'force', 'F_rel', 'I_A', 'h_cm', 'BE_uT', 'Bw_uT', 'angle_deg', 'tan'] },
+    /* Trial | Setup | I₁ | I₂ | d | Probe (x, y) | r | B | Direction | F/L on wire 1 | Loop | Current through it | Circulation | 1/r, 1/d (typed) */
+    'straight-wire-fields': { demo: 'Magnetic Fields of Currents', cols: ['row', 'setup', 'I1_A', 'I2_A', 'd_cm', 'probe_cm', 'r_cm', 'B_uT', 'dir_deg', 'F_uN_m', 'loop', 'Ienc_A', 'circ_uTm', null, null] },
+    /* Trial | Setup | N | L | R | I | z | Distance from the axis | B along, B away from the axis | B at the center | B at an end | 1/R, n (typed) */
+    'loops-solenoids': { demo: 'Magnetic Fields of Currents', cols: ['row', 'setup', 'N', 'L_cm', 'R_cm', 'I_A', 'z_cm', 'rho_cm', 'Bz_uT', 'Brho_uT', 'Bc_uT', 'Bend_uT', null, null] },
     'huygens': { demo: "Huygens's Principle", cols: ['row', 'view', 'medium1', 'n1', 'medium2', 'n2', 'L_m', 't_ns', 'th1_deg', 'th2_deg', 's1v1', 's2v2', 'a_lambda', 'dark_deg'] },
     dispersion: { demo: 'Optics Bench', cols: ['row', 'element', 'material', 'lam_nm', 'n', 'dev_deg'] },
+    /* Trial | Element | n₁ | n₂ | R (cm) | f (cm) | dₒ (cm) | dᵢ (cm) | m | Image | 1/dₒ, 1/dᵢ (typed) */
+    'mirrors-refraction': { demo: 'Optics Bench', cols: ['row', 'element', 'n1', 'n2', 'R_cm', 'f_cm', 'do_cm', 'di_cm', 'm', 'image', null, null] },
+    /* Trial | Setup | f or objective f (cm) | Eyepiece f (cm) | Separation (cm) | dₒ (cm) | dᵢ (cm) | m | M | Image | 1/dₒ, 1/dᵢ (typed) */
+    'lenses-instruments': { demo: 'Optics Bench', cols: ['row', 'setup', 'f_cm', 'f_eye_cm', 'sep_cm', 'do_cm', 'di_cm', 'm', 'M', 'image', null, null] },
     'the-eye': { demo: 'The Eye', cols: ['row', 'eye', 'glasses_D', 'd_cm', 'seen', 'blur_mm', 'NP_cm', 'FP_cm', 'P_D', 'di_cm', 'rx_far_D', 'rx_near_D'] },
     /* Reading | Setup | λ (nm) | D (mm) | Screen distance L (m) | Cursor x (mm) | Separation Δθ (µrad) | Intensity at the cursor I/I₀ | θ₁ = x/L (µrad) | λ/D (µrad) | 1/D (1/mm) */
     resolution: { demo: 'Circular Apertures and Resolution', cols: ['row', 'setup', 'lam_nm', 'D_mm', 'L_m', 'x_mm', 'sep_urad', 'I_rel', null, null, null] },

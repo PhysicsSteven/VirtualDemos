@@ -167,7 +167,7 @@ details.mag[open] { display: flex; flex-direction: column; gap: 10px; }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/magnets-oersted.html" target="magnets-oersted-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/magnets-oersted.html" target="magnets-oersted-worksheet">Worksheet 1: Magnets and Oersted's Compass</a></li><li><a href="../curriculum/labs/students/straight-wire-fields.html" target="straight-wire-fields-worksheet">Worksheet 2: Fields and Forces of Straight Wires</a></li><li><a href="../curriculum/labs/students/loops-solenoids.html" target="loops-solenoids-worksheet">Worksheet 3: Fields of Loops and Solenoids</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -1782,7 +1782,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.__cf = {
     get frameMs() { return frameMs; }, get S() { return S; }, get V() { return V; }, get lines() { return lines.length; }, get arrows() { return arrows.length; },
     get amp() { return ampere(); }, get needlesMoving() { return needlesMoving; }, get layerFine() { return layerFine; },
-    handles: () => handles().map((h) => h.id), X, Y, applyPreset, time(n) { const t = performance.now(); for (let i = 0; i < n; i++) { layerKey = ''; drawAll(); } return (performance.now() - t) / n; }
+    handles: () => handles().map((h) => h.id), X, Y, applyPreset, custom, time(n) { const t = performance.now(); for (let i = 0; i < n; i++) { layerKey = ''; drawAll(); } return (performance.now() - t) / n; }
   };
 
   // ---------- magnets and Oersted's compass ----------
@@ -1861,11 +1861,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('sBE').addEventListener('input', (e) => { MG.BE = +e.target.value; magUpdate(); });
   $('magHide').addEventListener('change', (e) => { MG.hide = e.target.checked; magUpdate(); });
   $('magDet').addEventListener('toggle', magUpdate);
-  /* a reading for the Readings section (tools/readings_panel.py), from Magnets and Oersted's compass; what Predict first hides is
-     left blank. The needle angle is where the needle settles, positive toward the west. */
-  window.vdShowCols = [['experiment', 'Experiment'], ['gap_cm', 'Gap (cm)'], ['I_A', 'I (A)'], ['angle_deg', 'Angle (°)']];
-  window.vdReadingRow = () => {
-    if (!$('magDet').open) return 'Open Magnets and Oersted\'s compass to record a reading.';
+  /* a reading for the Readings section (tools/readings_panel.py). Three worksheets share it: with Magnets and Oersted's compass
+     open, a magnets or compass reading (magnets-oersted; what Predict first hides is left blank, the needle angle is where it
+     settles, positive toward the west); otherwise the main picture: Straight wires (straight-wire-fields) or Loop and solenoid
+     (loops-solenoids). Readings for different worksheets are not mixed in one table. */
+  const WS_COLS = {
+    'magnets-oersted': [['experiment', 'Experiment'], ['gap_cm', 'Gap (cm)'], ['I_A', 'I (A)'], ['angle_deg', 'Angle (°)']],
+    'straight-wire-fields': [['setup', 'Setup'], ['r_cm', 'r (cm)'], ['B_uT', '|B| (μT)'], ['circ_uTm', '∮B·dl (μT·m)']],
+    'loops-solenoids': [['N', 'N'], ['z_cm', 'z (cm)'], ['Bz_uT', 'B_z (μT)'], ['Bc_uT', 'B centre (μT)']]
+  };
+  const wsNow = () => ($('magDet').open ? 'magnets-oersted' : S.scene === 'wires' ? 'straight-wire-fields' : 'loops-solenoids');
+  let wsRows = 'straight-wire-fields';
+  window.vdWorksheet = () => wsRows;
+  window.vdShowCols = WS_COLS[wsRows];
+  const sig = (v, n) => +(+v).toPrecision(n);
+  const setupName = () => { const b = S.preset && document.querySelector(`#presets [data-p="${S.preset}"]`); return b ? b.textContent : 'own setup'; };
+  function magRow() {
     if (MG.mode === 'bar') {
       const { a, b } = magnetPoles(), F = poleForceX(a, b), ref = poleForceX([[-0.5 - 6, 0, -1], [-0.5, 0, 1]], [[0.5, 0, -1], [6.5, 0, 1]]);
       return { experiment: MG.cut ? 'bar magnets, B cut in half' : 'bar magnets', gap_cm: MG.gap, facing: `N of A, ${MG.flipB ? 'N' : 'S'} of B`, force: F < 0 ? 'attraction' : 'repulsion',
@@ -1874,6 +1885,39 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const Bw = oerstedB(MG.I, MG.h / 100), th = oerstedAngle(MG.I, MG.h / 100, MG.BE * 1e-6), hd = MG.hide;
     return { experiment: 'Oersted', gap_cm: '', facing: '', force: '', F_rel: '', I_A: MG.I, h_cm: MG.h, BE_uT: MG.BE,
       Bw_uT: hd ? '' : +(Bw * 1e6).toPrecision(3), angle_deg: hd ? '' : +(th * 180 / Math.PI).toFixed(1), tan: hd ? '' : +(Bw / (MG.BE * 1e-6)).toPrecision(3) };
+  }
+  /* straight wires: wire 1 and wire 2 as listed, the probe, with exactly two wires the force per meter on wire 1 (positive when
+     it points toward wire 2, so + means attraction), and with the Amperian loop shown, the current through it and
+     the numerical ∮B·dl (the loop's direction gives the sign) */
+  function wireRow() {
+    const ws = S.wires, w1 = ws[0], w2 = ws[1], p = S.probe, b = wireB(ws, p.x, p.y), m = Math.hypot(b[0], b[1]);
+    let F = '';
+    if (ws.length === 2) { const f = wireForce(ws, 0), dx = w2.x - w1.x, dy = w2.y - w1.y, d = Math.hypot(dx, dy); F = d ? sig((f[0] * dx + f[1] * dy) / d * 1e6, 4) : ''; }
+    const row = { setup: setupName(), wires: ws.length, I1_A: w1 ? w1.I : '', I2_A: w2 ? w2.I : '', d_cm: w1 && w2 ? +Math.hypot(w2.x - w1.x, w2.y - w1.y).toFixed(2) : '',
+      probe_cm: `(${p.x.toFixed(1)}, ${p.y.toFixed(1)})`, r_cm: w1 ? +Math.hypot(p.x - w1.x, p.y - w1.y).toFixed(2) : '', B_uT: sig(m * 1e6, 4),
+      dir_deg: m ? +angDeg(b[0], b[1]).toFixed(1) : '', F_uN_m: F, loop: '', Ienc_A: '', circ_uTm: '' };
+    if (S.amp) {
+      const A = ampere(), L = S.loop;
+      if (A.on) return 'A wire sits on the Amperian loop, so ∮B·dl is not defined there. Move the wire or the loop a little.';
+      row.loop = (L.kind === 'circle' ? `circle r = ${L.r.toFixed(1)} cm` : `rectangle ${L.w.toFixed(1)} × ${L.h.toFixed(1)} cm`) + ` at (${L.x.toFixed(1)}, ${L.y.toFixed(1)}), ${S.ccw ? 'counterclockwise' : 'clockwise'}`;
+      row.Ienc_A = +A.Ienc.toFixed(2); row.circ_uTm = Math.abs(A.num.v) < 1e-12 * MU0 * A.sumI ? 0 : sig(A.num.v * 1e6, 6);   /* below the quadrature's error: zero */
+    }
+    return row;
+  }
+  /* loop and solenoid: the probe's field (B_z along the axis, B_ρ away from it), the exact field at the center and, with more
+     than one turn, at an end of the winding (z = L/2), summed over the turns */
+  function sideRow() {
+    const sol = S.sol, turns = solTurns(sol), p = S.sprobe, f = solField(sol, p.z, p.y, turns);
+    return { setup: setupName(), N: sol.N, L_cm: sol.N === 1 ? '' : sol.L, R_cm: sol.R, I_A: sol.I, z_cm: +p.z.toFixed(1), rho_cm: +Math.abs(p.y).toFixed(1),
+      Bz_uT: sig(f[0] * 1e6, 5), Brho_uT: Math.abs(f[1]) < 1e-9 * Math.hypot(f[0], f[1]) ? 0 : sig((p.y < 0 ? -f[1] : f[1]) * 1e6, 4), Bc_uT: sig(axisExact(sol, 0, turns) * 1e6, 5),
+      Bend_uT: sol.N === 1 ? '' : sig(axisExact(sol, sol.L / 2, turns) * 1e6, 5) };
+  }
+  window.vdReadingRow = () => {
+    const ws = wsNow(), n = typeof window.vdReadings === 'function' ? window.vdReadings() : 0;
+    if (n && ws !== wsRows) return 'These readings belong to another worksheet. Export or clear them before recording here.';
+    const r = ws === 'magnets-oersted' ? magRow() : ws === 'straight-wire-fields' ? wireRow() : sideRow();
+    if (typeof r !== 'string') { wsRows = ws; window.vdShowCols = WS_COLS[ws]; }
+    return r;
   };
   new MutationObserver(() => requestAnimationFrame(magDraw)).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector'] });
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => requestAnimationFrame(magDraw)); } catch (_) {}

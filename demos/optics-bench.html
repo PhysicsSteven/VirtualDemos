@@ -156,7 +156,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/dispersion.html" target="dispersion-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/dispersion.html" target="dispersion-worksheet">Worksheet 1: Dispersion</a></li><li><a href="../curriculum/labs/students/mirrors-refraction.html" target="mirrors-refraction-worksheet">Worksheet 2: Mirrors and Refracting Surfaces</a></li><li><a href="../curriculum/labs/students/lenses-instruments.html" target="lenses-instruments-worksheet">Worksheet 3: Lenses and Optical Instruments</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -2266,15 +2266,61 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
 
-  /* a reading for the Readings section (tools/readings_panel.py): the selected glass element's index at each wavelength, one row
-     each, and for a prism its deviation at minimum deviation (the prism's apex is 60°) */
-  window.vdShowCols = [['material', 'Material'], ['lam_nm', 'λ (nm)'], ['n', 'n'], ['dev_deg', 'δ (°)']];
-  window.vdReadingRow = () => {
-    if (!sel || !['prism', 'block', 'semi'].includes(sel.kind)) return 'Select a glass block, prism or semicircle to record its index.';
+  /* a reading for the Readings section (tools/readings_panel.py). Three worksheets share it. With a glass block, prism or
+     semicircle selected: its index at eight wavelengths, one row each, and for a prism its deviation at minimum deviation (the
+     prism's apex is 60°) (dispersion). Otherwise the image readouts: a mirror or refracting surface goes to mirrors-refraction;
+     a lens, or two lenses as a microscope or telescope, to lenses-instruments. Distances follow the signs in the Image section;
+     d_i and m are the traced ones. Readings for different worksheets are not mixed in one table. */
+  const WS_COLS = {
+    dispersion: [['material', 'Material'], ['lam_nm', 'λ (nm)'], ['n', 'n'], ['dev_deg', 'δ (°)']],
+    'mirrors-refraction': [['element', 'Element'], ['do_cm', 'd_o (cm)'], ['di_cm', 'd_i (cm)'], ['m', 'm']],
+    'lenses-instruments': [['setup', 'Setup'], ['do_cm', 'd_o (cm)'], ['di_cm', 'd_i (cm)'], ['M', 'M']]
+  };
+  let wsRows = 'dispersion';
+  window.vdWorksheet = () => wsRows;
+  window.vdShowCols = WS_COLS[wsRows];
+  const r2 = (v) => +v.toFixed(2), r3 = (v) => +v.toFixed(3);
+  function glassRows() {
     const mat = sel.glass ? GLASSES[sel.glass].name : `Adjustable n = ${sel.n} (dispersion exaggerated)`;
     return [400, 450, 500, 550, 589.3, 600, 650, 700].map((lam) => { const n = nAt(sel, lam);
       return { element: NAMES[sel.kind], material: mat, lam_nm: lam, n: +n.toFixed(5), dev_deg: sel.kind !== 'prism' ? '' : isFinite(minDeviation(n, Math.PI / 3)) ? +deg(minDeviation(n, Math.PI / 3)).toFixed(3) : 'none: total internal reflection' }; });
+  }
+  const imgKind = (im) => im.inf ? 'at infinity' : (im.real ? 'real' : 'virtual') + ', ' + (im.m > 0 ? 'upright' : 'inverted');
+  function imageRow() {
+    const fd = frameData, im = fd ? fd.image : null, ins = fd ? fd.inst : null;
+    if (ins && !ins.why) {
+      const base = { setup: ins.kind === 'microscope' ? 'Microscope' : 'Telescope', f_cm: ins.fO, f_eye_cm: ins.fE, sep_cm: r2(ins.sep) };
+      if (ins.kind === 'telescope') {
+        if (!ins.n) return 'No beam rays pass through both lenses.';
+        if (!ins.parallel) return 'The beam leaving the eyepiece is not parallel: set the lenses f_obj + f_eye apart first.';
+        if (Math.abs(ins.sIn) <= 1e-4) return 'Tilt the beam a little to measure the magnification.';
+        return { ws: 'lenses-instruments', row: Object.assign(base, { do_cm: '', di_cm: '', m: '', M: r3(ins.Mtr),
+          image: 'parallel, out at ' + deg(Math.atan(ins.sOut)).toFixed(2) + '°, in at ' + deg(Math.atan(ins.sIn)).toFixed(2) + '°' }) };
+      }
+      if (!ins.n) return 'No object rays pass through both lenses.';
+      if (ins.dItr == null) return "The objective's image is at infinity. Move the object a little farther from the objective.";
+      const gap = ins.sep - ins.dItr;
+      return { ws: 'lenses-instruments', row: Object.assign(base, { do_cm: r2(ins.dO), di_cm: r2(ins.dItr), m: r3(ins.mObjTr), M: ins.Mtr != null ? r3(ins.Mtr) : '',
+        image: Math.abs(gap - ins.fE) < 0.05 && ins.parallel ? 'final image at infinity' : "not at infinity: the objective's image is " + gap.toFixed(2) + ' cm from the eyepiece' }) };
+    }
+    if (!im || !im.E) return 'Add an object arrow and aim its rays at one lens, mirror or refracting surface (or two lenses) to record an image.';
+    const E = im.E, di = im.inf ? '∞' : r2(im.dI), m = im.inf ? '∞' : r3(im.m);
+    if (E.kind === 'lens') return { ws: 'lenses-instruments', row: { setup: E.f > 0 ? 'Converging lens' : 'Diverging lens', f_cm: E.f, f_eye_cm: '', sep_cm: '', do_cm: r2(im.dO), di_cm: di, m, M: '', image: imgKind(im) } };
+    const surf = E.kind === 'surf', R = surf ? surfR(E) : E.shape === 'plane' ? Infinity : signedR(E);
+    return { ws: 'mirrors-refraction', row: { element: itemName(E), n1: surf ? E.n1 : '', n2: surf ? E.n2 : '', R_cm: isFinite(R) ? R : '∞',
+      f_cm: surf ? '' : isFinite(R) ? R / 2 : '∞', do_cm: r2(im.dO), di_cm: di, m, image: imgKind(im) } };
+  }
+  window.vdReadingRow = () => {
+    let ws, r;
+    if (sel && isGlass(sel)) { ws = 'dispersion'; r = glassRows(); }
+    else { const x = imageRow(); if (typeof x === 'string') return x; ws = x.ws; r = x.row; }
+    const n = typeof window.vdReadings === 'function' ? window.vdReadings() : 0;
+    if (n && ws !== wsRows) return 'These readings belong to another worksheet. Export or clear them before recording here.';
+    wsRows = ws; window.vdShowCols = WS_COLS[ws];
+    return r;
   };
+  /* for the worksheet key scripts: the items on the bench, select one, redraw */
+  window.__ob = { get items() { return items; }, get sel() { return sel; }, select(i) { sel = i; schedule(); }, schedule, preset: (name) => document.querySelector(`#presets [data-p="${name}"]`).click() };
 
   // ---------- boot ----------
   items = PRESETS.converging();

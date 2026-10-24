@@ -6774,11 +6774,13 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Lecture demonstration only. Parallel-current force and dipole torque support selected magnetic-force topics; no new handout requested.",
+      "note": "Straight wires (fields, forces, Ampère’s law), loop and solenoid, and magnets with Oersted’s compass, each with a worksheet.",
       "title": "Magnetic Fields of Currents",
       "url": "demos/currents-fields.html",
       "handouts": [
-        "magnets-oersted"
+        "magnets-oersted",
+        "straight-wire-fields",
+        "loops-solenoids"
       ]
     },
     {
@@ -8463,7 +8465,9 @@
       "title": "Optics Bench",
       "url": "demos/optics-bench.html",
       "handouts": [
-        "dispersion"
+        "dispersion",
+        "mirrors-refraction",
+        "lenses-instruments"
       ]
     },
     {
