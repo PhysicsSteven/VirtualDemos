@@ -71,9 +71,9 @@ Save separate slow flow, tube comparison and diagnostic runs. Record temperature
 ## Analysis
 
 1. Fit uncorrected $$v$$ against $$d^2$$ in each tube. Calculate the apparent viscosity and explain its tube dependence.
-2. Fit $$Kv$$ against $$d^2$$ using the accepted low-$$\mathrm{Re}$$ points. Infer $$\eta$$ from the slope and compare the two tubes. Inspect residuals rather than judging agreement from the slope alone.
+2. Fit $$Kv$$ against $$d^2$$ using the accepted points at low $$\mathrm{Re}$$. Infer $$\eta$$ from the slope and compare the two tubes. Inspect residuals rather than judging agreement from the slope alone.
 3. Calculate $$\mathrm{Re}$$ from your own inferred viscosity. If it invalidates the selected range, revise the fit or state that the approximation is inadequate.
-4. Explain the large-ball/water diagnostic results. Separate wall effects, finite-$$\mathrm{Re}$$ drag and failure to reach terminal speed; a single anomalous time does not identify one cause uniquely.
+4. Explain the results of the large ball and water diagnostics. Separate wall effects, drag at finite $$\mathrm{Re}$$ and failure to reach terminal speed; a single anomalous time does not identify one cause uniquely.
 
 ## Uncertainty
 
@@ -84,7 +84,7 @@ The virtual gate time rounds to 0.01 s. Ball and tube diameters are specified mo
 1. Why does a wider tube usually improve agreement with unbounded Stokes' law?
 2. Why can a straight looking graph still give a biased viscosity?
 3. Why is a nylon ball in glycerol unsuitable for the same downward fall procedure?
-4. Why does multiplying speed by a wall factor not make a high-$$\mathrm{Re}$$ experiment a Stokes experiment?
+4. Why does multiplying speed by a wall factor not make an experiment at high $$\mathrm{Re}$$ a Stokes experiment?
 
 ## What to hand in
 

@@ -12,16 +12,16 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§10.4, 10.6–10.7 and 11.1�
 
 **Using the demo.**
 
-- Drag the push point along the door and drag the arrow tip to aim and size the force. Keys: <kbd>←</kbd> <kbd>→</kbd> move the push point, <kbd>↑</kbd> <kbd>↓</kbd> turn the force, <kbd>+</kbd> <kbd>−</kbd> change its size, <kbd>Enter</kbd> pushes.
-- Drag the round grip at the top of the lowest board to tilt the ramp. Keys: <kbd>↑</kbd> <kbd>↓</kbd> tilt, <kbd>1</kbd>–<kbd>5</kbd> select a lane, <kbd>Enter</kbd> races.
+- Door: drag the push point along the door and drag the arrow tip to aim and size the force. Keys: <kbd>←</kbd> <kbd>→</kbd> move the push point, <kbd>↑</kbd> <kbd>↓</kbd> turn the force, <kbd>+</kbd> <kbd>−</kbd> change its size, <kbd>Enter</kbd> pushes.
+- Rolling race: drag the round grip at the top of the lowest board to tilt the ramp. Keys: <kbd>↑</kbd> <kbd>↓</kbd> tilt, <kbd>1</kbd>–<kbd>5</kbd> select a lane, <kbd>Enter</kbd> races.
 - Click an object to select it. Change its mass and radius, even mid race: the motion does not change, only the energies in joules and the size.
 - Every object that rolls without slipping loses the same potential energy $$mgh$$, but part of it goes into spinning. The larger $$I/mR^2$$, the bigger that share, and the slower it goes down. The frictionless block puts it all into sliding, so it wins.
 - Assumes enough static friction to roll without slipping, no rolling resistance and no air drag; static friction does no work on a rolling object. Objects are drawn larger than scale.
-- Drag a mass in or out. Keys: <kbd>↑</kbd> <kbd>↓</kbd> move the masses out and in, <kbd>Space</kbd> plays or pauses. Moving the masses only pulls along the radius, so there is no torque and $$L$$ stays the same. The spin rate slider and the mass sliders reset the system, as if someone outside gave it a twist.
+- Skater: drag a mass in or out. Keys: <kbd>↑</kbd> <kbd>↓</kbd> move the masses out and in, <kbd>Space</kbd> plays or pauses. Moving the masses only pulls along the radius, so there is no torque and $$L$$ stays the same. The spin rate slider and the mass sliders reset the system, as if someone outside gave it a twist.
 - With $$L$$ fixed, $$KE = L^2/2I$$, so the kinetic energy grows by the same factor that $$I$$ shrinks. $$\omega$$ grows by that factor too, which is why the $$\omega$$ and $$KE$$ lines on the chart lie on top of each other. The extra energy is work done by your arms: they pull each mass toward the axis, and the masses move inward along that pull.
-- Drag the blocks along the beam. Keys: <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> pick a block, <kbd>←</kbd> <kbd>→</kbd> move it, <kbd>Enter</kbd> releases or holds the beam.
+- Seesaw: drag the blocks along the beam. Keys: <kbd>1</kbd> <kbd>2</kbd> <kbd>3</kbd> pick a block, <kbd>←</kbd> <kbd>→</kbd> move it, <kbd>Enter</kbd> releases or holds the beam.
 - A block on the left ($$x < 0$$) twists the beam counterclockwise, one on the right clockwise. Balanced means $$m_1x_1 + m_2x_2 + m_3x_3 = 0$$: a heavy block close in matches a light block far out. Uniform 4 m beam of 10 kg pivoted at its center, so its own weight has no torque. Blocks are treated as point masses fixed on the beam's center line.
-- Tables of the values drawn in the charts for this scene, for readers who cannot see the plots.
+- Show data table lists the values drawn in the charts for the current scene.
 
 </details>
 

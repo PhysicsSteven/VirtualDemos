@@ -41,7 +41,7 @@ Use metres for extension when applying that formula. After yielding, unloading c
 ## Before the lab
 
 1. Predict how doubling diameter changes extension at the same load, length and material.
-2. What are the units of the $$F$$-versus-$$\Delta L$$ slope and of Young's modulus?
+2. What are the units of the slope of $$F$$ against $$\Delta L$$ and of Young's modulus?
 3. How would you test whether a measured extension is elastic?
 
 ## Safety
@@ -81,7 +81,7 @@ The virtual dial rounds to 0.001 mm. Diameter controls are specified settings in
 
 ## Questions
 
-1. Why do thicker wires have steeper $$F$$-versus-$$\Delta L$$ graphs but not necessarily larger Young's moduli?
+1. Why do thicker wires have steeper graphs of $$F$$ against $$\Delta L$$ but not necessarily larger Young's moduli?
 2. Can a material be stiff yet have a low yield stress?
 3. Why can an unloaded yielded wire remain longer even though its stress is zero?
 4. Why should you avoid fitting one straight line through elastic and plastic loading points?

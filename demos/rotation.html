@@ -665,7 +665,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       if (SP.pull) {
         SP.pull.t += h;
         SP.r = pullProfile(SP.pull.r1, SP.pull.r2, SP.pull.Tm, SP.pull.t)[0];
-        if (SP.pull.t >= SP.pull.Tm) { SP.r = SP.pull.r2; SP.pull = null; }
+        if (SP.pull.t >= SP.pull.Tm) { SP.r = SP.pull.r2; SP.pull = null; syncSliders(); /* the radius slider and its readout follow the pull */ }
       }
       SP.phi += 0.5 * (w0 + spinW()) * h;
       SP.t += h;

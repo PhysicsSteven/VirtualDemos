@@ -1,5 +1,5 @@
 # Chladni Patterns and Plate Resonances
-Student laboratory · Waves / Acoustics
+Student laboratory · Acoustics
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/chladni.html)
 

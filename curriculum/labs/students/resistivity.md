@@ -46,7 +46,7 @@ If $$R = b + kT$$ with $$T$$ in degrees Celsius, then $$R_{20} = b + 20k$$ and $
 
 1. Predict what happens to resistance if length doubles or diameter doubles.
 2. Why would changing temperature during a length scan bias the result?
-3. In an $$R$$-versus-$$T$$ fit, why is the intercept at 0 °C different from $$R_{20}$$?
+3. In a fit of $$R$$ against $$T$$, why is the intercept at 0 °C different from $$R_{20}$$?
 
 ## Safety
 

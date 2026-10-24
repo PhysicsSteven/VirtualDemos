@@ -1,7 +1,7 @@
 # Van de Graaff Generator
 Student laboratory · Physics II
 
-Textbook: OpenStax *University Physics*, Vol. 2, §7.6 (and §7.3, §8.2). Access for free at https://openstax.org/details/books/university-physics-volume-2.
+Textbook: OpenStax *University Physics*, Vol. 2, §7.6 (and §7.3, §8.1, §8.3). Access for free at https://openstax.org/details/books/university-physics-volume-2.
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/electrostatics-at-work.html)
 

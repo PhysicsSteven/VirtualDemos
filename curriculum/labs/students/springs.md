@@ -40,7 +40,7 @@ $$E=\frac12mv^2+\frac12kx^2.$$
 ## Before the lab
 
 1. Predict the change in $$T$$ when $$m$$ doubles.
-2. What are the units of the $$T^2$$-versus-$$m$$ slope, and how do they give $$k$$ in N/m?
+2. What are the units of the slope of $$T^2$$ against $$m$$, and how do they give $$k$$ in N/m?
 3. Does the ideal period depend on release amplitude?
 
 ## Safety
@@ -87,4 +87,4 @@ For automatic periods use the displayed/CSV resolution and the stability of succ
 
 ## What to hand in
 
-Prelab answers, settings and CSV, the $$T^2$$-versus-$$m$$ graph and residuals, $$k$$ with uncertainty, the amplitude comparison and answers to the questions. Identify simulated data.
+Prelab answers, settings and CSV, the graph of $$T^2$$ against $$m$$ with residuals, $$k$$ with uncertainty, the amplitude comparison and answers to the questions. Identify simulated data.

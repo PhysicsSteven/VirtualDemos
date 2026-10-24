@@ -1141,7 +1141,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     capStatus(`${hand.rows.length} rows sent to the worksheet. `);
     const a = document.createElement('a'); a.href = '../curriculum/labs/students/timbre.html'; a.target = 'timbre-worksheet'; a.textContent = 'Open the worksheet'; a.style.color = 'var(--accent)'; $('capStatus').appendChild(a);
   });
-  $('randPh').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.ph[n] = Math.round(Math.random() * 72) * PI / 36; edited(false); });
+  $('randPh').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.ph[n] = Math.round(Math.random() * 72) * PI / 36; /* a phase only change keeps the preset's name: the spectrum is the same */ recompute(); readouts(); soundDirty = true; });
   $('zeroPh').addEventListener('click', () => { for (let n = 1; n <= NH; n++) S.ph[n] = 0; edited(false); });
   $('showDials').addEventListener('change', (e) => { S.showDials = e.target.checked; dirty = true; });
   $('detN').addEventListener('input', (e) => { S.detN = +e.target.value; recompute(); readouts(); soundDirty = true; });

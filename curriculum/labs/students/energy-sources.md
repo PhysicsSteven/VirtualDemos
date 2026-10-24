@@ -39,7 +39,7 @@ This is a reading/calculation activity. Do not inspect live electrical equipment
 
 ## Data
 
-| Utility-scale source/category | 2024 generation (thousand MWh) | Share (%) | Energy (J) | Annual average power (GW) |
+| Utility scale source or category | 2024 generation (thousand MWh) | Share (%) | Energy (J) | Annual average power (GW) |
 |---|---|---|---|---|
 | Coal | 652,156 | | | |
 | Natural gas | 1,869,902 | | | |

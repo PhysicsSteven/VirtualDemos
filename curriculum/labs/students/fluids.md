@@ -10,6 +10,20 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§14.1–14.6. Access for fre
 
 **Setups in the demo:** Pressure grows with depth; Floating and sinking; Iceberg; Weighing in water (Archimedes); Venturi tube; Torricelli's tank.
 
+**Using the demo.**
+
+- Pressure: drag the probe up and down, or set the depth exactly on the Set up card, and read the depth ruler and the pressure gauge. Gauge and Absolute switch what the gauge shows.
+- Buoyancy: drag the block anywhere and let go; drag the grip on its corner to resize it. With the spring scale on, drag the scale up and down to lower the block into the liquid, and wait for the reading to settle.
+- Flow: drag the grip on the throat wall to narrow or widen it, the grip on the inlet wall for $$D_1$$, the round grip on the arrow for the inlet speed and the first standpipe's level for the inlet pressure.
+- Capture reading stores the current readings; Export to worksheet sends them here. Blind hides the model graph, the formula line, the force arrows, the computed pressures and $$\Delta h$$ and the worked numbers in the hints; the instruments stay.
+
+**What the demo models.**
+
+- $$g = 9.80665\ \text{m/s}^2$$ and standard air pressure $$P_0 = 101.325\ \text{kPa}$$ on every free surface. Liquids: water 1000, oil 920, seawater 1025 and mercury 13 595 kg/m³, all incompressible.
+- Pressure: a liquid at rest, $$P = P_0 + \rho g d$$; the gauge reads to 10 Pa.
+- Buoyancy: a cube in a tank 50 cm by 30 cm, pushed up by $$\rho_f V_{\rm sub} g$$, with a small linear drag so it settles; the spring scale reads the string tension.
+- Flow: ideal flow (incompressible, inviscid, steady, uniform across each section) in a horizontal pipe; each open standpipe shows the gauge pressure at the pipe axis. If the throat pressure would fall below the liquid's vapor pressure (2339 Pa for water) the demo flags cavitation and the ideal result no longer describes a real flow.
+
 </details>
 
 ## Goal

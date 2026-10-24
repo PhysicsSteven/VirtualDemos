@@ -1,5 +1,5 @@
 # Doppler Shift of Sound
-Student laboratory · Physics I / Acoustics
+Student laboratory · Acoustics
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/doppler.html)
 

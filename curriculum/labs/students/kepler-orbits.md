@@ -31,7 +31,7 @@ For a light body orbiting central mass $$M$$ (§13.5),
 
 $$T^2=\frac{4\pi^2}{GM}a^3.$$
 
-Here $$a$$ is the semimajor axis, not the instantaneous distance from the star. For a bound orbit (§§13.3–13.4),
+Here $$a$$ is the semi major axis, not the instantaneous distance from the star. For a bound orbit (§§13.3–13.4),
 
 $$\frac{E}{m}=-\frac{GM}{2a},\qquad v^2=GM\left(\frac{2}{r}-\frac1a\right).$$
 
@@ -59,7 +59,7 @@ For an analogous real rotating apparatus, follow the instructor's speed limits a
 
 ## Data
 
-| Orbit | $$M$$ (solar masses) | Major-axis ruler distance (AU) | $$a$$ (AU) | $$T$$ (yr) | $$a^3$$ (AU³) | $$T^2$$ (yr²) |
+| Orbit | $$M$$ (solar masses) | Major axis ruler distance (AU) | $$a$$ (AU) | $$T$$ (yr) | $$a^3$$ (AU³) | $$T^2$$ (yr²) |
 |---|---|---|---|---|---|---|
 | | | | | | | |
 | | | | | | | |

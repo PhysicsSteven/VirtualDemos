@@ -1,5 +1,5 @@
 # Resonance Tube: Speed of Sound
-Student laboratory · acoustics
+Student laboratory · Acoustics
 
 [Open Resonators](https://physicssteven.github.io/VirtualDemos/demos/resonators.html)
 

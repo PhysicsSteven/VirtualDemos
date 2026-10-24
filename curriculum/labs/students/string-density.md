@@ -1,5 +1,7 @@
 # Linear Density of a String
-Student laboratory · Physics I / Acoustics
+Student laboratory · Physics II
+
+Textbook: OpenStax *University Physics*, Vol. 1, §16.3 and §16.6. Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/string-density.html)
 

@@ -1,5 +1,5 @@
 # Acoustic Levitation
-Student laboratory · acoustics
+Student laboratory · Acoustics
 
 [Open Acoustic Levitation](https://physicssteven.github.io/VirtualDemos/demos/acoustic-levitation.html)
 

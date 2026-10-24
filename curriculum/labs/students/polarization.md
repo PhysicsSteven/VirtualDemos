@@ -42,7 +42,7 @@ the $$p$$ component is not reflected at all, so the reflected light is completel
 
 1. Unpolarized light of intensity $$I_0$$ passes a polarizer with a vertical axis and then a second polarizer with its axis at 30° from vertical. What fraction of $$I_0$$ gets through?
 2. Two polarizers are crossed (axes at 0° and 90°). A third is put between them with its axis at 45°. What fraction of the unpolarized light now gets through? Show that with the middle axis at an angle $$\theta$$ the fraction is $$\tfrac{1}{8}\sin^2 2\theta$$.
-3. Find the Brewster angle for light in air reflecting from glass ($$n = 1.50$$) and from water ($$n = 1.333$$).
+3. Find the Brewster angle for light in air reflecting from glass ($$n = 1.50$$) and from water ($$n = 1.33$$).
 4. Light in air meets glass ($$n = 1.50$$) straight on. What fraction is reflected? (At normal incidence $$R = \big((n_1 - n_2)/(n_1 + n_2)\big)^2$$ for either polarization.)
 
 ## Safety
@@ -91,7 +91,7 @@ The model is exact for ideal elements, and the readings are given to six figures
 ## Questions
 
 1. Can sound in air be polarized? Why or why not?
-2. In the Many polarizers fold, light passes $$N$$ polarizers, each turned $$90°/N$$ more than the last, ending crossed with the first. Read the fraction that gets through for $$N = 1, 2, 6$$ and $$30$$. Show that each step passes $$\cos^2(90°/N)$$, and explain why the total grows toward 1 as $$N$$ grows.
+2. In the Many polarizers fold, light passes $$N$$ polarizers, each turned $$90°/N$$ more than the last, so that the last is crossed with the light's original polarization. Read the fraction that gets through for $$N = 1, 2, 6$$ and $$30$$. Show that each step passes $$\cos^2(90°/N)$$, and explain why the total grows toward 1 as $$N$$ grows.
 3. You tilt your head while wearing polarized sunglasses and look at the glare from a wet road. What happens to the glare, and why?
 4. How could you tell, using only a second pair, whether a pair of sunglasses is polarizing?
 

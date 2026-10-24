@@ -1,5 +1,5 @@
 # Timbre and Harmonics
-Student laboratory · acoustics
+Student laboratory · Acoustics
 
 [Open Timbre and Harmonics](https://physicssteven.github.io/VirtualDemos/demos/timbre.html)
 

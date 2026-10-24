@@ -1,5 +1,7 @@
 # Standing Waves: Finding Resonances on a String
-Student laboratory · Physics I / Acoustics
+Student laboratory · Physics II / Acoustics
+
+Textbook: OpenStax *University Physics*, Vol. 1, §§16.1–16.3, 16.5 and 16.6. Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/standing-waves.html)
 
@@ -31,7 +33,7 @@ On a real vibrating string bench, secure the string and hanging masses, keep han
 
 ## Procedure
 
-**Harmonic scan.** Investigate a driven string at fixed length, tension and linear density. Find and record the first six resonance frequencies, counting antinodes to identify each harmonic. Keep the same drive amplitude and damping setting throughout. Record the frequency at the response maximum rather than assuming that a nearby rounded setting is exact.
+**Harmonic scan.** Investigate a driven string at fixed length, tension and linear density. Find and record the first six resonance frequencies, counting antinodes to identify each harmonic. Keep the same damping setting throughout; the driver's amplitude is fixed. Record the frequency at the response maximum rather than assuming that a nearby rounded setting is exact.
 
 **Tension check.** Keep the same string and length. Measure the fundamental resonance at three different tensions. Test whether $$f_1^2$$ is proportional to $$T$$.
 
