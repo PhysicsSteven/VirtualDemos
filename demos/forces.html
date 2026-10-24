@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>.rail details.more > p + p { margin-top: 6px; }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 .rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
@@ -64,6 +65,9 @@ table.rows input:focus { border-color: var(--accent); }
 :root:not([data-theme="dark"]) .instr { background: linear-gradient(180deg, #f1f4f7, #d9dfe6); color: #1d252f; border: 1px solid #b9c2cc; box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 2px 6px rgba(20, 30, 45, 0.18); }
 :root:not([data-theme="dark"]) .instr .kctl label, :root:not([data-theme="dark"]) .instr .kctl .klab { color: #3a4552; }
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .instr { background: #2c3542; color: #e3e8ef; border: 0; box-shadow: 0 2px 0 rgba(0, 0, 0, 0.25); } :root:not([data-theme="light"]) .instr .kctl label, :root:not([data-theme="light"]) .instr .kctl .klab { color: #c9d0d9; } }
+#viewSeg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+#viewSeg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+#viewSeg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 .scene { position: absolute; inset: 0; }
 .instr { left: 12px; top: 58px; max-width: calc(60% - 24px); }
 @media (max-width: 820px) {
@@ -103,6 +107,7 @@ table.rows input:focus { border-color: var(--accent); }
         <button type="button" class="spin attn" id="go">Release</button>
         <button type="button" class="spin" id="back">Put back</button>
         <button type="button" class="spin" id="timed">Release at the top mark</button>
+        <div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div>
       </div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
       </div>
@@ -353,6 +358,154 @@ table.rows input:focus { border-color: var(--accent); }
     requestAnimationFrame(frame);
   }
 
+  // ---------- 3D view of the apparatus (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
+  /* The ramp frame: s up the ramp from the hinge, u out of the ramp's surface, y across it (away from the viewer). The rig turns by θ
+     about y. Ramp (3.0 m), block (0.32 m), pulley (0.09 m radius) and the drop of the hanging mass are to scale, as in the flat view; the
+     room and the spring scale's body are scenery. Drag to turn the view, wheel or pinch to zoom, double click to reset. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', geo: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.38, ph: 1.22, zoom: 1 } };
+  const BS = 0.32, PR = 0.09, TB = 0.07, RW = 0.5;   /* block side, pulley radius, board thickness, board width (m) */
+  let g3 = null, rect3 = { x: 0, y: 0, w: 0, h: 0 };
+  const use3 = () => !!(G3.on && g3);
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function woodCanvas(w, h, base, grainCol, n, seed) {   /* a plank's face: base colour with streaks of grain, from a seeded generator */
+    const c = document.createElement('canvas'); c.width = w; c.height = h; const x = c.getContext('2d'), r = seeded(seed);
+    x.fillStyle = base; x.fillRect(0, 0, w, h); x.strokeStyle = grainCol; x.lineWidth = 2;
+    for (let i = 0; i < n; i++) { const y = r() * h, a = r() * 0.4, ph = r() * 6.28; x.globalAlpha = 0.18 + r() * 0.25; x.beginPath(); x.moveTo(0, y);
+      for (let k = 1; k <= 24; k++) x.lineTo(k / 24 * w, y + Math.sin(ph + k * a) * h * 0.02); x.stroke(); }
+    x.globalAlpha = 1; return c;
+  }
+  function init3D() {
+    G3.tried = true;
+    const rd = VD3.renderer(); if (!rd) return false;
+    rd.shadowMap.enabled = true; rd.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = rd.domElement; el.setAttribute('aria-hidden', 'true'); el.style.position = 'absolute'; $('scene').insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.05, 80), M = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.55), sun = new THREE.DirectionalLight(0xffffff, 0.8); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048); sun.shadow.radius = 4;
+    Object.assign(sun.shadow.camera, { left: -4, right: 4, top: 4, bottom: -4, near: 0.5, far: 20 });
+    scene.add(hemi, sun, sun.target);
+    const mesh = (g, m, cast = true, recv = true) => { const x = new THREE.Mesh(g, m); x.castShadow = cast; x.receiveShadow = recv; return x; };
+    const tex = (c) => { const t = new THREE.CanvasTexture(c); t.anisotropy = rd.capabilities.getMaxAnisotropy(); return t; };
+    /* room: a floor of boards and a brick wall, both textures drawn in theme colours */
+    const floorCv = document.createElement('canvas'); floorCv.width = floorCv.height = 512; const floorTex = tex(floorCv); floorTex.wrapS = floorTex.wrapT = THREE.RepeatWrapping; floorTex.repeat.set(10, 5);
+    const floorM = M({ map: floorTex, roughness: 0.85 }), floor = mesh(new THREE.PlaneGeometry(20, 10), floorM, false, true);
+    const wallCv = document.createElement('canvas'); wallCv.width = wallCv.height = 512; const wallTex = tex(wallCv); wallTex.wrapS = wallTex.wrapT = THREE.RepeatWrapping; wallTex.repeat.set(10, 2.5);
+    const wallM = M({ map: wallTex, roughness: 0.95 }), wall = mesh(new THREE.PlaneGeometry(20, 5), wallM, false, true); wall.rotation.x = Math.PI / 2;
+    /* the bench a hanging mass needs: top and legs */
+    const benchCv = woodCanvas(1024, 128, '#c49c6b', '#8a6338', 30, 11), benchTex = tex(benchCv), benchM = M({ map: benchTex, roughness: 0.7 }), legM = M({ roughness: 0.7 });
+    const bench = new THREE.Group(), bTop = mesh(new THREE.BoxGeometry(1, 0.7, 0.05), benchM), bLegs = [0, 1, 2, 3].map(() => mesh(new THREE.BoxGeometry(0.06, 0.06, 1), legM)); bench.add(bTop, ...bLegs);
+    /* the rig: board, hinge, block, pulley and its clamp; the post and base strip stand in room coordinates */
+    const rig = new THREE.Group();
+    const boardCv = woodCanvas(2048, 256, '#d6b88f', '#8a6338', 46, 7), boardTex = tex(boardCv), boardM = M({ map: boardTex, roughness: 0.6 }), boardEdgeM = M({ roughness: 0.7 });
+    const board = mesh(new THREE.BoxGeometry(LEN + 0.3, RW, TB), [boardEdgeM, boardEdgeM, boardEdgeM, boardEdgeM, boardM, boardEdgeM]); board.position.set((LEN - 0.3) / 2, 0, -TB / 2);
+    const metalM = M({ roughness: 0.35, metalness: 0.7 }), metalDarkM = M({ roughness: 0.4, metalness: 0.6 });
+    const hinge = mesh(new THREE.CylinderGeometry(0.025, 0.025, RW + 0.04, 20), metalM); hinge.position.set(0, 0, -0.025);
+    const blockCv = woodCanvas(256, 256, '#c9a77a', '#8a6338', 12, 3), blockTex = tex(blockCv), blockM = M({ map: blockTex, roughness: 0.65 });
+    const labelCv = document.createElement('canvas'); labelCv.width = 256; labelCv.height = 256; const labelTex = tex(labelCv), labelM = M({ map: labelTex, roughness: 0.65 });
+    const block = mesh(new THREE.BoxGeometry(BS, BS, BS), [blockM, blockM, blockM, labelM, blockM, blockM]);
+    const pulley = new THREE.Group(), wheel = mesh(new THREE.CylinderGeometry(PR, PR, 0.03, 40), metalM), groove = mesh(new THREE.TorusGeometry(PR, 0.006, 8, 40).rotateX(Math.PI / 2), metalDarkM);
+    const spokes = mesh(new THREE.BoxGeometry(PR * 1.7, 0.034, 0.012), metalDarkM), spokes2 = spokes.clone(); spokes2.rotation.y = Math.PI / 2; pulley.add(wheel, groove, spokes, spokes2);
+    const clampRod = mesh(new THREE.CylinderGeometry(0.01, 0.01, 1, 12), metalM), clampBox = mesh(new THREE.BoxGeometry(0.05, RW * 0.5, 0.05), metalDarkM);
+    const lineG = (n) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); return g; };
+    const stringM = new THREE.LineBasicMaterial({ color: 0x222222 }), stringA = new THREE.Line(lineG(2), stringM), stringB = new THREE.Line(lineG(2), stringM);
+    /* the hanger and its slotted masses (one 1 kg slot per kilogram, up to 8, as in the flat view) */
+    const hanger = new THREE.Group(), hookM = M({ roughness: 0.35, metalness: 0.7 }), slotM = M({ roughness: 0.45, metalness: 0.5 });
+    const slots = Array.from({ length: 8 }, () => mesh(new THREE.CylinderGeometry(1, 1, 1, 32).rotateX(Math.PI / 2), slotM)), hookRod = mesh(new THREE.CylinderGeometry(0.004, 0.004, 1, 8).rotateX(Math.PI / 2), hookM), hBase = mesh(new THREE.CylinderGeometry(1, 1, 0.006, 32).rotateX(Math.PI / 2), hookM);
+    hanger.add(hookRod, hBase, ...slots);
+    /* the pull: a cord from the block's front face to a spring scale held in the direction of F */
+    const scaleG = new THREE.Group(), scBody = mesh(new THREE.CylinderGeometry(0.022, 0.022, 0.2, 20), M({ roughness: 0.4, metalness: 0.3, color: 0xd9dee4 })), scCap = mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.025, 20), M({ roughness: 0.5, color: 0x6f4bb3 }));
+    scCap.position.y = 0.11; const scRing = mesh(new THREE.TorusGeometry(0.03, 0.005, 8, 24), hookM); scRing.position.y = 0.15; scaleG.add(scBody, scCap, scRing);
+    const cordF = new THREE.Line(lineG(2), stringM);
+    /* the timer's two marks across the board */
+    const markM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.85 }), marks = [0, 1].map(() => mesh(new THREE.BoxGeometry(0.012, RW + 0.02, 0.002), markM, false, false));
+    rig.add(board, hinge, block, pulley, clampRod, clampBox, ...marks);
+    const post = mesh(new THREE.BoxGeometry(0.06, 0.06, 1), boardEdgeM), strip = mesh(new THREE.BoxGeometry(1, 0.05, 0.008), metalM);
+    scene.add(floor, wall, bench, rig, post, strip, stringA, stringB, hanger, scaleG, cordF);
+    g3 = { rd, el, scene, cam, hemi, sun, floorCv, floorTex, floorM, floor, wallCv, wallTex, wallM, wall, bench, bTop, bLegs, benchM, legM, rig, board, boardM, boardEdgeM, hinge, block, blockM, labelCv, labelTex, labelM, pulley, clampRod, clampBox,
+      stringA, stringB, stringM, hanger, hookRod, hBase, slots, slotM, scaleG, cordF, marks, markM, post, strip, metalM, metalDarkM, label: '', tmp: new THREE.Vector3() };
+    can.addEventListener('wheel', (e) => { if (!use3() || !in3(e)) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || !in3(e), phMin: 0.3, phMax: 1.5, zMin: 0.5, zMax: 3, keys: false });
+    can.addEventListener('pointerup', () => { if (!use3()) can.style.cursor = ''; });
+    return true;
+  }
+  const in3 = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; return x >= rect3.x && x < rect3.x + rect3.w && y >= rect3.y && y < rect3.y + rect3.h; };
+  function theme3() {
+    const g = g3, dk = VD3.dark(), bg = col3(T.wall, '#eef1f5');
+    g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 9, 22);
+    g.hemi.intensity = dk ? 0.7 : 0.55; g.sun.intensity = dk ? 0.75 : 0.8; g.hemi.groundColor = col3(dk ? '#2a241d' : '#8c7a60', '#8c7a60');
+    { const c = g.floorCv.getContext('2d'); c.fillStyle = T.floor; c.fillRect(0, 0, 512, 512); c.strokeStyle = T.floorLine; c.lineWidth = 6; for (let y = 0; y <= 512; y += 128) { c.beginPath(); c.moveTo(0, y); c.lineTo(512, y); c.stroke(); } for (let r = 0; r < 4; r++) { const x = (r % 2 ? 160 : 400); c.beginPath(); c.moveTo(x, r * 128); c.lineTo(x, r * 128 + 128); c.stroke(); } g.floorTex.needsUpdate = true; }
+    { const c = g.wallCv.getContext('2d'); c.fillStyle = T.wall; c.fillRect(0, 0, 512, 512); c.strokeStyle = T.wallLine; c.lineWidth = 6; for (let r = 0; r < 8; r++) { const y = r * 64; c.beginPath(); c.moveTo(0, y); c.lineTo(512, y); for (let x = r % 2 ? 64 : 0; x <= 512; x += 128) { c.moveTo(x, y); c.lineTo(x, y + 64); } c.stroke(); } g.wallTex.needsUpdate = true; }
+    g.wallM.emissive = col3(T.wall, '#eef1f5').multiplyScalar(dk ? 0.25 : 0.35);
+    const wood = (m) => { m.color = new THREE.Color(dk ? 0x9a8a78 : 0xffffff); };
+    wood(g.boardM); wood(g.benchM); wood(g.blockM); wood(g.labelM); g.boardEdgeM.color = col3(T.bench, '#c49c6b'); g.legM.color = col3(T.bench, '#c49c6b');
+    g.metalM.color = col3(T.metal, '#a3adb9'); g.metalDarkM.color = col3(T.metalDark, '#5f6a78'); g.slotM.color = col3(T.tn, '#a7740b'); g.markM.color = col3(T.accent, '#2b60b5');
+    g.stringM.color = col3(T.ink, '#1d252f'); g.label = '';
+  }
+  /* draws the 3D picture into the rectangle (x0, y0, w, h) of the scene and returns R(s, u, y): a ramp point to this canvas */
+  function draw3(x0, y0, w, h, drop, hangZ) {
+    /* the picture fills the scene from its top edge (behind the knob panel); the camera's view is shifted so the apparatus is centred in (y0, h) */
+    const g = g3, P = S.p, th = P.th * Math.PI / 180, dk = VD3.dark(), W0 = Math.max(1, Math.round(w)), H0 = Math.max(1, Math.round(h)), HF = Math.max(1, Math.round(y0 + h));
+    rect3 = { x: x0, y: 0, w: W0, h: HF }; g.el.hidden = false; Object.assign(g.el.style, { left: x0 + 'px', top: '0px', width: W0 + 'px', height: HF + 'px' });
+    if (G3.w !== W0 || G3.h !== HF || G3.y0 !== y0) { G3.w = W0; G3.h = HF; G3.y0 = y0; g.rd.setSize(W0, HF); g.cam.aspect = W0 / H0; g.cam.setViewOffset(W0, H0, 0, -Math.round(y0), W0, HF); g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.wall, T.floor, T.tn, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    const cs = Math.cos(th), sn = Math.sin(th), Wd = (s, u) => [s * cs - u * sn, s * sn + u * cs];   /* ramp point to room x, z (hinge at the origin) */
+    g.rig.rotation.y = -th;
+    const flat = P.th <= 0; g.board.visible = g.hinge.visible = g.post.visible = g.strip.visible = !flat;
+    /* the floor sits at the bottom of the drop; a bench holds the hinge up when a mass hangs */
+    const topX = Wd(LEN, 0)[0], benchL = -0.4, benchR = topX + 0.02;
+    g.floor.position.set(1.5, 2, -drop); g.wall.position.set(1.5, 1.4, -drop + 2.5); g.bench.visible = drop > 0;
+    if (drop > 0) { g.bTop.scale.x = benchR - benchL; g.bTop.position.set((benchL + benchR) / 2, 0, -0.025);
+      g.bLegs.forEach((l, i) => { l.scale.z = drop - 0.05; l.position.set(i < 2 ? benchL + 0.06 : benchR - 0.06, i % 2 ? 0.28 : -0.28, -drop / 2 - 0.025); }); }
+    if (!flat) { const [px, pz] = Wd(LEN - 0.12, -TB), base = drop > 0 ? 0 : 0; g.post.scale.z = Math.max(0.01, pz - base); g.post.position.set(px, 0.18, base + (pz - base) / 2);
+      g.strip.scale.x = Math.max(0.01, px); g.strip.position.set(px / 2, 0, 0.004); }
+    /* the block, with its mass printed on the face toward the viewer */
+    g.block.position.set(S.s + BS / 2, 0, BS / 2);
+    const lab = `${f(P.m, 1)} kg`; if (g.label !== lab) { g.label = lab; const c = g.labelCv.getContext('2d'); c.drawImage(woodCanvas(256, 256, '#c9a77a', '#8a6338', 12, 3), 0, 0); c.fillStyle = 'rgba(255,255,255,0.8)'; c.fillRect(38, 100, 180, 56); c.fillStyle = '#1d252f'; c.font = '700 44px sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(lab, 128, 129); g.labelTex.needsUpdate = true; }
+    /* pulley, string and hanging mass: the string's length is fixed, so when the block moves up the ramp by Δs the mass drops by Δs */
+    const hang = P.m2 > 0; g.pulley.visible = g.clampRod.visible = g.clampBox.visible = g.stringA.visible = g.stringB.visible = g.hanger.visible = hang;
+    if (hang) {
+      g.pulley.position.set(LEN + 0.08, 0, 0.16); g.pulley.rotation.y = -S.s / PR;
+      const cl = [LEN - 0.03, -0.05], dx = LEN + 0.08 - cl[0], dz = 0.16 - cl[1], L = Math.hypot(dx, dz);
+      g.clampRod.scale.y = L; g.clampRod.position.set((LEN + 0.08 + cl[0]) / 2, -0.03, (0.16 + cl[1]) / 2); g.clampRod.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(dx / L, 0, dz / L));
+      g.clampBox.position.set(cl[0], 0, cl[1]);
+      const tie = Wd(S.s + BS, BS / 2), pTop = Wd(LEN + 0.08 - PR * sn, 0.16 + PR * cs), pc = Wd(LEN + 0.08, 0.16), hx = pc[0] + PR;
+      const a = g.stringA.geometry.attributes.position; a.setXYZ(0, tie[0], 0, tie[1]); a.setXYZ(1, pTop[0], 0, pTop[1]); a.needsUpdate = true;
+      const b = g.stringB.geometry.attributes.position; b.setXYZ(0, hx, 0, pc[1]); b.setXYZ(1, hx, 0, hangZ); b.needsUpdate = true;
+      const hs = Math.min(0.32, 0.12 + 0.025 * P.m2), nd = Math.max(1, Math.min(8, Math.round(P.m2))), hk = hs * 0.25, dz2 = (hs - hk) / nd, rad = hs / 2;
+      g.hanger.position.set(hx, 0, hangZ); g.hookRod.scale.z = hs; g.hookRod.position.z = -hs / 2; g.hBase.scale.set(rad * 0.9, rad * 0.9, 1); g.hBase.position.z = -hs;
+      g.slots.forEach((sl, i) => { sl.visible = i < nd; sl.scale.set(rad, rad, Math.max(0.004, dz2 - 0.003)); sl.position.z = -hk - (i + 0.5) * dz2; });
+    }
+    /* the pull F: spring scale and cord, pointed at the angle φ above the surface */
+    const pull = P.F > 0; g.scaleG.visible = g.cordF.visible = pull;
+    if (pull) {
+      const ph2 = P.phi * Math.PI / 180, ds = Math.cos(ph2), du = Math.sin(ph2), at = [S.s + BS, BS / 2], far = 0.28, ends = [Wd(at[0], at[1]), Wd(at[0] + ds * far, at[1] + du * far)], dir = new THREE.Vector3(ends[1][0] - ends[0][0], 0, ends[1][1] - ends[0][1]).normalize();
+      const c = g.cordF.geometry.attributes.position; c.setXYZ(0, ends[0][0], -0.0, ends[0][1]); c.setXYZ(1, ends[1][0], 0, ends[1][1]); c.needsUpdate = true;
+      g.scaleG.position.set(ends[1][0] + dir.x * 0.1, 0, ends[1][1] + dir.z * 0.1); g.scaleG.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+    }
+    /* timer marks */
+    const tm = S.timing ? [S.timing.s0, S.timing.s0 + (S.timing.s0 > LEN / 2 ? -GATE_D : GATE_D)] : null;
+    g.marks.forEach((m, i) => { m.visible = !!tm; if (tm) m.position.set(tm[i], 0, 0.001); });
+    /* light from the front left, so the block's shadow falls on the board behind it */
+    const cx = topX / 2, cz = Wd(LEN, 0)[1] / 2 - drop / 2; g.sun.target.position.set(cx, 0, cz - 0.3); g.sun.position.set(cx - 2.5, -3.5, cz + 6);
+    /* camera: frame the ramp, the pulley and the hanging mass */
+    const x1 = Math.max(topX + (hang ? 0.35 : 0.25), 1.2), z1 = Math.max(Wd(LEN, 0)[1], 0.4) + 0.45, zb = -drop, spanX = x1 + 0.5, spanZ = z1 - zb;
+    const fov = g.cam.fov * Math.PI / 180, need = Math.max(spanX * 1.08 / g.cam.aspect, spanZ * 1.15) / (2 * Math.tan(fov / 2));
+    /* on a level floor with nothing hanging, the camera rides along with the block instead */
+    if (flat && !hang) { const near = Math.max(1.6 / g.cam.aspect, 0.9) / (2 * Math.tan(fov / 2)); VD3.place(g.cam, G3.o, new THREE.Vector3(S.s + BS / 2 + 0.15, 0, 0.18), Math.max(1.2, near)); }
+    else VD3.place(g.cam, G3.o, new THREE.Vector3((x1 - 0.5) / 2, 0, (z1 + zb) / 2), Math.max(1.5, need));
+    g.scene.updateMatrixWorld(); g.rd.render(g.scene, g.cam);
+    const v = g.tmp; return (s, u, y = 0) => { const [X, Z] = Wd(s, u); v.set(X, y, Z).project(g.cam); return [x0 + (v.x + 1) / 2 * W0, (1 - v.y) / 2 * HF]; };
+  }
+  function setView(v) {
+    G3.want = v === '3d';
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { G3.want = false; v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setView(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; can.style.cursor = use3() ? 'grab' : ''; if (g3 && !G3.on) g3.el.hidden = true;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    draw();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
   // ---------- drawing ----------
   function arrow(x0, y0, dx, dy, col, lw, lab, dashed, side) {
     const p = ps(), L = Math.hypot(dx, dy); if (L < 2) return;
@@ -368,7 +521,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const p = ps(), wide = W > 760, sw = wide ? W * 0.6 : W, sh = wide ? H : H * 0.56;
     /* the knob panel sits over the top of the scene: the apparatus is drawn below it */
-    const ins = $('instr'), top = wide && getComputedStyle(ins).position === 'absolute' ? Math.max(46 * p, ins.offsetTop + ins.offsetHeight + 8) : 46 * p;
+    const ins = $('instr'), top = wide && getComputedStyle(ins).position === 'absolute' ? Math.max(46 * p, ins.offsetTop + ins.offsetHeight + 8) : Math.max(46 * p, (() => { const vb = document.querySelector('#scene .viewbar'); return vb.offsetTop + vb.offsetHeight + 6; })());
     drawScene(0, top, sw, sh - top);
     drawFBD(wide ? sw : 0, wide ? 0 : sh, wide ? W - sw : W, wide ? H : H - sh);
   }
@@ -377,7 +530,14 @@ table.rows input:focus { border-color: var(--accent); }
     const drop = P.m2 > 0 ? 1.1 : 0;                                       // room under the pulley for the hanging mass
     const sc = Math.min((w - 90 * p) / (LEN * Math.cos(th) + 0.6), (h - 40 * p) / (LEN * Math.sin(th) + 0.9 + drop));
     const bx = x0 + 30 * p, by = y0 + h - 30 * p - drop * sc;              // bottom corner of the ramp (on a bench when a mass hangs)
-    const R = (s, u) => [bx + sc * (s * Math.cos(th) - u * Math.sin(th)), by - sc * (s * Math.sin(th) + u * Math.cos(th))];
+    let R = (s, u) => [bx + sc * (s * Math.cos(th) - u * Math.sin(th)), by - sc * (s * Math.sin(th) + u * Math.cos(th))];
+    const bs = 0.32;
+    const u3 = use3(); if (g3 && !u3) g3.el.hidden = true;
+    if (u3) {   /* the 3D picture draws the room and the apparatus; this canvas keeps the arrows and the words */
+      const pcz = (LEN + 0.08) * Math.sin(th) + 0.16 * Math.cos(th), hangZ = Math.max(0.3 - drop, pcz - (0.3 + S.s - 0.25));
+      ctx.clearRect(x0, 0, w, y0 + h); R = draw3(x0, y0, w, h, drop, hangZ);
+      if (P.th > 0) { const q = R(0.62, 0.08, -RW / 2); ctx.fillStyle = T.ink; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(`θ = ${f(P.th, 1)}°`, q[0] + 6 * p, q[1]); }
+    } else {
     // lab wall and floor behind everything; a bench when a mass hangs
     const top = R(LEN, 0), floorY = by + drop * sc, sx1 = x0 + w;
     ctx.fillStyle = T.wall; ctx.fillRect(x0, 0, w, floorY);
@@ -408,9 +568,9 @@ table.rows input:focus { border-color: var(--accent); }
     }
     if (P.th > 0) { ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(bx, by, 40 * p, -th, 0); ctx.stroke(); ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(`${f(P.th, 1)}°`, bx + 46 * p, by - 10 * p); }
     // timing marks
-    if (S.timing) { for (const s of [S.timing.s0, S.timing.s0 + (S.timing.s0 > LEN / 2 ? -GATE_D : GATE_D)]) { const a = R(s, 0), b = R(s, 0.55); ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.setLineDash([]); } }
+    if (S.timing && !u3) { for (const s of [S.timing.s0, S.timing.s0 + (S.timing.s0 > LEN / 2 ? -GATE_D : GATE_D)]) { const a = R(s, 0), b = R(s, 0.55); ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); ctx.stroke(); ctx.setLineDash([]); } }
     // pulley and hanging mass
-    const bs = 0.32, c = R(S.s, bs / 2);
+    const c = R(S.s, bs / 2);
     if (P.m2 > 0) {
       const pc = R(LEN + 0.08, 0.16), pr = 0.09 * sc, tie = R(S.s + bs / 2, bs / 2);
       ctx.strokeStyle = T.ink; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(tie[0], tie[1]); ctx.lineTo(pc[0] - pr * Math.sin(th), pc[1] - pr * Math.cos(th)); ctx.stroke();
@@ -444,8 +604,11 @@ table.rows input:focus { border-color: var(--accent); }
     const lw2 = ctx.measureText(`${f(P.m, 1)} kg`).width + 6 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.75; ctx.fillRect(-lw2 / 2, -7 * p, lw2, 14 * p); ctx.globalAlpha = 1;
     ctx.fillStyle = T.ink; ctx.fillText(`${f(P.m, 1)} kg`, 0, 0);
     ctx.restore();
+    }
+    /* unit directions on this canvas of a step (ds, du) in the ramp frame, from the picture's own mapping (the same vectors as before in the flat view) */
+    const sdir = (s0, u0, ds, du) => { const a = R(s0, u0), b = R(s0 + ds * 0.01, u0 + du * 0.01), L = Math.hypot(b[0] - a[0], b[1] - a[1]) || 1; return [(b[0] - a[0]) / L, (b[1] - a[1]) / L]; };
     // applied force on the scene
-    if (P.F > 0) { const ang = th + P.phi * Math.PI / 180, L = 50 * p, tail = R(S.s + bs / 2, bs / 2); arrow(tail[0], tail[1], Math.cos(ang) * L, -Math.sin(ang) * L, T.ap, 3 * p, 'F'); }
+    if (P.F > 0) { const ph2 = P.phi * Math.PI / 180, L = 50 * p, tail = R(S.s + bs / 2, bs / 2), d = sdir(S.s + bs / 2, bs / 2, Math.cos(ph2), Math.sin(ph2)); arrow(tail[0], tail[1], d[0] * L, d[1] * L, T.ap, 3 * p, 'F'); }
     // status
     ctx.font = `600 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.ink;
     const dirWord = P.th > 0 ? (S.v > 0 ? 'up the ramp' : 'down the ramp') : (S.v > 0 ? 'to the right' : 'to the left');
@@ -457,7 +620,7 @@ table.rows input:focus { border-color: var(--accent); }
     // Newton's third law: the partners of the forces on the block act on other objects (ramp, string, Earth), equal in size and opposite in direction
     if (S.pairs) {
       const k = 64 * p / Math.max(fz.W, fz.N, Math.abs(fz.f), fz.T, 1e-9), bl = S.blind, len = (F) => (bl ? 40 * p : F * k), cp = R(S.s, 0);
-      const into = [Math.sin(th), Math.cos(th)], upS = [Math.cos(th), -Math.sin(th)];
+      const into = sdir(S.s, 0, 0, -1), upS = sdir(S.s, 0, 1, 0);
       if (fz.N > 0) arrow(cp[0] - 8 * p * upS[0], cp[1] - 8 * p * upS[1], into[0] * len(fz.N), into[1] * len(fz.N), T.n, 2.6 * p, bl ? 'N on the ramp' : `N on the ramp = ${f(fz.N, 1)} N`, true);
       if (Math.abs(fz.f) > 1e-9) arrow(cp[0] + 8 * p * upS[0], cp[1] + 8 * p * upS[1], -Math.sign(fz.f) * upS[0] * len(Math.abs(fz.f)), -Math.sign(fz.f) * upS[1] * len(Math.abs(fz.f)), T.fr, 2.6 * p, bl ? 'f on the ramp' : `f on the ramp = ${f(Math.abs(fz.f), 1)} N`, true);
       if (P.m2 > 0) { const tie = R(S.s + bs / 2, bs / 2); arrow(tie[0] + (10 * p + len(fz.T)) * upS[0], tie[1] + (10 * p + len(fz.T)) * upS[1], -upS[0] * len(fz.T), -upS[1] * len(fz.T), T.tn, 2.6 * p, bl ? 'on the string' : `on the string = ${f(fz.T, 1)} N`, true); }
@@ -648,6 +811,8 @@ table.rows input:focus { border-color: var(--accent); }
     (function show() { for (const o of all) { if (o.inp.value !== o.shown) { o.shown = o.inp.value; o.k.style.setProperty('--a', `${(Math.round((+o.inp.value - +o.inp.min) / (+o.inp.step || 1)) * DEG) % 360}deg`); o.k.setAttribute('aria-valuenow', o.inp.value); } if (o.out) o.k.setAttribute('aria-valuetext', o.out.textContent); } requestAnimationFrame(show); })();
   })();
   tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(() => draw()).observe($('instr')); applyPreset('push'); renderRows(); resize();
+  /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
+  G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();

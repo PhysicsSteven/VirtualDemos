@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>.bench { position: relative; }
 /* the Set up card on the picture: it fades away while the run plays and comes back on pause or when the run ends */
 .setup-card { position: absolute; z-index: 3; left: 330px; top: 64px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); transition: opacity 0.35s ease, visibility 0.35s; }
@@ -56,6 +57,9 @@ table.rows input:focus { border-color: var(--accent); }
 .chips button { font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer; }
 .chips button:disabled { opacity: 0.45; cursor: default; }
 @media (max-width: 820px) { .chips button { min-height: 36px; } }
+#viewSeg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+#viewSeg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+#viewSeg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -78,7 +82,7 @@ table.rows input:focus { border-color: var(--accent); }
   <main class="bench">
     <div class="stage" id="stage">
       <canvas id="can" tabindex="0" role="img" aria-label="An elevator shaft with the car, a person standing on a scale with the normal force and weight arrows, and graphs of the scale reading and the velocity against time."></canvas>
-      <div class="viewbar"><button type="button" class="spin" id="pause">Pause</button><button type="button" class="spin" id="snap">Cable snaps</button></div>
+      <div class="viewbar"><button type="button" class="spin" id="pause">Pause</button><button type="button" class="spin" id="snap">Cable snaps</button><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -269,14 +273,136 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); S.hist.forEach((q, i) => { const v = Math.max(lo, Math.min(hi, q[key])); i ? ctx.lineTo(X(q[0]), Y(v)) : ctx.moveTo(X(q[0]), Y(v)); }); ctx.stroke();
     ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'top'; ctx.fillText(`${f(tEnd, 0)} s`, x0 + w, y0 + h + 2);
   }
+  // ---------- 3D view of the shaft (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
+  /* The building to scale (floors 3.0 m apart, z up, metres), cut open at the front; the camera rides with the car. The car, the
+     person (1.7 m) and the scale are drawn life size; the counterweight moves opposite to the car, as in the flat view. The scale's
+     display shows N/g. Drag to turn the view, wheel or pinch to zoom, double click to reset. This canvas keeps the arrows and words. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.42, ph: 1.36, zoom: 1 } };
+  const CW = 2.0, CD = 1.6, CH = 2.4;   /* car width, depth, height (m) */
+  let g3 = null, rect3 = { x: 0, y: 0, w: 0, h: 0 };
+  const use3 = () => !!(G3.on && g3);
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function init3D() {
+    G3.tried = true;
+    const rd = VD3.renderer(); if (!rd) return false;
+    rd.shadowMap.enabled = true; rd.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = rd.domElement; el.setAttribute('aria-hidden', 'true'); el.style.position = 'absolute'; stage.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(34, 1, 0.1, 200), M = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x777777, 0.6), sun = new THREE.DirectionalLight(0xffffff, 0.55); scene.add(hemi, sun, sun.target);
+    const lamp = new THREE.PointLight(0xfff2d8, 0.8, 6, 2); lamp.castShadow = true; lamp.shadow.mapSize.set(512, 512); scene.add(lamp);
+    const mesh = (g, m, cast = false, recv = true) => { const x = new THREE.Mesh(g, m); x.castShadow = cast; x.receiveShadow = recv; return x; };
+    const box = (w, d, h, m, x, y, z, cast) => { const b = mesh(new THREE.BoxGeometry(w, d, h), m, cast); b.position.set(x, y, z); return b; };
+    const H3 = (TOP + 1) * FLOOR + 2;
+    /* the building beside the shaft: floor slabs, a back wall with a window per floor, a landing door with its lamp */
+    const slabM = M({ roughness: 0.85 }), wallM = M({ roughness: 0.95 }), shaftM = M({ roughness: 0.95 }), doorM = M({ roughness: 0.4, metalness: 0.5 }), winOnM = M({ roughness: 0.4, emissive: 0x000000 }), winOffM = M({ roughness: 0.4 }), railM = M({ roughness: 0.4, metalness: 0.6 });
+    const bldg = new THREE.Group(), lamps = [];
+    bldg.add(box(9, 0.2, H3, wallM, -5.6, 1.15, H3 / 2 - 1), box(3.4, 0.2, H3 + 4, shaftM, 0.6, 1.15, H3 / 2), box(0.25, 1.0, H3, slabM, -1.25, 0.65, H3 / 2 - 1.2));
+    for (let k = 0; k <= TOP; k++) {
+      const z = k * FLOOR;
+      bldg.add(box(9, 2.6, 0.25, slabM, -5.6, 0, z - 0.125));
+      const w1 = box(1.3, 0.05, 1.2, LIT[k][0] ? winOnM : winOffM, -4.2, 1.03, z + 1.5), w2 = box(1.3, 0.05, 1.2, LIT[k][1] ? winOnM : winOffM, -7.2, 1.03, z + 1.5); bldg.add(w1, w2);
+      const dr = box(0.06, 1.1, 2.1, doorM, -1.1, 0, z + 1.05); bldg.add(dr);
+      const lp = mesh(new THREE.SphereGeometry(0.06, 12, 8), winOffM.clone()); lp.position.set(-1.08, 0, z + 2.35); bldg.add(lp); lamps.push(lp);
+    }
+    bldg.add(box(0.06, 0.08, H3 + 2, railM, -1.02, 0.25, H3 / 2), box(0.06, 0.08, H3 + 2, railM, 1.02, 0.25, H3 / 2));
+    /* machine room at the top: beam and two sheaves */
+    const topZ = (TOP + 1) * FLOOR + 1.2, sheaveM = M({ roughness: 0.35, metalness: 0.7 }), beam = box(3.6, 0.6, 0.25, slabM, 0.6, 0, topZ + 0.55);
+    const sheaves = [0, 1].map((i) => { const s = mesh(new THREE.CylinderGeometry(0.35, 0.35, 0.12, 28), sheaveM, true); s.position.set(i ? 1.6 : 0, 0, topZ); return s; });
+    /* the car: floor, ceiling with a light panel, back and right walls, doors on the landing side, a handrail; open at the front */
+    const car = new THREE.Group(), carM = M({ roughness: 0.45, metalness: 0.35 }), carWallM = M({ roughness: 0.6 }), lightM = M({ emissive: 0xfff2d8, emissiveIntensity: 0.9, color: 0xffffff });
+    car.add(box(CW, CD, 0.12, carM, 0, 0, -0.06, true), box(CW, CD, 0.1, carM, 0, 0, CH + 0.05, true), box(CW, 0.06, CH, carWallM, 0, CD / 2, CH / 2, true), box(0.06, CD, CH, carWallM, CW / 2, 0, CH / 2, true),
+      box(0.05, CD * 0.96, CH - 0.1, doorM, -CW / 2, 0, CH / 2), box(0.6, 0.4, 0.02, lightM, 0, 0, CH - 0.01), box(CW * 0.8, 0.05, 0.05, railM, 0, CD / 2 - 0.08, 0.95), box(0.3, 0.3, 0.12, carM, 0, 0, CH + 0.16));
+    /* the person on the scale: legs, body, arms, head (scenery, 1.7 m) */
+    const pM = M({ roughness: 0.7 }), skinM = M({ roughness: 0.7, color: 0xd9a77e }), person = new THREE.Group();
+    const cyl = (r, h, m, x, z) => { const c = mesh(new THREE.CylinderGeometry(r, r, h, 16).rotateX(Math.PI / 2), m, true); c.position.set(x, 0, z); return c; };
+    person.add(cyl(0.07, 0.8, pM, -0.1, 0.4 + 0.07), cyl(0.07, 0.8, pM, 0.1, 0.47), cyl(0.18, 0.62, pM, 0, 1.17), cyl(0.05, 0.6, pM, -0.25, 1.15), cyl(0.05, 0.6, pM, 0.25, 1.15));
+    const head = mesh(new THREE.SphereGeometry(0.12, 20, 14), skinM, true); head.position.z = 1.62; person.add(head);
+    person.position.set(-0.25, 0.05, 0.07);
+    /* the bathroom scale with its display, which shows N/g */
+    const scaleM = M({ roughness: 0.4, metalness: 0.2 }), dispCv = document.createElement('canvas'); dispCv.width = 256; dispCv.height = 96; const dispTex = new THREE.CanvasTexture(dispCv);
+    const scaleB = box(0.42, 0.36, 0.06, scaleM, -0.25, 0.05, 0.03, true), disp = mesh(new THREE.PlaneGeometry(0.2, 0.075), new THREE.MeshBasicMaterial({ map: dispTex })); disp.position.set(-0.25, -0.1, 0.0605);
+    car.add(person, scaleB, disp);
+    /* the counterweight and the cables */
+    const cwM = M({ roughness: 0.5, metalness: 0.4 }), cw = box(0.5, 0.4, 2.2, cwM, 1.6, 0.4, 0, true);
+    const lineG = () => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(9), 3)); return g; };
+    const cableM = new THREE.LineBasicMaterial(), cable = new THREE.Line(lineG(), cableM), cableC = new THREE.Line(lineG(), cableM), cableT = new THREE.Line(lineG(), cableM);
+    scene.add(bldg, beam, ...sheaves, car, cw, cable, cableC, cableT);
+    g3 = { rd, el, scene, cam, hemi, sun, lamp, slabM, wallM, shaftM, doorM, winOnM, winOffM, railM, lamps, sheaves, car, carM, carWallM, pM, scaleM, dispCv, dispTex, cwM, cw, cableM, cable, cableC, cableT, topZ, disp: '' };
+    can.addEventListener('wheel', (e) => { if (!use3() || !in3(e)) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || !in3(e), phMin: 0.5, phMax: 1.75, zMin: 0.5, zMax: 2.5, keys: false });
+    can.addEventListener('pointerup', () => { if (!use3()) can.style.cursor = ''; });
+    return true;
+  }
+  const in3 = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; return x >= rect3.x && x < rect3.x + rect3.w && y >= rect3.y && y < rect3.y + rect3.h; };
+  function theme3() {
+    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#ffffff');
+    g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 14, 34);
+    g.hemi.intensity = dk ? 0.6 : 0.7; g.sun.intensity = dk ? 0.35 : 0.5;
+    g.slabM.color = col3(T.slab, '#c5cdd7'); g.wallM.color = col3(T.building, '#e8ecf1'); g.shaftM.color = col3(T.shaft, '#dbe1e8'); g.doorM.color = col3(T.door, '#b3bcc8');
+    g.winOnM.color = col3(T.window, '#f1d58c'); g.winOnM.emissive = col3(T.window, '#f1d58c').multiplyScalar(dk ? 0.6 : 0.25); g.winOffM.color = col3(T.windowOff, '#d3dae3'); g.railM.color = col3(T.rail, '#bcc5d0');
+    g.carM.color = col3(T.car, '#c9d1db'); g.carWallM.color = col3(T.carWall, '#dfe5ec'); g.pM.color = col3(T.person, '#4a5563'); g.scaleM.color = col3(dk ? '#d8dde3' : '#2a2f36', '#2a2f36');
+    g.cwM.color = col3(T.cw, '#848e9b'); g.cableM.color = col3(T.cable, '#6b7787'); g.disp = '';
+  }
+  /* draws the 3D picture into (x0, y0, w, h); returns the person's hip and feet and the scale's display on this canvas */
+  function draw3(x0, y0, w, h, st, N) {
+    const g = g3, dk = VD3.dark(), W0 = Math.max(1, Math.round(w)), H0 = Math.max(1, Math.round(h));
+    rect3 = { x: x0, y: y0, w: W0, h: H0 }; g.el.hidden = false; Object.assign(g.el.style, { left: x0 + 'px', top: y0 + 'px', width: W0 + 'px', height: H0 + 'px' });
+    if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.car, T.building, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    const z = st.y, yc = S.snapped ? S.y0 : st.y;
+    g.car.position.set(0, 0, z); g.lamp.position.set(0, -0.2, z + CH - 0.3);
+    g.lamps.forEach((l, k) => { const here = Math.abs(st.y - k * FLOOR) < 0.25; l.material.color = col3(here ? T.lamp : T.windowOff, '#e39a2d'); l.material.emissive = here ? col3(T.lamp, '#e39a2d').multiplyScalar(0.8) : new THREE.Color(0); });
+    /* the counterweight's bottom is at TOP × FLOOR − (car height above the ground), as in the flat view; the sheaves turn with the rope */
+    g.cw.position.z = TOP * FLOOR - yc + 1.1; g.sheaves.forEach((s) => { s.rotation.y = yc / 0.35; });
+    const ca = g.cable.geometry.attributes.position, cc = g.cableC.geometry.attributes.position, ct = g.cableT.geometry.attributes.position;
+    if (!S.snapped) { ca.setXYZ(0, 0, 0, z + CH + 0.22); ca.setXYZ(1, 0, 0, g.topZ); ca.setXYZ(2, 0, 0, g.topZ); }
+    else { ca.setXYZ(0, 0, 0, g.topZ); ca.setXYZ(1, 0.2, 0, g.topZ - 4); ca.setXYZ(2, 0.1, 0, g.topZ - 7); }
+    cc.setXYZ(0, 1.6, 0.4, g.cw.position.z + 1.1); cc.setXYZ(1, 1.6, 0.4, g.topZ); cc.setXYZ(2, 1.6, 0.4, g.topZ);
+    ct.setXYZ(0, 0, 0, g.topZ + 0.35); ct.setXYZ(1, 1.6, 0, g.topZ + 0.35); ct.setXYZ(2, 1.6, 0, g.topZ + 0.35);
+    ca.needsUpdate = cc.needsUpdate = ct.needsUpdate = true; g.cableT.visible = !S.snapped;
+    /* the scale's display */
+    const txt = S.blind ? '?? kg' : `${f(N / G, 1)} kg`; if (g.disp !== txt) { g.disp = txt; const c = g.dispCv.getContext('2d'); c.fillStyle = '#0b1a12'; c.fillRect(0, 0, 256, 96); c.fillStyle = '#7ee0a0'; c.font = '700 60px monospace'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(txt, 128, 50); g.dispTex.needsUpdate = true; }
+    g.sun.position.set(-6, -10, z + 14); g.sun.target.position.set(0, 0, z);
+    VD3.place(g.cam, G3.o, new THREE.Vector3(0.1, 0, z + 1.3), 10.5 / Math.max(0.55, Math.min(1.2, g.cam.aspect * 1.4)));
+    g.scene.updateMatrixWorld(); g.rd.render(g.scene, g.cam);
+    const v = new THREE.Vector3(), Q = (x, y, zz) => { v.set(x, y, zz).project(g.cam); return [x0 + (v.x + 1) / 2 * W0, y0 + (1 - v.y) / 2 * H0]; };
+    const floors = []; for (let k = 0; k <= TOP; k++) floors.push(Q(-1.3, -1.2, k * FLOOR + 0.25));
+    return { hip: Q(-0.25, -0.2, z + 0.95), feet: Q(-0.25, -0.2, z + 0.07), disp: Q(-0.25, -0.2, z), side: Q(0.35, -0.2, z + 0.95), sideFeet: Q(0.35, -0.2, z + 0.07), floors };
+  }
+  function setView(v) {
+    G3.want = v === '3d';
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { G3.want = false; v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setView(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; can.style.cursor = use3() ? 'grab' : ''; if (g3 && !G3.on) g3.el.hidden = true;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    draw();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     const VG = window.VDGear;
     const p = ps(), wide = W > 620, st = now(), top = 56 * p, bot = Hh - 16 * p;
-    const shaftW = wide ? Math.min(W * 0.36, 260 * p) : W - 32 * p, shaftH = wide ? bot - top : (Hh - top) * 0.55, sx = 16 * p, sc = shaftH / (TOP * FLOOR + FLOOR + 1);
+    const shaftW = wide ? (use3() ? Math.min(W * 0.42, 360 * p) : Math.min(W * 0.36, 260 * p)) : W - 32 * p, shaftH = wide ? bot - top : (Hh - top) * 0.55, sx = 16 * p, sc = shaftH / (TOP * FLOOR + FLOOR + 1);
     const yS = (y) => top + shaftH - (y + 0.5) * sc;
     const cw = shaftW * 0.6, cx = sx + shaftW * 0.24, ch = Math.max(FLOOR * sc, 70 * p), cy = yS(st.y) - ch;
+    const u3 = use3(); if (g3 && !u3) g3.el.hidden = true;
+    if (u3) {   /* the 3D picture draws the building, the car and the person; this canvas keeps the arrows, the floor numbers and the reading */
+      const x3 = sx - 8 * p, y3 = top - 22 * p, w3 = shaftW + 13 * p, h3 = (wide ? bot : top + shaftH) - y3, N = scaleN(S.m, st.a);
+      ctx.clearRect(x3, y3, w3, h3); const r = draw3(x3, y3, w3, h3, st, N);
+      ctx.save(); ctx.beginPath(); ctx.rect(x3, y3, w3, h3); ctx.clip();
+      ctx.fillStyle = T.muted; ctx.font = `600 ${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      r.floors.forEach((q, k) => ctx.fillText(`floor ${k}`, Math.max(x3 + 6 * p, q[0] - 60 * p), q[1]));
+      /* force arrows beside the person, as in the flat view: 1 mg = 40 px */
+      const k = 40 * p / (S.m * G);
+      arrow(r.side[0], r.side[1], r.side[1] + S.m * G * k, T.Wc, 'mg', 1);
+      if (!S.blind) arrow(r.side[0] + 24 * p, r.sideFeet[1], r.sideFeet[1] - N * k, T.N, 'N', 1);
+      ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; const lab = S.blind ? '?? kg' : `${f(N / G, 1)} kg`, lw = ctx.measureText(lab).width + 8 * p;
+      ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(r.disp[0] - lw / 2, r.disp[1] + 4 * p, lw, 17 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.ink; ctx.fillText(lab, r.disp[0], r.disp[1] + 6 * p);
+      ctx.restore();
+    } else {
     // building cross section: the floors and landings at the left, the shaft with its rails and counterweight lane at the right
     const shL = cx - 5 * p, shR = sx + shaftW, gY = yS(0), roof = yS(TOP * FLOOR + FLOOR), sBot = top + shaftH;
     ctx.fillStyle = T.building; ctx.fillRect(sx - 8 * p, roof, shL - sx + 8 * p, gY - roof);
@@ -337,6 +463,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // scale display
     ctx.fillStyle = T.ink; ctx.font = `700 ${12 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
     ctx.fillText(S.blind ? '?? kg' : `${f(N / G, 1)} kg`, px, floorY + 2 * p);
+    }
     // graphs
     const gx = wide ? sx + shaftW + 50 * p : 50 * p, gw = wide ? W - gx - 20 * p : W - 70 * p, g0 = wide ? top + 18 * p : top + shaftH + 34 * p, gh = wide ? (bot - g0 - 50 * p) / 2 : (Hh - g0 - 50 * p) / 2;
     const r = S.m, vmx = Math.max(S.vmax, ...S.hist.map((q) => Math.abs(q[1]))) * 1.15;
@@ -364,6 +491,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.projector({ onChange: resize });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
+  /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
+  G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
+  /* something happens on open: the car rides up to floor 10 and back, unless Reduce motion is on. The first touch of a control puts it
+     back at rest on the ground floor, the way the page opened, so every exercise starts there */
+  let auto = 0;
+  setTimeout(() => { if (!reduce && !S.segs.length && auto === 0) { auto = 1; start('10'); } }, 900);
+  const backDown = setInterval(() => { if (auto === 1 && !moving() && S.segs.length) { auto = 2; start('0'); } if (auto === 2 && !moving()) { auto = 3; clearInterval(backDown); } }, 400);
+  for (const ev of ['pointerdown', 'keydown', 'click', 'input']) document.addEventListener(ev, (e) => {
+    if (auto === -1 || e.target === can) return; const was = auto; auto = -1; clearInterval(backDown);
+    if (was >= 1) { S.segs = []; S.y0 = 0; S.v0 = 0; S.t = 0; S.clock = 0; S.hist = []; S.snapped = false; S.paused = false; $('tripHint').textContent = 'The car starts at rest on the ground floor.'; syncBtns(); draw(); readouts(); }
+  }, { capture: true });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now();
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; tick(dt); requestAnimationFrame(loop); })();

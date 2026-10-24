@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>.bench { position: relative; }
 /* the Set up card on the picture: it fades away while the run plays and comes back on pause or when the run ends */
 .setup-card { position: absolute; z-index: 3; left: 300px; top: 64px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); transition: opacity 0.35s ease, visibility 0.35s; }
@@ -51,6 +52,9 @@
   .chips button, .proj, .spin { min-height: 36px; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
+#viewSeg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
+#viewSeg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+#viewSeg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -76,6 +80,7 @@
       <div class="viewbar">
         <button type="button" class="spin attn" id="go">Launch</button>
         <button type="button" class="spin" id="again">Start over</button>
+        <div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div>
       </div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
@@ -198,19 +203,138 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const P = () => ({ md: S.p.md, mf: S.p.mf, u: S.p.u, b: S.p.b, g: S.p.g ? G : 0 });
   function niceStep(r) { const e = 10 ** Math.floor(Math.log10(r)), f = r / e; return (f < 1.5 ? 1 : f < 3.5 ? 2 : f < 7.5 ? 5 : 10) * e; }
 
+  // ---------- 3D view of the flight (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
+  /* The camera rides beside the rocket at its true height (z up, metres), so the ground falls away below it; the rocket, pad and tower
+     are drawn 14 m tall for any mass (scenery: the sliders set masses, not sizes). The plume's size follows the thrust u × (burn rate)
+     and the orange window shows the fuel left, as in the flat view. Clouds sit at 2 km; the sky darkens with the same 15 km scale height.
+     Drag to turn the view, wheel or pinch to zoom, double click to reset. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.5, ph: 1.32, zoom: 1 } };
+  const RH = 14, RR = 0.8;   /* drawn height and radius of the rocket body (m) */
+  let g3 = null, rect3 = { x: 0, y: 0, w: 0, h: 0 };
+  const use3 = () => !!(G3.on && g3);
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function init3D() {
+    G3.tried = true;
+    const rd = VD3.renderer(); if (!rd) return false;
+    rd.shadowMap.enabled = true; rd.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = rd.domElement; el.setAttribute('aria-hidden', 'true'); el.style.position = 'absolute'; stage.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 0.5, 400000), M = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x667755, 0.6), sun = new THREE.DirectionalLight(0xffffff, 0.9); sun.castShadow = true; sun.shadow.mapSize.set(1024, 1024);
+    Object.assign(sun.shadow.camera, { left: -30, right: 30, top: 30, bottom: -30, near: 1, far: 200 }); scene.add(hemi, sun, sun.target);
+    const mesh = (g, m, cast = true, recv = false) => { const x = new THREE.Mesh(g, m); x.castShadow = cast; x.receiveShadow = recv; return x; };
+    const upZ = (g) => g.rotateX(Math.PI / 2);
+    /* the ground: grass to the horizon, a concrete pad, a lattice tower with two arms */
+    const groundM = M({ roughness: 1 }), ground = mesh(new THREE.CircleGeometry(60000, 64), groundM, false, true);
+    const padM = M({ roughness: 0.9 }), pad = mesh(upZ(new THREE.CylinderGeometry(16, 17, 1.2, 40)), padM, true, true); pad.position.z = 0.6;
+    const steelM = M({ roughness: 0.5, metalness: 0.6 }), tower = new THREE.Group();
+    { const H2 = RH + 6, leg = (x, y) => { const m = mesh(upZ(new THREE.CylinderGeometry(0.18, 0.18, H2, 6)), steelM); m.position.set(x, y, H2 / 2 + 1.2); tower.add(m); };
+      leg(-1.2, -1.2); leg(1.2, -1.2); leg(-1.2, 1.2); leg(1.2, 1.2);
+      for (let z = 3; z < H2; z += 2.5) for (const [a, b] of [[[-1.2, -1.2], [1.2, -1.2]], [[-1.2, 1.2], [1.2, 1.2]], [[-1.2, -1.2], [-1.2, 1.2]], [[1.2, -1.2], [1.2, 1.2]]]) {
+        const d = new THREE.Vector3(b[0] - a[0], b[1] - a[1], 2.5), L = d.length(), m = mesh(new THREE.CylinderGeometry(0.08, 0.08, L, 5), steelM);
+        m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d.normalize()); m.position.set((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, z + 1.25); tower.add(m); }
+      for (const h of [0.45, 0.8]) { const arm = mesh(new THREE.BoxGeometry(5.2, 0.5, 0.4), steelM); arm.position.set(3.8, 0, 1.2 + RH * h); tower.add(arm); }
+      tower.position.set(-7.4, 3, 0); }
+    /* clouds: flattened clumps at 2 km */
+    const cloudM = M({ roughness: 1, transparent: true, opacity: 0.92 }), clouds = new THREE.Group(), rc = rng(1957);
+    for (let i = 0; i < 26; i++) { const c = new THREE.Group(), n = 3 + Math.floor(rc() * 4); for (let k = 0; k < n; k++) { const b = mesh(new THREE.IcosahedronGeometry(1, 1), cloudM, false); b.scale.set(160 + rc() * 120, 120 + rc() * 80, 50 + rc() * 30); b.position.set((k - n / 2) * 140, rc() * 60, rc() * 30); c.add(b); }
+      const a = rc() * 6.283, d = 600 + rc() * 5000; c.position.set(Math.cos(a) * d, Math.sin(a) * d, 1800 + rc() * 500); clouds.add(c); }
+    /* stars: a fixed shell far out, faded in as the sky darkens */
+    const starG = new THREE.BufferGeometry(), sp = [], rs = rng(42); for (let i = 0; i < 900; i++) { const u = rs() * 2 - 1, a = rs() * 6.283, r = Math.sqrt(1 - u * u); sp.push(r * Math.cos(a), r * Math.sin(a), u); }
+    starG.setAttribute('position', new THREE.Float32BufferAttribute(sp, 3)); const starM = new THREE.PointsMaterial({ size: 2, sizeAttenuation: false, transparent: true, depthWrite: false }), stars = new THREE.Points(starG, starM); stars.scale.setScalar(150000);
+    /* the rocket: engine bell, fins, body with a window that shows the fuel level, nose cone; z = 0 at the bell's exit */
+    const rocket = new THREE.Group(), bodyM = M({ roughness: 0.4, metalness: 0.3 }), noseM = M({ roughness: 0.4, metalness: 0.2 }), finM = M({ roughness: 0.5 }), bellM = M({ roughness: 0.35, metalness: 0.8, color: 0x3a3f46 });
+    const bell = mesh(upZ(new THREE.CylinderGeometry(0.35, 0.6, 1.4, 24, 1, true)), bellM); bell.material.side = THREE.DoubleSide; bell.position.z = 0.7;
+    const body = mesh(upZ(new THREE.CylinderGeometry(RR, RR, RH - 4.4, 32)), bodyM); body.position.z = 1.4 + (RH - 4.4) / 2;
+    const nose = mesh(upZ(new THREE.ConeGeometry(RR, 3, 32)), noseM); nose.position.z = RH - 1.5;
+    for (let k = 0; k < 4; k++) { const sh = new THREE.Shape(); sh.moveTo(0, 0); sh.lineTo(1.5, -0.4); sh.lineTo(1.5, 0.8); sh.lineTo(0, 3.2); sh.closePath();
+      const fg = new THREE.ExtrudeGeometry(sh, { depth: 0.12, bevelEnabled: false }); fg.rotateX(Math.PI / 2); fg.translate(RR - 0.05, 0.06, 1.4); const fin = mesh(fg, finM); fin.rotation.z = k * Math.PI / 2 + Math.PI / 4; rocket.add(fin); }
+    const winBack = mesh(new THREE.BoxGeometry(0.5, 0.2, 1), M({ roughness: 0.6, color: 0x1d252f })), fuelM = M({ roughness: 0.5, emissive: 0x552200 }), fuel = mesh(new THREE.BoxGeometry(0.42, 0.24, 1), fuelM, false);
+    const winH = RH - 6.2; winBack.scale.z = winH; winBack.position.set(0, -RR + 0.05, 1.9 + winH / 2);
+    rocket.add(bell, body, nose, winBack, fuel);
+    /* plume: two nested cones, additive, scaled by the thrust; a glow sprite at the nozzle */
+    const plumeM = new THREE.MeshBasicMaterial({ color: 0xffa040, transparent: true, opacity: 0.55, blending: THREE.AdditiveBlending, depthWrite: false }), coreM = new THREE.MeshBasicMaterial({ color: 0xfff1c0, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false });
+    const cone = (r) => new THREE.ConeGeometry(r, 1, 24, 1, true).rotateX(-Math.PI / 2).translate(0, 0, -0.5);   /* wide end at the nozzle, tip 1 m below */
+    const plume = new THREE.Mesh(cone(0.7), plumeM), core = new THREE.Mesh(cone(0.38), coreM);
+    const plumeG = new THREE.Group(); plumeG.add(plume, core); rocket.add(plumeG);
+    /* smoke over the pad while the engine fires near the ground */
+    const smokeM = M({ roughness: 1, transparent: true, opacity: 0.8, depthWrite: false }), smoke = new THREE.Group(), rp = rng(7);
+    for (let i = 0; i < 26; i++) { const b = mesh(new THREE.IcosahedronGeometry(1, 3), smokeM, false); const a = rp() * 6.283, d = 6 + rp() * 14; b.position.set(Math.cos(a) * d, Math.sin(a) * d, 1.4 + rp() * 1.2); b.userData = { s: 1 + rp() * 1.6, ph: rp() * 6.28 }; smoke.add(b); }
+    scene.add(ground, pad, tower, clouds, stars, rocket, smoke);
+    g3 = { rd, el, scene, cam, hemi, sun, groundM, ground, padM, pad, steelM, tower, cloudM, clouds, starM, stars, rocket, bodyM, noseM, finM, fuel, fuelM, winH, plumeG, plume, core, smokeM, smoke };
+    can.addEventListener('wheel', (e) => { if (!use3() || !in3(e)) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3() && !S.run) draw(); }, { grab: (e) => !use3() || !in3(e), phMin: 0.25, phMax: 2.4, zMin: 0.35, zMax: 3, keys: false });
+    can.addEventListener('pointerup', () => { if (!use3()) can.style.cursor = ''; });
+    return true;
+  }
+  const in3 = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; return x >= rect3.x && x < rect3.x + rect3.w && y >= rect3.y && y < rect3.y + rect3.h; };
+  function theme3() {
+    const g = g3, dk = VD3.dark();
+    g.groundM.color = col3(T.ground, '#d5e3c8').multiplyScalar(dk ? 1 : 0.82); g.padM.color = col3(T.pad, '#b4bcc6'); g.steelM.color = col3(T.steel, '#8d99a8'); g.cloudM.color = col3(T.cloud, '#ffffff'); g.starM.color = col3(T.star, '#ffffff');
+    g.bodyM.color = col3(T.body, '#c9d1db'); g.noseM.color = col3(T.nose, '#c0392b'); g.finM.color = col3(T.fin, '#5f6a78'); g.fuelM.color = col3(T.flame, '#e08a2c'); g.smokeM.color = col3(T.smoke, '#e4e7eb');
+    g.hemi.intensity = dk ? 0.55 : 0.65; g.sun.intensity = dk ? 0.8 : 0.95;
+    /* additive light reads as fire on a dark sky; on a light one it washes out to white, so the plume is painted normally there */
+    for (const m of [g.plume.material, g.core.material]) { m.blending = dk ? THREE.AdditiveBlending : THREE.NormalBlending; m.needsUpdate = true; }
+    g.plume.material.color = col3(dk ? '#ffa040' : '#f08a20', '#ffa040'); g.core.material.color = col3(dk ? '#fff1c0' : '#ffd36a', '#fff1c0');
+  }
+  /* draws the 3D picture into (x0, y0, w, h) for the state q; returns the rocket's nose and tail on this canvas */
+  function draw3(x0, y0, w, h, q, F) {
+    const g = g3, dk = VD3.dark(), W0 = Math.max(1, Math.round(w)), H0 = Math.max(1, Math.round(h));
+    rect3 = { x: x0, y: y0, w: W0, h: H0 }; g.el.hidden = false; Object.assign(g.el.style, { left: x0 + 'px', top: y0 + 'px', width: W0 + 'px', height: H0 + 'px', borderRadius: 8 * ps() + 'px' });
+    if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.ground, T.body, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    const onEarth = !!S.p.g, sk = onEarth ? 1 - Math.exp(-q.y / 15000) : 1, z = q.y + 1.2;   /* the pad's top is 1.2 m up */
+    const skyCol = col3(mix(T.skyLow, T.space, sk), '#d4e8f7'); g.scene.background = skyCol;
+    g.scene.fog = onEarth ? new THREE.Fog(skyCol, 2000 + q.y * 2, 40000 + q.y * 6) : null;
+    g.ground.visible = g.pad.visible = g.tower.visible = g.clouds.visible = g.smoke.visible = onEarth;
+    g.starM.opacity = Math.max(0, Math.min(1, (sk - 0.3) / 0.5)); g.stars.visible = g.starM.opacity > 0;
+    g.rocket.position.set(0, 0, z); g.stars.position.set(0, 0, z);
+    /* fuel window: the orange fill's height is the fraction of fuel left */
+    const ff = Math.max(0, (q.m - S.p.md) / Math.max(1, S.p.mf)); g.fuel.visible = ff > 0.002; g.fuel.scale.z = Math.max(0.001, g.winH * ff); g.fuel.position.set(0, -RR + 0.02, 1.9 + g.winH * ff / 2);
+    /* plume: length grows with the square root of the thrust (2.25 MN is the largest the sliders allow), flickering while it runs */
+    const burn = q.burning && !(q.onPad && S.t === 0 && !S.run); g.plumeG.visible = burn;
+    if (burn) { const k = Math.sqrt(F.thrust / 2.25e6), fk = !reduce && S.run ? 1 + 0.07 * Math.sin(amb * 41) + 0.05 * Math.sin(amb * 67 + 1) : 1, L = (4 + 26 * k) * fk, r = 0.7 + 0.8 * k;
+      g.plume.scale.set(r, r, L); g.core.scale.set(r, r, L * 0.5); }
+    const low = onEarth && burn && S.t > 0 && q.y < 60; g.smoke.visible = low;
+    if (low) { const a = 1 - q.y / 60; g.smokeM.opacity = 0.6 * a; g.smoke.children.forEach((b) => { const s = b.userData.s * (1 + (reduce ? 0 : 0.15 * Math.sin(amb * 3 + b.userData.ph))); b.scale.setScalar(s); }); }
+    g.sun.position.set(-60, -80, z + 120); g.sun.target.position.set(0, 0, z); g.sun.castShadow = onEarth && q.y < 200;
+    /* camera: beside the rocket, looking at its middle; a little lower on the pad so the ground and tower show */
+    const tz = z + RH * 0.45, dist = 60 / Math.max(0.6, Math.min(1.4, g.cam.aspect * 1.6));
+    VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0, tz), dist);
+    g.cam.near = 0.5; g.cam.far = onEarth ? 120000 + q.y * 4 : 400000; g.cam.updateProjectionMatrix();
+    g.scene.updateMatrixWorld(); g.rd.render(g.scene, g.cam);
+    const v = new THREE.Vector3(), Q = (zz) => { v.set(0, 0, zz).project(g.cam); return [x0 + (v.x + 1) / 2 * W0, y0 + (1 - v.y) / 2 * H0]; };
+    return { nose: Q(z + RH), tail: Q(z), mid: Q(z + RH * 0.5) };
+  }
+  function setView(v) {
+    G3.want = v === '3d';
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { G3.want = false; v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setView(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; can.style.cursor = use3() ? 'grab' : ''; if (g3 && !G3.on) g3.el.hidden = true;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    draw();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const p = ps(), F = flight(P()), q = F.at(S.t), bl = S.blind, wide = W > 640;
-    const colW = wide ? Math.min(240 * p, W * 0.32) : W * 0.5, top = 96 * p, bot = H - 30 * p;
+    const colW = wide ? (use3() ? Math.min(360 * p, W * 0.4) : Math.min(240 * p, W * 0.32)) : W * 0.5, top = 96 * p, bot = H - 30 * p;
     // altitude column: scale to the highest point reached (or the burnout height in space)
     const yMax = Math.max(100, isFinite(F.yTop) ? F.yTop : F.yBurnout * 1.05), Yp = (y) => bot - (bot - top) * Math.min(1, y / yMax);
     const rx = colW * 0.62, ry = Yp(q.y), rw = 18 * p, rh = 58 * p, fuelFrac = Math.max(0, (q.m - S.p.md) / Math.max(1, S.p.mf));
-    scene(p, colW, top, bot, rx, ry, rw, rh, q, F);
+    const u3 = use3(); if (g3 && !u3) g3.el.hidden = true;
+    let r3 = null;
+    if (u3) { ctx.clearRect(80 * p, top - 18 * p, colW - 84 * p, H - top + 12 * p); r3 = draw3(80 * p, top - 18 * p, colW - 84 * p, H - top + 12 * p, q, F); } else scene(p, colW, top, bot, rx, ry, rw, rh, q, F);
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(74 * p, top); ctx.lineTo(74 * p, bot); ctx.stroke();
     ctx.font = `${10 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
     const ys = niceStep(yMax / 5); for (let y = 0; y <= yMax + 1e-9; y += ys) { ctx.fillRect(70 * p, Yp(y) - 0.5, 8 * p, 1); ctx.fillText(y >= 1000 ? `${n0(y / 1000, ys < 1000 ? 1 : 0)} km` : `${n0(y)} m`, 66 * p, Yp(y)); }
     if (S.p.g) { ctx.fillStyle = T.gridStrong; ctx.fillRect(0, bot, 78 * p, 3 * p); }
+    if (u3) {   /* the height scale points at the rocket: a marker at its height, joined to its tail in the picture */
+      const my = Yp(q.y); ctx.fillStyle = T.y || T.accent; ctx.beginPath(); ctx.moveTo(80 * p, my); ctx.lineTo(72 * p, my - 5 * p); ctx.lineTo(72 * p, my + 5 * p); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = T.y || T.accent; ctx.globalAlpha = 0.6; ctx.setLineDash([3 * p, 3 * p]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(80 * p, my); ctx.lineTo(r3.tail[0] - 14 * p, r3.tail[1]); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    } else {
     // rocket: exhaust plume whose size follows the thrust u × (burn rate), only while the engine burns
     if (q.burning && !(q.onPad && S.t === 0 && !S.run)) {
       const k = Math.sqrt(F.thrust / 2.25e6), fk = !reduce && S.run ? 1 + 0.07 * Math.sin(amb * 41) + 0.05 * Math.sin(amb * 67 + 1) : 1;   // 2.25 MN is the largest thrust the sliders allow
@@ -235,6 +359,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; const fx = rx + rw + 3 * p, fy = ry - rh * 0.45, fw2 = ctx.measureText('fuel').width;
     ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.8; ctx.fillRect(fx - 2 * p, fy - 7 * p, fw2 + 4 * p, 14 * p); ctx.globalAlpha = 1; ctx.fillStyle = T.muted; ctx.fillText('fuel', fx, fy);
+    }
     // status
     ctx.fillStyle = T.ink; ctx.font = `600 ${12.5 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     const st = !F.lifts && S.p.g ? 'Thrust never beats the weight: it never leaves the pad.' : q.landed ? 'Back on the ground.' : q.onPad && S.t > 0 && q.burning ? 'Burning on the pad: thrust is less than the weight.' : q.burning ? 'Engine on' : S.t > 0 ? 'Engine off: coasting' : 'Ready';
@@ -362,6 +487,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   tokens(); new ResizeObserver(resize).observe(stage); applyPreset('space'); resize();
+  /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
+  G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView('3d');
+  /* something happens on open: the rocket lights its engine once, unless Reduce motion is on or someone has already started */
+  let touched = false, auto = false;
+  for (const ev of ['pointerdown', 'keydown', 'click', 'input']) document.addEventListener(ev, () => { touched = true; if (auto) { auto = false; restart(); } }, { capture: true });
+  setTimeout(() => { if (!touched && !reduce && !S.run && S.t === 0) { auto = true; setRun(true); } }, 900);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();
