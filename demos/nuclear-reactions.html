@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <title>Nuclear Reactions, Fission and Fusion</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,6 +22,8 @@
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
 .pane { position: relative; flex: 1 1 auto; min-height: 360px; }
 .pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; }
+.pane.in3d #can { pointer-events: none; }
+.pane.in3d > canvas:first-child { cursor: grab; }
 .curvebox { position: relative; flex: none; height: 220px; border-top: 1px solid var(--line); }
 .curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
@@ -74,6 +78,7 @@
           <button type="button" data-s="1" aria-pressed="true">1×</button>
           <button type="button" data-s="10" aria-pressed="false">10×</button>
         </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg" hidden><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <span class="count mono" id="clock"></span>
       </div>
       <div class="pane" id="pane">
@@ -656,6 +661,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- chain reaction picture ----------
   function drawCh() {
+    if (use3()) { drawCh3(); return; }
     const p = proj(), by = scene(), c = S.ch;
     if (c.mode === 'sph') {
       const narrow = W < 620, Rpx = Math.min(by * 0.4, (narrow ? W * 0.4 : W * 0.26)), cx = narrow ? W * 0.5 : W * 0.33, cy = by * 0.5, sc = Rpx / c.R;
@@ -690,6 +696,53 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       lcdBox(mx, 30 * p, mw, mh, String(g.sizes.length - 1), 'generation'); lcdBox(mx, 96 * p, mw, mh, n > 99999 ? n.toExponential(2) : String(n), 'neutrons now');
       lcdBox(mx, 162 * p, mw, mh, g.fisTot > 99999 ? g.fisTot.toExponential(2) : String(g.fisTot), 'fissions so far'); }
     lab(W < 620 ? 'columns: generations · orange: fissions' : 'each column is a generation (up to 48 neutrons drawn); orange pairs are fissions', W * 0.04, by + 16 * p);
+  }
+
+  /* The sphere in 3D: the same neutron paths (the simulation keeps x, y, z), seen through a see-through shell of the metal at its
+     true radius, on the bench. Lengths in cm. Only the picture changes; k, the leak fraction and the readings are the flat view's. */
+  const G3 = { st: null, view: null, o: { th: -0.7, ph: 1.2, zoom: 1 }, shell: null, core: null, lines: null, fis: null, out: null, trk: null, R: 0, bench: null };
+  const use3 = () => !!(S.view === 'ch' && S.ch.mode === 'sph' && G3.view && G3.view.is3d() && G3.st);
+  function initCh3() {
+    const st = VD3K.stage($('pane'), { before: can, fov: 32, near: 0.5, far: 2000, fogAt: [1.3, 3.2] }); if (!st) return false;
+    G3.st = st; const sc = st.scene;
+    G3.bench = VD3K.bench(st, { w: 600, d: 600 }); sc.add(G3.bench);
+    G3.stand = new THREE.Mesh(new THREE.TorusGeometry(1, 0.08, 12, 48), VD3K.material(st, { roughness: 0.5, metalness: 0.6 }, ['#5d6772', '#8a95a3'])); sc.add(G3.stand);
+    G3.dim = new THREE.Line(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0xf2c14e })); G3.dim.renderOrder = 2; G3.dim.material.depthTest = false; sc.add(G3.dim);
+    G3.dimLab = VD3K.label('R', { size: 1, color: '#ffffff', bg: 'rgba(20,28,38,0.8)' }); G3.dimLab.material.depthTest = false; G3.dimLab.renderOrder = 3; sc.add(G3.dimLab);
+    G3.shell = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), VD3K.material(st, { roughness: 0.35, metalness: 0.7, transparent: true, opacity: 0.22, depthWrite: false }, ['#7f8a96', '#9aa6b4']));
+    G3.core = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), new THREE.MeshBasicMaterial({ color: 0x0b1016, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.BackSide }));
+    sc.add(G3.core, G3.shell);
+    G3.lines = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x8cc8ff, transparent: true, opacity: 0.85 })); sc.add(G3.lines);
+    G3.fis = VD3K.particles(st, { n: 400, r: 0.32, color: T.fis, emissive: 0.6 }); G3.out = VD3K.particles(st, { n: 400, r: 0.2, color: '#cfe6ff', emissive: 0.5 });
+    sc.add(G3.fis.mesh || G3.fis, G3.out.mesh || G3.out);
+    st.orbit(st.el, G3.o, () => redraw(), { phMin: 0.2, phMax: 1.5, zMin: 0.5, zMax: 3 });
+    return true;
+  }
+  function drawCh3() {
+    const st = G3.st, c = S.ch, p = proj(), R = c.R;
+    st.size(W, H);
+    G3.shell.scale.setScalar(R); G3.core.scale.setScalar(R * 0.999); G3.shell.position.set(0, 0, R); G3.core.position.set(0, 0, R); G3.bench.position.z = 0;
+    if (G3.trk !== CHN.tracks || G3.R !== R) {
+      G3.trk = CHN.tracks; G3.R = R; const v = []; let nf = 0, no = 0;
+      for (const tr of CHN.tracks) { for (let i = 1; i < tr.length; i++) v.push(tr[i - 1][0], tr[i - 1][1], tr[i - 1][2] + R, tr[i][0], tr[i][1], tr[i][2] + R);
+        const e = tr[tr.length - 1]; if (tr.end === 'fission') G3.fis.put(nf++, e[0], e[1], e[2] + R); else G3.out.put(no++, e[0], e[1], e[2] + R); }
+      G3.lines.geometry.dispose(); G3.lines.geometry = new THREE.BufferGeometry(); G3.lines.geometry.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
+      G3.fis.show(nf); G3.out.show(no); G3.fis.done(); G3.out.done();
+      G3.stand.scale.set(R * 0.45, R * 0.45, R * 0.45); G3.stand.position.set(0, 0, R * 0.04);
+      G3.dim.geometry.dispose(); G3.dim.geometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, R), new THREE.Vector3(0, -R, R)]);
+      const t = `R = ${f(R, 2)} cm`; if (t !== G3.dimLab.userData.t) { G3.dimLab.userData.t = t; G3.dimLab.set(t); G3.dimLab.scale.multiplyScalar(R / 6); } G3.dimLab.position.set(0, -R * 0.5, R * 1.12);
+    }
+    st.place(G3.o, new THREE.Vector3(0, 0, R), st.fit(R * 5.2, 1.4));
+    st.render();
+    /* words and meters on top, as in the flat view */
+    lab(`${MAT[c.mat].name}, ${f(sphereMass(MAT[c.mat], c.R), 1)} kg, R = ${f(c.R, 2)} cm`, 14 * p, 16 * p, { c: T.ink, w: 700 });
+    lab(W < 620 ? 'orange: fission · pale: leaked out · drag to turn' : 'paths of 40 neutrons this generation in 3D · orange: fission · pale: leaked out · drag to turn', 14 * p, 32 * p, { c: T.muted });
+    if (W < 620) return;
+    const mx = W - 160 * p, mw = 130 * p, mh = 28 * p, sk = kStats(CHN.ks);
+    lcdBox(mx, 30 * p, mw, mh, String(CHN.gen), 'generation');
+    lcdBox(mx, 96 * p, mw, mh, CHN.last ? f(CHN.last.k, 3) : '—', 'k this generation');
+    lcdBox(mx, 162 * p, mw, mh, isFinite(sk.k) ? f(sk.k, 3) : '—', 'k, mean so far');
+    lcdBox(mx, 228 * p, mw, mh, CHN.last ? `${f(100 * CHN.last.leak / c.N, 1)}%` : '—', 'leaked out');
   }
 
   // ---------- fusion picture ----------
@@ -866,7 +919,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (S.blind) note(c, 'Blind: model curves hidden', P2[0] + P2[2] - 4, P2[1] + 2, T.muted, 'right');
     }
   }
-  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); ({ rx: drawRx, ch: drawCh, fu: drawFu, do: drawDo })[S.view](); drawCurve(); readouts(); clock(); }
+  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); ({ rx: drawRx, ch: drawCh, fu: drawFu, do: drawDo })[S.view](); drawCurve(); readouts(); clock();
+    $('pane').classList.toggle('in3d', use3()); if (G3.st) G3.st.el.style.visibility = use3() ? 'visible' : 'hidden'; }
   function clock() { $('clock').textContent = S.view === 'ch' ? (S.ch.mode === 'sph' ? `generation ${CHN.gen}` : `generation ${CHN.g.sizes.length - 1}`) : S.view === 'fu' ? `T = ${sci(Math.pow(10, S.fu.lgT), 3)} K` : S.view === 'do' ? `${f(S.do.r, 2)} m` : eqText(true); }
 
   // ---------- readouts ----------
@@ -933,6 +987,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cc = rxCalc(); $('rxBalance').innerHTML = `ΣZ ${cc.Zin} → ${cc.Zout} <span class="${cc.Zin === cc.Zout ? 'good' : 'bad'}">${cc.Zin === cc.Zout ? '✓' : '✗'}</span> · ΣA ${cc.Ain} → ${cc.Aout} <span class="${cc.Ain === cc.Aout ? 'good' : 'bad'}">${cc.Ain === cc.Aout ? '✓' : '✗'}</span>${cc.missing.length ? ` · <span class="bad">no mass for ${cc.missing.join(', ')}</span>` : ''}`;
     segSet('chMode', 'm', c.mode); segSet('chMat', 'mat', c.mat); segSet('chNs', 'n', c.N); segSet('chN0', 'n0', c.N0);
     for (const el of document.querySelectorAll('[data-ch]')) el.hidden = el.dataset.ch !== c.mode;
+    $('dimSeg').hidden = !(S.view === 'ch' && c.mode === 'sph');
+    if (!$('dimSeg').hidden && !G3.view && window.VD3K) G3.view = VD3K.view({ seg: '#dimSeg', init: initCh3, change: () => redraw(), status: () => {} });   /* three.js loads the first time the sphere opens */
     $('chR').value = c.R; $('oR').textContent = `${f(c.R, 2)} cm (${f(sphereMass(MAT[c.mat], c.R), 1)} kg)`; $('chK').value = c.k; $('oKf').textContent = f(c.k, 2);
     $('chTitle').textContent = c.mode === 'sph' ? 'Neutrons are followed one by one through a bare sphere until they cause a fission or escape' : 'Each neutron causes a fission with probability k/ν̄; each fission releases ν neutrons';
     segSet('fuPair', 'f', S.fu.pair); $('fuT').value = S.fu.lgT; $('oT').textContent = `${sci(Math.pow(10, S.fu.lgT), 3)} K`;
