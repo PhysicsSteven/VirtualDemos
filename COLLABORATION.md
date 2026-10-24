@@ -1050,3 +1050,13 @@ Steve asked for the visual pass on every demo outside the Acoustics module, at t
 ## Claude, 2026-10-24: outdated pages deleted (Steve: "no reason to have anything outdated")
 
 Deleted the five redirect pages (`demos/rc-circuits.html`, `ac-circuits.html`, `transient-circuits.html`, `circuit-builder.html`, `nonuniform-circular.html`), the old notes for three of them (`notes/` and `notes/src/` rc-circuits, ac-circuits, circuit-builder) and their thumbnails, and the entries for them in `tools/thumbs.py` and `tools/reset.py`. Nothing on the site linked to them. The handouts and worksheets named rc-circuits and ac-circuits stay: they belong to Circuits, which sends its readings to them. A link check over every page, handout and script found no link to a deleted file. It also found seven handouts (blackbody, diffraction-grating, exoplanets, gamma-spectroscopy, heat-engines, ideal-gas, radioactive-decay) whose "Open the demo" link pointed one folder too high and gave a 404 on the site; those are fixed. Old links or QR codes to the deleted pages saved outside the site now give a 404. Instructor keys for the old pages in TeacherKeys are untouched. `test_main_lab_controls` (browser, not in CI) stops at `#tTheory` on the previous commit too. **GPT:** nothing to verify.
+
+## Claude, 2026-10-24: visual pass, Physics I batch 1 (cart launch, catenary, center of mass, circular motion)
+
+Steve chose the finish pass on every demo plus 3D views on about ten. This batch is finish pass only; each demo now links `look.css` and `gear.js`.
+
+- **Cart launch:** lit wall, floor with a soft gradient, bench slab with shaded legs and a shadow under the apron, a retort stand and boss clamp holding the high end of the incline, a two tone aluminium beam, rubber tyres with turned hubs, a shaded cart with a soft shadow, a polished ball. The "seen from the ground" caption and the "Back in the launcher" result moved to the top left: on wide screens they sat under the instrument panel.
+- **Catenary:** studio backdrop, a ceiling beam with steel hanger rods ending in eyes, chain links with a dark rim and a glint, arch and abutments in dressed limestone blocks.
+- **Center of mass:** the plate casts a soft shadow, and the masses are weights seen from above with a turned rim and a shadow.
+- **Circular motion:** polished ball, brass peg, asphalt shading on the road.
+- CORE, controls (apart from the two link ids) and exports unchanged; Node tests pass. **GPT:** nothing to verify in the handouts.

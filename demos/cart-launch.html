@@ -79,6 +79,8 @@ table.rows input:focus { border-color: var(--accent); }
 @media (min-width: 821px) { :root[data-projector="on"] .instr { right: 374px; } }
 @media (max-width: 820px) { .instr { position: static; margin: 0; max-width: none; justify-content: center; } }
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -304,6 +306,7 @@ table.rows input:focus { border-color: var(--accent); }
     ctx.font = fa; const wa = ctx.measureText(a).width; ctx.font = fb; const wb = b ? ctx.measureText(b).width + 1 : 0, x0 = x - (wa + wb) / 2;
     ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.font = fa; ctx.fillText(a, x0, y); if (b) { ctx.font = fb; ctx.fillText(b, x0 + wa + 1, y + 4 * p); }
   }
+  const VG = window.VDGear;
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -332,7 +335,7 @@ table.rows input:focus { border-color: var(--accent); }
     const bxA = Math.min(ax(trA, -MOUTH), ax(trB, -MOUTH)) - 0.35, bxB = Math.max(ax(trA, -MOUTH), ax(trB, -MOUTH)) + 0.35;
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
     ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, sceneBot + 10 * p); ctx.clip();
-    ctx.fillStyle = T.wall; ctx.fillRect(0, 0, W, sceneBot + 10 * p);
+    if (VG) VG.wall(ctx, 0, 0, W, GY(floorYm), { color: T.wall, tile: 0 }); else { ctx.fillStyle = T.wall; ctx.fillRect(0, 0, W, sceneBot + 10 * p); }
     // wall panels, a whiteboard behind the bench and a clock
     const xL = offX + (0 - X0) / sc, xR = offX + (W - X0) / sc;
     ctx.strokeStyle = T.grid; ctx.lineWidth = 1;
@@ -349,21 +352,26 @@ table.rows input:focus { border-color: var(--accent); }
       ctx.strokeStyle = T.muted; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.moveTo(GX(cx), GY(cy)); ctx.lineTo(GX(cx), GY(cy + cr * 0.7)); ctx.moveTo(GX(cx), GY(cy)); ctx.lineTo(GX(cx + cr * 0.5), GY(cy - cr * 0.1)); ctx.stroke(); ctx.globalAlpha = 1;
     }
     // floor and baseboard
-    ctx.fillStyle = T.floor; ctx.fillRect(0, GY(floorYm), W, Math.max(0, sceneBot + 10 * p - GY(floorYm)));
+    { const fy = GY(floorYm), fh = Math.max(0, sceneBot + 10 * p - fy), fg = ctx.createLinearGradient(0, fy, 0, fy + Math.max(1, fh));
+      fg.addColorStop(0, VG ? VG.mix(T.floor, '#000000', 0.06) : T.floor); fg.addColorStop(1, VG ? VG.mix(T.floor, '#ffffff', VG.dark() ? 0.04 : 0.3) : T.floor);
+      ctx.fillStyle = fg; ctx.fillRect(0, fy, W, fh); }
     ctx.fillStyle = T.gridStrong; ctx.fillRect(0, GY(floorYm) - 4 * p, W, 4 * p);
     // the lab bench: top slab, apron and legs
     const slab = 0.04;
-    ctx.fillStyle = T.benchDark; for (const lx of [bxA + 0.08, bxB - 0.12]) ctx.fillRect(GX(lx), GY(benchY - slab), 0.04 * sc, GY(floorYm) - GY(benchY - slab));
+    for (const lx of [bxA + 0.1, bxB - 0.1]) { if (VG) { VG.shadow(ctx, GX(lx), GY(floorYm), 0.12 * sc, 0.02 * sc, 0.8); VG.rod(ctx, GX(lx), GY(benchY - slab), GX(lx), GY(floorYm), 0.02 * sc, { color: T.benchDark }); } else { ctx.fillStyle = T.benchDark; ctx.fillRect(GX(lx - 0.02), GY(benchY - slab), 0.04 * sc, GY(floorYm) - GY(benchY - slab)); } }
     ctx.fillStyle = T.benchDark; ctx.fillRect(GX(bxA + 0.04), GY(benchY - slab), GX(bxB - 0.04) - GX(bxA + 0.04), 0.06 * sc);
-    ctx.fillStyle = T.bench; ctx.fillRect(GX(bxA), GY(benchY), GX(bxB) - GX(bxA), slab * sc);
+    { const sg = ctx.createLinearGradient(0, GY(benchY), 0, GY(benchY - slab)); sg.addColorStop(0, VG ? VG.mix(T.bench, '#ffffff', 0.12) : T.bench); sg.addColorStop(1, VG ? VG.mix(T.bench, '#000000', 0.25) : T.bench);
+      ctx.fillStyle = sg; ctx.fillRect(GX(bxA), GY(benchY), GX(bxB) - GX(bxA), slab * sc);
+      const sh = ctx.createLinearGradient(0, GY(benchY - slab) + 0.06 * sc, 0, GY(benchY - slab) + 0.06 * sc + 14 * p); sh.addColorStop(0, 'rgba(0,0,0,0.18)'); sh.addColorStop(1, 'rgba(0,0,0,0)');
+      ctx.fillStyle = sh; ctx.fillRect(GX(bxA), GY(benchY - slab) + 0.06 * sc, GX(bxB) - GX(bxA), 14 * p); }
     ctx.fillStyle = T.trackHi; ctx.globalAlpha = 0.35; ctx.fillRect(GX(bxA), GY(benchY), GX(bxB) - GX(bxA), Math.max(1, 0.006 * sc)); ctx.globalAlpha = 1;
     // supports: on the level the track sits on two low feet; on the incline the high end stands on a rod with a clamp
     ctx.fillStyle = T.track;
     for (const sF of [trA + 0.12, trB - 0.12]) { const x = ax(sF, -MOUTH - RAIL), y = ay(sF, -MOUTH - RAIL); ctx.fillRect(GX(x) - 3 * p, GY(y), 6 * p, Math.max(2 * p, GY(benchY) - GY(y))); }
     if (ph > 0) {
       const xh = ax(trA + 0.12, -MOUTH - RAIL), yh = ay(trA + 0.12, -MOUTH - RAIL);
-      ctx.fillStyle = T.benchDark; ctx.fillRect(GX(xh) - 14 * p, GY(benchY) - 5 * p, 28 * p, 5 * p);   // stand base
-      ctx.fillStyle = T.ink; ctx.fillRect(GX(xh) - 6 * p, GY(yh) - 2 * p, 12 * p, 7 * p);              // clamp
+      if (VG) { VG.stand(ctx, GX(xh), GY(benchY), GY(yh) - 14 * p, { s: Math.min(p, 0.7 * p + 0.0004 * sc) }); VG.boss(ctx, GX(xh), GY(yh) + 1 * p, 0.8 * p); }
+      else { ctx.fillStyle = T.benchDark; ctx.fillRect(GX(xh) - 14 * p, GY(benchY) - 5 * p, 28 * p, 5 * p); ctx.fillStyle = T.ink; ctx.fillRect(GX(xh) - 6 * p, GY(yh) - 2 * p, 12 * p, 7 * p); }   // stand base and clamp
       ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
       ctx.fillText(`incline ${S.phiDeg}°, no friction`, GX(xh) + 18 * p, Math.min(GY(benchY) - 8 * p, sceneBot));
     }
@@ -371,6 +379,7 @@ table.rows input:focus { border-color: var(--accent); }
     const tp = (sv, n) => [SX(sv, n), SY(sv, n)];
     const quad = (a, b, n0, n1, col) => { ctx.fillStyle = col; ctx.beginPath(); for (const [sv, n] of [[a, n0], [b, n0], [b, n1], [a, n1]]) { const [x, y] = tp(sv, n); ctx.lineTo(x, y); } ctx.closePath(); ctx.fill(); };
     quad(trA, trB, -MOUTH, -MOUTH - RAIL, T.track);
+    quad(trA, trB, -MOUTH - RAIL * 0.55, -MOUTH - RAIL, VG ? VG.mix(T.track, '#000000', 0.22) : T.track);
     quad(trA, trB, -MOUTH, -MOUTH - Math.max(0.005, 1.5 * p / sc), T.trackHi);
     for (const [a, b] of [[trA - 0.03, trA], [trB, trB + 0.03]]) quad(a, b, -MOUTH + 0.035, -MOUTH - RAIL, T.ink);
     ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 1; ctx.font = `${8.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
@@ -416,9 +425,10 @@ table.rows input:focus { border-color: var(--accent); }
       for (const a of [-0.9, -0.45, 0.45, 0.9]) { ctx.beginPath(); ctx.moveTo(Math.sin(a) * (6 + 10 * q) * p, -Math.cos(a) * (6 + 10 * q) * p); ctx.lineTo(Math.sin(a) * (12 + 14 * q) * p, -Math.cos(a) * (12 + 14 * q) * p); ctx.stroke(); }
       ctx.restore();
     }
-    const grd = ctx.createRadialGradient(bx - br * 0.35, by - br * 0.35, br * 0.1, bx, by, br);
-    grd.addColorStop(0, '#fff3e0'); grd.addColorStop(0.35, T.ball); grd.addColorStop(1, T.ball);
-    ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(bx, by, br, 0, 7); ctx.fill(); ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.6; ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1;
+    if (VG) VG.ball(ctx, bx, by, br, T.ball);
+    else { const grd = ctx.createRadialGradient(bx - br * 0.35, by - br * 0.35, br * 0.1, bx, by, br);
+      grd.addColorStop(0, '#fff3e0'); grd.addColorStop(0.35, T.ball); grd.addColorStop(1, T.ball);
+      ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(bx, by, br, 0, 7); ctx.fill(); }
     // vectors (screen px per m/s and per m/s²); in the cart view velocities are relative to the cart
     const kv = 26 * p, ka = 6 * p, dirS = [cs, sn], dirN = [sn, -cs];   // screen directions of +s and +n
     const vec = (x, y, a, b, col, lab, o) => arrow(x, y, (a * dirS[0] + b * dirN[0]), (a * dirS[1] + b * dirN[1]), col, lab, o);
@@ -438,8 +448,9 @@ table.rows input:focus { border-color: var(--accent); }
       if (Math.abs(cNow.a) > 1e-9 && !cam) vec(SX(cNow.s - HALF, (TOPN - MOUTH) / 2), SY(cNow.s - HALF, (TOPN - MOUTH) / 2), cNow.a * ka, 0, T.g, 'a|cart', { w: 2 });
     }
     // caption
-    const capX = wide ? W - 12 * p : 12 * p, capY = wide ? 12 * p : 52 * p;
-    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = wide ? 'right' : 'left'; ctx.textBaseline = 'top';
+    /* top left under the buttons: the instrument panel sits at the top right */
+    const capX = 14 * p, capY = 52 * p;
+    ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText(cam ? 'seen from the cart: velocities relative to the cart' : 'seen from the ground', capX, capY);
     if (t > 0 && !hidden() && t >= L.t) { ctx.fillStyle = L.kind === 'caught' ? T.vy : T.g; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.fillText(L.kind === 'caught' ? 'Back in the launcher' : L.kind === 'cart' ? 'Missed the launcher' : 'Missed the cart', capX, capY + 16 * p); }
     plot(48 * p, sceneBot + 32 * p, W - 64 * p, plotH - 40 * p);
@@ -458,13 +469,14 @@ table.rows input:focus { border-color: var(--accent); }
     }
     // wheels with hubs and spokes; angle = distance / radius (true radius 0.028 m)
     for (const wx of [-hl * 0.62, hl * 0.62]) {
-      ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(wx, -wr, wr, 0, 7); ctx.fill();
-      ctx.fillStyle = T.trackHi; ctx.beginPath(); ctx.arc(wx, -wr, wr * 0.55, 0, 7); ctx.fill();
+      ctx.fillStyle = '#1b1f25'; ctx.beginPath(); ctx.arc(wx, -wr, wr, 0, 7); ctx.fill();   /* rubber tyre and a turned metal hub */
+      { const hg = ctx.createRadialGradient(wx - wr * 0.2, -wr - wr * 0.2, 0, wx, -wr, wr * 0.58); hg.addColorStop(0, '#eef1f4'); hg.addColorStop(1, '#8f99a5'); ctx.fillStyle = hg; } ctx.beginPath(); ctx.arc(wx, -wr, wr * 0.55, 0, 7); ctx.fill();
       ctx.strokeStyle = T.ink; ctx.lineWidth = Math.max(1, wr * 0.15); const a0 = pos / 0.028;
       for (let k = 0; k < 3; k++) { const a = a0 + k * 2.094; ctx.beginPath(); ctx.moveTo(wx, -wr); ctx.lineTo(wx + Math.cos(a) * wr * 0.55, -wr + Math.sin(a) * wr * 0.55); ctx.stroke(); }
     }
     // body: rounded, with a lighter top edge and a label plate
-    ctx.fillStyle = T.cart; rrect(-hl, yb, 2 * hl, yBot - yb, rr); ctx.fill();
+    { const cg = ctx.createLinearGradient(0, yb, 0, yBot); cg.addColorStop(0, VG ? VG.mix(T.cart, '#ffffff', 0.25) : T.cart); cg.addColorStop(1, VG ? VG.mix(T.cart, '#000000', 0.25) : T.cart);
+      ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 6 * p; ctx.shadowOffsetY = 2 * p; ctx.fillStyle = cg; rrect(-hl, yb, 2 * hl, yBot - yb, rr); ctx.fill(); ctx.restore(); }
     ctx.fillStyle = T.trackHi; ctx.globalAlpha = 0.45; ctx.fillRect(-hl + rr, yb + 1, 2 * hl - 2 * rr, Math.max(1.5, (yBot - yb) * 0.12)); ctx.globalAlpha = 1;
     ctx.fillStyle = T.cartTop; ctx.globalAlpha = 0.9; rrect(-hl * 0.75, yb + (yBot - yb) * 0.35, hl * 0.6, (yBot - yb) * 0.4, 2); ctx.fill(); ctx.globalAlpha = 1;
     // trip lever under the body at the back, which meets the trigger flag

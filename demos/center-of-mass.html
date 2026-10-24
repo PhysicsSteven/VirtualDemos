@@ -54,6 +54,8 @@ table.rows input:focus { border-color: var(--accent); }
 .stage canvas { touch-action: none; }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -234,11 +236,22 @@ table.rows input:focus { border-color: var(--accent); }
     $('out').innerHTML = h;
   }
   function cross(x, y, col) { const p = ps(); ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(x, y, 9 * p, 0, 7); ctx.moveTo(x - 13 * p, y); ctx.lineTo(x + 13 * p, y); ctx.moveTo(x, y - 13 * p); ctx.lineTo(x, y + 13 * p); ctx.stroke(); ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom'; ctx.fillText('CM', x + 12 * p, y - 8 * p); }
+  /* a weight seen from above, sitting on the plate: soft shadow down and right, a lit top face with a turned rim (drawing only) */
+  function puck(x, y, r, col) {
+    const VG = window.VDGear, p = ps();
+    if (VG) VG.shadow(ctx, x + 3 * p, y + 4 * p, r * 1.15, r * 1.15, 0.9);
+    const base = /^#[0-9a-f]{6}$/i.test(col) ? col : '#2b60b5', g = ctx.createRadialGradient(x - r * 0.3, y - r * 0.35, r * 0.1, x, y, r);
+    g.addColorStop(0, VG ? VG.mix(base, '#ffffff', 0.3) : base); g.addColorStop(0.75, base); g.addColorStop(1, VG ? VG.mix(base, '#000000', 0.35) : base);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.arc(x, y, r * 0.74, Math.PI * 0.95, Math.PI * 1.75); ctx.stroke();
+    ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.arc(x, y, r * 0.74, Math.PI * 1.95, Math.PI * 2.75); ctx.stroke();
+  }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh); const p = ps();
     if (S.mode === 'plate') {
       const B = plateBox();
+      if (window.VDGear) { window.VDGear.backdrop(ctx, W, Hh); ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.25)'; ctx.shadowBlur = 18 * p; ctx.shadowOffsetY = 6 * p; ctx.fillStyle = T.plate; ctx.fillRect(B.x0, B.y0, B.w, B.h); ctx.restore(); }
       // a brushed metal sheet with a bolt in each corner; the measuring grid is drawn on top of it
       const pg = ctx.createLinearGradient(B.x0, B.y0, B.x0 + B.w, B.y0 + B.h); pg.addColorStop(0, T.plateHi); pg.addColorStop(1, T.plate); ctx.fillStyle = pg; ctx.fillRect(B.x0, B.y0, B.w, B.h);
       ctx.strokeStyle = T.brush; ctx.lineWidth = 1; ctx.beginPath(); for (const [u, v, l] of BRUSH) { const y = B.y0 + v * B.h; ctx.moveTo(B.x0 + u * B.w * (1 - l), y); ctx.lineTo(B.x0 + (u * (1 - l) + l) * B.w, y); } ctx.stroke();
@@ -247,7 +260,7 @@ table.rows input:focus { border-color: var(--accent); }
         ctx.fillStyle = T.bolt; ctx.beginPath(); ctx.arc(cx, cy, 4 * p, 0, 7); ctx.fill(); ctx.strokeStyle = T.plate; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(cx - 2.5 * p, cy - 1 * p); ctx.lineTo(cx + 2.5 * p, cy + 1 * p); ctx.stroke(); }
       ctx.strokeStyle = T.plateGrid; for (let i = 1; i < 10; i++) { const x = B.x0 + B.sc * i / 10; ctx.beginPath(); ctx.moveTo(x, B.y0); ctx.lineTo(x, B.y0 + B.h); ctx.stroke(); } for (let j = 1; j < 6; j++) { const y = B.y0 + B.h - B.sc * j / 10; ctx.beginPath(); ctx.moveTo(B.x0, y); ctx.lineTo(B.x0 + B.w, y); ctx.stroke(); }
       ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillText('0', B.x0, B.y0 + B.h + 3); ctx.textAlign = 'right'; ctx.fillText('1.0 m', B.x0 + B.w, B.y0 + B.h + 3); ctx.textBaseline = 'bottom'; ctx.textAlign = 'left'; ctx.fillText('0.6 m', B.x0 - 2, B.y0 - 3);
-      S.ms.forEach((a, i) => { const [x, y] = toPx(B, a), r = (8 + 9 * Math.sqrt(a.m)) * p; ctx.fillStyle = COLS()[i]; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.3; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.arc(x, y, r * 0.72, 0, 7); ctx.stroke(); ctx.globalAlpha = 1; if (i === S.sel) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.stroke(); }
+      S.ms.forEach((a, i) => { const [x, y] = toPx(B, a), r = (8 + 9 * Math.sqrt(a.m)) * p; puck(x, y, r, COLS()[i]); if (i === S.sel) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(x, y, r + 1.5 * p, 0, 7); ctx.stroke(); }
         ctx.fillStyle = T.canvas; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(`${a.m.toFixed(1)}`, x, y); });
       if (!S.blind) { const C = centre(S.ms), [x, y] = toPx(B, C); cross(x, y, T.cm); }
       return;

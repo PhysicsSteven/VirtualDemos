@@ -54,6 +54,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -274,7 +276,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const ri = R - 31 * p, ro = R + 11 * p;
       ctx.fillStyle = T.grass; ctx.fillRect(0, 0, rw, rh);
       tufts(rw, 70 * p, rh, p, (x, y) => { const d = Math.hypot(x - cx, y - cy); return d > ri - 8 * p && d < ro + 8 * p; });
-      ctx.fillStyle = T.road; ctx.beginPath(); ctx.arc(cx, cy, ro, 0, 7); ctx.arc(cx, cy, ri, 7, 0, true); ctx.fill();
+      { const rg = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.3, 0, cx, cy, ro * 1.2); rg.addColorStop(0, window.VDGear ? window.VDGear.mix(T.road, '#ffffff', 0.08) : T.road); rg.addColorStop(1, window.VDGear ? window.VDGear.mix(T.road, '#000000', 0.12) : T.road); ctx.fillStyle = rg; } ctx.beginPath(); ctx.arc(cx, cy, ro, 0, 7); ctx.arc(cx, cy, ri, 7, 0, true); ctx.fill();
       if (S.preset === 'bank') { const gr = ctx.createRadialGradient(cx, cy, ri, cx, cy, ro); gr.addColorStop(0, T.shadow); gr.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(cx, cy, ro, 0, 7); ctx.arc(cx, cy, ri, 7, 0, true); ctx.fill(); }   // the low, inner edge drawn darker
       for (const rk of [ri, ro]) { const n = Math.max(12, Math.round(2 * Math.PI * rk / (14 * p))); ctx.lineWidth = 4 * p;
         for (let i = 0; i < n; i++) { ctx.strokeStyle = i % 2 ? T.kerb2 : T.kerb; ctx.beginPath(); ctx.arc(cx, cy, rk, i * 2 * Math.PI / n, (i + 1) * 2 * Math.PI / n + 0.002); ctx.stroke(); } }
@@ -309,9 +311,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     }
     ctx.restore();
   }
-  function peg(x, y, p) { ctx.fillStyle = T.shadow; ctx.beginPath(); ctx.arc(x + 2 * p, y + 2 * p, 7 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.peg; ctx.beginPath(); ctx.arc(x, y, 7 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(x, y, 3 * p, 0, 7); ctx.fill(); }
+  function peg(x, y, p) { ctx.fillStyle = T.shadow; ctx.beginPath(); ctx.arc(x + 2 * p, y + 2 * p, 7 * p, 0, 7); ctx.fill(); if (window.VDGear) { window.VDGear.ball(ctx, x, y, 7 * p, '#b8913a'); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(x, y, 2.5 * p, 0, 7); ctx.fill(); return; } ctx.fillStyle = T.peg; ctx.beginPath(); ctx.arc(x, y, 7 * p, 0, 7); ctx.fill(); ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(x, y, 3 * p, 0, 7); ctx.fill(); }
   function ball(x, y, r, sh) {
     if (sh) { ctx.fillStyle = T.shadow; ctx.beginPath(); ctx.arc(x + sh, y + sh, r, 0, 7); ctx.fill(); }
+    if (window.VDGear) { window.VDGear.ball(ctx, x, y, r, T.n); return; }
     ctx.fillStyle = T.n; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
     const g = ctx.createRadialGradient(x - r * 0.35, y - r * 0.35, 0, x - r * 0.35, y - r * 0.35, r); g.addColorStop(0, T.shine); g.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
   }

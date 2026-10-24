@@ -866,7 +866,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       const al = lead + (Lc - 2 * tilt * r) * tau + tilt * r * (Math.sin(ph) + 1), pe = r * Math.cos(ph); return [ax + ux * al + nx * pe, ay + uy * al + ny * pe, Math.sin(ph)]; };
     const seg = (front, w, c) => { ctx.strokeStyle = c; ctx.lineWidth = w; ctx.beginPath();
       for (let i = 0; i < M; i++) { const a = pt(i), b = pt(i + 1); if ((a[2] + b[2] > 0) !== front) continue; ctx.moveTo(a[0], a[1]); ctx.lineTo(b[0], b[1]); } ctx.stroke(); };
-    const G = window.VDGear, dk = G ? G.mix(/^#[0-9a-f]{6}$/i.test(col) ? col : '#3b4655', '#000000', 0.45) : col;
+    const VG = window.VDGear, dk = VG ? VG.mix(/^#[0-9a-f]{6}$/i.test(col) ? col : '#3b4655', '#000000', 0.45) : col;
     seg(false, o.lw * 0.85, dk);
     ctx.strokeStyle = col; ctx.lineWidth = o.lw; ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax + ux * lead, ay + uy * lead); ctx.lineTo(pt(0)[0], pt(0)[1]); ctx.moveTo(pt(M)[0], pt(M)[1]); ctx.lineTo(bx, by); ctx.stroke();
     seg(true, o.lw, col);
@@ -874,22 +874,22 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   }
   const springLW = (k) => (1.1 + 0.75 * Math.log10(Math.max(k, 0.5))) * projScale();
   function wallH(ctx, x, y0, y1, side) {          // a steel mounting post bolted to the bench, on the far side of x
-    const ps = projScale(), w = 12 * ps, x0 = side < 0 ? x - w : x, G = window.VDGear;
-    if (!G) return;
-    G.box(ctx, x0, y0, w, y1 - y0 + 4 * ps, { color: T.wire, r: 2.5 * ps, shadow: false });
-    for (const yy of [y0 + 8 * ps, y1 - 8 * ps]) G.screw(ctx, x0 + w / 2, yy, 2.6 * ps);
+    const ps = projScale(), w = 12 * ps, x0 = side < 0 ? x - w : x, VG = window.VDGear;
+    if (!VG) return;
+    VG.box(ctx, x0, y0, w, y1 - y0 + 4 * ps, { color: T.wire, r: 2.5 * ps, shadow: false });
+    for (const yy of [y0 + 8 * ps, y1 - 8 * ps]) VG.screw(ctx, x0 + w / 2, yy, 2.6 * ps);
   }
   function wallV(ctx, y, x0, x1) {                 // a steel bracket fixed to the ceiling, its face at y
-    const ps = projScale(), h = 12 * ps, G = window.VDGear;
-    if (!G) return;
-    G.box(ctx, x0, y - h, x1 - x0, h, { color: T.wire, r: 2.5 * ps, shadow: false });
-    for (const xx of [x0 + 10 * ps, x1 - 10 * ps]) G.screw(ctx, xx, y - h / 2, 2.6 * ps);
+    const ps = projScale(), h = 12 * ps, VG = window.VDGear;
+    if (!VG) return;
+    VG.box(ctx, x0, y - h, x1 - x0, h, { color: T.wire, r: 2.5 * ps, shadow: false });
+    for (const xx of [x0 + 10 * ps, x1 - 10 * ps]) VG.screw(ctx, xx, y - h / 2, 2.6 * ps);
   }
   /* the air track the cart rides on: an aluminium beam with a lit top edge */
   function rail(ctx, x0, x1, y) {
-    const ps = projScale(), G = window.VDGear, h = 7 * ps;
-    if (!G) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke(); return; }
-    const gr = ctx.createLinearGradient(0, y, 0, y + h); gr.addColorStop(0, G.dark() ? '#9aa6b4' : '#e7ebf0'); gr.addColorStop(0.35, G.dark() ? '#6b7684' : '#aeb7c2'); gr.addColorStop(1, G.dark() ? '#3c4550' : '#7d8794');
+    const ps = projScale(), VG = window.VDGear, h = 7 * ps;
+    if (!VG) { ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke(); return; }
+    const gr = ctx.createLinearGradient(0, y, 0, y + h); gr.addColorStop(0, VG.dark() ? '#9aa6b4' : '#e7ebf0'); gr.addColorStop(0.35, VG.dark() ? '#6b7684' : '#aeb7c2'); gr.addColorStop(1, VG.dark() ? '#3c4550' : '#7d8794');
     ctx.fillStyle = gr; ctx.fillRect(x0, y, x1 - x0, h); ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.fillRect(x0, y + h - 1, x1 - x0, 1);
   }
   /* a glass trough or beaker of oil: walls with a highlight, oil darker towards the bottom, a bright meniscus line */
@@ -928,8 +928,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   function drawBlock(ctx, x, y, side, id, label, col) {
     const ps = projScale(), hot = isHot(id);
     if (hot) { ctx.fillStyle = T.accent; ctx.globalAlpha = 0.22; roundRect(ctx, x - side / 2 - 5 * ps, y - side / 2 - 5 * ps, side + 10 * ps, side + 10 * ps, 7 * ps); ctx.fill(); ctx.globalAlpha = 1; }
-    { const G = window.VDGear, bc = /^#[0-9a-f]{6}$/i.test(T.block) ? T.block : '#cdd6e1', gr = ctx.createLinearGradient(x - side / 2, y - side / 2, x + side / 2, y + side / 2);
-      gr.addColorStop(0, G ? G.mix(bc, '#ffffff', 0.35) : bc); gr.addColorStop(0.5, bc); gr.addColorStop(1, G ? G.mix(bc, '#000000', 0.22) : bc);
+    { const VG = window.VDGear, bc = /^#[0-9a-f]{6}$/i.test(T.block) ? T.block : '#cdd6e1', gr = ctx.createLinearGradient(x - side / 2, y - side / 2, x + side / 2, y + side / 2);
+      gr.addColorStop(0, VG ? VG.mix(bc, '#ffffff', 0.35) : bc); gr.addColorStop(0.5, bc); gr.addColorStop(1, VG ? VG.mix(bc, '#000000', 0.22) : bc);
       ctx.save(); ctx.shadowColor = 'rgba(0,0,0,0.22)'; ctx.shadowBlur = 8 * ps; ctx.shadowOffsetY = 3 * ps; ctx.fillStyle = gr; roundRect(ctx, x - side / 2, y - side / 2, side, side, 4 * ps); ctx.fill(); ctx.restore();
       ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 1; roundRect(ctx, x - side / 2 + 1.5, y - side / 2 + 1.5, side - 3, side - 3, 3 * ps); ctx.stroke(); }
     ctx.strokeStyle = col || T.ink; ctx.lineWidth = (hot ? 2.4 : 1.2) * ps; ctx.globalAlpha = hot || col ? 1 : 0.55;

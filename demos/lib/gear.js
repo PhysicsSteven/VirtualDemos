@@ -3,7 +3,8 @@
 window.VDGear = (function () {
   const dark = () => { const t = document.documentElement.getAttribute('data-theme');
     return t === 'dark' || (t !== 'light' && matchMedia('(prefers-color-scheme: dark)').matches); };
-  const mix = (a, b, t) => { const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b);
+  /* blends two #rrggbb colours; anything else (a token written as rgb() or a name) comes back unchanged */
+  const mix = (a, b, t) => { if (!/^#[0-9a-f]{6}$/i.test(a) || !/^#[0-9a-f]{6}$/i.test(b)) return a; const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16)); const A = p(a), B = p(b);
     return '#' + A.map((v, i) => Math.round(v + (B[i] - v) * t).toString(16).padStart(2, '0')).join(''); };
   /* the room behind the apparatus: a wall that darkens a little towards the top and a soft floor glow */
   function backdrop(ctx, w, h, o = {}) {

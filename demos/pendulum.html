@@ -204,7 +204,7 @@ table.rows input:focus { border-color: var(--accent); }
     moon: { rod: false, L: 1.0, A: 8, m: 0.2, g: 1.62, hint: 'The same pendulum on the Moon, where g = 1.62 m/s²: the period grows by √(9.81/1.62) = 2.46. Try the Mystery planet and measure its g.' }
   };
   const S = { preset: 'simple', rod: false, L: 1.0, A: 8, m: 0.2, g: 9.81, gKey: '9.81', mystery: null, damp: false, st: { th: 8 * Math.PI / 180, w: 0 }, run: false, t: 0, trace: [], passes: [], lastT: null, blind: false, rows: [], plot: 'TL' };
-  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage'), G = window.VDGear;
+  const can = $('can'), ctx = can.getContext('2d'), stage = $('stage'), VG = window.VDGear;
   let W = 0, H = 0, dpr = 1, T = null, geo = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), gridStrong: g('--grid-strong'), accent: g('--accent'),
@@ -232,7 +232,7 @@ table.rows input:focus { border-color: var(--accent); }
     scenery(p, wide, sw, sh, px, py, gy, bx);
     // photogate at the bottom: a U shaped gate whose infrared beam is drawn lit while the bob blocks it
     const inBeam = Math.abs(bx - px) < 10 * p;
-    G.gate(ctx, px, gy + 27 * p, 36 * p, 21 * p, inBeam, { s: p, beam: T.beam });
+    VG.gate(ctx, px, gy + 27 * p, 36 * p, 21 * p, inBeam, { s: p, beam: T.beam });
     // release angle guide
     ctx.strokeStyle = T.grid; ctx.setLineDash([4 * p, 4 * p]); ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(px, py + Lpx + 50 * p); ctx.stroke(); ctx.setLineDash([]);
     if (S.rod) {
@@ -246,18 +246,18 @@ table.rows input:focus { border-color: var(--accent); }
     else { ctx.save(); ctx.lineCap = 'round'; ctx.strokeStyle = T.rod; ctx.lineWidth = 1.3 * p; ctx.beginPath(); ctx.moveTo(px, py); ctx.lineTo(bx, by); ctx.stroke(); ctx.restore();
       // a polished metal bob with a small hook where the string ties on
       const r = (8 + 6 * Math.cbrt(S.m)) * p, ux = (bx - px) / (Lpx || 1), uy = (by - py) / (Lpx || 1);
-      G.rod(ctx, bx - ux * (r + 4 * p), by - uy * (r + 4 * p), bx - ux * r * 0.8, by - uy * r * 0.8, 1.6 * p, { color: T.metal });
-      G.ball(ctx, bx, by, r, T.bob); }
+      VG.rod(ctx, bx - ux * (r + 4 * p), by - uy * (r + 4 * p), bx - ux * r * 0.8, by - uy * r * 0.8, 1.6 * p, { color: T.metal });
+      VG.ball(ctx, bx, by, r, T.bob); }
     // the knife edge pivot: a steel axle through the block
-    G.screw(ctx, px, py, 4 * p);
+    VG.screw(ctx, px, py, 4 * p);
     // the photogate timer: an instrument with an LCD that shows the last full period
-    G.box(ctx, 14 * p, 50 * p, 150 * p, 46 * p, { r: 6 * p, shadow: false }); G.plate(ctx, 'Photogate timer', 89 * p, 59 * p, { s: 7 * p });
-    G.lcd(ctx, 22 * p, 66 * p, 134 * p, 22 * p, S.lastT ? `T = ${S.lastT.toFixed(3)} s` : 'T = –.––– s', { font: `600 ${13 * p}px ${T.mono}` });
+    VG.box(ctx, 14 * p, 50 * p, 150 * p, 46 * p, { r: 6 * p, shadow: false }); VG.plate(ctx, 'Photogate timer', 89 * p, 59 * p, { s: 7 * p });
+    VG.lcd(ctx, 22 * p, 66 * p, 134 * p, 22 * p, S.lastT ? `T = ${S.lastT.toFixed(3)} s` : 'T = –.––– s', { font: `600 ${13 * p}px ${T.mono}` });
     ctx.textAlign = 'left'; ctx.textBaseline = 'top'; ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`;
     ctx.fillText(`θ = ${f(th * 180 / Math.PI, 1)}°   t = ${f(S.t, 2)} s`, 16 * p, 104 * p); ctx.fillText(`L = ${f(S.L, 2)} m   θ₀ = ${S.A}°`, 16 * p, 120 * p); ctx.fillText(`m = ${f(S.m, 2)} kg`, 16 * p, 136 * p);
     // angle trace
     const tx0 = wide ? sw + 30 * p : 40 * p, tx1 = W - 14 * p, ty0 = wide ? 70 * p : sh + 10 * p, ty1 = wide ? H - 40 * p : H - 24 * p, mid = (ty0 + ty1) / 2, span = 10;
-    G.panel(ctx, tx0 - 34 * p, ty0 - 12 * p, tx1 - tx0 + 42 * p, ty1 - ty0 + 34 * p);   // the trace sits on a frosted panel in front of the wall
+    VG.panel(ctx, tx0 - 34 * p, ty0 - 12 * p, tx1 - tx0 + 42 * p, ty1 - ty0 + 34 * p);   // the trace sits on a frosted panel in front of the wall
     ctx.strokeStyle = T.grid; ctx.lineWidth = 1; for (const k of [0.25, 0.75]) { const y = Math.round(ty0 + (ty1 - ty0) * k) + 0.5; ctx.beginPath(); ctx.moveTo(tx0, y); ctx.lineTo(tx1, y); ctx.stroke(); }
     ctx.strokeStyle = T.gridStrong; ctx.beginPath(); ctx.moveTo(tx0, mid); ctx.lineTo(tx1, mid); ctx.stroke();
     ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${10 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; const am = Math.max(S.A, 5);
@@ -274,20 +274,20 @@ table.rows input:focus { border-color: var(--accent); }
   function scenery(p, wide, sw, sh, px, py, gy, bx) {
     // a painted lab wall, a wooden bench, a retort stand whose boss clamp holds the pivot, and a post under the photogate
     const ww = wide ? W : sw, bt = sh - 14 * p;
-    G.wall(ctx, 0, 0, ww, bt, { tile: [64 * p, 32 * p] });
-    G.bench(ctx, 0, bt + 6 * p, ww, 14 * p, Math.max(6 * p, sh - bt - 6 * p), { top: T.bench, front: T.benchEdge });
+    VG.wall(ctx, 0, 0, ww, bt, { tile: [64 * p, 32 * p] });
+    VG.bench(ctx, 0, bt + 6 * p, ww, 14 * p, Math.max(6 * p, sh - bt - 6 * p), { top: T.bench, front: T.benchEdge });
     // the bob's soft shadow on the bench, under it
-    G.shadow(ctx, bx, bt + 3 * p, 18 * p, 3 * p, 0.55);
+    VG.shadow(ctx, bx, bt + 3 * p, 18 * p, 3 * p, 0.55);
     // post and foot under the photogate
-    G.shadow(ctx, px, bt + 1 * p, 22 * p, 3 * p, 0.8);
-    G.rod(ctx, px, gy + 48 * p, px, bt - 4 * p, 2.2 * p, { color: T.metal });
-    G.box(ctx, px - 16 * p, bt - 5 * p, 32 * p, 6 * p, { color: T.metalDark, r: 2 * p, shadow: false });
+    VG.shadow(ctx, px, bt + 1 * p, 22 * p, 3 * p, 0.8);
+    VG.rod(ctx, px, gy + 48 * p, px, bt - 4 * p, 2.2 * p, { color: T.metal });
+    VG.box(ctx, px - 16 * p, bt - 5 * p, 32 * p, 6 * p, { color: T.metalDark, r: 2 * p, shadow: false });
     // retort stand at the right of the pendulum: base, upright, boss clamp, crossbar to the pivot block
     const sx = sw - 30 * p, top = py - 40 * p, cy = py - 14 * p;
-    G.stand(ctx, sx, bt + 1 * p, top, { s: p, side: -0.2 });
-    G.rod(ctx, px, cy, sx, cy, 2.6 * p, { color: T.metalHi });
-    G.boss(ctx, sx, cy, p);
-    G.box(ctx, px - 9 * p, py - 22 * p, 18 * p, 27 * p, { color: T.metalDark, r: 2.5 * p, shadow: false });   // pivot block; the axle is drawn on top later
+    VG.stand(ctx, sx, bt + 1 * p, top, { s: p, side: -0.2 });
+    VG.rod(ctx, px, cy, sx, cy, 2.6 * p, { color: T.metalHi });
+    VG.boss(ctx, sx, cy, p);
+    VG.box(ctx, px - 9 * p, py - 22 * p, 18 * p, 27 * p, { color: T.metalDark, r: 2.5 * p, shadow: false });   // pivot block; the axle is drawn on top later
   }
   function readouts() {
     const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, g = gNow(), th0 = S.A * Math.PI / 180;

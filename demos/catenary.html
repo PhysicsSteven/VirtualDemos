@@ -105,6 +105,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 @media (min-width: 1061px) and (max-height: 820px) { :root[data-projector="on"] .stage { min-height: 440px !important; } }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
 </head>
 <body>
 <div class="app">
@@ -549,24 +551,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const ctx = ctxs.m, g = mGeom(), ps = g.ps;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const VG = window.VDGear;
+    if (VG) VG.backdrop(ctx, W, H);
     const L = S.layers, isArch = arch();
     const pA = PX(g, S.A[0], S.A[1]), pB = PX(g, S.B[0], S.B[1]);
 
     // ground (arch) or ceiling posts (hanging)
     if (isArch) {
       const gy = Math.max(pA[1], pB[1]) + 0.3 * g.k;
-      ctx.fillStyle = T.grid; ctx.fillRect(0, gy, W, H - gy);
+      { const gg = ctx.createLinearGradient(0, gy, 0, H); gg.addColorStop(0, T.grid); gg.addColorStop(1, VG ? VG.mix(T.grid, '#000000', 0.12) : T.grid); ctx.fillStyle = gg; ctx.fillRect(0, gy, W, H - gy); }
       ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1.5 * ps; ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke();
-      for (const p of [pA, pB]) {   // abutments: a block from the ground up to the springing point
+      for (const p of [pA, pB]) {   // abutments: a stone block from the ground up to the springing point, lit from the left
         const w = 0.55 * g.k;
-        ctx.fillStyle = T.block; ctx.strokeStyle = T.wire; ctx.lineWidth = 1.2 * ps;
-        ctx.beginPath(); ctx.rect(p[0] - w / 2, p[1], w, gy - p[1]); ctx.fill(); ctx.stroke();
+        if (VG) VG.shadow(ctx, p[0], gy, w * 0.8, 4 * ps, 0.8);
+        stone(ctx, [[p[0] - w / 2, p[1]], [p[0] + w / 2, p[1]], [p[0] + w / 2, gy], [p[0] - w / 2, gy]], T.wire, 1.2 * ps);
       }
     } else {
       ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1 * ps;
       ctx.setLineDash([4 * ps, 4 * ps]); ctx.beginPath(); ctx.moveTo(0, 24 * ps); ctx.lineTo(W, 24 * ps); ctx.stroke(); ctx.setLineDash([]);
-      for (const p of [pA, pB]) {
-        ctx.strokeStyle = T.wire; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(p[0], 24 * ps); ctx.lineTo(p[0], p[1]); ctx.stroke();
+      if (VG) VG.box(ctx, 0, 0, W, 24 * ps, { color: VG.dark() ? '#3a4552' : '#5a6676', r: 0, shadow: false });   // the ceiling beam
+      for (const p of [pA, pB]) {   // a steel hanger rod with an eye at its foot
+        if (VG) { VG.rod(ctx, p[0], 22 * ps, p[0], p[1] - 4 * ps, 2.2 * ps, { color: '#a9b2bd' }); VG.screw(ctx, p[0], 15 * ps, 4 * ps);
+          ctx.strokeStyle = '#7f8995'; ctx.lineWidth = 2 * ps; ctx.beginPath(); ctx.arc(p[0], p[1], 4 * ps, 0, 7); ctx.stroke(); }
+        else { ctx.strokeStyle = T.wire; ctx.lineWidth = 3 * ps; ctx.beginPath(); ctx.moveTo(p[0], 24 * ps); ctx.lineTo(p[0], p[1]); ctx.stroke(); }
       }
     }
 
@@ -703,16 +710,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const col = colOf(0.5 * (pts[i].s + pts[i + 1].s));
       ctx.save(); ctx.translate(mx, my); ctx.rotate(ang);
       const hl = l / 2 + 2.6 * ps;
+      /* each link: a dark rim, the link's colour, then a thin glint on its upper edge (light from above) */
+      const up = Math.cos(ang) >= 0 ? -1 : 1;
       if (i % 2 === 0) {
-        const hw = 3.4 * ps;
-        ctx.strokeStyle = col; ctx.lineWidth = 2.2 * ps;
-        ctx.beginPath(); ctx.moveTo(-hl + hw, -hw); ctx.lineTo(hl - hw, -hw); ctx.arc(hl - hw, 0, hw, -Math.PI / 2, Math.PI / 2); ctx.lineTo(-hl + hw, hw); ctx.arc(-hl + hw, 0, hw, Math.PI / 2, 3 * Math.PI / 2); ctx.closePath(); ctx.stroke();
+        const hw = 3.4 * ps, oval = () => { ctx.beginPath(); ctx.moveTo(-hl + hw, -hw); ctx.lineTo(hl - hw, -hw); ctx.arc(hl - hw, 0, hw, -Math.PI / 2, Math.PI / 2); ctx.lineTo(-hl + hw, hw); ctx.arc(-hl + hw, 0, hw, Math.PI / 2, 3 * Math.PI / 2); ctx.closePath(); };
+        ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 3.2 * ps; oval(); ctx.stroke();
+        ctx.strokeStyle = col; ctx.lineWidth = 2.2 * ps; oval(); ctx.stroke();
+        ctx.strokeStyle = 'rgba(255,255,255,0.55)'; ctx.lineWidth = 0.8 * ps; ctx.beginPath(); ctx.moveTo(-hl + hw, up * (hw + 0.4 * ps)); ctx.lineTo(hl - hw, up * (hw + 0.4 * ps)); ctx.stroke();
       } else {
-        ctx.strokeStyle = col; ctx.lineWidth = 2.6 * ps; ctx.lineCap = 'round';
-        ctx.beginPath(); ctx.moveTo(-hl + 1.5 * ps, 0); ctx.lineTo(hl - 1.5 * ps, 0); ctx.stroke(); ctx.lineCap = 'butt';
+        ctx.lineCap = 'round'; ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 3.6 * ps;
+        ctx.beginPath(); ctx.moveTo(-hl + 1.5 * ps, 0); ctx.lineTo(hl - 1.5 * ps, 0); ctx.stroke();
+        ctx.strokeStyle = col; ctx.lineWidth = 2.6 * ps; ctx.stroke();
+        ctx.strokeStyle = 'rgba(255,255,255,0.5)'; ctx.lineWidth = 0.8 * ps; ctx.beginPath(); ctx.moveTo(-hl + 2 * ps, up * 0.7 * ps); ctx.lineTo(hl - 2 * ps, up * 0.7 * ps); ctx.stroke(); ctx.lineCap = 'butt';
       }
       ctx.restore();
     }
+  }
+  /* a dressed stone block (a quadrilateral, corners c): lit from the top left, a slight tone change from block to block (k), its joint stroked in col */
+  function stone(ctx, c, col, lw, k = 0) {
+    const VG = window.VDGear, xs = c.map((q) => q[0]), ys = c.map((q) => q[1]), x0 = Math.min(...xs), y0 = Math.min(...ys), x1 = Math.max(...xs), y1 = Math.max(...ys);
+    const lime = VG ? (VG.dark() ? '#4b463e' : '#ddd3c0') : T.block, base = VG ? VG.mix(lime, k % 3 === 1 ? '#000000' : '#ffffff', k % 3 === 0 ? 0 : 0.05) : lime;   /* limestone */
+    const gr = ctx.createLinearGradient(x0, y0, x1, y1); gr.addColorStop(0, VG ? VG.mix(base, '#ffffff', 0.22) : base); gr.addColorStop(1, VG ? VG.mix(base, '#000000', 0.16) : base);
+    ctx.beginPath(); ctx.moveTo(c[0][0], c[0][1]); for (let j = 1; j < c.length; j++) ctx.lineTo(c[j][0], c[j][1]); ctx.closePath();
+    ctx.fillStyle = gr; ctx.fill(); ctx.strokeStyle = col; ctx.lineWidth = lw; ctx.stroke();
   }
   function drawArchBlocks(ctx, g, R) {
     const ps = g.ps, L = S.layers, len = K.taut ? K.D : K.S;
@@ -723,9 +743,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const p = pts[i], q = pts[i + 1];
       // normal to the curve in hanging coordinates (−ty, tx); flipped drawing handled by PX
       const c = [PX(g, p.x - p.ty * half, p.y + p.tx * half), PX(g, q.x - q.ty * half, q.y + q.tx * half), PX(g, q.x + q.ty * half, q.y - q.tx * half), PX(g, p.x + p.ty * half, p.y - p.tx * half)];
-      ctx.beginPath(); ctx.moveTo(c[0][0], c[0][1]); for (let j = 1; j < 4; j++) ctx.lineTo(c[j][0], c[j][1]); ctx.closePath();
-      ctx.fillStyle = T.block; ctx.fill();
-      ctx.strokeStyle = K.taut ? T.pos : L.color ? rampCol(tFrac(0.5 * (p.s + q.s), R)) : T.wire; ctx.lineWidth = 1.6 * ps; ctx.stroke();
+      stone(ctx, c, K.taut ? T.pos : L.color ? rampCol(tFrac(0.5 * (p.s + q.s), R)) : T.wire, 1.6 * ps, i);
     }
     // line of thrust: the curve itself, through the middle of every block
     ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.55; ctx.lineWidth = 1 * ps; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath();
@@ -740,8 +758,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       const a0 = Math.PI * i / n, a1 = Math.PI * (i + 1) / n;
       const P = (r, an) => PX(g, xm - r * Math.cos(an), ym - r * Math.sin(an));
       const c = [P(Rr - t / 2, a0), P(Rr - t / 2, a1), P(Rr + t / 2, a1), P(Rr + t / 2, a0)];
-      ctx.beginPath(); ctx.moveTo(c[0][0], c[0][1]); for (let j = 1; j < 4; j++) ctx.lineTo(c[j][0], c[j][1]); ctx.closePath();
-      ctx.fillStyle = T.block; ctx.fill(); ctx.strokeStyle = T.wire; ctx.lineWidth = 1.2 * ps; ctx.stroke();
+      stone(ctx, c, T.wire, 1.2 * ps, i);
     }
     const Sc = lengthThroughMid(xm - Rr, ym, xm + Rr, ym, ym - Rr), kc = solveCatenary(xm - Rr, ym, xm + Rr, ym, Sc);
     let outside = 0, prev = null;

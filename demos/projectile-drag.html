@@ -838,7 +838,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     L = { ox: padL, oy: H - padB, s, ps };
 
     // sky with a low sun glow and a few still clouds, two ranges of hills, then the field (scenery only)
-    const G = window.VDGear, dk = G && G.dark();
+    const VG = window.VDGear, dk = VG && VG.dark();
     const sky = ctx.createLinearGradient(0, 0, 0, L.oy);
     sky.addColorStop(0, T.skyTop); sky.addColorStop(1, T.skyBot);
     ctx.fillStyle = sky; ctx.fillRect(0, 0, W, L.oy);
@@ -855,7 +855,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     const ridge = (amp, f1, f2, ph, fill) => { ctx.fillStyle = fill; ctx.beginPath(); ctx.moveTo(0, L.oy);
       for (let px = 0; px <= W + 8; px += 6) { const u = px / Math.max(W, 1); ctx.lineTo(px, L.oy - (amp + amp * 0.9 * Math.sin(u * f1 + ph) + amp * 0.55 * Math.sin(u * f2 + 2 * ph)) * ps); }
       ctx.lineTo(W, L.oy); ctx.closePath(); ctx.fill(); };
-    ridge(18, 4.3, 11.7, 1.9, G ? G.mix(/^#[0-9a-f]{6}$/i.test(T.hill) ? T.hill : '#c9dcc4', /^#[0-9a-f]{6}$/i.test(T.skyBot) ? T.skyBot : '#f4f8fc', 0.45) : T.hill);
+    ridge(18, 4.3, 11.7, 1.9, VG ? VG.mix(/^#[0-9a-f]{6}$/i.test(T.hill) ? T.hill : '#c9dcc4', /^#[0-9a-f]{6}$/i.test(T.skyBot) ? T.skyBot : '#f4f8fc', 0.45) : T.hill);
     ctx.fillStyle = T.hill; ctx.beginPath(); ctx.moveTo(0, L.oy);
     for (let px = 0; px <= W + 8; px += 8) {
       const u = px / Math.max(W, 1);
@@ -872,9 +872,9 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     ctx.strokeStyle = T.gridStrong; ctx.beginPath();
     ctx.moveTo(Math.round(L.ox) + 0.5, 0); ctx.lineTo(Math.round(L.ox) + 0.5, L.oy); ctx.stroke();
 
-    { const eg = ctx.createLinearGradient(0, L.oy, 0, H); eg.addColorStop(0, T.earth); eg.addColorStop(1, G ? G.mix(/^#[0-9a-f]{6}$/i.test(T.earth) ? T.earth : '#e6dfd0', '#000000', dk ? 0.3 : 0.08) : T.earth);
+    { const eg = ctx.createLinearGradient(0, L.oy, 0, H); eg.addColorStop(0, T.earth); eg.addColorStop(1, VG ? VG.mix(/^#[0-9a-f]{6}$/i.test(T.earth) ? T.earth : '#e6dfd0', '#000000', dk ? 0.3 : 0.08) : T.earth);
       ctx.fillStyle = eg; ctx.fillRect(0, L.oy, W, H - L.oy); }
-    { const tg = ctx.createLinearGradient(0, L.oy, 0, L.oy + 5 * ps); tg.addColorStop(0, T.turf); tg.addColorStop(1, G ? G.mix(/^#[0-9a-f]{6}$/i.test(T.turf) ? T.turf : '#6fa35a', '#000000', 0.3) : T.turf);
+    { const tg = ctx.createLinearGradient(0, L.oy, 0, L.oy + 5 * ps); tg.addColorStop(0, T.turf); tg.addColorStop(1, VG ? VG.mix(/^#[0-9a-f]{6}$/i.test(T.turf) ? T.turf : '#6fa35a', '#000000', 0.3) : T.turf);
       ctx.fillStyle = tg; ctx.fillRect(0, L.oy, W, 5 * ps);
       /* grass tufts along the edge */
       ctx.strokeStyle = T.turf; ctx.lineWidth = 1; ctx.beginPath();
@@ -942,7 +942,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     if (P.h > 0) {
       /* a concrete platform: lit left face, darker right, a rim at the top */
       const tw = 9 * ps, cg = ctx.createLinearGradient(lx - tw, 0, lx + tw, 0);
-      cg.addColorStop(0, G ? G.mix(/^#[0-9a-f]{6}$/i.test(T.relief) ? T.relief : '#dfe5ec', '#ffffff', 0.3) : T.relief); cg.addColorStop(1, G ? G.mix(/^#[0-9a-f]{6}$/i.test(T.relief) ? T.relief : '#dfe5ec', '#000000', 0.25) : T.relief);
+      cg.addColorStop(0, VG ? VG.mix(/^#[0-9a-f]{6}$/i.test(T.relief) ? T.relief : '#dfe5ec', '#ffffff', 0.3) : T.relief); cg.addColorStop(1, VG ? VG.mix(/^#[0-9a-f]{6}$/i.test(T.relief) ? T.relief : '#dfe5ec', '#000000', 0.25) : T.relief);
       ctx.fillStyle = cg; ctx.strokeStyle = T.muted; ctx.lineWidth = ps;
       ctx.fillRect(lx - tw, ly, 2 * tw, L.oy - ly); ctx.strokeRect(lx - tw + 0.5, ly + 0.5, 2 * tw - 1, L.oy - ly - 0.5);
       ctx.fillStyle = T.muted; ctx.fillRect(lx - tw - 2 * ps, ly, 2 * tw + 4 * ps, 2.5 * ps);
@@ -953,7 +953,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 60 * ps, ly); ctx.stroke(); ctx.setLineDash([]);
     ctx.beginPath(); ctx.arc(lx, ly, 26 * ps, -th, 0); ctx.stroke();
     /* the launcher: a steel barrel on a pivot block */
-    if (G) { G.rod(ctx, lx, ly, lx + 24 * ps * ca, ly - 24 * ps * sa, 3.6 * ps, { color: '#5d6876' }); ctx.fillStyle = '#2a3038'; ctx.beginPath(); ctx.arc(lx + 24 * ps * ca, ly - 24 * ps * sa, 3.6 * ps, 0, 7); ctx.fill(); G.screw(ctx, lx, ly, 4.2 * ps); }
+    if (VG) { VG.rod(ctx, lx, ly, lx + 24 * ps * ca, ly - 24 * ps * sa, 3.6 * ps, { color: '#5d6876' }); ctx.fillStyle = '#2a3038'; ctx.beginPath(); ctx.arc(lx + 24 * ps * ca, ly - 24 * ps * sa, 3.6 * ps, 0, 7); ctx.fill(); VG.screw(ctx, lx, ly, 4.2 * ps); }
     else { ctx.strokeStyle = T.ink; ctx.lineWidth = 7 * ps; ctx.lineCap = 'round';
       ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 22 * ps * ca, ly - 22 * ps * sa); ctx.stroke(); }
     ctx.fillStyle = T.muted; ctx.font = `600 ${11 * ps}px ` + mono; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
