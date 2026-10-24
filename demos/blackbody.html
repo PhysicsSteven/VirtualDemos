@@ -168,6 +168,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/blackbody.html" target="blackbody-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Glowing objects</h2>
         <div class="chips" id="presets">
@@ -240,6 +241,27 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
         </div></details>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="blackbody" data-title="Blackbody Radiation" data-demo="blackbody">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <h2>Why no green stars?</h2>
         <details class="more"><summary>More about this</summary>
@@ -1017,6 +1039,20 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   new ResizeObserver(resize).observe(stage);
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+
+  // ---------- readings (tools/readings_panel.py) ----------
+  /* the reading is taken from the curve itself: the peak is found by a golden section search on B(λ) and the flux is π times the
+     area under B(λ), Simpson's rule on ln λ from 0.01 to 1000 times the peak wavelength; they agree with b/T and σT⁴ to 6 figures */
+  function curvePeak(T) { let a = Math.log(BW / T / 3), b = Math.log(BW / T * 3); const r = (Math.sqrt(5) - 1) / 2;
+    for (let i = 0; i < 80; i++) { const c = b - r * (b - a), d = a + r * (b - a); if (logPlanck(Math.exp(c), T) > logPlanck(Math.exp(d), T)) b = d; else a = c; } return Math.exp((a + b) / 2); }
+  function curveFlux(T) { const lp = Math.log(BW / T), a = lp + Math.log(0.01), b = lp + Math.log(1000), n = 4000, h = (b - a) / n, g = (u) => { const l = Math.exp(u); return planck(l, T) * l; };
+    let sum = g(a) + g(b); for (let i = 1; i < n; i++) sum += (i % 2 ? 4 : 2) * g(a + i * h); return Math.PI * sum * h / 3; }
+  window.vdVersion = 'blackbody@2026-10-24';
+  window.vdShowCols = [['T_K', 'T (K)'], ['peak_nm', 'peak (nm)'], ['flux_W_m2', 'flux (W/m²)']];
+  window.vdReadingRow = () => {
+    const g = (v, d) => +(+v).toPrecision(d), pk = curvePeak(S.T);
+    return { T_K: g(S.T, 5), peak_nm: g(pk * 1e9, 5), B_peak_W_m2_sr_nm: g(planck(pk, S.T) * 1e-9, 4), flux_W_m2: g(curveFlux(S.T), 5), visible_percent: g(visibleFraction(S.T) * 100, 4), R_sun: S.star ? g(S.R, 4) : '' };
+  };
 
   // exposed for testing
   window.__blackbody = { planck, logPlanck, rayleighJeans, wien, visibleFraction, bbColor, classOf, S };

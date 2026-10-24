@@ -149,13 +149,42 @@
   });
   /* ==ACOUSTICS END== */
   /* ==THERMO START== Thermodynamics worksheets (thermo.html) and their demo column maps. */
-  const THERMO = ['heating-curve' /* States of Matter demo, Beaker view */, 'bonds-and-latent-heat' /* States of Matter demo, Atoms view */];
+  const THERMO = ['heating-curve' /* States of Matter demo, Beaker view */, 'bonds-and-latent-heat' /* States of Matter demo, Atoms view */,
+    'thermal-equilibrium', 'gas-thermometer', 'thermal-expansion', 'heat-conduction' /* Temperature and Heat demo, one per view */,
+    'heat-capacities-of-gases', 'ruchardt' /* Heat Capacities of Gases demo */, 'free-expansion', 'einstein-solids', 'second-law' /* Entropy demo */,
+    'ideal-gas', 'heat-engines', 'blackbody'];
   ENABLED.push(...THERMO);
   Object.assign(FROM_DEMO, {
     /* Reading | Time t (s) | Temperature T (°C) | Balance m (g) | Stage */
     'heating-curve': { demo: 'States of Matter (Beaker)', cols: ['row', 't_s', 'T_C', 'm_g', null] },
     /* Reading | Heat added Q (kJ/mol) | Temperature T (K) | Bond energy U (kJ/mol) | Solid (%) | Liquid (%) | Vapor (%) */
     'bonds-and-latent-heat': { demo: 'States of Matter (Atoms)', cols: ['row', 'Q_kJ_per_mol', 'T_K', 'U_kJ_per_mol', 'solid_pct', 'liquid_pct', 'vapor_pct'] },
+    /* Reading | Time t (s) | T_A (°C) | T_B (°C) | T_A − T_B (°C) | ln[(T_A − T_B)/(1 °C)] */
+    'thermal-equilibrium': { demo: 'Temperature and Heat (Equilibrium)', cols: ['row', 't_s', 'T_A_C', 'T_B_C', null, null] },
+    /* Reading | Bath | Bath temperature T (°C) | Gas n (mmol) | Pressure P (kPa) */
+    'gas-thermometer': { demo: 'Temperature and Heat (Thermometer)', cols: ['row', 'bath', 'bath_T_C', 'n_mmol', 'P_kPa'] },
+    /* Reading | Setup and material | Temperature T (°C) | Gauge or level reading (mm) | ΔT (°C) | ΔL/L₀ or ΔV/V₀ */
+    'thermal-expansion': { demo: 'Temperature and Heat (Expansion)', cols: ['row', (r) => `${r.setup}, ${r.material}`, 'T_C', 'reading_mm', null, null] },
+    /* Reading | Build and layers | Position x (mm) | Temperature T (°C) | Heat flow P (W) */
+    'heat-conduction': { demo: 'Temperature and Heat (Conduction)', cols: ['row', (r) => `${r.build}: ${r.layers}`, 'x_mm', 'T_probe_C', 'P_W'] },
+    /* Reading | Gas and piston | Heat Q (J) | Temperature T (°C) | Volume V (L) | Pressure P (kPa) */
+    'heat-capacities-of-gases': { demo: 'Heat Capacities of Gases', cols: ['row', (r) => `${r.gas}, ${r.n_mol} mol, piston ${r.piston}`, 'Q_J', 'T_C', 'V_L', 'P_kPa'] },
+    /* Reading | Gas | Flask volume V (L) | Period T (s) | T² (s²) */
+    ruchardt: { demo: "Heat Capacities of Gases (Rüchardt's ball)", cols: ['row', 'gas', 'V_L', 'period_s', null] },
+    /* Count on the left n | Time at n (s) | Share of time | Ways C(N, n) | Predicted share */
+    'free-expansion': { demo: 'Entropy and the Second Law (Free expansion)', cols: ['n_left', 'time_s', 'share', null, null] },
+    /* Reading | Exchanges tried | q_A | q_B | Ω_A | Ω_B | Ω_A Ω_B */
+    'einstein-solids': { demo: 'Entropy and the Second Law (Einstein solids)', cols: ['row', 'steps', 'q_A', 'q_B', null, null, null] },
+    /* Reading | Device | T_h (K) | T_c (K) | Q_h (J) | Q_c (J) | W (J) | ΔS universe (J/K) | Allowed? */
+    'second-law': { demo: 'Entropy and the Second Law (Second law)', cols: ['row', 'device', 'T_h_K', 'T_c_K', 'Q_h_J', 'Q_c_J', 'W_J', null, null] },
+    /* Reading | Atoms N | Temperature T (K) | Area A (nm²) | 1/A (1/nm²) | Pressure P (mN/m) | NkT/A (mN/m) | rms speed (m/s) | v_rms² (m²/s²) */
+    'ideal-gas': { demo: 'Gas in a Box', cols: ['row', 'N', 'T_K', 'A_nm2', null, 'P_mN_per_m', null, 'rms_m_s', null] },
+    /* Reading | Cycle and gas | Setting | Q_in (J) | Q_out (J) | W_net (J) | η = W/Q_in or COP | Formula η or COP | 1/T_h or ln r | ln(1 − η) */
+    'heat-engines': { demo: 'Heat Engine Cycles', cols: ['row', (r) => `${r.cycle}, ${r.gas}${r.run === 'backward' ? ', backward' : ''}${r.regenerator ? ', regenerator ' + r.regenerator : ''}`,
+      (r) => [r.T_h_K !== '' && `T_h ${r.T_h_K} K`, r.T_c_K !== '' && `T_c ${r.T_c_K} K`, r.r !== '' && `r ${r.r}`, r.r_c !== '' && `r_c ${r.r_c}`, r.r_p !== '' && `r_p ${r.r_p}`].filter(Boolean).join(', '),
+      'Q_in_J', 'Q_out_J', 'W_net_J', null, null, null, null] },
+    /* Reading | Temperature T (K) | Peak wavelength (nm) | Flux F (W/m²) | 1/T | ln T | ln F */
+    blackbody: { demo: 'Blackbody Radiation', cols: ['row', 'T_K', 'peak_nm', 'flux_W_m2', null, null, null] },
   });
   /* ==THERMO END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

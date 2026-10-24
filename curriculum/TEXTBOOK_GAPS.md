@@ -22,17 +22,10 @@ All 85 course sections have an explicit scoped mapping: 27 real demos, 12 full l
 
 ## Every unmapped section
 
-Regenerated from `textbook-map.json` on 2026-10-24 (Claude), after the Thermodynamics and Modern Physics modules were made and wave optics joined Physics II. Every section of Volumes 1, 2 and 3 has a record (99, 95 and 76). Physics I, required Physics II and Acoustics have no missing section. Thermodynamics is Vol. 2 ch. 1 to 4, Modern Physics is Vol. 3 ch. 5 to 11, and Physics II's optional wave optics unit is Vol. 3 ch. 3 and 4; the only gap still tagged later is Vol. 2 §15.6.
+Regenerated from `textbook-map.json` on 2026-10-24 (Claude), after the Thermodynamics and Modern Physics modules were made and wave optics joined Physics II. Every section of Volumes 1, 2 and 3 has a record (99, 95 and 76). Physics I, required Physics II, Acoustics and Thermodynamics have no missing section (Thermodynamics filled 2026-10-24 by the Temperature and Heat, Heat Capacities of Gases, and Entropy and the Second Law demos). Thermodynamics is Vol. 2 ch. 1 to 4, Modern Physics is Vol. 3 ch. 5 to 11, and Physics II's optional wave optics unit is Vol. 3 ch. 3 and 4; the only gap still tagged later is Vol. 2 §15.6.
 
 | Course / priority | Volume | Section | Exact textbook title | Status |
 |---|---:|---|---|---|
-| thermo | 2 | 1.1 | Temperature and Thermal Equilibrium | missing |
-| thermo | 2 | 1.2 | Thermometers and Temperature Scales | missing |
-| thermo | 2 | 1.3 | Thermal Expansion | missing |
-| thermo | 2 | 3.5 | Heat Capacities of an Ideal Gas | missing |
-| thermo | 2 | 4.1 | Reversible and Irreversible Processes | missing |
-| thermo | 2 | 4.4 | Statements of the Second Law of Thermodynamics | missing |
-| thermo | 2 | 4.7 | Entropy on a Microscopic Scale | missing |
 | later | 2 | 15.6 | Transformers | missing |
 | physics-2 | 3 | 3.5 | The Michelson Interferometer | missing |
 | physics-2 | 3 | 4.5 | Circular Apertures and Resolution | missing |
@@ -63,7 +56,6 @@ Regenerated from `textbook-map.json` on 2026-10-24 (Claude), after the Thermodyn
 | 2 / 11.2 | magnetic-force | Uniform imposed field; field-line exploration is limited. |
 | 2 / 11.3 | magnetic-force | See the activity entry. |
 | 2 / 14.2 | circuits, faraday | Lumped inductors and fixed coil model, not every inductor geometry. |
-| 2 / 1.6 | blackbody | Partial: radiation only (Stefan–Boltzmann, Wien); no conduction or convection activity. |
 | 3 / 2.3 | optics-bench | Basic refraction supported; general curved-surface image formation needs review. |
 | 3 / 2.8 | optics-bench | Instrument examples require review before section-complete labeling. |
 | 3 / 4.1 | double-slit, diffraction-grating | Partial: the single slit envelope appears inside the double slit and grating patterns; there is no single slit setup on its own. |

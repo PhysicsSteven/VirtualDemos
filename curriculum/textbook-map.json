@@ -4466,9 +4466,10 @@
         "thermo"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "status": "usable",
+      "demos": [
+        "temperature"
+      ],
       "unit": "temperature-heat"
     },
     {
@@ -4481,9 +4482,10 @@
         "thermo"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "status": "usable",
+      "demos": [
+        "temperature"
+      ],
       "unit": "temperature-heat"
     },
     {
@@ -4496,9 +4498,10 @@
         "thermo"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "status": "usable",
+      "demos": [
+        "temperature"
+      ],
       "unit": "temperature-heat"
     },
     {
@@ -4513,7 +4516,8 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "states-of-matter"
+        "states-of-matter",
+        "temperature"
       ],
       "unit": "temperature-heat"
     },
@@ -4543,12 +4547,12 @@
         "thermo"
       ],
       "requirement": "module",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
-        "blackbody"
+        "blackbody",
+        "temperature"
       ],
-      "unit": "temperature-heat",
-      "note": "Partial (2026-10-24, Claude): blackbody covers radiation (Stefan–Boltzmann, Wien); there is no conduction or convection activity."
+      "unit": "temperature-heat"
     },
     {
       "vol": 2,
@@ -4594,7 +4598,8 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "ideal-gas"
+        "ideal-gas",
+        "gas-heat-capacity"
       ],
       "unit": "kinetic-theory"
     },
@@ -4688,9 +4693,10 @@
         "thermo"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "status": "usable",
+      "demos": [
+        "gas-heat-capacity"
+      ],
       "unit": "first-law"
     },
     {
@@ -4705,7 +4711,8 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "heat-engines"
+        "heat-engines",
+        "gas-heat-capacity"
       ],
       "unit": "first-law"
     },
@@ -4719,9 +4726,10 @@
         "thermo"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "status": "usable",
+      "demos": [
+        "entropy"
+      ],
       "unit": "second-law"
     },
     {
@@ -4766,9 +4774,10 @@
         "thermo"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "status": "usable",
+      "demos": [
+        "entropy"
+      ],
       "unit": "second-law"
     },
     {
@@ -4799,7 +4808,8 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "heat-engines"
+        "heat-engines",
+        "entropy"
       ],
       "unit": "second-law"
     },
@@ -4813,9 +4823,10 @@
         "thermo"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "No mapped activity yet. This is a gap label, not a new-demo commitment.",
+      "status": "usable",
+      "demos": [
+        "entropy"
+      ],
       "unit": "second-law"
     },
     {
@@ -7903,7 +7914,10 @@
       "status": "usable",
       "note": "Thermal radiation connection; spectral/quantum treatment extends beyond Vol. 2 §1.6.",
       "title": "Blackbody Radiation",
-      "url": "demos/blackbody.html"
+      "url": "demos/blackbody.html",
+      "handouts": [
+        "blackbody"
+      ]
     },
     {
       "demo": "bz-reaction",
@@ -8280,7 +8294,10 @@
       "status": "usable",
       "note": "Thermodynamics deferred.",
       "title": "Heat Engine Cycles",
-      "url": "demos/heat-engines.html"
+      "url": "demos/heat-engines.html",
+      "handouts": [
+        "heat-engines"
+      ]
     },
     {
       "demo": "hr-diagram",
@@ -8351,7 +8368,10 @@
       "status": "usable",
       "note": "Thermodynamics deferred; numerical gas assumptions require separate review.",
       "title": "Gas in a Box",
-      "url": "demos/ideal-gas.html"
+      "url": "demos/ideal-gas.html",
+      "handouts": [
+        "ideal-gas"
+      ]
     },
     {
       "demo": "ising",
@@ -9061,6 +9081,123 @@
       ],
       "title": "States of Matter",
       "url": "demos/states-of-matter.html"
+    },
+    {
+      "demo": "temperature",
+      "course": [
+        "thermo"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "1.1",
+          "title": "Temperature and Thermal Equilibrium"
+        },
+        {
+          "vol": 2,
+          "sec": "1.2",
+          "title": "Thermometers and Temperature Scales"
+        },
+        {
+          "vol": 2,
+          "sec": "1.3",
+          "title": "Thermal Expansion"
+        },
+        {
+          "vol": 2,
+          "sec": "1.4",
+          "title": "Heat Transfer, Specific Heat, and Calorimetry"
+        },
+        {
+          "vol": 2,
+          "sec": "1.6",
+          "title": "Mechanisms of Heat Transfer"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). Four views: Equilibrium (two bodies joined by a conducting bar, Q = mcΔT with Table 1.3, P = kAΔT/L with Table 1.5, exponential approach), Thermometer (constant volume ideal gas thermometer, ITS-90 fixed points, extrapolation to absolute zero), Expansion (rod and dial gauge with Table 1.2; flask and capillary, water from Tanaka et al. 2001 density), Conduction (steady flow through layers with ASHRAE air films; house wall, window, icebox, rods in series). Four worksheets with keys from real runs in TeacherKeys.",
+      "handouts": [
+        "thermal-equilibrium",
+        "gas-thermometer",
+        "thermal-expansion",
+        "heat-conduction"
+      ],
+      "title": "Temperature and Heat",
+      "url": "demos/temperature.html"
+    },
+    {
+      "demo": "gas-heat-capacity",
+      "course": [
+        "thermo"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "2.3",
+          "title": "Heat Capacity and Equipartition of Energy"
+        },
+        {
+          "vol": 2,
+          "sec": "3.5",
+          "title": "Heat Capacities of an Ideal Gas"
+        },
+        {
+          "vol": 2,
+          "sec": "3.6",
+          "title": "Adiabatic Processes for an Ideal Gas"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). Heat a gas at constant volume or constant pressure (C_V from Table 2.3, C_P = C_V + R), with the heat split by equipartition and a mystery gas; Rüchardt's ball gives γ from the period of a ball on a flask of gas (adiabatic, T² ∝ V). Two worksheets with keys from real runs in TeacherKeys.",
+      "handouts": [
+        "heat-capacities-of-gases",
+        "ruchardt"
+      ],
+      "title": "Heat Capacities of Gases",
+      "url": "demos/gas-heat-capacity.html"
+    },
+    {
+      "demo": "entropy",
+      "course": [
+        "thermo"
+      ],
+      "sections": [
+        {
+          "vol": 2,
+          "sec": "4.1",
+          "title": "Reversible and Irreversible Processes"
+        },
+        {
+          "vol": 2,
+          "sec": "4.4",
+          "title": "Statements of the Second Law of Thermodynamics"
+        },
+        {
+          "vol": 2,
+          "sec": "4.6",
+          "title": "Entropy"
+        },
+        {
+          "vol": 2,
+          "sec": "4.7",
+          "title": "Entropy on a Microscopic Scale"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). Free expansion of a hard disk gas with the share of time at each count against C(N, n)/2^N (Example 4.8's ΔS = nR ln 2); Einstein solids sharing quanta, Ω = C(q + N − 1, q), S = k ln Ω, heat flowing hot to cold and the third law (beyond the book: Schroeder, An Introduction to Thermal Physics); a second law checker for engines and refrigerators with the Kelvin and Clausius statements and the Carnot pairing argument. Three worksheets with keys from real runs in TeacherKeys.",
+      "handouts": [
+        "free-expansion",
+        "einstein-solids",
+        "second-law"
+      ],
+      "title": "Entropy and the Second Law",
+      "url": "demos/entropy.html"
     }
   ],
   "activities": [

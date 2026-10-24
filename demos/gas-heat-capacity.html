@@ -1,0 +1,459 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Heat Capacities of Gases</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --hot: #d2452b; --trans: #d9682b; --rot: #6a4fc4; --vib: #10958f; --work: #2f8a4e; --curve: #17202b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hot: #ff7a5c; --trans: #ff9a5c; --rot: #a991ff; --vib: #3fd0c6; --work: #66d38c; --curve: #e3e8ef; } }
+:root[data-theme="dark"] { --hot: #ff7a5c; --trans: #ff9a5c; --rot: #a991ff; --vib: #3fd0c6; --work: #66d38c; --curve: #e3e8ef; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.pane { position: relative; flex: 1 1 auto; min-height: 400px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; }
+.curvebox { position: relative; flex: none; height: 190px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { align-self: stretch; flex: 1 1 520px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.shelf-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; max-width: 100%; }
+.shelf-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.shelf-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 400px; flex: none; } .curvebox { height: 170px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 360px; } }
+@media (min-width: 821px) { .stage { min-height: 740px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Heat Capacities of Gases</h1>
+      <p>Heat a gas with its piston locked, then with it free to rise. The same heat warms it less when it can push the piston: some goes into work. Measure C<sub>V</sub>, C<sub>P</sub> and their ratio γ, and find γ again from a ball bouncing on a cushion of gas.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">T in °C · Q in J · V in L</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/gas-heat-capacity.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/gas-heat-capacity.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM11 2h1v1h-1zM13 2h1v1h-1zM15 2h1v1h-1zM18 2h3v1h-3zM22 2h4v1h-4zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM15 3h2v1h-2zM18 3h1v1h-1zM20 3h2v1h-2zM23 3h2v1h-2zM26 3h2v1h-2zM29 3h2v1h-2zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h3v1h-3zM14 4h1v1h-1zM18 4h1v1h-1zM21 4h3v1h-3zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM17 5h3v1h-3zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h3v1h-3zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM15 7h2v1h-2zM18 7h1v1h-1zM20 7h1v1h-1zM23 7h1v1h-1zM28 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h3v1h-3zM14 9h2v1h-2zM21 9h4v1h-4zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h5v1h-5zM20 10h1v1h-1zM22 10h1v1h-1zM25 10h1v1h-1zM27 10h1v1h-1zM29 10h1v1h-1zM32 10h5v1h-5zM2 11h1v1h-1zM6 11h1v1h-1zM10 11h2v1h-2zM15 11h1v1h-1zM17 11h2v1h-2zM25 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM3 12h1v1h-1zM5 12h5v1h-5zM14 12h1v1h-1zM19 12h2v1h-2zM22 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM2 13h1v1h-1zM5 13h2v1h-2zM11 13h4v1h-4zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM26 13h1v1h-1zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM4 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM13 14h1v1h-1zM16 14h1v1h-1zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h15v1h-15zM3 15h3v1h-3zM7 15h1v1h-1zM10 15h3v1h-3zM14 15h2v1h-2zM18 15h2v1h-2zM22 15h1v1h-1zM24 15h2v1h-2zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM3 16h2v1h-2zM6 16h3v1h-3zM12 16h1v1h-1zM14 16h2v1h-2zM17 16h3v1h-3zM22 16h1v1h-1zM24 16h1v1h-1zM28 16h8v1h-8zM38 16h1v1h-1zM12 17h1v1h-1zM16 17h8v1h-8zM25 17h1v1h-1zM28 17h1v1h-1zM31 17h1v1h-1zM33 17h2v1h-2zM37 17h1v1h-1zM2 18h1v1h-1zM4 18h2v1h-2zM8 18h1v1h-1zM10 18h2v1h-2zM13 18h1v1h-1zM15 18h1v1h-1zM17 18h2v1h-2zM21 18h1v1h-1zM24 18h1v1h-1zM26 18h4v1h-4zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM2 19h1v1h-1zM6 19h1v1h-1zM9 19h6v1h-6zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h2v1h-2zM25 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM7 20h2v1h-2zM11 20h4v1h-4zM17 20h2v1h-2zM21 20h1v1h-1zM23 20h2v1h-2zM28 20h2v1h-2zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h1v1h-1zM4 21h2v1h-2zM7 21h1v1h-1zM9 21h3v1h-3zM14 21h1v1h-1zM17 21h1v1h-1zM20 21h7v1h-7zM28 21h2v1h-2zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h4v1h-4zM8 22h1v1h-1zM11 22h1v1h-1zM13 22h1v1h-1zM15 22h3v1h-3zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h1v1h-1zM26 22h3v1h-3zM31 22h2v1h-2zM34 22h3v1h-3zM5 23h1v1h-1zM9 23h1v1h-1zM11 23h1v1h-1zM14 23h1v1h-1zM16 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM28 23h1v1h-1zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM2 24h1v1h-1zM5 24h2v1h-2zM8 24h1v1h-1zM11 24h5v1h-5zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h2v1h-2zM26 24h2v1h-2zM29 24h2v1h-2zM32 24h4v1h-4zM37 24h2v1h-2zM2 25h1v1h-1zM6 25h2v1h-2zM9 25h1v1h-1zM13 25h2v1h-2zM17 25h2v1h-2zM21 25h3v1h-3zM25 25h1v1h-1zM28 25h2v1h-2zM31 25h4v1h-4zM37 25h1v1h-1zM2 26h1v1h-1zM4 26h1v1h-1zM6 26h3v1h-3zM10 26h1v1h-1zM13 26h2v1h-2zM17 26h1v1h-1zM20 26h2v1h-2zM24 26h5v1h-5zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h2v1h-2zM6 27h1v1h-1zM12 27h1v1h-1zM17 27h2v1h-2zM23 27h3v1h-3zM30 27h2v1h-2zM33 27h1v1h-1zM2 28h1v1h-1zM5 28h1v1h-1zM8 28h2v1h-2zM12 28h1v1h-1zM16 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h1v1h-1zM6 29h2v1h-2zM9 29h2v1h-2zM12 29h3v1h-3zM18 29h1v1h-1zM22 29h2v1h-2zM26 29h1v1h-1zM29 29h6v1h-6zM37 29h2v1h-2zM2 30h1v1h-1zM4 30h2v1h-2zM7 30h3v1h-3zM13 30h1v1h-1zM15 30h2v1h-2zM19 30h1v1h-1zM21 30h1v1h-1zM26 30h3v1h-3zM30 30h7v1h-7zM10 31h14v1h-14zM25 31h2v1h-2zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM13 32h2v1h-2zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h3v1h-3zM26 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM14 33h1v1h-1zM17 33h4v1h-4zM23 33h1v1h-1zM25 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h1v1h-1zM18 34h1v1h-1zM21 34h1v1h-1zM24 34h11v1h-11zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h2v1h-2zM17 35h1v1h-1zM20 35h3v1h-3zM25 35h1v1h-1zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h3v1h-3zM15 36h1v1h-1zM17 36h2v1h-2zM20 36h1v1h-1zM22 36h1v1h-1zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h7v1h-7zM22 37h2v1h-2zM26 37h1v1h-1zM28 37h3v1h-3zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM15 38h3v1h-3zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h4v1h-4zM31 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="heat" aria-pressed="true">Heat a gas</button>
+          <button type="button" data-v="ru" aria-pressed="false">Rüchardt's ball</button>
+        </div>
+        <button type="button" class="spin attn" id="go">Start</button>
+        <button type="button" class="btn" id="restart">Start over</button>
+        <div class="seg" role="group" aria-label="Simulation speed" id="speedSeg">
+          <button type="button" data-s="1" aria-pressed="true">1×</button>
+          <button type="button" data-s="5" aria-pressed="false">5×</button>
+        </div>
+        <span class="count mono" id="clock">t = 0 s</span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="A gas in a cylinder under a piston, with an electric heater at the bottom, a thermometer and a meter for the heat delivered. Space starts or pauses."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" role="img" aria-label="Graph: temperature against heat delivered, or the ball's height against time."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardHeat" role="group" aria-label="The gas and the heater">
+          <span class="card-title">Gas in a cylinder 10.0 cm across, starting at 20.00 °C and 101.325 kPa</span>
+          <div class="pick"><label for="selGas">Gas</label><select id="selGas"></select></div>
+          <div class="wide">
+            <span class="lab">Piston</span>
+            <div class="seg" role="group" aria-label="Piston" id="pistonSeg">
+              <button type="button" data-m="V" aria-pressed="true">Locked: constant volume</button>
+              <button type="button" data-m="P" aria-pressed="false">Free: constant pressure</button>
+            </div>
+          </div>
+          <div><div class="slider-head"><label for="sN">Amount of gas n</label><output id="oN" class="mono" for="sN"></output></div><input type="range" id="sN" min="0.02" max="0.30" step="0.01"></div>
+          <div><div class="slider-head"><label for="sW">Heater power</label><output id="oW" class="mono" for="sW"></output></div><input type="range" id="sW" min="0.5" max="10" step="0.5"></div>
+          <div class="wide"><button type="button" class="btn" id="newGas">New mystery gas</button><span class="lab" id="gasNote"></span></div>
+        </div>
+        <div class="shelf-card" id="cardRu" role="group" aria-label="The flask and the ball" hidden>
+          <span class="card-title">A steel ball (16.60 g) fits a glass tube 16.00 mm across on top of a flask of gas</span>
+          <div class="pick"><label for="selGasR">Gas in the flask</label><select id="selGasR"></select></div>
+          <div><div class="slider-head"><label for="sV">Flask volume V</label><output id="oV" class="mono" for="sV"></output></div><input type="range" id="sV" min="2" max="20" step="1"></div>
+          <div class="wide"><button type="button" class="btn" id="drop">Drop the ball</button><span class="lab">The photogate times each full swing.</span></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/heat-capacities-of-gases.html" target="heat-capacities-of-gases-worksheet">Worksheet 1: Heat Capacities of Gases</a></li><li><a href="../curriculum/labs/students/ruchardt.html" target="ruchardt-worksheet">Worksheet 2: Rüchardt's Ball</a></li></ul></details><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="argonV" aria-pressed="true">Argon, piston locked</button>
+          <button type="button" data-p="argonP" aria-pressed="false">Argon, piston free</button>
+          <button type="button" data-p="nitrogen" aria-pressed="false">Nitrogen</button>
+          <button type="button" data-p="mystery" aria-pressed="false">Mystery gas</button>
+          <button type="button" data-p="ruchardt" aria-pressed="false">Rüchardt's ball</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="heat-capacities-of-gases" data-title="Heat Capacities of Gases" data-demo="gas-heat-capacity">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the graph, the energy split and the gas's heat capacities</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="aboutHeat"></p>
+          <p class="hint" id="aboutRu"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Heat Capacities of Gases. Runnable in Node (curriculum/validation/test_gas-heat-capacity.cjs).
+     Molar heat capacities at constant volume from OpenStax University Physics Volume 2 (2016), Table 2.3 (C_V/R at 25 °C and 1 atm),
+     taken as constant over the range used here. Every gas is ideal, so C_P = C_V + R (§3.5) and γ = C_P/C_V. Dry air for the ball
+     uses Table 1.3: c_V = 721 and c_P = 1015 J/(kg·°C), so γ = 1015/721. */
+  const R = 8.314462618, G_STD = 9.80665, P_ATM = 101325, T0C = 20, C0 = 273.15;
+  const GASES = {
+    Ar: { name: 'Argon, Ar', cvR: 1.50, shape: 'mono' }, He: { name: 'Helium, He', cvR: 1.50, shape: 'mono' }, Ne: { name: 'Neon, Ne', cvR: 1.50, shape: 'mono' },
+    CO: { name: 'Carbon monoxide, CO', cvR: 2.50, shape: 'linear' }, H2: { name: 'Hydrogen, H₂', cvR: 2.47, shape: 'linear' }, N2: { name: 'Nitrogen, N₂', cvR: 2.50, shape: 'linear' },
+    O2: { name: 'Oxygen, O₂', cvR: 2.53, shape: 'linear' }, F2: { name: 'Fluorine, F₂', cvR: 2.8, shape: 'linear' }, CO2: { name: 'Carbon dioxide, CO₂', cvR: 3.48, shape: 'linear3' },
+    H2S: { name: 'Hydrogen sulfide, H₂S', cvR: 3.13, shape: 'bent' }, N2O: { name: 'Nitrous oxide, N₂O', cvR: 3.66, shape: 'linear3' } };
+  const MYSTERY_POOL = ['Ar', 'He', 'Ne', 'CO', 'N2', 'O2', 'F2', 'CO2', 'H2S', 'N2O', 'H2'];
+  const AIR_GAMMA = 1015 / 721;
+  const cvOf = (g) => GASES[g].cvR * R, cpOf = (g) => cvOf(g) + R, gammaOf = (g) => (g === 'air' ? AIR_GAMMA : cpOf(g) / cvOf(g));
+  /* Heating: n moles start at T0 = 20 °C and P0 = 1 atm in a cylinder of cross section A. With the piston locked the volume stays V0
+     and all the heat raises U: Q = nC_V ΔT. With it free the pressure stays P0 (a weightless frictionless piston under the
+     atmosphere), the gas pushes the piston back by W = P0 ΔV = nRΔT, and Q = nC_P ΔT. */
+  const CYL_D = 0.100, CYL_A = Math.PI * CYL_D * CYL_D / 4;
+  function heatState(gas, n, mode, Q) {
+    const cv = cvOf(gas), C = n * (mode === 'V' ? cv : cv + R), T0 = T0C + C0, V0 = n * R * T0 / P_ATM, T = T0 + Q / C;
+    const V = mode === 'V' ? V0 : n * R * T / P_ATM, P = mode === 'V' ? n * R * T / V0 : P_ATM, W = mode === 'V' ? 0 : P_ATM * (V - V0), dU = n * cv * (T - T0);
+    return { T: T - C0, V, P, W, dU, Q, h: V / CYL_A, h0: V0 / CYL_A, V0, C };
+  }
+  /* Where the heat goes, by equipartition: each molecule's motion through space holds 3/2 kT (3 kinds of motion, 1/2 kT each);
+     a linear molecule turns about 2 axes (another kT), a bent one about 3 (3/2 kT). Whatever the measured C_V holds beyond that is
+     vibration (H₂'s 2.47 R is a little under the 2.5 R of full rotation, so its rotation share is taken as 0.97 R). */
+  function split(gas, n, mode, dT) {
+    const g = GASES[gas], full = g.shape === 'mono' ? 0 : g.shape === 'bent' ? 1.5 : 1, rot = Math.min(full, g.cvR - 1.5), vib = Math.max(0, g.cvR - 1.5 - rot);
+    return { trans: 1.5 * n * R * dT, rot: rot * n * R * dT, vib: vib * n * R * dT, work: mode === 'P' ? n * R * dT : 0 };
+  }
+  /* Rüchardt's method: a ball of mass m fits a tube of cross section A on a flask of volume V. At rest the gas is at
+     P = P_atm + mg/A. Displaced by x, the gas is squeezed adiabatically (the swing is too fast for heat to flow), so
+     dP = −γP A x / V and the ball oscillates with ω² = γPA²/(mV). Friction and heat leaks damp it with an amplitude time constant
+     of 6 s (a chosen value); the damped period 2π/√(ω² − 1/τ²) is longer than 2π/ω by less than 0.1% for flasks up to 20 L. */
+  const BALL_M = 0.01660, TUBE_D = 0.01600, TUBE_A = Math.PI * TUBE_D * TUBE_D / 4, DAMP_TAU = 6;
+  function ruchardt(gas, V) {
+    const P = P_ATM + BALL_M * G_STD / TUBE_A, g = gammaOf(gas), w2 = g * P * TUBE_A * TUBE_A / (BALL_M * V), wd = Math.sqrt(w2 - 1 / (DAMP_TAU * DAMP_TAU));
+    return { P, gamma: g, omega: Math.sqrt(w2), T0: 2 * Math.PI / Math.sqrt(w2), Td: 2 * Math.PI / wd, wd };
+  }
+  const ballX = (r, x0, t) => x0 * Math.exp(-t / DAMP_TAU) * Math.cos(r.wd * t);
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VG = window.VDGear;
+  const S = { view: 'heat', preset: 'argonV', run: false, speed: 1, blind: false,
+    heat: { gas: 'Ar', n: 0.10, mode: 'V', W: 2, Q: 0, t: 0, mys: 'N2', mysN: 0, lastMys: null },
+    ru: { gas: 'air', V: 10, t: 0, x0: 0.010, dropped: false, swings: [], lastCross: null, lastPeriod: null } };
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
+  let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const g6 = (v) => +(+v).toPrecision(6);
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const dark = () => (VG ? VG.dark() : false);
+  const T_CUTOUT = 200;   /* °C: the heater switches itself off here */
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
+      hot: g('--hot'), trans: g('--trans'), rot: g('--rot'), vib: g('--vib'), work: g('--work'), curve: g('--curve'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+  const gasKey = () => (S.heat.gas === 'mystery' ? S.heat.mys : S.heat.gas);
+  const hs = () => heatState(gasKey(), S.heat.n, S.heat.mode, S.heat.Q);
+
+  // ---------- molecules (a picture only: their number and speeds are not the model's) ----------
+  const MOL = []; for (let i = 0; i < 46; i++) MOL.push({ x: Math.random(), y: Math.random(), a: Math.random() * 6.28, vx: Math.random() - 0.5, vy: Math.random() - 0.5, w: (Math.random() - 0.5) * 8 });
+  function moveMol(dt, speed, wob) { for (const m of MOL) { m.x += m.vx * dt * speed; m.y += m.vy * dt * speed; m.a += m.w * dt * wob;
+    if (m.x < 0) { m.x = -m.x; m.vx = Math.abs(m.vx); } if (m.x > 1) { m.x = 2 - m.x; m.vx = -Math.abs(m.vx); } if (m.y < 0) { m.y = -m.y; m.vy = Math.abs(m.vy); } if (m.y > 1) { m.y = 2 - m.y; m.vy = -Math.abs(m.vy); } } }
+  function drawMol(x, y, w, h, shape, tC, vib) {
+    const r = Math.max(2.2, Math.min(w, h) * 0.018), col = dark() ? '#dfe7f1' : '#2b3644', col2 = dark() ? '#ff9a7a' : '#c0432a';
+    for (const m of MOL) { const cx = x + r * 2 + m.x * (w - r * 4), cy = y + r * 2 + m.y * (h - r * 4), q = vib ? 1 + 0.15 * Math.sin(m.a * 5) : 1;
+      ctx.fillStyle = col;
+      if (shape === 'mono') { ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fill(); continue; }
+      const dx = Math.cos(m.a) * r * 1.3 * q, dy = Math.sin(m.a) * r * 1.3 * q;
+      if (shape === 'linear') { ctx.beginPath(); ctx.arc(cx - dx, cy - dy, r * 0.9, 0, 7); ctx.arc(cx + dx, cy + dy, r * 0.9, 0, 7); ctx.fill(); }
+      else if (shape === 'linear3') { ctx.beginPath(); ctx.arc(cx - 1.6 * dx, cy - 1.6 * dy, r * 0.8, 0, 7); ctx.arc(cx + 1.6 * dx, cy + 1.6 * dy, r * 0.8, 0, 7); ctx.fill(); ctx.fillStyle = col2; ctx.beginPath(); ctx.arc(cx, cy, r * 0.9, 0, 7); ctx.fill(); }
+      else { const b = 0.9; ctx.fillStyle = col2; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fill(); ctx.fillStyle = col; ctx.beginPath(); ctx.arc(cx + Math.cos(m.a + b) * r * 1.5, cy + Math.sin(m.a + b) * r * 1.5, r * 0.6, 0, 7); ctx.arc(cx + Math.cos(m.a - b + Math.PI) * r * 1.5, cy + Math.sin(m.a - b + Math.PI) * r * 1.5, r * 0.6, 0, 7); ctx.fill(); }
+    }
+  }
+  function lcdBox(x, y, w, h, text, name) {
+    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
+  }
+  function scene() { const y = Math.round(H * 0.84); if (VG) { VG.wall(ctx, 0, 0, W, y); VG.bench(ctx, 0, y, W, 14, Math.max(14, H - y - 2)); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); } return y; }
+  function drawHeat() {
+    const p = proj(), by = scene(), s = hs(), h = S.heat, g = GASES[gasKey()];
+    /* the cylinder: 10 cm across drawn to the same scale as its height */
+    const hTop = heatState(gasKey(), h.n, 'P', heatState(gasKey(), h.n, 'P', 0).C * (T_CUTOUT - T0C)).h;
+    const avail = by - 40 * p - H * 0.12, mm = Math.min(avail / (hTop * 1000 + 40), (W * 0.22) / (CYL_D * 1000));   /* px per mm */
+    const cw = CYL_D * 1000 * mm, cx = W * 0.32, base = by - 30 * p, gasH = s.h * 1000 * mm, top = base - gasH;
+    if (VG) VG.box(ctx, cx - cw / 2 - 18 * p, base, cw + 36 * p, 30 * p, { color: '#3d4754', r: 4 });
+    /* gas, tinted warm as it heats */
+    const warm = Math.max(0, Math.min(1, (s.T - T0C) / 180));
+    ctx.fillStyle = dark() ? `rgba(${60 + 150 * warm},${80 - 20 * warm},${110 - 60 * warm},0.35)` : `rgba(${200 + 40 * warm},${220 - 60 * warm},${240 - 120 * warm},0.55)`;
+    ctx.fillRect(cx - cw / 2, top, cw, gasH);
+    drawMol(cx - cw / 2, top, cw, gasH, g.shape, s.T, g.cvR - 1.5 > 1.05);
+    /* heater coil at the bottom */
+    const on = S.run && h.Q < heatState(gasKey(), h.n, h.mode, 0).C * (T_CUTOUT - T0C);
+    ctx.save(); ctx.strokeStyle = on ? '#ff6a3d' : (dark() ? '#7a838f' : '#5b6370'); ctx.lineWidth = 3 * p; if (on) { ctx.shadowColor = '#ff6a3d'; ctx.shadowBlur = 10 * p; }
+    ctx.beginPath(); for (let i = 0; i <= 40; i++) { const xx = cx - cw * 0.38 + cw * 0.76 * i / 40, yy = base - 10 * p + Math.sin(i * 1.2) * 5 * p; i ? ctx.lineTo(xx, yy) : ctx.moveTo(xx, yy); } ctx.stroke(); ctx.restore();
+    /* glass walls */
+    const wallTop = base - (hTop * 1000 + 30) * mm;
+    const gl = ctx.createLinearGradient(cx - cw / 2, 0, cx + cw / 2, 0); gl.addColorStop(0, 'rgba(255,255,255,0.35)'); gl.addColorStop(0.15, 'rgba(255,255,255,0.05)'); gl.addColorStop(0.85, 'rgba(255,255,255,0.03)'); gl.addColorStop(1, 'rgba(255,255,255,0.25)');
+    ctx.fillStyle = gl; ctx.fillRect(cx - cw / 2, wallTop, cw, base - wallTop);
+    ctx.strokeStyle = dark() ? 'rgba(220,235,245,0.75)' : 'rgba(80,110,130,0.8)'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(cx - cw / 2, wallTop); ctx.lineTo(cx - cw / 2, base); ctx.moveTo(cx + cw / 2, wallTop); ctx.lineTo(cx + cw / 2, base); ctx.stroke();
+    /* piston, with a pin through the wall when locked */
+    const pt = 16 * p; if (VG) VG.box(ctx, cx - cw / 2 + 2, top - pt, cw - 4, pt, { color: dark() ? '#6c7786' : '#8e99a7', r: 2, shadow: false });
+    if (VG) VG.rod(ctx, cx, top - pt, cx, top - pt - 40 * p, 4 * p, { color: '#b4bcc6' });
+    if (h.mode === 'V') { if (VG) VG.rod(ctx, cx - cw / 2 - 22 * p, top - pt / 2, cx + cw / 2 + 22 * p, top - pt / 2, 3 * p, { color: '#c9a24a' }); if (VG) VG.label(ctx, 'locking pin', cx + 10 * p, top - pt - 30 * p, { s: 10.5 * p }); }
+    else if (VG) VG.label(ctx, 'free piston (1 atm)', cx + 10 * p, top - pt - 30 * p, { s: 10.5 * p });
+    /* height scale */
+    const rx = cx - cw / 2 - 40 * p; ctx.fillStyle = dark() ? '#d9cfae' : '#f3e7c0'; ctx.fillRect(rx, wallTop, 22 * p, base - wallTop);
+    ctx.strokeStyle = '#3a3428'; ctx.fillStyle = '#3a3428'; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle'; ctx.lineWidth = 1;
+    const st = mm * 10 < 6 ? 50 : 10; for (let k = 0; k * mm <= base - wallTop; k += st) { const y = base - k * mm, big = k % (st * 5) === 0; ctx.beginPath(); ctx.moveTo(rx + 22 * p, y); ctx.lineTo(rx + 22 * p - (big ? 10 : 5) * p, y); ctx.stroke(); if (big) ctx.fillText(String(k), rx + 8 * p, y); }
+    if (VG) VG.label(ctx, 'mm', rx + 11 * p, wallTop - 8 * p, { s: 9.5 * p, a: 'center' });
+    /* meters */
+    const mx = Math.min(W - 160 * p, cx + cw / 2 + 120 * p), mw = 132 * p, mh = 28 * p;
+    lcdBox(mx, H * 0.08, mw, mh, `${f(s.T, 2)} °C`, 'thermometer');
+    lcdBox(mx, H * 0.08 + 66 * p, mw, mh, `${f(h.Q, 1)} J`, 'heat delivered');
+    lcdBox(mx, H * 0.08 + 132 * p, mw, mh, `${f(s.h * 1000, 1)} mm`, 'piston height');
+    if (VG) { VG.cable(ctx, cx + cw / 2, base - 8 * p, mx - 6, H * 0.08 + 66 * p + mh / 2, 30, { w: 2.5 * p }); VG.cable(ctx, cx + cw / 2, top + gasH * 0.5, mx - 6, H * 0.08 + mh / 2, 20, { w: 2 * p, color: '#3a4553' }); }
+    /* the energy split, unless Blind */
+    if (!S.blind && h.Q > 0) {
+      const sp = split(gasKey(), h.n, h.mode, s.T - T0C), parts = [['into motion through space', sp.trans, T.trans], ['into rotation', sp.rot, T.rot], ['into vibration', sp.vib, T.vib], ['work on the piston', sp.work, T.work]];
+      const bx = mx - 10 * p, bw = Math.min(W - bx - 12, 230 * p), byy = H * 0.08 + 200 * p, bh = 16 * p, tot = parts.reduce((a, q) => a + q[1], 0) || 1;
+      if (VG) VG.panel(ctx, bx - 8, byy - 26 * p, bw + 16, 26 * p + bh + 22 * p * parts.filter((q) => q[1] > 1e-9).length + 12, { r: 8 });
+      if (VG) VG.label(ctx, 'where the heat went', bx, byy - 13 * p, { s: 10.5 * p, w: 700 });
+      let xx = bx; for (const [, v, c] of parts) { const ww = bw * v / tot; ctx.fillStyle = c; ctx.fillRect(xx, byy, ww, bh); xx += ww; }
+      let yy = byy + bh + 14 * p; for (const [nm, v, c] of parts) { if (v < 1e-9) continue; ctx.fillStyle = c; ctx.fillRect(bx, yy - 5 * p, 10 * p, 10 * p); if (VG) VG.label(ctx, `${nm}: ${f(100 * v / tot, 1)}%`, bx + 16 * p, yy, { s: 10.5 * p, c: T.ink }); yy += 22 * p; }
+    }
+    if (VG) VG.label(ctx, `${S.heat.gas === 'mystery' ? 'mystery gas' : g.name.split(',')[0].toLowerCase()}, ${f(h.n, 2)} mol${S.blind ? '' : ''}; picture of molecules only`, cx, by + 16 * p, { a: 'center', s: 10.5 * p });
+  }
+  function drawRu() {
+    const p = proj(), by = scene(), r = ruchardt(S.ru.gas, S.ru.V / 1000), x = S.ru.dropped ? ballX(r, S.ru.x0, S.ru.t) : 0;
+    /* flask sized by its volume: a sphere of volume V, drawn to scale with the tube */
+    const rad = Math.cbrt(3 * S.ru.V / 1000 / (4 * Math.PI)), maxRad = Math.cbrt(3 * 0.020 / (4 * Math.PI)), px = Math.min(H * 0.25, W * 0.15) / maxRad;
+    const fr = rad * px, fx = W * 0.35, fy = by - fr - 8 * p, tubeW = Math.max(6 * p, TUBE_D * px * 1.0), tubeTop = H * 0.08, neck = fy - fr;
+    if (VG) VG.shadow(ctx, fx, by, fr * 0.8, 8);
+    const gg = ctx.createRadialGradient(fx - fr * 0.4, fy - fr * 0.4, 2, fx, fy, fr); gg.addColorStop(0, 'rgba(255,255,255,0.55)'); gg.addColorStop(0.6, dark() ? 'rgba(150,190,220,0.12)' : 'rgba(190,220,240,0.35)'); gg.addColorStop(1, 'rgba(120,150,170,0.45)');
+    ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(fx, fy, fr, 0, 7); ctx.fill(); ctx.strokeStyle = dark() ? 'rgba(220,235,245,0.75)' : 'rgba(80,110,130,0.8)'; ctx.lineWidth = 2; ctx.stroke();
+    ctx.fillStyle = dark() ? 'rgba(150,190,220,0.12)' : 'rgba(190,220,240,0.35)'; ctx.fillRect(fx - tubeW / 2, tubeTop, tubeW, neck - tubeTop + 4);
+    ctx.strokeRect(fx - tubeW / 2, tubeTop, tubeW, neck - tubeTop + 4);
+    /* the ball: its swing drawn 3 times larger than life so it can be seen (the photogate times the real motion) */
+    const eqY = tubeTop + (neck - tubeTop) * 0.45, by0 = eqY - x * 1000 * 3 * p, br = tubeW / 2 - 1;
+    if (VG) VG.ball(ctx, fx, by0, br, '#9aa4b0', { glint: 1 }); else { ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(fx, by0, br, 0, 7); ctx.fill(); }
+    if (VG) VG.gate(ctx, fx, eqY, tubeW + 10 * p, 30 * p, Math.abs(by0 - eqY) < br, { s: p });
+    const lx = Math.min(W - 160 * p, fx + 90 * p); lcdBox(lx, H * 0.1, 132 * p, 28 * p, S.ru.lastPeriod ? `${f(S.ru.lastPeriod, 4)} s` : '—', 'period of the last swing');
+    lcdBox(lx, H * 0.1 + 66 * p, 132 * p, 28 * p, `${S.ru.swings.length}`, 'swings timed');
+    if (VG) VG.cable(ctx, fx + tubeW / 2 + 14 * p, eqY, lx - 6, H * 0.1 + 14 * p, 30, { w: 2.5 * p });
+    if (VG) { VG.label(ctx, `${S.ru.gas === 'air' ? 'dry air' : GASES[S.ru.gas].name.split(',')[0].toLowerCase()}, ${S.ru.V} L flask`, fx, by + 16 * p, { a: 'center', s: 10.5 * p }); VG.label(ctx, 'swing drawn 3 times larger', fx + tubeW + 16 * p, tubeTop + 10 * p, { s: 10 * p }); }
+  }
+  function drawCurve() {
+    const p = proj(), c = cctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
+    if (S.blind) { c.fillStyle = T.muted; c.font = `${12 * p}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Graph hidden (Blind mode in the Lab section)', CW / 2, CH / 2); return; }
+    const L = 56 * p, Rr = 14 * p, Tp = 16 * p, B = 34 * p, pw = CW - L - Rr, ph = CH - Tp - B;
+    let xs, ys, lines = [], xl, yl;
+    if (S.view === 'heat') {
+      const h = S.heat, Cv = heatState(gasKey(), h.n, 'V', 0).C, Qmax = Math.max(50, h.Q * 1.15, Cv * 20);
+      xs = [0, Qmax]; ys = [T0C - 2, Math.max(T0C + 10, hs().T + 5)];
+      const run = []; for (let i = 0; i <= 60; i++) { const q = h.Q * i / 60; run.push([q, heatState(gasKey(), h.n, h.mode, q).T]); }
+      lines = [{ pts: run, col: T.hot }]; xl = 'heat delivered Q (J)'; yl = 'T (°C)';
+    } else {
+      const r = ruchardt(S.ru.gas, S.ru.V / 1000), tm = Math.max(6, S.ru.t); xs = [Math.max(0, tm - 6), tm]; ys = [-S.ru.x0 * 1000 * 1.1, S.ru.x0 * 1000 * 1.1];
+      const pts = []; if (S.ru.dropped) for (let i = 0; i <= 400; i++) { const t = xs[0] + (xs[1] - xs[0]) * i / 400; if (t <= S.ru.t) pts.push([t, ballX(r, S.ru.x0, t) * 1000]); }
+      lines = [{ pts, col: T.accent }]; xl = 'time since the drop t (s)'; yl = 'height (mm)';
+    }
+    const X = (v) => L + (v - xs[0]) / (xs[1] - xs[0]) * pw, Y = (v) => Tp + ph - (v - ys[0]) / (ys[1] - ys[0]) * ph;
+    const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+    c.font = `${10.5 * p}px ${T.mono}`; c.strokeStyle = T.grid; c.fillStyle = T.muted; c.lineWidth = 1;
+    const sx = nice((xs[1] - xs[0]) / 6), sy = nice((ys[1] - ys[0]) / 4);
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (let v = Math.ceil(xs[0] / sx) * sx; v <= xs[1] + 1e-9; v += sx) { c.beginPath(); c.moveTo(X(v), Tp); c.lineTo(X(v), Tp + ph); c.stroke(); c.fillText(String(+v.toPrecision(6)), X(v), Tp + ph + 4); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (let v = Math.ceil(ys[0] / sy) * sy; v <= ys[1] + 1e-9; v += sy) { c.beginPath(); c.moveTo(L, Y(v)); c.lineTo(L + pw, Y(v)); c.stroke(); c.fillText(String(+v.toPrecision(6)).replace('-', '−'), L - 5, Y(v)); }
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(xl, L + pw / 2, CH - 2);
+    c.save(); c.translate(12 * p, Tp + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore();
+    c.save(); c.beginPath(); c.rect(L, Tp, pw, ph); c.clip();
+    for (const s of lines) { c.strokeStyle = s.col; c.lineWidth = 2.2 * p; c.beginPath(); s.pts.forEach((q, i) => (i ? c.lineTo(X(q[0]), Y(q[1])) : c.moveTo(X(q[0]), Y(q[1])))); c.stroke(); }
+    c.restore();
+  }
+  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); (S.view === 'heat' ? drawHeat : drawRu)(); drawCurve(); readouts(); clock(); }
+  function clock() { $('clock').textContent = `t = ${f(S.view === 'heat' ? S.heat.t : S.ru.t, S.view === 'heat' ? 0 : 2)} s`; }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>';
+    let o = '';
+    if (S.view === 'heat') {
+      const s = hs(), h = S.heat, k = gasKey(), myst = h.gas === 'mystery';
+      o = dd('Thermometer', `${f(s.T, 2)} °C`) + dd('Heat delivered Q', `${f(h.Q, 1)} J`) + dd('Piston height', `${f(s.h * 1000, 1)} mm`) + dd('Volume V', `${f(s.V * 1000, 4)} L`)
+        + dd('Pressure P', `${f(s.P / 1000, 3)} kPa`) + dd('Heater power', `${f(h.W, 1)} W`)
+        + dd('Work done on the piston', S.blind ? hide : `${f(s.W, 2)} J`) + dd('Rise in internal energy ΔU', S.blind ? hide : `${f(s.dU, 2)} J`)
+        + dd('C_V of this gas', S.blind || myst ? hide : `${f(cvOf(k), 2)} J/(mol·K) = ${f(GASES[k].cvR, 2)} R`) + dd('γ = C_P/C_V', S.blind || myst ? hide : f(gammaOf(k), 4));
+      if (s.T >= T_CUTOUT - 1e-9) o += '<div class="wide"><dt>Heater</dt><dd>switched itself off at 200 °C</dd></div>';
+    } else {
+      const r = ruchardt(S.ru.gas, S.ru.V / 1000);
+      o = dd('Period of the last swing', S.ru.lastPeriod ? `${f(S.ru.lastPeriod, 4)} s` : '—') + dd('Swings timed', S.ru.swings.length) + dd('Flask volume V', `${S.ru.V} L`)
+        + dd('Gas pressure at rest', `${f(r.P / 1000, 3)} kPa`) + dd('Ball mass m', `${f(BALL_M * 1000, 2)} g`) + dd('Tube cross section A', `${f(TUBE_A * 1e6, 3)} mm²`)
+        + dd('γ of this gas', S.blind ? hide : f(r.gamma, 4)) + dd('Predicted period 2π√(mV/γPA²)', S.blind ? hide : `${f(r.T0, 4)} s`);
+    }
+    $('out').innerHTML = o;
+  }
+
+  // ---------- controls ----------
+  const fill = (sel, extra) => { sel.innerHTML = Object.keys(GASES).map((k) => `<option value="${k}">${GASES[k].name}</option>`).join('') + (extra || ''); };
+  fill($('selGas'), '<option value="mystery">Mystery gas</option>'); fill($('selGasR')); $('selGasR').insertAdjacentHTML('afterbegin', '<option value="air">Dry air</option>');
+  function sync() {
+    const h = S.heat, r = S.ru; $('selGas').value = h.gas; $('sN').value = h.n; $('oN').textContent = `${f(h.n, 2)} mol`; $('sW').value = h.W; $('oW').textContent = `${f(h.W, 1)} W`;
+    for (const b of document.querySelectorAll('#pistonSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === h.mode));
+    $('newGas').hidden = h.gas !== 'mystery'; $('gasNote').textContent = h.lastMys ? `The last mystery gas was ${GASES[h.lastMys].name.split(',')[0].toLowerCase()}.` : '';
+    $('selGasR').value = r.gas; $('sV').value = r.V; $('oV').textContent = `${r.V}.00 L`;
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  const PRESETS = {
+    argonV: { view: 'heat', hint: '0.10 mol of argon with the piston pinned, so its volume cannot change. A 2.0 W heater warms it: every joule goes into the motion of the atoms. Record the temperature against the heat delivered.', set: () => Object.assign(S.heat, { gas: 'Ar', n: 0.10, mode: 'V', W: 2, Q: 0, t: 0 }) },
+    argonP: { view: 'heat', hint: 'The same argon with the piston free, so the pressure stays at 1 atm. Now the gas pushes the piston up as it warms, so the same heat raises the temperature less. Compare the slopes.', set: () => Object.assign(S.heat, { gas: 'Ar', n: 0.10, mode: 'P', W: 2, Q: 0, t: 0 }) },
+    nitrogen: { view: 'heat', hint: 'Nitrogen molecules are pairs of atoms that also tumble, so each mole needs more heat per kelvin than argon. Try both piston settings.', set: () => Object.assign(S.heat, { gas: 'N2', n: 0.10, mode: 'V', W: 2, Q: 0, t: 0 }) },
+    mystery: { view: 'heat', hint: 'An unknown gas, 0.10 mol. Measure C_V and C_P, find γ, and decide what kind of molecule it is.', set: () => { Object.assign(S.heat, { gas: 'mystery', n: 0.10, mode: 'V', W: 2, Q: 0, t: 0 }); newGas(true); } },
+    ruchardt: { view: 'ru', hint: 'A steel ball fits snugly in a glass tube on top of a 10 L flask of dry air. Drop it and it bounces up and down on the gas, which acts as a spring. The period depends on γ: time it for several flask volumes.', set: () => Object.assign(S.ru, { gas: 'air', V: 10, t: 0, dropped: false, swings: [], lastPeriod: null }) } };
+  function newGas(quiet) { const h = S.heat; let k; do { k = MYSTERY_POOL[Math.floor(Math.random() * MYSTERY_POOL.length)]; } while (k === h.mys); if (!quiet && h.mysN) h.lastMys = h.mys; h.mys = k; h.mysN++; h.Q = 0; h.t = 0; }
+  function setView(v) {
+    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('cardHeat').hidden = v !== 'heat'; $('cardRu').hidden = v !== 'ru'; $('speedSeg').hidden = v !== 'heat';
+    $('units').textContent = v === 'heat' ? 'T in °C · Q in J · V in L' : 'V in L · time in s';
+    can.setAttribute('aria-label', v === 'heat' ? 'A gas in a cylinder under a piston, with an electric heater at the bottom, a thermometer and a meter for the heat delivered. Space starts or pauses.' : 'A large glass flask with a vertical tube on top; a steel ball bounces in the tube past a photogate.');
+    window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
+    setRun(false); sync(); redraw();
+  }
+  function setRun(on) { S.run = on; const t = S.view === 'heat' ? S.heat.t : S.ru.t; $('go').textContent = on ? 'Pause' : t > 0 ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); setView(c.view); }
+  const heatChanged = () => { S.preset = 'custom'; S.heat.Q = 0; S.heat.t = 0; setRun(false); sync(); redraw(); };
+  function drop() { Object.assign(S.ru, { t: 0, dropped: true, swings: [], lastCross: null, lastPeriod: null }); setRun(true); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
+  $('go').addEventListener('click', () => { if (S.view === 'ru' && !S.ru.dropped) { drop(); return; } setRun(!S.run); });
+  $('restart').addEventListener('click', () => { if (S.view === 'heat') { S.heat.Q = 0; S.heat.t = 0; } else Object.assign(S.ru, { t: 0, dropped: false, swings: [], lastCross: null, lastPeriod: null }); setRun(false); redraw(); });
+  $('selGas').addEventListener('change', (e) => { S.heat.gas = e.target.value; if (S.heat.gas === 'mystery') newGas(true); heatChanged(); });
+  $('pistonSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { S.heat.mode = b.dataset.m; heatChanged(); } });
+  $('sN').addEventListener('input', (e) => { S.heat.n = +e.target.value; heatChanged(); });
+  $('sW').addEventListener('input', (e) => { S.heat.W = +e.target.value; S.preset = 'custom'; sync(); redraw(); });
+  $('newGas').addEventListener('click', () => { newGas(false); heatChanged(); });
+  $('selGasR').addEventListener('change', (e) => { S.ru.gas = e.target.value; S.preset = 'custom'; Object.assign(S.ru, { t: 0, dropped: false, swings: [], lastPeriod: null }); setRun(false); sync(); redraw(); });
+  $('sV').addEventListener('input', (e) => { S.ru.V = +e.target.value; S.preset = 'custom'; Object.assign(S.ru, { t: 0, dropped: false, swings: [], lastPeriod: null }); setRun(false); sync(); redraw(); });
+  $('drop').addEventListener('click', drop);
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
+
+  // ---------- the clock ----------
+  /* Rüchardt: the photogate notes each time the ball passes its rest position moving down; a full swing is the time between two such passes */
+  function advanceRu(dt) {
+    const r = ruchardt(S.ru.gas, S.ru.V / 1000), n = Math.max(1, Math.ceil(dt / 0.002)), h = dt / n;
+    for (let i = 0; i < n; i++) { const t0 = S.ru.t, t1 = t0 + h, x0 = ballX(r, S.ru.x0, t0), x1 = ballX(r, S.ru.x0, t1);
+      if (x0 > 0 && x1 <= 0) { let a = t0, b = t1; for (let k = 0; k < 50; k++) { const m = (a + b) / 2; if (ballX(r, S.ru.x0, m) > 0) a = m; else b = m; } const tc = (a + b) / 2;
+        if (S.ru.lastCross != null) { S.ru.lastPeriod = tc - S.ru.lastCross; S.ru.swings.push(S.ru.lastPeriod); } S.ru.lastCross = tc; }
+      S.ru.t = t1; }
+    if (S.ru.t > 6 * DAMP_TAU) setRun(false);
+  }
+  let last = performance.now(), lastPic = 0;
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.view === 'heat') {
+      const s = hs(), sp = 0.5 + Math.sqrt((s.T + C0) / (T0C + C0)) * 0.6;
+      if (S.run) { const Cmax = heatState(gasKey(), S.heat.n, S.heat.mode, 0).C * (T_CUTOUT - T0C), dQ = S.heat.W * dt * S.speed;
+        if (S.heat.Q < Cmax) { S.heat.Q = Math.min(Cmax, S.heat.Q + dQ); S.heat.t += dt * S.speed; } else setRun(false); }
+      if (!reduce) moveMol(dt, sp, 1);
+      if (S.run || (!reduce && now - lastPic > 40)) { lastPic = now; redraw(); }
+    } else if (S.run) { advanceRu(dt); redraw(); }
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- readings (tools/readings_panel.py) ----------
+  window.vdVersion = 'gas-heat-capacity@2026-10-24';
+  const SHOW = { heat: [['Q_J', 'Q (J)'], ['T_C', 'T (°C)'], ['V_L', 'V (L)']], ru: [['V_L', 'V (L)'], ['period_s', 'period (s)']] };
+  window.vdShowCols = SHOW.heat;
+  window.vdWorksheet = () => (S.view === 'heat' ? 'heat-capacities-of-gases' : 'ruchardt');
+  window.vdReadingRow = () => {
+    const other = (window.vdRows ? window.vdRows() : []).find((r) => r.view !== S.view);
+    if (other) return `These readings are from the ${other.view === 'heat' ? 'Heat a gas' : "Rüchardt's ball"} view: export them to its worksheet or clear them first.`;
+    window.vdShowCols = SHOW[S.view];
+    if (S.view === 'heat') { const s = hs(), h = S.heat; return { view: 'heat', gas: h.gas === 'mystery' ? 'mystery' : GASES[h.gas].name, n_mol: h.n, piston: h.mode === 'V' ? 'locked' : 'free',
+      t_s: f(h.t, 1), Q_J: f(h.Q, 1), T_C: f(s.T, 2), h_mm: f(s.h * 1000, 1), V_L: f(s.V * 1000, 4), P_kPa: f(s.P / 1000, 3) }; }
+    if (!S.ru.lastPeriod) return 'Drop the ball and let it swing at least twice, so the photogate has timed a full swing.';
+    return { view: 'ru', gas: S.ru.gas === 'air' ? 'Dry air' : GASES[S.ru.gas].name, V_L: S.ru.V, m_g: g6(BALL_M * 1000), d_mm: g6(TUBE_D * 1000), P_kPa: f(ruchardt(S.ru.gas, S.ru.V / 1000).P / 1000, 3), period_s: f(S.ru.lastPeriod, 4), swing: S.ru.swings.length };
+  };
+
+  // ---------- about ----------
+  $('aboutHeat').textContent = 'Heat a gas: n moles of an ideal gas start at 20.00 °C and 101.325 kPa in a cylinder 10.0 cm across with perfectly insulating walls of no heat capacity. An electric heater delivers heat at a steady power; the meter shows the total delivered, and the heater switches itself off at 200 °C. With the piston pinned the volume is fixed and Q = nC_V ΔT. With it free, a weightless frictionless piston keeps the pressure at 1 atm, the gas does work PΔV = nRΔT on it, and Q = nC_P ΔT with C_P = C_V + R. C_V for each gas is the textbook\'s Table 2.3 value at 25 °C (C_V/R: Ar, He, Ne 1.50; CO 2.50; H₂ 2.47; N₂ 2.50; O₂ 2.53; F₂ 2.8; CO₂ 3.48; H₂S 3.13; N₂O 3.66), taken as constant up to 200 °C; real heat capacities grow slowly with temperature as vibrations wake up, and real gases have C_P − C_V a little above R. The energy split follows equipartition: 3/2 R per mole for motion through space, R for a linear molecule\'s rotation (3/2 R for a bent one), and the rest of the measured C_V counted as vibration. The molecules drawn are a picture, not the model: their number and speeds are only suggestive. The thermometer reads to 0.01 °C, the heat meter to 0.1 J and the piston height to 0.1 mm.';
+  $('aboutRu').textContent = 'Rüchardt\'s ball: a steel ball of 16.60 g fits a glass tube 16.00 mm across without friction or leaks, on a flask of V litres. At rest the gas is at P = P_atm + mg/A (101.325 kPa plus the ball\'s weight on the tube\'s cross section). A swing is too quick for heat to flow, so the gas is squeezed adiabatically (PV^γ constant) and pushes back with a force proportional to the displacement: the ball oscillates with ω² = γPA²/(mV), period 2π√(mV/(γPA²)). γ for dry air is 1015/721 = 1.408 from the textbook\'s Table 1.3; the other gases use Table 2.3 with C_P = C_V + R. Friction and heat leaks make the swing die away with an amplitude time constant of 6 s (a chosen value), which lengthens the period by less than 0.1% (0.04% for 10 L). The photogate times each full swing, from one downward pass of the rest position to the next. The picture draws the swing 3 times larger than its real 10 mm amplitude.';
+
+  // ---------- size, theme, start ----------
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); newGas(true); S.heat.mysN = 0;
+  const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'argonV');
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__gh = { S, setView, applyPreset, setRun, redraw, hs, sync, drop, advanceRu, newGas };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

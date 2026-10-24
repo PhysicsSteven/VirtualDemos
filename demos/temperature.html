@@ -1,0 +1,809 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Temperature and Heat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --hot: #d2452b; --cold: #2f7fd6; --ta: #d2452b; --tb: #2f7fd6; --fit: #2f8a4e; --curve: #17202b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hot: #ff7a5c; --cold: #74b0ff; --ta: #ff7a5c; --tb: #74b0ff; --fit: #66d38c; --curve: #e3e8ef; } }
+:root[data-theme="dark"] { --hot: #ff7a5c; --cold: #74b0ff; --ta: #ff7a5c; --tb: #74b0ff; --fit: #66d38c; --curve: #e3e8ef; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.pane { position: relative; flex: 1 1 auto; min-height: 380px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; touch-action: pan-y; }
+.curvebox { position: relative; flex: none; height: 200px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { align-self: stretch; flex: 1 1 520px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.shelf-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; max-width: 100%; }
+.shelf-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.shelf-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.shelf-card fieldset { border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px 8px; margin: 0; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.shelf-card legend { font-size: 0.78rem; font-weight: 700; color: var(--muted); padding: 0 4px; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 380px; flex: none; } .curvebox { height: 180px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 340px; } }
+@media (min-width: 821px) { .stage { min-height: 760px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Temperature and Heat</h1>
+      <p>Bring a hot block and a cold one into contact and watch them reach one temperature. Calibrate a gas thermometer, measure how solids and liquids expand, and follow heat through a wall.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">T in °C · time in s</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/temperature.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/temperature.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h1v1h-1zM17 2h1v1h-1zM19 2h3v1h-3zM26 2h2v1h-2zM29 2h2v1h-2zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h2v1h-2zM15 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM14 4h2v1h-2zM18 4h9v1h-9zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM14 5h2v1h-2zM20 5h2v1h-2zM26 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM15 6h1v1h-1zM18 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM20 7h5v1h-5zM27 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h2v1h-2zM16 9h7v1h-7zM24 9h2v1h-2zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM14 10h1v1h-1zM16 10h1v1h-1zM20 10h2v1h-2zM24 10h3v1h-3zM31 10h5v1h-5zM38 10h1v1h-1zM4 11h4v1h-4zM10 11h1v1h-1zM12 11h5v1h-5zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h3v1h-3zM34 11h4v1h-4zM3 12h7v1h-7zM12 12h1v1h-1zM15 12h2v1h-2zM18 12h1v1h-1zM22 12h5v1h-5zM28 12h4v1h-4zM33 12h2v1h-2zM2 13h1v1h-1zM5 13h3v1h-3zM9 13h4v1h-4zM15 13h1v1h-1zM19 13h1v1h-1zM23 13h4v1h-4zM30 13h2v1h-2zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h1v1h-1zM6 14h5v1h-5zM13 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM4 15h2v1h-2zM7 15h1v1h-1zM10 15h4v1h-4zM15 15h1v1h-1zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h1v1h-1zM5 16h1v1h-1zM7 16h2v1h-2zM12 16h1v1h-1zM14 16h2v1h-2zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h5v1h-5zM28 16h2v1h-2zM33 16h5v1h-5zM6 17h2v1h-2zM10 17h1v1h-1zM12 17h1v1h-1zM14 17h4v1h-4zM21 17h3v1h-3zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h2v1h-2zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h2v1h-2zM7 18h2v1h-2zM11 18h4v1h-4zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM3 19h1v1h-1zM5 19h1v1h-1zM7 19h1v1h-1zM9 19h4v1h-4zM14 19h1v1h-1zM20 19h2v1h-2zM24 19h2v1h-2zM27 19h1v1h-1zM29 19h2v1h-2zM33 19h3v1h-3zM37 19h1v1h-1zM4 20h2v1h-2zM7 20h3v1h-3zM12 20h1v1h-1zM14 20h2v1h-2zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h2v1h-2zM31 20h6v1h-6zM6 21h1v1h-1zM9 21h2v1h-2zM13 21h1v1h-1zM17 21h3v1h-3zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM3 22h1v1h-1zM7 22h2v1h-2zM11 22h2v1h-2zM14 22h2v1h-2zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h1v1h-1zM5 23h3v1h-3zM11 23h2v1h-2zM17 23h2v1h-2zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h2v1h-2zM5 24h1v1h-1zM7 24h3v1h-3zM12 24h1v1h-1zM15 24h1v1h-1zM17 24h3v1h-3zM22 24h1v1h-1zM25 24h1v1h-1zM27 24h1v1h-1zM29 24h1v1h-1zM33 24h4v1h-4zM7 25h1v1h-1zM10 25h1v1h-1zM12 25h1v1h-1zM14 25h4v1h-4zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h2v1h-2zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h4v1h-4zM8 26h1v1h-1zM10 26h2v1h-2zM13 26h1v1h-1zM16 26h1v1h-1zM20 26h1v1h-1zM24 26h2v1h-2zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM4 27h2v1h-2zM9 27h4v1h-4zM14 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM6 28h3v1h-3zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h2v1h-2zM27 28h8v1h-8zM36 28h1v1h-1zM4 29h1v1h-1zM7 29h1v1h-1zM12 29h1v1h-1zM15 29h1v1h-1zM19 29h2v1h-2zM23 29h3v1h-3zM29 29h2v1h-2zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h2v1h-2zM6 30h1v1h-1zM8 30h3v1h-3zM13 30h1v1h-1zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h5v1h-5zM18 31h3v1h-3zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h1v1h-1zM14 32h2v1h-2zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h4v1h-4zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h2v1h-2zM14 33h1v1h-1zM16 33h2v1h-2zM23 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h1v1h-1zM15 34h4v1h-4zM22 34h1v1h-1zM25 34h2v1h-2zM28 34h1v1h-1zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM13 35h2v1h-2zM16 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM16 36h2v1h-2zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM14 37h1v1h-1zM16 37h9v1h-9zM26 37h1v1h-1zM28 37h1v1h-1zM32 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM15 38h2v1h-2zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="eq" aria-pressed="true">Equilibrium</button>
+          <button type="button" data-v="th" aria-pressed="false">Thermometer</button>
+          <button type="button" data-v="ex" aria-pressed="false">Expansion</button>
+          <button type="button" data-v="co" aria-pressed="false">Conduction</button>
+        </div>
+        <button type="button" class="spin attn" id="go">Start</button>
+        <button type="button" class="btn" id="restart">Start over</button>
+        <div class="seg" role="group" aria-label="Simulation speed" id="speedSeg">
+          <button type="button" data-s="1" aria-pressed="false">1×</button>
+          <button type="button" data-s="10" aria-pressed="true">10×</button>
+          <button type="button" data-s="60" aria-pressed="false">60×</button>
+        </div>
+        <span class="count mono" id="clock">t = 0 s</span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="Two blocks in an insulated box joined by a metal bar, each with a thermometer. Space starts or pauses."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" role="img" aria-label="Graph of the readings."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardEq" role="group" aria-label="The two blocks and the bar">
+          <span class="card-title">Two blocks joined by a bar, in an insulated box</span>
+          <fieldset><legend>Block A</legend>
+            <div class="pick"><label for="selA">Material</label><select id="selA"></select></div>
+            <div><div class="slider-head"><label for="sMA">Mass</label><output id="oMA" class="mono" for="sMA"></output></div><input type="range" id="sMA" min="0.05" max="2" step="0.05"></div>
+            <div><div class="slider-head"><label for="sTA">Starting temperature</label><output id="oTA" class="mono" for="sTA"></output></div><input type="range" id="sTA" min="0" max="100" step="1"></div>
+          </fieldset>
+          <fieldset><legend>Block B</legend>
+            <div class="pick"><label for="selB">Material</label><select id="selB"></select></div>
+            <div><div class="slider-head"><label for="sMB">Mass</label><output id="oMB" class="mono" for="sMB"></output></div><input type="range" id="sMB" min="0.05" max="2" step="0.05"></div>
+            <div><div class="slider-head"><label for="sTB">Starting temperature</label><output id="oTB" class="mono" for="sTB"></output></div><input type="range" id="sTB" min="0" max="100" step="1"></div>
+          </fieldset>
+          <fieldset><legend>Bar between them (2.00 cm across)</legend>
+            <div class="pick"><label for="selBar">Material</label><select id="selBar"></select></div>
+            <div><div class="slider-head"><label for="sL">Length</label><output id="oL" class="mono" for="sL"></output></div><input type="range" id="sL" min="0.05" max="0.40" step="0.01"></div>
+            <div class="wide"><button type="button" class="btn" id="newMystery">New mystery block</button></div>
+          </fieldset>
+        </div>
+        <div class="shelf-card" id="cardTh" role="group" aria-label="The gas thermometer and the bath" hidden>
+          <span class="card-title">Constant volume gas thermometer: a 1.000 L bulb joined to a pressure gauge</span>
+          <div class="wide">
+            <span class="lab">Bath</span>
+            <div class="seg" role="group" aria-label="Bath" id="bathSeg">
+              <button type="button" data-b="ln2" aria-pressed="false">Liquid nitrogen</button>
+              <button type="button" data-b="dry" aria-pressed="false">Dry ice</button>
+              <button type="button" data-b="ice" aria-pressed="true">Ice water</button>
+              <button type="button" data-b="steam" aria-pressed="false">Boiling water</button>
+              <button type="button" data-b="room" aria-pressed="false">Room air</button>
+              <button type="button" data-b="mys" aria-pressed="false">Mystery bath</button>
+            </div>
+          </div>
+          <div><div class="slider-head"><label for="sN">Gas in the bulb</label><output id="oN" class="mono" for="sN"></output></div><input type="range" id="sN" min="5" max="50" step="1"></div>
+          <div class="wide"><button type="button" class="btn" id="newBath">New mystery bath</button><span class="lab" id="bathNote"></span></div>
+        </div>
+        <div class="shelf-card" id="cardEx" role="group" aria-label="The expansion apparatus" hidden>
+          <span class="card-title">Thermal expansion</span>
+          <div class="wide">
+            <div class="seg" role="group" aria-label="Apparatus" id="exSeg">
+              <button type="button" data-x="rod" aria-pressed="true">Rod and dial gauge</button>
+              <button type="button" data-x="flask" aria-pressed="false">Flask and capillary</button>
+            </div>
+          </div>
+          <div class="pick" id="pickRod"><label for="selRod">Rod (1.000 m long at 20.0 °C)</label><select id="selRod"></select></div>
+          <div class="pick" id="pickLiq" hidden><label for="selLiq">Liquid (5.000 mL at 20.0 °C)</label><select id="selLiq"></select></div>
+          <div><div class="slider-head"><label for="sTX">Bath temperature</label><output id="oTX" class="mono" for="sTX"></output></div><input type="range" id="sTX" min="0" max="100" step="0.5"></div>
+          <div class="wide"><button type="button" class="btn" id="newRod">New mystery rod</button></div>
+        </div>
+        <div class="shelf-card" id="cardCo" role="group" aria-label="The wall" hidden>
+          <span class="card-title">Steady heat flow through layers</span>
+          <div class="wide">
+            <div class="seg" role="group" aria-label="What heat flows through" id="buildSeg">
+              <button type="button" data-w="house" aria-pressed="true">House wall</button>
+              <button type="button" data-w="window" aria-pressed="false">Window</button>
+              <button type="button" data-w="icebox" aria-pressed="false">Icebox</button>
+              <button type="button" data-w="rods" aria-pressed="false">Rods in series</button>
+            </div>
+          </div>
+          <fieldset><legend>Layer 1 (inside or hot end)</legend>
+            <div class="pick"><label for="selL1">Material</label><select id="selL1"></select></div>
+            <div><div class="slider-head"><label for="sD1">Thickness</label><output id="oD1" class="mono" for="sD1"></output></div><input type="range" id="sD1" min="0" max="250" step="1"></div>
+          </fieldset>
+          <fieldset><legend>Layer 2</legend>
+            <div class="pick"><label for="selL2">Material</label><select id="selL2"></select></div>
+            <div><div class="slider-head"><label for="sD2">Thickness</label><output id="oD2" class="mono" for="sD2"></output></div><input type="range" id="sD2" min="0" max="250" step="1"></div>
+          </fieldset>
+          <fieldset><legend>Layer 3 (outside or cold end)</legend>
+            <div class="pick"><label for="selL3">Material</label><select id="selL3"></select></div>
+            <div><div class="slider-head"><label for="sD3">Thickness</label><output id="oD3" class="mono" for="sD3"></output></div><input type="range" id="sD3" min="0" max="250" step="1"></div>
+          </fieldset>
+          <fieldset><legend>The two sides</legend>
+            <div><div class="slider-head"><label for="sTi">Inside or hot side</label><output id="oTi" class="mono" for="sTi"></output></div><input type="range" id="sTi" min="-20" max="100" step="1"></div>
+            <div><div class="slider-head"><label for="sTo">Outside or cold side</label><output id="oTo" class="mono" for="sTo"></output></div><input type="range" id="sTo" min="-30" max="40" step="1"></div>
+            <div class="pick"><label for="selFi">Air on the inside</label><select id="selFi"></select></div>
+            <div class="pick"><label for="selFo">Air on the outside</label><select id="selFo"></select></div>
+          </fieldset>
+          <div><div class="slider-head"><label for="sX">Probe position</label><output id="oX" class="mono" for="sX"></output></div><input type="range" id="sX" min="0" max="1000" step="1"></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/thermal-equilibrium.html" target="thermal-equilibrium-worksheet">Worksheet 1: Thermal Equilibrium</a></li><li><a href="../curriculum/labs/students/gas-thermometer.html" target="gas-thermometer-worksheet">Worksheet 2: Gas Thermometer and Absolute Zero</a></li><li><a href="../curriculum/labs/students/thermal-expansion.html" target="thermal-expansion-worksheet">Worksheet 3: Thermal Expansion</a></li><li><a href="../curriculum/labs/students/heat-conduction.html" target="heat-conduction-worksheet">Worksheet 4: Heat Conduction Through Layers</a></li></ul></details><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="hotmetal" aria-pressed="true">Hot metal, cool water</button>
+          <button type="button" data-p="mystery" aria-pressed="false">Mystery block</button>
+          <button type="button" data-p="gas" aria-pressed="false">Gas thermometer</button>
+          <button type="button" data-p="rod" aria-pressed="false">Rod in a water bath</button>
+          <button type="button" data-p="water4" aria-pressed="false">Water near 4 °C</button>
+          <button type="button" data-p="wall" aria-pressed="false">House wall in winter</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="thermal-equilibrium" data-title="Temperature and Heat" data-demo="temperature">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the graph and the predicted values</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="aboutEq"></p>
+          <p class="hint" id="aboutTh"></p>
+          <p class="hint" id="aboutEx"></p>
+          <p class="hint" id="aboutCo"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Temperature and Heat. Everything here runs in Node (curriculum/validation/test_temperature.cjs).
+     Data: OpenStax University Physics Volume 2 (2016), Table 1.2 (expansion coefficients), Table 1.3 (specific heats) and
+     Table 1.5 (thermal conductivities, near 0 °C); temperature scales from its section 1.2. Fixed points on today's scale
+     (ITS-90, at 1 atm): ice point 0.00 °C, triple point of water 0.01 °C (273.16 K), water boils at 99.974 °C, nitrogen boils at
+     77.355 K, solid carbon dioxide sublimes at −78.464 °C. Water's density between 0 and 40 °C from M. Tanaka et al., Metrologia
+     38, 301 (2001). Air film resistances on a wall from the ASHRAE Handbook, Fundamentals. */
+  const C0 = 273.15, R_GAS = 8.314462618;
+  const cToF = (c) => 9 / 5 * c + 32, fToC = (F) => 5 / 9 * (F - 32), cToK = (c) => c + C0, kToC = (K) => K - C0;
+
+  /* ---- Equilibrium: two bodies joined by a conducting bar inside a perfectly insulated box ----
+     Heat flows through the bar at P = kA(T_A − T_B)/L (the bar's own heat capacity is neglected), so
+     C_A dT_A/dt = −P and C_B dT_B/dt = +P with C = mc. The difference decays as exp(−t/τ), 1/τ = (kA/L)(1/C_A + 1/C_B),
+     and both end at T_f = (C_A T_A0 + C_B T_B0)/(C_A + C_B): the heat one loses is the heat the other gains. */
+  const SPECIFIC = { /* c in J/(kg·°C), Table 1.3 */
+    aluminum: { name: 'Aluminum', c: 900, col: '#b8c0ca' }, copper: { name: 'Copper', c: 387, col: '#c87a4f' }, steel: { name: 'Iron, steel', c: 452, col: '#7d8794' },
+    lead: { name: 'Lead', c: 128, col: '#6e7480' }, silver: { name: 'Silver', c: 235, col: '#d9dee5' }, gold: { name: 'Gold', c: 129, col: '#d4a63a' },
+    glass: { name: 'Glass', c: 840, col: '#a9d3dc' }, granite: { name: 'Concrete, granite', c: 840, col: '#9a958c' },
+    water: { name: 'Water', c: 4186, col: '#4f9fd8', liquid: true }, ethanol: { name: 'Ethanol', c: 2450, col: '#b9d9ec', liquid: true },
+    glycerin: { name: 'Glycerin', c: 2410, col: '#d9e6c4', liquid: true }, mercury: { name: 'Mercury', c: 139, col: '#aeb6c1', liquid: true } };
+  const MYSTERY_POOL = ['copper', 'steel', 'lead', 'silver', 'gold', 'glass'];
+  const CONDUCT = { /* k in W/(m·°C), Table 1.5 */
+    diamond: { name: 'Diamond', k: 2000 }, silver: { name: 'Silver', k: 420 }, copper: { name: 'Copper', k: 390 }, gold: { name: 'Gold', k: 318 },
+    aluminum: { name: 'Aluminum', k: 220 }, steel: { name: 'Steel iron', k: 80 }, stainless: { name: 'Steel (stainless)', k: 14 }, ice: { name: 'Ice', k: 2.2 },
+    glass: { name: 'Glass (average)', k: 0.84 }, brick: { name: 'Concrete brick', k: 0.84 }, water: { name: 'Water', k: 0.6 }, fat: { name: 'Fatty tissue', k: 0.2 },
+    plaster: { name: 'Plasterboard', k: 0.16 }, wood: { name: 'Wood (0.12, middle of the range 0.08 to 0.16)', k: 0.12 }, snow: { name: 'Snow (dry)', k: 0.10 },
+    cork: { name: 'Cork', k: 0.042 }, glasswool: { name: 'Glass wool', k: 0.042 }, wool: { name: 'Wool', k: 0.04 }, foam: { name: 'Polystyrene foam', k: 0.035 },
+    down: { name: 'Down feathers', k: 0.025 }, air: { name: 'Air (still, conduction only)', k: 0.023 } };
+  const BAR_D = 0.02, BAR_A = Math.PI * BAR_D * BAR_D / 4;
+  function eqState(p, t) {
+    const CA = p.mA * p.cA, CB = p.mB * p.cB, G = p.k * BAR_A / p.L, Tf = (CA * p.TA0 + CB * p.TB0) / (CA + CB);
+    const tau = 1 / (G * (1 / CA + 1 / CB)), d = (p.TA0 - p.TB0) * Math.exp(-t / tau);
+    const TA = Tf + d * CB / (CA + CB), TB = Tf - d * CA / (CA + CB);
+    return { TA, TB, Tf, tau, G, CA, CB, P: G * (TA - TB), Q: CA * (p.TA0 - TA) };
+  }
+
+  /* ---- Gas thermometer: n moles of an ideal gas in a bulb of fixed volume V: P = nRT/V ----
+     The bulb's glass is taken not to expand and the tube to the gauge holds no gas. The gas follows the bath with a time
+     constant of 12 s (a chosen value: a real bulb's depends on its size and the bath). */
+  const BULB_V = 1.000e-3, BULB_TAU = 12;
+  const BATHS = { ln2: { name: 'Liquid nitrogen, boiling', T: 77.355 - C0 }, dry: { name: 'Dry ice in alcohol', T: -78.464 }, ice: { name: 'Ice and water', T: 0 },
+    steam: { name: 'Boiling water', T: 99.974 }, room: { name: 'Room air', T: 20 }, mys: { name: 'Mystery bath', T: NaN } };
+  const gasP = (nmol, Tc) => nmol * R_GAS * cToK(Tc) / BULB_V;              /* Pa */
+  const gasT = (P, nmol) => kToC(P * BULB_V / (nmol * R_GAS));               /* °C, the ideal gas law read backwards */
+  const follow = (Tg, Tb, dt) => Tb + (Tg - Tb) * Math.exp(-dt / BULB_TAU);
+
+  /* ---- Expansion ----
+     Rod: L = L0[1 + α(T − 20 °C)], with L0 = 1.000 m at 20.0 °C and α the textbook's average coefficient (Table 1.2).
+     Flask: 5.000 mL of liquid fills a Pyrex flask to the zero mark of a capillary of bore 1.00 mm at 20.0 °C. The liquid's volume
+     is V0[1 + β(T − 20)] (Table 1.2), except water, whose volume is V0 ρ(20)/ρ(T) from Tanaka's density formula; the flask grows
+     by V0 β_Pyrex (T − 20), and the difference rises in the capillary: h = ΔV/A. The capillary's own expansion is neglected. */
+  const EXPAND = { /* α in 1/°C, Table 1.2 */
+    aluminum: { name: 'Aluminum', a: 25e-6, col: '#b8c0ca' }, brass: { name: 'Brass', a: 19e-6, col: '#c9a24a' }, copper: { name: 'Copper', a: 17e-6, col: '#c87a4f' },
+    gold: { name: 'Gold', a: 14e-6, col: '#d4a63a' }, steel: { name: 'Iron or steel', a: 12e-6, col: '#7d8794' }, invar: { name: 'Invar', a: 0.9e-6, col: '#8e959e' },
+    lead: { name: 'Lead', a: 29e-6, col: '#6e7480' }, silver: { name: 'Silver', a: 18e-6, col: '#d9dee5' }, glass: { name: 'Glass (ordinary)', a: 9e-6, col: '#a9d3dc' },
+    pyrex: { name: 'Glass (Pyrex)', a: 3e-6, col: '#c4e3ea' }, quartz: { name: 'Quartz', a: 0.4e-6, col: '#e2eef1' }, concrete: { name: 'Concrete, brick', a: 12e-6, col: '#9a958c' },
+    marble: { name: 'Marble', a: 2.5e-6, col: '#e6e1d8' } };
+  const ROD_POOL = ['aluminum', 'brass', 'copper', 'gold', 'steel', 'lead', 'silver', 'glass'];
+  const LIQUIDS = { /* β in 1/°C, Table 1.2; water from its density */
+    water: { name: 'Water', b: null, col: '#4f9fd8' }, ether: { name: 'Ether', b: 1650e-6, col: '#e8eef3' }, ethanol: { name: 'Ethyl alcohol', b: 1100e-6, col: '#d84a4a' },
+    gasoline: { name: 'Gasoline', b: 950e-6, col: '#e2b84a' }, glycerin: { name: 'Glycerin', b: 500e-6, col: '#cfe3b5' }, mercury: { name: 'Mercury', b: 180e-6, col: '#aeb6c1' } };
+  const ROD_L0 = 1.000, T_REF = 20, FLASK_V0 = 5000, BORE = 1.00, CAP_A = Math.PI * BORE * BORE / 4, BETA_PYREX = 9e-6;   /* mm³, mm, mm² */
+  function waterRho(T) { /* kg/m³, 0 to 40 °C */
+    const a1 = -3.983035, a2 = 301.797, a3 = 522528.9, a4 = 69.34881, a5 = 999.974950;
+    return a5 * (1 - (T + a1) * (T + a1) * (T + a2) / (a3 * (T + a4)));
+  }
+  const rodDL = (key, T) => EXPAND[key].a * ROD_L0 * (T - T_REF) * 1000;                       /* mm */
+  const liquidVol = (key, T) => (key === 'water' ? waterRho(T_REF) / waterRho(T) : 1 + LIQUIDS[key].b * (T - T_REF));   /* V/V0 */
+  const capH = (key, T) => FLASK_V0 * (liquidVol(key, T) - (1 + BETA_PYREX * (T - T_REF))) / CAP_A;                    /* mm */
+
+  /* ---- Conduction: steady heat flow through layers in series ----
+     Each layer passes P = kA ΔT/d, so each has a resistance d/k per unit area (the R factor) and they add. The air on each side
+     carries heat to and from the surface by convection; its film resistance per unit area is the ASHRAE value: still indoor air
+     on a wall 0.12 m²·°C/W, outdoor air in a 24 km/h wind 0.030, in a 12 km/h wind 0.044. "None" holds the surface at the
+     air's temperature (a stirred bath or a reservoir). P = A ΔT / ΣR, and the temperature falls in each layer in proportion to
+     its share of ΣR. */
+  const FILMS = { none: { name: 'None: the surface is held at this temperature', R: 0 }, still: { name: 'Still indoor air (0.12 m²·°C/W)', R: 0.12 },
+    wind12: { name: 'Outdoor air, 12 km/h wind (0.044 m²·°C/W)', R: 0.044 }, wind24: { name: 'Outdoor air, 24 km/h wind (0.030 m²·°C/W)', R: 0.030 } };
+  function wallState(w) {
+    const L = w.layers.filter((l) => l.d > 0), rs = [w.Rin].concat(L.map((l) => l.d / CONDUCT[l.mat].k), [w.Rout]), R = rs.reduce((a, b) => a + b, 0);
+    const q = (w.Tin - w.Tout) / R, P = q * w.A, T = [w.Tin]; let x = 0;
+    for (let i = 0; i < rs.length; i++) { T.push(T[i] - q * rs[i]); if (i > 0 && i < rs.length - 1) x += L[i - 1].d; }
+    /* T[0] is the inside air, T[1] the inside surface, then each layer's far face; T[T.length − 2] is the outside surface (the films have no thickness) */
+    const thick = x, at = (xx) => { if (xx <= 0) return T[1]; let x0 = 0; for (let i = 0; i < L.length; i++) { const x1 = x0 + L[i].d; if (xx <= x1 + 1e-15) return T[i + 1] + (T[i + 2] - T[i + 1]) * (xx - x0) / L[i].d; x0 = x1; } return T[T.length - 2]; };
+    return { R, q, P, U: 1 / R, T, layers: L, thick, at, Ts_in: T[1], Ts_out: T[T.length - 2] };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VG = window.VDGear;
+  const rnd = () => Math.random();
+  const S = { view: 'eq', preset: 'hotmetal', run: false, speed: 10, blind: false,
+    eq: { a: 'aluminum', b: 'water', mA: 0.5, mB: 0.25, TA0: 90, TB0: 20, bar: 'copper', L: 0.10, t: 0, hist: [], mys: 'silver', mysN: 0 },
+    th: { bath: 'ice', n: 20, Tg: 20, t: 0, mysT: 61.3, mysN: 0, hist: [] },
+    ex: { kind: 'rod', rod: 'aluminum', liq: 'water', T: 20, mys: 'brass', mysN: 0 },
+    co: { build: 'house', layers: [{ mat: 'plaster', d: 13 }, { mat: 'glasswool', d: 90 }, { mat: 'brick', d: 100 }], Tin: 20, Tout: -5, fin: 'still', fout: 'wind24', A: 1, x: 0.5 } };
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
+  let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const g6 = (v) => +(+v).toPrecision(6);
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const dark = () => (VG ? VG.dark() : false);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
+      hot: g('--hot'), cold: g('--cold'), ta: g('--ta'), tb: g('--tb'), fit: g('--fit'), curve: g('--curve'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+
+  // ---------- the pieces of each view ----------
+  const eqPar = () => { const e = S.eq, ka = e.a === 'mystery' ? e.mys : e.a; return { mA: e.mA, cA: SPECIFIC[ka].c, mB: e.mB, cB: SPECIFIC[e.b].c, TA0: e.TA0, TB0: e.TB0, k: CONDUCT[e.bar].k, L: e.L }; };
+  const eqNow = () => eqState(eqPar(), S.eq.t);
+  const bathT = () => (S.th.bath === 'mys' ? S.th.mysT : BATHS[S.th.bath].T);
+  const rodKey = () => (S.ex.rod === 'mystery' ? S.ex.mys : S.ex.rod);
+  const coWall = () => { const c = S.co; return { A: c.A, Tin: c.Tin, Tout: c.Tout, Rin: FILMS[c.fin].R, Rout: FILMS[c.fout].R, layers: c.layers.map((l) => ({ mat: l.mat, d: l.d / 1000 })) }; };   /* the card works in mm, the physics in m */
+  const isStatic = () => S.view === 'ex' || S.view === 'co';
+  /* a colour for a temperature: blue at −30 °C through the canvas grey near 20 °C to red at 100 °C */
+  function tcol(t, a = 1) {
+    const s = Math.max(-1, Math.min(1, t < 20 ? (t - 20) / 50 : (t - 20) / 80)), d = dark();
+    const mid = d ? [70, 80, 95] : [226, 230, 236], hot = d ? [255, 110, 80] : [214, 66, 36], cold = d ? [100, 160, 255] : [47, 111, 208], e = s > 0 ? hot : cold, u = Math.abs(s);
+    return `rgba(${Math.round(mid[0] + (e[0] - mid[0]) * u)},${Math.round(mid[1] + (e[1] - mid[1]) * u)},${Math.round(mid[2] + (e[2] - mid[2]) * u)},${a})`;
+  }
+
+  // ---------- drawing ----------
+  function scene(benchFrac = 0.8) {
+    const y = Math.round(H * benchFrac);
+    if (VG) { VG.wall(ctx, 0, 0, W, y); VG.bench(ctx, 0, y, W, 14, Math.max(14, H - y - 2)); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    return y;
+  }
+  function thermoLCD(x, y, w, h, text, name) {
+    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
+    else { ctx.fillStyle = T.ink; ctx.font = `600 ${h * 0.6}px ${T.mono}`; ctx.textAlign = 'right'; ctx.fillText(text, x + w, y + h * 0.7); }
+  }
+  function arrow(x1, y1, x2, y2, w, col) {
+    const a = Math.atan2(y2 - y1, x2 - x1), h = Math.max(6, w * 2.2);
+    ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - Math.cos(a) * h * 0.8, y2 - Math.sin(a) * h * 0.8); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - Math.cos(a - 0.45) * h, y2 - Math.sin(a - 0.45) * h); ctx.lineTo(x2 - Math.cos(a + 0.45) * h, y2 - Math.sin(a + 0.45) * h); ctx.closePath(); ctx.fill(); ctx.restore();
+  }
+  function block(cx, by, s, key, temp, label) {
+    const m = SPECIFIC[key] || SPECIFIC.silver, x = cx - s / 2, y = by - s;
+    if (VG) VG.shadow(ctx, cx, by, s * 0.62, 5);
+    if (m.liquid) { /* a thin walled can with the liquid in it */
+      const gl = ctx.createLinearGradient(x, 0, x + s, 0); gl.addColorStop(0, 'rgba(170,180,190,0.9)'); gl.addColorStop(0.35, 'rgba(235,240,245,0.95)'); gl.addColorStop(1, 'rgba(120,130,142,0.95)');
+      ctx.fillStyle = gl; ctx.beginPath(); ctx.roundRect(x, y - s * 0.12, s, s * 1.12, 4); ctx.fill();
+      const lq = ctx.createLinearGradient(0, y, 0, by); lq.addColorStop(0, VG ? VG.mix(m.col, '#ffffff', 0.25) : m.col); lq.addColorStop(1, VG ? VG.mix(m.col, '#000000', 0.25) : m.col);
+      ctx.fillStyle = lq; ctx.fillRect(x + 3, y + s * 0.06, s - 6, s * 0.94 - 3);
+      ctx.fillStyle = tcol(temp, 0.35); ctx.fillRect(x + 3, y + s * 0.06, s - 6, s * 0.94 - 3);
+      ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.fillRect(x + 3, y + s * 0.06, s - 6, 2);
+    } else {
+      const g = ctx.createLinearGradient(x, y, x + s, by); g.addColorStop(0, VG ? VG.mix(m.col, '#ffffff', 0.35) : m.col); g.addColorStop(0.5, m.col); g.addColorStop(1, VG ? VG.mix(m.col, '#000000', 0.35) : m.col);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(x, y, s, s, 3); ctx.fill();
+      ctx.fillStyle = tcol(temp, 0.45); ctx.fill();
+      ctx.fillStyle = 'rgba(255,255,255,0.25)'; ctx.fillRect(x + 2, y + 2, s - 4, 2);
+      ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, s - 1, s - 1);
+    }
+    if (label) { ctx.fillStyle = T.ink; ctx.font = `700 ${12 * proj()}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(label, cx, by + 6); }
+  }
+  function drawEq() {
+    const p = proj(), by = scene(0.78), e = S.eq, st = eqNow(), keyA = e.a === 'mystery' ? e.mys : e.a;
+    const bx0 = W * 0.08, bx1 = W * 0.92, top = H * 0.2;
+    /* the insulated box: foam walls, cut away at the front */
+    const foam = dark() ? '#c9c2a8' : '#efe9d2', foamD = dark() ? '#8f8a76' : '#cfc7a8';
+    if (VG) VG.shadow(ctx, (bx0 + bx1) / 2, by, (bx1 - bx0) * 0.55, 8);
+    ctx.fillStyle = foamD; ctx.fillRect(bx0, top, bx1 - bx0, by - top);
+    const inner = ctx.createLinearGradient(0, top + 14, 0, by - 12); inner.addColorStop(0, dark() ? '#1b222b' : '#f7f4ea'); inner.addColorStop(1, dark() ? '#232b35' : '#e9e3cd');
+    ctx.fillStyle = inner; ctx.fillRect(bx0 + 14, top + 14, bx1 - bx0 - 28, by - top - 26);
+    ctx.fillStyle = foam; ctx.fillRect(bx0, top, bx1 - bx0, 14); ctx.fillRect(bx0, top, 14, by - top); ctx.fillRect(bx1 - 14, top, 14, by - top); ctx.fillRect(bx0, by - 12, bx1 - bx0, 12);
+    ctx.save(); ctx.globalAlpha = 0.18; ctx.fillStyle = '#000'; for (let i = 0; i < 90; i++) { const xx = bx0 + ((i * 97) % 1000) / 1000 * (bx1 - bx0), yy = top + ((i * 61) % 1000) / 1000 * (by - top); if (xx > bx0 + 14 && xx < bx1 - 14 && yy > top + 14 && yy < by - 12) continue; ctx.fillRect(xx, yy, 1.5, 1.5); } ctx.restore();
+    if (VG) VG.label(ctx, 'insulated box (no heat in or out)', (bx0 + bx1) / 2, top + 26, { s: 10.5 * p, a: 'center' });
+    /* blocks sized by the cube root of their mass */
+    const floor = by - 12, sA = Math.min(H * 0.32, (bx1 - bx0) * 0.2) * Math.cbrt(e.mA / 1), sB = Math.min(H * 0.32, (bx1 - bx0) * 0.2) * Math.cbrt(e.mB / 1);
+    const cA = bx0 + 14 + (bx1 - bx0) * 0.17, cB = bx1 - 14 - (bx1 - bx0) * 0.17, barY = floor - Math.min(sA, sB) * 0.5;
+    /* bar from face to face, coloured along its length by the temperature drop (straight line in steady flow) */
+    const xa = cA + sA / 2, xb = cB - sB / 2, br = Math.max(4, 7 * p);
+    const gb = ctx.createLinearGradient(xa, 0, xb, 0); gb.addColorStop(0, tcol(st.TA)); gb.addColorStop(1, tcol(st.TB));
+    if (VG) VG.rod(ctx, xa, barY, xb, barY, br, { color: (CONDUCT[e.bar] && SPECIFIC[e.bar]) ? SPECIFIC[e.bar].col : e.bar === 'stainless' ? '#9aa2ad' : e.bar === 'glass' ? '#bfe0e8' : '#b8c0ca' });
+    ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = gb; ctx.fillRect(xa, barY - br, xb - xa, 2 * br); ctx.restore();
+    if (VG) VG.label(ctx, `${CONDUCT[e.bar].name.split(' (')[0].toLowerCase()} bar, ${f(e.L * 100, 0)} cm`, (xa + xb) / 2, barY + br + 12 * p, { a: 'center', s: 10.5 * p });
+    block(cA, floor, sA, keyA, st.TA, e.a === 'mystery' ? 'A: mystery' : `A: ${SPECIFIC[keyA].name.toLowerCase()}`);
+    block(cB, floor, sB, e.b, st.TB, `B: ${SPECIFIC[e.b].name.toLowerCase()}`);
+    /* heat flow arrow, width by the power */
+    const P = st.P, mx = (xa + xb) / 2, len = Math.min(70 * p, (xb - xa) * 0.35);
+    if (Math.abs(P) > 1e-3) { const w = Math.max(1.5, Math.min(8, 2 + Math.log10(1 + Math.abs(P)) * 4)) * p, dir = Math.sign(P);
+      arrow(mx - dir * len / 2, barY - br - 14 * p, mx + dir * len / 2, barY - br - 14 * p, w, T.hot);
+      if (VG) VG.label(ctx, 'heat', mx, barY - br - 28 * p, { a: 'center', s: 10.5 * p, c: T.hot }); }
+    /* probes and their meters */
+    const lw = 96 * p, lh = 26 * p, ly = top - lh - 20 * p;
+    for (const [cx, sz, tt, nm] of [[cA, sA, st.TA, 'A'], [cB, sB, st.TB, 'B']]) {
+      const ty = floor - sz;
+      ctx.strokeStyle = dark() ? '#c7ced8' : '#4a5563'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(cx, ty + sz * 0.35); ctx.lineTo(cx, top + 4); ctx.stroke();
+      if (VG) VG.cable(ctx, cx, top + 4, cx, ly + lh + 16, -10, { w: 2.5 * p });
+      thermoLCD(Math.max(4, Math.min(W - lw - 4, cx - lw / 2)), Math.max(6, ly), lw, lh, `${f(tt, 2)} °C`, `thermometer ${nm}`);
+    }
+  }
+  function drawTh() {
+    const p = proj(), by = scene(0.8), th = S.th, Tb = bathT(), key = th.bath;
+    /* the bath vessel */
+    const vx = W * 0.3, vw = Math.min(W * 0.34, 260 * p), vh = Math.min(H * 0.38, 210 * p), vt = by - vh;
+    const lqTop = vt + vh * 0.18;
+    const COL = { ln2: dark() ? '#c9dcf2' : '#e5f0fb', dry: dark() ? '#6a7c8f' : '#c8d3de', ice: dark() ? '#3a7cb8' : '#a8d1f0', steam: dark() ? '#3a7cb8' : '#a8d1f0', room: null, mys: dark() ? '#8a5a3a' : '#e3b48a' };
+    if (key === 'steam' || key === 'mys') { /* a hot plate under the beaker */
+      if (VG) VG.box(ctx, vx - vw / 2 - 14, by - 22 * p, vw + 28, 22 * p, { color: '#4a5260', r: 4 });
+      ctx.fillStyle = key === 'steam' ? '#d2452b' : '#d98a2b'; ctx.fillRect(vx - vw / 2 - 4, by - 24 * p, vw + 8, 3);
+    }
+    const base = (key === 'steam' || key === 'mys') ? by - 24 * p : by;
+    if (key !== 'room') {
+      if (VG) VG.shadow(ctx, vx, base, vw * 0.6, 6);
+      if (key === 'ln2') { /* a dewar: silvered double wall */
+        const g = ctx.createLinearGradient(vx - vw / 2, 0, vx + vw / 2, 0); g.addColorStop(0, '#6b7480'); g.addColorStop(0.3, '#e9edf2'); g.addColorStop(0.6, '#a3acb7'); g.addColorStop(1, '#59616c');
+        ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(vx - vw / 2, base - vh, vw, vh, [4, 4, 18, 18]); ctx.fill();
+        ctx.fillStyle = COL.ln2; ctx.fillRect(vx - vw / 2 + 10, lqTop + (base - by), vw - 20, base - lqTop - (base - by) - 10);
+      } else {
+        ctx.fillStyle = COL[key]; ctx.globalAlpha = 0.85; ctx.fillRect(vx - vw / 2 + 3, lqTop + (base - by), vw - 6, base - lqTop - (base - by) - 3); ctx.globalAlpha = 1;
+        ctx.strokeStyle = dark() ? 'rgba(220,235,245,0.7)' : 'rgba(90,120,140,0.7)'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(vx - vw / 2, base - vh); ctx.lineTo(vx - vw / 2, base); ctx.lineTo(vx + vw / 2, base); ctx.lineTo(vx + vw / 2, base - vh); ctx.stroke();
+        ctx.fillStyle = 'rgba(255,255,255,0.25)'; ctx.fillRect(vx - vw / 2 + 6, base - vh + 6, 5, vh - 12);
+      }
+      /* contents */
+      const yl = lqTop + (base - by);
+      if (key === 'ice') for (let i = 0; i < 7; i++) { const x = vx - vw / 2 + 16 + ((i * 37) % 100) / 100 * (vw - 50), y = yl - 6 + (i % 3) * 8; ctx.fillStyle = 'rgba(255,255,255,0.8)'; ctx.strokeStyle = 'rgba(120,160,190,0.8)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x, y, 22 * p, 18 * p, 4); ctx.fill(); ctx.stroke(); }
+      if (key === 'dry') for (let i = 0; i < 9; i++) { const x = vx - vw / 2 + 14 + ((i * 53) % 100) / 100 * (vw - 40), y = base - 30 * p - (i % 3) * 14 * p; ctx.fillStyle = '#eef3f7'; ctx.beginPath(); ctx.roundRect(x, y, 18 * p, 12 * p, 3); ctx.fill(); }
+      const tt = performance.now() / 1000;
+      if ((key === 'steam' || key === 'ln2' || key === 'dry') && !reduce) for (let i = 0; i < 14; i++) { const ph = (tt * (0.6 + (i % 5) * 0.1) + i * 0.37) % 1, x = vx - vw / 2 + 14 + ((i * 71) % 100) / 100 * (vw - 28), y = base - 8 - ph * (base - yl - 10);
+        ctx.strokeStyle = 'rgba(255,255,255,0.75)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(x, y, (2 + (i % 3)) * p, 0, 7); ctx.stroke(); }
+      if ((key === 'ln2' || key === 'dry' || key === 'steam') && !reduce) { ctx.save(); for (let i = 0; i < 6; i++) { const ph = (tt * 0.25 + i / 6) % 1, x = vx - vw * 0.3 + i * vw * 0.12 + Math.sin(tt + i) * 8, y = base - vh - ph * 60 * p;
+        ctx.globalAlpha = 0.25 * (1 - ph); ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(x, y, (10 + ph * 18) * p, 0, 7); ctx.fill(); } ctx.restore(); }
+      if (key === 'mys') { ctx.fillStyle = T.ink; ctx.font = `700 ${28 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText('?', vx + vw * 0.3, yl + 26 * p); }
+    }
+    /* the bulb on a stand, held in the bath */
+    const sx = vx - vw / 2 - 40 * p; if (VG) { VG.stand(ctx, sx, by, by - vh - 120 * p, { s: p, side: -1 }); VG.boss(ctx, sx, by - vh - 70 * p, p); }
+    const bulbR = Math.min(vw * 0.2, 38 * p), bcx = vx, bcy = base - bulbR - 18 * p;
+    ctx.strokeStyle = dark() ? '#9fb0c2' : '#6b7d90'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(sx + 16 * p, by - vh - 70 * p); ctx.lineTo(bcx - 4, by - vh - 70 * p); ctx.stroke();
+    const tg = th.Tg, gg = ctx.createRadialGradient(bcx - bulbR * 0.3, bcy - bulbR * 0.3, 2, bcx, bcy, bulbR); gg.addColorStop(0, 'rgba(255,255,255,0.8)'); gg.addColorStop(0.5, tcol(tg, 0.55)); gg.addColorStop(1, 'rgba(120,140,160,0.7)');
+    ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(bcx, bcy, bulbR, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(80,100,120,0.8)'; ctx.lineWidth = 1.5; ctx.stroke();
+    /* gas molecules in the bulb, moving faster when hotter */
+    const sp = Math.sqrt(cToK(tg) / 293), tt = reduce ? 0 : performance.now() / 1000;
+    ctx.fillStyle = dark() ? '#e6edf5' : '#2a3442'; for (let i = 0; i < Math.round(th.n * 0.8); i++) { const a = i * 2.39996 + tt * sp * (0.6 + (i % 7) * 0.13), r = bulbR * 0.75 * Math.sqrt(((i * 0.618) % 1));
+      ctx.beginPath(); ctx.arc(bcx + Math.cos(a) * r, bcy + Math.sin(a * 1.3) * r * 0.9, 1.6 * p, 0, 7); ctx.fill(); }
+    /* tube up to the gauge */
+    const gx = W * 0.74, gy = H * 0.18, gw = Math.min(150 * p, W * 0.22), gh = 34 * p;
+    ctx.strokeStyle = dark() ? 'rgba(200,215,230,0.8)' : 'rgba(90,110,130,0.85)'; ctx.lineWidth = 3 * p; ctx.lineJoin = 'round';
+    ctx.beginPath(); ctx.moveTo(bcx, bcy - bulbR); ctx.lineTo(bcx, gy + gh / 2 + 4); ctx.lineTo(gx - gw / 2 - 6, gy + gh / 2 + 4); ctx.stroke();
+    const P = gasP(th.n * 1e-3, tg) / 1000;
+    thermoLCD(gx - gw / 2, gy, gw, gh, `${f(P, 2)} kPa`, 'pressure gauge');
+    if (VG) VG.label(ctx, key === 'room' ? 'the bulb in the room air' : BATHS[key].name.toLowerCase(), vx, by + 18 * p, { a: 'center', s: 11 * p });
+  }
+  function drawEx() {
+    const p = proj(), by = scene(0.8), ex = S.ex;
+    if (ex.kind === 'rod') {
+      const key = rodKey(), dl = rodDL(key, ex.T), x0 = W * 0.08, x1 = W * 0.78, ry = by - H * 0.22, r = Math.max(6, 9 * p);
+      /* clamp block at the left, water jacket around the rod, circulator below */
+      if (VG) { VG.box(ctx, x0 - 26 * p, ry - 40 * p, 26 * p, by - ry + 40 * p, { color: '#4a5563', r: 3 }); }
+      const jx0 = x0 + 30 * p, jx1 = x1 - 30 * p, jr = r * 3.2;
+      ctx.fillStyle = tcol(ex.T, 0.35); ctx.fillRect(jx0, ry - jr, jx1 - jx0, 2 * jr);
+      ctx.strokeStyle = dark() ? 'rgba(220,235,245,0.6)' : 'rgba(90,120,140,0.6)'; ctx.lineWidth = 2; ctx.strokeRect(jx0, ry - jr, jx1 - jx0, 2 * jr);
+      ctx.fillStyle = 'rgba(255,255,255,0.3)'; ctx.fillRect(jx0 + 4, ry - jr + 3, jx1 - jx0 - 8, 3);
+      const m = EXPAND[key], shift = Math.max(-8, Math.min(8, dl * 4)) * p;   /* the end moves by ΔL, drawn 4000 times larger */
+      if (VG) VG.rod(ctx, x0, ry, x1 + shift, ry, r, { color: m.col });
+      for (const sx of [jx0 + 20, jx1 - 20]) { if (VG) VG.box(ctx, sx - 10 * p, ry + jr, 20 * p, by - ry - jr, { color: '#5b6677', r: 2, shadow: false }); }
+      /* digital dial gauge on its own stand */
+      const gx = x1 + 12 * p + shift; if (VG) { VG.rod(ctx, gx, ry, gx + 34 * p, ry, 2.5 * p, { color: '#d0d6de' }); VG.stand(ctx, x1 + 60 * p, by, ry - 70 * p, { s: p }); }
+      thermoLCD(Math.min(W - 128 * p, x1 + 18 * p), ry - 80 * p, 110 * p, 28 * p, `${f(dl, 3)} mm`, 'dial gauge');
+      /* circulator */
+      const cx = (jx0 + jx1) / 2, cw = 120 * p; if (VG) VG.box(ctx, cx - cw / 2, by - 50 * p, cw, 50 * p, { color: '#3d4754', r: 5 });
+      if (VG) VG.lcd(ctx, cx - cw / 2 + 10 * p, by - 42 * p, cw - 20 * p, 22 * p, `${f(ex.T, 1)} °C`), VG.plate(ctx, 'water bath', cx, by - 10 * p, { s: 8 * p });
+      if (VG) { VG.cable(ctx, cx - cw / 2 + 8, by - 50 * p, jx0 + 30, ry + jr, -20, { w: 4 * p, color: '#2c5f88' }); VG.cable(ctx, cx + cw / 2 - 8, by - 50 * p, jx1 - 30, ry + jr, -20, { w: 4 * p, color: '#2c5f88' }); }
+      if (VG) VG.label(ctx, ex.rod === 'mystery' ? 'mystery rod, 1.000 m at 20.0 °C' : `${m.name.toLowerCase()} rod, 1.000 m at 20.0 °C`, (x0 + x1) / 2, ry - jr - 12 * p, { a: 'center', s: 11 * p });
+    } else {
+      const key = ex.liq, h = capH(key, ex.T), fx = W * 0.36, fr = Math.min(H * 0.1, 56 * p), fy = by - 30 * p - fr;
+      /* bath beaker */
+      const bw = fr * 3.4, bh = fr * 2.6; ctx.fillStyle = tcol(ex.T, 0.3); ctx.fillRect(fx - bw / 2, by - bh, bw, bh - 30 * p);
+      ctx.strokeStyle = dark() ? 'rgba(220,235,245,0.7)' : 'rgba(90,120,140,0.7)'; ctx.lineWidth = 2.5; ctx.beginPath(); ctx.moveTo(fx - bw / 2, by - bh - 20 * p); ctx.lineTo(fx - bw / 2, by - 30 * p); ctx.lineTo(fx + bw / 2, by - 30 * p); ctx.lineTo(fx + bw / 2, by - bh - 20 * p); ctx.stroke();
+      if (VG) { VG.box(ctx, fx - bw / 2 - 10, by - 30 * p, bw + 20, 30 * p, { color: '#3d4754', r: 4 }); VG.lcd(ctx, fx + bw / 2 - 86 * p, by - 26 * p, 76 * p, 20 * p, `${f(ex.T, 1)} °C`); }
+      /* flask and capillary */
+      /* the ruler spans this liquid's whole range from 0 to 40 °C, so the scale (px per mm) depends on the liquid */
+      const col = LIQUIDS[key].col, capX = fx, capTop = H * 0.05, capBot = fy - fr - 16 * p, hmin = Math.min(0, capH(key, 0), capH(key, 40)), hmax = Math.max(0, capH(key, 0), capH(key, 40));
+      const scale = Math.min(6, (capBot - capTop - 20 * p) / Math.max(10, hmax - hmin)), cap0 = capBot + hmin * scale;
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(fx, fy, fr - 3, 0, 7); ctx.fill();
+      ctx.fillStyle = tcol(ex.T, 0.25); ctx.fill();
+      const lvl = Math.max(capTop, Math.min(fy - fr, cap0 - h * scale));
+      ctx.fillStyle = col; ctx.fillRect(capX - 2.5 * p, lvl, 5 * p, fy - fr - lvl + 4);
+      ctx.strokeStyle = dark() ? 'rgba(220,235,245,0.8)' : 'rgba(80,110,130,0.85)'; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(fx, fy, fr, -Math.PI / 2 + 0.12, 1.5 * Math.PI - 0.12); ctx.stroke();
+      ctx.strokeRect(capX - 4 * p, capTop, 8 * p, fy - fr - capTop + 2);
+      const hl = ctx.createRadialGradient(fx - fr * 0.4, fy - fr * 0.4, 1, fx - fr * 0.4, fy - fr * 0.4, fr * 0.5); hl.addColorStop(0, 'rgba(255,255,255,0.6)'); hl.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = hl; ctx.beginPath(); ctx.arc(fx, fy, fr, 0, 7); ctx.fill();
+      /* ruler beside the capillary, zero at the 20 °C level, in mm */
+      const rx = capX + 14 * p; ctx.fillStyle = dark() ? '#d9cfae' : '#f3e7c0'; ctx.fillRect(rx, capTop, 30 * p, fy - fr - capTop);
+      ctx.strokeStyle = '#3a3428'; ctx.fillStyle = '#3a3428'; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.lineWidth = 1;
+      const tick = scale >= 4 ? 1 : scale >= 0.8 ? 5 : 10, labl = tick === 1 ? 5 : scale * 10 >= 14 * p ? 10 : 50;
+      for (let mm = -300; mm <= 400; mm += tick) { const y = cap0 - mm * scale; if (y < capTop + 2 || y > fy - fr - 2) continue; const big = mm % labl === 0; ctx.beginPath(); ctx.moveTo(rx, y); ctx.lineTo(rx + (big ? 12 : mm % (tick * 5) === 0 ? 8 : 4) * p, y); ctx.stroke(); if (big) ctx.fillText(String(mm).replace('-', '−'), rx + 14 * p, y); }
+      ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(capX - 10 * p, lvl); ctx.lineTo(rx + 30 * p, lvl); ctx.stroke();
+      thermoLCD(Math.min(W - 130 * p, rx + 46 * p), Math.max(8, Math.min(lvl - 14 * p, H * 0.5)), 110 * p, 28 * p, `${f(h, 1)} mm`, 'level above the mark');
+      if (VG) VG.label(ctx, `${LIQUIDS[key].name.toLowerCase()}, 5.000 mL in Pyrex, bore 1.00 mm`, fx, by + 18 * p, { a: 'center', s: 11 * p });
+    }
+  }
+  const LAYER_LOOK = { plaster: '#ece8df', glasswool: '#f1cf63', brick: '#b65a3c', glass: '#bfe2ec', wood: '#b9894f', foam: '#f6f7f8', steel: '#8a939e', aluminum: '#c3cad3', copper: '#c87a4f',
+    stainless: '#9aa2ad', cork: '#b88d5c', ice: '#e3f2fb', air: 'rgba(200,220,240,0.25)', snow: '#f6fafc', wool: '#e9e1d0', down: '#f7f2e6', diamond: '#e9f6fb', silver: '#d9dee5', gold: '#d4a63a', water: '#4f9fd8', fat: '#f1d7a8' };
+  function drawCo() {
+    const p = proj(), c = S.co, w = wallState(coWall()), rods = c.build === 'rods';
+    const by = scene(0.9), x0 = W * 0.12, x1 = W * 0.88, top = H * 0.08, bot = by - 10;
+    /* inside air on the left, outside on the right, tinted by temperature */
+    ctx.fillStyle = tcol(c.Tin, 0.25); ctx.fillRect(0, top, W * 0.36, bot - top);
+    ctx.fillStyle = tcol(c.Tout, 0.25); ctx.fillRect(W * 0.64, top, W * 0.36, bot - top);
+    const total = Math.max(w.thick, 1e-3), wx0 = W * 0.36, wx1 = W * 0.64, sc = (wx1 - wx0) / total;
+    let x = wx0; const wy0 = rods ? (top + bot) / 2 - 22 * p : top, wy1 = rods ? (top + bot) / 2 + 22 * p : bot;
+    for (const L of w.layers) {
+      const lw = L.d * sc, col = LAYER_LOOK[L.mat] || '#bbb';
+      if (rods && VG) VG.rod(ctx, x, (wy0 + wy1) / 2, x + lw, (wy0 + wy1) / 2, (wy1 - wy0) / 2, { color: col });
+      else { ctx.fillStyle = col; ctx.fillRect(x, wy0, lw, wy1 - wy0); }
+      ctx.save(); ctx.beginPath(); ctx.rect(x, wy0, lw, wy1 - wy0); ctx.clip();
+      if (L.mat === 'brick') { ctx.strokeStyle = 'rgba(240,230,215,0.7)'; ctx.lineWidth = 2; for (let yy = wy0; yy < wy1; yy += 22 * p) { ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + lw, yy); ctx.stroke(); } }
+      if (L.mat === 'glasswool' || L.mat === 'wool' || L.mat === 'down') { ctx.strokeStyle = 'rgba(160,120,30,0.35)'; ctx.lineWidth = 1; for (let i = 0; i < 60; i++) { const yy = wy0 + ((i * 53) % 100) / 100 * (wy1 - wy0), xx = x + ((i * 29) % 100) / 100 * lw; ctx.beginPath(); ctx.arc(xx, yy, 6 * p, 0.3, 2.6); ctx.stroke(); } }
+      if (L.mat === 'wood') { ctx.strokeStyle = 'rgba(90,55,20,0.3)'; for (let i = 0; i < 8; i++) { ctx.beginPath(); ctx.moveTo(x + (i + 0.5) * lw / 8, wy0); ctx.bezierCurveTo(x + (i + 0.2) * lw / 8, wy0 + (wy1 - wy0) / 3, x + (i + 0.8) * lw / 8, wy0 + 2 * (wy1 - wy0) / 3, x + (i + 0.5) * lw / 8, wy1); ctx.stroke(); } }
+      if (L.mat === 'foam') { ctx.strokeStyle = 'rgba(150,160,170,0.35)'; for (let i = 0; i < 80; i++) { ctx.beginPath(); ctx.arc(x + ((i * 37) % 100) / 100 * lw, wy0 + ((i * 71) % 100) / 100 * (wy1 - wy0), 3 * p, 0, 7); ctx.stroke(); } }
+      ctx.restore();
+      ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, wy0 + 0.5, lw - 1, wy1 - wy0 - 1);
+      if (lw > 34 * p && VG) { ctx.save(); ctx.translate(x + lw / 2, wy1 - 14 * p); ctx.rotate(-Math.PI / 2); VG.label(ctx, `${CONDUCT[L.mat].name.split(' (')[0]} ${g6(L.d * 1000)} mm`, 0, 0, { s: 10 * p, c: '#2a2a2a', a: 'left' }); ctx.restore(); }
+      x += lw;
+    }
+    /* the temperature profile drawn across the scene: flat in the air far away, a drop across each film, straight in each layer */
+    const tmin = Math.min(c.Tin, c.Tout) - 5, tmax = Math.max(c.Tin, c.Tout) + 5, ty = (t) => bot - 20 * p - (t - tmin) / (tmax - tmin) * (bot - top - 60 * p);
+    ctx.save(); ctx.strokeStyle = T.curve; ctx.lineWidth = 2.5 * p; ctx.beginPath();
+    const filmW = 28 * p; ctx.moveTo(0, ty(c.Tin)); ctx.lineTo(wx0 - (w.T[0] !== w.T[1] ? filmW : 0), ty(c.Tin)); ctx.lineTo(wx0, ty(w.Ts_in));
+    let xx = wx0; for (let i = 0; i < w.layers.length; i++) { xx += w.layers[i].d * sc; ctx.lineTo(xx, ty(w.T[i + 2])); }
+    ctx.lineTo(wx1 + (w.Ts_out !== c.Tout ? filmW : 0), ty(c.Tout)); ctx.lineTo(W, ty(c.Tout)); ctx.stroke(); ctx.restore();
+    if (VG) { VG.label(ctx, `${f(c.Tin, 0)} °C`, 10 * p, ty(c.Tin) - 10 * p, { s: 11 * p, m: true, c: T.ink }); VG.label(ctx, `${f(c.Tout, 0)} °C`, W - 10 * p, ty(c.Tout) - 10 * p, { s: 11 * p, m: true, a: 'right', c: T.ink }); }
+    /* heat flow arrows through */
+    const aw = Math.max(1.5, Math.min(9, 1.5 + Math.log10(1 + Math.abs(w.P)) * 2.5)) * p, ay = rods ? wy0 - 26 * p : top + 30 * p;
+    if (Math.abs(w.P) > 1e-6) arrow(w.P > 0 ? W * 0.06 : W * 0.94, ay, w.P > 0 ? W * 0.94 : W * 0.06, ay, aw, T.hot);
+    /* the probe */
+    const xp = wx0 + c.x * total * sc, tp = w.at(c.x * total);
+    ctx.strokeStyle = dark() ? '#e6edf5' : '#222b36'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(xp, wy0 - 4); ctx.lineTo(xp, ty(tp)); ctx.stroke();
+    ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(xp, ty(tp), 5 * p, 0, 7); ctx.fill();
+    thermoLCD(Math.max(4, Math.min(W - 104 * p, xp - 50 * p)), Math.max(4, (rods ? wy1 + 30 * p : top + 44 * p)), 96 * p, 24 * p, `${f(tp, 2)} °C`, 'probe');
+    if (VG) VG.label(ctx, rods ? 'two rods 1.00 cm across, end to end, insulated along their sides' : `${f(c.A, c.A < 1 ? 3 : 2)} m² of wall, seen edge on`, W / 2, by + 16 * p, { a: 'center', s: 11 * p });
+  }
+  function drawCurve() {
+    const p = proj(), c = cctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
+    if (S.blind) { c.fillStyle = T.muted; c.font = `${12 * p}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Graph hidden (Blind mode in the Lab section)', CW / 2, CH / 2); return; }
+    const L = 54 * p, R = 14 * p, Tp = 18 * p, B = 34 * p, pw = CW - L - R, ph = CH - Tp - B;
+    let xs = [0, 1], ys = [0, 1], series = [], xl = '', yl = '';
+    if (S.view === 'eq') {
+      const st = eqNow(), tmax = Math.max(st.tau * 4, S.eq.t, 10); xs = [0, tmax]; ys = [Math.min(S.eq.TA0, S.eq.TB0) - 2, Math.max(S.eq.TA0, S.eq.TB0) + 2];
+      const pa = [], pb = [], par = eqPar(); for (let i = 0; i <= 200; i++) { const t = S.eq.t * i / 200, s = eqState(par, t); pa.push([t, s.TA]); pb.push([t, s.TB]); }
+      series = [{ pts: pa, col: T.ta, w: 2.2 }, { pts: pb, col: T.tb, w: 2.2 }, { pts: [[0, st.Tf], [tmax, st.Tf]], col: T.muted, dash: true, w: 1.2 }];
+      xl = 'time t (s)'; yl = 'T (°C)';
+    } else if (S.view === 'th') {
+      xs = [-300, 120]; const pts = (window.vdRows ? window.vdRows() : []).filter((r) => r.bath && isFinite(+r.bath_T_C) && r.view === 'thermometer').map((r) => [+r.bath_T_C, +r.P_kPa]);
+      const now = [bathT(), gasP(S.th.n * 1e-3, S.th.Tg) / 1000]; ys = [0, Math.max(10, ...pts.map((q) => q[1]), now[1]) * 1.1];
+      series = [{ pts: pts, col: T.accent, dots: true }, { pts: isFinite(now[0]) ? [now] : [], col: T.hot, dots: true, ring: true }];
+      xl = 'bath temperature (°C), where known'; yl = 'P (kPa)';
+    } else if (S.view === 'ex') {
+      if (S.ex.kind === 'rod') { const k = rodKey(); xs = [0, 100]; const pts = []; for (let t = 0; t <= 100; t += 2) pts.push([t, rodDL(k, t)]); ys = [Math.min(...pts.map((q) => q[1])) * 1.1 - 0.01, Math.max(...pts.map((q) => q[1])) * 1.1 + 0.01];
+        series = [{ pts: [[S.ex.T, rodDL(k, S.ex.T)]], col: T.hot, dots: true, ring: true }].concat((window.vdRows ? window.vdRows() : []).filter((r) => r.setup === 'rod').length ? [{ pts: window.vdRows().filter((r) => r.setup === 'rod' && r.material === (S.ex.rod === 'mystery' ? 'mystery' : EXPAND[k].name)).map((r) => [+r.T_C, +r.reading_mm]), col: T.accent, dots: true }] : []);
+        xl = 'bath temperature (°C)'; yl = 'ΔL (mm)'; }
+      else { const k = S.ex.liq; xs = [0, 40]; const pts = []; for (let t = 0; t <= 40; t += 0.5) pts.push([t, capH(k, t)]); ys = [Math.min(...pts.map((q) => q[1])) - 2, Math.max(...pts.map((q) => q[1])) + 2];
+        series = [{ pts: [[S.ex.T, capH(k, S.ex.T)]], col: T.hot, dots: true, ring: true }, { pts: (window.vdRows ? window.vdRows() : []).filter((r) => r.setup === 'flask' && r.material === LIQUIDS[k].name).map((r) => [+r.T_C, +r.reading_mm]), col: T.accent, dots: true }];
+        xl = 'bath temperature (°C)'; yl = 'level h (mm)'; }
+    } else {
+      const w = wallState(coWall()), tot = Math.max(w.thick, 1e-6) * 1000, pts = [[0, w.Ts_in]]; let x = 0; w.layers.forEach((l, i) => { x += l.d; pts.push([x * 1000, w.T[i + 2]]); });
+      xs = [0, tot]; ys = [Math.min(S.co.Tin, S.co.Tout) - 3, Math.max(S.co.Tin, S.co.Tout) + 3];
+      series = [{ pts: pts.map((q) => [q[0], q[1]]), col: T.curve, w: 2.2 }, { pts: [[S.co.x * tot, w.at(S.co.x * w.thick)]], col: T.accent, dots: true, ring: true }];
+      xl = 'depth into the wall from the inside face (mm)'; yl = 'T (°C)';
+    }
+    if (!(xs[1] > xs[0])) xs[1] = xs[0] + 1; if (!(ys[1] > ys[0])) ys[1] = ys[0] + 1;
+    const X = (v) => L + (v - xs[0]) / (xs[1] - xs[0]) * pw, Y = (v) => Tp + ph - (v - ys[0]) / (ys[1] - ys[0]) * ph;
+    const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+    c.font = `${10.5 * p}px ${T.mono}`; c.strokeStyle = T.grid; c.fillStyle = T.muted; c.lineWidth = 1;
+    const sx = nice((xs[1] - xs[0]) / 6), sy = nice((ys[1] - ys[0]) / 4);
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (let v = Math.ceil(xs[0] / sx) * sx; v <= xs[1] + 1e-9; v += sx) { c.beginPath(); c.moveTo(X(v), Tp); c.lineTo(X(v), Tp + ph); c.stroke(); c.fillText(String(+v.toPrecision(6)).replace('-', '−'), X(v), Tp + ph + 4); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (let v = Math.ceil(ys[0] / sy) * sy; v <= ys[1] + 1e-9; v += sy) { c.beginPath(); c.moveTo(L, Y(v)); c.lineTo(L + pw, Y(v)); c.stroke(); c.fillText(String(+v.toPrecision(6)).replace('-', '−'), L - 5, Y(v)); }
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(xl, L + pw / 2, CH - 2);
+    c.save(); c.translate(12 * p, Tp + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore();
+    c.save(); c.beginPath(); c.rect(L, Tp - 4, pw, ph + 8); c.clip();
+    for (const s of series) {
+      if (s.dots) { for (const q of s.pts) { c.beginPath(); c.arc(X(q[0]), Y(q[1]), (s.ring ? 5 : 3.5) * p, 0, 7); if (s.ring) { c.strokeStyle = s.col; c.lineWidth = 2; c.stroke(); } else { c.fillStyle = s.col; c.fill(); } } continue; }
+      c.strokeStyle = s.col; c.lineWidth = (s.w || 2) * p; c.setLineDash(s.dash ? [5, 4] : []); c.beginPath(); s.pts.forEach((q, i) => (i ? c.lineTo(X(q[0]), Y(q[1])) : c.moveTo(X(q[0]), Y(q[1])))); c.stroke(); c.setLineDash([]);
+    }
+    c.restore();
+  }
+  function redraw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    ({ eq: drawEq, th: drawTh, ex: drawEx, co: drawCo })[S.view]();
+    drawCurve(); readouts(); clock();
+  }
+  function clock() { $('clock').textContent = S.view === 'eq' ? `t = ${f(S.eq.t, 0)} s` : S.view === 'th' ? `t = ${f(S.th.t, 0)} s in this bath` : ''; }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>';
+    let h = '';
+    if (S.view === 'eq') {
+      const st = eqNow(), e = S.eq;
+      h = dd('Thermometer A', `${f(st.TA, 2)} °C`) + dd('Thermometer B', `${f(st.TB, 2)} °C`) + dd('Time', `${f(e.t, 0)} s`)
+        + dd('Heat capacity of A, mc', e.a === 'mystery' ? 'unknown' : `${f(st.CA, 1)} J/°C`) + dd('Heat capacity of B, mc', `${f(st.CB, 1)} J/°C`)
+        + dd('Heat flow through the bar', S.blind ? hide : `${f(st.P, 3)} W`) + dd('Heat that has left A', S.blind ? hide : `${f(st.Q / 1000, 3)} kJ`)
+        + dd('Final temperature, predicted', S.blind || e.a === 'mystery' ? hide : `${f(st.Tf, 2)} °C`) + dd('Time constant τ', S.blind || e.a === 'mystery' ? hide : `${f(st.tau, 1)} s`);
+    } else if (S.view === 'th') {
+      const th = S.th, P = gasP(th.n * 1e-3, th.Tg), Tb = bathT();
+      h = dd('Pressure gauge', `${f(P / 1000, 2)} kPa`) + dd('Bath', th.bath === 'mys' ? 'mystery (unknown temperature)' : BATHS[th.bath].name)
+        + dd('Bath temperature', th.bath === 'mys' ? 'unknown' : `${f(Tb, 3)} °C = ${f(cToK(Tb), 3)} K = ${f(cToF(Tb), 2)} °F`)
+        + dd('Gas in the bulb', `${th.n} mmol`) + dd('Time in this bath', `${f(th.t, 0)} s`)
+        + dd('Gas temperature from PV = nRT', S.blind ? hide : `${f(gasT(P, th.n * 1e-3), 2)} °C`);
+    } else if (S.view === 'ex') {
+      const ex = S.ex;
+      if (ex.kind === 'rod') { const k = rodKey(), dl = rodDL(k, ex.T); h = dd('Dial gauge ΔL', `${f(dl, 3)} mm`) + dd('Bath temperature', `${f(ex.T, 1)} °C`) + dd('Rod', ex.rod === 'mystery' ? 'mystery' : EXPAND[k].name)
+        + dd('Length now', `${f(ROD_L0 * 1000 + dl, 3)} mm`) + dd('α from the table', S.blind || ex.rod === 'mystery' ? hide : `${f(EXPAND[k].a * 1e6, 1)} × 10⁻⁶ /°C`); }
+      else { const k = ex.liq, hh = capH(k, ex.T); h = dd('Level above the 20 °C mark', `${f(hh, 1)} mm`) + dd('Bath temperature', `${f(ex.T, 1)} °C`) + dd('Liquid', LIQUIDS[k].name)
+        + dd('Liquid volume now', S.blind ? hide : `${f(FLASK_V0 * liquidVol(k, ex.T) / 1000, 5)} mL`) + (k === 'water' ? dd('Density of water', S.blind ? hide : `${f(waterRho(ex.T), 3)} kg/m³`) : dd('β from the table', S.blind ? hide : `${f(LIQUIDS[k].b * 1e6, 0)} × 10⁻⁶ /°C`)); }
+    } else {
+      const w = wallState(coWall()), c = S.co;
+      h = dd('Heat flow P', `${f(w.P, w.P < 10 ? 3 : 1)} W`) + dd('Probe', `${f(w.at(c.x * w.thick), 2)} °C at ${f(c.x * w.thick * 1000, 1)} mm`)
+        + dd('Inside surface', `${f(w.Ts_in, 2)} °C`) + dd('Outside surface', `${f(w.Ts_out, 2)} °C`) + dd('Area A', `${c.A < 0.01 ? f(c.A * 1e4, 3) + ' cm²' : f(c.A, 3) + ' m²'}`)
+        + dd('Total resistance ΣR per unit area', S.blind ? hide : `${f(w.R, 4)} m²·°C/W`) + dd('U = 1/ΣR', S.blind ? hide : `${f(w.U, 3)} W/(m²·°C)`);
+    }
+    $('out').innerHTML = h;
+  }
+
+  // ---------- controls ----------
+  const fillSel = (sel, obj, keys, extra) => { sel.innerHTML = (keys || Object.keys(obj)).map((k) => `<option value="${k}">${obj[k].name}</option>`).join('') + (extra || ''); };
+  fillSel($('selA'), SPECIFIC, null, '<option value="mystery">Mystery block</option>'); fillSel($('selB'), SPECIFIC);
+  fillSel($('selBar'), CONDUCT, ['silver', 'copper', 'gold', 'aluminum', 'steel', 'stainless', 'glass']);
+  fillSel($('selRod'), EXPAND, null, '<option value="mystery">Mystery rod</option>'); fillSel($('selLiq'), LIQUIDS);
+  for (const id of ['selL1', 'selL2', 'selL3']) fillSel($(id), CONDUCT);
+  fillSel($('selFi'), FILMS, ['none', 'still']); fillSel($('selFo'), FILMS, ['none', 'wind12', 'wind24']);
+  function sync() {
+    const e = S.eq, th = S.th, ex = S.ex, c = S.co;
+    $('selA').value = e.a; $('selB').value = e.b; $('selBar').value = e.bar;
+    $('sMA').value = e.mA; $('oMA').textContent = `${f(e.mA, 2)} kg`; $('sMB').value = e.mB; $('oMB').textContent = `${f(e.mB, 2)} kg`;
+    $('sTA').value = e.TA0; $('oTA').textContent = `${e.TA0} °C`; $('sTB').value = e.TB0; $('oTB').textContent = `${e.TB0} °C`; $('sL').value = e.L; $('oL').textContent = `${f(e.L * 100, 0)} cm`;
+    $('newMystery').hidden = e.a !== 'mystery';
+    for (const b of document.querySelectorAll('#bathSeg button')) b.setAttribute('aria-pressed', String(b.dataset.b === th.bath));
+    $('sN').value = th.n; $('oN').textContent = `${th.n} mmol`; $('newBath').hidden = th.bath !== 'mys';
+    $('bathNote').textContent = th.mysN ? `Last mystery bath was ${f(th.lastMys, 1)} °C.` : '';
+    for (const b of document.querySelectorAll('#exSeg button')) b.setAttribute('aria-pressed', String(b.dataset.x === ex.kind));
+    $('pickRod').hidden = ex.kind !== 'rod'; $('pickLiq').hidden = ex.kind !== 'flask'; $('newRod').hidden = !(ex.kind === 'rod' && ex.rod === 'mystery');
+    $('selRod').value = ex.rod; $('selLiq').value = ex.liq; $('sTX').max = ex.kind === 'flask' ? 40 : 100; $('sTX').value = ex.T; $('oTX').textContent = `${f(ex.T, 1)} °C`;
+    for (const b of document.querySelectorAll('#buildSeg button')) b.setAttribute('aria-pressed', String(b.dataset.w === c.build));
+    c.layers.forEach((l, i) => { $(`selL${i + 1}`).value = l.mat; $(`sD${i + 1}`).value = l.d; $(`oD${i + 1}`).textContent = `${l.d} mm`; });
+    $('sTi').value = c.Tin; $('oTi').textContent = `${c.Tin} °C`; $('sTo').value = c.Tout; $('oTo').textContent = `${c.Tout} °C`; $('selFi').value = c.fin; $('selFo').value = c.fout;
+    $('sX').value = Math.round(c.x * 1000); const w = wallState(coWall()); $('oX').textContent = `${f(c.x * w.thick * 1000, 1)} mm in`;
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  const BUILDS = {
+    house: { layers: [{ mat: 'plaster', d: 13 }, { mat: 'glasswool', d: 90 }, { mat: 'brick', d: 100 }], Tin: 20, Tout: -5, fin: 'still', fout: 'wind24', A: 1 },
+    window: { layers: [{ mat: 'glass', d: 4 }, { mat: 'air', d: 0 }, { mat: 'glass', d: 0 }], Tin: 20, Tout: -5, fin: 'still', fout: 'wind24', A: 1 },
+    icebox: { layers: [{ mat: 'foam', d: 25 }, { mat: 'foam', d: 0 }, { mat: 'foam', d: 0 }], Tin: 35, Tout: 0, fin: 'none', fout: 'none', A: 0.95 },
+    rods: { layers: [{ mat: 'steel', d: 250 }, { mat: 'aluminum', d: 250 }, { mat: 'aluminum', d: 0 }], Tin: 100, Tout: 20, fin: 'none', fout: 'none', A: Math.PI * 0.005 * 0.005 } };
+  function setBuild(k) { const b = BUILDS[k]; S.co.build = k; S.co.layers = b.layers.map((l) => ({ ...l })); Object.assign(S.co, { Tin: b.Tin, Tout: b.Tout, fin: b.fin, fout: b.fout, A: b.A }); }
+  const PRESETS = {
+    hotmetal: { view: 'eq', hint: 'A 0.50 kg aluminum block at 90 °C joined by a 10 cm copper bar to 0.25 kg of water at 20 °C, all in an insulated box. Heat flows from hot to cold until the two thermometers agree; then nothing more changes. That shared temperature is what thermal equilibrium means.',
+      set: () => Object.assign(S.eq, { a: 'aluminum', b: 'water', mA: 0.5, mB: 0.25, TA0: 90, TB0: 20, bar: 'copper', L: 0.10, t: 0 }) },
+    mystery: { view: 'eq', hint: 'A 0.50 kg block of an unknown metal at 95 °C joined to 0.50 kg of water at 20 °C. Its specific heat is hidden: find it from the final temperature, since the heat the block loses is the heat the water gains.',
+      set: () => { Object.assign(S.eq, { a: 'mystery', b: 'water', mA: 0.5, mB: 0.5, TA0: 95, TB0: 20, bar: 'copper', L: 0.10, t: 0 }); } },
+    gas: { view: 'th', hint: 'A 1 L glass bulb holding 20 mmol of gas, joined to a pressure gauge. Its volume never changes, so its pressure tells its temperature. Put it in baths at known temperatures, wait for the gauge to settle, and plot pressure against temperature: the line points to the temperature where the pressure would be zero.',
+      set: () => { Object.assign(S.th, { bath: 'ice', n: 20, Tg: 20, t: 0 }); } },
+    rod: { view: 'ex', hint: 'An aluminum rod 1.000 m long at 20.0 °C lies in a water jacket with one end against a fixed block and the other against a dial gauge that reads to 0.001 mm. Change the bath temperature and read how much longer the rod gets.',
+      set: () => Object.assign(S.ex, { kind: 'rod', rod: 'aluminum', T: 20 }) },
+    water4: { view: 'ex', hint: 'Water fills a Pyrex flask to the zero mark of a thin tube at 20 °C. Cool it toward 0 °C: the level falls, then a little above 4 °C it turns and rises again. Water is densest at 3.98 °C; the level turns a little higher, at about 4.5 °C, because the flask shrinks as it cools too.',
+      set: () => Object.assign(S.ex, { kind: 'flask', liq: 'water', T: 20 }) },
+    wall: { view: 'co', hint: 'A house wall: 13 mm of plasterboard, 90 mm of glass wool and 100 mm of brick, with still air at 20 °C inside and a 24 km/h wind at −5 °C outside. Drag the probe through the wall: the temperature drops most across the insulation.',
+      set: () => setBuild('house') } };
+  const card = { eq: 'cardEq', th: 'cardTh', ex: 'cardEx', co: 'cardCo' };
+  const UNITS = { eq: 'T in °C · mass in kg · time in s', th: 'P in kPa · T in °C · gas in mmol', ex: 'T in °C · lengths in mm', co: 'T in °C · P in W · thickness in mm' };
+  const LABEL = { eq: 'Two blocks in an insulated box joined by a metal bar, each with a thermometer. Space starts or pauses.', th: 'A glass bulb of gas held in a bath on a stand, joined by a tube to a pressure gauge.',
+    ex: 'A rod in a water jacket against a dial gauge, or a flask of liquid with a thin tube and a ruler, in a water bath.', co: 'A wall seen edge on, with the temperature profile drawn across it and a probe inside it.' };
+  function setView(v) {
+    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    for (const k in card) $(card[k]).hidden = k !== v;
+    if (!(window.vdRows && window.vdRows().length)) { window.vdShowCols = SHOW[v]; window.dispatchEvent(new Event('load')); }   /* the Readings section redraws its table headings on load */
+    $('units').textContent = UNITS[v]; can.setAttribute('aria-label', LABEL[v]);
+    const st = isStatic(); $('go').hidden = st; $('restart').hidden = st; $('speedSeg').hidden = st;
+    setRun(false); sync(); redraw();
+  }
+  function setRun(on) { if (isStatic()) on = false; S.run = on; const t = S.view === 'eq' ? S.eq.t : S.th.t; $('go').textContent = on ? 'Pause' : t > 0 ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); if (k === 'mystery') newMystery(true); setView(c.view); }
+  function newMystery(quiet) { const e = S.eq; let k; do { k = MYSTERY_POOL[Math.floor(rnd() * MYSTERY_POOL.length)]; } while (k === e.mys && MYSTERY_POOL.length > 1); if (!quiet && e.mysN) $('presetHint').textContent = `The last mystery block was ${SPECIFIC[e.mys].name.toLowerCase()}.`; e.mys = k; e.mysN++; e.t = 0; e.hist = []; }
+  function newBath() { const th = S.th; if (th.mysN) th.lastMys = th.mysT; th.mysT = Math.round((25 + rnd() * 70) * 10) / 10; th.mysN++; th.t = 0; }
+  function newRod() { const ex = S.ex; let k; do { k = ROD_POOL[Math.floor(rnd() * ROD_POOL.length)]; } while (k === ex.mys); if (ex.mysN) $('presetHint').textContent = `The last mystery rod was ${EXPAND[ex.mys].name.toLowerCase()}.`; ex.mys = k; ex.mysN++; }
+  const custom = () => { S.preset = 'custom'; };
+  const eqChanged = () => { custom(); S.eq.t = 0; setRun(false); sync(); redraw(); };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
+  $('go').addEventListener('click', () => setRun(!S.run));
+  $('restart').addEventListener('click', () => { if (S.view === 'eq') S.eq.t = 0; else { S.th.t = 0; S.th.Tg = 20; } setRun(false); redraw(); });
+  $('selA').addEventListener('change', (e) => { S.eq.a = e.target.value; if (S.eq.a === 'mystery') newMystery(true); eqChanged(); });
+  $('selB').addEventListener('change', (e) => { S.eq.b = e.target.value; eqChanged(); });
+  $('selBar').addEventListener('change', (e) => { S.eq.bar = e.target.value; eqChanged(); });
+  $('sMA').addEventListener('input', (e) => { S.eq.mA = +e.target.value; eqChanged(); });
+  $('sMB').addEventListener('input', (e) => { S.eq.mB = +e.target.value; eqChanged(); });
+  $('sTA').addEventListener('input', (e) => { S.eq.TA0 = +e.target.value; eqChanged(); });
+  $('sTB').addEventListener('input', (e) => { S.eq.TB0 = +e.target.value; eqChanged(); });
+  $('sL').addEventListener('input', (e) => { S.eq.L = +e.target.value; eqChanged(); });
+  $('newMystery').addEventListener('click', () => { newMystery(false); eqChanged(); });
+  $('bathSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-b]'); if (!b || b.dataset.b === S.th.bath) return; S.th.bath = b.dataset.b; S.th.t = 0; if (b.dataset.b === 'mys' && !S.th.mysN) newBath(); custom(); setRun(!reduce || S.run); sync(); redraw(); });
+  $('sN').addEventListener('input', (e) => { S.th.n = +e.target.value; custom(); sync(); redraw(); });
+  $('newBath').addEventListener('click', () => { newBath(); custom(); sync(); redraw(); });
+  $('exSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-x]'); if (!b) return; S.ex.kind = b.dataset.x; if (S.ex.kind === 'flask') S.ex.T = Math.min(S.ex.T, 40); custom(); sync(); redraw(); });
+  $('selRod').addEventListener('change', (e) => { S.ex.rod = e.target.value; if (S.ex.rod === 'mystery' && !S.ex.mysN) newRod(); custom(); sync(); redraw(); });
+  $('selLiq').addEventListener('change', (e) => { S.ex.liq = e.target.value; custom(); sync(); redraw(); });
+  $('sTX').addEventListener('input', (e) => { S.ex.T = +e.target.value; custom(); sync(); redraw(); });
+  $('newRod').addEventListener('click', () => { newRod(); custom(); sync(); redraw(); });
+  $('buildSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-w]'); if (!b) return; setBuild(b.dataset.w); custom(); sync(); redraw(); });
+  for (let i = 1; i <= 3; i++) {
+    $(`selL${i}`).addEventListener('change', (e) => { S.co.layers[i - 1].mat = e.target.value; custom(); sync(); redraw(); });
+    $(`sD${i}`).addEventListener('input', (e) => { S.co.layers[i - 1].d = +e.target.value; if (S.co.layers.every((l) => l.d === 0)) S.co.layers[i - 1].d = 1; custom(); sync(); redraw(); });
+  }
+  $('sTi').addEventListener('input', (e) => { S.co.Tin = +e.target.value; custom(); sync(); redraw(); });
+  $('sTo').addEventListener('input', (e) => { S.co.Tout = +e.target.value; custom(); sync(); redraw(); });
+  $('selFi').addEventListener('change', (e) => { S.co.fin = e.target.value; custom(); sync(); redraw(); });
+  $('selFo').addEventListener('change', (e) => { S.co.fout = e.target.value; custom(); sync(); redraw(); });
+  $('sX').addEventListener('input', (e) => { S.co.x = +e.target.value / 1000; sync(); redraw(); });
+  /* drag the probe in the picture */
+  let dragging = false;
+  const probeX = (e) => { const r = can.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * W; return Math.max(0, Math.min(1, (x - W * 0.36) / (W * 0.28))); };
+  can.addEventListener('pointerdown', (e) => { if (S.view !== 'co') return; const r = can.getBoundingClientRect(), x = (e.clientX - r.left) / r.width * W; if (x < W * 0.34 || x > W * 0.66) return; dragging = true; can.setPointerCapture(e.pointerId); S.co.x = probeX(e); sync(); redraw(); });
+  can.addEventListener('pointermove', (e) => { if (dragging) { S.co.x = probeX(e); sync(); redraw(); } });
+  for (const ev of ['pointerup', 'pointercancel']) can.addEventListener(ev, () => { dragging = false; });
+  can.addEventListener('keydown', (e) => {
+    if (e.key === ' ') { if (!isStatic()) $('go').click(); e.preventDefault(); }
+    else if (S.view === 'co' && (e.key === 'ArrowLeft' || e.key === 'ArrowRight')) { S.co.x = Math.max(0, Math.min(1, S.co.x + (e.key === 'ArrowLeft' ? -1 : 1) * (e.shiftKey ? 0.1 : 0.01))); sync(); redraw(); e.preventDefault(); }
+  });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
+
+  // ---------- the clock ----------
+  let last = performance.now(), lastDraw = 0;
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.run) {
+      if (S.view === 'eq') S.eq.t += dt * S.speed;
+      else if (S.view === 'th') { const sd = dt * S.speed; S.th.Tg = follow(S.th.Tg, bathT(), sd); S.th.t += sd; }
+      redraw();
+    } else if (S.view === 'th' && !reduce && now - lastDraw > 50) { lastDraw = now; redraw(); }
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- readings for the worksheets (tools/readings_panel.py) ----------
+  window.vdVersion = 'temperature@2026-10-24';
+  const SHEETS = { eq: 'thermal-equilibrium', th: 'gas-thermometer', ex: 'thermal-expansion', co: 'heat-conduction' };
+  window.vdWorksheet = () => SHEETS[S.view];
+  const SHOW = { eq: [['t_s', 't (s)'], ['T_A_C', 'T_A (°C)'], ['T_B_C', 'T_B (°C)']], th: [['bath', 'bath'], ['n_mmol', 'n (mmol)'], ['P_kPa', 'P (kPa)']],
+    ex: [['material', 'sample'], ['T_C', 'T (°C)'], ['reading_mm', 'reading (mm)']], co: [['x_mm', 'probe (mm)'], ['T_probe_C', 'T (°C)'], ['P_W', 'P (W)']] };
+  const VIEWNAME = { eq: 'equilibrium', th: 'thermometer', ex: 'expansion', co: 'conduction' }, VIEWLABEL = { equilibrium: 'Equilibrium', thermometer: 'Thermometer', expansion: 'Expansion', conduction: 'Conduction' };
+  window.vdShowCols = SHOW.eq;
+  window.vdReadingRow = () => {
+    const other = (window.vdRows ? window.vdRows() : []).find((r) => r.view !== VIEWNAME[S.view]);
+    if (other) return `These readings are from the ${VIEWLABEL[other.view]} view: export them to its worksheet or clear them first.`;
+    window.vdShowCols = SHOW[S.view];
+    if (S.view === 'eq') { const e = S.eq, st = eqNow(); return { view: 'equilibrium', t_s: Math.round(e.t), T_A_C: f(st.TA, 2).replace('−', '-'), T_B_C: f(st.TB, 2).replace('−', '-'),
+      block_A: e.a === 'mystery' ? 'mystery' : SPECIFIC[e.a].name, m_A_kg: e.mA, T_A0_C: e.TA0, block_B: SPECIFIC[e.b].name, m_B_kg: e.mB, T_B0_C: e.TB0, bar: CONDUCT[e.bar].name, L_bar_m: e.L }; }
+    if (S.view === 'th') { const th = S.th, P = gasP(th.n * 1e-3, th.Tg) / 1000; return { view: 'thermometer', bath: th.bath === 'mys' ? 'mystery' : BATHS[th.bath].name,
+      bath_T_C: th.bath === 'mys' ? '' : g6(bathT()), n_mmol: th.n, t_in_bath_s: Math.round(th.t), P_kPa: f(P, 2) }; }
+    if (S.view === 'ex') { const ex = S.ex; if (ex.kind === 'rod') { const k = rodKey(); return { view: 'expansion', setup: 'rod', material: ex.rod === 'mystery' ? 'mystery' : EXPAND[k].name, T_C: ex.T, reading_mm: f(rodDL(k, ex.T), 3).replace('−', '-'), L0_m: ROD_L0 }; }
+      return { view: 'expansion', setup: 'flask', material: LIQUIDS[ex.liq].name, T_C: ex.T, reading_mm: f(capH(ex.liq, ex.T), 1).replace('−', '-'), L0_m: '' }; }
+    const c = S.co, w = wallState(coWall());
+    return { view: 'conduction', build: c.build, layers: w.layers.map((l) => `${CONDUCT[l.mat].name.split(' (')[0]} ${g6(l.d * 1000)} mm`).join(' + '), A_m2: g6(c.A), T_in_C: c.Tin, T_out_C: c.Tout,
+      film_in: c.fin, film_out: c.fout, x_mm: f(c.x * w.thick * 1000, 1), T_probe_C: f(w.at(c.x * w.thick), 2).replace('−', '-'), P_W: g6(w.P) };
+  };
+
+  // ---------- about ----------
+  $('aboutEq').textContent = 'Equilibrium view: two bodies in a perfectly insulated box, joined by a bar 2.00 cm across. Heat flows through the bar at P = kA(T_A − T_B)/L, with k from the textbook\'s Table 1.5; the bar\'s own heat capacity is neglected, and so is the box\'s. Each body changes temperature as Q = mcΔT, with c from Table 1.3 (liquids sit in a can whose heat capacity is neglected). The difference T_A − T_B dies away as exp(−t/τ) with 1/τ = (kA/L)(1/m_A c_A + 1/m_B c_B), and both end at the same temperature, where nothing more changes: thermal equilibrium. A thermometer reads the temperature of the body it touches only once it has come to equilibrium with it (the zeroth law); here the thermometers are taken to follow at once. They read to 0.01 °C. The speed buttons run the clock 1, 10 or 60 times faster than real time; the clock shows the time in the experiment.';
+  $('aboutTh').textContent = 'Thermometer view: an ideal gas in a glass bulb of fixed volume 1.000 L, joined to a pressure gauge that reads to 0.01 kPa. P = nRT/V, with R = 8.314462618 J/(mol·K). The bulb\'s expansion and the gas in the tube are neglected. The gas comes to the bath\'s temperature with a time constant of 12 s (a chosen value), so wait for the gauge to settle. Baths at 1 atm, on today\'s temperature scale (ITS-90): liquid nitrogen boils at 77.355 K (−195.795 °C), dry ice sublimes at −78.464 °C, ice and water is at 0.00 °C, water boils at 99.974 °C (the textbook rounds it to 100 °C). Room air is 20 °C. The mystery bath is between 25 °C and 95 °C. Real gases depart a little from PV = nRT, and different gases give slightly different readings except at low density, which is why a gas thermometer is extrapolated to zero density; this model is exactly ideal.';
+  $('aboutEx').textContent = 'Expansion view. Rod: L = L₀[1 + α(T − 20 °C)], with L₀ = 1.000 m at 20.0 °C and α from the textbook\'s Table 1.2 (an average over ordinary temperatures, so the response is exactly linear here). The dial gauge reads to 0.001 mm. The picture shows the rod\'s end moving 4000 times more than it does. Flask: 5.000 mL of liquid fills a Pyrex flask (β = 9 × 10⁻⁶ /°C) to the zero mark of a tube of bore 1.00 mm at 20.0 °C. The liquid\'s volume is V₀[1 + β(T − 20 °C)] with β from Table 1.2, except water, whose volume follows its measured density (Tanaka et al., Metrologia 2001, valid from 0 to 40 °C), so water\'s β changes with temperature and turns negative below about 4 °C. The level is the extra volume divided by the tube\'s cross section, read to 0.1 mm; the tube\'s own expansion is neglected. Each reading is taken after the sample has settled at the bath\'s temperature.';
+  $('aboutCo').textContent = 'Conduction view: steady heat flow (the temperatures have been held long enough for nothing to change with time). Each layer of thickness d passes P = kAΔT/d with k from the textbook\'s Table 1.5, so it has a resistance d/k per unit area (the R factor) and the layers\' resistances add. Air moving on each side carries heat to and from the surface by convection; its film resistance per unit area is the standard ASHRAE value: still indoor air on a wall 0.12 m²·°C/W, outdoor air in a 12 km/h wind 0.044, in a 24 km/h wind 0.030. "None" holds the surface at that side\'s temperature, like a stirred bath. P = AΔT/ΣR, and the temperature falls across each layer and film in proportion to its share of ΣR, in a straight line inside each layer. "Air (still, conduction only)" is air that cannot move; a real air gap also passes heat by convection and radiation, so it insulates less. Radiation through the wall is not modelled (the Blackbody demo covers radiation). The probe reads to 0.01 °C.';
+
+  // ---------- size, theme, start ----------
+  function resize() {
+    dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect();
+    W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw();
+  }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); newBath(); S.th.mysN = 0; newRod(); S.ex.mysN = 0; newMystery(true); S.eq.mysN = 0;
+  const q = new URLSearchParams(location.search), first = PRESETS[q.get('setup')] ? q.get('setup') : 'hotmetal';
+  applyPreset(first);
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__tp = { S, setView, applyPreset, setRun, redraw, eqNow, wallState, coWall, setBuild, sync, gasP, newMystery, newBath, newRod };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

@@ -662,6 +662,39 @@
      ]
     },
     {
+     "demo": "temperature",
+     "title": "Temperature and Heat",
+     "desc": "Join a hot block to cold water and watch them reach one temperature; calibrate a gas thermometer and extrapolate to absolute zero; measure a rod's expansion and water's odd behavior near 4 °C; and probe the temperature through a layered wall.",
+     "tags": [
+      "thermal equilibrium",
+      "gas thermometer",
+      "thermal expansion",
+      "conduction"
+     ]
+    },
+    {
+     "demo": "gas-heat-capacity",
+     "title": "Heat Capacities of Gases",
+     "desc": "Heat a gas with its piston locked, then free: the same heat warms it less when it pushes the piston. Measure C_V, C_P and γ, tell an atom from a molecule, and find γ again from a ball bouncing on a flask of gas.",
+     "tags": [
+      "C_V and C_P",
+      "equipartition",
+      "Rüchardt",
+      "adiabatic"
+     ]
+    },
+    {
+     "demo": "entropy",
+     "title": "Entropy and the Second Law",
+     "desc": "Pull the partition and count why a gas never gathers back; let two Einstein solids share energy and watch heat flow from hot to cold; then test engines and refrigerators against the Kelvin and Clausius statements.",
+     "tags": [
+      "entropy",
+      "microstates",
+      "free expansion",
+      "Kelvin and Clausius"
+     ]
+    },
+    {
      "demo": "blackbody",
      "title": "Blackbody Radiation",
      "desc": "Explore thermal emission across temperatures, test Planck’s spectrum, Wien’s displacement law and Stefan–Boltzmann scaling, and connect the results to visible color.",

@@ -1,0 +1,598 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Entropy and the Second Law</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --hot: #d2452b; --cold: #2b6fc4; --work: #2f8a4e; --solidA: #d9682b; --solidB: #2b8fc4; --mol: #2b3644; --theory: #6a4fc4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --hot: #ff7a5c; --cold: #69a8ff; --work: #66d38c; --solidA: #ff9a5c; --solidB: #5cc2ff; --mol: #dfe7f1; --theory: #a991ff; } }
+:root[data-theme="dark"] { --hot: #ff7a5c; --cold: #69a8ff; --work: #66d38c; --solidA: #ff9a5c; --solidB: #5cc2ff; --mol: #dfe7f1; --theory: #a991ff; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.pane { position: relative; flex: 1 1 auto; min-height: 400px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; }
+.curvebox { position: relative; flex: none; height: 200px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { align-self: stretch; flex: 1 1 520px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 400px; flex: none; } .curvebox { height: 190px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 360px; } }
+@media (min-width: 821px) { .stage { min-height: 740px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Entropy and the Second Law</h1>
+      <p>Pull the partition and a gas fills the box, and it never gathers back by itself. Let two solids share energy and heat flows from hot to cold. Both happen because there are far more ways to be spread out. Then test engines and refrigerators against the second law.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">model gas · time on the model's clock</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/entropy.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/entropy.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM14 2h3v1h-3zM19 2h3v1h-3zM24 2h1v1h-1zM26 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h1v1h-1zM14 3h1v1h-1zM16 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h4v1h-4zM16 4h1v1h-1zM18 4h8v1h-8zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM13 5h1v1h-1zM16 5h1v1h-1zM20 5h2v1h-2zM25 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h2v1h-2zM16 6h2v1h-2zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM15 7h1v1h-1zM20 7h5v1h-5zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM14 9h1v1h-1zM16 9h1v1h-1zM19 9h4v1h-4zM24 9h2v1h-2zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM12 10h4v1h-4zM17 10h1v1h-1zM20 10h2v1h-2zM24 10h3v1h-3zM30 10h6v1h-6zM38 10h1v1h-1zM2 11h1v1h-1zM4 11h4v1h-4zM9 11h1v1h-1zM14 11h2v1h-2zM18 11h1v1h-1zM21 11h3v1h-3zM27 11h4v1h-4zM34 11h4v1h-4zM2 12h1v1h-1zM4 12h1v1h-1zM6 12h4v1h-4zM11 12h1v1h-1zM14 12h1v1h-1zM18 12h1v1h-1zM22 12h3v1h-3zM28 12h4v1h-4zM33 12h2v1h-2zM2 13h1v1h-1zM5 13h1v1h-1zM7 13h1v1h-1zM11 13h1v1h-1zM13 13h2v1h-2zM19 13h1v1h-1zM23 13h2v1h-2zM26 13h1v1h-1zM29 13h3v1h-3zM33 13h2v1h-2zM36 13h2v1h-2zM3 14h3v1h-3zM7 14h3v1h-3zM11 14h1v1h-1zM13 14h2v1h-2zM16 14h2v1h-2zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM3 15h4v1h-4zM9 15h2v1h-2zM14 15h2v1h-2zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM3 16h2v1h-2zM6 16h5v1h-5zM13 16h1v1h-1zM16 16h2v1h-2zM20 16h1v1h-1zM22 16h5v1h-5zM29 16h1v1h-1zM33 16h5v1h-5zM4 17h1v1h-1zM6 17h1v1h-1zM9 17h1v1h-1zM14 17h4v1h-4zM21 17h3v1h-3zM26 17h1v1h-1zM30 17h1v1h-1zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM5 18h1v1h-1zM7 18h3v1h-3zM11 18h1v1h-1zM13 18h1v1h-1zM15 18h1v1h-1zM18 18h1v1h-1zM22 18h1v1h-1zM30 18h4v1h-4zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h3v1h-3zM6 19h2v1h-2zM10 19h1v1h-1zM12 19h1v1h-1zM14 19h1v1h-1zM16 19h1v1h-1zM20 19h2v1h-2zM24 19h1v1h-1zM26 19h2v1h-2zM29 19h2v1h-2zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h2v1h-2zM8 20h2v1h-2zM12 20h1v1h-1zM14 20h1v1h-1zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM2 21h2v1h-2zM5 21h1v1h-1zM9 21h2v1h-2zM16 21h4v1h-4zM21 21h3v1h-3zM25 21h1v1h-1zM28 21h1v1h-1zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h2v1h-2zM6 22h3v1h-3zM10 22h4v1h-4zM15 22h2v1h-2zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h1v1h-1zM4 23h4v1h-4zM13 23h6v1h-6zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM3 24h1v1h-1zM8 24h1v1h-1zM10 24h2v1h-2zM13 24h2v1h-2zM16 24h4v1h-4zM22 24h1v1h-1zM25 24h1v1h-1zM28 24h2v1h-2zM32 24h5v1h-5zM2 25h1v1h-1zM9 25h1v1h-1zM11 25h2v1h-2zM16 25h2v1h-2zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h6v1h-6zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h1v1h-1zM6 26h1v1h-1zM8 26h1v1h-1zM10 26h2v1h-2zM13 26h2v1h-2zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM10 27h5v1h-5zM18 27h1v1h-1zM21 27h2v1h-2zM27 27h5v1h-5zM34 27h2v1h-2zM5 28h4v1h-4zM12 28h2v1h-2zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h1v1h-1zM27 28h8v1h-8zM36 28h1v1h-1zM5 29h1v1h-1zM11 29h2v1h-2zM14 29h1v1h-1zM19 29h2v1h-2zM23 29h2v1h-2zM26 29h1v1h-1zM30 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h8v1h-8zM12 30h3v1h-3zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h2v1h-2zM10 31h1v1h-1zM12 31h1v1h-1zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h2v1h-2zM13 32h2v1h-2zM16 32h3v1h-3zM20 32h1v1h-1zM22 32h4v1h-4zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h2v1h-2zM15 33h3v1h-3zM23 33h1v1h-1zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h4v1h-4zM15 34h4v1h-4zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM13 35h1v1h-1zM20 35h2v1h-2zM23 35h2v1h-2zM26 35h8v1h-8zM35 35h3v1h-3zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM15 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h4v1h-4zM17 37h10v1h-10zM28 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h2v1h-2zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM32 38h2v1h-2zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="fe" aria-pressed="true">Free expansion</button>
+          <button type="button" data-v="es" aria-pressed="false">Einstein solids</button>
+          <button type="button" data-v="sl" aria-pressed="false">Second law</button>
+        </div>
+        <button type="button" class="spin attn" id="go">Start</button>
+        <button type="button" class="btn" id="restart">Start over</button>
+        <div class="seg" role="group" aria-label="Simulation speed" id="speedSeg">
+          <button type="button" data-s="1" aria-pressed="true">1×</button>
+          <button type="button" data-s="10" aria-pressed="false">10×</button>
+          <button type="button" data-s="100" aria-pressed="false">100×</button>
+        </div>
+        <span class="count mono" id="clock">t = 0 s</span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="A box of gas molecules with a partition down the middle. Space starts or pauses."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" role="img" aria-label="Graphs for the view: the count on the left over time and the share of time spent at each count, or the energy in solid A over time and the number of ways to share it."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardFe" role="group" aria-label="The gas">
+          <span class="card-title">A model gas of hard disks, all starting in the left half of an insulated box</span>
+          <div><div class="slider-head"><label for="sN">Number of molecules N</label><output id="oN" class="mono" for="sN"></output></div><input type="range" id="sN" min="0" max="10" step="1"></div>
+          <div class="wide"><button type="button" class="btn" id="pull">Remove the partition</button><span class="lab" id="pullNote"></span></div>
+        </div>
+        <div class="shelf-card" id="cardEs" role="group" aria-label="The two solids" hidden>
+          <span class="card-title">Two Einstein solids in contact share q quanta of energy, each quantum ε</span>
+          <div><div class="slider-head"><label for="sNA">Oscillators in solid A</label><output id="oNA" class="mono" for="sNA"></output></div><input type="range" id="sNA" min="2" max="300" step="1"></div>
+          <div><div class="slider-head"><label for="sNB">Oscillators in solid B</label><output id="oNB" class="mono" for="sNB"></output></div><input type="range" id="sNB" min="2" max="300" step="1"></div>
+          <div><div class="slider-head"><label for="sQ">Quanta of energy q</label><output id="oQ" class="mono" for="sQ"></output></div><input type="range" id="sQ" min="0" max="400" step="1"></div>
+          <div class="wide">
+            <span class="lab">Start with</span>
+            <div class="seg" role="group" aria-label="Where the energy starts" id="startSeg">
+              <button type="button" data-st="A" aria-pressed="true">All in A</button>
+              <button type="button" data-st="B" aria-pressed="false">All in B</button>
+            </div>
+          </div>
+        </div>
+        <div class="shelf-card" id="cardSl" role="group" aria-label="The device" hidden>
+          <span class="card-title">A device runs one cycle between a hot and a cold reservoir</span>
+          <div class="wide">
+            <span class="lab">Device</span>
+            <div class="seg" role="group" aria-label="Device" id="devSeg">
+              <button type="button" data-d="engine" aria-pressed="true">Heat engine</button>
+              <button type="button" data-d="fridge" aria-pressed="false">Refrigerator</button>
+            </div>
+          </div>
+          <div><div class="slider-head"><label for="sTh">Hot reservoir T<sub>h</sub></label><output id="oTh" class="mono" for="sTh"></output></div><input type="range" id="sTh" min="250" max="1000" step="5"></div>
+          <div><div class="slider-head"><label for="sTc">Cold reservoir T<sub>c</sub></label><output id="oTc" class="mono" for="sTc"></output></div><input type="range" id="sTc" min="50" max="500" step="5"></div>
+          <div><div class="slider-head"><label for="sQin" id="lQin">Heat taken from the hot reservoir Q<sub>h</sub></label><output id="oQin" class="mono" for="sQin"></output></div><input type="range" id="sQin" min="0" max="1000" step="5"></div>
+          <div><div class="slider-head"><label for="sW" id="lW">Work done by the engine W</label><output id="oW" class="mono" for="sW"></output></div><input type="range" id="sW" min="0" max="1000" step="5"></div>
+          <div class="wide"><label class="check"><input type="checkbox" id="pair"><span id="pairLab">Pair it with a Carnot refrigerator that returns all of Q<sub>c</sub></span></label></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/free-expansion.html" target="free-expansion-worksheet">Worksheet 1: Free Expansion</a></li><li><a href="../curriculum/labs/students/einstein-solids.html" target="einstein-solids-worksheet">Worksheet 2: Einstein Solids</a></li><li><a href="../curriculum/labs/students/second-law.html" target="second-law-worksheet">Worksheet 3: Testing the Second Law</a></li></ul></details><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="fe4" aria-pressed="true">Four molecules</button>
+          <button type="button" data-p="fe100" aria-pressed="false">A hundred molecules</button>
+          <button type="button" data-p="esSmall" aria-pressed="false">Small solids</button>
+          <button type="button" data-p="esHot" aria-pressed="false">Hot solid meets cold</button>
+          <button type="button" data-p="slReal" aria-pressed="false">A real engine</button>
+          <button type="button" data-p="slBeat" aria-pressed="false">Beats Carnot?</button>
+          <button type="button" data-p="slKelvin" aria-pressed="false">Perfect engine</button>
+          <button type="button" data-p="slClausius" aria-pressed="false">Perfect refrigerator</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="free-expansion" data-title="Entropy and the Second Law" data-demo="entropy">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the predictions, the entropy changes and the verdicts</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="aboutFe"></p>
+          <p class="hint" id="aboutEs"></p>
+          <p class="hint" id="aboutSl"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Entropy and the Second Law. Runnable in Node (curriculum/validation/test_entropy.cjs).
+     Sources: OpenStax University Physics Volume 2 (2016) §4.1 (free expansion is irreversible), §4.4 (the Kelvin and Clausius
+     statements and why they are equivalent), §4.5 (Carnot efficiency 1 − T_c/T_h and Carnot COP T_c/(T_h − T_c)), §4.6 (ΔS = Q/T
+     for a reservoir) and §4.7 (Example 4.8: free expansion ΔS = nR ln(V₂/V₁); the third law). Boltzmann's S = k ln Ω and the
+     Einstein solid's Ω = C(q + N − 1, q) are beyond the book: D. V. Schroeder, An Introduction to Thermal Physics (2000), §2.2 and §2.6. */
+  const K_B = 1.380649e-23, N_AV = 6.02214076e23, R = K_B * N_AV;
+  /* a small seeded random number generator (mulberry32), so a run can be repeated exactly */
+  function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  const LNF = [0]; for (let i = 1; i <= 2000; i++) LNF[i] = LNF[i - 1] + Math.log(i);
+  const lnC = (n, k) => (k < 0 || k > n ? -Infinity : LNF[n] - LNF[k] - LNF[n - k]);
+  /* exact binomial coefficient for small n (integers up to 2^53), else rounded from logs */
+  function choose(n, k) { if (k < 0 || k > n) return 0; k = Math.min(k, n - k); let c = 1; for (let i = 1; i <= k; i++) c = c * (n - k + i) / i; return Math.round(c); }
+
+  /* Free expansion. N hard disks of radius r and equal mass in a box 2 wide and 1 high (model units); a partition at x = 1 keeps
+     them on the left until it is removed. Collisions with the walls and each other are elastic, so the kinetic energy is constant.
+     After the partition goes, each molecule is equally likely to be in either half, so a count of n on the left can happen in
+     C(N, n) ways out of 2^N, and the share of time spent with all N on the left tends to 2^−N. The shares are counted from the first
+     moment the count on the left falls to half or less, so the first rush out of the left half is left out. */
+  const BOX_W = 2, BOX_H = 1, GAS_DT = 0.004;
+  const gasR = (N) => (N <= 20 ? 0.03 : N <= 60 ? 0.02 : 0.013);
+  function gasMake(N, seed) {
+    const rnd = rng(seed), r = gasR(N), x = new Float64Array(N), y = new Float64Array(N), vx = new Float64Array(N), vy = new Float64Array(N);
+    for (let i = 0; i < N; i++) {
+      let tries = 0, ok = false;
+      while (!ok && tries++ < 5000) { x[i] = r + rnd() * (1 - 2 * r); y[i] = r + rnd() * (BOX_H - 2 * r); ok = true;
+        for (let j = 0; j < i; j++) { const dx = x[i] - x[j], dy = y[i] - y[j]; if (dx * dx + dy * dy < 4.4 * r * r) { ok = false; break; } } }
+      const a = rnd() * 2 * Math.PI; vx[i] = Math.cos(a); vy[i] = Math.sin(a);
+    }
+    return { N, r, x, y, vx, vy, wall: true, t: 0, tOpen: 0, spread: false, tCount: 0, hist: new Float64Array(N + 1), trace: [] };
+  }
+  function gasStep(g, dt) {
+    const { N, r, x, y, vx, vy } = g, right = g.wall ? 1 - r : BOX_W - r;
+    for (let i = 0; i < N; i++) {
+      x[i] += vx[i] * dt; y[i] += vy[i] * dt;
+      if (x[i] < r) { x[i] = 2 * r - x[i]; vx[i] = Math.abs(vx[i]); } if (x[i] > right) { x[i] = 2 * right - x[i]; vx[i] = -Math.abs(vx[i]); }
+      if (y[i] < r) { y[i] = 2 * r - y[i]; vy[i] = Math.abs(vy[i]); } if (y[i] > BOX_H - r) { y[i] = 2 * (BOX_H - r) - y[i]; vy[i] = -Math.abs(vy[i]); }
+    }
+    const d2min = 4 * r * r;
+    for (let i = 0; i < N; i++) for (let j = i + 1; j < N; j++) {
+      const dx = x[i] - x[j], dy = y[i] - y[j], d2 = dx * dx + dy * dy;
+      if (d2 < d2min && d2 > 0) { const dv = (vx[i] - vx[j]) * dx + (vy[i] - vy[j]) * dy; if (dv < 0) { const k = dv / d2; vx[i] -= k * dx; vy[i] -= k * dy; vx[j] += k * dx; vy[j] += k * dy; } }
+    }
+    g.t += dt;
+    if (!g.wall) { g.tOpen += dt; const n = leftCount(g); if (!g.spread && 2 * n <= g.N) g.spread = true; if (g.spread) { g.tCount += dt; g.hist[n] += dt; } }
+  }
+  function leftCount(g) { let n = 0; for (let i = 0; i < g.N; i++) if (g.x[i] < BOX_W / 2) n++; return n; }
+  const gasEnergy = (g) => { let e = 0; for (let i = 0; i < g.N; i++) e += 0.5 * (g.vx[i] * g.vx[i] + g.vy[i] * g.vy[i]); return e; };
+  const shareExact = (N, n) => Math.exp(lnC(N, n) - N * Math.LN2);
+  /* ΔS for the doubling of volume, per molecule k ln 2 and per mole R ln 2 (Example 4.8 with V₂/V₁ = 2) */
+  const dSfree = (N, ratio = 2) => N * K_B * Math.log(ratio), dSfreeMol = (n, ratio = 2) => n * R * Math.log(ratio);
+
+  /* Einstein solids. Solid A has N_A oscillators and B has N_B; together they hold q quanta. One step picks an oscillator i and an
+     oscillator j at random (the same one is allowed); if i holds a quantum it passes one to j. The proposal is symmetric, so every
+     arrangement of the quanta (microstate) is equally likely in the long run. The number of microstates of a solid is
+     Ω(N, q) = C(q + N − 1, q); the pair has Ω_A Ω_B ways to put q_A in A, and S = k ln Ω. */
+  const lnOmega = (N, q) => (q < 0 ? -Infinity : lnC(q + N - 1, q));
+  function solidMake(NA, NB, q, seed, start = 'A') {
+    const rnd = rng(seed), N = NA + NB, n = new Int32Array(N);
+    for (let k = 0; k < q; k++) n[start === 'A' ? Math.floor(rnd() * NA) : NA + Math.floor(rnd() * NB)]++;
+    return { NA, NB, q, n, qA: start === 'A' ? q : 0, steps: 0, rnd, hist: new Float64Array(q + 1), trace: [] };
+  }
+  function solidStep(s, k) {
+    const N = s.NA + s.NB, n = s.n;
+    for (let m = 0; m < k; m++) {
+      const i = Math.floor(s.rnd() * N), j = Math.floor(s.rnd() * N);
+      if (n[i] > 0) { n[i]--; n[j]++; if (i < s.NA) s.qA--; if (j < s.NA) s.qA++; }
+      s.steps++; s.hist[s.qA]++;
+    }
+  }
+  /* the chance of finding q_A quanta in A, out of all Ω(N_A + N_B, q) microstates */
+  function solidDist(NA, NB, q) { const tot = lnOmega(NA + NB, q), P = []; for (let a = 0; a <= q; a++) P.push(Math.exp(lnOmega(NA, a) + lnOmega(NB, q - a) - tot)); return P; }
+  function solidPeak(NA, NB, q) { let best = 0, bv = -Infinity; for (let a = 0; a <= q; a++) { const v = lnOmega(NA, a) + lnOmega(NB, q - a); if (v > bv) { bv = v; best = a; } } return best; }
+  /* temperature from 1/T = dS/dU, in units of ε/k, by the centred difference over one quantum each way; a solid with no
+     energy has a single microstate (S = 0, the third law) and is taken as T = 0 */
+  const solidT = (N, q) => (q <= 0 ? 0 : 2 / (lnOmega(N, q + 1) - lnOmega(N, q - 1)));
+
+  /* The second law checker. An engine takes Q_h from the hot reservoir and does work W, so by the first law it gives
+     Q_c = Q_h − W to the cold one. A refrigerator takes Q_c from the cold reservoir with work W and gives Q_h = Q_c + W to the hot
+     one. The device itself returns to its start, so the universe's entropy changes only in the reservoirs (§4.6):
+     engine ΔS = −Q_h/T_h + Q_c/T_c, refrigerator ΔS = Q_h/T_h − Q_c/T_c. */
+  function device(d) {
+    const { mode, Th, Tc } = d, W = d.W;
+    const Qh = mode === 'engine' ? d.Q : d.Q + W, Qc = mode === 'engine' ? d.Q - W : d.Q;
+    const dSh = mode === 'engine' ? -Qh / Th : Qh / Th, dSc = mode === 'engine' ? Qc / Tc : -Qc / Tc, dS = dSh + dSc;
+    const carnotEff = 1 - Tc / Th, carnotCop = Tc / (Th - Tc);
+    const eff = mode === 'engine' && Qh > 0 ? W / Qh : NaN, cop = mode === 'fridge' && W > 0 ? Qc / W : (mode === 'fridge' && Qc > 0 ? Infinity : NaN);
+    const tol = 1e-9 * Math.max(1, Qh / Tc);
+    let verdict;
+    if (Qh === 0 && Qc === 0 && W === 0) verdict = 'idle';
+    else if (mode === 'engine' && Qc < 0) verdict = 'cold';
+    else if (mode === 'engine' && W > 0 && Qc === 0) verdict = 'kelvin';
+    else if (mode === 'fridge' && Qc > 0 && W === 0) verdict = 'clausius';
+    else if (dS < -tol) verdict = 'beats';
+    else if (Math.abs(dS) <= tol) verdict = 'reversible';
+    else verdict = 'allowed';
+    return { mode, Th, Tc, Qh, Qc, W, dSh, dSc, dS, eff, cop, carnotEff, carnotCop, verdict };
+  }
+  /* Pair the device with a Carnot device between the same reservoirs (§4.4's argument). An engine is paired with a Carnot
+     refrigerator that puts all of Q_c back into the hot reservoir; a refrigerator with a Carnot engine that supplies its work W.
+     What is left over is net heat from the hot reservoir, net heat into the cold one and net work out. */
+  function pair(r) {
+    if (r.mode === 'engine') { const Wf = r.Qc * (r.Th - r.Tc) / r.Tc, Qhf = r.Qc + Wf;
+      return { partner: { Qh: Qhf, Qc: r.Qc, W: Wf }, fromHot: r.Qh - Qhf, toCold: 0, Wnet: r.W - Wf }; }
+    const Qhe = r.W * r.Th / (r.Th - r.Tc), Qce = Qhe - r.W;
+    return { partner: { Qh: Qhe, Qc: Qce, W: r.W }, fromHot: Qhe - r.Qh, toCold: Qce - r.Qc, Wnet: 0 };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VG = window.VDGear;
+  const N_CHOICES = [2, 3, 4, 5, 6, 8, 10, 20, 50, 100, 200];
+  const S = { view: 'fe', preset: 'fe4', run: false, speed: 1, blind: false, seed: 1,
+    fe: { N: 4, g: null },
+    es: { NA: 3, NB: 3, q: 6, start: 'A', s: null },
+    sl: { mode: 'engine', Th: 600, Tc: 300, Q: 500, W: 150, pair: false } };
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
+  let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const f = (v, d = 2) => (!isFinite(v) ? (v === Infinity ? '∞' : '—') : v.toFixed(d).replace('-', '−'));
+  const sci = (v, d = 3) => { if (!isFinite(v) || v === 0) return f(v, 0); const e = Math.floor(Math.log10(Math.abs(v))); if (e >= -3 && e < 5) return f(v, Math.max(0, d - 1 - e)); return `${(v / Math.pow(10, e)).toFixed(d - 1)} × 10${sup(e)}`; };
+  const sup = (e) => String(e).replace(/-/g, '⁻').replace(/\d/g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'[c]);
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const dark = () => (VG ? VG.dark() : false);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
+      hot: g('--hot'), cold: g('--cold'), work: g('--work'), A: g('--solidA'), B: g('--solidB'), mol: g('--mol'), theory: g('--theory'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+  const newGas = () => { S.seed = (S.seed * 7919 + 13) % 100003; S.fe.g = gasMake(S.fe.N, S.seed); };
+  const newSolid = () => { S.seed = (S.seed * 7919 + 13) % 100003; const e = S.es; e.s = solidMake(e.NA, e.NB, e.q, S.seed, e.start); e.s.trace.push([0, e.s.qA]); };
+  const dev = () => device(S.sl);
+
+  // ---------- drawing ----------
+  function scene() { const y = Math.round(H * 0.86); if (VG) { VG.wall(ctx, 0, 0, W, y); VG.bench(ctx, 0, y, W, 14, Math.max(14, H - y - 2)); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); } return y; }
+  const lab = (s, x, y, o = {}) => { if (VG) VG.label(ctx, s, x, y, Object.assign({ s: 10.5 * proj() }, o)); };
+  function lcdBox(x, y, w, h, text, name) {
+    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: dark() ? '#2b3440' : '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
+  }
+  function drawFe() {
+    const p = proj(), by = scene(), g = S.fe.g;
+    const narrow = W < 560, bw = Math.min(W * (narrow ? 0.88 : 0.62), (by - 70 * p) * 2), bh = bw / 2, bx = W * 0.06, byy = (by - bh) / 2 + 6 * p, sc = bw / BOX_W;
+    if (VG) VG.box(ctx, bx - 10 * p, byy - 10 * p, bw + 20 * p, bh + 20 * p, { color: dark() ? '#3a4552' : '#56616f', r: 8 });
+    ctx.fillStyle = dark() ? '#0f151c' : '#f4f7fa'; ctx.fillRect(bx, byy, bw, bh);
+    ctx.fillStyle = dark() ? 'rgba(105,168,255,0.07)' : 'rgba(43,111,196,0.06)'; ctx.fillRect(bx, byy, bw / 2, bh);
+    /* the partition, or its dashed ghost once removed */
+    if (g.wall) { ctx.fillStyle = dark() ? '#9aa6b6' : '#56616f'; ctx.fillRect(bx + bw / 2 - 3 * p, byy, 6 * p, bh); }
+    else { ctx.save(); ctx.setLineDash([5 * p, 6 * p]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(bx + bw / 2, byy); ctx.lineTo(bx + bw / 2, byy + bh); ctx.stroke(); ctx.restore(); }
+    for (let i = 0; i < g.N; i++) { const L = g.x[i] < 1; ctx.fillStyle = L ? T.cold : T.hot; ctx.beginPath(); ctx.arc(bx + g.x[i] * sc, byy + (BOX_H - g.y[i]) * sc, Math.max(2, g.r * sc), 0, 7); ctx.fill(); }
+    lab('left half', bx + bw / 4, byy - 18 * p, { a: 'center' }); lab('right half', bx + 3 * bw / 4, byy - 18 * p, { a: 'center' });
+    lab(g.wall ? 'partition' : 'partition removed', bx + bw / 2, byy + bh + 22 * p, { a: 'center' });
+    lab(`${g.N} molecules; insulated box, no heat in or out`, bx + bw / 2, by + 16 * p, { a: 'center' });
+    if (narrow) return;
+    const nL = leftCount(g), mx = Math.min(W - 150 * p, bx + bw + 40 * p), mw = 120 * p, mh = 28 * p;
+    lcdBox(mx, byy, mw, mh, `${nL} of ${g.N}`, 'on the left now');
+    lcdBox(mx, byy + 66 * p, mw, mh, g.tCount > 0 ? `${f(100 * g.hist[g.N] / g.tCount, 2)}%` : '—', 'time all on the left');
+    lcdBox(mx, byy + 132 * p, mw, mh, `${f(g.tOpen, 1)} s`, 'time since opened');
+  }
+  function drawEs() {
+    const p = proj(), by = scene(), e = S.es, s = e.s, N = e.NA + e.NB;
+    /* each oscillator a cell, shaded by the quanta it holds (a dot per quantum while they fit) */
+    const narrow = W < 560, top = 40 * p, avail = by - top - 56 * p, gw = Math.min(narrow ? W * 0.42 : W * 0.3, avail), gap = (narrow ? 16 : 30) * p;
+    const block = (x, n0, cnt, col, name, qX, NX) => {
+      const cols = Math.ceil(Math.sqrt(cnt)), rows = Math.ceil(cnt / cols), c = Math.min(gw / cols, avail / rows), w = cols * c, h = rows * c, y0 = top + (avail - h) / 2;
+      if (VG) VG.box(ctx, x - 8 * p, y0 - 8 * p, w + 16 * p, h + 16 * p, { color: dark() ? '#3a4552' : '#56616f', r: 6 });
+      const mxq = Math.max(3, e.q / N * 3);
+      for (let k = 0; k < cnt; k++) { const qq = s.n[n0 + k], cx = x + (k % cols) * c, cy = y0 + Math.floor(k / cols) * c;
+        ctx.fillStyle = dark() ? '#18212b' : '#eef2f6'; ctx.fillRect(cx + 0.5, cy + 0.5, c - 1, c - 1);
+        if (qq > 0) { ctx.globalAlpha = Math.min(1, 0.25 + 0.75 * qq / mxq); ctx.fillStyle = col; ctx.fillRect(cx + 0.5, cy + 0.5, c - 1, c - 1); ctx.globalAlpha = 1; }
+        if (c > 22 * p && qq > 0) { ctx.fillStyle = dark() ? '#0f151c' : '#ffffff'; ctx.font = `600 ${Math.min(14, c * 0.4)}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(String(qq), cx + c / 2, cy + c / 2); } }
+      lab(`${name}: ${qX} quanta`, x + w / 2, y0 + h + 20 * p, { a: 'center', w: 700 }); lab(`${NX} oscillators`, x + w / 2, y0 + h + 36 * p, { a: 'center' });
+      return x + w;
+    };
+    const xA = W * 0.05, endA = block(xA, 0, e.NA, T.A, 'solid A', s.qA, e.NA);
+    const xB = endA + gap; block(xB, e.NA, e.NB, T.B, 'solid B', e.q - s.qA, e.NB);
+    const mx = Math.min(W - 150 * p, Math.max(xB + gw + 30 * p, W * 0.72)), mw = 120 * p, mh = 28 * p;
+    if (narrow) { lab('each square is one oscillator', W * 0.05, by + 16 * p); return; }
+    lcdBox(mx, top, mw, mh, `${s.qA}`, 'quanta in A');
+    lcdBox(mx, top + 66 * p, mw, mh, `${s.steps}`, 'exchanges tried');
+    if (!S.blind) { lcdBox(mx, top + 132 * p, mw, mh, f(solidT(e.NA, s.qA), 2), 'temperature of A'); lcdBox(mx, top + 198 * p, mw, mh, f(solidT(e.NB, e.q - s.qA), 2), 'temperature of B'); lab('temperatures in units of ε/k', mx + mw / 2, top + 252 * p, { a: 'center', s: 9.5 * p }); }
+    lab('each square is one oscillator; the number is its quanta', W * 0.05, by + 16 * p);
+  }
+  function arrow(x1, y1, x2, y2, w, col, text, side) {
+    if (w <= 0) return; const p = proj(), a = Math.atan2(y2 - y1, x2 - x1), hl = Math.max(10 * p, w * 1.2), hw = Math.max(9 * p, w * 1.1);
+    ctx.save(); ctx.strokeStyle = col; ctx.fillStyle = col; ctx.lineWidth = w; ctx.lineCap = 'butt';
+    ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2 - Math.cos(a) * hl, y2 - Math.sin(a) * hl); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2, y2); ctx.lineTo(x2 - Math.cos(a) * hl - Math.sin(a) * hw, y2 - Math.sin(a) * hl + Math.cos(a) * hw); ctx.lineTo(x2 - Math.cos(a) * hl + Math.sin(a) * hw, y2 - Math.sin(a) * hl - Math.cos(a) * hw); ctx.closePath(); ctx.fill(); ctx.restore();
+    if (text) lab(text, (x1 + x2) / 2 + (side || 1) * (hw + 8 * p), (y1 + y2) / 2, { a: side === -1 ? 'right' : 'left', c: T.ink, m: true });
+  }
+  function drawDevice(cx, top, bot, r, info, name, scale) {
+    const p = proj(), cy = (top + bot) / 2, eng = info.mode === 'engine';
+    const wq = (q) => Math.max(0, Math.min(40 * p, q * scale));
+    if (eng) { arrow(cx, top, cx, cy - r, wq(info.Qh), T.hot, `Q_h = ${f(info.Qh, 0)} J`); arrow(cx, cy + r, cx, bot, wq(info.Qc), T.cold, `Q_c = ${f(info.Qc, 0)} J`); arrow(cx + r, cy, cx + r + 90 * p, cy, wq(info.W), T.work, null); }
+    else { arrow(cx, cy - r, cx, top, wq(info.Qh), T.hot, `Q_h = ${f(info.Qh, 0)} J`); arrow(cx, bot, cx, cy + r, wq(info.Qc), T.cold, `Q_c = ${f(info.Qc, 0)} J`); arrow(cx + r + 90 * p, cy, cx + r, cy, wq(info.W), T.work, null); }
+    if (info.W > 0) lab(`W = ${f(info.W, 0)} J`, cx + r + 10 * p, cy - Math.max(9 * p, wq(info.W) * 1.1) - 10 * p, { c: T.ink, m: true });
+    const gg = ctx.createRadialGradient(cx - r * 0.3, cy - r * 0.3, 2, cx, cy, r); gg.addColorStop(0, dark() ? '#5b6878' : '#c7cfd8'); gg.addColorStop(1, dark() ? '#2b3440' : '#7d8896');
+    ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(cx, cy, r, 0, 7); ctx.fill(); ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+    if (VG) VG.plate(ctx, name, cx, cy, { s: 9 * p });
+  }
+  function drawSl() {
+    const p = proj(), by = scene(), r = dev(), pr = pair(r);
+    const rx = W * 0.05, rw = W * 0.9, rh = 46 * p, top = 26 * p, bot = by - rh - 26 * p;
+    const res = (y, col, text) => { if (VG) VG.box(ctx, rx, y, rw, rh, { color: col, r: 8 }); else { ctx.fillStyle = col; ctx.fillRect(rx, y, rw, rh); } lab(text, rx + rw / 2, y + rh / 2, { a: 'center', c: '#ffffff', w: 700, s: 12 * p, alpha: 0.95 }); };
+    res(top, dark() ? '#8a3424' : '#b8442c', `hot reservoir   T_h = ${f(r.Th, 0)} K`);
+    res(bot, dark() ? '#24508a' : '#2f67b0', `cold reservoir   T_c = ${f(r.Tc, 0)} K`);
+    const big = Math.max(r.Qh, r.Qc, r.W, S.sl.pair ? Math.max(pr.partner.Qh, pr.partner.Qc) : 0, 1), scale = 36 * p / big, rad = 34 * p;
+    const cx1 = S.sl.pair ? W * (W < 560 ? 0.2 : 0.28) : W * 0.4;
+    drawDevice(cx1, top + rh, bot, rad, r, r.mode === 'engine' ? 'engine' : 'fridge', scale);
+    if (S.sl.pair) {
+      const cx2 = W * (W < 560 ? 0.66 : 0.55), pinfo = Object.assign({ mode: r.mode === 'engine' ? 'fridge' : 'engine' }, pr.partner);
+      drawDevice(cx2, top + rh, bot, rad, pinfo, 'Carnot', scale);
+      const bx = W * 0.74, bw = Math.min(W * 0.24, 220 * p), byy = (top + bot) / 2 - 10 * p;
+      if (W >= 560) {
+      if (VG) VG.panel(ctx, bx, byy, bw, 96 * p, { r: 8 });
+      lab(r.mode === 'engine' ? 'with the Carnot refrigerator' : 'with the Carnot engine', bx + 10 * p, byy + 16 * p, { w: 700 });
+      lab(`net heat from hot: ${f(pr.fromHot, 1)} J`, bx + 10 * p, byy + 38 * p, { c: T.ink, m: true, s: 10 * p });
+      lab(`net heat to cold: ${f(pr.toCold, 1)} J`, bx + 10 * p, byy + 58 * p, { c: T.ink, m: true, s: 10 * p });
+      lab(`net work out: ${f(pr.Wnet, 1)} J`, bx + 10 * p, byy + 78 * p, { c: T.ink, m: true, s: 10 * p }); }
+    } else if (W >= 560) {
+      const bx = W * 0.62, bw = Math.min(W * 0.33, 280 * p), byy = (top + bot) / 2 - 50 * p;
+      if (VG) VG.panel(ctx, bx, byy, bw, 100 * p, { r: 8 });
+      lab(r.mode === 'engine' ? 'efficiency' : 'coefficient of performance', bx + 10 * p, byy + 16 * p, { w: 700 });
+      lab(r.mode === 'engine' ? `this engine W/Q_h = ${f(r.eff, 4)}` : `this fridge Q_c/W = ${f(r.cop, 3)}`, bx + 10 * p, byy + 40 * p, { c: T.ink, m: true, s: 10 * p });
+      if (!S.blind) lab(r.mode === 'engine' ? `Carnot 1 − T_c/T_h = ${f(r.carnotEff, 4)}` : `Carnot T_c/(T_h − T_c) = ${f(r.carnotCop, 3)}`, bx + 10 * p, byy + 62 * p, { c: T.ink, m: true, s: 10 * p });
+      if (!S.blind) lab(VERDICT[r.verdict], bx + 10 * p, byy + 84 * p, { c: r.verdict === 'allowed' || r.verdict === 'reversible' ? T.work : T.hot, w: 700, s: 10 * p });
+    }
+  }
+  const VERDICT = { idle: 'nothing happens', cold: 'it also draws heat from the cold reservoir', kelvin: 'breaks the Kelvin statement', clausius: 'breaks the Clausius statement',
+    beats: 'beats Carnot: breaks the second law', reversible: 'reversible: total ΔS = 0', allowed: 'allowed: total ΔS > 0' };
+
+  function axes(c, x0, y0, w, h, xs, ys, xl, yl) {
+    const p = proj(), X = (v) => x0 + (v - xs[0]) / (xs[1] - xs[0]) * w, Y = (v) => y0 + h - (v - ys[0]) / (ys[1] - ys[0]) * h;
+    const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+    c.font = `${10 * p}px ${T.mono}`; c.strokeStyle = T.grid; c.fillStyle = T.muted; c.lineWidth = 1;
+    const sx = nice((xs[1] - xs[0]) / 5), sy = nice((ys[1] - ys[0]) / 4);
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (let v = Math.ceil(xs[0] / sx) * sx; v <= xs[1] + 1e-9; v += sx) { c.beginPath(); c.moveTo(X(v), y0); c.lineTo(X(v), y0 + h); c.stroke(); c.fillText(String(+v.toPrecision(6)), X(v), y0 + h + 4); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (let v = Math.ceil(ys[0] / sy) * sy; v <= ys[1] + 1e-9; v += sy) { c.beginPath(); c.moveTo(x0, Y(v)); c.lineTo(x0 + w, Y(v)); c.stroke(); c.fillText(String(+v.toPrecision(6)).replace('-', '−'), x0 - 5, Y(v)); }
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(xl, x0 + w / 2, CH - 2);
+    c.save(); c.translate(x0 - 40 * p, y0 + h / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore();
+    return { X, Y };
+  }
+  function drawCurve() {
+    const p = proj(), c = cctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
+    const L = 54 * p, Tp = 14 * p, B = 34 * p, ph = CH - Tp - B, gap = 64 * p, half = (CW - L - gap - 14 * p) / 2;
+    const line = (pts, col, A) => { c.strokeStyle = col; c.lineWidth = 2 * p; c.beginPath(); pts.forEach((q, i) => (i ? c.lineTo(A.X(q[0]), A.Y(q[1])) : c.moveTo(A.X(q[0]), A.Y(q[1])))); c.stroke(); };
+    if (S.view === 'fe') {
+      const g = S.fe.g, tr = g.trace, tm = Math.max(10, g.tOpen), t0 = Math.max(0, tm - 60);
+      const A = axes(c, L, Tp, half, ph, [t0, tm], [0, g.N], 'time since opened (s)', 'count on the left');
+      c.save(); c.beginPath(); c.rect(L, Tp, half, ph); c.clip(); line(tr.filter((q) => q[0] >= t0), T.accent, A); c.restore();
+      const x0 = L + half + gap, B2 = axes(c, x0, Tp, half, ph, [-0.5, g.N + 0.5], [0, 1], 'count on the left n', 'share of time');
+      const bwid = Math.max(1, (B2.X(1) - B2.X(0)) * 0.7);
+      let ymax = 0.05; for (let n = 0; n <= g.N; n++) ymax = Math.max(ymax, g.tCount ? g.hist[n] / g.tCount : 0, S.blind ? 0 : shareExact(g.N, n));
+      const B3 = { X: B2.X, Y: (v) => Tp + ph - v / ymax * ph };
+      c.fillStyle = T.canvas; c.fillRect(x0 - 38 * p, Tp - 2, 38 * p, ph + 4); c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+      for (const v of [0, ymax / 2, ymax]) c.fillText(f(v, ymax < 0.1 ? 3 : 2), x0 - 5, B3.Y(v));
+      for (let n = 0; n <= g.N; n++) { const v = g.tCount ? g.hist[n] / g.tCount : 0; c.fillStyle = T.accent; c.fillRect(B3.X(n) - bwid / 2, B3.Y(v), bwid, Tp + ph - B3.Y(v)); }
+      if (!S.blind) { c.fillStyle = T.theory; for (let n = 0; n <= g.N; n++) { c.beginPath(); c.arc(B3.X(n), B3.Y(shareExact(g.N, n)), Math.min(4 * p, bwid / 2 + 1), 0, 7); c.fill(); }
+        if (half > 220) { c.textAlign = 'right'; c.textBaseline = 'top'; c.fillStyle = T.theory; c.fillText('dots: C(N, n)/2^N', x0 + half, Tp + 2); } }
+    } else if (S.view === 'es') {
+      const e = S.es, s = e.s, tr = s.trace, sm = Math.max(1000, s.steps);
+      const A = axes(c, L, Tp, half, ph, [0, sm], [0, Math.max(1, e.q)], 'exchanges tried', 'quanta in A, q_A');
+      c.save(); c.beginPath(); c.rect(L, Tp, half, ph); c.clip(); line(tr, T.A, A);
+      if (!S.blind) { const pk = solidPeak(e.NA, e.NB, e.q); c.setLineDash([4 * p, 4 * p]); c.strokeStyle = T.theory; c.lineWidth = 1.5; c.beginPath(); c.moveTo(L, A.Y(pk)); c.lineTo(L + half, A.Y(pk)); c.stroke(); c.setLineDash([]); }
+      c.restore();
+      const x0 = L + half + gap;
+      if (S.blind) { c.fillStyle = T.muted; c.font = `${12 * p}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Entropy curve hidden (Blind)', x0 + half / 2, CH / 2); return; }
+      const lnA = [], lnB = [], lnT = []; let ymax = 1; for (let a = 0; a <= e.q; a++) { const la = lnOmega(e.NA, a), lb = lnOmega(e.NB, e.q - a); lnA.push([a, la]); lnB.push([a, lb]); lnT.push([a, la + lb]); ymax = Math.max(ymax, la + lb); }
+      const B2 = axes(c, x0, Tp, half, ph, [0, Math.max(1, e.q)], [0, ymax * 1.05], 'quanta in A, q_A', 'S/k = ln Ω');
+      c.save(); c.beginPath(); c.rect(x0, Tp, half, ph); c.clip(); line(lnA, T.A, B2); line(lnB, T.B, B2); line(lnT, T.theory, B2); c.restore();
+      c.fillStyle = T.ink; c.beginPath(); c.arc(B2.X(s.qA), B2.Y(lnT[s.qA][1]), 4.5 * p, 0, 7); c.fill();
+      c.textAlign = 'left'; c.textBaseline = 'top'; c.font = `${10 * p}px ${T.mono}`;
+      c.fillStyle = T.A; c.fillText('ln Ω_A', x0 + 6, Tp + 2); c.fillStyle = T.B; c.fillText('ln Ω_B', x0 + 66 * p, Tp + 2); c.fillStyle = T.theory; c.fillText('ln Ω_A Ω_B', x0 + 126 * p, Tp + 2);
+    } else {
+      const r = dev();
+      if (S.blind) { c.fillStyle = T.muted; c.font = `${12 * p}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Entropy changes hidden (Blind mode in the Lab section)', CW / 2, CH / 2); return; }
+      const bars = [['hot reservoir', r.dSh, T.hot], ['cold reservoir', r.dSc, T.cold], ['device (one full cycle)', 0, T.muted], ['universe', r.dS, r.dS < -1e-9 ? T.hot : T.work]];
+      const m = Math.max(0.1, ...bars.map((b) => Math.abs(b[1]))), x0 = Math.min(200 * p, CW * (CW < 560 ? 0.25 : 0.36)), w = CW - x0 - 10 * p, zero = x0 + w / 2, bh = ph / 4 * 0.6, hw = w / 2 - Math.min(90 * p, w * 0.3);
+      c.font = `${10.5 * p}px ${T.mono}`; c.strokeStyle = T.grid; c.beginPath(); c.moveTo(zero, Tp); c.lineTo(zero, Tp + ph); c.stroke();
+      bars.forEach(([nm, v, col], i) => { const y = Tp + ph * (i + 0.5) / 4; c.fillStyle = col; c.fillRect(v >= 0 ? zero : zero - Math.abs(v) / m * hw, y - bh / 2, Math.abs(v) / m * hw, bh);
+        c.fillStyle = T.muted; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(CW < 560 ? `ΔS ${nm.split(' ')[0]}` : `ΔS ${nm}`, x0 - 8, y);
+        c.fillStyle = T.ink; c.textAlign = v >= 0 ? 'left' : 'right'; c.fillText(`${f(v, 4)} J/K`, v >= 0 ? zero + Math.abs(v) / m * hw + 6 : zero - Math.abs(v) / m * hw - 6, y); });
+      c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText('entropy change in one cycle (J/K)', zero, CH - 2);
+    }
+  }
+  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); ({ fe: drawFe, es: drawEs, sl: drawSl })[S.view](); drawCurve(); readouts(); clock(); }
+  function clock() { $('clock').textContent = S.view === 'fe' ? `t = ${f(S.fe.g.tOpen, 1)} s` : S.view === 'es' ? `${S.es.s.steps} exchanges` : 'one cycle'; }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>';
+    let o = '';
+    if (S.view === 'fe') {
+      const g = S.fe.g, N = g.N, nL = leftCount(g);
+      o = dd('Molecules N', N) + dd('On the left now', nL) + dd('Time since opened', `${f(g.tOpen, 1)} s`) + dd('Time counted', `${f(g.tCount, 1)} s`) + dd('Share of time all on the left', g.tCount ? f(g.hist[N] / g.tCount, 5) : '—')
+        + dd('Ways to have n on the left', S.blind ? hide : `C(${N}, ${nL}) = ${choose(N, nL) > 1e15 ? sci(Math.exp(lnC(N, nL))) : choose(N, nL)}`)
+        + dd('Chance all on the left 2^−N', S.blind ? hide : sci(Math.pow(2, -N)))
+        + dd('ΔS of doubling the volume, N k ln 2', S.blind ? hide : `${sci(dSfree(N))} J/K`) + dd('Per mole, R ln 2', S.blind ? hide : `${f(dSfreeMol(1), 3)} J/K`);
+    } else if (S.view === 'es') {
+      const e = S.es, s = e.s, qB = e.q - s.qA, pk = solidPeak(e.NA, e.NB, e.q);
+      o = dd('Quanta in A, q_A', s.qA) + dd('Quanta in B, q_B', qB) + dd('Oscillators N_A, N_B', `${e.NA}, ${e.NB}`) + dd('Exchanges tried', s.steps)
+        + dd('ln Ω_A + ln Ω_B now', S.blind ? hide : f(lnOmega(e.NA, s.qA) + lnOmega(e.NB, qB), 3)) + dd('Most likely q_A', S.blind ? hide : pk)
+        + dd('kT/ε of A', S.blind ? hide : f(solidT(e.NA, s.qA), 3)) + dd('kT/ε of B', S.blind ? hide : f(solidT(e.NB, qB), 3));
+    } else {
+      const r = dev();
+      o = dd('Q_h', `${f(r.Qh, 1)} J`) + dd('Q_c', `${f(r.Qc, 1)} J`) + dd('W', `${f(r.W, 1)} J`) + dd('T_h, T_c', `${f(r.Th, 0)} K, ${f(r.Tc, 0)} K`)
+        + dd(r.mode === 'engine' ? 'Efficiency W/Q_h' : 'COP Q_c/W', r.mode === 'engine' ? f(r.eff, 4) : f(r.cop, 3))
+        + dd(r.mode === 'engine' ? 'Carnot efficiency' : 'Carnot COP', S.blind ? hide : (r.mode === 'engine' ? f(r.carnotEff, 4) : f(r.carnotCop, 3)))
+        + dd('ΔS of the universe', S.blind ? hide : `${f(r.dS, 4)} J/K`) + (S.sl.pair ? (() => { const pr = pair(r); return dd('Pair: net heat from hot', `${f(pr.fromHot, 1)} J`) + dd('Pair: net heat to cold', `${f(pr.toCold, 1)} J`) + dd('Pair: net work out', `${f(pr.Wnet, 1)} J`); })() : '') + `<div class="wide"><dt>Verdict</dt><dd>${S.blind ? hide : VERDICT[r.verdict]}</dd></div>`;
+    }
+    $('out').innerHTML = o;
+  }
+
+  // ---------- controls ----------
+  function sync() {
+    const e = S.es, d = S.sl;
+    $('sN').value = N_CHOICES.indexOf(S.fe.N); $('oN').textContent = S.fe.N;
+    $('pull').disabled = !S.fe.g.wall; $('pullNote').textContent = S.fe.g.wall ? 'All the molecules start on the left.' : 'Start over puts the partition back.';
+    $('sNA').value = e.NA; $('oNA').textContent = e.NA; $('sNB').value = e.NB; $('oNB').textContent = e.NB; $('sQ').value = e.q; $('oQ').textContent = e.q;
+    for (const b of document.querySelectorAll('#startSeg button')) b.setAttribute('aria-pressed', String(b.dataset.st === e.start));
+    for (const b of document.querySelectorAll('#devSeg button')) b.setAttribute('aria-pressed', String(b.dataset.d === d.mode));
+    $('sTh').value = d.Th; $('oTh').textContent = `${d.Th} K`; $('sTc').value = d.Tc; $('oTc').textContent = `${d.Tc} K`;
+    $('sQin').value = d.Q; $('oQin').textContent = `${d.Q} J`; $('sW').value = d.W; $('oW').textContent = `${d.W} J`; $('sW').max = d.mode === 'engine' ? d.Q : 1000;
+    $('lQin').innerHTML = d.mode === 'engine' ? 'Heat taken from the hot reservoir Q<sub>h</sub>' : 'Heat taken from the cold reservoir Q<sub>c</sub>';
+    $('lW').textContent = d.mode === 'engine' ? 'Work done by the engine W' : 'Work done on the refrigerator W';
+    $('pairLab').innerHTML = d.mode === 'engine' ? 'Pair it with a Carnot refrigerator that returns all of Q<sub>c</sub>' : 'Pair it with a Carnot engine that supplies its work W';
+    $('pair').checked = d.pair;
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  const PRESETS = {
+    fe4: { view: 'fe', hint: 'Four molecules start in the left half. Remove the partition and watch the count on the left. With so few, all four often wander back to the left together: each molecule has a 1 in 2 chance of being there, so all four do so 1/16 of the time.', set: () => { S.fe.N = 4; newGas(); } },
+    fe100: { view: 'fe', hint: 'A hundred molecules. Once the partition is gone the count settles near 50 and only wobbles. The chance of finding all hundred on the left is 2^−100, about 8 × 10⁻³¹: it never happens, which is why free expansion is irreversible.', set: () => { S.fe.N = 100; newGas(); } },
+    esSmall: { view: 'es', hint: 'Two tiny solids of 3 oscillators each sharing 6 quanta, all in A to start. There are only 462 ways to arrange them, so you can check the share of time at each q_A against the count of ways.', set: () => { Object.assign(S.es, { NA: 3, NB: 3, q: 6, start: 'A' }); newSolid(); } },
+    esHot: { view: 'es', hint: 'Solid A (100 oscillators) holds all 150 quanta, solid B (200 oscillators) holds none. Random exchanges carry energy from A to B until q_A settles near the value with the most ways, where the two temperatures match. It never goes back.', set: () => { Object.assign(S.es, { NA: 100, NB: 200, q: 150, start: 'A' }); newSolid(); } },
+    slReal: { view: 'sl', hint: 'An engine between 600 K and 300 K takes 500 J from the hot reservoir and does 150 J of work. Its efficiency is 0.30, below the Carnot limit of 0.50, and the entropy of the universe rises.', set: () => Object.assign(S.sl, { mode: 'engine', Th: 600, Tc: 300, Q: 500, W: 150, pair: false }) },
+    slBeat: { view: 'sl', hint: 'The same reservoirs, but this engine claims 300 J of work from 500 J: an efficiency of 0.60, above Carnot. Pair it with a Carnot refrigerator that puts its waste heat back, and see what the pair does.', set: () => Object.assign(S.sl, { mode: 'engine', Th: 600, Tc: 300, Q: 500, W: 300, pair: false }) },
+    slKelvin: { view: 'sl', hint: 'An engine that turns all 500 J from the hot reservoir into work and gives nothing to the cold one. The Kelvin statement says no such engine exists.', set: () => Object.assign(S.sl, { mode: 'engine', Th: 600, Tc: 300, Q: 500, W: 500, pair: false }) },
+    slClausius: { view: 'sl', hint: 'A refrigerator that moves 400 J from a 270 K freezer to a 300 K room with no work at all. The Clausius statement says no such refrigerator exists.', set: () => Object.assign(S.sl, { mode: 'fridge', Th: 300, Tc: 270, Q: 400, W: 0, pair: false }) },
+  };
+  function setView(v) {
+    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('cardFe').hidden = v !== 'fe'; $('cardEs').hidden = v !== 'es'; $('cardSl').hidden = v !== 'sl';
+    $('speedSeg').hidden = v === 'sl'; $('go').hidden = v === 'sl'; $('restart').hidden = v === 'sl';
+    $('units').textContent = v === 'fe' ? "model gas · time on the model's clock" : v === 'es' ? 'energy in quanta ε · T in ε/k' : 'T in K · Q and W in J · S in J/K';
+    can.setAttribute('aria-label', { fe: 'A box of gas molecules with a partition down the middle. Space starts or pauses.', es: 'Two solids drawn as grids of oscillators, each shaded by the energy quanta it holds. Space starts or pauses.', sl: 'A hot reservoir above, a cold reservoir below and a device between them, with arrows for the heat and work in one cycle.' }[v]);
+    window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
+    setRun(false); sync(); redraw();
+  }
+  function setRun(on) { S.run = on; const started = S.view === 'fe' ? S.fe.g.t > 0 : S.view === 'es' ? S.es.s.steps > 0 : false; $('go').textContent = on ? 'Pause' : started ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); setView(c.view); }
+  function pull() { const g = S.fe.g; if (!g.wall) return; g.wall = false; g.trace = [[0, leftCount(g)]]; setRun(true); sync(); }
+  const feChanged = () => { S.preset = 'custom'; newGas(); setRun(false); sync(); redraw(); };
+  const esChanged = () => { S.preset = 'custom'; newSolid(); setRun(false); sync(); redraw(); };
+  const slChanged = () => { S.preset = 'custom'; if (S.sl.mode === 'engine') S.sl.W = Math.min(S.sl.W, S.sl.Q); if (S.sl.Tc >= S.sl.Th) S.sl.Tc = S.sl.Th - 5; sync(); redraw(); };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
+  $('go').addEventListener('click', () => { if (S.view === 'fe' && S.fe.g.wall) { pull(); return; } setRun(!S.run); });
+  $('restart').addEventListener('click', () => { if (S.view === 'fe') newGas(); else newSolid(); setRun(false); sync(); redraw(); });
+  $('pull').addEventListener('click', pull);
+  $('sN').addEventListener('input', (e) => { S.fe.N = N_CHOICES[+e.target.value]; feChanged(); });
+  $('sNA').addEventListener('input', (e) => { S.es.NA = +e.target.value; esChanged(); });
+  $('sNB').addEventListener('input', (e) => { S.es.NB = +e.target.value; esChanged(); });
+  $('sQ').addEventListener('input', (e) => { S.es.q = +e.target.value; esChanged(); });
+  $('startSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-st]'); if (b) { S.es.start = b.dataset.st; esChanged(); } });
+  $('devSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-d]'); if (b) { S.sl.mode = b.dataset.d; slChanged(); } });
+  $('sTh').addEventListener('input', (e) => { S.sl.Th = +e.target.value; if (S.sl.Tc >= S.sl.Th) S.sl.Tc = S.sl.Th - 5; slChanged(); });
+  $('sTc').addEventListener('input', (e) => { S.sl.Tc = +e.target.value; if (S.sl.Tc >= S.sl.Th) S.sl.Th = Math.min(1000, S.sl.Tc + 5); slChanged(); });
+  $('sQin').addEventListener('input', (e) => { S.sl.Q = +e.target.value; slChanged(); });
+  $('sW').addEventListener('input', (e) => { S.sl.W = +e.target.value; slChanged(); });
+  $('pair').addEventListener('change', (e) => { S.sl.pair = e.target.checked; S.preset = 'custom'; sync(); redraw(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ' && S.view !== 'sl') { $('go').click(); e.preventDefault(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
+
+  // ---------- the clock ----------
+  /* the gas moves 0.5 box heights a second at 1×; the solids try 30 exchanges a second at 1× */
+  function advance(dt) {
+    if (S.view === 'fe') { const g = S.fe.g, tt = dt * S.speed * 0.5, n = Math.max(1, Math.ceil(tt / GAS_DT));
+      for (let i = 0; i < n; i++) gasStep(g, tt / n);
+      if (!g.wall) { const last = g.trace[g.trace.length - 1]; if (!last || g.tOpen - last[0] >= 0.05) { g.trace.push([g.tOpen, leftCount(g)]); if (g.trace.length > 4000) g.trace.splice(0, g.trace.length - 4000); } } }
+    else if (S.view === 'es') { const s = S.es.s, k = Math.max(1, Math.round(30 * dt * S.speed)); solidStep(s, k);
+      const last = s.trace[s.trace.length - 1]; if (s.steps - last[0] >= Math.max(1, s.steps / 800)) s.trace.push([s.steps, s.qA]); if (s.trace.length > 3000) s.trace = s.trace.filter((_, i) => i % 2 === 0); }
+  }
+  let last = performance.now();
+  function frame(now) { const dt = Math.min(0.1, (now - last) / 1000); last = now; if (S.run && S.view !== 'sl') { advance(dt); redraw(); } requestAnimationFrame(frame); }
+
+  // ---------- readings ----------
+  window.vdVersion = 'entropy@2026-10-24';
+  const SHOW = { fe: [['n_left', 'n left'], ['share', 'share of time']], es: [['steps', 'exchanges'], ['q_A', 'q_A']], sl: [['device', 'device'], ['Q_h_J', 'Q_h (J)'], ['W_J', 'W (J)']] };
+  window.vdShowCols = SHOW.fe;
+  window.vdWorksheet = () => ({ fe: 'free-expansion', es: 'einstein-solids', sl: 'second-law' })[S.view];
+  window.vdReadingRow = () => {
+    const name = { fe: 'Free expansion', es: 'Einstein solids', sl: 'Second law' };
+    const other = (window.vdRows ? window.vdRows() : []).find((r) => r.view !== S.view);
+    if (other) return `These readings are from the ${name[other.view]} view: export them to its worksheet or clear them first.`;
+    window.vdShowCols = SHOW[S.view];
+    if (S.view === 'fe') { const g = S.fe.g;
+      if (g.wall || g.tCount < 1) return 'Remove the partition and let the gas run for a while first: the reading is the share of time spent at each count.';
+      /* one row per count on the left: the whole histogram of this run */
+      const rows = []; for (let n = 0; n <= g.N; n++) rows.push({ view: 'fe', N: g.N, run_s: f(g.tOpen, 1), counted_s: f(g.tCount, 1), n_left: n, time_s: f(g.hist[n], 2), share: f(g.hist[n] / g.tCount, 5) });
+      return rows; }
+    if (S.view === 'es') { const e = S.es, s = e.s; return { view: 'es', N_A: e.NA, N_B: e.NB, q: e.q, steps: s.steps, q_A: s.qA, q_B: e.q - s.qA }; }
+    const r = dev(); return { view: 'sl', device: r.mode === 'engine' ? 'engine' : 'refrigerator', T_h_K: r.Th, T_c_K: r.Tc, Q_h_J: f(r.Qh, 1), Q_c_J: f(r.Qc, 1), W_J: f(r.W, 1) };
+  };
+
+  // ---------- about ----------
+  $('aboutFe').textContent = 'Free expansion: a model gas of N hard disks of equal mass in an insulated box twice as wide as it is tall. The disks bounce off the walls and each other without losing energy, so the total kinetic energy (and the temperature) stays the same. At first a partition keeps them in the left half; removing it lets them spread through the whole box with no work done and no heat in or out (§4.1). The count on the left is sampled every step from the first moment it falls to half or less (so the first rush out of the left half is left out), and the share of that time spent at each count is compared with C(N, n)/2^N, the share of all 2^N left or right arrangements that put n on the left. This is a picture of the idea: the disks are far bigger and fewer than real molecules, and time runs on the model\'s own clock. For a real gas the entropy rises by ΔS = nR ln(V₂/V₁) (§4.7, Example 4.8), which is N k ln 2 for a doubling.';
+  $('aboutEs').textContent = 'Einstein solids (beyond the book): each solid is a set of identical quantum oscillators, each holding a whole number of energy quanta ε. A solid of N oscillators holding q quanta can arrange them in Ω = C(q + N − 1, q) ways, and Boltzmann\'s S = k ln Ω gives its entropy (Schroeder, An Introduction to Thermal Physics, §2.2 to §2.6). Each step the demo picks two oscillators at random and moves a quantum from the first to the second if it has one; in the long run every arrangement is equally likely. The temperature comes from 1/T = dS/dU, worked out over one quantum on each side. A solid with no energy has exactly one arrangement, so S = 0: the third law (§4.7).';
+  $('aboutSl').textContent = 'Second law: a device runs one complete cycle between two reservoirs so large that their temperatures do not change. The first law fixes the third energy from the two you set. The device ends where it started, so only the reservoirs change entropy, by +Q/T for heat they gain and −Q/T for heat they lose (§4.6). A process is allowed if the total is zero (reversible) or positive. The Kelvin and Clausius statements (§4.4) are the special cases with no heat to the cold reservoir or no work. Pairing the device with a Carnot device between the same reservoirs (§4.4, §4.5) shows that any engine better than Carnot could be made into a perfect engine, and any refrigerator better than Carnot into a perfect refrigerator.';
+
+  // ---------- size, theme, start ----------
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); newGas(); newSolid();
+  const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'fe4');
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__en = { S, setView, applyPreset, setRun, redraw, sync, pull, advance, dev, newGas, newSolid };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

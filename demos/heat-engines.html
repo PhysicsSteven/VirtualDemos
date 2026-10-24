@@ -154,6 +154,7 @@ select { font: inherit; font-size: 0.82rem; color: var(--ink); background: var(-
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/heat-engines.html" target="heat-engines-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -262,6 +263,27 @@ select { font: inherit; font-size: 0.82rem; color: var(--ink); background: var(-
           <p class="hint"><b>How the cycle stays closed.</b> Each process is a power law P V<sup>k</sup> = constant, with k = 0 (isobaric), 1 (isothermal), γ (adiabatic) or infinite (isochoric). Each corner is where two neighboring curves cross, so dragging a corner slides its two neighbors along their other curves. Entropy is S = n C<sub>v</sub> ln(T/300 K) + n R ln(V/V<sub>0</sub>), with V<sub>0</sub> the volume at 300 K and 100 kPa; only differences in S matter.</p>
         </div></details>
       </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="heat-engines" data-title="Heat Engine Cycles" data-demo="heat-engines">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
     </aside>
   </main>
 </div>
@@ -1292,6 +1314,17 @@ select { font: inherit; font-size: 0.82rem; color: var(--ink); background: var(-
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
     requestAnimationFrame(loop);
   }
+  // ---------- readings (tools/readings_panel.py) ----------
+  window.vdVersion = 'heat-engines@2026-10-24';
+  window.vdShowCols = [['cycle', 'cycle'], ['Q_in_J', 'Q_in (J)'], ['W_net_J', 'W_net (J)']];
+  window.vdReadingRow = () => {
+    if (!sum || !vs) return 'Pick a cycle first.';
+    const g4 = (v) => +(+v).toPrecision(5), p = {}; for (const d of defs()) p[d.key] = d.get(S.edges);
+    const opt = (k, d) => (p[k] == null ? '' : +p[k].toFixed(d));
+    return { cycle: CYC[S.cycle].label, gas: S.gas === 'mono' ? 'monatomic' : 'diatomic', gamma: S.gas === 'mono' ? '5/3' : '7/5', n_mol: S.n, run: S.dir > 0 ? 'forward' : 'backward',
+      regenerator: S.cycle === 'stirling' ? (S.regen ? 'on' : 'off') : '', T_h_K: opt('Th', 0), T_c_K: opt('Tc', 0), r: opt('r', 2), r_c: opt('rc', 2), r_p: opt('rp', 1),
+      Q_in_J: g4(sum.Qin), Q_out_J: g4(sum.Qout), W_net_J: g4(sum.Wnet), T_min_K: +sum.Tmin.toFixed(1), T_max_K: +sum.Tmax.toFixed(1) };
+  };
   window.__he = { get frameMs() { return frameMs; }, get S() { return S; }, get sum() { return sum; }, get vs() { return vs; }, get ax() { return ax; },
     setPhase(p) { phase = p; curLegCache = -1; drawAll(); }, setPlaying, applyPreset,
     handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt || h.mid })); }, pv() { return G && { L: G.L, R: G.R, T: G.T, B: G.B }; } };

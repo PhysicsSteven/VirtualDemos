@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Entropy and the Second Law: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Entropy and the Second Law</h1><ul class="meta"><li><a href="../demos/entropy.html">Open the demo</a></li><li>Intro physics (second law, statistical meaning of entropy)</li><li>20 to 30 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Irreversible means overwhelmingly improbable to undo, not forbidden by the laws of motion. Four molecules return to one half 1/16 of the time; a hundred essentially never do (2⁻¹⁰⁰ ≈ 8 × 10⁻³¹).</li>
+<li>Entropy counts ways: S = k ln Ω. Energy spreads between two solids because the shared state has vastly more microstates, and it stops where the two temperatures match, since 1/T = dS/dU.</li>
+<li>Over a cycle only the reservoirs change entropy, by Q/T each. The second law, ΔS_universe ≥ 0, gives the Carnot limit, and the Kelvin and Clausius statements stand or fall together: pair a device that beats Carnot with an ordinary one and you break both.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know heat engines, efficiency and the Carnot efficiency, and ideally have met S = Q/T for a reservoir. The demo has three views. <strong>Free expansion</strong>: hard disks in a box 2 by 1 units start in the left half behind a partition; the count on the left and a histogram of time spent at each count are shown once the partition is removed. <strong>Einstein solids</strong>: two solids of N_A and N_B oscillators share q quanta by random exchanges of one quantum at a time; Ω_A Ω_B is plotted against q_A. <strong>Second law</strong>: an engine or refrigerator between two reservoirs, with ΔS of each reservoir and of the universe, and an optional pairing with a Carnot partner.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Four molecules.</strong> Ask Q1, then remove the partition. All four come back to the left again and again; the histogram settles near the binomial shares 1/16, 4/16, 6/16, 4/16, 1/16.</li>
+<li><strong>A hundred molecules.</strong> The count settles near 50 and wobbles by about ±5 (Q2). The histogram never reaches 100 or 0.</li>
+<li><strong>Small solids.</strong> 3 and 3 oscillators sharing 6 quanta: only 462 microstates. The share of time at each q_A matches Ω_A Ω_B/462, peaking at q_A = 3 (Q3).</li>
+<li><strong>Hot solid meets cold.</strong> 100 oscillators holding all 150 quanta meet 200 holding none. q_A falls to about 50 and stays there; total ln Ω rises by 115.6 (Q4).</li>
+<li><strong>A real engine</strong>, <strong>Beats Carnot?</strong>, <strong>Perfect engine</strong>, <strong>Perfect refrigerator.</strong> Read ΔS_universe for each (Q5). Then turn on the pairing for <strong>Beats Carnot?</strong> and <strong>Perfect refrigerator</strong> (Q6).</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Four molecules wander independently around a box. What fraction of the time do you expect all four to be in the left half? Two on each side?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> With 100 molecules, how large are the typical wobbles of the left count about 50? What is the chance of finding all 100 on the left, and what does that say about why free expansion is irreversible?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Two solids of 3 oscillators share 6 quanta. Count the microstates with q_A = 0 and with q_A = 3, using Ω(N, q) = (q + N − 1)!/(q! (N − 1)!). Which is more likely, and by how much?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> In <strong>Hot solid meets cold</strong>, where should q_A settle, and why is that also where the two temperatures are equal? The total ln Ω rises from 164.4 to 279.9. How much more likely is the shared state than the start?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> For each engine setup (600 K and 300 K, Q_h = 500 J): find ΔS_universe for W = 150 J, 300 J and 500 J. Which are allowed? For the perfect refrigerator, 400 J from 270 K to 300 K with W = 0, find ΔS_universe.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Pair the <strong>Beats Carnot?</strong> engine with a Carnot refrigerator that returns its 200 J of waste heat to the hot reservoir. What does the pair do overall, and which statement does it break? Pair the refrigerator with W = 20 J and Q_c = 400 J with a Carnot engine that supplies its 20 J. What does that pair do?</p></div>
+
+<div class="q"><p><strong>Q7.</strong> A free expansion of one mole doubles the volume with no heat and no work. What is ΔS of the gas, and how can entropy rise when no heat flowed?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Entropy is disorder."</strong> It counts microstates. Disorder is a loose picture that often helps and sometimes misleads (crystals forming from solution can raise total entropy).</li>
+<li><strong>"Entropy can never decrease anywhere."</strong> Only the total of an isolated system cannot. A refrigerator lowers the entropy of its contents while raising the room's by more.</li>
+<li><strong>"The second law is absolute, so four molecules can never return to one side."</strong> They do, often. The law is statistical, and for macroscopic numbers the exceptions are too rare ever to see.</li>
+<li><strong>"A better engine design could beat Carnot."</strong> The limit comes from entropy, not engineering: any engine that beat it could be paired to break the Kelvin statement.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li><strong>Free expansion.</strong> Elastic hard disks in a box 2 × 1 with a time step of 0.004; radii shrink with N. The histogram starts counting only once the left count first falls to half, so the initial rush out does not skew the shares. Exact shares are binomial, C(N, n)/2^N; ΔS = Nk ln 2 (R ln 2 = 5.763 J/K per mole).</li>
+<li><strong>Einstein solids.</strong> Ω(N, q) = C(q + N − 1, q) for each solid; each step picks a random oscillator in either solid and, if it has a quantum, moves it to another random oscillator. The temperature readout is kT/ε = 1/(d ln Ω/dq) by a centred difference (0 at q = 0).</li>
+<li><strong>Second law.</strong> For an engine ΔS_universe = −Q_h/T_h + Q_c/T_c with Q_c = Q_h − W; for a refrigerator ΔS = Q_h/T_h − Q_c/T_c with Q_h = Q_c + W. The pairing partner is a reversible Carnot device between the same reservoirs.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Homework: find kT/ε for an Einstein solid of N oscillators holding q quanta when both are large, and show that energy flows from the solid with the higher q/N.</li>
+<li>Pair with <strong>Heat Engine Cycles</strong> (real cycles against the Carnot limit) and <strong>Gas in a Box</strong> (the same irreversibility in a gas you can watch).</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>
