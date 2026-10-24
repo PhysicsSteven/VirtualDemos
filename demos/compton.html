@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -55,7 +57,9 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
-#can { touch-action: none; outline: none; }
+#can { touch-action: none; outline: none; position: relative; z-index: 1; }
+#pane { position: relative; }
+.cs3 { position: absolute; left: 0; top: 0; z-index: 0; }
 #can:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
@@ -117,6 +121,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" id="tAng" aria-pressed="false">Angles</button>
           <button type="button" id="tEle" aria-pressed="false">Electron energy</button>
         </div>
+        <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
         <span class="count mono" id="count"></span>
       </div>
       <div class="pane" id="pane">
@@ -512,6 +517,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   function drawScene(s) {
+    if (use3()) { drawScene3(s); return; }
     const PC = photonColors(s);
     const g = sceneGeom(), c = ctx, ps = g.ps, box = g.s, { cx, cy, Rg } = g, sd = S.side;
     c.save(); c.beginPath(); c.rect(box.x, box.y, box.w, box.h); c.clip();
@@ -609,6 +615,120 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.fillText(capped ? 'Drawn wavelengths: λ not to scale, λ′ shortened' : 'Drawn wavelengths: λ not to scale, λ′/λ to scale', x0, box.y + box.h - 10 * ps);
     c.textAlign = 'right'; if (box.w >= 560) c.fillText('electron at rest, free', box.x + box.w - 12 * ps, box.y + box.h - 10 * ps);
     c.restore();
+  }
+  // ---------- Compton's spectrometer in 3D (three.js through lib/vd3.js and lib/vd3kit.js); Flat keeps the collision drawing (or ?view=flat) ----------
+  /* The X ray tube, a lead slit, the graphite scatterer on a turntable and the spectrometer arm at θ (calcite crystal and
+     ionization chamber), as in Compton's 1923 bench. The arm turns with θ and can be dragged round. Sizes drawn, not measured. */
+  const G3 = { o: { th: -Math.PI / 2 - 0.2, ph: 0.98, zoom: 1 }, rect: '' };
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d());
+  const ZB = 0.07, ARM = 0.26, XT = -0.3;   /* beam height, arm length and tube position (m, drawn) */
+  function init3D() {
+    const S3 = VD3K.stage(pane, { before: can, shadow: 0.5, fov: 30, fogAt: [1.6, 3.2] }); if (!S3) return false;
+    S3.el.className = 'cs3';
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), mesh = (geo, m, cast) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = true; return x; };
+    const alongX = (r, len, n) => { const g = new THREE.CylinderGeometry(r, r, len, n || 24); g.rotateZ(Math.PI / 2); return g; };
+    sc.add(VD3K.bench(S3, { w: 3, d: 2, y: 0.2 }), VD3K.backdrop(S3, { r: 1.3, h: 0.9, y: -0.4 }));
+    const steel = M({ roughness: 0.35, metalness: 0.75 }, ['#b9c0c8', '#77808a']), dark = M({ roughness: 0.5, metalness: 0.3 }, ['#56606b', '#3a424c']);
+    const lead = M({ roughness: 0.7, metalness: 0.3 }, ['#6e7378', '#4c5156']), brass = M({ roughness: 0.3, metalness: 0.85 }, ['#c9a24a', '#a8873c']);
+    /* the X ray tube: a glass bulb, the cathode neck and the molybdenum anode, in a lead housing open toward the graphite */
+    const tube = new THREE.Group(); tube.position.set(XT, 0, ZB);
+    tube.add(VD3K.box(0.11, 0.09, 0.1, lead, 0, 0, -0.05));
+    const bulb = VD3K.bulb(S3, { r: 0.035, opacity: 0.25 }); bulb.position.set(0, 0, 0.075); tube.add(bulb);
+    const neck = VD3K.glass(S3, { r: 0.01, len: 0.06, axis: 'z', opacity: 0.25 }); neck.position.set(0, 0, 0.13); tube.add(neck);
+    const anode = mesh(new THREE.CylinderGeometry(0.008, 0.008, 0.05, 20), M({ roughness: 0.25, metalness: 0.9 }, ['#b87333', '#a0632a']), true); anode.rotation.x = Math.PI / 2; anode.position.set(0, 0, 0.045); tube.add(anode);
+    const glowM = new THREE.MeshBasicMaterial({ color: 0xffb070, transparent: true, opacity: 0.8 }), fil = mesh(new THREE.SphereGeometry(0.003, 10, 8), glowM); fil.position.set(0, 0, 0.11); tube.add(fil);
+    sc.add(tube);
+    sc.add(VD3K.cable([XT, 0, ZB + 0.16], [XT - 0.12, 0.12, 0.004], { color: 0x23282f, rad: 0.004 }));
+    /* lead slits on the beam line */
+    for (const x of [-0.2, -0.13]) { const s = new THREE.Group(); s.add(VD3K.box(0.01, 0.04, 0.1, lead, 0, 0.0225, 0), VD3K.box(0.01, 0.04, 0.1, lead, 0, -0.0225, 0)); s.position.x = x; s.children.forEach((b) => { b.scale.y = 1; }); sc.add(s); }
+    /* the beam to the scatterer */
+    const beamM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.35, depthWrite: false }), beam = mesh(alongX(0.0025, -XT - 0.04, 12), beamM); beam.position.set(XT / 2 + 0.02, 0, ZB); beam.renderOrder = 3; sc.add(beam);
+    /* the graphite block on a turntable, the centre of the arm */
+    sc.add(mesh(new THREE.CylinderGeometry(0.06, 0.065, 0.012, 48).rotateX(Math.PI / 2).translate(0, 0, 0.006), steel, true));
+    sc.add(VD3K.rod([0, 0, 0.012], [0, 0, ZB - 0.02], 0.006, steel));
+    const graphite = VD3K.box(0.02, 0.03, 0.04, M({ roughness: 0.9, metalness: 0.15 }, ['#3a3d42', '#2c2f34']), 0, 0, ZB - 0.02); sc.add(graphite);
+    /* the spectrometer arm: a rail from the centre, the slit, the calcite crystal on its table and the ionization chamber */
+    const arm = new THREE.Group();
+    arm.add(VD3K.box(ARM + 0.03, 0.022, 0.008, dark, (ARM + 0.03) / 2, 0, 0.004));
+    const slit = new THREE.Group(); slit.add(VD3K.box(0.008, 0.016, 0.06, lead, 0, 0.014, ZB - 0.03), VD3K.box(0.008, 0.016, 0.06, lead, 0, -0.014, ZB - 0.03)); slit.position.x = 0.1; arm.add(slit);
+    arm.add(VD3K.rod([0.17, 0, 0.008], [0.17, 0, ZB - 0.012], 0.004, steel), VD3K.box(0.03, 0.03, 0.004, brass, 0.17, 0, ZB - 0.016));
+    const crystal = mesh(new THREE.BoxGeometry(0.004, 0.022, 0.026), new THREE.MeshStandardMaterial({ color: 0xe9f2f7, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.75 }), true); crystal.position.set(0.17, 0, ZB); crystal.rotation.z = 0.35; arm.add(crystal);
+    const chamber = mesh(alongX(0.018, 0.08, 32), brass, true); chamber.position.set(0.17 + 0.07 * Math.cos(0.7), 0.07 * Math.sin(0.7), ZB); chamber.rotation.z = 0.7; arm.add(chamber);
+    arm.add(VD3K.rod([0.17 + 0.07 * Math.cos(0.7), 0.07 * Math.sin(0.7), 0.008], [0.17 + 0.07 * Math.cos(0.7), 0.07 * Math.sin(0.7), ZB - 0.018], 0.004, steel));
+    const outM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.35, depthWrite: false }), outB = mesh(alongX(0.0022, 0.16, 12), outM); outB.position.set(0.09, 0, ZB); outB.renderOrder = 3; arm.add(outB);
+    sc.add(arm);
+    sc.add(VD3K.cable([0.24, 0.05, ZB], [0.32, 0.2, 0.004], { color: 0x23282f }));
+    /* a θ scale on the bench round the turntable */
+    const scaleCv = document.createElement('canvas'); scaleCv.width = scaleCv.height = 1024; const scaleTex = new THREE.CanvasTexture(scaleCv);
+    const dial = new THREE.Mesh(new THREE.RingGeometry(0.075, 0.11, 96), new THREE.MeshStandardMaterial({ map: scaleTex, transparent: true, roughness: 0.6 })); dial.position.z = 0.0008; sc.add(dial);
+    /* the photon packet in flight and the recoil electron */
+    const pkt = new THREE.Mesh(new THREE.SphereGeometry(0.005, 14, 10), new THREE.MeshBasicMaterial({ color: 0xffffff })); pkt.renderOrder = 4; sc.add(pkt);
+    const el = new THREE.Mesh(new THREE.SphereGeometry(0.0035, 12, 8), new THREE.MeshBasicMaterial({ color: 0xffffff })); el.renderOrder = 4; sc.add(el);
+    const dots = VD3K.particles(S3, { n: 80, r: 0.0022, color: '#ffffff' }); dots.material = new THREE.MeshBasicMaterial({ color: 0xffffff }); sc.add(dots);
+    g3 = { S3, arm, beamM, outM, pkt, el, dots, scaleCv, scaleTex, dialKey: '', ray: new THREE.Raycaster(), plane: new THREE.Plane(new THREE.Vector3(0, 0, 1), -ZB), hit: new THREE.Vector3() };
+    can.addEventListener('wheel', (e) => { if (!in3(e)) e.stopImmediatePropagation(); }, { passive: true });
+    can.addEventListener('dblclick', (e) => { if (!in3(e)) e.stopImmediatePropagation(); });
+    VD3.orbit(can, G3.o, () => { if (use3()) drawAll(); }, { grab: (e) => !in3(e) || !!handleAt(e), phMin: 0.3, phMax: 1.4, zMin: 0.6, zMax: 2.8 });
+    can.style.touchAction = ''; can.style.cursor = '';
+    return true;
+  }
+  function in3(e) { if (!use3() || !LY) return false; const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top, b = LY.scene; return x >= b.x && x <= b.x + b.w && y >= b.y && y <= b.y + b.h; }
+  function dial3() {
+    const k = String(T.dark); if (g3.dialKey === k) return; g3.dialKey = k;
+    const c = g3.scaleCv.getContext('2d'), N = 1024, cx = N / 2, r0 = N / 2 * 0.075 / 0.11, r1 = N / 2;
+    c.clearRect(0, 0, N, N); c.fillStyle = T.dark ? 'rgba(60,68,78,0.9)' : 'rgba(236,239,243,0.95)'; c.beginPath(); c.arc(cx, cx, r1, 0, 7); c.arc(cx, cx, r0, 0, 7, true); c.fill();
+    c.strokeStyle = c.fillStyle = T.dark ? '#e3e8ef' : '#1f262f'; c.font = '600 30px "JetBrains Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'middle';
+    for (let d = -180; d < 180; d += 5) { const a = d * DEG, l = d % 30 ? 22 : 44; c.lineWidth = d % 30 ? 2 : 4; c.beginPath(); c.moveTo(cx + Math.cos(a) * r1, cx - Math.sin(a) * r1); c.lineTo(cx + Math.cos(a) * (r1 - l), cx - Math.sin(a) * (r1 - l)); c.stroke();
+      if (d % 30 === 0) { const rr = r1 - 76; c.fillText(String(Math.abs(d)), cx + Math.cos(a) * rr, cx - Math.sin(a) * rr); } }
+    g3.scaleTex.needsUpdate = true;
+  }
+  function render3(box, s) {
+    const g = g3, S3 = g.S3, el = S3.el;
+    const k = [box.x, box.y, box.w, box.h].join(); if (G3.rect !== k) { G3.rect = k; Object.assign(el.style, { left: box.x + 'px', top: box.y + 'px', width: box.w + 'px', height: box.h + 'px' }); }
+    S3.size(box.w, box.h);
+    const asp = box.w / Math.max(1, box.h), dist = 1.25 * Math.max(1, 1.1 / asp);
+    S3.place(G3.o, [-0.07, 0.04, 0.04], dist); dial3();
+    const PC = photonColors(s), sd = S.side, a = sd * S.th;
+    g.arm.rotation.z = a;
+    g.beamM.color.set(PC.cin); g.outM.color.set(PC.cout); g.pkt.material.color.set(PC.cin);
+    /* the packet: along the beam until the hit, then along the arm (one cycle of the flat view's clock) */
+    const tt = clock % PERIOD, dt = tt - T_HIT, L1 = -XT, L2 = ARM, v = (L1 + L2) / (PERIOD * 0.8);
+    if (dt < 0) { g.pkt.position.set(Math.min(0, dt * v), 0, ZB); g.pkt.material.color.set(PC.cin); }
+    else { const d = Math.min(L2, dt * v); g.pkt.position.set(d * Math.cos(a), d * Math.sin(a), ZB); g.pkt.material.color.set(PC.cout); }
+    const de = dt > 0 ? Math.min(0.12, dt * v * s.beta) : 0, pa = -sd * s.phi;
+    g.el.position.set(de * Math.cos(pa), de * Math.sin(pa), ZB); g.el.material.color.set(T.elec); g.el.visible = de > 0.002;
+    /* sampled photons leave the graphite at their own angles */
+    let n = 0; const vv = 0.3;
+    for (const f of flying) { const d = (clock - f.t0) * vv; if (d < 0 || d > 0.3 || n >= 80) continue; const an = f.sg * f.th; g.dots.put(n++, d * Math.cos(an), d * Math.sin(an), ZB); }
+    g.dots.material.color.set(PC.cout); g.dots.show(n); g.dots.done();
+    S3.render();
+    return (q) => { const r = S3.project(q); return [box.x + r[0], box.y + r[1]]; };
+  }
+  function drawScene3(s) {
+    const c = ctx, box = LY.scene, ps = PS; c.clearRect(box.x, box.y, box.w, box.h);
+    const Q = render3(box, s), PC = photonColors(s), sd = S.side, a = sd * S.th;
+    c.save(); c.beginPath(); c.rect(box.x, box.y, box.w, box.h); c.clip();
+    const lab = (txt, q, col, al, bl) => { c.font = `600 ${11 * ps}px ${T.mono}`; const hw = c.measureText(txt).width / 2 + 6; const x = Math.max(box.x + hw, Math.min(box.x + box.w - hw, q[0])); label(c, txt, x, q[1], col, al || 'center', bl || 'middle', true); };
+    lab('X ray tube, Mo anode', Q([XT, 0, ZB + 0.19]), T.ink, 'center', 'bottom');
+    lab('graphite', Q([0, -0.03, ZB + 0.03]), T.ink, 'center', 'bottom');
+    lab(`θ = ${fmtDeg(S.th)}`, Q([0.13 * Math.cos(a / 2), 0.13 * Math.sin(a / 2), 0.004]), PC.cout);
+    lab('crystal and ionization chamber', Q([0.2 * Math.cos(a), 0.2 * Math.sin(a), ZB + 0.06]), T.muted, 'center', 'bottom');
+    if (S.th > 0.01) { const pa = -sd * s.phi, q = Q([0.09 * Math.cos(pa), 0.09 * Math.sin(pa), ZB]); lab(`recoil e⁻, φ = ${fmtDeg(s.phi)}`, q, T.elec); }
+    const x0 = box.x + 12 * ps; let y = box.y + 16 * ps;
+    label(c, `λ  = ${fmtL(s.lam)}`, x0, y, PC.cin, 'left', 'middle', true, 12); y += 18 * ps;
+    label(c, `λ′ = ${fmtL(s.lamP)}`, x0, y, PC.cout, 'left', 'middle', true, 12); y += 18 * ps;
+    label(c, `Δλ = ${fmtL(s.dlam)}`, x0, y, T.ink, 'left', 'middle', true, 12);
+    c.font = `${10.5 * ps}px ${T.ui}`; c.fillStyle = T.muted; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    if (box.w < 520) c.fillText(PC.real ? 'True color of the light.' : 'X rays in false color.', x0, box.y + box.h - 10 * ps); else c.fillText(VD3.turnText(PC.real ? 'Colors: true color of the light. Drag the arm to set θ, drag elsewhere to turn.' : 'X rays in false color, as in the Flat view. Drag the arm to set θ, drag elsewhere to turn.'), x0, box.y + box.h - 10 * ps);
+    c.restore();
+  }
+  function armHandle() {
+    const box = LY.scene, a = S.side * S.th, Q = (q) => { const r = g3.S3.project(q); return [box.x + r[0], box.y + r[1]]; };
+    const o = Q([0, 0, ZB]), e = Q([ARM * Math.cos(a), ARM * Math.sin(a), ZB]), L = Math.hypot(e[0] - o[0], e[1] - o[1]) || 1;
+    return { id: 'th', cursor: 'grab', pt: Q([0.2 * Math.cos(a), 0.2 * Math.sin(a), ZB]), ray: [o[0], o[1], (e[0] - o[0]) / L, (e[1] - o[1]) / L, L], set: (x, y) => {
+      const g = g3; g.ray.setFromCamera({ x: (x - box.x) / box.w * 2 - 1, y: -((y - box.y) / box.h * 2 - 1) }, g.S3.cam);
+      if (!g.ray.ray.intersectPlane(g.plane, g.hit)) return; const an = Math.atan2(g.hit.y, g.hit.x); setTheta(Math.abs(an), an >= 0 ? 1 : -1); } };
   }
   function grip(c, p, col, id) {
     const hot = (drag && drag.id === id) || (!drag && hoverId === id), ps = PS;
@@ -995,11 +1115,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!LY) return [];
     const out = [], g = sceneGeom(), s = sc(), sd = S.side;
     const ux = Math.cos(S.th), uy = -sd * Math.sin(S.th), ex = Math.cos(s.phi), ey = sd * Math.sin(s.phi);
+    if (use3()) out.push(armHandle());
     // the scattered photon: the angle of the pointer seen from the electron, either side of the beam
-    out.push({ id: 'th', cursor: 'grab', pt: [g.cx + ux * g.Rg, g.cy + uy * g.Rg], ray: [g.cx, g.cy, ux, uy, g.Rg * 1.2],
+    else out.push({ id: 'th', cursor: 'grab', pt: [g.cx + ux * g.Rg, g.cy + uy * g.Rg], ray: [g.cx, g.cy, ux, uy, g.Rg * 1.2],
       set: (x, y) => { const a = Math.atan2(-(y - g.cy), x - g.cx); setTheta(Math.abs(a), a >= 0 ? 1 : -1); } });
     // the recoil electron: φ from 0 to 90° on the far side of the beam, θ follows
-    out.push({ id: 'phi', cursor: 'grab', pt: [g.cx + ex * g.Rg * 0.8, g.cy + ey * g.Rg * 0.8], ray: [g.cx, g.cy, ex, ey, g.Rg],
+    if (!use3()) out.push({ id: 'phi', cursor: 'grab', pt: [g.cx + ex * g.Rg * 0.8, g.cy + ey * g.Rg * 0.8], ray: [g.cx, g.cy, ex, ey, g.Rg],
       set: (x, y) => { const a = Math.atan2(sd * (y - g.cy), x - g.cx); const phi = Math.max(0, Math.min(Math.PI / 2, a < -Math.PI / 2 ? Math.PI / 2 : a)); setTheta(thetaOfPhi(S.E, Math.max(phi, 0))); } });
     if (S.tab === 'det' && detGeom) {
       const { p, X, a, b } = detGeom, x = X(s.lamP);
@@ -1124,6 +1245,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   applyPreset('c1923');
   setPlaying(!reduce);
   if (reduce) { clock = T_HIT + 0.55; drawAll(); }   // a still picture: both packets clear of the electron
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: (on) => { if (g3) g3.S3.el.hidden = !on; drawAll(); }, status: (m) => { const st = document.querySelector('.status'); if (st) st.textContent = m; } });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
 })();
