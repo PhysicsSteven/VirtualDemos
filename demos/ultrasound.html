@@ -450,7 +450,7 @@ table.rows input:focus { border-color: var(--accent); }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const p = ps(), narrow = W < 620;
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
+    window.VDGear.backdrop(ctx, W, Hh);
     const overlay = getComputedStyle(shelf).position === 'absolute', bottom = overlay ? shelf.getBoundingClientRect().top - can.getBoundingClientRect().top - 12 * p : Hh - 12 * p;
     /* body panel on the left (on top on phones), screen on the right (below) */
     let bx, by, bw, bh, sx, sy, sw, sh;
@@ -462,33 +462,66 @@ table.rows input:focus { border-color: var(--accent); }
     /* the Set up card sits over the screen's empty top right when the body panel is on the left, so the body stays in view */
     if (getComputedStyle(card).position === 'absolute') { card.style.left = narrow ? '12px' : `${Math.max(12, sx + sw - 340 * p)}px`; }
   }
+  /* tissue drawn with a texture fixed to the panel (so a layer painted over another matches it exactly): fat as small lobules,
+     muscle as fibres, bone as a porous band, water clear. A picture only: the echoes come from the layer list. */
+  const hash = (i, j) => { const v = Math.sin(i * 127.1 + j * 311.7) * 43758.5453; return v - Math.floor(v); };
+  function tissue(m, px, py, x, y0, w, h, p) {
+    ctx.fillStyle = T[m] || T.surface; ctx.fillRect(x, y0, w, h);
+    const dk = window.VDGear.dark(); ctx.save(); ctx.beginPath(); ctx.rect(x, y0, w, h); ctx.clip();
+    if (m === 'fat') { const r = 7 * p; ctx.strokeStyle = dk ? 'rgba(255,240,180,0.10)' : 'rgba(150,120,40,0.18)'; ctx.lineWidth = 1;
+      for (let j = Math.floor((y0 - py) / r) - 1; j * r + py < y0 + h + r; j++) for (let i = 0; i * r < w + r; i++) { const cx = px + i * r + (j % 2) * r / 2 + (hash(i, j) - 0.5) * 2 * p, cy = py + j * r * 0.87;
+        ctx.beginPath(); ctx.arc(cx, cy, r * 0.46, 0, 7); ctx.stroke(); } }
+    else if (m === 'muscle') { const gap = 4 * p; ctx.strokeStyle = dk ? 'rgba(255,200,190,0.10)' : 'rgba(120,40,30,0.13)'; ctx.lineWidth = 1;
+      for (let k = Math.floor((y0 - py) / gap); k * gap + py < y0 + h + gap; k++) { const yy = py + k * gap; ctx.beginPath(); for (let xx = x; xx <= x + w + 12; xx += 12 * p) ctx.lineTo(xx, yy + Math.sin(xx * 0.03 + k * 0.9) * 1.2 * p); ctx.stroke(); } }
+    else if (m === 'bone') { ctx.fillStyle = dk ? 'rgba(0,0,0,0.22)' : 'rgba(120,100,70,0.20)'; const r = 6 * p;
+      for (let j = Math.floor((y0 - py) / r); j * r + py < y0 + h; j++) for (let i = 0; i * r < w; i++) if (hash(i + 7, j) > 0.55) { ctx.beginPath(); ctx.ellipse(px + i * r + hash(i, j + 3) * r, py + j * r + hash(j, i) * r, r * 0.22, r * 0.16, 0, 0, 7); ctx.fill(); } }
+    else if (m === 'water') { const g = ctx.createLinearGradient(0, y0, 0, y0 + h); g.addColorStop(0, 'rgba(255,255,255,0.18)'); g.addColorStop(1, 'rgba(255,255,255,0)'); ctx.fillStyle = g; ctx.fillRect(x, y0, w, h); }
+    ctx.restore();
+  }
+  /* the probe: a hand held transducer, face down at (cx, cy), turned by rot */
+  function probe(cx, cy, rot, p, label) {
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+    const Gr = window.VDGear; Gr.cable(ctx, 0, -46 * p, 24 * p, -80 * p, -10 * p, { w: 3 * p, dx1: 0, dx2: -10 * p });
+    let g = ctx.createLinearGradient(-15 * p, 0, 15 * p, 0); g.addColorStop(0, '#9aa3ad'); g.addColorStop(0.35, '#f2f4f6'); g.addColorStop(1, '#7d8792');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(-9 * p, -48 * p); ctx.lineTo(9 * p, -48 * p); ctx.quadraticCurveTo(12 * p, -24 * p, 17 * p, -8 * p); ctx.lineTo(17 * p, 0); ctx.lineTo(-17 * p, 0); ctx.lineTo(-17 * p, -8 * p); ctx.quadraticCurveTo(-12 * p, -24 * p, -9 * p, -48 * p); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = 'rgba(0,0,0,0.3)'; ctx.lineWidth = 1; ctx.stroke();
+    ctx.fillStyle = '#2b323b'; ctx.fillRect(-17 * p, -3 * p, 34 * p, 3 * p);
+    if (label) { ctx.fillStyle = '#4a5360'; ctx.font = `700 ${7.5 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(label, 0, -20 * p); }
+    ctx.restore();
+  }
   function drawBody(x, y, w, h, p) {
-    const ppm = h / DEPTH_MAX, L = layers(), tx = x + w * 0.5;
+    const ppm = h / DEPTH_MAX, L = layers(), tx = x + w * 0.5, Gr = window.VDGear;
+    ctx.save(); ctx.shadowColor = Gr.dark() ? 'rgba(0,0,0,0.5)' : 'rgba(20,30,45,0.16)'; ctx.shadowBlur = 16 * p; ctx.shadowOffsetY = 5 * p; ctx.fillStyle = T.surface; ctx.fillRect(x, y, w, h); ctx.restore();
     let d = 0; for (const l of L) { const y0 = y + d * ppm, y1 = Math.min(y + h, y + (d + l.d) * ppm); if (y0 >= y + h) break;
-      ctx.fillStyle = T[l.m] || T.surface; ctx.fillRect(x, y0, w, y1 - y0);
+      tissue(l.m, x, y, x, y0, w, y1 - y0, p);
       const hide = (S.preset === 'cyst' && l.m !== 'fat') || S.blind;
       if (!hide && y1 - y0 > 12 * p) txt(MEDIA[l.m].name, x + 48 * p, (y0 + y1) / 2, { s: 10, c: T.ink });
       d += l.d; }
     if (S.preset === 'cyst' && !S.blind) txt('muscle (a cyst is somewhere in it)', x + 48 * p, y + cm(1.0) * ppm + 12 * p, { s: 10 });
-    if (S.preset === 'cyst') { /* the cyst is hidden: muscle colour drawn over it */ const y0 = y + cm(S.cyst) * ppm; ctx.fillStyle = T.muscle; ctx.fillRect(x, y0 - 1, w, cm(1.5) * ppm + 2); }
+    if (S.preset === 'cyst') { /* the cyst is hidden: muscle, with the same texture, drawn over it */ const y0 = y + cm(S.cyst) * ppm; tissue('muscle', x, y, x, y0 - 1, w, cm(1.5) * ppm + 2, p); }
     ctx.strokeStyle = T.line; ctx.strokeRect(x + 0.5, y + 0.5, w, h);
     /* depth scale on the left edge */
     for (let c = 0; c <= 15; c++) { const yy = y + cm(c) * ppm; ctx.strokeStyle = T.ink; ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + (c % 5 ? 4 : 8) * p, yy); ctx.stroke(); if (c % 5 === 0 && c) txt(`${c} cm`, x + 10 * p, yy, { s: 9, c: T.ink, m: 1 }); }
     /* transducer and the pulse travelling down and back */
-    ctx.fillStyle = T.box; ctx.beginPath(); ctx.roundRect(tx - 16 * p, y - 30 * p, 32 * p, 30 * p, 4 * p); ctx.fill(); txt(`${S.f0} MHz`, tx, y - 15 * p, { a: 'center', s: 9, c: T.metalHi });
-    ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.35; ctx.lineWidth = 10 * p; ctx.beginPath(); ctx.moveTo(tx, y); ctx.lineTo(tx, y + h); ctx.stroke(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.3; ctx.lineWidth = 10 * p; ctx.beginPath(); ctx.moveTo(tx, y); ctx.lineTo(tx, y + h); ctx.stroke(); ctx.globalAlpha = 1;
+    /* a blob of gel under the probe face */
+    ctx.fillStyle = Gr.dark() ? 'rgba(150,200,240,0.35)' : 'rgba(150,200,240,0.55)'; ctx.beginPath(); ctx.ellipse(tx, y, 22 * p, 4 * p, 0, PI, 0); ctx.fill();
+    probe(tx, y - 1 * p, 0, p, `${S.f0} MHz`);
     if (S.running && !reduce) { /* a marker for the pulse, slowed: its depth for a time on the screen's scale */ const tt = S.phase / TAU * 200e-6; let dd = 0, t = 0, back = false;
       for (const l of L) { const dt = l.d / MEDIA[l.m].c; if (t + dt >= tt) { dd += (tt - t) * MEDIA[l.m].c; break; } t += dt; dd += l.d; }
       if (t < tt && dd >= DEPTH_MAX) back = true;
       if (!back) { ctx.fillStyle = T.accent; ctx.fillRect(tx - 9 * p, y + Math.min(dd, DEPTH_MAX) * ppm - 2 * p, 18 * p, 4 * p); } }
     if (S.preset === 'water') txt(`water depth ${S.water.toFixed(1)} cm (ruler)`, x + w - 6 * p, y + cm(S.water) * ppm - 9 * p, { a: 'right', s: 10, b: 1 });
-    txt('gel', tx + 20 * p, y - 6 * p, { s: 9, c: T.muted });
+    Gr.label(ctx, 'gel', tx + 26 * p, y - 5 * p, { s: 9 * p });
   }
   function drawVessel(x, y, w, h, p) {
+    const Gr0 = window.VDGear;
     const ppm = h / 0.06, vy = y + cm(3) * ppm, R = cm(0.4) * ppm;   /* 6 cm of depth shown; artery 8 mm across, 3 cm down */
-    ctx.fillStyle = T.fat; ctx.fillRect(x, y, w, cm(1) * ppm); ctx.fillStyle = T.muscle; ctx.fillRect(x, y + cm(1) * ppm, w, h - cm(1) * ppm);
+    ctx.save(); ctx.shadowColor = window.VDGear.dark() ? 'rgba(0,0,0,0.5)' : 'rgba(20,30,45,0.16)'; ctx.shadowBlur = 16 * p; ctx.shadowOffsetY = 5 * p; ctx.fillStyle = T.surface; ctx.fillRect(x, y, w, h); ctx.restore();
+    tissue('fat', x, y, x, y, w, cm(1) * ppm, p); tissue('muscle', x, y, x, y + cm(1) * ppm, w, h - cm(1) * ppm, p);
     txt('fat', x + 6 * p, y + cm(0.5) * ppm, { s: 10 }); txt('muscle', x + 6 * p, y + cm(1.6) * ppm, { s: 10 });
-    ctx.fillStyle = T.blood; ctx.fillRect(x, vy - R, w, 2 * R); txt('artery: blood flows ←', x + w - 6 * p, vy + R + 10 * p, { a: 'right', s: 10, b: 1 });
+    { const g = ctx.createLinearGradient(0, vy - R, 0, vy + R); g.addColorStop(0, Gr0.mix(T.blood.startsWith('#') ? T.blood : '#b0413e', '#000000', 0.35)); g.addColorStop(0.3, T.blood); g.addColorStop(0.7, T.blood); g.addColorStop(1, Gr0.mix(T.blood.startsWith('#') ? T.blood : '#b0413e', '#000000', 0.35)); ctx.fillStyle = g; } ctx.fillRect(x, vy - R, w, 2 * R);
+    ctx.strokeStyle = 'rgba(80,10,10,0.45)'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(x, vy - R); ctx.lineTo(x + w, vy - R); ctx.moveTo(x, vy + R); ctx.lineTo(x + w, vy + R); ctx.stroke(); txt('artery: blood flows ←', x + w - 6 * p, vy + R + 10 * p, { a: 'right', s: 10, b: 1 });
     /* moving cells, slowed: plug flow all at v, laminar at vmax(1 − r²/R²) */
     if (!reduce) { ctx.fillStyle = '#ffd7d2'; for (let i = 0; i < 26; i++) { const fr = ((i * 0.6180339) % 1) * 2 - 1, sp = S.prof === 'lam' ? 1 - fr * fr : 1, xx = x + ((((i * 0.37) - S.phase * 0.08 * sp) % 1) + 1) % 1 * w;
       ctx.beginPath(); ctx.arc(xx, vy + fr * R * 0.85, 2.2 * p, 0, 7); ctx.fill(); } }
@@ -496,20 +529,24 @@ table.rows input:focus { border-color: var(--accent); }
     const th = S.theta * PI / 180, hx = x + w * 0.55, d = vy - y, tx = hx - d / Math.tan(th);
     ctx.save(); ctx.beginPath(); ctx.rect(x, y - 40 * p, w, h + 40 * p); ctx.clip();
     ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.45; ctx.lineWidth = 8 * p; ctx.beginPath(); ctx.moveTo(tx, y); ctx.lineTo(hx + (h - d) / Math.tan(th), y + h); ctx.stroke(); ctx.globalAlpha = 1;
-    ctx.save(); ctx.translate(tx, y); ctx.rotate(th); ctx.fillStyle = T.box; ctx.fillRect(-26 * p, -12 * p, 26 * p, 24 * p); ctx.restore();
+    probe(tx, y, th - PI / 2, p, '');
     ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2; ctx.beginPath(); ctx.arc(hx, vy, 26 * p, PI, PI + th); ctx.stroke(); txt(`θ = ${S.theta}°`, hx - 30 * p, vy - 30 * p, { a: 'right', s: 10, b: 1 });
     ctx.restore();
     ctx.strokeStyle = T.line; ctx.strokeRect(x + 0.5, y + 0.5, w, h);
     if (tx < x) txt('transducer off the panel to the left', x + 6 * p, y - 10 * p, { s: 9, c: T.muted });
   }
   function drawScreen(x, y, w, h, p) {
-    ctx.fillStyle = T.scope; ctx.beginPath(); ctx.roundRect(x - 4 * p, y - 4 * p, w + 8 * p, h + 8 * p, 6 * p); ctx.fill();
+    /* the scanner's monitor: a bezel round a dark screen */
+    const Gr = window.VDGear; Gr.box(ctx, x - 12 * p, y - 12 * p, w + 24 * p, h + 44 * p, { r: 10 * p, color: '#2d3540' });
+    Gr.plate(ctx, 'ultrasound scanner', x + 48 * p, y + h + 22 * p, { s: 7 * p });
+    ctx.fillStyle = T.scope; ctx.beginPath(); ctx.roundRect(x - 4 * p, y - 4 * p, w + 8 * p, h + 8 * p, 4 * p); ctx.fill();
+    { const g = ctx.createRadialGradient(x + w / 2, y + h / 2, 0, x + w / 2, y + h / 2, Math.max(w, h) * 0.7); g.addColorStop(0, 'rgba(126,224,160,0.07)'); g.addColorStop(1, 'rgba(0,0,0,0)'); ctx.fillStyle = g; ctx.fillRect(x - 4 * p, y - 4 * p, w + 8 * p, h + 8 * p); }
     const tr = T.trace, grid = 'rgba(126, 224, 160, 0.16)';
     ctx.strokeStyle = grid; ctx.lineWidth = 1; for (let i = 0; i <= 10; i++) { const xx = x + w * i / 10; ctx.beginPath(); ctx.moveTo(xx, y); ctx.lineTo(xx, y + h); ctx.stroke(); } for (let j = 0; j <= 4; j++) { const yy = y + h * j / 4; ctx.beginPath(); ctx.moveTo(x, yy); ctx.lineTo(x + w, yy); ctx.stroke(); }
     if (S.mode === 'echo') {
       const zoom = S.tb === 'zoom', lo = zoom ? Math.max(0, Math.min(180, S.curT - 10)) : 0, hi = lo + (zoom ? 20 : 200); GEO.scr = { x, y, w, h, lo, hi };
-      for (let i = 0; i <= 10; i += zoom ? 2 : 2) txt(`${sig(lo + (hi - lo) * i / 10, 4)}`, x + w * i / 10, y + h + 10 * p, { a: 'center', s: 9, c: T.muted, m: 1 });
-      txt('time after the pulse is sent (μs)', x + w / 2, y + h + 22 * p, { a: 'center', s: 9, c: T.muted });
+      for (let i = 0; i <= 10; i += zoom ? 2 : 2) txt(`${sig(lo + (hi - lo) * i / 10, 4)}`, x + w * i / 10, y + h + 10 * p, { a: 'center', s: 9, c: '#b9c3cf', m: 1 });
+      txt('time after the pulse is sent (μs)', x + w / 2, y + h + 22 * p, { a: 'center', s: 9, c: '#b9c3cf' });
       if (S.running) {
         const ech = echoes(layers()), f0 = S.f0 * 1e6, n = Math.round(w * (zoom ? 2 : 3)), base = zoom ? y + h / 2 : y + h - 6 * p, amp = (zoom ? h / 2 - 6 * p : h - 14 * p) * S.gain;
         /* the pulse sent (drawn at t = 0, off the scale) */
@@ -527,8 +564,8 @@ table.rows input:focus { border-color: var(--accent); }
         txt(`${S.curT.toFixed(2)} μs${S.depth && !S.blind ? `, ${(C_SCANNER * S.curT * 1e-6 / 2 * 100).toFixed(2)} cm` : ''}`, Math.min(cx + 5 * p, x + w - 120 * p), y + 24 * p, { s: 10, c: '#ffd36b', m: 1, b: 1 }); }
     } else {
       const lo = 0, hi = S.range; GEO.scr = { x, y, w, h, lo, hi };
-      for (let i = 0; i <= 10; i += 2) txt(`${sig(hi * i / 10 / 1000, 3)}`, x + w * i / 10, y + h + 10 * p, { a: 'center', s: 9, c: T.muted, m: 1 });
-      txt('Doppler shift (kHz)', x + w / 2, y + h + 22 * p, { a: 'center', s: 9, c: T.muted });
+      for (let i = 0; i <= 10; i += 2) txt(`${sig(hi * i / 10 / 1000, 3)}`, x + w * i / 10, y + h + 10 * p, { a: 'center', s: 9, c: '#b9c3cf', m: 1 });
+      txt('Doppler shift (kHz)', x + w / 2, y + h + 22 * p, { a: 'center', s: 9, c: '#b9c3cf' });
       if (S.running) {
         const n = Math.round(w * 2), f0 = S.f0 * 1e6, lam = S.prof === 'lam', vals = []; let mx = 0;
         for (let i = 0; i <= n; i++) { const v = spectrum(hi * i / n, f0, vNow(), S.theta, MEDIA.blood.c, lam); vals.push(v); mx = Math.max(mx, v); }
