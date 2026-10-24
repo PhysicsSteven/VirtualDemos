@@ -203,7 +203,8 @@
   Object.assign(FROM_DEMO, {
   });
   /* Vol. 3 ch. 9 to 11 (condensed matter, nuclear, particles and cosmology), kept in its own list so the chapter threads don't collide */
-  const MODERN_9_11 = ['radioactive-decay', 'decay-chains' /* Radioactive Decay demo: one step setups, chains */, 'binding-energy'];
+  const MODERN_9_11 = ['radioactive-decay', 'decay-chains' /* Radioactive Decay demo: one step setups, chains */, 'binding-energy',
+    'gamma-spectroscopy', 'gamma-absorption' /* Gamma Spectroscopy demo */];
   MODERN.push(...MODERN_9_11); ENABLED.push(...MODERN_9_11);
   Object.assign(FROM_DEMO, {
     /* Reading | Setup and N₀ | Time t | Parents left N | N/N₀ | ln(N/N₀) */
@@ -212,6 +213,10 @@
     'decay-chains': { demo: 'Radioactive Decay (chains)', cols: ['row', (r) => `${r.setup}, N₀ = ${r.N0}, t in ${r.unit}`, 't', 'parent', 'daughter', 'stable', null] },
     /* Reading | Nuclide | Z | N | A | Mass excess Δ (MeV) | B (MeV) | B/A (MeV) | B/A liquid drop (MeV) */
     'binding-energy': { demo: 'Nuclear Binding Energy', cols: ['row', 'nuclide', 'Z', 'N', 'A', 'dm_MeV', 'B_MeV', 'BA_MeV', 'BA_ldm_MeV'] },
+    /* Reading | Source | Centroid (channel) | Centroid uncertainty (channel) | Known energy E (keV) | Net counts | FWHM (channel) | Energy from the demo's calibration (keV) */
+    'gamma-spectroscopy': { demo: 'Gamma Spectroscopy', cols: ['row', 'source', 'centroid_ch', 'centroid_unc', null, 'net', 'fwhm_ch', 'E_keV'] },
+    /* Reading | Distance d (cm) | Absorber | Mass thickness x (g/cm²) | Live time (s) | Net counts | Net rate R (1/s) | Rate uncertainty (1/s) | ln R | 1/√R (√s) */
+    'gamma-absorption': { demo: 'Gamma Spectroscopy (absorption)', cols: ['row', 'd_cm', 'absorber', 'x_g_cm2', 'live_s', 'net', 'rate_per_s', 'rate_unc', null, null] },
   });
   /* ==MODERN END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

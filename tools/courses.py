@@ -157,6 +157,7 @@ HANDOUT_TOPIC = {
     # modern, Vol. 3 ch. 9 to 11
     'radioactive-decay': 'Measuring a Half Life', 'decay-chains': 'Parent and Daughter',
     'binding-energy': 'The Curve of Binding Energy',
+    'gamma-spectroscopy': 'Calibrating a Detector', 'gamma-absorption': 'Absorbing Gamma Rays',
 }
 
 

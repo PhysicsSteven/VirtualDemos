@@ -8243,12 +8243,16 @@
           "title": "Particle Accelerators and Detectors"
         }
       ],
-      "role": "demo",
+      "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
+      "note": "A simulated NaI(Tl) spectrometer modelled on the ORTEC teaching set: ENSDF lines, NIST XCOM attenuation, Monte Carlo energy deposition, MCA, regions of interest, calibration. Readings and Export to worksheet added 2026-10-24 (Claude): worksheets Calibrating a Detector and Absorbing Gamma Rays (lead and distance, toward dose reduction in §10.7), keys from real runs in TeacherKeys.",
       "title": "Gamma Spectroscopy",
-      "url": "demos/gamma-spectroscopy.html"
+      "url": "demos/gamma-spectroscopy.html",
+      "handouts": [
+        "gamma-spectroscopy",
+        "gamma-absorption"
+      ]
     },
     {
       "demo": "heat-engines",
