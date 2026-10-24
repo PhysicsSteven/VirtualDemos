@@ -283,7 +283,8 @@
   const MODERN = [];
   /* Vol. 3 ch. 5 (relativity) and ch. 6 (photons and matter waves) */
   MODERN.push('velocity-addition', 'relativistic-momentum', 'relativistic-energy' /* Velocity, Momentum and Energy Near c demo, one per view */);
-  MODERN.push('photoelectric', 'compton', 'franck-hertz', 'spacetime', 'speed-of-light', 'rutherford', 'spectra', 'wave-particle-duality' /* Double Slit demo */, 'relativity-em');
+  MODERN.push('photoelectric', 'compton', 'franck-hertz', 'spacetime', 'speed-of-light', 'rutherford', 'spectra', 'wave-particle-duality' /* Double Slit demo */, 'relativity-em',
+    'doppler-light' /* Doppler demo, Light; typed, readings record sound only (Vol. 3 §5.7, 2026-10-24) */);
   Object.assign(FROM_DEMO, {
     /* Reading | Launch speed u′ (c) | Probe time A to B Δt (s) | Ground speed u (c) | u − u′ (c) | 1 − uu′/c² */
     'velocity-addition': { demo: 'Velocity, Momentum and Energy Near c (Adding velocities)', cols: ['row', 'u_prime_c', 'probe_dt_s', null, null, null] },

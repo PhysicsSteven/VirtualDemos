@@ -139,6 +139,7 @@ HANDOUT_TOPIC = {
     'spectra': 'The Hydrogen Spectrum and the Rydberg Constant',
     'wave-particle-duality': 'Wave and Particle Duality',
     'relativity-em': 'Magnetism from Relativity',
+    'doppler-light': 'Doppler Effect for Light',
     'household-wiring': 'Household Wiring and Electrical Safety',
     'van-de-graaff': 'Van de Graaff Generator',
     'ink-jet-printer': 'Ink Jet Printer',
@@ -177,7 +178,7 @@ HANDOUT_TOPIC = {
     'energy-sources': 'Electricity Sources',
     # acoustics
     'resonators': 'Speed of Sound', 'timbre': 'Timbre and Harmonics', 'acoustic-levitation': 'Acoustic Levitation',
-    'chladni': 'Chladni Plates', 'doppler': 'Doppler Effect',
+    'chladni': 'Chladni Plates', 'doppler': 'Doppler Effect and Shock Waves',
     # modern, Vol. 3 ch. 9 to 11
     'radioactive-decay': 'Measuring a Half Life', 'decay-chains': 'Parent and Daughter',
     'binding-energy': 'The Curve of Binding Energy',

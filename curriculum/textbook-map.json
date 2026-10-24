@@ -6920,11 +6920,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Acoustics module (2026-10-23).",
+      "note": "Acoustics module (2026-10-23). Worksheets: doppler (sound, with the Mach cone part, Vol. 1 §§17.7, 17.8) and doppler-light (Vol. 3 §5.7, measured γ from the transverse shift), 2026-10-24.",
       "title": "Doppler Effect and Shock Waves",
       "url": "demos/doppler.html",
       "handouts": [
-        "doppler"
+        "doppler",
+        "doppler-light"
       ]
     },
     {
