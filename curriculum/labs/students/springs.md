@@ -1,7 +1,7 @@
 # Finding an Unknown Spring Constant
 Student laboratory · Physics I
 
-Textbook: OpenStax *University Physics*, Vol. 1, §§15.1–15.2; optional damping comparison: §15.5. Access for free at https://openstax.org/details/books/university-physics-volume-1.
+Textbook: OpenStax *University Physics*, Vol. 1, §§15.1 to 15.3, 15.5 and 15.6. Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/springs.html)
 
@@ -25,7 +25,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§15.1–15.2; optional dampi
 
 ## Goal
 
-Determine an unknown spring constant from the dependence of oscillation period on mass.
+Determine an unknown spring constant from the dependence of oscillation period on mass, relate the motion to a point going around a circle, and measure how a driven oscillator responds near its natural frequency.
 
 ## Background
 
@@ -37,11 +37,22 @@ Therefore a graph of $$T^2$$ against $$m$$ is a line with slope $$4\pi^2/k$$. Th
 
 $$E=\frac12mv^2+\frac12kx^2.$$
 
+**The reference circle (§15.3).** The motion $$x = A\cos(\omega_0 t + \phi)$$, with $$\omega_0 = \sqrt{k/m} = 2\pi/T$$, is the shadow on the $$x$$ axis of a point going around a circle of radius $$A$$ at constant angular speed $$\omega_0$$. The point's speed $$A\omega_0$$ is the block's largest speed, reached as it passes equilibrium, and at position $$x$$ the block's speed is
+
+$$v = \omega_0\sqrt{A^2 - x^2}.$$
+
+**Driven oscillations (§15.6).** When a force $$F_0\cos\omega t$$ drives a block with damping force $$-bv$$, the motion settles, once the start up transient has died away (time constant $$2m/b$$), into oscillation at the drive frequency $$\omega$$ with amplitude
+
+$$A(\omega) = \frac{F_0}{\sqrt{(k - m\omega^2)^2 + (b\omega)^2}}.$$
+
+At low $$\omega$$ this is the static stretch $$F_0/k$$; it peaks near $$\omega_0$$ (exactly at $$\sqrt{\omega_0^2 - b^2/2m^2}$$), where for light damping it is about $$F_0/(b\omega_0)$$; and it falls toward zero far above $$\omega_0$$. Less damping gives a taller, narrower peak: for light damping the full width of the peak where $$A$$ is $$1/\sqrt2$$ of its largest value is about $$b/m$$. In the demo the wall at the far end of the spring moves as $$(F_0/k)\cos\omega t$$, which pulls on the block exactly like the force $$F_0\cos\omega t$$.
+
 ## Before the lab
 
 1. Predict the change in $$T$$ when $$m$$ doubles.
 2. What are the units of the slope of $$T^2$$ against $$m$$, and how do they give $$k$$ in N/m?
 3. Does the ideal period depend on release amplitude?
+4. A block of 1.00 kg on a spring of 40.0 N/m is driven with $$F_0 = 0.50$$ N and $$b = 0.632$$ kg/s. Find $$\omega_0$$, the static stretch $$F_0/k$$, and the steady amplitude at $$\omega = 3.00$$ rad/s and at $$\omega = \omega_0$$.
 
 ## Safety
 
@@ -53,7 +64,11 @@ Secure a real spring support and keep clear of falling masses. Do not stretch th
 
 **Amplitude check.** At one mass, repeat with three release amplitudes. Compare periods and explain any difference within resolution.
 
-**Optional damping.** After the undamped scan, introduce modest damping and compare the oscillation period and amplitude decay. Keep these points out of the undamped spring constant fit.
+**Damping.** After the undamped scan, introduce modest damping and compare the oscillation period and amplitude decay. Keep these points out of the undamped spring constant fit.
+
+**Reference circle.** Watch the reference circle beside one of your undamped runs and check that the block is always at the shadow of the moving point. From that run's measured period and release amplitude, predict the block's speed as it passes equilibrium and as it passes half the amplitude.
+
+**Driven oscillator.** Use the Resonance setup as it opens: $$m = 1.00$$ kg, $$k = 40.0$$ N/m, $$b = 0.632$$ kg/s and $$F_0 = 0.50$$ N. Measure the steady amplitude at drive frequencies of 3.00, 5.00, 5.80, 6.10, 6.30, 6.50, 6.80, 7.50 and 9.00 rad/s. After each change of $$\omega$$, wait until the amplitude stops changing (about 20 s of simulated time; speed the simulation up if you like) before you record it. Then make the damping stronger, $$b = 2.09$$ kg/s, and measure again at 3.00, 5.00, 5.80, 6.30, 6.80, 7.50 and 9.00 rad/s. Send each damping to the worksheet as its own series; driven readings go into the Driven oscillator table.
 
 **Using the virtual apparatus.** Investigate one unknown spring in free horizontal motion with no damping. Measure the period for masses 0.20, 0.40, 0.60, 0.80 and 1.00 kg after several oscillations. Keep the same unknown spring throughout: choosing a new one changes the hidden spring constant. Use the automatically measured periods for the main $$T^2$$ against $$m$$ fit; the demo's own graph instead uses separately timed stopwatch readings. If you use hand timing, count complete oscillations and keep those results distinct. Compare three release amplitudes at one mass, then investigate damping separately. Send each series to the worksheet before clearing, so each gets its own copy of the Data table. Reveal the spring constant only after completing your estimate.
 
@@ -67,12 +82,22 @@ Secure a real spring support and keep clear of falling masses. Do not stretch th
 
 Use the same period method throughout the main fit. State whether the data came from the automatic readout or hand timing.
 
+**Driven oscillator.** $$\omega_0 = \sqrt{k/m}$$. Work out the last two columns from the settings.
+
+| Run | $$m$$ (kg) | $$k$$ (N/m) | $$b$$ (kg/s) | $$F_0$$ (N) | $$\omega$$ (rad/s) | Steady amplitude $$A$$ (m) | $$\omega/\omega_0$$ | Predicted $$A$$ (m) |
+|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | |
+| | | | | | | | | |
+| | | | | | | | | |
+
 ## Analysis
 
 1. Fit $$T^2 = a + s m$$ and infer $$k = 4\pi^2/s$$. Inspect the intercept and residuals.
 2. Compare the inferred $$k$$ with the revealed value. Include slope uncertainty and any mass uncertainty.
 3. Compare the amplitude runs. Explain why the ideal linear spring model predicts the same period.
 4. If you timed oscillations, compare $$t/N$$ with the automatic readout; explain the different reading resolutions.
+5. For the run you watched with the reference circle, give your predicted speeds at equilibrium and at half the amplitude, and explain from the circle why the block moves fastest at equilibrium and stops at the ends.
+6. Plot the steady amplitude against $$\omega$$ for both dampings on one sketch or graph. Compare each measured amplitude with the predicted one, the frequency of the largest amplitude with $$\omega_0$$, and the heights and widths of the two peaks. How do the peak height and width depend on $$b$$?
 
 ## Uncertainty
 
@@ -84,7 +109,9 @@ For automatic periods use the displayed/CSV resolution and the stability of succ
 2. At which points are kinetic and spring potential energy greatest?
 3. Why is a straight line fit useful compared with calculating $$k$$ from one mass?
 4. Why should damped runs be excluded from the undamped period fit?
+5. Why does the driven amplitude approach $$F_0/k$$ at low drive frequency and fall toward zero at high frequency? What limits the amplitude at resonance?
+6. Give one example where resonance is useful and one where it must be avoided.
 
 ## What to hand in
 
-Prelab answers, settings and CSV, the graph of $$T^2$$ against $$m$$ with residuals, $$k$$ with uncertainty, the amplitude comparison and answers to the questions. Identify simulated data.
+Prelab answers, settings and CSV, the graph of $$T^2$$ against $$m$$ with residuals, $$k$$ with uncertainty, the amplitude comparison, the Driven oscillator table with its sketch or graph, and answers to the questions. Identify simulated data.

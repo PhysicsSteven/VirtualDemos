@@ -42,7 +42,9 @@
     'motion-graphs': { demo: 'Motion Graphs', cols: ['row', 't_s', 'x_m', null, null] },
     'projectile-drag': { demo: 'Projectile Range', cols: ['shot', 'v0_m_per_s', 'launch_angle_deg', 'launch_height_m', 'air_resistance', 't_s', 'x_m', 'y_m', 'range_m'] },
     'rotational-dynamics': { demo: 'Rotational Dynamics', cols: ['load', 'm_kg', 'r_m', '#drop_height_m', 't_s', 'a_m_per_s2', 'alpha_rad_per_s2', 'tau_N_m'] },
-    springs: { demo: 'Springs', cols: ['row', 'm_kg', 'A_m', 'T_zero_crossings_s', 'N_oscillations', 't_stopwatch_s', 'T_squared_s2'] },
+    /* driven series (every row has a drive frequency) go to the second table: Run | m | k | b | F₀ | ω | steady A | ω/ω₀ | predicted A */
+    springs: { demo: 'Springs', cols: ['row', 'm_kg', 'A_m', 'T_zero_crossings_s', 'N_oscillations', 't_stopwatch_s', 'T_squared_s2'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.omega_drive_rad_per_s !== ''), cols: ['row', 'm_kg', 'k_N_per_m', 'b_kg_per_s', 'F0_N', 'omega_drive_rad_per_s', 'A_m', null, null] }] },
     'stress-strain': { demo: 'Stress and Strain', cols: ['row', 'd_mm', '#wire_length_m', 'm_kg', 'dL_mm', null, null] },
     /* Force table setup of the Vectors demo. The handout's first data table is expected to have these columns in this order:
        Trial | m₁ (kg) | θ₁ (°) | m₂ (kg) | θ₂ (°) | m₃ (kg) | θ₃ (°) | m₄ (kg) | θ₄ (°) | Ring centered?  (more columns may follow). */
@@ -919,22 +921,29 @@ details.about[open] > summary { margin-bottom: 8px; }
     const h = readHand();
     if (!h || h.sent === received || h.sent === handHidden) { handBox.hidden = true; return; }
     const t = new Date(h.sent).toLocaleString([], { dateStyle: 'medium', timeStyle: 'short' }), n = h.rows.length;
-    const src = h.demo + ':' + (h.series || ''), target = dT.runs.find((R) => R.source === src);
+    const src = h.demo + ':' + (h.series || ''), target = route(h).T.runs.find((R) => R.source === src);
     handBox.innerHTML = '';
     handBox.appendChild(el('p', {}, [el('strong', { text: `New readings from the ${MAP.demo} demo: ` }), `${n} row${n === 1 ? '' : 's'}, sent ${t}.`]));
     handBox.appendChild(el('div', { class: 'ws-btns' }, [
       el('button', { type: 'button', class: 'ws-btn ws-main', text: target ? 'Update my table with these readings' : 'Put these readings in my table', on: { click: () => takeHand(h) } }),
       el('button', { type: 'button', class: 'ws-btn', text: 'Download them as CSV', on: { click: () => download(h.csvName || SLUG + '-readings.csv', h.csv || '', 'text/csv') } }),
       el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Not now', on: { click: () => { handHidden = h.sent; handBox.hidden = true; } } })]));
-    if (target) handBox.appendChild(el('p', { class: 'ws-note', text: `Updating replaces the demo's columns in ${target.label ? 'copy ' + (dT.runs.indexOf(target) + 1) : 'the table'} with these readings; your other columns and notes stay.` }));
+    if (target) handBox.appendChild(el('p', { class: 'ws-note', text: `Updating replaces the demo's columns in ${target.label ? 'copy ' + (route(h).T.runs.indexOf(target) + 1) : 'the table'} with these readings; your other columns and notes stay.` }));
     handBox.hidden = false;
   }
   /* The demo sends every reading of its current series (it starts a new series at Clear), so a later export of the same series
      replaces the earlier one in the same table instead of adding duplicates, and a new series goes into a new copy of the table. */
+  /* A map may send some series to another data table: MAP.alt = [{ table: <index of the data table>, when: (rows, meta) => true for
+     the series that belong there, cols: [as cols] }]; rows are keyed by CSV column. Otherwise everything goes to the first table. */
+  function route(h) {
+    const recs = h.rows.map((vals) => { const r = {}; h.columns.forEach((n, k) => { r[n] = vals[k] == null ? '' : vals[k]; }); return r; });
+    const a = (MAP.alt || []).find((x) => tables[x.table] && x.when(recs, h.meta || {}));
+    return a ? { T: tables[a.table], cols: a.cols } : { T: dT, cols: MAP.cols };
+  }
   function takeHand(h) {
     const src = h.demo + ':' + (h.series || '');
-    const meta = h.meta || {};
-    const get = MAP.cols.map((m) => (m == null ? null : typeof m === 'function' ? m : m[0] === '#' ? () => meta[m.slice(1)] : (r) => r[m]));
+    const meta = h.meta || {}, { T: dT, cols } = route(h);
+    const get = cols.map((m) => (m == null ? null : typeof m === 'function' ? m : m[0] === '#' ? () => meta[m.slice(1)] : (r) => r[m]));
     const filled = (R) => R.source || R.rows.some((r) => get.some((g, c) => g && r.cells[c] && r.cells[c].value)); /* the demo's columns already used */
     let R = dT.runs.find((x) => x.source === src);
     if (!R) {
