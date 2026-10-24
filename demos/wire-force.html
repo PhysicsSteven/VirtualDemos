@@ -1,11 +1,12 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="spin-attn seg seg-button seg-button-on inline img projshort-proj-bar-units mono bar-h1 bench pane chips-button-hover btn btn-primary btn-disabled slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas projshort-proj-bar-p" lang="en">
+<html data-vd-off="spin-attn inline img projshort-proj-bar-units mono bar-h1 bench pane chips-button-hover btn btn-primary btn-disabled slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas projshort-proj-bar-p" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>.rail details.more > p + p { margin-top: 6px; }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 .rail details.plotfold > summary { cursor: pointer; font-size: 0.85rem; font-weight: 600; color: var(--accent); width: fit-content; }
@@ -63,6 +64,7 @@ table.rows input:focus { border-color: var(--accent); }
 .vdknob::before { content: ""; position: absolute; left: 50%; top: 4px; width: 3px; height: 13px; margin-left: -1.5px; border-radius: 2px; background: #f1f4f8; transform: rotate(var(--a, 0deg)); transform-origin: 50% 18px; }
 .vdknob:focus-visible { outline: 2px solid var(--accent); outline-offset: 4px; }
 .scene { position: absolute; inset: 0; }
+.dimseg { position: absolute; top: 10px; right: 10px; z-index: 3; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
 .instr { left: 12px; bottom: 12px; right: 12px; justify-content: center; width: fit-content; margin: 0 auto; }
 @media (max-width: 820px) {
   main.bench .stage { height: auto; max-height: none; }
@@ -99,9 +101,10 @@ table.rows input:focus { border-color: var(--accent); }
   <main class="bench">
     <div class="stage" id="stage">
       <div class="scene" id="scene">
-      <canvas id="can" tabindex="0" role="img" aria-label="Current balance: a wire between magnet poles on an electronic balance. Loop: a coil seen from above between the poles, with the forces on its sides and its magnetic moment. Space starts or stops the loop."></canvas>
+      <canvas id="can" tabindex="0" role="img" aria-label="Current balance: a wire between magnet poles on an electronic balance, shown in 3D (drag to turn) or flat from above. Loop: a coil seen from above between the poles, with the forces on its sides and its magnetic moment. Space starts or stops the loop."></canvas>
       <div class="viewbar" id="loopBar" hidden><button type="button" class="spin" id="spin">Release the loop</button><button type="button" class="spin" id="reset">Start over</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
+      <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
       </div>
       <div class="instr" id="instr" role="group" aria-label="Supply and apparatus">
         <div class="kctl"><label for="sI">Current I</label><input type="range" id="sI" min="-5" max="5" step="0.1"><output id="oI" for="sI"></output></div>
@@ -259,6 +262,7 @@ table.rows input:focus { border-color: var(--accent); }
   }
   function draw() {
     if (!T || !W) return;
+    if (use3()) { draw3(); return; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const p = ps(), cx = W / 2, bl = S.blind;
     ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
@@ -342,6 +346,8 @@ table.rows input:focus { border-color: var(--accent); }
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (isLoop() && S.loop.run && !reduce) { const r = loopStep(S.loop, { N: S.N, I: S.I, B: Bnow(), comm: S.comm }, dt * (S.comm ? 0.03 : 0.25)); /* shown slowed: 4× for the swinging loop, about 30× for the motor */ S.loop.th = r.th; S.loop.w = r.w; draw(); readouts(); }
+    else if (use3() && !reduce && S.I !== 0) draw();
+    if (use3() && !reduce) G3.ph += dt * 0.05 * Math.abs(S.I);   /* the current dots: direction only, not the drift speed */
     requestAnimationFrame(frame);
   }
   can.addEventListener('keydown', (e) => { if (e.key === ' ' && isLoop()) { $('spin').click(); e.preventDefault(); } });
@@ -411,6 +417,213 @@ table.rows input:focus { border-color: var(--accent); }
   }
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; draw(); readouts(); fit(); });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
+  // ---------- the apparatus in 3D (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
+  /* The magnet's poles face each other across a 10 cm gap with B along +x (N to S), the same axes as the flat view seen from above (z up).
+     Current balance: a rigid wire hangs from an insulating holder with its horizontal piece, length L, across the middle of the gap at θ to B;
+     the magnet sits on the balance pan. Loop: a square coil of side 4 cm turns on a vertical axle in the gap. Drag to turn the view. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.6, ph: 0.8, zoom: 1 }, lcd: '', ph: 0, built: '' };
+  const NO3D = 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
+  const GAP = 0.1, PD = 0.035, PH = 0.05, BAL_H = 0.05, YOKE = 0.02, ZC = BAL_H + 0.006 + YOKE + PH / 2, ZHOLD = ZC + 0.11;   /* gap, pole depth along x, pole height; the gap's middle height (m) */
+  let g3 = null;
+  const use3 = () => !!(G3.on && g3);
+  function init3D() {
+    G3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); $('scene').insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.02, 20), Ms = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.7), sun = new THREE.DirectionalLight(0xffffff, 0.75);
+    sun.position.set(-0.5, -0.6, 1.4); sun.target.position.set(0, 0, 0.05); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+    Object.assign(sun.shadow.camera, { left: -0.45, right: 0.45, top: 0.45, bottom: -0.45, near: 0.3, far: 3 }); sun.shadow.radius = 3;
+    scene.add(hemi, sun, sun.target);
+    const mesh = (g, m, cast) => { const x = new THREE.Mesh(g, m); x.castShadow = cast !== false; x.receiveShadow = true; return x; };
+    const box = (w, d, h, m, x, y, z) => { const b = mesh(new THREE.BoxGeometry(w, d, h), m); b.position.set(x, y, z); return b; };
+    const rod = (a, b, rad, m, n) => { const A = new THREE.Vector3(...a), B = new THREE.Vector3(...b), len = A.distanceTo(B), g = new THREE.CylinderGeometry(rad, rad, len, n || 16); const c = mesh(g, m); c.position.copy(A).add(B).multiplyScalar(0.5); c.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), B.clone().sub(A).normalize()); return c; };
+    const benchM = Ms({ roughness: 0.85 }), bench = mesh(new THREE.PlaneGeometry(4, 3), benchM, false); bench.position.set(0, 0.3, 0);
+    /* the balance: a body with a stainless pan and a display on its front; in the loop setups a plain wooden block of the same height */
+    const balM = Ms({ roughness: 0.5, metalness: 0.1 }), panM = Ms({ roughness: 0.25, metalness: 0.85, color: 0xd5dade });
+    const lcdCv = document.createElement('canvas'); lcdCv.width = 512; lcdCv.height = 160; const lcdTex = new THREE.CanvasTexture(lcdCv);
+    const balance = new THREE.Group();
+    balance.add(box(0.26, 0.26, BAL_H, balM, 0, 0.01, BAL_H / 2), box(0.21, 0.21, 0.006, panM, 0, 0.0, BAL_H + 0.003));
+    /* the balance's display unit stands on the bench to the left, on a cable, so it is never hidden behind the magnet */
+    const disp = new THREE.Group(), face = new THREE.Mesh(new THREE.PlaneGeometry(0.15, 0.047), new THREE.MeshStandardMaterial({ map: lcdTex, roughness: 0.4 }));
+    disp.add(box(0.17, 0.03, 0.065, balM, 0, 0, 0)); face.rotation.x = Math.PI / 2; face.position.set(0, -0.0155, 0.004); disp.add(face); disp.rotation.x = -0.5; disp.position.set(-0.235, 0.075, 0.04); disp.rotation.z = 0.6; balance.add(disp);
+    balance.add(tube3([[-0.13, 0.03, 0.01], [-0.16, 0.035, 0.004], [-0.2, 0.06, 0.004], [-0.222, 0.07, 0.02]], Ms({ roughness: 0.6, color: 0x2a2f36 }), 0.0018));
+    const woodM = Ms({ roughness: 0.75 }), plinth = box(0.24, 0.16, BAL_H + 0.006, woodM, 0, 0, (BAL_H + 0.006) / 2);
+    /* the magnet: a steel yoke and two pole pieces, painted red (N) and blue (S) */
+    const steelM = Ms({ roughness: 0.45, metalness: 0.35 }), nM = Ms({ roughness: 0.45, metalness: 0.2 }), sM = Ms({ roughness: 0.45, metalness: 0.2 });
+    const z0 = BAL_H + 0.006, magnet = new THREE.Group();
+    magnet.add(box(GAP + 2 * PD, 0.1, YOKE, steelM, 0, 0, z0 + YOKE / 2), box(PD, 0.1, PH, nM, -(GAP + PD) / 2, 0, z0 + YOKE + PH / 2), box(PD, 0.1, PH, sM, (GAP + PD) / 2, 0, z0 + YOKE + PH / 2));
+    /* field lines across the gap with small arrowheads */
+    const fieldM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.55, depthWrite: false }), field = new THREE.Group();
+    for (const y of [-0.036, -0.012, 0.012, 0.036]) for (const z of [ZC - 0.016, ZC, ZC + 0.016]) {
+      const l = mesh(new THREE.CylinderGeometry(0.0006, 0.0006, GAP - 0.004, 6), fieldM, false); l.rotation.z = Math.PI / 2; l.position.set(0, y, z);
+      const h = mesh(new THREE.ConeGeometry(0.0022, 0.007, 10), fieldM, false); h.rotation.z = -Math.PI / 2; h.position.set(0.012, y, z); field.add(l, h); }
+    /* the stand that holds the wire's holder (balance) or the loop's axle */
+    const standM = Ms({ roughness: 0.35, metalness: 0.7, color: 0x9aa3ad }), baseM = Ms({ roughness: 0.6, metalness: 0.3, color: 0x3a4250 });
+    const stand = new THREE.Group(); stand.add(box(0.12, 0.08, 0.012, baseM, 0, 0.27, 0.006), rod([0, 0.27, 0.012], [0, 0.27, ZHOLD + 0.06], 0.006, standM), rod([0, 0.27, ZHOLD + 0.03], [0, 0, ZHOLD + 0.03], 0.0045, standM), box(0.022, 0.022, 0.022, baseM, 0, 0.27, ZHOLD + 0.03));
+    /* the hanging wire: holder, two leads down, the piece across the gap; rotated by θ about z */
+    const cuM = Ms({ roughness: 0.3, metalness: 0.8 }), holdM = Ms({ roughness: 0.3, metalness: 0, transparent: true, opacity: 0.85, color: 0xe9eef3 }), hang = new THREE.Group();
+    /* the coil on its axle, with the commutator and brushes for the motor */
+    const coilM = Ms({ roughness: 0.35, metalness: 0.7 }), coil = new THREE.Group(), loopG = new THREE.Group();
+    const a = LOOP.a, t = 0.004;
+    coil.add(box(t, t, a + t, coilM, 0, a / 2, 0), box(t, t, a + t, coilM, 0, -a / 2, 0), box(t, a + t, t, coilM, 0, 0, a / 2), box(t, a + t, t, coilM, 0, 0, -a / 2));
+    coil.position.z = ZC;
+    const axleM = Ms({ roughness: 0.3, metalness: 0.85, color: 0xc7ccd2 }), brassM = Ms({ roughness: 0.3, metalness: 0.85, color: 0xc9a24a }), carbonM = Ms({ roughness: 0.8, color: 0x2a2d31 });
+    const axle = rod([0, 0, z0 + YOKE + 0.004], [0, 0, ZHOLD + 0.03], 0.0018, axleM), comm = new THREE.Group();
+    for (const s of [0, Math.PI]) { const g = new THREE.CylinderGeometry(0.006, 0.006, 0.01, 20, 1, false, s + 0.15, Math.PI - 0.3); g.rotateX(Math.PI / 2); const m = mesh(g, brassM); m.position.z = ZC - a / 2 - 0.016; comm.add(m); }
+    const brushes = new THREE.Group(); for (const sx of [-1, 1]) brushes.add(box(0.008, 0.004, 0.008, carbonM, sx * 0.0098, 0, ZC - a / 2 - 0.016));
+    loopG.add(coil, axle, comm, brushes);
+    /* arrows: force on the wire and its reaction on the magnet (balance), forces on the coil's sides and μ (loop) */
+    const arrowM = (c) => Ms({ roughness: 0.4, color: c, emissive: c, emissiveIntensity: 0.15 });
+    const mkArrow = (m) => { const g = new THREE.Group(), s = mesh(new THREE.CylinderGeometry(0.0022, 0.0022, 1, 12), m), h = mesh(new THREE.ConeGeometry(0.0062, 0.016, 16), m); g.add(s, h); g.userData = { s, h }; return g; };
+    const forceM = arrowM(0x6f4bb3), muM = arrowM(0xa7740b), fW = mkArrow(forceM), fMag = mkArrow(forceM), fS1 = mkArrow(forceM), fS2 = mkArrow(forceM), muA = mkArrow(muM);
+    /* the angle between the wire and B: an arc in the plane of the gap's middle */
+    const arcM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.85 }), arc = new THREE.Line(new THREE.BufferGeometry().setFromPoints(Array.from({ length: 41 }, () => new THREE.Vector3())), arcM);
+    /* dots moving with the conventional current (direction only, not to scale) */
+    const dotM = Ms({ roughness: 0.3, emissive: 0x000000 }), dots = new THREE.InstancedMesh(new THREE.SphereGeometry(0.0024, 10, 8), dotM, 80); dots.frustumCulled = false;
+    const redM = Ms({ roughness: 0.6, color: 0xb8382a }), blackM = Ms({ roughness: 0.6, color: 0x23282f }), leads = new THREE.Group();
+    scene.add(bench, balance, plinth, magnet, field, stand, hang, loopG, fW, fMag, fS1, fS2, muA, arc, dots, leads);
+    g3 = { r, el, scene, cam, hemi, sun, benchM, balM, lcdCv, lcdTex, balance, plinth, woodM, nM, sM, steelM, fieldM, field, stand, hang, cuM, holdM, coil, coilM, loopG, comm, brushes, forceM, muM, fW, fMag, fS1, fS2, muA, arc, arcM, dots, dotM, redM, blackM, leads, mesh, box, rod, mat4: new THREE.Matrix4(), path: [] };
+    can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.3, phMax: 1.45, zMin: 0.6, zMax: 2.6 });
+    can.addEventListener('pointerup', () => { if (!use3()) can.style.cursor = ''; });
+    return true;
+  }
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function theme3() {
+    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fbfcfd');
+    g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 1.4, 3.2);
+    g.hemi.intensity = dk ? 0.95 : 0.62; g.sun.intensity = dk ? 0.85 : 0.62; g.hemi.groundColor = col3(dk ? '#2a241d' : '#8c7a60', '#8c7a60');
+    g.benchM.color = col3(dk ? '#3a3229' : '#cdbb9d', '#cdbb9d'); g.balM.color = col3(dk ? '#424b57' : '#e7eaee', '#e7eaee'); g.woodM.color = col3(dk ? '#6b5338' : '#b98d5c', '#b98d5c');
+    g.nM.color = col3(T.N, '#b0452f'); g.sM.color = col3(T.S, '#2b60b5'); g.steelM.color = col3(dk ? '#6d7680' : '#8d969f', '#8d969f');
+    g.fieldM.color = col3(T.b, '#2f7d4f'); g.cuM.color = col3(T.wire, '#b06a2c'); g.coilM.color = col3(T.wire, '#b06a2c');
+    g.forceM.color = col3(T.force, '#6f4bb3'); g.forceM.emissive = col3(T.force, '#6f4bb3'); g.muM.color = col3(T.mu, '#a7740b'); g.muM.emissive = col3(T.mu, '#a7740b');
+    g.arcM.color = col3(T.ink, '#1d252f'); g.dotM.color = col3(dk ? '#ffe9a8' : '#fff4c8', '#fff4c8'); g.dotM.emissive = col3('#ffcc55', '#ffcc55').multiplyScalar(dk ? 0.6 : 0.35);
+    G3.lcd = ''; G3.built = '';
+  }
+  function tube3(pts, m, rad) { const cv = new THREE.CatmullRomCurve3(pts.map((q) => new THREE.Vector3(...q))); const t = new THREE.Mesh(new THREE.TubeGeometry(cv, 40, rad || 0.0022, 8, false), m); t.castShadow = true; return t; }
+  function clear3(grp) { for (const m of grp.children.slice()) { m.traverse((o) => { if (o.geometry) o.geometry.dispose(); }); grp.remove(m); } }
+  /* rebuild the hanging wire and the leads when L, θ or the setup changes; the path the current dots follow comes with it */
+  function build3() {
+    const g = g3, k = [S.preset, S.L, S.th].join(); if (G3.built === k) return; G3.built = k;
+    clear3(g.hang); clear3(g.leads);
+    if (!isLoop()) {
+      const th = S.th * Math.PI / 180, u = [Math.cos(th), Math.sin(th)], hl = S.L / 200, zt = ZHOLD - 0.008;
+      const A = [-u[0] * hl, -u[1] * hl], B = [u[0] * hl, u[1] * hl];
+      g.hang.add(g.rod([A[0], A[1], ZC], [B[0], B[1], ZC], 0.0024, g.cuM), g.rod([A[0], A[1], ZC], [A[0], A[1], zt], 0.002, g.cuM), g.rod([B[0], B[1], ZC], [B[0], B[1], zt], 0.002, g.cuM));
+      const hb = g.box(S.L / 100 + 0.03, 0.014, 0.012, g.holdM, 0, 0, ZHOLD); hb.rotation.z = th; g.hang.add(hb, g.rod([0, 0, ZHOLD], [0, 0, ZHOLD + 0.03], 0.003, g.holdM));
+      for (const s of [A, B]) { const kn = g.mesh(new THREE.SphereGeometry(0.0035, 12, 10), g.cuM); kn.position.set(s[0], s[1], ZC); g.hang.add(kn); }
+      /* the leads leave the holder's ends towards the supply at the front of the bench */
+      g.leads.add(tube3([[A[0], A[1], ZHOLD + 0.006], [A[0] - 0.03, A[1] + 0.02, ZHOLD + 0.045], [-0.2, 0.2, 0.09], [-0.3, 0.45, 0.004]], g.redM, 0.0018));
+      g.leads.add(tube3([[B[0], B[1], ZHOLD + 0.006], [B[0] + 0.03, B[1] + 0.02, ZHOLD + 0.045], [0.2, 0.2, 0.09], [0.3, 0.45, 0.004]], g.blackM, 0.0018));
+      g.path = [[A[0], A[1], zt], [A[0], A[1], ZC], [B[0], B[1], ZC], [B[0], B[1], zt]];
+    } else {
+      g.leads.add(tube3([[-0.0098 - 0.004, 0, ZC - LOOP.a / 2 - 0.016], [-0.03, 0.03, ZC - LOOP.a / 2 - 0.02], [-0.2, 0.2, 0.09], [-0.3, 0.45, 0.004]], g.redM, 0.0018));
+      g.leads.add(tube3([[0.0098 + 0.004, 0, ZC - LOOP.a / 2 - 0.016], [0.03, 0.03, ZC - LOOP.a / 2 - 0.02], [0.2, 0.2, 0.09], [0.3, 0.45, 0.004]], g.blackM, 0.0018));
+      const h = LOOP.a / 2; g.path = [[0, -h, -h], [0, h, -h], [0, h, h], [0, -h, h], [0, -h, -h]];   /* around the coil in its own frame: up the +y side for current that makes μ along +x */
+    }
+  }
+  /* arrow length for the force on the wire (m in the scene): grows as √F up to 50 mN, so a downward arrow stays inside the gap; Blind draws one length */
+  const fLen3 = (F, bl) => (bl ? 0.02 : 0.032 * Math.min(1, Math.sqrt(Math.abs(F) / 0.05)));
+  function setArrow(A, at, dir, len) {
+    const L = Math.max(0.004, len), hd = Math.min(0.016, L * 0.5), d = new THREE.Vector3(...dir).normalize();
+    A.position.set(...at); A.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), d);
+    A.userData.s.scale.y = L - hd; A.userData.s.position.y = (L - hd) / 2; A.userData.h.position.y = L - hd / 2; A.userData.h.scale.setScalar(Math.min(1, L / 0.02) * 0.5 + 0.5); A.visible = true;
+  }
+  function lcd3() {
+    const t = isLoop() ? '' : `${dmShown().replace('-', '−')} g`; if (G3.lcd === t) return; G3.lcd = t;
+    const c = g3.lcdCv.getContext('2d'), w = 512, h = 160; c.fillStyle = '#2f3a46'; c.fillRect(0, 0, w, h);
+    if (window.VDGear) window.VDGear.lcd(c, 18, 16, w - 150, h - 32, t, { font: '600 76px "JetBrains Mono", ui-monospace, monospace' });
+    else { c.fillStyle = '#0b1a12'; c.fillRect(18, 16, w - 150, h - 32); c.fillStyle = '#7ee0a0'; c.font = '600 76px monospace'; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(t, w - 150, h / 2); }
+    c.fillStyle = 'rgba(230,236,243,0.85)'; c.font = '700 26px "Atkinson Hyperlegible", sans-serif'; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('TARE', w - 66, 56); c.font = '20px "Atkinson Hyperlegible", sans-serif'; c.fillStyle = 'rgba(230,236,243,0.6)'; c.fillText('0.01 g', w - 66, 100);
+    g3.lcdTex.needsUpdate = true;
+  }
+  /* sign of the current that actually flows in the coil (the commutator reverses it each half turn) */
+  const sgnLoop = () => (S.comm ? (Math.sin(S.loop.th) >= 0 ? -1 : 1) : 1) * (Math.sign(S.I) || 1);
+  function render3() {
+    const g = g3; if (!g) return null;
+    if (G3.w !== W || G3.h !== H) { G3.w = W; G3.h = H; g.r.setSize(W, Math.max(1, H)); g.cam.aspect = W / Math.max(1, H); g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.wire, T.force, T.N].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    const asp = W / Math.max(1, H), dist = 0.62 * Math.max(1, 1.3 / asp), narrow = W < 820;
+    VD3.place(g.cam, G3.o, new THREE.Vector3(-0.035, -0.01, narrow ? ZC : ZC - 0.03), dist);
+    g.scene.fog.near = 1.6 * dist / G3.o.zoom; g.scene.fog.far = 3.6 * dist / G3.o.zoom;
+    build3(); lcd3();
+    const L = isLoop(), bl = S.blind, Bv = Bnow();
+    g.balance.visible = !L; g.plinth.visible = L; g.hang.visible = !L; g.loopG.visible = L; g.comm.visible = g.brushes.visible = L && S.comm; g.arc.visible = !L;
+    for (const A of [g.fW, g.fMag, g.fS1, g.fS2, g.muA]) A.visible = false;
+    g.field.children.forEach((m) => { m.visible = Bv > 0; });
+    const nDots = []; const sp = Math.sign(S.I);
+    if (!L) {
+      const F = Fwire(), Fz = -S.I * Math.sin(S.th * Math.PI / 180), len = fLen3(F, bl);
+      if (Math.abs(F) > 1e-9 || bl) { setArrow(g.fW, [0, 0, ZC], [0, 0, Fz > 0 ? 1 : -1], len); setArrow(g.fMag, [0, -0.058, BAL_H + 0.006 + YOKE], [0, 0, Fz > 0 ? -1 : 1], len); if (Fz <= 0) g.fW.position.z = ZC + 0.004; else g.fMag.position.z += len; }
+      const th = S.th * Math.PI / 180, pa = g.arc.geometry.attributes.position, R = 0.026;
+      for (let i = 0; i <= 40; i++) { const t = th * i / 40; pa.setXYZ(i, R * Math.cos(t), R * Math.sin(t), ZC + 0.0005); } pa.needsUpdate = true; g.arc.geometry.computeBoundingSphere();
+      /* current dots along the hanging wire: in at the first lead for I > 0 */
+      const P = g.path, segs = [], tot = P.slice(1).reduce((s, q, i) => { const l = Math.hypot(q[0] - P[i][0], q[1] - P[i][1], q[2] - P[i][2]); segs.push(l); return s + l; }, 0), n = Math.min(40, Math.round(tot / 0.011));
+      for (let i = 0; i < n; i++) { let s = ((i / n + (sp >= 0 ? 1 : -1) * G3.ph) % 1 + 1) % 1 * tot, j = 0; while (j < segs.length - 1 && s > segs[j]) { s -= segs[j]; j++; } const f0 = Math.min(1, s / segs[j]), a0 = P[j], b0 = P[j + 1]; nDots.push([a0[0] + (b0[0] - a0[0]) * f0, a0[1] + (b0[1] - a0[1]) * f0, a0[2] + (b0[2] - a0[2]) * f0]); }
+    } else {
+      const th = S.loop.th, sg = sgnLoop(), c = Math.cos(th), s = Math.sin(th);
+      g.loopG.rotation.z = 0; g.coil.rotation.z = th; g.comm.rotation.z = th;
+      const h = LOOP.a / 2, p = [-s, c], Fs = Math.abs(S.I) * S.N * LOOP.a * Bv, fl = bl ? 0.035 : Math.min(0.07, Fs * 1.6);
+      if (Fs > 0 || bl) { setArrow(g.fS1, [p[0] * h, p[1] * h, ZC], [0, sg > 0 ? 1 : -1, 0], fl); setArrow(g.fS2, [-p[0] * h, -p[1] * h, ZC], [0, sg > 0 ? -1 : 1, 0], fl); }
+      setArrow(g.muA, [0, 0, ZC], [sg * c, sg * s, 0], 0.045);
+      const P = g.path, n = 40;
+      for (let i = 0; i < n; i++) { const q = ((i / n + (sg >= 0 ? 1 : -1) * G3.ph) % 1 + 1) % 1 * 4, j = Math.floor(q), f0 = q - j, a0 = P[j], b0 = P[j + 1], ly = a0[1] + (b0[1] - a0[1]) * f0, lz = a0[2] + (b0[2] - a0[2]) * f0; nDots.push([-s * ly, c * ly, ZC + lz]); }
+    }
+    const show = S.I !== 0; g.dots.count = show ? nDots.length : 0;
+    nDots.forEach((q, i) => { g.mat4.makeTranslation(q[0], q[1], q[2]); g.dots.setMatrixAt(i, g.mat4); }); g.dots.instanceMatrix.needsUpdate = true;
+    g.scene.updateMatrixWorld(); g.r.render(g.scene, g.cam);
+    const tmp = new THREE.Vector3();
+    return (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * H, tmp.z]; };
+  }
+  /* the words over the 3D picture */
+  function draw3() {
+    const p = ps(), Q = render3(); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); if (!Q) return;
+    const narrow = W < 560, bl = S.blind, Bv = Bnow();
+    const txt = (s, q, o = {}) => { ctx.save(); ctx.font = `${o.w || 400} ${(o.s || 11.5) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.bl || 'middle';
+      ctx.lineWidth = 4; ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.lineJoin = 'round'; ctx.strokeText(s, q[0], q[1]); ctx.globalAlpha = 1; ctx.fillStyle = o.c || T.ink; ctx.fillText(s, q[0], q[1]); ctx.restore(); };
+    const zp = BAL_H + 0.006 + YOKE + PH;
+    const n = Q([-(GAP + PD) / 2, -0.05, zp - 0.012]), sQ = Q([(GAP + PD) / 2, -0.05, zp - 0.012]);
+    txt('N', n, { w: 700, s: 18, a: 'center', c: T.N }); txt('S', sQ, { w: 700, s: 18, a: 'center', c: T.S });
+    const bq = Q([0, -0.05, BAL_H + 0.006 + YOKE + PH + 0.004]);
+    txt(hideB() ? 'B, from N to S' : `B = ${f(Bv, 2)} T, from N to S`, [bq[0], bq[1] + 12 * p], { w: 700, a: 'center', c: T.b, m: true, s: narrow ? 10 : 11.5 });
+    if (!isLoop()) {
+      const F = Fwire(), Fz = -S.I * Math.sin(S.th * Math.PI / 180), len = fLen3(F, bl);
+      const th = S.th * Math.PI / 180, hl = S.L / 200, end = Q([Math.cos(th) * hl, Math.sin(th) * hl, ZC]);
+      if (Math.abs(F) > 1e-9 || bl) {
+        const tip = Q([0, 0, ZC + (Fz > 0 ? len : -len)]), side = Q([GAP / 2 + PD + 0.01, -0.02, zp]), lab = bl ? `force on the wire, ${Fz > 0 ? 'up' : 'down'}` : `F on the wire = ${f(Math.abs(F) * 1000, 2)} mN, ${Fz > 0 ? 'up' : 'down'}`;
+        const lx = narrow ? 10 * p : Math.max(side[0], tip[0] + 40 * p), ly = narrow ? 30 * p : Math.min(tip[1], side[1]) - 16 * p;
+        ctx.save(); ctx.strokeStyle = T.force; ctx.globalAlpha = 0.6; ctx.lineWidth = 1.2; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(tip[0], tip[1]); ctx.lineTo(narrow ? tip[0] : lx - 4 * p, narrow ? ly + 8 * p : ly); ctx.stroke(); ctx.restore();
+        txt(lab, [lx, ly], { w: 700, c: T.force, bl: narrow ? 'top' : 'middle' });
+        const mq = Q([0, -0.058, BAL_H + 0.006 + YOKE + (Fz > 0 ? 0 : len)]);
+        if (!narrow) txt('equal and opposite force on the magnet: the balance reads it', [mq[0] - 12 * p, mq[1] + 2 * p], { s: 10.5, c: T.force, a: 'right' });
+      } else txt('No force: the current runs along B.', [Q([GAP / 2 + PD + 0.01, -0.02, zp])[0], Q([0, 0, zp])[1] - 16 * p], { w: 700, c: T.force });
+      const wl = Q([-Math.cos(th) * hl, -Math.sin(th) * hl, (ZC + ZHOLD) / 2 + 0.02]);
+      txt(`I = ${f(Math.abs(S.I), 1)} A`, [wl[0] - 10 * p, wl[1]], { w: 700, a: 'right', m: true });
+      const aq = Q([0.036 * Math.cos(th / 2), 0.036 * Math.sin(th / 2), ZC]); txt(`θ = ${S.th}°`, [aq[0] + 4 * p, aq[1]], { s: 10.5, m: true, w: 700 });
+      const lq = Q([0, 0, ZHOLD + 0.012]); txt(`L = ${f(S.L, 1)} cm in the field`, [lq[0] + 14 * p, lq[1] - 8 * p], { s: 10.5, c: T.muted });
+      const db = Q([-0.235, 0.075, 0.09]); if (!narrow) txt('balance, zeroed at I = 0', [db[0], db[1] - 4 * p], { s: 10.5, a: 'center', c: T.muted, bl: 'bottom' });
+    } else {
+      const th = S.loop.th, sg = sgnLoop(), h = LOOP.a / 2, c = Math.cos(th), s = Math.sin(th);
+      const mq = Q([sg * c * 0.052, sg * s * 0.052, ZC]); txt('μ', mq, { w: 700, s: 14, a: 'center', c: T.mu });
+      const Fs = Math.abs(S.I) * S.N * LOOP.a * Bv, fl = bl ? 0.035 : Math.min(0.07, Fs * 1.6);
+      if (Fs > 0 || bl) { const t1 = Q([-s * h, c * h + (sg > 0 ? 1 : -1) * (fl + 0.006), ZC]); txt(bl ? 'F' : `F = ${f(Fs * 1000, 1)} mN`, [t1[0] + 6 * p, t1[1] - 8 * p], { w: 700, c: T.force }); const t2 = Q([s * h, -c * h - (sg > 0 ? 1 : -1) * (fl + 0.006), ZC]); txt('F', [t2[0] + 6 * p, t2[1] - 8 * p], { w: 700, c: T.force }); }
+      const cq = Q([0, 0, ZC + h + 0.012]); txt(`${S.N} turns, ${LOOP.a * 100} cm square`, [cq[0] + 12 * p, cq[1] - 6 * p], { s: 10.5, c: T.muted });
+      if (S.comm) { const kq = Q([0.016, 0, ZC - h - 0.016]); txt('commutator and brushes', [kq[0] + 10 * p, kq[1] + 4 * p], { s: 10.5, c: T.muted }); }
+    }
+    if (!narrow) txt(`Lines across the gap show the uniform field; the dots move with the current to show its direction, not its speed. Drag to turn the view.`, [12 * p, isLoop() ? 48 * p : 18 * p], { s: 10, c: T.muted });
+  }
+  function setDim(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried || !window.VD3) { capStatus(NO3D); v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); if (!G3.ok) capStatus(NO3D); setDim(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3) g3.el.hidden = !use3(); can.style.cursor = use3() ? 'grab' : '';
+    for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String(b.dataset.dim === v));
+    draw();
+  }
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setDim(b.dataset.dim); });
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); fit(); }
   const retheme = () => { tokens(); draw(); fit(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
@@ -440,6 +653,7 @@ table.rows input:focus { border-color: var(--accent); }
     (function show() { for (const o of all) { if (o.inp.value !== o.shown) { o.shown = o.inp.value; o.k.style.setProperty('--a', `${(Math.round((+o.inp.value - +o.inp.min) / (+o.inp.step || 1)) * DEG) % 360}deg`); o.k.setAttribute('aria-valuenow', o.inp.value); } if (o.out) o.k.setAttribute('aria-valuetext', o.out.textContent); } requestAnimationFrame(show); })();
   })();
   tokens(); new ResizeObserver(resize).observe($('scene')); applyPreset('balance'); renderRows(); resize();
+  { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();
