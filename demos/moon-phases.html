@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -78,6 +80,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 #main { cursor: grab; }
 #sky { cursor: grab; }
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+/* the 3D pictures sit under the canvases that keep the words and take the pointer */
+.stage canvas.vd3d { pointer-events: none; }
+.pane.space { background: #04060b; }
+.viewbar { position: absolute; right: 10px; bottom: 10px; z-index: 2; display: flex; gap: 6px; }
 
 .seg { display: inline-flex; align-items: center; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .seg .seglabel { font-size: 0.8rem; color: var(--muted); padding: 0 6px 0 7px; font-weight: 700; }
@@ -156,6 +162,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     <div class="stage" id="stage">
       <div class="pane main">
         <canvas id="main" tabindex="0" role="application" aria-label="Top down view of the Sun's light, Earth and the Moon's orbit. Drag the Moon around its orbit. Arrow keys move the Moon one day; hold Shift for a tenth of a day. Space plays or pauses."></canvas>
+        <div class="viewbar">
+          <div class="seg" role="group" aria-label="Perspective" id="viewSeg">
+            <button type="button" data-dim="3d" aria-pressed="false">3D</button>
+            <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
+          </div>
+        </div>
       </div>
       <div class="pane view">
         <canvas id="moonview" role="img" aria-label="The Moon as seen from Earth by a Northern Hemisphere observer facing south."></canvas>
@@ -746,11 +758,210 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.restore();
   }
 
+  // ---------- 3D: the Sun's light, Earth and the Moon (three.js through demos/lib/vd3kit.js) ----------
+  // The same model as the flat view, in units of the Moon's orbit radius, sunlight along +x. The Earth (NASA Blue Marble) and the
+  // Moon are lit by that light, so every half that faces the Sun is lit by the renderer, not drawn. Earth turns with the sky clock:
+  // the blue dot is the observer, at local noon facing the Sun. The view from Earth is a second camera at that Earth, aimed at the
+  // Moon, so the phase there is the lit sphere itself. In the eclipse view the orbit is tilted by its true 5.145°. Sizes and the
+  // shadow's length are not to scale, as in the flat view; the Moon's surface markings are a made up texture.
+  const RE3 = 0.16, RM3 = 0.085, OBS_LON3 = -92.6 * Math.PI / 180, OBS_LAT3 = 30 * Math.PI / 180;
+  const DARK3 = { ink: '#e3e8ef', muted: '#9aa7b8', field: '#dfe6ef', canvas: '#0b1018', line: '#2a3442', grid: '#1c2531', accent: '#69a0ff', equi: '#e2b350', pos: '#ff7660', neg: '#69a0ff', lit: '#f2ead0', unlit: '#2a3441', onCharge: '#0d1218' };
+  const M3 = { S: null, on: false, r2: null, cam2: null, earth: null, moon: null, ring: [], orbit: null, orbitDash: null, cone: null, face: null, pin: null, o: { th: -Math.PI / 2, ph: 0.98, zoom: 1 }, tries: 0 };
+  function moonTexture() {
+    // grey with darker smooth patches: an illustration, not a map of the Moon
+    const c = document.createElement('canvas'); c.width = 512; c.height = 256; const g = c.getContext('2d');
+    g.fillStyle = '#b9b5ac'; g.fillRect(0, 0, 512, 256);
+    let sd = 5; const rn = () => (sd = (sd * 16807) % 2147483647) / 2147483647;
+    for (let i = 0; i < 26; i++) {
+      const x = rn() * 512, y = 50 + rn() * 156, r = 14 + rn() * 46, gr = g.createRadialGradient(x, y, 0, x, y, r);
+      gr.addColorStop(0, 'rgba(70,72,78,0.55)'); gr.addColorStop(1, 'rgba(70,72,78,0)'); g.fillStyle = gr; g.fillRect(x - r, y - r, 2 * r, 2 * r);
+    }
+    for (let i = 0; i < 900; i++) {
+      const x = rn() * 512, y = rn() * 256, r = 0.6 + rn() * rn() * 3.5, k = rn() < 0.5;
+      g.fillStyle = k ? 'rgba(90,90,96,0.18)' : 'rgba(235,232,224,0.16)'; g.beginPath(); g.arc(x, y, r, 0, 2 * Math.PI); g.fill();
+    }
+    return new THREE.CanvasTexture(c);
+  }
+  function init3D() {
+    const host = V.main.el.parentElement;
+    const S3 = VD3K.stage(host, { before: V.main.el, fov: 32, near: 0.01, far: 3000, sky: '#04060b' });
+    if (!S3) return false;
+    M3.S = S3; S3.el.classList.add('vd3d');
+    if (V.main.W / Math.max(1, mainGeo().topH) < 0.8) M3.o.ph = M3.home = 0.62;   /* a tall phone picture: look down more steeply */
+    const sc = S3.scene;
+    sc.add(VD3K.sky(S3, { n: 2400, r: 1200, seed: 3, milky: true }));
+    S3.sun.position.set(30, 0, 0); S3.sun.target.position.set(0, 0, 0);
+    S3.onTheme(() => { S3.hemi.intensity = 0.05; S3.sun.intensity = 1.3; });
+    const tex = moonTexture(), moonM = new THREE.MeshStandardMaterial({ map: tex, roughness: 1, metalness: 0 });
+    M3.moon = new THREE.Mesh(new THREE.SphereGeometry(RM3, 48, 32), moonM); sc.add(M3.moon);
+    const ghostM = new THREE.MeshStandardMaterial({ map: tex, roughness: 1, metalness: 0, transparent: true, opacity: 0.7 });
+    for (let k = 0; k < 8; k++) { const m = new THREE.Mesh(new THREE.SphereGeometry(RM3 * 0.62, 24, 16), ghostM); m.layers.set(1); sc.add(m); M3.ring.push(m); }
+    const lineG = () => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(3 * 121), 3)); return g; };
+    M3.orbit = new THREE.Line(lineG(), new THREE.LineBasicMaterial({ color: '#8e9bb0', transparent: true, opacity: 0.85 }));
+    M3.orbitDash = new THREE.Line(lineG(), new THREE.LineDashedMaterial({ color: '#8e9bb0', dashSize: 0.04, gapSize: 0.035, transparent: true, opacity: 0.6 }));
+    M3.orbit.layers.set(1); M3.orbitDash.layers.set(1); sc.add(M3.orbit, M3.orbitDash);
+    const cg = new THREE.CylinderGeometry(RE3, RE3 * 0.62, 1.45, 40, 1, true); cg.rotateZ(Math.PI / 2); cg.translate(-1.45 / 2, 0, 0);
+    M3.cone = new THREE.Mesh(cg, new THREE.MeshBasicMaterial({ color: '#3a4a66', transparent: true, opacity: 0.2, depthWrite: false, side: THREE.DoubleSide }));
+    M3.cone.layers.set(1); sc.add(M3.cone);
+    M3.face = new THREE.Mesh(new THREE.TorusGeometry(RM3 * 1.4, RM3 * 0.09, 8, 48, Math.PI), new THREE.MeshBasicMaterial({ color: '#5b98ff' }));
+    M3.face.layers.set(1); sc.add(M3.face);
+    M3.pin = new THREE.Mesh(new THREE.SphereGeometry(RE3 * 0.08, 16, 12), new THREE.MeshBasicMaterial({ color: '#7fb0ff' }));
+    S3.cam.layers.enable(1);
+    VD3K.earth(S3, { r: RE3, seg: 64 }, (pl) => {
+      M3.earth = pl; sc.add(pl); pl.ball.parent.add(M3.pin);
+      M3.pin.position.set(Math.cos(OBS_LAT3) * Math.cos(OBS_LON3), Math.cos(OBS_LAT3) * Math.sin(OBS_LON3), Math.sin(OBS_LAT3)).multiplyScalar(RE3 * 1.01);
+      requestDraw();
+    });
+    // the view from Earth: a second renderer and camera on the same scene, seeing only layer 0 (the Moon, the Earth and the stars)
+    M3.r2 = VD3.renderer();
+    if (M3.r2) { const el = M3.r2.domElement; el.classList.add('vd3d'); el.setAttribute('aria-hidden', 'true'); V.moon.el.parentElement.insertBefore(el, V.moon.el); M3.cam2 = new THREE.PerspectiveCamera(12, 1, 0.01, 3000); }
+    const ray = new THREE.Raycaster(), plane = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), hit = new THREE.Vector3();
+    M3.onPlane = (p) => {
+      ray.setFromCamera({ x: p.x / V.main.W * 2 - 1, y: 1 - p.y / V.main.H * 2 }, S3.cam);
+      return ray.ray.intersectPlane(plane, hit) ? [hit.x, hit.y] : null;
+    };
+    return true;
+  }
+  // where the Moon is at elongation a (deg): in the plane, or on the tilted orbit when the eclipse view is on
+  function moonAt(a, pn) {
+    const b = S.eclipse ? rad(beta(a, pn)) : 0;
+    return [Math.cos(rad(a)) * Math.cos(b), Math.sin(rad(a)) * Math.cos(b), Math.sin(b)];
+  }
+  const P3 = (q) => M3.S.project(q);
+  function render3D() {
+    const S3 = M3.S, w = V.main.W, h = V.main.H;
+    if (!S3 || !w || !h) return;
+    const g = mainGeo(), e = E(), pn = phiN();
+    S3.size(w, h);
+    const asp = w / g.topH, t = Math.tan(S3.cam.fov * Math.PI / 360);
+    const half = Math.max(1.32 / (t * asp), 1.22 / t);
+    S3.place(M3.o, [0.05, 0, 0], half * (1 / M3.o.zoom) * (h / g.topH));
+    S3.cam.setViewOffset(w, h, 0, (h - g.topH) / 2 - 18 * PS, w, h);
+    const m = moonAt(e, pn); M3.moon.position.set(m[0], m[1], m[2]);
+    M3.moon.rotation.z = rad(e) + Math.PI;   // the same face toward Earth
+    M3.face.position.copy(M3.moon.position); M3.face.rotation.set(0, 0, rad(e) + Math.PI / 2);
+    M3.ring.forEach((r, k) => { const q = moonAt(k * 45, pn); r.position.set(q[0], q[1], q[2]); r.visible = S.ring; });
+    const fill = (line, from, to) => {
+      const a = line.geometry.attributes.position;
+      for (let i = 0; i <= 120; i++) { const q = moonAt(from + (to - from) * i / 120, pn); a.setXYZ(i, q[0], q[1], q[2]); }
+      a.needsUpdate = true; line.geometry.computeBoundingSphere();
+    };
+    if (S.eclipse) { fill(M3.orbit, pn, pn + 180); fill(M3.orbitDash, pn + 180, pn + 360); M3.orbitDash.computeLineDistances(); M3.orbitDash.visible = true; }
+    else { fill(M3.orbit, 0, 360); M3.orbitDash.visible = false; }
+    M3.cone.visible = S.shadow;
+    if (M3.earth) M3.earth.spin(rad((S.hour - 12) * 15) - OBS_LON3);
+    if (M3.earth && !M3.earth.ball.material.map && M3.tries++ < 120) setTimeout(requestDraw, 50);
+    S3.render();
+    // the view from Earth: from the observer's side of the globe, toward the Moon, north up
+    if (M3.r2 && V.moon.W) {
+      const r2 = M3.r2, c2 = M3.cam2, vw = V.moon.W, vh = V.moon.H;
+      r2.setSize(vw, vh); c2.aspect = vw / vh;
+      const top = 48 * PS, bot = vh - 46 * PS, rpx = Math.max(14, Math.min(vw * 0.27, (bot - top) * 0.45));
+      const d = new THREE.Vector3(m[0], m[1], m[2]).normalize(), eye = d.clone().multiplyScalar(RE3 * 1.02), dist = eye.distanceTo(M3.moon.position);
+      c2.fov = 2 * Math.atan(Math.tan(Math.asin(RM3 / dist)) * (vh / 2) / rpx) * 180 / Math.PI;
+      c2.position.copy(eye); c2.up.set(0, 0, 1); c2.lookAt(M3.moon.position); c2.updateProjectionMatrix();
+      c2.setViewOffset(vw, vh, 0, -((top + bot) / 2 - vh / 2), vw, vh);
+      r2.render(S3.scene, c2);
+    }
+  }
+  // words and guides over the 3D picture, in the flat view's colours for a dark sky
+  function drawMain3D() {
+    const v = V.main, ctx = v.ctx, g = mainGeo(), { w, h, topH } = g, e = E(), pn = phiN();
+    const keep = T; T = Object.assign({}, T, DARK3);
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, w, h);
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, w, topH); ctx.clip();
+    const line = (pts, color, width, dash, alpha) => {
+      ctx.save(); ctx.strokeStyle = color; ctx.lineWidth = width * PS; ctx.globalAlpha = alpha == null ? 1 : alpha; if (dash) ctx.setLineDash(dash.map((x) => x * PS));
+      ctx.beginPath(); pts.forEach((q, i) => { const p = P3(q); i ? ctx.lineTo(p[0], p[1]) : ctx.moveTo(p[0], p[1]); }); ctx.stroke(); ctx.restore();
+    };
+    // sunlight: arrows along -x in the plane
+    ctx.save(); ctx.fillStyle = T.equi;
+    for (const k of [-2, -1, 1, 2]) {
+      const y = k * 0.4, a = P3([1.62, y, 0]), b = P3([1.3, y, 0]);
+      line([[1.62, y, 0], [1.3, y, 0]], T.equi, 1.6, null, 0.85);
+      ctx.globalAlpha = 0.85; arrowHead(ctx, b[0], b[1], Math.atan2(b[1] - a[1], b[0] - a[0]), 6 * PS);
+      if (k === -2) { ctx.globalAlpha = 1; ctx.font = font(700, 11.5, 'ui'); ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText('Sunlight', a[0], a[1] + 6 * PS); }
+    }
+    ctx.restore();
+    // phase names round the ring
+    if (S.ring) {
+      const names = ['New', 'Waxing crescent', 'First quarter', 'Waxing gibbous', 'Full', 'Waning gibbous', 'Third quarter', 'Waning crescent'];
+      ctx.font = font(400, 10.5, 'ui'); ctx.textBaseline = 'middle'; ctx.fillStyle = T.muted;
+      const c0 = P3([0, 0, 0]);
+      for (let k = 0; k < 8; k++) {
+        const q = moonAt(k * 45, pn), p = P3([q[0] * 1.2, q[1] * 1.2, q[2]]), dx = p[0] - c0[0];
+        ctx.textAlign = Math.abs(dx) < 0.25 * w * 0.2 ? 'center' : dx > 0 ? 'left' : 'right';
+        clampText(ctx, names[k], p[0], p[1], w, 4 * PS);
+      }
+    }
+    if (S.shadow) { const p = P3([-0.62, 0, RE3 * 0.8]); ctx.fillStyle = T.muted; ctx.font = font(600, 11, 'ui'); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; clampText(ctx, "Earth's shadow", p[0], p[1], w, 4 * PS); }
+    // elongation arc
+    if (S.arc) {
+      const rr = RE3 + 0.13, a = e <= 180 ? e : e - 360;
+      line([[0, 0, 0], [rr + 0.12, 0, 0]], T.field, 1.3, null, 0.8);
+      if (Math.abs(a) > 0.5) {
+        const pts = []; for (let i = 0; i <= 40; i++) { const t = rad(a * i / 40); pts.push([rr * Math.cos(t), rr * Math.sin(t), 0]); }
+        line(pts, T.field, 1.3, null, 0.8);
+        const mid = rad(a / 2), p = P3([(rr + 0.1) * Math.cos(mid), (rr + 0.1) * Math.sin(mid), 0]);
+        ctx.fillStyle = T.field; ctx.font = font(600, 11); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('E ' + Math.abs(a).toFixed(0) + '°', p[0], p[1]);
+      }
+    }
+    // sidereal vs synodic, in the plane
+    if (S.sidereal) {
+      const tn = dayOf(), star = rad(-360 * tn / YEAR), sidPt = -360 * P_SID / YEAR, L = 1.3;
+      line([[0, 0, 0], [L * Math.cos(star), L * Math.sin(star), 0]], T.field, 1.5, [2, 4]);
+      const pts = []; for (let i = 0; i <= 30; i++) { const t = rad(sidPt * (1 - i / 30)); pts.push([Math.cos(t), Math.sin(t), 0]); }
+      line(pts, T.equi, 5, null, 0.85);
+      const sp = P3([Math.cos(rad(sidPt)), Math.sin(rad(sidPt)), 0]);
+      ctx.fillStyle = T.field; ctx.beginPath(); ctx.arc(sp[0], sp[1], 3.5 * PS, 0, 2 * Math.PI); ctx.fill();
+      ctx.font = font(600, 11, 'ui'); ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      clampText(ctx, 'Same stars: day 27.32', sp[0] - 14 * PS, sp[1] + 14 * PS, w, 4 * PS);
+      const q = P3([1.05, 0.12, 0]); ctx.fillStyle = T.equi; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+      clampText(ctx, 'Same phase: day 29.53', q[0], q[1], w, 4 * PS);
+      const lp = P3([(L + 0.05) * Math.cos(star), (L + 0.05) * Math.sin(star), 0]); ctx.fillStyle = T.field; ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+      clampText(ctx, 'to a fixed star', lp[0], lp[1] + 4 * PS, w, 4 * PS);
+    }
+    // line of nodes
+    if (S.eclipse) {
+      const a = rad(pn), L = 1.12;
+      line([[-L * Math.cos(a), -L * Math.sin(a), 0], [L * Math.cos(a), L * Math.sin(a), 0]], T.pos, 1.6, [7, 5]);
+      for (const [ang, lab, filled] of [[pn, 'ascending node', true], [pn + 180, 'descending node', false]]) {
+        const p = P3([Math.cos(rad(ang)), Math.sin(rad(ang)), 0]), d = 7 * PS;
+        ctx.beginPath(); ctx.moveTo(p[0], p[1] - d); ctx.lineTo(p[0] + d, p[1]); ctx.lineTo(p[0], p[1] + d); ctx.lineTo(p[0] - d, p[1]); ctx.closePath();
+        ctx.fillStyle = filled ? T.pos : T.canvas; ctx.fill(); ctx.strokeStyle = T.pos; ctx.lineWidth = 2 * PS; ctx.stroke();
+        const q = P3([0.74 * Math.cos(rad(ang)), 0.74 * Math.sin(rad(ang)), 0]); q[1] += 12 * PS;
+        ctx.fillStyle = T.pos; ctx.font = font(600, 10.5, 'ui'); ctx.textBaseline = 'middle'; ctx.textAlign = 'center';
+        clampText(ctx, lab, q[0], q[1], w, 4 * PS);
+      }
+    }
+    // Earth label and the sightline to the Moon
+    const pe = P3([0, 0, -RE3]); ctx.fillStyle = T.muted; ctx.font = font(600, 11, 'ui'); ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.fillText('Earth', pe[0], pe[1] + 6 * PS);
+    const m = moonAt(e, pn), mu = Math.hypot(m[0], m[1], m[2]);
+    line([[m[0] * RE3 / mu, m[1] * RE3 / mu, m[2] * RE3 / mu], [m[0] * (1 - RM3 * 1.6), m[1] * (1 - RM3 * 1.6), m[2] * (1 - RM3 * 1.6)]], T.accent, 1.2, [3, 4], 0.7);
+    if (focusMain) { const pm = P3(m); ctx.save(); ctx.setLineDash([4 * PS, 3 * PS]); ctx.lineWidth = 1.5 * PS; ctx.strokeStyle = T.accent; ctx.beginPath(); ctx.arc(pm[0], pm[1], 22 * PS, 0, 2 * Math.PI); ctx.stroke(); ctx.restore(); }
+    // captions
+    ctx.fillStyle = T.ink; ctx.font = font(700, 15, 'ui'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
+    ctx.fillText('Day ' + dayOf().toFixed(1) + ' of 29.53 · ' + phaseName(e), 12 * PS, 10 * PS);
+    ctx.fillStyle = T.muted; ctx.font = font(400, 11.5, 'ui');
+    ctx.fillText('Not to scale · blue dot: you, ' + fmtHM(S.hour), 12 * PS, 30 * PS);
+    if (S.eclipse) {
+      const st = eclipseState(), py = 50 * PS;
+      if (st.k === 'solar') pill(ctx, 12 * PS, py, st.text, T.equi, T.onCharge, 'left');
+      else if (st.k === 'lunar') pill(ctx, 12 * PS, py, st.text, T.pos, T.onCharge, 'left');
+      else if (st.k === 'pen') pill(ctx, 12 * PS, py, st.text, T.canvas, T.ink, 'left', T.muted);
+    }
+    ctx.restore();
+    if (S.eclipse) { ctx.fillStyle = T.canvas; ctx.fillRect(0, topH, w, h - topH); drawSide(ctx, g, e, pn); }
+    T = keep;
+  }
+
   // ---------- view from Earth ----------
   function drawMoonView() {
     const v = V.moon, ctx = v.ctx, w = v.W, h = v.H, e = E();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = T.sky; ctx.fillRect(0, 0, w, h);
+    if (M3.on) ctx.clearRect(0, 0, w, h); else { ctx.fillStyle = T.sky; ctx.fillRect(0, 0, w, h); }
     ctx.fillStyle = T.onSky; ctx.font = font(700, 13, 'ui'); ctx.textAlign = 'left'; ctx.textBaseline = 'top';
     ctx.fillText('View from Earth', 12 * PS, 10 * PS);
     ctx.globalAlpha = 0.7; ctx.font = font(400, 11, 'ui');
@@ -759,7 +970,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
     const top = 48 * PS, bot = h - 46 * PS;
     const r = Math.max(14, Math.min(w * 0.27, (bot - top) * 0.45)), x = w / 2, y = (top + bot) / 2;
-    phaseDisc(ctx, x, y, r, e, '#f2ead0', '#28313c', 'rgba(223,230,239,0.25)');
+    if (!M3.on) phaseDisc(ctx, x, y, r, e, '#f2ead0', '#28313c', 'rgba(223,230,239,0.25)');
 
     // which way is the Sun
     const f = litFrac(e);
@@ -897,7 +1108,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       last = ts; S.T += dt * S.speed;
     } else last = 0;
     T = tokens(); PS = pscale();
-    if (V.main.W && V.main.H) drawMain();
+    if (M3.on) render3D();
+    if (V.main.W && V.main.H) { if (M3.on) drawMain3D(); else drawMain(); }
     if (V.moon.W && V.moon.H) drawMoonView();
     if (V.sky.W && V.sky.H) drawSky();
     updatePanel();
@@ -921,6 +1133,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function mainHit(p) {
     const g = mainGeo();
     if (p.y > g.topH) return null;
+    if (M3.on) {
+      if (S.eclipse) {
+        for (const [ang, k] of [[phiN(), 0], [phiN() + 180, 180]]) {
+          const q = P3([Math.cos(rad(ang)), Math.sin(rad(ang)), 0]);
+          if (Math.hypot(p.x - q[0], p.y - q[1]) < 13 * PS) return { type: 'node', off: k };
+        }
+      }
+      const q = M3.onPlane(p), r = q ? Math.hypot(q[0], q[1]) : 0;
+      return q && r > 0.6 && r < 1.45 ? { type: 'moon' } : { type: 'turn' };
+    }
     if (S.eclipse) {
       for (const [ang, k] of [[phiN(), 0], [phiN() + 180, 180]]) {
         const x = g.cx + g.R * Math.cos(rad(ang)), y = g.cy - g.R * Math.sin(rad(ang));
@@ -936,19 +1158,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = local(mainEl, ev), hit = mainHit(p);
     if (!hit) return;
     dragMain = hit; mainEl.setPointerCapture(ev.pointerId); mainEl.style.cursor = 'grabbing';
+    if (hit.type === 'turn') { moveMain(p); return; }
     if (S.playing) setPlaying(false);
     setPreset(null);
     moveMain(p);
   });
   function moveMain(p) {
-    const g = mainGeo(), a = angleAt(g, p);
+    if (dragMain.type === 'turn') {
+      if (dragMain.lx != null) { M3.o.th -= (p.x - dragMain.lx) * 0.008; M3.o.ph = Math.max(0.05, Math.min(1.45, M3.o.ph - (p.y - dragMain.ly) * 0.006)); }
+      dragMain.lx = p.x; dragMain.ly = p.y; requestDraw(); return;
+    }
+    let a;
+    if (M3.on) { const q = M3.onPlane(p); if (!q) return; a = mod(Math.atan2(q[1], q[0]) * 180 / Math.PI, 360); }
+    else a = angleAt(mainGeo(), p);
     if (dragMain.type === 'node') setNode(a - dragMain.off); else setE(a);
     requestDraw();
   }
   mainEl.addEventListener('pointermove', (ev) => {
     const p = local(mainEl, ev);
     if (dragMain) { moveMain(p); return; }
-    mainEl.style.cursor = mainHit(p) ? 'grab' : 'default';
+    const hv = mainHit(p); mainEl.style.cursor = !hv ? 'default' : hv.type === 'turn' ? 'move' : 'grab';
   });
   const endMain = () => { dragMain = null; mainEl.style.cursor = 'grab'; };
   mainEl.addEventListener('pointerup', endMain);
@@ -1085,6 +1314,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // theme changes
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', requestDraw); } catch (_) {}
   new MutationObserver(requestDraw).observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-projector', 'class', 'style'] });
+
+  // 3D | Flat
+  VD3K.view({
+    seg: '#viewSeg', init: init3D,
+    status: (m) => { $('presetHint').textContent = m; },
+    change: (on) => {
+      M3.on = on;
+      if (M3.S) M3.S.el.style.display = on ? '' : 'none';
+      if (M3.r2) M3.r2.domElement.style.display = on ? '' : 'none';
+      V.main.el.parentElement.classList.toggle('space', on); V.moon.el.parentElement.classList.toggle('space', on);
+      requestDraw();
+    }
+  });
+  V.main.el.addEventListener('dblclick', () => { M3.o.th = -Math.PI / 2; M3.o.ph = M3.home || 0.98; requestDraw(); });
 
   // ---------- boot ----------
   new ResizeObserver(resize).observe($('stage'));
