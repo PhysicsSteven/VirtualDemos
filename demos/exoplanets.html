@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -84,6 +86,8 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
   font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted);
 }
 .viewbar { position: absolute; top: 6px; right: 8px; z-index: 2; display: flex; gap: 6px; }
+.topv canvas.vd3d { pointer-events: none; }
+.topv .tag.on3 { color: #aeb9c8; }
 .seg { display: inline-flex; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .seg button {
   font: inherit; font-size: 0.8rem; font-weight: 700; color: var(--muted); background: none; border: 0;
@@ -164,8 +168,14 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     <div class="stage" id="stage">
       <div class="views">
         <div class="pane topv">
-          <canvas id="top" tabindex="0" role="application" aria-label="Top view of the orbit. Drag to move the planet along its orbit. Left and right arrows step time, up and down change the inclination, space plays or pauses."></canvas>
-          <div class="tag">Top view, looking down on the orbit</div>
+          <canvas id="top" tabindex="0" role="application" aria-label="The orbit, in 3D or from above. Drag the planet to move it along its orbit; in 3D drag elsewhere to turn the view. Left and right arrows step time, up and down change the inclination, space plays or pauses."></canvas>
+          <div class="tag" id="topTag">Top view, looking down on the orbit</div>
+          <div class="viewbar">
+            <div class="seg" role="group" aria-label="Perspective" id="viewSeg">
+              <button type="button" data-dim="3d" aria-pressed="false">3D</button>
+              <button type="button" data-dim="flat" aria-pressed="true">Flat</button>
+            </div>
+          </div>
         </div>
         <div class="pane side">
           <canvas id="side" tabindex="0" role="application" aria-label="What a distant telescope sees: the star disk and the planet. Up and down arrows change the inclination."></canvas>
@@ -662,6 +672,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- top view ----------
   let TV = { cx: 0, cy: 0, s: 1 };
   function drawTop(T) {
+    if (X3.on && X3.S) { drawTop3(T); return; }
     const [ctx, W, H] = begin('top', T), S = T.S, mono = monoFont();
     const Ms = 1 - D.q, F = D.F;
     // planet path relative to barycenter: -(1-q) r u ; screen y up = away from Earth
@@ -1058,7 +1069,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const setT = (t) => { ensure(); tau = (((t + D.Per / 4) % D.Per) + D.Per) % D.Per; schedule(); };
   function topAt(e) {
     const r = cv.top.getBoundingClientRect();
-    const x = (e.clientX - r.left - TV.cx) / TV.s, y = -(e.clientY - r.top - TV.cy) / TV.s;
+    let x = (e.clientX - r.left - TV.cx) / TV.s, y = -(e.clientY - r.top - TV.cy) / TV.s;
+    if (X3.on && X3.S) { const q = X3.onPlane(e.clientX - r.left, e.clientY - r.top); if (!q) return; x = q[0]; y = q[1]; }
     if (Math.hypot(x, y) < 1e-12) return;
     const th = Math.atan2(y, x) + Math.PI, nu = th - D.w, e2 = P.e;   // planet sits opposite the star
     const E = 2 * Math.atan2(Math.sqrt(1 - e2) * Math.sin(nu / 2), Math.sqrt(1 + e2) * Math.cos(nu / 2));
@@ -1071,7 +1083,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function bindScrub(k, fn) {
     const c = cv[k];
-    c.addEventListener('pointerdown', (e) => { c.focus({ preventScroll: true }); scrub = k; c.setPointerCapture(e.pointerId); if (k === 'top') c.style.cursor = 'grabbing'; fn(e); });
+    c.addEventListener('pointerdown', (e) => { if (k === 'top' && X3.on && !X3.hit(e)) return; c.focus({ preventScroll: true }); scrub = k; c.setPointerCapture(e.pointerId); if (k === 'top') c.style.cursor = 'grabbing'; fn(e); });
     c.addEventListener('pointermove', (e) => { if (scrub === k) fn(e); });
     const end = () => { if (scrub === k) { scrub = null; last = null; if (k === 'top') c.style.cursor = 'grab'; schedule(); } };
     c.addEventListener('pointerup', end); c.addEventListener('pointercancel', end);
@@ -1109,6 +1121,131 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // theme changes
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', schedule); } catch (_) {}
   new MutationObserver(schedule).observe(root, { attributes: true, attributeFilter: ['data-theme', 'data-projector', 'class', 'style'] });
+
+
+  // ---------- the orbit in 3D ----------
+  // The same orbit as the top view, in the orbit plane (x, y as in the top view, z up out of the page), with the line of sight to Earth
+  // tilted up from the plane by 90° − i. The pale column along it is the star's own shadow toward us: the planet transits when it
+  // passes through it. Positions, the wobble (exaggerated by the same factor as the top view) and the line of sight are exact;
+  // the star and planet are drawn larger than scale when they would be too small to see, as the top view says.
+  const X3 = { on: false, S: null, o: { th: -Math.PI / 2 - 0.62, ph: 1.02, zoom: 1 }, key: null, u: 1 };
+  function init3D() {
+    const S3 = VD3K.stage(cv.top.parentElement, { before: cv.top, fov: 30, near: 0.01, far: 2000, sky: '#04060b' });
+    if (!S3) return false;
+    X3.S = S3; S3.el.classList.add('vd3d');
+    const sc = S3.scene;
+    sc.add(VD3K.sky(S3, { n: 2200, r: 900, seed: 7, milky: true }));
+    S3.onTheme(() => { S3.hemi.intensity = 0.12; S3.sun.intensity = 0; });
+    X3.star = VD3K.star(S3, { r: 1, color: '#f4b450', glow: 3.2 }); sc.add(X3.star);
+    X3.light = new THREE.PointLight(0xffffff, 1.6, 0); sc.add(X3.light);
+    X3.planet = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 28), new THREE.MeshStandardMaterial({ color: '#9cc0f0', roughness: 0.75, metalness: 0, emissive: '#2c4266' }));
+    sc.add(X3.planet);
+    X3.beam = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 48, 1, true), new THREE.MeshBasicMaterial({ color: '#ffd89a', transparent: true, opacity: 0.1, depthWrite: false, side: THREE.DoubleSide }));
+    sc.add(X3.beam);
+    const lm = new THREE.LineBasicMaterial({ color: '#c9d4e2', transparent: true, opacity: 0.7 });
+    X3.los = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3(0, 0, 1)]), lm); sc.add(X3.los);
+    X3.tip = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.1, 18), new THREE.MeshBasicMaterial({ color: '#e8eef6' })); sc.add(X3.tip);
+    X3.bary = new THREE.Mesh(new THREE.SphereGeometry(0.012, 12, 8), new THREE.MeshBasicMaterial({ color: '#e8eef6' })); sc.add(X3.bary);
+    X3.orbit = new THREE.Group(); sc.add(X3.orbit);
+    X3.ray = new THREE.Raycaster();
+    VD3.orbit(cv.top, X3.o, schedule, { grab: (e) => !X3.on || X3.hit(e), phMin: 0.05, phMax: 1.62, zMin: 0.6, zMax: 4, keys: false });
+    return true;
+  }
+  /* orbit coordinates (m, relative to the barycentre, as in the top view) to scene units */
+  const w3 = (x, y) => new THREE.Vector3(x * X3.u, y * X3.u, 0);
+  function orbit3D(T) {
+    const g = X3.orbit; while (g.children.length) X3.S.dispose(g.children[0]);
+    const Ms = 1 - D.q, sq = D.q * D.F;
+    let x0 = Infinity, x1 = -Infinity, y0 = Infinity, y1 = -Infinity;
+    for (const [r, th] of D.path) { const x = -Ms * r * Math.cos(th), y = -Ms * r * Math.sin(th); x0 = Math.min(x0, x); x1 = Math.max(x1, x); y0 = Math.min(y0, y); y1 = Math.max(y1, y); }
+    X3.u = 2 / Math.max(x1 - x0, y1 - y0); X3.c = [(x0 + x1) / 2 * X3.u, (y0 + y1) / 2 * X3.u, 0];   /* the camera looks at the middle of the orbit */
+    const pts = D.path.map(([r, th]) => w3(-Ms * r * Math.cos(th), -Ms * r * Math.sin(th)));
+    g.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(pts), new THREE.LineBasicMaterial({ color: '#9fb2cc', transparent: true, opacity: 0.8 })));
+    const shape = new THREE.Shape(pts.map((v) => new THREE.Vector2(v.x, v.y)));
+    g.add(new THREE.Mesh(new THREE.ShapeGeometry(shape, 1), new THREE.MeshBasicMaterial({ color: '#8fa6c8', transparent: true, opacity: 0.06, depthWrite: false, side: THREE.DoubleSide })));
+    const sp = D.path.map(([r, th]) => w3(sq * r * Math.cos(th), sq * r * Math.sin(th)));
+    const sl = new THREE.Line(new THREE.BufferGeometry().setFromPoints(sp), new THREE.LineDashedMaterial({ color: '#e2b350', dashSize: 0.012, gapSize: 0.01 }));
+    sl.computeLineDistances(); g.add(sl);
+    X3.key = D;
+  }
+  function render3D(T, W, H) {
+    const S3 = X3.S; S3.size(W, H);
+    if (X3.key !== D) orbit3D(T);
+    const hid = hidden(), Ms = 1 - D.q, sq = D.q * D.F, st = state(nowT()), ux = Math.cos(st.th), uy = Math.sin(st.th);
+    const sPos = w3(sq * st.r * ux, sq * st.r * uy), pPos = w3(-Ms * st.r * ux, -Ms * st.r * uy);
+    const rs3 = hid ? 0.07 : Math.max(D.Rs * X3.u, 0.045), rp3 = hid ? 0.035 : Math.max(D.Rp * X3.u, 0.032);
+    X3.star.position.copy(sPos); X3.star.scale.setScalar(rs3); X3.light.position.copy(sPos);
+    if (X3.star.tint) X3.star.tint(T.star);
+    X3.planet.position.copy(pPos); X3.planet.scale.setScalar(rp3);
+    // toward Earth: −y in the plane (the bottom of the top view), raised by 90° − i
+    const el = (90 - P.inc) * DEG, e3 = new THREE.Vector3(0, -Math.cos(el), Math.sin(el)), L = 1.35;
+    X3.e3 = e3;
+    X3.los.geometry.setFromPoints([new THREE.Vector3(), e3.clone().multiplyScalar(L)]);
+    X3.tip.position.copy(e3).multiplyScalar(L); X3.tip.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), e3);
+    X3.beam.position.copy(sPos).addScaledVector(e3, L / 2); X3.beam.scale.set(rs3, L, rs3); X3.beam.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), e3);
+    X3.los.visible = X3.tip.visible = X3.beam.visible = !hid;
+    const asp = W / Math.max(1, H), half = 1.12, t = Math.tan(15 * DEG);
+    const top = 34 * T.S, bot = 40 * T.S, k = H / Math.max(1, H - top - bot);
+    S3.place(X3.o, X3.c, Math.max(half / t, half / (t * asp)) * k);
+    S3.cam.setViewOffset(W, H, 0, (bot - top) / 2, W, H);
+    S3.render();
+    return { sPos, pPos, rs3, rp3, st, ux, uy };
+  }
+  X3.hit = (e) => {
+    if (!X3.P) return false;
+    const r = cv.top.getBoundingClientRect(), [px, py] = X3.P;
+    return Math.hypot(e.clientX - r.left - px, e.clientY - r.top - py) < Math.max(18, X3.Pr + 8);
+  };
+  X3.onPlane = (mx, my) => {
+    const S3 = X3.S, v = new THREE.Vector2(mx / S3.w * 2 - 1, -(my / S3.h) * 2 + 1);
+    X3.ray.setFromCamera(v, S3.cam);
+    const pl = new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), q = new THREE.Vector3();
+    if (!X3.ray.ray.intersectPlane(pl, q)) return null;
+    return [q.x / X3.u, q.y / X3.u];
+  };
+  function drawTop3(T) {
+    const ctx = ctxs.top, { W, H } = dims.top, S = T.S, mono = monoFont();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    const R = render3D(T, W, H), S3 = X3.S;
+    const [px, py] = S3.project(R.pPos), [sx, sy] = S3.project(R.sPos);
+    const edge = S3.project([R.pPos.x + R.rp3, R.pPos.y, R.pPos.z]);
+    X3.P = [px, py]; X3.Pr = Math.hypot(edge[0] - px, edge[1] - py);
+    const DK = { canvas: '#04060b' }, f11 = `600 ${11 * S}px ${mono}`;
+    // star velocity arrow, colored by line of sight motion, as in the top view
+    const v = vr(R.st), vx = -R.uy - P.e * Math.sin(D.w), vy = R.ux + P.e * Math.cos(D.w), m = Math.hypot(vx, vy) || 1;
+    const vs = Math.min(1, m / (1 + P.e)), a0 = S3.project([R.sPos.x, R.sPos.y, 0]), a1 = S3.project([R.sPos.x + vx / m * 0.1, R.sPos.y + vy / m * 0.1, 0]);
+    const dx = a1[0] - a0[0], dy = a1[1] - a0[1], dl = Math.hypot(dx, dy) || 1, sr = Math.hypot(S3.project([R.sPos.x + R.rs3, R.sPos.y, R.sPos.z])[0] - sx, 0) + 4 * S, Lr = (16 + 22 * vs) * S;
+    if (D.K > 0 || D.q > 0) arrow(ctx, sx + dx / dl * sr, sy + dy / dl * sr, sx + dx / dl * (sr + Lr), sy + dy / dl * (sr + Lr), v >= 0 ? T.pos : T.neg, 2 * S);
+    // conjunction mark and periastron, as in the top view
+    const rc = D.a * (1 - P.e * P.e) / (1 + P.e * Math.sin(D.w)), [qx, qy] = S3.project(w3(0, -Ms3() * rc));
+    const qr = qx > W * 0.5;
+    label(ctx, DK, D.transits ? 'transit here' : 'nearest our line of sight', qx + (qr ? -10 : 10) * S, qy + 12 * S, qr ? 'right' : 'left', '#aeb9c8', f11);
+    if (P.e > 0.04) {
+      const rper = D.a * (1 - P.e), [ex, ey] = S3.project(w3(-Ms3() * rper * Math.cos(D.w), -Ms3() * rper * Math.sin(D.w)));
+      ctx.fillStyle = '#aeb9c8'; ctx.beginPath(); ctx.arc(ex, ey, 3 * S, 0, TAU); ctx.fill();
+      label(ctx, DK, 'periastron', ex, ey - 11 * S, 'center', '#aeb9c8', f11);
+    }
+    const f12 = `700 ${12 * S}px ${uiFont()}`;
+    if (!hidden()) {
+      const [tx, ty0] = S3.project(X3.e3.clone().multiplyScalar(1.45)), ty = ty0 + 14 * S, elev = 90 - P.inc;
+      label(ctx, DK, P.inc <= 0.05 ? 'To Earth, straight up' : elev < 0.05 ? 'To Earth, in the orbit plane' : `To Earth, ${elev.toFixed(1)}° up`, tx, ty, tx > W * 0.6 ? 'right' : tx < W * 0.4 ? 'left' : 'center', '#e8eef6', f12);
+    } else label(ctx, DK, 'To Earth: hidden in a mystery', W / 2, H - 14 * S, 'center', '#e8eef6', f12);
+    ctx.save(); ctx.font = `${10.5 * S}px ${mono}`; ctx.fillStyle = '#aeb9c8'; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
+    if (!hidden()) ctx.fillText('star wobble ×' + comma(D.F), 8 * S, H - 22 * S);
+    ctx.fillText('sizes not to scale · drag to turn', 8 * S, H - 8 * S);
+    ctx.restore();
+  }
+  const Ms3 = () => 1 - D.q;
+  X3.view = VD3K.view({
+    seg: '#viewSeg', init: init3D,
+    status: (msg) => { $('topTag').textContent = msg; },
+    change: (on) => {
+      X3.on = on; if (X3.S) X3.S.el.style.display = on ? '' : 'none';
+      cv.top.style.touchAction = on ? 'pan-y' : 'none';
+      const tag = $('topTag'); tag.textContent = on ? 'The orbit in 3D' : 'Top view, looking down on the orbit'; tag.classList.toggle('on3', on);
+      schedule();
+    }
+  });
 
   // ---------- boot ----------
   try { if (matchMedia('(prefers-reduced-motion: reduce)').matches) playing = false; } catch (_) {}
