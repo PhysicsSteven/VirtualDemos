@@ -13,7 +13,7 @@ for(const d of labs){
   assert((text.match(/^\|---/gm)||[]).length>=1,`${h}: a data table`);
   for(const [head,lo,hi] of [['Before the lab',2,6],['Questions',3,8]]){const part=text.split('## '+head+'\n')[1].split('\n## ')[0],n=(part.match(/^\d+\./gm)||[]).length;assert(n>=lo&&n<=hi,`${h}: ${head}`);}
   assert(!/^# .*Instructor Guide/m.test(text),`${h}: private guide heading in student file`);
-  if(['pendulum','rotational-dynamics','viscometer','impulse'].includes(d.demo)){
+  if(['pendulum','rotational-dynamics','viscometer','impulse'].includes(d.demo)&&text.includes('**Using the virtual apparatus.**')){   /* the pendulum demo's second handout (double pendulum, merged 2026-10-24) has no such paragraph */
    const para=text.split('**Using the virtual apparatus.**')[1].split('\n## Data')[0];
    const src=fs.readFileSync(path.join(root,d.url),'utf8').replace(/<\/?(?:sub|sup|span|b|strong|em|i)(?:\s[^>]*)?>/g,'');
    for(const [,label] of para.matchAll(/\*\*(.*?)\*\*/g)){assert(src.includes(label),`${h}: control ${label}`);labels++;}

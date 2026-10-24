@@ -21,7 +21,7 @@ The same resource may appear in several units. Chapter 13 precedes Chapter 12 as
 | Gravitation and orbital mechanics | [kepler-orbits](labs/students/kepler-orbits.md) | [gravity-near-earth](../notes/src/gravity-near-earth.md), [tides](../notes/src/tides.md), [gps-clocks](../notes/src/gps-clocks.md) | — | 7 scoped mappings |
 | Static equilibrium and elasticity | [stress-strain](labs/students/stress-strain.md) | [rotation](../notes/src/rotation.md), [catenary](../notes/src/catenary.md), [equilibrium](../notes/src/equilibrium.md) | — | 4 scoped mappings |
 | Fluids | [fluids](labs/students/fluids.md), [viscometer](labs/students/viscometer.md) | — | — | 7 scoped mappings |
-| Oscillations | [springs](labs/students/springs.md), [pendulum](labs/students/pendulum.md) | [double-pendulum](../notes/src/double-pendulum.md) | — | 6 scoped mappings |
+| Oscillations | [springs](labs/students/springs.md), [pendulum](labs/students/pendulum.md) | [double-pendulum](labs/students/double-pendulum.md) (in the pendulum demo) | — | 6 scoped mappings |
 
 ## What changed since the earlier gap list
 

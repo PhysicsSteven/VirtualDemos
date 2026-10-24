@@ -29,7 +29,7 @@
   const both = (...ks) => (r) => ks.map((k) => r[k]).filter((v) => v !== '' && v != null).join(', ');
   const sig = (v) => (isFinite(v) && v !== '' ? String(+(+v).toPrecision(6)) : '');
   const FROM_DEMO = {
-    pendulum: { demo: 'Pendulum', cols: ['row', 'type', 'L_m', 'theta0_deg', 'm_kg', 'T_s', 'T2_s2', null] },
+    pendulum: { demo: 'Pendulums', cols: ['row', 'type', 'L_m', 'theta0_deg', 'm_kg', 'T_s', 'T2_s2', null] },
     collisions: { demo: 'Collisions', cols: [both('row', 'bumper'), 'm1_kg', 'm2_kg', 'u1_m_per_s', 'u2_m_per_s', 'v1_after_m_per_s', 'v2_after_m_per_s'] },
     fluids: { demo: 'Fluids', cols: [(r) => [r.scene, r.liquid].concat(r.depth_d_m ? [`d = ${r.depth_d_m} m`] : []).filter(Boolean).join(', '),
       both('depth_h_m', 'D1_m', 'D2_m'), both('P_Pa', 'h1_m', 'h2_m'),
@@ -89,7 +89,7 @@
     catenary: { demo: 'Hanging Chains and Arches', cols: [(r) => `${r.row}${r.shape === 'arch' ? ', arch' : ''}`,
       'S_m', 'yA_m', 'yB_m', 'sag_m', 'H_N', 'TA_N', 'TB_N', null, null, null] },
     /* Trial | Start | L (m) | Measured period T (s) | 1/L | ω² | log₁₀ δ | Time to separate t_d (s) */
-    'double-pendulum': { demo: 'Pendulums and Chaos', cols: ['row',
+    'double-pendulum': { demo: 'Pendulums', cols: ['row',
       (r) => (r.start === 'simple pendulum' ? `simple pendulum, θ₀ = ${r.theta1_0_deg}°` : `${r.start}, θ₁ = ${r.theta1_0_deg}°, θ₂ = ${r.theta2_0_deg}°`
         + (+r.m1_kg !== 1 || +r.m2_kg !== 1 ? `, m₁ = ${r.m1_kg} kg, m₂ = ${r.m2_kg} kg` : '') + (+r.copies > 1 ? `, ${r.copies} copies` : '')),
       (r) => (r.L2_m === '' || r.L2_m == null || +r.L2_m === +r.L1_m ? r.L1_m : `${r.L1_m} and ${r.L2_m}`), 'T_s', null, null, 'log10_delta', 't_sep_s'] },

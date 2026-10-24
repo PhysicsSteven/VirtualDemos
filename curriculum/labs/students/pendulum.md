@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §15.4, with the rotational dyn
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Simple pendulum; Does mass matter?; Large swings; Swinging rod; On the Moon.
+**Setups in the demo:** Simple pendulum; Does mass matter?; Large swings; Swinging rod; On the Moon. These are in the **Photogate lab** scene of the Pendulums demo, the scene it opens on; its other two scenes (**Exact period** and **Double pendulum**) go with the Normal Modes and Chaos worksheet.
 
 **Using the demo.**
 

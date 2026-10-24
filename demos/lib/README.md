@@ -110,7 +110,7 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 | catenary | 2026-10-23 | batch 3 |
 | center-of-mass | 2026-10-23 | batch 3 |
 | circular-motion | 2026-10-23 | batch 3 |
-| double-pendulum | 2026-10-23 | batch 3 |
+| double-pendulum | 2026-10-23 | batch 3; merged into pendulum 2026-10-24 (double-pendulum.html now redirects) |
 | energy-sources | 2026-10-23 | batch 3 |
 | equilibrium | 2026-10-23 | batch 3 |
 | gravity-near-earth | 2026-10-23 | batch 3 |

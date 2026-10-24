@@ -115,7 +115,6 @@ OVERRIDES = {
     "ising": {"crop": "#pLat", "wait": 2500},
     "polarization": {"click": ['[data-p="three"]'], "wait": 1500},
     "collisions": {"click": ['[data-p="glance"]'], "wait": 1300},
-    "double-pendulum": {"click": ['[data-p="fly"]'], "wait": 9000},
     "fluids": {"crop": "#sPane", "anchor": "bottom", "wait": 2500},
     "franck-hertz": {"click": ['[data-p="ne"]'], "wait": 9500},
     "projectile-drag": {"click": ['[data-p="heavy"]'], "wait": 6500},

@@ -3,12 +3,12 @@ Student laboratory · Physics I
 
 Textbook: OpenStax *University Physics*, Vol. 1, §15.4 (small angle pendulums; the double pendulum's normal modes and chaos go beyond the textbook). Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
-[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/double-pendulum.html)
+[Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/pendulum.html?scene=double)
 
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Normal mode 1; Normal mode 2; Double pendulum chaos; Butterfly effect: 100 copies; Poincaré section.
+**Setups in the demo:** Normal mode 1; Normal mode 2; Double pendulum chaos; Butterfly effect: 100 copies; Poincaré section. These are in the **Double pendulum** scene of the Pendulums demo (the link above opens it); the **Exact period** scene has the simple pendulum at any amplitude, and the **Photogate lab** scene goes with the Measuring Gravity with a Pendulum worksheet.
 
 **Using the demo.**
 

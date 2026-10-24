@@ -3,7 +3,7 @@
 // Dormand–Prince integrator, the small angle normal modes, the exact large amplitude period of the simple pendulum
 // (elliptic integral), and the finite time Lyapunov estimate shown in the page.
 const assert = require('node:assert/strict'), { core } = require('./demo_source.cjs');
-const m = core('double-pendulum', 'G0,wrapPi,ellipK,simpleK2,periodExact,simplePeriod,simpleDeriv,dpDeriv,dpEnergy,dpVsec,dpTop,normalModes,phaseDist,sectionStart,sectionEdge,makeInteg,integReset,integTo,herm,crossIn,angleCross,makeLyap,lyapRenorm');
+const m = core('pendulum', 'G0,wrapPi,ellipK,simpleK2,periodExact,simplePeriod,simpleDeriv,dpDeriv,dpEnergy,dpVsec,dpTop,normalModes,phaseDist,sectionStart,sectionEdge,makeInteg,integReset,integTo,herm,crossIn,angleCross,makeLyap,lyapRenorm');
 let n = 0;
 const close = (a, b, rel = 1e-9, abs = 0) => assert(Math.abs(a - b) <= abs + rel * Math.abs(b), `expected ${b}, got ${a}`);
 const test = (name, f) => { f(); n++; console.log('PASS', name); };

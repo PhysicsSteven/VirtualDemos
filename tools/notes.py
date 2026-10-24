@@ -283,7 +283,8 @@ def main():
     names = sorted(p.stem for p in SRC.glob("*.md"))
     if a.check:
         demos = sorted(p.stem for p in DEMOS.glob("*.html"))
-        print("demos without notes:", " ".join(n for n in demos if n not in names) or "none")
+        moved = {n for n in demos if 'http-equiv="refresh"' in (DEMOS / f"{n}.html").read_text()}   # a page that only redirects to a merged demo
+        print("demos without notes:", " ".join(n for n in demos if n not in names and n not in moved) or "none")
         for n in names:
             qs = split_q(parse(SRC / f"{n}.md")[1])
             if sorted(qs) != list(range(1, len(qs) + 1)):

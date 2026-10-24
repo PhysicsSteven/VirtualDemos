@@ -2978,11 +2978,10 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "double-pendulum",
         "pendulum"
       ],
       "unit": "oscillations",
-      "note": "Pendulum: simple and physical (rod) pendulums, photogate period, exact large-angle period, g from T² against L, Mystery planet."
+      "note": "Pendulums: simple and physical (rod) pendulums, photogate period, g from T² against L, Mystery planet; exact period at any amplitude with the phase portrait; double pendulum normal modes and chaos."
     },
     {
       "vol": 1,
@@ -6935,28 +6934,6 @@
       ]
     },
     {
-      "demo": "double-pendulum",
-      "course": [
-        "physics-1"
-      ],
-      "sections": [
-        {
-          "vol": 1,
-          "sec": "15.4",
-          "title": "Pendulums"
-        }
-      ],
-      "role": "demo",
-      "beyond_book": false,
-      "status": "usable",
-      "note": "Small-angle pendulum comparison is relevant; nonlinear double-pendulum chaos is an extension beyond this section.",
-      "handouts": [
-        "double-pendulum"
-      ],
-      "title": "Pendulums and Chaos",
-      "url": "demos/double-pendulum.html"
-    },
-    {
       "demo": "double-slit",
       "course": [
         "physics-2",
@@ -8548,11 +8525,12 @@
       "role": "lab",
       "beyond_book": false,
       "status": "usable",
-      "note": "New 2026-10-22 (Claude). Bob on a string or uniform rod; length, release angle, mass, Earth/Moon/Mars/Mystery planet, optional air drag; RK4 motion; photogate to 0.001 s; Capture, CSV, T² against L fit for g, T against θ₀ with the exact curve; Blind. Full student/private instructor package written and numerically checked 2026-10-22. Mystery fit answer hiding requires Blind; strict source-fit check fails without it. Browser/classroom acceptance pending. String-bob lab restricted to release angles at or below 90 degrees; above-horizontal release requires slack-string dynamics or a rigid support. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind.",
+      "note": "New 2026-10-22 (Claude). Bob on a string or uniform rod; length, release angle, mass, Earth/Moon/Mars/Mystery planet, optional air drag; RK4 motion; photogate to 0.001 s; Capture, CSV, T² against L fit for g, T against θ₀ with the exact curve; Blind. Full student/private instructor package written and numerically checked 2026-10-22. Mystery fit answer hiding requires Blind; strict source-fit check fails without it. Browser/classroom acceptance pending. String-bob lab restricted to release angles at or below 90 degrees; above-horizontal release requires slack-string dynamics or a rigid support. Claude 2026-10-22: fitted answers now hidden for the Mystery option as well as in Blind. Claude 2026-10-24: Pendulums and Chaos (double-pendulum) merged in as the Exact period and Double pendulum scenes (pendulum.html?scene=phase, ?scene=double; the old double-pendulum.html redirects there), with its handout as the second worksheet.",
       "handouts": [
-        "pendulum"
+        "pendulum",
+        "double-pendulum"
       ],
-      "title": "Pendulum",
+      "title": "Pendulums",
       "url": "demos/pendulum.html"
     },
     {

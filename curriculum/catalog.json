@@ -582,13 +582,17 @@
     },
     {
      "demo": "pendulum",
-     "title": "Pendulum",
-     "desc": "Time a pendulum with a photogate and measure g from how its period depends on length. Then see that mass doesn't matter, large swings take longer, and a swinging rod beats a simple pendulum.",
+     "title": "Pendulums",
+     "desc": "Time a pendulum with a photogate and measure g from how its period depends on length; mass doesn't matter, and a swinging rod beats a simple pendulum. Then swing it all the way to the top for the exact period and the phase portrait, and hang a second pendulum from the first: normal modes at low energy, chaos at high energy, 100 copies a millionth of a radian apart fanning out, and a Poincaré section.",
      "tags": [
       "pendulum",
       "period",
       "measuring g",
-      "physical pendulum"
+      "physical pendulum",
+      "large amplitude pendulum",
+      "normal modes",
+      "chaos",
+      "Poincaré section"
      ]
     },
     {
@@ -699,17 +703,6 @@
       "variable mass",
       "thrust",
       "momentum"
-     ]
-    },
-    {
-     "demo": "double-pendulum",
-     "title": "Pendulums and Chaos",
-     "desc": "Big swings take longer than the small angle formula says. Hang a second pendulum from the first for normal modes at low energy and chaos at high energy: 100 copies a millionth of a radian apart fan out, and a Poincaré section shows islands in a chaotic sea.",
-     "tags": [
-      "large amplitude pendulum",
-      "normal modes",
-      "chaos",
-      "Poincaré section"
      ]
     },
     {
