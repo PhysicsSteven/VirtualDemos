@@ -2124,11 +2124,12 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
+        "terminal-velocity",
         "projectile-drag",
         "viscometer"
       ],
       "unit": "forces",
-      "note": "Falling Ball Viscometer: Stokes drag and terminal speed measured (worksheet viscometer). (OpenStax recheck 2026-10-24, Claude)"
+      "note": "Terminal Velocity (2026-10-24, Claude): the textbook's skydivers (Example 6.17 and the head first diver), body position changes, a round canopy, thin air (standard atmosphere) and stacked coffee filters; worksheet terminal-velocity. Falling Ball Viscometer: Stokes drag and terminal speed measured (worksheet viscometer). (OpenStax recheck 2026-10-24, Claude)"
     },
     {
       "vol": 1,
@@ -10043,6 +10044,28 @@
       ],
       "title": "The Cavendish Experiment",
       "url": "demos/cavendish.html"
+    },
+    {
+      "demo": "terminal-velocity",
+      "course": [
+        "physics-1"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "6.4",
+          "title": "Drag Force and Terminal Speed"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). A skydiver falling in 3D with quadratic drag, D = ½ρCAv²: the textbook's spread eagle (C = 1.0, A = 0.70 m²) and head first (C = 0.70, A = 0.18 m²) values, position changes during the fall, a round canopy (C = 0.81 on a 10.0 m flat diameter, Scher and Young 1971), uniform air of 1.21 kg/m³ or the standard atmosphere; coffee filters (0.86 g, 15.1 cm, C = 0.71, Boyle and Pantaleone 2022) dropped onto a motion detector. RK4 checked against v_T tanh(gt/v_T). Worksheet terminal-velocity with a key from real runs in TeacherKeys.",
+      "handouts": [
+        "terminal-velocity"
+      ],
+      "title": "Terminal Velocity",
+      "url": "demos/terminal-velocity.html"
     }
   ],
   "activities": [

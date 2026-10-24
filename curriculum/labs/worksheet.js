@@ -19,7 +19,8 @@
     'vectors' /* components, sums, differences and products, Vectors demo, 2026-10-24 */,
     'shear-bulk' /* Shear and Bulk tests of the Stress and Strain demo, 2026-10-24 */,
     'pipe-flow' /* Flow in a pipe experiment of the Falling Ball Viscometer demo, 2026-10-24 */,
-    'cavendish' /* torsion balance, The Cavendish Experiment demo, 2026-10-24 */];
+    'cavendish' /* torsion balance, The Cavendish Experiment demo, 2026-10-24 */,
+    'terminal-velocity' /* skydiver and coffee filters, Terminal Velocity demo, 2026-10-24 */];
   const ENABLED = PHYSICS_I.slice();
   /* Readings a demo hands over with its Export to worksheet button (localStorage key vd-handoff:<worksheet>). For each worksheet:
      the demo's name and, for each column of the worksheet's first data table, what fills it: a column of the demo's CSV, '#name' for
@@ -55,6 +56,10 @@
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.test === 'bulk'), cols: ['row', 'sample', 'F_kN', 'piston_dx_mm', 'gauge_strain_ue', null, null] }] },
     /* Reading | Liquid and pipe | Valve (%) | V (mL) | t (s) | ΔP (Pa) | Q | v | N_R | Dye (Q, v and N_R are the student's) */
     'cavendish': { demo: 'The Cavendish Experiment', cols: ['row', 'spheres', 't_s', 'S_cm', null, null] },
+    /* Reading | Body | m (kg) | t (s) | Fallen y (m) | v (m/s) | a (m/s²) | v² | D (v² and D are the student's). Coffee filter series (every row
+       a filter drop) go to the second table: Drop | Filters n | m (kg) | Release height (m) | t at landing (s) | v at landing (m/s) | v² */
+    'terminal-velocity': { demo: 'Terminal Velocity', cols: ['row', 'body', 'm_kg', 't_s', 'y_m', 'v_m_s', 'a_m_s2', null, null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.object === 'coffee filters'), cols: ['row', 'n', 'm_kg', 'drop_m', 't_s', 'v_m_s', null] }] },
     'pipe-flow': { demo: 'Falling Ball Viscometer (Flow in a pipe)', cols: ['row', (r) => `${r.liquid}, ${r.pipe_D_mm} mm`, 'valve_percent', 'V_mL', 't_s', 'dP_Pa', null, null, null, 'dye'] },
     /* Force table setup of the Vectors demo. The handout's first data table is expected to have these columns in this order:
        Trial | m₁ (kg) | θ₁ (°) | m₂ (kg) | θ₂ (°) | m₃ (kg) | θ₃ (°) | m₄ (kg) | θ₄ (°) | Ring centered?  (more columns may follow). */
@@ -442,7 +447,7 @@
      their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
-  const GRAPH_EVERY_TABLE = ['shear-bulk', 'neutral-attraction'];
+  const GRAPH_EVERY_TABLE = ['shear-bulk', 'neutral-attraction', 'terminal-velocity'];
   GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };

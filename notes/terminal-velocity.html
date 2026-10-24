@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Terminal Velocity: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Terminal Velocity</h1><ul class="meta"><li><a href="../demos/terminal-velocity.html">Open the demo</a></li><li>Intro mechanics (drag)</li><li>15 to 25 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Drag grows with speed, so a falling body speeds up less and less until the drag equals its weight. From then on the net force is zero and the speed stays at the terminal speed v_T = √(2mg/(ρCA)).</li>
+<li>The terminal speed depends on the weight and on the drag area CA: a heavier body, or one presenting less area, falls faster. The skydiver's body position and the parachute work by changing CA.</li>
+<li>The terminal speed is not one fixed number: it depends on the air density, so it changes on the way down from a high jump.</li>
+</ul>
+<h2>Before class</h2>
+<p>Students should know Newton's second law and the drag force D = ½ρCAv² (§6.4). The demo opens on the textbook's Example 6.17: an 85 kg skydiver spread eagle (C = 1.0, A = 0.70 m²) jumps from 4000 m and falls in 3D, with the weight and drag arrows to scale with each other and streaks showing the air moving past in 0.05 s. A speed bar, the graph and the readouts show v approaching v_T. Spread eagle and Head first switch the body position during the fall (1.0 s to change), and Pull opens a round canopy (the parachute also opens by itself at the pull altitude). Other setups: Parachute (pulled at 1500 m), Thin air from 10 km (the standard atmosphere), and one or four nested coffee filters dropped 2.00 m onto a motion detector. Step stops on whole seconds (0.05 s for the filters) for readings; Blind hides v_T, the forces and the drag area.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Jump.</strong> Ask Q1 before pressing Jump, then let it run: the drag arrow grows until it matches the weight, and the curve flattens at 44.4 m/s.</li>
+<li><strong>How fast does it get there?</strong> Pause near t = 4.5 s (v_T/g) and ask Q2.</li>
+<li><strong>Head first.</strong> Switch to Head first on the way down: the speed climbs again, to 98 m/s for the textbook's 75 kg diver. Ask Q3. Switch back and watch it fall back to 44 m/s.</li>
+<li><strong>Parachute.</strong> Run the Parachute setup at ×5. Ask Q4 while it opens; the largest deceleration is shown when Blind is off.</li>
+<li><strong>Coffee filters.</strong> Drop one filter, then four (Q5). The graph keeps the earlier falls in grey for comparison.</li>
+<li><strong>Thin air.</strong> Run Thin air, from 10 km, and ask Q6 when the speed starts to fall.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Find the terminal speed of an 85 kg skydiver spread eagle, with C = 1.0, A = 0.70 m² and ρ = 1.21 kg/m³. Why does the speed stop growing?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> From rest in uniform air, v = v_T tanh(gt/v_T). What fraction of v_T has the skydiver of Q1 reached at t = v_T/g, and when is the speed within 1% of v_T?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The textbook's 75 kg skydiver head first has C = 0.70 and A = 0.18 m². Find v_T, and the ratio to the spread eagle value of Q1.</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Under a canopy with CA = 63.6 m² (plus 0.13 m² for the body), what is the 85 kg skydiver's terminal speed? Landing at that speed is like jumping off a wall of what height?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> One coffee filter of 0.86 g falls at 1.05 m/s. How fast do four nested filters fall, and why?</p></div>
+
+<div class="q"><p><strong>Q6.</strong> Jumping from 10 000 m in the standard atmosphere (ρ = 0.4135 kg/m³ there, 1.225 kg/m³ at the ground), the spread eagle skydiver reaches a top speed and then slows down. Explain why, and estimate the top speed.</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"At terminal speed there is no force on the body."</strong> The weight and the drag are both there; they cancel.</li>
+<li><strong>"A heavier body falls faster because gravity pulls it harder."</strong> In a vacuum all bodies fall together. With drag, the heavier body has to go faster before the drag can balance its larger weight.</li>
+<li><strong>"The parachute pulls you up."</strong> The canopy makes the drag larger than the weight for a few seconds, so the acceleration points up and the body slows down; it never moves up.</li>
+<li><strong>"Terminal speed is reached quickly and exactly."</strong> The approach is gradual: about 12 s and 390 m to get within 1% for the spread eagle skydiver, and in thin air it is never one number.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Down positive, m dv/dt = mg − ½ρ(CA)v|v|, g = 9.80 m/s²; buoyancy and added mass left out, a straight vertical fall. RK4 with steps of at most 10 ms and v_T/(100g); it matches v_T tanh(gt/v_T) to 1 part in 10⁹, and landing is found by bisection.</li>
+<li>Uniform air ρ = 1.21 kg/m³ (the textbook's); the thin air option is the International Standard Atmosphere below 11 km (U.S. Standard Atmosphere 1976).</li>
+<li>Skydiver: C = 1.0 and A = 0.70 m² spread eagle, C = 0.70 and A = 0.18 m² head first (the textbook's Table 6.2 and examples); position changes take 1.0 s at a steady rate of change of CA.</li>
+<li>Canopy: flat circular, 10.0 m flat diameter, C = 0.81 on the flat area (Scher and Young, NASA TN D-6423, 1971), CA = 63.6 m²; 1.0 s line stretch, 3.0 s fill with CA growing in proportion to time (model choices), body upright under it.</li>
+<li>Coffee filter: 0.86 g, 15.1 cm across, C = 0.71 (Boyle and Pantaleone, arXiv:2206.14902, 2022). Nested filters: n times the mass, the same area.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>Projectile Range</strong> (the same drag force on a ball in flight) and the <strong>Falling Ball Viscometer</strong> (Stokes' law, where the drag is proportional to v, §14.7).</li>
+<li>Homework: Haldane's mouse. A body scaled down by 10 in every length has 1/1000 of the weight and 1/100 of the area. By what factor does its terminal speed change?</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

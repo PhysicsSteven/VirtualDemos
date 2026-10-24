@@ -1,0 +1,738 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<title>Terminal Velocity</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: its colours, the picture, the Set up card, the in picture controls and the graph */
+:root { --weight: #c23f2c; --drag: #2b60b5; --vt: #2f9a52; --suit: #e8692c; --sky-hi: #5b8fd0; --sky-lo: #d9e8f6; --ghost: #9aa3ad; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --weight: #ff7660; --drag: #69a0ff; --vt: #4cc07f; --suit: #f07a3c; --sky-hi: #1b3150; --sky-lo: #4a6a8c; --ghost: #6c7683; } }
+:root[data-theme="dark"] { --weight: #ff7660; --drag: #69a0ff; --vt: #4cc07f; --suit: #f07a3c; --sky-hi: #1b3150; --sky-lo: #4a6a8c; --ghost: #6c7683; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.scene { position: relative; flex: 1 1 auto; min-height: 440px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.plotbox { position: relative; flex: none; height: 230px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.plotbox .seg { position: absolute; top: 6px; right: 8px; z-index: 2; }
+.plotbox .seg button { padding: 3px 9px; font-size: 0.8rem; }
+.viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; max-width: calc(100% - 300px); }
+.actbar { position: absolute; left: 10px; bottom: 30px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.actbar[hidden] { display: none; }
+.actbar .seg, .viewbar .seg { background: color-mix(in srgb, var(--surface) 90%, transparent); }
+#pull { background: var(--suit); color: #fff; border-color: transparent; font-weight: 700; }
+#pull:disabled { opacity: 0.45; cursor: default; }
+.setup-card { position: absolute; z-index: 3; right: 12px; top: 12px; width: 270px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card.ghost { opacity: 0.25; pointer-events: none; }
+.setup-card [hidden] { display: none; }
+.setup-card .seg button { padding: 4px 8px; font-size: 0.8rem; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+@media (min-width: 821px) { .stage { min-height: 700px; } }
+@media (max-width: 820px) {
+  .scene { min-height: 0; height: 440px; flex: none; } .plotbox { height: 210px; }
+  .viewbar { max-width: calc(100% - 20px); } .setup-card { position: static; width: auto; margin: 8px; }
+}
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Terminal Velocity</h1>
+      <p>Jump from a plane and the air pushes back harder the faster you fall, until the drag balances your weight and the speed stops growing. Change your body position, open the parachute, jump where the air is thin, or drop stacks of coffee filters, and measure the terminal speed.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">SI units · down is positive</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/terminal-velocity.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/terminal-velocity.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h1v1h-1zM17 2h5v1h-5zM24 2h2v1h-2zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM13 3h1v1h-1zM17 3h2v1h-2zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM14 4h1v1h-1zM17 4h10v1h-10zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM14 5h1v1h-1zM20 5h2v1h-2zM25 5h5v1h-5zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM15 7h4v1h-4zM20 7h3v1h-3zM27 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h2v1h-2zM15 9h2v1h-2zM18 9h6v1h-6zM25 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM13 10h2v1h-2zM16 10h2v1h-2zM20 10h2v1h-2zM23 10h1v1h-1zM25 10h1v1h-1zM28 10h1v1h-1zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h3v1h-3zM6 11h1v1h-1zM9 11h1v1h-1zM12 11h1v1h-1zM14 11h1v1h-1zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h5v1h-5zM34 11h4v1h-4zM2 12h4v1h-4zM8 12h1v1h-1zM12 12h1v1h-1zM14 12h1v1h-1zM18 12h1v1h-1zM22 12h5v1h-5zM28 12h4v1h-4zM33 12h2v1h-2zM5 13h1v1h-1zM7 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM19 13h1v1h-1zM23 13h3v1h-3zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM3 14h4v1h-4zM8 14h4v1h-4zM15 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM29 14h4v1h-4zM36 14h3v1h-3zM7 15h1v1h-1zM9 15h1v1h-1zM12 15h1v1h-1zM14 15h6v1h-6zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM3 16h2v1h-2zM6 16h1v1h-1zM8 16h1v1h-1zM12 16h2v1h-2zM15 16h3v1h-3zM20 16h1v1h-1zM22 16h1v1h-1zM25 16h2v1h-2zM28 16h2v1h-2zM33 16h5v1h-5zM2 17h1v1h-1zM7 17h1v1h-1zM12 17h3v1h-3zM17 17h1v1h-1zM21 17h4v1h-4zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h2v1h-2zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h2v1h-2zM5 18h1v1h-1zM8 18h3v1h-3zM12 18h2v1h-2zM15 18h2v1h-2zM18 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h3v1h-3zM9 19h2v1h-2zM13 19h1v1h-1zM15 19h1v1h-1zM20 19h2v1h-2zM25 19h1v1h-1zM27 19h1v1h-1zM29 19h2v1h-2zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h3v1h-3zM8 20h1v1h-1zM11 20h1v1h-1zM13 20h2v1h-2zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM4 21h3v1h-3zM11 21h2v1h-2zM17 21h3v1h-3zM21 21h3v1h-3zM28 21h4v1h-4zM36 21h2v1h-2zM2 22h1v1h-1zM8 22h3v1h-3zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h2v1h-2zM6 23h1v1h-1zM10 23h2v1h-2zM14 23h2v1h-2zM17 23h2v1h-2zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM5 24h2v1h-2zM8 24h1v1h-1zM11 24h1v1h-1zM17 24h3v1h-3zM22 24h4v1h-4zM27 24h3v1h-3zM33 24h4v1h-4zM2 25h1v1h-1zM9 25h1v1h-1zM11 25h2v1h-2zM16 25h2v1h-2zM19 25h6v1h-6zM26 25h1v1h-1zM29 25h2v1h-2zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM3 26h1v1h-1zM5 26h2v1h-2zM8 26h3v1h-3zM12 26h2v1h-2zM15 26h2v1h-2zM20 26h1v1h-1zM22 26h5v1h-5zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h5v1h-5zM9 27h3v1h-3zM13 27h1v1h-1zM15 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM24 27h2v1h-2zM27 27h5v1h-5zM34 27h2v1h-2zM6 28h3v1h-3zM10 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM18 28h3v1h-3zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM4 29h2v1h-2zM9 29h2v1h-2zM13 29h1v1h-1zM19 29h2v1h-2zM22 29h3v1h-3zM26 29h1v1h-1zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h2v1h-2zM7 30h2v1h-2zM10 30h2v1h-2zM13 30h1v1h-1zM17 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM25 30h2v1h-2zM29 30h6v1h-6zM36 30h1v1h-1zM10 31h6v1h-6zM18 31h3v1h-3zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h1v1h-1zM15 32h4v1h-4zM20 32h1v1h-1zM22 32h2v1h-2zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM13 33h1v1h-1zM17 33h1v1h-1zM23 33h2v1h-2zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM13 34h2v1h-2zM17 34h2v1h-2zM22 34h5v1h-5zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM15 35h2v1h-2zM20 35h1v1h-1zM23 35h1v1h-1zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM15 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM22 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM14 37h7v1h-7zM22 37h5v1h-5zM28 37h2v1h-2zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h1v1h-1zM19 38h1v1h-1zM22 38h5v1h-5zM29 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="A skydiver falling through the sky, or coffee filters falling in a lab, in 3D or from the side, with arrows for the weight and the drag. Space runs or pauses."></canvas>
+        <div class="viewbar"><button type="button" class="spin attn" id="go">Jump</button><button type="button" class="spin" id="step">Step 1 s</button><button type="button" class="spin" id="restart">Start over</button><div class="seg" role="group" aria-label="View" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div></div>
+        <div class="actbar" id="actbar"><div class="seg" role="group" aria-label="Body position" id="posSeg"><button type="button" data-pos="spread" aria-pressed="true">Spread eagle</button><button type="button" data-pos="head" aria-pressed="false">Head first</button></div><button type="button" class="spin" id="pull">Pull</button></div>
+        <div class="setup-card" id="setupCard" role="group" aria-label="Set up the fall">
+          <span class="card-title" id="cardTitle">Set up, then jump</span>
+          <div data-for="sky"><div class="slider-head"><label for="sM">Mass with gear m</label><output id="oM" for="sM"></output></div><input type="range" id="sM" min="40" max="130" step="1"></div>
+          <div data-for="sky"><div class="slider-head"><label for="sH">Exit altitude</label><output id="oH" for="sH"></output></div><input type="range" id="sH" min="1000" max="11000" step="100"></div>
+          <div data-for="sky"><div class="slider-head"><label for="sP">Pull altitude</label><output id="oP" for="sP"></output></div><input type="range" id="sP" min="500" max="3000" step="100"></div>
+          <div data-for="sky"><div class="slider-head"><span>Air</span></div><div class="seg" role="group" aria-label="Air" id="airSeg"><button type="button" data-air="text" aria-pressed="true">Uniform, 1.21 kg/m³</button><button type="button" data-air="isa" aria-pressed="false">Thins with height</button></div></div>
+          <div data-for="lab"><div class="slider-head"><label for="sN">Filters stacked n</label><output id="oN" for="sN"></output></div><input type="range" id="sN" min="1" max="8" step="1"></div>
+          <div data-for="lab"><div class="slider-head"><label for="sD">Release height above the detector</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="0.5" max="3" step="0.05"></div>
+        </div>
+      </div>
+      <div class="plotbox"><canvas id="chart" role="img" aria-label="Graph of the speed, the acceleration or the distance fallen against time, with earlier falls in grey"></canvas><div class="seg" role="group" aria-label="Graph" id="plotSeg"><button type="button" data-g="v" aria-pressed="true">v</button><button type="button" data-g="a" aria-pressed="false">a</button><button type="button" data-g="y" aria-pressed="false">y</button></div></div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/terminal-velocity.html" target="terminal-velocity-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="spread" aria-pressed="true">Spread eagle</button>
+          <button type="button" data-p="head" aria-pressed="false">Head first</button>
+          <button type="button" data-p="canopy" aria-pressed="false">Parachute</button>
+          <button type="button" data-p="thin" aria-pressed="false">Thin air, from 10 km</button>
+          <button type="button" data-p="filter1" aria-pressed="false">One coffee filter</button>
+          <button type="button" data-p="filter4" aria-pressed="false">Four stacked filters</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Time</h2>
+        <div class="seg" role="group" aria-label="Playback speed" id="spdSeg"><button type="button" data-s="0" aria-pressed="true">×1</button><button type="button" data-s="1" aria-pressed="false">×5</button><button type="button" data-s="2" aria-pressed="false">×20</button></div>
+        <div class="slider-head"><span>Step</span></div><div class="seg" role="group" aria-label="Step size" id="stepSeg"><button type="button" data-k="0" aria-pressed="true">1 s</button><button type="button" data-k="1" aria-pressed="false">0.1 s</button></div>
+        <details class="more"><summary>More about this</summary><p class="hint" id="timeHint">The clock always shows the real time of the fall; the playback speed only changes how long you wait. Step runs the fall to the next whole step of the clock (1 s or 0.1 s for a skydiver, 0.05 s or 0.01 s for the filters) and stops there, so readings land on round times. Space on the picture runs or pauses.</p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="terminal-velocity" data-title="Terminal Velocity" data-demo="terminal-velocity">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">D = ½ρCAv², ma = mg − D, v_T = √(2mg/(ρCA))</p>
+          <p class="hint">Model: the drag is ½ρCAv² against the motion, with a constant drag coefficient C (OpenStax University Physics Vol. 1, §6.4). Buoyancy and the air carried along with the body are left out, and the fall is straight down (a real exit also carries the plane's forward speed). g = 9.80 m/s² everywhere. Uniform air has the textbook's ρ = 1.21 kg/m³; air that thins with height follows the International Standard Atmosphere below 11 km (U.S. Standard Atmosphere 1976: 288.15 K and 101 325 Pa at the ground, cooling 6.5 K per km), so ρ is 1.225 kg/m³ at the ground and 0.413 kg/m³ at 10 km.</p>
+          <p class="hint">Skydiver: C = 1.0 and A = 0.70 m² spread eagle, C = 0.70 and A = 0.18 m² head first, the textbook's Table 6.2 and its two examples. A change of position takes 1.0 s, with the drag area CA changing at a steady rate. The round canopy is a flat circular one 10.0 m across when laid flat, with C = 0.81 on that flat area (Scher and Young, NASA TN D-6423, 1971), so CA = 63.6 m². After the pull the lines take 1.0 s to stretch, then the canopy fills in 3.0 s, its drag area growing in step with time; under it the body hangs upright with the head first values. The 10.0 m, 1.0 s and 3.0 s are model choices. The canopy is drawn with its open area in proportion to its drag area.</p>
+          <p class="hint">Coffee filter: 0.86 g, 15.1 cm across the top, C = 0.71 on that circle (Boyle and Pantaleone, "The added mass of a falling coffee filter", arXiv:2206.14902, 2022, who measured 1.1 m/s for one filter). Stacked filters nest, so n of them have n times the mass and the same area. The motion detector under them reads the height above its face.</p>
+          <p class="hint">The motion is integrated with fourth order Runge–Kutta in steps of at most 10 ms and a hundredth of v_T/g; from rest in uniform air it agrees with the exact v = v_T tanh(gt/v_T) to better than 1 part in 10⁹. Readings: t to 0.01 s, distances to 0.01 m, altitude to 0.1 m, v to 0.01 m/s and a to 0.01 m/s². No noise is added.</p>
+          <p class="hint">Blind hides the terminal speed, the drag force and the weight, the drag area, the air density, the largest deceleration, the force arrows and the terminal speed line on the graph, leaving the clock, the height, v and a.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Falling through air with quadratic drag (OpenStax Vol 1 §6.4). Down is positive: y is the distance fallen and v the speed
+     downward. The drag is D = ½ρ(CA)v², against the motion; buoyancy and the air carried along with the body are left out. */
+  const G = 9.80;                          // m/s², uniform: the textbook's value in §6.4
+  const RHO_TEXT = 1.21;                   // kg/m³, the textbook's air density in §6.4
+  // The International Standard Atmosphere below 11 km (U.S. Standard Atmosphere 1976): T falls 6.5 K per km from 288.15 K,
+  // p = p₀(T/T₀)^(g₀M/(RL)), and ρ = pM/(RT).
+  const ISA = { T0: 288.15, P0: 101325, L: 0.0065, M: 0.0289644, R: 8.31432, g0: 9.80665, top: 11000 };
+  const isaT = (z) => ISA.T0 - ISA.L * Math.min(z, ISA.top);
+  const isaP = (z) => ISA.P0 * Math.pow(isaT(z) / ISA.T0, ISA.g0 * ISA.M / (ISA.R * ISA.L));
+  const isaRho = (z) => isaP(z) * ISA.M / (ISA.R * isaT(z));
+  // Bodies. Skydiver: Table 6.2 of §6.4 (C = 1.0 horizontal, 0.70 feet or head first) with the section's areas (0.70 m² spread
+  // eagle, 0.18 m² head first). Round canopy: a flat circular canopy, C = 0.81 on its flat area (Scher and Young, NASA TN D-6423,
+  // 1971); the 10.0 m flat diameter, the 1.0 s for the lines to stretch and the 3.0 s for the canopy to fill (drag area growing
+  // in proportion to time) are model choices. A change of body position takes 1.0 s, the drag area changing at a steady rate.
+  // Coffee filter: 0.86 g, 15.1 cm across the top, C = 0.71 on that circle (Boyle and Pantaleone, arXiv:2206.14902, 2022).
+  const BODY = { spread: { C: 1.0, A: 0.70 }, head: { C: 0.70, A: 0.18 }, upright: { C: 0.70, A: 0.18 } };
+  const CANOPY = { C: 0.81, D0: 10.0, stretch: 1.0, fill: 3.0 };
+  const FILTER = { m: 0.86e-3, D: 0.151, C: 0.71 };
+  const SWITCH = 1.0;
+  const bodyCA = (k) => BODY[k].C * BODY[k].A;
+  const canopyCA = () => CANOPY.C * Math.PI * CANOPY.D0 * CANOPY.D0 / 4;
+  const filterCA = () => FILTER.C * Math.PI * FILTER.D * FILTER.D / 4;
+  // terminal speed where the drag balances the weight: v_T = √(2mg/(ρ CA))
+  const vTerm = (m, CA, rho) => Math.sqrt(2 * m * G / (rho * CA));
+  // from rest in uniform air with a fixed drag area: v = v_T tanh(gt/v_T), y = (v_T²/g) ln cosh(gt/v_T)
+  const lnCosh = (x) => { const a = Math.abs(x); return a + Math.log1p(Math.exp(-2 * a)) - Math.LN2; };
+  const vExact = (vt, t) => vt * Math.tanh(G * t / vt);
+  const yExact = (vt, t) => vt * vt / G * lnCosh(G * t / vt);
+  /* A fall f = { kind: 'sky' | 'filter', m, h0 (start height above the ground or the detector), air: 'text' | 'isa', pos0, moves:
+     [[t, position]] (changes of body position, in time order), pull (time the ripcord was pulled, or null) }.
+     The drag area at time t and what it is made of: body, canopy and how full the canopy is. */
+  function dragParts(f, t) {
+    if (f.kind === 'filter') return { body: filterCA(), canopy: 0, fill: 0 };
+    const open = f.pull != null ? f.pull + CANOPY.stretch : Infinity, moves = f.moves.slice();
+    if (f.pull != null) moves.push([open, 'upright']);
+    moves.sort((a, b) => a[0] - b[0]);
+    let t0 = -Infinity, from = bodyCA(f.pos0), to = from;
+    for (const [tm, k] of moves) {
+      if (tm > t) break;
+      from = from + (to - from) * Math.min(1, (tm - t0) / SWITCH); to = bodyCA(k); t0 = tm;
+    }
+    const body = from + (to - from) * Math.min(1, Math.max(0, (t - t0) / SWITCH));
+    const fill = t <= open ? 0 : Math.min(1, (t - open) / CANOPY.fill);
+    return { body, canopy: canopyCA() * fill, fill };
+  }
+  const dragArea = (f, t) => { const p = dragParts(f, t); return p.body + p.canopy; };
+  const airRho = (f, y) => (f.air === 'isa' ? isaRho(Math.max(0, f.h0 - y)) : RHO_TEXT);
+  // acceleration, down positive: a = g − ½ρ(CA)v|v|/m
+  const accel = (f, t, y, v) => G - 0.5 * airRho(f, y) * dragArea(f, t) * v * Math.abs(v) / f.m;
+  function rk4(f, s, h) {
+    const k1y = s.v, k1v = accel(f, s.t, s.y, s.v);
+    const k2y = s.v + h / 2 * k1v, k2v = accel(f, s.t + h / 2, s.y + h / 2 * k1y, k2y);
+    const k3y = s.v + h / 2 * k2v, k3v = accel(f, s.t + h / 2, s.y + h / 2 * k2y, k3y);
+    const k4y = s.v + h * k3v, k4v = accel(f, s.t + h, s.y + h * k3y, k4y);
+    return { t: s.t + h, y: s.y + h / 6 * (k1y + 2 * k2y + 2 * k3y + k4y), v: s.v + h / 6 * (k1v + 2 * k2v + 2 * k3v + k4v) };
+  }
+  // the step: a hundredth of the time v_T/g over which the speed changes, and never more than 10 ms
+  const stepFor = (f, s) => Math.min(0.01, vTerm(f.m, dragArea(f, s.t), airRho(f, s.y)) / G / 100);
+  /* advance s by dt, or to the ground (found by bisection on the last step); onStep(s) after each step may change f (a pull) */
+  function advance(f, s, dt, onStep) {
+    const tEnd = s.t + dt; let landed = false;
+    while (s.t < tEnd - 1e-12) {
+      const h = Math.min(stepFor(f, s), tEnd - s.t), nx = rk4(f, s, h);
+      if (nx.y >= f.h0) {
+        let lo = 0, hi = h; for (let i = 0; i < 50; i++) { const m = (lo + hi) / 2; if (rk4(f, s, m).y < f.h0) lo = m; else hi = m; }
+        Object.assign(s, rk4(f, s, hi)); s.y = f.h0; landed = true; break;
+      }
+      Object.assign(s, nx); if (onStep) onStep(s);
+    }
+    return landed;
+  }
+  const roundTo = (v, step) => +(Math.round(v / step) * step).toFixed(Math.max(0, Math.ceil(-Math.log10(step) - 1e-9)));
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id), VG = window.VDGear;
+  const NAMES = { spread: 'spread eagle', head: 'head first' };
+  const PRESETS = {
+    spread: { kind: 'sky', m: 85, h0: 4000, pullAlt: 1000, air: 'text', pos0: 'spread', label: 'Spread eagle, 85 kg',
+      hint: 'The textbook\'s Example 6.17: an 85 kg skydiver spread eagle, C = 1.0 and A = 0.70 m² in air of 1.21 kg/m³. v_T = √(2 × 85 × 9.80 / (1.21 × 1.0 × 0.70)) = 44.4 m/s, about 160 km/h. The parachute opens by itself at the pull altitude.' },
+    head: { kind: 'sky', m: 75, h0: 4000, pullAlt: 1000, air: 'text', pos0: 'head', label: 'Head first, 75 kg',
+      hint: 'The textbook\'s 75 kg skydiver head first: C = 0.70 and A = 0.18 m², less than a fifth of the spread eagle drag area, so v_T = 98.2 m/s, about 350 km/h. Switch to spread eagle on the way down and watch the speed fall back.' },
+    canopy: { kind: 'sky', m: 85, h0: 2000, pullAlt: 1500, air: 'text', pos0: 'spread', label: 'Parachute at 1500 m',
+      hint: 'Out at 2000 m, pull at 1500 m, already at terminal speed. The canopy multiplies the drag area about ninety times, so the speed drops to v_T = 4.65 m/s. While it fills, the drag reaches six times the weight: a deceleration of 5 g.' },
+    thin: { kind: 'sky', m: 85, h0: 10000, pullAlt: 1000, air: 'isa', pos0: 'spread', label: 'Thin air, from 10 km',
+      hint: 'Out at 10 000 m, where the air is a third as dense as at the ground. The speed peaks above 70 m/s, then falls as the air thickens: the terminal speed is not one number on the way down.' },
+    filter1: { kind: 'filter', n: 1, h0: 2.0, label: 'One filter', hint: 'One basket coffee filter, 0.86 g, released from rest 2.00 m above a motion detector. Its terminal speed is 1.05 m/s, and it is within 1% of it after 22 cm.' },
+    filter4: { kind: 'filter', n: 4, h0: 2.0, label: 'Four filters', hint: 'Four filters nested together: four times the weight on the same area, so the terminal speed doubles, to 2.09 m/s.' },
+  };
+  const SPEEDS = { sky: [1, 5, 20], filter: [0.1, 0.25, 1] }, STEP = { sky: [1, 0.1], filter: [0.05, 0.01] };
+  /* the fall f, its state s, and what the page shows */
+  const S = { preset: 'spread', kind: 'sky', m: 85, h0: 4000, pullAlt: 1000, air: 'text', pos0: 'spread', n: 1, f: null, s: null, landed: false,
+    run: false, spd: 0, stepK: 0, blind: false, trace: [], ghosts: [], peak: 0, graph: 'v', label: '' };
+  function makeFall() {
+    return S.kind === 'filter' ? { kind: 'filter', m: S.n * FILTER.m, h0: S.h0, air: 'text', pos0: 'spread', moves: [], pull: null }
+      : { kind: 'sky', m: S.m, h0: S.h0, air: S.air, pos0: S.pos0, moves: [], pull: null };
+  }
+  const aNow = () => accel(S.f, S.s.t, S.s.y, S.s.v);
+  function startOver(keepGhost = true) {
+    if (keepGhost && S.trace.length > 2 && S.s && S.s.t > 0.2) { S.ghosts.unshift({ kind: S.kind, label: S.label, pts: S.trace }); S.ghosts = S.ghosts.slice(0, 3); }
+    S.f = makeFall(); S.s = { t: 0, y: 0, v: 0 }; S.landed = false; S.peak = 0; S.trace = [[0, 0, 0, G]];
+    S.label = S.kind === 'filter' ? `${S.n} filter${S.n > 1 ? 's' : ''}` : `${NAMES[S.pos0]}, ${S.m} kg${S.air === 'isa' ? ', thin air' : ''}`;
+  }
+  const curPos = () => (S.f.moves.length ? S.f.moves[S.f.moves.length - 1][1] : S.f.pos0);
+  const alt = () => S.f.h0 - S.s.y;
+  function onStep(s) {
+    if (S.kind === 'sky' && S.f.pull == null && S.f.h0 - s.y <= S.pullAlt) S.f.pull = s.t;
+    const a = accel(S.f, s.t, s.y, s.v);
+    if (S.f.pull != null && -a > S.peak) S.peak = -a;
+    const last = S.trace[S.trace.length - 1], gap = S.kind === 'filter' ? 0.005 : (S.f.pull != null && s.t < S.f.pull + 6 ? 0.05 : 0.2);
+    if (s.t - last[0] >= gap - 1e-9) S.trace.push([s.t, s.y, s.v, a]);
+  }
+  function go(dt) {
+    if (S.landed) return;
+    const landed = advance(S.f, S.s, dt, onStep);
+    if (landed) { S.landed = true; S.trace.push([S.s.t, S.s.y, S.s.v, aNow()]); setRun(false); say(S.kind === 'filter' ? `Landed at t = ${f2(S.s.t)} s, at ${f2(S.s.v)} m/s.` : `Landed at t = ${f1(S.s.t)} s, at ${f2(S.s.v)} m/s.`); }
+  }
+  /* step to the next whole step of the clock */
+  function stepOnce() { const d = STEP[S.kind][S.stepK], next = (Math.floor(S.s.t / d + 1e-6) + 1) * d; go(next - S.s.t); S.s.t = S.landed ? S.s.t : roundTo(S.s.t, 1e-9); }
+  function posLabel() {
+    const f = S.f, t = S.s.t;
+    if (S.kind === 'filter') return S.landed ? 'landed' : 'falling';
+    if (S.landed) return 'landed';
+    if (f.pull != null) { const p = dragParts(f, t); return t < f.pull + CANOPY.stretch ? 'lines stretching' : p.fill < 1 ? 'canopy opening' : 'under canopy'; }
+    const lm = f.moves[f.moves.length - 1]; if (lm && t - lm[0] < SWITCH) return 'changing position';
+    return NAMES[curPos()];
+  }
+
+  // ---------- page plumbing ----------
+  const can = $('can'), ctx = can.getContext('2d'), chart = $('chart'), cctx = chart.getContext('2d');
+  let W = 0, H = 0, CW = 0, CH = 0, dpr = 1, T = null;
+  const fx = (v, d) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const f1 = (v) => fx(v, 1), f2 = (v) => fx(v, 2);
+  const g3s = (v) => (!isFinite(v) ? '—' : Math.abs(v) >= 100 ? v.toFixed(0) : Math.abs(v) >= 10 ? v.toFixed(1) : v.toFixed(2)).replace('-', '−');
+  const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'), weight: g('--weight'), drag: g('--drag'), vt: g('--vt'), suit: g('--suit'),
+      skyHi: g('--sky-hi'), skyLo: g('--sky-lo'), ghost: g('--ghost'), surface: g('--surface'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+  function txt(c, s, x, y, o = {}) { const p = ps(); c.fillStyle = o.c || T.ink; c.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.bl || 'middle'; c.fillText(s, x, y); }
+  function tag(c, s, x, y, o = {}) { const p = ps(); c.font = `${o.b ? '700 ' : ''}${(o.s || 11) * p}px ${o.m ? T.mono : T.ui}`; const w = c.measureText(s).width, a = o.a || 'left', x0 = a === 'center' ? x - w / 2 : a === 'right' ? x - w : x;
+    c.fillStyle = VD3.dark() ? 'rgba(13,18,24,0.72)' : 'rgba(255,255,255,0.78)'; c.beginPath(); c.roundRect(x0 - 4 * p, y - 9 * p * (o.s || 11) / 11, w + 8 * p, 18 * p * (o.s || 11) / 11, 4 * p); c.fill(); txt(c, s, x, y, o); }
+  function arrow2(c, x0, y0, x1, y1, col, w) { const p = ps(), a = Math.atan2(y1 - y0, x1 - x0), h = Math.min(9 * p, Math.hypot(x1 - x0, y1 - y0) * 0.6);
+    c.strokeStyle = col; c.fillStyle = col; c.lineWidth = w * p; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1 - h * 0.6 * Math.cos(a), y1 - h * 0.6 * Math.sin(a)); c.stroke();
+    c.beginPath(); c.moveTo(x1, y1); c.lineTo(x1 - h * Math.cos(a - 0.4), y1 - h * Math.sin(a - 0.4)); c.lineTo(x1 - h * Math.cos(a + 0.4), y1 - h * Math.sin(a + 0.4)); c.closePath(); c.fill(); }
+  const status = { msg: '', until: 0 };
+  function say(m) { status.msg = m; status.until = performance.now() + 4000; }
+  /* seeded random numbers, so the clouds and fields are the same every time */
+  function rng(seed) { let x = seed >>> 0; return () => { x = (x + 0x6D2B79F5) >>> 0; let t = x; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  /* the air the body falls through: specks fixed in the air, wrapped into a box that follows the body. Each streak is how far the
+     air moves past the body in 0.05 s, so its length is v × 0.05 s */
+  const SPECKS = (() => { const r = rng(7), a = []; for (let i = 0; i < 140; i++) a.push([r() * 2 - 1, r() * 2 - 1, r()]); return a; })();
+  const EXPO = 0.05;
+  /* clouds at fixed places in the sky: [x, y, altitude, size] */
+  const CLOUDS = (() => { const r = rng(11), a = []; for (let i = 0; i < 26; i++) { const near = i < 6, R = near ? 120 + r() * 300 : 600 + r() * 7000, th = r() * Math.PI * 2;
+    a.push([R * Math.cos(th), R * Math.sin(th), 2300 + r() * 700, 120 + r() * 260]); } return a; })();
+
+  // ---------- 3D (three.js through demos/lib/vd3.js); the flat side view stays (Flat button, or ?view=flat) ----------
+  /* Metres, z up. Sky: the ground is z = 0 and the body falls along the z axis; lab: the detector's face is z = 0. Everything is to
+     scale: the skydiver about 1.8 m tall, the canopy as described in the model, the filter 15.1 cm across. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.55, ph: 1.5, zoom: 1 } };
+  let g3 = null;
+  const use3 = () => !!(G3.on && g3);
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function canvasTex(w, h, paint) { const c = document.createElement('canvas'); c.width = w; c.height = h; paint(c.getContext('2d'), w, h); const t = new THREE.CanvasTexture(c); t.anisotropy = 8; return t; }
+  function fieldsTex() {
+    return canvasTex(512, 512, (c, w, h) => {
+      const r = rng(3), cols = ['#7fa35a', '#93ad61', '#6b8f4e', '#b8a86a', '#a99a5c', '#86a35f', '#c4b47a', '#5f8546'];
+      c.fillStyle = '#7d9b58'; c.fillRect(0, 0, w, h);
+      const cut = (x, y, ww, hh, d) => { if (d > 4 || (d > 2 && r() < 0.3)) { c.fillStyle = cols[Math.floor(r() * cols.length)]; c.fillRect(x + 1, y + 1, ww - 2, hh - 2);
+          c.strokeStyle = 'rgba(60,70,40,0.25)'; c.lineWidth = 1; for (let k = 4; k < (ww > hh ? hh : ww); k += 6) { c.beginPath(); if (ww > hh) { c.moveTo(x + 2, y + k); c.lineTo(x + ww - 2, y + k); } else { c.moveTo(x + k, y + 2); c.lineTo(x + k, y + hh - 2); } c.stroke(); } return; }
+        if (ww > hh) { const s = ww * (0.3 + r() * 0.4); cut(x, y, s, hh, d + 1); cut(x + s, y, ww - s, hh, d + 1); } else { const s = hh * (0.3 + r() * 0.4); cut(x, y, ww, s, d + 1); cut(x, y + s, ww, hh - s, d + 1); } };
+      cut(0, 0, w, h, 0);
+      c.strokeStyle = '#b9b2a2'; c.lineWidth = 3; c.beginPath(); c.moveTo(0, h * 0.37); c.lineTo(w, h * 0.41); c.moveTo(w * 0.62, 0); c.lineTo(w * 0.58, h); c.stroke();
+      c.fillStyle = 'rgba(40,60,30,0.5)'; for (let i = 0; i < 160; i++) { c.beginPath(); c.arc(r() * w, r() * h, 1 + r() * 2.5, 0, 7); c.fill(); }
+    });
+  }
+  function puffTex() { return canvasTex(128, 128, (c, w) => { const g = c.createRadialGradient(w / 2, w / 2, 0, w / 2, w / 2, w / 2); g.addColorStop(0, 'rgba(255,255,255,0.95)'); g.addColorStop(0.45, 'rgba(255,255,255,0.6)'); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(0, 0, w, w); }); }
+  function rulerTex() {
+    return canvasTex(128, 2048, (c, w, h) => { c.fillStyle = '#f4ecd2'; c.fillRect(0, 0, w, h); c.fillStyle = '#222'; c.strokeStyle = '#222';
+      const pxm = h / 3.2; for (let cm = 0; cm <= 320; cm++) { const y = h - (cm / 100) * pxm - 0.1 * pxm * 0; const len = cm % 10 === 0 ? 0.55 : cm % 5 === 0 ? 0.35 : 0.2; c.lineWidth = cm % 10 === 0 ? 2.5 : 1.2; c.beginPath(); c.moveTo(0, y); c.lineTo(w * len, y); c.stroke();
+        if (cm % 10 === 0 && cm > 0) { c.font = '600 22px sans-serif'; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(cm % 100 === 0 ? `${cm / 100} m` : String(cm), w - 6, y); } } });
+  }
+  function woodTex() { return canvasTex(256, 256, (c, w, h) => { const r = rng(5); c.fillStyle = '#b48a5a'; c.fillRect(0, 0, w, h); for (let i = 0; i < 8; i++) { c.fillStyle = i % 2 ? '#a77d4f' : '#bc9262'; c.fillRect(0, i * 32, w, 31); }
+    c.strokeStyle = 'rgba(80,50,20,0.18)'; for (let i = 0; i < 90; i++) { const y = r() * h; c.beginPath(); c.moveTo(0, y); c.bezierCurveTo(w * 0.3, y + 3, w * 0.6, y - 3, w, y + 1); c.stroke(); } }); }
+  /* the skydiver: a jointed figure built standing (head up, front towards −y); pose() sets the joints and the body's turn */
+  function buildDiver(M) {
+    const root = new THREE.Group(), body = new THREE.Group(); root.add(body);
+    const suit = M({ roughness: 0.65 }), panel = M({ roughness: 0.6 }), skin = M({ roughness: 0.7, color: 0x2c2c30 }), helm = M({ roughness: 0.3, metalness: 0.1 }), visor = M({ roughness: 0.1, metalness: 0.6, color: 0x1c2733 }), rig = M({ roughness: 0.8 });
+    const mesh = (g, m) => { const x = new THREE.Mesh(g, m); x.castShadow = true; return x; };
+    const torso = mesh(new THREE.CylinderGeometry(0.17, 0.15, 0.62, 18).rotateX(Math.PI / 2), suit); torso.scale.set(1.15, 0.72, 1); torso.position.z = 0.27; body.add(torso);
+    const chest = mesh(new THREE.BoxGeometry(0.30, 0.02, 0.22), panel); chest.position.set(0, -0.125, 0.38); body.add(chest);
+    const pack = mesh(new THREE.BoxGeometry(0.3, 0.11, 0.44), rig); pack.position.set(0, 0.15, 0.3); body.add(pack);
+    const head = mesh(new THREE.SphereGeometry(0.115, 20, 14), helm); head.position.z = 0.7; body.add(head);
+    const vis = mesh(new THREE.SphereGeometry(0.1, 16, 10, -Math.PI * 0.8, Math.PI * 0.6, Math.PI * 0.35, Math.PI * 0.3), visor); vis.position.set(0, -0.025, 0.7); body.add(vis);
+    const limb = (len, r0, r1, m) => { const g = new THREE.Group(), c = mesh(new THREE.CylinderGeometry(r0, r1, len, 12).rotateX(Math.PI / 2).translate(0, 0, -len / 2), m), j = mesh(new THREE.SphereGeometry(r0, 12, 8), m); g.add(c, j); return g; };
+    const arms = [1, -1].map((s) => { const sh = limb(0.3, 0.055, 0.05, suit); sh.position.set(s * 0.2, 0, 0.53); const el = limb(0.27, 0.048, 0.042, suit); el.position.z = -0.3; sh.add(el);
+      const hand = mesh(new THREE.SphereGeometry(0.045, 10, 8), skin); hand.position.z = -0.29; el.add(hand); body.add(sh); return { sh, el, s }; });
+    const legs = [1, -1].map((s) => { const hp = limb(0.44, 0.075, 0.06, suit); hp.position.set(s * 0.1, 0, -0.02); const kn = limb(0.44, 0.058, 0.048, suit); kn.position.z = -0.44; hp.add(kn);
+      const foot = mesh(new THREE.BoxGeometry(0.09, 0.22, 0.07), skin); foot.position.set(0, -0.06, -0.47); kn.add(foot); body.add(hp); return { hp, kn, s }; });
+    /* poses: q is the body's turn about x; arms: abduction, back tilt, elbow; legs: abduction, back tilt, knee */
+    const POSES = {
+      spread: { q: Math.PI / 2, aA: 1.45, aB: 0.35, aE: 1.55, lA: 0.45, lB: 0.3, lK: 1.15 },
+      head: { q: Math.PI, aA: 0.18, aB: 0.25, aE: 0.1, lA: 0.05, lB: 0.0, lK: 0.05 },
+      upright: { q: 0, aA: 2.7, aB: -0.3, aE: 0.25, lA: 0.08, lB: -0.1, lK: 0.15 },
+    };
+    function pose(a, b, u) {
+      const P = POSES[a], Q = POSES[b], L = (k) => P[k] + (Q[k] - P[k]) * u;
+      body.rotation.set(L('q'), 0, 0);
+      for (const { sh, el, s } of arms) { sh.rotation.set(L('aB'), -s * L('aA'), 0, 'XYZ'); el.rotation.set(0, -s * L('aE'), 0); }
+      for (const { hp, kn, s } of legs) { hp.rotation.set(L('lB'), -s * L('lA'), 0, 'XYZ'); kn.rotation.set(L('lK'), 0, 0); }
+    }
+    return { root, pose, suit, panel, helm, rig };
+  }
+  /* the round canopy, inflated: a cap of a sphere 7.0 m across its skirt (about 0.7 of the flat 10.0 m), 24 coloured gores, lines to
+     a point 7.5 m below the skirt and risers to the shoulders. Before it fills, a pilot chute pulls out the line bundle */
+  function buildCanopy(M) {
+    const grp = new THREE.Group(), th = 1.25, R = 3.5 / Math.sin(th), gores = 24;
+    const geo = new THREE.SphereGeometry(R, gores * 2, 10, 0, Math.PI * 2, 0, th).rotateX(Math.PI / 2); geo.translate(0, 0, -R * Math.cos(th));
+    const pos = geo.attributes.position, colors = new Float32Array(pos.count * 3), cA = new THREE.Color('#e8692c'), cB = new THREE.Color('#f3f1ea');
+    for (let i = 0; i < pos.count; i++) { const a = Math.atan2(pos.getY(i), pos.getX(i)), k = Math.floor(((a + Math.PI) / (2 * Math.PI)) * gores + 1e-6) % 2, c = k ? cA : cB; colors.set([c.r, c.g, c.b], i * 3); }
+    geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+    const dome = new THREE.Mesh(geo, M({ vertexColors: true, side: THREE.DoubleSide, roughness: 0.8 })); dome.castShadow = true;
+    const cap = new THREE.Group(); cap.add(dome); grp.add(cap);
+    const lines = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x404850, transparent: true, opacity: 0.8 }));
+    lines.geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array((gores + 4) * 6), 3)); grp.add(lines);
+    const pilot = new THREE.Mesh(new THREE.SphereGeometry(0.45, 16, 8, 0, Math.PI * 2, 0, 1.3).rotateX(Math.PI / 2), M({ color: 0xe8692c, side: THREE.DoubleSide, roughness: 0.8 })); grp.add(pilot);
+    const bundle = new THREE.Mesh(new THREE.CylinderGeometry(0.09, 0.12, 1, 10).rotateX(Math.PI / 2).translate(0, 0, 0.5), M({ color: 0xd8d2c4, roughness: 0.9 })); grp.add(bundle);
+    /* set for the time since the pull: u in [0, 1] while the lines stretch, then the fill fraction; z0 is the shoulders */
+    function set(phase, u, z0) {
+      const LINES = 7.5, RIS = 0.6, conf = z0 + RIS, skirt = conf + LINES;
+      const full = phase === 'fill';
+      pilot.visible = bundle.visible = !full; cap.visible = lines.visible = full;
+      if (!full) { const len = (RIS + LINES + 1.5) * u + 0.3; bundle.position.z = z0; bundle.scale.set(1, 1, len); pilot.position.z = z0 + len + 0.3; return; }
+      const rad = Math.max(0.12, Math.sqrt(u)), hz = 1.6 - 0.6 * u;     /* open area in proportion to the drag area */
+      cap.position.z = skirt; cap.scale.set(rad, rad, hz);
+      const p = lines.geometry.attributes.position.array; let k = 0;
+      for (let i = 0; i < gores; i++) { const a = i / gores * Math.PI * 2; p.set([3.5 * rad * Math.cos(a), 3.5 * rad * Math.sin(a), skirt, 0, 0, conf], k); k += 6; }
+      for (const s of [1, -1]) { p.set([0, 0, conf, s * 0.2, 0.02, z0], k); k += 6; }
+      p.fill(0, k); lines.geometry.attributes.position.needsUpdate = true; lines.geometry.computeBoundingSphere();
+    }
+    return { grp, set };
+  }
+  /* a basket coffee filter: an open fluted cup, 15.1 cm across the top, 8.7 cm across the flat bottom, 4.7 cm deep (the paper's sizes) */
+  function filterGeo() {
+    const g = new THREE.CylinderGeometry(0.0755, 0.0435, 0.047, 96, 3, true).rotateX(Math.PI / 2), p = g.attributes.position;
+    for (let i = 0; i < p.count; i++) { const x = p.getX(i), y = p.getY(i), z = p.getZ(i), a = Math.atan2(y, x), r = Math.hypot(x, y), w = 1 + 0.035 * Math.cos(a * 30) * (0.5 + (z + 0.0235) / 0.047); p.setXYZ(i, x * w, y * w, z + 0.0235); }
+    g.computeVertexNormals(); return g;
+  }
+  function init3D() {
+    G3.tried = true;
+    const rd = VD3.renderer(); if (!rd) return false;
+    rd.shadowMap.enabled = true; rd.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = rd.domElement; el.setAttribute('aria-hidden', 'true'); el.style.pointerEvents = 'none'; $('scene').insertBefore(el, can);
+    const M = (o) => new THREE.MeshStandardMaterial(o), cam = new THREE.PerspectiveCamera(45, 1, 0.05, 160000);
+    /* --- the sky --- */
+    const sky = new THREE.Scene();
+    const domeG = new THREE.SphereGeometry(140000, 32, 16), dc = new Float32Array(domeG.attributes.position.count * 3); domeG.setAttribute('color', new THREE.BufferAttribute(dc, 3));
+    const domeM = new THREE.MeshBasicMaterial({ vertexColors: true, side: THREE.BackSide, fog: false, depthWrite: false }), skyDome = new THREE.Mesh(domeG, domeM); skyDome.renderOrder = -1; sky.add(skyDome);
+    sky.fog = new THREE.Fog(0xcfdff0, 8000, 75000);
+    const hemi = new THREE.HemisphereLight(0xdfeeff, 0x6f7a55, 0.75), sun = new THREE.DirectionalLight(0xfff4e0, 0.9); sun.position.set(-0.4, -0.5, 1).multiplyScalar(30); sun.castShadow = true;
+    Object.assign(sun.shadow.camera, { left: -16, right: 16, top: 16, bottom: -16, near: 1, far: 80 }); sun.shadow.mapSize.set(1024, 1024); sky.add(hemi, sun, sun.target);
+    const ft = fieldsTex(); ft.wrapS = ft.wrapT = THREE.RepeatWrapping; ft.repeat.set(240, 240);
+    const ground = new THREE.Mesh(new THREE.PlaneGeometry(240000, 240000), M({ map: ft, roughness: 1 })); ground.receiveShadow = true; sky.add(ground);
+    const grass = canvasTex(256, 256, (c, w, h) => { const r = rng(9); c.fillStyle = '#6f9a4f'; c.fillRect(0, 0, w, h); for (let i = 0; i < 2500; i++) { c.fillStyle = r() < 0.5 ? 'rgba(40,80,30,0.25)' : 'rgba(170,200,120,0.22)'; c.fillRect(r() * w, r() * h, 2, 2); } });
+    grass.wrapS = grass.wrapT = THREE.RepeatWrapping; grass.repeat.set(60, 60);
+    const dz = new THREE.Mesh(new THREE.CircleGeometry(300, 64), M({ map: grass, roughness: 1 })); dz.position.z = 0.05; dz.receiveShadow = true; sky.add(dz);
+    const target = canvasTex(256, 256, (c, w) => { c.clearRect(0, 0, w, w); for (let i = 5; i > 0; i--) { c.fillStyle = i % 2 ? '#f2efe6' : '#e8692c'; c.beginPath(); c.arc(w / 2, w / 2, w / 2 * i / 5, 0, 7); c.fill(); } });
+    const tgt = new THREE.Mesh(new THREE.CircleGeometry(15, 48), new THREE.MeshStandardMaterial({ map: target, transparent: true, roughness: 0.9 })); tgt.position.z = 0.1; tgt.receiveShadow = true; sky.add(tgt);
+    const pt = puffTex(), clouds = new THREE.Group();
+    { const r = rng(21); for (const [x, y, z, s] of CLOUDS) for (let k = 0; k < 7; k++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: pt, transparent: true, depthWrite: false, opacity: 0.85, fog: true })); const q = s * (0.5 + r() * 0.7);
+      sp.position.set(x + (r() - 0.5) * s * 1.6, y + (r() - 0.5) * s * 1.2, z + (r() - 0.5) * s * 0.35); sp.scale.set(q, q * 0.6, 1); clouds.add(sp); } }
+    sky.add(clouds);
+    const diver = buildDiver(M), canopy = buildCanopy(M); sky.add(diver.root, canopy.grp);
+    const speckG = new THREE.BufferGeometry(); speckG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(SPECKS.length * 6), 3));
+    const speckM = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4, fog: false }), specks = new THREE.LineSegments(speckG, speckM); specks.frustumCulled = false; sky.add(specks);
+    /* force arrows, drawn over everything */
+    const fM = (c) => new THREE.MeshBasicMaterial({ color: c, depthTest: false, transparent: true }), shaftG = new THREE.CylinderGeometry(1, 1, 1, 10).translate(0, 0.5, 0), headG = new THREE.ConeGeometry(1, 1, 14).translate(0, 0.5, 0);
+    const mkArrow = (m) => { const gr = new THREE.Group(), a = new THREE.Mesh(shaftG, m), b = new THREE.Mesh(headG, m); a.renderOrder = b.renderOrder = 10; gr.add(a, b); return gr; };
+    const wM = fM(0xc23f2c), dM = fM(0x2b60b5), arrW = mkArrow(wM), arrD = mkArrow(dM); sky.add(arrW, arrD);
+    /* --- the lab --- */
+    const lab = new THREE.Scene(), lhemi = new THREE.HemisphereLight(0xffffff, 0x8a8170, 0.7), lsun = new THREE.DirectionalLight(0xffffff, 0.75); lsun.position.set(-1.5, -2, 4); lsun.castShadow = true;
+    Object.assign(lsun.shadow.camera, { left: -2, right: 2, top: 4, bottom: -1, near: 0.5, far: 10 }); lsun.shadow.mapSize.set(1024, 1024); lab.add(lhemi, lsun);
+    const wt = woodTex(); wt.wrapS = wt.wrapT = THREE.RepeatWrapping; wt.repeat.set(4, 4);
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(8, 8), M({ map: wt, roughness: 0.75 })); floor.position.z = -0.075; floor.receiveShadow = true; lab.add(floor);
+    const wallM = M({ roughness: 0.95 }), wall = new THREE.Mesh(new THREE.PlaneGeometry(8, 4.2).rotateX(Math.PI / 2), wallM); wall.position.set(0, 0.8, 2.025); wall.receiveShadow = true; lab.add(wall);
+    /* a metre rule on the wall behind the fall line, its zero level with the detector's face */
+    const ruler = new THREE.Mesh(new THREE.PlaneGeometry(0.1, 3.2).rotateX(Math.PI / 2), M({ map: rulerTex(), roughness: 0.8 })); ruler.position.set(-0.16, 0.79, 1.6); lab.add(ruler);
+    const steel = M({ roughness: 0.35, metalness: 0.7, color: 0xa7b0ba }), dark = M({ roughness: 0.5, color: 0x2e353f });
+    const det = new THREE.Mesh(new THREE.BoxGeometry(0.11, 0.14, 0.075), dark); det.position.z = -0.0375; det.castShadow = true; lab.add(det);
+    const face = new THREE.Mesh(new THREE.CircleGeometry(0.035, 32), M({ roughness: 0.4, color: 0xc9b98a, metalness: 0.3 })); face.position.z = 0.001; lab.add(face);
+    const cone = new THREE.Mesh(new THREE.ConeGeometry(1, 1, 40, 1, true).rotateX(-Math.PI / 2).translate(0, 0, 0.5), new THREE.MeshBasicMaterial({ color: 0x69a0ff, transparent: true, opacity: 0.05, depthWrite: false, side: THREE.DoubleSide })); lab.add(cone);
+    /* the stand: a rod on a base beside the fall line, a boom over it and a clip that lets the filters go */
+    const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 1, 12).rotateX(Math.PI / 2).translate(0, 0, 0.5), steel), base = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.25, 0.02), dark);
+    const boom = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.4, 10).rotateZ(Math.PI / 2).translate(0.2, 0, 0), steel), clip = new THREE.Mesh(new THREE.BoxGeometry(0.025, 0.025, 0.04), dark);
+    rod.position.set(-0.4, 0.3, -0.075); base.position.set(-0.4, 0.3, -0.065); rod.castShadow = boom.castShadow = clip.castShadow = true; lab.add(rod, base, boom, clip);
+    const filM = M({ color: 0xf3ead6, roughness: 0.95, side: THREE.DoubleSide }), fg = filterGeo(), bottomG = new THREE.CircleGeometry(0.0435, 40);
+    const stack = new THREE.Group(); for (let i = 0; i < 8; i++) { const fl = new THREE.Group(), cup = new THREE.Mesh(fg, filM), bot = new THREE.Mesh(bottomG, filM); cup.castShadow = true; fl.add(cup, bot); fl.position.z = i * 0.0025; stack.add(fl); } lab.add(stack);
+    const larrW = mkArrow(wM), larrD = mkArrow(dM); lab.add(larrW, larrD);
+    g3 = { rd, el, cam, sky, lab, skyDome, domeM, dc, hemi, sun, ground, diver, canopy, specks, speckM, arrW, arrD, larrW, larrD, wM, dM, clouds, wallM, stack, rod, boom, clip, cone, Y: new THREE.Vector3(0, 1, 0) };
+    can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: () => !use3(), phMin: 0.15, phMax: 2.6, zMin: 0.4, zMax: 6, keys: false });
+    return true;
+  }
+  function theme3() {
+    const g = g3, dk = VD3.dark(), hi = col3(dk ? '#16304f' : '#3d78c4', '#3d78c4'), lo = col3(dk ? '#5a6f86' : '#dbe8f5', '#dbe8f5'), haze = col3(dk ? '#3c4a58' : '#c9d6e2', '#c9d6e2');
+    const p = g.skyDome.geometry.attributes.position; for (let i = 0; i < p.count; i++) { const u = p.getZ(i) / 140000, c = u > 0 ? lo.clone().lerp(hi, Math.pow(u, 0.6)) : lo.clone().lerp(haze, Math.min(1, -u * 6)); g.dc.set([c.r, c.g, c.b], i * 3); }
+    g.skyDome.geometry.attributes.color.needsUpdate = true;
+    g.sky.fog.color = lo.clone(); g.hemi.intensity = dk ? 0.55 : 0.75; g.sun.intensity = dk ? 0.6 : 0.9;
+    g.diver.suit.color = col3(T.suit, '#e8692c'); g.diver.panel.color = col3('#2b60b5', '#2b60b5'); g.diver.helm.color = col3('#f2f2f0', '#f2f2f0'); g.diver.rig.color = col3('#3b4552', '#3b4552');
+    g.wM.color = col3(T.weight, '#c23f2c'); g.dM.color = col3(T.drag, '#2b60b5'); g.speckM.opacity = dk ? 0.3 : 0.42;
+    g.lab.background = col3(dk ? '#1c232c' : '#e9edf2', '#e9edf2'); g.wallM.color = col3(dk ? '#36404c' : '#eef0ee', '#eef0ee');
+  }
+  function arrow3(gr, from, dir, L, r) { const [sh, hd] = gr.children, h = Math.min(L * 0.35, r * 5); gr.visible = L > r * 2; if (!gr.visible) return;
+    sh.scale.set(r, L - h, r); hd.position.set(0, L - h, 0); hd.scale.set(r * 2.6, h, r * 2.6); gr.position.copy(from); gr.quaternion.setFromUnitVectors(g3.Y, dir); }
+  /* the body's pose and the canopy's state now */
+  function bodyNow() {
+    const f = S.f, t = S.s.t, out = { a: 'spread', b: 'spread', u: 0, phase: null, cu: 0 };
+    if (f.pull != null && t >= f.pull) {
+      const open = f.pull + CANOPY.stretch, prev = curPos();
+      if (t < open) { out.a = out.b = prev; out.phase = 'stretch'; out.cu = (t - f.pull) / CANOPY.stretch; }
+      else { out.a = prev; out.b = 'upright'; out.u = Math.min(1, (t - open) / SWITCH); out.phase = 'fill'; out.cu = dragParts(f, t).fill; }
+      return out;
+    }
+    const lm = f.moves[f.moves.length - 1];
+    if (!lm) { out.a = out.b = f.pos0; return out; }
+    const before = f.moves.length > 1 ? f.moves[f.moves.length - 2][1] : f.pos0;
+    out.a = before; out.b = lm[1]; out.u = Math.min(1, Math.max(0, (t - lm[0]) / SWITCH)); return out;
+  }
+  function camDist() { if (S.kind === 'filter') return 1.25; const b = bodyNow(); if (!b.phase) return 6.5; const u = b.phase === 'stretch' ? 0.2 * b.cu : 0.2 + 0.8 * Math.min(1, b.cu * 1.6); return 6.5 + 22 * u; }
+  function draw3D() {
+    const g = g3, dk = VD3.dark(), p = ps(), W0 = Math.max(1, Math.round(W)), H0 = Math.max(1, Math.round(H));
+    if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; }
+    const key = [T.canvas, T.suit, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    g.el.hidden = false;
+    const D = camDist(), mg = S.f.m * G, Dn = dragArea(S.f, S.s.t) * 0.5 * airRho(S.f, S.s.y) * S.s.v * S.s.v, show = !S.blind;
+    let tgt, scene;
+    if (S.kind === 'sky') {
+      scene = g.sky; const z = alt(), b = bodyNow();
+      g.diver.root.position.set(0, 0, z); g.diver.pose(b.a, b.b, b.u);
+      g.canopy.grp.visible = !!b.phase; g.canopy.grp.position.set(0, 0, 0); if (b.phase) g.canopy.set(b.phase, b.cu, z + 0.55);
+      tgt = new THREE.Vector3(0, 0, z + (b.phase === 'fill' ? 4.5 * Math.min(1, b.cu * 1.6) : 0.2));
+      g.sun.position.set(-12, -15, z + 30); g.sun.target.position.set(0, 0, z);
+      /* the air: specks fixed in the air, streaked by the distance it moves past the body in 0.05 s */
+      const box = Math.max(5, D * 0.9), per = box * 2.4, a = g.specks.geometry.attributes.position.array, sl = Math.max(0.02, S.s.v * EXPO);
+      SPECKS.forEach(([x, y, zz], i) => { const zr = (((zz * per - (S.f.h0 - S.s.y) + 1e7 * per) % per) + per) % per - per / 2; const zw = z + zr; a.set([x * box, y * box, zw - sl, x * box, y * box, zw], i * 6); });
+      g.specks.geometry.attributes.position.needsUpdate = true; g.specks.visible = S.s.v > 0.3;
+      const unit = D * 0.13, from = new THREE.Vector3(0, 0, z + 0.25);
+      g.arrW.visible = g.arrD.visible = show;
+      if (show) { arrow3(g.arrW, from, new THREE.Vector3(0, 0, -1), unit, unit * 0.04); arrow3(g.arrD, from, new THREE.Vector3(0, 0, 1), unit * Math.min(8, Dn / mg), unit * 0.04); }
+      g.ground.visible = true;
+    } else {
+      scene = g.lab; const z = S.h0 - S.s.y;
+      g.stack.position.set(0, 0, z); g.stack.children.forEach((c, i) => { c.visible = i < S.n; });
+      const top = S.h0 + 0.047 + 0.03; g.rod.scale.set(1, 1, top + 0.075 + 0.04); g.boom.position.set(-0.4, 0.3, top); g.boom.rotation.z = Math.atan2(-0.3, 0.4); g.boom.scale.set(1.25, 1, 1);
+      g.clip.position.set(0, 0, top - 0.005);
+      g.cone.scale.set(Math.tan(0.26) * S.h0, Math.tan(0.26) * S.h0, S.h0);
+      tgt = new THREE.Vector3(0, 0, Math.max(0.3, z + 0.05));
+      const unit = D * 0.11, from = new THREE.Vector3(0.12, 0, z + 0.02);
+      g.larrW.visible = g.larrD.visible = show;
+      if (show) { arrow3(g.larrW, from, new THREE.Vector3(0, 0, -1), unit, unit * 0.025); arrow3(g.larrD, from, new THREE.Vector3(0, 0, 1), unit * Math.min(8, Dn / mg), unit * 0.025); }
+    }
+    g.skyDome.position.copy(g.cam.position);
+    VD3.place(g.cam, G3.o, tgt, D); g.cam.near = S.kind === 'filter' ? 0.02 : 0.1; g.cam.updateProjectionMatrix();
+    g.skyDome.position.copy(g.cam.position);
+    scene.updateMatrixWorld(); g.rd.render(scene, g.cam);
+    const v = new THREE.Vector3(), Q = (x, y, z) => { v.set(x, y, z).project(g.cam); return [(v.x + 1) / 2 * W0, (1 - v.y) / 2 * H0, v.z < 1]; };
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    if (show) {
+      const z = S.kind === 'sky' ? alt() + 0.25 : S.h0 - S.s.y + 0.02, ox = S.kind === 'sky' ? 0 : 0.12, unit = D * (S.kind === 'sky' ? 0.13 : 0.11);
+      const wq = Q(ox, 0, z - unit), dq = Q(ox, 0, z + unit * Math.min(8, Dn / mg));
+      const fN = (F) => (S.kind === 'sky' ? `${g3s(F)} N` : `${f2(F * 1000)} mN`);
+      if (wq[2]) tag(ctx, `weight ${fN(mg)}`, wq[0] + 10 * p, wq[1], { s: 10, c: T.weight, b: 1, m: 1 });
+      if (dq[2] && Dn > mg * 0.02) tag(ctx, `drag ${fN(Dn)}`, dq[0] + 10 * p, dq[1], { s: 10, c: T.drag, b: 1, m: 1 });
+    }
+    if (S.kind === 'sky') { const gq = Q(0, 0, 0); if (gq[2] && alt() < 400) tag(ctx, 'landing target', gq[0], gq[1] + 16 * p, { s: 9.5, c: T.muted, a: 'center' }); }
+    else { const dq = Q(0.09, 0, -0.03); if (dq[2]) tag(ctx, 'motion detector', dq[0] + 6 * p, dq[1], { s: 9.5, c: T.muted }); }
+    hud(S.kind === 'sky' ? `3D, to scale · streaks: the air moving past in 0.05 s · drag to turn` : `3D, to scale · drag to turn`);
+  }
+  function setView(v) {
+    G3.want = v === '3d';
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { G3.want = false; v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setView(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; can.style.cursor = use3() ? 'grab' : ''; if (g3 && !G3.on) g3.el.hidden = true;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    draw();
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
+
+  // ---------- the flat side view ----------
+  function drawFlat() {
+    const p = ps(), dk = VG ? VG.dark() : false;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const mg = S.f.m * G, Dn = dragArea(S.f, S.s.t) * 0.5 * airRho(S.f, S.s.y) * S.s.v * S.s.v, show = !S.blind, cx = W * 0.42;
+    if (S.kind === 'sky') {
+      const z = alt(), b = bodyNow(), span = !b.phase ? 10 : 10 + 36 * Math.min(1, b.phase === 'fill' ? 0.3 + b.cu : 0.3 * b.cu), sc = H / span, zc = z + (b.phase === 'fill' ? 4.5 * Math.min(1, b.cu * 1.6) : 0.2), Y = (zz) => H / 2 - (zz - zc) * sc;
+      const gr = ctx.createLinearGradient(0, 0, 0, H), up = Math.min(1, z / 11000); gr.addColorStop(0, T.skyHi); gr.addColorStop(1, T.skyLo); ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H);
+      ctx.fillStyle = `rgba(10,20,40,${0.35 * up})`; ctx.fillRect(0, 0, W, H);
+      /* clouds on the fall line's side, at their altitudes */
+      for (const [x, , cz, s] of CLOUDS.slice(0, 6)) { const yy = Y(cz); if (yy < -s * sc || yy > H + s * sc) continue; ctx.fillStyle = 'rgba(255,255,255,0.75)'; ctx.beginPath(); ctx.ellipse(cx + x * sc * 0.15, yy, s * sc * 0.6, s * sc * 0.2, 0, 0, 7); ctx.fill(); }
+      /* the ground */
+      if (Y(0) < H) { ctx.fillStyle = dk ? '#2f4a2a' : '#7d9b58'; ctx.fillRect(0, Y(0), W, H - Y(0)); }
+      /* the altitude scale */
+      const stp = span > 30 ? 5 : 1; ctx.strokeStyle = T.ink; ctx.fillStyle = T.ink; ctx.lineWidth = 1; ctx.font = `${9.5 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      for (let a = Math.floor((zc - span / 2) / stp) * stp; a <= zc + span / 2; a += stp) { if (a < 0) continue; const yy = Y(a), big = a % (stp * 5) === 0; ctx.beginPath(); ctx.moveTo(W, yy); ctx.lineTo(W - (big ? 14 : 7) * p, yy); ctx.stroke(); if (big) ctx.fillText(`${a} m`, W - 17 * p, yy); }
+      /* specks */
+      const per = span * 1.4, sl = Math.max(0.02, S.s.v * EXPO); ctx.strokeStyle = dk ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.6)'; ctx.lineWidth = 1 * p;
+      for (const [x, , zz] of SPECKS.slice(0, 70)) { const zr = (((zz * per - z + 1e7 * per) % per) + per) % per - per / 2, yy = Y(z + zr); ctx.beginPath(); ctx.moveTo(W * (0.5 + x * 0.48), yy); ctx.lineTo(W * (0.5 + x * 0.48), yy + sl * sc); ctx.stroke(); }
+      /* the canopy */
+      const bz = Y(z);
+      if (b.phase === 'fill') { const rad = Math.max(0.12, Math.sqrt(b.cu)) * 3.5 * sc, sk = Y(z + 0.55 + 0.6 + 7.5), hh = 2.5 * (1.6 - 0.6 * b.cu) * sc;
+        ctx.strokeStyle = 'rgba(60,70,80,0.7)'; ctx.lineWidth = 1; ctx.beginPath(); for (const s of [-1, -0.5, 0, 0.5, 1]) { ctx.moveTo(cx + s * rad, sk); ctx.lineTo(cx, Y(z + 1.15)); } ctx.lineTo(cx, bz - 0.55 * sc); ctx.stroke();
+        ctx.fillStyle = T.suit; ctx.beginPath(); ctx.ellipse(cx, sk, rad, hh, 0, Math.PI, 2 * Math.PI); ctx.closePath(); ctx.fill(); ctx.fillStyle = 'rgba(255,255,255,0.45)'; ctx.beginPath(); ctx.ellipse(cx, sk, rad * 0.45, hh * 0.98, 0, Math.PI, 2 * Math.PI); ctx.fill(); }
+      else if (b.phase === 'stretch') { const len = (9.6 * b.cu + 0.3) * sc; ctx.strokeStyle = '#d8d2c4'; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.moveTo(cx, bz - 0.5 * sc); ctx.lineTo(cx, bz - 0.5 * sc - len); ctx.stroke(); ctx.fillStyle = T.suit; ctx.beginPath(); ctx.arc(cx, bz - 0.5 * sc - len, 0.45 * sc, Math.PI, 0); ctx.fill(); }
+      /* the body, side on: a capsule along its axis, turned by the pose */
+      const ang = (k) => (k === 'spread' ? 0 : k === 'head' ? Math.PI / 2 : -Math.PI / 2), A0 = ang(b.a), A1 = ang(b.b), an = A0 + (A1 - A0) * b.u, Lb = 0.9 * sc;
+      ctx.save(); ctx.translate(cx, bz); ctx.rotate(an); ctx.lineCap = 'round'; ctx.strokeStyle = T.suit; ctx.lineWidth = Math.max(6, 0.3 * sc); ctx.beginPath(); ctx.moveTo(-Lb * 0.95, 0); ctx.lineTo(Lb * 0.55, 0); ctx.stroke();
+      const spread = b.a === 'spread' && b.b === 'spread' ? 1 : b.b === 'spread' ? b.u : b.a === 'spread' ? 1 - b.u : 0, upr = b.b === 'upright' ? b.u : 0;
+      /* arms from the shoulder and legs from the hip, bent back (up the page) by as much as the body is spread */
+      ctx.lineWidth = Math.max(4, 0.12 * sc); ctx.strokeStyle = T.suit;
+      const limb = (x0, a1, l1, a2, l2) => { const x1 = x0 + l1 * Math.cos(a1), y1 = -l1 * Math.sin(a1); ctx.beginPath(); ctx.moveTo(x0, 0); ctx.lineTo(x1, y1); ctx.lineTo(x1 + l2 * Math.cos(a2), y1 - l2 * Math.sin(a2)); ctx.stroke(); };
+      const arm = spread * 1.2 + upr * 1.5, leg = spread * 0.5;
+      limb(Lb * 0.45, Math.PI - 0.15 - arm, 0.3 * sc, Math.PI - 0.1 - arm * 1.4, 0.28 * sc);
+      limb(-Lb * 0.75, Math.PI + leg * 0.4, 0.44 * sc, Math.PI - leg * 2.2, 0.44 * sc);
+      ctx.fillStyle = '#f2f2f0'; ctx.beginPath(); ctx.arc(Lb * 0.75, 0, 0.12 * sc, 0, 7); ctx.fill(); ctx.fillStyle = '#3b4552'; ctx.fillRect(-Lb * 0.5, -0.27 * sc, Lb * 0.75, 0.12 * sc); ctx.restore();
+      if (show) { const unit = 0.13 * camDist() * sc; arrow2(ctx, cx + 30 * p, bz, cx + 30 * p, bz + unit, T.weight, 2.6); tag(ctx, `weight ${g3s(mg)} N`, cx + 40 * p, bz + unit, { s: 10, c: T.weight, b: 1, m: 1 });
+        const ld = unit * Math.min(8, Dn / mg); if (ld > 4 * p) { arrow2(ctx, cx + 30 * p, bz, cx + 30 * p, bz - ld, T.drag, 2.6); tag(ctx, `drag ${g3s(Dn)} N`, cx + 40 * p, bz - ld, { s: 10, c: T.drag, b: 1, m: 1 }); } }
+      hud('side view, to scale · streaks: the air moving past in 0.05 s');
+    } else {
+      VG ? VG.backdrop(ctx, W, H) : (ctx.fillStyle = T.canvas, ctx.fillRect(0, 0, W, H));
+      const top = 70 * p, bot = 50 * p, sc = (H - top - bot) / (S.h0 + 0.2), Y = (zz) => H - bot - zz * sc, z = S.h0 - S.s.y;
+      ctx.fillStyle = dk ? '#3a3128' : '#b48a5a'; ctx.fillRect(0, Y(0) + 0.075 * sc, W, H);
+      /* the ruler, zero at the detector's face */
+      const rx = cx - 0.3 * sc - 30 * p; ctx.fillStyle = '#f4ecd2'; ctx.fillRect(rx, Y(S.h0 + 0.15), 26 * p, (S.h0 + 0.15) * sc); ctx.strokeStyle = '#222'; ctx.fillStyle = '#222'; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'left';
+      for (let cm = 0; cm <= Math.floor((S.h0 + 0.15) * 100); cm += 5) { const yy = Y(cm / 100); ctx.lineWidth = cm % 10 === 0 ? 1.2 : 0.6; ctx.beginPath(); ctx.moveTo(rx, yy); ctx.lineTo(rx + (cm % 10 === 0 ? 10 : 5) * p, yy); ctx.stroke(); if (cm % 50 === 0) ctx.fillText(String(cm / 100), rx + 12 * p, yy); }
+      /* the detector and its beam */
+      ctx.fillStyle = 'rgba(105,160,255,0.08)'; ctx.beginPath(); ctx.moveTo(cx, Y(0)); ctx.lineTo(cx - Math.tan(0.26) * S.h0 * sc, Y(S.h0)); ctx.lineTo(cx + Math.tan(0.26) * S.h0 * sc, Y(S.h0)); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = '#2e353f'; ctx.fillRect(cx - 0.055 * sc, Y(0), 0.11 * sc, 0.075 * sc); txt(ctx, 'motion detector', cx + 0.08 * sc, Y(0) + 0.04 * sc, { s: 9.5, c: T.muted });
+      /* the stand and the clip at the release height */
+      ctx.strokeStyle = '#9aa3ad'; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(cx - 0.55 * sc, Y(-0.075)); ctx.lineTo(cx - 0.55 * sc, Y(S.h0 + 0.2)); ctx.moveTo(cx - 0.55 * sc, Y(S.h0 + 0.147)); ctx.lineTo(cx, Y(S.h0 + 0.147)); ctx.stroke();
+      /* the filters, side on, to scale */
+      const fw = 0.0755 * sc, bw = 0.0435 * sc, fh = 0.047 * sc + (S.n - 1) * 0.0025 * sc, yb = Y(z);
+      ctx.fillStyle = '#f3ead6'; ctx.strokeStyle = '#b8ab8a'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx - bw, yb); ctx.lineTo(cx + bw, yb); ctx.lineTo(cx + fw, yb - fh); ctx.lineTo(cx - fw, yb - fh); ctx.closePath(); ctx.fill(); ctx.stroke();
+      if (show) { const unit = 0.11 * camDist() * sc; arrow2(ctx, cx + fw + 14 * p, yb - fh / 2, cx + fw + 14 * p, yb - fh / 2 + unit, T.weight, 2.4); tag(ctx, `weight ${fx(mg * 1000, 2)} mN`, cx + fw + 24 * p, yb - fh / 2 + unit, { s: 10, c: T.weight, b: 1, m: 1 });
+        const ld = unit * Math.min(8, Dn / mg); if (ld > 4 * p) { arrow2(ctx, cx + fw + 14 * p, yb - fh / 2, cx + fw + 14 * p, yb - fh / 2 - ld, T.drag, 2.4); tag(ctx, `drag ${fx(Dn * 1000, 2)} mN`, cx + fw + 24 * p, yb - fh / 2 - ld, { s: 10, c: T.drag, b: 1, m: 1 }); } }
+      hud('side view, to scale');
+    }
+  }
+  /* what both views show over the picture: the clock and the instruments, a speed bar with the terminal speed, a caption */
+  function hud(caption) {
+    const p = ps(), x = 12 * p, y = 62 * p, sky = S.kind === 'sky', a = aNow(), vt = vTerm(S.f.m, dragArea(S.f, S.s.t), airRho(S.f, S.s.y));
+    const box = (x0, y0, w, h) => { ctx.fillStyle = VD3.dark() ? 'rgba(13,18,24,0.62)' : 'rgba(255,255,255,0.72)'; ctx.beginPath(); ctx.roundRect(x0, y0, w, h, 8 * p); ctx.fill(); };
+    box(x - 6 * p, y - 6 * p, (sky ? 210 : 250) * p, 82 * p);
+    txt(ctx, `${f2(S.s.v)} m/s`, x, y + 12 * p, { s: 20, m: 1, b: 1 });
+    txt(ctx, sky ? `${f1(S.s.v * 3.6)} km/h · a = ${f2(a)} m/s²` : `a = ${f2(a)} m/s²`, x, y + 34 * p, { s: 10.5, m: 1, c: T.muted });
+    txt(ctx, `t = ${sky ? f1(S.s.t) : f2(S.s.t)} s${S.run ? '' : ' · paused'}`, x, y + 52 * p, { s: 11, m: 1, b: 1 });
+    txt(ctx, sky ? `altitude ${Math.round(alt())} m · ${posLabel()}` : `height ${f2(S.h0 - S.s.y)} m above the detector`, x, y + 70 * p, { s: 10.5, m: 1, c: T.muted });
+    /* the speed bar */
+    const bx = 46 * p, by0 = H - (sky ? 92 : 46) * p, by1 = y + 112 * p, vmax = sky ? (S.f.pos0 === 'head' || S.f.moves.some((q) => q[1] === 'head') ? 120 : S.air === 'isa' ? 90 : 60) : 4, Yv = (u) => by0 - Math.min(1, u / vmax) * (by0 - by1);
+    if (by0 - by1 > 80 * p) {
+      box(bx - 26 * p, by1 - 24 * p, 54 * p, by0 - by1 + 40 * p);
+      ctx.fillStyle = T.line; ctx.fillRect(bx - 4 * p, by1, 8 * p, by0 - by1); ctx.fillStyle = T.accent; ctx.fillRect(bx - 4 * p, Yv(S.s.v), 8 * p, by0 - Yv(S.s.v));
+      const st = sky ? (vmax > 60 ? 20 : 10) : 1; ctx.font = `${8.5 * p}px ${T.mono}`; ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+      for (let u = 0; u <= vmax + 1e-9; u += st) { ctx.fillRect(bx + 5 * p, Yv(u), 4 * p, 1); ctx.fillText(String(u), bx - 7 * p, Yv(u)); }
+      txt(ctx, 'v (m/s)', bx, by1 - 13 * p, { s: 8.5, c: T.muted, a: 'center' });
+      if (!S.blind && vt < vmax * 1.5) { ctx.strokeStyle = T.vt; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(bx - 9 * p, Yv(vt)); ctx.lineTo(bx + 11 * p, Yv(vt)); ctx.stroke(); txt(ctx, 'v_T', bx + 2 * p, Yv(vt) - 8 * p, { s: 9, c: T.vt, b: 1, a: 'center' }); }
+    }
+    if (performance.now() < status.until) tag(ctx, status.msg, W / 2, H - 52 * p, { s: 11, a: 'center', b: 1 });
+    txt(ctx, VD3.turnText ? caption : caption, 12 * p, H - 12 * p, { s: 9.5, c: T.muted });
+  }
+  function draw() { if (!T || !W || !S.f) return; if (use3()) draw3D(); else drawFlat(); drawChart(); }
+
+  // ---------- the graph ----------
+  function drawChart() {
+    if (!CW) return; const p = ps(), c = cctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
+    const L = 50 * p, R = 14 * p, Tp = 34 * p, B = 28 * p, k = S.graph === 'v' ? 2 : S.graph === 'a' ? 3 : 1;
+    const series = [...S.ghosts.filter((g) => g.kind === S.kind).map((g) => ({ pts: g.pts, col: T.ghost, label: g.label })), { pts: S.trace, col: T.accent, label: S.label }];
+    let tmax = S.kind === 'sky' ? 20 : 0.5, lo = 0, hi = S.kind === 'sky' ? 10 : 0.5;
+    for (const s of series) for (const q of s.pts) { tmax = Math.max(tmax, q[0]); hi = Math.max(hi, q[k]); lo = Math.min(lo, q[k]); }
+    const vt = vTerm(S.f.m, dragArea(S.f, S.s.t), airRho(S.f, S.s.y)); if (S.graph === 'v' && !S.blind && vt < hi * 1.6) hi = Math.max(hi, vt);
+    if (S.graph === 'a') { hi = Math.max(hi, G * 1.05); lo = Math.min(lo, -1); }
+    const nice = (x) => { const e = Math.pow(10, Math.floor(Math.log10(x))), m = x / e; return (m < 1.5 ? 1 : m < 3 ? 2 : m < 7 ? 5 : 10) * e; };
+    hi *= 1.08; const ts = nice(tmax / 6), vs = nice((hi - lo) / 5);
+    tmax = Math.ceil(tmax / ts) * ts; hi = Math.ceil(hi / vs) * vs; lo = Math.floor(lo / vs) * vs;
+    const PX = (t) => L + t / tmax * (CW - L - R), PY = (v) => Tp + (hi - v) / (hi - lo) * (CH - Tp - B);
+    c.strokeStyle = T.grid; c.lineWidth = 1; c.font = `${9.5 * p}px ${T.mono}`; c.fillStyle = T.muted;
+    for (let t = 0; t <= tmax + 1e-9; t += ts) { c.beginPath(); c.moveTo(PX(t), Tp); c.lineTo(PX(t), CH - B); c.stroke(); c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(String(+t.toFixed(3)), PX(t), CH - B + 4 * p); }
+    for (let v = lo; v <= hi + 1e-9; v += vs) { c.beginPath(); c.moveTo(L, PY(v)); c.lineTo(CW - R, PY(v)); c.stroke(); c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(String(+v.toFixed(3)).replace('-', '−'), L - 4 * p, PY(v)); }
+    c.strokeStyle = T.muted; c.beginPath(); c.moveTo(L, PY(0)); c.lineTo(CW - R, PY(0)); c.stroke();
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText('t (s)', (L + CW) / 2, CH - 1);
+    c.save(); c.translate(12 * p, (Tp + CH - B) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(S.graph === 'v' ? 'v (m/s)' : S.graph === 'a' ? 'a (m/s²)' : 'y fallen (m)', 0, 0); c.restore();
+    if (S.graph === 'v' && !S.blind && isFinite(vt)) { c.strokeStyle = T.vt; c.setLineDash([6, 4]); c.lineWidth = 1.5 * p; c.beginPath(); c.moveTo(L, PY(vt)); c.lineTo(CW - R, PY(vt)); c.stroke(); c.setLineDash([]);
+      c.fillStyle = T.vt; c.font = `700 ${9.5 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(`v_T here = ${g3s(vt)} m/s`, L + 6 * p, PY(vt) - 3 * p); }
+    if (S.graph === 'a') { c.fillStyle = T.muted; c.font = `${9 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText('g', L + 4 * p, PY(G) - 2 * p); c.setLineDash([3, 4]); c.strokeStyle = T.muted; c.beginPath(); c.moveTo(L, PY(G)); c.lineTo(CW - R, PY(G)); c.stroke(); c.setLineDash([]); }
+    let lx = L + 6 * p;
+    for (const s of series) { c.strokeStyle = s.col; c.lineWidth = (s.col === T.accent ? 2 : 1.4) * p; c.beginPath(); s.pts.forEach((q, i) => { const X = PX(q[0]), Yy = PY(q[k]); if (i) c.lineTo(X, Yy); else c.moveTo(X, Yy); }); c.stroke();
+      c.font = `${9.5 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle'; const w = c.measureText(s.label).width; if (lx + w + 22 * p < CW - 120 * p) { c.fillRect(lx, 16 * p, 14 * p, 2 * p); c.fillStyle = s.col; c.fillRect(lx, 16 * p, 14 * p, 2.4 * p); c.fillStyle = T.muted; c.fillText(s.label, lx + 18 * p, 17 * p); lx += w + 34 * p; } }
+    const last = S.trace[S.trace.length - 1]; c.fillStyle = T.accent; c.beginPath(); c.arc(PX(last[0]), PY(last[k]), 3.2 * p, 0, 7); c.fill();
+  }
+
+  // ---------- readouts, controls ----------
+  function readouts() {
+    const dd = (a, b, w) => `<div${w ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, HID = '<span class="ok">hidden in Blind</span>', sky = S.kind === 'sky';
+    const a = aNow(), CA = dragArea(S.f, S.s.t), rho = airRho(S.f, S.s.y), vt = vTerm(S.f.m, CA, rho), D = 0.5 * rho * CA * S.s.v * S.s.v, mg = S.f.m * G;
+    let h = dd('Clock t', `${f2(S.s.t)} s`) + dd('Speed v', `${f2(S.s.v)} m/s`) + dd('Acceleration a', `${f2(a)} m/s²`)
+      + (sky ? dd('Altitude', `${f1(alt())} m`) : dd('Height above the detector', `${f2(S.h0 - S.s.y)} m`)) + dd('Fallen y', `${f2(S.s.y)} m`)
+      + dd(sky ? 'Body' : `Mass m, ${S.n} filter${S.n > 1 ? 's' : ''}`, sky ? posLabel() : `${fx(S.f.m * 1000, 2)} g`);
+    if (S.blind) h += dd('Terminal speed, drag, drag area, air density', HID, true);
+    else {
+      h += dd('Terminal speed here v_T', `${g3s(vt)} m/s`) + dd('Drag D / weight mg', sky ? `${g3s(D)} / ${g3s(mg)} N` : `${f2(D * 1000)} / ${f2(mg * 1000)} mN`) + dd('D/mg', fx(D / mg, 3)) + dd('Drag area CA', `${fx(CA, sky && CA > 1 ? 2 : 4)} m²`) + dd('Air density ρ', `${fx(rho, 3)} kg/m³`);
+      if (sky && S.f.pull != null) h += dd('Largest deceleration so far', `${f2(S.peak)} m/s² = ${f2(S.peak / G)} g`, true);
+    }
+    $('out').innerHTML = h;
+  }
+  function sync() {
+    const sky = S.kind === 'sky';
+    for (const el of document.querySelectorAll('#setupCard [data-for]')) el.hidden = el.dataset.for !== (sky ? 'sky' : 'lab');
+    $('sM').value = S.m; $('oM').textContent = `${S.m} kg`; $('sH').value = S.h0; $('oH').textContent = sky ? `${S.h0} m` : ''; $('sP').value = S.pullAlt; $('oP').textContent = `${S.pullAlt} m`;
+    $('sN').value = S.n; $('oN').textContent = `${S.n} (${fx(S.n * 0.86, 2)} g)`; $('sD').value = sky ? 2 : S.h0; $('oD').textContent = sky ? '' : `${f2(S.h0)} m`;
+    for (const b of document.querySelectorAll('#airSeg button')) b.setAttribute('aria-pressed', String(b.dataset.air === S.air));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#posSeg button')) b.setAttribute('aria-pressed', String(b.dataset.pos === curPos()));
+    for (const b of document.querySelectorAll('#plotSeg button')) b.setAttribute('aria-pressed', String(b.dataset.g === S.graph));
+    const sp = SPEEDS[S.kind]; document.querySelectorAll('#spdSeg button').forEach((b, i) => { b.textContent = `×${sp[i]}`; b.setAttribute('aria-pressed', String(i === S.spd)); });
+    $('actbar').hidden = !sky; $('pull').disabled = !sky || S.f.pull != null || S.landed; $('posSeg').querySelectorAll('button').forEach((b) => { b.disabled = S.f.pull != null || S.landed; });
+    const stp = STEP[S.kind]; document.querySelectorAll('#stepSeg button').forEach((b, i) => { b.textContent = `${stp[i]} s`; b.setAttribute('aria-pressed', String(i === S.stepK)); }); $('step').textContent = `Step ${stp[S.stepK]} s`; $('cardTitle').textContent = sky ? 'Set up, then jump' : 'Set up, then drop';
+  }
+  const card = VD.setupCard($('setupCard'));
+  function setRun(on) { S.run = on; card.away(on); $('go').textContent = on ? 'Pause' : S.s.t > 0 && !S.landed ? 'Resume' : S.kind === 'sky' ? 'Jump' : 'Drop'; $('go').classList.toggle('attn', !on); }
+  const all = () => { sync(); draw(); readouts(); };
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k; S.kind = c.kind;
+    if (c.kind === 'sky') Object.assign(S, { m: c.m, h0: c.h0, pullAlt: c.pullAlt, air: c.air, pos0: c.pos0 }); else Object.assign(S, { n: c.n, h0: c.h0 });
+    S.spd = c.kind === 'sky' ? (k === 'canopy' ? 1 : 0) : 1; $('presetHint').textContent = c.hint; G3.o.zoom = 1;
+    startOver(); setRun(false); all();
+  }
+  const changed = () => { S.preset = 'custom'; startOver(); setRun(false); all(); };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('sM').addEventListener('input', (e) => { S.m = +e.target.value; S.pos0 = curPos(); changed(); });
+  $('sH').addEventListener('input', (e) => { S.h0 = +e.target.value; S.pos0 = curPos(); changed(); });
+  $('sP').addEventListener('input', (e) => { S.pullAlt = +e.target.value; S.pos0 = curPos(); changed(); });
+  $('sN').addEventListener('input', (e) => { S.n = +e.target.value; changed(); });
+  $('sD').addEventListener('input', (e) => { S.h0 = +e.target.value; changed(); });
+  $('airSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-air]'); if (b) { S.air = b.dataset.air; S.pos0 = curPos(); changed(); } });
+  $('posSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-pos]'); if (!b || S.f.pull != null || S.landed) return; const k = b.dataset.pos;
+    if (k === curPos()) return; if (S.s.t === 0) { S.pos0 = k; S.f.pos0 = k; S.label = `${NAMES[k]}, ${S.m} kg${S.air === 'isa' ? ', thin air' : ''}`; } else S.f.moves.push([S.s.t, k]); all(); });
+  $('pull').addEventListener('click', () => { if (S.f.pull == null && !S.landed && S.kind === 'sky') { S.f.pull = S.s.t; say('Pulled: the lines stretch for 1.0 s, then the canopy fills.'); all(); } });
+  $('go').addEventListener('click', () => { if (S.landed) startOver(); setRun(!S.run); all(); });
+  $('step').addEventListener('click', () => { if (S.landed) return; setRun(false); stepOnce(); all(); });
+  $('restart').addEventListener('click', () => { startOver(); setRun(false); all(); });
+  $('stepSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) { S.stepK = +b.dataset.k; all(); } });
+  $('spdSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.spd = +b.dataset.s; all(); } });
+  $('plotSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-g]'); if (b) { S.graph = b.dataset.g; all(); } });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; all(); });
+  /* readings for the worksheet (tools/readings_panel.py) */
+  window.vdVersion = 'terminal-velocity@2026-10-24';
+  window.vdShowCols = [['t_s', 't (s)'], ['v_m_s', 'v (m/s)'], ['a_m_s2', 'a (m/s²)']];
+  window.vdReadingRow = () => {
+    if (S.run) return 'Pause first, so the reading is taken at one moment.';
+    const a = aNow(), base = { t_s: roundTo(S.s.t, 0.01).toFixed(2), y_m: roundTo(S.s.y, 0.01).toFixed(2), v_m_s: roundTo(S.s.v, 0.01).toFixed(2), a_m_s2: roundTo(a, 0.01).toFixed(2) };
+    if (S.kind === 'filter') return { object: 'coffee filters', n: S.n, m_kg: (S.n * FILTER.m).toPrecision(3), drop_m: S.h0.toFixed(2), ...base, landed: S.landed ? 'yes' : 'no' };
+    return { object: 'skydiver', body: posLabel(), m_kg: String(S.m), air: S.air === 'isa' ? 'thins with height' : 'uniform', alt_m: roundTo(alt(), 0.1).toFixed(1), ...base };
+  };
+  /* for the key's capture script and tests */
+  window.__tv = { step: () => { stepOnce(); all(); }, to: (t) => { go(t - S.s.t); all(); }, get S() { return S; } };
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    if (S.run) { go(dt * SPEEDS[S.kind][S.spd]); all(); } else if (performance.now() < status.until + 100) draw();
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(), r2 = chart.parentElement.getBoundingClientRect(); W = r.width; H = r.height; CW = r2.width; CH = r2.height;
+    can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); chart.width = Math.round(CW * dpr); chart.height = Math.round(CH * dpr); draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); applyPreset('spread'); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe(chart.parentElement); resize();
+  /* on opening: ready to jump; the jump starts with the Jump button (Steve, 2026-10-24: demos do not start on their own). ?setup= picks a setup */
+  const q = new URLSearchParams(location.search);
+  if (q.get('setup') && PRESETS[q.get('setup')]) applyPreset(q.get('setup'));
+  G3.want = q.get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();
+  if (G3.want) setView('3d');
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

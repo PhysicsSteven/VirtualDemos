@@ -41,6 +41,7 @@ VIEW = {"width": 1440, "height": 900}
 OVERRIDES = {
     "spectra": {"crop": "main.bench > :first-child", "anchor": "top"},
     "cavendish": {"wait": 2500, "crop": ".stage"},
+    "terminal-velocity": {"wait": 3000, "crop": ".stage", "js": "window.__tv.to(12); document.getElementById('setupCard').style.visibility = 'hidden';"},
     "superconductors": {"wait": 1200, "crop": ".scene", "js": "document.getElementById('setupCard').style.visibility = 'hidden';"},
     "photoelectric": {"anchor": "top"},
     "nuclear-reactions": {"wait": 1500, "crop": ".pane", "js": "window.__nr.applyPreset('rxFission');"},

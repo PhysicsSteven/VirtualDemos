@@ -548,6 +548,17 @@
      ]
     },
     {
+     "demo": "terminal-velocity",
+     "title": "Terminal Velocity",
+     "desc": "Jump with the textbook's skydiver and watch the drag grow until it matches the weight. Switch between spread eagle and head first, open the parachute, jump from 10 km where the air is thin, or drop stacks of coffee filters, and measure the terminal speed.",
+     "tags": [
+      "drag",
+      "terminal speed",
+      "air resistance",
+      "Newton's second law"
+     ]
+    },
+    {
      "demo": "cart-launch",
      "title": "Ball Launched from a Moving Cart",
      "desc": "A cart fires a ball straight up. At constant speed the ball lands back in the launcher; make the cart speed up or brake and it misses. Watch from the ground or from the cart, with velocity vectors and strobe images.",
