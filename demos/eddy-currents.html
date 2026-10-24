@@ -1,11 +1,12 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="chips chips-button btnrow seg seg-button seg-button-on inline readout readout-wide readout-dt readout-dd-ok status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-stage img projshort-proj-bar-units mono bar-h1 bench pane chips-button-hover chips-button-on btn btn-primary btn-disabled slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas projshort-proj-bar-p" lang="en">
+<html data-vd-off="chips chips-button btnrow inline readout readout-wide readout-dt readout-dd-ok status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-stage img projshort-proj-bar-units mono bar-h1 bench pane chips-button-hover chips-button-on btn btn-primary btn-disabled slider-head-output readout-dd toggles toggles-label toggles-input key key-span readout-big-dd swatch projshort-proj-stage phone-chips-button pane-canvas projshort-proj-bar-p" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>.bench { position: relative; }
 /* the Set up card on the picture: it fades away while the run plays and comes back on pause or when the run ends */
 .setup-card { position: absolute; z-index: 3; left: 620px; top: 60px; width: 250px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); transition: opacity 0.35s ease, visibility 0.35s; }
@@ -35,6 +36,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .stage canvas { position: absolute; inset: 0; display: block; outline: none; }
 .stage canvas:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 .viewbar { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
+.dimseg { position: absolute; top: 52px; left: 10px; z-index: 2; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
 .clock { position: absolute; top: 10px; right: 10px; z-index: 2; font-family: var(--font-mono); font-size: 0.9rem; font-weight: 600; background: color-mix(in srgb, var(--canvas) 85%, transparent); border-radius: 6px; padding: 4px 8px; }
 .blindtag { position: absolute; right: 10px; bottom: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
 .slider-head label { font-size: 0.88rem; }
@@ -85,9 +87,10 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 
   <main class="bench">
     <div class="stage" id="stage">
-      <canvas id="can" tabindex="0" role="img" aria-label="Three vertical pipes cut open to show the falling magnets and the induced currents in their walls, with a graph of speed against time. Space drops or pauses, R starts over."></canvas>
+      <canvas id="can" tabindex="0" role="img" aria-label="Three vertical pipes, in 3D (drag to turn) or flat, cut open to show the falling magnets and the induced currents in their walls, with a graph of speed against time. Space drops or pauses, R starts over."></canvas>
       <div class="viewbar"><button type="button" class="spin attn" id="drop">Drop all three</button><button type="button" class="spin" id="again">Start over</button></div>
       <div class="clock" id="clock">t = 0.00 s</div>
+      <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
       <span class="blindtag" id="blindTag" hidden>Blind</span>
     </div>
 
@@ -103,6 +106,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
       <section>
         <h2>Magnet and pipes</h2>
         <label class="check"><input type="checkbox" id="tCur" checked><span>Show the induced currents in the walls</span></label>
+        <label class="check" id="rowFollow" hidden><input type="checkbox" id="tFollow" checked><span>Follow the copper pipe's magnet (close up)</span></label>
         <details class="more"><summary>More about this</summary><p class="hint">The magnet is a neodymium cylinder 12.7 mm across and 12.7 mm long (12.2 g); the pipes have a 9.5 mm inner radius. Cooling copper in liquid nitrogen (−196 °C) raises its conductivity about seven times.</p></details>
       </section>
 
@@ -205,7 +209,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     const p = ps(), wide = W > 640, top = 92 * p, bot = H - (wide ? 40 : 230) * p, colW = wide ? W * 0.55 : W, k = ks(), tf = tFall();
     const Y = (y) => top + (bot - top) * y / LEN;
-    PIPES.forEach((P, i) => {
+    if (use3()) { pipes3(wide ? colW : W, wide ? H : bot + 26 * p, k, tf);
+      /* the graph sits on a frosted panel over the 3D picture */
+      const gx0 = wide ? colW + 12 * p : 8 * p, gy0 = wide ? top - 16 * p : bot + 30 * p; ctx.save(); ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.9; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(gx0, gy0, W - gx0 - 6 * p, H - gy0 - 6 * p, 10 * p) : ctx.rect(gx0, gy0, W - gx0 - 6 * p, H - gy0 - 6 * p); ctx.fill(); ctx.restore(); }
+    else PIPES.forEach((P, i) => {
       const cx = colW * (i + 0.5) / 3, pw = Math.min(46 * p, colW / 9), col = T[P.id];
       if (window.VDGear && /^#[0-9a-f]{6}$/i.test(col)) {
         /* cut pipe: the far inner wall in shadow, then the two cut walls lit like rods */
@@ -296,17 +303,135 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     card.away(S.run);
+    if (S.run && G3.on) G3.ph += dt * 1.6;   /* the dots on the current rings: direction only */
     if (S.run) { S.t += dt; const end = Math.max(...tFall()); if (S.t >= end) { S.t = end; S.run = false; $('drop').textContent = 'Drop all three'; } draw(); readouts(); }
     requestAnimationFrame(frame);
   }
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; readouts(); });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
+  // ---------- the pipes in 3D (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
+  /* Each pipe stands in a wooden base with its front quarter cut away so the magnet and the wall are seen. Lengths are to scale; the pipe and
+     magnet radii are drawn WX times larger, so they can be seen beside a metre of pipe. The rings in the wall carry the induced current: brighter
+     where it is larger (from ringEmf, the same as the flat view), with dots that circulate in its direction. Drag to turn the view. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.3, ph: 1.2, zoom: 1 }, ph: 0, lcd: '', follow: true };
+  const NO3D = 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
+  const WX = 3, PX3 = [-0.17, 0, 0.17], Z0 = 0.06, NR = 21, ND = 14;   /* radii drawn WX times larger; pipe positions (m); bottom of the pipes; rings per pipe, dots per ring */
+  let g3 = null;
+  const use3 = () => !!(G3.on && g3);
+  function init3D() {
+    G3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    r.shadowMap.enabled = true; r.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); el.style.right = 'auto'; el.style.bottom = 'auto'; stage.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.02, 30), Ms = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.7), sun = new THREE.DirectionalLight(0xffffff, 0.7);
+    sun.position.set(-0.8, -1.2, 2.2); sun.target.position.set(0, 0, 0.5); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+    Object.assign(sun.shadow.camera, { left: -0.8, right: 0.8, top: 0.9, bottom: -0.9, near: 0.5, far: 5 }); sun.shadow.radius = 3;
+    scene.add(hemi, sun, sun.target);
+    const mesh = (g, m, cast) => { const x = new THREE.Mesh(g, m); x.castShadow = cast !== false; x.receiveShadow = true; return x; };
+    const up = (g) => { g.rotateX(Math.PI / 2); return g; };
+    const benchM = Ms({ roughness: 0.85 }), bench = mesh(new THREE.PlaneGeometry(14, 10), benchM, false); bench.position.set(0, 3, 0);
+    const woodM = Ms({ roughness: 0.7 }), base = mesh(new THREE.BoxGeometry(0.56, 0.16, Z0), woodM); base.position.set(0, 0, Z0 / 2);
+    const steelM = Ms({ roughness: 0.35, metalness: 0.7, color: 0x9aa3ad }), top = new THREE.Group();
+    const bar = mesh(new THREE.BoxGeometry(0.56, 0.03, 0.02), steelM); bar.position.set(0, 0.06, Z0 + LEN + 0.07); top.add(bar);
+    for (const x of [-0.27, 0.27]) { const pst = mesh(up(new THREE.CylinderGeometry(0.008, 0.008, LEN + 0.08, 16)), steelM); pst.position.set(x, 0.06, Z0 + (LEN + 0.08) / 2); top.add(pst); }
+    /* the pipes: an outer and an inner wall with the front quarter removed, the two cut faces, and a rim at each end */
+    const pipes = PIPES.map((P, i) => {
+      const g = new THREE.Group(), m = Ms({ roughness: P.sigma20 ? 0.3 : 0.55, metalness: P.sigma20 ? 0.12 : 0, side: THREE.DoubleSide }), mi = Ms({ roughness: 0.5, metalness: P.sigma20 ? 0.1 : 0, side: THREE.DoubleSide });
+      const cut = Math.PI / 4, ts = cut, tl = 2 * Math.PI - 2 * cut, ro = 0.0095 * WX + 0.0016 * WX, ri = 0.0095 * WX;
+      const outer = mesh(up(new THREE.CylinderGeometry(ro, ro, LEN, 48, 1, true, ts, tl)), m), inner = mesh(up(new THREE.CylinderGeometry(ri, ri, LEN, 48, 1, true, ts, tl)), mi, false);
+      const faces = [ts, ts + tl].map((a) => { const f = mesh(new THREE.PlaneGeometry(ro - ri, LEN), m, false); f.rotation.x = Math.PI / 2; f.rotation.y = 0; const pv = new THREE.Group(); f.position.x = (ro + ri) / 2; pv.add(f); pv.rotation.z = a - Math.PI / 2; return pv; });
+      g.add(outer, inner, ...faces); g.position.set(PX3[i], 0, Z0 + LEN / 2);
+      const mag = new THREE.Group(), mr = 0.00635 * WX, mh = 0.0127;
+      const nM = Ms({ roughness: 0.4, metalness: 0.4 }), sM = Ms({ roughness: 0.4, metalness: 0.4 });
+      const mN = mesh(up(new THREE.CylinderGeometry(mr, mr, mh / 2, 32)), nM), mS = mesh(up(new THREE.CylinderGeometry(mr, mr, mh / 2, 32)), sM); mN.position.z = -mh / 4; mS.position.z = mh / 4; mag.add(mN, mS);
+      mag.position.x = PX3[i];
+      /* the induced current: NR rings just inside the wall, from 8 cm below the magnet to 8 cm above */
+      const ringM = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false }), rings = [];
+      for (let j = 0; j < NR; j++) { const rr = new THREE.Mesh(new THREE.TorusGeometry(ri - 0.0012, 0.0011, 6, 48), ringM.clone()); rr.position.x = PX3[i]; rings.push(rr); }
+      return { P, g, m, mi, mag, nM, sM, rings };
+    });
+    const dotM = new THREE.MeshBasicMaterial(), dots = new THREE.InstancedMesh(new THREE.SphereGeometry(0.0022, 8, 6), dotM, 2 * NR * ND); dots.frustumCulled = false;
+    scene.add(bench, base, top, dots); for (const q of pipes) scene.add(q.g, q.mag, ...q.rings);
+    g3 = { r, el, scene, cam, hemi, sun, benchM, woodM, pipes, dots, dotM, mat4: new THREE.Matrix4(), col: new THREE.Color() };
+    can.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => { if (!use3()) return true; const b = can.getBoundingClientRect(); return e.clientX - b.left > G3.w || e.clientY - b.top > G3.h; }, phMin: 0.5, phMax: 1.52, zMin: 0.6, zMax: 4 });
+    return true;
+  }
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function theme3() {
+    const g = g3, dk = VD3.dark(), bg = col3(T.canvas, '#fbfcfd');
+    g.scene.background = bg; g.scene.fog = new THREE.Fog(bg, 3, 7);
+    g.hemi.intensity = dk ? 1.05 : 0.85; g.sun.intensity = dk ? 0.9 : 0.7; g.hemi.groundColor = col3(dk ? '#2a241d' : '#8c7a60', '#8c7a60');
+    g.benchM.color = col3(dk ? '#3a3229' : '#cdbb9d', '#cdbb9d'); g.woodM.color = col3(dk ? '#6b5338' : '#b98d5c', '#b98d5c');
+    for (const q of g.pipes) { const c = q.P.id === 'pvc' ? (dk ? '#c9d0d8' : '#eef1f4') : T[q.P.id]; q.m.color = col3(c, '#b87333'); q.mi.color = col3(c, '#b87333').multiplyScalar(0.55); q.nM.color = col3(T.mag, '#b0452f'); q.sM.color = col3(T.mag2, '#2b60b5'); }
+    g.dotM.color = col3(T.cur, '#6f4bb3'); G3.lcd = '';
+  }
+  /* the 3D picture fills the left part of the stage (the pipes' column); the graph stays on the 2D canvas */
+  function render3(rw, rh, k, tf) {
+    const g = g3; if (!g) return null;
+    if (G3.w !== rw || G3.h !== rh || G3.W !== W || G3.H !== H) { G3.w = rw; G3.h = rh; G3.W = W; G3.H = H; g.r.setSize(W, Math.max(1, H)); g.cam.aspect = W / Math.max(1, H);
+      g.cam.setViewOffset(W, H, (W - rw) / 2, (H - rh) / 2, W, H); g.cam.updateProjectionMatrix(); }   /* the whole stage, with the pipes centred in their column */
+    const key = [T.canvas, T.cu, T.cur, T.mag].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    const asp = rw / Math.max(1, rh), st0 = fall(MAG.mass, k[0], Math.min(S.t, tf[0])), zc = Z0 + LEN - Math.min(LEN, st0.y);
+    if (G3.follow) VD3.place(g.cam, G3.o, new THREE.Vector3(PX3[0] + 0.07, 0, Math.min(zc, Z0 + LEN - 0.08)), 0.62 * Math.max(1, 0.9 / asp));
+    else VD3.place(g.cam, G3.o, new THREE.Vector3(0, 0, Z0 + LEN * 0.52), 2.55 * Math.max(1, 0.75 / asp));
+    const a = radius(); let nd = 0;
+    g.pipes.forEach((q, i) => {
+      const tt = Math.min(S.t, tf[i]), st = fall(MAG.mass, k[i], tt), y = Math.min(LEN, st.y), zm = Z0 + LEN - y;
+      q.mag.position.z = zm;
+      const live = S.cur && k[i] > 0 && S.t > 0 && tt < tf[i], ref = Math.abs(ringEmf(S.m, a, a / 2, 1));
+      q.rings.forEach((rr, j) => {
+        const dz = -0.08 + 0.008 * j, z = zm + dz; rr.position.z = z;
+        const e = live ? ringEmf(S.m, a, -dz, st.v) / (ref * Math.max(st.v, 1e-6)) : 0, al = Math.min(1, Math.abs(e));
+        rr.visible = live && al >= 0.06 && z > Z0 && z < Z0 + LEN; if (!rr.visible) return;
+        rr.material.color = col3(T.cur, '#6f4bb3'); rr.material.opacity = 0.15 + 0.75 * al;
+        /* dots go round counterclockwise seen from above where e > 0, a quarter turn per second at full strength (direction only) */
+        const n = Math.round(ND * al), R = 0.0095 * WX - 0.0012;
+        for (let d = 0; d < n && nd < 2 * NR * ND; d++) { const ang = (d / n) * 2 * Math.PI + Math.sign(e) * G3.ph * al; g.mat4.makeTranslation(PX3[i] + R * Math.cos(ang), R * Math.sin(ang), z); g.dots.setMatrixAt(nd++, g.mat4); }
+      });
+    });
+    g.dots.count = nd; g.dots.instanceMatrix.needsUpdate = true;
+    g.scene.updateMatrixWorld(); g.r.render(g.scene, g.cam);
+    const tmp = new THREE.Vector3();
+    return (p3) => { tmp.set(p3[0], p3[1], p3[2]).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * H, tmp.z]; };
+  }
+  /* the pipes' words and timers over the 3D picture */
+  function pipes3(rw, rh, k, tf) {
+    const p = ps(), Q = render3(rw, rh, k, tf); ctx.clearRect(0, 0, W, H); if (!Q) return;
+    const txt = (s, q, o = {}) => { ctx.save(); ctx.font = `${o.w || 400} ${(o.s || 11.5) * p}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'center'; ctx.textBaseline = o.bl || 'middle';
+      ctx.lineWidth = 4; ctx.strokeStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.lineJoin = 'round'; ctx.strokeText(s, q[0], q[1]); ctx.globalAlpha = 1; ctx.fillStyle = o.c || T.ink; ctx.fillText(s, q[0], q[1]); ctx.restore(); };
+    PIPES.forEach((P, i) => {
+      if (!G3.follow) { const t0 = Q([PX3[i], 0, Z0 + LEN + 0.02]); txt(P.name, [t0[0], t0[1] - 10 * p], { w: 700, s: 12 }); }
+      /* the timer under each pipe stops when its magnet reaches the bottom: on the base, or in a row along the bottom when the base is out of view */
+      const b = Q([PX3[i], -0.08, Z0 * 0.55]), s = S.t >= tf[i] ? `${f(tf[i], 2)} s` : S.t > 0 ? `${f(S.t, 2)} s` : '0.00 s', w = 66 * p, h = 22 * p;
+      const onBase = b[2] < 1 && b[0] > w && b[0] < rw - w && b[1] > 0 && b[1] < rh - 30 * p, at = onBase ? b : [rw / 2 + (i - 1) * (w + 54 * p), rh - 52 * p];
+      if (!onBase) txt(P.name.replace(' (PVC)', ''), [at[0], at[1] - h / 2 - 9 * p], { s: 10.5, w: 700 });
+      if (window.VDGear) window.VDGear.lcd(ctx, at[0] - w / 2, at[1] - h / 2, w, h, s, { font: `600 ${12 * p}px ${T.mono}` });
+      else { ctx.fillStyle = '#0b1a12'; ctx.fillRect(at[0] - w / 2, at[1] - h / 2, w, h); txt(s, at, { m: true, c: '#7ee0a0' }); }
+    });
+    const narrow = rw < 420;
+    if (!narrow) { txt(`Widths of the pipes and magnets drawn ${WX} times larger; lengths to scale. Drag to turn.`, [12 * p, rh - 24 * p], { a: 'left', s: 9.5, c: T.muted, bl: 'bottom' });
+      txt('Rings: the current in the wall, brighter where it is larger, dots turning its way.', [12 * p, rh - 10 * p], { a: 'left', s: 9.5, c: T.muted, bl: 'bottom' }); }
+  }
+  function setDim(v) {
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried || !window.VD3) { v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setDim(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3) g3.el.hidden = !use3(); can.style.cursor = use3() ? 'grab' : ''; $('rowFollow').hidden = !use3();
+    for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String(b.dataset.dim === v));
+    draw();
+  }
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setDim(b.dataset.dim); });
+  $('tFollow').addEventListener('change', (e) => { G3.follow = e.target.checked; draw(); });
   function resize() { dpr = window.devicePixelRatio || 1; const r = stage.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); can.style.width = W + 'px'; can.style.height = H + 'px'; draw(); }
   const retheme = () => { tokens(); draw(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   tokens(); new ResizeObserver(resize).observe(stage); restart(); resize();
+  { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
   window.__ed = { S, restart, sync, draw, readouts, tFall };   /* for the worksheet key capture: set S.t and redraw */
