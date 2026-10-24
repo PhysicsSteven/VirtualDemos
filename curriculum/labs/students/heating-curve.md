@@ -14,6 +14,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§1.4–1.5. Access for free 
 
 - The Beaker view heats a sample in an open beaker on a hot plate. The hot plate and beaker stand on a balance that has been tared, so it reads the mass of the sample only. A thermometer reads the sample's temperature to 0.1 °C and a timer reads the time to 1 s.
 - The model is ideal: every joule from the heater goes into the sample, none into the glass or the room, and the sample is at one temperature throughout. The vapor leaves the open beaker, so the balance reading falls while the sample boils. Evaporation below the boiling point is left out.
+- A covered beaker stands beside the open one: the same sample on the same hot plate, with a lid. Its vapor condenses on the lid and runs back, so its balance keeps reading the whole mass. The lid passes the heat on to the room, which the model leaves out, so the covered sample stays at the boiling point. You can hide it.
 - The specific heats and latent heats are the textbook's (Tables 1.3 and 1.4), so your results can be checked against them.
 - The speed buttons run the clock 5, 20 or 50 times faster than real time. The timer always shows the time in the experiment, so the speed does not change your results.
 - Capture reading stores the time, temperature and balance reading shown. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
@@ -90,6 +91,7 @@ The timer reads to 1 s, the thermometer to 0.1 °C and the balance to 0.1 g; the
 2. Why does a burn from steam at 100 °C do more harm than one from the same mass of water at 100 °C?
 3. Ethanol boils away much faster than the same mass of water on the same hot plate. Which property of ethanol does that measure?
 4. In a real beaker some water evaporates well below 100 °C. How would that change the balance reading and your value of $$c$$ for water?
+5. While the open beaker boils away, what does the covered beaker's balance read, and why? What does this say about where the mass of the open beaker went?
 
 ## What to hand in
 

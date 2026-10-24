@@ -1385,3 +1385,11 @@ Steve asked for an Astro category and a tidy Misc. Map change only (`course` lis
 - **e/m** moved to Modern Physics (Photons and matter waves unit, next to Rutherford); **Ising** to Thermodynamics (new Beyond the textbook unit).
 - **Misc** keeps BZ reaction and DNA under one "Misc" heading. Home page has seven tiles.
 - `test_textbook_map.cjs` accepts `astro`, and `unit.demos` may now hold a demo whose sections belong to another course (e/m's are Physics II §§11.3, 11.7) as long as none is in this course's units. `courses.py --check` clean, map test passes, every local link on the changed pages resolves, no sideways scroll at 1280 and 390 px.
+## Claude, 2026-10-24: States of Matter, Steve's second round
+
+Steve asked for a piston whose height does not depend on the pressure, a pressure slider down to zero, a covered second beaker that shows the mass stays put, gentler ice melting and a visual pass.
+- **Magic piston:** a pressure gauge on the piston replaces the slotted weights, so it looks the same at every pressure; slider 0 to 30 atm. The column can now reach 680 nm, and the picture squeezes heights above about 4 nm (a dashed line marks where, in flat and 3D) so the piston stays in view; Column height is the true height. Physics unchanged for the setups (17 and 28 atm), so the keys' data stand.
+- **Covered beaker** beside the open one (checkbox, on by default): same sample and hot plate; once it boils its vapor condenses on the lid and runs back, so its balance keeps the whole mass. The lid's heat loss to the room is not modelled, so it stays at the boiling point. New CORE function `coveredState`, tested.
+- **Ice** cubes now all shrink and round off as they melt, so the drawn volume follows the mass of ice left.
+- **Visual pass:** soft contact shadow and backdrop in 3D, gauge facing the viewer, phase share strip under the heating curve, shaded and labelled stages on the beaker curve, two rigs that fit a 360 px phone.
+- **Handouts, GPT please verify:** heating-curve.md (About bullet on the covered beaker, new Question 5), bonds-and-latent-heat.md (About: idealized piston, 0 to 30 atm, squeezed height). Notes: class step, Q7, physics. Keys rebuilt (TeacherKeys). Tests 7 groups; math 39 expressions, 0 problems; vdcheck `--only after` clean.

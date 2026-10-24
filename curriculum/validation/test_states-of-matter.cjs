@@ -2,7 +2,7 @@
 // States of Matter: argon units, the molecular dynamics (energy and enthalpy bookkeeping, phases), the beaker heating curve.
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('states-of-matter', 'AR,TAU_PS,KJMOL,ATM,POW,mdMake,mdStep,mdKE,mdTemp,mdEnthalpy,mdBonds,mdPhases,SUBSTANCES,stages,beakerState,beakerCSV,atomsCSV');
+const c = core('states-of-matter', 'AR,TAU_PS,KJMOL,ATM,POW,mdMake,mdStep,mdKE,mdTemp,mdEnthalpy,mdBonds,mdPhases,SUBSTANCES,stages,beakerState,coveredState,beakerCSV,atomsCSV');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.abs(b), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -42,6 +42,10 @@ group('beaker: 200 g of ice from −20 °C needs 8.36 kJ, 66.8 kJ, 83.72 kJ and 
   near(c.beakerState('water', 0.2, -20, 75160 + 41860).T, 50, 1e-12, 'water halfway');
   const e = c.stages('ethanol', 0.2, 20).map((g) => +(g.Q1 - g.Q0).toFixed(6)); assert.deepEqual(e, [+(0.2 * 2450 * 58.3).toFixed(6), 170800]);
   assert(c.beakerState('water', 0.2, -20, 1e7).done);
+});
+group('covered beaker: the same as the open one until it boils, then its mass stays 200 g at 100 °C', () => {
+  for (const Q of [5000, 50000, 120000]) assert.deepEqual(c.coveredState('water', 0.2, -20, Q), c.beakerState('water', 0.2, -20, Q));
+  for (const Q of [158880 + 225600, 1e7]) { const r = c.coveredState('water', 0.2, -20, Q); assert.equal(r.T, 100); near(r.mS + r.mL + r.mV, 0.2, 1e-12, 'mass kept'); assert(!r.done); }
 });
 group('CSV headers for the worksheets', () => {
   const b = c.beakerCSV([{ t: '10', T: '-15.2', m: '200.0' }], { substance: 'Water', m0: 200, P: 500, T0: -20 }).trim().split('\n');

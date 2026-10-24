@@ -108,7 +108,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
           </div>
           <div>
             <div class="slider-head"><label for="sPres">Pressure on the piston</label><output id="oPres" class="mono" for="sPres"></output></div>
-            <input type="range" id="sPres" min="15" max="30" step="1" value="17">
+            <input type="range" id="sPres" min="0" max="30" step="1" value="17">
           </div>
           <div class="legend wide" id="legend"></div>
         </div>
@@ -120,6 +120,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
               <button type="button" data-sub="water" aria-pressed="true">Water</button>
               <button type="button" data-sub="ethanol" aria-pressed="false">Ethanol</button>
             </div>
+            <label class="check"><input type="checkbox" id="cover2" checked><span>Covered beaker beside it</span></label>
           </div>
           <div>
             <div class="slider-head"><label for="sMass">Sample mass</label><output id="oMass" class="mono" for="sMass"></output></div>
@@ -363,6 +364,14 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     }
     return r;
   }
+  /* the covered beaker beside it: the same until it boils; then the vapor stays under the lid, condenses on it and runs back, so
+     nothing leaves and the balance keeps reading the whole mass. The lid passes the heat on to the room air (not modelled), so the
+     sample stays at the boiling point. */
+  function coveredState(sub, m, T0, Q) {
+    const r = beakerState(sub, m, T0, Q);
+    if (r.kind === 'boil') { r.mL = m; r.mV = 0; r.done = false; }
+    return r;
+  }
 
   const SM_VERSION = '2026-10-24';
   const csvCell = (v) => { const s = v == null ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
@@ -402,7 +411,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     ethanol: { view: 'beaker', sub: 'ethanol', m: 200, W: 500, T0: 20,
       hint: '200 g of ethanol at 20 °C on the same hot plate. It boils at 78.3 °C, and its latent heat of vaporization is 854 kJ/kg, less than half of water\'s 2256 kJ/kg, so it boils away much sooner.' },
   };
-  const S = { view: 'atoms', preset: 'crystal', run: false, speed: 4, dim: 'flat', heat: 1, pow: 4, Patm: 17, bonds: true, color: 'speed', blind: false,
+  const S = { view: 'atoms', preset: 'crystal', run: false, cover2: true, speed: 4, dim: 'flat', heat: 1, pow: 4, Patm: 17, bonds: true, color: 'speed', blind: false,
     md: null, kind: 'crystal', T0: 40, base: null, W: 0, avg: null, hist: [], ph: null, phAvg: [1, 0, 0], frame: 0, lastHist: 0, perStep: 0.5,
     bk: { sub: 'water', m: 200, W: 500, T0: -20, t: 0, hist: [] }, rows: { atoms: [], beaker: [] }, series: { atoms: 0, beaker: 0 } };
   const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
@@ -422,7 +431,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   const pwOf = () => S.heat * S.pow / POW;                     /* heater power in ε per τ per atom */
   const Pred = () => S.Patm / ATM;                             /* piston pressure in ε/σ³ */
   function newSample() {
-    S.md = mdMake({ kind: S.kind, T0: S.T0 / AR.epsK, P: Pred() });
+    S.md = mdMake({ kind: S.kind, T0: S.T0 / AR.epsK, P: Pred(), Hmax: 2000 });   /* room for a vapor at low pressure: 2000σ = 680 nm */
     const md = S.md, T0 = S.T0 / AR.epsK;                    /* settle the piston and the atoms, holding the temperature at T0 */
     for (let i = 0; i < 600; i++) { mdStep(md, 0); if (i % 20 === 19) { const s = Math.sqrt(T0 / mdTemp(md)); for (let k = 0; k < md.N; k++) { md.vx[k] *= s; md.vy[k] *= s; md.vz[k] *= s; } } }
     md.Q = 0; md.t = 0; S.W = 0;
@@ -431,7 +440,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     S.ph = mdPhases(md); S.phAvg = shares(S.ph); S.nb = mdBonds(md); S.hist = []; S.lastHist = -1; pushHist();
   }
   const shares = (ph) => { const c = [0, 0, 0]; for (const p of ph) c[p]++; return c.map((v) => v / ph.length); };
-  function pushHist() { const md = S.md; S.hist.push({ t: md.t * TAU_PS / 1000, Q: md.Q / md.N * KJMOL, T: S.avg.T * AR.epsK, U: S.avg.pe * KJMOL }); S.lastHist = md.t; }
+  function pushHist() { const md = S.md; S.hist.push({ t: md.t * TAU_PS / 1000, Q: md.Q / md.N * KJMOL, T: S.avg.T * AR.epsK, U: S.avg.pe * KJMOL, ph: S.phAvg.slice() }); S.lastHist = md.t; }
   function advanceAtoms(n) {
     const md = S.md, pw = pwOf(), A = md.Lx * md.Ly, a = md.dt / 10;      /* averages over about 10 τ = 0.02 ns */
     for (let k = 0; k < n; k++) {
@@ -450,12 +459,13 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
         + dd('Kinetic energy', `${f(av.ke * KJMOL, 2)} kJ/mol`) + dd('Bond energy U', `${f(av.pe * KJMOL, 2)} kJ/mol`)
         + dd('Bonds per atom', f(2 * S.nb / md.N, 1)) + dd('Column height', `${f(av.h * NM, 1)} nm`)
         + dd('Solid · liquid · vapor', `${p[0]} · ${p[1]} · ${p[2]} %`, 'wide')
-        + dd('Pressure', `${S.Patm} atm`) + dd('Heater', S.heat ? `${S.heat > 0 ? '+' : '−'}${f(S.pow, 1)} kJ/(mol·ns)` : 'off');
+        + dd('Pressure', `${S.Patm} atm`) + dd('Heater', S.heat ? `${S.heat > 0 ? '+' : '−'}${f(S.pow, 1)} kJ/(mol·ns)` : 'off', 'wide');
     } else {
       const b = S.bk, s = SUBSTANCES[b.sub], st = beakerState(b.sub, b.m / 1000, b.T0, b.W * b.t), what = beakerWhat(st);
       $('out').innerHTML = dd('Temperature T', `${f(st.T, 1)} °C`) + dd('Balance', `${f((st.mS + st.mL) * 1000, 1)} g`)
         + dd('Time t', `${f(b.t, 0)} s`) + dd('Heat supplied Pt', `${f(b.W * b.t / 1000, 1)} kJ`)
-        + dd('In the beaker', what, 'wide') + dd('Substance', s.name) + dd('Heater power P', `${b.W} W`);
+        + dd('In the beaker', what, 'wide') + dd('Substance', s.name) + dd('Heater power P', `${b.W} W`)
+        + (S.cover2 ? dd('Covered beaker', `${f(b.m, 1)} g · ${f(coveredState(b.sub, b.m / 1000, b.T0, b.W * b.t).T, 1)} °C`, 'wide') : '');
     }
   }
   function beakerWhat(st) {
@@ -488,10 +498,12 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     return Math.max(0, Math.min(1, Math.sqrt(v2 / ref) * 0.75));
   }
 
+  /* the picture squeezes heights above ZB (about 4 nm), so a tall vapor column and its piston stay in view; readouts use true heights */
+  const ZB = 12, ZK = 6, zd = (z) => (z <= ZB ? z : ZB + ZK * Math.log(1 + (z - ZB) / ZK));
   const SLICE = 0.5 / AR.sigmaNm;                              /* the flat view's slice: 0.5 nm thick */
   /* where the column sits in the picture (flat view): px per σ and the visible height in σ */
   function frameAtoms() {
-    const p = proj(), md = S.md, top = Math.max(12, Math.min(40, S.avg.h + 1.5)), padT = 34 * p, padB = 64 * p;
+    const p = proj(), md = S.md, top = Math.max(12, Math.min(50, zd(S.avg.h) + 1.5)), padT = 92 * p, padB = 64 * p;   /* room above for the piston rod and gauge */
     const sc = Math.min((H - padT - padB) / top, (W * 0.5) / md.Lx), x0 = Math.max(18 * p, W * 0.32 - md.Lx * sc / 2), y0 = H - padB;
     return { sc, x0, y0, top };
   }
@@ -512,7 +524,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     /* atoms, back to front (y is depth) */
     const r = Math.max(1.6, (S.bonds ? 0.3 : 0.48) * sc);   /* ball and stick with bonds, space filling without */
     if (!sprites || Math.abs(sprites.r - r) > 0.25) makeSprites(r);
-    const X = (i) => x0 + md.x[i] * sc, Z = (i) => y0 - md.z[i] * sc, inSlice = (i) => Math.abs(md.y[i] - md.Ly / 2) < SLICE / 2;
+    const X = (i) => x0 + md.x[i] * sc, Z = (i) => y0 - zd(md.z[i]) * sc, inSlice = (i) => Math.abs(md.y[i] - md.Ly / 2) < SLICE / 2;
     const order = S.order && S.order.length === md.N ? S.order : (S.order = Array.from({ length: md.N }, (_, i) => i));
     order.sort((i, j) => (inSlice(i) - inSlice(j)) || md.y[j] - md.y[i]);
     ctx.save(); ctx.beginPath(); ctx.rect(x0, yTop - r, colW, top * sc + r); ctx.clip();
@@ -534,20 +546,31 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     }
     ctx.globalAlpha = 1; ctx.restore();
     /* the piston and its weights */
-    const hp = md.h;
-    if (hp <= top + 0.5) drawPiston(x0, y0 - hp * sc, colW, sc, p);
-    else {
-      ctx.fillStyle = T.muted; ctx.font = `${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
-      ctx.fillText('↑ piston', x0 + colW / 2, yTop + 4 * p); ctx.fillText(`${f(hp * NM, 1)} nm up`, x0 + colW / 2, yTop + 19 * p);
+    const hp = zd(md.h);
+    if (md.h > ZB) {                                          /* where the squeezed scale starts */
+      const yb = y0 - ZB * sc; ctx.save(); ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.2 * p; ctx.setLineDash([5 * p, 4 * p]);
+      ctx.beginPath(); ctx.moveTo(x0 - 8 * p, yb); ctx.lineTo(x0 + colW + 8 * p, yb); ctx.stroke(); ctx.restore();
+      if (window.VDGear) VDGear.label(ctx, 'height squeezed above', x0 + colW + 12 * p, yb - 7 * p, { s: 10.5 * p }), VDGear.label(ctx, `piston ${f(md.h * NM, 1)} nm up`, x0 + colW + 12 * p, yb + 7 * p, { s: 10.5 * p });
     }
+    drawPiston(x0, y0 - Math.min(hp, top + 2) * sc, colW, sc, p);
     labelsAtoms(x0, y0, colW, sc, p);
   }
   function drawPiston(x, y, w, sc, p) {
     const t = Math.max(6 * p, 0.7 * sc), steel = dark() ? '#7d8896' : '#9aa4b0';
     if (window.VDGear) { VDGear.box(ctx, x - 2 * p, y - t, w + 4 * p, t, { color: steel, r: 2, shadow: false }); VDGear.rod(ctx, x + w / 2, y - t, x + w / 2, y - t - 24 * p, 3 * p); }
     else { ctx.fillStyle = steel; ctx.fillRect(x, y - t, w, t); }
-    const n = Math.round((S.Patm - 10) / 4), dw = Math.min(w * 0.8, 70 * p), dh = 6 * p;     /* one slotted weight per 4 atm above 10 */
-    for (let k = 0; k < n; k++) { const yy = y - t - 24 * p - k * (dh + 1); if (window.VDGear) VDGear.slotted(ctx, x + w / 2, yy, dw, dh); else { ctx.fillStyle = T.muted; ctx.fillRect(x + w / 2 - dw / 2, yy - dh, dw, dh); } }
+    gauge(ctx, x + w / 2, y - t - 24 * p - 15 * p, 15 * p);   /* a "magic" piston: it pushes with the set pressure, no weights needed */
+  }
+  /* the piston's pressure gauge, 0 to 30 atm */
+  function gauge(c, cx, cy, r) {
+    const a = (v) => Math.PI * (0.75 + 1.5 * v / 30);
+    const g = c.createRadialGradient(cx - r * 0.3, cy - r * 0.3, 0, cx, cy, r); g.addColorStop(0, '#f2f4f7'); g.addColorStop(1, '#b9c1cb');
+    c.save(); c.fillStyle = '#6b7684'; c.beginPath(); c.arc(cx, cy, r + 2, 0, 7); c.fill(); c.fillStyle = g; c.beginPath(); c.arc(cx, cy, r, 0, 7); c.fill();
+    c.strokeStyle = '#3a4552'; c.lineWidth = Math.max(1, r / 14);
+    for (let v = 0; v <= 30; v += 5) { const t = a(v); c.beginPath(); c.moveTo(cx + Math.cos(t) * r * 0.72, cy + Math.sin(t) * r * 0.72); c.lineTo(cx + Math.cos(t) * r * 0.9, cy + Math.sin(t) * r * 0.9); c.stroke(); }
+    const t = a(Math.max(0, Math.min(30, S.Patm))); c.strokeStyle = '#d2452b'; c.lineWidth = Math.max(1.2, r / 9); c.beginPath(); c.moveTo(cx, cy); c.lineTo(cx + Math.cos(t) * r * 0.78, cy + Math.sin(t) * r * 0.78); c.stroke();
+    c.fillStyle = '#3a4552'; c.beginPath(); c.arc(cx, cy, r * 0.12, 0, 7); c.fill();
+    c.font = `700 ${Math.max(7, r * 0.42)}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(S.Patm), cx, cy + r * 0.48); c.restore();
   }
   function labelsAtoms(x0, y0, colW, sc, p) {
     const L = (s, x, y, o) => (window.VDGear ? VDGear.label(ctx, s, x, y, Object.assign({ s: 11 * p }, o || {})) : null);
@@ -578,79 +601,107 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   }
 
   // ---------- drawing: the beaker ----------
-  const bub = [];
+  const bub = [];                                              /* bubbles rising while it boils; g = 0 open beaker, 1 covered */
   function drawBeaker() {
-    const b = S.bk, s = SUBSTANCES[b.sub], st = beakerState(b.sub, b.m / 1000, b.T0, b.W * b.t);
-    const p = Math.min(proj() * Math.max(1, Math.min(1.45, (H - 70) / 300)), (W * 0.64 - 12) / 252), benchY = H - 40 * p;   /* and shrinks to fit a phone */   /* the apparatus grows to fill a tall picture */
+    const b = S.bk, s = SUBSTANCES[b.sub], m = b.m / 1000, Q = b.W * b.t, two = S.cover2;
+    const stO = beakerState(b.sub, m, b.T0, Q), stC = coveredState(b.sub, m, b.T0, Q);
+    const fit = two ? (W - 16) / 440 : (W * 0.66 - 12) / 252;   /* the apparatus grows to fill a tall picture and shrinks to fit a phone */
+    const p = Math.min(proj() * Math.max(1, Math.min(1.4, (H - 70) / 310)), fit), benchY = H - 40 * p;
     if (window.VDGear) { VDGear.backdrop(ctx, W, H, { horizon: 0.78 }); VDGear.bench(ctx, 0, benchY, W, 12 * p, 14 * p); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
-    const cx = Math.min(W * 0.36, W / 2), balW = 230 * p, balH = 40 * p, plW = 180 * p, plH = 30 * p;
-    const by = benchY - balH, py = by - plH;
-    /* balance */
-    if (window.VDGear) { VDGear.box(ctx, cx - balW / 2, by, balW, balH, { color: dark() ? '#c9ced6' : '#e4e8ee', r: 6 }); VDGear.lcd(ctx, cx - balW / 2 + 12 * p, by + 9 * p, 92 * p, 22 * p, `${f((st.mS + st.mL) * 1000, 1)} g`);
-      VDGear.label(ctx, 'balance (tared)', cx + balW / 2 - 10 * p, by + balH / 2, { a: 'right', s: 10.5 * p, c: '#3a4552' }); }
-    /* hot plate */
-    const on = b.t > 0 && !st.done && S.run;
+    if (two) { const dx = Math.min(140 * p, W * 0.24); drawRig(W / 2 - dx, benchY, p, stO, false); drawRig(W / 2 + dx, benchY, p, stC, true); }
+    else drawRig(Math.min(W * 0.4, W / 2), benchY, p, stO, false);
+    /* timer */
+    const q = Math.min(p, 1.2), tx = 14 * q, ty = 14 * q;
+    if (window.VDGear) { VDGear.box(ctx, tx, ty, 110 * q, 38 * q, { color: '#3a4552', r: 5 }); VDGear.lcd(ctx, tx + 8 * q, ty + 7 * q, 94 * q, 24 * q, `${f(b.t, 0)} s`); VDGear.plate(ctx, 'timer', tx + 55 * q, ty + 46 * q, { s: 8 * q, c: T.muted }); }
+    else { ctx.fillStyle = T.ink; ctx.fillText(`${f(b.t, 0)} s`, tx, ty + 20); }
+    if (window.VDGear && W > 600) VDGear.label(ctx, `${s.name}, ${b.m} g each · ${b.W} W hot plates · room at 1 atm`, W - 14 * q, ty + 10 * q, { a: 'right', s: 11 * q });
+  }
+  /* one balance, hot plate and 600 mL beaker (drawn to scale, 8.5 cm wide inside), with a probe thermometer; covered: a lid keeps the vapor in */
+  function drawRig(cx, benchY, p, st, covered) {
+    const b = S.bk, s = SUBSTANCES[b.sub], m0 = b.m / 1000, g = covered ? 1 : 0, ink = dark() ? 'rgba(200,220,240,0.78)' : 'rgba(70,100,130,0.85)';
+    const balW = (S.cover2 ? 196 : 220) * p, balH = 38 * p, plW = 166 * p, plH = 28 * p, by = benchY - balH, py = by - plH;
+    /* balance: the vapor that stays under the lid still weighs on it */
+    if (window.VDGear) { VDGear.box(ctx, cx - balW / 2, by, balW, balH, { color: dark() ? '#c9ced6' : '#e6e9ee', r: 6 });
+      VDGear.lcd(ctx, cx - balW / 2 + 12 * p, by + 8 * p, 92 * p, 22 * p, `${f((st.mS + st.mL + (covered ? st.mV : 0)) * 1000, 1)} g`);
+      VDGear.label(ctx, 'balance (tared)', cx + balW / 2 - 10 * p, by + balH / 2, { a: 'right', s: 10 * p, c: '#3a4552' }); }
+    /* hot plate with a knob; its top glows while it heats */
+    const on = b.t > 0 && !(st.done) && S.run, warm = b.t > 0 && !st.done;
     if (window.VDGear) { VDGear.box(ctx, cx - plW / 2, py, plW, plH, { color: dark() ? '#3a4552' : '#4a5665', r: 5, shadow: false });
-      VDGear.lcd(ctx, cx - plW / 2 + 10 * p, py + 6 * p, 64 * p, 18 * p, `${b.W} W`, { color: '#ffb36b' }); }
-    ctx.fillStyle = on ? T.hot : (dark() ? '#56606e' : '#8a94a2'); ctx.globalAlpha = on ? 0.95 : 0.8; ctx.fillRect(cx - plW / 2 + 12 * p, py - 4 * p, plW - 24 * p, 4 * p); ctx.globalAlpha = 1;
-    /* beaker: 600 mL, drawn to scale (8.5 cm wide inside) */
-    const bwid = 120 * p, bh = 160 * p, bx = cx - bwid / 2, bt = py - 4 * p - bh, mlPerPx = 600 / (bh * 0.88);
+      VDGear.lcd(ctx, cx - plW / 2 + 10 * p, py + 5 * p, 58 * p, 18 * p, `${b.W} W`, { color: '#ffb36b' });
+      const kx = cx + plW / 2 - 22 * p, ky = py + plH / 2, kg = ctx.createRadialGradient(kx - 3 * p, ky - 3 * p, 1, kx, ky, 9 * p);
+      kg.addColorStop(0, '#f4f6f8'); kg.addColorStop(1, '#a9b2bd'); ctx.fillStyle = kg; ctx.beginPath(); ctx.arc(kx, ky, 8 * p, 0, 7); ctx.fill();
+      ctx.strokeStyle = '#4a5462'; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(kx, ky); ctx.lineTo(kx + 5 * p * Math.cos(-2.2 + b.W / 1000 * 4.4), ky + 5 * p * Math.sin(-2.2 + b.W / 1000 * 4.4)); ctx.stroke();
+      ctx.fillStyle = warm ? '#ff6b3d' : '#5b6470'; ctx.beginPath(); ctx.arc(cx + plW / 2 - 42 * p, ky, 2.6 * p, 0, 7); ctx.fill(); }
+    const topG = ctx.createLinearGradient(cx - plW / 2, 0, cx + plW / 2, 0), hc = warm ? [255, 110, 60] : (dark() ? [86, 96, 110] : [138, 148, 162]);
+    topG.addColorStop(0, `rgba(${hc},0.55)`); topG.addColorStop(0.5, `rgba(${hc},${warm ? 1 : 0.85})`); topG.addColorStop(1, `rgba(${hc},0.55)`);
+    ctx.fillStyle = topG; ctx.fillRect(cx - plW / 2 + 10 * p, py - 4 * p, plW - 20 * p, 4 * p);
+    if (warm && !reduce) { const hg = ctx.createRadialGradient(cx, py, 0, cx, py, plW * 0.6); hg.addColorStop(0, 'rgba(255,120,60,0.22)'); hg.addColorStop(1, 'rgba(255,120,60,0)'); ctx.fillStyle = hg; ctx.fillRect(cx - plW * 0.6, py - plW * 0.3, plW * 1.2, plW * 0.32); }
+    /* beaker */
+    const bwid = 116 * p, bh = 156 * p, bx = cx - bwid / 2, bt = py - 4 * p - bh, mlPerPx = 600 / (bh * 0.88), floor = py - 7 * p;
     const volL = st.mL / s.rhoL * 1e6, volS = s.rhoS ? st.mS / s.rhoS * 1e6 : 0;
     const liqH = (volL + (st.mS > 0 && st.mL > 0 ? volS * s.rhoS / s.rhoL : 0)) / mlPerPx;    /* floating ice displaces its own mass of water */
-    const floor = py - 4 * p - 3 * p;
-    /* contents */
-    if (st.mL > 0) {
-      const g = ctx.createLinearGradient(0, floor - liqH, 0, floor); const c = b.sub === 'water' ? ['rgba(120,180,235,0.55)', 'rgba(70,140,215,0.7)'] : ['rgba(235,215,140,0.45)', 'rgba(215,185,90,0.6)'];
-      g.addColorStop(0, c[0]); g.addColorStop(1, c[1]); ctx.fillStyle = g; ctx.fillRect(bx + 3 * p, floor - liqH, bwid - 6 * p, liqH);
-      ctx.fillStyle = 'rgba(255,255,255,0.5)'; ctx.fillRect(bx + 3 * p, floor - liqH, bwid - 6 * p, 1.5 * p);
-    }
-    if (st.mS > 0) {                                         /* ice cubes: a packed heap that shrinks as it melts */
-      const n = Math.max(1, Math.ceil(12 * st.mS / (b.m / 1000))), side = 26 * p * Math.cbrt(Math.min(1, st.mS / (b.m / 1000) * 12 / n));
-      const surf = st.mL > 0 ? floor - liqH : floor;
-      for (let k = 0; k < n; k++) {
-        const col = k % 4, row = Math.floor(k / 4), x = bx + 10 * p + col * (bwid - 20 * p) / 4 + (row % 2) * 6 * p, y = st.mL > 0 ? surf - side * 0.15 - row * side * 0.2 : floor - side - row * side * 0.95;
-        ctx.save(); ctx.translate(x + side / 2, y + side / 2); ctx.rotate(((k * 37) % 17 - 8) * 0.03);
-        const g = ctx.createLinearGradient(-side / 2, -side / 2, side / 2, side / 2); g.addColorStop(0, 'rgba(240,250,255,0.95)'); g.addColorStop(1, 'rgba(170,205,235,0.85)');
-        ctx.fillStyle = g; ctx.strokeStyle = 'rgba(120,160,200,0.8)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(-side / 2, -side / 2, side, side, 3 * p); ctx.fill(); ctx.stroke(); ctx.restore();
-      }
-    }
-    /* bubbles while it boils, from the bottom */
-    if (st.kind === 'boil' && !st.done && st.mL > 0 && S.run && !reduce) {
-      if (bub.length < 40 && Math.random() < 0.6) bub.push({ x: bx + 8 * p + Math.random() * (bwid - 16 * p), y: floor, r: (1.5 + Math.random() * 3) * p, v: (30 + Math.random() * 40) * p });
-    }
-    for (let k = bub.length - 1; k >= 0; k--) { const u = bub[k]; if (u.y < floor - liqH + 2 || st.mL <= 0) { bub.splice(k, 1); continue; }
-      ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(u.x, u.y, u.r, 0, 7); ctx.stroke(); }
-    if (st.kind === 'boil' && !st.done && st.mL > 0) {          /* vapor leaving the open top */
-      ctx.save(); for (let k = 0; k < 5; k++) { const ph = (performance.now() / 1400 + k / 5) % 1, x = bx + bwid * (0.25 + 0.12 * k), y = bt - ph * 60 * p;
-        ctx.globalAlpha = 0.35 * (1 - ph); ctx.fillStyle = dark() ? '#c9d4e0' : '#ffffff'; ctx.beginPath(); ctx.arc(x + Math.sin(ph * 6 + k) * 6 * p, y, (6 + ph * 14) * p, 0, 7); ctx.fill(); }
-      ctx.restore(); }
-    /* glass */
     ctx.save(); const bot = floor + 3 * p, rr = 9 * p;
     const body = () => { ctx.beginPath(); ctx.moveTo(bx, bt + 4 * p); ctx.lineTo(bx, bot - rr); ctx.quadraticCurveTo(bx, bot, bx + rr, bot); ctx.lineTo(bx + bwid - rr, bot); ctx.quadraticCurveTo(bx + bwid, bot, bx + bwid, bot - rr); ctx.lineTo(bx + bwid, bt + 4 * p); };
-    ctx.fillStyle = dark() ? 'rgba(170,200,230,0.07)' : 'rgba(205,225,245,0.28)'; body(); ctx.closePath(); ctx.fill();
-    ctx.strokeStyle = dark() ? 'rgba(200,220,240,0.75)' : 'rgba(80,110,140,0.8)'; ctx.lineWidth = 2.2 * p; ctx.lineJoin = 'round';
-    body(); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(bx - 7 * p, bt); ctx.quadraticCurveTo(bx - 2 * p, bt, bx, bt + 4 * p); ctx.moveTo(bx + bwid, bt + 4 * p); ctx.lineTo(bx + bwid + 2 * p, bt); ctx.stroke();   /* rim and spout */
-    const sheen = ctx.createLinearGradient(bx, 0, bx + bwid, 0); sheen.addColorStop(0, 'rgba(255,255,255,0)'); sheen.addColorStop(0.12, dark() ? 'rgba(255,255,255,0.10)' : 'rgba(255,255,255,0.55)'); sheen.addColorStop(0.2, 'rgba(255,255,255,0)');
-    sheen.addColorStop(0.86, 'rgba(255,255,255,0)'); sheen.addColorStop(0.92, dark() ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.35)'); sheen.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = dark() ? 'rgba(170,200,230,0.07)' : 'rgba(205,225,245,0.3)'; body(); ctx.closePath(); ctx.fill(); ctx.restore();
+    if (st.mL > 0) {
+      const lg = ctx.createLinearGradient(0, floor - liqH, 0, floor), c = b.sub === 'water' ? ['rgba(120,180,235,0.55)', 'rgba(60,130,210,0.75)'] : ['rgba(235,215,140,0.45)', 'rgba(215,185,90,0.65)'];
+      lg.addColorStop(0, c[0]); lg.addColorStop(1, c[1]); ctx.fillStyle = lg; ctx.fillRect(bx + 2 * p, floor - liqH, bwid - 4 * p, liqH + 2 * p);
+      ctx.fillStyle = 'rgba(255,255,255,0.55)'; ctx.fillRect(bx + 2 * p, floor - liqH, bwid - 4 * p, 1.5 * p);       /* meniscus */
+    }
+    if (st.mS > 0) {                                         /* ice: the same cubes all shrink and round off as they melt, so the drawn volume follows the mass */
+      const n = Math.max(3, Math.min(16, Math.round(12 * m0 / 0.2))), left = st.mS / m0, side = 26 * p * Math.cbrt(m0 / 0.2 * 12 / n) * Math.cbrt(left);
+      const surf = st.mL > 0 ? floor - liqH : floor, per = Math.max(1, Math.floor((bwid - 12 * p) / Math.max(side * 1.05, 1)));
+      for (let k = 0; k < n; k++) {
+        const col = k % Math.min(4, per), row = Math.floor(k / Math.min(4, per)), slot = (bwid - 16 * p) / Math.min(4, per);
+        const x = bx + 8 * p + col * slot + (slot - side) / 2 + (row % 2 ? 0.25 : -0.1) * (slot - side), y = st.mL > 0 ? surf - side * 0.12 - row * side * 0.22 : floor - side - row * side * 0.92;
+        ctx.save(); ctx.translate(x + side / 2, y + side / 2); ctx.rotate(((k * 37) % 17 - 8) * 0.03); ctx.globalAlpha = 0.55 + 0.4 * left;
+        const ig = ctx.createLinearGradient(-side / 2, -side / 2, side / 2, side / 2); ig.addColorStop(0, 'rgba(244,251,255,0.97)'); ig.addColorStop(1, 'rgba(165,202,235,0.85)');
+        ctx.fillStyle = ig; ctx.strokeStyle = 'rgba(120,160,200,0.75)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(-side / 2, -side / 2, side, side, side * (0.14 + 0.32 * (1 - left))); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = 'rgba(255,255,255,0.7)'; ctx.fillRect(-side * 0.3, -side * 0.32, side * 0.22, side * 0.08); ctx.restore();
+      }
+    }
+    const boiling = st.kind === 'boil' && !st.done && st.mL > 0;
+    if (boiling && S.run && !reduce && bub.filter((u) => u.g === g).length < 40 && Math.random() < 0.6)
+      bub.push({ g, x: bx + 8 * p + Math.random() * (bwid - 16 * p), y: floor, r: (1.5 + Math.random() * 3) * p, v: (30 + Math.random() * 40) * p });
+    for (let k = bub.length - 1; k >= 0; k--) { const u = bub[k]; if (u.g !== g) continue; if (u.y < floor - liqH + 2 || st.mL <= 0 || !boiling) { bub.splice(k, 1); continue; }
+      ctx.strokeStyle = 'rgba(255,255,255,0.8)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(u.x, u.y, u.r, 0, 7); ctx.stroke(); }
+    const ph = performance.now() / 1400;
+    if (boiling && !covered) {                               /* vapor leaving the open top */
+      ctx.save(); for (let k = 0; k < 5; k++) { const a = (ph + k / 5) % 1, x = bx + bwid * (0.25 + 0.12 * k), y = bt - a * 60 * p;
+        ctx.globalAlpha = (dark() ? 0.35 : 0.5) * (1 - a); ctx.fillStyle = dark() ? '#c9d4e0' : '#c4d0dc'; ctx.beginPath(); ctx.arc(x + Math.sin(a * 6 + k) * 6 * p, y, (6 + a * 14) * p, 0, 7); ctx.fill(); }
+      ctx.restore(); }
+    if (boiling && covered) {                                /* vapor stays under the lid, condenses on it and drips back */
+      const top = bt + 10 * p, hgt = Math.max(0, floor - liqH - top);
+      const fg = ctx.createLinearGradient(0, top, 0, top + hgt); fg.addColorStop(0, dark() ? 'rgba(220,230,240,0.22)' : 'rgba(255,255,255,0.55)'); fg.addColorStop(1, 'rgba(255,255,255,0)');
+      ctx.fillStyle = fg; ctx.fillRect(bx + 2 * p, top, bwid - 4 * p, hgt);
+      ctx.fillStyle = dark() ? 'rgba(200,225,250,0.75)' : 'rgba(120,170,220,0.8)';
+      for (let k = 0; k < 9; k++) { const x = bx + 10 * p + k * (bwid - 20 * p) / 8; ctx.beginPath(); ctx.arc(x, bt + 3 * p, (1.6 + (k % 3) * 0.6) * p, 0, Math.PI); ctx.fill(); }
+      if (!reduce) for (let k = 0; k < 3; k++) { const a = (ph * 0.8 + k / 3) % 1, x = bx + bwid * (0.28 + 0.22 * k), y = bt + 4 * p + a * Math.max(0, floor - liqH - bt - 4 * p);
+        ctx.beginPath(); ctx.ellipse(x, y, 1.4 * p, 2.4 * p, 0, 0, 7); ctx.fill(); }
+    }
+    /* glass on top of the contents */
+    ctx.save(); ctx.strokeStyle = ink; ctx.lineWidth = 2.2 * p; ctx.lineJoin = 'round'; body(); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(bx - 7 * p, bt); ctx.quadraticCurveTo(bx - 2 * p, bt, bx, bt + 4 * p); ctx.moveTo(bx + bwid, bt + 4 * p); ctx.lineTo(bx + bwid + 2 * p, bt); ctx.stroke();   /* spout and rim */
+    const sheen = ctx.createLinearGradient(bx, 0, bx + bwid, 0); sheen.addColorStop(0, 'rgba(255,255,255,0)'); sheen.addColorStop(0.1, dark() ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.55)'); sheen.addColorStop(0.18, 'rgba(255,255,255,0)');
+    sheen.addColorStop(0.88, 'rgba(255,255,255,0)'); sheen.addColorStop(0.93, dark() ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.35)'); sheen.addColorStop(1, 'rgba(255,255,255,0)');
     ctx.fillStyle = sheen; ctx.fillRect(bx + 2 * p, bt + 8 * p, bwid - 4 * p, bh - 18 * p);
-    ctx.fillStyle = dark() ? 'rgba(220,230,240,0.75)' : 'rgba(60,80,100,0.75)'; ctx.font = `${9.5 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';   /* mL marks on the left */
-    for (let v = 100; v <= 500; v += 100) { const y = floor - v / mlPerPx; ctx.fillRect(bx + 4 * p, y, 12 * p, 1.2 * p); ctx.fillRect(bx + 4 * p, y - 0.5 / mlPerPx * 100, 6 * p, 1); ctx.fillText(`${v}`, bx + 19 * p, y); }
-    ctx.fillText('mL', bx + 19 * p, floor - 560 / mlPerPx);
-    ctx.restore();
-    /* thermometer probe from a stand on the right */
-    const sx = bx + bwid + 70 * p;
-    if (window.VDGear) { VDGear.stand(ctx, sx, benchY, bt - 50 * p, { side: 1 }); VDGear.boss(ctx, sx, bt - 30 * p, p); }
-    const tipY = st.mL > 0 || st.mS > 0 ? floor - 14 * p : floor - 14 * p;
-    if (window.VDGear) { VDGear.rod(ctx, sx, bt - 30 * p, bx + bwid * 0.8, bt - 30 * p, 2.5 * p); VDGear.rod(ctx, bx + bwid * 0.8, bt - 30 * p, bx + bwid * 0.8, tipY, 2.2 * p, { color: '#c7ced6' }); }
-    else { ctx.strokeStyle = T.muted; ctx.beginPath(); ctx.moveTo(bx + bwid * 0.8, bt - 30 * p); ctx.lineTo(bx + bwid * 0.8, tipY); ctx.stroke(); }
-    if (window.VDGear) { VDGear.box(ctx, sx + 14 * p, bt - 70 * p, 108 * p, 40 * p, { color: '#3a4552', r: 5 }); VDGear.lcd(ctx, sx + 22 * p, bt - 62 * p, 92 * p, 24 * p, `${f(st.T, 1)} °C`);
-      VDGear.label(ctx, 'thermometer', sx + 68 * p, bt - 78 * p, { a: 'center', s: 10.5 * p }); }
-    /* timer */
-    const tx = 16 * p, ty = 16 * p;
-    if (window.VDGear) { VDGear.box(ctx, tx, ty, 120 * p, 40 * p, { color: '#3a4552', r: 5 }); VDGear.lcd(ctx, tx + 8 * p, ty + 8 * p, 104 * p, 24 * p, `${f(b.t, 0)} s`); }
-    else { ctx.fillStyle = T.ink; ctx.fillText(`${f(b.t, 0)} s`, tx, ty + 20); }
-    if (window.VDGear && W > 600) VDGear.label(ctx, `${s.name}, ${b.m} g · open beaker at 1 atm · ${b.W} W hot plate`, tx + 2 * p, ty + 54 * p, { a: 'left', s: 11 * p });
+    ctx.fillStyle = ink; ctx.font = `${9 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';      /* mL marks on the left */
+    for (let v = 100; v <= 500; v += 100) { const y = floor - v / mlPerPx; ctx.fillRect(bx + 4 * p, y, 12 * p, 1.2 * p); ctx.fillRect(bx + 4 * p, y - 50 / mlPerPx, 6 * p, 1); ctx.fillText(`${v}`, bx + 19 * p, y); }
+    ctx.fillText('mL', bx + 19 * p, floor - 560 / mlPerPx); ctx.restore();
+    /* the lid: a glass plate with a knob, sealed with a gasket */
+    if (covered) {
+      const lx = bx - 10 * p, lw = bwid + 20 * p, lg = ctx.createLinearGradient(0, bt - 6 * p, 0, bt);
+      lg.addColorStop(0, dark() ? 'rgba(210,225,240,0.45)' : 'rgba(225,238,250,0.95)'); lg.addColorStop(1, dark() ? 'rgba(150,175,200,0.35)' : 'rgba(170,195,220,0.9)');
+      ctx.fillStyle = lg; ctx.strokeStyle = ink; ctx.lineWidth = 1.4 * p; ctx.beginPath(); ctx.roundRect(lx, bt - 6 * p, lw, 6 * p, 3 * p); ctx.fill(); ctx.stroke();
+      ctx.fillStyle = dark() ? '#56606e' : '#6b7684'; ctx.fillRect(bx - 1 * p, bt, bwid + 2 * p, 2 * p);
+      ctx.fillStyle = dark() ? '#9aa4b0' : '#7d8794'; ctx.beginPath(); ctx.roundRect(cx - 10 * p, bt - 13 * p, 20 * p, 7 * p, 3 * p); ctx.fill();
+    }
+    /* probe thermometer: a small meter above the beaker, its probe in the sample (through a grommet in the lid) */
+    const mx = W < 600 ? cx - 20 * p : cx + bwid * 0.3, tipX = bx + bwid * 0.78, tipY = floor - 14 * p, meterY = bt - 58 * p;
+    if (window.VDGear) { VDGear.rod(ctx, tipX, meterY + 30 * p, tipX, tipY, 2 * p, { color: '#c7ced6' });
+      VDGear.box(ctx, mx - 6 * p, meterY, 96 * p, 34 * p, { color: '#3a4552', r: 5 }); VDGear.lcd(ctx, mx + 1 * p, meterY + 6 * p, 82 * p, 22 * p, `${f(st.T, 1)} °C`); }
+    else { ctx.strokeStyle = T.muted; ctx.beginPath(); ctx.moveTo(tipX, meterY + 30 * p); ctx.lineTo(tipX, tipY); ctx.stroke(); }
+    if (window.VDGear) VDGear.label(ctx, W > 760 ? (covered ? 'covered: the vapor stays in' : 'open: the vapor escapes') : (covered ? 'covered' : 'open'), mx - 10 * p, meterY + 17 * p, { a: 'right', s: Math.max(10, 10.5 * p) });
   }
 
   // ---------- the heating curve ----------
@@ -685,6 +736,19 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     cctx.save(); cctx.translate(CW - 10 * p, Tp + ph / 2); cctx.rotate(Math.PI / 2); cctx.fillStyle = S.view === 'atoms' ? T.pe : T.accent; cctx.fillText(y2l, 0, -4 * p); cctx.restore();
     cctx.textAlign = 'left'; cctx.textBaseline = 'middle'; cctx.font = `${10.5 * p}px ${T.mono}`; cctx.fillStyle = S.view === 'atoms' ? T.pe : T.accent;
     cctx.fillText(f(u1, 1), L + pw + 4 * p, pu(u1)); cctx.fillText(f(u0, 1), L + pw + 4 * p, pu(u0));
+    if (S.view === 'atoms') {                                /* a strip along the bottom: the solid, liquid and vapor shares at each point */
+      const bh = 7 * p, yb = Tp + ph - bh, cols = [T.solid, T.liquid, T.vapor]; cctx.save(); cctx.globalAlpha = 0.85;
+      for (let i = 1; i < pts.length; i++) { const q = pts[i], xa = px(X(pts[i - 1])), wq = Math.max(0.6, px(X(q)) - xa + 0.4); if (!q.ph) continue; let yy = yb;
+        for (let k = 0; k < 3; k++) { const hk = q.ph[k] * bh; cctx.fillStyle = cols[k]; cctx.fillRect(xa, yy, wq, hk); yy += hk; } }
+      cctx.restore(); cctx.fillStyle = T.muted; cctx.font = `${9 * p}px ${T.ui}`; cctx.textAlign = 'left'; cctx.textBaseline = 'bottom';
+      if (pts.length > 1) cctx.fillText('solid · liquid · vapor shares', L + 4 * p, yb - 2 * p);
+    } else {                                                  /* the stages so far, shaded behind the curve */
+      const b = S.bk, s = SUBSTANCES[b.sub], tint = { warm: null, melt: T.solid, boil: T.vapor };
+      stages(b.sub, b.m / 1000, b.T0).forEach((g) => { const ta = g.Q0 / b.W, tb = Math.min(g.Q1 / b.W, b.t); if (tb <= ta) return;
+        const xa = px(ta), xb = px(tb); if (tint[g.kind]) { cctx.save(); cctx.globalAlpha = dark() ? 0.14 : 0.1; cctx.fillStyle = tint[g.kind]; cctx.fillRect(xa, Tp, xb - xa, ph); cctx.restore(); }
+        const name = { warm: g.phase === 'solid' ? `${s.solid} warms` : 'liquid warms', melt: 'melting', boil: 'boiling' }[g.kind];
+        cctx.font = `${9.5 * p}px ${T.ui}`; if (cctx.measureText(name).width < xb - xa - 6 * p) { cctx.fillStyle = T.muted; cctx.textAlign = 'center'; cctx.textBaseline = 'bottom'; cctx.fillText(name, (xa + xb) / 2, Tp + ph - 3 * p); } });
+    }
     const line = (fy, c, w) => { cctx.strokeStyle = c; cctx.lineWidth = w; cctx.lineJoin = 'round'; cctx.beginPath(); pts.forEach((q, i) => (i ? cctx.lineTo(px(X(q)), fy(q)) : cctx.moveTo(px(X(q)), fy(q)))); cctx.stroke(); };
     line((q) => pu(Y2(q)), S.view === 'atoms' ? T.pe : T.accent, 1.5 * p);
     line((q) => py(Y(q)), T.curve, 2.2 * p);
@@ -729,24 +793,33 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     const benchCv = document.createElement('canvas'); benchCv.width = benchCv.height = 256; { const x = benchCv.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, 256, 256); x.strokeStyle = 'rgba(0,0,0,0.07)'; x.lineWidth = 2; x.strokeRect(0, 0, 256, 256); }
     const benchTex = new THREE.CanvasTexture(benchCv); benchTex.wrapS = benchTex.wrapT = THREE.RepeatWrapping; benchTex.repeat.set(30, 30);
     const benchMat = new THREE.MeshStandardMaterial({ map: benchTex, roughness: 0.9, metalness: 0 });
-    const bench = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), benchMat); bench.position.z = -3.4; bench.receiveShadow = shadows; scene.add(bench);
+    const bench = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), benchMat); bench.position.z = -3.4; scene.add(bench);
+    const csCv = document.createElement('canvas'); csCv.width = csCv.height = 128; { const x = csCv.getContext('2d'), rg = x.createRadialGradient(64, 64, 10, 64, 64, 64); rg.addColorStop(0, 'rgba(0,0,0,0.55)'); rg.addColorStop(0.6, 'rgba(0,0,0,0.25)'); rg.addColorStop(1, 'rgba(0,0,0,0)'); x.fillStyle = rg; x.fillRect(0, 0, 128, 128); }
+    const contact = new THREE.Mesh(new THREE.PlaneGeometry(md.Lx + 14, md.Ly + 14), new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(csCv), transparent: true, depthWrite: false }));
+    contact.position.z = -3.38; scene.add(contact);   /* a soft contact shadow under the hot plate */
     const glassMat = new THREE.MeshPhysicalMaterial({ color: 0xcfe3f5, roughness: 0.05, metalness: 0, transparent: true, opacity: 0.1, side: THREE.DoubleSide, depthWrite: false });
     const glass = new THREE.Mesh(new THREE.BoxGeometry(md.Lx, md.Ly, 1, 1, 1, 1), glassMat); scene.add(glass);
     const edges = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(md.Lx, md.Ly, 1)), new THREE.LineBasicMaterial({ color: 0x8fb3d6, transparent: true, opacity: 0.5 })); scene.add(edges);
     const steel = new THREE.MeshStandardMaterial({ color: 0xc9d1da, roughness: 0.35, metalness: 0.45 });
     const piston = new THREE.Group(), plate = new THREE.Mesh(new THREE.BoxGeometry(md.Lx + 0.6, md.Ly + 0.6, 0.8), steel); plate.position.z = 0.4; plate.castShadow = shadows; piston.add(plate);
     const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.35, 0.35, 4, 16), steel); rod.rotation.x = Math.PI / 2; rod.position.z = 2.8; piston.add(rod);
-    const brass = new THREE.MeshStandardMaterial({ color: 0xd2a84e, roughness: 0.38, metalness: 0.45 }), wts = [];
-    for (let k = 0; k < 6; k++) { const w = new THREE.Mesh(new THREE.CylinderGeometry(2.4, 2.4, 0.7, 32), brass); w.rotation.x = Math.PI / 2; w.position.z = 1.6 + k * 0.78; w.castShadow = shadows; piston.add(w); wts.push(w); }
+    /* a "magic" piston: a gauge on top shows the pressure it pushes with, so it looks the same at every pressure */
+    const dialCv = document.createElement('canvas'); dialCv.width = dialCv.height = 256; const dialTex = new THREE.CanvasTexture(dialCv); dialTex.center.set(0.5, 0.5); dialTex.rotation = Math.PI / 2;
+    const dial = new THREE.Mesh(new THREE.CylinderGeometry(2.2, 2.2, 0.5, 40).rotateX(Math.PI / 2), [steel, new THREE.MeshStandardMaterial({ map: dialTex, roughness: 0.5 }), steel]);
+    dial.position.set(0, 0, 6.4); piston.add(dial);
     scene.add(piston);
+    const hx = md.Lx / 2 + 0.05, hy = md.Ly / 2 + 0.05, brk = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-hx, -hy, ZB), new THREE.Vector3(hx, -hy, ZB), new THREE.Vector3(hx, hy, ZB), new THREE.Vector3(-hx, hy, ZB)]),
+      new THREE.LineDashedMaterial({ color: 0x3a7bd5, dashSize: 0.5, gapSize: 0.35 })); brk.computeLineDistances(); scene.add(brk);   /* where the squeezed height scale starts */
     VD3.orbit(el, orb, () => { G3.dirty = true; }, { phMin: 0.25, phMax: 1.5, zMin: 0.35, zMax: 3 });
     el.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
-    Object.assign(G3, { r, el, scene, cam, atoms, bonds, cap, floorMat, lamp, glow, benchMat, glass, edges, piston, wts, sun, hemi: scene.children[0], m4: new THREE.Matrix4(), q: new THREE.Quaternion(), v: new THREE.Vector3(), s: new THREE.Vector3(), up: new THREE.Vector3(0, 1, 0), col: new THREE.Color() });
+    Object.assign(G3, { r, el, scene, cam, atoms, bonds, cap, floorMat, lamp, glow, benchMat, glass, edges, piston, brk, dial, dialCv, dialTex, dialP: null, sun, hemi: scene.children[0], m4: new THREE.Matrix4(), q: new THREE.Quaternion(), v: new THREE.Vector3(), s: new THREE.Vector3(), up: new THREE.Vector3(0, 1, 0), col: new THREE.Color() });
     theme3D(); return true;
   }
   function theme3D() {
     if (!G3.ok && !G3.scene) return;
-    const d = VD3.dark(), bg = new THREE.Color(d ? 0x10161e : 0xeef1f5); G3.scene.background = bg; G3.scene.fog = new THREE.Fog(bg, 60, 260);
+    const d = VD3.dark(), bg = new THREE.Color(d ? 0x10161e : 0xeceff3), cv = document.createElement('canvas'); cv.width = 4; cv.height = 256;
+    const x = cv.getContext('2d'), lg = x.createLinearGradient(0, 0, 0, 256); lg.addColorStop(0, d ? '#0d131a' : '#e3e8ee'); lg.addColorStop(0.62, d ? '#18212c' : '#fafbfc'); lg.addColorStop(1, d ? '#10161e' : '#eceff3');
+    x.fillStyle = lg; x.fillRect(0, 0, 4, 256); G3.scene.background = new THREE.CanvasTexture(cv); G3.scene.fog = new THREE.Fog(bg, 60, 260);   /* the same backdrop as the flat view */
     G3.benchMat.color.set(d ? 0x2a323d : 0xdfe4ea);
   }
   function draw3D() {
@@ -755,7 +828,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     if (g.w !== rect.width || g.h !== rect.height) { g.w = rect.width; g.h = rect.height; g.r.setSize(rect.width, rect.height, false); g.cam.aspect = rect.width / rect.height; g.cam.updateProjectionMatrix(); }
     const ka = S.bonds ? 0.3 / 0.46 : 1;
     for (let i = 0; i < md.N; i++) {
-      g.m4.makeScale(ka, ka, ka).setPosition(md.x[i] - half.x, md.y[i] - half.y, md.z[i]); g.atoms.setMatrixAt(i, g.m4);
+      g.m4.makeScale(ka, ka, ka).setPosition(md.x[i] - half.x, md.y[i] - half.y, zd(md.z[i])); g.atoms.setMatrixAt(i, g.m4);
       if (S.color === 'phase' && S.ph) g.col.set([T.solid, T.liquid, T.vapor][S.ph[i]]); else g.col.set(speedColor(atomColorIndex(i)));
       g.atoms.setColorAt(i, g.col);
     }
@@ -764,19 +837,24 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     if (S.bonds) mdBonds(md, (i, j, rr, dx, dy, dz) => {
       if (n >= g.cap || Math.abs(md.x[j] - md.x[i]) > half.x || Math.abs(md.y[j] - md.y[i]) > half.y) return;
       const s = Math.max(0, Math.min(1, (1.5 - rr) / 0.38));
-      g.v.set(dx / rr, dy / rr, dz / rr); g.q.setFromUnitVectors(g.up, g.v); g.s.set(0.035 + 0.055 * s, rr, 0.035 + 0.055 * s);
-      g.m4.compose(new THREE.Vector3(md.x[i] + dx / 2 - half.x, md.y[i] + dy / 2 - half.y, md.z[i] + dz / 2), g.q, g.s); g.bonds.setMatrixAt(n, g.m4);
+      const z1 = zd(md.z[i]), dzd = zd(md.z[i] + dz) - z1, rd = Math.hypot(dx, dy, dzd);   /* drawn on the squeezed height scale */
+      g.v.set(dx / rd, dy / rd, dzd / rd); g.q.setFromUnitVectors(g.up, g.v); g.s.set(0.035 + 0.055 * s, rd, 0.035 + 0.055 * s);
+      g.m4.compose(new THREE.Vector3(md.x[i] + dx / 2 - half.x, md.y[i] + dy / 2 - half.y, z1 + dzd / 2), g.q, g.s); g.bonds.setMatrixAt(n, g.m4);
       g.col.set(dark() ? '#bdb2ff' : '#8a78dc').multiplyScalar(0.55 + 0.5 * s); g.bonds.setColorAt(n, g.col); n++;
     });
     g.bonds.count = n; g.bonds.instanceMatrix.needsUpdate = true; if (g.bonds.instanceColor) g.bonds.instanceColor.needsUpdate = true;
     const top = Math.max(12, Math.min(60, S.avg.h + 2));
-    g.glass.scale.z = Math.max(1, md.h); g.glass.position.z = md.h / 2; g.edges.scale.z = Math.max(1, md.h); g.edges.position.z = md.h / 2;
-    g.piston.position.z = md.h; const nw = Math.round((S.Patm - 10) / 4); g.wts.forEach((w, k) => { w.visible = k < nw; });
+    const hz = zd(md.h);
+    g.glass.scale.z = Math.max(1, hz); g.glass.position.z = hz / 2; g.edges.scale.z = Math.max(1, hz); g.edges.position.z = hz / 2;
+    g.piston.position.z = hz; g.brk.visible = md.h > ZB;
+    if (g.dialP !== S.Patm) { const c = g.dialCv.getContext('2d'); c.clearRect(0, 0, 256, 256); gauge(c, 128, 128, 118); g.dialTex.needsUpdate = true; g.dialP = S.Patm; }
+
     const gl = S.heat ? 0.35 + 0.65 * S.pow / 8 : 0, hot = S.heat > 0 ? 0xff5a1f : 0x3f8cff;   /* the coil glows with the heater setting */
     g.floorMat.emissive.set(gl ? hot : 0x000000); g.floorMat.emissiveIntensity = gl; g.lamp.material.emissive.set(gl ? hot : 0x000000);
     g.glow.color.set(S.heat > 0 ? 0xff7a3c : 0x5c9cff); g.glow.intensity = gl * 1.6;
-    const hv = Math.min(60, S.avg.h), need = Math.max((hv + 9) / 0.575, 19 / (0.575 * g.cam.aspect));   /* fit the column and its weights (tan 16° = 0.287) */
-    const tgt = { x: 0, y: 0, z: hv * 0.48 + 1.2 }; VD3.place(g.cam, orb, tgt, need * 1.05);
+    const hv = zd(S.avg.h), need = Math.max((hv + 13) / 0.575, 19 / (0.575 * g.cam.aspect));   /* fit the column and its weights (tan 16° = 0.287) */
+    const tgt = { x: 0, y: 0, z: hv * 0.5 + 3 }; VD3.place(g.cam, orb, tgt, need * 1.05);
+    g.dial.up.set(0, 0, 1); g.dial.lookAt(g.cam.position.x, g.cam.position.y, hz + 6.4);   /* the gauge faces the viewer */
     g.sun.position.set(-20, -30, top + 50); g.sun.target.position.set(0, 0, top * 0.3);
     g.r.render(g.scene, g.cam);
   }
@@ -796,7 +874,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     if (S.view === 'atoms') {
-      if (S.dim === '3d' && G3.ok) { ctx.clearRect(0, 0, W, H); draw3D(); drawSplit(proj()); }
+      if (S.dim === '3d' && G3.ok) { ctx.clearRect(0, 0, W, H); draw3D(); drawSplit(proj()); if (S.md.h > ZB && window.VDGear) VDGear.label(ctx, `height squeezed above the dashed line · piston ${f(S.md.h * NM, 1)} nm up`, 14 * proj(), 16 * proj(), { s: 11 * proj() }); }
       else drawAtomsFlat();
     } else drawBeaker();
     drawCurve(); readouts(); clock();
@@ -870,6 +948,7 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   $('showBonds').addEventListener('change', (e) => { S.bonds = e.target.checked; redraw(); });
   $('sPow').addEventListener('input', (e) => { S.pow = +e.target.value; custom(); redraw(); });
   $('sPres').addEventListener('input', (e) => { S.Patm = +e.target.value; if (S.md) S.md.P = Pred(); custom(); redraw(); });
+  $('cover2').addEventListener('change', (e) => { S.cover2 = e.target.checked; bub.length = 0; redraw(); });
   $('sMass').addEventListener('input', (e) => { S.bk.m = +e.target.value; S.bk.t = 0; custom(); setRun(false); });
   $('sWatt').addEventListener('input', (e) => { S.bk.W = +e.target.value; S.bk.t = 0; custom(); setRun(false); });
   $('sT0').addEventListener('input', (e) => { S.bk.T0 = +e.target.value; S.bk.t = 0; custom(); setRun(false); });
@@ -920,8 +999,8 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   $('rowsTbl').addEventListener('click', (e) => { const b = e.target.closest('[data-del]'); if (b) { S.rows[S.view].splice(+b.dataset.del, 1); renderRows(); } });
 
   // ---------- about ----------
-  $('aboutAtoms').textContent = `Atoms view: ${432} argon atoms that attract each other at a distance and repel when they touch (the Lennard-Jones potential, with argon's bond strength ε/k = 120 K and size σ = 0.34 nm, cut off at 0.85 nm). Newton's second law moves every atom in steps of ${f(MD_DT * TAU_PS * 1000, 1)} fs. The sample repeats sideways, so an atom leaving one side comes back in at the other, as if it were part of a wide sheet. A free piston presses down with a fixed pressure, and the heater adds energy to the atoms touching the floor. Temperature is the average kinetic energy of the atoms (KE = 3/2 kT per atom); the bond energy U is their potential energy, negative because bound atoms have less energy than separated ones. The heat added equals the change in KE + U + PV: the first law at constant pressure. The run lasts nanoseconds, so the heater is far stronger than a stove. Two things move the temperatures away from real argon's 83.8 K (melting) and 87.3 K (boiling at 1 atm). The piston presses at 17 atm, not 1 atm, so that the vapor fits in the column (at 1 atm it would need more than ten times the room), and a liquid boils hotter at a higher pressure: that is why boiling here comes well above 87.3 K. And the sample is only a few nanometres thick, with many atoms at a surface, and each atom feels only the atoms within 0.85 nm, so it is held together less firmly than a flask of argon: it melts below 83.8 K and its latent heats are smaller. The shape of the heating curve, and where the heat goes, are the same. A small sample can also overheat for a moment before the first vapor forms, then settle back to the boiling plateau; real liquids do this too (superheating). Temperatures and energies on screen are averages over the last 0.02 ns. The flat view shows a slice 0.5 nm thick through the middle of the sample, with the atoms behind it faint; the 3D view shows them all.`;
-  $('aboutBeaker').textContent = 'Beaker view: a sample heated at a constant power P in a perfectly insulated beaker open to the air at 1 atm, so all of the heat goes into the sample (none into the glass or the room) and the vapor leaves. Specific heats and latent heats are from OpenStax University Physics Volume 2, Tables 1.3 and 1.4: ice 2090 J/kg·°C, water 4186, ethanol 2450; water melts at 0 °C with Lf = 334 kJ/kg and boils at 100 °C with Lv = 2256 kJ/kg; ethanol boils at 78.3 °C with Lv = 854 kJ/kg. Each stage takes heat Q = mcΔT or Q = mL, delivered at Q = Pt. Evaporation below the boiling point is neglected. The balance is tared, so it reads the sample only.';
+  $('aboutAtoms').textContent = `Atoms view: ${432} argon atoms that attract each other at a distance and repel when they touch (the Lennard-Jones potential, with argon's bond strength ε/k = 120 K and size σ = 0.34 nm, cut off at 0.85 nm). Newton's second law moves every atom in steps of ${f(MD_DT * TAU_PS * 1000, 1)} fs. The sample repeats sideways, so an atom leaving one side comes back in at the other, as if it were part of a wide sheet. A free piston presses down with the pressure you set, and the heater adds energy to the atoms touching the floor. The piston is idealized: it pushes with exactly the set pressure (its gauge shows it), with no weights, from 0 to 30 atm. At low pressure the vapor needs far more room, so the picture squeezes heights above 4 nm (a dashed line marks where) to keep the piston in view; the Column height readout is the true height. The column stops at 680 nm, so at 0 atm the vapor fills it and then the volume stays fixed. Temperature is the average kinetic energy of the atoms (KE = 3/2 kT per atom); the bond energy U is their potential energy, negative because bound atoms have less energy than separated ones. The heat added equals the change in KE + U + PV: the first law at constant pressure. The run lasts nanoseconds, so the heater is far stronger than a stove. Two things move the temperatures away from real argon's 83.8 K (melting) and 87.3 K (boiling at 1 atm). The setups use 17 atm, not 1 atm, so that the vapor stays near the sample (at 1 atm it would need more than ten times the room), and a liquid boils hotter at a higher pressure: that is why boiling here comes well above 87.3 K. And the sample is only a few nanometres thick, with many atoms at a surface, and each atom feels only the atoms within 0.85 nm, so it is held together less firmly than a flask of argon: it melts below 83.8 K and its latent heats are smaller. The shape of the heating curve, and where the heat goes, are the same. A small sample can also overheat for a moment before the first vapor forms, then settle back to the boiling plateau; real liquids do this too (superheating). Temperatures and energies on screen are averages over the last 0.02 ns. The flat view shows a slice 0.5 nm thick through the middle of the sample, with the atoms behind it faint; the 3D view shows them all.`;
+  $('aboutBeaker').textContent = 'Beaker view: a sample heated at a constant power P in a perfectly insulated beaker open to the air at 1 atm, so all of the heat goes into the sample (none into the glass or the room) and the vapor leaves. Specific heats and latent heats are from OpenStax University Physics Volume 2, Tables 1.3 and 1.4: ice 2090 J/kg·°C, water 4186, ethanol 2450; water melts at 0 °C with Lf = 334 kJ/kg and boils at 100 °C with Lv = 2256 kJ/kg; ethanol boils at 78.3 °C with Lv = 854 kJ/kg. Each stage takes heat Q = mcΔT or Q = mL, delivered at Q = Pt. Evaporation below the boiling point is neglected. The balance is tared, so it reads the sample only. The covered beaker beside it is the same sample on the same hot plate with a lid: until it boils the two match, then its vapor condenses on the lid and runs back, so nothing leaves and its balance keeps reading the whole mass (mass is conserved; only the open beaker loses the vapor). The lid passes the heat on to the room, which is not modelled, so the covered sample stays at the boiling point. Ice is drawn as cubes that shrink as they melt, their total volume following the mass of ice left.';
 
   // ---------- size, theme, start ----------
   function resize() {

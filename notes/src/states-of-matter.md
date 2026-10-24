@@ -17,7 +17,7 @@ Students should know Q = mcΔT and the idea of temperature as average kinetic en
 
 ## Running it in class
 
-1. **Ice to steam** (Beaker). Ask Q1, then press **Start** at the fastest speed. Point to the thermometer stuck at 0 °C while the cubes shrink, and the balance falling only once it boils.
+1. **Ice to steam** (Beaker). Ask Q1, then press **Start** at the fastest speed. Point to the thermometer stuck at 0 °C while the cubes shrink, and the balance falling only once it boils. Then compare the two balances once it boils: the open beaker's reading falls, the covered one's stays at 200 g (Q7).
 2. Read the curve. Ask Q2 about the two slopes and Q3 about the plateau lengths, then check with the timer.
 3. **Heat a crystal** (Atoms). Leave **Show bonds** on and colour the atoms by **Phase**. Start it and let the class watch the crystal pattern break up while the temperature holds near 66 K. Ask Q4.
 4. Keep going to boiling. Watch *Where the heat went*: on the plateaus the bond energy bar grows and the kinetic energy bar does not. Ask Q5. The sample may overheat briefly before the first vapor forms, then settle back: a real effect (superheating).
@@ -38,6 +38,8 @@ Students should know Q = mcΔT and the idea of temperature as average kinetic en
 
 **Q6.** Why does the boiling temperature go up at 28 atm, while the melting temperature hardly changes?
 
+**Q7.** Predict: when the open beaker has boiled half away, what does the covered beaker's balance read? Where did the open beaker's missing mass go?
+
 ## Common misconceptions
 
 - **"Heat and temperature are the same thing."** On a plateau heat goes in and the temperature does not change.
@@ -47,4 +49,4 @@ Students should know Q = mcΔT and the idea of temperature as average kinetic en
 
 ## Physics behind the demo
 
-Atoms: 432 atoms with the Lennard-Jones potential and argon's parameters, ε/k = 120 K, σ = 0.34 nm, m = 39.948 u (Rahman 1964), cut off and shifted at 2.5σ = 0.85 nm; velocity Verlet, time step 0.005τ ≈ 11 fs (τ = 2.15 ps). Periodic sideways, a 9-3 attractive floor (strength 2ε) and a free piston at constant pressure; the heater rescales the motion of atoms within 2.5σ of the floor. Enthalpy H = KE + U + PV changes only by the heat added (checked in curriculum/validation/test_states-of-matter.cjs). Phases from neighbour counts and the q6 bond order (ten Wolde, Ruiz-Montero and Frenkel 1996). The thin film and the cutoff hold the sample together less firmly than real argon, so it melts at about 66 K (argon 83.8 K) with smaller latent heats; it boils at about 112 to 115 K because the piston is at 17 atm (chosen so the vapor fits in the column), not 1 atm, where argon boils at 87.3 K; readouts average over 0.02 ns. Beaker: an exact piecewise heating curve at constant power with no heat losses and no evaporation below the boiling point, using the textbook's c and L values (OpenStax University Physics Vol. 2, Tables 1.3 and 1.4); the vapor leaves the open beaker. Run speeds are faster than real time; the timer shows experiment time.
+Atoms: 432 atoms with the Lennard-Jones potential and argon's parameters, ε/k = 120 K, σ = 0.34 nm, m = 39.948 u (Rahman 1964), cut off and shifted at 2.5σ = 0.85 nm; velocity Verlet, time step 0.005τ ≈ 11 fs (τ = 2.15 ps). Periodic sideways, a 9-3 attractive floor (strength 2ε) and a free piston at constant pressure; the heater rescales the motion of atoms within 2.5σ of the floor. Enthalpy H = KE + U + PV changes only by the heat added (checked in curriculum/validation/test_states-of-matter.cjs). Phases from neighbour counts and the q6 bond order (ten Wolde, Ruiz-Montero and Frenkel 1996). The thin film and the cutoff hold the sample together less firmly than real argon, so it melts at about 66 K (argon 83.8 K) with smaller latent heats; it boils at about 112 to 115 K because the piston is at 17 atm (chosen so the vapor fits in the column), not 1 atm, where argon boils at 87.3 K; readouts average over 0.02 ns. The piston is idealized: it pushes with exactly the set pressure (0 to 30 atm) without weights, and above 4 nm the picture squeezes heights (marked) so the piston stays in view; Column height is the true height, and the column stops at 680 nm. Beaker: an exact piecewise heating curve at constant power with no heat losses and no evaporation below the boiling point, using the textbook's c and L values (OpenStax University Physics Vol. 2, Tables 1.3 and 1.4); the vapor leaves the open beaker. The covered beaker is the same until it boils; then its vapor condenses on the lid and runs back, so its balance keeps the whole mass, and the lid's loss of heat to the room is not modelled. Run speeds are faster than real time; the timer shows experiment time.
