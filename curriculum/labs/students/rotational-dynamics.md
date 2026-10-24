@@ -1,7 +1,7 @@
 # Measuring Rotational Inertia with a Falling Mass
 Student laboratory · Physics I
 
-Textbook: OpenStax *University Physics*, Vol. 1, §§10.2, 10.5–10.8 and 11.1. Access for free at https://openstax.org/details/books/university-physics-volume-1.
+Textbook: OpenStax *University Physics*, Vol. 1, §§10.2 and 10.5–10.8. Access for free at https://openstax.org/details/books/university-physics-volume-1.
 
 [Open the virtual apparatus](https://physicssteven.github.io/VirtualDemos/demos/rotational-dynamics.html)
 

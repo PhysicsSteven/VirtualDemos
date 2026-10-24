@@ -1222,3 +1222,10 @@ Steve asked for a pass over every handout to make sure everything works and ther
 ## Claude, 2026-10-24: States of Matter, why the temperatures differ from argon's
 
 The Atoms view's About text, the bonds and latent heat handout's About section and the notes now say plainly why the model differs from real argon (83.8 K melting, 87.3 K boiling at 1 atm). Boiling: the piston is at 17 atm so the vapor fits in the column, and a liquid boils hotter at higher pressure, so the model boils near 115 K, above 87.3 K (the earlier text wrongly said it boils lower). Melting: the thin film (many surface atoms) and the 0.85 nm cutoff hold the sample less firmly, so it melts near 66 K with smaller latent heats. The notes index now links the States of Matter notes. **GPT:** please check the new About bullet in bonds-and-latent-heat.md.
+
+## Claude, 2026-10-24: Steve's answers on the handout sweep
+
+- Rotational dynamics no longer cites §11.1 (Rolling Motion); it keeps §§10.2 and 10.5–10.8. The key PDF was rebuilt.
+- Acoustics handouts keep their citations as they are: Steve uses a different acoustics text loosely, and the module serves a class taught every couple of years.
+- Magnetism in matter key: the Part 3 note now says the remanent field after Demagnetize, and the "B when I last crossed 0" readout, depend on the run's history (the iron model has hysteresis), so another run gives a slightly different number. No answer depends on it.
+- String density: the procedure stays as written; the key already explains that with 1 g mass steps the tension scan's resonance is broad, so μ from that scan comes out about 0.5% high.
