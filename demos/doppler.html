@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 /* folded rail sections: secondary options behind their heading (layout redesign, as in springs) */
@@ -139,6 +140,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" id="mSound" aria-pressed="true">Sound</button>
           <button type="button" id="mLight" aria-pressed="false">Light</button>
         </div>
+        <div class="seg" role="group" aria-label="3D or flat" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+        <div class="seg" role="group" aria-label="Camera" id="camSeg" hidden><button type="button" data-cam="all" aria-pressed="true">Whole view</button><button type="button" data-cam="src" aria-pressed="false">Follow source</button><button type="button" data-cam="obs" aria-pressed="false">Observer's eye</button></div>
         <button type="button" class="btn" id="play">Pause</button>
         <button type="button" class="btn" id="restart">Restart</button>
         <button type="button" class="btn" id="audio" aria-pressed="false">Sound off</button>
@@ -185,7 +188,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </details>
         </div>
         <details class="more"><summary>Moving them on the picture</summary>
-  <p class="hint" id="srcHint">Drag the source to move it, and the grip at the tip of its arrow to set its velocity. The arrow shows how far it moves in the time printed on the drawing.</p>
+  <p class="hint" id="srcHint">Drag the source to move it, and the grip at the tip of its arrow to set its velocity. The arrow shows how far it moves in the time printed on the drawing. In 3D, drag anywhere else to turn the view, and use the wheel or a pinch to zoom; double click puts the view back. The 3D view shows the same simulation: each crest is a sphere around the point it left from, and the flat view is a slice through the spheres (the ground for the ambulance, the upright plane of the flight for the jet). Everything in it is to scale.</p>
         </details>
       </div>
     </div>
@@ -615,6 +618,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawMain() {
     const c = ctx, m = LY.main, ps = PS, v = vW();
+    if (on3()) { c.clearRect(m.x, m.y, m.w, m.h); render3(); c.save(); c.beginPath(); c.rect(m.x, m.y, m.w, m.h); c.clip(); draw3Overlay(); c.restore(); return; }
     c.save(); c.beginPath(); c.rect(m.x, m.y, m.w, m.h); c.clip();
     // faint grid at the scale bar spacing
     const gs = nice((G.vis.x1 - G.vis.x0) / 8);
@@ -1000,6 +1004,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S.mode = p.mode; S.view = p.view.slice(); S.M = p.M; S.dir = p.dir; S.Mo = p.Mo; S.odir = p.odir; S.time = p.time;
     if (p.f) S.f = p.f; if (p.lam) S.lam = p.lam;
     S.start = p.src.slice(); S.ox = p.obs[0]; S.oy = p.obs[1];
+    if (PLANE[name]) D3.plane = PLANE[name];
+    sync3();
     if (modeChange && light()) audioSet(false);
     markPreset(name); restart();
     if (!reduce) setPlaying(true);
@@ -1082,10 +1088,346 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   document.addEventListener('visibilitychange', () => { if (document.hidden && audioOn) audioSet(false); });
   window.addEventListener('pagehide', () => { if (audioOn) audioSet(false); });
 
+  // ---------- 3D view (three.js through demos/lib/vd3.js), sound only ----------
+  // The same simulation in perspective. A crest is really a sphere around the point it left from; the flat view is a slice
+  // through the spheres. Street: the slice is the ground and each crest is a dome over it. Sky: the slice is the upright plane
+  // of the flight, the ground lies under the observer, and the circles where the crests meet the ground are drawn on it.
+  // Everything is to scale: people 1.75 m, the ambulance 6 m, the jet 15 m. Drag to turn, wheel or pinch to zoom.
+  const D3 = { want: true, ok: false, rings: [], cam: 'all', tried: false, loading: false, plane: 'ground', key: '', w: 0, h: 0,
+    oG: { th: -Math.PI / 2 - 0.3, ph: 0.92, zoom: 1 }, oS: { th: -Math.PI / 2 - 0.22, ph: 1.42, zoom: 1 } };
+  const NO3D = 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
+  const PLANE = { ambulance: 'ground', observer: 'ground', mach1: 'sky', jet: 'sky' };
+  let d3 = null;
+  const on3 = () => D3.want && D3.ok && !light();
+  const orb = () => (D3.plane === 'ground' ? D3.oG : D3.oS);
+  // simulation point (x, y) to world (z up); the flat view's plane is z = 0 (Street) or y = 0 (Sky, ground at the observer's feet)
+  const w3 = (x, y) => (D3.plane === 'ground' ? [x, y, 0] : [x, 0, y - S.oy]);
+  const MAXC = 420, RSEG = 72;
+  function init3D() {
+    D3.tried = true;
+    const r = VD3.renderer(); if (!r) return false;
+    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); el.style.inset = 'auto'; el.hidden = true; pane.insertBefore(el, can);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(34, 1, 0.5, 30000);
+    const M = (o) => new THREE.MeshStandardMaterial(Object.assign({ roughness: 0.7, metalness: 0 }, o));
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x667755, 0.75), sun = new THREE.DirectionalLight(0xffffff, 0.85);
+    sun.position.set(-0.4, -0.7, 1); scene.add(hemi, sun);
+    // ground: grass with a little noise, and in Street a road along x through where the source starts
+    const gCv = document.createElement('canvas'); gCv.width = gCv.height = 256;
+    const gTex = new THREE.CanvasTexture(gCv); gTex.wrapS = gTex.wrapT = THREE.RepeatWrapping; gTex.repeat.set(240, 240); gTex.anisotropy = r.capabilities.getMaxAnisotropy();
+    const groundM = M({ map: gTex, roughness: 0.95 }), ground = new THREE.Mesh(new THREE.PlaneGeometry(12000, 12000), groundM);
+    ground.renderOrder = -2; scene.add(ground);
+    const rCv = document.createElement('canvas'); rCv.width = 64; rCv.height = 256;
+    const rTex = new THREE.CanvasTexture(rCv); rTex.wrapS = THREE.RepeatWrapping; rTex.repeat.set(1, 1);
+    const roadM = M({ map: rTex, roughness: 0.85, polygonOffset: true, polygonOffsetFactor: -1, polygonOffsetUnits: -1 });
+    const road = new THREE.Mesh(new THREE.PlaneGeometry(12000, 10), roadM); road.renderOrder = -1; scene.add(road);
+    // trees, seeded so they stay put: a trunk and two cones each, 8 to 16 m tall
+    const NT = 900, trunkG = new THREE.CylinderGeometry(0.22, 0.32, 1, 6).rotateX(Math.PI / 2).translate(0, 0, 0.5);
+    const crownG = new THREE.ConeGeometry(1, 1, 8).rotateX(Math.PI / 2).translate(0, 0, 0.5);
+    const trunkM = M({ color: 0x6b4a2f }), crownM = M({ color: 0x3f7a45, roughness: 0.9 });
+    const trunks = new THREE.InstancedMesh(trunkG, trunkM, NT), crowns = new THREE.InstancedMesh(crownG, crownM, NT * 2);
+    scene.add(trunks, crowns);
+    // the source: an ambulance (Street) or a jet (Sky); the observer: a person, or a car when moving
+    const amb = new THREE.Group(), white = M({ color: 0xf4f5f7, roughness: 0.4 }), red = M({ color: 0xc8312a, roughness: 0.5 }), glass = M({ color: 0x223040, roughness: 0.15, metalness: 0.3 }), tyre = M({ color: 0x1b1d20, roughness: 0.9 });
+    const bx = (w, d, h, m, x, y, z) => { const b = new THREE.Mesh(new THREE.BoxGeometry(w, d, h), m); b.position.set(x, y, z); return b; };
+    amb.add(bx(4.1, 2.3, 2.6, white, -0.9, 0, 1.75), bx(1.9, 2.2, 1.9, white, 2.05, 0, 1.4), bx(0.08, 1.9, 0.8, glass, 3.0, 0, 1.95),
+      bx(4.12, 2.32, 0.28, red, -0.9, 0, 1.55), bx(0.5, 1.4, 0.18, red, 1.3, 0, 3.12));
+    const lampR = new THREE.MeshBasicMaterial({ color: 0xff2a2a }), lampB = new THREE.MeshBasicMaterial({ color: 0x2f6dff });
+    const lr = bx(0.3, 0.55, 0.22, lampR, 1.6, -0.4, 3.2), lb = bx(0.3, 0.55, 0.22, lampB, 1.6, 0.4, 3.2); amb.add(lr, lb);
+    for (const [x, y] of [[-2.3, -1.05], [-2.3, 1.05], [1.9, -1.05], [1.9, 1.05]]) { const w = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.3, 16), tyre); w.position.set(x, y, 0.45); amb.add(w); }
+    const jet = new THREE.Group(), steel = M({ color: 0x9aa4b0, roughness: 0.35, metalness: 0.6 }), dark = M({ color: 0x39424d, roughness: 0.5, metalness: 0.4 });
+    { const fus = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.6, 12, 20).rotateZ(-Math.PI / 2), steel); fus.position.x = -1; jet.add(fus);
+      const nose = new THREE.Mesh(new THREE.ConeGeometry(0.75, 4, 20).rotateZ(-Math.PI / 2), steel); nose.position.x = 7; jet.add(nose);
+      const wingS = new THREE.Shape(); wingS.moveTo(2.5, 0); wingS.lineTo(-4.5, 5.2); wingS.lineTo(-5.6, 5.2); wingS.lineTo(-5.6, -5.2); wingS.lineTo(-4.5, -5.2); wingS.closePath();
+      const wing = new THREE.Mesh(new THREE.ExtrudeGeometry(wingS, { depth: 0.2, bevelEnabled: false }), steel); wing.position.z = -0.1; jet.add(wing);
+      const finS = new THREE.Shape(); finS.moveTo(-3.6, 0); finS.lineTo(-6.6, 3.2); finS.lineTo(-7.4, 3.2); finS.lineTo(-7.0, 0); finS.closePath();
+      const fin = new THREE.Mesh(new THREE.ExtrudeGeometry(finS, { depth: 0.16, bevelEnabled: false }), steel); fin.rotation.x = Math.PI / 2; fin.position.y = 0.08; jet.add(fin);
+      const can2 = new THREE.Mesh(new THREE.CylinderGeometry(0.42, 0.42, 1.2, 16).rotateZ(-Math.PI / 2), glass); can2.position.set(3.6, 0, 0.62); jet.add(can2);
+      const noz = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 0.5, 0.6, 16).rotateZ(-Math.PI / 2), dark); noz.position.x = -7.3; jet.add(noz); }
+    const flame = new THREE.Mesh(new THREE.ConeGeometry(0.45, 3, 12).rotateZ(Math.PI / 2), new THREE.MeshBasicMaterial({ color: 0xffa040, transparent: true, opacity: 0.75, depthWrite: false }));
+    flame.position.x = -9.1; jet.add(flame);
+    const person = new THREE.Group(), skin = M({ color: 0xd9a77e }), shirt = M({ color: 0x17855f }), pants = M({ color: 0x2c3440 });
+    { const legs = new THREE.Mesh(new THREE.CylinderGeometry(0.17, 0.15, 0.85, 10).rotateX(Math.PI / 2), pants); legs.position.z = 0.43; legs.scale.set(1.6, 1, 1);
+      const body = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.17, 0.62, 12).rotateX(Math.PI / 2), shirt); body.position.z = 1.17; body.scale.set(1.5, 1, 1);
+      const head = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 12), skin); head.position.z = 1.63; person.add(legs, body, head); }
+    const car = new THREE.Group(), paint = M({ color: 0x17855f, roughness: 0.35, metalness: 0.3 });
+    car.add(bx(4.4, 1.8, 0.75, paint, 0, 0, 0.7), bx(2.3, 1.7, 0.6, glass, -0.2, 0, 1.35));
+    for (const [x, y] of [[-1.4, -0.9], [-1.4, 0.9], [1.4, -0.9], [1.4, 0.9]]) { const w = new THREE.Mesh(new THREE.CylinderGeometry(0.33, 0.33, 0.24, 14), tyre); w.position.set(x, y, 0.33); car.add(w); }
+    scene.add(amb, jet, person, car);
+    // where the observer stands, and where the sound now arriving left the source: rings on the plane of the flat view
+    const discG = new THREE.RingGeometry(0.72, 1, 48), obsRingM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.85, side: THREE.DoubleSide, depthWrite: false });
+    const obsRing = new THREE.Mesh(discG, obsRingM); scene.add(obsRing);
+    const emitM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.9, side: THREE.DoubleSide, depthWrite: false });
+    const emits = [new THREE.Mesh(discG, emitM), new THREE.Mesh(discG, emitM)]; scene.add(...emits);
+    const losG = new THREE.BufferGeometry(); losG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(12), 3));
+    const losM = new THREE.LineDashedMaterial({ dashSize: 3, gapSize: 3, transparent: true, opacity: 0.85 }), los = new THREE.LineSegments(losG, losM); los.frustumCulled = false; scene.add(los);
+    // crests: spheres (instanced, faint, brighter at the rim) and their circles on the ground (one set of line segments)
+    const shellM = new THREE.ShaderMaterial({ transparent: true, depthWrite: false, side: THREE.DoubleSide,
+      uniforms: { uCol: { value: new THREE.Color() }, uK: { value: 1 }, uBase: { value: 0.035 } },
+      vertexShader: 'attribute float aAlpha; varying float vA; varying vec3 vN; varying vec3 vV; varying float vZ;\n' +
+        'void main() { vec4 wp = modelMatrix * instanceMatrix * vec4(position, 1.0); vZ = wp.z; vN = normalize(mat3(modelMatrix * instanceMatrix) * normal);\n' +
+        ' vV = normalize(cameraPosition - wp.xyz); vA = aAlpha; gl_Position = projectionMatrix * viewMatrix * wp; }',
+      fragmentShader: 'uniform vec3 uCol; uniform float uK; uniform float uBase; varying float vA; varying vec3 vN; varying vec3 vV; varying float vZ;\n' +
+        'void main() { if (vZ < -0.05) discard; float rim = 1.0 - abs(dot(normalize(vN), normalize(vV)));\n' +
+        ' gl_FragColor = vec4(uCol, vA * uK * (uBase + 0.6 * pow(rim, 4.0))); }' });
+    const shells = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 48, 24), shellM, MAXC);
+    const aAlpha = new THREE.InstancedBufferAttribute(new Float32Array(MAXC), 1); shells.geometry.setAttribute('aAlpha', aAlpha);
+    shells.frustumCulled = false; shells.renderOrder = 2; scene.add(shells);
+    const ringG = new THREE.BufferGeometry();
+    ringG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(MAXC * RSEG * 6), 3));
+    ringG.setAttribute('color', new THREE.BufferAttribute(new Float32Array(MAXC * RSEG * 6), 3));
+    const ringM = new THREE.LineBasicMaterial({ vertexColors: true }), ringL = new THREE.LineSegments(ringG, ringM); ringL.frustumCulled = false; ringL.renderOrder = 1; scene.add(ringL);
+    // Mach cone (open cone, apex at the source), or at Mach 1 the wall square to the motion
+    const coneG = new THREE.ConeGeometry(1, 1, 72, 1, true).translate(0, -0.5, 0);
+    const coneM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.08, side: THREE.FrontSide, depthWrite: false }), cone = new THREE.Mesh(coneG, coneM);
+    const coneEdgeM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.9 });
+    const coneEdge = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, 0), new THREE.Vector3(1, 1, 0), new THREE.Vector3(0, 0, 0), new THREE.Vector3(-1, 1, 0)]), coneEdgeM);
+    const wall = new THREE.Mesh(new THREE.CircleGeometry(1, 64), coneM);
+    cone.renderOrder = wall.renderOrder = 3; scene.add(cone, coneEdge, wall);
+    // velocity arrows: a shaft and a head, scaled to length
+    function arrow3() { const m = new THREE.MeshBasicMaterial(), g = new THREE.Group(), sh = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 10).translate(0, 0.5, 0), m), hd = new THREE.Mesh(new THREE.ConeGeometry(1, 1, 16).translate(0, -0.5, 0), m); g.add(sh, hd); g.userData = { m, sh, hd }; scene.add(g); return g; }
+    const aS = arrow3(), aO = arrow3();
+    const boomM = new THREE.MeshBasicMaterial({ transparent: true, side: THREE.DoubleSide, depthWrite: false }), boom = new THREE.Mesh(new THREE.RingGeometry(0.9, 1, 64), boomM); scene.add(boom);
+    d3 = { r, el, scene, cam, hemi, sun, gCv, gTex, groundM, ground, rCv, rTex, road, roadM, trunks, crowns, amb, lr, lb, jet, flame, person, car, paint, shirt,
+      obsRing, obsRingM, emits, emitM, los, losG, losM, shells, shellM, aAlpha, ringG, ringL, cone, coneM, coneEdge, coneEdgeM, wall, aS, aO, boom, boomM, treesFor: '' };
+    // the wheel scrolls the page in the flat view and over the strip; a drag that starts on a grip moves that grip
+    can.addEventListener('wheel', (e) => { if (!on3() || e.offsetY > LY.main.y + LY.main.h) e.stopImmediatePropagation(); }, { passive: true });
+    for (const o of [D3.oG, D3.oS]) {
+      VD3.orbit(can, o, () => { if (!playing) drawAll(); }, { keys: false, phMin: 0.25, phMax: 1.5, zMin: 0.45, zMax: 3,
+        grab: (e) => o !== orb() || !on3() || !!handleAt(e) || e.offsetY > LY.main.y + LY.main.h });
+    }
+    return true;
+  }
+  // trees scattered over 3 km, none on the road or within 12 m of where the observer starts; reseeded per preset
+  function plant3() {
+    const g = d3, key = D3.plane + (S.preset || '') + S.start[1].toFixed(0);
+    if (g.treesFor === key) return; g.treesFor = key;
+    let sd = 7; const rn = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
+    const m = new THREE.Matrix4(), q = new THREE.Quaternion(), roadY = S.start[1];
+    let n = 0;
+    for (let i = 0; i < 6000 && n < g.trunks.count; i++) {
+      const x = (rn() - 0.5) * 3000, y = (rn() - 0.5) * 3000;
+      if (D3.plane === 'ground' && Math.abs(y - roadY) < 14) continue;
+      const near = D3.plane === 'ground' ? Math.hypot(x - S.ox, y - S.oy) : Math.hypot(x - S.ox, y);
+      if (near < 12 || (D3.plane === 'ground' && rn() < 0.55 && Math.abs(x) < 220 && Math.abs(y - roadY) < 90)) continue;
+      const h = 8 + 8 * rn(), w = 2.2 + 1.6 * rn();
+      m.compose(new THREE.Vector3(x, y, 0), q, new THREE.Vector3(1, 1, h * 0.35)); g.trunks.setMatrixAt(n, m);
+      m.compose(new THREE.Vector3(x, y, h * 0.25), q, new THREE.Vector3(w, w, h * 0.55)); g.crowns.setMatrixAt(2 * n, m);
+      m.compose(new THREE.Vector3(x, y, h * 0.5), q, new THREE.Vector3(w * 0.72, w * 0.72, h * 0.5)); g.crowns.setMatrixAt(2 * n + 1, m);
+      n++;
+    }
+    g.trunks.count = n; g.crowns.count = 2 * n; g.trunks.instanceMatrix.needsUpdate = g.crowns.instanceMatrix.needsUpdate = true;
+  }
+  function theme3() {
+    const g = d3, d = VD3.dark(), col = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+    const sky = d ? new THREE.Color('#0f1824') : new THREE.Color('#dbe7f2');
+    g.scene.background = sky; g.scene.fog = new THREE.Fog(sky, 600, 2600);
+    g.hemi.intensity = d ? 0.55 : 0.8; g.sun.intensity = d ? 0.55 : 0.85;
+    let c = g.gCv.getContext('2d'); const base = d ? '#1f2a1f' : '#9cb98a';
+    c.fillStyle = base; c.fillRect(0, 0, 256, 256);
+    let sd = 3; const rn = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
+    for (let i = 0; i < 2600; i++) { c.fillStyle = `rgba(${d ? '120,150,110' : '60,90,50'},${0.05 + 0.08 * rn()})`; c.fillRect(rn() * 256, rn() * 256, 2 + 3 * rn(), 2 + 3 * rn()); }
+    g.gTex.needsUpdate = true;
+    c = g.rCv.getContext('2d'); c.fillStyle = d ? '#2b2f35' : '#5f646b'; c.fillRect(0, 0, 64, 256);
+    c.fillStyle = d ? '#c9ccd1' : '#f2f2ee'; c.fillRect(0, 10, 64, 6); c.fillRect(0, 240, 64, 6);
+    c.fillStyle = '#e7c34a'; c.fillRect(0, 124, 30, 8);
+    g.rTex.needsUpdate = true; g.rTex.repeat.set(12000 / 9, 1);
+    g.shellM.uniforms.uCol.value = col(T.wave, '#3f5b78'); g.shellM.uniforms.uK.value = d ? 1.2 : 1.6;
+    g.obsRingM.color = col(T.obs, '#17855f'); g.paint.color = col(T.obs, '#17855f'); g.shirt.color = col(T.obs, '#17855f');
+    g.emitM.color = col(T.muted, '#5a6575'); g.losM.color = col(T.ink, '#17202b');
+    g.coneM.color = col(T.pos, '#c23f2c'); g.coneEdgeM.color = col(T.pos, '#c23f2c'); g.boomM.color = col(T.pos, '#c23f2c');
+    g.aS.userData.m.color = col(T.pos, '#c23f2c'); g.aO.userData.m.color = col(T.obs, '#17855f');
+    g.ringBase = sky.clone(); g.ringCol = col(T.wave, '#3f5b78');
+    if (!d) g.ringCol.multiplyScalar(0.8);
+  }
+  // the camera frames the flat view's area: its width across, its height up the screen
+  function place3() {
+    const g = d3, o = orb(), m = LY.main, asp = m.w / Math.max(1, m.h), tn = Math.tan(17 * Math.PI / 180);
+    let c0 = w3(0, 0), dist = Math.max(S.view[0] / asp, S.view[1] * (D3.plane === 'ground' ? 0.8 : 1)) / (2 * tn) * 1.02;
+    const sp = srcPos(), sw = w3(sp[0], sp[1]);
+    if (D3.cam === 'src') { c0 = [sw[0], sw[1], sw[2] + (D3.plane === 'ground' ? 1.5 : 0)]; dist = D3.plane === 'ground' ? 55 : 170; }
+    if (D3.cam === 'obs') {
+      // from the observer's eyes, 1.6 m up, looking at where the source is now
+      const ow = w3(S.ox, S.oy); g.cam.fov = 55; g.cam.position.set(ow[0], ow[1], ow[2] + 1.6); g.cam.up.set(0, 0, 1);
+      g.cam.lookAt(sw[0], sw[1], sw[2] + (D3.plane === 'ground' ? 1.5 : 0)); dist = 300;
+    } else { g.cam.fov = 34; VD3.place(g.cam, o, new THREE.Vector3(c0[0], c0[1], c0[2]), dist); }
+    g.cam.far = dist * 8 + 3000; g.cam.near = Math.max(0.3, dist / 2000); g.cam.updateProjectionMatrix();
+    g.scene.fog.near = dist * 1.4; g.scene.fog.far = dist * 5 + 800;
+  }
+  const v3 = (a) => new THREE.Vector3(a[0], a[1], a[2]);
+  function setArrow3(a, o, dir, len, thick) {
+    if (!(len > 0)) { a.visible = false; return; }
+    a.visible = true; a.position.copy(o); a.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), dir);
+    const hl = Math.min(len * 0.5, thick * 5);
+    a.userData.sh.scale.set(thick * 0.45, len - hl, thick * 0.45); a.userData.hd.scale.set(thick * 1.6, hl, thick * 1.6); a.userData.hd.position.y = len;
+  }
+  // simulation velocity (vx, vy) as a world direction
+  const dir3 = (vx, vy) => (D3.plane === 'ground' ? new THREE.Vector3(vx, vy, 0) : new THREE.Vector3(vx, 0, vy));
+  function render3() {
+    const g = d3, m = LY.main, ps = PS, v = vW();
+    if (D3.w !== m.w || D3.h !== m.h) { D3.w = m.w; D3.h = m.h; g.r.setSize(m.w, Math.max(1, m.h)); g.cam.aspect = m.w / Math.max(1, m.h); }
+    g.el.style.left = m.x + 'px'; g.el.style.top = m.y + 'px';
+    const key = [T.canvas, T.wave, T.obs].join(); if (D3.key !== key) { D3.key = key; theme3(); }
+    plant3(); place3();
+    const ground = D3.plane === 'ground', unitPx = G.sc;   // the flat view's pixels per metre, for sizes that should read the same
+    g.road.visible = ground; if (ground) g.road.position.set(0, S.start[1], 0);
+    // crests
+    const now = S.t, amax = Math.min(ringAge(), (G.diag + G.margin) / v), pos = g.ringG.attributes.position.array, colA = g.ringG.attributes.color.array;
+    const mtx = new THREE.Matrix4(), q = new THREE.Quaternion(), rc = g.ringCol, rb = g.ringBase;
+    let ns = 0, nl = 0; D3.rings = [];
+    for (const rr of rings) {
+      const rad = v * (now - rr.te); if (rad <= 0 || ns >= MAXC) continue;
+      if (nearDist(rr.x, rr.y) > rad) continue;
+      const fade = [0.9, 0.62, 0.42, 0.26][Math.min(3, Math.floor(4 * (now - rr.te) / Math.max(1e-9, amax)))];
+      const c = w3(rr.x, rr.y);
+      mtx.compose(v3(c), q, new THREE.Vector3(rad, rad, rad)); g.shells.setMatrixAt(ns, mtx); g.aAlpha.array[ns] = fade; ns++;
+      // where this sphere meets the ground (Street: the flat view's ring itself)
+      const h = c[2], rg = rad * rad - h * h; if (rg <= 0) continue;
+      D3.rings.push([c[0], c[1], Math.sqrt(rg), fade]);
+    }
+    g.shells.count = ns; g.shells.instanceMatrix.needsUpdate = true; g.aAlpha.needsUpdate = true;
+    g.ringL.visible = false; g.shellM.uniforms.uK.value = (VD3.dark() ? 0.9 : 1.1) * (ground ? 0.5 : 0.4); g.shellM.uniforms.uBase.value = ground ? 0.03 : 0.006;
+    // source and observer bodies
+    const sp = srcPos(), vs = srcVel(), vo = obsVel(), spW = v3(w3(sp[0], sp[1])), opW = v3(w3(S.ox, S.oy));
+    const sAng = Math.atan2(vs[1], vs[0]) || S.dir * RAD;
+    g.amb.visible = ground; g.jet.visible = !ground;
+    if (ground) { g.amb.position.copy(spW); g.amb.rotation.set(0, 0, sAng); const on = Math.floor(performance.now() / 260) % 2; g.lr.visible = !!on || reduce; g.lb.visible = !on || reduce; }
+    else { g.jet.position.copy(spW); g.jet.rotation.set(Math.PI / 2 * 0, -sAng, 0); g.flame.visible = S.M > 0; g.flame.scale.x = 0.8 + 0.25 * Math.sin(performance.now() / 40); }
+    const moving = S.Mo > 0;
+    g.person.visible = !moving; g.car.visible = moving;
+    g.person.position.copy(opW); g.person.rotation.set(0, 0, 0);
+    if (moving) { g.car.position.copy(opW); if (ground) g.car.rotation.set(0, 0, S.odir * RAD); else g.car.rotation.set(0, -S.odir * RAD, 0); }
+    const ringR = 11 * ps / unitPx;
+    g.obsRing.position.set(opW.x, opW.y, opW.z + 0.06); g.obsRing.scale.setScalar(ringR); g.obsRing.rotation.set(ground ? 0 : 0, 0, 0);
+    // emission points of the sound arriving now, and the line from each to the observer
+    const lp = g.losG.attributes.position.array; let nlos = 0;
+    g.emits.forEach((e, i) => {
+      const rt = roots[i]; e.visible = !!rt;
+      if (!rt) return;
+      const p = v3(w3(rt.x, rt.y)); e.position.copy(p); e.position.z += ground ? 0.08 : 0; e.scale.setScalar(6 * ps / unitPx);
+      if (!ground) e.rotation.set(Math.PI / 2, 0, 0); else e.rotation.set(0, 0, 0);
+      lp.set([p.x, p.y, p.z + (ground ? 0.1 : 0), opW.x, opW.y, opW.z + (ground ? 0.1 : 0)], nlos * 6); nlos++;
+    });
+    g.losG.setDrawRange(0, nlos * 2); g.losG.attributes.position.needsUpdate = true; g.los.computeLineDistances();
+    g.losM.dashSize = g.losM.gapSize = 5 * ps / unitPx;
+    // velocity arrows: the displacement in arrowT seconds, as in the flat view
+    const th = 2.2 * ps / unitPx, lift = ground ? 3.2 : 0;
+    const sv = Math.hypot(vs[0], vs[1]) * arrowT, ov = Math.hypot(vo[0], vo[1]) * arrowT;
+    setArrow3(g.aS, spW.clone().add(new THREE.Vector3(0, 0, lift)), dir3(Math.cos(S.dir * RAD), Math.sin(S.dir * RAD)).normalize(), sv > 2 / unitPx ? sv : 0, th);
+    setArrow3(g.aO, opW.clone().add(new THREE.Vector3(0, 0, ground ? 2.2 : 0)), dir3(Math.cos(S.odir * RAD), Math.sin(S.odir * RAD)).normalize(), ov > 2 / unitPx ? ov : 0, th);
+    // Mach cone: apex at the source, axis behind it, half angle arcsin(1/M), out to where the newest straight run's crests touch it
+    g.cone.visible = g.coneEdge.visible = g.wall.visible = false;
+    if (S.M >= 0.9995) {
+      const V = S.M * v, u = dir3(vs[0], vs[1]).normalize();
+      if (S.M <= 1.0005) {
+        g.wall.visible = true; g.wall.position.copy(spW); g.wall.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), u);
+        g.wall.scale.setScalar(0.35 * Math.min(m.w, m.h) / unitPx);
+      } else {
+        const run = Math.max(0, S.t - Math.max(H.length > 1 ? H[H.length - 1].t : -Infinity, seedT, rings.length ? rings[0].te : S.t));
+        const a = Math.asin(1 / S.M), L = run * Math.sqrt(V * V - v * v);
+        if (L > 0) {
+          g.cone.visible = g.coneEdge.visible = true;
+          g.cone.position.copy(spW); g.cone.quaternion.setFromUnitVectors(new THREE.Vector3(0, -1, 0), u.clone().negate());
+          g.cone.scale.set(L * Math.sin(a), L * Math.cos(a), L * Math.sin(a));
+          // the two edges in the flat view's plane
+          g.coneEdge.position.copy(spW);
+          const nPl = ground ? new THREE.Vector3(0, 0, 1) : new THREE.Vector3(0, 1, 0), side = new THREE.Vector3().crossVectors(nPl, u).normalize();
+          const mb = new THREE.Matrix4().makeBasis(side, u.clone().negate(), nPl); g.coneEdge.quaternion.setFromRotationMatrix(mb);
+          g.coneEdge.scale.set(L * Math.sin(a), L * Math.cos(a), 1);
+        }
+      }
+    }
+    // the boom: a ring spreading on the ground around the observer
+    g.boom.visible = false;
+    if (flash) { const age = performance.now() / 1000 - flash.t; if (age < 1.2) { g.boom.visible = true; g.boom.position.set(opW.x, opW.y, 0.1); g.boom.scale.setScalar((14 + 60 * age) * ps / unitPx); g.boomM.opacity = 1 - age / 1.2; } }
+    g.scene.updateMatrixWorld(); g.r.render(g.scene, g.cam);
+  }
+  // world point to pane pixels, and pane pixels to the simulation point on the flat view's plane
+  function proj3(p) { const t = v3(p).project(d3.cam), m = LY.main; return [m.x + (t.x + 1) / 2 * m.w, m.y + (1 - t.y) / 2 * m.h, t.z]; }
+  function unproj3(px, py, up = 0) {
+    const m = LY.main, nd = new THREE.Vector2((px - m.x) / m.w * 2 - 1, -((py - m.y) / m.h) * 2 + 1), rc = new THREE.Raycaster();
+    d3.cam.updateMatrixWorld(); rc.setFromCamera(nd, d3.cam);
+    const pl = D3.plane === 'ground' ? new THREE.Plane(new THREE.Vector3(0, 0, 1), -up) : new THREE.Plane(new THREE.Vector3(0, 1, 0), 0), hit = new THREE.Vector3();
+    if (!rc.ray.intersectPlane(pl, hit)) return null;
+    return D3.plane === 'ground' ? [hit.x, hit.y] : [hit.x, hit.z + S.oy];
+  }
+  // the overlay on the 3D picture: labels, grips and notes, drawn by the flat canvas over it
+  function draw3Overlay() {
+    const c = ctx, m = LY.main, ps = PS, ground = D3.plane === 'ground';
+    // where each crest meets the ground, drawn crisp over the picture (Street: exactly the flat view's rings)
+    const groups = [new Path2D(), new Path2D(), new Path2D(), new Path2D()], N = 96;
+    for (const [x, y, R, fade] of D3.rings) {
+      const p = groups[[0.9, 0.62, 0.42, 0.26].indexOf(fade)];
+      let pen = false;
+      for (let k = 0; k <= N; k++) {
+        const a = 2 * Math.PI * k / N, q = proj3([x + R * Math.cos(a), y + R * Math.sin(a), 0.05]);
+        if (q[2] > 1 || q[2] < -1) { pen = false; continue; }
+        if (pen) p.lineTo(q[0], q[1]); else { p.moveTo(q[0], q[1]); pen = true; }
+      }
+    }
+    c.strokeStyle = T.wave; c.lineWidth = 1.4 * ps;
+    [0.9, 0.62, 0.42, 0.26].forEach((a, i) => { c.globalAlpha = a; c.stroke(groups[i]); });
+    c.globalAlpha = 1;
+    const sp = srcPos(), sP = proj3(w3(sp[0], sp[1])), oP = proj3(w3(S.ox, S.oy));
+    const hs = dragHandles(), hot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
+    for (const h of hs) {
+      const on = hot(h.id); c.strokeStyle = h.id.startsWith('obs') ? T.obs : T.pos;
+      if (h.kind === 'tip') { c.fillStyle = T.canvas; c.lineWidth = (on ? 2.4 : 1.6) * ps; c.beginPath(); c.arc(h.pt[0], h.pt[1], (on ? 6.5 : 5) * ps, 0, 2 * Math.PI); c.fill(); c.stroke(); }
+      else if (on) { c.fillStyle = T.accent; c.globalAlpha = 0.22; c.beginPath(); c.arc(h.pt[0], h.pt[1], 17 * ps, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1; }
+      if (S.sel === h.id && document.activeElement === can) { c.strokeStyle = T.accent; c.lineWidth = 1.5 * ps; c.setLineDash([3 * ps, 3 * ps]); c.beginPath(); c.arc(h.pt[0], h.pt[1], 14 * ps, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]); }
+    }
+    const what = ground ? (S.M > 1 ? 'source' : 'ambulance') : 'jet';
+    label(c, `${what} · ${Math.round(S.M * vW())} m/s`, sP[0], sP[1] - 22 * ps, T.pos, 'center', 'middle', true);
+    let olab;
+    if (!roots.length) olab = S.M > 1 ? 'silent: outside the cone' : 'silent: no sound yet';
+    else if (roots.length === 1) olab = `hears ${fmtHz(S.f * roots[0].k)}`;
+    else olab = `hears ${fmtHz(S.f * roots[0].k)} and ${fmtHz(S.f * roots[1].k)}${roots[1].k < 0 || roots[0].k < 0 ? ' (one backward)' : ''}`;
+    c.font = `600 ${11 * ps}px ${T.mono}`; const ow = c.measureText(olab).width / 2 + 6;
+    label(c, olab, Math.max(m.x + ow, Math.min(m.x + m.w - ow, oP[0])), oP[1] + 24 * ps, T.obs, 'center', 'middle', true);
+    if (roots[0]) {
+      const r = roots[0], eP = proj3(w3(r.x, r.y)), thd = Math.hypot(r.vx, r.vy) > 0 ? Math.acos(Math.max(-1, Math.min(1, r.cosTh))) / RAD : null;
+      const tx = `left from here, θ = ${thd === null ? '' : thd.toFixed(0)}°`; c.font = `${10.5 * ps}px ${T.mono}`; const hw = c.measureText(tx).width / 2 + 6;
+      if (thd !== null && Math.hypot(eP[0] - oP[0], eP[1] - oP[1]) > 40 * ps) label(c, tx, Math.max(m.x + hw, Math.min(m.x + m.w - hw, eP[0])), eP[1] + 18 * ps, T.muted, 'center', 'middle', false, 10.5);
+    }
+    if (S.M > 1.0005 && d3.cone.visible) { const a = Math.asin(1 / S.M); label(c, `Mach cone, θc = ${(a / RAD).toFixed(1)}°`, sP[0] - 70 * ps, sP[1] + 30 * ps, T.pos, 'right', 'middle', true); }
+    else if (S.M >= 0.9995 && S.M <= 1.0005) label(c, 'crests pile up: Mach 1', sP[0] + 16 * ps, sP[1] + 34 * ps, T.pos, 'left', 'middle', true);
+    if (flash) label(c, 'boom', oP[0] + 16 * ps, oP[1] - 30 * ps, T.pos, 'left', 'middle', true, 13);
+    const sby = m.y + m.h - 14 * ps;
+    if (m.w < 560) return;
+    label(c, ground ? `crests are domes over the ground · to scale, view ${Math.round(S.view[0])} m across` : `crests are spheres; circles where they meet the ground · to scale`, m.x + 12 * ps, sby, T.ink, 'left', 'middle', false, 10.5);
+    label(c, `arrows: motion in ${trim(String(+arrowT.toPrecision(3)))} s · drag to turn`, m.x + m.w - 12 * ps, sby - 18 * ps, T.muted, 'right', 'middle', false, 10.5);
+  }
+  function setView3(want) {
+    D3.want = want;
+    if (want && !D3.ok && !light()) {
+      if (D3.tried) D3.want = false;
+      else if (!D3.loading) { D3.loading = true; VD3.load((ok) => { D3.loading = false; D3.ok = ok && init3D(); if (!D3.ok) { D3.want = false; $('count').textContent = NO3D; } sync3(); drawAll(); }); }
+    }
+    sync3(); drawAll();
+  }
+  function sync3() {
+    $('dimSeg').hidden = light(); $('camSeg').hidden = !on3();
+    for (const b of document.querySelectorAll('#camSeg button')) b.setAttribute('aria-pressed', String(b.dataset.cam === D3.cam));
+    for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String((b.dataset.dim === '3d') === D3.want));
+    if (d3) d3.el.hidden = !on3();
+  }
+  $('camSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-cam]'); if (!b) return; D3.cam = b.dataset.cam; sync3(); drawAll(); });
+  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setView3(b.dataset.dim === '3d'); });
+
   // ---------- dragging on the drawing ----------
   let drag = null, hoverId = null;
   function dragHandles() {
     if (!G || !H.length) return [];
+    if (on3()) {
+      const ground = D3.plane === 'ground', sp = srcPos(), out = [], lift = ground ? 3.2 : 0, minL = 16 * PS / G.sc;
+      const tip = (x, y, vel, deg, up) => { const L = Math.max(Math.hypot(vel[0], vel[1]) * arrowT, minL), a = Math.hypot(vel[0], vel[1]) > 0 ? Math.atan2(vel[1], vel[0]) : deg * RAD;
+        const w = w3(x + L * Math.cos(a), y + L * Math.sin(a)); w[2] += up; return proj3(w); };
+      const body = (x, y, up) => { const w = w3(x, y); w[2] += up; return proj3(w); };
+      out.push({ id: 'srcV', kind: 'tip', pt: tip(sp[0], sp[1], srcVel(), S.dir, lift), base: sp, up: lift, cursor: 'crosshair' });
+      out.push({ id: 'obsV', kind: 'tip', pt: tip(S.ox, S.oy, obsVel(), S.odir, ground ? 2.2 : 0), base: [S.ox, S.oy], up: ground ? 2.2 : 0, cursor: 'crosshair' });
+      out.push({ id: 'src', kind: 'body', pt: body(sp[0], sp[1], ground ? 1.6 : 0), cursor: 'move' });
+      out.push({ id: 'obs', kind: 'body', pt: body(S.ox, S.oy, ground ? 0.9 : 0.9), cursor: 'move' });
+      return out;
+    }
     const sp = srcPos(), spx = X(sp[0]), spy = Y(sp[1]), opx = X(S.ox), opy = Y(S.oy), out = [];
     const st = tipOf(spx, spy, srcVel(), S.dir);
     out.push({ id: 'srcV', kind: 'tip', pt: [st[0], st[1]], base: [spx, spy], cursor: 'crosshair' });
@@ -1113,6 +1455,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function moveObserver(x, y) { const v = G.vis, e = 8 / G.sc; S.ox = Math.max(v.x0 + e, Math.min(v.x1 - e, x)); S.oy = Math.max(v.y0 + e, Math.min(v.y1 - e, y)); skipBoom = 2; track.push({ t: S.t, gap: true }); custom(); }
   function setFromTip(id, px, py) {
     const h = dragHandles().find((k) => k.id === id); if (!h) return;
+    if (on3()) {
+      const s = unproj3(px, py, h.up); if (!s) return;
+      const dx = s[0] - h.base[0], dy = s[1] - h.base[1], L = Math.hypot(dx, dy), small = L < 8 * PS / G.sc;
+      const speed = small ? 0 : L / arrowT / vW(), ang = Math.atan2(dy, dx) / RAD;
+      if (id === 'srcV') { setSpeed(speed); if (!small) setDir(ang); } else { setOSpeed(speed); if (!small) setODir(ang); }
+      return;
+    }
     const dx = px - h.base[0], dy = h.base[1] - py, L = Math.hypot(dx, dy);
     const speed = L < 8 * PS ? 0 : L / (arrowT * G.sc) / vW();
     const ang = Math.atan2(dy, dx) / RAD;
@@ -1128,15 +1477,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         requestAnimationFrame(() => {
           dragFrame = false; if (!drag || !dragQ) return;
           const [px, py] = dragQ; dragQ = null;
-          if (drag.id === 'src') moveSource(wx(px - drag.off[0]), wy(py - drag.off[1]));
-          else if (drag.id === 'obs') moveObserver(wx(px - drag.off[0]), wy(py - drag.off[1]));
+          const w = on3() ? unproj3(px - drag.off[0], py - drag.off[1]) : [wx(px - drag.off[0]), wy(py - drag.off[1])];
+          if (!w) return;
+          if (drag.id === 'src') moveSource(w[0], w[1]);
+          else if (drag.id === 'obs') moveObserver(w[0], w[1]);
           else setFromTip(drag.id, px, py);
           listen(); readouts(); if (!playing) drawAll();
         });
       }
       return;
     }
-    const h = handleAt(ev); hoverId = h ? h.id : null; can.style.cursor = h ? h.cursor : 'default';
+    const h = handleAt(ev); hoverId = h ? h.id : null; can.style.cursor = h ? h.cursor : on3() && ev.offsetY < LY.main.y + LY.main.h ? 'grab' : 'default';
     if (!playing) drawAll();
   });
   can.addEventListener('pointerdown', (ev) => {
@@ -1223,6 +1574,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   ro.observe(pane);
   resize();
   applyPreset('ambulance');
+  setView3(new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower());
   setPlaying(!reduce);
   if (reduce) { window.__dop.run(6.5); }   // a meaningful still picture: the source just past the observer, the pitch falling
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
