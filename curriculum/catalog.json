@@ -199,6 +199,17 @@
      ]
     },
     {
+     "demo": "relativistic-motion",
+     "title": "Velocity, Momentum and Energy Near c",
+     "desc": "Time a probe fired from a fast rocket, push a particle with a steady force, and time electrons over 8.4 m as Bertozzi did: velocities don't simply add, momentum is γmv and kinetic energy is (γ − 1)mc².",
+     "tags": [
+      "velocity addition",
+      "relativistic momentum",
+      "relativistic energy",
+      "Bertozzi experiment"
+     ]
+    },
+    {
      "demo": "quantum-waves",
      "title": "Quantum Wave Packets",
      "desc": "Launch an electron at a barrier and watch part of it tunnel through, settle into energy eigenstates in a box or an oscillator, and collapse when you measure where it is.",

@@ -30,7 +30,6 @@ Regenerated from `textbook-map.json` on 2026-10-24 (Claude), after the Thermodyn
 | physics-2 | 3 | 3.5 | The Michelson Interferometer | missing |
 | physics-2 | 3 | 4.5 | Circular Apertures and Resolution | missing |
 | physics-2 | 3 | 4.7 | Holography | missing |
-| modern | 3 | 5.6 | Relativistic Velocity Transformation | missing |
 | modern | 3 | 9.1 | Types of Molecular Bonds | missing |
 | modern | 3 | 9.2 | Molecular Spectra | missing |
 | modern | 3 | 9.3 | Bonding in Crystalline Solids | missing |
@@ -59,8 +58,6 @@ Regenerated from `textbook-map.json` on 2026-10-24 (Claude), after the Thermodyn
 | 3 / 4.1 | double-slit, diffraction-grating | Partial: the single slit envelope appears inside the double slit and grating patterns; there is no single slit setup on its own. |
 | 3 / 4.2 | diffraction-grating | Partial: the grating plot includes the [sin β/β]² envelope; no single slit intensity setup on its own. |
 | 3 / 4.6 | electron-diffraction | Partial: electron diffraction uses Bragg's law 2d sin θ = λ on graphite with electrons, not X rays. |
-| 3 / 5.8 | compton | Partial: Compton scattering uses exact relativistic kinematics for the recoil electron; no dedicated momentum activity. |
-| 3 / 5.9 | compton, binding-energy | Partial: Compton (E/mc² of the collision) and binding energy (mass defect, E = mc²); no dedicated activity. |
 | 3 / 10.5 | binding-energy, energy-sources | Partial: energy released from the binding energy curve; energy sources uses 200 MeV per fission. No chain reaction activity. |
 | 3 / 10.6 | binding-energy, star-slice | Partial: energy released from the binding energy curve; star slice shows burning shells. No reaction rate activity. |
 | 3 / 10.7 | gamma-spectroscopy | Partial: gamma spectroscopy measures lead attenuation; no dose or biological effects. |

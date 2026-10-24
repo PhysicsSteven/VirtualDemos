@@ -189,6 +189,16 @@
   /* ==THERMO END== */
   /* ==MODERN START== Modern Physics worksheets (modern.html) and their demo column maps. Threads for other chapters push into MODERN. */
   const MODERN = [];
+  /* Vol. 3 ch. 5 (relativity) and ch. 6 (photons and matter waves) */
+  MODERN.push('velocity-addition', 'relativistic-momentum', 'relativistic-energy' /* Velocity, Momentum and Energy Near c demo, one per view */);
+  Object.assign(FROM_DEMO, {
+    /* Reading | Launch speed u′ (c) | Probe time A to B Δt (s) | Ground speed u (c) | u − u′ (c) | 1 − uu′/c² */
+    'velocity-addition': { demo: 'Velocity, Momentum and Energy Near c (Adding velocities)', cols: ['row', 'u_prime_c', 'probe_dt_s', null, null, null] },
+    /* Reading | Time t (ns) | Distance x (m) | Speed v (c) | γ | γv (c) */
+    'relativistic-momentum': { demo: 'Velocity, Momentum and Energy Near c (Steady force)', cols: ['row', 't_ns', 'x_m', 'v_c', null, null] },
+    /* Reading | Voltage V (MV) | Flight time t (ns) | Bend radius r (cm) | Speed v (c) | v² (c²) | γ | pc (MeV) */
+    'relativistic-energy': { demo: 'Velocity, Momentum and Energy Near c (Electron flight)', cols: ['row', 'V_MV', 't_ns', 'r_cm', null, null, null, null] },
+  });
   ENABLED.push(...MODERN);
   Object.assign(FROM_DEMO, {
   });

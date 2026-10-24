@@ -5218,9 +5218,11 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "missing",
-      "demos": [],
-      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet. Candidate: velocity addition on the spacetime diagram.",
+      "status": "usable",
+      "demos": [
+        "relativistic-motion"
+      ],
+      "note": "Velocity, Momentum and Energy Near c (2026-10-24, Claude): Adding velocities view, a rocket fires probes timed between two beacons; worksheet velocity-addition. Volume 3 mapping (2026-10-24, Claude).",
       "unit": "relativity"
     },
     {
@@ -5250,11 +5252,12 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
+        "relativistic-motion",
         "compton"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: Compton scattering uses exact relativistic kinematics for the recoil electron; no dedicated momentum activity.",
+      "note": "Velocity, Momentum and Energy Near c (2026-10-24, Claude): Steady force view, p = γmv = Ft from rest; worksheet relativistic-momentum. Compton scattering also uses relativistic momentum for the recoil electron. Volume 3 mapping (2026-10-24, Claude).",
       "unit": "relativity"
     },
     {
@@ -5267,12 +5270,13 @@
         "modern"
       ],
       "requirement": "module",
-      "status": "needs-feature",
+      "status": "usable",
       "demos": [
+        "relativistic-motion",
         "compton",
         "binding-energy"
       ],
-      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: Compton (E/mc² of the collision) and binding energy (mass defect, E = mc²); no dedicated activity.",
+      "note": "Velocity, Momentum and Energy Near c (2026-10-24, Claude): Electron flight view after Bertozzi (1964), K = (γ − 1)mc² by time of flight and E² = (pc)² + (mc²)² with a bending magnet; worksheet relativistic-energy. Compton and binding energy also use E = mc². Volume 3 mapping (2026-10-24, Claude).",
       "unit": "relativity"
     },
     {
@@ -8549,6 +8553,40 @@
       "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Magnetism from Relativity",
       "url": "demos/relativity-em.html"
+    },
+    {
+      "demo": "relativistic-motion",
+      "course": [
+        "modern"
+      ],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "5.6",
+          "title": "Relativistic Velocity Transformation"
+        },
+        {
+          "vol": 3,
+          "sec": "5.8",
+          "title": "Relativistic Momentum"
+        },
+        {
+          "vol": 3,
+          "sec": "5.9",
+          "title": "Relativistic Energy"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-24 (Claude). Three views: Adding velocities (a rocket fires probes or light between two beacons 3.000 light seconds apart; mystery rocket), Steady force (p = γmv = Ft from rest in a uniform field), Electron flight (Bertozzi 1964: time of flight over 8.400 m and a bending magnet; mystery particle). Three worksheets with keys from real runs in TeacherKeys.",
+      "handouts": [
+        "velocity-addition",
+        "relativistic-momentum",
+        "relativistic-energy"
+      ],
+      "title": "Velocity, Momentum and Energy Near c",
+      "url": "demos/relativistic-motion.html"
     },
     {
       "demo": "resonators",

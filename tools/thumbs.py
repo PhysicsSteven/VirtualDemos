@@ -41,6 +41,7 @@ VIEW = {"width": 1440, "height": 900}
 OVERRIDES = {
     "spectra": {"crop": "main.bench > :first-child", "anchor": "top"},
     "photoelectric": {"anchor": "top"},
+    "relativistic-motion": {"wait": 1200, "anchor": "top", "js": "window.__rm.S.vel.t = 4.0; window.__rm.redraw();"},
     "star-slice": {"wait": 9000,
                    "js": "setTimeout(() => { const m = document.getElementById('mass'); m.value = 1000; m.dispatchEvent(new Event('input', { bubbles: true })); "
                          "setTimeout(() => { const b = [...document.querySelectorAll('#presets button')].find((x) => x.textContent === 'Onion shells'); if (b) b.click(); }, 3500); }, 1500)"},

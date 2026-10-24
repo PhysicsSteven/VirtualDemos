@@ -1,0 +1,572 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Velocity, Momentum and Energy Near c</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css */
+:root { --rel: #2f62c8; --newt: #c0432a; --probe: #e08a12; --light: #d4a00a; --field: #6a4fc4; --curve: #17202b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --rel: #7aa7ff; --newt: #ff7a5c; --probe: #ffb347; --light: #ffe066; --field: #a991ff; --curve: #e3e8ef; } }
+:root[data-theme="dark"] { --rel: #7aa7ff; --newt: #ff7a5c; --probe: #ffb347; --light: #ffe066; --field: #a991ff; --curve: #e3e8ef; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }
+.pane { position: relative; flex: 1 1 auto; min-height: 380px; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; outline: none; }
+.curvebox { position: relative; flex: none; height: 200px; border-top: 1px solid var(--line); }
+.curvebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.shelf { display: flex; flex-wrap: wrap; align-items: stretch; gap: 12px; padding: 10px; border-top: 1px solid var(--line); background: var(--surface); }
+.shelf-card { align-self: stretch; flex: 1 1 520px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); align-content: start; gap: 8px 16px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; background: var(--canvas); }
+.shelf-card[hidden] { display: none; }
+.shelf-card > .card-title { grid-column: 1 / -1; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.shelf-card > .wide { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; }
+.shelf-card .lab { font-size: 0.8rem; color: var(--muted); }
+.shelf-card .slider-head output { white-space: nowrap; }
+.shelf-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; max-width: 100%; }
+.shelf-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.shelf-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.rail details.more > p + p { margin-top: 6px; }
+@media (max-width: 820px) { .pane { min-height: 0; height: 380px; flex: none; } .curvebox { height: 180px; } .shelf-card { flex: 1 1 100%; } }
+@media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 340px; } }
+@media (min-width: 821px) { .stage { min-height: 740px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Velocity, Momentum and Energy Near c</h1>
+      <p>Fire a probe from a fast rocket and time it between two beacons: the speeds do not simply add. Push a particle with a steady force and watch its momentum grow without limit while its speed creeps up to c. Accelerate electrons through millions of volts and time their flight, as Bertozzi did in 1964.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono" id="units">speeds in units of c · times in s</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/relativistic-motion.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/relativistic-motion.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h3v1h-3zM16 2h2v1h-2zM19 2h3v1h-3zM25 2h1v1h-1zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM14 3h1v1h-1zM16 3h2v1h-2zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h1v1h-1zM15 4h3v1h-3zM19 4h8v1h-8zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM14 5h2v1h-2zM18 5h1v1h-1zM20 5h2v1h-2zM25 5h5v1h-5zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h4v1h-4zM15 6h2v1h-2zM18 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM17 7h1v1h-1zM20 7h3v1h-3zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM15 9h1v1h-1zM17 9h1v1h-1zM19 9h5v1h-5zM25 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM12 10h4v1h-4zM17 10h1v1h-1zM20 10h6v1h-6zM30 10h6v1h-6zM38 10h1v1h-1zM3 11h5v1h-5zM9 11h5v1h-5zM16 11h1v1h-1zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h3v1h-3zM34 11h4v1h-4zM2 12h2v1h-2zM5 12h1v1h-1zM8 12h4v1h-4zM14 12h2v1h-2zM18 12h1v1h-1zM23 12h4v1h-4zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM4 13h1v1h-1zM6 13h1v1h-1zM11 13h3v1h-3zM16 13h1v1h-1zM19 13h1v1h-1zM22 13h3v1h-3zM26 13h1v1h-1zM29 13h3v1h-3zM33 13h2v1h-2zM36 13h2v1h-2zM4 14h1v1h-1zM6 14h3v1h-3zM10 14h2v1h-2zM14 14h1v1h-1zM16 14h2v1h-2zM19 14h1v1h-1zM23 14h4v1h-4zM29 14h4v1h-4zM36 14h3v1h-3zM2 15h1v1h-1zM7 15h1v1h-1zM10 15h2v1h-2zM13 15h1v1h-1zM17 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM3 16h2v1h-2zM6 16h6v1h-6zM14 16h4v1h-4zM20 16h1v1h-1zM22 16h1v1h-1zM25 16h3v1h-3zM29 16h1v1h-1zM31 16h1v1h-1zM33 16h5v1h-5zM2 17h1v1h-1zM4 17h1v1h-1zM6 17h1v1h-1zM9 17h1v1h-1zM12 17h2v1h-2zM17 17h1v1h-1zM21 17h3v1h-3zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h5v1h-5zM36 17h1v1h-1zM38 17h1v1h-1zM4 18h1v1h-1zM8 18h2v1h-2zM11 18h3v1h-3zM16 18h1v1h-1zM18 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h2v1h-2zM5 19h1v1h-1zM9 19h1v1h-1zM12 19h1v1h-1zM15 19h1v1h-1zM20 19h1v1h-1zM25 19h1v1h-1zM27 19h1v1h-1zM29 19h2v1h-2zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h1v1h-1zM6 20h1v1h-1zM8 20h2v1h-2zM14 20h4v1h-4zM19 20h2v1h-2zM22 20h2v1h-2zM25 20h2v1h-2zM28 20h9v1h-9zM3 21h1v1h-1zM6 21h2v1h-2zM11 21h1v1h-1zM13 21h2v1h-2zM16 21h4v1h-4zM22 21h2v1h-2zM25 21h2v1h-2zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM6 22h1v1h-1zM8 22h1v1h-1zM10 22h2v1h-2zM13 22h3v1h-3zM19 22h1v1h-1zM22 22h5v1h-5zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h3v1h-3zM7 23h1v1h-1zM9 23h10v1h-10zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM3 24h6v1h-6zM14 24h2v1h-2zM17 24h3v1h-3zM22 24h1v1h-1zM25 24h1v1h-1zM28 24h2v1h-2zM33 24h4v1h-4zM9 25h3v1h-3zM13 25h1v1h-1zM15 25h1v1h-1zM17 25h1v1h-1zM19 25h6v1h-6zM26 25h1v1h-1zM29 25h2v1h-2zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM3 26h3v1h-3zM7 26h2v1h-2zM11 26h1v1h-1zM14 26h1v1h-1zM16 26h1v1h-1zM20 26h1v1h-1zM22 26h2v1h-2zM25 26h2v1h-2zM29 26h4v1h-4zM35 26h3v1h-3zM2 27h3v1h-3zM6 27h2v1h-2zM10 27h1v1h-1zM16 27h1v1h-1zM18 27h1v1h-1zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM5 28h1v1h-1zM7 28h6v1h-6zM16 28h1v1h-1zM18 28h3v1h-3zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM5 29h2v1h-2zM12 29h1v1h-1zM14 29h2v1h-2zM19 29h2v1h-2zM22 29h5v1h-5zM29 29h2v1h-2zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h2v1h-2zM6 30h1v1h-1zM8 30h1v1h-1zM11 30h1v1h-1zM13 30h5v1h-5zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM10 31h2v1h-2zM13 31h2v1h-2zM18 31h3v1h-3zM23 31h1v1h-1zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM13 32h1v1h-1zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h1v1h-1zM25 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h7v1h-7zM23 33h2v1h-2zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h3v1h-3zM17 34h2v1h-2zM23 34h4v1h-4zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h2v1h-2zM14 35h3v1h-3zM20 35h1v1h-1zM23 35h1v1h-1zM25 35h9v1h-9zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM14 37h2v1h-2zM17 37h4v1h-4zM23 37h2v1h-2zM28 37h2v1h-2zM32 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM13 38h1v1h-1zM15 38h2v1h-2zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM32 38h2v1h-2zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="vel" aria-pressed="true">Adding velocities</button>
+          <button type="button" data-v="mom" aria-pressed="false">Steady force</button>
+          <button type="button" data-v="en" aria-pressed="false">Electron flight</button>
+        </div>
+        <button type="button" class="spin attn" id="go">Launch</button>
+        <button type="button" class="btn" id="restart">Start over</button>
+        <button type="button" class="btn" id="step" hidden>Step</button>
+        <div class="seg" role="group" aria-label="Simulation speed" id="speedSeg">
+          <button type="button" data-s="1" aria-pressed="true">1×</button>
+          <button type="button" data-s="5" aria-pressed="false">5×</button>
+          <button type="button" data-s="20" aria-pressed="false">20×</button>
+        </div>
+        <span class="count mono" id="clock">t = 0 s</span>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="can" tabindex="0" role="img" aria-label="A rocket in space passes a launch mark and fires a probe forward; two beacons 3 light seconds apart time the probe and the rocket. Space launches or pauses."></canvas>
+      </div>
+      <div class="curvebox"><canvas id="curve" role="img" aria-label="Graph of the ground speed against the launch speed, with the Galilean sum for comparison."></canvas></div>
+      <div class="shelf" id="shelf">
+        <div class="shelf-card" id="cardVel" role="group" aria-label="The rocket and the probe">
+          <span class="card-title">Beacons A and B, 3.000 light seconds apart, at rest in the ground frame</span>
+          <div><div class="slider-head"><label for="sV">Rocket speed v</label><output id="oV" class="mono" for="sV"></output></div><input type="range" id="sV" min="0" max="0.95" step="0.01"></div>
+          <div><div class="slider-head"><label for="sU">Launch speed u′, measured on the rocket</label><output id="oU" class="mono" for="sU"></output></div><input type="range" id="sU" min="0" max="0.99" step="0.01"></div>
+          <div class="wide">
+            <label class="check"><input type="checkbox" id="chkLight"><span>Fire a light pulse instead of the probe</span></label>
+            <button type="button" class="btn" id="newRocket" hidden>New mystery rocket</button><span class="lab" id="rocketNote"></span>
+          </div>
+        </div>
+        <div class="shelf-card" id="cardMom" role="group" aria-label="The particle and the field" hidden>
+          <span class="card-title">A particle starts from rest in a uniform electric field in a long vacuum tube</span>
+          <div class="pick"><label for="selPm">Particle</label><select id="selPm"></select></div>
+          <div><div class="slider-head"><label for="sE">Field strength E</label><output id="oE" class="mono" for="sE"></output></div><input type="range" id="sE" min="0.1" max="10" step="0.1"></div>
+          <div class="wide"><span class="lab" id="momNote"></span></div>
+        </div>
+        <div class="shelf-card" id="cardEn" role="group" aria-label="The accelerator, the flight path and the magnet" hidden>
+          <span class="card-title">Particles accelerated from rest fly 8.400 m between two pickups, then a magnet bends them onto a ruler</span>
+          <div class="pick"><label for="selPe">Particle</label><select id="selPe"></select></div>
+          <div><div class="slider-head"><label for="sAcc">Accelerating voltage V</label><output id="oAcc" class="mono" for="sAcc"></output></div><input type="range" id="sAcc" min="0" max="18" step="1"></div>
+          <div><div class="slider-head"><label for="sB">Magnet field B</label><output id="oB" class="mono" for="sB"></output></div><input type="range" id="sB" min="0.01" max="1" step="0.01"></div>
+          <div class="wide"><button type="button" class="btn" id="newPart" hidden>New mystery particle</button><span class="lab" id="partNote"></span></div>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/velocity-addition.html" target="velocity-addition-worksheet">Worksheet 1: Adding Velocities Near c</a></li><li><a href="../curriculum/labs/students/relativistic-momentum.html" target="relativistic-momentum-worksheet">Worksheet 2: Momentum Under a Steady Force</a></li><li><a href="../curriculum/labs/students/relativistic-energy.html" target="relativistic-energy-worksheet">Worksheet 3: Bertozzi's Electrons</a></li></ul></details><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="probe" aria-pressed="true">Rocket fires a probe</button>
+          <button type="button" data-p="light" aria-pressed="false">Rocket fires light</button>
+          <button type="button" data-p="mysteryRocket" aria-pressed="false">Mystery rocket</button>
+          <button type="button" data-p="electronField" aria-pressed="false">Electron, steady force</button>
+          <button type="button" data-p="bertozzi" aria-pressed="false">Bertozzi's electrons</button>
+          <button type="button" data-p="mysteryParticle" aria-pressed="false">Mystery particle</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="velocity-addition" data-title="Velocity, Momentum and Energy Near c" data-demo="relativistic-motion">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the graph and every predicted or derived value</span></label>
+        <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
+        <details class="more"><summary>About the demo</summary>
+          <p class="hint" id="aboutVel"></p>
+          <p class="hint" id="aboutMom"></p>
+          <p class="hint" id="aboutEn"></p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Velocity, Momentum and Energy Near c. Runnable in Node (curriculum/validation/test_relativistic-motion.cjs).
+     Special relativity in one dimension, exact (OpenStax University Physics Volume 3, §§5.6, 5.8 and 5.9). Speeds are in units of c.
+     c and e are exact SI values. Rest energies in MeV: CODATA 2018. */
+  const C = 299792458, E_CH = 1.602176634e-19;
+  const PARTICLES = {
+    e: { name: 'Electron', mc2: 0.51099895000, q: 1 }, mu: { name: 'Muon', mc2: 105.6583755, q: 1 },
+    p: { name: 'Proton', mc2: 938.27208816, q: 1 }, d: { name: 'Deuteron', mc2: 1875.61294257, q: 1 }, alpha: { name: 'Alpha particle', mc2: 3727.3794066, q: 2 } };
+  const MYSTERY_POOL = ['e', 'mu', 'p', 'd'];   /* all with a charge of magnitude e */
+  const gammaOf = (b) => 1 / Math.sqrt(1 - b * b);
+  /* §5.6: a probe launched at u′ (measured in the rocket's frame) from a rocket moving at v along the same line has ground speed
+     u = (v + u′)/(1 + v u′/c²). Light (u′ = 1) comes out at 1 for every v. */
+  const addVel = (v, u) => (v + u) / (1 + v * u);
+  const galileo = (v, u) => v + u;
+  /* the beacons: the rocket passes the launch mark (x = −0.6 light seconds) at t = 0 and fires there; beacon A is at x = 0 and
+     beacon B at x = 3.000 light seconds. A body at constant speed s (in c) crosses from A to B in 3.000/s seconds. */
+  const MARK = -0.6, GAP = 3.000;
+  const gateTimes = (s) => (s > 0 ? { tA: (0 - MARK) / s, tB: (GAP - MARK) / s, dt: GAP / s } : null);
+  /* §5.8: a steady force F on a particle from rest. dp/dt = F, so p = Ft exactly, with p = γmv. Then
+     v/c = k t/√(1 + (k t)²) with k = F/(mc), and the distance gone is x = (mc²/F)(√(1 + (k t)²) − 1), so γ = 1 + Fx/(mc²)
+     (the work done is the kinetic energy, §5.9). Newton's mechanics would give v = Ft/m without limit.
+     For a charge qe in a field of E megavolts per metre, F/(mc) = qEc/(mc² in MeV) per second. */
+  function steady(part, E_MVm, t) {
+    const P = PARTICLES[part], k = P.q * E_MVm * C / P.mc2, kt = k * t, s = Math.sqrt(1 + kt * kt);
+    const F = P.q * E_CH * E_MVm * 1e6, mc2J = P.mc2 * 1e6 * E_CH;
+    return { k, F, beta: kt / s, gamma: s, gb: kt, x: mc2J / F * (s - 1), newton: kt, p_MeV: kt * P.mc2, K_MeV: (s - 1) * P.mc2 };
+  }
+  /* §5.9: through a potential difference V (in MV) a charge qe gains K = qV MeV, so γ = 1 + K/mc², v/c = √(1 − 1/γ²) and the
+     time over the L = 8.400 m flight path is L/v. pc = √(K² + 2K mc²), from E² = (pc)² + (mc²)² with E = K + mc². A magnet of
+     field B bends the path into a circle of radius r = p/(qeB) (§11.3 of Vol. 2, which holds for relativistic momentum). Newton:
+     ½mv² = K would give v/c = √(2K/mc²), past 1 once K > mc²/2. */
+  const FLIGHT = 8.400;
+  const VOLTS = [0.01, 0.02, 0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20, 50, 100, 200, 500, 1000, 2000, 5000, 10000];
+  function flight(part, V_MV, B) {
+    const P = PARTICLES[part], K = P.q * V_MV, g = 1 + K / P.mc2, beta = Math.sqrt(1 - 1 / (g * g)), pc = Math.sqrt(K * K + 2 * K * P.mc2);
+    return { K, gamma: g, beta, t_ns: FLIGHT / (beta * C) * 1e9, pc, E: K + P.mc2, r_m: pc * 1e6 / (P.q * C * B), newtonBeta: Math.sqrt(2 * K / P.mc2) };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const VG = window.VDGear;
+  const S = { view: 'vel', preset: 'probe', run: false, speed: 1, blind: false,
+    vel: { v: 0.60, u: 0.50, light: false, mystery: false, mv: 0.7, lastMys: null, t: 0, done: false },
+    mom: { part: 'e', E: 1.0, t: 0 },
+    en: { part: 'e', vi: 6, B: 0.05, mys: 'mu', mystery: false, lastMys: null, shots: 0, t: 0 } };
+  const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
+  let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
+  let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+  const f = (v, d = 2) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const proj = () => document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1;
+  const dark = () => (VG ? VG.dark() : false);
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
+      rel: g('--rel'), newt: g('--newt'), probe: g('--probe'), light: g('--light'), field: g('--field'), curve: g('--curve'), mono: g('--font-mono'), ui: g('--font-ui') };
+  }
+  const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+  /* significant figures for a readout, without exponent notation for the sizes used here */
+  const SUPD = '⁰¹²³⁴⁵⁶⁷⁸⁹';
+  const sci = (v, n) => { if (!isFinite(v) || v === 0) return sig(v, n); const e = Math.floor(Math.log10(Math.abs(v))), m = v / Math.pow(10, e);
+    return `${m.toFixed(n - 1)} × 10${e < 0 ? '⁻' : ''}${String(Math.abs(e)).split('').map((d) => SUPD[d]).join('')}`; };
+  const sig = (v, n) => { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const d = Math.max(0, n - 1 - Math.floor(Math.log10(Math.abs(v)))); return v.toFixed(Math.min(d, 12)); };
+
+  // ---------- the velocity view ----------
+  const rocketV = () => (S.vel.mystery ? S.vel.mv : S.vel.v);
+  const launchU = () => (S.vel.light ? 1 : S.vel.u);
+  const probeU = () => addVel(rocketV(), launchU());
+  /* the run ends once the probe and (if it moves) the rocket have passed beacon B */
+  const velEnd = () => { const pt = gateTimes(probeU()), rt = gateTimes(rocketV()); return Math.max(pt ? pt.tB : 0, rt ? rt.tB : 0) + 0.4; };
+  const passed = (s, t) => { const g = gateTimes(s); return g && t >= g.tB ? g : null; };
+  function stars(seed, n) { const a = []; let x = seed; for (let i = 0; i < n; i++) { x = (x * 16807) % 2147483647; const u = x / 2147483647; x = (x * 16807) % 2147483647; const w = x / 2147483647; x = (x * 16807) % 2147483647; a.push([u, w, x / 2147483647]); } return a; }
+  const STARS = stars(42, 140);
+  function space() {
+    const g = ctx.createLinearGradient(0, 0, 0, H); g.addColorStop(0, dark() ? '#05080f' : '#0d1626'); g.addColorStop(1, dark() ? '#0b1220' : '#1b2a44');
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    for (const [u, w, b] of STARS) { ctx.globalAlpha = 0.3 + 0.6 * b; ctx.fillStyle = '#ffffff'; ctx.fillRect(u * W, w * H, b > 0.8 ? 2 : 1, b > 0.8 ? 2 : 1); }
+    ctx.globalAlpha = 1;
+  }
+  function rocketShape(x, y, s) {
+    ctx.save(); ctx.translate(x, y);
+    const g = ctx.createLinearGradient(0, -10 * s, 0, 10 * s); g.addColorStop(0, '#e9eef5'); g.addColorStop(0.5, '#b9c3cf'); g.addColorStop(1, '#6f7b8a');
+    ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(26 * s, 0); ctx.quadraticCurveTo(14 * s, -10 * s, -16 * s, -9 * s); ctx.lineTo(-16 * s, 9 * s); ctx.quadraticCurveTo(14 * s, 10 * s, 26 * s, 0); ctx.fill();
+    ctx.fillStyle = '#c0432a'; ctx.beginPath(); ctx.moveTo(-10 * s, -9 * s); ctx.lineTo(-22 * s, -18 * s); ctx.lineTo(-18 * s, -8 * s); ctx.fill(); ctx.beginPath(); ctx.moveTo(-10 * s, 9 * s); ctx.lineTo(-22 * s, 18 * s); ctx.lineTo(-18 * s, 8 * s); ctx.fill();
+    ctx.fillStyle = '#2b4f86'; ctx.beginPath(); ctx.arc(10 * s, -2 * s, 3.2 * s, 0, 7); ctx.fill();
+    ctx.restore();
+  }
+  function beacon(x, y, label, lit, p) {
+    ctx.save(); ctx.strokeStyle = 'rgba(200,215,235,0.55)'; ctx.setLineDash([3, 4]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x, y - 70 * p); ctx.lineTo(x, y + 46 * p); ctx.stroke(); ctx.restore();
+    if (VG) VG.box(ctx, x - 9 * p, y + 30 * p, 18 * p, 22 * p, { color: '#3b4654', r: 3, shadow: false });
+    ctx.save(); ctx.fillStyle = lit ? '#ff5a3c' : '#4a1f1a'; if (lit) { ctx.shadowColor = '#ff5a3c'; ctx.shadowBlur = 12 * p; } ctx.beginPath(); ctx.arc(x, y + 36 * p, 3.5 * p, 0, 7); ctx.fill(); ctx.restore();
+    ctx.fillStyle = '#e3e8ef'; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(label, x, y - 72 * p);
+  }
+  function lcdBox(x, y, w, h, text, name) {
+    if (VG) { VG.box(ctx, x - 6, y - 6, w + 12, h + 22, { color: '#34404e', r: 6 }); VG.lcd(ctx, x, y, w, h, text); VG.plate(ctx, name, x + w / 2, y + h + 8, { s: 8 * proj() }); }
+    else { ctx.fillStyle = T.ink; ctx.font = `${12 * proj()}px ${T.mono}`; ctx.textAlign = 'left'; ctx.fillText(`${name}: ${text}`, x, y + h / 2); }
+  }
+  function drawVel() {
+    const p = proj(), h = S.vel; space();
+    const x0 = -0.9, x1 = 3.5, L = 30 * p, R = W - 30 * p, X = (x) => L + (x - x0) / (x1 - x0) * (R - L), y = H * 0.56;
+    /* the light second ruler along the track */
+    ctx.strokeStyle = 'rgba(200,215,235,0.4)'; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(L, y + 58 * p); ctx.lineTo(R, y + 58 * p); ctx.stroke();
+    ctx.fillStyle = 'rgba(220,230,245,0.75)'; ctx.font = `${9.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let k = -0.5; k <= 3.5 + 1e-9; k += 0.5) { const xx = X(k), big = Math.abs(k - Math.round(k)) < 1e-9; ctx.beginPath(); ctx.moveTo(xx, y + 58 * p); ctx.lineTo(xx, y + (big ? 66 : 62) * p); ctx.stroke(); if (big) ctx.fillText(`${k}`, xx, y + 68 * p); }
+    ctx.textAlign = 'right'; ctx.fillText('light seconds', R, y + 82 * p);
+    const t = h.t, v = rocketV(), u = probeU(), pg = gateTimes(u), rg = gateTimes(v);
+    /* launch mark */
+    ctx.save(); ctx.strokeStyle = 'rgba(255,200,120,0.6)'; ctx.setLineDash([2, 3]); ctx.beginPath(); ctx.moveTo(X(MARK), y - 40 * p); ctx.lineTo(X(MARK), y + 46 * p); ctx.stroke(); ctx.restore();
+    if (VG) VG.label(ctx, 'launch mark', X(MARK), y - 46 * p, { a: 'center', s: 10 * p, c: '#ffd9a0' });
+    const litA = (pg && Math.abs(t - pg.tA) < 0.25) || (rg && Math.abs(t - rg.tA) < 0.25), litB = (pg && Math.abs(t - pg.tB) < 0.25) || (rg && Math.abs(t - rg.tB) < 0.25);
+    beacon(X(0), y, 'beacon A', litA, p); beacon(X(GAP), y, 'beacon B', litB, p);
+    /* the probe (or light pulse) leaves the rocket at the mark at t = 0 */
+    const xr = MARK + v * t, xp = MARK + u * t;
+    if (t > 0) {
+      const col = h.light ? T.light : T.probe, tail = Math.min(xp - MARK, 0.5);
+      const gr = ctx.createLinearGradient(X(xp - tail), 0, X(xp), 0); gr.addColorStop(0, 'rgba(255,200,80,0)'); gr.addColorStop(1, col);
+      ctx.strokeStyle = gr; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.moveTo(X(xp - tail), y - 2 * p); ctx.lineTo(X(xp), y - 2 * p); ctx.stroke();
+      ctx.save(); ctx.fillStyle = col; ctx.shadowColor = col; ctx.shadowBlur = 10 * p; ctx.beginPath(); ctx.arc(X(xp), y - 2 * p, (h.light ? 4 : 5) * p, 0, 7); ctx.fill(); ctx.restore();
+    }
+    rocketShape(X(xr) - 12 * p, y + 14 * p, 0.9 * p);
+    if (VG && xp < x1) VG.label(ctx, h.light ? 'light pulse' : 'probe', X(xp), y - 18 * p, { a: 'center', s: 10 * p, c: '#ffe2b0' });
+    /* timers: each shows the time between beacon A and beacon B once the body has passed B */
+    const narrow = W < 640, pw = (narrow ? 118 : 128) * p, ph = 26 * p, px = W - pw - (narrow ? 14 : 24) * p, py = (narrow ? 66 : 18) * p, pd = passed(u, t), rd = passed(v, t);
+    const live = (g) => (g && t > g.tA ? `${f(Math.min(t, g.tB) - g.tA, 4)} s` : '—');
+    lcdBox(px, py, pw, ph, pd ? `${f(pd.dt, 4)} s` : live(pg), h.light ? 'light pulse A to B' : 'probe A to B');
+    lcdBox(px - pw - (narrow ? 22 : 30) * p, py, pw, ph, rd ? `${f(rd.dt, 4)} s` : live(rg), 'rocket A to B');
+    if (VG) VG.label(ctx, `ground clock ${f(t, 3)} s`, 24 * p, 26 * p, { s: 11 * p, m: 1, c: '#e3e8ef' });
+    if (VG) VG.label(ctx, h.mystery ? 'rocket speed unknown' : `rocket ${f(v, 2)}c`, 24 * p, 44 * p, { s: 10.5 * p, c: '#c9d4e3' });
+  }
+
+  // ---------- the steady force view ----------
+  const mState = () => steady(S.mom.part, S.mom.E, S.mom.t * 1e-9);
+  const momRate = () => 1 / (PARTICLES[S.mom.part].q * S.mom.E * C / PARTICLES[S.mom.part].mc2) * 1e9;   /* ns for kt to grow by 1 */
+  const momEnd = () => 6 * momRate();
+  const momStep = () => nice(0.25 * momRate());
+  function drawMom() {
+    const p = proj(), s = mState(), endS = steady(S.mom.part, S.mom.E, momEnd() * 1e-9);
+    if (VG) VG.wall(ctx, 0, 0, W, H); else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    const L = 40 * p, R = W - 40 * p, y = H * 0.40, X = (x) => L + x / endS.x * (R - L);
+    /* the vacuum tube and its field plates */
+    if (VG) VG.rod(ctx, L - 14 * p, y, R + 14 * p, y, 15 * p, { color: '#a9b4c1' });
+    ctx.fillStyle = dark() ? '#0b1018' : '#1a222d'; ctx.fillRect(L - 10 * p, y - 9 * p, R - L + 20 * p, 18 * p);
+    for (let i = 0; i <= 24; i++) { const xx = L + (R - L) * i / 24; ctx.fillStyle = T.field; ctx.globalAlpha = 0.45; ctx.fillRect(xx - 1, y - 16 * p, 2, 4 * p); ctx.fillRect(xx - 1, y + 12 * p, 2, 4 * p); ctx.globalAlpha = 1; }
+    /* field arrows */
+    ctx.strokeStyle = T.field; ctx.fillStyle = T.field; ctx.lineWidth = 1.5 * p;
+    for (let i = 0; i < 6; i++) { const xx = L + (R - L) * (i + 0.5) / 6; ctx.beginPath(); ctx.moveTo(xx - 16 * p, y - 30 * p); ctx.lineTo(xx + 12 * p, y - 30 * p); ctx.stroke(); ctx.beginPath(); ctx.moveTo(xx + 16 * p, y - 30 * p); ctx.lineTo(xx + 9 * p, y - 34 * p); ctx.lineTo(xx + 9 * p, y - 26 * p); ctx.fill(); }
+    if (VG) VG.label(ctx, `force F = ${sci(s.F, 4)} N on the particle, the same all the way`, L, y - 48 * p, { s: 10.5 * p, c: T.ink });
+    /* the particle */
+    ctx.save(); ctx.fillStyle = T.probe; ctx.shadowColor = T.probe; ctx.shadowBlur = 10 * p; ctx.beginPath(); ctx.arc(X(s.x), y, 5 * p, 0, 7); ctx.fill(); ctx.restore();
+    /* distance scale */
+    const sx = nice(endS.x / 6); ctx.strokeStyle = T.muted; ctx.fillStyle = T.muted; ctx.lineWidth = 1; ctx.font = `${9.5 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    ctx.beginPath(); ctx.moveTo(L, y + 26 * p); ctx.lineTo(R, y + 26 * p); ctx.stroke();
+    for (let v = 0; v <= endS.x + 1e-9; v += sx) { ctx.beginPath(); ctx.moveTo(X(v), y + 26 * p); ctx.lineTo(X(v), y + 32 * p); ctx.stroke(); ctx.fillText(sig(v, 3), X(v), y + 34 * p); }
+    ctx.textAlign = 'right'; ctx.fillText('distance from the start (m)', R, y + 50 * p);
+    /* speed gauge: a bar from 0 to c */
+    const gx = L, gy = H * 0.72, gw = Math.min(R - L, 520 * p), gh = 18 * p;
+    if (VG) VG.panel(ctx, gx - 10 * p, gy - 30 * p, gw + 20 * p, gh + 64 * p, { r: 8 });
+    if (VG) VG.label(ctx, 'speed', gx, gy - 16 * p, { s: 10.5 * p, w: 700, c: T.ink });
+    ctx.fillStyle = T.grid; ctx.fillRect(gx, gy, gw, gh); ctx.fillStyle = T.rel; ctx.fillRect(gx, gy, gw * s.beta, gh);
+    if (!S.blind) { const nb = Math.min(s.newton, 1.25); ctx.strokeStyle = T.newt; ctx.lineWidth = 2 * p; ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.moveTo(gx + gw * Math.min(nb, 1), gy - 4 * p); ctx.lineTo(gx + gw * Math.min(nb, 1), gy + gh + 4 * p); ctx.stroke(); ctx.setLineDash([]);
+      if (VG) VG.label(ctx, s.newton > 1 ? `Newton: ${f(s.newton, 2)}c, off the scale` : 'Newton', gx + gw * Math.min(nb, 1) - (s.newton > 1 ? 150 * p : 0), gy + gh + 14 * p, { s: 10 * p, c: T.newt }); }
+    ctx.strokeStyle = T.ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(gx + gw, gy - 6 * p); ctx.lineTo(gx + gw, gy + gh + 6 * p); ctx.stroke();
+    if (VG) VG.label(ctx, 'c', gx + gw + 6 * p, gy + gh / 2, { s: 12 * p, w: 700, c: T.ink });
+    if (VG) VG.label(ctx, `${f(s.beta, 6)} c`, gx + 52 * p, gy - 16 * p, { s: 10.5 * p, m: 1, c: T.ink });
+    if (VG) VG.label(ctx, `${PARTICLES[S.mom.part].name.toLowerCase()}, t = ${sig(S.mom.t, 5)} ns`, R, H * 0.08, { a: 'right', s: 11 * p, m: 1, c: T.ink });
+  }
+
+  // ---------- the electron flight view ----------
+  const ePart = () => (S.en.mystery ? S.en.mys : S.en.part);
+  const eState = () => flight(ePart(), VOLTS[S.en.vi], S.en.B);
+  function drawEn() {
+    const p = proj(), s = eState(), h = S.en, by = Math.round(H * 0.86);
+    if (VG) { VG.wall(ctx, 0, 0, W, by); VG.bench(ctx, 0, by, W, 14, Math.max(14, H - by - 2)); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
+    const gunX = 24 * p, gunW = 90 * p, y = H * 0.36, magW = Math.min(170 * p, W * 0.24), magX = W - magW - 20 * p, x1 = gunX + gunW + 40 * p, x2 = magX - 30 * p;
+    /* accelerator */
+    if (VG) VG.box(ctx, gunX, y - 34 * p, gunW, 68 * p, { color: '#4a3d5c', r: 6 });
+    if (VG) VG.plate(ctx, 'accelerator', gunX + gunW / 2, y - 18 * p, { s: 8 * p });
+    if (VG) VG.lcd(ctx, gunX + 8 * p, y - 6 * p, gunW - 16 * p, 22 * p, `${VOLTS[h.vi]} MV`);
+    /* flight tube with two pickups 8.400 m apart */
+    if (VG) VG.rod(ctx, gunX + gunW, y, magX, y, 7 * p, { color: '#a9b4c1' });
+    for (const [xx, nm] of [[x1, 'pickup 1'], [x2, 'pickup 2']]) { if (VG) { VG.box(ctx, xx - 8 * p, y - 16 * p, 16 * p, 32 * p, { color: '#2f3945', r: 3, shadow: false }); VG.label(ctx, nm, xx, y - 26 * p, { a: 'center', s: 10 * p }); } }
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x1, y + 26 * p); ctx.lineTo(x2, y + 26 * p); ctx.stroke();
+    for (const xx of [x1, x2]) { ctx.beginPath(); ctx.moveTo(xx, y + 21 * p); ctx.lineTo(xx, y + 31 * p); ctx.stroke(); }
+    if (VG) VG.label(ctx, '8.400 m', (x1 + x2) / 2, y + 38 * p, { a: 'center', s: 10.5 * p, m: 1 });
+    /* the magnet and the bent path to the ruler (the circle is drawn to the scale of the ruler, up to the magnet's size) */
+    if (VG) VG.box(ctx, magX, y - 30 * p, magW, 110 * p, { color: '#7a2b2b', r: 6 });
+    if (VG) VG.plate(ctx, `magnet ${f(h.B, 2)} T`, magX + magW / 2, y - 18 * p, { s: 8 * p });
+    /* the path inside the magnet: a half circle back onto a ruler along the entrance face (radius drawn on a log scale, not to scale) */
+    const rPx = Math.max(8 * p, Math.min(40 * p, 20 * p + 10 * p * Math.log10(Math.max(1e-3, s.r_m * 10))));
+    ctx.fillStyle = dark() ? '#d9cfae' : '#f3e7c0'; ctx.fillRect(magX + 4 * p, y + 6 * p, 8 * p, 82 * p);
+    ctx.strokeStyle = '#3a3428'; ctx.lineWidth = 1; for (let k = 0; k <= 16; k++) { const yy = y + 8 * p + k * 5 * p; ctx.beginPath(); ctx.moveTo(magX + 12 * p, yy); ctx.lineTo(magX + (k % 4 ? 9 : 6) * p, yy); ctx.stroke(); }
+    ctx.save(); ctx.strokeStyle = T.probe; ctx.lineWidth = 2.4 * p; ctx.globalAlpha = h.shots ? 0.95 : 0.35; if (h.shots) { ctx.shadowColor = T.probe; ctx.shadowBlur = 8 * p; }
+    ctx.beginPath(); ctx.moveTo(gunX + gunW, y); ctx.lineTo(magX + 12 * p, y); ctx.arc(magX + 12 * p, y + rPx, rPx, -Math.PI / 2, Math.PI / 2, false); ctx.stroke();
+    if (h.shots) { ctx.fillStyle = T.probe; ctx.beginPath(); ctx.arc(magX + 12 * p, y + 2 * rPx, 3.5 * p, 0, 7); ctx.fill(); } ctx.restore();
+    if (VG) VG.label(ctx, `bend radius ${h.shots ? f(s.r_m * 100, 2) + ' cm' : '—'}${W < 640 ? '' : ' (picture not to scale)'}`, W - 10 * p, y + 96 * p, { a: 'right', s: 10 * p });
+    /* the bunch in flight */
+    if (S.run && !reduce) { const fr = (h.t % 1); const bx = gunX + gunW + fr * (magX - gunX - gunW); ctx.save(); ctx.fillStyle = T.probe; ctx.shadowColor = T.probe; ctx.shadowBlur = 10 * p; ctx.beginPath(); ctx.arc(bx, y, 4 * p, 0, 7); ctx.fill(); ctx.restore(); }
+    /* the oscilloscope: the two pickup pulses */
+    const ox = gunX, oy = y + 70 * p, ow = Math.min(x2 - gunX - 20 * p, 420 * p), oh = Math.max(70 * p, by - oy - 40 * p);
+    if (VG) VG.box(ctx, ox - 8 * p, oy - 8 * p, ow + 16 * p, oh + 30 * p, { color: '#2b3440', r: 8 });
+    ctx.fillStyle = '#0b1a14'; ctx.fillRect(ox, oy, ow, oh);
+    const span = Math.max(40, nice(s.t_ns * 1.4 / 10) * 10), Xo = (tt) => ox + (tt + span * 0.1) / (span * 1.1) * ow;
+    ctx.strokeStyle = 'rgba(80,220,140,0.18)'; ctx.lineWidth = 1; for (let i = 0; i <= 10; i++) { const xx = ox + ow * i / 10; ctx.beginPath(); ctx.moveTo(xx, oy); ctx.lineTo(xx, oy + oh); ctx.stroke(); }
+    ctx.strokeStyle = '#4fe39a'; ctx.lineWidth = 1.6 * p; ctx.beginPath();
+    for (let i = 0; i <= 400; i++) { const tt = -span * 0.1 + span * 1.1 * i / 400, pulse = h.shots ? Math.exp(-Math.pow(tt / 0.8, 2)) + Math.exp(-Math.pow((tt - s.t_ns) / 0.8, 2)) : 0, yy = oy + oh * 0.8 - pulse * oh * 0.6; i ? ctx.lineTo(Xo(tt), yy) : ctx.moveTo(Xo(tt), yy); }
+    ctx.stroke();
+    if (VG) VG.plate(ctx, `oscilloscope · ${sig(span * 1.1 / 10, 2)} ns per division`, ox + ow / 2, oy + oh + 11 * p, { s: 8 * p });
+    const lx = Math.min(W - 160 * p, ox + ow + 40 * p); if (lx + 132 * p < magX - 10 * p) lcdBox(lx, oy + 6 * p, 132 * p, 26 * p, h.shots ? `${f(s.t_ns, 2)} ns` : '—', 'time of flight');
+    if (VG) VG.label(ctx, h.mystery ? 'mystery particle' : PARTICLES[ePart()].name.toLowerCase(), gunX, H * 0.08, { s: 11 * p, c: T.ink });
+  }
+
+  // ---------- the graph ----------
+  function axes(c, xs, ys, xl, yl, p) {
+    const L = 58 * p, Rr = 16 * p, Tp = 16 * p, B = 34 * p, pw = CW - L - Rr, ph = CH - Tp - B;
+    const X = (v) => L + (v - xs[0]) / (xs[1] - xs[0]) * pw, Y = (v) => Tp + ph - (v - ys[0]) / (ys[1] - ys[0]) * ph;
+    c.font = `${10.5 * p}px ${T.mono}`; c.strokeStyle = T.grid; c.fillStyle = T.muted; c.lineWidth = 1;
+    const sx = nice((xs[1] - xs[0]) / 6), sy = nice((ys[1] - ys[0]) / 4);
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (let v = Math.ceil(xs[0] / sx) * sx; v <= xs[1] + 1e-9; v += sx) { c.beginPath(); c.moveTo(X(v), Tp); c.lineTo(X(v), Tp + ph); c.stroke(); c.fillText(String(+v.toPrecision(6)), X(v), Tp + ph + 4); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (let v = Math.ceil(ys[0] / sy) * sy; v <= ys[1] + 1e-9; v += sy) { c.beginPath(); c.moveTo(L, Y(v)); c.lineTo(L + pw, Y(v)); c.stroke(); c.fillText(String(+v.toPrecision(6)), L - 5, Y(v)); }
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(xl, L + pw / 2, CH - 2);
+    c.save(); c.translate(12 * p, Tp + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore();
+    return { X, Y, L, Tp, pw, ph };
+  }
+  function line(c, A, pts, col, w, dash) { c.strokeStyle = col; c.lineWidth = w; c.setLineDash(dash || []); c.beginPath(); pts.forEach((q, i) => (i ? c.lineTo(A.X(q[0]), A.Y(q[1])) : c.moveTo(A.X(q[0]), A.Y(q[1])))); c.stroke(); c.setLineDash([]); }
+  function dot(c, A, x, y, col, p) { c.fillStyle = col; c.beginPath(); c.arc(A.X(x), A.Y(y), 4.5 * p, 0, 7); c.fill(); }
+  function key(c, A, items, p) { let y = A.Tp + 10 * p; c.font = `${10.5 * p}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle'; for (const [t, col, dash] of items) { c.strokeStyle = col; c.lineWidth = 2 * p; c.setLineDash(dash || []); c.beginPath(); c.moveTo(A.L + 10 * p, y); c.lineTo(A.L + 34 * p, y); c.stroke(); c.setLineDash([]); c.fillStyle = T.ink; c.fillText(t, A.L + 40 * p, y); y += 16 * p; } }
+  function drawCurve() {
+    const p = proj(), c = cctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
+    if (S.blind) { c.fillStyle = T.muted; c.font = `${12 * p}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText('Graph hidden (Blind mode in the Lab section)', CW / 2, CH / 2); return; }
+    c.save();
+    if (S.view === 'vel') {
+      const v = rocketV(), A = axes(c, [0, 1], [0, 2], 'launch speed u′ on the rocket (c)', 'ground speed (c)', p), rel = [], gal = [];
+      for (let i = 0; i <= 100; i++) { const u = i / 100; rel.push([u, addVel(v, u)]); gal.push([u, Math.min(2, galileo(v, u))]); }
+      line(c, A, [[0, 1], [1, 1]], T.muted, 1, [2, 3]); line(c, A, gal, T.newt, 2 * p, [6, 4]); line(c, A, rel, T.rel, 2.4 * p);
+      dot(c, A, launchU(), probeU(), T.rel, p);
+      key(c, A, [[S.vel.mystery ? 'relativity, this rocket' : `relativity, rocket at ${f(v, 2)}c`, T.rel], ['Galileo: u′ + v', T.newt, [6, 4]]], p);
+    } else if (S.view === 'mom') {
+      const tEnd = momEnd(), A = axes(c, [0, tEnd], [0, 1.5], 'time t (ns)', 'speed (c)', p), rel = [], nw = [];
+      for (let i = 0; i <= 200; i++) { const t = tEnd * i / 200, s = steady(S.mom.part, S.mom.E, t * 1e-9); if (t <= S.mom.t + 1e-12) rel.push([t, s.beta]); nw.push([t, Math.min(1.5, s.newton)]); }
+      line(c, A, [[0, 1], [tEnd, 1]], T.muted, 1, [2, 3]); line(c, A, nw, T.newt, 2 * p, [6, 4]); if (rel.length > 1) line(c, A, rel, T.rel, 2.4 * p);
+      dot(c, A, S.mom.t, mState().beta, T.rel, p);
+      key(c, A, [['relativity: p = γmv = Ft', T.rel], ['Newton: v = Ft/m', T.newt, [6, 4]]], p);
+    } else {
+      const P = PARTICLES[ePart()], s = eState(), xm = Math.max(4, s.K / P.mc2 * 1.2), A = axes(c, [0, xm], [0, 2], 'kinetic energy K / mc²', 'v²/c²', p), rel = [], nw = [];
+      for (let i = 0; i <= 200; i++) { const k = xm * i / 200, g = 1 + k; rel.push([k, 1 - 1 / (g * g)]); nw.push([k, Math.min(2, 2 * k)]); }
+      line(c, A, [[0, 1], [xm, 1]], T.muted, 1, [2, 3]); line(c, A, nw, T.newt, 2 * p, [6, 4]); line(c, A, rel, T.rel, 2.4 * p);
+      if (S.en.shots && !S.en.mystery) dot(c, A, s.K / P.mc2, s.beta * s.beta, T.rel, p);
+      key(c, A, [['relativity: K = (γ − 1)mc²', T.rel], ['Newton: K = ½mv²', T.newt, [6, 4]]], p);
+    }
+    c.restore();
+  }
+  function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); ({ vel: drawVel, mom: drawMom, en: drawEn })[S.view](); drawCurve(); readouts(); clock(); }
+  function clock() { $('clock').textContent = S.view === 'vel' ? `t = ${f(S.vel.t, 2)} s` : S.view === 'mom' ? `t = ${sig(S.mom.t, 4)} ns` : `${S.en.shots} bunch${S.en.shots === 1 ? '' : 'es'} timed`; }
+
+  // ---------- readouts ----------
+  function readouts() {
+    const dd = (a, b) => `<div><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<span class="ok">hidden</span>';
+    let o = '';
+    if (S.view === 'vel') {
+      const h = S.vel, v = rocketV(), u = probeU(), pd = passed(u, h.t), rd = passed(v, h.t);
+      o = dd('Rocket speed v', h.mystery ? hide : `${f(v, 2)}c`) + dd('Launch speed u′ (on the rocket)', h.light ? 'c (light)' : `${f(h.u, 2)}c`)
+        + dd(h.light ? 'Light pulse, A to B' : 'Probe, A to B', pd ? `${f(pd.dt, 4)} s` : '—') + dd('Rocket, A to B', rd ? `${f(rd.dt, 4)} s` : v > 0 ? '—' : 'never (at rest)')
+        + dd('Beacons apart', '3.000 light seconds')
+        + dd('Galilean sum v + u′', S.blind || h.mystery ? hide : `${f(galileo(v, launchU()), 4)}c`) + dd('Relativistic ground speed', S.blind || h.mystery ? hide : `${f(u, 4)}c`);
+    } else if (S.view === 'mom') {
+      const s = mState(), P = PARTICLES[S.mom.part];
+      o = dd('Particle', `${P.name}, mc² = ${sig(P.mc2, 6)} MeV`) + dd('Field E', `${f(S.mom.E, 1)} MV/m`) + dd('Force F', `${sci(s.F, 4)} N`)
+        + dd('Time t', `${sig(S.mom.t, 5)} ns`) + dd('Distance x', `${sig(s.x, 5)} m`) + dd('Speed v', `${f(s.beta, 6)}c`)
+        + dd('Momentum p = Ft', S.blind ? hide : `${sig(s.p_MeV, 5)} MeV/c`) + dd('γ', S.blind ? hide : f(s.gamma, 5)) + dd("Newton's speed Ft/m", S.blind ? hide : `${f(s.newton, 4)}c`);
+    } else {
+      const s = eState(), h = S.en, P = PARTICLES[ePart()], shot = h.shots > 0;
+      o = dd('Particle', h.mystery ? 'mystery (charge magnitude e)' : `${P.name}, mc² = ${sig(P.mc2, 6)} MeV`) + dd('Accelerating voltage V', `${VOLTS[h.vi]} MV`)
+        + dd('Time of flight over 8.400 m', shot ? `${f(s.t_ns, 2)} ns` : '—') + dd(`Bend radius in ${f(h.B, 2)} T`, shot ? `${f(s.r_m * 100, 2)} cm` : '—')
+        + dd('Kinetic energy K = qV', `${sig(s.K, 5)} MeV`) + dd('Speed v', S.blind || h.mystery ? hide : `${f(s.beta, 6)}c`)
+        + dd('γ', S.blind || h.mystery ? hide : f(s.gamma, 5)) + dd('Momentum pc', S.blind || h.mystery ? hide : `${sig(s.pc, 5)} MeV`)
+        + dd("Newton's speed √(2K/m)", S.blind || h.mystery ? hide : `${f(s.newtonBeta, 4)}c`);
+    }
+    $('out').innerHTML = o;
+  }
+
+  // ---------- controls ----------
+  const fill = (sel, extra) => { sel.innerHTML = Object.keys(PARTICLES).map((k) => `<option value="${k}">${PARTICLES[k].name}</option>`).join('') + (extra || ''); };
+  fill($('selPm')); fill($('selPe'), '<option value="mystery">Mystery particle</option>');
+  function sync() {
+    const h = S.vel, m = S.mom, e = S.en;
+    $('sV').value = h.v; $('oV').textContent = h.mystery ? 'mystery' : `${f(h.v, 2)}c`; $('sV').disabled = h.mystery;
+    $('sU').value = h.u; $('oU').textContent = h.light ? 'light: c' : `${f(h.u, 2)}c`; $('sU').disabled = h.light; $('chkLight').checked = h.light;
+    $('newRocket').hidden = !h.mystery; $('rocketNote').textContent = h.mystery && h.lastMys != null ? `The last mystery rocket moved at ${f(h.lastMys, 3)}c.` : '';
+    $('selPm').value = m.part; $('sE').value = m.E; $('oE').textContent = `${f(m.E, 1)} MV/m`;
+    $('momNote').textContent = `Step advances the clock by ${sig(momStep(), 3)} ns; the run stops at ${sig(momEnd(), 3)} ns.`;
+    $('selPe').value = e.mystery ? 'mystery' : e.part; $('sAcc').value = e.vi; $('oAcc').textContent = `${VOLTS[e.vi]} MV`; $('sB').value = e.B; $('oB').textContent = `${f(e.B, 2)} T`;
+    $('newPart').hidden = !e.mystery; $('partNote').textContent = e.mystery && e.lastMys ? `The last mystery particle was a ${PARTICLES[e.lastMys].name.toLowerCase()}.` : '';
+    for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  const PRESETS = {
+    probe: { view: 'vel', hint: 'A rocket moving at 0.60c passes the launch mark and fires a probe forward at 0.50c, as measured by the crew. Time the probe between the two beacons and find its speed in the ground frame. It is not 1.10c.', set: () => Object.assign(S.vel, { v: 0.60, u: 0.50, light: false, mystery: false, t: 0 }) },
+    light: { view: 'vel', hint: 'The same rocket fires a pulse of light forward. Time it between the beacons, then change the rocket speed and do it again. Light crosses in the same time whatever the rocket does (§5.1).', set: () => Object.assign(S.vel, { v: 0.60, u: 0.50, light: true, mystery: false, t: 0 }) },
+    mysteryRocket: { view: 'vel', hint: 'A rocket of unknown speed fires probes at speeds you choose. From the probe times alone, find the rocket speed; then time the rocket itself to check.', set: () => { Object.assign(S.vel, { u: 0.30, light: false, mystery: true, t: 0 }); newRocket(true); } },
+    electronField: { view: 'mom', hint: 'An electron starts from rest in a steady field of 1.0 MV/m, so the force on it never changes. Its momentum p = Ft grows in step with time; its speed does not. Step the clock and record the speed and distance.', set: () => Object.assign(S.mom, { part: 'e', E: 1.0, t: 0 }) },
+    bertozzi: { view: 'en', hint: "Electrons from an accelerator fly 8.400 m between two pickups, the length Bertozzi used in 1964. Time them at voltages from 0.1 to 20 MV. Newton's ½mv² = K says the speed should keep rising as √V; it does not.", set: () => Object.assign(S.en, { part: 'e', mystery: false, vi: 6, B: 0.05, shots: 0, t: 0 }) },
+    mysteryParticle: { view: 'en', hint: 'An unknown particle with a charge of magnitude e. Time its flight and measure its bend radius at several voltages, then find its rest energy mc² and say what it is.', set: () => { Object.assign(S.en, { mystery: true, vi: 14, B: 0.5, shots: 0, t: 0 }); newPart(true); } } };
+  function newRocket(quiet) { const h = S.vel; let v; do { v = Math.round((0.30 + 0.60 * Math.random()) * 1000) / 1000; } while (Math.abs(v - h.mv) < 0.05); if (!quiet && h.mystery) h.lastMys = h.mv; h.mv = v; h.t = 0; }
+  function newPart(quiet) { const e = S.en; let k; do { k = MYSTERY_POOL[Math.floor(Math.random() * MYSTERY_POOL.length)]; } while (k === e.mys); if (!quiet) e.lastMys = e.mys; e.mys = k; e.shots = 0; }
+  const GO = { vel: 'Launch', mom: 'Start', en: 'Fire a bunch' };
+  function setView(v) {
+    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('cardVel').hidden = v !== 'vel'; $('cardMom').hidden = v !== 'mom'; $('cardEn').hidden = v !== 'en'; $('speedSeg').hidden = v === 'en'; $('step').hidden = v !== 'mom';
+    $('restart').hidden = v === 'en';
+    $('units').textContent = v === 'vel' ? 'speeds in units of c · times in s' : v === 'mom' ? 'speeds in units of c · times in ns' : 'voltages in MV · energies in MeV · times in ns';
+    can.setAttribute('aria-label', v === 'vel' ? 'A rocket in space passes a launch mark and fires a probe forward; two beacons 3 light seconds apart time the probe and the rocket. Space launches or pauses.'
+      : v === 'mom' ? 'A particle in a long vacuum tube is pushed by a uniform electric field; a bar shows its speed against c. Space starts or pauses.'
+      : 'An accelerator sends particles down an 8.400 m flight tube past two pickups into a magnet; an oscilloscope shows the two pickup pulses. Space fires a bunch.');
+    $('curve').setAttribute('aria-label', v === 'vel' ? 'Graph of the ground speed against the launch speed, with the Galilean sum for comparison.' : v === 'mom' ? "Graph of speed against time, with Newton's straight line for comparison." : "Graph of v²/c² against K/mc², with Newton's straight line for comparison.");
+    window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
+    setRun(false); sync(); redraw();
+  }
+  function setRun(on) {
+    S.run = on; const g = $('go');
+    if (S.view === 'vel') g.textContent = on ? 'Pause' : S.vel.t > 0 && !S.vel.done ? 'Resume' : 'Launch';
+    else if (S.view === 'mom') g.textContent = on ? 'Pause' : S.mom.t > 0 && S.mom.t < momEnd() ? 'Resume' : 'Start';
+    else g.textContent = GO.en;
+    g.classList.toggle('attn', !on);
+  }
+  function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); S.vel.done = false; setView(c.view); }
+  const velChanged = () => { S.preset = 'custom'; S.vel.t = 0; S.vel.done = false; setRun(false); sync(); redraw(); };
+  const momChanged = () => { S.preset = 'custom'; S.mom.t = 0; setRun(false); sync(); redraw(); };
+  const enChanged = () => { S.preset = 'custom'; S.en.shots = 0; sync(); redraw(); };
+  function fire() { S.en.shots++; S.en.t = 0; S.run = true; setTimeout(() => { if (S.view === 'en') { S.run = false; redraw(); } }, reduce ? 0 : 900); redraw(); }
+  /* the velocity run, to its end (for Record when a student is in a hurry, and for the key captures) */
+  function finishVel() { S.vel.t = velEnd(); S.vel.done = true; setRun(false); redraw(); }
+  function stepMom() { S.mom.t = Math.min(momEnd(), Math.round((S.mom.t + momStep()) / momStep()) * momStep()); setRun(false); redraw(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) { S.preset = 'custom'; setView(b.dataset.v); sync(); } });
+  $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
+  $('go').addEventListener('click', () => {
+    if (S.view === 'en') { fire(); return; }
+    if (S.view === 'vel') { if (rocketV() === 0 && launchU() === 0) { S.vel.t = 0; redraw(); return; } if (S.vel.done) { S.vel.t = 0; S.vel.done = false; } }
+    if (S.view === 'mom' && S.mom.t >= momEnd()) S.mom.t = 0;
+    setRun(!S.run);
+  });
+  $('restart').addEventListener('click', () => { if (S.view === 'vel') { S.vel.t = 0; S.vel.done = false; } else S.mom.t = 0; setRun(false); redraw(); });
+  $('step').addEventListener('click', stepMom);
+  $('sV').addEventListener('input', (e) => { S.vel.v = +e.target.value; velChanged(); });
+  $('sU').addEventListener('input', (e) => { S.vel.u = +e.target.value; velChanged(); });
+  $('chkLight').addEventListener('change', (e) => { S.vel.light = e.target.checked; velChanged(); });
+  $('newRocket').addEventListener('click', () => { newRocket(false); velChanged(); });
+  $('selPm').addEventListener('change', (e) => { S.mom.part = e.target.value; momChanged(); });
+  $('sE').addEventListener('input', (e) => { S.mom.E = +e.target.value; momChanged(); });
+  $('selPe').addEventListener('change', (e) => { const v = e.target.value; if (v === 'mystery') { S.en.mystery = true; newPart(true); } else { S.en.mystery = false; S.en.part = v; } enChanged(); });
+  $('sAcc').addEventListener('input', (e) => { S.en.vi = +e.target.value; enChanged(); });
+  $('sB').addEventListener('input', (e) => { S.en.B = +e.target.value; enChanged(); });
+  $('newPart').addEventListener('click', () => { newPart(false); enChanged(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
+
+  // ---------- the clock ----------
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.run && S.view === 'vel') { S.vel.t += dt * S.speed; if (S.vel.t >= velEnd()) { S.vel.t = velEnd(); S.vel.done = true; setRun(false); } redraw(); }
+    else if (S.run && S.view === 'mom') { S.mom.t += dt * S.speed * momRate() * 0.5; if (S.mom.t >= momEnd()) { S.mom.t = momEnd(); setRun(false); } redraw(); }
+    else if (S.run && S.view === 'en') { S.en.t += dt * 1.6; redraw(); }
+    requestAnimationFrame(frame);
+  }
+
+  // ---------- readings (tools/readings_panel.py) ----------
+  window.vdVersion = 'relativistic-motion@2026-10-24';
+  const WS = { vel: 'velocity-addition', mom: 'relativistic-momentum', en: 'relativistic-energy' };
+  const SHOW = { vel: [['u_prime_c', 'u′ (c)'], ['probe_dt_s', 'Δt (s)']], mom: [['t_ns', 't (ns)'], ['x_m', 'x (m)'], ['v_c', 'v (c)']], en: [['V_MV', 'V (MV)'], ['t_ns', 't (ns)'], ['r_cm', 'r (cm)']] };
+  window.vdShowCols = SHOW.vel;
+  window.vdWorksheet = () => WS[S.view];
+  window.vdReadingRow = () => {
+    const other = (window.vdRows ? window.vdRows() : []).find((r) => r.view !== S.view);
+    if (other) return `These readings are from another view: export them to its worksheet or clear them first.`;
+    window.vdShowCols = SHOW[S.view];
+    if (S.view === 'vel') {
+      const h = S.vel, pd = passed(probeU(), h.t), rd = passed(rocketV(), h.t);
+      if (!pd) return h.t > 0 ? 'Let the probe pass beacon B first.' : 'Launch first, and let the probe pass beacon B.';
+      return { view: 'vel', rocket: h.mystery ? 'mystery' : f(h.v, 2), pulse: h.light ? 'light' : 'probe', u_prime_c: h.light ? '1.00' : f(h.u, 2), gap_ls: '3.000', probe_dt_s: f(pd.dt, 4), rocket_dt_s: rd ? f(rd.dt, 4) : '' };
+    }
+    if (S.view === 'mom') {
+      if (S.mom.t <= 0) return 'Start the clock or step it first.';
+      const s = mState(); return { view: 'mom', particle: PARTICLES[S.mom.part].name, E_MV_m: f(S.mom.E, 1), F_N: sig(s.F, 6), t_ns: sig(S.mom.t, 5), x_m: sig(s.x, 5), v_c: f(s.beta, 6) };
+    }
+    if (!S.en.shots) return 'Fire a bunch first, so the pickups can time it.';
+    const s = eState(); return { view: 'en', particle: S.en.mystery ? 'mystery' : PARTICLES[ePart()].name, V_MV: VOLTS[S.en.vi], B_T: f(S.en.B, 2), t_ns: f(s.t_ns, 2), r_cm: f(s.r_m * 100, 2) };
+  };
+
+  // ---------- about ----------
+  $('aboutVel').textContent = 'Adding velocities: everything moves along one straight line in empty space. Two beacons, A and B, are at rest 3.000 light seconds apart (8.994 × 10⁸ m) in the ground frame. The rocket passes a launch mark 0.600 light seconds before A at t = 0 and fires the probe there, at a speed u′ measured by the crew in the rocket\'s own frame. The probe\'s ground speed is the exact relativistic sum u = (v + u′)/(1 + vu′/c²) from §5.6; a light pulse (u′ = c) always comes out at c. Each beacon is a ground clock: a timer shows the ground time between a body passing A and passing B, to 0.0001 s. The run plays in real time at 1× (a light second takes one second). The rocket is drawn at a fixed size; its length contraction is not shown. The mystery rocket\'s speed is a random value from 0.300c to 0.900c.';
+  $('aboutMom').textContent = 'Steady force: a particle starts from rest in a uniform electric field E inside a long straight vacuum tube, so the force F = qE on it is the same at every speed (the field is static; the energy the accelerated charge radiates is left out: at every time the Step button reaches it is less than 1 part in 10¹⁰ of the work done). Newton\'s second law in its momentum form, F = dp/dt, holds in relativity with p = γmv (§5.8), so p = Ft exactly. The speed follows v/c = kt/√(1 + (kt)²) with k = F/(mc), and the distance is x = (mc²/F)(√(1 + (kt)²) − 1). Readouts are the model\'s values at the clock time; the clock plays slowed down so the run lasts about 12 s at 1×. Rest energies are CODATA 2018 values.';
+  $('aboutEn').textContent = 'Electron flight: modelled on W. Bertozzi, "Speed and kinetic energy of relativistic electrons", Am. J. Phys. 32, 551 (1964), who timed electrons from 0.5 to 15 MeV over 8.4 m. A particle of charge qe accelerated from rest through V megavolts gains K = qV MeV (§5.9). Its speed follows from K = (γ − 1)mc², and the time of flight between the two pickups, 8.400 m apart, is shown to 0.01 ns. A magnet of uniform field B then bends it in a circle of radius r = p/(qeB), with pc = √(K² + 2Kmc²); the ruler reads r to 0.01 cm. The pictures of the bend and the bunch are not to scale. The particle is not slowed by anything in the tube. Muons are timed as if none decayed in flight: their mean life is 2.197 μs, so about 3% would decay over the 8.400 m at 10 MV, under 1% from 100 MV up, but 9% at 1 MV and more than half at 0.01 MV. The mystery particle is one of the electron, muon, proton or deuteron.';
+
+  // ---------- size, theme, start ----------
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'probe');
+  new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__rm = { S, setView, applyPreset, setRun, redraw, sync, finishVel, stepMom, fire, newRocket, newPart, momEnd, momStep };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

@@ -1252,3 +1252,14 @@ Steve approved the four builds that cover the rest of OpenStax Vol. 2 ch. 1 to 4
 - Map, catalog, course pages, handout buttons, notes (`notes/src/temperature.md`, `gas-heat-capacity.md`, `entropy.md`) and thumbnails updated. Keys for all twelve worksheets and answers for the three notes are in TeacherKeys (`worksheet-keys/thermo/`, `answers/`), each from a real capture run.
 - Checks: every demo Node test passes; vdcheck `--only after` 0 problems on all six demos touched; math check 2765 expressions, 0 problems; map contract test passes (105 catalog entries, 270 sections); `courses.py --check` clean. `test_gauss_law_browser.cjs` and `test_main_lab_controls.cjs` fail here, and fail the same way on the previous commit, so they are not from this work.
 - **GPT, please verify** the twelve thermo handouts above (physics, wording, procedure stating the task), the CORE of the three new demos against their tests, and the ideal gas About claim that hard disk size raises P by about 1 + (πd²/2)(N/A).
+
+## Claude, 2026-10-24: Relativity gaps filled (Vol. 3 §§5.6, 5.8, 5.9): Velocity, Momentum and Energy Near c
+
+New demo `demos/relativistic-motion.html` with three views, each with an interactive worksheet (MODERN block of `worksheet.js`) and a key from a real run in TeacherKeys `worksheet-keys/modern/`:
+
+- **Adding velocities** (§5.6, worksheet `velocity-addition`): a rocket passes a launch mark and fires a probe (or a light pulse) at a speed measured by its crew; two beacons 3.000 light seconds apart time the probe and the rocket. Exact rule u = (v + u′)/(1 + vu′/c²); students graph u − u′ against 1 − uu′/c² (slope v) and find a mystery rocket's speed.
+- **Steady force** (§5.8, worksheet `relativistic-momentum`): a particle from rest in a uniform field, p = γmv = Ft exactly; γv against t gives m, γ against x gives mc².
+- **Electron flight** (§5.9, worksheet `relativistic-energy`): after Bertozzi (Am. J. Phys. 32, 551, 1964), time of flight over 8.400 m at 0.01 to 10 000 MV and a bending magnet for p; γ against V gives mc², E² = (pc)² + (mc²)², mystery particle (electron, muon, proton or deuteron).
+- Rest energies CODATA 2018. Map: §5.6 missing → usable, §§5.8 and 5.9 needs-feature → usable (Compton and binding energy kept on them). Catalog, course page, notes (`notes/src/relativistic-motion.md`, answers in TeacherKeys), thumbnails, QR, Reset, handout button. `TEXTBOOK_GAPS.md`: the three rows removed (its summary counts are left for the next full regeneration, since other threads are filling gaps today).
+- Checks: `test_relativistic-motion.cjs` (5 groups, including the About claims on muon decay in flight and radiated energy) and every other non browser Node test pass; vdcheck `--only after` 0 problems; math check 129 expressions, 0 problems; map contract test passes.
+- **GPT, please verify** the three handouts (physics, wording, procedure states the task) and the demo's CORE against its tests.
