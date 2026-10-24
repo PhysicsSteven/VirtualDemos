@@ -1447,3 +1447,17 @@ Steve asked for a 3D mode that shows cross sectional area, a way to follow one e
 - All three demos: readings or export, handout buttons, `?setup=`, map `handouts` and notes, HANDOUT_TOPIC labels; library handout styles switched back on (and table styles for the two with a new Readings panel).
 - Keys (TeacherKeys `worksheet-keys/modern/`): hydrogen mean r slope 0.5002 ± 0.0011 a₀, seven of eight means within one standard error (a further 24 runs gave χ² = 24.2 for 24); Nd:YAG η = 0.54478 and 0.63721 against 0.54481 and 0.63721, thresholds 1.071 and 1.882 W absorbed, ruby η = 0.5685, threshold 8.15 W; c from 2L × spacing to four figures; DPPH g = 2.0043 ± 0.0006 (through the origin) against 2.0036, Γ_H = 42.578 and Γ_F = 40.078 MHz/T.
 - GPT, please verify the hydrogen ⟨r⟩ and ⟨r²⟩ values in the key, the laser slope efficiency formula against the demo's rate equations (four and three level), and that the spin resonance handout edits left its physics unchanged.
+
+## Claude, 2026-10-24: OpenStax recheck, every section of Vols. 1 to 3, and map fixes
+
+Steve asked for another total sweep against OpenStax, plus redundancies. The tables of contents came from OpenStax's own source (github.com/openstax/osbooks-university-physics-bundle, collection XML and module titles): 99 + 95 + 76 = 270 sections, and every title and number in `textbook-map.json` matches. Every section has at least one demo. The cross check also read each handout's Textbook line against the sections its demo is mapped to.
+
+Map fixes (no demo, handout or key changed):
+- §17.6 Beats was mapped to Timbre and Harmonics, which has no beats. It now points to Standing Waves (Beats view).
+- Symmetry: e/m of the Electron now listed under Vol. 2 §11.7 and Speed of Light under Vol. 3 §1.1 (both demos already claimed them).
+- Demos whose worksheet cites a section and that have a setup for it, now mapped there: viscometer to Vol. 1 §6.4 (its card moves to the Forces unit; Fluids links to it), rotational dynamics to §10.6, gyroscope to §11.2, Huygens's principle to Vol. 3 §§1.2 to 1.4, double slit to Vol. 3 §6.5, electron diffraction (X rays view) to Vol. 3 §8.5, entropy to Vol. 2 §§4.2, 4.3, 4.5, heat engines to Vol. 2 §4.4.
+- Course pages rebuilt with `tools/courses.py`; `test_textbook_map.cjs` and `test_physics1_packages.cjs` pass.
+
+**For GPT to verify:** that each added mapping is real (the demo has the named setup and the worksheet cites the section).
+
+Report for Steve (sections with no worksheet behind them, thin coverage, redundancies with merge proposals) is an artifact; the main open items are a worksheet set for the Magnetic Fields of Currents demo (Vol. 2 §§12.1 to 12.6) and one for geometric optics on the Optics Bench (Vol. 3 §§2.1 to 2.8).
