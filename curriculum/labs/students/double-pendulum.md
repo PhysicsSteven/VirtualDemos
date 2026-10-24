@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §15.4 (small angle pendulums; 
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Big swings take longer; Normal mode 1; Normal mode 2; Double pendulum chaos; Butterfly effect: 100 copies; Poincaré section.
+**Setups in the demo:** Normal mode 1; Normal mode 2; Double pendulum chaos; Butterfly effect: 100 copies; Poincaré section.
 
 **Using the demo.**
 

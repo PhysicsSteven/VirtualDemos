@@ -172,7 +172,6 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
-          <button type="button" data-p="big" aria-pressed="false">Big swings take longer</button>
           <button type="button" data-p="mode1" aria-pressed="false">Normal mode 1</button>
           <button type="button" data-p="mode2" aria-pressed="false">Normal mode 2</button>
           <button type="button" data-p="chaos" aria-pressed="true">Double pendulum chaos</button>
@@ -510,7 +509,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- setups ----------
   const PRESETS = {
-    big: { mode: 'simple', L: 1, A: 150, hint: 'Released from 150°, the pendulum lags further behind the dashed small angle model on every swing. Its period is T = 4√(L/g) K(sin(θ₀/2)), not 2π√(L/g); the top plot shows how T grows with the release angle and becomes infinite at 180°. Drag the bob or the marker on the curve.' },
     mode1: { mode: 'double', m1: 1, m2: 1, L1: 1, L2: 1, amp: 6, start: 'm1', N: 1, view: 'config',
       hint: 'Both rods swing together at one frequency, the lower one √2 times as far: normal mode 1, ω₁² = (2 − √2)g/L for equal masses and lengths. The θ₂ against θ₁ plot is a straight line. Try 50 copies: at small angles they stay together.' },
     mode2: { mode: 'double', m1: 1, m2: 1, L1: 1, L2: 1, amp: 6, start: 'm2', N: 1, view: 'config',

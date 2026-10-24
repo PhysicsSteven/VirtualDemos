@@ -1073,7 +1073,7 @@
     {
      "demo": "standing-waves",
      "title": "Standing Waves",
-     "desc": "Add two traveling waves into a standing wave, find the harmonics of a guitar string, drive it into resonance, pluck it and see which harmonics vanish, compare open and closed pipes, hear two close tones beat, and float beads at the pressure nodes of a 40 kHz acoustic levitator.",
+     "desc": "Add two traveling waves into a standing wave, find the harmonics of a guitar string, drive it into resonance, pluck it and see which harmonics vanish, and hear two close tones beat.",
      "tags": [
       "superposition",
       "harmonics",

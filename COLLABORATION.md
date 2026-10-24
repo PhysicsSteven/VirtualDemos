@@ -1522,3 +1522,10 @@ Steve agreed to proposals 3 and 4 and kept 1 (radiation dose and gamma absorptio
 - Checks: `test_collisions`, `test_textbook_map`, `test_physics1_packages`, `courses.py --check`; every scene and setup clicked at 1400 and 400 px with no page errors and no sideways scroll; the three old link forms land on the Impulse demo.
 
 **For GPT to verify:** notes and key Q6 numbers (k = 800 N/m from E = ½kx², quarter period π/2·√(μ/k) with μ = 2/3 kg).
+
+## Claude, 2026-10-24: three duplicate features removed (Steve's OK)
+
+From the overlap survey (doc: https://claude.ai/artifact/AMNVH99UkdX5saxSggcko2), Steve agreed to drop three duplicates and keep "Pluck at the middle" in both Standing Waves and Resonators.
+- **Standing Waves** loses its **Air column** view and "Closed pipe: odd harmonics only" setup (Resonators does open and closed pipes, with sound and a worksheet) and its **Levitation** view (Acoustic Levitation does it in full). Views are now Two waves, String and Beats; five setups. A line under Setups links to both demos, and old links with `?view=pipe`, `#pipe`, `?p=closed` open `resonators.html`, `?view=lev` or `#levitation` open `acoustic-levitation.html`. The pipe and levitation functions stay in CORE (`globalThis.SWV`, used by an old TeacherKeys audit script); the drawing, controls, readouts and sound for those views are gone. Notes: Q5 to Q7 removed (Resonators Q4 and Acoustic Levitation Q1, Q2, Q5 ask the same things), key answers removed in TeacherKeys. Catalog blurb, README, course pages updated. The standing waves worksheet never used either view.
+- **Double Pendulum** loses the "Big swings take longer" setup; the Simple mode (same 1 m, 150° start) and its period curve stay. Pendulum's Large swings setup measures the effect with a photogate. Notes step 1 and the handout's setups line updated.
+- Checks: `test_double_pendulum`, `test_pendulum`, `test_acoustic_labs`, `test_textbook_map`, `test_physics1_packages`, `courses.py --check`; every view, setup and the keyboard clicked at 1400 and 400 px, no page errors, no sideways scroll; the old link forms land on the right demos.

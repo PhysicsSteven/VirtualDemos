@@ -16,7 +16,7 @@ For an intro class, steps 1, 2, 4 and 5 are enough; the mode numbers and the Poi
 
 ## Running it in class
 
-1. **Big swings take longer.** Ask Q1 first. A 1.00 m pendulum from 150° falls behind the dashed small angle model every swing: T = 3.536 s against T₀ = 2.006 s, a ratio of 1.762. Drag the marker on the top plot toward 180°.
+1. **Simple** (the Pendulum buttons). Ask Q1 first. A 1.00 m pendulum from 150° falls behind the dashed small angle model every swing: T = 3.536 s against T₀ = 2.006 s, a ratio of 1.762. Drag the marker on the top plot toward 180°. The Pendulum demo's **Large swings** setup measures the same effect with a photogate.
 2. **Normal mode 1.** Both rods swing together at one frequency; the angle path is a straight line along a gold mode line. The rail shows ω₁ = 2.397 rad/s (period 2.622 s) and shape θ₂/θ₁ = 1.414. The **Mode amplitude, larger angle** slider (6°) sets the larger starting angle, here the lower rod's, so θ₁ starts at 4.2° and θ₂ at 6.0°.
 3. **Normal mode 2.** The rods swing opposite ways, period 1.086 s. Ask Q3. Then raise **Mode amplitude, larger angle** to its 60° maximum and press **Mode 2**: the angle path spreads into a band around the gold line, because the large angle motion is no longer linear.
 4. **Double pendulum chaos.** Both rods start at 130°, with E = 48.3 J against 58.8 J needed to stand both rods straight up. The lower bob flips over the top at irregular times. Point to the **λ estimate** in **Copies and separation**; after half a minute it settles near 1.5 s⁻¹.
