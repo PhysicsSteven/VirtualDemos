@@ -1575,7 +1575,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   resize();
   applyPreset('ambulance');
   setView3(new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower());
-  setPlaying(!reduce);
+  setPlaying(false);   /* opens still until Play or a setup (Steve: no demo starts on its own) */
   if (reduce) { window.__dop.run(6.5); }   // a meaningful still picture: the source just past the observer, the pitch falling
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);

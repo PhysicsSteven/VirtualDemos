@@ -924,8 +924,8 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   /* the 3D room opens first, except with ?view=plan or on a device that asks to save data or has two cores or fewer */
   if (new URLSearchParams(location.search).get('view') !== 'plan' && window.VD3 && !VD3.lowPower()) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
-  /* one clap in slow motion on open, so the sound is already moving through the room (the Set up card stays); ?clap=0 opens it quiet */
-  if (new URLSearchParams(location.search).get('clap') !== '0' && !reduce) clap(true);
+  /* the room opens quiet until Clap (Steve: no demo starts on its own); ?clap=1 claps once in slow motion on open */
+  if (new URLSearchParams(location.search).get('clap') === '1' && !reduce) clap(true);
   requestAnimationFrame(frame);
 })();
 </script>

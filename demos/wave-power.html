@@ -606,7 +606,7 @@ table.rows input:focus { border-color: var(--accent); }
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'amp'); renderRows(); resize();
   /* the vibrator runs on open so the wave is already travelling (the Set up card stays until the first Start); ?run=0 opens it stopped */
   const run0 = new URLSearchParams(location.search).get('run');
-  if (run0 === '1') setRun(true, false); else if (run0 !== '0' && !reduce) setRun(true, true);
+  if (run0 === '1') setRun(true, false);   /* otherwise it opens still until Start the vibrator (Steve: no demo starts on its own) */
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();

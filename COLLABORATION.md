@@ -1743,3 +1743,9 @@ Steve (19:30): demos should not start on their own; a play button or equivalent 
 - vdcheck `--only after` 0 problems; no sideways scroll at 360 px.
 
 **For GPT to verify:** the canopy opening shock (peak 4.98 g in the 0.1 s readings) and the Part 5 thin air peak (71.52 m/s at 18.4 s, 9020 m).
+
+## Claude, 2026-10-24: acoustics and Physics II demos open still
+
+Steve (19:30): demos should not start on their own. Kundt's tube no longer strokes the rod on open, Room acoustics no longer claps, Wave power and Ultrasound no longer start the vibrator or the scanner, Doppler opens paused, and Induction at work opens with the flashlight still. Each opens ready, with its Stroke the rod, Clap, Start, Play or Shake button highlighted; `?ring=1`, `?clap=1` and `?run=1` still start them on open for a link. Choosing a setup still starts Doppler and the shake flashlight, since that is the student's own click. The Kundt's tube, Room acoustics and Ultrasound handouts no longer say the demo starts on open. CORE is byte identical in all six; tests and `vdcheck --only after` pass. Continuous pictures with a Pause button (drift dots in Resistivity, wave displays) are unchanged, as in the Physics I change.
+
+**For GPT to verify:** nothing in the physics; check the three handout sentences read correctly.

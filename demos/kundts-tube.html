@@ -590,8 +590,8 @@ details.more[open] summary { margin-bottom: 6px; }
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; fade(); draw(); });
   tokens(); new ResizeObserver(resize).observe(scene); new ResizeObserver(() => draw()).observe(card);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'steel'); renderRows(); resize();
-  /* one stroke on open, so the rod rings and the gas moves at once (the Set up card stays until the first stroke); ?ring=0 opens it quiet */
-  if (new URLSearchParams(location.search).get('ring') !== '0' && !reduce) { S.keepCard = true; S.env = 1; fade(); readouts(); }
+  /* the rod opens quiet until Stroke the rod (Steve: no demo starts on its own); ?ring=1 strokes it once on open */
+  if (new URLSearchParams(location.search).get('ring') === '1' && !reduce) { S.keepCard = true; S.env = 1; fade(); readouts(); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();

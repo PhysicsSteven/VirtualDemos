@@ -652,7 +652,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     (function show() { for (const o of all) { if (o.inp.value !== o.shown) { o.shown = o.inp.value; o.k.style.setProperty('--a', `${(Math.round((+o.inp.value - +o.inp.min) / (+o.inp.step || 1)) * DEG) % 360}deg`); o.k.setAttribute('aria-valuenow', o.inp.value); } if (o.out) o.k.setAttribute('aria-valuetext', o.out.textContent); } requestAnimationFrame(show); })();
   })();
   tokens(); new ResizeObserver(resize).observe(stage);
-  const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'flash'); resize();
+  const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'flash'); S.fl.shaking = false; upd(); resize();   /* opens still until Shake (Steve: no demo starts on its own) */
   { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;

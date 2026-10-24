@@ -622,7 +622,7 @@ table.rows input:focus { border-color: var(--accent); }
   tokens(); new ResizeObserver(resize).observe(scene); new ResizeObserver(() => draw()).observe(shelf);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'layers'); renderRows(); resize();
   /* the scanner runs from the start, so the pulse is already going down; the Set up card stays until the scanner is next started */
-  if (new URLSearchParams(location.search).get('run') === '1') setRun(true); else if (!reduce) setRun(true, true);
+  if (new URLSearchParams(location.search).get('run') === '1') setRun(true);   /* otherwise it opens still until Start the scanner (Steve: no demo starts on its own) */
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
