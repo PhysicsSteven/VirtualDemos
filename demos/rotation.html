@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 .rail details.more > p + p { margin-top: 6px; }
@@ -175,6 +176,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
             <button type="button" data-ts="0.25" aria-pressed="false">¼×</button>
             <button type="button" data-ts="1" aria-pressed="true">1×</button>
           </div>
+          <div class="seg" role="group" aria-label="View" id="viewSeg" hidden><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div>
           <span class="tclock mono" id="tclock">t = 0.00 s</span>
         </div>
       </div>
@@ -1674,13 +1676,125 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   };
 
   // ---------- drawing ----------
+  // ---------- 3D view of the rolling race (three.js through demos/lib/vd3.js); the flat view stays (Flat button, or ?view=flat) ----------
+  /* Metres, z up. Each lane is a board D long at angle β, the boards side by side; each object has its real radius R and turns by
+     s/R as it rolls (the block slides without turning), at the distance s the model gives. The camera looks across the boards so the
+     whole race shows. The other scenes stay flat. Click an object or its name to select its lane; drag elsewhere to turn the view,
+     wheel or pinch to zoom, double click to reset. */
+  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.22, ph: 1.08, zoom: 1 } };
+  let g3 = null;
+  const use3 = () => !!(G3.on && g3) && S.scene === 'roll';
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  function init3D() {
+    G3.tried = true;
+    const rd = VD3.renderer(); if (!rd) return false;
+    rd.shadowMap.enabled = true; rd.shadowMap.type = THREE.PCFSoftShadowMap;
+    const el = rd.domElement; el.setAttribute('aria-hidden', 'true'); Object.assign(el.style, { position: 'absolute', left: '0', top: '0' }); view.parentElement.insertBefore(el, view);
+    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(32, 1, 0.02, 100), M = (o) => new THREE.MeshStandardMaterial(o);
+    const hemi = new THREE.HemisphereLight(0xffffff, 0x8a8170, 0.6), sun = new THREE.DirectionalLight(0xffffff, 0.85); sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+    Object.assign(sun.shadow.camera, { left: -3, right: 3, top: 3, bottom: -3, near: 0.5, far: 20 }); sun.shadow.bias = -0.0004; scene.add(hemi, sun, sun.target);
+    const floorM = M({ roughness: 0.9 }), floor = new THREE.Mesh(new THREE.PlaneGeometry(40, 40), floorM); floor.receiveShadow = true; floor.position.z = -0.012;
+    const wallM = M({ roughness: 1 }), wall = new THREE.Mesh(new THREE.PlaneGeometry(40, 8), wallM); wall.rotation.x = Math.PI / 2; wall.position.set(0, 2.2, 4); wall.receiveShadow = true;
+    const boardM = M({ roughness: 0.75 }), railM = M({ roughness: 0.5, metalness: 0.4 }), legM = M({ roughness: 0.6 }), lineM = M({ roughness: 0.6 });
+    const ramp = new THREE.Group(), objs = new THREE.Group();
+    /* a stripe texture so rolling shows on a ball */
+    const stc = document.createElement('canvas'); stc.width = 256; stc.height = 128; const sx = stc.getContext('2d'); sx.fillStyle = '#ffffff'; sx.fillRect(0, 0, 256, 128); sx.fillStyle = '#d0d4da'; for (let i = 0; i < 4; i++) sx.fillRect(i * 64, 0, 32, 128);
+    const stripeT = new THREE.CanvasTexture(stc);
+    scene.add(floor, wall, ramp, objs);
+    g3 = { rd, el, scene, cam, hemi, sun, floorM, wallM, boardM, railM, legM, lineM, ramp, objs, stripeT, sig: '' };
+    view.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(view, G3.o, () => { if (use3()) dirty = true; }, { grab: (e) => !use3() || !!handleAt(e), phMin: 0.3, phMax: 1.55, zMin: 0.5, zMax: 3, keys: false });
+    return true;
+  }
+  function theme3() {
+    const g = g3, dk = VD3.dark();
+    g.scene.background = col3(T.canvas, '#ffffff'); g.floorM.color = col3(dk ? '#2a2620' : '#e2ddd3', '#e2ddd3'); g.wallM.color = col3(dk ? '#1c222b' : '#eef1f5', '#eef1f5');
+    g.boardM.color = col3(dk ? '#6e5a42' : '#c9a97c', '#c9a97c'); g.railM.color = col3(dk ? '#8b95a3' : '#9aa6b6', '#9aa6b6'); g.legM.color = col3(dk ? '#4a3c2c' : '#8a6d4a', '#8a6d4a'); g.lineM.color = col3(T.ink, '#17202b');
+    g.hemi.intensity = dk ? 0.5 : 0.62; g.sun.intensity = dk ? 0.75 : 0.85; g.sig = '';
+  }
+  const laneW = () => Math.max(0.14, 2.4 * Math.max(...RO.lanes.map((o) => o.R)) + 0.06);
+  /* rebuilds the boards and objects when the lanes, β or D change */
+  function build3() {
+    const g = g3, b = RO.beta * DEG, D = RO.D, n = RO.lanes.length, wl = laneW();
+    const sig = [b, D, wl, RO.lanes.map((o) => o.shape + o.R + shapeColor(o.shape)).join()].join('|'); if (g.sig === sig) return; g.sig = sig;
+    for (const grp of [g.ramp, g.objs]) while (grp.children.length) { const c = grp.children.pop(); c.traverse((m) => { if (m.geometry) m.geometry.dispose(); }); }
+    const mesh = (geo, m, cast = true, recv = true) => { const x = new THREE.Mesh(geo, m); x.castShadow = cast; x.receiveShadow = recv; return x; };
+    const W = n * wl, TH = 0.02, rig = new THREE.Group(); rig.position.set(0, 0, D * Math.sin(b)); rig.rotation.y = b; g.ramp.add(rig);
+    const brd = mesh(new THREE.BoxGeometry(D + 0.25, W + 0.04, TH), g.boardM); brd.position.set(D / 2, (n - 1) * wl / 2, -TH / 2); rig.add(brd);
+    for (let k = 0; k <= n; k++) { const r = mesh(new THREE.BoxGeometry(D + 0.25, 0.008, 0.025), g.railM); r.position.set(D / 2, (k - 0.5) * wl, 0.0125); rig.add(r); }
+    for (const x of [0, D]) { const ln = mesh(new THREE.BoxGeometry(0.012, W, 0.001), g.lineM, false, false); ln.position.set(x, (n - 1) * wl / 2, 0.001); rig.add(ln); }
+    /* trestle under the top end, a stop at the foot */
+    const hTop = D * Math.sin(b), xTop = 0;
+    for (const y of [-0.5 * wl + 0.03, (n - 0.5) * wl - 0.03]) { const leg = mesh(new THREE.BoxGeometry(0.05, 0.05, Math.max(0.02, hTop)), g.legM); leg.position.set(xTop + 0.06, y, Math.max(0.01, hTop) / 2 - 0.01); g.ramp.add(leg); }
+    RO.lanes.forEach((o, k) => {
+      const col = col3(shapeColor(o.shape), '#2b60b5'), R = o.R, m = M2({ color: col, roughness: 0.4, metalness: 0.15 }), grp = new THREE.Group(), spin = new THREE.Group(); grp.add(spin);
+      if (o.shape === 'block') spin.add(mesh(new THREE.BoxGeometry(2 * R, 2 * R, 2 * R), m));
+      else if (o.shape === 'sphere') { m.map = g.stripeT; spin.add(mesh(new THREE.SphereGeometry(R, 32, 20), m)); }
+      else if (o.shape === 'disk') { const cap = M2({ color: col.clone().multiplyScalar(0.8), roughness: 0.5 }); spin.add(mesh(new THREE.CylinderGeometry(R, R, Math.min(0.06, 1.2 * R), 40), [m, cap, cap]));
+        const mark = mesh(new THREE.BoxGeometry(R * 0.9, Math.min(0.062, 1.22 * R), R * 0.12), M2({ color: 0xffffff, roughness: 0.6 })); mark.position.x = R * 0.45; spin.add(mark); }
+      else if (o.shape === 'hsphere') { m.transparent = true; m.opacity = 0.45; m.side = THREE.DoubleSide; m.depthWrite = false; spin.add(mesh(new THREE.SphereGeometry(R, 32, 20), m, true, false));
+        const ring = mesh(new THREE.TorusGeometry(R * 0.995, R * 0.05, 8, 48), M2({ color: col, roughness: 0.4 })); spin.add(ring); const ring2 = ring.clone(); ring2.rotation.y = Math.PI / 2; spin.add(ring2); }
+      else { const tor = mesh(new THREE.TorusGeometry(R - R * 0.07, R * 0.07, 10, 56).rotateX(Math.PI / 2), m); spin.add(tor);
+        const sp = mesh(new THREE.CylinderGeometry(R * 0.03, R * 0.03, R * 0.9, 6).rotateZ(Math.PI / 2).translate(R * 0.45, 0, 0), M2({ color: col, roughness: 0.5 })); spin.add(sp); }
+      grp.userData = { k, R }; g.objs.add(grp);
+    });
+  }
+  const M2 = (o) => new THREE.MeshStandardMaterial(o);
+  /* draws the race in 3D over the whole view pane, then the labels and lane handles on the 2D canvas */
+  function drawRoll3D() {
+    const g = g3, dk = VD3.dark(), [W, H] = dims.v, W0 = Math.max(1, Math.round(W)), H0 = Math.max(1, Math.round(H)), ctx = ctxV, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    g.el.hidden = false; Object.assign(g.el.style, { width: W0 + 'px', height: H0 + 'px' });
+    if (G3.w !== W0 || G3.h !== H0) { G3.w = W0; G3.h = H0; g.rd.setSize(W0, H0); g.cam.aspect = W0 / H0; g.cam.updateProjectionMatrix(); }
+    const key = [T.canvas, T.ink, dk].join(); if (G3.key !== key) { G3.key = key; theme3(); }
+    build3();
+    const b = RO.beta * DEG, D = RO.D, cb = Math.cos(b), sb = Math.sin(b), n = RO.lanes.length, wl = laneW(), TH = 0.02;
+    const results = RO.lanes.map((o) => rollAt(o, b, D, RO.t)), order = results.map((r, i) => [r.T, i]).sort((p, q) => p[0] - q[0]), place = []; order.forEach(([, i], j) => { place[i] = j + 1; });
+    /* a point s along lane k, height u above the board, in world coordinates */
+    const P = (s, k, u) => new THREE.Vector3(s * cb + u * sb, k * wl, (D - s) * sb + u * cb);
+    g.objs.children.forEach((grp) => { const { k, R } = grp.userData, o = RO.lanes[k], st = results[k]; grp.position.copy(P(st.s, k, R)); grp.rotation.set(0, b, 0); grp.children[0].rotation.y = SHAPES[o.shape].rolls ? st.s / o.R : 0; });
+    const cx = D * cb / 2, cyy = (n - 1) * wl / 2, cz = D * sb / 2, span = Math.max(D * cb + 0.5, n * wl * 1.6), tv = Math.tan(g.cam.fov * Math.PI / 360);
+    g.sun.position.set(cx - 2, cyy - 3, 5); g.sun.target.position.set(cx, cyy, 0);
+    VD3.place(g.cam, G3.o, new THREE.Vector3(cx, cyy, cz + 0.05), Math.max(span * (W < 600 ? 0.62 : 0.52) / (tv * g.cam.aspect), (D * sb + 0.4) * 0.75 / tv) + n * wl);
+    g.scene.updateMatrixWorld(); g.rd.render(g.scene, g.cam);
+    const v = new THREE.Vector3(), Q = (p3) => { v.copy(p3).project(g.cam); return [(v.x + 1) / 2 * W0, (1 - v.y) / 2 * H0]; };
+    roGeo = null; handlesNow = [];
+    const laneName = (o) => SHAPES[o.shape].name.replace('Sliding block', 'Block'), laneSub = (o) => fx(o.m, 1) + ' kg, ' + fx(o.R * 100, 1) + ' cm';
+    const feet = RO.lanes.map((o, k) => Q(P(D, k, 0))), colX = Math.min(W - 120 * ps, Math.max(...feet.map((q) => q[0])) + 24 * ps), rowH = 30 * ps, colY0 = Math.min(H - 40 * ps - n * rowH, Math.max(ctlH + 24 * ps, feet.reduce((a, q) => a + q[1], 0) / n - (n - 1) * rowH / 2));
+    RO.lanes.forEach((o, k) => {
+      const st = results[k], sel = k === RO.sel, col = shapeColor(o.shape), c = Q(P(st.s, k, o.R)), f = feet[k], rp = Math.max(8 * ps, Math.abs(Q(P(st.s, k, 2 * o.R))[1] - Q(P(st.s, k, 0))[1]) / 2);
+      if (sel) { ctx.save(); ctx.strokeStyle = T.ink; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([3 * ps, 3 * ps]); ctx.beginPath(); ctx.arc(c[0], c[1], rp + 4 * ps, 0, 2 * Math.PI); ctx.stroke(); ctx.restore(); }
+      const lx = colX, ly = colY0 + (n - 1 - k) * rowH;
+      ctx.save(); ctx.strokeStyle = col; ctx.globalAlpha = 0.6; ctx.lineWidth = 1 * ps; ctx.beginPath(); ctx.moveTo(f[0] + 3 * ps, f[1]); ctx.lineTo(lx - 4 * ps, ly - 4 * ps); ctx.stroke(); ctx.restore();
+      ctx.save(); ctx.font = `${sel ? 700 : 400} ${11 * ps}px ${T.ui}`; ctx.fillStyle = col; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic'; ctx.fillText(laneName(o), lx, ly - 3 * ps);
+      ctx.font = `600 ${10.5 * ps}px ${T.mono}`; ctx.fillStyle = st.done ? T.ink : T.muted; if (st.done || W >= 600) ctx.fillText(st.done ? fx(st.T, 2) + ' s  #' + place[k] : laneSub(o), lx, ly + 11 * ps); ctx.restore();
+      handlesNow.push({ id: 'lane' + k, pt: c, rad: rp, noGrip: true, cursor: 'pointer', click: () => selectLane(k) });
+      handlesNow.push({ id: 'lname' + k, pt: [lx + 30 * ps, ly], rad: 14 * ps, noGrip: true, cursor: 'pointer', click: () => selectLane(k) });
+    });
+    const st0 = Q(P(0, -0.7, 0.03)), fin = Q(P(D, -0.7, 0.03));
+    label(ctx, 'start', st0[0], st0[1], T.muted, 'center', 'bottom', 10.5); label(ctx, 'finish', fin[0], fin[1], T.muted, 'center', 'bottom', 10.5);
+    const foot = Q(new THREE.Vector3(D * cb, -0.6 * wl, 0)); label(ctx, 'β = ' + fx(RO.beta, 1) + '°, D = ' + fx(D, 1) + ' m, drop h = D sin β = ' + fx(D * sb, 2) + ' m', 16 * ps, H - 18 * ps, T.muted, 'left', 'middle', 10.5);
+    if (W >= 600) label(ctx, 'drag to turn, wheel to zoom', W - 12 * ps, H - 18 * ps, T.muted, 'right', 'middle', 10);
+    void foot;
+  }
+  function setView3(v) {
+    G3.want = v === '3d';
+    if (v === '3d' && !G3.ok) {
+      if (G3.tried) { G3.want = false; v = 'flat'; }
+      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setView3(G3.ok ? '3d' : 'flat'); }); } return; }
+    }
+    G3.on = v === '3d'; if (g3 && !use3()) g3.el.hidden = true;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    dirty = true;
+  }
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView3(b.dataset.view); });
   function drawAll() {
     if (!T) tokens();
     { const c = $('ctl'); ctlH = c.offsetTop + c.offsetHeight; }
     if (!dims.v[0] || !dims.v[1]) return;
-    const sc = S.scene;
+    const sc = S.scene; if (g3 && !use3()) g3.el.hidden = true; $('viewSeg').hidden = sc !== 'roll';
     if (sc === 'torque') { drawTorque(); drawTorqueCharts(); }
-    else if (sc === 'roll') { drawRoll(); drawRollCharts(); }
+    else if (sc === 'roll') { if (use3()) drawRoll3D(); else drawRoll(); drawRollCharts(); }
     else if (sc === 'spin') { drawSpin(); drawSpinCharts(); }
     else { drawSeesaw(); drawSeesawCharts(); }
   }
@@ -1948,6 +2062,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   new ResizeObserver(resize).observe(stage);
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
+  /* the race opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
+  G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setView3('3d');
   requestAnimationFrame(loop);
 })();
 </script>
