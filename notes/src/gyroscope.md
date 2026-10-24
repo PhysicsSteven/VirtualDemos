@@ -22,6 +22,8 @@ Students need L = Iω as a vector along the spin axis (right hand rule) and τ =
 4. **Halve the spin.** At 1500 rpm the period halves to 1.87 s (the formula says 1.81 s; the gap is the wobble). **Smooth start** releases it with exactly the steady sideways speed: no dip, no wobble, and the period matches the formula exactly.
 5. **Rim-heavy wheel.** Same mass, the mass at the rim: I_s nearly doubles, so the precession takes 6.56 s.
 6. **Lab.** Measure P at several spin rates (Smooth start, or 2500 rpm and above from rest), plot Ω = 2π/P against 1/ω_s, and find I_s of the Mystery wheel from the slope Mgd/I_s.
+7. **Change it while it runs.** Start with Smooth start (1500 rpm, level, no wobble), release, then drag the spin to 3000 rpm. The precession rate is now twice the steady rate for that spin, so the axle rises and wobbles between level and 3.8° above it, about a steady tilt of 1.9° (gold line on the strip). From Smooth start, slide d out to 18 cm instead: the turning slows (the angular momentum across the axle is kept while I₁ grows) and the torque grows, so the axle drops, rocking between level and 38° below it about a steady tilt of 22° below level. Ask before each change which way the axle will go.
+
 
 ## Questions
 
