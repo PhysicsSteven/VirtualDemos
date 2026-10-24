@@ -1667,3 +1667,8 @@ CORE byte identical; vdcheck differs only by the new Perspective control (`dimSe
 - Plot fix (was there before this pass): the voltage axis now scales to the capacitor voltage too. With the light on and a charged 0.1 F capacitor (about 2.8 V) the green line used to run off the top of the plot.
 
 **For GPT to verify:** that the field line shape matches the dipole model in the code, and the coil tint sign (warm for positive EMF as plotted).
+
+## Claude, 2026-10-24: Physics I deeper visual pass, Rotation (rolling race)
+
+- **Rotation and Torque, Rolling** scene opens in 3D (new **3D | Flat** switch `#viewSeg` in the stage bar, shown in the Rolling scene only; `?view=flat`). Boards side by side at β, D long, on a trestle. Each object has its real radius and turns by s/R at the model's s: a striped solid sphere, a cylinder with a mark on its face, a glassy hollow sphere with two rings, a hoop with a spoke, and the block sliding. Names, then times and places at the finish, sit in a column with leader lines to each lane's foot. Click an object or its name to select its lane; drag elsewhere to turn the view. The β drag handle is a flat view feature (the slider does the same). Torque, Spin and Seesaw stay flat for now.
+- Checks: `test_rotation` and `test_rotational_dynamics` pass; `vdcheck --only after rotation` 0 problems. The key's capture script (`rotation.cjs`) prints the same readouts on the old and new pages except the skater after Pull in. That one is read after a 3 s real time wait and varies from run to run on the old page too (4.38 and 4.39 rev/s on two old runs).
