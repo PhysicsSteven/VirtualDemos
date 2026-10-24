@@ -45,9 +45,9 @@ table.rows input:focus { border-color: var(--accent); }
 .chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 @media (max-width: 820px) { .chips button { min-height: 36px; } }
 .readout dd.warn { color: var(--pos); }
-:root { --wood: #d8bf98; --wood-line: #c3a77c; --metal: #9aa4b0; --metal-hi: #c9d0d9; --string: #b4532a; --env: rgba(180, 83, 42, 0.18); --brass: #b98f2e; --box: #3b4656; --rule: #f1e3b5; }
-@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; } }
-:root[data-theme="dark"] { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; }
+:root { --wood: #d8bf98; --wood-line: #c3a77c; --metal: #9aa4b0; --metal-hi: #c9d0d9; --string: #b4532a; --env: rgba(180, 83, 42, 0.18); --brass: #b98f2e; --box: #3b4656; --rule: #f1e3b5; --air: rgba(50, 120, 200, 0.22); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; --air: rgba(120, 180, 240, 0.24); } }
+:root[data-theme="dark"] { --wood: #5b4a33; --wood-line: #6d5a3f; --metal: #7d8793; --metal-hi: #a3adb9; --string: #f08a55; --env: rgba(240, 138, 85, 0.20); --brass: #d6ad4a; --box: #2c3542; --rule: #4d4630; --air: rgba(120, 180, 240, 0.24); }
 .fine { display: flex; gap: 6px; flex-wrap: wrap; }
 .fine .btn { padding: 3px 9px; font-family: var(--font-mono); font-size: 0.82rem; }
 .readout dd .ok { font-family: var(--font-ui); font-size: 0.85rem; font-weight: 400; color: var(--muted); }
@@ -285,7 +285,7 @@ details.more[open] summary { margin-bottom: 6px; }
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const newUnknown = () => ({ name: 'Unknown rod', v: Math.round(UNKNOWN_V[0] + Math.random() * (UNKNOWN_V[1] - UNKNOWN_V[0])) });
   const RING_TAU = 1.5;    /* s, how fast a stroked rod dies away (chosen) */
-  const S = { rod: 'steel', unknown: newUnknown(), L: 1.0, n: 1, gas: 'air', tC: 20, l: 1.0, x: 0.5, env: 0, keep: false, blind: false, preset: 'steel', rows: [], series: 0, dust: [], act: new Float32Array(1500) };
+  const S = { ph: 0, keepCard: false, rod: 'steel', unknown: newUnknown(), L: 1.0, n: 1, gas: 'air', tC: 20, l: 1.0, x: 0.5, env: 0, keep: false, blind: false, preset: 'steel', rows: [], series: 0, dust: [], act: new Float32Array(1500) };
   const rodNow = () => (S.rod === 'unknown' ? S.unknown : RODS[S.rod]);
   const fNow = () => rodFreq(S.n, S.L, rodSpeed(rodNow()));
   const vGas = () => gasSpeed(GASES[S.gas], S.tC);
@@ -307,7 +307,7 @@ details.more[open] summary { margin-bottom: 6px; }
   const can = $('can'), ctx = can.getContext('2d'), scene = $('scene'), card = $('card'), GEO = {};
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
-    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'accent', 'pos', 'neg', 'surface', 'relief', 'wood', 'wood-line', 'metal', 'metal-hi', 'box', 'rule', 'brass']) T[k.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + k);
+    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'accent', 'pos', 'neg', 'surface', 'relief', 'wood', 'wood-line', 'metal', 'metal-hi', 'box', 'rule', 'brass', 'air']) T[k.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + k);
     T.mono = g('--font-mono'); T.ui = g('--font-ui'); }
   const ps = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
   const sig = (v, n = 3) => (isFinite(v) ? String(+v.toPrecision(n)) : '—');
@@ -328,7 +328,7 @@ details.more[open] summary { margin-bottom: 6px; }
     $('presetHint').textContent = S.preset ? PRESETS[S.preset].hint : '';
     fade();
   }
-  function fade() { card.classList.toggle('away', !reduce && ringing()); }
+  function fade() { card.classList.toggle('away', !reduce && ringing() && !S.keepCard); }
   /* a new rod, rod length, clamp or temperature leaves the dust where it lies: it moves only when the tube is loud again.
      Filling the tube with another gas spreads it again. */
   const changedSetup = (spread) => { S.preset = ''; if (spread) spreadDust(); upd(); };
@@ -360,8 +360,8 @@ details.more[open] summary { margin-bottom: 6px; }
     h.addEventListener('keydown', (e) => { const st = { ArrowRight: 0.001, ArrowUp: 0.001, ArrowLeft: -0.001, ArrowDown: -0.001, PageUp: 0.01, PageDown: -0.01 }[e.key];
       if (st) set(get() + st); else if (e.key === 'Home') set(0); else if (e.key === 'End') set(1.4); else return; e.preventDefault(); });
   }
-  $('stroke').addEventListener('click', () => { S.env = 1; fade(); readouts(); });
-  $('keep').addEventListener('change', (e) => { S.keep = e.target.checked; if (!S.keep) S.env = 1; fade(); readouts(); });
+  $('stroke').addEventListener('click', () => { S.env = 1; S.keepCard = false; fade(); readouts(); });
+  $('keep').addEventListener('change', (e) => { S.keep = e.target.checked; S.keepCard = false; if (!S.keep) S.env = 1; fade(); readouts(); });
   $('spread').addEventListener('click', () => { spreadDust(); draw(); });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; upd(); });
   can.addEventListener('keydown', (e) => {
@@ -472,6 +472,32 @@ details.more[open] summary { margin-bottom: 6px; }
     const r = Math.max(0.8, hScale * 0.55);
     for (const i of hops) { const X = xd + S.dust[i] * ppm; if (X < clipL || X > clipR) continue; ctx.fillRect(X - r / 2, floor - r - Math.random() * hScale * 4 * Math.min(1, S.act[i] / 6), r, r); }
   }
+  /* the gas while the rod rings: the steady state S(x) = a sin(κ(ℓ − x))/sin(κℓ) of the CORE, with κ = ω/v − iα. A band shows its
+     size e|S(x)| (zero at the displacement nodes, where the dust heaps); thin lines are layers of gas, moved sideways by
+     e Re[S(x) e^(iφ)], magnified and slowed as by a strobe, so they bunch and spread half a wavelength apart */
+  const csin = (a, b) => [Math.sin(a) * Math.cosh(b), Math.cos(a) * Math.sinh(b)];   /* sin(a + ib) */
+  function Sx(x, f, v, l) { const p = TAU * f / v, n = csin(p * (l - x), -ALPHA * (l - x)), d = csin(p * l, -ALPHA * l), dd = d[0] * d[0] + d[1] * d[1];
+    return [(n[0] * d[0] + n[1] * d[1]) / dd, (n[1] * d[0] - n[0] * d[1]) / dd]; }
+  function drawAir(X, xa, xb, cyT, rIn, layers, f, v) {
+    const e = S.keep ? 1 : S.env, lam = v / f, N = 240, c = Math.cos(S.ph), s = Math.sin(S.ph);
+    const band = rIn / 10, shift = lam / 2 * 0.25 / 8;   /* one scale for every setup: air moving 10 times as much as the disc (about the loudest a 1 m tube gets) fills the tube, and 8 times moves a layer λ/8, so a tube off resonance looks quieter */
+    if (xb <= xa) return;
+    ctx.save(); ctx.beginPath(); ctx.rect(X(xa), cyT - rIn, X(xb) - X(xa), 2 * rIn); ctx.clip();
+    const half = (x) => Math.min(rIn, Math.hypot(...Sx(x, f, v, S.l)) * e * band);
+    ctx.fillStyle = T.air; ctx.beginPath();
+    for (let i = 0; i <= N; i++) { const x = xa + (xb - xa) * i / N; ctx.lineTo(X(x), cyT - half(x)); }
+    for (let i = N; i >= 0; i--) { const x = xa + (xb - xa) * i / N; ctx.lineTo(X(x), cyT + half(x)); }
+    ctx.closePath(); ctx.fill();
+    if (layers && !reduce) { const dx = lam / 24; ctx.strokeStyle = T.accent; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.2;
+      ctx.beginPath(); for (let x = (Math.floor(xa / dx) + 0.5) * dx; x < xb; x += dx) { if (x < 0) continue; const z = Sx(x, f, v, S.l), px = X(x + Math.max(-lam / 8, Math.min(lam / 8, e * shift * (z[0] * c - z[1] * s)))); ctx.moveTo(px, cyT - rIn); ctx.lineTo(px, cyT + rIn); } ctx.stroke(); }
+    ctx.restore();
+  }
+  /* the rod's own standing wave: free ends, a node at the clamp, u ∝ cos(nπx/L); the strain ∝ sin(nπx/L) is drawn as darker
+     (squeezed) and lighter (stretched) bands, slowed as by a strobe */
+  function drawRodStrain(x0, len, y, r) {
+    if (reduce) return; const e = S.keep ? 1 : S.env, c = Math.cos(S.ph), M = 60;
+    for (let i = 0; i < M; i++) { const u = (i + 0.5) / M, st = Math.sin(S.n * PI * u) * c * e; ctx.fillStyle = st > 0 ? `rgba(20,30,45,${0.45 * st})` : `rgba(255,255,255,${-0.6 * st})`; ctx.fillRect(x0 + len * i / M, y - r, len / M + 0.5, 2 * r); }
+  }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); const Gr = window.VDGear, dk = Gr.dark(); Gr.backdrop(ctx, W, Hh);
@@ -501,6 +527,7 @@ details.more[open] summary { margin-bottom: 6px; }
     Gr.rod(ctx, clampX, ry, clampX, ry + 55 * p, 3 * p);
     const ROD_COL = { steel: '#aab3be', aluminum: '#cfd5dc', brass: '#c9a24a', copper: '#c27b4e', glass: '#b9d6df' };
     Gr.rod(ctx, rodL, ry, rodL + S.L * ppm, ry, 3.4 * p, { color: ROD_COL[S.rod] || '#9da0ab' });
+    if (ring) drawRodStrain(rodL, S.L * ppm, ry, 3.4 * p);
     Gr.box(ctx, clampX - 7 * p, ry - 8 * p, 14 * p, 16 * p, { r: 2 * p, color: '#5b6e8c', shadow: false }); Gr.screw(ctx, clampX, ry + 11 * p, 2.4 * p);
     if (ring && !reduce) { ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * p; for (const [x, s] of [[rodL, -1], [xd, 1]]) for (let k = 1; k <= 2; k++) { ctx.beginPath(); ctx.arc(x - s * 2 * p, ry, (4 + 5 * k) * p, s > 0 ? -0.6 : PI - 0.6, s > 0 ? 0.6 : PI + 0.6); ctx.stroke(); } }
     Gr.label(ctx, `rod L = ${S.L.toFixed(2)} m`, rodL + S.L * ppm * 0.25, ry - 16 * p, { a: 'center', s: 10 * p, w: 700, c: T.ink, alpha: 0.85 });
@@ -514,6 +541,7 @@ details.more[open] summary { margin-bottom: 6px; }
     { const gt = ctx.createLinearGradient(0, tTop, 0, tBot); gt.addColorStop(0, dk ? 'rgba(200,225,245,0.28)' : 'rgba(255,255,255,0.95)'); gt.addColorStop(0.25, dk ? 'rgba(120,150,180,0.10)' : 'rgba(215,230,240,0.45)'); gt.addColorStop(1, dk ? 'rgba(0,0,0,0.35)' : 'rgba(120,145,170,0.35)');
       ctx.fillStyle = gt; ctx.beginPath(); ctx.roundRect(xd - 4 * p, tTop, xr - xd + 4 * p, tBot - tTop, (tBot - tTop) / 2); ctx.fill(); }
     ctx.strokeStyle = dk ? 'rgba(170,195,220,0.6)' : 'rgba(80,100,120,0.55)'; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.roundRect(xd - 4 * p, tTop, xr - xd + 4 * p, tBot - tTop, (tBot - tTop) / 2); ctx.stroke();
+    if (ring) drawAir((m) => xd + m * ppm, 0, S.l, ry, (tBot - tTop) / 2 - 3, false, f, v);
     drawDust(xd, ppm, tBot - 1.5 * p, 0, S.l, 0.002, 1.6 * p, xd, GEO.xl);
     Gr.box(ctx, xd - 3 * p, tTop + 3 * p, 4 * p, tBot - tTop - 6 * p, { r: 1, color: '#c9a24a', shadow: false });
     Gr.rod(ctx, GEO.xl + 6 * p, ry, xr + 30 * p, ry, 2 * p); Gr.box(ctx, GEO.xl, tTop + 2 * p, 6 * p, tBot - tTop - 4 * p, { r: 1.5 * p, color: '#8b5a3c', shadow: false });
@@ -536,6 +564,7 @@ details.more[open] summary { margin-bottom: 6px; }
       ctx.fillStyle = T.surface; ctx.beginPath(); ctx.roundRect(zL, zTop, zR - zL, zH, 8 * p); ctx.fill(); ctx.restore(); ctx.strokeStyle = T.line; ctx.beginPath(); ctx.roundRect(zL + 0.5, zTop + 0.5, zR - zL, zH, 8 * p); ctx.stroke();
       const zFloor = zTop + zH - 30 * p, zx = (m) => zL + (m - zx0) * zppm;
       ctx.save(); ctx.beginPath(); ctx.rect(zL, zTop, zR - zL, zH); ctx.clip();
+      if (ring) { const zc = (zTop + 20 * p + zFloor) / 2; drawAir(zx, Math.max(0, zx0), Math.min(S.l, S.x + half), zc, (zFloor - zTop - 20 * p) / 2, true, f, v); }
       drawDust(zx(0), zppm, zFloor, Math.max(0, zx0), Math.min(S.l, S.x + half), 0.0005, 3.2 * p, zL, Math.min(zR, zx(S.l)));
       if (S.l < S.x + half) { ctx.fillStyle = T.metal; ctx.fillRect(zx(S.l), zTop + 4 * p, 8 * p, zFloor - zTop - 4 * p); }
       if (zx0 < 0) { ctx.fillStyle = T.box; ctx.fillRect(zx(0) - 8 * p, zTop + 4 * p, 8 * p, zFloor - zTop - 4 * p); }
@@ -543,14 +572,14 @@ details.more[open] summary { margin-bottom: 6px; }
       for (let mm = Math.ceil(zx0 * 1000); mm <= (S.x + half) * 1000; mm++) { const x = zx(mm / 1000), big = mm % 10 === 0, mid = mm % 5 === 0; ctx.beginPath(); ctx.moveTo(x, zFloor + 2 * p); ctx.lineTo(x, zFloor + (big ? 12 : mid ? 8 : 5) * p); ctx.stroke(); if (big && mm >= 0) txt(String(mm / 10), x, zFloor + 20 * p, { s: 9, a: 'center', m: 1 }); }
       ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(zx(S.x), zTop); ctx.lineTo(zx(S.x), zFloor + 14 * p); ctx.stroke();
       ctx.restore();
-      Gr.label(ctx, `close up: 16 cm of tube around the pointer, x = ${(S.x * 100).toFixed(1)} cm`, zL + 8 * p, zTop + 11 * p, { s: 9 * p, alpha: 0.8 });
+      Gr.label(ctx, `close up: 16 cm of tube around the pointer, x = ${(S.x * 100).toFixed(1)} cm` + (ring ? '. Blue band: how far the gas moves; lines: layers of gas, motion magnified and slowed as by a strobe' : ''), zL + 8 * p, zTop + 11 * p, { s: 9 * p, alpha: 0.8 });
     }
   }
 
   function tick(dt) {
     let moved = false;
     if (S.env > 0 && !S.keep) { S.env *= Math.exp(-dt / RING_TAU); if (S.env < 0.2) { S.env = 0; S.act.fill(0); fade(); readouts(); draw(); } }
-    if (ringing()) moved = stepDust(reduce ? dt * 4 : dt);
+    if (ringing()) { moved = stepDust(reduce ? dt * 4 : dt); S.ph = (S.ph + dt * TAU * 0.6) % TAU; }
     if (moved || ringing()) draw();
   }
   function resize() { dpr = window.devicePixelRatio || 1; const rc = scene.getBoundingClientRect(); W = rc.width; Hh = rc.height; can.width = Math.round(W * dpr); can.height = Math.round(Hh * dpr); can.style.width = W + 'px'; can.style.height = Hh + 'px'; draw(); fit(); }
@@ -561,6 +590,8 @@ details.more[open] summary { margin-bottom: 6px; }
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; fade(); draw(); });
   tokens(); new ResizeObserver(resize).observe(scene); new ResizeObserver(() => draw()).observe(card);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'steel'); renderRows(); resize();
+  /* one stroke on open, so the rod rings and the gas moves at once (the Set up card stays until the first stroke); ?ring=0 opens it quiet */
+  if (new URLSearchParams(location.search).get('ring') !== '0' && !reduce) { S.keepCard = true; S.env = 1; fade(); readouts(); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
