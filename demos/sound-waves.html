@@ -679,7 +679,7 @@ details.more[open] summary { margin-bottom: 6px; }
     raceReset(); changed();
   });
   $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setDim(b.dataset.dim); });
-  $('camSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-cam]'); if (!b) return; S.cam = b.dataset.cam; Object.assign(R3.o, S.cam === 'near' ? R3.home : R3.homeC); sync(); draw(); });
+  $('camSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-cam]'); if (!b) return; S.cam = b.dataset.cam; Object.assign(R3.o, S.cam === 'near' ? R3.home : R3.homeC); R3.pan = { x: 0, y: 0 }; sync(); draw(); });
   function syncRace() {
     const race = S.view === 'race', on3 = race && R3.on;
     $('strike').hidden = $('dimSeg').hidden = !race; $('camSeg').hidden = !on3;
@@ -787,7 +787,7 @@ details.more[open] summary { margin-bottom: 6px; }
   // ---------- the race in 3D (three.js through demos/lib/vd3.js) ----------
   // Drag to turn the view, wheel or pinch to zoom, double click to reset. The flat view stays (Flat button, or ?view=flat).
   const R3 = { on: false, ok: false, tried: false, loading: false, key: '', sig: '', w: 0, h: 0, o: { th: -1.95, ph: 1.34, zoom: 1 } };
-  R3.home = { th: -1.95, ph: 1.34, zoom: 1 }; R3.homeC = { th: -2.1, ph: 0.98, zoom: 1 };
+  R3.home = { th: -1.95, ph: 1.34, zoom: 1 }; R3.pan = { x: 0, y: 0 }; R3.homeC = { th: -2.1, ph: 0.98, zoom: 1 };
   const NO3D = 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
   const PERSON_H = 1.75;   /* m, the height of the people drawn for scale (chosen) */
   const LANE_GAP = 5;      /* m between the centres of neighbouring lanes (chosen) */
@@ -827,7 +827,33 @@ details.more[open] summary { margin-bottom: 6px; }
     const dyn = new THREE.Group(); sc.add(dyn);
     g3 = { r, el, sc, cam, hemi, sun, grassCv, grassTex, groundM, ground, skyCv, skyTex, striker, listener, hammer, steelM, dyn, M, lanes: [], tex: {} };
     can.addEventListener('wheel', (e) => { if (!(S.view === 'race' && R3.on)) e.stopImmediatePropagation(); }, { passive: true });
-    VD3.orbit(can, R3.o, () => { if (!S.race.run) draw(); }, { grab: () => !(S.view === 'race' && R3.on), phMin: 0.35, phMax: 1.5, zMin: 0.25, zMax: 4 });
+    /* a plain drag (one finger on a touch screen) moves along the course; a right drag or Shift drag turns the view (VD3.orbit);
+       two fingers pinch to zoom and twist to turn */
+    const on3 = () => S.view === 'race' && R3.on, pts = new Map(); let pinch = null;
+    const two = () => { const [a, b] = [...pts.values()]; return { d: Math.hypot(a.x - b.x, a.y - b.y) || 1, ang: Math.atan2(b.y - a.y, b.x - a.x) }; };
+    const panGrab = (e) => {
+      if (!on3()) return true;
+      if (e.pointerType === 'mouse' && (e.button === 2 || e.shiftKey)) return false;
+      can.setPointerCapture(e.pointerId); pts.set(e.pointerId, { x: e.clientX, y: e.clientY }); can.style.cursor = 'grabbing';
+      if (pts.size === 2) { const q = two(); pinch = { d0: q.d, a0: q.ang, z0: R3.o.zoom, th0: R3.o.th }; }
+      return true;
+    };
+    can.addEventListener('pointermove', (e) => {
+      const q0 = pts.get(e.pointerId); if (!q0 || !on3()) return;
+      const dx = e.clientX - q0.x, dy = e.clientY - q0.y; pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (pts.size >= 2 && pinch) { const q = two(); R3.o.zoom = Math.max(0.25, Math.min(4, pinch.z0 * q.d / pinch.d0)); R3.o.th = pinch.th0 - (q.ang - pinch.a0); }
+      else panBy(dx, dy);
+      if (!S.race.run) draw();
+    });
+    const panEnd = (e) => { pts.delete(e.pointerId); if (pts.size < 2) pinch = null; if (!pts.size && on3()) can.style.cursor = 'grab'; };
+    can.addEventListener('pointerup', panEnd); can.addEventListener('pointercancel', panEnd);
+    can.addEventListener('contextmenu', (e) => { if (on3()) e.preventDefault(); });
+    can.addEventListener('dblclick', () => { if (on3()) { R3.pan = { x: 0, y: 0 }; draw(); } });
+    can.addEventListener('keydown', (e) => {
+      if (!on3()) return; const k = { ArrowLeft: [-40, 0], ArrowRight: [40, 0], ArrowUp: [0, -40], ArrowDown: [0, 40] }[e.key]; if (!k) return;
+      panBy(-k[0], -k[1]); e.preventDefault(); if (!S.race.run) draw();
+    });
+    VD3.orbit(can, R3.o, () => { if (!S.race.run) draw(); }, { grab: panGrab, phMin: 0.35, phMax: 1.5, zMin: 0.25, zMax: 4 });
     can.addEventListener('pointerup', () => { if (!(S.view === 'race' && R3.on)) can.style.cursor = ''; });
     return true;
   }
@@ -919,6 +945,14 @@ details.more[open] summary { margin-bottom: 6px; }
     for (let q = 1; q < 10; q++) { add(new THREE.BoxGeometry(tw, span + 4, 0.03), lineM, q * L / 10, yMax / 2, 0.02); add(new THREE.BoxGeometry(0.2, 0.2, 2.2), postM, q * L / 10, -LANE_W / 2 - 2.5, 1.1, true); }
     g.striker.g.position.set(-1.2, 0, 0); g.listener.g.position.set(L + 2, -LANE_W / 2 - 3.5, 0); g.listener.g.rotation.z = Math.PI;
   }
+  /* moves the point the camera looks at across the ground as if the ground were dragged by (dx, dy) pixels: sideways across the
+     screen, and along the camera's heading for up and down (scaled for how steeply the camera looks down, at most 4 times) */
+  function panBy(dx, dy) {
+    const g = g3; if (!g) return;
+    const dist = (R3.dist || 30), mpp = 2 * dist * Math.tan(g.cam.fov * Math.PI / 360) / Math.max(1, Hh), th = R3.o.th;
+    const fx = -Math.cos(th), fy = -Math.sin(th), rx = fy, ry = -fx, k = Math.min(4, 1 / Math.max(0.25, Math.cos(R3.o.ph)));
+    R3.pan.x += (-dx * rx - dy * fx * k) * mpp; R3.pan.y += (-dx * ry - dy * fy * k) * mpp;
+  }
   /* draws the 3D scene; returns a function from a point in metres to overlay pixels [x, y, in front] */
   function render3() {
     const g = g3, ls = lanesNow(), L = S.L, R = S.race, n = Math.max(1, ls.length), yMax = (n - 1) * LANE_GAP;
@@ -926,7 +960,12 @@ details.more[open] summary { margin-bottom: 6px; }
     const key = [T.canvas, T.ink, VD3.dark()].join(); if (R3.key !== key) { R3.key = key; theme3(); }
     const sigNow = [ls.map((l) => (l.mystery ? 'm' + l.id : l.id)).join(), L].join('|'); if (R3.sig !== sigNow) { R3.sig = sigNow; build3(); }
     const near = S.cam === 'near', tgt = near ? new THREE.Vector3(10, yMax / 2 + 2, 1.4) : new THREE.Vector3(L / 2, yMax / 2, 0), rr = (near ? 34 + yMax * 0.5 : 0.85 * L + 60) * Math.max(1, 1.3 / g.cam.aspect);
-    VD3.place(g.cam, R3.o, tgt, rr);
+    /* the pan keeps the target on or near the course */
+    const n0 = near ? [10, yMax / 2 + 2] : [L / 2, yMax / 2];
+    R3.pan.x = Math.min(L + 60 - n0[0], Math.max(-60 - n0[0], R3.pan.x)); R3.pan.y = Math.min(yMax + 25 - n0[1], Math.max(-25 - n0[1], R3.pan.y));
+    tgt.x += R3.pan.x; tgt.y += R3.pan.y;
+    VD3.place(g.cam, R3.o, tgt, rr); R3.dist = rr / R3.o.zoom;
+    g.sun.target.position.set(tgt.x - 4, tgt.y - 4, 0); g.sun.position.set(tgt.x - 26, tgt.y - 51, 60);
     const dist = rr / R3.o.zoom; g.cam.near = Math.max(0.05, Math.min(dist / 300, 5)); g.cam.far = Math.max(8000, 5 * L + dist * 2); g.cam.updateProjectionMatrix();
     g.sc.fog.near = Math.max(400, 1.2 * L, dist * 1.5); g.sc.fog.far = Math.max(5000, 6 * L, dist * 6);
     const started = R.run || R.done, trail = Math.min(L * 0.02, 60);
@@ -962,7 +1001,7 @@ details.more[open] summary { margin-bottom: 6px; }
     const [sx, sy, sok] = P(-1.2, 0, PERSON_H + 0.35); if (sok && sx > 0 && sx < W) tag(`${PERSON_H} m tall`, sx, sy - 6 * p, { s: 9 });
     const [lx, ly, lok] = P(L + 2, -LANE_W / 2 - 3.5, PERSON_H + 0.35); if (lok && lx > 0 && lx < W && S.cam === 'course') tag('listener', lx, ly - 26 * p, { s: 9 });
     raceClock(p); raceBoard(ls, p);
-    if (W >= 620) Gr.label(ctx, 'drag to turn · scroll or pinch to zoom · double click to reset', W - 12 * p, Hh - 12 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
+    if (W >= 620) Gr.label(ctx, 'drag to move · right drag or Shift drag to turn · scroll to zoom · double click to reset', W - 12 * p, Hh - 12 * p, { a: 'right', s: 9 * p, alpha: 0.75 });
   }
   function tick(dt) {
     if (S.view === 'wave') { if (S.running && !reduce) { S.t += dt; draw(); } }

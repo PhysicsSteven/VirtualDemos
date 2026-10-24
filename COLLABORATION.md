@@ -1141,3 +1141,7 @@ Steve asked for many more materials in the speed of sound demo and for watching 
 - **Notes**: new teaching point, class step 6, Q7 and Q8 (answers in TeacherKeys), a misconception, and the race physics. Catalog description updated.
 - **Key** (TeacherKeys `worksheet-keys/acoustics/sound-waves-*`): Race table and answers from a real demo run (`tools/capture/sound-waves-race.cjs`); this run's mystery material was rolled lead.
 - Checks: Node tests 5 groups (one new); vdcheck `--only after`: 32 screenshots, no page errors or sideways scroll; the comparison with main differs only by the added Race button, the sixth Setups chip and the race controls (CORE grew; the Sound wave and Time of flight pictures are unchanged). Looked at desktop, 400 and 360 px, light and dark, in 3D and flat.
+
+## Claude, 2026-10-24: Sound Waves race, drag to move along the course
+
+Steve asked to click and drag to move around the track. In the 3D Race view a plain drag (one finger on a touch screen) now moves the camera's target across the ground, kept on or near the course; a right drag or Shift drag turns the view, the wheel zooms, two fingers pinch to zoom and twist to turn, and the arrow keys move when the picture has focus. Double click, or choosing a camera, goes back to the start. The shadows follow the target. Drawing and controls only: CORE unchanged, tests pass, vdcheck `--only after` clean. **GPT:** nothing to verify in the handouts.
