@@ -364,7 +364,29 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.eyeball; ctx.strokeStyle = T.sclera; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.arc(xR - R, cy, R, 0, 7); ctx.fill();
     { const g = ctx.createRadialGradient(xR - R * 1.35, cy - R * 0.45, R * 0.05, xR - R, cy, R); g.addColorStop(0, 'rgba(255,255,255,0.35)'); g.addColorStop(0.6, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(60,40,30,0.16)'); ctx.fillStyle = g; ctx.fill(); }   // a round, moist eyeball (a picture only)
     ctx.stroke();
+    /* optic nerve (a picture only): leaves the back of the eye a little off the axis */
+    { const a = 0.32, nx = xR - R + R * Math.cos(a), ny = cy + R * Math.sin(a), nw = 0.0018 * k;
+      ctx.fillStyle = VG.dark() ? '#5a4a3e' : '#e9d6bf'; ctx.strokeStyle = T.sclera; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(nx - 2 * p, ny - nw); ctx.lineTo(nx + 0.007 * k, ny - nw + 0.0015 * k); ctx.lineTo(nx + 0.007 * k, ny + nw + 0.0015 * k); ctx.lineTo(nx - 2 * p, ny + nw); ctx.closePath(); ctx.fill(); ctx.stroke();
+      if (w > 420) txt('optic nerve', nx + 0.0035 * k, ny + nw + 0.0015 * k + 11 * p, { a: 'center', s: 9, c: T.muted }); }
     ctx.strokeStyle = T.retina; ctx.lineWidth = 4 * p; ctx.beginPath(); ctx.arc(xR - R, cy, R, -0.55, 0.55); ctx.stroke(); txt('retina', xR + 6 * p, cy - R * 0.62, { s: 10, c: T.retina, b: 1 });
+    /* cornea (a picture only: the model lumps the cornea and the lens into one lens of power P) */
+    { /* a bulge 2.2 mm proud of the eyeball, meeting it 5.5 mm from the axis */
+      const hc = 0.0055, sag = 0.0022 + (0.012 - Math.sqrt(0.012 ** 2 - hc * hc)), rc = (hc * hc + sag * sag) / (2 * sag), xc = xR - 2 * R - 0.0022 * k + rc * k, ang = Math.asin(hc / rc);
+      ctx.fillStyle = T.lensc; ctx.globalAlpha = 0.22; ctx.beginPath(); ctx.arc(xc, cy, rc * k, Math.PI - ang, Math.PI + ang); ctx.closePath(); ctx.fill(); ctx.globalAlpha = 1;
+      ctx.strokeStyle = T.sclera; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(xc, cy, rc * k, Math.PI - ang, Math.PI + ang); ctx.stroke();
+      if (w > 420) txt('cornea', xR - 2 * R - 0.0022 * k, cy - hc * k - 12 * p, { a: 'center', s: 9, c: T.muted }); }
+    /* ciliary muscle and zonule fibres (a picture only): to accommodate, the ring of muscle contracts, the fibres go slack and the lens rounds up.
+       acc is the fraction of the eye's range of power in use now */
+    { const acc = Math.max(0, Math.min(1, (st.Pt - st.r.Pmin) / Math.max(1e-9, st.r.Pmax - st.r.Pmin))), yw = Math.sqrt(R * R - (0.006 * k) ** 2);
+      for (const sg of [-1, 1]) {
+        const mw = (0.0007 + 0.0005 * acc) * k, mh = (0.0015 - 0.0002 * acc) * k, my = cy + sg * (yw - mh * 1.05);
+        ctx.fillStyle = VG.dark() ? '#9a4c45' : '#d27a6c'; ctx.beginPath(); ctx.ellipse(xL + 0.0004 * k, my, mw, mh, 0, 0, 7); ctx.fill();
+        ctx.strokeStyle = T.muted; ctx.lineWidth = 0.9 * p; ctx.globalAlpha = 0.8;
+        for (const dx of [-0.0012, 0, 0.0012]) { const xa = xL + dx * k, ya = my - sg * mh * 0.9, yb = cy + sg * 0.0043 * k, sag = acc * 0.0012 * k;
+          ctx.beginPath(); ctx.moveTo(xa, ya); ctx.quadraticCurveTo(xa + sag * (dx >= 0 ? 1 : -1) + sag * 0.6, (ya + yb) / 2, xL + dx * k * 0.4, yb); ctx.stroke(); }
+        ctx.globalAlpha = 1;
+      }
+      if (w > 420) txt(acc > 0.5 ? 'ciliary muscle: contracted' : 'ciliary muscle: relaxed', xL, cy - yw - 12 * p, { a: 'center', s: 9, c: T.muted }); }
     /* lens: thickness grows with the power in use */
     { const ir = ctx.createLinearGradient(0, cy - 0.0058 * k, 0, cy + 0.0058 * k); ir.addColorStop(0, '#4a6b8a'); ir.addColorStop(0.5, '#6f8fae'); ir.addColorStop(1, '#4a6b8a');   // the iris, from the pupil's edge outward: it stops rays outside the pupil
       ctx.fillStyle = ir; ctx.fillRect(xL - 3 * p, cy - 0.0058 * k, 2.5 * p, 0.0058 * k - PUPIL / 2 * k); ctx.fillRect(xL - 3 * p, cy + PUPIL / 2 * k, 2.5 * p, 0.0058 * k - PUPIL / 2 * k); }
@@ -389,7 +411,42 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     /* blur spot */
     if (!S.blind) { const b = st.img.blur * k; ctx.fillStyle = st.img.blur < SHARP ? T.np : T.pos; ctx.fillRect(xR - 3 * p, cy - Math.max(b, 3 * p) / 2, 6 * p, Math.max(b, 3 * p)); }
-    txt('enlarged view of the eye: lens to retina 1.80 cm, pupil 4.0 mm', x0 + 8 * p, y0 + h - 12 * p, { s: 9, c: T.muted });
+    txt('enlarged view of the eye: lens to retina 1.80 cm, pupil 4.0 mm' + (w > 600 ? '; the cornea and lens act as one lens here' : ''), x0 + 8 * p, y0 + h - 12 * p, { s: 9, c: T.muted });
+  }
+  /* What the eye sees: chart rows sized by angle (Snellen: a 20/20 letter is 5 arcmin tall), blurred by the model's blur spot.
+     The spot is a uniform disk (geometric optics, a round pupil; no diffraction or aberrations); seen from the lens it spans blur / RETINA radians. */
+  const ROWS = [['H Z', 20, '20/80'], ['K N R', 10, '20/40'], ['D S O V C', 5, '20/20']], ARCMIN = Math.PI / (180 * 60);
+  const seen = { src: null, acc: null };
+  function drawSeen(x, y, w, h, st) {
+    const p = ps(); VG.box(ctx, x, y, w, h, { color: T.surface, r: 8, shadow: false }); ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(x + 0.5, y + 0.5, w - 1, h - 1);
+    txt('What this eye sees', x + 10 * p, y + 13 * p, { s: 10, b: 1 });
+    const bArc = st.img.blur / RETINA / ARCMIN, l20 = 5 * ARCMIN * RETINA;
+    txt(S.blind ? 'chart rows sized by angle' : `blur spot ${(st.img.blur * 1e6).toFixed(0)} µm = ${bArc.toFixed(1)}′; a 20/20 letter is 5′ = ${(l20 * 1e6).toFixed(0)} µm`, x + 10 * p, y + h - 10 * p, { s: 9, c: T.muted });
+    const px = x + 8 * p, py = y + 24 * p, pw = w - 50 * p, ph = h - 44 * p;
+    ctx.fillStyle = '#fbfaf6'; ctx.fillRect(px, py, pw, ph);   /* the chart is white paper in either theme */
+    const gap = [6, 5, 4], tot = ROWS.reduce((a, r) => a + r[1], 0) + gap.reduce((a, b) => a + b, 0), wide = Math.max(...ROWS.map((r) => (2 * r[0].split(' ').length - 1) * r[1]));
+    const kA = Math.min((pw - 12 * p) / wide, (ph - 8 * p) / tot);   /* px per arcmin */
+    let yy = py + (ph - tot * kA) / 2 + gap[0] * kA / 2;
+    const rowsY = []; for (let i = 0; i < ROWS.length; i++) { rowsY.push(yy); txt(ROWS[i][2], px + pw + 6 * p, yy + ROWS[i][1] * kA / 2, { s: 9, c: T.muted, m: 1 }); yy += (ROWS[i][1] + (gap[i + 1] || 0)) * kA; }
+    if (S.blind) { ctx.fillStyle = T.surface; ctx.globalAlpha = 0.92; ctx.fillRect(px, py, pw, ph); ctx.globalAlpha = 1; txt('hidden in Blind', px + pw / 2, py + ph / 2, { a: 'center', s: 11, c: T.muted }); return; }
+    /* letters on a transparent canvas, then the disk blur by averaging shifted copies (on a smaller canvas when the disk is large) */
+    const D = dpr, cw = Math.max(1, Math.round(pw * D)), ch = Math.max(1, Math.round(ph * D)), rDev = bArc * kA * D / 2, sc = Math.min(1, 6 / Math.max(rDev, 1e-6));
+    const sw = Math.max(1, Math.round(cw * sc)), sh = Math.max(1, Math.round(ch * sc));
+    for (const k of ['src', 'acc']) { if (!seen[k]) seen[k] = document.createElement('canvas'); if (seen[k].width !== sw || seen[k].height !== sh) { seen[k].width = sw; seen[k].height = sh; } }
+    const g = seen.src.getContext('2d'); g.setTransform(1, 0, 0, 1, 0, 0); g.clearRect(0, 0, sw, sh); g.setTransform(D * sc, 0, 0, D * sc, 0, 0);
+    g.fillStyle = '#111'; g.textAlign = 'center'; g.textBaseline = 'alphabetic';
+    ROWS.forEach(([letters, a], i) => { const L = letters.split(' '), sz = a * kA, x0 = pw / 2 - (2 * L.length - 1) * sz / 2; g.font = `700 ${sz * 1.4}px ${T.ui}`;
+      L.forEach((c, j) => g.fillText(c, x0 + (2 * j + 0.5) * sz, rowsY[i] - py + sz)); });
+    let out = seen.src;
+    const r = rDev * sc;
+    if (r >= 0.5) {
+      const a2 = seen.acc.getContext('2d'), N = Math.max(12, Math.min(160, Math.ceil(Math.PI * r * r * 0.9)));
+      a2.setTransform(1, 0, 0, 1, 0, 0); a2.globalCompositeOperation = 'source-over'; a2.globalAlpha = 1; a2.clearRect(0, 0, sw, sh);
+      a2.globalCompositeOperation = 'lighter'; a2.globalAlpha = 1 / N;
+      for (let i = 0; i < N; i++) { const rr = r * Math.sqrt((i + 0.5) / N), th = i * 2.399963; a2.drawImage(seen.src, rr * Math.cos(th), rr * Math.sin(th)); }
+      a2.globalCompositeOperation = 'source-over'; a2.globalAlpha = 1; out = seen.acc;
+    }
+    ctx.save(); ctx.imageSmoothingEnabled = true; ctx.beginPath(); ctx.rect(px, py, pw, ph); ctx.clip(); ctx.drawImage(out, 0, 0, sw, sh, px, py, pw, ph); ctx.restore();
   }
   /* ---------- camera drawing ---------- */
   function drawScaleCam(x0, x1, y, q) {
@@ -482,7 +539,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = ps(), st = state(), topH = Math.max(130 * p, Hh * 0.3);
     drawScale(24 * p, W - 30 * p, topH * 0.62, st);
     ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(0, topH); ctx.lineTo(W, topH); ctx.stroke();
-    drawEye(0, topH, W, Hh - topH, st);
+    const narrow = W < 700, cwS = narrow ? W - 24 * p : Math.min(300 * p, W * 0.32), chS = narrow ? 128 * p : Math.min(Hh - topH - 60 * p, 250 * p);
+    if (narrow) { drawSeen(12 * p, topH + 30 * p, cwS, chS, st); drawEye(0, topH + chS + 30 * p, W, Hh - topH - chS - 30 * p, st); }
+    else { drawEye(0, topH, W - cwS - 16 * p, Hh - topH, st); drawSeen(W - cwS - 12 * p, topH + 34 * p, cwS, chS, st); }
     const sharp = st.img.blur < SHARP;
     if (!S.blind) txt(sharp ? 'sharp' : 'blurred', W - 12 * p, topH + 18 * p, { a: 'right', s: 13, b: 1, c: sharp ? T.np : T.pos });
   }
