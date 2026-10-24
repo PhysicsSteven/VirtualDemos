@@ -154,7 +154,16 @@ The QR, Reset all, handout button and sidebar trim tools see the library link an
 | spectra | 2026-10-24 | batch 5 (Misc) |
 | thin-films | 2026-10-24 | batch 5 (Misc) |
 | white-dwarf-cooling | 2026-10-24 | batch 5 (Misc) |
+| bz-reaction | 2026-10-24 | batch 6 (three.js) |
+| dna | 2026-10-24 | batch 6 (three.js) |
+| e-over-m | 2026-10-24 | batch 6 (three.js) |
+| electron-diffraction | 2026-10-24 | batch 6 (three.js) |
+| hydrogen-orbitals | 2026-10-24 | batch 6 (three.js) |
+| relativity-em | 2026-10-24 | batch 6 (three.js) |
+| speed-of-light | 2026-10-24 | batch 6 (three.js) |
+| spin-resonance | 2026-10-24 | batch 6 (three.js) |
+| star-slice | 2026-10-24 | batch 6 (three.js), built from tools/star-slice/star-slice.template.html |
 
 ## Being moved
 
-Batch 6 (Misc with three.js), from 2026-10-24 00:50: bz-reaction, dna, e-over-m, electron-diffraction, hydrogen-orbitals, relativity-em, speed-of-light, spin-resonance.
+Nothing at the moment. Every demo is on the library except the redirect pages (nonuniform-circular, circuit-builder, transient-circuits) and the two older circuit pages kept for now (rc-circuits, ac-circuits).

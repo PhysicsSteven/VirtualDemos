@@ -1,35 +1,15 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html lang="en">
+<html data-vd-off="rail-details-more-summary rail-details-more-summary-focusvisible rail-details-more-summary-2 handout handout-menu handout-menu-summary handout-menu-summary-webkitdetailsmarker handout-menu-summary-after handout-menu-summary-after-2 handout-menu-ul handout-menu-li-a handout-menu-li-a-hover handout-hover handout-focusvisible handout-svg rail-details-fold-summary rail-details-fold-summary-webkitdetailsmarker rail-details-fold-summary-after rail-details-fold-summary-after-2 rail-details-fold-summary-focusvisible rail-details-fold-foldbody root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage pane toggles swatch phone-chips-button pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<style>
-*, *::before, *::after { box-sizing: border-box; }
-:root { padding-top: env(safe-area-inset-top, 0px); padding-bottom: env(safe-area-inset-bottom, 0px); box-sizing: border-box; height: 100%; }
-body { margin: 0; }
-img { max-width: 100%; }
-[hidden] { display: none !important; }
-/* vd-qr */
-.vd-qr { display: none; }
-@media (min-width: 821px) {
-  :root[data-projector="on"] .vd-qr { display: block; margin: -8px 0; }
-}
-.vd-qr svg { width: 64px; height: 64px; display: block; border-radius: 3px; }
-.vd-qr { padding: 0; border: 0; background: none; cursor: zoom-in; }
-.vd-qr-big { position: fixed; inset: 0; z-index: 1000; display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 16px; background: rgba(0, 0, 0, 0.82); color: #fff; cursor: zoom-out; font: 600 1.4rem/1.3 system-ui, sans-serif; text-align: center; padding: 16px; }
-.vd-qr-big svg { width: min(70vh, 86vw); height: min(70vh, 86vw); border-radius: 8px; }
-.vd-qr-big small { font: 400 1rem/1.3 ui-monospace, monospace; opacity: 0.85; }
-/* /vd-qr */
-/* vd-reset */
-.vd-reset { white-space: nowrap; }
-/* /vd-reset */
-</style>
 <title>Spin Resonance</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
 <style>
 /* Layout: a 3D lab bench across the top of the stage, the oscilloscope and the chart recorder below it; instrument rail on the right; stacks on phones. */
 :root {
@@ -73,24 +53,7 @@ img { max-width: 100%; }
 html, body { height: 100%; }
 body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); font-size: 15px; line-height: 1.45; }
 :root[data-projector="on"] body { font-size: 1.25rem; }
-.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
-
-.app {
-  height: 100%; display: flex; flex-direction: column; gap: 12px;
-  padding-block: 14px;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-}
-.bar { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 20px; }
-.bar h1 { margin: 0; font-size: 1.5rem; font-weight: 700; letter-spacing: -0.01em; text-wrap: balance; }
-.bar > div:first-child { flex: 1 1 360px; min-width: 0; }
-.bar p { margin: 2px 0 0; color: var(--muted); max-width: 72ch; }
-.bar-right { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .units { color: var(--muted); font-size: 0.8rem; }
-.proj { font: inherit; font-size: 0.82rem; font-weight: 700; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
-.proj[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
-
-.bench { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 290px; gap: 12px; }
 .stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: auto minmax(0, 1fr); }
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 10px; border-bottom: 1px solid var(--line); }
 .count { margin-left: auto; font-size: 0.9rem; font-weight: 600; white-space: nowrap; }
@@ -103,49 +66,19 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 #p3d canvas, #scope, #chart { touch-action: none; outline: none; }
 #p3d canvas:focus-visible, #scope:focus-visible, #chart:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 .tip { position: absolute; left: 8px; bottom: 6px; margin: 0; font-size: 0.76rem; color: var(--muted); background: color-mix(in srgb, var(--bench-bg) 82%, transparent); padding: 2px 6px; border-radius: 4px; pointer-events: none; max-width: calc(100% - 16px); }
-
-.rail { min-width: 0; overflow-y: auto; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; }
-.rail section { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; }
-.rail section + section { border-top: 1px solid var(--line); }
-.rail h2 { margin: 0; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; color: var(--muted); }
-.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
-
-.chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.chips button, .btn {
-  font: inherit; font-size: 0.88rem; color: var(--ink); background: var(--canvas);
-  border: 1px solid var(--line); border-radius: 6px; padding: 5px 10px; cursor: pointer;
-}
-.chips button:hover, .btn:hover { border-color: var(--muted); }
-.chips button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 button:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
 .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
-.seg { display: inline-flex; background: var(--canvas); border: 1px solid var(--line); border-radius: 8px; padding: 2px; }
 .seg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
 .seg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
-.inline { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; }
 .inline .lab { font-size: 0.88rem; }
 select { font: inherit; font-size: 0.85rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; }
-
-.slider-head { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; }
-.slider-head label { font-size: 0.88rem; }
-.slider-head output { font-size: 0.85rem; color: var(--muted); text-align: right; }
 input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
-
-.readout { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; }
-.readout div { min-width: 0; }
-.readout dt { font-size: 0.78rem; color: var(--muted); }
-.readout dd { margin: 0; font-family: var(--font-mono); font-variant-numeric: tabular-nums; font-size: 1.02rem; font-weight: 600; overflow-wrap: anywhere; }
-.readout .big dd { font-size: 1.2rem; }
-.readout .wide { grid-column: 1 / -1; }
 .formula { margin: 0; font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; line-height: 1.6; }
 .toggles { display: grid; grid-template-columns: 1fr; gap: 6px 10px; }
-.toggles label, .check { display: flex; align-items: center; gap: 7px; font-size: 0.9rem; cursor: pointer; }
 .toggles input, .check input { accent-color: var(--accent); margin: 0; }
-.key { display: grid; gap: 5px; font-size: 0.84rem; color: var(--muted); }
-.key span { display: flex; align-items: center; gap: 8px; }
 .swatch { flex: none; width: 22px; height: 0; border-top: 3px solid; }
 .swatch.c1 { border-color: #f2c94c; }
 .swatch.c2 { border-color: #4fd8f0; }
@@ -172,7 +105,6 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
 table.rows td.b { font-size: 0.76rem; }
 .plotbox { position: relative; height: 190px; }
 .plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.btnrow { display: flex; flex-wrap: wrap; gap: 6px; }
 .seed { width: 6.5em; font: inherit; font-family: var(--font-mono); font-size: 0.88rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
 .ok { color: var(--muted); font-weight: 400; font-size: 0.82rem; }
 .note { margin: 0; font-size: 0.82rem; color: var(--pos); }
@@ -190,12 +122,9 @@ table.rows td.b { font-size: 0.76rem; }
   table.rows input { min-height: 32px; }
   table.rows button { min-height: 36px; min-width: 32px; }
   html, body { height: auto; }
-  .app { height: auto; }
-  .bench { grid-template-columns: minmax(0, 1fr); }
   .stage { min-height: 0; }
   .panes { grid-template-columns: minmax(0, 1fr); grid-template-rows: 250px 330px 230px; }
   #pChart { border-left: 0; border-top: 1px solid var(--line); }
-  .rail { overflow: visible; }
 }
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 @media (min-width: 821px) and (max-height: 820px) { :root[data-projector="on"] .bar .units { display: none; } :root[data-projector="on"] .bar p { font-size: 1rem; max-width: none; } }
@@ -211,9 +140,9 @@ table.rows td.b { font-size: 0.76rem; }
     </div>
     <div class="bar-right">
       <div class="units mono">B in mT · ν in MHz · hν = gμ<sub>B</sub>B · ν = (γ/2π)B</div>
-      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><script>(function(b){var base=new WeakMap(),rec=false;function data(t){var n=0;Array.prototype.forEach.call(t.rows,function(r){if(r.parentNode.tagName==='THEAD'||r.parentNode.tagName==='TFOOT')return;if(r.cells.length>1||(r.cells.length===1&&r.cells[0].colSpan<2))n++;});return n;}function snap(){document.querySelectorAll('table').forEach(function(t){base.set(t,data(t));});}window.addEventListener('load',function(){setTimeout(snap,400);});document.addEventListener('click',function(e){var x=e.target.closest&&e.target.closest('button');if(!x||x===b)return;var s=x.textContent.trim();if(/^(capture|record|add to table|add point|keep trace|pin this)/i.test(s))rec=true;else if(/^clear/i.test(s))rec=false;},true);function lost(){if(typeof window.vdReadings==='function')return Number(window.vdReadings())||0;var n=0;document.querySelectorAll('table').forEach(function(t){n+=Math.max(0,data(t)-(base.has(t)?base.get(t):0));});return n||(rec?-1:0);}b.vdLost=lost;b.addEventListener('click',function(){var n=lost();if(n&&!window.confirm('Reset all clears '+(n>1?'the '+n+' readings':n===1?'the reading':'the readings')+' you recorded. '+'Export them first if you need them. Reset anyway?'))return;document.querySelectorAll('input,select,textarea,form').forEach(function(e){e.setAttribute('autocomplete','off');});location.reload();});})(document.currentScript.previousElementSibling);</script><!-- /vd-reset -->
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
-      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/spin-resonance.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/spin-resonance.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h1v1h-1zM14 2h1v1h-1zM16 2h1v1h-1zM18 2h1v1h-1zM21 2h3v1h-3zM27 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM12 3h2v1h-2zM15 3h1v1h-1zM20 3h2v1h-2zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h2v1h-2zM16 4h1v1h-1zM18 4h1v1h-1zM21 4h1v1h-1zM23 4h2v1h-2zM26 4h4v1h-4zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM13 5h1v1h-1zM15 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM22 5h2v1h-2zM25 5h1v1h-1zM27 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM16 6h1v1h-1zM21 6h1v1h-1zM23 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM13 7h5v1h-5zM25 7h1v1h-1zM27 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM18 9h3v1h-3zM26 9h2v1h-2zM29 9h1v1h-1zM2 10h1v1h-1zM5 10h6v1h-6zM14 10h1v1h-1zM17 10h1v1h-1zM21 10h1v1h-1zM25 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM4 11h2v1h-2zM9 11h2v1h-2zM15 11h2v1h-2zM18 11h1v1h-1zM20 11h1v1h-1zM23 11h3v1h-3zM28 11h2v1h-2zM31 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h1v1h-1zM4 12h1v1h-1zM6 12h4v1h-4zM14 12h1v1h-1zM16 12h3v1h-3zM20 12h4v1h-4zM25 12h2v1h-2zM29 12h1v1h-1zM31 12h3v1h-3zM36 12h1v1h-1zM38 12h1v1h-1zM3 13h4v1h-4zM9 13h4v1h-4zM16 13h1v1h-1zM18 13h5v1h-5zM24 13h1v1h-1zM29 13h10v1h-10zM3 14h2v1h-2zM6 14h4v1h-4zM11 14h2v1h-2zM14 14h2v1h-2zM17 14h2v1h-2zM26 14h1v1h-1zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM3 15h3v1h-3zM7 15h1v1h-1zM9 15h2v1h-2zM14 15h1v1h-1zM16 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h2v1h-2zM5 16h2v1h-2zM8 16h2v1h-2zM14 16h1v1h-1zM17 16h1v1h-1zM20 16h4v1h-4zM28 16h2v1h-2zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM3 17h3v1h-3zM7 17h1v1h-1zM9 17h2v1h-2zM12 17h2v1h-2zM15 17h2v1h-2zM21 17h1v1h-1zM25 17h1v1h-1zM29 17h3v1h-3zM33 17h1v1h-1zM35 17h3v1h-3zM2 18h1v1h-1zM4 18h8v1h-8zM14 18h1v1h-1zM16 18h2v1h-2zM19 18h3v1h-3zM24 18h4v1h-4zM29 18h2v1h-2zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h3v1h-3zM7 19h1v1h-1zM10 19h1v1h-1zM12 19h2v1h-2zM15 19h1v1h-1zM19 19h1v1h-1zM24 19h1v1h-1zM26 19h1v1h-1zM29 19h1v1h-1zM35 19h2v1h-2zM2 20h1v1h-1zM4 20h3v1h-3zM8 20h1v1h-1zM11 20h1v1h-1zM18 20h2v1h-2zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM4 21h3v1h-3zM9 21h1v1h-1zM11 21h1v1h-1zM13 21h3v1h-3zM17 21h2v1h-2zM20 21h3v1h-3zM24 21h1v1h-1zM27 21h1v1h-1zM30 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM6 22h1v1h-1zM8 22h3v1h-3zM14 22h3v1h-3zM18 22h2v1h-2zM21 22h1v1h-1zM26 22h1v1h-1zM28 22h1v1h-1zM30 22h6v1h-6zM4 23h4v1h-4zM9 23h1v1h-1zM12 23h1v1h-1zM14 23h4v1h-4zM19 23h1v1h-1zM21 23h5v1h-5zM27 23h1v1h-1zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM2 24h1v1h-1zM4 24h3v1h-3zM8 24h1v1h-1zM11 24h1v1h-1zM13 24h5v1h-5zM23 24h5v1h-5zM29 24h5v1h-5zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h2v1h-2zM6 25h1v1h-1zM9 25h1v1h-1zM11 25h1v1h-1zM13 25h1v1h-1zM15 25h1v1h-1zM20 25h3v1h-3zM24 25h1v1h-1zM30 25h7v1h-7zM4 26h2v1h-2zM8 26h6v1h-6zM17 26h1v1h-1zM19 26h1v1h-1zM22 26h3v1h-3zM26 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h2v1h-2zM7 27h1v1h-1zM9 27h1v1h-1zM11 27h1v1h-1zM14 27h1v1h-1zM16 27h1v1h-1zM20 27h2v1h-2zM25 27h1v1h-1zM27 27h3v1h-3zM34 27h2v1h-2zM2 28h7v1h-7zM10 28h1v1h-1zM14 28h2v1h-2zM17 28h1v1h-1zM24 28h1v1h-1zM28 28h3v1h-3zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM12 29h2v1h-2zM15 29h2v1h-2zM18 29h1v1h-1zM21 29h1v1h-1zM24 29h3v1h-3zM28 29h2v1h-2zM31 29h3v1h-3zM35 29h2v1h-2zM2 30h1v1h-1zM4 30h1v1h-1zM7 30h2v1h-2zM11 30h1v1h-1zM13 30h1v1h-1zM17 30h1v1h-1zM21 30h2v1h-2zM25 30h3v1h-3zM30 30h7v1h-7zM38 30h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h3v1h-3zM19 31h6v1h-6zM26 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h4v1h-4zM17 32h5v1h-5zM25 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM18 33h1v1h-1zM21 33h3v1h-3zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h4v1h-4zM15 34h1v1h-1zM18 34h1v1h-1zM20 34h1v1h-1zM22 34h2v1h-2zM25 34h2v1h-2zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h4v1h-4zM22 35h4v1h-4zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM14 36h3v1h-3zM19 36h2v1h-2zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM17 37h1v1h-1zM19 37h1v1h-1zM24 37h1v1h-1zM28 37h1v1h-1zM31 37h1v1h-1zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h1v1h-1zM18 38h1v1h-1zM21 38h2v1h-2zM26 38h1v1h-1zM30 38h1v1h-1zM32 38h2v1h-2zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><script>(function(b){var h=location.href.split(/[?#]/)[0].toLowerCase();if(h!==b.dataset.url.toLowerCase()){b.remove();return;}b.addEventListener('click',function(){var o=document.createElement('div');o.className='vd-qr-big';o.setAttribute('role','dialog');o.setAttribute('aria-label','QR code');o.innerHTML=b.innerHTML+'<div>Scan to open this demo on your phone</div><small>'+b.dataset.url+'</small>';function x(e){if(!e||e.type==='click'||e.key==='Escape'){o.remove();document.removeEventListener('keydown',x);b.focus();}}o.addEventListener('click',x);document.addEventListener('keydown',x);document.body.appendChild(o);});})(document.currentScript.previousElementSibling);</script><!-- /vd-qr -->
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/spin-resonance.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/spin-resonance.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h1v1h-1zM14 2h1v1h-1zM16 2h1v1h-1zM18 2h1v1h-1zM21 2h3v1h-3zM27 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h1v1h-1zM12 3h2v1h-2zM15 3h1v1h-1zM20 3h2v1h-2zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM12 4h2v1h-2zM16 4h1v1h-1zM18 4h1v1h-1zM21 4h1v1h-1zM23 4h2v1h-2zM26 4h4v1h-4zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h1v1h-1zM13 5h1v1h-1zM15 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM22 5h2v1h-2zM25 5h1v1h-1zM27 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM16 6h1v1h-1zM21 6h1v1h-1zM23 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM13 7h5v1h-5zM25 7h1v1h-1zM27 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h1v1h-1zM13 9h1v1h-1zM15 9h1v1h-1zM18 9h3v1h-3zM26 9h2v1h-2zM29 9h1v1h-1zM2 10h1v1h-1zM5 10h6v1h-6zM14 10h1v1h-1zM17 10h1v1h-1zM21 10h1v1h-1zM25 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM4 11h2v1h-2zM9 11h2v1h-2zM15 11h2v1h-2zM18 11h1v1h-1zM20 11h1v1h-1zM23 11h3v1h-3zM28 11h2v1h-2zM31 11h1v1h-1zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h1v1h-1zM4 12h1v1h-1zM6 12h4v1h-4zM14 12h1v1h-1zM16 12h3v1h-3zM20 12h4v1h-4zM25 12h2v1h-2zM29 12h1v1h-1zM31 12h3v1h-3zM36 12h1v1h-1zM38 12h1v1h-1zM3 13h4v1h-4zM9 13h4v1h-4zM16 13h1v1h-1zM18 13h5v1h-5zM24 13h1v1h-1zM29 13h10v1h-10zM3 14h2v1h-2zM6 14h4v1h-4zM11 14h2v1h-2zM14 14h2v1h-2zM17 14h2v1h-2zM26 14h1v1h-1zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM3 15h3v1h-3zM7 15h1v1h-1zM9 15h2v1h-2zM14 15h1v1h-1zM16 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h2v1h-2zM5 16h2v1h-2zM8 16h2v1h-2zM14 16h1v1h-1zM17 16h1v1h-1zM20 16h4v1h-4zM28 16h2v1h-2zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM3 17h3v1h-3zM7 17h1v1h-1zM9 17h2v1h-2zM12 17h2v1h-2zM15 17h2v1h-2zM21 17h1v1h-1zM25 17h1v1h-1zM29 17h3v1h-3zM33 17h1v1h-1zM35 17h3v1h-3zM2 18h1v1h-1zM4 18h8v1h-8zM14 18h1v1h-1zM16 18h2v1h-2zM19 18h3v1h-3zM24 18h4v1h-4zM29 18h2v1h-2zM32 18h1v1h-1zM36 18h3v1h-3zM2 19h3v1h-3zM7 19h1v1h-1zM10 19h1v1h-1zM12 19h2v1h-2zM15 19h1v1h-1zM19 19h1v1h-1zM24 19h1v1h-1zM26 19h1v1h-1zM29 19h1v1h-1zM35 19h2v1h-2zM2 20h1v1h-1zM4 20h3v1h-3zM8 20h1v1h-1zM11 20h1v1h-1zM18 20h2v1h-2zM21 20h1v1h-1zM23 20h1v1h-1zM25 20h1v1h-1zM27 20h1v1h-1zM29 20h1v1h-1zM31 20h1v1h-1zM35 20h2v1h-2zM38 20h1v1h-1zM4 21h3v1h-3zM9 21h1v1h-1zM11 21h1v1h-1zM13 21h3v1h-3zM17 21h2v1h-2zM20 21h3v1h-3zM24 21h1v1h-1zM27 21h1v1h-1zM30 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM6 22h1v1h-1zM8 22h3v1h-3zM14 22h3v1h-3zM18 22h2v1h-2zM21 22h1v1h-1zM26 22h1v1h-1zM28 22h1v1h-1zM30 22h6v1h-6zM4 23h4v1h-4zM9 23h1v1h-1zM12 23h1v1h-1zM14 23h4v1h-4zM19 23h1v1h-1zM21 23h5v1h-5zM27 23h1v1h-1zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM2 24h1v1h-1zM4 24h3v1h-3zM8 24h1v1h-1zM11 24h1v1h-1zM13 24h5v1h-5zM23 24h5v1h-5zM29 24h5v1h-5zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h2v1h-2zM6 25h1v1h-1zM9 25h1v1h-1zM11 25h1v1h-1zM13 25h1v1h-1zM15 25h1v1h-1zM20 25h3v1h-3zM24 25h1v1h-1zM30 25h7v1h-7zM4 26h2v1h-2zM8 26h6v1h-6zM17 26h1v1h-1zM19 26h1v1h-1zM22 26h3v1h-3zM26 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h2v1h-2zM7 27h1v1h-1zM9 27h1v1h-1zM11 27h1v1h-1zM14 27h1v1h-1zM16 27h1v1h-1zM20 27h2v1h-2zM25 27h1v1h-1zM27 27h3v1h-3zM34 27h2v1h-2zM2 28h7v1h-7zM10 28h1v1h-1zM14 28h2v1h-2zM17 28h1v1h-1zM24 28h1v1h-1zM28 28h3v1h-3zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM12 29h2v1h-2zM15 29h2v1h-2zM18 29h1v1h-1zM21 29h1v1h-1zM24 29h3v1h-3zM28 29h2v1h-2zM31 29h3v1h-3zM35 29h2v1h-2zM2 30h1v1h-1zM4 30h1v1h-1zM7 30h2v1h-2zM11 30h1v1h-1zM13 30h1v1h-1zM17 30h1v1h-1zM21 30h2v1h-2zM25 30h3v1h-3zM30 30h7v1h-7zM38 30h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM14 31h3v1h-3zM19 31h6v1h-6zM26 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h4v1h-4zM17 32h5v1h-5zM25 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h1v1h-1zM18 33h1v1h-1zM21 33h3v1h-3zM25 33h1v1h-1zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h4v1h-4zM15 34h1v1h-1zM18 34h1v1h-1zM20 34h1v1h-1zM22 34h2v1h-2zM25 34h2v1h-2zM28 34h7v1h-7zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h4v1h-4zM22 35h4v1h-4zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM14 36h3v1h-3zM19 36h2v1h-2zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM17 37h1v1h-1zM19 37h1v1h-1zM24 37h1v1h-1zM28 37h1v1h-1zM31 37h1v1h-1zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h2v1h-2zM14 38h1v1h-1zM18 38h1v1h-1zM21 38h2v1h-2zM26 38h1v1h-1zM30 38h1v1h-1zM32 38h2v1h-2zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
     </div>
   </header>
 

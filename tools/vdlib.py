@@ -191,6 +191,9 @@ def move(demo, report=False):
     proj = PROJECTOR.search(t)
     if proj and t.count('setProjector') == 3 and t.count('projBtn') == 4:
         t = t[:proj.start()] + f'VD.projector({{ onChange: {proj.group(2)} }});' + t[proj.end():]
+    if 'root-2' in off and 'root' not in off and '<style>' in t:
+        # the shared * rule (root) no longer reaches the html element, which only root-2 sizes in vd.css
+        t = t.replace('<style>', '<style>:root { box-sizing: border-box; } /* the html element, which vd.css only sizes this way along with root-2 */\n', 1)
     i = t.index('<style') if '<style' in t else t.index('</head>')
     t = t[:i] + LINKS + t[i:]
     if off: t = re.sub(r'<html\b', '<html data-vd-off="' + ' '.join(off) + '"', t, count=1)
