@@ -46,5 +46,5 @@ assert(p2.units.at(-1).sections.every(r => r.vol === 3));
 assert(demos.get('magnetic-force').sections.some(s => s.vol === 2 && s.sec === '11.6'));
 assert(['needs-handout', 'usable'].includes(demos.get('springs').status));
 for (const name of ['currents-fields', 'em-waves', 'catenary', 'relativity-em']) assert.equal(demos.get(name).role, 'demo');
-for (const [vol, count] of [[1, 99], [2, 95], [3, 15]]) assert.equal(map.sections.filter(s => s.vol === vol).length, count);
+for (const [vol, count] of [[1, 99], [2, 95], [3, 76]]) /* Vol 3: chapters 1 to 11, every section (chapters 3 to 11 mapped 2026-10-24) */ assert.equal(map.sections.filter(s => s.vol === vol).length, count);
 console.log(`PASS textbook map contract: ${demos.size} catalog entries, ${sections.size} sections, ordered course units and explicit gaps`);

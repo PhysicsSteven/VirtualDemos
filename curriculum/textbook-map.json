@@ -4445,6 +4445,963 @@
       "status": "missing",
       "demos": [],
       "note": "No mapped activity yet. This is a gap label, not a new-demo commitment."
+    },
+    {
+      "vol": 3,
+      "sec": "3.1",
+      "title": "Young's Double-Slit Interference",
+      "chapter": 3,
+      "chapter_title": "Interference",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "double-slit"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Double slit: fringes from photons, electrons or buckyballs, slit separation d and width a."
+    },
+    {
+      "vol": 3,
+      "sec": "3.2",
+      "title": "Mathematics of Interference",
+      "chapter": 3,
+      "chapter_title": "Interference",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "double-slit",
+        "diffraction-grating"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Double slit fringe positions and intensity; the grating plot gives the two slit pattern with N = 2."
+    },
+    {
+      "vol": 3,
+      "sec": "3.3",
+      "title": "Multiple-Slit Interference",
+      "chapter": 3,
+      "chapter_title": "Interference",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "diffraction-grating"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Diffraction grating: far field pattern of N slits, I ∝ [sin(Nφ)/sin φ]² times the single slit envelope."
+    },
+    {
+      "vol": 3,
+      "sec": "3.4",
+      "title": "Interference in Thin Films",
+      "chapter": 3,
+      "chapter_title": "Interference",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "thin-films"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Thin films: soap and oil films, the black film, air wedge, Newton's rings, anti reflection coatings."
+    },
+    {
+      "vol": 3,
+      "sec": "3.5",
+      "title": "The Michelson Interferometer",
+      "chapter": 3,
+      "chapter_title": "Interference",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet. Candidate: a Michelson view (fringe count against mirror travel) in the thin films demo."
+    },
+    {
+      "vol": 3,
+      "sec": "4.1",
+      "title": "Single-Slit Diffraction",
+      "chapter": 4,
+      "chapter_title": "Diffraction",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "needs-feature",
+      "demos": [
+        "double-slit",
+        "diffraction-grating"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: the single slit envelope appears inside the double slit and grating patterns; there is no single slit setup on its own."
+    },
+    {
+      "vol": 3,
+      "sec": "4.2",
+      "title": "Intensity in Single-Slit Diffraction",
+      "chapter": 4,
+      "chapter_title": "Diffraction",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "needs-feature",
+      "demos": [
+        "diffraction-grating"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: the grating plot includes the [sin β/β]² envelope; no single slit intensity setup on its own."
+    },
+    {
+      "vol": 3,
+      "sec": "4.3",
+      "title": "Double-Slit Diffraction",
+      "chapter": 4,
+      "chapter_title": "Diffraction",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "double-slit",
+        "diffraction-grating"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Finite slit width a: orders on an envelope zero are missing (both demos)."
+    },
+    {
+      "vol": 3,
+      "sec": "4.4",
+      "title": "Diffraction Gratings",
+      "chapter": 4,
+      "chapter_title": "Diffraction",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "diffraction-grating"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Gratings of 100 to 1000 lines/mm, CD and DVD, lamps and lasers; measure a spot to find λ."
+    },
+    {
+      "vol": 3,
+      "sec": "4.5",
+      "title": "Circular Apertures and Resolution",
+      "chapter": 4,
+      "chapter_title": "Diffraction",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet. Candidate: an Airy disk and Rayleigh criterion setup (the eye or optics bench)."
+    },
+    {
+      "vol": 3,
+      "sec": "4.6",
+      "title": "X-Ray Diffraction",
+      "chapter": 4,
+      "chapter_title": "Diffraction",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "needs-feature",
+      "demos": [
+        "electron-diffraction"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: electron diffraction uses Bragg's law 2d sin θ = λ on graphite with electrons, not X rays."
+    },
+    {
+      "vol": 3,
+      "sec": "4.7",
+      "title": "Holography",
+      "chapter": 4,
+      "chapter_title": "Diffraction",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+    },
+    {
+      "vol": 3,
+      "sec": "5.1",
+      "title": "Invariance of Physical Laws",
+      "chapter": 5,
+      "chapter_title": "Relativity",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "spacetime",
+        "speed-of-light"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: light stays at 45° for every observer; speed of light bench measures c."
+    },
+    {
+      "vol": 3,
+      "sec": "5.2",
+      "title": "Relativity of Simultaneity",
+      "chapter": 5,
+      "chapter_title": "Relativity",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "spacetime"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: Relativity of simultaneity preset."
+    },
+    {
+      "vol": 3,
+      "sec": "5.3",
+      "title": "Time Dilation",
+      "chapter": 5,
+      "chapter_title": "Relativity",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "spacetime",
+        "gps-clocks"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: Time dilation preset and twin paradox; GPS clocks gives the speed part of the clock rate difference."
+    },
+    {
+      "vol": 3,
+      "sec": "5.4",
+      "title": "Length Contraction",
+      "chapter": 5,
+      "chapter_title": "Relativity",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "spacetime",
+        "relativity-em"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: Length contraction preset; relativity and EM uses contraction of the charge spacing."
+    },
+    {
+      "vol": 3,
+      "sec": "5.5",
+      "title": "The Lorentz Transformation",
+      "chapter": 5,
+      "chapter_title": "Relativity",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "spacetime",
+        "relativity-em"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Spacetime: events transformed between observers on a Minkowski diagram; relativity and EM transforms E and B."
+    },
+    {
+      "vol": 3,
+      "sec": "5.6",
+      "title": "Relativistic Velocity Transformation",
+      "chapter": 5,
+      "chapter_title": "Relativity",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet. Candidate: velocity addition on the spacetime diagram."
+    },
+    {
+      "vol": 3,
+      "sec": "5.7",
+      "title": "Doppler Effect for Light",
+      "chapter": 5,
+      "chapter_title": "Relativity",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "doppler"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Doppler effect: light mode with the exact relativistic shift, including the transverse 1/γ redshift."
+    },
+    {
+      "vol": 3,
+      "sec": "5.8",
+      "title": "Relativistic Momentum",
+      "chapter": 5,
+      "chapter_title": "Relativity",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "needs-feature",
+      "demos": [
+        "compton"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: Compton scattering uses exact relativistic kinematics for the recoil electron; no dedicated momentum activity."
+    },
+    {
+      "vol": 3,
+      "sec": "5.9",
+      "title": "Relativistic Energy",
+      "chapter": 5,
+      "chapter_title": "Relativity",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "needs-feature",
+      "demos": [
+        "compton",
+        "binding-energy"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: Compton (E/mc² of the collision) and binding energy (mass defect, E = mc²); no dedicated activity."
+    },
+    {
+      "vol": 3,
+      "sec": "6.1",
+      "title": "Blackbody Radiation",
+      "chapter": 6,
+      "chapter_title": "Photons and Matter Waves",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "blackbody"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Planck spectrum, Wien and Stefan–Boltzmann laws."
+    },
+    {
+      "vol": 3,
+      "sec": "6.2",
+      "title": "Photoelectric Effect",
+      "chapter": 6,
+      "chapter_title": "Photons and Matter Waves",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "photoelectric"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Stopping voltage against frequency; h from the slope."
+    },
+    {
+      "vol": 3,
+      "sec": "6.3",
+      "title": "The Compton Effect",
+      "chapter": 6,
+      "chapter_title": "Photons and Matter Waves",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "compton"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Wavelength shift, electron recoil and the momentum triangle."
+    },
+    {
+      "vol": 3,
+      "sec": "6.4",
+      "title": "Bohr’s Model of the Hydrogen Atom",
+      "chapter": 6,
+      "chapter_title": "Photons and Matter Waves",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "spectra",
+        "franck-hertz",
+        "rutherford"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Spectra: Bohr model of hydrogen and NIST lines; Franck–Hertz: quantized excitation; Rutherford: the nuclear atom."
+    },
+    {
+      "vol": 3,
+      "sec": "6.5",
+      "title": "De Broglie’s Matter Waves",
+      "chapter": 6,
+      "chapter_title": "Photons and Matter Waves",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "electron-diffraction"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Electron diffraction: λ = h/p from ring radii at several voltages."
+    },
+    {
+      "vol": 3,
+      "sec": "6.6",
+      "title": "Wave-Particle Duality",
+      "chapter": 6,
+      "chapter_title": "Photons and Matter Waves",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "double-slit"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Single particles build up fringes; a which slit detector removes them."
+    },
+    {
+      "vol": 3,
+      "sec": "7.1",
+      "title": "Wave Functions",
+      "chapter": 7,
+      "chapter_title": "Quantum Mechanics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "quantum-waves",
+        "hydrogen-orbitals"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: ψ and |ψ|² of a packet; measurement collapses it."
+    },
+    {
+      "vol": 3,
+      "sec": "7.2",
+      "title": "The Heisenberg Uncertainty Principle",
+      "chapter": 7,
+      "chapter_title": "Quantum Mechanics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "quantum-waves"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: Δx and Δp of the packet, minimum product at launch."
+    },
+    {
+      "vol": 3,
+      "sec": "7.3",
+      "title": "The Schrӧdinger Equation",
+      "chapter": 7,
+      "chapter_title": "Quantum Mechanics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "quantum-waves"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: the packet evolves under the time dependent Schrödinger equation."
+    },
+    {
+      "vol": 3,
+      "sec": "7.4",
+      "title": "The Quantum Particle in a Box",
+      "chapter": 7,
+      "chapter_title": "Quantum Mechanics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "quantum-waves"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: energy eigenstates in a box."
+    },
+    {
+      "vol": 3,
+      "sec": "7.5",
+      "title": "The Quantum Harmonic Oscillator",
+      "chapter": 7,
+      "chapter_title": "Quantum Mechanics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "quantum-waves"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: oscillator eigenstates."
+    },
+    {
+      "vol": 3,
+      "sec": "7.6",
+      "title": "The Quantum Tunneling of Particles through Potential Barriers",
+      "chapter": 7,
+      "chapter_title": "Quantum Mechanics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "quantum-waves"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Quantum waves: tunnelling through a barrier, reflected and transmitted parts."
+    },
+    {
+      "vol": 3,
+      "sec": "8.1",
+      "title": "The Hydrogen Atom",
+      "chapter": 8,
+      "chapter_title": "Atomic Structure",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "hydrogen-orbitals",
+        "spectra"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Hydrogen orbitals up to n = 6 with radial probability; spectra shows the lines."
+    },
+    {
+      "vol": 3,
+      "sec": "8.2",
+      "title": "Orbital Magnetic Dipole Moment of the Electron",
+      "chapter": 8,
+      "chapter_title": "Atomic Structure",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+    },
+    {
+      "vol": 3,
+      "sec": "8.3",
+      "title": "Electron Spin",
+      "chapter": 8,
+      "chapter_title": "Atomic Structure",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "needs-feature",
+      "demos": [
+        "spin-resonance"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: electron spin resonance measures g for DPPH; spin itself is not the subject of an activity."
+    },
+    {
+      "vol": 3,
+      "sec": "8.4",
+      "title": "The Exclusion Principle and the Periodic Table",
+      "chapter": 8,
+      "chapter_title": "Atomic Structure",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet (spectra has a periodic table to pick elements, but no shell filling)."
+    },
+    {
+      "vol": 3,
+      "sec": "8.5",
+      "title": "Atomic Spectra and X-rays",
+      "chapter": 8,
+      "chapter_title": "Atomic Structure",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "needs-feature",
+      "demos": [
+        "spectra"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: spectra covers optical emission and absorption lines; no X ray spectra (Moseley)."
+    },
+    {
+      "vol": 3,
+      "sec": "8.6",
+      "title": "Lasers",
+      "chapter": 8,
+      "chapter_title": "Atomic Structure",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "lasers"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Stimulated emission, population inversion, threshold, cavity modes."
+    },
+    {
+      "vol": 3,
+      "sec": "9.1",
+      "title": "Types of Molecular Bonds",
+      "chapter": 9,
+      "chapter_title": "Condensed Matter Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+    },
+    {
+      "vol": 3,
+      "sec": "9.2",
+      "title": "Molecular Spectra",
+      "chapter": 9,
+      "chapter_title": "Condensed Matter Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+    },
+    {
+      "vol": 3,
+      "sec": "9.3",
+      "title": "Bonding in Crystalline Solids",
+      "chapter": 9,
+      "chapter_title": "Condensed Matter Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+    },
+    {
+      "vol": 3,
+      "sec": "9.4",
+      "title": "Free Electron Model of Metals",
+      "chapter": 9,
+      "chapter_title": "Condensed Matter Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "resistivity"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Resistivity of a wire: free electron density, drift speed and Fermi speed (Inside the wire)."
+    },
+    {
+      "vol": 3,
+      "sec": "9.5",
+      "title": "Band Theory of Solids",
+      "chapter": 9,
+      "chapter_title": "Condensed Matter Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+    },
+    {
+      "vol": 3,
+      "sec": "9.6",
+      "title": "Semiconductors and Doping",
+      "chapter": 9,
+      "chapter_title": "Condensed Matter Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+    },
+    {
+      "vol": 3,
+      "sec": "9.7",
+      "title": "Semiconductor Devices",
+      "chapter": 9,
+      "chapter_title": "Condensed Matter Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+    },
+    {
+      "vol": 3,
+      "sec": "9.8",
+      "title": "Superconductivity",
+      "chapter": 9,
+      "chapter_title": "Condensed Matter Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "resistivity"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Resistivity of a wire: cold stage with superconductors (critical temperatures)."
+    },
+    {
+      "vol": 3,
+      "sec": "10.1",
+      "title": "Properties of Nuclei",
+      "chapter": 10,
+      "chapter_title": "Nuclear Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "binding-energy",
+        "rutherford"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Binding energy: chart of nuclides from AME2020 masses; Rutherford: scattering from a small nucleus."
+    },
+    {
+      "vol": 3,
+      "sec": "10.2",
+      "title": "Nuclear Binding Energy",
+      "chapter": 10,
+      "chapter_title": "Nuclear Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "binding-energy"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Curve of binding energy and the liquid drop model."
+    },
+    {
+      "vol": 3,
+      "sec": "10.3",
+      "title": "Radioactive Decay",
+      "chapter": 10,
+      "chapter_title": "Nuclear Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "usable",
+      "demos": [
+        "radioactive-decay",
+        "gamma-spectroscopy"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Random decays and half life, carbon 14, decay chains; gamma spectra of real sources."
+    },
+    {
+      "vol": 3,
+      "sec": "10.4",
+      "title": "Nuclear Reactions",
+      "chapter": 10,
+      "chapter_title": "Nuclear Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+    },
+    {
+      "vol": 3,
+      "sec": "10.5",
+      "title": "Fission",
+      "chapter": 10,
+      "chapter_title": "Nuclear Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "needs-feature",
+      "demos": [
+        "binding-energy",
+        "energy-sources"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: energy released from the binding energy curve; energy sources uses 200 MeV per fission. No chain reaction activity."
+    },
+    {
+      "vol": 3,
+      "sec": "10.6",
+      "title": "Nuclear Fusion",
+      "chapter": 10,
+      "chapter_title": "Nuclear Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "needs-feature",
+      "demos": [
+        "binding-energy",
+        "star-slice"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: energy released from the binding energy curve; star slice shows burning shells. No reaction rate activity."
+    },
+    {
+      "vol": 3,
+      "sec": "10.7",
+      "title": "Medical Applications and Biological Effects of Nuclear Radiation",
+      "chapter": 10,
+      "chapter_title": "Nuclear Physics",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "needs-feature",
+      "demos": [
+        "gamma-spectroscopy"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: gamma spectroscopy measures lead attenuation; no dose or biological effects."
+    },
+    {
+      "vol": 3,
+      "sec": "11.1",
+      "title": "Introduction to Particle Physics",
+      "chapter": 11,
+      "chapter_title": "Particle Physics and Cosmology",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+    },
+    {
+      "vol": 3,
+      "sec": "11.2",
+      "title": "Particle Conservation Laws",
+      "chapter": 11,
+      "chapter_title": "Particle Physics and Cosmology",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+    },
+    {
+      "vol": 3,
+      "sec": "11.3",
+      "title": "Quarks",
+      "chapter": 11,
+      "chapter_title": "Particle Physics and Cosmology",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+    },
+    {
+      "vol": 3,
+      "sec": "11.4",
+      "title": "Particle Accelerators and Detectors",
+      "chapter": 11,
+      "chapter_title": "Particle Physics and Cosmology",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "needs-feature",
+      "demos": [
+        "magnetic-force",
+        "gamma-spectroscopy"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: cyclotron motion in charges in magnetic fields; a NaI(Tl) scintillation detector in gamma spectroscopy."
+    },
+    {
+      "vol": 3,
+      "sec": "11.5",
+      "title": "The Standard Model",
+      "chapter": 11,
+      "chapter_title": "Particle Physics and Cosmology",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
+    },
+    {
+      "vol": 3,
+      "sec": "11.6",
+      "title": "The Big Bang",
+      "chapter": 11,
+      "chapter_title": "Particle Physics and Cosmology",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "needs-feature",
+      "demos": [
+        "distance-ladder"
+      ],
+      "note": "Volume 3 mapping (2026-10-24, Claude). Partial: Hubble's law fitted to galaxy redshifts; no cosmological model."
+    },
+    {
+      "vol": 3,
+      "sec": "11.7",
+      "title": "Evolution of the Early Universe",
+      "chapter": 11,
+      "chapter_title": "Particle Physics and Cosmology",
+      "course": [
+        "later"
+      ],
+      "requirement": "later",
+      "status": "missing",
+      "demos": [],
+      "note": "Volume 3 mapping (2026-10-24, Claude). No mapped activity yet."
     }
   ],
   "demos": [
@@ -4858,6 +5815,11 @@
           "vol": 1,
           "sec": "8.5",
           "title": "Sources of Energy"
+        },
+        {
+          "vol": 3,
+          "sec": "10.5",
+          "title": "Fission"
         }
       ],
       "role": "demo",
@@ -5121,6 +6083,11 @@
           "vol": 1,
           "sec": "13.7",
           "title": "Einstein's Theory of Gravity"
+        },
+        {
+          "vol": 3,
+          "sec": "5.3",
+          "title": "Time Dilation"
         }
       ],
       "role": "demo",
@@ -5665,6 +6632,16 @@
           "vol": 2,
           "sec": "9.6",
           "title": "Superconductors"
+        },
+        {
+          "vol": 3,
+          "sec": "9.4",
+          "title": "Free Electron Model of Metals"
+        },
+        {
+          "vol": 3,
+          "sec": "9.8",
+          "title": "Superconductivity"
         }
       ],
       "role": "lab",
@@ -5834,6 +6811,11 @@
           "vol": 2,
           "sec": "11.7",
           "title": "Applications of Magnetic Forces and Fields"
+        },
+        {
+          "vol": 3,
+          "sec": "11.4",
+          "title": "Particle Accelerators and Detectors"
         }
       ],
       "role": "lab",
@@ -6142,8 +7124,8 @@
       ],
       "role": "demo",
       "beyond_book": false,
-      "status": "needs-feature",
-      "note": "Plane-wave E/B, energy and radiation-pressure examples exist. Maxwell/displacement-current coverage is partial: no charging-capacitor displacement-current apparatus. Required endpoint is Maxwell and light as an EM wave; no full lab requested.",
+      "status": "usable",
+      "note": "Plane wave E and B, energy and radiation pressure examples, the spectrum and a dipole antenna. The charging capacitor apparatus for displacement current is the displacement current demo (2026-10-22), mapped with it to 16.1. Lecture demo; no lab requested.",
       "title": "Electromagnetic Waves",
       "url": "demos/em-waves.html"
     },
@@ -6311,11 +7293,37 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "5.9",
+          "title": "Relativistic Energy"
+        },
+        {
+          "vol": 3,
+          "sec": "10.1",
+          "title": "Properties of Nuclei"
+        },
+        {
+          "vol": 3,
+          "sec": "10.2",
+          "title": "Nuclear Binding Energy"
+        },
+        {
+          "vol": 3,
+          "sec": "10.5",
+          "title": "Fission"
+        },
+        {
+          "vol": 3,
+          "sec": "10.6",
+          "title": "Nuclear Fusion"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Nuclear Binding Energy",
       "url": "demos/binding-energy.html"
     },
@@ -6348,6 +7356,11 @@
           "vol": 2,
           "sec": "1.6",
           "title": "Mechanisms of Heat Transfer"
+        },
+        {
+          "vol": 3,
+          "sec": "6.1",
+          "title": "Blackbody Radiation"
         }
       ],
       "role": "demo",
@@ -6391,11 +7404,27 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "5.8",
+          "title": "Relativistic Momentum"
+        },
+        {
+          "vol": 3,
+          "sec": "5.9",
+          "title": "Relativistic Energy"
+        },
+        {
+          "vol": 3,
+          "sec": "6.3",
+          "title": "The Compton Effect"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Compton Scattering",
       "url": "demos/compton.html"
     },
@@ -6404,11 +7433,42 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "3.2",
+          "title": "Mathematics of Interference"
+        },
+        {
+          "vol": 3,
+          "sec": "3.3",
+          "title": "Multiple-Slit Interference"
+        },
+        {
+          "vol": 3,
+          "sec": "4.1",
+          "title": "Single-Slit Diffraction"
+        },
+        {
+          "vol": 3,
+          "sec": "4.2",
+          "title": "Intensity in Single-Slit Diffraction"
+        },
+        {
+          "vol": 3,
+          "sec": "4.3",
+          "title": "Double-Slit Diffraction"
+        },
+        {
+          "vol": 3,
+          "sec": "4.4",
+          "title": "Diffraction Gratings"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Diffraction beyond the two syllabi; Volume 3 alignment deferred.",
+      "note": "Diffraction beyond the two syllabi; Volume 3 sections mapped 2026-10-24.",
       "title": "Diffraction Grating",
       "url": "demos/diffraction-grating.html"
     },
@@ -6417,11 +7477,17 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "11.6",
+          "title": "The Big Bang"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Cosmic Distance Ladder",
       "url": "demos/distance-ladder.html"
     },
@@ -6453,6 +7519,11 @@
           "vol": 1,
           "sec": "17.8",
           "title": "Shock Waves"
+        },
+        {
+          "vol": 3,
+          "sec": "5.7",
+          "title": "Doppler Effect for Light"
         }
       ],
       "role": "demo",
@@ -6470,11 +7541,37 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "3.1",
+          "title": "Young's Double-Slit Interference"
+        },
+        {
+          "vol": 3,
+          "sec": "3.2",
+          "title": "Mathematics of Interference"
+        },
+        {
+          "vol": 3,
+          "sec": "4.1",
+          "title": "Single-Slit Diffraction"
+        },
+        {
+          "vol": 3,
+          "sec": "4.3",
+          "title": "Double-Slit Diffraction"
+        },
+        {
+          "vol": 3,
+          "sec": "6.6",
+          "title": "Wave-Particle Duality"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Interference and single-particle extension; Volume 3 alignment deferred.",
+      "note": "Interference and single-particle extension; Volume 3 sections mapped 2026-10-24.",
       "title": "Double Slit, One Particle at a Time",
       "url": "demos/double-slit.html"
     },
@@ -6507,11 +7604,22 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "4.6",
+          "title": "X-Ray Diffraction"
+        },
+        {
+          "vol": 3,
+          "sec": "6.5",
+          "title": "De Broglie’s Matter Waves"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Electron Diffraction",
       "url": "demos/electron-diffraction.html"
     },
@@ -6533,11 +7641,17 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "6.4",
+          "title": "Bohr’s Model of the Hydrogen Atom"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Franck–Hertz Experiment",
       "url": "demos/franck-hertz.html"
     },
@@ -6546,11 +7660,27 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "10.3",
+          "title": "Radioactive Decay"
+        },
+        {
+          "vol": 3,
+          "sec": "10.7",
+          "title": "Medical Applications and Biological Effects of Nuclear Radiation"
+        },
+        {
+          "vol": 3,
+          "sec": "11.4",
+          "title": "Particle Accelerators and Detectors"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Gamma Spectroscopy",
       "url": "demos/gamma-spectroscopy.html"
     },
@@ -6631,11 +7761,22 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "7.1",
+          "title": "Wave Functions"
+        },
+        {
+          "vol": 3,
+          "sec": "8.1",
+          "title": "The Hydrogen Atom"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Hydrogen Orbitals",
       "url": "demos/hydrogen-orbitals.html"
     },
@@ -6704,11 +7845,17 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "8.6",
+          "title": "Lasers"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Lasers and Stimulated Emission",
       "url": "demos/lasers.html"
     },
@@ -6730,11 +7877,17 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "6.2",
+          "title": "Photoelectric Effect"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Photoelectric Effect",
       "url": "demos/photoelectric.html"
     },
@@ -6743,11 +7896,42 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "7.1",
+          "title": "Wave Functions"
+        },
+        {
+          "vol": 3,
+          "sec": "7.2",
+          "title": "The Heisenberg Uncertainty Principle"
+        },
+        {
+          "vol": 3,
+          "sec": "7.3",
+          "title": "The Schrӧdinger Equation"
+        },
+        {
+          "vol": 3,
+          "sec": "7.4",
+          "title": "The Quantum Particle in a Box"
+        },
+        {
+          "vol": 3,
+          "sec": "7.5",
+          "title": "The Quantum Harmonic Oscillator"
+        },
+        {
+          "vol": 3,
+          "sec": "7.6",
+          "title": "The Quantum Tunneling of Particles through Potential Barriers"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Quantum Wave Packets",
       "url": "demos/quantum-waves.html"
     },
@@ -6756,11 +7940,17 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "10.3",
+          "title": "Radioactive Decay"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Radioactive Decay",
       "url": "demos/radioactive-decay.html"
     },
@@ -6769,11 +7959,22 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "5.4",
+          "title": "Length Contraction"
+        },
+        {
+          "vol": 3,
+          "sec": "5.5",
+          "title": "The Lorentz Transformation"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Magnetism from Relativity",
       "url": "demos/relativity-em.html"
     },
@@ -6997,11 +8198,22 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "6.4",
+          "title": "Bohr’s Model of the Hydrogen Atom"
+        },
+        {
+          "vol": 3,
+          "sec": "10.1",
+          "title": "Properties of Nuclei"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Rutherford Scattering",
       "url": "demos/rutherford.html"
     },
@@ -7023,11 +8235,37 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "5.1",
+          "title": "Invariance of Physical Laws"
+        },
+        {
+          "vol": 3,
+          "sec": "5.2",
+          "title": "Relativity of Simultaneity"
+        },
+        {
+          "vol": 3,
+          "sec": "5.3",
+          "title": "Time Dilation"
+        },
+        {
+          "vol": 3,
+          "sec": "5.4",
+          "title": "Length Contraction"
+        },
+        {
+          "vol": 3,
+          "sec": "5.5",
+          "title": "The Lorentz Transformation"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Spacetime Diagrams",
       "url": "demos/spacetime.html"
     },
@@ -7036,11 +8274,27 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "6.4",
+          "title": "Bohr’s Model of the Hydrogen Atom"
+        },
+        {
+          "vol": 3,
+          "sec": "8.1",
+          "title": "The Hydrogen Atom"
+        },
+        {
+          "vol": 3,
+          "sec": "8.5",
+          "title": "Atomic Spectra and X-rays"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Spectra Explorer",
       "url": "demos/spectra.html"
     },
@@ -7054,10 +8308,15 @@
           "vol": 3,
           "sec": "1.1",
           "title": "The Propagation of Light"
+        },
+        {
+          "vol": 3,
+          "sec": "5.1",
+          "title": "Invariance of Physical Laws"
         }
       ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
       "note": "Dedicated modern bench deferred despite introductory speed-of-light connection.",
       "title": "Speed of Light",
@@ -7068,11 +8327,17 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "8.3",
+          "title": "Electron Spin"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Spin Resonance",
       "url": "demos/spin-resonance.html"
     },
@@ -7151,11 +8416,17 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "10.6",
+          "title": "Nuclear Fusion"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Outside the two syllabi; no new lab/manual work in this pass. No direct Volume 1/2 activity mapping established.",
+      "note": "Outside the two syllabi; no new lab/manual work in this pass. Volume 3 sections mapped 2026-10-24.",
       "title": "Star Slice",
       "url": "demos/star-slice.html"
     },
@@ -7164,11 +8435,17 @@
       "course": [
         "later"
       ],
-      "sections": [],
+      "sections": [
+        {
+          "vol": 3,
+          "sec": "3.4",
+          "title": "Interference in Thin Films"
+        }
+      ],
       "role": "demo",
-      "beyond_book": true,
+      "beyond_book": false,
       "status": "usable",
-      "note": "Wave optics beyond the optional basic-optics scope; Volume 3 alignment deferred.",
+      "note": "Wave optics beyond the optional basic-optics scope; Volume 3 sections mapped 2026-10-24.",
       "title": "Thin Film Interference",
       "url": "demos/thin-films.html"
     },

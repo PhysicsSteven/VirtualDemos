@@ -20,22 +20,12 @@ A section's status describes scoped topic coverage from demos and/or standalone 
 
 All 85 course sections have an explicit scoped mapping: 27 real demos, 12 full lab packages, two Chapter 1 worksheets and one §8.5 reading/data activity. Chapter 1 is not represented as a simulation. Impulse's new lab is complete. The four Mystery fit-hiding fixes pass their strict tests. Standalone course-card integration, browser/deployment and classroom checks remain open. [Unit inventory](PHYSICS_I_STATUS.md) and [validation](validation/PHYSICS_I_GAP_ACTIVITIES_2026-10-22.md).
 
-## Every unmapped Volume 1/2 section
+## Every unmapped section
+
+Regenerated from `textbook-map.json` on 2026-10-24 (Claude). Every section of Volumes 1, 2 and 3 now has a record (99, 95 and 76). Physics I, Physics II and Acoustics have no missing section; all gaps are in material tagged later.
 
 | Course / priority | Volume | Section | Exact textbook title | Status |
 |---|---:|---|---|---|
-| physics-2 | 2 | 7.6 | Applications of Electrostatics | missing |
-| physics-2 | 2 | 8.5 | Molecular Model of a Dielectric | missing |
-| physics-2 | 2 | 9.2 | Model of Conduction in Metals | missing |
-| physics-2 | 2 | 9.6 | Superconductors | missing |
-| physics-2 | 2 | 10.6 | Household Wiring and Electrical Safety | missing |
-| physics-2 | 2 | 11.1 | Magnetism and Its Historical Discoveries | missing |
-| physics-2 | 2 | 12.7 | Magnetism in Matter | missing |
-| physics-2 | 2 | 13.4 | Induced Electric Fields | missing |
-| physics-2 | 2 | 13.7 | Applications of Electromagnetic Induction | missing |
-| later | 1 | 16.4 | Energy and Power of a Wave | missing |
-| later | 1 | 17.1 | Sound Waves | missing |
-| later | 1 | 17.3 | Sound Intensity | missing |
 | later | 2 | 1.1 | Temperature and Thermal Equilibrium | missing |
 | later | 2 | 1.2 | Thermometers and Temperature Scales | missing |
 | later | 2 | 1.3 | Thermal Expansion | missing |
@@ -46,6 +36,24 @@ All 85 course sections have an explicit scoped mapping: 27 real demos, 12 full l
 | later | 2 | 4.4 | Statements of the Second Law of Thermodynamics | missing |
 | later | 2 | 4.7 | Entropy on a Microscopic Scale | missing |
 | later | 2 | 15.6 | Transformers | missing |
+| later | 3 | 3.5 | The Michelson Interferometer | missing |
+| later | 3 | 4.5 | Circular Apertures and Resolution | missing |
+| later | 3 | 4.7 | Holography | missing |
+| later | 3 | 5.6 | Relativistic Velocity Transformation | missing |
+| later | 3 | 8.2 | Orbital Magnetic Dipole Moment of the Electron | missing |
+| later | 3 | 8.4 | The Exclusion Principle and the Periodic Table | missing |
+| later | 3 | 9.1 | Types of Molecular Bonds | missing |
+| later | 3 | 9.2 | Molecular Spectra | missing |
+| later | 3 | 9.3 | Bonding in Crystalline Solids | missing |
+| later | 3 | 9.5 | Band Theory of Solids | missing |
+| later | 3 | 9.6 | Semiconductors and Doping | missing |
+| later | 3 | 9.7 | Semiconductor Devices | missing |
+| later | 3 | 10.4 | Nuclear Reactions | missing |
+| later | 3 | 11.1 | Introduction to Particle Physics | missing |
+| later | 3 | 11.2 | Particle Conservation Laws | missing |
+| later | 3 | 11.3 | Quarks | missing |
+| later | 3 | 11.5 | The Standard Model | missing |
+| later | 3 | 11.7 | Evolution of the Early Universe | missing |
 
 ## Partial section mappings
 
@@ -57,22 +65,25 @@ All 85 course sections have an explicit scoped mapping: 27 real demos, 12 full l
 | 2 / 11.2 | magnetic-force | Uniform imposed field; field-line exploration is limited. |
 | 2 / 11.3 | magnetic-force | See the activity entry. |
 | 2 / 14.2 | circuits, faraday | Lumped inductors and fixed coil model, not every inductor geometry. |
-| 2 / 16.2 | em-waves | See the activity entry. |
-| 2 / 16.3 | em-waves | See the activity entry. |
-| 2 / 16.4 | em-waves | See the activity entry. |
-| 2 / 16.5 | em-waves | See the activity entry. |
 | 3 / 2.3 | optics-bench | Basic refraction supported; general curved-surface image formation needs review. |
 | 3 / 2.8 | optics-bench | Instrument examples require review before section-complete labeling. |
+| 3 / 4.1 | double-slit, diffraction-grating | Partial: the single slit envelope appears inside the double slit and grating patterns; there is no single slit setup on its own. |
+| 3 / 4.2 | diffraction-grating | Partial: the grating plot includes the [sin β/β]² envelope; no single slit intensity setup on its own. |
+| 3 / 4.6 | electron-diffraction | Partial: electron diffraction uses Bragg's law 2d sin θ = λ on graphite with electrons, not X rays. |
+| 3 / 5.8 | compton | Partial: Compton scattering uses exact relativistic kinematics for the recoil electron; no dedicated momentum activity. |
+| 3 / 5.9 | compton, binding-energy | Partial: Compton (E/mc² of the collision) and binding energy (mass defect, E = mc²); no dedicated activity. |
+| 3 / 8.3 | spin-resonance | Partial: electron spin resonance measures g for DPPH; spin itself is not the subject of an activity. |
+| 3 / 8.5 | spectra | Partial: spectra covers optical emission and absorption lines; no X ray spectra (Moseley). |
+| 3 / 10.5 | binding-energy, energy-sources | Partial: energy released from the binding energy curve; energy sources uses 200 MeV per fission. No chain reaction activity. |
+| 3 / 10.6 | binding-energy, star-slice | Partial: energy released from the binding energy curve; star slice shows burning shells. No reaction rate activity. |
+| 3 / 10.7 | gamma-spectroscopy | Partial: gamma spectroscopy measures lead attenuation; no dose or biological effects. |
+| 3 / 11.4 | magnetic-force, gamma-spectroscopy | Partial: cyclotron motion in charges in magnetic fields; a NaI(Tl) scintillation detector in gamma spectroscopy. |
+| 3 / 11.6 | distance-ladder | Partial: Hubble's law fitted to galaxy redshifts; no cosmological model. |
 
 ## Optional optics gaps
 
-| Section | Title | Status |
-|---|---|---|
-| 1.1 | The Propagation of Light | missing |
-| 1.5 | Dispersion | missing |
-| 1.6 | Huygens’s Principle | missing |
-| 2.5 | The Eye | missing |
+None: Volume 3 sections 1.1, 1.5, 1.6 and 2.5 were mapped on 2026-10-23 (huygens, optics-bench, the-eye).
 
 ## Sources and scope
 
-Volume 1/2 section titles follow the owner-supplied OpenStax PDFs. Optional optics uses the official Volume 3 chapter outlines. Energy activity input values are from the cited EIA Table 3.1.A 2024 row, with a stored teaching snapshot; arithmetic solutions stay private. Older source-pinned reports remain evidence for their recorded snapshots, not the latest defect status. All demo HTML remains Claude-owned and no public main merge was made by GPT.
+Volume 1/2 section titles follow the owner-supplied OpenStax PDFs. Volume 3 titles (chapters 1 to 11) follow the official OpenStax chapter outlines, checked 2026-10-24. Energy activity input values are from the cited EIA Table 3.1.A 2024 row, with a stored teaching snapshot; arithmetic solutions stay private. Older source-pinned reports remain evidence for their recorded snapshots, not the latest defect status. All demo HTML remains Claude-owned and no public main merge was made by GPT.
