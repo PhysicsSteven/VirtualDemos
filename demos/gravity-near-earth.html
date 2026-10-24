@@ -302,10 +302,39 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     scene.add(planet3, atmo, axis, path, stalk, rig, gArrow, cArrow, stars3);
     g3 = { rd, el, scene, cam, sun, tc, tex, planetM, planet3, atmo, atmoM, axis, path, stalk, rig, massM, gArrow, cArrow, body: '' };
     can.addEventListener('wheel', (e) => { if (!use3() || !in3(e)) e.stopImmediatePropagation(); }, { passive: true });
-    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || !in3(e), phMin: 0.1, phMax: 3.0, zMin: 0.5, zMax: 4, keys: false });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || !in3(e) || pickRig(e), phMin: 0.1, phMax: 3.0, zMin: 0.5, zMax: 4, keys: false });
     can.addEventListener('pointerup', () => { if (!use3()) can.style.cursor = ''; });
     return true;
   }
+  /* grab the scale and its mass and slide them along the line from the planet's centre: the height follows, in the slider's own steps,
+     so every reading is one the slider could give. The pointer is read through the camera as it was when the drag began, since the
+     view zooms out to keep the mass in sight and reading it through the moving camera would run away. */
+  const DRG = { on: false, id: null, cam: null };
+  function screen3(p3) { const r = can.getBoundingClientRect(), v = p3.clone().project(g3.cam); return [rect3.x + (v.x + 1) / 2 * rect3.w + r.left, rect3.y + (1 - v.y) / 2 * rect3.h + r.top]; }
+  function pickRig(e) {
+    if (!use3() || !g3.pos) return false; const a = screen3(g3.pos), b = screen3(g3.top), dx = b[0] - a[0], dy = b[1] - a[1], L2 = dx * dx + dy * dy || 1;
+    const t = Math.max(0, Math.min(1, ((e.clientX - a[0]) * dx + (e.clientY - a[1]) * dy) / L2));
+    return Math.hypot(e.clientX - a[0] - t * dx, e.clientY - a[1] - t * dy) < 18 * ps();
+  }
+  function dragH(e) {
+    const r = can.getBoundingClientRect(), rc = new THREE.Raycaster();
+    rc.setFromCamera({ x: (e.clientX - r.left - rect3.x) / rect3.w * 2 - 1, y: -(e.clientY - r.top - rect3.y) / rect3.h * 2 + 1 }, DRG.cam);
+    const o = rc.ray.origin, d = rc.ray.direction, u = g3.up, k = d.dot(u); if (Math.abs(k) > 0.995) return S.h;
+    const t = (o.dot(u) - k * o.dot(d)) / (1 - k * k), b = B();
+    return fromSlider(toSlider(Math.max(0, Math.min(HMAX, (t - 1) * b.R))));
+  }
+  can.addEventListener('pointerdown', (e) => {
+    if (DRG.on || (e.pointerType === 'mouse' && e.button !== 0) || !pickRig(e)) return;
+    DRG.on = true; DRG.id = e.pointerId; DRG.cam = g3.cam.clone(); try { can.setPointerCapture(e.pointerId); } catch (_) {}
+    can.style.cursor = 'grabbing'; e.preventDefault(); e.stopImmediatePropagation(); draw();
+  });
+  can.addEventListener('pointermove', (e) => {
+    if (DRG.on && e.pointerId === DRG.id) { const h = dragH(e); if (h !== S.h) { S.h = h; upd(); } return; }
+    if (use3() && e.pointerType === 'mouse' && !e.buttons) can.style.cursor = pickRig(e) ? 'grab' : (in3(e) ? 'grab' : '');
+  });
+  const dragDone = (e) => { if (!DRG.on || e.pointerId !== DRG.id) return; DRG.on = false; can.style.cursor = 'grab'; draw(); };
+  can.addEventListener('pointerup', dragDone); can.addEventListener('pointercancel', dragDone);
+  window.__gne = { pickRig: (x, y) => pickRig({ clientX: x, clientY: y }), rig: () => (g3 && g3.pos ? screen3(g3.pos) : null), top: () => (g3 && g3.top ? screen3(g3.top) : null), get h() { return S.h; } };
   const in3 = (e) => { const r = can.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top; return x >= rect3.x && x < rect3.x + rect3.w && y >= rect3.y && y < rect3.y + rect3.h; };
   /* the planet's texture: equirectangular, longitude −180° at the left, north at the top */
   function paintPlanet() {
@@ -340,7 +369,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g.axis.scale.z = rv / 1.25;
     const tv = Math.tan(g.cam.fov * Math.PI / 360), dist = rv * 1.15 / (tv * Math.min(1, g.cam.aspect)), o = { th: G3.o.th + ph, ph: G3.o.ph, zoom: G3.o.zoom };
     VD3.place(g.cam, o, new THREE.Vector3(0, 0, 0), dist); g.cam.near = dist * 0.01; g.cam.far = dist + 300; g.cam.updateProjectionMatrix();
-    g.scene.updateMatrixWorld(); g.rd.render(g.scene, g.cam);
+    g.scene.updateMatrixWorld(); g.rd.render(g.scene, g.cam); g.up = up; g.pos = pos; g.top = pos.clone().add(effUp.clone().multiplyScalar(s * 2.2));
     const v = new THREE.Vector3(), Q = (p3) => { v.copy(p3).project(g.cam); return [x0 + (v.x + 1) / 2 * W0, y0 + (1 - v.y) / 2 * H0]; };
     return { Q, pos, gTip: pos.clone().add(up.clone().multiplyScalar(-E.grav * kA)), cTip: pos.clone().add(out.clone().multiplyScalar(cl3)), top: pos.clone().add(effUp.clone().multiplyScalar(s * 2.2)), pathPt: new THREE.Vector3(r * cl * Math.cos(lon - 1.3), r * cl * Math.sin(lon - 1.3), r * sl), axisTop: new THREE.Vector3(0, 0, rv * 1.08) };
   }
@@ -371,7 +400,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (!S.blind) lab(R3.top, `scale reads ${f(E.g, 3)} N`, LIT.ink, 'center', 'bottom');
       if (S.spin) lab(R3.pathPt, 'path in one day', LIT.cv, 'center', 'bottom');
       lab(R3.axisTop, S.spin ? 'axis (spinning)' : 'axis', LIT.muted, 'center', 'bottom');
-      ctx.fillStyle = LIT.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(S.spin ? 'turning shown far faster than real · drag to turn, wheel to zoom' : 'drag to turn, wheel to zoom', pw / 2, h3 - 8 * p);
+      ctx.fillStyle = LIT.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(DRG.on ? 'drag out or in along the line from the centre to change the height' : (S.spin ? 'turning shown far faster than real · ' : '') + 'drag the scale out or in · drag elsewhere to turn', pw / 2, h3 - 8 * p);
     } else {
     stars(0, 0, pw, wide ? Hh : ph + 14 * p);
     planet(cx, cy, Rp);
