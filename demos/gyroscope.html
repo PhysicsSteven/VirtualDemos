@@ -761,6 +761,8 @@ table.rows input:focus { border-color: var(--accent); }
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   /* the measuring tools: a stopwatch on the simulated clock */
+  /* How this works: a 21 s video of one precession period at 1000 rpm (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/gyroscope.mp4', poster: 'media/how-this-works/gyroscope.jpg' });
   VD.tools({ el: can, strip: '.viewbar', time: () => S.t });
   tokens(); new ResizeObserver(resize).observe(stage); applyPreset('fast'); renderRows(); resize();
   /* the gyroscope opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */

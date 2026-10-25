@@ -216,6 +216,8 @@ table.rows input:focus { border-color: var(--accent); }
 
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock */
+  /* How this works: a 25 s video of one timed drop of the empty table (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/rotational-dynamics.mp4', poster: 'media/how-this-works/rotational-dynamics.jpg' });
   VD.tools({ el: $('can'), strip: '.viewbar', time: () => S.t });
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const HINT = { none: 'The empty turntable: measure its own moment of inertia first, so you can subtract it later.', disk: 'A solid disk, 1.00 kg and 10.0 cm in radius: I = ½MR².', ring: 'A ring with the same mass and outer radius as the disk, but its mass far from the axis: I = ½M(R₁² + R₂²), nearly twice the disk.', pair: 'Two 0.200 kg masses at equal distances from the axis: I grows as d². Slide them out and time the drop again.', mystery: 'An unknown object. Measure the table with and without it and subtract.' };

@@ -2922,3 +2922,25 @@ vdcheck: no page errors, missing files or sideways scroll; the comparison differ
 No What's new entry (one comes for the whole set).
 
 **For GPT:** please check the three videos' captions and readings against the demos.
+
+## 2026-10-25 Claude: How this works videos for Rotation and Torque, Rotational Dynamics and Gyroscope Precession
+
+Physics I rollout of the Pendulum pilot (one dark theme video per demo, `tools/howto/<demo>.cjs` on `lib.cjs`, composed with
+`compose.py`). Each shows the first measurement of the demo's own worksheet; every number on screen comes from a real run and
+was checked against the physics. The measuring tools never appear.
+
+- Rotation and Torque (`rotation.mp4`, 19.0 s, 1.1 MB): the first Door swing push, door 0.90 m and 15 kg, F = 20 N at
+  r = 0.80 m, θ = 90°, F keeping its angle. The demo shows τ = +16.0 N·m, I = 4.05 kg·m², α = +3.95 rad/s², time to 90°
+  0.892 s, ω at 90° +3.52 rad/s; by hand τ = rF = 16.0 N·m, I = mL²/3 = 4.05 kg·m², α = 3.951 rad/s²,
+  t = √(π/α) = 0.892 s, ω = αt = 3.523 rad/s. This demo has no Capture, so the video ends on writing the readouts into the
+  Door swing table.
+- Rotational Dynamics (`rotational-dynamics.mp4`, 24.8 s, 1.5 MB): the empty table, m = 0.020 kg (5 g hanger + 10 g + 5 g),
+  2.0 cm spool, bearing friction on, 0.500 m drop. Timer 5.338 s; by hand a = (mgr − τ_f)r/(I₀ + mr²) = 0.03510 m/s² with
+  I₀ = 2.00 × 10⁻³ kg·m² and τ_f = 4.0 × 10⁻⁴ N·m, t = √(2h/a) = 5.338 s.
+- Gyroscope Precession (`gyroscope.mp4`, 21.3 s, 1.6 MB): Part 1's first reading, solid disk, d = 0.10 m, level axle, steady
+  start, 1000 rpm. Gate 1.21 s; by hand I_s = ½MR² = 9.00 × 10⁻⁴ kg·m², ω_s = 104.72 rad/s, Ω = Mgd/(I_s ω_s) = 5.204 rad/s
+  (exact for a level axle), P = 2π/Ω = 1.207 s.
+- `VD.howTo` added to the three demos (recorded with the button on the page); `tools/vdcheck.cjs --only after`: 0 problems on
+  each. No whats-new entry here (one for the whole set comes from the Pendulum thread).
+
+**For GPT:** please check the captions and the readings in the three videos against the demos and the figures above.
