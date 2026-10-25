@@ -38,7 +38,7 @@
 table.rows input { font: inherit; font-family: var(--font-mono); width: 4.8em; background: none; border: 1px solid transparent; color: var(--ink); padding: 1px 3px; border-radius: 4px; }
 table.rows input:focus { border-color: var(--accent); }
 .plotbox { position: relative; height: 180px; }
-@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 440px; } }
+@media (min-width: 821px) { :root[data-projector="on"] .bench { grid-template-columns: minmax(0, 1fr) 350px; } :root[data-projector="on"] .stage { min-height: 560px; } }   /* below 560 px the 3D view cuts off the vibrator and its handle */
 @media (max-width: 820px) {
   .bench { grid-template-columns: minmax(0, 1fr); }
   .stage { min-height: 0; height: 540px; max-height: 85vh; }
@@ -718,6 +718,7 @@ table.rows input:focus { border-color: var(--accent); }
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  VD.fitStage();   /* the set up cards never hang off the picture on a short window or in Projector */
   /* How this works: a short video of one sample reading, the first resonance of the frequency scan; made by tools/howto/ */
   VD.howTo({ src: 'media/how-this-works/string-density.mp4', poster: 'media/how-this-works/string-density.jpg' });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });

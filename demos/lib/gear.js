@@ -31,6 +31,7 @@ window.VDGear = (function () {
   }
   /* soft contact shadow: an ellipse under an object resting at y */
   function shadow(ctx, cx, y, rx, ry, a = 1) {
+    if (!(rx > 0 && ry > 0)) return;   /* nothing to draw while a picture has no room yet (a negative radius throws) */
     const d = dark(); ctx.save(); ctx.translate(cx, y); ctx.scale(1, ry / rx);
     const g = ctx.createRadialGradient(0, 0, 0, 0, 0, rx); g.addColorStop(0, `rgba(0,0,0,${(d ? 0.5 : 0.22) * a})`); g.addColorStop(1, 'rgba(0,0,0,0)');
     ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, rx, 0, 7); ctx.fill(); ctx.restore();

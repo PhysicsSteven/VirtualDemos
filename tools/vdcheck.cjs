@@ -5,6 +5,11 @@
    options: --ref REF     compare with this commit (default origin/main)
             --full        every width and state (the pilot and every library edit); the default is the batch set
             --only after  no comparison: page errors, missing files and sideways scroll only
+            --only clip   no comparison: fails when any control is cut off by a box that clips it (overflow hidden or
+                          clip, such as a .stage with a fixed min-height, or a box inside the stage that scrolls up and
+                          down) at 1024x768, 1280x720, 1440x900, 1920x1080,
+                          400x860 and 360x780, as the page opens, after each view switch and Setups chip, and in Projector
+            --all         every demo (not the redirect pages)
 
    Five checks, each comparing the demo served from REF ("before") with the working tree ("after"):
    1. CORE: the text between // ==CORE START== and // ==CORE END== is byte identical.
@@ -33,7 +38,8 @@ const args = process.argv.slice(2), opt = (k, d) => { const i = args.indexOf(k);
 const flag = (k) => { const i = args.indexOf(k); if (i < 0) return false; args.splice(i, 1); return true; };
 const REF = opt('--ref', 'origin/main'), ONLY = opt('--only', null), FULL = flag('--full'), OUT = process.env.VDCHECK_DIR || '/tmp/vdcheck';
 const NOISE = 50;
-const demos = args.filter((a) => !a.startsWith('--'));
+const ALL = flag('--all');
+const demos = ALL ? fs.readdirSync(path.join(ROOT, 'demos')).filter((f) => f.endsWith('.html') && !/http-equiv="refresh"/i.test(fs.readFileSync(path.join(ROOT, 'demos', f), 'utf8'))).map((f) => f.slice(0, -5)).sort() : args.filter((a) => !a.startsWith('--'));
 if (!demos.length) { console.error('usage: node tools/vdcheck.cjs [--ref REF] [--full] [--only after] demo...'); process.exit(2); }
 
 const VIEWS = FULL ? [['1440', 1440, 900], ['1280', 1280, 800], ['400', 400, 860], ['360', 360, 780]] : [['1280', 1280, 800], ['400', 400, 860]];
@@ -73,7 +79,7 @@ async function openPage(ctx, base, demo, problems, label) {
   page.on('response', (r) => { if (r.status() >= 400 && r.url().startsWith(base + 'demos/')) problems.push(`${label}: ${r.status()} ${r.url().slice(base.length)}`); });
   page.on('dialog', (d) => d.accept());
   await page.goto(base + `demos/${demo}.html`, { waitUntil: 'load' });
-  await page.clock.runFor(500);
+  try { await page.clock.runFor(500); } catch (e) { problems.push(`${label}: page error: ${e.message.split('\n')[0]}`); }
   return page;
 }
 
@@ -108,6 +114,64 @@ const TOKENS = () => {
   const cs = getComputedStyle(document.documentElement);
   return [...names].sort().map((n) => `${n}: ${cs.getPropertyValue(n).trim()}`);
 };
+
+/* every visible control whose box is cut off by an ancestor that clips it (overflow hidden or clip) */
+const CLIPPED = () => {
+  const out = [], SEL = 'input:not([type=hidden]), button, select, textarea, [role=slider], [role=button], [role=radio], [role=checkbox], [role=switch], [role=tab], summary';
+  const name = (e) => e.id ? '#' + e.id : (e.getAttribute('aria-label') || (e.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 40) || e.getAttribute('name') || e.tagName.toLowerCase());
+  for (const e of document.querySelectorAll(SEL)) {
+    const b = e.getBoundingClientRect(), r = { left: b.left, top: b.top, right: b.right, bottom: b.bottom };
+    if (b.width <= 1 || b.height <= 1 || !e.checkVisibility({ opacityProperty: true, visibilityProperty: true })) continue;
+    const inStage = !!e.closest('.stage');
+    for (let a = e.parentElement; a && a !== document.body; a = a.parentElement) {
+      /* hidden or clip cuts a control off. Inside the picture (.stage), scrolling up and down does too: a student should
+         not have to find a scroll bar inside the stage. A sideways scroller (a wide table) and a scrolling sidebar are fine;
+         what can be scrolled into view counts as the scroller's own box from there up. */
+      const cs = getComputedStyle(a), scr = (v) => v === 'auto' || v === 'scroll';
+      const hidX = cs.overflowX === 'hidden' || cs.overflowX === 'clip', hidY = cs.overflowY === 'hidden' || cs.overflowY === 'clip' || (inStage && scr(cs.overflowY));
+      const q = a.getBoundingClientRect(), bl = parseFloat(cs.borderLeftWidth), bt = parseFloat(cs.borderTopWidth);
+      const L = q.left + bl, T = q.top + bt, R = L + a.clientWidth, B = T + a.clientHeight;
+      const cut = [];
+      if (hidY && r.bottom > B + 2) cut.push(`${Math.round(r.bottom - B)} px below`);
+      if (hidY && r.top < T - 2) cut.push(`${Math.round(T - r.top)} px above`);
+      if (hidX && r.right > R + 2) cut.push(`${Math.round(r.right - R)} px right`);
+      if (hidX && r.left < L - 2) cut.push(`${Math.round(L - r.left)} px left`);
+      if (cut.length) { out.push(`${name(e)} cut ${cut.join(', ')} of ${a.tagName.toLowerCase()}${a.id ? '#' + a.id : ''}${a.classList.length ? '.' + [...a.classList].join('.') : ''}`); break; }
+      if (scr(cs.overflowX)) { r.left = Math.max(L, Math.min(r.left, R - b.width)); r.right = r.left + Math.min(b.width, R - L); }
+      if (scr(cs.overflowY) && !hidY) { r.top = Math.max(T, Math.min(r.top, B - b.height)); r.bottom = r.top + Math.min(b.height, B - T); }
+    }
+  }
+  return out;
+};
+/* --only clip: at the usual laptop, desktop and phone window sizes, as the page opens, then after each view switch in the
+   strip across the top of the picture and each Setups chip, and with Projector on */
+const CLIP_VIEWS = [[1024, 768], [1280, 720], [1440, 900], [1920, 1080], [400, 860], [360, 780]];
+async function clipCheck(browser, base, demo, problems) {
+  for (const [w, h] of CLIP_VIEWS) {
+    const ctx = await context(browser, w, h, 'dark', 'reduce'), seen = new Set();
+    const look = async (page, state) => {
+      /* a page error inside a timer is thrown out of runFor: report it and go on */
+      try { await page.clock.runFor(300); } catch (e) { problems.push(`${w}x${h} ${state}: page error: ${e.message.split('\n')[0]}`); }
+      for (const c of await page.evaluate(CLIPPED)) if (!seen.has(c)) { seen.add(c); problems.push(`${w}x${h} ${state}: ${c}`); }
+    };
+    const page = await openPage(ctx, base, demo, problems, `${w}x${h}`);
+    await look(page, 'open');
+    let stuck = false;
+    for (const sel of ['.stage-ctl .seg button', '#presets button']) {
+      for (const b of await page.locator(sel).all()) {
+        if (stuck || !(await b.isVisible()) || !(await b.isEnabled())) continue;
+        const t = ((await b.textContent()) || '').trim();
+        /* a chip whose work runs on a time budget can wait forever on the paused clock: note it and stop at this size */
+        try { await b.click({ timeout: 5000 }); } catch (e) { console.log(`  ${demo} ${w}x${h}: note: "${t}" did not finish on the paused clock; the states after it are not checked`); stuck = true; continue; }
+        await look(page, `"${t}"`);
+      }
+    }
+    let pp = page;
+    if (stuck) { await page.close(); pp = await openPage(ctx, base, demo, problems, `${w}x${h}`); }
+    if (w > 820 && await pp.locator('#proj').count()) { await pp.click('#proj'); await look(pp, 'Projector'); }
+    await pp.close(); await ctx.close();
+  }
+}
 
 async function behaviour(browser, base, demo, x, problems) {
   const r = { controls: null, tokens: {}, styles: {}, exported: null, table: null };
@@ -199,7 +263,8 @@ function same(label, a, b, log) {
     fs.rmSync(path.join(OUT, demo), { recursive: true, force: true });
     const xf = path.join(ROOT, 'tools', 'vdcheck', demo + '.cjs');
     const x = fs.existsSync(xf) ? require(xf) : {}, log = (m) => console.log(`  ${demo} ${m}`);
-    const pa = [], A = await shoot(browser, after.base, demo, x, 'after', pa);
+    const pa = [], A = ONLY === 'clip' ? null : await shoot(browser, after.base, demo, x, 'after', pa);
+    if (ONLY === 'clip') { const pc = []; await clipCheck(browser, after.base, demo, pc); for (const p of pc) log(p); bad += pc.length; console.log(`${demo}: ${pc.length} controls cut off`); continue; }
     if (ONLY) { for (const p of pa) log(p); bad += pa.length; console.log(`${demo}: ${A.size} screenshots, ${pa.length} problems`); continue; }
     const fails = [];
     const ca = coreOf(fromTree(`demos/${demo}.html`)), cb = coreOf(fromRef(`demos/${demo}.html`));

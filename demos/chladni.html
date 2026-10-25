@@ -100,6 +100,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
 .units { color: var(--muted); font-size: 0.8rem; }
 .stage { position: relative; min-height: 540px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--bench); display: grid; grid-template-rows: auto minmax(0, 1fr) auto; }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(540px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }   /* the stage grows with its controls on a short window (a fixed height cut them off) and still fills a tall one */
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 8px; padding: 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .count { margin-left: auto; font-size: 0.95rem; font-weight: 600; white-space: nowrap; }
 .count small { font-weight: 400; color: var(--muted); font-size: 0.8rem; }
@@ -1294,6 +1295,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawPlate(ps) {
     const p = G.plate, c = ctx;
+    if (!(p.s > 0)) return;   /* the picture is measured mid resize with no room for the plate yet: the next resize draws it */
     // lamp light on the bench
     const lg = c.createRadialGradient(p.cx - p.s * 0.15, p.cy - p.s * 0.2, p.s * 0.05, p.cx, p.cy, p.s * 0.85);
     lg.addColorStop(0, T.lamp); lg.addColorStop(1, T.bench);

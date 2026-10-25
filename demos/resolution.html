@@ -17,6 +17,7 @@
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --cursor: #ff9a5c; --mark: #74b0ff; --compA: #9aa6b6; --profile-fill: rgba(116, 176, 255, 0.12); } }
 :root[data-theme="dark"] { --cursor: #ff9a5c; --mark: #74b0ff; --compA: #9aa6b6; --profile-fill: rgba(116, 176, 255, 0.12); }
 .stage { position: relative; display: flex; flex-direction: column; min-height: min-content; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }   /* min-content: never clip the graph and the controls under the picture on a short window */
+:root[data-projector="on"] .stage { min-height: min-content; }   /* in Projector too: the library sets 440 px there */
 .stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .check { font-size: 0.84rem; }
 .stage-ctl .count { margin-left: auto; font-size: 0.82rem; color: var(--muted); }

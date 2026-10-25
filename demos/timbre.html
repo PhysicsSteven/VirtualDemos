@@ -136,6 +136,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 @media (min-width: 821px) and (max-height: 820px) {
   :root[data-projector="on"] .bar p { font-size: 1rem; line-height: 1.35; }
   :root[data-projector="on"] .stage { min-height: 440px; }
+  :root[data-projector="on"] .bench > .stage { align-self: start; min-height: max(440px, 100%); }   /* and grows with the shelf rather than cutting it off */
 }
 @media (max-width: 820px) {
   .chips button, .btn, .seg button, .proj { min-height: 36px; }

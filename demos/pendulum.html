@@ -2450,6 +2450,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   for (const b of document.querySelectorAll('#sceneSeg button')) b.addEventListener('click', () => setScene(b.dataset.s));
   /* Projector resizes both scenes; Reset all counts the readings of both */
   VD.projector({ onChange: () => { lab.resize(); dbl.resize(); } });
+  VD.fitStage();   /* the set up cards never hang off the picture on a short window or in Projector */
   const dpCount = window.vdReadings;
   window.vdReadings = () => lab.rows() + (typeof dpCount === 'function' ? dpCount() : 0);
   /* 3D | Flat: one choice for the scenes; 3D opens first (unless ?view=flat, a low power device, or no WebGL) */

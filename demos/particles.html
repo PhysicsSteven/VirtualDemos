@@ -94,7 +94,7 @@ table.ck td.num { font-family: var(--font-mono); }
 @media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 380px; } .pane.tall { height: 600px; } .hpane { padding: 10px; }
   .tile .mm { white-space: normal; }
   .sm { gap: 4px; grid-template-columns: repeat(3, minmax(0, 1fr)) 4px minmax(0, 1fr) minmax(0, 1fr); } .tile { padding: 4px 4px; border-left-width: 4px; } .tile .sy { font-size: 1.05rem; } .tile .nm { display: none; } .tile .mm { font-size: 0.6rem; } }
-@media (min-width: 821px) { .stage { min-height: 760px; } }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }   /* the stage grows with its controls on a short window (a fixed height cut them off) and still fills a tall one */
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>

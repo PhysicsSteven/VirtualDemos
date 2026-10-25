@@ -33,7 +33,7 @@
 .readout .warn { color: var(--heat); }
 @media (max-width: 820px) { .pane { min-height: 0; height: 400px; flex: none; } .curvebox { height: 200px; } }
 @media (max-width: 520px) { .pane { height: 360px; } .curvebox { height: 230px; } }
-@media (min-width: 821px) { .stage { min-height: 780px; min-height: min-content; } :root[data-projector="on"] .stage { overflow-y: auto; } :root[data-projector="on"] .pane { flex: none; height: 56vh; min-height: 360px; } }
+@media (min-width: 821px) { .stage, :root[data-projector="on"] .stage { min-height: 780px; min-height: min-content; } :root[data-projector="on"] .stage { overflow-y: auto; } :root[data-projector="on"] .pane { flex: none; height: 56vh; min-height: 360px; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>

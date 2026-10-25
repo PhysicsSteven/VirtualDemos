@@ -858,6 +858,7 @@ table.rows input:focus { border-color: var(--accent); }
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  VD.fitStage();   /* the set up cards never hang off the picture on a short window or in Projector */
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
   tokens(); new ResizeObserver(resize).observe(scene); new ResizeObserver(() => draw()).observe(shelf);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'layers'); renderRows(); resize();
