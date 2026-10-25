@@ -361,6 +361,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawEye(x0, y0, w, h, st) {
     const p = ps(), cy = y0 + h / 2, k = Math.min(w * 0.5 / RETINA, h * 0.7 / 0.024), xL = Math.min(x0 + w * 0.42, x0 + w - 48 * p - RETINA * k), xR = xL + RETINA * k, R = 0.012 * k;
+    if (!(k > 0)) return;   /* a stage caught mid resize, too short for the eye; the next resize draws it */
     /* eyeball and retina */
     ctx.fillStyle = T.eyeball; ctx.strokeStyle = T.sclera; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.arc(xR - R, cy, R, 0, 7); ctx.fill();
     { const g = ctx.createRadialGradient(xR - R * 1.35, cy - R * 0.45, R * 0.05, xR - R, cy, R); g.addColorStop(0, 'rgba(255,255,255,0.35)'); g.addColorStop(0.6, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(60,40,30,0.16)'); ctx.fillStyle = g; ctx.fill(); }   // a round, moist eyeball (a picture only)
@@ -551,6 +552,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* How this works: a short video of one sample reading from the worksheet the mode belongs to, The Eye in Eye and Camera in
+     Camera (made by tools/howto/) */
+  const howVid = () => (S.mode === 'camera' ? 'camera' : 'the-eye');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (S.mode === 'camera' ? 'How this works: Camera' : 'How this works: The Eye') });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
   tokens(); new ResizeObserver(resize).observe(stage);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'normal'); resize();

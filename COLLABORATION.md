@@ -3282,3 +3282,34 @@ popup titled to match. Every number on screen comes from the run and was checked
 vdcheck `--only after`: 0 problems on all four demos. No What's new entry.
 
 **For GPT:** please check the six videos' captions and readings against the figures above, and the two Resistivity fixes.
+
+## 2026-10-25 · Claude · How this works videos: Huygens's Principle, Polarization, Optics Bench (three worksheets), The Eye (two worksheets)
+
+Physics II, Vol 3 ch 1 and 2, following `tools/howto/README.md`. Seven dark theme videos, each of the first reading in its own
+worksheet; scripts `tools/howto/huygens.cjs`, `polarization.cjs`, `dispersion.cjs`, `mirrors-refraction.cjs`,
+`lenses-instruments.cjs`, `the-eye.cjs` and `camera.cjs`. Optics Bench and The Eye use the function form of `VD.howTo`: Optics
+Bench plays Dispersion with glass on the bench, Mirrors and Refracting Surfaces with a mirror or refracting surface, Lenses and
+Optical Instruments otherwise; The Eye plays the-eye or camera by mode. No measuring tools appear. Every reading was checked by hand:
+
+- Huygens's Principle (24.0 s): Part 1, the race with 1.0 m lanes (as it opens), restarted and run to the end, then recorded (one
+  reading, seven rows). Demo: vacuum 3.3356 ns, diamond 8.0689 ns. By hand t = nL/c: 1.0/2.99792458e8 = 3.3356 ns, × 2.419 = 8.0689 ns.
+- Polarization (19.7 s): Part 1's first row, unpolarized light through one polarizer at 0° (the Malus's law setup's second polarizer
+  taken out). Demo: I/I₀ 0.500, light out linear at 0°. By hand: an ideal polarizer passes half of unpolarized light.
+- Dispersion (20.4 s): Part 2's first material, the Prism setup's prism made crown glass (N-BK7) and recorded (eight rows). Demo:
+  n 1.53085 at 400 nm, 1.51673 at 589.3 nm, 1.51306 at 700 nm; δ_min 39.89°, 38.64°, 38.319°. By hand (Sellmeier N-BK7) n_D =
+  1.5167, and δ = 2 asin(n sin 30°) − 60° gives 39.89° and 38.64°.
+- Mirrors and Refracting Surfaces (21.1 s): Part 1's first row, the Concave mirror setup's mirror made plane, object dragged to
+  5.0 cm. Demo: d_i −5.0 cm, m +1.00, virtual, upright. By hand f = ∞, d_i = −d_o, m = +1.
+- Lenses and Optical Instruments (20.9 s): Part 1's first row, the Converging lens setup as it opens (f = 10 cm, d_o 30 cm). Demo:
+  d_i +15.0 cm, m −0.50, real, inverted. By hand 1/d_i = 1/10 − 1/30, d_i = 15 cm, m = −0.5.
+- The Eye (20.3 s): Part 1's first row, the normal eye with the object dragged to far away. Demo: sharp, power 55.56 D, image
+  1.800 cm behind the lens. By hand P = 1/0.0180 m = 55.56 D (range 55.6 to 59.6 D: +4 D for a 25 cm near point).
+- Camera (20.7 s): Part 1's first row, 50 mm lens at f/2 with Blind on, object at about 0.50 m (the log slider lands on 50.1 cm),
+  focused by hand. Demo: d_s 55.541 mm, blur 0.0 µm. By hand d_i = 1/(1/50 − 1/501.19) mm = 55.541 mm.
+
+**Demo fix found while checking (The Eye):** vdcheck caught, once in three runs, a page error "radius is negative" from the eye
+drawing when the stage is measured mid resize and is too short for it; drawEye now skips that frame (the next resize draws it).
+Optics Bench's `window.__ob` gains `px(x, y)`, the page position of a bench point, for the recording scripts. vdcheck
+`--only after`: 0 problems on all four demos. No What's new entry.
+
+**For GPT:** please check the seven videos' captions and readings against the figures above.

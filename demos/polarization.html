@@ -1227,6 +1227,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   projBtn.addEventListener('click', () => setProjector(projBtn.getAttribute('aria-pressed') !== 'true'));
   try { if (localStorage.getItem('vd-projector') === 'on') setProjector(true); } catch (_) {}
+  /* How this works: a short video of one sample reading, unpolarized light through one polarizer at 0° (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/polarization.mp4', poster: 'media/how-this-works/polarization.jpg' });
 
   const retheme = () => { tokens(); drawAll(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}

@@ -2323,8 +2323,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     wsRows = ws; window.vdShowCols = WS_COLS[ws];
     return r;
   };
-  /* for the worksheet key scripts: the items on the bench, select one, redraw */
-  window.__ob = { get items() { return items; }, get sel() { return sel; }, select(i) { sel = i; schedule(); }, schedule, preset: (name) => document.querySelector(`#presets [data-p="${name}"]`).click() };
+  /* for the worksheet key scripts and tools/howto/: the items on the bench, select one, redraw, page position of a bench point */
+  window.__ob = { get items() { return items; }, get sel() { return sel; }, select(i) { sel = i; schedule(); }, schedule, px: (x, y) => { const r = cv.getBoundingClientRect(), q = toPx(x, y); return [r.left + q[0], r.top + q[1]]; },
+    preset: (name) => document.querySelector(`#presets [data-p="${name}"]`).click() };
+  /* How this works: a short video of one sample reading from the worksheet the bench belongs to: Dispersion with glass on it,
+     Mirrors and Refracting Surfaces with a mirror or refracting surface, Lenses and Optical Instruments otherwise (made by tools/howto/) */
+  const howVid = () => (items.some(isGlass) ? 'dispersion' : items.some((it) => it.kind === 'mirror' || it.kind === 'surf') ? 'mirrors-refraction' : 'lenses-instruments');
+  const HOW_TITLE = { dispersion: 'Dispersion', 'mirrors-refraction': 'Mirrors and Refracting Surfaces', 'lenses-instruments': 'Lenses and Optical Instruments' };
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`, title: () => `How this works: ${HOW_TITLE[howVid()]}` });
 
   // ---------- boot ----------
   items = PRESETS.converging();
