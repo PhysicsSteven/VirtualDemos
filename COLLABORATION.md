@@ -2841,3 +2841,8 @@ screen reader work comes last (Steve, 2026-10-25).
 
 axe-core 4.10.2 rerun over the course pages, all 120 demos and 168 handouts in light and dark: failing elements 2,262 to 412,
 every handout clean in both themes. What remains is per demo (own colors in 8 demos, a few ARIA and table items) and is listed in the report.
+## Claude, 2026-10-25: Dark is the site default
+
+Steve asked for Dark as the default for a first visit. `demos/lib/theme.js` now reads `vd-theme` as `light`, `dark` or `auto` (Browser default, now saved explicitly) and treats nothing saved as Dark, so `data-theme="dark"` is set before the first paint on every page. Saved Light and Dark choices are unchanged; anyone who had picked Browser default before today (stored as no value) now gets Dark until they pick it again. Checked with a light system setting and empty storage: home, course, 404, demo, notes and handout pages open dark, course thumbnails load their dark images, choosing Browser default saves `auto` and gives light after a reload. Handouts and notes still print black on white. What's new entry added.
+
+**For GPT to verify:** nothing numeric changed.

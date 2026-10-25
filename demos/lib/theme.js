@@ -1,7 +1,8 @@
 /* Theme switch for the whole site: Light, Dark or Browser default (follows prefers-color-scheme).
    Load it first in <head>, as a plain blocking script, before any stylesheet or other script:
      <script src="lib/theme.js"></script>
-   It reads the saved choice (localStorage 'vd-theme': 'light', 'dark', or absent for Browser default) and sets
+   It reads the saved choice (localStorage 'vd-theme': 'light', 'dark' or 'auto' for Browser default; nothing saved
+   means Dark, the site default for a first visit, Steve 2026-10-25) and sets
    data-theme on <html> before the page paints, so pages do not flash. Every page already styles itself from
    :root tokens with a dark @media block guarded by :not([data-theme="light"]) and a [data-theme="dark"] block.
 
@@ -20,7 +21,7 @@
   'use strict';
   if (window.VDTheme) return;
   var KEY = 'vd-theme', root = document.documentElement;
-  var read = function () { try { var v = localStorage.getItem(KEY); return v === 'light' || v === 'dark' ? v : ''; } catch (_) { return ''; } };
+  var read = function () { var v = null; try { v = localStorage.getItem(KEY); } catch (_) {} return v === 'light' || v === 'dark' ? v : v === 'auto' ? '' : 'dark'; };
   var mode = read();
   if (mode) root.setAttribute('data-theme', mode);
 
@@ -95,7 +96,7 @@
     var was = dark();
     mode = v;
     if (v) root.setAttribute('data-theme', v); else root.removeAttribute('data-theme');
-    if (save) { try { if (v) localStorage.setItem(KEY, v); else localStorage.removeItem(KEY); } catch (_) {} }
+    if (save) { try { localStorage.setItem(KEY, v || 'auto'); } catch (_) {} }
     fixSources();
     for (var i = 0; i < selects.length; i++) if (selects[i].value !== v) selects[i].value = v;
     if (dark() !== was) changed();
