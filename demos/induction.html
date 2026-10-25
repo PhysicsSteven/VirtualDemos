@@ -1483,6 +1483,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* How this works: a short video of one sample reading from the worksheet the setup belongs to, Attracting a Neutral Insulator
+     (Worksheet 2) in the Attracting a neutral insulator setup and Charging by Induction (Worksheet 1) in the others; made by tools/howto/ */
+  VD.howTo({ src: () => `media/how-this-works/${window.vdWorksheet()}.mp4`, poster: () => `media/how-this-works/${window.vdWorksheet()}.jpg`,
+    title: () => (S.preset === 'polar' ? 'How this works: Attracting a Neutral Insulator' : 'How this works: Charging by Induction') });
   tokens(); new ResizeObserver(resize).observe(stage); applyPreset('induce'); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
 })();

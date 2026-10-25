@@ -210,7 +210,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
           <div><dt>Position (cm)</dt><dd id="rPos">—</dd></div>
         </dl>
         <p class="hint core-note" id="coreNote" hidden>The probe is inside a charge's 1.2 mm model ball. A true point charge has no finite V or E here; these values are for a uniformly charged ball.</p>
-        <details class="more"><summary>More about this</summary><p class="hint">Hover over the field, tap to place the probe, or press P on the field and use the arrow keys. The probe sits on a 0.1 cm grid. Each charge is modeled as a uniformly charged ball 1.2 mm in radius, inside its drawn disc; outside the ball V and E are exact point charge values.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">Hover over the field to read it anywhere; click or tap to place the probe, which stays there when the pointer leaves the map; or press P on the field and use the arrow keys. The probe sits on a 0.1 cm grid. Each charge is modeled as a uniformly charged ball 1.2 mm in radius, inside its drawn disc; outside the ball V and E are exact point charge values.</p></details>
         <p class="hint" id="bodyModel" hidden>Model: a rod, ring or disk carries its charge Q spread uniformly, and V and E are the exact integrals of k dq/r: closed forms for the rod, and complete elliptic integrals for the ring and the disk off their axis (on the axis these reduce to the textbook formulas). Within 1.2 mm of a body its charge is treated as a line or sheet of uniformly charged balls 1.2 mm in radius, integrated numerically to 1 part in 10¹⁰.</p>
       </section>
 
@@ -636,7 +636,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   let W = 0, H = 0, dpr = 1, s = 40, cx = 0, cy = 0;
   let charges = [], sel = null, drag = null, nextId = 1;
   let qDrag = null, hoverKnob = false, tagUntil = 0, tagTimer = 0;   // dragging a charge's value
-  let probe = { x: 0, y: 2.5 };
+  let probe = { x: 0, y: 2.5 }, placed = probe;   /* placed: where a click, drag or key put the probe; a mouse hovering the map moves it for a look, and leaving the map puts it back */
   const layers = { shade: true, equi: true, lines: true, grid: true };
   let dV = 250, density = 6, reliefMult = 1;
   let view = '2d', blind = false, kbFocus = false, lastSel = null;
@@ -1399,12 +1399,12 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         if (hitSphere()) { el.style.cursor = 'grab'; return; }
         el.style.cursor = 'move';
         const p = hitSurface();
-        if (p) { probe = { x: snap01(p.x), y: snap01(p.y) }; markOver(); }
+        if (p) { probe = placed = { x: snap01(p.x), y: snap01(p.y) }; markOver(); }
       }
     });
     const end = (e) => {
       if (mode && mode.type === 'orbit' && mode.moved < 5 && e.pointerType !== 'mouse' && e.type === 'pointerup') {
-        setRay(e); const p = hitSurface(); if (p) { probe = { x: snap01(p.x), y: snap01(p.y) }; markOver(); }
+        setRay(e); const p = hitSurface(); if (p) { probe = placed = { x: snap01(p.x), y: snap01(p.y) }; markOver(); }
       }
       if (mode && mode.type === 'q') { endQDrag(); if (e.type === 'pointerup' && VD.tap(e, true)) typeQ(e, el); }
       pointers.delete(e.pointerId);
@@ -1624,7 +1624,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       charges = charges.filter((k) => k !== c).concat(c);
       over.style.cursor = 'grabbing';
     } else {
-      drag = { type: 'probe' }; probe = snapP(p);
+      drag = { type: 'probe' }; probe = placed = snapP(p);
     }
     over.setPointerCapture(e.pointerId);
     markBase();
@@ -1641,7 +1641,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       drag.c.x = p.x - drag.dx; drag.c.y = p.y - drag.dy; clampToView(drag.c); snapC(drag.c);
       setPreset(null); markBase();
     } else if (drag && drag.type === 'probe') {
-      probe = snapP(p); markOver();
+      probe = placed = snapP(p); markOver();
     } else if (e.pointerType === 'mouse') {
       const h = hit(p);
       over.style.cursor = h ? 'grab' : 'crosshair';
@@ -1656,7 +1656,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   };
   over.addEventListener('pointerup', endDrag);
   over.addEventListener('pointercancel', endDrag);
-  over.addEventListener('pointerleave', () => { if (hoverKnob && !qDrag) { hoverKnob = false; markOver(); } });
+  over.addEventListener('pointerleave', (e) => {
+    if (hoverKnob && !qDrag) { hoverKnob = false; markOver(); }
+    if (!drag && e.pointerType === 'mouse' && (probe.x !== placed.x || probe.y !== placed.y)) { probe = placed; markOver(); }
+  });
 
   // scrolling over a charge (or the selected charge's knob) steps its value; elsewhere the page scrolls
   let wheelAcc = 0, wheelId = null;
@@ -1725,7 +1728,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         announce(`${sel.kind ? KIND_NAME[sel.kind] + ' centered' : 'Charge'} at ${posText(sel.x, sel.y)}.`);
       } else {
         const b = bounds();
-        probe = { x: snap01(Math.min(b.x1 - 0.1, Math.max(b.x0 + 0.1, probe.x + mx * st))), y: snap01(Math.min(b.y1 - 0.1, Math.max(b.y0 + 0.1, probe.y + my * st))) };
+        probe = placed = { x: snap01(Math.min(b.x1 - 0.1, Math.max(b.x0 + 0.1, probe.x + mx * st))), y: snap01(Math.min(b.y1 - 0.1, Math.max(b.y0 + 0.1, probe.y + my * st))) };
         announceProbe('Probe');
       }
     } else if (sel && (k === 'Delete' || k === 'Backspace')) {
@@ -1779,7 +1782,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 
   for (const b of document.querySelectorAll('#presets button')) {
     b.addEventListener('click', () => {
-      charges = PRESETS[b.dataset.p](); sel = null; probe = { x: 0, y: 2.5 };
+      charges = PRESETS[b.dataset.p](); sel = null; probe = placed = { x: 0, y: 2.5 };
       setPreset(b.dataset.p); markBase();
     });
   }
@@ -1971,6 +1974,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   // ---------- boot ----------
   charges = PRESETS.dipole();
   setBlind(false); setReduce(reduceMotion, false);
+  /* How this works: a short video of one sample reading, V and E 1.0 cm from a single +1 nC charge; made by tools/howto/ */
+  VD.howTo({ src: 'media/how-this-works/coulomb-sandbox.mp4', poster: 'media/how-this-works/coulomb-sandbox.jpg' });
   window.__cs = { get rows() { return rows; }, get configs() { return configs; }, get probe() { return probe; }, get sel() { return sel; }, get view() { return view; },
     get charges() { return charges; }, get orbit() { return orbit; }, potentialEnergy, csv: () => readingsCsv(rows, configs), probeReading, potentialAt, fieldAt, bodyAt, bodyLimits };
   new ResizeObserver(resize).observe(stage);

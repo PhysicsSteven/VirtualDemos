@@ -3203,3 +3203,35 @@ photons as before; electrons V (kV), η (%), Hits, B − A (µm); C₆₀ v (m/s
 field). vdcheck `--only after`: 0 problems on all three demos. No What's new entry.
 
 **For GPT:** please check the four videos' captions and readings against the figures above, and the Double Slit table columns.
+## 2026-10-25 · Claude · How this works videos: Linear Density of a String, Charging by Induction (two), Coulomb Sandbox, Gauss's Law
+
+Physics II, charges and fields group (Vol 2 ch 5 and 6, plus the waves lab), following `tools/howto/README.md`. Each demo has a
+`VD.howTo` button and a dark theme video of the first reading in its worksheet; Charging by Induction picks its video by setup
+(`neutral-attraction.mp4` in Attracting a neutral insulator, `induction.mp4` in the others, from `window.vdWorksheet()`), with the
+popup titled to match. Scripts: `tools/howto/string-density.cjs`, `induction.cjs`, `neutral-attraction.cjs`, `coulomb-sandbox.cjs`,
+`gauss-law.cjs`. No measuring tools appear (none of these demos has them). Every reading on screen comes from the run, checked by hand:
+
+- Linear Density of a String (20.7 s): Sweep the frequency, 200 g (String B, L = 1.20 m), Blind on; the Coarse knob swept to 18 Hz
+  past the peak, the Fine knob back to 16.8 Hz. Demo: T 1.9620 N, largest amplitude 8.84 mm, 1 loop; recorded 0.200, 1.9620, 16.8, 1,
+  as in the worksheet key. By hand T = 0.200 × 9.81 = 1.962 N, v = √(1.962/1.20e-3) = 40.43 m/s, f₁ = v/2L = 16.85 Hz; on the
+  0.1 Hz steps 16.8 Hz gives 8.84 mm and 16.9 Hz 8.79 mm.
+- Charging by Induction (24.8 s): Part 1's first reading, Charging one sphere by grounding, +10 nC, rod tip 1.0 cm, Start over and
+  the four guided steps. Demo: Q_A −8.333 nC, V_A −1498 V. By hand the image charge −qR/(R + d) = −10 × 5/6 = −8.333 nC, and
+  kQ/R = 8.988e9 × 8.333e-9/0.05 = 1498 V. (The recorded −8.33325 nC is the exact two sphere solution with neutral B 40 cm away.)
+- Attracting a Neutral Insulator (19.9 s): Part 1's first reading, polystyrene (a = 2.00 cm, κ = 2.56), −20 nC, gap 2.0 cm, Blind
+  on, the rod lowered, read after the settling ring goes out. Demo: −32.02 mg, as in the key. By hand the multipole series
+  F = Σ (l + 1) β_l k q² a^(2l+1)/D^(2l+3), β_l = l(κ − 1)/(lκ + l + 1), D = 4.0 cm, gives 314.08 µN (dipole term alone 192.2 µN),
+  and F/g = 32.02 mg.
+- Coulomb Sandbox (24.2 s): the single charge scan's first point: Blind on, the −2 nC charge removed, the other set to +1 nC and
+  dragged to (0, 0), the probe clicked at (1.0, 0) cm. Demo: 899 V, 89.9 kV/m, 0°; captured 1.0, 0.0, 899, 89900, 0, as in the
+  key. By hand kq/r = 899 V, kq/r² = 89.9 kV/m.
+- Gauss's Law (20.2 s): Charge inside, paused, predicted flux hidden, the charge set to +1 nC and typed to (0, 0), sphere R = 6.0 cm.
+  Demo: numerical ∮E·dA 112.9 N·m²/C, recorded 112.9409. By hand q/ε₀ = 1e-9/8.8541878188e-12 = 112.9409 N·m²/C.
+
+**Demo fix found while recording (Coulomb Sandbox, visible to students):** in the 2D map a mouse hovering the field moves the probe
+for a look, so on the way to Capture reading the probe followed the pointer to the map's edge, and the reading captured was not the
+point the student had clicked. A click, drag or arrow key now sets where the probe is placed, and when the mouse leaves the map the
+probe goes back there (the hover look is unchanged; touch and 3D are unchanged). vdcheck `--only after`: 0 problems on all four demos.
+No What's new entry (one comes for the whole set).
+
+**For GPT:** please check the five videos' captions and readings against the figures above, and the Coulomb Sandbox probe change.

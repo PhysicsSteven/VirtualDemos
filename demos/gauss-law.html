@@ -3004,6 +3004,9 @@ void main() {
     enclosed: () => enclosed(), setView3d, get view3d() { return view3d; }, orbit, get lc3() { return G3.lc; }, handles3: () => G3.handles.map((h) => ({ id: h.id, s: h.s }))
   };
 
+  /* How this works: a short video of one sample reading, the flux of +1 nC through a sphere; made by tools/howto/ */
+  VD.howTo({ src: 'media/how-this-works/gauss-law.mp4', poster: 'media/how-this-works/gauss-law.jpg' });
+
   tokens();
   const ro = new ResizeObserver(resize);
   ro.observe(panes.d); ro.observe(panes.p);
