@@ -372,7 +372,7 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
     dims: 'Choose exponents with the sliders until the dimensions [M L T] on the left match the answer\'s. Then press Show the answer. Variables that do not appear in the answer get exponent 0.',
     sig: 'Type two measurements as you would write them. A decimal point makes trailing zeros significant; 1500 with no decimal point is ambiguous (taken as 2 figures here).',
     fermi: 'Adjust the low and high values to your own estimates. The answer is the product, shown as a range and to the nearest power of ten.' };
-  const S = { tab: 'scale', kind: 'speed', from: 'mi/h', to: 'm/s', q: 'pendulum', ex: [0, 0, 0], fq: 'beats', fr: null, blind: false, cursor: 0, view: 'zoom', zoom: 0.4, fly: 0, goto: null };
+  const S = { tab: 'scale', kind: 'speed', from: 'mi/h', to: 'm/s', q: 'pendulum', ex: [0, 0, 0], fq: 'beats', fr: null, blind: false, cursor: 0, view: 'zoom', zoom: Math.log10(4), fly: 0, goto: null };   // opens 4 m wide, so the scale bar (a quarter of the width) reads 1 m
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();

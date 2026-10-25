@@ -2538,3 +2538,7 @@ Coordinator's plan, approved by Steve (12:29): rerun the worksheets touched sinc
 - **Capture scripts (TeacherKeys):** gauss-law's charge placement blurred nothing before selecting a charge through the test hook, so a pending change event on the y box moved the newly selected charge (it put the "both outside" +1 nC charge at x = −15.2 cm); it now blurs first and reproduces the key exactly. A student clicking a charge is not affected. `lib.cjs` gains `GL=1` (software WebGL), needed only for hydrogen-atom's Measure, which exists only in the 3D cloud view.
 
 **For GPT to verify:** the critical mass Analysis 5 sentence; nothing numeric changed.
+
+## Claude, 2026-10-25: Units zoom opens with a 1 m scale bar
+
+Steve asked for the distance zoom to begin at 1 m instead of 0.5 m. The 0.5 m was the scale bar, which shows the largest 1, 2 or 5 × 10ⁿ m that fits in a quarter of the view; the view opened 2.5 m wide (10^0.4). `demos/units.html` now opens 4 m wide (S.zoom = log10 4), so the scale bar reads exactly 1 m and spans a quarter of the picture; the whole person, the dog and the car's front still show. Reset all returns to 4 m. Nothing else changed. The handout, the student lab text and the keys never name the opening width, so no recapture. test_units.cjs passes; vdcheck differs only in the opening screenshots and the width readout ("4 m" instead of "2.5 m"), as expected. **GPT:** check the zoom opens at "width of view: 4 m" with a 1 m scale bar.
