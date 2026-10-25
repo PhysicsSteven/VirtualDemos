@@ -3945,3 +3945,55 @@ as the plan places it. Lagrange Points and Kepler's Laws untouched.
 
 **For GPT:** please check the resonance distances and the JPL counts (sums in the test), the Le Verrier numbers against Laskar
 2017, the worksheet's wording for a non major online class, and the video's captions against its reading.
+
+## 2026-10-25 · Claude · Controls cut off at laptop sizes and in Projector; vdcheck --only clip
+
+The Transformers video thread found controls inside `.stage` sitting below its bottom edge at 1280x720 and 1440x900. Cause: a
+stage with a fixed `min-height` (740 to 780 px) and `overflow: hidden` in the bench grid. Its minimum sizes the grid row, so the
+row ignores content taller than that and the stage clips it. Projector's 440 px floor from `vd.css` does the same on short
+screens, and demos whose set up cards float over the picture (position absolute) cut the card off when the stage is short.
+
+**Check:** `node tools/vdcheck.cjs --only clip --all` (or name demos) fails when any visible control is cut off by a box that
+clips it (overflow hidden or clip, or a box inside the stage that scrolls up and down), at 1024x768, 1280x720, 1440x900,
+1920x1080, 400x860 and 360x780, as the page opens, after each view switch in the strip and each Setups chip, and in Projector.
+`--all` runs every demo except the redirect pages. A chip whose work runs on a time budget never finishes on the paused clock
+(Sound Waves' race, Vectors' force table, Franck–Hertz neon, Standing Waves' beats, Induction at Work's tablet); it is noted and
+the states after it at that size are skipped.
+
+**First run: 28 demos cut something off** (the coordinator's 12 were all real, plus capacitors, chladni, kundts-tube,
+magnetic-moments, molecules, pendulum, ripple-tank, room-acoustics, sound-waves, states-of-matter, string-density, timbre,
+transformers, ultrasound, and holography, resolution and gas-heat-capacity in Projector only). Fixes:
+- Stacked stages (early-universe, magnetic-moments, molecules, nuclear-reactions, particles, relativistic-motion, ripple-tank,
+  shells-and-x-rays, solids, states-of-matter, retrograde-motion, celestial-sphere): at 821 px and up the stage gets
+  `align-self: start` and `min-height: max(<its old floor>, 100%)`, and in Projector `max(440px, 100%)`. The stage grows with its
+  controls on a short window and still fills a tall one; nothing changes where nothing was cut. Michelson (which scrolled inside
+  its stage), Chladni and Capacitors (821 to 1060 px, panes stacked) get the same; Timbre in Projector on a short screen.
+- Holography, Resolution, Transformers and Gas in a Box heat capacities kept the video threads' `min-height: min-content` and now
+  have it in Projector too (the library's 440 px Projector floor overrode it). Entropy keeps its video thread's 930 px floor.
+- New shared helper **`VD.fitStage(stage)`** (demos/lib/vd.js, README): for set up cards that float over the picture and handles
+  placed on the drawing, a minimum height on the stage that fits each card (keeping its offset from the edge it is placed by),
+  measured again on resize, Projector, a click in the stage and any size change of the stage or a card. It only grows the stage,
+  and only while something would be cut. Used by pendulum, string-density, kundts-tube, room-acoustics, sound-waves, ultrasound.
+  Room Acoustics' card no longer scrolls inside itself in Projector; String Density's Projector floor is 560 px (below that the
+  3D view cuts off the vibrator and its handle).
+- Temperature: on phones a row of choices wraps (Conduction, Cooling and Mystery bath were cut off at 400 and 360 px).
+
+**Page errors the check found (pre-existing, 1024x768):** Chladni's plate drawing and Resonators' bottle shadow drew a radial
+gradient with a negative radius while the picture had no room yet. `drawPlate` and the shared `Gr.shadow` (demos/lib/gear.js)
+now skip that frame.
+
+**Verified:** clip check over all 124 demos on main after the fixes: 0 cut off, except Planet Temperatures (below). Before and after, measured at
+1920x1080, 2560x1440, 1440x900, 1280x720, 1024x768, 1100x900, 400x860, 360x780 and 1920x1080 Projector: no control moves; only
+stages that cut something off grow (Particles at 1920x1080 grew 890 to 1441 px: the particle filter chips were 484 px below
+the stage). `vdcheck --only after` on the 27 changed demos: 0 problems. No CORE changed.
+
+**Keys:** the capture scripts run at 1100x900, where 12 stages grew. I reran the 29 capture scripts that use those demos against a
+local build: 20 match the committed data exactly; the other 9 match a capture made the same way from main before this change
+(their differences from the committed files are older: label wording, helper columns, and run to run values in x-ray-spectra Part
+3 and Timbre's random phases, which differ between two runs on main too). Keys are unaffected.
+
+**Left:** Planet Temperatures (new today) caps its set up card to the system pane's height in `resize()`, so the card scrolls inside
+itself and the clip check flags it in Projector and at 1024x768 and 1280x720 in Flat. Left to its thread rather than rework a new
+layout. Screenshots: project files `stage-clipping/`. What's new: one entry, since students can now reach controls that were hidden.
+
+**For GPT:** please spot check a few of the demos above at 1280x720 and 1024x768 (normal and Projector) for anything cut off.

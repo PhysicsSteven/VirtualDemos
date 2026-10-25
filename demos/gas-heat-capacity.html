@@ -42,7 +42,7 @@
 @media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 360px; } }
 /* the stage is as tall as its picture, graph and shelf (at least 400 + 190 px plus the shelf, so more than 740 px): a fixed 740 px
    with overflow hidden clipped the shelf, Drop the ball and Add heat among it, on screens under about 1000 px tall */
-@media (min-width: 821px) { .stage { min-height: min-content; } }
+@media (min-width: 821px) { .stage, :root[data-projector="on"] .stage { min-height: min-content; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>

@@ -17,6 +17,7 @@
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ecl: #f2c14e; --eq: #69a0ff; --hor: #5fd08a; --sel: #ff8a50; --moon: #c3cbd6; --pole: #b794ff; } }
 :root[data-theme="dark"] { --ecl: #f2c14e; --eq: #69a0ff; --hor: #5fd08a; --sel: #ff8a50; --moon: #c3cbd6; --pole: #b794ff; }
 .stage { position: relative; display: flex; flex-direction: column; min-height: 600px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(600px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }   /* the stage grows with its controls on a short window (a fixed height cut them off) and still fills a tall one */
 .stage-ctl { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
 .stage-ctl .grow { flex: 1; }
 .stage-ctl .btn { padding: 4px 12px; min-width: 64px; }

@@ -47,7 +47,7 @@
 .evrow select { flex: 1 1 140px; }
 .swatch.sight { border-color: var(--sight); } .swatch.trail { border-color: var(--trail); } .swatch.real { border-color: var(--real); border-top-style: dashed; }
 .swatch.epi { border-color: var(--epi); } .swatch.earth { border-color: var(--earthc); }
-@media (min-width: 821px) { .stage { min-height: 760px; } }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }   /* the stage grows with its controls on a short window (a fixed height cut them off) and still fills a tall one */
 @media (max-width: 820px) {
   .views { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto; }
   .side { overflow: visible; }

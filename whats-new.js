@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-laptop-controls', date: '2026-10-25', title: 'Every control on a laptop screen',
+    text: 'On laptop sized windows (and in Projector on a short screen) some demos cut off the controls at the bottom of the picture, such as the particle filters, the Michelson fine moves and the Pendulum mass rack. The picture now grows to show them all, and the page scrolls to reach them.' },
   { id: '2026-10-25-resonances', date: '2026-10-25', title: 'Orbital Resonances',
     text: 'A new Astro 2203 demo with its own worksheet: watch Jupiter tug an asteroid at the same place orbit after orbit until its path crosses Mars\'s, beside the real counts of 881,333 asteroids that show the Kirkwood gaps. See why Pluto never meets Neptune though their orbits cross, and find Neptune from its pull on Uranus as Le Verrier did in 1846.', link: { href: 'demos/resonances.html', text: 'Open Orbital Resonances' } },
   { id: '2026-10-25-celestial-sphere', date: '2026-10-25', title: 'The Sky and the Celestial Sphere',
