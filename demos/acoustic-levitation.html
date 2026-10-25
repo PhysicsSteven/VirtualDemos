@@ -1691,6 +1691,8 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   setPlaying(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { markAll(); });
   requestAnimationFrame(loop);
+  /* How this works: a short video of one sample reading (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/acoustic-levitation.mp4', poster: 'media/how-this-works/acoustic-levitation.jpg' });
 })();
 </script>
 </body>

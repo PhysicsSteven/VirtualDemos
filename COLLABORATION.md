@@ -3078,3 +3078,32 @@ number on screen comes from the run and was checked by hand. The videos are sile
   the whole set).
 
 **For GPT:** please check the five videos' captions and readings against the demos and the figures above.
+## 2026-10-25 · Claude · How this works videos: Resonators, Kundt's Tube, Timbre and Harmonics, Chladni Plates, Acoustic Levitation
+
+Acoustics rollout of the Pendulum pilot: one dark theme video per demo of the first reading in its own worksheet, scripts in
+`tools/howto/<demo>.cjs`, `VD.howTo` button on each demo (recorded with the button on the page). No measuring tools appear. The
+videos are silent, so every step that would be heard is shown on a readout instead. Every number on screen comes from the run:
+
+- Resonators (20.3 s): Resonance tube, find c, 20 °C, 3.2 cm tube, 512 Hz, Blind ticked; the water dragged past the first
+  resonance and back to the level peak, 15.8 cm (level 0.0 dB). By hand c = 331.3√(1 + 20/273.15) = 343.2 m/s, λ/4 = 16.76 cm,
+  ΔL = 0.6133a = 0.98 cm, L₁ = 15.78 cm. The captured row reads 16.0 cm: the demo's simulated meniscus reading error (seed 2718).
+- Kundt's Tube (25.8 s): steel rod 1.00 m clamped at the middle, air at 20 °C, Keep it ringing, plunger tuned to 102.0 cm, pointer
+  on the first heap, 6.8 cm, counter 2524 Hz. By hand v_rod = √(200 GPa/7850) = 5048 m/s, f = v/2L = 2524 Hz, d = 343.2/(2 × 2524)
+  = 6.80 cm, resonance at 15d = 102.0 cm (the demo's readout says 102.00), first node 102.0 − 14d = 6.8 cm.
+- Timbre and Harmonics (17.1 s): Sawtooth wave at 220 Hz, Strongest partials 220.0 Hz 0 dB, 440.0 −6.0, 660.0 −9.5, 880.0 −12.0,
+  1.10 kHz −14.0, 1.32 kHz −15.6 dB (20 log 1/n), repeats every 4.55 ms (1/220 Hz), RMS 0.890 (√(½ Σ 1/n²) over 16 harmonics).
+- Chladni Plates (20.7 s): steel square, 1.00 mm, wave driver at the center, Sand view, swept up from 20 Hz with Next resonance to
+  89.30 Hz, mode 3 (a ring). Free plate check: D = Eh³/12(1 − ν²) = 18.3 N·m, f = 24.27/(2π × 0.24²) × √(D/ρh) = 102.4 Hz as the
+  demo says; the driver's 50 g moving mass pulls it to 89.30 Hz. The twisting mode (56.8 Hz) has a node at the center, so a center
+  drive skips it. Recorded row: square, steel, 1, 89.301 Hz.
+- Acoustic Levitation (21.1 s): Stack of beads, foam, a = 0.30 mm, 10 V, Slice view, trap table 2.36 and −2.38 mm either side of the
+  center (spacing 4.74 to 4.81 mm, the demo's 4.76 mm = λ/(2⟨cos θ⟩) with λ = 8.58 mm, ⟨cos θ⟩ = 0.901); F_max/W = 112, the same
+  as at 0.75 mm (radius cancels). Recorded: tracked trap at 2.36 mm.
+
+**Demo fix found while recording (Chladni, visible to students):** on screens with a device pixel ratio above 1 (every Retina Mac and
+most phones) the Sand view drew the grains at dpr² scale, so only the top left quarter of the plate's sand showed. The grain
+position now scales by k (device pixels per CSS pixel) once. Also, on a small plate the corner labels overlapped; the top label now
+shortens and the peak |a| label moves up a line when they would collide. vdcheck --only after: 0 problems on all five demos.
+`tools/howto/lib.cjs` takes an optional `o.dsf` (Chladni records at 2 for its small plate picture). No What's new entry.
+
+**For GPT:** please check the five videos' captions and readings against the figures above, and the Chladni sand fix at dpr 2.

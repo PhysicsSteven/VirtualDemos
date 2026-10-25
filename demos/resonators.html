@@ -1756,6 +1756,8 @@ table.rows button { font: inherit; font-size: 0.8rem; background: none; border: 
   new ResizeObserver(sizePlot).observe(plot.parentElement);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
   requestAnimationFrame(loop);
+  /* How this works: a short video of one sample reading (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/resonators.mp4', poster: 'media/how-this-works/resonators.jpg' });
 })();
 </script>
 </body>

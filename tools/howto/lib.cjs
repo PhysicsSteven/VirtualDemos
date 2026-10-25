@@ -8,13 +8,14 @@
 //   r.state.arrow    { rect: [x, y, w, h] } to ring and point at, or null
 // Helpers: r.box(sel), r.text(sel), r.tick(frames), r.secs(s), r.moveTo(x, y, s), r.click(sel), r.dragUntil(dx, dy, sel, want),
 // r.dragTo(x, y, s), r.findDrag(sel, cardSel), r.scrollRail(sel), r.p (the Playwright page), r.check (readings to print and save).
+// Options: o.query (appended to the demo's URL), o.dsf (device scale factor, 1.5 by default; more for a small picture zoomed far in).
 const { chromium } = require('playwright');
 const fs = require('fs');
 module.exports = async function record(o, steps) {
   const OUT = process.argv[2] || 'take';
   if (!process.env.VD_THREE) throw new Error('set VD_THREE to a local three.min.js r128 (npm pack three@0.128.0)');
   const URL = process.env.DEMO_URL || `http://localhost:8811/demos/${o.demo}.html${o.query || ''}`;
-  const W = 1280, H = 720, DSF = 1.5, FPS = 30, DT = 1000 / FPS;
+  const W = 1280, H = 720, DSF = o.dsf || 1.5, FPS = 30, DT = 1000 / FPS;
   fs.rmSync(OUT, { recursive: true, force: true }); fs.mkdirSync(OUT + '/frames', { recursive: true });
   const b = await chromium.launch();
   const p = await b.newPage({ viewport: { width: W, height: H }, deviceScaleFactor: DSF, colorScheme: 'dark' });

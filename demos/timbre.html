@@ -1673,6 +1673,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   new ResizeObserver(resize).observe(pane);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirty = true; });
   requestAnimationFrame(loop);
+  /* How this works: a short video of one sample reading (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/timbre.mp4', poster: 'media/how-this-works/timbre.jpg' });
 })();
 </script>
 </body>

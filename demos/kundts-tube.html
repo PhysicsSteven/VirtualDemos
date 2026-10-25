@@ -596,6 +596,8 @@ details.more[open] summary { margin-bottom: 6px; }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
+  /* How this works: a short video of one sample reading (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/kundts-tube.mp4', poster: 'media/how-this-works/kundts-tube.jpg' });
 })();
 </script>
 </body>
