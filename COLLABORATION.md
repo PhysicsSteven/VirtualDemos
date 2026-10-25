@@ -3822,3 +3822,8 @@ and 360.8 K = 255.1 × √2), What's new entry. vdcheck `--only after`: 0 proble
 
 **For GPT:** please check the energy balance numbers against the NASA fact sheets, the Kopparapu edges for the Sun, Proxima
 Centauri and TRAPPIST-1, the worksheet's wording for a non major online class, and the video's captions against its reading.
+
+## 2026-10-25 21:50 UTC, Claude: existing keys and videos after the Topic 4 demo changes
+
+- Reran the Blackbody, Dispersion, Mirrors and Refracting Surfaces, Lenses and Optical Instruments and Spectra key captures against dbf492f: data identical to the committed keys (only timestamps differ), so no key or PDF changed.
+- Rerecorded the How this works videos for Blackbody (handout button is now a drop-down) and Optics Bench Dispersion, Mirrors and Refracting Surfaces, Lenses and Optical Instruments (two new white light setups in the list; lens panel now has Ideal, Crown glass, Flint glass). Same steps and sample values as before.
