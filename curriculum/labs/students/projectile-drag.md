@@ -62,7 +62,7 @@ On a real projectile bench, keep the landing area clear and follow the instructo
 
 **Drag.** Repeat selected angles with air on, keeping ball properties fixed. Compare the range and angle of maximum range with the vacuum results. Compare heavy and light balls of the same size without changing their launch speed.
 
-**Using the virtual apparatus.** Turn **Off** under Air, set **Launch speed v₀**, **Launch angle θ** and **Launch height**, then enable **Blind: hide predictions and answers**. Press **Launch**. Turn on **Time dots**, choose **Dot interval**, and click a trajectory dot; use **Earlier dot** / **Later dot** for adjacent samples. Press **Capture reading** at each chosen point and **Export to worksheet** before **Clear**. Use **y against t** for one trajectory and **R against sin 2θ** for the range scan. Each captured row includes its shot settings; do not mix different speeds in one range fit. For drag, select **On** and record the air density and ball settings.
+**Using the virtual apparatus.** Start with air resistance off, set the launch speed, angle and height, and hide the predictions and answers before you launch. Show time dots at an interval you choose, and record the time and position at each dot you use. Send each scan to the worksheet before clearing, so the trajectory and the range scan each get their own copy of the Data table; graph $$y$$ against $$t$$ for the trajectory and $$R$$ against $$\sin 2\theta$$ for the range scan. Every recorded row keeps its shot's settings, so do not mix launch speeds in one range fit. For drag, turn air resistance on and record the air density and the ball's settings.
 
 ## Data
 

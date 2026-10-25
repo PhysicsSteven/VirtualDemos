@@ -56,7 +56,7 @@ Switch off a real supply before rewiring. Begin with its current limit set low. 
 
 **A multiloop circuit.** Choose a bridge circuit. Label the nodes and current arrows. Use measured currents to test two independent junctions and measured voltage changes to test two loops. Change one resistance and repeat. Include a drawing that defines every sign.
 
-**Using the virtual apparatus.** Choose **DC** and turn on **Blind: hide predictions and answers**. Use **Series bulbs**, **Parallel bulbs**, **Voltage divider** and **Wheatstone bridge**. The simulated bulbs are fixed resistors for this activity. Click a part to edit it under **Selected**. Use the A and V tools to place meters in the correct connections; keep a copy of the schematic. Press **Capture reading** under **Readings** after each change and **Export to worksheet** before changing setup. Each meter of each reading becomes a row of the Data table, with the part settings. Compare your own sums first, then use **Junction rule** and **Loop rule** to check them.
+**Using the virtual apparatus.** Work in DC with predictions and answers hidden, starting from the series bulbs, parallel bulbs, voltage divider and Wheatstone bridge circuits. The bulbs here are fixed resistors. Set each part's value, connect each ammeter in series with the part you measure and each voltmeter across it, and keep a copy of the schematic. Record a reading after each change and send the readings to the worksheet before you change circuits; each meter of each reading becomes a row of the Data table, with the part values. Check your own sums first, then compare them with the demo's junction rule and loop rule checks.
 
 ## Data
 

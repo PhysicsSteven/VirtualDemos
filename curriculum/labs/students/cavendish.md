@@ -73,7 +73,7 @@ Never look into a laser or its reflection from the mirror. The large spheres of 
 
 **Part 3: back to A.** Right after the seventh turning point, swing the large spheres back to position A. Record the time and the spot at each of the next seven turning points.
 
-**Using the virtual apparatus.** Turn Blind on before you start. Send the readings of Parts 1 and 2 to the worksheet together, then clear them before Part 3; each gets its own copy of the Data table. Number the turning points of each part from 1.
+**Using the virtual apparatus.** Hide the predictions and answers before you start. Send the readings of Parts 1 and 2 to the worksheet together, then clear them before Part 3, so each gets its own copy of the Data table. Number the turning points of each part from 1.
 
 ## Data
 

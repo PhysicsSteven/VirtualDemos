@@ -59,7 +59,7 @@ Predict each result before reading the demonstration. Compare torque at two forc
 
 **Rotational variables (door swing).** Use the door, 0.90 m long and 15 kg, with the force keeping its angle to the door, at 90°. Push with 20 N at 0.80 m, then with 20 N at 0.40 m, then with 40 N at 0.40 m. For each push record the torque, the angular acceleration, the time to turn 90° and $$\omega$$ on reaching 90° in the Door swing table, then work out the remaining columns yourself.
 
-**Using the virtual apparatus.** Choose **Torque** and vary **Force F**, **Push point r, from the pivot** and **Angle θ between r and F**. Use **Rolling race** for shape comparisons, recording **Incline angle β** and **Ramp length D**. Choose **Skater**, then **Pull in** or **Push out**, and compare angular momentum with kinetic energy. **Show data table** exposes plotted values; record the relevant readouts manually.
+**Using the virtual apparatus.** For torque, change the force, the distance of the push point from the pivot and the angle between $$\mathbf r$$ and $$\mathbf F$$, one at a time. For rolling, race the shapes on one ramp and record its incline angle $$\beta$$ and length $$D$$. For the skater, pull the masses in or push them out, and compare angular momentum and kinetic energy before and after; read the values after the masses have stopped moving. The data table lists the plotted values; record the readouts you need by hand.
 
 ## Data
 

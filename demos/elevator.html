@@ -15,6 +15,9 @@
 .setup-card.away { opacity: 0; visibility: hidden; }
 @media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
 @media (max-width: 820px) { .setup-card { position: static; width: auto; box-shadow: none; } }
+/* on a wide picture the card lies across the top of the graph column, its sliders in two columns where it is wide enough, and the graphs start below it (placeCard) */
+.setup-card.across.two { display: grid; grid-template-columns: 1fr 1fr; column-gap: 18px; row-gap: 6px; }
+.setup-card.across.two .setup-title { grid-column: 1 / -1; }
 .rail details.more > p + p { margin-top: 6px; }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
@@ -380,6 +383,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     draw();
   }
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-view]'); if (b) setView(b.dataset.view); });
+  /* Where the picture is wide, the Set up card lies across the top of the graph column and the graphs start below it, so the card
+     never hides the graphs when it comes back on Pause. Returns the card's bottom edge in picture coordinates (0 when it is elsewhere). */
+  let cardAt = '';
+  function placeCard(wide, gx, gw, p) {
+    const el = $('setupCard');
+    if (getComputedStyle(el).position !== 'absolute') return 0;
+    const x = Math.round(gx - 34 * p), w = Math.round(gw + 34 * p), key = wide ? `${x},${w}` : '';
+    if (key !== cardAt) {
+      cardAt = key; el.classList.toggle('across', wide); el.classList.toggle('two', wide && w >= 420);
+      el.style.left = wide ? `${stage.offsetLeft + x}px` : ''; el.style.top = wide ? `${stage.offsetTop + Math.round(44 * p)}px` : ''; el.style.width = wide ? `${w}px` : '';
+    }
+    if (!wide) return 0;
+    const b = 44 * p + el.offsetHeight + 16 * p;
+    return (Hh - 16 * p - b - 50 * p) / 2 >= 55 ? b : 0;
+  }
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
@@ -465,7 +483,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillText(S.blind ? '?? kg' : `${f(N / G, 1)} kg`, px, floorY + 2 * p);
     }
     // graphs
-    const gx = wide ? sx + shaftW + 50 * p : 50 * p, gw = wide ? W - gx - 20 * p : W - 70 * p, g0 = wide ? top + 18 * p : top + shaftH + 34 * p, gh = wide ? (bot - g0 - 50 * p) / 2 : (Hh - g0 - 50 * p) / 2;
+    const gx = wide ? sx + shaftW + 50 * p : 50 * p, gw = wide ? W - gx - 20 * p : W - 70 * p, cardBot = placeCard(wide, gx, gw, p);
+    const g0 = wide ? Math.max(top, cardBot) + 18 * p : top + shaftH + 34 * p, gh = wide ? (bot - g0 - 50 * p) / 2 : (Hh - g0 - 50 * p) / 2;
     const r = S.m, vmx = Math.max(S.vmax, ...S.hist.map((q) => Math.abs(q[1]))) * 1.15;
     const nh = Math.max(1.5 * r, ...S.hist.map((q) => q[2])) * 1.08;
     plot(gx, g0, gw, gh, 2, 'scale reading (kg)', 0, nh, T.N, r);
