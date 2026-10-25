@@ -4121,3 +4121,40 @@ Card readouts for radius and densities take typed values. vdcheck `--only after`
 
 **For GPT:** please check the two layer formulas and the cited planet values, the isostasy numbers, whether About states the
 convection model's limits clearly enough, and the worksheet's wording for a non major online class.
+
+
+## 2026-10-25 · Claude · New demo: Giant Planets, Rings and Moons (Astro 2203 Topics 10 and 11, plan gap 8)
+
+`demos/giant-planets.html`, vd3kit 3D plus Flat, shared framework, Readings panel, Copy link (setup), How this works video. Four
+views: **Planets** (Jupiter, Saturn, Uranus, Neptune and Earth to scale, each at its axial tilt, density bars against water),
+**Rings** (each giant's rings to scale from above with the Roche limits for any moon density and a rubble pile test moon at 1.2 to
+4 planet radii; a painted line that shears; ring moons; the Mimas 2:1 place), **Moons** (main moons on Kepler ellipses from JPL
+J2000 places for Jupiter and Saturn, drawn 20 times larger and colored by density, with the conjunction lines of the resonant
+pairs; Triton backward) and **Io** (oval orbit, tidal bulge close up, tidal heating). 13 setups. Links to Orbital Resonances for
+the Kirkwood gaps and Kuiper belt instead of repeating them.
+
+- **Data**: NASA planetary, satellite and ring fact sheets (NSSDCA); JPL satellite mean elements (λ = node + ω + M at J2000).
+  Uranus's and Neptune's moons start spread out (stated). Nereid left out. Inclinations, precession and mutual pulls left out.
+- **Roche**: fluid d = 2.455 R (ρ_P/ρ)^(1/3) from Chandrasekhar's 0.09009; rigid 3^(1/3) = 1.442; the unit taken from the mass.
+  Saturn: 2.15 R for solid ice, 2.64 R for porous ice (0.5, like Pan 0.42 and Prometheus 0.48), 1.45 R for rock.
+- **Rubble pile**: 200 frictionless balls with contact springs and restitution, self gravity, Hill's frame to first order.
+  Holds at least 8 orbits at 1.80 Roche units; comes apart within 3 orbits at 1.78 or closer (sweep 1.66 to 1.85).
+- **Checks**: Jupiter's GM from each Galilean moon within 0.1 %; Io:Europa 2.0073, Europa:Ganymede 2.0147, Enceladus:Dione 1.9974;
+  Laplace angle 180.0° at J2000; Mimas 2:1 at 117 528 km with J2 (B ring edge 117 507 km; Kepler alone 116 870 km); ring
+  periods D ring inner 4.90 h, C ring inner 5.78 h, A ring outer 14.34 h; Io's heating (21/2)(k₂/Q)GM²R⁵ne²/a⁶ with
+  k₂/Q = 0.015 (Lainey 2009): 8.87 × 10¹³ W, 2.13 W/m² at e = 0.004, against at least 2.5 W/m² measured (Veeder 1994).
+- Tests: `curriculum/validation/test_giant-planets.cjs`, 10 groups (about 2 minutes, the pile runs). Node suite passes;
+  vdcheck `--only after --full` 120 screenshots, 0 problems; `--only clip` 0 controls cut off; symbols checks clean;
+  check_math clean.
+- **Worksheet** `intro-giant-planets` (Astro 2203): Part 1 Jupiter's four moons and Saturn's six (a³ against P², graphed);
+  Part 2 the giants and Earth; Part 3 Saturn's ice moon at 3.0, 2.0, 1.6, 1.5, 1.4 radii and rock at 1.5 after 3 orbits;
+  Part 4 Io at e = 0 to 0.008. Readings go to the Planets, Rings or Io table when every row is from that view. Key from a real
+  run: TeacherKeys `worksheet-keys/astro-2203/intro-giant-planets-*` (`tools/capture/intro-giant-planets.cjs`): the slopes
+  65.57 and 32.78 give Jupiter 3.34 Saturn masses (NASA 3.34); the ice moon survives at 1.6 R and breaks at 1.5 R.
+- Notes `notes/src/giant-planets.md` (answers in TeacherKeys). Video 20.9 s (`tools/howto/giant-planets.cjs`): Io 5.900 R_J,
+  1.7691 d; Europa 9.387 R_J, 3.5512 d. Thumbnails, What's new. Mapped to astro-2203 units jupiter-saturn and
+  uranus-neptune-kuiper and the Astro module's gravitation unit.
+
+**For GPT:** please check (1) the Roche limit constants and the claim that the A ring lies inside the porous ice limit but
+outside the solid ice one; (2) the Io tidal heating formula and its numbers; (3) the worksheet key's slope ratio arithmetic and
+the worksheet and notes wording for hyphens and American spelling.
