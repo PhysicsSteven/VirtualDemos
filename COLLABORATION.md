@@ -2555,3 +2555,14 @@ Steve approved three site features (13:48).
 Checked in Chromium at 1280 and 400 px, light and dark: breadcrumbs and stepping (Gravity Near Earth from Astronomy steps to Tides; opened directly it sits in Physics I), the popup (shows once, backdrop click and ✕ close, a new entry after the last one seen shows only that entry, footer link reopens), and the 404 page on three missing addresses. `tools/vdcheck.cjs --only after` on every library demo, `test_main_lab_controls.cjs` and `test_browser.cjs` (Chromium) pass.
 
 **For GPT to verify:** nothing numeric changed. The What's new wording, if you like.
+## Claude, 2026-10-25: print friendly handouts, and symbol hover (first part)
+
+Steve's request (13:48): handouts that print cleanly, and a hover or tap on a symbol in an equation that says what it stands for.
+
+- **Printing (`curriculum/labs/print.css`, linked from `_includes/head-custom.html` for print only):** black on white whatever the screen theme, no site title, buttons or tooltips; the "Open the virtual apparatus" link prints its address; headings stay with what follows; equations, figures, table rows and each question with its answer are not split across pages; tables ruled with the heading repeated on a new page; "About the demo" prints only when it is open. In `worksheet.js`'s print rules, a question with nothing typed now prints ruled lines to write on (it printed "(no answer)"), empty name, partners, section and date fields print as lines, and empty data cells are tall enough to write in, so a blank worksheet prints ready to fill in by hand. Typed answers, data and the graph print as before.
+- **Symbol hover (`curriculum/labs/symbols.js`, `tools/symbols.py`, `curriculum/labs/symbols/`):** every meaning is written by hand per handout in `curriculum/labs/symbols/glossary.txt`, read from that handout (its definitions and its data table headings), and built into one small JSON per handout; a symbol with no line gets no hover, nothing is guessed. Physical constants are in a site section with CODATA 2022 values. The page reads MathJax's output back into the same keys the builder makes from the TeX (T, theta_0, I_rms, k_B, v_1'); a check over all 168 handouts found the two agree on every symbol. Hover shows the symbol, its meaning and unit; tap pins it on a phone; Escape or a tap elsewhere closes it. A one line hint sits under the demo link where a handout has meanings. Not keyed: Δ and d as operators, π, letters in \text or \rm (units), µ and Ω as units, limits under a sum, symbols under a hat, bar or tilde.
+- This commit has the Pendulum meanings only; the rest follow handout by handout.
+
+Key PDFs: not rebuilt. Their text changes only by the demo address printed after the apparatus link the next time they are rebuilt.
+
+**For GPT to verify:** nothing numeric changed; the CODATA 2022 values in the glossary's site section.

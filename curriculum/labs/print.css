@@ -1,0 +1,40 @@
+/* Printing a student handout or worksheet (linked from _includes/head-custom.html): black on white whatever the screen theme,
+   no buttons or site chrome, the link to the demo spelled out, headings kept with what follows, tables and equations whole.
+   The worksheet's own print rules (typed answers and data in place of the boxes, blank lines where nothing is typed) are in
+   curriculum/labs/worksheet.js. */
+@media print {
+  @page { margin: 0.6in 0.65in; }
+  html, body { background: #fff !important; color: #000 !important; color-scheme: light; }
+  body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .markdown-body { font-size: 10.5pt; line-height: 1.45; max-width: none !important; margin: 0 !important; padding: 0 !important; }
+  .markdown-body, .markdown-body * { color: #000 !important; background-color: transparent !important; box-shadow: none !important; text-shadow: none !important; }
+  .markdown-body > h1:first-child, .footer, .anchorjs-link, .sym-tip, .sym-hint { display: none !important; }
+
+  /* headings stay with the text under them; equations, figures and table rows are not split across pages */
+  .markdown-body h1, .markdown-body h2, .markdown-body h3, .markdown-body h4 { break-after: avoid; page-break-after: avoid; break-inside: avoid; }
+  .markdown-body h1 { font-size: 18pt; margin: 0 0 6pt; border: 0; }
+  .markdown-body h2 { font-size: 13pt; margin: 14pt 0 6pt; padding-bottom: 2pt; border-bottom: 1px solid #888 !important; }
+  .markdown-body h3 { font-size: 11pt; }
+  .markdown-body p, .markdown-body li { orphans: 3; widows: 3; }
+  .markdown-body tr, .markdown-body img, .markdown-body svg, .markdown-body figure, .markdown-body pre, .markdown-body blockquote,
+  mjx-container[display="true"] { break-inside: avoid; page-break-inside: avoid; }
+  mjx-container[display="true"] { overflow: visible !important; }
+
+  /* tables: ruled, the heading repeated on each page, no screen striping */
+  .markdown-body table { display: table; width: auto; max-width: 100%; border-collapse: collapse; font-size: 9.5pt; }
+  .markdown-body table thead { display: table-header-group; }
+  .markdown-body table th, .markdown-body table td { border: 1px solid #666 !important; padding: 3pt 5pt; }
+  .markdown-body table th { font-weight: 600; }
+
+  /* the link to the demo, spelled out so a paper copy still leads there; other links read as plain text */
+  .markdown-body a { text-decoration: none; }
+  .markdown-body a[href*="/demos/"]::after { content: " (" attr(href) ")"; font-size: 0.85em; word-break: break-all; }
+
+  /* "About the demo" prints only when it is open on screen */
+  .markdown-body details:not([open]) { display: none !important; }
+  .markdown-body details { border: 0 !important; padding: 0 !important; }
+  .markdown-body details > summary { list-style: none; font-weight: 700; }
+  .markdown-body details > summary::-webkit-details-marker { display: none; }
+
+  .markdown-body code, .markdown-body pre { border: 1px solid #bbb !important; }
+}

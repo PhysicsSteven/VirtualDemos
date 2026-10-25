@@ -597,13 +597,19 @@ details.about[open] > summary { margin-bottom: 8px; }
   .ws-btns, .ws-btn, .ws-status, .ws-note, .ws-noprint { display: none !important; }
   .ws-panel { border: 0; background: none; padding: 0; margin: 8px 0 14px; }
   .ws-panel h2 { display: none; }
-  .ws-who label { flex-direction: row; gap: 6px; font-size: 0.95em; }
+  .ws-who { grid-template-columns: 1fr 1fr; gap: 10px 24px; }
+  .ws-who label { flex-direction: row; align-items: baseline; gap: 6px; font-size: 0.95em; white-space: nowrap; }
+  .ws-who .ws-print:empty { flex: 1; }
   .ws input.ws-f, .ws textarea.ws-f, .ws-panel input { display: none !important; }
   .ws-print { display: block; white-space: pre-wrap; min-height: 1.2em; }
   td .ws-print, .ws-who .ws-print, .ws-copyhead .ws-print { display: inline; font-weight: 400; }
   .ws-answer .ws-print { border-left: 3px solid #8c959f; padding: 2px 0 2px 8px; margin: 4px 0 8px; }
-  .ws-answer .ws-print:empty::before { content: "(no answer)"; color: #8c959f; }
-  .ws-tablebox, .ws-answer { break-inside: avoid; }
+  /* nothing typed: ruled lines to write on, so a blank worksheet prints ready to fill in by hand */
+  .ws-answer .ws-print:empty { border-left: 0; padding: 0; height: 6.4em; background: repeating-linear-gradient(to bottom, transparent 0, transparent 1.55em, #9a9a9a 1.55em, #9a9a9a calc(1.55em + 1px)) !important; }
+  .ws-answer-one .ws-print:empty { height: 9.6em; }
+  .ws-who .ws-print:empty { display: inline-block; min-width: 11em; border-bottom: 1px solid #000; }
+  .markdown-body table.ws-table td { height: 1.9em; }
+  .ws-tablebox, .ws-answer, .markdown-body li:has(> .ws-answer) { break-inside: avoid; }
   .markdown-body table.ws-table { display: table; } .markdown-body > h1:first-child { display: none; }
 }` }));
 

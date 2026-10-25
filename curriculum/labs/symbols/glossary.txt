@@ -1,0 +1,38 @@
+// What each symbol in a handout's equations stands for, shown when a student hovers over or taps it.
+// Built into curriculum/labs/symbols/<handout>.json by tools/symbols.py (read its header for the format).
+// Every line is read from its own handout: its definitions, its data table headings and their units.
+// key | meaning | unit | note
+
+== site ==
+// Applied to every handout that uses the symbol, unless the handout's section says otherwise ("key | -" turns it off).
+k_B | Boltzmann constant | J/K | 1.380649 × 10⁻²³ J/K, exact
+N_A | Avogadro constant | mol⁻¹ | 6.02214076 × 10²³ mol⁻¹, exact
+epsilon_0 | Permittivity of free space | F/m | 8.8541878188 × 10⁻¹² F/m (CODATA 2022)
+mu_0 | Permeability of free space | N/A² | 1.25663706127 × 10⁻⁶ N/A² (CODATA 2022)
+hbar | Reduced Planck constant, h/2π | J·s | 1.054571817… × 10⁻³⁴ J·s, exact
+m_e | Electron mass | kg | 9.1093837139 × 10⁻³¹ kg (CODATA 2022)
+m_p | Proton mass | kg | 1.67262192595 × 10⁻²⁷ kg (CODATA 2022)
+m_n | Neutron mass | kg | 1.67492750056 × 10⁻²⁷ kg (CODATA 2022)
+mu_B | Bohr magneton | J/T | 9.2740100657 × 10⁻²⁴ J/T (CODATA 2022)
+mu_N | Nuclear magneton | J/T | 5.0507837393 × 10⁻²⁷ J/T (CODATA 2022)
+a_0 | Bohr radius | m | 5.29177210544 × 10⁻¹¹ m (CODATA 2022)
+// Used only where a handout asks for them ("c | @"), since these letters mean other things on other handouts.
+@c | Speed of light in vacuum | m/s | 299 792 458 m/s, exact
+@e | Elementary charge | C | 1.602176634 × 10⁻¹⁹ C, exact
+@h | Planck constant | J·s | 6.62607015 × 10⁻³⁴ J·s, exact
+@G | Gravitational constant | N·m²/kg² | 6.67430 × 10⁻¹¹ N·m²/kg² (CODATA 2022)
+@sigma | Stefan–Boltzmann constant | W/(m²·K⁴) | 5.670374419… × 10⁻⁸ W/(m²·K⁴), exact
+@R | Molar gas constant | J/(mol·K) | 8.314462618… J/(mol·K), exact
+@u | Atomic mass unit | kg | 1.66053906892 × 10⁻²⁷ kg (CODATA 2022)
+@R_infty | Rydberg constant | m⁻¹ | 10 973 731.568157 m⁻¹ (CODATA 2022)
+@euler | Euler's number, the base of natural logarithms | | 2.71828…
+
+== pendulum ==
+L | Length, pivot to bob center (for the rod, its full length) | m
+theta_0 | Release angle | ° or rad
+T | Full period | s
+T_0 | Small angle period | s
+g | Gravitational acceleration | m/s²
+K | Complete elliptic integral of the first kind
+theta | Angle of the string from vertical | rad
+k | Slope of T² against L | s²/m
