@@ -140,8 +140,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 <script>
 (() => {
   // ==CORE START==
-  const GRV_VERSION = 'gravity-near-earth@2026-10-22';
-  const BODIES = { earth: { name: 'Earth', GM: 3.986004418e14, R: 6.371e6, w: 7.2921159e-5 }, moon: { name: 'Moon', GM: 4.9048695e12, R: 1.7374e6, w: 2.6617e-6 }, mars: { name: 'Mars', GM: 4.282837e13, R: 3.3895e6, w: 7.088218e-5 } };
+  const GRV_VERSION = 'gravity-near-earth@2026-10-25';
+  const BODIES = { earth: { name: 'Earth', GM: 3.986004418e14, R: 6.371e6, w: 7.2921159e-5 }, moon: { name: 'Moon', GM: 4.9028001e12, R: 1.7374e6, w: 2.6617e-6 }, mars: { name: 'Mars', GM: 4.282837e13, R: 3.3895e6, w: 7.088218e-5 } };
   const gGrav = (b, h) => b.GM / (b.R + h) ** 2;
   // effective g on something at rest on the rotating planet at latitude lat (rad): gravity toward the center plus ω² r cos(lat) outward from the axis
   function gEff(b, h, lat, spin) {

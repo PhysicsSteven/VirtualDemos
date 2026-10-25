@@ -2452,3 +2452,18 @@ Steve approved every recommendation in the open items document (2026-10-25 05:39
 - **17** `textbook-map.json`: pendulum gains Vol 1 §§10.6, 10.7; impulse §9.1; the-eye (camera handout) Vol 3 §2.4; induction-at-work Vol 2 §§13.1, 13.2, in both the demo entries and the sections' demo lists. Course pages and search rebuilt; coverage unchanged.
 
 **For GPT to verify:** the Table 6.1 values above against the book; the viscometer Mystery key rows and Analysis 5 arithmetic.
+
+## Claude, 2026-10-25: value changes from the open items list (items 1, 4, 5, 16)
+
+Steve approved every recommendation in the open items document (2026-10-25 05:39). This batch is the value changes that move numbers in demos and keys. Each key was first recaptured against the unchanged code to confirm the capture reproduces it (all did, apart from the precipitator's random counts), then recaptured after the change.
+
+- **Item 1, blackbody skin at 305 K:** the Human body preset is now **Human skin** at 305 K (the skin surface is what radiates; the handout already said 305 K in Before the lab 3 and Analysis 4). Hint: peak near 9.5 μm, visible share about 2 × 10⁻²¹ % (computed with the demo's own `visibleFraction`: 1.94 × 10⁻²¹ %). Handout setup list, Cool objects step and Analysis 3 wording, and the notes, say Human skin. Key recaptured: the cool objects row now reads 305 K, 9500.9 nm; Analysis 3 gives 9.50 μm. The Wien and Stefan fits use the first run only and are unchanged.
+- **Item 4, Moon GM:** 4.9028001 × 10¹² m³/s² (JPL DE440) in place of 4.9048695 × 10¹²; the handout's quoted value follows (4.902800 × 10¹²). Surface g 1.6242 m/s², one radius up 0.4077 m/s², ratio still 0.2510. Gravity key Moon rows and Analysis 6 updated.
+- **Item 5, sphere C_D 0.45:** ping pong, cannonball and shot put presets use OpenStax Vol 1 Table 6.2's 0.45; the code comment no longer calls 0.47 the textbook value (it says engineering tables often give 0.47). The C_d family fallback list uses 0.45 too. No key uses these presets (projectile drag's key uses the baseball, terminal velocity is its own demo), so no key changed.
+- **Item 16, precipitator diameter:** the physics now uses the diameter exactly as displayed and exported (2 significant figures, one `dpUm()` helper), so a row reading 0.3 μm is computed for 0.3 μm, not 0.302. Precipitator key recaptured from a new run (drift speeds 1.655, 2.070, 2.935, 9.536 cm/s for 0.2, 0.3, 0.5, 2 μm; the counts are random, so every measured number and Analysis 1 to 4 were redone from the new run: Part 2 slope (0.1635 ± 0.0064) per meter, w = 2.04 cm/s against 2.07; fifteen of sixteen readings within 2σ).
+- **Observation, not changed:** in both the old and the new precipitator runs the u = 3.0 m/s reading came out high (3.3σ and 2.4σ). A Node replica of `espStep` with the same step logic is unbiased at 3 m/s (32.6 % against 32.4 % predicted over 200 000 particles), so it is probably chance, but worth a look if it shows up a third time.
+- Item 6 (plutonium density) is waiting on Steve: Chadwick's Table 2 computes both the Eq. 1 mass (8.6 kg) and the MCNP6 mass (10.2 kg) at 19.6 g/cm³.
+
+Checks: tests for projectile drag, gravity, nuclear reactions, electrostatics at work pass; vdcheck clean on the four demos. Key PDFs rebuilt: blackbody, gravity-near-earth, precipitator (TeacherKeys).
+
+**For GPT to verify:** the 305 K numbers (9.50 μm, 2 × 10⁻²¹ %), the Moon g values, and the precipitator key's Analysis 2 to 4 arithmetic.

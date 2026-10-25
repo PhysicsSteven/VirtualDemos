@@ -277,6 +277,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     R: 15, I: 2, motor: false, Q: 0, t: 0, hist: [], spark: 0, sparks: 0, tRun: 0,
     q: 0.15, PV: 3000, d: 60, v: 20, drops: [], paper: [], col: 0, queue: [], qAcc: 0,
     lgDp: 0, kappa: Infinity, Ekv: 3, u: 1, L: 5, parts: [], dust: [], pend: [], nIn: 0, nOut: 0, nCaught: 0, spawnAcc: 0 };
+  /* particle diameter in µm as shown and exported (2 significant figures); the physics uses this same value, so a recorded row is exact */
+  const dpUm = () => +(10 ** S.lgDp).toPrecision(2);
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
@@ -323,7 +325,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('wandUp').setAttribute('aria-pressed', String(S.wand.on)); $('wandUp').disabled = S.wand.on; $('wandAway').disabled = !S.wand.on;
     $('sQ').value = S.q; $('oQ').textContent = S.blind ? 'hidden' : `${S.q.toFixed(2)} pC`;
     $('sPV').value = S.PV; $('oPV').textContent = `${S.PV} V`; $('sD').value = S.d; $('oD').textContent = `${S.d} µm`; $('sV').value = S.v; $('oV').textContent = `${S.v} m/s`;
-    const dp = 10 ** S.lgDp; $('sDp').value = S.lgDp; $('oDp').textContent = `${+dp.toPrecision(2)} µm`;
+    $('sDp').value = S.lgDp; $('oDp').textContent = `${dpUm()} µm`;
     for (const b of document.querySelectorAll('#ptype button')) b.setAttribute('aria-pressed', String((b.dataset.p === 'cond') === (S.kappa === Infinity)));
     $('sE').value = S.Ekv; $('oE').textContent = `${S.Ekv.toFixed(1)} kV/cm`; $('sU').value = S.u; $('oU').textContent = `${S.u.toFixed(1)} m/s`; $('sL').value = S.L; $('oL').textContent = `${S.L.toFixed(1)} m`;
   }
@@ -464,7 +466,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       h += dd('Part of that from gravity', `${fx(r.yGrav * 1e6, 1)} µm`) + dd('Rayleigh limit for this drop', `${sci(rayleighLimit(S.d * 1e-6) * 1e12)} pC`);
       h += dd('Electrons per drop q/e', b ? HIDDEN : sci(S.q * 1e-12 / QE));
     } else {
-      const dp = 10 ** S.lgDp * 1e-6, E = S.Ekv * 1e5, q = satCharge(dp, E, S.kappa), w = driftSpeed(dp, E, S.kappa), eta = deutsch(w, S.L, S.u, S_ESP), b = S.blind;
+      const dp = dpUm() * 1e-6, E = S.Ekv * 1e5, q = satCharge(dp, E, S.kappa), w = driftSpeed(dp, E, S.kappa), eta = deutsch(w, S.L, S.u, S_ESP), b = S.blind;
       h += dd('Slip correction C<sub>c</sub>', fx(cunningham(dp), 3)) + dd('Charge (electrons)', b ? HIDDEN : sci(q / QE));
       h += dd('Drift speed w', b ? HIDDEN : `${sci(w * 100)} cm/s`) + dd('Time in the channel L/u', `${sci(S.L / S.u)} s`);
       h += dd('Efficiency 1 − exp(−wL/us)', b ? HIDDEN : `${(eta * 100).toFixed(eta > 0.999 ? 4 : 2)}%`) + dd('Fraction escaping', b ? HIDDEN : sci(1 - eta));
@@ -496,9 +498,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       window.vdShowCols = [['q_pC', 'q (pC)'], ['V_plates_V', 'Plates (V)'], ['y_paper_mm', 'Height (mm)']];
       return { machine: 'printer', d_um: S.d, v_m_s: S.v, q_pC: b ? '' : S.q, V_plates_V: S.PV, m_ng: g4(r.m * 1e12),
         y_paper_mm: b ? '' : r.hitsPlate ? 'hits a plate' : r.inGutter ? 'caught by the gutter' : +(r.yPaper * 1000).toFixed(3), y_grav_um: +(r.yGrav * 1e6).toFixed(1) }; }
-    const dp = 10 ** S.lgDp * 1e-6, E = S.Ekv * 1e5, w = driftSpeed(dp, E, S.kappa), eta = deutsch(w, S.L, S.u, S_ESP), n = S.nCaught + S.nOut;
+    const dp = dpUm() * 1e-6, E = S.Ekv * 1e5, w = driftSpeed(dp, E, S.kappa), eta = deutsch(w, S.L, S.u, S_ESP), n = S.nCaught + S.nOut;
     window.vdShowCols = [['dp_um', 'd (µm)'], ['eff_pred_pct', 'Predicted (%)'], ['eff_meas_pct', 'Measured (%)']];
-    return { machine: 'precipitator', dp_um: +(10 ** S.lgDp).toPrecision(2), particles: S.kappa === Infinity ? 'conducting' : 'insulating, κ = 4', E_kV_cm: S.Ekv, u_m_s: S.u, L_m: S.L,
+    return { machine: 'precipitator', dp_um: dpUm(), particles: S.kappa === Infinity ? 'conducting' : 'insulating, κ = 4', E_kV_cm: S.Ekv, u_m_s: S.u, L_m: S.L,
       w_cm_s: b ? '' : g4(w * 100), eff_pred_pct: b ? '' : +(eta * 100).toFixed(eta > 0.999 ? 4 : 2), caught: S.nCaught, through: S.nOut, eff_meas_pct: n ? +(S.nCaught / n * 100).toFixed(1) : '' };
   };
 
@@ -525,7 +527,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- precipitator particles ----------
   function espStep(dt) {
-    const dp = 10 ** S.lgDp * 1e-6, E = S.Ekv * 1e5, w = driftSpeed(dp, E, S.kappa), pc = Math.min(1, w * dt / S_ESP);
+    const dp = dpUm() * 1e-6, E = S.Ekv * 1e5, w = driftSpeed(dp, E, S.kappa), pc = Math.min(1, w * dt / S_ESP);
     S.spawnAcc += dt * 30; while (S.spawnAcc >= 1) { S.spawnAcc--; S.parts.push({ x: 0, y: Math.random() * 2 - 1, st: 0 }); S.nIn++; }
     for (const p of S.parts) {
       if (p.st === 0) {
@@ -774,7 +776,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   function drawEsp() {
     const p = ps(), narrow = W < 640, sceneH = Hh * (narrow ? 0.52 : 0.58), x0 = 40 * p, x1 = W - (narrow ? 50 : 110) * p, yc = 24 * p + (sceneH - 24 * p) / 2, hw = Math.min((sceneH - 70 * p) / 2, 110 * p), Xf = (f) => x0 + f * (x1 - x0), Yf = (y) => yc - y * hw;
-    const dp = 10 ** S.lgDp * 1e-6, E = S.Ekv * 1e5, w = driftSpeed(dp, E, S.kappa), eta = deutsch(w, S.L, S.u, S_ESP);
+    const dp = dpUm() * 1e-6, E = S.Ekv * 1e5, w = driftSpeed(dp, E, S.kappa), eta = deutsch(w, S.L, S.u, S_ESP);
     txt(narrow ? `Top view, not to scale: 0.250 m by ${S.L.toFixed(1)} m` : `Top view of one channel (not to scale): 0.250 m wide, ${S.L.toFixed(1)} m long`, 12 * p, 16 * p, { b: 1 });
     /* plates with dust layers */
     ctx.fillStyle = T.plateLo; ctx.fillRect(x0, Yf(1) - 6 * p, x1 - x0, 6 * p); ctx.fillRect(x0, Yf(-1), x1 - x0, 6 * p);

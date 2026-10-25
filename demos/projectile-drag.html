@@ -606,13 +606,14 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
   // Preset balls. Masses and diameters lie inside the official ranges: baseball, Official Baseball Rules 3.01
   // (5 to 5¼ oz, 9 to 9¼ in around); table tennis, ITTF Laws of Table Tennis 2.3 (40 mm, 2.7 g); shot put, World
   // Athletics Technical Rules (men, 7.26 kg, 110 to 130 mm); football, IFAB Law 2 (size 5: 68 to 70 cm around, 410 to 450 g).
-  // C_d: 0.47 is the textbook smooth sphere value below the drag crisis; 0.35 (baseball) and 0.25 (soccer ball)
+  // C_d: 0.45 is the sphere value in OpenStax University Physics Vol 1 Table 6.2 (below the drag crisis; engineering tables
+  // often give 0.47, inside the measured scatter); 0.35 (baseball) and 0.25 (soccer ball)
   // are typical values at these speeds, where measured values scatter. The cannonball is a generic heavy ball.
   const PRESETS = {
     baseball: { m: 0.145,  d: 0.074, cd: 0.35, v: 40, h: 0 },
-    pingpong: { m: 0.0027, d: 0.040, cd: 0.47, v: 20, h: 0 },
-    cannon:   { m: 5,      d: 0.12,  cd: 0.47, v: 50, h: 0 },
-    shotput:  { m: 7.26,   d: 0.12,  cd: 0.47, v: 14, h: 2 },
+    pingpong: { m: 0.0027, d: 0.040, cd: 0.45, v: 20, h: 0 },
+    cannon:   { m: 5,      d: 0.12,  cd: 0.45, v: 50, h: 0 },
+    shotput:  { m: 7.26,   d: 0.12,  cd: 0.45, v: 14, h: 2 },
     soccer:   { m: 0.43,   d: 0.22,  cd: 0.25, v: 25, h: 0 }
   };
   const csvCell = (v) => { const s = v === null || v === undefined ? '' : String(v); return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s; };
@@ -1597,7 +1598,7 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
     if (kind === 'mass') for (const m of fitFactors(base.m, [0.5, 1, 2, 4], 0.001, 10)) { const mm = +m.toPrecision(3); add({ m: mm }, fmtMass(mm)); }
     if (kind === 'size') for (const d of fitFactors(base.d, [0.5, 1, 1.5, 2], 0.01, 0.30)) { const dd = Math.round(d * 1000) / 1000; add({ d: dd }, fmtDiam(dd)); }
     if (kind === 'cd') {
-      const vals = base.cd > 0 ? [0, 0.5, 1, 2].map((f) => Math.min(1.2, Math.round(base.cd * f * 100) / 100)) : [0, 0.25, 0.47, 1];
+      const vals = base.cd > 0 ? [0, 0.5, 1, 2].map((f) => Math.min(1.2, Math.round(base.cd * f * 100) / 100)) : [0, 0.25, 0.45, 1];
       for (const c of vals) add({ cd: c }, 'Cd ' + c.toFixed(2));
     }
     if (kind === 'air') { add({ rho: AIRS.sea, drag: true }, 'sea level'); add({ rho: AIRS.denver, drag: true }, 'Denver'); add({ rho: AIRS.moon, drag: true }, 'no air'); }

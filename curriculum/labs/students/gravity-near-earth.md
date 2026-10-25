@@ -19,7 +19,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §13.2. Access for free at http
 
 **What the demo models.**
 
-- Each planet is a uniform sphere with the measured GM and mean radius: Earth GM = 3.986004 × 10¹⁴ m³/s², R = 6371 km; Moon GM = 4.904870 × 10¹² m³/s², R = 1737.4 km; Mars GM = 4.282837 × 10¹³ m³/s², R = 3389.5 km. Each turns once per sidereal day (Earth: ω = 7.292116 × 10⁻⁵ rad/s, one turn in 23 h 56 min).
+- Each planet is a uniform sphere with the measured GM and mean radius: Earth GM = 3.986004 × 10¹⁴ m³/s², R = 6371 km; Moon GM = 4.902800 × 10¹² m³/s², R = 1737.4 km; Mars GM = 4.282837 × 10¹³ m³/s², R = 3389.5 km. Each turns once per sidereal day (Earth: ω = 7.292116 × 10⁻⁵ rad/s, one turn in 23 h 56 min).
 - The scale is at rest relative to the ground, so it reads the vector sum of gravity and the centrifugal term $$\omega^2 r\cos\lambda$$ directed away from the axis, where $$\lambda$$ is the latitude. The real Earth is also flattened at the poles, which a sphere leaves out; the WGS 84 value includes it.
 
 </details>

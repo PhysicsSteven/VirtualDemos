@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §1.6, and Vol. 3, §6.1. Acces
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Human body; Light bulb; Sun; Betelgeuse; Rigel; Cosmic background.
+**Setups in the demo:** Human skin; Light bulb; Sun; Betelgeuse; Rigel; Cosmic background.
 
 **Using the demo.**
 
@@ -51,7 +51,7 @@ No hazards in the virtual lab. Never look directly at the Sun or a bright lamp.
 
 **A range of temperatures.** Record a reading at about ten temperatures spread from 1000 K to 30 000 K, using the slider or by dragging the peak. Include the Sun.
 
-**Cool objects.** Send the readings to the worksheet, then clear them and record the Human body, the Light bulb and the Cosmic background setups, and send those to the worksheet too.
+**Cool objects.** Send the readings to the worksheet, then clear them and record the Human skin, the Light bulb and the Cosmic background setups, and send those to the worksheet too.
 
 ## Data
 
@@ -65,7 +65,7 @@ No hazards in the virtual lab. Never look directly at the Sun or a bright lamp.
 
 1. Plot $$\lambda_\mathrm{max}$$ against $$1/T$$. From the slope find Wien's constant $$b$$ and compare it with $$2.898\times10^{-3}$$ m·K.
 2. Plot $$\ln F$$ against $$\ln T$$. Compare the slope with 4, and from the intercept find $$\sigma$$; compare it with $$5.670\times10^{-8}$$ W/(m²·K⁴).
-3. Find the peak wavelengths of the human body and the cosmic background, and name the part of the spectrum each lies in.
+3. Find the peak wavelengths of human skin and the cosmic background, and name the part of the spectrum each lies in.
 4. Use the Stefan and Boltzmann law to find the power given off by 1.5 m² of skin at 305 K. Why is the net loss from a person in a room much smaller?
 
 ## Uncertainty

@@ -174,7 +174,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       <section>
         <h2>Glowing objects</h2>
         <div class="chips" id="presets">
-          <button type="button" data-p="human" aria-pressed="false">Human body</button>
+          <button type="button" data-p="human" aria-pressed="false">Human skin</button>
           <button type="button" data-p="bulb" aria-pressed="false">Light bulb</button>
           <button type="button" data-p="sun" aria-pressed="true">Sun</button>
           <button type="button" data-p="betel" aria-pressed="false">Betelgeuse</button>
@@ -436,7 +436,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- state ----------
   const PRESETS = {
-    human:  { T: 310,   hint: 'Your skin at 310 K peaks near 9.3 μm, deep in the infrared. Thermal cameras see this glow; your eyes do not. The visible share readout shows how little reaches the visible band: about 5 × 10⁻²¹ % of the power, far below even the log axis.' },
+    human:  { T: 305,   hint: 'Your skin surface at about 305 K peaks near 9.5 μm, deep in the infrared. Thermal cameras see this glow; your eyes do not. The visible share readout shows how little reaches the visible band: about 2 × 10⁻²¹ % of the power, far below even the log axis.' },
     bulb:   { T: 2800,  hint: 'A tungsten filament at 2800 K peaks near 1 μm, just past red. Only about 8% of its power lands in the visible band; the rest is heat.' },
     sun:    { T: 5772, R: 1, hint: 'The Sun at 5772 K peaks near 500 nm, right in the visible band, and about 44% of its power is visible light. Its color is close to white, not yellow.' },
     betel:  { T: 3600, R: 760, hint: 'Betelgeuse is a red supergiant: cooler than the Sun, so each square meter emits about 15% as much, but 760 times wider, so it outshines the Sun nearly 90,000 times.' },
