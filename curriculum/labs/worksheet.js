@@ -491,8 +491,8 @@
   Object.assign(FROM_DEMO, {
     /* Reading | Model | Cooling age t (yr) | L (L☉) | T_c (K) | T_eff (K) | Solid (% of the mass) | log₁₀ t | log₁₀ L | log₁₀ T_c */
     'white-dwarf-cooling': { demo: 'White Dwarf Cooling', cols: ['row', 'model', 'age_yr', 'L_Lsun', 'Tc_K', 'Teff_K', 'solid_pct', null, null, null],
-      /* several masses: Reading | M (M☉) | R (km) | ρ_c (g/cm³) | T_m (K) | Crystallization begins at age (yr) | T_eff then (K) | ρ_c^(1/3) */
-      alt: [{ table: 1, when: (rows) => new Set(rows.map((r) => r.M_Msun)).size > 1, cols: ['row', 'M_Msun', 'R_km', 'rhoc_g_cm3', 'Tm_K', 'onset_yr', 'onset_Teff_K', null] }] },
+      /* several masses: Reading | M (M☉) | R (km) | ρ_c (g/cm³) | T_m (K) | Crystallization begins at age (yr) | T_eff then (K) | ρ_c^(1/3) | log₁₀ M | log₁₀ R */
+      alt: [{ table: 1, when: (rows) => new Set(rows.map((r) => r.M_Msun)).size > 1, cols: ['row', 'M_Msun', 'R_km', 'rhoc_g_cm3', 'Tm_K', 'onset_yr', 'onset_Teff_K', null, null, null] }] },
   });
   /* ==ASTRO END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

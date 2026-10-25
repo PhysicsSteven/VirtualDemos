@@ -56,11 +56,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The main sequence.** Choose The Sun. Record a reading for each of about five initial masses from 0.5 to 2 $$M_\odot$$, with the star at the very start of its life (age zero), so that the time left in the phase is its whole main sequence lifetime. Clear, and do the same for about seven masses from 2 to 25 $$M_\odot$$, spread evenly on a logarithmic scale.
+**The main sequence.** Choose The Sun. Record a reading for each of about five initial masses from 0.5 to 2 $$M_\odot$$, with the star at the very start of its life (age zero), so that the time left in the phase is its whole main sequence lifetime. Send these readings to the worksheet, then clear them and do the same for about seven masses from 2 to 25 $$M_\odot$$, spread evenly on a logarithmic scale, and send those too. Each series gets its own copy of the first table.
 
-**The Sun's life.** Clear and choose The Sun. Record a reading today. Then record one near the end of each phase, main sequence, subgiant, red giant branch (at its top), horizontal branch and asymptotic giant branch (at its top), and one in the planetary nebula phase. Finish with three readings on the white dwarf line, at white dwarf ages near 10 Myr, 1 Gyr and 10 Gyr after the nebula.
+**The Sun's life.** Clear the readings and choose The Sun. Record a reading today. Then record one near the end of each phase, main sequence, subgiant, red giant branch (at its top), horizontal branch and asymptotic giant branch (at its top), and one in the planetary nebula phase. Finish with three readings on the white dwarf line, at white dwarf ages near 10 Myr, 1 Gyr and 10 Gyr after the nebula. Send them to the worksheet, where they fill the Sun's life table.
 
-**A star cluster.** Clear and choose Cluster. Record readings at about seven cluster ages from 100 Myr to 13 Gyr, spread evenly on a logarithmic scale.
+**A star cluster.** Clear the readings and choose Cluster. Record readings at about seven cluster ages from 100 Myr to 13 Gyr, spread evenly on a logarithmic scale, and send them to the worksheet.
 
 ## Data
 

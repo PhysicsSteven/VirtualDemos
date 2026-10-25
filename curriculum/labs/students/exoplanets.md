@@ -43,7 +43,7 @@ where $$P$$ is the period and $$i$$ the inclination ($$i = 90°$$ is edge on). A
 
 $$P^2 = \frac{4\pi^2}{G(M_s + M_p)}\,a^3.$$
 
-Constants: $$GM_\odot = 1.3271\times10^{20}$$ m³/s², $$GM_\oplus = 3.9860\times10^{14}$$ m³/s², $$G = 6.6743\times10^{-11}$$ N·m²/kg², 1 AU = $$1.4960\times10^{11}$$ m.
+Jupiter: $$R_J = 11.2\,R_\oplus$$ and $$M_J = 318\,M_\oplus$$ (the demo's planet sliders read in Earth units). Constants: $$GM_\odot = 1.3271\times10^{20}$$ m³/s², $$GM_\oplus = 3.9860\times10^{14}$$ m³/s², $$G = 6.6743\times10^{-11}$$ N·m²/kg², 1 AU = $$1.4960\times10^{11}$$ m.
 
 ## Before the lab
 
@@ -60,9 +60,9 @@ No hazards in the virtual lab.
 
 **Transit depth and planet size.** Choose Hot Jupiter, set the noise to none and pause. Put the cursor at mid transit (time from mid transit 0). Set the planet's radius to five values from about 0.3 to 2 Jupiter radii, and record a reading at each.
 
-**The star's wobble and planet mass.** Clear the readings and choose Hot Jupiter again, with no noise. Set the planet's mass to five values from about 0.1 to 10 Jupiter masses. At each, put the cursor at the top of the velocity curve and record a reading.
+**The star's wobble and planet mass.** Send the readings to the worksheet, then clear them and choose Hot Jupiter again, with no noise. Set the planet's mass to five values from about 0.1 to 10 Jupiter masses. At each, put the cursor at the top of the velocity curve and record a reading.
 
-**A mystery planet.** Clear and press New mystery system. Record the star's mass, its radius and the period. With Zoom on transit, record ten readings spread across the flat bottom of the transit and ten before or after it. Then, on the full orbit, record five readings near the highest star velocity and five near the lowest. Do not reveal the planet until your analysis is done.
+**A mystery planet.** Send these readings to the worksheet, then clear them and press New mystery system. Note the star's mass, its radius and the period (they go in the notes of the copy you send). With Zoom on transit, record ten readings spread across the flat bottom of the transit and ten before or after it. Then, on the full orbit, record five readings near the highest star velocity and five near the lowest. Send the readings to the worksheet. Do not reveal the planet until your analysis is done.
 
 ## Data
 

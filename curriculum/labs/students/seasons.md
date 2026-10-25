@@ -59,11 +59,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Through the year at Ruston.** Pause the demo. At 32.5° N with the real tilt of 23.44°, record a reading on the 21st of each month, January to December (12 readings).
+**Through the year at Ruston.** Pause the demo. At 32.5° N with the real tilt of 23.44°, record a reading on the 21st of each month, January to December (12 readings). Send the readings to the worksheet before you clear them.
 
-**Distance alone.** Clear the readings and choose No tilt. At 32.5° N, record a reading on the 21st of each month again.
+**Distance alone.** Clear the readings and choose No tilt. At 32.5° N, record a reading on the 21st of each month again, then send them to the worksheet.
 
-**Around the world at the June solstice.** Clear the readings and choose June solstice. Record a reading at every 15° of latitude from 90° S to 90° N (13 readings), without changing the date.
+**Around the world at the June solstice.** Clear the readings and choose June solstice. Record a reading at every 15° of latitude from 90° S to 90° N (13 readings), without changing the date, then send them to the worksheet.
 
 ## Data
 

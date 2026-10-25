@@ -52,7 +52,7 @@ where $$t_E$$ is the time to cross one Einstein radius: $$t_E = \theta_E D_L/v$$
 
 $$\sin\alpha = \frac{b_c}{r_o}\sqrt{1 - \frac{r_s}{r_o}}\qquad (r_o \ge 1.5\,r_s).$$
 
-Far away this becomes $$\alpha \approx b_c/r_o$$.
+Far away this becomes $$\sin\alpha \approx b_c/r_o$$ (the demo's far away estimate), and $$\alpha \approx b_c/r_o$$ once the angle is small.
 
 Constants: $$GM_\odot = 1.3271\times10^{20}$$ m³/s², $$c = 2.9979\times10^8$$ m/s, 1 pc $$= 3.0857\times10^{16}$$ m, 1 mas $$= 4.8481\times10^{-9}$$ rad, $$g = 9.81$$ m/s².
 
@@ -70,13 +70,13 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Einstein radius and lens mass.** Choose Microlensing event and pause it. Keep both distances. Set the lens mass to five values from about 0.1 to 10 $$M_\odot$$ and record a reading at each.
+**Einstein radius and lens mass.** Choose Microlensing event and pause it. Keep both distances. Set the lens mass to five values from about 0.1 to 10 $$M_\odot$$ and record a reading at each. Send the readings to the worksheet, then clear them.
 
-**A microlensing light curve.** Choose Microlensing event again and pause it. Without changing the lens, the distances or the source's track, move the event through time and record about 13 readings from about 2 $$t_E$$ before closest approach to 2 $$t_E$$ after, closer together near the peak. Read only the time and the point source magnification for your analysis, as an observer would.
+**A microlensing light curve.** Choose Microlensing event again and pause it. Without changing the lens, the distances or the source's track, move the event through time and record about 13 readings from about 2 $$t_E$$ before closest approach to 2 $$t_E$$ after, closer together near the peak. Read only the time and the point source magnification for your analysis, as an observer would. Send the readings to the worksheet, then clear them.
 
-**Clocks near a stellar black hole.** Choose Close to a stellar black hole. Record readings at about eight distances from 1.1 $$r_s$$ out to 100 $$r_s$$. Then clear, and record one reading at each of five masses from about 1 $$M_\odot$$ to $$10^{9}$$ $$M_\odot$$, for the stretch at the horizon.
+**Clocks near a stellar black hole.** Choose Close to a stellar black hole. Record readings at about eight distances from 1.1 $$r_s$$ out to 100 $$r_s$$. Send them to the worksheet and clear them, then record one reading at each of five masses from about 1 $$M_\odot$$ to $$10^{9}$$ $$M_\odot$$, for the stretch at the horizon. Send these too, then clear them.
 
-**The shadow.** Choose M87\*. Record the view from about seven distances, from 2 $$r_s$$ out to 100 $$r_s$$.
+**The shadow.** Choose M87\*. Record the view from about seven distances, from 2 $$r_s$$ out to 100 $$r_s$$, and send the readings to the worksheet.
 
 ## Data
 

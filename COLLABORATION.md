@@ -2384,3 +2384,16 @@ Steve's call (2026-10-25 05:12): Sources of Energy is a reference demo, with no 
 - The demo itself is unchanged (it never had a handout button or Export).
 
 **For GPT to verify:** nothing on the site still links `labs/students/energy-sources`.
+
+## Claude, 2026-10-25: student run through of the Astro worksheets
+
+Steve asked for a student run through of Astro. Scope: the 8 worksheets with keys in TeacherKeys worksheet-keys/astro (the Astro page's worksheets shared with Physics I and Modern passed in those runs). Each was read as a student would, worked on the local site from the handout's words, sent with Export to worksheet, graphed as the analysis asks, and its capture script rerun against the key. No physics changed; every capture reproduced its key data exactly. The measuring Tools are not mentioned anywhere.
+
+- **Result:** 0 pass, 8 fixed. Every handout had "Clear the readings" before the earlier series was sent (Clear discards silently); all now send first and send at the end. In black-holes this also kept the light curve from mixing with the lens mass series.
+- **Graph a student could not draw:** white-dwarf-cooling Question 4 asked for n in R ∝ Mⁿ with no log columns; the freezing table gains student filled log₁₀ M and log₁₀ R columns (FROM_DEMO alt map gains two nulls), filled for 0.5 to 0.8 solar masses, fit slope −0.656 ± 0.032 (key −0.66 ± 0.03 stands).
+- **Steps that did not match the demo:** white-dwarf-cooling's Hot young white dwarf preset starts playing (now says pause); lagrange-points Comet meets Jupiter starts running at once (pause, Reset, record t = 0, slow to 0.1 P per second, record near 0.5 to 2.5 P); exoplanets gives R_J = 11.2 R⊕ and M_J = 318 M⊕ (the sliders read in Earth units) and says the mystery star's mass, radius and period go in the copy's notes; moon-phases friend question uses they.
+- **Demos (outside CORE):** black-holes far away estimate label reads sin α = b_c/r_o (the code is arcsin, the handout Background now matches); lagrange-points time speed readout printed 4.3e+2 d, now 430 d.
+- **Keys (TeacherKeys):** white-dwarf-cooling recaptured (new log columns); lagrange-points key gives TAs the ranges to accept for the 0.5 and 2.5 P comet readings (close passes at about 0.45, 1.43, 2.37 P); rotation-curves Question 4 corrected to 4.4 (speed ratio squared) and 4.9 (mass ratio), it had quoted the Milky Way's 4.8. All 8 key PDFs rebuilt; TA guide astro snags updated.
+- **Left for Steve:** hr-diagram's Massive star hint says "a thousand times shorter" where the key's figure is 870 (fine as a round number).
+
+**For GPT to verify:** the white dwarf log columns and slope, the rotation curves 4.4 and 4.9, the Lagrange comet ranges against the demo.

@@ -58,11 +58,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Mestel's law.** Choose Mestel cooling law and pause. Record readings at about seven cooling ages from 100 Myr to 10 Gyr, spread evenly on a logarithmic scale.
+**Mestel's law.** Choose Mestel cooling law and pause. Record readings at about seven cooling ages from 100 Myr to 10 Gyr, spread evenly on a logarithmic scale. Send them to the worksheet.
 
-**Real ions.** Clear and choose Hot young white dwarf. Without changing the mass, record readings at the same seven cooling ages.
+**Real ions.** Clear the readings, choose Hot young white dwarf and pause (it starts playing). Without changing the mass, record readings at the same seven cooling ages, and send them to the worksheet; they go into a second copy of the first table.
 
-**Freezing and mass.** Clear and choose Heavier dwarfs crystallize first. Record a reading at each mass from 0.5 to 1.2 $$M_\odot$$ in steps of 0.1 $$M_\odot$$; the cooling age does not matter for this part.
+**Freezing and mass.** Clear the readings and choose Heavier dwarfs crystallize first. Record a reading at each mass from 0.5 to 1.2 $$M_\odot$$ in steps of 0.1 $$M_\odot$$; the cooling age does not matter for this part. Send them to the worksheet, where they fill the Freezing and mass table.
 
 ## Data
 
@@ -74,11 +74,11 @@ No hazards in the virtual lab.
 
 **Freezing and mass.**
 
-| Reading | Mass $$M$$ ($$M_\odot$$) | Radius $$R$$ (km) | Central density $$\rho_c$$ (g/cm³) | Center freezes at $$T_m$$ (K) | Crystallization begins at age (yr) | Surface temperature then (K) | Cube root of $$\rho_c$$ (g⅓/cm) |
-|---|---|---|---|---|---|---|---|
-| | | | | | | | |
-| | | | | | | | |
-| | | | | | | | |
+| Reading | Mass $$M$$ ($$M_\odot$$) | Radius $$R$$ (km) | Central density $$\rho_c$$ (g/cm³) | Center freezes at $$T_m$$ (K) | Crystallization begins at age (yr) | Surface temperature then (K) | Cube root of $$\rho_c$$ (g⅓/cm) | log₁₀ $$M$$ | log₁₀ $$R$$ |
+|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | |
+| | | | | | | | | | |
+| | | | | | | | | | |
 
 ## Analysis
 
@@ -99,7 +99,7 @@ The readings are exact values of the model, so the fits' standard errors are tin
 1. Predict, then check: two carbon/oxygen white dwarfs form together, one of 0.6 $$M_\odot$$ and one of 1.0 $$M_\odot$$. Which starts to crystallize first?
 2. Latent heat makes a white dwarf take longer to fade, yet at any given core temperature it is exactly as bright as without latent heat. Explain both facts.
 3. A helium white dwarf has 3.4 times as many ions as a carbon/oxygen one of the same mass. Choose Helium vs carbon/oxygen: why does it fade more slowly, and why does its center not freeze within the age of the universe?
-4. Heavier white dwarfs are smaller. Use your radii to find how $$R$$ depends on $$M$$ for the lighter ones (try $$R \propto M^{n}$$). Why does it fall faster near 1.2 $$M_\odot$$?
+4. Heavier white dwarfs are smaller. Fill in log₁₀ $$M$$ and log₁₀ $$R$$ for the lighter ones (0.5 to 0.8 $$M_\odot$$) and graph log₁₀ $$R$$ against log₁₀ $$M$$ to find $$n$$ in $$R \propto M^{n}$$. Why does it fall faster near 1.2 $$M_\odot$$?
 5. Why is a population of white dwarfs a clock for the age of the Galaxy's disk? Choose Cosmic clock and drag the disk's age to see.
 
 ## What to hand in

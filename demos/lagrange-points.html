@@ -859,9 +859,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const trimz = (s) => (s.includes('e') ? s : s.replace(/(\.\d*?)0+$/, '$1').replace(/\.$/, ''));
   function fmtT(tu, prec = 3) {    // time in units 1/n, shown in P and in days or years
     const P = tu / TWO_PI, s = sysNow();
-    if (!s.Pd) return `${trimz(P.toPrecision(prec))} P`;
+    const fp = (x) => trimz(String(Number(x.toPrecision(prec))));   /* 433 at 2 figures reads 430, not 4.3e+2 */
+    if (!s.Pd) return `${fp(P)} P`;
     const dd = P * s.Pd;
-    return dd < 700 ? `${trimz(dd.toPrecision(prec))} d` : `${trimz((dd / 365.25).toPrecision(prec))} yr`;
+    return dd < 700 ? `${fp(dd)} d` : `${fp(dd / 365.25)} yr`;
   }
   function fmtSpeed(v) { const s = sysNow(); if (!s.aKm) return `${sci(v, 3)} a·n`; const kms = v * s.aKm * TWO_PI / (s.Pd * 86400); return kms >= 0.1 ? `${kms.toPrecision(3)} km/s` : `${(kms * 1000).toPrecision(3)} m/s`; }
   function fmtC(C) { if (CL.L1 - 3 < 0.01) { const d = C - 3; return `3 ${d < 0 ? '−' : '+'} ${sci(Math.abs(d), 4)}`; } return C.toFixed(5); }

@@ -54,9 +54,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**A month of phases.** Choose New moon. Record a reading every 2 days from 0 to 28 days since new moon (15 readings).
+**A month of phases.** Choose New moon. Record a reading every 2 days from 0 to 28 days since new moon (15 readings). Send the readings to the worksheet before you clear them.
 
-**Eclipse seasons.** Clear the readings and choose Eclipse season. Record a reading at this new moon. Then step to the next full moon and record, to the next new moon and record, and so on, until you have 14 readings.
+**Eclipse seasons.** Clear the readings and choose Eclipse season. Record a reading at this new moon. Then step to the next full moon and record, to the next new moon and record, and so on, until you have 14 readings, then send them to the worksheet.
 
 ## Data
 
@@ -82,7 +82,7 @@ The demo's readings are exact for its model, so repeating a reading gives the sa
 ## Questions
 
 1. A common idea is that the phases come from Earth's shadow falling on the Moon. If that were so, where would the Moon have to be to show a crescent? Where is it really when we see a crescent?
-2. A friend says they saw a thin crescent moon high in the south at midnight. Could she be right? Use your moonrise and moonset times to decide.
+2. A friend says they saw a thin crescent moon high in the south at midnight. Could they be right? Use your moonrise and moonset times to decide.
 3. Why does the Moon take longer to go from new moon to new moon than to go once around Earth against the stars? Draw Earth, the Moon and the Sun at two new moons a month apart.
 4. Why is there not a solar eclipse at every new moon and a lunar eclipse at every full moon?
 5. The eclipse year (346.6 d) is shorter than the year. Why do eclipse seasons arrive about 19 days earlier each year?

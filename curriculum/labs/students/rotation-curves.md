@@ -50,11 +50,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The solar system.** Choose Solar system (Kepler). Record a reading at the distance of each planet: 0.39, 0.72, 1.00, 1.52, 5.20, 9.54, 19.19 and 30.07 AU.
+**The solar system.** Choose Solar system (Kepler). Record a reading at the distance of each planet: 0.39, 0.72, 1.00, 1.52, 5.20, 9.54, 19.19 and 30.07 AU. Send the readings to the worksheet before you clear them.
 
-**The Milky Way.** Clear the readings and choose Milky Way. Record a reading at 1, 2, 4, 6, 8.2, 10, 12, 15, 20, 25 and 30 kpc.
+**The Milky Way.** Clear the readings and choose Milky Way. Record a reading at 1, 2, 4, 6, 8.2, 10, 12, 15, 20, 25 and 30 kpc. Send these to the worksheet too.
 
-**Doppler.** Clear the readings and choose Measure with Doppler. With the 21 cm line, record a reading at 4, 8, 12, 16 and 20 kpc. Then switch to Hα and record at 4, 8 and 12 kpc.
+**Doppler.** Clear the readings and choose Measure with Doppler. With the 21 cm line, record a reading at 4, 8, 12, 16 and 20 kpc. Then switch to Hα and record at 4, 8 and 12 kpc. Send all eight readings to the worksheet.
 
 ## Data
 

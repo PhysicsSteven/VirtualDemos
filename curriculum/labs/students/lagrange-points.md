@@ -56,9 +56,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The points against the mass ratio.** Set the mass ratio to each of $$\mu = 10^{-6}$$, $$10^{-5}$$, $$10^{-4}$$, $$10^{-3}$$, 0.01, 0.02, 0.03, 0.035, 0.04, 0.05 and 0.1, and record a reading at each.
+**The points against the mass ratio.** Set the mass ratio to each of $$\mu = 10^{-6}$$, $$10^{-5}$$, $$10^{-4}$$, $$10^{-3}$$, 0.01, 0.02, 0.03, 0.035, 0.04, 0.05 and 0.1, and record a reading at each. Send the readings to the worksheet before you clear them.
 
-**A comet meets Jupiter.** Clear the readings and choose Comet meets Jupiter. Record a reading at the start. Then let it run, pausing to record a reading about every half Jupiter period, up to 2.5 periods (6 readings in all). Note when the comet passes close to Jupiter.
+**A comet meets Jupiter.** Clear the readings and choose Comet meets Jupiter. It starts running at once, so pause it and press Reset to go back to $$t = 0$$, then record a reading at the start. Slow the time to 0.1 $$P$$ per second (Reset puts the setup's speed back) and let it run, pausing to record a reading as near as you can to $$t = 0.5$$, 1.0, 1.5, 2.0 and 2.5 $$P$$ (6 readings in all). Note when the comet passes close to Jupiter. Send these readings to the worksheet too.
 
 ## Data
 
