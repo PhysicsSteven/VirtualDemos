@@ -13,6 +13,16 @@
   'use strict';
   var VD = window.VD = window.VD || {};
 
+  /* Course worksheets (Astro 2203's intro worksheets, 2026-10-25): a worksheet written for one course opens its demo with
+     ?ws=<its slug>, and Export to worksheet then sends the readings there instead of to the demo's own worksheet.
+     VD.ws(own) gives the slug to send to; the Readings panel asks window.vdWorksheet(), so while ?ws= is in the address that
+     answers the slug, whatever function the demo sets. A demo with its own export code calls VD.ws('<its slug>'). */
+  var wsMatch = /[?&]ws=([a-z0-9-]+)/.exec(location.search);
+  VD.ws = function (own) { return wsMatch ? wsMatch[1] : own; };
+  if (wsMatch) {
+    try { Object.defineProperty(window, 'vdWorksheet', { configurable: true, get: function () { return function () { return wsMatch[1]; }; }, set: function () {} }); } catch (_) {}
+  }
+
   /* the QR button (markup from tools/qr.py): only shown on the hosted copy it points to; opened from a file, Canvas or
      another host it removes itself instead of showing a link that may not work there. Click shows it large; click or Esc closes */
   VD.qr = function (b) {

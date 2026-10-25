@@ -498,6 +498,16 @@
       alt: [{ table: 1, when: (rows) => new Set(rows.map((r) => r.M_Msun)).size > 1, cols: ['row', 'M_Msun', 'R_km', 'rhoc_g_cm3', 'Tm_K', 'onset_yr', 'onset_Teff_K', null, null, null] }] },
   });
   /* ==ASTRO END== */
+  /* ==ASTRO 2203 START== Intro level worksheets written for Astro 2203 (astro-2203.html, 2026-10-25). Each opens its demo with
+     ?ws=<slug>, so the demo's Export to worksheet sends here (VD.ws in demos/lib/vd.js). INTRO_GRAPHS: those that graph a table. */
+  const INTRO = ['intro-seasons'];
+  const INTRO_GRAPHS = [];
+  ENABLED.push(...INTRO);
+  Object.assign(FROM_DEMO, {
+    /* Reading | Date | Noon Sun altitude (°) | Day length (h) | Earth to Sun distance (AU) | Daily sunlight (W/m²) */
+    'intro-seasons': { demo: 'Reasons for Seasons', cols: ['row', 'date', 'alt_deg', 'day_h', 'r_AU', 'Q_W_m2'] },
+  });
+  /* ==ASTRO 2203 END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. The student may choose a quadratic instead (y = a + bx + cx², all three coefficients free), for data
@@ -509,7 +519,7 @@
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
   const CURVE_TABLES = { 'franck-hertz': [0] };
-  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
+  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
   const pretty = (h) => String(h || '').replace(/\^([23])/g, (m, d) => SUP[d]).replace(/_(\d)/g, (m, d) => SUB[d]);

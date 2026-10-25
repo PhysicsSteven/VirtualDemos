@@ -3611,3 +3611,18 @@ step one, the course page.
 - `test_textbook_map.cjs` accepts `astro-2203`. Canvas: `tools/canvas.py` now builds `virtualdemos-astro-2203.imscc` (links only
   until the worksheets exist).
 - Steve's slides are teaching material only: nothing from them goes on the site.
+
+### Follow up: the first Astro 2203 intro worksheet, and how course worksheets reach their demo
+
+- **`?ws=` routing** (`demos/lib/vd.js`): a worksheet written for one course opens its demo as `demos/<demo>.html?ws=<slug>`.
+  While `?ws=` is in the address, `window.vdWorksheet()` answers that slug (a getter, whatever function the demo sets), so the
+  shared Readings panel's Export to worksheet sends there; demos with their own export code (kepler-orbits, gyroscope, fluids and
+  others that write `vd-handoff:<fixed slug>`) need `VD.ws('<own slug>')` in that line when they get a course worksheet.
+  Without `?ws=` nothing changes.
+- **Intro worksheets** are slugs starting `intro-`, listed in the `==ASTRO 2203==` block of `worksheet.js` (`INTRO`, and
+  `INTRO_GRAPHS` for those with a graph), in the demo's `handouts` in the map, in `COURSE_HANDOUTS['astro-2203']` and
+  `HANDOUT_TOPIC` (label ends "(Astro 2203)"). Level: algebra, ratios, at most one straight line graph; no math blocks where words do.
+- **First one: `intro-seasons`, "Why We Have Seasons"** on Reasons for Seasons: six dates at Ruston with the tilt and with No
+  tilt, then five latitudes on June 21; ratios show the tilt changes Ruston's sunlight by ×2.28 and distance by ×1.069. Key from
+  a real run: TeacherKeys `worksheet-keys/astro-2203/intro-seasons-*` (`tools/capture/intro-seasons.cjs`). vdcheck seasons 0
+  problems; symbols `--check` 0.

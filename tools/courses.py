@@ -34,7 +34,7 @@ BLURB = {
 # A course with no textbook (Astro 2203, 2026-10-25): its units list demos only, and its worksheets are its own intro level
 # handouts. COURSE_HANDOUTS[course] is the set of handouts written for that course: its page shows only those on each demo card,
 # and the other course pages leave them out (the demo's own Handout and worksheet menu still lists every one).
-COURSE_HANDOUTS = {'astro-2203': set()}
+COURSE_HANDOUTS = {'astro-2203': {'intro-seasons'}}
 NO_BOOK = {'astro-2203'}
 MODULES = {'acoustics', 'thermo', 'modern', 'astro'}   # modules follow the textbook chapters, not a course schedule
 TILE_START, TILE_END = '<!-- COURSES START (tools/courses.py) -->', '<!-- COURSES END -->'
@@ -208,6 +208,8 @@ HANDOUT_TOPIC = {
     'rotation-curves': 'Weighing a Galaxy',
     'black-holes': 'Black Holes and Lensing', 'hr-diagram': 'Stellar Lives and Cluster Ages', 'white-dwarf-cooling': 'White Dwarf Cooling and Crystallization',
     'ising': 'The Ising Phase Transition',
+    # Astro 2203 intro worksheets (COURSE_HANDOUTS), 2026-10-25
+    'intro-seasons': 'Why We Have Seasons (Astro 2203)',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 
