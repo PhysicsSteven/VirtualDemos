@@ -502,6 +502,7 @@
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
   const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs'];
+  const PRINT_ROWS = 8;   /* rows a blank data table prints with, to fill in by hand */
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
   const CURVE_TABLES = { 'franck-hertz': [0] };
@@ -575,6 +576,7 @@ details.about[open] > summary { margin-bottom: 8px; }
 .ws-btn.ws-quiet { border-color: var(--hd-line, #d0d7de); color: var(--hd-muted, #57606a); }
 .ws-status { font-size: 0.85em; color: var(--hd-muted, #57606a); margin: 4px 0 0; } .ws-status.ws-warn { color: var(--hd-warn, #9a6700); font-weight: 600; }
 .ws-note { font-size: 0.85em; color: var(--hd-muted, #57606a); margin: 6px 0 0; }
+tbody.ws-pad { display: none; }
 .markdown-body table.ws-table td { padding: 3px 4px; vertical-align: top; } .markdown-body table.ws-table td.ws-fixed { padding: 6px 10px; }
 .markdown-body table.ws-table input.ws-f { min-width: 6.5em; border-color: var(--hd-line2, #c4ccd5); padding: 4px 6px; }
 .ws-tablebox { margin: 0 0 16px; } .ws-tablebox .ws-copyhead { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 14px 0 6px; font-weight: 600; }
@@ -609,6 +611,10 @@ details.about[open] > summary { margin-bottom: 8px; }
   .ws-answer-one .ws-print:empty { height: 9.6em; }
   .ws-who .ws-print:empty { display: inline-block; min-width: 11em; border-bottom: 1px solid #000; }
   .markdown-body table.ws-table td { height: 1.9em; }
+  /* a blank table prints at full width with rows to write in; the extra rows go once anything is typed in it */
+  .markdown-body table.ws-table:not(:has(td .ws-print:not(:empty))) { width: 100%; }
+  .markdown-body table.ws-table:not(:has(td .ws-print:not(:empty))) tbody.ws-pad { display: table-row-group; }
+  .ws-notes .ws-print:empty { height: 3.1em; background: repeating-linear-gradient(to bottom, transparent 0, transparent 1.55em, #9a9a9a 1.55em, #9a9a9a calc(1.55em + 1px)) !important; }
   .ws-tablebox, .ws-answer, .markdown-body li:has(> .ws-answer) { break-inside: avoid; }
   .markdown-body table.ws-table { display: table; } .markdown-body > h1:first-child { display: none; }
 }` }));
@@ -705,6 +711,12 @@ details.about[open] > summary { margin-bottom: 8px; }
     t.classList.add('ws', 'ws-table');
     R.table = t;
     [...t.tBodies[0].rows].forEach((tr, i) => R.rows.push(wireRow(T, R, tr, T.tpl[i] || [])));
+    /* printed with nothing typed, a table with no set rows gets rows to write in by hand, up to PRINT_ROWS (print only) */
+    if (!T.tpl.some((r) => r.some(Boolean)) && R.rows.length < PRINT_ROWS) {
+      const pad = el('tbody', { class: 'ws-pad', 'aria-hidden': 'true' });
+      for (let i = R.rows.length; i < PRINT_ROWS; i++) { const tr = el('tr'); for (let c = 0; c < T.ncol; c++) tr.appendChild(el('td')); pad.appendChild(tr); }
+      t.appendChild(pad);
+    }
     R.notes = field('area', `Settings and notes for ${R.label ? 'copy ' + n + ' of ' : ''}the ${T.heading} table`);
     const addRow = el('button', { type: 'button', class: 'ws-btn', text: 'Add a row', on: { click: () => { const row = newRow(T, R); row.cells[0] && row.cells[0].focus(); changed(); } } });
     R.removeRow = el('button', { type: 'button', class: 'ws-btn ws-quiet', text: 'Remove the last added row', hidden: true, on: { click: () => { dropRow(R); changed(); } } });

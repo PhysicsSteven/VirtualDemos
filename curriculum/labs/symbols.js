@@ -236,6 +236,8 @@
 mjx-container .sym-on { cursor: help; background: var(--sym-hi, rgba(9, 105, 218, 0.14)); border-radius: 3px; }
 .sym-hint { font-size: 0.9em; color: var(--sym-dim, #57606a); }
 .sym-tip.sym-dark { --sym-bg: #161b22; --sym-fg: #e6edf3; --sym-line: #6e7681; --sym-dim: #9da7b3; }
+@media screen and (prefers-color-scheme: dark) { :root:not([data-theme="light"]) mjx-container .sym-on { --sym-hi: rgba(105, 160, 255, 0.32); } }
+:root[data-theme="dark"] mjx-container .sym-on { --sym-hi: rgba(105, 160, 255, 0.32); }
 @media print { .sym-tip, .sym-hint { display: none !important; } mjx-container .sym-on { background: none; } }`;
     document.head.appendChild(st);
   }
@@ -305,6 +307,8 @@ mjx-container .sym-on { cursor: help; background: var(--sym-hi, rgba(9, 105, 218
     });
     document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') hide(); });
     window.addEventListener('resize', () => { if (!pinned) hide(); });
+    /* the site theme switch (demos/lib/theme.js): a tip on show takes the new colors */
+    window.addEventListener('vd-theme', () => requestAnimationFrame(() => { if (tip && !tip.hidden) tip.classList.toggle('sym-dark', darkPage()); }));
     /* one line telling students the symbols explain themselves, under the link to the demo */
     const link = document.querySelector('.markdown-body a[href*="/demos/"]');
     const p = link && link.closest('p');

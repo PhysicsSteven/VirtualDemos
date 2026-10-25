@@ -2788,3 +2788,21 @@ vdcheck pass.
 Low, unchanged: Kepler's Halley preset overlaps the circular and escape speed labels; the Torricelli jet tube ends 1.2 cm
 above the floor; the water barometer shows a vacuum and ignores water's 2.3 kPa vapor pressure; the cradle's brass discs are
 symbolic. For GPT: nothing needs WebGL to verify; the numbers are in the code lines named above.
+
+## Claude, 2026-10-25: today's site features tested together (print, phone, theme, links, navigation)
+
+The coordinator asked for one pass over today's features together, especially what GPT could not test (printing and phone touch). Checked on a local Jekyll build in Chromium (Playwright), desktop 1280 px and phones at 360 and 400 px (Pixel 7 and iPhone 13 touch emulation), light, dark and Browser default on a dark device.
+
+**Passed:** handouts and worksheets print black on white from Dark and from Browser default on a dark device, blank (ruled answer lines, name fields as lines) and filled (typed answers, data, the graph with fit and residuals, "About the demo" when open); course breadcrumbs and previous and next (Gravity Near Earth opened from Astronomy steps Kepler's Laws ‹ › Tides), hidden in Projector; Copy link round trip; Fullscreen and the F, P, Space and R keys, which stay quiet while the theme select has the focus; What's new shows once, closes with Esc, the button reopens it, and it reads well in dark; the 404 page (status 404, search offers Projectile Range for `projectile-drag.htm`) at every size; no sideways scroll on five demos, the home, course, 404 and handout pages at 360 and 400 px in both themes; symbol tap on three handouts: the tip opens pinned, stays on screen, and closes on a tap elsewhere. No page errors (the Primer theme's anchor script is blocked in the sandbox only).
+
+**Fixed:**
+- **Reset all after Copy link did not reset.** Copy link writes the `set=` link into the address bar, and Reset all reloaded that address, so the copied settings came back. Reset all (and the R key, where it falls back to Reset all) now reloads without `set=`; `setup=` and `view=` stay as before. `demos/lib/vd.js`, README line updated.
+- **Blank worksheets printed data tables with three narrow rows**, too few for the scans the procedures ask for. A table with no set rows now prints at full width with 8 rows when nothing is typed in it (`PRINT_ROWS` in `worksheet.js`; the extra rows are a second, print only `tbody.ws-pad`, so `tBodies[0]`, saves, CSV, the graph and every TeacherKeys capture script are untouched). The extra rows go as soon as anything is typed in that table. "Settings and notes" prints two ruled lines when empty. 179 of the 201 data tables get the rows; the 11 with set rows and the 11 with 8 or more do not. Key PDFs change only for a table left wholly empty, the next time they are rebuilt.
+- **Symbol tip kept the old colors after a theme switch** while it was pinned; it now follows the switch. The highlight on the tapped symbol was nearly invisible in dark; it is brighter there now. `curriculum/labs/symbols.js`.
+- **Demo, home and course pages printed in dark colors when Dark was chosen** (white text on white once the browser drops backgrounds). `theme.js` now switches the page to light for printing and back after, without saving the choice. A 3D scene may still print with its dark sky; nobody is asked to print a demo.
+
+Not fixed (older than today, noted only): on a 360 px phone a comma after inline math can wrap to the start of the next line ("length L / , measured"); MathJax behavior.
+
+Checks: test_main_lab_controls and test_browser (Chromium) pass; `vdcheck --only after` on pendulum, projectile-drag, doppler, faraday, ising, hr-diagram and collisions: 0 problems.
+
+**For GPT to verify:** nothing numeric changed.

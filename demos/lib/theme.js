@@ -8,7 +8,7 @@
    Scripts that ask matchMedia('(prefers-color-scheme: dark)') get an answer that follows the choice, and their
    'change' listeners run when the choice changes, so canvases and 3D scenes that already redraw on a system
    theme change redraw on a switch too. <picture> sources with a prefers-color-scheme media follow the choice.
-   A 'vd-theme' event fires on window after each change (detail: { theme, dark }).
+   A 'vd-theme' event fires on window after each change (detail: { theme, dark }). Pages print light whatever the choice.
 
    The switch itself (a small select) is placed by this file: in a demo's header next to Projector (.bar-right),
    in the hero of the home and course pages, beside Print on teaching notes (top right of the notes index), and at
@@ -153,6 +153,12 @@
   function ready() { fixSources(); place(); }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ready); else ready();
   window.addEventListener('load', function () { if (mo) { mo.disconnect(); mo = null; } });
+
+  /* printing: every page prints light (dark tokens print white text when the browser leaves backgrounds out); the
+     choice comes back after. Not saved, so other tabs are not touched. */
+  var beforePrint = null;
+  window.addEventListener('beforeprint', function () { if (beforePrint === null && dark()) { beforePrint = mode; apply('light', false); } });
+  window.addEventListener('afterprint', function () { if (beforePrint !== null) { var v = beforePrint; beforePrint = null; apply(v, false); } });
 
   window.VDTheme = { get: function () { return mode; }, set: function (v) { apply(v, true); }, dark: dark };
 })();

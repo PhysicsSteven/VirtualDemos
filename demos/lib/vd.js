@@ -29,7 +29,7 @@
   /* Reset all (markup from tools/reset.py): reloads the page, so every control, preset and the simulation are as the page
      opened (the address, Projector and Reduce motion survive). Asks first when a table holds more data rows than it had
      just after load, or a Capture, Record, Add point, Add to table, Keep trace or Pin button was pressed since the last
-     Clear. A demo can define window.vdReadings = () => count instead. b.vdLost() is there for tests */
+     Clear. A shared setting (set= in the address) is dropped on the reload. A demo can define window.vdReadings = () => count instead. b.vdLost() is there for tests */
   VD.reset = function (b) {
     var base = new WeakMap(), rec = false;
     function data(t) { var n = 0; Array.prototype.forEach.call(t.rows, function (r) {
@@ -47,7 +47,9 @@
       if (n && !window.confirm('Reset all clears ' + (n > 1 ? 'the ' + n + ' readings' : n === 1 ? 'the reading' : 'the readings') + ' you recorded. '
         + 'Export them first if you need them. Reset anyway?')) return;
       document.querySelectorAll('input,select,textarea,form').forEach(function (e) { e.setAttribute('autocomplete', 'off'); });
-      location.reload(); });
+      /* settings from a shared link (set=, which Copy link also writes into the address) are dropped, so Reset all always resets */
+      var q = location.search.replace(/^\?/, '').split('&').filter(function (x) { return x && !/^set=/.test(x); }).join('&');
+      if (q !== location.search.replace(/^\?/, '')) location.replace(location.pathname + (q ? '?' + q : '') + location.hash); else location.reload(); });
   };
 
   /* a plot folded in the sidebar is drawn when it opens: press its pressed plot button again, or send a resize */
