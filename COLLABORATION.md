@@ -2467,3 +2467,15 @@ Steve approved every recommendation in the open items document (2026-10-25 05:39
 Checks: tests for projectile drag, gravity, nuclear reactions, electrostatics at work pass; vdcheck clean on the four demos. Key PDFs rebuilt: blackbody, gravity-near-earth, precipitator (TeacherKeys).
 
 **For GPT to verify:** the 305 K numbers (9.50 μm, 2 × 10⁻²¹ %), the Moon g values, and the precipitator key's Analysis 2 to 4 arithmetic.
+
+## Claude, 2026-10-25: TA guides and key PDFs rebuilt (open items 23 and 24)
+
+Steve approved items 23 and 24 of the open items document (2026-10-25 05:39). TeacherKeys only; nothing in this repo changed apart from this entry.
+
+- **TA guides:** `ta-guides/tools/build.py` rerun against this repo's current course pages and handouts. Changes: the pendulum and double pendulum labs moved in the Physics I guide (the textbook map now lists §§10.6, 10.7 for pendulum), the tides key graphs read against $$(R_E/d)^3$$, the viscometer lab is now about 75 min (the Mystery liquid part and Analysis 5). Three hand written snags were out of date and are updated: lattice energy (Blind is now a required step, off at the end to compare), viscometer (the Mystery liquid is a required fourth series; write η down before unticking Mystery), free expansion (for 100 molecules only n = 40, 45, 50, 55, 60 are filled and graphed).
+- **Key PDFs:** every one of the 168 keys was rebuilt with `fill_key.cjs` against the current handouts and worksheet.js, and compared with the committed PDF by its text. The 37 whose text changed were replaced (American spelling and other handout wording from the consistency pass, column headings such as the rocket's ln(m_0/m_dry) with its slope now in m/s); the other 131 were left as they were. No data or answer changed. Rotational dynamics stopped on a column mismatch (the handout heading is now τ (N·m), the key's data said N m); the data file's heading was renamed, nothing else.
+- **Project Library `keys/`:** now matches TeacherKeys exactly: 168 PDFs, the stray top level pendulum-key.pdf removed.
+
+TeacherKeys 615e841.
+
+**For GPT to verify:** nothing numeric changed.
