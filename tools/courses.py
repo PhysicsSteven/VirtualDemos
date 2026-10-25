@@ -37,6 +37,7 @@ BLURB = {
 COURSE_HANDOUTS = {'astro-2203': {'intro-seasons', 'intro-solar-system-formation', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession', 'intro-celestial-sphere',
                                 'intro-telescope', 'intro-resolution', 'intro-mirrors', 'intro-blackbody', 'intro-spectra', 'intro-em-spectrum', 'intro-planet-temperatures',
                                 'intro-retrograde', 'intro-resonances', 'intro-craters', 'intro-mars-ages'}}
+COURSE_HANDOUTS['astro-2203'].add('intro-inside-a-planet')
 NO_BOOK = {'astro-2203'}
 MODULES = {'acoustics', 'thermo', 'modern', 'astro'}   # modules follow the textbook chapters, not a course schedule
 TILE_START, TILE_END = '<!-- COURSES START (tools/courses.py) -->', '<!-- COURSES END -->'
@@ -227,6 +228,7 @@ HANDOUT_TOPIC = {
     'intro-planet-temperatures': 'Planet Temperatures and Habitable Zones (Astro 2203)',
     'intro-retrograde': 'Retrograde Motion and World Models (Astro 2203)',
     'intro-resonances': 'Orbital Resonances (Astro 2203)',
+    'intro-inside-a-planet': 'Inside a Planet (Astro 2203)',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 

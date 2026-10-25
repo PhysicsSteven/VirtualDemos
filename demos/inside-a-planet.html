@@ -1,0 +1,961 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Inside a Planet</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the layer colors, the stage with its strip, the setup card and the graph */
+:root { --core: #c99a2e; --core2: #e7c25d; --mantle: #b5583a; --crust: #7d6f5f; --rockc: #b9a58a; --rocko: #5f6670; --mantleF: #c77b54; --meas: #c2410c; --model: #2b60b5; --prem: #7c3aed; --sea: #3b82c4; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --core: #e0b24a; --core2: #f4d77e; --mantle: #c8694a; --crust: #a39482; --rockc: #cdb999; --rocko: #8c95a1; --mantleF: #b56a46; --meas: #fb923c; --model: #69a0ff; --prem: #c4a5ff; --sea: #6aaee8; } }
+:root[data-theme="dark"] { --core: #e0b24a; --core2: #f4d77e; --mantle: #c8694a; --crust: #a39482; --rockc: #cdb999; --rocko: #8c95a1; --mantleF: #b56a46; --meas: #fb923c; --model: #69a0ff; --prem: #c4a5ff; --sea: #6aaee8; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.stage-ctl .lbl { font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 470px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+#can { z-index: 1; }
+.scene canvas.ip3 { z-index: 0; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 56px; width: 272px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 290px); overflow: auto; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
+.plotbox { position: relative; flex: none; height: 210px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+@media (min-width: 821px) { .stage { min-height: 760px; } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 380px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 190px; } }
+@media (max-width: 420px) { .scene { height: 300px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Inside a Planet</h1>
+      <p>Weigh a planet's layers: find how big its iron core must be from its mean density and how it spins. Then heat a mantle from below and inside and watch it churn: a weak lid breaks into moving plates, a strong one stays one shell, and under Mars's still lid the plumes stay put. Last, float continents on the mantle.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">km · kg/m³ · Myr</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/inside-a-planet.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/inside-a-planet.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h1v1h-1zM15 2h1v1h-1zM17 2h5v1h-5zM25 2h1v1h-1zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM14 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM13 4h4v1h-4zM19 4h6v1h-6zM26 4h1v1h-1zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h2v1h-2zM16 5h2v1h-2zM20 5h2v1h-2zM26 5h3v1h-3zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM17 6h2v1h-2zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM15 7h3v1h-3zM20 7h3v1h-3zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h3v1h-3zM14 9h1v1h-1zM16 9h1v1h-1zM19 9h7v1h-7zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM14 10h2v1h-2zM17 10h1v1h-1zM20 10h2v1h-2zM23 10h4v1h-4zM28 10h1v1h-1zM31 10h5v1h-5zM38 10h1v1h-1zM4 11h1v1h-1zM6 11h2v1h-2zM11 11h1v1h-1zM13 11h1v1h-1zM15 11h2v1h-2zM18 11h1v1h-1zM21 11h9v1h-9zM34 11h4v1h-4zM3 12h1v1h-1zM5 12h1v1h-1zM7 12h2v1h-2zM10 12h2v1h-2zM13 12h1v1h-1zM18 12h1v1h-1zM22 12h4v1h-4zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h3v1h-3zM13 13h1v1h-1zM19 13h1v1h-1zM23 13h4v1h-4zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h7v1h-7zM10 14h3v1h-3zM15 14h3v1h-3zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h2v1h-2zM26 14h1v1h-1zM30 14h3v1h-3zM36 14h3v1h-3zM2 15h2v1h-2zM6 15h2v1h-2zM11 15h1v1h-1zM14 15h2v1h-2zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM28 15h3v1h-3zM34 15h2v1h-2zM4 16h1v1h-1zM7 16h4v1h-4zM13 16h1v1h-1zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h2v1h-2zM25 16h2v1h-2zM28 16h2v1h-2zM31 16h7v1h-7zM2 17h1v1h-1zM5 17h1v1h-1zM9 17h1v1h-1zM12 17h3v1h-3zM16 17h2v1h-2zM21 17h4v1h-4zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h1v1h-1zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM3 18h1v1h-1zM5 18h2v1h-2zM8 18h1v1h-1zM10 18h2v1h-2zM14 18h3v1h-3zM18 18h1v1h-1zM22 18h3v1h-3zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM9 19h1v1h-1zM11 19h2v1h-2zM15 19h2v1h-2zM20 19h2v1h-2zM25 19h1v1h-1zM27 19h1v1h-1zM29 19h2v1h-2zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h3v1h-3zM6 20h3v1h-3zM10 20h2v1h-2zM14 20h1v1h-1zM16 20h2v1h-2zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h2v1h-2zM28 20h9v1h-9zM5 21h1v1h-1zM7 21h1v1h-1zM10 21h1v1h-1zM17 21h3v1h-3zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM4 22h7v1h-7zM16 22h1v1h-1zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM11 23h3v1h-3zM15 23h1v1h-1zM17 23h2v1h-2zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM5 24h4v1h-4zM10 24h1v1h-1zM13 24h7v1h-7zM22 24h2v1h-2zM25 24h1v1h-1zM29 24h1v1h-1zM32 24h5v1h-5zM2 25h2v1h-2zM7 25h1v1h-1zM10 25h2v1h-2zM13 25h1v1h-1zM16 25h2v1h-2zM19 25h5v1h-5zM26 25h1v1h-1zM29 25h6v1h-6zM36 25h1v1h-1zM38 25h1v1h-1zM4 26h2v1h-2zM7 26h7v1h-7zM16 26h1v1h-1zM20 26h1v1h-1zM23 26h4v1h-4zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h3v1h-3zM7 27h1v1h-1zM9 27h1v1h-1zM14 27h1v1h-1zM16 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h5v1h-5zM34 27h2v1h-2zM5 28h2v1h-2zM8 28h1v1h-1zM10 28h3v1h-3zM14 28h1v1h-1zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h2v1h-2zM27 28h3v1h-3zM31 28h4v1h-4zM36 28h1v1h-1zM5 29h2v1h-2zM10 29h2v1h-2zM13 29h1v1h-1zM15 29h1v1h-1zM19 29h2v1h-2zM23 29h2v1h-2zM26 29h1v1h-1zM29 29h2v1h-2zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h2v1h-2zM6 30h7v1h-7zM16 30h2v1h-2zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM29 30h6v1h-6zM36 30h3v1h-3zM10 31h2v1h-2zM14 31h3v1h-3zM18 31h3v1h-3zM23 31h1v1h-1zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h2v1h-2zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h2v1h-2zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h1v1h-1zM14 33h1v1h-1zM16 33h2v1h-2zM23 33h2v1h-2zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM14 34h2v1h-2zM17 34h2v1h-2zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h3v1h-3zM20 35h2v1h-2zM23 35h1v1h-1zM25 35h1v1h-1zM27 35h7v1h-7zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM14 36h2v1h-2zM17 36h1v1h-1zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h2v1h-2zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h2v1h-2zM15 37h11v1h-11zM28 37h2v1h-2zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h4v1h-4zM15 38h1v1h-1zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM31 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <div class="seg" role="group" aria-label="What to explore" id="modeSeg">
+          <button type="button" data-mode="layers" aria-pressed="true">Layers</button>
+          <button type="button" data-mode="convect" aria-pressed="false">Convection</button>
+          <button type="button" data-mode="crust" aria-pressed="false">Floating crust</button>
+        </div>
+        <button type="button" class="spin attn" id="play" hidden>Start</button>
+        <button type="button" class="btn" id="restart" hidden title="Start the mantle again from its first temperatures">Start again</button>
+        <label class="lbl" for="selSpeed" id="speedLbl" hidden>Steps a frame</label>
+        <select id="selSpeed" hidden><option value="1" selected>1</option><option value="2">2</option><option value="4">4</option></select>
+        <label class="lbl" for="selLook" id="lookLbl" hidden>Picture</label>
+        <select id="selLook" hidden><option value="T" selected>Temperature</option><option value="eta">Stiffness (viscosity)</option></select>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="A planet cut in half to show its layers."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the planet">
+        <span class="card-title" id="cardTitle">The planet's layers</span>
+        <div id="layersBox">
+          <div class="pick"><label for="selLPlanet">Planet</label><select id="selLPlanet">
+            <option value="mercury">Mercury</option><option value="venus">Venus</option><option value="earth" selected>Earth</option><option value="moon">Moon</option><option value="mars">Mars</option></select></div>
+          <div><div class="slider-head"><label for="sCore">Core radius</label><output id="oCore" class="mono" for="sCore"></output></div><input type="range" id="sCore" min="0" max="6000" step="10"></div>
+          <div><div class="slider-head"><label for="sRhoC">Core density</label><output id="oRhoC" class="mono" for="sRhoC"></output></div><input type="range" id="sRhoC" min="2500" max="15000" step="1"></div>
+          <div><div class="slider-head"><label for="sRhoM">Mantle density</label><output id="oRhoM" class="mono" for="sRhoM"></output></div><input type="range" id="sRhoM" min="2500" max="6000" step="1"></div>
+          <label class="check" id="premBox"><input type="checkbox" id="chkPrem" checked><span>Show PREM, Earth's layers from seismic waves</span></label>
+        </div>
+        <div id="convectBox" hidden>
+          <div class="pick"><label for="selCPlanet">Planet (sets the mantle's depth and width)</label><select id="selCPlanet">
+            <option value="earth" selected>Earth</option><option value="venus">Venus</option><option value="mars">Mars</option></select></div>
+          <div><div class="slider-head"><label for="sRa">Vigor (Rayleigh number)</label><output id="oRa" class="mono" for="sRa"></output></div><input type="range" id="sRa" min="4" max="7" step="0.1"></div>
+          <div><div class="slider-head"><label for="sVisc">Cold rock stiffer by</label><output id="oVisc" class="mono" for="sVisc"></output></div><input type="range" id="sVisc" min="0" max="5" step="0.5"></div>
+          <div><div class="slider-head"><label for="sYield">Strength of the cold lid</label><output id="oYield" class="mono" for="sYield"></output></div><input type="range" id="sYield" min="3" max="6" step="0.25"></div>
+          <div><div class="slider-head"><label for="sHeat">Radioactive heat inside H</label><output id="oHeat" class="mono" for="sHeat"></output></div><input type="range" id="sHeat" min="0" max="20" step="1"></div>
+          <div><div class="slider-head"><label for="sLower">Lower mantle stiffer by</label><output id="oLower" class="mono" for="sLower"></output></div><input type="range" id="sLower" min="0" max="2" step="0.25"></div>
+          <div class="pick"><label for="selShape">Shape of the picture</label><select id="selShape"><option value="bent" selected>Bent round the core</option><option value="box">Unrolled: the model's box</option></select></div>
+          <label class="check"><input type="checkbox" id="chkFlow" checked><span>Show the flow</span></label>
+          <p class="note" id="convNote">A change here starts the mantle again.</p>
+        </div>
+        <div id="crustBox" hidden>
+          <div><div class="slider-head"><label for="sTc">Continent: crust thickness</label><output id="oTc" class="mono" for="sTc"></output></div><input type="range" id="sTc" min="10" max="80" step="0.5"></div>
+          <div><div class="slider-head"><label for="sRc">Continent: crust density</label><output id="oRc" class="mono" for="sRc"></output></div><input type="range" id="sRc" min="2500" max="3300" step="5"></div>
+          <div><div class="slider-head"><label for="sTo">Ocean floor: crust thickness</label><output id="oTo" class="mono" for="sTo"></output></div><input type="range" id="sTo" min="3" max="20" step="0.5"></div>
+          <div><div class="slider-head"><label for="sRo">Ocean floor: crust density</label><output id="oRo" class="mono" for="sRo"></output></div><input type="range" id="sRo" min="2500" max="3300" step="5"></div>
+          <div><div class="slider-head"><label for="sRm">Mantle density</label><output id="oRm" class="mono" for="sRm"></output></div><input type="range" id="sRm" min="3200" max="3500" step="2"></div>
+        </div>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <canvas id="plot" role="img" aria-label="Graph"></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/intro-inside-a-planet.html" target="intro-inside-a-planet-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="earth2" data-m="layers" aria-pressed="true">Earth: core and mantle</button>
+          <button type="button" data-p="earthRock" data-m="layers" aria-pressed="false">Earth if it were rock all through</button>
+          <button type="button" data-p="mercury2" data-m="layers" aria-pressed="false">Mercury: a huge core</button>
+          <button type="button" data-p="venus2" data-m="layers" aria-pressed="false">Venus</button>
+          <button type="button" data-p="mars2" data-m="layers" aria-pressed="false">Mars</button>
+          <button type="button" data-p="moon2" data-m="layers" aria-pressed="false">Moon: a tiny core</button>
+          <button type="button" data-p="plates" data-m="convect" aria-pressed="false" hidden>Earth: moving plates</button>
+          <button type="button" data-p="lid" data-m="convect" aria-pressed="false" hidden>Venus: one stiff lid</button>
+          <button type="button" data-p="episodic" data-m="convect" aria-pressed="false" hidden>Venus: a lid that holds, then breaks</button>
+          <button type="button" data-p="plume" data-m="convect" aria-pressed="false" hidden>Mars: plumes that stay put</button>
+          <button type="button" data-p="even" data-m="convect" aria-pressed="false" hidden>Rock equally runny hot or cold</button>
+          <button type="button" data-p="inside" data-m="convect" aria-pressed="false" hidden>Heated only from inside</button>
+          <button type="button" data-p="bench" data-m="convect" aria-pressed="false" hidden>Benchmark: one steady roll</button>
+          <button type="button" data-p="continents" data-m="crust" aria-pressed="false" hidden>Continent and ocean floor</button>
+          <button type="button" data-p="tibet" data-m="crust" aria-pressed="false" hidden>A high plateau with a deep root</button>
+          <button type="button" data-p="stretched" data-m="crust" aria-pressed="false" hidden>A stretched, thin continent</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="intro-inside-a-planet" data-title="Inside a Planet" data-demo="inside-a-planet">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the measured values to compare with</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">mean density ρ̄ = ρm + (ρc − ρm)(rc/R)³</p>
+          <p class="formula">C/MR² = 0.4 [ρm + (ρc − ρm)(rc/R)⁵] / ρ̄</p>
+          <p class="formula">Ra = ρ g α ΔT d³ / (κ η)</p>
+          <p class="formula">floating crust: height above the mantle h = t (1 − ρcrust/ρmantle)</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+<script>
+(() => {
+  // ==CORE START==
+  /* Mantle convection: a 2D box of the mantle, depth 1 and width A (in mantle depths), heated from below (T = 1 at the core,
+     T = 0 at the surface) and from inside (radioactive heat H), sides insulating, every wall free slip. Infinite Prandtl number
+     Boussinesq flow (the mantle is so viscous that its inertia is nothing):
+        ∇·(2η ε̇) − ∇p + Ra T ẑ = 0,  ∇·u = 0,  ∂T/∂t + u·∇T = ∇²T + H,
+     in units of the mantle depth d, the diffusion time d²/κ and the temperature drop ΔT. With the stream function ψ
+     (u = ∂ψ/∂z, w = −∂ψ/∂x) the flow is one equation (see Gerya, Introduction to Numerical Geodynamic Modelling, 2nd ed. 2019):
+        (∂zz − ∂xx)[η (ψzz − ψxx)] + 4 ∂xz[η ψxz] = Ra ∂T/∂x.
+     Here on a grid of nodes, ψ = 0 on the walls and η(ψzz − ψxx) = 0 there (free slip). Written as M ψ = Ra ∂T/∂x with
+     M = Σ_nodes η s sᵀ + 4 Σ_cells η t tᵀ, which is symmetric and positive, so a banded Cholesky factorization solves it exactly
+     every step. Temperature: second order upwind (van Leer limited) advection in conservative form with face velocities taken
+     straight from ψ, so no heat is made or lost by the scheme, and central diffusion; explicit, the step set by the flow (Courant 0.4)
+     and by diffusion. Checked against the community benchmark (Blankenbach et al. 1989): see test_inside-a-planet.cjs. */
+  function makeBox(A, NZ) {
+    const NX = Math.round(A * NZ), nx = NX + 1, nz = NZ + 1, dx = A / NX, dz = 1 / NZ;
+    const nI = NX - 1, nJ = NZ - 1, N = nI * nJ, P = 2 * nJ;
+    const B = {
+      A, NX, NZ, nx, nz, dx, dz, N, P, t: 0,
+      T: new Float64Array(nx * nz), psi: new Float64Array(nx * nz), eta: new Float64Array(nx * nz), etaC: new Float64Array(NX * NZ),
+      u: new Float64Array(nx * nz), w: new Float64Array(nx * nz), edot: new Float64Array(nx * nz),
+      band: new Float64Array(N * (P + 1)), rhs: new Float64Array(N), sol: new Float64Array(N), Tn: new Float64Array(nx * nz),
+    };
+    return B;
+  }
+  const at = (B, i, j) => i * B.nz + j;   /* node index: z fastest */
+  /* unknown number of interior node (i, j), or −1 on a wall */
+  const unk = (B, i, j) => (i < 1 || i > B.NX - 1 || j < 1 || j > B.NZ - 1 ? -1 : (i - 1) * (B.NZ - 1) + (j - 1));
+
+  function assemble(B) {
+    const { band, P, dx, dz, NX, NZ } = B, W = P + 1;
+    band.fill(0);
+    const add = (r, c, v) => { if (r < 0 || c < 0) return; if (c > r) { const q = r; r = c; c = q; } band[r * W + (r - c)] += v; };
+    const ix2 = 1 / (dx * dx), iz2 = 1 / (dz * dz), ixz = 1 / (dx * dz);
+    const ks = new Int32Array(5), vs = new Float64Array(5);
+    for (let i = 1; i < NX; i++) for (let j = 1; j < NZ; j++) {
+      const e = B.eta[at(B, i, j)];
+      ks[0] = unk(B, i, j); vs[0] = 2 * ix2 - 2 * iz2;
+      ks[1] = unk(B, i, j + 1); vs[1] = iz2; ks[2] = unk(B, i, j - 1); vs[2] = iz2;
+      ks[3] = unk(B, i + 1, j); vs[3] = -ix2; ks[4] = unk(B, i - 1, j); vs[4] = -ix2;
+      for (let a = 0; a < 5; a++) { if (ks[a] < 0) continue; for (let b = 0; b <= a; b++) { if (ks[b] < 0) continue; const v = e * vs[a] * vs[b]; if (a === b) add(ks[a], ks[a], v); else add(ks[a], ks[b], v); } }
+    }
+    for (let i = 0; i < NX; i++) for (let j = 0; j < NZ; j++) {
+      const e = 4 * B.etaC[i * NZ + j];
+      ks[0] = unk(B, i, j); vs[0] = ixz; ks[1] = unk(B, i + 1, j + 1); vs[1] = ixz;
+      ks[2] = unk(B, i + 1, j); vs[2] = -ixz; ks[3] = unk(B, i, j + 1); vs[3] = -ixz;
+      for (let a = 0; a < 4; a++) { if (ks[a] < 0) continue; for (let b = 0; b <= a; b++) { if (ks[b] < 0) continue; const v = e * vs[a] * vs[b]; add(ks[a], ks[b], v); } }
+    }
+  }
+  /* in place banded Cholesky (lower band, entry (r, r − d) at r·(P + 1) + d), then the two triangular solves */
+  function cholesky(B) {
+    const { band: L, N, P } = B, W = P + 1;
+    for (let k = 0; k < N; k++) {
+      const lo = Math.max(0, k - P);
+      for (let j = lo; j <= k; j++) {
+        let s = L[k * W + (k - j)];
+        const m0 = Math.max(lo, j - P);
+        for (let m = m0; m < j; m++) s -= L[k * W + (k - m)] * L[j * W + (j - m)];
+        if (j === k) L[k * W] = Math.sqrt(Math.max(s, 1e-300)); else L[k * W + (k - j)] = s / L[j * W];
+      }
+    }
+  }
+  function backsolve(B) {
+    const { band: L, N, P, rhs, sol } = B, W = P + 1;
+    for (let k = 0; k < N; k++) { let s = rhs[k]; const lo = Math.max(0, k - P); for (let m = lo; m < k; m++) s -= L[k * W + (k - m)] * sol[m]; sol[k] = s / L[k * W]; }
+    for (let k = N - 1; k >= 0; k--) { let s = sol[k]; const hi = Math.min(N - 1, k + P); for (let m = k + 1; m <= hi; m++) s -= L[m * W + (m - k)] * sol[m]; sol[k] = s / L[k * W]; }
+  }
+  /* viscosity at the nodes from the temperature and, with a yield stress, from the last step's strain rate:
+       η_T = exp(γ (1 − T)), the linearized Arrhenius (Frank-Kamenetskii) law, 1 at the hot bottom (T = 1) and Δη = e^γ at the cold top;
+       a yield stress σ_y caps the stress the cold lid can hold: η = min(η_T, σ_y / (2 ε̇_II)) (Moresi and Solomatov 1998, Geophys. J. Int.
+       133, 669), so where the lid is bent hard enough it breaks and sinks; σ_y may rise with depth by σ_z (rock is stronger under
+       pressure). A lower mantle o.lower times stiffer below the depth o.lowerDepth is optional. Never below ETA_MIN. */
+  const ETA_MIN = 0.1;
+  function viscosity(B, o) {
+    const { nx, nz, NX, NZ } = B, g = o.gamma || 0;
+    /* a viscosity that does not depend on the temperature or the flow needs factoring only once */
+    const key = !(g > 0) && !(o.sy > 0 && isFinite(o.sy)) ? `${o.lower || 1}|${o.lowerDepth || 0.5}` : '';
+    if (key && key === B.fixedKey) return;
+    B.fixedKey = key; B.factored = false;
+    for (let i = 0; i < nx; i++) for (let j = 0; j < nz; j++) {
+      const q = at(B, i, j);
+      let e = Math.exp(g * (1 - Math.min(1.2, Math.max(0, B.T[q]))));
+      if (o.lower > 1 && j / NZ < 1 - (o.lowerDepth || 0.5)) e *= o.lower;   /* a stiffer lower mantle: η times o.lower below o.lowerDepth */
+      if (o.sy > 0 && isFinite(o.sy)) {
+        /* the yield viscosity comes from the last step's flow, so it is eased in (half way, in the logarithm) to keep it from flickering */
+        const depth = 1 - j / NZ, sy = o.sy + (o.sz || 0) * depth, ed = B.edot[q], tgt = ed > 0 ? Math.min(e, sy / (2 * ed)) : e, prev = B.eta[q];
+        e = prev > 0 ? Math.min(e, Math.sqrt(prev * tgt)) : tgt;
+      }
+      B.eta[q] = Math.max(ETA_MIN, e);
+    }
+    for (let i = 0; i < NX; i++) for (let j = 0; j < NZ; j++) {
+      const a = B.eta[at(B, i, j)], b = B.eta[at(B, i + 1, j)], c = B.eta[at(B, i, j + 1)], d = B.eta[at(B, i + 1, j + 1)];
+      B.etaC[i * NZ + j] = Math.sqrt(Math.sqrt(a * b * c * d));
+    }
+  }
+  /* the flow for the present temperature and viscosity; then velocities and the strain rate second invariant at the nodes */
+  function stokes(B, Ra) {
+    const { NX, NZ, dx, dz, T, psi } = B;
+    if (!B.factored) { assemble(B); cholesky(B); B.factored = !!B.fixedKey; }
+    for (let i = 1; i < NX; i++) for (let j = 1; j < NZ; j++) B.rhs[unk(B, i, j)] = Ra * (T[at(B, i + 1, j)] - T[at(B, i - 1, j)]) / (2 * dx);
+    backsolve(B);
+    psi.fill(0);
+    for (let i = 1; i < NX; i++) for (let j = 1; j < NZ; j++) psi[at(B, i, j)] = B.sol[unk(B, i, j)];
+    velocities(B);
+  }
+  function velocities(B) {
+    const { nx, nz, NX, NZ, dx, dz, psi, u, w, edot } = B;
+    const P = (i, j) => {   /* ψ with the free slip mirror: odd across every wall */
+      if (i < 0) return -psi[at(B, -i, j)]; if (i > NX) return -psi[at(B, 2 * NX - i, j)];
+      if (j < 0) return -psi[at(B, i, -j)]; if (j > NZ) return -psi[at(B, i, 2 * NZ - j)];
+      return psi[at(B, i, j)];
+    };
+    for (let i = 0; i < nx; i++) for (let j = 0; j < nz; j++) {
+      const q = at(B, i, j);
+      u[q] = (P(i, j + 1) - P(i, j - 1)) / (2 * dz);
+      w[q] = -(P(i + 1, j) - P(i - 1, j)) / (2 * dx);
+      const pxz = (P(i + 1, j + 1) - P(i - 1, j + 1) - P(i + 1, j - 1) + P(i - 1, j - 1)) / (4 * dx * dz);
+      const pzz = (P(i, j + 1) - 2 * P(i, j) + P(i, j - 1)) / (dz * dz), pxx = (P(i + 1, j) - 2 * P(i, j) + P(i - 1, j)) / (dx * dx);
+      const exx = pxz, exz = 0.5 * (pzz - pxx);
+      edot[q] = Math.sqrt(exx * exx + exz * exz);
+    }
+  }
+  /* one explicit step of the heat equation; returns the step taken */
+  function heatStep(B, H, dtMax) {
+    const { nx, nz, NX, NZ, dx, dz, T, u, w, Tn, psi } = B;
+    let vmax = 1e-12;
+    for (let q = 0; q < nx * nz; q++) vmax = Math.max(vmax, Math.abs(u[q]) / dx, Math.abs(w[q]) / dz);
+    const dt = Math.min(dtMax || 1, 0.4 / vmax, 0.2 / (1 / (dx * dx) + 1 / (dz * dz)));
+    const Tg = (i, j) => { if (i < 0) i = -i; else if (i > NX) i = 2 * NX - i; if (j < 0) j = 0; else if (j > NZ) j = NZ; return T[at(B, i, j)]; };
+    /* van Leer limited upwind face values */
+    const lim = (a, b) => (a * b <= 0 ? 0 : (2 * a * b) / (a + b));
+    const faceX = (i, j, v) => { /* value at face i+½ for velocity v there */
+      if (v >= 0) { const c = Tg(i, j); return c + 0.5 * lim(c - Tg(i - 1, j), Tg(i + 1, j) - c); }
+      const c = Tg(i + 1, j); return c - 0.5 * lim(Tg(i + 2, j) - c, c - Tg(i, j));
+    };
+    const faceZ = (i, j, v) => {
+      if (v >= 0) { const c = Tg(i, j); return c + 0.5 * lim(c - Tg(i, j - 1), Tg(i, j + 1) - c); }
+      const c = Tg(i, j + 1); return c - 0.5 * lim(Tg(i, j + 2) - c, c - Tg(i, j));
+    };
+    /* face velocities straight from ψ at the cell centers (mean of the four corners), so the discrete flow has no divergence
+       and the advection conserves heat exactly */
+    const pc = (i, j) => (i < 0 || i >= NX || j < 0 || j >= NZ ? 0 : 0.25 * (psi[at(B, i, j)] + psi[at(B, i + 1, j)] + psi[at(B, i, j + 1)] + psi[at(B, i + 1, j + 1)]));
+    const uF = (i, j) => (i < 0 || i >= NX ? 0 : (pc(i, j) - pc(i, j - 1)) / dz);         /* u at face (i+½, j) */
+    const wF = (i, j) => (j < 0 || j >= NZ ? 0 : -(pc(i, j) - pc(i - 1, j)) / (i === 0 || i === NX ? dx / 2 : dx));   /* mean w over the face (i, j+½); a side node's face is half a cell wide, ψ = 0 on the wall */
+    let qt = 0, qb = 0;
+    for (let i = 0; i < nx; i++) for (let j = 1; j < NZ; j++) {
+      const q = at(B, i, j), c = T[q];
+      /* the control volume of a side node is half a cell wide; its outer face carries no flow */
+      const ue = uF(i, j), uw = uF(i - 1, j), wn = wF(i, j), ws = wF(i, j - 1);
+      const fe = i === NX ? 0 : ue * faceX(i, j, ue), fw = i === 0 ? 0 : uw * faceX(i - 1, j, uw);
+      const fn = wn * faceZ(i, j, wn), fs = ws * faceZ(i, j - 1, ws);
+      const wdt = (i === 0 || i === NX) ? 0.5 : 1;
+      const adv = (fe - fw) / (dx * wdt) + (fn - fs) / dz;
+      const lap = (Tg(i + 1, j) - 2 * c + Tg(i - 1, j)) / (dx * dx) + (Tg(i, j + 1) - 2 * c + Tg(i, j - 1)) / (dz * dz);
+      Tn[q] = c + dt * (lap - adv + H);
+      /* heat through the faces next to the top and bottom walls (conducted plus carried), plus the heat made in the half cell at the wall:
+         the scheme's own fluxes, so at a steady state heat out of the top = heat in at the bottom + all the heat made inside */
+      if (j === NZ - 1) qt += wdt * ((c - Tg(i, NZ)) / dz + fn + H * dz / 2);
+      if (j === 1) qb += wdt * ((Tg(i, 0) - c) / dz + fs - H * dz / 2);
+    }
+    B.qTop = qt * dx / B.A; B.qBot = qb * dx / B.A;
+    for (let i = 0; i < nx; i++) { Tn[at(B, i, 0)] = 1; Tn[at(B, i, NZ)] = 0; }
+    T.set(Tn); B.t += dt;
+    return dt;
+  }
+  /* measurements: Nu (mean heat flow out of the top over the conductive ΔT/d), the rms speed, the rms surface speed, the mean
+     interior temperature, heat into the bottom; mobility = surface rms speed / whole rms speed (Tackley 2000) */
+  function measure(B) {
+    const { nx, nz, NX, NZ, dx, dz, T, u, w } = B;
+    const trap = (f) => { let s = 0; for (let i = 0; i < nx; i++) s += (i === 0 || i === NX ? 0.5 : 1) * f(i); return s * dx / B.A; };
+    /* second order one sided gradient at the walls */
+    const top = trap((i) => -(3 * T[at(B, i, NZ)] - 4 * T[at(B, i, NZ - 1)] + T[at(B, i, NZ - 2)]) / (2 * dz));
+    const bot = trap((i) => -(-3 * T[at(B, i, 0)] + 4 * T[at(B, i, 1)] - T[at(B, i, 2)]) / (2 * dz));
+    let v2 = 0, tm = 0, n = 0;
+    for (let i = 0; i < nx; i++) for (let j = 0; j < nz; j++) {
+      const wgt = (i === 0 || i === NX ? 0.5 : 1) * (j === 0 || j === NZ ? 0.5 : 1), q = at(B, i, j);
+      v2 += wgt * (u[q] * u[q] + w[q] * w[q]); tm += wgt * T[q]; n += wgt;
+    }
+    const vs = Math.sqrt(trap((i) => u[at(B, i, NZ)] ** 2));
+    const vrms = Math.sqrt(v2 / n);
+    return { Nu: B.qTop, qBottom: B.qBot, NuGrad: top, vrms, vsurf: vs, Tmean: tm / n, mobility: vs / vrms, t: B.t };
+  }
+  /* starting temperature: the cold lid and hot base already formed (error function layers) around an interior at Ti, plus a small
+     random wiggle from a seeded generator, so a run is repeatable; the convection pattern grows from the wiggle by itself */
+  function seedBox(B, Ti, seed) {
+    let s = (seed >>> 0) || 1; const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
+    const erf = (x) => { const t = 1 / (1 + 0.3275911 * Math.abs(x)), y = 1 - t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429)))) * Math.exp(-x * x); return x < 0 ? -y : y; };
+    for (let i = 0; i < B.nx; i++) for (let j = 0; j < B.nz; j++) {
+      const z = j / B.NZ, base = Ti * erf((1 - z) / 0.1) + (1 - Ti) * (1 - erf(z / 0.05));
+      B.T[at(B, i, j)] = Math.min(1, Math.max(0, base + 0.02 * (rnd() - 0.5) * Math.sin(Math.PI * z)));
+    }
+    B.t = 0; B.psi.fill(0); B.u.fill(0); B.w.fill(0); B.edot.fill(0);
+  }
+  /* rising plumes: hot (more than 0.05 above the row's mean) upwellings at mid depth, counted once each */
+  function plumes(B) {
+    const j = Math.round(B.NZ / 2); let mean = 0; for (let i = 0; i < B.nx; i++) mean += B.T[at(B, i, j)]; mean /= B.nx;
+    let n = 0, inside = false;
+    for (let i = 0; i < B.nx; i++) { const q = at(B, i, j), hot = B.T[q] > mean + 0.05 && B.w[q] > 0; if (hot && !inside) n++; inside = hot; }
+    return n;
+  }
+  /* one step of the whole model: viscosity, flow, heat. o: { Ra, gamma, sy, sz, lower, lowerDepth, H } */
+  function step(B, o) { viscosity(B, o); stokes(B, o.Ra); return heatStep(B, o.H || 0); }
+
+  /* ---------- Layers: how a planet's mean density and moment of inertia show a dense core ----------
+     A planet of radius R made of a core (radius rc, density ρc) inside a mantle (density ρm), each of one density (no squeezing
+     with depth, which is the model's main simplification). With q = rc/R:
+        mean density ρ̄ = ρm + (ρc − ρm) q³,      moment of inertia factor C/MR² = 0.4 [ρm + (ρc − ρm) q⁵] / ρ̄.
+     A planet of one density all through has C/MR² = 0.4; less than 0.4 means the mass sits toward the middle. Given ρ̄ and C/MR²,
+     and the core's radius, the two densities follow (fitTwoLayer): the way the presets set them. */
+  function twoLayer(R, rc, rhoC, rhoM) {
+    const q = Math.min(1, Math.max(0, rc / R)), q3 = q ** 3, q5 = q ** 5, rho = rhoM + (rhoC - rhoM) * q3;
+    const M = (4 / 3) * Math.PI * (R * 1e3) ** 3 * rho;
+    return { q, q3, rho, M, k: (0.4 * (rhoM + (rhoC - rhoM) * q5)) / rho, coreMass: (rhoC * q3) / rho };
+  }
+  function fitTwoLayer(R, rc, rho, k) {
+    const q = rc / R, q3 = q ** 3, q5 = q ** 5, d = (rho * (1 - k / 0.4)) / (q3 - q5);
+    return { rhoM: rho - d * q3, rhoC: rho - d * q3 + d };
+  }
+  /* measured values. R mean radius (km) and ρ̄ (kg/m³): NASA NSSDCA planetary and Moon fact sheets (D. R. Williams).
+     C/MR²: Mercury 0.346 ± 0.014 (Margot et al. 2012, J. Geophys. Res. 117, E00L09); Venus 0.337 ± 0.024 (Margot et al. 2021,
+     Nature Astronomy 5, 676); Earth 0.3307 (Yoder 1995, AGU Reference Shelf 1, normalized by the equatorial radius; PREM gives 0.3308
+     with the mean radius); Moon 0.3929 ± 0.0009 (Konopliv et al. 1998, Science 281, 1476); Mars 0.3644 ± 0.0005 (Konopliv et al. 2011,
+     Icarus 211, 401). Core radius rc (km): Mercury 2020 ± 30 (Hauck et al. 2013, J. Geophys. Res. Planets 118, 1204); Venus about
+     3500, uncertain by more than 500 (Margot et al. 2021); Earth 3480 (PREM, Dziewonski and Anderson 1981, Phys. Earth Planet. Inter.
+     25, 297); Moon 330 ± 20 (Weber et al. 2011, Science 331, 309); Mars 1830 ± 40 (Stähler et al. 2021, Science 373, 443). */
+  const PLANETS = {
+    mercury: { name: 'Mercury', R: 2439.7, rho: 5429, k: 0.346, kErr: 0.014, rc: 2020, rcErr: 30 },
+    venus: { name: 'Venus', R: 6051.8, rho: 5243, k: 0.337, kErr: 0.024, rc: 3500, rcErr: 500 },
+    earth: { name: 'Earth', R: 6371.0, rho: 5514, k: 0.3307, kErr: 0, rc: 3480, rcErr: 0 },
+    moon: { name: 'Moon', R: 1737.4, rho: 3344, k: 0.3929, kErr: 0.0009, rc: 330, rcErr: 20 },
+    mars: { name: 'Mars', R: 3389.5, rho: 3934, k: 0.3644, kErr: 0.0005, rc: 1830, rcErr: 40 },
+  };
+  /* PREM, the Preliminary Reference Earth Model (Dziewonski and Anderson 1981, Table 1): density in g/cm³ as a polynomial in
+     x = r / 6371 km in each shell [outer radius km, a0, a1, a2, a3]; seismic waves fix it, and it gives Earth's mass and C/MR² */
+  const PREM = [[1221.5, [13.0885, 0, -8.8381, 0]], [3480, [12.5815, -1.2638, -3.6426, -5.5281]], [5701, [7.9565, -6.4761, 5.5283, -3.0807]],
+    [5771, [5.3197, -1.4836, 0, 0]], [5971, [11.2494, -8.0298, 0, 0]], [6151, [7.1089, -3.8045, 0, 0]], [6346.6, [2.6910, 0.6924, 0, 0]],
+    [6356, [2.9, 0, 0, 0]], [6368, [2.6, 0, 0, 0]], [6371, [1.02, 0, 0, 0]]];
+  function premRho(rkm) { const x = rkm / 6371; for (const [r, a] of PREM) if (rkm <= r) return 1000 * (a[0] + x * (a[1] + x * (a[2] + x * a[3]))); return 0; }
+  /* mass (kg) and moment of inertia (kg m²) of a spherical profile rho(r) (kg/m³, r in km); Simpson's rule inside each shell */
+  function integrate(rho, edges) {
+    let M = 0, I = 0, r0 = 0;
+    for (const r1 of edges) {
+      const n = 200, h = (r1 - r0) / n;
+      for (let k = 0; k <= n; k++) {
+        const r = r0 + k * h, w = ((k === 0 || k === n ? 1 : k % 2 ? 4 : 2) * h) / 3;
+        const m = 4 * Math.PI * (r * 1e3) ** 2 * rho(Math.min(r1 - 1e-9, Math.max(r0 + 1e-9, r))) * 1e3 * w;
+        M += m; I += (2 / 3) * (r * 1e3) ** 2 * m;
+      }
+      r0 = r1;
+    }
+    return { M, I };
+  }
+
+  /* ---------- Floating crust: isostasy ----------
+     A block of crust t thick and of density ρb floats on the mantle (density ρm) like a block of wood on water: it sinks until it
+     pushes aside its own weight of mantle, so a fraction ρb/ρm of it lies below the mantle's level and h = t (1 − ρb/ρm) stands above.
+     The mantle flows only over millions of years, but it does flow, so over that time crust floats this way (Airy isostasy). */
+  function floatBlock(t, rhoB, rhoM) { const below = (t * rhoB) / rhoM; return { above: t - below, below }; }
+
+  /* ---------- the convection runs in planet units ----------
+     Mantle depth d (km): Earth 2891 (PREM), Venus 2552 (core about 3500 km, Margot et al. 2021), Mars 1560 (core 1830 km, Stähler
+     et al. 2021); κ = 1.0e-6 m²/s, thermal diffusivity of mantle rock (Turcotte and Schubert, Geodynamics, 3rd ed. 2014). Box width
+     A: half the circumference at mid mantle over the depth, π (R + rc) / 2 / d, so the box is half the planet's mantle unrolled. */
+  const KAPPA = 1.0e-6, YR = 365.25 * 86400;
+  const MANTLE = { earth: { d: 2891, R: 6371.0, rc: 3480 }, venus: { d: 2551.8, R: 6051.8, rc: 3500 }, mars: { d: 1559.5, R: 3389.5, rc: 1830 } };
+  function boxWidth(p) { const m = MANTLE[p]; return (Math.PI * (m.R + m.rc)) / 2 / m.d; }
+  const timeMyr = (p, t) => (t * (MANTLE[p].d * 1e3) ** 2) / KAPPA / YR / 1e6;           /* model time (units d²/κ) in millions of years */
+  const speedCmYr = (p, v) => ((v * KAPPA) / (MANTLE[p].d * 1e3)) * YR * 100;             /* model speed (units κ/d) in cm per year */
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const NZ = 32;
+  const LN10 = Math.LN10;
+  /* ---------- setups ---------- */
+  const LPRE = {
+    earth2: { planet: 'earth', fit: true, hint: "Earth with the core radius PREM gives (3480 km), and a core and mantle density chosen so the two layer model has Earth's measured mean density and C/MR² exactly. The core comes out a little denser than PREM's core (average 10 990 kg/m³) and the mantle lighter than PREM's (4450 kg/m³), because in the real Earth the rock and iron are squeezed denser with depth, which a model of two even layers cannot show." },
+    earthRock: { planet: 'earth', rc: 0, rhoC: 3300, rhoM: 3300, hint: "If Earth were one rock all through, with the density of mantle rock at the surface (about 3300 kg/m³), its mean density would be 3300 kg/m³, far below the 5514 kg/m³ measured from its mass and size, and its C/MR² would be 0.4, the value for a ball of even density. Both say the inside is denser: try a core." },
+    mercury2: { planet: 'mercury', fit: true, hint: 'Mercury, with the core radius from its gravity field and spin (2020 ± 30 km, Hauck et al. 2013). The core fills 83% of the radius and holds about three quarters of the mass.' },
+    venus2: { planet: 'venus', fit: true, hint: 'Venus, with a core of about 3500 km (Margot et al. 2021). Its C/MR² is measured only to ±0.024, so this core radius is uncertain by more than 500 km.' },
+    mars2: { planet: 'mars', fit: true, hint: 'Mars, with the core radius found by the InSight seismometer (1830 ± 40 km, Stähler et al. 2021). Its core is less dense than iron: it holds light elements such as sulfur.' },
+    moon2: { planet: 'moon', fit: true, hint: "The Moon, with a core of 330 km (Weber et al. 2011, from Apollo seismometers). Its C/MR² of 0.3929 is close to 0.4: the Moon is nearly even all through. The fit asks for a core denser than iron, which is the two layer model failing: the Moon's light crust (about 2550 kg/m³ and 34 to 43 km thick, Wieczorek et al. 2013) lowers its C/MR² too, and the model has no crust." },
+  };
+  /* convection setups. ra = log10 Ra (hot rock at the base), visc = log10 of how much stiffer the coldest rock is, yld = log10 of the
+     lid's yield stress (6: it never breaks), heat = H, lower = log10 of how much stiffer the lower mantle is */
+  const CPRE = {
+    plates: { planet: 'earth', ra: 6, visc: 5, yld: 3.5, heat: 10, lower: 0, hint: 'Earth: water makes the cold lid weak enough to break (here a yield stress of 3200 in the model\'s units), so it breaks into plates that sink back into the mantle and move along with the flow below. The surface speed rises and falls as plates speed up and slow down.' },
+    lid: { planet: 'venus', ra: 5.8, visc: 5, yld: 6, heat: 5, lower: 0, hint: 'Venus: dry rock is strong, so the cold lid never breaks. It stays one shell while the mantle churns underneath; only small cold drips fall from its base. Less heat gets out than through moving plates, so the inside runs hotter. Venus\'s Ra is set 0.63 times Earth\'s: g d³ for its gravity (8.87 m/s²) and mantle depth (2552 km).' },
+    episodic: { planet: 'venus', ra: 5.8, visc: 5, yld: 3.75, heat: 10, lower: 0, hint: 'A lid strong enough to hold for a long time, but not forever: the inside heats up under it for some 3 billion years in the model, until the lid breaks and sinks and the surface races. In models of this kind the lid can then form again and break again (Moresi and Solomatov 1998). Venus\'s whole surface looks about 300 to 700 million years old, which some scientists explain by an overturn like this.' },
+    plume: { planet: 'mars', ra: 7, visc: 5, yld: 6, heat: 0, lower: 1.5, hint: 'Mars: a lid that never breaks, over a lower mantle about 30 times stiffer than the upper (a layering that makes Mars\'s convection very broad in 3D models: Zhong and Zuber 2001 found a single plume, as under Tharsis). In this 2D slab two or three great plumes rise from the core and stay in the same place, under a surface that does not move: lava keeps erupting at the same spots. The Ra here is for the hot rock at the base without the extra stiffness: the lower mantle\'s own Ra is 30 times smaller.' },
+    even: { planet: 'earth', ra: 5, visc: 0, yld: 6, heat: 0, lower: 0, hint: 'Rock equally runny hot or cold: no stiff lid at all, so the cold top sinks as easily as the hot base rises, in rolls about as wide as they are deep, and the whole surface moves.' },
+    inside: { planet: 'earth', ra: 5, visc: 0, yld: 6, heat: 20, lower: 0, hint: 'Most of the heat made inside (H = 20) and even viscosity. Cold sheets sink from the top and spread over the base; the hot rock rises slowly everywhere in between, with few hot plumes from the bottom.' },
+    bench: { planet: 'earth', ra: 4, visc: 0, yld: 6, heat: 0, lower: 0, hint: 'The convection benchmark: Ra = 10⁴, even viscosity, heated from below (Blankenbach et al. 1989). In a square box the flow settles to one steady roll carrying 4.884 times the heat a still layer conducts; this model gets 4.896 there (test_inside-a-planet.cjs). Here the box is wider, so it settles into several steady rolls.' },
+  };
+  const KPRE = {
+    continents: { tc: 34.4, rc: 2835, to: 8.0, ro: 2900, rm: 3378, hint: 'Average crust: continents 34.4 km thick and the ocean floor 8.0 km (Huang et al. 2013); continental crust 2835 kg/m³ (Christensen and Mooney 1995), ocean crust 2900 kg/m³ and the top of the mantle 3378 kg/m³ (PREM). The thick, light continent floats 4.4 km higher. Earth measures 4.5 km between the average land (0.84 km up) and the average sea floor (3.68 km down).' },
+    tibet: { tc: 70, rc: 2835, to: 8.0, ro: 2900, rm: 3378, hint: 'Crust about 70 km thick, as under the Tibetan Plateau. It stands twice as high above the mantle, and its root reaches twice as deep: high mountains float on deep roots.' },
+    stretched: { tc: 25, rc: 2835, to: 8.0, ro: 2900, rm: 3378, hint: 'A continent stretched to 25 km thick, as in a rift or a basin. It sinks: stretched continents end up below sea level.' },
+  };
+  const S = {
+    mode: 'layers', preset: 'earth2', lp: 'earth', rc: 3480, rhoC: 12507, rhoM: 4152, prem: true,
+    cp: 'earth', ra: 7, visc: 5, yld: 4, heat: 20, lower: 0, shape: 'bent', flow: true, look: 'T', steps: 1, run: false,
+    tc: 34.4, rcr: 2835, to: 8, ro: 2900, rm: 3378, blind: false,
+  };
+  let B = null, M = null, hist = [], plumeN = 0;
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const fs = (v) => (v >= 10000 || v <= -10000 ? Math.round(v).toLocaleString('en-US').replace(/,/g, ' ') : String(Math.round(v)));
+  const sup = (n) => String(n).replace(/[-0-9.]/g, (c) => ({ '-': '⁻', '.': '.', 0: '⁰', 1: '¹', 2: '²', 3: '³', 4: '⁴', 5: '⁵', 6: '⁶', 7: '⁷', 8: '⁸', 9: '⁹' }[c]));
+  const pow10 = (x) => { const e = Math.floor(x + 1e-9), m = 10 ** (x - e); return (Math.abs(m - 1) < 0.005 ? '' : `${m.toFixed(m < 9.95 ? 1 : 0)} × `) + `10${sup(e)}`; };
+  const cparams = () => ({ Ra: 10 ** S.ra, gamma: S.visc * LN10, sy: S.yld >= 6 ? Infinity : 10 ** S.yld, sz: 0, lower: 10 ** S.lower, lowerDepth: 0.5, H: S.heat });
+
+  /* ---------- the convection run ---------- */
+  function newBox() { B = makeBox(boxWidth(S.cp), NZ); seedBox(B, 0.8, 2026); viscosity(B, cparams()); hist = []; M = measure(B); plumeN = 0; }
+  function advance(n) {
+    const o = cparams();
+    for (let k = 0; k < n; k++) step(B, o);
+    M = measure(B); plumeN = plumes(B);
+    hist.push([timeMyr(S.cp, B.t), speedCmYr(S.cp, M.vsurf), M.Nu]);
+    if (hist.length > 900) hist.splice(0, hist.length - 900);
+  }
+
+  /* ---------- colors ---------- */
+  let K = null;
+  function tokens() {
+    const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), surface: g('--surface'), accent: g('--accent'), core: g('--core'), core2: g('--core2'),
+      mantle: g('--mantle'), crust: g('--crust'), rockc: g('--rockc'), rocko: g('--rocko'), mantleF: g('--mantleF'), meas: g('--meas'), model: g('--model'), prem: g('--prem'), sea: g('--sea'),
+      ui: g('--font-ui') || 'Atkinson Hyperlegible, system-ui, sans-serif', mono: g('--font-mono') || 'JetBrains Mono, monospace', dark: VD3.dark ? VD3.dark() : false };
+  }
+  /* temperature: cold blue through warm orange to hot pale yellow (the same in both themes); stiffness: runny pale to stiff dark */
+  const ramp = (stops) => { const L = new Uint8ClampedArray(256 * 3); for (let i = 0; i < 256; i++) { const t = i / 255; let k = 0; while (k < stops.length - 2 && t > stops[k + 1][0]) k++;
+    const [t0, a] = stops[k], [t1, b] = stops[k + 1], u = Math.min(1, Math.max(0, (t - t0) / (t1 - t0))); for (let c = 0; c < 3; c++) L[i * 3 + c] = a[c] + (b[c] - a[c]) * u; } return L; };
+  const LUT_T = ramp([[0, [20, 48, 90]], [0.3, [59, 120, 184]], [0.55, [199, 91, 58]], [0.78, [232, 137, 47]], [1, [255, 227, 154]]]);
+  const LUT_E = ramp([[0, [255, 241, 196]], [0.4, [214, 160, 92]], [0.75, [120, 72, 40]], [1, [40, 26, 18]]]);
+  /* a value of the box at (X, Z), X from 0 to A, Z from 0 (core) to 1 (surface), by bilinear interpolation of the nodes */
+  function sample(arr, X, Z) {
+    const fx = Math.min(B.NX - 1e-6, Math.max(0, X / B.dx)), fz = Math.min(B.NZ - 1e-6, Math.max(0, Z / B.dz)), i = fx | 0, j = fz | 0, a = fx - i, b = fz - j;
+    const q = i * B.nz + j;
+    return (arr[q] * (1 - a) + arr[q + B.nz] * a) * (1 - b) + (arr[q + 1] * (1 - a) + arr[q + B.nz + 1] * a) * b;
+  }
+  function colorAt(X, Z, out, o) {
+    let L, t;
+    if (S.look === 'eta') { L = LUT_E; t = (Math.log10(sample(B.eta, X, Z)) + 3) / 8; } else { L = LUT_T; t = sample(B.T, X, Z); }
+    const k = Math.max(0, Math.min(255, Math.round(t * 255))) * 3; out[o] = L[k]; out[o + 1] = L[k + 1]; out[o + 2] = L[k + 2]; out[o + 3] = 255;
+  }
+
+  /* ---------- flat pictures ---------- */
+  const can = $('can'), ctx = can.getContext('2d'), plot = $('plot'), pctx = plot.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH = 0, dpr = 1;
+  const off = document.createElement('canvas'), octx = off.getContext('2d');
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.3 : 1);
+  const narrow = () => W < 821 || window.innerWidth < 821;
+  const area = () => { const card = narrow() ? 0 : $('setupCard').offsetWidth + 28; return { x0: 0, w: W - card }; };
+  function label(c, s, x, y, o = {}) {
+    const p = proj(); c.save(); c.font = `${o.w || 600} ${(o.size || 12) * p}px ${K.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
+    if (o.halo !== false) { c.lineWidth = 3.5 * p; c.strokeStyle = o.haloCol || K.canvas; c.lineJoin = 'round'; c.strokeText(s, x, y); }
+    c.fillStyle = o.col || K.ink; c.fillText(s, x, y); c.restore();
+  }
+  function arrow(c, x0, y0, x1, y1, col, wdt, head) {
+    const a = Math.atan2(y1 - y0, x1 - x0), h = head || 6;
+    c.strokeStyle = col; c.fillStyle = col; c.lineWidth = wdt || 1.5; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke();
+    c.beginPath(); c.moveTo(x1, y1); c.lineTo(x1 - h * Math.cos(a - 0.45), y1 - h * Math.sin(a - 0.45)); c.lineTo(x1 - h * Math.cos(a + 0.45), y1 - h * Math.sin(a + 0.45)); c.closePath(); c.fill();
+  }
+
+  function drawLayers() {
+    const p = proj(), A = area(), P = PLANETS[S.lp], cx = A.x0 + A.w / 2, cy = H / 2 + 8 * p, R = Math.max(40, Math.min(A.w * 0.36, H * 0.42)), rc = (R * S.rc) / P.R;
+    const g = ctx.createRadialGradient(cx - R * 0.3, cy - R * 0.3, R * 0.1, cx, cy, R);
+    g.addColorStop(0, K.mantleF); g.addColorStop(1, K.mantle);
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(cx, cy, R, 0, 2 * Math.PI); ctx.fill();
+    if (rc > 0.5) { const gc = ctx.createRadialGradient(cx - rc * 0.3, cy - rc * 0.3, rc * 0.05, cx, cy, rc); gc.addColorStop(0, K.core2); gc.addColorStop(1, K.core); ctx.fillStyle = gc; ctx.beginPath(); ctx.arc(cx, cy, rc, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.strokeStyle = K.crust; ctx.lineWidth = 3 * p; ctx.beginPath(); ctx.arc(cx, cy, R - 1.5 * p, 0, 2 * Math.PI); ctx.stroke();
+    if (S.lp === 'earth' && S.prem) {
+      ctx.save(); ctx.setLineDash([5 * p, 4 * p]); ctx.strokeStyle = K.prem; ctx.lineWidth = 1.6 * p;
+      for (const r of [1221.5, 3480]) { ctx.beginPath(); ctx.arc(cx, cy, (R * r) / P.R, 0, 2 * Math.PI); ctx.stroke(); }
+      ctx.restore();
+      label(ctx, 'PREM inner core 1221.5 km', cx, cy + (R * 1221.5) / P.R + 12 * p, { a: 'center', col: K.prem, size: 11 });
+      label(ctx, 'PREM core 3480 km', cx, cy - (R * 3480) / P.R - 11 * p, { a: 'center', col: K.prem, size: 11 });
+    }
+    label(ctx, `${P.name}, cut through the middle (drawn to scale)`, A.x0 + 14 * p, 20 * p, { w: 700, size: 13 });
+    const lx = cx + R + 16 * p, room = A.x0 + A.w - lx > 150 * p;
+    const tag = (r, s, col) => { const y = cy - r * 0.62; if (room) { ctx.strokeStyle = K.muted; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx + r * 0.75, y); ctx.lineTo(lx - 4 * p, y); ctx.stroke(); label(ctx, s, lx, y, { col }); } else label(ctx, s, cx, cy - r + 14 * p, { a: 'center', col }); };
+    if (rc > 0.5) tag(rc, `core: ${fs(S.rc)} km, ${fs(S.rhoC)} kg/m³`, K.ink);
+    tag(R, `mantle: ${fs(S.rhoM)} kg/m³`, K.ink);
+    if (!room) return;
+    label(ctx, `radius ${fs(P.R)} km`, lx, cy + R * 0.7, { col: K.muted });
+  }
+
+  /* convection: the box, bent round the core (half the planet cut through its poles) or unrolled */
+  function convGeom() {
+    const p = proj(), A = area(), m = MANTLE[S.cp], top = 34 * p, bot = 16 * p;
+    if (S.shape === 'box') { const w = A.w - 40 * p, h = Math.min(H - top - bot - 30 * p, w / B.A); return { box: true, x: A.x0 + 20 * p, y: top + 18 * p, w, h }; }
+    const R = Math.max(40, Math.min((A.w - 30 * p) / 2, H - top - bot - 20 * p)), rc = (R * m.rc) / m.R;
+    return { box: false, cx: A.x0 + A.w / 2, cy: H - bot - 8 * p, R, rc };
+  }
+  /* box coordinates (X, Z) to the canvas, and the direction of the box's x and z there */
+  function toCanvas(G, X, Z) {
+    if (G.box) return [G.x + (X / B.A) * G.w, G.y + (1 - Z) * G.h, 1, 0, 0, -1];
+    const th = Math.PI * (1 - X / B.A), r = G.rc + Z * (G.R - G.rc), s = Math.sin(th), c = Math.cos(th);
+    return [G.cx + r * c, G.cy - r * s, s, c, c, -s];
+  }
+  function drawConvect() {
+    const p = proj(), G = convGeom();
+    /* the field, pixel by pixel into an offscreen image the size of the picture (device pixels, at most 900 wide) */
+    const bw = G.box ? G.w : 2 * G.R, bh = G.box ? G.h : G.R, sc = Math.min(dpr, 900 / bw), iw = Math.max(2, Math.round(bw * sc)), ih = Math.max(2, Math.round(bh * sc));
+    if (off.width !== iw || off.height !== ih) { off.width = iw; off.height = ih; }
+    const img = octx.createImageData(iw, ih), d = img.data;
+    for (let y = 0; y < ih; y++) for (let x = 0; x < iw; x++) {
+      const o = (y * iw + x) * 4;
+      if (G.box) { colorAt(((x + 0.5) / iw) * B.A, 1 - (y + 0.5) / ih, d, o); continue; }
+      const px = (x + 0.5) / sc - G.R, py = G.R - (y + 0.5) / sc, r = Math.hypot(px, py);
+      if (r > G.R || r < G.rc) { d[o + 3] = 0; continue; }
+      const th = Math.atan2(py, px); colorAt(B.A * (1 - th / Math.PI), (r - G.rc) / (G.R - G.rc), d, o);
+    }
+    octx.putImageData(img, 0, 0);
+    ctx.imageSmoothingEnabled = true;
+    if (G.box) ctx.drawImage(off, G.x, G.y, G.w, G.h); else ctx.drawImage(off, G.cx - G.R, G.cy - G.R, 2 * G.R, G.R);
+    if (!G.box) {
+      const gc = ctx.createRadialGradient(G.cx - G.rc * 0.2, G.cy - G.rc * 0.3, 2, G.cx, G.cy, G.rc); gc.addColorStop(0, K.core2); gc.addColorStop(1, K.core);
+      ctx.fillStyle = gc; ctx.beginPath(); ctx.arc(G.cx, G.cy, G.rc, Math.PI, 2 * Math.PI); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = K.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.arc(G.cx, G.cy, G.R, Math.PI, 2 * Math.PI); ctx.moveTo(G.cx - G.R, G.cy); ctx.lineTo(G.cx + G.R, G.cy); ctx.stroke();
+      label(ctx, 'core', G.cx, G.cy - G.rc * 0.45, { a: 'center', col: '#3a2a08', halo: false, w: 700 });
+    } else { ctx.strokeStyle = K.line; ctx.strokeRect(G.x, G.y, G.w, G.h); label(ctx, 'core below', G.x + G.w / 2, G.y + G.h + 12 * p, { a: 'center', col: K.muted }); label(ctx, 'surface', G.x + G.w / 2, G.y - 9 * p, { a: 'center', col: K.muted }); }
+    /* the flow: arrows on a grid, longest for the fastest rock now in the picture */
+    let vmax = 1e-9; for (let q = 0; q < B.u.length; q++) vmax = Math.max(vmax, Math.hypot(B.u[q], B.w[q]));
+    if (S.flow && vmax > 1e-6) {
+      const nx = Math.max(8, Math.round((G.box ? G.w : Math.PI * (G.R + G.rc) / 2) / (34 * p))), nz = 5, Lm = 15 * p;
+      for (let a = 0; a < nx; a++) for (let b = 0; b < nz; b++) {
+        const X = ((a + 0.5) / nx) * B.A, Z = (b + 0.5) / nz, u = sample(B.u, X, Z), w = sample(B.w, X, Z), s = Math.hypot(u, w) / vmax;
+        if (s < 0.06) continue;
+        const [x, y, ex, ey, zx, zy] = toCanvas(G, X, Z), L = Lm * Math.sqrt(s), dx = (u * ex + w * zx) / Math.hypot(u, w), dy = (u * ey + w * zy) / Math.hypot(u, w);
+        arrow(ctx, x - (dx * L) / 2, y - (dy * L) / 2, x + (dx * L) / 2, y + (dy * L) / 2, 'rgba(255,255,255,0.85)', 1.4 * p, 5 * p);
+      }
+    }
+    /* the surface: arrows outside the rim showing how fast the lid itself moves (none when it stands still) */
+    const us = []; let umax = 0; for (let i = 0; i < B.nx; i++) { const v = B.u[i * B.nz + B.NZ]; us.push(v); umax = Math.max(umax, Math.abs(v)); }
+    const n = 14, cmyr = speedCmYr(S.cp, umax);
+    if (cmyr > 0.05) for (let a = 0; a < n; a++) {
+      const X = ((a + 0.5) / n) * B.A, u = sample(B.u, X, 1), s = Math.abs(u) / umax; if (s < 0.15) continue;
+      const [x, y, ex, ey, zx, zy] = toCanvas(G, X, 1), out = 9 * p, L = 16 * p * s, sg = Math.sign(u), bx = x + zx * out, by = y + zy * out;
+      arrow(ctx, bx - (sg * ex * L) / 2, by - (sg * ey * L) / 2, bx + (sg * ex * L) / 2, by + (sg * ey * L) / 2, K.accent, 2 * p, 6 * p);
+    }
+    const t = `${MANTLE[S.cp] ? PLANETS[S.cp].name : ''}: half the mantle, cut through the poles${G.box ? ', unrolled' : ''}`;
+    label(ctx, t, area().x0 + 14 * p, 20 * p, { w: 700, size: 13 });
+    /* the color key */
+    const kx = area().x0 + 14 * p, ky = 34 * p, kw = 120 * p, kh = 8 * p, L = S.look === 'eta' ? LUT_E : LUT_T;
+    for (let i = 0; i < kw; i++) { const k = Math.round((i / kw) * 255) * 3; ctx.fillStyle = `rgb(${L[k]},${L[k + 1]},${L[k + 2]})`; ctx.fillRect(kx + i, ky, 1.5, kh); }
+    label(ctx, S.look === 'eta' ? 'runny' : 'surface temp.', kx, ky + kh + 9 * p, { size: 10, col: K.muted });
+    label(ctx, S.look === 'eta' ? 'stiff' : 'core temp.', kx + kw, ky + kh + 9 * p, { size: 10, col: K.muted, a: 'right' });
+  }
+
+  function drawCrust() {
+    const p = proj(), A = area(), top = 74 * p, s = (H - top - 26 * p) / Math.max(30, 1.15 * Math.max(S.tc, S.to) * 1.05), cb = floatBlock(S.tc, S.rcr, S.rm), ob = floatBlock(S.to, S.ro, S.rm);
+    const yL = top + Math.max(cb.above, ob.above) * s + 14 * p;
+    ctx.fillStyle = K.mantleF; ctx.fillRect(A.x0, yL, A.w, H - yL);
+    const gm = ctx.createLinearGradient(0, yL, 0, H); gm.addColorStop(0, 'rgba(0,0,0,0)'); gm.addColorStop(1, 'rgba(0,0,0,0.25)'); ctx.fillStyle = gm; ctx.fillRect(A.x0, yL, A.w, H - yL);
+    label(ctx, `mantle ${fs(S.rm)} kg/m³ (flows over millions of years)`, A.x0 + 14 * p, H - 14 * p, { col: '#fff', halo: false });
+    const blk = (x0, x1, b, col, name, rho) => {
+      const yt = yL - b.above * s, yb = yL + b.below * s;
+      ctx.fillStyle = col; ctx.fillRect(x0, yt, x1 - x0, yb - yt); ctx.strokeStyle = K.ink; ctx.lineWidth = 1; ctx.strokeRect(x0, yt, x1 - x0, yb - yt);
+      label(ctx, name, (x0 + x1) / 2, yt - 26 * p, { a: 'center', w: 700 });
+      label(ctx, `${fs(rho)} kg/m³`, (x0 + x1) / 2, yt - 12 * p, { a: 'center', col: K.muted, size: 11 });
+      const xd = x1 + 10 * p;
+      ctx.strokeStyle = K.meas; ctx.lineWidth = 1.5 * p;
+      if (b.above * s > 6) { arrow(ctx, xd, yL, xd, yt + 1, K.meas, 1.5 * p, 5 * p); arrow(ctx, xd, yt, xd, yL - 1, K.meas, 1.5 * p, 5 * p); }
+      if (!S.blind) label(ctx, `${f(b.above, 2)} km up`, xd + 5 * p, (yL + yt) / 2, { col: K.meas, size: 11 });
+      arrow(ctx, xd, yL, xd, yb - 1, K.muted, 1.2 * p, 5 * p);
+      label(ctx, `root ${f(b.below, 1)} km`, xd + 5 * p, (yL + yb) / 2, { col: K.muted, size: 11 });
+    };
+    const w = A.w;
+    blk(A.x0 + w * 0.08, A.x0 + w * 0.36, cb, K.rockc, 'Continent', S.rcr);
+    blk(A.x0 + w * 0.56, A.x0 + w * 0.84, ob, K.rocko, 'Ocean floor', S.ro);
+    ctx.save(); ctx.setLineDash([6 * p, 5 * p]); ctx.strokeStyle = K.ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(A.x0, yL); ctx.lineTo(A.x0 + w, yL); ctx.stroke(); ctx.restore();
+    label(ctx, "the mantle's level", A.x0 + w * 0.39, yL - 9 * p, { col: K.muted, size: 11 });
+    label(ctx, 'Crust floating on the mantle (side view, heights and depths to scale)', A.x0 + 14 * p, 20 * p, { w: 700, size: 13 });
+    const bx = A.x0 + w - 24 * p, by0 = yL + 20 * p; ctx.strokeStyle = '#fff'; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.moveTo(bx, by0); ctx.lineTo(bx, by0 + 10 * s); ctx.moveTo(bx - 4 * p, by0); ctx.lineTo(bx + 4 * p, by0); ctx.moveTo(bx - 4 * p, by0 + 10 * s); ctx.lineTo(bx + 4 * p, by0 + 10 * s); ctx.stroke();
+    label(ctx, '10 km', bx - 6 * p, by0 + 5 * s, { a: 'right', col: '#fff', halo: false, size: 11 });
+  }
+
+  /* ---------- the graph under the picture ---------- */
+  function axes(x0, y0, x1, y1, xr, yr, xl, yl, xt, yt) {
+    const p = proj(), c = pctx; c.strokeStyle = K.line; c.lineWidth = 1; c.strokeRect(x0, y0, x1 - x0, y1 - y0);
+    c.font = `${10.5 * p}px ${K.mono}`; c.fillStyle = K.muted;
+    const X = (v) => x0 + ((v - xr[0]) / (xr[1] - xr[0])) * (x1 - x0), Y = (v) => y1 - ((v - yr[0]) / (yr[1] - yr[0])) * (y1 - y0);
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (const v of xt) { c.fillText(fs(v), X(v), y1 + 4 * p); c.strokeStyle = K.line; c.beginPath(); c.moveTo(X(v), y1); c.lineTo(X(v), y1 + 3); c.stroke(); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (const v of yt) { c.fillText(Math.abs(v) < 10 && v % 1 ? v.toFixed(1) : fs(v), x0 - 5 * p, Y(v)); }
+    c.font = `600 ${11 * p}px ${K.ui}`; c.fillStyle = K.ink; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(xl, (x0 + x1) / 2, y1 + 30 * p);
+    c.save(); c.translate(x0 - 46 * p, (y0 + y1) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore();
+    return { X, Y };
+  }
+  const ticks = (a, b, n) => { const st = 10 ** Math.floor(Math.log10((b - a) / n)), m = (b - a) / n / st, step = (m > 5 ? 10 : m > 2 ? 5 : m > 1 ? 2 : 1) * st, out = []; for (let v = Math.ceil(a / step) * step; v <= b + 1e-9; v += step) out.push(+v.toFixed(6)); return out; };
+  function drawPlot() {
+    const p = proj(), c = pctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, PW, PH);
+    const x0 = 64 * p, x1 = PW - 150 * p, y0 = 14 * p, y1 = PH - 40 * p;
+    if (S.mode === 'layers') {
+      const P = PLANETS[S.lp], ym = Math.max(14000, S.rhoC * 1.08), ax = axes(x0, y0, x1, y1, [0, P.R], [0, ym], 'distance from the center (km)', 'density (kg/m³)', ticks(0, P.R, 6), ticks(0, ym, 4));
+      if (S.lp === 'earth' && S.prem) {
+        c.strokeStyle = K.prem; c.lineWidth = 2 * p; c.beginPath(); for (let r = 0; r <= 6371; r += 5) { const y = ax.Y(premRho(r)); r ? c.lineTo(ax.X(r), y) : c.moveTo(ax.X(r), y); } c.stroke();
+      }
+      c.strokeStyle = K.model; c.lineWidth = 2.5 * p; c.beginPath(); c.moveTo(ax.X(0), ax.Y(S.rhoC)); c.lineTo(ax.X(S.rc), ax.Y(S.rhoC)); c.lineTo(ax.X(S.rc), ax.Y(S.rhoM)); c.lineTo(ax.X(P.R), ax.Y(S.rhoM)); c.stroke();
+      const t = twoLayer(P.R, S.rc, S.rhoC, S.rhoM);
+      c.save(); c.setLineDash([6 * p, 4 * p]); c.lineWidth = 1.5 * p; c.strokeStyle = K.model; c.beginPath(); c.moveTo(ax.X(0), ax.Y(t.rho)); c.lineTo(ax.X(P.R), ax.Y(t.rho)); c.stroke();
+      if (!S.blind) { c.strokeStyle = K.meas; c.beginPath(); c.moveTo(ax.X(0), ax.Y(P.rho)); c.lineTo(ax.X(P.R), ax.Y(P.rho)); c.stroke(); }
+      c.restore();
+      const lg = [[K.model, 'model layers', false], [K.model, 'model mean density', true]];
+      if (!S.blind) lg.push([K.meas, 'measured mean density', true]);
+      if (S.lp === 'earth' && S.prem) lg.push([K.prem, 'PREM (Earth)', false]);
+      legend(lg, x1 + 12 * p, y0 + 6 * p);
+    } else if (S.mode === 'convect') {
+      const h = hist, tmax = h.length ? Math.max(h[h.length - 1][0], 1) : 100, tmin = h.length ? h[0][0] : 0;
+      let vm = 0.5, nm = 2; for (const r of h) { vm = Math.max(vm, r[1]); nm = Math.max(nm, r[2]); }
+      vm *= 1.1; nm *= 1.1;
+      const ax = axes(x0, y0, x1, y1, [tmin, Math.max(tmin + 1, tmax)], [0, vm], 'time in the model (millions of years)', 'surface speed (cm/yr)', ticks(tmin, Math.max(tmin + 1, tmax), 5), ticks(0, vm, 4));
+      const Y2 = (v) => y1 - (v / nm) * (y1 - y0);
+      c.font = `${10.5 * p}px ${K.mono}`; c.fillStyle = K.meas; c.textAlign = 'left'; c.textBaseline = 'middle'; for (const v of ticks(0, nm, 4)) c.fillText(fs(v), x1 + 4 * p, Y2(v));
+      const line = (k, Yf, col) => { c.strokeStyle = col; c.lineWidth = 2 * p; c.beginPath(); h.forEach((r, i) => { const x = ax.X(r[0]), y = Yf(r[k]); i ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke(); };
+      if (h.length > 1) { line(1, ax.Y, K.model); line(2, Y2, K.meas); }
+      legend([[K.model, 'surface speed (left)', false], [K.meas, 'heat out, × a still mantle (right)', false]], x1 + 34 * p, y0 + 6 * p, 110 * p);
+    }
+  }
+  function legend(items, x, y, wmax) {
+    const p = proj(), c = pctx; c.font = `${11 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle';
+    items.forEach(([col, s, dash], i) => { const yy = y + i * 34 * p; c.save(); if (dash) c.setLineDash([5 * p, 3 * p]); c.strokeStyle = col; c.lineWidth = 2.2 * p; c.beginPath(); c.moveTo(x, yy); c.lineTo(x + 18 * p, yy); c.stroke(); c.restore();
+      c.fillStyle = K.ink; const words = s.split(' '); let line = '', ly = yy, lim = Math.min(wmax || 1e9, PW - x - 30 * p); for (const w of words) { const t = line ? `${line} ${w}` : w; if (c.measureText(t).width > lim && line) { c.fillText(line, x + 24 * p, ly); ly += 13 * p; line = w; } else line = t; } c.fillText(line, x + 24 * p, ly); });
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hid = '<span class="ok">hidden</span>';
+    let h = '';
+    if (S.mode === 'layers') {
+      const P = PLANETS[S.lp], t = twoLayer(P.R, S.rc, S.rhoC, S.rhoM);
+      h += dd('Model mean density', `${fs(t.rho)} kg/m³`) + dd('Measured mean density', S.blind ? hid : `${fs(P.rho)} kg/m³`);
+      h += dd('Model C/MR²', f(t.k, 4)) + dd('Measured C/MR²', S.blind ? hid : f(P.k, 4) + (P.kErr ? ` ± ${P.kErr}` : ''));
+      h += dd('Core share of the volume', `${f(100 * t.q3, 1)} %`) + dd('Core share of the mass', `${f(100 * t.coreMass, 1)} %`);
+      h += dd('Planet radius', `${fs(P.R)} km`) + dd('Even all through', 'C/MR² = 0.4');
+    } else if (S.mode === 'convect') {
+      const mob = M ? M.mobility : 0;
+      h += dd('Time in the model', `${fs(timeMyr(S.cp, B.t))} Myr`) + dd('Surface speed', `${f(speedCmYr(S.cp, M.vsurf), 2)} cm/yr`);
+      h += dd('Heat out of the top', `${f(M.Nu, 1)} × a still mantle`) + dd('Mean mantle temperature', `${f(100 * M.Tmean, 0)} % of the way to the core's`);
+      h += dd('Rising plumes', String(plumeN)) + dd('The lid', mob > 0.6 ? 'moves with the flow (plates)' : mob > 0.15 ? 'creeps' : 'stands still (one lid)');
+      h += dd('Rayleigh number', pow10(S.ra)) + dd('Speed in the mantle (rms)', `${f(speedCmYr(S.cp, M.vrms), 2)} cm/yr`);
+    } else {
+      const cb = floatBlock(S.tc, S.rcr, S.rm), ob = floatBlock(S.to, S.ro, S.rm);
+      h += dd('Continent above the mantle', S.blind ? hid : `${f(cb.above, 2)} km`) + dd('Continent root below', `${f(cb.below, 2)} km`);
+      h += dd('Ocean floor above the mantle', S.blind ? hid : `${f(ob.above, 2)} km`) + dd('Ocean crust root below', `${f(ob.below, 2)} km`);
+      h += dd('Continent higher by', S.blind ? hid : `${f(cb.above - ob.above, 2)} km`, 'wide');
+    }
+    $('out').innerHTML = h;
+  }
+  function clock() { $('clock').textContent = S.mode === 'convect' && B ? `t = ${fs(timeMyr(S.cp, B.t))} Myr` : ''; }
+
+  /* ---------- controls ---------- */
+  const card = VD.setupCard($('setupCard'));
+  function sync() {
+    const P = PLANETS[S.lp];
+    $('selLPlanet').value = S.lp; $('sCore').max = Math.round(P.R * 0.95 / 10) * 10; $('sCore').value = S.rc; $('oCore').textContent = `${fs(S.rc)} km`;
+    $('sRhoC').value = S.rhoC; $('oRhoC').textContent = `${fs(S.rhoC)} kg/m³`; $('sRhoM').value = S.rhoM; $('oRhoM').textContent = `${fs(S.rhoM)} kg/m³`;
+    $('chkPrem').checked = S.prem; $('premBox').hidden = S.lp !== 'earth';
+    $('selCPlanet').value = S.cp; $('sRa').value = S.ra; $('oRa').textContent = pow10(S.ra); $('sVisc').value = S.visc; $('oVisc').textContent = S.visc ? `× ${pow10(S.visc)}` : '× 1 (even)';
+    $('sYield').value = S.yld; $('oYield').textContent = S.yld >= 6 ? 'never breaks' : pow10(S.yld); $('sHeat').value = S.heat; $('oHeat').textContent = String(S.heat);
+    $('sLower').value = S.lower; $('oLower').textContent = `× ${f(10 ** S.lower, S.lower % 1 ? 1 : 0)}`; $('selShape').value = S.shape; $('chkFlow').checked = S.flow; $('selLook').value = S.look;
+    $('sTc').value = S.tc; $('oTc').textContent = `${f(S.tc, 1)} km`; $('sRc').value = S.rcr; $('oRc').textContent = `${fs(S.rcr)} kg/m³`;
+    $('sTo').value = S.to; $('oTo').textContent = `${f(S.to, 1)} km`; $('sRo').value = S.ro; $('oRo').textContent = `${fs(S.ro)} kg/m³`; $('sRm').value = S.rm; $('oRm').textContent = `${fs(S.rm)} kg/m³`;
+    for (const b of document.querySelectorAll('#presets button')) { b.setAttribute('aria-pressed', String(b.dataset.p === S.preset)); b.hidden = b.dataset.m !== S.mode; }
+    for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.mode === S.mode));
+    const cv = S.mode === 'convect';
+    $('layersBox').hidden = S.mode !== 'layers'; $('convectBox').hidden = !cv; $('crustBox').hidden = S.mode !== 'crust';
+    $('cardTitle').textContent = S.mode === 'layers' ? "The planet's layers" : cv ? 'The mantle' : 'The crust and the mantle';
+    for (const id of ['play', 'restart', 'speedLbl', 'selSpeed', 'lookLbl', 'selLook']) $(id).hidden = !cv;
+    $('plotbox').hidden = S.mode === 'crust';
+    can.setAttribute('aria-label', S.mode === 'layers' ? `${P.name} cut in half: a core of radius ${fs(S.rc)} km inside a mantle.` : cv ? 'Half of a planet\'s mantle cut through the poles, colored by temperature, with arrows for the flow and for the surface\'s motion. Space starts or pauses.' : 'Side view of a continent and the ocean floor floating on the mantle, with their heights above the mantle and their roots below.');
+    $('plot').setAttribute('aria-label', S.mode === 'layers' ? 'Graph: density against distance from the center, for the model and the measured mean density.' : 'Graph: surface speed and heat out of the top against time in the model.');
+    $('about').textContent = ABOUT[S.mode];
+    window.vdShowCols = SHOW[S.mode];
+  }
+  function setRun(on) { S.run = on && S.mode === 'convect'; card.away(S.run); $('play').textContent = S.run ? 'Pause' : B && B.t > 0 ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !S.run); }
+  function hint(s) { $('presetHint').textContent = s || ''; }
+  function applyPreset(k) {
+    S.preset = k;
+    if (LPRE[k]) { const c = LPRE[k], P = PLANETS[c.planet]; S.mode = 'layers'; S.lp = c.planet;
+      if (c.fit) { const ft = fitTwoLayer(P.R, P.rc, P.rho, P.k); S.rc = P.rc; S.rhoC = Math.round(ft.rhoC); S.rhoM = Math.round(ft.rhoM); } else Object.assign(S, { rc: c.rc, rhoC: c.rhoC, rhoM: c.rhoM });
+      hint(c.hint); }
+    else if (CPRE[k]) { const c = CPRE[k]; S.mode = 'convect'; Object.assign(S, { cp: c.planet, ra: c.ra, visc: c.visc, yld: c.yld, heat: c.heat, lower: c.lower }); newBox(); hint(c.hint); }
+    else if (KPRE[k]) { const c = KPRE[k]; S.mode = 'crust'; Object.assign(S, { tc: c.tc, rcr: c.rc, to: c.to, ro: c.ro, rm: c.rm }); hint(c.hint); }
+    setRun(false); sync(); dirty3 = true; redraw();
+  }
+  const MODE_FIRST = { layers: 'earth2', convect: 'plates', crust: 'continents' };
+  const lastPreset = {};
+  function setMode(m) {
+    if (m === S.mode) return; lastPreset[S.mode] = S.preset;
+    if (m === 'convect' && B) { S.mode = m; S.preset = lastPreset.convect || 'custom'; setRun(false); sync(); dirty3 = true; redraw(); return; }
+    applyPreset(lastPreset[m] && lastPreset[m] !== 'custom' ? lastPreset[m] : MODE_FIRST[m]);
+  }
+  for (const b of document.querySelectorAll('#modeSeg button')) b.addEventListener('click', () => setMode(b.dataset.mode));
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const lchg = () => { S.preset = 'custom'; hint('Your own planet.'); sync(); dirty3 = true; redraw(); };
+  $('selLPlanet').addEventListener('change', (e) => { S.lp = e.target.value; const P = PLANETS[S.lp], ft = fitTwoLayer(P.R, P.rc, P.rho, P.k); S.rc = P.rc; S.rhoC = Math.round(ft.rhoC); S.rhoM = Math.round(ft.rhoM); const k = `${S.lp}2`; if (LPRE[k]) { applyPreset(k); return; } lchg(); });
+  $('sCore').addEventListener('input', (e) => { S.rc = +e.target.value; lchg(); });
+  $('sRhoC').addEventListener('input', (e) => { S.rhoC = +e.target.value; lchg(); });
+  $('sRhoM').addEventListener('input', (e) => { S.rhoM = +e.target.value; lchg(); });
+  $('chkPrem').addEventListener('change', (e) => { S.prem = e.target.checked; redraw(); });
+  const cchg = () => { S.preset = 'custom'; hint('Your own mantle.'); newBox(); setRun(false); sync(); dirty3 = true; redraw(); };
+  $('selCPlanet').addEventListener('change', (e) => { S.cp = e.target.value; cchg(); });
+  $('sRa').addEventListener('input', (e) => { S.ra = +e.target.value; cchg(); });
+  $('sVisc').addEventListener('input', (e) => { S.visc = +e.target.value; cchg(); });
+  $('sYield').addEventListener('input', (e) => { S.yld = +e.target.value; cchg(); });
+  $('sHeat').addEventListener('input', (e) => { S.heat = +e.target.value; cchg(); });
+  $('sLower').addEventListener('input', (e) => { S.lower = +e.target.value; cchg(); });
+  $('selShape').addEventListener('change', (e) => { S.shape = e.target.value; redraw(); });
+  $('chkFlow').addEventListener('change', (e) => { S.flow = e.target.checked; redraw(); });
+  $('selLook').addEventListener('change', (e) => { S.look = e.target.value; dirty3 = true; redraw(); });
+  $('selSpeed').addEventListener('change', (e) => { S.steps = +e.target.value; });
+  const kchg = () => { S.preset = 'custom'; hint('Your own crust.'); sync(); dirty3 = true; redraw(); };
+  for (const [id, k] of [['sTc', 'tc'], ['sRc', 'rcr'], ['sTo', 'to'], ['sRo', 'ro'], ['sRm', 'rm']]) $(id).addEventListener('input', (e) => { S[k] = +e.target.value; kchg(); });
+  $('play').addEventListener('click', () => setRun(!S.run));
+  $('restart').addEventListener('click', () => { newBox(); setRun(false); dirty3 = true; redraw(); });
+  can.addEventListener('keydown', (e) => { if (e.key === ' ' && S.mode === 'convect') { $('play').click(); e.preventDefault(); } });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+  /* click a readout on the card to type an exact value (the sliders shown as powers of ten are left to the slider) */
+  for (const id of ['sCore', 'sRhoC', 'sRhoM', 'sHeat', 'sTc', 'sRc', 'sTo', 'sRo', 'sRm']) {
+    const inp = $(id), out = document.querySelector(`output[for="${id}"]`), lab = document.querySelector(`label[for="${id}"]`);
+    VD.typeIn(out, { get: () => +inp.value, set: (v) => { inp.value = v; inp.dispatchEvent(new Event('input', { bubbles: true })); }, min: () => +inp.min, max: () => +inp.max, step: () => +inp.step,
+      unit: id === 'sHeat' ? '' : /km$/.test(out.textContent) ? 'km' : 'kg/m³', label: lab.textContent, seed: () => inp.value, can: () => true });
+  }
+
+  const SHOW = { layers: [['planet', 'planet'], ['core_km', 'core (km)'], ['rho_mean_model', 'ρ̄ model'], ['k_model', 'C/MR²']],
+    convect: [['planet', 'planet'], ['time_Myr', 't (Myr)'], ['surface_cm_yr', 'v (cm/yr)'], ['heat_out', 'heat out']],
+    crust: [['block', 'block'], ['thickness_km', 't (km)'], ['above_km', 'up (km)'], ['root_km', 'root (km)']] };
+  const ABOUT = {
+    layers: 'Model: a core and a mantle, each of one density. Real rock and iron are squeezed denser with depth (PREM shows how much in Earth), and a planet has a light crust too, so a two layer model fitted to the mean density and C/MR² gives a core a little too dense and a mantle a little too light. The measured C/MR² values are normalized by slightly different radii (Earth\'s by its equatorial radius); the differences are under 0.5%. Sources: mean radius and density from the NASA NSSDCA fact sheets; C/MR² from Margot et al. 2012 (Mercury), Margot et al. 2021 (Venus), Yoder 1995 (Earth), Konopliv et al. 1998 (Moon) and Konopliv et al. 2011 (Mars); core radii from Hauck et al. 2013, Margot et al. 2021, PREM (Dziewonski and Anderson 1981), Weber et al. 2011 and Stähler et al. 2021.',
+    convect: 'Model: a real convection calculation, in 2D. A slab of mantle as deep as the planet\'s mantle and half its circumference wide, its base held at the core\'s temperature and its top at the surface\'s, heated also from inside by radioactive decay (H), its sides insulating. The rock is a very stiff fluid (no inertia, the Boussinesq approximation); each step solves for the flow exactly from the temperatures, then carries and conducts the heat. Cold rock is stiffer by up to 10⁵ (the linearized Arrhenius law), and the lid breaks where the stress passes its strength (a yield stress, Moresi and Solomatov 1998). Simplified: 2D, not a sphere (the bent picture wraps the flat slab round the core, so its inner edge is drawn shorter than in the model); 32 cells deep (about 90 km each for Earth), so the thinnest hot and cold layers are only two or three cells thick; Rayleigh numbers of at most 10⁷, while Earth\'s mantle is about 10⁷ to 10⁹, so the model\'s plates move a few times slower than Earth\'s (2 to 10 cm/yr). The constant viscosity flow matches the community benchmark (Blankenbach et al. 1989) to 0.2% in heat flow; with a viscosity that changes a thousandfold with temperature (the benchmark\'s case 2a) this grid gives about 15% too much heat flow, so the numbers are a guide to the regimes, not exact values. Times and speeds use the mantle\'s depth (Earth 2891, Venus 2552, Mars 1560 km) and a thermal diffusivity of 10⁻⁶ m²/s (Turcotte and Schubert 2014).',
+    crust: 'Model: Airy isostasy. Each block of crust sinks into the mantle until it has pushed aside its own weight of mantle rock: a fraction ρcrust/ρmantle of it lies below the mantle\'s level. The mantle is solid but flows over millions of years, which is why this works. Left out: the ocean\'s water on the ocean floor, and the cold, dense mantle rock that travels with each plate, which also differ between continents and oceans. Data: crust thickness from Huang et al. 2013, continental crust density from Christensen and Mooney 1995, ocean crust and upper mantle densities from PREM; Earth\'s heights from the ETOPO1 global relief model (Eakins and Sharman 2010).',
+  };
+
+  /* ---------- 3D: the planet cut in half (a sphere clipped at a plane through its poles, the cut face painted), or the crust in a block ---------- */
+  const G3 = { o: { th: -Math.PI / 2 + 0.8, ph: 1.12, zoom: 1 } };
+  let g3 = null, view3 = null, dirty3 = true;
+  const use3 = () => !!(g3 && view3 && view3.is3d());
+  const PCOL = { mercury: '#8f877d', venus: '#d8bf8a', earth: '#6d8fb3', moon: '#a2a09a', mars: '#b8613c' };
+  function init3D() {
+    const S3 = VD3K.stage($('scene'), { before: can, fov: 30, sky: '#04070d', near: 0.05, far: 60 }); if (!S3) return false;
+    S3.el.classList.add('ip3'); S3.r.localClippingEnabled = true;
+    const sc = S3.scene; sc.add(VD3K.sky(S3, { n: 2200, r: 40, milky: true }));
+    S3.sun.position.set(-1.6, -2.6, 1.8); S3.sun.intensity = 0.9;
+    const clip = [new THREE.Plane(new THREE.Vector3(0, 1, 0), 0)];
+    const ball = new THREE.Mesh(new THREE.SphereGeometry(1, 96, 48), new THREE.MeshStandardMaterial({ color: '#888888', roughness: 0.92, metalness: 0, clippingPlanes: clip, side: THREE.DoubleSide }));
+    ball.rotation.x = Math.PI / 2;
+    const planet = new THREE.Group(); planet.add(ball); sc.add(planet);
+    const fc = document.createElement('canvas'); fc.width = fc.height = 512;
+    const ftex = new THREE.CanvasTexture(fc); ftex.minFilter = THREE.LinearFilter;
+    const face = new THREE.Mesh(new THREE.CircleGeometry(1, 128), new THREE.MeshBasicMaterial({ map: ftex, transparent: true }));
+    face.geometry.rotateX(Math.PI / 2); face.position.y = -0.0005; planet.add(face);
+    let earthBall = null;
+    VD3K.earth(S3, { r: 1 }, (e) => { earthBall = e; e.ball.material.clippingPlanes = clip; e.ball.material.side = THREE.DoubleSide; e.visible = false; planet.add(e); dirty3 = true; draw(); });
+    /* the crust block: mantle slab with two floating blocks, depths in km times KM3 */
+    const crust = new THREE.Group(); sc.add(crust);
+    const mM = new THREE.MeshStandardMaterial({ color: '#b56a46', roughness: 0.9 }), cM = new THREE.MeshStandardMaterial({ color: '#cdb999', roughness: 0.85 }), oM = new THREE.MeshStandardMaterial({ color: '#7d8590', roughness: 0.85 });
+    const slab = new THREE.Mesh(new THREE.BoxGeometry(2.4, 1, 1), mM), cb = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.7, 1), cM), ob = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.7, 1), oM);
+    crust.add(slab, cb, ob);
+    VD3.orbit(S3.el, G3.o, () => draw(), { phMin: 0.15, phMax: 2.95, zMin: 0.5, zMax: 3 });
+    g3 = { S3, planet, ball, face, fc, fctx: fc.getContext('2d'), ftex, get earth() { return earthBall; }, crust, slab, cb, ob };
+    return true;
+  }
+  function paintFace() {
+    const g = g3, c = g.fctx, N = 512, h = N / 2;
+    c.clearRect(0, 0, N, N);
+    if (S.mode === 'layers') {
+      const P = PLANETS[S.lp], rc = (h * S.rc) / P.R;
+      c.fillStyle = K3.mantle; c.beginPath(); c.arc(h, h, h, 0, 2 * Math.PI); c.fill();
+      const gm = c.createRadialGradient(h, h, rc, h, h, h); gm.addColorStop(0, 'rgba(255,220,180,0.25)'); gm.addColorStop(1, 'rgba(0,0,0,0.15)'); c.fillStyle = gm; c.fill();
+      if (rc > 0.5) { const gc = c.createRadialGradient(h - rc * 0.25, h - rc * 0.25, 2, h, h, rc); gc.addColorStop(0, '#f6d77a'); gc.addColorStop(1, '#c48f22'); c.fillStyle = gc; c.beginPath(); c.arc(h, h, rc, 0, 2 * Math.PI); c.fill(); }
+      c.strokeStyle = '#7d6f5f'; c.lineWidth = 6; c.beginPath(); c.arc(h, h, h - 3, 0, 2 * Math.PI); c.stroke();
+      if (S.lp === 'earth' && S.prem) { c.setLineDash([10, 8]); c.strokeStyle = '#d9c8ff'; c.lineWidth = 3; for (const r of [1221.5, 3480]) { c.beginPath(); c.arc(h, h, (h * r) / P.R, 0, 2 * Math.PI); c.stroke(); } c.setLineDash([]); }
+    } else {
+      const m = MANTLE[S.cp], rc = (h * m.rc) / m.R, img = c.createImageData(N, N), d = img.data;
+      for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) {
+        const px = x + 0.5 - h, py = h - (y + 0.5), r = Math.hypot(px, py), o = (y * N + x) * 4;
+        if (r > h || r < rc) continue;
+        const th = Math.abs(Math.atan2(py, px));   /* the lower half is the slab's mirror image: a free slip side is a mirror */
+        colorAt(B.A * (1 - th / Math.PI), (r - rc) / (h - rc), d, o);
+      }
+      c.putImageData(img, 0, 0);
+      const gc = c.createRadialGradient(h - rc * 0.25, h - rc * 0.25, 2, h, h, rc); gc.addColorStop(0, '#f6d77a'); gc.addColorStop(1, '#c48f22'); c.fillStyle = gc; c.beginPath(); c.arc(h, h, rc, 0, 2 * Math.PI); c.fill();
+    }
+    g.ftex.needsUpdate = true;
+  }
+  const K3 = { mantle: '#b5583a' };
+  function draw3() {
+    const g = g3, S3 = g.S3, p = proj(), card = narrow() ? 0 : $('setupCard').offsetWidth + 28, wv = W - card;
+    S3.size(W, H); S3.cam.setViewOffset(W, H, card / 2, 0, W, H);
+    const crustMode = S.mode === 'crust';
+    g.planet.visible = !crustMode; g.crust.visible = crustMode;
+    if (crustMode) {
+      const s = 1.2 / Math.max(30, Math.max(S.tc, S.to) * 1.2), cb = floatBlock(S.tc, S.rcr, S.rm), ob = floatBlock(S.to, S.ro, S.rm);
+      g.slab.scale.set(1, 1, 1.0); g.slab.position.set(0, 0, -0.5);
+      g.cb.scale.set(1, 1, S.tc * s); g.cb.position.set(-0.55, 0, (cb.above - cb.below) * s / 2);
+      g.ob.scale.set(1, 1, S.to * s); g.ob.position.set(0.55, 0, (ob.above - ob.below) * s / 2);
+      g.slab.material.transparent = true; g.slab.material.opacity = 0.55;
+      S3.place(G3.o, [0, 0, 0], S3.fit(4.2, 1.6));
+    } else {
+      const lp = S.mode === 'layers' ? S.lp : S.cp, isE = lp === 'earth' && g.earth;
+      g.ball.visible = !isE; if (g.earth) g.earth.visible = !!isE;
+      g.ball.material.color.set(PCOL[lp]);
+      if (dirty3 || S.mode === 'convect') paintFace();
+      S3.place(G3.o, [0, 0, 0], S3.fit(4.6, 1.6) * Math.max(1, 1.3 / (wv / Math.max(1, H))));
+    }
+    dirty3 = false;
+    S3.render();
+    /* words over the picture */
+    if (!crustMode) {
+      const P = S.mode === 'layers' ? PLANETS[S.lp] : PLANETS[S.cp], rcf = S.mode === 'layers' ? S.rc / P.R : MANTLE[S.cp].rc / MANTLE[S.cp].R;
+      const pc = S3.project([0, 0, 0]), pm = S3.project([0, 0, (1 + rcf) / 2]), pr = S3.project([0, 0, 1.12]);
+      if (pc[2] < 1 && rcf > 0.08) label(ctx, 'core', pc[0], pc[1], { a: 'center', w: 700, col: '#3a2a08', halo: false });
+      if (pm[2] < 1) label(ctx, 'mantle', pm[0], pm[1], { a: 'center', w: 700, col: '#fff', halo: false });
+      label(ctx, `${P.name}, cut in half${S.mode === 'convect' ? ': the mantle churning' : ''}`, area().x0 + 14 * p, 20 * p, { w: 700, size: 13, col: '#e8eef6', haloCol: '#04070d' });
+      void pr;
+    } else {
+      const s = 1.2 / Math.max(30, Math.max(S.tc, S.to) * 1.2), cb = floatBlock(S.tc, S.rcr, S.rm), ob = floatBlock(S.to, S.ro, S.rm);
+      const a = S3.project([-0.55, -0.35, cb.above * s + 0.06]), b = S3.project([0.55, -0.35, ob.above * s + 0.06]);
+      label(ctx, 'Continent', a[0], a[1], { a: 'center', w: 700, col: '#e8eef6', haloCol: '#04070d' }); label(ctx, 'Ocean floor', b[0], b[1], { a: 'center', w: 700, col: '#e8eef6', haloCol: '#04070d' });
+      label(ctx, 'Crust floating on the mantle (heights and depths to scale)', area().x0 + 14 * p, 20 * p, { w: 700, size: 13, col: '#e8eef6', haloCol: '#04070d' });
+    }
+  }
+
+  /* ---------- drawing and the loop ---------- */
+  function draw() {
+    if (!K || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    if (use3()) { can.style.pointerEvents = 'none'; draw3(); return; }
+    can.style.pointerEvents = '';
+    ctx.fillStyle = K.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.mode === 'layers') drawLayers(); else if (S.mode === 'convect') drawConvect(); else drawCrust();
+  }
+  const redraw = () => { draw(); if (!$('plotbox').hidden) drawPlot(); readouts(); clock(); };
+  let lastOut = 0;
+  function frame(now) {
+    if (S.run && S.mode === 'convect') {
+      advance(S.steps); draw(); drawPlot();
+      if (now - lastOut > 250) { lastOut = now; readouts(); clock(); }
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() {
+    $('setupCard').style.top = narrow() ? '' : `${$('strip').offsetHeight + 12}px`;
+    dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = $('plotbox').getBoundingClientRect(); PW = q.width; PH = q.height; plot.width = Math.round(PW * dpr); plot.height = Math.round(PH * dpr);
+    dirty3 = true; redraw();
+  }
+  const retheme = () => { tokens(); dirty3 = true; redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  VD.projector({ onChange: resize });
+
+  /* ---------- readings ---------- */
+  window.vdVersion = 'inside-a-planet@2026-10-25';
+  window.vdReadingRow = () => {
+    if (S.mode === 'layers') {
+      const P = PLANETS[S.lp], t = twoLayer(P.R, S.rc, S.rhoC, S.rhoM);
+      return { part: 'layers', planet: P.name, core_km: S.rc, core_volume_pct: +(100 * t.q3).toFixed(2), rho_core: S.rhoC, rho_mantle: S.rhoM, rho_mean_model: Math.round(t.rho), k_model: +t.k.toFixed(4),
+        rho_mean_measured: P.rho, k_measured: P.k, core_mass_pct: +(100 * t.coreMass).toFixed(1) };
+    }
+    if (S.mode === 'convect') {
+      if (!B || B.t <= 0) return 'Start the mantle first: record a reading once it has been running for a while.';
+      const pb = document.querySelector(`#presets [data-p="${S.preset}"]`);
+      return { part: 'convection', planet: PLANETS[S.cp].name, setup: pb ? pb.textContent : `custom (${PLANETS[S.cp].name})`, time_Myr: Math.round(timeMyr(S.cp, B.t)), surface_cm_yr: +speedCmYr(S.cp, M.vsurf).toFixed(3), heat_out: +M.Nu.toFixed(1),
+        mantle_T_pct: Math.round(100 * M.Tmean), plumes: plumeN, lid: M.mobility > 0.6 ? 'moves' : M.mobility > 0.15 ? 'creeps' : 'still', mobility: +M.mobility.toFixed(2), log_Ra: S.ra, H: S.heat };
+    }
+    const cb = floatBlock(S.tc, S.rcr, S.rm), ob = floatBlock(S.to, S.ro, S.rm);
+    return [{ part: 'crust', block: 'Continent', thickness_km: S.tc, density: S.rcr, mantle_density: S.rm, above_km: +cb.above.toFixed(2), root_km: +cb.below.toFixed(2) },
+      { part: 'crust', block: 'Ocean floor', thickness_km: S.to, density: S.ro, mantle_density: S.rm, above_km: +ob.above.toFixed(2), root_km: +ob.below.toFixed(2) }];
+  };
+
+  tokens(); newBox();
+  new ResizeObserver(resize).observe($('scene'));
+  applyPreset('earth2'); resize();
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); dirty3 = true; redraw(); }, status: () => {}, start: '3d' });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => (S.mode === 'convect' && B ? timeMyr(S.cp, B.t) : null), timeUnit: 'Myr' });
+  VD.howTo({ src: 'media/how-this-works/inside-a-planet.mp4', poster: 'media/how-this-works/inside-a-planet.jpg' });
+  window.__ip = { S, get B() { return B; }, get M() { return M; }, applyPreset, setMode, advance, newBox, redraw, sync, setRun, cparams, hist: () => hist, LPRE, CPRE, KPRE };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

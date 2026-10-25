@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-inside-a-planet', date: '2026-10-25', title: 'Inside a Planet',
+    text: 'A new Astro 2203 demo with its own worksheet: weigh the iron cores of Mercury, Venus, Earth, the Moon and Mars from their mean densities and how they spin, watch a real model of a churning mantle break into plates on Earth or stay one stiff lid on Venus, and float continents on the mantle.', link: { href: 'demos/inside-a-planet.html', text: 'Open Inside a Planet' } },
   { id: '2026-10-25-craters', date: '2026-10-25', title: 'Craters, Cooling and Surface Ages',
     text: 'Drop an asteroid on the Moon, Mercury, Venus, Earth or Mars and watch the crater form, from a small bowl to a basin with a ring of peaks, sized by the scaling law impact scientists use. Count the craters on simulated patches of the Moon and Mars to date them with the crater clock, and cool a Moon, a Mars and an Earth side by side to see why small worlds go quiet first. Two new Astro 2203 worksheets: Craters and the Ages of the Moon\'s Surface, and Dating the Surface of Mars.', link: { href: 'demos/craters.html', text: 'Open the demo' } },
   { id: '2026-10-25-solar-system-formation', date: '2026-10-25', title: 'Building a Solar System',

@@ -1547,7 +1547,8 @@
           "requirement": "module",
           "sections": [],
           "demos": [
-            "craters"
+            "craters",
+            "inside-a-planet"
           ]
         }
       ]
@@ -1650,7 +1651,8 @@
           "demos": [
             "craters",
             "radioactive-decay",
-            "fluids"
+            "fluids",
+            "inside-a-planet"
           ],
           "note": "The Moon forming impact, craters and the ages of surfaces, why small worlds cool first, and the geology of the Earth."
         },
@@ -1663,6 +1665,7 @@
           "demos": [
             "craters",
             "planet-temperatures",
+            "inside-a-planet",
             "ideal-gas",
             "kepler-orbits"
           ],
@@ -1676,7 +1679,8 @@
           "sections": [],
           "demos": [
             "craters",
-            "kepler-orbits"
+            "kepler-orbits",
+            "inside-a-planet"
           ],
           "note": "Volcanoes, canyons, old water and crater counts on Mars, and its two small moons."
         },
@@ -10520,6 +10524,23 @@
       ],
       "title": "Terminal Velocity",
       "url": "demos/terminal-velocity.html"
+    },
+    {
+      "demo": "inside-a-planet",
+      "course": [
+        "astro-2203",
+        "astro"
+      ],
+      "sections": [],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-25 (Claude), gap demo 6 of the Astro 2203 plan (Inside a Planet: Plates or a Stagnant Lid). Three parts. Layers: a two layer planet (core and mantle of one density each) gives mean density and C/MR²; presets fit Mercury, Venus, Earth, Moon and Mars to their measured values with cited core radii; Earth shows PREM. Convection: a 2D mantle convection calculation (infinite Prandtl Boussinesq, stream function solved exactly each step, temperature dependent viscosity up to 10^5 and a yield stress), checked against the Blankenbach et al. 1989 benchmark; presets for Earth's plates, Venus's stagnant lid, a lid that breaks, Mars's plumes under a still lid. Floating crust: Airy isostasy of continent and ocean floor. Intro worksheet intro-inside-a-planet with a key from a real run in TeacherKeys.",
+      "handouts": [
+        "intro-inside-a-planet"
+      ],
+      "title": "Inside a Planet",
+      "url": "demos/inside-a-planet.html"
     },
     {
       "demo": "retrograde-motion",

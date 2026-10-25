@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Inside a Planet: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Inside a Planet</h1><ul class="meta"><li><a href="../demos/inside-a-planet.html">Open the demo</a></li><li>Astro 2203, Topics 6, 7 and 8 (Earth and Moon, inner planets, Mars geology; no textbook section); Astronomy module, inside the planets</li><li>15 to 45 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A planet's mean density, from its mass and radius, tells us whether it is denser inside than its surface rocks. Earth's 5514 kg/m³ against about 3300 kg/m³ for mantle rock says it has a dense core.</li>
+<li>The moment of inertia factor C/MR² tells how the mass is spread: 0.4 for a ball of even density, less when the mass is crowded toward the middle. With the mean density and a core radius it fixes a two layer planet's core and mantle densities.</li>
+<li>The mantle is solid but flows over millions of years. Heated from below and from inside, it convects. A cold, stiff lid either breaks into moving plates (Earth, where water weakens the rock) or stays one stagnant lid (Venus, Mars, Mercury, the Moon).</li>
+<li>A lid that moves lets heat out quickly; a stagnant lid traps it, so the inside runs hotter. Under a lid that never moves, a plume erupts at the same place for billions of years, which is how Olympus Mons grew so large.</li>
+<li>Crust floats on the mantle (isostasy): a block stands higher the thicker and lighter it is, with a root about 5 times deeper than its height. Continents stand 4.4 km above the ocean floor in the model, 4.5 km on Earth.</li>
+</ul>
+<h2>Before class</h2>
+<p>The demo has three parts. <strong>Layers</strong> builds a planet from a core and a mantle of one density each, for Mercury, Venus, Earth, the Moon and Mars, with measured radii and mean densities (NASA NSSDCA), measured C/MR² values and core radii from seismology or gravity (cited in the demo). Each planet's setup fits the two densities to its mean density and C/MR²: Mars gives a core of 6580 and a mantle of 3440 kg/m³, Earth 12 507 and 4152 kg/m³. For Earth it also draws PREM, the layered model from seismic waves (Dziewonski and Anderson 1981). <strong>Convection</strong> runs a real 2D mantle convection model in half of a planet's mantle (infinite Prandtl number, Boussinesq, temperature dependent viscosity with a yield stress). It matches the constant viscosity community benchmark (Blankenbach et al. 1989, case 1a) to 0.2% in heat flow. Its limits are stated in the demo: 2D, 32 cells deep, Rayleigh numbers up to 10⁷ (Earth's mantle is about 10⁷ to 10⁹), and with a strongly varying viscosity the heat flow on this grid runs about 15% high (benchmark case 2a). <strong>Floating crust</strong> is Airy isostasy with average crust thicknesses (Huang et al. 2013) and densities (Christensen and Mooney 1995, PREM).</p>
+<p>Setups: Earth: moving plates; Venus: one stiff lid; Venus: a lid that holds, then breaks; Mars: plumes that stay put; rock equally runny hot or cold; heated only from inside; the benchmark. The plates setup holds a stagnant lid for about 2800 Myr of model time before it first breaks; run it at 4 steps a frame. Mars in this 2D model settles into three or four fixed plumes, not the single Tharsis plume that 3D models with a stiff lower mantle give (Zhong and Zuber 2001); the setup says so.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Earth if it were rock all through.</strong> Ask Q1. The model's mean density is 3300 kg/m³, C/MR² 0.4. Then Earth: core and mantle, with PREM shown.</li>
+<li><strong>Mars.</strong> Ask Q2. Drag the core radius from 0 to 2200 km: the mean density rises and C/MR² falls; both match the measured values at 1830 km, the radius InSight found.</li>
+<li><strong>Moon: a tiny core.</strong> Ask Q3.</li>
+<li><strong>Earth: moving plates</strong>, then <strong>Venus: one stiff lid.</strong> Ask Q4. Compare the orange surface arrows, the heat out and the mantle temperature.</li>
+<li><strong>Venus: a lid that holds, then breaks.</strong> The lid holds for about 3300 Myr, then breaks and the heat floods out.</li>
+<li><strong>Mars: plumes that stay put.</strong> Ask Q5.</li>
+<li><strong>Floating crust</strong>, then <strong>A high plateau with a deep root.</strong> Ask Q6.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Earth's mean density is 5514 kg/m³ and its surface rocks are about 3300 kg/m³. What does that say about the inside? What would C/MR² be if it were rock all through?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Mars's C/MR² is 0.3644 and its mean density 3934 kg/m³. How do the two measurements, together, fix the size of its core?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> The Moon's C/MR² is 0.3929. Why is it so close to 0.4? Why does the two layer fit give the Moon a core denser than iron?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Why does a planet with moving plates lose its heat faster than one with a stagnant lid? Which runs hotter inside?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> Olympus Mons is about 22 km high, far taller than any volcano on Earth. Use the Mars setup to explain why.</p></div>
+
+<div class="q"><p><strong>Q6.</strong> A continent 34.4 km thick at 2835 kg/m³ floats on mantle of 3378 kg/m³. How high does it stand above the mantle's level, and how deep is its root? What happens to a plateau with crust 70 km thick?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"The mantle is molten."</strong> It is solid rock that flows very slowly, like a glacier; earthquake S waves pass through it. Only small pockets melt, near the surface, where the pressure drops.</li>
+<li><strong>"Continents float on liquid magma."</strong> They float on solid mantle that flows over millions of years; the floating is isostasy, a balance of weight, not buoyancy in a liquid.</li>
+<li><strong>"A bigger core always means a denser planet."</strong> The mean density depends on both the core's size and its density: Mars's core is less dense than iron because it holds light elements such as sulfur.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

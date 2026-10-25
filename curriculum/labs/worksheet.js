@@ -506,6 +506,8 @@
   INTRO.push('intro-retrograde'); INTRO_GRAPHS.push('intro-retrograde'); /* Retrograde Motion and World Models demo, 2026-10-25 */
   INTRO.push('intro-resonances'); /* Orbital Resonances demo, 2026-10-25 */
   INTRO.push('intro-craters', 'intro-mars-ages'); /* Craters, Cooling and Surface Ages demo, 2026-10-25 */
+  INTRO.push('intro-inside-a-planet');
+  INTRO_GRAPHS.push('intro-inside-a-planet');
   ENABLED.push(...INTRO);
   /* Craters, Cooling and Surface Ages: one table per part, picked by the mode the rows were recorded in */
   const CR_IMPACT = ['row', 'body', 'L_km', 'v_km_s', 'D_km', 'form'], CR_COUNT = ['row', 'surface', 'D_km', 'N', 'area_km2', 'per_km2', 'age_Gyr'],
@@ -565,6 +567,15 @@
       alt: [
         { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.planet === 'Neptune'), cols: ['row', 'setup', 'a0_AU', 'ratio', 't_yr', 'dmin_AU', 'out_yr'] },
         { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.rms_arcsec !== undefined && r.rms_arcsec !== ''), cols: ['row', 'setup', 'X_a_AU', 'X_mass_ME', 'X_lon_deg', 'rms_arcsec'] }] },
+    /* Topics 6 to 8, Inside a Planet. Part 1 (one planet): Reading | Planet | Core radius (km) | Core share of the volume (%) | Model mean
+       density | Model C/MR². Part 2 (several planets): Reading | Planet | Core radius | Core share of the mass (%) | Model C/MR² | Measured C/MR².
+       Part 3 (convection): Reading | Setup | Time | Surface speed | Heat out | Mean mantle temperature | Rising plumes | The lid.
+       Part 4 (floating crust): Reading | Block | Crust thickness | Crust density | Height above the mantle | Root below */
+    'intro-inside-a-planet': { demo: 'Inside a Planet', cols: ['row', 'planet', 'core_km', 'core_volume_pct', 'rho_mean_model', 'k_model'],
+      alt: [
+        { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'convection'), cols: ['row', 'setup', 'time_Myr', 'surface_cm_yr', 'heat_out', 'mantle_T_pct', 'plumes', 'lid'] },
+        { table: 3, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'crust'), cols: ['row', 'block', 'thickness_km', 'density', 'above_km', 'root_km'] },
+        { table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'layers') && new Set(rows.map((r) => r.planet)).size > 1, cols: ['row', 'planet', 'core_km', 'core_mass_pct', 'k_model', 'k_measured'] }] },
   });
   /* ==ASTRO 2203 END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

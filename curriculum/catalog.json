@@ -131,6 +131,19 @@
      ]
     },
     {
+     "demo": "inside-a-planet",
+     "title": "Inside a Planet",
+     "desc": "Weigh a planet's iron core from its mean density and moment of inertia, watch a mantle churn into moving plates or under one stiff lid, and float continents on the mantle.",
+     "tags": [
+      "planet interiors",
+      "differentiation",
+      "moment of inertia",
+      "mantle convection",
+      "plate tectonics",
+      "isostasy"
+     ]
+    },
+    {
      "demo": "resonances",
      "title": "Orbital Resonances",
      "desc": "Watch Jupiter tug an asteroid at the same place orbit after orbit until its path crosses Mars's, beside the real counts that show the Kirkwood gaps. See how the same timing keeps Pluto safe from Neptune, and find Neptune from its pull on Uranus as Le Verrier did.",

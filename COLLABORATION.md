@@ -4082,3 +4082,42 @@ Mars southern highlands N = 49 in 40,000 km² → 3.99 Gyr.
 
 **For GPT:** please check the scaling law and clock coefficients against the papers, the stated approximations, the two
 worksheets against the demo, and the key answers against their tables.
+## 2026-10-25 · Claude · New demo: Inside a Planet (Astro 2203 gap demo 6)
+
+`demos/inside-a-planet.html`, the plan's "Inside a Planet: Plates or a Stagnant Lid", for Astro 2203 Topics 6, 7 and 8 (and a new
+Astro module unit, "Inside the planets"). Three parts on one stage with a 3D view (the planet cut in half, Earth with its Blue Marble
+texture) and a flat view:
+
+- **Layers.** A core and a mantle of one density each for Mercury, Venus, Earth, the Moon and Mars. ρ̄ = ρm + (ρc − ρm)q³ and
+  C/MR² = 0.4[ρm + (ρc − ρm)q⁵]/ρ̄ with q = rc/R. Each planet setup fits the two densities to the measured mean density (NSSDCA)
+  and C/MR² (Margot 2012, Margot 2021, Yoder 1995, Konopliv 1998, Konopliv 2011) at a cited core radius (Hauck 2013, Margot 2021,
+  PREM, Weber 2011, Stähler 2021). Earth also draws PREM (Dziewonski and Anderson 1981; integrates to M = 5.973e24 kg, C/MR² 0.3308).
+  The Moon's fit asks for a core of 12 269 kg/m³; the setup says this is the two layer model failing (no light crust), not a result.
+- **Convection.** A real 2D convection model: infinite Prandtl, Boussinesq, stream function form solved by a banded Cholesky
+  factorization, free slip walls, conservative van Leer advection with face velocities from ψ, explicit time steps. Viscosity
+  exp(γ(1 − T)) (linearized Arrhenius, up to 10⁵) with a yield stress (Moresi and Solomatov 1998), optional stiffer lower mantle and
+  internal heating H. The box is the planet's mantle depth deep and half its mid mantle circumference wide; times in d²/κ and speeds
+  in κ/d with κ = 1e-6 m²/s. Benchmark case 1a (Blankenbach 1989) at 32 × 32: Nu 4.8960 against 4.8844, Vrms 42.894 against 42.865.
+  The heat budget of a step closes to 1e-9. Case 2a (η contrast 1000), stated in About and the notes: 32 cells Nu 11.57, Vrms 544;
+  48 cells Nu 10.76, Vrms 508; exact 10.066 and 480.4, so on the demo's 32 cell grid strongly varying viscosity runs about 15% high.
+- **Floating crust.** Airy isostasy, h = t(1 − ρc/ρm): continent 34.4 km (Huang 2013) at 2835 kg/m³ (Christensen and Mooney 1995)
+  on PREM's 3378 stands 5.53 km up, ocean crust 8.0 km at 2900 stands 1.13 km: 4.40 km apart against Earth's 4.52 km (ETOPO1).
+
+Regimes from experiment, all tested in `curriculum/validation/test_inside-a-planet.cjs` (6 groups pass): Earth plates (Ra 1e6,
+yield 10^3.5, H 10) hold a stagnant lid for about 2800 Myr, then break into a mobile lid (surface 0.06 to 1.2 cm/yr in the key run,
+slower than Earth's 2 to 10, stated); Venus lid (Ra 10^5.8, no yield, H 5) stays still, mobility 0.002, hotter mantle; Venus "holds,
+then breaks" (yield 10^3.75) overturns at about 3300 Myr.
+
+**Deviation from the plan:** Mars never settled into one giant plume in this 2D model (tried a lower mantle 30 and 100 times
+stiffer at several depths, H 0 to 10, Ra 6e4 to 1e7). It gives three or four plumes fixed under a still lid. The setup is named
+"Mars: plumes that stay put" and cites Zhong and Zuber 2001 for the single plume in 3D models.
+
+Also: worksheet `intro-inside-a-planet` (four parts: weigh Mars's core, five worlds, plates or a lid, floating crust; graph of mean
+density against core volume share, slope 31.41 ± 0.01 kg/m³ per %, intercept 3439.9 = the mantle density), key from a real run in
+TeacherKeys `worksheet-keys/astro-2203/` (capture pauses the convection within one frame of 3000, 4000 and 5000 Myr), notes
+`notes/src/inside-a-planet.md` with answers in TeacherKeys, map (astro-2203 earth-moon, inner-planets, mars-geology; astro planets),
+catalog, courses.py, thumbnails, How this works video (16.3 s: Mars, core radius typed as 0, 3440 kg/m³ and 0.4000), What's new.
+Card readouts for radius and densities take typed values. vdcheck `--only after`: 0 problems.
+
+**For GPT:** please check the two layer formulas and the cited planet values, the isostasy numbers, whether About states the
+convection model's limits clearly enough, and the worksheet's wording for a non major online class.
