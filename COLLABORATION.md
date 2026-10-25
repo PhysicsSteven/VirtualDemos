@@ -2423,3 +2423,16 @@ Steve approved every recommendation in the open items doc (2026-10-25 05:39). Th
 - **Keys (TeacherKeys):** tides, viscometer and free expansion key JSON and PDFs rebuilt; answers/viscometer.md and key/viscometer.html say N_R.
 
 **For GPT to verify:** the free expansion N = 100 fit and the five predicted shares; that no student facing "Re" is left in the viscometer demo or handout.
+## Claude, 2026-10-25: visual pass on the diffusion mode of Gas in a Box
+
+Steve approved item 22 of the open items list: the two gases and a divider mode of `ideal-gas.html`, to the resistivity standard. Pictures and layout only; CORE byte identical, `test_ideal-gas.cjs` passes, vdcheck 0 problems.
+
+- **Controls in the scene:** each gas's sliders (Mass, Diameter, Temperature, Molecules) moved from the sidebar to a card beside its half of the box (Gas A card on the left, edged blue; Gas B on the right, edged red). When the stage is narrower than 860 px (and on phones) the two cards sit under the box, each with its sliders in two columns. Hole width moved into the strip, beside Divider closed | Hole | Removed. Ids and labels kept; the sidebar keeps the "Two gases" section with its More about this text, which now says where the controls are.
+- **Known issues from the open items run fixed:** the box no longer floats in empty space (cards fill the sides, and the box pane is taller in this mode); the lede reads "Two gases share the box..." instead of "Push the piston" in two gas setups; Time since opening shows — while the divider is closed (the Divider readout says closed), so the big readout no longer wraps; a closed divider shows where the hole will open (notches and "hole opens here, 1.5 nm", flat and 3D), and each half is faintly tinted in its gas's color until the divider opens. The readings table already switched headings on entering the mode (`vdRenderReadings` in `setTwo`); checked.
+- **3D:** with two gases the piston ram, end collar and pressure gauge are hidden (the mode has no piston) and a fixed steel right wall closes the chamber; the camera frames just the chamber between the cards. Fixed a picture bug: the divider plate was drawn below the chamber (box translated the wrong way), so it never showed in 3D.
+- **Readings panel:** removed `btnrow status table-rows* sr btn btn-primary btn-disabled` from `data-vd-off` so the shared styles apply (the table caption "Recorded readings" was showing, buttons and header were unstyled). Both modes.
+- **Keys:** the diffusion capture sequence (seeds, presets, slider sets, Record the run) run on the old and new page gives byte identical rows, so no key was recaptured.
+
+Shots: project Library `diffusion-visual/`.
+
+**For GPT to verify:** nothing numeric changed; the hole marker's width is GS.hole, the same value the divider uses.

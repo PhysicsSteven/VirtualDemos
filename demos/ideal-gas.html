@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="app stage-canvas-focusvisible spin formula btnrow seg seg-button inline readout-wide readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench btn btn-primary btn-disabled slider-head-output toggles-label toggles-input readout-big-dd projshort-proj-stage phone-chips-button pane-canvas" lang="en">
+<html data-vd-off="app stage-canvas-focusvisible spin formula seg seg-button inline readout-wide readout-dd-ok check check-input empty plotbox-canvas wide-proj-bench slider-head-output toggles-label toggles-input readout-big-dd projshort-proj-stage phone-chips-button pane-canvas" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -80,7 +80,27 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .pane.box { flex: none; height: calc((100vw - 34px) * 0.6 + 86px); max-height: 72vh; min-height: 260px; }
   .pane.hist { flex: none; height: 230px; }
 }
-.clock.two { min-width: 24ch; text-align: right; }
+.clock.two { text-align: right; }
+/* two gases: a card for each gas beside its half of the box (under the picture when there is no room), hole width in the strip */
+@media (min-width: 821px) { .stage.two .pane.box { flex: 1.9 1 0; } }
+.gascards { display: flex; gap: 10px; padding: 10px 12px; border-top: 1px solid var(--line); background: var(--canvas); }
+.gascards[hidden] { display: none; }
+.gascard { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 6px; padding: 8px 10px; background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; }
+.gascard.a { border-left: 3px solid var(--neg); }
+.gascard.b { border-left: 3px solid var(--pos); }
+.gascards:not(.beside) .gascard { display: grid; grid-template-columns: 1fr 1fr; column-gap: 14px; row-gap: 4px; }
+.gascards:not(.beside) .gascard h3 { grid-column: 1 / -1; }
+@media (max-width: 620px) { .gascards { flex-direction: column; } }
+.gascard h3 { margin: 0; font-size: 0.82rem; font-weight: 700; }
+.gascard .slider-head label, .gascard .slider-head output { font-size: 0.78rem; }
+.gascards.beside { position: absolute; inset: 0 0 auto 0; height: 0; padding: 0; border: 0; background: none; z-index: 2; }
+.gascards.beside .gascard { position: absolute; width: 176px; box-sizing: border-box; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12); }
+.gascards.beside .gascard.a { left: 12px; }
+.gascards.beside .gascard.b { right: 12px; }
+.holectl { display: inline-flex; align-items: center; gap: 8px; background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 2px 10px; font-size: 0.86rem; font-weight: 700; color: var(--muted); }
+.holectl[hidden] { display: none; }
+.holectl input { width: 110px; }
+.holectl output { color: var(--ink); min-width: 5ch; }
 .graphseg { position: absolute; top: 8px; right: 10px; z-index: 2; }
 .graphseg button { font-size: 0.8rem; padding: 3px 9px; }
 .chips-head { margin: 10px 0 4px; font-size: 0.8rem; color: var(--muted); }
@@ -103,7 +123,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   <header class="bar">
     <div>
       <h1>Gas in a Box</h1>
-      <p>Pressure and temperature come from molecules hitting the walls. Push the piston and watch the gas heat up.</p>
+      <p id="lede">Pressure and temperature come from molecules hitting the walls. Push the piston and watch the gas heat up.</p>
     </div>
     <div class="bar-right">
       <div class="units mono"><span id="unitsGas">argon, m = 6.63×10⁻²⁶ kg</span> · box height 30 nm · 1 s on screen = <span id="rate">80 ps</span></div>
@@ -122,11 +142,28 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="spin" id="reset">Reset</button>
           <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
           <div class="seg" role="group" aria-label="Divider" id="divSeg" hidden><button type="button" data-div="1" aria-pressed="true">Divider closed</button><button type="button" data-div="2" aria-pressed="false">Hole</button><button type="button" data-div="0" aria-pressed="false">Removed</button></div>
+          <div class="holectl" id="holeCtl" hidden><label for="hole">Hole width</label><input type="range" id="hole" min="1" max="6" step="0.5" value="3"><output id="holeOut" class="mono" for="hole">3.0 nm</output></div>
           <button type="button" class="spin" id="ride" aria-pressed="false" hidden>Follow the marked molecule</button>
         </div>
         <p class="status3d" id="status3d" role="status"></p>
         <p class="cap3d" id="cap3d" hidden>Drag the piston to move it, click a molecule to mark it, drag elsewhere to turn. The model gas is two dimensional: its molecules move in one plane, drawn to scale.</p>
         <div class="clock mono" id="clock">t = 0 ps</div>
+      </div>
+      <div class="gascards" id="gasCards" hidden>
+        <div class="gascard a" id="cardA" role="group" aria-labelledby="cardAT">
+          <h3 id="cardAT"><i class="gasdot a"></i>Gas A, left half</h3>
+          <div><div class="slider-head"><label for="mA">Mass</label><output id="mAOut" class="mono" for="mA">40 u</output></div><input type="range" id="mA" min="4" max="150" step="1" value="40"></div>
+          <div><div class="slider-head"><label for="dA">Diameter</label><output id="dAOut" class="mono" for="dA">0.50 nm</output></div><input type="range" id="dA" min="0.3" max="1" step="0.05" value="0.5"></div>
+          <div><div class="slider-head"><label for="TA">Temperature</label><output id="TAOut" class="mono" for="TA">300 K</output></div><input type="range" id="TA" min="50" max="1000" step="10" value="300"></div>
+          <div><div class="slider-head"><label for="nA">Molecules</label><output id="nAOut" class="mono" for="nA">150</output></div><input type="range" id="nA" min="0" max="200" step="10" value="150"></div>
+        </div>
+        <div class="gascard b" id="cardB" role="group" aria-labelledby="cardBT">
+          <h3 id="cardBT"><i class="gasdot b"></i>Gas B, right half</h3>
+          <div><div class="slider-head"><label for="mB">Mass</label><output id="mBOut" class="mono" for="mB">40 u</output></div><input type="range" id="mB" min="4" max="150" step="1" value="40"></div>
+          <div><div class="slider-head"><label for="dB">Diameter</label><output id="dBOut" class="mono" for="dB">0.50 nm</output></div><input type="range" id="dB" min="0.3" max="1" step="0.05" value="0.5"></div>
+          <div><div class="slider-head"><label for="TB">Temperature</label><output id="TBOut" class="mono" for="TB">300 K</output></div><input type="range" id="TB" min="50" max="1000" step="10" value="300"></div>
+          <div><div class="slider-head"><label for="nB">Molecules</label><output id="nBOut" class="mono" for="nB">150</output></div><input type="range" id="nB" min="0" max="200" step="10" value="150"></div>
+        </div>
       </div>
       <div class="pane hist" id="histPane">
         <canvas id="hist" role="img" aria-label="Histogram of molecular speeds with the two dimensional Maxwell-Boltzmann curve overlaid."></canvas>
@@ -185,26 +222,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 
       <section id="secTwo" hidden>
         <h2>Two gases</h2>
-        <div class="gasbox">
-          <h3><i class="gasdot a"></i>Gas A, starts on the left</h3>
-          <div><div class="slider-head"><label for="mA">Mass</label><output id="mAOut" class="mono" for="mA">40 u</output></div><input type="range" id="mA" min="4" max="150" step="1" value="40"></div>
-          <div><div class="slider-head"><label for="dA">Diameter</label><output id="dAOut" class="mono" for="dA">0.50 nm</output></div><input type="range" id="dA" min="0.3" max="1" step="0.05" value="0.5"></div>
-          <div><div class="slider-head"><label for="TA">Temperature</label><output id="TAOut" class="mono" for="TA">300 K</output></div><input type="range" id="TA" min="50" max="1000" step="10" value="300"></div>
-          <div><div class="slider-head"><label for="nA">Molecules</label><output id="nAOut" class="mono" for="nA">150</output></div><input type="range" id="nA" min="0" max="200" step="10" value="150"></div>
-        </div>
-        <div class="gasbox">
-          <h3><i class="gasdot b"></i>Gas B, starts on the right</h3>
-          <div><div class="slider-head"><label for="mB">Mass</label><output id="mBOut" class="mono" for="mB">40 u</output></div><input type="range" id="mB" min="4" max="150" step="1" value="40"></div>
-          <div><div class="slider-head"><label for="dB">Diameter</label><output id="dBOut" class="mono" for="dB">0.50 nm</output></div><input type="range" id="dB" min="0.3" max="1" step="0.05" value="0.5"></div>
-          <div><div class="slider-head"><label for="TB">Temperature</label><output id="TBOut" class="mono" for="TB">300 K</output></div><input type="range" id="TB" min="50" max="1000" step="10" value="300"></div>
-          <div><div class="slider-head"><label for="nB">Molecules</label><output id="nBOut" class="mono" for="nB">150</output></div><input type="range" id="nB" min="0" max="200" step="10" value="150"></div>
-        </div>
-        <div>
-          <div class="slider-head"><label for="hole">Hole width</label><output id="holeOut" class="mono" for="hole">3.0 nm</output></div>
-          <input type="range" id="hole" min="1" max="6" step="0.5" value="3">
-        </div>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">Changing a gas starts again with the divider closed: gas A fills the left half and gas B the right half, each at its own temperature. Then choose Hole or Removed above the box; that moment is t = 0. Masses are in atomic mass units u (helium 4, neon 20, argon 40, krypton 84, xenon 131). The molecules are hard disks of the diameter you choose. A molecule goes through the hole only if it fits, so the opening its center can use is the hole width minus the diameter.</p>
+          <p class="hint">Set each gas on its card beside the box, and the hole width above it. Changing a gas starts again with the divider closed: gas A fills the left half and gas B the right half, each at its own temperature. Then choose Hole or Removed above the box; that moment is t = 0. Masses are in atomic mass units u (helium 4, neon 20, argon 40, krypton 84, xenon 131). The molecules are hard disks of the diameter you choose. A molecule goes through the hole only if it fits, so the opening its center can use is the hole width minus the diameter.</p>
         </details>
       </section>
 
@@ -594,7 +613,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ck.style.top = '';
     const vbB = vb.offsetTop + vb.offsetHeight;
     if (ck.offsetLeft < vb.offsetLeft + vb.offsetWidth + 8 && ck.offsetTop < vbB) ck.style.top = (vbB + 4) + 'px';
-    const padT = Math.max(ps > 1 ? 64 : 50, vbB + 10, ck.offsetTop + ck.offsetHeight + 8), padB = 32 * ps, padL = 22 * ps, padR = 22;
+    /* two gases: each gas's card stands beside its half of the box when the stage has room for both and a box between them */
+    const gc = $('gasCards'), beside = two && innerWidth > 820 && boxPane.clientWidth >= 860;
+    gc.classList.toggle('beside', beside);
+    const side = beside ? $('cardA').offsetWidth + 12 + 30 * ps : 0;   /* the card, a gap, and room for the 30 nm label */
+    const padT = Math.max(ps > 1 ? 64 : 50, vbB + 10, ck.offsetTop + ck.offsetHeight + 8), padB = 32 * ps, padL = Math.max(22 * ps, side), padR = Math.max(22, side);
     /* on a phone the box pane grows by whatever the strip takes beyond its usual 50 px */
     boxPane.style.height = innerWidth <= 820 && padT > 50 ? `calc((100vw - 34px) * 0.6 + ${36 + padT}px)` : '';
     histPane.style.height = innerWidth <= 820 && two ? '280px' : '';
@@ -608,6 +631,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G.s = Math.max(1, Math.min((G.W - padL - padR) / LX, (G.H - padT - padB) / LY));
     G.bx0 = padL + (G.W - padL - padR - LX * G.s) / 2;
     G.by0 = padT + (G.H - padT - padB - LY * G.s) / 2;
+    if (beside) { const top = Math.round(on3d ? padT : G.by0) + 'px'; $('cardA').style.top = top; $('cardB').style.top = top; }
     dirty = true;
   }
   const toX = (x) => G.bx0 + x * G.s, toY = (y) => G.by0 + (LY - y) * G.s;
@@ -618,6 +642,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, G.W, G.H);
     const x0 = toX(0), x1 = toX(LX), yTop = toY(LY), yBot = toY(0), wp = toX(GS.wallX);
 
+    /* two gases, divider closed: each half faintly tinted in the color of the gas that starts there */
+    if (two && GS.div === 1) {
+      ctx.globalAlpha = 0.06; ctx.fillStyle = T.neg; ctx.fillRect(x0, yTop, toX(DIV_X) - x0, yBot - yTop);
+      ctx.fillStyle = T.pos; ctx.fillRect(toX(DIV_X), yTop, wp - toX(DIV_X), yBot - yTop); ctx.globalAlpha = 1;
+    }
     // 5 nm grid inside the gas
     ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath();
     for (let x = 5; x < GS.wallX; x += 5) { const p = Math.round(toX(x)) + 0.5; ctx.moveTo(p, yTop); ctx.lineTo(p, yBot); }
@@ -695,6 +724,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (GS.div === 2) { ctx.moveTo(xd, yTop); ctx.lineTo(xd, hy0); ctx.moveTo(xd, hy1); ctx.lineTo(xd, yBot); }
       else { ctx.moveTo(xd, yTop); ctx.lineTo(xd, yBot); }
       ctx.stroke();
+      if (GS.div === 1) {   /* where the hole will open: notches on the closed divider, and its width */
+        const n = 6 * ps;
+        ctx.strokeStyle = T.accent; ctx.lineWidth = 2 * ps; ctx.beginPath();
+        ctx.moveTo(xd - n, hy0); ctx.lineTo(xd + n, hy0); ctx.moveTo(xd - n, hy1); ctx.lineTo(xd + n, hy1); ctx.stroke();
+        ctx.font = `600 ${11 * ps}px ` + T.mono; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+        let lab = 'hole opens here, ' + GS.hole.toFixed(1) + ' nm';
+        if (xd + n + ctx.measureText(lab).width + 14 * ps > wp) lab = 'hole, ' + GS.hole.toFixed(1) + ' nm';   /* a narrow box: the short label */
+        const lw = ctx.measureText(lab).width + 10 * ps, lx = xd + n + 4 * ps, ly = (hy0 + hy1) / 2;
+        ctx.fillStyle = T.surface; ctx.globalAlpha = 0.9; ctx.fillRect(lx, ly - 9 * ps, lw, 18 * ps); ctx.globalAlpha = 1;
+        ctx.fillStyle = T.accent; ctx.fillText(lab, lx + 5 * ps, ly + 0.5);
+      }
     } else if (two) {
       ctx.save(); ctx.setLineDash([3 * ps, 5 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = ps; ctx.beginPath();
       ctx.moveTo(toX(DIV_X), yTop); ctx.lineTo(toX(DIV_X), yBot); ctx.stroke(); ctx.restore();
@@ -849,12 +889,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const pRod = VD3K.rod([0, 0, 0], [1, 0, 0], 0.006, steel); pRod.geometry.translate(0, 0.5, 0); pRod.position.set(0, 0, 0); pRod.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(1, 0, 0));
     const knob = new THREE.Mesh(new THREE.SphereGeometry(0.018, 24, 16), VD3K.material(S, { roughness: 0.4, metalness: 0.1 }, ['#2b60b5', '#69a0ff']));
     knob.castShadow = true; piston.add(face, pRod, knob); S.scene.add(piston);
-    S.scene.add(VD3K.box(0.016, 0.05, LY * K3 + 0.04, dark, LX * K3 + 0.008, 0, Z0 - 0.02));   /* the end collar the ram slides through */
+    const collar = VD3K.box(0.016, 0.05, LY * K3 + 0.04, dark, LX * K3 + 0.008, 0, Z0 - 0.02); S.scene.add(collar);   /* the end collar the ram slides through */
+    /* the two gas setups have no piston: a fixed steel right wall closes the chamber at 50 nm */
+    const rWall = VD3K.box(0.012, 0.036, LY * K3 + 0.024, steel, LX * K3 + 0.006, 0, Z0 - 0.012); rWall.visible = false; S.scene.add(rWall);
     /* molecules, the marked one, its trail, and the wall flashes */
     const gas = VD3K.particles(S, { n: NMAX, r: R * K3, seg: 10 }); S.scene.add(gas);
     const gasB = VD3K.particles(S, { n: NMAX, r: R * K3, seg: 10 }); S.scene.add(gasB);   /* gas B of the two gas setups */
     /* the divider of the two gas setups: a thin steel plate across the chamber at 25 nm, in two pieces around the hole */
-    const divs = [0, 1].map(() => { const b = VD3K.box(0.004, 0.032, 1, steel, DIV_X * K3, 0, 0); b.geometry.translate(0, 0, -0.5); b.position.z = Z0; b.visible = false; S.scene.add(b); return b; });
+    const divs = [0, 1].map(() => { const b = VD3K.box(0.004, 0.032, 1, steel, DIV_X * K3, 0, 0); b.geometry.translate(0, 0, 0.5); b.position.z = Z0; b.visible = false; S.scene.add(b); return b; });
     const mark = VD3K.marker(S, { r: 0.008, color: tok.accent || '#2b60b5' }); S.scene.add(mark);
     const trailG = new THREE.BufferGeometry(); trailG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(360 * 3), 3));
     const trailL = new THREE.Line(trailG, new THREE.LineBasicMaterial({ color: tok.accent || '#2b60b5', transparent: true, opacity: 0.75 })); trailL.frustumCulled = false; S.scene.add(trailL);
@@ -866,7 +908,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* instruments: a pressure gauge fed by the hits, and a thermometer reading the mean kinetic energy */
     const top = Z0 + LY * K3 + 0.012;
     const gauge = VD3K.meter(S, { kind: 'needle', label: 'PRESSURE', sub: 'measured from wall hits', w: 0.17, h: 0.11, tilt: -0.15 });
-    gauge.position.set(0.14, 0, top + 0.03 + 0.055); S.scene.add(gauge, VD3K.rod([0.14, 0, top], [0.14, 0, top + 0.035], 0.006, steel));
+    const gRod = VD3K.rod([0.14, 0, top], [0.14, 0, top + 0.035], 0.006, steel);
+    gauge.position.set(0.14, 0, top + 0.03 + 0.055); S.scene.add(gauge, gRod);
+    /* where the hole will open, while the divider is closed */
+    const holeLab = VD3K.label('hole opens here', { size: 0.022, color: '#2b60b5', bg: 'rgba(255,255,255,0.88)' }); holeLab.visible = false; S.scene.add(holeLab);
+    const notchM = new THREE.MeshBasicMaterial({ color: '#2b60b5' });
+    const notches = [0, 1].map(() => { const b = new THREE.Mesh(new THREE.BoxGeometry(0.016, 0.036, 0.0025), notchM); b.visible = false; S.scene.add(b); return b; });
     const therm = VD3K.meter(S, { label: 'TEMPERATURE', sub: 'from mean kinetic energy', w: 0.15, h: 0.09 });
     therm.position.set(-0.16, -0.04, 0.045); S.scene.add(therm);
     S.scene.add(VD3K.cable([-0.16, -0.03, 0.03], [-0.006, 0, Z0 + 0.04], { sag: 0.03, color: 0xb8382a }));
@@ -874,7 +921,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     hLab.position.set(-0.04, -0.02, Z0 + LY * K3 / 2); S.scene.add(wLab, hLab);
     const follow = VD3K.follow({ x: 0.25, y: 0, z: Z0 + 0.15 }, 0.1);
     let pScale = 0;
-    G3 = { S, gScale: 1, gScaleB: 1, gas, gasB, divs, mark, trailL, flashes, piston, face, pRod, knob, gauge, therm, wLab, follow, next: 0, setScale: (v) => { pScale = v; }, get pScale() { return pScale; } };
+    G3 = { S, gScale: 1, gScaleB: 1, gas, gasB, divs, collar, rWall, gRod, holeLab, notches, mark, trailL, flashes, piston, face, pRod, knob, gauge, therm, wLab, follow, next: 0, setScale: (v) => { pScale = v; }, get pScale() { return pScale; } };
     S.orbit(S.el, o3, () => { dirty = true; }, { grab: grab3, zMin: 0.6, zMax: 3 });
     S.el.addEventListener('pointermove', move3); S.el.addEventListener('pointerup', up3); S.el.addEventListener('pointercancel', up3);
     G3.hit = (side, at, dp) => {
@@ -928,6 +975,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       g.gas.show(N); g.gas.done(); g.gasB.show(0); g.gasB.done();
     }
     g.divs.forEach((d) => { d.visible = two && GS.div > 0; });
+    for (const o of [g.face, g.pRod, g.knob, g.collar, g.gauge, g.gRod]) o.visible = !two;   /* no piston or pressure gauge with two gases */
+    g.rWall.visible = two;
+    g.holeLab.visible = two && GS.div === 1;
+    g.notches.forEach((b, k) => { b.visible = g.holeLab.visible; b.position.set(DIV_X * K3, 0, Z0 + (HOLE_Y + (k ? 0.5 : -0.5) * GS.hole) * K3); });
+    if (two && GS.div === 1) { g.holeLab.set('hole opens here, ' + GS.hole.toFixed(1) + ' nm'); g.holeLab.position.set(DIV_X * K3 + 0.075, -0.03, Z0 + HOLE_Y * K3); }
     if (two && GS.div) {
       const lo = GS.div === 2 ? HOLE_Y - GS.hole / 2 : LY, hi = GS.div === 2 ? HOLE_Y + GS.hole / 2 : LY;
       g.divs[0].position.z = Z0; g.divs[0].scale.z = lo * K3;
@@ -965,9 +1017,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g.gauge.set(simT > 0 && isFinite(pm) ? pm / pFull : 0, simT > 0 ? pa : '—'); void fs;
     g.therm.set(fmtK(stats.T));
     /* camera: the whole apparatus, or riding along with the marked molecule */
-    const tgt = ride && tracer < N ? W3(px[tracer], py[tracer]) : [0.36, 0, 0.26];
+    const tgt = ride && tracer < N ? W3(px[tracer], py[tracer]) : two ? [0.235, 0, 0.215] : [0.36, 0, 0.26];   /* two gases: just the chamber, between the gas cards */
     const f = g.follow.to(tgt[0], tgt[1], tgt[2]);
-    S.place(o3, [f.x, f.y, f.z], ride ? S.fit(0.42) : S.fit(1.38));
+    S.place(o3, [f.x, f.y, f.z], ride ? S.fit(0.42) : S.fit(two ? 1.12 : 1.38));
     S.render();
   }
   const view3 = VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { $('status3d').textContent = m; },
@@ -1087,9 +1139,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     hotcold2: { A: { m: 40, d: 0.5, T: 600, n: 150 }, B: { m: 40, d: 0.5, T: 150, n: 150 }, hole: 3, graph: 'counts',
       hint: 'Hot argon (600 K) on the left and cold argon (150 K) on the right. Remove the divider: the gases mix, and collisions bring both sides to one temperature.' }
   };
+  const LEDE = [$('lede').textContent, 'Two gases share the box, kept apart by a divider. Open it and watch them mix, spread out, and leak through a small hole.'];
   function setTwo(on) {
     two = on;
-    for (const id of ['divSeg', 'graphSeg', 'read2', 'more2', 'secTwo', 'recRun']) $(id).hidden = !on;
+    for (const id of ['divSeg', 'holeCtl', 'gasCards', 'graphSeg', 'read2', 'more2', 'secTwo', 'recRun']) $(id).hidden = !on;
+    $('stage').classList.toggle('two', on);
+    $('lede').textContent = LEDE[on ? 1 : 0];
     for (const id of ['read1', 'more1', 'secGas', 'secPiston']) $(id).hidden = on;
     $('clock').classList.toggle('two', on);
     $('cap3d').textContent = CAP[on ? 1 : 0];
@@ -1230,7 +1285,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const fmtMsd = (v) => (isFinite(v) ? (v >= 100 ? Math.round(v) : v.toFixed(1)) + ' nm²' : '—');
   function updateTwo() {
     const s = ms2 || mixStats(GS, N, px, py);
-    $('rT2').textContent = run.open ? fmtPs(run.t) : 'not yet open';
+    $('rT2').textContent = run.open ? fmtPs(run.t) : '—';   /* the Divider readout says closed */
     $('rDiv').textContent = run.label;
     $('rA2').textContent = s.left[0] + ' · ' + s.right[0];
     $('rB2').textContent = s.left[1] + ' · ' + s.right[1];
