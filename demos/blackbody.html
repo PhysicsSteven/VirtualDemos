@@ -1173,7 +1173,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- boot ----------
   /* How this works: a short video of one sample reading; made by tools/howto/ */
-  VD.howTo({ src: 'media/how-this-works/blackbody.mp4', poster: 'media/how-this-works/blackbody.jpg' });
+  /* How this works: the Astro 2203 worksheet opens the demo with ?ws=intro-blackbody */
+  const howVid = () => (VD.ws('blackbody') === 'intro-blackbody' ? 'intro-blackbody' : 'blackbody');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
   applyPreset('sun');
   renderPins();
   new ResizeObserver(resize).observe(stage);

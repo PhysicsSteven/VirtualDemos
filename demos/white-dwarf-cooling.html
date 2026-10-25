@@ -1054,7 +1054,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // labels
     c.font = `${10.5 * ps}px ${T.mono}`; c.fillStyle = T.muted; c.textAlign = 'center'; c.textBaseline = 'top';
     c.fillText(`R = ${Math.round(s.R / 1000).toLocaleString('en-US')} km` + (on3 ? ' · quarter cut away' : ''), cx, on3 ? cy + Rmax + 4 * ps : cy + 5 * ps);
-    label(c, 'Earth', cx - rE * 0.74, cy - rE * 0.74 - 2 * ps, T.muted, 'right', 'bottom', false, 10);
+    /* in 3D the liquid label sits in the cut away quarter at the top, so Earth's label goes at the lower left of its circle */
+    if (on3) label(c, 'Earth', cx - rE * 0.74, cy + rE * 0.74 + 2 * ps, T.muted, 'right', 'top', false, 10);
+    else label(c, 'Earth', cx - rE * 0.74, cy - rE * 0.74 - 2 * ps, T.muted, 'right', 'bottom', false, 10);
     label(c, `M = ${S.M.toFixed(2)} M☉`, hx + 9 * ps, hy - 6 * ps, T.accent, 'left', 'bottom', true, 10.5);
     const comp = COMPS[S.comp].short;
     if (rs > 14 * ps) label(c, `solid ${Math.round(100 * nw.fs)}%`, cx, cy - Math.min(rs * 0.45, rs - 8 * ps), T.ink, 'center', 'middle', true, 10.5);

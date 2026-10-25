@@ -4206,7 +4206,10 @@ Spectra picks its video by worksheet (`VD.ws('spectra')`, since the intro worksh
 Radioactive Decay by the setup (a two step chain shows the Parent and Daughter video), matching where Export sends the readings.
 whats-new.js not touched (one entry per batch comes later).
 
-Seen while recording, not changed: in White Dwarf Cooling's 3D slice the "Earth" scale label overlaps the "liquid C/O" label.
+Follow up: **intro-blackbody** (21.2 s, Astro 2203, ?ws=intro-blackbody): Betelgeuse, 3600 K: peak 805 nm (b/T = 804.9), flux
+9.52 × 10⁶ W/m² (σT⁴ = 9.524 × 10⁶), visible share 19.9%, class M, red. Blackbody now picks its video by worksheet
+(`VD.ws('blackbody')`), like Spectra. White Dwarf Cooling's 3D slice: the "Earth" scale label overlapped "liquid C/O"; in 3D it now
+sits at the lower left of Earth's circle (Flat unchanged), and the White Dwarf Cooling video was retaken with it (same readings).
 
 
 
