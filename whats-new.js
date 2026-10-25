@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-watch-molecules', date: '2026-10-25', title: 'Watch molecules share energy',
+    text: 'Heat Capacities of Gases has a new Watch the molecules view: 125 simulated molecules start moving but not spinning, and collisions set them turning until motion and rotation reach the same temperature. It shows why a gas like nitrogen has C_V = 5/2 R while argon has 3/2 R.', link: { href: 'demos/gas-heat-capacity.html?setup=molNoSpin', text: 'Open Heat Capacities of Gases' } },
   { id: '2026-10-25-gas-walls', date: '2026-10-25', title: 'Walls with a temperature',
     text: 'In Gas in a Box each wall can now be insulated or held at a temperature of its own, so the gas cools or warms toward the walls, or carries heat from a hot wall to a cold one. Try the Cold walls and Hot wall, cold wall setups.', link: { href: 'demos/ideal-gas.html', text: 'Open Gas in a Box' } },
   { id: '2026-10-25-how-this-works', date: '2026-10-25', title: 'How this works videos',

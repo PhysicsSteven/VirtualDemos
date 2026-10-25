@@ -66,6 +66,7 @@
         <div class="seg" role="group" aria-label="View" id="viewSeg">
           <button type="button" data-v="heat" aria-pressed="true">Heat a gas</button>
           <button type="button" data-v="ru" aria-pressed="false">Rüchardt's ball</button>
+          <button type="button" data-v="mol" aria-pressed="false">Watch the molecules</button>
         </div>
         <button type="button" class="spin attn" id="go">Start</button>
         <button type="button" class="btn" id="restart">Start over</button>
@@ -102,6 +103,26 @@
           <div><div class="slider-head"><label for="sV">Flask volume V</label><output id="oV" class="mono" for="sV"></output></div><input type="range" id="sV" min="2" max="20" step="1"></div>
           <div class="wide"><button type="button" class="btn" id="drop">Drop the ball</button><span class="lab">The photogate times each full swing.</span></div>
         </div>
+        <div class="shelf-card" id="cardMol" role="group" aria-label="The simulated molecules" hidden>
+          <span class="card-title">125 simulated molecules in a box 3.60 nm on a side, with hard walls and nothing else to share energy with</span>
+          <div class="wide">
+            <span class="lab">Molecules</span>
+            <div class="seg" role="group" aria-label="Molecules" id="molKindSeg">
+              <button type="button" data-k="dumb" aria-pressed="true">Two atoms (like N₂)</button>
+              <button type="button" data-k="atom" aria-pressed="false">Single atoms (like Ar)</button>
+            </div>
+          </div>
+          <div class="wide">
+            <span class="lab">Energy at the start</span>
+            <div class="seg" role="group" aria-label="Energy at the start" id="molStartSeg">
+              <button type="button" data-st="trans" aria-pressed="true">All in motion, no spin</button>
+              <button type="button" data-st="rot" aria-pressed="false">Mostly in spin</button>
+            </div>
+          </div>
+          <div><div class="slider-head"><label for="sBond">Bond length</label><output id="oBond" class="mono" for="sBond"></output></div><input type="range" id="sBond" min="0.05" max="0.36" step="0.01"></div>
+          <div class="wide"><button type="button" class="btn" id="molHeatBtn">Add heat (+100 K of motion)</button><span class="lab" id="molNote"></span></div>
+          <div class="wide"><span class="lab">Each temperature counts ½kT for every way to move (3) or turn (2), averaged over the last 1 ps.</span></div>
+        </div>
       </div>
     </div>
 
@@ -115,6 +136,9 @@
           <button type="button" data-p="nitrogen" aria-pressed="false">Nitrogen</button>
           <button type="button" data-p="mystery" aria-pressed="false">Mystery gas</button>
           <button type="button" data-p="ruchardt" aria-pressed="false">Rüchardt's ball</button>
+          <button type="button" data-p="molNoSpin" aria-pressed="false">Molecules start with no spin</button>
+          <button type="button" data-p="molSpin" aria-pressed="false">Molecules start spinning</button>
+          <button type="button" data-p="molAtoms" aria-pressed="false">Atoms: nothing to spin</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -150,6 +174,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <details class="more"><summary>About the demo</summary>
           <p class="hint" id="aboutHeat"></p>
           <p class="hint" id="aboutRu"></p>
+          <p class="hint" id="aboutMol"></p>
         </details>
         </div></details>
       </section>
@@ -199,6 +224,82 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { P, gamma: g, omega: Math.sqrt(w2), T0: 2 * Math.PI / Math.sqrt(w2), Td: 2 * Math.PI / wd, wd };
   }
   const ballX = (r, x0, t) => x0 * Math.exp(-t / DAMP_TAU) * Math.cos(r.wd * t);
+  /* Watch the molecules: a simulated gas of rigid dumbbells in a cube with smooth hard walls. Each molecule is two smooth hard
+     spheres (atom diameter σ) held a bond length d apart, with each atom's mass at its center; a single atom is one sphere. Collisions
+     are elastic: the impulse at the contact acts along the line through the two atom centers, and because that point is off a
+     molecule's center it can set the molecule turning. A smooth sphere pushes along a line through the atom's own center, so no
+     collision can spin a molecule about its own axis: a linear molecule has 2 ways to turn, not 3. Units inside: σ, the atom mass and
+     k·(300 K). Between collisions each molecule moves in a straight line and turns steadily about its angular velocity; nothing else
+     changes its energy, so the total is conserved to rounding. Time steps are short (no atom moves more than 0.02 σ per step);
+     a collision is applied to a pair of atoms that overlap and are closing. Classical mechanics throughout: no quantum freeze out. */
+  const KB = 1.380649e-23, AMU = 1.66053906892e-27, MOL_T0 = 300, MOL_SIG = 0.30e-9, MOL_MA = 14.007 * AMU, MOL_L = 12;
+  const MOL_TAU = MOL_SIG / Math.sqrt(KB * MOL_T0 / MOL_MA), MOL_EU = KB * MOL_T0;   /* time unit (s) and energy unit (J) */
+  function molRng(seed) { let s = (seed >>> 0) || 1; return () => { s ^= s << 13; s >>>= 0; s ^= s >>> 17; s ^= s << 5; s >>>= 0; return s / 4294967296; }; }
+  /* o: { n, dumb (true: dumbbells), d (bond in σ), Tt and Tr (starting temperatures of translation and rotation, in units of 300 K), seed }.
+     Molecules start on a lattice, axes at random, speeds drawn from Maxwell's distribution at Tt, angular velocities at Tr. */
+  function molMake(o) {
+    const r = molRng(o.seed), gs = () => Math.sqrt(-2 * Math.log(r() || 1e-12)) * Math.cos(2 * Math.PI * r());
+    const N = o.n, dumb = !!o.dumb, d = dumb ? o.d : 0, M = dumb ? 2 : 1, I = dumb ? 2 * (d / 2) * (d / 2) : 0, g = Math.ceil(Math.cbrt(N)), sp = MOL_L / g, mol = [];
+    for (let i = 0; i < N; i++) {
+      let ex = gs(), ey = gs(), ez = gs(); const e = Math.hypot(ex, ey, ez); ex /= e; ey /= e; ez /= e;
+      let wx = gs(), wy = gs(), wz = gs(); const dt = wx * ex + wy * ey + wz * ez; wx -= dt * ex; wy -= dt * ey; wz -= dt * ez;
+      const sv = Math.sqrt(o.Tt / M), sw = dumb ? Math.sqrt(o.Tr / I) : 0;
+      mol.push({ x: (i % g + 0.5) * sp, y: (Math.floor(i / g) % g + 0.5) * sp, z: (Math.floor(i / g / g) + 0.5) * sp, vx: gs() * sv, vy: gs() * sv, vz: gs() * sv, ex, ey, ez, wx: wx * sw, wy: wy * sw, wz: wz * sw });
+    }
+    /* scale the draws so the gas starts at exactly Tt and Tr */
+    const G = { N, dumb, d, M, I, mol, t: 0, hits: 0 }, e = molEnergy(G), st = e.kt > 0 ? Math.sqrt(o.Tt / e.Tt) : 0, sr = e.kr > 0 ? Math.sqrt(o.Tr / e.Tr) : 0;
+    for (const m of mol) { m.vx *= st; m.vy *= st; m.vz *= st; m.wx *= sr; m.wy *= sr; m.wz *= sr; }
+    return G;
+  }
+  function molEnergy(G) {
+    let kt = 0, kr = 0; for (const m of G.mol) { kt += 0.5 * G.M * (m.vx * m.vx + m.vy * m.vy + m.vz * m.vz); kr += 0.5 * G.I * (m.wx * m.wx + m.wy * m.wy + m.wz * m.wz); }
+    /* temperatures from equipartition: 3 ways to move through space (3/2 kT), 2 ways to turn (kT) */
+    return { kt, kr, U: kt + kr, Tt: kt / (1.5 * G.N), Tr: G.dumb ? kr / G.N : 0, Teq: (kt + kr) / ((G.dumb ? 2.5 : 1.5) * G.N) };
+  }
+  /* atom centers and their offsets from the molecule's center */
+  function molAtoms(G, m) { const a = G.d / 2; return G.dumb ? [[m.x + a * m.ex, m.y + a * m.ey, m.z + a * m.ez, a * m.ex, a * m.ey, a * m.ez], [m.x - a * m.ex, m.y - a * m.ey, m.z - a * m.ez, -a * m.ex, -a * m.ey, -a * m.ez]] : [[m.x, m.y, m.z, 0, 0, 0]]; }
+  function molStep(G, dt) {
+    const ms = G.mol, N = G.N, iM = 1 / G.M, iI = G.I ? 1 / G.I : 0, reach = (G.d + 1) * (G.d + 1);
+    for (const m of ms) {
+      m.x += m.vx * dt; m.y += m.vy * dt; m.z += m.vz * dt;
+      const w = Math.hypot(m.wx, m.wy, m.wz); if (!(w > 0)) continue;
+      /* the axis turns by w dt about the angular velocity (Rodrigues' rotation) */
+      const th = w * dt, c = Math.cos(th), s = Math.sin(th), ux = m.wx / w, uy = m.wy / w, uz = m.wz / w, dd = (ux * m.ex + uy * m.ey + uz * m.ez) * (1 - c);
+      const ex = m.ex * c + (uy * m.ez - uz * m.ey) * s + ux * dd, ey = m.ey * c + (uz * m.ex - ux * m.ez) * s + uy * dd, ez = m.ez * c + (ux * m.ey - uy * m.ex) * s + uz * dd, e = Math.hypot(ex, ey, ez);
+      m.ex = ex / e; m.ey = ey / e; m.ez = ez / e;
+    }
+    /* walls: an atom touching a wall and moving into it bounces; J = −2 v_n / (1/M + |r × n|²/I) */
+    for (const m of ms) for (const A of molAtoms(G, m)) for (let k = 0; k < 3; k++) {
+      const lo = A[k] < 0.5, hi = A[k] > MOL_L - 0.5; if (!lo && !hi) continue;
+      const n0 = k === 0 ? (lo ? 1 : -1) : 0, n1 = k === 1 ? (lo ? 1 : -1) : 0, n2 = k === 2 ? (lo ? 1 : -1) : 0, rx = A[3], ry = A[4], rz = A[5];
+      const vn = (m.vx + m.wy * rz - m.wz * ry) * n0 + (m.vy + m.wz * rx - m.wx * rz) * n1 + (m.vz + m.wx * ry - m.wy * rx) * n2; if (vn >= 0) continue;
+      const tx = ry * n2 - rz * n1, ty = rz * n0 - rx * n2, tz = rx * n1 - ry * n0, J = -2 * vn / (iM + iI * (tx * tx + ty * ty + tz * tz));
+      m.vx += J * n0 * iM; m.vy += J * n1 * iM; m.vz += J * n2 * iM; m.wx += J * tx * iI; m.wy += J * ty * iI; m.wz += J * tz * iI;
+    }
+    /* pairs of atoms on different molecules: J = −2 v_n / (2/M + |r_A × n|²/I + |r_B × n|²/I) */
+    const AT = ms.map((m) => molAtoms(G, m));
+    for (let i = 0; i < N; i++) { const a = ms[i]; for (let j = i + 1; j < N; j++) { const b = ms[j], X = b.x - a.x, Y = b.y - a.y, Z = b.z - a.z; if (X * X + Y * Y + Z * Z > reach) continue;
+      for (const P of AT[i]) for (const Q of AT[j]) {
+        const dx = Q[0] - P[0], dy = Q[1] - P[1], dz = Q[2] - P[2], r2 = dx * dx + dy * dy + dz * dz; if (r2 >= 1) continue;
+        const rr = Math.sqrt(r2), nx = dx / rr, ny = dy / rr, nz = dz / rr;
+        const vn = (b.vx + b.wy * Q[5] - b.wz * Q[4] - a.vx - a.wy * P[5] + a.wz * P[4]) * nx + (b.vy + b.wz * Q[3] - b.wx * Q[5] - a.vy - a.wz * P[3] + a.wx * P[5]) * ny + (b.vz + b.wx * Q[4] - b.wy * Q[3] - a.vz - a.wx * P[4] + a.wy * P[3]) * nz;
+        if (vn >= 0) continue;
+        const tax = P[4] * nz - P[5] * ny, tay = P[5] * nx - P[3] * nz, taz = P[3] * ny - P[4] * nx, tbx = Q[4] * nz - Q[5] * ny, tby = Q[5] * nx - Q[3] * nz, tbz = Q[3] * ny - Q[4] * nx;
+        const J = -2 * vn / (2 * iM + iI * (tax * tax + tay * tay + taz * taz + tbx * tbx + tby * tby + tbz * tbz));
+        a.vx -= J * nx * iM; a.vy -= J * ny * iM; a.vz -= J * nz * iM; b.vx += J * nx * iM; b.vy += J * ny * iM; b.vz += J * nz * iM;
+        a.wx -= J * tax * iI; a.wy -= J * tay * iI; a.wz -= J * taz * iI; b.wx += J * tbx * iI; b.wy += J * tby * iI; b.wz += J * tbz * iI; G.hits++;
+      } } }
+    G.t += dt;
+  }
+  /* advance by tt time units in steps of at most 0.005, short enough that no atom moves more than 0.02 σ */
+  function molAdvance(G, tt) {
+    let left = tt; while (left > 1e-12) {
+      let vmax = 1e-9; for (const m of G.mol) vmax = Math.max(vmax, Math.hypot(m.vx, m.vy, m.vz) + Math.hypot(m.wx, m.wy, m.wz) * G.d / 2);
+      const dt = Math.min(left, 0.005, 0.02 / vmax); molStep(G, dt); left -= dt;
+    }
+  }
+  /* heat delivered straight into motion through space: every speed scaled so the translational energy rises by dU */
+  function molHeat(G, dU) { const e = molEnergy(G), s = Math.sqrt((e.kt + dU) / e.kt); for (const m of G.mol) { m.vx *= s; m.vy *= s; m.vz *= s; } }
   // ==CORE END==
   if (typeof document === 'undefined') return;
 
@@ -206,7 +307,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const VG = window.VDGear;
   const S = { view: 'heat', preset: 'argonV', run: false, speed: 1, blind: false,
     heat: { gas: 'Ar', n: 0.10, mode: 'V', W: 2, Q: 0, t: 0, mys: 'N2', mysN: 0, lastMys: null },
-    ru: { gas: 'air', V: 10, t: 0, x0: 0.010, dropped: false, swings: [], lastCross: null, lastPeriod: null } };
+    ru: { gas: 'air', V: 10, t: 0, x0: 0.010, dropped: false, swings: [], lastCross: null, lastPeriod: null },
+    mol: { dumb: true, d: 0.11, start: 'trans', G: null, seed: 1, hist: [], Q: 0 } };
+  /* Watch the molecules: 1× plays 0.5 ps of the simulation each second, 5× plays 2.5 ps */
+  const MOL_N = 125, MOL_PS = 0.5, MOL_TMAX = 2000, MOL_DRAW = 0.7;   /* atoms drawn at 70% of their size, so the bonds show */
+  const molPs = () => (S.mol.G ? S.mol.G.t * MOL_TAU * 1e12 : 0);
+  function molReset(seed) {
+    const m = S.mol; m.seed = seed == null ? 1 + Math.floor(Math.random() * 4294967000) : seed; m.Q = 0;
+    const spin = m.dumb && m.start === 'rot';
+    m.G = molMake({ n: MOL_N, dumb: m.dumb, d: m.d * 1e-9 / MOL_SIG, Tt: spin ? 0.1 : 1, Tr: spin ? 1.35 : 0, seed: m.seed });
+    m.hist = []; molNote();
+  }
+  function molNote() { const e = molEnergy(S.mol.G); S.mol.hist.push([molPs(), e.Tt * MOL_T0, e.Tr * MOL_T0]); if (S.mol.hist.length > 6000) S.mol.hist = S.mol.hist.filter((_, i) => i % 2 === 0); }
+  /* the mean of the last 1 ps of the record, to steady the readouts (125 molecules jitter by several percent) */
+  function molAvg() { const h = S.mol.hist, t1 = h.length ? h[h.length - 1][0] : 0; let a = 0, b = 0, k = 0; for (let i = h.length - 1; i >= 0 && h[i][0] >= t1 - 1; i--) { a += h[i][1]; b += h[i][2]; k++; } return k ? [a / k, b / k] : [0, 0]; }
   const can = $('can'), ctx = can.getContext('2d'), cur = $('curve'), cctx = cur.getContext('2d');
   let W = 0, H = 0, dpr = 1, CW = 0, CH = 0, T = null;
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
@@ -314,6 +428,57 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (VG) VG.cable(ctx, fx + tubeW / 2 + 14 * p, eqY, lx - 6, H * 0.1 + 14 * p, 30, { w: 2.5 * p });
     if (VG) { VG.label(ctx, `${S.ru.gas === 'air' ? 'dry air' : GASES[S.ru.gas].name.split(',')[0].toLowerCase()}, ${S.ru.V} L flask`, fx, by + 16 * p, { a: 'center', s: 10.5 * p }); VG.label(ctx, 'swing drawn 3 times larger', fx + tubeW + 16 * p, tubeTop + 10 * p, { s: 10 * p }); }
   }
+  /* ---------- Watch the molecules, flat view: the box seen in perspective, every atom where the simulation has it ---------- */
+  const hexRgb = (h) => { const m = /^#?([0-9a-f]{6})$/i.exec(h || ''); const v = m ? parseInt(m[1], 16) : 0x888888; return [v >> 16 & 255, v >> 8 & 255, v & 255]; };
+  const mixA = (A, B, t) => A.map((v, i) => Math.round(v + (B[i] - v) * t)), css = (A) => `rgb(${A.join(',')})`;
+  /* how strongly a molecule is spinning, 0 to 1, for its color: its own rotational energy against 2 kT of the whole gas */
+  const spinOf = (G, m, Tq) => (G.dumb ? Math.min(1, 0.5 * G.I * (m.wx * m.wx + m.wy * m.wy + m.wz * m.wz) / (2 * Math.max(0.05, Tq))) : 0);
+  function molScale(e, avg) { const top = Math.max(e.Tt, e.Tr, e.Teq) * MOL_T0; return Math.max(400, Math.ceil(Math.max(top, avg[0], avg[1]) * 1.15 / 100) * 100); }
+  function drawSim() {
+    const p = proj(), G = S.mol.G, e = molEnergy(G), avg = molAvg(), wide = W >= 620;
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const gw = wide ? 170 * p : 0, top = wide ? 0 : 74 * p, cx = (W - gw) / 2, cy = top + (H - top) / 2 + 6 * p, sc = Math.min((W - gw) * 0.86, (H - top) * 0.86) / (MOL_L * 1.55);
+    const ya = 0.55, pa = 0.32, D = 46, c1 = Math.cos(ya), s1 = Math.sin(ya), c2 = Math.cos(pa), s2 = Math.sin(pa);
+    const P3 = (x, y, z) => { const X = x - MOL_L / 2, Y = y - MOL_L / 2, Z = z - MOL_L / 2, u = X * c1 - Y * s1, yy = X * s1 + Y * c1, v = Z * c2 - yy * s2, w = yy * c2 + Z * s2, k = D / (D + w); return [cx + u * k * sc, cy - v * k * sc, w, k]; };
+    const Lb = MOL_L, corners = []; for (let i = 0; i < 8; i++) corners.push(P3(i & 1 ? Lb : 0, i & 2 ? Lb : 0, i & 4 ? Lb : 0));
+    const edges = []; for (let i = 0; i < 8; i++) for (const b of [1, 2, 4]) if (!(i & b)) edges.push([i, i | b]);
+    const edge = (front) => { ctx.strokeStyle = dark() ? 'rgba(200,215,230,0.55)' : 'rgba(60,80,100,0.55)'; ctx.lineWidth = 1.4 * p; ctx.beginPath();
+      for (const [a, b] of edges) { if (((corners[a][2] + corners[b][2]) / 2 < 0) !== front) continue; ctx.moveTo(corners[a][0], corners[a][1]); ctx.lineTo(corners[b][0], corners[b][1]); } ctx.stroke(); };
+    /* the floor, faintly shaded */
+    ctx.fillStyle = dark() ? 'rgba(120,140,160,0.10)' : 'rgba(60,90,120,0.07)'; ctx.beginPath(); [0, 1, 3, 2].forEach((i, k) => (k ? ctx.lineTo(corners[i][0], corners[i][1]) : ctx.moveTo(corners[i][0], corners[i][1]))); ctx.fill();
+    edge(false);
+    const base = hexRgb(dark() ? '#c9d3df' : '#4a5868'), rotC = hexRgb(T.rot), shade = hexRgb(dark() ? '#1a2029' : '#202833'), items = [];
+    for (const m of G.mol) { const A = molAtoms(G, m).map((a) => P3(a[0], a[1], a[2])), c = mixA(base, rotC, spinOf(G, m, e.Teq)); items.push({ A, w: A.reduce((t, a) => t + a[2], 0) / A.length, col: css(c), edge: css(mixA(c, shade, 0.55)) }); }
+    items.sort((a, b) => b.w - a.w);
+    for (const it of items) {
+      const r0 = 0.5 * MOL_DRAW * sc;
+      if (it.A.length > 1) { ctx.strokeStyle = it.col; ctx.lineWidth = Math.max(1, r0 * 0.4 * it.A[0][3]); ctx.beginPath(); ctx.moveTo(it.A[0][0], it.A[0][1]); ctx.lineTo(it.A[1][0], it.A[1][1]); ctx.stroke(); }
+      for (const a of it.A.slice().sort((u, v) => v[2] - u[2])) { const r = r0 * a[3], gr = ctx.createRadialGradient(a[0] - r * 0.35, a[1] - r * 0.35, r * 0.1, a[0], a[1], r);
+        gr.addColorStop(0, 'rgba(255,255,255,0.85)'); gr.addColorStop(0.35, it.col); gr.addColorStop(1, it.edge);
+        ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(a[0], a[1], r, 0, 7); ctx.fill(); }
+    }
+    edge(true);
+    /* two thermometers: motion through space and rotation, each the mean of the last 1 ps */
+    const Ts = molScale(e, avg), gauges = G.dumb ? [['motion through space', avg[0], T.trans], ['rotation', avg[1], T.rot]] : [['motion through space', avg[0], T.trans]];
+    const lab = (t, x, y, o) => { if (VG) VG.label(ctx, t, x, y, o); };
+    if (wide) {
+      const gx = W - gw + 18 * p, gy = H * 0.1, gh = H * 0.62, tw = 18 * p;
+      gauges.forEach(([nm, Tv, col], i) => { const x = gx + i * 72 * p, hh = gh * Math.min(1, Tv / Ts);
+        ctx.fillStyle = dark() ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'; ctx.fillRect(x, gy, tw, gh); ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.strokeRect(x, gy, tw, gh);
+        ctx.fillStyle = col; ctx.fillRect(x, gy + gh - hh, tw, hh);
+        lab(`${f(Tv, 0)} K`, x + tw / 2, gy + gh + 14 * p, { a: 'center', s: 11.5 * p, w: 700, c: T.ink }); lab(nm === 'rotation' ? 'rotation' : 'motion', x + tw / 2, gy + gh + 30 * p, { a: 'center', s: 10 * p, c: T.muted }); });
+      ctx.fillStyle = T.muted; ctx.font = `${9.5 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
+      for (let v = 0; v <= Ts; v += Ts > 1000 ? 500 : 100) { const y = gy + gh - gh * v / Ts; if (Ts > 1000 || v % 200 === 0 || Ts <= 600) ctx.fillText(String(v), gx + (gauges.length * 72 - 46) * p, y); }
+      if (!S.blind && G.dumb) { const y = gy + gh - gh * e.Teq * MOL_T0 / Ts; ctx.save(); ctx.setLineDash([5 * p, 4 * p]); ctx.strokeStyle = T.ink; ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(gx - 6 * p, y); ctx.lineTo(gx + 72 * p + tw + 6 * p, y); ctx.stroke(); ctx.restore(); lab('shared evenly', gx - 10 * p, y, { s: 9.5 * p, c: T.muted, a: 'right' }); }
+      lab('temperature', gx, gy - 14 * p, { s: 10.5 * p, w: 700, c: T.muted });
+    } else {
+      gauges.forEach(([nm, Tv, col], i) => { const y = 12 * p + i * 28 * p, x = 12 * p, bw = W - 130 * p, ww = bw * Math.min(1, Tv / Ts);
+        ctx.fillStyle = dark() ? 'rgba(255,255,255,0.06)' : 'rgba(0,0,0,0.05)'; ctx.fillRect(x, y, bw, 14 * p); ctx.fillStyle = col; ctx.fillRect(x, y, ww, 14 * p);
+        if (!S.blind && G.dumb) { const xx = x + bw * e.Teq * MOL_T0 / Ts; ctx.fillStyle = T.ink; ctx.fillRect(xx - 1, y - 3 * p, 2, 20 * p); }
+        lab(`${nm === 'rotation' ? 'rotation' : 'motion'} ${f(Tv, 0)} K`, x + bw + 8 * p, y + 7 * p, { s: 11 * p, w: 700, c: T.ink }); });
+    }
+    lab(G.dumb ? 'simulated molecules (atoms drawn at 70% of their size): purple ones are spinning' : 'simulated atoms: a smooth atom cannot be set spinning', cx, H - 12 * p, { a: 'center', s: 10.5 * p, c: T.muted });
+  }
   // ---------- 3D view: the same apparatus to scale, in meters ----------
   /* Pictures only, from the same state as the flat view. Heat a gas: the cylinder 10.0 cm across, its gas column at the model's
      height, the piston and pin, the heater coil, a mm rule, the three meters, and a column whose height is the heat delivered, split
@@ -321,6 +486,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      model's), each colored by its own speed, faster ones redder, all speeding up as √T. Rüchardt: a flask of the chosen volume
      (a sphere of volume V), the 16 mm tube, the ball (its swing drawn 3 times larger, as in the flat view) and the photogate. */
   let G3 = null, on3d = false;
+  const MOL_S3 = 0.025, MOL_Z3 = 0.012;   /* molecules view: 1 σ drawn as 25 mm, the box's floor just above the bench */
   const o3 = { th: -Math.PI / 2 + 0.38, ph: 1.28, zoom: 1 };
   const BASE = 0.04;
   function init3() {
@@ -370,18 +536,38 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const mP = VD3K.meter(S3, { label: 'PERIOD OF THE LAST SWING', w: 0.18, h: 0.09, tilt: 0 }), mN = VD3K.meter(S3, { label: 'SWINGS TIMED', w: 0.18, h: 0.09, tilt: 0 });
     const rack2 = VD3K.box(0.21, 0.02, 0.26, dark3, 0.3, 0.04, 0); ru.add(rack2, mP, mN); mP.position.set(0.3, 0.01, 0.2); mN.position.set(0.3, 0.01, 0.09);
     const gCab = { m: null };
-    S3.scene.add(heat, ru);
-    G3 = { S: S3, heat, ru, tube, gas, gasM, pG, pin, coilM, atoms, bonds, mT, mQ, mH, seg, colTitle, flask, neckT, ring, ball, gate, led, mP, mN, gCab, hTop, glass };
+    /* --- watch the molecules: the 3.60 nm box drawn 0.30 m on a side (1 σ = 25 mm) on the bench --- */
+    const molG = new THREE.Group(), frameM = VD3K.material(S3, { roughness: 0.5, metalness: 0.5 }, ['#8a939e', '#6a737e']), B = MOL_L * MOL_S3;
+    for (let i = 0; i < 8; i++) for (const b of [1, 2, 4]) if (!(i & b)) { const j = i | b, P = (k) => [(k & 1 ? 0.5 : -0.5) * B, (k & 2 ? 0.5 : -0.5) * B, (k & 4 ? B : 0) + MOL_Z3]; molG.add(VD3K.rod(P(i), P(j), 0.0025, frameM)); }
+    const molGlass = new THREE.Mesh(new THREE.BoxGeometry(B, B, B), new THREE.MeshStandardMaterial({ color: '#cfe0ee', transparent: true, opacity: 0.06, depthWrite: false })); molGlass.position.z = MOL_Z3 + B / 2; molG.add(molGlass);
+    const molAt = VD3K.particles(S3, { n: MOL_N * 2, r: 0.5 * MOL_DRAW * MOL_S3, seg: 12 }); molG.add(molAt);
+    const molBonds = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.12 * MOL_S3, 0.12 * MOL_S3, 1, 8), new THREE.MeshStandardMaterial({ roughness: 0.45, metalness: 0.2, color: '#ffffff' }), MOL_N);
+    molBonds.frustumCulled = false; for (let i = 0; i < MOL_N; i++) molBonds.setColorAt(i, new THREE.Color('#9aa4b0')); molBonds.count = 0; molG.add(molBonds);   /* colors before count = 0, as in VD3K.particles */
+    const mTt = VD3K.meter(S3, { label: 'T, MOTION THROUGH SPACE', w: 0.17, h: 0.085, tilt: 0 }), mTr = VD3K.meter(S3, { label: 'T, ROTATION', w: 0.17, h: 0.085, tilt: 0 });
+    const rack3 = VD3K.box(0.2, 0.02, 0.26, dark3, 0.33, 0.04, 0); mTt.position.set(0.33, 0.01, 0.2); mTr.position.set(0.33, 0.01, 0.095); molG.add(rack3, mTt, mTr);
+    S3.scene.add(heat, ru, molG);
+    G3 = { S: S3, heat, ru, molG, molAt, molBonds, mTt, mTr, tube, gas, gasM, pG, pin, coilM, atoms, bonds, mT, mQ, mH, seg, colTitle, flask, neckT, ring, ball, gate, led, mP, mN, gCab, hTop, glass };
     S3.orbit(S3.el, o3, () => redraw(), { zMin: 0.5, zMax: 3 });
     return true;
   }
   function render3() {
     const g = G3, S3 = g.S, r = $('pane').getBoundingClientRect(), p = proj();
     S3.size(r.width, r.height);
-    const heatV = S.view === 'heat';
-    g.heat.visible = heatV; g.ru.visible = !heatV;
+    const heatV = S.view === 'heat', molV = S.view === 'mol';
+    g.heat.visible = heatV; g.ru.visible = S.view === 'ru'; g.molG.visible = molV;
     let tgt, dist;
-    if (heatV) {
+    if (molV) {
+      const G = S.mol.G, e = molEnergy(G), a = molAvg(), base = hexRgb(dark() ? '#c9d3df' : '#7d8794'), rotC = hexRgb(T.rot), col = new THREE.Color();
+      const at = (q) => [(q[0] - MOL_L / 2) * MOL_S3, (q[1] - MOL_L / 2) * MOL_S3, q[2] * MOL_S3 + MOL_Z3];
+      const BY = new THREE.Vector3(0, 1, 0), BD = new THREE.Vector3(), BQ = new THREE.Quaternion(), BM = new THREE.Matrix4(), BP = new THREE.Vector3(), BS = new THREE.Vector3();
+      let k = 0, nb = 0;
+      for (const m of G.mol) { const c = mixA(base, rotC, spinOf(G, m, e.Teq)); col.setRGB(c[0] / 255, c[1] / 255, c[2] / 255); const A = molAtoms(G, m).map(at);
+        for (const q of A) g.molAt.put(k++, q[0], q[1], q[2], col);
+        if (A.length > 1) { const L = G.d * MOL_S3; BD.set(m.ex, m.ey, m.ez); BQ.setFromUnitVectors(BY, BD); BM.compose(BP.set(...at([m.x, m.y, m.z])), BQ, BS.set(1, L, 1)); g.molBonds.setMatrixAt(nb, BM); g.molBonds.setColorAt(nb++, col); } }
+      g.molAt.show(k); g.molAt.done(); g.molBonds.count = nb; g.molBonds.instanceMatrix.needsUpdate = true; if (g.molBonds.instanceColor) g.molBonds.instanceColor.needsUpdate = true;
+      g.mTt.set(`${f(a[0], 0)} K`); g.mTr.set(G.dumb ? `${f(a[1], 0)} K` : 'no spin');
+      tgt = [0.08, 0, 0.17]; dist = 1.25;
+    } else if (heatV) {
       const s = hs(), h = S.heat, gs = GASES[gasKey()];
       const hTop = heatState(gasKey(), h.n, 'P', heatState(gasKey(), h.n, 'P', 0).C * (T_CUTOUT - T0C)).h, wallH = hTop + 0.03;
       g.tube.scale.set(1, wallH, 1); g.tube.position.z = BASE + wallH / 2;
@@ -434,7 +620,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S3.render();
   }
   const view3 = VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { $('cap3d').textContent = m; },
-    change: (on) => { on3d = on; if (G3) G3.S.el.hidden = !on; can.hidden = on; $('cap3d').textContent = on ? VD3.turnText('Drag to turn, scroll to zoom. Molecules are a picture: each is colored by its speed, faster ones redder.') : ''; redraw(); } });
+    change: (on) => { on3d = on; if (G3) G3.S.el.hidden = !on; can.hidden = on; cap3(); redraw(); } });
+  function cap3() { $('cap3d').textContent = !on3d ? '' : VD3.turnText(S.view === 'mol' ? (S.mol.dumb ? 'Drag to turn, scroll to zoom. Simulated molecules where the simulation has them, atoms drawn at 70% of their size; purple ones are spinning.' : 'Drag to turn, scroll to zoom. Simulated atoms where the simulation has them, drawn at 70% of their size.') : 'Drag to turn, scroll to zoom. Molecules are a picture: each is colored by its speed, faster ones redder.'); }
 
   function drawCurve() {
     const p = proj(), c = cctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = T.canvas; c.fillRect(0, 0, CW, CH);
@@ -446,6 +633,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       xs = [0, Qmax]; ys = [T0C - 2, Math.max(T0C + 10, hs().T + 5)];
       const run = []; for (let i = 0; i <= 60; i++) { const q = h.Q * i / 60; run.push([q, heatState(gasKey(), h.n, h.mode, q).T]); }
       lines = [{ pts: run, col: T.hot }]; xl = 'heat delivered Q (J)'; yl = 'T (°C)';
+    } else if (S.view === 'mol') {
+      const G = S.mol.G, e = molEnergy(G), h = S.mol.hist, tn = molPs(), Ts = molScale(e, molAvg());
+      xs = [0, Math.max(5, Math.ceil(tn / 5) * 5)]; ys = [0, Ts];
+      lines = [{ pts: h.map((q) => [q[0], q[1]]), col: T.trans, name: 'motion through space' }];
+      if (G.dumb) lines.push({ pts: h.map((q) => [q[0], q[2]]), col: T.rot, name: 'rotation' }, { pts: [[0, e.Teq * MOL_T0], [xs[1], e.Teq * MOL_T0]], col: T.muted, dash: true, name: 'shared evenly' });
+      xl = 'time t (ps)'; yl = 'T (K)';
     } else {
       const r = ruchardt(S.ru.gas, S.ru.V / 1000), tm = Math.max(6, S.ru.t); xs = [Math.max(0, tm - 6), tm]; ys = [-S.ru.x0 * 1000 * 1.1, S.ru.x0 * 1000 * 1.1];
       const pts = []; if (S.ru.dropped) for (let i = 0; i <= 400; i++) { const t = xs[0] + (xs[1] - xs[0]) * i / 400; if (t <= S.ru.t) pts.push([t, ballX(r, S.ru.x0, t) * 1000]); }
@@ -460,12 +653,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(xl, L + pw / 2, CH - 2);
     c.save(); c.translate(12 * p, Tp + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore();
     c.save(); c.beginPath(); c.rect(L, Tp, pw, ph); c.clip();
-    for (const s of lines) { c.strokeStyle = s.col; c.lineWidth = 2.2 * p; c.beginPath(); s.pts.forEach((q, i) => (i ? c.lineTo(X(q[0]), Y(q[1])) : c.moveTo(X(q[0]), Y(q[1])))); c.stroke(); }
-    c.restore();
+    for (const s of lines) { c.strokeStyle = s.col; c.lineWidth = (s.dash ? 1.4 : 2.2) * p; c.setLineDash(s.dash ? [6 * p, 4 * p] : []); c.beginPath(); s.pts.forEach((q, i) => (i ? c.lineTo(X(q[0]), Y(q[1])) : c.moveTo(X(q[0]), Y(q[1])))); c.stroke(); }
+    c.setLineDash([]); c.restore();
+    /* a key, when the lines are named */
+    let kx = L + pw - 6 * p; c.font = `${10.5 * p}px ${T.ui}`; c.textAlign = 'right'; c.textBaseline = 'middle';
+    for (const s of lines.slice().reverse()) { if (!s.name) continue; c.fillStyle = T.ink; c.fillText(s.name, kx, Tp + 8 * p); kx -= c.measureText(s.name).width + 6 * p; c.fillStyle = s.col; c.fillRect(kx - 14 * p, Tp + 7 * p, 14 * p, 2.5 * p); kx -= 26 * p; }
   }
   let rulerAt = null;   /* the cylinder's scale, for the ruler */
-  function redraw() { if (!T || !W) return; if (on3d && G3) render3(); else { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); (S.view === 'heat' ? drawHeat : drawRu)(); } drawCurve(); readouts(); clock(); }
-  function clock() { $('clock').textContent = `t = ${f(S.view === 'heat' ? S.heat.t : S.ru.t, S.view === 'heat' ? 0 : 2)} s`; }
+  function redraw() { if (!T || !W) return; if (on3d && G3) render3(); else { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); (S.view === 'heat' ? drawHeat : S.view === 'mol' ? drawSim : drawRu)(); } drawCurve(); readouts(); clock(); }
+  function clock() { $('clock').textContent = S.view === 'mol' ? `t = ${f(molPs(), 2)} ps` : `t = ${f(S.view === 'heat' ? S.heat.t : S.ru.t, S.view === 'heat' ? 0 : 2)} s`; }
 
   // ---------- readouts ----------
   function readouts() {
@@ -478,6 +674,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         + dd('Work done on the piston', S.blind ? hide : `${f(s.W, 2)} J`) + dd('Rise in internal energy ΔU', S.blind ? hide : `${f(s.dU, 2)} J`)
         + dd('C_V of this gas', S.blind || myst ? hide : `${f(cvOf(k), 2)} J/(mol·K) = ${f(GASES[k].cvR, 2)} R`) + dd('γ = C_P/C_V', S.blind || myst ? hide : f(gammaOf(k), 4));
       if (s.T >= T_CUTOUT - 1e-9) o += '<div class="wide"><dt>Heater</dt><dd>switched itself off at 200 °C</dd></div>';
+    } else if (S.view === 'mol') {
+      const G = S.mol.G, e = molEnergy(G), a = molAvg(), zJ = MOL_EU * 1e21, kTt = Math.max(1e-9, a[0] / MOL_T0);
+      o = dd('T from motion through space', `${f(a[0], 0)} K`) + (G.dumb ? dd('T from rotation', `${f(a[1], 0)} K`) : '')
+        + dd('Energy in motion through space', `${f(100 * e.kt / e.U, 1)}%`) + (G.dumb ? dd('Energy in rotation', `${f(100 * e.kr / e.U, 1)}%`) : '')
+        + dd('Total energy U (stays the same)', `${f(e.U * zJ, 2)} zJ`) + dd('Heat added', `${f(S.mol.Q * zJ, 2)} zJ`)
+        + dd('Energy per molecule U/N', S.blind ? hide : `${f(e.U / G.N / kTt, 2)} kT`) + dd('T once shared evenly', S.blind ? hide : `${f(e.Teq * MOL_T0, 0)} K`)
+        + dd('Collisions per molecule', f(2 * G.hits / G.N, 1)) + dd('Bond length', G.dumb ? `${f(S.mol.d, 2)} nm` : 'single atoms');
     } else {
       const r = ruchardt(S.ru.gas, S.ru.V / 1000);
       o = dd('Period of the last swing', S.ru.lastPeriod ? `${f(S.ru.lastPeriod, 4)} s` : '—') + dd('Swings timed', S.ru.swings.length) + dd('Flask volume V', `${S.ru.V} L`)
@@ -495,6 +698,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const b of document.querySelectorAll('#pistonSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === h.mode));
     $('newGas').hidden = h.gas !== 'mystery'; $('gasNote').textContent = h.lastMys ? `The last mystery gas was ${GASES[h.lastMys].name.split(',')[0].toLowerCase()}.` : '';
     $('selGasR').value = r.gas; $('sV').value = r.V; $('oV').textContent = `${r.V}.00 L`;
+    const m = S.mol; $('sBond').value = m.d; $('oBond').textContent = `${f(m.d, 2)} nm`; $('sBond').parentElement.hidden = !m.dumb; $('molStartSeg').parentElement.hidden = !m.dumb;
+    for (const b of document.querySelectorAll('#molKindSeg button')) b.setAttribute('aria-pressed', String((b.dataset.k === 'dumb') === m.dumb));
+    for (const b of document.querySelectorAll('#molStartSeg button')) b.setAttribute('aria-pressed', String(b.dataset.st === m.start));
+    if (m.G) { const T = molEnergy(m.G).Teq * MOL_T0; $('molHeatBtn').disabled = T + 100 * (m.dumb ? 0.6 : 1) > MOL_TMAX; $('molNote').textContent = $('molHeatBtn').disabled ? `Stops at ${MOL_TMAX} K: start over to cool the gas.` : ''; }
     for (const b of document.querySelectorAll('#speedSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.s === S.speed));
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
   }
@@ -503,17 +710,23 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     argonP: { view: 'heat', hint: 'The same argon with the piston free, so the pressure stays at 1 atm. Now the gas pushes the piston up as it warms, so the same heat raises the temperature less. Compare the slopes.', set: () => Object.assign(S.heat, { gas: 'Ar', n: 0.10, mode: 'P', W: 2, Q: 0, t: 0 }) },
     nitrogen: { view: 'heat', hint: 'Nitrogen molecules are pairs of atoms that also tumble, so each mole needs more heat per kelvin than argon. Try both piston settings.', set: () => Object.assign(S.heat, { gas: 'N2', n: 0.10, mode: 'V', W: 2, Q: 0, t: 0 }) },
     mystery: { view: 'heat', hint: 'An unknown gas, 0.10 mol. Measure C_V and C_P, find γ, and decide what kind of molecule it is.', set: () => { Object.assign(S.heat, { gas: 'mystery', n: 0.10, mode: 'V', W: 2, Q: 0, t: 0 }); newGas(true); } },
+    molNoSpin: { view: 'mol', hint: '125 simulated molecules shaped like nitrogen, every one moving at 300 K but none turning. Each collision that strikes a molecule off center sets it spinning. Watch the two temperatures meet: each way a molecule can move or turn ends up holding the same ½kT.', set: () => { Object.assign(S.mol, { dumb: true, d: 0.11, start: 'trans' }); molReset(1); } },
+    molSpin: { view: 'mol', hint: 'The same molecules with most of their energy in spin (rotation at 405 K) and little in motion (30 K). The sharing runs the other way: collisions turn spin into motion until both temperatures agree.', set: () => { Object.assign(S.mol, { dumb: true, d: 0.11, start: 'rot' }); molReset(1); } },
+    molAtoms: { view: 'mol', hint: 'Single smooth atoms, like argon. A collision pushes along the line through both centers, so it can never set an atom spinning: all the energy stays in motion through space, 3/2 kT per atom, and C_V = 3/2 R.', set: () => { Object.assign(S.mol, { dumb: false, start: 'trans' }); molReset(1); } },
     ruchardt: { view: 'ru', hint: 'A steel ball fits snugly in a glass tube on top of a 10 L flask of dry air. Drop it and it bounces up and down on the gas, which acts as a spring. The period depends on γ: time it for several flask volumes.', set: () => Object.assign(S.ru, { gas: 'air', V: 10, t: 0, dropped: false, swings: [], lastPeriod: null }) } };
   function newGas(quiet) { const h = S.heat; let k; do { k = MYSTERY_POOL[Math.floor(Math.random() * MYSTERY_POOL.length)]; } while (k === h.mys); if (!quiet && h.mysN) h.lastMys = h.mys; h.mys = k; h.mysN++; h.Q = 0; h.t = 0; }
   function setView(v) {
-    S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
-    $('cardHeat').hidden = v !== 'heat'; $('cardRu').hidden = v !== 'ru'; $('speedSeg').hidden = v !== 'heat';
-    $('units').textContent = v === 'heat' ? 'T in °C · Q in J · V in L' : 'V in L · time in s';
-    can.setAttribute('aria-label', v === 'heat' ? 'A gas in a cylinder under a piston, with an electric heater at the bottom, a thermometer and a meter for the heat delivered. Space starts or pauses.' : 'A large glass flask with a vertical tube on top; a steel ball bounces in the tube past a photogate.');
+    if (v === 'mol' && !S.mol.G) molReset(1);
+    S.view = v; cap3(); for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
+    $('cardHeat').hidden = v !== 'heat'; $('cardRu').hidden = v !== 'ru'; $('cardMol').hidden = v !== 'mol'; $('speedSeg').hidden = v === 'ru';
+    $('units').textContent = v === 'heat' ? 'T in °C · Q in J · V in L' : v === 'mol' ? 'T in K · t in ps · energy in zJ' : 'V in L · time in s';
+    can.setAttribute('aria-label', v === 'heat' ? 'A gas in a cylinder under a piston, with an electric heater at the bottom, a thermometer and a meter for the heat delivered. Space starts or pauses.'
+      : v === 'mol' ? 'A box of simulated molecules, each two atoms joined by a bond, with two thermometers: one for motion through space and one for rotation. Space starts or pauses.'
+      : 'A large glass flask with a vertical tube on top; a steel ball bounces in the tube past a photogate.');
     window.vdShowCols = SHOW[v]; if (!(window.vdRows && window.vdRows().length)) window.dispatchEvent(new Event('load'));
     setRun(false); sync(); redraw();
   }
-  function setRun(on) { S.run = on; const t = S.view === 'heat' ? S.heat.t : S.ru.t; $('go').textContent = on ? 'Pause' : t > 0 ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); }
+  function setRun(on) { S.run = on; const t = S.view === 'heat' ? S.heat.t : S.view === 'mol' ? molPs() : S.ru.t; $('go').textContent = on ? 'Pause' : t > 0 ? 'Resume' : 'Start'; $('go').classList.toggle('attn', !on); }
   function applyPreset(k) { const c = PRESETS[k]; S.preset = k; $('presetHint').textContent = c.hint; c.set(); setView(c.view); }
   const heatChanged = () => { S.preset = 'custom'; S.heat.Q = 0; S.heat.t = 0; setRun(false); sync(); redraw(); };
   function drop() { Object.assign(S.ru, { t: 0, dropped: true, swings: [], lastCross: null, lastPeriod: null }); setRun(true); }
@@ -521,7 +734,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (b && b.dataset.v !== S.view) setView(b.dataset.v); });
   $('speedSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-s]'); if (b) { S.speed = +b.dataset.s; sync(); } });
   $('go').addEventListener('click', () => { if (S.view === 'ru' && !S.ru.dropped) { drop(); return; } setRun(!S.run); });
-  $('restart').addEventListener('click', () => { if (S.view === 'heat') { S.heat.Q = 0; S.heat.t = 0; } else Object.assign(S.ru, { t: 0, dropped: false, swings: [], lastCross: null, lastPeriod: null }); setRun(false); redraw(); });
+  $('restart').addEventListener('click', () => { if (S.view === 'mol') molReset(); else if (S.view === 'heat') { S.heat.Q = 0; S.heat.t = 0; } else Object.assign(S.ru, { t: 0, dropped: false, swings: [], lastCross: null, lastPeriod: null }); setRun(false); redraw(); });
   $('selGas').addEventListener('change', (e) => { S.heat.gas = e.target.value; if (S.heat.gas === 'mystery') newGas(true); heatChanged(); });
   $('pistonSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-m]'); if (b) { S.heat.mode = b.dataset.m; heatChanged(); } });
   $('sN').addEventListener('input', (e) => { S.heat.n = +e.target.value; heatChanged(); });
@@ -530,6 +743,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('selGasR').addEventListener('change', (e) => { S.ru.gas = e.target.value; S.preset = 'custom'; Object.assign(S.ru, { t: 0, dropped: false, swings: [], lastPeriod: null }); setRun(false); sync(); redraw(); });
   $('sV').addEventListener('input', (e) => { S.ru.V = +e.target.value; S.preset = 'custom'; Object.assign(S.ru, { t: 0, dropped: false, swings: [], lastPeriod: null }); setRun(false); sync(); redraw(); });
   $('drop').addEventListener('click', drop);
+  const molChanged = () => { S.preset = 'custom'; molReset(); setRun(false); sync(); cap3(); redraw(); };
+  $('molKindSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-k]'); if (b) { S.mol.dumb = b.dataset.k === 'dumb'; molChanged(); } });
+  $('molStartSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-st]'); if (b) { S.mol.start = b.dataset.st; molChanged(); } });
+  $('sBond').addEventListener('input', (e) => { S.mol.d = +e.target.value; molChanged(); });
+  $('molHeatBtn').addEventListener('click', () => { const G = S.mol.G, dU = 1.5 * G.N * 100 / MOL_T0; molHeat(G, dU); S.mol.Q += dU; molNote(); sync(); redraw(); });
   can.addEventListener('keydown', (e) => { if (e.key === ' ') { $('go').click(); e.preventDefault(); } });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
@@ -553,7 +771,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         if (S.heat.Q < Cmax) { S.heat.Q = Math.min(Cmax, S.heat.Q + dQ); S.heat.t += dt * S.speed; } else setRun(false); }
       if (!reduce) moveMol(dt, sp, 1);
       if (S.run || (!reduce && now - lastPic > 40)) { lastPic = now; redraw(); }
-    } else if (S.run) { advanceRu(dt); redraw(); }
+    } else if (S.view === 'mol') { if (S.run) { molAdvance(S.mol.G, dt * S.speed * MOL_PS * 1e-12 / MOL_TAU); molNote(); redraw(); } }
+    else if (S.run) { advanceRu(dt); redraw(); }
     requestAnimationFrame(frame);
   }
 
@@ -561,9 +780,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdVersion = 'gas-heat-capacity@2026-10-24';
   const SHOW = { heat: [['Q_J', 'Q (J)'], ['T_C', 'T (°C)'], ['V_L', 'V (L)']], ru: [['V_L', 'V (L)'], ['period_s', 'period (s)']] };
   window.vdShowCols = SHOW.heat;
-  window.vdWorksheet = () => (S.view === 'heat' ? 'heat-capacities-of-gases' : 'ruchardt');
+  window.vdWorksheet = () => { const r = window.vdRows ? window.vdRows() : [], v = r.length ? r[0].view : S.view; return v === 'ru' ? 'ruchardt' : 'heat-capacities-of-gases'; };
   window.vdReadingRow = () => {
     const other = (window.vdRows ? window.vdRows() : []).find((r) => r.view !== S.view);
+    if (S.view === 'mol') return 'Watch the molecules has no worksheet: read the temperatures from the readouts and the graph.';
     if (other) return `These readings are from the ${other.view === 'heat' ? 'Heat a gas' : "Rüchardt's ball"} view: export them to its worksheet or clear them first.`;
     window.vdShowCols = SHOW[S.view];
     if (S.view === 'heat') { const s = hs(), h = S.heat; return { view: 'heat', gas: h.gas === 'mystery' ? 'mystery' : GASES[h.gas].name, n_mol: h.n, piston: h.mode === 'V' ? 'locked' : 'free',
@@ -576,6 +796,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('aboutHeat').textContent = 'Heat a gas: n moles of an ideal gas start at 20.00 °C and 101.325 kPa in a cylinder 10.0 cm across with perfectly insulating walls of no heat capacity. An electric heater delivers heat at a steady power; the meter shows the total delivered, and the heater switches itself off at 200 °C. With the piston pinned the volume is fixed and Q = nC_V ΔT. With it free, a weightless frictionless piston keeps the pressure at 1 atm, the gas does work PΔV = nRΔT on it, and Q = nC_P ΔT with C_P = C_V + R. C_V for each gas is the textbook\'s Table 2.3 value at 25 °C (C_V/R: Ar, He, Ne 1.50; CO 2.50; H₂ 2.47; N₂ 2.50; O₂ 2.53; F₂ 2.8; CO₂ 3.48; H₂S 3.13; N₂O 3.66), taken as constant up to 200 °C; real heat capacities grow slowly with temperature as vibrations wake up, and real gases have C_P − C_V a little above R. The energy split follows equipartition: 3/2 R per mole for motion through space, R for a linear molecule\'s rotation (3/2 R for a bent one), and the rest of the measured C_V counted as vibration. Where the measured C_V falls short of full rotation the split is not equipartition: H₂\'s 2.47 R is a little under 5/2 R (at 25 °C its rotation is not quite fully awake, a quantum effect of its small moment of inertia), so its rotation share is taken as the remaining 0.97 R. The molecules drawn are a picture, not the model: their number and speeds are only suggestive. The thermometer reads to 0.01 °C, the heat meter to 0.1 J and the piston height to 0.1 mm.';
   $('aboutRu').textContent = 'Rüchardt\'s ball: a steel ball of 16.60 g fits a glass tube 16.00 mm across without friction or leaks, on a flask of V liters. At rest the gas is at P = P_atm + mg/A (101.325 kPa plus the ball\'s weight on the tube\'s cross section). A swing is too quick for heat to flow, so the gas is squeezed adiabatically (PV^γ constant) and pushes back with a force proportional to the displacement: the ball oscillates with ω² = γPA²/(mV), period 2π√(mV/(γPA²)). γ for dry air is 1015/721 = 1.408 from the textbook\'s Table 1.3; the other gases use Table 2.3 with C_P = C_V + R. Friction and heat leaks make the swing die away with an amplitude time constant of 6 s (a chosen value), which lengthens the period by less than 0.1% (0.04% for 10 L). The photogate times each full swing, from one downward pass of the rest position to the next. The picture draws the swing 3 times larger than its real 10 mm amplitude.';
 
+  $('aboutMol').textContent = 'Watch the molecules: a simulation, separate from the measured data above, which stays the source for C_V. 125 molecules, each two smooth hard spheres 0.30 nm across (a chosen size) held 0.110 nm apart by a rigid bond (N₂\'s bond length; the slider changes it), with the mass of each atom, 14.007 u, at its center. They fly in a cube 3.60 nm on a side with smooth hard walls and collide elastically, so the total energy never changes. They start on a lattice with random directions and speeds from Maxwell\'s distribution at 300 K, and with no spin. A collision pushes along the line through the two atoms\' centers; when that line misses a molecule\'s center the push also turns it, so collisions feed energy into rotation until each way to move or turn holds the same ½kT on average (equipartition). A molecule moves through space in 3 ways and turns in 2 (a smooth atom can never be spun about the bond), so the shared temperature is 3/5 of the start, U/N = 5/2 kT and C_V = 5/2 R, as Table 2.3 gives for N₂, CO and O₂. Single atoms (same size and mass) cannot be spun at all, so they keep U/N = 3/2 kT. Temperatures here count ½kT per way: from motion through space T = 2KE/(3Nk), from rotation T = KE/(Nk); each readout is the mean over the last 1 ps, since 125 molecules jitter by several percent. Limits: classical mechanics and a rigid bond, so there is no vibration at all and nothing freezes out at low temperature (real H₂ loses its rotation in the cold, a quantum effect); smooth hard spheres are not real forces, so how fast the sharing happens (a few collisions per molecule) is the model\'s, not nitrogen\'s; the gas is far denser than air so that collisions come quickly (with the 0.110 nm bond the molecules fill 5.8% of the box; at 20 °C and 1 atm the same molecules would fill 0.054%). In the pictures each atom is drawn at 70% of its size so the bonds show, and a molecule turns purple as its own spin energy nears 2kT. Add heat scales every molecule\'s speed so the motion through space warms by 100 K at once; the spin then takes its share. Time steps are short enough that no atom moves more than 0.02 σ per step.';
   // ---------- size, theme, start ----------
   function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(), c = cur.parentElement.getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); CW = c.width; CH = c.height; cur.width = Math.round(CW * dpr); cur.height = Math.round(CH * dpr); redraw(); }
   const retheme = () => { tokens(); redraw(); };
@@ -588,7 +809,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'argonV');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
-  window.__gh = { S, setView, applyPreset, setRun, redraw, hs, sync, drop, advanceRu, newGas };
+  window.__gh = { S, setView, applyPreset, setRun, redraw, hs, sync, drop, advanceRu, newGas, molReset, molAdvance, molEnergy };
   requestAnimationFrame(frame);
 })();
 </script>
