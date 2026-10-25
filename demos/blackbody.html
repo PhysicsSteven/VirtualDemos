@@ -171,7 +171,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/blackbody.html" target="blackbody-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/blackbody.html" target="blackbody-worksheet">Worksheet 1: Blackbody Radiation</a></li><li><a href="../curriculum/labs/students/intro-blackbody.html" target="intro-blackbody-worksheet">Worksheet 2: Star Colors and Temperatures (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Glowing objects</h2>
         <div class="chips" id="presets">
@@ -1191,7 +1191,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdShowCols = [['T_K', 'T (K)'], ['peak_nm', 'peak (nm)'], ['flux_W_m2', 'flux (W/m²)']];
   window.vdReadingRow = () => {
     const g = (v, d) => +(+v).toPrecision(d), pk = curvePeak(S.T);
-    return { T_K: g(S.T, 5), peak_nm: g(pk * 1e9, 5), B_peak_W_m2_sr_nm: g(planck(pk, S.T) * 1e-9, 4), flux_W_m2: g(curveFlux(S.T), 5), visible_percent: g(visibleFraction(S.T) * 100, 4), R_sun: S.star ? g(S.R, 4) : '' };
+    return { T_K: g(S.T, 5), peak_nm: g(pk * 1e9, 5), B_peak_W_m2_sr_nm: g(planck(pk, S.T) * 1e-9, 4), flux_W_m2: g(curveFlux(S.T), 5), visible_percent: g(visibleFraction(S.T) * 100, 4), R_sun: S.star ? g(S.R, 4) : '',
+      /* added for Astro 2203's intro worksheet: the star's spectral class and color name as the readouts give them, and its luminosity */
+      spectral_class: classOf(S.T) ? classOf(S.T).c : (S.T < 2400 ? 'cooler than M' : ''), color: $('rCol').textContent,
+      L_sun: S.star ? g(4 * Math.PI * Math.pow(S.R * RSUN, 2) * SIG * Math.pow(S.T, 4) / LSUN, 4) : '' };
   };
 
   // exposed for testing

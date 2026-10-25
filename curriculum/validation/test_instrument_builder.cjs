@@ -89,4 +89,13 @@ group('camera: 50 mm lens focuses from infinity (d_s = f) to 45 cm', () => {
   near(c.cameraFocus(0).ds, 5, 1e-12); near(c.cameraFocus(-1 / 45).ds, 1 / (1 / 5 - 1 / 45), 1e-12); assert(c.cameraFocus(-1 / 45).sharp);
   assert(!c.cameraFocus(-1 / 20).sharp); assert(!c.cameraFocus(0.1).sharp);
 });
+group('light from a star (Astro 2203): (D_en/d)² with the eye pupil as a stop; equals the traced share of the objective times (D/d)²', () => {
+  const kep = [lens(0, 50, 5), lens(55, 5, 2.5)], zE = c.pupils(kep, MOON).ex.z;
+  const gather = (els, d) => Math.pow(c.pupils(els.concat([stop(zE, d)]), MOON).en.D / d, 2);
+  near(gather(kep, 0.7), Math.pow(5 / 0.7, 2), 1e-9, '7 mm pupil, exit pupil 5 mm: the whole objective');
+  near(gather(kep, 0.4), 100, 1e-9, '4 mm pupil, exit pupil 5 mm: the eye pupil limits it to M² = 100');
+  /* the traced rays agree: the share of rays through the objective that reach the 4 mm pupil is (4/5)² */
+  near(c.passFraction(kep, MOON, 0, zE, 0.4, 120) * Math.pow(5 / 0.4, 2), 100, 0.01, 'traced');
+  for (const D of [2, 3, 4, 6, 7]) near(gather([lens(0, 50, D), lens(55, 5, 2.5)], 0.7), Math.pow(D / 0.7, 2), 1e-9, 'D ' + D);
+});
 console.log(`${n} groups passed`);

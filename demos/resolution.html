@@ -94,7 +94,7 @@
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/resolution.html" target="resolution-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/resolution.html" target="resolution-worksheet">Worksheet 1: Circular Apertures and Resolution</a></li><li><a href="../curriculum/labs/students/intro-resolution.html" target="intro-resolution-worksheet">Worksheet 2: Seeing Fine Detail (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -613,7 +613,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const st = ST(), c = C(), n = nNow(), D = Dnow(), screen = st.kind === 'screen';
     const setup = S.setup === 'eye' ? (n === 2 ? `eye, car at ${f(c.sepv, 2)} km` : 'eye') : S.setup === 'telescope' ? (n === 2 ? `telescope, stars ${f(c.sepv, 2)} ly apart` : 'telescope')
       : S.setup === 'camera' ? `camera, f/${c.N}` : st.short;
-    return { setup, lam_nm: c.lam, D_mm: isMys() ? 'mystery' : g6(D * 1e3), sources: n, L_m: screen && S.setup !== 'camera' ? g6(c.L) : '',
+    return { setup, lam_nm: c.lam, D_mm: isMys() ? 'mystery' : g6(D * 1e3), D_m: isMys() ? 'mystery' : g6(D), sources: n, L_m: screen && S.setup !== 'camera' ? g6(c.L) : '',
       x_mm: screen && S.setup !== 'camera' ? f(c.cur * 1e3, 3).replace('−', '-') : '', x_um: S.setup === 'camera' ? f(c.cur * 1e6, 2).replace('−', '-') : '',
       cursor_urad: screen ? '' : f(c.cur * 1e6, st.dec).replace('−', '-'), sep_urad: n === 2 ? g6(sepAngle() * 1e6) : '', I_rel: f(Iexact(c.cur), 4),
       R_km: S.setup === 'eye' && n === 2 ? c.sepv : '', sep_ly: S.setup === 'telescope' && n === 2 ? c.sepv : '', f_number: S.setup === 'camera' ? c.N : '',

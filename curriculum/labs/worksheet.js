@@ -500,8 +500,9 @@
   /* ==ASTRO END== */
   /* ==ASTRO 2203 START== Intro level worksheets written for Astro 2203 (astro-2203.html, 2026-10-25). Each opens its demo with
      ?ws=<slug>, so the demo's Export to worksheet sends here (VD.ws in demos/lib/vd.js). INTRO_GRAPHS: those that graph a table. */
-  const INTRO = ['intro-seasons', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession', 'intro-stellarium-sky'];
-  const INTRO_GRAPHS = ['intro-kepler', 'intro-gravity', 'intro-scale', 'intro-precession'];   /* intro-scale and intro-stellarium-sky are typed by hand (no Export) */
+  const INTRO = ['intro-seasons', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession', 'intro-stellarium-sky',
+    'intro-telescope', 'intro-resolution', 'intro-mirrors', 'intro-blackbody', 'intro-spectra', 'intro-em-spectrum'];
+  const INTRO_GRAPHS = ['intro-kepler', 'intro-gravity', 'intro-scale', 'intro-precession', 'intro-telescope'];   /* intro-scale and intro-stellarium-sky are typed by hand (no Export) */
   ENABLED.push(...INTRO);
   Object.assign(FROM_DEMO, {
     /* Reading | Date | Noon Sun altitude (°) | Day length (h) | Earth to Sun distance (AU) | Daily sunlight (W/m²) */
@@ -512,6 +513,18 @@
     'intro-moon': { demo: 'Moon Phases', cols: ['row', 't_d', 'days', 'E_deg', 'lit_pct', 'rise_h', 'set_h', 'node_dist_deg', 'beta_deg', 'eclipse'] },
     /* Reading | Wheel | Start | Spin (rpm) | Distance from the post d (m) | Time for one turn around the post (s) */
     'intro-precession': { demo: 'Gyroscope Precession', cols: ['row', 'wheel', 'start', 'spin_rpm', 'd_m', 'P_s'] },
+    /* Topic 4, telescopes and light. Reading | f₁ (cm) | f₂ (cm) | D (cm) | M | Exit pupil (mm) | Light from a star | True field (°) | D² (typed) */
+    'intro-telescope': { demo: 'Build a Microscope or Telescope', cols: ['row', 'f_obj_cm', 'f_eye_cm', 'D_obj_cm', 'M', 'exit_pupil_mm', 'gather', 'true_field_deg', null] },
+    /* Reading | Setup | λ (nm) | D (m) | Distance between the stars (ly) | Angle (µrad) | I/I₀ midway | 1.22 λ/D (typed) */
+    'intro-resolution': { demo: 'Circular Apertures and Resolution', cols: ['row', 'setup', 'lam_nm', 'D_m', 'sep_ly', 'sep_urad', 'I_rel', null] },
+    /* Reading | Element | Material | λ (nm) | Focal length f (cm) */
+    'intro-mirrors': { demo: 'Optics Bench', cols: ['row', 'element', 'material', 'lam_nm', 'f_cm'] },
+    /* Reading | T (K) | Peak wavelength (nm) | Light from each square meter (W/m²) | Visible share (%) | Spectral class | Color */
+    'intro-blackbody': { demo: 'Blackbody Radiation', cols: ['row', 'T_K', 'peak_nm', 'flux_W_m2', 'visible_percent', 'spectral_class', 'color'] },
+    /* Reading | Source | Wavelength (nm) | Ion */
+    'intro-spectra': { demo: 'Spectra Explorer', cols: ['row', 'source', 'lambda_nm', 'ion'] },
+    /* Reading | Band | f (Hz) | λ (m) | λ × f (typed) */
+    'intro-em-spectrum': { demo: 'Electromagnetic Waves', cols: ['row', 'band', 'f_Hz', 'lambda_m', null] },
   });
   /* ==ASTRO 2203 END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the

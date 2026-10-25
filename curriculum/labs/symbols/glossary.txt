@@ -1389,6 +1389,16 @@ T | Period of the orbit | yr
 r_p | Perihelion distance, closest to the Sun | AU
 r_a | Aphelion distance, farthest from the Sun | AU
 
+== intro-resolution ==
+theta | Smallest angle between two stars the telescope can resolve | rad
+lambda | Wavelength of the light | m
+D | Diameter of the mirror | m
+
+== intro-telescope ==
+f_1 | Focal length of the objective, the large front lens | cm
+f_2 | Focal length of the eyepiece | cm
+D | Diameter of the objective | cm
+
 == kundts-tube ==
 v_rod | Speed of longitudinal waves in the rod | m/s
 E | Young's modulus of the rod | Pa

@@ -234,6 +234,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
             <div class="seg" role="group" aria-label="Display">
               <button type="button" data-d="emission" aria-pressed="true">Emission</button>
               <button type="button" data-d="absorption" aria-pressed="false">Absorption</button>
+              <button type="button" data-d="continuous" aria-pressed="false">Continuous</button>
             </div>
             <div class="seg" role="group" aria-label="Wavelength range">
               <button type="button" data-v="visible" aria-pressed="true">Visible</button>
@@ -294,7 +295,7 @@ table.lines tr.on td { background: color-mix(in srgb, var(--accent) 16%, transpa
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/spectra.html" target="spectra-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/spectra.html" target="spectra-worksheet">Worksheet 1: The Hydrogen Spectrum and the Rydberg Constant</a></li><li><a href="../curriculum/labs/students/intro-spectra.html" target="intro-spectra-worksheet">Worksheet 2: Fingerprints of the Elements (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section class="card">
         <h2>Mode</h2>
         <div class="seg" role="group" aria-label="Mode" id="modeSeg" style="align-self: flex-start;">
@@ -1069,7 +1070,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function rigScene() {
     const mode = S.mode;
     if (mode === 'mystery' && S.kind === 'star') return { kind: 'star', items: [] };
-    const kind = S.display === 'absorption' ? 'abs' : 'emit';
+    const kind = S.display === 'absorption' ? 'abs' : S.display === 'continuous' && mode !== 'mystery' ? 'cont' : 'emit';
+    if (kind === 'cont') return { kind, items: [] };
     if (mode === 'mystery') return { kind, items: [{ tag: '?', col: gasColor(S.mystery) }], mystery: true };
     const items = [{ tag: S.a, col: gasColor([S.a]) }];
     if (mode === 'compare') items.unshift({ tag: S.b, col: gasColor([S.b]), second: true });
@@ -1079,6 +1081,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     emit: 'A spectrum tube glowing on a 5000 V supply, viewed through a hand spectroscope. The strip below is the view in the eyepiece. The tube color is computed from its lines.',
     emit2: 'Two tubes; a comparison prism at the slit shows one spectrum above the other, as in the two strips below. Tube colors are computed from their lines.',
     abs: 'White light from a lamp passes through a cell of cool gas into the spectroscope. The strip below is the view in the eyepiece.',
+    cont: 'The lamp alone: a hot, dense glowing solid (its tungsten coil) shines straight into the spectroscope. Every color is there and there are no lines, whatever element is chosen. The strip below is the view in the eyepiece.',
     abs2: 'One lamp shines through two cells of cool gas; a comparison prism at the slit shows one spectrum above the other.',
     star: 'Starlight gathered by a telescope and spread out by the spectroscope. The strip below is the view in the eyepiece.'
   };
@@ -1086,7 +1089,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function paintRig(c, W, H) {
     const sc = rigScene(), ps = projScale(), lps = Math.min(ps, 1.25);
     const two = sc.items.length > 1, star = sc.kind === 'star';
-    const srcW = star ? 206 : sc.kind === 'abs' ? 200 : two ? 254 : 120, gap = star ? 0 : 30, tail = 50;
+    const srcW = star ? 206 : sc.kind === 'abs' ? 200 : sc.kind === 'cont' ? 80 : two ? 254 : 120, gap = star ? 0 : 30, tail = 50;
     const need = 14 + srcW + gap + 150 + 14 + tail;
     const s = Math.min(H / DH, W / need, 1.35);
     const Ls = Math.max(150, Math.min(300, W / s - 14 - srcW - gap - 14 - tail - 10));
@@ -1111,7 +1114,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         radial(c, cx, (yB + yE) / 2, 130, it.col, 0.16);
         emit.push({ cx, y0: yB, y1: yE, col: it.col, ph: k * 1.7 });
       });
-    } else if (sc.kind === 'abs') {
+    } else if (sc.kind === 'abs' || sc.kind === 'cont') {
       radial(c, 30, CY, 120, LAMP, 0.12);
     }
     if (!star) {
@@ -1139,6 +1142,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       sc.items.forEach((it, k) => drawCell(c, xc, cys[k], r, it));
       lab(30, 211, 'white light lamp');
       lab(xc + 52, CY - (two ? 26 + 13 : 14 + 13), two ? 'cells of cool gas' : sc.mystery ? 'unknown cool gas' : 'cell of cool gas');
+    } else if (sc.kind === 'cont') {
+      c.fillStyle = rgba(LAMP, 0.09); c.beginPath(); c.moveTo(30, CY - 6); c.lineTo(sx - 5, CY - 3); c.lineTo(sx - 5, CY + 3); c.lineTo(30, CY + 6); c.closePath(); c.fill();
+      drawLamp(c, 0);
+      lab(30, 211, 'white light lamp');
     } else {
       const g = c.createRadialGradient(46, CY, 0, 46, CY, 54);
       g.addColorStop(0, '#fff9ee'); g.addColorStop(0.65, '#ffe6b8'); g.addColorStop(0.92, '#f6b56a'); g.addColorStop(1, '#e8964a');
@@ -1171,7 +1178,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     rig = { emit: emit.map((e) => ({ x: ox + e.cx * s, y0: oy + e.y0 * s, y1: oy + e.y1 * s, s, col: e.col, ph: e.ph })) };
     $('rigCap').textContent = RIG_CAP[sc.kind + (two ? '2' : '')] || '';
-    const what = star ? 'Starlight through a telescope and a hand spectroscope' : sc.kind === 'abs' ? 'A lamp shining through a cell of cool gas into a hand spectroscope' : 'A glowing spectrum tube on a high voltage supply, viewed through a hand spectroscope';
+    const what = star ? 'Starlight through a telescope and a hand spectroscope' : sc.kind === 'cont' ? 'A white light lamp shining straight into a hand spectroscope' : sc.kind === 'abs' ? 'A lamp shining through a cell of cool gas into a hand spectroscope' : 'A glowing spectrum tube on a high voltage supply, viewed through a hand spectroscope';
     rigCv.setAttribute('aria-label', what);
   }
   function drawRig() {
@@ -1217,8 +1224,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const forced = mode === 'mystery' && S.kind === 'star';
     for (const b of document.querySelectorAll('#modeSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === mode));
     for (const b of document.querySelectorAll('[data-d]')) {
-      b.setAttribute('aria-pressed', String(b.dataset.d === (forced ? 'absorption' : S.display)));
-      b.disabled = forced;
+      b.setAttribute('aria-pressed', String(b.dataset.d === (forced ? 'absorption' : mode === 'mystery' && S.display === 'continuous' ? 'emission' : S.display)));
+      b.disabled = forced || (mode === 'mystery' && b.dataset.d === 'continuous');
     }
     for (const b of document.querySelectorAll('[data-v]')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
     for (const b of document.querySelectorAll('[data-i]')) b.setAttribute('aria-pressed', String(b.dataset.i === S.ion));
@@ -1257,7 +1264,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     $('tSym').textContent = title[0]; $('tName').textContent = title[1]; $('tZ').textContent = title[2];
 
     if (mode === 'explore' && S.a === 'H') updateH();
-    const disp = mode === 'mystery' && S.kind === 'star' ? 'absorption' : S.display;
+    /* Continuous (the lamp alone, 2026-10-25): a hot dense source shows every color and no lines; the mystery modes keep their gas */
+    const disp = mode === 'mystery' && S.kind === 'star' ? 'absorption' : mode === 'mystery' && S.display === 'continuous' ? 'emission' : S.display;
+    const cont = disp === 'continuous';
     if (mode === 'mystery') {
       if (!S.mystery) newMystery();
       shownA = linesOfSet(S.mystery, { ion: 'all' });
@@ -1269,18 +1278,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       drawStrip($('cA'), shownA, { display: disp, fraun: S.revealed, wash: gasColor(S.mystery) });
       drawStrip($('cB'), shownB, { display: disp, fraun: S.revealed, wash: gasColor([...S.guesses]), empty: S.guesses.size ? null : 'no elements guessed yet' });
     } else {
-      shownA = linesOf(S.a);
-      $('labA').innerHTML = `<b>${S.a}</b> ${BY[S.a][2]}`;
-      $('countA').textContent = `${shownA.length} lines`;
-      drawStrip($('cA'), shownA, { display: disp, mark: S.mark, fraun: true, wash: gasColor([S.a]), empty: shownA.length ? null : 'no lines listed in this range' });
+      const linesA = linesOf(S.a);
+      shownA = cont ? [] : linesA;
+      $('labA').innerHTML = cont ? '<b>Lamp</b> alone: a continuous spectrum' : `<b>${S.a}</b> ${BY[S.a][2]}`;
+      $('countA').textContent = cont ? 'no lines' : `${shownA.length} lines`;
+      drawStrip($('cA'), shownA, { display: cont ? 'absorption' : disp, mark: cont ? null : S.mark, fraun: true, wash: gasColor([S.a]), empty: shownA.length || cont ? null : 'no lines listed in this range' });
       if (mode === 'compare') {
-        shownB = linesOf(S.b);
-        $('labB').innerHTML = `<b>${S.b}</b> ${BY[S.b][2]}`;
-        $('countB').textContent = `${shownB.length} lines`;
-        drawStrip($('cB'), shownB, { display: disp, fraun: true, wash: gasColor([S.b]), empty: shownB.length ? null : 'no lines listed in this range' });
+        shownB = cont ? [] : linesOf(S.b);
+        $('labB').innerHTML = cont ? '<b>Lamp</b> alone: a continuous spectrum' : `<b>${S.b}</b> ${BY[S.b][2]}`;
+        $('countB').textContent = cont ? 'no lines' : `${shownB.length} lines`;
+        drawStrip($('cB'), shownB, { display: cont ? 'absorption' : disp, fraun: true, wash: gasColor([S.b]), empty: shownB.length || cont ? null : 'no lines listed in this range' });
       }
-      updateFacts(S.a, shownA);
-      updateList(S.a, shownA);
+      updateFacts(S.a, linesA);
+      updateList(S.a, linesA);
     }
     $('absNote').hidden = disp !== 'absorption';
     drawAxis();
@@ -1305,6 +1315,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   window.vdVersion = 'spectra@2026-10-24';
   window.vdShowCols = [['source', 'Source'], ['lambda_nm', 'λ air (nm)'], ['ion', 'Ion']];
   window.vdReadingRow = () => {
+    if (S.display === 'continuous' && S.mode !== 'mystery') return 'A continuous spectrum has no lines to read: choose Emission or Absorption.';
     if (!picked) return 'Click or tap a line in the top spectrum first, so its readout shows.';
     const myst = S.mode === 'mystery' && !S.revealed;
     return { source: myst ? 'Mystery' : `${BY[picked.sym][2]}`, ion: myst ? '' : ionName(picked.ion), lambda_nm: nmText(picked.nm), intensity: String(picked.inten || '') };

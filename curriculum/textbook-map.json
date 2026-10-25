@@ -6493,7 +6493,8 @@
       "title": "Blackbody Radiation",
       "url": "demos/blackbody.html",
       "handouts": [
-        "blackbody"
+        "blackbody",
+        "intro-blackbody"
       ]
     },
     {
@@ -7406,7 +7407,8 @@
       "status": "usable",
       "note": "Plane wave E and B, energy and radiation pressure examples, the spectrum and a dipole antenna. The charging capacitor apparatus for displacement current is the displacement current demo (2026-10-22), mapped with it to 16.1. 2026-10-24: student worksheet em-waves (B₀ against E₀ for c, I against E₀² for ε₀, radiation pressure against I, sunlight, laser and radio, the dipole pattern) with the shared Readings section.",
       "handouts": [
-        "em-waves"
+        "em-waves",
+        "intro-em-spectrum"
       ],
       "title": "Electromagnetic Waves",
       "url": "demos/em-waves.html"
@@ -8775,7 +8777,8 @@
       "handouts": [
         "dispersion",
         "mirrors-refraction",
-        "lenses-instruments"
+        "lenses-instruments",
+        "intro-mirrors"
       ]
     },
     {
@@ -9193,7 +9196,8 @@
       "status": "usable",
       "note": "New 2026-10-24 (Claude). Exact Airy pattern I = I0[2J1(x)/x]^2 (J1 from Bessel's integral, tested against its tabulated zeros), first dark ring at sin θ = 1.2197 λ/D, two incoherent sources and Rayleigh's criterion with a line profile and cursor. Setups: laser through a pinhole onto a screen, two point sources and an iris, headlights and the eye (3.00 mm pupil, 1.30 m, textbook Chapter 4 problem), Hubble (2.40 m, 2.0 million ly, textbook example), a 50 mm camera lens by f-number, mystery pinhole. Worksheet resolution with a key from a real run in TeacherKeys.",
       "handouts": [
-        "resolution"
+        "resolution",
+        "intro-resolution"
       ],
       "title": "Circular Apertures and Resolution",
       "url": "demos/resolution.html"
@@ -9652,7 +9656,8 @@
       "title": "Spectra Explorer",
       "url": "demos/spectra.html",
       "handouts": [
-        "spectra"
+        "spectra",
+        "intro-spectra"
       ]
     },
     {
@@ -10003,7 +10008,9 @@
       "beyond_book": false,
       "status": "usable",
       "note": "New 2026-10-25 (Claude). Build your own instrument: ideal thin lenses and round stops on a rail, viewed by the reduced eye of The Eye demo or a 50 mm camera. Image chain from the lens equation, angular magnification from traced rays against the textbook formulas, aperture stop, entrance and exit pupils, eye relief, field of view and brightness from 3D ray tracing; views of what the eye and camera see traced backward ray by ray. Presets: magnifier, compound microscope, Keplerian, Galilean and terrestrial telescopes, start from scratch. Worksheet to follow.",
-      "handouts": [],
+      "handouts": [
+        "intro-telescope"
+      ],
       "title": "Build a Microscope or Telescope",
       "url": "demos/instrument-builder.html"
     },

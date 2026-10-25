@@ -3731,3 +3731,41 @@ Four more intro level worksheets for Astro 2203 (plan: https://claude.ai/artifac
 
 **For GPT:** please check the light time arithmetic (8.317 min per au), the precession numbers (50.29″ a year, 25,772 years, 43 km
 bulge), the circumpolar limits (57.5° Ruston, 28.8° Anchorage) and the Sun's constellations on the five dates.
+
+## 2026-10-25 · Claude · Astro 2203 Topic 4: six intro worksheets on telescopes and light
+
+Six intro level worksheets for Topic 4 of the Astro 2203 plan (https://claude.ai/artifact/T3sRWCeRiojRhCBa1xhRoV), following the
+`intro-seasons` recipe (`?ws=` routing, `==ASTRO 2203==` block of `worksheet.js`, `COURSE_HANDOUTS`, map `handouts`). Existing
+worksheets and keys are unchanged; every demo change below adds a control, a setup or a reading key, and renames nothing.
+
+| Slug | Title | Demo | What students do |
+|---|---|---|---|
+| `intro-telescope` | Building a Telescope | Build a Microscope or Telescope | Keplerian telescope, eyepieces 5, 2.5, 4 cm (M = f₁/f₂); objectives 2 to 7 cm with a 7 mm pupil; graph light from a star against D² (slope 1/(0.7 cm)²) |
+| `intro-resolution` | Seeing Fine Detail | Circular Apertures and Resolution | Hubble and two stars: smallest resolved separation (midway ≤ 0.735) for mirrors 0.5 to 10 m and for 405 and 650 nm; 21.1 cm radio dish on paper |
+| `intro-mirrors` | Lenses, Mirrors and Color | Optics Bench | focal length at seven colors for flint and crown lenses and a concave mirror |
+| `intro-blackbody` | Star Colors and Temperatures | Blackbody Radiation | Betelgeuse, Sun, Rigel; 3000 and 12 000 K; Wien and Stefan–Boltzmann as ratios |
+| `intro-spectra` | Fingerprints of the Elements | Spectra Explorer | Kirchhoff's three spectra; hydrogen bright and dark lines; sodium and neon; the mystery star |
+| `intro-em-spectrum` | The Electromagnetic Spectrum | Electromagnetic Waves | one reading per decade 10⁶ to 10²⁰ Hz, λ × f = c |
+
+**Demo additions.**
+- `instrument-builder`: a Readings section (`tools/readings_panel.py`, worksheet `intro-telescope`, its only one) and a readout
+  **Light from a star**: (D_en/d)², D_en the entrance pupil of the whole system with the viewer's pupil d counted as a stop (the
+  light from an axial point at infinity that reaches the retina, over the bare eye's). Test group added: 5 cm objective with a 7 mm
+  pupil gives (5/0.7)² = 51.02; with a 4 mm pupil the exit pupil (5 mm) is clipped and it gives M² = 100, matching the traced
+  `passFraction`.
+- `optics-bench`: a lens can be Ideal (default, unchanged), Crown glass (N-BK7) or Flint glass (F2). A thin lens of fixed shape has
+  1/f = (n − 1)(1/R₁ − 1/R₂), so f(λ) = f (n_589.3 − 1)/(n(λ) − 1) (`glassLensF`, in CORE, tested); white light splits at a glass
+  lens into the seven traced colors as it already did at glass bodies. Setups Lens in white light (flint, f 20 cm, screen at the
+  589 nm focus) and Mirror in white light (R 40 cm). With `?ws=intro-mirrors` the reading is the selected lens's or mirror's focal
+  length at the seven colors (F2: 19.011 to 20.238 cm; N-BK7: 19.468 to 20.143 cm; mirror 20 cm), checked against Sellmeier.
+- `spectra`: a third Display button, **Continuous** (the lamp alone shining into the spectroscope: every color, no lines; its
+  readings say there is no line to read; disabled in Mystery mode).
+- `blackbody`: readings gain `spectral_class`, `color` (as the readouts show them) and `L_sun`. `resolution`: readings gain `D_m`.
+
+**Keys** (TeacherKeys `worksheet-keys/astro-2203/intro-*`, capture scripts `tools/capture/intro-*.cjs`), all from real runs of the
+demos opened with `?ws=`; PDFs in the project's keys/astro-2203/. Checks: vdcheck `--only after` on the six demos 0 problems;
+tests instrument builder 13 groups, optics bench 7, dispersion 4, resolution 8; handout math 10 expressions 0 problems; symbols
+`--check`, `--missing`, `--meanings` 0 (glossary sections `intro-resolution`, `intro-telescope`); symcheck 0 differences.
+
+**For GPT:** please check the light from a star readout (and the exit pupil clipping case), the glass lens focal lengths, the
+resolution key's separations against 1.22 λ/D, and each key's answers against its tables.

@@ -157,7 +157,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/dispersion.html" target="dispersion-worksheet">Worksheet 1: Dispersion</a></li><li><a href="../curriculum/labs/students/mirrors-refraction.html" target="mirrors-refraction-worksheet">Worksheet 2: Mirrors and Refracting Surfaces</a></li><li><a href="../curriculum/labs/students/lenses-instruments.html" target="lenses-instruments-worksheet">Worksheet 3: Lenses and Optical Instruments</a></li></ul></details><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/dispersion.html" target="dispersion-worksheet">Worksheet 1: Dispersion</a></li><li><a href="../curriculum/labs/students/mirrors-refraction.html" target="mirrors-refraction-worksheet">Worksheet 2: Mirrors and Refracting Surfaces</a></li><li><a href="../curriculum/labs/students/lenses-instruments.html" target="lenses-instruments-worksheet">Worksheet 3: Lenses and Optical Instruments</a></li><li><a href="../curriculum/labs/students/intro-mirrors.html" target="intro-mirrors-worksheet">Worksheet 4: Lenses, Mirrors and Color (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -171,6 +171,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="microscope" aria-pressed="false">Microscope</button>
           <button type="button" data-p="surface" aria-pressed="false">Refracting surface</button>
           <button type="button" data-p="depth" aria-pressed="false">Apparent depth</button>
+          <button type="button" data-p="lenswhite" aria-pressed="false">Lens in white light</button>
+          <button type="button" data-p="mirrorwhite" aria-pressed="false">Mirror in white light</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint">For a diverging lens, click the lens and choose Diverging.</p></details>
       </section>
@@ -377,6 +379,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function sellmeier(g, lamNm) { const L = (lamNm / 1000) ** 2; let s = 1; g.B.forEach((b, i) => { s += b * L / (L - g.C[i]); }); return Math.sqrt(s); }
   /* deviation of a ray through a prism of apex angle A at minimum deviation: n sin(A/2) = sin((A + δ)/2) */
   function minDeviation(n, A) { const s = n * Math.sin(A / 2); return Math.abs(s) > 1 ? NaN : 2 * Math.asin(s) - A; }
+  /* a thin glass lens of fixed shape: 1/f = (n − 1)(1/R₁ − 1/R₂), so a lens of focal length fRef at index nRef has f = fRef (nRef − 1)/(n − 1) at index n */
+  function glassLensF(fRef, nRef, n) { return fRef * (nRef - 1) / (n - 1); }
   // ==CORE END==
 
   const MAX_ITEMS = 8, MAX_BOUNCES = 30, EPS = 1e-6;
@@ -413,6 +417,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     camera:     () => [mk('object', -35, 0, { h: 5, rays: 9, spread: 3.3, rot: -8.1 }), mk('lens', 0, 0, { f: 5, ap: 4 }), mk('screen', 5.83, 0, { h: 4 })],
     magnifier:  () => [mk('object', -2, 0, { h: 2, rays: 9, spread: 40, rot: -10 }), mk('lens', 4, 0, { f: 12, ap: 12 })],
     concave:    () => [mk('object', -16, 0, { h: 3, rays: 9, spread: 7.5, rot: -5.6 }), mk('mirror', 14, 0, { R: 24, ap: 8 })],
+    lenswhite:  () => [mk('beam', -24, 0, { w: 8, rays: 9, white: true }), mk('lens', -8, 0, { f: 20, ap: 10, glass: 'f2' }), mk('screen', 12, 0, { h: 6 })],
+    mirrorwhite: () => [mk('beam', -24, 0, { w: 6, rays: 7, white: true }), mk('mirror', 14, 0, { R: 40, ap: 10 })],
     telescope:  () => [mk('beam', -22, 0, { w: 6, rays: 7, rot: 3 }), mk('lens', -14, 0, { f: 16, ap: 10 }), mk('lens', 7, 0, { f: 5, ap: 8 })],
     prism:      () => [mk('beam', -18, -4, { w: 0, rays: 1, rot: 18.6, white: true }), mk('prism', 2, 0, { side: 12 })],
     microscope: () => [mk('object', -16.25, 0, { h: 0.5, rays: 9, spread: 30, rot: -9 }), mk('lens', -14, 0, { f: 2, ap: 3 }), mk('lens', 9, 0, { f: 5, ap: 12 })],
@@ -428,7 +434,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const FRAMES = {
     converging: [1, 0, 54, 22], camera: [-12, 0, 52, 14], magnifier: [3, 0, 34, 18], concave: [-2, 0, 41, 18],
     telescope: [-4, 0, 44, 18], prism: [0, 0, 50, 22], tir: [0, 0, 36, 24],
-    microscope: [-2, 0, 40, 17], surface: [3, 0, 50, 14], depth: [-2, 0, 32, 16]
+    microscope: [-2, 0, 40, 17], surface: [3, 0, 50, 14], depth: [-2, 0, 32, 16], lenswhite: [-5, 0, 42, 16], mirrorwhite: [-4, 0, 44, 16]
   };
   let frame = FRAMES.converging;
   function placeOnPivot(it) {
@@ -552,12 +558,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return Math.max(t, 0);
   }
   const reflect = (d, N) => { const k = 2 * dot(d, N); return [d[0] - k * N[0], d[1] - k * N[1]]; };
-  function lensBend(el, q, d) {
-    const { u, w } = frameOf(el);
+  /* a lens of real glass (Crown or Flint; Astro 2203, 2026-10-25): a thin lens of fixed shape has 1/f = (n − 1)(1/R₁ − 1/R₂), so
+     f(λ) = f (n_d − 1)/(n(λ) − 1), with f the focal length at the sodium d line, 589.3 nm. An ideal lens (no glass) has one f for
+     every color. This is the chromatic aberration a mirror does not have: reflection is the same for every wavelength. */
+  const lensF = (el, lam) => (el.glass && GLASSES[el.glass] && lam ? glassLensF(el.f, nAt(el, 589.3), nAt(el, lam)) : el.f);
+  function lensBend(el, q, d, lam) {
+    const { u, w } = frameOf(el), f = lensF(el, lam);
     const du = dot(d, u), dw = dot(d, w);
     if (Math.abs(du) < 1e-9) return d;
     const sg = du > 0 ? 1 : -1, h = (q[0] - el.x) * w[0] + (q[1] - el.y) * w[1];
-    const slope = dw / Math.abs(du) - h / el.f;    // thin lens: slope_out = slope_in − h/f
+    const slope = dw / Math.abs(du) - h / f;       // thin lens: slope_out = slope_in − h/f
     return norm([sg * u[0] + slope * w[0], sg * u[1] + slope * w[1]]);
   }
 
@@ -588,7 +598,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         if (best.role === 'screen') { end = 'screen'; r.scr = best.el; break; }     // the screen stops the light
         p = q;
         if (best.role === 'lens') {
-          d = lensBend(best.el, q, d); r.hits.push(best.el);
+          if (r.white && best.el.glass) {                  /* white light meets a glass lens: one ray per color, as at a glass body */
+            for (const lam of LAMBDAS) {
+              stack.push({ p: q, d, lam, white: false, faint: r.faint, central: r.central && lam === 550, src: r.src, tag: r.tag,
+                           pts: [q], hits: r.hits.slice(), bounces: r.bounces, pending: best, wall: r.wall });
+            }
+            end = 'split'; break;
+          }
+          d = lensBend(best.el, q, d, r.lam); r.hits.push(best.el);
         } else if (best.role === 'surf') {
           /* exact Snell's law at the refracting surface (no dispersion there); a ray crossing a rod wall is marked and left out of the image */
           const el = best.el;
@@ -1768,7 +1785,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const SPECS = {
     lens: [
       { chips: [['conv', 'Converging'], ['div', 'Diverging']], get: (it) => it.f > 0 ? 'conv' : 'div', set: (it, v) => { it.f = (v === 'conv' ? 1 : -1) * Math.abs(it.f); } },
-      { label: 'Focal length', hk: 'f', min: 1, max: 30, step: 0.5, get: (it) => Math.abs(it.f), set: (it, v) => { it.f = Math.sign(it.f) * v; }, fmt: (it) => 'f = ' + fmtCm(it.f) },
+      { label: 'Focal length', hk: 'f', min: 1, max: 30, step: 0.5, get: (it) => Math.abs(it.f), set: (it, v) => { it.f = Math.sign(it.f) * v; }, fmt: (it) => 'f = ' + fmtCm(it.f) + (it.glass ? ' at 589 nm' : '') },
+      { chips: [['ideal', 'Ideal'], ['bk7', 'Crown glass'], ['f2', 'Flint glass']], get: (it) => it.glass || 'ideal', set: (it, v) => { it.glass = v === 'ideal' ? undefined : v; } },
+      { note: (it) => lensNote(it) },
       { label: 'Aperture height', min: 2, max: 20, step: 0.5, key: 'ap', unit: ' cm' },
       { label: 'Rotate', min: -90, max: 90, step: 1, key: 'rot', unit: '°' }
     ],
@@ -1849,6 +1868,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (it.kind === 'prism') { const A = Math.PI / 3, d4 = minDeviation(n(400), A), d7 = minDeviation(n(700), A); if (isFinite(d4) && isFinite(d7)) t += ` At minimum deviation this 60° prism turns 400 nm light by ${deg(d4).toFixed(2)}° and 700 nm light by ${deg(d7).toFixed(2)}°, a spread of ${deg(d4 - d7).toFixed(2)}°.`; }
     return t;
   }
+  /* a glass lens: its focal length at the ends of the spectrum (white light shows the colors focusing apart) */
+  function lensNote(it) {
+    if (!it.glass) return 'Ideal: the same focal length for every color.';
+    const f = (lam) => minus(lensF(it, lam).toFixed(2));
+    return `${GLASSES[it.glass].name}: f = ${f(400)} cm at 400 nm, ${f(589.3)} cm at 589 nm, ${f(700)} cm at 700 nm. Turn on White light at the source to see the colors focus apart.`;
+  }
   function itemName(it) {
     if (it.kind === 'lens') return it.f > 0 ? 'Converging lens' : 'Diverging lens';
     if (it.kind === 'mirror') return { concave: 'Concave mirror', convex: 'Convex mirror', plane: 'Plane mirror' }[it.shape];
@@ -1924,7 +1949,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     camera: 'A camera: a 5.0 cm lens makes a real, inverted, smaller image of an object 35 cm away on the sensor (the screen) 5.83 cm behind it. Move the object closer and the sensor must move back to stay in focus. For blur, the f-number and a phone lens, use the Camera mode of The Eye.',
     microscope: 'A 2 cm objective and a 5 cm eyepiece, tube length 16 cm. The object sits 2.25 cm from the objective, just outside its F.',
     surface: 'The curved end of a glass rod (n = 1.50, R = +4 cm) with a 3 cm aperture. Shrink the aperture to bring the traced image to the paraxial one.',
-    depth: 'A fish in water (n = 1.33) seen through a flat surface, here standing upright: the eye is on the right, in air.'
+    depth: 'A fish in water (n = 1.33) seen through a flat surface, here standing upright: the eye is on the right, in air.',
+    lenswhite: 'White light through a flint glass lens, f = 20.00 cm at 589 nm. The glass bends violet more than red, so violet (400 nm) focuses 1.23 cm nearer the lens than red (700 nm): chromatic aberration. The spot on the screen has a colored fringe. Click the lens to switch to crown glass or an ideal lens.',
+    mirrorwhite: 'White light on a concave mirror, R = 40 cm, f = 20 cm. Reflection turns every color by the same angle, so all the colors meet at one focus. This is one reason every large modern telescope is a reflector.'
   };
 
   // ---------- drag handles on the selected item ----------
@@ -2314,8 +2341,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { ws: 'mirrors-refraction', row: { element: itemName(E), n1: surf ? E.n1 : '', n2: surf ? E.n2 : '', R_cm: isFinite(R) ? R : '∞',
       f_cm: surf ? '' : isFinite(R) ? R / 2 : '∞', do_cm: r2(im.dO), di_cm: di, m, image: imgKind(im) } };
   }
+  /* Astro 2203's intro-mirrors worksheet (opened with ?ws=intro-mirrors): the focal length of the selected lens or mirror (or the
+     first one on the bench) at the seven colors the white light is split into. A mirror's is R/2 for every color. */
+  function focusRows() {
+    const E = sel && (sel.kind === 'lens' || sel.kind === 'mirror') ? sel : items.find((it) => it.kind === 'lens' || it.kind === 'mirror');
+    if (!E) return 'Put a lens or a mirror on the bench first.';
+    if (E.kind === 'mirror' && E.shape === 'plane') return 'A plane mirror has no focus: choose a concave mirror.';
+    const mat = E.kind === 'mirror' ? 'mirror (reflection)' : E.glass ? GLASSES[E.glass].name : 'ideal lens';
+    return LAMBDAS.map((lam) => ({ element: itemName(E), material: mat, lam_nm: lam, f_cm: E.kind === 'mirror' ? +(signedR(E) / 2).toFixed(3) : +lensF(E, lam).toFixed(3) }));
+  }
   window.vdReadingRow = () => {
     let ws, r;
+    if (VD.ws('') === 'intro-mirrors') { window.vdShowCols = [['element', 'Element'], ['lam_nm', 'λ (nm)'], ['f_cm', 'f (cm)']]; return focusRows(); }
     if (sel && isGlass(sel)) { ws = 'dispersion'; r = glassRows(); }
     else { const x = imageRow(); if (typeof x === 'string') return x; ws = x.ws; r = x.row; }
     const n = typeof window.vdReadings === 'function' ? window.vdReadings() : 0;

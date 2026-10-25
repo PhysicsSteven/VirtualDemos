@@ -2,7 +2,7 @@
 // Optics Bench: dispersion of real materials by Sellmeier formulas (OpenStax Vol 3 §1.5).
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('optics-bench', 'GLASSES,sellmeier,minDeviation');
+const c = core('optics-bench', 'GLASSES,sellmeier,minDeviation,glassLensF');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol, `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -21,5 +21,13 @@ group('normal dispersion: n falls from violet to red for every material, more in
 group('minimum deviation of a 60° prism: n sin(A/2) = sin((A + δ)/2)', () => {
   const A = Math.PI / 3, d = c.minDeviation(1.5, A); near(Math.sin((A + d) / 2), 1.5 * 0.5, 1e-12); near(d * 180 / Math.PI, 37.18, 0.01);
   const spread = c.minDeviation(c.sellmeier(c.GLASSES.bk7, 400), A) - c.minDeviation(c.sellmeier(c.GLASSES.bk7, 700), A); assert(spread > 0); const n4 = c.sellmeier(c.GLASSES.bk7, 400), n7 = c.sellmeier(c.GLASSES.bk7, 700); near(spread, 2 * Math.asin(n4 / 2) - 2 * Math.asin(n7 / 2), 1e-12); near(spread * 180 / Math.PI, 1.57, 0.01);
+});
+group('a glass lens (Lens in white light): f(λ) = f (n_589 − 1)/(n(λ) − 1), violet focuses first, flint spreads more than crown', () => {
+  const f = (k, l) => c.glassLensF(20, c.sellmeier(c.GLASSES[k], 589.3), c.sellmeier(c.GLASSES[k], l));
+  near(f('bk7', 589.3), 20, 1e-12);
+  /* lensmaker's equation for a symmetric biconvex lens, R = 2f(n − 1): the same R gives the scaled f at any wavelength */
+  const R = 2 * 20 * (c.sellmeier(c.GLASSES.bk7, 589.3) - 1); near(f('bk7', 400), R / 2 / (c.sellmeier(c.GLASSES.bk7, 400) - 1), 1e-12);
+  near(f('bk7', 400), 19.468, 5e-4); near(f('bk7', 700), 20.143, 5e-4); near(f('f2', 400), 19.011, 5e-4); near(f('f2', 700), 20.238, 5e-4);
+  assert(f('f2', 700) - f('f2', 400) > f('bk7', 700) - f('bk7', 400));
 });
 console.log(`${n} groups passed`);

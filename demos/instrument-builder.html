@@ -118,6 +118,7 @@ table.chain td { text-align: right; padding: 3px 4px; border-top: 1px solid var(
             <div class="big"><dt>Exit pupil</dt><dd id="qXP">—</dd></div>
             <div><dt>Apparent field of view</dt><dd id="qFov">—</dd></div>
             <div><dt>Image brightness</dt><dd id="qBright">—</dd></div>
+            <div><dt>Light from a star</dt><dd id="qGather">—</dd></div>
             <div class="wide"><dt id="qFocusL">The eye</dt><dd id="qFocus" class="note">—</dd></div>
           </dl>
         </div>
@@ -125,6 +126,7 @@ table.chain td { text-align: right; padding: 3px 4px; border-top: 1px solid var(
     </div>
 
     <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/intro-telescope.html" target="intro-telescope-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -224,9 +226,30 @@ table.chain td { text-align: right; padding: 3px 4px; border-top: 1px solid var(
           <div><dt>Apparent field</dt><dd id="rApp">—</dd></div>
           <div class="wide"><dt id="rDiffL">Diffraction limit (not in the ray picture)</dt><dd id="rDiff">—</dd></div>
         </dl>
-        <details class="more"><summary>What these mean</summary><p class="hint">The aperture stop is the opening that limits the cone of light from the middle of the object. The entrance pupil is that stop as seen from the object, and the exit pupil is the stop's image after the last lens: every ray that gets through passes through it, so that is where the eye's pupil belongs. The fields are full angles (or, for a near object, the width of the object you can see) out to where half the light still reaches the eye. Brightness compares the light per area of the picture on the retina with the unaided eye looking at the same object: it falls when the exit pupil is smaller than the eye's pupil. No lens or mirror can make an extended object look brighter than it does to the bare eye.</p></details>
+        <details class="more"><summary>What these mean</summary><p class="hint">The aperture stop is the opening that limits the cone of light from the middle of the object. The entrance pupil is that stop as seen from the object, and the exit pupil is the stop's image after the last lens: every ray that gets through passes through it, so that is where the eye's pupil belongs. The fields are full angles (or, for a near object, the width of the object you can see) out to where half the light still reaches the eye. Brightness compares the light per area of the picture on the retina with the unaided eye looking at the same object: it falls when the exit pupil is smaller than the eye's pupil. No lens or mirror can make an extended object look brighter than it does to the bare eye. A star is different: it is a point, so all the light the instrument collects from it lands on one spot. Light from a star compares the light from a distant point on the axis that reaches the retina or sensor with what the bare eye or camera collects: (D/d)², where D is the entrance pupil of the whole instrument with the viewer's pupil d counted as a stop.</p></details>
       </section>
 
+      <!-- vd-readings --><section class="vd-readings" data-ws="intro-telescope" data-title="Build a Microscope or Telescope" data-demo="instrument-builder">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
       <section>
         <details class="fold"><summary>Key and model</summary><div class="foldbody">
         <div class="key">
@@ -467,7 +490,11 @@ table.chain td { text-align: right; padding: 3px 4px; border-top: 1px solid var(
       const z0 = obj.kind === 'near' ? obj.z : startZ(els, obj) - 1, t = traceBack(els, S.zV, r, z0);
       if (t) fill++;
     }
-    model = { obj, els, chain, zF, vo, M, Mt, pu, hf, bright: K ? fill / K : 0 };
+    /* light gathered from a star (a distant point on the axis): every ray that reaches the retina or sensor passes the entrance
+       pupil of the whole system with the viewer's pupil counted as a stop, so the light collected goes as its area: (D/d)² */
+    let gather = null;
+    if (obj.kind === 'far' && els.length) { const pa = pupils(els.concat([{ kind: 'stop', z: S.zV, D: vo.D }]), obj); gather = pa && isFinite(pa.en.D) ? Math.pow(pa.en.D / vo.D, 2) : null; }
+    model = { obj, els, chain, zF, vo, M, Mt, pu, hf, bright: K ? fill / K : 0, gather };
     return model;
   }
 
@@ -633,6 +660,7 @@ table.chain td { text-align: right; padding: 3px 4px; border-top: 1px solid var(
       $('qFov').textContent = blind ? 'hidden' : `${hf.open ? 'over ' : ''}${sig(2 * deg(appT), 3)}°`;
     } else { $('rTrue').textContent = m.els.length ? 'no light gets through' : '—'; $('rApp').textContent = '—'; $('qFov').textContent = m.els.length ? 'no light' : '—'; }
     $('qBright').textContent = `${m.bright >= 0.995 ? '100' : sig(100 * m.bright, 2)} % of the bare ${cam ? 'camera' : 'eye'}`;
+    $('qGather').textContent = m.gather == null ? (obj.kind === 'near' ? '— (for a distant point)' : '—') : m.gather <= 0 ? 'none' : `${sig(m.gather, 3)} × the bare ${cam ? 'camera' : 'eye'}`;
     /* diffraction: the stop of the whole system, the viewer's pupil included (it is the stop when the exit pupil is bigger) */
     const ps = pupils(m.els.concat([{ kind: 'stop', name: cam ? 'the camera lens' : 'the eye\'s pupil', z: S.zV, D: vo.D }]), obj);
     if (ps && m.els.length) {
@@ -1166,6 +1194,21 @@ table.chain td { text-align: right; padding: 3px 4px; border-top: 1px solid var(
   applyPreset(first); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   window.vdModel = () => model;
+
+  /* ---------- readings for the worksheet (tools/readings_panel.py): the instrument as built, and what the readouts give ---------- */
+  window.vdVersion = 'instrument-builder@2026-10-25';
+  window.vdShowCols = [['f_obj_cm', 'f₁ (cm)'], ['f_eye_cm', 'f₂ (cm)'], ['D_obj_cm', 'D (cm)'], ['M', 'M'], ['gather', 'star light']];
+  const OBJ_NAME = { slide: 'slide, near', sign: 'far sign', moon: 'the Moon' };
+  window.vdReadingRow = () => {
+    const m = model, ps = usable(S.els, S.obj).filter((e) => e.kind === 'lens');
+    if (!ps.length) return 'Add a lens first.';
+    const r3 = (v) => (isFinite(v) ? +(+v).toPrecision(4) : '∞'), hf = m.hf, far = m.obj.kind === 'far';
+    const appT = hf ? (far ? Math.abs(m.M) * hf.field : Math.abs(m.M) * hf.field / NEAR_POINT) : NaN;
+    return { setup: (document.querySelector(`#presets [data-p="${S.preset}"]`) || { textContent: 'custom' }).textContent, object: OBJ_NAME[m.obj.tex] || m.obj.tex,
+      f_obj_cm: ps[0].f, f_eye_cm: ps[ps.length - 1].f, sep_cm: +(ps[ps.length - 1].z - ps[0].z).toFixed(2), D_obj_cm: ps[0].D, pupil_mm: +(m.vo.D * 10).toFixed(1),
+      M: S.blind ? '' : r3(m.M), exit_pupil_mm: m.pu && isFinite(m.pu.ex.D) ? +(m.pu.ex.D * 10).toFixed(2) : '∞', gather: m.gather == null ? '' : r3(m.gather),
+      bright_pct: +(100 * m.bright).toFixed(1), true_field_deg: hf && far ? r3(2 * deg(hf.field)) : '', app_field_deg: S.blind || !hf ? '' : r3(2 * deg(appT)) };
+  };
 })();
 </script>
 </body>

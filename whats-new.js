@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-astro-2203-light', date: '2026-10-25', title: 'Astro 2203: telescopes and light',
+    text: 'Six new worksheets for Astro 2203, Topic 4: build a telescope and measure its magnification and light gathering, the finest detail a mirror or radio dish can see, why mirrors beat lenses for color, star colors and temperatures, the fingerprints of the elements, and the electromagnetic spectrum. New in the demos: Build a Microscope or Telescope records readings and shows the light it gathers from a star, Optics Bench lenses can be crown or flint glass (with Lens in white light and Mirror in white light setups), and Spectra Explorer shows a continuous spectrum beside emission and absorption.', link: { href: 'astro-2203.html', text: 'Open Astro 2203' } },
   { id: '2026-10-25-astro-2203-sky-scale', date: '2026-10-25', title: 'Astro 2203: sky and scale worksheets',
     text: 'Four new worksheets for Astro 2203, Topics 1 and 2: the size of the solar system in au and light travel times, the phases of the Moon and eclipse seasons, why Earth\'s axis slowly circles the sky (with the gyroscope), and reading the sky in the free Stellarium planetarium. The planets in the Units, Scales and Estimates zoom now show their average distance from the Sun.', link: { href: 'astro-2203.html', text: 'Open Astro 2203' } },
   { id: '2026-10-25-astro-2203', date: '2026-10-25', title: 'Astro 2203 course page',
