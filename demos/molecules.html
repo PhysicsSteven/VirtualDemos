@@ -261,6 +261,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const mu = (m) => reduced(m.m1, m.m2);
   /* vibrational term G(v), rotational constant B_v and centrifugal constant D_v, all in cm⁻¹ */
   const G = (m, v) => { const x = v + 0.5; return m.we * x - m.wexe * x * x + (m.weye || 0) * x ** 3 + (m.weze || 0) * x ** 4; };
+  /* Born–Oppenheimer: both isotopologues share the well depth D_e = D₀ + G(0), so H³⁷Cl's D₀ is higher by its smaller zero point energy */
+  HCL37.D0 = MOLS.HCl.D0 + (G(MOLS.HCl, 0) - G(HCL37, 0)) * CM_EV;
   const Bv = (m, v) => { const x = v + 0.5; return m.Be - m.ae * x + (m.g2 || 0) * x * x + (m.g3 || 0) * x ** 3; };
   const Dv = (m, v) => { const x = v + 0.5; return m.Dc != null ? m.Dc + (m.d1 || 0) * x + (m.d2 || 0) * x * x : 4 * m.Be ** 3 / m.we ** 2; };
   /* term value of the level (v, J) in cm⁻¹ above the bottom of the well. model 'book': the rigid rotor and harmonic oscillator of

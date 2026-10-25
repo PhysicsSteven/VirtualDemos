@@ -753,13 +753,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         const [a, b] = resp, key = `${cfg.size}|${d}|${cfg.src}`;
         let c = convCache && convCache.get(key);
         if (!c) { c = conv(a.r.hist, b.r.hist); if (convCache) convCache.set(key, c); }
+        // the response histograms hold only deposits (they sum to inter < 1), so the sum spectrum carries weight p·q·inter_a·inter_b and a photon
+        // that enters but passes through leaves the other one's deposit alone: single deposits weigh p(1 − q·inter_b) and q(1 − p·inter_a)
         if (src.sum === 'cascade') {
           const p = g * a.I * trans(cfg.mat, cfg.t, a.E), q = g * b.I * trans(cfg.mat, cfg.t, b.E);
-          add(a.r.hist, A * p * (1 - q)); add(b.r.hist, A * q * (1 - p)); add(c, A * p * q);
+          add(a.r.hist, A * p * (1 - q * b.r.inter)); add(b.r.hist, A * q * (1 - p * a.r.inter)); add(c, A * p * q);
           parts.direct = A * (p * a.r.inter + q * b.r.inter);
         } else {                                   // beta+: two back to back 511 keV photons from fb of decays, 1274 keV from all
           const fb = src.fb, p = 2 * g * trans(cfg.mat, cfg.t, a.E), q = g * b.I * trans(cfg.mat, cfg.t, b.E);
-          add(a.r.hist, A * fb * p * (1 - q)); add(b.r.hist, A * q * (fb * (1 - p) + (1 - fb))); add(c, A * fb * p * q);
+          add(a.r.hist, A * fb * p * (1 - q * b.r.inter)); add(b.r.hist, A * q * (fb * (1 - p * a.r.inter) + (1 - fb))); add(c, A * fb * p * q);
           parts.direct = A * (fb * p * a.r.inter + q * b.r.inter);
         }
       } else {

@@ -322,16 +322,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function electron(g, tp, U, Ur, Uc, rnd, keep) {
     const L = g.L, lv = g.levels, thr = lv[0], F = (U - Uc) / L;
     const E0 = startEnergy(rnd);
-    let base = E0, nx = 0, lost = 0;
+    let base = E0, nx = 0, lost = 0, xPrev = 0;
     const exc = keep ? [] : null;
     if (F > 0) {
       for (;;) {
-        const xs = Math.max((thr - base) / F, 0); if (xs >= L) break;
+        const xs = Math.max((thr - base) / F, xPrev); if (xs >= L) break;   /* from where E reaches threshold again, or the last collision if E stayed above it */
         const xe = xs - tp.lam * Math.log(1 - rnd()); if (xe >= L) break;
         const Ex = base + F * xe;
         let k = 0; while (k + 1 < lv.length && lv[k + 1] <= Ex) k++;
         const dE = lv[Math.min(k, Math.floor(rnd() * (k + 1)))];
-        base -= dE; nx++; lost += dE;
+        base -= dE; nx++; lost += dE; xPrev = xe;
         if (exc) exc.push({ x: xe / L, E: Ex, dE });
       }
     }

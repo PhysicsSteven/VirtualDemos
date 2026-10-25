@@ -407,7 +407,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
     }
   }
-  // Expectation values. Momentum uses the central difference, consistently for ⟨k⟩ and ⟨k²⟩.
+  // Expectation values. Momentum uses the fourth order central difference (−ψ₊₂ + 8ψ₊₁ − 8ψ₋₁ + ψ₋₂)/12dx, consistently for ⟨k⟩ and ⟨k²⟩:
+  // its effective wavenumber (8 sin k dx − sin 2k dx)/6dx is low by only (k dx)⁴/30, so a minimum uncertainty packet reads Δx·Δk = 0.5000.
   function observe(s, xsplit) {
     const N = s.N, re = s.re, im = s.im, dx = s.dx, x = s.x, V = s.V, t = KIN / (dx * dx);
     let n = 0, sx = 0, sxx = 0, sk = 0, skk = 0, kin = 0, pot = 0, h2 = 0, left = 0;
@@ -417,7 +418,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (x[i] < xsplit) left += p;
       const r1 = i < N - 1 ? re[i + 1] : 0, m1 = i < N - 1 ? im[i + 1] : 0;
       const r0 = i > 0 ? re[i - 1] : 0, m0 = i > 0 ? im[i - 1] : 0;
-      const dr = r1 - r0, dm = m1 - m0;
+      const r2 = i < N - 2 ? re[i + 2] : 0, m2 = i < N - 2 ? im[i + 2] : 0, r_2 = i > 1 ? re[i - 2] : 0, m_2 = i > 1 ? im[i - 2] : 0;
+      const dr = (8 * (r1 - r0) - (r2 - r_2)) / 6, dm = (8 * (m1 - m0) - (m2 - m_2)) / 6;
       sk += r * dm - m * dr; skk += dr * dr + dm * dm;
       const fr = r1 - r, fm = m1 - m; kin += fr * fr + fm * fm;
       // (Hψ)_i with Hermitian part of H
@@ -432,7 +434,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const E = (t * kin + pot) / n, E2 = h2 / n;
     return { norm, left: left * dx, right: (n - left) * dx, x: mx, dx: dxv, k: mk, dk, E, dE: Math.sqrt(Math.max(0, E2 - E * E)) };
   }
-  // Note: ⟨k⟩ above: Σ Im(ψ*_i (ψ_{i+1} − ψ_{i−1})) / (2 dx) per unit norm.
+  // Note: ⟨k⟩ above: Σ Im(ψ*_i Dψ_i) / (2 dx) per unit norm, with Dψ the fourth order difference (dr, dm) scaled to the two point one.
 
   function gaussian(s, x0, sigma, k0) {
     const N = s.N; let n = 0;

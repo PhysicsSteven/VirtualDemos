@@ -298,8 +298,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   // ==CORE START==
   // Pure physics and reading helpers, no DOM. Lengths in cm, charges in nC, V in volts, E in V/m.
   const DEMO_VERSION = 'coulomb-sandbox@2026-10-23';
-  const C_V = 898.755;   // V·cm per nC   (k q / r), k = 8.98755×10⁹ N·m²/C²
-  const C_E = 89875.5;   // V/m · cm² per nC (k q / r²)
+  const C_V = 898.75517862;   // V·cm per nC   (k q / r), k = 8.9875517862×10⁹ N·m²/C² (CODATA 2022)
+  const C_E = 89875.517862;   // V/m · cm² per nC (k q / r²)
   const CORE_R = 0.12, CORE_R3 = CORE_R ** 3;   // cm: each charge is a uniformly charged ball of this radius (always inside its drawn disc)
 
   // ---- continuous charge distributions (OpenStax University Physics Vol 2, section 5.5) ----
@@ -602,7 +602,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       '# Coulomb Sandbox probe readings (simulated data)',
       `# demo version,${DEMO_VERSION}`,
       '# model,point charges in one plane with the full 3D Coulomb field: V = sum of k q/r and E = sum of k q r_hat/r^2; within 1.2 mm of a charge it is a uniformly charged ball',
-      '# k_N_m2_per_C2,8.98755e9',
+      '# k_N_m2_per_C2,8.9875517862e9',
       '# charge_ball_radius_m,0.0012',
       '# rounding,positions to 0.001 m (the probe sits on a 0.1 cm grid); V to 1 V below 1 kV and 10 V from 1 kV; |E| to 1 V/m below 1 kV/m then 100 V/m below 100 kV/m then 1 kV/m below 1 MV/m then 10 kV/m; direction to 1 degree counterclockwise from +x'
     ];

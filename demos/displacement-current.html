@@ -116,7 +116,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div><div class="slider-head"><label for="sV">Battery voltage V</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="10" max="200" step="5"></div>
         <div><div class="slider-head"><label for="sRes">Resistance R</label><output id="oRes" for="sRes"></output></div><input type="range" id="sRes" min="0.2" max="5" step="0.1"></div>
         <dl class="readout" id="circOut"></dl>
-        <details class="more"><summary>More about this</summary><p class="hint">The capacitor charges as q = CV(1 − e<sup>−t/RC</sup>), so the current I = (V/R)e<sup>−t/RC</sup> dies away. Time runs about 10⁵ times slower than real. Ideal plates: the field between them is uniform and fringing is ignored; the wire is long and straight, 1 mm in radius.</p></details>
+        <details class="more"><summary>More about this</summary><p class="hint">The capacitor charges as q = CV(1 − e<sup>−t/RC</sup>), so the current I = (V/R)e<sup>−t/RC</sup> dies away. Time runs about 10⁵ times slower than real. Ideal plates: the field between them is uniform and fringing is ignored; the wire is long and straight, 1 mm in radius. The field at the loop is the instantaneous (quasi static) Ampère–Maxwell value: retardation and radiation are left out, a correction of order (size/λ)² ≈ 10⁻¹⁰ for a 10 cm apparatus and a 35 µs time constant.</p></details>
       </section>
 
       <!-- vd-readings --><section class="vd-readings" data-ws="displacement-current" data-title="Displacement Current" data-demo="displacement-current">

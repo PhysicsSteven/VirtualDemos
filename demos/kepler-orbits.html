@@ -419,7 +419,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // Units: AU, years and solar masses, so G = 4π² AU³/(M_sun·yr²) and GM = m = 4π² M. The star is fixed at the origin.
   const TAU = 2 * Math.PI;
   const KMS = 4.740470;          // km/s per AU/yr
-  const ETA = 0.002;             // step = ETA * sqrt(r^3 / GM)
+  const ETA = 0.001;             // step = ETA * sqrt(r^3 / GM) (0.001: Halley's measured period then matches 2π√(a³/GM) to 4 figures)
   const R_HIT = 0.005;           // AU, about one solar radius
 
   // orbital elements of a state {x, y, vx, vy} around GM = m

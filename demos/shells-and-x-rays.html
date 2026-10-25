@@ -647,7 +647,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const Z = S.sh.Z, e = byZ(Z), real = realConfig(Z), rule = ruleConfig(Z), os = outerShell(real);
       o = dd('Element', `${e[2]}, ${e[1]}`) + dd('Atomic number Z', Z) + dd('Configuration (measured)', pretty(real) + (Z > 103 ? ' (predicted)' : '')) + dd('By the n + l rule', pretty(rule))
         + dd('Electrons per shell', shellCounts(real).filter((k, i, a) => a.slice(i).some((q) => q)).join(', ')) + dd('Outer shell', `n = ${os.n}, ${os.count} electron${os.count === 1 ? '' : 's'}`)
-        + dd('First ionization energy', S.blind ? hide : e[7] == null ? 'not measured' : `${f(e[7], 4)} eV`) + dd('Z_eff = n√(IE/13.6 eV)', S.blind || e[7] == null ? hide : f(zEff(e[7], os.n), 3));
+        + dd('First ionization energy', S.blind ? hide : e[7] == null ? 'not measured' : `${f(e[7], 4)} eV`) + dd('Z_eff = n√(IE/13.606 eV)', S.blind || e[7] == null ? hide : f(zEff(e[7], os.n), 3));
     } else {
       const Z = xZ(), x = XR[Z], kV = S.xr.kV, myst = S.xr.target === 'mystery', ln = xrayLines(Z, kV), lmin = lamPm(kV * 1000), cl = S.xr.axis === 'lam' ? S.xr.cur : lamPm(S.xr.cur);
       o = dd('Target', myst ? 'mystery' : `${byZ(Z)[2]}, Z = ${Z}`) + dd('Tube voltage', `${f(kV, 1)} kV`) + dd('Cutoff λ_min = hc/eV', S.blind ? hide : `${f(lmin, 3)} pm`)

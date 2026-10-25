@@ -147,7 +147,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function gEff(b, h, lat, spin) {
     const g = gGrav(b, h), r = b.R + h, c = spin ? b.w * b.w * r * Math.cos(lat) : 0;
     const radial = g - c * Math.cos(lat), tang = c * Math.sin(lat);   // components: inward radial, and toward the equator
-    return { g: Math.hypot(radial, tang), tilt: Math.atan2(tang, radial), grav: g, cent: c };
+    // signed: above the geostationary radius the centrifugal term wins, the net acceleration points away from the planet and g is negative
+    return { g: Math.sign(radial || 1) * Math.hypot(radial, tang), tilt: Math.atan2(tang, radial), grav: g, cent: c, outward: radial < 0 };
   }
   // WGS 84 normal gravity at sea level (Somigliana), for comparison
   const wgs84 = (lat) => 9.7803253359 * (1 + 0.00193185265241 * Math.sin(lat) ** 2) / Math.sqrt(1 - 0.00669437999013 * Math.sin(lat) ** 2);
@@ -199,8 +200,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.blind) h += dd('Height', hText(S.h)) + '<div class="wide"><dt>g, the scale and the percentages</dt><dd class="ok">hidden in Blind: work them out</dd></div>';
     else {
       h += dd('Gravity alone GM/r²', `${f(E.grav, 4)} m/s²`) + dd('Fraction of surface value', `${f(100 * E.grav / g0, 2)}%`);
-      if (S.spin) h += dd('Centrifugal term ω²r cos(lat)', `${f(E.cent, 4)} m/s²`) + dd('Effective g (what a scale feels)', `${f(E.g, 4)} m/s²`) + dd('Plumb line tilt from the center', `${f(E.tilt * 180 / Math.PI * 60, 2)} arcmin`);
-      h += dd(S.h > 0 ? '1.000 kg on a spring scale held up on a tower at this height' : '1.000 kg on a spring scale', `${f(E.g, 3)} N`, S.h > 0);
+      if (S.spin) h += dd('Centrifugal term ω²r cos(lat)', `${f(E.cent, 4)} m/s²`) + dd('Effective g (what a scale feels)', `${f(E.g, 4)} m/s²${E.outward ? ' <span class="ok">(negative: the net acceleration points away from the planet)</span>' : ''}`) + (E.outward ? dd('Plumb line', 'points away from the planet') : dd('Plumb line tilt from the center', `${f(E.tilt * 180 / Math.PI * 60, 2)} arcmin`));
+      h += dd(S.h > 0 ? '1.000 kg on a spring scale held up on a tower at this height' : '1.000 kg on a spring scale', E.outward ? '0 N: above the geostationary radius the mass floats up against the tower' : `${f(E.g, 3)} N`, S.h > 0);
       if (S.h <= 1e6) { const la = linearApprox(b, S.h); h += dd('Near surface line g₀(1 − 2h/R)', `${f(la, 4)} m/s²`) + dd('Its error', `${f(100 * (la - E.grav) / E.grav, 3)}%`); }
       if (S.body === 'earth' && S.h === 0) h += dd('Real Earth at sea level (WGS 84)', `${f(wgs84(lat()), 4)} m/s²`, true);
       if (S.h > 1e5) { const o = orbit(b, S.h); h += dd('In orbit at this height', '<span style="font-family:var(--font-ui);font-size:0.85rem">the same scale reads 0: the craft and the mass fall together</span>', true) + dd('Circular orbit speed here', `${f(o.v / 1000, 2)} km/s`) + dd('Orbit period', o.T < 2 * 86400 ? `${f(o.T / 60, 1)} min` : `${f(o.T / 3600, 2)} h`); }
@@ -397,7 +398,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const R3 = draw3(0, 0, pw, h3, E), Q = R3.Q, lab = (p3, t, col, al, bl) => { const q = Q(p3); ctx.fillStyle = col; ctx.font = `700 ${11 * p}px ${T.ui}`; ctx.textAlign = al || 'left'; ctx.textBaseline = bl || 'middle'; ctx.fillText(t, q[0] + (al === 'right' ? -6 : al === 'center' ? 0 : 6) * p, q[1] + (bl === 'top' ? 6 : bl === 'bottom' ? -6 : 0) * p); };
       lab(R3.gTip, S.blind ? 'gravity' : `gravity ${f(E.grav, 2)} N`, LIT.gv, 'left', 'top');
       if (S.spin && E.cent > 0) lab(R3.cTip, 'centrifugal ×100', LIT.cv);
-      if (!S.blind) lab(R3.top, `scale reads ${f(E.g, 3)} N`, LIT.ink, 'center', 'bottom');
+      if (!S.blind) lab(R3.top, `scale reads ${f(Math.max(0, E.g), 3)} N`, LIT.ink, 'center', 'bottom');
       if (S.spin) lab(R3.pathPt, 'path in one day', LIT.cv, 'center', 'bottom');
       lab(R3.axisTop, S.spin ? 'axis (spinning)' : 'axis', LIT.muted, 'center', 'bottom');
       ctx.fillStyle = LIT.muted; ctx.font = `${10 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom'; ctx.fillText(DRG.on ? 'drag out or in along the line from the center to change the height' : (S.spin ? 'turning shown far faster than real · ' : '') + 'drag the scale out or in · drag elsewhere to turn', pw / 2, h3 - 8 * p);

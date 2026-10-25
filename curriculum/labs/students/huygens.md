@@ -35,7 +35,7 @@ Wavelets growing back into the upper medium at $$v_1$$ give the reflected front,
 1. How long does light take to cross 1.00 m of vacuum? Of diamond ($$n = 2.419$$)? How far behind the vacuum pulse is the diamond pulse?
 2. Light in air meets crown glass ($$n = 1.52$$) at 40°. Find the angle of refraction.
 3. Find the critical angle for light going from crown glass into air.
-4. Sound at 1000 Hz ($$\lambda = 0.33$$ m) passes through a doorway 1.0 m wide. In what direction is the first dark (quiet) direction? Why does light through the same door not spread noticeably?
+4. Sound at 1000 Hz ($$\lambda = 0.343$$ m, with sound at 343.2 m/s) passes through a doorway 1.0 m wide. In what direction is the first dark (quiet) direction? Why does light through the same door not spread noticeably?
 
 ## Safety
 

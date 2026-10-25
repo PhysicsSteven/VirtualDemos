@@ -219,7 +219,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     reflect: { view: 'boundary', set() { S.m1 = 'air'; S.mirror = true; S.th = 40 * Math.PI / 180; S.showRefl = true; }, hint: 'The front reaches the left of the mirror first, so wavelets there have been growing longest. Their tangent is the reflected front, leaving at the same angle the incident front arrived at.' },
     refract: { view: 'boundary', set() { S.m1 = 'air'; S.m2 = 'crown'; S.mirror = false; S.th = 40 * Math.PI / 180; S.showRefl = false; }, hint: 'In glass the wavelets grow only 1/1.52 as fast, so the part of the front already in the glass falls behind and the front turns: the ray bends toward the normal. This is how Huygens derived Snell’s law (OpenStax Example 1.6).' },
     out: { view: 'boundary', set() { S.m1 = 'crown'; S.m2 = 'air'; S.mirror = false; S.th = 30 * Math.PI / 180; S.showRefl = true; }, hint: 'Now light speeds up as it leaves the glass and bends away from the normal. Raise θ₁ past 41.2°: the wavelets in air outrun the front so fast that no line is tangent to them all. There is no refracted wave; all the light reflects.' },
-    door: { view: 'opening', set() { S.a = 3.0; }, hint: 'Sound at 1000 Hz has λ = 0.33 m, so a 1.0 m doorway is only 3 wavelengths wide and the sound spreads well beyond the door. Light through the same door is about 1.7 million wavelengths wide: it casts a sharp shadow. Make the opening narrower than a wavelength and the wave leaves it as an almost circular wave.' }
+    door: { view: 'opening', set() { S.a = 3.0; }, hint: 'Sound at 1000 Hz has λ = 0.343 m (343.2 m/s), so a 1.0 m doorway is only about 3 wavelengths wide and the sound spreads well beyond the door. Light through the same door is about 1.7 million wavelengths wide: it casts a sharp shadow. Make the opening narrower than a wavelength and the wave leaves it as an almost circular wave.' }
   };
   function applyPreset(name) { const c = PRESETS[name]; S.preset = name; S.view = c.view; c.set(); S.t = 0; S.playing = !reduce; upd(); }
   const can = $('can'), ctx = can.getContext('2d'), stage = $('stage');
@@ -303,7 +303,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     } else {
       const fd = firstDark(S.a);
       h += dd('Opening', `${S.a.toFixed(1)} wavelengths`) + dd('First dark direction, sin θ = λ/a', hide ? HID : fd === null ? 'none: narrower than λ' : `${deg(fd).toFixed(1)}°`);
-      h += dd('For sound at 1000 Hz (λ = 0.33 m)', `a = ${(S.a * 0.33).toFixed(2)} m`) + dd('For yellow light (λ = 589 nm)', `a = ${si(S.a * 589e-9, 'm')}`);
+      h += dd('For sound at 1000 Hz (λ = 0.343 m)', `a = ${(S.a * 0.3432).toFixed(2)} m`) + dd('For yellow light (λ = 589 nm)', `a = ${si(S.a * 589e-9, 'm')}`);
     }
     $('out').innerHTML = h;
   }

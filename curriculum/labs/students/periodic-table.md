@@ -17,7 +17,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §8.4. Access for free at https
 - The bars show how many electrons each shell holds, out of $$2n^2$$.
 - "Measured ground state" is the configuration in the NIST Atomic Spectra Database. "By the n + l rule" fills subshells in order of n + l, lower n first on a tie. About twenty elements differ between the two, and the subshells that differ are outlined.
 - The graph shows the first ionization energy for Z = 1 to 103, from NIST, with the selected element marked.
-- The readout gives $$Z_\mathrm{eff} = n\sqrt{IE/13.6\ \mathrm{eV}}$$, which treats the outer electron as if it were in a hydrogen atom with nuclear charge $$Z_\mathrm{eff}$$. It is a rough estimate.
+- The readout gives $$Z_\mathrm{eff} = n\sqrt{IE/13.606\ \mathrm{eV}}$$ (13.606 eV is the hydrogen ground state energy), which treats the outer electron as if it were in a hydrogen atom with nuclear charge $$Z_\mathrm{eff}$$. It is a rough estimate.
 - Record reading stores the element, Z, the measured and rule configurations, the electrons in each shell, the outer shell's n and its number of electrons, and the ionization energy. Export to worksheet sends the readings to the Data table below. Clear starts a new series, which goes into a new copy of the table.
 - Blind hides the ionization graph and the ionization energy and $$Z_\mathrm{eff}$$ readouts, and leaves the ionization energy out of the readings. Keep it off for this worksheet.
 
@@ -64,7 +64,7 @@ No hazards in the virtual lab.
 | | | | | | | | |
 | | | | | | | | |
 
-Work out $$Z_\mathrm{eff} = n\sqrt{IE/13.6\ \mathrm{eV}}$$ yourself.
+Work out $$Z_\mathrm{eff} = n\sqrt{IE/13.606\ \mathrm{eV}}$$ yourself.
 
 | Element | Measured ground state | By the n + l rule | What changed |
 |---|---|---|---|

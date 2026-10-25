@@ -3,7 +3,7 @@ const assert=require('node:assert/strict'),{core}=require('./demo_source.cjs');
 const m=core('coulomb-sandbox','DEMO_VERSION,C_V,C_E,CORE_R,potentialAt,fieldAt,coreAt,viewBounds,snap01,roundV,roundE,fmtV,fmtE,dirDeg,probeReading,fieldGrid,chargeKey,cmToM,readingsCsv');
 // the demo's own pure functions take the charge list; this shim keeps the original test groups unchanged
 let charges=[];
-const c={potential:(x,y)=>m.potentialAt(charges,x,y),field:(x,y)=>m.fieldAt(charges,x,y),inCore:(x,y)=>m.coreAt(charges,x,y),CORE_R:m.CORE_R,set:q=>{charges=q;}};const k=8.98755e9;let n=0;
+const c={potential:(x,y)=>m.potentialAt(charges,x,y),field:(x,y)=>m.fieldAt(charges,x,y),inCore:(x,y)=>m.coreAt(charges,x,y),CORE_R:m.CORE_R,set:q=>{charges=q;}};const k=8.9875517862e9;let n=0;
 const close=(a,b,rel=1e-8,abs=1e-6)=>assert(Math.abs(a-b)<=abs+rel*Math.abs(b),`expected ${b}, got ${a}`),test=(name,f)=>{f();n++;console.log('PASS',name);};
 test('SI units and inverse distance / inverse square for isolated charges',()=>{
  for(const q of [-3,1,5]){c.set([{x:0,y:0,q}]);for(const r of [.2,1,3,10]){close(c.potential(r,0),k*q*1e-9/(r*.01));close(c.field(r,0)[0],k*q*1e-9/(r*.01)**2);close(c.field(r,0)[1],0);}}

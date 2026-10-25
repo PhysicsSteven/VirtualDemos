@@ -273,14 +273,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const T_QCD = 156.5, DM_NP = 1.29333, TAU_N = 878.4;
   const SPECIES = [
     /* name, mc² (MeV), degrees of freedom g, 'b' boson or 'f' fermion, phase: '' always, 'q' above T_QCD, 'h' below */
-    ['photon', 0, 2, 'b', ''], ['electron', 0.51099895, 4, 'f', ''], ['muon', 105.6583755, 4, 'f', ''], ['tau', 1776.86, 4, 'f', ''],
+    ['photon', 0, 2, 'b', ''], ['electron', 0.51099895, 4, 'f', ''], ['muon', 105.6583755, 4, 'f', ''], ['tau', 1776.93, 4, 'f', ''],
     ['up quark', 2.16, 12, 'f', 'q'], ['down quark', 4.70, 12, 'f', 'q'], ['strange quark', 93.5, 12, 'f', 'q'], ['charm quark', 1273, 12, 'f', 'q'],
     ['bottom quark', 4183, 12, 'f', 'q'], ['top quark', 172570, 12, 'f', 'q'], ['gluon', 0, 16, 'b', 'q'],
     ['charged pion', 139.57039, 2, 'b', 'h'], ['neutral pion', 134.9768, 1, 'b', 'h'],
     ['W boson', 80369.2, 6, 'b', ''], ['Z boson', 91188.0, 3, 'b', ''], ['Higgs boson', 125200, 1, 'b', ''],
   ];
   /* thresholds kT = mc² for the particles students look for (rest energies in MeV, PDG 2024) */
-  const THRESHOLDS = [['top quark', 172570], ['Higgs', 125200], ['Z', 91188], ['W', 80369.2], ['bottom', 4183], ['tau', 1776.86], ['charm', 1273],
+  const THRESHOLDS = [['top quark', 172570], ['Higgs', 125200], ['Z', 91188], ['W', 80369.2], ['bottom', 4183], ['tau', 1776.93], ['charm', 1273],
     ['neutron', 939.56542], ['proton', 938.27209], ['muon', 105.6583755], ['pion', 139.57039], ['electron', 0.51099895]];
   /* shares of a massless boson gas for one degree of freedom of mass x = mc²/kT:
      ρ: (15/π⁴) ∫ y² E/(e^E ∓ 1) dy and s: (45/4π⁴) ∫ y² (E + y²/3E)/(e^E ∓ 1) dy, E = √(y² + x²); fermions give 7/8 at x = 0 */
@@ -563,7 +563,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (big) txt(c, 'above this line kT is beyond accelerators (10⁴ GeV): extrapolated, with no inflation', x0 + 8 * p, yAcc - 9 * p, { c: T.muted, s: 9.5, ui: true });
     /* thresholds kT = mc² */
     if (S.th.thr && !S.blind) {
-      const L = [['top', 172570], ['W', 80369.2], ['bottom', 4183], ['tau', 1776.86], ['charm', 1273], ['proton, neutron', 938.27209], ['pion', 139.57039], ['muon', 105.6583755], ['electron', 0.51099895]];
+      const L = [['top', 172570], ['W', 80369.2], ['bottom', 4183], ['tau', 1776.93], ['charm', 1273], ['proton, neutron', 938.27209], ['pion', 139.57039], ['muon', 105.6583755], ['electron', 0.51099895]];
       let lastY = -1e9; const ys = L.map(([nm, m]) => [nm, m, A.Y(Math.log10(Tof(m * 1e6)))]).sort((u, v) => u[2] - v[2]);
       c.strokeStyle = T.hot; c.globalAlpha = 0.55; c.lineWidth = 1;
       ys.forEach(([, , y]) => { c.beginPath(); c.moveTo(x0, y); c.lineTo(x0 + w, y); c.stroke(); }); c.globalAlpha = 1;

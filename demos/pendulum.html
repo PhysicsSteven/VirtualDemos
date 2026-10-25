@@ -301,7 +301,7 @@ table.rows input:focus { border-color: var(--accent); }
         <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide predictions and answers</span></label>
         <label class="check"><input type="checkbox" id="rmToggle"><span>Reduce motion</span></label>
         <details class="more"><summary>The model and its formulas</summary><p class="formula">T₀ = 2π√(L/g) · rod: 2π√(2L/3g) · exact: T = T₀ · (2/π) K(sin(θ₀/2))</p>
-        <p class="hint">Model: a point bob on a massless, inextensible string (or a thin uniform rod). A string can only pull, so the bob on a string is released from at most 90° (above horizontal it would go slack and fall); the rod can start from up to 170° about a frictionless pivot, integrated exactly enough (fourth order Runge–Kutta, 1 ms steps) that the photogate's 0.001 s readings are reliable. Air drag, when on, is a small force in proportion to speed. The photogate times every second pass of the bottom.</p></details>
+        <p class="hint">Model: a point bob on a massless, inextensible string (or a thin uniform rod). A string can only pull, so the bob on a string is released from at most 90° (above horizontal it would go slack and fall); the rod can start from up to 170° about a frictionless pivot, integrated exactly enough (fourth order Runge–Kutta, 1 ms steps) that the photogate's 0.001 s readings are reliable. Air drag, when on, is a small force in proportion to speed with the same drag constant (0.004 kg/s) for every bob, so a heavier bob dies away more slowly. The photogate times every second pass of the bottom.</p></details>
         </div></details>
       </section>
       </div>
@@ -663,7 +663,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
     const gNow = () => (S.mystery ? S.mystery : S.g), hideG = () => S.blind || !!S.mystery;
     const w0sq = () => gNow() / effLen(S.L, S.rod);
-    const bDamp = () => (S.damp ? 0.02 : 0);
+    const bDamp = () => (S.damp ? 0.004 / S.m : 0);   /* drag constant c = 0.004 kg/s on every bob: angular damping rate c/m (0.02 /s for the 0.2 kg bob) */
 
     function release() { S.st = { th: S.A * Math.PI / 180, w: 0 }; S.t = 0; S.trace = []; S.passes = []; S.lastT = null; }
     /* pixels per meter: a 2 m pendulum and its swing fit the pendulum's half of the picture */
