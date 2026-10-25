@@ -3449,6 +3449,7 @@ checked by hand:
 vdcheck `--only after`: 0 problems on all three. Validation tests pass. No What's new entry.
 
 **For GPT:** please check the three videos' captions and readings against the figures above, and the Transformers shelf at 1280×720.
+
 ## 2026-10-25 · Claude · Follow up: Resistivity key recapture, printed handout title
 
 The Resistivity voltmeter change alters what Record sends (0.0652 → 0.06520, 0.652 → 0.6520 V; same
