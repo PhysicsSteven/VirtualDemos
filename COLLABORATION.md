@@ -4259,6 +4259,8 @@ sends to the demo's own worksheet slug. Lagrange Points and Exoplanets have one 
 Fix found: Exoplanets showed the cursor time as "4.042e−15 h" when it landed exactly on mid transit (rounding noise); times
 under a microsecond now show 0. vdcheck `--only after` on the seven demos: 0 problems. No whats-new.js entry (one for the set
 comes later).
+
+
 ## 2026-10-25 · Claude · How this works videos: Astro 2203 telescopes and scale (6 videos)
 
 One video per worksheet, dark only, each from one real run (scripts in `tools/howto/`, readings printed by `r.check` and checked
