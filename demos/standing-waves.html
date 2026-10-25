@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
 <script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <script>/* the Air column and Levitation views moved to their own demos (2026-10-24): old links to them open Resonators or Acoustic Levitation */ (function () { var q = location.search + location.hash; if (/[?&#](view|v)=lev\b|#lev(itation)?\b/i.test(q)) location.replace('acoustic-levitation.html'); else if (/[?&#](view|v)=pipe\b|#pipe\b|[?&#]p(reset)?=closed\b/i.test(q)) location.replace('resonators.html'); })();</script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
@@ -137,7 +138,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 }
 
 /* with the shelf under it the picture keeps its room (a stage at least 760 px tall); on a short screen the page scrolls instead of squeezing it */
-@media (min-width: 821px) { .stage:has(> .shelf) { min-height: 760px; } }
+@media (min-width: 821px) { .stage:has(> .shelf) { min-height: 760px; } .stage.w3d:has(> .shelf) { min-height: 880px; } }
+@media (max-width: 820px) { .stage.w3d:has(> .shelf) > .pane { height: 86vh; min-height: 620px; } }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -586,7 +588,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let presetId = 'standing';
 
   const MODEL = {
-    waves: 'Ideal waves on a long string with no loss, both moving at v = 2 m/s. Amplitudes in cm, drawn larger than true scale.',
+    waves: 'Ideal waves on a long string with no loss, both moving at v = 2 m/s. Amplitudes in cm, drawn larger than true scale. The 3D view shows the same waves on a rope: the rope is the sum, the red and blue ghosts are the two waves alone, and up and down displacement is drawn 10 times larger than true scale while lengths along the rope are to scale. Each driver moves its end of the rope just as the two waves move the rope there, so it sends its own wave in and takes the other one away with no reflection.',
     string: 'Ideal flexible string: small amplitude, fixed ends, no stiffness. Harmonic and pluck motion have no damping, so the energy stays constant; the pluck is a sum of 200 modes. The driven string is a point force at x = L/20 with the same damping rate γ = ω₁/Q for every mode, solved exactly with 40 modes, transients included. Up and down displacement is exaggerated. The 3D view shows the same motion on a sonometer, sideways in the plane of the box top and magnified by the factor printed under it; lengths along the string are to scale, and the hanging mass is m = T/g with g = 9.81 m/s². The string is drawn three times thicker than a 1.2 mm guitar string.',
     beats: 'Two pure tones added; nothing else. The close up strips show about five cycles; the long strip is too dense to resolve single cycles, so it shows the band the signal fills.'
   };
@@ -759,8 +761,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- view: two traveling waves ----------
   function drawWaves() {
     const w = S.w, v = WAVE_V, xa = 0, xb = 6;
-    const L = 46 * ls, R = W - 18 * ls, top = 12 * ls, bot = H - 34 * ls;
-    const gap = 30 * ls, avail = bot - top - 3 * gap;
+    /* in 3D the rope takes the top of the pane and the three plots sit under it as the analysis panel */
+    let y00 = 0;
+    if (onW3()) {
+      y00 = Math.round(H * (W < 600 ? 0.5 : 0.5)); W3.rect = { x: 0, y: 0, w: W, h: y00 };
+      drawWaves3(W3.rect); hline(0, W, y00 + 0.5, T.line);
+    }
+    const L = 46 * ls, R = W - 18 * ls, top = y00 + (y00 ? 4 : 12) * ls, bot = H - 34 * ls;
+    const gap = (y00 ? 24 : 30) * ls, avail = bot - top - 3 * gap;
     const hs = [avail * 0.27, avail * 0.27, avail * 0.46];
     const strips = []; let y = top;
     for (let i = 0; i < 3; i++) { y += gap; strips.push([y, y + hs[i]]); y += hs[i]; }
@@ -849,6 +857,177 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         set: (mx, my) => { const val = ((a + b) / 2 - my) / ((b - a) / 2) * scales[i]; setSlider(key, val); } });
     };
     mk('A1', 0, w.A1, 'wA1', T.pos); mk('A2', 1, w.A2, 'wA2', T.neg);
+  }
+
+  // ---------- Two waves in 3D (demos/lib/vd3kit.js on vd3.js): a long rope between two wave drivers ----------
+  // The same two waves as the plots, on a rope across a lab floor in front of a wall. The rope is the sum y₁ + y₂; the red and blue
+  // ghosts are wave 1 and wave 2 on their own, in the same place; the band is the envelope. Each driver moves its end of the rope just
+  // as the two waves move the rope there, so it sends its own wave in and takes the other one away: nothing reflects, as on the long
+  // string of the plots. Displacements are magnified ×WK; lengths along the rope are to scale (the tape on the floor is in meters).
+  const W3 = { ok: false, tried: false, loading: false, rect: null, o: { th: -Math.PI / 2 - 0.05, ph: 1.33, zoom: 1 }, home: { th: -Math.PI / 2 - 0.05, ph: 1.33, zoom: 1 } };
+  const WK = 10, WZ0 = 1.1, WXA = -0.75, WXB = 6.75, WN = 360, WRS = 10, WROPE = 0.02, WWALL = 0.9, WTAPE = -0.42;
+  let w3 = null;
+  const onW3 = () => S3.want && W3.ok && S.view === 'waves';
+  function tubeMesh(n, rs, mat, uv) {   /* a tube along x of n segments and rs sides, its vertices set each frame by tubeSet */
+    const g = new THREE.BufferGeometry(), nv = (n + 1) * rs;
+    g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(nv * 3), 3)); g.setAttribute('normal', new THREE.BufferAttribute(new Float32Array(nv * 3), 3));
+    if (uv) { const u = new Float32Array(nv * 2); for (let i = 0; i <= n; i++) for (let j = 0; j < rs; j++) { u[(i * rs + j) * 2] = i * uv; u[(i * rs + j) * 2 + 1] = j / rs; } g.setAttribute('uv', new THREE.BufferAttribute(u, 2)); }
+    const idx = []; for (let i = 0; i < n; i++) for (let j = 0; j < rs; j++) { const a = i * rs + j, b = i * rs + (j + 1) % rs, c = a + rs, d = b + rs; idx.push(a, c, b, b, c, d); }
+    g.setIndex(idx); const m = new THREE.Mesh(g, mat); m.frustumCulled = false; m.n = n; m.rs = rs; return m;
+  }
+  function tubeSet(m, xs, zs, y, rad) {   /* the tube through (xs[i], y, zs[i]), its rings square to the curve in the x–z plane */
+    const n = m.n, rs = m.rs, pos = m.geometry.attributes.position.array, nor = m.geometry.attributes.normal.array;
+    for (let i = 0; i <= n; i++) {
+      const a = Math.max(0, i - 1), b = Math.min(n, i + 1), dx = xs[b] - xs[a], dz = zs[b] - zs[a], l = Math.hypot(dx, dz) || 1, ax = -dz / l, az = dx / l;
+      for (let j = 0; j < rs; j++) {
+        const th = TAU * j / rs, c = Math.cos(th), s = Math.sin(th), o = (i * rs + j) * 3, nx = ax * c, ny = s, nz = az * c;
+        pos[o] = xs[i] + rad * nx; pos[o + 1] = y + rad * ny; pos[o + 2] = zs[i] + rad * nz; nor[o] = nx; nor[o + 1] = ny; nor[o + 2] = nz;
+      }
+    }
+    m.geometry.attributes.position.needsUpdate = m.geometry.attributes.normal.needsUpdate = true;
+  }
+  function initW3() {
+    const St = VD3K.stage(pane, { before: can, fov: 30, near: 0.05, far: 60, shadow: 5.5 });
+    if (!St) return false;
+    const el = St.el; el.style.inset = 'auto'; el.style.left = '0px'; el.style.top = '0px'; el.hidden = true;
+    const sc = St.scene, M = (o, c) => VD3K.material(St, Object.assign({ roughness: 0.6, metalness: 0 }, o), c);
+    St.sun.position.set(4.6, -2.2, 6.4); St.sun.target.position.set(3, 0.2, 0.6); St.sun.shadow.bias = -0.0004;
+    Object.assign(St.sun.shadow.camera, { left: -6, right: 6, top: 3.5, bottom: -3.5 }); St.sun.shadow.camera.updateProjectionMatrix();
+    // the room: a plank floor and a painted wall with a skirting board
+    const tex = (w, h) => { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const t = new THREE.CanvasTexture(cv); t.anisotropy = St.r.capabilities.getMaxAnisotropy(); return { cv, t }; };
+    const fl = tex(512, 512); fl.t.wrapS = fl.t.wrapT = THREE.RepeatWrapping; fl.t.repeat.set(40, 18);
+    const fill = new THREE.DirectionalLight(0xffffff, 0.3); fill.position.set(2, -8, 2.2); fill.target.position.set(3, 1, 1); sc.add(fill, fill.target);
+    const floorM = new THREE.MeshStandardMaterial({ map: fl.t, roughness: 0.7, metalness: 0 });
+    const floor = new THREE.Mesh(new THREE.PlaneGeometry(26, 12), floorM); floor.position.set(3, WWALL - 6, 0); floor.receiveShadow = true; sc.add(floor);
+    const wallM = M({ roughness: 0.95 }, ['#e4e8ee', '#262e38']), wall = new THREE.Mesh(new THREE.PlaneGeometry(26, 5), wallM);
+    wall.rotation.x = Math.PI / 2; wall.position.set(3, WWALL, 2.5); wall.receiveShadow = true; sc.add(wall);
+    const skirt = VD3K.box(26, 0.02, 0.12, M({ roughness: 0.5 }, ['#f6f4ef', '#39414c']), 3, WWALL - 0.01, 0); skirt.castShadow = false; sc.add(skirt);
+    // a whiteboard on the wall behind the rope, in an aluminum frame with a pen tray
+    const wbM = M({ roughness: 0.25, metalness: 0 }, ['#fbfcfd', '#8d96a2']), alu = M({ roughness: 0.35, metalness: 0.6 }, ['#b8c0ca', '#7d8692']);
+    const wb = new THREE.Mesh(new THREE.BoxGeometry(7.0, 0.02, 1.25), wbM); wb.position.set(3, WWALL - 0.03, 1.2); wb.receiveShadow = true; sc.add(wb);
+    for (const [w, h, x, z] of [[7.08, 0.04, 3, 1.84], [7.08, 0.04, 3, 0.56], [0.04, 1.3, -0.52, 1.2], [0.04, 1.3, 6.52, 1.2]]) { const f = new THREE.Mesh(new THREE.BoxGeometry(w, 0.035, h), alu); f.position.set(x, WWALL - 0.035, z); f.castShadow = f.receiveShadow = true; sc.add(f); }
+    const tray = new THREE.Mesh(new THREE.BoxGeometry(6.0, 0.07, 0.025), alu); tray.position.set(3, WWALL - 0.07, 0.55); tray.castShadow = true; sc.add(tray);
+    // the tape measure along the floor under the rope, 0 to 6 m (its numbers are drawn over the picture so they stay sharp)
+    const tp = tex(4096, 64), tape = new THREE.Mesh(new THREE.BoxGeometry(6.06, 0.07, 0.002), [0, 0, 0, 0, 0, 0].map((_, i) => i === 4 ? new THREE.MeshStandardMaterial({ map: tp.t, roughness: 0.5 }) : M({}, ['#d8b422', '#9a8020'])));
+    tape.position.set(3, WTAPE, 0.001); tape.receiveShadow = true; sc.add(tape);
+    // the rope (a twisted cord), the two waves as ghosts, the envelope band, the rest line and the node rings
+    const rp = tex(64, 64); rp.t.wrapS = rp.t.wrapT = THREE.RepeatWrapping;
+    const ropeM = new THREE.MeshStandardMaterial({ map: rp.t, roughness: 0.75, metalness: 0 });
+    const rope = tubeMesh(WN, WRS, ropeM, (WXB - WXA) / WN / 0.05); rope.castShadow = true; sc.add(rope);
+    const ghostM = (c) => new THREE.MeshBasicMaterial({ color: c, transparent: true, opacity: 0.62, depthWrite: false });
+    const g1 = tubeMesh(WN, 6, ghostM('#c23f2c')), g2 = tubeMesh(WN, 6, ghostM('#2b60b5')); g1.renderOrder = g2.renderOrder = 3; sc.add(g1, g2);
+    const bandM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.14, side: THREE.DoubleSide, depthWrite: false });
+    const bg = new THREE.BufferGeometry(); bg.setAttribute('position', new THREE.BufferAttribute(new Float32Array((WN + 1) * 6), 3));
+    const bi = []; for (let i = 0; i < WN; i++) { const a = 2 * i; bi.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } bg.setIndex(bi);
+    const band = new THREE.Mesh(bg, bandM); band.frustumCulled = false; band.renderOrder = 2; sc.add(band);
+    const edgeM = new THREE.LineDashedMaterial({ dashSize: 0.06, gapSize: 0.05, transparent: true, opacity: 0.85 }), edges = [0, 1].map(() => {
+      const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array((WN + 1) * 3), 3)); const l = new THREE.Line(g, edgeM); l.frustumCulled = false; sc.add(l); return l; });
+    const restM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.35 }), rest = new THREE.Line(new THREE.BufferGeometry().setFromPoints([v3(WXA, 0, WZ0), v3(WXB, 0, WZ0)]), restM); sc.add(rest);
+    const nodeM = new THREE.MeshStandardMaterial({ roughness: 0.35, metalness: 0.2 }), nodes = [], pinsN = [], pinsA = [];
+    for (let k = 0; k < 16; k++) { const n = new THREE.Mesh(new THREE.TorusGeometry(0.04, 0.009, 10, 28).rotateY(Math.PI / 2), nodeM); n.castShadow = true; sc.add(n); nodes.push(n); }
+    const pinG = new THREE.ConeGeometry(0.035, 0.07, 18).rotateX(Math.PI / 2).translate(0, 0, 0.037), pinA = M({ roughness: 0.5 }, ['#7a8594', '#96a2b2']);
+    for (let k = 0; k < 16; k++) { const a = new THREE.Mesh(pinG, nodeM), b = new THREE.Mesh(pinG, pinA); a.castShadow = b.castShadow = true; sc.add(a, b); pinsN.push(a); pinsA.push(b); }
+    // the two wave drivers: a case with an LCD of its frequency on a stand, a shaft up to a clamp on the rope's end
+    const metal = M({ roughness: 0.3, metalness: 0.6 }, ['#c4ccd6', '#9aa4b0']), dark = M({ roughness: 0.5, metalness: 0.2 }, ['#2f363f', '#262c34']);
+    const drivers = [WXA, WXB].map((x, k) => {
+      const o = { label: k ? 'WAVE DRIVER 2' : 'WAVE DRIVER 1', sub: '', w: 0.16, h: 0.1, tilt: 0 }, met = VD3K.meter(St, o);
+      met.scale.setScalar(2.4); met.position.set(x, -0.02, 0.44 + 0.12); sc.add(met);
+      sc.add(VD3K.box(0.36, 0.32, 0.03, dark, x, 0, 0), VD3K.rod([x, 0.03, 0.03], [x, 0.03, 0.44], 0.016, metal));
+      const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.008, 0.008, 1, 12).translate(0, 0.5, 0), metal), clamp = VD3K.box(0.05, 0.05, 0.06, dark, 0, 0, 0);
+      shaft.castShadow = true; sc.add(shaft, clamp);
+      const lead = VD3K.cable([x + (k ? 0.12 : -0.12), 0.05, 0.47], [x + (k ? 0.9 : -0.9), WWALL - 0.03, 0.4], { sag: 0.25, rad: 0.006 }); sc.add(lead);
+      return { o, met, shaft, clamp, x };
+    });
+    w3 = { St, el, floorM, fl, wallM, tp, rp, rope, g1, g2, band, bg, bandM, edges, edgeM, restM, nodes, nodeM, pinsN, pinsA, drivers };
+    St.onTheme((dk) => {
+      let c = fl.cv.getContext('2d'); c.fillStyle = dk ? '#3b3128' : '#c9a77c'; c.fillRect(0, 0, 512, 512);
+      for (let r = 0; r < 4; r++) for (let i = 0; i < 3; i++) {   /* planks 128 px wide, staggered joints, faint grain */
+        const x0 = r * 128, y0 = (i * 512 / 3 + r * 97) % 512, h = 512 / 3, tone = (r * 7 + i * 3) % 5;
+        c.fillStyle = `rgba(${dk ? '0,0,0' : '255,240,215'},${0.03 * tone})`; c.fillRect(x0, y0, 128, h); c.fillRect(x0, y0 - 512, 128, h);
+        c.strokeStyle = `rgba(${dk ? '0,0,0' : '90,60,30'},0.08)`; c.lineWidth = 1;
+        for (let g = 0; g < 9; g++) { c.beginPath(); c.moveTo(x0 + 8 + g * 13, 0); c.bezierCurveTo(x0 + 4 + g * 13, 170, x0 + 14 + g * 13, 340, x0 + 8 + g * 13, 512); c.stroke(); }
+        c.fillStyle = `rgba(${dk ? '0,0,0' : '70,45,20'},0.35)`; c.fillRect(x0, y0, 128, 2); c.fillRect(x0, y0 - 512, 128, 2);
+      }
+      c.fillStyle = `rgba(${dk ? '0,0,0' : '70,45,20'},0.4)`; for (let r = 0; r <= 4; r++) c.fillRect(r * 128 - 1, 0, 2, 512);
+      fl.t.needsUpdate = true;
+      c = tp.cv.getContext('2d'); c.fillStyle = dk ? '#b39a2a' : '#f2cf2e'; c.fillRect(0, 0, 4096, 64); c.fillStyle = '#1d1d1d';
+      const px = (xm) => (xm + 0.03) / 6.06 * 4096;
+      for (let k = 0; k <= 60; k++) { const big = k % 10 === 0, mid = k % 5 === 0, w = big ? 6 : 3; c.fillRect(px(k / 10) - w / 2, 0, w, big ? 64 : mid ? 40 : 24); }
+      tp.t.needsUpdate = true;
+      c = rp.cv.getContext('2d'); c.fillStyle = dk ? '#cfc7b8' : '#3d4654'; c.fillRect(0, 0, 64, 64);
+      c.strokeStyle = dk ? 'rgba(80,70,55,0.55)' : 'rgba(0,0,0,0.45)'; c.lineWidth = 5;   /* the lay of a three strand rope */
+      for (let k = -2; k < 4; k++) { c.beginPath(); c.moveTo(k * 22, 0); c.lineTo(k * 22 + 64, 64); c.stroke(); }
+      c.strokeStyle = dk ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.12)'; c.lineWidth = 2;
+      for (let k = -2; k < 4; k++) { c.beginPath(); c.moveTo(k * 22 + 8, 0); c.lineTo(k * 22 + 72, 64); c.stroke(); }
+      rp.t.needsUpdate = true;
+      bandM.color = VD3K.token('--accent', '#2b60b5'); edgeM.color = VD3K.token('--muted', '#5a6575'); restM.color = VD3K.token('--muted', '#5a6575');
+      nodeM.color = VD3K.token('--equi', '#a7740b'); nodeM.emissive = VD3K.token('--equi', '#a7740b').multiplyScalar(dk ? 0.6 : 0.35);
+      w3.g1.material.color = VD3K.token('--pos', '#c23f2c'); w3.g2.material.color = VD3K.token('--neg', '#2b60b5');
+    });
+    orbit3();
+    return true;
+  }
+  /* the picture: drawn by drawWaves in the top part of the pane, with the plots under it */
+  function drawWaves3(R) {
+    const g = w3, St = g.St, w = S.w, v = WAVE_V;
+    ctx.clearRect(R.x, R.y, R.w, R.h);
+    St.size(R.w, R.h); St.theme();
+    const asp = R.w / Math.max(1, R.h), tn = Math.tan(15 * PI / 180), narrow = asp < 1.9;
+    /* a wide picture faces the rope; a narrow one (a phone) looks along it from the left, so the rope fills more of it */
+    const dist = narrow ? 7.9 / Math.min(1.5, Math.max(0.75, asp)) : Math.max(4.15 / (tn * asp), 1.25 / tn) * 1.02;
+    St.place(narrow ? { th: W3.o.th - 0.5, ph: W3.o.ph - 0.06, zoom: W3.o.zoom } : W3.o, narrow ? [3.2, 0, 0.75] : [3, 0, 0.8], dist);
+    const y1 = (x) => w.A1 * Math.sin(TAU * w.f1 / v * x - TAU * w.f1 * t), y2 = (x) => w.A2 * Math.sin(TAU * w.f2 / v * x + TAU * w.f2 * t);
+    const k = WK / 100, n = WN, xs = new Float32Array(n + 1), z0 = new Float32Array(n + 1), z1 = new Float32Array(n + 1), z2 = new Float32Array(n + 1);
+    const bp = g.bg.attributes.position.array, ep = g.edges.map((l) => l.geometry.attributes.position.array);
+    for (let i = 0; i <= n; i++) {
+      const x = WXA + (WXB - WXA) * i / n, a = y1(x), b = y2(x), e = k * waveEnvelope(x, t, w.A1, w.A2, w.f1, w.f2, v);
+      xs[i] = x; z1[i] = WZ0 + k * a; z2[i] = WZ0 + k * b; z0[i] = WZ0 + k * (a + b);
+      bp.set([x, 0.03, WZ0 - e, x, 0.03, WZ0 + e], i * 6); ep[0].set([x, 0.03, WZ0 + e], i * 3); ep[1].set([x, 0.03, WZ0 - e], i * 3);
+    }
+    tubeSet(g.rope, xs, z0, 0, WROPE); tubeSet(g.g1, xs, z1, 0.004, 0.011); tubeSet(g.g2, xs, z2, 0.008, 0.011);
+    g.rope.geometry.computeBoundingSphere();
+    g.band.visible = g.edges[0].visible = g.edges[1].visible = w.env; g.bg.attributes.position.needsUpdate = true;
+    for (const l of g.edges) { l.geometry.attributes.position.needsUpdate = true; l.computeLineDistances(); }
+    // the drivers follow the rope's ends; their screens show the frequency of the wave each one sends
+    g.drivers.forEach((d, i) => {
+      const ze = WZ0 + k * (y1(d.x) + y2(d.x)), top = 0.44 + 0.24;
+      cyl(d.shaft, v3(d.x, 0, top), v3(d.x, 0, ze - 0.03)); d.clamp.position.set(d.x, 0, ze);
+      d.o.sub = i ? `sends wave 2 ←  A₂ = ${w.A2.toFixed(2)} cm` : `sends wave 1 →  A₁ = ${w.A1.toFixed(2)} cm`;
+      d.met.set((i ? w.f2 : w.f1).toFixed(2) + ' Hz', d.o.sub);
+    });
+    // nodes (sin Σ = 0) and antinodes (cos Σ = 0) between 0 and 6 m, as in the plots
+    const marks = [];
+    if (w.marks && w.A1 + w.A2 > 0) {
+      const kb = PI * (w.f1 + w.f2) / v, ph = PI * (w.f2 - w.f1) * t;
+      for (let m = Math.ceil(ph / PI - 0.5 - 1e-9); m <= Math.floor((kb * 6 + ph) / PI); m++) {
+        const xn = (m * PI - ph) / kb, xa = ((m + 0.5) * PI - ph) / kb;
+        if (xn >= -1e-9 && xn <= 6 + 1e-9) marks.push(['N', xn]);
+        if (xa >= 0 && xa <= 6) marks.push(['A', xa]);
+      }
+    }
+    let iN = 0, iA = 0;
+    for (const [kind, xm] of marks) {
+      if (kind === 'N' && iN < 16) { g.nodes[iN].position.set(xm, 0, WZ0 + k * (y1(xm) + y2(xm))); g.pinsN[iN].position.set(xm, WTAPE, 0.002); g.nodes[iN].visible = g.pinsN[iN].visible = true; iN++; }
+      else if (kind === 'A' && iA < 16) { g.pinsA[iA].position.set(xm, WTAPE, 0.002); g.pinsA[iA].visible = true; iA++; }
+    }
+    for (let i = iN; i < 16; i++) g.nodes[i].visible = g.pinsN[i].visible = false;
+    for (let i = iA; i < 16; i++) g.pinsA[i].visible = false;
+    St.render();
+    // words over the picture
+    ctx.save(); ctx.beginPath(); ctx.rect(R.x, R.y, R.w, R.h); ctx.clip();   /* words stay inside the picture */
+    const P = (x, y, z) => { const p = St.project([x, y, z]); return p[2] > 1 ? [-9999, -9999] : [R.x + p[0], R.y + p[1]]; };
+    const p0 = P(0, WTAPE, 0), p1 = P(1, WTAPE, 0), mstep = Math.abs(p1[0] - p0[0]);
+    for (let m = 0; m <= 6; m++) { const q = P(m, WTAPE - 0.05, 0); if (mstep > 22 * ls || m % 2 === 0) tag(String(m), q[0], q[1] + 2 * ls, T.ink, 'center', 'top', true, 10); }
+    { const q = P(6.25, WTAPE - 0.05, 0); tag('x (m)', q[0], q[1] + 2 * ls, T.muted, 'left', 'top', false, 10); }
+    if (marks.length && mstep * v / (w.f1 + w.f2) > 24 * ls) for (const [kind, xm] of marks) { const q = P(xm, WTAPE + 0.06, 0.075); tag(kind, q[0], q[1] - 2 * ls, kind === 'N' ? T.equi : T.muted, 'center', 'bottom', kind === 'N', 9); }
+    g.drivers.forEach((d, i) => { const q = P(d.x, -0.1, 0.03); tag(`driver ${i + 1}`, Math.max(34 * ls, Math.min(R.w - 34 * ls, q[0])), q[1] + 4 * ls, i ? T.neg : T.pos, 'center', 'top', true, 10); });
+    const a1 = P(0.35, 0, WZ0 + 0.3), a2 = P(5.65, 0, WZ0 + 0.3); a1[0] = Math.max(8 * ls, a1[0]); a2[0] = Math.min(R.w - 8 * ls, a2[0]);
+    tag(pick(['wave 1, moving right →', 'wave 1 →'], (a2[0] - a1[0]) / 2 - 10 * ls, 11, true), a1[0], a1[1], T.pos, 'left', 'bottom', true, 11);
+    tag(pick(['← wave 2, moving left', '← wave 2'], (a2[0] - a1[0]) / 2 - 10 * ls, 11, true), a2[0], a2[1], T.neg, 'right', 'bottom', true, 11);
+    tag(pick(['A long rope: the rope is the sum y₁ + y₂, the red and blue ghosts are the two waves alone', 'The rope is the sum y₁ + y₂; ghosts: the two waves', 'Rope = y₁ + y₂'], R.w - 24 * ls, 11.5, true), 12 * ls, R.y + 10 * ls, T.ink, 'left', 'top', true, 11.5);
+    const note = `displacement drawn ${WK}× larger than true scale · lengths along the rope to scale · drag to turn`;
+    tag(pick([note, `displacement ×${WK}, not to scale · lengths to scale · drag to turn`, `displacement ×${WK}, not to scale · drag to turn`, `displacement ×${WK}, not to scale`], R.w - 24 * ls, 10, false), R.w - 12 * ls, R.y + 32 * ls, T.muted, 'right', 'top', false, 10);
+    ctx.restore();
   }
 
   // ---------- view: string ----------
@@ -975,7 +1154,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // x = L, then over a pulley to a hanging mass m = T/g, which sets the tension. Its motion is drawn sideways, in the plane of the
   // box top, magnified ×K (the flat view draws it up and down); the shaded band is where the string moves, as the eye sees it.
   // Lengths along the string are to scale. Drag to turn, wheel or pinch to zoom, double click to reset. ?view=flat starts flat.
-  const S3 = { want: true, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, rect: null, K: 10, o: { th: -Math.PI / 2 - 0.14, ph: 0.98, zoom: 1 } };
+  const S3 = { want: true, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, rect: null, K: 10, o: { th: -Math.PI / 2 - 0.14, ph: 0.98, zoom: 1 }, home: { th: -Math.PI / 2 - 0.14, ph: 0.98, zoom: 1 } };
   const NO3D = 'The 3D view needs WebGL, which this browser does not offer here: showing the flat view.';
   const BOX = { x0: -0.14, x1: 1.12, w: 0.17, h: 0.085 }, BR = 0.032, Z0 = BOX.h + BR, PUL = 1.175, NSEG = 220, RS = 8, RSTR = 0.0018;
   let s3 = null;
@@ -1041,10 +1220,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     rul.position.set(0.5, -BOX.w / 2 + 0.02, BOX.h + 0.002); scene.add(rul);
     s3 = { r, el, scene, cam, hemi, sun, woodCv, woodTex, benchM, floorM, boxCv, boxTex, boxM, sideM, brM, nut, bridge, str, sg, strM, hitch, back, drop, hook, discs, hangM,
       band, bg, bandM, ghost, gg, ghostM, nodes, nodeM, drv, arm, clip, rulCv, rulTex };
-    // the wheel scrolls the page in the flat view and over the plot below; a drag that starts on a grip moves that grip
-    const below = (e) => e.offsetY > (S3.rect ? S3.rect.h : 0);
-    can.addEventListener('wheel', (e) => { if (!on3() || below(e)) e.stopImmediatePropagation(); }, { passive: true });
-    VD3.orbit(can, S3.o, () => { if (!running) drawAll(); }, { phMin: 0.3, phMax: 1.45, zMin: 0.6, zMax: 3, grab: (e) => !on3() || below(e) || !!drag || !!handleAt(e) });
+    orbit3();
     return true;
   }
   function theme3() {
@@ -1174,18 +1350,35 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         start: () => { startPluck(); }, set: (mx, my) => { const w = unproj3(mx, my); if (w) setPluckFromPointer(w[0] / L, w[1] / K * 1e3); } });
     }
   }
+  /* the 3D | Flat choice is one preference for both 3D views (String and Two waves); each scene is built the first time it opens */
+  const scene3 = () => (S.view === 'string' ? S3 : S.view === 'waves' ? W3 : null);
   function setView3(want) {
     S3.want = want;
-    if (want && !S3.ok && S.view === 'string') {
-      if (S3.tried) S3.want = false;
-      else if (!S3.loading) { S3.loading = true; VD3.load((ok) => { S3.loading = false; S3.ok = ok && init3(); if (!S3.ok) { S3.want = false; $('modelHint').textContent = NO3D; } sync3(); drawAll(); }); }
+    const sc = scene3();
+    if (want && sc && !sc.ok) {
+      if (sc.tried) S3.want = false;
+      else if (!sc.loading) { sc.loading = true; VD3.load((ok) => { sc.loading = false; sc.ok = !!(ok && (sc === S3 ? init3() : initW3())); sc.tried = true; if (!sc.ok) { S3.want = false; $('modelHint').textContent = NO3D; } sync3(); drawAll(); }); }
     }
     sync3(); drawAll();
   }
   function sync3() {
-    $('dimSeg').hidden = S.view !== 'string';
+    $('dimSeg').hidden = S.view === 'beats';
     for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String((b.dataset.dim === '3d') === S3.want));
     if (s3) s3.el.hidden = !on3();
+    if (w3) w3.el.hidden = !onW3();
+    $('stage').classList.toggle('w3d', onW3());
+  }
+  /* one orbit on the drawing canvas for both 3D views: it turns the camera of the view on screen. The wheel scrolls the page in
+     a flat view and over the plots below a 3D picture; a drag that starts on a grip moves that grip. */
+  let orbitOn = false;
+  const cam3 = () => (S.view === 'string' ? S3.o : W3.o);
+  const in3 = (e) => (on3() && S3.rect && e.offsetY < S3.rect.h) || (onW3() && W3.rect && e.offsetY < W3.rect.h);
+  function orbit3() {
+    if (orbitOn) return; orbitOn = true;
+    const O = {}; for (const k of ['th', 'ph', 'zoom']) Object.defineProperty(O, k, { get: () => cam3()[k], set: (v) => { cam3()[k] = v; } });
+    can.addEventListener('wheel', (e) => { if (!in3(e)) e.stopImmediatePropagation(); }, { passive: true });
+    VD3.orbit(can, O, () => { if (!running) drawAll(); }, { phMin: 0.3, phMax: 1.48, zMin: 0.6, zMax: 3, grab: (e) => !in3(e) || !!drag || !!handleAt(e) });
+    can.addEventListener('dblclick', () => { Object.assign(cam3(), S.view === 'string' ? S3.home : W3.home); if (!running) drawAll(); });
   }
   $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setView3(b.dataset.dim === '3d'); });
   function stringTitle(maxW) {
@@ -1421,7 +1614,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     buildKey(); updateReadouts(); soundRebuild();
     t = 0; holdSpan = null;
     if (v === 'string' && S.s.mode === 'drive') restDriven(D);
-    if (v === 'string' && S3.want && !S3.ok && !S3.tried) setView3(true); else sync3();
+    const sc = scene3(); if (sc && S3.want && !sc.ok && !sc.tried) setView3(true); else sync3();
     drawAll();
   }
   $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('button'); if (!b) return; setView(b.dataset.v); markPreset(null); });
@@ -1557,7 +1750,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   can.addEventListener('pointermove', (ev) => {
     if (drag) { dragTo(ev); return; }
     const h = handleAt(ev); hoverId = h ? h.id : null;
-    can.style.cursor = h ? h.cursor : on3() && S3.rect && ev.offsetY < S3.rect.h ? 'grab' : 'default';
+    can.style.cursor = h ? h.cursor : in3(ev) ? 'grab' : 'default';
     if (!running) drawAll();
   });
   can.addEventListener('pointerdown', (ev) => {
@@ -1741,7 +1934,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
   const ro = new ResizeObserver(resize);
   ro.observe(pane);
-  S3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();
+  { const q = new URLSearchParams(location.search).get('view'); S3.want = !!window.VD3 && (q === '3d' || (q !== 'flat' && !VD3.lowPower())); }
   applyPreset('standing');
   sync3();
   setRunning(!reduce);
