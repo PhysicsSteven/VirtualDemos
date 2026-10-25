@@ -2781,9 +2781,9 @@ starts at the outer face of the wall, where the range is measured from. The mano
 but they are scaled to fit (about 0.35 times true height for water, 4.8 times for mercury) and have no rule; the caption now
 says so. A code comment gave the Venturi width exaggeration as 1.5 times; it is 2 times, as the caption already said.
 
-Fixed in Collisions (pending Steve's confirmation): the cradle's balls were 0.25 kg at 2.5 cm radius and called steel, but a
-steel ball that size is 0.514 kg. Kept the mass (so no readout or key changes) and set the radius to 1.97 cm, which a
-0.25 kg steel ball has at 7850 kg/m³; model text and caption updated. Collision tests and vdcheck pass.
+Collisions cradle: the balls were 0.25 kg at 2.5 cm radius and called steel, but a steel ball that size is 0.514 kg.
+Steve chose to keep the size and mass and drop the word steel from the model text and caption. Collision tests and
+vdcheck pass.
 
 Low, unchanged: Kepler's Halley preset overlaps the circular and escape speed labels; the Torricelli jet tube ends 1.2 cm
 above the floor; the water barometer shows a vacuum and ignores water's 2.3 kPa vapor pressure; the cradle's brass discs are
