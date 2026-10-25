@@ -106,6 +106,8 @@ def caption(d, i):
     numw = 44 * S if n > 0 else 0
     pw, ph = tw + numw + 48 * S, 58 * S
     x0, y0 = (OW * S - pw) / 2, OH * S - ph - 26 * S
+    if n > 0 and frames[i].get('capTop'):              # r.state.capTop: the caption at the top, when what the step shows sits at the page bottom
+        y0 = 26 * S
     if n == 0:                                        # the opening line gets a heading above it
         hdr = ('HOW THIS WORKS  ·  ' + D.get('title', '')).upper().rstrip(' ·')
         hw = d.textlength(hdr, font=fhead)

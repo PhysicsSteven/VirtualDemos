@@ -3492,3 +3492,32 @@ vdcheck `--only after` on all four demos: 0 problems. No What's new entry. The m
 Fields' Tools button is hidden in its take; the ruler and timer shown are the demo's own, which the handout uses).
 
 **For GPT:** please check the six videos' captions and readings against the figures above, and the two fixes.
+
+## 2026-10-25 · Claude · How this works videos: Thermo, Temperature and heat (five worksheets of Temperature and Heat)
+
+Thermo module, first group, following `tools/howto/README.md`. `demos/temperature.html` gets one `VD.howTo` that plays the video for
+the worksheet the current view belongs to (its own `SHEETS[S.view]` table), with the popup titled to match. Scripts:
+`tools/howto/thermal-equilibrium.cjs`, `gas-thermometer.cjs`, `thermal-expansion.cjs`, `heat-conduction.cjs`, `convection.cjs`
+(all record `demo: 'temperature'`). Every reading on screen is from the run and checked by hand and against the key's first row:
+
+- Thermal Equilibrium (20.5 s): Hot metal, cool water (0.50 kg aluminum at 90 °C, 0.25 kg water at 20 °C, copper bar 10 cm); the
+  first row is t = 0, 90.00 °C, 20.00 °C, then Start shows the approach. Final temperature by hand
+  (0.5 × 900 × 90 + 0.25 × 4186 × 20)/(450 + 1046.5) = 41.05 °C.
+- Gas Thermometer (22.2 s): 20 mmol in a 1.000 L bulb, liquid nitrogen, 60×, gauge settled: 12.86 kPa. By hand
+  nRT/V = 0.020 × 8.314462618 × 77.355/0.001 = 12 863 Pa.
+- Thermal Expansion (20.7 s): aluminum rod 1.000 m at 20.0 °C, bath dragged to 0.0 °C: dial −0.500 mm. By hand
+  25 × 10⁻⁶ × 1000 mm × (−20) = −0.500 mm.
+- Heat Conduction (19.5 s): House wall in winter, probe at 0.0 mm: 18.80 °C, 10.0275 W. By hand ΣR = 0.12 + 0.013/0.16 +
+  0.090/0.042 + 0.100/0.84 + 0.030 = 2.4932 m²·°C/W, q = 25/2.4932 = 10.027 W/m², T = 20 − 10.027 × 0.12 = 18.80 °C.
+- Cooling (22.0 s): the opening Cooling setup (polished aluminum sphere 5.0 cm, 80 °C, room 20 °C, fan off); first row t = 0,
+  80.00 °C, then 300× and Start show the cooling. Mass 2700 × π × 0.05³/6 = 176.7 g.
+
+**Demo fix found while recording (visible to students):** at desktop width the Temperature and Heat stage was held at 760 px and its
+`overflow: hidden` cut off the bottom of the controls card (Equilibrium starting temperatures and bar length, about 250 px of
+Conduction, and Surface, Diameter and both temperatures in Cooling). The stage now grows with its card (`height: max-content`
+above 820 px); phones unchanged. vdcheck `--only after temperature`: 0 problems; `test_temperature.cjs` passes (CORE untouched).
+
+Recorder: `lib.cjs` now hides the Tools button in every take (the measuring tools never appear); `compose.py` takes
+`r.state.capTop` to put a step's caption at the top when what the step shows sits at the bottom of the page. No What's new entry.
+
+**For GPT:** please check the five videos' captions and readings against the worksheets and the figures above, and the stage fix.

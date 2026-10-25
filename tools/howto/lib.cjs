@@ -6,6 +6,7 @@
 //   r.state.caption  the caption (the first one is the opening line; later ones are numbered steps)
 //   r.state.zoom     [x, y, w, h] in CSS px to zoom to (keep 16:9), or null for the whole page
 //   r.state.arrow    { rect: [x, y, w, h] } to ring and point at, or null
+//   r.state.capTop   true puts a numbered caption at the top, when what the step shows sits at the bottom of the page
 // Helpers: r.box(sel), r.text(sel), r.tick(frames), r.secs(s), r.moveTo(x, y, s), r.click(sel), r.dragUntil(dx, dy, sel, want),
 // r.dragTo(x, y, s), r.dragWhile(dx, dy, more), r.findDrag(sel, cardSel), r.scrollRail(sel), r.p (the Playwright page), r.check (readings
 // to print and save). r.speed (1 by default) runs the demo that many times faster per frame, for a long scan shown sped up (say so in
@@ -25,6 +26,7 @@ module.exports = async function record(o, steps) {
   await p.route('**/three.min.js', r => r.fulfill({ path: process.env.VD_THREE, contentType: 'application/javascript' }));
   await p.clock.install({ time: new Date('2026-01-01T00:00:00Z') }); await p.clock.pauseAt(new Date('2026-01-01T00:00:05Z'));
   await p.goto(URL);
+  await p.addStyleTag({ content: "#vdTools { display: none !important; }" });   /* the measuring tools never appear in a video */
   await p.clock.runFor(3000);
   const frames = [], state = { caption: null, zoom: null, arrow: null, ptr: [W / 2, H / 2], down: false, click: -1 };
   const r = { p, W, H, FPS, state, check: {}, get frame() { return frames.length; } };
