@@ -1318,6 +1318,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       alt_deg: noonAlt(phi, dec).toFixed(2), day_h: sd.hours.toFixed(3), r_AU: o.r.toFixed(5), Q_W_m2: insolation(phi, dec, o.r).toFixed(1) };
   };
 
+  /* How this works: one video per worksheet; the Astro 2203 one (intro-seasons) when the demo was opened from that worksheet (?ws=) or from
+     the Astro 2203 course page (?course=astro-2203, whose Handout and worksheet menu lists only intro-seasons) (made by tools/howto/) */
+  const howVid = () => { const q = new URLSearchParams(location.search), ws = q.get('ws');
+    return ws === 'intro-seasons' || (!ws && q.get('course') === 'astro-2203') ? 'intro-seasons' : 'seasons'; };
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'intro-seasons' ? 'How this works: Why We Have Seasons' : 'How this works: Sunlight Through the Year') });
+
   // exposed for testing
   window.__seasons = { orbitAt, declination, sunDay, insolation, noonAlt, SEASONS, S };
 })();

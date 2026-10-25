@@ -968,7 +968,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const f = flux(nowT());
     $('rFnow').textContent = f === 1 ? '1' : minus('−' + fmtPpm((1 - f) * 1e6));
     $('insideWarn').hidden = !D.inside;
-    const now = nowT(), m = meas(now), hrs = (x) => minus(sig(x / 3600, 4)) + ' h';
+    const now = nowT(), m = meas(now), hrs = (x) => minus(sig(Math.abs(x) < 1e-6 ? 0 : x / 3600, 4)) + ' h';   /* rounding noise at mid transit (1e−11 s) would show as 4e−15 h */
     $('rTnow').textContent = hrs(now);
     if (P.noise > 0) {   /* with noise the readouts give the measurements nearest the cursor, as Record reading stores them */
       $('rFnow').textContent = minus(sig((1 - m.f) * 1e6, 4)) + ' ppm drop';
@@ -1272,6 +1272,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       a_AU: hid ? 'hidden' : g(P.a), inc_deg: hid ? 'hidden' : P.inc, e: hid ? 'hidden' : P.e, noise_ppm: +(sigF() * 1e6).toPrecision(3), noise_m_s: +sigV().toPrecision(3),
       P_d: +(D.Per / DAY).toPrecision(6), t_h: (m.t / 3600).toFixed(4), drop_ppm: ((1 - m.f) * 1e6).toFixed(1), v_m_s: m.v.toFixed(3), t_v_h: (m.tv / 3600).toFixed(4) };
   };
+
+  /* How this works: a short video of the first reading, the Hot Jupiter transit depth (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/exoplanets.mp4', poster: 'media/how-this-works/exoplanets.jpg' });
 
   // exposed for testing
   window.__exo = { P, get D() { return D; }, derive, flux, blocked, PRESETS, applyPreset, meas, newMystery, revealMystery, setT: (t) => setT(t), nowT, get MYS() { return MYS; }, schedule, setPlaying };

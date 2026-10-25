@@ -4233,3 +4233,29 @@ Steve asked that a demo used in several modules link only the worksheets for the
 - Medical Physics (`WARM_UPS`) keeps what its page did: its own worksheets first, then the demo's others marked (warm up); the
   demo's button opened from that page shows the same list. A new course works with no code change: name its exact title on the
   second line of its handouts.
+## 2026-10-25 · Claude · How this works videos: sky and orbits (Seasons, Moon Phases, Lagrange Points, Exoplanets, three Astro 2203 worksheets)
+
+Nine new videos, one per worksheet, dark theme, each one real run with the readings checked by hand (scripts in `tools/howto/`,
+expected numbers in each script's header):
+
+- **seasons** (Worksheet 1, 17.9 s): Ruston, January 21: δ −19.88°, noon Sun 37.62°, day 10.225 h, r 0.98412 AU, Q 235.9 W/m².
+- **intro-seasons** (Astro 2203, 17.9 s): January 3, perihelion: δ −22.81°, noon 34.69°, day 9.928 h, r 0.98330 AU, Q 214.3 W/m².
+- **moon-phases** (Worksheet 1, 19.2 s): New moon at 0 d, then 2.00 d: E 24.38°, lit 4.46 %, rise 7.625 h.
+- **intro-moon** (Astro 2203, 19.2 s): New moon at 0 d, then 3.69 d: E 44.98°, lit 14.63 %, rise 8.999 h.
+- **lagrange-points** (17.8 s): μ = 10⁻⁶: L1 0.00691755 a, L2 0.0069496 a (Hill h(1 ∓ h/3) gives 0.0069176 and 0.0069496), L2 ×e every
+  0.0639 P, L4 librations 384.9 P (P/√(27μ/4)).
+- **exoplanets** (21.5 s): Hot Jupiter, no noise, paused, cursor at mid transit, Rp 0.500 RJ (5.61 R⊕): (Rp/Rs)² 1,996 ppm, drop
+  2,423.5 ppm with the quadratic limb darkening (1,995.8 × 1/(1 − 0.40/3 − 0.26/6) = 2,424).
+- **intro-kepler** (27.5 s): Mercury with Blind and the ruler, ruler 0.7742 AU, timer 0.24128 yr (one frame pause by eye; exact 0.2408).
+- **intro-gravity** (22.4 s): sea level 9.7864 m/s², then Top of Everest 9.7591 m/s² (GM/r² 9.7930 at r 6379.849 km).
+- **intro-precession** (21.3 s): solid disk, d 0.10 m, steady start, 1000 rpm, gate 1.21 s (2π I_s ω_s/(Mgd) = 1.207 s).
+
+The Astro 2203 videos record the demo opened with `?ws=intro-...`, and Seasons, Moon Phases, Kepler's Laws, Gravity Near Earth
+and Gyroscope now pick the video and its title (function form of `VD.howTo`): the Astro 2203 one with the `?ws=` its worksheet
+link adds, or with `?course=astro-2203` and no `?ws=` (the course page link, whose Handout and worksheet menu lists only that
+worksheet), else the demo's own. Not changed here: opened from the Astro 2203 course page (no `?ws=`), Export to worksheet still
+sends to the demo's own worksheet slug. Lagrange Points and Exoplanets have one worksheet each.
+
+Fix found: Exoplanets showed the cursor time as "4.042e−15 h" when it landed exactly on mid transit (rounding noise); times
+under a microsecond now show 0. vdcheck `--only after` on the seven demos: 0 problems. No whats-new.js entry (one for the set
+comes later).

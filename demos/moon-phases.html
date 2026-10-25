@@ -1349,6 +1349,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       eclipse: S.eclipse ? eclipseState().text : '' };
   };
 
+  /* How this works: one video per worksheet; the Astro 2203 one (intro-moon) when the demo was opened from that worksheet (?ws=) or from
+     the Astro 2203 course page (?course=astro-2203, whose Handout and worksheet menu lists only intro-moon) (made by tools/howto/) */
+  const howVid = () => { const q = new URLSearchParams(location.search), ws = q.get('ws');
+    return ws === 'intro-moon' || (!ws && q.get('course') === 'astro-2203') ? 'intro-moon' : 'moon-phases'; };
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'intro-moon' ? 'How this works: Phases of the Moon and Eclipse Seasons' : 'How this works: Phases and the Lunar Month') });
+
   // exposed for testing
   window.__moon = { S, E, phiN, litFrac, beta, riseH, transitH, setH, eclipseState, applyPreset, P_SYN, P_SID, YEAR, EC_YEAR, P_NODE };
 })();

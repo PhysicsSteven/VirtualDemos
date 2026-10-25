@@ -598,8 +598,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock, in years (the demo has its own ruler and timer as well) */
-  /* How this works: a 28 s video of Mercury's orbit measured with the ruler and the timer (made by tools/howto/) */
-  VD.howTo({ src: 'media/how-this-works/kepler-orbits.mp4', poster: 'media/how-this-works/kepler-orbits.jpg' });
+  /* How this works: one video per worksheet; the Astro 2203 one (intro-kepler) when the demo was opened from that worksheet (?ws=) or from
+     the Astro 2203 course page (?course=astro-2203, whose Handout and worksheet menu lists only intro-kepler) (made by tools/howto/) */
+  const howVid = () => { const q = new URLSearchParams(location.search), ws = q.get('ws');
+    return ws === 'intro-kepler' || (!ws && q.get('course') === 'astro-2203') ? 'intro-kepler' : 'kepler-orbits'; };
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'intro-kepler' ? "How this works: Kepler's Laws from Mercury to Pluto" : "How this works: Kepler's Third Law") });
   VD.tools({ el: $('view'), strip: '.viewbar', time: () => S.t, timeUnit: 'yr' });
   /* Energy bars per kilogram of the planet, in MJ/kg (1 MJ/kg = 1 km²/s²): v²/2, −GM/r and their sum ε (demos/lib/vdenergy.js) */
   VD.energy({ el: $('eBars'), unit: 'MJ/kg', hidden: () => S.blind, run: () => S.A.E0 + ',' + S.M,

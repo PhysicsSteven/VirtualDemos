@@ -438,8 +438,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
-  /* How this works: a 22 s video of the effective g at sea level and at the space station (made by tools/howto/) */
-  VD.howTo({ src: 'media/how-this-works/gravity-near-earth.mp4', poster: 'media/how-this-works/gravity-near-earth.jpg' });
+  /* How this works: one video per worksheet; the Astro 2203 one (intro-gravity) when the demo was opened from that worksheet (?ws=) or from
+     the Astro 2203 course page (?course=astro-2203, whose Handout and worksheet menu lists only intro-gravity) (made by tools/howto/) */
+  const howVid = () => { const q = new URLSearchParams(location.search), ws = q.get('ws');
+    return ws === 'intro-gravity' || (!ws && q.get('course') === 'astro-2203') ? 'intro-gravity' : 'gravity-near-earth'; };
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'intro-gravity' ? 'How this works: Gravity from the Ground to Orbit' : 'How this works: How g Changes with Height and Latitude') });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; draw(); });
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
   /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */

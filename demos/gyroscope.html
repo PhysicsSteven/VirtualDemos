@@ -761,8 +761,12 @@ table.rows input:focus { border-color: var(--accent); }
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   /* the measuring tools: a stopwatch on the simulated clock */
-  /* How this works: a 21 s video of one precession period at 1000 rpm (made by tools/howto/) */
-  VD.howTo({ src: 'media/how-this-works/gyroscope.mp4', poster: 'media/how-this-works/gyroscope.jpg' });
+  /* How this works: one video per worksheet; the Astro 2203 one (intro-precession) when the demo was opened from that worksheet (?ws=) or from
+     the Astro 2203 course page (?course=astro-2203, whose Handout and worksheet menu lists only intro-precession) (made by tools/howto/) */
+  const howVid = () => { const q = new URLSearchParams(location.search), ws = q.get('ws');
+    return ws === 'intro-precession' || (!ws && q.get('course') === 'astro-2203') ? 'intro-precession' : 'gyroscope'; };
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (howVid() === 'intro-precession' ? 'How this works: A Spinning Top and the Wandering Pole Star' : 'How this works: Gyroscope Precession') });
   VD.tools({ el: can, strip: '.viewbar', time: () => S.t });
   tokens(); new ResizeObserver(resize).observe(stage); applyPreset('fast'); renderRows(); resize();
   /* the gyroscope opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */

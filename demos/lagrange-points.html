@@ -1670,6 +1670,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return row;
   };
 
+  /* How this works: a short video of the first reading, the Lagrange points at μ = 10⁻⁶ (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/lagrange-points.mp4', poster: 'media/how-this-works/lagrange-points.jpg' });
   window.__lp = { get frameMs() { return frameMs; }, get S() { return S; }, get t() { return t; }, get parts() { return parts; }, get sel() { return sel; }, get L() { return LPT; }, get CL() { return CL; },
     get V() { return V; }, get grip() { return zvcGrip; }, get labels() { return placedLabels; }, get fieldBusy() { return !!field.job; }, toPx, P, sunXY, setFrame, lockView, fitView,
     handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt })); }, setPlaying, applyPreset, run(P) { stepParticles(P * TWO_PI); readouts(); drawAll(); }, step(P) { stepParticles(P * TWO_PI); }, draw: () => drawAll(),
