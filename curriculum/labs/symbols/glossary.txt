@@ -2043,6 +2043,11 @@ V_n | Voltage at one positive maximum | V
 V_n+1 | Voltage at the next positive maximum | V
 R_fit | Resistance found from the decay | Ω
 
+== intro-planet-temperatures ==
+d | Distance of the planet from its star | AU
+S | Starlight falling on each square meter at the planet | W/m²
+e | Share of the ground's heat radiation that escapes to space (1 means no greenhouse)
+
 == ripple-tank ==
 f | Frequency of the wave maker | Hz
 lambda | Wavelength | mm

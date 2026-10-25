@@ -1,0 +1,683 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Planet Temperatures and Habitable Zones</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the colors of sunlight, heat and the zones, the three panes and the card */
+:root { --sunc: #c98a00; --irc: #c2410c; --refl: #6b7787; --hz: #1f9a4a; --hzo: #8bcf9a; --water: #2b60b5; --boil: #c23f2c; --meas: #7c3aed; --space: #04060b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --sunc: #ffc94a; --irc: #ff8a50; --refl: #aab4c2; --hz: #4cd07d; --hzo: #2f6b43; --water: #69a0ff; --boil: #ff7660; --meas: #c4a5ff; } }
+:root[data-theme="dark"] { --sunc: #ffc94a; --irc: #ff8a50; --refl: #aab4c2; --hz: #4cd07d; --hzo: #2f6b43; --water: #69a0ff; --boil: #ff7660; --meas: #c4a5ff; }
+.stage { position: relative; display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) 240px;
+  grid-template-areas: "ctl ctl" "sys bud" "chart chart"; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { grid-area: ctl; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .check { font-size: 0.84rem; }
+.pane { position: relative; min-width: 0; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+.pane.sys { grid-area: sys; background: var(--space); }
+.pane.bud { grid-area: bud; border-left: 1px solid var(--line); }
+.pane.chart { grid-area: chart; border-top: 1px solid var(--line); }
+#sys { z-index: 1; touch-action: pan-y; cursor: grab; }
+.pane.sys canvas.vd3d { z-index: 0; }
+.setup-card { position: absolute; z-index: 3; left: 10px; top: 10px; width: 232px; display: flex; flex-direction: column; gap: 5px; padding: 7px 9px; font-size: 0.86rem;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 24px); overflow: auto; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+.setup-card .card-title + div { margin-top: -2px; }
+.setup-card hr { border: 0; border-top: 1px solid var(--line); margin: 2px 0; width: 100%; }
+.setup-card .seg { flex-wrap: wrap; }
+.setup-card .seg button { font-size: 0.78rem; padding: 3px 7px; }
+.setup-card .lbl { font-size: 0.8rem; color: var(--muted); }
+.slider-head { display: flex; justify-content: space-between; gap: 8px; font-size: 0.82rem; line-height: 1.25; }
+.slider-head output { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+.readout dd.note { font-family: var(--font-ui); font-size: 0.86rem; font-weight: 400; }
+.readout .big dd { font-size: 1.2rem; }
+.formula { font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; margin: 0 0 6px; }
+.blindtag { position: absolute; right: 10px; top: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.srcs { margin: 0; padding-left: 18px; font-size: 0.8rem; color: var(--muted); }
+@media (min-width: 821px) { .stage { min-height: 780px; } :root[data-projector="on"] .stage { grid-template-rows: auto minmax(0, 1fr) 280px; } }
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto auto auto; grid-template-areas: "ctl" "sys" "card" "bud" "chart"; }
+  .pane.sys { height: 340px; }
+  .setup-card { position: static; grid-area: card; width: auto; margin: 8px; max-height: none; }
+  .pane.bud { height: 330px; border-left: 0; border-top: 1px solid var(--line); }
+  .pane.chart { height: 270px; }
+  .chips button, .btn, .seg button, .proj, .spin { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+@media (max-width: 420px) { .pane.sys { height: 300px; } .pane.bud { height: 300px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Planet Temperatures and Habitable Zones</h1>
+      <p>Sunlight spreads out as it travels, so a planet's share falls as one over the distance squared. Balance the sunlight a planet absorbs against the heat it radiates to find its temperature, add a greenhouse to match Venus, Earth and Mars, and move the star's habitable zone.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">AU · W/m² · K · L☉ = 3.828 × 10²⁶ W</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/planet-temperatures.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/planet-temperatures.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM13 2h3v1h-3zM19 2h2v1h-2zM22 2h4v1h-4zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h2v1h-2zM14 3h3v1h-3zM19 3h1v1h-1zM21 3h2v1h-2zM24 3h5v1h-5zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h2v1h-2zM16 4h1v1h-1zM18 4h1v1h-1zM20 4h1v1h-1zM22 4h1v1h-1zM24 4h1v1h-1zM26 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h3v1h-3zM15 5h1v1h-1zM17 5h1v1h-1zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h2v1h-2zM30 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM11 6h2v1h-2zM14 6h3v1h-3zM18 6h4v1h-4zM26 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM12 7h1v1h-1zM14 7h5v1h-5zM21 7h1v1h-1zM23 7h2v1h-2zM26 7h3v1h-3zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h1v1h-1zM15 9h2v1h-2zM18 9h4v1h-4zM25 9h1v1h-1zM28 9h2v1h-2zM2 10h1v1h-1zM4 10h2v1h-2zM7 10h3v1h-3zM11 10h3v1h-3zM16 10h3v1h-3zM21 10h1v1h-1zM23 10h1v1h-1zM25 10h2v1h-2zM28 10h1v1h-1zM30 10h1v1h-1zM32 10h1v1h-1zM35 10h1v1h-1zM37 10h2v1h-2zM3 11h4v1h-4zM10 11h1v1h-1zM12 11h7v1h-7zM25 11h1v1h-1zM31 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h5v1h-5zM8 12h3v1h-3zM12 12h2v1h-2zM15 12h3v1h-3zM22 12h1v1h-1zM25 12h1v1h-1zM31 12h1v1h-1zM33 12h1v1h-1zM35 12h2v1h-2zM3 13h1v1h-1zM5 13h3v1h-3zM10 13h1v1h-1zM12 13h1v1h-1zM15 13h3v1h-3zM21 13h2v1h-2zM24 13h1v1h-1zM26 13h2v1h-2zM34 13h3v1h-3zM3 14h7v1h-7zM13 14h3v1h-3zM19 14h1v1h-1zM21 14h2v1h-2zM24 14h1v1h-1zM26 14h13v1h-13zM3 15h1v1h-1zM9 15h3v1h-3zM14 15h1v1h-1zM17 15h2v1h-2zM20 15h1v1h-1zM24 15h1v1h-1zM26 15h1v1h-1zM28 15h8v1h-8zM37 15h2v1h-2zM3 16h3v1h-3zM7 16h2v1h-2zM10 16h1v1h-1zM13 16h2v1h-2zM19 16h4v1h-4zM26 16h3v1h-3zM34 16h1v1h-1zM36 16h1v1h-1zM2 17h1v1h-1zM4 17h1v1h-1zM6 17h2v1h-2zM9 17h1v1h-1zM11 17h2v1h-2zM14 17h12v1h-12zM28 17h1v1h-1zM32 17h3v1h-3zM37 17h1v1h-1zM4 18h5v1h-5zM10 18h2v1h-2zM14 18h1v1h-1zM16 18h1v1h-1zM18 18h10v1h-10zM30 18h1v1h-1zM35 18h3v1h-3zM4 19h3v1h-3zM14 19h3v1h-3zM18 19h1v1h-1zM22 19h1v1h-1zM25 19h3v1h-3zM29 19h1v1h-1zM32 19h2v1h-2zM35 19h4v1h-4zM2 20h2v1h-2zM7 20h2v1h-2zM12 20h2v1h-2zM15 20h4v1h-4zM22 20h3v1h-3zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM3 21h3v1h-3zM7 21h1v1h-1zM9 21h1v1h-1zM12 21h1v1h-1zM14 21h1v1h-1zM19 21h1v1h-1zM24 21h2v1h-2zM30 21h2v1h-2zM34 21h2v1h-2zM37 21h1v1h-1zM2 22h1v1h-1zM4 22h1v1h-1zM8 22h2v1h-2zM11 22h3v1h-3zM15 22h2v1h-2zM18 22h3v1h-3zM23 22h1v1h-1zM28 22h1v1h-1zM30 22h2v1h-2zM33 22h2v1h-2zM38 22h1v1h-1zM2 23h1v1h-1zM7 23h1v1h-1zM11 23h4v1h-4zM18 23h1v1h-1zM21 23h1v1h-1zM23 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM6 24h1v1h-1zM8 24h1v1h-1zM10 24h1v1h-1zM14 24h1v1h-1zM19 24h1v1h-1zM23 24h1v1h-1zM25 24h1v1h-1zM30 24h1v1h-1zM32 24h2v1h-2zM3 25h1v1h-1zM5 25h1v1h-1zM7 25h1v1h-1zM10 25h2v1h-2zM15 25h1v1h-1zM20 25h1v1h-1zM22 25h1v1h-1zM25 25h4v1h-4zM30 25h1v1h-1zM34 25h5v1h-5zM3 26h1v1h-1zM8 26h3v1h-3zM12 26h1v1h-1zM14 26h1v1h-1zM16 26h2v1h-2zM20 26h2v1h-2zM25 26h4v1h-4zM31 26h4v1h-4zM36 26h2v1h-2zM4 27h1v1h-1zM6 27h1v1h-1zM10 27h1v1h-1zM12 27h2v1h-2zM15 27h2v1h-2zM18 27h4v1h-4zM26 27h1v1h-1zM29 27h7v1h-7zM37 27h2v1h-2zM3 28h3v1h-3zM8 28h2v1h-2zM12 28h2v1h-2zM15 28h4v1h-4zM20 28h2v1h-2zM23 28h2v1h-2zM28 28h1v1h-1zM30 28h1v1h-1zM32 28h1v1h-1zM34 28h4v1h-4zM2 29h1v1h-1zM4 29h1v1h-1zM7 29h1v1h-1zM10 29h1v1h-1zM14 29h2v1h-2zM18 29h1v1h-1zM22 29h2v1h-2zM25 29h2v1h-2zM30 29h5v1h-5zM37 29h1v1h-1zM4 30h1v1h-1zM6 30h4v1h-4zM11 30h1v1h-1zM13 30h1v1h-1zM16 30h2v1h-2zM20 30h1v1h-1zM22 30h2v1h-2zM25 30h1v1h-1zM27 30h1v1h-1zM29 30h6v1h-6zM36 30h3v1h-3zM10 31h1v1h-1zM12 31h2v1h-2zM16 31h1v1h-1zM19 31h1v1h-1zM22 31h4v1h-4zM27 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h1v1h-1zM38 31h1v1h-1zM2 32h7v1h-7zM10 32h3v1h-3zM14 32h1v1h-1zM17 32h1v1h-1zM19 32h1v1h-1zM22 32h1v1h-1zM24 32h1v1h-1zM26 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM13 33h4v1h-4zM18 33h1v1h-1zM22 33h1v1h-1zM26 33h1v1h-1zM28 33h3v1h-3zM34 33h1v1h-1zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM12 34h2v1h-2zM16 34h2v1h-2zM20 34h1v1h-1zM22 34h2v1h-2zM25 34h2v1h-2zM28 34h1v1h-1zM30 34h6v1h-6zM37 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM14 35h1v1h-1zM17 35h1v1h-1zM20 35h3v1h-3zM25 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h2v1h-2zM13 36h2v1h-2zM16 36h1v1h-1zM18 36h2v1h-2zM22 36h5v1h-5zM32 36h1v1h-1zM34 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h3v1h-3zM18 37h1v1h-1zM20 37h2v1h-2zM24 37h1v1h-1zM26 37h3v1h-3zM33 37h4v1h-4zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h1v1h-1zM17 38h1v1h-1zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h2v1h-2zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin" id="play" title="Start or stop the planet going round (the picture only: nothing depends on where it is on its orbit)">Pause</button>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="true">3D</button><button type="button" data-dim="flat" aria-pressed="false">Flat</button></div>
+        <div class="seg" role="group" aria-label="Chart" id="chartSeg"><button type="button" data-c="temp" aria-pressed="true">Temperature and distance</button><button type="button" data-c="air" aria-pressed="false">Keeping an atmosphere</button></div>
+        <label class="check"><input type="checkbox" id="chkSpread"><span>Show how sunlight spreads</span></label>
+        <label class="check"><input type="checkbox" id="chkOrbits" checked><span>Inner planets' orbits</span></label>
+      </div>
+      <div class="pane sys" id="sysPane">
+        <canvas id="sys" tabindex="0" role="application" aria-label="The star, its habitable zone in green and the planet on its orbit, seen from above or in 3D. Drag the planet in or out to change its distance from the star; drag elsewhere in 3D to turn the view. Left and right arrow keys change the distance (Shift for bigger steps)."></canvas>
+        <span class="blindtag" id="blindTag" hidden>Blind</span>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="The star and the planet">
+        <span class="card-title">Star</span>
+        <div><div class="slider-head"><label for="sL">Luminosity L</label><output id="oL" for="sL"></output></div><input type="range" id="sL" min="-4" max="1.5" step="0.001"></div>
+        <div><div class="slider-head"><label for="sT">Surface temperature</label><output id="oT" for="sT"></output></div><input type="range" id="sT" min="2500" max="7500" step="1"></div>
+        <hr>
+        <span class="card-title">Planet</span>
+        <div><div class="slider-head"><label for="sD">Distance d</label><output id="oD" for="sD"></output></div><input type="range" id="sD" min="-2" max="1.7" step="0.0005"></div>
+        <div><div class="slider-head"><label for="sA" title="The share of the starlight the planet reflects">Albedo a</label><output id="oA" for="sA"></output></div><input type="range" id="sA" min="0" max="0.95" step="0.001"></div>
+        <span class="lbl" id="spreadL">Heat shared over</span>
+        <div class="seg" role="group" aria-labelledby="spreadL" id="spreadSeg">
+          <button type="button" data-sp="whole" aria-pressed="true" title="A planet that spins fast or has thick air spreads the heat over its whole surface">Whole planet</button>
+          <button type="button" data-sp="day" aria-pressed="false" title="Only the day side radiates: a planet that keeps one face to its star, with no air to carry heat round">Day side</button>
+          <button type="button" data-sp="sub" aria-pressed="false" title="The spot with the star straight overhead, on a world with no air to carry the heat away">Under the star</button>
+        </div>
+        <label class="check"><input type="checkbox" id="chkGH" checked><span>Greenhouse</span></label>
+        <div id="eBox"><div class="slider-head"><label for="sE" title="The share of the ground's heat radiation that escapes to space: 1 is no greenhouse">Escaping to space e</label><output id="oE" for="sE"></output></div><input type="range" id="sE" min="-2.5" max="0" step="0.0005"></div>
+        <div><div class="slider-head"><label for="sV">Escape speed</label><output id="oV" for="sV"></output></div><input type="range" id="sV" min="-0.5" max="2" step="0.001"></div>
+      </div>
+      <div class="pane bud" id="budPane">
+        <canvas id="bud" role="img" aria-label="The energy budget of one square meter of the planet: sunlight in, the share reflected, the heat radiation from the ground, the share that escapes to space and the share the air sends back down, with a thermometer."></canvas>
+      </div>
+      <div class="pane chart" id="chartPane">
+        <canvas id="chart" role="img" aria-label="Chart: surface temperature against distance from the star, with the habitable zone, or the speeds of gas molecules against temperature compared with each world's escape speed."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/intro-planet-temperatures.html" target="intro-planet-temperatures-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="mercury" aria-pressed="false">Mercury</button>
+          <button type="button" data-p="venus" aria-pressed="false">Venus</button>
+          <button type="button" data-p="earth" aria-pressed="true">Earth</button>
+          <button type="button" data-p="moon" aria-pressed="false">The Moon</button>
+          <button type="button" data-p="mars" aria-pressed="false">Mars</button>
+          <button type="button" data-p="young" aria-pressed="false">Earth under the young Sun</button>
+          <button type="button" data-p="proxima" aria-pressed="false">Proxima Centauri b</button>
+          <button type="button" data-p="trappist" aria-pressed="false">TRAPPIST-1 e</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="intro-planet-temperatures" data-title="Planet Temperatures and Habitable Zones" data-demo="planet-temperatures">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the model's temperatures, the zone and which gases stay</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">S = L / (4π d²)</p>
+          <p class="formula">absorbed per m² = S (1 − a) / f, f = 4 (whole planet), 2 (day side), 1 (under the star)</p>
+          <p class="formula">no greenhouse: σT⁴ = S (1 − a) / f</p>
+          <p class="formula">greenhouse: e σT⁴ = S (1 − a) / f, so T = T(no greenhouse) / e^¼</p>
+          <p class="formula">one layer absorbing a share ε of the heat radiation: e = 1 − ε/2; N layers absorbing all of it: e = 1/(N + 1)</p>
+          <p class="formula">habitable zone edges: d = √(L / S_eff), S_eff = S₀ + aT⋆ + bT⋆² + cT⋆³ + dT⋆⁴, T⋆ = T_star − 5780 K</p>
+          <p class="formula">air kept for billions of years if 6 v_rms &lt; v_esc, v_rms = √(3kT/m)</p>
+          <p class="hint" id="about"></p>
+        </details>
+        <details class="more"><summary>Where the numbers come from</summary>
+          <ul class="srcs">
+            <li>L☉ = 3.828 × 10²⁶ W, the nominal solar luminosity (IAU 2015 Resolution B3); 1 AU = 1.495978707 × 10¹¹ m (IAU 2012 Resolution B2).</li>
+            <li>σ = 5.670374419 × 10⁻⁸ W m⁻² K⁻⁴, k = 1.380649 × 10⁻²³ J/K, u = 1.66053906892 × 10⁻²⁷ kg, G = 6.67430 × 10⁻¹¹ (CODATA 2022).</li>
+            <li>Distances, Bond albedos, escape speeds and measured temperatures: NASA NSSDCA planetary fact sheets (Mercury, Venus, Moon 2024; Earth 2024; Mars 2025; Jupiter 2024; Titan's mass and radius from the Saturnian satellite fact sheet, 2025).</li>
+            <li>Titan's surface temperature, 93.65 K: Fulchignoni et al. 2005, Nature 438, 785 (Huygens probe).</li>
+            <li>Habitable zone edges for a planet of Earth's mass: Kopparapu et al. 2014, ApJ Letters 787, L29, valid for star temperatures 2600 to 7200 K.</li>
+            <li>Proxima Centauri: 2900 K, log L = −2.82, planet b at 0.04848 AU (Suárez Mascareño et al. 2025). TRAPPIST-1: 2566 K, log L = −3.26 (Piaulet-Ghorayeb et al. 2025); planet e at 0.02925 AU, 0.692 Earth masses, 0.920 Earth radii (Agol et al. 2021); values as listed by the NASA Exoplanet Archive.</li>
+            <li>The young Sun's luminosity: L = L☉ / [1 + 0.4 (1 − t/t☉)] (Gough 1981, Solar Physics 74, 21), with t☉ = 4.57 billion years.</li>
+            <li>The factor of 6 between escape speed and molecular speed: Freedman, Geller and Kaufmann, Universe, 10th ed., Box 7-2.</li>
+          </ul>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Planet temperatures. Runs in Node (curriculum/validation/test_planet-temperatures.cjs).
+     Energy balance of a planet: it absorbs the starlight that falls on its disk and does not reflect, and radiates heat from its
+     surface as a blackbody would. Averaged over the area that shares the heat (f = 4 for the whole sphere, 2 for the day side only,
+     1 for the point with the star overhead), the balance is  e σ T⁴ = S (1 − a) / f,  with S = L/(4π d²) the starlight at distance d,
+     a the Bond albedo and e the share of the surface's heat radiation that escapes to space. e = 1 is a planet with no greenhouse.
+     The simple layer models fix what e means: an atmosphere that lets sunlight through and absorbs a share ε of the surface's heat
+     radiation, radiating up and down at its own temperature, lets e = 1 − ε/2 escape; a stack of N layers that each absorb all of it
+     gives e = 1/(N + 1). Real atmospheres also carry heat upward by convection and absorb some sunlight, so e here is an effective
+     value that matches a measured temperature, as in an introductory course, not a prediction of it.
+     Habitable zone: Kopparapu et al. 2014, ApJL 787, L29, coefficients for one Earth mass (their Table 1, as in their published
+     calculator): the starlight S_eff (in units of Earth's today) at each edge is a quartic in T_star − 5780 K, valid from 2600 to
+     7200 K; d = √(L/L☉ ÷ S_eff) AU. Conservative zone: runaway greenhouse to maximum greenhouse. Optimistic: recent Venus to early Mars.
+     Keeping air: a gas stays for billions of years when its root mean square speed √(3kT/m) is less than a sixth of the escape speed
+     (Freedman, Geller and Kaufmann, Universe, 10th ed., Box 7-2). */
+  const SIGMA = 5.670374419e-8, LSUN = 3.828e26, AU = 1.495978707e11, KB = 1.380649e-23, AMU = 1.66053906892e-27, G = 6.6743e-11;
+  const SPREAD = { whole: 4, day: 2, sub: 1 };
+  function flux(L, d) { return L * LSUN / (4 * Math.PI * Math.pow(d * AU, 2)); }
+  function tBare(L, d, a, sp) { return Math.pow(flux(L, d) * (1 - a) / (SPREAD[sp || 'whole'] * SIGMA), 0.25); }
+  function tSurf(L, d, a, e, sp) { return tBare(L, d, a, sp) / Math.pow(e, 0.25); }
+  function eFor(tb, tm) { return Math.pow(tb / tm, 4); }
+  function layers(e) { return e >= 0.5 ? { kind: 'one', eps: 2 * (1 - e) } : { kind: 'stack', n: 1 / e - 1 }; }
+  /* each row: S_eff at 5780 K, then a, b, c, d */
+  const HZC = {
+    rv: [1.776, 2.136e-4, 2.533e-8, -1.332e-11, -3.097e-15],
+    rg: [1.107, 1.332e-4, 1.580e-8, -8.308e-12, -1.931e-15],
+    mg: [0.356, 6.171e-5, 1.698e-9, -3.198e-12, -5.575e-16],
+    em: [0.320, 5.547e-5, 1.526e-9, -2.874e-12, -5.011e-16],
+  };
+  function seff(k, T) { const t = Math.max(2600, Math.min(7200, T)) - 5780, c = HZC[k]; return c[0] + t * (c[1] + t * (c[2] + t * (c[3] + t * c[4]))); }
+  function hzEdges(L, T) { const o = {}; for (const k in HZC) o[k] = Math.sqrt(L / seff(k, T)); return o; }
+  function zoneOf(d, z) { return d < z.rv ? 'hot' : d < z.rg ? 'optIn' : d <= z.mg ? 'cons' : d <= z.em ? 'optOut' : 'cold'; }
+  function vrms(T, M) { return Math.sqrt(3 * KB * T / (M * AMU)); }
+  function vEscape(Mkg, Rm) { return Math.sqrt(2 * G * Mkg / Rm); }
+  function keeps(vesc, T, M) { return 6 * vrms(T, M) < vesc; }
+  /* the young Sun (Gough 1981): t in billions of years since the Sun formed, t☉ = 4.57 */
+  function youngSun(t) { return 1 / (1 + 0.4 * (1 - t / 4.57)); }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  /* gases: molar masses from the IUPAC standard atomic weights */
+  const GASES = [
+    { k: 'H2', n: 'H₂', m: 2.016, c: '#e0609a' }, { k: 'He', n: 'He', m: 4.0026, c: '#d08a1c' }, { k: 'CH4', n: 'CH₄', m: 16.043, c: '#8a9a2a' },
+    { k: 'H2O', n: 'H₂O', m: 18.015, c: '#2b9ac8' }, { k: 'N2', n: 'N₂', m: 28.014, c: '#5a6ad0' }, { k: 'O2', n: 'O₂', m: 31.998, c: '#3aa070' }, { k: 'CO2', n: 'CO₂', m: 44.009, c: '#9a5ac8' },
+  ];
+  /* worlds on the air chart, at their measured temperatures (NASA fact sheets; Titan: Huygens) */
+  const WORLDS = [
+    { n: 'Mercury', T: 725, v: 4.3, note: 'sunward side, up to' }, { n: 'Venus', T: 737, v: 10.36 }, { n: 'Earth', T: 288, v: 11.186 },
+    { n: 'Moon', T: 390, v: 2.38, note: 'equator at noon' }, { n: 'Mars', T: 214, v: 5.03 },
+    { n: 'Titan', T: 93.65, v: vEscape(1345.5e20, 2575e3) / 1000 }, { n: 'Jupiter', T: 165, v: 59.5, note: 'at 1 bar' },
+  ];
+  /* the inner solar system for the orbits and the chart: semimajor axes (AU) from the fact sheets */
+  const INNER = [{ n: 'Mercury', d: 57.909 / 149.598 }, { n: 'Venus', d: 108.210 / 149.598 }, { n: 'Earth', d: 1 }, { n: 'Mars', d: 227.956 / 149.598 }];
+  const MEAS = [{ n: 'Mercury', d: INNER[0].d, lo: 590, hi: 725 }, { n: 'Venus', d: INNER[1].d, v: 737 }, { n: 'Earth', d: 1, v: 288 }, { n: 'Moon', d: 1, lo: 95, hi: 390 }, { n: 'Mars', d: INNER[3].d, v: 214 }];
+  const SUN = { L: 1, T: 5772 };
+  const YOUNG_T = 0.57, YOUNG_L = youngSun(YOUNG_T);
+  const PRESETS = {
+    mercury: { body: 'Mercury', star: 'Sun', L: 1, T: 5772, d: INNER[0].d, a: 0.068, sp: 'sub', gh: false, e: 1, v: 4.3, col: '#9a948c', meas: { lo: 590, hi: 725, text: '590 to 725 K on the sunward side' },
+      hint: 'Mercury, 0.387 AU from the Sun, Bond albedo 0.068, no air. It turns so slowly (one solar day lasts 176 Earth days) that each spot faces the Sun for weeks, so the setup looks at the spot with the Sun overhead. The fact sheet gives 590 to 725 K on the sunward side; at its mean distance the model gives about 622 K there, and Mercury\'s orbit takes it from 0.31 to 0.47 AU.' },
+    venus: { body: 'Venus', star: 'Sun', L: 1, T: 5772, d: INNER[1].d, a: 0.77, sp: 'whole', gh: true, e: 'match', v: 10.36, col: '#d9c08a', meas: { v: 737, text: '737 K, average surface' },
+      hint: 'Venus, 0.723 AU, Bond albedo 0.77: its clouds reflect most of the sunlight, so with no greenhouse it would be colder than Earth (227 K). Its surface is 737 K. The greenhouse setting that matches lets only about 0.9 % of the ground\'s heat radiation escape, as if about 111 layers of air each trapped all of it: 92 bar of carbon dioxide.' },
+    earth: { body: 'Earth', star: 'Sun', L: 1, T: 5772, d: 1, a: 0.294, sp: 'whole', gh: true, e: 'match', v: 11.186, col: '#3a78c0', meas: { v: 288, text: '288 K, global average' },
+      hint: 'Earth, 1 AU, Bond albedo 0.294. With no greenhouse the balance gives 255 K, below freezing; the measured average is 288 K. One layer of air that absorbs about 77 % of the ground\'s heat radiation makes up the difference.' },
+    moon: { body: 'Moon', star: 'Sun', L: 1, T: 5772, d: 1, a: 0.11, sp: 'sub', gh: false, e: 1, v: 2.38, col: '#a8a49c', meas: { lo: 95, hi: 390, text: '95 to 390 K at the equator' },
+      hint: 'The Moon, 1 AU from the Sun, Bond albedo 0.11, no air. A lunar day lasts 29.5 Earth days, so the ground under a high Sun comes close to balance: about 382 K in the model against 390 K measured at the equator. At night it falls to 95 K: with no air nothing holds the heat.' },
+    mars: { body: 'Mars', star: 'Sun', L: 1, T: 5772, d: INNER[3].d, a: 0.25, sp: 'whole', gh: true, e: 'match', v: 5.03, col: '#c0603a', meas: { v: 214, text: 'about 214 K, average' },
+      hint: 'Mars, 1.524 AU, Bond albedo 0.25. With no greenhouse the balance gives 210 K; the average surface is about 214 K. Its thin carbon dioxide air (6 mbar) adds only about 4 K.' },
+    young: { body: 'Earth', star: 'young Sun', L: YOUNG_L, T: 5772, d: 1, a: 0.294, sp: 'whole', gh: true, e: 'earth', v: 11.186, col: '#3a78c0', meas: null,
+      hint: 'Four billion years ago the Sun gave out about 74 % of its light today (L = 0.741 L☉, Gough 1981). Keep Earth\'s albedo and today\'s greenhouse and the planet comes out at 267 K, below freezing, yet rocks show liquid water then: the faint young Sun puzzle. A stronger greenhouse is the usual answer. The zone moves in with the dimmer Sun. The star\'s temperature is left at today\'s 5772 K (the zone edges depend mostly on L).' },
+    proxima: { body: 'Proxima Centauri b', star: 'Proxima Centauri', L: Math.pow(10, -2.82), T: 2900, d: 0.04848, a: 0.294, sp: 'whole', gh: false, e: 1, v: 11.186, col: '#b87a5a', meas: null,
+      hint: 'The nearest star to the Sun, a red dwarf with 0.15 % of the Sun\'s light (log L = −2.82, 2900 K), and its planet b, 0.0485 AU out, 20 times closer than Earth to the Sun. Its albedo, air and size are unknown: the setup borrows Earth\'s albedo and escape speed, with no greenhouse.' },
+    trappist: { body: 'TRAPPIST-1 e', star: 'TRAPPIST-1', L: Math.pow(10, -3.26), T: 2566, d: 0.02925, a: 0.294, sp: 'whole', gh: false, e: 1, v: 11.186 * Math.sqrt(0.692 / 0.920), col: '#8a7aa8', meas: null,
+      hint: 'TRAPPIST-1, a red dwarf with 0.055 % of the Sun\'s light (log L = −3.26, 2566 K), has seven Earth sized planets. Planet e, 0.0293 AU out, has 0.692 Earth masses and 0.920 Earth radii, so its escape speed is 9.70 km/s. Albedo borrowed from Earth, no greenhouse. The star is just below the 2600 K where the zone formulas start, so the edges use 2600 K.' },
+  };
+  const S = { preset: 'earth', body: 'Earth', star: 'Sun', L: 1, T: 5772, d: 1, a: 0.294, sp: 'whole', gh: true, e: 0.6, v: 11.186, col: '#3a78c0', meas: null,
+    chart: 'temp', spread: false, orbits: true, run: true, blind: false, ang: 0.7 };
+  const p0 = { L: 1, d: 1, a: 0.294 };
+  const sysC = $('sys'), budC = $('bud'), chC = $('chart'), sctx = sysC.getContext('2d'), bctx = budC.getContext('2d'), cctx = chC.getContext('2d');
+  let K = null, dpr = 1, SW = 0, SH = 0, BW = 0, BH = 0, CW = 0, CH = 0, view3 = null, g3 = null;
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const reduce = () => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } };
+  const sig = (v, n = 3) => { if (!isFinite(v)) return '—'; const a = Math.abs(v); if (a === 0) return '0'; const dgt = Math.max(0, n - 1 - Math.floor(Math.log10(a))); return v.toFixed(Math.min(6, dgt)).replace('-', '−'); };
+  const fx = (v, d) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'), sun: g('--sunc'), ir: g('--irc'), refl: g('--refl'),
+      hz: g('--hz'), hzo: g('--hzo'), water: g('--water'), boil: g('--boil'), meas: g('--meas'), ui: g('--font-ui'), mono: g('--font-mono'), dark: VD3.dark ? VD3.dark() : false }; }
+
+  /* ---------- what the model gives now ---------- */
+  const eNow = () => (S.gh ? S.e : 1);
+  function state() {
+    const Sx = flux(S.L, S.d), tb = tBare(S.L, S.d, S.a, S.sp), ts = tSurf(S.L, S.d, S.a, eNow(), S.sp), z = hzEdges(S.L, S.T);
+    const absorbed = Sx * (1 - S.a) / SPREAD[S.sp];
+    return { Sx, rel: Sx / flux(1, 1), tb, ts, z, zone: zoneOf(S.d, z), absorbed, surf: absorbed / eNow(), lay: layers(eNow()) };
+  }
+  /* the measured value counts only while the star, the distance and the albedo are the setup's own */
+  const asSet = () => !!S.meas && Math.abs(S.L - p0.L) < 1e-9 && Math.abs(S.d - p0.d) < 1e-6 && Math.abs(S.a - p0.a) < 1e-9;
+  const measText = () => (asSet() ? S.meas.text : '—');
+  const ZONE = { hot: 'closer than the inner edge: too hot', optIn: 'between the optimistic and the conservative inner edges', cons: 'inside the conservative zone',
+    optOut: 'between the conservative and the optimistic outer edges', cold: 'beyond the outer edge: too cold' };
+  const ZSHORT = { hot: 'too close', optIn: 'optimistic zone only', cons: 'conservative zone', optOut: 'optimistic zone only', cold: 'too far' };
+
+  /* ---------- star color: an approximate blackbody color, for the picture only ---------- */
+  const STARC = [[2500, [255, 150, 70]], [3000, [255, 177, 110]], [4000, [255, 206, 160]], [5000, [255, 228, 206]], [5772, [255, 240, 225]], [6500, [255, 249, 251]], [7500, [228, 233, 255]]];
+  function starRGB(T) { let i = 0; while (i < STARC.length - 2 && T > STARC[i + 1][0]) i++; const [t0, c0] = STARC[i], [t1, c1] = STARC[i + 1], u = Math.max(0, Math.min(1, (T - t0) / (t1 - t0)));
+    return c0.map((v, k) => Math.round(v + (c1[k] - v) * u)); }
+  const rgb = (c, al = 1) => `rgba(${c[0]},${c[1]},${c[2]},${al})`;
+  /* a temperature to a color: deep blue at 100 K, white near 300 K, red hot near 800 K */
+  function heatRGB(T) { const st = [[50, [60, 90, 200]], [200, [110, 170, 230]], [273, [220, 236, 248]], [330, [250, 220, 140]], [500, [240, 140, 60]], [800, [200, 50, 30]]];
+    let i = 0; while (i < st.length - 2 && T > st[i + 1][0]) i++; const [t0, c0] = st[i], [t1, c1] = st[i + 1], u = Math.max(0, Math.min(1, (T - t0) / (t1 - t0))); return c0.map((v, k) => Math.round(v + (c1[k] - v) * u)); }
+
+  /* ---------- the system view: flat ---------- */
+  function sysLayout() {
+    const narrow = SW < 600 || getComputedStyle($('setupCard')).position !== 'absolute', card = narrow ? 0 : $('setupCard').offsetWidth + 24;
+    const cx = card + (SW - card) / 2, cy = SH / 2, R = Math.max(40, Math.min((SW - card) / 2, SH / 2) - 30 * proj());
+    const st = state(), z = st.z, inner = solarish() && S.orbits ? 1.6 : 0;
+    const Rv = Math.max(S.spread ? 2.1 * S.d : S.d, z.em, inner) * 1.12;
+    return { cx, cy, R, s: R / Rv, Rv, card, st };
+  }
+  const solarish = () => S.star === 'Sun' || S.star === 'young Sun';
+  function label(c, t, x, y, o = {}) { const p = proj(); c.save(); c.font = `${o.w || 600} ${(o.s || 11.5) * p}px ${K.ui}`; c.textAlign = o.a || 'left'; c.textBaseline = o.b || 'middle';
+    if (o.halo !== false) { c.lineWidth = 3.5 * p; c.strokeStyle = o.bg || 'rgba(4,6,11,0.85)'; c.lineJoin = 'round'; c.strokeText(t, x, y); }
+    c.fillStyle = o.col || '#e3e8ef'; c.fillText(t, x, y); c.restore(); }
+  function drawSysFlat() {
+    const c = sctx, Lr = sysLayout(), { cx, cy, s } = Lr, st = Lr.st, z = st.z, p = proj();
+    c.fillStyle = '#04060b'; c.fillRect(0, 0, SW, SH);
+    /* a few fixed stars behind, the same each time */
+    let sd = 7; const rn = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
+    for (let i = 0; i < 160; i++) { const b = 0.25 + 0.6 * Math.pow(rn(), 3); c.fillStyle = `rgba(220,228,240,${b})`; c.fillRect(rn() * SW, rn() * SH, 1.2, 1.2); }
+    /* the habitable zones */
+    if (!S.blind) {
+      const ring = (r0, r1, col) => { c.beginPath(); c.arc(cx, cy, r1 * s, 0, 2 * Math.PI); c.arc(cx, cy, r0 * s, 0, 2 * Math.PI, true); c.fillStyle = col; c.fill('evenodd'); };
+      ring(z.rv, z.em, 'rgba(76,208,125,0.16)'); ring(z.rg, z.mg, 'rgba(76,208,125,0.34)');
+      c.strokeStyle = 'rgba(120,230,160,0.7)'; c.lineWidth = 1; for (const r of [z.rg, z.mg]) { c.beginPath(); c.arc(cx, cy, r * s, 0, 2 * Math.PI); c.stroke(); }
+      label(c, 'habitable zone', cx + z.mg * s * 0.707 + 6 * p, cy - z.mg * s * 0.707 - 6 * p, { col: '#8fe6ad', w: 700, s: 11 });
+    }
+    /* the inner planets' orbits */
+    if (solarish() && S.orbits) for (const o of INNER) { c.strokeStyle = 'rgba(170,185,205,0.45)'; c.setLineDash([3, 4]); c.lineWidth = 1; c.beginPath(); c.arc(cx, cy, o.d * s, 0, 2 * Math.PI); c.stroke(); c.setLineDash([]);
+      label(c, o.n, cx - o.d * s * 0.92, cy + o.d * s * 0.39, { col: 'rgba(190,200,215,0.85)', w: 400, s: 10 }); }
+    /* the planet's orbit and the planet */
+    const pr = S.d * s, px = cx + pr * Math.cos(S.ang), py = cy - pr * Math.sin(S.ang);
+    c.strokeStyle = 'rgba(105,160,255,0.85)'; c.lineWidth = 1.5 * p; c.beginPath(); c.arc(cx, cy, pr, 0, 2 * Math.PI); c.stroke();
+    if (S.spread) spreadFlat(c, cx, cy, s);
+    /* the star: its size grows a little with L, not to scale */
+    const sc = starRGB(S.T), sr = (7 + 4 * Math.max(0, Math.log10(S.L) + 4) / 5.5) * p, gl = c.createRadialGradient(cx, cy, 0, cx, cy, sr * 4);
+    gl.addColorStop(0, rgb(sc, 0.9)); gl.addColorStop(0.3, rgb(sc, 0.35)); gl.addColorStop(1, rgb(sc, 0)); c.fillStyle = gl; c.beginPath(); c.arc(cx, cy, sr * 4, 0, 2 * Math.PI); c.fill();
+    c.fillStyle = rgb(sc); c.beginPath(); c.arc(cx, cy, sr, 0, 2 * Math.PI); c.fill();
+    label(c, S.star === 'Sun' || S.star === 'young Sun' ? (S.star === 'Sun' ? 'Sun' : 'young Sun') : S.star, cx, cy + sr + 12 * p, { a: 'center', col: rgb(sc), w: 700 });
+    const tc = heatRGB(st.ts), pl = 7 * p;
+    c.fillStyle = S.col; c.beginPath(); c.arc(px, py, pl, 0, 2 * Math.PI); c.fill();
+    c.strokeStyle = S.blind ? '#c8d2e0' : rgb(tc); c.lineWidth = 2.5 * p; c.beginPath(); c.arc(px, py, pl + 3 * p, 0, 2 * Math.PI); c.stroke();
+    const lt = S.body + (S.blind ? '' : ` · ${fx(st.ts, 0)} K`), right = px < SW - 140 * p;
+    label(c, lt, right ? px + pl + 8 * p : px - pl - 8 * p, py - 12 * p, { a: right ? 'left' : 'right', col: '#f1f4f8', w: 700 });
+    flatScale(c, s, Lr);
+  }
+  function flatScale(c, s, Lr) {
+    const p = proj(), nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+    const au = nice(Lr.Rv / 3), w = au * s, x0 = SW - w - 16 * p, y0 = SH - 16 * p;
+    c.strokeStyle = 'rgba(210,220,235,0.85)'; c.lineWidth = 1.5; c.beginPath(); c.moveTo(x0, y0 - 4); c.lineTo(x0, y0); c.lineTo(x0 + w, y0); c.lineTo(x0 + w, y0 - 4); c.stroke();
+    label(c, `${sig(au, 2)} AU`, x0 + w / 2, y0 - 10 * p, { a: 'center', col: 'rgba(210,220,235,0.95)', w: 400, s: 10.5 });
+    label(c, 'distances to scale · star and planet sizes are not', 14 * p, SH - 14 * p, { col: 'rgba(170,180,195,0.9)', w: 400, s: 10 });
+  }
+  /* the light from the star spreading: a 1 m² patch at d is 4 m² at 2d (a wedge whose width doubles) */
+  function spreadFlat(c, cx, cy, s) {
+    const p = proj(), a = S.ang, half = 0.075, r1 = S.d * s, r2 = 2 * S.d * s, ca = Math.cos(a), sa = Math.sin(a);
+    const pt = (r, t) => [cx + r * Math.cos(a + t), cy - r * Math.sin(a + t)];
+    c.fillStyle = 'rgba(255,201,74,0.13)'; c.beginPath(); c.moveTo(cx, cy); const e1 = pt(r2 * 1.04, half), e2 = pt(r2 * 1.04, -half); c.lineTo(e1[0], e1[1]); c.lineTo(e2[0], e2[1]); c.closePath(); c.fill();
+    c.strokeStyle = 'rgba(255,201,74,0.8)'; c.lineWidth = 2.5 * p;
+    for (const r of [r1, r2]) { const u = pt(r, half), v = pt(r, -half); c.beginPath(); c.moveTo(u[0], u[1]); c.lineTo(v[0], v[1]); c.stroke(); }
+    const l1 = pt(r1, -half * 1.6), l2 = pt(r2, -half * 1.3);
+    label(c, `at d: S = ${sig(flux(S.L, S.d), 4)} W/m²`, l1[0], l1[1] + 26 * p, { a: 'center', col: '#ffd77a', w: 600, s: 10.5 });
+    label(c, `at 2d: ¼ as much, ${sig(flux(S.L, 2 * S.d), 4)} W/m²`, l2[0], l2[1] + 12 * p, { a: 'center', col: '#ffd77a', w: 600, s: 10.5 });
+    void ca; void sa;
+  }
+
+  /* ---------- the system view: 3D ---------- */
+  function init3D() {
+    const S3 = VD3K.stage($('sysPane'), { before: sysC, fov: 34, near: 0.002, far: 400, sky: '#04060b' }); if (!S3) return false;
+    S3.el.classList.add('vd3d');
+    const sc = S3.scene; S3.hemi.intensity = 0.25;
+    sc.add(VD3K.sky(S3, { n: 2200, r: 150, seed: 5, milky: true }));
+    const star = VD3K.star(S3, { r: 0.045, color: '#ffe7c2', glow: 6 }); sc.add(star);
+    const lamp = new THREE.PointLight(0xffffff, 1.6, 0, 0); sc.add(lamp);
+    const zoneM = (col, op) => new THREE.MeshBasicMaterial({ color: col, transparent: true, opacity: op, side: THREE.DoubleSide, depthWrite: false });
+    const opt = new THREE.Mesh(new THREE.RingGeometry(0.5, 1, 160, 1), zoneM(0x4cd07d, 0.13)), cons = new THREE.Mesh(new THREE.RingGeometry(0.5, 1, 160, 1), zoneM(0x4cd07d, 0.30));
+    cons.position.z = 0.0005; sc.add(opt, cons);
+    const orbits = INNER.map(() => { const l = VD3K.ring(1, { color: '#aab9cd', dashed: true, opacity: 0.45 }); sc.add(l); return l; });
+    const mine = VD3K.ring(1, { color: '#69a0ff', opacity: 0.85 }); sc.add(mine);
+    const planet = VD3K.planet(S3, { r: 0.03, color: '#3a78c0', seg: 48 }); sc.add(planet);
+    const haloM = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85, side: THREE.DoubleSide, depthWrite: false });
+    const halo = new THREE.Mesh(new THREE.RingGeometry(1.25, 1.55, 48), haloM); sc.add(halo);
+    /* the spreading light: a square pyramid from the star with its 1 and 4 square patches */
+    const pyr = new THREE.Group(), lineM = new THREE.LineBasicMaterial({ color: 0xffc94a, transparent: true, opacity: 0.75 });
+    const patchM = new THREE.MeshBasicMaterial({ color: 0xffc94a, transparent: true, opacity: 0.32, side: THREE.DoubleSide, depthWrite: false });
+    const edges = new THREE.LineSegments(new THREE.BufferGeometry(), lineM), p1 = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), patchM), p2 = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), patchM);
+    pyr.add(edges, p1, p2); sc.add(pyr);
+    g3 = { S3, star, lamp, opt, cons, orbits, mine, planet, halo, haloM, pyr, edges, p1, p2, o: { th: -1.05, ph: 1.0, zoom: 1 }, col: '' };
+    VD3.orbit(sysC, g3.o, () => { if (use3()) drawSys(); }, { grab: (e) => use3() && nearPlanet(e), phMin: 0.15, phMax: 1.5, zMin: 0.45, zMax: 3.5 });
+    return true;
+  }
+  const use3 = () => !!(view3 && view3.is3d() && g3);
+  function drawSys3() {
+    const g = g3, S3 = g.S3, Lr = sysLayout(), st = Lr.st, z = st.z, u = 1 / Lr.Rv, p = proj();
+    S3.size(SW, SH); S3.cam.setViewOffset(SW, SH, -Lr.card / 2, 0, SW, SH);
+    S3.place(g.o, [0, 0, 0], S3.fit(4.1, 1.2));
+    const sc = starRGB(S.T), sr = 0.03 + 0.03 * Math.max(0, Math.log10(S.L) + 4) / 5.5;
+    g.star.tint(`rgb(${sc[0]},${sc[1]},${sc[2]})`); g.star.scale.setScalar(sr / 0.045); g.lamp.color.setRGB(sc[0] / 255, sc[1] / 255, sc[2] / 255);
+    const setRing = (m, r0, r1) => { m.geometry.dispose(); m.geometry = new THREE.RingGeometry(r0 * u, r1 * u, 160, 1); };
+    const key = [z.rv, z.rg, z.mg, z.em, u].map((v) => v.toPrecision(6)).join('|');
+    if (g.key !== key) { g.key = key; setRing(g.opt, z.rv, z.em); setRing(g.cons, z.rg, z.mg); }
+    g.opt.visible = g.cons.visible = !S.blind;
+    g.orbits.forEach((l, i) => { l.visible = solarish() && S.orbits; l.scale.setScalar(INNER[i].d * u); });
+    g.mine.scale.setScalar(S.d * u);
+    const r = S.d * u, x = r * Math.cos(S.ang), y = r * Math.sin(S.ang);
+    g.planet.position.set(x, y, 0); g.planet.spin(S.ang * 6); if (g.col !== S.col) { g.col = S.col; g.planet.ball.material.color.set(S.col); }
+    const tc = heatRGB(st.ts); g.halo.position.set(x, y, 0); g.halo.scale.setScalar(0.03); g.halo.quaternion.copy(S3.cam.quaternion);
+    g.haloM.color.setRGB(S.blind ? 0.8 : tc[0] / 255, S.blind ? 0.84 : tc[1] / 255, S.blind ? 0.9 : tc[2] / 255);
+    g.pyr.visible = S.spread;
+    if (S.spread) {
+      const h = Math.tan(0.075), ca = Math.cos(S.ang), sa = Math.sin(S.ang), dir = new THREE.Vector3(ca, sa, 0), side = new THREE.Vector3(-sa, ca, 0), up = new THREE.Vector3(0, 0, 1);
+      const corner = (rr, i, j) => dir.clone().multiplyScalar(rr).addScaledVector(side, i * h * rr).addScaledVector(up, j * h * rr);
+      const r2 = 2 * r * 1.04, pts = []; for (const [i, j] of [[1, 1], [1, -1], [-1, -1], [-1, 1]]) pts.push(new THREE.Vector3(0, 0, 0), corner(r2, i, j));
+      g.edges.geometry.dispose(); g.edges.geometry = new THREE.BufferGeometry().setFromPoints(pts);
+      for (const [m, rr] of [[g.p1, r], [g.p2, 2 * r]]) { m.position.copy(dir.clone().multiplyScalar(rr)); m.scale.set(2 * h * rr, 2 * h * rr, 1); m.lookAt(0, 0, 0); }
+    }
+    S3.render();
+    /* labels over the 3D picture */
+    const c = sctx; c.clearRect(0, 0, SW, SH);
+    const pp = S3.project([x, y, 0]), sp = S3.project([0, 0, 0]);
+    const lt = S.body + (S.blind ? '' : ` · ${fx(st.ts, 0)} K`), right = pp[0] < SW - 140 * p;
+    label(c, lt, right ? pp[0] + 14 * p : pp[0] - 14 * p, pp[1] - 14 * p, { a: right ? 'left' : 'right', col: '#f1f4f8', w: 700 });
+    label(c, solarish() ? (S.star === 'Sun' ? 'Sun' : 'young Sun') : S.star, sp[0], sp[1] + 22 * p, { a: 'center', col: rgb(sc), w: 700 });
+    if (!S.blind) { const q = S3.project([z.mg * u * 0.707, -z.mg * u * 0.707, 0]); label(c, 'habitable zone', q[0] + 6 * p, q[1] + 8 * p, { col: '#8fe6ad', w: 700, s: 11 }); }
+    if (solarish() && S.orbits) INNER.forEach((o) => { const q = S3.project([-o.d * u * 0.92, -o.d * u * 0.39, 0]); label(c, o.n, q[0], q[1], { col: 'rgba(190,200,215,0.85)', w: 400, s: 10 }); });
+    if (S.spread) { const a1 = S3.project([r * Math.cos(S.ang), r * Math.sin(S.ang), -0.1 * r]), a2 = S3.project([2 * r * Math.cos(S.ang), 2 * r * Math.sin(S.ang), -0.17 * r]);
+      label(c, `1 m² at d: ${sig(flux(S.L, S.d), 4)} W/m²`, a1[0], a1[1] + 14 * p, { a: 'center', col: '#ffd77a', s: 10.5 });
+      label(c, `spread over 4 m² at 2d: ${sig(flux(S.L, 2 * S.d), 4)} W/m²`, a2[0], a2[1] + 14 * p, { a: 'center', col: '#ffd77a', s: 10.5 }); }
+    if (SW > 600) label(c, 'drag the planet in or out · drag elsewhere to turn · sizes not to scale', 14 * p, SH - 14 * p, { col: 'rgba(170,180,195,0.9)', w: 400, s: 10 });
+  }
+  function drawSys() { if (!K || !SW) return; sctx.setTransform(dpr, 0, 0, dpr, 0, 0); if (use3()) drawSys3(); else drawSysFlat(); }
+
+  /* ---------- the energy budget ---------- */
+  function arrow(c, x, y0, y1, w, col, o = {}) {
+    const dir = Math.sign(y1 - y0) || 1, hl = Math.min(Math.abs(y1 - y0) * 0.45, w * 0.9 + 6), hw = w / 2 + 5;
+    c.fillStyle = col; c.globalAlpha = o.alpha || 0.9; c.beginPath();
+    c.moveTo(x - w / 2, y0); c.lineTo(x + w / 2, y0); c.lineTo(x + w / 2, y1 - dir * hl); c.lineTo(x + hw, y1 - dir * hl); c.lineTo(x, y1); c.lineTo(x - hw, y1 - dir * hl); c.lineTo(x - w / 2, y1 - dir * hl); c.closePath(); c.fill();
+    c.globalAlpha = 1;
+  }
+  function drawBud() {
+    if (!K || !BW) return;
+    const c = bctx, p = proj(), st = state(); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, BW, BH);
+    const thW = Math.min(124 * p, BW * 0.32), L = 10 * p, Rr = BW - thW - 6 * p, top = 30 * p, ground = BH - 34 * p, airTop = top + (ground - top) * 0.30, mid = (airTop + ground) / 2;
+    c.font = `700 ${10.5 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textBaseline = 'top'; c.textAlign = 'left';
+    c.fillText(`ENERGY BUDGET PER m², ${S.sp === 'whole' ? 'WHOLE PLANET' : S.sp === 'day' ? 'DAY SIDE' : 'UNDER THE STAR'}`, L, 8 * p);
+    /* the ground, and the air as layers */
+    c.fillStyle = S.col; c.globalAlpha = 0.85; c.fillRect(L, ground, Rr - L, BH - ground - 18 * p); c.globalAlpha = 1;
+    const e = eNow(), lay = st.lay, gh = S.gh && e < 0.999;
+    if (gh) {
+      const n = lay.kind === 'one' ? 1 : Math.min(14, Math.max(2, Math.round(lay.n))), alpha = lay.kind === 'one' ? 0.10 + 0.28 * lay.eps : 0.17, hh = (ground - airTop) / n;
+      for (let i = 0; i < n; i++) { c.fillStyle = `rgba(150,170,200,${alpha})`; c.fillRect(L, airTop + hh * i + hh * 0.12, Rr - L, hh * 0.76); }
+    }
+    /* arrows: widths grow as the square root of the power, so Venus's 100 times stronger ground glow still fits */
+    const inP = st.Sx / SPREAD[S.sp], ref = S.a * inP, ab = st.absorbed, surf = st.surf, out = e * surf, back = surf - out, maxP = Math.max(inP, surf);
+    const wOf = (P) => Math.max(2 * p, 30 * p * Math.sqrt(P / maxP)), span = Rr - L, xs = [L + span * 0.13, L + span * 0.34, L + span * 0.6, L + span * 0.84];
+    arrow(c, xs[0], top + 2 * p, ground, wOf(inP), K.sun);
+    if (ref > 0.05) arrow(c, xs[1], airTop, top + 2 * p, wOf(ref), K.refl);
+    if (gh) { arrow(c, xs[2], ground, mid, wOf(surf), K.ir, { alpha: 0.4 }); arrow(c, xs[2], airTop, top + 2 * p, wOf(out), K.ir); arrow(c, xs[3], mid, ground, wOf(back), K.ir, { alpha: 0.75 }); }
+    else arrow(c, xs[2], ground, top + 2 * p, wOf(surf), K.ir);
+    const tl = (t, x, y, col, al = 'center') => { c.font = `600 ${10 * p}px ${K.ui}`; c.textAlign = al; c.textBaseline = 'middle'; c.lineWidth = 3.5 * p; c.lineJoin = 'round'; c.strokeStyle = K.canvas; c.strokeText(t, x, y); c.fillStyle = col; c.fillText(t, x, y); };
+    const Wt = (P) => `${sig(P, 3)} W/m²`, two = (a1, a2, x, y) => { tl(a1, x, y, K.ink); tl(a2, x, y + 12 * p, K.ink); };
+    two('starlight in', Wt(inP), xs[0], top + 14 * p);
+    if (ref > 0.05) two('reflected', Wt(ref), xs[1], airTop + 14 * p);
+    two(gh ? 'escapes to space' : 'heat radiation to space', Wt(out), xs[2], top + 14 * p);
+    two('ground radiates', S.blind ? 'σT⁴' : Wt(surf), xs[2], ground - 18 * p);
+    if (gh) two('air sends back', Wt(back), xs[3], mid + (ground - mid) * 0.35);
+    c.font = `${10 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle';
+    const lt = gh ? (lay.kind === 'one' ? `air: like one layer absorbing ${fx(lay.eps * 100, 0)} % of the heat radiation` : `air: like ${sig(lay.n, 2)} layers each absorbing all of it${lay.n > 14 ? ' (14 drawn)' : ''}`)
+      : (S.gh ? 'no greenhouse at this setting (e = 1)' : 'greenhouse off: all the heat radiation escapes');
+    tl(lt, L + 4 * p, airTop - 9 * p, K.muted, 'left');
+    c.font = `${10 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textAlign = 'left'; c.textBaseline = 'bottom';
+    c.fillText(`balance: absorbed ${sig(ab, 3)} = escaping ${sig(out, 3)} W/m²`, L, BH - 3 * p);
+    drawThermo(c, Rr + 2 * p, top, thW - 4 * p, ground, st);
+  }
+  function drawThermo(c, x0, top, w, bot, st) {
+    const p = proj(), mt = asSet() ? (S.meas.v || S.meas.hi) : 0, Tm = Math.max(400, Math.min(2000, 100 * Math.ceil(Math.max(st.ts, st.tb, mt) * 1.12 / 100)));
+    const y = (T) => bot - (bot - top - 8 * p) * Math.min(1, T / Tm), xb = x0 + 26 * p, bw = 11 * p;
+    c.fillStyle = K.surface; c.strokeStyle = K.line; c.lineWidth = 1; c.beginPath(); if (c.roundRect) c.roundRect(xb, top, bw, bot - top, 5 * p); else c.rect(xb, top, bw, bot - top); c.fill(); c.stroke();
+    c.font = `${9 * p}px ${K.mono}`; c.fillStyle = K.muted; c.textAlign = 'right'; c.textBaseline = 'middle';
+    const step = Tm > 1000 ? 400 : Tm > 500 ? 200 : 100; for (let T = 0; T <= Tm; T += step) { c.fillRect(xb - 3 * p, y(T), 3 * p, 1); c.fillText(String(T), xb - 5 * p, y(T)); }
+    if (!S.blind) { const tc = heatRGB(st.ts); c.fillStyle = rgb(tc); c.fillRect(xb + 2 * p, y(st.ts), bw - 4 * p, bot - y(st.ts) - 2 * p); }
+    /* the marks, with their labels pushed apart so none overlap */
+    const marks = [[273.15, K.water, 'water freezes', true], [373.15, K.boil, 'boils (1 atm)', true]];
+    if (!S.blind) { marks.push([st.ts, K.ink, `surface ${fx(st.ts, 0)} K`, false]); if (Math.abs(st.ts - st.tb) > 3) marks.push([st.tb, K.muted, `bare ${fx(st.tb, 0)} K`, true]); }
+    if (asSet()) { const m = S.meas; if (m.v) marks.push([m.v, K.meas, `measured ${m.v} K`, false]); else { c.fillStyle = K.meas; c.globalAlpha = 0.4; c.fillRect(xb + bw + 1 * p, y(m.hi), 4 * p, y(m.lo) - y(m.hi)); c.globalAlpha = 1; marks.push([m.hi, K.meas, `measured ${m.lo}–${m.hi} K`, false]); } }
+    const vis = marks.filter((m) => m[0] <= Tm).map((m) => ({ m, ty: y(m[0]) })).sort((a1, b1) => b1.ty - a1.ty), gap = 11 * p;
+    for (let i = 1; i < vis.length; i++) if (vis[i - 1].ty - vis[i].ty < gap) vis[i].ty = vis[i - 1].ty - gap;
+    for (const v of vis) { const [T, col, t, dash] = v.m; c.strokeStyle = col; c.lineWidth = 1.5 * p; c.setLineDash(dash ? [3, 3] : []); c.beginPath(); c.moveTo(xb - 1 * p, y(T)); c.lineTo(xb + bw + 4 * p, y(T)); c.lineTo(xb + bw + 8 * p, v.ty); c.stroke(); c.setLineDash([]);
+      c.font = `600 ${9 * p}px ${K.ui}`; c.fillStyle = col; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(t, xb + bw + 10 * p, v.ty); }
+    c.font = `700 ${9.5 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('K', xb + bw / 2, bot + 3 * p);
+    void w;
+  }
+
+  /* ---------- the chart ---------- */
+  function drawChart() {
+    if (!K || !CW) return;
+    const c = cctx, p = proj(); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, CW, CH);
+    if (S.chart === 'air') drawAir(c, p); else drawTemp(c, p);
+  }
+  const niceTicks = (lo, hi) => { const out = []; for (let k = Math.floor(Math.log10(lo)); k <= Math.ceil(Math.log10(hi)); k++) for (const m of [1, 2, 5]) { const v = m * Math.pow(10, k); if (v >= lo * 0.999 && v <= hi * 1.001) out.push(v); } return out; };
+  function axes(c, p, o) {
+    const { Lm, Tm, pw, ph, xt, yt, X, Y, xl, yl } = o; c.font = `${10 * p}px ${K.mono}`; c.strokeStyle = K.grid; c.fillStyle = K.muted; c.lineWidth = 1;
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (const v of xt) { c.beginPath(); c.moveTo(X(v), Tm); c.lineTo(X(v), Tm + ph); c.stroke(); c.fillText(sig(v, 2), X(v), Tm + ph + 4 * p); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (const v of yt) { c.beginPath(); c.moveTo(Lm, Y(v)); c.lineTo(Lm + pw, Y(v)); c.stroke(); c.fillText(sig(v, 3), Lm - 5 * p, Y(v)); }
+    c.strokeStyle = K.line; c.strokeRect(Lm, Tm, pw, ph);
+    c.font = `${10.5 * p}px ${K.ui}`; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText(xl, Lm + pw / 2, CH - 2 * p);
+    c.save(); c.translate(11 * p, Tm + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(yl, 0, 0); c.restore();
+  }
+  function drawTemp(c, p) {
+    const st = state(), z = st.z, narrow = CW < 600, Lm = 52 * p, Rm = 14 * p, Tm = (narrow ? 14 : 36) * p, Bm = 34 * p, pw = CW - Lm - Rm, ph = CH - Tm - Bm;
+    let d0 = Math.min(z.rv, S.d) / 2.5, d1 = Math.max(z.em, S.d) * 2.5; if (solarish()) { d0 = Math.min(d0, 0.25); d1 = Math.max(d1, 3); }
+    const X = (d) => Lm + Math.log(d / d0) / Math.log(d1 / d0) * pw;
+    const pts = []; for (let k = 0; k <= 160; k++) { const d = d0 * Math.pow(d1 / d0, k / 160); pts.push([d, tSurf(S.L, d, S.a, eNow(), S.sp), tBare(S.L, d, S.a, S.sp)]); }
+    const meas = solarish() && S.star === 'Sun' ? MEAS : [], Tmax = Math.min(2500, Math.max(400, 1.1 * Math.max(...pts.filter((q) => q[0] <= d1).map((q) => Math.min(q[1], 2 * st.ts + 300))), ...meas.map((m) => (m.v || m.hi) * 1.1)));
+    const Y = (T) => Tm + ph - Math.min(1.02, T / Tmax) * ph;
+    if (!S.blind) {
+      c.fillStyle = 'rgba(76,208,125,0.12)'; c.fillRect(X(Math.max(d0, z.rv)), Tm, X(Math.min(d1, z.em)) - X(Math.max(d0, z.rv)), ph);
+      c.fillStyle = 'rgba(76,208,125,0.22)'; c.fillRect(X(Math.max(d0, z.rg)), Tm, X(Math.min(d1, z.mg)) - X(Math.max(d0, z.rg)), ph);
+    }
+    const yt = []; for (let T = 0; T <= Tmax; T += Tmax > 1200 ? 400 : Tmax > 600 ? 200 : 100) yt.push(T);
+    axes(c, p, { Lm, Tm, pw, ph, xt: niceTicks(d0, d1), yt, X, Y, xl: 'distance from the star d (AU, log scale)', yl: 'temperature (K)' });
+    for (const [T, col, t] of [[273.15, K.water, 'water freezes'], [373.15, K.boil, 'water boils at 1 atm']]) { if (T > Tmax) continue; c.strokeStyle = col; c.setLineDash([4, 4]); c.lineWidth = 1.2 * p; c.beginPath(); c.moveTo(Lm, Y(T)); c.lineTo(Lm + pw, Y(T)); c.stroke(); c.setLineDash([]);
+      c.font = `600 ${9.5 * p}px ${K.ui}`; c.fillStyle = col; c.textAlign = 'right'; c.textBaseline = 'bottom'; c.fillText(t, Lm + pw - 4 * p, Y(T) - 2 * p); }
+    if (!S.blind) {
+      c.lineWidth = 1.5 * p; c.strokeStyle = K.muted; c.setLineDash([5, 4]); c.beginPath(); pts.forEach((q, k) => { const x = X(q[0]), y = Y(q[2]); k ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke(); c.setLineDash([]);
+      if (S.gh && S.e < 0.999) { c.lineWidth = 2.2 * p; c.strokeStyle = K.accent; c.beginPath(); pts.forEach((q, k) => { const x = X(q[0]), y = Y(q[1]); k ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke(); }
+    }
+    /* measured temperatures of the Sun's inner worlds */
+    c.font = `600 ${9.5 * p}px ${K.ui}`; c.textBaseline = 'middle';
+    for (const m of meas) { const x = X(m.d) + (m.n === 'Moon' ? 7 * p : 0); c.fillStyle = K.meas; c.strokeStyle = K.meas; c.lineWidth = 2 * p;
+      if (m.v) { c.beginPath(); c.moveTo(x, Y(m.v) - 5 * p); c.lineTo(x + 5 * p, Y(m.v)); c.lineTo(x, Y(m.v) + 5 * p); c.lineTo(x - 5 * p, Y(m.v)); c.closePath(); c.fill(); c.textAlign = 'left'; c.fillText(m.n, x + 7 * p, Y(m.v)); }
+      else { c.beginPath(); c.moveTo(x, Y(m.lo)); c.lineTo(x, Y(m.hi)); c.stroke(); c.fillRect(x - 4 * p, Y(m.lo) - 1, 8 * p, 2); c.fillRect(x - 4 * p, Y(m.hi) - 1, 8 * p, 2); c.textAlign = 'left'; c.fillText(m.n, x + 6 * p, m.n === 'Moon' ? Y(m.lo) - 8 * p : Y(m.hi) + 8 * p); } }
+    /* this planet */
+    if (!S.blind) { const x = X(S.d), y = Y(st.ts); c.fillStyle = K.accent; c.beginPath(); c.arc(x, y, 5 * p, 0, 2 * Math.PI); c.fill(); c.strokeStyle = K.canvas; c.lineWidth = 1.5; c.stroke(); }
+    if (!narrow) { c.font = `${10.5 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textAlign = 'left'; c.textBaseline = 'middle';
+      c.fillText(S.blind ? 'measured temperatures (◆ and bars)' : `this planet's model: with its greenhouse (solid), with none (dashed) · green: habitable zone · ◆ measured`, Lm, 16 * p); }
+  }
+  function drawAir(c, p) {
+    const st = state(), narrow = CW < 600, Lm = 52 * p, Rm = 14 * p, Tm = (narrow ? 14 : 36) * p, Bm = 34 * p, pw = CW - Lm - Rm, ph = CH - Tm - Bm;
+    const T0 = 30, T1 = 3000, v0 = 0.5, v1 = 80, X = (T) => Lm + Math.log(T / T0) / Math.log(T1 / T0) * pw, Y = (v) => Tm + ph - Math.log(v / v0) / Math.log(v1 / v0) * ph;
+    axes(c, p, { Lm, Tm, pw, ph, xt: niceTicks(T0, T1), yt: niceTicks(v0, v1), X, Y, xl: 'temperature (K, log scale)', yl: 'speed (km/s, log scale)' });
+    c.save(); c.beginPath(); c.rect(Lm, Tm, pw, ph); c.clip();
+    for (const g of GASES) { c.strokeStyle = g.c; c.lineWidth = 1.8 * p; c.beginPath(); c.moveTo(X(T0), Y(6 * vrms(T0, g.m) / 1000)); c.lineTo(X(T1), Y(6 * vrms(T1, g.m) / 1000)); c.stroke();
+      const gi = GASES.indexOf(g), Tl = T0 * Math.pow(T1 / T0, 0.04 + 0.075 * gi), yl = Y(6 * vrms(Tl, g.m) / 1000);
+      c.font = `700 ${10 * p}px ${K.ui}`; c.fillStyle = g.c; c.textAlign = 'center'; c.textBaseline = 'bottom'; c.lineWidth = 3 * p; c.strokeStyle = K.canvas; c.strokeText(g.n, X(Tl), yl - 3 * p); c.fillText(g.n, X(Tl), yl - 3 * p); }
+    c.font = `600 ${9.5 * p}px ${K.ui}`;
+    for (const w of WORLDS) { const x = X(w.T), y = Y(w.v); c.fillStyle = K.ink; c.beginPath(); c.arc(x, y, 3.5 * p, 0, 2 * Math.PI); c.fill(); c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillText(w.n, x + 6 * p, y - 7 * p); }
+    if (!S.blind) { const x = X(Math.max(T0, Math.min(T1, st.ts))), y = Y(S.v); c.strokeStyle = K.accent; c.lineWidth = 2.5 * p; c.beginPath(); c.arc(x, y, 7 * p, 0, 2 * Math.PI); c.stroke();
+      c.fillStyle = K.accent; c.textAlign = 'left'; c.fillText(`${S.body} in the model`, x + 10 * p, y + 9 * p); }
+    c.restore();
+    if (!narrow) { c.font = `${10.5 * p}px ${K.ui}`; c.fillStyle = K.muted; c.textAlign = 'left'; c.textBaseline = 'middle';
+      c.fillText('lines: 6 × each gas\'s rms speed · dots: worlds at their escape speed and measured temperature · a gas stays where the world sits above its line', Lm, 16 * p); }
+  }
+
+  /* ---------- readouts ---------- */
+  function gasesNow(T) { const kept = [], lost = []; for (const g of GASES) (keeps(S.v * 1000, T, g.m) ? kept : lost).push(g.n); return { kept, lost }; }
+  function readouts() {
+    const st = state(), z = st.z, B = S.blind, hide = '<span class="ok">hidden</span>', dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd${cls && cls.includes('note') ? ' class="note"' : ''}>${b}</dd></div>`;
+    const gs = gasesNow(st.ts), lay = st.lay, e = eNow();
+    let h = dd('Starlight at the planet S', `${sig(st.Sx, 4)} W/m²`, 'big') + dd('compared with Earth\'s', `${sig(st.rel, 3)} ×`, 'big')
+      + dd('Temperature, no greenhouse', B ? hide : `${fx(st.tb, 1)} K`) + dd('Surface temperature, model', B ? hide : `${fx(st.ts, 1)} K`)
+      + dd('Measured', measText(), 'wide note')
+      + dd('Greenhouse warming', B ? hide : `${fx(st.ts - st.tb, 1)} K`) + dd('Escaping to space e', S.gh ? sig(e, 3) : '1 (off)')
+      + dd('The greenhouse is like', !S.gh || e > 0.999 ? 'no greenhouse' : lay.kind === 'one' ? `one layer absorbing ${fx(lay.eps * 100, 0)} % of the heat radiation` : `${sig(lay.n, 3)} layers each absorbing all of it`, 'wide note')
+      + dd('Habitable zone, conservative', B ? hide : `${sig(z.rg, 3)} to ${sig(z.mg, 3)} AU`) + dd('optimistic', B ? hide : `${sig(z.rv, 3)} to ${sig(z.em, 3)} AU`)
+      + dd(`At ${sig(S.d, 4)} AU the planet is`, B ? hide : ZONE[st.zone], 'wide note')
+      + dd('Gases kept at the model temperature', B ? hide : (gs.kept.join(', ') || 'none'), 'wide note') + dd('lost to space', B ? hide : (gs.lost.join(', ') || 'none'), 'wide note');
+    if (S.T < 2600 || S.T > 7200) h += dd('Note', `The zone formulas hold from 2600 to 7200 K; the edges use ${S.T < 2600 ? 2600 : 7200} K.`, 'wide note');
+    $('out').innerHTML = h;
+  }
+
+  /* ---------- controls ---------- */
+  const lg = Math.log10;
+  function sync() {
+    const set = (id, v, txt) => { $('s' + id).value = v; $('o' + id).textContent = txt; };
+    set('L', lg(S.L), `${sig(S.L, 3)} L☉`); set('T', S.T, `${Math.round(S.T)} K`); set('D', lg(S.d), `${sig(S.d, 4)} AU`); set('A', S.a, fx(S.a, 3));
+    set('E', lg(S.e), sig(S.e, 3)); set('V', lg(S.v), `${sig(S.v, 3)} km/s`);
+    $('chkGH').checked = S.gh; $('eBox').style.opacity = S.gh ? 1 : 0.45; $('sE').disabled = !S.gh;
+    $('chkSpread').checked = S.spread; $('chkOrbits').checked = S.orbits;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#spreadSeg button')) b.setAttribute('aria-pressed', String(b.dataset.sp === S.sp));
+    for (const b of document.querySelectorAll('#chartSeg button')) b.setAttribute('aria-pressed', String(b.dataset.c === S.chart));
+    $('blindTag').hidden = !S.blind;
+  }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k;
+    Object.assign(S, { body: c.body, star: c.star, L: c.L, T: c.T, d: c.d, a: c.a, sp: c.sp, gh: c.gh, v: c.v, col: c.col, meas: c.meas });
+    if (c.e === 'match') S.e = eFor(tBare(c.L, c.d, c.a, c.sp), c.meas.v);
+    else if (c.e === 'earth') { const E = PRESETS.earth; S.e = eFor(tBare(E.L, E.d, E.a, E.sp), E.meas.v); }
+    else S.e = c.e;
+    Object.assign(p0, { L: S.L, d: S.d, a: S.a });
+    $('presetHint').textContent = c.hint; sync(); redraw();
+  }
+  const changed = () => { S.preset = 'custom'; sync(); redraw(); };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  const num = (id, fn) => $(id).addEventListener('input', (e) => { fn(+e.target.value); changed(); });
+  num('sL', (v) => { S.L = Math.pow(10, v); if (S.star === 'Sun' || S.star === 'young Sun') S.star = 'Your star'; });
+  num('sT', (v) => { S.T = v; if (S.star === 'Sun' || S.star === 'young Sun') S.star = 'Your star'; });
+  num('sD', (v) => { S.d = Math.pow(10, v); }); num('sA', (v) => { S.a = v; }); num('sE', (v) => { S.e = Math.pow(10, v); }); num('sV', (v) => { S.v = Math.pow(10, v); });
+  /* the greenhouse switch keeps the setup's name: the reading records greenhouse on or off */
+  $('chkGH').addEventListener('change', (e) => { S.gh = e.target.checked; sync(); redraw(); });
+  $('chkSpread').addEventListener('change', (e) => { S.spread = e.target.checked; sync(); redraw(); });
+  $('chkOrbits').addEventListener('change', (e) => { S.orbits = e.target.checked; sync(); redraw(); });
+  $('spreadSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-sp]'); if (b) { S.sp = b.dataset.sp; changed(); } });
+  $('chartSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-c]'); if (b) { S.chart = b.dataset.c; sync(); drawChart(); } });
+  $('play').addEventListener('click', () => { S.run = !S.run; $('play').textContent = S.run ? 'Pause' : 'Play'; });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; sync(); redraw(); });
+  VD.setupCard($('setupCard'));
+  /* type an exact value into a readout: distances, luminosity and the rest to the precision shown */
+  const typed = (id, o) => VD.typeIn($(id), Object.assign({ can: () => true }, o));
+  typed('oL', { get: () => S.L, set: (v) => { S.L = v; if (solarish()) S.star = 'Your star'; changed(); }, min: 1e-4, max: 31.6, step: 1e-6, unit: 'L☉', label: 'Luminosity L', seed: () => sig(S.L, 4) });
+  typed('oT', { get: () => S.T, set: (v) => { S.T = v; if (solarish()) S.star = 'Your star'; changed(); }, min: 2500, max: 7500, step: 1, unit: 'K', label: 'Star surface temperature' });
+  typed('oD', { get: () => S.d, set: (v) => { S.d = v; changed(); }, min: 0.01, max: 50, step: 1e-4, unit: 'AU', label: 'Distance d', seed: () => sig(S.d, 4) });
+  typed('oA', { get: () => S.a, set: (v) => { S.a = v; changed(); }, min: 0, max: 0.95, step: 0.001, label: 'Albedo a' });
+  typed('oE', { get: () => S.e, set: (v) => { S.e = v; changed(); }, min: 0.0032, max: 1, step: 1e-5, label: 'Escaping to space e', can: () => S.gh, seed: () => sig(S.e, 3) });
+  typed('oV', { get: () => S.v, set: (v) => { S.v = v; changed(); }, min: 0.32, max: 100, step: 0.01, unit: 'km/s', label: 'Escape speed' });
+
+  /* ---------- drag the planet in or out ---------- */
+  function planetPx() { if (use3()) { const Lr = sysLayout(), u = 1 / Lr.Rv, q = g3.S3.project([S.d * u * Math.cos(S.ang), S.d * u * Math.sin(S.ang), 0]); return [q[0], q[1]]; }
+    const Lr = sysLayout(); return [Lr.cx + S.d * Lr.s * Math.cos(S.ang), Lr.cy - S.d * Lr.s * Math.sin(S.ang)]; }
+  function nearPlanet(e) { const r = sysC.getBoundingClientRect(), [x, y] = planetPx(); return Math.hypot(e.clientX - r.left - x, e.clientY - r.top - y) < (e.pointerType === 'touch' ? 26 : 16) * proj(); }
+  function distAt(e) {
+    const r = sysC.getBoundingClientRect(), Lr = sysLayout();
+    if (!use3()) return Math.hypot(e.clientX - r.left - Lr.cx, e.clientY - r.top - Lr.cy) / Lr.s;
+    const cam = g3.S3.cam, v = new THREE.Vector3(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1, 0.5); v.unproject(cam);
+    const o = cam.position, dir = v.sub(o).normalize(); if (Math.abs(dir.z) < 1e-6) return null; const t = -o.z / dir.z; if (t < 0) return null;
+    return Math.hypot(o.x + dir.x * t, o.y + dir.y * t) * Lr.Rv;
+  }
+  let drag = null;
+  sysC.addEventListener('pointerdown', (e) => { if (!nearPlanet(e)) return; drag = { Rv: sysLayout().Rv }; sysC.setPointerCapture(e.pointerId); e.preventDefault(); e.stopPropagation(); });
+  sysC.addEventListener('pointermove', (e) => {
+    if (!drag) { if (e.pointerType !== 'touch') sysC.style.cursor = nearPlanet(e) ? 'ew-resize' : use3() ? 'grab' : 'default'; return; }
+    const d = distAt(e); if (d == null) return; S.d = Math.max(0.01, Math.min(50, +d.toPrecision(4))); changed();
+  });
+  const end = () => { drag = null; }; sysC.addEventListener('pointerup', end); sysC.addEventListener('pointercancel', end);
+  sysC.addEventListener('keydown', (e) => { const k = { ArrowLeft: -1, ArrowRight: 1, ArrowDown: -1, ArrowUp: 1 }[e.key]; if (!k) return;
+    S.d = Math.max(0.01, Math.min(50, +(Math.pow(10, lg(S.d) + k * (e.shiftKey ? 0.05 : 0.005))).toPrecision(4))); e.preventDefault(); changed(); });
+
+  /* ---------- readings for the worksheet ---------- */
+  const SP_NAME = { whole: 'whole planet', day: 'day side', sub: 'under the star' };
+  window.vdVersion = 'planet-temperatures@2026-10-25';
+  window.vdShowCols = [['body', 'planet'], ['d_AU', 'd (AU)'], ['S_W_m2', 'S (W/m²)'], ['T_surf_K', 'T (K)']];
+  window.vdReadingRow = () => { const st = state(), z = st.z, gs = gasesNow(st.ts);
+    return { body: S.preset === 'custom' ? `${S.body}, changed` : S.body, star: S.star, L_Lsun: sig(S.L, 4), Tstar_K: String(Math.round(S.T)), d_AU: sig(S.d, 4), inv_d2: sig(1 / (S.d * S.d), 4),
+      S_W_m2: sig(st.Sx, 4), S_rel: sig(st.rel, 4), albedo: fx(S.a, 3), spread: SP_NAME[S.sp], greenhouse: S.gh ? 'on' : 'off', e: S.gh ? sig(S.e, 3) : '1',
+      T_bare_K: fx(st.tb, 1), T_surf_K: fx(st.ts, 1), T_meas_K: asSet() ? (S.meas.v ? String(S.meas.v) : `${S.meas.lo} to ${S.meas.hi}`) : '', warming_K: fx(st.ts - st.tb, 1),
+      hz_cons_AU: `${sig(z.rg, 3)} to ${sig(z.mg, 3)}`, hz_opt_AU: `${sig(z.rv, 3)} to ${sig(z.em, 3)}`, zone: ZSHORT[st.zone], vesc_kms: sig(S.v, 3), gases_kept: gs.kept.join(' ') || 'none' }; };
+  $('about').textContent = 'Model: the planet absorbs the starlight on its disk that it does not reflect and radiates heat like a blackbody from the area that shares the heat. '
+    + 'Approximations: one temperature for that whole area (real planets are warmer at the equator and on the day side); no heat from inside the planet (Jupiter gives out about as much again of its own); '
+    + 'the greenhouse is one number e, chosen to match a measured temperature, standing for the simple layer models; real air also carries heat up by convection, and clouds and ice change the albedo as the temperature changes, which the model holds fixed. '
+    + 'Each planet sits at its average distance on a circle. Under the star assumes the star straight overhead and no heat carried into the ground or away. '
+    + 'The habitable zone edges come from detailed climate models (Kopparapu et al. 2014), not from this balance: inside the zone a planet like Earth, with enough carbon dioxide and water, could keep liquid water at its surface. '
+    + 'The air rule uses the model temperature at the ground; gas escapes from the top of an atmosphere, which can be much hotter (on Earth it is, which is why Earth loses hydrogen and helium), and the solar wind strips some air too, so the rule is a rough guide.';
+
+  /* ---------- run, size, theme ---------- */
+  const redraw = () => { drawSys(); drawBud(); drawChart(); readouts(); };
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.run && !reduce() && !drag) { S.ang += dt * 0.35 * Math.min(4, Math.pow(Math.max(0.3, S.d / Math.max(1e-3, Math.sqrt(S.L))), -0.5)); drawSys(); }
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1;
+    const sc = $('setupCard'), abs = getComputedStyle(sc).position === 'absolute';
+    sc.style.top = abs ? `${$('strip').offsetHeight + 12}px` : ''; sc.style.maxHeight = abs ? `${$('sysPane').offsetHeight - 24}px` : '';
+    const sz = (cv, host) => { const r = host.getBoundingClientRect(); cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr); return [r.width, r.height]; };
+    [SW, SH] = sz(sysC, $('sysPane')); [BW, BH] = sz(budC, $('budPane')); [CW, CH] = sz(chC, $('chartPane')); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'earth');
+  for (const id of ['sysPane', 'budPane', 'chartPane']) new ResizeObserver(resize).observe($(id));
+  resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); sysC.style.cursor = use3() ? 'grab' : 'default'; drawSys(); }, status: () => {} });
+  VD.tools({ el: sysC, strip: '#strip', stage: '#sysPane', scale: () => { if (use3()) return null; const Lr = sysLayout(); return { el: sysC, m: AU / Lr.s, unit: 'AU' }; } });
+  VD.howTo({ src: 'media/how-this-works/planet-temperatures.mp4', poster: 'media/how-this-works/planet-temperatures.jpg' });
+  window.__pt = { S, PRESETS, applyPreset, state, redraw, sync, flux, tBare, tSurf, hzEdges, set: (o) => { Object.assign(S, o); sync(); redraw(); }, planetPx };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

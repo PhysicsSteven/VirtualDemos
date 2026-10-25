@@ -83,6 +83,18 @@
      ]
     },
     {
+     "demo": "planet-temperatures",
+     "title": "Planet Temperatures and Habitable Zones",
+     "desc": "Move a planet nearer or farther from its star, change how much light it reflects and how much heat its air traps, and match the measured temperatures of Mercury, Venus, Earth, the Moon and Mars. Then find the habitable zone around the Sun and two red dwarfs, and see which worlds can keep their air.",
+     "tags": [
+      "inverse square law",
+      "albedo",
+      "greenhouse effect",
+      "habitable zone",
+      "escape speed"
+     ]
+    },
+    {
      "demo": "distance-ladder",
      "title": "Cosmic Distance Ladder",
      "desc": "Measure a parallax from two photos, time a Cepheid's light curve, find a supernova's peak, and fit Hubble's law to galaxy redshifts. Each rung calibrates the next.",

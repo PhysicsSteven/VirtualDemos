@@ -3794,3 +3794,31 @@ Readings checked by hand and against the keys:
 CORE untouched; vdcheck `--only after`: 0 problems on both. No What's new entry.
 
 **For GPT:** please check the four videos' captions and readings against the worksheets and the figures above, and the two fixes.
+## 2026-10-25 · Claude · New demo: Planet Temperatures and Habitable Zones (Astro 2203 gap demo 4)
+
+`demos/planet-temperatures.html`, from the Astro 2203 plan (Topics 5, 7, 12). Star (luminosity, surface temperature) and planet
+(distance, albedo, how the heat is shared, greenhouse, escape speed) on a setup card over a 3D or flat view of the system with the
+habitable zone; an energy budget per square meter with a thermometer; a chart of temperature against distance with the zone and the
+measured points, or of 6 v_rms for each gas against temperature with each world's escape speed (Keeping an atmosphere). Eight
+setups: Mercury, Venus, Earth, the Moon, Mars, Earth under the young Sun, Proxima Centauri b, TRAPPIST-1 e.
+
+Physics, all in the demo's CORE and `curriculum/validation/test_planet-temperatures.cjs` (7 groups pass):
+- S = L/(4πd²) with IAU 2015 L☉ = 3.828e26 W and the IAU 2012 au: 1361.2 W/m² at 1 AU. e σT⁴ = S(1 − a)/f, f = 4 (whole planet),
+  2 (day side), 1 (under the star). Matches NASA's black body temperatures for Venus, Mars, the Moon, Mercury and Jupiter to 0.2 K;
+  Earth's 254.0 K goes with the sheet's older albedo 0.306 (255.1 K at today's 0.294).
+- Greenhouse: e is the share of the ground's heat radiation that escapes; each setup with air starts at the e that matches the
+  measured temperature (Venus 0.00894, Earth 0.616, Mars 0.924). Labelled a simple layer model: one gray layer e = 1 − ε/2,
+  N opaque layers e = 1/(N + 1). Mercury and the Moon use "under the star" (382 K against the Moon's 390 K at noon).
+- Habitable zone: Kopparapu et al. 2014 one Earth mass fits, T_eff clamped to 2600 to 7200 K (Sun: 0.951 to 1.68 AU conservative,
+  0.751 to 1.77 optimistic). Gas kept when v_esc > 6 v_rms. Young Sun: Gough 1981.
+- Stated limits (About and notes): the 6 v_rms rule ignores the hot upper atmosphere and the solar wind, so it says Mercury at
+  622 K could keep O₂ and CO₂; no albedo or greenhouse feedback; habitability kept physical (liquid water), no astrobiology.
+
+Also: worksheet `intro-planet-temperatures` (Astro 2203 intro level, five parts, graph of S against 1/d²), key from a real run in
+TeacherKeys `worksheet-keys/astro-2203/` (slope 1361.24 ± 0.05 W/m²·AU²), notes `notes/src/planet-temperatures.md`, glossary
+section, map (astro-2203 units formation, inner-planets, exoplanets; astro gravitation), catalog, courses.py, thumbnails (crop
+`#sysPane`), How this works video `tools/howto/planet-temperatures.cjs` (17.6 s: Earth, greenhouse off, 0.5 AU typed; 5445 W/m²
+and 360.8 K = 255.1 × √2), What's new entry. vdcheck `--only after`: 0 problems; symbols `--check`, `--missing`, `--meanings` 0.
+
+**For GPT:** please check the energy balance numbers against the NASA fact sheets, the Kopparapu edges for the Sun, Proxima
+Centauri and TRAPPIST-1, the worksheet's wording for a non major online class, and the video's captions against its reading.

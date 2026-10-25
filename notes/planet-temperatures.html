@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Planet Temperatures and Habitable Zones: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Planet Temperatures and Habitable Zones</h1><ul class="meta"><li><a href="../demos/planet-temperatures.html">Open the demo</a></li><li>Astro 2203, Topics 5, 7 and 12 (no textbook section); Astronomy module, gravitation and orbits</li><li>10 to 45 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Starlight spreads over a sphere, so the light on each square meter falls as 1/d²: half as far gives four times as much.</li>
+<li>A planet settles where the heat it radiates (σT⁴ from each square meter) balances the starlight it absorbs. Its temperature goes as the fourth root of the absorbed light: 16 times the light only doubles the temperature, and a planet four times as far out is half as hot.</li>
+<li>Albedo matters as much as distance: cloudy Venus gets 1.9 times Earth's sunlight but, with no greenhouse, would be colder than Earth (227 K against 255 K).</li>
+<li>The greenhouse effect is the difference between that balance and the measured surface: about 4 K on Mars, 33 K on Earth, 510 K on Venus. Without it Earth's oceans would freeze.</li>
+<li>The habitable zone is where an Earth like planet could keep liquid water given a suitable atmosphere; it moves in for a dimmer star and out for a brighter one. Being in it does not mean a planet has water.</li>
+<li>A world keeps a gas when its escape speed is more than about 6 times the gas's molecular speed: small or hot worlds lose their air, light gases go first.</li>
+</ul>
+<h2>Before class</h2>
+<p>The demo opens on Earth. The large view shows the star, the habitable zone (conservative in dark green, optimistic in light green) and the planet on its orbit, in 3D or flat; drag the planet in or out. A card sets the star's luminosity and temperature and the planet's distance, albedo, how the heat is shared (whole planet, day side, or the point under the star), the greenhouse (e, the share of the ground's heat radiation that escapes to space; a check box turns it off) and the escape speed. Numbers on the card can be typed. The energy budget shows one square meter with a thermometer; the chart shows temperature against distance or, under Keeping an atmosphere, 6 v_rms of seven gases against temperature with the escape speeds of seven worlds. Presets: Mercury, Venus, Earth, the Moon, Mars, Earth under the young Sun, Proxima Centauri b, TRAPPIST-1 e. Each world with air starts with the e that matches its measured temperature. The student worksheet is the Astro 2203 intro worksheet.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Earth.</strong> Ask Q1. Turn the greenhouse off: 255 K, below freezing. Turn it back on: 288 K, and the readouts compare the air to one layer absorbing 77 % of the heat radiation. Tick Show how sunlight spreads.</li>
+<li><strong>Venus.</strong> Ask Q2. Turn its greenhouse off (227 K, colder than Earth), then on: 737 K. Only 0.9 % of the ground's heat radiation escapes, like 111 opaque layers.</li>
+<li><strong>The Moon</strong> and <strong>Mercury.</strong> Ask Q3. They have no air: the point under the Sun reaches the balance, 382 K on the Moon (390 K measured) and 622 K on Mercury at its mean distance (590 to 725 K measured).</li>
+<li><strong>Earth under the young Sun.</strong> Ask Q4. The zone moves in, Earth stays inside it, yet with today's greenhouse it is 267 K.</li>
+<li><strong>Proxima Centauri b</strong> and <strong>TRAPPIST-1 e</strong>, then switch the chart to Keeping an atmosphere. Ask Q5.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Earth absorbs 70.6 % of 1361 W/m² averaged over its whole surface. What temperature does the balance give, and why is the real Earth warmer?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> Venus gets 2602 W/m² but reflects 77 % of it. Show that with no greenhouse it would be colder than Earth. What fraction of its ground's heat radiation must escape for its surface to be 737 K?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Why do the Moon and Mercury match the balance best at the point under the Sun, and the whole planet balance for Venus and Earth?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Four billion years ago the Sun was about 74 % as bright. How warm would today's Earth have been? Rocks show liquid water then; what must have been different?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> The Moon and Titan have nearly the same escape speed (2.38 and 2.64 km/s). Why does Titan keep a thick nitrogen atmosphere and the Moon none?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Planets nearer the Sun are always hotter."</strong> Venus is hotter than Mercury, and with no greenhouse it would be colder than Earth: albedo and the atmosphere matter as much as distance.</li>
+<li><strong>"The greenhouse effect is bad."</strong> Without it Earth would average 255 K. The concern is changing it.</li>
+<li><strong>"The habitable zone is where the balance gives 273 to 373 K."</strong> Earth's own balance temperature is 255 K. The zone's edges come from climate models that include the greenhouse of water and carbon dioxide.</li>
+<li><strong>"A planet in the habitable zone has water."</strong> The zone says only where liquid water could be stable for a suitable atmosphere; the planet may have no air or no water.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>S = L/(4πd²) with L☉ = 3.828 × 10²⁶ W (IAU 2015 B3) and 1 AU = 1.495978707 × 10¹¹ m: 1361.0 W/m² at 1 AU, the fact sheets' solar irradiance.</li>
+<li>Balance: e σT⁴ = S(1 − a)/f with f = 4 (heat shared over the sphere), 2 (day side) or 1 (the point under the star), σ from CODATA 2022. With e = 1 it reproduces NASA's black body temperatures for Venus (226.6 K), Mars (209.8 K), the Moon (270.4 K), Mercury (439.6 K) and Jupiter (109.9 K) to 0.1 K; for Earth the fact sheet's 254.0 K goes with its older Bond albedo 0.306, and the current 0.294 gives 255.1 K.</li>
+<li>e is an effective value matched to the measured temperature (Venus 737 K, Earth 288 K, Mars about 214 K, all NASA fact sheets). The layer readings are exact for the gray models: one layer transparent to sunlight that absorbs a share ε of the heat radiation gives e = 1 − ε/2; N fully absorbing layers give e = 1/(N + 1). Real atmospheres also carry heat by convection and absorb some sunlight; real albedos change with clouds and ice. The demo states these on the page.</li>
+<li>Habitable zone: Kopparapu et al. 2014 (ApJL 787, L29), one Earth mass: S_eff = S_eff☉ + aT⋆ + bT⋆² + cT⋆³ + dT⋆⁴, T⋆ = T_eff − 5780 K, valid 2600 to 7200 K (TRAPPIST-1 at 2566 K uses 2600 K, stated); d = √(L/S_eff). For the Sun: conservative 0.951 to 1.676 AU, optimistic 0.750 to 1.768 AU.</li>
+<li>Air: 6 v_rms &lt; v_esc with v_rms = √(3kT/m) (Freedman, Geller and Kaufmann, Universe, 10th ed., Box 7-2), using the temperature at the ground; escape happens at the top of the atmosphere, which on Earth is far hotter, so Earth loses helium although the rule at 288 K says it keeps it.</li>
+<li>Stars: Proxima Centauri 2900 K, log L = −2.82, b at 0.04848 AU (Suárez Mascareño et al. 2025); TRAPPIST-1 2566 K, log L = −3.26 (Piaulet-Ghorayeb et al. 2025), e at 0.02925 AU with 0.692 Earth masses and 0.920 Earth radii (Agol et al. 2021). The young Sun from Gough 1981, L = L☉/[1 + 0.4(1 − t/4.57 Gyr)].</li>
+<li>Checks: curriculum/validation/test_planet-temperatures.cjs.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>Blackbody Radiation</strong> (Stefan–Boltzmann law and Wien's law) and with <strong>Gas in a Box</strong> for molecular speeds.</li>
+<li>With <strong>Finding Exoplanets</strong>, find a planet's distance from its period and put it in its star's zone.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

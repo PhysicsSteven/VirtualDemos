@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-planet-temperatures', date: '2026-10-25', title: 'Planet Temperatures and Habitable Zones',
+    text: 'A new Astro 2203 demo with its own worksheet: move a planet closer to its star or farther away, change its albedo and greenhouse, and see its temperature from a balance of sunlight and heat radiation. Match the measured temperatures of Venus, Earth and Mars, find the habitable zone around the Sun, Proxima Centauri and TRAPPIST-1, and see why the Moon and Mercury kept no air.', link: { href: 'demos/planet-temperatures.html', text: 'Open Planet Temperatures' } },
   { id: '2026-10-25-how-this-works-p2-thermo', date: '2026-10-25', title: 'How this works videos: Physics II and Thermo',
     text: 'The Physics II and Thermo demos now have a How this works button under the handout button: a short video, under 30 seconds, of one sample reading with arrows and zooms on each step. A demo with several worksheets plays the video for the worksheet of the setup or view you are in.', link: { href: 'thermo.html', text: 'Open Thermo' } },
   { id: '2026-10-25-astro-2203-light', date: '2026-10-25', title: 'Astro 2203: telescopes and light',

@@ -1500,7 +1500,8 @@
           ],
           "demos": [
             "lagrange-points",
-            "exoplanets"
+            "exoplanets",
+            "planet-temperatures"
           ]
         },
         {
@@ -1619,6 +1620,7 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "planet-temperatures",
             "rotation"
           ],
           "note": "A spinning cloud flattens into a disk and builds planets; what sets a planet’s temperature, and the habitable zone."
@@ -1642,6 +1644,7 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "planet-temperatures",
             "ideal-gas",
             "kepler-orbits"
           ],
@@ -1716,6 +1719,7 @@
           "sections": [],
           "demos": [
             "exoplanets",
+            "planet-temperatures",
             "distance-ladder",
             "kepler-orbits"
           ],
@@ -7536,6 +7540,23 @@
       "handouts": [
         "exoplanets"
       ]
+    },
+    {
+      "demo": "planet-temperatures",
+      "course": [
+        "astro-2203",
+        "astro"
+      ],
+      "sections": [],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-25 (Claude), gap demo 4 of the Astro 2203 plan. A planet's energy balance with starlight S = L/(4πd²), Bond albedo and heat shared over the whole planet, the day side or the subsolar point; a greenhouse factor e (the share of the ground's heat radiation that escapes) matched to Venus, Earth and Mars and read as the one layer or N layer model; habitable zone edges from Kopparapu et al. 2014; which gases a world keeps (6 v_rms against escape speed). NASA fact sheet values; presets Mercury, Venus, Earth, Moon, Mars, Earth under the young Sun, Proxima Centauri b and TRAPPIST-1 e. Intro worksheet intro-planet-temperatures with a key from a real run in TeacherKeys.",
+      "handouts": [
+        "intro-planet-temperatures"
+      ],
+      "title": "Planet Temperatures and Habitable Zones",
+      "url": "demos/planet-temperatures.html"
     },
     {
       "demo": "faraday",

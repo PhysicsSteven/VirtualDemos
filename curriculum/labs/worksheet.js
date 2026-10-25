@@ -501,8 +501,8 @@
   /* ==ASTRO 2203 START== Intro level worksheets written for Astro 2203 (astro-2203.html, 2026-10-25). Each opens its demo with
      ?ws=<slug>, so the demo's Export to worksheet sends here (VD.ws in demos/lib/vd.js). INTRO_GRAPHS: those that graph a table. */
   const INTRO = ['intro-seasons', 'intro-kepler', 'intro-gravity', 'intro-scale', 'intro-moon', 'intro-precession', 'intro-stellarium-sky',
-    'intro-telescope', 'intro-resolution', 'intro-mirrors', 'intro-blackbody', 'intro-spectra', 'intro-em-spectrum'];
-  const INTRO_GRAPHS = ['intro-kepler', 'intro-gravity', 'intro-scale', 'intro-precession', 'intro-telescope'];   /* intro-scale and intro-stellarium-sky are typed by hand (no Export) */
+    'intro-telescope', 'intro-resolution', 'intro-mirrors', 'intro-blackbody', 'intro-spectra', 'intro-em-spectrum', 'intro-planet-temperatures'];
+  const INTRO_GRAPHS = ['intro-kepler', 'intro-gravity', 'intro-scale', 'intro-precession', 'intro-telescope', 'intro-planet-temperatures'];   /* intro-scale and intro-stellarium-sky are typed by hand (no Export) */
   ENABLED.push(...INTRO);
   Object.assign(FROM_DEMO, {
     /* Reading | Date | Noon Sun altitude (°) | Day length (h) | Earth to Sun distance (AU) | Daily sunlight (W/m²) */
@@ -525,6 +525,8 @@
     'intro-spectra': { demo: 'Spectra Explorer', cols: ['row', 'source', 'lambda_nm', 'ion'] },
     /* Reading | Band | f (Hz) | λ (m) | λ × f (typed) */
     'intro-em-spectrum': { demo: 'Electromagnetic Waves', cols: ['row', 'band', 'f_Hz', 'lambda_m', null] },
+    /* Reading | Planet | Distance d (AU) | 1/d² (1/AU²) | Starlight S (W/m²) | Albedo | Temperature, no greenhouse (K) | Surface temperature in the model (K) | Measured temperature (K) */
+    'intro-planet-temperatures': { demo: 'Planet Temperatures and Habitable Zones', cols: ['row', 'body', 'd_AU', 'inv_d2', 'S_W_m2', 'albedo', 'T_bare_K', 'T_surf_K', 'T_meas_K'] },
   });
   /* ==ASTRO 2203 END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
