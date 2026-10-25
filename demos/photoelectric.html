@@ -173,6 +173,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <section>
         <h2>Metal</h2>
         <div class="chips" id="metals"></div>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Cesium, potassium, calcium, zinc and platinum use Michaelson's preferred values for clean polycrystalline surfaces (H. B. Michaelson, J. Appl. Phys. 48, 4729 (1977), Table III); sodium (2.28 eV) and copper (4.70 eV) use the values in the HyperPhysics table of work functions. A work function depends on the crystal face and on how clean the surface is, so tables differ by a few tenths of an eV: OpenStax Table 6.1 lists sodium 2.46, zinc 4.31 and platinum 6.35 eV.</p>
+        </details>
       </section>
 
       <section>
@@ -237,7 +240,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const HC = 1239.84;            // eV nm
   const H = 6.62607015e-34, QE = 1.602176634e-19, C = 2.99792458e8;   /* CODATA 2022 (exact) */
   const EFF = 1e-3;              // electrons per photon
-  const METALS = [
+  const METALS = [   /* eV: Michaelson 1977 Table III for Cs, K, Ca, Zn, Pt; HyperPhysics for Na and Cu (see the Metal fold) */
     ['Cs', 'Cesium', 2.14], ['K', 'Potassium', 2.30], ['Na', 'Sodium', 2.28],
     ['Ca', 'Calcium', 2.87], ['Zn', 'Zinc', 4.33], ['Cu', 'Copper', 4.70], ['Pt', 'Platinum', 5.65]
   ];

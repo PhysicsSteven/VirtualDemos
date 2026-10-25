@@ -52,7 +52,7 @@ No hazards in the virtual lab.
 
 **The Madelung sum.** Pick Rock salt. Using Shells, record the running total $$\alpha$$ after 1 to 12 shells in the second table. Switch to Neutral cubes and record $$\alpha$$ for cube half widths 1 to 6. Then pick Cesium chloride and record its running total after 1 to 12 shells.
 
-**Lattice energies.** Record a reading for each of the seventeen salts with the NaCl structure and export them to the first table. Clear the readings, then record the three salts with the CsCl structure and export them; they go into a second copy of the table. Turn Blind on first if your instructor asks you to calculate the energies yourself.
+**Lattice energies.** Turn Blind on first: calculate each lattice energy yourself before you compare it with the model's. Record a reading for each of the seventeen salts with the NaCl structure and export them to the first table. Clear the readings, then record the three salts with the CsCl structure and export them; they go into a second copy of the table. When your own energies are in the table, turn Blind off and compare them with the model's calculated values.
 
 ## Data
 

@@ -43,7 +43,7 @@ Students should have seen the blackbody ideas: hotter means bluer, and luminosit
 - **"Stars move along the main sequence as they age."** A star stays near the same spot for its whole main sequence life; here it brightens by about a factor of 2. Its place on the main sequence is set by its mass.
 - **"The HR diagram is a map of where stars are in the sky."** It is a graph of two physical properties. Two stars next to each other on it can be far apart in space.
 - **"Bright stars must be hot."** Red giants are cool but huge. Luminosity depends on R² as well as T⁴.
-- **"Massive stars live longer because they have more fuel."** They burn it far faster: a 15 M☉ star lives about a thousand times shorter than the Sun.
+- **"Massive stars live longer because they have more fuel."** They burn it far faster: a 15 M☉ star lives nearly a thousand times shorter than the Sun.
 - **"The Sun will explode as a supernova."** Stars below about 8 M☉ end as white dwarfs. The Sun will become a red giant and then a white dwarf.
 
 ## Physics behind the demo

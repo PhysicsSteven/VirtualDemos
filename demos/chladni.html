@@ -1103,7 +1103,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     rings: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, driver: 'wave', x0: 0.5e-3, pick: { nm: [0, 3] },
       hint: 'Driven at the center, a circular plate can only ring in modes without nodal diameters, so every pattern is a set of concentric nodal circles. Step through them with Next resonance.' },
     sweep: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, driver: 'wave', x0: 2e-3, f: 60, sweep: true, rate: 1,
-      hint: 'Turn on Sound. The sweep starts at 60 Hz, where the whole plate rides up and down with the driver at about 2.5 g and all the sand jumps. It rises one semitone per second: at each peak the sand snaps into a pattern, and between peaks the old pattern breaks up again.' },
+      hint: 'Turn on Sound. The sweep starts at 60 Hz, where the whole plate rides up and down with the driver at about 2 g at the post, more out on the plate, and all the sand jumps. It rises one semitone per second: at each peak the sand snaps into a pattern, and between peaks the old pattern breaks up again.' },
     star: { shape: 'square', mat: 'steel', h: 1e-3, drive: 'center', Q: 50, driver: 'wave', x0: 1e-3, pick: { driven: 7 },
       hint: 'A higher resonance of the center driven square: nodal lines cross on the diagonals and loop around the corners. Patterns like this fill the plates in Chladni’s 1787 book.' },
     high: { shape: 'circle', mat: 'steel', h: 1e-3, drive: 'edge', Q: 200, driver: 'force', F: 0.3, pick: { nm: [4, 2] },

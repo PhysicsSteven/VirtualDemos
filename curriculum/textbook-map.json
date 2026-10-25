@@ -2296,7 +2296,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "collisions"
+        "collisions",
+        "impulse"
       ],
       "unit": "momentum"
     },
@@ -2498,7 +2499,8 @@
       "status": "usable",
       "demos": [
         "rotation",
-        "rotational-dynamics"
+        "rotational-dynamics",
+        "pendulum"
       ],
       "unit": "rotation",
       "note": "Rotational Dynamics: the string's torque rT on the turntable. (OpenStax recheck 2026-10-24, Claude)"
@@ -2516,7 +2518,8 @@
       "status": "usable",
       "demos": [
         "rotation",
-        "rotational-dynamics"
+        "rotational-dynamics",
+        "pendulum"
       ],
       "unit": "rotation",
       "note": "Rotational Dynamics lab (2026-10-22, Claude): falling mass spins a turntable; time the drop, α from a = 2h/t², I from the τ against α slope; τ = Iα with a friction torque intercept."
@@ -3822,7 +3825,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "faraday"
+        "faraday",
+        "induction-at-work"
       ],
       "unit": "induction"
     },
@@ -3838,7 +3842,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "faraday"
+        "faraday",
+        "induction-at-work"
       ],
       "unit": "induction"
     },
@@ -4294,7 +4299,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "optics-bench"
+        "optics-bench",
+        "the-eye"
       ],
       "unit": "optics"
     },
@@ -7949,6 +7955,11 @@
       "sections": [
         {
           "vol": 1,
+          "sec": "9.1",
+          "title": "Linear Momentum"
+        },
+        {
+          "vol": 1,
           "sec": "9.2",
           "title": "Impulse and Collisions"
         }
@@ -8029,6 +8040,16 @@
         "physics-2"
       ],
       "sections": [
+        {
+          "vol": 2,
+          "sec": "13.1",
+          "title": "Faraday’s Law"
+        },
+        {
+          "vol": 2,
+          "sec": "13.2",
+          "title": "Lenz's Law"
+        },
         {
           "vol": 2,
           "sec": "13.7",
@@ -8535,6 +8556,16 @@
         "physics-1"
       ],
       "sections": [
+        {
+          "vol": 1,
+          "sec": "10.6",
+          "title": "Torque"
+        },
+        {
+          "vol": 1,
+          "sec": "10.7",
+          "title": "Newton’s Second Law for Rotation"
+        },
         {
           "vol": 1,
           "sec": "15.4",
@@ -9640,6 +9671,11 @@
         "physics-2"
       ],
       "sections": [
+        {
+          "vol": 3,
+          "sec": "2.4",
+          "title": "Thin Lenses"
+        },
         {
           "vol": 3,
           "sec": "2.5",
