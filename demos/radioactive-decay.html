@@ -597,7 +597,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const [W, H0] = dims.g; if (!W || !H0 || !sim) return;
     const ctx = ctxs.g, ps = projScale();
     ctx.setTransform(1, 0, 0, 1, 0, 0);
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W * dpr, H0 * dpr);
     // legend layout first: one line, or two when narrow
     const legFont = 12 * ps;
     ctx.font = `700 ${legFont * dpr}px ${T.ui}`;
@@ -616,31 +615,35 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const x0 = Math.round((W * dpr - gp) / 2), y0 = Math.round(blockTop * dpr);
     const legTop = blockTop + gp / dpr + 8 * ps;
     gGeom = { x0, y0, cell, n, gp };
-    // the sample: nuclei in a shallow metal tray (a planchet), each drawn as a small shaded ball
-    trayAndNuclei(ctx, x0, y0, cell, n, gp, ps);
-    // decays of the last step: a flash at the nucleus and the emitted particle's short track leaving it
+    // the sample: nuclei in a shallow metal tray (a planchet), each drawn as a small shaded ball; kept on a canvas of its own and
+    // only the nuclei that changed are drawn again, since redrawing all 10,000 every frame dropped frames
+    ctx.drawImage(sampleCanvas(W, H0, x0, y0, cell, n, gp, ps), 0, 0);
+    // decays of the last step: a flash at the nucleus and the emitted particle's short track leaving it. The flash is a sprite made
+    // once per size, and the tracks of one step and kind share one path: the first steps of a big sample have thousands of decays.
     const now = performance.now(), dur = 520;
     let keep = 0;
-    const kind = decayKinds();
+    const kind = decayKinds(), fs = flashSprites(cell), tracks = new Map(), drawTracks = flashes.length < 1500;
     for (let j = 0; j < flashes.length; j++) {
       const f = flashes[j], a = 1 - (now - f.t0) / dur;
       if (a <= 0) continue;
       flashes[keep++] = f;
       if (f.i >= S.N0) continue;
       const cx = x0 + (f.i % n) * cell + cell / 2, cy = y0 + Math.floor(f.i / n) * cell + cell / 2;
-      const from = Math.max(0, sim.sp[f.i] - 1), k = kind[from] || 'b', u = reduce ? 1 : Math.min(1, (1 - a) * 1.6);
-      const ang = ((f.i * 2654435761) >>> 0) / 4294967296 * 2 * Math.PI, Lt = (k === 'a' ? 1.8 : 4.5) * Math.max(cell, 6 * dpr) * u;
-      ctx.globalAlpha = a;
-      const g = ctx.createRadialGradient(cx, cy, 0, cx, cy, cell * 0.9 + 3 * dpr);
-      g.addColorStop(0, 'rgba(255,248,214,0.95)'); g.addColorStop(0.35, k === 'a' ? 'rgba(255,190,70,0.55)' : 'rgba(120,220,255,0.5)'); g.addColorStop(1, 'rgba(255,255,255,0)');
-      ctx.fillStyle = g; ctx.fillRect(cx - cell * 1.4 - 4 * dpr, cy - cell * 1.4 - 4 * dpr, cell * 2.8 + 8 * dpr, cell * 2.8 + 8 * dpr);
-      if (flashes.length < 1500) {
-        const w = (k === 'a' ? 3 : 1.6) * dpr * ps;
-        ctx.globalAlpha = Math.min(1, a * 1.5); ctx.lineCap = 'round';
-        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(ang) * Lt, cy + Math.sin(ang) * Lt);
-        ctx.strokeStyle = 'rgba(10,20,35,0.55)'; ctx.lineWidth = w + 2 * dpr; ctx.stroke();
-        ctx.strokeStyle = k === 'a' ? '#ffe27a' : '#7fe3ff'; ctx.lineWidth = w; ctx.stroke();
+      const from = Math.max(0, sim.sp[f.i] - 1), k = kind[from] || 'b';
+      ctx.globalAlpha = a; ctx.drawImage(fs[k], cx - fs.half, cy - fs.half);
+      if (drawTracks) {
+        const u = reduce ? 1 : Math.min(1, (1 - a) * 1.6), ang = ((f.i * 2654435761) >>> 0) / 4294967296 * 2 * Math.PI, Lt = (k === 'a' ? 1.8 : 4.5) * Math.max(cell, 6 * dpr) * u;
+        const key = f.t0 + k; let tr = tracks.get(key); if (!tr) tracks.set(key, (tr = { k, a, xy: [] }));
+        tr.xy.push(cx, cy, cx + Math.cos(ang) * Lt, cy + Math.sin(ang) * Lt);
       }
+    }
+    ctx.lineCap = 'round';
+    for (const tr of tracks.values()) {
+      const w = (tr.k === 'a' ? 3 : 1.6) * dpr * ps, xy = tr.xy;
+      ctx.globalAlpha = Math.min(1, tr.a * 1.5); ctx.beginPath();
+      for (let j = 0; j < xy.length; j += 4) { ctx.moveTo(xy[j], xy[j + 1]); ctx.lineTo(xy[j + 2], xy[j + 3]); }
+      ctx.strokeStyle = 'rgba(10,20,35,0.55)'; ctx.lineWidth = w + 2 * dpr; ctx.stroke();
+      ctx.strokeStyle = tr.k === 'a' ? '#ffe27a' : '#7fe3ff'; ctx.lineWidth = w; ctx.stroke();
     }
     flashes.length = keep; ctx.globalAlpha = 1;
     // followed nucleus: accent ring and ticks on the grid edge
@@ -689,9 +692,51 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     sprites = { key, s: [make(hex(T.sp[0], '#1f57b0'), 0.9, 0.9), make(hex(T.sp[1], '#e08414'), 0.78, 0.8), make(hex(T.sp[2], '#a3adba'), 0.5, 0.4)] };
     return sprites;
   }
-  function trayAndNuclei(ctx, x0, y0, cell, n, gp, ps) {
-    const rim = Math.round(7 * dpr * ps), d = VDGear && VDGear.dark ? false : false;
-    void d;
+  /* the flash of a decay, one sprite per kind of decay and cell size (the glow that was a radial gradient made for each flash) */
+  let flashSpr = null;
+  function flashSprites(cell) {
+    const key = cell + '|' + dpr;
+    if (flashSpr && flashSpr.key === key) return flashSpr;
+    const half = Math.ceil(cell * 1.4 + 4 * dpr), make = (k) => {
+      const c = document.createElement('canvas'); c.width = c.height = 2 * half;
+      const x = c.getContext('2d'), g = x.createRadialGradient(half, half, 0, half, half, cell * 0.9 + 3 * dpr);
+      g.addColorStop(0, 'rgba(255,248,214,0.95)'); g.addColorStop(0.35, k === 'a' ? 'rgba(255,190,70,0.55)' : 'rgba(120,220,255,0.5)'); g.addColorStop(1, 'rgba(255,255,255,0)');
+      x.fillStyle = g; x.fillRect(0, 0, 2 * half, 2 * half); return c;
+    };
+    flashSpr = { key, half, a: make('a'), b: make('b') };
+    return flashSpr;
+  }
+  /* the pane's background with the tray (bg) and the same with the nuclei on it (nuc); a frame copies nuc, and a nucleus that
+     changed kind is drawn again over its own square of bg */
+  let sample = null;
+  function sampleCanvas(W, H0, x0, y0, cell, n, gp, ps) {
+    const key = [W, H0, dpr, x0, y0, cell, n, gp, ps, T.canvas, T.grid, T.sp.join(',')].join('|');
+    if (!sample || sample.key !== key) {
+      const mk = () => { const c = document.createElement('canvas'); c.width = Math.round(W * dpr); c.height = Math.round(H0 * dpr); return c; };
+      const bg = sample && sample.bg.width === Math.round(W * dpr) && sample.bg.height === Math.round(H0 * dpr) ? sample.bg : mk();
+      const nuc = sample && sample.nuc.width === bg.width && sample.nuc.height === bg.height ? sample.nuc : mk();
+      const b = bg.getContext('2d'); b.setTransform(1, 0, 0, 1, 0, 0); b.clearRect(0, 0, bg.width, bg.height);
+      b.fillStyle = T.canvas; b.fillRect(0, 0, bg.width, bg.height); tray(b, x0, y0, gp, ps);
+      sample = { key, bg, nuc, sim: null, sp: null };
+    }
+    const c = sample.nuc.getContext('2d'), sp = sim.sp, ns = nSp(), spr = nucleusSprites(cell).s, pick = (v) => (v === 0 ? spr[0] : v === ns ? spr[2] : spr[1]);
+    if (sample.sim !== sim || sample.sp.length !== S.N0) {
+      c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, sample.nuc.width, sample.nuc.height); c.drawImage(sample.bg, 0, 0);
+      for (let k = 0; k < S.N0; k++) c.drawImage(pick(sp[k]), x0 + (k % n) * cell, y0 + Math.floor(k / n) * cell);
+      sample.sim = sim; sample.sp = sp.slice(0, S.N0);
+    } else {
+      const old = sample.sp;
+      for (let k = 0; k < S.N0; k++) {
+        if (old[k] === sp[k]) continue;
+        old[k] = sp[k];
+        const x = x0 + (k % n) * cell, y = y0 + Math.floor(k / n) * cell;
+        c.clearRect(x, y, cell, cell); c.drawImage(sample.bg, x, y, cell, cell, x, y, cell, cell); c.drawImage(pick(sp[k]), x, y);
+      }
+    }
+    return sample.nuc;
+  }
+  function tray(ctx, x0, y0, gp, ps) {
+    const rim = Math.round(7 * dpr * ps);
     let g = ctx.createLinearGradient(x0 - rim, y0 - rim, x0 + gp + rim, y0 + gp + rim);
     g.addColorStop(0, '#eef2f6'); g.addColorStop(0.45, '#a9b3bf'); g.addColorStop(1, '#6d7784');
     ctx.fillStyle = g; ctx.beginPath(); ctx.roundRect(x0 - rim, y0 - rim, gp + 2 * rim, gp + 2 * rim, rim * 1.4); ctx.fill();
@@ -700,11 +745,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g.addColorStop(0, T.canvas); g.addColorStop(1, T.grid);
     ctx.fillStyle = g; ctx.fillRect(x0 - 2, y0 - 2, gp + 4, gp + 4);
     ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.lineWidth = 2 * dpr; ctx.strokeRect(x0 - 2, y0 - 2, gp + 4, gp + 4);
-    const sp = sim.sp, ns = nSp(), spr = nucleusSprites(cell).s;
-    for (let k = 0; k < S.N0; k++) {
-      const v = sp[k], im = v === 0 ? spr[0] : v === ns ? spr[2] : spr[1];
-      ctx.drawImage(im, x0 + (k % n) * cell, y0 + Math.floor(k / n) * cell);
-    }
   }
   /* the Geiger counter under the sample: it counts every decay (taken as 100% efficient, a stated idealization), so its total is the
      number of nuclei that have decayed and its last step reading is the activity histogram's last bar at one step a bin */
@@ -1027,10 +1067,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.strokeStyle = T.gridStrong; ctx.lineWidth = 1; ctx.strokeRect(g.L + 0.5, g.top + 0.5, g.R - g.L, g.bot - g.top);
   }
 
-  function drawAll() {
+  /* the two plots change only when the run takes a step or the reader does something, so a frame redraws them only then;
+     the sample redraws every frame for its flashes */
+  let plotsDirty = true, plotsKey = '', plotsSim = null;
+  for (const ev of ['pointerdown', 'pointermove', 'pointerup', 'input', 'change', 'click', 'keydown', 'wheel']) document.addEventListener(ev, () => { plotsDirty = true; }, true);
+  function drawAll(frame) {
     if (!sim || !T) return;
     { const c = $('gPane').querySelector('.stage-ctl'); ctlH = c.offsetTop + c.offsetHeight; }
-    drawGrid(); drawN(); drawA();
+    drawGrid();
+    const key = [sim.step, sim.N0, win, dims.n, dims.a, dpr].join('|');
+    if (frame && !plotsDirty && key === plotsKey && sim === plotsSim) return;
+    plotsDirty = false; plotsKey = key; plotsSim = sim;
+    drawN(); drawA();
   }
 
   // ---------- readouts ----------
@@ -1351,7 +1399,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const dtr = Math.min(0.1, Math.max(0, (now - last) / 1000)); last = now;
     const t0 = performance.now();
     if (running && dtr > 0) advance(dtr);
-    drawAll();
+    drawAll(true);
     frameMs = 0.9 * frameMs + 0.1 * (performance.now() - t0);
     if (now - lastRead > 150) { updateReadouts(); lastRead = now; }
     requestAnimationFrame(loop);

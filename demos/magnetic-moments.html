@@ -412,7 +412,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the glass screen, its face a canvas with the deposit */
     const cv = document.createElement('canvas'); cv.width = 512; cv.height = 512; const tex = new THREE.CanvasTexture(cv);
     const plate = new THREE.Group(), glassM = new THREE.MeshStandardMaterial({ map: tex, roughness: 0.15, metalness: 0, transparent: true, opacity: 0.92, side: THREE.DoubleSide });
-    const face = mesh(new THREE.PlaneGeometry(0.03, 0.03), glassM); face.rotation.set(Math.PI / 2, -Math.PI / 2, 0, 'YXZ'); face.position.x = -0.0002; plate.add(face);
+    const face = mesh(new THREE.PlaneGeometry(0.03, 0.03), glassM);
+    /* the face stands across the beam and looks back at the oven: its width along the ribbon (−y), its height along z (up), its normal −x */
+    face.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(new THREE.Vector3(0, -1, 0), new THREE.Vector3(0, 0, 1), new THREE.Vector3(-1, 0, 0))); face.position.x = -0.0002; plate.add(face);
     const edge = mesh(new THREE.BoxGeometry(0.0012, 0.031, 0.031), M({ roughness: 0.1, transparent: true, opacity: 0.4 }, ['#c5d4df', '#9fb3c4'])); edge.position.x = 0.0007; plate.add(edge);
     const clamp = VD3K.rod([0.003, 0, -0.016], [0.003, 0, -ZB3 + 0.006], 0.0015, steel); plate.add(clamp);
     plate.position.z = ZB3; sc.add(plate);
