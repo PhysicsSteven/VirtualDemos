@@ -431,6 +431,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: in the laser view, a stopwatch on the simulated clock since switch on */
+  VD.tools({ el: $('can'), time: () => (S.view === 'laser' ? Math.max(0, sim.t) : null) });
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
 
   const TRANS = {

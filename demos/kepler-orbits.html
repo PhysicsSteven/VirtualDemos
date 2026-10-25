@@ -576,6 +576,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // ==CORE END==
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: a stopwatch on the simulated clock, in years (the demo has its own ruler and timer as well) */
+  VD.tools({ el: $('view'), strip: '.viewbar', time: () => S.t, timeUnit: 'yr' });
   // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
   let reduce = !!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches);
   try { const v = sessionStorage.getItem('kepler-orbits-reduce-motion'); if (v === 'on') reduce = true; else if (v === 'off') reduce = false; } catch (_) {}

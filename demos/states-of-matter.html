@@ -397,6 +397,9 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: a stopwatch on the simulated clock (nanoseconds for the atoms, seconds for the beaker) */
+  VD.tools({ el: $('can'), time: () => (S.view === 'atoms' ? S.md.t * TAU_PS / 1000 : null), timeUnit: 'ns' });
+  VD.tools({ el: $('can'), time: () => (S.view === 'atoms' ? null : S.bk.t) });
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const NM = AR.sigmaNm, KJK = KJMOL / AR.epsK;   /* σ in nm; kJ/mol per kelvin of kT (= R/1000) */
   const PRESETS = {

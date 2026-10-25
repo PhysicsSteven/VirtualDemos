@@ -182,6 +182,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: a stopwatch on the simulated clock */
+  VD.tools({ el: $('can'), strip: '.viewbar', time: () => S.t });
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   try { const r = sessionStorage.getItem('vd-rk-motion'); if (r) reduce = r === 'reduce'; } catch (_) {}
   const PRESETS = {

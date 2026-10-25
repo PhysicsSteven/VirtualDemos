@@ -204,6 +204,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: a stopwatch on the simulated clock (seconds in the velocity view, nanoseconds in the momentum view) */
+  VD.tools({ el: $('can'), time: () => (S.view === 'vel' ? S.vel.t : null) });
+  VD.tools({ el: $('can'), time: () => (S.view === 'mom' ? S.mom.t : null), timeUnit: 'ns' });
   const VG = window.VDGear;
   const S = { view: 'vel', preset: 'probe', run: false, speed: 1, blind: false,
     vel: { v: 0.60, u: 0.50, light: false, mystery: false, mv: 0.7, lastMys: null, t: 0, done: false },

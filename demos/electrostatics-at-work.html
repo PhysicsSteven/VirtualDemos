@@ -661,7 +661,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const gap = 16 * p; ctx.fillStyle = T.pos;
     for (let yb = by1 - ((beltPhase * gap) % gap); yb > by0; yb -= gap) if (S.motor) txt('+', bx1 + 5 * p, yb, { c: T.pos, s: 10, b: 1, a: 'center' });
     for (const [yy] of [[by0], [by1]]) { ctx.fillStyle = T.muted; ctx.beginPath(); ctx.arc(cx, yy, cw * 0.27, 0, 7); ctx.fill(); }
-    const X = (x) => cx + x * scale, Y = (z) => floorY - z * scale, w = wandNow(); FL = { X, Y, scale, cx, floorY };
+    const X = (x) => cx + x * scale, Y = (z) => floorY - z * scale, w = wandNow(); FL = { X, Y, scale, cx, floorY, h: sceneH };
     /* field lines in the plane of the picture: radial for the dome alone, traced through the exact field with the wand */
     fieldLinesFlat(w, R, frac, X, Y, p);
     /* dome: a polished sphere */
@@ -997,6 +997,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* the measuring tools: on the Van de Graaff, the stopwatch on the simulated clock and the ruler on the flat picture, drawn to scale */
+  VD.tools({ el: can, float: 'top: 10px; right: 112px', time: () => (S.setup === 'vdg' ? S.t : null), scale: () => (S.setup === 'vdg' && !use3() && FL ? { m: 1 / FL.scale, area: [0, 0, W, FL.h] } : null) });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce) finishAll(); draw(); });
   tokens(); new ResizeObserver(resize).observe(stage);
   const q0 = new URLSearchParams(location.search).get('setup'); setSetup(['vdg', 'ink', 'esp'].includes(q0) ? q0 : 'vdg'); resize();

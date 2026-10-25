@@ -302,6 +302,8 @@
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: on the river crossing, a stopwatch on the simulated clock */
+  VD.tools({ el: $('can'), time: () => (S.preset === 'river' ? S.river.t : null) });
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   try { const r = sessionStorage.getItem('vd-vec-motion'); if (r) reduce = r === 'reduce'; } catch (_) {}
   const PRESETS = {

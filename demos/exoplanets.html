@@ -427,6 +427,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: a stopwatch on the simulated clock, in hours */
+  VD.tools({ el: document.querySelector('canvas'), time: () => simClock / 3600, timeUnit: 'h' });
   const DEG = Math.PI / 180, TAU = 2 * Math.PI;
   // constants (SI)
   const GM_SUN = 1.32712440018e20, GM_EARTH = 3.986004418e14, GM_JUP = 1.26686534e17, G = 6.6743e-11;
@@ -457,6 +459,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     trappist: 'A tiny, cool star about 12% the size of the Sun. An Earth sized planet blocks 0.5% of its light, 60 times deeper than Earth crossing the Sun.'
   };
   let D = null;                 // derived quantities and sampled curves
+  let simClock = 0;            /* simulated time that does not wrap each orbit, s, for the stopwatch */
   let tau = 0;                  // time since the start of the window, s (0..Per)
   let playing = true, speed = 1, slowmo = true, showModel = true, lcMode = 'orbit';
   let raf = 0, last = null, scrub = null, dirty = true, slowNow = false;
@@ -988,7 +991,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     raf = 0;
     if (dirty) { const frac = D ? tau / D.Per : 0.03; derive(); tau = ((frac % 1) + 1) % 1 * D.Per; dirty = false; }
     if (playing && !scrub) {
-      if (last != null) { tau += rate() * Math.min(0.1, (now - last) / 1000); tau %= D.Per; }
+      if (last != null) { const dtau = rate() * Math.min(0.1, (now - last) / 1000); tau += dtau; tau %= D.Per; simClock += dtau; }
       last = now;
     } else { last = null; rate(); }
     const T = tokens();

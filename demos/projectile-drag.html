@@ -620,6 +620,8 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
   // ==CORE END==
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: the stopwatch on the flight's simulated clock; the ruler on the flight view, drawn to the same scale across and up */
+  VD.tools({ el: $('view'), strip: '.viewbar', time: () => (anim ? anim.t : null), scale: () => ({ m: 1 / L.s, area: [L.ox, 0, $('view').clientWidth - L.ox, L.oy] }) });
   const MAX_SHOTS = 8;
 
   // ---------- state ----------

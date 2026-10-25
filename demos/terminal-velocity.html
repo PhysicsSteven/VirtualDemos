@@ -221,6 +221,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id), VG = window.VDGear;
+  /* the measuring tools: a stopwatch on the simulated clock */
+  VD.tools({ el: $('can'), strip: '.viewbar', time: () => (S.s ? S.s.t : null) });
   const NAMES = { spread: 'spread eagle', head: 'head first' };
   const PRESETS = {
     spread: { kind: 'sky', m: 85, h0: 4000, pullAlt: 1000, air: 'text', pos0: 'spread', label: 'Spread eagle, 85 kg',

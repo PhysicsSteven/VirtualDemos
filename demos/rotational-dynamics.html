@@ -214,6 +214,8 @@ table.rows input:focus { border-color: var(--accent); }
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: a stopwatch on the simulated clock */
+  VD.tools({ el: $('can'), strip: '.viewbar', time: () => S.t });
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const HINT = { none: 'The empty turntable: measure its own moment of inertia first, so you can subtract it later.', disk: 'A solid disk, 1.00 kg and 10.0 cm in radius: I = ½MR².', ring: 'A ring with the same mass and outer radius as the disk, but its mass far from the axis: I = ½M(R₁² + R₂²), nearly twice the disk.', pair: 'Two 0.200 kg masses at equal distances from the axis: I grows as d². Slide them out and time the drop again.', mystery: 'An unknown object. Measure the table with and without it and subtract.' };
   const S = { pieces: [20, 20, 5], obj: 'none', d: 0.08, m: 0.05, r: 0.02, fric: false, t: 0, run: false, done: false, blind: false, rows: [], ang: 0 };

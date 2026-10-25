@@ -546,10 +546,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // shown slower than real time so it stays readable: the loop at half speed, the cars at a quarter
   const timeScale = () => (S.preset === 'string' ? 1 : S.preset === 'loop' ? 0.5 : S.preset === 'speed' ? 1 : 0.25);
   let last = performance.now();
+  let simClock = 0;   /* simulated time for the stopwatch: it runs at the preset's slow motion rate */
   function frame(now) {
     const dt = Math.min(0.05, (now - last) / 1000); last = now;
     if (S.run && W) {
       if (!reduce) amb += dt;
+      simClock += dt * timeScale();
       const free = S.cut || S.slid || S.fell;
       if (free) { free.t += dt * timeScale(); const g = geom(); if (free.t > 6 || free.y > H + 50 || free.x < -50 || free.x > g.sw + 50 + free.vx * 0) { /* off screen: keep */ } }
       else {
@@ -596,6 +598,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* the measuring tools: the stopwatch on the simulated clock; the ruler on the flat picture, where the circle's radius is to scale */
+  VD.tools({ el: can, strip: '.viewbar', time: () => simClock, scale: () => { if (use3()) return null; const g = geom(); return { m: S.r / g.R, area: [0, 0, g.sw, g.sh] }; } });
   $('play').textContent = S.run ? 'Pause' : 'Play';
   /* the banked curve opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();

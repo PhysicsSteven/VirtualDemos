@@ -5,7 +5,7 @@
      .vd-qr          the QR button: large on click, removes itself when the page is not the hosted copy it points to
      #vdReset        Reset all: reloads the page, asking first when readings would be lost
      details.plotfold  a plot folded in the sidebar is drawn when it opens (its size is zero while folded)
-   Helpers a demo calls itself: VD.projector, VD.setupCard, VD.typeIn, VD.typeAt, VD.knobAt, VD.knob, VD.knobs. See demos/lib/README.md. Never change what an existing helper does:
+   Helpers a demo calls itself: VD.projector, VD.setupCard, VD.typeIn, VD.typeAt, VD.knobAt, VD.knob, VD.knobs, VD.tools. See demos/lib/README.md. Never change what an existing helper does:
    add an option or a new helper instead, and rerun tools/vdcheck.cjs on every moved demo after any edit here. */
 (function () {
   'use strict';
@@ -283,6 +283,15 @@
       all.push({ inp: inp, k: k, out: out, shown: null });
     });
     (function show() { all.forEach(function (o) { if (o.inp.value !== o.shown) { o.shown = o.inp.value; o.k.style.setProperty('--a', (Math.round((+o.inp.value - +o.inp.min) / (+o.inp.step || 1)) * DEG) % 360 + 'deg'); o.k.setAttribute('aria-valuenow', o.inp.value); } if (o.out) o.k.setAttribute('aria-valuetext', o.out.textContent); }); requestAnimationFrame(show); })();
+  };
+
+  /* VD.tools(o): the measuring tools (a stopwatch on the demo's own clock, a ruler on the picture's own scale) behind a Tools
+     button in the strip. This loads demos/lib/vdtools.js the first time; its comment lists the options. */
+  var here = document.currentScript && document.currentScript.src;
+  VD.tools = function (o) {
+    (VD.toolsQueue = VD.toolsQueue || []).push(o);
+    if (VD.tools.loading || !here) return; VD.tools.loading = true;
+    var s = document.createElement('script'); s.src = here.replace(/vd\.js([?#].*)?$/, 'vdtools.js'); s.id = 'vd-tools'; document.head.appendChild(s);
   };
 
   function wire() {

@@ -49,7 +49,9 @@ the two assistants share context. Log what you change there when you finish.
    and don't add `data-vd-off` (that list is only for demos that were moved and never had a rule).
 3. For readings and Export to worksheet, copy the Readings section and its code from `demos/pendulum.html` (the `vd-handoff:<name>`
    key, `FROM_DEMO` map in worksheet.js) until the library has a readings helper.
-4. Run `python3 tools/reset.py <name>` and `python3 tools/qr.py <name>` (markup only, since the demo links the library), then the
+4. If the demo has a running clock or a picture drawn to scale, give it the measuring tools in one line: `VD.tools({ el: can, time: () => S.t, scale: () => metersPerPixel })`
+   (see `demos/lib/vdtools.js`; leave out `scale` when nothing is to scale, and return null from either in a view where it does not apply).
+5. Run `python3 tools/reset.py <name>` and `python3 tools/qr.py <name>` (markup only, since the demo links the library), then the
    new demo checklist below, and check it with `NODE_PATH=/opt/node-tools/node_modules node tools/vdcheck.cjs --only after <name>`
    (page errors, sideways scroll) and by looking at the screenshots it saves.
 

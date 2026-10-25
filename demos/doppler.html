@@ -1099,6 +1099,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const PLANE = { ambulance: 'ground', observer: 'ground', mach1: 'sky', jet: 'sky' };
   let d3 = null;
   const on3 = () => D3.want && D3.ok && !light();
+  /* the measuring tools: the stopwatch on the simulated clock; the ruler on the flat picture, in meters (sound) or light seconds (light) */
+  VD.tools({ el: can, time: () => S.t, scale: () => { const g = geom(); if (on3() || !g) return null; return { m: (light() ? 299792458 : 1) / g.sc, area: [g.m.x, g.m.y, g.m.w, g.m.h], unit: light() ? 'light s' : null }; } });
   const orb = () => (D3.plane === 'ground' ? D3.oG : D3.oS);
   // simulation point (x, y) to world (z up); the flat view's plane is z = 0 (Street) or y = 0 (Sky, ground at the observer's feet)
   const w3 = (x, y) => (D3.plane === 'ground' ? [x, y, 0] : [x, 0, y - S.oy]);

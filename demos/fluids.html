@@ -2169,9 +2169,10 @@ table.rows button:hover { color: var(--pos); }
   new MutationObserver(() => { tokens(); drawAll(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   // ---------- loop ----------
+  let simClock = 0;   /* simulated time in the moving scenes, for the stopwatch */
   function advance(dts) {
     if (!(dts > 0)) return;
-    spillT += dts;
+    spillT += dts; simClock += dts;
     if (S.scene === 'buoy' && !S.P.buoy.scale && !held) {
       const before = bs.caught;
       bs = bobRun(bs, bp(), dts, 5e-4);
@@ -2182,6 +2183,8 @@ table.rows button:hover { color: var(--pos); }
     } else if (S.scene === 'venturi') advanceParts(dts);
     else if (S.scene === 'torr') advanceDrops(dts);
   }
+  /* the measuring tools: a stopwatch on the simulated clock of the moving scenes (block, pipe, tank) */
+  VD.tools({ el: $('sCan'), time: () => (S.scene === 'buoy' || S.scene === 'venturi' || S.scene === 'torr' ? simClock : null) });
   let frameMs = 0, lastR = 0;
   function loop(now) {
     const dtr = Math.min(0.05, Math.max(0, (now - last) / 1000)); last = now;

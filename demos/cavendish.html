@@ -492,6 +492,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* the measuring tools: a stopwatch on the simulated clock (no ruler: the deflection is drawn exaggerated) */
+  VD.tools({ el: can, strip: '.viewbar', time: () => S.t });
   /* opens settled at A with the clock at zero, as Part 1 of the handout starts */
   tokens(); startOver(); sync(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe(chart.parentElement); resize(); readouts();
   G3.want = new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower();

@@ -377,6 +377,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: a stopwatch on the simulated clock */
+  VD.tools({ el: $('can'), time: () => (S.view === 'eq' ? S.eq.t : S.view === 'cv' ? S.cv.t : S.view === 'th' ? S.th.t : null) });
   const VG = window.VDGear;
   const rnd = () => Math.random();
   const S = { view: 'eq', preset: 'hotmetal', run: false, speed: 10, blind: false,

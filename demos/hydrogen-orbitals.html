@@ -507,6 +507,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: a stopwatch on the simulated clock of the superposition, in femtoseconds */
+  VD.tools({ el: $('slice'), time: () => S.t, timeUnit: 'fs' });
 
   // ψ = (ψ_A + ψ_B e^{−iδ})/√2 at one point; out = [Re, Im, w] with w = |ψ|² / (|ψ_A|² + |ψ_B|²) ∈ [0, 1],
   // the ratio of |ψ(t)|² to twice the mixture density the points were drawn from. Accepting a mixture

@@ -341,6 +341,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 <script>
 (() => {
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: a stopwatch on the simulated clock, in days (it keeps counting past the end of the year) */
+  let simClock = 0;
+  VD.tools({ el: document.querySelector('canvas'), time: () => simClock, timeUnit: 'day' });
   const DEG = Math.PI / 180;
 
   // ---------- physics ----------
@@ -1134,7 +1137,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function frame(now) {
     raf = 0;
     if (S.running && !dragging) {
-      if (last != null) S.T = wrapT(S.T + Math.min(0.1, (now - last) / 1000) * S.speed);
+      if (last != null) { const dT = Math.min(0.1, (now - last) / 1000) * S.speed; S.T = wrapT(S.T + dT); simClock += dT; }
       last = now;
     } else last = null;
     if (yearDirty) { buildYear(); yearDirty = false; }

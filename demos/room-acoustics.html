@@ -348,6 +348,8 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: the stopwatch on the clap's simulated clock; the ruler on the floor plan, drawn to scale (flat view) */
+  VD.tools({ el: $('can'), strip: '.viewbar', time: () => (anim ? anim.t : null), scale: () => (G3.on ? null : planAt) });
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const P_SRC = 0.01;   /* steady source for the level meter: 10 mW */
   const PRESETS = {
@@ -419,9 +421,12 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
       Object.assign(g3.el.style, { left: `${g3.rect.x}px`, top: `${t}px`, width: `${g3.rect.w}px`, height: `${g3.rect.h}px` }); G3.dirty = true; }
     if (S.mode === 'decay') drawDecay(R); else drawLevel(R, m);
   }
+  let planAt = null;   /* the floor plan's scale, for the ruler */
   function drawPlan(R, m) {
     const p = R.p, d = S.walls === 'wedges' ? S.wedge : 0;
-    const sc = Math.min((R.x1 - R.x0 - 20 * p) / S.L, (R.planBot - R.planTop) / S.W), ox = R.x0 + (R.x1 - R.x0 - S.L * sc) / 2, oy = R.planTop + (R.planBot - R.planTop - S.W * sc) / 2;
+    const sc = Math.min((R.x1 - R.x0 - 20 * p) / S.L, (R.planBot - R.planTop) / S.W);
+    planAt = { m: 1 / sc, area: [R.x0, R.planTop, R.x1 - R.x0, R.planBot - R.planTop] };
+    const ox = R.x0 + (R.x1 - R.x0 - S.L * sc) / 2, oy = R.planTop + (R.planBot - R.planTop - S.W * sc) / 2;
     const X = (x) => ox + (x + d) * sc, Y = (y) => oy + (y + d) * sc;   /* free space coordinates to the picture */
     geo = { X, Y, sc, m, d };
     ctx.fillStyle = T.ink; ctx.font = `700 ${13 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';

@@ -1793,10 +1793,14 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.beginPath(); for (const dx of [-4, 0, 4]) { ctx.moveTo(dx * sc + 0.5, -hb * 0.5); ctx.lineTo(dx * sc + 0.5, hb * 0.5); } ctx.stroke();
     ctx.restore();
   }
+  /* the measuring tools: the stopwatch on the simulated clock; the ruler where the apparatus is drawn to scale (the magnet and the coils scenes) */
+  let rulerAt = null;
+  VD.tools({ el: $('sCan'), time: () => W.t, scale: () => rulerAt });
   function drawMagnetScene(ctx, W0, H0) {
     const ps = projScale(), sc = Math.min(ps, 1.25), p = magP();
     const top = ctlH + 4, bandH = 112 * sc, fieldH = H0 - bandH - top;
     const s = Math.max(200, Math.min((W0 - 12) / 0.32, fieldH / 0.15));
+    rulerAt = { m: 1 / s, area: [0, top, W0, fieldH] };
     const cx = W0 / 2, y0 = top + fieldH * 0.48;
     const X = (z) => cx + z * s, Y = (r) => y0 - r * s;
     geo = { s, cx, y0, X, Y, invZ: (px) => (px - cx) / s, invR: (py) => (y0 - py) / s };
@@ -2301,6 +2305,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     const ps = projScale(), sc = Math.min(ps, 1.25), top = ctlH + 4, bandH = 118 * sc, fieldH = H0 - bandH - top, labH = 58 * sc;
     const sy = CS.sys, cs = S.coils, d = cs.d / 100, a1 = sy.a1, a2 = sy.a2, o = CS.out;
     const s = Math.max(120, Math.min((W0 - 16) / (CZ.zhi - CZ.zlo), (fieldH - labH - 8 * sc) / 0.165));
+    rulerAt = { m: 1 / s, area: [0, top + labH, W0, fieldH - labH] };
     const xm = W0 / 2, zm = (CZ.zlo + CZ.zhi) / 2, y0 = top + labH + (fieldH - labH) / 2;
     const X = (z) => xm + (z - zm) * s, Y = (r) => y0 - r * s;
     geo = { s, X, Y, y0, invZ: (px) => (px - xm) / s + zm, invR: (py) => (y0 - py) / s };
@@ -2596,6 +2601,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W0, H0);
     handles = [];
+    rulerAt = null;
     if (S.mode === 'magnet') drawMagnetScene(ctx, W0, H0);
     else if (S.mode === 'gen') drawGenScene(ctx, W0, H0);
     else if (S.mode === 'coils') drawCoilsScene(ctx, W0, H0);

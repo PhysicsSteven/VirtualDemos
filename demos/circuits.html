@@ -1893,6 +1893,8 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   }
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: a stopwatch on the simulated clock of a run */
+  VD.tools({ el: $('can'), time: () => (run ? run.t : null) });
   // reduce motion: the OS setting, or the page's own toggle (kept for this browser session only)
   let reduce = (() => {
     try { const s = sessionStorage.getItem('vd-circuits-reduce-motion'); if (s === 'on' || s === 'off') return s === 'on'; } catch (_) {}

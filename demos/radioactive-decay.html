@@ -406,6 +406,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: a stopwatch on the simulated clock, in the setup's unit (steps, years, days or hours) */
+  VD.tools({ el: $('nCan'), time: () => (sim ? tNow() : null), timeUnit: () => ({ step: 'steps', d: 'day' })[cfg().unit] || cfg().unit });
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
 
   // ---------- setups ----------

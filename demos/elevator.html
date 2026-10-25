@@ -398,6 +398,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const b = 44 * p + el.offsetHeight + 16 * p;
     return (Hh - 16 * p - b - 50 * p) / 2 >= 55 ? b : 0;
   }
+  let rulerAt = null;
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh);
@@ -405,6 +406,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = ps(), wide = W > 620, st = now(), top = 56 * p, bot = Hh - 16 * p;
     const shaftW = wide ? (use3() ? Math.min(W * 0.42, 360 * p) : Math.min(W * 0.36, 260 * p)) : W - 32 * p, shaftH = wide ? bot - top : (Hh - top) * 0.55, sx = 16 * p, sc = shaftH / (TOP * FLOOR + FLOOR + 1);
     const yS = (y) => top + shaftH - (y + 0.5) * sc;
+    rulerAt = use3() ? null : { m: 1 / sc, area: [sx, top, shaftW, shaftH] };
     const cw = shaftW * 0.6, cx = sx + shaftW * 0.24, ch = Math.max(FLOOR * sc, 70 * p), cy = yS(st.y) - ch;
     const u3 = use3(); if (g3 && !u3) g3.el.hidden = true;
     if (u3) {   /* the 3D picture draws the building, the car and the person; this canvas keeps the arrows, the floor numbers and the reading */
@@ -508,6 +510,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* the measuring tools: the stopwatch on the simulated clock; the ruler on the flat shaft, which is drawn to scale (the car's height is not) */
+  VD.tools({ el: can, strip: '.viewbar', time: () => S.t, scale: () => rulerAt });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
   /* opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */

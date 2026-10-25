@@ -556,6 +556,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* the measuring tools: in the race, a stopwatch on the light's own clock (the picture runs the vacuum lane in 3.5 s), in nanoseconds */
+  VD.tools({ el: can, time: () => (S.view === 'race' ? S.t / (3.5 / transitTime(1, S.L)) * 1e9 : null), timeUnit: 'ns' });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce) S.playing = false; upd(); });
   tokens(); new ResizeObserver(resize).observe(stage);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'race'); resize();

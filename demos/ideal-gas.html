@@ -278,6 +278,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let N = 150, Tset = 300, mode = 'equal', preset = 'relax';
   let wallX = LX, wallTarget = LX, wallV = 0, pistonMax = 300, pistonTouched = false;
   let running = !reduce, simT = 0, tracer = 0, trail = [];
+  /* the measuring tools: a stopwatch on the simulated clock, in picoseconds */
+  VD.tools({ el: $('box'), strip: '.viewbar', time: () => simT, timeUnit: 'ps' });
   let showTrail = true, colorBySpeed = true;
   let impAcc = 0, ltAcc = 0;
   const hist = new Float32Array(NB), counts = new Float32Array(NB);

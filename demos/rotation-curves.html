@@ -434,6 +434,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: a stopwatch on the simulated clock (years for the solar system, millions of years for a galaxy) */
+  VD.tools({ el: $('can'), time: () => (S.sys === 'sun' ? S.t : null), timeUnit: 'yr' });
+  VD.tools({ el: $('can'), time: () => (S.sys === 'sun' ? null : S.t), timeUnit: 'Myr' });
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
 
   // ---------- presets ----------

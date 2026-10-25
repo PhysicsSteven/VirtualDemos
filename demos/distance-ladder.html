@@ -1660,6 +1660,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { narrowMQ.addEventListener('change', stageHeight); } catch (_) {}
   new MutationObserver(() => { tokens(); dirty = true; }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+  /* the measuring tools: on the Type Ia rung, a stopwatch on the light curve's clock, in days */
+  VD.tools({ el: can, time: () => (S.tab === 'sn' ? S.sn.time : null), timeUnit: 'day' });
   // ---------- loop ----------
   let last = performance.now(), frameMs = 0;
   function loop(now) {

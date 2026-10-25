@@ -759,6 +759,8 @@ table.rows input:focus { border-color: var(--accent); }
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* the measuring tools: a stopwatch on the simulated clock */
+  VD.tools({ el: can, strip: '.viewbar', time: () => S.t });
   tokens(); new ResizeObserver(resize).observe(stage); applyPreset('fast'); renderRows(); resize();
   /* the gyroscope opens in 3D where WebGL works, unless the page asks for the flat view (?view=flat) or the device asks to save data */
   if (new URLSearchParams(location.search).get('view') !== 'flat' && window.VD3 && !VD3.lowPower()) setView('3d');

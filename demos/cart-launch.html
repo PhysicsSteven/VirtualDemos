@@ -562,6 +562,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillText(W > 520 ? 'cart, track and ball to scale · drag to turn the view, double click to reset' : 'to scale · drag to turn', W - 12 * p, hs - 6 * p); ctx.globalAlpha = 1;
   }
   const VG = window.VDGear;
+  let rulerAt = null;
   function draw() {
     if (!T || !W) return;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -579,6 +580,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const corners = [[sMin, nMin], [sMax, nMin], [sMin, nMax], [sMax, nMax]].map(([s, n]) => [wx(s + (cam ? off : 0), n), wy(s + (cam ? off : 0), n)]);
     const xs = corners.map((q) => q[0]), ys = corners.map((q) => q[1]), bw = Math.max(...xs) - Math.min(...xs), bh = Math.max(...ys) - Math.min(...ys);
     const availW = W - 32 * p, availH = sceneBot - sceneTop, sc = Math.min(availW / bw, availH / bh, 420 * p);
+    rulerAt = use3() ? null : { m: 1 / sc, area: [0, 0, W, sceneBot + 10 * p] };
     const X0 = 16 * p + (availW - bw * sc) / 2 - Math.min(...xs) * sc, Y0 = sceneTop + (availH - bh * sc) / 2 + Math.max(...ys) * sc;
     const SX = (s, n) => X0 + wx(s, n) * sc, SY = (s, n) => Y0 - wy(s, n) * sc;
     // ---- the room, drawn in ground coordinates so it slides past in the cart view ----
@@ -764,6 +766,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* the measuring tools: the stopwatch on the simulated clock, the ruler on the flat picture (drawn to scale; not the plot) */
+  VD.tools({ el: can, strip: '.viewbar', time: () => S.t, scale: () => rulerAt });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   /* vd-knobs: every range input inside .instr gets a knob, and its readout takes a typed value (demos/lib/vd.js) */
   VD.knobs();

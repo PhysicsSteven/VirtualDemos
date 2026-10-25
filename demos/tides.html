@@ -354,6 +354,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // PHYSICS-END
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: in Ocean bulges, a stopwatch on the simulated clock, in hours */
+  let simClock = 0;
+  VD.tools({ el: document.querySelector('canvas'), time: () => (S.view === 'bulge' ? simClock : null), timeUnit: 'h' });
   const root = document.documentElement;
   const mod = (a, n) => ((a % n) + n) % n;
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
@@ -1252,7 +1255,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const dt = last ? Math.min(0.1, (ts - last) / 1000) : 0;
       last = ts;
       const dh = dt * S.speed;
-      S.hour = mod(S.hour + dh, 24); S.tp = mod(S.tp + dh / 24, P_SYN);
+      S.hour = mod(S.hour + dh, 24); S.tp = mod(S.tp + dh / 24, P_SYN); simClock += dh;
     } else last = 0;
     T = tokens(); PS = pscale();
     if (V.main.W && V.main.H) {

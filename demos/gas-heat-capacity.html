@@ -250,6 +250,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the cylinder: 10 cm across drawn to the same scale as its height */
     const hTop = heatState(gasKey(), h.n, 'P', heatState(gasKey(), h.n, 'P', 0).C * (T_CUTOUT - T0C)).h;
     const avail = by - 40 * p - H * 0.12, mm = Math.min(avail / (hTop * 1000 + 40), (W * 0.22) / (CYL_D * 1000));   /* px per mm */
+    rulerAt = { m: 1e-3 / mm };
     const cw = CYL_D * 1000 * mm, cx = W * 0.32, base = by - 30 * p, gasH = s.h * 1000 * mm, top = base - gasH;
     if (VG) VG.box(ctx, cx - cw / 2 - 18 * p, base, cw + 36 * p, 30 * p, { color: '#3d4754', r: 4 });
     /* gas, tinted warm as it heats */
@@ -461,6 +462,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const s of lines) { c.strokeStyle = s.col; c.lineWidth = 2.2 * p; c.beginPath(); s.pts.forEach((q, i) => (i ? c.lineTo(X(q[0]), Y(q[1])) : c.moveTo(X(q[0]), Y(q[1])))); c.stroke(); }
     c.restore();
   }
+  let rulerAt = null;   /* the cylinder's scale, for the ruler */
   function redraw() { if (!T || !W) return; if (on3d && G3) render3(); else { ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); (S.view === 'heat' ? drawHeat : drawRu)(); } drawCurve(); readouts(); clock(); }
   function clock() { $('clock').textContent = `t = ${f(S.view === 'heat' ? S.heat.t : S.ru.t, S.view === 'heat' ? 0 : 2)} s`; }
 
@@ -579,6 +581,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* the measuring tools: while heating, the stopwatch on the simulated clock and the ruler on the cylinder (drawn to scale, flat view) */
+  VD.tools({ el: can, time: () => (S.view === 'heat' ? S.heat.t : null), scale: () => (S.view === 'heat' && !on3d ? rulerAt : null) });
   tokens(); newGas(true); S.heat.mysN = 0;
   const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'argonV');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();

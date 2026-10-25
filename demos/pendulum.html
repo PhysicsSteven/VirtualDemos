@@ -1029,6 +1029,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the camera in the 3D view: the whole pendulum, or a close up at the photogate */
     $('camSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-cam]'); if (!b) return; L3.cam = b.dataset.cam; for (const x of $('camSeg').querySelectorAll('[data-cam]')) x.setAttribute('aria-pressed', String(x === b)); draw(); });
     stage.dataset.dim = 'flat';
+    /* the measuring tools: a stopwatch on the simulated clock, and a ruler on the flat picture's pendulum half, which is drawn to scale */
+    VD.tools({ el: can, strip: '#dimbar', stage: '#scene', time: () => (can.getClientRects().length ? S.t : null),
+      scale: () => { if (use3() || !geo) return null; const wide = W > 640; return { m: 1 / geo.sc, area: [0, 0, wide ? W * 0.55 : W, wide ? H : H * 0.62] }; } });
     return { resize, pause: () => setRun(false), applyPreset, presets: PRESETS, rows: () => S.rows.length, init3D, dim3, status: capStatus };
   })();
 
@@ -2418,6 +2421,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
     requestAnimationFrame(loop);
     $('dpStage').dataset.dim = 'flat';
+    /* the measuring tools: the stopwatch on the simulated clock, the ruler on the flat pendulum pane (drawn to scale) */
+    VD.tools({ el: $('pCan'), time: () => { const r = S.mode === 'simple' ? Rs : R; return dpStage.hidden || !r ? null : r.t; },
+      scale: () => (use3d() || dpStage.hidden ? null : { el: $('pCan'), m: 1 / pGeom().sc }) });
     return { resize, pause: () => setRunning(false), setMode, applyPreset, presets: PRESETS, mode: () => S.mode, init3D, dim3 };
   })();
 

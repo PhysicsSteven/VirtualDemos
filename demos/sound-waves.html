@@ -321,6 +321,8 @@ details.more[open] summary { margin-bottom: 6px; }
   if (typeof document === 'undefined') return;
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: a stopwatch on the simulated clock of the clap and the race */
+  VD.tools({ el: $('can'), strip: '.viewbar', time: () => (S.view === 'tof' ? (S.clap ? S.clap.t : null) : S.view === 'race' ? S.race.t : null) });
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const newUnknown = () => ({ name: 'Unknown gas', gamma: UNKNOWN_GAMMAS[Math.floor(Math.random() * 3)], M: Math.round((UNKNOWN_M[0] + Math.random() * (UNKNOWN_M[1] - UNKNOWN_M[0])) * 1e4) / 1e4 });
   const S = { view: 'wave', gas: 'air', unknown: newUnknown(), tC: 20, f: 500, s: 1.0, xA: 0.5, d: 1.0, blind: false, running: true, t: 0, preset: 'wave', rows: [], series: 0,

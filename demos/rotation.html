@@ -564,6 +564,8 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // ==CORE END==
 
   const $ = (id) => document.getElementById(id);
+  /* the measuring tools: a stopwatch on the simulated clock of the torque, spin and rolling scenes */
+  VD.tools({ el: $('view'), time: () => (S.scene === 'torque' ? TQ.t : S.scene === 'roll' ? RO.t : S.scene === 'spin' ? SP.t : null) });
   // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   try { const v = sessionStorage.getItem('rotation-reduce-motion'); if (v === 'on') reduce = true; else if (v === 'off') reduce = false; } catch (_) {}

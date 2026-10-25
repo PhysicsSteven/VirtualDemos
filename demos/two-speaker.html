@@ -287,6 +287,8 @@ table.rows input:focus { border-color: var(--accent); }
 
   function applyPreset(name) { const c = PRESETS[name]; S.preset = name; S.f = c.f; S.d = c.d; S.ph = c.ph; S.on2 = c.on2; S.tC = c.tC; S.X = c.X; S.mystery = c.mystery ? newMystery() : 0; S.mx = c.X; S.my = 0; upd(); }
   const can = $('can'), ctx = can.getContext('2d'), scene = $('scene'), shelf = $('shelf'), card = $('card'), mic = $('mic'), GEO = {};
+  /* the measuring tools: a ruler on the floor of the room, drawn to scale (path differences from each speaker to the microphone) */
+  VD.tools({ el: can, scale: () => (GEO.ppm ? { m: 1 / GEO.ppm, area: GEO.area } : null) });
   let W = 0, Hh = 0, dpr = 1, T = null;
   function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'grid', 'grid-strong', 'accent', 'pos', 'neg', 'surface', 'relief', 'metal', 'metal-hi', 'box', 'equi', 'wood']) T[k.replace(/-(\w)/g, (_, c) => c.toUpperCase())] = g('--' + k);
@@ -429,6 +431,7 @@ table.rows input:focus { border-color: var(--accent); }
     const padL = 46 * p, padT = 50 * p, availW = W - padL - 14 * p, availH = Math.max(120, shelfTop - padT - 24 * p), ppm = Math.min(availW / ROOM_X, availH / ROOM_Y);
     const x0 = padL, yc = padT + ROOM_Y / 2 * ppm; Object.assign(GEO, { ppm, x0, yc });
     const fw = ROOM_X * ppm, fh = ROOM_Y * ppm, fy = yc - fh / 2;
+    GEO.area = [x0, fy, fw, fh];
     /* the Set up card sits in the room left over to the right of the floor when there is room for it, otherwise over the floor's top left */
     if (getComputedStyle(card).position === 'absolute') { const spare = W - (x0 + fw) - 24 * p; card.style.left = spare >= 300 ? `${x0 + fw + 16 * p}px` : '12px'; card.style.width = spare >= 300 ? `${Math.min(360, spare)}px` : ''; }
     /* the floor, lifted off the page by a soft shadow */
