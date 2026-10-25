@@ -8,6 +8,7 @@
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
 <script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>.rail details.more > p + p { margin-top: 6px; }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
 </style>
@@ -81,6 +82,7 @@ table.rows input:focus { border-color: var(--accent); }
 .dimseg { position: absolute; top: 10px; right: 214px; z-index: 2; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12); }
 @media (max-width: 820px) { .dimseg { right: 10px; } }
 .dimseg[hidden] { display: none; }
+.dimseg.at-edge { right: 10px; }
 .dimseg button { font: inherit; font-size: 0.84rem; font-weight: 700; color: var(--muted); background: none; border: 0; border-radius: 6px; padding: 4px 10px; cursor: pointer; }
 .dimseg button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
 </style>
@@ -354,7 +356,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function sync() {
     for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
     $('secFlash').hidden = S.machine !== 'flash'; $('secTablet').hidden = S.machine !== 'tablet'; $('secCard').hidden = S.machine !== 'card'; $('kF').hidden = $('kA').hidden = S.machine !== 'flash'; $('kV').hidden = S.machine !== 'card'; $('instr').hidden = S.machine === 'tablet';
-    $('dimSeg').hidden = S.machine !== 'flash'; if (g3) g3.el.hidden = !use3();
+    $('dimSeg').classList.toggle('at-edge', S.machine !== 'flash'); if (g3) g3.S.el.hidden = !use3();
     $('modelFlash').hidden = S.machine !== 'flash'; $('modelTablet').hidden = S.machine !== 'tablet'; $('modelCard').hidden = S.machine !== 'card';
     const F = S.fl; $('shakeBtn').textContent = F.shaking ? 'Stop shaking' : 'Shake'; $('sF').value = F.f; $('oF').textContent = `${F.f} Hz`; $('sA').value = F.A * 100; $('oA').textContent = `${(F.A * 100).toFixed(1)} cm`;
     for (const b of document.querySelectorAll('#capSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.c === F.C)); $('ledOn').checked = F.led; $('ff').checked = F.ff;
@@ -382,8 +384,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; $('blindTag').hidden = !S.blind; upd(); });
   /* tablet pen: drag or arrow keys */
   let dragging = false;
-  function penTo(e) { if (!TBV) return; const r = can.getBoundingClientRect(); S.tb.x = Math.max(0, Math.min(0.1, (e.clientX - r.left - TBV.x0) / TBV.k)); S.tb.y = Math.max(0, Math.min(0.1, (TBV.y0 + TBV.size - (e.clientY - r.top)) / TBV.k)); }
-  can.addEventListener('pointerdown', (e) => { if (S.machine !== 'tablet') return; dragging = true; S.tb.circle = false; user(); can.setPointerCapture(e.pointerId); penTo(e); sync(); });
+  function penTo(e) { if (use3()) { const h = tabletHit(e); if (h) { S.tb.x = h[0]; S.tb.y = h[1]; } return; } if (!TBV) return; const r = can.getBoundingClientRect(); S.tb.x = Math.max(0, Math.min(0.1, (e.clientX - r.left - TBV.x0) / TBV.k)); S.tb.y = Math.max(0, Math.min(0.1, (TBV.y0 + TBV.size - (e.clientY - r.top)) / TBV.k)); }
+  can.addEventListener('pointerdown', (e) => { if (S.machine !== 'tablet' || (use3() && !(inPane(e) && tabletHit(e)))) return; dragging = true; S.tb.circle = false; user(); can.setPointerCapture(e.pointerId); penTo(e); sync(); });
   can.addEventListener('pointermove', (e) => { if (dragging) penTo(e); });
   can.addEventListener('pointerup', () => { dragging = false; });
   can.addEventListener('keydown', (e) => { if (S.machine !== 'tablet') return; const k = { ArrowRight: [1, 0], ArrowLeft: [-1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] }[e.key]; if (!k) return; e.preventDefault(); S.tb.circle = false; user(); S.tb.x = Math.max(0, Math.min(0.1, S.tb.x + k[0] * 0.002)); S.tb.y = Math.max(0, Math.min(0.1, S.tb.y + k[1] * 0.002)); sync(); });
@@ -446,91 +448,262 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     txt(xlab, X1, Y1 + 21 * p, { a: 'right', s: 9, c: T.muted }); txt(ylab, X0 + 4 * p, Y0 - 2 * p, { s: 9, c: T.muted, bl: 'bottom' });
     return { X, Y };
   }
-  /* ---------- 3D: the shake flashlight, in centimeters. The magnet slides at st.z inside a clear tube through the 1000 turn coil;
-     its field lines are the point dipole's (r = C sin²θ, the model the EMF is computed from), moving with it. The LED glows as the
-     flat view's light does (from the LED current); the coil is tinted by the sign of the EMF. Board, capacitor and shell are pictures. */
-  const G3 = { want: false, on: false, ok: false, tried: false, loading: false, key: '', w: 0, h: 0, o: { th: -Math.PI / 2 + 0.38, ph: 1.12, zoom: 1 }, pane: [0, 0, 0, 0] };
+  /* ---------- 3D: the three devices on a lab desk, in centimeters, z up, the desk top at z = 0; built on demos/lib/vd3kit.js. Each is drawn
+     from the same state as the flat view and only one is shown at a time.
+     Flashlight: the magnet slides at st.z inside a clear tube through the 1000 turn coil; its field lines are the point dipole's
+     (r = C sin²θ, the model the EMF is computed from), moving with it. The LED glows as the flat view's light does (from the LED current);
+     the coil is tinted by the sign of the EMF. Board, capacitor, shell and cradles are pictures.
+     Tablet: the 10 cm square of wires 5 mm apart under a clear cover, 5 mm below the center of the magnet in the pen's tip (N down), as in
+     the model; each wire glows with the sign of its EMF, brighter for a larger EMF. Lines on the cover: the tablet's fit and the true path.
+     Card: a swipe reader with a clear front wall, the card on its edge in the slot and the head facing track 2. Above it the 4 mm of
+     stripe nearest the head, magnified 25 times along the stripe (its height and depth are not to scale): each region is a little bar
+     magnet, N red and S blue, under the head's ring core and coil. The scope shows the head's EMF on the same axes as the plot. */
+  const G3 = { o: { th: 0, ph: 0, zoom: 1 }, pane: [0, 0, 0, 0], view: null, msg: '' };
+  /* each device has its own home view; a drag turns away from it by the same amount for all three */
+  const HOME = { flash: { th: -Math.PI / 2 + 0.36, ph: 1.1, t: [3.2, 0, 4.6], w: 32, h: 15 }, tablet: { th: -Math.PI / 2 + 0.34, ph: 0.84, t: [1.4, 0.8, 2.2], w: 28, h: 23 },
+    card: { th: -Math.PI / 2 + 0.3, ph: 1.18, t: [6.2, 1.5, 5.4], w: 34, h: 15 } };
   let g3 = null;
-  const use3 = () => !!(G3.on && g3 && S.machine === 'flash');
+  const use3 = () => !!(G3.view && G3.view.is3d() && g3);
+  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  const CARD3 = { zoom: 25, half: 0.002, off: 0.0074, bottom: 0.85, track: 1.04 };   /* track 2 taken 10.4 mm from the stripe edge of the card (chosen, near ISO 7811) */
   function init3D() {
-    G3.tried = true;
-    const r = VD3.renderer(); if (!r) return false;
-    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); el.style.right = 'auto'; el.style.bottom = 'auto'; stage.insertBefore(el, can);
-    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.3, 200), Ms = (o) => new THREE.MeshStandardMaterial(o);
-    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.9), sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(-8, -14, 18); scene.add(hemi, sun);
+    const St = VD3K.stage(stage, { before: can, fov: 30, near: 0.5, far: 900, shadow: 34 }); if (!St) return false;
+    const el = St.el; el.style.right = 'auto'; el.style.bottom = 'auto';
+    St.sun.position.set(16, -26, 70); St.sun.shadow.bias = -0.0004;   /* the scene is in cm: the sun stands well above the desk */
+    const scene = St.scene, K = VD3K, Ms = (o) => new THREE.MeshStandardMaterial(o), Mt = (o, c) => K.material(St, o, c);
+    const shadowAll = (g) => g.traverse((m) => { if (m.isMesh && !m.material.transparent) { m.castShadow = true; m.receiveShadow = true; } });
+    /* the room: a wooden desk against a painted wall with a pegboard */
+    const woodCv = document.createElement('canvas'); woodCv.width = 1024; woodCv.height = 256; const woodTex = new THREE.CanvasTexture(woodCv); woodTex.anisotropy = St.r.capabilities.getMaxAnisotropy();
+    const deskM = Ms({ map: woodTex, roughness: 0.7, metalness: 0 }), desk = K.box(170, 90, 3, deskM, 2, -13, -3); desk.castShadow = false;
+    const wallM = Mt({ roughness: 0.95 }, ['#e6e9ee', '#1c232d']), wall = new THREE.Mesh(new THREE.PlaneGeometry(170, 90), wallM); wall.rotation.x = Math.PI / 2; wall.position.set(2, 32, 45); wall.receiveShadow = true;
+    const pegCv = document.createElement('canvas'); pegCv.width = 512; pegCv.height = 256; const pegTex = new THREE.CanvasTexture(pegCv);
+    const peg = new THREE.Mesh(new THREE.PlaneGeometry(96, 36), Ms({ map: pegTex, roughness: 0.9 })); peg.rotation.x = Math.PI / 2; peg.position.set(4, 31.8, 22); peg.receiveShadow = true;
+    const skirt = K.box(170, 1.2, 4, Mt({ roughness: 0.6 }, ['#cfd5dc', '#2a323d']), 2, 31.4, 0);
+    scene.add(desk, wall, peg, skirt);
+    St.onTheme((dk) => {
+      let c = woodCv.getContext('2d'); c.fillStyle = dk ? '#3b3127' : '#dcc9a8'; c.fillRect(0, 0, 1024, 256);
+      for (let i = 0; i < 120; i++) { c.strokeStyle = `rgba(${dk ? '0,0,0' : '120,80,40'},${0.05 + 0.07 * Math.abs(Math.sin(i * 7.3))})`; c.lineWidth = 1 + (i % 3); c.beginPath(); const y = (i * 37) % 256; c.moveTo(0, y); for (let x = 0; x <= 1024; x += 32) c.lineTo(x, y + 3 * Math.sin(x * 0.011 + i)); c.stroke(); }
+      woodTex.needsUpdate = true;
+      c = pegCv.getContext('2d'); c.fillStyle = dk ? '#4a3d2e' : '#c9ab7f'; c.fillRect(0, 0, 512, 256);
+      c.fillStyle = dk ? 'rgba(0,0,0,0.55)' : 'rgba(60,40,20,0.5)'; for (let y = 6; y < 256; y += 11.4) for (let x = 6; x < 512; x += 11.4) { c.beginPath(); c.arc(x, y, 1.9, 0, 7); c.fill(); }
+      c.strokeStyle = dk ? '#2b241b' : '#9a7d55'; c.lineWidth = 6; c.strokeRect(3, 3, 506, 250); pegTex.needsUpdate = true;
+    });
+    const steel = Ms({ color: 0x9aa3ad, roughness: 0.35, metalness: 0.6 });
+    /* hooks on the pegboard, with a coil of wire and a pair of pliers hanging, so the wall reads as a workshop */
+    const hookAt = (x, z) => { const h = K.rod([x, 31.6, z], [x, 28.4, z + 0.6], 0.18, steel); scene.add(h); };
+    hookAt(-24, 30); hookAt(-8, 30); hookAt(26, 28);
+    const spool = new THREE.Mesh(new THREE.TorusGeometry(4.2, 0.9, 12, 40), Ms({ color: 0xb8692e, roughness: 0.4, metalness: 0.5 })); spool.position.set(-24, 29.3, 26); scene.add(spool);
+    const plier = new THREE.Group(); plier.add(K.rod([0, 0, 0], [-1.6, 0, -9], 0.45, Ms({ color: 0xc23f2c, roughness: 0.6 })), K.rod([0, 0, 0], [1.6, 0, -9], 0.45, Ms({ color: 0xc23f2c, roughness: 0.6 })), K.rod([0, 0, 0], [0, 0, 3.2], 0.5, steel)); plier.position.set(26, 29.5, 26); scene.add(plier);
+
+    /* ---- the shake flashlight, its axis along x, lying in two cradles ---- */
+    const fl = new THREE.Group(), FZ = 5.0; fl.position.z = FZ;
     const alongX = (geo) => geo.rotateZ(-Math.PI / 2);
     const clear = (c, o) => new THREE.MeshPhongMaterial({ color: c, transparent: true, opacity: o, depthWrite: false, side: THREE.DoubleSide, shininess: 100, specular: 0xffffff });
-    const shell = new THREE.Mesh(alongX(new THREE.CylinderGeometry(1.9, 1.9, 17, 48, 1, true)), clear(0xe6eef6, 0.14)); shell.position.x = 1.5;
+    const shell = new THREE.Mesh(alongX(new THREE.CylinderGeometry(1.9, 1.9, 17, 48, 1, true)), clear(0xe6eef6, 0.2)); shell.position.x = 1.5;
     const tube = new THREE.Mesh(alongX(new THREE.CylinderGeometry(0.62, 0.62, 13, 32, 1, true)), clear(0xdfe8f2, 0.3));
     const capM = Ms({ color: 0x30363e, roughness: 0.6 }), endCap = new THREE.Mesh(alongX(new THREE.CylinderGeometry(1.95, 1.95, 0.8, 48)), capM); endCap.position.x = -7.4;
     const bumpM = Ms({ color: 0x1d2126, roughness: 0.9 }), bumps = [-1, 1].map((s) => { const b = new THREE.Mesh(alongX(new THREE.CylinderGeometry(0.55, 0.55, 0.4, 24)), bumpM); b.position.x = s * 6.3; return b; });
-    /* head: bezel, reflector and the LED */
-    const bezelM = Ms({ color: 0x8d96a1, roughness: 0.3, metalness: 0.4 }), bezel = new THREE.Mesh(alongX(new THREE.CylinderGeometry(2.15, 1.95, 1.6, 48, 1, true)), bezelM); bezel.position.x = 10.4;
+    const bezelM = Ms({ color: 0xb4bcc6, roughness: 0.3, metalness: 0.5, side: THREE.DoubleSide }), bezel = new THREE.Mesh(alongX(new THREE.CylinderGeometry(2.15, 1.95, 1.6, 48, 1, true)), bezelM); bezel.position.x = 10.4;
     const reflM = Ms({ color: 0xe8edf2, roughness: 0.15, metalness: 0.6, side: THREE.DoubleSide }), refl = new THREE.Mesh(alongX(new THREE.CylinderGeometry(2.0, 0.4, 1.4, 40, 1, true)), reflM); refl.position.x = 10.4;
     const ledM = Ms({ color: 0xf6f1d8, roughness: 0.2, emissive: 0x000000 }), led = new THREE.Mesh(new THREE.SphereGeometry(0.35, 20, 14), ledM); led.position.x = 9.85;
-    const lamp = new THREE.PointLight(0xffe6a0, 0, 14); lamp.position.x = 10.6;
+    const lamp = new THREE.PointLight(0xffe6a0, 0, 40); lamp.position.x = 11.6;
     const lens = new THREE.Mesh(alongX(new THREE.CylinderGeometry(2.05, 2.05, 0.1, 48)), clear(0xf4f8fc, 0.25)); lens.position.x = 11.15;
-    /* the board below the tube: rectifier diodes and the capacitor */
+    /* the beam: a faint cone of light in front of the lens, as bright as the LED */
+    const beamM = new THREE.MeshBasicMaterial({ color: 0xfff1c0, transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide });
+    const beam = new THREE.Mesh(new THREE.CylinderGeometry(1.9, 4.6, 12, 40, 1, true).rotateZ(Math.PI / 2), beamM); beam.position.x = 17.2;
     const pcb = new THREE.Mesh(new THREE.BoxGeometry(6, 2.2, 0.12), Ms({ color: 0x2f7d4f, roughness: 0.6 })); pcb.position.set(5.6, 0, -1.35);
     const capCan = new THREE.Mesh(alongX(new THREE.CylinderGeometry(0.75, 0.75, 2.2, 28)), Ms({ color: 0x2b4f8f, roughness: 0.4 })); capCan.position.set(6.4, 0, -0.55);
     const diodes = [0, 1, 2, 3].map((i) => { const d = new THREE.Mesh(alongX(new THREE.CylinderGeometry(0.15, 0.15, 0.6, 12)), Ms({ color: 0x1d2126 })); d.position.set(3.4 + (i % 2) * 0.9, (i < 2 ? -0.5 : 0.5), -1.12); return d; });
-    /* the coil: copper turns, tinted by the EMF */
     const coilM = Ms({ color: 0xc47a3c, roughness: 0.35, metalness: 0.3, emissive: 0x000000 }), pts = [];
     for (let i = 0; i <= 24 * 30; i++) { const f = i / (24 * 30), a = f * 24 * 2 * Math.PI; pts.push(new THREE.Vector3(-0.5 + f, 1.2 * Math.sin(a), 1.2 * Math.cos(a))); }
     const coil = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 24 * 30, 0.045, 6, false), coilM);
     const bobbin = new THREE.Mesh(alongX(new THREE.CylinderGeometry(1.13, 1.13, 1.3, 32, 1, true)), Ms({ color: 0x2a2f36, roughness: 0.7, side: THREE.DoubleSide }));
-    /* the magnet, N toward +x, and its field lines */
     const magnet = new THREE.Group(), nM = Ms({ roughness: 0.4, metalness: 0.2 }), sM = Ms({ roughness: 0.4, metalness: 0.2 });
     const halfN = new THREE.Mesh(alongX(new THREE.CylinderGeometry(0.5, 0.5, 1, 32)), nM), halfS = new THREE.Mesh(alongX(new THREE.CylinderGeometry(0.5, 0.5, 1, 32)), sM); halfN.position.x = 0.5; halfS.position.x = -0.5; magnet.add(halfN, halfS);
     const lineM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.55 }), headM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.8 });
     for (const C of [1.6, 2.3, 3.3, 4.8]) for (const phi of [0, Math.PI / 2, Math.PI, 1.5 * Math.PI]) {
       const lp = []; for (let i = 0; i <= 80; i++) { const th = 0.04 + (Math.PI - 0.08) * i / 80, rr = C * Math.sin(th) ** 2; if (rr < 1.15) continue; lp.push(new THREE.Vector3(rr * Math.cos(th), rr * Math.sin(th) * Math.cos(phi), rr * Math.sin(th) * Math.sin(phi))); }
-      const ln = new THREE.Line(new THREE.BufferGeometry().setFromPoints(lp), lineM); magnet.add(ln);
-      /* at the equator the field points back along −x, from N around to S */
+      magnet.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(lp), lineM));
+      /* at the equator the field points back along −x, from N around to St */
       const hd = new THREE.Mesh(new THREE.ConeGeometry(0.13, 0.4, 10).rotateZ(Math.PI / 2), headM); hd.position.set(0, C * Math.cos(phi), C * Math.sin(phi)); magnet.add(hd);
     }
-    scene.add(shell, tube, endCap, ...bumps, bezel, refl, led, lamp, lens, pcb, capCan, ...diodes, coil, bobbin, magnet);
-    g3 = { r, el, scene, cam, hemi, nM, sM, lineM, headM, coilM, ledM, lamp, magnet };
+    fl.add(shell, tube, endCap, ...bumps, bezel, refl, led, lamp, lens, beam, pcb, capCan, ...diodes, coil, bobbin, magnet);
+    const flAll = new THREE.Group(); flAll.add(fl);
+    const cradleM = Mt({ roughness: 0.6 }, ['#5d6670', '#4a525c']);
+    /* two saddles: a foot, a post and a curved rubber rest under the shell */
+    for (const x of [-4.6, 7.6]) { const c = new THREE.Group(); c.add(K.box(1.6, 4.4, 0.4, cradleM, 0, 0, 0), K.box(0.7, 1.2, FZ - 2.3 - 0.4, cradleM, 0, 0, 0.4), K.box(1.1, 2.4, 0.45, Ms({ color: 0x1d2126, roughness: 0.9 }), 0, 0, FZ - 1.9 - 0.42));
+      c.position.x = x; flAll.add(c); }
+    shadowAll(flAll); scene.add(flAll);
+
+    /* ---- the graphics tablet: the active square centered at the origin, x right, y away from you ---- */
+    const tb = new THREE.Group(), bodyM = Mt({ roughness: 0.5, metalness: 0.15 }, ['#2c323b', '#262c34']), TZ = 0.9;
+    tb.add(K.box(18.4, 15.4, 0.55, bodyM, 1.6, 0.4, 0), K.box(1.8, 15.4, 0.35, bodyM, -6.9, 0.4, 0.55), K.box(4.6, 15.4, 0.35, bodyM, 8.5, 0.4, 0.55),
+      K.box(12, 1.6, 0.35, bodyM, 0, -6.6, 0.55), K.box(12, 2.1, 0.35, bodyM, 0, 7.05, 0.55));
+    const keyM = Mt({ roughness: 0.4 }, ['#4a525e', '#424a55']); for (let i = 0; i < 4; i++) tb.add(K.box(2.2, 1.4, 0.12, keyM, 8.3, -3.6 + i * 2.2, 0.9));
+    const ledT = new THREE.Mesh(new THREE.SphereGeometry(0.16, 12, 8), Ms({ color: 0x4cc07f, emissive: 0x2f9a52, emissiveIntensity: 0.8 })); ledT.position.set(8.3, 5.8, 0.92); tb.add(ledT);
+    const sensor = new THREE.Mesh(new THREE.PlaneGeometry(12, 12), Mt({ roughness: 0.8 }, ['#13241c', '#0f1c16'])); sensor.position.z = 0.56; sensor.receiveShadow = true; tb.add(sensor);
+    const wireMs = [], wireGeoX = new THREE.BoxGeometry(0.06, 10.8, 0.03), wireGeoY = new THREE.BoxGeometry(10.8, 0.06, 0.03), wires = [];
+    XS.forEach((x, i) => { for (const ax of [0, 1]) { const m = Ms({ color: 0xa89480, roughness: 0.4, metalness: 0.5, emissive: 0x000000 }), w = new THREE.Mesh(ax ? wireGeoY : wireGeoX, m), c = (x - 0.05) * 100;
+      if (ax) w.position.set(0, c, 0.6); else w.position.set(c, 0, 0.64); wireMs.push(m); wires.push(w); tb.add(w); } });
+    const cover = new THREE.Mesh(new THREE.BoxGeometry(12, 12, 0.25), new THREE.MeshPhongMaterial({ color: 0xaab8c6, transparent: true, opacity: 0.22, depthWrite: false, shininess: 90, specular: 0x666666 })); cover.position.z = TZ - 0.125; tb.add(cover);
+    const markM = new THREE.MeshBasicMaterial({ color: 0xdfe6ee, transparent: true, opacity: 0.7 });
+    for (const [sx, sy] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) { const a = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.08), markM), b = new THREE.Mesh(new THREE.PlaneGeometry(0.08, 0.9), markM);
+      a.position.set(sx * 5.25 - sx * 0.45, sy * 5.25, TZ + 0.01); b.position.set(sx * 5.25, sy * 5.25 - sy * 0.45, TZ + 0.01); tb.add(a, b); }
+    const NP = 3200, estPos = new Float32Array(NP * 6), estG = new THREE.BufferGeometry(); estG.setAttribute('position', new THREE.BufferAttribute(estPos, 3));
+    const estM = new THREE.LineBasicMaterial({ color: 0x2b60b5 }), estL = new THREE.LineSegments(estG, estM); tb.add(estL);
+    const truPos = new Float32Array(NP * 3), truG = new THREE.BufferGeometry(); truG.setAttribute('position', new THREE.BufferAttribute(truPos, 3));
+    const truM = new THREE.LineDashedMaterial({ color: 0x8a95a3, dashSize: 0.25, gapSize: 0.18 }), truL = new THREE.Line(truG, truM); truL.frustumCulled = false; estL.frustumCulled = false; tb.add(truL);
+    /* the pen, upright: a clear nib holding the magnet (2 mm across, 5 mm long, N down) and a barrel with a side switch */
+    const pen = new THREE.Group(), penM = Mt({ roughness: 0.45, metalness: 0.2 }, ['#3a414b', '#59626e']), gripM = Ms({ color: 0x1b1f24, roughness: 0.9 });
+    const pN = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.25, 16).rotateX(Math.PI / 2), nM), pS = new THREE.Mesh(new THREE.CylinderGeometry(0.1, 0.1, 0.25, 16).rotateX(Math.PI / 2), sM);
+    pN.position.z = 0.145; pS.position.z = 0.395; pen.add(pN, pS);
+    const nib = new THREE.Mesh(new THREE.ConeGeometry(0.42, 1.5, 24, 1, true).rotateX(-Math.PI / 2), clear(0xdfe8f2, 0.3)); nib.position.z = 0.75; pen.add(nib);
+    const tipBall = new THREE.Mesh(new THREE.SphereGeometry(0.05, 8, 6), gripM); tipBall.position.z = 0.02; pen.add(tipBall);
+    pen.add(K.rod([0, 0, 1.5], [0, 0, 4.2], 0.48, gripM), K.rod([0, 0, 4.2], [0, 0, 8.6], 0.45, penM), K.rod([0, 0, 8.6], [0, 0, 9.0], 0.36, gripM));
+    const sw = K.box(0.3, 0.9, 0.12, keyM, 0, 0, 0); sw.rotation.y = Math.PI / 2; sw.position.set(-0.44, 0, 5.2); pen.add(sw);
+    tb.add(pen);
+    const tbCable = K.cable([0, 8.0, 0.4], [-3, 31, 1], { via: [[0, 13, 0.4], [-2, 22, 0.4]], rad: 0.22 }); tb.add(tbCable);
+    shadowAll(tb); scene.add(tb);
+
+    /* ---- the card reader: the slot along x, the head at x = 0 in the front wall of the slot ---- */
+    const cd = new THREE.Group(), rdM = Mt({ roughness: 0.45, metalness: 0.1 }, ['#39414c', '#2f3640']);
+    const RD = { x0: -3.2, x1: 9.2, slot: 0.36, d: 3.6, base: 0.8, h: 3.3 }, rw = (RD.d - RD.slot) / 2, rl = RD.x1 - RD.x0, rx = (RD.x0 + RD.x1) / 2;
+    cd.add(K.box(rl, RD.d, RD.base, rdM, rx, 0, 0), K.box(rl, rw, RD.h - RD.base, rdM, rx, RD.slot / 2 + rw / 2, RD.base));
+    const front = new THREE.Mesh(new THREE.BoxGeometry(rl, rw, RD.h - RD.base), new THREE.MeshPhongMaterial({ color: 0x9fb4c8, transparent: true, opacity: 0.12, depthWrite: false, shininess: 90, side: THREE.DoubleSide }));
+    front.position.set(rx, -RD.slot / 2 - rw / 2, (RD.h + RD.base) / 2); front.renderOrder = 3; cd.add(front);
+    const rimM = Mt({ roughness: 0.5 }, ['#2a3038', '#20262d']); cd.add(K.box(rl, 0.12, 0.12, rimM, rx, -RD.d / 2 + 0.06, RD.h - 0.12), K.box(0.12, rw, RD.h - RD.base, rimM, RD.x0 + 0.06, -RD.slot / 2 - rw / 2, RD.base), K.box(0.12, rw, RD.h - RD.base, rimM, RD.x1 - 0.06, -RD.slot / 2 - rw / 2, RD.base));
+    const headZ = CARD3.bottom + CARD3.track, headCan = K.box(0.7, 0.9, 0.9, steel, 0, -RD.slot / 2 - 0.45, headZ - 0.45); cd.add(headCan);
+    const hcoilM = Ms({ color: 0xc47a3c, roughness: 0.35, metalness: 0.4, emissive: 0x000000 }), hcoil = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.5, 20).rotateX(Math.PI / 2), hcoilM); hcoil.position.set(0, -RD.slot / 2 - 1.05, headZ); cd.add(hcoil);
+    /* the card: 85.6 mm × 54.0 mm × 0.76 mm (ISO/IEC 7810 ID-1), standing on its stripe edge with the stripe toward you */
+    const cardCv = document.createElement('canvas'); cardCv.width = 1024; cardCv.height = 646; const cardTex = new THREE.CanvasTexture(cardCv); cardTex.anisotropy = St.r.capabilities.getMaxAnisotropy();
+    const card = new THREE.Group(), cardBody = K.box(8.56, 0.076, 5.398, Mt({ roughness: 0.4 }, ['#e9eef4', '#c9d2dc']), 4.28, 0, 0);
+    const cardFace = new THREE.Mesh(new THREE.PlaneGeometry(8.56, 5.398).rotateZ(Math.PI).rotateX(Math.PI / 2), Ms({ map: cardTex, roughness: 0.4 })); cardFace.position.set(4.28, -0.04, 2.699);
+    card.add(cardBody, cardFace); card.position.z = CARD3.bottom; cd.add(card);
+    let cardKey = '';
+    const drawCardFace = (digits) => {
+      const c = cardCv.getContext('2d'), W2 = 1024, H2 = 646, k2 = H2 / 5.398;
+      const g = c.createLinearGradient(0, 0, W2, H2); g.addColorStop(0, '#f2f5f9'); g.addColorStop(1, '#d6e2ef'); c.fillStyle = g; c.fillRect(0, 0, W2, H2);
+      c.fillStyle = '#2b2620'; c.fillRect(0, 0.56 * k2, W2, 1.02 * k2);   /* the stripe, 5.6 mm to 15.8 mm from the edge */
+      c.fillStyle = 'rgba(255,255,255,0.06)'; c.fillRect(0, (CARD3.track - 0.15) * k2, W2, 0.3 * k2);
+      c.fillStyle = '#fbfbf6'; c.fillRect(60, 2.2 * k2, 560, 0.9 * k2); c.strokeStyle = '#b9c2cc'; c.lineWidth = 3; c.strokeRect(60, 2.2 * k2, 560, 0.9 * k2);
+      c.fillStyle = '#5a6575'; c.font = '600 34px ' + T.ui; c.textBaseline = 'middle'; c.fillText('TEST CARD', 60, 3.75 * k2);
+      c.font = '28px ' + T.mono; c.fillText(`track 2: ;${digits}?`, 60, 4.35 * k2); cardTex.needsUpdate = true;
+    };
+    /* the magnified stripe and head, above the reader */
+    const MZ = 8.4, mag = new THREE.Group(); mag.position.z = MZ;
+    const baseSlab = new THREE.Mesh(new THREE.BoxGeometry(2 * CARD3.half * 100 * CARD3.zoom, 0.9, 0.5), Mt({ roughness: 0.7 }, ['#8c8f94', '#5b6068'])); baseSlab.position.z = -0.75; mag.add(baseSlab);
+    const regM = { n: Ms({ roughness: 0.45, metalness: 0.1 }), s: Ms({ roughness: 0.45, metalness: 0.1 }), o: Mt({ roughness: 0.8 }, ['#7c8087', '#4d535b']) }, regGeo = new THREE.BoxGeometry(1, 0.8, 1), regs = [];
+    for (let i = 0; i < 90; i++) { const m = new THREE.Mesh(regGeo, regM.n); m.visible = false; m.castShadow = true; mag.add(m); regs.push(m); }
+    const core = new THREE.Group(), coreM = Ms({ color: 0x3b3f46, roughness: 0.5, metalness: 0.5 }), gap = 0.22;
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(1.0, 0.22, 14, 64, 2 * Math.PI - gap).rotateZ(-Math.PI / 2 + gap / 2), coreM); core.add(ring);
+    const turnM = Ms({ color: 0xc47a3c, roughness: 0.35, metalness: 0.4, emissive: 0x000000 }), turnG = new THREE.TorusGeometry(0.33, 0.045, 6, 24);
+    for (let j = 0; j < 11; j++) { const a = Math.PI / 2 + (j - 5) * 0.105, t = new THREE.Mesh(turnG, turnM); t.position.set(1.0 * Math.cos(a), 1.0 * Math.sin(a), 0); t.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), new THREE.Vector3(-Math.sin(a), Math.cos(a), 0)); core.add(t); }
+    core.rotation.x = Math.PI / 2; core.position.z = 0.5 + 1.22 + 0.02; mag.add(core);
+    const dashM = new THREE.LineDashedMaterial({ color: 0x8a95a3, dashSize: 0.3, gapSize: 0.25, transparent: true, opacity: 0.8 }), w5 = CARD3.half * 100 * CARD3.zoom;
+    const dash = new THREE.LineSegments(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(-w5, 0, MZ - 1.0), new THREE.Vector3(-0.05, -RD.slot / 2, headZ + 0.1), new THREE.Vector3(w5, 0, MZ - 1.0), new THREE.Vector3(0.05, -RD.slot / 2, headZ + 0.1)]), dashM); dash.computeLineDistances();
+    cd.add(mag, dash);
+    /* the oscilloscope */
+    const scopeCv = document.createElement('canvas'); scopeCv.width = 640; scopeCv.height = 400; const scopeTex = new THREE.CanvasTexture(scopeCv);
+    const scope = new THREE.Group(), sw0 = 11, sh0 = 7.6; scope.add(K.box(sw0, 6.5, sh0, Mt({ roughness: 0.5 }, ['#3b4652', '#2f3842']), 0, 0, 0));
+    const scr = new THREE.Mesh(new THREE.PlaneGeometry(7.2, 4.5).rotateX(Math.PI / 2), Ms({ map: scopeTex, roughness: 0.3, emissive: 0xffffff, emissiveMap: scopeTex, emissiveIntensity: 0.55 })); scr.position.set(-1.4, -3.26, 4.3); scope.add(scr);
+    const knobM = Ms({ color: 0x9aa3ad, roughness: 0.4, metalness: 0.5 });
+    for (const [x, z, r] of [[3.4, 6.0, 0.55], [4.4, 4.5, 0.4], [3.2, 3.3, 0.4], [4.4, 2.2, 0.4]]) { const kb = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 0.5, 20), knobM); kb.position.set(x, -3.45, z); scope.add(kb); }
+    const bnc = new THREE.Mesh(new THREE.CylinderGeometry(0.3, 0.3, 0.6, 16), steel); bnc.position.set(-3.6, -3.5, 1.0); scope.add(bnc);
+    scope.position.set(17, 7, 0); scope.rotation.z = 0.12; cd.add(scope);
+    cd.add(K.cable([RD.x1, -0.6, 1.0], [17 - 3.6 * Math.cos(0.12) + 3.5 * Math.sin(0.12), 7 - 3.6 * Math.sin(0.12) - 3.5 * Math.cos(0.12) - 0.3, 1.0], { sag: 0, via: [[RD.x1 + 1.6, -0.8, 0.25], [12, 2.4, 0.25]], rad: 0.2 }));
+    shadowAll(cd); scene.add(cd);
+    let scopeKey = '';
+    const drawScope = (r, blind) => {
+      const tMax = r ? (r.L + 1.6e-3) / S.cd.v * (S.cd.uneven ? 1.4 : 1.05) : 1, ymax = 1.6 * Math.max(0.3, S.cd.v * 1.2), key = [r ? r.ts.length : -1, r && r.digits, tMax, ymax, blind].join();
+      if (key === scopeKey) return; scopeKey = key;
+      const c = scopeCv.getContext('2d'), w = 640, h = 400; c.fillStyle = '#071510'; c.fillRect(0, 0, w, h);
+      c.strokeStyle = 'rgba(120,230,170,0.18)'; c.lineWidth = 1.5; for (let i = 1; i < 10; i++) { c.beginPath(); c.moveTo(i * w / 10, 0); c.lineTo(i * w / 10, h); c.stroke(); } for (let i = 1; i < 8; i++) { c.beginPath(); c.moveTo(0, i * h / 8); c.lineTo(w, i * h / 8); c.stroke(); }
+      c.strokeStyle = 'rgba(120,230,170,0.4)'; c.beginPath(); c.moveTo(0, h / 2); c.lineTo(w, h / 2); c.stroke();
+      c.fillStyle = 'rgba(140,240,180,0.85)'; c.font = '600 22px ' + T.mono; c.textBaseline = 'top'; c.fillText('EMF in the head', 12, 10); c.textAlign = 'right'; c.fillText(`${+(tMax * 1e3 / 10).toPrecision(2)} ms/div`, w - 12, h - 32); c.textAlign = 'left';
+      if (blind) { c.fillText('hidden in Blind', 12, h / 2 + 14); }
+      else if (r) { c.strokeStyle = '#8ef0b0'; c.lineWidth = 2.6; c.shadowColor = '#3cff9a'; c.shadowBlur = 8; c.beginPath(); const step = Math.max(1, Math.floor(r.ts.length / 1500));
+        for (let i = 0; i < r.ts.length; i += step) { const X = r.ts[i] / tMax * w, Y = h / 2 - r.ys[i] / ymax * h / 2; i ? c.lineTo(X, Y) : c.moveTo(X, Y); } c.stroke(); c.shadowBlur = 0; }
+      scopeTex.needsUpdate = true;
+    };
+    g3 = { S: St, flAll, fl, tb, cd, nM, sM, lineM, headM, coilM, ledM, lamp, beamM, magnet, wireMs, wires, estG, estPos, estM, truG, truPos, truM, truL, pen, card, regs, regM, turnM, hcoilM, drawScope, drawCardFace, get cardKey() { return cardKey; }, set cardKey(v) { cardKey = v; }, headZ, MZ, RD };
+    St.onTheme((dk) => { g3.lineM.color = g3.headM.color = col3(dk ? '#9fb0c4' : '#5a6575', '#5a6575'); scopeKey = ''; cardKey = ''; });
     can.addEventListener('wheel', (e) => { if (!use3() || !inPane(e)) e.stopImmediatePropagation(); }, { passive: true });
-    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || !inPane(e), phMin: 0.4, phMax: 1.55, zMin: 0.6, zMax: 3, keys: false });
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => !use3() || !inPane(e) || (S.machine === 'tablet' && !!tabletHit(e)), phMin: -0.75, phMax: 0.5, zMin: 0.6, zMax: 3, keys: false });
     return true;
   }
   const inPane = (e) => { const b = can.getBoundingClientRect(), x = e.clientX - b.left, y = e.clientY - b.top, [x0, y0, w, h] = G3.pane; return x >= x0 && x <= x0 + w && y >= y0 && y <= y0 + h; };
-  const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
+  /* where a pointer meets the tablet's cover, in meters on the tablet (0 to 0.1), or null off the active square */
+  const ray3 = { rc: null, pl: null, v: null };
+  function tabletHit(e) {
+    if (!g3 || S.machine !== 'tablet') return null;
+    const b = can.getBoundingClientRect(), [x0, y0, w, h] = G3.pane, nx = (e.clientX - b.left - x0) / w * 2 - 1, ny = 1 - (e.clientY - b.top - y0) / h * 2;
+    if (!ray3.rc) { ray3.rc = new THREE.Raycaster(); ray3.pl = new THREE.Plane(new THREE.Vector3(0, 0, 1), -0.9); ray3.v = new THREE.Vector3(); }
+    ray3.rc.setFromCamera({ x: nx, y: ny }, g3.S.cam); if (!ray3.rc.ray.intersectPlane(ray3.pl, ray3.v)) return null;
+    const x = ray3.v.x / 100 + 0.05, y = ray3.v.y / 100 + 0.05; return x > -0.006 && x < 0.106 && y > -0.006 && y < 0.106 ? [Math.max(0, Math.min(0.1, x)), Math.max(0, Math.min(0.1, y))] : null;
+  }
+  /* renders the 3D view into G3.pane and returns a projector from scene points (cm) to canvas pixels */
+  function render3() {
+    const g = g3, Sg = g.S, [x0, y0, w, h] = G3.pane, m = S.machine, H0 = HOME[m];
+    Sg.size(w, h); g.S.el.style.left = x0 + 'px'; g.S.el.style.top = y0 + 'px';
+    g.flAll.visible = m === 'flash'; g.tb.visible = m === 'tablet'; g.cd.visible = m === 'card';
+    g.nM.color = col3(T.magN, '#c23f2c'); g.sM.color = col3(T.magS, '#2b60b5');
+    const asp = w / Math.max(1, h), tan = Math.tan(15 * Math.PI / 180), dist = Math.max(H0.w / (2 * tan * asp), H0.h / (2 * tan));
+    Sg.place({ th: H0.th + G3.o.th, ph: Math.max(0.3, Math.min(1.5, H0.ph + G3.o.ph)), zoom: G3.o.zoom }, H0.t, dist);
+    Sg.render();
+    return (q) => { const r = Sg.project(q); return [x0 + r[0], y0 + r[1], r[2]]; };
+  }
   function flash3(n) {
-    const g = g3, F = S.fl, st = F.st, [x0, y0, w, h] = G3.pane;
-    if (G3.w !== w || G3.h !== h) { G3.w = w; G3.h = h; g.r.setSize(w, Math.max(1, h)); g.cam.aspect = w / Math.max(1, h); g.cam.updateProjectionMatrix(); }
-    g.el.style.left = x0 + 'px'; g.el.style.top = y0 + 'px';
-    const key = [T.canvas, T.magN, T.magS].join(); if (G3.key !== key) { G3.key = key; const dk = VD3.dark(); g.scene.background = col3(T.canvas, '#fbfcfd'); g.hemi.groundColor = col3(dk ? '#1c222a' : '#8c8a84', '#8c8a84');
-      g.nM.color = col3(T.magN, '#c23f2c'); g.sM.color = col3(T.magS, '#2b60b5'); g.lineM.color = g.headM.color = col3(dk ? '#9fb0c4' : '#5a6575', '#5a6575'); }
-    const asp = w / Math.max(1, h), span = Math.max(9.5, 25 / asp);
-    VD3.place(g.cam, G3.o, new THREE.Vector3(1.1, 0, -0.2), span / (2 * Math.tan(15 * Math.PI / 180)));
+    const g = g3, F = S.fl, st = F.st;
     g.magnet.position.x = st.z * 100;
     const vref = Math.max(1, ...F.hist.map((q) => Math.abs(q[1]))), e = S.blind ? 0 : Math.min(1, Math.abs(n.eps) / vref);
     g.coilM.emissive = col3(n.eps >= 0 ? T.pos : T.neg, '#c0392b').multiplyScalar(0.55 * e);
-    const glow = S.blind ? 0 : Math.min(1, n.iL / 0.02); g.ledM.emissive = col3(T.lit, '#f5c542').multiplyScalar(glow); g.lamp.intensity = 2.2 * glow;
-    g.r.render(g.scene, g.cam);
-    const tmp = new THREE.Vector3();
-    return (q) => { tmp.set(q[0], q[1], q[2]).project(g.cam); return [x0 + (tmp.x + 1) / 2 * w, y0 + (1 - tmp.y) / 2 * h, tmp.z]; };
+    const glow = S.blind ? 0 : Math.min(1, n.iL / 0.02); g.ledM.emissive = col3(T.lit, '#f5c542').multiplyScalar(glow); g.lamp.intensity = 2.2 * glow; g.beamM.opacity = 0.3 * glow;
+    return render3();
   }
-  function setDim(v) {
-    if (v === '3d' && !G3.ok) {
-      if (G3.tried || !window.VD3) { v = 'flat'; }
-      else { if (!G3.loading) { G3.loading = true; VD3.load((ok) => { G3.loading = false; G3.ok = ok && init3D(); setDim(G3.ok ? '3d' : 'flat'); }); } return; }
-    }
-    G3.on = v === '3d'; if (g3) g3.el.hidden = !use3();
-    for (const b of document.querySelectorAll('#dimSeg button')) b.setAttribute('aria-pressed', String(b.dataset.dim === v));
-    draw();
+  function tablet3() {
+    const g = g3, B = S.tb, scale = Math.max(1e-6, ...B.emfX.map(Math.abs), ...B.emfY.map(Math.abs));
+    XS.forEach((_, i) => { for (const ax of [0, 1]) { const e = (ax ? B.emfY : B.emfX)[i], m = g.wireMs[2 * i + ax], f = S.blind || Math.abs(e) < TB.noise ? 0 : Math.abs(e) / scale;
+      m.emissive = f ? col3(e > 0 ? T.pos : T.neg, '#c23f2c').multiplyScalar(0.25 + 0.9 * f) : m.emissive.setRGB(0, 0, 0); if (f) m.color.setRGB(0.25, 0.25, 0.25); else m.color.setHex(0xa89480);
+      const sc = 1 + (S.blind ? 0 : 2.5 * f); if (ax) g.wires[2 * i + ax].scale.set(1, sc, 1); else g.wires[2 * i + ax].scale.set(sc, 1, 1); } });
+    const P = (q) => [(q[0] - 0.05) * 100, (q[1] - 0.05) * 100];
+    let k = 0; const ep = g.estPos;
+    if (!S.blind) for (let i = 1; i < B.est.length && k < 3200; i++) { const a = B.est[i - 1], b = B.est[i]; if (!a || !b) continue; const A = P(a), Bq = P(b); ep.set([A[0], A[1], 0.915, Bq[0], Bq[1], 0.915], k * 6); k++; }
+    g.estG.setDrawRange(0, 2 * k); g.estG.attributes.position.needsUpdate = true; g.estM.color = col3(T.accent, '#2b60b5');
+    let j = 0; if (B.showTrue) for (const q of B.tru) { if (j >= 3200) break; const A = P(q); g.truPos.set([A[0], A[1], 0.91], j * 3); j++; }
+    g.truG.setDrawRange(0, j); g.truG.attributes.position.needsUpdate = true; if (j > 1) g.truL.computeLineDistances(); g.truM.color = col3(T.true, '#8a95a3');
+    const [px, py] = P([B.x, B.y]); g.pen.position.set(px, py, 0.9);
+    return render3();
   }
-  $('dimSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-dim]'); if (b) setDim(b.dataset.dim); });
+  function card3() {
+    const g = g3, r = S.cd.run, x = r ? r.x : 0, Z = CARD3.zoom * 100;
+    g.card.position.x = -(CARD3.off + x) * 100;
+    const dk = (r ? r.digits : S.cd.digits) + '|' + T.ui + VD3.dark(); if (g.cardKey !== dk) { g.cardKey = dk; g.drawCardFace(r ? r.digits : S.cd.digits); }
+    g.regM.n.color = col3(T.magN, '#c23f2c'); g.regM.s.color = col3(T.magS, '#2b60b5');
+    let u = 0; const lim = CARD3.half * Z, put = (a, b, mat) => { const A = Math.max(-lim, a), Bx = Math.min(lim, b); if (Bx - A < 0.01 || u >= g.regs.length) return; const m = g.regs[u++]; m.visible = true; m.material = mat; m.scale.set(Bx - A - 0.015, 1, 1); m.position.set((A + Bx) / 2, 0, 0); };
+    if (r) { let M = 1; const tr = r.tr; for (let i = 1; i <= tr.length; i++) { const a = tr[i - 1], b = i < tr.length ? tr[i] : r.L + 1; if (b <= r.L + 1e-9) { const A = (a - r.x) * Z, Bx = (b - r.x) * Z, mid = (A + Bx) / 2;
+      /* a region magnetized along +x has its N end at +x */ put(A, mid, M > 0 ? g.regM.s : g.regM.n); put(mid, Bx, M > 0 ? g.regM.n : g.regM.s); } M = -M; } }
+    for (let i = u; i < g.regs.length; i++) g.regs[i].visible = false;
+    const e = r && r.ys.length && !S.blind ? r.ys[r.ys.length - 1] : 0, f = Math.min(1, Math.abs(e) / Math.max(0.3, S.cd.v * 1.2));
+    const em = f ? col3(e > 0 ? T.pos : T.neg, '#c23f2c').multiplyScalar(0.8 * f) : new THREE.Color(0, 0, 0); g.turnM.emissive = em; g.hcoilM.emissive = em;
+    g.drawScope(r, S.blind);
+    return render3();
+  }
+  /* a label in the 3D view: text with a soft plate behind it so it reads on any part of the scene */
+  function tag(s, x, y, o = {}) {
+    const p = ps(); ctx.font = `${o.b ? '700 ' : '600 '}${(o.s || 10.5) * p}px ${T.ui}`; const tw = ctx.measureText(VD3.turnText(s)).width, a = o.a || 'center', bx = a === 'center' ? x - tw / 2 : a === 'right' ? x - tw : x;
+    ctx.fillStyle = VD3.dark() ? 'rgba(16,22,30,0.72)' : 'rgba(252,253,254,0.8)'; ctx.beginPath(); ctx.roundRect(bx - 5 * p, y - 9 * p, tw + 10 * p, 18 * p, 5 * p); ctx.fill();
+    txt(s, x, y + 0.5 * p, { a, s: o.s || 10.5, c: o.c || T.ink, b: o.b });
+  }
+  function caption3(s) { const p = ps(), [x0, y0, w, h] = G3.pane; ctx.font = `${9.5 * p}px ${T.ui}`; if (ctx.measureText(VD3.turnText(s)).width > w - 20 * p) return; tag(s, x0 + w - 8 * p, y0 + h - 12 * p, { a: 'right', s: 9.5, c: T.muted }); }
   function drawFlash() {
     const p = ps(), F = S.fl, st = F.st, n = F.now || { eps: 0, i: 0, iL: 0 }, narrow = W < 620, sceneH = Math.min(Hh * 0.46, 300 * p);
     /* tube, coil and magnet: 1 cm of travel is k pixels */
     const k = Math.min((W - (narrow ? 30 : 260) * p) / 0.15, 3200 * p), cy = 34 * p + FL.a * k, cx = narrow ? W / 2 : (W - 200 * p) / 2;
     const in3 = use3(), paneH = narrow ? 210 * p : Math.max(220 * p, Math.min(420 * p, Hh * 0.52)), ch = FL.a * 2 * k + 8 * p;
-    if (in3) { G3.pane = [0, 0, narrow ? W : W - 200 * p, paneH]; ctx.clearRect(0, 0, G3.pane[2], paneH); const Q = flash3(n);
-      const lm = Q([st.z * 100, 0, 1.6]), lc = Q([0, 0, -2.3]); txt(`stroke ±${(F.A * 100).toFixed(1)} cm`, lm[0], lm[1] - 8 * p, { a: 'center', s: 10, c: T.muted }); txt('coil, 1000 turns', lc[0], lc[1] + 10 * p, { a: 'center', s: 10, c: T.muted });
-      if (G3.pane[2] > 520) txt('Field lines: the magnet as a point dipole, as in the model. Coil tinted by the sign of the EMF. Drag to turn.', G3.pane[2] - 8 * p, paneH - 8 * p, { a: 'right', s: 9, c: T.muted }); }
+    if (in3) { G3.pane = [0, 0, W, paneH]; ctx.clearRect(0, 0, W, paneH); const Q = flash3(n);
+      const lm = Q([st.z * 100, 0, 5.0 + 5.4]), lc = Q([0, -2.4, 1.0]), lb = Q([5.6, -2.4, 1.2]), ll = Q([11.2, 0, 5.0 + 2.9]);
+      tag(`magnet, stroke ±${(F.A * 100).toFixed(1)} cm`, lm[0], lm[1]); tag('coil, 1000 turns', lc[0], lc[1]); if (!narrow) tag('rectifier and capacitor', lb[0], lb[1]); tag('LED', ll[0], ll[1]);
+      caption3('Field lines: the magnet as a point dipole, as in the model. Coil tinted by the sign of the EMF. Drag to turn.'); }
     else {
     ctx.fillStyle = T.tube; ctx.beginPath(); ctx.roundRect(cx - 0.065 * k, cy - 0.009 * k, 0.13 * k, 0.018 * k, 6 * p); ctx.fill();
     /* magnet */
@@ -565,9 +738,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ly0 = py0 + (narrow ? 30 : 14) * p; txt('— EMF ε', W - 24 * p, ly0, { a: 'right', s: 10, c: T.coil, b: 1 }); txt('— capacitor', W - 90 * p, ly0, { a: 'right', s: 10, c: T.cap, b: 1 });
   }
   function drawTablet() {
-    const p = ps(), B = S.tb, narrow = W < 700, size = narrow ? Math.min(W - 40 * p, Hh * 0.55) : Math.min(Hh - 40 * p, W * 0.55), x0 = narrow ? (W - size) / 2 : 20 * p, y0 = 20 * p, k = size / 0.1; TBV = { x0, y0, size, k };
+    const p = ps(), B = S.tb, narrow = W < 700, scale = Math.max(1e-6, ...B.emfX.map(Math.abs), ...B.emfY.map(Math.abs));
+    let fx0, fy0, fx1 = W - 8 * p, fy1 = Hh - 8 * p;
+    if (use3()) {
+      const paneH = narrow ? Math.min(300 * p, Hh * 0.56) : Math.max(260 * p, Hh * 0.6); G3.pane = [0, 0, W, paneH]; ctx.clearRect(0, 0, W, paneH); TBV = null; const Q = tablet3();
+      const lp = Q([(B.x - 0.05) * 100, (B.y - 0.05) * 100, 9.6]); tag('pen: a magnet in the tip, N down', lp[0], lp[1] - 4 * p);
+      const lw = Q([0, -6.4, 0.9]); tag('10 cm × 10 cm, wires every 5 mm, 5 mm below the magnet', lw[0], lw[1] + 12 * p, { s: narrow ? 9 : 10.5 });
+      if (B.lost) tag('pen not moving: no EMF in any wire', W / 2, 22 * p, { b: 1, c: T.pos });
+      caption3('Each wire glows red or blue with the sign of its EMF, brighter for more. Drag the pen; drag elsewhere to turn.');
+      fx0 = 8 * p; fy0 = paneH + 6 * p;
+    } else {
+    const size = narrow ? Math.min(W - 40 * p, Hh * 0.55) : Math.min(Hh - 40 * p, W * 0.55), x0 = narrow ? (W - size) / 2 : 20 * p, y0 = 20 * p, k = size / 0.1; TBV = { x0, y0, size, k };
+    if (window.VDGear) VDGear.box(ctx, x0 - 17 * p, y0 - 17 * p, size + 34 * p, size + 34 * p, { r: 14 * p, color: '#2c323b' });   /* the tablet's case round its sensing area */
     ctx.fillStyle = T.surface; ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.beginPath(); ctx.roundRect(x0 - 10 * p, y0 - 10 * p, size + 20 * p, size + 20 * p, 10 * p); ctx.fill(); ctx.stroke();
-    const scale = Math.max(1e-6, ...B.emfX.map(Math.abs), ...B.emfY.map(Math.abs));
     const wcol = (e) => { if (S.blind || Math.abs(e) < TB.noise) return T.wire; return e > 0 ? T.pos : T.neg; };
     XS.forEach((x, i) => { const e = B.emfX[i]; ctx.strokeStyle = wcol(e); ctx.lineWidth = (1 + (S.blind ? 0 : 3 * Math.abs(e) / scale)) * p; ctx.beginPath(); ctx.moveTo(x0 + x * k, y0); ctx.lineTo(x0 + x * k, y0 + size); ctx.stroke(); });
     XS.forEach((y, i) => { const e = B.emfY[i]; ctx.strokeStyle = wcol(e); ctx.lineWidth = (1 + (S.blind ? 0 : 3 * Math.abs(e) / scale)) * p; ctx.beginPath(); ctx.moveTo(x0, y0 + size - y * k); ctx.lineTo(x0 + size, y0 + size - y * k); ctx.stroke(); });
@@ -576,10 +759,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!S.blind) { ctx.strokeStyle = T.accent; ctx.lineWidth = 2.6 * p; ctx.lineJoin = 'round'; ctx.beginPath(); let pen = false; for (const q of B.est) { if (!q) { pen = false; continue; } const [a, b] = P(q); if (pen) ctx.lineTo(a, b); else ctx.moveTo(a, b); pen = true; } ctx.stroke(); }
     const [px, py] = P([B.x, B.y]); ctx.fillStyle = T.ink; ctx.globalAlpha = 0.18; ctx.beginPath(); ctx.arc(px, py, 14 * p, 0, 7); ctx.fill(); ctx.globalAlpha = 1; ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * p; ctx.beginPath(); ctx.arc(px, py, 6 * p, 0, 7); ctx.stroke();
     txt('pen', px + 10 * p, py - 12 * p, { s: 10, b: 1 });
-    if (B.lost) txt('pen not moving: no EMF in any wire', x0 + size / 2, y0 + size + 22 * p, { a: 'center', s: 11, b: 1, c: T.pos });
-    else txt('10 cm × 10 cm, wires every 5 mm', x0 + size / 2, y0 + size + 22 * p, { a: 'center', s: 10, c: T.muted });
+    if (B.lost) txt('pen not moving: no EMF in any wire', x0 + size / 2, y0 + size + 29 * p, { a: 'center', s: 11, b: 1, c: T.pos });
+    else txt('10 cm × 10 cm, wires every 5 mm', x0 + size / 2, y0 + size + 29 * p, { a: 'center', s: 10, c: T.muted });
     /* EMF on the wires that run up the tablet (they sense left and right motion) */
-    const fx0 = narrow ? 8 * p : x0 + size + 24 * p, fy0 = narrow ? y0 + size + 40 * p : 20 * p, fx1 = W - 8 * p, fy1 = Hh - 8 * p;
+    fx0 = narrow ? 8 * p : x0 + size + 24 * p; fy0 = narrow ? y0 + size + 40 * p : 20 * p;
+    }
     frame(fx0, fy0, fx1, fy1, 'EMF in the wires across x');
     const ax = axes(fx0 + 44 * p, fy0 + 40 * p, fx1 - 12 * p, fy1 - 30 * p, 0, 100, -scale * 1.2e6, scale * 1.2e6, 'wire position x (mm)', 'EMF (µV)');
     if (S.blind) { txt('hidden in Blind', (fx0 + fx1) / 2, (fy0 + fy1) / 2, { a: 'center', s: 11, c: T.muted }); return; }
@@ -588,11 +772,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function drawCard() {
     const p = ps(), r = S.cd.run, narrow = W < 620;
+    let py0;
+    if (use3()) {
+      const paneH = narrow ? Math.min(300 * p, Hh * 0.56) : Math.max(280 * p, Hh * 0.6); G3.pane = [0, 0, W, paneH]; ctx.clearRect(0, 0, W, paneH); const Q = card3(), g = g3;
+      const lh = Q([0, -g.RD.d / 2, 0.6]), lm = Q([-5, -0.5, g.MZ - 1.0]), ls = Q([17, 7, 8.4]), lc = Q([-(CARD3.off + (r ? r.x : 0)) * 100 + 8.56, 0, CARD3.bottom + 5.0]);
+      tag('read head and its coil', lh[0], lh[1] + 10 * p); tag('the 4 mm of track 2 at the head, 25× along the stripe', lm[0], lm[1] + 12 * p, { s: narrow ? 9 : 10.5, a: 'left' }); tag('scope', ls[0], ls[1]);
+      if (!narrow) tag('card, stripe toward you, moving left', lc[0] + 6 * p, lc[1], { a: 'left' });
+      const ln = Q([-5.6, -0.6, g.MZ]), lsx = Q([5.6, -0.6, g.MZ]); if (!narrow) { tag('N', lsx[0] + 12 * p, lsx[1], { b: 1, c: T.magN }); tag('S', ln[0] - 12 * p, ln[1], { b: 1, c: T.magS }); }
+      caption3(`Red is an N end, blue an S end; each bit is ${(CARD.bitLen * 1000).toFixed(3)} mm long. Drag to turn.`);
+      py0 = paneH + 6 * p;
+    } else {
     /* the card and the reader slot, to scale */
     const cardW = Math.min(W - 40 * p, 360 * p), k = cardW / 0.0856, cy = 20 * p, headX = W / 2, xPos = r ? r.x : 0, off = 0.0074;   /* data starts 7.4 mm from the card edge (chosen) */
     const cx0 = headX - (off + xPos) * k;
-    ctx.fillStyle = T.card; ctx.beginPath(); ctx.roundRect(cx0, cy, cardW, 0.054 * k, 8 * p); ctx.fill(); ctx.fillStyle = T.stripe; ctx.fillRect(cx0, cy + 0.0056 * k, cardW, 0.0102 * k);
-    ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * p; ctx.strokeRect(headX - 4 * p, cy - 6 * p, 8 * p, 0.016 * k + 12 * p); txt('head', headX + 8 * p, cy - 2 * p, { s: 10, c: T.muted });
+    if (window.VDGear) VDGear.shadow(ctx, cx0 + cardW / 2, cy + 0.054 * k + 3 * p, cardW * 0.5, 6 * p, 0.8);
+    ctx.fillStyle = T.card; ctx.beginPath(); ctx.roundRect(cx0, cy, cardW, 0.054 * k, 8 * p); ctx.fill(); ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.stroke(); ctx.fillStyle = T.stripe; ctx.fillRect(cx0, cy + 0.0056 * k, cardW, 0.0102 * k);
+    if (window.VDGear) { ctx.globalAlpha = 0.85; VDGear.box(ctx, headX - 4 * p, cy - 6 * p, 8 * p, 0.016 * k + 12 * p, { r: 2 * p, color: '#8d96a1', shadow: false }); ctx.globalAlpha = 1; } else { ctx.strokeStyle = T.muted; ctx.lineWidth = 1 * p; ctx.strokeRect(headX - 4 * p, cy - 6 * p, 8 * p, 0.016 * k + 12 * p); } txt('head', headX + 8 * p, cy - 2 * p, { s: 10, c: T.muted });
     /* zoomed stripe under the head: ±2 mm */
     const zy = cy + 0.054 * k + 18 * p, zh = 54 * p, zx0 = 16 * p, zx1 = W - 16 * p, zk = (zx1 - zx0) / 0.004;
     ctx.save(); ctx.beginPath(); ctx.rect(zx0, zy, zx1 - zx0, zh); ctx.clip(); ctx.fillStyle = T.relief; ctx.fillRect(zx0, zy, zx1 - zx0, zh);
@@ -600,8 +795,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.restore();
     ctx.fillStyle = T.coil; ctx.fillRect(headX - 2 * p, zy - 6 * p, 4 * p, zh + 12 * p); txt('magnetization near the head, 4 mm shown', zx0, zy + zh + 12 * p, { s: 9, c: T.muted });
     txt(`each bit is ${(CARD.bitLen * 1000).toFixed(3)} mm long`, zx1, zy + zh + 12 * p, { a: 'right', s: 9, c: T.muted });
+    py0 = zy + zh + 28 * p;
+    }
     /* EMF against time */
-    const py0 = zy + zh + 28 * p; frame(8 * p, py0, W - 8 * p, Hh - 8 * p, 'EMF in the head (relative units)');
+    frame(8 * p, py0, W - 8 * p, Hh - 8 * p, 'EMF in the head (relative units)');
     if (!r) return;
     const tMax = (r.L + 1.6e-3) / S.cd.v * (S.cd.uneven ? 1.4 : 1.05), ymax = 1.6 * Math.max(0.3, S.cd.v * 1.2);
     const ax = axes(48 * p, py0 + 40 * p, W - 20 * p, Hh - 50 * p, 0, tMax * 1e3, -ymax, ymax, 't (ms)', 'EMF');
@@ -614,8 +811,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function draw() {
     if (!T || !W) return;
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh); if (g3) g3.el.hidden = !use3();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, Hh); if (g3) g3.S.el.hidden = !use3();
     if (S.machine === 'flash') drawFlash(); else if (S.machine === 'tablet') drawTablet(); else drawCard();
+    if (G3.msg && !use3()) txt(G3.msg, W - 10 * ps(), 12 * ps(), { a: 'right', s: 9, c: T.muted });
   }
 
   let rd = 0;
@@ -634,7 +832,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.knobs();
   tokens(); new ResizeObserver(resize).observe(stage);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'flash'); S.fl.shaking = false; upd(); resize();   /* opens still until Shake (Steve: no demo starts on its own) */
-  { const v0 = new URLSearchParams(location.search).get('view'); G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
+  /* opens in 3D (?view=flat opens flat; a low power device opens flat); the tablet's pen can be dragged in either view */
+  G3.view = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { sync(); draw(); }, status: (m) => { G3.msg = m; draw(); } });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
