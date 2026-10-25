@@ -585,6 +585,19 @@
         { table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.part === 'layers') && new Set(rows.map((r) => r.planet)).size > 1, cols: ['row', 'planet', 'core_km', 'core_mass_pct', 'k_model', 'k_measured'] }] },
   });
   /* ==ASTRO 2203 END== */
+  /* ==MEDICAL PHYSICS START== Upper level worksheets for the Medical Physics module (medical-physics.html, 2026-10-25): calculus, cited data
+     tables and uncertainties. Each opens its demo with ?ws=<slug>. */
+  const MEDPHYS = ['mp-kerma-equilibrium', 'mp-proton-calibration'];
+  ENABLED.push(...MEDPHYS);
+  Object.assign(FROM_DEMO, {
+    /* Reading | Depth z (cm) | K_col (Gy) | Model dose D (Gy) | D/K_col | Monte Carlo dose (Gy) | its uncertainty (Gy) | ln(D_MC/1 Gy), typed */
+    'mp-kerma-equilibrium': { demo: 'Dosimetry: Kerma, Equilibrium and the Ion Chamber', cols: ['row', 'z_cm', 'Kcol_Gy', 'D_Gy', 'ratio', 'DMC_Gy', 'uMC_Gy', null] },
+    /* Reading | Voltage V (V) | 1/V (1/kV) | Reading M (nC) | 1/M (1/nC); the Calibration view's readings (every row from it) go to the
+       second table: Reading | Beam | Voltage (V) | Polarity | Reading M (nC) | Water temperature (°C) | Pressure (kPa) */
+    'mp-proton-calibration': { demo: 'Dosimetry: Kerma, Equilibrium and the Ion Chamber', cols: ['row', 'V', 'inv_V', 'M_nC', 'inv_M'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'Calibration'), cols: ['row', 'beam', 'V', 'pol', 'M_nC', 'T_C', 'P_kPa'] }] },
+  });
+  /* ==MEDICAL PHYSICS END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. The student may choose a quadratic instead (y = a + bx + cx², all three coefficients free), for data
@@ -592,11 +605,12 @@
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
   const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'ripple-tank', 'intro-retrograde'];
+  GRAPH_EVERY_TABLE.push('mp-kerma-equilibrium');   /* its energy table graphs d_max against the electron range */
   const PRINT_ROWS = 8;   /* rows a blank data table prints with, to fill in by hand */
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
   const CURVE_TABLES = { 'franck-hertz': [0], 'intro-retrograde': [0, 2] };
-  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
+  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS, ...MEDPHYS); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
   const pretty = (h) => String(h || '').replace(/\^([23])/g, (m, d) => SUP[d]).replace(/_(\d)/g, (m, d) => SUB[d]);

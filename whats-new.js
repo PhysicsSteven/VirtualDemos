@@ -12,6 +12,9 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-dosimetry', date: '2026-10-25', title: 'Dosimetry: Kerma, Equilibrium and the Ion Chamber',
+    text: 'A new Medical Physics demo with two worksheets: watch a photon beam\'s dose build up in water against its kerma, with a Monte Carlo run and its uncertainty; read a Farmer ion chamber\'s saturation curve in a pulsed proton beam; and calibrate a scanned proton layer step by step the TRS-398 way, from k_TP and polarity to k_Q.',
+    link: { href: 'demos/dosimetry.html', text: 'Open Dosimetry' } },
   { id: '2026-10-25-astro-combined', date: '2026-10-25', title: 'Astronomy and Astro 2203 in one place',
     text: 'The Astronomy page now holds every astronomy demo, with a new Telescopes and light unit, and each card lists the Astro 2203 worksheets too. The Astro 2203 schedule is at the bottom of the page, topic by topic, and old Astro 2203 links land there.' },
   { id: '2026-10-25-course-worksheets', date: '2026-10-25', title: 'Each course\'s own worksheets',

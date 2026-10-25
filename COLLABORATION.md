@@ -4336,3 +4336,44 @@ Checked: courses.py --check, test_textbook_map, Playwright on astro.html (deskto
 VD.ws, breadcrumbs and worksheet menus on seven demo and course combinations. vdcheck compare on seasons, kepler orbits,
 gyroscope, units: pass; optics bench fails at 400 px on presets that change from run to run, and fails the same way on main
 with no changes (timing), so not from this.
+## 2026-10-25 · Claude · New demo: Dosimetry: Kerma, Equilibrium and the Ion Chamber (Medical Physics, gap 3)
+
+Gap 3 of the Medical Physics plan (Steve picked option A, the radiation physics core). Upper level audience (calculus, cited
+tables, uncertainties). New `demos/dosimetry.html` with three views, two worksheets, notes, tests, keys. Course entry: first demo
+of the `dosimetry` unit on `medical-physics.html` (the `coming` placeholder removed; tools/courses.py rerun), catalog subject
+modern physics, worksheets in `COURSE_HANDOUTS['medical-physics']`.
+
+- **Kerma and dose.** K_col = Φ hν (μ_en/ρ) e^(−μz) from NIST liquid water (Hubbell and Seltzer), log–log interpolated.
+  D(z) = ∫ K_col(z − x) G(x) dx with G from the Klein–Nishina electron spectrum and angle, each electron straight along its first
+  direction for its ESTAR CSDA range, leaving ESTAR S_col along the way; G normalized to 1. Model ⁶⁰Co d_max 4.50 mm, β 1.0107
+  (stated as a sketch: no multiple scattering; Khan's measured 0.5 cm quoted). A Monte Carlo of the same physics (batches of 4000
+  histories, seeded mulberry32) gives points with standard uncertainties; the probe readout is linear between the two nearest bin
+  centers (u too), so it compares with the model at the same depth. Non Compton events are left out of the electron spread
+  (0.2 to 1.0 % of interactions from 0.2 to 2 MeV, 5.7 % at 4 MeV), stated in the Lab fold.
+- **Ion chamber.** PTW 30013 type Farmer cavity (0.6 cm³, a 3.05 mm, b 0.55 mm, Boag equivalent gap 2.78 mm). Boag pulsed
+  f = ln(1 + u)/u and continuous f = 1/(1 + m²d⁴q/(6V²)) with α 1.3e-12 m³/s, k₁ 1.87e-4, k₂ 2.09e-4 m²/(V s) (Fenwick and Kumar
+  2023). Saturation curve and Jaffé plots (1/M against 1/V or 1/V²).
+- **Calibration.** TRS-398 steps with a Check per factor: k_TP, k_pol, k_s (pulsed two voltage coefficients, continuous formula),
+  N_D,w (simulated certificate = s_w,air p_Co W_air/(ρ_air V)), k_Q from the TRS-398 (2000) proton s_w,air fit, W_air 34.23 eV,
+  ⁶⁰Co 1.133 and 33.97 eV, p_Co 0.982 / 0.973 / 0.972 (Burigo and Greilich 2019, Table 5), z_ref from TRS-398 Rev. 1 Table 36
+  (via Baumann et al. 2025), R_p = PSTAR CSDA range (stated). ICRU 90 W_air 34.44 eV is a Lab option. Simulated: polarity effect,
+  0.05 % noise, the plan's 1.000 Gy per 100 MU, the rooms, Mystery's drift (1 to 3 %, either way).
+- Worksheets: `mp-kerma-equilibrium` (buildup, equilibrium at depth, energy table, 1/√N) and `mp-proton-calibration` (saturation
+  at 1 and 8 mGy per pulse, ⁶⁰Co N_D,w, a 150 MeV layer with a factor table and uncertainty budget, Mystery). worksheet.js
+  MEDICAL PHYSICS block (the calibration view's rows route to the second table); the kerma worksheet graphs every table.
+  Glossary sections added (symbols.py --check, --meanings 0; symcheck 303 symbols, 0 differences; check_math 0 problems).
+- Tests: `curriculum/validation/test_dosimetry.cjs`, 9 groups (Klein–Nishina integrates to σ; Compton + ESTAR gives NIST
+  μ_en/ρ within 0.1 % at 1.25 MeV; energy conservation of the dose kernel; the Monte Carlo against the model; k_TP undoes the
+  air density; k_Q from its definition; the calibration closes to 1e-5 with exact k_s and 3e-4 with the polynomial).
+- vdcheck --only after: 48 screenshots, 0 problems; --only clip: 0 cut off. Thumbnails made. No How this works videos yet: Steve
+  wants a visual pass on the Medical Physics demos first.
+- Keys (TeacherKeys `worksheet-keys/medical-physics/`, capture scripts in tools/capture): from real runs. Kerma: Part 2 slope
+  −0.06283 ± 0.00019 cm⁻¹ against μ 0.06323; weighted D_MC/K_col 1.0094 ± 0.0018 against β 1.0107; Part 1 χ²/N 2.1 from one
+  correlated 2 M history run, settled by 8.1 M histories at 0.80 cm (0.05705 ± 0.00019 against 0.05706 Gy). Calibration: k_s 1.0059
+  (1 mGy per pulse) and 1.048 (8 mGy per pulse, fit 150 to 500 V; curvature below), N_D,w from ⁶⁰Co 0.052337 ± 0.000013 Gy/nC
+  against the certificate 0.052315, D_w 1.0000 Gy ± 1.52 % for 100 MU, Mystery −1.60 % (true −1.6 %).
+- The demo carries small ESTAR and PSTAR tables in its CORE; the shared stopping power helper the charged particles thread planned
+  for demos/lib did not exist yet, so they could move there later.
+
+For GPT: please check the TRS-398 numbers (k_Q 1.0293 for the PTW 30013 at 150 MeV, the two voltage coefficients, z_ref rule),
+the Boag formulas and constants, and both keys' arithmetic against their data files.

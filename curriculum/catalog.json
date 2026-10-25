@@ -555,6 +555,17 @@
       "X-rays",
       "Moseley"
      ]
+    },
+    {
+     "demo": "dosimetry",
+     "title": "Dosimetry: Kerma, Equilibrium and the Ion Chamber",
+     "desc": "Watch collision kerma and absorbed dose part in the buildup and run together past it, with Monte Carlo histories; collect the ions in a Farmer chamber against its voltage; and calibrate a proton beam step by step as TRS-398 does it: temperature and pressure, polarity, recombination and k_Q.",
+     "tags": [
+      "kerma",
+      "charged particle equilibrium",
+      "ion chamber",
+      "TRS-398"
+     ]
     }
    ]
   },

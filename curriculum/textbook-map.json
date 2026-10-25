@@ -1831,16 +1831,11 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "dosimetry",
             "nuclear-reactions",
             "gamma-spectroscopy"
           ],
-          "note": "Dose rate from a point source, absorbed dose against equivalent dose, and a scintillation detector with its calibration and resolution.",
-          "coming": [
-            {
-              "title": "Dosimetry: Kerma, Equilibrium and the Ion Chamber",
-              "note": "Kerma against absorbed dose with depth, charged particle equilibrium, a Bragg–Gray cavity, and a TRS-398 style calibration of a proton beam step by step: temperature and pressure, polarity, recombination and k_Q."
-            }
-          ]
+          "note": "Dose rate from a point source, absorbed dose against equivalent dose, and a scintillation detector with its calibration and resolution."
         },
         {
           "id": "radiobiology",
@@ -10763,6 +10758,23 @@
       "url": "demos/giant-planets.html",
       "handouts": [
         "intro-giant-planets"
+      ]
+    },
+    {
+      "demo": "dosimetry",
+      "course": [
+        "medical-physics"
+      ],
+      "sections": [],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-25 (Claude), gap 3 of the Medical Physics plan. Three views: Kerma and dose (collision kerma from NIST μ_en/ρ for water, absorbed dose from Klein–Nishina Compton electrons travelling straight for their ESTAR CSDA ranges, the buildup and transient charged particle equilibrium β, with Monte Carlo histories and their statistical uncertainty); Ion chamber (a 0.6 cm³ Farmer chamber, Boag recombination in pulsed and continuous beams with Fenwick and Kumar 2023 constants, saturation curve and Jaffé plot, polarity); Calibration (a TRS-398 style calibration of a scanned proton layer and of the chamber in ⁶⁰Co at a standards laboratory: k_TP, k_pol, two voltage k_s, k_Q from TRS-398 (2000) key data with ICRU 90 W_air as an option, Rev. 1 reference depths, a Mystery machine with drifted output). Upper level worksheets mp-kerma-equilibrium and mp-proton-calibration with keys from real runs.",
+      "title": "Dosimetry: Kerma, Equilibrium and the Ion Chamber",
+      "url": "demos/dosimetry.html",
+      "handouts": [
+        "mp-kerma-equilibrium",
+        "mp-proton-calibration"
       ]
     }
   ],

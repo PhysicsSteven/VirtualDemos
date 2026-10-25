@@ -1,0 +1,931 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<title>Dosimetry: Kerma, Equilibrium and the Ion Chamber</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: its colors, the strip, the picture and the calibration steps */
+:root { --water: #2f7fc1; --water2: #cfe6f7; --photon: #c2410c; --elec: #7c3aed; --kerma: #b45309; --dose: #0f766e; --mc: #be185d; --ion: #2563eb; --neg: #dc2626; --beam: #f59e0b; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --water: #5aa9e6; --water2: #12324d; --photon: #fb923c; --elec: #c4a5ff; --kerma: #fbbf24; --dose: #2dd4bf; --mc: #f472b6; --ion: #7aa7ff; --neg: #ff7a7a; --beam: #fcd34d; } }
+:root[data-theme="dark"] { --water: #5aa9e6; --water2: #12324d; --photon: #fb923c; --elec: #c4a5ff; --kerma: #fbbf24; --dose: #2dd4bf; --mc: #f472b6; --ion: #7aa7ff; --neg: #ff7a7a; --beam: #fcd34d; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 600px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: pan-y; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 14px; width: 270px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card.ghost { opacity: 0.25; pointer-events: none; }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-card .pick label, .setup-card .lbl { font-size: 0.8rem; color: var(--muted); }
+.setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
+.setup-card .row2 { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+.steps { margin: 0; padding-left: 1.2em; display: flex; flex-direction: column; gap: 8px; font-size: 0.86rem; }
+.steps li p { margin: 2px 0 4px; color: var(--muted); font-size: 0.8rem; }
+.steps .chk { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.steps input { font: inherit; font-family: var(--font-mono); font-size: 0.84rem; width: 8.5em; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 3px 6px; }
+.steps .say { font-size: 0.8rem; }
+.steps .say.good { color: var(--dose); } .steps .say.bad { color: var(--neg); }
+.readout .warn { color: var(--neg); }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(720px, 100%); } }
+:root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); }
+@media (max-width: 820px) { .scene { min-height: 0; height: 470px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; } }
+@media (max-width: 420px) { .scene { height: 420px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Dosimetry: Kerma, Equilibrium and the Ion Chamber</h1>
+      <p>Photons hand their energy to electrons, and the electrons carry it deeper before they leave it as dose: watch kerma and absorbed dose part in the buildup and run side by side past it. Then collect the ions in a Farmer chamber and calibrate a proton beam the way a TRS-398 calibration does it, one correction at a time.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">Gy · nC · cm of water</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/dosimetry.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/dosimetry.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM12 2h4v1h-4zM18 2h3v1h-3zM22 2h3v1h-3zM26 2h1v1h-1zM28 2h1v1h-1zM30 2h1v1h-1zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h3v1h-3zM17 3h2v1h-2zM20 3h2v1h-2zM23 3h2v1h-2zM27 3h1v1h-1zM29 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h1v1h-1zM14 4h1v1h-1zM16 4h1v1h-1zM21 4h3v1h-3zM26 4h1v1h-1zM28 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM19 5h1v1h-1zM21 5h1v1h-1zM24 5h1v1h-1zM27 5h4v1h-4zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM17 6h1v1h-1zM21 6h2v1h-2zM25 6h1v1h-1zM28 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM15 7h1v1h-1zM17 7h2v1h-2zM20 7h1v1h-1zM24 7h1v1h-1zM27 7h1v1h-1zM29 7h2v1h-2zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h3v1h-3zM14 9h1v1h-1zM18 9h1v1h-1zM21 9h2v1h-2zM26 9h1v1h-1zM2 10h1v1h-1zM4 10h5v1h-5zM11 10h2v1h-2zM14 10h1v1h-1zM16 10h2v1h-2zM20 10h1v1h-1zM22 10h9v1h-9zM32 10h5v1h-5zM2 11h1v1h-1zM6 11h2v1h-2zM9 11h2v1h-2zM12 11h1v1h-1zM14 11h1v1h-1zM16 11h3v1h-3zM28 11h1v1h-1zM30 11h1v1h-1zM33 11h1v1h-1zM36 11h2v1h-2zM2 12h4v1h-4zM8 12h2v1h-2zM11 12h2v1h-2zM14 12h1v1h-1zM16 12h1v1h-1zM19 12h2v1h-2zM22 12h2v1h-2zM25 12h2v1h-2zM28 12h3v1h-3zM32 12h3v1h-3zM36 12h3v1h-3zM4 13h1v1h-1zM6 13h2v1h-2zM10 13h3v1h-3zM14 13h3v1h-3zM18 13h1v1h-1zM20 13h1v1h-1zM23 13h1v1h-1zM25 13h1v1h-1zM29 13h2v1h-2zM32 13h3v1h-3zM38 13h1v1h-1zM2 14h1v1h-1zM6 14h1v1h-1zM8 14h1v1h-1zM11 14h1v1h-1zM14 14h1v1h-1zM19 14h1v1h-1zM22 14h1v1h-1zM24 14h15v1h-15zM3 15h1v1h-1zM7 15h1v1h-1zM10 15h2v1h-2zM14 15h1v1h-1zM18 15h2v1h-2zM22 15h4v1h-4zM27 15h1v1h-1zM30 15h1v1h-1zM33 15h1v1h-1zM2 16h2v1h-2zM5 16h1v1h-1zM7 16h6v1h-6zM14 16h2v1h-2zM17 16h3v1h-3zM22 16h2v1h-2zM29 16h7v1h-7zM38 16h1v1h-1zM2 17h1v1h-1zM4 17h1v1h-1zM6 17h1v1h-1zM9 17h3v1h-3zM13 17h2v1h-2zM17 17h9v1h-9zM28 17h1v1h-1zM32 17h3v1h-3zM37 17h1v1h-1zM3 18h1v1h-1zM7 18h4v1h-4zM12 18h2v1h-2zM15 18h1v1h-1zM17 18h2v1h-2zM21 18h1v1h-1zM23 18h1v1h-1zM26 18h2v1h-2zM29 18h1v1h-1zM31 18h2v1h-2zM34 18h1v1h-1zM36 18h1v1h-1zM38 18h1v1h-1zM5 19h2v1h-2zM9 19h1v1h-1zM12 19h4v1h-4zM17 19h1v1h-1zM20 19h1v1h-1zM22 19h3v1h-3zM26 19h1v1h-1zM30 19h1v1h-1zM37 19h1v1h-1zM3 20h2v1h-2zM6 20h1v1h-1zM8 20h1v1h-1zM10 20h2v1h-2zM14 20h1v1h-1zM16 20h3v1h-3zM21 20h1v1h-1zM23 20h2v1h-2zM26 20h1v1h-1zM28 20h3v1h-3zM33 20h3v1h-3zM37 20h2v1h-2zM2 21h3v1h-3zM9 21h1v1h-1zM16 21h2v1h-2zM20 21h5v1h-5zM28 21h3v1h-3zM32 21h1v1h-1zM38 21h1v1h-1zM2 22h1v1h-1zM5 22h9v1h-9zM15 22h3v1h-3zM19 22h1v1h-1zM21 22h1v1h-1zM24 22h5v1h-5zM31 22h2v1h-2zM34 22h3v1h-3zM2 23h5v1h-5zM10 23h2v1h-2zM13 23h1v1h-1zM15 23h1v1h-1zM18 23h1v1h-1zM21 23h1v1h-1zM25 23h1v1h-1zM27 23h2v1h-2zM30 23h2v1h-2zM35 23h1v1h-1zM37 23h1v1h-1zM4 24h2v1h-2zM7 24h3v1h-3zM11 24h1v1h-1zM13 24h1v1h-1zM17 24h1v1h-1zM20 24h1v1h-1zM22 24h1v1h-1zM24 24h1v1h-1zM26 24h6v1h-6zM33 24h3v1h-3zM37 24h2v1h-2zM3 25h1v1h-1zM6 25h1v1h-1zM12 25h1v1h-1zM15 25h4v1h-4zM21 25h2v1h-2zM25 25h1v1h-1zM29 25h1v1h-1zM31 25h1v1h-1zM33 25h2v1h-2zM37 25h1v1h-1zM2 26h1v1h-1zM4 26h1v1h-1zM6 26h3v1h-3zM10 26h1v1h-1zM15 26h1v1h-1zM17 26h1v1h-1zM20 26h9v1h-9zM31 26h4v1h-4zM36 26h2v1h-2zM2 27h1v1h-1zM5 27h1v1h-1zM7 27h1v1h-1zM9 27h1v1h-1zM11 27h2v1h-2zM14 27h1v1h-1zM16 27h3v1h-3zM23 27h1v1h-1zM25 27h1v1h-1zM30 27h2v1h-2zM33 27h1v1h-1zM2 28h1v1h-1zM5 28h2v1h-2zM8 28h1v1h-1zM11 28h1v1h-1zM14 28h1v1h-1zM16 28h1v1h-1zM22 28h1v1h-1zM27 28h4v1h-4zM33 28h2v1h-2zM37 28h2v1h-2zM2 29h1v1h-1zM4 29h2v1h-2zM9 29h2v1h-2zM12 29h1v1h-1zM14 29h1v1h-1zM18 29h1v1h-1zM23 29h1v1h-1zM29 29h1v1h-1zM31 29h4v1h-4zM37 29h2v1h-2zM2 30h1v1h-1zM4 30h2v1h-2zM7 30h2v1h-2zM10 30h2v1h-2zM13 30h2v1h-2zM16 30h1v1h-1zM19 30h1v1h-1zM25 30h4v1h-4zM30 30h7v1h-7zM38 30h1v1h-1zM10 31h1v1h-1zM13 31h11v1h-11zM25 31h3v1h-3zM29 31h2v1h-2zM34 31h2v1h-2zM2 32h7v1h-7zM12 32h1v1h-1zM16 32h2v1h-2zM19 32h1v1h-1zM22 32h2v1h-2zM26 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM36 32h3v1h-3zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM12 33h3v1h-3zM16 33h5v1h-5zM23 33h3v1h-3zM30 33h1v1h-1zM34 33h2v1h-2zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM13 34h3v1h-3zM18 34h1v1h-1zM21 34h1v1h-1zM23 34h1v1h-1zM25 34h10v1h-10zM36 34h2v1h-2zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h2v1h-2zM13 35h1v1h-1zM15 35h1v1h-1zM17 35h1v1h-1zM20 35h1v1h-1zM22 35h1v1h-1zM24 35h2v1h-2zM28 35h1v1h-1zM30 35h3v1h-3zM34 35h1v1h-1zM36 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM10 36h1v1h-1zM15 36h4v1h-4zM20 36h2v1h-2zM24 36h1v1h-1zM26 36h1v1h-1zM28 36h2v1h-2zM31 36h1v1h-1zM37 36h2v1h-2zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM13 37h1v1h-1zM17 37h1v1h-1zM21 37h3v1h-3zM28 37h3v1h-3zM32 37h1v1h-1zM34 37h1v1h-1zM38 37h1v1h-1zM2 38h7v1h-7zM10 38h1v1h-1zM15 38h3v1h-3zM19 38h1v1h-1zM21 38h1v1h-1zM24 38h1v1h-1zM26 38h3v1h-3zM31 38h1v1h-1zM34 38h5v1h-5z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Start</button>
+        <button type="button" class="btn" id="restart" title="Clear the histories and start counting again">Start again</button>
+        <div class="seg" role="group" aria-label="What the picture shows" id="viewSeg">
+          <button type="button" data-view="kerma" aria-pressed="true">Kerma and dose</button>
+          <button type="button" data-view="chamber" aria-pressed="false">Ion chamber</button>
+          <button type="button" data-view="cal" aria-pressed="false">Calibration</button>
+        </div>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="A photon beam entering water, the electrons it sets moving, and the collision kerma and absorbed dose against depth. Drag in the picture or the graph to move the depth probe."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the beam and the measurement">
+        <span class="card-title" id="cardTitle">Set up, then press Start</span>
+        <div id="boxKerma">
+          <div><div class="slider-head"><label for="sE">Photon energy hν</label><output id="oE" class="mono" for="sE"></output></div><input type="range" id="sE" min="0" max="1" step="0.001"></div>
+          <div class="chips" role="group" aria-label="Photon energy"><button type="button" data-e="0.5" aria-pressed="false">0.5 MeV</button><button type="button" data-e="1.25" aria-pressed="false">⁶⁰Co 1.25 MeV</button><button type="button" data-e="2" aria-pressed="false">2 MeV</button><button type="button" data-e="4" aria-pressed="false">4 MeV</button></div>
+          <div><div class="slider-head"><label for="sZ">Depth probe z</label><output id="oZ" class="mono" for="sZ"></output></div><input type="range" id="sZ" min="0" max="1" step="0.0001"></div>
+          <div class="pick"><label for="selRange">Depths shown</label><select id="selRange"><option value="build">The buildup (0 to 2.5 electron ranges)</option><option value="deep">Deep (0 to 20 cm)</option></select></div>
+          <div class="pick"><label for="selPhi">Photon fluence at the surface Φ</label><select id="selPhi"><option value="1e10">10¹⁰ photons per cm²</option><option value="1e11">10¹¹ photons per cm²</option><option value="1e12">10¹² photons per cm²</option></select></div>
+          <label class="check"><input type="checkbox" id="chkMC" checked><span>Count Monte Carlo histories while running</span></label>
+        </div>
+        <div id="boxChamber" hidden>
+          <div class="pick"><label for="selBeamC">Beam</label><select id="selBeamC"><option value="proton">Proton pencil beam scanning (pulsed, 1 kHz)</option><option value="co60">Cobalt 60 (continuous)</option></select></div>
+          <div id="boxPulse"><div class="slider-head"><label for="sDpp">Dose to water per pulse</label><output id="oDpp" class="mono" for="sDpp"></output></div><input type="range" id="sDpp" min="0.1" max="10" step="0.1"></div>
+          <div id="boxRate" hidden><div class="slider-head"><label for="sRate">Dose rate to water</label><output id="oRate" class="mono" for="sRate"></output></div><input type="range" id="sRate" min="0.1" max="10" step="0.1"></div>
+          <div><div class="slider-head"><label for="sV">Chamber voltage</label><output id="oV" class="mono" for="sV"></output></div><input type="range" id="sV" min="25" max="500" step="25"></div>
+          <div class="row2"><span class="lbl">Polarity</span><div class="seg" role="group" aria-label="Polarity of the collecting voltage" id="polSegC"><button type="button" data-pol="1" aria-pressed="true">+</button><button type="button" data-pol="-1" aria-pressed="false">−</button></div></div>
+          <div class="pick"><label for="selPlot">Graph</label><select id="selPlot"><option value="sat">Reading against voltage</option><option value="jaffe">1/M against 1/V (Jaffé plot)</option><option value="jaffe2">1/M against 1/V²</option></select></div>
+          <button type="button" class="btn primary" id="btnMeasureC">Deliver 1 Gy and read the charge</button>
+          <p class="note">Each reading is one delivery of 1.000 Gy to water at the chamber. The chamber is a 0.6 cm³ Farmer type in water at 20.0 °C and 101.325 kPa.</p>
+        </div>
+        <div id="boxCal" hidden>
+          <div class="pick"><label for="selBeam">Beam</label><select id="selBeam"><option value="proton">Proton reference field (scanned layer, 10 cm × 10 cm)</option><option value="co60">Cobalt 60 at the standards laboratory</option></select></div>
+          <div class="pick" id="boxEp"><label for="selEp">Proton energy</label><select id="selEp"><option value="70">70 MeV</option><option value="100">100 MeV</option><option value="150" selected>150 MeV</option><option value="200">200 MeV</option><option value="225">225 MeV</option></select></div>
+          <div class="pick"><label for="selCh">Chamber</label><select id="selCh"><option value="ptw30013">PTW 30013 (Farmer)</option><option value="ne2571">NE 2571 (Farmer)</option><option value="fc65g">IBA FC65-G (Farmer)</option></select></div>
+          <div class="row2"><span class="lbl">Voltage</span><div class="seg" role="group" aria-label="Chamber voltage" id="vSeg"><button type="button" data-v="400" aria-pressed="true">400 V</button><button type="button" data-v="200" aria-pressed="false">200 V</button><button type="button" data-v="100" aria-pressed="false">100 V</button></div></div>
+          <div class="row2"><span class="lbl">Polarity</span><div class="seg" role="group" aria-label="Polarity of the collecting voltage" id="polSeg"><button type="button" data-pol="1" aria-pressed="true">+</button><button type="button" data-pol="-1" aria-pressed="false">−</button></div></div>
+          <button type="button" class="btn primary" id="btnDeliver">Deliver the plan: 100 MU</button>
+          <p class="note" id="calNote"></p>
+        </div>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/mp-kerma-equilibrium.html" target="mp-kerma-equilibrium-worksheet">Worksheet 1: Kerma, Dose and Charged Particle Equilibrium (Medical Physics)</a></li><li><a href="../curriculum/labs/students/mp-proton-calibration.html" target="mp-proton-calibration-worksheet">Worksheet 2: Calibrating a Proton Beam: TRS-398 Step by Step (Medical Physics)</a></li></ul></details><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="co60" aria-pressed="true">⁶⁰Co buildup</button>
+          <button type="button" data-p="deep" aria-pressed="false">Equilibrium at depth</button>
+          <button type="button" data-p="low" aria-pressed="false">0.5 MeV: a thin buildup</button>
+          <button type="button" data-p="high" aria-pressed="false">4 MeV: a deep buildup</button>
+          <button type="button" data-p="sat" aria-pressed="false">Saturation curve, protons</button>
+          <button type="button" data-p="hot" aria-pressed="false">High dose per pulse</button>
+          <button type="button" data-p="cochamber" aria-pressed="false">⁶⁰Co: hardly any recombination</button>
+          <button type="button" data-p="cal" aria-pressed="false">Calibrate a 150 MeV layer</button>
+          <button type="button" data-p="cal70" aria-pressed="false">70 MeV: z_ref = 1 g/cm²</button>
+          <button type="button" data-p="lab" aria-pressed="false">Where N_D,w comes from</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <section id="stepsSec" hidden>
+        <h2>Calibration steps</h2>
+        <ol class="steps" id="steps"></ol>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="mp-proton-calibration" data-title="Dosimetry: Kerma, Equilibrium and the Ion Chamber" data-demo="dosimetry">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the model's answers and the checks</span></label>
+        <label class="check"><input type="checkbox" id="labMystery"><span>Mystery machine: the output has drifted by an unknown amount</span></label>
+        <label class="check"><input type="checkbox" id="labIcru"><span>Use the ICRU 90 W_air for protons (34.44 eV) in k_Q</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">K_col(z) = Φ hν (μ_en/ρ) e^(−μz); D(z) = ∫ K_col(z − x) G(x) dx; past the buildup D/K_col = β = ∫ G(x) e^(μx) dx</p>
+          <p class="hint">Primary photons only (a narrow beam view of a broad field, so scattered photons leave), water of density 1.000 g/cm³. μ/ρ and μ_en/ρ are NIST's. Each interaction makes a Compton electron with the Klein–Nishina spectrum and angle; it goes straight along its first direction for its ESTAR CSDA range and leaves its collision stopping power along the way. Real electrons scatter and zig zag, so the real buildup has a different shape: the model is a sketch of the mechanism, not a depth dose for planning (⁶⁰Co: d_max 4.5 mm here; Khan's tables give 0.5 cm measured). Coherent, photoelectric and pair events are left out of the electron spread (1 % of the interactions or less from 0.2 to 2 MeV, 6 % at 4 MeV). The Monte Carlo scores 50 depth bins (0.5 cm bins at depth) in batches of 4000 histories; the readout at the probe is read linearly between the two nearest bin centers, and so is its uncertainty.</p>
+          <p class="formula">D_air = M/(ρ_air V) · W_air/e; D_w = D_air s_w,air p_Q (Bragg–Gray)</p>
+          <p class="formula">D_w,Q = M k_TP k_pol k_s N_D,w k_Q; k_TP = (273.2 + T)/(273.2 + 20) · 101.325/P; k_pol = (|M₊| + |M₋|)/(2|M|)</p>
+          <p class="formula">pulsed: f = ln(1 + u)/u, u = α n₀ d²/((k₁ + k₂) V); continuous: f = 1/(1 + m² d⁴ q/(6V²))</p>
+          <p class="formula">k_Q = (s_w,air)_Q W_Q p_Q / ((s_w,air)_Co W_Co p_Co); s_w,air = 1.137 − 4.3 × 10⁻⁵ R_res + 1.84 × 10⁻³/R_res</p>
+          <p class="hint">The chamber is simulated from these formulas and the key data below, so the protocol closes on itself: what you calculate is the dose the demo delivered, within the reading noise (0.05 %, simulated) and the two voltage approximation. The polarity effect (+0.10 % in protons, +0.05 % in ⁶⁰Co), the standards laboratory's dose rate and the plan's 1.000 Gy are simulated values. A real calibration uses the chamber's own certificate and the current tables of TRS-398 Rev. 1 (2024), whose k_Q values were recalculated with ICRU 90 key data and Monte Carlo chamber factors (thimble chambers moved by up to 1.7 %). This is a teaching version, not a calibration protocol.</p>
+        </details>
+        <details class="more"><summary>Sources</summary>
+          <p class="hint">NIST X-Ray Mass Attenuation Coefficients, liquid water (Hubbell and Seltzer). NIST ESTAR and PSTAR, liquid water and dry air (Berger, Coursey, Zucker and Chang). IAEA TRS-398 (2000): proton s_w,air fit and W_air = 34.23 eV; ⁶⁰Co s_w,air = 1.133 and W_air = 33.97 eV; p_Co 0.982 (PTW 30013), 0.973 (NE 2571), 0.972 (FC65-G), as listed by Burigo and Greilich 2019 (arXiv 1812.07877), Table 5; two voltage coefficients for pulsed radiation. ICRU Report 90: W_air = 34.44 eV for protons. TRS-398 Rev. 1 (2024) Table 36, reference depth in scanned beams, as given by Baumann et al. 2025 (Phys. Med. Biol. 70 015014). Boag 1950 (Br. J. Radiol. 23 601) for recombination, with α = 1.3 × 10⁻¹² m³/s, k₁ = 1.87 × 10⁻⁴ and k₂ = 2.09 × 10⁻⁴ m²/(V s) from Fenwick and Kumar 2023 (Phys. Med. Biol. 68 015016). Farmer cavity 0.6 cm³ (PTW 30013 data) with radius 3.05 mm; the central electrode radius 0.55 mm is a typical value.</p>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Dosimetry physics, runnable in Node (curriculum/validation/test_dosimetry.cjs).
+     Data: NIST X-Ray Mass Attenuation Coefficients for liquid water (Hubbell and Seltzer, NISTIR 5632); NIST ESTAR and PSTAR
+     (Berger, Coursey, Zucker and Chang) for water and dry air; IAEA TRS-398 (2000) key data for protons and cobalt 60; ICRU 90 W_air
+     for protons; ion mobilities and recombination rate from Fenwick and Kumar 2023 (Phys. Med. Biol. 68 015016) Table 1. */
+  const MEC2 = 0.51099895069;          /* electron rest energy, MeV (CODATA 2022) */
+  const RE = 2.8179403205e-13;          /* classical electron radius, cm (CODATA 2022) */
+  const NA = 6.02214076e23, QE = 1.602176634e-19, RGAS = 8.314462618;
+  const MEV_PER_G_TO_GY = 1.602176634e-10;   /* 1 MeV/g = 1.602176634e-13 J / 1e-3 kg */
+  const ZA_WATER = 10 / 18.01528;       /* electrons per gram / N_A for H2O (H 1.00794, O 15.9994) */
+  const M_AIR = 28.9644e-3;             /* molar mass of dry air, kg/mol (US Standard Atmosphere 1976) */
+  /* NIST liquid water, density 1.000 g/cm³: [E (MeV), μ/ρ (cm²/g), μ_en/ρ (cm²/g)] */
+  const NIST_W = [[0.1, 0.1707, 0.02546], [0.15, 0.1505, 0.02764], [0.2, 0.1370, 0.02967], [0.3, 0.1186, 0.03192], [0.4, 0.1061, 0.03279],
+    [0.5, 0.09687, 0.03299], [0.6, 0.08956, 0.03284], [0.8, 0.07865, 0.03206], [1.0, 0.07072, 0.03103], [1.25, 0.06323, 0.02965],
+    [1.5, 0.05754, 0.02833], [2.0, 0.04942, 0.02608], [3.0, 0.03969, 0.02281], [4.0, 0.03403, 0.02066], [5.0, 0.03031, 0.01915],
+    [6.0, 0.02770, 0.01806], [8.0, 0.02429, 0.01658], [10.0, 0.02219, 0.01566]];
+  /* ESTAR liquid water: [T (MeV), collision stopping power, radiative stopping power (MeV cm²/g), CSDA range (g/cm²)] */
+  const ESTAR_W = [[0.01, 22.56, 0.003898, 0.0002216], [0.0125, 18.97, 0.003927, 0.0003429], [0.015, 16.47, 0.003944, 0.0004848], [0.0175, 14.61, 0.003955, 0.0006463],
+    [0.02, 13.17, 0.003963, 0.0008267], [0.025, 11.09, 0.003974, 0.001242], [0.03, 9.653, 0.003984, 0.001726], [0.035, 8.592, 0.003994, 0.002276],
+    [0.04, 7.777, 0.004005, 0.002889], [0.045, 7.13, 0.004018, 0.003561], [0.05, 6.603, 0.004031, 0.00429], [0.055, 6.166, 0.004046, 0.005074],
+    [0.06, 5.797, 0.004062, 0.00591], [0.07, 5.207, 0.004098, 0.007732], [0.08, 4.757, 0.004138, 0.009743], [0.09, 4.402, 0.004181, 0.01193],
+    [0.1, 4.115, 0.004228, 0.01428], [0.125, 3.591, 0.004355, 0.0208], [0.15, 3.238, 0.004494, 0.02814], [0.175, 2.984, 0.004643, 0.03619],
+    [0.2, 2.793, 0.004801, 0.04485], [0.25, 2.528, 0.005141, 0.06369], [0.3, 2.355, 0.005514, 0.08418], [0.35, 2.235, 0.005914, 0.106],
+    [0.4, 2.148, 0.006339, 0.1287], [0.45, 2.083, 0.006787, 0.1523], [0.5, 2.034, 0.007257, 0.1765], [0.55, 1.995, 0.007747, 0.2013],
+    [0.6, 1.963, 0.008254, 0.2264], [0.7, 1.917, 0.009313, 0.2778], [0.8, 1.886, 0.01042, 0.3301], [0.9, 1.864, 0.01159, 0.3832],
+    [1.0, 1.849, 0.0128, 0.4367], [1.25, 1.829, 0.016, 0.5717], [1.5, 1.822, 0.01942, 0.7074], [1.75, 1.821, 0.02303, 0.8432],
+    [2.0, 1.824, 0.02678, 0.9785], [2.5, 1.834, 0.03468, 1.247], [3.0, 1.846, 0.04299, 1.514], [3.5, 1.858, 0.05164, 1.777],
+    [4.0, 1.87, 0.06058, 2.037], [4.5, 1.882, 0.06976, 2.295], [5.0, 1.892, 0.07917, 2.55], [5.5, 1.902, 0.08876, 2.802],
+    [6.0, 1.911, 0.09854, 3.052], [7.0, 1.928, 0.1185, 3.545], [8.0, 1.943, 0.1391, 4.03], [9.0, 1.956, 0.1601, 4.506], [10.0, 1.968, 0.1814, 4.975]];
+  /* ESTAR dry air (near sea level): [T (MeV), collision stopping power (MeV cm²/g)] */
+  const ESTAR_A = [[0.01, 19.75], [0.015, 14.44], [0.02, 11.57], [0.03, 8.491], [0.04, 6.848], [0.05, 5.818], [0.06, 5.11], [0.08, 4.197], [0.1, 3.633],
+    [0.15, 2.861], [0.2, 2.469], [0.3, 2.084], [0.4, 1.902], [0.5, 1.802], [0.6, 1.743], [0.8, 1.683], [1.0, 1.661], [1.25, 1.655], [1.5, 1.661],
+    [2.0, 1.684], [3.0, 1.74], [4.0, 1.79], [5.0, 1.833], [6.0, 1.87], [8.0, 1.931], [10.0, 1.979]];
+  /* PSTAR liquid water: [proton kinetic energy (MeV), CSDA range (g/cm²)] at the energies the demo offers */
+  const PSTAR_W = [[70, 4.080], [100, 7.718], [150, 15.77], [200, 25.96], [225, 31.74]];
+  /* log–log interpolation in table rows a (sorted by column 0), column j */
+  function lerpLog(a, x, j) {
+    if (x <= a[0][0]) return a[0][j];   /* below the table: the first row (only ever reached by the last few eV of a track) */
+    const n = a.length; if (x >= a[n - 1][0]) return a[n - 1][j];
+    let i = 1; while (a[i][0] < x) i++;
+    const t = Math.log(x / a[i - 1][0]) / Math.log(a[i][0] / a[i - 1][0]);
+    return Math.exp(Math.log(a[i - 1][j]) + t * Math.log(a[i][j] / a[i - 1][j]));
+  }
+  const muRho = (E) => lerpLog(NIST_W, E, 1), muenRho = (E) => lerpLog(NIST_W, E, 2);
+  const sColW = (T) => lerpLog(ESTAR_W, T, 1), sRadW = (T) => lerpLog(ESTAR_W, T, 2), csdaW = (T) => lerpLog(ESTAR_W, T, 3);
+  const sColA = (T) => lerpLog(ESTAR_A, T, 1);
+  /* kinetic energy left after a path s (g/cm²) for an electron that started with T0: invert the CSDA range table */
+  function tAfter(T0, s) {
+    const r = csdaW(T0) - s; if (r <= ESTAR_W[0][3]) return 0;
+    let lo = ESTAR_W[0][0], hi = T0;
+    for (let k = 0; k < 40; k++) { const m = Math.sqrt(lo * hi); if (csdaW(m) < r) lo = m; else hi = m; }
+    return Math.sqrt(lo * hi);
+  }
+
+  /* Klein–Nishina for a free electron. k = E/mc², s = T/E. dσ/dT in cm² per MeV per electron (Attix eq. 7.13 form). */
+  function knTotal(E) {
+    const k = E / MEC2, a = 1 + 2 * k, L = Math.log(a);
+    return 2 * Math.PI * RE * RE * (((1 + k) / (k * k)) * (2 * (1 + k) / a - L / k) + L / (2 * k) - (1 + 3 * k) / (a * a));
+  }
+  function knDsdT(E, T) {
+    const k = E / MEC2, s = T / E, Tmax = E * 2 * k / (1 + 2 * k);
+    if (T <= 0 || T > Tmax) return 0;
+    return Math.PI * RE * RE / (MEC2 * k * k) * (2 + s * s / (k * k * (1 - s) * (1 - s)) + s / (1 - s) * (s - 2 / k));
+  }
+  const tMaxCompton = (E) => { const k = E / MEC2; return E * 2 * k / (1 + 2 * k); };
+  /* the electron's angle from the beam for a Compton electron of energy T: cot θe = (1 + k) tan(θ/2), 1 − cos θ = T / (k (E − T)) */
+  function cosElectron(E, T) {
+    const k = E / MEC2, omc = Math.min(2, T / (k * (E - T))), th = Math.acos(1 - omc);
+    const te = Math.atan2(1, (1 + k) * Math.tan(th / 2));
+    return Math.cos(te);
+  }
+  const NT = 160;   /* energy bins for the Compton electron spectrum */
+  /* the Compton electron spectrum as NT bins: T at the bin middle, weight dσ/dT ΔT, cos θe */
+  function comptonBins(E) {
+    const Tm = tMaxCompton(E), out = [];
+    for (let i = 0; i < NT; i++) { const T = (i + 0.5) / NT * Tm; out.push({ T, w: knDsdT(E, T) * Tm / NT, c: cosElectron(E, T) }); }
+    return out;
+  }
+  /* mean starting energy of the Compton electrons, and the share of it they lose in collisions (1 − radiative yield) */
+  function comptonMeans(E) {
+    const b = comptonBins(E); let w = 0, wt = 0, wc = 0;
+    for (const x of b) { w += x.w; wt += x.w * x.T; wc += x.w * collisionLoss(x.T); }
+    return { Tmean: wt / w, colShare: wc / wt, sigma: w };
+  }
+  /* collision energy an electron of energy T leaves along its whole path: ∫ S_col/S_tot dT' from 0 to T */
+  function collisionLoss(T) {
+    const n = 60; let s = 0;
+    for (let i = 0; i < n; i++) { const t = (i + 0.5) / n * T; s += sColW(t) / (sColW(t) + sRadW(t)) * T / n; }
+    return s;
+  }
+  /* The depth spread of the energy the electrons deposit, per unit collision kerma: G(x) on a grid of nx steps of dx (cm, water
+     1.000 g/cm³). Each Compton electron goes straight along its starting direction (no multiple scattering) for its CSDA range and
+     leaves S_col(T) per cm along the way; the spread is normalised so that ∫G dx = 1, so the collision kerma it carries is conserved. */
+  function kernel(E, nx = 240) {
+    const b = comptonBins(E), Rmax = csdaW(tMaxCompton(E)), dx = Rmax / nx, G = new Float64Array(nx + 1);
+    for (const x of b) {
+      const R = csdaW(x.T), ns = 40, ds = R / ns;
+      for (let j = 0; j < ns; j++) {
+        const s = (j + 0.5) * ds, T = tAfter(x.T, s), dep = sColW(Math.max(T, 0.01)) * ds * x.w, depth = s * x.c;
+        const k = Math.min(nx, Math.floor(depth / dx)); G[k] += dep;
+      }
+    }
+    let sum = 0; for (let k = 0; k <= nx; k++) sum += G[k];
+    for (let k = 0; k <= nx; k++) G[k] /= sum * dx;
+    return { G, dx, nx, Rmax };
+  }
+  /* collision kerma of the primary photons at depth z (cm) for a fluence phi (photons/cm²) at the surface: Gy */
+  function kcol(E, phi, z) { return phi * E * muenRho(E) * Math.exp(-muRho(E) * z) * MEV_PER_G_TO_GY; }
+  /* absorbed dose: the collision kerma carried downstream by the spread G, D(z) = ∫ Kcol(z − x) G(x) dx */
+  function dose(E, phi, z, ker) {
+    const K = ker || kernel(E); let s = 0;
+    for (let k = 0; k <= K.nx; k++) { const x = (k + 0.5) * K.dx; if (x > z) break; s += kcol(E, phi, z - x) * K.G[k] * Math.min(K.dx, z - k * K.dx); }
+    return s;
+  }
+  /* past the buildup, D/Kcol is the constant β = ∫ G(x) e^{μx} dx (transient charged particle equilibrium) */
+  function beta(E, ker) { const K = ker || kernel(E), mu = muRho(E); let s = 0; for (let k = 0; k <= K.nx; k++) s += K.G[k] * Math.exp(mu * (k + 0.5) * K.dx) * K.dx; return s; }
+  /* depth of the dose maximum on a 0.01 mm grid */
+  function dmax(E, ker) {
+    const K = ker || kernel(E); let best = 0, zb = 0;
+    for (let z = 0; z <= K.Rmax * 1.5; z += 0.001) { const d = dose(E, 1, z, K); if (d > best) { best = d; zb = z; } }
+    return zb;
+  }
+
+  /* ---- Monte Carlo histories for the Kerma view: the same physics sampled photon by photon ----
+     Photons enter a broad, uniform beam, interact at depths drawn from e^{−μz} (NIST μ), and each interaction is taken as a Compton
+     scattering with probability μ_C/μ (else it leaves no dose here: coherent, photoelectric and pair events, 1 % of the interactions or less
+     from 0.2 to 2 MeV); the electron energy comes from Klein–Nishina and it deposits along its straight CSDA path as in kernel(). The scattered
+     photon leaves (primary dose only). Bins are h cm thick; batches of B histories give the uncertainty of each bin. */
+  function mcSetup(E, h, zmax, B = 4000) {
+    const b = comptonBins(E), cdf = [], segs = [], ns = 24; let acc = 0;
+    for (const x of b) {
+      acc += x.w; cdf.push(acc); const R = csdaW(x.T), ds = R / ns, list = [];
+      let sum = 0;
+      for (let j = 0; j < ns; j++) { const s = (j + 0.5) * ds, e = sColW(Math.max(tAfter(x.T, s), 0.01)) * ds; sum += e; list.push([s * x.c, e]); }
+      const scale = collisionLoss(x.T) / sum; for (const sg of list) sg[1] *= scale;   /* each track leaves exactly its collision energy T(1 − Y) */
+      segs.push(list);
+    }
+    for (let i = 0; i < cdf.length; i++) cdf[i] /= acc;
+    const nb = Math.ceil(zmax / h), pC = Math.min(1, knTotal(E) * ZA_WATER * NA / muRho(E));
+    return { E, h, zmax, B, nb, cdf, segs, pC, mu: muRho(E), S1: new Float64Array(nb), S2: new Float64Array(nb), cur: new Float64Array(nb), inBatch: 0, batches: 0, n: 0, last: [] };
+  }
+  /* run n histories; rng() gives uniform numbers in [0, 1). Keeps the last few electron tracks for the picture. */
+  function mcRun(st, n, rng, keep = 0) {
+    for (let i = 0; i < n; i++) {
+      const z = -Math.log(1 - rng()) / st.mu;
+      if (z < st.zmax && rng() < st.pC) {
+        const u = rng(); let lo = 0, hi = st.cdf.length - 1; while (lo < hi) { const m = (lo + hi) >> 1; if (st.cdf[m] < u) lo = m + 1; else hi = m; }
+        for (const sg of st.segs[lo]) { const k = Math.floor((z + sg[0]) / st.h); if (k < st.nb) st.cur[k] += sg[1]; }
+        if (keep && st.last.length < keep) st.last.push({ z, bin: lo });
+      }
+      st.n++; st.inBatch++;
+      if (st.inBatch === st.B) {
+        for (let k = 0; k < st.nb; k++) { const v = st.cur[k] / st.B; st.S1[k] += v; st.S2[k] += v * v; st.cur[k] = 0; }
+        st.inBatch = 0; st.batches++;
+      }
+    }
+  }
+  /* dose (Gy) in each bin for fluence phi, with the standard uncertainty of the mean over the finished batches */
+  function mcDose(st, phi) {
+    const nB = st.batches, out = [];
+    for (let k = 0; k < st.nb; k++) {
+      const m = nB ? st.S1[k] / nB : 0, v = nB > 1 ? Math.max(0, (st.S2[k] / nB - m * m) * nB / (nB - 1)) : 0, c = phi / st.h * MEV_PER_G_TO_GY;
+      out.push({ z: (k + 0.5) * st.h, D: m * c, u: nB > 1 ? Math.sqrt(v / nB) * c : NaN });
+    }
+    return out;
+  }
+  /* a small seeded generator (mulberry32) so a run can be repeated */
+  function rng32(seed) { let a = seed >>> 0; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  /* a normal deviate from two uniforms (Box–Muller) */
+  const gauss = (rng) => Math.sqrt(-2 * Math.log(1 - rng())) * Math.cos(2 * Math.PI * rng());
+
+  /* ---- the ion chamber ---- */
+  /* dry air density at temperature T (°C) and pressure P (kPa), kg/m³ (ideal gas) */
+  const rhoAir = (T, P) => P * 1e3 * M_AIR / (RGAS * (T + 273.15));
+  const KEY = { W_CO: 33.97, W_P2000: 34.23, W_P90: 34.44, S_CO: 1.133 };   /* eV per ion pair; TRS-398 s_w,air for 60Co */
+  /* TRS-398 (2000) water to air stopping power ratio for protons against residual range (g/cm²) */
+  const swairProton = (Rres) => 1.137 - 4.3e-5 * Rres + 1.84e-3 / Rres;
+  /* Farmer type chambers: TRS-398 (2000) p_Co (as listed by Burigo and Greilich 2019, Table 5). The cavity is the same for all three
+     here: 0.6 cm³ (PTW 30013 data), cavity radius 3.05 mm, central electrode radius 0.55 mm (a typical Farmer electrode). */
+  const CHAMBERS = { ptw30013: { name: 'PTW 30013', pCo: 0.982 }, ne2571: { name: 'NE 2571', pCo: 0.973 }, fc65g: { name: 'IBA FC65-G', pCo: 0.972 } };
+  const CAV = { V: 0.6e-6, a: 3.05e-3, b: 0.55e-3 };
+  /* beam quality factor for protons, TRS-398: k_Q = (s_w,air)_Q W_Q p_Q / ((s_w,air)_Co W_Co p_Co), with p_Q = 1 */
+  const kQproton = (ch, Rres, W = KEY.W_P2000) => swairProton(Rres) * W / (KEY.S_CO * KEY.W_CO * CHAMBERS[ch].pCo);
+  /* Boag's equivalent plate spacing for a cylindrical chamber */
+  const dEff = (a, b) => (a - b) * Math.sqrt((a + b) / (a - b) * Math.log(a / b) / 2);
+  const RECOMB = { alpha: 1.3e-12, k1: 1.87e-4, k2: 2.09e-4 };   /* m³/s, m²/(V s) */
+  /* pulsed beam (Boag 1950): f = ln(1 + u)/u, u = α n0 d² / ((k1 + k2) V), n0 = ion pairs per m³ per pulse */
+  function uPulsed(dAirPulse, rho, W, V, d = dEff(CAV.a, CAV.b)) { const n0 = dAirPulse * rho / (W * QE); return RECOMB.alpha * n0 * d * d / ((RECOMB.k1 + RECOMB.k2) * V); }
+  const fPulsed = (u) => (u < 1e-9 ? 1 : Math.log(1 + u) / u);
+  /* continuous beam (Boag): f = 1/(1 + ξ²), ξ² = m² d⁴ q / (6 V²), m² = α/(e k1 k2), q = charge per m³ per s */
+  function fContinuous(dAirRate, rho, W, V, d = dEff(CAV.a, CAV.b)) {
+    const q = dAirRate * rho / W, m2 = RECOMB.alpha / (QE * RECOMB.k1 * RECOMB.k2);
+    return 1 / (1 + m2 * Math.pow(d, 4) * q / (6 * V * V));
+  }
+  /* TRS-398 two voltage method, pulsed radiation: k_s = a0 + a1 (M1/M2) + a2 (M1/M2)², coefficients for V1/V2 */
+  const TWO_V = { 2: [2.337, -3.636, 2.299], 2.5: [1.474, -1.587, 1.114], 3: [1.198, -0.875, 0.677], 3.5: [1.080, -0.542, 0.463], 4: [1.022, -0.363, 0.341], 5: [0.975, -0.188, 0.214] };
+  function ksTwoVoltage(M1, M2, V1, V2, pulsed) {
+    const r = V1 / V2, m = M1 / M2;
+    if (!pulsed) return (r * r - 1) / (r * r - m);
+    const c = TWO_V[Math.round(r * 2) / 2]; return c ? c[0] + c[1] * m + c[2] * m * m : NaN;
+  }
+  /* the exact Boag answer the table approximates: find u1 with f(u1)/f(u1 V1/V2) = M1/M2, then k_s = 1/f(u1) */
+  function ksBoagExact(M1, M2, V1, V2) {
+    const r = V1 / V2; let lo = 0, hi = 50;
+    for (let k = 0; k < 80; k++) { const u = (lo + hi) / 2, g = fPulsed(u) / fPulsed(u * r); if (g < M1 / M2) lo = u; else hi = u; }
+    return 1 / fPulsed((lo + hi) / 2);
+  }
+  const kTP = (T, P) => (273.2 + T) / (273.2 + 20) * 101.325 / P;
+  const kPol = (Mplus, Mminus, M) => (Math.abs(Mplus) + Math.abs(Mminus)) / (2 * Math.abs(M));
+  /* N_D,w from a 60Co standards laboratory for this chamber (simulated certificate): Gy per C, read at 20 °C, 101.325 kPa */
+  const nDw = (ch) => KEY.S_CO * CHAMBERS[ch].pCo * KEY.W_CO / (rhoAir(20, 101.325) * CAV.V);
+  /* The charge the electrometer reads for one delivery (C, no noise). beam: { kind: 'proton', Rres, W, dPulse } or { kind: 'co60', rate };
+     Dw: dose to water at the chamber's reference point; sign +1 or −1; delta: the chamber's polarity effect (M+ = Q(1 + δ), M− = Q(1 − δ)). */
+  function chargeReading(o) {
+    const ch = CHAMBERS[o.ch], rho = rhoAir(o.T, o.P);
+    const s = o.beam.kind === 'proton' ? swairProton(o.beam.Rres) : KEY.S_CO, pQ = o.beam.kind === 'proton' ? 1 : ch.pCo;
+    const W = o.beam.kind === 'proton' ? o.beam.W : KEY.W_CO, dAir = o.Dw / (s * pQ), Qsat = dAir * rho * CAV.V / W;
+    const f = o.beam.kind === 'proton' ? fPulsed(uPulsed(o.beam.dPulse / (s * pQ), rho, W, o.V)) : fContinuous(o.beam.rate / (s * pQ), rho, W, o.V);
+    return { M: o.sign * Qsat * f * (1 + o.sign * (o.delta || 0)), Qsat, f, dAir };
+  }
+  /* proton reference conditions in a scanned single layer field (TRS-398 Rev. 1 Table 36): z_ref 2 g/cm² when R_res ≥ 5 g/cm², else 1 g/cm².
+     R_p is taken as the PSTAR CSDA range here (a stated simplification: the protocol takes it from the measured distal fall off). */
+  function protonRef(Ep) {
+    const Rp = lerpLog(PSTAR_W, Ep, 1), z = Rp - 2 >= 5 ? 2 : 1;
+    return { Rp, zref: z, Rres: Rp - z };
+  }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const can = $('can'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null;
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const sup = (n) => String(n).replace(/[-0-9]/g, (c) => '⁻⁰¹²³⁴⁵⁶⁷⁸⁹'['-0123456789'.indexOf(c)]);
+  const pn = (v, d) => (isFinite(v) ? Number(v.toPrecision(d)).toString() : '');   /* a plain number for the worksheet (no × 10ⁿ) */
+  const sci = (v, d = 3) => { if (!isFinite(v)) return '—'; if (v === 0) return '0'; const e = Math.floor(Math.log10(Math.abs(v))); if (e >= -2 && e < 4) return f(v, Math.max(0, d - 1 - e)); return `${f(v / Math.pow(10, e), d - 1)} × 10${sup(e)}`; };
+  const PROJ = () => document.documentElement.getAttribute('data-projector') === 'on';
+  const RNG = rng32(20261025);   /* reading noise and the Monte Carlo share one seeded stream, so a session can be repeated */
+  const NOISE = 0.0005, DPP_CAL = 1.0e-3, RATE_CO = 0.5 / 60, DELTA = { proton: 0.0010, co60: 0.0005 };
+  const ROOM = { proton: { T: 22.3, P: 100.82 }, co60: { T: 20.6, P: 101.48 } };
+  const S = {
+    view: 'kerma', preset: 'co60', run: false, blind: false, mystery: false, icru: false,
+    E: 1.25, z: 0.45, range: 'build', phi: 1e10, mcOn: true,
+    beamC: 'proton', dpp: 1.0, rate: 1.0, V: 400, pol: 1, plot: 'sat', pts: [], lastC: null,
+    beam: 'proton', Ep: 150, ch: 'ptw30013', Vc: 400, polc: 1, room: { ...ROOM.proton }, offset: 0, reads: [], lastR: null, deliver: null,
+  };
+  let K = null, KE = 0, MC = null, MCB = null, tracks = [];
+
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid') || g('--line'), surface: g('--surface'), accent: g('--accent'),
+      water: g('--water'), water2: g('--water2'), photon: g('--photon'), elec: g('--elec'), kerma: g('--kerma'), dose: g('--dose'), mc: g('--mc'), ion: g('--ion'), neg: g('--neg'), beam: g('--beam'),
+      mono: g('--font-mono'), ui: g('--font-ui') }; }
+
+  /* ---------- Kerma view ---------- */
+  const E_MIN = 0.2, E_MAX = 4;
+  const eFromSlider = (v) => E_MIN * Math.pow(E_MAX / E_MIN, v), sliderFromE = (E) => Math.log(E / E_MIN) / Math.log(E_MAX / E_MIN);
+  function ensureKernel() { if (!K || KE !== S.E) { K = kernel(S.E); KE = S.E; K.beta = beta(S.E, K); K.dmax = dmax(S.E, K); K.means = comptonMeans(S.E); } }
+  const zMax = () => (S.range === 'deep' ? 20 : 2.5 * K.Rmax);
+  function resetMC() {
+    ensureKernel();
+    const zm = zMax(), h = S.range === 'deep' ? 0.5 : zm / 50;
+    MC = mcSetup(S.E, h, zm); MCB = comptonBins(S.E); tracks = [];
+  }
+  function probeK() { ensureKernel(); const kc = kcol(S.E, S.phi, S.z), d = dose(S.E, S.phi, S.z, K); return { kc, d, r: d / kc }; }
+  /* the Monte Carlo dose at the probe: linear between the centers of the two nearest bins (the first and last bins' values beyond
+     their centers), so it is compared with the model at the same depth rather than with a bin's average over h */
+  function mcAtProbe() {
+    if (!MC || MC.batches < 2) return null; const md = mcDose(MC, S.phi), x = S.z / MC.h - 0.5;
+    if (x <= 0) return md[0]; if (x >= MC.nb - 1) return md[MC.nb - 1];
+    const k = Math.floor(x), t = x - k, a = md[k], b = md[k + 1];
+    return { z: S.z, D: a.D + t * (b.D - a.D), u: (1 - t) * a.u + t * b.u };   /* u interpolated too: neighboring bins share electrons, so they are not independent */
+  }
+
+  /* ---------- Ion chamber view ---------- */
+  const REF150 = protonRef(150);
+  function chamberBeam() { return S.beamC === 'proton' ? { kind: 'proton', Rres: REF150.Rres, W: KEY.W_P2000, dPulse: S.dpp * 1e-3 } : { kind: 'co60', rate: S.rate / 60 }; }
+  function chamberTrue(V, pol) { return chargeReading({ ch: 'ptw30013', T: 20, P: 101.325, V, sign: pol, delta: DELTA[S.beamC], Dw: 1, beam: chamberBeam() }); }
+  function measureChamber() {
+    const r = chamberTrue(S.V, S.pol), M = r.M * (1 + NOISE * gauss(RNG));
+    S.lastC = { V: S.V, pol: S.pol, M: M * 1e9 }; S.pts.push(S.lastC); readouts(); draw();
+  }
+
+  /* ---------- Calibration view ---------- */
+  function calBeam() {
+    if (S.beam === 'co60') return { kind: 'co60', rate: RATE_CO, zref: 5, label: '⁶⁰Co, 5 g/cm²' };
+    const r = protonRef(S.Ep);
+    return { kind: 'proton', Rres: r.Rres, Rp: r.Rp, zref: r.zref, W: KEY.W_P2000, dPulse: DPP_CAL, label: `${S.Ep} MeV protons` };
+  }
+  /* the dose the machine really gives for one delivery: the plan's 1.000 Gy at z_ref for 100 MU, times the drift in Mystery; the standards
+     laboratory gives 0.5000 Gy/min for 2.000 min */
+  const calDose = () => (S.beam === 'co60' ? RATE_CO * 60 * 2 : 1.000 * (1 + S.offset));
+  function calTrue(V, pol) { return chargeReading({ ch: S.ch, T: S.room.T, P: S.room.P, V, sign: pol, delta: DELTA[S.beam], Dw: calDose(), beam: calBeam() }); }
+  function deliver() {
+    if (S.deliver) return;
+    const r = calTrue(S.Vc, S.polc), M = r.M * (1 + NOISE * gauss(RNG)) * 1e9;
+    S.deliver = { t0: performance.now(), dur: 1600, M };
+    $('btnDeliver').disabled = true;
+  }
+  function deliveryDone() {
+    const d = S.deliver; S.deliver = null; $('btnDeliver').disabled = false;
+    S.lastR = { V: S.Vc, pol: S.polc, M: d.M }; S.reads.push(S.lastR); readouts(); steps(); draw();
+  }
+  const kQnow = () => { const b = calBeam(); return b.kind === 'proton' ? kQproton(S.ch, b.Rres, S.icru ? KEY.W_P90 : KEY.W_P2000) : 1; };
+  /* what a careful student should get from noise free readings, for the checks */
+  function calAnswers() {
+    const p = calTrue(400, 1).M, m = calTrue(400, -1).M, h = calTrue(200, 1).M, b = calBeam();
+    const ktp = kTP(S.room.T, S.room.P), kp = kPol(p, m, p), ks = ksTwoVoltage(p, h, 400, 200, b.kind === 'proton'), kq = kQnow();
+    const Mc = p * ktp * kp * ks;
+    return { ktp, kp, ks, kq, Dw: Mc * nDw(S.ch) * kq, N: calDose() / Mc, true: calDose() };
+  }
+  function meanOf(V, pol) { const a = S.reads.filter((r) => r.V === V && r.pol === pol).map((r) => r.M); if (!a.length) return null;
+    const m = a.reduce((s, x) => s + x, 0) / a.length, sd = a.length > 1 ? Math.sqrt(a.reduce((s, x) => s + (x - m) * (x - m), 0) / (a.length - 1)) : NaN; return { m, sd, n: a.length }; }
+
+  /* ---------- drawing ---------- */
+  function plotBox() {
+    const p = PROJ() ? 1.25 : 1, wide = W > 820, right = wide ? 300 : 16;
+    return { p, x0: 64 * p, x1: Math.max(200, W - right), wide };
+  }
+  function axes(x0, y0, x1, y1, xt, yt, xl, yl, p) {
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; ctx.fillStyle = T.muted; ctx.font = `${11 * p}px ${T.mono}`;
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (const t of xt) { const x = x0 + (t.v - xt.lo) / (xt.hi - xt.lo) * (x1 - x0); ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.moveTo(x, y0); ctx.lineTo(x, y1); ctx.stroke(); ctx.globalAlpha = 1; ctx.fillText(t.s, x, y1 + 4 * p); }
+    ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (const t of yt) { const y = y1 - (t.v - yt.lo) / (yt.hi - yt.lo) * (y1 - y0); ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.moveTo(x0, y); ctx.lineTo(x1, y); ctx.stroke(); ctx.globalAlpha = 1; ctx.fillText(t.s, x0 - 6 * p, y); }
+    ctx.strokeStyle = T.muted; ctx.beginPath(); ctx.moveTo(x0, y0); ctx.lineTo(x0, y1); ctx.lineTo(x1, y1); ctx.stroke();
+    ctx.font = `${12 * p}px ${T.ui}`; ctx.textAlign = 'center'; ctx.textBaseline = 'top'; ctx.fillText(xl, (x0 + x1) / 2, y1 + 20 * p);
+    ctx.save(); ctx.translate(x0 - 50 * p, (y0 + y1) / 2); ctx.rotate(-Math.PI / 2); ctx.textBaseline = 'middle'; ctx.fillText(yl, 0, 0); ctx.restore();
+  }
+  function ticks(lo, hi, n, fmt) { const raw = (hi - lo) / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), st = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= raw) || raw;
+    const out = []; for (let v = Math.ceil(lo / st - 1e-9) * st; v <= hi + 1e-9; v += st) out.push({ v, s: fmt(v) }); out.lo = lo; out.hi = hi; return out; }
+  function text(s, x, y, o = {}) { ctx.save(); ctx.fillStyle = o.c || T.muted; ctx.font = `${o.w || 400} ${o.s || 12}px ${o.m ? T.mono : T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = o.b || 'middle'; ctx.fillText(s, x, y); ctx.restore(); }
+
+  function drawKerma() {
+    ensureKernel();
+    const B = plotBox(), p = B.p, x0 = B.x0, x1 = B.x1, zm = zMax();
+    const X = (z) => x0 + z / zm * (x1 - x0);
+    /* the water and the beam */
+    const py0 = 56 * p, py1 = Math.max(py0 + 120, H * 0.36);
+    const gw = ctx.createLinearGradient(0, py0, 0, py1); gw.addColorStop(0, T.water2); gw.addColorStop(1, T.water2);
+    ctx.save(); ctx.globalAlpha = 0.9; ctx.fillStyle = gw; ctx.fillRect(x0, py0, x1 - x0, py1 - py0); ctx.restore();
+    ctx.strokeStyle = T.water; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(x0, py0 - 4); ctx.lineTo(x0, py1 + 4); ctx.stroke();
+    text('water', x1 - 6 * p, py0 + 12 * p, { a: 'right', s: 11 * p, c: T.water });
+    text('photons', x0 - 8 * p, py0 + 12 * p, { a: 'right', s: 11 * p, c: T.photon });
+    ctx.strokeStyle = T.photon; ctx.lineWidth = 1.2; ctx.globalAlpha = 0.7;
+    for (let i = 0; i < 5; i++) { const y = py0 + (i + 0.5) / 5 * (py1 - py0); ctx.beginPath(); ctx.moveTo(x0 - 40 * p, y); ctx.lineTo(x0 - 6 * p, y); ctx.lineTo(x0 - 11 * p, y - 3); ctx.moveTo(x0 - 6 * p, y); ctx.lineTo(x0 - 11 * p, y + 3); ctx.stroke(); }
+    ctx.globalAlpha = 1;
+    /* electron tracks from the Monte Carlo histories, to scale in depth and sideways */
+    const pxcm = (x1 - x0) / zm;
+    ctx.save(); ctx.beginPath(); ctx.rect(x0, py0, x1 - x0, py1 - py0); ctx.clip();
+    for (const t of tracks) {
+      const a = Math.max(0, 1 - t.age / 1.6); if (a <= 0) continue;
+      const xi = X(t.z), yi = t.y * (py1 - py0) + py0;
+      ctx.globalAlpha = 0.25 * a; ctx.strokeStyle = T.photon; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(x0, yi); ctx.lineTo(xi, yi); ctx.stroke();
+      ctx.globalAlpha = 0.9 * a; ctx.strokeStyle = T.elec; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(xi, yi);
+      ctx.lineTo(xi + t.L * t.c * pxcm, yi + t.side * t.L * Math.sqrt(Math.max(0, 1 - t.c * t.c)) * pxcm); ctx.stroke();
+      ctx.fillStyle = T.photon; ctx.beginPath(); ctx.arc(xi, yi, 2.2, 0, 7); ctx.fill();
+    }
+    ctx.restore(); ctx.globalAlpha = 1;
+    if (!S.run && !tracks.length) text('Start to send photons in: each dot is an interaction, each purple line the electron it sets moving (to scale).', x0 + 10 * p, py1 - 14 * p, { s: 11 * p });
+    /* the graph */
+    const gy0 = py1 + 34 * p, gy1 = H - (W < 600 ? 86 : 54) * p;
+    const kc0 = kcol(S.E, S.phi, 0), ymax = kc0 * (S.range === 'deep' ? 1.12 : Math.max(1.12, K.beta * 1.08));
+    const xt = ticks(0, zm, 6, (v) => (zm < 1 ? f(v * 10, 1) : f(v, zm < 5 ? 1 : 0)));
+    const yt = ticks(0, ymax, 5, (v) => sci(v, 2));
+    axes(x0, gy0, x1, gy1, xt, yt, zm < 1 ? 'depth z (mm)' : 'depth z (cm)', 'Gy', p);
+    const Y = (v) => gy1 - v / ymax * (gy1 - gy0);
+    /* collision kerma */
+    ctx.strokeStyle = T.kerma; ctx.lineWidth = 2 * p; ctx.setLineDash([7, 5]); ctx.beginPath();
+    for (let i = 0; i <= 200; i++) { const z = i / 200 * zm, y = Y(kcol(S.E, S.phi, z)); if (i) ctx.lineTo(X(z), y); else ctx.moveTo(X(z), y); }
+    ctx.stroke(); ctx.setLineDash([]);
+    if (!S.blind) {
+      ctx.strokeStyle = T.dose; ctx.lineWidth = 2.4 * p; ctx.beginPath();
+      for (let i = 0; i <= 260; i++) { const z = i / 260 * zm, y = Y(dose(S.E, S.phi, z, K)); if (i) ctx.lineTo(X(z), y); else ctx.moveTo(X(z), y); }
+      ctx.stroke();
+      if (K.dmax < zm) { ctx.strokeStyle = T.dose; ctx.globalAlpha = 0.5; ctx.setLineDash([2, 4]); ctx.beginPath(); ctx.moveTo(X(K.dmax), gy0); ctx.lineTo(X(K.dmax), gy1); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+        text(`d_max ${zm < 1 ? f(K.dmax * 10, 2) + ' mm' : f(K.dmax, 2) + ' cm'}`, X(K.dmax) + 4 * p, gy0 + 10 * p, { s: 11 * p, c: T.dose, m: true }); }
+    }
+    /* Monte Carlo bins with their uncertainties */
+    if (MC && MC.batches >= 2) {
+      const md = mcDose(MC, S.phi); ctx.fillStyle = T.mc; ctx.strokeStyle = T.mc; ctx.lineWidth = 1.2;
+      for (const b of md) { if (b.z > zm) break; const x = X(b.z), y = Y(b.D); ctx.beginPath(); ctx.arc(x, y, 2.6 * p, 0, 7); ctx.fill();
+        if (isFinite(b.u)) { ctx.beginPath(); ctx.moveTo(x, Y(b.D - b.u)); ctx.lineTo(x, Y(b.D + b.u)); ctx.stroke(); } }
+    }
+    /* the probe */
+    const xp = X(S.z); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(xp, py0 - 6); ctx.lineTo(xp, gy1); ctx.stroke();
+    ctx.fillStyle = T.accent; ctx.beginPath(); ctx.moveTo(xp - 6, py0 - 12); ctx.lineTo(xp + 6, py0 - 12); ctx.lineTo(xp, py0 - 4); ctx.fill();
+    const pr = probeK(); ctx.fillStyle = T.kerma; ctx.beginPath(); ctx.arc(xp, Y(pr.kc), 4 * p, 0, 7); ctx.fill();
+    if (!S.blind) { ctx.fillStyle = T.dose; ctx.beginPath(); ctx.arc(xp, Y(pr.d), 4 * p, 0, 7); ctx.fill(); }
+    /* key */
+    let ky = gy1 + 40 * p, kx = x0;
+    const key = (c, s, dash) => { ctx.font = `${11.5 * p}px ${T.ui}`; const wd = (36 * p) + ctx.measureText(s).width; if (kx > x0 && kx + wd > W - 8) { kx = x0; ky += 16 * p; }
+      ctx.strokeStyle = c; ctx.lineWidth = 2.4; ctx.setLineDash(dash || []); ctx.beginPath(); ctx.moveTo(kx, ky); ctx.lineTo(kx + 22 * p, ky); ctx.stroke(); ctx.setLineDash([]); text(s, kx + 28 * p, ky, { s: 11.5 * p }); kx += wd + 10 * p; };
+    key(T.kerma, 'collision kerma K_col (NIST μ_en/ρ)', [7, 5]); if (!S.blind) key(T.dose, 'absorbed dose D (model)'); key(T.mc, 'Monte Carlo dose ± 1 standard uncertainty');
+    S.geomK = { x0, x1, zm, py0, gy1 };
+  }
+
+  function drawChamber() {
+    const B = plotBox(), p = B.p, x0 = B.x0, x1 = B.x1;
+    /* the chamber, seen cut along its axis */
+    const cy = 56 * p + Math.max(70, H * 0.15), L = Math.min(x1 - x0 - 100 * p, 520 * p), R = Math.min(56 * p, H * 0.09), xl = x0 + 20 * p, xr = xl + L;
+    ctx.fillStyle = T.water2; ctx.globalAlpha = 0.8; ctx.fillRect(x0 - 30 * p, cy - R - 26 * p, x1 - x0 + 30 * p, 2 * R + 52 * p); ctx.globalAlpha = 1;
+    text('water', x1 - 6 * p, cy - R - 14 * p, { a: 'right', s: 11 * p, c: T.water });
+    /* wall (graphite inside a PMMA sleeve), domed tip at the left */
+    ctx.fillStyle = '#3a3f46'; ctx.beginPath(); ctx.moveTo(xr, cy - R - 6 * p); ctx.lineTo(xl + R, cy - R - 6 * p); ctx.arc(xl + R, cy, R + 6 * p, -Math.PI / 2, Math.PI / 2, true); ctx.lineTo(xr, cy + R + 6 * p); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = T.canvas; ctx.beginPath(); ctx.moveTo(xr, cy - R); ctx.lineTo(xl + R, cy - R); ctx.arc(xl + R, cy, R, -Math.PI / 2, Math.PI / 2, true); ctx.lineTo(xr, cy + R); ctx.closePath(); ctx.fill();
+    VDGear.box(ctx, xr, cy - R - 10 * p, 70 * p, 2 * R + 20 * p, { shadow: false });
+    text('stem', xr + 35 * p, cy + R + 22 * p, { a: 'center', s: 10.5 * p });
+    const eb = Math.max(2, R * 0.18); VDGear.rod(ctx, xl + R * 0.6, cy, xr + 10 * p, cy, eb, { color: '#b8c0ca' });
+    const sign = S.pol > 0 ? '+' : '−';
+    text(`central electrode ${sign}${S.V} V`, xl + L * 0.55, cy - eb - 10 * p, { a: 'center', s: 10.5 * p, c: T.ink });
+    text('air cavity, 0.6 cm³', xl + R * 1.2, cy + R - 10 * p, { s: 10.5 * p });
+    text('wall, earthed', xl + L * 0.55, cy + R + 16 * p, { a: 'center', s: 10.5 * p });
+    /* ions: pairs made where the beam crosses the cavity, drifting apart; some meet again and recombine */
+    S.ionGeom = { xl, xr, cy, R, eb };
+    for (const q of ions) {
+      const y = cy + q.side * q.r;
+      if (q.rec) { ctx.globalAlpha = Math.max(0, 1 - q.age * 3); ctx.fillStyle = T.beam; ctx.beginPath(); ctx.arc(q.x, cy + q.side * q.r0, 4 * p, 0, 7); ctx.fill(); ctx.globalAlpha = 1; continue; }
+      ctx.fillStyle = T.ion; ctx.beginPath(); ctx.arc(q.x, cy + q.side * q.rp, 2.4 * p, 0, 7); ctx.fill();
+      ctx.fillStyle = T.neg; ctx.beginPath(); ctx.arc(q.x + 3, cy + q.side * q.rn, 2.4 * p, 0, 7); ctx.fill();
+    }
+    const nar = x1 - x0 < 480, ly = cy + R + 40 * p;
+    text('● positive ion', xl, ly, { s: 10.5 * p, c: T.ion }); text('● negative ion', xl + 110 * p, ly, { s: 10.5 * p, c: T.neg });
+    text('● pair lost to recombination', nar ? xl : xl + 220 * p, nar ? ly + 15 * p : ly, { s: 10.5 * p, c: T.beam });
+    text(nar ? 'Slowed down, not to scale.' : 'Slowed down and not to scale: the share that recombines is the model\'s.', nar ? xl + 180 * p : xl, nar ? ly + 15 * p : cy + R + 58 * p, { s: 10.5 * p });
+    /* the graph */
+    const gy0 = cy + R + 86 * p, gy1 = H - 56 * p, tr = (V) => chamberTrue(V, S.pol), Qs = tr(400).Qsat * 1e9 * (1 + S.pol * DELTA[S.beamC]);
+    const pts = S.pts.filter((q) => q.pol === S.pol);
+    if (S.plot === 'sat') {
+      const lo = Math.min(tr(25).M * S.pol * 1e9, ...pts.map((q) => q.M * S.pol)) * 0.995, hi = Qs * 1.004;
+      const xt = ticks(0, 500, 5, (v) => f(v, 0)), yt = ticks(lo, hi, 5, (v) => f(v, 2));
+      axes(x0, gy0, x1, gy1, xt, yt, 'chamber voltage V (V)', `${S.pol < 0 ? '−' : ''}M (nC)`, p);
+      const Xv = (V) => x0 + V / 500 * (x1 - x0), Ym = (m) => gy1 - (m - lo) / (hi - lo) * (gy1 - gy0);
+      if (!S.blind) {
+        ctx.strokeStyle = T.dose; ctx.lineWidth = 2 * p; ctx.beginPath();
+        for (let V = 25; V <= 500; V += 5) { const y = Ym(tr(V).M * S.pol * 1e9); if (V > 25) ctx.lineTo(Xv(V), y); else ctx.moveTo(Xv(V), y); } ctx.stroke();
+        ctx.strokeStyle = T.kerma; ctx.setLineDash([6, 5]); ctx.beginPath(); ctx.moveTo(x0, Ym(Qs)); ctx.lineTo(x1, Ym(Qs)); ctx.stroke(); ctx.setLineDash([]);
+        text('every ion collected', x1 - 4 * p, Ym(Qs) - 9 * p, { a: 'right', s: 11 * p, c: T.kerma });
+      }
+      ctx.fillStyle = T.mc; for (const q of pts) { ctx.beginPath(); ctx.arc(Xv(q.V), Ym(q.M * S.pol), 3.6 * p, 0, 7); ctx.fill(); }
+    } else {
+      const sq = S.plot === 'jaffe2', xv = (V) => (sq ? 1e4 / (V * V) : 1e3 / V), xm = sq ? 1e4 / 625 : 1e3 / 25;
+      const iv = (m) => 1 / m, ys = pts.map((q) => iv(q.M * S.pol)), lo = Math.min(1 / Qs, ...ys) * 0.999, hi = Math.max(iv(tr(25).M * S.pol * 1e9), ...ys) * 1.001;
+      const xt = ticks(0, xm, 5, (v) => f(v, sq ? 1 : 0)), yt = ticks(lo, hi, 5, (v) => f(v, 4));
+      axes(x0, gy0, x1, gy1, xt, yt, sq ? '1/V² (1/(100 V)²)' : '1/V (1/kV)', '1/|M| (1/nC)', p);
+      const Xx = (x) => x0 + x / xm * (x1 - x0), Yy = (y) => gy1 - (y - lo) / (hi - lo) * (gy1 - gy0);
+      if (!S.blind) { ctx.strokeStyle = T.dose; ctx.lineWidth = 2 * p; ctx.beginPath(); let first = true;
+        for (let V = 25; V <= 2000; V += 5) { const x = xv(V); if (x > xm) continue; const y = Yy(iv(tr(V).M * S.pol * 1e9)); if (first) { ctx.moveTo(Xx(x), y); first = false; } else ctx.lineTo(Xx(x), y); }
+        ctx.lineTo(Xx(0), Yy(1 / Qs)); ctx.stroke(); }
+      ctx.fillStyle = T.mc; for (const q of pts) { ctx.beginPath(); ctx.arc(Xx(xv(q.V)), Yy(iv(q.M * S.pol)), 3.6 * p, 0, 7); ctx.fill(); }
+    }
+  }
+
+  function drawCal() {
+    const B = plotBox(), p = B.p, x0 = B.x0, x1 = Math.max(B.x1, x0 + 300), b = calBeam(), co = b.kind === 'co60';
+    VDGear.backdrop(ctx, W, H);
+    /* the water phantom: 0 to 35 cm of water drawn to scale */
+    const narrow = x1 - x0 < 480, tx0 = x0, tx1 = x0 + Math.min(360 * p, (x1 - x0) * (narrow ? 0.5 : 0.58)), ty0 = 150 * p, ty1 = H - 70 * p, depth = 35, pxcm = (ty1 - ty0) / depth;
+    const tg = ctx.createLinearGradient(0, ty0, 0, ty1); tg.addColorStop(0, T.water2); tg.addColorStop(1, T.water);
+    ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = tg; ctx.fillRect(tx0, ty0, tx1 - tx0, ty1 - ty0); ctx.restore();
+    ctx.strokeStyle = T.muted; ctx.lineWidth = 2; ctx.strokeRect(tx0, ty0 - 10 * p, tx1 - tx0, ty1 - ty0 + 10 * p);
+    ctx.fillStyle = T.muted; ctx.font = `${10.5 * p}px ${T.mono}`; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let z = 0; z <= depth; z += 5) { const y = ty0 + z * pxcm; ctx.fillRect(tx0 - 6 * p, y, 6 * p, 1); ctx.fillText(`${z}`, tx0 - 9 * p, y); }
+    ctx.save(); ctx.translate(tx0 - 36 * p, (ty0 + ty1) / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.font = `${11 * p}px ${T.ui}`; ctx.fillText('depth in water (g/cm²)', 0, 0); ctx.restore();
+    /* the beam from above */
+    const bx = (tx0 + tx1) / 2, bw = co ? (tx1 - tx0) * 0.5 : (tx1 - tx0) * 0.42, on = !!S.deliver;
+    VDGear.box(ctx, bx - bw * 0.6, 40 * p, bw * 1.2, 70 * p, { color: co ? '#4a5563' : '#5b6575' });
+    VDGear.plate(ctx, co ? 'cobalt 60 unit' : 'scanning nozzle', bx, 75 * p, { s: 8.5 * p });
+    ctx.save(); ctx.globalAlpha = on ? 0.32 : 0.08; ctx.fillStyle = T.beam;
+    const bottom = co ? ty1 : Math.min(ty1, ty0 + b.Rp * pxcm);
+    ctx.beginPath(); ctx.moveTo(bx - bw * 0.42, 110 * p); ctx.lineTo(bx + bw * 0.42, 110 * p); ctx.lineTo(bx + bw / 2, bottom); ctx.lineTo(bx - bw / 2, bottom); ctx.closePath(); ctx.fill(); ctx.restore();
+    if (!co) { const yr = ty0 + b.Rp * pxcm; ctx.strokeStyle = T.photon; ctx.setLineDash([5, 4]); ctx.beginPath(); ctx.moveTo(tx0, yr); ctx.lineTo(tx1, yr); ctx.stroke(); ctx.setLineDash([]);
+      text(narrow ? `R_p ${f(b.Rp, 2)}` : `R_p ≈ ${f(b.Rp, 2)} g/cm² (PSTAR CSDA range)`, tx1 - 4 * p, yr - 9 * p, { a: 'right', s: 10.5 * p, c: T.photon }); }
+    /* the chamber at z_ref, drawn across the beam */
+    const yc = ty0 + b.zref * pxcm, cl = 23 * 0.1 * pxcm * 1.0, cr = Math.max(3, 0.305 * pxcm);
+    ctx.fillStyle = '#3a3f46'; ctx.beginPath(); ctx.roundRect(bx - cl / 2, yc - cr, cl, 2 * cr, cr); ctx.fill();
+    VDGear.rod(ctx, bx + cl / 2, yc, tx1 + 30 * p, yc, Math.max(1.5, cr * 0.5), { color: '#7d8894' });
+    ctx.strokeStyle = T.accent; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(tx0, yc); ctx.lineTo(bx - cl / 2 - 4, yc); ctx.stroke(); ctx.setLineDash([]);
+    text(`z_ref = ${b.zref} g/cm²`, tx0 + 6 * p, yc - 10 * p, { s: 10.5 * p, c: T.accent, m: true });
+    /* electrometer, thermometer, barometer (smaller on a phone) */
+    const q = p * (narrow ? 0.7 : 1);
+    const ex = narrow ? tx1 + 18 * p : Math.min(x1 - 170 * q, tx1 + 60 * q), ey = (narrow ? 150 : 170) * p, ew = Math.min(168 * q, x1 - ex);
+    VDGear.cable(ctx, tx1 + 30 * p, yc, ex, ey + 70 * q, 60 * q, { w: 3 });
+    VDGear.box(ctx, ex, ey, ew, 108 * q);
+    VDGear.plate(ctx, 'electrometer', ex + ew / 2, ey + 12 * q, { s: 8 * q });
+    let shown = '— nC';
+    if (S.deliver) { const k = Math.min(1, (performance.now() - S.deliver.t0) / S.deliver.dur); shown = `${f(S.deliver.M * k, 3)} nC`; }
+    else if (S.lastR) shown = `${f(S.lastR.M, 3)} nC`;
+    VDGear.lcd(ctx, ex + 10 * q, ey + 24 * q, ew - 20 * q, 34 * q, shown);
+    VDGear.lcd(ctx, ex + 10 * q, ey + 66 * q, ew - 20 * q, 26 * q, `${S.polc > 0 ? '+' : '−'}${S.Vc} V`, { color: '#ffd38a' });
+    const thx = ex, thy = ey + 140 * q;
+    VDGear.box(ctx, thx, thy, ew, 64 * q, { color: '#4b5563' }); VDGear.plate(ctx, 'thermometer in the water', thx + ew / 2, thy + 11 * q, { s: 7.5 * q });
+    VDGear.lcd(ctx, thx + 10 * q, thy + 22 * q, ew - 20 * q, 32 * q, `${f(S.room.T, 1)} °C`);
+    VDGear.cable(ctx, thx, thy + 40 * q, tx1 - 30 * p, ty0 + 60 * p, 40 * q, { w: 2, color: '#6b7280' });
+    ctx.strokeStyle = '#9aa4b0'; ctx.lineWidth = 3; ctx.beginPath(); ctx.moveTo(tx1 - 30 * p, ty0 - 14 * p); ctx.lineTo(tx1 - 30 * p, ty0 + 60 * p); ctx.stroke();
+    const bay = thy + 90 * q;
+    VDGear.box(ctx, thx, bay, ew, 64 * q, { color: '#4b5563' }); VDGear.plate(ctx, 'barometer', thx + ew / 2, bay + 11 * q, { s: 7.5 * q });
+    VDGear.lcd(ctx, thx + 10 * q, bay + 22 * q, ew - 20 * q, 32 * q, `${f(S.room.P, 2)} kPa`);
+    text(co ? (narrow ? '10 cm × 10 cm, 100 cm from the source' : 'Field 10 cm × 10 cm, 100 cm from the source to the chamber') : 'Scanned layer, 10 cm × 10 cm', tx0, ty1 + 22 * p, { s: 11 * p });
+    if (S.mystery) text('Mystery machine: its output has drifted', tx0, ty1 + 40 * p, { s: 11 * p, c: T.neg, w: 700 });
+  }
+
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.view === 'kerma') drawKerma(); else if (S.view === 'chamber') drawChamber(); else drawCal();
+  }
+
+  /* ---------- readouts and steps ---------- */
+  const dd = (a, b, c = '') => `<div class="${c}"><dt>${a}</dt><dd>${b}</dd></div>`;
+  const hid = (a) => `<div><dt>${a}</dt><dd class="ok">hidden</dd></div>`;
+  function readouts() {
+    let h = '';
+    if (S.view === 'kerma') {
+      ensureKernel(); const pr = probeK(), mc = mcAtProbe(), m = K.means;
+      h += dd('Photon energy hν', `${f(S.E, 3)} MeV`) + dd('μ/ρ (NIST)', `${f(muRho(S.E), 5)} cm²/g`) + dd('μ_en/ρ (NIST)', `${f(muenRho(S.E), 5)} cm²/g`)
+        + dd('Mean Compton electron energy', `${f(m.Tmean, 3)} MeV`) + dd('Most energetic electron', `${f(tMaxCompton(S.E), 3)} MeV`) + dd('Its CSDA range (ESTAR)', `${f(K.Rmax * 10, 2)} mm`)
+        + dd('Depth z', `${f(S.z, 3)} cm`) + dd('Collision kerma K_col', `${sci(pr.kc, 4)} Gy`)
+        + (S.blind ? hid('Absorbed dose D') + hid('D/K_col') + hid('d_max') + hid('β past the buildup') : dd('Absorbed dose D', `${sci(pr.d, 4)} Gy`) + dd('D/K_col', f(pr.r, 4)) + dd('d_max (model)', `${f(K.dmax * 10, 2)} mm`) + dd('β past the buildup', f(K.beta, 4)))
+        + dd('Monte Carlo D at z', mc ? `${sci(mc.D, 4)} ± ${sci(mc.u, 2)} Gy` : '—', 'wide')
+        + dd('Histories', MC ? MC.n.toLocaleString('en-US') : '0') + dd('Compton share of interactions', `${f(MC ? MC.pC * 100 : 0, 1)} %`);
+    } else if (S.view === 'chamber') {
+      const r = chamberTrue(S.V, S.pol), b = chamberBeam(), u = b.kind === 'proton' ? uPulsed(b.dPulse / swairProton(b.Rres), rhoAir(20, 101.325), b.W, S.V) : NaN;
+      h += dd('Voltage', `${S.pol > 0 ? '+' : '−'}${S.V} V`) + dd('Equivalent gap d_eff', `${f(dEff(CAV.a, CAV.b) * 1e3, 2)} mm`)
+        + dd('Last reading M', S.lastC ? `${f(S.lastC.M, 3)} nC` : '—') + dd('Readings at this setting', String(S.pts.filter((q) => q.V === S.V && q.pol === S.pol).length))
+        + (S.blind ? hid('Collection efficiency f') + hid('k_s = 1/f') + hid('All the charge Q_sat')
+          : dd('Collection efficiency f', f(r.f, 5)) + dd('k_s = 1/f', f(1 / r.f, 5)) + (b.kind === 'proton' ? dd('Boag u', f(u, 5)) : '') + dd('All the charge Q_sat', `${f(r.Qsat * 1e9, 3)} nC`))
+        + dd('Dose to the cavity air D_air', S.blind ? 'hidden' : `${f(r.dAir, 4)} Gy`) + dd(b.kind === 'proton' ? 's_w,air (150 MeV, TRS-398)' : 's_w,air (⁶⁰Co, TRS-398)', f(b.kind === 'proton' ? swairProton(b.Rres) : KEY.S_CO, 4));
+    } else {
+      const b = calBeam(), mp = meanOf(S.Vc, S.polc);
+      h += dd('Beam', b.label) + (b.kind === 'proton' ? dd('R_p (PSTAR CSDA)', `${f(b.Rp, 2)} g/cm²`) + dd('Reference depth z_ref', `${b.zref} g/cm²`) + dd('Residual range R_res', `${f(b.Rres, 2)} g/cm²`)
+        : dd('Reference depth', '5 g/cm²') + dd('Laboratory dose to water', '0.5000 Gy/min for 2.000 min'))
+        + dd('Water temperature', `${f(S.room.T, 1)} °C`) + dd('Pressure', `${f(S.room.P, 2)} kPa`)
+        + dd('Last reading', S.lastR ? `${f(S.lastR.M, 3)} nC` : '—') + dd(`Mean at ${S.polc > 0 ? '+' : '−'}${S.Vc} V`, mp ? `${f(mp.m, 3)} nC (n = ${mp.n}${mp.n > 1 ? `, s = ${f(mp.sd, 3)}` : ''})` : '—', 'wide')
+        + dd('N_D,w certificate (simulated)', `${f(nDw(S.ch) * 1e-7, 4)} × 10⁷ Gy/C = ${f(nDw(S.ch) * 1e-9, 5)} Gy/nC, ± 0.6 % (k = 1)`, 'wide')
+        + (b.kind === 'proton' ? dd('The plan', '100 MU, 1.000 Gy at z_ref', 'wide') : '');
+    }
+    $('out').innerHTML = h;
+    $('clock').textContent = S.view === 'kerma' && MC ? `${MC.n.toLocaleString('en-US')} histories` : '';
+  }
+  const STEP_TXT = {
+    proton: [
+      ['Reference conditions', 'A 10 cm × 10 cm scanned layer, the chamber\'s reference point at z_ref, the residual range R_res = R_p − z_ref sets the beam quality.'],
+      ['Read the chamber', 'Deliver the plan three times or more at +400 V and take the mean reading M.'],
+      ['Temperature and pressure k_TP', 'From the thermometer in the water and the barometer.', 'ktp'],
+      ['Polarity k_pol', 'Deliver at −400 V too, then k_pol = (|M₊| + |M₋|)/(2|M₊|).', 'kp'],
+      ['Recombination k_s', 'Deliver at 200 V too (V₁/V₂ = 2) and use the pulsed two voltage coefficients.', 'ks'],
+      ['Beam quality k_Q', 'From s_w,air at R_res, W_air and the chamber\'s p_Co.', 'kq'],
+      ['Dose to water', 'D_w = M k_TP k_pol k_s N_D,w k_Q for the 100 MU plan.', 'Dw'],
+    ],
+    co60: [
+      ['Reference conditions', '⁶⁰Co, 10 cm × 10 cm, the chamber at 5 g/cm² in water, where the laboratory knows the dose rate to water.'],
+      ['Read the chamber', 'Irradiate for 2.000 min three times or more at +400 V and take the mean reading.'],
+      ['Temperature and pressure k_TP', 'From the thermometer in the water and the barometer.', 'ktp'],
+      ['Polarity k_pol', 'Irradiate at −400 V too.', 'kp'],
+      ['Recombination k_s', 'Irradiate at 200 V too; the beam is continuous, so k_s = ((V₁/V₂)² − 1)/((V₁/V₂)² − M₁/M₂).', 'ks'],
+      ['Calibration coefficient N_D,w', 'N_D,w = D_w/(M k_TP k_pol k_s), with D_w = 1.000 Gy in 2.000 min. Compare it with the certificate.', 'N'],
+    ],
+  };
+  const TOL = { ktp: 2e-4, kp: 1.5e-3, ks: 1.5e-3, kq: 5e-4, Dw: 3e-3, N: 3e-3 };
+  function steps() {
+    const list = STEP_TXT[S.beam];
+    $('steps').innerHTML = list.map((s, i) => `<li><b>${s[0]}</b><p>${s[1]}</p>${s[2] && !S.blind ? `<div class="chk"><input type="text" inputmode="decimal" id="in_${s[2]}" aria-label="Your ${s[0]}" placeholder="your value"><button type="button" class="btn" data-chk="${s[2]}">Check</button><span class="say" id="say_${s[2]}"></span></div>` : ''}</li>`).join('');
+  }
+  $('steps').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-chk]'); if (!b) return;
+    const k = b.dataset.chk, v = parseFloat($('in_' + k).value.replace('−', '-').replace(',', '.')), a = calAnswers(), want = k === 'N' ? a.N * 1e-9 : k === 'Dw' ? a.true : a[k], say = $('say_' + k);
+    if (!isFinite(v)) { say.textContent = 'Type a number first.'; say.className = 'say'; return; }
+    const ok = Math.abs(v / want - 1) <= TOL[k];
+    say.className = 'say ' + (ok ? 'good' : 'bad');
+    say.textContent = ok ? (k === 'Dw' ? `Yes: the machine gave ${f(a.true, 4)} Gy, ${f(a.true * 1, 4)} cGy per MU.` : 'Yes, within the reading noise.') : (k === 'Dw' || k === 'N' ? 'Not yet: check each factor and the units (N_D,w in Gy/nC).' : 'Not yet: check the formula and the readings it uses.');
+  });
+
+  /* ---------- views, presets and controls ---------- */
+  const card = VD.setupCard($('setupCard'));
+  function setRun(on) { S.run = on && S.view === 'kerma'; card.away(S.run); $('play').textContent = S.run ? 'Pause' : MC && MC.n ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !S.run); }
+  function setView(v) {
+    S.view = v;
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === v));
+    $('boxKerma').hidden = v !== 'kerma'; $('boxChamber').hidden = v !== 'chamber'; $('boxCal').hidden = v !== 'cal'; $('stepsSec').hidden = v !== 'cal';
+    $('play').hidden = v !== 'kerma'; $('restart').hidden = v !== 'kerma';
+    $('cardTitle').textContent = v === 'kerma' ? 'Set up, then press Start' : v === 'chamber' ? 'Set up the chamber, then read it' : 'Calibrate: deliver, read, correct';
+    can.setAttribute('aria-label', v === 'kerma' ? 'A photon beam entering water, the electrons it sets moving, and the collision kerma and absorbed dose against depth. Drag in the picture or the graph to move the depth probe.'
+      : v === 'chamber' ? 'A Farmer ion chamber cut along its axis, with ion pairs drifting to the electrodes, and the chamber reading against voltage.'
+      : 'A water phantom under the beam, the chamber at the reference depth, the electrometer, thermometer and barometer.');
+    setRun(false); sync(); steps(); readouts(); draw();
+  }
+  const PRESETS = {
+    co60: { view: 'kerma', E: 1.25, range: 'build', z: 0.2, hint: '⁶⁰Co photons (1.17 and 1.33 MeV, taken as 1.25 MeV). The electrons they set moving reach at most 4.6 mm, so the dose builds up over the first few millimeters while the collision kerma already falls from the surface.' },
+    deep: { view: 'kerma', E: 1.25, range: 'deep', z: 10, hint: 'Past the buildup the dose and the collision kerma fall together, e^(−μz), with D/K_col fixed a little above 1: transient charged particle equilibrium. The electrons carry energy from shallower, where the kerma is higher.' },
+    low: { view: 'kerma', E: 0.5, range: 'build', z: 0.05, hint: 'At 0.5 MeV the electrons travel less than 1 mm, so the buildup is thin and D/K_col past it is very close to 1.' },
+    high: { view: 'kerma', E: 4, range: 'build', z: 1, hint: 'At 4 MeV the fastest electrons travel 2 cm: the skin gets little dose (the skin sparing of megavoltage beams). About one interaction in 17 (5.7 %) is now not a Compton scattering, mostly pair production, and is left out of the electron spread here.' },
+    sat: { view: 'chamber', beamC: 'proton', dpp: 1.0, V: 400, plot: 'sat', hint: 'Protons from a synchrocyclotron arrive in pulses (1 kHz). Some ion pairs made in a pulse meet again before they are collected; the higher the voltage, the fewer. Read the chamber from 50 V to 500 V.' },
+    hot: { view: 'chamber', beamC: 'proton', dpp: 8.0, V: 400, plot: 'jaffe', hint: 'Eight times the charge per pulse: recombination grows in step (u is proportional to the dose per pulse), so k_s at 400 V is several times further from 1. 1/M against 1/V is close to a straight line, whose intercept is 1/Q_sat.' },
+    cochamber: { view: 'chamber', beamC: 'co60', rate: 1.0, V: 400, plot: 'sat', hint: 'A continuous beam of 1 Gy/min makes so few ions at once that hardly any recombine: k_s at 400 V is 1.00001.' },
+    cal: { view: 'cal', beam: 'proton', Ep: 150, ch: 'ptw30013', hint: 'A 150 MeV scanned layer: R_p 15.77 g/cm², z_ref 2 g/cm², R_res 13.77 g/cm². Work down the steps; each reading has 0.05 % noise (simulated), so take several.' },
+    cal70: { view: 'cal', beam: 'proton', Ep: 70, ch: 'ptw30013', hint: 'At 70 MeV R_res at 2 g/cm² would be under 5 g/cm², so Rev. 1 puts the reference depth at 1 g/cm².' },
+    lab: { view: 'cal', beam: 'co60', ch: 'ptw30013', hint: 'The standards laboratory puts the chamber in ⁶⁰Co where it knows the dose to water and divides it by the corrected reading: that is N_D,w, the number on the certificate.' },
+  };
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k;
+    for (const key of ['E', 'range', 'z', 'beamC', 'dpp', 'rate', 'V', 'plot', 'beam', 'Ep', 'ch']) if (c[key] != null) S[key] = c[key];
+    if (c.view === 'chamber') { S.pts = []; S.lastC = null; S.pol = 1; }
+    if (c.view === 'cal') { S.Vc = 400; S.polc = 1; newRoom(); }
+    if (c.view === 'kerma') resetMC();
+    $('presetHint').textContent = c.hint; setView(c.view);
+  }
+  function newRoom() {
+    S.reads = []; S.lastR = null;
+    if (S.mystery) { S.offset = Math.round((RNG() < 0.5 ? -1 : 1) * (1 + RNG() * 2) * 10) / 1000;   /* a drift of 1.0 to 3.0 %, either way */ S.room = { T: Math.round((19 + RNG() * 6) * 10) / 10, P: Math.round((99.6 + RNG() * 2.6) * 100) / 100 }; }
+    else { S.offset = 0; S.room = { ...ROOM[S.beam] }; }
+  }
+  function sync() {
+    $('sE').value = sliderFromE(S.E); $('oE').textContent = `${f(S.E, 3)} MeV`;
+    ensureKernel(); const zm = zMax(); $('sZ').value = Math.min(1, S.z / zm); $('oZ').textContent = `${f(S.z, 3)} cm`;
+    $('selRange').value = S.range; $('selPhi').value = String(S.phi); $('chkMC').checked = S.mcOn;
+    for (const b of document.querySelectorAll('#boxKerma .chips button')) b.setAttribute('aria-pressed', String(Math.abs(+b.dataset.e - S.E) < 1e-6));
+    $('selBeamC').value = S.beamC; $('boxPulse').hidden = S.beamC !== 'proton'; $('boxRate').hidden = S.beamC === 'proton';
+    $('sDpp').value = S.dpp; $('oDpp').textContent = `${f(S.dpp, 1)} mGy`; $('sRate').value = S.rate; $('oRate').textContent = `${f(S.rate, 1)} Gy/min`;
+    $('sV').value = S.V; $('oV').textContent = `${S.V} V`; $('selPlot').value = S.plot;
+    for (const b of document.querySelectorAll('#polSegC button')) b.setAttribute('aria-pressed', String(+b.dataset.pol === S.pol));
+    $('selBeam').value = S.beam; $('boxEp').hidden = S.beam !== 'proton'; $('selEp').value = String(S.Ep); $('selCh').value = S.ch;
+    for (const b of document.querySelectorAll('#vSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.v === S.Vc));
+    for (const b of document.querySelectorAll('#polSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.pol === S.polc));
+    $('btnDeliver').textContent = S.beam === 'co60' ? 'Irradiate for 2.000 min' : 'Deliver the plan: 100 MU';
+    $('calNote').textContent = S.beam === 'co60' ? 'The laboratory\'s ⁶⁰Co beam gives 0.5000 Gy/min to water at 5 g/cm² (a simulated certificate value).' : 'Each delivery is the same 100 MU plan. Changing the beam, chamber or Mystery starts a new session.';
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+  }
+  const custom = () => { S.preset = 'custom'; for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', 'false'); };
+  function kermaChanged(resetRun) { custom(); if (resetRun) { resetMC(); setRun(false); } sync(); readouts(); draw(); }
+  let eTimer = 0;
+  $('sE').addEventListener('input', (e) => { S.E = Math.round(eFromSlider(+e.target.value) * 1000) / 1000; $('oE').textContent = `${f(S.E, 3)} MeV`; clearTimeout(eTimer); eTimer = setTimeout(() => { S.z = Math.min(S.z, 20); kermaChanged(true); }, 60); });
+  for (const b of document.querySelectorAll('#boxKerma .chips button')) b.addEventListener('click', () => { S.E = +b.dataset.e; kermaChanged(true); });
+  $('sZ').addEventListener('input', (e) => { S.z = Math.round(+e.target.value * zMax() * 1e4) / 1e4; kermaChanged(false); });
+  $('selRange').addEventListener('change', (e) => { S.range = e.target.value; ensureKernel(); S.z = Math.min(S.z, zMax()); kermaChanged(true); });
+  $('selPhi').addEventListener('change', (e) => { S.phi = +e.target.value; kermaChanged(false); });
+  $('chkMC').addEventListener('change', (e) => { S.mcOn = e.target.checked; });
+  const chamberChanged = (clear) => { custom(); if (clear) { S.pts = []; S.lastC = null; } sync(); readouts(); draw(); };
+  $('selBeamC').addEventListener('change', (e) => { S.beamC = e.target.value; chamberChanged(true); });
+  $('sDpp').addEventListener('input', (e) => { S.dpp = +e.target.value; chamberChanged(true); });
+  $('sRate').addEventListener('input', (e) => { S.rate = +e.target.value; chamberChanged(true); });
+  $('sV').addEventListener('input', (e) => { S.V = +e.target.value; chamberChanged(false); });
+  $('selPlot').addEventListener('change', (e) => { S.plot = e.target.value; chamberChanged(false); });
+  for (const b of document.querySelectorAll('#polSegC button')) b.addEventListener('click', () => { S.pol = +b.dataset.pol; chamberChanged(false); });
+  $('btnMeasureC').addEventListener('click', measureChamber);
+  const calChanged = (fresh) => { custom(); if (fresh) newRoom(); sync(); steps(); readouts(); draw(); };
+  $('selBeam').addEventListener('change', (e) => { S.beam = e.target.value; calChanged(true); });
+  $('selEp').addEventListener('change', (e) => { S.Ep = +e.target.value; calChanged(true); });
+  $('selCh').addEventListener('change', (e) => { S.ch = e.target.value; calChanged(true); });
+  for (const b of document.querySelectorAll('#vSeg button')) b.addEventListener('click', () => { S.Vc = +b.dataset.v; calChanged(false); });
+  for (const b of document.querySelectorAll('#polSeg button')) b.addEventListener('click', () => { S.polc = +b.dataset.pol; calChanged(false); });
+  $('btnDeliver').addEventListener('click', deliver);
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { custom(); if (b.dataset.view === 'kerma' && !MC) resetMC(); setView(b.dataset.view); });
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('play').addEventListener('click', () => setRun(!S.run));
+  $('restart').addEventListener('click', () => { resetMC(); setRun(false); readouts(); draw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; steps(); readouts(); draw(); });
+  $('labMystery').addEventListener('change', (e) => { S.mystery = e.target.checked; if (S.view === 'cal') calChanged(true); else newRoom(); });
+  $('labIcru').addEventListener('change', (e) => { S.icru = e.target.checked; readouts(); });
+  /* drag the depth probe in the Kerma view */
+  let drag = false;
+  const probeAt = (e) => { const g = S.geomK; if (!g) return; const r = can.getBoundingClientRect(), x = e.clientX - r.left; S.z = Math.max(0, Math.min(g.zm, (x - g.x0) / (g.x1 - g.x0) * g.zm)); S.z = Math.round(S.z * 1e4) / 1e4; kermaChanged(false); };
+  can.addEventListener('pointerdown', (e) => { if (S.view !== 'kerma' || !S.geomK) return; const r = can.getBoundingClientRect(), x = e.clientX - r.left; if (x < S.geomK.x0 - 10 || x > S.geomK.x1 + 10) return; drag = true; card.ghost(true); can.setPointerCapture(e.pointerId); probeAt(e); });
+  can.addEventListener('pointermove', (e) => { if (drag) probeAt(e); });
+  const endDrag = () => { if (drag) { drag = false; card.ghost(false); } };
+  can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('keydown', (e) => {
+    if (S.view === 'kerma' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { const st = zMax() / 200 * (e.shiftKey ? 10 : 1); S.z = Math.max(0, Math.min(zMax(), S.z + (e.key === 'ArrowRight' ? st : -st))); S.z = Math.round(S.z * 1e4) / 1e4; kermaChanged(false); e.preventDefault(); }
+    if (e.key === ' ') { if (S.view === 'kerma') $('play').click(); else if (S.view === 'chamber') measureChamber(); else deliver(); e.preventDefault(); }
+  });
+
+  /* ---------- the ion animation in the chamber view ---------- */
+  let ions = [], pulseT = 0;
+  function stepIons(dt) {
+    const g = S.ionGeom; if (!g) return;
+    const r = chamberTrue(S.V, S.pol), lose = 1 - r.f, speed = 30 * S.V / 400;
+    pulseT += dt;
+    const burst = S.beamC === 'proton' ? (pulseT > 0.7 ? (pulseT = 0, 26) : 0) : (Math.random() < dt * 30 ? 1 : 0);
+    for (let i = 0; i < burst; i++) {
+      const r0 = g.eb + 3 + Math.random() * (g.R - g.eb - 6), x = g.xl + g.R + Math.random() * (g.xr - g.xl - g.R - 6);
+      ions.push({ x, r0, rp: r0, rn: r0, side: Math.random() < 0.5 ? -1 : 1, rec: Math.random() < Math.min(0.9, lose * (S.beamC === 'proton' ? 6 : 1)), age: 0, done: 0 });
+    }
+    for (const q of ions) {
+      q.age += dt;
+      if (q.rec) { q.done = q.age > 0.35; continue; }
+      const toCenter = S.pol > 0 ? 'n' : 'p';
+      const v = speed * dt * (g.R / Math.max(q.rp, 4));
+      if (toCenter === 'n') { q.rn = Math.max(g.eb, q.rn - v); q.rp = Math.min(g.R, q.rp + v * 0.6); } else { q.rp = Math.max(g.eb, q.rp - v * 0.6); q.rn = Math.min(g.R, q.rn + v); }
+      q.done = (q.rn <= g.eb || q.rn >= g.R) && (q.rp <= g.eb || q.rp >= g.R);
+    }
+    ions = ions.filter((q) => !q.done).slice(-400);
+  }
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    let redraw = false;
+    if (S.view === 'kerma' && S.run) {
+      if (S.mcOn && MC) { const n0 = MC.n; MC.last = []; mcRun(MC, 16000, RNG, 3); for (const t of MC.last) { const bin = MCB[t.bin]; tracks.push({ z: t.z, y: RNG(), L: csdaW(bin.T), c: bin.c, side: RNG() < 0.5 ? -1 : 1, age: 0 }); } if (MC.n !== n0) readouts(); }
+      redraw = true;
+    }
+    if (tracks.length) { for (const t of tracks) t.age += dt; tracks = tracks.filter((t) => t.age < 1.6).slice(-60); redraw = true; }
+    if (S.view === 'chamber' && !matchMedia('(prefers-reduced-motion: reduce)').matches) { stepIons(dt); redraw = true; }
+    if (S.deliver) { redraw = true; if (now - S.deliver.t0 >= S.deliver.dur) deliveryDone(); }
+    if (redraw) draw();
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+
+  /* ---------- readings for the worksheets ---------- */
+  const wsOf = (v) => (v === 'kerma' ? 'mp-kerma-equilibrium' : 'mp-proton-calibration');
+  window.vdWorksheet = () => wsOf(S.view);
+  window.vdVersion = 'dosimetry@2026-10-25';
+  window.vdShowCols = [['view', 'view'], ['what', 'setting'], ['value', 'reading']];
+  window.vdReadingRow = () => {
+    const prev = typeof window.vdRows === 'function' ? window.vdRows() : [], opened = VD.ws(null);
+    if (opened && opened !== wsOf(S.view)) return `This worksheet (${opened}) takes ${opened === 'mp-kerma-equilibrium' ? 'Kerma and dose' : 'Ion chamber and Calibration'} readings: switch views, or open the other worksheet's link.`;
+    if (prev.length && wsOf(prev[0].view === 'Kerma' ? 'kerma' : 'cal') !== wsOf(S.view)) return 'These readings belong to the other worksheet: export or clear them first.';
+    if (S.view === 'kerma') {
+      const pr = probeK(), mc = mcAtProbe();
+      return { view: 'Kerma', what: `${f(S.E, 3)} MeV, z ${f(S.z, 3)} cm`, value: mc ? `${sci(mc.D, 4)} Gy (MC)` : `${sci(pr.kc, 4)} Gy (K_col)`,
+        E_MeV: f(S.E, 3), z_cm: f(S.z, 4), Kcol_Gy: pn(pr.kc, 5), D_Gy: S.blind ? '' : pn(pr.d, 5), ratio: S.blind ? '' : f(pr.r, 4),
+        DMC_Gy: mc ? pn(mc.D, 4) : '', uMC_Gy: mc ? pn(mc.u, 2) : '', histories: MC ? MC.n : 0, phi_cm2: S.phi };
+    }
+    if (S.view === 'chamber') {
+      if (!S.lastC) return 'Deliver 1 Gy and read the charge first.';
+      const q = S.lastC; return { view: 'Chamber', what: `${S.beamC === 'proton' ? `protons ${f(S.dpp, 1)} mGy/pulse` : `⁶⁰Co ${f(S.rate, 1)} Gy/min`}, ${q.pol > 0 ? '+' : '−'}${q.V} V`, value: `${f(q.M, 3)} nC`,
+        beam: S.beamC === 'proton' ? 'protons' : 'Co-60', dose_per_pulse_mGy: S.beamC === 'proton' ? f(S.dpp, 1) : '', rate_Gy_min: S.beamC === 'proton' ? '' : f(S.rate, 1),
+        V: q.V, inv_V: f(1000 / q.V, 3), pol: q.pol > 0 ? '+' : '−', M_nC: f(q.M, 3), inv_M: f(1 / Math.abs(q.M), 6) };
+    }
+    if (!S.lastR) return S.deliver ? 'Wait for the delivery to finish.' : 'Deliver the plan first.';
+    const q = S.lastR, b = calBeam();
+    return { view: 'Calibration', what: `${b.label}, ${q.pol > 0 ? '+' : '−'}${q.V} V`, value: `${f(q.M, 3)} nC`, beam: b.kind === 'proton' ? `${S.Ep} MeV protons` : 'Co-60 lab',
+      chamber: CHAMBERS[S.ch].name, V: q.V, pol: q.pol > 0 ? '+' : '−', M_nC: f(q.M, 3), T_C: f(S.room.T, 1), P_kPa: f(S.room.P, 2), delivery: b.kind === 'proton' ? '100 MU' : '2.000 min' };
+  };
+  window.__dos = { S, calAnswers, calTrue, chamberTrue, probeK, mcAtProbe, get MC() { return MC; }, resetMC, measureChamber, deliver, setView, applyPreset };
+
+  const qs = new URLSearchParams(location.search);
+  tokens(); new ResizeObserver(resize).observe($('scene')); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'co60'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
