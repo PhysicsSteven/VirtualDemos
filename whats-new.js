@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-share-keys', date: '2026-10-25', title: 'Share a setup, fullscreen, shortcuts',
+    text: 'Every demo has Copy link, which makes a link that opens the demo with your current settings, and a Fullscreen button. Keys: Space plays or pauses, R resets, P switches Projector, F switches fullscreen.' },
   { id: '2026-10-25-theme', date: '2026-10-25', title: 'Light or dark',
     text: 'Every page has a theme switch at the top: Light, Dark, or Browser default, which follows your device. The choice carries across the whole site, handouts and worksheets included; printed worksheets stay black on white.' },
   { id: '2026-10-25-course-nav', date: '2026-10-25', title: 'Step through a course',
