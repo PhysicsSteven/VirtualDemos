@@ -1017,6 +1017,11 @@ table.rows td input { width: 7ch; font: inherit; font-family: var(--font-mono); 
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* How this works: a short video of one sample reading for the worksheet the view belongs to, Heating Curve and Latent Heat
+     (Worksheet 1, Beaker view) or Bonds, Temperature and Latent Heat (Worksheet 2, Atoms view); made by tools/howto/ */
+  const howVid = () => (S.view === 'beaker' ? 'heating-curve' : 'bonds-and-latent-heat');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (S.view === 'beaker' ? 'How this works: Heating Curve and Latent Heat' : 'How this works: Bonds, Temperature and Latent Heat') });
   tokens(); applyPreset('crystal');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);

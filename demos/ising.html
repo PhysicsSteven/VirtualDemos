@@ -1436,6 +1436,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     applyPreset, setT, setH, setJ, setL, setMethod, startMeasure, capture, csvTable, resetSpins, doSweep, setPlaying, SCAN_T, get LG() { return LG; } };
 
   // ---------- start ----------
+  /* How this works: a short video of one sample reading; made by tools/howto/ */
+  VD.howTo({ src: 'media/how-this-works/ising.mp4', poster: 'media/how-this-works/ising.jpg' });
   tokens();
   const ro = new ResizeObserver(() => resize());
   ro.observe($('pLat')); ro.observe($('pcan'));

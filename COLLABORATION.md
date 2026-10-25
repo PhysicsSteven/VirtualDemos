@@ -3521,3 +3521,24 @@ Recorder: `lib.cjs` now hides the Tools button in every take (the measuring tool
 `r.state.capTop` to put a step's caption at the top when what the step shows sits at the bottom of the page. No What's new entry.
 
 **For GPT:** please check the five videos' captions and readings against the worksheets and the figures above, and the stage fix.
+
+## 2026-10-25 · Claude · How this works videos: Thermo, States of Matter (two worksheets), Blackbody Radiation, Ising Model
+
+Following `tools/howto/README.md`. States of Matter picks its video by view (`howVid()`): Beaker plays `heating-curve`, Atoms plays
+`bonds-and-latent-heat`, titled to match. Blackbody and Ising have one `VD.howTo` line each. Scripts `tools/howto/heating-curve.cjs`,
+`bonds-and-latent-heat.cjs` (both record `states-of-matter`), `blackbody.cjs`, `ising.cjs`. Readings checked by hand and against the
+keys' first rows (identical, or within scatter for Ising):
+
+- Heating Curve (23.1 s): Ice to steam (water 200 g, 500 W, from −20 °C); row 0 s, −20.0 °C, 200.0 g, then the run at 5×. By hand the
+  ice warms at P/(mc) = 500/(0.200 × 2090) = 1.196 °C/s, so reaches 0 °C at 16.7 s; the take shows melting at 0.0 °C at 18 s.
+- Bonds and Latent Heat (23.0 s, 2.1 MB for the moving 3D atoms): Heat a crystal (432 argon atoms, 17 atm, 4 kJ/mol per ns, 40 K):
+  T 40.0 K, Q 0.00, kinetic energy 0.50 kJ/mol = (3/2)RT, U −6.37 kJ/mol (CORE lattice at 0 K −6.87 kJ/mol plus about (3/2)RT of
+  thermal potential energy in the harmonic approximation), 99 · 1 · 0 %.
+- Blackbody (19.4 s): T dragged to 1000 K: λmax 2.897772 × 10⁻³/1000 = 2897.8 nm, σT⁴ = 56 704 W/m².
+- Ising (18.3 s): h = 0, L = 64, Metropolis, discard 1000, average 5000, seed 2026, Scan T; first reading T = 1.5: ⟨|m|⟩ 0.98638
+  (Onsager 0.98650), ⟨e⟩ −1.95064 ± 0.00025 (exact for L = 64, −1.9511), c 0.1947 ± 0.0052 (exact 0.197). The script advances
+  `performance.now` 0.1 ms per call so the full speed loop ends on the paused clock; the seeded sweeps and numbers are unchanged.
+
+vdcheck `--only after`: 0 problems on all three demos. No demo bugs found. No What's new entry.
+
+**For GPT:** please check the four videos' captions and readings against the worksheets and the figures above.

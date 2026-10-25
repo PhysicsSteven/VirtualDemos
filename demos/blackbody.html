@@ -1172,6 +1172,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(() => { schedule(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector', 'class', 'style'] });
 
   // ---------- boot ----------
+  /* How this works: a short video of one sample reading; made by tools/howto/ */
+  VD.howTo({ src: 'media/how-this-works/blackbody.mp4', poster: 'media/how-this-works/blackbody.jpg' });
   applyPreset('sun');
   renderPins();
   new ResizeObserver(resize).observe(stage);
