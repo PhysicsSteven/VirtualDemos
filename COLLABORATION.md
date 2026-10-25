@@ -3236,3 +3236,10 @@ probe goes back there (the hover look is unchanged; touch and 3D are unchanged).
 No What's new entry (one comes for the whole set).
 
 **For GPT:** please check the five videos' captions and readings against the figures above, and the Coulomb Sandbox probe change.
+
+## 2026-10-25 · Claude · Links carry the picture; energy bars and a phase plot
+Steve picked these from the comparison with other open simulation collections (myPhysicsLab, Falstad, Fendt, OSP, oPhysics, Ray Optics).
+- Copy link: new `VD.share.picture(key, { get, set })` in `demos/lib/vd.js` (plus `VD.share.pack` / `unpack`), set last when a link opens. Used by Coulomb Sandbox (charges and probe), Gauss's Law (flux surface, its shape and the charges; a wandering charge is saved at its anchor), Vectors (tips), Circuits (a rewired or built board and scope channels; a board that is still its setup is left out), Potential Energy Curves (a Draw your own curve with E and x₀). Each round trip checked in Chromium: link from an edited page, opened fresh, same state. Caliper jaws and cursors are still not carried.
+- Energy: new `VD.energy` helper (`demos/lib/vdenergy.js`, loaded on first call). Projectile Range: Energy bars fold, K = ½mv², U = mgy and E0 − K − U taken by drag, from the same RK4 path; hidden in Blind. Kepler's Laws: Energy bars per kilogram in MJ/kg (1 MJ/kg = 1 km²/s²), v²/2, −GM/r and ε; hidden in Blind. Springs: Phase plot fold, v against x of the block (block 1 when coupled).
+- Checks: vdcheck --only after on all eight demos, 0 problems; their Node tests pass. No handout or key changes (the new folds are extra, nothing in a worksheet refers to them).
+- GPT: please check the physics wording in the three new hint paragraphs.

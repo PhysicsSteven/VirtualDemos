@@ -5716,6 +5716,41 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
   const howWs = () => (S.mode === 'dc' ? wsDC() : S.mode === 'time' ? wsTime() : { ws: 'ac-circuits', ...wsAC() });
   VD.howTo({ src: () => `media/how-this-works/${howWs().ws}.mp4`, poster: () => `media/how-this-works/${howWs().ws}.jpg`,
     title: () => `How this works: ${howWs().wsName}` });
+  /* Copy link carries a board you built or rewired (VD.share.picture in demos/lib/vd.js): every part with its ends and the values
+     that differ from a new part's, and the scope channels. A board that is still its setup rides in the link as the setup. */
+  const boardCode = (list, chans) => {
+    const out = list.map((e, i) => {
+      const d = DEFAULTS[e.type] || {}, x = {};
+      for (const k of Object.keys(e)) if (!['id', 'type', 'a', 'b'].includes(k) && JSON.stringify(e[k]) !== JSON.stringify(d[k])) x[k] = e[k];
+      if (x.name === autoName(list.slice(0, i), e.type)) delete x.name;   /* set again by the same rule on the way back */
+      return Object.keys(x).length ? [e.type, e.a[0], e.a[1], e.b[0], e.b[1], x] : [e.type, e.a[0], e.a[1], e.b[0], e.b[1]];
+    });
+    return { e: out, c: chans.map((c) => [list.findIndex((e) => e.id === c.id), c.q]) };
+  };
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('c', {
+    get: () => {
+      const now = JSON.stringify(boardCode(els, channels));
+      if (S.preset && PRESETS[S.preset]) { const P = buildPreset(S.preset); if (JSON.stringify(boardCode(P.els, (P.meta.ch || []).map(([n, q]) => ({ id: P.els.find((e) => e.name === n).id, q })))) === now) return ''; }
+      return VD.share.pack(JSON.parse(now));
+    },
+    set: (str) => {
+      const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v);
+      if (!o || !Array.isArray(o.e)) return;
+      const list = [];
+      for (const r of o.e) {
+        if (!Array.isArray(r) || !DEFAULTS[r[0]] || ![1, 2, 3, 4].every((i) => ok(r[i]))) continue;
+        const x = r[5] && typeof r[5] === 'object' ? r[5] : {};
+        const e = { id: list.length + 1, type: r[0], a: [r[1], r[2]], b: [r[3], r[4]], ...JSON.parse(JSON.stringify(DEFAULTS[r[0]])), ...x };
+        if (e.name === undefined) e.name = autoName(list, e.type);
+        list.push(e);
+      }
+      pushUndo(null);
+      els = list; nextId = list.length + 1; sel = null; S.edited = true; phase.clear(); Iscale = 0; Ipeak = 0; kPick = null; pending = null;
+      channels = (Array.isArray(o.c) ? o.c : []).filter((c) => Array.isArray(c) && list[c[0]] && (c[1] === 'V' || c[1] === 'I')).map((c) => ({ id: list[c[0]].id, q: c[1] }));
+      run = null; scopeScale = null; ghosts = []; resoKey = ''; ghostKey = '';
+      changed('edit'); updateRail();
+    }
+  });
   tokens();
   { const p = fromHash() || 'series'; S.mode = PRESETS[p].mode; showMode(); applyPreset(p, true); }
   setRunning(!reduce); $('rmotion').checked = reduce;

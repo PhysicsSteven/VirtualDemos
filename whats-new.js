@@ -12,6 +12,10 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-energy-phase', date: '2026-10-25', title: 'Energy bars and a phase plot',
+    text: 'Projectile Range and Kepler\'s Laws have Energy bars in the sidebar: kinetic, potential, and for the ball the energy drag has taken, with a total that never changes. Springs has a Phase plot of velocity against position: an ellipse without damping, a spiral with it.', link: { href: 'demos/springs.html', text: 'Open Springs' } },
+  { id: '2026-10-25-links-picture', date: '2026-10-25', title: 'Links keep what you built',
+    text: 'Copy link now also keeps what you placed or drew in the picture: charges in Coulomb Sandbox and Gauss\'s Law, your circuit in Circuits, the vectors in Vectors, and a curve you drew in Potential Energy Curves.' },
   { id: '2026-10-25-how-this-works-p1-acoustics', date: '2026-10-25', title: 'How this works videos',
     text: 'Every Physics I and Acoustics demo now has a How this works button under the handout button: a short video, under 30 seconds, of one sample reading with arrows and zooms on each step. It adds to the worksheet procedure and does not replace it.', link: { href: 'physics-1.html', text: 'Open Physics I' } },
   { id: '2026-10-25-watch-molecules', date: '2026-10-25', title: 'Watch molecules share energy',

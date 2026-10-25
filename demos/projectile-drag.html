@@ -150,6 +150,7 @@ table.rows input { font: inherit; font-family: var(--font-mono); font-variant-nu
 table.rows button { font: inherit; font-size: 0.85rem; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 2px 4px; }
 table.rows .empty td { color: var(--muted); font-style: italic; }
 .plotbox { position: relative; height: 230px; }
+.plotbox.ebox { height: 190px; }
 .plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 :root[data-projector="on"] .plotbox { height: 270px; }
 .blindtag { align-self: center; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
@@ -302,6 +303,14 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
         <details class="more"><summary>More about this</summary>
           <p class="hint">The time cursor sits on a dot of the selected shot: t is a whole number of dot intervals after launch. Click a time graph to place it, or use the buttons, or <kbd>,</kbd> and <kbd>.</kbd> on the view (<kbd>Home</kbd>, <kbd>End</kbd> jump to launch and the last dot). x and y read to 1 cm from the launcher's foot; R is where the ball lands, to 1 cm.</p>
         </details>
+        </div></details>
+      </section>
+
+      <section id="secEnergy">
+        <h2>Energy</h2>
+        <details class="plotfold"><summary>Energy bars</summary><div class="foldbody">
+        <div class="plotbox ebox"><canvas id="eBars" aria-label="Energy bars"></canvas></div>
+        <p class="hint">The selected shot at the time shown: kinetic energy ½mv², gravitational potential energy mgy (zero at the ground), and the energy drag has taken so far, which is the launch energy minus the other two. Without drag that bar stays at zero and the total never changes; with drag the total still never changes, because the lost energy is counted.</p>
         </div></details>
       </section>
 
@@ -625,6 +634,17 @@ table.rows .empty td { color: var(--muted); font-style: italic; }
   /* the measuring tools: the stopwatch on the flight's simulated clock; the ruler on the flight view, drawn to the same scale across and up */
   /* How this works: a short video of one dot on a trajectory with no air (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/projectile-drag.mp4', poster: 'media/how-this-works/projectile-drag.jpg' });
+  /* Energy bars for the selected shot (or the settings before any launch) at the time shown: K = ½mv², U = mgy, and what drag
+     has taken, E0 − K − U, read from the same RK4 path the picture flies (demos/lib/vdenergy.js) */
+  VD.energy({ el: $('eBars'), unit: 'J', hidden: () => LAB.blind,
+    run: () => { const s = shotById(sel); return s ? s.id : keyOf(P); },
+    terms: () => {
+      const s = shotById(sel), p = s ? s.p : P, m = p.m, E0 = 0.5 * m * p.v * p.v + m * G * p.h;
+      let v = p.v, y = p.h;
+      if (s) { const q = sampleAt(s.pts, tShown(s)); v = Math.hypot(q[3], q[4]); y = q[2]; }
+      const K = 0.5 * m * v * v, U = m * G * y;
+      return [{ label: 'Kinetic', v: K, c: '--c1' }, { label: 'Potential', v: U, c: '--c2' }, { label: 'To drag', v: Math.max(0, E0 - K - U), c: '--c4' }];
+    } });
   VD.tools({ el: $('view'), strip: '.viewbar', time: () => (anim ? anim.t : null), scale: () => ({ m: 1 / L.s, area: [L.ox, 0, $('view').clientWidth - L.ox, L.oy] }) });
   const MAX_SHOTS = 8;
 

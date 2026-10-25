@@ -3007,6 +3007,38 @@ void main() {
   /* How this works: a short video of one sample reading, the flux of +1 nC through a sphere; made by tools/howto/ */
   VD.howTo({ src: 'media/how-this-works/gauss-law.mp4', poster: 'media/how-this-works/gauss-law.jpg' });
 
+  /* Copy link carries your own flux setup (VD.share.picture in demos/lib/vd.js): the surface, its size and shape, and the charges.
+     A wandering charge is saved at its anchor, so it wanders from there again. */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('g', {
+    get: () => {
+      if (mode !== 'flux') return '';
+      const r = (v) => +(+v).toFixed(2), m = F.motion, at = new Map();
+      if (m && m.type === 'lis') at.set(m.id, [m.ax, m.ay]);
+      else if (m) { at.set(m.ids[0], [m.cx + m.rad * Math.cos(m.ang0), m.cy + m.rad * Math.sin(m.ang0)]); at.set(m.ids[1], [m.cx - m.rad * Math.cos(m.ang0), m.cy - m.rad * Math.sin(m.ang0)]); }
+      const ix = (id) => F.charges.findIndex((c) => c.id === id);
+      return VD.share.pack({ s: F.surf, o: [r(F.sph.x), r(F.sph.y), r(F.sph.R)], b: [r(F.rect.x), r(F.rect.y), r(F.rect.w), r(F.rect.h)], d: r(F.depth),
+        f: F.free.map((pt) => [r(pt[0]), r(pt[1])]), c: F.charges.map((c) => { const p = at.get(c.id) || [c.x, c.y]; return [r(p[0]), r(p[1]), r(c.q)]; }),
+        m: m ? (m.type === 'lis' ? [ix(m.id), r(m.A), r(m.B), 0] : [ix(m.ids[0]), ix(m.ids[1])]) : null });
+    },
+    set: (str) => {
+      const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v), all = (a, n) => Array.isArray(a) && a.length >= n && a.slice(0, n).every(ok);
+      if (!o || !['sphere', 'box', 'cyl', 'free'].includes(o.s) || !Array.isArray(o.c) || mode !== 'flux') return;
+      if (o.s === 'free' && !(Array.isArray(o.f) && o.f.length >= 3 && o.f.every((pt) => all(pt, 2)))) return;
+      nextId = 1; F.charges = o.c.filter((a) => all(a, 3)).map((a) => mk(a[0], a[1], a[2]));
+      if (all(o.o, 3)) F.sph = { x: o.o[0], y: o.o[1], R: o.o[2] };
+      if (all(o.b, 4)) F.rect = { x: o.b[0], y: o.b[1], w: o.b[2], h: o.b[3] };
+      if (ok(o.d)) F.depth = o.d;
+      if (o.s === 'free') F.free = o.f.map((pt) => [pt[0], pt[1]]);
+      const q = (i) => F.charges[i];
+      F.motion = null;
+      if (Array.isArray(o.m) && o.m.length === 4 && all(o.m, 3) && q(o.m[0])) F.motion = { type: 'lis', id: q(o.m[0]).id, A: o.m[1], B: o.m[2] };
+      else if (Array.isArray(o.m) && o.m.length === 2 && q(o.m[0]) && q(o.m[1])) F.motion = { type: 'rot', ids: [q(o.m[0]).id, q(o.m[1]).id] };
+      anchorMotion();
+      setSurf(o.s, true);
+      F.sel = F.charges.length ? { kind: 'q', id: F.charges[0].id } : null;
+      chargesChanged();
+    }
+  });
   tokens();
   const ro = new ResizeObserver(resize);
   ro.observe(panes.d); ro.observe(panes.p);

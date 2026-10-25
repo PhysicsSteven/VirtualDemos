@@ -15,6 +15,9 @@
 .rail details.plotfold > summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .rail details.plotfold[open] > summary { margin-bottom: 8px; }
 .rail details.plotfold > .foldbody { display: flex; flex-direction: column; gap: 10px; }
+.ebox { position: relative; height: 200px; }
+.ebox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+:root[data-projector="on"] .ebox { height: 240px; }
 </style>
 <title>Springs and Oscillations</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -276,6 +279,13 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
         <h2>Measurements</h2>
         <dl class="readout" id="measBox"></dl>
         <p class="formula mono" id="mFormula"></p>
+      </section>
+
+      <section>
+        <details class="fold"><summary>Phase plot</summary><div class="foldbody">
+        <div class="ebox"><canvas id="phCan" aria-label="Phase plot"></canvas></div>
+        <p class="hint">Velocity against displacement for the block (block 1 with two masses), with the last few seconds as a trail. Without damping the path is a closed ellipse: the block passes the same points at the same speeds every cycle, because energy is conserved. Damping turns it into a spiral in to the middle. A drive settles it onto one ellipse at the drive frequency.</p>
+        </div></details>
       </section>
 
       <section>
@@ -579,6 +589,10 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   VD.tools({ el: $('cCan'), time: () => (held ? null : t) });
   /* How this works: a short video of one sample reading from the worksheet (made by tools/howto/) */
   VD.howTo({ src: 'media/how-this-works/springs.mp4', poster: 'media/how-this-works/springs.jpg' });
+  /* Phase plot of the block (block 1 when coupled): v against x at the time shown (demos/lib/vdenergy.js) */
+  VD.energy({ run: () => [S.sys, S.preset, S.vert, lastIC.x, lastIC.v, held ? 'held' : ''].join(','),
+    phase: { el: $('phCan'), x: 'x (m)', v: 'v (m/s)', n: 1200,
+      get: () => { if (!segs.length) return null; const st = stateAt(t); return S.sys === 'coupled' ? [st.x1, st.v1] : [st.x, st.v]; } } });
   // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   try { const rm = sessionStorage.getItem('vd-springs-motion'); if (rm) reduce = rm === 'reduce'; } catch (_) {}

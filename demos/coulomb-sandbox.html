@@ -1978,6 +1978,19 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   VD.howTo({ src: 'media/how-this-works/coulomb-sandbox.mp4', poster: 'media/how-this-works/coulomb-sandbox.jpg' });
   window.__cs = { get rows() { return rows; }, get configs() { return configs; }, get probe() { return probe; }, get sel() { return sel; }, get view() { return view; },
     get charges() { return charges; }, get orbit() { return orbit; }, potentialEnergy, csv: () => readingsCsv(rows, configs), probeReading, potentialAt, fieldAt, bodyAt, bodyLimits };
+  /* Copy link carries the charges and the probe as they are placed (VD.share.picture in demos/lib/vd.js) */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('q', {
+    get: () => { const r = (v) => +(+v).toFixed(3);
+      return VD.share.pack({ c: charges.map((c) => (c.kind ? [r(c.x), r(c.y), r(c.q), c.kind, r(c.size), r(c.ang)] : [r(c.x), r(c.y), r(c.q)])), p: [r(probe.x), r(probe.y)] }); },
+    set: (str) => {
+      const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v);
+      if (!o || !Array.isArray(o.c)) return;
+      const cs = o.c.filter((a) => Array.isArray(a) && ok(a[0]) && ok(a[1]) && ok(a[2]) && (a.length < 4 || (KIND_NAME[a[3]] && ok(a[4]) && ok(a[5]))));
+      nextId = 1; charges = cs.map((a) => (a.length > 3 ? mkB(a[3], a[0], a[1], a[2], a[4], a[5]) : mk(a[0], a[1], a[2])));
+      if (Array.isArray(o.p) && ok(o.p[0]) && ok(o.p[1])) probe = { x: o.p[0], y: o.p[1] };
+      sel = null; setPreset(null); markBase();
+    }
+  });
   new ResizeObserver(resize).observe(stage);
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(markBase);

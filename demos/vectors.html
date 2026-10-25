@@ -1466,6 +1466,17 @@
     FT.view3dFirst = qv !== 'top' && !lite;
   } catch (_) {}
   applyPreset(PRESETS[q0] ? q0 : 'comp'); resize();
+  /* Copy link carries the vector tips as dragged (VD.share.picture in demos/lib/vd.js); the river and the force table keep theirs in controls */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('v', {
+    get: () => (S.preset === 'river' || S.preset === 'table' ? '' : (S.A ? S.A.join(',') : '') + (S.B ? ';' + S.B.join(',') : '')),
+    set: (str) => {
+      if (S.preset === 'river' || S.preset === 'table') return;
+      const [a, b] = String(str).split(';').map((t) => t.split(',').map(Number)), good = (v) => v && v.length === 2 && v.every((x) => isFinite(x));
+      if (!good(a)) return;
+      S.A = a.map(lim); if (S.B && good(b)) S.B = b.map(lim);
+      draw(); readouts();
+    }
+  });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();

@@ -1941,6 +1941,19 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const ro = new ResizeObserver(resize);
   for (const k of ['m', 'p', 't']) ro.observe(boxes[k]);
   ro.observe(sPane);
+  /* Copy link carries a drawn curve (Draw your own) with the energy line and the particle on it (VD.share.picture in demos/lib/vd.js) */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('u', {
+    get: () => { if (S.preset !== 'custom') return ''; const r = (v) => +(+v).toFixed(4);
+      return VD.share.pack({ x: S.params.xs.map(r), y: S.params.ys.map(r), e: r(S.E), p: r(S.x0), d: S.dir }); },
+    set: (str) => {
+      const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v);
+      if (S.preset !== 'custom' || !o || !Array.isArray(o.x) || !Array.isArray(o.y) || o.x.length !== o.y.length || o.x.length < 3 || ![...o.x, ...o.y].every(ok)) return;
+      S.params.xs = o.x.slice(); S.params.ys = o.y.slice(); sel = -1;
+      potentialChanged();
+      for (const b of document.querySelectorAll('#ptsSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.n === S.params.xs.length));
+      if (ok(o.e) && ok(o.p)) { place(o.p, o.e, o.d === -1 ? -1 : 1); updateReadouts(true); }
+    }
+  });
   setRunning(running);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
