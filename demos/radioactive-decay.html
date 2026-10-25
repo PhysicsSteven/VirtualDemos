@@ -192,6 +192,11 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="i131" aria-pressed="false">Iodine 131</button>
           <button type="button" data-p="bi210" aria-pressed="false">Two step chain</button>
           <button type="button" data-p="te132" aria-pressed="false">Short daughter, long parent</button>
+          <button type="button" data-p="tc99m" aria-pressed="false">Technetium 99m</button>
+          <button type="button" data-p="f18" aria-pressed="false">Fluorine 18 (PET)</button>
+          <button type="button" data-p="ir192" aria-pressed="false">Iridium 192</button>
+          <button type="button" data-p="co60" aria-pressed="false">Cobalt 60</button>
+          <button type="button" data-p="mo99" aria-pressed="false">⁹⁹Mo generator</button>
         </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
@@ -264,6 +269,21 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </dl>
         <p class="formula mono" id="cFormula"></p>
         <p class="hint" id="cNote"></p>
+        <div id="eluteRow" hidden>
+          <div class="row2">
+            <button type="button" class="btn primary" id="eluteBtn">Elute now</button>
+            <div class="toggles"><label><input type="checkbox" id="eluteAuto">Elute every 24 h</label></div>
+          </div>
+          <dl class="readout">
+            <div><dt>Last elution</dt><dd id="eLast">none yet</dd></div>
+            <div><dt>⁹⁹ᵐTc taken off</dt><dd id="eN">—</dd></div>
+            <div><dt>Its activity then</dt><dd id="eA">—</dd></div>
+            <div><dt>Expected</dt><dd id="eExp">—</dd></div>
+          </dl>
+          <details class="more"><summary>More about this</summary>
+            <p class="hint">Eluting takes every ⁹⁹ᵐTc nucleus off the column (they leave the tray). The technetium then grows back from zero, fed by the molybdenum left: N<sub>D</sub> = B N<sub>P</sub>(t<sub>e</sub>) λ<sub>P</sub>/(λ<sub>D</sub> − λ<sub>P</sub>) (e<sup>−λ<sub>P</sub>τ</sup> − e<sup>−λ<sub>D</sub>τ</sup>), τ after the elution, so it is largest about 22.9 h later. That is why generators are eluted once a day.</p>
+          </details>
+        </div>
       </section>
 
       <section id="dateSec">
@@ -369,24 +389,27 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
     };
   }
-  function makeSim(N0, lam, dt, seed) {
+  // br: the share of parent decays that make the daughter (the rest go straight to the stable end, as ⁹⁹Mo → ⁹⁹Tc does)
+  function makeSim(N0, lam, dt, seed, br) {
     const n = lam.length, rows = [];
+    br = br === undefined ? 1 : br;
     for (let s = 0; s < n; s++) rows.push(fractions(lam, dt, s));
-    const counts = new Array(n + 1).fill(0); counts[0] = N0;
-    return { N0, lam: lam.slice(), dt, n, rows, counts, sp: new Uint8Array(N0), rng: mulberry32(seed >>> 0), step: 0 };
+    if (n === 2) { const f = rows[0]; rows[0] = [f[0], br * f[1], br * f[2], (1 - br) * (1 - f[0])]; }
+    const counts = new Array(n + 2).fill(0); counts[0] = N0;   /* counts[n + 1]: daughters taken out by elution */
+    return { N0, lam: lam.slice(), dt, n, br, rows, counts, sp: new Uint8Array(N0), rng: mulberry32(seed >>> 0), step: 0 };
   }
   // One step: every unstable nucleus draws one uniform number and moves with the exact transition probabilities for Δt.
   // Returns the decays out of each species; `changed` (optional Int32Array) receives the indices that changed.
   function stepSim(s, changed) {
     const n = s.n, sp = s.sp, rng = s.rng, r0 = s.rows[0];
-    const c00 = r0[0], c01 = n === 2 ? r0[0] + r0[1] : 2, c11 = n === 2 ? s.rows[1][1] : 0;
-    let d0 = 0, d1 = 0, m = 0;
+    const c00 = r0[0], c01 = n === 2 ? r0[0] + r0[1] : 2, c02 = n === 2 ? c01 + r0[2] : 2, c11 = n === 2 ? s.rows[1][1] : 0;
+    let d0 = 0, d1 = 0, dd = 0, m = 0;
     for (let i = 0; i < sp.length; i++) {
-      const k = sp[i]; if (k === n) continue;
+      const k = sp[i]; if (k >= n) continue;
       const u = rng();
       if (k === 0) {
         if (u < c00) continue;
-        if (u < c01) { sp[i] = 1; d0++; } else { sp[i] = n; d0++; if (n === 2) d1++; }
+        if (u < c01) { sp[i] = 1; d0++; } else { sp[i] = n; d0++; if (n === 2) { if (u < c02) d1++; else dd++; } }
       } else {
         if (u < c11) continue;
         sp[i] = 2; d1++;
@@ -395,14 +418,32 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     const c = s.counts;
     c[0] -= d0;
-    if (n === 1) c[1] += d0; else { c[1] += d0 - d1; c[2] += d1; }
+    if (n === 1) c[1] += d0; else { c[1] += d0 - d1 - dd; c[2] += d1 + dd; }   /* dd: parents straight to the stable end */
     s.step++;
     return { d0, d1, m };
+  }
+  // Elution (a generator is milked): every daughter nucleus leaves the column. Returns how many left.
+  function elute(s) {
+    if (s.n !== 2) return 0;
+    let m = 0; for (let i = 0; i < s.sp.length; i++) if (s.sp[i] === 1) { s.sp[i] = 3; m++; }
+    s.counts[1] -= m; s.counts[3] += m; return m;
+  }
+  // Expected shares of the starting parents for a chain with branching br and elutions at the times el (sorted):
+  // [parent, daughter, stable, eluted, decays out of the parent, decays out of the daughter]. The parent is never eluted;
+  // after the last elution te the daughter grows again from zero, fed by the parents left at te.
+  function expected(lam, t, br, el) {
+    if (lam.length === 1) { const f = fractions(lam, t, 0); return [f[0], 0, f[1], 0, f[1], 0]; }
+    br = br === undefined ? 1 : br; el = el || [];
+    let prev = 0, cumD = 0, out = 0;
+    for (const e of el) { if (e > t) break; const g = fractions(lam, e - prev, 0), P = Math.exp(-lam[0] * prev); cumD += br * P * g[2]; out += br * P * g[1]; prev = e; }
+    const g = fractions(lam, t - prev, 0), Pe = Math.exp(-lam[0] * prev), P = Math.exp(-lam[0] * t), D = br * Pe * g[1];
+    cumD += br * Pe * g[2];
+    return [P, D, (1 - br) * (1 - P) + cumD, out, 1 - P, cumD];
   }
   // ==CORE END==
 
   if (typeof document === 'undefined') {
-    globalThis.RD = { phi, fractions, cumDecays, peakTime, mulberry32, makeSim, stepSim };
+    globalThis.RD = { phi, fractions, cumDecays, peakTime, mulberry32, makeSim, stepSim, elute, expected };
     return;
   }
 
@@ -428,9 +469,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       note: '²¹⁰Bi: 5.01 d (β⁻); ²¹⁰Po: 138 d (α); ²⁰⁶Pb is stable. These are the last steps of the uranium 238 series. A tiny α branch of ²¹⁰Bi (0.00013%) is left out.' },
     te132: { unit: 'h', species: [{ name: '¹³²Te', T: 76.896, range: [5, 1000] }, { name: '¹³²I', T: 2.295, range: [0.2, 100] }, { name: '¹³²Xe' }],
       hint: 'A long lived parent feeds a short lived daughter. Within a few daughter half lives the daughter’s activity catches up and then tracks the parent’s. On the log scale the two activity lines run parallel.',
-      note: '¹³²Te: 3.20 d = 76.9 h; ¹³²I: 2.30 h; ¹³²Xe is stable. The same happens for ⁹⁰Sr (28.8 yr) and ⁹⁰Y (64.1 h), but there only 1 nucleus in 3,900 would be ⁹⁰Y at a time, too few to see among 10,000.' }
+      note: '¹³²Te: 3.20 d = 76.9 h; ¹³²I: 2.30 h; ¹³²Xe is stable. The same happens for ⁹⁰Sr (28.8 yr) and ⁹⁰Y (64.1 h), but there only 1 nucleus in 3,900 would be ⁹⁰Y at a time, too few to see among 10,000.' },
+    /* medical isotopes (Medical Physics module, 2026-10-25). ⁹⁹Mo and ⁹⁹ᵐTc: ENSDF, Browne and Tuli, Nucl. Data Sheets 145, 25 (2017);
+       ¹⁸F, ¹⁹²Ir, ⁶⁰Co: ENSDF via NuDat 3 */
+    tc99m: { unit: 'h', species: [{ name: '⁹⁹ᵐTc', T: 6.0072, range: [0.5, 100] }, { name: '⁹⁹Tc' }], winHL: 8,
+      hint: 'Technetium 99m is used in most nuclear medicine scans. Its 140.5 keV γ ray passes out of the body to the gamma camera, and its 6 hour half life is long enough to prepare a dose and image, short enough that little is left a day later.',
+      note: '⁹⁹ᵐTc: 6.0072 h (ENSDF 2017), an isomeric transition to ⁹⁹Tc, whose half life of 211,100 yr makes it stable on this scale.' },
+    f18: { unit: 'min', species: [{ name: '¹⁸F', T: 109.77, range: [5, 2000] }, { name: '¹⁸O' }], winHL: 8,
+      hint: 'Fluorine 18 labels FDG, the sugar that PET scans follow. Its 110 minute half life means it is made in a cyclotron near the scanner and used the same morning: a dose made at 7:00 has 68% of its activity left at 8:00.',
+      note: '¹⁸F: 109.77 min, 96.9% β⁺ and 3.1% electron capture to stable ¹⁸O. Each positron annihilates into two 511 keV photons, which the PET ring detects in coincidence.' },
+    ir192: { unit: 'd', species: [{ name: '¹⁹²Ir', T: 73.829, range: [5, 1000] }, { name: '¹⁹²Pt, ¹⁹²Os' }], winHL: 8,
+      hint: 'Iridium 192 is the source in high dose rate brachytherapy, a pellet a few millimeters long driven into the patient through a catheter. As it decays, every treatment takes longer for the same dose, so the source is replaced every few months.',
+      note: '¹⁹²Ir: 73.829 d, 95.1% β⁻ to ¹⁹²Pt and 4.9% electron capture to ¹⁹²Os, both stable. After 91 days (a quarter year) 42.5% of the activity is left.' },
+    co60: { unit: 'yr', species: [{ name: '⁶⁰Co', T: 5.2711, range: [0.5, 100] }, { name: '⁶⁰Ni' }], winHL: 8,
+      hint: 'Cobalt 60 drove the first teletherapy machines and still fills the Gamma Knife. Its activity falls 1.09% a month, so treatment times are made longer month by month.',
+      note: '⁶⁰Co: 1925.28 d = 5.2711 yr, β⁻ to ⁶⁰Ni, which sends out the 1.173 and 1.332 MeV γ rays. The monthly decay factor is 2^(−1/(12 × 5.2711)) = 0.98910.' },
+    mo99: { unit: 'h', species: [{ name: '⁹⁹Mo', T: 65.924, range: [5, 1000] }, { name: '⁹⁹ᵐTc', T: 6.0072, range: [0.2, 100] }, { name: '⁹⁹Tc' }], br: 0.886, generator: true,
+      hint: 'A technetium generator: ⁹⁹Mo sits on an alumina column and decays into ⁹⁹ᵐTc, which saline washes out (elution) each morning. Elute, then watch the technetium grow back: it peaks about 23 hours later, then settles into transient equilibrium with the molybdenum.',
+      note: '⁹⁹Mo: 65.924 h; ⁹⁹ᵐTc: 6.0072 h (ENSDF 2017). 88.6% of ⁹⁹Mo decays go through ⁹⁹ᵐTc (the share in the prescribing information of a commercial generator, Ultra-TechneKow V4; nuclear data compilations give 87 to 88.6%); the rest go straight to ⁹⁹Tc, stable on this scale. Elution here takes every ⁹⁹ᵐTc nucleus off the column; a real column releases about 90% of it.' }
   };
-  const UNIT_LONG = { step: 'steps', yr: 'yr', d: 'd', h: 'h' };
+  const UNIT_LONG = { step: 'steps', yr: 'yr', d: 'd', h: 'h', min: 'min' };
 
   // ---------- state ----------
   const S = { preset: 'coin', N0: 400, T: [1], custom: false, mult: 1, logY: false, layers: { exp: true, band: true, marks: true, ghost: true } };
@@ -440,6 +498,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   let running = !reduce, seed = 12345;
   let changedBuf = new Int32Array(400), flashes = [];
   let follow = -1, followLog = [], ages = [];
+  let elutions = [], lastElution = null;   /* elution times of this run, and { t, n } of the last one */
+  const br = () => (S.custom ? 1 : cfg().br || 1);
+  /* expected share of the starting parents in species i at time t, and decays out of species i by t, with branching and elutions */
+  const expFr = (t) => (nSp() === 2 ? expected(lam, t, br(), elutions).slice(0, 3) : fractions(lam, t, 0));
+  const expCum = (t, i) => (nSp() === 2 ? expected(lam, t, br(), elutions)[4 + i] : cumDecays(lam, t, i));
   let dragHold = null;
   const cfg = () => PRESETS[S.preset];
   const nSp = () => lam.length;          // number of unstable species
@@ -478,7 +541,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!dragHold) { winBase = naturalWindow(); win = winBase; dt = chooseStep(win); }
     stepsPerSec = cfg().coin ? win / 10 : (win / dt) / 30;
     seed = (seed * 1103515245 + 12345 + Date.now()) >>> 0;
-    sim = makeSim(S.N0, lam, dt, seed);
+    sim = makeSim(S.N0, lam, dt, seed, br());
+    elutions = []; lastElution = null;
     if (changedBuf.length < S.N0) changedBuf = new Int32Array(S.N0);
     H = []; D = [];
     for (let i = 0; i <= nSp(); i++) { H.push([sim.counts[i]]); D.push([0]); }
@@ -489,12 +553,21 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     updateFollow();
     updateReadouts(true);
   }
+  /* milk the generator now: the daughter count drops to zero at this time (the plot's last point is replaced) */
+  function doElute() {
+    if (!sim || nSp() !== 2) return;
+    const t = tNow(), before = expected(lam, t, br(), elutions)[1] * S.N0, n = elute(sim);
+    elutions.push(t); lastElution = { t, n, exp: before };
+    const k = H[1].length - 1; H[1][k] = sim.counts[1];
+    updateReadouts(true);
+  }
   let lastAuto = '';
   function stepOnce(noFlash) {
     const r = stepSim(sim, changedBuf), now = performance.now();
     if (!noFlash) { flashes = []; for (let j = 0; j < r.m; j++) flashes.push({ i: changedBuf[j], t0: now }); }
     if (flashes.length > 4000) flashes.splice(0, flashes.length - 4000);
     for (let i = 0; i <= nSp(); i++) { H[i].push(sim.counts[i]); D[i].push(i === 0 ? r.d0 : i === 1 && nSp() === 2 ? r.d1 : 0); }
+    if (cfg().generator && $('eluteAuto').checked) { const t = tNow(), k = Math.round(t / 24); if (k >= 1 && Math.abs(t - 24 * k) < dt / 2 && !elutions.some((e) => Math.abs(e - t) < dt / 2)) doElute(); }
     if (follow >= 0) {
       const s = sim.sp[follow], last = followLog[followLog.length - 1];
       if (last && s !== last.sp) {
@@ -633,8 +706,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (f.i >= S.N0) continue;
       const cx = x0 + (f.i % n) * cell + cell / 2, cy = y0 + Math.floor(f.i / n) * cell + cell / 2;
       const from = Math.max(0, sim.sp[f.i] - 1), k = kind[from] || 'b';
-      ctx.globalAlpha = a; ctx.drawImage(fs[k], cx - fs.half, cy - fs.half);
-      if (drawTracks) {
+      ctx.globalAlpha = a; ctx.drawImage(fs[k === 'g' ? 'b' : k], cx - fs.half, cy - fs.half);
+      if (drawTracks && k !== 'g') {   /* g: an isomeric transition (⁹⁹ᵐTc) sends out a γ ray, no charged track */
         const u = reduce ? 1 : Math.min(1, (1 - a) * 1.6), ang = ((f.i * 2654435761) >>> 0) / 4294967296 * 2 * Math.PI, Lt = (k === 'a' ? 1.8 : 4.5) * Math.max(cell, 6 * dpr) * u;
         const key = f.t0 + k; let tr = tracks.get(key); if (!tr) tracks.set(key, (tr = { k, a, xy: [] }));
         tr.xy.push(cx, cy, cx + Math.cos(ang) * Lt, cy + Math.sin(ang) * Lt);
@@ -678,7 +751,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     geiger(ctx, W, legTop + legH - 2 * ps, IR, ps);
   }
   /* what leaves the nucleus in each decay of the chain, for the track drawn at a flash: 'a' alpha, 'b' beta (the coin is drawn as beta) */
-  function decayKinds() { return S.preset === 'bi210' && !S.custom ? ['b', 'a'] : ['b', 'b']; }
+  function decayKinds() { return S.custom ? ['b', 'b'] : S.preset === 'bi210' ? ['b', 'a'] : S.preset === 'tc99m' ? ['g'] : S.preset === 'mo99' ? ['b', 'g'] : ['b', 'b']; }
   /* nucleus sprites, made once per cell size and theme: parent full size, intermediate a little smaller, stable end product small and gray */
   let sprites = null;
   function nucleusSprites(cell) {
@@ -722,10 +795,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       b.fillStyle = T.canvas; b.fillRect(0, 0, bg.width, bg.height); tray(b, x0, y0, gp, ps);
       sample = { key, bg, nuc, sim: null, sp: null };
     }
-    const c = sample.nuc.getContext('2d'), sp = sim.sp, ns = nSp(), spr = nucleusSprites(cell).s, pick = (v) => (v === 0 ? spr[0] : v === ns ? spr[2] : spr[1]);
+    const c = sample.nuc.getContext('2d'), sp = sim.sp, ns = nSp(), spr = nucleusSprites(cell).s, pick = (v) => (v === 0 ? spr[0] : v === ns ? spr[2] : v > ns ? null : spr[1]);
     if (sample.sim !== sim || sample.sp.length !== S.N0) {
       c.setTransform(1, 0, 0, 1, 0, 0); c.clearRect(0, 0, sample.nuc.width, sample.nuc.height); c.drawImage(sample.bg, 0, 0);
-      for (let k = 0; k < S.N0; k++) c.drawImage(pick(sp[k]), x0 + (k % n) * cell, y0 + Math.floor(k / n) * cell);
+      for (let k = 0; k < S.N0; k++) { const im = pick(sp[k]); if (im) c.drawImage(im, x0 + (k % n) * cell, y0 + Math.floor(k / n) * cell); }
       sample.sim = sim; sample.sp = sp.slice(0, S.N0);
     } else {
       const old = sample.sp;
@@ -733,7 +806,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         if (old[k] === sp[k]) continue;
         old[k] = sp[k];
         const x = x0 + (k % n) * cell, y = y0 + Math.floor(k / n) * cell;
-        c.clearRect(x, y, cell, cell); c.drawImage(sample.bg, x, y, cell, cell, x, y, cell, cell); c.drawImage(pick(sp[k]), x, y);
+        c.clearRect(x, y, cell, cell); c.drawImage(sample.bg, x, y, cell, cell, x, y, cell, cell); const im = pick(sp[k]); if (im) c.drawImage(im, x, y);
       }
     }
     return sample.nuc;
@@ -866,7 +939,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     // daughter peak
     if (nSp() === 2) {
-      const tp = peakTime(lam[0], lam[1]);
+      const tp = peakTime(lam[0], lam[1]) + (elutions.length ? elutions[elutions.length - 1] : 0);
       if (tp < win) {
         ctx.strokeStyle = T.sp[1]; ctx.lineWidth = 1.2; ctx.setLineDash([6, 4]); ctx.globalAlpha = 0.7;
         const px = Math.round(g.X(tp)) + 0.5; ctx.beginPath(); ctx.moveTo(px, g.top); ctx.lineTo(px, g.bot); ctx.stroke();
@@ -878,8 +951,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.layers.band) {
       for (let i = 0; i <= ns; i++) {
         ctx.fillStyle = spColor(i); ctx.globalAlpha = i === ns ? 0.12 : 0.16; ctx.beginPath();
-        for (let j = 0; j <= nPts; j++) { const t = win * j / nPts, f = fractions(lam, t, 0)[i], m = N0 * f, s = Math.sqrt(N0 * f * (1 - f)); const px = g.X(t), py = Y(m + s); j ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
-        for (let j = nPts; j >= 0; j--) { const t = win * j / nPts, f = fractions(lam, t, 0)[i], m = N0 * f, s = Math.sqrt(N0 * f * (1 - f)); ctx.lineTo(g.X(t), Y(Math.max(log ? 0.3 : 0, m - s))); }
+        for (let j = 0; j <= nPts; j++) { const t = win * j / nPts, f = expFr(t)[i], m = N0 * f, s = Math.sqrt(N0 * f * (1 - f)); const px = g.X(t), py = Y(m + s); j ? ctx.lineTo(px, py) : ctx.moveTo(px, py); }
+        for (let j = nPts; j >= 0; j--) { const t = win * j / nPts, f = expFr(t)[i], m = N0 * f, s = Math.sqrt(N0 * f * (1 - f)); ctx.lineTo(g.X(t), Y(Math.max(log ? 0.3 : 0, m - s))); }
         ctx.closePath(); ctx.fill();
       }
       ctx.globalAlpha = 1;
@@ -911,7 +984,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // expected curves, dashed, drawn over the sample with a thin halo so they stay visible
     if (S.layers.exp) {
       for (let i = 0; i <= ns; i++) {
-        const path = () => { ctx.beginPath(); for (let j = 0; j <= nPts; j++) { const t = win * j / nPts, px = g.X(t), py = Y(N0 * fractions(lam, t, 0)[i]); j ? ctx.lineTo(px, py) : ctx.moveTo(px, py); } };
+        const path = () => { ctx.beginPath(); for (let j = 0; j <= nPts; j++) { const t = win * j / nPts, px = g.X(t), py = Y(N0 * expFr(t)[i]); j ? ctx.lineTo(px, py) : ctx.moveTo(px, py); } };
         ctx.setLineDash([7 * ps, 5 * ps]);
         path(); ctx.strokeStyle = T.canvas; ctx.lineWidth = 3.4 * ps; ctx.globalAlpha = 0.7; ctx.stroke(); ctx.globalAlpha = 1;
         path(); ctx.strokeStyle = i === ns ? T.sp3line : T.ink; ctx.lineWidth = 1.5 * ps; ctx.stroke();
@@ -1008,7 +1081,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       for (let b = 0; b < nb; b++) omax = Math.max(omax, a[b]);
       obs.push(a);
     }
-    const mu = (i, tc) => N0 * (cumDecays(lam, tc + bw / 2, i) - cumDecays(lam, Math.max(0, tc - bw / 2), i));
+    const mu = (i, tc) => N0 * (expCum(tc + bw / 2, i) - expCum(Math.max(0, tc - bw / 2), i));
     let emax = 0;
     for (let i = 0; i < ns; i++) for (let b = 0; b < nb; b++) { const m = mu(i, (b + 0.5) * bw), q = m / N0; emax = Math.max(emax, m + 2 * Math.sqrt(N0 * q * (1 - q))); }
     const ymax = Math.max(4, emax, omax) * (log ? 1.6 : 1.1);
@@ -1087,7 +1160,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- readouts ----------
   function updateReadouts(full) {
     if (!sim) return;
-    const t = tNow(), N0 = S.N0, ns = nSp(), f = fractions(lam, t, 0);
+    const t = tNow(), N0 = S.N0, ns = nSp(), f = expFr(t);
     $('tclock').textContent = 't = ' + fmtT(t);
     $('rT').textContent = fmtT(t);
     $('rHLlab').textContent = ns === 2 ? `Half lives of ${spName(0)}` : 'Half lives elapsed';
@@ -1115,29 +1188,38 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       $('rSurv').innerHTML = `${pct(ratio)} <span class="ok">of ${fmtInt(H[0][k - m])}; expected ${pct(expv)}</span>`;
     } else $('rSurv').innerHTML = `— <span class="ok">after one half life</span>`;
     $('rSurvLab').textContent = `${ns === 2 ? spName(0) + ' nuclei' : 'Parents'} alive one half life ago that are still alive`;
-    if (ns === 2) chainReadouts(t);
+    if (ns === 2) { chainReadouts(t); eluteReadouts(); }
     if (cfg().dating && !S.custom) datingReadout(t);
     updateFollow();
   }
   function chainReadouts(t) {
-    const [a, b] = lam, f = fractions(lam, t, 0);
+    const [a, b] = lam, f = expFr(t), B = br();
     const AP = a * sim.counts[0], AD = b * sim.counts[1];
     $('cRatio').textContent = AP > 0 ? (AD / AP).toFixed(3) : AD > 0 ? 'parent gone' : '—';
     $('cRatioExp').textContent = f[0] > 1e-300 ? (b * f[1] / (a * f[0])).toFixed(3) : '—';
-    $('cPeak').textContent = fmtT(peakTime(a, b));
+    $('cPeak').textContent = fmtT(peakTime(a, b) + (elutions.length ? elutions[elutions.length - 1] : 0));
     if (b > a) {
-      $('cLim').textContent = (b / (b - a)).toFixed(4);
+      $('cLim').textContent = (B * b / (b - a)).toFixed(4);
     } else $('cLim').textContent = 'grows';
+  }
+  function eluteReadouts() {
+    if (!cfg().generator) return;
+    const e = lastElution;
+    $('eLast').textContent = e ? `t = ${fmtT(e.t)}` : 'none yet';
+    $('eN').textContent = e ? fmtInt(e.n) : '—';
+    $('eA').textContent = e ? `${fmtNum(lam[1] * e.n)} decays per h` : '—';
+    $('eExp').textContent = e ? `${fmtNum(e.exp)} ± ${fmtNum(Math.sqrt(e.exp * (1 - e.exp / S.N0)))} nuclei` : '—';
   }
   function chainStatic() {
     if (nSp() !== 2) return;
-    const [a, b] = lam, r = S.T[0] / S.T[1];
-    $('cFormula').innerHTML = `N<sub>D</sub>(t) = N₀ λ<sub>P</sub>/(λ<sub>D</sub> − λ<sub>P</sub>) · (e<sup>−λ<sub>P</sub>t</sup> − e<sup>−λ<sub>D</sub>t</sup>)`;
+    const [a, b] = lam, r = S.T[0] / S.T[1], B = br(), Bh = B < 1 ? 'B ' : '';
+    $('cFormula').innerHTML = `N<sub>D</sub>(t) = ${Bh}N₀ λ<sub>P</sub>/(λ<sub>D</sub> − λ<sub>P</sub>) · (e<sup>−λ<sub>P</sub>t</sup> − e<sup>−λ<sub>D</sub>t</sup>)` + (B < 1 ? `, B = ${B}` : '');
     let note;
     if (b > a * 100) note = `The daughter lives ${fmtNum(r)} times shorter than the parent: secular equilibrium. After a few daughter half lives the activities match to within ${pct(b / (b - a) - 1)}, and the daughter count settles at N<sub>D</sub>/N<sub>P</sub> = λ<sub>P</sub>/λ<sub>D</sub> ≈ ${fmtSci(a / b, 3)}.`;
-    else if (b > a) note = `The daughter lives ${fmtNum(r)} times shorter than the parent: transient equilibrium. The activity ratio settles at λ<sub>D</sub>/(λ<sub>D</sub> − λ<sub>P</sub>) = ${(b / (b - a)).toFixed(3)}, just above 1, and both then fall with the parent’s half life.`;
+    else if (b > a) note = `The daughter lives ${fmtNum(r)} times shorter than the parent: transient equilibrium. The activity ratio settles at ${Bh}λ<sub>D</sub>/(λ<sub>D</sub> − λ<sub>P</sub>) = ${(B * b / (b - a)).toFixed(3)}${B < 1 ? `, with only a share B = ${B} of the parent decays feeding the daughter` : ', just above 1'}, and both then fall with the parent’s half life.`;
     else note = `The daughter outlives the parent, so there is no equilibrium: once the parent is gone the daughter decays on its own half life. At the peak the two activities are equal.`;
-    $('cNote').innerHTML = note + ' The dashed orange line on the N(t) plot marks the daughter peak.';
+    $('cNote').innerHTML = note + ' The dashed orange line on the N(t) plot marks the daughter peak' + (cfg().generator ? ' after the last elution.' : '.');
+    $('eluteRow').hidden = !cfg().generator;
   }
   function datingReadout(t) {
     const N = sim.counts[0], N0 = S.N0, Th = S.T[0];
@@ -1307,6 +1389,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     stepOnce(); updateReadouts();
   }
   $('reset').addEventListener('click', () => { newRun(true); });
+  $('eluteBtn').addEventListener('click', doElute);
   $('tExp').addEventListener('change', (e) => { S.layers.exp = e.target.checked; });
   $('tBand').addEventListener('change', (e) => { S.layers.band = e.target.checked; });
   $('tMarks').addEventListener('change', (e) => { S.layers.marks = e.target.checked; });
@@ -1414,17 +1497,27 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- readings ----------
   /* One row per Record reading: the counts of each kind of nucleus at the time shown. A chain setup's readings go to the
      Parent and Daughter worksheet, the others to Measuring a Half Life. */
-  const SETUP_NAME = { coin: 'Coin flip nuclei', c14: 'Carbon 14', i131: 'Iodine 131', bi210: 'Bismuth 210 to polonium 210', te132: 'Tellurium 132 to iodine 132' };
+  const SETUP_NAME = { coin: 'Coin flip nuclei', c14: 'Carbon 14', i131: 'Iodine 131', bi210: 'Bismuth 210 to polonium 210', te132: 'Tellurium 132 to iodine 132',
+    tc99m: 'Technetium 99m', f18: 'Fluorine 18', ir192: 'Iridium 192', co60: 'Cobalt 60', mo99: 'Molybdenum 99 generator' };
   window.vdVersion = 'radioactive-decay@2026-10-24';
   window.vdShowCols = [['t', 't'], ['parent', 'parents'], ['daughter', 'daughters']];
   /* How this works: a two step chain shows the Parent and Daughter video, the others Measuring a Half Life */
   const howVid = () => (nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
   VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
-  window.vdWorksheet = () => (nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
+  window.vdWorksheet = () => (cfg().generator && !S.custom ? 'mp-technetium-generator' : nSp() === 2 ? 'decay-chains' : 'radioactive-decay');
   window.vdReadingRow = () => {
     if (!sim) return null;
-    const chain = nSp() === 2, other = (window.vdRows ? window.vdRows() : []).find((r) => (r.daughter_T_half !== '') !== chain);
+    const chain = nSp() === 2, gen = !!(cfg().generator && !S.custom), rows = window.vdRows ? window.vdRows() : [];
+    const other = rows.find((r) => (r.daughter_T_half !== '') !== chain);
     if (other) return `These readings are from a ${chain ? 'one step' : 'two step'} setup: export them to its worksheet or clear them first.`;
+    if (rows.find((r) => (r.setup === SETUP_NAME.mo99) !== gen)) return `These readings are ${gen ? 'not ' : ''}from the generator: export them to their worksheet or clear them first.`;
+    if (gen) {
+      window.vdShowCols = [['t', 't (h)'], ['parent', '⁹⁹Mo'], ['daughter', '⁹⁹ᵐTc'], ['eluted_last', 'last elution']];
+      const c = sim.counts, t = tNow(), e = expected(lam, t, br(), elutions);
+      return { setup: SETUP_NAME.mo99, N0: S.N0, unit: 'h', T_half: S.T[0], daughter_T_half: S.T[1], t: +t.toPrecision(6), parent: c[0], daughter: c[1], stable: c[2],
+        eluted_last: lastElution ? lastElution.n : '', last_elution_t: lastElution ? +lastElution.t.toPrecision(6) : '', since_elution: +(t - (lastElution ? lastElution.t : 0)).toPrecision(6),
+        expected_daughter: +(S.N0 * e[1]).toPrecision(5) };
+    }
     window.vdShowCols = [['t', `t (${UNIT_LONG[cfg().unit]})`], ['parent', 'parents'], chain ? ['daughter', 'daughters'] : ['stable', 'decayed']];
     const unit = UNIT_LONG[cfg().unit], c = sim.counts;
     return { setup: S.custom ? 'Your own half lives' : SETUP_NAME[S.preset], N0: S.N0, unit, T_half: S.T[0], daughter_T_half: chain ? S.T[1] : '',
