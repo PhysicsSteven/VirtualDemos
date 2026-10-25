@@ -16,6 +16,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
+.rail [hidden], .seg[hidden] { display: none !important; }
 /* Layout: lab bench. The gas box and speed histogram fill the left, a narrow instrument rail sits on the right; stacks on phones. */
 
 .app {
@@ -79,6 +80,16 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .pane.box { flex: none; height: calc((100vw - 34px) * 0.6 + 86px); max-height: 72vh; min-height: 260px; }
   .pane.hist { flex: none; height: 230px; }
 }
+.clock.two { min-width: 24ch; text-align: right; }
+.graphseg { position: absolute; top: 8px; right: 10px; z-index: 2; }
+.graphseg button { font-size: 0.8rem; padding: 3px 9px; }
+.chips-head { margin: 10px 0 4px; font-size: 0.8rem; color: var(--muted); }
+.gasdot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+.gasdot.a { background: var(--neg); }
+.gasdot.b { background: var(--pos); }
+.gasbox { display: flex; flex-direction: column; gap: 8px; padding: 8px 0 4px; }
+.gasbox + .gasbox { border-top: 1px dashed var(--line); }
+.gasbox h3 { margin: 0; font-size: 0.86rem; font-weight: 700; }
 .slider-scale { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--muted); margin-top: 3px; }
 /* phone touch targets: the house minimums (buttons 36 px, sliders 28 px) */
 @media (max-width: 820px) {
@@ -95,7 +106,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       <p>Pressure and temperature come from molecules hitting the walls. Push the piston and watch the gas heat up.</p>
     </div>
     <div class="bar-right">
-      <div class="units mono">argon, m = 6.63×10⁻²⁶ kg · box height 30 nm · 1 s on screen = <span id="rate">80 ps</span></div>
+      <div class="units mono"><span id="unitsGas">argon, m = 6.63×10⁻²⁶ kg</span> · box height 30 nm · 1 s on screen = <span id="rate">80 ps</span></div>
       <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
       <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
       <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/ideal-gas.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/ideal-gas.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h2v1h-2zM14 2h1v1h-1zM16 2h1v1h-1zM18 2h4v1h-4zM24 2h1v1h-1zM26 2h5v1h-5zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM12 3h5v1h-5zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h3v1h-3zM16 4h1v1h-1zM18 4h8v1h-8zM28 4h1v1h-1zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM14 5h1v1h-1zM17 5h2v1h-2zM20 5h2v1h-2zM25 5h5v1h-5zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM13 6h1v1h-1zM15 6h2v1h-2zM23 6h1v1h-1zM25 6h1v1h-1zM27 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM15 7h1v1h-1zM18 7h1v1h-1zM20 7h5v1h-5zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM12 9h2v1h-2zM15 9h1v1h-1zM19 9h4v1h-4zM24 9h2v1h-2zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM12 10h1v1h-1zM15 10h1v1h-1zM20 10h2v1h-2zM24 10h3v1h-3zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h1v1h-1zM4 11h1v1h-1zM6 11h2v1h-2zM9 11h1v1h-1zM11 11h2v1h-2zM15 11h1v1h-1zM18 11h1v1h-1zM21 11h3v1h-3zM27 11h1v1h-1zM29 11h2v1h-2zM34 11h4v1h-4zM3 12h2v1h-2zM6 12h4v1h-4zM11 12h1v1h-1zM13 12h1v1h-1zM16 12h1v1h-1zM18 12h1v1h-1zM22 12h3v1h-3zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM2 13h1v1h-1zM9 13h3v1h-3zM15 13h2v1h-2zM19 13h1v1h-1zM23 13h2v1h-2zM26 13h1v1h-1zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM2 14h5v1h-5zM8 14h1v1h-1zM10 14h1v1h-1zM13 14h5v1h-5zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM29 14h4v1h-4zM36 14h3v1h-3zM4 15h4v1h-4zM9 15h1v1h-1zM11 15h1v1h-1zM14 15h6v1h-6zM21 15h1v1h-1zM24 15h2v1h-2zM27 15h4v1h-4zM34 15h2v1h-2zM3 16h1v1h-1zM5 16h2v1h-2zM8 16h3v1h-3zM13 16h1v1h-1zM15 16h3v1h-3zM20 16h1v1h-1zM22 16h6v1h-6zM29 16h1v1h-1zM31 16h7v1h-7zM3 17h2v1h-2zM6 17h1v1h-1zM9 17h2v1h-2zM12 17h1v1h-1zM15 17h3v1h-3zM21 17h3v1h-3zM26 17h1v1h-1zM28 17h1v1h-1zM30 17h1v1h-1zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h1v1h-1zM4 18h2v1h-2zM8 18h1v1h-1zM11 18h3v1h-3zM18 18h1v1h-1zM22 18h1v1h-1zM26 18h1v1h-1zM28 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM4 19h4v1h-4zM11 19h1v1h-1zM13 19h2v1h-2zM20 19h2v1h-2zM24 19h1v1h-1zM26 19h4v1h-4zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h2v1h-2zM5 20h1v1h-1zM7 20h7v1h-7zM16 20h2v1h-2zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h1v1h-1zM28 20h9v1h-9zM3 21h2v1h-2zM6 21h2v1h-2zM9 21h1v1h-1zM12 21h1v1h-1zM14 21h1v1h-1zM16 21h4v1h-4zM21 21h3v1h-3zM25 21h2v1h-2zM28 21h2v1h-2zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h2v1h-2zM6 22h3v1h-3zM12 22h2v1h-2zM19 22h1v1h-1zM22 22h5v1h-5zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h1v1h-1zM9 23h1v1h-1zM13 23h1v1h-1zM15 23h4v1h-4zM22 23h2v1h-2zM25 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM3 24h3v1h-3zM8 24h2v1h-2zM12 24h1v1h-1zM14 24h1v1h-1zM16 24h4v1h-4zM22 24h1v1h-1zM25 24h1v1h-1zM27 24h3v1h-3zM33 24h4v1h-4zM7 25h1v1h-1zM11 25h1v1h-1zM13 25h5v1h-5zM19 25h4v1h-4zM24 25h1v1h-1zM26 25h1v1h-1zM29 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM2 26h1v1h-1zM6 26h4v1h-4zM11 26h2v1h-2zM15 26h2v1h-2zM20 26h1v1h-1zM24 26h3v1h-3zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h3v1h-3zM15 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM4 28h1v1h-1zM7 28h6v1h-6zM16 28h1v1h-1zM18 28h3v1h-3zM22 28h1v1h-1zM24 28h6v1h-6zM31 28h4v1h-4zM36 28h1v1h-1zM4 29h1v1h-1zM6 29h2v1h-2zM9 29h1v1h-1zM13 29h2v1h-2zM19 29h2v1h-2zM23 29h4v1h-4zM29 29h2v1h-2zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h3v1h-3zM7 30h2v1h-2zM14 30h2v1h-2zM17 30h1v1h-1zM19 30h1v1h-1zM21 30h3v1h-3zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM38 30h1v1h-1zM10 31h1v1h-1zM13 31h3v1h-3zM18 31h3v1h-3zM25 31h2v1h-2zM28 31h1v1h-1zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h2v1h-2zM13 32h2v1h-2zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h4v1h-4zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM12 33h1v1h-1zM17 33h1v1h-1zM23 33h1v1h-1zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM13 34h1v1h-1zM15 34h1v1h-1zM17 34h2v1h-2zM22 34h1v1h-1zM25 34h2v1h-2zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM12 35h1v1h-1zM20 35h2v1h-2zM23 35h3v1h-3zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h6v1h-6zM19 36h1v1h-1zM21 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h2v1h-2zM14 37h1v1h-1zM17 37h10v1h-10zM28 37h2v1h-2zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM13 38h1v1h-1zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
@@ -110,6 +121,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" class="spin" id="play">Pause</button>
           <button type="button" class="spin" id="reset">Reset</button>
           <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+          <div class="seg" role="group" aria-label="Divider" id="divSeg" hidden><button type="button" data-div="1" aria-pressed="true">Divider closed</button><button type="button" data-div="2" aria-pressed="false">Hole</button><button type="button" data-div="0" aria-pressed="false">Removed</button></div>
           <button type="button" class="spin" id="ride" aria-pressed="false" hidden>Follow the marked molecule</button>
         </div>
         <p class="status3d" id="status3d" role="status"></p>
@@ -118,11 +130,12 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </div>
       <div class="pane hist" id="histPane">
         <canvas id="hist" role="img" aria-label="Histogram of molecular speeds with the two dimensional Maxwell-Boltzmann curve overlaid."></canvas>
+        <div class="seg graphseg" role="group" aria-label="Graph" id="graphSeg" hidden><button type="button" data-g="counts" aria-pressed="true">Mixing</button><button type="button" data-g="msd" aria-pressed="false">Spreading</button><button type="button" data-g="speeds" aria-pressed="false">Speeds</button></div>
       </div>
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/ideal-gas.html" target="ideal-gas-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/ideal-gas.html" target="ideal-gas-worksheet">Worksheet 1: Gas in a Box</a></li><li><a href="../curriculum/labs/students/diffusion.html" target="diffusion-worksheet">Worksheet 2: Diffusion and Graham's Law</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Setups</h2>
         <div class="chips" id="presets">
@@ -132,12 +145,29 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="dilute" aria-pressed="false">Dilute gas</button>
           <button type="button" data-p="cold" aria-pressed="false">Near absolute zero</button>
         </div>
+        <p class="chips-head">Two gases and a divider</p>
+        <div class="chips" id="presets2">
+          <button type="button" data-p="mix" aria-pressed="false">Two gases mix</button>
+          <button type="button" data-p="lightheavy" aria-pressed="false">Light and heavy</button>
+          <button type="button" data-p="effuse" aria-pressed="false">Through a small hole</button>
+          <button type="button" data-p="hotcold2" aria-pressed="false">Hot meets cold</button>
+        </div>
         <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
       </section>
 
       <section>
         <h2>Measurements</h2>
-        <dl class="readout">
+        <dl class="readout" id="read2" hidden>
+          <div class="big"><dt>Time since opening</dt><dd id="rT2">—</dd></div>
+          <div><dt>Divider</dt><dd id="rDiv">—</dd></div>
+          <div><dt><i class="gasdot a"></i>Gas A left · right</dt><dd id="rA2">—</dd></div>
+          <div><dt><i class="gasdot b"></i>Gas B left · right</dt><dd id="rB2">—</dd></div>
+          <div><dt>Mean square displacement A</dt><dd id="rMA">—</dd></div>
+          <div><dt>Mean square displacement B</dt><dd id="rMB">—</dd></div>
+          <div><dt>T left · right</dt><dd id="rTs">—</dd></div>
+          <div><dt>T of A · of B</dt><dd id="rTk">—</dd></div>
+        </dl>
+        <dl class="readout" id="read1">
           <div class="big"><dt>Temperature T</dt><dd id="rT">—</dd></div>
           <div class="big"><dt>Molecules N</dt><dd id="rN">—</dd></div>
           <div><dt>P measured</dt><dd id="rP">—</dd></div>
@@ -148,11 +178,37 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <div><dt>rms speed</dt><dd id="rRms">—</dd></div>
         </dl>
         <details class="more"><summary>More about this</summary>
-          <p class="hint">T comes from the kinetic energy: in two dimensions the average is ⟨KE⟩ = kT. P measured is the momentum the molecules deliver to the walls, per unit wall length per unit time, averaged over about a second. In 2D, pressure is force per length (N/m).</p>
+          <p class="hint" id="more1">T comes from the kinetic energy: in two dimensions the average is ⟨KE⟩ = kT. P measured is the momentum the molecules deliver to the walls, per unit wall length per unit time, averaged over about a second. In 2D, pressure is force per length (N/m).</p>
+          <p class="hint" id="more2" hidden>A molecule is on the side its center is on. Time and the mean square displacement start when the divider opens (or is closed again). The displacement counts a bounce off a wall or the divider as if the molecule went on into a mirror image of the box: a box with mirror walls behaves exactly like an endless gas made of mirror copies of it, so this is how far the molecule wanders in that endless gas, and the walls do not cap it. T is from the kinetic energy, ⟨½mv²⟩ = kT.</p>
         </details>
       </section>
 
-      <section>
+      <section id="secTwo" hidden>
+        <h2>Two gases</h2>
+        <div class="gasbox">
+          <h3><i class="gasdot a"></i>Gas A, starts on the left</h3>
+          <div><div class="slider-head"><label for="mA">Mass</label><output id="mAOut" class="mono" for="mA">40 u</output></div><input type="range" id="mA" min="4" max="150" step="1" value="40"></div>
+          <div><div class="slider-head"><label for="dA">Diameter</label><output id="dAOut" class="mono" for="dA">0.50 nm</output></div><input type="range" id="dA" min="0.3" max="1" step="0.05" value="0.5"></div>
+          <div><div class="slider-head"><label for="TA">Temperature</label><output id="TAOut" class="mono" for="TA">300 K</output></div><input type="range" id="TA" min="50" max="1000" step="10" value="300"></div>
+          <div><div class="slider-head"><label for="nA">Molecules</label><output id="nAOut" class="mono" for="nA">150</output></div><input type="range" id="nA" min="0" max="200" step="10" value="150"></div>
+        </div>
+        <div class="gasbox">
+          <h3><i class="gasdot b"></i>Gas B, starts on the right</h3>
+          <div><div class="slider-head"><label for="mB">Mass</label><output id="mBOut" class="mono" for="mB">40 u</output></div><input type="range" id="mB" min="4" max="150" step="1" value="40"></div>
+          <div><div class="slider-head"><label for="dB">Diameter</label><output id="dBOut" class="mono" for="dB">0.50 nm</output></div><input type="range" id="dB" min="0.3" max="1" step="0.05" value="0.5"></div>
+          <div><div class="slider-head"><label for="TB">Temperature</label><output id="TBOut" class="mono" for="TB">300 K</output></div><input type="range" id="TB" min="50" max="1000" step="10" value="300"></div>
+          <div><div class="slider-head"><label for="nB">Molecules</label><output id="nBOut" class="mono" for="nB">150</output></div><input type="range" id="nB" min="0" max="200" step="10" value="150"></div>
+        </div>
+        <div>
+          <div class="slider-head"><label for="hole">Hole width</label><output id="holeOut" class="mono" for="hole">3.0 nm</output></div>
+          <input type="range" id="hole" min="1" max="6" step="0.5" value="3">
+        </div>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Changing a gas starts again with the divider closed: gas A fills the left half and gas B the right half, each at its own temperature. Then choose Hole or Removed above the box; that moment is t = 0. Masses are in atomic mass units u (helium 4, neon 20, argon 40, krypton 84, xenon 131). The molecules are hard disks of the diameter you choose. A molecule goes through the hole only if it fits, so the opening its center can use is the hole width minus the diameter.</p>
+        </details>
+      </section>
+
+      <section id="secGas">
         <h2>Gas</h2>
         <div>
           <div class="slider-head"><label for="nIn">Molecules N</label><output id="nOut" class="mono" for="nIn">150</output></div>
@@ -179,7 +235,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </details>
       </section>
 
-      <section>
+      <section id="secPiston">
         <h2>Piston</h2>
         <div>
           <div class="slider-head"><label for="wIn">Box width</label><output id="wOut" class="mono" for="wIn">50.0 nm</output></div>
@@ -216,7 +272,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
       </section>
       <!-- vd-readings --><section class="vd-readings" data-ws="ideal-gas" data-title="Gas in a Box" data-demo="ideal-gas">
         <h2>Readings</h2>
-        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn" id="recRun" hidden>Record the run</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
         <p class="status" aria-live="polite"></p>
         <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
       </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
@@ -241,12 +297,138 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
 <script>
 (() => {
+  // ==CORE START==
+  /* The model gas: hard disks in a two dimensional box, positions in nm, velocities in m/s, time in ps (1 m/s = 1e-3 nm/ps).
+     Disks move in straight lines and bounce elastically off each other and the walls; time advances in short steps, and a pair
+     found overlapping exchanges momentum along the line of centers if approaching, then is moved apart along that line in
+     inverse proportion to mass (so the center of mass stays put). The right wall is a piston that moves at most pistonMax.
+     For two gases, a thin divider stands at x = 25 nm. Closed, it reflects every molecule; with a hole, a molecule passes only
+     where it fits through the opening (|y − 15 nm| ≤ hole/2 − r), and one that clips an edge bounces as off the divider face;
+     a molecule caught straddling the divider when it leaves the opening is put back on the side its center is on. */
+  const KB = 1.380649e-23;        /* J/K, exact (SI 2019) */
+  const M = 6.63e-26;             /* kg, argon, the Gas in a Box setups */
+  const U_KG = 1.66053906892e-27; /* kg, atomic mass constant (CODATA 2022) */
+  const LX = 50, LY = 30;         /* nm, largest box */
+  const MIN_W = 15;               /* nm */
+  const R = 0.25, D2 = 4 * R * R; /* nm, hard disk radius of the argon setups */
+  const NMAX = 400;
+  const CS = 1, GX = Math.ceil(LX / CS), GY = Math.ceil(LY / CS);   /* cell list; a contact distance r_i + r_j must not exceed CS */
+  const DIV_X = LX / 2, HOLE_Y = LY / 2;                            /* nm, the divider of the two gas setups and the middle of its hole */
+  function makeGas() {
+    return { px: new Float64Array(NMAX), py: new Float64Array(NMAX), vx: new Float64Array(NMAX), vy: new Float64Array(NMAX),
+      m: new Float64Array(NMAX).fill(M), r: new Float64Array(NMAX).fill(R), kind: new Uint8Array(NMAX), side: new Uint8Array(NMAX),
+      head: new Int32Array(GX * GY), next: new Int32Array(NMAX),
+      wallX: LX, wallTarget: LX, wallV: 0, pistonMax: 300,
+      imp: 0, lt: 0,            /* impulse delivered to the outer walls (kg m/s) and wall length times time (nm ps) */
+      div: 0, hole: 3,          /* divider: 0 none, 1 closed, 2 with a hole of this width (nm) */
+      hitLog: null,             /* set by the 3D view: notes each outer wall hit for the flashes */
+      ux: null, uy: null, sx: null, sy: null, ox: new Float64Array(NMAX), oy: new Float64Array(NMAX) };
+  }
+  /* Unfolded positions, for the mean square displacement: a bounce off a wall or the divider is counted as if the molecule went on
+     into a mirror image of the box. A box with mirror walls is the same as an endless gas made of mirror copies of the box, in which
+     a wall bounce is a collision with the molecule's own image, so ux, uy is where the molecule really is in that endless gas. */
+  function track(G, N) {
+    G.ux = Float64Array.from(G.px); G.uy = Float64Array.from(G.py);
+    G.sx = new Int8Array(NMAX).fill(1); G.sy = new Int8Array(NMAX).fill(1);
+  }
+  const holeOpen = (G, y, r) => G.div === 2 && Math.abs(y - HOLE_Y) <= G.hole / 2 - r;
+  function pair(G, i, j) {
+    const px = G.px, py = G.py, vx = G.vx, vy = G.vy;
+    const dx = px[j] - px[i], dy = py[j] - py[i], d2 = dx * dx + dy * dy, s = G.r[i] + G.r[j];
+    if (d2 >= s * s || d2 === 0) return;
+    if (G.div && G.side[i] !== G.side[j] && !holeOpen(G, (py[i] + py[j]) / 2, 0)) return;   /* the divider is between them */
+    const d = Math.sqrt(d2), nx = dx / d, ny = dy / d, mi = G.m[i], mj = G.m[j], wi = mj / (mi + mj), wj = mi / (mi + mj);
+    const dvn = (vx[j] - vx[i]) * nx + (vy[j] - vy[i]) * ny;
+    if (dvn < 0) { /* approaching: impulse 2μ dvn along the line of centers (equal masses swap their components along it) */
+      vx[i] += 2 * wi * dvn * nx; vy[i] += 2 * wi * dvn * ny; vx[j] -= 2 * wj * dvn * nx; vy[j] -= 2 * wj * dvn * ny;
+    }
+    const push = s - d;
+    px[i] -= nx * push * wi; py[i] -= ny * push * wi; px[j] += nx * push * wj; py[j] += ny * push * wj;
+  }
+  function collidePairs(G, N) {
+    const head = G.head, next = G.next, px = G.px, py = G.py;
+    head.fill(-1);
+    for (let i = 0; i < N; i++) {
+      const cx = Math.min(GX - 1, Math.max(0, Math.floor(px[i] / CS)));
+      const cy = Math.min(GY - 1, Math.max(0, Math.floor(py[i] / CS)));
+      const c = cy * GX + cx; next[i] = head[c]; head[c] = i;
+    }
+    for (let cy = 0; cy < GY; cy++) for (let cx = 0; cx < GX; cx++) {
+      for (let i = head[cy * GX + cx]; i !== -1; i = next[i]) {
+        for (let j = next[i]; j !== -1; j = next[j]) pair(G, i, j);
+        if (cx + 1 < GX) for (let j = head[cy * GX + cx + 1]; j !== -1; j = next[j]) pair(G, i, j);
+        if (cy + 1 < GY) {
+          const r = (cy + 1) * GX;
+          if (cx > 0) for (let j = head[r + cx - 1]; j !== -1; j = next[j]) pair(G, i, j);
+          for (let j = head[r + cx]; j !== -1; j = next[j]) pair(G, i, j);
+          if (cx + 1 < GX) for (let j = head[r + cx + 1]; j !== -1; j = next[j]) pair(G, i, j);
+        }
+      }
+    }
+  }
+  function divider(G, i) {
+    const x = G.px[i], ri = G.r[i];
+    if (holeOpen(G, G.py[i], ri)) { G.side[i] = x < DIV_X ? 0 : 1; return; }
+    if (G.side[i] === 0) { if (x > DIV_X - ri) { G.px[i] = DIV_X - ri; if (G.vx[i] > 0) { G.vx[i] = -G.vx[i]; return 1; } } }
+    else if (x < DIV_X + ri) { G.px[i] = DIV_X + ri; if (G.vx[i] < 0) { G.vx[i] = -G.vx[i]; return 1; } }
+    return 0;
+  }
+  function step(G, N, dt) { /* dt in ps */
+    const px = G.px, py = G.py, vx = G.vx, vy = G.vy, m = G.m, r = G.r, log = G.hitLog;
+    const diff = G.wallTarget - G.wallX, maxStep = G.pistonMax * 1e-3 * dt;
+    if (Math.abs(diff) <= maxStep) { G.wallV = diff / (dt * 1e-3); G.wallX = G.wallTarget; }
+    else { const sg = Math.sign(diff); G.wallV = sg * G.pistonMax; G.wallX += sg * maxStep; }
+    const k = 1e-3 * dt, wallX = G.wallX, wallV = G.wallV, ux = G.ux, uy = G.uy, ox = G.ox, oy = G.oy;
+    if (ux) { ox.set(px); oy.set(py); }
+    for (let i = 0; i < N; i++) { px[i] += vx[i] * k; py[i] += vy[i] * k; }
+    collidePairs(G, N);
+    let imp = 0;
+    for (let i = 0; i < N; i++) {
+      const ri = r[i], mi = m[i], xr = wallX - ri, yt = LY - ri;
+      let fx = 0, fy = 0;   /* bounces this step, for the unfolded positions */
+      if (px[i] < ri) { px[i] = ri; if (vx[i] < 0) { if (log) log(0, py[i], -2 * mi * vx[i]); imp -= 2 * mi * vx[i]; vx[i] = -vx[i]; fx = 1; } }
+      else if (px[i] > xr) { /* piston: reflect relative to the moving wall */
+        px[i] = xr;
+        if (vx[i] > wallV) { if (log) log(1, py[i], 2 * mi * (vx[i] - wallV)); imp += 2 * mi * (vx[i] - wallV); vx[i] = 2 * wallV - vx[i]; fx = 1; }
+      }
+      if (py[i] < ri) { py[i] = ri; if (vy[i] < 0) { if (log) log(2, px[i], -2 * mi * vy[i]); imp -= 2 * mi * vy[i]; vy[i] = -vy[i]; fy = 1; } }
+      else if (py[i] > yt) { py[i] = yt; if (vy[i] > 0) { if (log) log(3, px[i], 2 * mi * vy[i]); imp += 2 * mi * vy[i]; vy[i] = -vy[i]; fy = 1; } }
+      if (G.div) fx ^= divider(G, i); else G.side[i] = px[i] < DIV_X ? 0 : 1;
+      if (ux) {
+        ux[i] += G.sx[i] * (px[i] - ox[i]); uy[i] += G.sy[i] * (py[i] - oy[i]);
+        if (fx) G.sx[i] = -G.sx[i];
+        if (fy) G.sy[i] = -G.sy[i];
+      }
+    }
+    G.imp += imp;                         /* kg m/s */
+    G.lt += 2 * (wallX + LY) * dt;        /* nm ps of wall length times time */
+  }
+  /* kinetic temperature of the molecules that pass the test: ⟨½mv²⟩ = kT in two dimensions */
+  function tempOf(G, N, test) {
+    let e = 0, n = 0;
+    for (let i = 0; i < N; i++) if (!test || test(i)) { e += 0.5 * G.m[i] * (G.vx[i] * G.vx[i] + G.vy[i] * G.vy[i]); n++; }
+    return n ? e / (n * KB) : NaN;
+  }
+  /* two gases: count of each kind on each side (by the center), and the mean square displacement of each kind (nm²) from x0, y0,
+     using the unfolded positions */
+  function mixStats(G, N, x0, y0) {
+    const s = { n: [0, 0], left: [0, 0], right: [0, 0], msd: [0, 0] }, ux = G.ux || G.px, uy = G.uy || G.py;
+    for (let i = 0; i < N; i++) {
+      const k = G.kind[i], dx = ux[i] - x0[i], dy = uy[i] - y0[i];
+      s.n[k]++; if (G.px[i] < DIV_X) s.left[k]++; else s.right[k]++;
+      s.msd[k] += dx * dx + dy * dy;
+    }
+    for (const k of [0, 1]) s.msd[k] = s.n[k] ? s.msd[k] / s.n[k] : NaN;
+    return s;
+  }
+  /* exact results the handout compares with (ideal gas, point molecules): the 2D mean speed, the one way rate through an opening
+     of width w (n⟨v_x > 0⟩w = n w √(kT/(2πm))), and the 2D mean free path 1/(2√2 n d) for disks of diameter d */
+  const meanSpeed2D = (T, m) => Math.sqrt(Math.PI * KB * T / (2 * m));
+  const effusionRate = (n, w, T, m) => n * w * Math.sqrt(KB * T / (2 * Math.PI * m)) * 1e-3;   /* per ps, with n in 1/nm², w in nm */
+  const meanFreePath2D = (n, d) => 1 / (2 * Math.SQRT2 * n * d);                            /* nm */
+  // ==CORE END==
+
   // ---------- constants (SI where it matters) ----------
-  const KB = 1.380649e-23;        // J/K
-  const M = 6.63e-26;             // kg, argon
-  const LX = 50, LY = 30;         // nm, largest box
-  const MIN_W = 15;               // nm
-  const R = 0.25, D2 = 4 * R * R; // nm, hard disk radius
   const BASE_PS = 80;             // ps of simulated time per second on screen at the fixed rate
   const T_LO = 0.01, T_HI = 1000; // temperature slider range, K (log scale)
   let psPerS = BASE_PS, playMode = 'fixed', Tsmooth = 300;
@@ -261,9 +443,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   const fmtSpeed = (v) => (v >= 99.5 ? Math.round(v) : v >= 9.95 ? v.toFixed(1) : v.toFixed(2)) + ' m/s';
   function fmtRate(ps) { return ps >= 1000 ? (ps / 1000).toPrecision(3) + ' ns' : Math.round(ps) + ' ps'; }
-  const NMAX = 400, NB = 30;
+  const NB = 30;
   const P_TAU = 1.2, H_TAU = 0.35; // smoothing windows, seconds on screen
-  const CS = 1, GX = Math.ceil(LX / CS), GY = Math.ceil(LY / CS);
   const AXES = [];
   for (let e = -1; e <= 3; e++) for (const m of [1, 1.5, 2, 2.5, 3, 4, 5, 7]) AXES.push(+(m * Math.pow(10, e)).toPrecision(3));
   AXES.push(10000);
@@ -272,21 +453,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
 
   // ---------- state ----------
-  const px = new Float64Array(NMAX), py = new Float64Array(NMAX);
-  const vx = new Float64Array(NMAX), vy = new Float64Array(NMAX);
-  const head = new Int32Array(GX * GY), next = new Int32Array(NMAX);
+  const GS = makeGas(), px = GS.px, py = GS.py, vx = GS.vx, vy = GS.vy;
   let N = 150, Tset = 300, mode = 'equal', preset = 'relax';
-  let wallX = LX, wallTarget = LX, wallV = 0, pistonMax = 300, pistonTouched = false;
+  let pistonTouched = false;
   let running = !reduce, simT = 0, tracer = 0, trail = [];
   /* the measuring tools: a stopwatch on the simulated clock, in picoseconds */
   VD.tools({ el: $('box'), strip: '.viewbar', time: () => simT, timeUnit: 'ps' });
   let showTrail = true, colorBySpeed = true;
-  let impAcc = 0, ltAcc = 0;
   const hist = new Float32Array(NB), counts = new Float32Array(NB);
   let histFresh = true, vAxis = 1000, yMax = 0, overflow = 0;
   const stats = { T: 0, mean: 0, rms: 0, vmax: 0 };
   let dirty = true, drag = null, tDragging = false;
-  let hitLog = null;   /* set while the 3D view is open: notes each wall hit (which wall, where, the impulse) for the flashes */
 
   // ---------- theme ----------
   let tok = null, palette = [];
@@ -315,11 +492,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const colorIndex = (v) => Math.min(PAL - 1, Math.floor(v / V_COLOR * PAL));
 
   // ---------- setup ----------
-  function gauss() { let u = 0; while (!u) u = Math.random(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * Math.random()); }
+  let rnd = Math.random;   /* a seeded generator replaces it for the key captures (window.__ig.seed) */
+  function gauss() { let u = 0; while (!u) u = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rnd()); }
   function freeSpot(x0, x1, upto) {
     const w = x1 - x0 - 2 * R, h = LY - 2 * R;
     for (let t = 0; t < 300; t++) {
-      const x = x0 + R + Math.random() * w, y = R + Math.random() * h;
+      const x = x0 + R + rnd() * w, y = R + rnd() * h;
       let ok = true;
       for (let j = 0; j < upto; j++) {
         const dx = px[j] - x, dy = py[j] - y;
@@ -327,7 +505,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       }
       if (ok) return [x, y];
     }
-    return [x0 + R + Math.random() * w, R + Math.random() * h];
+    return [x0 + R + rnd() * w, R + rnd() * h];
   }
   function scaleGroup(i0, i1, T) {
     let s2 = 0;
@@ -338,7 +516,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function setVel(i0, i1, T, how) {
     if (how === 'equal') {
       const v = Math.sqrt(2 * KB * T / M);
-      for (let i = i0; i < i1; i++) { const a = 2 * Math.PI * Math.random(); vx[i] = v * Math.cos(a); vy[i] = v * Math.sin(a); }
+      for (let i = i0; i < i1; i++) { const a = 2 * Math.PI * rnd(); vx[i] = v * Math.cos(a); vy[i] = v * Math.sin(a); }
     } else {
       const sg = Math.sqrt(KB * T / M);
       for (let i = i0; i < i1; i++) { vx[i] = sg * gauss(); vy[i] = sg * gauss(); }
@@ -346,13 +524,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
   }
   function resetGas() {
-    simT = 0; impAcc = 0; ltAcc = 0; trail = []; tracer = 0; wallV = 0; wallX = wallTarget;
+    simT = 0; GS.imp = 0; GS.lt = 0; trail = []; tracer = 0; GS.wallV = 0; GS.wallX = GS.wallTarget;
     if (mode === 'hotcold') {
       const half = Math.floor(N / 2);
-      for (let i = 0; i < N; i++) { const p = i < half ? freeSpot(0, wallX / 2, i) : freeSpot(wallX / 2, wallX, i); px[i] = p[0]; py[i] = p[1]; }
+      for (let i = 0; i < N; i++) { const p = i < half ? freeSpot(0, GS.wallX / 2, i) : freeSpot(GS.wallX / 2, GS.wallX, i); px[i] = p[0]; py[i] = p[1]; }
       setVel(0, half, 700, 'thermal'); setVel(half, N, 100, 'thermal');
     } else {
-      for (let i = 0; i < N; i++) { const p = freeSpot(0, wallX, i); px[i] = p[0]; py[i] = p[1]; }
+      for (let i = 0; i < N; i++) { const p = freeSpot(0, GS.wallX, i); px[i] = p[0]; py[i] = p[1]; }
       setVel(0, N, Tset, mode);
     }
     computeStats(); histFresh = true; updateHist(0); syncT(true); dirty = true;
@@ -360,7 +538,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function setN(n) {
     if (n > N) {
       const T = stats.T || Tset;
-      for (let i = N; i < n; i++) { const p = freeSpot(0, wallX, i); px[i] = p[0]; py[i] = p[1]; }
+      for (let i = N; i < n; i++) { const p = freeSpot(0, GS.wallX, i); px[i] = p[0]; py[i] = p[1]; }
       setVel(N, n, T, 'thermal');
       N = n; scaleGroup(0, N, T);
     } else {
@@ -377,64 +555,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const v2 = vx[i] * vx[i] + vy[i] * vy[i], v = Math.sqrt(v2);
       s2 += v2; s1 += v; if (v > vm) vm = v;
     }
-    stats.T = M * s2 / (2 * KB * N);   // <KE> = kT in two dimensions
+    stats.T = two ? tempOf(GS, N) : M * s2 / (2 * KB * N);   // <KE> = kT in two dimensions
     stats.mean = s1 / N; stats.rms = Math.sqrt(s2 / N); stats.vmax = vm;
   }
 
-  function pair(i, j) {
-    const dx = px[j] - px[i], dy = py[j] - py[i], d2 = dx * dx + dy * dy;
-    if (d2 >= D2 || d2 === 0) return;
-    const d = Math.sqrt(d2), nx = dx / d, ny = dy / d;
-    const dvn = (vx[j] - vx[i]) * nx + (vy[j] - vy[i]) * ny;
-    if (dvn < 0) { // approaching: equal masses swap their velocity components along the line of centers
-      vx[i] += dvn * nx; vy[i] += dvn * ny; vx[j] -= dvn * nx; vy[j] -= dvn * ny;
-    }
-    const push = (2 * R - d) / 2;
-    px[i] -= nx * push; py[i] -= ny * push; px[j] += nx * push; py[j] += ny * push;
-  }
-  function collidePairs() {
-    head.fill(-1);
-    for (let i = 0; i < N; i++) {
-      const cx = Math.min(GX - 1, Math.max(0, Math.floor(px[i] / CS)));
-      const cy = Math.min(GY - 1, Math.max(0, Math.floor(py[i] / CS)));
-      const c = cy * GX + cx; next[i] = head[c]; head[c] = i;
-    }
-    for (let cy = 0; cy < GY; cy++) for (let cx = 0; cx < GX; cx++) {
-      for (let i = head[cy * GX + cx]; i !== -1; i = next[i]) {
-        for (let j = next[i]; j !== -1; j = next[j]) pair(i, j);
-        if (cx + 1 < GX) for (let j = head[cy * GX + cx + 1]; j !== -1; j = next[j]) pair(i, j);
-        if (cy + 1 < GY) {
-          const r = (cy + 1) * GX;
-          if (cx > 0) for (let j = head[r + cx - 1]; j !== -1; j = next[j]) pair(i, j);
-          for (let j = head[r + cx]; j !== -1; j = next[j]) pair(i, j);
-          if (cx + 1 < GX) for (let j = head[r + cx + 1]; j !== -1; j = next[j]) pair(i, j);
-        }
-      }
-    }
-  }
-  function step(dt) { // dt in ps; positions in nm; velocities in m/s (1 m/s = 1e-3 nm/ps)
-    const diff = wallTarget - wallX, maxStep = pistonMax * 1e-3 * dt;
-    if (Math.abs(diff) <= maxStep) { wallV = diff / (dt * 1e-3); wallX = wallTarget; }
-    else { const sg = Math.sign(diff); wallV = sg * pistonMax; wallX += sg * maxStep; }
-    const k = 1e-3 * dt;
-    for (let i = 0; i < N; i++) { px[i] += vx[i] * k; py[i] += vy[i] * k; }
-    collidePairs();
-    let imp = 0;
-    const xr = wallX - R, yt = LY - R;
-    for (let i = 0; i < N; i++) {
-      if (px[i] < R) { px[i] = R; if (vx[i] < 0) { if (hitLog) hitLog(0, py[i], -2 * M * vx[i]); imp -= 2 * M * vx[i]; vx[i] = -vx[i]; } }
-      else if (px[i] > xr) { // piston: reflect relative to the moving wall
-        px[i] = xr;
-        if (vx[i] > wallV) { if (hitLog) hitLog(1, py[i], 2 * M * (vx[i] - wallV)); imp += 2 * M * (vx[i] - wallV); vx[i] = 2 * wallV - vx[i]; }
-      }
-      if (py[i] < R) { py[i] = R; if (vy[i] < 0) { if (hitLog) hitLog(2, px[i], -2 * M * vy[i]); imp -= 2 * M * vy[i]; vy[i] = -vy[i]; } }
-      else if (py[i] > yt) { py[i] = yt; if (vy[i] > 0) { if (hitLog) hitLog(3, px[i], 2 * M * vy[i]); imp += 2 * M * vy[i]; vy[i] = -vy[i]; } }
-    }
-    impAcc += imp;                        // kg m/s
-    ltAcc += 2 * (wallX + LY) * dt;       // nm ps of wall length times time
-  }
-  const pMeasured = () => ltAcc > 0 ? impAcc / (ltAcc * 1e-21) : NaN;   // N/m
-  const pIdeal = () => N * KB * stats.T / (wallX * LY * 1e-18);         // N/m
+  const pMeasured = () => GS.lt > 0 ? GS.imp / (GS.lt * 1e-21) : NaN;   // N/m
+  const pIdeal = () => N * KB * stats.T / (GS.wallX * LY * 1e-18);         // N/m
 
   function updateHist(dtS) {
     const need = 3.6 * Math.sqrt(KB * Math.max(stats.T, 1e-5) / M);
@@ -462,6 +588,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const G = { W: 0, H: 0, s: 10, bx0: 0, by0: 0 }, HG = { W: 0, H: 0 };
   let dpr = 1;
   function resize() {
+    const ps = projScale();
+    /* keep the picture below the strip; on a narrow screen the clock drops under the strip when they would overlap */
+    const vb = document.querySelector('#boxPane .viewbar'), ck = $('clock');
+    ck.style.top = '';
+    const vbB = vb.offsetTop + vb.offsetHeight;
+    if (ck.offsetLeft < vb.offsetLeft + vb.offsetWidth + 8 && ck.offsetTop < vbB) ck.style.top = (vbB + 4) + 'px';
+    const padT = Math.max(ps > 1 ? 64 : 50, vbB + 10, ck.offsetTop + ck.offsetHeight + 8), padB = 32 * ps, padL = 22 * ps, padR = 22;
+    /* on a phone the box pane grows by whatever the strip takes beyond its usual 50 px */
+    boxPane.style.height = innerWidth <= 820 && padT > 50 ? `calc((100vw - 34px) * 0.6 + ${36 + padT}px)` : '';
+    histPane.style.height = innerWidth <= 820 && two ? '280px' : '';
     dpr = window.devicePixelRatio || 1;
     for (const [c, pane, o] of [[box, boxPane, G], [hc, histPane, HG]]) {
       const r = pane.getBoundingClientRect();
@@ -469,8 +605,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       c.width = Math.round(r.width * dpr); c.height = Math.round(r.height * dpr);
       c.style.width = r.width + 'px'; c.style.height = r.height + 'px';
     }
-    const ps = projScale();
-    const padT = ps > 1 ? 64 : 50, padB = 32 * ps, padL = 22 * ps, padR = 22;
     G.s = Math.max(1, Math.min((G.W - padL - padR) / LX, (G.H - padT - padB) / LY));
     G.bx0 = padL + (G.W - padL - padR - LX * G.s) / 2;
     G.by0 = padT + (G.H - padT - padB - LY * G.s) / 2;
@@ -482,11 +616,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const ctx = bctx, T = tok, s = G.s, ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, G.W, G.H);
-    const x0 = toX(0), x1 = toX(LX), yTop = toY(LY), yBot = toY(0), wp = toX(wallX);
+    const x0 = toX(0), x1 = toX(LX), yTop = toY(LY), yBot = toY(0), wp = toX(GS.wallX);
 
     // 5 nm grid inside the gas
     ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath();
-    for (let x = 5; x < wallX; x += 5) { const p = Math.round(toX(x)) + 0.5; ctx.moveTo(p, yTop); ctx.lineTo(p, yBot); }
+    for (let x = 5; x < GS.wallX; x += 5) { const p = Math.round(toX(x)) + 0.5; ctx.moveTo(p, yTop); ctx.lineTo(p, yBot); }
     for (let y = 5; y < LY; y += 5) { const p = Math.round(toY(y)) + 0.5; ctx.moveTo(x0, p); ctx.lineTo(wp, p); }
     ctx.stroke();
 
@@ -499,15 +633,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.beginPath(); ctx.moveTo(wp, yTop - 1); ctx.lineTo(x0 - 1, yTop - 1); ctx.lineTo(x0 - 1, yBot + 1); ctx.lineTo(wp, yBot + 1); ctx.stroke();
 
     // target ghost while the piston catches up
-    if (Math.abs(wallTarget - wallX) > 0.02) {
-      const tp = toX(wallTarget);
+    if (Math.abs(GS.wallTarget - GS.wallX) > 0.02) {
+      const tp = toX(GS.wallTarget);
       ctx.save(); ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * ps;
       ctx.beginPath(); ctx.moveTo(tp, yTop); ctx.lineTo(tp, yBot); ctx.stroke(); ctx.restore();
     }
 
     // tracer trail
     if (showTrail && trail.length > 1) {
-      ctx.save(); ctx.strokeStyle = T.accent; ctx.lineWidth = 1.5 * ps; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
+      ctx.save(); ctx.strokeStyle = two ? T.equi : T.accent; ctx.lineWidth = 1.5 * ps; ctx.lineJoin = 'round'; ctx.lineCap = 'round';
       const chunks = 10, n = trail.length, per = Math.ceil(n / chunks);
       for (let c = 0; c < chunks; c++) {
         const a = c * per, b = Math.min(n - 1, (c + 1) * per);
@@ -522,7 +656,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
     // molecules, batched by color
     const pr = Math.max(R * s, 2.2 * ps);   // true disk size; only the floor for tiny boxes grows in projector mode
-    if (colorBySpeed) {
+    if (two) {   /* two gases: each kind in its own color, at its own true size */
+      for (const k of [0, 1]) {
+        const p = new Path2D(), rk = Math.max(TWO[k ? 'B' : 'A'].d / 2 * s, 2.2 * ps);
+        for (let i = 0; i < N; i++) {
+          if (GS.kind[i] !== k || (i === tracer && showTrail)) continue;
+          const X = toX(px[i]), Y = toY(py[i]); p.moveTo(X + rk, Y); p.arc(X, Y, rk, 0, 2 * Math.PI);
+        }
+        ctx.fillStyle = k ? T.pos : T.neg; ctx.fill(p);
+      }
+    } else if (colorBySpeed) {
       const paths = palette.map(() => new Path2D());
       for (let i = 0; i < N; i++) {
         if (i === tracer && showTrail) continue;
@@ -545,21 +688,35 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       ctx.lineWidth = 1.5 * ps; ctx.strokeStyle = T.ink; ctx.stroke();
     }
 
+    // the divider of the two gas setups: a thin wall at 25 nm, with the hole in the middle
+    if (two && GS.div) {
+      const xd = toX(DIV_X), hy0 = toY(HOLE_Y + GS.hole / 2), hy1 = toY(HOLE_Y - GS.hole / 2);
+      ctx.strokeStyle = T.ink; ctx.lineWidth = 3 * ps; ctx.lineCap = 'butt'; ctx.beginPath();
+      if (GS.div === 2) { ctx.moveTo(xd, yTop); ctx.lineTo(xd, hy0); ctx.moveTo(xd, hy1); ctx.lineTo(xd, yBot); }
+      else { ctx.moveTo(xd, yTop); ctx.lineTo(xd, yBot); }
+      ctx.stroke();
+    } else if (two) {
+      ctx.save(); ctx.setLineDash([3 * ps, 5 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = ps; ctx.beginPath();
+      ctx.moveTo(toX(DIV_X), yTop); ctx.lineTo(toX(DIV_X), yBot); ctx.stroke(); ctx.restore();
+    }
+
     // piston face and handle
     ctx.fillStyle = T.ink; ctx.fillRect(wp, yTop - 2, 4 * ps, yBot - yTop + 4);
     const hw = 10 * ps, hh = Math.min(48 * ps, (yBot - yTop) * 0.4), hy = (yTop + yBot) / 2 - hh / 2, hx = wp + 2 * ps - hw / 2;
-    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(hx, hy, hw, hh, 4 * ps) : ctx.rect(hx, hy, hw, hh);
-    ctx.fillStyle = drag ? T.ink : T.accent; ctx.fill();
-    ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.2 * ps; ctx.beginPath();
-    for (let k = -1; k <= 1; k++) { const yy = hy + hh / 2 + k * 6 * ps; ctx.moveTo(hx + 2.5 * ps, yy); ctx.lineTo(hx + hw - 2.5 * ps, yy); }
-    ctx.stroke();
+    if (!two) {   /* the two gas setups keep the wall at 50 nm, so no handle */
+      ctx.beginPath(); ctx.roundRect ? ctx.roundRect(hx, hy, hw, hh, 4 * ps) : ctx.rect(hx, hy, hw, hh);
+      ctx.fillStyle = drag ? T.ink : T.accent; ctx.fill();
+      ctx.strokeStyle = T.canvas; ctx.lineWidth = 1.2 * ps; ctx.beginPath();
+      for (let k = -1; k <= 1; k++) { const yy = hy + hh / 2 + k * 6 * ps; ctx.moveTo(hx + 2.5 * ps, yy); ctx.lineTo(hx + hw - 2.5 * ps, yy); }
+      ctx.stroke();
+    }
 
     // dimensions
     ctx.font = `600 ${11 * ps}px ` + T.mono; ctx.fillStyle = T.muted; ctx.strokeStyle = T.muted; ctx.lineWidth = 1.2 * ps;
     const dy = yBot + 15 * ps;
     ctx.beginPath(); ctx.moveTo(x0, dy - 4 * ps); ctx.lineTo(x0, dy + 4 * ps); ctx.moveTo(x0, dy); ctx.lineTo(wp + 2, dy);
     ctx.moveTo(wp + 2, dy - 4 * ps); ctx.lineTo(wp + 2, dy + 4 * ps); ctx.stroke();
-    const lab = wallX.toFixed(1) + ' nm', lw = ctx.measureText(lab).width + 10 * ps, lx = (x0 + wp) / 2;
+    const lab = GS.wallX.toFixed(1) + ' nm', lw = ctx.measureText(lab).width + 10 * ps, lx = two ? x0 + 0.75 * (wp - x0) : (x0 + wp) / 2;   /* beside the divider in the two gas setups */
     ctx.fillStyle = T.canvas; ctx.fillRect(lx - lw / 2, dy - 8 * ps, lw, 16 * ps);
     ctx.fillStyle = T.muted; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(lab, lx, dy + 0.5);
     ctx.save(); ctx.translate(x0 - 11 * ps, (yTop + yBot) / 2); ctx.rotate(-Math.PI / 2); ctx.fillText('30 nm', 0, 0); ctx.restore();
@@ -580,6 +737,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return (f <= 1 ? 1 : f <= 2 ? 2 : f <= 5 ? 5 : 10) * p;
   }
   function drawHist() {
+    if (two) { drawGraph2(); return; }
     const ctx = hctx, T = tok, W = HG.W, H = HG.H, ps = projScale();
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
@@ -694,6 +852,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S.scene.add(VD3K.box(0.016, 0.05, LY * K3 + 0.04, dark, LX * K3 + 0.008, 0, Z0 - 0.02));   /* the end collar the ram slides through */
     /* molecules, the marked one, its trail, and the wall flashes */
     const gas = VD3K.particles(S, { n: NMAX, r: R * K3, seg: 10 }); S.scene.add(gas);
+    const gasB = VD3K.particles(S, { n: NMAX, r: R * K3, seg: 10 }); S.scene.add(gasB);   /* gas B of the two gas setups */
+    /* the divider of the two gas setups: a thin steel plate across the chamber at 25 nm, in two pieces around the hole */
+    const divs = [0, 1].map(() => { const b = VD3K.box(0.004, 0.032, 1, steel, DIV_X * K3, 0, 0); b.geometry.translate(0, 0, -0.5); b.position.z = Z0; b.visible = false; S.scene.add(b); return b; });
     const mark = VD3K.marker(S, { r: 0.008, color: tok.accent || '#2b60b5' }); S.scene.add(mark);
     const trailG = new THREE.BufferGeometry(); trailG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(360 * 3), 3));
     const trailL = new THREE.Line(trailG, new THREE.LineBasicMaterial({ color: tok.accent || '#2b60b5', transparent: true, opacity: 0.75 })); trailL.frustumCulled = false; S.scene.add(trailL);
@@ -713,12 +874,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     hLab.position.set(-0.04, -0.02, Z0 + LY * K3 / 2); S.scene.add(wLab, hLab);
     const follow = VD3K.follow({ x: 0.25, y: 0, z: Z0 + 0.15 }, 0.1);
     let pScale = 0;
-    G3 = { S, gScale: 1, gas, mark, trailL, flashes, piston, face, pRod, knob, gauge, therm, wLab, follow, next: 0, setScale: (v) => { pScale = v; }, get pScale() { return pScale; } };
+    G3 = { S, gScale: 1, gScaleB: 1, gas, gasB, divs, mark, trailL, flashes, piston, face, pRod, knob, gauge, therm, wLab, follow, next: 0, setScale: (v) => { pScale = v; }, get pScale() { return pScale; } };
     S.orbit(S.el, o3, () => { dirty = true; }, { grab: grab3, zMin: 0.6, zMax: 3 });
     S.el.addEventListener('pointermove', move3); S.el.addEventListener('pointerup', up3); S.el.addEventListener('pointercancel', up3);
     G3.hit = (side, at, dp) => {
       const f = G3.flashes[G3.next = (G3.next + 1) % FL], typ = 2 * Math.sqrt(2 * KB * Math.max(stats.T, 1e-5) * M);
-      const pos = side === 0 ? W3(0, at) : side === 1 ? W3(wallX, at) : side === 2 ? W3(at, 0) : W3(at, LY);
+      const pos = side === 0 ? W3(0, at) : side === 1 ? W3(GS.wallX, at) : side === 2 ? W3(at, 0) : W3(at, LY);
       f.m.position.set(pos[0], -0.004, pos[2]); f.m.rotation.set(Math.PI / 2, 0, 0); f.t = 0.35; f.a = Math.min(1, 0.35 + 0.65 * dp / typ); f.m.visible = true;
     };
     return true;
@@ -732,10 +893,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function grab3(e) {
     if (!G3) return false;
     const r = G3.S.el.getBoundingClientRect(), mx = e.clientX - r.left, my = e.clientY - r.top;
-    const a = G3.S.project(W3(wallX, 0)), b = G3.S.project(W3(wallX, LY)), k = G3.S.project([wallX * K3 + RAM + ROD, 0, Z0 + LY * K3 / 2]);
+    const a = G3.S.project(W3(GS.wallX, 0)), b = G3.S.project(W3(GS.wallX, LY)), k = G3.S.project([GS.wallX * K3 + RAM + ROD, 0, Z0 + LY * K3 / 2]);
     const seg = (p, q) => { const dx = q[0] - p[0], dy = q[1] - p[1], t = Math.max(0, Math.min(1, ((mx - p[0]) * dx + (my - p[1]) * dy) / (dx * dx + dy * dy || 1))); return Math.hypot(mx - p[0] - t * dx, my - p[1] - t * dy); };
-    if (seg(a, b) < 16 || Math.hypot(mx - k[0], my - k[1]) < 22) {
-      const h = ray3(e); drag3 = { off: h ? h.x / K3 - wallX : 0 }; pistonTouched = true;
+    if (!two && (seg(a, b) < 16 || Math.hypot(mx - k[0], my - k[1]) < 22)) {
+      const h = ray3(e); drag3 = { off: h ? h.x / K3 - GS.wallX : 0 }; pistonTouched = true;
       G3.S.el.setPointerCapture(e.pointerId); G3.S.el.style.cursor = 'grabbing'; return true;
     }
     let best = -1, bd = 14;
@@ -743,7 +904,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (best >= 0) { tracer = best; trail = []; if (!showTrail) { showTrail = true; $('tTrail').checked = true; } dirty = true; return true; }
     return false;
   }
-  function move3(e) { if (!drag3) return; const h = ray3(e); if (!h) return; wallTarget = Math.round(clampW(h.x / K3 - drag3.off) * 10) / 10; syncW(); dirty = true; }
+  function move3(e) { if (!drag3) return; const h = ray3(e); if (!h) return; GS.wallTarget = Math.round(clampW(h.x / K3 - drag3.off) * 10) / 10; syncW(); dirty = true; }
   function up3() { if (drag3) { drag3 = null; G3.S.el.style.cursor = 'grab'; dirty = true; } }
   let pFull = 0;
   function render3(dtS) {
@@ -752,20 +913,37 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const sp = Math.max(1, stats.vmax);
     void sp;
     const cols = palette.map((c) => new THREE.Color(c)), mute = new THREE.Color(tok.muted || '#8090a0');
-    for (let i = 0; i < N; i++) {
-      const q = W3(px[i], py[i]);
-      g.gas.put(i, q[0], q[1], q[2], colorBySpeed ? cols[colorIndex(Math.hypot(vx[i], vy[i]))] : mute);
+    if (two) {   /* each gas in its own color and pool, so each can have its own size */
+      const cA = new THREE.Color(tok.neg), cB = new THREE.Color(tok.pos); let a = 0, b = 0;
+      for (let i = 0; i < N; i++) {
+        const q = W3(px[i], py[i]);
+        if (GS.kind[i]) g.gasB.put(b++, q[0], q[1], q[2], cB); else g.gas.put(a++, q[0], q[1], q[2], cA);
+      }
+      g.gas.show(a); g.gas.done(); g.gasB.show(b); g.gasB.done();
+    } else {
+      for (let i = 0; i < N; i++) {
+        const q = W3(px[i], py[i]);
+        g.gas.put(i, q[0], q[1], q[2], colorBySpeed ? cols[colorIndex(Math.hypot(vx[i], vy[i]))] : mute);
+      }
+      g.gas.show(N); g.gas.done(); g.gasB.show(0); g.gasB.done();
     }
-    g.gas.show(N); g.gas.done();
+    g.divs.forEach((d) => { d.visible = two && GS.div > 0; });
+    if (two && GS.div) {
+      const lo = GS.div === 2 ? HOLE_Y - GS.hole / 2 : LY, hi = GS.div === 2 ? HOLE_Y + GS.hole / 2 : LY;
+      g.divs[0].position.z = Z0; g.divs[0].scale.z = lo * K3;
+      g.divs[1].position.z = Z0 + hi * K3; g.divs[1].scale.z = Math.max(1e-4, (LY - hi) * K3); g.divs[1].visible = hi < LY;
+    }
     /* true size, with the flat view's floor: at least 2.2 px across the radius when the camera is far away */
     const pxM = 2 * S.cam.position.distanceTo(new THREE.Vector3(px[0] * K3, 0, Z0 + py[0] * K3)) * Math.tan(S.cam.fov * Math.PI / 360) / Math.max(1, S.h);
-    const want = Math.max(1, 2.2 * projScale() * pxM / (R * K3));
+    const floor = 2.2 * projScale() * pxM / (R * K3);
+    const want = Math.max(two ? TWO.A.d / 2 / R : 1, floor), wantB = Math.max(TWO.B.d / 2 / R, floor);
     if (Math.abs(want / g.gScale - 1) > 0.05) { g.gas.geometry.scale(want / g.gScale, want / g.gScale, want / g.gScale); g.gScale = want; }
-    const wx = wallX * K3;
+    if (two && Math.abs(wantB / g.gScaleB - 1) > 0.05) { g.gasB.geometry.scale(wantB / g.gScaleB, wantB / g.gScaleB, wantB / g.gScaleB); g.gScaleB = wantB; }
+    const wx = GS.wallX * K3;
     /* the piston block, its rod (through the guide) and the handle all ride with the wall */
     g.face.position.x = wx; g.pRod.scale.y = ROD; g.pRod.position.set(wx + RAM, 0, Z0 + LY * K3 / 2); g.knob.position.set(wx + RAM + ROD, 0, Z0 + LY * K3 / 2);
     g.knob.material.emissive = new THREE.Color(drag3 ? '#1d3f80' : '#000000');
-    g.wLab.set(wallX.toFixed(1) + ' nm'); g.wLab.position.set(wx / 2, -0.02, Z0 - 0.03);
+    g.wLab.set(GS.wallX.toFixed(1) + ' nm'); g.wLab.position.set(wx / 2, -0.02, Z0 - 0.03);
     const showT = showTrail && tracer < N;
     g.mark.visible = showT; g.trailL.visible = showT && trail.length > 1;
     if (showT) {
@@ -793,10 +971,239 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     S.render();
   }
   const view3 = VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { $('status3d').textContent = m; },
-    change: (on) => { on3d = on; if (G3) G3.S.el.hidden = !on; box.hidden = on; $('ride').hidden = !on; $('cap3d').hidden = !on; hitLog = on && G3 ? G3.hit : null; dirty = true; } });
+    change: (on) => { on3d = on; if (G3) G3.S.el.hidden = !on; box.hidden = on; $('ride').hidden = !on; $('cap3d').hidden = !on; GS.hitLog = on && G3 ? G3.hit : null; dirty = true; } });
   try { $('cap3d').textContent = VD3.turnText($('cap3d').textContent); } catch (_) {}
+  const CAP = [$('cap3d').textContent, 'Click a molecule to mark it, drag elsewhere to turn. Gas A is blue and gas B red; the model gas is two dimensional, its molecules drawn to scale.'];
+  try { CAP[1] = VD3.turnText(CAP[1]); } catch (_) {}
   $('ride').addEventListener('click', () => { ride = !ride; $('ride').setAttribute('aria-pressed', String(ride)); dirty = true; });
   window.__ig3 = { view: view3, get on() { return on3d; } };
+
+  // ---------- two gases and a divider ----------
+  /* Gas A starts in the left half and gas B in the right half, each with its own mass, diameter, temperature and number; the
+     divider at x = 25 nm can be closed, have a hole, or be removed (CORE: divider, holeOpen). The run is timed from the moment the
+     divider changes: then the unfolded positions start (CORE: track) and a sample of the counts, the mean square displacements and
+     the temperatures is kept every 1 ps of the gas's time, exactly on the ps. The piston stays at 50 nm. */
+  let two = false;
+  const TWO = { A: { m: 40, d: 0.5, T: 300, n: 150 }, B: { m: 40, d: 0.5, T: 300, n: 150 }, hole: 3 };
+  const run = { t: 0, open: false, samples: [], x0: new Float64Array(NMAX), y0: new Float64Array(NMAX), label: '' };
+  let graph = 'counts', ms2 = null, rMin = R;
+  const SAMPLE = 1;   /* ps between samples */
+  function freeSpot2(x0, x1, ri, upto) {
+    const w = x1 - x0 - 2 * ri, h = LY - 2 * ri;
+    for (let t = 0; t < 400; t++) {
+      const x = x0 + ri + rnd() * w, y = ri + rnd() * h;
+      let ok = true;
+      for (let j = 0; j < upto; j++) {
+        const dx = px[j] - x, dy = py[j] - y, s = GS.r[j] + ri;
+        if (dx * dx + dy * dy < s * s * 1.3) { ok = false; break; }
+      }
+      if (ok) return [x, y];
+    }
+    return [x0 + ri + rnd() * w, ri + rnd() * h];
+  }
+  const gasLabel = (g) => `${g.n} of ${g.m} u, ${g.d.toFixed(2)} nm, ${g.T} K`;
+  function resetTwo() {
+    simT = 0; GS.imp = 0; GS.lt = 0; trail = []; tracer = 0;
+    GS.wallTarget = GS.wallX = LX; GS.wallV = 0; syncW();
+    GS.div = 1; GS.hole = TWO.hole; GS.ux = null;
+    N = 0;
+    for (const [k, g] of [[0, TWO.A], [1, TWO.B]]) {
+      const i0 = N, mk = g.m * U_KG, rk = g.d / 2;
+      for (let n = 0; n < g.n; n++) {
+        const i = N++; GS.kind[i] = k; GS.m[i] = mk; GS.r[i] = rk; GS.side[i] = k;
+        const p = freeSpot2(k ? DIV_X : 0, k ? LX : DIV_X, rk, i); px[i] = p[0]; py[i] = p[1];
+        const sg = Math.sqrt(KB * g.T / mk); vx[i] = sg * gauss(); vy[i] = sg * gauss();
+      }
+      /* scale the group to exactly its temperature */
+      const Tg = tempOf(GS, N, (i) => i >= i0);
+      if (Tg > 0) { const f = Math.sqrt(g.T / Tg); for (let i = i0; i < N; i++) { vx[i] *= f; vy[i] *= f; } }
+    }
+    rMin = Math.min(TWO.A.n ? TWO.A.d / 2 : 1, TWO.B.n ? TWO.B.d / 2 : 1);
+    if (tracer >= N) tracer = 0;
+    newRun(); setDivUI(); computeStats(); dirty = true;
+  }
+  function newRun() {
+    run.t = 0; run.samples = []; run.open = GS.div !== 1;
+    run.label = GS.div === 0 ? 'removed' : GS.div === 2 ? `hole ${GS.hole.toFixed(1)} nm` : 'closed';
+    if (run.open) { track(GS, N); run.x0.set(px); run.y0.set(py); sampleTwo(); }
+    else GS.ux = null;
+    ms2 = mixStats(GS, N, px, py);
+  }
+  function sampleTwo() {
+    const s = mixStats(GS, N, run.x0, run.y0);
+    run.samples.push({ t: Math.round(run.t), aL: s.left[0], aR: s.right[0], bL: s.left[1], bR: s.right[1], msdA: s.msd[0], msdB: s.msd[1],
+      TL: tempOf(GS, N, (i) => px[i] < DIV_X), TR: tempOf(GS, N, (i) => px[i] >= DIV_X) });
+    if (run.samples.length > 20000) run.samples.splice(1, 1);
+  }
+  /* advance the two gas run by dt ps, in steps short enough that the fastest molecule moves at most 0.4 of the smallest radius,
+     breaking at each whole ps of the run for a sample */
+  function runTwo(dt) {
+    let left = dt;
+    while (left > 1e-12) {
+      const next = run.open ? (Math.floor(run.t / SAMPLE + 1e-9) + 1) * SAMPLE : Infinity;
+      const chunk = Math.min(left, next - run.t);
+      let vm = 0; for (let i = 0; i < N; i++) { const v2 = vx[i] * vx[i] + vy[i] * vy[i]; if (v2 > vm) vm = v2; }
+      const nsub = Math.max(1, Math.ceil(chunk * (Math.sqrt(vm) + 5) * 1e-3 / (0.4 * rMin)));
+      for (let k = 0; k < nsub; k++) step(GS, N, chunk / nsub);
+      left -= chunk; simT += chunk;
+      if (run.open && next - (run.t + chunk) < 1e-9) { run.t = next; sampleTwo(); } else run.t += chunk;
+    }
+    ms2 = mixStats(GS, N, run.open ? run.x0 : px, run.open ? run.y0 : py);
+  }
+  function setDiv(d) {
+    if (!two || d === GS.div) return;
+    GS.div = d; GS.hole = TWO.hole;
+    for (let i = 0; i < N; i++) GS.side[i] = px[i] < DIV_X ? 0 : 1;
+    newRun(); setDivUI(); dirty = true;
+  }
+  function setDivUI() {
+    for (const b of document.querySelectorAll('#divSeg button')) b.setAttribute('aria-pressed', String(+b.dataset.div === GS.div));
+  }
+  for (const b of document.querySelectorAll('#divSeg button')) b.addEventListener('click', () => setDiv(+b.dataset.div));
+  for (const b of document.querySelectorAll('#graphSeg button')) b.addEventListener('click', () => {
+    graph = b.dataset.g; for (const c of document.querySelectorAll('#graphSeg button')) c.setAttribute('aria-pressed', String(c === b)); dirty = true;
+  });
+  const fmtU = (v) => v + ' u', fmtD = (v) => (+v).toFixed(2) + ' nm', fmtTK = (v) => v + ' K';
+  const TWO_IN = [['mA', 'A', 'm', fmtU], ['dA', 'A', 'd', fmtD], ['TA', 'A', 'T', fmtTK], ['nA', 'A', 'n', String],
+    ['mB', 'B', 'm', fmtU], ['dB', 'B', 'd', fmtD], ['TB', 'B', 'T', fmtTK], ['nB', 'B', 'n', String]];
+  function syncTwoUI() {
+    for (const [id, g, k, f] of TWO_IN) { $(id).value = TWO[g][k]; $(id + 'Out').textContent = f(TWO[g][k]); }
+    $('hole').value = TWO.hole; $('holeOut').textContent = TWO.hole.toFixed(1) + ' nm';
+  }
+  for (const [id, g, k, f] of TWO_IN) $(id).addEventListener('input', () => {
+    TWO[g][k] = +$(id).value; $(id + 'Out').textContent = f(TWO[g][k]); setPresetUI(null); resetTwo();
+  });
+  $('hole').addEventListener('input', () => {
+    TWO.hole = +$('hole').value; $('holeOut').textContent = TWO.hole.toFixed(1) + ' nm';
+    GS.hole = TWO.hole; if (GS.div === 2) newRun(); dirty = true;
+  });
+  const TWO_PRESETS = {
+    mix: { A: { m: 40, d: 0.5, T: 300, n: 150 }, B: { m: 40, d: 0.5, T: 300, n: 150 }, hole: 3, graph: 'counts',
+      hint: 'Two batches of the same gas (argon, 40 u), colored so you can tell them apart. Remove the divider and watch them mix: the counts on the far side climb toward half of each gas, and the mean square displacement grows in proportion to time once each molecule has had a few collisions.' },
+    lightheavy: { A: { m: 4, d: 0.5, T: 300, n: 150 }, B: { m: 40, d: 0.5, T: 300, n: 150 }, hole: 3, graph: 'msd',
+      hint: 'Helium mass (4 u) on the left and argon mass (40 u) on the right, the same size and temperature. Remove the divider: the light molecules move faster and spread faster.' },
+    effuse: { A: { m: 4, d: 0.3, T: 300, n: 200 }, B: { m: 40, d: 0.3, T: 300, n: 0 }, hole: 1.5, graph: 'counts',
+      hint: "200 molecules of helium mass (4 u) on the left, nothing on the right, and a hole 1.5 nm wide, smaller than the distance a molecule travels between collisions (about 4 nm here). Open the hole and count how fast the gas leaks through. Then make gas A argon (40 u) and repeat: Graham's law says the rate goes as 1/√m." },
+    hotcold2: { A: { m: 40, d: 0.5, T: 600, n: 150 }, B: { m: 40, d: 0.5, T: 150, n: 150 }, hole: 3, graph: 'counts',
+      hint: 'Hot argon (600 K) on the left and cold argon (150 K) on the right. Remove the divider: the gases mix, and collisions bring both sides to one temperature.' }
+  };
+  function setTwo(on) {
+    two = on;
+    for (const id of ['divSeg', 'graphSeg', 'read2', 'more2', 'secTwo', 'recRun']) $(id).hidden = !on;
+    for (const id of ['read1', 'more1', 'secGas', 'secPiston']) $(id).hidden = on;
+    $('clock').classList.toggle('two', on);
+    $('cap3d').textContent = CAP[on ? 1 : 0];
+    $('unitsGas').textContent = on ? 'two gases, masses in u' : 'argon, m = 6.63×10⁻²⁶ kg';
+    if (!on) { GS.div = 0; GS.ux = null; GS.m.fill(M); GS.r.fill(R); GS.kind.fill(0); rMin = R; }
+    window.vdShowCols = on ? [['t_ps', 't (ps)'], ['A_right', 'A right'], ['B_left', 'B left'], ['msd_A_nm2', 'MSD A (nm²)']]
+      : [['T_K', 'T (K)'], ['A_nm2', 'A (nm²)'], ['P_mN_per_m', 'P (mN/m)']];
+    $('hist').setAttribute('aria-label', on ? 'Graph of the two gases: counts on the far side, mean square displacement, or speeds, against time since the divider opened.' : 'Histogram of molecular speeds with the two dimensional Maxwell-Boltzmann curve overlaid.');
+    resize();
+  }
+  function applyTwo(name) {
+    const p = TWO_PRESETS[name];
+    TWO.A = Object.assign({}, p.A); TWO.B = Object.assign({}, p.B); TWO.hole = p.hole;
+    graph = p.graph; for (const c of document.querySelectorAll('#graphSeg button')) c.setAttribute('aria-pressed', String(c.dataset.g === graph));
+    if (!two) setTwo(true);
+    setPlay('fixed'); syncTwoUI(); setPresetUI(name); resetTwo();
+  }
+
+  /* the graph pane in the two gas setups */
+  function niceMax(v) { const e = Math.pow(10, Math.floor(Math.log10(v))), m = v / e; return (m <= 1 ? 1 : m <= 2 ? 2 : m <= 2.5 ? 2.5 : m <= 5 ? 5 : 10) * e; }
+  function drawGraph2() {
+    const ctx = hctx, T = tok, W = HG.W, H = HG.H, ps = projScale();
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    /* on a narrow screen the legend takes its own line under the graph switch */
+    const segW = $('graphSeg').offsetWidth, low = W - segW - 24 < 300 * ps;
+    const L = 52 * ps, Rr = 14 * ps, Tp = low ? $('graphSeg').offsetTop + $('graphSeg').offsetHeight + 34 * ps : 40 * ps, B = 40 * ps, pw = Math.max(10, W - L - Rr), ph = Math.max(10, H - Tp - B);
+    const f11 = `${11 * ps}px ` + T.mono; ctx.font = f11;
+    const colA = T.neg, colB = T.pos;
+    let xMax, yMax, xLab, yLab, series = [], refs = [], bars = null;
+    if (graph === 'speeds') {
+      /* speeds of each gas, with the 2D Maxwell-Boltzmann curve at that gas's measured temperature */
+      const TA = tempOf(GS, N, (i) => GS.kind[i] === 0), TB = tempOf(GS, N, (i) => GS.kind[i] === 1);
+      const mA = TWO.A.m * U_KG, mB = TWO.B.m * U_KG;
+      let need = 0;
+      for (const [Tk, mk, nk] of [[TA, mA, TWO.A.n], [TB, mB, TWO.B.n]]) if (nk && Tk > 0) need = Math.max(need, 3.6 * Math.sqrt(KB * Tk / mk));
+      xMax = niceMax(Math.max(need, 100)); const NBb = 30, bw = xMax / NBb;
+      const cA = new Float32Array(NBb), cB = new Float32Array(NBb);
+      for (let i = 0; i < N; i++) { const b = Math.floor(Math.hypot(vx[i], vy[i]) / bw); if (b < NBb) (GS.kind[i] ? cB : cA)[b]++; }
+      let top = 1;
+      const curve = (Tk, mk, nk) => { const pts = []; if (!(nk && Tk > 0)) return pts; for (let k = 0; k <= 200; k++) { const v = xMax * k / 200; pts.push([v, nk * bw * (mk * v / (KB * Tk)) * Math.exp(-mk * v * v / (2 * KB * Tk))]); } return pts; };
+      const pA = curve(TA, mA, TWO.A.n), pB = curve(TB, mB, TWO.B.n);
+      for (const p of pA.concat(pB)) top = Math.max(top, p[1]);
+      for (let b = 0; b < NBb; b++) top = Math.max(top, cA[b], cB[b]);
+      yMax = niceMax(top * 1.1); xLab = 'speed (m/s)'; yLab = 'molecules per bin';
+      bars = { cA, cB, bw, NBb };
+      series = [{ pts: pA, col: colA, w: 2.2, lab: 'A curve at ' + fmtK(TA), n: TWO.A.n }, { pts: pB, col: colB, w: 2.2, lab: 'B curve at ' + fmtK(TB), n: TWO.B.n }];
+    } else {
+      const S = run.samples, tEnd = run.open ? run.t : 0;
+      xMax = niceMax(Math.max(100, tEnd)); xLab = run.open ? 'time since the divider opened (ps)' : 'time (ps): open the divider to start';
+      if (graph === 'counts') {
+        yLab = 'molecules';
+        const pa = S.map((s) => [s.t, s.aR]), pb = S.map((s) => [s.t, s.bL]);
+        yMax = niceMax(Math.max(10, TWO.A.n, TWO.B.n) * 0.6);
+        series = [{ pts: pa, col: colA, w: 2, lab: 'A on the right', n: TWO.A.n }, { pts: pb, col: colB, w: 2, lab: 'B on the left', n: TWO.B.n }];
+        refs = [[TWO.A.n / 2, colA, TWO.A.n], [TWO.B.n / 2, colB, TWO.B.n]].filter((r) => r[2]);
+      } else {
+        yLab = 'mean square displacement (nm²)';
+        const pa = S.map((s) => [s.t, s.msdA]), pb = S.map((s) => [s.t, s.msdB]);
+        let top = 10; for (const s of S) { if (s.msdA > top) top = s.msdA; if (s.msdB > top) top = s.msdB; }
+        yMax = niceMax(top * 1.1);
+        series = [{ pts: pa, col: colA, w: 2, lab: 'gas A', n: TWO.A.n }, { pts: pb, col: colB, w: 2, lab: 'gas B', n: TWO.B.n }];
+      }
+    }
+    series = series.filter((sr) => sr.n);   /* a gas with no molecules has nothing to show */
+    const X = (v) => L + v / xMax * pw, Y = (c) => Tp + ph - c / yMax * ph;
+    /* grid and ticks */
+    const ys = niceStep(yMax / 4), xs = niceStep(xMax / (pw < 300 * ps ? 4 : 6));
+    ctx.strokeStyle = T.grid; ctx.lineWidth = 1; ctx.beginPath();
+    for (let c = ys; c <= yMax + 1e-9; c += ys) { const yy = Math.round(Y(c)) + 0.5; ctx.moveTo(L, yy); ctx.lineTo(L + pw, yy); }
+    ctx.stroke();
+    ctx.fillStyle = T.muted; ctx.textAlign = 'right'; ctx.textBaseline = 'middle';
+    for (let c = 0; c <= yMax + 1e-9; c += ys) ctx.fillText(String(+c.toPrecision(6)), L - 6 * ps, Y(c));
+    ctx.textAlign = 'center'; ctx.textBaseline = 'top';
+    for (let v = 0; v <= xMax + 1e-9; v += xs) ctx.fillText(String(+v.toPrecision(6)), X(v), Tp + ph + 5 * ps);
+    ctx.fillText(xLab, L + pw / 2, Tp + ph + 22 * ps);
+    ctx.save(); ctx.translate(12 * ps, Tp + ph / 2); ctx.rotate(-Math.PI / 2); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(yLab, 0, 0); ctx.restore();
+    ctx.save(); ctx.beginPath(); ctx.rect(L, Tp - 2, pw, ph + 2); ctx.clip();
+    if (bars) {
+      const w = pw / bars.NBb;
+      ctx.globalAlpha = 0.45;
+      for (let b = 0; b < bars.NBb; b++) {
+        ctx.fillStyle = colA; if (bars.cA[b]) ctx.fillRect(X(b * bars.bw) + 1, Y(bars.cA[b]), w / 2 - 1, Tp + ph - Y(bars.cA[b]));
+        ctx.fillStyle = colB; if (bars.cB[b]) ctx.fillRect(X(b * bars.bw) + w / 2, Y(bars.cB[b]), w / 2 - 1, Tp + ph - Y(bars.cB[b]));
+      }
+      ctx.globalAlpha = 1;
+    }
+    for (const [v, col] of refs) {
+      ctx.save(); ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = col; ctx.globalAlpha = 0.7; ctx.lineWidth = 1.3 * ps;
+      ctx.beginPath(); ctx.moveTo(L, Y(v)); ctx.lineTo(L + pw, Y(v)); ctx.stroke(); ctx.restore();
+    }
+    for (const s of series) {
+      if (s.pts.length < 2) continue;
+      ctx.strokeStyle = s.col; ctx.lineWidth = s.w * ps; ctx.lineJoin = 'round'; ctx.beginPath();
+      const stride = Math.max(1, Math.floor(s.pts.length / (pw * 1.5)));
+      for (let k = 0; k < s.pts.length; k += stride) { const p = s.pts[k]; k ? ctx.lineTo(X(p[0]), Y(p[1])) : ctx.moveTo(X(p[0]), Y(p[1])); }
+      const e = s.pts[s.pts.length - 1]; ctx.lineTo(X(e[0]), Y(e[1]));
+      ctx.stroke();
+    }
+    ctx.restore();
+    ctx.strokeStyle = T.gridStrong; ctx.lineWidth = ps; ctx.beginPath(); ctx.moveTo(L, Tp + ph + 0.5); ctx.lineTo(L + pw, Tp + ph + 0.5); ctx.stroke();
+    /* legend */
+    ctx.font = `600 ${11.5 * ps}px ` + T.mono; ctx.textBaseline = 'middle'; ctx.textAlign = 'left';
+    let lx = low ? 12 * ps : L; const ly = low ? $('graphSeg').offsetTop + $('graphSeg').offsetHeight + 12 * ps : 17 * ps;
+    for (const s of series) {
+      ctx.strokeStyle = s.col; ctx.lineWidth = 2.2 * ps; ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 16 * ps, ly); ctx.stroke();
+      ctx.fillStyle = T.ink; ctx.fillText(s.lab, lx + 21 * ps, ly); lx += (21 + 18) * ps + ctx.measureText(s.lab).width;
+    }
+    if (refs.length && lx + 140 * ps < (low ? W : W - segW - 24)) {
+      ctx.save(); ctx.setLineDash([5 * ps, 4 * ps]); ctx.strokeStyle = T.muted; ctx.lineWidth = 1.3 * ps; ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 16 * ps, ly); ctx.stroke(); ctx.restore();
+      ctx.fillStyle = T.muted; ctx.fillText('half of each gas', lx + 21 * ps, ly);
+    }
+  }
 
   // ---------- readouts ----------
   const out = { rN: $('rN'), rT: $('rT'), rP: $('rP'), rPi: $('rPi'), rRatio: $('rRatio'), rA: $('rA'), rMean: $('rMean'), rRms: $('rRms') };
@@ -806,23 +1213,41 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return [g(pm), g(pi)];
   }
   function updateReadouts() {
+    if (two) { updateTwo(); return; }
     const pm = pMeasured(), pi = pIdeal(), [a, b] = fmtPair(pm, pi);
     out.rN.textContent = N;
     out.rT.textContent = fmtK(stats.T);
     out.rP.textContent = simT > 0 ? a : '—';
     out.rPi.textContent = b;
     out.rRatio.textContent = simT > 0 && isFinite(pm) ? (pm / pi).toFixed(3) : '—';
-    out.rA.textContent = Math.round(wallX * LY) + ' nm²';
+    out.rA.textContent = Math.round(GS.wallX * LY) + ' nm²';
     out.rMean.textContent = fmtSpeed(stats.mean);
     out.rRms.textContent = fmtSpeed(stats.rms);
     $('clock').textContent = 't = ' + (simT < 1000 ? Math.round(simT) + ' ps' : (simT / 1000).toFixed(2) + ' ns');
+  }
+  const fmtPs = (t) => (t < 1000 ? Math.round(t) + ' ps' : (t / 1000).toFixed(2) + ' ns');
+  const fmtMsd = (v) => (isFinite(v) ? (v >= 100 ? Math.round(v) : v.toFixed(1)) + ' nm²' : '—');
+  function updateTwo() {
+    const s = ms2 || mixStats(GS, N, px, py);
+    $('rT2').textContent = run.open ? fmtPs(run.t) : 'not yet open';
+    $('rDiv').textContent = run.label;
+    $('rA2').textContent = s.left[0] + ' · ' + s.right[0];
+    $('rB2').textContent = s.left[1] + ' · ' + s.right[1];
+    $('rMA').textContent = run.open && s.n[0] ? fmtMsd(s.msd[0]) : '—';
+    $('rMB').textContent = run.open && s.n[1] ? fmtMsd(s.msd[1]) : '—';
+    const tl = tempOf(GS, N, (i) => px[i] < DIV_X), tr = tempOf(GS, N, (i) => px[i] >= DIV_X);
+    const k2 = (a, b) => (isFinite(a) ? fmtK(a).replace(' K', '') : '—') + ' · ' + (isFinite(b) ? fmtK(b) : '—');
+    $('rTs').textContent = k2(tl, tr);
+    const ta = tempOf(GS, N, (i) => GS.kind[i] === 0), tb = tempOf(GS, N, (i) => GS.kind[i] === 1);
+    $('rTk').textContent = k2(ta, tb);
+    $('clock').textContent = run.open ? 't = ' + fmtPs(run.t) + ' since opening' : 'divider closed';
   }
   const tIn = $('tIn'), tOut = $('tOut'), wIn = $('wIn'), wOut = $('wOut'), nIn = $('nIn'), nOut = $('nOut');
   function syncT(force) {
     if (tDragging && !force) return;
     tIn.value = sliderFromT(stats.T); tOut.textContent = fmtK(stats.T);
   }
-  function syncW() { wIn.value = wallTarget; wOut.textContent = wallTarget.toFixed(1) + ' nm'; }
+  function syncW() { wIn.value = GS.wallTarget; wOut.textContent = GS.wallTarget.toFixed(1) + ' nm'; }
 
   // ---------- loop ----------
   let last = performance.now(), lastRead = 0, lastSync = 0;
@@ -832,14 +1257,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       Tsmooth += (Math.max(stats.T, 1e-5) - Tsmooth) * Math.min(1, dtS * 1.5);
       psPerS = playMode === 'follow' ? BASE_PS * Math.min(300, Math.max(1, Math.sqrt(300 / Tsmooth))) : BASE_PS;
       const simDt = dtS * psPerS;
-      const vlim = stats.vmax + (Math.abs(wallTarget - wallX) > 1e-9 ? pistonMax : 0) + 5;
-      const nsub = Math.min(300, Math.max(1, Math.ceil(simDt * vlim * 1e-3 / (0.4 * R))));
-      const f = Math.exp(-dtS / P_TAU); impAcc *= f; ltAcc *= f;
-      for (let k = 0; k < nsub; k++) step(simDt / nsub);
-      simT += simDt;
-      computeStats(); updateHist(dtS);
-      if (tracer < N) { trail.push([px[tracer], py[tracer]]); if (trail.length > 360) trail.shift(); }
-      dirty = true;
+      if (two) { runTwo(simDt); computeStats(); if (tracer < N) { trail.push([px[tracer], py[tracer]]); if (trail.length > 360) trail.shift(); } dirty = true; }
+      else {
+        const vlim = stats.vmax + (Math.abs(GS.wallTarget - GS.wallX) > 1e-9 ? GS.pistonMax : 0) + 5;
+        const nsub = Math.min(300, Math.max(1, Math.ceil(simDt * vlim * 1e-3 / (0.4 * R))));
+        const f = Math.exp(-dtS / P_TAU); GS.imp *= f; GS.lt *= f;
+        for (let k = 0; k < nsub; k++) step(GS, N, simDt / nsub);
+        simT += simDt;
+        computeStats(); updateHist(dtS);
+        if (tracer < N) { trail.push([px[tracer], py[tracer]]); if (trail.length > 360) trail.shift(); }
+        dirty = true;
+      }
     }
     if (dirty && G.W && HG.W) { if (on3d && G3) render3(dtS); else drawBox(); drawHist(); dirty = false; }
     else if (on3d && G3) render3(dtS);
@@ -855,7 +1283,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     last = performance.now();
   }
   playBtn.addEventListener('click', () => setRunning(!running));
-  $('reset').addEventListener('click', () => { Tset = tFromSlider(+tIn.value); resetGas(); });
+  $('reset').addEventListener('click', () => { if (two) { resetTwo(); return; } Tset = tFromSlider(+tIn.value); resetGas(); });
 
   const PRESETS = {
     relax:    { N: 150, T: 300, W: 50, mode: 'equal',
@@ -871,20 +1299,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   };
   function setPresetUI(name) {
     preset = name;
-    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
-    if (name) $('presetHint').textContent = PRESETS[name].hint;
+    for (const b of document.querySelectorAll('[data-p]')) b.setAttribute('aria-pressed', String(b.dataset.p === name));
+    if (name) $('presetHint').textContent = (PRESETS[name] || TWO_PRESETS[name]).hint;
   }
   function setModeUI() {
     for (const b of document.querySelectorAll('#startSeg button')) b.setAttribute('aria-pressed', String(b.dataset.m === mode));
   }
   function applyPreset(name) {
+    if (TWO_PRESETS[name]) { applyTwo(name); return; }
+    if (two) setTwo(false);
     const p = PRESETS[name];
-    N = p.N; Tset = p.T; wallTarget = p.W; mode = p.mode; pistonTouched = false;
+    N = p.N; Tset = p.T; GS.wallTarget = p.W; mode = p.mode; pistonTouched = false;
     nIn.value = N; nOut.textContent = N; tIn.value = sliderFromT(Tset); syncW();
     setPlay(p.play || 'fixed');
     setPresetUI(name); setModeUI(); resetGas();
   }
-  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('[data-p]')) b.addEventListener('click', () => applyPreset(b.dataset.p));
   for (const b of document.querySelectorAll('#startSeg button')) b.addEventListener('click', () => {
     mode = b.dataset.m; Tset = tFromSlider(+tIn.value); setModeUI(); setPresetUI(null); resetGas();
   });
@@ -907,20 +1337,20 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     Tset = tFromSlider(+tIn.value); tOut.textContent = fmtK(Tset);
     scaleGroup(0, N, Tset); computeStats(); histFresh = true; updateHist(0); dirty = true; setPresetUI(null);
   });
-  wIn.addEventListener('input', () => { wallTarget = +wIn.value; pistonTouched = true; syncW(); dirty = true; });
-  $('sIn').addEventListener('input', (e) => { pistonMax = +e.target.value; $('sOut').textContent = pistonMax + ' m/s'; });
+  wIn.addEventListener('input', () => { GS.wallTarget = +wIn.value; pistonTouched = true; syncW(); dirty = true; });
+  $('sIn').addEventListener('input', (e) => { GS.pistonMax = +e.target.value; $('sOut').textContent = GS.pistonMax + ' m/s'; });
   $('tColor').addEventListener('change', (e) => { colorBySpeed = e.target.checked; dirty = true; });
   $('tTrail').addEventListener('change', (e) => { showTrail = e.target.checked; trail = []; dirty = true; });
 
   // pointer on the box: drag the piston, or pick a molecule to trace
   const local = (e) => { const r = box.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
-  const nearWall = (mx, my) => Math.abs(mx - (toX(wallX) + 2)) < 18 * projScale() && my > toY(LY) - 12 && my < toY(0) + 12;
+  const nearWall = (mx, my) => !two && Math.abs(mx - (toX(GS.wallX) + 2)) < 18 * projScale() && my > toY(LY) - 12 && my < toY(0) + 12;
   const clampW = (w) => Math.min(LX, Math.max(MIN_W, w));
   box.addEventListener('pointerdown', (e) => {
     box.focus({ preventScroll: true });
     const [mx, my] = local(e);
     if (nearWall(mx, my)) {
-      drag = { off: mx - toX(wallX) };
+      drag = { off: mx - toX(GS.wallX) };
       pistonTouched = true; box.setPointerCapture(e.pointerId); box.style.cursor = 'grabbing'; dirty = true;
       return;
     }
@@ -935,7 +1365,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   box.addEventListener('pointermove', (e) => {
     const [mx, my] = local(e);
     if (drag) {
-      wallTarget = Math.round(clampW((mx - drag.off - G.bx0) / G.s) * 10) / 10;
+      GS.wallTarget = Math.round(clampW((mx - drag.off - G.bx0) / G.s) * 10) / 10;
       syncW(); dirty = true; return;
     }
     if (e.pointerType === 'mouse') box.style.cursor = nearWall(mx, my) ? 'ew-resize' : 'crosshair';
@@ -945,8 +1375,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   box.addEventListener('pointercancel', endDrag);
   box.addEventListener('keydown', (e) => {
     const stepW = e.shiftKey ? 0.2 : 1;
-    if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
-      wallTarget = Math.round(clampW(wallTarget + (e.key === 'ArrowLeft' ? -stepW : stepW)) * 10) / 10;
+    if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && !two) {
+      GS.wallTarget = Math.round(clampW(GS.wallTarget + (e.key === 'ArrowLeft' ? -stepW : stepW)) * 10) / 10;
       pistonTouched = true; syncW(); dirty = true;
     } else if (e.key === ' ' || e.key === 'k') {
       setRunning(!running);
@@ -972,13 +1402,42 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- readings (tools/readings_panel.py) ----------
   window.vdVersion = 'ideal-gas@2026-10-24';
   window.vdShowCols = [['T_K', 'T (K)'], ['A_nm2', 'A (nm²)'], ['P_mN_per_m', 'P (mN/m)']];
+  /* a two gas row: time since the divider opened, the counts on each side, each gas's mean square displacement, the temperature on
+     each side, and the settings */
+  const rowTwo = (sm) => ({ t_ps: sm.t, A_left: sm.aL, A_right: sm.aR, B_left: sm.bL, B_right: sm.bR,
+    msd_A_nm2: TWO.A.n ? +sm.msdA.toPrecision(4) : '', msd_B_nm2: TWO.B.n ? +sm.msdB.toPrecision(4) : '',
+    T_left_K: isFinite(sm.TL) ? +sm.TL.toPrecision(4) : '', T_right_K: isFinite(sm.TR) ? +sm.TR.toPrecision(4) : '',
+    divider: run.label, gas_A: gasLabel(TWO.A), gas_B: gasLabel(TWO.B) });
+  const mixedRows = (wantTwo) => { const r = window.vdRows ? window.vdRows() : []; return r.length && ('A_right' in r[r.length - 1]) !== wantTwo; };
+  const MIXED = 'The readings so far are from the other kind of setup. Send them to the worksheet and Clear before recording these.';
+  function readTwo() {
+    if (mixedRows(true)) return MIXED;
+    if (!run.open) return 'Readings are timed from the moment the divider opens: choose Hole or Removed first.';
+    return rowTwo(run.samples[run.samples.length - 1]);
+  }
+  /* Record the run: a row every 2, 5, 10, 20, 50, 100 or 200 ps (the first that gives at most 40 rows), from t = 0 to now */
+  $('recRun').addEventListener('click', () => {
+    const st = document.querySelector('.vd-readings .status');
+    if (mixedRows(true)) { st.textContent = MIXED; return; }
+    if (!run.open || run.t < 2) { st.textContent = 'Open the divider (Hole or Removed) and let the run go for a while first.'; return; }
+    const every = [2, 5, 10, 20, 50, 100, 200].find((e) => run.t / e <= 40) || 500;
+    const want = run.samples.filter((sm) => sm.t % every === 0).map(rowTwo);
+    const save = window.vdReadingRow; window.vdReadingRow = () => want;
+    document.querySelector('.vd-readings .vd-rec').click(); window.vdReadingRow = save;
+    st.textContent += ' A row every ' + every + ' ps.';
+  });
+  window.vdWorksheet = () => (two ? 'diffusion' : 'ideal-gas');
   window.vdReadingRow = () => {
+    if (two) return readTwo();
+    if (mixedRows(false)) return MIXED;
     const pm = pMeasured();
     if (!(simT > 0) || !isFinite(pm)) return 'Let the gas run for a moment so the walls have been hit and a pressure measured.';
     const g = (v, d) => +(+v).toPrecision(d);
-    return { t_ps: Math.round(simT), N, T_K: g(stats.T, 4), A_nm2: Math.round(wallX * LY), width_nm: +wallX.toFixed(1), P_mN_per_m: g(pm * 1e3, 4), mean_m_s: g(stats.mean, 4), rms_m_s: g(stats.rms, 4) };
+    return { t_ps: Math.round(simT), N, T_K: g(stats.T, 4), A_nm2: Math.round(GS.wallX * LY), width_nm: +GS.wallX.toFixed(1), P_mN_per_m: g(pm * 1e3, 4), mean_m_s: g(stats.mean, 4), rms_m_s: g(stats.rms, 4) };
   };
-  window.__ig = { setRunning, applyPreset, get N() { return N; }, stats, pMeasured, pIdeal, setWall: (w) => { wallTarget = clampW(w); pistonTouched = true; syncW(); dirty = true; } };
+  window.__ig = { setRunning, applyPreset, setDiv, get two() { return two; }, run, TWO, GS,
+    fast: (ps) => { if (two) { runTwo(ps); computeStats(); dirty = true; } },
+    seed: (n) => { let a = n >>> 0; rnd = () => { a = (a + 0x6D2B79F5) >>> 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }, get N() { return N; }, stats, pMeasured, pIdeal, setWall: (w) => { GS.wallTarget = clampW(w); pistonTouched = true; syncW(); dirty = true; } };
 
   // ---------- boot ----------
   refreshTokens();

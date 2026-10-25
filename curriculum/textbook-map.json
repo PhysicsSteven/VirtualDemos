@@ -7936,11 +7936,12 @@
       "role": "demo",
       "beyond_book": false,
       "status": "usable",
-      "note": "Thermodynamics deferred; numerical gas assumptions require separate review.",
+      "note": "Thermodynamics deferred; numerical gas assumptions require separate review. Two gases and a divider (2026-10-25): mixing, mean square displacement (diffusion coefficient), temperature and mass dependence, and effusion through a hole (Graham’s law), worksheet diffusion, for the mean free path of §2.2 and the speeds of light and heavy molecules of §2.4.",
       "title": "Gas in a Box",
       "url": "demos/ideal-gas.html",
       "handouts": [
-        "ideal-gas"
+        "ideal-gas",
+        "diffusion"
       ]
     },
     {

@@ -824,11 +824,15 @@
     {
      "demo": "ideal-gas",
      "title": "Gas in a Box",
-     "desc": "Watch pressure and temperature emerge from molecules hitting the walls, speeds relax to Maxwell-Boltzmann, and a moving piston heat the gas.",
+     "desc": "Watch pressure and temperature emerge from molecules hitting the walls, speeds relax to Maxwell-Boltzmann, and a moving piston heat the gas. Then let two gases mix through a divider: measure diffusion from the mean square displacement and test Graham's law through a small hole.",
      "tags": [
       "kinetic theory",
       "ideal gas law",
-      "adiabatic compression"
+      "adiabatic compression",
+      "diffusion",
+      "effusion",
+      "Graham's law",
+      "mean free path"
      ]
     },
     {

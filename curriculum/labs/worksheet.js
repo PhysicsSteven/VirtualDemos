@@ -269,7 +269,8 @@
   const THERMO = ['heating-curve' /* States of Matter demo, Beaker view */, 'bonds-and-latent-heat' /* States of Matter demo, Atoms view */,
     'thermal-equilibrium', 'gas-thermometer', 'thermal-expansion', 'heat-conduction' /* Temperature and Heat demo, one per view */,
     'heat-capacities-of-gases', 'ruchardt' /* Heat Capacities of Gases demo */, 'free-expansion', 'einstein-solids', 'second-law' /* Entropy demo */,
-    'ideal-gas', 'heat-engines', 'blackbody', 'convection' /* Temperature and Heat demo, Cooling view (2026-10-24) */, 'ising'];
+    'ideal-gas', 'heat-engines', 'blackbody', 'convection' /* Temperature and Heat demo, Cooling view (2026-10-24) */, 'ising',
+    'diffusion' /* Gas in a Box demo, two gases and a divider (2026-10-25) */];
   ENABLED.push(...THERMO);
   Object.assign(FROM_DEMO, {
     /* Reading | Time t (s) | Temperature T (°C) | Balance m (g) | Stage */
@@ -298,6 +299,9 @@
     'second-law': { demo: 'Entropy and the Second Law (Second law)', cols: ['row', 'device', 'T_h_K', 'T_c_K', 'Q_h_J', 'Q_c_J', 'W_J', null, null] },
     /* Reading | Atoms N | Temperature T (K) | Area A (nm²) | 1/A (1/nm²) | Pressure P (mN/m) | NkT/A (mN/m) | rms speed (m/s) | v_rms² (m²/s²) */
     'ideal-gas': { demo: 'Gas in a Box', cols: ['row', 'N', 'T_K', 'A_nm2', null, 'P_mN_per_m', null, 'rms_m_s', null] },
+    /* Reading | Divider and gases (first row of a series only, so the long settings are not repeated on every row) | Time t (ps) |
+       A on the right | B on the left | MSD of A (nm²) | MSD of B (nm²) | ln(1 − 2n_A/N_A) */
+    diffusion: { demo: 'Gas in a Box (two gases)', cols: ['row', (r) => (+r.row === 1 ? `divider ${r.divider}; A: ${r.gas_A}; B: ${r.gas_B}` : ''), 't_ps', 'A_right', 'B_left', 'msd_A_nm2', 'msd_B_nm2', null] },
     /* Reading | Cycle and gas | Setting | Q_in (J) | Q_out (J) | W_net (J) | η = W/Q_in or COP | Formula η or COP | 1/T_h or ln r | ln(1 − η) */
     'heat-engines': { demo: 'Heat Engine Cycles', cols: ['row', (r) => `${r.cycle}, ${r.gas}${r.run === 'backward' ? ', backward' : ''}${r.regenerator ? ', regenerator ' + r.regenerator : ''}`,
       (r) => [r.T_h_K !== '' && `T_h ${r.T_h_K} K`, r.T_c_K !== '' && `T_c ${r.T_c_K} K`, r.r !== '' && `r ${r.r}`, r.r_c !== '' && `r_c ${r.r_c}`, r.r_p !== '' && `r_p ${r.r_p}`].filter(Boolean).join(', '),
@@ -496,7 +500,7 @@
      their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
-  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising'];
+  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion'];
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
   const CURVE_TABLES = { 'franck-hertz': [0] };

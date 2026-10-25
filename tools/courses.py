@@ -128,7 +128,7 @@ HANDOUT_TOPIC = {
     'thermal-equilibrium': 'Thermal Equilibrium', 'gas-thermometer': 'Gas Thermometer and Absolute Zero', 'thermal-expansion': 'Thermal Expansion',
     'heat-conduction': 'Heat Conduction Through Layers', 'heat-capacities-of-gases': 'Heat Capacities of Gases', 'ruchardt': "Rüchardt's Ball",
     'free-expansion': 'Free Expansion', 'einstein-solids': 'Einstein Solids', 'second-law': 'Testing the Second Law',
-    'ideal-gas': 'Gas in a Box', 'heat-engines': 'Heat Engine Cycles', 'blackbody': 'Blackbody Radiation', 'convection': 'Cooling by Convection and Radiation',
+    'ideal-gas': 'Gas in a Box', 'diffusion': "Diffusion and Graham's Law", 'heat-engines': 'Heat Engine Cycles', 'blackbody': 'Blackbody Radiation', 'convection': 'Cooling by Convection and Radiation',
     'velocity-addition': 'Adding Velocities Near c', 'relativistic-momentum': 'Momentum Under a Steady Force', 'relativistic-energy': "Bertozzi's Electrons",
     'photoelectric': "Photoelectric Effect and Planck's Constant",
     'compton': 'Compton Scattering',
