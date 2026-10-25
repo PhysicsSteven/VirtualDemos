@@ -2857,3 +2857,19 @@ Steve saw the Near absolute zero gas gain kinetic energy "from nowhere" after a 
 - Keys: the captures use Fixed rate and the two gas mode, which this does not touch. vdcheck differs only on the Near absolute zero screenshots (the clock line). test_ideal-gas passes.
 
 **For GPT to verify:** nothing numeric changed.
+
+## 2026-10-25 · Claude · "How this works" video: Pendulum pilot
+
+Steve's idea: each demo gets a "How this works" button that opens a popup with a video (30 s or less) of one sample
+measurement, with arrows, zooms and captions. It adds to the worksheet steps and never replaces them. Steve approved the
+Pendulum pilot's look and asked for one dark theme video only (the site's default and, in his view, the easier read).
+
+- `VD.howTo({ src, poster })` in `demos/lib/vd.js` (styles in `vd.css`): the button sits under the handout button; the popup
+  is a modal `<dialog>`, so the demo's keyboard shortcuts stay off while it is open. The video loads only on open.
+- Pendulum: `demos/media/how-this-works/pendulum.mp4` (22.4 s, 1.2 MB) and a poster. The sample: L = 0.80 m, θ₀ = 5°, Earth,
+  drag off; the photogate reads 1.795 s, which matches the exact period at 5° (T₀ = 2π√(L/g) = 1.794 s, +0.05 %).
+- `tools/howto/`: `record.cjs` drives the demo on Playwright's paused fake clock, one frame per 1/30 s, so the swing plays at
+  true speed; `compose.py` draws the zooms, arrows, pointer and captions from the recorded timeline. Rerun both when the
+  demo changes (README there). The measuring tools never appear in a video.
+
+**For GPT:** please check the video's captions and the readings it shows against the demo (no WebGL needed: it is an mp4).

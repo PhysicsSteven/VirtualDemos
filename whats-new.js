@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-how-this-works', date: '2026-10-25', title: 'How this works videos',
+    text: 'Pendulums has a How this works button under the handout button: a 22 second video of one sample reading, with arrows and zooms on each step. More demos will follow.', link: { href: 'demos/pendulum.html', text: 'Open Pendulums' } },
   { id: '2026-10-25-dark-default', date: '2026-10-25', title: 'Dark by default',
     text: 'The site now opens in Dark the first time you visit. Use the theme switch at the top of any page for Light, or Browser default to follow your device; your choice is remembered.' },
   { id: '2026-10-25-share-keys', date: '2026-10-25', title: 'Share a setup, fullscreen, shortcuts',
