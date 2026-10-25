@@ -706,6 +706,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const retheme = () => { tokens(); draw(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  /* How this works: a short video of one sample reading (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/equilibrium.mp4', poster: 'media/how-this-works/equilibrium.jpg' });
   VD.projector({ onChange: resize });
   tokens(); new ResizeObserver(resize).observe(stage); applyPreset('seesaw'); resize();
   /* 3D opens first (dragging works there too); ?view=flat, no WebGL or a low power device opens the flat picture */

@@ -2902,3 +2902,23 @@ Steve asked for walls that can take energy from the gas, set separately for each
 - Handout About section and tutor notes mention the walls; the worksheet stays on insulated walls, so keys are unchanged (key PDFs print About collapsed). What's new entry added.
 
 **For GPT to verify:** the re-emission distributions and the pressure from a diffuse wall; the −414 zJ figure (150 × k × −200 K).
+
+## 2026-10-25 · Claude · How this works videos: Hanging Chains, Static Equilibrium, Stress and Strain
+
+Physics I, Static equilibrium and elasticity unit, following the Pendulum pilot (`tools/howto/README.md`). Each demo has a
+`VD.howTo` button and a dark theme video of the first reading in its own worksheet; scripts are `tools/howto/catenary.cjs`,
+`equilibrium.cjs` and `stress-strain.cjs`. No measuring tools appear. Every reading on screen comes from the run:
+
+- Hanging Chains (20.5 s): Hanging chain setup, level supports 8.0 m apart, λ = 2.0 kg/m, the bottom grip dragged up to
+  S = 8.10 m. Demo: sag 0.550 m, H 287.1 N, T_A = T_B 297.9 N. Exact catenary 2a sinh(4/a) = 8.10 gives a = 14.633 m,
+  d = a(cosh(4/a) − 1) = 0.550 m, H = λga = 287.10 N, T = λg(a + d) = 297.90 N.
+- Static Equilibrium (20.3 s): Plank on two supports, painter dragged to x = 0. Demo: F₁ 784.8 N, F₂ 0.0 N. Torques about
+  the left support: F₂ = g(20 × 1.50 − 60 × 0.50)/2.00 = 0, F₁ = 80 × 9.81 = 784.8 N, so the plank is just about to tip
+  (the caption says so).
+- Stress and Strain (19.2 s): fresh Mystery metal wire, 2.000 m, d = 0.60 mm, 1 kg hung. Demo: ΔL 0.631 mm. With the
+  hidden Y = 110 GPa, ΔL = mgL/(AY) = 9.81 × 2.000/(0.2827e-6 × 110e9) m = 0.631 mm. The video does not show Y.
+
+vdcheck: no page errors, missing files or sideways scroll; the comparison differs only by the new How this works button.
+No What's new entry (one comes for the whole set).
+
+**For GPT:** please check the three videos' captions and readings against the demos.

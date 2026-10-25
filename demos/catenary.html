@@ -1362,6 +1362,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   tokens();
   const ro = new ResizeObserver(resize);
   for (const k of ['m', 'f', 'g']) ro.observe(panes[k]);
+  /* How this works: a short video of one sample reading (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/catenary.mp4', poster: 'media/how-this-works/catenary.jpg' });
   applyPreset('hang');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawNow());
 })();
