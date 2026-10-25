@@ -1578,6 +1578,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   ro.observe(pane);
   resize();
   applyPreset('ambulance');
+  /* How this works: a short video of one sample reading, the ambulance heading in at 30 m/s (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/doppler.mp4', poster: 'media/how-this-works/doppler.jpg' });
   setView3(new URLSearchParams(location.search).get('view') !== 'flat' && !!window.VD3 && !VD3.lowPower());
   setPlaying(false);   /* opens still until Play or a setup (Steve: no demo starts on its own) */
   if (reduce) { window.__dop.run(6.5); }   // a meaningful still picture: the source just past the observer, the pitch falling

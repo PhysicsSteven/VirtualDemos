@@ -306,6 +306,8 @@
        src    the video, relative to the demo (media/how-this-works/<demo>.mp4, made by tools/howto/)
        poster (optional) a still shown before it plays
        title  (optional) the popup heading (default 'How this works')
+     src, poster and title may also be functions, read each time the popup opens: a demo with several worksheets (Room Acoustics)
+     shows the video for the one its controls are on.
      The video loads only when the popup opens, and plays at once unless Reduce motion is on in the device. Esc, ✕ or a click
      outside closes it and stops it. */
   VD.howTo = function (o) {
@@ -315,20 +317,22 @@
     b.title = 'A short video of one sample measurement in this demo';
     var menu = rail.querySelector('.handout-menu, .handout');
     if (menu) menu.insertAdjacentElement('afterend', b); else rail.insertBefore(b, rail.firstChild);
-    var dlg = null, vid = null;
+    var dlg = null, vid = null, val = function (v) { return typeof v === 'function' ? v() : v; };
     function close() { if (dlg && dlg.open) dlg.close(); }
     b.addEventListener('click', function () {
       if (!dlg) {
-        dlg = document.createElement('dialog'); dlg.className = 'vd-howto'; dlg.setAttribute('aria-label', o.title || 'How this works');
+        dlg = document.createElement('dialog'); dlg.className = 'vd-howto';
         dlg.innerHTML = '<div class="vd-howto-head"><h2></h2><button type="button" class="vd-howto-x" aria-label="Close">✕</button></div>' +
           '<video controls playsinline preload="none"></video><p class="vd-howto-note">One sample reading. The worksheet has the full procedure.</p>';
-        dlg.querySelector('h2').textContent = o.title || 'How this works';
-        vid = dlg.querySelector('video'); vid.src = o.src; if (o.poster) vid.poster = o.poster; vid.muted = true;
+        vid = dlg.querySelector('video'); vid.muted = true;
         dlg.querySelector('.vd-howto-x').addEventListener('click', close);
         dlg.addEventListener('click', function (e) { if (e.target === dlg) close(); });   /* the backdrop */
         dlg.addEventListener('close', function () { vid.pause(); b.focus(); });
         document.body.appendChild(dlg);
       }
+      var src = val(o.src), title = val(o.title) || 'How this works';
+      dlg.querySelector('h2').textContent = title; dlg.setAttribute('aria-label', title);
+      if (vid.getAttribute('src') !== src) { vid.src = src; if (o.poster) vid.poster = val(o.poster); }
       dlg.showModal(); vid.currentTime = 0;
       if (!(window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches)) { var pr = vid.play(); if (pr && pr.catch) pr.catch(function () {}); }
     });

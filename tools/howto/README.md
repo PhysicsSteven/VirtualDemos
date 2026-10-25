@@ -36,3 +36,6 @@ Everything comes from a script, so when a demo changes, rerun both steps:
    right thing, captions not hiding what the step is about.
 
 3. In the demo, after its other setup: `VD.howTo({ src: 'media/how-this-works/<demo>.mp4', poster: 'media/how-this-works/<demo>.jpg' });`
+   A demo with several worksheets can pass functions instead, read each time the popup opens, as Room Acoustics does:
+   `` VD.howTo({ src: () => `media/how-this-works/${S.mode === 'decay' ? 'room-acoustics' : 'anechoic-chamber'}.mp4`, ... }) ``.
+   Its scripts set `demo:` to the page they record (`anechoic-chamber.cjs` records `room-acoustics`).

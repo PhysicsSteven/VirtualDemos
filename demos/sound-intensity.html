@@ -417,6 +417,8 @@ table.rows input:focus { border-color: var(--accent); }
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   tokens(); new ResizeObserver(resize).observe($('scene')); applyPreset('inverse'); renderRows(); resize();
+  /* How this works: a short video of one sample reading, Part 1 at 0.5 m (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/sound-intensity.mp4', poster: 'media/how-this-works/sound-intensity.jpg' });
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   requestAnimationFrame(frame);
 })();

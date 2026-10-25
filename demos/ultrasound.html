@@ -865,6 +865,8 @@ table.rows input:focus { border-color: var(--accent); }
   if (window.VD3K) VD3K.view({ seg: '#viewSeg', start: '3d', init: init3D, status: (m) => capStatus(m),
     change: (on) => { G3.on = on && !!g3; if (g3) g3.st.el.style.display = G3.on ? '' : 'none'; can.style.pointerEvents = G3.on ? 'none' : ''; $('stage').classList.toggle('v3', G3.on); can.style.cursor = ''; draw(); } });
   /* the scanner runs from the start, so the pulse is already going down; the Set up card stays until the scanner is next started */
+  /* How this works: a short video of one sample reading, the water tank at 2.0 cm (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/ultrasound.mp4', poster: 'media/how-this-works/ultrasound.jpg' });
   if (new URLSearchParams(location.search).get('run') === '1') setRun(true);   /* otherwise it opens still until Start the scanner (Steve: no demo starts on its own) */
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;

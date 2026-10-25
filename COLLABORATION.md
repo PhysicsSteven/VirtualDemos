@@ -3051,3 +3051,30 @@ button already on the page. The measuring tools are never opened. vdcheck: the c
   ((GM/c²)(1/R − 1/r) and (v² − v_ground²)/2c², times 86,400 s, with v_ground = 465 m/s).
 
 **For GPT:** please check the captions and the readings on screen against these numbers (the videos are mp4, no WebGL needed).
+## 2026-10-25 · Claude · How this works videos: Doppler, Sound Intensity, Room Acoustics (both worksheets), Ultrasound
+
+Acoustics rollout of the Pendulum pilot (one dark theme video per worksheet, `tools/howto/<name>.cjs` on `lib.cjs`, composed with
+`compose.py`), recorded with the How this works button on the page. Each shows the first measurement of its own worksheet; every
+number on screen comes from the run and was checked by hand. The videos are silent and no step needs sound. No measuring tools.
+
+- Doppler (`doppler.mp4`, 19.3 s, 1.7 MB): Ambulance passing as the demo opens (30 m/s, 700 Hz, observer at rest), played and paused
+  while it heads in. Demo: 757 Hz, θ 31.1°, reading 25.698 m/s approaching, f′ 756.66 Hz. By hand: 30 cos 31.1° = 25.69 m/s along the
+  line, f′ = 700/(1 − 25.698/343.2) = 756.66 Hz. The setup chip is only pointed at, since choosing a setup starts the run.
+- Sound Intensity (`sound-intensity.mp4`, 17.7 s, 1.1 MB): Inverse square law, the meter dragged to 0.5 m. Demo 95.0 dB; by hand
+  I = 0.010/(4π × 0.25) = 3.183 × 10⁻³ W/m², β = 95.03 dB.
+- Room Acoustics, Reverberation Time (`room-acoustics.mp4`, 21.9 s, 1.4 MB): bare 9 × 7 × 3 m room, 125 Hz, one clap. Demo T = 13.69 s
+  (T20 from the ray run); Sabine 0.161 × 189/2.22 = 13.71 s, within the stated 1 to 3 % scatter (the key has 13.69 s).
+- Room Acoustics, Anechoic Chamber (`anechoic-chamber.mp4`, 17.7 s, 1.2 MB, script `anechoic-chamber.cjs`): Anechoic chamber setup,
+  0.30 m wedges, 500 Hz, the microphone slider at 0.50 m. Demo 95.2 dB; free field by hand √(Iρc) with ρc = 1.204 × 343.2 gives
+  95.17 dB; wedge α at 500 Hz 1 − (0.1 (286/500)²)² = 0.9989, as shown.
+- Ultrasound (`ultrasound.mp4`, 26.2 s, 1.6 MB): Speed of sound in water, Blind on (the handout asks for it; it hides the predicted
+  echo times), 2.0 cm of water, the cursor dragged near the echo, Zoom, then the fine steps to the peak. Demo 26.67 μs; by hand
+  2 × 0.020/1500 = 26.67 μs.
+- Room Acoustics has two worksheets on one page, so `VD.howTo` got an option (shared lib, nothing else changes): `src`, `poster`
+  and `title` may be functions, read each time the popup opens. Room Acoustics shows the Reverberation Time video or the Anechoic
+  Chamber one by its Measure switch (checked in Chromium: the popup switches source and title both ways; Pendulum unchanged).
+  `demos/lib/README.md` and `tools/howto/README.md` say so.
+- `tools/vdcheck.cjs --only after doppler sound-intensity room-acoustics ultrasound`: 0 problems. No What's new entry (one comes for
+  the whole set).
+
+**For GPT:** please check the five videos' captions and readings against the demos and the figures above.

@@ -927,6 +927,11 @@ table.mat td.num { font-family: var(--font-mono); text-align: right; }
   VD.projector({ onChange: resize });
   tokens(); new ResizeObserver(resize).observe($('scene'));
   const hashP = location.hash.slice(1); applyPreset(PRESETS[hashP] ? hashP : 'bare'); resize();
+  /* How this works: a short video of one sample reading for the worksheet the Measure switch is on, Reverberation Time (a clap in
+     the bare room at 125 Hz) or Anechoic Chamber (the level 0.50 m from the speaker); made by tools/howto/ */
+  const howVid = () => (S.mode === 'decay' ? 'room-acoustics' : 'anechoic-chamber');
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => (S.mode === 'decay' ? 'How this works: Reverberation Time' : 'How this works: Anechoic Chamber') });
   /* the 3D room opens first, except with ?view=plan or on a device that asks to save data or has two cores or fewer */
   if (new URLSearchParams(location.search).get('view') !== 'plan' && window.VD3 && !VD3.lowPower()) setView('3d');
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
