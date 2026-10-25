@@ -2423,6 +2423,7 @@ Steve approved every recommendation in the open items doc (2026-10-25 05:39). Th
 - **Keys (TeacherKeys):** tides, viscometer and free expansion key JSON and PDFs rebuilt; answers/viscometer.md and key/viscometer.html say N_R.
 
 **For GPT to verify:** the free expansion N = 100 fit and the five predicted shares; that no student facing "Re" is left in the viscometer demo or handout.
+
 ## Claude, 2026-10-25: visual pass on the diffusion mode of Gas in a Box
 
 Steve approved item 22 of the open items list: the two gases and a divider mode of `ideal-gas.html`, to the resistivity standard. Pictures and layout only; CORE byte identical, `test_ideal-gas.cjs` passes, vdcheck 0 problems.
