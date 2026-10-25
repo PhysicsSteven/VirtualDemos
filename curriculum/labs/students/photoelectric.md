@@ -12,6 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §6.2. Access for free at https
 
 **Using the demo.**
 
+- The apparatus opens in 3D: drag to turn it, scroll or pinch to zoom, double click to put it back; **Flat** shows the same bench as a drawing. The phototube is drawn 2.2 times its real size, with its plate turned toward you so you can see the electrons leave it. The knobs on the lamp, the monochromator and the supply work the same way in both views.
 - Light of one wavelength, from 100 to 800 nm in 1 nm steps, falls on a clean metal plate in a vacuum tube. The mercury line buttons pick the five lines of a mercury lamp (365, 405, 436, 546 and 577 nm). Light power runs from 0 to 100 µW.
 - The metals and their work functions are cesium 2.14 eV, potassium 2.30 eV, sodium 2.28 eV, calcium 2.87 eV, zinc 4.33 eV, copper 4.70 eV and platinum 5.65 eV.
 - The collector voltage $$V$$ runs from −6 to +4 V in 0.01 V steps; a negative voltage pushes electrons back towards the plate. The picoammeter reads to 0.01 nA below 10 nA (0.1 nA up to 100 nA), so near the stopping voltage it reads to 0.01 nA. One absorbed photon in a thousand frees an electron.

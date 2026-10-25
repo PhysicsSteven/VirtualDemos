@@ -1,11 +1,13 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="root-4 auto-dark dark bar-div-firstchild stage-canvas-focusvisible spin spin-attn formula btnrow seg seg-button seg-button-on inline readout-wide readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled slider-head-output toggles-label toggles-input key key-span swatch projshort-proj-stage phone-chips-button" lang="en">
+<html data-vd-off="root-4 auto-dark dark bar-div-firstchild stage-canvas-focusvisible spin spin-attn formula btnrow inline readout-wide readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage btn-disabled slider-head-output toggles-label toggles-input key key-span swatch projshort-proj-stage phone-chips-button" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -76,8 +78,11 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .units { color: var(--muted); font-size: 0.8rem; }
 .stage { position: relative; min-height: 520px; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); display: grid; grid-template-rows: minmax(0, 58fr) minmax(0, 42fr); }
 .pane + .pane { border-top: 1px solid var(--line); }
-#app { touch-action: none; outline: none; }
-.stage-ctl { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; }
+#app { touch-action: none; outline: none; position: relative; z-index: 1; }
+#appPane { position: relative; }
+.pe3 { position: absolute; left: 0; top: 0; z-index: 0; }
+.stage-ctl .vmsg { align-self: center; font-size: 0.78rem; color: var(--muted); }
+.stage-ctl { position: absolute; top: 10px; left: 10px; z-index: 2; display: flex; gap: 6px; flex-wrap: wrap; }
 button:focus-visible, input:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .btn { font-weight: 700; }
 .btn.primary { background: var(--ink); color: var(--canvas); border-color: var(--ink); }
@@ -92,7 +97,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
 .toggles input { accent-color: var(--accent); margin: 0; }
 
 @media (max-width: 820px) {
-  .chips button, .btn, .proj { min-height: 36px; }
+  .chips button, .btn, .seg button, .proj { min-height: 36px; }
   input[type="range"] { min-height: 28px; }
   html, body { height: auto; }
   .stage { height: 88vh; min-height: 700px; }
@@ -123,6 +128,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         <div class="stage-ctl">
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="reset">Reset</button>
+          <div class="seg dimseg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+          <span class="vmsg" id="viewMsg" aria-live="polite"></span>
         </div>
       </div>
       <div class="pane" id="chartPane">
@@ -453,6 +460,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const hot = (id) => (drag && drag.id === id) || (!drag && hoverId === id);
   function drawApp() {
     if (!AW || !AH || !T) return;
+    if (use3()) { drawApp3(); return; }
     const c = actx, L = lay(), ps = L.ps, t = L.tube, s = L.src;
     c.setTransform(dpr, 0, 0, dpr, 0, 0);
     c.fillStyle = T.canvas; c.fillRect(0, 0, AW, AH);
@@ -1109,7 +1117,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
     if (drag) { dragTo(ev); return; }
     const h = handleAt(ev);
     hoverId = h ? h.id : null;
-    appC.style.cursor = h ? (h.sw ? 'pointer' : 'grab') : 'default';
+    appC.style.cursor = h ? (h.sw ? 'pointer' : 'grab') : (use3() ? 'grab' : 'default');
   });
   appC.addEventListener('pointerdown', (ev) => {
     const h = handleAt(ev);
@@ -1124,7 +1132,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   const endDrag = (ev) => {
     if (!drag) return;
     const id = ev && ev.type === 'pointerup' && VD.tap(ev, true) ? drag.id : null;
-    drag = null; hoverId = null; appC.style.cursor = 'default';
+    drag = null; hoverId = null; appC.style.cursor = use3() ? 'grab' : 'default';
     /* a click or tap on a knob that did not turn it: type the value, through the sidebar slider behind it */
     if (id) VD.knobAt($(id), ev.clientX, ev.clientY, { unit: { lam: 'nm', pow: 'µW', volt: 'V' }[id], back: appC });
   };
@@ -1161,6 +1169,234 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { tokens(); drawApp(); }); } catch (_) {}
   new MutationObserver(() => { tokens(); drawApp(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
+  // ---------- the apparatus in 3D (three.js through lib/vd3.js and lib/vd3kit.js); Flat keeps the drawing above (or ?view=flat) ----------
+  /* The same bench in three dimensions, in meters and close to the size of a teaching apparatus: lamp and monochromator on an
+     optical rail, the phototube on its socket, the picoammeter stacked on the voltage supply. The photons, electrons and glints are
+     the ones step() moves for the flat drawing, placed on the real half cylinder cathode and the anode wire on its axis. The two
+     instrument faces are the flat drawings (drawPico, drawSupply) painted onto the cases, so both views show the same numbers, and
+     the knobs work the same way: drag to turn, click or tap to type. Words stay on the canvas on top. */
+  const P3 = { o: { th: -Math.PI / 2 + 0.2, ph: 1.2, zoom: 1 }, narrow: null };
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d());
+  const ZB = 0.097, RC = 0.014, AX = -0.004, ZT = 0.127, ZL = 0.067;   /* beam height, cathode radius, anode x, cathode top and bottom (m) */
+  const TS = 2.2, ZW = ZB * TS;                                         /* the tube is drawn 2.2 times its size; ZW is the beam height in the scene */
+  const LX = -0.5, LW = 0.1, LD = 0.1, LH = 0.14, MX = -0.31, MW = 0.18, MD = 0.12, MH = 0.095, XF = -0.205;   /* lamp, monochromator, filter holder (m) */
+  const XS = -0.19, XE = (AX + RC * 0.62) * TS, XG = -0.021 * TS;      /* snout exit, where the beam meets the cathode, and the glass (scene m) */
+  const IW = 0.22, IH = 0.11, ID = 0.17, FW = 320, FH = 160;            /* instrument case (m) and its face drawing (px) */
+  const YAW = 1.0;   /* the cathode is turned this far toward the viewer, so its hollow can be seen; the light still falls inside it */
+  const cath0 = (th, zf) => [AX + RC * Math.cos(th + YAW), RC * Math.sin(th + YAW), ZT + zf * (ZL - ZT)];   /* in the tube's own frame */
+  const cath3 = (th, zf) => cath0(th, zf).map((v) => v * TS), anode3 = (zf) => [AX * TS, 0, (ZT + zf * (ZL - ZT)) * TS];
+  function glowTex() {
+    const cv = document.createElement('canvas'); cv.width = cv.height = 64; const c = cv.getContext('2d'), gr = c.createRadialGradient(32, 32, 0, 32, 32, 32);
+    gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.3, 'rgba(255,255,255,0.6)'); gr.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = gr; c.fillRect(0, 0, 64, 64);
+    return new THREE.CanvasTexture(cv);
+  }
+  const lightCol = (l) => l < 380 ? '#8b5cf6' : lamColor(l, 1).replace(/^rgba\((\d+),(\d+),(\d+),1\)$/, 'rgb($1,$2,$3)');
+  function init3D() {
+    const pane = $('appPane'), S3 = VD3K.stage(pane, { before: appC, shadow: 0.5, fov: 28, fogAt: [1.7, 3.4] }); if (!S3) return false;
+    S3.el.className = 'pe3';
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c);
+    const mesh = (geo, m, cast = true) => { const x = new THREE.Mesh(geo, m); x.castShadow = cast; x.receiveShadow = true; return x; };
+    const cyl = (r, h, m, seg = 24) => mesh(new THREE.CylinderGeometry(r, r, h, seg), m);
+    sc.add(VD3K.bench(S3, { w: 3.2, d: 2, y: 0.3 }), VD3K.backdrop(S3, { r: 1.4, h: 1, y: -0.62 }));
+    const alu = M({ roughness: 0.35, metalness: 0.7 }, ['#c9d0d8', '#8a949f']), aluDk = M({ roughness: 0.45, metalness: 0.6 }, ['#8f99a5', '#5d6670']);
+    const lampM = M({ roughness: 0.55, metalness: 0.3 }, ['#4b535e', '#3a414b']), caseM = M({ roughness: 0.6, metalness: 0.1 }, ['#e1e5ea', '#363e4a']);
+    const black = M({ roughness: 0.5, metalness: 0.2 }, ['#1c1e22', '#16181b']), knobM = M({ roughness: 0.4, metalness: 0.35 }, ['#2c323b', '#2a3039']);
+    const white = new THREE.MeshBasicMaterial({ color: 0xf2f4f7 });
+    const g = { S3 };
+
+    /* optical rail, carriers and posts */
+    sc.add(VD3K.box(0.41, 0.04, 0.014, aluDk, -0.375, 0, 0));
+    const post = (x, z1) => { sc.add(VD3K.box(0.05, 0.06, 0.008, aluDk, x, 0, 0.014)); sc.add(VD3K.rod([x, 0, 0.02], [x, 0, z1], 0.006, alu)); };
+    /* lamp housing: vents that glow with the light power, a chimney, a pilot lamp and the power knob */
+    const LZ = ZW - 0.06;
+    post(LX, LZ); sc.add(VD3K.box(LW, LD, LH, lampM, LX, 0, LZ), VD3K.box(LW * 0.5, LD * 0.5, 0.02, lampM, LX, 0, LZ + LH));
+    g.vent = new THREE.MeshBasicMaterial({ color: 0x0d0f12 });
+    for (let i = 0; i < 4; i++) { const v = mesh(new THREE.BoxGeometry(LW * 0.62, 0.002, 0.005), g.vent, false); v.position.set(LX, -LD / 2 - 0.0008, LZ + LH - 0.02 - i * 0.012); sc.add(v); }
+    g.pilot = new THREE.MeshBasicMaterial({ color: 0x4a3a1c }); const pl = mesh(new THREE.SphereGeometry(0.0035, 12, 8), g.pilot, false); pl.position.set(LX - LW * 0.3, -LD / 2, LZ + 0.016); sc.add(pl);
+    sc.add(VD3K.cable([LX + 0.02, LD / 2, LZ + 0.02], [LX + 0.05, 0.25, 0], { color: 0x1d1f23, sag: 0.03 }));
+    /* coupling tube and monochromator, with a counter that shows the wavelength, the wavelength knob, the exit snout and filter holder */
+    const MZ = ZW - MH / 2;
+    post(MX, MZ); sc.add(VD3K.box(MW, MD, MH, caseM, MX, 0, MZ));
+    const cpl = cyl(0.014, MX - MW / 2 - (LX + LW / 2) + 0.004, lampM); cpl.rotation.z = Math.PI / 2; cpl.position.set((MX - MW / 2 + LX + LW / 2) / 2, 0, ZW); sc.add(cpl);
+    const sn = cyl(0.011, XS - (MX + MW / 2), lampM); sn.rotation.z = Math.PI / 2; sn.position.set((XS + MX + MW / 2) / 2, 0, ZW); sc.add(sn);
+    sc.add(VD3K.box(0.004, 0.034, 0.04, aluDk, XF, 0, ZW - 0.02));
+    g.filterM = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.85 }); g.filter = mesh(new THREE.BoxGeometry(0.0046, 0.026, 0.03), g.filterM, false); g.filter.position.set(XF, 0, ZW); sc.add(g.filter);
+    const cnt = document.createElement('canvas'); cnt.width = 256; cnt.height = 72; g.cnt = { cv: cnt, tex: new THREE.CanvasTexture(cnt), key: '' };
+    const cp = mesh(new THREE.PlaneGeometry(0.07, 0.07 * 72 / 256), new THREE.MeshBasicMaterial({ map: g.cnt.tex }), false); cp.rotation.x = Math.PI / 2; cp.position.set(MX, -MD / 2 - 0.0008, MZ + MH - 0.022); sc.add(cp);
+    /* a knob: a knurled cylinder with a white pointer line on its face, turned by rotation.y (the flat drawing's angle) */
+    const knob3 = (r) => { const k = new THREE.Group(), body = cyl(r, 0.012, knobM, 32), skirt = cyl(r * 1.12, 0.003, black, 32), ln = mesh(new THREE.BoxGeometry(r * 0.62, 0.001, r * 0.13), white, false);
+      body.position.y = -0.006; skirt.position.y = -0.0015; ln.position.set(r * 0.48, -0.0122, 0); k.add(body, skirt, ln); k.r = r; return k; };
+    g.kLam = knob3(0.016); g.kLam.position.set(MX, -MD / 2, MZ + 0.033); sc.add(g.kLam);
+    g.kPow = knob3(0.0135); g.kPow.position.set(LX + 0.012, -LD / 2, LZ + 0.034); sc.add(g.kPow);
+    /* the light: a soft cone from the exit slit to the cathode, colored by the wavelength */
+    /* the cone stops at the glass, so the cathode and the electrons inside stay clear; inside, the light shows on the coating */
+    const bg = new THREE.CylinderGeometry(0.008 + 0.042 * (XG - XS) / (XE - XS), 0.008, XG - XS, 32, 1, true); bg.rotateZ(-Math.PI / 2); bg.scale(1, 0.55, 1); bg.translate((XS + XG) / 2, 0, ZW);
+    g.beamM = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0, depthWrite: false, side: THREE.DoubleSide }); g.beam = new THREE.Mesh(bg, g.beamM); g.beam.renderOrder = 3; sc.add(g.beam);
+
+    /* the phototube: plate, socket, glass envelope, stem, cathode (a half cylinder coated with the metal), anode wire and top cap,
+       built at its own size and drawn TS times larger */
+    const tube = new THREE.Group(); tube.scale.setScalar(TS); sc.add(tube);
+    tube.add(VD3K.box(0.08, 0.08, 0.006, aluDk, 0, 0, 0));
+    const sock = cyl(0.025, 0.044, black, 32); sock.rotation.x = Math.PI / 2; sock.position.set(0, 0, 0.006 + 0.022); tube.add(sock);
+    for (let i = 0; i < 4; i++) { const a = i * Math.PI / 2 + Math.PI / 4, k = cyl(0.0026, 0.004, alu, 10); k.rotation.x = Math.PI / 2; k.position.set(0.0256 * Math.cos(a), 0.0256 * Math.sin(a), 0.03); tube.add(k); }
+    const glass = VD3K.glass(S3, { r: 0.022, len: 0.1, axis: 'z', opacity: 0.14 }); glass.position.z = 0.099; tube.add(glass);
+    const stem = mesh(new THREE.CylinderGeometry(0.0045, 0.009, 0.014, 20), M({ roughness: 0.2, metalness: 0, transparent: true, opacity: 0.45 }, ['#bcd2e2', '#7f9cb2']), false); stem.rotation.x = Math.PI / 2; stem.position.set(0, 0, 0.056); tube.add(stem);
+    const getter = mesh(new THREE.SphereGeometry(0.0215, 24, 10, -0.6, 1.5, 0.15, 0.7), M({ roughness: 0.25, metalness: 0.9, transparent: true, opacity: 0.55, side: THREE.DoubleSide }, ['#8a919b', '#a9b0b9']), false);
+    getter.rotation.x = Math.PI / 2; getter.position.z = 0.149; tube.add(getter);
+    const cg = new THREE.CylinderGeometry(RC, RC, ZT - ZL, 40, 1, true, Math.PI / 2 - TH + YAW, 2 * TH); cg.rotateX(Math.PI / 2); cg.translate(AX, 0, (ZT + ZL) / 2);
+    g.coat = new THREE.MeshStandardMaterial({ roughness: 0.38, metalness: 0.55, side: THREE.DoubleSide, emissive: 0x000000 }); tube.add(mesh(cg, g.coat, false));
+    const wire = M({ roughness: 0.3, metalness: 0.85 }, ['#aab3bd', '#c3cad2']);
+    for (const s of [-1, 1]) tube.add(VD3K.rod([0.002 * s, 0, 0.06], cath0(s * TH, 1.06), 0.0007, wire));
+    tube.add(VD3K.rod([0, 0, 0.06], [AX, 0, ZL - 0.004], 0.0007, wire));
+    g.anodeM = new THREE.MeshStandardMaterial({ roughness: 0.25, metalness: 0.85, color: 0xd6dbe1, emissive: 0x000000 });
+    tube.add(VD3K.rod([AX, 0, ZL - 0.004], [AX, 0, 0.142], 0.0011, g.anodeM), VD3K.rod([AX, 0, 0.142], [0, 0, 0.17], 0.0009, wire));
+    const cap = cyl(0.005, 0.009, alu, 20); cap.rotation.x = Math.PI / 2; cap.position.z = 0.1745; tube.add(cap);
+
+    /* the picoammeter on top of the voltage supply; their faces are the flat drawings on a canvas */
+    const rack = new THREE.Group(); sc.add(rack); g.rack = rack;
+    const face = (z0) => {
+      const cv = document.createElement('canvas'); cv.width = FW * 2; cv.height = FH * 2;
+      const f = { cv, ctx: cv.getContext('2d'), tex: new THREE.CanvasTexture(cv), key: '', z0, knobs: [] };
+      f.tex.anisotropy = S3.r.capabilities.getMaxAnisotropy();
+      rack.add(VD3K.box(IW, ID, IH - 0.004, caseM, 0, 0, z0));
+      const p = mesh(new THREE.PlaneGeometry(IW * 0.985, (IH - 0.004) * 0.98), new THREE.MeshBasicMaterial({ map: f.tex }), false);
+      p.rotation.x = Math.PI / 2; p.position.set(0, -ID / 2 - 0.0006, z0 + (IH - 0.004) / 2); rack.add(p); f.plane = p; return f;
+    };
+    g.sup = face(0.004); g.pico = face(IH + 0.002);
+    for (const [x, y] of [[-1, -1], [1, -1], [-1, 1], [1, 1]]) rack.add(VD3K.box(0.016, 0.016, 0.004, black, x * (IW / 2 - 0.02), y * (ID / 2 - 0.02), 0));
+    g.kVolt = knob3(0.01); rack.add(g.kVolt);
+    g.bat = cyl(0.0022, 0.016, alu, 12); rack.add(g.bat);
+    g.photons = []; const tex = glowTex();
+    for (let i = 0; i < 90; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0 })); sp.renderOrder = 4; sc.add(sp); g.photons.push(sp); }
+    g.glints = [];
+    for (let i = 0; i < 40; i++) { const sp = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false, opacity: 0, color: 0x96c8ff })); sp.renderOrder = 4; sc.add(sp); g.glints.push(sp); }
+    g.dots = VD3K.particles(S3, { n: 600, r: 0.0024, color: '#2b60b5', emissive: '#1a4aa8', seg: 8 }); sc.add(g.dots);
+    g.cables = null;
+    g3 = g;
+    appC.addEventListener('wheel', (e) => { if (!use3()) e.stopImmediatePropagation(); }, { passive: true });
+    appC.addEventListener('dblclick', (e) => { if (!use3() || handleAt(e)) e.stopImmediatePropagation(); });
+    VD3.orbit(appC, P3.o, () => { if (!running) drawApp(); }, { grab: (e) => !use3() || !!handleAt(e), phMin: 0.45, phMax: 1.5, zMin: 0.6, zMax: 2.8 });
+    return true;
+  }
+  /* face coordinates (px on the drawing) to a point in the scene */
+  function faceAt(f, px, py, out = 0) {
+    const r = g3.rack.position, h = IH - 0.004;
+    return [r.x + (px / FW - 0.5) * IW * 0.985, r.y - ID / 2 - 0.0006 - out, r.z + f.z0 + h / 2 + (0.5 - py / FH) * h * 0.98];
+  }
+  function layout3(narrow) {
+    const g = g3; if (P3.narrow === narrow) return; P3.narrow = narrow;
+    /* phones: the instruments stand on the bench in front of the light source, so the picture is less wide */
+    if (narrow) g.rack.position.set(-0.2, -0.36, 0); else g.rack.position.set(0.255, 0.02, 0);
+    g.rack.rotation.z = 0;
+    if (g.cables) g.S3.dispose(g.cables);
+    const cb = g.cables = new THREE.Group(); g.S3.scene.add(cb);
+    const bnc = faceAt(g.pico, FW - 3 - 26 * 1, 3 + (FH - 9) - 20, 0.004), pa = faceAt(g.sup, 3 + (FW - 8) - 46, 3 + (FH - 9) - 20, 0.004), pk = faceAt(g.sup, 3 + (FW - 8) - 22, 3 + (FH - 9) - 20, 0.004);
+    const pr = faceAt(g.pico, FW - 3 - 60, 3 + (FH - 9) - 14, 0.004);
+    const fr = (p, dy, dz) => [p[0], p[1] + dy, p[2] + dz];
+    if (narrow) {
+      cb.add(VD3K.cable([0, 0, 0.18 * TS], bnc, { color: 0x26292e, rad: 0.0028, via: [[0.01, -0.02, 0.24], [0.02, -0.2, 0.2], fr(bnc, -0.03, 0.01)] }));
+      cb.add(VD3K.cable([0.03, -0.035, 0.03], pk, { color: 0x1d1f23, rad: 0.0026, via: [[0.03, -0.1, 0.004], fr(pk, -0.05, -0.04)] }));
+    } else {
+      cb.add(VD3K.cable([0, 0, 0.18 * TS], bnc, { color: 0x26292e, rad: 0.0028, via: [[0.012, 0, 0.235], [0.12, -0.05, 0.25], fr(bnc, -0.04, 0.02)] }));
+      cb.add(VD3K.cable([0.03, -0.035, 0.03], pk, { color: 0x1d1f23, rad: 0.0026, via: [[0.07, -0.1, 0.004], fr(pk, -0.05, -0.05)] }));
+    }
+    cb.add(VD3K.cable(pr, pa, { color: 0xc2362b, rad: 0.0024, via: [fr(pr, -0.03, -0.01), fr(pa, -0.04, 0.02)] }));
+  }
+  /* repaint a face only when what it shows changes */
+  function paintFace(f, which, key) {
+    if (f.key === key) return; f.key = key;
+    const c = f.ctx, keep = knobs; knobs = [];
+    c.setTransform(2, 0, 0, 2, 0, 0); c.fillStyle = T.caseDk; c.fillRect(0, 0, FW, FH);
+    const b = { x: 3, y: 3, w: FW - 8, h: FH - 9 };
+    if (which === 'pico') drawPico(c, b, 1, false);
+    else drawSupply(c, b, 1, false, { a: [b.x + b.w - 46, b.y + b.h - 20], k: [b.x + b.w - 22, b.y + b.h - 20] });
+    f.knobs = knobs; knobs = keep; f.tex.needsUpdate = true;
+  }
+  function update3(now) {
+    const g = g3, on = S.pow > 0, uv = S.lam < 380, ir = S.lam > 750, col = new THREE.Color(lightCol(S.lam));
+    /* light: beam, filter, the glow on the coating, vents and pilot lamp */
+    g.beam.visible = on; g.beamM.color.copy(col); g.beamM.opacity = (uv || ir ? 0.05 : 0.07) + (uv || ir ? 0.1 : 0.26) * S.pow / 100;
+    const hg = HG.includes(Math.round(S.lam)) && S.lam === Math.round(S.lam);
+    g.filter.visible = hg; if (hg) g.filterM.color.set(uv ? '#3a2b4d' : lightCol(S.lam));
+    g.coat.color.set(COAT[S.metal] || '#c0c4c8');
+    g.coat.emissive.copy(col).multiplyScalar(on ? (uv || ir ? 0.05 : 0.16) * (0.3 + 0.7 * S.pow / 100) : 0);
+    const gl = on ? 0.25 + 0.6 * S.pow / 100 : 0; g.vent.color.setRGB(0.05 + 0.87 * gl, 0.06 + 0.88 * gl, 0.07 + 0.93 * gl);
+    g.pilot.color.set(on ? '#ffb02e' : '#4a3a1c');
+    /* the wavelength counter */
+    const ck = Math.round(S.lam) + '|' + T.mono;
+    if (g.cnt.key !== ck) { g.cnt.key = ck; const c = g.cnt.cv.getContext('2d'); c.fillStyle = '#0e1013'; c.fillRect(0, 0, 256, 72); c.fillStyle = '#f4f1e8'; c.fillRect(8, 8, 240, 56);
+      c.fillStyle = '#16181c'; c.font = `600 40px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(Math.round(S.lam)).padStart(3, '0') + ' nm', 128, 38);
+      c.fillStyle = 'rgba(0,0,0,0.12)'; c.fillRect(8, 35, 240, 2); g.cnt.tex.needsUpdate = true; }
+    /* knobs: the same angle as the flat drawing, π(0.75 + 1.5 f) measured with y down */
+    g.kLam.rotation.y = Math.PI * (0.75 + 1.5 * (S.lam - 100) / 700); g.kPow.rotation.y = Math.PI * (0.75 + 1.5 * S.pow / 100);
+    /* instrument faces */
+    paintFace(g.pico, 'pico', [needle.toFixed(3), meterFS, fmtI(current(S.V)), T.case, T.face, T.lcd, T.mono].join('|'));
+    paintFace(g.sup, 'sup', [S.V, pol, hot('volt'), hot('rev'), T.case, T.mono].join('|'));
+    const kv = g.sup.knobs.find((k) => k.id === 'volt'), sw = g.sup.knobs.find((k) => k.id === 'rev');
+    if (kv) { const p = faceAt(g.sup, kv.x, kv.y), r = g.rack.position; g.kVolt.position.set(p[0] - r.x, p[1] - r.y, p[2] - r.z); const rr_ = kv.r / FW * IW * 0.985; g.kVolt.scale.setScalar(rr_ / g.kVolt.r); g.kVolt.rotation.y = Math.PI * (0.75 + 1.5 * Math.abs(S.V) / 6); }
+    if (sw) { const p = faceAt(g.sup, sw.x, sw.y), r = g.rack.position, up = (S.V !== 0 ? S.V > 0 : pol > 0); g.bat.position.set(p[0] - r.x, p[1] - r.y - 0.007, p[2] - r.z + (up ? 0.003 : -0.003)); g.bat.rotation.x = up ? 0.5 : -0.5; }
+    /* photons, electrons, glints */
+    let n = 0;
+    if (layers.photons) for (const p of photons) { if (n >= g.photons.length) break; const sp = g.photons[n++], q = cath3(p.th, p.zf), z0 = ZW + p.u * 0.014;
+      sp.position.set(XS + (q[0] - XS) * p.t, q[1] * p.t, z0 + (q[2] - z0) * p.t); sp.scale.set(0.008, 0.008, 1); sp.material.color.copy(col); sp.material.opacity = uv || ir ? 0.75 : 0.95; }
+    for (; n < g.photons.length; n++) g.photons[n].material.opacity = 0;
+    const ec = new THREE.Color(T.dark ? '#7fb0ff' : '#2f6fe0'); let m = 0;
+    for (const e of electrons) { const a = cath3(e.th, e.zf), b = anode3(e.zf), f = Math.max(0, Math.min(1, e.s)); g.dots.put(m++, a[0] + (b[0] - a[0]) * f, a[1] + (b[1] - a[1]) * f, a[2] + (b[2] - a[2]) * f, ec); }
+    g.dots.show(m); g.dots.done();
+    let k = 0;
+    for (const gl_ of glints) { if (k >= g.glints.length) break; const sp = g.glints[k++], q = anode3(gl_.zf), s = 0.006 + 0.01 * (1 - gl_.a); sp.position.set(q[0], q[1], q[2]); sp.scale.set(s, s, 1); sp.material.opacity = 0.8 * gl_.a; }
+    for (; k < g.glints.length; k++) g.glints[k].material.opacity = 0;
+    g.anodeM.emissive.setRGB(0.25 * flash, 0.45 * flash, 0.8 * flash);
+  }
+  function drawApp3() {
+    const g = g3, S3 = g.S3, c = actx, ps = labScale();
+    S3.size(AW, AH);
+    const asp = AW / Math.max(1, AH), narrow = asp < 1.25;
+    layout3(narrow);
+    if (narrow) S3.place(P3.o, [-0.14, -0.15, 0.16], 1.42 * Math.max(1, 1.0 / asp));
+    else S3.place(P3.o, [-0.09, 0, 0.165], 1.08 * Math.max(1, 2.3 / asp));
+    update3(); S3.render();
+    c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, AW, AH);
+    const Q = (q) => S3.project(q);
+    /* the knobs, where the pointer code looks for them: centre and radius on the screen */
+    knobs = [];
+    const put = (id, k3, extra) => { const p = new THREE.Vector3(); k3.getWorldPosition(p); const e = p.clone(); e.x += k3.r * k3.scale.x;
+      const a = Q([p.x, p.y, p.z]), b = Q([e.x, e.y, e.z]), r = Math.max(8, Math.hypot(b[0] - a[0], b[1] - a[1])); const h = { id, x: a[0], y: a[1], r, ...extra }; knobs.push(h); return h; };
+    const kl = put('lam', g.kLam), kp = put('pow', g.kPow); put('volt', g.kVolt);
+    const sw = g.sup.knobs.find((k) => k.id === 'rev');
+    if (sw) { const a = Q(faceAt(g.sup, sw.x, sw.y)), b = Q(faceAt(g.sup, sw.x + sw.r, sw.y)); knobs.push({ id: 'rev', x: a[0], y: a[1], r: Math.max(12, Math.hypot(b[0] - a[0], b[1] - a[1])), sw: true }); }
+    for (const h of [kl, kp]) { const ht = hot(h.id); if (ht) { c.fillStyle = T.accent; c.globalAlpha = 0.18; c.beginPath(); c.arc(h.x, h.y, h.r + 7 * ps, 0, 7); c.fill(); c.globalAlpha = 1; }
+      c.strokeStyle = T.accent; c.lineWidth = (ht ? 3 : 1.6) * ps; c.globalAlpha = ht ? 1 : 0.85; c.beginPath(); c.arc(h.x, h.y, h.r + 3.5 * ps, Math.PI * 0.75, Math.PI * 2.25); c.stroke(); c.globalAlpha = 1; }
+    /* field arrows between the cathode and the anode when V is not zero, as in Flat */
+    if (Math.abs(S.V) > 0.05) {
+      c.save(); c.globalAlpha = Math.min(0.55, 0.15 + Math.abs(S.V) / 10); c.strokeStyle = T.muted; c.fillStyle = T.muted; c.lineWidth = 1 * ps;
+      for (const zf of [0.2, 0.5, 0.8]) {
+        const a = Q(anode3(zf)), b = Q(cath3(0, zf)), xa = a[0] + (b[0] - a[0]) * 0.3, ya = a[1] + (b[1] - a[1]) * 0.3, xb = a[0] + (b[0] - a[0]) * 0.7, yb = a[1] + (b[1] - a[1]) * 0.7;
+        c.beginPath(); c.moveTo(xa, ya); c.lineTo(xb, yb); c.stroke();
+        const [hx, hy, tx, ty] = S.V > 0 ? [xb, yb, xa, ya] : [xa, ya, xb, yb], an = Math.atan2(hy - ty, hx - tx), s = 6 * ps;
+        c.beginPath(); c.moveTo(hx, hy); c.lineTo(hx - s * Math.cos(an - 0.5), hy - s * Math.sin(an - 0.5)); c.lineTo(hx - s * Math.cos(an + 0.5), hy - s * Math.sin(an + 0.5)); c.closePath(); c.fill();
+      }
+      c.restore();
+    }
+    /* labels, on halos */
+    const lb = (txt, q, dx, dy, col, al = 'center', bold = false, sz = 10.5) => { const p = Q(q); label(c, txt, p[0] + dx * ps, p[1] + dy * ps, col, al, 'middle', bold, ps, sz); };
+    const nm = METALS.find((m) => m[0] === S.metal)[1];
+    lb('anode (collector)', [0, 0, 0.18 * TS], 0, -14, T.ink, 'center', false, 9.5);
+    lb(`${narrow ? S.metal : nm} cathode (emitter)`, [XG, -0.02, ZL * TS], -8, 4, T.ink, 'right', true, narrow ? 9.5 : 10.5);
+    lb(narrow ? 'phototube' : 'evacuated phototube', [0, -0.026 * TS, 0.006], 0, 10, T.muted, 'center');
+    if (narrow) lb('lamp + mono', [MX, 0, ZW + MH / 2], 0, -12, T.muted, 'center'); else lb('lamp + monochromator', [(LX + MX) / 2, -0.065, 0.014], 0, 12, T.muted, 'center');
+    if (!narrow) { lb('λ', [MX - 0.016, -MD / 2, ZW - MH / 2 + 0.033], -12, 0, T.muted, 'right', true, 10); lb('power', [LX + 0.012, -LD / 2, ZW - 0.06 + 0.034 + 0.0135], 0, -12, T.muted, 'center', false, 9); }
+    if (S.pow > 0 && (S.lam < 380 || S.lam > 750)) lb(S.lam < 380 ? 'UV, invisible' : 'IR, invisible', [(XS + XE) / 2, 0, ZW + 0.035], 0, -6, S.lam < 380 ? '#8b5cf6' : T.muted, 'center', true);
+    const hgl = HG.includes(Math.round(S.lam)) && S.lam === Math.round(S.lam);
+    if (hgl) lb(`Hg ${Math.round(S.lam)} nm filter`, [XF, 0, ZW + 0.024], 0, -10, T.ink, 'center', false, 9.5);
+    label(c, narrow ? `tube drawn ${TS}× its size · drag to turn` : `phototube drawn ${TS} times its size · electrons slowed enormously · drag to turn, a knob to set it`, 12 * ps, AH - 8 * ps, T.muted, 'left', 'bottom', false, ps, 9.5);
+    if (Kmax() <= 0 && S.pow > 0) {
+      if (narrow) { lb('hf < φ', [0.024 * TS, 0, ZW + 0.03], 6, -8, T.pos, 'left', true, 12); lb('no electrons', [0.024 * TS, 0, ZW + 0.03], 6, 8, T.pos, 'left', true, 12); }
+      else lb('hf < φ : no electrons', [0.024 * TS, 0, ZW + 0.035], 6, 0, T.pos, 'left', true, 13);
+    }
+  }
+
   // ---------- loop ----------
   let last = performance.now(), lastRead = 0, lastNeedle = performance.now();
   function loop(now) {
@@ -1183,6 +1419,9 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   setRunning(running);
   if (!running) { for (let i = 0; i < 90; i++) step(1 / 60); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { dirtyCharts = true; });
+  window.__pe = { P3, S, get g3() { return g3; }, get knobs() { return knobs; }, get electrons() { return electrons; }, applyPreset, drawApp, step };
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, status: (m) => { $('viewMsg').textContent = m; },
+    change: (on) => { if (g3) g3.S3.el.hidden = !on; appC.style.touchAction = on ? 'pan-y' : ''; appC.style.cursor = on ? 'grab' : 'default'; drawApp(); } });
   requestAnimationFrame(loop);
 })();
 </script>
