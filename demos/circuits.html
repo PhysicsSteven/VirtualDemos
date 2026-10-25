@@ -5224,7 +5224,11 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     tb.tHead.innerHTML = `<tr><th>#</th>${keys.map((k) => `<th>${(colInfo.get(k) || { head: escH(k) }).head}</th>`).join('')}<th><span class="sr">Delete</span></th></tr>`;
     const body = tb.tBodies[0];
     if (!rows.length) { body.innerHTML = `<tr><td class="empty" colspan="${keys.length + 2}">${empty}</td></tr>`; return; }
-    body.innerHTML = rows.map((r, i) => `<tr title="${escH(r.tip || '')}"><td class="n">${i + 1}</td>${keys.map((k) => `<td><input aria-label="${escH((colInfo.get(k) || { aria: k }).aria)}, row ${i + 1}" data-i="${i}" data-k="${escH(k)}" value="${escH(r.cells[k] ?? '')}" inputmode="decimal" spellcheck="false"></td>`).join('')}<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('');
+    /* each column's boxes are wide enough for its longest value (a microampere reading is 0.00000171), at least the shared 7ch;
+       a table wider than the sidebar scrolls sideways in its .twrap */
+    const wid = new Map(keys.map((k) => [k, Math.max(7, ...rows.map((r) => String(r.cells[k] ?? '').length))]));
+    const wst = (k) => (wid.get(k) > 7 ? ` style="width: calc(${wid.get(k)}ch + 6px)"` : '');
+    body.innerHTML = rows.map((r, i) => `<tr title="${escH(r.tip || '')}"><td class="n">${i + 1}</td>${keys.map((k) => `<td><input aria-label="${escH((colInfo.get(k) || { aria: k }).aria)}, row ${i + 1}" data-i="${i}" data-k="${escH(k)}" value="${escH(r.cells[k] ?? '')}" inputmode="decimal" spellcheck="false"${wst(k)}></td>`).join('')}<td><button type="button" data-del="${i}" aria-label="Delete row ${i + 1}">×</button></td></tr>`).join('');
   }
   const setupName = () => { const m = meta(); return m ? m.name + (S.edited ? ' (rewired)' : '') : 'own circuit'; };
   // the part values that set up a reading, SI units in the key
@@ -5706,6 +5710,12 @@ select.pick:focus-visible { outline: 2px solid var(--accent); outline-offset: 2p
     byName(n) { return els.find((e) => e.name === n); }
   };
 
+  /* How this works: a short video of one sample reading for the worksheet that Export would send the current readings to (the
+     same choice as wsDC, wsTime and wsAC: by mode, by the circuit on the board and by the worksheet link that opened the page);
+     made by tools/howto/ */
+  const howWs = () => (S.mode === 'dc' ? wsDC() : S.mode === 'time' ? wsTime() : { ws: 'ac-circuits', ...wsAC() });
+  VD.howTo({ src: () => `media/how-this-works/${howWs().ws}.mp4`, poster: () => `media/how-this-works/${howWs().ws}.jpg`,
+    title: () => `How this works: ${howWs().wsName}` });
   tokens();
   { const p = fromHash() || 'series'; S.mode = PRESETS[p].mode; showMode(); applyPreset(p, true); }
   setRunning(!reduce); $('rmotion').checked = reduce;

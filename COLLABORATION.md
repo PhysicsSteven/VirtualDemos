@@ -3142,3 +3142,36 @@ tools appear. Every reading on screen comes from the run and was checked by hand
 vdcheck `--only after`: 0 problems on all four. No What's new entry (one comes for the whole set).
 
 **For GPT:** please check the four videos' captions and readings against the demos and the figures above.
+
+## 2026-10-25 · Claude · How this works videos: Circuits (all seven worksheets)
+
+Physics II, circuits group, following the Pendulum recipe (`tools/howto/README.md`). `demos/circuits.html` gets `VD.howTo` in the
+function form through `howWs()`, which reuses the demo's own export routing (`wsDC`, `wsTime`, `wsAC`), so the button plays the video
+for the worksheet that Export to worksheet would fill, and the popup is titled with that worksheet's name. Scripts are
+`tools/howto/<handout>.cjs`; videos and posters `demos/media/how-this-works/<handout>.mp4/.jpg`, dark theme. In In time mode the demo
+shows its Tools button, so `rc-circuits.cjs` and `rlc-transients.cjs` hide it with an injected style before the first frame (the
+measuring tools never appear). Every reading on screen comes from the run and was checked by hand:
+
+- DC Circuits (18.1 s): Series bulbs, 6 V, L1 = L2 = 10 Ω; a voltmeter dragged across L2. A1 = A2 = 300 mA, V1 3.00 V.
+  By hand I = 6/(10 + 10) = 0.300 A, V = 0.300 × 10 = 3.00 V (as in the key).
+- RC Circuits (25.1 s): 10 V, 4700 Ω, 100 µF, cursor at 0.100 s. V_C 1.917 V, V_R 8.083 V, I 1.720 mA, W 1.917 mJ, U_C 183.7 µJ,
+  heat 1.733 mJ. By hand τ = 0.47 s, V_C = 10(1 − e^(−0.1/0.47)) = 1.9165 V, I = 8.0835/4700 = 1.7199 mA, W = εCV_C = 1.9165 mJ,
+  U_C = ½CV_C² = 0.18366 mJ, heat = W − U_C = 1.7329 mJ.
+- RLC Transients (23.0 s): LC oscillation, 10 µF at 10 V, 100 mH, cursor at 1.56 ms. V_C 108.0 mV, I_L 99.99 mA, U_C 58.28 nJ,
+  U_L 499.9 µJ. By hand ω = 1/√(LC) = 1000 rad/s, V_C = 10 cos 1.56 = 0.10796 V, I_L = 10√(C/L) sin 1.56 = 0.099994 A (the key's
+  second row; its first row is t = 0).
+- AC Circuits (21.0 s): Resistor only, 100 Ω, 10 V peak, 100 Hz. I0 100.0 mA, Irms 70.71 mA, φ 0.0°, P 500.0 mW. By hand
+  Irms = 10/100/√2 = 70.71 mA, P = 7.071²/100 = 0.500 W. Ends by typing 200 Hz to show the next row (not captured).
+- Junction Transistor (19.4 s): Diode setup, R1 1 MΩ. A1 1.71 µA, V1 294 mV. By hand (2 − V)/(1 MΩ + Rs) = Is(e^(V/nV_T) − 1) with
+  Is 4.352 nA, n 1.906, V_T 25.865 mV (300.15 K), Rs 0.6458 Ω gives V = 0.29449 V, I = 1.7055 µA.
+- AC Reactance (20.0 s): Capacitor only, 10 µF, 10 V peak, 50 Hz. |Z| 318.3 Ω, φ −90.0°, Irms 22.21 mA, P 0 W. By hand
+  X_C = 1/(2π × 50 × 10⁻⁵) = 318.31 Ω, Irms = 7.0711/318.31 = 22.21 mA. The caption asks which trace peaks first, without the answer.
+- AC Power (19.3 s): Wall outlet, 169.7 V peak at 60 Hz, 144 Ω. I0 1.179 A, Irms 833.3 mA, P 100.0 W (graph average 100.0 W).
+  By hand Irms = 120/144 = 0.8333 A, P = 120²/144 = 100.0 W.
+
+**Demo fix (visible to students):** the DC and In time readings tables had every value box 7 characters wide, so a microampere reading
+such as 0.00000171 A showed as "0.00000" (every diode reading and the transistor base currents). `renderLab` now sizes each column to
+its longest value, never below 7ch; a wider table scrolls in its `.twrap`. No control names, CSV or physics changed.
+vdcheck `--only after circuits`: 32 screenshots, 0 problems; test_circuits, _readings, _devices and _ac_power pass. No What's new entry.
+
+**For GPT:** please check the seven videos' captions and readings against the figures above, and the readings table widths.
