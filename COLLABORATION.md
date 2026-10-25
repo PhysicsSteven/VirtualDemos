@@ -4158,3 +4158,27 @@ the Kirkwood gaps and Kuiper belt instead of repeating them.
 **For GPT:** please check (1) the Roche limit constants and the claim that the A ring lies inside the porous ice limit but
 outside the solid ice one; (2) the Io tidal heating formula and its numbers; (3) the worksheet key's slope ratio arithmetic and
 the worksheet and notes wording for hyphens and American spelling.
+
+
+## 2026-10-25 · Claude · How this works videos: galaxies and cosmology
+
+Five videos, one per worksheet, dark only, from scripts in `tools/howto/` (lib.cjs and compose.py unchanged). Every reading on
+screen is from the take and was checked by hand:
+
+- **Galaxy Rotation Curves** (`rotation-curves.mp4`, 18.3 s): Solar system (Kepler), the dashed ring dragged in to 0.39 AU (the
+  slider readout here does not take typed values, so the ring is dragged in fine steps), then 47.69 km/s, 1.0000 M_sun, 0.244 yr
+  = 89.0 days, recorded. By hand: 29.785/√0.39 = 47.694 km/s; 0.39^1.5 = 0.24356 yr = 88.96 days.
+- **Cosmic Distance Ladder** (`hubble-law.mp4`, 19.7 s): Rung 4, Galaxy 13 (Type Ia, 105 Mpc ±7%) clicked without moving it
+  (moved: no), the comb dragged onto its lines, z = 0.0229 (catalog 0.0229), v = cz = 6,865 km/s, recorded.
+- **The Big Bang and the Early Universe**, picked by view with the function form of `VD.howTo` (Microwave background opens the
+  thermal history video, since that view belongs to the thermal history worksheet):
+  - Expansion (`cosmic-expansion.mp4`, 21.1 s): Blind on, Hubble's law today, A to E recorded at t = 0 (86.57, 140.65, 230.33,
+    318.57, 373.45 Mpc), +0.1 Gyr, recorded again (87.16 ... 376.02). Every ratio is 1.0069 = 1 + 67.4 × 0.1/977.8.
+  - Thermal history (`thermal-history.mp4`, 17.1 s): time slider dragged near 10⁻⁴⁰ s and stepped there with the arrow keys
+    (the slider has no typed entry), then 5.616 × 10²⁹ K and kT 4.84 × 10¹³ TeV. By hand with g* = 106.75:
+    kT = √(2.42/√106.75 / 10⁻⁴⁰) MeV = 4.84 × 10¹⁹ MeV, T = 5.62 × 10²⁹ K.
+  - Helium (`big-bang-helium.mp4`, 20.2 s): First three minutes, 4× and Play, paused at 285 s (past t_D = 180 s): 349 neutrons
+    at freeze out, 284 left at t_D, 142 helium nuclei, Y 0.2840, recorded. By hand: 349 × e^(−(180 − 1.17)/878.4) = 284.7;
+    1432 free protons + 2 × 284 = 2000; 4 × 142/2000 = 0.284. Encoded at CRF 30 (CRF 24 gave 3.9 MB for the moving particles).
+
+vdcheck `--only after` on the three demos: 0 problems. No What's new entry (left for the batch entry).

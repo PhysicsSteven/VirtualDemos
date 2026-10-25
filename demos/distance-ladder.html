@@ -1688,6 +1688,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return { galaxy: `Galaxy ${i + 1}`, indicator: p.grp === 'cep' ? 'Cepheids' : 'Type Ia', d_Mpc: +hubD(i).toPrecision(4), d_unc_pct: Math.round(p.sig * 100),
       z_comb: match ? S.hub.zc.toFixed(4) : '', z_catalog: p.z.toFixed(4), a: S.calA.toFixed(2), M_Ia: S.snM.toFixed(2), moved: S.hub.over[i] !== undefined ? 'yes' : 'no' };
   };
+  /* How this works: a video of one Hubble diagram reading, a galaxy's distance and its comb redshift (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/hubble-law.mp4', poster: 'media/how-this-works/hubble-law.jpg' });
+
   window.__dl = { get frameMs() { return frameMs; }, S, HUB, CEP, SNE, hubFit, cepMeasure, snMeasure, applyPreset, openRung, handles: () => handles(), get G() { return G; },
     core: { apparentOffset, distModulus, distFromModulus, leavitt, fitOrigin, fitHubble, hubbleTimeGyr } };
 

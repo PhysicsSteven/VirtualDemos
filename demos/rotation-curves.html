@@ -1407,6 +1407,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return row;
   };
 
+  /* How this works: a video of the solar system reading at Mercury's distance (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/rotation-curves.mp4', poster: 'media/how-this-works/rotation-curves.jpg' });
+
   window.__rc = { get frameMs() { return frameMs; }, get S() { return S; }, get PV() { return PV; }, setPlaying, applyPreset, vAt: (r) => vAt(r),
     handles() { return dragHandles().map((h) => ({ id: h.id, pt: h.pt, seg: h.seg, ring: h.ring })); } };
 

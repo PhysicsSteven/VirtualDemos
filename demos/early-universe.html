@@ -978,6 +978,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const q = new URLSearchParams(location.search); applyPreset(PRESETS[q.get('setup')] ? q.get('setup') : 'exToday');
   new ResizeObserver(resize).observe($('pane')); new ResizeObserver(resize).observe(cur.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  /* How this works: one video per worksheet, picked by the view (made by tools/howto/); the Microwave background view is part of the thermal history worksheet */
+  const howVid = () => ({ ex: 'cosmic-expansion', th: 'thermal-history', bbn: 'big-bang-helium', cmb: 'thermal-history' })[S.view];
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg` });
+
   window.__eu = { S, setView, applyPreset, setRun, redraw, sync, advance, bbnTrace, buildExpansion, X, aNow, K: () => K, E3 };
   requestAnimationFrame(frame);
 })();
