@@ -290,7 +290,7 @@ q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No rea
 var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
 try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
 say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
-window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};window.vdRenderReadings=render;render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
     </aside>
   </main>
 </div>
@@ -1097,6 +1097,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (!on) { GS.div = 0; GS.ux = null; GS.m.fill(M); GS.r.fill(R); GS.kind.fill(0); rMin = R; }
     window.vdShowCols = on ? [['t_ps', 't (ps)'], ['A_right', 'A right'], ['B_left', 'B left'], ['msd_A_nm2', 'MSD A (nm²)']]
       : [['T_K', 'T (K)'], ['A_nm2', 'A (nm²)'], ['P_mN_per_m', 'P (mN/m)']];
+    if (window.vdRenderReadings) window.vdRenderReadings(); /* the headings follow the mode before the first reading */
     $('hist').setAttribute('aria-label', on ? 'Graph of the two gases: counts on the far side, mean square displacement, or speeds, against time since the divider opened.' : 'Histogram of molecular speeds with the two dimensional Maxwell-Boltzmann curve overlaid.');
     resize();
   }

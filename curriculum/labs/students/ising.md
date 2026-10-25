@@ -75,11 +75,11 @@ No hazards in the virtual lab.
 
 The demo opens with a small field, $$h = -0.2$$: set the field to zero first. Keep the field at zero and the coupling ferromagnetic ($$J = +1$$) throughout.
 
-**Heating through $$T_c$$.** On a $$64 \times 64$$ lattice with Metropolis updates, discard 1000 sweeps and average over 5000. Run a temperature scan from 1.5 to 3.6 and keep every reading.
+**Heating through $$T_c$$.** On a $$64 \times 64$$ lattice with Metropolis updates, discard 1000 sweeps and average over 5000. Run a temperature scan from 1.5 to 3.6 and keep every reading, then send the readings to the worksheet.
 
-**At $$T_c$$ with cluster updates.** Clear. Set $$T$$ to exactly $$T_c$$ and use Wolff updates. Discard 1000 sweeps and average over 20 000. Measure on lattices of 32, 64, 128 and 256. The largest can take a few minutes.
+**At $$T_c$$ with cluster updates.** Clear the readings. Set $$T$$ to exactly $$T_c$$ and use Wolff updates. Discard 1000 sweeps and average over 20 000. Measure on lattices of 32, 64, 128 and 256, keeping each reading. The largest can take a few minutes. Send the readings to the worksheet.
 
-**Critical slowing down.** Clear. Still at $$T_c$$, use Metropolis updates. Discard 5000 sweeps and average over 100 000. Measure on lattices of 32, 64 and 128.
+**Critical slowing down.** Clear the readings. Still at $$T_c$$, use Metropolis updates. Discard 5000 sweeps and average over 100 000. Measure on lattices of 32, 64 and 128, keeping each reading, and send the readings to the worksheet.
 
 ## Data
 

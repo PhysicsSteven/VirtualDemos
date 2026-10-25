@@ -2270,3 +2270,33 @@ as they were; 22 had snags, all fixed. No physics changed (CORE untouched); noth
 
 **For GPT to verify:** the new last columns and the fits the keys quote for them; the polarization, displacement-current and
 magnetism-in-matter procedure changes against the demos.
+## Claude, 2026-10-25: Student run through of the Thermodynamics worksheets
+
+Steve asked for simulated student run throughs of the OpenStax modules. All 17 Thermodynamics worksheets (Diffusion and Ising
+included) were worked end to end on a local build: handout read, every procedure step done on the demo through its own controls
+(Flat view, no WebGL), readings exported to the worksheet, graphs built with the student's choice of axes, every analysis item worked,
+and the result compared with the TeacherKeys key. No physics changed (CORE untouched).
+
+- **Result:** every worksheet can be finished from the handout alone and every key reproduces within its stated scatter (seeded demos
+  such as Ising, Rüchardt, heat engines and heat capacities to every digit). No wrong key result.
+- **Commonest snag (15 handouts):** a step said "Clear the readings" before the earlier series had been sent to the worksheet, and Clear
+  discards it without asking. Each of those steps now says to send the readings first: blackbody, convection, diffusion, einstein
+  solids, free expansion, gas thermometer, heat capacities, heat conduction, heat engines, ideal gas, ising, ruchardt, second law,
+  thermal equilibrium, thermal expansion (heating curve already said it).
+- **Other handout fixes:** einstein solids (a reading every 200 exchanges is not possible at 100×, so run slowly or pause); free
+  expansion Uncertainty (it asked for a "short run" never recorded and for counting about 150 gatherings by eye; now a 200 s reading
+  and a count over 300 s, key text updated: 23 in 300 s gives 21%, about 150 in 2000 s gives 8%); second law (the refrigerator above
+  Carnot now has example values); ising (keep each reading at T_c, send before clearing); heating curve (Analysis 4 and 5 and What to
+  hand in now include the ethanol run the procedure asks for); gas thermometer (run the clock until the gauge settles, since Ice water
+  is already chosen at the start); thermal expansion (the water graph is not a line, so the drawn fit is to be ignored).
+- **worksheet.js:** a column heading such as ln(1 − η), ln(I / 1 A) or ln sin(θ/2) had its argument read as a unit, so the graph
+  axis and slope showed "(1 − η)" as a unit. Parentheses right after ln, log, sin, cos, tan, exp or sqrt now count as the argument.
+- **demos/ideal-gas.html:** the readings table headings now switch to the two gas columns as soon as a two gas setup is chosen (and
+  back), not only after the first reading. vdcheck `--only after ideal-gas`: 28 screenshots, 0 problems.
+- TeacherKeys: all 17 Thermo key PDFs rebuilt against the new handouts; free expansion answers changed; TA guides rebuilt (Diffusion
+  added, with its snags). check_math on the 16 edited handouts: 673 expressions, 0 problems.
+- Left for Steve: the free expansion 100 molecule table asks for 202 hand computed cells (heavy but workable); blackbody 305 vs 310 K
+  does not trip a student (prelab and analysis name 305 K, the demo reading is 310 K).
+
+**For GPT to verify:** the new free expansion Uncertainty text and its key; that each edited procedure step still matches the order
+of copies in its key.

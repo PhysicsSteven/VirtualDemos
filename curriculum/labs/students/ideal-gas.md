@@ -48,9 +48,9 @@ No hazards in the virtual lab.
 
 **Pressure and temperature.** Pick Relax to equilibrium and wait until the histogram matches the curve. With 150 atoms and the box 50 nm wide, record a reading at about six temperatures from 50 K to 1000 K, waiting a few seconds at each.
 
-**Pressure and number.** Clear the readings. At 300 K and 50 nm wide, record a reading for about six numbers of atoms from 50 to 400.
+**Pressure and number.** Send the readings to the worksheet and clear them. At 300 K and 50 nm wide, record a reading for about six numbers of atoms from 50 to 400.
 
-**Pressure and area.** Clear the readings. With 150 atoms, set the temperature to 300 K and record a reading for about six box widths from 50 nm to 15 nm, resetting the temperature to 300 K after each change of width.
+**Pressure and area.** Send the readings to the worksheet and clear them. With 150 atoms, set the temperature to 300 K and record a reading for about six box widths from 50 nm to 15 nm, resetting the temperature to 300 K after each change of width. Send the readings to the worksheet.
 
 ## Data
 

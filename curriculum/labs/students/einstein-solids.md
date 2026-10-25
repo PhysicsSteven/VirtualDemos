@@ -51,9 +51,9 @@ No hazards in the virtual lab.
 
 **Small solids.** Start with the Small solids setup (3 and 3 oscillators, 6 quanta, all in A). Run at 100× and record a reading every few seconds, until you have at least 40.
 
-**Hot solid meets cold.** Clear the readings and pick Hot solid meets cold. Record a reading every 200 exchanges or so for the first 3000 exchanges, then every few thousand until 30 000.
+**Hot solid meets cold.** Send the readings to the worksheet and clear them, then pick Hot solid meets cold. Record a reading every 200 exchanges or so for the first 3000 exchanges (run slowly, or pause between readings), then every few thousand until 30 000.
 
-**Start in B.** Repeat Hot solid meets cold with all the energy starting in B.
+**Start in B.** Send these readings to the worksheet and clear them, then repeat Hot solid meets cold with all the energy starting in B. Send this run too.
 
 ## Data
 

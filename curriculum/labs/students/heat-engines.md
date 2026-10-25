@@ -66,13 +66,13 @@ No hazards in the virtual lab. Real engines get hot and have moving parts.
 
 **Carnot.** Pick Carnot cycle. Keep $$T_c$$ at 300 K and record a reading for $$T_h$$ from 400 K to 1200 K in steps of 100 K.
 
-**Otto.** Clear the readings and pick Otto cycle. Record a reading for compression ratios from 2 to 12.
+**Otto.** Send the readings to the worksheet and clear them, then pick Otto cycle. Record a reading for compression ratios from 2 to 12.
 
-**Otto, monatomic.** Repeat the Otto readings with the monatomic gas, in a new copy of the table.
+**Otto, monatomic.** Send the readings to the worksheet and clear them, then repeat the Otto readings with the monatomic gas.
 
-**Refrigerator.** Pick Run it backward: refrigerator and record a reading. Then change $$T_c$$ in a few steps and record each.
+**Refrigerator.** Send the readings to the worksheet and clear them, then pick Run it backward: refrigerator and record a reading. Then change $$T_c$$ in a few steps and record each.
 
-**Stirling.** Pick Stirling engine and record a reading with the regenerator on and with it off.
+**Stirling.** Pick Stirling engine and record a reading with the regenerator on and with it off. Send the refrigerator and Stirling readings to the worksheet.
 
 ## Data
 

@@ -48,13 +48,13 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Engines.** Start with the A real engine setup (600 K and 300 K, $$Q_h$$ = 500 J). Record a reading for each value of $$W$$ from 0 to 500 J, in steps of 50 J.
+**Engines.** Start with the A real engine setup (600 K and 300 K, $$Q_h$$ = 500 J). Record a reading for each value of $$W$$ from 0 to 500 J, in steps of 50 J, and send the readings to the worksheet.
 
 **Another temperature.** Clear the readings, set $$T_h$$ = 900 K and repeat. Send this run to a new copy of the table.
 
-**Refrigerators.** Clear the readings and switch to Refrigerator, with 300 K and 270 K and $$Q_c$$ = 400 J. Record readings for $$W$$ from 0 to 100 J, in steps of 10 J.
+**Refrigerators.** Clear the readings and switch to Refrigerator, with 300 K and 270 K and $$Q_c$$ = 400 J. Record readings for $$W$$ from 0 to 100 J, in steps of 10 J, and send them to a new copy of the table.
 
-**The pairing argument.** Pick Beats Carnot? and turn on the pairing. Record what the pair does. Then do the same for a refrigerator with a COP above the Carnot value.
+**The pairing argument.** Clear the readings, pick Beats Carnot? and turn on the pairing. Record what the pair does. Then do the same for a refrigerator with a COP above the Carnot value, such as $$Q_c$$ = 400 J and $$W$$ = 20 J between 300 K and 270 K. Send these readings to a new copy of the table.
 
 ## Data
 

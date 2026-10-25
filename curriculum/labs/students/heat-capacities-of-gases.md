@@ -54,11 +54,11 @@ No hazards in the virtual lab. A real gas heated in a closed vessel builds up pr
 
 **Argon, piston locked.** Start with the Argon, piston locked setup. Run the heater and record a reading about every 10 J of heat, up to about 200 J.
 
-**Argon, piston free.** Clear the readings, pick Argon, piston free and repeat. Send this run to a new copy of the table.
+**Argon, piston free.** Send the readings to the worksheet and clear them, then pick Argon, piston free and repeat. Send this run to a new copy of the table.
 
-**Nitrogen.** Repeat both piston settings for nitrogen, each in its own copy of the table.
+**Nitrogen.** Send and clear, then repeat both piston settings for nitrogen, sending each run to its own copy of the table and clearing before the next.
 
-**Mystery gas.** Pick Mystery gas and measure it with the piston locked and then free.
+**Mystery gas.** Send and clear, then pick Mystery gas and measure it with the piston locked and then free, sending each run to its own copy of the table.
 
 ## Data
 

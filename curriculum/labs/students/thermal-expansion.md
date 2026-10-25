@@ -53,13 +53,13 @@ Hot water jackets and baths can scald, and glassware can crack when heated or co
 
 **The aluminum rod.** Start with the Rod in a water bath setup. Record the gauge reading at bath temperatures from 0 °C to 100 °C, about every 10 °C.
 
-**Two more rods.** Clear the readings and repeat for two other rods from the list, each in its own copy of the table.
+**Two more rods.** Send the readings to the worksheet and clear them, then repeat for two other rods from the list, sending each rod to its own copy of the table and clearing before the next.
 
-**Mystery rod.** Pick Mystery rod in the rod list and record at least five readings over the full range.
+**Mystery rod.** Send and clear, then pick Mystery rod in the rod list and record at least five readings over the full range.
 
-**Water near 4 °C.** Pick the Water near 4 °C setup and record the level every 1 °C from 0 °C to 10 °C and then every 5 °C up to 40 °C.
+**Water near 4 °C.** Send and clear, then pick the Water near 4 °C setup and record the level every 1 °C from 0 °C to 10 °C and then every 5 °C up to 40 °C.
 
-**Another liquid.** Repeat with ethyl alcohol or glycerin from 0 °C to 40 °C, every 5 °C.
+**Another liquid.** Send and clear, then repeat with ethyl alcohol or glycerin from 0 °C to 40 °C, every 5 °C, and send that run too.
 
 ## Data
 
@@ -74,7 +74,7 @@ Hot water jackets and baths can scald, and glassware can crack when heated or co
 1. Fit the gauge reading against $$T$$ for each rod. From the slope find $$\alpha = \text{slope}/L_0$$ and compare it with Table 1.2.
 2. Find $$\alpha$$ for the mystery rod and name its material.
 3. For the liquid, fit the level against $$T$$. From the slope find $$\beta_\mathrm{liquid} = \text{slope}\cdot A/V_0 + \beta_\mathrm{flask}$$ and compare it with Table 1.2.
-4. For water, find the temperature at which the level is lowest. Explain why it is a little above 3.98 °C, the temperature at which water is densest.
+4. For water, graph the level against $$T$$ (the graph is not a straight line, so ignore the fitted line the worksheet draws) and find the temperature at which the level is lowest. Explain why it is a little above 3.98 °C, the temperature at which water is densest.
 5. Estimate water's $$\beta$$ near 30 °C from the slope of your level readings there, and compare it with the value in Table 1.2.
 
 ## Uncertainty

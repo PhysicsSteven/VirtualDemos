@@ -51,7 +51,7 @@ No hazards in the virtual lab. Never look directly at the Sun or a bright lamp.
 
 **A range of temperatures.** Record a reading at about ten temperatures spread from 1000 K to 30 000 K, using the slider or by dragging the peak. Include the Sun.
 
-**Cool objects.** Clear the readings and record the Human body, the Light bulb and the Cosmic background setups.
+**Cool objects.** Send the readings to the worksheet, then clear them and record the Human body, the Light bulb and the Cosmic background setups, and send those to the worksheet too.
 
 ## Data
 

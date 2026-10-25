@@ -46,9 +46,9 @@ Liquid nitrogen and dry ice cause severe cold burns, and boiling water scalds. I
 
 ## Procedure
 
-**Calibrate.** Start with the Gas thermometer setup (20 mmol). Put the bulb in each of the five known baths in turn; wait for the gauge to settle and record a reading in each.
+**Calibrate.** Start with the Gas thermometer setup (20 mmol). Put the bulb in each of the five known baths in turn, running the clock until the gauge settles, and record a reading in each.
 
-**More gas.** Clear the readings, change the amount of gas to 40 mmol and repeat the five baths. Send this run to a new copy of the table.
+**More gas.** Send the readings to the worksheet and clear them, then change the amount of gas to 40 mmol and repeat the five baths. Send this run to a new copy of the table.
 
 **Mystery bath.** Return to 20 mmol, put the bulb in the mystery bath and record the settled pressure.
 

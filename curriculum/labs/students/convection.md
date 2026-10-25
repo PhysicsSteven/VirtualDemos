@@ -59,9 +59,9 @@ No hazards in the virtual lab. In a real one, a sphere at 80 °C burns: handle i
 
 **Still air.** Use an aluminum sphere 5.0 cm across, polished, starting at 80 °C, with the room at 20 °C and the fan off. Record the temperature every 300 s from 0 to 3600 s.
 
-**With the fan.** Clear the readings and set the fan to 1.0 m/s. Record every 120 s from 0 to 1200 s. Repeat at 2.0 and 4.0 m/s, clearing between runs.
+**With the fan.** Send the readings to the worksheet and clear them, then set the fan to 1.0 m/s. Record every 120 s from 0 to 1200 s. Repeat at 2.0 and 4.0 m/s, sending the readings to the worksheet and clearing them after each run.
 
-**Black sphere.** Clear, paint the sphere black and turn the fan off. Record every 300 s from 0 to 3600 s. Then repeat with the fan at 4.0 m/s, every 120 s from 0 to 1200 s.
+**Black sphere.** Send the readings to the worksheet and clear them, then paint the sphere black and turn the fan off. Record every 300 s from 0 to 3600 s. Then repeat with the fan at 4.0 m/s, every 120 s from 0 to 1200 s.
 
 ## Data
 

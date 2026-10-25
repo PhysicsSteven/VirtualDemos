@@ -53,7 +53,7 @@ No hazards in the virtual lab. In a real one, the hot side of a conduction appar
 
 **The house wall.** Start with the House wall in winter setup. Record a reading at the inside surface, at each boundary between layers and at the outside surface, and two or three readings inside each layer.
 
-**Without insulation.** Clear the readings, set the glass wool's thickness to 0 and repeat.
+**Without insulation.** Send the readings to the worksheet and clear them, then set the glass wool's thickness to 0 and repeat.
 
 **Window.** Pick Window. Record the heat flow for a single 4 mm pane, then for double glazing: two 4 mm panes with 12 mm of still air between them.
 

@@ -53,9 +53,9 @@ No hazards in the virtual lab.
 
 **Four molecules.** Start with the Four molecules setup. Remove the partition and let the gas run at 100× until at least 2000 s have passed on the clock. Record a reading.
 
-**More molecules.** Clear the readings and repeat with 10 molecules, running for at least 5000 s.
+**More molecules.** Send the reading to the worksheet and clear the readings, then repeat with 10 molecules, running for at least 5000 s.
 
-**A hundred molecules.** Pick A hundred molecules, remove the partition and watch the count on the left. Run for at least 500 s and record a reading.
+**A hundred molecules.** Send the reading and clear the readings, then pick A hundred molecules, remove the partition and watch the count on the left. Run for at least 500 s, record a reading and send it.
 
 ## Data
 
@@ -77,7 +77,7 @@ Record N and the time counted for each copy of the table.
 
 ## Uncertainty
 
-The shares come from a run of finite length, so they scatter about the predicted values. Compare the scatter for a short run and a long run of four molecules; how does it change? Count roughly how many separate times all four molecules gathered on the left, and use that count $$k$$ to estimate the relative uncertainty $$1/\sqrt{k}$$ of that share.
+The shares come from a run of finite length, so they scatter about the predicted values. Start over with four molecules and record a reading after 200 s. Compare its scatter about the predicted shares with that of your 2000 s run; how does it change? Then watch a stretch of 300 s, count roughly how many separate times all four molecules gathered on the left, and use that count $$k$$ to estimate the relative uncertainty $$1/\sqrt{k}$$ of the share of time all four were on the left. How would the uncertainty change over the whole 2000 s?
 
 ## Questions
 

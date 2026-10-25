@@ -508,10 +508,12 @@
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
   const pretty = (h) => String(h || '').replace(/\^([23])/g, (m, d) => SUP[d]).replace(/_(\d)/g, (m, d) => SUB[d]);
-  /* a heading such as "Pressure (Pa) or head (m)" names two quantities with different units: keep it whole, with no unit (null) */
+  /* a heading such as "Pressure (Pa) or head (m)" names two quantities with different units: keep it whole, with no unit (null);
+     parentheses right after a function ("ln(1 - η)", "ln sin(θ/2)") hold its argument, not a unit */
+  const FN_ARG = /(^|[^A-Za-z])(ln|log|sin|cos|tan|exp|sqrt)\s*$/;
   const nameUnit = (h) => {
     const t = pretty(h), m = t.match(/^(.*?)\s*\(([^()]*)\)\s*$/), us = new Set((t.match(/\(([^()]*)\)/g) || []));
-    return !m ? [String(h || ''), ''] : us.size > 1 ? [t, null] : [m[1] || h, m[2]];
+    return !m || FN_ARG.test(m[1]) ? [String(h || ''), ''] : us.size > 1 ? [t, null] : [m[1] || h, m[2]];
   };
   const ANSWER_LISTS = /^(before-the-lab|before-the-activity|analysis|questions)$/, ONE_BOX = /^uncertainty$/;
   const m = location.pathname.match(/\/curriculum\/labs\/students\/([a-z0-9-]+?)(?:\.html)?$/);

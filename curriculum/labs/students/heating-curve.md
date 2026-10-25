@@ -77,8 +77,8 @@ Record the substance, sample mass, heater power and starting temperature for eac
 1. Fit $$T$$ against $$t$$ for the ice warming stage. From the slope find the specific heat of ice, $$c = P/(m\,\text{slope})$$.
 2. Do the same for the water warming stage and find the specific heat of water.
 3. From the time the melting stage lasts, find the latent heat of fusion, $$L_\mathrm{f} = P\,\Delta t/m$$.
-4. Fit the balance reading $$m$$ against $$t$$ for the boiling stage. From the slope find the latent heat of vaporization, $$L_\mathrm{v} = P/\lvert\text{slope}\rvert$$. Compare it with $$P\,\Delta t/m$$ from the time the boiling stage lasts.
-5. Compare all four values with the textbook's Tables 1.3 and 1.4, as percentage differences.
+4. Fit the balance reading $$m$$ against $$t$$ for the boiling stage. From the slope find the latent heat of vaporization, $$L_\mathrm{v} = P/\lvert\text{slope}\rvert$$. Compare it with $$P\,\Delta t/m$$ from the time the boiling stage lasts. Do the same for the ethanol run, and read its boiling point from the thermometer.
+5. Compare all four values for water, and the ethanol boiling point and latent heat, with the textbook's Tables 1.3 and 1.4, as percentage differences.
 6. Use your second run to check that the time each stage lasts is in proportion to $$m/P$$.
 
 ## Uncertainty
@@ -95,4 +95,4 @@ The timer reads to 1 s, the thermometer to 0.1 °C and the balance to 0.1 g; the
 
 ## What to hand in
 
-Prelab answers, the run settings, the four table copies with their graphs and fits, the four measured values with uncertainties and comparisons, and answers to the questions. Identify simulated data.
+Prelab answers, the run settings, the table copies (four for water, two for ethanol) with their graphs and fits, the four measured values for water and the ethanol values with uncertainties and comparisons, and answers to the questions. Identify simulated data.

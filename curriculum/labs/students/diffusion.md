@@ -62,11 +62,11 @@ No hazards in the virtual lab.
 
 **Mixing and spreading.** Choose Two gases mix, remove the divider, and let the run go to at least 400 ps. Pause, record the run from 0 to 400 ps and send it to the worksheet.
 
-**Temperature.** Clear the readings. Set both gases to 150 K, remove the divider and record the run to 400 ps. Send it, clear, and repeat with both gases at 600 K and at 1000 K. Changing a gas closes the divider again.
+**Temperature.** Clear the readings. Set both gases to 150 K, remove the divider and record the run to 400 ps. Send it to the worksheet and clear, then repeat with both gases at 600 K and at 1000 K, sending each run before you clear. Changing a gas closes the divider again.
 
-**Light and heavy.** Clear the readings. Choose Light and heavy, remove the divider and record the run to 400 ps.
+**Light and heavy.** Clear the readings once the 1000 K run is sent. Choose Light and heavy, remove the divider, record the run to 400 ps and send it.
 
-**Through a small hole.** Clear the readings. Choose Through a small hole (helium on the left, the right half empty), open the hole and record the run to 1000 ps. Send it and clear. Make gas A argon (40 u), open the hole again and record the run to 2000 ps, since argon leaks more slowly.
+**Through a small hole.** Clear the readings once the Light and heavy run is sent. Choose Through a small hole (helium on the left, the right half empty), open the hole and record the run to 1000 ps. Send it and clear. Make gas A argon (40 u), open the hole again and record the run to 2000 ps, since argon leaks more slowly.
 
 **Hot meets cold.** Choose Hot meets cold, remove the divider and watch the temperature on each side and the counts for a few hundred ps. Nothing to record.
 

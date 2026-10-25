@@ -53,7 +53,7 @@ Hot metal blocks and hot water can burn. In a real lab use tongs and an insulate
 
 **Hot metal, cool water.** Start with the Hot metal, cool water setup. Run the clock and record both temperatures about every 20 s for the first two minutes and then about every 60 s until they agree to 0.01 °C. Send the readings to the worksheet.
 
-**A longer bar.** Clear the readings, double the bar's length and repeat. Send this run to a new copy of the table.
+**A longer bar.** Send the readings to the worksheet and clear them, then double the bar's length and repeat. Send this run to a new copy of the table.
 
 **Mystery block.** Pick the Mystery block setup, run it to equilibrium and record the starting temperatures and the final temperature. Repeat with a different water mass or starting temperature to check your result.
 

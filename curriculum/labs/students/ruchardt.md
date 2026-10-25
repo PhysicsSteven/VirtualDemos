@@ -53,9 +53,9 @@ A real Rüchardt apparatus uses a large glass flask under slight pressure. Handl
 
 **Dry air.** Start with the Rüchardt's ball setup (dry air, 10 L). Drop the ball and record the period once the photogate has timed a few swings. Repeat for flask volumes from 2 L to 20 L, in about 2 L steps.
 
-**Argon.** Clear the readings, choose argon and repeat at five or more volumes. Send this run to a new copy of the table.
+**Argon.** Send the readings to the worksheet and clear them, then choose argon and repeat at five or more volumes. Send this run to a new copy of the table.
 
-**One more gas.** Do the same for carbon dioxide or another gas of your choice.
+**One more gas.** Send and clear, then do the same for carbon dioxide or another gas of your choice, and send that run too.
 
 ## Data
 
