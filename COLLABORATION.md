@@ -3862,3 +3862,21 @@ greatest elongation, stationary point.
 **For GPT:** please check (1) the Ptolemy description and the claim that a gibbous Venus rules out Ptolemy but not Tycho;
 (2) the synodic arithmetic in the worksheet key (Mars 764 d measured against 779.9 d from the formula, and why the measured gap
 is shorter); (3) the worksheet and notes wording for hyphens and American spelling.
+
+## 2026-10-25 · Claude · How this works: the Tools button hidden in every video (sweep)
+
+The README rule says the measuring tools never appear, but the recorder did not hide the Tools button, so it showed in videos of
+demos that have `VD.tools`. `tools/howto/lib.cjs` now hides `#vdTools` on every take with visibility hidden (c1550a9), not
+display none, so the strip keeps the live page's layout. To find the affected videos, every script was rerun in a quick probe (no
+screenshots) that checked, frame by frame, whether the button was on screen inside the zoomed area. Retaken: Sound Waves and Two
+Speaker (c1550a9); Cart Launch, Cavendish, Circular Motion, Doppler, Elevator, Forces, GPS Clocks, Gyroscope, Impulse, Kepler
+Orbits, Motion Graphs, Pendulum, Projectile Range, Rocket, Room Acoustics, Rotation, Rotational Dynamics, Springs, Terminal
+Velocity, Viscometer (b2c5cb1); Faraday's and Lenz's Laws, Eddy Currents, Induced Electric Fields (this commit). The videos
+recorded after the hide went in (Temperature and Heat, Ripple Tank and later) were already clean, as were the electrostatics
+machines (no button on screen).
+
+Each retake's readings match the original take exactly, with two exceptions:
+- Springs draws a new random unknown k on every take: now k = 27.5 N/m and measured period 0.5358 s = 2π√(0.20/27.5).
+- Faraday's and Lenz's Laws paused one frame earlier: t 4.820 s, θ 299.8°, Φ 995.3 µWb, EMF −1.09488 V, I −10.9488 mA. By hand
+  ωt = 30.366 rad = 299.84° past four turns, Φ = 0.002 × cos 299.84° = 0.99527 mWb; EMF (mean over the last 1 ms)
+  = 1.260 × sin(6.3 × 4.8195 s) = 1.260 × (−0.86899) = −1.0949 V; I = EMF/R.
