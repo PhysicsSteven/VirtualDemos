@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-how-this-works-p2-thermo', date: '2026-10-25', title: 'How this works videos: Physics II and Thermo',
+    text: 'The Physics II and Thermo demos now have a How this works button under the handout button: a short video, under 30 seconds, of one sample reading with arrows and zooms on each step. A demo with several worksheets plays the video for the worksheet of the setup or view you are in.', link: { href: 'thermo.html', text: 'Open Thermo' } },
   { id: '2026-10-25-astro-2203-light', date: '2026-10-25', title: 'Astro 2203: telescopes and light',
     text: 'Six new worksheets for Astro 2203, Topic 4: build a telescope and measure its magnification and light gathering, the finest detail a mirror or radio dish can see, why mirrors beat lenses for color, star colors and temperatures, the fingerprints of the elements, and the electromagnetic spectrum. New in the demos: Build a Microscope or Telescope records readings and shows the light it gathers from a star, Optics Bench lenses can be crown or flint glass (with Lens in white light and Mirror in white light setups), and Spectra Explorer shows a continuous spectrum beside emission and absorption.', link: { href: 'astro-2203.html', text: 'Open Astro 2203' } },
   { id: '2026-10-25-astro-2203-sky-scale', date: '2026-10-25', title: 'Astro 2203: sky and scale worksheets',
