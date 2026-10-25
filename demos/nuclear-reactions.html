@@ -468,6 +468,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
     T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'),
       proton: g('--proton'), neutron: g('--neutron'), gamma: g('--gamma'), fis: g('--fis'), theory: g('--theory'), pp: g('--pp'), dt: g('--dt'), metal: g('--metal'), mono: g('--font-mono'), ui: g('--font-ui') };
+    SPR.clear();
   }
   const lab = (s, x, y, o = {}) => { if (VG) VG.label(ctx, s, x, y, Object.assign({ s: 10.5 * proj() }, o)); else { ctx.fillStyle = o.c || T.muted; ctx.font = `${o.w || 400} ${(o.s || 10.5 * proj())}px ${T.ui}`; ctx.textAlign = o.a || 'left'; ctx.textBaseline = 'middle'; ctx.fillText(s, x, y); } };
   function lcdBox(x, y, w, h, text, name) {
@@ -544,7 +545,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     g: { sizes: [], fis: [], tree: [], nuHist: new Array(11).fill(0), fisTot: 0, r: null, D: null } };
   function chNew() {
     const c = S.ch; c.seed = (c.seed * 7919 + 13) % 100003;
-    if (c.mode === 'sph') { const m = MAT[c.mat]; CHN.r = rng(c.seed); CHN.D = nuDist(m.nu); CHN.sites = Array.from({ length: c.N }, () => uniformBall(c.R, CHN.r)); CHN.ks = []; CHN.tg = []; CHN.leaks = []; CHN.gen = 0; CHN.tracks = []; CHN.last = null; }
+    if (c.mode === 'sph') { const m = MAT[c.mat]; CHN.r = rng(c.seed); CHN.D = nuDist(m.nu); CHN.sites = Array.from({ length: c.N }, () => uniformBall(c.R, CHN.r)); CHN.ks = []; CHN.tg = []; CHN.leaks = []; CHN.gen = 0; CHN.tracks = []; CHN.last = null; cpNew(); }
     else { const g = CHN.g; c.gseed++; g.r = rng(c.gseed); g.D = nuDist(NU_THERMAL_U235); g.sizes = [c.N0]; g.fis = []; g.fisTot = 0; g.nuHist = new Array(11).fill(0); g.tree = [Array.from({ length: Math.min(c.N0, 48) }, () => ({ p: -1, f: false }))]; g.done = false; }
   }
   const GEN_MAX = 120, POP_MAX = 2e6;
@@ -552,7 +553,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const c = S.ch;
     if (c.mode === 'sph') {
       if (CHN.gen >= GEN_MAX) return false;
-      const m = MAT[c.mat], o = sphereGen(CHN.sites, c.R, m, CHN.D, CHN.r, 40);
+      const m = MAT[c.mat], o = sphereGen(CHN.sites, c.R, m, CHN.D, CHN.r);
       CHN.ks.push(o.k); CHN.tg.push(o.tGen); CHN.leaks.push(o.leak / CHN.sites.length); CHN.tracks = o.tracks; CHN.last = o; CHN.gen++;
       CHN.sites = resample(o.bank, c.N, c.R, CHN.r); return CHN.gen < GEN_MAX;
     }
@@ -569,17 +570,137 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     return !g.done;
   }
 
+  // ---------- the chain picture ----------
+  /* The Sphere model's picture follows one chain at a time as it happens, with the same rules as sphereGen: a free path drawn from
+     an exponential with mean λ = 1/(nσ_T), then a fission with probability σ_F/σ_T (ν neutrons from Terrell's distribution, each
+     in a random direction) or an isotropic scatter, until the neutron causes a fission or crosses the surface. A source on the left
+     fires one neutron in every CP_GAP seconds, and each starts a chain; when more than CP_CAP neutrons are in flight the chain has
+     run away and the picture starts again. Lengths are true (cm); time is slowed so a neutron covers CP_V radii a second. A nucleus
+     is drawn only where a neutron is about to strike one. k and the meters come from the generations run, not from this picture. */
+  const CP = { r: rng(2027), D: null, t: 0, ns: [], hits: [], frags: [], trails: [], flashes: [], fpts: [], state: 'run', wait: 0, next: 0, fired: 0, fis: 0, gen: 0, field: [] };
+  const CP_CAP = 40, CP_V = 0.9, CP_FADE = 2.4, CP_FRAG = 1.6, CP_GAP = 1.5;
+  const vadd = (p, u, d) => [p[0] + u[0] * d, p[1] + u[1] * d, p[2] + u[2] * d];
+  function cpNew() {
+    CP.D = nuDist(MAT[S.ch.mat].nu); CP.t = 0; CP.ns = []; CP.hits = []; CP.frags = []; CP.trails = []; CP.flashes = []; CP.fpts = [];
+    CP.state = 'run'; CP.wait = 0; CP.next = 0; CP.fired = 0; CP.fis = 0; CP.gen = 0;
+    if (!CP.field.length) { const fr = rng(99); for (let i = 0; i < 320; i++) CP.field.push(uniformBall(1, fr)); }
+    /* Reduce motion: run five source neutrons and their chains to the end, then show every path at once */
+    if (reduce) { for (let i = 0; i < 20000 && CP.state === 'run' && (CP.fired < 5 || CP.ns.length); i++) cpStep(0.03, CP.fired < 5); }
+  }
+  /* the source fires a neutron along +x a little off the axis; it enters the sphere where that line meets the surface */
+  function cpFire() {
+    const R = S.ch.R, r = CP.r, y = (2 * r() - 1) * 0.06 * R, z = (2 * r() - 1) * 0.06 * R, x0 = -2.2 * R;
+    CP.ns.push({ p: [x0, y, z], u: [1, 0, 0], left: -Math.sqrt(R * R - y * y - z * z) - x0, end: 'enter', gen: 0, delay: 0, pts: [[x0, y, z]] }); CP.fired++;
+  }
+  /* a new straight leg from where the neutron is: direction u (isotropic unless given), free path from the exponential */
+  function cpLeg(n, u) {
+    const R = S.ch.R, m = MAT[S.ch.mat], r = CP.r, [x, y, z] = n.p; u = u || isoDir(r);
+    const d = -lamT(m) * Math.log(1 - r()), b = x * u[0] + y * u[1] + z * u[2], c = x * x + y * y + z * z - R * R, tex = -b + Math.sqrt(Math.max(0, b * b - c));
+    n.u = u; n.pts.push([x, y, z]);
+    if (d >= tex) { n.left = tex; n.end = 'leak'; n.hit = null; }
+    else { n.left = d; n.end = 'hit'; n.hit = { p: vadd(n.p, u, d), t0: CP.t, kind: 'wait' }; CP.hits.push(n.hit); }
+  }
+  function cpStep(dt, fire = true) {
+    if (CP.state === 'runaway') { CP.wait -= dt; if (CP.wait <= 0) cpNew(); return; }
+    CP.t += dt; if (fire && CP.t >= CP.next) { cpFire(); CP.next = CP.t + CP_GAP; }
+    const R = S.ch.R, m = MAT[S.ch.mat], pf = m.sf / m.st, step = CP_V * R * dt, born = [];
+    for (const n of CP.ns) {
+      if (n.delay > 0) { n.delay -= dt; continue; }
+      let go = step;
+      while (go > 0 && !n.gone) {
+        if (go < n.left) { n.p = vadd(n.p, n.u, go); n.left -= go; break; }
+        n.p = vadd(n.p, n.u, n.left); go -= n.left; n.left = 0;
+        if (n.end === 'enter') cpLeg(n, [1, 0, 0]);
+        else if (n.end === 'leak') { n.pts.push(n.p.slice()); n.end = 'out'; n.left = 0.6 * R; }
+        else if (n.end === 'out') n.gone = true;
+        else {
+          const h = n.hit; h.t1 = CP.t;
+          if (CP.r() < pf) {
+            h.kind = 'split'; n.gone = true; n.pts.push(h.p.slice()); CP.fis++; CP.fpts.push(h.p);
+            const nu = sampleNu(CP.D, CP.r), Ac = Math.round(m.A) + 1, Zc = S.ch.mat === 'u235' ? 92 : 94, Ah = 140, Al = Ac - nu - Ah, u = isoDir(CP.r);
+            CP.frags.push({ p: h.p, u, t0: CP.t, Z: Math.round(Zc * Ah / Ac), A: Ah }, { p: h.p, u: [-u[0], -u[1], -u[2]], t0: CP.t, Z: Zc - Math.round(Zc * Ah / Ac), A: Al });
+            CP.flashes.push({ p: h.p, t0: CP.t });
+            for (let k = 0; k < nu; k++) { const b = { p: h.p.slice(), gen: n.gen + 1, delay: 0.1, pts: [] }; cpLeg(b); born.push(b); }
+            CP.gen = Math.max(CP.gen, n.gen + 1);
+          } else { h.kind = 'bump'; cpLeg(n); }
+        }
+      }
+    }
+    for (const n of CP.ns) if (n.gone) { n.pts.push(n.p.slice()); CP.trails.push({ pts: n.pts, t1: CP.t }); }
+    CP.ns = CP.ns.filter((n) => !n.gone).concat(born);
+    const t = CP.t;
+    if (!reduce) {
+      CP.trails = CP.trails.filter((q) => t - q.t1 < CP_FADE);
+      CP.frags = CP.frags.filter((q) => t - q.t0 < CP_FRAG);
+      CP.flashes = CP.flashes.filter((q) => t - q.t0 < 0.4);
+    }
+    CP.hits = CP.hits.filter((h) => h.kind === 'wait' || (h.kind === 'bump' && t - h.t1 < 0.8));
+    if (CP.ns.length > CP_CAP) { CP.state = 'runaway'; CP.wait = 3.5; }
+  }
+  /* fission fragments stop almost where they are made: the picture only moves them a little apart, then fades them */
+  const cpFrag = (q, age) => vadd(q.p, q.u, 0.07 * S.ch.R * (1 - Math.exp(-age / 0.25)));
+  function cpCaption() {
+    const s = CP.state === 'runaway' ? `over ${CP_CAP} neutrons in flight: the chain runs away${reduce ? '' : ', starting again'}` : `${CP.ns.length} neutron${CP.ns.length === 1 ? '' : 's'} in flight`;
+    return `${CP.fired} fired in, ${CP.fis} fission${CP.fis === 1 ? '' : 's'}, longest chain ${CP.gen} generation${CP.gen === 1 ? '' : 's'} · ${s}`;
+  }
+  /* sprites for the flat picture, drawn once per size and theme */
+  const SPR = new Map();
+  function sprite(Z, A, s) {
+    const key = `${Z},${A},${s.toFixed(2)},${dpr},${T.proton},${T.neutron}`; let o = SPR.get(key); if (o) return o;
+    const R = A === 1 ? s : s * Math.cbrt(A) * 1.05 + Math.max(1.5, s * 0.92), w = Math.ceil(2 * R + 4), cv = document.createElement('canvas');
+    cv.width = Math.ceil(w * dpr); cv.height = Math.ceil(w * dpr); const g = cv.getContext('2d'); g.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (A === 1 || !VG) nucleus(w / 2, w / 2, Z, A, s, g);
+    else {
+      /* small and many: every nucleon as a shaded ball, protons spread at random so no spiral shows, packed a little overlapping */
+      const Rn = s * Math.cbrt(A) * 1.05, rb = 1.3 * Rn / Math.sqrt(A), golden = Math.PI * (3 - Math.sqrt(5)), rr = rng(A * 131 + Z), idx = [];
+      for (let i = 0; i < A; i++) idx.push(i); for (let i = A - 1; i > 0; i--) { const j = Math.floor(rr() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
+      for (let i = A - 1; i >= 0; i--) { const d = Rn * Math.sqrt((i + 0.5) / A), a = i * golden;
+        VG.ball(g, w / 2 + d * Math.cos(a), w / 2 + d * Math.sin(a), rb, idx[i] < Z ? toHex(T.proton) : toHex(T.neutron), { glint: 0.5 }); }
+    }
+    o = { cv, w }; SPR.set(key, o); if (SPR.size > 60) SPR.delete(SPR.keys().next().value); return o;
+  }
+  const blit = (o, x, y, sx = 1, sy = 1) => ctx.drawImage(o.cv, x - o.w * sx / 2, y - o.w * sy / 2, o.w * sx, o.w * sy);
+  function cpDrawFlat(cx, cy, sc, Rpx, p) {
+    const R = S.ch.R, t = CP.t, X = (q) => cx + q[0] * sc, Y = (q) => cy - q[1] * sc, fade = (a) => (reduce ? 1 : Math.max(0, a));
+    /* the metal is full of nuclei: a faint field of them, then the source on the left */
+    ctx.fillStyle = dark() ? 'rgba(190,200,215,0.16)' : 'rgba(220,226,235,0.2)';
+    for (const q of CP.field) { ctx.beginPath(); ctx.arc(cx + q[0] * Rpx, cy - q[1] * Rpx, 1.6 * p, 0, 7); ctx.fill(); }
+    const sx = cx - Rpx * 1.35;
+    if (VG && sx > 0) { VG.rod(ctx, 0, cy, sx, cy, 8 * p, { color: '#a6afba' }); VG.box(ctx, Math.max(2, sx - 64 * p), cy - 13 * p, 50 * p, 26 * p, { color: '#4f5d6e', r: 4 }); lab('neutron source', Math.max(2, sx - 64 * p) + 25 * p, cy - 24 * p, { a: 'center', s: 9.5 * p }); }
+    ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, H * 0.88); ctx.clip();
+    ctx.lineWidth = 1.2 * p; ctx.lineJoin = 'round';
+    const path = (pts, last) => { ctx.beginPath(); pts.forEach((q, i) => (i ? ctx.lineTo(X(q), Y(q)) : ctx.moveTo(X(q), Y(q)))); if (last) ctx.lineTo(X(last), Y(last)); ctx.stroke(); };
+    /* finished trails only inside the metal; the live ones also as they leave */
+    ctx.save(); ctx.beginPath(); ctx.arc(cx, cy, Rpx, 0, 7); ctx.clip();
+    for (const q of CP.trails) { ctx.strokeStyle = `rgba(140,200,255,${(reduce ? 0.55 : 0.7) * fade(1 - (t - q.t1) / CP_FADE)})`; path(q.pts); }
+    ctx.restore();
+    ctx.strokeStyle = 'rgba(140,200,255,0.75)'; for (const n of CP.ns) if (n.pts.length) path(n.pts, n.p);
+    /* the nuclei about to be struck (U or Pu), nearest last */
+    const sN = Math.max(1.6, Math.min(3.2, Rpx / 85)) * p, Zt = S.ch.mat === 'u235' ? 92 : 94, At = Math.round(MAT[S.ch.mat].A), spT = sprite(Zt, At, sN);
+    for (const h of CP.hits.slice().sort((a, b) => a.p[2] - b.p[2])) {
+      ctx.globalAlpha = h.kind === 'wait' ? Math.min(1, (t - h.t0) / 0.15) : fade(1 - (t - h.t1) / 0.8);
+      const k = h.kind === 'bump' ? 1 + 0.12 * Math.max(0, 1 - (t - h.t1) / 0.15) : 1; blit(spT, X(h.p), Y(h.p), k, k);
+    }
+    ctx.globalAlpha = 1;
+    if (reduce) { ctx.fillStyle = T.fis; for (const q of CP.fpts) { ctx.beginPath(); ctx.arc(X(q), Y(q), 3.4 * p, 0, 7); ctx.fill(); } }
+    if (!reduce) for (const q of CP.flashes) { const a = 1 - (t - q.t0) / 0.4, rr = 30 * p, gg = ctx.createRadialGradient(X(q.p), Y(q.p), 0, X(q.p), Y(q.p), rr); gg.addColorStop(0, `rgba(255,236,170,${a})`); gg.addColorStop(1, 'rgba(255,236,170,0)'); ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(X(q.p), Y(q.p), rr, 0, 7); ctx.fill(); }
+    if (!reduce) for (const q of CP.frags) { const age = t - q.t0, at = cpFrag(q, age); ctx.globalAlpha = Math.min(1, 3 * (1 - age / CP_FRAG)); blit(sprite(q.Z, q.A, sN), X(at), Y(at)); }
+    ctx.globalAlpha = 1;
+    const spn = sprite(0, 1, 2.8 * p); for (const n of CP.ns) blit(spn, X(n.p), Y(n.p));
+    ctx.restore();
+  }
+
   // ---------- drawing helpers ----------
   function scene(tile) { const y = Math.round(H * 0.88); if (VG) { VG.wall(ctx, 0, 0, W, y, tile === undefined ? {} : { tile }); VG.bench(ctx, 0, y, W, 14, Math.max(14, H - y - 2)); } else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); } return y; }
   /* a nucleus drawn as packed nucleons (sunflower packing), protons red and neutrons gray; size grows as A^(1/3) */
-  function nucleus(x, y, Z, A, s) {
+  function nucleus(x, y, Z, A, s, g = ctx) {
     if (A === 0) return;
-    if (A === 1) { (VG ? VG.ball(ctx, x, y, s, Z ? toHex(T.proton) : toHex(T.neutron)) : null); return; }
+    if (A === 1) { (VG ? VG.ball(g, x, y, s, Z ? toHex(T.proton) : toHex(T.neutron)) : null); return; }
     const R = s * Math.cbrt(A) * 1.05, rb = Math.max(1.5, s * 0.92), golden = Math.PI * (3 - Math.sqrt(5));
     const order = []; for (let i = 0; i < A; i++) order.push(Math.floor((i + 1) * Z / A) > Math.floor(i * Z / A));
     for (let i = A - 1; i >= 0; i--) { const rr = R * Math.sqrt((i + 0.5) / A), a = i * golden, px = x + rr * Math.cos(a), py = y + rr * Math.sin(a) * 0.95;
-      if (VG && A <= 80) VG.ball(ctx, px, py, rb, order[i] ? toHex(T.proton) : toHex(T.neutron), { glint: 0.6 }); else { ctx.fillStyle = order[i] ? T.proton : T.neutron; ctx.beginPath(); ctx.arc(px, py, rb, 0, 7); ctx.fill(); } }
-    if (!VG || A > 80) { const g = ctx.createRadialGradient(x - R * 0.35, y - R * 0.4, 0, x, y, R * 1.05); g.addColorStop(0, 'rgba(255,255,255,0.35)'); g.addColorStop(0.6, 'rgba(255,255,255,0)'); g.addColorStop(1, 'rgba(0,0,0,0.25)'); ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, R * 1.02, 0, 7); ctx.fill(); }
+      if (VG && A <= 80) VG.ball(g, px, py, rb, order[i] ? toHex(T.proton) : toHex(T.neutron), { glint: 0.6 }); else { g.fillStyle = order[i] ? T.proton : T.neutron; g.beginPath(); g.arc(px, py, rb, 0, 7); g.fill(); } }
+    if (!VG || A > 80) { const gr = g.createRadialGradient(x - R * 0.35, y - R * 0.4, 0, x, y, R * 1.05); gr.addColorStop(0, 'rgba(255,255,255,0.35)'); gr.addColorStop(0.6, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(0,0,0,0.25)'); g.fillStyle = gr; g.beginPath(); g.arc(x, y, R * 1.02, 0, 7); g.fill(); }
   }
   const toHex = (c) => { if (/^#[0-9a-f]{6}$/i.test(c)) return c; const m = /^#([0-9a-f])([0-9a-f])([0-9a-f])$/i.exec(c); return m ? '#' + m[1] + m[1] + m[2] + m[2] + m[3] + m[3] : '#888888'; };
   function photon(x1, y1, x2, y2, col, amp) {
@@ -667,21 +788,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       const narrow = W < 620, Rpx = Math.min(by * 0.4, (narrow ? W * 0.4 : W * 0.26)), cx = narrow ? W * 0.5 : W * 0.33, cy = by * 0.5, sc = Rpx / c.R;
       if (VG) { VG.shadow(ctx, cx, by - 2, Rpx * 0.9, 8 * p, 1); VG.ball(ctx, cx, cy, Rpx, toHex(T.metal), { glint: 0.7 }); } else { ctx.fillStyle = T.metal; ctx.beginPath(); ctx.arc(cx, cy, Rpx, 0, 7); ctx.fill(); }
       ctx.save(); ctx.globalAlpha = 0.55; ctx.fillStyle = dark() ? '#0b1016' : '#26303c'; ctx.beginPath(); ctx.arc(cx, cy, Rpx, 0, 7); ctx.fill(); ctx.restore();
-      ctx.save(); ctx.beginPath(); ctx.rect(0, 0, W, by); ctx.clip();
-      for (const tr of CHN.tracks) { ctx.strokeStyle = 'rgba(140,200,255,0.75)'; ctx.lineWidth = 1.1 * p; ctx.beginPath(); tr.forEach((q, i) => { const X = cx + q[0] * sc, Y = cy - q[1] * sc; i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y); }); ctx.stroke();
-        const e = tr[tr.length - 1], X = cx + e[0] * sc, Y = cy - e[1] * sc;
-        if (tr.end === 'fission') { ctx.fillStyle = T.fis; ctx.beginPath(); ctx.arc(X, Y, 3.2 * p, 0, 7); ctx.fill(); } else { ctx.fillStyle = '#cfe6ff'; ctx.beginPath(); ctx.arc(X, Y, 2 * p, 0, 7); ctx.fill(); } }
-      ctx.restore();
+      cpDrawFlat(cx, cy, sc, Rpx, p);
       ctx.strokeStyle = T.ink; ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(cx, cy + Rpx + 14 * p); ctx.lineTo(cx + Rpx, cy + Rpx + 14 * p); ctx.stroke();
       lab(`R = ${f(c.R, 2)} cm`, cx + Rpx / 2, cy + Rpx + 26 * p, { a: 'center', c: T.ink, m: true });
       lab(`${MAT[c.mat].name}, ${f(sphereMass(MAT[c.mat], c.R), 1)} kg`, cx, Math.max(14 * p, cy - Rpx - 14 * p), { a: 'center', c: T.ink, w: 700 });
-      if (narrow) { lab('orange: fission  ·  pale: leaked out', cx, by + 16 * p, { a: 'center' }); return; }
+      if (narrow) { lab(cpCaption(), W / 2, by + 16 * p, { a: 'center', c: T.ink, s: 9.5 * p }); return; }
       const mx = Math.min(W - 160 * p, cx + Rpx + 70 * p), mw = 130 * p, mh = 28 * p, st = kStats(CHN.ks);
       lcdBox(mx, 30 * p, mw, mh, String(CHN.gen), 'generation');
       lcdBox(mx, 96 * p, mw, mh, CHN.last ? f(CHN.last.k, 3) : '—', 'k this generation');
       lcdBox(mx, 162 * p, mw, mh, isFinite(st.k) ? f(st.k, 3) : '—', 'k, mean so far');
       lcdBox(mx, 228 * p, mw, mh, CHN.last ? `${f(100 * CHN.last.leak / c.N, 1)}%` : '—', 'leaked out');
-      lab('paths of 40 neutrons this generation, seen from the side', W * 0.04, by + 16 * p);
+      lab(cpCaption(), W * 0.04, by + 16 * p, { c: T.ink, m: true });
+      lab(`a neutron fired in every ${CP_GAP} s, seen from the side · nuclei drawn far larger than to scale · 1 s here is ${f(CP_V * c.R / V_N * 1e9, 1)} ns`, W * 0.04, by + 32 * p, { s: 9.5 * p });
       return;
     }
     /* generations: the family tree of the first neutrons in each generation */
@@ -698,9 +816,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     lab(W < 620 ? 'columns: generations · orange: fissions' : 'each column is a generation (up to 48 neutrons drawn); orange pairs are fissions', W * 0.04, by + 16 * p);
   }
 
-  /* The sphere in 3D: the same neutron paths (the simulation keeps x, y, z), seen through a see-through shell of the metal at its
-     true radius, on the bench. Lengths in cm. Only the picture changes; k, the leak fraction and the readings are the flat view's. */
-  const G3 = { st: null, view: null, o: { th: -0.7, ph: 1.2, zoom: 1 }, shell: null, core: null, lines: null, fis: null, out: null, trk: null, R: 0, bench: null };
+  /* The sphere in 3D: the same chain as the flat picture (the simulation keeps x, y, z), inside a see-through shell of the metal
+     at its true radius, on the bench. Lengths in cm; the chain lives in a group scaled by R. Only the picture changes. */
+  const G3 = { st: null, view: null, o: { th: -0.7, ph: 1.2, zoom: 1 }, shell: null, core: null, R: 0, bench: null, cg: null, TR: 6000 };
   const use3 = () => !!(S.view === 'ch' && S.ch.mode === 'sph' && G3.view && G3.view.is3d() && G3.st);
   function initCh3() {
     const st = VD3K.stage($('pane'), { before: can, fov: 32, near: 0.5, far: 2000, fogAt: [1.3, 3.2] }); if (!st) return false;
@@ -712,31 +830,49 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     G3.shell = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), VD3K.material(st, { roughness: 0.35, metalness: 0.7, transparent: true, opacity: 0.22, depthWrite: false }, ['#7f8a96', '#9aa6b4']));
     G3.core = new THREE.Mesh(new THREE.SphereGeometry(1, 64, 40), new THREE.MeshBasicMaterial({ color: 0x0b1016, transparent: true, opacity: 0.35, depthWrite: false, side: THREE.BackSide }));
     sc.add(G3.core, G3.shell);
-    G3.lines = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ color: 0x8cc8ff, transparent: true, opacity: 0.85 })); sc.add(G3.lines);
-    G3.fis = VD3K.particles(st, { n: 400, r: 0.32, color: T.fis, emissive: 0.6 }); G3.out = VD3K.particles(st, { n: 400, r: 0.2, color: '#cfe6ff', emissive: 0.5 });
-    sc.add(G3.fis.mesh || G3.fis, G3.out.mesh || G3.out);
+    /* the chain, in units of R: trails with colors fading into the dark core, nuclei, fragments, neutrons, a faint field of nuclei */
+    const cg = G3.cg = new THREE.Group(); sc.add(cg);
+    const lines = (op) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(G3.TR * 6), 3));
+      const L = new THREE.LineSegments(g, new THREE.LineBasicMaterial({ color: 0x8cc8ff, transparent: op < 1, opacity: op })); L.frustumCulled = false; cg.add(L); return L; };
+    G3.trails = lines(0.4); G3.live = lines(1);
+    G3.field = VD3K.particles(st, { n: 320, r: 0.012, color: '#8f9aa8', seg: 6 }); CP.field.forEach((q, i) => G3.field.put(i, q[0], q[1], q[2])); G3.field.show(CP.field.length); G3.field.done();
+    G3.nuc = VD3K.particles(st, { n: 200, r: 0.06, color: '#c0705a', seg: 14 });
+    G3.frag = VD3K.particles(st, { n: 200, r: 0.045, color: T.fis, emissive: '#7a3d08', seg: 12 });
+    G3.neu = VD3K.particles(st, { n: 200, r: 0.022, color: '#e8eef5', emissive: '#56606c', seg: 8 });
+    G3.fpt = VD3K.particles(st, { n: 400, r: 0.03, color: T.fis, emissive: '#7a3d08', seg: 8 });
+    cg.add(G3.field, G3.nuc, G3.frag, G3.neu, G3.fpt);
+    G3.src = VD3K.rod([-2.6, 0, 0], [-1.4, 0, 0], 0.07, VD3K.material(st, { roughness: 0.4, metalness: 0.7 }, ['#a6afba', '#8d97a3'])); cg.add(G3.src);
     st.orbit(st.el, G3.o, () => redraw(), { phMin: 0.2, phMax: 1.5, zMin: 0.5, zMax: 3 });
     return true;
   }
   function drawCh3() {
-    const st = G3.st, c = S.ch, p = proj(), R = c.R;
+    const st = G3.st, c = S.ch, p = proj(), R = c.R, t = CP.t;
     st.size(W, H);
     G3.shell.scale.setScalar(R); G3.core.scale.setScalar(R * 0.999); G3.shell.position.set(0, 0, R); G3.core.position.set(0, 0, R); G3.bench.position.z = 0;
-    if (G3.trk !== CHN.tracks || G3.R !== R) {
-      G3.trk = CHN.tracks; G3.R = R; const v = []; let nf = 0, no = 0;
-      for (const tr of CHN.tracks) { for (let i = 1; i < tr.length; i++) v.push(tr[i - 1][0], tr[i - 1][1], tr[i - 1][2] + R, tr[i][0], tr[i][1], tr[i][2] + R);
-        const e = tr[tr.length - 1]; if (tr.end === 'fission') G3.fis.put(nf++, e[0], e[1], e[2] + R); else G3.out.put(no++, e[0], e[1], e[2] + R); }
-      G3.lines.geometry.dispose(); G3.lines.geometry = new THREE.BufferGeometry(); G3.lines.geometry.setAttribute('position', new THREE.Float32BufferAttribute(v, 3));
-      G3.fis.show(nf); G3.out.show(no); G3.fis.done(); G3.out.done();
-      G3.stand.scale.set(R * 0.45, R * 0.45, R * 0.45); G3.stand.position.set(0, 0, R * 0.04);
+    G3.cg.position.set(0, 0, R); G3.cg.scale.setScalar(R);
+    if (G3.R !== R) {
+      G3.R = R; G3.stand.scale.set(R * 0.45, R * 0.45, R * 0.45); G3.stand.position.set(0, 0, R * 0.04);
       G3.dim.geometry.dispose(); G3.dim.geometry = new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(0, 0, R), new THREE.Vector3(0, -R, R)]);
-      const t = `R = ${f(R, 2)} cm`; if (t !== G3.dimLab.userData.t) { G3.dimLab.userData.t = t; G3.dimLab.set(t); G3.dimLab.scale.multiplyScalar(R / 6); } G3.dimLab.position.set(0, -R * 0.5, R * 1.12);
+      const s = `R = ${f(R, 2)} cm`; if (s !== G3.dimLab.userData.t) { G3.dimLab.userData.t = s; G3.dimLab.set(s); G3.dimLab.scale.multiplyScalar(R / 6); } G3.dimLab.position.set(0, -R * 1.3, R);
     }
-    st.place(G3.o, new THREE.Vector3(0, 0, R), st.fit(R * 5.2, 1.4));
+    /* trails: the live legs bright, finished trails fainter, and only their part inside the metal */
+    const inside = (q) => q[0] * q[0] + q[1] * q[1] + q[2] * q[2] <= R * R * 1.0001;
+    const fill = (L, list) => { const pos = L.geometry.attributes.position; let k = 0;
+      for (const [pts, last] of list) { const P = last ? pts.concat([last]) : pts;
+        for (let i = 1; i < P.length && k < G3.TR; i++) { if (!last && !(inside(P[i - 1]) && inside(P[i]))) continue;
+          pos.setXYZ(2 * k, P[i - 1][0] / R, P[i - 1][1] / R, P[i - 1][2] / R); pos.setXYZ(2 * k + 1, P[i][0] / R, P[i][1] / R, P[i][2] / R); k++; } }
+      L.geometry.setDrawRange(0, 2 * k); pos.needsUpdate = true; };
+    fill(G3.trails, CP.trails.map((q) => [q.pts, null])); fill(G3.live, CP.ns.filter((n) => n.pts.length).map((n) => [n.pts, n.p]));
+    let i = 0; for (const h of CP.hits) if (h.kind === 'wait' || t - h.t1 < 0.4) G3.nuc.put(i++, h.p[0] / R, h.p[1] / R, h.p[2] / R); G3.nuc.show(i); G3.nuc.done();
+    i = 0; if (!reduce) for (const q of CP.frags) { const a = cpFrag(q, t - q.t0); G3.frag.put(i++, a[0] / R, a[1] / R, a[2] / R); } G3.frag.show(i); G3.frag.done();
+    i = 0; for (const n of CP.ns) if (n.p[0] > -2.5 * R) G3.neu.put(i++, n.p[0] / R, n.p[1] / R, n.p[2] / R); G3.neu.show(i); G3.neu.done();
+    i = 0; if (reduce) for (const q of CP.fpts) G3.fpt.put(i++, q[0] / R, q[1] / R, q[2] / R); G3.fpt.show(i); G3.fpt.done();
+    st.place(G3.o, new THREE.Vector3(-0.5 * R, 0, R), st.fit(R * 6.2, 1.4));
     st.render();
     /* words and meters on top, as in the flat view */
     lab(`${MAT[c.mat].name}, ${f(sphereMass(MAT[c.mat], c.R), 1)} kg, R = ${f(c.R, 2)} cm`, 14 * p, 16 * p, { c: T.ink, w: 700 });
-    lab(W < 620 ? 'orange: fission · pale: leaked out · drag to turn' : 'paths of 40 neutrons this generation in 3D · orange: fission · pale: leaked out · drag to turn', 14 * p, 32 * p, { c: T.muted });
+    lab(W < 620 ? 'drag to turn' : `a neutron fired in every ${CP_GAP} s · red: the nucleus each neutron will strike · orange: fission fragments · drag to turn`, 14 * p, 32 * p, { c: T.muted });
+    lab(cpCaption(), 14 * p, H - 14 * p, { c: T.ink, m: true });
     if (W < 620) return;
     const mx = W - 160 * p, mw = 130 * p, mh = 28 * p, sk = kStats(CHN.ks);
     lcdBox(mx, 30 * p, mw, mh, String(CHN.gen), 'generation');
@@ -921,6 +1057,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function redraw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); ({ rx: drawRx, ch: drawCh, fu: drawFu, do: drawDo })[S.view](); drawCurve(); readouts(); clock();
     $('pane').classList.toggle('in3d', use3()); if (G3.st) G3.st.el.style.visibility = use3() ? 'visible' : 'hidden'; }
+  function picture() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H); drawCh(); }
   function clock() { $('clock').textContent = S.view === 'ch' ? (S.ch.mode === 'sph' ? `generation ${CHN.gen}` : `generation ${CHN.g.sizes.length - 1}`) : S.view === 'fu' ? `T = ${sci(Math.pow(10, S.fu.lgT), 3)} K` : S.view === 'do' ? `${f(S.do.r, 2)} m` : eqText(true); }
 
   // ---------- readouts ----------
@@ -1057,7 +1194,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('doT').addEventListener('input', (e) => { S.do.ti = +e.target.value; doChanged(); });
   can.addEventListener('keydown', (e) => { if (e.key === ' ' && (S.view === 'rx' || S.view === 'ch')) { $('go').click(); e.preventDefault(); } });
   $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
-  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; redraw(); });
+  $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; cpNew(); redraw(); });
   document.querySelector('.vd-readings').addEventListener('click', () => setTimeout(redraw, 0));
 
   // ---------- the clock ----------
@@ -1067,7 +1204,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (S.view === 'rx' && S.rx.t > 0 && S.rx.t < 1.5) { S.rx.t = Math.min(1.5, S.rx.t + dt * 0.9); dirty = true; }
     if (S.view === 'ch' && S.run) { acc += dt * (S.speed === 1 ? 2 : 20); let n = 0; while (acc >= 1 && n < 20) { acc -= 1; n++; if (!chStep()) { setRun(false); break; } } if (n) dirty = true; }
     if (S.view === 'do' && !reduce) { photStep(dt); dirty = true; }
-    if (dirty) redraw(); requestAnimationFrame(frame);
+    const live = S.view === 'ch' && S.ch.mode === 'sph' && !reduce; if (live) cpStep(dt);
+    if (dirty) redraw(); else if (live) picture(); requestAnimationFrame(frame);
   }
 
   // ---------- readings ----------
@@ -1095,7 +1233,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- about ----------
   $('aboutRx').textContent = 'Reactions: masses are AME2020 atomic masses (M. Wang et al., Chinese Physics C 45, 030003 (2021)), the table used in the Binding Energy demo. Each nucleus is a neutral atom, so when the charge balances the electrons balance too and their masses cancel in Q = (Σm before − Σm after)c² (1 u = 931.494 MeV/c², CODATA 2022). The atomic masses include the electrons\' binding energies (up to about 0.8 MeV for uranium), so Q is the energy released when the products end up as neutral atoms. All nuclei are in their ground states; a product left excited gives the excitation energy off as γ rays and the products share that much less kinetic energy. The target is at rest. The threshold is K_th = −Q(Σm before + Σm after)/(2m_target), exact in relativity; the nonrelativistic form −Q(1 + m_projectile/m_target) differs by less than 0.1% here. With two products, the energy of the light one at the detector angle comes from exact relativistic two body kinematics; with more products only their total kinetic energy, K + Q, is fixed. "Allowed by energy" says only that energy and momentum can be conserved: whether the reaction actually happens, and how often, depends on its cross section, which is not modeled. The Coulomb barrier is k Z₁Z₂e²/(R₁ + R₂) with R = 1.2 fm × A^(1/3) (OpenStax Vol 3 §10.1); charged projectiles below it can still tunnel through. A slow (thermal) neutron has K ≈ 0.025 eV, entered as 0.';
-  $('aboutCh').textContent = 'Chain reaction, generations: each neutron causes a fission with probability k/ν̄ (it otherwise escapes or is captured), and each fission releases ν neutrons drawn at random from Terrell\'s distribution, P(ν ≤ n) = Φ((n − ν̄ + 1/2 + b)/σ) with σ = 1.08 (J. Terrell, Phys. Rev. 108, 783 (1957)), b chosen so the mean is ν̄ = 2.4355 for thermal fission of ²³⁵U (A. D. Carlson et al., Nucl. Data Sheets 148, 143 (2018)). The energy counts 200 MeV a fission (OpenStax Example 10.10): of the 207 MeV released, 168 MeV is the fragments\' kinetic energy, 5 MeV the neutrons, 7 MeV prompt γ rays, 8 MeV β and 7 MeV γ rays from the fission products, and 12 MeV neutrinos that escape (J. R. Lamarsh and A. J. Baratta, Introduction to Nuclear Engineering, 3rd ed., Table 3.6). Sphere: a teaching model, simulated. A bare sphere of pure metal, with neutrons of one speed (about 1.5 MeV) followed one at a time. One group constants from M. B. Chadwick, Nuclear Technology 207 (2021) (arXiv:2103.05727), Tables 1 and 2, ENDF/B-VIII.0 at 1.5 MeV: ²³⁵U, σ_F = 1.24 b, σ_T = 5.0 b, ν̄ = 2.57, ρ = 18.9 g/cm³; ²³⁹Pu (α phase), σ_F = 1.93 b, σ_T = 5.29 b, ν̄ = 3.09, ρ = 19.6 g/cm³. Free paths are drawn from an exponential with mean 1/(nσ_T); at each collision the neutron causes a fission with probability σ_F/σ_T, and otherwise scatters in a random direction with no loss of energy (σ_T is the transport cross section, so isotropic scattering stands in for the real forward peaked scattering). Capture, the slowing of neutrons, the spread of their energies and any reflector are left out. k for a generation is the neutrons born divided by those followed; the next generation starts from a random sample of the fission sites, and the mean k leaves out the first 5 generations while that shape settles. Its uncertainty is the standard error of the generation values, which slightly understates it because successive generations are correlated. Chadwick quotes bare critical masses from a full transport calculation (MCNP6) of 46 kg for ²³⁵U and 10.2 kg for ²³⁹Pu. The neutron lifetime is the mean path length over the speed of a 1.5 MeV neutron, 1.69 × 10⁹ cm/s.';
+  $('aboutCh').textContent = 'Chain reaction, generations: each neutron causes a fission with probability k/ν̄ (it otherwise escapes or is captured), and each fission releases ν neutrons drawn at random from Terrell\'s distribution, P(ν ≤ n) = Φ((n − ν̄ + 1/2 + b)/σ) with σ = 1.08 (J. Terrell, Phys. Rev. 108, 783 (1957)), b chosen so the mean is ν̄ = 2.4355 for thermal fission of ²³⁵U (A. D. Carlson et al., Nucl. Data Sheets 148, 143 (2018)). The energy counts 200 MeV a fission (OpenStax Example 10.10): of the 207 MeV released, 168 MeV is the fragments\' kinetic energy, 5 MeV the neutrons, 7 MeV prompt γ rays, 8 MeV β and 7 MeV γ rays from the fission products, and 12 MeV neutrinos that escape (J. R. Lamarsh and A. J. Baratta, Introduction to Nuclear Engineering, 3rd ed., Table 3.6). Sphere: a teaching model, simulated. A bare sphere of pure metal, with neutrons of one speed (about 1.5 MeV) followed one at a time. One group constants from M. B. Chadwick, Nuclear Technology 207 (2021) (arXiv:2103.05727), Tables 1 and 2, ENDF/B-VIII.0 at 1.5 MeV: ²³⁵U, σ_F = 1.24 b, σ_T = 5.0 b, ν̄ = 2.57, ρ = 18.9 g/cm³; ²³⁹Pu (α phase), σ_F = 1.93 b, σ_T = 5.29 b, ν̄ = 3.09, ρ = 19.6 g/cm³. Free paths are drawn from an exponential with mean 1/(nσ_T); at each collision the neutron causes a fission with probability σ_F/σ_T, and otherwise scatters in a random direction with no loss of energy (σ_T is the transport cross section, so isotropic scattering stands in for the real forward peaked scattering). Capture, the slowing of neutrons, the spread of their energies and any reflector are left out. k for a generation is the neutrons born divided by those followed; the next generation starts from a random sample of the fission sites, and the mean k leaves out the first 5 generations while that shape settles. Its uncertainty is the standard error of the generation values, which slightly understates it because successive generations are correlated. Chadwick quotes bare critical masses from a full transport calculation (MCNP6) of 46 kg for ²³⁵U and 10.2 kg for ²³⁹Pu. The neutron lifetime is the mean path length over the speed of a 1.5 MeV neutron, 1.69 × 10⁹ cm/s. The picture follows chains as they happen, with the same rules: a source fires a neutron into the sphere every 1.5 s, each nucleus a neutron is about to strike is drawn where the collision will be (the metal holds about 4.8 × 10²² nuclei per cm³, far too many to draw), a fission splits it into two fragments and releases ν new neutrons, and a scatter sends the neutron off in a new direction. Time is slowed: a neutron covers 0.9 R each second of the picture, so 1 s of the picture is a few nanoseconds. The heavy, highly charged fragments really stop almost where they are made, far closer than the picture can show; it moves them only a little apart. When more than 40 neutrons are in flight the chain has run away and the picture starts again. The picture is one sample of a chain; k, the meters and the readings come from the generations run.';
   $('aboutFu').textContent = 'Fusion: two bare nuclei at separation r feel the Coulomb potential kZ₁Z₂e²/r until they touch at R = 1.2 fm × (A₁^(1/3) + A₂^(1/3)); inside, the nuclear well is drawn with a schematic depth. In a gas at temperature T the chance of a collision at energy E falls as e^(−E/kT) (Maxwell–Boltzmann), while the chance of tunneling through the barrier rises as e^(−√(E_G/E)), with the Gamow energy E_G = 2μc²(παZ₁Z₂)² (μ the reduced mass, α the fine structure constant). Their product, the Gamow peak, sits at E₀ = (E_G(kT)²/4)^(1/3) with 1/e full width 4√(E₀kT/3) (C. E. Rolfs and W. S. Rodney, Cauldrons in the Cosmos (1988), ch. 4); the demo measures the peak and its full width at half maximum on the curve itself. Reaction rates: p + p from ⟨σv⟩ = √(8/πμ)(kT)^(−3/2) ∫ S e^(−E/kT − √(E_G/E)) dE with the S factor taken constant at S(0) = 4.01 × 10⁻²⁵ MeV b (E. G. Adelberger et al., Rev. Mod. Phys. 83, 195 (2011)); D + T from the fit of H.-S. Bosch and G. M. Hale, Nucl. Fusion 32, 611 (1992), valid for kT from 0.2 to 100 keV. Screening by electrons is left out. The Sun\'s core is taken from the standard solar model (J. N. Bahcall, A. M. Serenelli and S. Basu, ApJ 621, L85 (2005)): T ≈ 1.57 × 10⁷ K, ρ ≈ 150 g/cm³, hydrogen mass fraction 0.35, so about 3.1 × 10²⁵ protons per cm³; the mean time for one proton to fuse is 1/(n_p⟨σv⟩). OpenStax §10.6 gives D + T → ⁴He + n + 17.6 MeV.';
   $('aboutDo').textContent = 'Dose: the source is a point emitting γ rays equally in all directions; the line energies and the photons per decay are from ENSDF via NuDat 3 (¹³⁷Cs 661.7 keV, 85.1%, through ¹³⁷ᵐBa; ⁶⁰Co 1173.2 and 1332.5 keV; ⁹⁹ᵐTc 140.5 keV, 89%; ¹⁸F two 511 keV annihilation photons per positron, 96.7% of decays). The β particles and positrons are taken to stop in the capsule. The photon flux at distance r is A y e^(−μx)/(4πr²): narrow beam attenuation in the shield with no buildup (in a thick shield, scattered photons add to the dose, so the real dose rate behind it is higher, by a factor of a few for many half value layers), and no attenuation in air or scattering from the room. Attenuation coefficients μ/ρ (lead 11.35 g/cm³, ordinary concrete 2.30 g/cm³, water) and the soft tissue (ICRU-44) mass energy absorption coefficient μ_en/ρ are from NIST (J. H. Hubbell and S. M. Seltzer, Standard Reference Database 126), interpolated log–log. The absorbed dose rate is the photon energy flux times μ_en/ρ of tissue, as for a small piece of tissue at the meter, all of whose absorbed energy stays there (1 Gy = 1 J/kg; OpenStax Vol 3 §10.7: 1 rad = 0.01 Gy). The equivalent dose is w_R times the absorbed dose with w_R = 1 for photons (ICRP Publication 103 (2007); OpenStax\'s RBE table gives 1 for γ and X-rays and up to 20 for α particles; ICRP 103 gives protons 2, α particles 20, neutrons 2.5 to 21 by energy). A whole body taken as uniformly exposed, so its effective dose equals this equivalent dose. The dose over a time t allows for the source decaying, D = Ḋ₀τ(1 − e^(−t/τ)) with τ = t½/ln 2. A patient is treated as a bare point source, ignoring the body\'s own absorption. Background: OpenStax §10.7 gives 3.5 mSv per year in the United States (2.8 mSv world average), including medical exposure.';
 

@@ -2109,3 +2109,13 @@ From Steve's desktop review (2026-10-25 01:19): Stellar Evolution's Play and Res
 - No CORE or readings changed. Tests (lagrange points, tides) pass; `vdcheck --only after` on all six: no page errors, no sideways scroll at 400 px, light and dark; checked by hand in Chromium (throw, Shift throw, click, turn drag adds nothing).
 
 **For GPT to verify:** nothing numerical; the 3D throw uses the same ARW = 0.1·2π scaling as Flat.
+## Claude, 2026-10-25: chain reaction picture rebuilt (Nuclear Reactions)
+
+Steve's desktop review: the Chain reaction view was jumpy (it redrew 40 random paths each generation) and did not show the chaining. The Sphere model's picture, flat and 3D, now follows chains as they happen: a neutron source on the left fires a neutron into the sphere every 1.5 s; the nucleus each neutron will strike is drawn at its collision point; a scatter bounces the neutron off in a new direction; a fission flashes, splits the nucleus into two fragments and sends out ν new neutrons, which go on to strike other nuclei. Over 40 neutrons in flight counts as a runaway and the picture starts again. The caption counts neutrons fired in, fissions, the longest chain in generations and the neutrons in flight, and gives the time scale (1 s of the picture is a few ns).
+
+- Same rules as sphereGen (exponential free path with mean 1/(nσ_T), fission with probability σ_F/σ_T, Terrell ν, isotropic scatter, leak at the surface), lengths true in cm. CORE is unchanged; the MC generations, k, the meters, the graphs and Record reading are unchanged (same seed gives the same k values and the same reading row as before). Keys unchanged.
+- Reduce motion shows five source neutrons and their chains run to the end, every path at once, fissions as orange dots.
+- Critical Mass handout: the sentence describing the picture now says what it shows (it was "the same 40 paths").
+- Checked: test_nuclear-reactions.cjs passes, vdcheck 40 screenshots 0 problems, Chromium at 1400 px light and dark, 400 px phone, Reduce motion and 3D (three.js served locally); 60 fps flat.
+
+**For GPT to verify:** that the About text's description of the picture matches what it shows (it cannot check the 3D view).
