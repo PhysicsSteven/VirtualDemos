@@ -3243,3 +3243,42 @@ Steve picked these from the comparison with other open simulation collections (m
 - Energy: new `VD.energy` helper (`demos/lib/vdenergy.js`, loaded on first call). Projectile Range: Energy bars fold, K = ½mv², U = mgy and E0 − K − U taken by drag, from the same RK4 path; hidden in Blind. Kepler's Laws: Energy bars per kilogram in MJ/kg (1 MJ/kg = 1 km²/s²), v²/2, −GM/r and ε; hidden in Blind. Springs: Phase plot fold, v against x of the block (block 1 when coupled).
 - Checks: vdcheck --only after on all eight demos, 0 problems; their Node tests pass. No handout or key changes (the new folds are extra, nothing in a worksheet refers to them).
 - GPT: please check the physics wording in the three new hint paragraphs.
+
+## 2026-10-25 · Claude · How this works videos: Electrostatics at Work (three worksheets), Capacitors, Resistivity, Household Wiring
+
+Physics II, chapters 7 to 9 and household wiring, following `tools/howto/README.md`. Six dark theme videos of the first reading in
+each worksheet; no measuring tools appear (the Van de Graaff script hides the Tools button). Electrostatics at Work uses the
+function form of `VD.howTo`: the button plays `van-de-graaff`, `ink-jet-printer` or `precipitator` for the machine shown, with the
+popup titled to match. Every number on screen comes from the run and was checked by hand:
+
+- Van de Graaff Generator (23.0 s): Part 1's first row, R = 5 cm, I = 10 µA, set on the Set up card, motor started. Demo: C 5.56 pF,
+  V_max 150 kV, time to spark 0.0834 s, spark energy 0.0626 J (row 5.563 pF, 0.08345 s, 0.06259 J). By hand C = 4πε₀R = 5.563 pF,
+  V_max = E_b R = 150 kV, Q_max = 0.8345 µC, t = Q_max/I = 0.08345 s, U = ½Q_max V_max = 0.06259 J.
+- Ink Jet Printer (26.0 s): Part 1's first two rows, 60 µm, 20 m/s, 3000 V, q = 0 then 0.05 pC. Demo: 0 pC caught by the gutter;
+  0.05 pC lands at 0.324 mm, gravity −7.7 µm, mass 113.1 ng. By hand m = ρπd³/6 = 113.1 ng, a = qV/(m d_gap) = 663.1 m/s²,
+  y = a t₁(t₁/2 + t₂) − ½g(t₁ + t₂)² = 0.3316 − 0.0077 = 0.324 mm (t₁ 0.50 ms, t₂ 0.75 ms).
+- Smoke Precipitator (19.4 s): Part 1's first row, conducting 0.1 µm, 3.0 kV/cm, 1.0 m/s, 5.0 m, counted past 500. The roughly 22 s
+  wait is shown 8 times faster, and the caption says so. Demo: C_c 2.889, 1.56 electrons, w 1.272 cm/s, predicted 39.87 %; recorded
+  199 caught / 351 through, measured 36.2 %. By hand Kn = 1.32, C_c = 2.8887, q = 3πε₀d²E = 2.503 × 10⁻¹⁹ C, w = qEC_c/(3πηd) =
+  1.2718 cm/s, η = 1 − exp(−wL/us) = 39.87 %. The measured value is 1.7σ low (σ = √(η(1 − η)/N) = 2.1 % at N = 550), a fair
+  random run; a 200 000 particle check of the demo's counting rule gives 40.0 %, so it is unbiased.
+- Capacitors (19.4 s): the geometry scan's first reading, Pull apart connected, Blind on, sweep paused, top plate dragged to
+  d = 1.00 cm. Demo: C 12.8 pF, Q 1.28 nC, V 100 V. By hand C = ε₀A/d = 12.75 pF, Q = 1.275 nC.
+- Resistivity (18.1 s): the length scan's first reading, Mystery wire, 0.405 mm, 0.20 A, 20 °C, clip dragged to 0.100 m. Demo:
+  V 0.06520 V. By hand (the demo's hidden ρ = 4.2 × 10⁻⁷ Ω·m) A = 0.12882 mm², R = 0.32602 Ω, V = IR = 0.065205 V.
+- Household Wiring (18.8 s): Part 1's first row, the lamp alone, 15 m of 14 gauge, 15 A breaker. Demo: hot and neutral 0.8319 A,
+  ground 0, outlet 119.8 V, power 99.66 W, 0.00559 W/m, 121.1 mΩ one way. By hand R_w = ρL/A = 0.1211 Ω,
+  I = 120/(144 + 0.2422) = 0.8319 A, outlet 119.80 V, P = 119.80²/144 = 99.66 W, I²ρ/A = 0.00559 W/m.
+
+**Demo fixes found while recording (visible to students):**
+- Resistivity, 3D: below about L = 0.44 m the "fixed clip" and "L = …" labels sat on the voltmeter's display. They now go above the
+  wire whenever the voltmeter is close enough to sit under them.
+- Resistivity: the voltmeter (LCD, readout, ΔV label and captured V) dropped trailing zeros, so 0.065205 V showed as 0.0652 instead
+  of 4 significant figures. It now shows 0.06520. (R = V/I and the supply current still use the shared rounding that drops trailing
+  zeros, e.g. 0.326 Ω for 0.3260 Ω; left as is.)
+- Electrostatics at Work: a page error at 400 px (createRadialGradient with a negative radius while the stage had no height yet);
+  the scale is now clamped at 0.
+
+vdcheck `--only after`: 0 problems on all four demos. No What's new entry.
+
+**For GPT:** please check the six videos' captions and readings against the figures above, and the two Resistivity fixes.

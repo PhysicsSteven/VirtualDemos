@@ -335,7 +335,7 @@ table.rows input:focus { border-color: var(--accent); }
     return `${(v / 10 ** e).toFixed(n - 1).replace('-', '−')} × 10${String(e).split('').map((c) => SUP[c]).join('')}`; }
   const M = () => MATS[S.mat], d = () => GAUGES[S.g][1], hidden = () => S.blind || S.mat === 'mystery';
   const volts = () => S.I * resistance(M(), S.L, d(), S.T);
-  const vShown = () => sig(volts(), 4);
+  const vShown = () => (volts() === 0 ? '0' : volts().toPrecision(4));   /* 4 significant figures, trailing zeros kept: a meter shows 0.06520, not 0.0652 */
 
   function draw() {
     if (!T || !W) return;
@@ -650,7 +650,9 @@ table.rows input:focus { border-color: var(--accent); }
     halo(`ΔV = ${vShown()} V`, [ta[0] + (right ? 6 : -6) * p, (ta[1] + tb[1]) / 2], { w: 700, a: right ? 'left' : 'right', m: true });
     /* the clips and the rule */
     const ca = Q([0, -0.06, 0]), cb = Q([S.L, -0.06, 0]);
-    halo('fixed clip', [ca[0], ca[1] + 6 * p], { a: 'center', s: 10.5, c: T.muted }); halo(`L = ${(S.L * 100).toFixed(1)} cm`, [cb[0], cb[1] + (S.L < 0.12 ? 20 : 6) * p], { a: 'center', w: 700 });
+    /* below the clips, except when the voltmeter (at x = dmX(), 0.16 m wide) comes close enough to sit under the words: then above them */
+    const up = dmX() < 0.22 || Math.abs(dmX() - S.L) < 0.15, dy = (k) => (up ? -40 - k : 6 + k) * p;
+    halo('fixed clip', [ca[0], ca[1] + dy(0)], { a: 'center', s: 10.5, c: T.muted }); halo(`L = ${(S.L * 100).toFixed(1)} cm`, [cb[0], cb[1] + dy(S.L < 0.12 ? 14 : 0)], { a: 'center', w: 700 });
     if (!narrow) halo(`The wire on the rule is drawn ${WIRE_X} times thicker than it is; the magnified piece is to scale. Drag a clip to set L, drag elsewhere to turn.`, [12 * p, H - 76 * p], { s: 10, c: T.muted });
   }
   function setDim(v) {
@@ -1024,6 +1026,7 @@ table.rows input:focus { border-color: var(--accent); }
   document.addEventListener('visibilitychange', () => { if (!document.hidden) { runLoop(); benchLoop(); } });
   resetElectrons();
   tokens(); new ResizeObserver(resize).observe(stage); coldSync(); upd(); renderRows(); resize();
+  VD.howTo({ src: 'media/how-this-works/resistivity.mp4', poster: 'media/how-this-works/resistivity.jpg' });
   { const v0 = new URLSearchParams(location.search).get('view'); if (v0 === 'cold' || v0 === 'inside') setView(v0); else benchLoop();
     G3.want = v0 !== 'flat' && !!window.VD3 && !VD3.lowPower(); if (G3.want) setDim('3d'); }
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
