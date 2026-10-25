@@ -5,7 +5,7 @@
   --look-shadow: 0 1px 2px rgba(20, 30, 45, 0.06), 0 6px 20px rgba(20, 30, 45, 0.07);
   --look-lift: 0 1px 2px rgba(20, 30, 45, 0.10), 0 10px 28px rgba(20, 30, 45, 0.14);
   --look-edge: color-mix(in srgb, var(--line) 75%, transparent);
-  --look-quiet: color-mix(in srgb, var(--muted) 82%, var(--surface));
+  --look-quiet: color-mix(in srgb, var(--muted) 95%, var(--surface)); /* 95%: at least 4.5:1 on surface and page background in both themes (WCAG AA) */
   --look-glass: color-mix(in srgb, var(--surface) 84%, transparent);
   --inst-top: #4a5665; --inst-bot: #333c48; --inst-rim: #1f262f; --inst-ink: #e6ebf1; --inst-quiet: #b9c3cf;
   --look-lcd-bg: #0a1810; --look-lcd-ink: #8ef0b0;
@@ -25,7 +25,7 @@
 body { background: radial-gradient(1400px 700px at 15% -20%, color-mix(in srgb, var(--accent) 6%, var(--bg)), var(--bg) 65%) var(--bg); background-attachment: fixed; }
 .bar h1 { letter-spacing: -0.015em; }
 .bar p { color: var(--look-quiet); }
-.units { color: var(--look-quiet); opacity: 0.85; }
+.units { color: var(--look-quiet); }
 .stage, .rail { border-color: var(--look-edge); border-radius: var(--look-radius); box-shadow: var(--look-shadow); }
 .rail h2, .rail details.fold > summary { color: var(--look-quiet); letter-spacing: 0.1em; }
 .rail section + section, .rail > details + section, .rail > section + details { border-top-color: color-mix(in srgb, var(--line) 70%, transparent); }

@@ -234,7 +234,7 @@
 .sym-tip .sym-name { font-weight: 600; }
 .sym-tip .sym-unit, .sym-tip .sym-note { color: var(--sym-dim, #57606a); margin-top: 2px; }
 mjx-container .sym-on { cursor: help; background: var(--sym-hi, rgba(9, 105, 218, 0.14)); border-radius: 3px; }
-.sym-hint { font-size: 0.9em; color: var(--sym-dim, #57606a); }
+.sym-hint { font-size: 0.9em; color: var(--sym-dim, var(--hd-muted, #57606a)); }
 .sym-tip.sym-dark { --sym-bg: #161b22; --sym-fg: #e6edf3; --sym-line: #6e7681; --sym-dim: #9da7b3; }
 @media screen and (prefers-color-scheme: dark) { :root:not([data-theme="light"]) mjx-container .sym-on { --sym-hi: rgba(105, 160, 255, 0.32); } }
 :root[data-theme="dark"] mjx-container .sym-on { --sym-hi: rgba(105, 160, 255, 0.32); }

@@ -2827,3 +2827,17 @@ Keys: each TeacherKeys capture script was run against the old and new pages with
 ## Claude, 2026-10-25: What's new and theme switch move to the top left of the home page
 
 Steve (16:29): the What's new button overlapped the Kepler orbit graphic. The `.hero-tools` row (What's new and the theme switch) now sits in the flow at the top left of the hero, above the Physics eyebrow, at every width, so neither touches the graphic. Checked at 1280, 400 and 360 px, light and dark.
+
+## 2026-10-25 Claude: two contrast fixes (WCAG 2.1 AA)
+
+Steve asked how far the site is from WCAG 2.1 AA (report: https://claude.ai/artifact/VDSJGiJ7C7FaZGvVnGBTNu) and approved fixing the
+two colors behind about 95% of the automated failures. Other accessibility work waits until everything else is polished, and the
+screen reader work comes last (Steve, 2026-10-25).
+
+- `demos/lib/look.css`: `--look-quiet` (rail headings, hints, card titles, readout labels) mixes 95% of `--muted` into the surface
+  instead of 82%, so it reaches 4.5:1 on the surface and the page background in both themes (was 3.8:1 in light). `.units` lost its
+  extra 0.85 opacity for the same reason. The look is nearly unchanged.
+- `curriculum/labs/symbols.js`: the "Hover over a symbol" hint uses `--hd-muted`, so it follows the dark handout theme (was 2.9:1 in dark).
+
+axe-core 4.10.2 rerun over the course pages, all 120 demos and 168 handouts in light and dark: failing elements 2,262 to 412,
+every handout clean in both themes. What remains is per demo (own colors in 8 demos, a few ARIA and table items) and is listed in the report.
