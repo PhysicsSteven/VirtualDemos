@@ -2847,3 +2847,13 @@ every handout clean in both themes. What remains is per demo (own colors in 8 de
 Steve asked for Dark as the default for a first visit. `demos/lib/theme.js` now reads `vd-theme` as `light`, `dark` or `auto` (Browser default, now saved explicitly) and treats nothing saved as Dark, so `data-theme="dark"` is set before the first paint on every page. Saved Light and Dark choices are unchanged; anyone who had picked Browser default before today (stored as no value) now gets Dark until they pick it again. Checked with a light system setting and empty storage: home, course, 404, demo, notes and handout pages open dark, course thumbnails load their dark images, choosing Browser default saves `auto` and gives light after a reload. Handouts and notes still print black on white. What's new entry added.
 
 **For GPT to verify:** nothing numeric changed.
+
+## Claude, 2026-10-25: Gas in a Box, Near absolute zero no longer looks like it heats up
+
+Steve saw the Near absolute zero gas gain kinetic energy "from nowhere" after a few seconds. It never did: T stays 0.0100 K to 1 part in 10¹⁵ (elastic collisions, energy conserved). The cause was the playback. The preset turned on Slow motion follows T before the new gas existed, so the rate started at the old gas's 300 K value (80 ps per second) and eased up to 13.9 ns per second (√(300/0.01) = 173 times faster) over about 8 s; the molecules looked like they sped up 173 times.
+- `applyPreset` now sets the playback after `resetGas`, so the rate starts at the new T; a move of the T slider also sets the rate at once (the smoothing stays for real changes such as compression).
+- In Slow motion follows T the clock adds a line, "playback 173× faster than Fixed rate", and the preset hint says the gas only looks lively because of it.
+- Checked the speed axis: for argon at 0.01 K the 2D most probable speed √(kT/m) is 1.44 m/s and the mean √(πkT/2m) 1.82 m/s, as drawn and as read out.
+- Keys: the captures use Fixed rate and the two gas mode, which this does not touch. vdcheck differs only on the Near absolute zero screenshots (the clock line). test_ideal-gas passes.
+
+**For GPT to verify:** nothing numeric changed.
