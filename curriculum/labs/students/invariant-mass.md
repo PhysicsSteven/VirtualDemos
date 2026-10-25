@@ -77,7 +77,7 @@ r₊ and r₋ are the radii of the positive and negative tracks. For the masses,
 2. Plot the mass with the p π⁻ guess against the mass with the π⁺π⁻ guess. Describe the two clusters of points, and name the parent for each reading.
 3. Find the mean and standard deviation of the Λ⁰ masses and of the K⁰ masses. Compare each mean with the Particle Data Group values, 1115.68 MeV/c² and 497.61 MeV/c².
 4. In the Λ⁰ decays, which track carries more momentum, the proton or the pion? Explain why, using what you found in Before the lab question 2.
-5. For one V, find the momentum of the parent, $$\sqrt{p_+^2 + p_-^2 + 2p_+p_-\cos\theta}$$. Then find its speed and the time it took to fly from the end of the beam track to the V, in its own frame.
+5. For one V, find the momentum of the parent, $$\sqrt{p_+^2 + p_-^2 + 2p_+p_-\cos\theta}$$. Then find its speed and the time it took to fly from the end of the beam track to the V, in its own frame. (Measure the flight distance on the picture: the crosses are 10 cm apart.)
 6. Compare the field run with your reading of the same V at 1.5 T. What changed, and what did not?
 
 ## Uncertainty

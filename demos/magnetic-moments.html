@@ -621,7 +621,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     sg: 'Side view of a Stern–Gerlach apparatus: an oven, two slits, a magnet with a knife edge pole and a grooved pole, and a glass screen. Space starts or pauses the beam.',
     zee: 'A discharge lamp between the poles of an electromagnet, and the energy levels of the line split into magnetic sublevels with the allowed transitions.' };
   const CURVE_LABEL = { orbit: 'Graph of the energy shift of each m_l level against the magnetic field.', sg: 'The face of the screen with the atoms that have landed, and their count along z. Drag or use the arrow keys to move the cursor.',
-    zee: 'The spectrum around the line, brightness against wavelength shift in picometres. Drag or use the arrow keys to move the cursor.' };
+    zee: 'The spectrum around the line, brightness against wavelength shift in picometers. Drag or use the arrow keys to move the cursor.' };
   function setView(v) {
     S.view = v; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === v));
     $('cardOrbit').hidden = v !== 'orbit'; $('cardSg').hidden = v !== 'sg'; $('cardZee').hidden = v !== 'zee';

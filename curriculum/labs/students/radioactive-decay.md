@@ -50,11 +50,13 @@ No hazards in the virtual lab. Real iodine 131 is a beta and gamma emitter handl
 
 ## Procedure
 
-**Coin flip nuclei.** With 400 nuclei, record a reading at the start and after each step, one step at a time, until 8 steps have passed. Then Reset and record a second run the same way, in a new copy of the table.
+The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = 0. Clear throws away readings not yet sent, so Export each series before you Clear it.
 
-**Iodine 131, 10 000 nuclei.** Clear the readings and choose Iodine 131 with 10 000 nuclei. Hide the expected curve and band. Record a reading at the start and every 4.0 d until 40.0 d (step to the exact times).
+**Coin flip nuclei.** With 400 nuclei, record a reading at the start and after each step, one step at a time, until 8 steps have passed. Then Export, Clear, Reset and record a second run the same way, in a new copy of the table.
 
-**Iodine 131, 100 nuclei.** Clear the readings, choose 100 nuclei and record the same times.
+**Iodine 131, 10 000 nuclei.** Export and Clear the readings, then choose Iodine 131 with 10 000 nuclei. Hide the expected curve and band. Record a reading at the start and every 4.0 d until 40.0 d (step to the exact times).
+
+**Iodine 131, 100 nuclei.** Export and Clear the readings, choose 100 nuclei and record the same times.
 
 **One nucleus.** With any one step setup, follow at least ten nuclei, one after another, and write down their ages at decay.
 

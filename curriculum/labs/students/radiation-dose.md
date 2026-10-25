@@ -47,11 +47,11 @@ No hazards in the virtual lab. With real sources: keep your distance, keep your 
 
 **Distance.** Start with the ¹³⁷Cs source setup (1 GBq, no shield). Record readings at distances of 0.5, 1, 2, 3, 4, 6 and 8 m.
 
-**Lead.** Clear the readings, return to 1 m and choose a lead shield. Record readings for thicknesses of 0, 0.5, 1.0, 1.5, 2.0, 3.0 and 4.0 cm.
+**Lead.** Export and Clear the readings, return to 1 m and choose a lead shield. Record readings for thicknesses of 0, 0.5, 1.0, 1.5, 2.0, 3.0 and 4.0 cm.
 
-**Concrete.** Clear the readings and repeat at 1 m with concrete, for thicknesses of 0, 5, 10, 15, 20 and 25 cm.
+**Concrete.** Export and Clear the readings, then repeat at 1 m with concrete, for thicknesses of 0, 5, 10, 15, 20 and 25 cm.
 
-**A patient.** Clear the readings and pick the ⁹⁹ᵐTc patient setup. Record a reading at 1 m with no shield and with 10 and 20 cm of water (water stands in for the patient's own body). Note the dose over 8 hours for each.
+**A patient.** Export and Clear the readings, then pick the ⁹⁹ᵐTc patient setup. Record a reading at 1 m with no shield and with 10 and 20 cm of water (water stands in for the patient's own body). Note the dose over 8 hours for each.
 
 ## Data
 

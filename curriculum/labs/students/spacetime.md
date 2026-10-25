@@ -55,7 +55,7 @@ None.
 
 Turn Blind on before you start.
 
-**A clock at rest in S.** Start with the Time dilation setup. Add an event on the home worldline where the home clock reads 10 years, at $$(ct, x) = (10\ \text{ly}, 0)$$, and select it. Record it at $$\beta$$ = 0, 0.15, 0.30, 0.45, 0.60, 0.75 and 0.90.
+**A clock at rest in S.** Start with the Time dilation setup. Add an event on the home worldline where the home clock reads 10 years, at $$(ct, x) = (10\ \text{ly}, 0)$$, and select it. Record it at $$\beta$$ = 0, 0.15, 0.30, 0.45, 0.60, 0.75 and 0.90, and send the run to the worksheet before you clear the readings.
 
 **Two events at the same time in S.** Clear the readings and choose the Relativity of simultaneity setup. Select event B, at $$(0, 4\ \text{ly})$$, and record it at the same seven speeds. Send this run to a new copy of the table.
 
@@ -63,7 +63,7 @@ Turn Blind on before you start.
 
 **Order of events.** Choose the Causality setup. Find the speed at which events A and B happen at the same time in S′, and check whether any speed changes the order of A and C. Write your findings in the answer box below Analysis 5.
 
-**Twin paradox.** Choose the Twin paradox setup and select O and T. Find the traveler's age at the turnaround and at home again from the coordinates of T. Write it below Analysis 6.
+**Twin paradox.** Choose the Twin paradox setup and select the turnaround event T. Find the traveler's age at the turnaround and at home again from the coordinates of T. Write it below Analysis 6.
 
 **Length.** Choose the Length contraction setup. At $$\beta = 0.6$$ add events at the two ends of the rod at $$ct = 0$$ and read the length of the rod in S. Repeat at $$\beta = 0.8$$. Write the lengths below Analysis 7.
 

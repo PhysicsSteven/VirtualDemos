@@ -53,7 +53,7 @@ None for the virtual apparatus. Real X-ray tubes and cesium 137 sources need shi
 
 Turn Blind on.
 
-**Molybdenum X-rays.** Start with Compton's 1923 experiment. Record a reading at angles from 0° to 180° in 30° steps.
+**Molybdenum X-rays.** Start with Compton's 1923 experiment. Record a reading at angles from 0° to 180° in 30° steps, and send the run to the worksheet before you clear the readings.
 
 **Cesium gamma rays.** Clear the readings and pick the cesium 137 source. Record a reading at the same seven angles. Send this run to a new copy of the table.
 

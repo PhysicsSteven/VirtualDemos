@@ -81,7 +81,7 @@ No hazards in the virtual lab.
 
 ## Uncertainty
 
-The book gives its eras with rough times, for example 10⁻⁴³ s for a temperature of 10³² K. Read the demo's time for 10³² K and compare. Which parts of the curve rest on physics tested in the laboratory, and which are extrapolations? (Accelerators reach energies of about 10⁴ GeV.)
+The book gives its eras with rough times, for example 10⁻⁴³ s for a temperature of 10³² K. Read the demo's time for 10³² K from the graph (it is earlier than the slider reaches, but the curve is drawn back to 10⁻⁴⁵ s) and compare. Which parts of the curve rest on physics tested in the laboratory, and which are extrapolations? (Accelerators reach energies of about 10⁴ GeV.)
 
 ## Questions
 

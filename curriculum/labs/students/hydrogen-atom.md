@@ -53,7 +53,7 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Finding the electron.** For the real orbitals 1s, 2s, 2p<sub>z</sub>, 3s, 3p<sub>z</sub>, 3d<sub>z²</sub>, 4p<sub>z</sub> and 4f<sub>z³</sub> (all with m = 0), measure the electron's position until at least 5000 positions have been found, then record a reading.
+**Finding the electron.** For the real orbitals 1s, 2s, 2p<sub>z</sub>, 3s, 3p<sub>z</sub>, 3d<sub>z²</sub>, 4p<sub>z</sub> and 4f<sub>z³</sub> (all with m = 0), measure the electron's position until at least 5000 positions have been found, then record a reading. Measure is in the 3D cloud view, not in Slice.
 
 **How the mean settles.** Clear the readings. Pick 1s, start a new measurement and record a reading when about 100, 1000 and 10,000 positions have been found, all in the same run. Send this run to a new copy of the table.
 

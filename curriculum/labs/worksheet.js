@@ -365,8 +365,8 @@
   Object.assign(FROM_DEMO, {
     /* Reading | Setup and N₀ | Time t | Parents left N | N/N₀ | ln(N/N₀) */
     'radioactive-decay': { demo: 'Radioactive Decay', cols: ['row', (r) => `${r.setup}, N₀ = ${r.N0}, t in ${r.unit}`, 't', 'parent', null, null] },
-    /* Reading | Setup and N₀ | Time t | Parents N_P | Daughters N_D | Stable N_S | Activity ratio R_D/R_P */
-    'decay-chains': { demo: 'Radioactive Decay (chains)', cols: ['row', (r) => `${r.setup}, N₀ = ${r.N0}, t in ${r.unit}`, 't', 'parent', 'daughter', 'stable', null] },
+    /* Reading | Setup and N₀ | Time t | Parents N_P | Daughters N_D | Stable N_S | Activity ratio R_D/R_P | ln N_D */
+    'decay-chains': { demo: 'Radioactive Decay (chains)', cols: ['row', (r) => `${r.setup}, N₀ = ${r.N0}, t in ${r.unit}`, 't', 'parent', 'daughter', 'stable', null, null] },
     /* Reading | Nuclide | Z | N | A | Mass excess Δ (MeV) | B (MeV) | B/A (MeV) | B/A liquid drop (MeV) */
     'binding-energy': { demo: 'Nuclear Binding Energy', cols: ['row', 'nuclide', 'Z', 'N', 'A', 'dm_MeV', 'B_MeV', 'BA_MeV', 'BA_ldm_MeV'] },
     /* Reading | Source | Centroid (channel) | Centroid uncertainty (channel) | Known energy E (keV) | Net counts | FWHM (channel) | Energy from the demo's calibration (keV) */
@@ -384,7 +384,7 @@
     /* Reading | Time t (s) | Temperature T (K) | kT (eV) | log₁₀ t | log₁₀ T */
     'thermal-history': { demo: 'The Big Bang and the Early Universe (Thermal history)', cols: ['row', 't_s', 'T_K', 'kT_eV', null, null] },
     /* Reading | Freeze out kT_f (MeV) | Lifetime τ (s) | Deuterium time t_D (s) | Neutrons at freeze out | Neutrons left at t_D | Helium nuclei | 1/kT_f | ln(n/p) | Y */
-    'big-bang-helium': { demo: 'The Big Bang and the Early Universe (Helium)', cols: ['row', 'kTf_MeV', 'tau_s', 'tD_s', 'n_f', 'n_D', 'He', null, null, null] },
+    'big-bang-helium': { demo: 'The Big Bang and the Early Universe (Helium)', cols: ['row', 'kTf_MeV', 'tau_s', 'tD_s', 'n_f', 'n_D', 'He', null, null, null, null] },
     /* Reading | Salt | Structure | r0 (nm) | n | α | Table U (kJ/mol) | U per ion pair (eV) | (1 − 1/n)/r0 (1/nm) */
     'lattice-energy': { demo: 'Crystals, Bands and Semiconductors (Crystal)', cols: ['row', 'salt', 'structure', 'r0_nm', 'n', 'alpha', 'U_table_kJ_mol', null, null] },
     /* Reading | Atoms N | Spacing d (nm) | Lowest s level (eV) | Highest s level (eV) | Lowest p level (eV) | Width w (eV) | Gap (eV) | ln(w / 1 eV) */
@@ -500,7 +500,7 @@
      their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
-  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion'];
+  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass'];
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
   const CURVE_TABLES = { 'franck-hertz': [0] };

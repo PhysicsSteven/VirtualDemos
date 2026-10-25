@@ -53,19 +53,21 @@ No hazards in the virtual lab. Polonium 210 is a strong alpha emitter, dangerous
 
 ## Procedure
 
+The demo starts running as soon as it opens and whenever you choose a setup, and choosing a number of nuclei starts a new sample: pause it and Reset before the first reading, so it starts from t = 0. Play at a slow speed and pause at each time; the reading stores the time on the clock. Clear throws away readings not yet sent, so Export each series before you Clear it.
+
 **Bismuth 210 to polonium 210.** With 10 000 nuclei, hide the expected curves. Record a reading at the start, every 5 d to 60 d, then every 20 d to 300 d.
 
-**Tellurium 132 to iodine 132.** Clear the readings and choose the tellurium chain with 10 000 nuclei. Record a reading at the start, every 1 h to 12 h, then every 12 h to 192 h.
+**Tellurium 132 to iodine 132.** Export and Clear the readings, then choose the tellurium chain with 10 000 nuclei. Record a reading at the start, every 1 h to 12 h, then every 12 h to 192 h.
 
 ## Data
 
-| Reading | Setup and $$N_0$$ | Time $$t$$ | Parents $$N_P$$ | Daughters $$N_D$$ | Stable $$N_S$$ | Activity ratio R_D/R_P |
-|---|---|---|---|---|---|---|
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
+| Reading | Setup and $$N_0$$ | Time $$t$$ | Parents $$N_P$$ | Daughters $$N_D$$ | Stable $$N_S$$ | Activity ratio R_D/R_P | ln N_D |
+|---|---|---|---|---|---|---|---|
+| | | | | | | | |
+| | | | | | | | |
+| | | | | | | | |
 
-The time unit is in the Setup column. Work out $$R_D/R_P = \lambda_D N_D/(\lambda_P N_P)$$ for each row.
+The time unit is in the Setup column. Work out $$R_D/R_P = \lambda_D N_D/(\lambda_P N_P)$$ for each row, and $$\ln N_D$$ for the tellurium rows after the ratio has settled (Analysis 5).
 
 ## Analysis
 

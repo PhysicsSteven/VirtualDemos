@@ -64,11 +64,11 @@ No hazards in the virtual lab.
 
 ## Data
 
-| Reading | Freeze out kT_f (MeV) | Lifetime τ (s) | Deuterium time t_D (s) | Neutrons at freeze out | Neutrons left at t_D | Helium nuclei | 1/kT_f (1/MeV) | ln(n/p) at freeze out | Helium mass fraction Y |
-|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | |
-| | | | | | | | | | |
-| | | | | | | | | | |
+| Reading | Freeze out kT_f (MeV) | Lifetime τ (s) | Deuterium time t_D (s) | Neutrons at freeze out | Neutrons left at t_D | Helium nuclei | 1/kT_f (1/MeV) | ln(n/p) at freeze out | Helium mass fraction Y | ln(neutrons left) |
+|---|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | | |
+| | | | | | | | | | | |
+| | | | | | | | | | | |
 
 The sample always has 2000 nucleons, so a count of $$n$$ neutrons means $$n/p = n/(2000 - n)$$, and $$Y$$ is 4 × (helium nuclei)/2000.
 
@@ -78,7 +78,7 @@ The sample always has 2000 nucleons, so a count of $$n$$ neutrons means $$n/p = 
 2. For the freeze out readings, fill the last three columns and plot $$\ln(n/p)$$ at freeze out against $$1/kT_f$$. Find the slope, and compare it with $$-\Delta m c^2$$.
 3. Plot $$Y$$ against $$kT_f$$. What freeze out temperature gives the observed primordial helium fraction, $$Y_p$$ = 0.245 ± 0.004?
 4. Plot $$Y$$ against $$\tau$$ and against $$t_D$$. Which setting changes $$Y$$ the most over its range? Explain why, using the decay law.
-5. From the deuterium readings, plot $$\ln$$(neutrons left at $$t_D$$) against $$t_D$$. Find the slope and the neutron lifetime from it.
+5. For the deuterium readings, fill the last column with $$\ln$$(neutrons left at $$t_D$$) and plot it against $$t_D$$. Find the slope and the neutron lifetime from it.
 
 ## Uncertainty
 

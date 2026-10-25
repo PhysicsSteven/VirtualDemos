@@ -50,11 +50,11 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**Octet.** With one spin down (spin ½), build and record the eight baryons with u, d and s quarks: n, p, Σ⁻, Σ⁰ and Λ⁰ (both uds), Σ⁺, Ξ⁻ and Ξ⁰.
+**Octet.** With one spin down (spin ½), build and record the eight baryons with u, d and s quarks: n, p, Σ⁻, Σ⁰ and Λ⁰, Σ⁺, Ξ⁻ and Ξ⁰. The Σ⁰ and the Λ⁰ are both uds, so one reading covers the two (the demo names both).
 
 **Decuplet.** Clear the readings. With all three spins up (spin 3/2), build and record the four Δ's, the three Σ*'s and the two Ξ*'s. Do not build sss yet.
 
-**Predict the Ω⁻.** Fit your decuplet masses against strangeness (Analysis 3), predict the mass of the sss baryon, and write down your prediction. Then build sss with all spins up and record it.
+**Predict the Ω⁻.** Send your nine decuplet readings to the worksheet, fit their masses against strangeness (Analysis 3), predict the mass of the sss baryon, and write down your prediction. Then build sss with all spins up, record it and send again: it joins the same copy of the table, and the graph then includes it.
 
 **Mesons.** In a new copy of the table, record π⁺, π⁻, K⁺, K⁰, K⁻ and K̄⁰ with opposite spins (spin 0), then u d̄ and s s̄ with parallel spins (spin 1).
 

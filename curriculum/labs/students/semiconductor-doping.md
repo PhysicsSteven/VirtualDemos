@@ -54,9 +54,9 @@ No hazards in the virtual lab.
 
 **Pure silicon.** Pick Pure silicon. Record readings from 300 K to 700 K in steps of 50 K.
 
-**n type silicon.** Clear the readings and pick n type silicon (phosphorus at 10¹⁵ cm⁻³). Record readings at 30, 40, 50, 60, 80, 100, 150, 200, 300, 400, 500, 550, 600, 650, 700 and 800 K.
+**n type silicon.** Export, clear the readings and pick n type silicon (phosphorus at 10¹⁵ cm⁻³). Record readings at 30, 40, 50, 60, 80, 100, 150, 200, 300, 400, 500, 550, 600, 650, 700 and 800 K.
 
-**p type silicon.** Clear the readings. Remove the phosphorus, add boron at 10¹⁶ cm⁻³ and record readings at 200, 300 and 400 K.
+**p type silicon.** Export and clear the readings. Turn the phosphorus down to its lowest setting (10¹¹ cm⁻³, too few to matter here), add boron at 10¹⁶ cm⁻³ and record readings at 200, 300 and 400 K.
 
 ## Data
 
@@ -70,11 +70,11 @@ In the last column, take $$T$$ in kelvins.
 
 ## Analysis
 
-1. For pure silicon, plot $$\ln n - 1.5\ln T$$ against $$1/T$$ and fit a straight line. Find $$E_g$$ from the slope.
+1. Fill in the last three columns for every reading. For pure silicon, plot $$\ln n - 1.5\ln T$$ against $$1/T$$ and fit a straight line. Find $$E_g$$ from the slope.
 2. Now plot $$\ln n$$ alone against $$1/T$$ and find $$E_g$$ the same way. Which value is closer to 1.12 eV, and why?
 3. For the n type sample, sketch or plot $$\ln n$$ against $$T$$ and mark the freeze out, extrinsic and intrinsic regions. What is $$n$$ on the plateau, and near what temperature does the intrinsic density take over?
 4. At the four lowest temperatures, plot $$\ln n$$ against $$1/T$$. In freeze out $$n$$ varies roughly as $$e^{-E_d/2kT}$$; estimate the donor binding energy $$E_d$$ and compare it with 0.045 eV.
-5. For the p type readings, find $$np$$ at each temperature and compare it with your $$n_i^2$$ from pure silicon at the same temperature.
+5. For the p type readings, find $$np$$ at each temperature and compare it with your $$n_i^2$$ from pure silicon at the same temperature (at 200 K, extrapolate your Analysis 1 line).
 
 ## Uncertainty
 

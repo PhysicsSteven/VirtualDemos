@@ -56,13 +56,13 @@ No hazards in the virtual lab. In a real one, liquid helium and liquid nitrogen 
 
 **Cooling in a field.** Start with Lead above T<sub>c</sub> (9.00 K, 20.00 mT) and record a reading. Cool to 8.00, 7.30, 7.10, 6.00 and 4.20 K, recording at each. Then lower the applied field to 0 and record once more.
 
-**A perfect conductor.** Clear the readings, choose Perfect conductor and repeat exactly the same steps. Look at the field lines at each step.
+**A perfect conductor.** Export and clear the readings, choose Perfect conductor and repeat exactly the same steps. Look at the field lines at each step.
 
-**Moment against field.** Clear, choose lead as a superconductor at 4.20 K and record readings from 0 to 60 mT in steps of 5 mT, with extra readings every 1 mT between 30 and 55 mT. Export and start a new series where the moment stops following a straight line, and again once it reaches zero, so that each part goes in its own copy of the table and can be fitted on its own.
+**Moment against field.** Export, clear, choose lead as a superconductor at 4.20 K and record readings from 0 to 60 mT in steps of 5 mT, with extra readings every 1 mT between 30 and 55 mT. Export and start a new series where the moment stops following a straight line, and again once it reaches zero, so that each part goes in its own copy of the table and can be fitted on its own.
 
-**Critical field against temperature.** Clear. At 1.00, 2.00, 3.00, 4.00, 5.00, 6.00 and 7.00 K, find the smallest applied field at which the moment is zero, to 0.05 mT, and record that reading.
+**Critical field against temperature.** Export and clear. At 1.00, 2.00, 3.00, 4.00, 5.00, 6.00 and 7.00 K, find the smallest applied field at which the moment is zero, to 0.05 mT, and record that reading.
 
-**Mystery metal.** Clear and choose Mystery metal (choosing it again draws a new metal, so stay with one). First find roughly where its superconductivity ends: in the smallest field, 0.05 mT, raise the temperature until the moment reaches zero, which happens just below $$T_c$$. Then find its critical field, as for lead, at six temperatures spread between 0.30 K and $$T_c$$.
+**Mystery metal.** Export, clear and choose Mystery metal (choosing it again draws a new metal, so stay with one). First find roughly where its superconductivity ends: in the smallest field, 0.05 mT, raise the temperature until the moment reaches zero, which happens just below $$T_c$$. Then find its critical field, as for lead, at six temperatures spread between 0.30 K and $$T_c$$.
 
 ## Data
 

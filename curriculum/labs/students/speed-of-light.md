@@ -59,7 +59,7 @@ Use the bench seed your instructor gives you (the demo starts with 2718), and tu
 
 **Rest position.** Start with The bench at rest ($$D = 12.00$$ m, $$B = 0.500$$ m). Write down $$A$$. Center the crosshair on the spot and capture the reading.
 
-**Both directions.** Run the mirror clockwise at 250, 500, 750 and 1000 rev/s. At each speed center the crosshair on the spot and capture. Do the same counterclockwise.
+**Both directions.** Run the mirror clockwise at 250, 500, 750 and 1000 rev/s. At each speed center the crosshair on the spot and capture. Do the same counterclockwise, then send the readings to the worksheet before you clear them.
 
 **Longer path.** Clear the readings, set $$D = 20.00$$ m with $$B = 0.500$$ m, and write down the new $$A$$. Capture the rest position and readings at 500 and 1000 rev/s in each direction. Send this run to a new copy of the table.
 

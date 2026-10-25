@@ -73,7 +73,7 @@ No hazards in the virtual lab.
 ## Analysis
 
 1. Plot the running totals against the number of shells and against the cube size. Which way of adding the ions settles on a value, and how many cubes does it take to agree with 1.7476 to three decimal places?
-2. Convert each table lattice energy to eV per ion pair and fill in the last column. Plot $$U$$ against $$(1 - 1/n)/r_0$$ for the seventeen salts with the NaCl structure and fit a straight line. From the slope, find $$\alpha$$, and compare it with 1.7476.
+2. Fill in the last two columns: each table lattice energy converted to eV per ion pair, and $$(1 - 1/n)/r_0$$. Plot $$U$$ against $$(1 - 1/n)/r_0$$ for the seventeen salts with the NaCl structure and fit a straight line. From the slope, find $$\alpha$$, and compare it with 1.7476.
 3. Calculate $$U$$ from the model for NaCl, KCl and CsCl, and find the percentage difference from the table for each.
 4. Do the three salts with the CsCl structure fall on the same line as the others? Should they?
 

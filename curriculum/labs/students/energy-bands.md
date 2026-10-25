@@ -53,7 +53,7 @@ No hazards in the virtual lab.
 
 **Counting levels.** Set the spacing to 0.30 nm. Record a reading for N = 1, 2, 3, 6, 10, 20 and 40, and count the s levels on the right diagram for the smaller chains.
 
-**Width against spacing.** Clear the readings. With N = 40, record a reading at spacings from 0.20 nm to 0.60 nm in steps of 0.05 nm.
+**Width against spacing.** Export, then clear the readings. With N = 40, record a reading at spacings from 0.20 nm to 0.60 nm in steps of 0.05 nm.
 
 **Filling the bands.** With N = 40 and d = 0.30 nm, note the verdict and the highest filled level for 1, 2 and 3 electrons per atom. Then set 2 electrons per atom and reduce the spacing in small steps until the verdict changes; note that spacing.
 
@@ -69,7 +69,7 @@ The gap is the lowest p level minus the highest s level; a negative value means 
 
 ## Analysis
 
-1. How many s levels does a chain of N atoms have? For the counting series, plot the width of the s levels against N. What does it approach?
+1. Fill in the width, gap and $$\ln(w/1\ \text{eV})$$ columns from the levels in each reading. How many s levels does a chain of N atoms have? For the counting series, plot the width of the s levels against N. What does it approach?
 2. For N = 40, plot $$\ln(w/1\ \text{eV})$$ against $$d$$ and fit a straight line. Find $$\lambda$$ from the slope.
 3. Plot the gap against $$d$$. At what spacing does the gap close? Compare with the spacing where the verdict changed.
 4. For each number of electrons per atom in the filling series, say whether the chain is a metal or an insulator, and explain using the number of electrons each band can hold.

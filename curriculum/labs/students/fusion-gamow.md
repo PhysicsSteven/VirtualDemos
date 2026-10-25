@@ -52,9 +52,9 @@ No hazards in the virtual lab.
 
 **Protons.** Start with The Sun's core setup. Record readings for p + p at $$T$$ near 5, 10, 15.7, 30, 60, 100 and 300 million kelvin.
 
-**Deuterium and tritium.** Clear the readings, choose D + T, and record readings at about 10, 15.7, 30, 100, 150, 300 and 1000 million kelvin.
+**Deuterium and tritium.** Export and Clear the readings, choose D + T, and record readings at about 10, 15.7, 30, 100, 150, 300 and 1000 million kelvin.
 
-**Heavier pairs.** Clear the readings and record one reading for each of the five pairs at $$1.57 \times 10^7$$ K.
+**Heavier pairs.** Export and Clear the readings, then record one reading for each of the five pairs at $$1.57 \times 10^7$$ K.
 
 ## Data
 

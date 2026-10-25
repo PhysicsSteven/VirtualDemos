@@ -49,7 +49,7 @@ No hazards in the virtual lab.
 
 **Critical size of ²³⁵U.** In the Sphere model with ²³⁵U, 4000 neutrons per generation, run at least 30 generations at each radius from 6 cm to 11 cm in 1 cm steps, and record a reading at each. Then add readings 0.2 cm apart on each side of where $$k$$ crosses 1.
 
-**Critical size of ²³⁹Pu.** Clear the readings, switch to ²³⁹Pu and repeat for radii from 3.5 cm to 6.5 cm in 0.5 cm steps, adding readings near where $$k$$ crosses 1.
+**Critical size of ²³⁹Pu.** Export and Clear the readings, switch to ²³⁹Pu and repeat for radii from 3.5 cm to 6.5 cm in 0.5 cm steps, adding readings near where $$k$$ crosses 1.
 
 ## Data
 
@@ -59,13 +59,15 @@ No hazards in the virtual lab.
 | | | | | | | | |
 | | | | | | | | |
 
-| Generation | Neutrons, k = 0.95 | Neutrons, k = 1.00 | Neutrons, k = 1.05 |
-|---|---|---|---|
-| 0 | | | |
-| 5 | | | |
-| 10 | | | |
-| 15 | | | |
-| 20 | | | |
+| Generation | Neutrons, k = 0.95 | Neutrons, k = 1.00 | Neutrons, k = 1.05 | ln N, k = 0.95 | ln N, k = 1.00 | ln N, k = 1.05 |
+|---|---|---|---|---|---|---|
+| 0 | | | | | | |
+| 5 | | | | | | |
+| 10 | | | | | | |
+| 15 | | | | | | |
+| 20 | | | | | | |
+
+Fill in the natural log of each neutron count in the last three columns.
 
 ## Analysis
 

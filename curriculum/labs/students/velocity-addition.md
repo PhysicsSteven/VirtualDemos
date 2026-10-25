@@ -51,11 +51,11 @@ None for the virtual apparatus.
 
 ## Procedure
 
-**One rocket, many probes.** Start with the Rocket fires a probe setup (rocket at 0.60c). Fire probes at launch speeds from 0.10c to 0.90c in steps of 0.10c and record each one once it has passed beacon B. Then fire a pulse of light and record it too.
+**One rocket, many probes.** Start with the Rocket fires a probe setup (rocket at 0.60c). Fire probes at launch speeds from 0.10c to 0.90c in steps of 0.10c and record each one once it has passed beacon B. Then fire a pulse of light, record it too, and send the run to the worksheet before you clear the readings.
 
 **A faster rocket.** Clear the readings, set the rocket to 0.90c and repeat at 0.10c, 0.30c, 0.50c, 0.70c, 0.90c and with light. Send this run to a new copy of the table.
 
-**Mystery rocket.** Clear the readings and choose the Mystery rocket setup (picking it again, or New mystery rocket, changes the speed). Fire probes at five or more launch speeds from 0.10c to 0.90c and record each. Write down the rocket's own timer reading as well: it is in the exported readings.
+**Mystery rocket.** Clear the readings and choose the Mystery rocket setup (picking it again, or New mystery rocket, changes the speed). Fire probes at five or more launch speeds from 0.10c to 0.90c and record each. Write down the rocket's own timer reading (Rocket, A to B) as well: the demo shows it, but the table has no column for it. Send this run to a third copy of the table.
 
 ## Data
 

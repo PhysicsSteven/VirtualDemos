@@ -18,7 +18,7 @@ Textbook: OpenStax *University Physics*, Vol. 3, §6.2. Access for free at https
 - The collector voltage $$V$$ runs from −6 to +4 V in 0.01 V steps; a negative voltage pushes electrons back towards the plate. The picoammeter reads to 0.01 nA below 10 nA (0.1 nA up to 100 nA), so near the stopping voltage it reads to 0.01 nA. One absorbed photon in a thousand frees an electron.
 - The current falls in a straight line from its full value at $$V = 0$$ to zero at the stopping voltage. This simple shape is the model's choice; real tubes give a rounder curve, but the stopping voltage means the same thing.
 - **Record V₀** saves the collector voltage you have set, as a positive stopping voltage, with the wavelength, frequency, metal, power and the meter reading. Lower the voltage until the meter just reads 0.00 nA first: it warns you if the current had not reached zero. **Export to worksheet** sends the points to the Data table below; **Clear points** starts a new series, which goes into a new copy of the table.
-- Untick **Theory line and answers** (in the Layers fold) to hide the model's $$K_\mathrm{max}$$, $$V_0$$ and the fitted $$h$$ while you measure. The work function and threshold wavelength readouts stay visible; cover them while you find the threshold.
+- Untick **Theory line and answers** (in the Layers fold) to hide the model's $$K_\mathrm{max}$$, $$V_0$$, threshold wavelength and fitted $$h$$ while you measure. The work function readout stays visible.
 
 </details>
 

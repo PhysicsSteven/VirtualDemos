@@ -52,11 +52,11 @@ None for the virtual apparatus. Real accelerating fields of megavolts per meter 
 
 ## Procedure
 
-**Electron.** Start with the Electron, steady force setup (electron, 1.0 MV/m). Step the clock and record the time, distance and speed at every step, up to 10 ns.
+**Electron.** Start with the Electron, steady force setup (electron, 1.0 MV/m). Step the clock and record the time, distance and speed at every step, up to 10 ns. Send the run to the worksheet before you clear the readings.
 
 **Proton.** Clear the readings, choose the proton and a field of 10.0 MV/m, and do the same, recording at least twelve times spread over the whole run. Send this run to a new copy of the table.
 
-**Your choice.** Repeat for the alpha particle or the muon, at a field of your choice.
+**Your choice.** Clear the readings and repeat for the alpha particle or the muon, at a field of your choice. Send this run to a third copy of the table.
 
 ## Data
 

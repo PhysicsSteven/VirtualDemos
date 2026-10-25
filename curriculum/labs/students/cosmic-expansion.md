@@ -67,7 +67,7 @@ Turn Blind on before you start, so the readouts do not give the speeds, H or the
 
 **The past.** Clear, pick the Half the size setup (Planck ΛCDM, about 7.95 Gyr ago) and record at that time and 0.1 Gyr later.
 
-Before you open the Lab section, write down your own estimate of each model's age. Then open it, turn Blind off and note the age the demo gives for each model.
+Before you turn Blind off, write down your own estimate of each model's age from your slopes. Then turn Blind off and note the age today the demo gives for each model.
 
 ## Data
 

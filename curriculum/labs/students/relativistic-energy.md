@@ -53,11 +53,11 @@ None for the virtual apparatus. Real electron beams of MeV energies produce X-ra
 
 ## Procedure
 
-**Electrons.** Start with the Bertozzi's electrons setup (electron, magnet at 0.05 T). Fire a bunch and record it at every voltage from 0.01 MV to 20 MV.
+**Electrons.** Start with the Bertozzi's electrons setup (electron, magnet at 0.05 T). Fire a bunch and record it at every voltage from 0.01 MV to 20 MV. Send the run to the worksheet before you clear the readings.
 
 **Mystery particle.** Clear the readings and choose the Mystery particle setup (magnet at 0.50 T). Record it at every voltage from 50 MV to 10 000 MV. Send this run to a new copy of the table.
 
-**A known heavy particle.** Do the same for the proton.
+**A known heavy particle.** Clear the readings and do the same for the proton. Send this run to a third copy of the table.
 
 ## Data
 

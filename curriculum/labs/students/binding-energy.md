@@ -54,9 +54,9 @@ No hazards in the virtual lab.
 
 ## Procedure
 
-**The curve.** With the curve of binding energy setup, record the most tightly bound nuclide at A = 2, 3, 4, 6, 9, 12, 16, 20, 28, 40, 56, 62, 90, 120, 160, 208 and 238. Add uranium 235 and helium 3.
+**The curve.** With the curve of binding energy setup, record the most tightly bound nuclide at A = 2, 3, 4, 6, 9, 12, 16, 20, 28, 40, 56, 62, 90, 120, 160, 208 and 238. Add uranium 235 and helium 3. Helium 3 is not the most tightly bound nuclide at A = 3, so step Z at that A (or click its dot) to select it.
 
-**Reactions.** In Energy from the curve, read Q for D + T fusion and for uranium 235 fission. Record the two fission fragments, barium 141 and krypton 92.
+**Reactions.** In Energy from the curve, read Q for D + T fusion and for uranium 235 fission. Record the two fission fragments, barium 141 and krypton 92, selecting each by its A and then stepping Z.
 
 **Liquid drop.** With the liquid drop model setup, record tin 120 and lead 208 with all five terms on. Export them, Clear, turn off the Coulomb term and record both again, so they go into a new copy of the table.
 
