@@ -4217,7 +4217,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "huygens"
+        "huygens",
+        "ripple-tank"
       ],
       "unit": "optics",
       "note": "Huygens's Principle (2026-10-23, Claude): wavelet construction, reflection, refraction and Snell's law (Example 1.6), total internal reflection, and spreading through an opening (sound through a doorway)."
@@ -4387,7 +4388,8 @@
       "requirement": "module",
       "status": "usable",
       "demos": [
-        "standing-waves"
+        "standing-waves",
+        "ripple-tank"
       ],
       "unit": "waves"
     },
@@ -4459,7 +4461,8 @@
       "status": "usable",
       "demos": [
         "standing-waves",
-        "two-speaker"
+        "two-speaker",
+        "ripple-tank"
       ],
       "unit": "waves"
     },
@@ -5112,7 +5115,8 @@
       "requirement": "required",
       "status": "usable",
       "demos": [
-        "double-slit"
+        "double-slit",
+        "ripple-tank"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Double slit: fringes from photons, electrons or buckyballs, slit separation d and width a.",
       "unit": "wave-optics"
@@ -5130,7 +5134,8 @@
       "status": "usable",
       "demos": [
         "double-slit",
-        "diffraction-grating"
+        "diffraction-grating",
+        "ripple-tank"
       ],
       "note": "Volume 3 mapping (2026-10-24, Claude). Double slit fringe positions and intensity; the grating plot gives the two slit pattern with N = 2.",
       "unit": "wave-optics"
@@ -5199,7 +5204,8 @@
       "status": "usable",
       "demos": [
         "diffraction-grating",
-        "double-slit"
+        "double-slit",
+        "ripple-tank"
       ],
       "note": "Single slit (2026-10-24, Claude): the diffraction grating demo's Single slit aperture (N = 1, slit width a from 0.5 to 20 µm) puts the exact far field pattern on the wall, with dark fringes at a sin θ = mλ measured by caliper; worksheet single-slit (dark fringe positions against m and against 1/a, slit width from the slope). The double slit demo's One slit setup shows the same pattern built up one particle at a time.",
       "unit": "wave-optics"
@@ -7884,6 +7890,54 @@
       ],
       "title": "Huygens's Principle",
       "url": "demos/huygens.html"
+    },
+    {
+      "demo": "ripple-tank",
+      "course": [
+        "physics-2",
+        "acoustics"
+      ],
+      "sections": [
+        {
+          "vol": 1,
+          "sec": "16.1",
+          "title": "Traveling Waves"
+        },
+        {
+          "vol": 1,
+          "sec": "16.5",
+          "title": "Interference of Waves"
+        },
+        {
+          "vol": 3,
+          "sec": "1.6",
+          "title": "Huygens’s Principle"
+        },
+        {
+          "vol": 3,
+          "sec": "3.1",
+          "title": "Young's Double-Slit Interference"
+        },
+        {
+          "vol": 3,
+          "sec": "3.2",
+          "title": "Mathematics of Interference"
+        },
+        {
+          "vol": 3,
+          "sec": "4.1",
+          "title": "Single-Slit Diffraction"
+        }
+      ],
+      "role": "lab",
+      "beyond_book": false,
+      "status": "usable",
+      "note": "New 2026-10-25 (Claude), from the open simulations comparison (idea 2, drawn barriers). A ripple tank on a 1.25 mm grid: the wave equation with the phase speed of gravity and capillary ripples at the source frequency and depth, beaches or walls, dippers or a bar, drawn walls and shallow plates; presets for single and double slits, reflection, refraction and focusing. Worksheet ripple-tank: wavelength and speed against frequency and depth, Snell's law at a plate edge, quiet lines of two slits (d sin θ = (m + ½)λ) and the first quiet line of one slit, with a key from a real run in TeacherKeys.",
+      "title": "Ripple Tank",
+      "url": "demos/ripple-tank.html",
+      "handouts": [
+        "ripple-tank"
+      ]
     },
     {
       "demo": "hydrogen-orbitals",

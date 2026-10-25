@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-ripple-tank', date: '2026-10-25', title: 'Ripple Tank',
+    text: 'A new demo with its own worksheet: a tank of water with a straight bar, one dipper or two. Draw your own walls and shallow plates, then watch waves pass through one or two slits, reflect, bend where the water gets shallower and focus. Measure the wavelength, the speed and the angles of the quiet lines, in a flat view or in 3D.', link: { href: 'demos/ripple-tank.html', text: 'Open Ripple Tank' } },
   { id: '2026-10-25-instrument-builder', date: '2026-10-25', title: 'Build a microscope or telescope',
     text: 'A new Physics II demo: put lenses and stops on an optical rail and look through them with an eye or a camera. It shows each image the lenses make, the magnification, the exit pupil and the field of view, and pictures what the eye sees with and without your instrument. Start from a magnifier, a microscope or three kinds of telescope, or from an empty rail.', link: { href: 'demos/instrument-builder.html', text: 'Open Build a Microscope or Telescope' } },
   { id: '2026-10-25-energy-phase', date: '2026-10-25', title: 'Energy bars and a phase plot',

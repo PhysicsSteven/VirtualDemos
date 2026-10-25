@@ -2021,6 +2021,32 @@ V_n | Voltage at one positive maximum | V
 V_n+1 | Voltage at the next positive maximum | V
 R_fit | Resistance found from the decay | Ω
 
+== ripple-tank ==
+f | Frequency of the wave maker | Hz
+lambda | Wavelength | mm
+v | Speed of the waves, fλ | m/s
+d [gd] | Water depth | mm
+d [d\sin] | Distance between the slits | mm
+d | Water depth (in d sin θ, the distance between the slits) | mm
+sigma | Surface tension of water | N/m | 0.07274 N/m at 20 °C
+omega | Angular frequency, 2πf | rad/s
+g | Gravitational acceleration | m/s² | 9.81 m/s²
+k | Wavenumber, 2π/λ | rad/m
+rho | Density of water | kg/m³ | 998.2 kg/m³ at 20 °C
+theta_2 | Angle between the crests past the edge and the edge | °
+lambda_1 | Wavelength in the deeper water | mm
+lambda_2 | Wavelength in the shallower water | mm
+v_1 | Speed in the deeper water | m/s
+v_2 | Speed in the shallower water | m/s
+r | Distance from the sources | mm
+Delta r | Difference between the distances from the two sources | mm
+m | Order of the quiet line (0, 1, 2, …)
+theta | Angle of the line from the +x direction (from straight ahead, for the slits) | °
+a | Width of the slit | mm
+N | Number of wavelengths between A and B
+L | Length of the measuring line A to B | mm
+theta_1 | Angle between the incoming crests and the edge; for one slit, angle of the first quiet line | °
+
 == rocket ==
 u | Exhaust speed relative to the rocket | m/s
 m_0 | Starting mass, rocket and fuel | kg

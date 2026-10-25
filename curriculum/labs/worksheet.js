@@ -116,7 +116,8 @@
     'junction-transistor' /* Circuits demo, diode and transistor, 2026-10-24 */,
     'ac-reactance', 'ac-power' /* Circuits demo, AC mode, Vol. 2 §§15.1, 15.2 and 15.4, 2026-10-24 */,
     'straight-wire-fields', 'loops-solenoids' /* Magnetic Fields of Currents, 2026-10-24 */,
-    'mirrors-refraction', 'lenses-instruments' /* Optics Bench, 2026-10-24 */];
+    'mirrors-refraction', 'lenses-instruments' /* Optics Bench, 2026-10-24 */,
+    'ripple-tank' /* Ripple Tank, 2026-10-25 */];
   ENABLED.push(...PHYSICS_II);
   /* Helpers for the Physics II maps. parts: the part values a Circuits row carries (R1_ohm, C1_F, L1_H, B1_emf_V, B1_r_ohm, S1_state),
      optionally only those whose column matches a pattern. pick: the first column matching a pattern that has a value in this row
@@ -218,6 +219,8 @@
     holography: { demo: 'Holography', cols: ['row', (r) => `${String(r.object).replace('plane wave at ', 'plane ').replace(', middle at', ', middle')}, ref ${r.thr_deg}°${r.view === 'reconstruct' ? `, lit ${r.thi_deg}°` : ''}`.replace(/-/g, '−'),
       'lam1_nm', 'angle_between_deg', 'N_periods', 'span_um', null, null, 'lam2_nm', (r) => (r.view === 'reconstruct' && r.object && /plane/.test(r.object) ? r.det_deg : ''), null,
       (r) => (r.view === 'reconstruct' && r.object && !/plane/.test(r.object) ? r.z_screen_mm : ''), null] },
+    /* Reading | Setup | f (Hz) | Water depth (mm) | Line length L (mm) | Line angle θ (°) | Amplitude at B (mm) | Wavelengths counted N (typed) */
+    'ripple-tank': { demo: 'Ripple Tank', cols: ['row', 'setup', 'f_Hz', 'depth_mm', 'L_mm', 'angle_deg', 'amp_mm', null] },
     /* Trial | Pipe | T (°C) | m (A·m²) | m² (typed) | w (mm) | σ (MS/m) | Fall time t (s) */
     'eddy-currents': { demo: 'Eddy Currents: Magnet in a Pipe', cols: ['row', 'pipe', 'T_C', 'm_A_m2', null, 'w_mm', 'sigma_MS_m', 't_s'] },
     /* Reading | Light source | Micrometer reading (μm) | Mirror displacement Δd (μm, typed) | Cell pressure P (kPa) | Fringe count N */
@@ -501,7 +504,7 @@
      such as position against time at constant acceleration. Anything computed from the fit (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
-  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs'];
+  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'ripple-tank'];
   const PRINT_ROWS = 8;   /* rows a blank data table prints with, to fill in by hand */
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */

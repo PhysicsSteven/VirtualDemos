@@ -89,6 +89,7 @@ OVERRIDES = {
     "magnetism-in-matter": {"wait": 10500, "js": "document.querySelector('[data-p=loop]').click()"},
     "induced-electric-field": {"wait": 700, "js": "document.querySelector('[data-p=outside]').click(); document.getElementById('playBtn').click();"},
     "induction-at-work": {"wait": 2500, "js": "document.querySelector('[data-p=tablet]').click()"},
+    "ripple-tank": {"wait": 2500, "crop": ".scene", "hide": "#drawbar, .readout", "js": "document.getElementById('setupCard').style.display = 'none'; window.dispatchEvent(new Event('resize')); window.__rt.applyPreset('double'); window.__rt.run(3); document.querySelector('#dimSeg button').click();"},
     "huygens": {"wait": 2500, "js": "document.querySelector('[data-p=refract]').click()"},
     "the-eye": {"wait": 2000, "js": "document.querySelector('[data-p=myopiaFix]').click()"},
     "instrument-builder": {"wait": 2000, "crop": ".stage", "anchor": "top"},

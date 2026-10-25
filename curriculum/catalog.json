@@ -1268,6 +1268,18 @@
      ]
     },
     {
+     "demo": "ripple-tank",
+     "title": "Ripple Tank",
+     "desc": "Make waves in a tank of water with dippers or a straight bar, draw your own walls and shallow plates, and watch waves spread through slits, interfere, reflect, refract and focus. Measure wavelength, speed and the angles of the quiet lines.",
+     "tags": [
+      "water waves",
+      "interference",
+      "diffraction",
+      "refraction",
+      "d sin θ = mλ"
+     ]
+    },
+    {
      "demo": "optics-bench",
      "title": "Optics Bench",
      "desc": "Drag lenses, mirrors, prisms and light sources. Rays bend and bounce live, and images form where they cross.",

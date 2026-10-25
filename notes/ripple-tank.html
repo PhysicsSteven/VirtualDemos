@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>Ripple Tank: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>Ripple Tank</h1><ul class="meta"><li><a href="../demos/ripple-tank.html">Open the demo</a></li><li>Physics II, waves and wave optics (OpenStax Vol. 1 §§16.1 and 16.5, Vol. 3 §§1.6, 3.1, 3.2 and 4.1); Acoustics, waves</li><li>10 to 40 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>Frequency is set by the source; the water sets the speed; the wavelength follows from v = fλ. Over shallower water the waves are slower and shorter, with the same frequency.</li>
+<li>Water ripples are dispersive: their speed depends on the frequency, and it is not √(gd) unless the waves are much longer than the water is deep and surface tension does not matter.</li>
+<li>Crests stay joined at an edge where the speed changes, which gives Snell's law, sin θ₁/sin θ₂ = λ₁/λ₂.</li>
+<li>Two sources in step make quiet lines where the paths differ by a half wavelength, an odd number of times: far away, d sin θ = (m + ½)λ. Two slits lit by one plane wave are such a pair. One slit spreads the waves more the narrower it is, with its first quiet lines at a sin θ = λ.</li>
+</ul>
+<h2>Before class</h2>
+<p>The tank is 450 mm by 300 mm of water, 10 mm deep unless changed, with beaches at the sides (or walls). A straight bar makes plane waves; one or two dippers make circular waves, with the second dipper's spacing and phase adjustable. Students and the instructor can draw walls and shallow plates anywhere and erase them. Presets: plane waves, one dipper, two dippers, single slit, double slit, reflection from a 45° wall, a dipper beside a wall, a shallow plate across the tank, a plate edge turned 0° to 60°, a parabolic mirror and a lens shaped plate. The measuring line A to B reads its length and angle, the amplitude at B, and graphs the water along it. The Amplitude view shows the quiet lines; Draw the predicted lines overlays d sin θ = (m + ½)λ. Slow motion 1/4 is the default; the 3D view shows the surface from the side with the heights drawn 12 times larger.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>Plane waves.</strong> Ask Q1. Change the frequency from 6 Hz to 20 Hz: the wavelength falls from 44 mm to 12 mm, but not in proportion (the speed falls from 0.266 to 0.232 m/s near 13 Hz and rises again).</li>
+<li><strong>Shallow water slows waves.</strong> Ask Q2. Over the 1.5 mm plate the wavelength at 8 Hz drops from 30.9 mm to 19.5 mm. Turn the edge with Refraction and the crests bend toward the normal.</li>
+<li><strong>Two dippers</strong>, then <strong>Double slit.</strong> Ask Q3. Show the Amplitude, then tick Draw the predicted lines: the dark lines sit on them far from the sources and curve away close in.</li>
+<li><strong>Single slit.</strong> Ask Q4. Narrow the slit from 60 mm to 10 mm: the waves past it spread more and more until they look like a dipper's.</li>
+<li><strong>Focusing mirror</strong> and <strong>Focusing lens.</strong> Ask Q5.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> The bar makes waves 23.6 mm long at 10 Hz. What is their speed? What would √(gd) give for water 10 mm deep, and why is it different?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> At a plate edge the waves slow from 0.247 m/s to 0.156 m/s. What happens to the frequency and the wavelength? If the crests meet the edge at 30°, at what angle do they leave it?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Two slits are 45 mm apart and the waves are 15.45 mm long. At what angles are the quiet lines? Why are they curved near the slits?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Plane waves 15.45 mm long pass a slit 30 mm wide. Where is the first quiet line? What happens when the slit is narrower than the wavelength?</p></div>
+
+<div class="q"><p><strong>Q5.</strong> A plate that makes the water shallow, shaped like a convex lens, focuses plane waves. Why does it converge them, when it makes the waves slower in the middle, as glass does to light?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Shallower water changes the frequency."</strong> The frequency is fixed by the wave maker: every crest that arrives makes a crest that leaves.</li>
+<li><strong>"Water waves all travel at √(gd)."</strong> Only long waves on shallow water do. Ripples a few centimeters long are faster than that, because surface tension adds to gravity, and their speed depends on their frequency.</li>
+<li><strong>"The quiet lines are straight rays from the slits."</strong> They are hyperbolas, with straight asymptotes through the midpoint at d sin θ = (m + ½)λ; close to the slits they curve.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>The water's surface follows the small wave equation ∂²h/∂t² + 2β ∂h/∂t = c²∇²h on a grid of 1.25 mm squares. In each place c is the phase speed at the source frequency from ω² = (gk + σk³/ρ) tanh(kd) (Lamb, Hydrodynamics, §§228 and 267), with g = 9.81 m/s², σ = 72.74 mN/m, ρ = 998.2 kg/m³ (water at 20 °C). That is exact for one frequency, which is all the wave makers produce, so the demo makes no pulses.</li>
+<li>Leapfrog in time and the isotropic nine point Laplacian, with the grid's own dispersion taken out at the source frequency: the wavelengths match the relation to better than 0.05 % in every direction (curriculum/validation/test_ripple-tank.cjs).</li>
+<li>β is the viscous damping 2νk² (Lamb §348), plus the beaches, a ramp of damping 50 mm wide that reflects less than 3 % of the amplitude. Walls reflect everything (∂h/∂n = 0). The bar adds to the water each step instead of holding it, set from the grid's own dispersion so its plane waves are 0.50 mm in amplitude, so waves reflected back to it pass under it into the beach; a bar that held the water would mirror them and the tank between bar and barrier would ring, bending the waves that reach a slit. Friction with the floor in very shallow water, the meniscus and nonlinear waves are left out.</li>
+<li>One speed in each place is exact for one frequency, with two approximations that follow: the waves carry energy at the phase speed, not the group speed, so the slow viscous fall of the amplitude with distance is off by their ratio (0.8 at 6 Hz to 1.5 at 8 Hz over 1.5 mm of water); and at a change of depth the wavelengths and directions are exact but the share reflected and the change of height are the model's.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>Huygens's Principle</strong> for light (§1.6) and <strong>Double Slit</strong> (§3.1): the same geometry at a wavelength a hundred thousand times shorter.</li>
+<li>Draw a harbor wall with a gap, or a corner reflector, and predict the pattern before running it.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

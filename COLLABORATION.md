@@ -3542,3 +3542,50 @@ keys' first rows (identical, or within scatter for Ising):
 vdcheck `--only after`: 0 problems on all three demos. No demo bugs found. No What's new entry.
 
 **For GPT:** please check the four videos' captions and readings against the worksheets and the figures above.
+
+## 2026-10-25 · Claude · New demo: Ripple Tank (draw walls and shallow plates; slits, interference, reflection, refraction, focusing)
+
+Steve's idea 2 from the open simulations comparison. `demos/ripple-tank.html`, with a worksheet handout
+(`curriculum/labs/students/ripple-tank.md`), teaching notes, tests, thumbnails and a What's new entry. Physics II (Vol. 1 §§16.1
+and 16.5, Vol. 3 §§1.6, 3.1, 3.2, 4.1) and Acoustics. Opens on Double slit, in the Flat view; 3D shows the tank on its stand.
+
+**Model.** ∂²h/∂t² + 2β ∂h/∂t = c²∇²h on 360 × 240 cells of 1.25 mm (a tank 450 × 300 mm). In each cell c is the phase speed
+at the source frequency from ω² = (gk + σk³/ρ) tanh(kd) (Lamb §§228, 267), g = 9.81 m/s², σ = 0.07274 N/m, ρ = 998.2 kg/m³,
+μ = 1.0016 mPa·s (water at 20 °C). Leapfrog in time with the isotropic nine point Laplacian (weights 2/3, 1/6, −10/3); the
+grid's own dispersion is taken out per cell (C = 4 sin²(ωΔt/2)/⟨symbol⟩ over directions), so wavelengths are exact to 3e-4
+in every direction. Stability c Δt/Δx < √3/2; the demo runs at 0.6 of it. β = 2νk² (Lamb §348) plus beaches 50 mm wide
+(β ramps to 1.2ω, quadratic); walls are mirror (∂h/∂n = 0, diagonal neighbors mirrored across the wall face). A dipper holds
+its 3 mm disk at 0.50 mm amplitude; the bar adds to its column each step instead (S = 2C sin κ per unit amplitude, κ the grid
+wavenumber along x), so it makes 0.50 mm plane waves and is transparent to waves coming back. Stated approximations (in the
+demo's model text and the notes): one speed per cell means energy moves at the phase speed, so the slow viscous fall with
+distance is off by c_g/c (0.8 to 1.5 over the demo's range), and at a depth change the share reflected is the model's while
+wavelengths and directions are exact.
+
+**Found on the way: a hard bar made the tank ring.** With the bar holding the water (first version), every wave the barrier
+sent back was mirrored again, and between beaches 200 mm apart the field at a slit became curved (21° phase lag at the edges
+of a 50 mm slit). Double slit angles were unaffected, but single slit minima came out 3° low (a sin θ = 0.86λ to 0.91λ). In a
+900 mm tall tank the same solver gave the Kirchhoff angle (18.25° against 18.24° for a = 50 mm at 150 mm), which located the
+cause. With the transparent bar the demo's own tank agrees with Kirchhoff to within 0.6°.
+
+**Presets:** Plane waves, One dipper, Two dippers (spacing, phase), Single slit, Double slit, Reflection from a 45° wall,
+Dipper beside a wall, Shallow water slows waves, Refraction (edge 0 to 60°), Focusing mirror (parabola), Focusing lens
+(R 150 mm, 40 mm thick), Draw your own. Draw tools: Wall, Shallow plate, Erase, widths. Measuring line A to B with L, θ,
+amplitude at B and a height graph; readouts give λ and c in the deep water and over the plate, predicted quiet lines,
+Snell's angle, mirror focus and thin lens estimate (hidden with Blind). A slider keeps the setup's name (the reading carries f,
+depth, slits, edge).
+
+**Checks.** `curriculum/validation/test_ripple-tank.cjs`, 10 groups: dispersion relation; grid wavenumber; stability; running
+tank λ within 0.05 %; beaches reflect under 3 %; a wall returns a packet's energy less e^(−4νk²t); double slit quiet lines
+within 0.15° of the exact hyperbola; Snell direction within 0.5°; the bar's amplitude (2.5 %) and viscous fall e^(−2νk²x/c)
+(4 %); single slit first minima within 0.6° of a Kirchhoff integral (a = 50 and 30 mm). vdcheck `--only after`: 0 problems
+(56 screenshots, 400 and 1280 px, projector). 360 px: no sideways scroll. Handout math 76 expressions, 0 problems; symbols
+`--check`, `--missing`, `--meanings` all 0 (new `== ripple-tank ==` section, d per use: depth or slit spacing).
+
+**Key** (TeacherKeys `worksheet-keys/physics-2/ripple-tank-*`): captured from a real run by `tools/capture/ripple-tank.cjs`
+(crests and amplitude minima found in the paused water, line ends to 0.1 mm), tables 2 to 5 by `ripple-tank-tables.cjs`.
+λ within 0.7 % of the relation; Snell slope 0.636 ± 0.008 (λ₂/λ₁ = 0.631); double slit λ = 15.55 ± 0.02 mm (15.45; the
+hyperbolas at 150 mm); single slit a sin θ = 16.1 to 15.5 mm for a = 50 to 30 mm, high for the wide slits because 150 mm is
+less than a²/λ, which Analysis 6 now asks about. Part 4 uses 50, 45, 40, 35 and 30 mm (a 25 mm slit's line reaches the beach).
+
+**For GPT:** please check the dispersion numbers (λ at 6 to 20 Hz, 1.5 to 12 mm), the bar calibration (S = 2C sin κ), the two
+stated approximations, and the key's answers against its tables.

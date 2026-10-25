@@ -1,0 +1,804 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
+<title>Ripple Tank</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the water's colors, the tank picture, the strip, the drawing tools and the graph */
+:root { --w-base: #bcd8e8; --w-crest: #f6fbff; --w-trough: #4f8db8; --wallc: #3f4853; --plate: #d9c47e; --beach: #d6c6a0; --meas: #c2410c; --pred: #7c3aed; --src: #b8382a; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --w-base: #143650; --w-crest: #7cc4f0; --w-trough: #050f1a; --wallc: #a7b0bb; --plate: #8a7536; --beach: #4d4431; --meas: #fb923c; --pred: #c4a5ff; --src: #ff7a5c; } }
+:root[data-theme="dark"] { --w-base: #143650; --w-crest: #7cc4f0; --w-trough: #050f1a; --wallc: #a7b0bb; --plate: #8a7536; --beach: #4d4431; --meas: #fb923c; --pred: #c4a5ff; --src: #ff7a5c; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 460px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; }
+#can { z-index: 1; touch-action: none; }
+#can.tool-move { cursor: grab; } #can.tool-draw { cursor: crosshair; }
+.scene canvas.rt3 { z-index: 0; }
+.drawbar { position: absolute; z-index: 2; left: 10px; bottom: 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; padding: 6px 8px;
+  background: color-mix(in srgb, var(--surface) 90%, transparent); border: 1px solid var(--line); border-radius: 8px; max-width: calc(100% - 320px); }
+.drawbar .lbl { font-size: 0.74rem; font-weight: 700; color: var(--muted); }
+.drawbar select { font: inherit; font-size: 0.8rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 3px 4px; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 14px; width: 270px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 28px); overflow: auto; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.setup-card .note { font-size: 0.76rem; color: var(--muted); margin: 0; }
+.plotbox { position: relative; flex: none; height: 210px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+@media (min-width: 821px) { .stage { min-height: 760px; } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 380px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; }
+  .drawbar { position: static; max-width: none; margin: 8px 8px 0; } .plotbox { height: 190px; } }
+@media (max-width: 420px) { .scene { height: 300px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Ripple Tank</h1>
+      <p>Make waves in a shallow tank of water with a dipper, two dippers or a straight bar. Draw your own walls and shallow plates, then watch waves spread through slits, interfere, reflect, bend and focus, and measure their wavelength, speed and angles.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">lengths in mm · f in Hz</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/ripple-tank.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/ripple-tank.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h5v1h-5zM16 2h1v1h-1zM18 2h1v1h-1zM20 2h2v1h-2zM23 2h5v1h-5zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM10 3h6v1h-6zM18 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM26 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM10 4h2v1h-2zM17 4h1v1h-1zM22 4h3v1h-3zM27 4h3v1h-3zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM11 5h3v1h-3zM15 5h2v1h-2zM19 5h1v1h-1zM21 5h3v1h-3zM25 5h1v1h-1zM27 5h1v1h-1zM29 5h1v1h-1zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h1v1h-1zM17 6h3v1h-3zM21 6h1v1h-1zM30 6h1v1h-1zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM11 7h3v1h-3zM15 7h2v1h-2zM18 7h3v1h-3zM23 7h1v1h-1zM25 7h1v1h-1zM28 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM11 9h1v1h-1zM13 9h2v1h-2zM23 9h1v1h-1zM26 9h4v1h-4zM2 10h1v1h-1zM5 10h6v1h-6zM17 10h2v1h-2zM20 10h4v1h-4zM25 10h2v1h-2zM28 10h4v1h-4zM34 10h1v1h-1zM36 10h3v1h-3zM3 11h3v1h-3zM13 11h2v1h-2zM22 11h4v1h-4zM28 11h4v1h-4zM33 11h3v1h-3zM37 11h1v1h-1zM2 12h2v1h-2zM5 12h1v1h-1zM7 12h2v1h-2zM13 12h1v1h-1zM15 12h1v1h-1zM20 12h1v1h-1zM23 12h1v1h-1zM25 12h1v1h-1zM29 12h5v1h-5zM36 12h1v1h-1zM38 12h1v1h-1zM4 13h1v1h-1zM6 13h2v1h-2zM12 13h1v1h-1zM15 13h1v1h-1zM17 13h1v1h-1zM19 13h2v1h-2zM24 13h2v1h-2zM31 13h8v1h-8zM2 14h1v1h-1zM4 14h2v1h-2zM8 14h1v1h-1zM10 14h3v1h-3zM18 14h1v1h-1zM21 14h1v1h-1zM26 14h1v1h-1zM29 14h1v1h-1zM32 14h1v1h-1zM35 14h1v1h-1zM38 14h1v1h-1zM4 15h4v1h-4zM10 15h1v1h-1zM12 15h2v1h-2zM17 15h3v1h-3zM21 15h1v1h-1zM24 15h2v1h-2zM27 15h4v1h-4zM34 15h2v1h-2zM3 16h1v1h-1zM5 16h1v1h-1zM7 16h3v1h-3zM11 16h3v1h-3zM16 16h2v1h-2zM19 16h1v1h-1zM21 16h4v1h-4zM27 16h1v1h-1zM29 16h1v1h-1zM32 16h1v1h-1zM34 16h3v1h-3zM38 16h1v1h-1zM2 17h4v1h-4zM7 17h1v1h-1zM11 17h3v1h-3zM19 17h3v1h-3zM25 17h1v1h-1zM29 17h2v1h-2zM33 17h1v1h-1zM35 17h3v1h-3zM3 18h1v1h-1zM6 18h6v1h-6zM14 18h2v1h-2zM17 18h3v1h-3zM21 18h3v1h-3zM25 18h3v1h-3zM29 18h1v1h-1zM32 18h1v1h-1zM36 18h3v1h-3zM4 19h3v1h-3zM11 19h1v1h-1zM14 19h2v1h-2zM18 19h3v1h-3zM22 19h1v1h-1zM29 19h1v1h-1zM31 19h1v1h-1zM35 19h2v1h-2zM2 20h4v1h-4zM7 20h4v1h-4zM12 20h2v1h-2zM16 20h2v1h-2zM19 20h1v1h-1zM22 20h2v1h-2zM25 20h3v1h-3zM29 20h3v1h-3zM35 20h2v1h-2zM38 20h1v1h-1zM2 21h4v1h-4zM7 21h1v1h-1zM11 21h2v1h-2zM15 21h2v1h-2zM20 21h1v1h-1zM24 21h1v1h-1zM27 21h1v1h-1zM30 21h1v1h-1zM32 21h4v1h-4zM38 21h1v1h-1zM3 22h1v1h-1zM5 22h6v1h-6zM14 22h6v1h-6zM26 22h1v1h-1zM28 22h1v1h-1zM30 22h6v1h-6zM3 23h1v1h-1zM5 23h1v1h-1zM7 23h1v1h-1zM9 23h1v1h-1zM17 23h1v1h-1zM21 23h5v1h-5zM27 23h1v1h-1zM29 23h1v1h-1zM31 23h1v1h-1zM34 23h1v1h-1zM36 23h2v1h-2zM2 24h1v1h-1zM4 24h2v1h-2zM7 24h4v1h-4zM14 24h1v1h-1zM16 24h2v1h-2zM19 24h2v1h-2zM24 24h4v1h-4zM29 24h3v1h-3zM33 24h1v1h-1zM35 24h1v1h-1zM38 24h1v1h-1zM2 25h1v1h-1zM5 25h3v1h-3zM10 25h1v1h-1zM12 25h1v1h-1zM16 25h1v1h-1zM19 25h1v1h-1zM21 25h4v1h-4zM30 25h1v1h-1zM32 25h5v1h-5zM4 26h1v1h-1zM8 26h1v1h-1zM10 26h1v1h-1zM14 26h7v1h-7zM23 26h1v1h-1zM30 26h1v1h-1zM32 26h1v1h-1zM2 27h1v1h-1zM5 27h1v1h-1zM10 27h2v1h-2zM14 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM25 27h1v1h-1zM27 27h5v1h-5zM34 27h2v1h-2zM2 28h3v1h-3zM6 28h1v1h-1zM8 28h1v1h-1zM13 28h1v1h-1zM15 28h2v1h-2zM18 28h1v1h-1zM21 28h2v1h-2zM24 28h1v1h-1zM26 28h1v1h-1zM28 28h3v1h-3zM34 28h1v1h-1zM36 28h3v1h-3zM2 29h1v1h-1zM11 29h7v1h-7zM22 29h1v1h-1zM24 29h1v1h-1zM26 29h1v1h-1zM28 29h1v1h-1zM30 29h4v1h-4zM35 29h3v1h-3zM2 30h1v1h-1zM5 30h7v1h-7zM13 30h1v1h-1zM15 30h2v1h-2zM22 30h1v1h-1zM26 30h2v1h-2zM29 30h10v1h-10zM10 31h2v1h-2zM14 31h1v1h-1zM16 31h1v1h-1zM20 31h3v1h-3zM24 31h1v1h-1zM26 31h2v1h-2zM30 31h1v1h-1zM34 31h1v1h-1zM36 31h2v1h-2zM2 32h7v1h-7zM10 32h3v1h-3zM16 32h3v1h-3zM21 32h1v1h-1zM23 32h4v1h-4zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM38 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM10 33h1v1h-1zM13 33h1v1h-1zM16 33h1v1h-1zM18 33h5v1h-5zM24 33h2v1h-2zM27 33h1v1h-1zM29 33h2v1h-2zM34 33h1v1h-1zM37 33h2v1h-2zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h6v1h-6zM23 34h4v1h-4zM29 34h6v1h-6zM37 34h1v1h-1zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM10 35h1v1h-1zM12 35h4v1h-4zM18 35h1v1h-1zM20 35h1v1h-1zM23 35h1v1h-1zM25 35h1v1h-1zM28 35h2v1h-2zM31 35h2v1h-2zM35 35h1v1h-1zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h2v1h-2zM14 36h1v1h-1zM17 36h6v1h-6zM24 36h3v1h-3zM29 36h1v1h-1zM34 36h1v1h-1zM38 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM14 37h1v1h-1zM16 37h1v1h-1zM18 37h2v1h-2zM21 37h2v1h-2zM24 37h1v1h-1zM28 37h2v1h-2zM31 37h2v1h-2zM34 37h5v1h-5zM2 38h7v1h-7zM10 38h4v1h-4zM15 38h4v1h-4zM22 38h1v1h-1zM26 38h1v1h-1zM30 38h4v1h-4zM35 38h1v1h-1zM38 38h1v1h-1z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Start</button>
+        <button type="button" class="btn" id="restart" title="Still water: start the waves again from the beginning">Still the water</button>
+        <label class="lbl" for="selSpeed" style="font-size:0.8rem;color:var(--muted)">Time</label>
+        <select id="selSpeed"><option value="0.125">slow motion 1/8</option><option value="0.25" selected>slow motion 1/4</option><option value="0.5">slow motion 1/2</option><option value="1">real time</option></select>
+        <div class="seg" role="group" aria-label="What the picture shows" id="lookSeg"><button type="button" data-look="surface" aria-pressed="true">Surface</button><button type="button" data-look="amp" aria-pressed="false" title="The amplitude of the waves at each place, averaged over the last two periods: quiet (nodal) lines show dark">Amplitude</button></div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
+        <span class="clock mono" id="clock" aria-live="off"></span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="A ripple tank seen from above: the water's surface, the wave makers, walls and shallow plates, and a measuring line from A to B. Arrow keys move end B of the line (Shift: 10 mm); press A or B to choose which end moves."></canvas>
+        <div class="drawbar" id="drawbar" role="group" aria-label="Drawing in the tank">
+          <span class="lbl">Draw</span>
+          <div class="seg" role="group" aria-label="Tool" id="toolSeg">
+            <button type="button" data-tool="move" aria-pressed="true" title="Drag the measuring line's ends and the dippers">Move</button>
+            <button type="button" data-tool="wall" aria-pressed="false" title="Draw a wall that stands out of the water">Wall</button>
+            <button type="button" data-tool="plate" aria-pressed="false" title="Draw a glass plate under the water, which makes the water shallow there">Shallow plate</button>
+            <button type="button" data-tool="erase" aria-pressed="false" title="Remove walls and plates">Erase</button>
+          </div>
+          <label class="lbl" for="selBrush">Width</label>
+          <select id="selBrush"><option value="2.5">2.5 mm</option><option value="5" selected>5 mm</option><option value="10">10 mm</option><option value="20">20 mm</option></select>
+          <button type="button" class="btn" id="clearDraw">Clear tank</button>
+        </div>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="The wave maker, the water and the shapes in the tank">
+        <span class="card-title">Wave maker and water</span>
+        <div class="pick"><label for="selSrc">Wave maker</label><select id="selSrc">
+          <option value="bar">Straight bar (plane waves)</option><option value="one">One dipper (circular waves)</option><option value="two">Two dippers</option></select></div>
+        <div><div class="slider-head"><label for="sF">Frequency f</label><output id="oF" class="mono" for="sF"></output></div><input type="range" id="sF" min="6" max="20" step="0.5"></div>
+        <div><div class="slider-head"><label for="sDeep">Water depth</label><output id="oDeep" class="mono" for="sDeep"></output></div><input type="range" id="sDeep" min="3" max="12" step="0.5"></div>
+        <div><div class="slider-head"><label for="sPlate">Depth over a shallow plate</label><output id="oPlate" class="mono" for="sPlate"></output></div><input type="range" id="sPlate" min="1" max="6" step="0.5"></div>
+        <div id="twoBox" hidden>
+          <div><div class="slider-head"><label for="sSep">Dipper spacing d</label><output id="oSep" class="mono" for="sSep"></output></div><input type="range" id="sSep" min="10" max="100" step="1"></div>
+          <div><div class="slider-head"><label for="sPh">Dipper 2 ahead by</label><output id="oPh" class="mono" for="sPh"></output></div><input type="range" id="sPh" min="0" max="360" step="15"></div>
+        </div>
+        <div id="slitBox" hidden>
+          <div><div class="slider-head"><label for="sA">Slit width a</label><output id="oA" class="mono" for="sA"></output></div><input type="range" id="sA" min="4" max="60" step="1"></div>
+          <div id="dBox"><div class="slider-head"><label for="sD">Slit spacing d</label><output id="oD" class="mono" for="sD"></output></div><input type="range" id="sD" min="20" max="90" step="1"></div>
+        </div>
+        <div id="edgeBox" hidden><div class="slider-head"><label for="sEdge">Plate edge turned by</label><output id="oEdge" class="mono" for="sEdge"></output></div><input type="range" id="sEdge" min="0" max="60" step="5"></div>
+        <div class="pick"><label for="selEdges">Sides of the tank</label><select id="selEdges"><option value="beach">Beaches (absorb the waves)</option><option value="wall">Walls (reflect the waves)</option></select></div>
+        <label class="check" id="predBox"><input type="checkbox" id="chkPred"><span>Draw the predicted lines</span></label>
+      </div>
+      <div class="plotbox">
+        <canvas id="plot" role="img" aria-label="Graph: the height of the water along the measuring line from A to B, with the average height of the waves above and below."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/ripple-tank.html" target="ripple-tank-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="plane" aria-pressed="true">Plane waves</button>
+          <button type="button" data-p="dipper" aria-pressed="false">One dipper</button>
+          <button type="button" data-p="two" aria-pressed="false">Two dippers</button>
+          <button type="button" data-p="single" aria-pressed="false">Single slit</button>
+          <button type="button" data-p="double" aria-pressed="false">Double slit</button>
+          <button type="button" data-p="reflect" aria-pressed="false">Reflection from a wall</button>
+          <button type="button" data-p="image" aria-pressed="false">Dipper beside a wall</button>
+          <button type="button" data-p="slow" aria-pressed="false">Shallow water slows waves</button>
+          <button type="button" data-p="refract" aria-pressed="false">Refraction</button>
+          <button type="button" data-p="mirror" aria-pressed="false">Focusing mirror</button>
+          <button type="button" data-p="lens" aria-pressed="false">Focusing lens</button>
+          <button type="button" data-p="draw" aria-pressed="false">Draw your own</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+<!-- vd-readings --><section class="vd-readings" data-ws="ripple-tank" data-title="Ripple Tank" data-demo="ripple-tank">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the wavelengths, speeds and predicted angles</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">ω² = (g k + σk³/ρ) tanh(k d), λ = 2π/k, c = f λ</p>
+          <p class="formula">two sources d apart: bright lines at d sin θ = m λ, quiet (nodal) lines at d sin θ = (m + ½) λ</p>
+          <p class="formula">one slit of width a: quiet lines at a sin θ = m λ (m = 1, 2, …)</p>
+          <p class="hint" id="about"></p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Ripple tank. Runs in Node (curriculum/validation/test_ripple-tank.cjs).
+     Water: the small wave equation for the surface height h(x, y, t) on a square grid of side DX,
+        ∂²h/∂t² + 2β ∂h/∂t = c² ∇²h,
+     with c the phase speed of a wave at the source frequency for the water depth in that cell. That speed comes from the linear
+     dispersion relation of gravity and capillary waves on water of depth d (Lamb, Hydrodynamics, 6th ed. 1932, §§228 and 267):
+        ω² = (g k + σ k³/ρ) tanh(k d),
+     g = 9.81 m/s² (the site's value), and water at 20 °C: surface tension σ = 72.74 mN/m (IAPWS 2014 release on the surface tension
+     of ordinary water), density ρ = 998.2 kg/m³ and viscosity μ = 1.0016 mPa·s (IAPWS 2008). One speed per depth is exact for waves of
+     one frequency, which is all the dippers and the bar make: the pattern of crests, wavelengths, angles and nodal lines is that
+     of the real tank. A pulse would spread out in a real tank (the speed depends on the frequency) and does not here, so the demo
+     has no pulses. Changing the frequency or a depth starts the water again.
+     β: viscous damping of the amplitude, 2νk² (Lamb §348, ν = μ/ρ), plus the beaches. The friction of the tank's bottom on very
+     shallow water is left out, and so are the meniscus at walls and waves large enough to be nonlinear.
+     Scheme: leapfrog in time (second order) and the isotropic nine point Laplacian (weights 2/3 on the four sides, 1/6 on the four
+     corners, −10/3 in the middle; Patra and Karttunen 2006), whose error is the same in every direction to fourth order. The grid's
+     own dispersion is taken out exactly for the source frequency: the speed in each cell is set so that the scheme's wavelength at
+     that frequency, averaged over directions, is the true one (the spread with direction is below 1 part in 10⁴). Stable for
+     c Δt/DX < √3/2; the demo runs at 0.6 of that.
+     Walls: no water flows through them, so ∂h/∂n = 0 (a wave reflects whole, with a crest at the wall): a wall cell next to water
+     counts as having the water cell's own height. Beaches: a ramp of damping over BEACH mm at the tank's sides, like the sloping
+     foam edges of a real tank, reflecting less than 3 % of the amplitude from 6 to 20 Hz (test_ripple-tank.cjs); or the tank's sides as walls.
+     Sources: a dipper (a ball 6 mm across bobbing in the water) or a straight bar the width of the tank, each holding the water it
+     touches at A sin(ωt + φ), A = 0.50 mm. The motion grows smoothly over the first two periods after a start. */
+  const PH = { g: 9.81, sigma: 0.07274, rho: 998.2, mu: 1.0016e-3 };
+  PH.nu = PH.mu / PH.rho;
+  const DX = 1.25e-3, NX = 360, NY = 240, BEACH = 50, AMP = 0.5e-3, DIP_R = 3e-3, CFL = 0.6 * Math.sqrt(3) / 2;
+  /* wavenumber k (1/m) of a wave of frequency f (Hz) on water of depth d (m), by Newton's method from the deep water guess */
+  function kOf(f, d) {
+    const w2 = (2 * Math.PI * f) ** 2, s = PH.sigma / PH.rho;
+    let k = Math.max(w2 / PH.g, 1);
+    for (let i = 0; i < 60; i++) {
+      const th = Math.tanh(k * d), F = (PH.g * k + s * k ** 3) * th - w2, dF = (PH.g + 3 * s * k * k) * th + (PH.g * k + s * k ** 3) * d * (1 - th * th);
+      const k2 = k - F / dF; if (Math.abs(k2 - k) < 1e-12 * k) { k = k2; break; } k = k2 > 0 ? k2 : k / 2;
+    }
+    return k;
+  }
+  const lambdaOf = (f, d) => 2 * Math.PI / kOf(f, d);
+  const speedOf = (f, d) => f * lambdaOf(f, d);
+  const shallowSpeed = (d) => Math.sqrt(PH.g * d);
+  /* −(symbol of the nine point Laplacian) for a plane wave of wavenumber k at angle th, times DX² */
+  function lapSym(k, th) { const a = k * DX * Math.cos(th), b = k * DX * Math.sin(th);
+    return 10 / 3 - (4 / 3) * (Math.cos(a) + Math.cos(b)) - (2 / 3) * Math.cos(a) * Math.cos(b); }
+  function lapAvg(k) { let s = 0; const n = 16; for (let i = 0; i < n; i++) s += lapSym(k, (i + 0.5) / n * Math.PI / 4); return s / n; }
+  /* the c² Δt²/DX² that makes the leapfrog scheme's wavenumber at angular frequency w equal k */
+  const coefFor = (k, w, dt) => 4 * Math.sin(w * dt / 2) ** 2 / lapAvg(k);
+  /* the scheme's wavenumber at angle th for a given coefficient (to check the correction) */
+  function schemeK(C, w, dt, th) { const target = 4 * Math.sin(w * dt / 2) ** 2 / C; let lo = 0, hi = Math.PI / DX;
+    for (let i = 0; i < 80; i++) { const m = (lo + hi) / 2; if (lapSym(m, th) < target) lo = m; else hi = m; } return (lo + hi) / 2; }
+
+  /* the tank: (NX + 2) × (NY + 2) cells, the outer ring always wall. Cell (i, j) holds the water whose center is at
+     x = (i − 0.5) DX, y = (j − 0.5) DX from the tank's lower left corner, for i in 1..NX and j in 1..NY. */
+  function makeTank(nx, ny) {
+    nx = nx || NX; ny = ny || NY; const W = nx + 2, H = ny + 2, n = W * H;
+    const T = { nx, ny, W, H, n, h: new Float64Array(n), hp: new Float64Array(n), ms: new Float64Array(n), wall: new Uint8Array(n), depth: new Float32Array(n),
+      type: new Uint8Array(n), C: new Float64Array(n), B: new Float64Array(n), src: [], f: 10, deep: 10, edges: 'beach', t: 0, dt: 1e-3, srcIdx: null, srcPh: null, barIdx: null, barS: null, barPh: null, steps: 0 };
+    for (let j = 0; j < H; j++) for (let i = 0; i < W; i++) if (i === 0 || j === 0 || i === W - 1 || j === H - 1) T.wall[j * W + i] = 1;
+    T.depth.fill(10);
+    return T;
+  }
+  const idx = (T, x, y) => (Math.floor(y / DX) + 1) * T.W + Math.floor(x / DX) + 1;   /* x, y in m */
+  /* per cell coefficients from the depths, the frequency and the edges; returns the time step */
+  function prepare(T) {
+    const f = T.f, w = 2 * Math.PI * f, ks = new Map(), kd = (d) => { if (!ks.has(d)) ks.set(d, kOf(f, d * 1e-3)); return ks.get(d); };
+    let cmax = 0; for (let q = 0; q < T.n; q++) if (!T.wall[q]) { const k = kd(T.depth[q]); cmax = Math.max(cmax, w / k); }
+    let dt = CFL * DX / Math.max(cmax, 0.05);
+    /* the corrected speeds are a little above the true ones: shrink the step until every cell is inside the limit */
+    for (let it = 0; it < 20; it++) { let worst = 0; for (const k of ks.values()) worst = Math.max(worst, coefFor(k, w, dt)); if (Math.sqrt(worst) <= CFL) break; dt *= 0.97; }
+    T.dt = dt; const W = T.W, sponge = T.edges === 'beach', bw = BEACH, bmax = 1.2 * w, sides = T.sides || [1, 1, 1, 1];
+    for (let j = 0; j < T.H; j++) for (let i = 0; i < W; i++) {
+      const q = j * W + i; if (T.wall[q]) { T.C[q] = 0; T.B[q] = 0; continue; }
+      const k = kd(T.depth[q]); T.C[q] = coefFor(k, w, dt);
+      let beta = 2 * PH.nu * k * k;
+      if (sponge) { const s = Math.min(sides[0] ? i - 0.5 : 1e9, sides[1] ? T.nx + 0.5 - i : 1e9, sides[2] ? j - 0.5 : 1e9, sides[3] ? T.ny + 0.5 - j : 1e9) * DX * 1e3; if (s < bw) beta += bmax * ((bw - s) / bw) ** 2; }
+      T.B[q] = beta * dt;
+    }
+    classify(T); sources(T); return dt;
+  }
+  /* type 0: water with water all round (fast path); 1: water next to a wall; 2: wall */
+  function classify(T) {
+    const W = T.W;
+    for (let q = 0; q < T.n; q++) {
+      if (T.wall[q]) { T.type[q] = 2; T.h[q] = 0; T.hp[q] = 0; T.ms[q] = 0; continue; }
+      const nb = [q - 1, q + 1, q - W, q + W, q - W - 1, q - W + 1, q + W - 1, q + W + 1];
+      T.type[q] = nb.some((r) => T.wall[r]) ? 1 : 0;
+    }
+    const e = []; for (let q = 0; q < T.n; q++) if (T.type[q] === 1) e.push(q);
+    T.edge = Int32Array.from(e); T.edgeHp = new Float64Array(e.length);
+  }
+  /* the cells each source drives: a dipper's disk, which it holds, or the bar's column, which it adds to (the bar runs the full width, into the beaches) */
+  function sources(T) {
+    const I = [], P = [], BI = [], BS = [], BP = [];
+    for (const s of T.src) {
+      /* the bar adds to the water instead of holding it, so waves coming back pass under it into the beach behind it (a bar that
+         held the water would mirror them, and the tank between bar and barrier would ring). Added each step, S sin ωt on one column
+         makes plane waves of amplitude S/(2C sin κ) either way, where sin²(κ/2) = sin²(ωΔt/2)/C is the grid's own wavenumber
+         along x (exact for the scheme, which is the plain three point one for waves that do not vary along y): S is set so they
+         are AMP high */
+      if (s.kind === 'bar') { const i = Math.floor(s.x / DX) + 1, w = 2 * Math.PI * T.f, sw = Math.sin(w * T.dt / 2) ** 2;
+        for (let j = 1; j <= T.ny; j++) { const q = j * T.W + i; if (T.wall[q]) continue; const C = T.C[q], kap = 2 * Math.asin(Math.min(1, Math.sqrt(sw / C)));
+          BI.push(q); BS.push(2 * C * Math.sin(kap)); BP.push(s.phase || 0); } continue; }
+      const r = s.r || DIP_R, i0 = Math.floor((s.x - r) / DX), i1 = Math.floor((s.x + r) / DX), j0 = Math.floor((s.y - r) / DX), j1 = Math.floor((s.y + r) / DX);
+      for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) {
+        if (i < 0 || j < 0 || i >= T.nx || j >= T.ny) continue;
+        const cx = (i + 0.5) * DX - s.x, cy = (j + 0.5) * DX - s.y; if (cx * cx + cy * cy > r * r) continue;
+        const q = (j + 1) * T.W + i + 1; if (!T.wall[q]) { I.push(q); P.push(s.phase || 0); }
+      }
+    }
+    T.srcIdx = Int32Array.from(I); T.srcPh = Float32Array.from(P); T.barIdx = Int32Array.from(BI); T.barS = Float64Array.from(BS); T.barPh = Float32Array.from(BP);
+  }
+  const ramp = (t, f) => { const u = t * f / 2; return u >= 1 ? 1 : (1 - Math.cos(Math.PI * u)) / 2; };
+  /* one step of length T.dt; tau: the averaging time of the mean square height (s) */
+  function step(T, tau) {
+    const W = T.W, h = T.h, hp = T.hp, ms = T.ms, km = tau ? T.dt / tau : 0, C = T.C, B = T.B, wl = T.wall, a = 2 / 3, b = 1 / 6, c0 = 10 / 3, ny = T.ny, nx = T.nx;
+    const E = T.edge, EH = T.edgeHp; for (let m = 0; m < E.length; m++) EH[m] = hp[E[m]];
+    /* every cell with the plain stencil (a wall cell has C = B = 0 and stays at 0), then the cells next to a wall again */
+    for (let j = 1; j <= ny; j++) {
+      let q = j * W + 1;
+      for (let i = 1; i <= nx; i++, q++) {
+        const hc = h[q], lap = a * (h[q - 1] + h[q + 1] + h[q - W] + h[q + W]) + b * (h[q - W - 1] + h[q - W + 1] + h[q + W - 1] + h[q + W + 1]) - c0 * hc;
+        const bq = B[q], hn = (2 * hc - (1 - bq) * hp[q] + C[q] * lap) / (1 + bq); hp[q] = hn; ms[q] += (hn * hn - ms[q]) * km;
+      }
+    }
+    /* a wall neighbor takes the value of its mirror image across the wall: hc beside it; for a corner, the side cell the wall face
+       reflects it onto (both sides wall: hc; neither: their mean) */
+    for (let m = 0; m < E.length; m++) {
+      const q = E[m], hc = h[q], L = q - 1, R = q + 1, D = q - W, U = q + W;
+      const v = (r) => (wl[r] ? hc : h[r]), dg = (s1, s2) => { const w1 = wl[s1], w2 = wl[s2]; return w1 && w2 ? hc : w1 ? h[s2] : w2 ? h[s1] : (h[s1] + h[s2]) / 2; };
+      const lap = a * (v(L) + v(R) + v(D) + v(U)) - c0 * hc + b * ((wl[D - 1] ? dg(L, D) : h[D - 1]) + (wl[D + 1] ? dg(R, D) : h[D + 1]) + (wl[U - 1] ? dg(L, U) : h[U - 1]) + (wl[U + 1] ? dg(R, U) : h[U + 1]));
+      const bq = B[q], hn = (2 * hc - (1 - bq) * EH[m] + C[q] * lap) / (1 + bq), m0 = ms[q] - hp[q] * hp[q] * km; /* the first pass's average undone */
+      hp[q] = hn; ms[q] = m0 + hn * hn * km;
+    }
+    const w = 2 * Math.PI * T.f, BI = T.barIdx, BS = T.barS, BP = T.barPh, Ab = AMP * ramp(T.t, T.f);
+    for (let m = 0; m < BI.length; m++) { const q = BI[m], o = hp[q], v = o + Ab * BS[m] * Math.sin(w * T.t + BP[m]); hp[q] = v; ms[q] += (v * v - o * o) * km; }
+    T.t += T.dt; T.steps++;
+    const A = AMP * ramp(T.t, T.f), I = T.srcIdx, P = T.srcPh;
+    for (let m = 0; m < I.length; m++) { const v = A * Math.sin(w * T.t + P[m]); hp[I[m]] = v; ms[I[m]] += (v * v - ms[I[m]]) * km; }
+    T.h = hp; T.hp = h;
+  }
+  function clearWater(T) { T.h.fill(0); T.hp.fill(0); T.ms.fill(0); T.t = 0; T.steps = 0; }
+  /* bilinear value of an array at (x, y) in m */
+  function sampleAt(T, arr, x, y) {
+    const u = x / DX - 0.5, v = y / DX - 0.5, i = Math.max(0, Math.min(T.nx - 2, Math.floor(u))), j = Math.max(0, Math.min(T.ny - 2, Math.floor(v))), fu = Math.max(0, Math.min(1, u - i)), fv = Math.max(0, Math.min(1, v - j));
+    const q = (j + 1) * T.W + i + 1, g = (r) => (T.wall[r] ? 0 : arr[r]);
+    return g(q) * (1 - fu) * (1 - fv) + g(q + 1) * fu * (1 - fv) + g(q + T.W) * (1 - fu) * fv + g(q + T.W + 1) * fu * fv;
+  }
+  const ampAt = (T, x, y) => Math.sqrt(2 * Math.max(0, sampleAt(T, T.ms, x, y)));
+  /* shapes, in m: a thick segment, a disk, a polygon test */
+  function paint(T, layer, val, test, box) {
+    const [x0, y0, x1, y1] = box || [0, 0, T.nx * DX, T.ny * DX];
+    const i0 = Math.max(0, Math.floor(x0 / DX) - 1), i1 = Math.min(T.nx - 1, Math.ceil(x1 / DX) + 1), j0 = Math.max(0, Math.floor(y0 / DX) - 1), j1 = Math.min(T.ny - 1, Math.ceil(y1 / DX) + 1);
+    let n = 0;
+    for (let j = j0; j <= j1; j++) for (let i = i0; i <= i1; i++) if (test((i + 0.5) * DX, (j + 0.5) * DX)) { T[layer][(j + 1) * T.W + i + 1] = val; n++; }
+    return n;
+  }
+  const segTest = (ax, ay, bx, by, r) => (x, y) => { const dx = bx - ax, dy = by - ay, L2 = dx * dx + dy * dy, u = L2 ? Math.max(0, Math.min(1, ((x - ax) * dx + (y - ay) * dy) / L2)) : 0, px = ax + u * dx - x, py = ay + u * dy - y; return px * px + py * py <= r * r; };
+  const segBox = (ax, ay, bx, by, r) => [Math.min(ax, bx) - r, Math.min(ay, by) - r, Math.max(ax, bx) + r, Math.max(ay, by) + r];
+  /* the barrier with n openings of width a, centers spaced d, across the tank at x (thickness th), all in m */
+  function slitTest(x, th, yc, n, a, d) {
+    const opens = []; for (let m = 0; m < n; m++) opens.push(yc + (m - (n - 1) / 2) * d);
+    return (px, py) => Math.abs(px - x) <= th / 2 && !opens.some((o) => Math.abs(py - o) < a / 2);
+  }
+  /* angles of the nodal lines (d sin θ = (m + ½)λ) and the bright lines (d sin θ = mλ) of two sources d apart, in degrees */
+  function fringeAngles(lam, d) {
+    const nod = [], bright = [];
+    for (let m = 0; (m + 0.5) * lam < d; m++) nod.push(Math.asin((m + 0.5) * lam / d) * 180 / Math.PI);
+    for (let m = 0; m * lam <= d; m++) bright.push(Math.asin(m * lam / d) * 180 / Math.PI);
+    return { nod, bright };
+  }
+  /* single slit of width a: minima at a sin θ = mλ */
+  function slitMinima(lam, a) { const r = []; for (let m = 1; m * lam < a; m++) r.push(Math.asin(m * lam / a) * 180 / Math.PI); return r; }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+
+  const $ = (id) => document.getElementById(id);
+  const MM = 1e-3, TW = NX * DX / MM, TH = NY * DX / MM, BAR_X = 62.5, SLIT_X = 150, YC = TH / 2;   /* tank 450 mm × 300 mm */
+  const LENS = { R: 150, t: 40, x: 190 }, MIRROR = { xv: 360, p: 80, half: 95 }, IMAGE_X = 300;
+  const PRESETS = {
+    plane: { src: 'bar', f: 10, deep: 10, plate: 1.5, geo: null, A: [120, 150], B: [214.4, 150],
+      hint: 'A straight bar dips in and out of the water across the whole tank and sends out plane waves. Put A and B on two crests several wavelengths apart and count the wavelengths between them to find λ; then c = fλ. Change the frequency and the depth and see what each does to the wavelength.' },
+    dipper: { src: 'one', f: 12, deep: 10, plate: 1.5, geo: null, mid: [200, 150], A: [200, 150], B: [320, 150],
+      hint: 'One dipper makes circular waves. Each crest is a circle centered on the dipper, and the waves get weaker as they spread (the energy of each ring is spread round a longer circle), until the beaches absorb them.' },
+    two: { src: 'two', f: 12, deep: 10, plate: 1.5, sep: 40, ph: 0, geo: null, mid: [150, 150], A: [150, 150], B: [330, 150],
+      hint: 'Two dippers 40 mm apart, moving together. Where crest meets crest the water moves most; along the quiet (nodal) lines a crest from one always meets a trough from the other. Show the Amplitude to see the lines, then put A midway between the dippers and B on a quiet line far away: the line angle θ obeys d sin θ = (m + ½)λ.' },
+    single: { src: 'bar', f: 15, deep: 10, plate: 1.5, a: 30, geo: { kind: 'slits', n: 1 }, A: [SLIT_X, YC], B: [SLIT_X + 180, YC],
+      hint: 'Plane waves reach a barrier with one opening, 30 mm wide. Past it they spread out (diffraction), most strongly when the opening is not much wider than a wavelength. The first quiet lines either side are where a sin θ = λ. Narrow the slit and watch the waves spread more.' },
+    double: { src: 'bar', f: 15, deep: 10, plate: 1.5, a: 8, d: 45, geo: { kind: 'slits', n: 2 }, A: [SLIT_X, YC], B: [SLIT_X + 180, YC],
+      hint: 'Plane waves reach a barrier with two narrow slits 45 mm apart: each slit becomes a source, like two dippers in step. A is at the middle of the barrier, between the slits. Show the Amplitude, drag B onto a quiet line far from the slits, and check d sin θ = (m + ½)λ.' },
+    reflect: { src: 'bar', f: 12, deep: 10, plate: 1.5, geo: { kind: 'wall45' }, A: [280, 200], B: [380, 200],
+      hint: 'Plane waves meet a straight wall at 45°. They leave it at 45° on the other side of the normal, heading up the tank, and cross the waves still arriving: the checkered pattern in front of the wall is the two sets of waves added together.' },
+    image: { src: 'one', f: 12, deep: 10, plate: 1.5, geo: { kind: 'image' }, mid: [260, 150], A: [260, 150], B: [140, 150],
+      hint: 'A dipper 40 mm from a straight wall. The reflected waves are circles centered on a point 40 mm behind the wall, the image of the dipper, so the pattern in front of the wall is that of two dippers 80 mm apart moving together.' },
+    slow: { src: 'bar', f: 8, deep: 10, plate: 1.5, edge: 0, geo: { kind: 'edge' }, A: [100, 150], B: [190, 150],
+      hint: 'The right part of the tank has a glass plate under the water, leaving it 1.5 mm deep. The frequency is the same on both sides (each crest makes one crest), but the waves are slower in shallow water, so the wavelength is shorter. Measure λ on each side.' },
+    refract: { src: 'bar', f: 8, deep: 10, plate: 1.5, edge: 30, geo: { kind: 'edge' }, A: [100, 150], B: [190, 150],
+      hint: 'The edge of the shallow plate is turned 30° from the wavefronts, so the waves meet it at 30° and bend toward the normal as they slow: sin θ₁/sin θ₂ = λ₁/λ₂ = c₁/c₂. Lay the line along a crest on each side to measure its angle.' },
+    mirror: { src: 'bar', f: 12, deep: 10, plate: 1.5, geo: { kind: 'mirror' }, A: [280, 150], B: [200, 150],
+      hint: 'A wall bent into a parabola whose focus is 80 mm in front of it. Every part of a plane wave travels the same distance to the focus after reflecting, so the reflected crests are circles that shrink onto the focus and then spread from it.' },
+    lens: { src: 'bar', f: 8, deep: 10, plate: 1.5, geo: { kind: 'lens' }, A: [320, 150], B: [320, 220],
+      hint: 'A plate shaped like a convex lens (two arcs of radius 150 mm, 40 mm thick in the middle) under the water. The waves go slower over it, most where it is widest, so the wavefronts are held back in the middle and curve inward: they converge, as light does through a glass lens.' },
+    draw: { src: 'bar', f: 12, deep: 10, plate: 1.5, geo: null, A: [120, 150], B: [220, 150], tool: 'wall',
+      hint: 'An empty tank with the bar. Draw walls and shallow plates with the tools at the bottom of the picture; Erase removes them. Try a slit of your own, a corner reflector, a prism of shallow water, or a harbor wall.' },
+  };
+  const S = { preset: 'plane', src: 'bar', f: 10, deep: 10, plate: 1.5, sep: 40, ph: 0, a: 8, d: 45, edge: 30, edges: 'beach', geo: null, strokes: [], tool: 'move', brush: 5,
+    look: 'surface', speed: 0.25, run: false, blind: false, pred: false, mid: { x: 200, y: 150 }, A: { x: 120, y: 150 }, B: { x: 214.4, y: 150 }, sel: 'B', since: 0, hasPlate: false, rate: 1 };
+  const T = makeTank();
+  const can = $('can'), ctx = can.getContext('2d'), pl = $('plot'), pctx = pl.getContext('2d');
+  const oc = document.createElement('canvas'); oc.width = NX; oc.height = NY; const octx = oc.getContext('2d'), img = octx.createImageData(NX, NY), px32 = new Uint32Array(img.data.buffer);
+  let W = 0, H = 0, PW = 0, PH2 = 0, dpr = 1, K = null, view = { x0: 0, y0: 0, s: 1 };
+  const f1 = (v, d = 1) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const hex = (c) => { const m = /^#?([0-9a-f]{6})$/i.exec(c.trim()); if (!m) return [128, 128, 128]; const n = parseInt(m[1], 16); return [n >> 16, (n >> 8) & 255, n & 255]; };
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    K = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), grid: g('--grid'), accent: g('--accent'), meas: g('--meas'), pred: g('--pred'), src: g('--src'),
+      wallc: g('--wallc'), mono: g('--font-mono'), ui: g('--font-ui'), base: hex(g('--w-base')), crest: hex(g('--w-crest')), trough: hex(g('--w-trough')), wallRGB: hex(g('--wallc')), plate: hex(g('--plate')), beach: hex(g('--beach')) }; }
+
+  /* ---------- the tank's shapes: the preset's, then the student's strokes in order ---------- */
+  const lam = (d) => lambdaOf(S.f, d * MM) / MM;   /* mm */
+  function shapeTests() {
+    const g = S.geo; if (!g) return [];
+    if (g.kind === 'slits') return [['wall', 1, slitTest(SLIT_X * MM, 3 * MM, YC * MM, g.n, S.a * MM, S.d * MM), [(SLIT_X - 3) * MM, 0, (SLIT_X + 3) * MM, TH * MM]]];
+    if (g.kind === 'wall45') return [['wall', 1, segTest(230 * MM, 50 * MM, 410 * MM, 230 * MM, 1.5 * MM), segBox(230 * MM, 50 * MM, 410 * MM, 230 * MM, 1.5 * MM)]];
+    if (g.kind === 'image') return [['wall', 1, segTest(IMAGE_X * MM, 40 * MM, IMAGE_X * MM, 260 * MM, 1.5 * MM), segBox(IMAGE_X * MM, 40 * MM, IMAGE_X * MM, 260 * MM, 1.5 * MM)]];
+    if (g.kind === 'edge') { const e = S.edge * Math.PI / 180, nx = Math.cos(e), ny = -Math.sin(e);
+      return [['depth', S.plate, (x, y) => (x / MM - 200) * nx + (y / MM - YC) * ny > 0, null]]; }
+    if (g.kind === 'lens') { const o = LENS.R - LENS.t / 2, R2 = LENS.R * LENS.R;
+      return [['depth', S.plate, (x, y) => { const X = x / MM, Y = y / MM - YC; return (X - LENS.x - o) ** 2 + Y * Y < R2 && (X - LENS.x + o) ** 2 + Y * Y < R2; }, null]]; }
+    if (g.kind === 'mirror') { const out = []; let px = null, py = null;
+      for (let y = YC - MIRROR.half; y <= YC + MIRROR.half + 1e-9; y += 5) { const x = MIRROR.xv - (y - YC) ** 2 / (4 * MIRROR.p);
+        if (px != null) out.push(['wall', 1, segTest(px * MM, py * MM, x * MM, y * MM, 1.5 * MM), segBox(px * MM, py * MM, x * MM, y * MM, 1.5 * MM)]); px = x; py = y; }
+      return out; }
+    return [];
+  }
+  function strokeTests(st) {
+    const out = [], r = st.r / 2 * MM;
+    for (let i = 0; i < st.pts.length; i++) { const a = st.pts[Math.max(0, i - 1)], b = st.pts[i];
+      const t = segTest(a[0] * MM, a[1] * MM, b[0] * MM, b[1] * MM, r), bx = segBox(a[0] * MM, a[1] * MM, b[0] * MM, b[1] * MM, r);
+      if (st.tool === 'wall') out.push(['wall', 1, t, bx]);
+      else if (st.tool === 'plate') out.push(['depth', S.plate, t, bx]);
+      else { out.push(['wall', 0, t, bx]); out.push(['depth', S.deep, t, bx]); } }
+    return out;
+  }
+  function buildShapes() {
+    T.wall.fill(0); for (let j = 0; j < T.H; j++) for (let i = 0; i < T.W; i++) if (i === 0 || j === 0 || i === T.W - 1 || j === T.H - 1) T.wall[j * T.W + i] = 1;
+    T.depth.fill(S.deep);
+    for (const [layer, val, test, box] of shapeTests()) paint(T, layer, val, test, box);
+    for (const st of S.strokes) for (const [layer, val, test, box] of strokeTests(st)) paint(T, layer, val, test, box);
+    /* a wall never buries a dipper */
+    for (const d of dippers()) paint(T, 'wall', 0, (x, y) => (x / MM - d.x) ** 2 + (y / MM - d.y) ** 2 <= (DIP_R / MM + 1.5) ** 2, [(d.x - 6) * MM, (d.y - 6) * MM, (d.x + 6) * MM, (d.y + 6) * MM]);
+    for (let q = 0; q < T.n; q++) if (T.wall[q]) T.depth[q] = S.deep;
+    S.hasPlate = false; for (let q = 0; q < T.n; q++) if (!T.wall[q] && T.depth[q] !== S.deep) { S.hasPlate = true; break; }
+  }
+  function dippers() {
+    if (S.src === 'one') return [{ x: S.mid.x, y: S.mid.y, ph: 0, n: 1 }];
+    if (S.src === 'two') return [{ x: S.mid.x, y: S.mid.y - S.sep / 2, ph: 0, n: 1 }, { x: S.mid.x, y: S.mid.y + S.sep / 2, ph: S.ph * Math.PI / 180, n: 2 }];
+    return [];
+  }
+  function setSources() { T.src = S.src === 'bar' ? [{ kind: 'bar', x: BAR_X * MM }] : dippers().map((d) => ({ x: d.x * MM, y: d.y * MM, phase: d.ph })); }
+  let dirty3 = true;
+  /* clear: start the water again (a new frequency or depth: the old waves would not belong to the new water) */
+  function rebuild(clear) {
+    buildShapes(); setSources(); T.f = S.f; T.edges = S.edges; prepare(T);
+    if (clear) { clearWater(T); S.since = 0; } else S.since = T.t;
+    dirty3 = true;
+  }
+
+  /* ---------- the flat picture ---------- */
+  function layout() {
+    const p = proj(), wide = getComputedStyle($('setupCard')).position === 'absolute', db = $('drawbar'), dbh = getComputedStyle(db).position === 'absolute' ? db.offsetHeight + 16 : 0;
+    const aw = W - (wide ? $('setupCard').offsetWidth + 34 : 16) - 16, ah = H - 16 - dbh - 18 * p, s = Math.max(0.2, Math.min(aw / TW, ah / TH));
+    view = { s, x0: 16 + (aw - TW * s) / 2, y0: 10 + (ah - TH * s) / 2 };
+  }
+  const X = (x) => view.x0 + x * view.s, Y = (y) => view.y0 + (TH - y) * view.s;
+  const toTank = (cx, cy) => ({ x: (cx - view.x0) / view.s, y: TH - (cy - view.y0) / view.s });
+  function paintWater() {
+    const amp = S.look === 'amp', b = K.base, c = K.crest, tr = K.trough, wc = K.wallRGB, pc = K.plate, bc = K.beach, A = AMP, Wd = T.W, h = T.h, ms = T.ms, beachOn = S.edges === 'beach', bw = BEACH / (DX / MM);
+    const stops = [[11, 26, 42], [31, 95, 139], [79, 176, 198], [242, 232, 160]];
+    for (let j = 0; j < NY; j++) {
+      const row = (NY - 1 - j) * NX;
+      for (let i = 0; i < NX; i++) {
+        const q = (j + 1) * Wd + i + 1; let r, g, bl;
+        if (T.wall[q]) { r = wc[0]; g = wc[1]; bl = wc[2]; }
+        else {
+          if (amp) {
+            const t = Math.min(1, Math.sqrt(2 * Math.max(0, ms[q])) / A / 1.6) * 3, k = Math.min(2, Math.floor(t)), u = t - k, s0 = stops[k], s1 = stops[k + 1];
+            r = s0[0] + (s1[0] - s0[0]) * u; g = s0[1] + (s1[1] - s0[1]) * u; bl = s0[2] + (s1[2] - s0[2]) * u;
+          } else {
+            const v = Math.max(-1, Math.min(1, h[q] / A / 1.4)), sl = Math.max(-0.35, Math.min(0.35, (h[q + 1] - h[q - 1] + h[q + Wd] - h[q - Wd]) / A * 0.9)), e = v > 0 ? c : tr, av = Math.abs(v);
+            r = b[0] + (e[0] - b[0]) * av; g = b[1] + (e[1] - b[1]) * av; bl = b[2] + (e[2] - b[2]) * av;
+            const L = 1 + sl; r *= L; g *= L; bl *= L;
+          }
+          if (T.depth[q] !== S.deep) { r = r * 0.72 + pc[0] * 0.28; g = g * 0.72 + pc[1] * 0.28; bl = bl * 0.72 + pc[2] * 0.28; }
+          if (beachOn) { const s = Math.min(i + 0.5, NX - 0.5 - i, j + 0.5, NY - 0.5 - j); if (s < bw) { const m = 0.75 * ((bw - s) / bw) ** 1.5; r += (bc[0] - r) * m; g += (bc[1] - g) * m; bl += (bc[2] - bl) * m; } }
+        }
+        px32[row + i] = (255 << 24) | (Math.max(0, Math.min(255, bl)) << 16) | (Math.max(0, Math.min(255, g)) << 8) | Math.max(0, Math.min(255, r));
+      }
+    }
+    octx.putImageData(img, 0, 0);
+  }
+  function label(c, txt, x, y, o) {
+    o = Object.assign({ a: 'left', b: 'middle', s: 11 * proj(), w: 600, col: K.ink }, o || {});
+    c.save(); c.font = `${o.w} ${o.s}px ${K.ui}`; c.textAlign = o.a; c.textBaseline = o.b; c.lineJoin = 'round'; c.lineWidth = 3.5; c.strokeStyle = K.surface; c.globalAlpha = 0.85;
+    c.strokeText(txt, x, y); c.globalAlpha = 1; c.fillStyle = o.col; c.fillText(txt, x, y); c.restore();
+  }
+  function predLines() {
+    /* rays for the predicted lines: [origin, angles in degrees (from +x), kind] */
+    if (S.blind || !S.pred) return null;
+    const g = S.geo, lw = lam(S.deep);
+    if (S.src === 'two' && !g) { const fa = fringeAngles(lw * MM, S.sep * MM); return { o: [S.mid.x, S.mid.y], nod: fa.nod, bright: fa.bright, dir: 0 }; }
+    if (g && g.kind === 'slits' && g.n === 2) { const fa = fringeAngles(lw * MM, S.d * MM); return { o: [SLIT_X, YC], nod: fa.nod, bright: fa.bright, dir: 0 }; }
+    if (g && g.kind === 'slits' && g.n === 1) return { o: [SLIT_X, YC], nod: slitMinima(lw * MM, S.a * MM), bright: [0], dir: 0 };
+    return null;
+  }
+  function drawFlat() {
+    const p = proj();
+    ctx.fillStyle = K.canvas; ctx.fillRect(0, 0, W, H);
+    paintWater();
+    const s = view.s, x0 = X(0), y0 = Y(TH), w = TW * s, h = TH * s;
+    /* the tank's frame */
+    ctx.fillStyle = K.wallc; ctx.globalAlpha = 0.9; ctx.fillRect(x0 - 6, y0 - 6, w + 12, h + 12); ctx.globalAlpha = 1;
+    ctx.imageSmoothingEnabled = true; ctx.drawImage(oc, x0, y0, w, h);
+    /* the wave makers */
+    if (S.src === 'bar') { ctx.fillStyle = K.src; ctx.fillRect(X(BAR_X - 1.5), y0, Math.max(2, 3 * s), h); label(ctx, 'bar', X(BAR_X) + 6, Y(TH - 14), { col: K.src }); }
+    for (const d of dippers()) { ctx.fillStyle = K.src; ctx.strokeStyle = K.surface; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.arc(X(d.x), Y(d.y), Math.max(4 * p, DIP_R / MM * s), 0, 7); ctx.fill(); ctx.stroke();
+      if (S.src === 'two') label(ctx, String(d.n), X(d.x) - 10 * p, Y(d.y), { a: 'right', col: K.src }); }
+    /* predicted lines */
+    const pr = predLines();
+    if (pr) {
+      ctx.save(); ctx.beginPath(); ctx.rect(x0, y0, w, h); ctx.clip(); const R = Math.hypot(TW, TH);
+      const ray = (deg, dash, col) => { const a = deg * Math.PI / 180; ctx.strokeStyle = col; ctx.lineWidth = 1.4 * p; ctx.setLineDash(dash); ctx.beginPath(); ctx.moveTo(X(pr.o[0]), Y(pr.o[1])); ctx.lineTo(X(pr.o[0] + R * Math.cos(a)), Y(pr.o[1] + R * Math.sin(a))); ctx.stroke(); };
+      for (const a of pr.nod) { ray(a, [6, 5], K.pred); ray(-a, [6, 5], K.pred); }
+      for (const a of pr.bright) { ray(a, [1.5, 4], K.pred); if (a) ray(-a, [1.5, 4], K.pred); }
+      ctx.setLineDash([]); ctx.restore();
+    }
+    if (S.pred && !S.blind && S.geo && S.geo.kind === 'mirror') { const fx = X(MIRROR.xv - MIRROR.p), fy = Y(YC); ctx.strokeStyle = K.pred; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(fx - 7, fy); ctx.lineTo(fx + 7, fy); ctx.moveTo(fx, fy - 7); ctx.lineTo(fx, fy + 7); ctx.stroke(); label(ctx, 'focus', fx, fy - 14 * p, { a: 'center', col: K.pred }); }
+    /* the measuring line */
+    const ax = X(S.A.x), ay = Y(S.A.y), bx = X(S.B.x), by = Y(S.B.y);
+    ctx.strokeStyle = K.meas; ctx.lineWidth = 2 * p; ctx.setLineDash([7, 4]); ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(bx, by); ctx.stroke(); ctx.setLineDash([]);
+    for (const [k, x, y] of [['A', ax, ay], ['B', bx, by]]) { ctx.lineWidth = (S.sel === k ? 3 : 2) * p; ctx.fillStyle = K.surface; ctx.beginPath(); ctx.arc(x, y, 7 * p, 0, 7); ctx.fill(); ctx.stroke();
+      label(ctx, k, x, y + 0.5, { a: 'center', s: 9.5 * p, w: 700, col: K.meas }); }
+    const ln = lineInfo(), lt = `L = ${f1(ln.L)} mm, θ = ${f1(ln.th)}°`;
+    ctx.save(); ctx.font = `600 ${11 * p}px ${K.ui}`; const lwid = ctx.measureText(lt).width; ctx.restore();
+    const flip = bx + 11 * p + lwid > W - 4;
+    label(ctx, lt, flip ? bx - 11 * p : bx + 11 * p, by - 13 * p, { a: flip ? 'right' : 'left', col: K.meas });
+    /* scale bar and the tank's size */
+    const sb = 50 * s, sx = x0, sy = y0 + h + 14 * p;
+    ctx.strokeStyle = K.ink; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(sx + sb, sy); ctx.moveTo(sx, sy - 4); ctx.lineTo(sx, sy + 4); ctx.moveTo(sx + sb, sy - 4); ctx.lineTo(sx + sb, sy + 4); ctx.stroke();
+    ctx.fillStyle = K.muted; ctx.font = `${10.5 * p}px ${K.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; ctx.fillText(`50 mm · tank ${TW} × ${TH} mm${S.edges === 'beach' ? ', beaches 50 mm wide' : ''}`, sx + sb + 8, sy);
+  }
+  function lineInfo() {
+    const dx = S.B.x - S.A.x, dy = S.B.y - S.A.y, L = Math.hypot(dx, dy), th = Math.atan2(dy, dx) * 180 / Math.PI;
+    const dA = depthAt(S.A.x, S.A.y), dB = depthAt(S.B.x, S.B.y);
+    return { L, th, ampB: ampAt(T, S.B.x * MM, S.B.y * MM) / MM, dA, dB };
+  }
+  function depthAt(x, y) { const q = idx(T, Math.max(0, Math.min(TW - 0.01, x)) * MM, Math.max(0, Math.min(TH - 0.01, y)) * MM); return T.wall[q] ? null : T.depth[q]; }
+
+  /* ---------- the 3D tank (three.js through lib/vd3.js and lib/vd3kit.js); Flat is the view from above (or ?view=flat) ----------
+     Built in meters to the tank's real size. The water's surface is drawn every second cell of the grid, with the heights drawn
+     EXAG times larger than they are (the waves are 0.5 mm high), and colored like the flat view. Walls stand out of the water,
+     a plate is a sheet of glass under it, the beaches slope up at the sides. */
+  const EXAG = 12, G3 = { o: { th: -Math.PI / 2 - 0.3, ph: 0.88, zoom: 1 } };
+  let g3 = null, view3 = null;
+  const use3 = () => !!(g3 && view3 && view3.is3d());
+  const Z0 = 0.05;   /* the tank's floor above the bench */
+  function init3D() {
+    const S3 = VD3K.stage($('scene'), { before: can, shadow: 0.4, fov: 32, fogAt: [1.8, 3.6] }); if (!S3) return false;
+    S3.el.classList.add('rt3');
+    const sc = S3.scene, M = (o, c) => VD3K.material(S3, o, c), tw = TW * MM, th = TH * MM;
+    sc.add(VD3K.bench(S3, { w: 2.6, d: 1.8, y: 0.25 }), VD3K.backdrop(S3, { r: 1.0, h: 1.0, y: -0.25 }));
+    const frameM = M({ roughness: 0.45, metalness: 0.55 }, ['#a9b2bc', '#6f7884']), legM = M({ roughness: 0.6, metalness: 0.3 }, ['#59626e', '#454d58']);
+    const g = new THREE.Group(); g.position.set(-tw / 2, -th / 2, 0); sc.add(g);
+    /* legs, the glass floor and the frame */
+    for (const [x, y] of [[0, 0], [tw, 0], [0, th], [tw, th]]) g.add(VD3K.rod([x, y, 0], [x, y, Z0], 0.008, legM));
+    const floor = new THREE.Mesh(new THREE.BoxGeometry(tw, th, 0.004), M({ roughness: 0.15, metalness: 0.05, transparent: true, opacity: 0.55 }, ['#cfe0ea', '#3a5568'])); floor.position.set(tw / 2, th / 2, Z0 - 0.002); floor.receiveShadow = true; g.add(floor);
+    const fz = 0.022, fw = 0.008;
+    for (const [x, y, w, d] of [[tw / 2, -fw / 2, tw + 2 * fw, fw], [tw / 2, th + fw / 2, tw + 2 * fw, fw], [-fw / 2, th / 2, fw, th], [tw + fw / 2, th / 2, fw, th]]) g.add(VD3K.box(w, d, fz, frameM, x, y, Z0 - 0.004));
+    /* the water's surface */
+    const sx = Math.ceil(NX / 2), sy = Math.ceil(NY / 2), geo = new THREE.PlaneGeometry(tw, th, sx, sy);
+    geo.translate(tw / 2, th / 2, 0); const col = new Float32Array((sx + 1) * (sy + 1) * 3); geo.setAttribute('color', new THREE.BufferAttribute(col, 3));
+    const waterM = new THREE.MeshStandardMaterial({ vertexColors: true, roughness: 0.22, metalness: 0.08, transparent: true, opacity: 0.9 });
+    const water = new THREE.Mesh(geo, waterM); water.receiveShadow = true; g.add(water);
+    /* walls and plates as instanced boxes, one per run of cells along a row (rebuilt when the shapes change) */
+    const wallM = M({ roughness: 0.5, metalness: 0.15 }, ['#6b7480', '#9aa4b0']), plateM = new THREE.MeshStandardMaterial({ color: 0xe9dca0, roughness: 0.1, metalness: 0.05, transparent: true, opacity: 0.6, depthWrite: false });
+    const unit = new THREE.BoxGeometry(1, 1, 1); unit.translate(0.5, 0.5, 0.5);
+    const walls = new THREE.InstancedMesh(unit, wallM, NX * NY / 2), plates = new THREE.InstancedMesh(unit, plateM, NX * NY / 2);
+    walls.castShadow = true; walls.count = 0; plates.count = 0; plates.renderOrder = -1; water.renderOrder = 1; g.add(walls, plates);
+    /* the plate is under the water: it never shows through the water, even where a trough drawn EXAG times deeper dips below its top */
+    plateM.depthTest = false;
+    /* the beaches: sloping foam strips at the sides */
+    const beachM = M({ roughness: 1, metalness: 0, transparent: true, opacity: 0.55 }, ['#e8dcc0', '#6b6047']), bw = BEACH * MM;
+    const beaches = new THREE.Group(); g.add(beaches);
+    for (const [x, y, w, d, rx, ry] of [[bw / 2, th / 2, bw, th, 0, -1], [tw - bw / 2, th / 2, bw, th, 0, 1], [tw / 2, bw / 2, tw, bw, 1, 0], [tw / 2, th - bw / 2, tw, bw, -1, 0]]) {
+      const b = new THREE.Mesh(new THREE.PlaneGeometry(w, d), beachM); b.position.set(x, y, 0); b.rotation.set(rx * 0.07, ry * 0.07, 0); beaches.add(b); }
+    /* the bar on its motor and the dippers on their rod */
+    const darkM = M({ roughness: 0.5, metalness: 0.2 }, ['#3b4350', '#2b323c']), srcM = M({ roughness: 0.35, metalness: 0.3 }, ['#b8382a', '#e0604a']);
+    const bar = new THREE.Group(), barB = VD3K.box(0.006, th - 0.004, 0.008, srcM, 0, th / 2, -0.004); bar.add(barB);
+    bar.add(VD3K.box(0.03, 0.022, 0.022, darkM, 0, th / 2, 0.05), VD3K.rod([0, th / 2, 0.004], [0, th / 2, 0.05], 0.002, frameM)); g.add(bar);
+    const dips = [0, 1].map(() => { const d = new THREE.Group(); const ball = new THREE.Mesh(new THREE.SphereGeometry(DIP_R, 20, 14), srcM); ball.castShadow = true; d.add(ball, VD3K.rod([0, 0, 0], [0, 0, 0.07], 0.0012, frameM)); g.add(d); return d; });
+    const beam = VD3K.box(0.012, th + 0.08, 0.012, darkM, 0, th / 2, Z0 + 0.075); g.add(beam);
+    /* the measuring line: two posts and a thread between them */
+    const measM = new THREE.MeshBasicMaterial({ color: 0xc2410c }), postA = new THREE.Mesh(new THREE.CylinderGeometry(0.0015, 0.0015, 0.016, 8), measM), postB = postA.clone();
+    postA.rotation.x = postB.rotation.x = Math.PI / 2; const thread = new THREE.Mesh(new THREE.CylinderGeometry(0.0007, 0.0007, 1, 6), measM); g.add(postA, postB, thread);
+    g3 = { S3, g, geo, col, water, walls, plates, bar, dips, beam, postA, postB, thread, measM, sx, sy, beaches, unit };
+    VD3.orbit(can, G3.o, () => { if (use3()) draw(); }, { grab: (e) => use3() && wantGrab(e), phMin: 0.25, phMax: 1.4, zMin: 0.6, zMax: 3 });
+    return true;
+  }
+  function runs3(test, mesh, z0, z1) {
+    const m = new THREE.Matrix4(); let n = 0; const d = DX;
+    for (let j = 0; j < NY; j++) { let i = 0; while (i < NX) { const q = (j + 1) * T.W + i + 1; if (!test(q)) { i++; continue; } let k = i; while (k < NX && test((j + 1) * T.W + k + 1) && T.depth[(j + 1) * T.W + k + 1] === T.depth[q]) k++;
+      const zt = typeof z1 === 'function' ? z1(q) : z1; m.makeScale((k - i) * d, d, zt - z0); m.setPosition(i * d, j * d, z0); mesh.setMatrixAt(n++, m); i = k; } }
+    mesh.count = n; mesh.instanceMatrix.needsUpdate = true;
+  }
+  function draw3() {
+    const g = g3, S3 = g.S3, p = proj(), narrow = W < 821, card = narrow ? 0 : $('setupCard').offsetWidth + 30, wv = W - card;
+    S3.size(W, H); S3.cam.setViewOffset(W, H, card / 2, 0, W, H);
+    S3.place(G3.o, [0, 0.0, Z0], 0.66 * Math.max(1, 1.5 / (wv / Math.max(1, H))));
+    const zw = (q) => Z0 + T.depth[q] * MM;
+    if (dirty3) { dirty3 = false;
+      runs3((q) => T.wall[q] === 1, g.walls, Z0, Z0 + S.deep * MM + 0.012);
+      runs3((q) => !T.wall[q] && T.depth[q] !== S.deep, g.plates, Z0, (q) => Z0 + (S.deep - T.depth[q]) * MM);
+      g.beaches.visible = S.edges === 'beach'; g.beaches.children.forEach((b) => { b.position.z = Z0 + S.deep * MM + 0.0006; }); }
+    /* the surface: heights drawn EXAG times larger, colors from the same map as the flat view */
+    const pos = g.geo.attributes.position.array, col = g.col, sx = g.sx, sy = g.sy, A = AMP, b = K.base, c = K.crest, tr = K.trough, amp = S.look === 'amp';
+    const stops = [[11, 26, 42], [31, 95, 139], [79, 176, 198], [242, 232, 160]];
+    for (let vj = 0; vj <= sy; vj++) for (let vi = 0; vi <= sx; vi++) {
+      const v = vj * (sx + 1) + vi, i = Math.min(NX - 1, vi * 2), j = Math.max(0, Math.min(NY - 1, NY - vj * 2)), q = (j + 1) * T.W + i + 1, wall = T.wall[q];
+      pos[v * 3 + 2] = Z0 + S.deep * MM + (wall ? 0 : T.h[q] * EXAG);
+      let r, gg, bb;
+      if (amp) { const t = Math.min(1, Math.sqrt(2 * Math.max(0, T.ms[q])) / A / 1.6) * 3, k = Math.min(2, Math.floor(t)), u = t - k, s0 = stops[k], s1 = stops[k + 1]; r = s0[0] + (s1[0] - s0[0]) * u; gg = s0[1] + (s1[1] - s0[1]) * u; bb = s0[2] + (s1[2] - s0[2]) * u; }
+      else { const vv = Math.max(-1, Math.min(1, T.h[q] / A / 1.4)), e = vv > 0 ? c : tr, av = Math.abs(vv); r = b[0] + (e[0] - b[0]) * av; gg = b[1] + (e[1] - b[1]) * av; bb = b[2] + (e[2] - b[2]) * av; }
+      col[v * 3] = r / 255; col[v * 3 + 1] = gg / 255; col[v * 3 + 2] = bb / 255;
+    }
+    g.geo.attributes.position.needsUpdate = true; g.geo.attributes.color.needsUpdate = true; g.geo.computeVertexNormals();
+    /* the wave makers move with the water they hold */
+    const ws = AMP * EXAG * ramp(T.t, T.f) * Math.sin(2 * Math.PI * T.f * T.t), zs = Z0 + S.deep * MM;
+    g.bar.visible = S.src === 'bar'; g.bar.position.set(BAR_X * MM, 0, zs + ws);
+    const ds = dippers(); g.beam.visible = ds.length > 0; if (ds.length) g.beam.position.x = ds[0].x * MM;
+    g.dips.forEach((d, k) => { const o = ds[k]; d.visible = !!o; if (o) d.position.set(o.x * MM, o.y * MM, zs + AMP * EXAG * ramp(T.t, T.f) * Math.sin(2 * Math.PI * T.f * T.t + o.ph)); });
+    const za = zs + 0.012, A3 = [S.A.x * MM, S.A.y * MM, za], B3 = [S.B.x * MM, S.B.y * MM, za];
+    g.postA.position.set(A3[0], A3[1], za - 0.004); g.postB.position.set(B3[0], B3[1], za - 0.004);
+    const dx = B3[0] - A3[0], dy = B3[1] - A3[1], L = Math.hypot(dx, dy) || 1e-6; g.thread.scale.set(1, L, 1); g.thread.position.set((A3[0] + B3[0]) / 2, (A3[1] + B3[1]) / 2, za + 0.004); g.thread.rotation.set(0, 0, Math.atan2(dy, dx) - Math.PI / 2);
+    g.measM.color.set(K.meas);
+    S3.render();
+    const P = (x, y, z) => S3.project([x * MM - TW * MM / 2, y * MM - TH * MM / 2, z]);
+    const pa = P(S.A.x, S.A.y, za + 0.01), pb = P(S.B.x, S.B.y, za + 0.01);
+    label(ctx, 'A', pa[0], pa[1], { a: 'center', col: K.meas, w: 700 }); label(ctx, 'B', pb[0], pb[1], { a: 'center', col: K.meas, w: 700 });
+    const ln = lineInfo(), lt = `L = ${f1(ln.L)} mm, θ = ${f1(ln.th)}°`;
+    ctx.save(); ctx.font = `600 ${11 * p}px ${K.ui}`; const lwid = ctx.measureText(lt).width; ctx.restore();
+    const flip = pb[0] + 12 * p + lwid > W - 4;
+    label(ctx, lt, flip ? pb[0] - 12 * p : pb[0] + 12 * p, pb[1] - 12 * p, { a: flip ? 'right' : 'left', col: K.meas });
+    if (!narrow) label(ctx, `heights drawn ${EXAG} times larger · drag to turn`, 14 * p, H - 74 * p, { col: K.muted, w: 400, s: 10.5 * p });
+  }
+
+  /* ---------- the graph: the water along the measuring line ---------- */
+  function drawPlot() {
+    const p = proj(), c = pctx; c.setTransform(dpr, 0, 0, dpr, 0, 0); c.fillStyle = K.canvas; c.fillRect(0, 0, PW, PH2);
+    const ln = lineInfo(), L = Math.max(1e-6, ln.L), N = 360, hs = [], as = [];
+    for (let k = 0; k <= N; k++) { const u = k / N, x = (S.A.x + (S.B.x - S.A.x) * u) * MM, y = (S.A.y + (S.B.y - S.A.y) * u) * MM; hs.push(sampleAt(T, T.h, x, y) / MM); as.push(ampAt(T, x, y) / MM); }
+    const top = Math.max(0.6, ...as.map((v) => v * 1.15), ...hs.map((v) => Math.abs(v) * 1.15));
+    const Lm = 52 * p, Rm = 14 * p, Tm = 26 * p, Bm = 32 * p, pw = PW - Lm - Rm, ph = PH2 - Tm - Bm;
+    const Xp = (v) => Lm + v / L * pw, Yp = (v) => Tm + ph / 2 - v / top * ph / 2;
+    const nice = (r) => { const q = Math.pow(10, Math.floor(Math.log10(r))), m = r / q; return (m < 1.5 ? 1 : m < 3.5 ? 2 : m < 7.5 ? 5 : 10) * q; };
+    c.font = `${10.5 * p}px ${K.mono}`; c.strokeStyle = K.grid; c.fillStyle = K.muted; c.lineWidth = 1;
+    const sxs = nice(L / 8), sys = nice(top / 2);
+    c.textAlign = 'center'; c.textBaseline = 'top'; for (let v = 0; v <= L + 1e-9; v += sxs) { c.beginPath(); c.moveTo(Xp(v), Tm); c.lineTo(Xp(v), Tm + ph); c.stroke(); c.fillText(String(+v.toPrecision(6)), Xp(v), Tm + ph + 4); }
+    c.textAlign = 'right'; c.textBaseline = 'middle'; for (let v = -Math.floor(top / sys) * sys; v <= top + 1e-9; v += sys) { c.beginPath(); c.moveTo(Lm, Yp(v)); c.lineTo(Lm + pw, Yp(v)); c.stroke(); c.fillText(String(+v.toPrecision(6)).replace('-', '−'), Lm - 5, Yp(v)); }
+    c.textAlign = 'center'; c.textBaseline = 'bottom'; c.fillText('distance along the line from A (mm)', Lm + pw / 2, PH2 - 1);
+    c.save(); c.translate(11 * p, Tm + ph / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText('height (mm)', 0, 0); c.restore();
+    c.strokeStyle = K.muted; c.setLineDash([4, 4]); c.lineWidth = 1.3 * p;
+    for (const sg of [1, -1]) { c.beginPath(); as.forEach((v, k) => { const x = Xp(k / N * L), y = Yp(sg * v); k ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke(); }
+    c.setLineDash([]); c.strokeStyle = K.accent; c.lineWidth = 2 * p; c.beginPath(); hs.forEach((v, k) => { const x = Xp(k / N * L), y = Yp(v); k ? c.lineTo(x, y) : c.moveTo(x, y); }); c.stroke();
+    c.font = `${10.5 * p}px ${K.ui}`; c.textAlign = 'left'; c.textBaseline = 'middle'; c.fillStyle = K.muted;
+    c.fillText(`water height along A → B now (solid) and the amplitude, averaged over the last two periods (dashed) · L = ${f1(ln.L)} mm`, Lm, 12 * p);
+  }
+
+  /* ---------- readouts ---------- */
+  function readouts() {
+    const hide = '<span class="ok">hidden</span>', dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`, B = S.blind;
+    const lw = lam(S.deep), lp = lam(S.plate), ln = lineInfo(), deep = (v) => (v == null ? 'in a wall' : v === S.deep ? `${f1(v)} mm` : `${f1(v)} mm (over a plate)`);
+    let h = dd('Frequency f', `${f1(S.f)} Hz`) + dd('Period', `${(1000 / S.f).toFixed(1)} ms`)
+      + dd(`Water ${f1(S.deep)} mm deep: λ`, B ? hide : `${f1(lw, 2)} mm`) + dd('wave speed c = fλ', B ? hide : `${(S.f * lw / 1000).toFixed(3)} m/s`);
+    if (S.hasPlate) h += dd(`Over the plate, ${f1(S.plate)} mm deep: λ`, B ? hide : `${f1(lp, 2)} mm`) + dd('wave speed c = fλ', B ? hide : `${(S.f * lp / 1000).toFixed(3)} m/s`);
+    h += dd('Line A to B: length L', `${f1(ln.L)} mm`) + dd('angle θ from the +x direction', `${f1(ln.th)}°`)
+      + dd('Amplitude at B', `${ln.ampB.toFixed(3)} mm`) + dd('Depth at A, at B', `${deep(ln.dA)}, ${deep(ln.dB)}`, 'wide');
+    const g = S.geo;
+    if (S.src === 'two' && !g) { const fa = fringeAngles(lw * MM, S.sep * MM); h += dd('Dippers d apart', `${f1(S.sep)} mm`) + dd('Quiet lines, d sin θ = (m + ½)λ', B ? hide : fa.nod.map((a) => `±${f1(a)}°`).join(', ') || 'none', 'wide'); }
+    if (g && g.kind === 'slits' && g.n === 2) { const fa = fringeAngles(lw * MM, S.d * MM); h += dd('Slits: spacing d, width a', `${f1(S.d)} mm, ${f1(S.a)} mm`) + dd('Quiet lines, d sin θ = (m + ½)λ', B ? hide : fa.nod.map((a) => `±${f1(a)}°`).join(', ') || 'none', 'wide'); }
+    if (g && g.kind === 'slits' && g.n === 1) { const mn = slitMinima(lw * MM, S.a * MM); h += dd('Slit width a', `${f1(S.a)} mm`) + dd('Quiet lines, a sin θ = mλ', B ? hide : mn.map((a) => `±${f1(a)}°`).join(', ') || 'none: λ is wider than the slit', 'wide'); }
+    if (g && g.kind === 'edge' && S.edge > 0) { const t2 = Math.asin(Math.sin(S.edge * Math.PI / 180) * lp / lw) * 180 / Math.PI; h += dd('Plate edge turned by', `${f1(S.edge)}°`) + dd('Snell: angle past the edge', B ? hide : `${f1(t2)}°`); }
+    if (g && g.kind === 'mirror') h += dd('Mirror: parabola, focus in front', B ? hide : `${MIRROR.p} mm`);
+    if (g && g.kind === 'lens') { const n = lw / lp, fl = LENS.R / (2 * (n - 1)); h += dd('Lens: λ ratio n = λ/λ<sub>plate</sub>', B ? hide : f1(n, 2)) + dd('Thin lens estimate of the focal length', B ? hide : `${f1(fl, 0)} mm from the center`); }
+    h += dd('Time t', `${T.t.toFixed(3)} s`) + dd('Average built up over', `${Math.max(0, (T.t - S.since) * S.f).toFixed(1)} periods`);
+    $('out').innerHTML = h;
+  }
+  function clock() { const want = S.speed, sl = want === 1 ? 'real time' : `slow motion 1/${Math.round(1 / want)}`;
+    $('clock').textContent = `t = ${T.t.toFixed(3)} s` + (S.run && S.rate < want * 0.85 ? ` · this device keeps up at ${S.rate >= 0.999 ? 'real time' : '1/' + (1 / S.rate).toFixed(1)}` : ` · ${sl}`); }
+
+  /* ---------- controls ---------- */
+  function sync() {
+    $('selSrc').value = S.src; $('selEdges').value = S.edges; $('selSpeed').value = String(S.speed); $('selBrush').value = String(S.brush);
+    const set = (id, v, txt) => { $('s' + id).value = v; $('o' + id).textContent = txt; };
+    set('F', S.f, `${f1(S.f)} Hz`); set('Deep', S.deep, `${f1(S.deep)} mm`); $('sPlate').max = String(Math.max(1, S.deep - 1)); set('Plate', S.plate, `${f1(S.plate)} mm`);
+    set('Sep', S.sep, `${S.sep} mm`); set('Ph', S.ph, `${S.ph}°`); set('A', S.a, `${S.a} mm`); set('D', S.d, `${S.d} mm`); set('Edge', S.edge, `${S.edge}°`);
+    $('twoBox').hidden = S.src !== 'two'; const sl = S.geo && S.geo.kind === 'slits'; $('slitBox').hidden = !sl; $('dBox').hidden = !(sl && S.geo.n === 2);
+    $('edgeBox').hidden = !(S.geo && S.geo.kind === 'edge'); $('chkPred').checked = S.pred;
+    $('predBox').hidden = !((S.src === 'two' && !S.geo) || sl || (S.geo && S.geo.kind === 'mirror'));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#lookSeg button')) b.setAttribute('aria-pressed', String(b.dataset.look === S.look));
+    for (const b of document.querySelectorAll('#toolSeg button')) b.setAttribute('aria-pressed', String(b.dataset.tool === S.tool));
+    can.className = S.tool === 'move' ? 'tool-move' : 'tool-draw';
+  }
+  VD.setupCard($('setupCard'));
+  function setRun(on) { S.run = on; $('play').textContent = on ? 'Pause' : T.t > 0 ? 'Resume' : 'Start'; $('play').classList.toggle('attn', !on); }
+  function applyPreset(k) {
+    const c = PRESETS[k]; S.preset = k;
+    Object.assign(S, { src: c.src, f: c.f, deep: c.deep, plate: c.plate, geo: c.geo ? Object.assign({}, c.geo) : null, strokes: [], tool: c.tool || 'move', pred: false });
+    if (c.a != null) S.a = c.a; if (c.d != null) S.d = c.d; if (c.sep != null) S.sep = c.sep; if (c.ph != null) S.ph = c.ph; if (c.edge != null) S.edge = c.edge;
+    if (c.mid) S.mid = { x: c.mid[0], y: c.mid[1] };
+    S.A = { x: c.A[0], y: c.A[1] }; S.B = { x: c.B[0], y: c.B[1] }; S.sel = 'B';
+    $('presetHint').textContent = c.hint; rebuild(true); sync(); setRun(true); redraw();
+  }
+  const custom = () => { if (S.preset !== 'draw') S.preset = 'custom'; };
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  /* a slider keeps the setup's name: the reading records f and the depth, and the setup text carries the slits, the dippers' spacing and phase and the edge */
+  const num = (id, fn, clear) => $(id).addEventListener('input', (e) => { fn(+e.target.value); rebuild(clear); sync(); redraw(); });
+  num('sF', (v) => { S.f = v; }, true); num('sDeep', (v) => { S.deep = v; if (S.plate > v - 1) S.plate = Math.max(1, v - 1); }, true); num('sPlate', (v) => { S.plate = v; }, true);
+  num('sSep', (v) => { S.sep = v; }, true); num('sPh', (v) => { S.ph = v; }, true); num('sA', (v) => { S.a = v; }, false); num('sD', (v) => { S.d = v; }, false); num('sEdge', (v) => { S.edge = v; }, false);
+  $('selSrc').addEventListener('change', (e) => { S.src = e.target.value; custom(); rebuild(true); sync(); redraw(); });
+  $('selEdges').addEventListener('change', (e) => { S.edges = e.target.value; custom(); rebuild(true); sync(); redraw(); });
+  $('selSpeed').addEventListener('change', (e) => { S.speed = +e.target.value; clock(); });
+  $('selBrush').addEventListener('change', (e) => { S.brush = +e.target.value; });
+  $('chkPred').addEventListener('change', (e) => { S.pred = e.target.checked; redraw(); });
+  $('clearDraw').addEventListener('click', () => { S.strokes = []; S.geo = null; custom(); rebuild(false); sync(); redraw(); });
+  $('lookSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-look]'); if (b) { S.look = b.dataset.look; sync(); redraw(); } });
+  $('toolSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-tool]'); if (b) { S.tool = b.dataset.tool; sync(); } });
+  $('play').addEventListener('click', () => setRun(!S.run));
+  $('restart').addEventListener('click', () => { clearWater(T); S.since = 0; setRun(S.run); redraw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; redraw(); });
+
+  /* ---------- pointer: drag the line's ends and the dippers, or draw ---------- */
+  const ray3 = (e) => { const g = g3, r = can.getBoundingClientRect(), v = new THREE.Vector3(((e.clientX - r.left) / r.width) * 2 - 1, -((e.clientY - r.top) / r.height) * 2 + 1, 0.5);
+    v.unproject(g.S3.cam); const o = g.S3.cam.position, d = v.sub(o).normalize(), z = Z0 + S.deep * MM; if (Math.abs(d.z) < 1e-6) return null; const t = (z - o.z) / d.z; if (t < 0) return null;
+    return { x: (o.x + d.x * t) / MM + TW / 2, y: (o.y + d.y * t) / MM + TH / 2 }; };
+  const where = (e) => { if (use3()) return ray3(e); const r = can.getBoundingClientRect(); return toTank(e.clientX - r.left, e.clientY - r.top); };
+  const handlePx = (pt) => { if (!use3()) return [X(pt.x), Y(pt.y)]; const q = g3.S3.project([pt.x * MM - TW * MM / 2, pt.y * MM - TH * MM / 2, Z0 + S.deep * MM + 0.012]); return [q[0], q[1]]; };
+  function pick(e) {
+    const r = can.getBoundingClientRect(), cx = e.clientX - r.left, cy = e.clientY - r.top, near = (pt, rad) => { const [x, y] = handlePx(pt); return Math.hypot(x - cx, y - cy) < rad; };
+    const tol = (e.pointerType === 'touch' ? 22 : 13) * proj();
+    if (near(S.B, tol)) return 'B'; if (near(S.A, tol)) return 'A';
+    for (const d of dippers()) if (near(d, tol)) return 'dip';
+    return null;
+  }
+  function wantGrab(e) { return S.tool !== 'move' || !!pick(e); }
+  let drag = null;
+  const clampT = (p) => ({ x: Math.max(0, Math.min(TW, p.x)), y: Math.max(0, Math.min(TH, p.y)) });
+  can.addEventListener('pointerdown', (e) => {
+    if (use3() && !wantGrab(e)) return;
+    if (!use3() && e.pointerType === 'touch' && S.tool === 'move' && !pick(e)) return;
+    const pt = where(e); if (!pt) return;
+    if (S.tool === 'move') { const k = pick(e); if (!k) return; drag = { k, off: k === 'dip' ? { x: S.mid.x - pt.x, y: S.mid.y - pt.y } : null }; if (k !== 'dip') S.sel = k; }
+    else { const st = { tool: S.tool, r: S.brush, pts: [[pt.x, pt.y]] }; S.strokes.push(st); drag = { k: 'draw', st }; custom(); dirtyShapes = true; }
+    can.setPointerCapture(e.pointerId); e.preventDefault(); e.stopPropagation();
+  });
+  can.addEventListener('pointermove', (e) => {
+    if (!drag) { if (S.tool === 'move' && !use3() && e.pointerType !== 'touch') can.style.cursor = pick(e) ? 'grab' : 'default'; return; }
+    const pt = where(e); if (!pt) return; const c = clampT(pt);
+    if (drag.k === 'A' || drag.k === 'B') { S[drag.k] = { x: Math.round(c.x * 10) / 10, y: Math.round(c.y * 10) / 10 }; redraw(); }
+    else if (drag.k === 'dip') { S.mid = clampT({ x: pt.x + drag.off.x, y: pt.y + drag.off.y }); S.mid.y = Math.max(S.sep / 2 + 4, Math.min(TH - S.sep / 2 - 4, S.mid.y)); custom(); setSources(); sources(T); redraw(); }
+    else { const L = drag.st.pts[drag.st.pts.length - 1]; if (Math.hypot(c.x - L[0], c.y - L[1]) >= 1) { drag.st.pts.push([c.x, c.y]); dirtyShapes = true; } }
+  });
+  const end = () => { if (drag && drag.k === 'dip') rebuild(false); drag = null; };
+  can.addEventListener('pointerup', end); can.addEventListener('pointercancel', end);
+  let dirtyShapes = false;
+  can.addEventListener('keydown', (e) => {
+    const k = e.key.toLowerCase(); if (k === 'a' || k === 'b') { S.sel = k.toUpperCase(); redraw(); e.preventDefault(); return; }
+    const st = e.shiftKey ? 10 : 1, mv = { ArrowLeft: [-st, 0], ArrowRight: [st, 0], ArrowUp: [0, st], ArrowDown: [0, -st] }[e.key]; if (!mv) return;
+    const P = S[S.sel]; S[S.sel] = clampT({ x: Math.round((P.x + mv[0]) * 10) / 10, y: Math.round((P.y + mv[1]) * 10) / 10 }); e.preventDefault(); redraw();
+  });
+
+  /* ---------- readings for the worksheet ---------- */
+  const SETUP_NAME = { plane: 'Plane waves', dipper: 'One dipper', two: 'Two dippers', single: 'Single slit', double: 'Double slit', reflect: 'Reflection from a wall', image: 'Dipper beside a wall',
+    slow: 'Shallow water slows waves', refract: 'Refraction', mirror: 'Focusing mirror', lens: 'Focusing lens', draw: 'Draw your own', custom: 'Changed by hand' };
+  window.vdVersion = 'ripple-tank@2026-10-25';
+  window.vdShowCols = [['f_Hz', 'f (Hz)'], ['L_mm', 'L (mm)'], ['angle_deg', 'θ (°)'], ['amp_mm', 'amp. B (mm)']];
+  window.vdReadingRow = () => { const ln = lineInfo(), g = S.geo, dep = ln.dA === ln.dB ? f1(ln.dA) : `${ln.dA == null ? 'wall' : f1(ln.dA)} to ${ln.dB == null ? 'wall' : f1(ln.dB)}`;
+    let setup = SETUP_NAME[S.preset] || S.preset;
+    if (g && g.kind === 'slits') setup += g.n === 2 ? `, d = ${S.d} mm, a = ${S.a} mm` : `, a = ${S.a} mm`;
+    else if (S.src === 'two') setup += `, d = ${S.sep} mm${S.ph ? `, dipper 2 ahead ${S.ph}°` : ''}`;
+    else if (g && g.kind === 'edge') setup += `, plate ${f1(S.plate)} mm, edge ${S.edge}°`;
+    return { setup, f_Hz: f1(S.f), depth_mm: dep, L_mm: f1(ln.L), angle_deg: f1(ln.th), amp_mm: ln.ampB.toFixed(3), xA_mm: f1(S.A.x), yA_mm: f1(S.A.y), xB_mm: f1(S.B.x), yB_mm: f1(S.B.y), t_s: T.t.toFixed(3) }; };
+  $('about').textContent = `Model: the small wave equation for the water's surface on a grid of ${DX / MM} mm squares (${NX} × ${NY}), stepped with leapfrog in time and an isotropic nine point Laplacian, with the grid's own dispersion taken out at the source frequency so the wavelengths are exact to better than 0.1 %. The speed in each place is the phase speed of ripples at that frequency and depth, from ω² = (gk + σk³/ρ) tanh(kd) with g = 9.81 m/s² and water at 20 °C (σ = 72.74 mN/m, ρ = 998.2 kg/m³). Viscous damping 2νk² (ν = 1.003 mm²/s) is included; friction with the tank's floor in very shallow water is left out. Walls reflect the whole wave; the beaches are a ramp of damping that reflects about 1 to 3 % of the amplitude. The bar adds to the water rather than holding it, set so its plane waves are 0.50 mm in amplitude, and waves coming back pass under it into the beach behind it; a dipper holds the water it touches at 0.50 mm. Each place has one speed, which is exact for one frequency, so the demo makes only steady waves, never a pulse. Two things follow from that and are only approximate: the waves carry their energy at the phase speed instead of the group speed, so the slow viscous fall of the amplitude with distance is off by their ratio (0.8 to 1.5 over the demo's range), and where the depth changes, how much of a wave is reflected and how its height changes are the model's, while the wavelengths and directions are exact. The amplitude view and readouts average over the last two periods, so they settle a few periods after the waves arrive. If this device cannot keep up with the chosen speed, time runs slower, as the clock says.`;
+
+  /* ---------- run, size, theme ---------- */
+  const redraw = () => { draw(); drawPlot(); readouts(); clock(); };
+  function draw() { if (!K || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); layout(); if (use3()) { ctx.clearRect(0, 0, W, H); draw3(); } else drawFlat(); }
+  /* deterministic stepping for tests and key capture: advance sim time by sec */
+  function run(sec) { const t1 = T.t + sec; while (T.t < t1 - 1e-12) step(T, 2 / S.f); redraw(); }
+  let last = performance.now(), acc = 0, perStep = 0.5, lastOut = 0, rr = { sim: 0, real: 0 };
+  function frame(now) {
+    const dtr = Math.min(0.1, (now - last) / 1000); last = now;
+    if (dirtyShapes) { dirtyShapes = false; rebuild(false); }
+    if (S.run) {
+      acc += dtr * S.speed; let n = Math.floor(acc / T.dt); const cap = Math.max(1, Math.floor(14 / perStep));
+      if (n > cap) { n = cap; acc = 0; } else acc -= n * T.dt;
+      const t0 = performance.now(); for (let i = 0; i < n; i++) step(T, 2 / S.f); if (n) perStep = 0.85 * perStep + 0.15 * (performance.now() - t0) / n;
+      rr.sim += n * T.dt; rr.real += dtr; if (rr.real > 1) { S.rate = rr.sim / rr.real; rr.sim = 0; rr.real = 0; }
+      draw(); drawPlot(); if (now - lastOut > 250) { lastOut = now; readouts(); clock(); }
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() { const sc = $('setupCard'); sc.style.top = getComputedStyle(sc).position === 'absolute' ? `${$('strip').offsetHeight + 10}px` : ''; dpr = window.devicePixelRatio || 1; const r = $('scene').getBoundingClientRect(), q = pl.parentElement.getBoundingClientRect();
+    W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); PW = q.width; PH2 = q.height; pl.width = Math.round(PW * dpr); pl.height = Math.round(PH2 * dpr); redraw(); }
+  const retheme = () => { tokens(); dirty3 = true; redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'double');
+  new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe(pl.parentElement); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); dirty3 = true; redraw(); }, status: () => {}, start: 'flat' });
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => T.t, scale: () => (use3() ? null : { el: can, m: MM / view.s, area: [X(0), Y(TH), TW * view.s, TH * view.s] }) });
+  window.__rt = { S, T, applyPreset, rebuild, redraw, run, lineInfo, setRun, sync, PRESETS, lam, dippers, set: (o) => { Object.assign(S, o); sync(); redraw(); } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

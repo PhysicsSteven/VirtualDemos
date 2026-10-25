@@ -152,7 +152,7 @@ HANDOUT_TOPIC = {
     'induction-at-work': 'Induction at Work',
     'transformers': 'Transformers and Power Lines',
     'displacement-current': 'Displacement Current',
-    'huygens': "Huygens's Principle",
+    'huygens': "Huygens's Principle", 'ripple-tank': 'Ripple Tank: Wavelength, Refraction and Interference',
     'dispersion': 'Dispersion',
     'mirrors-refraction': 'Mirrors and Refracting Surfaces', 'lenses-instruments': 'Lenses and Optical Instruments',
     'the-eye': 'The Eye', 'camera': 'The Camera',
