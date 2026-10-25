@@ -52,7 +52,7 @@ On a real bench, secure the tube, catch balls safely and wear the required eye p
 
 **Wall check.** Repeat the same ball sizes in the 40 mm tube. Fit uncorrected $$v$$ against $$d^2$$ for each tube, then calculate $$K$$ for every row and fit $$Kv$$ against $$d^2$$. Compare the viscosities before and after correction. Keep liquid and ball material unchanged.
 
-**Model limits.** Record your estimates before revealing predictions. Use your inferred $$\eta$$ to estimate $$\mathrm{Re}$$ and retain only sufficiently slow flow points; $$\mathrm{Re} \le 0.01$$ is a conservative criterion here. Try a larger ball and then a steel ball in water as diagnostic runs. Do not include these automatically in the viscosity fit. Explain what evidence suggests a failure of the slow flow or terminal speed assumptions.
+**Model limits.** Record your estimates before revealing predictions. Use your inferred $$\eta$$ to estimate $$\mathrm{Re}$$ and retain only sufficiently slow flow points; $$\mathrm{Re} \le 0.01$$ is a conservative criterion here. As diagnostic runs, time a 6.0 mm glass ball in glycerol in the 40 mm tube and a 2.0 mm steel ball in water in the 100 mm tube, and send them to the worksheet as a third series. Do not include these automatically in the viscosity fit. Explain what evidence suggests a failure of the slow flow or terminal speed assumptions.
 
 **Unknown extension.** If assigned, measure a Mystery liquid with the same procedure. Use the displayed density and infer $$\eta$$, then recheck $$\mathrm{Re}$$. If the available ball sizes leave too few low-$$\mathrm{Re}$$ points, report that limitation rather than forcing a precise Stokes fit.
 

@@ -64,7 +64,7 @@ Keep water away from electrical equipment. Secure real pressure tubing and hangi
 
 **Flow.** Use a horizontal Venturi tube. Hold inlet diameter and inlet speed fixed; vary throat diameter through at least five settings. Record the two diameters, flow rate and pressure head readings. Avoid settings where cavitation or an empty standpipe prevents the required pressure measurement.
 
-**Using the virtual apparatus.** Work with predictions and answers hidden; the instruments stay visible. For pressure, read the depth ruler and the gauge at each depth, and read both gauge and absolute pressure at one depth. For buoyancy, weigh the block on the spring scale in air and then fully under the liquid, and wait for the reading to settle before you record it. For flow, keep the pipe diameter $$D_1$$ and the inlet speed $$v_1$$ fixed while you change the throat diameter $$D_2$$, and read the flow meter and both standpipes. Send each investigation to the worksheet when you finish it.
+**Using the virtual apparatus.** Work with predictions and answers hidden; the instruments stay visible. For pressure, read the depth ruler and the gauge at each depth, and read both gauge and absolute pressure at one depth. For buoyancy, weigh the block on the spring scale in air and then fully under the liquid, and wait for the reading to settle before you record it. For flow, keep the pipe diameter $$D_1$$ and the inlet speed $$v_1$$ fixed while you change the throat diameter $$D_2$$, and read the flow meter and both standpipes. Send each investigation to the worksheet when you finish it, then clear the readings, so each one gets its own copy of the Data table.
 
 ## Data
 

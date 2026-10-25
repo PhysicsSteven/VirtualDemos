@@ -56,7 +56,7 @@ A real stretched wire can snap. Use eye protection, secure the support, shield t
 
 **Yielding.** Return to a fresh specimen at the first diameter. Increase the peak load, unload fully, and record the residual extension. Start with small loads, then use smaller increments near the first detectable permanent set. Bracket the onset between the largest peak load that returned to zero and the first that did not. Once it yields, do not use subsequent loading points as fresh wire elastic data. Stop after detecting a clear permanent set; fracture is unnecessary.
 
-**Using the virtual apparatus.** Investigate a fresh Mystery metal wire 2.000 m long and 0.60 mm in diameter. Measure loaded extension at 0, 1, 2, 3, 4 and 5 kg, then remove the load and check for residual extension. Repeat with a fresh 0.80 mm wire, keeping the specimens' measurements separate. For yielding, begin with another fresh 0.60 mm wire, increase the peak mass in small steps and fully unload after each peak. Record the residual extension by hand and bracket the first permanent set. A new wire starts a new fit in the demo but does not clear earlier readings, so send each specimen's series to the worksheet and clear before the next; each then gets its own copy of the Data table. Keep the material properties hidden until your modulus and yield estimates are recorded.
+**Using the virtual apparatus.** Investigate a fresh Mystery metal wire 2.000 m long and 0.60 mm in diameter. Measure loaded extension at 0, 1, 2, 3, 4 and 5 kg, then remove the load and check for residual extension. Repeat with a fresh 0.80 mm wire, keeping the specimens' measurements separate. For yielding, begin with another fresh 0.60 mm wire, increase the peak mass in small steps and fully unload after each peak. Record the residual extension by hand and bracket the first permanent set. A new wire starts a new fit in the demo but does not clear earlier readings, so send each specimen's series to the worksheet and clear before the next; each then gets its own copy of the Data table. The demo never shows the Mystery metal's properties: your modulus and yield onset come only from your readings.
 
 ## Data
 
@@ -70,7 +70,7 @@ Save each elastic series separately. For yield cycles, pair each peak load with 
 
 ## Analysis
 
-1. Convert masses to forces and fit $$F$$ against $$\Delta L$$ for each elastic series. Report slope, intercept and residuals. Convert extension to meters before calculating $$Y$$, or explicitly convert a slope in N/mm to N/m.
+1. Fit the load mass against $$\Delta L$$ for each elastic series, and multiply the slope by $$g$$ to get the slope of $$F = mg$$ against $$\Delta L$$. Report slope, intercept and residuals. Convert extension to meters before calculating $$Y$$, or explicitly convert a slope in N/mm to N/m.
 2. Compare the two estimates of $$Y$$. Test whether the slope ratio agrees with the squared diameter ratio.
 3. Convert the two peak loads bracketing permanent set to stresses. Report a yield onset interval rather than an exact material constant from a coarse step.
 4. Explain the difference between total extension under load and residual extension after unloading. Distinguish the operational detection threshold from an exact yield stress.

@@ -61,11 +61,11 @@ Keep both masses at 1.00 kg and $$g$$ at Earth's value throughout. Set the mode 
 
 **Part 1: mode 1.** With both rods the same length $$L$$, start the pendulum in mode 1 and record its measured period for $$L$$ = 0.25, 0.50, 1.00, 1.50 and 2.00 m. Start the mode again after each change of length, and wait for the measured period to appear. Send the series to the worksheet, then clear the demo's readings.
 
-**Part 2: mode 2.** Repeat Part 1 in mode 2, and send it as a new copy of the table.
+**Part 2: mode 2.** Repeat Part 1 in mode 2. Send it to the worksheet, then clear the readings, so it gets a new copy of the table.
 
-**Part 3: how small is small?** With both rods 1.00 m long, record the mode 2 period at mode amplitudes of 2°, 6°, 12° and 24°. Send these as a new copy.
+**Part 3: how small is small?** With both rods 1.00 m long, record the mode 2 period at mode amplitudes of 2°, 6°, 12° and 24°. Send these to the worksheet, then clear the readings.
 
-**Part 4: separation.** Use the Double pendulum chaos setup (both rods 1.00 m, released from rest at 130° and 130°) with two copies. Record the time for copy 1 to reach $$d = 0.1$$ for start differences $$\delta$$ of $$10^{-6}$$ to $$10^{-3}$$ rad, every half power of ten (seven values). Changing $$\delta$$ starts the run again; let it run until the time appears before you record. Note the Lyapunov estimate after 20 s of the last run. Send these as a new copy.
+**Part 4: separation.** Use the Double pendulum chaos setup (both rods 1.00 m, released from rest at 130° and 130°) with two copies. Record the time for copy 1 to reach $$d = 0.1$$ for start differences $$\delta$$ of $$10^{-6}$$ to $$10^{-3}$$ rad, every half power of ten (seven values). Changing $$\delta$$ starts the run again; let it run until the time appears before you record. Note the Lyapunov estimate after 20 s of the last run. Send these to the worksheet, then clear the readings.
 
 **Part 5: a regular swing.** Start mode 1 at 2° with two copies and $$\delta = 10^{-3}$$ rad. Watch the separation for 30 s and describe what it does in the notes under your Part 4 table.
 

@@ -59,9 +59,9 @@ No physical apparatus is used. On a real bench, a precision spring scale or grav
 
 **Height scan.** On Earth at the equator, with the rotation included, record a reading at each of the six places in the demo and at about five more heights spread between 1000 km and 40,000 km. Send the readings to the worksheet.
 
-**Latitude scan.** Clear the readings. At sea level on Earth, record a reading at latitudes 0°, 15°, 30°, 45°, 60°, 75° and 90°. Send this scan to a new copy of the table.
+**Latitude scan.** Once the height scan is in the worksheet, clear the readings. At sea level on Earth, record a reading at latitudes 0°, 15°, 30°, 45°, 60°, 75° and 90°. Send this scan to a new copy of the table.
 
-**Moon and Mars.** Clear the readings. For the Moon and for Mars, record the surface value at the equator, then a reading with the rotation left out, and a reading at a height as close to one planet radius as you can set. Send these to a third copy of the table.
+**Moon and Mars.** Once the latitude scan is in the worksheet, clear the readings. For the Moon and for Mars, record the surface value at the equator, then a reading with the rotation left out, and a reading at a height as close to one planet radius as you can set. Send these to a third copy of the table.
 
 ## Data
 

@@ -500,7 +500,7 @@
      their standard errors. Anything computed from the slope (g, k, ...) is left to the student. */
   const GRAPHS = PHYSICS_I.slice();
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
-  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass'];
+  const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs'];
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
   const CURVE_TABLES = { 'franck-hertz': [0] };

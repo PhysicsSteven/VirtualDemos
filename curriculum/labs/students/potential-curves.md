@@ -42,7 +42,7 @@ For a real rolling track comparison, secure the track and catch the object safel
 
 Sketch the potential and choose three total energies. Predict turning points and where speed will be largest. Check those predictions, then repeat for a curve with two wells. Explain when the particle can cross the central barrier.
 
-**Using the virtual apparatus.** For the spring and then the double well, choose a total energy and a release point, and pause the particle whenever you compare values. Write your predictions before you show the turning points, the equilibria and the force and velocity. Estimate slopes and turning positions from the plotted samples in the data table rather than from a force formula. The molecule and pendulum curves are not part of this activity.
+**Using the virtual apparatus.** For the spring and then the double well, choose a total energy and a release point, and pause the particle whenever you compare values. The turning points, equilibria and force and velocity arrows are drawn when the demo opens, and the readouts always list the force and turning points: turn the three drawings off and write your predictions before you look at the readouts or turn the drawings back on. Estimate slopes and turning positions from the plotted samples in the data table rather than from a force formula. The molecule and pendulum curves are not part of this activity.
 
 ## Data
 

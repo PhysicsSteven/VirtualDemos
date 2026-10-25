@@ -83,7 +83,7 @@ Use one copy of the table for each part.
 
 ## Analysis
 
-1. For Part 1, fit $$\Delta P$$ against $$Q$$ (in m³/s) and find $$\eta$$ from the slope, $$\eta = \text{slope}\times\pi r^4/(8L)$$, with its uncertainty. Compare with 1.002 mPa·s.
+1. For Part 1, fit $$\Delta P$$ against $$Q$$, convert the slope to Pa·s/m³ (1 mL/s = 10⁻⁶ m³/s) and find $$\eta$$ from it, $$\eta = \text{slope}\times\pi r^4/(8L)$$, with its uncertainty. Compare with 1.002 mPa·s.
 2. For Parts 1 and 2, find $$N_R$$ for every reading. Between which readings does the dye first break up, and from which reading is it mixed across the whole pipe? Compare these Reynolds numbers with the textbook's 2000 and 3000.
 3. Compare each Part 2 pressure drop with the Poiseuille prediction from your Part 1 slope. By what factor is the measured $$\Delta P$$ larger at the highest flow? Use pairs of readings to find the exponent $$n$$ in $$\Delta P\propto Q^n$$ for the lowest flows and for the highest.
 4. For Part 3, fit $$\Delta P$$ against $$Q$$ and compare the slope with Part 1's. Does the ratio agree with $$(5.00/3.00)^4$$?

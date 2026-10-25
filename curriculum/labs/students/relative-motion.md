@@ -66,7 +66,7 @@ On a real track, keep hands and faces out of the launcher's line, wear eye prote
 
 **Cart accelerates after the launch.** Keep the launch speed at 4.0 m/s and set the cart speed at launch to 3.0 m/s. Launch with cart accelerations of −3.0, −2.0, −1.0, 0, 1.0, 2.0 and 3.0 m/s² (negative values brake the cart). At 3.0 m/s the braking cart is still moving when the ball comes down; from a slower start it can stop first, and then the miss no longer follows the formula in the Background.
 
-**Frictionless incline.** With a launch speed of 4.0 m/s and a cart speed at launch of 0.5 m/s, launch at incline angles of 5°, 10°, 15°, 20°, 25° and 30°.
+**Frictionless incline.** On the Frictionless incline setup, with a launch speed of 4.0 m/s and a cart speed at launch of 0.5 m/s, launch at incline angles of 5°, 10°, 15°, 20°, 25° and 30°.
 
 **Using the virtual apparatus.** Record each launch after the ball has come down. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Turn Blind on if you want to predict each landing before you see it, and off again to read the results.
 

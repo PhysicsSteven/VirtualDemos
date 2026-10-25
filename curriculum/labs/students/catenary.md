@@ -79,7 +79,7 @@ $$y_A$$ and $$y_B$$ are the heights of the supports. Work out the last three col
 
 ## Analysis
 
-1. Part 1: plot $$H$$ against $$1/d$$. Fit a line to the five shallowest rows (the largest $$1/d$$) and compare its slope with $$\lambda g\,\Delta x^2/8$$. Then look at where the deeper rows fall compared with that line, and explain the difference using the fuller expansion in the Background.
+1. Part 1: plot $$H$$ against $$1/d$$. Fit a line to the five shallowest rows (the largest $$1/d$$) and compare its slope with $$\lambda g\,\Delta x^2/8$$; the graph uses only rows with a number in both columns, so fill in $$1/d$$ for those five rows first. Then fill in the rest and look at where the deeper rows fall compared with that line, and explain the difference using the fuller expansion in the Background.
 2. For two Part 1 rows, find the vertical part of the tension at each support from $$T$$ and $$H$$. Check that together the supports hold up the whole weight of the chain, $$\lambda g S$$.
 3. Part 2: plot $$T_A - T_B$$ against $$y_A - y_B$$ and fit a line. Compare the slope with $$\lambda g$$ and the intercept with zero.
 4. In Part 2, did $$H$$ stay the same as support B was lowered? Within any one row, why must the horizontal parts of the pulls at the two supports be equal?

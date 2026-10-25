@@ -56,11 +56,11 @@ No physical apparatus is used.
 
 **Orbit scan.** With the ground clock turning with Earth, put the second clock in a circular orbit and record a reading at the space station, GPS and geostationary radii and at about six more radii spread from 7000 km to 50,000 km. Send the readings to the worksheet.
 
-**Ground clock at rest.** Clear the readings. Stop the ground clock turning and record orbits at about five radii from 7000 km to 20,000 km, including two on either side of the radius where the net gain is zero. Send them to a new copy of the table.
+**Ground clock at rest.** Once the orbit scan is in the worksheet, clear the readings. Stop the ground clock turning and record orbits at about five radii from 7000 km to 20,000 km, including two on either side of the radius where the net gain is zero. Send them to a new copy of the table.
 
-**Clocks on towers.** Clear the readings. With the ground clock turning again, put the second clock at rest on a tower and record readings at 22.5 m and at heights of about 100 km, 1000 km and 10,000 km. Send them to a third copy of the table.
+**Clocks on towers.** Once this scan is in the worksheet, clear the readings. With the ground clock turning again, put the second clock at rest on a tower and record readings at 22.5 m and at heights of about 100 km, 1000 km and 10,000 km. Send them to a third copy of the table.
 
-**One day.** Put the second clock in the GPS orbit, set both clocks to zero and run them for one simulated day (24.0 h). Write down how far the second clock is ahead.
+**One day.** Put the second clock in the GPS orbit, set both clocks to zero and run them for about one simulated day (they run one hour each second, so stop them close to 24 h). Write down the time run and how far the second clock is ahead.
 
 ## Data
 
@@ -78,7 +78,7 @@ No physical apparatus is used.
 2. Fit the speed part against $$1/r$$ for the same scan. Compare its slope with the gravity part's slope, and explain the ratio from $$v^2 = GM/r$$.
 3. Fit the speed part against $$v^2$$. From the slope find the speed of light.
 4. Use your two fits to find the radius at which the net gain is zero, for the ground clock turning. Then use the ground clock at rest scan to find it again, and compare with $$r = 3R/2$$. Why does the ground clock's turning move it?
-5. For the GPS orbit, how far would a position drift in one day if the clocks were not corrected? Compare your one day run with the net gain per day.
+5. For the GPS orbit, how far would a position drift in one day if the clocks were not corrected? Scale your run to exactly one day and compare it with the net gain per day.
 6. For the 22.5 m tower, find the fractional rate difference and compare it with $$gh/c^2$$, which Pound and Rebka measured in 1959 in a 22.5 m tower at Harvard. For the taller towers, why is the speed part not zero?
 
 ## Uncertainty

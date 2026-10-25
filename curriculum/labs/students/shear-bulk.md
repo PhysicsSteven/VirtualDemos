@@ -113,7 +113,7 @@ For a liquid, $$-\Delta V/V_0 = \Delta x/h_0$$; for a cube, $$-\Delta V/V_0 = 1 
 
 1. For each block, fit $$F$$ against $$\Delta x$$ and find $$S = \text{slope}\times L_0/A$$, with its uncertainty from the slope's. Compare aluminum and steel with Table 12.1 of the textbook, and give the Mystery metal's shear modulus.
 2. For each liquid, fit $$F$$ against $$\Delta x$$ and find $$B = \text{slope}\times h_0/A$$. Compare water and acetone with Table 12.1, and give the Mystery liquid's bulk modulus and its compressibility in 1/atm (1 atm = 101 325 Pa).
-3. For each cube, fit $$F$$ against $$-\varepsilon$$ and find $$B = \text{slope}/(3A)$$ with $$\varepsilon$$ in plain numbers (1 µε = 10⁻⁶). Then, for the largest force, find $$B$$ from the exact $$\Delta V/V_0 = (1 + \varepsilon)^3 - 1$$ and show that the approximation $$3\varepsilon$$ changes $$B$$ by much less than your uncertainty.
+3. For each cube, fit $$F$$ against the strain gauge reading $$\varepsilon$$. Since $$\varepsilon$$ is negative the slope is negative, so $$B = -\text{slope}/(3A)$$ with $$\varepsilon$$ in plain numbers (1 µε = 10⁻⁶). Then, for the largest force, find $$B$$ from the exact $$\Delta V/V_0 = (1 + \varepsilon)^3 - 1$$ and show that the approximation $$3\varepsilon$$ changes $$B$$ by much less than your uncertainty.
 4. Steel's Young's modulus is about $$2.0\times10^{11}$$ Pa. Put steel's $$Y$$, $$S$$ and $$B$$ in order. Which is easier for steel: changing its shape or changing its volume?
 5. Compare water's bulk modulus with steel's. By what factor does the same pressure change water's volume more than steel's? Is it reasonable to treat water as incompressible in a hydraulic jack at a few megapascals?
 
