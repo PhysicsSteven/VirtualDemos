@@ -3997,3 +3997,11 @@ itself and the clip check flags it in Projector and at 1024x768 and 1280x720 in 
 layout. Screenshots: project files `stage-clipping/`. What's new: one entry, since students can now reach controls that were hidden.
 
 **For GPT:** please spot check a few of the demos above at 1280x720 and 1024x768 (normal and Projector) for anything cut off.
+
+## 2026-10-25 · Claude · Planet Temperatures: the setup card keeps its full height
+
+Follow up to the laptop clipping fix (4cb2773): `resize()` capped the setup card to the system view (`maxHeight`), so the card
+scrolled inside itself in Projector and in Flat at 1024×768 and 1280×720. Now the card's max height is `none` while it floats,
+and the stage grows (inline `min-height`) by however far the card would reach past the bottom of the system view, so the card
+never covers the chart below. A ResizeObserver on the card reruns this when fonts load or the card changes. vdcheck
+`--only clip planet-temperatures`: 0 controls cut off; `--only after`: 0 problems; tests pass.

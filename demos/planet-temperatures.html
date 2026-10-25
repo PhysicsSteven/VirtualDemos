@@ -660,13 +660,17 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function resize() { dpr = window.devicePixelRatio || 1;
     const sc = $('setupCard'), abs = getComputedStyle(sc).position === 'absolute';
-    sc.style.top = abs ? `${$('strip').offsetHeight + 12}px` : ''; sc.style.maxHeight = abs ? `${$('sysPane').offsetHeight - 24}px` : '';
+    sc.style.top = abs ? `${$('strip').offsetHeight + 12}px` : ''; sc.style.maxHeight = abs ? 'none' : '';
+    /* the card keeps its full height; on a short window or in Projector the stage grows until the system view holds it (vdcheck --only clip) */
+    const st = $('stage'), sp = $('sysPane'); st.style.minHeight = '';
+    if (abs) { const over = sc.offsetTop + sc.offsetHeight + 12 - (sp.offsetTop + sp.offsetHeight); if (over > 0) st.style.minHeight = `${st.offsetHeight + over}px`; }
     const sz = (cv, host) => { const r = host.getBoundingClientRect(); cv.width = Math.round(r.width * dpr); cv.height = Math.round(r.height * dpr); return [r.width, r.height]; };
     [SW, SH] = sz(sysC, $('sysPane')); [BW, BH] = sz(budC, $('budPane')); [CW, CH] = sz(chC, $('chartPane')); redraw(); }
   const retheme = () => { tokens(); redraw(); };
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  if (window.ResizeObserver) new ResizeObserver(() => resize()).observe($('setupCard'));   /* fonts arriving or the card's contents changing */
   tokens();
   const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'earth');
   for (const id of ['sysPane', 'budPane', 'chartPane']) new ResizeObserver(resize).observe($(id));
