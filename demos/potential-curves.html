@@ -1944,6 +1944,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   setRunning(running);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
   requestAnimationFrame(loop);
+  /* How this works: a short video of one sample reading from the worksheet (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/potential-curves.mp4', poster: 'media/how-this-works/potential-curves.jpg' });
 })();
 </script>
 </body>

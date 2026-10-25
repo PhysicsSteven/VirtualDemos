@@ -577,6 +577,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock (no ruler: the stretch is drawn shortened) */
   VD.tools({ el: $('cCan'), time: () => (held ? null : t) });
+  /* How this works: a short video of one sample reading from the worksheet (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/springs.mp4', poster: 'media/how-this-works/springs.jpg' });
   // Reduce motion: the OS setting, or the in-page toggle remembered for this browser session only
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   try { const rm = sessionStorage.getItem('vd-springs-motion'); if (rm) reduce = rm === 'reduce'; } catch (_) {}

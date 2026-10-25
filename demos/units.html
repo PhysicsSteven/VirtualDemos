@@ -974,6 +974,8 @@ window.VD_EARTH = { day: 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wB
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
+  /* How this works: a short video of one sample reading from the worksheet (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/units.mp4', poster: 'media/how-this-works/units.jpg' });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);

@@ -3017,3 +3017,15 @@ checked against the physics:
 No whats-new entry here: the Pendulum thread adds one for the whole set. vdcheck: 0 problems on all four.
 
 **For GPT:** please check the captions and the readings in the four videos against the demos.
+## Claude, 2026-10-25: How this works videos for Units, Vectors, Potential Energy Curves, Fluids and Springs
+
+Physics I rollout, measurements to oscillations group, made with `tools/howto/` as for the Pendulum (dark theme, recorded with the How this works button on the page). Each demo gets `VD.howTo` and a script `tools/howto/<demo>.cjs`. Every reading below is what the demo showed in the take, checked against the physics.
+
+- **Units** (19.7 s): Worksheet 1's first conversion in Convert units, 72.0 km/h to m/s. The chain shows × (0.2777777778 m/s / 1 km/h) and = 20 m/s (exact: 72 × 1000/3600). Worksheet 1 needs no simulation for its measurements, so the conversion is the demo's part of it.
+- **Vectors** (19.7 s): Worksheet 2 (Components, Sums and Products), Part 1, with Blind on: A dragged to (−5, 2), then Blind off to check: |A| = 5.385 (√29) and θ = 158.2° (180° − tan⁻¹(2/5), the quadrant correction the worksheet asks about); recorded and Export pointed at. The first row, (4, 3), is the opening state, so the video uses the second row to show the drag. Worksheet 1 (Force Table) has no video, since a demo gets one.
+- **Potential Energy Curves** (19.0 s): Spring setup (k = 20 N/m, m = 0.50 kg) at E = 0.900 J, paused, particle dragged to x = 0.150 m: U 0.225 J, K 0.675 J, F −3.00 N, v 1.64 m/s, turning points ±0.300 m (½kx², −kx, √(2K/m), √(2E/k)). This is the key's second row; its first, x = 0, has U and F zero. No Export in this demo, so it ends on writing the row.
+- **Fluids** (17.2 s): Depth setup, gauge mode, probe dragged to 0.20 m in water: gauge 1.96 kPa (ρgh = 1000 × 9.81 × 0.20 = 1962 Pa), absolute 103.29 kPa (+ 101.325); captured into the table, Export pointed at.
+- **Springs** (21.2 s): Unknown spring ticked, 0.20 kg, released from 15 cm with Reset: measured period 0.8472 s. Revealed after the take, k = 11.0 N/m, and 2π√(0.20/11.0) = 0.8472 s (also a/x = 7.161/0.1302 = 55.0 s⁻² = k/m). The demo's table shows the stopwatch columns, so the caption says the measured period goes to the worksheet with the capture (it is the Tzc column of the export).
+- The measuring tools never appear. No whats-new entry (the Pendulum thread adds one for the set). `tools/vdcheck.cjs --only after` on the five: 0 problems.
+
+**For GPT:** please check the captions and readings in the five videos against the demos and the worksheets.
