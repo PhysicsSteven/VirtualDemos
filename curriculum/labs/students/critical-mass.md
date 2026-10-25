@@ -75,7 +75,7 @@ Fill in the natural log of each neutron count in the last three columns.
 2. Plot $$k$$ against $$R$$ for ²³⁵U. Find the critical radius $$R_c$$ where $$k = 1$$ by interpolating between the two readings on either side, and the critical mass $$M_c$$.
 3. Do the same for ²³⁹Pu. Which needs less metal, and why?
 4. At the critical radius, compare the share of neutrons that leaked with $$1 - 1/\bar\nu$$ from Before the lab question 2.
-5. A full calculation (MCNP6, quoted by M. B. Chadwick, 2021) gives bare critical masses of 46 kg for ²³⁵U and 10.2 kg for ²³⁹Pu. Like the demo, it takes ²³⁹Pu at 19.6 g/cm³; handbook α plutonium is 19.86 g/cm³, which would lower every critical mass here by about 3%, since the critical mass scales as 1/ρ². Compare your values and suggest which simplifications of the model matter.
+5. A full calculation (MCNP6, quoted by M. B. Chadwick, 2021) gives bare critical masses of 46 kg for ²³⁵U and 10.2 kg for ²³⁹Pu. Like the demo, it takes ²³⁹Pu at 19.6 g/cm³; handbook α plutonium is 19.86 g/cm³, which would lower every plutonium critical mass here by about 3%, since the critical mass scales as 1/ρ². Compare your values and suggest which simplifications of the model matter.
 
 ## Uncertainty
 
