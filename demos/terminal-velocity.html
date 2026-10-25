@@ -223,6 +223,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   const $ = (id) => document.getElementById(id), VG = window.VDGear;
   /* the measuring tools: a stopwatch on the simulated clock */
+  /* How this works: a 20 s video of the first readings of a spread eagle jump (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/terminal-velocity.mp4', poster: 'media/how-this-works/terminal-velocity.jpg' });
   VD.tools({ el: $('can'), strip: '.viewbar', time: () => (S.s ? S.s.t : null) });
   const NAMES = { spread: 'spread eagle', head: 'head first' };
   const PRESETS = {

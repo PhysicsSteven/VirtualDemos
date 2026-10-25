@@ -512,6 +512,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   /* the measuring tools: the stopwatch on the simulated clock; the ruler on the flat shaft, which is drawn to scale (the car's height is not) */
+  /* How this works: an 18 s video of one scale reading while the car speeds up (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/elevator.mp4', poster: 'media/how-this-works/elevator.jpg' });
   VD.tools({ el: can, strip: '.viewbar', time: () => S.t, scale: () => rulerAt });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();

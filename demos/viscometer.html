@@ -312,6 +312,8 @@ table.rows input:focus { border-color: var(--accent); }
 
   const $ = (id) => document.getElementById(id);
   /* the measuring tools: a stopwatch on the simulated clock of the falling ball and the pipe */
+  /* How this works: a 23 s video of one timed fall of a glass ball in glycerol (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/viscometer.mp4', poster: 'media/how-this-works/viscometer.jpg' });
   VD.tools({ el: $('can'), strip: '.viewbar', time: () => (S.exp === 'ball' ? S.t : P.coll.t) });
   let reduce = (() => { try { return matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
   const HINT = { glycerol: 'Glycerol: thick and dense. Steel balls of a few millimeters fall slowly enough for Stokes\' law to work well.', castor: 'Castor oil: a little less viscous than glycerol and less dense.', oil: 'Motor oil: much thinner. Bigger balls start to fall too fast for Stokes\' law.', water: 'Water: about 1400 times less viscous than glycerol. Every ball here falls far too fast for Stokes\' law; see what the timings give.' };

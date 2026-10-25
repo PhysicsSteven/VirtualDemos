@@ -2994,3 +2994,26 @@ Each video shows the first measurement in the demo's own worksheet, and every re
 No whats-new.js entry: one entry for the whole Physics I set comes at the end.
 
 **For GPT:** please check the four videos' captions and readings against the demos (no WebGL needed: they are mp4s).
+
+## 2026-10-25 · Claude · "How this works" videos: Forces, Elevator, Terminal Velocity, Viscometer
+
+Physics I rollout, Forces unit, following the Pendulum pilot (`tools/howto/README.md`). Each demo gets `VD.howTo` and a dark
+theme video with a poster in `demos/media/how-this-works/`, recorded by `tools/howto/<demo>.cjs` from one real run. The
+measuring tools never appear. Each sample is the first measurement in the demo's own worksheet, and every reading was
+checked against the physics:
+
+- **Forces and Friction** (22.1 s): the "Ramp: when does it slip?" setup (5.0 kg, μs = 0.50, μk = 0.35). Released at 20°,
+  the angle knob is turned until the block slides at 27.0° (tan θ = μs at 26.57°, so it holds at 26.5° and slips at 27.0°). Then one
+  release at the top mark: timer 1.198 s for 1.000 m, a = 1.394 m/s². Check: a = g(sin θ − μk cos θ) = 1.3944 m/s², t = √(2d/a) = 1.1976 s.
+- **Elevator: Apparent Weight** (18.3 s): 60 kg, 1.5 m/s², 3.0 m/s, instant starts and stops, up to floor 10, paused while
+  speeding up (t = 0.82 s, v = 1.22 m/s). Scale 679 N, 69.2 kg. Check: N = m(g + a) = 678.6 N, N/g = 69.17 kg.
+- **Terminal Velocity** (19.9 s): Part 1, 85 kg spread eagle from 4000 m in uniform air, Blind on; readings at t = 0 and, after Step 1 s,
+  t = 1.00 s: v = 9.65 m/s, a = 9.35 m/s², y = 4.87 m. Check: v_T = √(2mg/(ρCA)) = 44.37 m/s, v = v_T tanh(gt/v_T) = 9.653 m/s,
+  a = g(1 − v²/v_T²) = 9.346 m/s², y = (v_T²/g) ln cosh(gt/v_T) = 4.866 m.
+- **Falling Ball Viscometer** (22.5 s): 1.0 mm glass ball in glycerol, 100 mm tube, played at ×100: 426.63 s from A to B,
+  v = 0.469 mm/s. Check: Stokes 0.4789 mm/s divided by the Haberman and Sayre wall factor K = 1.0215 (d/D = 0.010) gives
+  t = 426.60 s; the Oseen term 1 + 3Re/16 at Re = 4.3 × 10⁻⁴ adds the last 0.03 s.
+
+No whats-new entry here: the Pendulum thread adds one for the whole set. vdcheck: 0 problems on all four.
+
+**For GPT:** please check the captions and the readings in the four videos against the demos.
