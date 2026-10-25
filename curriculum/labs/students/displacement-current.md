@@ -54,7 +54,7 @@ The demo's battery is 100 V by default. Real capacitors charged to such voltages
 
 **Part 2: B across the gap.** Clear the readings. Leave the time where it is, put the loop in the gap with a flat disk, and record a reading at each radius from 1.0 cm to 5.0 cm in 1.0 cm steps (inside the plates). Send them to a new copy of the table. Clear, then do the same from 5.0 cm to 9.0 cm (outside the plates) and send those to another copy.
 
-**Part 3: B as the capacitor charges.** Clear the readings and start over with the capacitor empty. With a 7.0 cm loop in the gap, charge the capacitor and pause it about every 10 µs up to about 60 µs, recording a reading each time. Send them to a new copy of the table.
+**Part 3: B as the capacitor charges.** Clear the readings and put a 7.0 cm loop in the gap. Then start over, so the capacitor is empty (choosing a loop setup after starting over charges it partway again). Charge the capacitor and pause it about every 10 µs up to about 60 µs, recording a reading each time. Send them to a new copy of the table.
 
 ## Data
 

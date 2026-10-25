@@ -45,7 +45,7 @@ On a real vibrator and pulley bench, secure the pulley, check the string's load 
 
 **Tension scan.** At a fixed drive frequency, change the suspended mass to find several standing wave patterns with different loop counts. Record total mass and $$n$$ for each. Keep the same string and length.
 
-**Unknown string.** Repeat one scan with an unknown string and infer its linear density before revealing its value. Do not choose a new unknown string during a scan, because that changes the specimen.
+**Unknown string.** Repeat one scan with an unknown string and infer its linear density before revealing its value: once your scan is sent, choosing a named string makes the demo state the unknown string's density. Do not choose a new unknown string during a scan, because that changes the specimen.
 
 **Using the virtual apparatus.** Record the vibrating length, string identity, total suspended mass and loop count for each resonance. A 50 g hanger contributes to the total mass even when no extra weights are added. Collect readings for one consistent scan and send them to the worksheet before clearing, so each scan has its own Data table. Use frequency against harmonic number for the frequency scan and tension against $$1/n^2$$ for the scan at fixed frequency.
 

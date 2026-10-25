@@ -57,22 +57,24 @@ Before each part, predict what you will see. Then measure.
 
 ## Data
 
-| Trial | Element | Material | Wavelength $$\lambda$$ (nm) | Index $$n$$ | Minimum deviation $$\delta$$ (°) |
-|---|---|---|---|---|---|
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
-| | | | | | |
+| Trial | Element | Material | Wavelength $$\lambda$$ (nm) | Index $$n$$ | Minimum deviation $$\delta$$ (°) | $$1/\lambda^2$$ (1/µm²) |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
+
+Fill in the last column yourself for every prism row.
 
 ## Analysis
 
 1. For each material in Part 2, graph $$n$$ against $$\lambda$$. Then graph $$n$$ against $$1/\lambda^2$$ and fit a straight line: find $$A_C$$ and $$B_C$$. Is the Cauchy form a good fit? Which material has the largest $$B_C$$?
 2. For each material, find the spread of the spectrum, $$\delta(400\ \mathrm{nm}) - \delta(700\ \mathrm{nm})$$, and the index difference $$n(400) - n(700)$$. Rank the materials by each. Which would make the best prism for spreading colors, and which the best lens for keeping them together?
-3. Graph $$\delta$$ against $$n$$ for all the prism rows together. Is the deviation set by $$n$$ alone, whatever the material? Use the minimum deviation formula to explain why the curve steepens as $$n$$ grows.
+3. Type the prism rows from all your copies into one new copy of the Data table, and graph $$\delta$$ against $$n$$ for them together. Is the deviation set by $$n$$ alone, whatever the material? Use the minimum deviation formula to explain why the curve steepens as $$n$$ grows.
 4. For Part 3, explain why the diamond prism gives no deviation, and why diamond's large index and dispersion make cut diamonds flash with color.
 
 ## Uncertainty

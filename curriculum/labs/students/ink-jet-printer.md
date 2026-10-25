@@ -10,7 +10,7 @@ Textbook: OpenStax *University Physics*, Vol. 2, §7.6 (and §5.4, §7.5). Acces
 
 **Machines in the demo:** Van de Graaff generator; Ink jet printer; Smoke precipitator. This worksheet uses the printer.
 
-**Using the demo.** A continuous ink jet: drops pass a charging electrode, then fly between two deflection plates and on to the paper. The Printer section sets the charge on each drop $$q$$, the plate voltage, the drop diameter and the drop speed. Fire one drop sends a single drop; Print PHYS works out the charge for each dot, as a printer's controller does. Drops with too little charge fly into the gutter; drops with too much hit a plate. A ruler in millimeters stands beside the paper. Blind hides the drop charge, $$q/m$$ and the deflections, but not the ruler.
+**Using the demo.** A continuous ink jet: drops pass a charging electrode, then fly between two deflection plates and on to the paper. The Printer section sets the charge on each drop $$q$$, the plate voltage, the drop diameter and the drop speed. Fire one drop sends a single drop; Print PHYS works out the charge for each dot, as a printer's controller does. Drops with too little charge fly into the gutter; drops with too much hit a plate. A millimeter scale stands beside the paper. Blind hides the drop charge, $$q/m$$ and the deflections, but not the scale.
 
 **What the demo models.** Plates 10.0 mm long and 2.0 mm apart, with the paper 15.0 mm past their end; the lower plate is at the voltage set and the upper one grounded, so the field points up and positive drops bend up. The field is uniform between the plates and zero outside them (no fringing). Each drop is a water sphere of density 1000 kg/m³ moving at a constant horizontal speed; gravity is included and air drag is left out (it would slow a 60 μm drop by about a tenth over this path). Drawn to scale, in slow motion. Simulated data.
 
@@ -49,9 +49,9 @@ Real continuous ink jet printers use kilovolts on the deflection plates; keep co
 
 **Part 2: plate voltage and speed.** With 0.15 pC on 60 μm drops, record the height at plate voltages of 1000, 2000, 3000 and 4000 V (at 20 m/s), then at speeds of 10, 15, 20, 25 and 30 m/s (at 3000 V).
 
-**Part 3: an unknown charge.** Turn Blind on, and have a partner set the drop charge without telling you (60 μm, 20 m/s, 3000 V). Fire a drop, read where it lands on the ruler, and type the height into the table. Repeat for two more charges.
+**Part 3: an unknown charge.** Turn Blind on, and have a partner set the drop charge without telling you (60 μm, 20 m/s, 3000 V). Fire a drop, read where it lands on the scale beside the paper, and type the height into the table. Repeat for two more charges.
 
-**Using the virtual apparatus.** Blind leaves the charge and height cells blank for you to fill from the ruler. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** Blind leaves the charge and height cells blank for you to fill from the scale. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
 ## Data
 
@@ -76,7 +76,7 @@ Real continuous ink jet printers use kilovolts on the deflection plates; keep co
 
 ## Uncertainty
 
-The model has no noise; in Parts 1 and 2 the heights are worked out exactly and shown to 1 μm. In Part 3 the height is read from the ruler, to about 0.05 mm, which sets the uncertainty in the charge you find. In a real printer, air drag slows the drops and depends on the drops ahead of them, the charge of each drop depends on its neighbors, and the plates' field fringes beyond their ends; printers correct for all of these with calibrated charge tables.
+The model has no noise; in Parts 1 and 2 the heights are worked out exactly and shown to 1 μm. In Part 3 the height is read from the scale beside the paper, to about 0.05 mm, which sets the uncertainty in the charge you find. In a real printer, air drag slows the drops and depends on the drops ahead of them, the charge of each drop depends on its neighbors, and the plates' field fringes beyond their ends; printers correct for all of these with calibrated charge tables.
 
 ## Questions
 

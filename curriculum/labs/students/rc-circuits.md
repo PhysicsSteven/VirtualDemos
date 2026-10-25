@@ -66,19 +66,19 @@ For a real circuit, turn off the supply before changing connections. Check the c
 
 ## Data
 
-| $$t$$ (s) | $$V_C$$ (V) | $$I$$ (A) | $$W$$ (J) | $$U_C$$ (J) | $$H$$ (J) |
-|---|---|---|---|---|---|
-| | | | | | |
-| | | | | | |
-| | | | | | |
+| $$t$$ (s) | $$V_C$$ (V) | $$I$$ (A) | $$W$$ (J) | $$U_C$$ (J) | $$H$$ (J) | Log ratio |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
 
-Use a separate copy for each run. Write $$\varepsilon$$, $$R$$, $$C$$ and the switch time above it. Fill the energy columns for the energy run.
+Use a separate copy for each run. Write $$\varepsilon$$, $$R$$, $$C$$ and the switch time above it. Fill the energy columns for the energy run. Fill in the last column yourself: $$\ln(1 - V_C/\varepsilon)$$ for charging readings and $$\ln(V_C/V_{C0})$$ for readings after the switch in a discharge. Each copy's graph fits a line to every row that has both of its columns filled, so leave it blank on rows you leave out of the fit.
 
 ## Analysis
 
 1. Find $$\tau$$ from the time when $$V_C$$ reaches 63.2% of $$\varepsilon$$.
 2. Plot $$\ln(1 - V_C/\varepsilon)$$ against $$t$$. Find $$\tau$$ from the slope. Leave out points so close to the final voltage that rounding makes the logarithm unusable.
-3. Plot $$\tau$$ against $$R$$. Find $$C$$ from the slope and compare it with the component value.
+3. Plot $$\tau$$ against $$R$$ by hand or in a spreadsheet (the five values are not rows of one table). Find $$C$$ from the slope and compare it with the component value.
 4. For discharge, plot $$\ln(V_C/V_{C0})$$ against time since switching. Compare its time constant with charging.
 5. Check $$W - U_C - H$$ at each energy reading. If using CSV, also estimate heat from the area under $$I^2 R$$ against time.
 6. In the flash run, calculate the stored energy and initial discharge power from the voltage just before the switch. Do not assume the capacitor has reached the full battery voltage.

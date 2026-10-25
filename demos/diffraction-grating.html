@@ -1534,7 +1534,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       : `For ${fmtNm(lamNm)}: orders <b>${minus(r.lo)}</b> to <b>${r.hi}</b>. Order ${nx} would need sin θ = ${minus(sN.toFixed(3))}.`;
     const missing = []; for (let m = 1; m <= Math.max(r.hi, -r.lo); m++) if (isMissing(m, S.dA)) missing.push(m);
     if (missing.length) note += ` Missing: m = ${missing.join(', ')} (d/a = ${S.dA.toFixed(0)}).`;
-    note += ` Resolving power in order 1: R = mN = ${S.N}, so lines closer than λ/R = ${(lamNm / S.N).toFixed(S.N > 500 ? 2 : 1)} nm blur together.`;
+    note += ` Resolving power in order 1: R = mN = ${S.N}, so lines closer than λ/R = ${(lamNm / S.N).toFixed(S.N > 500 ? 3 : 1)} nm blur together.`;
     if (!sym) note += ' θ is measured from the straight through beam; from the grating normal subtract the turn.';
     $('ordNote').innerHTML = note;
   }

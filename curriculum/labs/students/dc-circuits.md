@@ -56,17 +56,17 @@ Switch off a real supply before rewiring. Begin with its current limit set low. 
 
 **A multiloop circuit.** Choose a bridge circuit. Label the nodes and current arrows. Use measured currents to test two independent junctions and measured voltage changes to test two loops. Change one resistance and repeat. Include a drawing that defines every sign.
 
-**Using the virtual apparatus.** Work in DC with predictions and answers hidden, starting from the series bulbs, parallel bulbs, voltage divider and Wheatstone bridge circuits. The bulbs here are fixed resistors. Set each part's value, connect each ammeter in series with the part you measure and each voltmeter across it, and keep a copy of the schematic. Record a reading after each change and send the readings to the worksheet before you change circuits; each meter of each reading becomes a row of the Data table, with the part values. Check your own sums first, then compare them with the demo's junction rule and loop rule checks.
+**Using the virtual apparatus.** Work in DC with predictions and answers hidden, starting from the series bulbs, parallel bulbs, voltage divider and Wheatstone bridge circuits. The bulbs here are fixed resistors. Set each part's value, connect each ammeter in series with the part you measure and each voltmeter across it, and keep a copy of the schematic. To put an ammeter in a current path, first delete a short wire in that path and place the ammeter across the gap: an ammeter laid alongside a wire shares the current with the wire and reads too little. Record a reading after each change and send the readings to the worksheet before you change circuits; each meter of each reading becomes a row of the Data table, with the part values. Check your own sums first, then compare them with the demo's junction rule and loop rule checks.
 
 ## Data
 
-| Setup and resistor values | Meter/branch | $$I$$ (A) | Voltage rise/drop (V) | $$P$$ (W) | Junction/loop label |
-|---|---|---|---|---|---|
-| | | | | | |
-| | | | | | |
-| | | | | | |
+| Setup and resistor values | Meter/branch | $$I$$ (A) | Voltage rise/drop (V) | $$P$$ (W) | Junction/loop label | Divider ratio |
+|---|---|---|---|---|---|---|
+| | | | | | | |
+| | | | | | | |
+| | | | | | | |
 
-Add rows as needed. Attach a schematic with meter polarity, current arrows and loop directions.
+Add rows as needed. For the voltage divider, fill in the divider ratio $$R_2/(R_1+R_2)$$ yourself on the rows of the voltmeter across $$R_2$$, so that the graph fits those rows. Attach a schematic with meter polarity, current arrows and loop directions.
 
 ## Analysis
 

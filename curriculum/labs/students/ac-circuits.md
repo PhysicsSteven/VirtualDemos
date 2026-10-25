@@ -30,7 +30,7 @@ $$\begin{gathered} X_L=2\pi fL, \\[4pt] X_C=\frac{1}{2\pi fC}. \end{gathered}$$
 
 For the series circuit (§15.3),
 
-$$\begin{gathered} |Z|=\sqrt{R^2+(X_L-X_C)^2}, \\[4pt] I_{\rm rms}=\frac{V_0}{\sqrt2\,|Z|}. \end{gathered}$$
+$$\begin{gathered} \lvert Z\rvert=\sqrt{R^2+(X_L-X_C)^2}, \\[4pt] I_{\rm rms}=\frac{V_0}{\sqrt2\,\lvert Z\rvert}. \end{gathered}$$
 
 Here $$V_0$$ is the source's peak voltage. Current lags the voltage when $$X_L$$ is larger than $$X_C$$, and leads when $$X_C$$ is larger. At resonance (§15.5) the reactances cancel:
 

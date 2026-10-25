@@ -66,13 +66,13 @@ Discharge real capacitors through a suitable resistor before handling them. Obse
 
 ## Data
 
-| Run: connected/isolated/network | $$d$$ (m) | $$A$$ (m²) | Inserted fraction | $$C$$ (F) | $$Q$$ (C) | $$V$$ (V) | $$U$$ (J) |
-|---|---|---|---|---|---|---|---|
-| | | | | | | | |
-| | | | | | | | |
-| | | | | | | | |
+| Run: connected/isolated/network | $$d$$ (m) | $$A$$ (m²) | Inserted fraction | $$C$$ (F) | $$Q$$ (C) | $$V$$ (V) | $$U$$ (J) | $$1/d$$ (1/m) |
+|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | |
+| | | | | | | | | |
+| | | | | | | | | |
 
-Use a separate copy for each scan. For networks, put the component label in the first column and leave geometry columns blank.
+Use a separate copy for each scan. Fill in the last column yourself for the two separation scans. For networks, put the component label in the first column and leave geometry columns blank.
 
 ## Analysis
 

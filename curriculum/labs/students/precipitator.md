@@ -51,7 +51,7 @@ Industrial precipitators run at tens of kilovolts and are interlocked; never ope
 
 **Part 3: gas speed and material.** With 0.5 μm particles and 5.0 m plates, measure the efficiency at gas speeds of 0.5, 1.0, 2.0 and 3.0 m/s. Then repeat 1.0 m/s with insulating particles.
 
-**Using the virtual apparatus.** Wait for at least 500 particles to be counted before recording; the count starts again when you change a setting. Record with Blind on if you want to predict first: the predicted efficiency and drift speed are left blank. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** Wait for at least 500 particles to be counted before recording; the count starts again when you change a setting. Keep Blind off, so each reading records the predicted efficiency and the drift speed. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
 ## Data
 
@@ -67,7 +67,7 @@ Industrial precipitators run at tens of kilovolts and are interlocked; never ope
 ## Analysis
 
 1. For Part 1, compare the measured and predicted efficiencies. How does the efficiency change with particle size? Which sizes are hardest to catch, and why might real precipitators do better than the model for the smallest?
-2. For Part 2, work out $$-\ln(1 - \eta)$$ from each measured efficiency and graph it against $$L$$. Is it a straight line through the origin? From the slope, find the drift speed and compare it with the demo's (turn Blind off).
+2. For Part 2, work out $$-\ln(1 - \eta)$$ from each measured efficiency and graph it against $$L$$. Is it a straight line through the origin? From the slope, find the drift speed and compare it with the drift speed the demo recorded.
 3. For Part 3, show how $$-\ln(1 - \eta)$$ depends on the gas speed. Why does a faster gas leave more smoke in the air? How much does the insulating dust's smaller charge matter?
 4. Find the uncertainty of each measured efficiency from the counts, $$\sqrt{\eta(1-\eta)/N}$$ with $$N$$ the number counted. Do the measured and predicted values agree within it?
 

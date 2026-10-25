@@ -2236,3 +2236,37 @@ Steve (2026-10-25 03:28) asked for the diffusion idea: a two gas setup in Gas in
 - Checks: vdcheck `--only after` 28 screenshots, 0 problems; the full compare differs only where expected (new controls and chips). Two gas mode looked at in Chromium at 1280 px dark, 700, 400 and 360 px (the strip wraps on a phone, so the picture and graph now move down below it); check_math 61 expressions, 0 problems.
 
 **For GPT to verify:** the 2D formulas in the handout background (v̄ = √(πkT/2m), λ = 1/(2√2 nd), one way rate n w √(kT/2πm), ln(1 − 2n/N) = −2kt with k = w √(kT/2πm)/A_half); the key's slopes against its tables; that the flat view counts match the readouts.
+## Claude, 2026-10-25: Student run through of the Physics II worksheets
+
+Steve queued simulated student run throughs for the OpenStax modules. All 48 Physics II worksheets were worked end to end on a local
+build: read the handout, do each step on the demo with only what the handout says, export, graph, answer, compare with the key
+(every capture script rerun; Electrons Through Two Slits is the Modern wave particle worksheet, covered by the Modern run). 26 passed
+as they were; 22 had snags, all fixed. No physics changed (CORE untouched); nothing mentions the shared ruler or stopwatch.
+
+- **Graphs with no column to plot (11):** an analysis item asked for a graph against a derived quantity no table column held, so the
+  worksheet graph could not draw it. Each now has a last column the student fills in (the pattern straight wire fields already used):
+  capacitors 1/d, dc-circuits divider ratio, rc-circuits and rlc-transients log ratio, dispersion 1/λ² (1/µm²; Analysis 3 types
+  all prism rows into one copy), the-eye 1/d_o, camera 1/N, magnets-oersted 1/h, wire-force sin θ. rc-circuits Analysis 3 (τ against
+  R) is plotted outside the worksheet, since the five τ values are not rows of one table. No worksheet.js change: the new columns are
+  unmapped and stay empty on export.
+- **Steps that didn't match the demo:** polarization (a new element always goes at the end of the beam; how to get a middle
+  polarizer), magnetism-in-matter Part 3 (the iron preset starts at 0.20 A, so press Demagnetize first), displacement-current Part 3
+  (choosing a loop setup after Start over charges the capacitor partway: pick the loop, then start over), diffraction-grating Part 4
+  (pick the 589.0 nm line for sodium; the order note now gives λ/R to 3 decimals above N = 500, display only), double-slit (Fit is in
+  the Display fold), dc-circuits (an ammeter dropped beside a wire shares its current: delete the wire and place the ammeter in the
+  gap), camera (object distance slider is log scaled: "about" each distance, record what the demo shows), string-density (how the
+  unknown density is revealed), precipitator (an "if you want" Blind step made definite: keep Blind off).
+- **Rendering:** resistivity had a literal tab for `\times`; `|…|` in math lines changed to `\lvert…\rvert` in ac-circuits,
+  rlc-transients, magnetic-force, wire-force.
+- **Wording:** ink-jet-printer calls the demo's own millimeter scale "the scale beside the paper" rather than a ruler.
+- **Keys (TeacherKeys):** standing-waves beats check row matched only Mystery mode (now 2 beats in the 0.67 s strip, 3.03 Hz);
+  precipitator analysis 2 was a through origin fit (now free intercept: slope 0.170 ± 0.006 /m, w = 2.12 cm/s against the demo's
+  2.08); diffraction-grating analysis 5 resolving power wording; the eleven new columns filled from the existing data with the
+  worksheet's own fits quoted (for example capacitors ε₀ = 8.904 ± 0.016 × 10⁻¹² F/m, dispersion Cauchy A and B with uncertainties);
+  PDFs rebuilt for every changed handout. Rerun captures matched the stored data within run to run scatter everywhere.
+- **Left for Steve:** magnetic-force and electron-diffraction use the demo's own built in ruler and timer as the measurement (not the
+  shared Tools kit), so they stay. Double slit fringe spacing reads 1.5 to 4.5% under λL/d (largest at d/a = 3), probably the single
+  slit envelope shifting the maxima, which is real; a key note could say so.
+
+**For GPT to verify:** the new last columns and the fits the keys quote for them; the polarization, displacement-current and
+magnetism-in-matter procedure changes against the demos.

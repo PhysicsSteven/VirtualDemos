@@ -45,7 +45,7 @@ Real solenoids carrying a few amperes get warm; let them cool before handling. L
 
 **Part 2: field against current.** With a bismuth core, measure $$B - B_0$$ at currents from −1.00 to +1.00 A in steps of 0.50 A.
 
-**Part 3: iron's first magnetization curve.** Start from unmagnetized iron (the iron preset, or Demagnetize). Raise the current in steps, never going back down, and measure $$B$$ at 0, 0.02, 0.05, 0.10, 0.20, 0.40, 0.70 and 1.00 A.
+**Part 3: iron's first magnetization curve.** Start from unmagnetized iron: choose the iron core, press Demagnetize, and wait until the current has settled at zero (the iron preset alone leaves the iron magnetized at 0.20 A). Raise the current in steps, never going back down, and measure $$B$$ at 0, 0.02, 0.05, 0.10, 0.20, 0.40, 0.70 and 1.00 A.
 
 **Part 4: the hysteresis loop.** From 1.00 A, bring the current down to 0 and measure $$B$$, then make it negative in small steps until $$B$$ is zero and record that current. Go on to −1.00 A, then back up to 0 and record $$B$$ again.
 

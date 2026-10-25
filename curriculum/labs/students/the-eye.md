@@ -63,19 +63,21 @@ Before each part, predict what you will see. Then measure.
 
 ## Data
 
-| Trial | Eye | Glasses (D) | Object distance (cm) | Seen | Blur spot (mm) | Near point (cm) | Far point (cm) | Power the eye uses (D) | Image behind the lens (cm) | For distance (D) | For reading at 25 cm (D) |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | | | |
-| | | | | | | | | | | | |
-| | | | | | | | | | | | |
-| | | | | | | | | | | | |
-| | | | | | | | | | | | |
-| | | | | | | | | | | | |
-| | | | | | | | | | | | |
+| Trial | Eye | Glasses (D) | Object distance (cm) | Seen | Blur spot (mm) | Near point (cm) | Far point (cm) | Power the eye uses (D) | Image behind the lens (cm) | For distance (D) | For reading at 25 cm (D) | $$1/d_o$$ (1/m) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | | | | |
+| | | | | | | | | | | | | |
+| | | | | | | | | | | | | |
+| | | | | | | | | | | | | |
+| | | | | | | | | | | | | |
+| | | | | | | | | | | | | |
+| | | | | | | | | | | | | |
+
+Fill in the last column yourself for the objects the eye sees sharply in Part 1, using $$1/d_o = 0$$ for an object far away.
 
 ## Analysis
 
-1. For Part 1, graph the power the eye uses against $$1/d_o$$ for the objects it sees sharply. Find the slope and intercept, and compare them with the thin lens equation and $$d_i = 1.80$$ cm. What happens for objects nearer than the near point?
+1. For Part 1, graph the power the eye uses against $$1/d_o$$ for the objects the eye sees sharply. Find the slope and intercept, and compare them with the thin lens equation and $$d_i = 1.80$$ cm. What happens for objects nearer than the near point?
 2. For Part 2, explain why the nearsighted eye blurs far objects, and show from your readings that its glasses fix them. Compare the prescription with Example 2.8. Can it still see the 30 cm object with the glasses on? Why?
 3. For Part 3, compare the reading prescription with Example 2.9. Explain why the farsighted eye with reading glasses may blur far objects.
 4. For Part 4, find the range of distances the older eye sees sharply with its reading glasses. Explain why the range is so short, and why such a person might choose bifocals or progressive lenses.

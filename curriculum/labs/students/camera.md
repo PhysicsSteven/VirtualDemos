@@ -57,29 +57,29 @@ Never point a camera, or look through any lens, at the Sun. The simulation has n
 
 ## Procedure
 
-**Part 1: focusing the 50 mm lens.** At f/2, for objects at 0.50, 0.75, 1.00, 2.00, 5.00 and 10.0 m and far away, adjust the lens to sensor distance until the blur spot is as small as you can make it, and record.
+**Part 1: focusing the 50 mm lens.** At f/2, for objects at about 0.50, 0.75, 1.00, 2.00, 5.00 and 10.0 m and far away, adjust the lens to sensor distance until the blur spot is as small as you can make it, and record.
 
-**Part 2: focusing the phone camera.** Do the same with the phone camera for objects at 0.25, 0.50, 1.00 and 5.00 m and far away.
+**Part 2: focusing the phone camera.** Do the same with the phone camera for objects at about 0.25, 0.50, 1.00 and 5.00 m and far away.
 
-**Part 3: a fixed focus phone.** Set the phone's lens to sensor distance to 5.0000 mm, as for a distant object, and leave it there. Record the blur with the object at 0.25, 0.50, 1.00, 2.00, 5.00 and 10.0 m and far away.
+**Part 3: a fixed focus phone.** Set the phone's lens to sensor distance to 5.0000 mm, as for a distant object, and leave it there. Record the blur with the object at about 0.25, 0.50, 1.00, 2.00, 5.00 and 10.0 m and far away.
 
 **Part 4: aperture and depth of field.** With the 50 mm lens at f/2, focus on an object 2.00 m away and leave the focus there. Move the object to 1.00 m and record the blur at f/2, f/4, f/8 and f/16.
 
-**Using the virtual apparatus.** Turn Blind on before you start; it also turns Autofocus off, so focus by hand by watching the blur readout and the 1:1 crop. Send each part's readings to the worksheet, then clear them before the next part; each part gets its own copy of the Data table.
+**Using the virtual apparatus.** Turn Blind on before you start; it also turns Autofocus off, so focus by hand by watching the blur readout and the 1:1 crop. The object distance moves in small steps on a log scale, so it may not land on a round number: record the distance the demo shows. Send each part's readings to the worksheet, then clear them before the next part; each part gets its own copy of the Data table.
 
 ## Data
 
-| Reading | Camera | f-number $$N$$ | Object $$d$$ (cm) | Lens to sensor $$d_s$$ (mm) | Blur (µm) | Blur (pixels) | $$1/d$$ (1/m) | $$1/d_s$$ (1/m) | $$d_i$$ from the lens equation (mm) |
-|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | |
-| | | | | | | | | | |
-| | | | | | | | | | |
-| | | | | | | | | | |
-| | | | | | | | | | |
-| | | | | | | | | | |
-| | | | | | | | | | |
+| Reading | Camera | f-number $$N$$ | Object $$d$$ (cm) | Lens to sensor $$d_s$$ (mm) | Blur (µm) | Blur (pixels) | $$1/d$$ (1/m) | $$1/d_s$$ (1/m) | $$d_i$$ from the lens equation (mm) | $$1/N$$ |
+|---|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | | |
+| | | | | | | | | | | |
+| | | | | | | | | | | |
+| | | | | | | | | | | |
+| | | | | | | | | | | |
+| | | | | | | | | | | |
+| | | | | | | | | | | |
 
-Use $$1/d = 0$$ for an object far away.
+Use $$1/d = 0$$ for an object far away. Fill in the last column yourself for Part 4.
 
 ## Analysis
 

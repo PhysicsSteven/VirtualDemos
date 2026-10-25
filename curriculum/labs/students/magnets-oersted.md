@@ -59,15 +59,17 @@ Before each part, predict what you will see. Then measure.
 
 ## Data
 
-| Trial | Experiment | Gap (cm) | Facing poles | Force on B | Force, compared with a 1 cm gap | Current $$I$$ (A) | Height $$h$$ (cm) | $$B_E$$ (μT) | Wire field (μT) | Needle angle (°, + west) | $$\tan\theta$$ |
-|---|---|---|---|---|---|---|---|---|---|---|---|
-| | | | | | | | | | | | |
-| | | | | | | | | | | | |
-| | | | | | | | | | | | |
-| | | | | | | | | | | | |
-| | | | | | | | | | | | |
-| | | | | | | | | | | | |
-| | | | | | | | | | | | |
+| Trial | Experiment | Gap (cm) | Facing poles | Force on B | Force, compared with a 1 cm gap | Current $$I$$ (A) | Height $$h$$ (cm) | $$B_E$$ (μT) | Wire field (μT) | Needle angle (°, + west) | $$\tan\theta$$ | $$1/h$$ (1/m) |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | | | | | |
+| | | | | | | | | | | | | |
+| | | | | | | | | | | | | |
+| | | | | | | | | | | | | |
+| | | | | | | | | | | | | |
+| | | | | | | | | | | | | |
+| | | | | | | | | | | | | |
+
+Fill in the last column yourself for Part 3.
 
 ## Analysis
 

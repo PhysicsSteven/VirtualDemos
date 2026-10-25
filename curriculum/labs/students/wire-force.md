@@ -31,7 +31,7 @@ Determine an unknown magnetic field from a balance reading. Test the dependence 
 A straight current carrying wire in a uniform magnetic field experiences
 
 $$\mathbf F_{\rm wire}=I\mathbf L\times\mathbf B,\qquad
-|F_{\rm wire}|=|I|LB\sin\theta.$$
+\lvert F_{\rm wire}\rvert=\lvert I\rvert LB\sin\theta.$$
 
 Here $$\theta$$ is the angle between the positive current direction and the field. The magnet feels the opposite force. A balance supporting the magnet is zeroed at $$I = 0$$; its signed mass change gives the force inferred from the balance,
 
@@ -39,7 +39,7 @@ $$F_{\rm bal}=\Delta m\,g.$$
 
 A negative reading means the magnet has become lighter. It does not mean the field magnitude is negative. With $$L$$ and $$\theta$$ fixed, plot $$F_{\rm bal}$$ against signed current $$I$$. If its slope is $$k$$,
 
-$$B=\frac{|k|}{L\sin\theta}.$$
+$$B=\frac{\lvert k\rvert}{L\sin\theta}.$$
 
 Convert grams to kilograms and centimeters to meters. At $$\theta = 0$$, the force vanishes, so this method cannot determine $$B$$. For a loop, the magnetic moment is $$NIA\,\hat{\mathbf n}$$ and torque magnitude is $$NIAB\sin\psi$$, where $$\psi$$ is the angle between the loop normal and $$B$$. This $$\psi$$ is different from the straight wire angle $$\theta$$.
 
@@ -65,19 +65,19 @@ On a real bench, zero the balance before energizing the wire and keep the wire f
 
 ## Data
 
-| Scan | $$I$$ (A) | $$L$$ (cm) | $$\theta$$ (°) | $$\Delta m$$ (g) | $$F_{\rm bal}$$ (N) | Observation |
-|---|---|---|---|---|---|---|
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
+| Scan | $$I$$ (A) | $$L$$ (cm) | $$\theta$$ (°) | $$\Delta m$$ (g) | $$F_{\rm bal}$$ (N) | Observation | $$\sin\theta$$ |
+|---|---|---|---|---|---|---|---|
+| | | | | | | | |
+| | | | | | | | |
+| | | | | | | | |
 
-Record the same magnet identifier for all scans and whether the balance was zeroed. Keep loop sketches separate from the balance data.
+Record the same magnet identifier for all scans and whether the balance was zeroed. Keep loop sketches separate from the balance data. Fill in the last column yourself for the angle scan.
 
 ## Analysis
 
 1. Fit $$F_{\rm bal}$$ against $$I$$ at each length, including a free intercept. Calculate $$B$$ and compare the two estimates. Interpret the slope sign using the drawn field and current directions.
 2. Compare the measured slope ratio with the length ratio. Inspect residuals and discuss whether the zero current reading supports the balance zero.
-3. Fit $$F_{\rm bal}$$ against $$\sin\theta$$ at fixed $$I$$ and $$L$$. Infer $$B$$ from the slope magnitude and compare with the current scans. Explain why near zero angles make individual $$B$$ estimates unreliable.
+3. For the angle scan, fit $$F_{\rm bal}$$ against $$\sin\theta$$ at fixed $$I$$ and $$L$$. Infer $$B$$ from the slope magnitude and compare with the current scans. Explain why near zero angles make individual $$B$$ estimates unreliable.
 4. Use the loop force diagram to explain torque, equilibrium and the role of current direction. Keep wire angle and loop normal angle distinct.
 
 ## Uncertainty

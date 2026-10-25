@@ -70,24 +70,24 @@ For a real circuit, turn off the supply before rewiring. Discharge capacitors th
 
 ## Data
 
-| Run and $$R$$ (Ω) | $$t$$ (s) | $$V_C$$ (V) | $$I_L$$ (A) | $$U_C$$ (J) | $$U_L$$ (J) | Heat (J) |
-|---|---|---|---|---|---|---|
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
+| Run and $$R$$ (Ω) | $$t$$ (s) | $$V_C$$ (V) | $$I_L$$ (A) | $$U_C$$ (J) | $$U_L$$ (J) | Heat (J) | Log ratio |
+|---|---|---|---|---|---|---|---|
+| | | | | | | | |
+| | | | | | | | |
+| | | | | | | | |
 
-Use a separate copy for each run. Write $$L$$, $$C$$, initial voltage and switch time above it. For RC or RL, replace unused columns with the quantity you measure.
+Use a separate copy for each run. Write $$L$$, $$C$$, initial voltage and switch time above it. For RC or RL runs the columns a circuit does not have stay blank. For the RC and RL decays, fill in the last column yourself after the switch: $$\ln(V_C/V_{C0})$$ for the RC discharge and $$\ln(I_L/I_{L0})$$ for the RL decay, where $$V_{C0}$$ and $$I_{L0}$$ are the values at the switch. Each copy's graph fits a line to every row that has both of its columns filled.
 
 ## Analysis
 
 1. Find the LC period and infer $$L$$ from the known $$C$$. Check whether $$U_C + U_L$$ stays constant.
 2. For each oscillating RLC run, find the damped period $$T_d$$. Use two successive positive maxima to calculate
 
-   $$\begin{gathered} \delta=\ln\!\left(\frac{|V_n|}{|V_{n+1}|}\right), \\[4pt] \alpha=\frac{\delta}{T_d}, \\[4pt] R_{\rm fit}=2L\alpha. \end{gathered}$$
+   $$\begin{gathered} \delta=\ln\!\left(\frac{\lvert V_n\rvert}{\lvert V_{n+1}\rvert}\right), \\[4pt] \alpha=\frac{\delta}{T_d}, \\[4pt] R_{\rm fit}=2L\alpha. \end{gathered}$$
 
 3. Compare the measured period and damping with the predicted values. Check whether stored energy plus heat equals the initial energy.
 4. Compare runs at 0.95, 0.99, 1.00, 1.01 and 1.05 times $$R_{\rm crit}$$. Explain why a barely visible or absent sign change is not enough by itself to identify critical damping.
-5. Fit the RC and RL decays to find their time constants. Compare them with $$RC$$ and $$L/R$$.
+5. Plot the log ratio against $$t$$ for the RC and RL decays and find their time constants from the slopes. Compare them with $$RC$$ and $$L/R$$.
 
 ## Uncertainty
 

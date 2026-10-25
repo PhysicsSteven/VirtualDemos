@@ -61,7 +61,7 @@ Before each part, predict what you will see. Then measure.
 
 **Part 4: reflection from water.** Repeat Part 3 for water ($$n_2 = 1.33$$) at 0°, 40°, 53.1°, 60° and 80°.
 
-**Using the virtual apparatus.** On the bench, the reading records every element in order. Choosing a setup replaces the elements and the light in, so set the light and elements again after a setup if you changed them. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** On the bench, the reading records every element in order. Choosing a setup replaces the elements and the light in, so set the light and elements again after a setup if you changed them. A new element always goes at the end of the beam, so to put a polarizer between two others, set the axes again so the new middle one has the angle you want (the Three polarizer surprise setup starts that way). Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
 ## Data
 

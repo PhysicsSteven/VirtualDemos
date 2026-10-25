@@ -31,11 +31,11 @@ $$\mathbf F=q\mathbf v\times\mathbf B.$$
 
 For nonrelativistic motion perpendicular to a uniform field,
 
-$$r=\frac{mv}{|q|B},\qquad T=\frac{2\pi m}{|q|B}.$$
+$$r=\frac{mv}{\lvert q\rvert B},\qquad T=\frac{2\pi m}{\lvert q\rvert B}.$$
 
 In a Hall strip (§11.6), charge builds up until the electric and magnetic forces on drifting carriers balance. For one carrier type,
 
-$$|V_H|=\frac{I|B|}{n|q|t},$$
+$$\lvert V_H\rvert=\frac{I\lvert B\rvert}{n\lvert q\rvert t},$$
 
 where $$t$$ is thickness along $$B$$. The voltage sign depends on carrier sign, field direction and which edge is connected to the positive meter lead.
 

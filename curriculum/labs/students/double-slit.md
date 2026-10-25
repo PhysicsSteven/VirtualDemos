@@ -50,7 +50,7 @@ There are no hazards in the simulation. A real laser can damage the eye: never l
 
 ## Procedure
 
-Start from the Light, red laser setup and turn on the measuring cursors. In each part, after you change a setting, fit the screen range, then let at least 2000 photons land so the fringes are clear. Put cursor A on the center of one bright fringe and cursor B on the center of another several fringes away (bright fringes $$-3$$ and $$+3$$ work well, unless fringe 3 is missing) and record a reading. Count the spacings between the two fringes; you will need that number.
+Start from the Light, red laser setup and turn on the measuring cursors. In each part, after you change a setting, fit the screen range (Fit, in the Display fold), then let at least 2000 photons land so the fringes are clear. Put cursor A on the center of one bright fringe and cursor B on the center of another several fringes away (bright fringes $$-3$$ and $$+3$$ work well, unless fringe 3 is missing) and record a reading. Count the spacings between the two fringes; you will need that number.
 
 **Part 1: fringe spacing against wavelength.** Keep $$a = 0.05$$ mm, $$d = 0.25$$ mm and $$L = 1.00$$ m. Measure at $$\lambda$$ = 400, 450, 500, 550, 600, 650 and 700 nm. Send the readings to the worksheet and clear them.
 

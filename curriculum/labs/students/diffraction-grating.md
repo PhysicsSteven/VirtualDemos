@@ -58,7 +58,7 @@ Start from the Red laser through 600 lines/mm setup, switch to Measure and set $
 
 **Part 3: the hydrogen spectrum.** Pick the Hydrogen lamp spectrum setup, switch to Measure and set $$L = 0.50$$ m. Measure the first order position of each of the four visible lines (red, cyan, blue and violet). Send the readings.
 
-**Part 4: resolving power.** Back in Explore, choose the sodium lamp. The two D lines land less than half a millimeter apart, too close to see on the wall, but the note under the table of orders gives the resolving power for the lit slits and the smallest wavelength difference it separates. Change the number of lit slits and find the fewest that still separate the D lines in first order.
+**Part 4: resolving power.** Back in Explore, choose the sodium lamp and pick its 589.0 nm line with the wavelength buttons above the table of orders. The two D lines land less than half a millimeter apart, too close to see on the wall, but the note under the table of orders gives the resolving power for the lit slits and the smallest wavelength difference it separates. Change the number of lit slits and find the fewest that still separate the D lines in first order.
 
 ## Data
 
