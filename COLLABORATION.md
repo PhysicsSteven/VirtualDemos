@@ -2397,3 +2397,17 @@ Steve asked for a student run through of Astro. Scope: the 8 worksheets with key
 - **Left for Steve:** hr-diagram's Massive star hint says "a thousand times shorter" where the key's figure is 870 (fine as a round number).
 
 **For GPT to verify:** the white dwarf log columns and slope, the rotation curves 4.4 and 4.9, the Lagrange comet ranges against the demo.
+
+## Claude (Fable), 2026-10-25: Physics audit of the model code, Astronomy module
+
+Steve asked (2026-10-25 05:10) for the same audit of the Astronomy module. Scope: the eight demos that belong only to Astro (seasons, moon-phases, lagrange-points, exoplanets, hr-diagram, white-dwarf-cooling, rotation-curves, black-holes), read against the sources they cite; the six shared demos (kepler-orbits, gravity-near-earth, tides, gps-clocks, distance-ladder, early-universe) were covered by the OpenStax audit above, and star-slice is data, not a model. Every check was run in Node against the live code: Lagrange points as zeros of the gradient and a Jacobi drift of 2e-10 over eight orbits; the Freeman disk Bessel functions against tabulated values and the disk peak at 2.15 R_d; the white dwarf structure against Eggleton's fit (2 to 3% larger, as a zero temperature star without Coulomb corrections should be) and a Chandrasekhar mass of 1.454 M☉; Mestel's analytic cooling time against the integrated track to four figures; the Gaia zero points; equinox and solstice dates from the seasons orbit (Mar 20, Jun 21, Sep 22, Dec 21); the moon eclipse limits; every preset number quoted in the hints (JWST L1/L2 at 1.5 million km, Trojan libration 150 yr, Sgr A* and M87* shadows, Earth transit 84 ppm and 9 cm/s, TRAPPIST-1e 0.5%, NGC 3198 and Eilers 2019 curves). Per demo verdicts are in the audit artifact linked from the project thread.
+
+**Result:** 8 clean, no model error, no handout value changes, no key rebuilt. Constants are CODATA 2022 and IAU where they appear.
+
+**Fixed (low):** `hr-diagram` "More about this" now names its initial final mass relation (Cummings et al. 2018, their 0.83 to 2.85 M☉ fit, used for every mass).
+
+**Looked at and left:** `seasons` runs the mean anomaly on the tropical year (365.2422 d) rather than the anomalistic year (365.2596 d), a 0.005% rate difference that moves nothing a student reads in one year; `moon-phases` uses β = i sin(u) for the Moon's ecliptic latitude (exact: sin β = sin i sin u), 0.1% at i = 5.145°, well inside the eclipse limits' own rounding; `exoplanets` reports the geometric depth k² while the limb darkened dip is deeper (the handout says so); `white-dwarf-cooling` Chandrasekhar mass 1.454 against 1.456 M☉ because the central x_c grid stops at 60 (nothing on the page reaches it).
+
+**For Steve:** the two white dwarf demos use different initial final mass relations (hr-diagram: Cummings et al. 2018 low mass fit, 0.08 M_i + 0.49; white-dwarf-cooling: Kalirai et al. 2008, 0.109 M_i + 0.394). At 1 M☉ they give 0.57 and 0.50, at 5 M☉ 0.89 and 0.94. Both are published; recommendation: leave them, now that each page cites its own.
+
+**For GPT to verify:** the hr-diagram citation sentence; nothing else changed.
