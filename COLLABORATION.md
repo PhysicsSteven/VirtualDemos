@@ -2072,3 +2072,10 @@ agree for every package. Changed: Doppler handout → Doppler Effect and Shock W
 → Tension in a Hanging Chain; Collisions label → Momentum and Collisions; Impulse label and handout → Impulse and Momentum; Kepler handout
 → Kepler's Third Law. The matching worksheet keys (doppler, resonators, catenary, impulse, kepler-orbits) were refilled so their titles and
 PDFs match; no numbers changed.
+
+## Claude, 2026-10-25: site search
+
+Steve asked for search (2026-10-25 01:34). The home page has a "Find a demo" box above the course tiles, and every course page and Misc has the same box at the left of its sticky section bar. Typing filters all 119 demos plus the one standalone reading (Electricity Sources; the other standalone worksheets are already linked from demo cards) by title, description, tags, worksheet label, course name or OpenStax section. A number is read as a section: `3.2` or `1:3.2` finds that section, `13` or `3:6` a whole chapter. Words of one or two letters ("g", "pn") match whole words only. Each result shows the demo, its courses, its worksheets and its first sections; arrow keys and Enter open a result, `/` focuses the box, Escape clears it.
+
+- `tools/courses.py` writes the index to `search.js` (from catalog.json and textbook-map.json, about 80 kB) and adds the box and its styles to the pages; `--check` covers `search.js` too. No new library.
+- Checked in Chromium at 1280 px light and dark, 390 px and 360 px phones: no page errors, no sideways scroll.
