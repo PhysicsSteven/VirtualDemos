@@ -58,6 +58,8 @@ The site wide visual pass (from 2026-10-24) links the same two files into every 
 
 Phase two helpers (presets, step buttons, readings, Export to worksheet) are added when a demo is being edited anyway, each behind the same checks. Pendulum uses `VD.setupCard`; other demos with a Set up card switch to it when they are next edited.
 
+`theme.js` (`window.VDTheme`, 2026-10-25) is the site theme switch: Light, Dark or Browser default, saved in `localStorage` as `vd-theme`. Every page links it first in `<head>` (`python3 tools/theme.py` adds it; `tools/courses.py`, `tools/notes.py`, the star slice template, `template.html` and the handouts' `_includes/head-custom.html` carry it), so `data-theme` is set before the page paints. It answers `matchMedia('(prefers-color-scheme: dark)')` for the chosen theme and runs that query's `change` listeners on a switch, so a demo that redraws on a system theme change (`retheme`, `tokens()`) redraws on a switch with no change of its own; `<picture>` thumbnails follow too, and a `vd-theme` event fires on window. It puts the switch in the demo header beside Reset all and Projector, at the top right of the home and course pages, beside Print on notes, and at the top of a handout; an empty `[data-vd-theme]` element places it elsewhere. A new canvas or 3D view reads its colors through tokens or `VD3.dark()` and redraws on that `change` event, as before.
+
 ## Rules
 
 1. Moving a demo changes nothing a student sees or does. `tools/vdcheck.cjs` must pass for it: CORE unchanged, the same controls, the same computed style on every element, the same colour tokens, the same Export to worksheet data, and the same screenshots.

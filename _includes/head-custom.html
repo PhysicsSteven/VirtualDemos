@@ -1,4 +1,33 @@
 <!-- Loaded by the GitHub Pages theme on the Markdown pages (student handouts) so their LaTeX renders. kramdown turns $$...$$ into \( \) and \[ \]; single $...$ is handled here too. -->
+<!-- Site theme switch (demos/lib/theme.js): Light, Dark or Browser default, the same choice as on the demos. The Primer theme is light only, so the dark look is set here with --hd- colors, on screen only: printed handouts and worksheets stay as they are. worksheet.js uses the same colors. -->
+<script src="{{ '/demos/lib/theme.js' | relative_url }}"></script>
+<style>
+@media screen and (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --hd-bg: #0d1218; --hd-ink: #e3e8ef; --hd-muted: #96a2b2; --hd-line: #283241; --hd-line2: #3d495b; --hd-surface: #151c25; --hd-row: #111821; --hd-field: #10161e; --hd-hover: #1d2631; --hd-link: #69a0ff; --hd-accent: #69a0ff; --hd-code: rgb(255 255 255 / 0.08); --hd-warn: #e2b350; --hd-hand: #102538; --hd-hand-line: #2f5f8f; --hd-left: #2a2410; --hd-left-line: #8a6d1f; --hd-grid: #1f2935; --hd-dot: #ff7660; color-scheme: dark; }
+}
+@media screen {
+  :root[data-theme="dark"] { --hd-bg: #0d1218; --hd-ink: #e3e8ef; --hd-muted: #96a2b2; --hd-line: #283241; --hd-line2: #3d495b; --hd-surface: #151c25; --hd-row: #111821; --hd-field: #10161e; --hd-hover: #1d2631; --hd-link: #69a0ff; --hd-accent: #69a0ff; --hd-code: rgb(255 255 255 / 0.08); --hd-warn: #e2b350; --hd-hand: #102538; --hd-hand-line: #2f5f8f; --hd-left: #2a2410; --hd-left-line: #8a6d1f; --hd-grid: #1f2935; --hd-dot: #ff7660; color-scheme: dark; }
+  body { color: var(--hd-ink, #24292e); background-color: var(--hd-bg, #fff); }
+  a { color: var(--hd-link, #0366d6); }
+  .markdown-body h1, .markdown-body h2 { border-bottom-color: var(--hd-line, #eaecef); }
+  .markdown-body h6, .markdown-body blockquote { color: var(--hd-muted, #6a737d); }
+  .markdown-body blockquote { border-left-color: var(--hd-line2, #dfe2e5); }
+  .markdown-body hr { background-color: var(--hd-line, #e1e4e8); }
+  .markdown-body table th, .markdown-body table td { border-color: var(--hd-line2, #dfe2e5); }
+  .markdown-body table tr { background-color: var(--hd-bg, #fff); border-top-color: var(--hd-line2, #c6cbd1); }
+  .markdown-body table tr:nth-child(2n) { background-color: var(--hd-row, #f6f8fa); }
+  .markdown-body code, .markdown-body tt { background-color: var(--hd-code, rgba(27, 31, 35, 0.05)); }
+  .markdown-body pre, .markdown-body .highlight pre { background-color: var(--hd-surface, #f6f8fa); }
+  .markdown-body kbd { color: var(--hd-ink, #444d56); background-color: var(--hd-surface, #fafbfc); border-color: var(--hd-line2, #c6cbd1); }
+  .ws-plot svg rect[fill="#fff"] { fill: var(--hd-field, #fff); stroke: var(--hd-line2, #8c959f); }
+  .ws-plot svg line[stroke="#eaeef2"] { stroke: var(--hd-grid, #eaeef2); }
+  .ws-plot svg text[fill="#57606a"] { fill: var(--hd-muted, #57606a); }
+  .ws-plot svg text[fill="#1f2328"] { fill: var(--hd-ink, #1f2328); }
+  .ws-plot svg line[stroke="#1f6feb"], .ws-plot svg polyline[stroke="#1f6feb"] { stroke: var(--hd-accent, #1f6feb); }
+  .ws-plot svg circle[fill="#cf222e"] { fill: var(--hd-dot, #cf222e); } .ws-plot svg circle[fill="#cf222e"][stroke] { stroke: var(--hd-field, #fff); }
+  .vd-theme { --muted: var(--hd-muted, #57606a); --surface: var(--hd-field, #fff); --line: var(--hd-line2, #d0d7de); --accent: var(--hd-accent, #0969da); }
+}
+</style>
 <!-- Interactive worksheets: answer boxes, editable data tables, saving and export on the student worksheets it lists (curriculum/labs/worksheet.js). Before MathJax, so it reads the page before any math is typeset. -->
 <script defer src="{{ '/curriculum/labs/worksheet.js' | relative_url }}"></script>
 <!-- Printing: black on white, no buttons, the demo link spelled out (curriculum/labs/print.css). -->

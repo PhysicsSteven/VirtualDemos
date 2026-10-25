@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-theme', date: '2026-10-25', title: 'Light or dark',
+    text: 'Every page has a theme switch at the top: Light, Dark, or Browser default, which follows your device. The choice carries across the whole site, handouts and worksheets included; printed worksheets stay black on white.' },
   { id: '2026-10-25-course-nav', date: '2026-10-25', title: 'Step through a course',
     text: 'Every demo now shows its course and unit above the title, with links to the previous and next demo in that course, so you can work through a unit in order.' },
   { id: '2026-10-25-quadratic-fit', date: '2026-10-25', title: 'Quadratic fits on worksheet graphs',

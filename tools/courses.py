@@ -324,6 +324,7 @@ def page_shell(title, sub, lede, facts, jump, body, how):
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="demos/lib/theme.js"></script>
 <title>{esc(title)} · Virtual Physics Demos</title>
 <meta name="description" content="{esc(title)}: {esc(lede)}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -709,6 +710,7 @@ def notfound_page(m):
 <meta charset="utf-8">
 <script>(function () {{ var m = location.pathname.match(/^(.*?\\/VirtualDemos\\/)/i); document.write('<base href="' + (m ? m[1] : '/') + '">'); }})();</script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="demos/lib/theme.js"></script>
 <meta name="robots" content="noindex">
 <title>Page not found · Virtual Physics Demos</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">

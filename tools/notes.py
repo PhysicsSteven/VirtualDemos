@@ -61,6 +61,9 @@ CSS = r"""
 @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
   --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
   --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
 * { box-sizing: border-box; }
 body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
 main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
@@ -107,13 +110,17 @@ FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n'
          '&family=JetBrains+Mono:wght@400;600&display=swap">')
 
 
+# the site theme switch (demos/lib/theme.js); not on answer keys, which live outside the site
+THEME = '<script src="../demos/lib/theme.js"></script>\n'
+
+
 def page(title, body, robots=""):
     return f"""<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-{robots}<title>{html.escape(title)}</title>
+{"" if robots else THEME}{robots}<title>{html.escape(title)}</title>
 {FONTS}
 {MATHJAX if robots else ""}<style>{CSS}</style>
 </head>

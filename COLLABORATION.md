@@ -2662,3 +2662,15 @@ Steve approved three of the coordinator's suggestions for the demos (13:48). All
 Checks: node suites pass; browser suites pass (test_browser needs `BROWSER=chromium` here, as before); `vdcheck --only after` on all 119: no page errors or sideways scroll apart from DNA's known missing three.js and one displacement-current ellipse error at 400 px dark that did not repeat on a rerun (and does not appear on main either). Header checked at 1280, 400 and 360 px, light, dark and Projector.
 
 **For GPT to verify:** nothing numeric changed; the wording of the Copy link note and button titles.
+
+## Claude, 2026-10-25: Light | Dark | Browser default theme switch
+
+Steve asked for a light, dark and browser default button. Every page already had dark tokens (the `@media (prefers-color-scheme: dark)` block guarded by `:not([data-theme="light"])` and a `[data-theme="dark"]` block); nothing set `data-theme` until now.
+
+- **`demos/lib/theme.js`** (`window.VDTheme`), linked first in `<head>` of every page (`python3 tools/theme.py`, with `--check`; `tools/courses.py`, `tools/notes.py`, the star slice template, `demos/lib/template.html` and `_includes/head-custom.html` write it into what they generate). It reads `localStorage` `vd-theme` and sets `data-theme` before the page paints, so there is no flash. It answers `matchMedia('(prefers-color-scheme: dark)')` for the chosen theme and runs that query's `change` listeners on a switch, so every demo that already redrew its canvases or 3D scene on a system theme change redraws on a switch with no edit to the demo. `<picture>` thumbnails on the course pages follow the choice. A `vd-theme` event fires on window.
+- **Where the switch is:** a small select (Browser default, Light, Dark) in each demo's header before Reset all and Projector, at the top right of the home, course and 404 pages, beside Print on the teaching notes (top right of the notes index), and at the top right of every handout. One choice for the whole site, and other open tabs follow.
+- **Handouts and worksheets:** the Primer theme is light only, so `_includes/head-custom.html` gives them a dark look with `--hd-` colors, on screen only; `worksheet.js` colors now read `var(--hd-…, original)` and the graph's SVG colors are restyled the same way. Printing is unchanged (light), so key PDFs are unaffected. With Browser default on a dark device the handouts are now dark, like the demos.
+- **Notes:** `tools/notes.py` gained the `[data-theme="dark"]` block (screen only, so print stays light). Answer keys built by notes.py do not get the script.
+- **Checked:** every demo opened in light, switched to dark, and compared with a fresh dark load (mean brightness of each canvas and of the page), then the reverse; no page errors. Light and dark screenshots of the home, course, demo (desktop and 400 px), notes, 404 and a worksheet with a graph. Node suites pass.
+
+**For GPT to verify:** nothing numeric changed. Worth a look: a handout in dark on a phone, and that printing from dark still gives black on white.
