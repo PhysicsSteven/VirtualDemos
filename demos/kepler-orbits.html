@@ -191,7 +191,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     </div>
 
     <aside class="rail">
-      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/kepler-orbits.html" target="kepler-orbits-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <!-- vd-handout --><details class="handout-menu"><summary><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handouts and worksheets</summary><ul><li><a href="../curriculum/labs/students/kepler-orbits.html" target="kepler-orbits-worksheet">Worksheet 1: Kepler's Third Law</a></li><li><a href="../curriculum/labs/students/intro-kepler.html" target="intro-kepler-worksheet">Worksheet 2: Kepler's Laws from Mercury to Pluto (Astro 2203)</a></li></ul></details><!-- /vd-handout -->
       <section>
         <h2>Orbits</h2>
         <div class="chips" id="presets">
@@ -199,6 +199,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-p="mars" aria-pressed="false">Mars</button>
           <button type="button" data-p="mercury" aria-pressed="true">Mercury</button>
           <button type="button" data-p="halley" aria-pressed="false">Halley's comet</button>
+          <button type="button" data-p="vesta" aria-pressed="false">Vesta</button>
+          <button type="button" data-p="ceres" aria-pressed="false">Ceres</button>
+          <button type="button" data-p="apophis" aria-pressed="false">Apophis</button>
+          <button type="button" data-p="pluto" aria-pressed="false">Pluto</button>
           <button type="button" data-p="circle" aria-pressed="false">Circular orbit</button>
           <button type="button" data-p="escape" aria-pressed="false">Escape</button>
         </div>
@@ -634,6 +638,16 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
                hint: 'The most eccentric planet. Watch the wedges: thin and long near aphelion, short and wide near perihelion, yet all equal in area.' },
     halley:  { a: 17.8, e: 0.967, at: 'aph', spd: 9,
                hint: 'Launched at aphelion, 35 AU out, at under 1 km/s. It spends most of its 75 years far away and whips around the Sun in a few months.' },
+    /* asteroids and Pluto (Astro 2203, 2026-10-25): a and e from the JPL Small Body Database, osculating elements at epoch
+       JD 2461200.5 (Pluto: JD 2457588.5), rounded to 4 figures; launched at perihelion */
+    vesta:   { a: 2.3614, e: 0.09020, at: 'peri', spd: 0.6,
+               hint: 'The brightest asteroid, a leftover protoplanet in the inner asteroid belt between Mars and Jupiter. A nearly circular orbit.' },
+    ceres:   { a: 2.7656, e: 0.07969, at: 'peri', spd: 0.75,
+               hint: 'The largest body in the asteroid belt, a dwarf planet about 940 km across, found in 1801.' },
+    apophis: { a: 0.9224, e: 0.1911, at: 'peri', spd: 0.15,
+               hint: 'A near Earth asteroid about 340 m across. Its orbit crosses Earth\u2019s: it comes inside 1 AU at perihelion and goes outside it at aphelion.' },
+    pluto:   { a: 39.59, e: 0.2518, at: 'peri', spd: 30,
+               hint: 'A dwarf planet of the Kuiper belt. Near perihelion it comes closer to the Sun than Neptune (30 AU), though the two never meet.' },
     circle:  { r: 1.0, f: 1, spd: 0.15,
                hint: 'Launch speed equals the circular speed, so the arrow tip sits on the gold circle and the two foci merge at the star. Try 0.9 or 1.1 times it.' },
     escape:  { r: 1.0, f: 1.2 * Math.SQRT2, spd: 0.2,
@@ -1422,11 +1436,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     lines.filter((l) => l[0] === '#').forEach((l) => { const c = cells(l.replace(/^#\s*/, '')); if (c.length > 1) meta[c[0]] = c[1]; });
     const hand = { v: 1, demo: 'kepler-orbits', series: wsSeries, sent: new Date().toISOString(), columns: cells(data[0]), rows: data.slice(1).map(cells), meta,
       note: 'Simulated data from the Kepler Orbits demo.', csv: txt, csvName: 'kepler-orbits-readings.csv' };
-    try { localStorage.setItem('vd-handoff:kepler-orbits', JSON.stringify(hand)); }
+    const slug = VD.ws('kepler-orbits');   /* ?ws= in the address: a course worksheet (demos/lib/vd.js) */
+    try { localStorage.setItem('vd-handoff:' + slug, JSON.stringify(hand)); }
     catch (_) { fallback(); capStat('This browser blocks storage, so the readings were saved as a CSV file instead.'); return; }
     const n = hand.rows.length;
     capStat(`${n} reading${n === 1 ? '' : 's'} sent to the worksheet. `);
-    const a = document.createElement('a'); a.href = '../curriculum/labs/students/kepler-orbits.html'; a.target = 'kepler-orbits-worksheet'; a.textContent = 'Open the worksheet';
+    const a = document.createElement('a'); a.href = '../curriculum/labs/students/' + slug + '.html'; a.target = slug + '-worksheet'; a.textContent = 'Open the worksheet';
     a.style.color = 'var(--accent)'; $('capStat').appendChild(a);
   }
   $('expCsv').addEventListener('click', () => { if (!rows.length) { capStat('No readings to export yet.'); return; } const txt = csvText(); toWorksheet(txt, () => download('kepler-orbits-readings.csv', txt)); });

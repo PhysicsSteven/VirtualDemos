@@ -15,7 +15,8 @@ const deg = Math.PI / 180;
 const GM = (M) => K.TAU * K.TAU * M;                     // the page's mu(): 4π² M in AU³/yr²
 // the presets as the page defines them (demos/kepler-orbits.html PRESETS)
 const PRE = { earth: { a: 1.0, e: 0.0167, at: 'peri' }, mars: { a: 1.5237, e: 0.0934, at: 'peri' }, mercury: { a: 0.3871, e: 0.2056, at: 'peri' },
-  halley: { a: 17.8, e: 0.967, at: 'aph' }, circular: { r: 1.0, f: 1 }, escape: { r: 1.0, f: 1.2 * Math.SQRT2 } };
+  halley: { a: 17.8, e: 0.967, at: 'aph' }, vesta: { a: 2.3614, e: 0.09020, at: 'peri' }, ceres: { a: 2.7656, e: 0.07969, at: 'peri' },
+  apophis: { a: 0.9224, e: 0.1911, at: 'peri' }, pluto: { a: 39.59, e: 0.2518, at: 'peri' }, circular: { r: 1.0, f: 1 }, escape: { r: 1.0, f: 1.2 * Math.SQRT2 } };
 const M2 = Math.pow(10, 0.3);                            // the mass slider shown as 2.00 M☉ (log10 M in steps of 0.005)
 const el = (name, M = 1) => K.orbitElements(K.launchState(PRE[name], GM(M)), GM(M));
 const run = (st, M, T, nW = 12) => { const m = GM(M), b = K.newBody(st, 0, m); K.startWedgesOn(b, m, nW); K.advanceBody(b, T, 2e8, m, nW); return b; };
@@ -141,6 +142,18 @@ group('worksheet key rows: a and T to four figures for Mercury, Earth, Mars, Hal
   /* the key's 0.50125 ± 0.00004 and M = 1.9950 are the fit with an intercept; through the origin the CORE gives 0.50123 ± 0.00002 */
   const g = K.fitOrigin(x2, y2); fixed(g.b, 5, '0.50123'); fixed(g.sb, 5, '0.00002'); fixed(1 / g.b, 3, '1.995'); fixed(f.b / g.b, 3, '1.995');
   const G2 = fit(x2, y2); fixed(G2.a, 5, '-0.00006'); fixed(G2.sa, 5, '0.00008'); fixed(G2.b, 5, '0.50125'); fixed(G2.sb, 5, '0.00004'); fixed(1 / G2.b, 4, '1.9950');
+});
+
+group('Astro 2203 presets (JPL SBDB elements to 4 figures): periods 3.629, 4.599, 0.8859, 249.1 yr match JPL; Apophis crosses 1 AU; Pluto inside 30.07 AU', () => {
+  /* JPL periods 1325.389, 1679.853, 323.555 and 90981.7 d over 365.25 d; perihelia 2.1484, 2.5452, 0.7461, 29.619 AU */
+  const jpl = { vesta: [1325.389, 2.1483619, 2.5743700], ceres: [1679.853, 2.5451594, 2.9859458], apophis: [323.555, 0.7460510, 1.0986675], pluto: [90981.7, 29.618713, 49.558546] };
+  for (const p of Object.keys(jpl)) {
+    const e = el(p), [Pd, q, Q] = jpl[p]; near(e.a, PRE[p].a, 1e-12, p); near(e.e, PRE[p].e, 1e-12, p); assert(e.bound, p);
+    near(e.P * e.P / e.a ** 3, 1, 1e-12, `P² = a³ for ${p}`);
+    near(e.P / (Pd / 365.25), 1, 1e-4, `period of ${p}`); near(e.q / q, 1, 3e-4, `perihelion of ${p}`); near(e.Q / Q, 1, 3e-4, `aphelion of ${p}`);
+  }
+  sig(el('vesta').P, 4, '3.629'); sig(el('ceres').P, 4, '4.599'); sig(el('apophis').P, 4, '0.8859'); sig(el('pluto').P, 4, '249.1');
+  assert(el('apophis').q < 1 && el('apophis').Q > 1, 'Apophis crosses Earth\u2019s orbit'); assert(el('pluto').q < 30.07, 'Pluto perihelion inside Neptune\u2019s orbit');
 });
 
 group('CSV and number helpers used by Capture reading', () => {

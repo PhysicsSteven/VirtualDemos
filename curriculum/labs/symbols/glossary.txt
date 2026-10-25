@@ -1377,6 +1377,13 @@ v_p | Speed at perihelion | AU/yr
 r_a | Distance at aphelion | AU
 v_a | Speed at aphelion | AU/yr
 
+== intro-kepler ==
+a | Semi major axis, the average of the perihelion and aphelion distances | AU
+e | Eccentricity of the orbit, 0 for a circle
+T | Period of the orbit | yr
+r_p | Perihelion distance, closest to the Sun | AU
+r_a | Aphelion distance, farthest from the Sun | AU
+
 == kundts-tube ==
 v_rod | Speed of longitudinal waves in the rod | m/s
 E | Young's modulus of the rod | Pa

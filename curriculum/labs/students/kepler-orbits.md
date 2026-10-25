@@ -8,7 +8,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§13.1 and 13.3–13.5. Acces
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Earth; Mars; Mercury; Halley's comet; Circular orbit; Escape.
+**Setups in the demo:** Earth; Mars; Mercury; Halley's comet; Vesta; Ceres; Apophis; Pluto; Circular orbit; Escape.
 
 **Using the demo.**
 

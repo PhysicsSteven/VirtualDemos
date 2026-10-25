@@ -3639,3 +3639,17 @@ x = 350 mm, steady after 2 s; a held bar gives the same, so it is the beaches, n
 appear. The demo gains `window.__rt.px` (tank mm to screen) for the script. vdcheck `--only after`: 0 problems.
 
 **For GPT:** please check the video's captions and its reading against the figures above.
+
+## 2026-10-25 · Claude · Astro 2203 Topic 3: Kepler presets for asteroids and Pluto, and the intro Kepler worksheet
+
+- **Kepler's Laws presets** Vesta, Ceres, Apophis and Pluto (`demos/kepler-orbits.html` PRESETS): a and e from the JPL Small
+  Body Database osculating elements (epoch JD 2461200.5; Pluto JD 2457588.5), to 4 figures, launched at perihelion. New test
+  group in `test_kepler_orbits_figures.cjs`: P² = a³, periods within 1e-4 of JPL's (3.629, 4.599, 0.8859, 249.1 yr), apsides
+  within 3e-4, Apophis crossing 1 AU, Pluto's perihelion inside Neptune's 30.07 AU. vdcheck kepler-orbits 0 problems. The
+  Physics I handout's setup list names the new presets. Export to worksheet now uses `VD.ws('kepler-orbits')`.
+- **`intro-kepler`, "Kepler's Laws from Mercury to Pluto"** (Astro 2203): eight objects measured with Blind on, ruler on
+  perihelion and aphelion, timer over one orbit; students compute a, e, a³ and T² and graph T² against a³ (free intercept).
+  Questions on Apophis in 2029, Mars and Kepler, a transfer orbit to Mars, and why T² = a³ fails for Jupiter's moons. Glossary
+  section added (symbols `--check`, `--missing`, `--meanings` all clean). Key: TeacherKeys `worksheet-keys/astro-2203/intro-kepler-*`
+  (`tools/capture/intro-kepler.cjs`: ruler points put exactly on the demo's apsides and the timer set to the demo's measured
+  period, then the demo's own Capture and Export; the key says these are ideal readings).
