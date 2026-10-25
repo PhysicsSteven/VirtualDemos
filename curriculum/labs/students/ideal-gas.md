@@ -8,15 +8,16 @@ Textbook: OpenStax *University Physics*, Vol. 2, §§2.1, 2.2 and 2.4. Access fo
 <details class="about" markdown="1">
 <summary>About the demo</summary>
 
-**Setups in the demo:** Relax to equilibrium; Hot vs cold; Compress; Dilute gas; Near absolute zero.
+**Setups in the demo:** Relax to equilibrium; Hot vs cold; Compress; Dilute gas; Near absolute zero; Cold walls; Hot wall, cold wall.
 
 **Using the demo.**
 
 - The box holds argon atoms (mass $$6.63\times10^{-26}$$ kg) moving in two dimensions. It is 30 nm high, and its right wall is a piston you can drag to make it from 15 to 50 nm wide. You choose the number of atoms, from 20 to 400, and the temperature, from 0.01 K to 1000 K.
-- The atoms are hard disks 0.5 nm across that bounce off each other and the walls without losing energy. Their size makes the pressure run a few percent above the ideal value, more when the box is crowded.
+- The atoms are hard disks 0.5 nm across that bounce off each other and the walls without losing energy (the walls set to Insulated, as for this whole worksheet). Their size makes the pressure run a few percent above the ideal value, more when the box is crowded.
 - In two dimensions pressure is force per unit length of wall, in N/m (the readout picks nN/m, µN/m or mN/m; the recorded column is always in mN/m), and the ideal gas law reads $$PA = NkT$$, with $$A$$ the box's area.
 - The temperature is worked out from the atoms' kinetic energy, $$\langle \tfrac{1}{2}mv^2\rangle = kT$$ in two dimensions. The pressure is the momentum the atoms deliver to the walls per unit length per unit time, averaged over about a second on screen, so wait a few seconds after any change before recording.
-- Moving the temperature slider rescales every speed at once. One second on screen is 80 ps of the atoms' time.
+- Moving the temperature slider rescales every speed at once. One second on screen is 80 ps of the atoms' time at Fixed rate. Slow motion follows T speeds the playback up for a cold gas (and slows it for a hot one), and the clock says by how much, so a cold gas only looks lively.
+- Each wall can instead be held at a temperature of its own. An atom that hits such a wall trades energy with it (how often is set by Energy exchange per hit) and leaves as if from a gas at the wall's temperature, so the gas warms or cools toward it, and walls at different temperatures keep heat flowing through the gas. Q is the heat the walls have given the gas.
 - Record reading stores the time, the number of atoms, the temperature, the box's area and width, the measured pressure, and the mean and rms speeds. Export to worksheet sends the readings to the Data table below; Clear starts a new series, which goes into a new copy of the table.
 
 </details>

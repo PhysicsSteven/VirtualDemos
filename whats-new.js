@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-gas-walls', date: '2026-10-25', title: 'Walls with a temperature',
+    text: 'In Gas in a Box each wall can now be insulated or held at a temperature of its own, so the gas cools or warms toward the walls, or carries heat from a hot wall to a cold one. Try the Cold walls and Hot wall, cold wall setups.', link: { href: 'demos/ideal-gas.html', text: 'Open Gas in a Box' } },
   { id: '2026-10-25-how-this-works', date: '2026-10-25', title: 'How this works videos',
     text: 'Pendulums has a How this works button under the handout button: a 22 second video of one sample reading, with arrows and zooms on each step. More demos will follow.', link: { href: 'demos/pendulum.html', text: 'Open Pendulums' } },
   { id: '2026-10-25-dark-default', date: '2026-10-25', title: 'Dark by default',

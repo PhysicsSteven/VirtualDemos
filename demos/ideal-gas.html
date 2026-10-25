@@ -83,6 +83,10 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   .pane.hist { flex: none; height: 230px; }
 }
 .clock.two { text-align: right; }
+#wallCtl:not([hidden]) { display: grid; gap: 12px; margin-top: 12px; }
+#wallPick { grid-template-columns: repeat(5, 1fr); margin-bottom: 8px; }
+#wallPick button { padding-left: 2px; padding-right: 2px; font-size: 0.8rem; }
+#wallRead:not([hidden]) { margin-top: 12px; }
 /* two gases: a card for each gas beside its half of the box (under the picture when there is no room), hole width in the strip */
 @media (min-width: 821px) { .stage.two .pane.box { flex: 1.9 1 0; } }
 .gascards { display: flex; gap: 10px; padding: 10px 12px; border-top: 1px solid var(--line); background: var(--canvas); }
@@ -183,6 +187,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" data-p="compress" aria-pressed="false">Compress</button>
           <button type="button" data-p="dilute" aria-pressed="false">Dilute gas</button>
           <button type="button" data-p="cold" aria-pressed="false">Near absolute zero</button>
+          <button type="button" data-p="walls" aria-pressed="false">Cold walls</button>
+          <button type="button" data-p="flow" aria-pressed="false">Hot wall, cold wall</button>
         </div>
         <p class="chips-head">Two gases and a divider</p>
         <div class="chips" id="presets2">
@@ -271,6 +277,36 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
         </details>
       </section>
 
+      <section id="secWalls">
+        <h2>Walls</h2>
+        <div class="seg full" role="group" aria-label="Which wall to set" id="wallPick">
+          <button type="button" data-k="all" aria-pressed="true">All</button>
+          <button type="button" data-k="0" aria-pressed="false">Left</button>
+          <button type="button" data-k="1" aria-pressed="false">Piston</button>
+          <button type="button" data-k="3" aria-pressed="false">Top</button>
+          <button type="button" data-k="2" aria-pressed="false">Bottom</button>
+        </div>
+        <div class="seg full" role="group" aria-label="Wall kind" id="wallSeg">
+          <button type="button" data-w="ins" aria-pressed="true">Insulated</button>
+          <button type="button" data-w="held" aria-pressed="false">Held at a temperature</button>
+        </div>
+        <div id="wallCtl" hidden>
+          <div>
+            <div class="slider-head"><label for="wtIn">Wall temperature</label><output id="wtOut" class="mono" for="wtIn">100 K</output></div>
+            <input type="range" id="wtIn" min="0" max="1000" step="1" value="800">
+            <div class="slider-scale mono"><span>0.01 K</span><span>1 K</span><span>100 K</span><span>1000 K</span></div>
+          </div>
+          <div>
+            <div class="slider-head"><label for="accIn">Energy exchange per hit</label><output id="accOut" class="mono" for="accIn">1.00</output></div>
+            <input type="range" id="accIn" min="0.05" max="1" step="0.05" value="1">
+          </div>
+        </div>
+        <dl class="readout" id="wallRead" hidden><div><dt>Heat into the gas Q</dt><dd id="rQ">—</dd></div><div><dt id="rQwT">Q from this wall</dt><dd id="rQw">—</dd></div><div><dt>T left · right half</dt><dd id="rTh">—</dd></div></dl>
+        <details class="more"><summary>More about this</summary>
+          <p class="hint">Insulated walls are perfect mirrors: every bounce is elastic, so the gas keeps its energy and T only changes when the piston moves. Pick All to set every wall at once, or one wall to set it alone. Walls held at a temperature are in contact with a large body at that temperature. A molecule that hits one trades energy with it, with the chance set by Energy exchange per hit (the accommodation coefficient), and leaves as if it came from a gas at the wall's temperature; otherwise it bounces like a mirror. So a hotter gas gives heat to the walls and a colder one takes heat from them until T reaches the wall temperature, faster when more hits exchange energy. With walls at different temperatures the gas never settles to one T: heat flows steadily through it from the warm walls to the cold ones, and the half of the box near the warm wall stays warmer. Q adds up the heat the walls give the gas since the start (negative when the gas gives heat away); 1 zJ is 10⁻²¹ J. The walls glow blue when they are colder than the gas and orange when warmer. Real surfaces exchange anywhere from a small fraction to nearly all of the energy, depending on the gas and how clean and rough the surface is.</p>
+        </details>
+      </section>
+
       <section>
         <details class="fold"><summary>Display</summary><div class="foldbody">
         <div class="toggles">
@@ -325,7 +361,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
      inverse proportion to mass (so the center of mass stays put). The right wall is a piston that moves at most pistonMax.
      For two gases, a thin divider stands at x = 25 nm. Closed, it reflects every molecule; with a hole, a molecule passes only
      where it fits through the opening (|y − 15 nm| ≤ hole/2 − r), and one that clips an edge bounces as off the divider face;
-     a molecule caught straddling the divider when it leaves the opening is put back on the side its center is on. */
+     a molecule caught straddling the divider when it leaves the opening is put back on the side its center is on.
+     Walls held at a temperature (one gas only; each outer wall w = 0 left, 1 piston, 2 bottom, 3 top has its own wallT[w] and
+     acc[w], wallT 0 meaning insulated): a molecule that hits a wall held at a temperature trades energy with it with
+     probability acc (the accommodation coefficient) and otherwise bounces elastically. Trading, it leaves as from a wall at
+     wallT: the speed away from the wall drawn from the flux weighted distribution p(v) ∝ v exp(−mv²/2kT_w), the speed along the
+     wall from a Gaussian of variance kT_w/m (diffuse re-emission, the Maxwell wall model), in the frame of the piston for the
+     piston. heat[w] adds up the energy wall w gives the gas (J). With every wall at one wallT the gas ends at wallT; with walls at
+     different temperatures heat flows through the gas from the warm walls to the cold ones; with wallT = 0 a wall is a perfect
+     mirror, as before. */
   const KB = 1.380649e-23;        /* J/K, exact (SI 2019) */
   const M = 6.63e-26;             /* kg, argon, the Gas in a Box setups */
   const U_KG = 1.66053906892e-27; /* kg, atomic mass constant (CODATA 2022) */
@@ -342,6 +386,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       wallX: LX, wallTarget: LX, wallV: 0, pistonMax: 300,
       imp: 0, lt: 0,            /* impulse delivered to the outer walls (kg m/s) and wall length times time (nm ps) */
       div: 0, hole: 3,          /* divider: 0 none, 1 closed, 2 with a hole of this width (nm) */
+      wallT: [0, 0, 0, 0], acc: [1, 1, 1, 1], heat: [0, 0, 0, 0], rand: Math.random,   /* per wall: K (0 = insulated mirror), accommodation, heat in (J) */
       hitLog: null,             /* set by the 3D view: notes each outer wall hit for the flashes */
       ux: null, uy: null, sx: null, sy: null, ox: new Float64Array(NMAX), oy: new Float64Array(NMAX) };
   }
@@ -394,6 +439,24 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (x < DIV_X + ri) { G.px[i] = DIV_X + ri; if (G.vx[i] < 0) { G.vx[i] = -G.vx[i]; return 1; } }
     return 0;
   }
+  /* a molecule leaving a wall at temperature T: speed away from the wall (≥ 0) and along it, m/s */
+  function wallEmit(G, mi, T) {
+    const s = Math.sqrt(KB * T / mi), u = 1 - G.rand(), g1 = 1 - G.rand(), g2 = G.rand();   /* u, g1 in (0, 1] */
+    return [s * Math.sqrt(-2 * Math.log(u)), s * Math.sqrt(-2 * Math.log(g1)) * Math.cos(2 * Math.PI * g2)];   /* inverse CDF; Box–Muller */
+  }
+  /* the bounce of molecule i off outer wall w; a is the axis (0 x, 1 y), sg the direction away from the wall (+1 or −1),
+     wv the wall's velocity along a. Returns the momentum the wall receives (kg m/s, along −sg as a magnitude) */
+  function wallHit(G, i, w, a, sg, wv) {
+    const mi = G.m[i], vn = a ? G.vy : G.vx, vt = a ? G.vx : G.vy, vin = sg * (wv - vn[i]);   /* vin > 0: speed into the wall */
+    if (G.wallT[w] > 0 && G.rand() < G.acc[w]) {
+      const e0 = vn[i] * vn[i] + vt[i] * vt[i], [out, along] = wallEmit(G, mi, G.wallT[w]);
+      vn[i] = wv + sg * out; vt[i] = along;
+      G.heat[w] += 0.5 * mi * (vn[i] * vn[i] + vt[i] * vt[i] - e0);
+      return mi * (vin + out);
+    }
+    vn[i] = 2 * wv - vn[i];
+    return 2 * mi * vin;
+  }
   function step(G, N, dt) { /* dt in ps */
     const px = G.px, py = G.py, vx = G.vx, vy = G.vy, m = G.m, r = G.r, log = G.hitLog;
     const diff = G.wallTarget - G.wallX, maxStep = G.pistonMax * 1e-3 * dt;
@@ -407,13 +470,14 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (let i = 0; i < N; i++) {
       const ri = r[i], mi = m[i], xr = wallX - ri, yt = LY - ri;
       let fx = 0, fy = 0;   /* bounces this step, for the unfolded positions */
-      if (px[i] < ri) { px[i] = ri; if (vx[i] < 0) { if (log) log(0, py[i], -2 * mi * vx[i]); imp -= 2 * mi * vx[i]; vx[i] = -vx[i]; fx = 1; } }
-      else if (px[i] > xr) { /* piston: reflect relative to the moving wall */
+      let J;   /* momentum given to a wall; a mirror bounce gives 2m times the speed into it, as before */
+      if (px[i] < ri) { px[i] = ri; if (vx[i] < 0) { J = wallHit(G, i, 0, 0, 1, 0); if (log) log(0, py[i], J); imp += J; fx = 1; } }
+      else if (px[i] > xr) { /* piston: bounce relative to the moving wall */
         px[i] = xr;
-        if (vx[i] > wallV) { if (log) log(1, py[i], 2 * mi * (vx[i] - wallV)); imp += 2 * mi * (vx[i] - wallV); vx[i] = 2 * wallV - vx[i]; fx = 1; }
+        if (vx[i] > wallV) { J = wallHit(G, i, 1, 0, -1, wallV); if (log) log(1, py[i], J); imp += J; fx = 1; }
       }
-      if (py[i] < ri) { py[i] = ri; if (vy[i] < 0) { if (log) log(2, px[i], -2 * mi * vy[i]); imp -= 2 * mi * vy[i]; vy[i] = -vy[i]; fy = 1; } }
-      else if (py[i] > yt) { py[i] = yt; if (vy[i] > 0) { if (log) log(3, px[i], 2 * mi * vy[i]); imp += 2 * mi * vy[i]; vy[i] = -vy[i]; fy = 1; } }
+      if (py[i] < ri) { py[i] = ri; if (vy[i] < 0) { J = wallHit(G, i, 2, 1, 1, 0); if (log) log(2, px[i], J); imp += J; fy = 1; } }
+      else if (py[i] > yt) { py[i] = yt; if (vy[i] > 0) { J = wallHit(G, i, 3, 1, -1, 0); if (log) log(3, px[i], J); imp += J; fy = 1; } }
       if (G.div) fx ^= divider(G, i); else G.side[i] = px[i] < DIV_X ? 0 : 1;
       if (ux) {
         ux[i] += G.sx[i] * (px[i] - ox[i]); uy[i] += G.sy[i] * (py[i] - oy[i]);
@@ -514,6 +578,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   // ---------- setup ----------
   let rnd = Math.random;   /* a seeded generator replaces it for the key captures (window.__ig.seed) */
+  GS.rand = () => rnd();   /* the walls held at a temperature draw from the same generator */
   function gauss() { let u = 0; while (!u) u = rnd(); return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * rnd()); }
   function freeSpot(x0, x1, upto) {
     const w = x1 - x0 - 2 * R, h = LY - 2 * R;
@@ -545,7 +610,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
   }
   function resetGas() {
-    simT = 0; GS.imp = 0; GS.lt = 0; trail = []; tracer = 0; GS.wallV = 0; GS.wallX = GS.wallTarget;
+    simT = 0; GS.imp = 0; GS.lt = 0; GS.heat.fill(0); trail = []; tracer = 0; GS.wallV = 0; GS.wallX = GS.wallTarget;
     if (mode === 'hotcold') {
       const half = Math.floor(N / 2);
       for (let i = 0; i < N; i++) { const p = i < half ? freeSpot(0, GS.wallX / 2, i) : freeSpot(GS.wallX / 2, GS.wallX, i); px[i] = p[0]; py[i] = p[1]; }
@@ -659,9 +724,15 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     ctx.fillStyle = T.relief; ctx.fillRect(wp, yTop, x1 - wp, yBot - yTop);
     ctx.strokeStyle = T.line; ctx.lineWidth = ps; ctx.strokeRect(wp, yTop, x1 - wp, yBot - yTop);
 
-    // fixed walls
-    ctx.strokeStyle = T.ink; ctx.lineWidth = 2 * ps; ctx.lineJoin = 'miter';
-    ctx.beginPath(); ctx.moveTo(wp, yTop - 1); ctx.lineTo(x0 - 1, yTop - 1); ctx.lineTo(x0 - 1, yBot + 1); ctx.lineTo(wp, yBot + 1); ctx.stroke();
+    // fixed walls, each in its glow color when held at a temperature
+    ctx.lineCap = 'square';
+    for (const [w, xa, ya, xb, yb] of [[3, wp, yTop - 1, x0 - 1, yTop - 1], [0, x0 - 1, yTop - 1, x0 - 1, yBot + 1], [2, x0 - 1, yBot + 1, wp, yBot + 1]]) {
+      const wg = wallGlow(w);
+      ctx.strokeStyle = wg ? wg.color : T.ink; ctx.lineWidth = (wg ? 3 : 2) * ps;
+      ctx.beginPath(); ctx.moveTo(xa, ya); ctx.lineTo(xb, yb); ctx.stroke();
+    }
+    ctx.lineCap = 'butt';
+    const wg = wallGlow(1);
 
     // target ghost while the piston catches up
     if (Math.abs(GS.wallTarget - GS.wallX) > 0.02) {
@@ -743,7 +814,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
 
     // piston face and handle
-    ctx.fillStyle = T.ink; ctx.fillRect(wp, yTop - 2, 4 * ps, yBot - yTop + 4);
+    ctx.fillStyle = wg ? wg.color : T.ink; ctx.fillRect(wp, yTop - 2, 4 * ps, yBot - yTop + 4);
     const hw = 10 * ps, hh = Math.min(48 * ps, (yBot - yTop) * 0.4), hy = (yTop + yBot) / 2 - hh / 2, hx = wp + 2 * ps - hw / 2;
     if (!two) {   /* the two gas setups keep the wall at 50 nm, so no handle */
       ctx.beginPath(); ctx.roundRect ? ctx.roundRect(hx, hy, hw, hh, 4 * ps) : ctx.rect(hx, hy, hw, hh);
@@ -882,10 +953,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     });
     const glass = new THREE.Mesh(new THREE.PlaneGeometry(LX * K3 + 0.02, LY * K3 + 0.02), VD3K.material(S, { transparent: true, opacity: 0.1, roughness: 0.05, metalness: 0.2, depthWrite: false, side: THREE.DoubleSide }, ['#cfe3f0', '#9fc4dc']));
     glass.rotation.x = Math.PI / 2; glass.position.set(LX * K3 / 2, -0.016, Z0 + LY * K3 / 2); glass.renderOrder = 3; S.scene.add(glass);
-    /* fixed walls: left, top and bottom bars */
-    S.scene.add(VD3K.box(0.012, 0.036, LY * K3 + 0.024, steel, -0.006, 0, Z0 - 0.012));
-    S.scene.add(VD3K.box(LX * K3 + 0.012, 0.036, 0.012, steel, LX * K3 / 2, 0, Z0 + LY * K3));
-    S.scene.add(VD3K.box(LX * K3 + 0.012, 0.036, 0.012, steel, LX * K3 / 2, 0, Z0 - 0.012));
+    /* fixed walls: left, top and bottom bars, in their own steel so they can glow when held at a temperature */
+    const wallMat = [0, 1, 2, 3].map(() => VD3K.material(S, { roughness: 0.4, metalness: 0.35 }, ['#b4bcc6', '#8a939e']));
+    S.scene.add(VD3K.box(0.012, 0.036, LY * K3 + 0.024, wallMat[0], -0.006, 0, Z0 - 0.012));
+    S.scene.add(VD3K.box(LX * K3 + 0.012, 0.036, 0.012, wallMat[3], LX * K3 / 2, 0, Z0 + LY * K3));
+    S.scene.add(VD3K.box(LX * K3 + 0.012, 0.036, 0.012, wallMat[2], LX * K3 / 2, 0, Z0 - 0.012));
+    /* a thin plate on the piston face that glows like the fixed walls */
+    const facePlate = VD3K.box(0.004, 0.034, LY * K3, wallMat[1], 0, 0, Z0); S.scene.add(facePlate);
     /* the piston: a block that slides inside, a rod out through a guide, and a handle */
     const piston = new THREE.Group(), face = VD3K.box(1, 0.03, LY * K3, alu, 0, 0, 0); face.geometry.translate(0.5, 0, 0); face.position.set(0, 0, Z0 + LY * K3 / 2); face.scale.x = RAM;
     const pRod = VD3K.rod([0, 0, 0], [1, 0, 0], 0.006, steel); pRod.geometry.translate(0, 0.5, 0); pRod.position.set(0, 0, 0); pRod.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(1, 0, 0));
@@ -923,7 +997,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     hLab.position.set(-0.04, -0.02, Z0 + LY * K3 / 2); S.scene.add(wLab, hLab);
     const follow = VD3K.follow({ x: 0.25, y: 0, z: Z0 + 0.15 }, 0.1);
     let pScale = 0;
-    G3 = { S, gScale: 1, gScaleB: 1, gas, gasB, divs, collar, rWall, gRod, holeLab, notches, mark, trailL, flashes, piston, face, pRod, knob, gauge, therm, wLab, follow, next: 0, setScale: (v) => { pScale = v; }, get pScale() { return pScale; } };
+    G3 = { S, wallMat, facePlate, gScale: 1, gScaleB: 1, gas, gasB, divs, collar, rWall, gRod, holeLab, notches, mark, trailL, flashes, piston, face, pRod, knob, gauge, therm, wLab, follow, next: 0, setScale: (v) => { pScale = v; }, get pScale() { return pScale; } };
     S.orbit(S.el, o3, () => { dirty = true; }, { grab: grab3, zMin: 0.6, zMax: 3 });
     S.el.addEventListener('pointermove', move3); S.el.addEventListener('pointerup', up3); S.el.addEventListener('pointercancel', up3);
     G3.hit = (side, at, dp) => {
@@ -997,6 +1071,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     /* the piston block, its rod (through the guide) and the handle all ride with the wall */
     g.face.position.x = wx; g.pRod.scale.y = ROD; g.pRod.position.set(wx + RAM, 0, Z0 + LY * K3 / 2); g.knob.position.set(wx + RAM + ROD, 0, Z0 + LY * K3 / 2);
     g.knob.material.emissive = new THREE.Color(drag3 ? '#1d3f80' : '#000000');
+    for (let w = 0; w < 4; w++) { const wg = wallGlow(w); g.wallMat[w].emissive.set(wg ? wg.color : '#000000'); g.wallMat[w].emissiveIntensity = wg ? 0.25 + 0.5 * wg.k : 0; }
+    g.facePlate.visible = !two; g.facePlate.position.x = wx + 0.002;
     g.wLab.set(GS.wallX.toFixed(1) + ' nm'); g.wLab.position.set(wx / 2, -0.02, Z0 - 0.03);
     const showT = showTrail && tracer < N;
     g.mark.visible = showT; g.trailL.visible = showT && trail.length > 1;
@@ -1147,7 +1223,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     for (const id of ['divSeg', 'holeCtl', 'gasCards', 'graphSeg', 'read2', 'more2', 'secTwo', 'recRun']) $(id).hidden = !on;
     $('stage').classList.toggle('two', on);
     $('lede').textContent = LEDE[on ? 1 : 0];
-    for (const id of ['read1', 'more1', 'secGas', 'secPiston']) $(id).hidden = on;
+    for (const id of ['read1', 'more1', 'secGas', 'secPiston', 'secWalls']) $(id).hidden = on;
+    if (on) setWalls([0, 1, 2, 3], 0, 1);   /* the two gas setups keep mirror walls */
     $('clock').classList.toggle('two', on);
     $('cap3d').textContent = CAP[on ? 1 : 0];
     $('unitsGas').textContent = on ? 'two gases, masses in u' : 'argon, m = 6.63×10⁻²⁶ kg';
@@ -1280,6 +1357,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     out.rRatio.textContent = simT > 0 && isFinite(pm) ? (pm / pi).toFixed(3) : '—';
     out.rA.textContent = Math.round(GS.wallX * LY) + ' nm²';
     out.rMean.textContent = fmtSpeed(stats.mean);
+    if (!$('wallRead').hidden) {
+      const fq = (J) => { const q = J / 1e-21; return (Math.abs(q) < 0.05 ? '0.0' : (q > 0 ? '+' : '−') + Math.abs(q).toPrecision(3)) + ' zJ'; };
+      $('rQ').textContent = fq(GS.heat[0] + GS.heat[1] + GS.heat[2] + GS.heat[3]);
+      $('rQw').textContent = fq(GS.heat[pickedWalls()[0]]);
+      const half = GS.wallX / 2;
+      $('rTh').textContent = fmtK(tempOf(GS, N, (i) => px[i] < half)).replace(' K', '') + ' · ' + fmtK(tempOf(GS, N, (i) => px[i] >= half));
+    }
     out.rRms.textContent = fmtSpeed(stats.rms);
     /* in Slow motion follows T the playback rate changes with T, so the clock says so: a cold gas looks lively only because it is sped up */
     const fast = psPerS / BASE_PS;
@@ -1312,6 +1396,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
   function syncW() { wIn.value = GS.wallTarget; wOut.textContent = GS.wallTarget.toFixed(1) + ' nm'; }
 
+  /* walls held at a temperature glow blue when colder than the gas and orange when warmer, brighter the bigger the ratio */
+  function wallGlow(w) {
+    if (two || !(GS.wallT[w] > 0) || !(stats.T > 0)) return null;
+    const r = Math.log(GS.wallT[w] / stats.T);
+    if (Math.abs(r) < 2 / Math.sqrt(N)) return null;   /* T of N molecules in contact with the walls wanders by about 1/√N; don't flicker */
+    return { color: r < 0 ? tok.neg : tok.pos, k: Math.min(1, Math.abs(r) / 1.5) };
+  }
   // ---------- loop ----------
   let last = performance.now(), lastRead = 0, lastSync = 0;
   function frame(now) {
@@ -1357,6 +1448,10 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
                 hint: 'Drag the right wall inward and watch T rise. Halve the area slowly and T about doubles, since T × A stays constant for a 2D gas. Then pull the wall back out.' },
     dilute:   { N: 25, T: 300, W: 50, mode: 'equal',
                 hint: 'Only 25 molecules. Collisions are rare, so the spike takes much longer to relax, and the measured pressure jumps around more.' },
+    walls:    { N: 150, T: 300, W: 50, mode: 'thermal', wallT: [100, 100, 100, 100],
+                hint: 'The walls are held at 100 K. Every molecule that hits a wall leaves as if from a gas at 100 K, so the 300 K gas gives heat to the walls and cools until T settles near 100 K; Q counts the heat. Then push the piston: the walls carry off the work you do, and T stays near 100 K (an isothermal squeeze) instead of rising. Switch the walls to Insulated and compare.' },
+    flow:     { N: 150, T: 250, W: 50, mode: 'thermal', wallT: [400, 100, 0, 0],
+                hint: 'The left wall is held at 400 K and the piston at 100 K; the top and bottom are insulated. The gas never settles to one temperature: molecules carry energy from the hot wall across to the cold one, the left half stays warmer than the right, and once the flow is steady the heat in at the left matches the heat out at the piston, so Q for all the walls stops changing. Pick each wall to read its own Q.' },
     cold:     { N: 150, T: 0.01, W: 50, mode: 'equal', play: 'follow',
                 hint: 'The gas at 0.01 K. The rms speed is about 2 m/s instead of 350 m/s at room temperature, but they never stop: speeds still spread out into a Maxwell-Boltzmann curve, and the walls still feel a pressure. Slow motion follows T is on, so the playback runs about 170 times faster than Fixed rate (the clock says by how much): the gas only looks lively. T stays at 0.010 K because the collisions conserve energy. Switch to Fixed rate to see how sluggish the gas really is. Classically, motion only stops at exactly 0 K.' }
   };
@@ -1374,6 +1469,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const p = PRESETS[name];
     N = p.N; Tset = p.T; GS.wallTarget = p.W; mode = p.mode; pistonTouched = false;
     nIn.value = N; nOut.textContent = N; tIn.value = sliderFromT(Tset); syncW();
+    setWalls([0, 1, 2, 3], 0, 1); if (p.wallT) p.wallT.forEach((t, w) => setWalls([w], t, 1)); pickWall('all');
     setPresetUI(name); setModeUI(); resetGas();
     setPlay(p.play || 'fixed');   /* after resetGas, so Slow motion follows T starts at the new T rather than easing over from the old gas */
   }
@@ -1393,6 +1489,32 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     updateRate();
   }
   for (const b of document.querySelectorAll('#playSeg button')) b.addEventListener('click', () => setPlay(b.dataset.r));
+  /* walls: each is an insulated mirror (wallT 0) or held at its own temperature. The controls set the picked wall, or all four;
+     with All picked they show the left wall. keep remembers each wall's last temperature for when it is held again */
+  const wallKeep = [100, 100, 100, 100], WALL_NAME = ['left wall', 'piston', 'bottom', 'top'];
+  let wallPicked = 'all';
+  const pickedWalls = () => (wallPicked === 'all' ? [0, 1, 2, 3] : [+wallPicked]);
+  function setWalls(ws, T, acc) {
+    for (const w of ws) { if (T > 0) wallKeep[w] = T; GS.wallT[w] = T; GS.acc[w] = acc; }
+    syncWallUI(); dirty = true;
+  }
+  function syncWallUI() {
+    const w = pickedWalls()[0], held = GS.wallT[w] > 0;
+    for (const b of document.querySelectorAll('#wallPick button')) b.setAttribute('aria-pressed', String(b.dataset.k === String(wallPicked)));
+    for (const b of document.querySelectorAll('#wallSeg button')) b.setAttribute('aria-pressed', String((b.dataset.w === 'held') === held));
+    $('wallCtl').hidden = !held;
+    $('wallRead').hidden = !GS.wallT.some((t) => t > 0);
+    $('wtIn').value = sliderFromT(wallKeep[w]); $('wtOut').textContent = fmtK(wallKeep[w]);
+    $('accIn').value = GS.acc[w]; $('accOut').textContent = GS.acc[w].toFixed(2);
+    $('rQwT').textContent = 'Q from the ' + (wallPicked === 'all' ? WALL_NAME[0] : WALL_NAME[w]);
+  }
+  function pickWall(k) { wallPicked = k; syncWallUI(); updateReadouts(); }
+  for (const b of document.querySelectorAll('#wallPick button')) b.addEventListener('click', () => pickWall(b.dataset.k));
+  for (const b of document.querySelectorAll('#wallSeg button')) b.addEventListener('click', () => {
+    const ws = pickedWalls(); setWalls(ws, b.dataset.w === 'held' ? wallKeep[ws[0]] : 0, GS.acc[ws[0]]); setPresetUI(null);
+  });
+  $('wtIn').addEventListener('input', (e) => { const ws = pickedWalls(); setWalls(ws, tFromSlider(+e.target.value), GS.acc[ws[0]]); setPresetUI(null); });
+  $('accIn').addEventListener('input', (e) => { const ws = pickedWalls(); setWalls(ws, GS.wallT[ws[0]], +e.target.value); setPresetUI(null); });
   nIn.addEventListener('input', () => { nOut.textContent = nIn.value; setN(+nIn.value); setPresetUI(null); });
   tIn.addEventListener('pointerdown', () => { tDragging = true; });
   for (const ev of ['pointerup', 'pointercancel', 'change', 'blur']) tIn.addEventListener(ev, () => { tDragging = false; });

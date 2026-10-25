@@ -2,7 +2,7 @@
 // Gas in a Box: the hard disk gas and the two gas setups (masses, sizes, divider, hole, unfolded mean square displacement).
 const assert = require('node:assert');
 const { core } = require('./demo_source.cjs');
-const c = core('ideal-gas', 'KB,M,U_KG,LX,LY,R,NMAX,DIV_X,HOLE_Y,makeGas,pair,step,track,tempOf,mixStats,meanSpeed2D,effusionRate,meanFreePath2D');
+const c = core('ideal-gas', 'KB,M,U_KG,LX,LY,R,NMAX,DIV_X,HOLE_Y,makeGas,pair,step,wallEmit,track,tempOf,mixStats,meanSpeed2D,effusionRate,meanFreePath2D');
 let n = 0;
 const near = (a, b, tol, w) => assert(Math.abs(a - b) <= tol * Math.max(1e-300, Math.abs(b)), `${w || ''}: expected ${b}, got ${a}`);
 function group(name, f) { f(); n++; console.log('PASS', name); }
@@ -88,5 +88,48 @@ group('effusion: in a thin gas the one way rate through the hole is n w √(kT/(
 group('formulas: 2D mean speed √(πkT/2m), mean free path 1/(2√2 n d)', () => {
   near(c.meanSpeed2D(300, c.M), Math.sqrt(Math.PI * c.KB * 300 / (2 * c.M)), 1e-15);
   near(c.meanFreePath2D(0.2, 0.5), 3.5355, 1e-4);
+});
+/* one argon gas on a grid at temperature T, walls as given */
+function oneGas(N, T, wallT, acc) {
+  const G = c.makeGas(); G.wallT.fill(wallT); G.acc.fill(acc); G.rand = rnd;
+  const sg = Math.sqrt(c.KB * T / c.M);
+  for (let i = 0; i < N; i++) { G.px[i] = 1 + (i % 15) * 3.3; G.py[i] = 1 + Math.floor(i / 15) * 2.8; G.vx[i] = sg * gauss(); G.vy[i] = sg * gauss(); }
+  return G;
+}
+group('walls held at a temperature: re-emitted molecules carry ⟨v_n²⟩ = 2kT/m, ⟨v_t²⟩ = kT/m, so 3/2 kT each in 2D', () => {
+  const G = c.makeGas(); G.rand = rnd; let sn = 0, st = 0, n = 200000;
+  for (let k = 0; k < n; k++) { const [a, b] = c.wallEmit(G, c.M, 200); assert(a >= 0); sn += a * a; st += b * b; }
+  const kT = c.KB * 200 / c.M;
+  near(sn / n, 2 * kT, 0.01, '⟨v_n²⟩'); near(st / n, kT, 0.01, '⟨v_t²⟩');
+});
+group('insulated walls (wallT 0) never draw a random number and add no heat', () => {
+  const G = oneGas(150, 300, 0, 1); G.rand = () => { throw new Error('random number drawn'); };
+  const e0 = ke(G, 150); for (let k = 0; k < 2000; k++) c.step(G, 150, 0.1);
+  near(ke(G, 150), e0, 1e-10, 'KE'); assert(G.heat.every((h) => h === 0), 'no heat');
+});
+group('walls at 100 K bring a 300 K gas to 100 K; the energy lost is the heat to the walls', () => {
+  const N = 150, G = oneGas(N, 300, 100, 1), e0 = ke(G, N);
+  for (let k = 0; k < 15000; k++) c.step(G, N, 0.1);   /* 1.5 ns, several wall hits per molecule */
+  let T = 0; for (let k = 0; k < 40; k++) { for (let j = 0; j < 250; j++) c.step(G, N, 0.1); T += c.tempOf(G, N) / 40; }
+  near(T, 100, 0.05, 'final T');
+  near(ke(G, N) - e0, G.heat.reduce((a, b) => a + b), 1e-9, 'first law: ΔKE = Q');
+});
+group('walls at the gas temperature: T stays put on average and P measured matches the insulated box', () => {
+  const N = 150, run = (wallT) => { seed = 777; const G = oneGas(N, 300, wallT, 0.5); for (let k = 0; k < 5000; k++) c.step(G, N, 0.1);
+    G.imp = 0; G.lt = 0; let T = 0; for (let k = 0; k < 50; k++) { for (let j = 0; j < 400; j++) c.step(G, N, 0.1); T += c.tempOf(G, N) / 50; }
+    return { T, P: G.imp / (G.lt * 1e-21) }; };
+  const a = run(0), b = run(300);
+  near(b.T, 300, 0.05, 'T with walls at 300 K'); near(b.P / b.T, a.P / a.T, 0.05, 'P / T');
+});
+group('left wall at 400 K, piston at 100 K, top and bottom insulated: a steady flow of heat and a warmer left half', () => {
+  const N = 150, G = oneGas(N, 250, 0, 1); G.wallT[0] = 400; G.wallT[1] = 100;
+  for (let k = 0; k < 10000; k++) c.step(G, N, 0.1);
+  const h0 = G.heat.slice(); let tl = 0, tr = 0;
+  for (let k = 0; k < 40; k++) { for (let j = 0; j < 500; j++) c.step(G, N, 0.1); tl += c.tempOf(G, N, (i) => G.px[i] < 25) / 40; tr += c.tempOf(G, N, (i) => G.px[i] >= 25) / 40; }
+  const qin = G.heat[0] - h0[0], qout = G.heat[1] - h0[1];
+  assert(qin > 0 && qout < 0, 'heat in at the hot wall, out at the cold one');
+  near(-qout, qin, 0.15, 'steady: heat in matches heat out');
+  assert(G.heat[2] === 0 && G.heat[3] === 0, 'insulated walls pass no heat');
+  assert(tl > tr + 30 && tl < 400 && tr > 100, `left half ${tl.toFixed(0)} K, right half ${tr.toFixed(0)} K`);
 });
 console.log(`${n} groups passed`);
