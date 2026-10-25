@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <script>/* the Impulse scene moved to its own demo (2026-10-24): old links to it open Impulse and Momentum */ (function () { if (/[?&#](setup|p|mode|scene)=impulse\b|#impulse\b/i.test(location.search + location.hash)) location.replace('impulse.html'); })();</script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
@@ -120,6 +122,11 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
 .blind-tag { display: none; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--muted); border-radius: 4px; padding: 3px 7px; }
 :root[data-blind="on"] .blind-tag { display: inline-block; }
 
+/* the 3D view takes a little more of the stage height on a wide screen */
+@media (min-width: 821px) { .stage.three { grid-template-rows: minmax(0, 57fr) minmax(0, 43fr); } }
+@media (min-width: 641px) and (max-width: 820px) { .stage.three { grid-template-rows: 380px 290px; } }
+@media (max-width: 640px) { .stage.three { grid-template-rows: 390px 250px 290px; } }
+.stage-ctl .seg button { padding: 3px 10px; font-size: 0.84rem; }
 @media (max-width: 820px) {
   table.rows button { min-width: 36px; min-height: 36px; }
   table.rows input { min-height: 30px; }
@@ -159,6 +166,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
       <div class="pane" id="cPane">
         <canvas id="cCan" tabindex="0" role="application" aria-label="Collision scene. Drag the round grips on the velocity arrows to set velocities, drag a cart or puck to move its start, and drag the small square grips to change masses, the stored energy or a bumper's stiffness, and drag a photogate's grip to move it along the track. Keys: 1 and 2 pick a body, left and right arrows change its velocity, up and down arrows change e (with Blind on, they step through the bumpers), space plays or pauses, R replays, C captures a reading. Every drag also has a slider in the rail, including Gate A position and Gate B position."></canvas>
         <div class="stage-ctl">
+          <div class="seg" role="group" aria-label="Perspective" id="viewSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
           <button type="button" class="btn" id="play">Pause</button>
           <button type="button" class="btn" id="reset">Replay</button>
           <span class="blind-tag" id="blindTag" title="Blind is on: predictions and answers are hidden">Blind</span>
@@ -1605,6 +1613,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
     if (window.VDGear) window.VDGear.backdrop(ctx, W, H);
     ctlH = (document.querySelector('.stage-ctl').getBoundingClientRect().height || 30) + 10;
+    if (on3()) { handles = []; render3(ctx, W, H); return; }
     if (S.mode === 'track' || S.mode === 'explode') drawTrackScene(ctx, W, H);
     else if (S.mode === 'table') drawTableScene(ctx, W, H);
     else drawCradleScene(ctx, W, H);
@@ -1826,13 +1835,14 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     const p = P(); cr = cradleInit(p.N, p.k, p.th * Math.PI / 180); crE0 = cradleEnergy(cr, CR.m, CR.L); crLog = null;
   }
   cans.c.addEventListener('pointermove', (ev) => {
-    if (drag) { dragTo(ev); return; }
-    const h = handleAt(ev); const id = h ? h.id : null;
+    if (drag) { if (drag.three) drag3To(ev); else dragTo(ev); return; }
+    const h = on3() ? pick3(ev) : handleAt(ev); const id = h ? h.id : null;
     if (id !== hoverId) { hoverId = id; if (!running) drawAll(); }
-    cans.c.style.cursor = h ? h.cursor : 'default';
+    cans.c.style.cursor = h ? (h.cursor || 'pointer') : on3() ? 'grab' : 'default';
   });
   cans.c.addEventListener('pointerdown', (ev) => {
     cans.c.focus({ preventScroll: true });
+    if (on3()) { down3(ev); return; }     /* 3D: a grip takes the pointer; anywhere else the view turns (VD3.orbit) */
     const h = handleAt(ev); if (!h) return;
     if (S.frame === 'cm') frozen = { x: cmAt(0), v: vcm() };
     held = true; t = 0; hold = 0;
@@ -2166,8 +2176,576 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
     applyPreset, setMode, setParam, setFrame, setRunning, pk, get gd() { return gd; }, get runDone() { return runDone; }, get rows() { return S.rows; },
     csvText, captureReading, gateValue, placeGates,
     go(dts, step) { step = step || 0.01; for (let x = 0; x < dts - 1e-12; x += step) advance(Math.min(step, dts - x)); updateReadouts(); drawAll(); },
-    seek(tt) { t = tt; drawAll(); }
+    seek(tt) { t = tt; drawAll(); },
+    get g3() { return G3; }, get handles3() { return handles3; },
+    h3pt(id) { const h = handles3.find((k) => k.id === id), r = cans.c.getBoundingClientRect(); if (!h) return null; const p = G3.S.project(pt3(h)); return [r.left + p[0], r.top + p[1]]; }
   };
+
+  // ---------- the 3D view (three.js through demos/lib/vd3.js and vd3kit.js); the flat view stays (Flat button, or ?view=flat) ----------
+  // Pictures only: every position, velocity and reading below comes from the same run and state as the flat view. Meters, z up, the
+  // bench top at z = 0. To scale: the air track, the gliders' lengths, the flags and the gate positions; the air table and pucks; the
+  // cradle's balls, strings and frame. The labels and grips are drawn over the picture on #cCan. In the center of mass frame the
+  // apparatus stays in the lab and the camera rides with the center of mass; the arrows then show velocities relative to it.
+  const G3 = { S: null, on: false, o: { th: -Math.PI / 2 + 0.2, ph: 1.2, zoom: 1 }, env: null, mode: '', room: null, bench: null };
+  const HOME3 = { track: { th: -Math.PI / 2 + 0.13, ph: 1.2 }, explode: { th: -Math.PI / 2 + 0.13, ph: 1.2 }, table: { th: -Math.PI / 2 + 0.14, ph: 0.9 }, cradle: { th: -Math.PI / 2 + 0.42, ph: 1.24 } };
+  let handles3 = [], OV = null;
+  const on3 = () => G3.on && !!G3.S;
+  const ZB = 0.14, KV = 0.2, TRK = 1.4, FLOOR = -0.86, FLAGZ = 0.04;   /* track top above the bench; arrow scale, m per m/s; track half length; floor; flag middle above the track top */
+  const OV0 = () => (G3.S ? G3.S.w / Math.max(1, G3.S.h) : 2);    /* the 3D picture's aspect ratio (wide on a desktop, near 1 on a phone) */
+  const pt3 = (h) => (h.plane != null ? h.pt : h.at(h.v));
+  const NOTE3S = 'Drag to turn; drag a grip to change a value.';
+  const NOTE3 = 'Drag to turn, scroll to zoom, double click to go back; drag a grip to change a value.';
+
+  // ---- small builders ----
+  const K3 = {
+    seed: 7,
+    rnd() { K3.seed = (K3.seed * 16807) % 2147483647; return K3.seed / 2147483647; },
+    std: (o) => new THREE.MeshStandardMaterial(o),
+    th: (o, c) => VD3K.material(G3.S, o, c),
+    mesh(g, m, cast, recv) { const x = new THREE.Mesh(g, m); x.castShadow = cast !== false; x.receiveShadow = !!recv; return x; },
+    tex(w, h) { const cv = document.createElement('canvas'); cv.width = w; cv.height = h; const t = new THREE.CanvasTexture(cv); t.anisotropy = G3.S.r.capabilities.getMaxAnisotropy(); return { cv, c: cv.getContext('2d'), t }; },
+    // an arrow drawn over the scene (like the flat view's arrows): set(from, direction, length, color, opacity)
+    arrow(r) {
+      const m = new THREE.MeshBasicMaterial({ color: '#888', depthTest: false, transparent: true });
+      const g = new THREE.Group(), sh = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 1, 10).rotateX(Math.PI / 2).translate(0, 0, 0.5), m), hd = new THREE.Mesh(new THREE.ConeGeometry(r * 2.7, 1, 16).rotateX(Math.PI / 2), m);
+      sh.renderOrder = hd.renderOrder = 8; g.add(sh, hd); g.visible = false;
+      const up = new THREE.Vector3(0, 0, 1), dir = new THREE.Vector3();
+      g.set = (p, d, len, col, op) => {
+        g.visible = len > 1e-4; if (!g.visible) return; m.color.set(col); m.opacity = op == null ? 1 : op;
+        const hl = Math.min(r * 8, len * 0.5); g.position.set(p[0], p[1], p[2]); dir.set(d[0], d[1], d[2]).normalize(); g.quaternion.setFromUnitVectors(up, dir);
+        sh.scale.z = Math.max(1e-4, len - hl); hd.scale.set(1, 1, hl); hd.position.z = len - hl / 2;
+      };
+      g.off = () => { g.visible = false; };
+      return g;
+    },
+    // a polyline (dashed or not) whose points and color change each frame
+    line(dashed, dash) {
+      const m = dashed ? new THREE.LineDashedMaterial({ dashSize: dash || 0.03, gapSize: (dash || 0.03) * 0.7, transparent: true }) : new THREE.LineBasicMaterial({ transparent: true });
+      const l = new THREE.Line(new THREE.BufferGeometry(), m); l.renderOrder = 4; l.frustumCulled = false; l.visible = false;
+      l.pts = (pts, col, op) => { l.geometry.dispose(); l.geometry = new THREE.BufferGeometry().setFromPoints(pts.map((q) => new THREE.Vector3(q[0], q[1], q[2]))); if (dashed) l.computeLineDistances(); m.color.set(col); m.opacity = op == null ? 1 : op; l.visible = true; };
+      return l;
+    },
+    ring(dashed) { const l = VD3K.ring(1, { seg: 72, dashed }); l.renderOrder = 4; l.visible = false; return l; },
+    // a thin rod of unit length along y; seg.to(a, b) stretches it between two points
+    seg(r, mat) {
+      const s = new THREE.Mesh(new THREE.CylinderGeometry(r, r, 1, 6), mat), Y = new THREE.Vector3(0, 1, 0), d = new THREE.Vector3();
+      s.castShadow = true;
+      s.to = (a, b) => { d.set(b[0] - a[0], b[1] - a[1], b[2] - a[2]); const L = d.length() || 1e-6; s.position.set((a[0] + b[0]) / 2, (a[1] + b[1]) / 2, (a[2] + b[2]) / 2); s.quaternion.setFromUnitVectors(Y, d.normalize()); s.scale.set(1, L, 1); };
+      return s;
+    }
+  };
+
+  // ---- the room: tiled floor, a wall with a dado panel, and a wooden lab bench (top at z = 0) ----
+  function room3() {
+    const V = G3.S, g = new THREE.Group();
+    const ft = K3.tex(256, 256), c = ft.c;
+    c.fillStyle = '#dfe2e5'; c.fillRect(0, 0, 256, 256);
+    for (let i = 0; i < 900; i++) { c.fillStyle = `rgba(${K3.rnd() < 0.5 ? '255,255,255' : '90,96,104'},${0.05 + 0.06 * K3.rnd()})`; c.fillRect(K3.rnd() * 256, K3.rnd() * 256, 2, 2); }
+    c.fillStyle = '#b4bac1'; c.fillRect(0, 0, 256, 3); c.fillRect(0, 0, 3, 256);
+    ft.t.wrapS = ft.t.wrapT = THREE.RepeatWrapping; ft.t.repeat.set(16 / 0.5, 12 / 0.5);
+    const floor = K3.mesh(new THREE.PlaneGeometry(16, 12), K3.th({ map: ft.t, roughness: 0.8, metalness: 0 }, ['#ffffff', '#4a5260']), false, true);
+    floor.position.set(0, 3.5, FLOOR); g.add(floor);
+    const wallM = K3.th({ roughness: 0.95, metalness: 0 }, ['#eef1f4', '#1d2530']), dadoM = K3.th({ roughness: 0.9, metalness: 0 }, ['#dde3e9', '#222b37']), skirtM = K3.th({ roughness: 0.6 }, ['#8d96a1', '#11161d']);
+    const wall = K3.mesh(new THREE.PlaneGeometry(16, 3.4), wallM, false, true); wall.rotation.x = Math.PI / 2; wall.position.set(0, 1.25, FLOOR + 1.7); g.add(wall);
+    const dado = K3.mesh(new THREE.PlaneGeometry(16, 0.95), dadoM, false, true); dado.rotation.x = Math.PI / 2; dado.position.set(0, 1.245, FLOOR + 0.475); g.add(dado);
+    g.add(VD3K.box(16, 0.02, 0.012, skirtM, 0, 1.24, FLOOR + 0.95), VD3K.box(16, 0.02, 0.09, skirtM, 0, 1.24, FLOOR));
+    return g;
+  }
+  function bench3() {
+    const g = new THREE.Group(), wt = K3.tex(1024, 256), c = wt.c;
+    c.fillStyle = '#d4b182'; c.fillRect(0, 0, 1024, 256);
+    for (let y = 0; y < 256; y++) { const w = 0.5 + 0.5 * Math.sin(y * 0.19 + 3 * Math.sin(y * 0.023)); c.fillStyle = `rgba(140,92,48,${0.04 + 0.2 * Math.pow(w, 8)})`; c.fillRect(0, y, 1024, 1); }
+    for (let i = 0; i < 60; i++) { c.fillStyle = `rgba(120,78,40,${0.05 + 0.08 * K3.rnd()})`; c.fillRect(0, K3.rnd() * 256, 1024, 1 + 2 * K3.rnd()); }
+    const top = K3.th({ map: wt.t, roughness: 0.62, metalness: 0 }, ['#ffffff', '#6b5a47']), leg = K3.th({ roughness: 0.45, metalness: 0.5 }, ['#5d6670', '#3a424c']);
+    const bt = VD3K.box(3.6, 1.0, 0.045, top, 0, 0.12, -0.045); bt.castShadow = false; g.add(bt);
+    for (const sx of [-1, 1]) for (const sy of [-1, 1]) g.add(VD3K.box(0.05, 0.05, -FLOOR - 0.045, leg, sx * 1.72, 0.12 + sy * 0.44, FLOOR));
+    for (const sx of [-1, 1]) g.add(VD3K.box(0.04, 0.88, 0.04, leg, sx * 1.72, 0.12, FLOOR + 0.12));
+    g.add(VD3K.box(3.44, 0.04, 0.04, leg, 0, 0.56, FLOOR + 0.12));
+    return g;
+  }
+
+  function init3() {
+    const V = VD3K.stage(panes.c, { before: cans.c, fov: 30, near: 0.02, far: 40, shadow: 1.7 }); if (!V) return false;
+    G3.S = V; V.el.style.pointerEvents = 'none';
+    V.sun.position.set(-0.9, -1.5, 3.2); V.sun.shadow.bias = -0.0005;
+    const fill = new THREE.DirectionalLight(0xffffff, 0.32); fill.position.set(0.8, -3, 1.2); V.scene.add(fill);
+    // a soft studio environment, so steel and aluminium catch highlights (pictures only)
+    const cv = document.createElement('canvas'); cv.width = 256; cv.height = 128; const c = cv.getContext('2d');
+    const gr = c.createLinearGradient(0, 0, 0, 128); gr.addColorStop(0, '#f5f7fa'); gr.addColorStop(0.48, '#aab3bd'); gr.addColorStop(0.52, '#7c776f'); gr.addColorStop(1, '#4d463d');
+    c.fillStyle = gr; c.fillRect(0, 0, 256, 128);
+    for (const [x, y, w, h] of [[24, 16, 60, 18], [140, 10, 80, 14], [100, 40, 14, 22], [200, 44, 30, 16]]) { c.fillStyle = 'rgba(255,255,255,0.95)'; c.fillRect(x, y, w, h); }
+    const et = new THREE.CanvasTexture(cv); et.mapping = THREE.EquirectangularReflectionMapping;
+    const pm = new THREE.PMREMGenerator(V.r); G3.env = pm.fromEquirectangular(et).texture; pm.dispose();
+    G3.room = room3(); G3.bench = bench3(); V.scene.add(G3.room, G3.bench);
+    // in Flat these do nothing; in 3D a grip takes the pointer first, then the view turns (VD3.orbit)
+    for (const ev of ['pointerdown', 'wheel', 'touchstart', 'touchmove', 'dblclick']) cans.c.addEventListener(ev, (e) => { if (!on3()) e.stopImmediatePropagation(); }, { passive: false });
+    V.orbit(cans.c, G3.o, () => { if (on3() && !running) drawAll(); }, { grab: (e) => !!pick3(e), phMin: 0.3, phMax: 1.5, zMin: 0.5, zMax: 3.2 });
+    cans.c.addEventListener('dblclick', () => { if (on3()) { Object.assign(G3.o, HOME3[S.mode], { zoom: 1 }); drawAll(); } });
+    return true;
+  }
+
+  // ---- picking and dragging the grips drawn over the 3D view ----
+  // A grip is { id, at(v) -> [x, y, z], v, lo, hi, set(v) } (dragging finds the value whose point lies nearest the pointer)
+  // or { id, plane: z, pt, set2(x, y) } (dragging follows the pointer on the horizontal plane at height z).
+  function pick3(ev) {
+    if (!on3()) return null;
+    const r = cans.c.getBoundingClientRect(), x = ev.clientX - r.left, y = ev.clientY - r.top, tol = (ev.pointerType === 'touch' ? 24 : 13) * projScale();
+    let best = null, bd = tol;
+    for (const h of handles3) { const p = G3.S.project(pt3(h)); if (p[2] > 1) continue; const d = Math.hypot(p[0] - x, p[1] - y) - (h.pri ? 4 : 0); if (d < bd) { bd = d; best = h; } }
+    return best;
+  }
+  function solve3(h, x, y) {
+    const f = (v) => { const p = G3.S.project(h.at(v)); return Math.hypot(p[0] - x, p[1] - y); };
+    const n = 160; let bv = h.lo, bd = Infinity;
+    for (let i = 0; i <= n; i++) { const v = h.lo + (h.hi - h.lo) * i / n, d = f(v); if (d < bd) { bd = d; bv = v; } }
+    let a = Math.max(h.lo, bv - (h.hi - h.lo) / n), b = Math.min(h.hi, bv + (h.hi - h.lo) / n);
+    for (let k = 0; k < 30; k++) { const m1 = a + (b - a) / 3, m2 = b - (b - a) / 3; if (f(m1) < f(m2)) b = m2; else a = m1; }
+    return (a + b) / 2;
+  }
+  const _v3 = { a: null };
+  function ray3(x, y, z0) {
+    const V = G3.S, v = (_v3.a || (_v3.a = new THREE.Vector3())).set(x / V.w * 2 - 1, -(y / V.h) * 2 + 1, 0.5).unproject(V.cam), o = V.cam.position;
+    v.sub(o).normalize(); if (Math.abs(v.z) < 1e-6) return null; const s = (z0 - o.z) / v.z; if (s < 0) return null;
+    return [o.x + v.x * s, o.y + v.y * s];
+  }
+  function down3(ev) {
+    const h = pick3(ev); if (!h) return;
+    if (S.frame === 'cm') frozen = { x: cmAt(0), v: vcm() };
+    held = true; t = 0; hold = 0;
+    if (S.mode === 'cradle') pullCradle();
+    const r = cans.c.getBoundingClientRect(), p = G3.S.project(pt3(h));
+    drag = { id: h.id, three: h, off: [ev.clientX - r.left - p[0], ev.clientY - r.top - p[1]] };
+    if ((S.mode === 'track' || S.mode === 'table') && !h.gate) S.sel = +h.id.slice(-1) || 0;
+    try { cans.c.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault(); drawAll();
+  }
+  let q3 = null, q3Frame = false;
+  function drag3To(ev) {
+    const r = cans.c.getBoundingClientRect(); q3 = [ev.clientX - r.left - drag.off[0], ev.clientY - r.top - drag.off[1]];
+    if (q3Frame) return; q3Frame = true;
+    requestAnimationFrame(() => {
+      q3Frame = false; if (!drag || !drag.three || !q3) return;
+      const [x, y] = q3, h = handles3.find((k) => k.id === drag.id) || drag.three; q3 = null;
+      if (h.plane != null) { const w = ray3(x, y, h.plane); if (w) h.set2(w[0], w[1]); } else h.set(solve3(h, x, y));
+      if (!h.gate) { S.P[S.mode].__touched = true; clearPreset(); }
+      buildRun(); syncGates(); if (S.mode === 'cradle') pullCradle();
+      syncSliders(); updateReadouts(); drawAll();
+    });
+  }
+
+  // ---- overlay helpers (labels, grips and the caption drawn on #cCan over the picture) ----
+  const tag0 = (...a) => tag(...a);
+  function tag(txt, q, al, col, size, wt, dx, dy) {
+    const p = G3.S.project(q); if (p[2] > 1) return null; const ls = OV.ls;
+    const x = p[0] + (dx || 0) * ls, y = p[1] + (dy || 0) * ls;
+    if (y < ctlH + 6 || y > OV.H - 2 || x < -40 || x > OV.W + 40) return null;
+    labelBox(OV.ctx, txt, clamp(x, 4, OV.W - 4), y, al || 'left', col || T.ink, (size || 11.5) * ls, wt || 600);
+    return [x, y];
+  }
+  function grips3() {
+    for (const h of handles3) {
+      const p = G3.S.project(pt3(h)); if (p[2] > 1 || p[1] < ctlH) continue;
+      if (h.round) { roundGrip(OV.ctx, p[0], p[1], isHot(h.id), h.col); continue; }
+      let vert = false;
+      if (h.at) { const dv = (h.hi - h.lo) * 0.02, q = G3.S.project(h.at(Math.min(h.hi, h.v + dv))); vert = Math.abs(q[1] - p[1]) >= Math.abs(q[0] - p[0]); }
+      grip(OV.ctx, p[0], p[1], isHot(h.id), vert);
+    }
+  }
+  function note3(txt) {
+    const ctx = OV.ctx, ls = OV.ls, fs = 10.5 * ls; ctx.font = `${fs}px ${T.ui}`;
+    const words = txt.split(' '), lines = []; let cur = '';
+    for (const w of words) { const t2 = cur ? cur + ' ' + w : w; if (ctx.measureText(t2).width > OV.W - 24 * ls && cur) { lines.push(cur); cur = w; } else cur = t2; }
+    lines.push(cur);
+    lines.forEach((l, i) => labelBox(ctx, l, 10 * ls, OV.H - 8 * ls - (lines.length - 1 - i) * fs * 1.35, 'left', T.muted, fs, 400));
+  }
+  // a line of text on a soft panel, centered at y (baseline)
+  function panel3(txt, y, col, size, mono, alpha) {
+    const ctx = OV.ctx, w = richWidth(ctx, txt, size, 600, mono ? T.mono : T.ui);
+    ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.78 * (alpha == null ? 1 : alpha); ctx.fillRect(OV.W / 2 - w / 2 - 6, y - size * 1.0, w + 12, size * 1.42); ctx.globalAlpha = alpha == null ? 1 : alpha;
+    ctx.fillStyle = col; ctx.textBaseline = 'alphabetic'; richText(ctx, txt, OV.W / 2, y, size, 600, 'center', mono ? T.mono : T.ui); ctx.globalAlpha = 1;
+  }
+
+  // ---- the air track: beam, gliders with flags and mass discs, photogates and their timer (the 1D track and the explosion) ----
+  const TR3 = { g: null };
+  function glider3() {
+    const g = new THREE.Group(), w = 0.044, gp = 0.002, th = 0.011;
+    const sh = new THREE.Shape(); sh.moveTo(-w, -w + gp); sh.lineTo(0, gp); sh.lineTo(w, -w + gp); sh.lineTo(w, -w + gp + th); sh.lineTo(0, gp + th); sh.lineTo(-w, -w + gp + th); sh.closePath();
+    const geo = new THREE.ExtrudeGeometry(sh, { depth: 1, bevelEnabled: false }); geo.applyMatrix4(new THREE.Matrix4().set(0, 0, 1, -0.5, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1));
+    const bm = K3.std({ roughness: 0.42, metalness: 0.25, envMap: G3.env, envMapIntensity: 0.7 }), dark = K3.th({ roughness: 0.5, metalness: 0.3 }, ['#2f353c', '#262b31']), blk = K3.std({ color: '#15181c', roughness: 0.6, metalness: 0.2 });
+    const steel = K3.std({ color: '#c8cdd3', roughness: 0.25, metalness: 0.85, envMap: G3.env }), brass = K3.std({ color: '#c99a3e', roughness: 0.3, metalness: 0.85, envMap: G3.env });
+    const body = K3.mesh(geo, bm, true, true); g.add(body);
+    const plates = [K3.mesh(geo, dark), K3.mesh(geo, dark)]; plates.forEach((p) => { p.scale.x = 0.004; g.add(p); });
+    const bar = VD3K.box(1, 0.024, 0.012, dark, 0, 0, gp + th - 0.003); g.add(bar);
+    const flag = VD3K.box(GATE.flag, 0.0025, 0.036, blk, 0, 0, gp + th + 0.009); g.add(flag);
+    // mass discs on pegs at the sides, below the flag (so a gate beam sees only the flag)
+    const pegs = [-1, 1].map((s) => { const p = K3.seg(0.0035, steel); p.to([0, s * 0.03, -0.022], [0, s * 0.112, -0.022]); g.add(p); return p; });
+    void pegs;
+    const dg = new THREE.CylinderGeometry(0.02, 0.02, 0.0055, 28), discs = [];
+    for (let k = 0; k < 20; k++) { const d = K3.mesh(dg, brass); const s = k % 2 ? 1 : -1, j = k >> 1; d.position.set(0, s * (0.051 + j * 0.0059), -0.022); g.add(d); discs.push(d); }
+    // the bumper on the facing end: a steel spring loop, a velcro pad or (Blind) a plain rubber block that says nothing about e
+    const loopG = new THREE.TorusGeometry(0.009, 0.0011, 8, 24, Math.PI), loop = K3.mesh(loopG, steel);
+    const velcro = VD3K.box(0.006, 0.03, 0.02, K3.std({ color: '#1c1d22', roughness: 1 }), 0, 0, gp + th - 0.012);
+    const rubber = VD3K.box(0.008, 0.026, 0.018, K3.std({ color: '#30343a', roughness: 0.85 }), 0, 0, gp + th - 0.01);
+    g.add(loop, velcro, rubber);
+    let lastL = -1;
+    g.setL = (L) => {
+      if (Math.abs(L - lastL) < 1e-9) return; lastL = L;
+      body.scale.x = L - 0.026; bar.scale.x = L - 0.03; plates[0].position.x = -(L / 2 - 0.011); plates[1].position.x = L / 2 - 0.011;
+    };
+    g.setMass = (m) => { const n = clamp(Math.round(m / 0.25), 1, 20); discs.forEach((d, k) => { d.visible = k < n; }); };
+    g.setCol = (col) => { bm.color.set(col); };
+    g.setBump = (kind, side, L) => {
+      loop.visible = kind === 'spring'; velcro.visible = kind === 'velcro'; rubber.visible = kind === 'rubber';
+      loop.position.set(side * (L / 2 - 0.009), 0, gp + th + 0.003); loop.rotation.set(0, 0, side > 0 ? -Math.PI / 2 : Math.PI / 2);
+      velcro.position.x = side * (L / 2 - 0.003); rubber.position.x = side * (L / 2 - 0.004);
+    };
+    return g;
+  }
+  function ghost3() {
+    const m = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.22, depthWrite: false }), w = 0.044;
+    const sh = new THREE.Shape(); sh.moveTo(-w, -w); sh.lineTo(0, 0.002); sh.lineTo(w, -w); sh.lineTo(w, -w + 0.06); sh.lineTo(-w, -w + 0.06); sh.closePath();
+    const geo = new THREE.ExtrudeGeometry(sh, { depth: 1, bevelEnabled: false }); geo.applyMatrix4(new THREE.Matrix4().set(0, 0, 1, -0.5, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1));
+    const g = new THREE.Mesh(geo, m); g.renderOrder = 3; g.mat = m; g.visible = false; return g;
+  }
+  function gate3(name) {
+    const g = new THREE.Group(), blk = K3.th({ roughness: 0.45, metalness: 0.25 }, ['#30363e', '#2a3038']), steel = K3.std({ color: '#b9c1ca', roughness: 0.3, metalness: 0.7, envMap: G3.env });
+    const zF = ZB + FLAGZ, yA = 0.15, top = ZB + 0.092;
+    for (const s of [-1, 1]) {
+      g.add(VD3K.box(0.03, 0.022, top - (zF - 0.022), blk, 0, s * yA, zF - 0.022));
+      const led = VD3K.box(0.006, 0.002, 0.006, new THREE.MeshBasicMaterial({ color: '#ff4a3a' }), 0, s * (yA - 0.012), zF - 0.003); g.add(led);
+    }
+    g.add(VD3K.box(0.03, 2 * yA + 0.022, 0.02, blk, 0, 0, top));
+    const sy = yA + 0.07;
+    g.add(VD3K.box(0.09, 0.09, 0.012, blk, 0, sy, 0), VD3K.rod([0, sy, 0.012], [0, sy, top + 0.01], 0.006, steel), VD3K.rod([0, sy, top + 0.01], [0, yA, top + 0.01], 0.005, steel));
+    const beamM = new THREE.MeshBasicMaterial({ color: '#ff3b2a', transparent: true, opacity: 0.35, depthWrite: false });
+    const beam = new THREE.Mesh(new THREE.CylinderGeometry(0.0011, 0.0011, 2 * yA - 0.024, 6), beamM); beam.position.z = zF; g.add(beam);
+    g.beamM = beamM; g.name3 = name; return g;
+  }
+  function buildTrack() {
+    const V = G3.S, g = new THREE.Group(); V.scene.add(g); TR3.g = g;
+    const ht = K3.tex(64, 64); ht.c.fillStyle = '#d6dce2'; ht.c.fillRect(0, 0, 64, 64); ht.c.fillStyle = '#4c545e'; ht.c.beginPath(); ht.c.arc(32, 32, 5, 0, 7); ht.c.fill();
+    ht.t.wrapS = ht.t.wrapT = THREE.RepeatWrapping; ht.t.repeat.set(2 * TRK / 0.04, 1);
+    const beamM = K3.th({ map: ht.t, roughness: 0.34, metalness: 0.55, envMap: G3.env }, ['#ffffff', '#6f7984']);
+    const beam = K3.mesh(new THREE.BoxGeometry(2 * TRK, 0.06, 0.06), beamM, true, true); beam.rotation.x = Math.PI / 4; beam.position.z = ZB - 0.03 * Math.SQRT2; g.add(beam);
+    const dark = K3.th({ roughness: 0.45, metalness: 0.4 }, ['#59626d', '#3c444e']), blk = K3.th({ roughness: 0.5, metalness: 0.3 }, ['#2b3036', '#22272d']);
+    g.add(VD3K.box(2 * TRK, 0.05, 0.05, dark, 0, 0, 0.012));
+    for (const s of [-1, 1]) {
+      g.add(VD3K.box(0.09, 0.16, 0.012, blk, s * (TRK - 0.18), 0, 0));
+      g.add(VD3K.box(0.016, 0.1, ZB + 0.03 - 0.012, blk, s * (TRK + 0.008), 0, 0.012));
+    }
+    // air supply: a blower on the bench and its hose into the end of the track
+    const blow = new THREE.Group(); blow.add(VD3K.box(0.2, 0.17, 0.15, K3.th({ roughness: 0.55, metalness: 0.2 }, ['#3d4650', '#2e353e']), 0, 0, 0));
+    for (let k = 0; k < 5; k++) blow.add(VD3K.box(0.14, 0.002, 0.008, blk, 0, -0.086, 0.03 + k * 0.022));
+    blow.position.set(TRK + 0.2, 0.34, 0); g.add(blow);
+    g.add(VD3K.cable([TRK + 0.016, 0, ZB - 0.05], [TRK + 0.2, 0.25, 0.08], { via: [[TRK + 0.09, 0.0, ZB - 0.07], [TRK + 0.14, 0.12, 0.03]], rad: 0.012, color: 0x24282d }));
+    // a steel rule in cm along the front of the track, tipped toward the viewer
+    const rule = new THREE.Group();     /* three steel rules end to end, from −130 cm to 130 cm (so each prints sharply) */
+    for (const [a, b] of [[-130, -50], [-50, 50], [50, 130]]) { const rl = VD3K.ruler(V, { len: (b - a) / 100, from: a, to: b, unit: 'cm', step: 1, w: 0.055 }); rl.position.x += (a + 130) / 100; rule.add(rl); }
+    rule.rotation.x = 0.55; rule.position.set(-1.3, -0.075, 0.004); g.add(rule);
+    TR3.gl = [glider3(), glider3()]; TR3.gh = [ghost3(), ghost3()]; g.add(...TR3.gl, ...TR3.gh);
+    TR3.gates = { A: gate3('A'), B: gate3('B') }; g.add(TR3.gates.A, TR3.gates.B);
+    // the two channel timer at the front of the bench
+    TR3.meters = { A: VD3K.meter(V, { w: 0.18, h: 0.105, label: 'Gate A', sub: 'flag time, ms' }), B: VD3K.meter(V, { w: 0.18, h: 0.105, label: 'Gate B', sub: 'flag time, ms' }) };
+    g.add(VD3K.box(0.46, 0.16, 0.1, K3.th({ roughness: 0.5, metalness: 0.2 }, ['#59626d', '#3c444e']), -0.86, 0.42, 0));   /* the timer's case, on the bench behind the track */
+    TR3.meters.A.position.x = -0.96; TR3.meters.B.position.x = -0.76; for (const k of ['A', 'B']) { TR3.meters[k].position.y = 0.38; TR3.meters[k].position.z += 0.1; g.add(TR3.meters[k]); }
+    TR3.cables = {}; TR3.cx = {};
+    // center of mass pointer on the bench in front of the rule
+    TR3.cm = K3.mesh(new THREE.ConeGeometry(0.014, 0.034, 4).rotateX(Math.PI / 2).translate(0, 0, 0.017), K3.std({ color: '#d39b1c', roughness: 0.35, metalness: 0.5, envMap: G3.env }));
+    g.add(TR3.cm);
+    TR3.arr = [K3.arrow(0.006), K3.arrow(0.006)]; TR3.arr0 = [K3.arrow(0.006), K3.arrow(0.006)]; TR3.arrV = K3.arrow(0.0045); g.add(...TR3.arr, ...TR3.arr0, TR3.arrV);
+    // explosion: a coil spring between the gliders and the thread that holds it
+    const pts = []; for (let k = 0; k <= 200; k++) { const u = k / 200, a = u * 8 * 2 * Math.PI; pts.push(new THREE.Vector3(u, 0.009 * Math.cos(a), 0.009 * Math.sin(a))); }
+    TR3.spring = K3.mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 400, 0.0012, 6, false), K3.std({ color: '#c9ced4', roughness: 0.3, metalness: 0.8, envMap: G3.env }));
+    TR3.thread = K3.seg(0.0007, K3.std({ color: '#f0ece0', roughness: 0.9 })); g.add(TR3.spring, TR3.thread);
+  }
+  function cable3(gn, x) {
+    if (TR3.cx[gn] === x) return; TR3.cx[gn] = x;
+    if (TR3.cables[gn]) G3.S.dispose(TR3.cables[gn]);
+    const mx = TR3.meters[gn].position.x, c = VD3K.cable([x, 0.22 + 0.045, 0.006], [mx, 0.5, 0.05], { via: [[x, 0.3, 0.004], [(x + mx) / 2, 0.56, 0.004], [mx, 0.56, 0.02]], rad: 0.0025 });
+    TR3.cables[gn] = c; TR3.g.add(c);
+  }
+  function upd3Track() {
+    if (!TR3.g) buildTrack();
+    const ex = S.mode === 'explode', BL = blind(), p = P(), off = frameOff(t), off0 = frameOff(0), atStart = t === 0 || held, zA = ZB + 0.16;
+    run.bodies.forEach((b, i) => {
+      const gl = TR3.gl[i], x = b.pos(t)[0];
+      gl.visible = Math.abs(x) + b.size / 2 < TRK - 0.002;    /* a glider that runs into an end of the track leaves the picture, as it leaves the flat view */
+      gl.position.set(x, 0, ZB); gl.setL(b.size); gl.setMass(b.m); gl.setCol(T.body[i]);
+      gl.setBump(ex ? 'none' : BL ? 'rubber' : p.e < 0.05 ? 'velcro' : 'spring', i ? -1 : 1, b.size);
+      const gh = TR3.gh[i]; gh.visible = S.layers.ghost && !atStart; gh.position.set(b.pos(0)[0], 0, ZB); gh.scale.x = b.size; gh.mat.color.set(T.body[i]);
+    });
+    const ev = shownEvents();
+    for (const gn of ['A', 'B']) {
+      const gx = S.gates[S.mode][gn], gt = TR3.gates[gn]; gt.position.x = gx;
+      const blocked = run.bodies.some((b) => Math.abs(b.pos(t)[0] - gx) < GATE.flag / 2); gt.beamM.opacity = blocked ? 0.95 : 0.3;
+      const last = ev.filter((q) => q.g === gn).pop(); TR3.meters[gn].set(last ? last.rd.msStr : '- - - -');
+      cable3(gn, gx);
+    }
+    const xc = cmAt(t)[0]; TR3.cm.visible = S.layers.cm; TR3.cm.position.set(xc, -0.17, 0);
+    const Vc = vcm()[0] - off.v[0];
+    if (S.layers.cm && Math.abs(Vc) * KV * 0.6 > 0.02) TR3.arrV.set([xc + Math.sign(Vc) * 0.02, -0.17, 0.012], [Math.sign(Vc), 0, 0], Math.abs(Vc) * KV * 0.6, T.equi); else TR3.arrV.off();
+    // velocity arrows: where the bodies are now, and (faint) at the start
+    TR3.arr.forEach((a) => a.off()); TR3.arr0.forEach((a) => a.off());
+    if (S.layers.arrows && !atStart) {
+      const pre = ex && t < EXP.ts;
+      run.bodies.forEach((b, i) => {
+        if (pre && i === 1) return;
+        const v = b.vel(t)[0] - off.v[0], x = pre ? cmAt(t)[0] : b.pos(t)[0];
+        TR3.arr[i].set([x, 0, zA], [Math.sign(v) || 1, 0, 0], Math.abs(v) * KV, pre ? T.equi : T.body[i]);
+      });
+    }
+    handles3 = [];
+    if (!ex) {
+      run.bodies.forEach((b, i) => {
+        const x0 = b.pos(0)[0], v0 = (i ? p.v2 : p.v1) - off0.v[0];
+        if (S.layers.arrows && (atStart || S.layers.ghost)) {
+          TR3.arr0[i].set([x0, 0, zA], [Math.sign(v0) || 1, 0, 0], Math.abs(v0) * KV, T.body[i], atStart ? 1 : 0.4);
+          handles3.push({ id: 'v' + i, round: true, col: T.body[i], pri: true, v: v0, lo: -2.4, hi: 2.4, at: (v) => [x0 + v * KV, 0, zA], set: (v) => setParam(i ? 'v2' : 'v1', v + off0.v[0], { nosync: true }) });
+        }
+        handles3.push({ id: 'c' + i, v: x0, lo: -XR, hi: XR, at: (v) => [v, 0, ZB + 0.062], set: (v) => { const q = P(); q[i ? 'x2' : 'x1'] = v; trackKeep(q, i + 1); } });
+      });
+    } else {
+      const x0 = cmAt(0)[0], V0 = p.V - off0.v[0];
+      if (S.layers.arrows && (atStart || S.layers.ghost)) {
+        TR3.arr0[0].set([x0, 0, zA], [Math.sign(V0) || 1, 0, 0], Math.abs(V0) * KV, T.equi, atStart ? 1 : 0.4);
+        handles3.push({ id: 'V', round: true, col: T.equi, pri: true, v: V0, lo: -1.4, hi: 1.4, at: (v) => [x0 + v * KV, 0, zA], set: (v) => setParam('V', v + off0.v[0], { nosync: true }) });
+      }
+      handles3.push({ id: 'pair', v: p.x0, lo: -0.7, hi: 0.7, at: (v) => [v, 0, ZB + 0.062], set: (v) => { const q = P(); q.x0 = +clamp(v, -0.7, 0.7).toFixed(3); } });
+    }
+    for (const gn of ['A', 'B']) handles3.push({ id: 'g' + gn, gate: true, v: S.gates[S.mode][gn], lo: -1, hi: 1, at: (v) => [v, 0, ZB + 0.114],
+      set: (v) => { S.gates[S.mode][gn] = +clamp(Math.round(v * 100) / 100, -1, 1).toFixed(2); } });
+    // the explosion's spring and thread
+    TR3.spring.visible = TR3.thread.visible = false;
+    if (ex) {
+      const b0 = run.bodies[0], b1 = run.bodies[1], xr = b0.pos(t)[0] + b0.size / 2, gap = run.gapAt(t)[0];
+      TR3.spring.visible = true; TR3.spring.position.set(xr, 0, ZB + 0.016); TR3.spring.scale.x = Math.max(0.002, Math.min(gap, EXP.Ls));
+      if (t < EXP.ts || held) { TR3.thread.visible = true; TR3.thread.to([b0.pos(t)[0] + b0.size * 0.2, 0, ZB + 0.028], [b1.pos(t)[0] - b1.size * 0.2, 0, ZB + 0.028]); }
+    }
+    const tx = S.frame === 'cm' ? cmAt(t)[0] : 0;
+    return { t: [tx, 0.0, ZB - 0.02], d: OV0() < 1.6 ? 1.45 : 1.8, ref: OV0() < 1.6 ? 1.3 : 2.3, ovl: () => ovl3Track(ex, BL, off, off0, atStart, zA) };
+  }
+  function ovl3Track(ex, BL, off, off0, atStart, zA) {
+    const ls = OV.ls, fs = 11.5 * ls, p = P(), ev = shownEvents();
+    for (const gn of ['A', 'B']) { const last = ev.filter((q) => q.g === gn).pop(); tag(`${gn}${last ? '  ' + last.rd.msStr + ' ms' : ''}`, [S.gates[S.mode][gn] + 0.018, -0.15, ZB + 0.08], 'left', T.ink, 11.5, 600, 2, 0); }
+    run.bodies.forEach((b, i) => { const x = b.pos(t)[0]; if (Math.abs(x) + b.size / 2 < TRK) tag(`${ex ? '' : 'm' + (i ? '₂' : '₁') + ' '}${sig(b.m, 2)} kg`, [x, -0.06, ZB - 0.075], 'center', T.body[i], 11, 700, 0, 4); });
+    if (S.layers.cm) tag('CM', [cmAt(t)[0], -0.17, 0.0], 'center', T.equi, 11, 700, 0, 16);
+    if (S.layers.arrows) {
+      const lab = [];   /* two velocity labels that would overlap: the second one moves up a line */
+      const tag = (txt, q, al, col, sz, wt, dx, dy) => { const p0 = G3.S.project(q), w = richWidth(OV.ctx, txt, sz * OV.ls, wt);
+        if (lab.some((r) => Math.abs(r[0] - p0[0]) < (w + r[1]) / 2 + 6 && Math.abs(r[2] - (p0[1] + dy * OV.ls)) < 14 * OV.ls)) dy -= 17;
+        lab.push([p0[0], w, p0[1] + dy * OV.ls]); return tag0(txt, q, al, col, sz, wt, dx, dy); };
+      if (!atStart && !BL) {
+        const pre = ex && t < EXP.ts;
+        run.bodies.forEach((b, i) => {
+          if (pre && i === 1) return;
+          const v = b.vel(t)[0] - off.v[0], x = pre ? cmAt(t)[0] : b.pos(t)[0];
+          tag(pre ? `V = ${fv(v)}` : `v_${i + 1} = ${fv(v)}`, [x + v * KV / 2, 0, zA], 'center', pre ? T.equi : T.body[i], 11.5, 600, 0, -9);
+        });
+      } else if (atStart) {
+        if (!ex) run.bodies.forEach((b, i) => { const v0 = (i ? p.v2 : p.v1) - off0.v[0]; tag(`v_${i + 1} = ${fv(v0)}`, [b.pos(0)[0] + v0 * KV / 2, 0, zA], 'center', T.body[i], 11.5, 600, 0, -11); });
+        else { const V0 = p.V - off0.v[0]; tag(`V = ${fv(V0)}`, [cmAt(0)[0] + V0 * KV / 2, 0, zA], 'center', T.equi, 11.5, 600, 0, -11); }
+      }
+    }
+    if (ex && (t < EXP.ts || held) && OV.W > 420) { const b0 = run.bodies[0], b1 = run.bodies[1]; tag('thread', [(b0.pos(t)[0] + b1.pos(t)[0]) / 2, 0, ZB + 0.03], 'center', T.muted, 10.5, 400, 0, -8); }
+    // the moment of contact
+    if (!ex && isFinite(run.tc) && Math.abs(t - run.tc) < 0.12 && t > 0) {
+      const a = 1 - Math.abs(t - run.tc) / 0.12, q = G3.S.project([run.bodies[0].pos(run.tc)[0] + run.bodies[0].size / 2, 0, ZB + 0.01]), ctx = OV.ctx, ps = projScale();
+      ctx.strokeStyle = T.equi; ctx.lineWidth = 2 * ps; ctx.globalAlpha = a;
+      ctx.beginPath(); for (let k = 0; k < 8; k++) { const an = k * Math.PI / 4; ctx.moveTo(q[0] + Math.cos(an) * 6 * ps, q[1] + Math.sin(an) * 6 * ps); ctx.lineTo(q[0] + Math.cos(an) * 16 * ps, q[1] + Math.sin(an) * 16 * ps); } ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    grips3();
+    // the bookkeeping, as in the flat view: momentum and kinetic energy before and after
+    let y = ctlH + 8 * ls;
+    if (!BL && OV.W >= 480) {
+      const B = pk('before'), A = pk('after'), done = held || t >= run.tc + (run.tq && isFinite(run.tq) ? run.tq : 0) || !isFinite(run.tc);
+      const ef = clamp(12.5 * ls * Math.min(1, OV.W / 700), 10, 18), pS = (q) => fx(q, 2), tp = (X) => X[0].p[0] + X[1].p[0], tk = (X) => X[0].K + X[1].K;
+      let r0 = `before:  p_1 + p_2 = ${pS(B[0].p[0])} + ${pS(B[1].p[0])} = ${pS(tp(B))} kg·m/s    K = ${fx(tk(B), 3)} J`, r1 = `after:   p_1′ + p_2′ = ${pS(A[0].p[0])} + ${pS(A[1].p[0])} = ${pS(tp(A))} kg·m/s    K = ${fx(tk(A), 3)} J`;
+      if (OV.W < 640) { r0 = r0.replace('before:  ', 'before: ').replace(/ {4}K = .*/, ''); r1 = r1.replace('after:   ', 'after: ').replace(/ {4}K = .*/, ''); }
+      panel3(r0, y + ef, T.muted, ef, true); panel3(r1, y + ef * 2.6, T.ink, ef, true, done ? 1 : 0.45); y += ef * 3.2;
+    } else if (BL) { panel3('Blind: read the velocities from the photogates', y + fs, T.muted, fs, false); y += fs * 1.8; }
+    if (!ex && !isFinite(run.tc)) panel3('No collision: cart 1 never catches cart 2', y + fs, T.muted, fs, false);
+    if (ex && t >= EXP.ts && t < EXP.ts + 0.5 && !held) panel3('thread cut', y + fs, T.muted, fs, false);
+    const cmNote = S.frame === 'cm' ? ' Center of mass frame: the camera rides with the center of mass and the arrows show velocities relative to it.' : '';
+    note3(OV.W < 520 ? `Track, gliders, flags and gates to scale; rule in cm.${S.frame === 'cm' ? ' Camera rides with the center of mass.' : ''} ${NOTE3S}` : `Air track, gliders, flags and gate positions to scale; the rule is in cm; arrows 0.2 m per m/s.${cmNote} ${NOTE3}`);
+  }
+
+  // ---- the air table: pucks on a perforated table seen at a tilt, their paths, the line of centers ----
+  const TB3 = { g: null };
+  function buildTable() {
+    const V = G3.S, g = new THREE.Group(); V.scene.add(g); TB3.g = g;
+    const ht = K3.tex(64, 64); ht.c.fillStyle = '#ffffff'; ht.c.fillRect(0, 0, 64, 64); ht.c.fillStyle = 'rgba(60,70,82,0.55)'; ht.c.beginPath(); ht.c.arc(32, 32, 3.2, 0, 7); ht.c.fill();
+    ht.t.wrapS = ht.t.wrapT = THREE.RepeatWrapping; ht.t.repeat.set(2 * TBL.x / 0.05, 2 * TBL.y / 0.05);
+    const surf = K3.mesh(new THREE.PlaneGeometry(2 * TBL.x, 2 * TBL.y), K3.th({ map: ht.t, roughness: 0.42, metalness: 0.05 }, ['#eef2f6', '#7d8a99']), false, true);
+    surf.position.z = 0.0005; g.add(surf);
+    const frame = K3.th({ roughness: 0.5, metalness: 0.35 }, ['#6b747f', '#3c444e']), leg = K3.th({ roughness: 0.45, metalness: 0.5 }, ['#59626d', '#353d47']);
+    g.add(VD3K.box(2 * TBL.x + 0.12, 2 * TBL.y + 0.12, 0.06, frame, 0, 0, -0.06));
+    for (const sx of [-1, 1]) for (const sy of [-1, 1]) g.add(VD3K.box(0.06, 0.06, -FLOOR - 0.06, leg, sx * (TBL.x - 0.08), sy * (TBL.y - 0.08), FLOOR));
+    g.add(VD3K.box(0.5, 0.36, 0.26, K3.th({ roughness: 0.55, metalness: 0.2 }, ['#3d4650', '#2e353e']), 0, 0, FLOOR));
+    g.add(VD3K.cable([0, 0.1, FLOOR + 0.24], [0, 0.1, -0.06], { via: [[0.05, 0.14, FLOOR + 0.4], [-0.05, 0.12, -0.25]], rad: 0.018, color: 0x24282d }));
+    TB3.pk = [0, 1].map((i) => {
+      const T2 = K3.tex(256, 256), side = K3.std({ color: '#2a2f36', roughness: 0.5, metalness: 0.2 }), topM = K3.std({ map: T2.t, roughness: 0.35, metalness: 0.1 });
+      const m = K3.mesh(new THREE.CylinderGeometry(1, 1, 0.024, 48).rotateX(Math.PI / 2).translate(0, 0, 0.012), [side, topM, side], true, true);
+      T2.t.center.set(0.5, 0.5); T2.t.rotation = Math.PI / 2; m.T2 = T2; m.key = ''; g.add(m); return m;
+    });
+    TB3.paths = [K3.line(true, 0.04), K3.line(true, 0.04)]; TB3.trail = [K3.line(false), K3.line(false)]; g.add(...TB3.trail); TB3.cmPath = K3.line(true, 0.015);
+    TB3.cRing = [K3.ring(true), K3.ring(true)]; TB3.gRing = [K3.ring(true), K3.ring(true)]; TB3.loc = K3.line(false);
+    TB3.bLine = K3.line(true, 0.012); TB3.bSeg = K3.line(false);
+    g.add(...TB3.paths, TB3.cmPath, ...TB3.cRing, ...TB3.gRing, TB3.loc, TB3.bLine, TB3.bSeg);
+    TB3.cm = K3.mesh(new THREE.OctahedronGeometry(0.016), K3.std({ color: '#d39b1c', roughness: 0.35, metalness: 0.5, envMap: G3.env })); g.add(TB3.cm);
+    TB3.arr = [K3.arrow(0.0055), K3.arrow(0.0055)]; TB3.arr0 = [K3.arrow(0.0045), K3.arrow(0.0045)]; g.add(...TB3.arr, ...TB3.arr0);
+  }
+  function puckTop(m, i) {
+    const col = T.body[i]; if (m.key === col) return; m.key = col;
+    const c = m.T2.c; c.clearRect(0, 0, 256, 256);
+    c.fillStyle = '#e8ecf0'; c.fillRect(0, 0, 256, 256);
+    c.fillStyle = col; c.beginPath(); c.arc(128, 128, 128, 0, 7); c.fill();
+    c.fillStyle = '#f4f6f8'; c.beginPath(); c.arc(128, 128, 92, 0, 7); c.fill();
+    c.fillStyle = col; c.globalAlpha = 0.25; c.beginPath(); c.arc(128, 128, 92, 0, 7); c.fill(); c.globalAlpha = 1;
+    c.fillStyle = '#1f262f'; c.font = `700 120px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle'; c.fillText(String(i + 1), 128, 136);
+    m.T2.t.needsUpdate = true;
+  }
+  function upd3Table() {
+    if (!TB3.g) buildTable();
+    const B = blind(), p = P(), off = frameOff(t), off0 = frameOff(0), atStart = t === 0 || held, tEnd = B ? t : Trun, zA = 0.03;
+    const onTable = (r, R) => Math.abs(r[0]) < TBL.x + 0.06 - R * 0.3 && Math.abs(r[1]) < TBL.y + 0.06 - R * 0.3;
+    run.bodies.forEach((b, i) => {
+      const m = TB3.pk[i], r = b.pos(t); puckTop(m, i);
+      m.visible = onTable(r, b.size); m.position.set(r[0], r[1], 0); m.scale.set(b.size, b.size, 1);
+      const pts = []; for (let k = 0; k <= 120; k++) { const q = b.pos(tEnd * k / 120); pts.push([q[0], q[1], 0.002]); }
+      TB3.paths[i].pts(pts, T.body[i], 0.6);
+      const tp = []; for (let k = 0; k <= 60; k++) { const q = b.pos(t * k / 60); tp.push([q[0], q[1], 0.003]); }   /* where it has been: a solid trail */
+      if (t > 0) TB3.trail[i].pts(tp, T.body[i], 0.95); else TB3.trail[i].visible = false;
+      const gr = TB3.gRing[i]; gr.visible = S.layers.ghost && !atStart; if (gr.visible) { const r0 = b.pos(0); gr.position.set(r0[0], r0[1], 0.003); gr.scale.setScalar(b.size); gr.material.color.set(T.body[i]); gr.material.opacity = 0.7; }
+    });
+    // contact: where the pucks touch and the line of centers
+    TB3.cRing.forEach((r) => { r.visible = false; }); TB3.loc.visible = false;
+    if (isFinite(run.tc) && (!B || t >= run.tc)) {
+      const r1 = run.bodies[0].pos(run.tc), r2 = run.bodies[1].pos(run.tc), n = run.n, ext = 0.22, shown = t >= run.tc - 1e-9 || atStart;
+      [r1, r2].forEach((r, i) => { const cr2 = TB3.cRing[i]; cr2.visible = true; cr2.position.set(r[0], r[1], 0.004); cr2.scale.setScalar(run.bodies[i].size); cr2.material.color.set(T.body[i]); cr2.material.opacity = shown ? 0.8 : 0.35; });
+      TB3.loc.pts([[r1[0] - n[0] * ext, r1[1] - n[1] * ext, 0.004], [r2[0] + n[0] * ext, r2[1] + n[1] * ext, 0.004]], T.equi, shown ? 0.95 : 0.4);
+    }
+    // impact parameter, for a target at rest in the lab
+    TB3.bLine.visible = TB3.bSeg.visible = false; let bInfo = null;
+    if (S.frame === 'lab' && hyp(p.v2) < 1e-9 && hyp(p.v1) > 0) {
+      const u = [p.v1[0] / hyp(p.v1), p.v1[1] / hyp(p.v1)], dr = [p.r2[0] - p.r1[0], p.r2[1] - p.r1[1]], along = dr[0] * u[0] + dr[1] * u[1];
+      const foot = [p.r1[0] + u[0] * along, p.r1[1] + u[1] * along];
+      TB3.bLine.pts([[p.r1[0], p.r1[1], 0.003], [foot[0] + u[0] * 0.25, foot[1] + u[1] * 0.25, 0.003]], T.muted, 0.9);
+      const bb = Math.hypot(p.r2[0] - foot[0], p.r2[1] - foot[1]);
+      if (bb > 0.003) { TB3.bSeg.pts([[foot[0], foot[1], 0.03], [p.r2[0], p.r2[1], 0.03]], T.ink, 1); bInfo = { bb, foot }; }
+    }
+    // center of mass and its path
+    TB3.cm.visible = S.layers.cm; TB3.cmPath.visible = false;
+    if (S.layers.cm) { const c = cmAt(t), c0 = cmAt(0), c1 = cmAt(tEnd); TB3.cm.position.set(c[0], c[1], 0.03); TB3.cm.rotation.z = t * 2; TB3.cmPath.pts([[c0[0], c0[1], 0.003], [c1[0], c1[1], 0.003]], T.equi, 0.9); }
+    // velocity arrows and grips
+    TB3.arr.forEach((a) => a.off()); TB3.arr0.forEach((a) => a.off()); handles3 = [];
+    run.bodies.forEach((b, i) => {
+      const r = b.pos(t), v = b.vel(t), u = [v[0] - off.v[0], v[1] - off.v[1]], R = b.size, su = hyp(u);
+      if (S.layers.arrows && su * KV > R + 0.005 && TB3.pk[i].visible) TB3.arr[i].set([r[0] + u[0] / su * R, r[1] + u[1] / su * R, zA], [u[0], u[1], 0], su * KV - R, T.body[i]);
+      const r0 = b.pos(0);
+      handles3.push({ id: 'c' + i, plane: 0.024, pt: [r0[0], r0[1], 0.024], set2: (x, y) => { const q = P(); q[i ? 'r2' : 'r1'] = [x, y]; tableKeep(q, i + 1); } });
+      if (S.layers.arrows && (atStart || S.layers.ghost)) {
+        const v0 = i ? p.v2 : p.v1, w0 = [v0[0] - off0.v[0], v0[1] - off0.v[1]], L = hyp(w0) * KV;
+        let tip = [r0[0] + w0[0] * KV, r0[1] + w0[1] * KV];
+        if (!atStart && S.layers.ghost && L > R + 0.005) TB3.arr0[i].set([r0[0] + w0[0] / hyp(w0) * R, r0[1] + w0[1] / hyp(w0) * R, zA], [w0[0], w0[1], 0], L - R, T.body[i], 0.4);
+        if (atStart && L > R + 0.005) TB3.arr0[i].set([r0[0] + w0[0] / hyp(w0) * R, r0[1] + w0[1] / hyp(w0) * R, zA], [w0[0], w0[1], 0], L - R, T.body[i], 1);
+        if (L < R + 0.02) { const ux = L > 1e-6 ? w0[0] / hyp(w0) : 1, uy = L > 1e-6 ? w0[1] / hyp(w0) : 0; tip = [r0[0] + ux * (R + 0.025), r0[1] + uy * (R + 0.025)]; }
+        handles3.push({ id: 'v' + i, round: true, pri: true, col: T.body[i], plane: zA, pt: [tip[0], tip[1], zA], set2: (mx, my) => {
+          const q = P(), lim = 2;
+          let vx = (mx - r0[0]) / KV + off0.v[0], vy = (my - r0[1]) / KV + off0.v[1];
+          const sp = Math.hypot(vx, vy); if (sp > lim) { vx *= lim / sp; vy *= lim / sp; }
+          vx = Math.round(vx * 20) / 20; vy = Math.round(vy * 20) / 20;
+          if (i === 0 && Math.hypot(vx, vy) < 0.05) vx = 0.05;
+          q[i ? 'v2' : 'v1'] = [vx, vy];
+        } });
+      }
+    });
+    const c = S.frame === 'cm' ? cmAt(t) : [0, 0];
+    return { t: [c[0], c[1] - 0.02, 0], d: 2.3, ref: 1.9, ovl: () => ovl3Table(B, off, off0, atStart, bInfo, zA) };
+  }
+  function ovl3Table(B, off, off0, atStart, bInfo, zA) {
+    const p = P();
+    if (isFinite(run.tc) && (!B || t >= run.tc) && (t >= run.tc - 1e-9 || atStart) && OV.W > 360) {
+      const r2 = run.bodies[1].pos(run.tc), n = run.n; tag('line of centers', [r2[0] + n[0] * 0.22, r2[1] + n[1] * 0.22, 0.004], 'left', T.equi, 11, 600, 6, 4);
+    }
+    if (bInfo) tag(`b = ${fx(bInfo.bb * 100, 1)} cm`, [(bInfo.foot[0] + p.r2[0]) / 2, (bInfo.foot[1] + p.r2[1]) / 2, 0.03], 'right', T.ink, 11.5, 600, -8, 4);
+    if (S.layers.cm) { const c = cmAt(t); tag('CM', [c[0], c[1], 0.03], 'left', T.equi, 11, 700, 9, 14); }
+    run.bodies.forEach((b, i) => {
+      const r = b.pos(t), v = b.vel(t), u = [v[0] - off.v[0], v[1] - off.v[1]];
+      if (S.layers.arrows && !atStart && !B && hyp(u) > 1e-6 && TB3.pk[i].visible) tag(fv(hyp(u)), [r[0] + u[0] * KV, r[1] + u[1] * KV, zA], 'left', T.body[i], 11.5, 600, 6, -6);
+      if (S.layers.arrows && atStart) { const v0 = i ? p.v2 : p.v1, w0 = [v0[0] - off0.v[0], v0[1] - off0.v[1]], r0 = b.pos(0); tag(`v_${i + 1} = ${fv(hyp(w0))}`, [r0[0] + w0[0] * KV, r0[1] + w0[1] * KV, zA], 'left', T.body[i], 11.5, 600, 10, -8); }
+    });
+    grips3();
+    if (!isFinite(run.tc)) panel3('Miss: b is larger than R₁ + R₂', ctlH + 22 * OV.ls, T.muted, 11.5 * OV.ls, false);
+    const cmNote = S.frame === 'cm' ? ' Center of mass frame: the camera rides with the center of mass and the arrows show velocities relative to it.' : '';
+    note3(OV.W < 520 ? `Table and pucks to scale; dashed: the paths.${S.frame === 'cm' ? ' Camera rides with the center of mass.' : ''} ${NOTE3S}` : `Air table and pucks to scale (holes 5 cm apart); dashed lines: the paths ${B ? 'so far' : 'over the whole run'}; arrows 0.2 m per m/s.${cmNote} ${NOTE3}`);
+  }
+
+  // ---- Newton's cradle: steel balls each hung from two strings on a chrome frame, on the bench ----
+  const CR3 = { g: null };
+  function buildCradle() {
+    const V = G3.S, g = new THREE.Group(); V.scene.add(g); CR3.g = g;
+    const chrome = K3.std({ color: '#dfe3e8', roughness: 0.12, metalness: 1, envMap: G3.env, envMapIntensity: 1.3 }), base = K3.th({ roughness: 0.3, metalness: 0.1 }, ['#23272c', '#1a1d21']);
+    const strM = K3.std({ color: '#e8e4da', roughness: 0.8 });
+    CR3.base = VD3K.box(1, 2 * CR3D + 0.08, 0.02, base, 0, 0, 0); g.add(CR3.base);
+    CR3.rails = [-1, 1].map((s) => { const r = K3.seg(0.004, chrome); g.add(r); return r; });
+    CR3.posts = []; for (let k = 0; k < 4; k++) { const r = K3.seg(0.004, chrome); g.add(r); CR3.posts.push(r); }
+    CR3.balls = []; CR3.str = [];
+    for (let i = 0; i < 7; i++) {
+      const b = K3.mesh(new THREE.SphereGeometry(CR.R, 40, 24), chrome); g.add(b); CR3.balls.push(b);
+      const s2 = [K3.seg(0.0006, strM), K3.seg(0.0006, strM)]; s2.forEach((s) => g.add(s)); CR3.str.push(s2);
+    }
+    CR3.arr = []; for (let i = 0; i < 7; i++) { const a = K3.arrow(0.0028); g.add(a); CR3.arr.push(a); }
+  }
+  const CR3D = 0.07, CR3Z = 0.02 + 0.03 + CR.R + CR.L;   /* the strings' anchors are CR3D either side of the swing plane; the pivot line height */
+  function upd3Cradle() {
+    if (!CR3.g) buildCradle();
+    const p = P(), N = p.N, px = (i) => (i - (N - 1) / 2) * 2 * CR.R, zP = CR3Z;
+    const ball = (i, th) => [px(i) + CR.L * Math.sin(th), 0, zP - CR.L * Math.cos(th)];
+    const xe = (N - 1) * CR.R + CR.L * 0.75;
+    CR3.base.scale.x = 2 * xe + 0.1;
+    CR3.rails.forEach((r, k) => r.to([-xe, (k ? 1 : -1) * CR3D, zP], [xe, (k ? 1 : -1) * CR3D, zP]));
+    CR3.posts.forEach((r, k) => { const sx = k & 1 ? 1 : -1, sy = k & 2 ? 1 : -1; r.to([sx * xe, sy * CR3D, 0.02], [sx * xe, sy * CR3D, zP]); });
+    const vmax = Math.sqrt(2 * G * CR.L * (1 - Math.cos(p.th * Math.PI / 180))) || 1;
+    handles3 = [];
+    for (let i = 0; i < 7; i++) {
+      const on = i < N; CR3.balls[i].visible = on; CR3.str[i].forEach((s) => { s.visible = on; }); CR3.arr[i].off(); if (!on) continue;
+      const b = ball(i, cr.th[i]); CR3.balls[i].position.set(b[0], b[1], b[2]);
+      CR3.str[i].forEach((s, k) => s.to([px(i), (k ? 1 : -1) * CR3D, zP], [b[0] - CR.R * 0.8 * Math.sin(cr.th[i]), 0, b[2] + CR.R * 0.8 * Math.cos(cr.th[i])]));
+      const v = cr.om[i] * CR.L * Math.cos(cr.th[i]);
+      if (S.layers.arrows && Math.abs(v) > 0.05 * vmax) CR3.arr[i].set([b[0], -CR.R - 0.004, b[2] - CR.R - 0.012], [Math.sign(v), 0, 0], Math.abs(v) / vmax * 0.07, T.accent);
+      if (i < N - 1) handles3.push({ id: 'b' + i, round: true, v: Math.max(0, -cr.th[i] * 180 / Math.PI), lo: 0, hi: 45, at: (v) => ball(i, -v * Math.PI / 180), set: (v) => { const q = P(); q.k = i + 1; q.th = clamp(Math.round(v), 5, 40); } });
+    }
+    return { t: [0, 0, 0.17], d: 0.82, ref: 1.55, ovl: () => {
+      if (held) { const b = ball(p.k - 1, cr.th[p.k - 1]); tag(`${p.k} ball${p.k > 1 ? 's' : ''} at ${p.th}°`, [b[0] - CR.R, 0, b[2] + CR.R], 'right', T.ink, 11.5, 600, -6, -6); }
+      grips3();
+      note3(OV.W < 520 ? `To scale: ${CR.R * 200} cm balls on ${CR.L * 100} cm strings. ${NOTE3S}` : `Balls, strings and frame to scale: ${CR.R * 200} cm steel balls on ${CR.L * 100} cm strings, each hung from two strings so it swings in one plane. ${NOTE3}`);
+    } };
+  }
+
+  // one frame of the 3D view: the scene's objects from the state, the camera, then the labels and grips over it
+  function render3(ctx, W, H) {
+    const V = G3.S, m = S.mode; V.size(W, H);
+    if (G3.mode !== m) { G3.mode = m; Object.assign(G3.o, HOME3[m], { zoom: 1 }); }
+    const tr = m === 'track' || m === 'explode';
+    if (TR3.g) TR3.g.visible = tr; if (TB3.g) TB3.g.visible = m === 'table'; if (CR3.g) CR3.g.visible = m === 'cradle';
+    G3.bench.visible = m !== 'table';
+    const cam = tr ? upd3Track() : m === 'table' ? upd3Table() : upd3Cradle();
+    V.place(G3.o, cam.t, V.fit(cam.d, cam.ref));
+    V.render();
+    ctx.clearRect(0, 0, W, H);
+    OV = { ctx, W, H, ls: lsc(W, H) };
+    cam.ovl();
+  }
+  function view3(on) {
+    G3.on = on && !!G3.S;
+    if (G3.S) G3.S.el.hidden = !G3.on;
+    cans.c.style.touchAction = G3.on ? 'pan-y' : 'none';
+    cans.c.style.cursor = G3.on ? 'grab' : 'default';
+    hoverId = null; drag = null; handles = []; handles3 = [];
+    $('stage').classList.toggle('three', G3.on);
+    drawAll();
+  }
 
   tokens();
   buildSliders();
@@ -2175,6 +2753,7 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   for (const k of ['c', 'e', 'p']) ro.observe(panes[k]);
   new ResizeObserver(() => fitResize()).observe(fCan.parentElement);
   applyPreset('elastic');
+  VD3K.view({ seg: '#viewSeg', init: init3, change: view3, status: (m) => { $('live').textContent = m; capStatus(m); } });
   renderRows();
   setRunning(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
