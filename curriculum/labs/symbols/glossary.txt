@@ -3015,3 +3015,39 @@ M_Q0 | Fully corrected reading in ⁶⁰Co | nC
 s | Standard deviation of the readings | nC
 n | Number of readings
 k | Coverage factor
+
+== mp-photon-interactions ==
+mu | Linear attenuation coefficient: the chance per unit length that a photon interacts | cm⁻¹
+rho | Density of the material | g/cm³
+mu_tr | Energy transfer coefficient: the part of μ that hands energy to electrons and positrons | cm⁻¹
+mu_en | Energy absorption coefficient, μ_tr(1 − g) | cm⁻¹
+mu_1 | Attenuation coefficient of the first energy in the beam | cm⁻¹
+mu_2 | Attenuation coefficient of the second energy in the beam | cm⁻¹
+B | Buildup factor: broad beam kerma over the narrow beam prediction
+x | Distance into the absorber (dx is a thin layer of it) | cm
+t | Thickness of the slab | cm
+N | Number of photons that have not yet interacted (in the table: photons sent)
+N_0 | Number of photons at the start
+e | @euler
+sigma_a | Cross section per atom | b (10⁻²⁴ cm²)
+A | Molar mass (atomic weight) | g/mol
+sigma_coh | Coherent (Rayleigh) scattering cross section | per atom; ÷ρ: cm²/g
+sigma_incoh | Incoherent (Compton) scattering cross section | per atom; ÷ρ: cm²/g
+tau | Photoelectric cross section | per atom; ÷ρ: cm²/g
+tau_a | Photoelectric cross section per atom | b/atom
+kappa | Pair production cross section (nuclear and electron fields) | per atom; ÷ρ: cm²/g
+Z | Atomic number
+n | Exponent of Z in τ_a ∝ Zⁿ, the slope of ln τ_a against ln Z
+h [h\nu] | @h
+h | Homogeneity coefficient, HVL₁/HVL₂
+nu | Photon frequency (hν is the photon energy) | Hz
+c | @c
+g | Share of the electrons' energy radiated again as bremsstrahlung
+Phi | Photon fluence | cm⁻²
+E | Photon energy | keV
+K | Air kerma behind the absorber | Gy
+K_0 | Air kerma with no absorber
+K_1 | Kerma carried by the first energy in the beam (no absorber)
+K_2 | Kerma carried by the second energy in the beam (no absorber)
+d | Derivative: d/dx is the rate of change with depth x
+T | Narrow beam transmission: share of photons that never interacted

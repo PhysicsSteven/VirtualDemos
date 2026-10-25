@@ -4377,3 +4377,33 @@ modern physics, worksheets in `COURSE_HANDOUTS['medical-physics']`.
 
 For GPT: please check the TRS-398 numbers (k_Q 1.0293 for the PTW 30013 at 150 MeV, the two voltage coefficients, z_ref rule),
 the Boag formulas and constants, and both keys' arithmetic against their data files.
+
+## 2026-10-25 · Claude · Photon Interactions in Matter (Medical Physics demo, worksheet, key, notes, tests)
+
+Medical Physics plan gap 1 (Steve picked option A, 22:48). New demo `demos/photon-interactions.html`, unit 2 (photons) of the
+Medical Physics course, with worksheet `mp-photon-interactions`, notes, tests and a key from a real run in TeacherKeys.
+
+- Data: `demos/lib/photondata.js`, built by `tools/photondata/` (README there lists sources and how to rebuild it; it rebuilds
+  byte for byte). NIST XCOM components for Z 1 to 92 (from the MIT licensed MuMassCalculator tables, used with NIST's permission),
+  NIST SRD 126 μ/ρ and μ_en/ρ of 15 materials (raw tables in `tools/photondata/srd126/`), xraylib form factors, incoherent
+  scattering functions, Krause yields and Deslattes line energies, SpekPy 2.5.4 tungsten spectra.
+- Views: Coefficients (five processes, μ_tr/ρ and μ_en/ρ, four scales), Which process wins (Z against energy map, equivalent Z,
+  stacked shares), Narrow and broad beam (photon only slab Monte Carlo, T and K/K₀ with standard errors, buildup B), Beam
+  hardening (HVL₁, HVL₂, h, mean and effective energy, air kerma). Fourteen setups. Every stated approximation is in the About
+  text and the notes: XCOM additivity, K and L only fluorescence (so g for lead below 1 MeV holds some fluorescence), no Doppler
+  broadening, slab broad parallel beam buildup (not ANSI/ANS 6.4.3 point isotropic), bin center HVLs.
+- Constants: CODATA 2022 m_ec² = 510.99895069 keV and r_e = 2.8179403205 fm, the same as the Compton demo.
+- Tests `curriculum/validation/test_photon-interactions.cjs`, 11 groups: XCOM sums against every SRD 126 table (median 0.01 %),
+  printed SRD values, the gamma spectroscopy demo's attenuation (1 %), Klein–Nishina closed form, g for water, the crossings (water
+  28.0 keV and 24.1 MeV, lead 556 keV and 4.75 MeV), the Monte Carlo against e^(−μt) over 10 seeds, buildup (water 2.49, lead
+  2.09), HVLs against SpekPy (80 kVp, 2.5 mm Al: 2.740 and 4.093 mm).
+- Worksheet: five parts, one table each (Coefficients, Z dependence, Which wins, Beam, Hardening), all graphed; FROM_DEMO picks
+  the table by the reading's mode. Upper level: calculus in Before the lab, fits with standard errors, a binomial error check.
+  Glossary section added (symbols.py --check, --meanings 0, symcheck 0 differences).
+- Key: TeacherKeys `worksheet-keys/medical-physics/` and capture script `tools/capture/mp-photon-interactions.cjs`. Notes answers
+  in TeacherKeys `answers/photon-interactions.md`.
+- vdcheck `--only after` 0 problems, `--only clip` 0 controls cut off. No How this works video yet: Steve wants a visual pass on
+  the Medical Physics demos first.
+
+**For GPT:** please check the preset hints and the worksheet's Background against the tables (the K edge jumps, the crossings,
+the bone and soft tissue ratios), the key's fits, and hyphens.

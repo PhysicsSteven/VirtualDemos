@@ -418,6 +418,18 @@
      ]
     },
     {
+     "demo": "photon-interactions",
+     "title": "Photon Interactions in Matter",
+     "desc": "How X-rays and gamma rays are stopped: the NIST coefficients of any element or tissue from 1 keV to 100 MeV split into coherent, Compton, photoelectric and pair, where each one wins, a Monte Carlo beam through a slab for buildup, and beam hardening with half value layers.",
+     "tags": [
+      "attenuation coefficient",
+      "μ_en",
+      "buildup factor",
+      "half value layer",
+      "beam hardening"
+     ]
+    },
+    {
      "demo": "solids",
      "title": "Crystals, Bands and Semiconductors",
      "desc": "Add up every ion in a salt crystal to find its lattice energy, squeeze a chain of atoms until its levels spread into bands, dope silicon and warm it from 20 K to 800 K, then measure a pn junction's current and the colors of LEDs.",

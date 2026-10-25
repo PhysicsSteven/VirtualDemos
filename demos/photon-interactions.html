@@ -1,0 +1,815 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/photondata.js"></script>
+<title>Photon Interactions in Matter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: one color per interaction, the stage with its card and chart */
+:root { --coh: #7c3aed; --inc: #2b60b5; --pe: #c2410c; --pairn: #1f9a4a; --paire: #0f766e; --tot: #1d2430; --tr: #b45309; --en: #be185d; --slab: #c9d3df; --slabedge: #8a96a6; --beam: #c98a00; --fluor: #db2777; --band1: rgba(194, 65, 12, 0.08); --band2: rgba(43, 96, 181, 0.08); --band3: rgba(31, 154, 74, 0.09); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --coh: #b79bff; --inc: #69a0ff; --pe: #ff8a50; --pairn: #4cd07d; --paire: #2dd4bf; --tot: #e8edf3; --tr: #fbbf24; --en: #f472b6; --slab: #2d3644; --slabedge: #6b7787; --beam: #ffc94a; --fluor: #f472b6; --band1: rgba(255, 138, 80, 0.10); --band2: rgba(105, 160, 255, 0.10); --band3: rgba(76, 208, 125, 0.10); } }
+:root[data-theme="dark"] { --coh: #b79bff; --inc: #69a0ff; --pe: #ff8a50; --pairn: #4cd07d; --paire: #2dd4bf; --tot: #e8edf3; --tr: #fbbf24; --en: #f472b6; --slab: #2d3644; --slabedge: #6b7787; --beam: #ffc94a; --fluor: #f472b6; --band1: rgba(255, 138, 80, 0.10); --band2: rgba(105, 160, 255, 0.10); --band3: rgba(76, 208, 125, 0.10); }
+.stage { position: relative; display: grid; grid-template-columns: 272px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); grid-template-areas: "ctl ctl" "card main";
+  border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { grid-area: ctl; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl .seg { flex-wrap: wrap; }
+.pane { grid-area: main; position: relative; min-width: 0; min-height: 0; }
+.pane canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: pan-y; }
+.setup-card { grid-area: card; display: flex; flex-direction: column; gap: 6px; padding: 9px 10px; font-size: 0.86rem; border-right: 1px solid var(--line); background: var(--surface); min-width: 0; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: 0.07em; }
+.setup-card hr { border: 0; border-top: 1px solid var(--line); margin: 3px 0; width: 100%; }
+.setup-card .seg { flex-wrap: wrap; }
+.setup-card .seg button { font-size: 0.78rem; padding: 3px 7px; }
+.setup-card .lbl { font-size: 0.8rem; color: var(--muted); }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--canvas); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .row2 { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.setup-card .note { font-size: 0.78rem; color: var(--muted); margin: 0; }
+.slider-head { display: flex; justify-content: space-between; gap: 8px; font-size: 0.82rem; line-height: 1.25; }
+.slider-head output { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); }
+.readout dd.note { font-family: var(--font-ui); font-size: 0.86rem; font-weight: 400; }
+.formula { font-family: var(--font-mono); font-size: 0.8rem; overflow-wrap: anywhere; margin: 0 0 6px; }
+.srcs { margin: 0; padding-left: 18px; font-size: 0.8rem; color: var(--muted); }
+.blindtag { position: absolute; right: 10px; top: 8px; z-index: 3; font-size: 0.74rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--canvas); background: var(--ink); border-radius: 5px; padding: 3px 8px; }
+.prog { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(720px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }
+@media (max-width: 820px) {
+  html, body { height: auto; }
+  .app { height: auto; }
+  .stage { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto; grid-template-areas: "ctl" "main" "card"; }
+  .pane { height: 470px; }
+  .setup-card { border-right: 0; border-top: 1px solid var(--line); }
+  .chips button, .btn, .seg button, .proj, .spin { min-height: 36px; }
+  input[type="range"] { min-height: 28px; }
+}
+@media (max-width: 420px) { .pane { height: 430px; } }
+@media (max-width: 820px) { .pane[data-v="beam"] { height: 860px; } .pane[data-v="wins"], .pane[data-v="hard"] { height: 640px; } }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Photon Interactions in Matter</h1>
+      <p>A photon crossing matter is scattered coherently, scattered by an electron (Compton), absorbed by an atom (photoelectric) or turned into an electron and a positron (pair production). Read each process's share of the attenuation coefficient from the NIST tables for any element or tissue from 1 keV to 100 MeV, see which one wins at each energy and atomic number, send a beam through a slab to see narrow and broad beam attenuation and buildup, and harden an X-ray beam to measure its half value layers.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">keV · cm²/g · cm · mm Al</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/photon-interactions.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/photon-interactions.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h3v1h-3zM16 2h6v1h-6zM25 2h1v1h-1zM27 2h4v1h-4zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM11 3h1v1h-1zM16 3h3v1h-3zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM30 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM12 4h1v1h-1zM15 4h3v1h-3zM19 4h7v1h-7zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h3v1h-3zM17 5h2v1h-2zM20 5h2v1h-2zM26 5h3v1h-3zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h1v1h-1zM12 6h2v1h-2zM16 6h1v1h-1zM18 6h1v1h-1zM23 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h2v1h-2zM15 7h1v1h-1zM17 7h1v1h-1zM20 7h5v1h-5zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h3v1h-3zM16 9h2v1h-2zM19 9h5v1h-5zM25 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM13 10h1v1h-1zM15 10h1v1h-1zM17 10h1v1h-1zM20 10h7v1h-7zM31 10h5v1h-5zM38 10h1v1h-1zM4 11h3v1h-3zM10 11h2v1h-2zM13 11h2v1h-2zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h3v1h-3zM31 11h1v1h-1zM34 11h4v1h-4zM2 12h2v1h-2zM8 12h2v1h-2zM11 12h1v1h-1zM13 12h1v1h-1zM15 12h1v1h-1zM18 12h1v1h-1zM23 12h3v1h-3zM28 12h4v1h-4zM33 12h2v1h-2zM4 13h1v1h-1zM6 13h1v1h-1zM11 13h2v1h-2zM16 13h1v1h-1zM19 13h1v1h-1zM22 13h5v1h-5zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM6 14h3v1h-3zM10 14h2v1h-2zM14 14h1v1h-1zM16 14h2v1h-2zM19 14h1v1h-1zM23 14h2v1h-2zM26 14h1v1h-1zM29 14h4v1h-4zM36 14h3v1h-3zM2 15h1v1h-1zM7 15h1v1h-1zM10 15h1v1h-1zM13 15h1v1h-1zM15 15h1v1h-1zM17 15h3v1h-3zM21 15h1v1h-1zM23 15h3v1h-3zM28 15h3v1h-3zM34 15h2v1h-2zM2 16h3v1h-3zM8 16h4v1h-4zM14 16h2v1h-2zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h1v1h-1zM25 16h5v1h-5zM31 16h1v1h-1zM33 16h5v1h-5zM2 17h1v1h-1zM4 17h1v1h-1zM6 17h1v1h-1zM9 17h1v1h-1zM12 17h2v1h-2zM15 17h3v1h-3zM21 17h4v1h-4zM26 17h1v1h-1zM30 17h2v1h-2zM33 17h2v1h-2zM36 17h1v1h-1zM38 17h1v1h-1zM3 18h2v1h-2zM8 18h4v1h-4zM13 18h3v1h-3zM18 18h1v1h-1zM22 18h3v1h-3zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h1v1h-1zM4 19h1v1h-1zM7 19h1v1h-1zM10 19h1v1h-1zM13 19h3v1h-3zM20 19h1v1h-1zM24 19h2v1h-2zM27 19h1v1h-1zM29 19h2v1h-2zM33 19h3v1h-3zM37 19h1v1h-1zM3 20h4v1h-4zM8 20h1v1h-1zM13 20h1v1h-1zM15 20h3v1h-3zM19 20h2v1h-2zM22 20h2v1h-2zM25 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM3 21h2v1h-2zM6 21h2v1h-2zM11 21h1v1h-1zM13 21h1v1h-1zM16 21h4v1h-4zM22 21h2v1h-2zM28 21h1v1h-1zM31 21h1v1h-1zM36 21h2v1h-2zM4 22h1v1h-1zM6 22h1v1h-1zM8 22h1v1h-1zM10 22h2v1h-2zM14 22h2v1h-2zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM29 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM3 23h3v1h-3zM7 23h1v1h-1zM9 23h10v1h-10zM22 23h1v1h-1zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM2 24h7v1h-7zM11 24h1v1h-1zM14 24h2v1h-2zM17 24h3v1h-3zM22 24h1v1h-1zM24 24h2v1h-2zM28 24h2v1h-2zM31 24h6v1h-6zM2 25h1v1h-1zM6 25h1v1h-1zM9 25h2v1h-2zM12 25h2v1h-2zM15 25h1v1h-1zM17 25h1v1h-1zM19 25h5v1h-5zM26 25h1v1h-1zM29 25h3v1h-3zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM3 26h4v1h-4zM8 26h1v1h-1zM11 26h1v1h-1zM14 26h1v1h-1zM20 26h1v1h-1zM22 26h2v1h-2zM25 26h2v1h-2zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h3v1h-3zM6 27h1v1h-1zM9 27h2v1h-2zM14 27h1v1h-1zM16 27h1v1h-1zM18 27h1v1h-1zM25 27h1v1h-1zM27 27h4v1h-4zM34 27h2v1h-2zM4 28h2v1h-2zM7 28h6v1h-6zM16 28h1v1h-1zM18 28h3v1h-3zM24 28h11v1h-11zM36 28h1v1h-1zM4 29h1v1h-1zM6 29h1v1h-1zM12 29h2v1h-2zM15 29h1v1h-1zM19 29h2v1h-2zM22 29h4v1h-4zM29 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM38 29h1v1h-1zM2 30h3v1h-3zM6 30h1v1h-1zM8 30h2v1h-2zM11 30h1v1h-1zM14 30h4v1h-4zM19 30h1v1h-1zM21 30h3v1h-3zM26 30h1v1h-1zM30 30h5v1h-5zM36 30h1v1h-1zM10 31h2v1h-2zM13 31h2v1h-2zM18 31h3v1h-3zM23 31h1v1h-1zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h2v1h-2zM16 32h3v1h-3zM20 32h1v1h-1zM22 32h1v1h-1zM25 32h1v1h-1zM28 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h4v1h-4zM16 33h2v1h-2zM23 33h2v1h-2zM26 33h1v1h-1zM28 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h2v1h-2zM13 34h2v1h-2zM16 34h3v1h-3zM23 34h4v1h-4zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h2v1h-2zM14 35h2v1h-2zM20 35h1v1h-1zM23 35h1v1h-1zM25 35h1v1h-1zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM12 36h1v1h-1zM14 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM12 37h1v1h-1zM14 37h2v1h-2zM17 37h4v1h-4zM23 37h2v1h-2zM28 37h1v1h-1zM32 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h1v1h-1zM13 38h1v1h-1zM15 38h2v1h-2zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM31 38h1v1h-1zM33 38h1v1h-1zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <div class="seg" role="group" aria-label="View" id="viewSeg">
+          <button type="button" data-v="coef" aria-pressed="true">Coefficients</button>
+          <button type="button" data-v="wins" aria-pressed="false">Which process wins</button>
+          <button type="button" data-v="beam" aria-pressed="false">Narrow and broad beam</button>
+          <button type="button" data-v="hard" aria-pressed="false">Beam hardening</button>
+        </div>
+        <button type="button" class="spin attn" id="run" data-vd-key="play" hidden>Send photons</button>
+        <span class="prog" id="prog" aria-live="polite"></span>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="Set up the material, the photons and the beam">
+        <div id="matBox">
+          <span class="card-title">Material</span>
+          <select id="selMat" aria-label="Material"></select>
+          <div id="zBox" hidden><div class="slider-head"><label for="sZ">Element Z</label><output id="oZ" for="sZ"></output></div><input type="range" id="sZ" min="1" max="92" step="1" value="26"></div>
+          <p class="note" id="matNote"></p>
+        </div>
+        <div id="eBox">
+          <hr>
+          <span class="card-title">Photons</span>
+          <div><div class="slider-head"><label for="sE">Energy hν</label><output id="oE" for="sE"></output></div><input type="range" id="sE" min="0" max="5" step="0.0005" value="2"></div>
+        </div>
+        <div id="coefBox">
+          <span class="lbl" id="yL">Scale</span>
+          <div class="seg" role="group" aria-labelledby="yL" id="ySeg">
+            <button type="button" data-y="mass" aria-pressed="true" title="Mass attenuation coefficient, cm² per gram">cm²/g</button>
+            <button type="button" data-y="lin" aria-pressed="false" title="Linear attenuation coefficient, per cm: μ/ρ times the density">1/cm</button>
+            <button type="button" data-y="atom" aria-pressed="false" title="Cross section per atom, in barns (10⁻²⁴ cm²): elements only">b/atom</button>
+            <button type="button" data-y="elec" aria-pressed="false" title="Cross section per electron, in barns">b/electron</button>
+          </div>
+          <label class="check"><input type="checkbox" id="chkParts" checked><span>The four processes</span></label>
+          <label class="check"><input type="checkbox" id="chkTr" checked><span>Energy transfer μ_tr/ρ</span></label>
+          <label class="check"><input type="checkbox" id="chkEn" checked><span>Energy absorption μ_en/ρ</span></label>
+        </div>
+        <div id="beamBox" hidden>
+          <hr>
+          <span class="card-title">Slab and beam</span>
+          <div><div class="slider-head"><label for="sT">Thickness t</label><output id="oT" for="sT"></output></div><input type="range" id="sT" min="0" max="60" step="0.01" value="10"></div>
+          <div class="row2"><label class="lbl" for="selN">Photons</label><select id="selN" style="width:auto"><option value="2000">2 000</option><option value="5000">5 000</option><option value="10000">10 000</option><option value="20000" selected>20 000</option><option value="50000">50 000</option><option value="100000">100 000</option></select></div>
+          <div class="row2"><span class="lbl">Random seed <span class="mono" id="seedOut"></span></span><button type="button" class="btn" id="newSeed">New seed</button></div>
+          <p class="note">A broad parallel beam on a slab that is endless sideways. The narrow beam counts only photons that never interacted; the broad beam counts every photon behind the slab, as air kerma.</p>
+        </div>
+        <div id="hardBox" hidden>
+          <hr>
+          <span class="card-title">X-ray tube</span>
+          <div><div class="slider-head"><label for="sKv">Tube voltage</label><output id="oKv" for="sKv"></output></div><input type="range" id="sKv" min="50" max="150" step="10" value="80"></div>
+          <div><div class="slider-head"><label for="sAl">Aluminum filtration</label><output id="oAl" for="sAl"></output></div><input type="range" id="sAl" min="0" max="10" step="0.05" value="2.5"></div>
+          <div class="row2"><label class="lbl" for="selF2">Added filter</label><select id="selF2" style="width:auto"><option value="cu">Copper</option><option value="pmma">PMMA</option><option value="water">Water</option><option value="tissue">Soft tissue</option><option value="bone">Cortical bone</option><option value="pb">Lead</option></select></div>
+          <div><div class="slider-head"><label for="sF2">Added filter thickness</label><output id="oF2" for="sF2"></output></div><input type="range" id="sF2" min="0" max="2" step="0.005" value="0"></div>
+          <span class="lbl" id="hvlL">Half value layers measured in</span>
+          <div class="seg" role="group" aria-labelledby="hvlL" id="hvlSeg"><button type="button" data-h="al" aria-pressed="true">Aluminum</button><button type="button" data-h="cu" aria-pressed="false">Copper</button></div>
+        </div>
+      </div>
+      <div class="pane" id="pane">
+        <canvas id="plot" tabindex="0" role="img" aria-label="Chart of the attenuation coefficients against photon energy. Drag across it, or use the left and right arrow keys, to move the energy."></canvas>
+        <span class="blindtag" id="blindTag" hidden>Blind</span>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/mp-photon-interactions.html" target="mp-photon-interactions-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="water100" aria-pressed="true">Water at 100 keV</button>
+          <button type="button" data-p="lead1" aria-pressed="false">Lead at 1 MeV</button>
+          <button type="button" data-p="bone30" aria-pressed="false">Bone against soft tissue, 30 keV</button>
+          <button type="button" data-p="iodine" aria-pressed="false">Iodine K edge</button>
+          <button type="button" data-p="leadK" aria-pressed="false">Lead K edge</button>
+          <button type="button" data-p="pair" aria-pressed="false">Pair production in lead</button>
+          <button type="button" data-p="winsWater" aria-pressed="false">Where Compton wins in water</button>
+          <button type="button" data-p="winsLead" aria-pressed="false">Lead from 1 keV to 100 MeV</button>
+          <button type="button" data-p="cs137" aria-pressed="false">Cs 137 through water</button>
+          <button type="button" data-p="co60lead" aria-pressed="false">Co 60 through lead</button>
+          <button type="button" data-p="co60concrete" aria-pressed="false">Co 60 through a concrete wall</button>
+          <button type="button" data-p="lowE" aria-pressed="false">60 keV through water</button>
+          <button type="button" data-p="tube80" aria-pressed="false">80 kVp diagnostic beam</button>
+          <button type="button" data-p="tube120cu" aria-pressed="false">120 kVp with copper</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+      <!-- vd-readings --><section class="vd-readings" data-ws="mp-photon-interactions" data-title="Photon Interactions in Matter" data-demo="photon-interactions">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the tabulated μ and the narrow beam prediction in the slab view</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">μ/ρ = σ_coh/ρ + σ_incoh/ρ + τ/ρ + κ_n/ρ + κ_e/ρ, a compound: Σ wᵢ (μ/ρ)ᵢ</p>
+          <p class="formula">μ = (μ/ρ) ρ, narrow beam: I/I₀ = e^(−μt), HVL = ln 2 / μ, mean free path 1/μ</p>
+          <p class="formula">per atom: σₐ = (μ/ρ) A / N_A; per electron: σₑ = σₐ / Z</p>
+          <p class="formula">μ_tr/ρ = τ/ρ (1 − δ/hν) + σ_incoh/ρ ⟨T⟩/hν + κ/ρ (1 − 2mc²/hν)</p>
+          <p class="formula">μ_en/ρ = μ_tr/ρ (1 − g)</p>
+          <p class="formula">broad beam: K/K₀ = B e^(−μt), B ≥ 1 the buildup factor</p>
+          <p class="formula">air kerma K = Σ Φ(E) E μ_en/ρ(air, E); HVL₁ halves K, HVL₂ halves it again; h = HVL₁/HVL₂</p>
+          <p class="hint" id="about"></p>
+        </details>
+        <details class="more"><summary>Where the numbers come from</summary>
+          <ul class="srcs">
+            <li>Cross sections: NIST XCOM (Berger, Hubbell, Seltzer, Chang, Coursey, Sukumar, Zucker and Olsen, Standard Reference Database 8, doi:10.18434/T48G6X), per element Z = 1 to 92, standard energy grid with the absorption edges.</li>
+            <li>μ/ρ and μ_en/ρ tables, densities and compositions of the tissues and shields: Hubbell and Seltzer, NIST Standard Reference Database 126 (doi:10.18434/T4D01F), Tables 1 to 4; tissues from ICRU Report 44. XCOM sums for water and air match its μ/ρ to 0.05 %.</li>
+            <li>Atomic form factors and incoherent scattering functions: Hubbell et al. 1975, J. Phys. Chem. Ref. Data 4, 471. K and L3 fluorescence yields: Krause 1979, J. Phys. Chem. Ref. Data 8, 307. X-ray line energies: Deslattes et al. 2003, Rev. Mod. Phys. 75, 35. All as tabulated in xraylib 4.3 (Schoonjans et al. 2011, Spectrochim. Acta B 66, 776).</li>
+            <li>Energy transfer: F. H. Attix, Introduction to Radiological Physics and Radiation Dosimetry (Wiley, 1986), chapter 7. Klein–Nishina cross section; mc² = 510.99895069 keV, r_e, N_A and hc from CODATA 2022.</li>
+            <li>Sampling: coherent as in PENELOPE (Salvat, PENELOPE 2014, NEA/NSC/DOC(2015)3); Klein–Nishina as in Geant4's G4KleinNishinaCompton.</li>
+            <li>X-ray spectra: SpekPy 2.5.4 (Poludniowski et al. 2021, Med. Phys. 48, 3630), tungsten anode at 12°, 0.8 mm beryllium window. Its half value layers agree with the ones computed here to 0.2 %.</li>
+            <li>Gamma energies: ¹³⁷Cs 661.657 keV; ⁶⁰Co 1173.228 and 1332.492 keV, here one beam at their mean, 1252.86 keV (ENSDF).</li>
+          </ul>
+        </details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* Photon Interactions in Matter. Runs in Node (curriculum/validation/test_photon-interactions.cjs) once useData(VDPHOTON) is called
+     with the shared data in demos/lib/photondata.js (its header lists every source).
+     Cross sections: NIST XCOM per element, coherent, incoherent, photoelectric, pair production in the nuclear field and in the electron
+     field (triplet), interpolated log–log between table energies (linear where a value is zero, near the pair thresholds), each side of
+     an absorption edge from its own row. A material's μ/ρ is the sum of its elements' by weight, as XCOM does it.
+     Energy transfer (Attix, Introduction to Radiological Physics and Radiation Dosimetry, ch. 7):
+       μ_tr/ρ = τ/ρ (1 − δ/hν) + σ_incoh/ρ ⟨T⟩/hν + κ/ρ (1 − 2mc²/hν), coherent scattering transfers nothing.
+       ⟨T⟩/hν: Klein–Nishina weighted by the incoherent scattering function S(x, Z)/Z (Waller–Hartree), as XCOM's σ_incoh is.
+       δ: the fluorescence energy that leaves the atom after a photoelectric event, δ = P_K ω_K X̄_K + (1 − P_K) P_L ω_L3 E(Lα₁), with
+       P_K = 1 − 1/J_K from XCOM's own K edge jump J_K (likewise the L edges), ω from Krause 1979, X̄_K the rate weighted K line energy.
+       A Kα X-ray leaves an L vacancy that adds ω_L3 E(Lα₁). Auger electrons count as transferred. Other cascades, the L1 and L2
+       yields (all L vacancies get ω_L3) and M shell fluorescence are left out, so δ is a little low for heavy elements.
+       Triplet production is given the pair value 1 − 2mc²/hν (the triplet's recoil electron makes it slightly larger).
+     μ_en/ρ = μ_tr/ρ (1 − g) is read from NIST SRD 126 for the materials that have a table, so g = 1 − μ_en/μ_tr comes out of the two. */
+  const MEC2 = 510.99895069;        /* electron rest energy, keV (CODATA 2022) */
+  const NA = 6.02214076e23;          /* Avogadro constant, 1/mol (exact) */
+  const HC = 12.398419843;           /* hc in keV·Å (CODATA 2022) */
+  const RE = 2.8179403205e-13;       /* classical electron radius, cm (CODATA 2022) */
+  const BARN = 1e-24;                /* cm² */
+  const EMIN = 1, EMAX = 1e5;        /* keV: the XCOM range used here */
+  const COMP = ['coh', 'incoh', 'photo', 'pairN', 'pairE'];
+  let D = null; const ELC = {}, MATC = {};
+  function useData(d) { D = d; for (const k in ELC) delete ELC[k]; for (const k in MATC) delete MATC[k]; }
+  const rowsOf = (s) => s.split(';').map((r) => r.split(',').map(Number));
+  function lastLE(xs, v) { let lo = 0, hi = xs.length - 1; if (v <= xs[0]) return 0; if (v >= xs[hi]) return hi - 1;
+    while (hi - lo > 1) { const m = (lo + hi) >> 1; if (xs[m] <= v) lo = m; else hi = m; } return lo; }
+  function interp(xs, ys, v) { /* log–log between table points; the row above an edge from the edge energy up */
+    let i = lastLE(xs, v); if (i >= xs.length - 1) i = xs.length - 2; while (i > 0 && xs[i + 1] === xs[i]) i--;
+    if (xs[i + 1] === xs[i]) i++;
+    const a = ys[i], b = ys[i + 1], t = Math.log(v / xs[i]) / Math.log(xs[i + 1] / xs[i]);
+    return a > 0 && b > 0 ? Math.exp(Math.log(a) + t * Math.log(b / a)) : a + t * (b - a); }
+  function elem(Z) {
+    if (ELC[Z]) return ELC[Z];
+    const R = rowsOf(D.xcom[Z]), t = { Z, E: R.map((r) => r[0]), c: COMP.map((_, k) => R.map((r) => r[k + 1])) };
+    const s = D.tab1[Z]; t.sym = s[0]; t.ZA = s[1]; t.A = Z / s[1]; t.I = s[2]; t.rho = s[3];
+    t.edges = []; for (let i = 0; i + 1 < t.E.length; i++) if (t.E[i] === t.E[i + 1]) t.edges.push({ E: t.E[i], J: t.c[2][i + 1] / t.c[2][i] });
+    const a = D.atom[Z], EK = a[0], EL3 = a[3];
+    t.K = t.edges.find((e) => Math.abs(e.E / EK - 1) < 0.02) || null;
+    t.L = t.edges.filter((e) => EL3 > 0 && e.E >= EL3 * 0.98 && e.E < EK * 0.9);
+    const lines = a[2], rs = lines.reduce((s, l) => s + l[1], 0);
+    t.wK = a[1]; t.XK = rs > 0 ? lines.reduce((s, l) => s + l[0] * l[1], 0) / rs : 0; t.Klines = lines.map((l) => [l[0], l[1] / (rs || 1)]);
+    t.wL = a[4]; t.La = a[5];
+    return ELC[Z] = t; }
+  /* XCOM components of element Z at E (keV), cm²/g: [coherent, incoherent, photoelectric, pair nuclear, pair electron] */
+  function elemCS(Z, E) { const t = elem(Z); E = Math.min(EMAX, Math.max(EMIN, E)); return t.c.map((ys) => interp(t.E, ys, E)); }
+  function material(key) {
+    if (MATC[key]) return MATC[key];
+    let m = D.mats.find((x) => x.key === key), out;
+    if (m) out = { key, name: m.name, rho: m.rho, w: Object.fromEntries(Object.entries(m.w).map(([z, f]) => [+z, f])), en: m.en ? rowsOf(m.en) : null };
+    else { const Z = +String(key).replace(/^z/, ''); if (!(Z >= 1 && Z <= 92)) return null; const t = elem(Z);
+      const tab = D.mats.find((x) => Object.keys(x.w).length === 1 && +Object.keys(x.w)[0] === Z);
+      out = { key, name: t.sym, Z, rho: t.rho, w: { [Z]: 1 }, en: tab ? rowsOf(tab.en) : null }; }
+    if (out.en) { out.enE = out.en.map((r) => r[0]); out.enMu = out.en.map((r) => r[1]); out.enMuen = out.en.map((r) => r[2]); }
+    return MATC[key] = out; }
+  function matCS(m, E) { if (typeof m === 'string') m = material(m); const s = [0, 0, 0, 0, 0];
+    for (const z in m.w) { const c = elemCS(+z, E), w = m.w[z]; for (let k = 0; k < 5; k++) s[k] += w * c[k]; } return s; }
+  const total = (c) => c[0] + c[1] + c[2] + c[3] + c[4];
+  function muRho(m, E) { return total(matCS(m, E)); }
+  /* Klein–Nishina for a free electron: σ per electron (cm²) and the mean share ⟨T⟩/hν of the photon energy given to the electron */
+  function kleinNishina(E) { return knIntegrals(E, null); }
+  /* ∫ over the scattering angle with u = 1 − cos θ on a log grid (Simpson in ln u), so the forward peak at high energy and the
+     small angles where S(x, Z) cuts in are both resolved */
+  function knIntegrals(E, sw) { const k = E / MEC2, n = 600, l0 = Math.log(1e-12), l1 = Math.log(2); let s = 0, st = 0;
+    for (let i = 0; i <= n; i++) { const u = Math.exp(l0 + (l1 - l0) * i / n), w = i === 0 || i === n ? 1 : i % 2 ? 4 : 2, c = 1 - u, P = 1 / (1 + k * u),
+      d = 0.5 * RE * RE * P * P * (P + 1 / P - (1 - c * c)) * u * (sw ? sw(u) : 1); s += w * d; st += w * d * (1 - P); }
+    const h = (l1 - l0) / n / 3 * 2 * Math.PI; return { sigma: s * h, frac: s > 0 ? st / s : 0 }; }
+  function knSigmaExact(E) { const k = E / MEC2, l = Math.log(1 + 2 * k); /* Klein–Nishina total, closed form, for the tests */
+    return 2 * Math.PI * RE * RE * ((1 + k) / (k * k) * (2 * (1 + k) / (1 + 2 * k) - l / k) + l / (2 * k) - (1 + 3 * k) / ((1 + 2 * k) ** 2)); }
+  /* share of the photoelectric energy that fluorescence carries away from element Z: δ/hν. A Kα X-ray (KL₂, KL₃) leaves an L
+     vacancy behind, which adds its own L X-ray with the yield ω_L3 */
+  function fluorShare(Z, E) { const t = elem(Z); let PK = 0, PL = 0;
+    if (t.K && E >= t.K.E) PK = 1 - 1 / t.K.J;
+    let JL = 1; for (const e of t.L) if (E >= e.E) JL *= e.J; if (JL > 1) PL = 1 - 1 / JL;
+    const ka = t.Klines.slice(0, 2).reduce((s, l) => s + l[1], 0), Lx = t.wL * t.La;
+    return (PK * t.wK * (t.XK + ka * Lx) + (1 - PK) * PL * Lx) / E; }
+  /* incoherent scattering on element Z: mean share of hν given to the electron, Klein–Nishina weighted by S(x, Z)/Z where the
+     scattering function is tabulated (Hubbell 1975; binding removes mostly the small angle, small transfer scatters), else free */
+  const ITC = {};
+  function incohTransfer(Z, E) { const key = Z + ':' + E; if (ITC[key] !== undefined) return ITC[key]; const ff = ffOf(Z);
+    if (!ff) return ITC[key] = kleinNishina(E).frac;
+    const xm = E / HC; return ITC[key] = knIntegrals(E, (u) => sFun(ff, xm * Math.sqrt(u / 2)) / Z).frac; }
+  /* energy transfer coefficient and its parts, cm²/g */
+  function muTr(m, E) { if (typeof m === 'string') m = material(m); const fp = E > 2 * MEC2 ? 1 - 2 * MEC2 / E : 0;
+    let pe = 0, inc = 0, pair = 0; for (const z in m.w) { const c = elemCS(+z, E), w = m.w[z]; pe += w * c[2] * (1 - fluorShare(+z, E)); inc += w * c[1] * incohTransfer(+z, E); pair += w * (c[3] + c[4]) * fp; }
+    return { photo: pe, incoh: inc, pair, total: pe + inc + pair }; }
+  /* NIST SRD 126 μ_en/ρ (cm²/g), 1 keV to 20 MeV, log–log; null where the material has no table or E is past 20 MeV */
+  function muEn(m, E) { if (typeof m === 'string') m = material(m); if (!m || !m.en || E < m.enE[0] || E > m.enE[m.enE.length - 1] * 1.0000001) return null; return interp(m.enE, m.enMuen, E); }
+  function muSRD(m, E) { if (typeof m === 'string') m = material(m); if (!m || !m.en || E < m.enE[0] || E > m.enE[m.enE.length - 1] * 1.0000001) return null; return interp(m.enE, m.enMu, E); }
+  /* cross section per atom in barns for element Z (μ/ρ × A / N_A) */
+  function perAtom(Z, muRhoVal) { return muRhoVal * elem(Z).A / NA / BARN; }
+  /* per electron: divide by Z */
+  function electronDensity(m) { if (typeof m === 'string') m = material(m); let s = 0; for (const z in m.w) s += m.w[z] * elem(+z).ZA; return s * NA; }
+  /* energies (keV) where two processes are equal in a material: photoelectric = incoherent (the highest one) and incoherent = pair
+     (nuclear + electron field), found on a fine log grid and refined by bisection */
+  function crossing(m, which) { const f = (E) => { const c = matCS(m, E); return which === 'pe' ? Math.log(c[2] / c[1]) : Math.log((c[3] + c[4]) / c[1]); };
+    const n = 600, L0 = Math.log(EMIN), L1 = Math.log(EMAX); let found = null, prev = null, pE = 0;
+    for (let i = 0; i <= n; i++) { const E = Math.exp(L0 + (L1 - L0) * i / n), v = f(E);
+      if (isFinite(v) && prev !== null && isFinite(prev) && Math.sign(v) !== Math.sign(prev)) { let a = pE, b = E;
+        for (let j = 0; j < 60; j++) { const c = Math.sqrt(a * b), vc = f(c); if (Math.sign(vc) === Math.sign(f(a))) a = c; else b = c; }
+        found = Math.sqrt(a * b); if (which === 'pair') return found; }
+      prev = v; pE = E; }
+    return found; }
+  const ECACHE = {};
+  function evansLine(which) { if (ECACHE[which]) return ECACHE[which]; const out = []; for (let Z = 1; Z <= 92; Z++) out.push([Z, crossing({ w: { [Z]: 1 } }, which)]); return ECACHE[which] = out; }
+  /* Z of the element whose crossing is at the same energy as the material's (interpolated between whole Z): the material's
+     "photoelectric effective Z" by this definition (it differs from the power law Z_eff) */
+  function equivalentZ(m, which) { const Ec = crossing(m, which), L = evansLine(which); if (!Ec) return null;
+    for (let i = 0; i + 1 < L.length; i++) { const [z1, e1] = L[i], [z2, e2] = L[i + 1]; if (!e1 || !e2) continue;
+      if ((Ec - e1) * (Ec - e2) <= 0) return z1 + (z2 - z1) * Math.log(Ec / e1) / Math.log(e2 / e1); }
+    return null; }
+
+  /* ---- Monte Carlo: a broad parallel beam on a slab ----
+     A photon of energy E₀ enters a slab of thickness t (cm), infinite sideways, along its normal. Free paths from μ(E); each
+     interaction is picked by its share of μ, and in a compound the atom by its share of that process.
+     Coherent: Thomson × F(x, Z)² (Hubbell 1975 form factors), sampled as in PENELOPE (Salvat 2015, section 2.1): x² from F², then
+     the angle accepted with (1 + cos²θ)/2. Incoherent: Klein–Nishina (Geant4's G4KleinNishinaCompton sampling, after Butcher and
+     Messel 1960), accepted with S(x, Z)/Z (Hubbell 1975 incoherent scattering function: binding suppresses small angle scattering);
+     the scattered energy is the free electron's (no Doppler broadening). Photoelectric: the photon is absorbed; a K or L X-ray leaves
+     with the probability P_K ω_K or (1 − P_K) P_L ω_L3, isotropically, at the line energy. Pair and triplet: absorbed; the positron
+     annihilates where it was made (its range is left out), sending two 511 keV photons back to back in a random direction.
+     Charged particles are not followed: this scores kerma, not dose, and leaves out bremsstrahlung from the secondary electrons.
+     Photons below 1 keV are taken as absorbed. Scoring: a photon crossing the back face adds E μ_en/ρ(air, E)/|cos θ| to the air
+     kerma per unit incident fluence behind an infinitely broad beam (|cos θ| taken as at least 0.01, a cap that leaves out
+     photons crossing within 0.6° of the face); the narrow beam counts only photons that never interacted. */
+  function rngOf(seed) { let a = seed >>> 0 || 1; return () => { a = (a + 0x6D2B79F5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
+  const FFC = {};
+  function ffOf(Z) { if (FFC[Z]) return FFC[Z]; const f = D.ff[Z]; if (!f) return null; const xg = D.xg, F = f[0].split(',').map(Number), S = f[1].split(',').map(Number);
+    const x2 = xg.map((x) => x * x), A = [0]; for (let j = 1; j < xg.length; j++) A.push(A[j - 1] + 0.5 * (F[j] * F[j] + F[j - 1] * F[j - 1]) * (x2[j] - x2[j - 1]));
+    return FFC[Z] = { xg, F, S, x2, A }; }
+  function sFun(ff, x) { if (x <= 0) return 0; const xs = ff.xg; if (x >= xs[xs.length - 1]) return ff.S[ff.S.length - 1];
+    const i = lastLE(xs, x); return ff.S[i] + (ff.S[i + 1] - ff.S[i]) * (x - xs[i]) / (xs[i + 1] - xs[i]); }
+  function sampleCoherent(Z, E, r) { const ff = ffOf(Z), xm = E / HC, xm2 = xm * xm;
+    if (!ff) return 1; const Am = (() => { if (xm2 >= ff.x2[ff.x2.length - 1]) return ff.A[ff.A.length - 1]; const i = lastLE(ff.x2, xm2);
+      return ff.A[i] + (ff.A[i + 1] - ff.A[i]) * (xm2 - ff.x2[i]) / (ff.x2[i + 1] - ff.x2[i]); })();
+    for (let k = 0; k < 1000; k++) { const u = r() * Am; let i = lastLE(ff.A, u); if (i >= ff.A.length - 1) i = ff.A.length - 2;
+      const dA = ff.A[i + 1] - ff.A[i], x2 = ff.x2[i] + (dA > 0 ? (u - ff.A[i]) / dA : 0) * (ff.x2[i + 1] - ff.x2[i]);
+      const c = 1 - 2 * Math.min(1, x2 / xm2); if (r() * 2 <= 1 + c * c) return c; }
+    return 1; }
+  function sampleIncoherent(Z, E, r) { const k = E / MEC2, e0 = 1 / (1 + 2 * k), e0s = e0 * e0, a1 = -Math.log(e0), a2 = a1 + 0.5 * (1 - e0s), ff = ffOf(Z);
+    for (let n = 0; n < 10000; n++) { let eps, epss;
+      if (a1 > a2 * r()) { eps = Math.exp(-a1 * r()); epss = eps * eps; } else { epss = e0s + (1 - e0s) * r(); eps = Math.sqrt(epss); }
+      const omc = (1 - eps) / (eps * k), sin2 = omc * (2 - omc), g = 1 - eps * sin2 / (1 + epss);
+      if (g < r()) continue;
+      const c = 1 - omc; if (ff) { const x = (E / HC) * Math.sqrt(Math.max(0, (1 - c) / 2)); if (r() * Z > sFun(ff, x)) continue; }
+      return { c, E: E * eps }; }
+    return { c: 1, E }; }
+  function turn(d, c, r) { /* new direction after scattering by polar cos c and a random azimuth */
+    const s = Math.sqrt(Math.max(0, 1 - c * c)), ph = 2 * Math.PI * r(), cp = Math.cos(ph), sp = Math.sin(ph), [u, v, w] = d;
+    if (Math.abs(w) > 0.99999) { const sg = w > 0 ? 1 : -1; return [s * cp, s * sp, sg * c]; }
+    const q = Math.sqrt(1 - w * w);
+    return [u * c + s * (u * w * cp - v * sp) / q, v * c + s * (v * w * cp + u * sp) / q, w * c - s * cp * q]; }
+  function iso(r) { const w = 2 * r() - 1, s = Math.sqrt(1 - w * w), ph = 2 * Math.PI * r(); return [s * Math.cos(ph), s * Math.sin(ph), w]; }
+  function pick(ws, r) { let s = 0; for (const w of ws) s += w; let u = r() * s; for (let i = 0; i < ws.length; i++) { u -= ws[i]; if (u <= 0) return i; } return ws.length - 1; }
+  /* a material's components on a fine grid in ln E (steps of 0.2 %), for the Monte Carlo: μ (1/cm) for each process and, for
+     coherent, incoherent and photoelectric, each element's running share. Values between grid points are interpolated linearly
+     in ln E (within 0.1 % of the direct sum, except in the 0.2 % step that holds an absorption edge) */
+  const FAST = {}, DL = 0.002, L0 = 0, NG = Math.ceil(Math.log(EMAX) / DL) + 1;
+  function fastTables(m) { if (FAST[m.key]) return FAST[m.key]; const Zs = Object.keys(m.w).map(Number), nz = Zs.length,
+      mu = [0, 1, 2, 3, 4].map(() => new Float64Array(NG)), share = [0, 1, 2].map(() => new Float64Array(NG * nz)), en = new Float64Array(NG), air = material('air');
+    for (let i = 0; i < NG; i++) { const E = Math.exp(L0 + i * DL), parts = Zs.map((z) => elemCS(z, E));
+      for (let k = 0; k < 5; k++) { let sum = 0; for (let j = 0; j < nz; j++) sum += m.w[Zs[j]] * parts[j][k]; mu[k][i] = m.rho * sum; }
+      for (let k = 0; k < 3; k++) { let run = 0; const tot = mu[k][i] / m.rho || 1; for (let j = 0; j < nz; j++) { run += m.w[Zs[j]] * parts[j][k] / tot; share[k][i * nz + j] = run; } }
+      en[i] = muEn(air, Math.min(Math.max(E, 1), 2e4)); }
+    return FAST[m.key] = { Zs, nz, mu, share, en }; }
+  function mcStart(o) { const m = typeof o.mat === 'string' ? material(o.mat) : o.mat, air = material('air'), E0 = o.E;
+    return { o, m, ft: fastTables(m), r: rngOf(o.seed || 1), done: 0, E0, t: o.t, N: o.N || 20000, keep: o.keep || 0, bins: o.bins || 100,
+      K0: E0 * muEn(air, Math.min(E0, 2e4)), mu0: m.rho * muRho(m, E0), transmitted: 0, uncollided: 0, back: 0, absorbed: 0,
+      events: { coh: 0, incoh: 0, photo: 0, pair: 0, fluor: 0 }, kSum: 0, kSq: 0, spec: new Float64Array(o.bins || 100), specUnc: 0, tracks: [] }; }
+  function mcStep(S, n) { const { m, ft, r, E0, t, bins } = S, { Zs, nz, mu, share, en } = ft, end = Math.min(S.N, S.done + n);
+    for (let h = S.done; h < end; h++) {
+      let kh = 0; const stack = [{ p: [0, 0, 0], d: [0, 0, 1], E: E0, n: 0 }], tr = h < S.keep ? [] : null;
+      while (stack.length) { const ph = stack.pop(); let p = ph.p, d = ph.d, E = ph.E, nInt = ph.n; const path = tr ? [[p[0], p[2], E, 'start']] : null;
+        for (;;) {
+          if (E < EMIN) { S.absorbed++; if (path) path.push([p[0], p[2], E, 'cut']); break; }
+          const g = (Math.log(E) - L0) / DL, i = Math.min(NG - 2, Math.floor(g)), f = g - i, c = [0, 0, 0, 0, 0];
+          let mt = 0; for (let k = 0; k < 5; k++) { c[k] = mu[k][i] + f * (mu[k][i + 1] - mu[k][i]); mt += c[k]; }
+          const s = -Math.log(1 - r()) / mt, z = p[2] + d[2] * s;
+          if (z >= t || z < 0) { const sz = ((z >= t ? t : 0) - p[2]) / d[2]; p = [p[0] + d[0] * sz, p[1] + d[1] * sz, z >= t ? t : 0];
+            if (z >= t) { S.transmitted++; const ea = en[i] + f * (en[i + 1] - en[i]), k = E * ea / Math.max(Math.abs(d[2]), 0.01) / S.K0; kh += k;
+              if (nInt === 0) { S.uncollided++; S.specUnc++; } else S.spec[Math.min(bins - 1, Math.floor(E / E0 * bins))]++;
+              if (path) path.push([p[0], p[2], E, 'out']); }
+            else { S.back++; if (path) path.push([p[0], p[2], E, 'back']); }
+            break; }
+          p = [p[0] + d[0] * s, p[1] + d[1] * s, z]; nInt++;
+          const kind = pick(c, r);
+          const atom = () => { if (nz === 1) return Zs[0]; const u = r(), sh = share[kind]; for (let j = 0; j < nz - 1; j++) if (u < sh[i * nz + j]) return Zs[j]; return Zs[nz - 1]; };
+          if (kind === 0) { S.events.coh++; d = turn(d, sampleCoherent(atom(), E, r), r); if (path) path.push([p[0], p[2], E, 'coh']); continue; }
+          if (kind === 1) { S.events.incoh++; const sc = sampleIncoherent(atom(), E, r); d = turn(d, sc.c, r); E = sc.E; if (path) path.push([p[0], p[2], E, 'incoh']); continue; }
+          if (kind === 2) { S.events.photo++; const el = elem(atom()); if (path) path.push([p[0], p[2], E, 'photo']);
+            let PK = 0, JL = 1; if (el.K && E >= el.K.E) PK = 1 - 1 / el.K.J; for (const e of el.L) if (E >= e.E) JL *= e.J;
+            const u = r();
+            if (u < PK * el.wK && el.Klines.length) { S.events.fluor++; stack.push({ p, d: iso(r), E: el.Klines[pick(el.Klines.map((l) => l[1]), r)][0], n: nInt }); }
+            else if (u >= PK && r() < (1 - 1 / JL) * el.wL && el.La > 0) { S.events.fluor++; stack.push({ p, d: iso(r), E: el.La, n: nInt }); }
+            else S.absorbed++;
+            break; }
+          S.events.pair++; if (path) path.push([p[0], p[2], E, 'pair']); const dd = iso(r);
+          stack.push({ p, d: dd, E: MEC2, n: nInt }, { p, d: [-dd[0], -dd[1], -dd[2]], E: MEC2, n: nInt }); break; }
+        if (path) tr.push(path); }
+      S.kSum += kh; S.kSq += kh * kh; if (tr) S.tracks.push(tr); }
+    S.done = end; return S; }
+  /* results so far: narrow beam transmission (uncollided share) with its binomial SE, broad beam air kerma per unit incident air
+     kerma K with its SE, and the buildup factor B = K / e^(−μt) */
+  function mcResult(S) { const N = S.done || 1, mean = S.kSum / N, sd = Math.sqrt(Math.max(0, S.kSq / N - mean * mean)), narrow = Math.exp(-S.mu0 * S.t), Tn = S.uncollided / N;
+    return { N: S.done, E0: S.E0, t: S.t, mu: S.mu0, mut: S.mu0 * S.t, narrow, Tn, TnSE: Math.sqrt(S.uncollided * (1 - Tn)) / N, K: mean, Kse: sd / Math.sqrt(N),
+      B: mean / narrow, Bse: sd / Math.sqrt(N) / narrow, transmitted: S.transmitted, uncollided: S.uncollided, back: S.back, absorbed: S.absorbed, events: S.events,
+      spec: S.spec, specUnc: S.specUnc, tracks: S.tracks }; }
+  function mcSlab(o) { const S = mcStart(o); mcStep(S, S.N); return mcResult(S); }
+
+  /* ---- a polyenergetic beam: SpekPy spectra filtered by slabs, air kerma, HVL ---- */
+  const JKEV = 1.602176634e-16;      /* J per keV (exact) */
+  function tubeSpectrum(kvp) { const s = D.spec[kvp]; if (!s) return null; const f = s.split(',').map(Number); return { kvp, E: f.map((_, i) => i + 1.5), f }; }
+  function filtered(sp, filters) { const f = sp.f.map((v, i) => { let a = 0; for (const fl of filters) { if (!fl.mm) continue; const m = material(fl.mat); a += m.rho * muRho(m, sp.E[i]) * fl.mm / 10; } return v * Math.exp(-a); });
+    return { kvp: sp.kvp, E: sp.E, f }; }
+  /* air kerma, µGy per mAs at 1 m: Σ Φ(E) E μ_en/ρ(air, E) */
+  function airKerma(sp) { const air = material('air'); let k = 0; for (let i = 0; i < sp.E.length; i++) k += sp.f[i] * sp.E[i] * JKEV * muEn(air, sp.E[i]) * 1000; return k * 1e6; }
+  function meanEnergy(sp) { let a = 0, b = 0; for (let i = 0; i < sp.E.length; i++) { a += sp.f[i] * sp.E[i]; b += sp.f[i]; } return a / b; }
+  /* thickness (mm of mat) that brings the air kerma down to the share q of its value */
+  function thicknessFor(sp, mat, q) { const K0 = airKerma(sp); let lo = 0, hi = 1; while (airKerma(filtered(sp, [{ mat, mm: hi }])) > q * K0) hi *= 2;
+    for (let i = 0; i < 50; i++) { const mid = (lo + hi) / 2; if (airKerma(filtered(sp, [{ mat, mm: mid }])) > q * K0) lo = mid; else hi = mid; } return (lo + hi) / 2; }
+  function hvl(sp, mat) { const h1 = thicknessFor(sp, mat, 0.5), q = thicknessFor(sp, mat, 0.25); return { hvl1: h1, hvl2: q - h1, h: h1 / (q - h1) }; }
+  /* effective energy: the single energy with the same first HVL in mat, μ(E) = ln 2 / HVL₁ (searched from 10 keV up to the kVp) */
+  function effectiveEnergy(hvlMm, mat, kvp) { const m = material(mat), target = Math.LN2 / (hvlMm / 10); let lo = 10, hi = kvp;
+    if (m.rho * muRho(m, hi) > target) return hi; for (let i = 0; i < 60; i++) { const mid = Math.sqrt(lo * hi); if (m.rho * muRho(m, mid) > target) lo = mid; else hi = mid; } return Math.sqrt(lo * hi); }
+  // ==CORE END==
+
+  if (typeof document === 'undefined') return;
+  useData(window.VDPHOTON);
+
+  const $ = (id) => document.getElementById(id);
+  const can = $('plot'), ctx = can.getContext('2d');
+  let W = 0, H = 0, dpr = 1, T = null;
+  const MATS = D.mats.map((m) => m.key), MC_PAIRS = ['coh', 'incoh', 'photo', 'pairN', 'pairE'];
+  const S = { view: 'coef', mat: 'water', Z: 26, E: 100, y: 'mass', parts: true, tr: true, en: true, t: 10, N: 20000, seed: 1, kv: 80, al: 2.5, f2: 'cu', f2mm: 0, hm: 'al', blind: false, preset: 'water100' };
+  const PRESETS = {
+    water100: { view: 'coef', mat: 'water', E: 100, hint: 'Water at 100 keV: incoherent (Compton) scattering is 95 % of μ/ρ = 0.1707 cm²/g, but the electrons get only about 14 % of the photon energy, so μ_en/ρ is 0.0255 cm²/g, a seventh of μ/ρ.' },
+    lead1: { view: 'coef', mat: 'pb', E: 1000, hint: 'Lead at 1 MeV: Compton scattering is still the largest share, but the photoelectric effect is about a quarter of μ/ρ = 0.0710 cm²/g. 1 cm of lead stops 55 % of a narrow beam.' },
+    bone30: { view: 'coef', mat: 'bone', E: 30, hint: 'Cortical bone at 30 keV: calcium and phosphorus make the photoelectric effect 81 % of μ/ρ = 1.331 cm²/g, against 0.379 cm²/g for soft tissue (switch the material to compare). That difference is the contrast in a radiograph.' },
+    iodine: { view: 'coef', mat: 'el', Z: 53, E: 33.17, hint: 'Iodine just above its K edge at 33.17 keV: the photoelectric coefficient jumps by a factor of 6.0 across the edge, which is why iodine contrast shows up so well in a beam whose photons sit just above it.' },
+    leadK: { view: 'coef', mat: 'pb', E: 88.0, hint: 'Lead just above its K edge at 88.0 keV. Below the edge a photon cannot free a K electron; just above it can, and μ/ρ jumps from 1.91 to 7.68 cm²/g. Much of that energy comes back out as 73 to 87 keV K X-rays, so μ_tr/ρ is well below μ/ρ.' },
+    pair: { view: 'coef', mat: 'pb', E: 10000, hint: 'Lead at 10 MeV: pair production in the nucleus\'s field is now the largest share, and μ/ρ rises again with energy. 1.022 MeV is the threshold in a nucleus\'s field, 2.044 MeV in an electron\'s (triplet production).' },
+    winsWater: { view: 'wins', mat: 'water', E: 1000, hint: 'Water from 1 keV to 100 MeV: the photoelectric effect wins up to 28 keV, Compton scattering from there to 24 MeV, then pair production. Almost every photon used in radiotherapy interacts by Compton scattering in tissue.' },
+    winsLead: { view: 'wins', mat: 'pb', E: 1000, hint: 'Lead: the photoelectric effect wins up to 0.56 MeV and pair production takes over at 4.7 MeV, so Compton scattering wins only between them. The higher Z, the narrower the Compton region.' },
+    cs137: { view: 'beam', mat: 'water', E: 661.657, t: 20, hint: '661.657 keV photons from ¹³⁷Cs through 20 cm of water, μt = 1.71. The narrow beam keeps e^(−1.71) = 18 % of its photons; behind a broad beam the air kerma is about 2.5 times that, because scattered photons reach the far side too.' },
+    co60lead: { view: 'beam', mat: 'pb', E: 1252.86, t: 3, hint: '⁶⁰Co photons (one beam at the mean of its two lines, 1252.86 keV) through 3 cm of lead, about two mean free paths. Buildup is smaller in lead than in water at the same μt, since the photons that scatter are soon absorbed by the photoelectric effect.' },
+    co60concrete: { view: 'beam', mat: 'concrete', E: 1252.86, t: 30, hint: '⁶⁰Co photons through 30 cm of ordinary concrete, μt = 4.0: the narrow beam would keep 1.8 %, but the broad beam air kerma behind the wall is about 4 times that. A shielding calculation that leaves out buildup underestimates the dose.' },
+    lowE: { view: 'beam', mat: 'water', E: 60, t: 10, hint: '60 keV photons through 10 cm of water. Scattered photons lose little energy at this energy, so many survive to the far side: the buildup factor is large even though the slab is only about two mean free paths.' },
+    tube80: { view: 'hard', kv: 80, al: 2.5, f2mm: 0, hint: '80 kVp from a tungsten anode with 2.5 mm of aluminum: the filter removes the low energy photons, which would only add dose to the skin. The first half value layer is 2.74 mm Al; the second is larger, since the beam hardens as it goes.' },
+    tube120cu: { view: 'hard', kv: 120, al: 2.5, f2: 'cu', f2mm: 0.3, hint: '120 kVp with 2.5 mm Al and 0.3 mm of copper added, a filtration used to cut skin dose in fluoroscopy. The mean energy rises and the two half value layers move closer together (h closer to 1).' },
+  };
+  const mat = () => material(S.mat === 'el' ? 'z' + S.Z : S.mat);
+  const isEl = () => S.mat === 'el' || Object.keys(mat().w).length === 1;
+  const sig = (v, n = 4) => (!isFinite(v) ? '—' : Number(v).toPrecision(n).replace(/e\+?(-?\d+)/, (m, e) => ` × 10^${e}`).replace('-', '−'));
+  const sup = (s) => s.replace(/\^(−?\d+)/g, (m, e) => e.replace(/./g, (c) => '⁰¹²³⁴⁵⁶⁷⁸⁹'['0123456789'.indexOf(c)] || (c === '−' ? '⁻' : c)));
+  const nice = (v, n = 4) => sup(sig(v, n));
+  const fx = (v, d) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const plainNum = (v, n = 4) => (!isFinite(v) ? '' : String(+Number(v).toPrecision(n)));
+  const fmtE = (E) => (E >= 1000 ? `${sig(E / 1000, 4)} MeV` : `${sig(E, 4)} keV`);
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = {}; for (const k of ['canvas', 'ink', 'muted', 'line', 'surface', 'accent', 'coh', 'inc', 'pe', 'pairn', 'paire', 'tot', 'tr', 'en', 'slab', 'slabedge', 'beam', 'fluor', 'band1', 'band2', 'band3']) T[k] = g('--' + k);
+    T.mono = g('--font-mono') || 'monospace'; T.ui = g('--font-ui') || 'sans-serif'; }
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  const COL = () => [T.coh, T.inc, T.pe, T.pairn, T.paire];
+  const NAMES = ['Coherent', 'Incoherent (Compton)', 'Photoelectric', 'Pair, nuclear field', 'Pair, electron field'];
+
+  /* ---------- the material list ---------- */
+  const sel = $('selMat');
+  sel.innerHTML = D.mats.map((m) => `<option value="${m.key}">${m.name}</option>`).join('') + '<option value="el">Any element, by Z</option>';
+
+  /* ---------- chart helpers ---------- */
+  function frameBox(x, y, w, h) { return { x, y, w, h }; }
+  function logAx(lo, hi, a, b) { const L0 = Math.log10(lo), L1 = Math.log10(hi); return (v) => a + (Math.log10(v) - L0) / (L1 - L0) * (b - a); }
+  function linAx(lo, hi, a, b) { return (v) => a + (v - lo) / (hi - lo) * (b - a); }
+  function text(s, x, y, col, align = 'left', base = 'alphabetic', size = 11, bold = false) { const p = proj(); ctx.fillStyle = col; ctx.font = `${bold ? 700 : 400} ${size * p}px ${T.ui}`; ctx.textAlign = align; ctx.textBaseline = base; ctx.fillText(s, x, y); }
+  function mono(s, x, y, col, align = 'left', base = 'alphabetic', size = 10.5) { const p = proj(); ctx.fillStyle = col; ctx.font = `${size * p}px ${T.mono}`; ctx.textAlign = align; ctx.textBaseline = base; ctx.fillText(s, x, y); }
+  const eLabel = (E) => (E >= 1000 ? `${E / 1000 >= 1 ? +(E / 1000).toPrecision(3) : E / 1000} MeV` : `${+E.toPrecision(3)} keV`);
+  function decadeAxis(box, X, lo, hi, vertical, label, fmt) { /* log axis ticks: decades labeled, 2 to 9 minor */
+    const p = proj(), every = !vertical && Math.abs(X(lo * 10) - X(lo)) < 66 * p ? 2 : 1; ctx.strokeStyle = T.line; ctx.lineWidth = 1; /* on a narrow chart, label every other decade */
+    for (let d = Math.floor(Math.log10(lo)); d <= Math.ceil(Math.log10(hi)); d++) for (let k = 1; k < 10; k++) { const v = k * 10 ** d; if (v < lo * 0.9999 || v > hi * 1.0001) continue;
+      const q = X(v); ctx.globalAlpha = k === 1 ? 0.9 : 0.35; ctx.beginPath();
+      if (vertical) { ctx.moveTo(box.x, q); ctx.lineTo(box.x + box.w, q); } else { ctx.moveTo(q, box.y); ctx.lineTo(q, box.y + box.h); } ctx.stroke(); ctx.globalAlpha = 1;
+      if (k === 1 && (d % every === 0)) { const s = fmt(v); if (vertical) mono(s, box.x - 4 * p, q, T.muted, 'right', 'middle'); else { const edge = q > box.x + box.w - 24 * p; mono(s, edge ? box.x + box.w : q, box.y + box.h + 13 * p, T.muted, edge ? 'right' : 'center', 'alphabetic'); } } }
+    if (label) { if (vertical) { ctx.save(); ctx.translate(box.x - 52 * p, box.y + box.h / 2); ctx.rotate(-Math.PI / 2); text(label, 0, 0, T.muted, 'center', 'middle', 11); ctx.restore(); }
+      else text(label, box.x + box.w / 2, box.y + box.h + 28 * p, T.muted, 'center', 'alphabetic', 11); } }
+  const pow10 = (v) => { const e = Math.round(Math.log10(v)); return e === 0 ? '1' : e === 1 ? '10' : e === 2 ? '100' : sup(`10^${String(e).replace('-', '−')}`); };
+  const ENERGIES = (() => { const out = []; for (let i = 0; i <= 600; i++) out.push(10 ** (5 * i / 600)); return out; })();
+
+  /* ---------- coefficients view ---------- */
+  const yScale = (m) => { /* factor from cm²/g to the scale shown, and its label */
+    if (S.y === 'lin') return { f: m.rho, unit: '1/cm', label: 'μ (1/cm)' };
+    if (S.y === 'atom' && Object.keys(m.w).length === 1) { const Z = +Object.keys(m.w)[0]; return { f: elem(Z).A / NA / BARN, unit: 'b/atom', label: 'σ per atom (barns)' }; }
+    if (S.y === 'elec') return { f: 1 / (electronDensity(m)) / BARN, unit: 'b/electron', label: 'σ per electron (barns)' };
+    return { f: 1, unit: 'cm²/g', label: 'μ/ρ (cm²/g)' }; };
+  let CURVES = null;
+  function curves(m) { const key = m.key; if (CURVES && CURVES.key === key) return CURVES;
+    const pts = ENERGIES.slice(); for (const z in m.w) for (const e of elem(+z).edges) pts.push(e.E * (1 - 1e-9), e.E * (1 + 1e-9));
+    pts.sort((a, b) => a - b); const E = pts.filter((v) => v >= EMIN && v <= EMAX);
+    const c = E.map((x) => matCS(m, x)), tr = E.map((x) => muTr(m, x).total), en = E.map((x) => muEn(m, x));
+    return CURVES = { key, E, c, tr, en }; }
+  function drawCoef(box) { const p = proj(), m = mat(), cv = curves(m), ys = yScale(m);
+    let lo = Infinity, hi = 0; cv.c.forEach((c) => { const t = total(c); hi = Math.max(hi, t); for (const v of c) if (v > 0) lo = Math.min(lo, v); });
+    lo = Math.max(lo, hi * 1e-7); const yLo = 10 ** Math.floor(Math.log10(lo * ys.f)), yHi = 10 ** Math.ceil(Math.log10(hi * ys.f));
+    const X = logAx(EMIN, EMAX, box.x, box.x + box.w), Y = logAx(yLo, yHi, box.y + box.h, box.y);
+    decadeAxis(box, X, EMIN, EMAX, false, 'Photon energy', (v) => eLabel(v)); decadeAxis(box, Y, yLo, yHi, true, ys.label, pow10);
+    const line = (vals, col, w, dash) => { ctx.save(); ctx.beginPath(); ctx.rect(box.x, box.y, box.w, box.h); ctx.clip(); ctx.strokeStyle = col; ctx.lineWidth = w * p; ctx.setLineDash(dash || []); ctx.beginPath(); let on = false;
+      for (let i = 0; i < cv.E.length; i++) { const v = vals[i] == null ? null : vals[i] * ys.f; if (!(v > 0)) { on = false; continue; } const x = X(cv.E[i]), y = Y(Math.max(v, yLo * 0.5)); if (on) ctx.lineTo(x, y); else ctx.moveTo(x, y); on = true; }
+      ctx.stroke(); ctx.restore(); };
+    const cols = COL();
+    if (S.parts) for (let k = 0; k < 5; k++) line(cv.c.map((c) => c[k]), cols[k], 1.6, k === 4 ? [5, 3] : null);
+    line(cv.c.map(total), T.tot, 2.6);
+    if (S.tr) line(cv.tr, T.tr, 1.8, [7, 4]);
+    if (S.en) line(cv.en, T.en, 1.8, [2, 3]);
+    /* legend */
+    const items = [['μ/ρ, all processes', T.tot, 2.6, null]]; if (S.parts) NAMES.forEach((n, k) => items.push([n, cols[k], 1.6, k === 4 ? [5, 3] : null]));
+    if (S.tr) items.push(['μ_tr/ρ, energy transfer', T.tr, 1.8, [7, 4]]); if (S.en) items.push(['μ_en/ρ, energy absorption (SRD 126)', T.en, 1.8, [2, 3]]);
+    const lh = (box.w < 420 ? 13 : 15) * p, lfs = box.w < 420 ? 9.5 : 10.5, lx = box.x + 10 * p; let ly = box.y + box.h - items.length * lh + 4 * p; /* bottom left, where the curves seldom go */ ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(lx - 6 * p, ly - lh + 2 * p, (box.w < 420 ? 200 : 236) * p, items.length * lh + 2 * p); ctx.globalAlpha = 1;
+    for (const [n, c, w, d] of items) { ctx.strokeStyle = c; ctx.lineWidth = w * p; ctx.setLineDash(d || []); ctx.beginPath(); ctx.moveTo(lx, ly - 4 * p); ctx.lineTo(lx + 22 * p, ly - 4 * p); ctx.stroke(); ctx.setLineDash([]); text(n, lx + 28 * p, ly, T.ink, 'left', 'alphabetic', lfs); ly += lh; }
+    /* the energy cursor */
+    const xe = X(S.E); ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(xe, box.y); ctx.lineTo(xe, box.y + box.h); ctx.stroke(); ctx.globalAlpha = 1;
+    const c = matCS(m, S.E), tot = total(c); ctx.fillStyle = T.tot; ctx.beginPath(); ctx.arc(xe, Y(tot * ys.f), 4 * p, 0, 7); ctx.fill();
+    text(`${m.name}, ${fmtE(S.E)}`, box.x + 6 * p, box.y + 14 * p, T.ink, 'left', 'alphabetic', 12, true);
+    return { X, box }; }
+
+  /* ---------- which process wins ---------- */
+  function drawWins(box) { const p = proj(), m = mat(), top = { x: box.x, y: box.y, w: box.w, h: box.h * 0.6 }, bot = { x: box.x, y: box.y + box.h * 0.6 + 62 * p, w: box.w, h: box.h * 0.4 - 62 * p };
+    const X = logAx(EMIN, EMAX, box.x, box.x + box.w), Y = linAx(0, 100, top.y + top.h, top.y);
+    const pe = evansLine('pe'), pr = evansLine('pair');
+    /* the three regions */
+    const poly = (pts, col) => { ctx.fillStyle = col; ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.closePath(); ctx.fill(); };
+    const peP = pe.filter((r) => r[1]).map(([z, e]) => [X(e), Y(z)]), prP = pr.filter((r) => r[1]).map(([z, e]) => [X(e), Y(z)]);
+    ctx.save(); ctx.beginPath(); ctx.rect(top.x, top.y, top.w, top.h); ctx.clip();
+    poly([[top.x, Y(0)], ...peP.map(([x, y]) => [x, y]).reverse().reverse(), [peP[peP.length - 1][0], top.y], [top.x, top.y]].concat([]), T.band1);
+    poly([[top.x + top.w, Y(0)], ...prP, [prP[prP.length - 1][0], top.y], [top.x + top.w, top.y]], T.band3);
+    ctx.restore();
+    ctx.strokeStyle = T.line; ctx.lineWidth = 1; for (let z = 0; z <= 100; z += 20) { ctx.beginPath(); ctx.moveTo(top.x, Y(z)); ctx.lineTo(top.x + top.w, Y(z)); ctx.stroke(); mono(String(z), top.x - 4 * p, Y(z), T.muted, 'right', 'middle'); }
+    decadeAxis(top, X, EMIN, EMAX, false, null, (v) => eLabel(v));
+    ctx.save(); ctx.translate(top.x - 40 * p, top.y + top.h / 2); ctx.rotate(-Math.PI / 2); text('Atomic number Z', 0, 0, T.muted, 'center', 'middle', 11); ctx.restore();
+    const stroke = (P, col) => { ctx.strokeStyle = col; ctx.lineWidth = 2.2 * p; ctx.beginPath(); P.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); ctx.stroke(); };
+    stroke(peP, T.pe); stroke(prP, T.pairn);
+    const narrow = box.w < 520, rf = narrow ? 10.5 : 12;
+    text(narrow ? 'Photoelectric wins' : 'Photoelectric effect wins', top.x + 8 * p, top.y + 16 * p, T.pe, 'left', 'alphabetic', rf, true);
+    text(narrow ? 'Compton wins' : 'Compton scattering wins', X(1500), Y(30), T.inc, 'center', 'alphabetic', rf, true);
+    text(narrow ? 'Pair wins' : 'Pair production wins', top.x + top.w - 8 * p, top.y + (narrow ? 34 : 16) * p, T.pairn, 'right', 'alphabetic', rf, true);
+    if (!narrow) { text('τ = σ_incoh', X(pe[60][1]) + 6 * p, Y(61), T.pe, 'left', 'middle', 10.5); text('σ_incoh = κ', X(pr[60][1]) - 6 * p, Y(61), T.pairn, 'right', 'middle', 10.5); }
+    /* where the material sits */
+    const one = Object.keys(m.w).length === 1, zz = one ? +Object.keys(m.w)[0] : equivalentZ(m, 'pe');
+    if (zz) { const y = Y(zz); ctx.strokeStyle = T.ink; ctx.setLineDash([4, 4]); ctx.lineWidth = 1; ctx.beginPath(); ctx.moveTo(top.x, y); ctx.lineTo(top.x + top.w, y); ctx.stroke(); ctx.setLineDash([]);
+      text(one ? `${m.name}, Z = ${zz}` : `${m.name}, equivalent Z = ${zz.toFixed(2)}`, top.x + 8 * p, y - 5 * p, T.ink, 'left', 'alphabetic', 11, true);
+      ctx.fillStyle = T.accent; ctx.beginPath(); ctx.arc(X(S.E), y, 5 * p, 0, 7); ctx.fill(); }
+    /* the shares at each energy, stacked */
+    const Es = ENERGIES.filter((e, i) => i % 2 === 0), cols = COL(), sh = Es.map((e) => { const c = matCS(m, e), t = total(c); return c.map((v) => v / t); }), Yb = linAx(0, 1, bot.y + bot.h, bot.y);
+    decadeAxis(bot, X, EMIN, EMAX, false, 'Photon energy', (v) => eLabel(v));
+    const cum = (i, k) => { let s = 0; for (let j = 0; j < k; j++) s += sh[i][j]; return s; }; /* each band between its lower and upper sums, so none is painted over another */
+    for (let k = 0; k < 5; k++) { ctx.fillStyle = cols[k]; ctx.globalAlpha = 0.85; ctx.beginPath();
+      Es.forEach((e, i) => (i ? ctx.lineTo(X(e), Yb(cum(i, k + 1))) : ctx.moveTo(X(e), Yb(cum(i, k + 1)))));
+      for (let i = Es.length - 1; i >= 0; i--) ctx.lineTo(X(Es[i]), Yb(cum(i, k))); ctx.closePath(); ctx.fill(); }
+    ctx.globalAlpha = 1; ctx.strokeStyle = T.line; ctx.strokeRect(bot.x, bot.y, bot.w, bot.h);
+    for (const q of [0, 0.5, 1]) mono(`${q * 100} %`, bot.x - 4 * p, Yb(q), T.muted, 'right', 'middle');
+    { const NM = ['coherent', 'incoherent', 'photoelectric', 'pair (nucleus)', 'pair (electron)']; ctx.font = `${10.5 * p}px ${T.ui}`; const wd = NM.map((n) => ctx.measureText(n).width + 22 * p), all = wd.reduce((a, b) => a + b, 0);
+      const rows = all > bot.w ? [[0, 1, 2], [3, 4]] : [[0, 1, 2, 3, 4]]; /* one row, or two on a narrow chart */
+      text(narrow ? `Share in ${m.name}` : `Share of the interactions in ${m.name}`, bot.x, bot.y - (rows.length > 1 ? 38 : 24) * p, T.ink, 'left', 'alphabetic', 11.5, true);
+      let ry = rows.length > 1 ? bot.y - 22 * p : bot.y - 7 * p; for (const r of rows) { let lx = rows.length > 1 ? bot.x : bot.x + bot.w - r.reduce((a, k) => a + wd[k], 0);
+        for (const k of r) { ctx.fillStyle = cols[k]; ctx.fillRect(lx, ry - 9 * p, 10 * p, 10 * p); text(NM[k], lx + 13 * p, ry, T.muted, 'left', 'alphabetic', 10.5); lx += wd[k]; } ry += 15 * p; } }
+    const xe = X(S.E); ctx.strokeStyle = T.ink; ctx.globalAlpha = 0.55; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(xe, top.y); ctx.lineTo(xe, top.y + top.h); ctx.moveTo(xe, bot.y); ctx.lineTo(xe, bot.y + bot.h); ctx.stroke(); ctx.globalAlpha = 1;
+    return { X, box }; }
+
+  /* ---------- narrow and broad beam: the Monte Carlo ---------- */
+  let MC = null, RUNS = [], running = false;
+  function mcKey() { return `${mat().key}|${S.E}|${S.t}|${S.N}|${S.seed}`; }
+  function mcNew() { MC = mcStart({ mat: mat(), E: S.E, t: S.t, N: S.N, seed: S.seed, keep: 160, bins: 60 }); MC.key = mcKey(); }
+  function runsKey() { return `${mat().key}|${S.E}`; }
+  function drawBeam(box) { const p = proj(), m = mat(), R = MC ? mcResult(MC) : null;
+    const narrow = box.w < 520; /* on a narrow chart the two small charts go one above the other */
+    const pic = { x: box.x, y: box.y, w: box.w, h: box.h * (narrow ? 0.38 : 0.52) }, sp = { x: box.x, y: pic.y + pic.h + (narrow ? 62 : 50) * p, w: narrow ? box.w : box.w * 0.46, h: narrow ? (box.h * 0.62 - 140 * p) / 2 : box.h * 0.48 - 72 * p },
+      tg = narrow ? { x: box.x, y: sp.y + sp.h + 66 * p, w: box.w, h: sp.h } : { x: box.x + box.w * 0.56, y: sp.y, w: box.w * 0.44, h: sp.h };
+    /* the slab, to scale: the beam comes in from the left */
+    const span = Math.max(S.t, 0.5) * 2.2, sc = Math.min(pic.w / span, pic.h / (span * 0.62)), x0 = pic.x + (pic.w - S.t * sc) / 2, cy = pic.y + pic.h / 2, halfH = pic.h / 2 / sc;
+    ctx.save(); ctx.beginPath(); ctx.rect(pic.x, pic.y, pic.w, pic.h); ctx.clip();
+    ctx.fillStyle = T.slab; ctx.fillRect(x0, pic.y, S.t * sc, pic.h); ctx.strokeStyle = T.slabedge; ctx.lineWidth = 1.5 * p; ctx.strokeRect(x0, pic.y - 2, S.t * sc, pic.h + 4);
+    if (R) { const tracks = R.tracks, nT = tracks.length; for (let h = 0; h < nT; h++) { const yo = ((h + 0.5) / 160 - 0.5) * 2 * halfH * 0.92;
+        for (const path of tracks[h]) { ctx.lineWidth = 1 * p; ctx.globalAlpha = 0.8;
+          for (let i = 1; i < path.length; i++) { const [xa, za, Ea] = path[i - 1], [xb, zb, , ev] = path[i]; ctx.strokeStyle = Ea < S.E * 0.999 && Ea !== MEC2 ? T.inc : Ea === MEC2 ? T.pairn : T.beam;
+            if (path[0][3] === 'start' && i === 1 && path[0][2] !== S.E) ctx.strokeStyle = Ea === MEC2 ? T.pairn : T.fluor;
+            ctx.beginPath(); ctx.moveTo(x0 + za * sc, cy + (xa + yo) * sc); ctx.lineTo(x0 + zb * sc, cy + (xb + yo) * sc); ctx.stroke();
+            if (ev === 'out' || ev === 'back') { const d = ev === 'out' ? 1 : -1, last = path[i - 1], dz = zb - last[1], dx = xb - last[0], L = Math.hypot(dz, dx) || 1, ext = 40 / sc;
+              ctx.globalAlpha = 0.35; ctx.beginPath(); ctx.moveTo(x0 + zb * sc, cy + (xb + yo) * sc); ctx.lineTo(x0 + (zb + dz / L * ext) * sc, cy + (xb + yo + dx / L * ext) * sc); ctx.stroke(); ctx.globalAlpha = 0.8; void d; }
+            const X1 = x0 + zb * sc, Y1 = cy + (xb + yo) * sc;
+            if (ev === 'photo') { ctx.strokeStyle = T.pe; ctx.beginPath(); ctx.moveTo(X1 - 3 * p, Y1 - 3 * p); ctx.lineTo(X1 + 3 * p, Y1 + 3 * p); ctx.moveTo(X1 + 3 * p, Y1 - 3 * p); ctx.lineTo(X1 - 3 * p, Y1 + 3 * p); ctx.stroke(); }
+            else if (ev === 'incoh') { ctx.fillStyle = T.inc; ctx.beginPath(); ctx.arc(X1, Y1, 1.8 * p, 0, 7); ctx.fill(); }
+            else if (ev === 'coh') { ctx.strokeStyle = T.coh; ctx.beginPath(); ctx.arc(X1, Y1, 2.5 * p, 0, 7); ctx.stroke(); }
+            else if (ev === 'pair') { ctx.fillStyle = T.pairn; ctx.beginPath(); ctx.moveTo(X1, Y1 - 4 * p); ctx.lineTo(X1 + 4 * p, Y1); ctx.lineTo(X1, Y1 + 4 * p); ctx.lineTo(X1 - 4 * p, Y1); ctx.fill(); } }
+          ctx.globalAlpha = 1; } } }
+    else { ctx.strokeStyle = T.beam; ctx.lineWidth = 1 * p; for (let k = -6; k <= 6; k++) { const y = cy + k * pic.h / 14; ctx.beginPath(); ctx.moveTo(pic.x + 10, y); ctx.lineTo(x0, y); ctx.stroke(); } }
+    ctx.restore();
+    { const lab = `${m.name}, ${fx(S.t, 2)} cm`; ctx.font = `700 ${11.5 * p}px ${T.ui}`; const w = ctx.measureText(lab).width + 12 * p; ctx.fillStyle = T.canvas; ctx.globalAlpha = 0.85; ctx.fillRect(pic.x + pic.w / 2 - w / 2, pic.y + 3 * p, w, 18 * p); ctx.globalAlpha = 1;
+      text(lab, pic.x + pic.w / 2, pic.y + 16 * p, T.ink, 'center', 'alphabetic', 11.5, true); }
+    const key = [['photon at the start energy', T.beam], ['scattered photon', T.inc], ['fluorescence X-ray', T.fluor], ['511 keV annihilation photon', T.pairn]];
+    let kx = pic.x + 4 * p, ky = pic.y + pic.h + 14 * p; for (const [n, c] of key) { ctx.font = `${10 * p}px ${T.ui}`; const w = ctx.measureText(n).width + 30 * p; if (kx + w > pic.x + pic.w + 20 * p) { kx = pic.x + 4 * p; ky += 14 * p; }
+      ctx.fillStyle = c; ctx.fillRect(kx, ky - 5 * p, 14 * p, 3 * p); text(n, kx + 18 * p, ky, T.muted, 'left', 'alphabetic', 10); kx += w; }
+    /* spectrum of the photons that get through */
+    ctx.strokeStyle = T.line; ctx.strokeRect(sp.x, sp.y, sp.w, sp.h);
+    text('Photons behind the slab, by energy', sp.x, sp.y - 8 * p, T.ink, 'left', 'alphabetic', 11.5, true);
+    if (R && R.N) { const bins = R.spec.length, mx = Math.max(1, ...R.spec), bw = sp.w / bins; ctx.fillStyle = T.inc;
+      for (let i = 0; i < bins; i++) { const h = R.spec[i] / mx * sp.h * 0.9; ctx.fillRect(sp.x + i * bw, sp.y + sp.h - h, Math.max(1, bw - 1), h); }
+      ctx.fillStyle = T.beam; const hu = Math.min(sp.h * 0.9, R.specUnc / mx * sp.h * 0.9); ctx.fillRect(sp.x + sp.w - 3 * p, sp.y + sp.h - hu, 3 * p, hu);
+      mono(`${R.specUnc} never interacted`, sp.x + sp.w - 6 * p, sp.y + 12 * p, T.beam, 'right'); mono(`${R.transmitted - R.specUnc} scattered`, sp.x + sp.w - 6 * p, sp.y + 26 * p, T.inc, 'right');
+      if (S.E > 2 * MEC2 && m.rho) { const x511 = sp.x + MEC2 / S.E * sp.w; ctx.strokeStyle = T.pairn; ctx.setLineDash([3, 3]); ctx.beginPath(); ctx.moveTo(x511, sp.y); ctx.lineTo(x511, sp.y + sp.h); ctx.stroke(); ctx.setLineDash([]); mono('511 keV', x511 + 3 * p, sp.y + 40 * p, T.pairn); } }
+    mono('0', sp.x, sp.y + sp.h + 13 * p, T.muted, 'left'); mono(fmtE(S.E), sp.x + sp.w, sp.y + sp.h + 13 * p, T.muted, 'right'); text('Photon energy', sp.x + sp.w / 2, sp.y + sp.h + 13 * p, T.muted, 'center', 'alphabetic', 10.5);
+    /* transmission against μt: the narrow beam line and each finished run */
+    const runs = RUNS.filter((r) => r.key === runsKey()), mu = m.rho * muRho(m, S.E), xmax = Math.max(2, ...runs.map((r) => r.mut), mu * S.t) * 1.1;
+    let ymin = 1; for (const r of runs) ymin = Math.min(ymin, r.Tn || 1, r.narrow); ymin = Math.max(1e-6, Math.min(ymin, Math.exp(-xmax)) * 0.5);
+    const yMax = Math.max(2, ...runs.map((r) => r.K * 1.3)), Xt = linAx(0, xmax, tg.x, tg.x + tg.w), Yt = logAx(10 ** Math.floor(Math.log10(ymin)), 10 ** Math.ceil(Math.log10(yMax)), tg.y + tg.h, tg.y);
+    ctx.strokeStyle = T.line; ctx.strokeRect(tg.x, tg.y, tg.w, tg.h);
+    decadeAxis(tg, Yt, 10 ** Math.floor(Math.log10(ymin)), 10 ** Math.ceil(Math.log10(yMax)), true, null, pow10);
+    for (let k = 0; k <= Math.floor(xmax); k += xmax > 8 ? 2 : 1) mono(String(k), Xt(k), tg.y + tg.h + 13 * p, T.muted, 'center');
+    text('μt (mean free paths)', tg.x + tg.w / 2, tg.y + tg.h + 27 * p, T.muted, 'center', 'alphabetic', 10.5);
+    text('Behind the slab, per unit incident', tg.x, tg.y - 8 * p, T.ink, 'left', 'alphabetic', 11.5, true);
+    if (!S.blind) { ctx.strokeStyle = T.beam; ctx.lineWidth = 1.6 * p; ctx.beginPath(); ctx.moveTo(Xt(0), Yt(1)); ctx.lineTo(Xt(xmax), Yt(Math.exp(-xmax))); ctx.stroke(); mono('e^(−μt)', Xt(xmax * 0.3), Yt(Math.exp(-xmax * 0.3)) + 16 * p, T.beam, 'left'); }
+    for (const r of runs) { const x = Xt(r.mut); ctx.fillStyle = T.beam; ctx.beginPath(); ctx.arc(x, Yt(Math.max(r.Tn, ymin)), 3.5 * p, 0, 7); ctx.fill();
+      ctx.fillStyle = T.inc; ctx.fillRect(x - 3.5 * p, Yt(r.K) - 3.5 * p, 7 * p, 7 * p); ctx.strokeStyle = T.inc; ctx.beginPath(); ctx.moveTo(x, Yt(r.K + 2 * r.Kse)); ctx.lineTo(x, Yt(Math.max(r.K - 2 * r.Kse, ymin))); ctx.stroke(); }
+    ctx.fillStyle = T.beam; ctx.beginPath(); ctx.arc(tg.x + 10 * p, tg.y + tg.h - 26 * p, 3.5 * p, 0, 7); ctx.fill(); text('narrow beam T', tg.x + 18 * p, tg.y + tg.h - 22 * p, T.muted, 'left', 'alphabetic', 10);
+    ctx.fillStyle = T.inc; ctx.fillRect(tg.x + 6.5 * p, tg.y + tg.h - 15 * p, 7 * p, 7 * p); text('broad beam K/K₀', tg.x + 18 * p, tg.y + tg.h - 8 * p, T.muted, 'left', 'alphabetic', 10);
+    return { box }; }
+
+  /* ---------- beam hardening ---------- */
+  function beamNow() { const sp0 = tubeSpectrum(S.kv), filt = [{ mat: 'al', mm: S.al }, { mat: S.f2, mm: S.f2mm }]; return { sp0, sp: filtered(sp0, filt) }; }
+  let HCACHE = null;
+  function hardNow() { const key = `${S.kv}|${S.al}|${S.f2}|${S.f2mm}|${S.hm}`; if (HCACHE && HCACHE.key === key) return HCACHE;
+    const { sp0, sp } = beamNow(), h = hvl(sp, S.hm), K = airKerma(sp), Em = meanEnergy(sp), Ee = effectiveEnergy(h.hvl1, S.hm, S.kv);
+    return HCACHE = { key, sp0, sp, h, K, Em, Ee }; }
+  function drawHard(box) { const p = proj(), Hn = hardNow(), top = { x: box.x, y: box.y + 16 * p, w: box.w, h: box.h * 0.5 - 16 * p }, bot = { x: box.x, y: box.y + box.h * 0.5 + 58 * p, w: box.w, h: box.h * 0.5 - 58 * p };
+    const { sp0, sp } = Hn, X = linAx(0, 150, top.x, top.x + top.w), mx = Math.max(...sp.f) || 1;
+    const Y = linAx(0, mx * 1.15, top.y + top.h, top.y);
+    ctx.strokeStyle = T.line; ctx.strokeRect(top.x, top.y, top.w, top.h);
+    for (let e = 0; e <= 150; e += 25) mono(String(e), X(e), top.y + top.h + 13 * p, T.muted, 'center');
+    text('Photon energy (keV)', top.x + top.w / 2, top.y + top.h + 27 * p, T.muted, 'center', 'alphabetic', 10.5);
+    text(`${S.kv} kVp, tungsten anode: photons per keV`, top.x, top.y - 6 * p, T.ink, 'left', 'alphabetic', 11.5, true);
+    ctx.save(); ctx.beginPath(); ctx.rect(top.x, top.y, top.w, top.h); ctx.clip();
+    const f0 = 1; /* the same scale: the filters only ever take photons away */ ctx.strokeStyle = T.muted; ctx.setLineDash([4, 3]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); sp0.E.forEach((e, i) => { const y = Y(sp0.f[i] * f0); i ? ctx.lineTo(X(e), y) : ctx.moveTo(X(e), y); }); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle = T.inc; ctx.globalAlpha = 0.25; ctx.beginPath(); ctx.moveTo(X(sp.E[0]), Y(0)); sp.E.forEach((e, i) => ctx.lineTo(X(e), Y(sp.f[i]))); ctx.lineTo(X(sp.E[sp.E.length - 1]), Y(0)); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = T.inc; ctx.lineWidth = 2 * p; ctx.beginPath(); sp.E.forEach((e, i) => { const y = Y(sp.f[i]); i ? ctx.lineTo(X(e), y) : ctx.moveTo(X(e), y); }); ctx.stroke();
+    const xm = X(Hn.Em); ctx.strokeStyle = T.accent; ctx.setLineDash([5, 3]); ctx.beginPath(); ctx.moveTo(xm, top.y); ctx.lineTo(xm, top.y + top.h); ctx.stroke(); ctx.setLineDash([]); mono(`mean ${fx(Hn.Em, 1)} keV`, xm + 4 * p, top.y + 14 * p, T.accent);
+    ctx.restore();
+    text(box.w < 520 ? 'dashed: Be window only' : 'dashed: through the 0.8 mm Be window only, same scale', top.x + top.w - 6 * p, top.y + top.h - 8 * p, T.muted, 'right', 'alphabetic', 10);
+    /* air kerma against thickness of the HVL material */
+    const hm = material(S.hm), xmax = Math.max(Hn.h.hvl1 + Hn.h.hvl2, 0.1) * 2.2, Xb = linAx(0, xmax, bot.x, bot.x + bot.w), Yb = logAx(0.01, 1, bot.y + bot.h, bot.y);
+    ctx.strokeStyle = T.line; ctx.strokeRect(bot.x, bot.y, bot.w, bot.h); decadeAxis(bot, Yb, 0.01, 1, true, null, (v) => (v === 1 ? '1' : v === 0.1 ? '0.1' : '0.01'));
+    const step = xmax > 20 ? 5 : xmax > 8 ? 2 : xmax > 4 ? 1 : xmax > 2 ? 0.5 : 0.2;
+    for (let x = 0; x <= xmax + 1e-9; x += step) mono(String(+x.toFixed(2)), Xb(x), bot.y + bot.h + 13 * p, T.muted, 'center');
+    text(`${hm.name} added (mm)`, bot.x + bot.w / 2, bot.y + bot.h + 27 * p, T.muted, 'center', 'alphabetic', 10.5);
+    text('Air kerma, relative to no absorber', bot.x, bot.y - 8 * p, T.ink, 'left', 'alphabetic', 11.5, true);
+    const K0 = Hn.K, n = 60; ctx.strokeStyle = T.inc; ctx.lineWidth = 2.2 * p; ctx.beginPath();
+    for (let i = 0; i <= n; i++) { const x = xmax * i / n, k = airKerma(filtered(sp, [{ mat: S.hm, mm: x }])) / K0; const y = Yb(Math.max(k, 0.01)); i ? ctx.lineTo(Xb(x), y) : ctx.moveTo(Xb(x), y); } ctx.stroke();
+    const muE = hm.rho * muRho(hm, Hn.Ee) / 10; ctx.strokeStyle = T.muted; ctx.setLineDash([5, 4]); ctx.lineWidth = 1.2 * p; ctx.beginPath(); ctx.moveTo(Xb(0), Yb(1)); ctx.lineTo(Xb(xmax), Yb(Math.max(0.01, Math.exp(-muE * xmax)))); ctx.stroke(); ctx.setLineDash([]);
+    mono(`one energy, ${fx(Hn.Ee, 1)} keV`, Xb(xmax * 0.97), Yb(Math.max(0.012, Math.exp(-muE * xmax * 0.97))) + 16 * p, T.muted, 'right');
+    for (const [q, x, lab] of [[0.5, Hn.h.hvl1, 'HVL₁'], [0.25, Hn.h.hvl1 + Hn.h.hvl2, 'HVL₁ + HVL₂']]) { ctx.strokeStyle = T.accent; ctx.lineWidth = 1 * p; ctx.beginPath(); ctx.moveTo(Xb(0), Yb(q)); ctx.lineTo(Xb(x), Yb(q)); ctx.lineTo(Xb(x), Yb(0.01)); ctx.stroke();
+      mono(`${lab} ${fx(x, 3)} mm`, Xb(x) + 4 * p, Yb(q) - 5 * p, T.accent, 'left'); }
+    return { box }; }
+
+  /* ---------- draw ---------- */
+  let LAST = null;
+  function draw() { if (!T || !W) return; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    const p = proj(), box = frameBox(70 * p, 30 * p, W - 88 * p, H - 76 * p);
+    LAST = S.view === 'coef' ? drawCoef(box) : S.view === 'wins' ? drawWins(box) : S.view === 'beam' ? drawBeam(frameBox(56 * p, 18 * p, W - 72 * p, H - 52 * p)) : drawHard(frameBox(56 * p, 24 * p, W - 72 * p, H - 60 * p)); }
+
+  /* ---------- readouts ---------- */
+  const dd = (a, b, cls) => `<div${cls ? ` class="${cls}"` : ''}><dt>${a}</dt><dd>${b}</dd></div>`;
+  function readouts() { const m = mat(), out = $('out'); let h = '';
+    if (S.view === 'coef' || S.view === 'wins') { const c = matCS(m, S.E), t = total(c), tr = muTr(m, S.E), en = muEn(m, S.E), ys = yScale(m);
+      h += dd('Material', m.name, 'wide') + dd('Energy', fmtE(S.E)) + dd('Density', `${nice(m.rho, 4)} g/cm³`);
+      if (S.view === 'coef') { NAMES.forEach((n, k) => { h += dd(n, `${nice(c[k], 4)} cm²/g · ${fx(100 * c[k] / t, 1)} %`, 'wide'); });
+        h += dd('μ/ρ', `${nice(t, 4)} cm²/g`) + dd('μ', `${nice(t * m.rho, 4)} /cm`) + dd('Mean free path', `${nice(1 / (t * m.rho), 4)} cm`) + dd('Half value layer', `${nice(Math.LN2 / (t * m.rho), 4)} cm`)
+          + dd('μ_tr/ρ', `${nice(tr.total, 4)} cm²/g`) + dd('μ_en/ρ (SRD 126)', en == null ? (S.E > 2e4 ? 'past 20 MeV' : 'no table') : `${nice(en, 4)} cm²/g`, en == null ? 'note' : '')
+          + (en != null ? dd('g = 1 − μ_en/μ_tr', fx(1 - en / tr.total, 4)) : '') + dd('Energy transferred, μ_tr/μ', `${fx(100 * tr.total / t, 2)} %`);
+        if (ys.unit !== 'cm²/g' && ys.unit !== '1/cm') h += dd(`Total, ${ys.unit}`, nice(t * ys.f, 4)) + dd(`Photoelectric, ${ys.unit}`, nice(c[2] * ys.f, 4)) + dd(`Incoherent, ${ys.unit}`, nice(c[1] * ys.f, 4)); }
+      else { const ep = crossing(m, 'pe'), ek = crossing(m, 'pair'), one = Object.keys(m.w).length === 1;
+        h += dd('Photoelectric = Compton at', ep ? fmtE(ep) : 'below 1 keV') + dd('Compton = pair production at', ek ? fmtE(ek) : '—');
+        if (!one) h += dd('Equivalent Z, photoelectric', fx(equivalentZ(m, 'pe'), 2)) + dd('Equivalent Z, pair', fx(equivalentZ(m, 'pair'), 2));
+        ['Coherent', 'Incoherent', 'Photoelectric', 'Pair (nucleus)', 'Pair (electron)'].forEach((n, k) => { h += dd(`${n} share`, `${fx(100 * c[k] / t, 2)} %`); }); } }
+    else if (S.view === 'beam') { const R = MC ? mcResult(MC) : null, mu = m.rho * muRho(m, S.E);
+      h += dd('Material', m.name, 'wide') + dd('Energy', fmtE(S.E)) + dd('Thickness t', `${fx(S.t, 2)} cm`);
+      h += S.blind ? dd('μ and μt', 'hidden: fit them', 'note') : dd('μ (XCOM)', `${nice(mu, 4)} /cm`) + dd('μt', fx(mu * S.t, 4)) + dd('Narrow beam e^(−μt)', nice(Math.exp(-mu * S.t), 4));
+      if (R && R.N) { h += dd('Photons sent', `${R.N} of ${S.N}`) + dd('Seed', String(S.seed))
+        + dd('Narrow beam T', `${nice(R.Tn, 4)} ± ${nice(R.TnSE, 2)}`) + dd('Broad beam K/K₀', `${nice(R.K, 4)} ± ${nice(R.Kse, 2)}`)
+        + (S.blind ? '' : dd('Buildup B', `${nice(R.B, 4)} ± ${nice(R.Bse, 2)}`))
+        + dd('Through, never interacted', String(R.uncollided)) + dd('Through, scattered', String(R.transmitted - R.uncollided)) + dd('Back out of the front', String(R.back)) + dd('Absorbed', String(R.absorbed))
+        + dd('Interactions', `${R.events.coh} coherent, ${R.events.incoh} incoherent, ${R.events.photo} photoelectric, ${R.events.pair} pair; ${R.events.fluor} fluorescence X-rays`, 'wide'); }
+      else h += dd('Run', 'Send photons to start', 'note'); }
+    else { const Hn = hardNow(); h += dd('Tube voltage', `${S.kv} kVp`) + dd('Filtration', `${fx(S.al, 2)} mm Al${S.f2mm > 0 ? ` + ${fx(S.f2mm, 3)} mm ${material(S.f2).name.toLowerCase()}` : ''}`)
+      + dd('Mean energy', `${fx(Hn.Em, 2)} keV`) + dd(`HVL₁ (${S.hm === 'al' ? 'Al' : 'Cu'})`, `${fx(Hn.h.hvl1, 3)} mm`) + dd(`HVL₂ (${S.hm === 'al' ? 'Al' : 'Cu'})`, `${fx(Hn.h.hvl2, 3)} mm`) + dd('Homogeneity h = HVL₁/HVL₂', fx(Hn.h.h, 3))
+      + dd('Effective energy', `${fx(Hn.Ee, 2)} keV`) + dd('Air kerma at 1 m', `${fx(Hn.K, 2)} µGy per mAs`); }
+    out.innerHTML = h; }
+
+  /* ---------- controls ---------- */
+  const lgE = () => Math.log10(S.E);
+  function sync() { $('pane').dataset.v = S.view; for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.v === S.view));
+    for (const b of document.querySelectorAll('#ySeg button')) { b.setAttribute('aria-pressed', String(b.dataset.y === S.y)); }
+    $('ySeg').querySelector('[data-y="atom"]').disabled = !isEl();
+    for (const b of document.querySelectorAll('#hvlSeg button')) b.setAttribute('aria-pressed', String(b.dataset.h === S.hm));
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    sel.value = S.mat; $('zBox').hidden = S.mat !== 'el'; $('sZ').value = S.Z; $('oZ').textContent = `${S.Z} · ${elem(S.Z).sym}`;
+    const eMin = S.view === 'beam' ? 1 : 0, eMax = S.view === 'beam' ? 4.3 : 5; $('sE').min = eMin; $('sE').max = eMax; $('sE').value = lgE(); $('oE').textContent = fmtE(S.E);
+    $('sT').value = S.t; $('oT').textContent = `${fx(S.t, 2)} cm`; $('selN').value = String(S.N); $('seedOut').textContent = String(S.seed);
+    $('sKv').value = S.kv; $('oKv').textContent = `${S.kv} kVp`; $('sAl').value = S.al; $('oAl').textContent = `${fx(S.al, 2)} mm`; $('selF2').value = S.f2; $('sF2').value = S.f2mm; $('oF2').textContent = `${fx(S.f2mm, 3)} mm`;
+    $('coefBox').hidden = S.view !== 'coef'; $('beamBox').hidden = S.view !== 'beam'; $('hardBox').hidden = S.view !== 'hard'; $('matBox').hidden = S.view === 'hard'; $('eBox').hidden = S.view === 'hard';
+    $('run').hidden = S.view !== 'beam'; $('blindTag').hidden = !(S.blind && S.view === 'beam');
+    const m = mat(); $('matNote').textContent = S.view === 'beam' && !D.ff[S.mat === 'el' ? S.Z : 0] && S.mat === 'el' ? 'No form factor table for this element: coherent scattering goes straight on and incoherent scattering is on free electrons.' : m.en ? '' : 'No SRD 126 μ_en table loaded for this element: μ_en/ρ is not drawn.';
+    can.setAttribute('aria-label', S.view === 'coef' ? 'Chart of the attenuation coefficients against photon energy. Drag across it, or use the left and right arrow keys, to move the energy.'
+      : S.view === 'wins' ? 'Chart of atomic number against photon energy with the regions where the photoelectric effect, Compton scattering and pair production win, and the share of each process in the material below. Arrow keys move the energy.'
+      : S.view === 'beam' ? 'The slab seen from the side with photon tracks, the energies of the photons behind it, and the transmission against the number of mean free paths.'
+      : 'The X-ray spectrum before and after filtration, and the air kerma against added absorber with the half value layers.');
+    $('prog').textContent = S.view === 'beam' && MC ? (running ? `${MC.done} of ${S.N} photons` : MC.done ? `${MC.done} photons` : '') : '';
+    $('run').textContent = running ? 'Stop' : MC && MC.done && MC.done < S.N ? 'Send the rest' : 'Send photons'; $('run').classList.toggle('attn', !running); }
+  const redraw = () => { draw(); readouts(); };
+  function changed(keepPreset) { if (!keepPreset) S.preset = 'custom'; if (S.view === 'beam' && (!MC || MC.key !== mcKey())) { stop(); MC = null; } sync(); redraw(); }
+  function applyPreset(k) { const c = PRESETS[k]; if (!c) return; stop(); MC = null;
+    Object.assign(S, { preset: k, view: c.view }); for (const f of ['mat', 'Z', 'E', 't', 'kv', 'al', 'f2', 'f2mm']) if (c[f] !== undefined) S[f] = c[f];
+    if (c.view === 'hard' && c.f2mm === 0) S.f2mm = 0; $('presetHint').textContent = c.hint; sync(); redraw(); if (c.view === 'beam') start(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  $('viewSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-v]'); if (!b) return; stop(); S.view = b.dataset.v; if (S.view === 'beam') S.E = Math.min(2e4, Math.max(10, S.E)); MC = null; changed(true); });
+  $('ySeg').addEventListener('click', (e) => { const b = e.target.closest('[data-y]'); if (b && !b.disabled) { S.y = b.dataset.y; changed(true); } });
+  $('hvlSeg').addEventListener('click', (e) => { const b = e.target.closest('[data-h]'); if (b) { S.hm = b.dataset.h; changed(); } });
+  sel.addEventListener('change', () => { S.mat = sel.value; CURVES = null; if (S.y === 'atom' && !isEl()) S.y = 'mass'; changed(); });
+  $('sZ').addEventListener('input', (e) => { S.Z = +e.target.value; CURVES = null; changed(); });
+  $('sE').addEventListener('input', (e) => { S.E = +(10 ** +e.target.value).toPrecision(5); changed(); });
+  $('sT').addEventListener('input', (e) => { S.t = +e.target.value; changed(); });
+  $('selN').addEventListener('change', (e) => { S.N = +e.target.value; changed(); });
+  $('newSeed').addEventListener('click', () => { S.seed = 1 + Math.floor(Math.random() * 99998); changed(); });
+  $('sKv').addEventListener('input', (e) => { S.kv = +e.target.value; changed(); });
+  $('sAl').addEventListener('input', (e) => { S.al = +e.target.value; changed(); });
+  $('selF2').addEventListener('change', (e) => { S.f2 = e.target.value; changed(); });
+  $('sF2').addEventListener('input', (e) => { S.f2mm = +e.target.value; changed(); });
+  $('chkParts').addEventListener('change', (e) => { S.parts = e.target.checked; redraw(); });
+  $('chkTr').addEventListener('change', (e) => { S.tr = e.target.checked; redraw(); });
+  $('chkEn').addEventListener('change', (e) => { S.en = e.target.checked; redraw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; sync(); redraw(); });
+  const typed = (id, o) => VD.typeIn($(id), Object.assign({ can: () => true }, o));
+  typed('oE', { get: () => S.E, set: (v) => { S.E = v; changed(); }, min: () => (S.view === 'beam' ? 10 : 1), max: () => (S.view === 'beam' ? 2e4 : 1e5), step: 0.001, unit: 'keV', label: 'Photon energy (keV)', seed: () => String(+S.E.toPrecision(6)) });
+  typed('oT', { get: () => S.t, set: (v) => { S.t = v; changed(); }, min: 0, max: 60, step: 0.01, unit: 'cm', label: 'Slab thickness' });
+  typed('oZ', { get: () => S.Z, set: (v) => { S.Z = v; CURVES = null; changed(); }, min: 1, max: 92, step: 1, label: 'Atomic number Z' });
+  typed('oAl', { get: () => S.al, set: (v) => { S.al = v; changed(); }, min: 0, max: 10, step: 0.01, unit: 'mm', label: 'Aluminum filtration' });
+  typed('oF2', { get: () => S.f2mm, set: (v) => { S.f2mm = v; changed(); }, min: 0, max: 2, step: 0.001, unit: 'mm', label: 'Added filter thickness' });
+  /* drag across the chart, or arrow keys, to move the energy */
+  let dragging = false;
+  function eAt(e) { if (!LAST || !LAST.X) return null; const r = can.getBoundingClientRect(), x = e.clientX - r.left, b = LAST.box; if (x < b.x - 10 || x > b.x + b.w + 10) return null;
+    const L = Math.log10(EMIN) + (x - b.x) / b.w * (Math.log10(EMAX) - Math.log10(EMIN)); return +(10 ** Math.min(5, Math.max(0, L))).toPrecision(4); }
+  can.addEventListener('pointerdown', (e) => { if (S.view !== 'coef' && S.view !== 'wins') return; const v = eAt(e); if (v == null) return; dragging = true; can.setPointerCapture(e.pointerId); S.E = v; changed(); });
+  can.addEventListener('pointermove', (e) => { if (!dragging) return; const v = eAt(e); if (v != null) { S.E = v; changed(); } });
+  const endDrag = () => { dragging = false; }; can.addEventListener('pointerup', endDrag); can.addEventListener('pointercancel', endDrag);
+  can.addEventListener('keydown', (e) => { const k = { ArrowLeft: -1, ArrowRight: 1 }[e.key]; if (!k || S.view === 'hard') return; const lo = S.view === 'beam' ? 1 : 0, hi = S.view === 'beam' ? 4.3 : 5;
+    S.E = +(10 ** Math.min(hi, Math.max(lo, lgE() + k * (e.shiftKey ? 0.1 : 0.01)))).toPrecision(4); e.preventDefault(); changed(); });
+
+  /* ---------- running the Monte Carlo ---------- */
+  function start() { if (S.view !== 'beam') return; if (!MC || MC.key !== mcKey() || MC.done >= S.N) mcNew(); running = true; sync(); }
+  function stop() { running = false; }
+  function finishRun() { const R = mcResult(MC); RUNS = RUNS.filter((r) => !(r.key === runsKey() && Math.abs(r.t - S.t) < 1e-9 && r.seed === S.seed)); RUNS.push({ key: runsKey(), t: S.t, seed: S.seed, mut: R.mut, Tn: R.Tn, narrow: R.narrow, K: R.K, Kse: R.Kse }); }
+  $('run').addEventListener('click', () => { if (running) { stop(); sync(); return; } start(); });
+  let lastFrame = performance.now();
+  function frame(now) { if (running && MC) { const t0 = performance.now(); let n = 0; while (MC.done < S.N && performance.now() - t0 < 24) { mcStep(MC, 200); n++; }
+      if (MC.done >= S.N) { running = false; finishRun(); } sync(); redraw(); }
+    lastFrame = now; requestAnimationFrame(frame); }
+
+  /* ---------- readings for the worksheet ---------- */
+  window.vdVersion = 'photon-interactions@2026-10-25';
+  window.vdShowCols = [['mode', 'view'], ['material', 'material'], ['E_keV', 'E (keV)'], ['main', 'result']];
+  window.vdReadingRow = () => { const m = mat(), Zone = Object.keys(m.w).length === 1 ? +Object.keys(m.w)[0] : null;
+    if (S.view === 'coef') { const c = matCS(m, S.E), t = total(c), tr = muTr(m, S.E).total, en = muEn(m, S.E), A = Zone ? elem(Zone).A / NA / BARN : null, eps = 1 / electronDensity(m) / BARN;
+      return { mode: 'Coefficients', scale: S.y, material: m.name, Z: Zone ? String(Zone) : '', E_keV: plainNum(S.E, 6), coh: plainNum(c[0]), incoh: plainNum(c[1]), photo: plainNum(c[2]), pair: plainNum(c[3] + c[4]),
+        mu_rho: plainNum(t), mu_cm: plainNum(t * m.rho), mu_tr: plainNum(tr), mu_en: en == null ? '' : plainNum(en), g: en == null ? '' : plainNum(1 - en / tr, 3),
+        photo_b_atom: A ? plainNum(c[2] * A) : '', incoh_b_electron: plainNum(c[1] * eps), lnZ: Zone ? plainNum(Math.log(Zone), 5) : '', ln_photo: A ? plainNum(Math.log(c[2] * A), 5) : '', main: `μ/ρ ${plainNum(t)} cm²/g` }; }
+    if (S.view === 'wins') { const ep = crossing(m, 'pe'), ek = crossing(m, 'pair'), one = !!Zone;
+      return { mode: 'Which wins', material: m.name, Z: one ? String(Zone) : '', E_keV: plainNum(S.E, 6), pe_compton_keV: ep ? plainNum(ep, 4) : '', compton_pair_MeV: ek ? plainNum(ek / 1000, 4) : '',
+        Zeq: one ? String(Zone) : plainNum(equivalentZ(m, 'pe'), 4), Zeq_pair: one ? String(Zone) : plainNum(equivalentZ(m, 'pair'), 4), main: `photo = Compton at ${ep ? plainNum(ep, 4) : '?'} keV` }; }
+    if (S.view === 'beam') { if (!MC || !MC.done) return 'Send photons first: a reading needs a finished run.'; if (MC.done < S.N) return 'Let the run finish before recording it.';
+      const R = mcResult(MC);
+      return { mode: 'Beam', material: m.name, E_keV: plainNum(S.E, 6), t_cm: plainNum(S.t, 4), mut: S.blind ? '' : plainNum(R.mut, 4), N: String(R.N), seed: String(S.seed), T_narrow: plainNum(R.Tn, 4), T_se: plainNum(R.TnSE, 2),
+        lnT: R.Tn > 0 ? plainNum(Math.log(R.Tn), 4) : '', K_rel: plainNum(R.K, 4), K_se: plainNum(R.Kse, 2), B: S.blind ? '' : plainNum(R.B, 4), B_se: S.blind ? '' : plainNum(R.Bse, 2), back: String(R.back), main: `T ${plainNum(R.Tn, 4)}, K/K₀ ${plainNum(R.K, 4)}` }; }
+    const Hn = hardNow();
+    return { mode: 'Hardening', material: '', E_keV: '', kVp: String(S.kv), al_mm: plainNum(S.al, 4), filter: S.f2mm > 0 ? `${plainNum(S.f2mm, 4)} mm ${material(S.f2).name.toLowerCase()}` : 'none', hvl_in: S.hm === 'al' ? 'Al' : 'Cu',
+      hvl1_mm: plainNum(Hn.h.hvl1, 4), hvl2_mm: plainNum(Hn.h.hvl2, 4), h: plainNum(Hn.h.h, 3), Emean_keV: plainNum(Hn.Em, 4), Eeff_keV: plainNum(Hn.Ee, 4), K_uGy_mAs: plainNum(Hn.K, 4), main: `HVL₁ ${plainNum(Hn.h.hvl1, 4)} mm` }; };
+  $('about').textContent = 'Model: the cross sections are NIST\'s XCOM values, interpolated log–log between table energies (linearly near the pair thresholds, where a value is zero); a compound is the sum of its elements by weight, which leaves out chemical binding and molecular effects on coherent scattering. '
+    + 'μ_tr/ρ is computed here from the parts: Klein–Nishina energy transfer weighted by the incoherent scattering function, fluorescence from the K and L shells only (all L vacancies given the L3 yield and the Lα₁ energy, the KL cascade kept, other cascades and M shells left out), and 1 − 2mc²/hν for pair and triplet production. '
+    + 'So 1 − μ_en/μ_tr is the radiative yield g only where fluorescence is small: for lead below about 1 MeV part of it is fluorescence this model leaves out (3 to 4 % at 100 keV). '
+    + 'The slab Monte Carlo follows photons only: coherent scattering with Hubbell\'s form factors, incoherent with Klein–Nishina and the incoherent scattering function (free electron energies, no Doppler broadening), K and L fluorescence, positrons annihilating where they are made. '
+    + 'It scores air kerma behind an infinitely broad parallel beam, so its buildup factor is for that geometry; the point isotropic buildup factors of ANSI/ANS 6.4.3 are larger. Each run is reproducible from its seed. '
+    + 'Beam hardening uses each 1 keV bin of the SpekPy spectrum at its center energy, narrow beam attenuation in the filters and the absorber, and air kerma from SRD 126 μ_en/ρ of air.';
+
+  /* ---------- size, theme ---------- */
+  function resize() { dpr = window.devicePixelRatio || 1; const r = $('pane').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr); redraw(); }
+  const retheme = () => { tokens(); redraw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens();
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'water100');
+  if (qs.get('view') && ['coef', 'wins', 'beam', 'hard'].includes(qs.get('view'))) { S.view = qs.get('view'); sync(); }
+  new ResizeObserver(resize).observe($('pane')); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  window.__pi = { S, PRESETS, applyPreset, sync, redraw, mat, set: (o) => { stop(); Object.assign(S, o); CURVES = null; HCACHE = null; MC = null; sync(); redraw(); }, start, mc: () => (MC ? mcResult(MC) : null), running: () => running,
+    runNow: () => { start(); while (MC.done < S.N) mcStep(MC, 1000); running = false; finishRun(); sync(); redraw(); return mcResult(MC); } };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

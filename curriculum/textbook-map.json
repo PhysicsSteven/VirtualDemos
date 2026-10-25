@@ -1795,17 +1795,12 @@
           "requirement": "required",
           "sections": [],
           "demos": [
+            "photon-interactions",
             "compton",
             "gamma-spectroscopy",
             "photoelectric"
           ],
-          "note": "Compton kinematics and the Klein–Nishina cross section, attenuation coefficients from XCOM, and the photoelectric effect as review.",
-          "coming": [
-            {
-              "title": "Photon Interactions in Matter",
-              "note": "μ/ρ from 1 keV to 100 MeV split into photoelectric, coherent, Compton and pair production for any element or tissue; μ_tr and μ_en; narrow and broad beams and buildup; beam hardening."
-            }
-          ]
+          "note": "Compton kinematics and the Klein–Nishina cross section, attenuation coefficients from XCOM, and the photoelectric effect as review."
         },
         {
           "id": "charged",
@@ -10775,6 +10770,22 @@
       "handouts": [
         "mp-kerma-equilibrium",
         "mp-proton-calibration"
+      ]
+    },
+    {
+      "demo": "photon-interactions",
+      "course": [
+        "medical-physics"
+      ],
+      "sections": [],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-25 (Claude), Medical Physics plan gap 1. NIST XCOM cross sections for Z 1 to 92 and SRD 126 μ/ρ and μ_en/ρ for 15 tissues, dosimeters and shields (demos/lib/photondata.js); μ_tr from Klein–Nishina with the incoherent scattering function and K and L fluorescence; where each process wins against Z; a slab Monte Carlo for narrow against broad beam and the buildup factor; SpekPy tungsten spectra for HVL₁, HVL₂ and beam hardening. Worksheet mp-photon-interactions with a key from a real run in TeacherKeys.",
+      "title": "Photon Interactions in Matter",
+      "url": "demos/photon-interactions.html",
+      "handouts": [
+        "mp-photon-interactions"
       ]
     }
   ],

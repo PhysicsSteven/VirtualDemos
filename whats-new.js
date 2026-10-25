@@ -12,6 +12,8 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-photon-interactions', date: '2026-10-25', title: 'Photon Interactions in Matter',
+    text: 'A new Medical Physics demo with its own worksheet: the NIST attenuation coefficients of any element or tissue from 1 keV to 100 MeV split into coherent, Compton, photoelectric and pair production, where each one wins as Z changes, a simulated beam through a slab to measure μ and the buildup factor, and an X-ray beam hardened by filters with its half value layers.', link: { href: 'demos/photon-interactions.html', text: 'Open Photon Interactions' } },
   { id: '2026-10-25-dosimetry', date: '2026-10-25', title: 'Dosimetry: Kerma, Equilibrium and the Ion Chamber',
     text: 'A new Medical Physics demo with two worksheets: watch a photon beam\'s dose build up in water against its kerma, with a Monte Carlo run and its uncertainty; read a Farmer ion chamber\'s saturation curve in a pulsed proton beam; and calibrate a scanned proton layer step by step the TRS-398 way, from k_TP and polarity to k_Q.',
     link: { href: 'demos/dosimetry.html', text: 'Open Dosimetry' } },

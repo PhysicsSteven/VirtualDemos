@@ -598,6 +598,20 @@
       alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'Calibration'), cols: ['row', 'beam', 'V', 'pol', 'M_nC', 'T_C', 'P_kPa'] }] },
   });
   /* ==MEDICAL PHYSICS END== */
+  /* ==MEDICAL PHYSICS photon interactions START== Photon Interactions in Matter (medical-physics.html, 2026-10-25). One table per view, picked
+     by the mode the rows were recorded in; Coefficients readings of several elements go to the Z dependence table. */
+  const PI_ALL = (mode) => (rows) => rows.length > 0 && rows.every((r) => r.mode === mode);
+  ENABLED.push('mp-photon-interactions'); /* graphed on every table: see GRAPHS and GRAPH_EVERY_TABLE below */
+  Object.assign(FROM_DEMO, {
+    /* Reading | Material | hν (keV) | coh | incoh | photo | pair | μ/ρ | μ_tr/ρ | μ_en/ρ | g (all cm²/g); then Z dependence, Which wins, Beam, Hardening */
+    'mp-photon-interactions': { demo: 'Photon Interactions in Matter', cols: ['row', 'material', 'E_keV', 'coh', 'incoh', 'photo', 'pair', 'mu_rho', 'mu_tr', 'mu_en', 'g'],
+      alt: [
+        { table: 1, when: (rows) => PI_ALL('Coefficients')(rows) && rows.every((r) => r.Z !== '') && new Set(rows.map((r) => r.Z)).size > 1, cols: ['row', 'material', 'Z', 'E_keV', 'photo_b_atom', 'incoh_b_electron', 'lnZ', 'ln_photo'] },
+        { table: 2, when: PI_ALL('Which wins'), cols: ['row', 'material', 'Zeq', 'pe_compton_keV', 'compton_pair_MeV'] },
+        { table: 3, when: PI_ALL('Beam'), cols: ['row', 'material', 'E_keV', 't_cm', 'mut', 'N', 'T_narrow', 'T_se', 'lnT', 'K_rel', 'K_se', 'B', 'B_se'] },
+        { table: 4, when: PI_ALL('Hardening'), cols: ['row', 'kVp', 'al_mm', 'filter', 'hvl_in', 'hvl1_mm', 'hvl2_mm', 'h', 'Emean_keV', 'Eeff_keV', 'K_uGy_mAs'] }] },
+  });
+  /* ==MEDICAL PHYSICS photon interactions END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. The student may choose a quadratic instead (y = a + bx + cx², all three coefficients free), for data
@@ -606,11 +620,12 @@
   /* worksheets whose later data tables get a graph too (every other worksheet graphs its first table only) */
   const GRAPH_EVERY_TABLE = ['franck-hertz', 'shear-bulk', 'neutral-attraction', 'terminal-velocity', 'black-holes', 'hr-diagram', 'white-dwarf-cooling', 'ising', 'diffusion', 'critical-mass', 'springs', 'ripple-tank', 'intro-retrograde'];
   GRAPH_EVERY_TABLE.push('mp-kerma-equilibrium');   /* its energy table graphs d_max against the electron range */
+  GRAPH_EVERY_TABLE.push('mp-photon-interactions');
   const PRINT_ROWS = 8;   /* rows a blank data table prints with, to fill in by hand */
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
   const CURVE_TABLES = { 'franck-hertz': [0], 'intro-retrograde': [0, 2] };
-  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS, ...MEDPHYS); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
+  GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS, ...MEDPHYS); GRAPHS.push('mp-photon-interactions'); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
   const pretty = (h) => String(h || '').replace(/\^([23])/g, (m, d) => SUP[d]).replace(/_(\d)/g, (m, d) => SUB[d]);
