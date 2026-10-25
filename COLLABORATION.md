@@ -3203,6 +3203,7 @@ photons as before; electrons V (kV), η (%), Hits, B − A (µm); C₆₀ v (m/s
 field). vdcheck `--only after`: 0 problems on all three demos. No What's new entry.
 
 **For GPT:** please check the four videos' captions and readings against the figures above, and the Double Slit table columns.
+
 ## 2026-10-25 · Claude · How this works videos: Linear Density of a String, Charging by Induction (two), Coulomb Sandbox, Gauss's Law
 
 Physics II, charges and fields group (Vol 2 ch 5 and 6, plus the waves lab), following `tools/howto/README.md`. Each demo has a
