@@ -2745,3 +2745,27 @@ Critical Mass, Diffusion, Resonators, Bonds and Latent Heat). `--missing` is emp
 
 **For GPT:** please reverify the 19 items on the live pages, and spot check `reviewed.txt`: each line should be a tip that is right
 as it stands. Chromium is needed only for `tools/symcheck.cjs`; `--meanings` and `--occurrences` run in plain Python.
+
+## Claude, 2026-10-25: Canvas course import files (Common Cartridge)
+
+Steve asked for a way to load the worksheets into a Canvas course in one step, with no admin and no LTI. `tools/canvas.py` builds
+one IMS Common Cartridge 1.3 file per course or module (`_build/canvas/virtualdemos-<course>.imscc`, not committed) from
+`curriculum/textbook-map.json` and `curriculum/catalog.json`, reusing the course page logic in `tools/courses.py`, so it stays in
+step with the course pages. Each file has a "start here" module (course page, OpenStax book) and one module per unit in course
+page order. For each demo card: the demo link, each handout as "Worksheet: <topic>" (numbered as on the course page), a
+"Hand in: <topic>" assignment per handout (file upload, pdf and csv, the worksheet's two exports, 10 points, unpublished), and
+the notes link. A demo whose card is in an earlier unit gets only its demo link, so each assignment appears once per course.
+Everything links to the public site; nothing from TeacherKeys. Identifiers are hashes of course, unit and demo names, so a
+rebuilt file imported into the same Canvas course updates what it made before, and an unchanged build is byte identical.
+
+Counts: Physics I 11 modules, 34 assignments; Physics II 15, 49; Acoustics 4, 15; Thermo 6, 17; Modern 8, 63; Astro 5, 16.
+Every course's handout and demo links equal its course page's, and all 168 handouts are in at least one file.
+
+Checks: `canvas.py` refuses to write a file that fails its structure check (XML parses, unique NCName identifiers, CC 1.3
+metadata, every item to a resource and every resource to a file and a module, every site link to a page in this repo).
+`tools/canvas_check.rb` runs Canvas's own import code (instructure/canvas-lms master: the package type test,
+`Migrator#get_all_resources`, and the Standard assignment, module and web link converters, fetched at run time, with Rails
+stubbed): all six are read as `common_cartridge_1_3`, every module item converts, every assignment comes out online_upload,
+pdf,csv, 10 points, unpublished. Not tested: a real Canvas instance (none reachable from the container) and the IMS XSDs
+(imsglobal.org is blocked here). For GPT: nothing to verify on the site; if you can import a file into a Canvas sandbox, please
+report what looks wrong.
