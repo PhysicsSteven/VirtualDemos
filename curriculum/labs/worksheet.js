@@ -633,6 +633,26 @@
     'mp-ultrasound-attenuation': { demo: 'Ultrasound: Echoes and Blood Flow (absorption)', cols: ['row', (r) => `${r.setup}, ${r.f0_MHz} MHz`, 'depth_cm', 'cursor_time_us', 'level_dB', 'tgc', null] },
   });
   /* ==MEDICAL PHYSICS small additions END== */
+  /* ==MEDICAL PHYSICS: CHARGED PARTICLES AND PROTON QA START== upper level worksheets (medical-physics.html, 2026-10-25), opened with
+     ?ws=<slug>. Charged Particles in Matter: graph readings (Stopping power and Range views) fill the first table, beam readings the second. */
+  const MED_CP = ['mp-charged-particles'];
+  ENABLED.push(...MED_CP);
+  Object.assign(FROM_DEMO, {
+    'mp-charged-particles': { demo: 'Charged Particles in Matter', cols: ['row', (r) => `${r.particle} in ${r.material}`, 'E_MeV', 'S_MeV_cm2_g', 'R_g_cm2', 'rsp', null, null],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'beam'),
+        cols: ['row', (r) => `${r.particle} ${r.E_MeV} MeV` + (r.slab && r.slab !== 'none' ? `, ${r.slab_cm} cm ${r.slab}` : '') + (r.spread_pct && +r.spread_pct ? `, spread ${r.spread_pct} %` : '')
+          + (r.straggling === 'off' ? ', no straggling' : '') + (r.nuclear === 'off' ? ', no nuclear reactions' : ''), 'depth_cm', 'dose_pct', 'E_mean_MeV', 'tracks', 'end_mean_cm', 'end_sd_cm'] }] },
+  });
+  /* The Bragg Peak: each view's readings fill their own table (one energy, spread out peak, protons and photons). */
+  MED_CP.push('mp-bragg-peak'); ENABLED.push('mp-bragg-peak');
+  Object.assign(FROM_DEMO, {
+    'mp-bragg-peak': { demo: 'The Bragg Peak', cols: ['row', (r) => `${r.E_MeV} MeV in ${r.medium}` + (r.spread_pct && +r.spread_pct ? `, spread ${r.spread_pct} %` : ''), 'depth_cm', 'dose_pct'],
+      alt: [{ table: 1, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'spread out peak'),
+        cols: ['row', (r) => `${r.from_cm} to ${r.to_cm} cm in ${r.medium}, ${r.layers} layers ${r.step_cm} cm apart`, 'weights', 'depth_cm', 'dose_pct'] },
+      { table: 2, when: (rows) => rows.length > 0 && rows.every((r) => r.view === 'protons and photons'),
+        cols: ['row', (r) => `${r.from_cm} to ${r.to_cm} cm`, 'depth_cm', 'proton_pct', 'photon_pct'] }] },
+  });
+  /* ==MEDICAL PHYSICS: CHARGED PARTICLES AND PROTON QA END== */
   /* Worksheets with a live graph under each copy of the first data table. The student chooses which column goes on each axis; the
      graph shows the points, a least squares line (free intercept, equal weights), its residuals, and the slope and intercept with
      their standard errors. The student may choose a quadratic instead (y = a + bx + cx², all three coefficients free), for data
@@ -643,11 +663,13 @@
   GRAPH_EVERY_TABLE.push('mp-kerma-equilibrium');   /* its energy table graphs d_max against the electron range */
   GRAPH_EVERY_TABLE.push('mp-photon-interactions');
   GRAPH_EVERY_TABLE.push('mp-technetium-generator', 'mp-x-ray-filtration', 'mp-ultrasound-attenuation');
+  GRAPH_EVERY_TABLE.push('mp-charged-particles', 'mp-bragg-peak');
   const PRINT_ROWS = 8;   /* rows a blank data table prints with, to fill in by hand */
   /* data tables that hold a measured curve, not a straight line (worksheet: [table indexes]): the graph joins the points in order of x
      and fits nothing, since a line through a curve means nothing; the student reads features (maxima, minima) from it */
   const CURVE_TABLES = { 'franck-hertz': [0], 'intro-retrograde': [0, 2] };
   GRAPHS.push(...PHYSICS_II, ...ACOUSTICS, ...THERMO, ...MODERN, ...ASTRO, ...INTRO_GRAPHS, ...MEDPHYS); GRAPHS.push('mp-photon-interactions'); /* Physics II: the same graph on every worksheet (list in the PHYSICS II block above) */
+  GRAPHS.push(...MED_CP);
   /* a column heading split into its name and the unit in its last parentheses: "Full period T (s)" -> ["Full period T", "s"] */
   const SUB = '₀₁₂₃₄₅₆₇₈₉', SUP = { 2: '²', 3: '³' };
   const pretty = (h) => String(h || '').replace(/\^([23])/g, (m, d) => SUP[d]).replace(/_(\d)/g, (m, d) => SUB[d]);

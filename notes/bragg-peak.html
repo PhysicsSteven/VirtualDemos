@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../demos/lib/theme.js"></script>
+<title>The Bragg Peak: teaching notes</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+:root {
+  --bg: #ffffff; --surface: #f6f8fb; --ink: #17202b; --muted: #5a6575; --line: #d3d9e2;
+  --accent: #2b60b5; --pos: #c23f2c; --equi: #a7740b; --tag: #e9eef6;
+  --sans: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+@media screen { :root[data-theme="dark"] {
+  --bg: #0f141b; --surface: #161d27; --ink: #e6ebf1; --muted: #9aa6b5; --line: #2a3442;
+  --accent: #7aa7f0; --pos: #f08a77; --equi: #e0b452; --tag: #1d2633; color-scheme: dark; } }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.55 var(--sans); }
+main { max-width: 760px; margin: 0 auto; padding: 28px 20px 56px; }
+a { color: var(--accent); }
+header { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 18px; }
+.kicker { font: 600 0.78rem/1.2 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+h1 { font-size: 1.9rem; line-height: 1.15; margin: 0 0 8px; letter-spacing: -0.01em; }
+.meta { display: flex; flex-wrap: wrap; gap: 6px 10px; margin: 8px 0 0; padding: 0; list-style: none; font-size: 0.9rem; }
+.meta li { background: var(--tag); border-radius: 999px; padding: 2px 10px; }
+.meta a { font-weight: 700; }
+h2 { font-size: 1.15rem; margin: 26px 0 8px; padding-top: 4px; border-top: 1px solid var(--line); }
+h2:first-of-type { border-top: 0; }
+h3 { font-size: 1rem; margin: 16px 0 4px; }
+p, ul, ol { margin: 6px 0 10px; }
+li { margin: 3px 0; }
+code { font: 0.9em var(--mono); background: var(--surface); padding: 0 4px; border-radius: 4px; }
+em.preset, .preset { font-style: normal; font-weight: 700; }
+.q { margin: 10px 0 14px; padding: 8px 12px; border-left: 3px solid var(--accent); background: var(--surface); border-radius: 0 6px 6px 0; break-inside: avoid; }
+.q > p:first-child { margin-top: 0; } .q > :last-child { margin-bottom: 0; }
+.q strong:first-child { color: var(--accent); }
+.a { margin: 6px 0 0; padding: 8px 12px; border-left: 3px solid var(--equi); background: var(--bg); border-radius: 0 6px 6px 0; }
+.a > :first-child { margin-top: 0; } .a > :last-child { margin-bottom: 0; }
+.a .lbl { font: 700 0.75rem/1 var(--mono); letter-spacing: 0.05em; text-transform: uppercase; color: var(--equi); display: block; margin-bottom: 4px; }
+.keynote { border: 2px solid var(--pos); color: var(--pos); border-radius: 8px; padding: 6px 10px; font-weight: 700; margin: 0 0 14px; }
+footer { margin-top: 36px; padding-top: 10px; border-top: 1px solid var(--line); color: var(--muted); font-size: 0.85rem; }
+.toc { columns: 2 260px; padding-left: 0; list-style: none; }
+.toc li { break-inside: avoid; margin: 2px 0; }
+.toc h3 { break-after: avoid; }
+.missing { color: var(--muted); }
+.print { float: right; font: inherit; font-size: 0.85rem; padding: 4px 12px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); color: var(--ink); cursor: pointer; }
+@media print {
+  :root { --bg: #fff; --surface: #f3f5f8; --ink: #000; --muted: #444; --line: #bbb; --tag: #eef1f5; color-scheme: light; }
+  body { font-size: 11pt; } main { max-width: none; padding: 0; }
+  .print { display: none; } a { color: inherit; text-decoration: none; }
+  h2 { break-after: avoid; } .q { break-inside: avoid; }
+  @page { margin: 16mm 16mm 18mm; }
+}
+@media (max-width: 480px) { main { padding: 18px 16px 40px; } h1 { font-size: 1.5rem; } }
+</style>
+</head>
+<body>
+<main>
+<header><button class="print" type="button" onclick="print()">Print</button><p class="kicker">Teaching notes · Virtual Physics Demos</p><h1>The Bragg Peak</h1><ul class="meta"><li><a href="../demos/bragg-peak.html">Open the demo</a></li><li>Medical Physics, proton therapy (upper level, calculus)</li><li>10 to 45 minutes</li></ul></header><h2>What students should come away with</h2>
+<ul>
+<li>A proton beam puts most of its dose down near the end of its range, because each proton loses energy faster as it slows. The beam energy sets the depth: R = αE^p, from about 4.1 cm at 70 MeV to 33 cm at 230 MeV in water, the energies of the IBA Proteus ONE.</li>
+<li>The distal 80 % point sits at the CSDA range. The peak widens with depth, since range straggling is about 1.1 % of the range.</li>
+<li>The same beam stops sooner in bone and later in fat. Plans convert every tissue to water equivalent depth, and the conversion is why they add range margins.</li>
+<li>One peak is a few millimeters wide. A spread out Bragg peak covers a target with weighted energy layers, the deepest one weighted most. The price is an entrance dose that rises with the width of the target.</li>
+<li>Against a single 6 MV photon field, which peaks 1.5 cm deep and keeps going, a single proton field gives about half the dose in front of the target and almost none behind it.</li>
+</ul>
+<h2>Before class</h2>
+<p>Three views. <strong>One energy</strong>: a single proton energy from 70 to 230 MeV in water, muscle, adipose tissue or compact bone, with an optional energy spread. <strong>Spread out peak</strong>: a target set by its two depths, energy layers 0.3 to 1.0 cm apart in range, and weights fitted for a flat dose or all equal; each weighted layer can be shown on the graph. <strong>Protons and photons</strong>: the same spread out peak and a measured 6 MV beam (10 × 10 cm², SSD 100 cm), both scaled to the same mean dose over the target, with the phantom showing either beam. The phantom shows the dose as a clinical color wash. Beam on animates the particles: protons slow and stop, and photons keep going. A Bragg peak chamber on a scanning carriage reads the dose at its depth on the electrometer. Blind hides the ranges, widths and dose ratios.</p>
+<h2>Running it in class</h2>
+<ol>
+<li><strong>150 MeV in water.</strong> Ask Q1. The peak is at 15.60 cm, R80 at 15.76 cm (PSTAR range 15.77 cm), and the peak is 4.9 times the entrance dose.</li>
+<li><strong>70 MeV, lowest</strong>, then <strong>230 MeV, highest.</strong> The peak to entrance ratio falls from 5.9 to 3.7, and the 80 % to 20 % falloff widens from 0.6 mm to 4.5 mm.</li>
+<li><strong>150 MeV in bone</strong>, then <strong>in fat.</strong> Ask Q2. R80 is 9.16 cm in bone, 15.32 cm in muscle and 16.65 cm in fat.</li>
+<li><strong>Spread out peak, 10 to 15 cm.</strong> Ask Q3. It takes 18 layers, 146.7 down to 116.2 MeV. The deepest carries 30 % of the weight, and the entrance dose is 62 % of the target dose.</li>
+<li><strong>Equal weights</strong>, then <strong>Layers too far apart.</strong> The dose tilts toward the front, then ripples between 80 % and 133 %.</li>
+<li><strong>Protons against photons.</strong> Ask Q4. Before the target the mean dose is 71 % for protons against 145 % for photons. In the 5 cm past it, it's 5 % against 75 %.</li>
+</ol>
+<h2>Questions</h2>
+<div class="q"><p><strong>Q1.</strong> Why is the dose largest near the end of the range, not where the beam enters?</p></div>
+
+<div class="q"><p><strong>Q2.</strong> The same 150 MeV beam stops 6.6 cm sooner in bone than in water. What does a planning system need to know about the tissue in front of a tumor?</p></div>
+
+<div class="q"><p><strong>Q3.</strong> Why does the deepest energy layer need the largest weight?</p></div>
+
+<div class="q"><p><strong>Q4.</strong> Both beams give the target the same dose. Where does each give its highest dose, and which gives more outside the target?</p></div>
+<h2>Common misconceptions</h2>
+<ul>
+<li><strong>"Protons put their dose only in the peak."</strong> The plateau in front of the peak gets 17 to 27 % of the peak dose for one energy. A spread out peak's entrance dose is 40 to 80 % of the target dose, depending on its width.</li>
+<li><strong>"A higher energy means a stronger beam."</strong> The energy sets the depth; the number of protons (the monitor units) sets the dose.</li>
+<li><strong>"The peak is as sharp at any depth."</strong> Straggling grows with range, so deep peaks are wider and their distal edges less steep.</li>
+</ul>
+<h2>Physics behind the demo</h2>
+<ul>
+<li>Proton depth dose: the broad beam model of the shared core (demos/lib/vdstop.js). It uses Bethe stopping powers with NIST PSTAR material data, CSDA ranges within 0.2 mm of PSTAR in water from 10 to 250 MeV, Bohr range straggling, the beam's energy spread, and nuclear losses of 1.2 % per cm with 60 % of the energy deposited locally (Bortfeld 1997). A tissue medium is turned into water equivalent depth with its stopping power ratio to water; R80 in each tissue is within 0.2 mm of its CSDA range (curriculum/validation/test_vdstop.cjs).</li>
+<li>Machine: the IBA Proteus ONE at Willis-Knighton, which has a C230 cyclotron, 70 to 230 MeV, a variable degrader of beryllium, graphite and aluminum, and a 4.1 cm water equivalent range shifter (Pidikiti et al., J. Appl. Clin. Med. Phys. 19(1), 94, 2018).</li>
+<li>Spread out peak: layers evenly spaced in range from one range straggling width past the target's end, energies from the CSDA range. Weights come from non negative least squares over the target (Lee and Seung's multiplicative update, 3000 passes), scaled to a mean of 100 % over the target.</li>
+<li>Photons: a four parameter curve (buildup, attenuation, a slow scatter term, inverse square from SSD 100 cm) fitted through the measured VitalBeam points of Chowdhury et al., Int. J. Radiol. Radiat. Ther. 11(4), 100 (2024). The points are surface 50.7 %, d_max 1.5 cm, d80 6.6 cm, D10 66.8 % and d50 15.2 cm, and the curve passes within 0.05 % of each. Past 15.2 cm it is extrapolated (37.7 % at 20 cm), so the photon dose behind deep targets is uncertain by a few percent.</li>
+<li>Dose wash: the central axis curve with field edges. The edges use the Fermi–Eyges lateral spread for protons and a fixed 3 mm blur for a diverging photon field (a picture). The moving particles are a picture too, with end depths drawn from the model's distribution. Dose is physical dose; clinical proton doses use an RBE of 1.1.</li>
+</ul>
+<h2>Going further</h2>
+<ul>
+<li>Pair with <strong>Charged Particles in Matter</strong> for the stopping power and straggling behind each peak, and with <strong>Proton Therapy QA</strong> for how a clinic checks the range and output of these layers every day.</li>
+<li>Ask for a target from 1 to 3 cm deep. The demo stops at the 70 MeV range, which leads to range shifters.</li>
+</ul><footer>Part of <a href="index.html">the teaching notes</a> for <a href="../index.html">Virtual Physics Demos</a>. © 2026 Steven Anderson. All rights reserved; see the <a href="../LICENSE.html">terms of use</a>.</footer>
+</main>
+</body>
+</html>

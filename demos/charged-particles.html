@@ -1,0 +1,566 @@
+<!doctype html>
+<!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<script src="lib/theme.js"></script>
+<link rel="stylesheet" href="lib/vd.css">
+<script src="lib/vd.js"></script>
+<script src="lib/vdstop.js"></script>
+<title>Charged Particles in Matter</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* only what this demo needs beyond demos/lib/vd.css: the tank, the tracks, the graphs and the strip */
+:root { --water: #d7ebf6; --water-edge: #8fb9d3; --slab: #e9dcc0; --slab-edge: #a8916a; --nozzle: #59636e; --dose: #c2410c; --model: #1d4ed8;
+  --pstar: #b91c1c; --det: #7c3aed; --grid: rgba(60, 70, 85, 0.13); --fit: #15803d; --elec: #a16207; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --water: #10283a; --water-edge: #2f5f80; --slab: #3b3326; --slab-edge: #8a7552; --nozzle: #9aa6b6;
+  --dose: #fb923c; --model: #7cb0ff; --pstar: #ff7a7a; --det: #c4a5ff; --grid: rgba(200, 210, 225, 0.12); --fit: #4ade80; --elec: #facc15; } }
+:root[data-theme="dark"] { --water: #10283a; --water-edge: #2f5f80; --slab: #3b3326; --slab-edge: #8a7552; --nozzle: #9aa6b6;
+  --dose: #fb923c; --model: #7cb0ff; --pstar: #ff7a7a; --det: #c4a5ff; --grid: rgba(200, 210, 225, 0.12); --fit: #4ade80; --elec: #facc15; }
+.stage { position: relative; display: flex; flex-direction: column; min-height: 0; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; background: var(--canvas); }
+.stage-ctl { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid var(--line); background: var(--surface); }
+.stage-ctl select { font: inherit; font-size: 0.84rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; }
+.stage-ctl .lbl { font-size: 0.8rem; color: var(--muted); }
+.stage-ctl .clock { margin-left: auto; font-size: 0.8rem; color: var(--muted); }
+.scene { position: relative; flex: 1 1 auto; min-height: 330px; }
+.scene canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; outline: none; touch-action: none; }
+.setup-card { position: absolute; z-index: 3; right: 14px; top: 14px; width: 270px; display: flex; flex-direction: column; gap: 8px; padding: 8px 10px;
+  background: color-mix(in srgb, var(--surface) 92%, transparent); border: 1px solid var(--line); border-radius: 8px; max-height: calc(100% - 28px); overflow: auto; transition: opacity 0.35s ease, visibility 0.35s; }
+.setup-card .card-title { font-size: 0.72rem; font-weight: 700; color: var(--muted); }
+.setup-card select { font: inherit; font-size: 0.86rem; color: var(--ink); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 6px; width: 100%; }
+.setup-card .pick { display: flex; flex-direction: column; gap: 4px; }
+.setup-card .pick label { font-size: 0.8rem; color: var(--muted); }
+.setup-card.away { opacity: 0; visibility: hidden; }
+.setup-card.ghost { opacity: 0.25; pointer-events: none; }
+.plotbox { position: relative; flex: none; height: 270px; border-top: 1px solid var(--line); }
+.plotbox canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.plotbox[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) { .setup-card { transition: none; } }
+@media (min-width: 821px) { .bench > .stage { align-self: start; min-height: max(760px, 100%); } :root[data-projector="on"] .bench > .stage { min-height: max(440px, 100%); } }
+@media (max-width: 820px) { .scene { min-height: 0; height: 330px; flex: none; } .setup-card { position: static; width: auto; margin: 8px; max-height: none; } .plotbox { height: 240px; } }
+@media (max-width: 420px) { .scene { height: 280px; } }
+</style>
+<link rel="stylesheet" id="vd-look" href="lib/look.css">
+<script id="vd-gear" src="lib/gear.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="bar">
+    <div>
+      <h1>Charged Particles in Matter</h1>
+      <p>Send protons, alpha particles or carbon ions into water, through a slab of bone, lung, plastic or metal first if you like. Watch each track slow down, scatter and stop, see the Bragg peak build up from the tracks, and compare the Bethe stopping power and range with the NIST PSTAR tables.</p>
+    </div>
+    <div class="bar-right">
+      <div class="units mono">depth in cm · E in MeV</div>
+      <!-- vd-reset --><button type="button" class="proj vd-reset" id="vdReset" title="Put every control, preset and the simulation back the way the page opened">Reset all</button><!-- /vd-reset -->
+      <button type="button" class="proj" id="proj" aria-pressed="false">Projector</button>
+      <!-- vd-qr --><button type="button" class="vd-qr" data-url="https://physicssteven.github.io/VirtualDemos/demos/charged-particles.html" title="Show a large QR code to open this demo on a phone" aria-label="Show QR code for phones"><svg viewBox="0 0 41 41" role="img" aria-label="QR code for https://physicssteven.github.io/VirtualDemos/demos/charged-particles.html" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M2 2h7v1h-7zM10 2h1v1h-1zM12 2h3v1h-3zM18 2h4v1h-4zM24 2h2v1h-2zM27 2h3v1h-3zM32 2h7v1h-7zM2 3h1v1h-1zM8 3h1v1h-1zM14 3h1v1h-1zM17 3h1v1h-1zM20 3h1v1h-1zM22 3h1v1h-1zM24 3h1v1h-1zM28 3h1v1h-1zM32 3h1v1h-1zM38 3h1v1h-1zM2 4h1v1h-1zM4 4h3v1h-3zM8 4h1v1h-1zM11 4h1v1h-1zM14 4h1v1h-1zM19 4h8v1h-8zM28 4h2v1h-2zM32 4h1v1h-1zM34 4h3v1h-3zM38 4h1v1h-1zM2 5h1v1h-1zM4 5h3v1h-3zM8 5h1v1h-1zM10 5h2v1h-2zM13 5h2v1h-2zM17 5h1v1h-1zM20 5h2v1h-2zM25 5h5v1h-5zM32 5h1v1h-1zM34 5h3v1h-3zM38 5h1v1h-1zM2 6h1v1h-1zM4 6h3v1h-3zM8 6h1v1h-1zM10 6h2v1h-2zM13 6h1v1h-1zM15 6h1v1h-1zM25 6h1v1h-1zM29 6h2v1h-2zM32 6h1v1h-1zM34 6h3v1h-3zM38 6h1v1h-1zM2 7h1v1h-1zM8 7h1v1h-1zM10 7h1v1h-1zM12 7h1v1h-1zM15 7h4v1h-4zM20 7h4v1h-4zM27 7h1v1h-1zM30 7h1v1h-1zM32 7h1v1h-1zM38 7h1v1h-1zM2 8h7v1h-7zM10 8h1v1h-1zM12 8h1v1h-1zM14 8h1v1h-1zM16 8h1v1h-1zM18 8h1v1h-1zM20 8h1v1h-1zM22 8h1v1h-1zM24 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h7v1h-7zM10 9h1v1h-1zM13 9h1v1h-1zM18 9h6v1h-6zM25 9h1v1h-1zM28 9h1v1h-1zM30 9h1v1h-1zM2 10h1v1h-1zM6 10h1v1h-1zM8 10h3v1h-3zM13 10h2v1h-2zM16 10h2v1h-2zM20 10h2v1h-2zM23 10h1v1h-1zM25 10h2v1h-2zM31 10h5v1h-5zM38 10h1v1h-1zM2 11h1v1h-1zM5 11h2v1h-2zM10 11h1v1h-1zM12 11h3v1h-3zM16 11h1v1h-1zM18 11h1v1h-1zM21 11h3v1h-3zM25 11h1v1h-1zM27 11h1v1h-1zM29 11h2v1h-2zM34 11h4v1h-4zM2 12h3v1h-3zM8 12h1v1h-1zM12 12h2v1h-2zM18 12h1v1h-1zM22 12h4v1h-4zM28 12h2v1h-2zM31 12h1v1h-1zM33 12h2v1h-2zM4 13h2v1h-2zM7 13h1v1h-1zM9 13h1v1h-1zM11 13h1v1h-1zM14 13h1v1h-1zM19 13h1v1h-1zM23 13h4v1h-4zM29 13h1v1h-1zM31 13h1v1h-1zM33 13h2v1h-2zM36 13h2v1h-2zM3 14h1v1h-1zM5 14h2v1h-2zM8 14h1v1h-1zM10 14h2v1h-2zM15 14h1v1h-1zM17 14h1v1h-1zM19 14h1v1h-1zM21 14h1v1h-1zM23 14h4v1h-4zM30 14h3v1h-3zM36 14h3v1h-3zM2 15h1v1h-1zM6 15h2v1h-2zM9 15h1v1h-1zM12 15h1v1h-1zM14 15h1v1h-1zM16 15h4v1h-4zM21 15h1v1h-1zM23 15h3v1h-3zM27 15h4v1h-4zM34 15h2v1h-2zM2 16h1v1h-1zM4 16h1v1h-1zM8 16h1v1h-1zM11 16h1v1h-1zM13 16h1v1h-1zM15 16h1v1h-1zM17 16h1v1h-1zM20 16h1v1h-1zM22 16h1v1h-1zM25 16h2v1h-2zM29 16h1v1h-1zM31 16h1v1h-1zM33 16h5v1h-5zM3 17h1v1h-1zM6 17h2v1h-2zM12 17h3v1h-3zM16 17h2v1h-2zM21 17h4v1h-4zM26 17h1v1h-1zM30 17h1v1h-1zM32 17h3v1h-3zM36 17h1v1h-1zM38 17h1v1h-1zM2 18h1v1h-1zM8 18h8v1h-8zM18 18h1v1h-1zM22 18h3v1h-3zM26 18h1v1h-1zM31 18h3v1h-3zM35 18h2v1h-2zM38 18h1v1h-1zM2 19h2v1h-2zM5 19h3v1h-3zM13 19h1v1h-1zM15 19h2v1h-2zM20 19h2v1h-2zM25 19h1v1h-1zM27 19h4v1h-4zM33 19h3v1h-3zM37 19h1v1h-1zM2 20h1v1h-1zM4 20h3v1h-3zM8 20h1v1h-1zM10 20h2v1h-2zM13 20h2v1h-2zM17 20h1v1h-1zM19 20h3v1h-3zM23 20h1v1h-1zM25 20h2v1h-2zM28 20h2v1h-2zM31 20h6v1h-6zM4 21h1v1h-1zM6 21h1v1h-1zM11 21h3v1h-3zM17 21h3v1h-3zM21 21h3v1h-3zM28 21h1v1h-1zM31 21h1v1h-1zM36 21h2v1h-2zM2 22h1v1h-1zM8 22h3v1h-3zM13 22h1v1h-1zM19 22h1v1h-1zM22 22h3v1h-3zM26 22h1v1h-1zM31 22h3v1h-3zM36 22h1v1h-1zM2 23h3v1h-3zM6 23h1v1h-1zM10 23h1v1h-1zM14 23h1v1h-1zM17 23h2v1h-2zM22 23h2v1h-2zM25 23h1v1h-1zM27 23h1v1h-1zM29 23h3v1h-3zM33 23h2v1h-2zM37 23h1v1h-1zM3 24h1v1h-1zM5 24h4v1h-4zM11 24h2v1h-2zM15 24h5v1h-5zM22 24h4v1h-4zM29 24h1v1h-1zM31 24h6v1h-6zM2 25h1v1h-1zM6 25h2v1h-2zM9 25h1v1h-1zM12 25h1v1h-1zM15 25h3v1h-3zM19 25h6v1h-6zM26 25h1v1h-1zM28 25h4v1h-4zM33 25h2v1h-2zM36 25h1v1h-1zM38 25h1v1h-1zM3 26h1v1h-1zM5 26h2v1h-2zM8 26h4v1h-4zM13 26h2v1h-2zM20 26h1v1h-1zM22 26h5v1h-5zM29 26h1v1h-1zM31 26h2v1h-2zM35 26h3v1h-3zM2 27h1v1h-1zM5 27h3v1h-3zM9 27h3v1h-3zM13 27h1v1h-1zM15 27h1v1h-1zM18 27h1v1h-1zM21 27h2v1h-2zM24 27h2v1h-2zM27 27h1v1h-1zM29 27h2v1h-2zM34 27h2v1h-2zM5 28h6v1h-6zM14 28h1v1h-1zM16 28h1v1h-1zM18 28h3v1h-3zM24 28h11v1h-11zM36 28h1v1h-1zM4 29h2v1h-2zM9 29h2v1h-2zM13 29h2v1h-2zM19 29h2v1h-2zM22 29h4v1h-4zM30 29h1v1h-1zM33 29h2v1h-2zM36 29h1v1h-1zM2 30h2v1h-2zM7 30h5v1h-5zM13 30h1v1h-1zM17 30h1v1h-1zM19 30h1v1h-1zM22 30h2v1h-2zM25 30h2v1h-2zM30 30h5v1h-5zM36 30h1v1h-1zM10 31h1v1h-1zM12 31h3v1h-3zM18 31h3v1h-3zM25 31h4v1h-4zM30 31h1v1h-1zM34 31h1v1h-1zM2 32h7v1h-7zM10 32h1v1h-1zM12 32h1v1h-1zM15 32h1v1h-1zM17 32h2v1h-2zM20 32h1v1h-1zM22 32h2v1h-2zM25 32h1v1h-1zM27 32h1v1h-1zM30 32h1v1h-1zM32 32h1v1h-1zM34 32h1v1h-1zM2 33h1v1h-1zM8 33h1v1h-1zM11 33h3v1h-3zM17 33h1v1h-1zM23 33h2v1h-2zM26 33h1v1h-1zM30 33h1v1h-1zM34 33h3v1h-3zM2 34h1v1h-1zM4 34h3v1h-3zM8 34h1v1h-1zM10 34h1v1h-1zM12 34h7v1h-7zM22 34h5v1h-5zM30 34h8v1h-8zM2 35h1v1h-1zM4 35h3v1h-3zM8 35h1v1h-1zM11 35h1v1h-1zM15 35h2v1h-2zM20 35h1v1h-1zM23 35h1v1h-1zM25 35h1v1h-1zM27 35h1v1h-1zM29 35h5v1h-5zM35 35h2v1h-2zM38 35h1v1h-1zM2 36h1v1h-1zM4 36h3v1h-3zM8 36h1v1h-1zM11 36h1v1h-1zM13 36h1v1h-1zM15 36h1v1h-1zM17 36h1v1h-1zM19 36h1v1h-1zM22 36h1v1h-1zM25 36h1v1h-1zM28 36h3v1h-3zM32 36h1v1h-1zM36 36h1v1h-1zM2 37h1v1h-1zM8 37h1v1h-1zM11 37h1v1h-1zM15 37h6v1h-6zM22 37h5v1h-5zM28 37h1v1h-1zM31 37h1v1h-1zM34 37h1v1h-1zM36 37h2v1h-2zM2 38h7v1h-7zM10 38h2v1h-2zM19 38h1v1h-1zM22 38h3v1h-3zM26 38h1v1h-1zM29 38h1v1h-1zM31 38h3v1h-3zM36 38h3v1h-3z"/></svg></button><!-- /vd-qr -->
+    </div>
+  </header>
+
+  <main class="bench">
+    <div class="stage" id="stage">
+      <div class="stage-ctl" id="strip">
+        <button type="button" class="spin attn" id="play">Fire</button>
+        <button type="button" class="btn" id="restart" title="Clear the tracks and the dose they built up">Clear tracks</button>
+        <label class="lbl" for="selRate">Rate</label>
+        <select id="selRate"><option value="10">10 tracks/s</option><option value="40" selected>40 tracks/s</option><option value="200">200 tracks/s</option><option value="1000">1000 tracks/s</option></select>
+        <div class="seg" role="group" aria-label="What the picture shows" id="viewSeg">
+          <button type="button" data-view="beam" aria-pressed="true">Beam in water</button>
+          <button type="button" data-view="stop" aria-pressed="false">Stopping power</button>
+          <button type="button" data-view="range" aria-pressed="false">Range</button>
+        </div>
+        <span class="clock mono" id="count" aria-live="off"></span>
+      </div>
+      <div class="scene" id="scene">
+        <canvas id="can" tabindex="0" role="img" aria-label="Side view of a water tank: the beam enters from the left, through a slab if one is set, and each particle's track is drawn colored by its energy. A small chamber marks the detector depth: drag it, or use the arrow keys (Shift: 1 cm) when the picture has the focus."></canvas>
+      </div>
+      <div class="setup-card" id="setupCard" role="group" aria-label="The beam, the slab and the detector">
+        <span class="card-title">Beam, slab and detector</span>
+        <div class="pick"><label for="selPart">Particle</label><select id="selPart"><option value="proton">Proton</option><option value="alpha">Alpha particle (⁴He)</option><option value="carbon">Carbon 12 ion</option></select></div>
+        <div><div class="slider-head"><label for="sE">Energy per nucleon</label><output id="oE" class="mono" for="sE"></output></div><input type="range" id="sE" min="1" max="250" step="0.1" data-unit="MeV/u"></div>
+        <div><div class="slider-head"><label for="sSp">Energy spread (1σ)</label><output id="oSp" class="mono" for="sSp"></output></div><input type="range" id="sSp" min="0" max="2" step="0.1" data-unit="%"></div>
+        <div class="pick"><label for="selSlab">Slab before the water</label><select id="selSlab">
+          <option value="none">None</option><option value="bone">Compact bone (ICRU)</option><option value="lung">Lung tissue (ICRP)</option><option value="adipose">Adipose tissue (ICRP)</option>
+          <option value="muscle">Muscle (ICRP)</option><option value="pmma">PMMA (acrylic)</option><option value="graphite">Graphite</option><option value="aluminum">Aluminum</option>
+          <option value="copper">Copper</option><option value="lead">Lead</option></select></div>
+        <div id="slabBox"><div class="slider-head"><label for="sT">Slab thickness</label><output id="oT" class="mono" for="sT"></output></div><input type="range" id="sT" min="0.1" max="5" step="0.1" data-unit="cm"></div>
+        <div><div class="slider-head"><label for="sZ">Detector depth</label><output id="oZ" class="mono" for="sZ"></output></div><input type="range" id="sZ" min="0" max="40" step="0.01" data-unit="cm"></div>
+        <div class="pick" id="matBox" hidden><label for="selMat">Material for the graph</label><select id="selMat">
+          <option value="water">Water</option><option value="bone">Compact bone (ICRU)</option><option value="lung">Lung tissue (ICRP)</option><option value="adipose">Adipose tissue (ICRP)</option>
+          <option value="muscle">Muscle (ICRP)</option><option value="pmma">PMMA (acrylic)</option><option value="air">Air (dry)</option><option value="graphite">Graphite</option>
+          <option value="beryllium">Beryllium</option><option value="aluminum">Aluminum</option><option value="copper">Copper</option><option value="lead">Lead</option></select></div>
+        <label class="check"><input type="checkbox" id="chkStr" checked><span>Range straggling</span></label>
+        <label class="check"><input type="checkbox" id="chkNuc" checked><span>Nuclear reactions (protons)</span></label>
+        <label class="check" id="wideBox"><input type="checkbox" id="chkWide"><span>Stretch the tracks sideways ×5</span></label>
+        <label class="check" id="elecBox" hidden><input type="checkbox" id="chkElec"><span>Electrons too (collision stopping)</span></label>
+        <label class="check" id="pstarBox" hidden><input type="checkbox" id="chkPstar" checked><span>NIST PSTAR ranges and the fit</span></label>
+      </div>
+      <div class="plotbox" id="plotbox">
+        <canvas id="plot" role="img" aria-label="Graph of the dose against depth: the model's Bragg curve, the dose the drawn tracks have put down, and the detector depth."></canvas>
+      </div>
+    </div>
+
+    <aside class="rail">
+      <!-- vd-handout --><a class="handout" href="../curriculum/labs/students/mp-charged-particles.html" target="mp-charged-particles-worksheet"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><path d="M14 3v6h6M8 13h8M8 17h5"/></svg>Handout and worksheet</a><!-- /vd-handout -->
+      <section>
+        <h2>Setups</h2>
+        <div class="chips" id="presets">
+          <button type="button" data-p="p150" aria-pressed="true">Proton 150 MeV</button>
+          <button type="button" data-p="p70" aria-pressed="false">Proton 70 MeV</button>
+          <button type="button" data-p="p230" aria-pressed="false">Proton 230 MeV</button>
+          <button type="button" data-p="bone" aria-pressed="false">Bone in the way</button>
+          <button type="button" data-p="lung" aria-pressed="false">Lung in the way</button>
+          <button type="button" data-p="lead" aria-pressed="false">Lead range shifter</button>
+          <button type="button" data-p="alpha" aria-pressed="false">Alpha 150 MeV/u</button>
+          <button type="button" data-p="carbon" aria-pressed="false">Carbon 290 MeV/u</button>
+          <button type="button" data-p="nostrag" aria-pressed="false">No straggling</button>
+          <button type="button" data-p="stop" aria-pressed="false">Stopping power curves</button>
+          <button type="button" data-p="range" aria-pressed="false">Range against PSTAR</button>
+        </div>
+        <details class="more"><summary>About this setup</summary><p class="hint" id="presetHint"></p></details>
+      </section>
+      <section>
+        <h2>Readouts</h2>
+        <dl class="readout" id="out"></dl>
+      </section>
+<!-- vd-readings --><section class="vd-readings" data-ws="mp-charged-particles" data-title="Charged Particles in Matter" data-demo="charged-particles">
+        <h2>Readings</h2>
+        <div class="btnrow"><button type="button" class="btn primary vd-rec">Record reading</button><button type="button" class="btn vd-export">Export to worksheet</button><button type="button" class="btn vd-clear">Clear</button></div>
+        <p class="status" aria-live="polite"></p>
+        <div class="twrap"><table class="rows"><caption class="sr">Recorded readings</caption><thead></thead><tbody></tbody></table></div>
+      </section><script>(function(sec){var ws=sec.dataset.ws,title=sec.dataset.title,demo=sec.dataset.demo,rows=[],series=0,q=function(s){return sec.querySelector(s);};
+function cols(){var c=[];rows.forEach(function(r){Object.keys(r).forEach(function(k){if(c.indexOf(k)<0)c.push(k);});});return c;}
+function cell(v){var s=v==null?'':String(v);return /[",\n]/.test(s)?'"'+s.replace(/"/g,'""')+'"':s;}
+function csv(){var c=cols(),L=['# '+title+' virtual apparatus: recorded readings (simulated data)','# demo version,'+(window.vdVersion||'')];L.push(['row'].concat(c).join(','));rows.forEach(function(r,i){L.push([i+1].concat(c.map(function(k){return r[k];})).map(cell).join(','));});return L.join('\n')+'\n';}
+function say(m){q('.status').textContent=m;}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,function(ch){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch];});}
+function render(){var show=(window.vdShowCols||cols().slice(0,4)).map(function(k){return typeof k==='string'?[k,k]:k;}),t=q('table');t.tHead.innerHTML='<tr><th>#</th>'+show.map(function(k){return'<th>'+esc(k[1])+'</th>';}).join('')+'<th><span class="sr">Delete</span></th></tr>';
+t.tBodies[0].innerHTML=rows.length?rows.map(function(r,i){return'<tr><td>'+(i+1)+'</td>'+show.map(function(k){return'<td>'+esc(r[k[0]])+'</td>';}).join('')+'<td><button type="button" class="vd-del" data-del="'+i+'" aria-label="Delete row '+(i+1)+'">×</button></td></tr>';}).join(''):'<tr><td colspan="'+(show.length+2)+'">No readings yet.</td></tr>';}
+q('.vd-rec').addEventListener('click',function(){var r=typeof window.vdReadingRow==='function'?window.vdReadingRow():null;if(!r){say('Nothing to record here.');return;}if(typeof r==='string'){say(r);return;}if(!series)series=Date.now();var add=Array.isArray(r)?r:[r];add.forEach(function(x){rows.push(x);});render();say(add.length>1?'Rows '+(rows.length-add.length+1)+' to '+rows.length+' recorded.':'Row '+rows.length+' recorded.');});
+q('.vd-clear').addEventListener('click',function(){rows=[];series=Date.now();render();say('Readings cleared.');});
+q('table').addEventListener('click',function(e){var b=e.target.closest('[data-del]');if(b){rows.splice(+b.dataset.del,1);render();}});
+q('.vd-export').addEventListener('click',function(){if(!rows.length){say('No readings to export.');return;}var slug=typeof window.vdWorksheet==='function'?window.vdWorksheet():ws,txt=csv(),name=slug+'-readings.csv',c=cols();
+var hand={v:1,demo:demo,series:series,sent:new Date().toISOString(),columns:['row'].concat(c),rows:rows.map(function(r,i){return[String(i+1)].concat(c.map(function(k){return r[k]==null?'':String(r[k]);}));}),note:'Simulated data from the '+title+' demo.',csv:txt,csvName:name};
+try{localStorage.setItem('vd-handoff:'+slug,JSON.stringify(hand));}catch(_){try{var u=URL.createObjectURL(new Blob([txt],{type:'text/csv'})),a=document.createElement('a');a.href=u;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(u);},1000);}catch(_){}say('This browser blocks storage, so the readings were saved as a CSV file instead.');return;}
+say(rows.length+' reading'+(rows.length===1?'':'s')+' sent to the worksheet. ');var l=document.createElement('a');l.href='../curriculum/labs/students/'+slug+'.html';l.target=slug+'-worksheet';l.textContent='Open the worksheet';l.style.color='var(--accent)';q('.status').appendChild(l);});
+window.vdReadings=function(){return rows.length;};window.vdRows=function(){return rows.slice();};render();window.addEventListener('load',render);})(document.currentScript.previousElementSibling);</script><style>.vd-readings .vd-del{font:inherit;background:none;border:0;color:var(--muted);cursor:pointer;padding:0 4px}.vd-readings .twrap{margin-top:6px}</style><!-- /vd-readings -->
+      <section>
+        <details class="fold"><summary>Lab</summary><div class="foldbody">
+        <label class="check"><input type="checkbox" id="labBlind"><span>Blind: hide the model's ranges, peak and widths</span></label>
+        <details class="more"><summary>The model and its formulas</summary>
+          <p class="formula">S/ρ = K z² (Z/A)(1/β²)[½ ln(2mₑc²β²γ²W_max/I²) − β²], K = 0.307075 MeV cm²/mol</p>
+          <p class="formula">R = ∫₀^E dE′/S(E′) (CSDA), R ≈ αE^p (Bragg–Kleeman)</p>
+          <p class="formula">σ_R² = ∫ (dσ_E²/dx)/S³ dE, dσ_E²/dx = K mₑc² z² (Z/A) ρ (1 − β²/2)/(1 − β²)</p>
+          <p class="formula">θ₀ = (13.6 MeV/βcp) z √(x/X₀)[1 + 0.038 ln(x z²/X₀β²)] (Highland)</p>
+          <p class="hint" id="about"></p></details>
+        <details class="more"><summary>NIST PSTAR CSDA ranges in water</summary><div class="twrap"><table class="rows" id="pstarTable"><caption class="sr">PSTAR CSDA ranges of protons in liquid water</caption></table></div>
+          <p class="hint">Protons in liquid water, I = 75.0 eV, from NIST PSTAR (Berger, Coursey, Zucker and Chang; ICRU Report 49), as tabulated on the UCL proton therapy wiki. The model's range is beside each.</p></details>
+        </div></details>
+      </section>
+    </aside>
+  </main>
+</div>
+
+<script>
+(() => {
+  // ==CORE START==
+  /* the demo's own physics, runnable in Node (curriculum/validation/test_charged-particles.cjs). The stopping power, ranges, straggling,
+     Bragg curve and Monte Carlo histories are the shared core in lib/vdstop.js (VDStop), passed in as V. */
+  /* NIST PSTAR CSDA ranges of protons in liquid water (mm), as tabulated on the UCL proton therapy wiki ("Proton ranges") */
+  const PSTAR_MM = [[10, 1.23], [20, 4.26], [30, 8.85], [40, 14.89], [50, 22.27], [60, 30.93], [70, 40.80], [80, 51.84], [90, 63.98], [100, 77.18],
+    [120, 106.6], [140, 139.8], [150, 157.7], [160, 176.5], [180, 216.5], [200, 259.6], [220, 305.5], [230, 329.5], [250, 379.4]];
+  /* the depth range shown: past the end of the deepest track, rounded to a whole cm (or mm for short ranges) */
+  function depthSpan(V, o) {
+    const P = V.part(o.p), R = V.range(o.T, 'water', P), lay = (o.layers || []).filter((l) => l.t > 0);
+    let wSlab = 0, tSlab = 0; for (const l of lay) { tSlab += l.t; wSlab += V.wet(l.t, l.m, o.T, P); }
+    const zEnd = Math.max(tSlab, R - wSlab + tSlab), want = Math.max(zEnd * 1.18, tSlab + 0.05, 0.005);
+    const step = want > 4 ? 1 : want > 0.4 ? 0.1 : want > 0.04 ? 0.01 : 0.001;
+    return Math.ceil(want / step) * step;
+  }
+  /* the energy each track step gives the medium, into depth bins (MeV per bin per track); a nuclear removal gives the fraction γ of
+     the energy it took away at that place, as in the analytic curve */
+  function depositTrack(t, bins, dz, gamma) {
+    const p = t.pts;
+    for (let i = 1; i < p.length; i++) {
+      const dE = Math.max(0, p[i - 1][2] - p[i][2]), z = 0.5 * (p[i - 1][0] + p[i][0]), k = Math.floor(z / dz);
+      if (k >= 0 && k < bins.length) bins[k] += dE;
+    }
+    if (t.absorbed) { const q = p[p.length - 1], k = Math.floor(q[0] / dz); if (k >= 0 && k < bins.length) bins[k] += gamma * q[2]; }
+  }
+  /* mean and sample standard deviation */
+  function stats(a) { const n = a.length; if (!n) return { n, m: NaN, sd: NaN }; const m = a.reduce((s, x) => s + x, 0) / n; const sd = n > 1 ? Math.sqrt(a.reduce((s, x) => s + (x - m) * (x - m), 0) / (n - 1)) : NaN; return { n, m, sd }; }
+  /* the dose curve read at a depth by linear interpolation */
+  function doseAt(D, z) { const dz = D.z[1] - D.z[0], i = Math.floor(z / dz); if (i < 0) return D.d[0]; if (i >= D.d.length - 1) return D.d[D.d.length - 1]; const f = z / dz - i; return D.d[i] + f * (D.d[i + 1] - D.d[i]); }
+  function at(D, arr, z) { const dz = D.z[1] - D.z[0], i = Math.floor(z / dz); if (i < 0) return arr[0]; if (i >= arr.length - 1) return arr[arr.length - 1]; const f = z / dz - i; return arr[i] + f * (arr[i + 1] - arr[i]); }
+  // ==CORE END==
+  if (typeof document === 'undefined') return;
+  const V = window.VDStop;
+  const $ = (id) => document.getElementById(id);
+  const PRESETS = {
+    p150: { p: 'proton', e: 150, sp: 0, slab: 'none', t: 2, z: 15, view: 'beam', hint: 'Protons of 150 MeV in water: PSTAR gives a CSDA range of 157.7 mm. The dose rises slowly as the protons slow, then peaks sharply just before they stop: the Bragg peak.' },
+    p70: { p: 'proton', e: 70, sp: 0, slab: 'none', t: 2, z: 4, view: 'beam', hint: 'Protons of 70 MeV, the lowest energy of a typical proton therapy machine: PSTAR range 40.80 mm. The peak is higher compared with the entrance than at 150 MeV, since there is less straggling and fewer nuclear losses.' },
+    p230: { p: 'proton', e: 230, sp: 0, slab: 'none', t: 2, z: 32, view: 'beam', hint: 'Protons of 230 MeV, the top of a compact therapy cyclotron: PSTAR range 329.5 mm. Range straggling is about 1.1 % of the range, so this peak is the widest; about a quarter of the protons are lost to nuclear reactions on the way.' },
+    bone: { p: 'proton', e: 150, sp: 0, slab: 'bone', t: 2, z: 13, view: 'beam', hint: 'Two centimeters of compact bone (1.85 g/cm³) in front of the water: bone stops protons about 1.7 times as fast as water per centimeter, so the peak moves back by the slab\'s water equivalent thickness less its 2 cm.' },
+    lung: { p: 'proton', e: 150, sp: 0, slab: 'lung', t: 5, z: 15, view: 'beam', hint: 'Five centimeters of lung tissue. PSTAR\'s lung (ICRP) is the tissue itself, 1.05 g/cm³; an inflated lung is mostly air, about a quarter of that density, and would move the peak deeper instead.' },
+    lead: { p: 'proton', e: 150, sp: 0, slab: 'lead', t: 1, z: 10, view: 'beam', hint: 'One centimeter of lead: dense, but its electrons are fewer per gram (Z/A = 0.396 against 0.555 for water) and more tightly bound (I = 823 eV), so per gram it stops protons only about 0.6 times as well as water. Lead also scatters them far more.' },
+    alpha: { p: 'alpha', e: 150, sp: 0, slab: 'none', t: 2, z: 15, view: 'beam', hint: 'Alpha particles of 150 MeV per nucleon (600 MeV) move as fast as 150 MeV protons. Range goes as M/z² at the same speed, and for an alpha M/z² is 4/4 of the proton\'s, so the range is about the same; but the alpha is four times heavier, so its range straggles about half as much compared with its range, and the peak is sharper.' },
+    carbon: { p: 'carbon', e: 290, sp: 0, slab: 'none', t: 2, z: 15, view: 'beam', hint: 'Carbon ions of 290 MeV per nucleon reach about the same depth as 150 MeV protons. With 36 times the charge squared and 12 times the mass, they straggle and scatter much less, so the peak is narrower and sharper. Real carbon beams fragment and leave a tail past the peak, which this model leaves out.' },
+    nostrag: { p: 'proton', e: 150, sp: 0, slab: 'none', t: 2, z: 15, view: 'beam', str: false, nuc: false, hint: 'With straggling and nuclear reactions off, every proton loses exactly the mean energy and the curve is the stopping power at the residual range: it rises without limit at the end. Straggling is what gives the real peak its finite height and width.' },
+    stop: { p: 'proton', e: 100, sp: 0, slab: 'none', t: 2, z: 7, view: 'stop', hint: 'Mass stopping power against energy on log scales. Above about 1 MeV it falls nearly as 1/β², then levels off and slowly rises as the particle becomes relativistic. Choose a material to compare; the energy slider moves the marker.' },
+    range: { p: 'proton', e: 100, sp: 0, slab: 'none', t: 2, z: 7, view: 'range', hint: 'CSDA range against energy on log scales, with the NIST PSTAR ranges for protons in water and the Bragg–Kleeman power law R = αE^p fitted to the PSTAR values from 70 to 230 MeV.' },
+  };
+  const S = { preset: 'p150', p: 'proton', e: 150, sp: 0, slab: 'none', t: 2, z: 15, view: 'beam', str: true, nuc: true, wide: false, elec: false, pstar: true, mat: 'water',
+    run: false, blind: false, tracks: [], ends: [], absorbed: 0, n: 0, bins: null, binDz: 0, zmax: 20, D: null, acc: 0 };
+  const can = $('can'), ctx = can.getContext('2d'), plot = $('plot'), pctx = plot.getContext('2d');
+  let W = 0, H = 0, PW = 0, PH = 0, dpr = 1, T = null, seed = 12345;
+  const rng = () => { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+  const f = (v, d = 3) => (!isFinite(v) ? '—' : v.toFixed(d).replace('-', '−'));
+  const sig3 = (v, n = 4) => (!isFinite(v) ? '—' : Math.abs(v) >= 1e4 || (Math.abs(v) < 1e-3 && v !== 0) ? v.toExponential(n - 1).replace('e', ' × 10^').replace('-', '−') : (+v.toPrecision(n)).toString());
+  const lenTxt = (cm) => (!isFinite(cm) ? '—' : cm >= 1 ? `${f(cm, 2)} cm` : cm >= 0.1 ? `${f(cm * 10, 2)} mm` : `${f(cm * 1e4, 1)} μm`);
+  function tokens() { const cs = getComputedStyle(document.documentElement), g = (n) => cs.getPropertyValue(n).trim();
+    T = { canvas: g('--canvas'), surface: g('--surface'), ink: g('--ink'), muted: g('--muted'), line: g('--line'), water: g('--water'), wedge: g('--water-edge'), slab: g('--slab'), sedge: g('--slab-edge'),
+      nozzle: g('--nozzle'), dose: g('--dose'), model: g('--model'), pstar: g('--pstar'), det: g('--det'), grid: g('--grid'), fit: g('--fit'), elec: g('--elec'), mono: g('--font-mono'), ui: g('--font-ui') }; }
+  const dark = () => { const c = T && T.canvas; if (!c) return false; const m = c.match(/\w\w/g); if (!m || c[0] !== '#') return false; return (parseInt(m[0], 16) + parseInt(m[1], 16) + parseInt(m[2], 16)) < 300; };
+  const P = () => V.part(S.p), T0 = () => S.e * P().A;
+  const layers = () => (S.slab === 'none' ? [] : [{ m: S.slab, t: S.t }]);
+  const opts = () => ({ T: T0(), p: S.p, spread: S.sp / 100, layers: layers(), straggle: S.str, nuclear: S.nuc });
+
+  /* energy to color: from deep red at rest through orange and yellow to pale blue at full energy */
+  function heat(u) { u = Math.max(0, Math.min(1, u)); const stops = [[0, [150, 20, 30]], [0.25, [220, 60, 30]], [0.5, [245, 150, 40]], [0.75, [250, 220, 90]], [1, [120, 180, 255]]];
+    let i = 0; while (i < stops.length - 2 && u > stops[i + 1][0]) i++; const a = stops[i], b = stops[i + 1], t = (u - a[0]) / (b[0] - a[0]);
+    return `rgb(${a[1].map((v, k) => Math.round(v + t * (b[1][k] - v))).join(',')})`; }
+
+  /* ---------- the model curve, recomputed on any change ---------- */
+  function recompute() {
+    const o = opts(); S.zmax = depthSpan(V, o);
+    const dz = S.zmax / 800; S.D = V.dose(Object.assign({}, o, { dz, zmax: S.zmax }));
+    S.binDz = S.zmax / 200; S.bins = new Float64Array(200); S.tracks = []; S.ends = []; S.absorbed = 0; S.n = 0;
+    S.sxz = []; for (let i = 0; i <= 60; i++) { const z = i / 60 * S.zmax; S.sxz.push(V.sigmaX(o, Math.max(0, z - wSlabShift(o)))); }
+    $('sZ').max = String(S.zmax); $('sZ').step = String(S.zmax > 4 ? 0.01 : S.zmax > 0.4 ? 0.001 : 0.0001); if (S.z > S.zmax) S.z = S.zmax;
+  }
+  /* the slab's thickness less its water equivalent: depth z in the tank lies this far short in water */
+  function wSlabShift(o) { let t = 0, w = 0; for (const l of o.layers) { t += l.t; w += V.wet(l.t, l.m, o.T, o.p); } return t - w; }
+  const spreadAt = (z) => { const a = S.sxz, u = Math.max(0, Math.min(1, z / S.zmax)) * 60, i = Math.min(59, Math.floor(u)); return a[i] + (u - i) * (a[i + 1] - a[i]); };
+  const peak = () => { let im = 0; const d = S.D.d; for (let i = 1; i < d.length; i++) if (d[i] > d[im]) im = i; return { z: S.D.z[im], d: d[im] }; };
+
+  /* ---------- tracks ---------- */
+  function fireOne() {
+    const o = opts(), t = V.track(Object.assign({}, o, { zmax: S.zmax * 1.05, step: Math.min(0.05, S.zmax / 400) }), rng);
+    depositTrack(t, S.bins, S.binDz, V.GAMMA); S.n++;
+    if (t.absorbed) S.absorbed++; else S.ends.push(t.end);
+    S.tracks.push(t); if (S.tracks.length > 400) S.tracks.shift();
+  }
+
+  /* ---------- drawing: the tank ---------- */
+  const proj = () => (document.documentElement.getAttribute('data-projector') === 'on' ? 1.25 : 1);
+  function tankBox() { const p = proj(), cardW = W > 820 && $('setupCard').style.display !== 'none' ? 300 : 0, x0 = 96 * p, x1 = Math.max(x0 + 160, W - cardW - 30 * p), y0 = Math.min(78 * p, H * 0.2), y1 = H - 62 * p; return { x0, x1, y0, y1, p }; }
+  /* how a slab looks: picture only */
+  const SLAB_LOOK = { bone: ['#efe4c8', '#cdb98f'], lung: ['#eab9b5', '#c98a86'], adipose: ['#f3dfa0', '#d6bb6c'], muscle: ['#c9605e', '#9a3f3e'], pmma: ['#d9eef6', '#a9cddd'],
+    graphite: ['#4a4f57', '#2c3036'], aluminum: ['#d3d9e0', '#9aa4b0'], copper: ['#d99060', '#a35f33'], lead: ['#8c939c', '#5b626b'] };
+  function drawTank() {
+    const G = window.VDGear, d = dark(), b = tankBox(), p = b.p, sx = (b.x1 - b.x0) / S.zmax, cy = (b.y0 + b.y1) / 2, ky = sx * (S.wide ? 5 : 1), tSlab = S.slab === 'none' ? 0 : S.t;
+    const wall = 5 * p, lip = 12 * p, top = b.y0 - lip, benchY = b.y1 + wall + 26 * p;
+    G.backdrop(ctx, W, H, { horizon: (benchY - 8 * p) / H });
+    G.bench(ctx, 0, benchY, W, 9 * p, H - benchY);
+    /* the depth rule: a steel strip on the bench in front of the tank */
+    G.shadow(ctx, (b.x0 + b.x1) / 2, benchY - 2 * p, (b.x1 - b.x0) * 0.55, 4 * p, 0.7);
+    const ry = b.y1 + wall + 4 * p, rh = 17 * p, rg = ctx.createLinearGradient(0, ry, 0, ry + rh);
+    rg.addColorStop(0, d ? '#7b8592' : '#e4e8ed'); rg.addColorStop(1, d ? '#4c5560' : '#b7bfc9');
+    ctx.fillStyle = rg; ctx.beginPath(); ctx.roundRect(b.x0 - 34 * p, ry, b.x1 - b.x0 + 40 * p, rh, 2 * p); ctx.fill();
+    const rink = d ? '#0e1319' : '#1f2833'; ctx.strokeStyle = rink; ctx.fillStyle = rink; ctx.lineWidth = 1; ctx.font = `600 ${10 * p}px ${T.mono}`; ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+    const ticks = niceTicks(0, S.zmax, 8), st = ticks.length > 1 ? ticks[1] - ticks[0] : S.zmax;
+    for (let v = 0; v <= S.zmax + 1e-9; v += st / 5) { const x = b.x0 + v * sx; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + 3 * p); ctx.stroke(); }
+    for (const v of ticks) { const x = b.x0 + v * sx; ctx.beginPath(); ctx.moveTo(x, ry); ctx.lineTo(x, ry + 6 * p); ctx.stroke(); ctx.fillText(tickLabel(v), x, ry + rh - 0.5 * p); }
+    ctx.textAlign = 'right'; ctx.fillText(unitOf(S.zmax), b.x0 - 14 * p, ry + rh - 0.5 * p);
+    /* the tank: acrylic walls, the water and the air above it */
+    G.shadow(ctx, (b.x0 + b.x1) / 2, b.y1 + wall + 2 * p, (b.x1 - b.x0) * 0.56, 6 * p, 0.8);
+    ctx.fillStyle = d ? 'rgba(170,200,230,0.05)' : 'rgba(255,255,255,0.45)'; ctx.fillRect(b.x0, top, b.x1 - b.x0, lip);
+    const wg = ctx.createLinearGradient(0, b.y0, 0, b.y1); wg.addColorStop(0, G.mix(T.water, '#ffffff', d ? 0.06 : 0.35)); wg.addColorStop(1, G.mix(T.water, d ? '#000000' : '#5a9cc4', d ? 0.35 : 0.22));
+    ctx.fillStyle = wg; ctx.fillRect(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0);
+    /* soft light bands through the water */
+    ctx.save(); ctx.beginPath(); ctx.rect(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0); ctx.clip(); ctx.globalAlpha = d ? 0.05 : 0.18; ctx.fillStyle = '#ffffff';
+    for (let i = 0; i < 4; i++) { const x = b.x0 + (b.x1 - b.x0) * (0.12 + 0.24 * i); ctx.beginPath(); ctx.moveTo(x, b.y0); ctx.lineTo(x + 40 * p, b.y0); ctx.lineTo(x - 30 * p, b.y1); ctx.lineTo(x - 70 * p, b.y1); ctx.fill(); }
+    ctx.restore();
+    ctx.strokeStyle = d ? 'rgba(160,210,255,0.55)' : 'rgba(255,255,255,0.95)'; ctx.lineWidth = 1.5 * p; ctx.beginPath(); ctx.moveTo(b.x0, b.y0 + 0.5); ctx.lineTo(b.x1, b.y0 + 0.5); ctx.stroke();
+    if (tSlab > 0) {
+      const lk = SLAB_LOOK[S.slab] || [T.slab, T.sedge], wS = Math.min(tSlab, S.zmax) * sx, sg = ctx.createLinearGradient(b.x0, 0, b.x0 + wS, 0);
+      sg.addColorStop(0, G.mix(lk[0], '#ffffff', 0.15)); sg.addColorStop(1, lk[1]); ctx.fillStyle = sg; ctx.globalAlpha = S.slab === 'pmma' ? 0.7 : 0.95;
+      ctx.fillRect(b.x0, b.y0 - lip * 0.6, wS, b.y1 - b.y0 + lip * 0.6); ctx.globalAlpha = 1;
+      if (S.slab === 'bone' || S.slab === 'lung') { let s = 99; const r = () => (s = (s * 16807) % 2147483647) / 2147483647; ctx.fillStyle = S.slab === 'lung' ? 'rgba(255,255,255,0.35)' : 'rgba(120,95,55,0.22)';
+        for (let i = 0; i < wS * (b.y1 - b.y0) / (S.slab === 'lung' ? 60 : 140); i++) { ctx.beginPath(); ctx.arc(b.x0 + r() * wS, b.y0 + r() * (b.y1 - b.y0), (S.slab === 'lung' ? 2.2 : 1.2) * p * (0.5 + r()), 0, 7); ctx.fill(); } }
+      ctx.strokeStyle = lk[1]; ctx.lineWidth = 1; ctx.strokeRect(b.x0 + 0.5, b.y0 - lip * 0.6 + 0.5, wS - 1, b.y1 - b.y0 + lip * 0.6 - 1);
+    }
+    /* walls: the thin entrance window on the beam side, thicker acrylic elsewhere */
+    const glass = d ? 'rgba(190,215,240,0.22)' : 'rgba(120,150,175,0.35)', edge = d ? 'rgba(220,235,255,0.35)' : 'rgba(70,95,120,0.55)';
+    ctx.fillStyle = glass; ctx.fillRect(b.x0 - 2 * p, top, 2 * p, b.y1 - top + wall); ctx.fillRect(b.x1, top, wall, b.y1 - top + wall); ctx.fillRect(b.x0 - 2 * p, b.y1, b.x1 - b.x0 + 2 * p + wall, wall);
+    ctx.strokeStyle = edge; ctx.lineWidth = 1; ctx.strokeRect(b.x0 - 2 * p + 0.5, top + 0.5, b.x1 - b.x0 + 2 * p + wall - 1, b.y1 - top + wall - 1);
+    ctx.fillStyle = d ? 'rgba(255,255,255,0.12)' : 'rgba(255,255,255,0.7)'; ctx.fillRect(b.x1 + 1, top + 2, 1.2 * p, b.y1 - top);
+    /* the treatment nozzle */
+    const nh = Math.min(70 * p, (b.y1 - b.y0) * 0.45), nx1 = b.x0 - 16 * p;
+    G.box(ctx, -12 * p, cy - nh / 2, nx1 + 12 * p, nh, { color: d ? '#4a5563' : '#566273', r: 6 * p, shadow: false });
+    G.box(ctx, nx1 - 4 * p, cy - nh * 0.28, 12 * p, nh * 0.56, { color: d ? '#6b7786' : '#7b8796', r: 3 * p, shadow: false });
+    ctx.fillStyle = d ? '#9fb7d0' : '#d7e3ef'; ctx.fillRect(nx1 + 7 * p, cy - 7 * p, 1.5 * p, 14 * p);
+    G.plate(ctx, 'nozzle', (nx1 - 12 * p) / 2, cy - nh / 2 + 10 * p, { s: 7.5 * p });
+    G.label(ctx, P().name, (nx1 - 12 * p) / 2, cy + nh / 2 + 10 * p, { a: 'center', s: 10.5 * p, c: T.muted });
+    ctx.strokeStyle = d ? 'rgba(140,190,255,0.35)' : 'rgba(40,90,170,0.3)'; ctx.lineWidth = 1.2 * p; ctx.setLineDash([3 * p, 3 * p]); ctx.beginPath(); ctx.moveTo(nx1 + 9 * p, cy); ctx.lineTo(b.x0, cy); ctx.stroke(); ctx.setLineDash([]);
+    /* the model dose as a glow along the beam, as wide as a pencil beam spreads by multiple scattering */
+    ctx.save(); ctx.beginPath(); ctx.rect(b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0); ctx.clip();
+    const pk = peak(), cols = Math.max(40, Math.round((b.x1 - b.x0) / (3 * p))), glowC = d ? [255, 150, 70] : [236, 96, 24];
+    for (let i = 0; i < cols; i++) { const z0 = i / cols * S.zmax, z1 = (i + 1) / cols * S.zmax, u = doseAt(S.D, (z0 + z1) / 2) / pk.d; if (u < 0.01) continue;
+      const hw = Math.min((b.y1 - b.y0) / 2, Math.max(5 * p, 3 * spreadAt((z0 + z1) / 2) * ky)), g = ctx.createLinearGradient(0, cy - hw, 0, cy + hw), a = (d ? 0.6 : 0.5) * u;
+      g.addColorStop(0, `rgba(${glowC},0)`); g.addColorStop(0.5, `rgba(${glowC},${a})`); g.addColorStop(1, `rgba(${glowC},0)`);
+      const xa = Math.round(b.x0 + z0 * sx), xb = Math.round(b.x0 + z1 * sx); ctx.fillStyle = g; ctx.fillRect(xa, cy - hw, xb - xa, 2 * hw); }
+    /* tracks: in the dark, overlapping tracks add up and glow */
+    const E0 = T0(), many = S.tracks.length > 60; ctx.lineWidth = (many ? 0.8 : 1.3) * p; ctx.globalAlpha = many ? 0.5 : 0.9; ctx.lineCap = 'round';
+    if (d) ctx.globalCompositeOperation = 'lighter';
+    for (const t of S.tracks) { const q = t.pts; for (let i = 1; i < q.length; i++) { ctx.strokeStyle = heat(q[i][2] / E0); ctx.beginPath(); ctx.moveTo(b.x0 + q[i - 1][0] * sx, cy - q[i - 1][1] * ky); ctx.lineTo(b.x0 + q[i][0] * sx, cy - q[i][1] * ky); ctx.stroke(); } }
+    ctx.globalCompositeOperation = 'source-over'; ctx.globalAlpha = 1;
+    for (const t of S.tracks) if (t.absorbed) { const e = t.pts[t.pts.length - 1]; ctx.fillStyle = T.ink; ctx.beginPath(); ctx.arc(b.x0 + e[0] * sx, cy - e[1] * ky, 2.2 * p, 0, 2 * Math.PI); ctx.fill(); }
+    ctx.restore();
+    /* the Bragg peak chamber: a flat disk across the beam (seen edge on), 8.4 cm across, held from the scanning carriage */
+    const xd = b.x0 + S.z * sx, ch = Math.min((b.y1 - b.y0) * 0.8, 8.4 * ky), cw = Math.max(7 * p, Math.min(1 * sx, 14 * p)), cg = ctx.createLinearGradient(xd - cw / 2, 0, xd + cw / 2, 0);
+    ctx.strokeStyle = T.det; ctx.lineWidth = 1 * p; ctx.setLineDash([3 * p, 4 * p]); ctx.globalAlpha = 0.7; ctx.beginPath(); ctx.moveTo(xd, b.y0); ctx.lineTo(xd, b.y1); ctx.stroke(); ctx.setLineDash([]); ctx.globalAlpha = 1;
+    const railY = top - 8 * p; G.rod(ctx, b.x0 - 10 * p, railY, b.x1 + wall + 10 * p, railY, 3.2 * p, { color: '#a9b2bd' });
+    for (const x of [b.x0 - 10 * p, b.x1 + wall + 6 * p]) G.box(ctx, x - 4 * p, railY - 6 * p, 8 * p, top - railY + 6 * p, { color: '#5f6b7a', r: 2 * p, shadow: false });
+    G.rod(ctx, xd, railY + 4 * p, xd, cy - ch / 2, 2.2 * p, { color: '#b8c0ca' });
+    G.box(ctx, xd - 15 * p, railY - 9 * p, 30 * p, 16 * p, { color: d ? '#6a4fb0' : '#5b3fa6', r: 3 * p, shadow: false });
+    cg.addColorStop(0, G.mix(d ? '#c4b2f2' : '#8a6fd1', '#ffffff', 0.25)); cg.addColorStop(0.5, d ? '#9b82e0' : '#6b4fc0'); cg.addColorStop(1, d ? '#5d47a0' : '#43308a');
+    ctx.globalAlpha = 0.78; ctx.fillStyle = cg; ctx.beginPath(); ctx.roundRect(xd - cw / 2, cy - ch / 2, cw, ch, cw / 2.5); ctx.fill(); ctx.globalAlpha = 1;
+    ctx.strokeStyle = 'rgba(255,255,255,0.35)'; ctx.lineWidth = 1; ctx.stroke();
+    /* the electrometer, cabled to the chamber */
+    const ew = 128 * p, eh = Math.min(46 * p, b.y0 - 18 * p), ex = 8 * p, ey = 6 * p;
+    G.cable(ctx, ex + ew, ey + eh * 0.6, xd - 15 * p, railY - 2 * p, 16 * p, { w: 2.2 * p, color: d ? '#0b0f14' : '#2a3038' });
+    G.box(ctx, ex, ey, ew, eh, { color: d ? '#333c47' : '#3b4552', r: 5 * p });
+    G.plate(ctx, 'electrometer', ex + ew / 2, ey + 7 * p, { s: 6.5 * p });
+    const dpct = 100 * doseAt(S.D, S.z) / pk.d; G.lcd(ctx, ex + 7 * p, ey + 13 * p, ew - 14 * p, eh - 19 * p, `${f(dpct, 1)} %`);
+    G.label(ctx, `z = ${lenTxt(S.z)}`, xd + (xd > b.x1 - 110 * p ? -6 : 6) * p, top + lip / 2 + 1, { a: xd > b.x1 - 110 * p ? 'right' : 'left', s: 11 * p, w: 600, m: true, c: T.ink, alpha: 1 });
+    /* labels */
+    G.label(ctx, S.wide ? 'sideways stretched ×5' : 'to scale', b.x1 + wall, Math.max(ey + eh / 2, railY - 18 * p), { a: 'right', s: 10 * p });
+    if (tSlab > 0) G.label(ctx, `${V.mat(S.slab).name}, ${lenTxt(S.t)}`, b.x0 + 4 * p, b.y0 + 12 * p, { s: 10.5 * p, c: T.ink, alpha: 1 });
+    /* color key */
+    const kx = b.x0 + 10 * p, ky0 = b.y1 - 16 * p; for (let i = 0; i < 60; i++) { ctx.fillStyle = heat(i / 59); ctx.fillRect(kx + i * 1.5 * p, ky0, 1.6 * p, 7 * p); }
+    G.label(ctx, 'track energy: 0 → full · glow: model dose', kx, ky0 - 7 * p, { s: 10 * p, c: T.ink, alpha: 0.85 });
+  }
+  function niceTicks(a, b, n) { const span = b - a, raw = span / n, mag = Math.pow(10, Math.floor(Math.log10(raw))), st = [1, 2, 5, 10].map((k) => k * mag).find((k) => span / k <= n) || 10 * mag; const out = []; for (let v = Math.ceil(a / st) * st; v <= b + 1e-9; v += st) out.push(+v.toPrecision(10)); return out; }
+  const unitOf = (zmax) => (zmax >= 1 ? 'cm' : zmax >= 0.1 ? 'mm' : 'μm');
+  const tickLabel = (v) => { const u = unitOf(S.zmax), x = u === 'cm' ? v : u === 'mm' ? v * 10 : v * 1e4; return String(+x.toPrecision(6)); };
+
+  /* ---------- drawing: the depth dose graph ---------- */
+  function drawDose() {
+    if (!PW) return; const p = proj(), G2 = window.VDGear; pctx.setTransform(dpr, 0, 0, dpr, 0, 0); pctx.fillStyle = T.canvas; pctx.fillRect(0, 0, PW, PH);
+    const b = tankBox(), L = b.x0, R = b.x1, top = 22 * p, bot = PH - 34 * p, sx = (R - L) / S.zmax, pk = peak();
+    const dmax = pk.d * 1.08, Y = (v) => bot - (v / dmax) * (bot - top);
+    pctx.strokeStyle = T.grid; pctx.lineWidth = 1; for (let k = 0; k <= 5; k++) { const y = Y(pk.d * k / 5); pctx.beginPath(); pctx.moveTo(L, y); pctx.lineTo(R, y); pctx.stroke(); }
+    pctx.fillStyle = T.muted; pctx.font = `${10 * p}px ${T.mono}`; pctx.textAlign = 'right'; pctx.textBaseline = 'middle';
+    for (let k = 0; k <= 5; k++) pctx.fillText(`${k * 20}`, L - 6 * p, Y(pk.d * k / 5));
+    pctx.save(); pctx.translate(14 * p, (top + bot) / 2); pctx.rotate(-Math.PI / 2); pctx.textAlign = 'center'; pctx.font = `${11 * p}px ${T.ui}`; pctx.fillText('dose (% of the peak)', 0, 0); pctx.restore();
+    pctx.textAlign = 'center'; pctx.textBaseline = 'top'; for (const v of niceTicks(0, S.zmax, 8)) pctx.fillText(tickLabel(v), L + v * sx, bot + 5 * p);
+    pctx.fillText(`depth (${unitOf(S.zmax)})`, (L + R) / 2, bot + 18 * p);
+    /* the tracks' dose: MeV per bin per track over the bin's mass thickness gives MeV cm²/g, like the model */
+    /* a soft fill under the model curve */
+    { const D = S.D, g = pctx.createLinearGradient(0, top, 0, bot); g.addColorStop(0, G2.mix(T.model, T.canvas, 0.55)); g.addColorStop(1, T.canvas); pctx.globalAlpha = 0.5; pctx.fillStyle = g; pctx.beginPath(); pctx.moveTo(L, bot);
+      for (let i = 0; i < D.z.length; i++) pctx.lineTo(L + D.z[i] * sx, Y(Math.min(D.d[i], dmax * 1.5))); pctx.lineTo(L + D.z[D.z.length - 1] * sx, bot); pctx.closePath(); pctx.fill(); pctx.globalAlpha = 1; }
+    if (S.n > 0) {
+      pctx.fillStyle = T.dose; pctx.globalAlpha = 0.45; const tSlab = S.slab === 'none' ? 0 : S.t, rhoS = S.slab === 'none' ? 1 : V.mat(S.slab).rho;
+      for (let k = 0; k < S.bins.length; k++) { const zc = (k + 0.5) * S.binDz, rho = zc < tSlab ? rhoS : 1, v = S.bins[k] / S.n / (S.binDz * rho); const y = Y(v); pctx.fillRect(L + k * S.binDz * sx, y, Math.max(1, S.binDz * sx - 0.5), bot - y); }
+      pctx.globalAlpha = 1;
+    }
+    /* the model */
+    pctx.strokeStyle = T.model; pctx.lineWidth = 2 * p; pctx.beginPath(); const D = S.D; for (let i = 0; i < D.z.length; i++) { const x = L + D.z[i] * sx, y = Y(Math.min(D.d[i], dmax * 1.5)); i ? pctx.lineTo(x, y) : pctx.moveTo(x, y); } pctx.stroke();
+    /* the detector */
+    const xd = L + S.z * sx; pctx.strokeStyle = T.det; pctx.setLineDash([4 * p, 4 * p]); pctx.lineWidth = 1.5 * p; pctx.beginPath(); pctx.moveTo(xd, top); pctx.lineTo(xd, bot); pctx.stroke(); pctx.setLineDash([]);
+    const dd = doseAt(D, S.z); pctx.fillStyle = T.det; pctx.beginPath(); pctx.arc(xd, Y(dd), 4 * p, 0, 2 * Math.PI); pctx.fill();
+    /* legend */
+    pctx.textAlign = 'left'; pctx.textBaseline = 'middle'; pctx.font = `${11 * p}px ${T.ui}`; let lx = L + 6 * p, ly2 = top - 10 * p; const ly = ly2;
+    pctx.strokeStyle = T.model; pctx.lineWidth = 2 * p; pctx.beginPath(); pctx.moveTo(lx, ly); pctx.lineTo(lx + 18 * p, ly); pctx.stroke(); pctx.fillStyle = T.ink; pctx.fillText('model (broad beam)', lx + 22 * p, ly);
+    lx += 22 * p + pctx.measureText('model (broad beam)').width + 16 * p; const narrow = lx + 130 * p > PW; pctx.fillStyle = T.dose; pctx.globalAlpha = 0.6; pctx.fillRect(lx, ly2 - 5 * p, 14 * p, 10 * p); pctx.globalAlpha = 1; pctx.fillStyle = T.ink; pctx.fillText(narrow ? `tracks (${S.n})` : `from the tracks (${S.n})`, lx + 19 * p, ly2);
+  }
+
+  /* ---------- drawing: stopping power and range graphs ---------- */
+  function logAxes(c, box, xr, yr, xlab, ylab) {
+    const p = proj(), X = (v) => box.x0 + (Math.log10(v) - Math.log10(xr[0])) / (Math.log10(xr[1]) - Math.log10(xr[0])) * (box.x1 - box.x0);
+    const Y = (v) => box.y1 - (Math.log10(v) - Math.log10(yr[0])) / (Math.log10(yr[1]) - Math.log10(yr[0])) * (box.y1 - box.y0);
+    c.strokeStyle = T.grid; c.lineWidth = 1; c.fillStyle = T.muted; c.font = `${10 * p}px ${T.mono}`;
+    for (let e = Math.floor(Math.log10(xr[0])); e <= Math.ceil(Math.log10(xr[1])); e++) for (const m of [1, 2, 5]) { const v = m * Math.pow(10, e); if (v < xr[0] * 0.999 || v > xr[1] * 1.001) continue;
+      const x = X(v); c.globalAlpha = m === 1 ? 1 : 0.5; c.beginPath(); c.moveTo(x, box.y0); c.lineTo(x, box.y1); c.stroke(); c.globalAlpha = 1; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(sig3(v, 3), x, box.y1 + 5 * p); }
+    for (let e = Math.floor(Math.log10(yr[0])); e <= Math.ceil(Math.log10(yr[1])); e++) for (const m of [1, 2, 5]) { const v = m * Math.pow(10, e); if (v < yr[0] * 0.999 || v > yr[1] * 1.001) continue;
+      const y = Y(v); c.globalAlpha = m === 1 ? 1 : 0.5; c.beginPath(); c.moveTo(box.x0, y); c.lineTo(box.x1, y); c.stroke(); c.globalAlpha = 1; c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(sig3(v, 3), box.x0 - 6 * p, y); }
+    c.strokeStyle = T.muted; c.strokeRect(box.x0, box.y0, box.x1 - box.x0, box.y1 - box.y0);
+    c.fillStyle = T.ink; c.font = `${11 * p}px ${T.ui}`; c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText(xlab, (box.x0 + box.x1) / 2, box.y1 + 20 * p);
+    c.save(); c.translate(box.x0 - 52 * p, (box.y0 + box.y1) / 2); c.rotate(-Math.PI / 2); c.textBaseline = 'middle'; c.fillText(ylab, 0, 0); c.restore();
+    return { X, Y };
+  }
+  function curve(c, ax, xs, fy, color, w, dash) { c.strokeStyle = color; c.lineWidth = w; c.setLineDash(dash || []); c.beginPath(); let on = false; for (const x of xs) { const y = fy(x); if (!(y > 0) || !isFinite(y)) { on = false; continue; } const px = ax.X(x), py = ax.Y(y); on ? c.lineTo(px, py) : c.moveTo(px, py); on = true; } c.stroke(); c.setLineDash([]); }
+  const graphBox = () => { const p = proj(), cardW = W > 820 && $('setupCard').style.display !== 'none' ? 300 : 0; return { x0: 80 * p, x1: Math.max(80 * p + 160, W - cardW - 24 * p), y0: 34 * p, y1: H - 50 * p, p }; };
+  function drawStop() {
+    const box = graphBox(), p = box.p, A = P().A, xr = [A * 1, A * 1000], yr = [S.p === 'proton' ? 1 : 10, S.p === 'carbon' ? 1e4 : S.p === 'alpha' ? 3000 : 400];
+    const ax = logAxes(ctx, box, xr, yr, `kinetic energy T (MeV), ${P().name.toLowerCase()}`, 'mass stopping power S/ρ (MeV cm²/g)');
+    const xs = []; for (let i = 0; i <= 300; i++) xs.push(xr[0] * Math.pow(xr[1] / xr[0], i / 300));
+    ctx.save(); ctx.beginPath(); ctx.rect(box.x0, box.y0, box.x1 - box.x0, box.y1 - box.y0); ctx.clip();
+    if (S.mat !== 'water') curve(ctx, ax, xs, (x) => V.S(x, 'water', S.p), T.muted, 1.5 * p, [5 * p, 4 * p]);
+    curve(ctx, ax, xs, (x) => V.S(x, S.mat, S.p), T.model, 2.5 * p);
+    if (S.elec) { const xe = []; for (let i = 0; i <= 300; i++) xe.push(Math.max(xr[0], 0.01) * Math.pow(xr[1] / Math.max(xr[0], 0.01), i / 300)); curve(ctx, ax, xe, (x) => V.Se(x, S.mat), T.elec, 2 * p, [2 * p, 3 * p]); }
+    const e = T0(), s = V.S(e, S.mat, S.p); ctx.fillStyle = T.det; ctx.beginPath(); ctx.arc(ax.X(e), ax.Y(s), 5 * p, 0, 2 * Math.PI); ctx.fill();
+    ctx.restore();
+    ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; let ly = box.y0 + 14 * p; const lx = box.x0 + (box.x1 - box.x0) * 0.42;
+    const key = (col, dash, txt) => { ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.setLineDash(dash || []); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 22 * p, ly); ctx.stroke(); ctx.setLineDash([]); ctx.fillStyle = T.ink; ctx.fillText(txt, lx + 28 * p, ly); ly += 17 * p; };
+    key(T.model, null, `${P().name}, ${V.mat(S.mat).name} (Bethe)`); if (S.mat !== 'water') key(T.muted, [5 * p, 4 * p], `${P().name}, water`); if (S.elec) key(T.elec, [2 * p, 3 * p], `Electron, ${V.mat(S.mat).name} (collision only)`);
+    ctx.fillStyle = T.det; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.textAlign = 'left'; ctx.fillText(`T = ${sig3(e, 4)} MeV: S/ρ = ${sig3(s, 4)} MeV cm²/g`, box.x0 + 8 * p, box.y1 - 12 * p);
+  }
+  function drawRange() {
+    const box = graphBox(), p = box.p, A = P().A, xr = [A * 3, A * 400], yr = [S.p === 'carbon' ? 3e-4 : 1e-3, 300];
+    const ax = logAxes(ctx, box, xr, yr, `kinetic energy T (MeV), ${P().name.toLowerCase()}`, 'CSDA range R (g/cm²)');
+    const xs = []; for (let i = 0; i <= 300; i++) xs.push(xr[0] * Math.pow(xr[1] / xr[0], i / 300));
+    ctx.save(); ctx.beginPath(); ctx.rect(box.x0, box.y0, box.x1 - box.x0, box.y1 - box.y0); ctx.clip();
+    if (S.mat !== 'water') curve(ctx, ax, xs, (x) => V.range(x, 'water', S.p), T.muted, 1.5 * p, [5 * p, 4 * p]);
+    curve(ctx, ax, xs, (x) => V.range(x, S.mat, S.p), T.model, 2.5 * p);
+    if (S.pstar && S.p === 'proton') {
+      const fit = pstarFit(); curve(ctx, ax, xs.filter((x) => x >= 20 && x <= 400), (x) => fit.alpha * Math.pow(x, fit.p), T.fit, 1.5 * p, [6 * p, 4 * p]);
+      ctx.fillStyle = T.pstar; for (const [E, mm] of PSTAR_MM) { ctx.beginPath(); ctx.arc(ax.X(E), ax.Y(mm / 10), 4 * p, 0, 2 * Math.PI); ctx.fill(); }
+    }
+    const e = T0(), r = V.range(e, S.mat, S.p); ctx.fillStyle = T.det; ctx.beginPath(); ctx.arc(ax.X(e), ax.Y(r), 5 * p, 0, 2 * Math.PI); ctx.fill();
+    ctx.restore();
+    ctx.font = `${11 * p}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'middle'; let ly = box.y0 + 14 * p; const lx = box.x0 + 14 * p;
+    const key = (col, dash, txt, dot) => { if (dot) { ctx.fillStyle = col; ctx.beginPath(); ctx.arc(lx + 11 * p, ly, 4 * p, 0, 2 * Math.PI); ctx.fill(); } else { ctx.strokeStyle = col; ctx.lineWidth = 2 * p; ctx.setLineDash(dash || []); ctx.beginPath(); ctx.moveTo(lx, ly); ctx.lineTo(lx + 22 * p, ly); ctx.stroke(); ctx.setLineDash([]); } ctx.fillStyle = T.ink; ctx.fillText(txt, lx + 28 * p, ly); ly += 17 * p; };
+    key(T.model, null, `${P().name}, ${V.mat(S.mat).name} (Bethe, CSDA)`); if (S.mat !== 'water') key(T.muted, [5 * p, 4 * p], `${P().name}, water`);
+    if (S.pstar && S.p === 'proton') { const fit = pstarFit(); key(T.pstar, null, 'NIST PSTAR, protons in water', true); if (!S.blind) key(T.fit, [6 * p, 4 * p], `fit to PSTAR 70 to 230 MeV: R = ${f(fit.alpha * 1000, 3)} × 10⁻³ E^${f(fit.p, 3)}`); else key(T.fit, [6 * p, 4 * p], 'power law fit to PSTAR 70 to 230 MeV'); }
+    ctx.fillStyle = T.det; ctx.font = `600 ${11 * p}px ${T.mono}`; ctx.fillText(`T = ${sig3(e, 4)} MeV: R = ${sig3(r, 4)} g/cm² = ${lenTxt(r / V.mat(S.mat).rho)}`, box.x0 + 8 * p, box.y1 - 12 * p);
+  }
+  let fitCache = null;
+  function pstarFit() { if (fitCache) return fitCache; const pts = PSTAR_MM.filter(([E]) => E >= 70 && E <= 230); return (fitCache = V.bk(pts.map((q) => q[0]), pts.map((q) => q[1] / 10))); }
+
+  function draw() {
+    if (!T || !W) return;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.view === 'beam') { drawTank(); drawDose(); } else if (S.view === 'stop') drawStop(); else drawRange();
+    $('count').textContent = S.view === 'beam' ? `${S.n} tracks` : '';
+  }
+  function readouts() {
+    const dd = (a, b, wide) => `<div${wide ? ' class="wide"' : ''}><dt>${a}</dt><dd>${b}</dd></div>`, hide = '<dd class="ok">hidden: measure it</dd>';
+    const hid = (a) => `<div><dt>${a}</dt>${hide}</div>`, Pp = P(), e = T0();
+    let h = '';
+    if (S.view === 'beam') {
+      const D = S.D, pk = peak(), R80 = V.distal(D.z, D.d, 0.8), R90 = V.distal(D.z, D.d, 0.9), dz = doseAt(D, S.z), E = at(D, D.e, S.z), phi = at(D, D.phi, S.z);
+      const tSlab = S.slab === 'none' ? 0 : S.t, Mz = S.z < tSlab ? V.mat(S.slab) : V.MATS.water, sz = E > Pp.A ? V.S(E, Mz, Pp) : NaN, st = stats(S.ends);
+      h += dd('Beam', `${Pp.name}, ${sig3(e, 4)} MeV`, true);
+      h += S.blind ? hid('CSDA range in water R₀') + hid('Depth of 80 % (distal), R80') : dd('CSDA range in water R₀', lenTxt(V.range(e, 'water', Pp))) + dd('Depth of 80 % (distal), R80', lenTxt(R80));
+      h += S.blind ? hid('Depth of 90 % (distal), R90') + hid('Peak depth') : dd('Depth of 90 % (distal), R90', lenTxt(R90)) + dd('Peak depth', lenTxt(pk.z));
+      h += S.blind ? hid('Peak to entrance dose') + hid('End point spread σ') : dd('Peak to entrance dose', f(pk.d / D.d[0], 2)) + dd('End point spread σ (straggling, spread)', lenTxt(D.sigma));
+      if (tSlab > 0) h += S.blind ? hid('Slab\'s water equivalent thickness') : dd('Slab\'s water equivalent thickness', lenTxt(V.wet(S.t, S.slab, e, Pp)), true);
+      h += dd('At the detector: dose', `${f(100 * dz / pk.d, 1)} % of the peak`) + dd('Mean energy there', E > 0 ? `${sig3(E, 4)} MeV` : 'stopped');
+      h += dd('Stopping power there', isFinite(sz) ? `${sig3(sz, 4)} MeV cm²/g` : '—') + dd('Primaries still going', `${f(100 * phi, 1)} %`);
+      h += dd('Tracks that stopped', `${st.n}` + (Pp.z === 1 ? ` (${S.absorbed} lost to nuclear reactions)` : ''), true);
+      h += dd('Mean end depth', lenTxt(st.m)) + dd('Spread of the end depths', st.n > 1 ? lenTxt(st.sd) : '—');
+    } else {
+      const M = V.mat(S.mat), s = V.S(e, M, Pp), r = V.range(e, M, Pp);
+      h += dd('Particle and material', `${Pp.name} in ${M.name}`, true) + dd('Kinetic energy T', `${sig3(e, 4)} MeV`) + dd('β = v/c', f(Math.sqrt(1 - Math.pow(Pp.M / (e + Pp.M), 2)), 4));
+      h += dd('Mass stopping power S/ρ', `${sig3(s, 4)} MeV cm²/g`) + dd('Linear stopping power S', `${sig3(s * M.rho, 4)} MeV/cm`);
+      h += dd('CSDA range R', `${sig3(r, 4)} g/cm²`) + dd('Range in this material', lenTxt(r / M.rho));
+      h += dd('Relative to water (per cm)', f(V.rsp(M, e, Pp), 4)) + dd('Material: ρ, I, Z/A', `${sig3(M.rho, 4)} g/cm³, ${M.I} eV, ${f(M.ZA, 5)}`);
+      if (S.view === 'range' && S.p === 'proton' && M === V.MATS.water) { const q = PSTAR_MM.find(([E]) => Math.abs(E - e) < 1e-6); h += dd('NIST PSTAR at this energy', q ? `${f(q[1] / 10, 3)} g/cm²` : 'not tabulated (choose 10, 20, … MeV)', true); }
+    }
+    $('out').innerHTML = h;
+  }
+  function sync() {
+    const sl = $('sE'); sl.max = S.p === 'carbon' ? '430' : '250'; sl.min = '1'; sl.value = S.e; $('oE').textContent = `${sig3(S.e, 4)} MeV/u` + (P().A > 1 ? ` (${sig3(T0(), 4)} MeV)` : '');
+    $('sSp').value = S.sp; $('oSp').textContent = `${f(S.sp, 1)} %`; $('selPart').value = S.p; $('selSlab').value = S.slab; $('sT').value = S.t; $('oT').textContent = lenTxt(S.t);
+    $('slabBox').hidden = S.slab === 'none' || S.view !== 'beam'; $('sZ').value = S.z; $('oZ').textContent = lenTxt(S.z);
+    $('chkStr').checked = S.str; $('chkNuc').checked = S.nuc; $('chkWide').checked = S.wide; $('chkElec').checked = S.elec; $('chkPstar').checked = S.pstar; $('selMat').value = S.mat;
+    const beam = S.view === 'beam';
+    for (const id of ['sSp', 'selSlab', 'sZ', 'chkStr', 'chkNuc', 'chkWide']) { const el = $(id).closest('div.pick, div:not(.setup-card), label.check'); if (el) el.hidden = !beam; }
+    $('slabBox').hidden = !beam || S.slab === 'none'; $('matBox').hidden = beam; $('elecBox').hidden = S.view !== 'stop'; $('pstarBox').hidden = S.view !== 'range';
+    $('plotbox').hidden = !beam; $('play').hidden = !beam; $('restart').hidden = !beam; $('selRate').hidden = !beam; document.querySelector('label[for="selRate"]').hidden = !beam;
+    for (const b of document.querySelectorAll('#presets button')) b.setAttribute('aria-pressed', String(b.dataset.p === S.preset));
+    for (const b of document.querySelectorAll('#viewSeg button')) b.setAttribute('aria-pressed', String(b.dataset.view === S.view));
+    /* the Readings table shows the columns of the view the readings come from */
+    window.vdShowCols = beam ? [['E_MeV', 'T (MeV)'], ['depth_cm', 'z (cm)'], ['dose_pct', 'dose (%)'], ['end_sd_cm', 'σ ends (cm)']] : [['E_MeV', 'T (MeV)'], ['material', 'material'], ['S_MeV_cm2_g', 'S/ρ'], ['R_g_cm2', 'R (g/cm²)']];
+    $('about').textContent = 'Model: the Bethe formula with the full maximum energy transfer and NIST PSTAR\'s material data (density, mean excitation energy I, composition), with no shell, Barkas, Bloch or density corrections: '
+      + 'for protons in water its CSDA ranges are within 0.2 mm of PSTAR from 10 to 250 MeV and its stopping powers within about 0.6 % above 10 MeV (about 3 % high at 1 MeV). It is used down to 1 MeV per nucleon; the rest of the energy is put down where the particle stops (for a proton in water, less than 0.04 mm). '
+      + 'The broad beam curve spreads the end points as a Gaussian from Bohr\'s straggling and the beam\'s energy spread. Protons are lost to nuclear reactions at 1.2 % per cm of water, and 60 % of the energy they carried is put down locally (Bortfeld 1997); for ions nuclear reactions and fragments are left out. '
+      + 'A slab is turned into water equivalent depth with its stopping power ratio to water at the energy there. Each drawn track takes steps of up to 0.5 mm with Gaussian energy loss straggling and Highland multiple scattering (good to about 11 %, PDG). Electrons (Stopping power view): collision stopping from the ICRU 37 formula with the density effect for water only, no radiative loss.';
+  }
+  const card = VD.setupCard($('setupCard'));
+  function setRun(on) { S.run = on; card.away(on); $('play').textContent = on ? 'Pause' : S.n ? 'Fire more' : 'Fire'; $('play').classList.toggle('attn', !on); }
+  function full() { recompute(); sync(); readouts(); draw(); }
+  const changed = () => { S.preset = 'custom'; setRun(false); full(); };
+  function applyPreset(k) { const c = PRESETS[k]; Object.assign(S, { preset: k, p: c.p, e: c.e, sp: c.sp, slab: c.slab, t: c.t, z: c.z, view: c.view, str: c.str !== false, nuc: c.nuc !== false, mat: 'water' });
+    $('presetHint').textContent = c.hint; setRun(false); full(); }
+  for (const b of document.querySelectorAll('#presets button')) b.addEventListener('click', () => applyPreset(b.dataset.p));
+  for (const b of document.querySelectorAll('#viewSeg button')) b.addEventListener('click', () => { S.view = b.dataset.view; setRun(false); sync(); readouts(); resize(); });
+  $('selPart').addEventListener('change', (e) => { S.p = e.target.value; if (S.p === 'carbon' && S.e > 430) S.e = 430; if (S.p !== 'carbon' && S.e > 250) S.e = 250; changed(); });
+  $('sE').addEventListener('input', (e) => { S.e = +e.target.value; changed(); });
+  $('sSp').addEventListener('input', (e) => { S.sp = +e.target.value; changed(); });
+  $('selSlab').addEventListener('change', (e) => { S.slab = e.target.value; changed(); });
+  $('sT').addEventListener('input', (e) => { S.t = +e.target.value; changed(); });
+  $('sZ').addEventListener('input', (e) => { S.z = +e.target.value; $('oZ').textContent = lenTxt(S.z); readouts(); draw(); });
+  $('chkStr').addEventListener('change', (e) => { S.str = e.target.checked; changed(); });
+  $('chkNuc').addEventListener('change', (e) => { S.nuc = e.target.checked; changed(); });
+  $('chkWide').addEventListener('change', (e) => { S.wide = e.target.checked; draw(); });
+  $('chkElec').addEventListener('change', (e) => { S.elec = e.target.checked; draw(); });
+  $('chkPstar').addEventListener('change', (e) => { S.pstar = e.target.checked; draw(); });
+  $('selMat').addEventListener('change', (e) => { S.mat = e.target.value; S.preset = 'custom'; sync(); readouts(); draw(); });
+  $('play').addEventListener('click', () => setRun(!S.run));
+  $('restart').addEventListener('click', () => { S.tracks = []; S.ends = []; S.absorbed = 0; S.n = 0; S.bins.fill(0); setRun(false); readouts(); draw(); });
+  $('labBlind').addEventListener('change', (e) => { S.blind = e.target.checked; readouts(); draw(); });
+  VD.typeIn($('oE'), { get: () => S.e, set: (v) => { S.e = v; changed(); }, min: 1, max: () => (S.p === 'carbon' ? 430 : 250), step: 0.01, unit: 'MeV/u', label: 'Energy per nucleon' });
+  VD.typeIn($('oZ'), { get: () => S.z, set: (v) => { S.z = v; sync(); readouts(); draw(); }, min: 0, max: () => S.zmax, step: () => (S.zmax > 4 ? 0.01 : S.zmax > 0.4 ? 0.001 : 0.0001), unit: 'cm', label: 'Detector depth' });
+  VD.typeIn($('oT'), { get: () => S.t, set: (v) => { S.t = v; changed(); }, min: 0.1, max: 5, step: 0.1, unit: 'cm', label: 'Slab thickness' });
+  /* drag the detector along the tank or the graph */
+  function dragZ(e, el) { const r = el.getBoundingClientRect(), b = tankBox(), z = ((e.clientX - r.left) - b.x0) / (b.x1 - b.x0) * S.zmax; S.z = Math.max(0, Math.min(S.zmax, Math.round(z / +$('sZ').step) * +$('sZ').step)); sync(); readouts(); draw(); }
+  for (const el of [can, plot]) {
+    let down = false;
+    el.addEventListener('pointerdown', (e) => { if (S.view !== 'beam') return; down = true; el.setPointerCapture(e.pointerId); dragZ(e, el); });
+    el.addEventListener('pointermove', (e) => { if (down) dragZ(e, el); });
+    el.addEventListener('pointerup', () => { down = false; });
+  }
+  can.addEventListener('keydown', (e) => { if (S.view !== 'beam') return; const st = (e.shiftKey ? 1 : 0.1) * (S.zmax > 4 ? 1 : S.zmax > 0.4 ? 0.1 : 0.01);
+    if (e.key === 'ArrowRight' || e.key === 'ArrowUp') { S.z = Math.min(S.zmax, +(S.z + st).toFixed(6)); } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') { S.z = Math.max(0, +(S.z - st).toFixed(6)); } else return;
+    e.preventDefault(); sync(); readouts(); draw(); });
+  /* PSTAR table in the Lab fold */
+  $('pstarTable').innerHTML = '<thead><tr><th>T (MeV)</th><th>PSTAR R (g/cm²)</th><th>Model R (g/cm²)</th></tr></thead><tbody>'
+    + PSTAR_MM.map(([E, mm]) => `<tr><td>${E}</td><td>${f(mm / 10, 3)}</td><td>${f(V.range(E, 'water'), 3)}</td></tr>`).join('') + '</tbody>';
+
+  /* readings: the detector and the tracks in the beam view, the curve at the beam energy in the graph views */
+  window.vdReadingRow = () => {
+    const Pp = P(), e = T0(), r6 = (v) => (isFinite(v) ? String(+v.toPrecision(6)) : '');
+    if (S.view === 'beam') {
+      const D = S.D, pk = peak(), E = at(D, D.e, S.z), st = stats(S.ends), tSlab = S.slab === 'none' ? 0 : S.t, Mz = S.z < tSlab ? V.mat(S.slab) : V.MATS.water;
+      return { view: 'beam', particle: Pp.name, E_MeV: r6(e), spread_pct: f(S.sp, 1), slab: S.slab === 'none' ? 'none' : V.mat(S.slab).name, slab_cm: tSlab ? f(S.t, 2) : '0',
+        straggling: S.str ? 'on' : 'off', nuclear: S.nuc ? 'on' : 'off', depth_cm: r6(S.z), dose_pct: f(100 * doseAt(D, S.z) / pk.d, 2), E_mean_MeV: E > 0 ? r6(E) : '0',
+        S_MeV_cm2_g: E > Pp.A ? r6(V.S(E, Mz, Pp)) : '', tracks: String(st.n), end_mean_cm: r6(st.m), end_sd_cm: st.n > 1 ? r6(st.sd) : '' };
+    }
+    const M = V.mat(S.mat);
+    return { view: S.view === 'stop' ? 'stopping power' : 'range', particle: Pp.name, material: M.name, E_MeV: r6(e), S_MeV_cm2_g: r6(V.S(e, M, Pp)), R_g_cm2: r6(V.range(e, M, Pp)), rsp: f(V.rsp(M, e, Pp), 4) };
+  };
+
+  let last = performance.now();
+  function frame(now) {
+    const dt = Math.min(0.1, (now - last) / 1000); last = now;
+    if (S.run && S.view === 'beam') {
+      S.acc += dt * +$('selRate').value; let k = 0, t0 = performance.now();
+      while (S.acc >= 1 && performance.now() - t0 < 30) { fireOne(); S.acc -= 1; k++; }
+      if (S.acc > 50) S.acc = 0;
+      if (k) { readouts(); draw(); }
+    }
+    requestAnimationFrame(frame);
+  }
+  function resize() { dpr = window.devicePixelRatio || 1; $('setupCard').style.top = innerWidth > 820 ? `${$('strip').offsetHeight + 14}px` : ''; const r = $('scene').getBoundingClientRect(); W = r.width; H = r.height; can.width = Math.round(W * dpr); can.height = Math.round(H * dpr);
+    const q = plot.getBoundingClientRect(); PW = q.width; PH = q.height; plot.width = Math.round(PW * dpr); plot.height = Math.round(PH * dpr); draw(); }
+  const retheme = () => { tokens(); draw(); };
+  try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
+  new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  VD.projector({ onChange: resize });
+  tokens(); new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe($('plotbox'));
+  const qs = new URLSearchParams(location.search); applyPreset(PRESETS[qs.get('setup')] ? qs.get('setup') : 'p150'); resize();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
+  VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => null, scale: () => (S.view === 'beam' && !S.wide ? (() => { const b = tankBox(); return { el: can, m: S.zmax / 100 / (b.x1 - b.x0), area: [b.x0, b.y0, b.x1 - b.x0, b.y1 - b.y0] }; })() : null) });
+  window.vdDemo = { S, V, fireOne, recompute, full, applyPreset };
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

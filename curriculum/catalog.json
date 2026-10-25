@@ -578,6 +578,30 @@
       "ion chamber",
       "TRS-398"
      ]
+    },
+    {
+     "demo": "charged-particles",
+     "title": "Charged Particles in Matter",
+     "desc": "Send protons, alpha particles or carbon ions into water, through bone, lung, plastic or metal first. Watch the tracks slow, scatter and stop, build the Bragg peak from them, and compare the Bethe stopping power and CSDA range with NIST PSTAR.",
+     "tags": [
+      "stopping power",
+      "Bragg peak",
+      "CSDA range",
+      "range straggling",
+      "water equivalent thickness"
+     ]
+    },
+    {
+     "demo": "bragg-peak",
+     "title": "The Bragg Peak",
+     "desc": "A proton beam's depth dose in water, muscle, fat or bone: move the peak with the energy, stack weighted energy layers into a spread out Bragg peak over a target, and compare it with a measured 6 MV photon beam.",
+     "tags": [
+      "Bragg peak",
+      "spread out Bragg peak",
+      "proton therapy",
+      "depth dose",
+      "photons"
+     ]
     }
    ]
   },

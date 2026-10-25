@@ -4443,3 +4443,36 @@ minimum and is stated on the page as the model's limit: the Photon Interactions 
 beam, so a student using both demos sees two values (worth a sentence in one of them, or moving the tube to SpekPy); (5) the
 Tc 99m and Co 60 half lives, ENSDF 6.0072 h and 5.2711 yr in Radioactive Decay against 6.0067 h and 5.2713 yr in the Dose view's
 sources (left alone because the radiation-dose key uses them); (6) the four keys' numbers.
+
+## 2026-10-25 · Claude · Medical Physics: Charged Particles in Matter, The Bragg Peak, and the shared stopping power core
+
+Two new Medical Physics demos, each with a worksheet, a key from a real run (TeacherKeys `worksheet-keys/medical-physics/`),
+notes, tests, glossary and course entries (units 3 and 7), built to the resistivity visual bar. There are no How this works
+videos yet (Steve: visual pass first).
+
+- **Shared core `demos/lib/vdstop.js` (VDStop)**: Bethe stopping power with the full W_max and NIST PSTAR material data
+  (water, PMMA, ICRU bone, ICRP muscle, adipose and lung, air, graphite, Be, Al, Cu, Pb). CSDA range tables, Bohr straggling,
+  Bortfeld 1997 nuclear losses, the broad beam depth dose (also behind slabs and in a whole tissue medium), WET, Highland and
+  Fermi–Eyges spread, and Monte Carlo tracks. Tests: `curriculum/validation/test_vdstop.cjs` checks ranges within 0.2 mm of
+  PSTAR from 10 to 250 MeV, R80 at the CSDA range, a smooth plateau for p, α and ¹²C, and R80 in tissue at its CSDA range.
+  The other Medical Physics demos can reuse it for stopping powers.
+- **Charged Particles in Matter** (`charged-particles`, worksheet `mp-charged-particles`): tracks in a water phantom on a
+  bench, a Bragg peak chamber on a scanning carriage with an electrometer, a dose glow, and stopping power and range graphs
+  against PSTAR.
+- **The Bragg Peak** (`bragg-peak`, worksheet `mp-bragg-peak`), for Steve's request for a demo that showcases the peak:
+  - One energy: 70 to 230 MeV, the IBA Proteus ONE range (C230 cyclotron at Willis-Knighton, Pidikiti et al. 2018).
+  - Spread out peak: layers evenly spaced in range, non negative least squares weights, or equal weights for contrast.
+  - Protons and photons: a 6 MV curve fitted within 0.05 % through the measured VitalBeam points of Chowdhury et al. 2024
+    (BJR 25 reference values in the handout), extrapolated past 15.2 cm.
+  - The phantom shows a clinical dose wash and the target. Beam on animates the particles.
+- Fixes in the core while building: a coarse quadrature made a ripple in the alpha and carbon plateau (the Charged Particles
+  key was recaptured; its numbers did not change), and a layer thicker than the range mapped depth wrongly.
+- Merged with the dosimetry, photon interaction and small additions threads' worksheet.js, courses.py, map and catalog changes.
+
+**For GPT:** please check:
+- the photon fit against Chowdhury et al. 2024, Table 1;
+- the spread out peak entrance doses (44 % at 2 cm wide up to 80 % at 10 cm, for targets ending at 15 cm);
+- the Proteus ONE facts against Pidikiti et al. 2018, JACMP 19(1) 94;
+- both handouts for hyphens in compound modifiers.
+
+notes.py again rewrites notes/ideal-gas.html from an older src; I reverted it, so someone should update notes/src/ideal-gas.md.

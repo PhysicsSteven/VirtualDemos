@@ -1809,15 +1809,11 @@
           "requirement": "required",
           "sections": [],
           "demos": [
-            "rutherford"
+            "rutherford",
+            "charged-particles",
+            "bragg-peak"
           ],
-          "note": "Single Coulomb scattering, the step that multiple scattering adds up, then stopping power and range.",
-          "coming": [
-            {
-              "title": "Charged Particles in Matter",
-              "note": "Bethe stopping power against the NIST PSTAR, ESTAR and ASTAR tables, CSDA range, a proton track building the Bragg peak, range straggling and multiple Coulomb scattering, electrons against protons, alphas and carbon ions."
-            }
-          ]
+          "note": "Single Coulomb scattering, the step that multiple scattering adds up, then stopping power and range."
         },
         {
           "id": "dosimetry",
@@ -1865,7 +1861,10 @@
           "short": "7 · Protons",
           "requirement": "required",
           "sections": [],
-          "demos": [],
+          "demos": [
+            "charged-particles",
+            "bragg-peak"
+          ],
           "note": "Preparation for the seniors' QA runs and dosimetry walkthrough at the proton therapy center, modeled on its IBA Proteus ONE pencil beam scanning system.",
           "coming": [
             {
@@ -10790,6 +10789,38 @@
       "url": "demos/photon-interactions.html",
       "handouts": [
         "mp-photon-interactions"
+      ]
+    },
+    {
+      "demo": "charged-particles",
+      "course": [
+        "medical-physics"
+      ],
+      "sections": [],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-25 (Claude), Medical Physics gap 2. Bethe stopping power with PSTAR material data from the shared core demos/lib/vdstop.js (CSDA ranges within 0.2 mm of PSTAR, 10 to 250 MeV), broad beam Bragg curve with Bohr straggling, energy spread and Bortfeld's nuclear losses, Monte Carlo tracks with energy loss straggling and Highland scattering, slabs turned into water equivalent depth, stopping power and range graphs against PSTAR. Worksheet mp-charged-particles with a key from a real run in TeacherKeys.",
+      "title": "Charged Particles in Matter",
+      "url": "demos/charged-particles.html",
+      "handouts": [
+        "mp-charged-particles"
+      ]
+    },
+    {
+      "demo": "bragg-peak",
+      "course": [
+        "medical-physics"
+      ],
+      "sections": [],
+      "role": "lab",
+      "beyond_book": true,
+      "status": "usable",
+      "note": "New 2026-10-25 (Claude), Medical Physics, for Steve's request for a demo that showcases the Bragg peak. Broad beam proton depth dose from the shared core demos/lib/vdstop.js (also in tissue), IBA Proteus ONE energies 70 to 230 MeV (Pidikiti et al. 2018), spread out peak with non negative least squares layer weights, 6 MV photon depth dose fitted through the VitalBeam measurements of Chowdhury et al. 2024. Worksheet mp-bragg-peak with a key from a real run in TeacherKeys.",
+      "title": "The Bragg Peak",
+      "url": "demos/bragg-peak.html",
+      "handouts": [
+        "mp-bragg-peak"
       ]
     }
   ],

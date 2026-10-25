@@ -1408,6 +1408,57 @@ a | A moon's average distance from the center of its planet | planet radii
 P | A moon's orbital period, once around its planet | days
 e | Eccentricity of Io's orbit, how far it is from a circle (0 is a circle) |
 
+== mp-charged-particles ==
+S | Stopping power, the mean energy a particle loses per unit path, −dE/dx | MeV/cm | divided by ρ it is the mass stopping power, MeV cm²/g
+E | Kinetic energy of the particle | MeV
+x | Path length traveled in the material | cm
+rho | Density of the material | g/cm³
+z | Depth in the tank | cm
+z [ze] | Charge number of the particle (its charge is ze) |
+z [Kz^2] | Charge number of the particle (1 for a proton) |
+e | @
+beta | Speed of the particle as a fraction of the speed of light, v/c |
+c | @
+K | Bethe constant, 4π N_A rₑ² mₑc² | MeV cm²/mol | 0.307075 MeV cm²/mol
+Z | Atomic number (in Z/A, electrons per atom) |
+A | Atomic mass (in Z/A, per gram per mole) | g/mol
+gamma | Lorentz factor of the particle, 1/√(1 − β²) |
+W_max | Largest energy one collision can give an electron | MeV
+I | Mean excitation energy of the material | eV | 75.0 eV for water in PSTAR
+R | CSDA range, the path a particle travels while slowing to rest at the mean rate | g/cm² | divide by the density for cm
+E' | Kinetic energy, the variable of integration | MeV
+alpha | Bragg–Kleeman coefficient in R = αE^p | g/cm² per MeV^p | Bortfeld: 0.0022 cm MeV⁻ᵖ for water
+p | Bragg–Kleeman exponent in R = αE^p | | about 1.75 for protons in water
+t_w | Water equivalent thickness of a slab, the depth of water that takes away the same energy | cm
+t | Thickness of a slab | cm
+r | Residual range, the range a proton still has left | g/cm²
+T | Kinetic energy of the particle | MeV
+R_90 | Depth beyond the peak where the dose has fallen to 90 % of the peak | cm
+R_80 | Depth beyond the peak where the dose has fallen to 80 % of the peak | cm
+R_20 | Depth beyond the peak where the dose has fallen to 20 % of the peak | cm
+bar z | Mean depth where the simulated protons stopped | cm
+sigma | Spread (standard deviation) of the depths where the protons stopped | cm
+N | Number of tracks that stopped |
+
+== mp-bragg-peak ==
+S | Stopping power, the rate a proton loses energy per unit path, −dE/dx | MeV/cm
+beta | Speed of the proton as a fraction of the speed of light, v/c |
+z | Depth in the phantom | cm
+R | CSDA range of protons in water, the path they travel while slowing to rest at the mean rate | cm
+alpha | Bragg–Kleeman coefficient in R = αE^p | cm MeV⁻ᵖ | 0.0022 cm MeV⁻ᵖ for water (Bortfeld 1997)
+E | Kinetic energy of the protons | MeV
+p | Bragg–Kleeman exponent in R = αE^p | | about 1.77 for protons in water
+r | Residual range, the range a proton still has left | cm
+R_80 | Depth past the peak where the dose has fallen to 80 % of the peak | cm
+R_20 | Depth past the peak where the dose has fallen to 20 % of the peak | cm
+D | Photon dose at depth d | | here relative, 100 % at d_max
+d | Depth in water below the surface | cm
+d_max | Depth of the photon beam's dose maximum | cm | 1.5 cm for 6 MV
+e | @euler
+mu_eff | Effective attenuation coefficient of the photon beam in water | 1/cm
+w | Width of the target the spread out peak covers | cm
+sigma | Standard deviation of the depths where the protons stop | cm
+
 == kundts-tube ==
 v_rod | Speed of longitudinal waves in the rod | m/s
 E | Young's modulus of the rod | Pa

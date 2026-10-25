@@ -12,6 +12,12 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-bragg-peak', date: '2026-10-25', title: 'The Bragg Peak',
+    text: 'A new Medical Physics demo with its own worksheet: move a proton beam\'s Bragg peak with its energy in water, muscle, fat or bone, stack weighted energy layers into a spread out peak that covers a target, and set it against a measured 6 MV photon beam aimed at the same target.',
+    link: { href: 'demos/bragg-peak.html', text: 'Open The Bragg Peak' } },
+  { id: '2026-10-25-charged-particles', date: '2026-10-25', title: 'Charged Particles in Matter',
+    text: 'A new Medical Physics demo with its own worksheet: fire protons, alpha particles or carbon ions into a water phantom, through bone, lung, plastic or lead first, watch each track slow and scatter, build the Bragg peak from the tracks, and check the stopping power and range against the NIST PSTAR tables.',
+    link: { href: 'demos/charged-particles.html', text: 'Open Charged Particles in Matter' } },
   { id: '2026-10-25-medical-physics', date: '2026-10-25', title: 'Medical Physics module',
     text: 'A new module for the upper level medical physics track, with four worksheets that read cited data and carry uncertainties: milk a technetium 99m generator (Radioactive Decay, with new medical isotopes), filter an X-ray tube and measure its half value layers with an ion chamber, shield a PET uptake room with broad beam buildup and the NCRP design goals (Nuclear Reactions, Dose view), and measure how muscle absorbs ultrasound at four frequencies. More demos are on the way.', link: { href: 'medical-physics.html', text: 'Open Medical Physics' } },
   { id: '2026-10-25-photon-interactions', date: '2026-10-25', title: 'Photon Interactions in Matter',

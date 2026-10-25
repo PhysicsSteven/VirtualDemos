@@ -62,3 +62,5 @@ wave-power | b | force | "a force b times its velocity": b is the damping consta
 white-dwarf-cooling | Gamma_m | critical value | the critical value of the coupling is the one at which the ions freeze
 wire-force | LB | label LB | a product, L times B; each letter has its own tip
 mp-ultrasound-attenuation | e | euler \alpha=20\log_{10}(e)\,a=8.686\,a | log₁₀(e) = 0.4343 converts nepers to decibels: this e is Euler's number, as the tip says
+mp-charged-particles | t | = shift + | "t_w = shift + t" in a table heading: t is the slab thickness added to the shift
+mp-bragg-peak | R_80 | in water ÷ | "R_80 in water ÷ R_80" in a table heading: the first R_80 is the one measured in water, the tip is right for both
