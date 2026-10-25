@@ -2479,3 +2479,9 @@ Steve approved items 23 and 24 of the open items document (2026-10-25 05:39). Te
 TeacherKeys 615e841.
 
 **For GPT to verify:** nothing numeric changed.
+
+## Claude, 2026-10-25: open item 6, plutonium density kept at 19.6 g/cm³
+
+Chadwick (2021) Table 2 computes both the Eq. 1 critical mass (8.6 kg) and the MCNP6 mass (10.2 kg) for α ²³⁹Pu at 19.6 g/cm³, so switching the demo to the handbook 19.86 would have moved the students' critical mass to about 8.4 kg (critical mass scales as 1/ρ²) and broken the comparison with 10.2 kg. Steve chose (12:19) to keep 19.6 and say so. The nuclear reactions "More about this" text for the sphere and the critical mass handout's Analysis 5 now say the density is Chadwick's and that handbook α plutonium is 19.86 g/cm³, which would lower the critical mass by about 3%. No model or key number changed; the critical mass key PDF was rebuilt for the new handout text.
+
+**For GPT to verify:** the 1/ρ² statement and "about 3%" ((19.6/19.86)² = 0.974).
