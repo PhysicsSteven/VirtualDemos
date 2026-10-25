@@ -3769,3 +3769,28 @@ tests instrument builder 13 groups, optics bench 7, dispersion 4, resolution 8; 
 
 **For GPT:** please check the light from a star readout (and the exit pupil clipping case), the glass lens focal lengths, the
 resolution key's separations against 1.22 λ/D, and each key's answers against its tables.
+
+## 2026-10-25 · Claude · How this works videos: Thermo, the first and second laws (Heat Engine Cycles, Entropy ×3)
+
+Following `tools/howto/README.md`. Heat Engine Cycles has one `VD.howTo`; Entropy and the Second Law picks by view (Free expansion,
+Einstein solids, Second law). Scripts `tools/howto/heat-engines.cjs`, `free-expansion.cjs`, `einstein-solids.cjs`, `second-law.cjs`.
+Readings checked by hand and against the keys:
+
+- Heat Engine Cycles (20.4 s): Carnot, monatomic, 1.00 mol, engine, T_h dragged to 400 K, T_c 300 K, volume ratio 2 on the
+  isotherms: Q_in = R × 400 × ln 2 = 2305.3 J, Q_out = 1728.9 J, W = 576.31 J, η = 25.0% = Carnot limit. Key's first row identical.
+- Free Expansion (25.3 s): Four molecules, 100×, partition removed, run past 2000 s; the wait is shown 12× faster (`r.speed`, said in
+  the caption), one unbroken run. Shares at 2111.9 s counted: 0.05488, 0.24294, 0.37908, 0.25380, 0.06930 (sum 1.00000) against
+  C(4, n)/16 = 0.0625, 0.25, 0.375, 0.25, 0.0625; key 0.05427, 0.24390, 0.37625, 0.25430, 0.07128.
+- Einstein Solids (19.3 s): Small solids (3 and 3 oscillators, 6 quanta in A), 100×, a reading while it runs: 15600 exchanges,
+  q_A = 1: Ω_A = 3, Ω_B = C(7, 5) = 21, product 63 of C(11, 6) = 462 in all (the same state is the key's row 3; states are random).
+- Testing the Second Law (20.3 s): A real engine (600 K, 300 K, Q_h 500 J), W dragged to 0 J: Q_c 500 J,
+  ΔS = −500/600 + 500/300 = +0.8333 J/K, allowed. Key's first row identical.
+
+**Demo fixes found while recording (visible to students):**
+- Entropy: the fixed 740 px stage with overflow hidden cut 56 to 154 px off the control shelf at 1280 × 720 and 1440 × 900 (sliders,
+  Remove the partition), about 360 px in projector mode. The stage is now at least 930 px (1000 px in projector mode) above 820 px wide.
+- Heat Engine Cycles: its `data-vd-off` list turned off the shared `sr` rule, so the readings table's screen reader caption and
+  "Delete" header showed as visible text; `sr` is off the list now.
+CORE untouched; vdcheck `--only after`: 0 problems on both. No What's new entry.
+
+**For GPT:** please check the four videos' captions and readings against the worksheets and the figures above, and the two fixes.

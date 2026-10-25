@@ -35,7 +35,8 @@
 .rail details.more > p + p { margin-top: 6px; }
 @media (max-width: 820px) { .pane { min-height: 0; height: 400px; flex: none; } .curvebox { height: 190px; } .shelf-card { flex: 1 1 100%; } }
 @media (max-width: 520px) { .shelf-card { grid-template-columns: minmax(0, 1fr); } .pane { height: 360px; } }
-@media (min-width: 821px) { .stage { min-height: 740px; } }
+/* tall enough for the picture, the graphs and the whole control shelf (740 px cut the shelf off at 1280 × 720 and 1440 × 900) */
+@media (min-width: 821px) { .stage { min-height: 930px; } :root[data-projector="on"] .stage { min-height: 1000px; } }
 .pane .cap3d { position: absolute; left: 8px; right: 8px; bottom: 6px; margin: 0; width: fit-content; max-width: calc(100% - 16px); padding: 3px 8px; border-radius: 6px; font-size: 0.76rem; line-height: 1.35; color: var(--muted); background: color-mix(in srgb, var(--canvas) 82%, transparent); pointer-events: none; }
 .pane .cap3d:empty { display: none; }
 </style>
@@ -912,6 +913,11 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD3K.view({ seg: '#dimSeg', init: init3, status: (m) => { note3 = m; $('cap3d').textContent = m; },
     change: (on) => { on3d = on; if (G3) G3.S.el.hidden = !on; $('cap3d').textContent = on ? cap3(S.view) : note3; redraw(); } });
   window.__en = { S, setView, applyPreset, setRun, redraw, sync, pull, advance, dev, newGas, newSolid };
+  /* How this works: a short video of one sample reading for the worksheet of the view in use (Free Expansion: four molecules after
+     2000 s; Einstein Solids: the first reading of the small solids; Testing the Second Law: the 600 K to 300 K engine with W = 0); made by tools/howto/ */
+  const howVid = () => ({ fe: 'free-expansion', es: 'einstein-solids', sl: 'second-law' })[S.view];
+  VD.howTo({ src: () => `media/how-this-works/${howVid()}.mp4`, poster: () => `media/how-this-works/${howVid()}.jpg`,
+    title: () => 'How this works: ' + ({ fe: 'Free Expansion', es: 'Einstein Solids', sl: 'Testing the Second Law' })[S.view] });
   requestAnimationFrame(frame);
 })();
 </script>

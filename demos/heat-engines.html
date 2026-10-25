@@ -1,6 +1,6 @@
 <!doctype html>
 <!-- © 2026 Steven Anderson. All rights reserved. Not licensed for copying or reuse; terms at https://physicssteven.github.io/VirtualDemos/LICENSE.html -->
-<html data-vd-off="root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas sr wide-proj-bench wide-proj-stage slider-head-output swatch phone-chips-button" lang="en">
+<html data-vd-off="root-4 auto-dark dark stage-canvas-focusvisible spin spin-attn formula btnrow seg button-focusvisible readout-dd-ok check check-input status table-rows table-rows-th table-rows-td table-rows-input-focus table-rows-button empty plotbox-canvas wide-proj-bench wide-proj-stage slider-head-output swatch phone-chips-button" lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1432,6 +1432,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
 
   tokens();
   applyPreset('carnot');
+  /* How this works: a short video of one sample reading (the Carnot cycle between 400 K and 300 K); made by tools/howto/ */
+  VD.howTo({ src: 'media/how-this-works/heat-engines.mp4', poster: 'media/how-this-works/heat-engines.jpg' });
   const ro = new ResizeObserver(() => resize());
   ro.observe(pane);
   resize();
