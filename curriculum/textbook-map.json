@@ -1768,6 +1768,164 @@
           ]
         }
       ]
+    },
+    {
+      "id": "medical-physics",
+      "title": "Medical Physics",
+      "metadata": {},
+      "units": [
+        {
+          "id": "sources",
+          "title": "1 · Sources and decay",
+          "short": "1 · Sources",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "radioactive-decay",
+            "binding-energy",
+            "nuclear-reactions",
+            "shells-and-x-rays"
+          ],
+          "note": "Decay laws, the medical isotopes and the ⁹⁹Mo to ⁹⁹ᵐTc generator with transient equilibrium, Q values for isotope production, and the X-ray tube with its filtration and half value layer."
+        },
+        {
+          "id": "photons",
+          "title": "2 · Photon interactions",
+          "short": "2 · Photons",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "compton",
+            "gamma-spectroscopy",
+            "photoelectric"
+          ],
+          "note": "Compton kinematics and the Klein–Nishina cross section, attenuation coefficients from XCOM, and the photoelectric effect as review.",
+          "coming": [
+            {
+              "title": "Photon Interactions in Matter",
+              "note": "μ/ρ from 1 keV to 100 MeV split into photoelectric, coherent, Compton and pair production for any element or tissue; μ_tr and μ_en; narrow and broad beams and buildup; beam hardening."
+            }
+          ]
+        },
+        {
+          "id": "charged",
+          "title": "3 · Charged particles in matter",
+          "short": "3 · Charged particles",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "rutherford"
+          ],
+          "note": "Single Coulomb scattering, the step that multiple scattering adds up, then stopping power and range.",
+          "coming": [
+            {
+              "title": "Charged Particles in Matter",
+              "note": "Bethe stopping power against the NIST PSTAR, ESTAR and ASTAR tables, CSDA range, a proton track building the Bragg peak, range straggling and multiple Coulomb scattering, electrons against protons, alphas and carbon ions."
+            }
+          ]
+        },
+        {
+          "id": "dosimetry",
+          "title": "4 · Dosimetry and detectors",
+          "short": "4 · Dosimetry",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "nuclear-reactions",
+            "gamma-spectroscopy"
+          ],
+          "note": "Dose rate from a point source, absorbed dose against equivalent dose, and a scintillation detector with its calibration and resolution.",
+          "coming": [
+            {
+              "title": "Dosimetry: Kerma, Equilibrium and the Ion Chamber",
+              "note": "Kerma against absorbed dose with depth, charged particle equilibrium, a Bragg–Gray cavity, and a TRS-398 style calibration of a proton beam step by step: temperature and pressure, polarity, recombination and k_Q."
+            }
+          ]
+        },
+        {
+          "id": "radiobiology",
+          "title": "5 · Radiobiology",
+          "short": "5 · Radiobiology",
+          "requirement": "required",
+          "sections": [],
+          "demos": [],
+          "note": "Cell survival, fractionation and the relative biological effectiveness of protons.",
+          "coming": [
+            {
+              "title": "Radiobiology: Cell Survival and Fractionation",
+              "note": "The linear quadratic model fitted to a simulated clonogenic assay, BED and EQD2 for different fractionations, oxygen enhancement, and proton RBE."
+            }
+          ]
+        },
+        {
+          "id": "shielding",
+          "title": "6 · Protection and shielding",
+          "short": "6 · Shielding",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "nuclear-reactions",
+            "gamma-spectroscopy"
+          ],
+          "note": "Time, distance and shielding; broad beam transmission and buildup; a barrier calculation with workload, occupancy and the NCRP design goals (Dose view of Nuclear Reactions)."
+        },
+        {
+          "id": "proton-therapy",
+          "title": "7 · Proton therapy",
+          "short": "7 · Protons",
+          "requirement": "required",
+          "sections": [],
+          "demos": [],
+          "note": "Preparation for the seniors' QA runs and dosimetry walkthrough at the proton therapy center, modeled on its IBA Proteus ONE pencil beam scanning system.",
+          "coming": [
+            {
+              "title": "Proton Therapy QA",
+              "note": "Machine QA (output, range from R80 and R90, spot position and size against AAPM TG-224 tolerances, a drifting machine to catch), patient QA by gamma analysis, and the physics behind them: spread out Bragg peaks, energy layers and range uncertainty."
+            }
+          ]
+        },
+        {
+          "id": "linac",
+          "title": "8 · Photon and electron beams",
+          "short": "8 · Linac beams",
+          "requirement": "required",
+          "sections": [],
+          "demos": [],
+          "note": "Second phase.",
+          "coming": [
+            {
+              "title": "Linac Beams in Water",
+              "note": "Percent depth dose for megavoltage photons and electrons from published reference data, buildup, field size and SSD, and several photon beams against one proton field."
+            }
+          ]
+        },
+        {
+          "id": "imaging",
+          "title": "9 · Imaging",
+          "short": "9 · Imaging",
+          "requirement": "required",
+          "sections": [],
+          "demos": [
+            "ultrasound",
+            "spin-resonance"
+          ],
+          "note": "Echo ranging, impedance, tissue attenuation in dB per cm per MHz and Doppler; the Larmor relation for hydrogen. X-ray imaging, MRI and nuclear medicine imaging come in a second phase.",
+          "coming": [
+            {
+              "title": "X-Ray Imaging and CT",
+              "note": "Second phase."
+            },
+            {
+              "title": "MRI",
+              "note": "Second phase."
+            },
+            {
+              "title": "Gamma Camera and PET",
+              "note": "Second phase."
+            }
+          ]
+        }
+      ]
     }
   ],
   "sections": [
@@ -6438,7 +6596,8 @@
     {
       "demo": "binding-energy",
       "course": [
-        "modern"
+        "modern",
+        "medical-physics"
       ],
       "sections": [
         {
@@ -6872,7 +7031,8 @@
     {
       "demo": "compton",
       "course": [
-        "modern"
+        "modern",
+        "medical-physics"
       ],
       "sections": [
         {
@@ -7832,7 +7992,8 @@
     {
       "demo": "gamma-spectroscopy",
       "course": [
-        "modern"
+        "modern",
+        "medical-physics"
       ],
       "sections": [
         {
@@ -8768,7 +8929,8 @@
     {
       "demo": "nuclear-reactions",
       "course": [
-        "modern"
+        "modern",
+        "medical-physics"
       ],
       "sections": [
         {
@@ -8961,7 +9123,8 @@
     {
       "demo": "photoelectric",
       "course": [
-        "modern"
+        "modern",
+        "medical-physics"
       ],
       "sections": [
         {
@@ -9144,7 +9307,8 @@
       "demo": "radioactive-decay",
       "course": [
         "modern",
-        "astro-2203"
+        "astro-2203",
+        "medical-physics"
       ],
       "sections": [
         {
@@ -9503,7 +9667,8 @@
     {
       "demo": "rutherford",
       "course": [
-        "modern"
+        "modern",
+        "medical-physics"
       ],
       "sections": [
         {
@@ -9548,7 +9713,8 @@
     {
       "demo": "shells-and-x-rays",
       "course": [
-        "modern"
+        "modern",
+        "medical-physics"
       ],
       "sections": [
         {
@@ -9790,7 +9956,8 @@
     {
       "demo": "spin-resonance",
       "course": [
-        "modern"
+        "modern",
+        "medical-physics"
       ],
       "sections": [
         {
@@ -10244,7 +10411,8 @@
     {
       "demo": "ultrasound",
       "course": [
-        "acoustics"
+        "acoustics",
+        "medical-physics"
       ],
       "sections": [
         {

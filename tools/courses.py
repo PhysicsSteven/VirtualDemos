@@ -30,6 +30,7 @@ BLURB = {
     'modern': ('Relativity, quanta, atoms and nuclei', 'Relativity, photons and matter waves, quantum mechanics, atoms, solids, nuclei, particles and cosmology. OpenStax University Physics Volume 3, chapters 5 to 11.'),
     'astro': ('Sky, planets, stars and galaxies', 'Seasons and the Moon, gravitation and orbits, how stars shine and age, and galaxies, dark matter and the expanding universe. OpenStax University Physics Volume 1, chapter 13, and Volume 3, chapters 10 and 11, where they apply.'),
     'astro-2203': ('Solar system astronomy', 'From naked eye observations of the sky to the planets, their moons, the small bodies and planets around other stars, in the order of the Astro 2203 schedule, with a review before each of the three tests. The worksheets are written for an introductory class: algebra, ratios and short graphs.'),
+    'medical-physics': ('Radiation physics and proton therapy', 'For the junior and senior medical physics track, beside the radiation physics class and ahead of the seniors\u2019 lab at the proton therapy center: sources and decay, photon interactions, charged particles in matter, dosimetry, radiobiology, shielding, proton therapy and imaging. Calculus throughout; the upper level worksheets read cited data tables and carry uncertainties, and the other worksheets on each card work as warm ups.'),
 }
 # A course with no textbook (Astro 2203, 2026-10-25): its units list demos only, and its worksheets are its own intro level
 # handouts. COURSE_HANDOUTS[course] is the set of handouts written for that course: its page shows only those on each demo card,
@@ -38,7 +39,10 @@ COURSE_HANDOUTS = {'astro-2203': {'intro-seasons', 'intro-solar-system-formation
                                 'intro-telescope', 'intro-resolution', 'intro-mirrors', 'intro-blackbody', 'intro-spectra', 'intro-em-spectrum', 'intro-planet-temperatures',
                                 'intro-retrograde', 'intro-resonances', 'intro-craters', 'intro-mars-ages', 'intro-giant-planets'}}
 COURSE_HANDOUTS['astro-2203'].add('intro-inside-a-planet')
-NO_BOOK = {'astro-2203'}
+COURSE_HANDOUTS['medical-physics'] = {'mp-technetium-generator', 'mp-x-ray-filtration', 'mp-shielding-barrier', 'mp-ultrasound-attenuation'}
+# Medical Physics (2026-10-25) is upper level: its page lists its own worksheets first, then the demo's other worksheets as warm ups.
+WARM_UPS = {'medical-physics'}
+NO_BOOK = {'astro-2203', 'medical-physics'}
 MODULES = {'acoustics', 'thermo', 'modern', 'astro'}   # modules follow the textbook chapters, not a course schedule
 TILE_START, TILE_END = '<!-- COURSES START (tools/courses.py) -->', '<!-- COURSES END -->'
 esc = html.escape
@@ -230,6 +234,8 @@ HANDOUT_TOPIC = {
     'intro-giant-planets': 'Giant Planets, Rings and Moons (Astro 2203)',
     'intro-resonances': 'Orbital Resonances (Astro 2203)',
     'intro-inside-a-planet': 'Inside a Planet (Astro 2203)',
+    'mp-technetium-generator': 'A Technetium Generator (Medical Physics)', 'mp-x-ray-filtration': 'Filtration and Half Value Layer (Medical Physics)',
+    'mp-shielding-barrier': 'Shielding a PET Uptake Room (Medical Physics)', 'mp-ultrasound-attenuation': 'Attenuation in Tissue (Medical Physics)',
     'quantum-tunneling': 'Quantum Tunneling', 'energy-levels': 'Energy Levels in a Box and a Spring', 'uncertainty-principle': 'The Uncertainty Principle', 'hydrogen-atom': 'The Hydrogen Atom', 'laser-threshold': 'Laser Threshold, Efficiency and Cavity Modes', 'spin-resonance': 'Spin Resonance',
 }
 
@@ -237,9 +243,9 @@ HANDOUT_TOPIC = {
 def course_handouts(cid, demo):
     """The demo's handouts (with a students/<h>.md) that course cid shows."""
     hs = [h for h in demo.get('handouts') or [] if (ROOT / 'curriculum' / 'labs' / 'students' / f'{h}.md').exists()]
-    if cid in COURSE_HANDOUTS:
-        return [h for h in hs if h in COURSE_HANDOUTS[cid]]
     other = set().union(*COURSE_HANDOUTS.values())
+    if cid in COURSE_HANDOUTS:
+        return [h for h in hs if h in COURSE_HANDOUTS[cid]] + ([h for h in hs if h not in other] if cid in WARM_UPS else [])
     return [h for h in hs if h not in other]
 
 
@@ -254,7 +260,8 @@ def card(name, demo, unit_secs, cards, notes, cid=None):
     links = [f'<a class="go" href="demos/{name}.html">Open demo</a>']
     hs = course_handouts(cid, demo)
     for i, h in enumerate(hs, 1):
-        links.append(f'<a href="curriculum/labs/students/{h}.html">{esc(handout_label(h, i if len(hs) > 1 else None))}</a>')
+        warm = cid in WARM_UPS and h not in COURSE_HANDOUTS[cid]
+        links.append(f'<a href="curriculum/labs/students/{h}.html">{esc(handout_label(h, i if len(hs) > 1 else None))}{" (warm up)" if warm else ""}</a>')
     if name in notes:
         links.append(f'<a href="notes/{name}.html">Notes</a>')
     role = 'Lab' if demo['role'] == 'lab' else 'Demo'
@@ -333,6 +340,14 @@ def course_page(course, m, cards, notes):
             back = list(dict.fromkeys(n for x in rev for n in x.get('demos', []) if n in cards and n in demos and cid in demos[n]['course']))
             items.append(f'      <li class="also">Review the units {rlinks}. Their demos: '
                          + ' · '.join(f'<a href="demos/{n}.html">{esc(cards[n]["title"])}</a>' for n in back) + '</li>')
+        for cm in u.get('coming', []):   # a demo still being built (Medical Physics, 2026-10-25): a placeholder card, no link
+            items.append(f'''      <li class="item coming">
+        <div class="body" style="grid-column: 1 / -1">
+          <p class="kind"><span class="role">Coming</span></p>
+          <h3>{esc(cm['title'])}</h3>
+          <p>{esc(cm['note'])}</p>
+        </div>
+      </li>''')
         grid = '\n'.join(items) if items else '      <li class="none">No activity for this unit yet.</li>'
         gap_html = ''
         if gaps:
@@ -359,6 +374,9 @@ def course_page(course, m, cards, notes):
         facts += f'<li><span><strong>{len(n_activity)}</strong> worksheets and readings</span></li>'
     how = ('Units follow the course schedule, one per topic, with a review unit before each test. A demo can appear in more than one unit: '
            'it has one card, in the first unit that uses it, and later units link to it.') if cid in NO_BOOK else None
+    if cid == 'medical-physics':
+        how = ('Units follow the radiation physics topics, from sources to imaging. A demo can appear in more than one unit: it has one card, in the first '
+               'unit that uses it, and later units link to it. Cards marked Coming are demos being built for this module.')
     return page_shell(title, BLURB[cid][0], lede, facts, ''.join(jump), '\n'.join(units), how or
                       ('Units follow the textbook chapters.' if cid in MODULES else 'Units follow the course schedule.')
                       + ' Section numbers are volume:section in OpenStax University Physics. A demo can appear in more than one unit. Sections with no activity yet are listed under each unit.')
@@ -453,6 +471,8 @@ COURSE_CSS = '''
 .also { grid-column: 1 / -1; color: var(--muted); font-size: 0.92rem; padding: 4px 2px; }
 .also a { font-weight: 700; }
 .also .where, .also .where a { font-weight: 400; }
+.item.coming { border-style: dashed; background: transparent; }
+.item.coming h3 { color: var(--muted); }
 .none { color: var(--muted); padding: 18px; border: 1px dashed var(--line); border-radius: 12px; }
 .gaps { margin-top: 12px; font-size: 0.9rem; }
 .gaps summary { cursor: pointer; color: var(--muted); font-weight: 700; min-height: 32px; display: flex; align-items: center; gap: 8px; }
