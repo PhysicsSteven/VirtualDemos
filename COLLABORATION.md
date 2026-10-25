@@ -2436,3 +2436,18 @@ Steve approved item 22 of the open items list: the two gases and a divider mode 
 Shots: project Library `diffusion-visual/`.
 
 **For GPT to verify:** nothing numeric changed; the hole marker's width is GS.hole, the same value the divider uses.
+
+## Claude, 2026-10-25: open items batch A (2, 7 to 12, 17)
+
+Steve approved every recommendation in the open items document (2026-10-25 05:39). This batch is the text items; other threads did the rest.
+
+- **2** `hr-diagram` Massive star hint and its notes: a 15 M☉ star lives "nearly a thousand times shorter" than the Sun (the key's figure is 870).
+- **7** `photoelectric` work functions now cited. They were not from one handbook: cesium 2.14, potassium 2.30, calcium 2.87, zinc 4.33 and platinum 5.65 eV are Michaelson's preferred polycrystalline values (J. Appl. Phys. 48, 4729 (1977), Table III); sodium 2.28 and copper 4.70 eV are HyperPhysics's (Michaelson gives 2.75 and 4.65). OpenStax Vol 3 Table 6.1 was checked on openstax.org: Na 2.46, Al 4.08, Pb 4.14, Zn 4.31, Fe 4.50, Cu 4.70, Ag 4.73, Pt 6.35 eV. The demo has a new More about this fold under Metal, a source comment beside METALS, and the handout's About the demo and the notes say where the values come from and that Table 6.1 lists others (surface and crystal face). No value changed, so the key stands. The open items document had suggested citing the CRC Handbook, but the CRC table (Na 2.75, Cs 1.95 in the 2008 edition) does not match the demo's values, so it is not cited.
+- **8** `ink-jet-printer` handout: an isolated drop would lose about a third of its speed over the path; in a real stream the drops ride in each other's wake and lose much less.
+- **9** `chladni` Sweep and listen hint: about 2 g at the post, more out on the plate.
+- **10** `double-slit` cursor hint: two fringes of the same kind several spacings apart (dark fringes are not shifted by the envelope).
+- **11** `nuclear-reactions`: n + ¹⁴N → p + ¹⁴C is out of the Famous reactions list (the handout has students build it); About the demo now says cosmic ray neutrons striking nitrogen make the carbon 14 used in radiocarbon dating. No key or capture script used that preset.
+- **12** `lattice-energy` handout: Blind on is a required step, Blind off to compare at the end (Export fills neither energy column, so the key stands). `viscometer` handout: the Mystery liquid is a required part (glass, 1.0 to 2.5 mm, 100 mm tube, a fourth series; untick Mystery only after writing η down) with a new Analysis 5. The worksheet key had no Mystery run, so TeacherKeys dea7da3 adds one (new capture script `viscometer-mystery.cjs`, Mystery pinned at η = 1.664 Pa·s, ρ_f = 1170 kg/m³): Kv against d² slope 435.12 ± 0.10 (m/s)/m², η = 1.6659 ± 0.0004 Pa·s, N_R ≤ 0.0045. Key JSON and PDF rebuilt.
+- **17** `textbook-map.json`: pendulum gains Vol 1 §§10.6, 10.7; impulse §9.1; the-eye (camera handout) Vol 3 §2.4; induction-at-work Vol 2 §§13.1, 13.2, in both the demo entries and the sections' demo lists. Course pages and search rebuilt; coverage unchanged.
+
+**For GPT to verify:** the Table 6.1 values above against the book; the viscometer Mystery key rows and Analysis 5 arithmetic.

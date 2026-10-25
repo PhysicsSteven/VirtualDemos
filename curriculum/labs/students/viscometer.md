@@ -54,9 +54,9 @@ On a real bench, secure the tube, catch balls safely and wear the required eye p
 
 **Model limits.** Record your estimates before revealing predictions. Use your inferred $$\eta$$ to estimate $$N_R$$ and retain only sufficiently slow flow points; $$N_R \le 0.01$$ is a conservative criterion here. As diagnostic runs, time a 6.0 mm glass ball in glycerol in the 40 mm tube and a 2.0 mm steel ball in water in the 100 mm tube, and send them to the worksheet as a third series. Do not include these automatically in the viscosity fit. Explain what evidence suggests a failure of the slow flow or terminal speed assumptions.
 
-**Unknown extension.** If assigned, measure a Mystery liquid with the same procedure. Use the displayed density and infer $$\eta$$, then recheck $$N_R$$. If the available ball sizes leave too few points at low $$N_R$$, report that limitation rather than forcing a precise Stokes fit.
+**Mystery liquid.** Measure a Mystery liquid with glass balls of diameters 1.0, 1.5, 2.0 and 2.5 mm in the 100 mm tube, and send it to the worksheet as a fourth series. Use the displayed density and infer $$\eta$$, then recheck $$N_R$$. If the available ball sizes leave too few points at low $$N_R$$, report that limitation rather than forcing a precise Stokes fit. Only when your $$\eta$$ is written down, untick Mystery: the demo then tells you the viscosity it used.
 
-**Using the virtual apparatus.** Start with glass balls in glycerol and a tube of 100 mm inside diameter, with predictions hidden. Time the 0.200 m gate interval for ball diameters 1.0, 1.5, 2.0 and 2.5 mm, allowing each ball to pass both marks. Repeat the same series in a 40 mm tube. Faster playback may shorten the wait, but the recorded gate times remain physical seconds. Send each tube series to the worksheet before clearing, so each gets its own copy of the Data table. Calculate the wall correction and exclude points whose Reynolds number is too high yourself: the demo's own fit uses uncorrected speeds and all matching rows. Use larger balls or steel in water only to check the limits of the model. If assigned a mystery liquid, keep the same specimen throughout; choosing a new mystery realization can mix incompatible measurements.
+**Using the virtual apparatus.** Start with glass balls in glycerol and a tube of 100 mm inside diameter, with predictions hidden. Time the 0.200 m gate interval for ball diameters 1.0, 1.5, 2.0 and 2.5 mm, allowing each ball to pass both marks. Repeat the same series in a 40 mm tube. Faster playback may shorten the wait, but the recorded gate times remain physical seconds. Send each tube series to the worksheet before clearing, so each gets its own copy of the Data table. Calculate the wall correction and exclude points whose Reynolds number is too high yourself: the demo's own fit uses uncorrected speeds and all matching rows. Use larger balls or steel in water only to check the limits of the model. Keep the same Mystery liquid for all four balls: ticking Mystery again makes a new liquid, which would mix incompatible measurements.
 
 ## Data
 
@@ -66,7 +66,7 @@ On a real bench, secure the tube, catch balls safely and wear the required eye p
 | | | | | | | | | | |
 | | | | | | | | | | |
 
-Save separate slow flow, tube comparison and diagnostic runs. Record temperature; the virtual values represent 20 °C. State which rows you exclude and why.
+Save separate slow flow, tube comparison, diagnostic and Mystery liquid runs. Record temperature; the virtual values represent 20 °C. State which rows you exclude and why.
 
 ## Analysis
 
@@ -74,6 +74,7 @@ Save separate slow flow, tube comparison and diagnostic runs. Record temperature
 2. Fit $$Kv$$ against $$d^2$$ using the accepted points at low $$N_R$$. Infer $$\eta$$ from the slope and compare the two tubes. Inspect residuals rather than judging agreement from the slope alone.
 3. Calculate $$N_R$$ from your own inferred viscosity. If it invalidates the selected range, revise the fit or state that the approximation is inadequate.
 4. Explain the results of the large ball and water diagnostics. Separate wall effects, drag at finite $$N_R$$ and failure to reach terminal speed; a single anomalous time does not identify one cause uniquely.
+5. Fit $$Kv$$ against $$d^2$$ for the Mystery liquid and infer its viscosity with an uncertainty. Check $$N_R$$ for each row, then compare your value with the one the demo reveals.
 
 ## Uncertainty
 
@@ -88,4 +89,4 @@ The virtual gate time rounds to 0.01 s. Ball and tube diameters are specified mo
 
 ## What to hand in
 
-Prelab answers, settings and CSV files, raw and corrected fits with residuals, viscosity estimates and uncertainty, Reynolds number checks and excluded row reasoning, diagnostic observations, and answers to the questions. Identify simulated data.
+Prelab answers, settings and CSV files, raw and corrected fits with residuals, viscosity estimates and uncertainty, Reynolds number checks and excluded row reasoning, diagnostic observations, the Mystery liquid's viscosity, and answers to the questions. Identify simulated data.
