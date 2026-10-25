@@ -488,6 +488,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   VD.projector({ onChange: resize });
   /* the measuring tools: a stopwatch on the simulated clock */
   VD.tools({ el: can, time: () => S.t });
+  /* How this works: a short video of one sample reading (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/induced-electric-field.mp4', poster: 'media/how-this-works/induced-electric-field.jpg' });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce) S.playing = false; upd(); });
   tokens(); new ResizeObserver(resize).observe(stage);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'outside'); resize();

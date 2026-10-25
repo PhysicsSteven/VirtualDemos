@@ -1797,6 +1797,8 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
   /* the measuring tools: the stopwatch on the simulated clock; the ruler where the apparatus is drawn to scale (the magnet and the coils scenes) */
   let rulerAt = null;
   VD.tools({ el: $('sCan'), time: () => W.t, scale: () => rulerAt });
+  /* How this works: a short video of one sample reading (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/faraday.mp4', poster: 'media/how-this-works/faraday.jpg' });
   function drawMagnetScene(ctx, W0, H0) {
     const ps = projScale(), sc = Math.min(ps, 1.25), p = magP();
     const top = ctlH + 4, bandH = 112 * sc, fieldH = H0 - bandH - top;

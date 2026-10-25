@@ -830,6 +830,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; if (reduce) { S.fl.shaking = false; S.tb.circle = false; } upd(); });
   /* vd-knobs: every range input inside .instr gets a knob, and its readout takes a typed value (demos/lib/vd.js) */
   VD.knobs();
+  /* How this works: a short video of one sample reading (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/induction-at-work.mp4', poster: 'media/how-this-works/induction-at-work.jpg' });
   tokens(); new ResizeObserver(resize).observe(stage);
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'flash'); S.fl.shaking = false; upd(); resize();   /* opens still until Shake (Steve: no demo starts on its own) */
   /* opens in 3D (?view=flat opens flat; a low power device opens flat); the tablet's pen can be dragged in either view */

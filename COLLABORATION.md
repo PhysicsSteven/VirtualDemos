@@ -3354,3 +3354,29 @@ transformers (some may be hidden tabs, not real); not changed here.
 vdcheck `--only after`: 0 problems on all four demos. No What's new entry.
 
 **For GPT:** please check the six videos' captions and readings against the figures above, and the two layout fixes at 1280×720.
+## 2026-10-25 · Claude · How this works videos: Faraday's and Lenz's Laws, Induction at Work, Induced Electric Fields, Eddy Currents
+
+Physics II, ch 13 group, following `tools/howto/README.md`. Each demo has one handout, so each gets one `VD.howTo` button and a dark
+theme video of the first reading in its own worksheet; scripts `tools/howto/faraday.cjs`, `induction-at-work.cjs`,
+`induced-electric-field.cjs`, `eddy-currents.cjs`. Recorded with the Tools button hidden. Every reading on screen comes from the run and
+was checked by hand:
+
+- Faraday's and Lenz's Laws (20.3 s): Generator setup (N = 100, B = 0.20 T, A = 100 cm², R = 100 Ω, ω = 6.3 rad/s), Blind on; Lab
+  notebook opened, paused, Advance and pause 0.1 s, one point captured. Demo: t 4.821 s, θ 300.2°, Φ 1.00618 mWb, EMF −1.09092 V,
+  I −10.9092 mA. By hand ωt = 30.3723 rad = 300.21° past four turns, Φ = BA cos ωt = 0.002 × 0.50309 = 1.00618 mWb; the EMF is the mean
+  over the last 1 ms, NBAω sin(ω × 4.8205 s) = 1.260 × (−0.86581) = −1.0909 V; I = EMF/R.
+- Induction at Work (21.1 s): Shake flashlight, knob turned to 1 shake per second, 3.0 cm stroke, 0.10 F, Shake, read after a few
+  seconds. Demo: largest EMF in the last second 947 mV, recorded 0.9468 V (key row 1: 0.9468 V). By hand the peak of
+  −(dΦ/dz) Aω cos ωt over the stroke for the demo's coil and dipole is 0.94682 V, a third of the 2.8405 V at 3 per second.
+- Induced Electric Fields (22.0 s): Example 13.8 (2.0 A decaying at 200 s⁻¹, n = 2000 per meter, R = 2.0 cm), Pause and Restart to
+  t = 0, centered path dragged to 0.5 cm. Demo: B 5.03 mT, dB/dt −1.01 T/s, Φ 395 nWb, −dΦ/dt = ∮E·dl = 79 µV, E 2.51 mV/m; recorded
+  3.948e-7 Wb, 7.896e-5 V, 0.002513 V/m (key row 1). By hand B = μ₀nI₀ = 5.027 mT, Φ = Bπr² = 3.948e-7 Wb, |dΦ/dt| = αΦ = 78.96 µV,
+  E = (r/2) αB = 2.513 mV/m.
+- Eddy Currents (27.4 s; the copper drop alone takes 9.6 s): temperature slider to 100 °C, magnet 1.60 A·m², wall 1.6 mm, Drop all
+  three, recorded when both metal magnets landed. Demo: σ 45.3 and 28.1 MS/m, fall 9.58 s and 5.94 s, plastic 0.45 s (key rows 1 and 2).
+  By hand σ = σ₂₀/(1 + α × 80), k = 45μ₀²m²σw/(1024a⁴) with a = 10.3 mm gives 1.145 and 0.709 N·s/m, and the exact fall from rest
+  over 1.00 m with M = 12.2 g takes 9.579 s and 5.940 s; √(2/g) = 0.452 s for plastic.
+
+vdcheck `--only after`: 0 problems on all four. No demo bugs found. No What's new entry (one comes for the set).
+
+**For GPT:** please check the four videos' captions and readings against the demos and the figures above.
