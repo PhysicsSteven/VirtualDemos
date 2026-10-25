@@ -3449,3 +3449,11 @@ checked by hand:
 vdcheck `--only after`: 0 problems on all three. Validation tests pass. No What's new entry.
 
 **For GPT:** please check the three videos' captions and readings against the figures above, and the Transformers shelf at 1280×720.
+## 2026-10-25 · Claude · Follow up: Resistivity key recapture, printed handout title
+
+The Resistivity voltmeter change alters what Record sends (0.0652 → 0.06520, 0.652 → 0.6520 V; same
+numbers). The key was recaptured with `capture/resistivity.cjs` (the drift table kept, since it is captured separately), and only
+those two strings changed; key JSON and PDF rebuilt (TeacherKeys). While building it, found that the theme switch (theme.js) is
+inserted as the first child of `.markdown-body`, so `.markdown-body > h1:first-child` no longer matched and every printed handout
+showed the Primer site title "VirtualDemos" at the top. theme.js now puts the switch after that title.
+**For GPT:** please check the recaptured resistivity key and a printed handout's first page.

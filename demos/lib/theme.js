@@ -148,7 +148,9 @@
     } else if ((it = document.querySelector('main > header'))) {
       it.insertBefore(make('vd-theme-doc'), it.firstChild);
     } else if ((it = document.querySelector('.markdown-body'))) {
-      it.insertBefore(make('vd-theme-doc'), it.firstChild);
+      /* after the Primer theme's site title (an h1 holding a link), which the handouts hide as .markdown-body > h1:first-child */
+      var h = it.firstElementChild, site = h && h.tagName === 'H1' && h.children.length === 1 && h.firstElementChild.tagName === 'A';
+      it.insertBefore(make('vd-theme-doc'), site ? h.nextSibling : it.firstChild);
     }
   }
   function ready() { fixSources(); place(); }
