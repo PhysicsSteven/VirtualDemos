@@ -3572,7 +3572,8 @@ Dipper beside a wall, Shallow water slows waves, Refraction (edge 0 to 60°), Fo
 (R 150 mm, 40 mm thick), Draw your own. Draw tools: Wall, Shallow plate, Erase, widths. Measuring line A to B with L, θ,
 amplitude at B and a height graph; readouts give λ and c in the deep water and over the plate, predicted quiet lines,
 Snell's angle, mirror focus and thin lens estimate (hidden with Blind). A slider keeps the setup's name (the reading carries f,
-depth, slits, edge).
+depth, slits, edge). Copy link carries the picture too (`VD.share.picture('t')`): drawn walls and plates, the setup's shape,
+the dippers' place and the measuring line, rounded to 0.5 mm; checked by a round trip (same wall cells, same plate).
 
 **Checks.** `curriculum/validation/test_ripple-tank.cjs`, 10 groups: dispersion relation; grid wavenumber; stability; running
 tank λ within 0.05 %; beaches reflect under 3 %; a wall returns a packet's energy less e^(−4νk²t); double slit quiet lines

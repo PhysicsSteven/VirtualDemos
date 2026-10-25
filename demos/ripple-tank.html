@@ -795,6 +795,22 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new ResizeObserver(resize).observe($('scene')); new ResizeObserver(resize).observe(pl.parentElement); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   view3 = VD3K.view({ seg: '#dimSeg', init: init3D, change: () => { if (g3) g3.S3.el.hidden = !use3(); dirty3 = true; redraw(); }, status: () => {}, start: 'flat' });
+  /* Copy link carries what lives only in the picture: the drawn walls and plates, the shape the setup started from, where the
+     dippers are, and the measuring line (lengths rounded to 0.5 mm) */
+  if (window.VD && VD.share && VD.share.picture) VD.share.picture('t', {
+    get: () => { const r = (v) => Math.round(v * 2) / 2;
+      return VD.share.pack({ p: S.preset, g: S.geo, s: S.strokes.map((st) => [st.tool === 'plate' ? 1 : st.tool === 'erase' ? 2 : 0, st.r, st.pts.map((q) => [r(q[0]), r(q[1])])]),
+        m: [r(S.mid.x), r(S.mid.y)], a: [r(S.A.x), r(S.A.y), r(S.B.x), r(S.B.y)] }); },
+    set: (str) => {
+      const o = VD.share.unpack(str), ok = (v) => typeof v === 'number' && isFinite(v), TOOL = ['wall', 'plate', 'erase'];
+      if (!o || !Array.isArray(o.s) || !Array.isArray(o.m) || !Array.isArray(o.a) || !o.a.every(ok) || !o.m.every(ok)) return;
+      if (typeof o.p === 'string' && (SETUP_NAME[o.p] || PRESETS[o.p])) S.preset = o.p;
+      S.geo = o.g && typeof o.g === 'object' && typeof o.g.kind === 'string' ? Object.assign({}, o.g) : null;
+      S.strokes = o.s.filter((st) => Array.isArray(st) && TOOL[st[0]] && ok(st[1]) && Array.isArray(st[2]) && st[2].every((q) => Array.isArray(q) && ok(q[0]) && ok(q[1])))
+        .map((st) => ({ tool: TOOL[st[0]], r: st[1], pts: st[2].map((q) => [q[0], q[1]]) }));
+      S.mid = clampT({ x: o.m[0], y: o.m[1] }); S.A = clampT({ x: o.a[0], y: o.a[1] }); S.B = clampT({ x: o.a[2], y: o.a[3] });
+      rebuild(true); sync(); redraw();
+    } });
   VD.tools({ el: can, strip: '#strip', stage: '#scene', time: () => T.t, scale: () => (use3() ? null : { el: can, m: MM / view.s, area: [X(0), Y(TH), TW * view.s, TH * view.s] }) });
   window.__rt = { S, T, applyPreset, rebuild, redraw, run, lineInfo, setRun, sync, PRESETS, lam, dippers, set: (o) => { Object.assign(S, o); sync(); redraw(); } };
   requestAnimationFrame(frame);
