@@ -12,12 +12,12 @@
      text   one or two sentences
      link   (optional) { href: 'path from the site root', text: 'link words' } */
 window.VD_WHATS_NEW = [
+  { id: '2026-10-25-how-this-works-p1-acoustics', date: '2026-10-25', title: 'How this works videos',
+    text: 'Every Physics I and Acoustics demo now has a How this works button under the handout button: a short video, under 30 seconds, of one sample reading with arrows and zooms on each step. It adds to the worksheet procedure and does not replace it.', link: { href: 'physics-1.html', text: 'Open Physics I' } },
   { id: '2026-10-25-watch-molecules', date: '2026-10-25', title: 'Watch molecules share energy',
     text: 'Heat Capacities of Gases has a new Watch the molecules view: 125 simulated molecules start moving but not spinning, and collisions set them turning until motion and rotation reach the same temperature. It shows why a gas like nitrogen has C_V = 5/2 R while argon has 3/2 R.', link: { href: 'demos/gas-heat-capacity.html?setup=molNoSpin', text: 'Open Heat Capacities of Gases' } },
   { id: '2026-10-25-gas-walls', date: '2026-10-25', title: 'Walls with a temperature',
     text: 'In Gas in a Box each wall can now be insulated or held at a temperature of its own, so the gas cools or warms toward the walls, or carries heat from a hot wall to a cold one. Try the Cold walls and Hot wall, cold wall setups.', link: { href: 'demos/ideal-gas.html', text: 'Open Gas in a Box' } },
-  { id: '2026-10-25-how-this-works', date: '2026-10-25', title: 'How this works videos',
-    text: 'Pendulums has a How this works button under the handout button: a 22 second video of one sample reading, with arrows and zooms on each step. More demos will follow.', link: { href: 'demos/pendulum.html', text: 'Open Pendulums' } },
   { id: '2026-10-25-dark-default', date: '2026-10-25', title: 'Dark by default',
     text: 'The site now opens in Dark the first time you visit. Use the theme switch at the top of any page for Light, or Browser default to follow your device; your choice is remembered.' },
   { id: '2026-10-25-share-keys', date: '2026-10-25', title: 'Share a setup, fullscreen, shortcuts',
