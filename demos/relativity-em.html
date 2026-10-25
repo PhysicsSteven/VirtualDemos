@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
 <script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* Layout: a 3D stage (wire, point charge or field calculator) over a strip that tells the current frame's story; instrument rail on the right; stacks on phones. */
 :root {
@@ -73,6 +74,7 @@ body { background: var(--bg); color: var(--ink); font-family: var(--font-ui); fo
 .tag { max-width: 100%; font-size: 0.8rem; font-weight: 700; padding: 4px 9px; border-radius: 999px; border: 1px solid var(--equi); color: var(--equi); background: color-mix(in srgb, var(--canvas) 88%, transparent); pointer-events: none; }
 .tag.exact { border-color: var(--frame); color: var(--frame); }
 .tag.kx { border-color: var(--accent); color: var(--accent); }
+.tag.note { max-width: min(100%, 520px); border-radius: 8px; border-color: var(--line); color: var(--ink); font-weight: 400; font-size: 0.76rem; line-height: 1.35; }
 .nogl { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 24px; text-align: center; color: var(--muted); }
 
 /* the strip under the stage: what the current frame says */
@@ -204,13 +206,17 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <button type="button" data-f="lab" aria-pressed="true">Lab frame</button>
           <button type="button" data-f="charge" aria-pressed="false">Charge's frame</button>
         </div>
+        <div class="seg" role="group" aria-label="Perspective" id="dimSeg">
+          <button type="button" data-dim="3d" aria-pressed="true">3D</button>
+          <button type="button" data-dim="flat" aria-pressed="false">Flat</button>
+        </div>
         <span class="grow"></span>
         <button type="button" class="btn primary" id="play">Pause</button>
         <button type="button" class="btn" id="resetView">Reset view</button>
       </div>
       <div class="pane" id="pane">
         <canvas id="over" aria-hidden="true"></canvas>
-        <div class="ptop"><div class="cap" id="cap" hidden></div><div class="tag" id="tag"></div><div class="tag kx" id="tagK" hidden></div></div>
+        <div class="ptop"><div class="cap" id="cap" hidden></div><div class="tag" id="tag"></div><div class="tag kx" id="tagK" hidden></div><div class="tag note" id="tagN" hidden></div></div>
         <div class="nogl" id="nogl" hidden>The 3D view needs three.js, loaded from cdnjs.cloudflare.com, and WebGL. The readouts in the panel still work.</div>
       </div>
       <div class="strip" id="strip" aria-live="polite">
@@ -483,7 +489,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
         <details class="fold"><summary>Controls and model</summary><div class="foldbody">
           <p class="hint">Drag the 3D view to turn it, scroll or pinch to zoom, double click to reset. Ringed dots are grips: drag the test charge to change r, or an arrow tip to change a speed. With the view focused: <kbd>←</kbd> <kbd>→</kbd> speed, <kbd>↑</kbd> <kbd>↓</kbd> distance, <kbd>F</kbd> switch frame, <kbd>Space</kbd> pause.</p>
           <p class="hint" data-v="wire">Model: exact special relativity at any speed. The wire is two infinitely long, thin lines of charge: ions with density +λ₀ at rest in the lab, and electrons drifting at v with density −λ₀ in the lab, so the lab sees a neutral wire. In any frame, each line's density is its density in its own rest frame times its γ in that frame. Fields of an infinite line: E = λ/(2πε₀r), B = μ₀I/(2πr). The force is the Lorentz force q(E + u × B) on the test charge. Ignored: the test charge's own field and radiation, the wire's resistance, and the small surface charges that push current around a real circuit.</p>
-          <p class="hint" data-v="wire">What is drawn: with speeds near c each dot stands for 5 nC of charge (λ₀ × 0.5 cm), 20 of each kind per 10 cm in the lab; their spacing shows each line's density in the frame drawn. The charges are points, so only their spacing contracts. The ticks mark each line's own spacing, in its rest frame: the ions' is the lab spacing, the electrons' is γᵥ times wider (in the lab their spacing equals the ions', contracted from their own). The contraction control exaggerates only the drawing: drawn spacing = lab spacing × (true spacing ratio)<sup>k</sup>, for the dots and the ticks alike; at ×1 the drawing is true. Counts and all other numbers are always exact. Distances are to scale (the wire is drawn much thicker than a line). Time is slowed: 0.16 ns of the frame's own time per second on screen. The test charge, an electron or positron, follows the exact relativistic equation of motion dp/dt = q(E + v × B), computed separately in each frame (RK4, 1 ps steps); its own field and its radiation (about 10⁻¹⁵ of its energy) are ignored. In the real wire the true spacing, one electron per 10⁻²³ m of wire, and its 10⁻²⁶ change cannot be drawn: equal spacing is the honest picture, and the charge is not set free.</p>
+          <p class="hint" data-v="wire">What is drawn: with speeds near c each dot stands for 5 nC of charge (λ₀ × 0.5 cm), 20 of each kind per 10 cm in the lab; their spacing shows each line's density in the frame drawn. The charges are points, so only their spacing contracts. The ticks mark each line's own spacing, in its rest frame: the ions' is the lab spacing, the electrons' is γᵥ times wider (in the lab their spacing equals the ions', contracted from their own). The contraction control exaggerates only the drawing: drawn spacing = lab spacing × (true spacing ratio)<sup>k</sup>, for the dots and the ticks alike; at ×1 the drawing is true. Counts and all other numbers are always exact. Distances are to scale (the wire is drawn much thicker than a line). Time is slowed: 0.16 ns of the frame's own time per second on screen. The test charge, an electron or positron, follows the exact relativistic equation of motion dp/dt = q(E + v × B), computed separately in each frame (RK4, 1 ps steps); its own field and its radiation (about 10⁻¹⁵ of its energy) are ignored. 3D draws the wire as a cutaway copper wire 8 mm thick on supports 20 cm apart in the lab (at rest there like the ions, so their spacing and width are drawn with the same contraction), over a bench; Flat draws the plain schematic. In the real wire the true spacing, one electron per 10⁻²³ m of wire, and its 10⁻²⁶ change cannot be drawn: equal spacing is the honest picture, and the charge is not set free.</p>
           <p class="hint" data-v="point">Model: the exact field of a charge that has moved at constant velocity forever (Heaviside, 1888). It points straight away from where the charge is now: E = kq(1 − β²)/(r²(1 − β² sin²θ)^3/2), with θ measured from the direction of motion, and B = v × E/c². No acceleration, so no radiation. The view rides with the charge; the grid below is at rest in the lab and slides past at the charge's speed, slowed for the screen. Field lines are spaced so their density shows |E|.</p>
           <p class="hint" data-v="magnet">Model: the magnet is a uniformly magnetized cylinder, which is the same as a sheet of current K = M around its side. Its field is the exact field of each current loop (complete elliptic integrals), summed along the length by Gauss–Legendre quadrature, 120 nodes; the flux through the ring uses the exact mutual inductance of coaxial loops. Everything moves along the axis at constant speed; fields in the loop's frame come from the exact Lorentz transformation, at everyday speeds too. The EMFs are sums of the push on the charges over 48 pieces of the ring; −dΦ′/dt′ is a central difference. Ignored: the field of the induced current itself (a thin ring of high resistance). The motion on screen is slowed, and near c the magnet and spacing are drawn contracted by γ.</p>
           <p class="hint" data-v="xform">Model: the exact Lorentz transformation of the fields at one event, for a boost along x. Arrows show E and cB on one scale, so a field of 300 kV/m and one of 1 mT (cB = 299.8 kV/m) look about the same length.</p>
@@ -493,7 +499,6 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   </main>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 (() => {
   'use strict';
@@ -979,11 +984,13 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     cap.hidden = false;
     const shortPane = PH < 420 || PW < 600;
     $('tag').hidden = shortPane; $('tagK').hidden = shortPane || !kOn;
+    $('tagN').hidden = shortPane || !G.on3d;
+    $('tagN').textContent = real ? 'Cutaway copper wires, drawn 8 mm thick; each is a thin line in the model.' : 'Cutaway wire, drawn 8 mm thick; it is a thin line in the model. Supports 20 cm apart in the lab, at rest there like the ions, drawn with the same contraction.';
     if (!moving) { cap.className = 'cap'; cap.innerHTML = 'The test charge does not move along the wire, so there is no magnetic force, and the wire is neutral, so there is no electric force.'; }
     else if (!settled) { cap.className = 'cap mix'; cap.innerHTML = 'Changing frames. In between, the wire is partly charged and <span class="e">both fields push</span>.<small>The charge\'s own clock is held still while the frame changes.</small>'; }
     else if (S.frame === 'lab') { cap.className = 'cap'; cap.innerHTML = 'Lab frame: the wire is neutral. Only the <span class="m">magnetic field</span> pushes the moving charge.<small>In the lab the electrons are spaced exactly like the ions: their own spacing (ticks below), contracted.</small>'; }
     else { cap.className = 'cap el'; cap.innerHTML = `Charge's frame: the wire is ${sign} charged. Only the <span class="e">electric field</span> pushes the charge, which starts at rest here.<small>B is still there, but cannot push a charge at rest. Once the charge picks up speed toward the wire, B adds a small sideways push.</small>`; }
-    if (shortPane) cap.insertAdjacentHTML('beforeend', '<small>' + $('tag').textContent + '.' + (kOn ? ' ' + $('tagK').textContent + '.' : '') + '</small>');
+    if (shortPane) cap.insertAdjacentHTML('beforeend', '<small>' + $('tag').textContent + '.' + (kOn ? ' ' + $('tagK').textContent + '.' : '') + (G.on3d ? ' Cutaway wire, drawn 8 mm thick' + (real ? '.' : '; supports drawn with the ions\' contraction.') : '') + '</small>');
   }
   function pointReadouts() {
     const b = S.bp, g = gammaOf(b), q = 1e-9;
@@ -1099,9 +1106,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       $('sC1').className = ''; $('sC2').className = 'c-ef'; $('sC3').className = 'c-b'; $('sC4').className = 'c-f';
       if (readDirty) wireReadouts();
       wireStrip();
-    } else if (S.view === 'magnet') { $('tagK').hidden = true; $('tag').hidden = false; $('cap').hidden = true; magnetReadouts(); magnetStrip(); }
-    else if (S.view === 'point') { $('tagK').hidden = true; $('tag').hidden = false; $('cap').hidden = true; $('sC1').className = ''; $('sC2').className = 'c-e'; $('sC3').className = 'c-b'; if (readDirty) pointReadouts(); }
-    else { $('tagK').hidden = true; $('tag').hidden = false; $('cap').hidden = true; if (readDirty) xformReadouts(); }
+    } else if (S.view === 'magnet') { $('tagN').hidden = true; $('tagK').hidden = true; $('tag').hidden = false; $('cap').hidden = true; magnetReadouts(); magnetStrip(); }
+    else if (S.view === 'point') { $('tagN').hidden = true; $('tagK').hidden = true; $('tag').hidden = false; $('cap').hidden = true; $('sC1').className = ''; $('sC2').className = 'c-e'; $('sC3').className = 'c-b'; if (readDirty) pointReadouts(); }
+    else { $('tagN').hidden = true; $('tagK').hidden = true; $('tag').hidden = false; $('cap').hidden = true; if (readDirty) xformReadouts(); }
     readDirty = false;
   }
 
@@ -1126,28 +1133,38 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   const HALF = 13;         // charges live on x in [−HALF, HALF]
   const orbit = { theta: 0, phi: 0, zoom: 1 };
   const ORBIT0 = { magnet: [-Math.PI / 2 - 0.85, 1.15], wire: [-Math.PI / 2 - 0.28, Math.PI / 2], point: [-Math.PI / 2 - 0.42, 1.2], xform: [-Math.PI / 2 - 0.72, 1.12] };
-  function resetOrbit() { const o = ORBIT0[S.view]; orbit.theta = o[0]; orbit.phi = o[1]; orbit.zoom = 1; dirty = true; }
+  /* the 3D view looks down a little more, so the bench and the shadows read */
+  const ORBIT3 = { magnet: [-Math.PI / 2 - 0.62, 1.2], wire: [-Math.PI / 2 - 0.34, 1.27], point: [-Math.PI / 2 - 0.42, 1.2], xform: [-Math.PI / 2 - 0.72, 1.12] };
+  function resetOrbit() { const o = (G.on3d ? ORBIT3 : ORBIT0)[S.view]; orbit.theta = o[0]; orbit.phi = o[1]; orbit.zoom = 1; dirty = true; }
   let dirty = true;
+  /* 3D | Flat: the same scene and state; 3D adds the room, the copper wire with its cutaway, the supports and shadows */
+  function setDim(on) {
+    G.on3d = !!on;
+    if (G.ready) { G.KS.sun.castShadow = G.on3d; G.KS.theme(true); }
+    resetOrbit(); dirty = true;
+  }
 
   function init3D() {
-    if (!window.THREE) return false;
-    let renderer;
-    try { renderer = new THREE.WebGLRenderer({ antialias: true }); } catch (_) { return false; }
-    const el = renderer.domElement;
+    if (!window.THREE || !window.VD3K) return false;
+    const KS = VD3K.stage($('pane'), { before: $('over'), fov: 36, near: 0.1, far: 400, shadow: 18 });
+    if (!KS) return false;
+    const renderer = KS.r, el = KS.el;
+    el.removeAttribute('aria-hidden');
     el.id = 'gl'; el.tabIndex = 0;
     el.setAttribute('role', 'application');
     el.setAttribute('aria-label', '3D view. Drag to turn, scroll to zoom. Drag the test charge or an arrow tip to change it. Arrow keys change speed and distance, F switches frame, space pauses.');
-    $('pane').insertBefore(el, $('over'));
     UPY = new THREE.Vector3(0, 1, 0); tv = new THREE.Vector3();
-    const scene = new THREE.Scene();
-    const cam = new THREE.PerspectiveCamera(36, 1, 0.1, 400);
+    const scene = KS.scene, cam = KS.cam;
     cam.up.set(0, 0, 1);
-    const hemi = new THREE.HemisphereLight(0xffffff, 0x6f7a88, 0.85); hemi.position.set(0, 0, 1); scene.add(hemi);
-    const sun = new THREE.DirectionalLight(0xffffff, 0.6); sun.position.set(-6, -10, 14); scene.add(sun);
-    Object.assign(G, { ready: true, renderer, el, scene, cam,
+    /* the kit's sun, moved high and to the front left so the apparatus throws soft shadows on the bench */
+    KS.sun.position.set(-7, -11, 22); KS.sun.target.position.set(0, 0, -2);
+    KS.sun.shadow.camera.far = 80; KS.sun.shadow.bias = -0.0006; KS.sun.shadow.camera.updateProjectionMatrix();
+    Object.assign(G, { ready: true, KS, renderer, el, scene, cam,
       cyl: new THREE.CylinderGeometry(1, 1, 1, 14), cone: new THREE.ConeGeometry(1, 1, 18), sph: new THREE.SphereGeometry(1, 20, 14),
       mats: [], arrows: [] });
-    buildWire(); buildPoint(); buildXform(); buildMagnet();
+    buildRoom(); buildWire(); buildPoint(); buildXform(); buildMagnet();
+    KS.onTheme(() => { if (!G.on3d) { KS.hemi.intensity = 0.85; KS.sun.intensity = 0.6; KS.hemi.groundColor.set(0x6f7a88); } });
+    G.W.q.castShadow = true;   /* the ions and electrons sit inside the copper, whose shadow already covers theirs */
     bind3D(el);
     return true;
   }
@@ -1156,6 +1173,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function mkArrow(key, opts = {}) {
     const mo = Object.assign({ transparent: true }, opts); delete mo.w; const m = mat(mo, key);
     const g = new THREE.Group(), shaft = new THREE.Mesh(G.cyl, m), head = new THREE.Mesh(G.cone, m);
+    shaft.castShadow = head.castShadow = true;
     g.add(shaft, head); g.userData = { shaft, head, m, w: opts.w || 0.045 };
     return g;
   }
@@ -1177,6 +1195,78 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     if (G.W) { G.W.ionMat.emissive.set(T.pos).multiplyScalar(0.25); G.W.elMat.emissive.set(T.neg).multiplyScalar(0.25); }
   }
 
+  // ---------- the room and the copper wire (3D only: Flat keeps the plain schematic) ----------
+  /* where the bench top and the back wall sit in each scene's display units */
+  const ROOM = { wire: [-4.6, 6.5], magnet: [-7.2, 10], point: [-3.55, 6.5], xform: [-3.9, 6] };
+  function buildRoom() {
+    const KS = G.KS, R = G.room = new THREE.Group(); G.scene.add(R);
+    const wood = VD3K.material(KS, { roughness: 0.8, metalness: 0 }, ['#c9b391', '#3b3229']);
+    const edge = VD3K.material(KS, { roughness: 0.7, metalness: 0 }, ['#a88d66', '#2c251e']);
+    const wall = VD3K.material(KS, { roughness: 1, metalness: 0 }, ['#e3e8ee', '#18202a']);
+    KS.onTheme((dk) => { wall.emissive.set(dk ? '#0e141b' : '#6d7682'); });   /* the wall faces away from the sun: lift it a little */
+    const skirt = VD3K.material(KS, { roughness: 0.9, metalness: 0 }, ['#c3cad3', '#222b36']);
+    R.top = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), [edge, edge, edge, edge, wood, edge]); R.top.receiveShadow = true;
+    R.wall = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), wall); R.wall.rotation.x = Math.PI / 2; R.wall.receiveShadow = true;
+    R.skirt = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), skirt);
+    R.add(R.top, R.wall, R.skirt);
+    R.visible = false;
+  }
+  function placeRoom() {
+    const R = G.room, k = ROOM[S.view], z = k[0], y = k[1], w = 140, front = -18;
+    R.top.scale.set(w, y - front, 0.5); R.top.position.set(0, (y + front) / 2, z - 0.25);
+    R.wall.scale.set(w, 60, 1); R.wall.position.set(0, y, z + 30);
+    R.skirt.scale.set(w, 0.12, 0.5); R.skirt.position.set(0, y - 0.06, z + 0.25);
+  }
+  /* a copper wire along x, radius Rw, cut away in front (y < 0) between −L and L so the charges in the plane y = 0 show.
+     Outside the window it is whole. setWindow(L) moves the cut. */
+  function cuWireMesh(Rw) {
+    const KS = G.KS, g = new THREE.Group();
+    const cu = VD3K.material(KS, { roughness: 0.3, metalness: 0.3 }, ['#d08452', '#c27a45']);
+    const cuIn = VD3K.material(KS, { roughness: 0.6, metalness: 0.2, side: THREE.DoubleSide }, ['#8a4f2a', '#7a4524']);
+    const cut = VD3K.material(KS, { roughness: 0.25, metalness: 0.5, side: THREE.DoubleSide }, ['#e0996a', '#d08a5c']);
+    const glassCu = VD3K.material(KS, { transparent: true, opacity: 0.1, roughness: 0.2, metalness: 0.2, depthWrite: false, side: THREE.DoubleSide }, ['#d08a5c', '#d08a5c']);
+    const along = (geo) => { geo.rotateZ(Math.PI / 2); return geo; };   /* cylinder axis y → x; angle θ from z toward +y */
+    const back = new THREE.Mesh(along(new THREE.CylinderGeometry(Rw, Rw, 1, 48, 1, true, 0, Math.PI)), cu);
+    const inner = new THREE.Mesh(along(new THREE.CylinderGeometry(Rw * 0.9, Rw * 0.9, 1, 48, 1, true, 0, Math.PI)), cuIn);
+    const front = new THREE.Mesh(along(new THREE.CylinderGeometry(Rw, Rw, 1, 48, 1, true, Math.PI, Math.PI)), glassCu);
+    const lips = [1, -1].map((sz) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(1, Rw * 0.1), cut); m.rotation.x = Math.PI / 2; m.position.z = sz * Rw * 0.95; return m; });
+    const ends = [1, -1].map(() => new THREE.Mesh(along(new THREE.CylinderGeometry(Rw, Rw, 1, 48)), cu));
+    back.castShadow = ends[0].castShadow = ends[1].castShadow = true;
+    g.add(back, inner, front, ...lips, ...ends);
+    g.setWindow = (L, far) => {
+      for (const m of [back, inner, front, ...lips]) m.scale.x = 2 * L;
+      ends.forEach((m, i) => { const a = L, b = far; m.scale.x = b - a; m.position.x = (i ? -1 : 1) * (a + b) / 2; });
+    };
+    g.setWindow(8, 60);
+    return g;
+  }
+  /* insulating supports under the wire, behind it: a stem from the bench and a cradle. One instance each per support. */
+  const POST_D = 0.2;      /* supports every 20 cm of wire, at rest in the lab */
+  function buildPosts(g) {
+    const KS = G.KS, n = 140;
+    const ceramic = VD3K.material(KS, { roughness: 0.35, metalness: 0 }, ['#f2efe8', '#cfcac0']);
+    const steel = VD3K.material(KS, { roughness: 0.4, metalness: 0.6 }, ['#8e98a3', '#6c7682']);
+    const stem = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.16, 0.22, 1, 20).rotateX(Math.PI / 2).translate(0, 0, 0.5), ceramic, n);
+    const arm = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1), steel, n);
+    const foot = new THREE.InstancedMesh(new THREE.CylinderGeometry(0.42, 0.46, 0.14, 24).rotateX(Math.PI / 2), steel, n);
+    for (const m of [stem, arm, foot]) { m.castShadow = true; m.receiveShadow = true; m.frustumCulled = false; m.count = 0; g.add(m); }
+    return { stem, arm, foot, n };
+  }
+  function layPosts(Po, xs, sx, zFloor) {
+    const d = G.W.dummy, yb = 1.1, zt = -0.62; let n = 0;
+    for (const x of xs) {
+      if (n >= Po.n) break;
+      d.rotation.set(0, 0, 0);
+      d.position.set(x, yb, zFloor); d.scale.set(sx, 1, zt - zFloor); d.updateMatrix(); Po.stem.setMatrixAt(n, d.matrix);
+      d.position.set(x, yb, zFloor + 0.07); d.scale.set(sx, 1, 1); d.updateMatrix(); Po.foot.setMatrixAt(n, d.matrix);
+      /* the arm runs from the stem top forward to a cradle just under the wire */
+      d.position.set(x, yb / 2, (zt - 0.36) / 2); d.rotation.set(Math.atan2(-0.36 - zt, -yb), 0, 0); d.scale.set(0.12 * sx, Math.hypot(yb, zt + 0.36) + 0.1, 0.07); d.updateMatrix(); Po.arm.setMatrixAt(n, d.matrix);
+      n++;
+    }
+    d.rotation.set(0, 0, 0);
+    for (const m of [Po.stem, Po.arm, Po.foot]) { m.count = n; m.instanceMatrix.needsUpdate = true; }
+  }
+
   // wire scene. Display units: RD per cm, in the plane y = 0 (x along the wire, z away from it).
   const D0 = 0.005;        // lab spacing of each line of drawn charges, m (20 per 10 cm); each dot stands for λ₀D0 of charge
   const RATE = 0.16e-9;    // seconds of the frame's own time shown per second on screen
@@ -1189,6 +1279,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     W.tube.rotation.z = Math.PI / 2; g.add(W.tube);
     W.tube2 = new THREE.Mesh(tubeGeo, mat({ transparent: true, opacity: 0.09, depthWrite: false, side: THREE.DoubleSide }, 'wire'));
     W.tube2.rotation.z = Math.PI / 2; g.add(W.tube2);
+    W.cu = cuWireMesh(0.3); g.add(W.cu);
+    W.cu2 = cuWireMesh(0.3); g.add(W.cu2); W.cu2.setWindow(60, 61);
+    W.posts = buildPosts(g);
     W.ionMat = mat({}, 'pos'); W.elMat = mat({}, 'neg');
     W.ions = new THREE.InstancedMesh(G.sph, W.ionMat, 600); W.els = new THREE.InstancedMesh(G.sph, W.elMat, 600);
     W.ions.instanceMatrix.setUsage(THREE.DynamicDrawUsage); W.els.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
@@ -1282,11 +1375,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
       if (!real) for (let k = Math.ceil((-HALF + 1) / sp); k * sp <= HALF - 1 && nt < 290; k++) { tg.setXYZ(2 * nt, k * sp, 0, z0); tg.setXYZ(2 * nt + 1, k * sp, 0, z1); nt++; }
       tg.needsUpdate = true; obj.geometry.setDrawRange(0, 2 * nt); obj.visible = !real;
     };
-    tickLine(Wg.ticks, toD(drawnSpacing(D0, SP.ion0, K)), 0.2, 0.5);
-    tickLine(Wg.ticksE, toD(drawnSpacing(D0, SP.el0, K)), -0.2, -0.5);
+    const t3 = G.on3d ? 0.16 : 0;   /* in 3D the ticks start outside the copper */
+    tickLine(Wg.ticks, toD(drawnSpacing(D0, SP.ion0, K)), 0.2 + t3, 0.5 + t3);
+    tickLine(Wg.ticksE, toD(drawnSpacing(D0, SP.el0, K)), -0.2 - t3, -0.5 - t3);
     if (!real) {
-      labels.push({ p: [-HALF + 1.6, 0, 0.55], t: 'ions’ own spacing (the lab)', c: T.pos, a: 'l', dx: 2, pri: 1 });
-      labels.push({ p: [-HALF + 1.6, 0, -0.55], t: 'electrons’ own spacing (their rest frame)', c: T.neg, a: 'l', dx: 2, pri: 1 });
+      labels.push({ p: [-HALF + 1.6, 0, 0.55 + 1.6 * t3], t: 'ions’ own spacing (the lab)', c: T.pos, a: 'l', dx: 2, pri: 1 });
+      labels.push({ p: [-HALF + 1.6, 0, -0.55 - 1.6 * t3], t: 'electrons’ own spacing (their rest frame)', c: T.neg, a: 'l', dx: 2, pri: 1 });
     }
     // the counting bracket, below the wire
     const bp = Wg.bracket.geometry.attributes.position, zb = -2.25;
@@ -1296,7 +1390,16 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const net = nI - nE;
     Wg.bracket.visible = false;
     BRK.on = true; BRK.x0 = bx0; BRK.x1 = bx1; BRK.t = `in this ${narrow ? 5 : 10} cm: ${cnt(nI)} ions, ${cnt(nE)} electrons, net ${Math.abs(net) < 0.05 ? '0' : (net > 0 ? '+' : '−') + cnt(Math.abs(net))}`;
-    Wg.tube2.visible = real; Wg.tube2.position.set(0, 0, toD(P.r));
+    Wg.tube.visible = !G.on3d;
+    Wg.tube2.visible = real && !G.on3d; Wg.tube2.position.set(0, 0, toD(P.r));
+    Wg.cu.visible = G.on3d; Wg.cu2.visible = real && G.on3d; Wg.cu2.position.set(0, 0, toD(P.r));
+    /* the supports are at rest in the lab like the ions: same offset, and spacing and width contracted by the same drawn factor */
+    if (G.on3d) {
+      Wg.cu.setWindow(Math.max(4.5, Math.min(HALF - 1, G.halfX * 0.86)), 80);
+      const sp = drawnSpacing(POST_D, SP.ion, K), o = -f * C0 * Tf + sp / 2, lim = 40 / (100 * RD), xs = [];
+      for (let k = Math.ceil((-lim - shift - o) / sp); k * sp + o <= lim - shift && xs.length < Wg.posts.n; k++) xs.push(X(k * sp + o));
+      layPosts(Wg.posts, xs, Math.pow(SP.ion, K), ROOM.wire[0]);
+    } else layPosts(Wg.posts, [], 1, 0);
     // the charge, its starting point and its path so far, all in the frame drawn
     const qx = X(ev.x), qz = toD(ev.z);
     Wg.qMat.color.set(P.q > 0 ? T.pos : T.neg); Wg.qMat.emissive.set(P.q > 0 ? T.pos : T.neg).multiplyScalar(0.3);
@@ -1497,6 +1600,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     Mg.mag.add(Mg.lines);
     Mg.ring = new THREE.Mesh(new THREE.TorusGeometry(RB * 100, 0.08, 12, 96), mat({ roughness: 0.3, metalness: 0.5 }, 'wire'));
     Mg.ring.rotation.y = Math.PI / 2; g.add(Mg.ring);
+    Mg.ringMat = Mg.ring.material; Mg.ringCu = VD3K.material(G.KS, { roughness: 0.3, metalness: 0.3 }, ['#d08452', '#c27a45']);
+    Mg.ring.castShadow = true; Mg.mag.traverse((o) => { if (o.isMesh) o.castShadow = true; });
     Mg.aE = []; Mg.aM = []; Mg.aO = [];
     for (let j = 0; j < 12; j++) { const a = mkArrow('equi', { w: 0.055 }), b = mkArrow('bfield', { w: 0.055 }); g.add(a, b); Mg.aE.push(a); Mg.aM.push(b); }
     for (let j = 0; j < 16; j++) { const a = mkArrow('equi', { w: 0.035, opacity: 0.55 }); g.add(a); Mg.aO.push(a); }
@@ -1557,7 +1662,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const xr = al * d, xm = xr - d;
     Mg.mag.position.x = xm; Mg.mag.scale.set(1 / gf, 1, 1);
     Mg.lines.visible = S.layers.mlines;
-    Mg.ring.position.x = xr;
+    Mg.ring.position.x = xr; Mg.ring.material = G.on3d ? Mg.ringCu : Mg.ringMat;
     // push on + charges around the ring, electric part then magnetic part, on one scale for every frame
     const P = plotData(), ref = gammaOf(b) * Math.abs(b) * C0 * P.brMax || 1, sc = 2.2 / ref, R = RB * 100;
     for (let j = 0; j < 12; j++) {
@@ -1698,6 +1803,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     else if (S.view === 'magnet') drawMagnet(dt, labels, hs);
     else if (S.view === 'point') drawPoint(dt, labels, hs);
     else drawXform(labels, hs);
+    if (G.room) { G.room.visible = G.on3d; if (G.on3d) placeRoom(); }
+    G.KS.theme();
     G.renderer.render(G.scene, G.cam);
     handles = hs.map((h) => Object.assign(h, { s: toScreen(h.p) })).filter((h) => h.s);
     drawOverlay(labels);
@@ -1714,7 +1821,9 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     if (S.view === 'magnet') drawPlot(ctx, ps);
     let brBox = null;
-    if (S.view === 'wire') { drawWirePlot(ctx, ps); if (BRK.on) brBox = drawBracket(ctx, ps); }
+    if (S.view === 'wire') {
+      drawWirePlot(ctx, ps); if (BRK.on) brBox = drawBracket(ctx, ps);
+    }
     // labels on halo boxes, high priority first, nudged off each other
     ctx.font = `600 ${11.5 * ps}px ${T.mono}`; ctx.textBaseline = 'middle';
     const boxes = brBox ? [brBox] : [];
@@ -1863,8 +1972,12 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   }
 
   tokens();
-  if (!init3D()) $('nogl').hidden = false;
-  else recolor();
+  /* three.js draws every view, Flat included (Flat is the plain schematic, 3D adds the copper, the supports and the room) */
+  VD3.load((ok) => {
+    if (!ok || !init3D()) { $('nogl').hidden = false; $('dimSeg').hidden = true; return; }
+    recolor(); resize();
+    VD3K.view({ seg: '#dimSeg', init: () => true, change: setDim, start: '3d' });
+  });
   new ResizeObserver(resize).observe($('pane'));
   resize();
   if (!playing) { $('play').textContent = 'Play'; $('play').classList.remove('primary'); }
