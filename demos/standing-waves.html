@@ -1940,6 +1940,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   sync3();
   setRunning(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
+  VD.howTo({ src: 'media/how-this-works/standing-waves.mp4', poster: 'media/how-this-works/standing-waves.jpg' });
   requestAnimationFrame(loop);
 })();
 </script>

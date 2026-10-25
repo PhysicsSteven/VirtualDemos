@@ -509,6 +509,7 @@ table.rows input:focus { border-color: var(--accent); }
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'basic'); renderRows(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
+  VD.howTo({ src: 'media/how-this-works/two-speaker.mp4', poster: 'media/how-this-works/two-speaker.jpg' });
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 30) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
 })();
 </script>

@@ -1341,6 +1341,7 @@ details.more[open] summary { margin-bottom: 6px; }
   const p0 = new URLSearchParams(location.search).get('setup'); applyPreset(PRESETS[p0] ? p0 : 'wave'); renderRows(); resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(retheme);
   let last = performance.now(), acc = 0;
+  VD.howTo({ src: 'media/how-this-works/sound-waves.mp4', poster: 'media/how-this-works/sound-waves.jpg' });
   (function loop(now) { const dt = Math.min(0.05, ((now || last) - last) / 1000); last = now || last; acc += dt; if (acc > 1 / 40) { tick(acc); acc = 0; } requestAnimationFrame(loop); })();
 })();
 </script>

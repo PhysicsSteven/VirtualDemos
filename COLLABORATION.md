@@ -3116,3 +3116,29 @@ Steve asked for a second Vectors video, for Worksheet 1. The How this works butt
 - `tools/vdcheck.cjs --only after vectors`: 0 problems. No whats-new entry.
 
 **For GPT:** please check this video's captions and readings against the Force Table worksheet.
+## 2026-10-25 · Claude · How this works videos: Sound Waves, Standing Waves, Energy and Power of a Wave, Two Speaker Interference
+
+Acoustics, Waves group, following the Pendulum pilot (`tools/howto/README.md`). Each demo has a `VD.howTo` button and a dark
+theme video of the first reading in its own worksheet; scripts are `tools/howto/sound-waves.cjs`, `standing-waves.cjs`,
+`wave-power.cjs` and `two-speaker.cjs`. The videos are silent, so every step is read off a readout, never by ear. No measuring
+tools appear. Every reading on screen comes from the run and was checked by hand:
+
+- Sound Waves (23.0 s): Part 2's first clap, air at 20 °C, clap 0.50 m from microphone A, microphone B dragged to d = 0.50 m.
+  Demo: v 343.2 m/s, timer 1.4583 ms = 70 samples at 48 kHz. By hand v = √(1.4 × 8.314462618 × 293.15/0.0289647) = 343.2 m/s,
+  d/v = 1.4567 ms = 69.92 samples, so the timer reads 70 samples (69, 1.4375 ms, for about one clap in 13, from the random
+  phase of the sampling clock).
+- Standing Waves (23.6 s): the harmonic scan's first peak, Find the resonances (L = 0.648 m, T = 70.0 N, μ = 6.14 g/m, Q = 30), shown
+  Flat, drive tuned with the Coarse then Fine knob to 82.4 Hz, then played at 4× so the loop builds up in the clip. Demo: steady amplitude 2.201 mm. By hand v = √(T/μ) = 106.77 m/s,
+  f₁ = v/2L = 82.39 Hz; on the 0.1 Hz steps the amplitude is largest at 82.4 Hz (2.200 mm at 82.3, 2.191 mm at 82.5). The caption
+  identifies harmonic 1 by its one loop, as the handout asks.
+- Energy and Power of a Wave (20.7 s): Part 1's first row, the opening setup (String B, 1.20 m, 200 g, matched, 20 Hz,
+  0.50 mm). Demo: T 1.9620 N, P 0.09578 mW. By hand P = ½ √(Tμ) ω² A² = ½ × √(1.962 × 1.20e-3) × (40π)² × (0.50e-3)² W
+  = 0.09578 mW.
+- Two Speaker Interference (18.9 s): Part 1's first quiet spot, 686 Hz, 20 °C, d = 1.00 m in phase, walk line x = 4.0 m; the
+  microphone dragged up the line until the level is lowest. Demo: y 1.040 m, r₁ 4.036 m, r₂ 4.286 m, 43.2 dB. By hand
+  v = 331.3 √(1 + 20/273.15) = 343.21 m/s, λ = 0.5003 m; the level along the line is lowest at y = 1.041 m (43.2 dB), where
+  r₂ − r₁ = 0.250 m = λ/2. The dip is not silent because the far speaker's sound is weaker (1/r).
+
+vdcheck `--only after`: 0 problems on all four. No What's new entry (one comes for the whole set).
+
+**For GPT:** please check the four videos' captions and readings against the demos and the figures above.
