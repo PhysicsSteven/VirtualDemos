@@ -6,6 +6,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
+<script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -143,6 +145,10 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   table.rows button { min-height: 32px; min-width: 32px; }
 }
 /* folded rail sections: secondary options behind their heading (layout redesign) */
+/* the 3D view: a WebGL canvas under the orbit canvas, which then only carries the words and takes no pointer */
+.pane.main.space { background: #04060b; }
+.pane.main.space #view { pointer-events: none; }
+.v3note { position: absolute; left: 12px; bottom: 40px; z-index: 2; max-width: 60%; margin: 0; font-size: 0.8rem; color: var(--muted); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 4px 8px; }
 </style>
 <link rel="stylesheet" id="vd-look" href="lib/look.css">
 <script id="vd-gear" src="lib/gear.js"></script>
@@ -167,10 +173,12 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       <div class="pane main" id="mainPane">
         <canvas id="view" tabindex="0" role="application" aria-label="Orbit view."></canvas>
         <div class="viewbar">
+          <div class="seg" role="group" aria-label="Perspective" id="viewSeg"><button type="button" data-dim="3d" aria-pressed="false">3D</button><button type="button" data-dim="flat" aria-pressed="true">Flat</button></div>
           <button type="button" class="btn primary" id="play">Pause</button>
           <button type="button" class="btn" id="reset">Reset</button>
           <button type="button" class="btn" id="fit">Fit</button>
         </div>
+        <p class="v3note" id="v3note" role="status" hidden></p>
       </div>
       <div class="pane chart" id="chartPane">
         <canvas id="chart" role="img" aria-label="Kepler's third law: orbital period against semi major axis on log scales, with the planets of the solar system and the current orbit."></canvas>
@@ -324,6 +332,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
           <label><input type="checkbox" id="tCirc" checked>Speed circles</label>
           <label><input type="checkbox" id="tVel" checked>Velocity now</label>
           <label><input type="checkbox" id="tGrid" checked>AU grid</label>
+          <label><input type="checkbox" id="tSpace">Space backdrop on the flat view</label>
         </div>
         </div></details>
       </section>
@@ -587,7 +596,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     M: 1, keep: true, speed: 0.04, playing: true, t: 0, nW: 12,
     launch: { x: 0.3075, y: 0, vx: 0, vy: 12.32 },
     A: null, B: null, Blaunch: null,
-    layers: { wedge: true, conic: true, trail: true, foci: true, circ: true, vel: true, grid: true },
+    layers: { wedge: true, conic: true, trail: true, foci: true, circ: true, vel: true, grid: true, space: false },
     kw: 0.05, preset: 'mercury',
     blind: false, cview: 'law', keyMode: 'vel',
     timer: { on: false, acc: 0 }, ruler: { on: false, pts: [null, null], active: 0 }
@@ -820,9 +829,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   // ---------- main view ----------
   const VG = window.VDGear;   // shared drawing helpers (demos/lib/gear.js); pictures only
   function drawView() {
-    const T = tokens(), ps = T.ps, ctx = vctx;
+    if (T3.on && T3.S) { draw3D(); return; }
+    const T = S.layers.space ? Object.assign(tokens(), SPACE) : tokens(), ps = T.ps, ctx = vctx;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H);
+    if (S.layers.space) spaceBackdrop(ctx);
+    else { ctx.fillStyle = T.canvas; ctx.fillRect(0, 0, W, H); }
     const A = S.A, elA = elements(A), elL = elements(S.launch);
 
     // AU grid
@@ -1001,7 +1012,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
       if (S.layers.vel && S.t > 0 && !b.done) arrow(ctx, px, py, px + b.vx * kpx, py - b.vy * kpx, col, 1.8 * ps, 8 * ps, T.canvas);
       ctx.beginPath(); ctx.arc(px, py, 6 * ps, 0, TAU);
       ctx.fillStyle = col; ctx.fill(); ctx.lineWidth = 2 * ps; ctx.strokeStyle = T.canvas; ctx.stroke();
-      if (VG) VG.ball(ctx, px, py, 5 * ps, col);
+      if (VG) litBall(ctx, px, py, 5 * ps, col, -b.x, b.y);
       // off screen indicator
       const m = 14 * ps;
       if (px < 0 || px > W || py < 0 || py > H) {
@@ -1039,8 +1050,15 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     ctx.strokeStyle = T.muted; ctx.lineWidth = 1.5 * ps;
     ctx.beginPath(); ctx.moveTo(bx, by - 4 * ps); ctx.lineTo(bx, by); ctx.lineTo(bx + barW, by); ctx.lineTo(bx + barW, by - 4 * ps); ctx.stroke();
     text(ctx, T, sig(step, 2) + ' AU', bx + barW / 2, by - 4 * ps, 'center', 'bottom', T.muted, 11 * ps);
-    text(ctx, T, 't = ' + fmtT(S.t), 12 * ps, 12 * ps, 'left', 'top', T.ink, 13 * ps, 700);
-    text(ctx, T, statusText(A, elA), 12 * ps, 30 * ps, 'left', 'top', T.muted, 11 * ps, 600);
+    text(ctx, T, 'star and planet not to scale', W - 12 * ps, H - 10 * ps, 'right', 'bottom', T.muted, 10 * ps, 400);
+    const y0 = clockY();
+    text(ctx, T, 't = ' + fmtT(S.t), 12 * ps, y0, 'left', 'top', T.ink, 13 * ps, 700);
+    text(ctx, T, statusText(A, elA), 12 * ps, y0 + 18 * ps, 'left', 'top', T.muted, 11 * ps, 600);
+  }
+  /* where the clock goes: top left, or under the strip of buttons when a narrow picture makes the strip reach across */
+  function clockY() {
+    const bar = mainPane.querySelector('.viewbar'), ps = tokens().ps;
+    return bar && bar.offsetLeft < 170 * ps ? bar.offsetTop + bar.offsetHeight + 6 : 12 * ps;
   }
 
   function statusText(b, el) {
@@ -1210,7 +1228,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
     if (W && H) drawView();
     if (CW && CH) drawChart();
     updateReadouts();
-    if ((S.playing && !drag) || viewMoving()) raf = requestAnimationFrame(frame);
+    if ((S.playing && !drag) || viewMoving() || moving3()) raf = requestAnimationFrame(frame);
     else last = 0;
   }
   function schedule() { if (!raf) raf = requestAnimationFrame(frame); }
@@ -1273,7 +1291,7 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
 
   const bindLayer = (id, key, fn) => $(id).addEventListener('change', (e) => { S.layers[key] = e.target.checked; if (fn) fn(); schedule(); });
   bindLayer('tWedge', 'wedge'); bindLayer('tConic', 'conic'); bindLayer('tTrail', 'trail');
-  bindLayer('tFoci', 'foci'); bindLayer('tCirc', 'circ'); bindLayer('tVel', 'vel'); bindLayer('tGrid', 'grid');
+  bindLayer('tFoci', 'foci'); bindLayer('tCirc', 'circ'); bindLayer('tVel', 'vel'); bindLayer('tGrid', 'grid'); bindLayer('tSpace', 'space');
   for (const b of document.querySelectorAll('#nwSeg button')) {
     b.addEventListener('click', () => {
       S.nW = +b.dataset.n;
@@ -1534,7 +1552,11 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   }
   function setVelFromTip(px, py, free) {
     const L = S.launch, [lx, ly] = toPx(L.x, L.y), k = S.kw * V.s;
-    let vx = (px - lx) / k, vy = -(py - ly) / k;
+    setVel((px - lx) / k, -(py - ly) / k, free);
+  }
+  /* the launch velocity from where the arrow tip was dragged (flat view above, or a point on the orbit plane in 3D), with the snaps */
+  function setVel(vx, vy, free) {
+    const L = S.launch;
     const el = elements(L);
     let v = Math.hypot(vx, vy);
     v = Math.min(v, 3 * el.vesc);
@@ -1691,6 +1713,423 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   new MutationObserver(() => { if (autoView) fitView(true, false); schedule(); })
     .observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'data-projector', 'class', 'style'] });
 
+  // ---------- the look: space backdrop for the flat view, a planet lit from the star ----------
+  // Pictures only. The space palette is shared by the 3D view's words and the flat view's Space backdrop option.
+  const SPACE = { canvas: 'rgba(5,8,14,0.8)', ink: '#e3e8ef', muted: '#a3afc0', line: '#3a4656', grid: '#141c28', gridStrong: '#2a3546',
+                  pos: '#ff7660', neg: '#69a0ff', equi: '#e2b350', accent: '#8cb4ff', sun: '#f5c451' };
+  let skyCv = null;
+  function spaceBackdrop(ctx) {
+    if (!skyCv || skyCv.w !== W || skyCv.h !== H) {   /* a fixed seeded star field, redrawn only when the pane changes size */
+      const c = document.createElement('canvas'); c.width = Math.round(W * dpr); c.height = Math.round(H * dpr);
+      const g = c.getContext('2d'); g.scale(dpr, dpr);
+      const bg = g.createRadialGradient(W * 0.5, H * 0.45, 0, W * 0.5, H * 0.45, Math.max(W, H) * 0.75);
+      bg.addColorStop(0, '#0b1220'); bg.addColorStop(1, '#03050a'); g.fillStyle = bg; g.fillRect(0, 0, W, H);
+      let sd = 7; const rn = () => { sd = (sd * 16807) % 2147483647; return sd / 2147483647; };
+      for (let i = 0, n = Math.round(W * H / 900); i < n; i++) {
+        const b = Math.pow(rn(), 3) * 0.8 + 0.12, r = rn() < 0.04 ? 1.3 : 0.7, t = rn();
+        g.fillStyle = `rgba(${Math.round(225 + 30 * (t < 0.2))},${Math.round(232)},${Math.round(235 + 20 * (t > 0.8))},${b.toFixed(2)})`;
+        g.beginPath(); g.arc(rn() * W, rn() * H, r, 0, TAU); g.fill();
+      }
+      skyCv = { c, w: W, h: H };
+    }
+    ctx.drawImage(skyCv.c, 0, 0, W, H);
+  }
+  /* a planet lit from the star: the bright side faces the star (dx, dy is the screen direction to it), the far side in shadow */
+  function litBall(ctx, x, y, r, col, dx, dy) {
+    const L = Math.hypot(dx, dy) || 1, ux = dx / L, uy = dy / L;
+    const g = ctx.createRadialGradient(x + ux * r * 0.45, y + uy * r * 0.45, r * 0.05, x - ux * r * 0.2, y - uy * r * 0.2, r * 1.15);
+    g.addColorStop(0, VG.mix(col, '#ffffff', 0.55)); g.addColorStop(0.45, col); g.addColorStop(1, VG.mix(col, '#000000', 0.7));
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
+  }
+
+  // ---------- 3D view (three.js through demos/lib/vd3kit.js) ----------
+  // The same simulation seen in space: the orbit plane at a tilt with its AU grid, the predicted path, the trail, the swept wedges
+  // as see through sectors, the foci and the axis, the speed circles, the launch arrow and the velocity now. Every position is the
+  // model's, in AU, times one factor so the orbit fills the view, and the arrows use the flat view's own scale (S.kw). The star and
+  // the planets are drawn far larger than to scale. The arrow tip, the launch point and the ruler points are dragged on the orbit
+  // plane, as in the flat view; a drag elsewhere turns the view.
+  const T3 = { S: null, on: false, X: null, o: { th: -Math.PI / 2 + 0.12, ph: 0.86, zoom: 1 }, E: null, k: 1, wed: new Map(), gridKey: '', ray: null };
+  const clamp3 = (v, a, b) => Math.max(a, Math.min(b, v));
+  function init3D() {
+    const S3 = VD3K.stage(mainPane, { before: view, fov: 30, near: 0.005, far: 4000, sky: '#04060b' });
+    if (!S3) return false;
+    T3.S = S3; S3.el.classList.add('vd3d');
+    const sc = S3.scene, X = {};
+    sc.add(VD3K.sky(S3, { n: 3000, r: 1500, seed: 5, milky: true }));
+    S3.onTheme(() => { S3.hemi.intensity = 0.16; S3.sun.intensity = 0; });
+    sc.add(new THREE.PointLight(0xfff2dc, 1.9, 0));   /* the star lights the planets */
+    X.star = VD3K.star(S3, { r: 1, color: '#ffcf6b', glow: 5.5 }); sc.add(X.star);
+    X.G = new THREE.Group(); sc.add(X.G);   /* everything inside G is in AU; G is scaled by k */
+    const basic = (c, op) => new THREE.MeshBasicMaterial({ color: c, transparent: op != null, opacity: op == null ? 1 : op, depthWrite: op == null, side: THREE.DoubleSide });
+    const lineOf = (n, mat) => { const g = new THREE.BufferGeometry(); g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(n * 3), 3)); g.setDrawRange(0, 0); const l = new THREE.Line(g, mat); l.frustumCulled = false; return l; };
+    X.grid = new THREE.LineSegments(new THREE.BufferGeometry(), new THREE.LineBasicMaterial({ vertexColors: true })); X.grid.frustumCulled = false;
+    X.disc = new THREE.Mesh(new THREE.CircleGeometry(1, 160), basic('#8fa6c8', 0.07));
+    X.axis = lineOf(2, new THREE.LineDashedMaterial({ color: '#9aa7b8', transparent: true, opacity: 0.85, dashSize: 1, gapSize: 1 }));
+    X.circ = VD3K.ring(1, { dashed: true, color: SPACE.equi, opacity: 0.95, seg: 160 }); X.esc = VD3K.ring(1, { dashed: true, color: SPACE.pos, opacity: 0.95, seg: 160 });
+    X.wG = new THREE.Group();
+    X.G.add(X.grid, X.disc, X.wG, X.axis, X.circ, X.esc);
+    /* the predicted paths and the trails are thin tubes in the scene (k applied), so they keep a width on the picture */
+    X.tcA = new THREE.Mesh(new THREE.BufferGeometry(), basic('#aebbd0')); X.tcB = new THREE.Mesh(new THREE.BufferGeometry(), basic(SPACE.pos));
+    X.ttA = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ vertexColors: true })); X.ttB = new THREE.Mesh(new THREE.BufferGeometry(), new THREE.MeshBasicMaterial({ vertexColors: true }));
+    for (const m of [X.tcA, X.tcB, X.ttA, X.ttB]) { m.frustumCulled = false; m.key = ''; sc.add(m); }
+    /* a wide faint corona round the star and a small glow round each planet, so they read at any size */
+    const glowTex = (() => { const cv = document.createElement('canvas'); cv.width = cv.height = 128; const c = cv.getContext('2d'), g = c.createRadialGradient(64, 64, 0, 64, 64, 64);
+      g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(0.2, 'rgba(255,255,255,0.35)'); g.addColorStop(0.5, 'rgba(255,255,255,0.08)'); g.addColorStop(1, 'rgba(255,255,255,0)'); c.fillStyle = g; c.fillRect(0, 0, 128, 128); return new THREE.CanvasTexture(cv); })();
+    const halo = (c, op) => new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex, color: c, opacity: op, blending: THREE.AdditiveBlending, depthWrite: false, transparent: true }));
+    X.corona = halo('#ffb347', 0.55); X.star.add(X.corona); X.corona.scale.setScalar(16);
+    X.gA = halo('#7fb0ff', 0.6); X.gB = halo('#ff8a70', 0.6); sc.add(X.gA, X.gB);
+    X.disc.renderOrder = 0; X.wG.renderOrder = 1;
+    X.wmat = [[basic(SPACE.neg, 0.2), basic(SPACE.neg, 0.36)], [basic(SPACE.equi, 0.2), basic(SPACE.equi, 0.36)]];
+    X.wline = [new THREE.LineBasicMaterial({ color: SPACE.neg, transparent: true, opacity: 0.6 }), new THREE.LineBasicMaterial({ color: SPACE.equi, transparent: true, opacity: 0.6 })];
+    const planet = (c) => new THREE.Mesh(new THREE.SphereGeometry(1, 48, 32), new THREE.MeshStandardMaterial({ color: c, roughness: 0.6, metalness: 0 }));
+    X.pA = planet('#5d93f0'); X.pB = planet('#f06a52');
+    const arrowOf = (c) => { const g = new THREE.Group(), m = basic(c); g.shaft = new THREE.Mesh(new THREE.CylinderGeometry(1, 1, 1, 14), m); g.head = new THREE.Mesh(new THREE.ConeGeometry(1, 1, 20), m); g.add(g.shaft, g.head); return g; };
+    X.launch = arrowOf(SPACE.accent); X.vA = arrowOf(SPACE.neg); X.vB = arrowOf(SPACE.pos);
+    X.tip = new THREE.Mesh(new THREE.TorusGeometry(1, 0.24, 12, 48), basic(SPACE.accent));
+    X.tipIn = new THREE.Mesh(new THREE.CircleGeometry(0.8, 32), basic('#0b1220'));
+    X.mark = new THREE.Mesh(new THREE.TorusGeometry(1, 0.15, 12, 48), basic('#e3e8ef'));
+    const grey = basic('#b8c3d2');
+    X.focus = new THREE.Group(); X.focus.add(new THREE.Mesh(new THREE.TorusGeometry(1, 0.16, 8, 40), grey));
+    X.ctr = new THREE.Group();
+    for (const a of [Math.PI / 4, -Math.PI / 4]) { const bar = new THREE.Mesh(new THREE.BoxGeometry(1.5, 0.22, 0.22), grey); bar.rotation.z = a; X.focus.add(bar); }
+    for (const a of [0, Math.PI / 2]) { const bar = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.2, 0.2), grey); bar.rotation.z = a; X.ctr.add(bar); }
+    X.dq = new THREE.Mesh(new THREE.SphereGeometry(1, 16, 12), grey); X.dQ = X.dq.clone();
+    sc.add(X.pA, X.pB, X.launch, X.vA, X.vB, X.tip, X.tipIn, X.mark, X.focus, X.ctr, X.dq, X.dQ);
+    T3.X = X; T3.ray = new THREE.Raycaster();
+    if (W < H) T3.o.ph = 0.6;   /* a tall (phone) picture: look down more steeply, so the orbit fills more of it */
+    S3.orbit(S3.el, T3.o, schedule, { grab: grab3, phMin: 0.02, phMax: 1.42, zMin: 0.4, zMax: 6, keys: false });
+    S3.el.addEventListener('pointermove', move3);
+    S3.el.addEventListener('pointerup', endDrag); S3.el.addEventListener('pointercancel', endDrag);
+    return true;
+  }
+  // the region the 3D view frames, from the same box the flat view fits (both orbits), eased toward when it changes
+  function box3() {
+    const b = orbitBox(S.launch);
+    if (S.Blaunch) { const b2 = orbitBox(S.Blaunch); b.x0 = Math.min(b.x0, b2.x0); b.x1 = Math.max(b.x1, b2.x1); b.y0 = Math.min(b.y0, b2.y0); b.y1 = Math.max(b.y1, b2.y1); }
+    return { cx: (b.x0 + b.x1) / 2, cy: (b.y0 + b.y1) / 2, hw: Math.max((b.x1 - b.x0) / 2, 1e-3), hh: Math.max((b.y1 - b.y0) / 2, 1e-3) };
+  }
+  function moving3() {
+    if (!T3.on || !T3.S || !T3.E || drag) return false;
+    const B = box3(), E = T3.E, R = Math.max(B.hw, B.hh);
+    return Math.abs(Math.log(E.hw / B.hw)) > 2e-3 || Math.abs(Math.log(E.hh / B.hh)) > 2e-3 || Math.hypot(E.cx - B.cx, E.cy - B.cy) > 1e-3 * R;
+  }
+  function ease3() {
+    const B = box3();
+    if (!T3.E || reduce) { T3.E = B; return; }
+    if (drag) return;   /* hold the frame still under a drag */
+    const E = T3.E, q = 0.2;
+    E.cx += (B.cx - E.cx) * q; E.cy += (B.cy - E.cy) * q;
+    E.hw = Math.exp(Math.log(E.hw) + (Math.log(B.hw) - Math.log(E.hw)) * q); E.hh = Math.exp(Math.log(E.hh) + (Math.log(B.hh) - Math.log(E.hh)) * q);
+    if (!moving3()) T3.E = B;
+  }
+  function setArrow(g, a, b, w) {
+    const d = new THREE.Vector3().subVectors(b, a), L = d.length();
+    g.visible = L > w * 2; if (!g.visible) return;
+    d.divideScalar(L);
+    const h = Math.min(L * 0.5, w * 5.5), q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0, 1, 0), d);
+    g.shaft.scale.set(w, L - h * 0.9, w); g.shaft.position.copy(a).addScaledVector(d, (L - h * 0.9) / 2); g.shaft.quaternion.copy(q);
+    g.head.scale.set(w * 2.4, h, w * 2.4); g.head.position.copy(b).addScaledVector(d, -h / 2); g.head.quaternion.copy(q);
+  }
+  function grid3(step, cx, cy, half) {
+    const key = [step, cx, cy, half].join(); if (key === T3.gridKey) return; T3.gridKey = key;
+    const n = Math.ceil(half / step), seg = 28, pos = [], col = [], bg = new THREE.Color('#04060b'), c0 = new THREE.Color('#4f6585'), c1 = new THREE.Color('#7d93b4'), c = new THREE.Color();
+    const put = (x, y, ax) => { const f = Math.pow(Math.max(0, 1 - Math.hypot(x - cx, y - cy) / half), 1.3) * (ax ? 1 : 0.6); c.copy(bg).lerp(ax ? c1 : c0, f); pos.push(x, y, 0); col.push(c.r, c.g, c.b); };
+    for (let i = -n; i <= n; i++) {
+      const gx = cx + i * step, gy = cy + i * step, ax = Math.abs(gx) < step * 1e-6, ay = Math.abs(gy) < step * 1e-6;
+      for (let s = 0; s < seg; s++) {
+        const u0 = -half + 2 * half * s / seg, u1 = -half + 2 * half * (s + 1) / seg;
+        put(gx, cy + u0, ax); put(gx, cy + u1, ax); put(cx + u0, gy, ay); put(cx + u1, gy, ay);
+      }
+    }
+    const g = T3.X.grid.geometry; g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('color', new THREE.Float32BufferAttribute(col, 3));
+  }
+  function fill3(line, pts, z) {
+    const a = line.geometry.attributes.position, n = Math.min(pts.length, a.count);
+    for (let i = 0; i < n; i++) a.setXYZ(i, pts[i][0], pts[i][1], z || 0);
+    a.needsUpdate = true; line.geometry.setDrawRange(0, n); line.visible = n > 1;
+    if (line.material.isLineDashedMaterial) line.computeLineDistances();
+  }
+  // the predicted path r = p/(1 + e cos ν) in AU, cut where an open orbit runs far out of the view
+  function conicPts(el, R) {
+    if (el.radial || el.p < 1e-12) return [];
+    const pts = [];
+    if (el.bound) {
+      const b = el.a * Math.sqrt(1 - el.e * el.e), c = Math.cos(el.w), s = Math.sin(el.w), cx = -el.a * el.e * c, cy = -el.a * el.e * s;
+      for (let i = 0; i <= 720; i++) { const E = TAU * i / 720, x = el.a * Math.cos(E), y = b * Math.sin(E); pts.push([cx + x * c - y * s, cy + x * s + y * c]); }
+      return pts;
+    }
+    const rMax = 6 * R + 4 * el.q, nuMax = Math.min(Math.acos(Math.max(-1, -1 / el.e)) - 1e-4, Math.acos(clamp3((el.p / rMax - 1) / el.e, -1, 1)));
+    for (let i = 0; i <= 720; i++) { const nu = -nuMax + 2 * nuMax * i / 720, r = el.p / (1 + el.e * Math.cos(nu)); if (r > 0) pts.push([r * Math.cos(nu + el.w), r * Math.sin(nu + el.w)]); }
+    return pts;
+  }
+  function fan3(wd, cur) {
+    const pts = wd.pts.concat(cur ? [[S.A.x, S.A.y]] : []), n = pts.length, pos = new Float32Array((n + 1) * 3), idx = [];
+    pts.forEach((p, i) => { pos[3 * i + 3] = p[0]; pos[3 * i + 4] = p[1]; });
+    for (let i = 1; i < n; i++) idx.push(0, i, i + 1);
+    const g = new THREE.BufferGeometry(), attr = new THREE.BufferAttribute(pos, 3); g.setAttribute('position', attr); g.setIndex(idx);
+    const e = new THREE.BufferGeometry(); e.setAttribute('position', attr);
+    const X = T3.X, m = new THREE.Mesh(g, X.wmat[wd.k % 2][cur ? 1 : 0]), l = new THREE.LineLoop(e, X.wline[wd.k % 2]);
+    m.renderOrder = 1; return { m, l, cur };
+  }
+  function wedges3() {
+    const X = T3.X, A = S.A, live = new Set(), on = S.layers.wedge && !!A.cur;
+    if (on) {
+      for (const wd of A.wedges.concat([A.cur])) {
+        if (wd.pts.length < 1) continue;
+        const cur = wd === A.cur; live.add(wd);
+        let f = T3.wed.get(wd);
+        if (f && (cur || f.cur)) { X.wG.remove(f.m, f.l); f.m.geometry.dispose(); f.l.geometry.dispose(); f = null; }
+        if (!f) { f = fan3(wd, cur); T3.wed.set(wd, f); X.wG.add(f.m, f.l); }
+      }
+    }
+    for (const [wd, f] of T3.wed) if (!live.has(wd)) { X.wG.remove(f.m, f.l); f.m.geometry.dispose(); f.l.geometry.dispose(); T3.wed.delete(wd); }
+  }
+  // a tube of radius r (scene units) along a path in the plane (scene units): six sides, a color per point if cols, gaps if dash
+  function tube3(mesh, pts, r, cols, dash) {
+    mesh.geometry.dispose();
+    const n = pts.length, RS = 6, g = new THREE.BufferGeometry();
+    mesh.geometry = g; mesh.visible = n > 1; if (n < 2) return;
+    const pos = new Float32Array(n * RS * 3), col = cols ? new Float32Array(n * RS * 3) : null, idx = [];
+    let len = 0;
+    for (let i = 0; i < n; i++) {
+      const a = pts[Math.max(0, i - 1)], b = pts[Math.min(n - 1, i + 1)];
+      let tx = b[0] - a[0], ty = b[1] - a[1]; const tl = Math.hypot(tx, ty) || 1; tx /= tl; ty /= tl;
+      for (let j = 0; j < RS; j++) {
+        const an = TAU * j / RS, o = (i * RS + j) * 3;
+        pos[o] = pts[i][0] - r * Math.sin(an) * ty; pos[o + 1] = pts[i][1] + r * Math.sin(an) * tx; pos[o + 2] = r * Math.cos(an);
+        if (col) { col[o] = cols[3 * i]; col[o + 1] = cols[3 * i + 1]; col[o + 2] = cols[3 * i + 2]; }
+      }
+      if (i > 0) {
+        len += Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]);
+        if (!dash || Math.floor(len / dash) % 2 === 0) for (let j = 0; j < RS; j++) { const p0 = (i - 1) * RS + j, p1 = (i - 1) * RS + (j + 1) % RS, q0 = p0 + RS, q1 = p1 + RS; idx.push(p0, q0, p1, p1, q0, q1); }
+      }
+    }
+    g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); if (col) g.setAttribute('color', new THREE.BufferAttribute(col, 3)); g.setIndex(idx);
+  }
+  // the trail as a tube that fades into the sky toward its old end (the last 1500 points kept by the model, at most 600 drawn)
+  function trail3(mesh, b, col) {
+    const tr = b.trail.slice(-1500).concat([[b.x, b.y]]), st = Math.max(1, Math.ceil(tr.length / 600)), k = T3.k, pts = [], cols = [];
+    const bg = new THREE.Color('#04060b'), cc = new THREE.Color(col), t = new THREE.Color();
+    for (let i = (tr.length - 1) % st; i < tr.length; i += st) pts.push([tr[i][0] * k, tr[i][1] * k]);
+    pts.forEach((_, i) => { t.copy(bg).lerp(cc, 0.12 + 0.88 * Math.pow((i + 1) / pts.length, 1.5)); cols.push(t.r, t.g, t.b); });
+    tube3(mesh, pts, 0.0034, cols);
+  }
+  // world point (AU) to the picture (CSS px), and a picture point to the orbit plane (AU, or null off the plane)
+  const P3 = (x, y) => T3.S.project([x * T3.k, y * T3.k, 0]);
+  function toW3(px, py) {
+    const S3 = T3.S, p = new THREE.Vector3();
+    T3.ray.setFromCamera({ x: px / S3.w * 2 - 1, y: 1 - py / S3.h * 2 }, S3.cam);
+    if (!T3.ray.ray.intersectPlane(new THREE.Plane(new THREE.Vector3(0, 0, 1), 0), p)) return null;
+    return { x: p.x / T3.k, y: p.y / T3.k };
+  }
+  function draw3D() {
+    const S3 = T3.S, X = T3.X, A = S.A, elA = elements(A), elL = elements(S.launch), L = S.launch;
+    S3.size(W, H); ease3();
+    const E = T3.E, R = Math.max(E.hw, E.hh), k = T3.k = 1 / R, G = X.G, ps = tokens().ps;
+    G.scale.setScalar(k);
+    // camera: frame the box with room for the strip at the top and the words at the bottom
+    const o = T3.o, t = Math.tan(S3.cam.fov * Math.PI / 360), asp = W / H, top = Math.max(50 * ps, clockY() + 34 * ps), bot = (W < 560 * ps ? 62 : 48) * ps;
+    const cr = Math.abs(Math.sin(o.th)), sr0 = Math.abs(Math.cos(o.th)), hx = (E.hw * cr + E.hh * sr0) * k, hy = (E.hw * sr0 + E.hh * cr) * k;   /* the box across and along the line of sight */
+    const need = Math.max(hx * 1.14 / (t * asp), (hy * Math.max(Math.cos(o.ph), 0.4) + 0.07) * 1.06 / t * H / Math.max(60, H - top - bot));
+    S3.cam.setViewOffset(W, H, 0, 0.035 * H + (bot - top) / 2, W, H);
+    S3.place(o, [E.cx * k, E.cy * k, 0], need);
+    // the plane: AU grid fading out, a faint disc inside a closed orbit
+    const step = niceStep(2.6 * R, W < 600 ? 6 : 10);
+    X.grid.visible = S.layers.grid;
+    if (S.layers.grid) grid3(step, Math.round(E.cx / step) * step, Math.round(E.cy / step) * step, 1.7 * R);
+    X.disc.visible = S.layers.conic && elA.bound && !elA.radial;
+    if (X.disc.visible) { const b = elA.a * Math.sqrt(1 - elA.e * elA.e); X.disc.scale.set(elA.a, b, 1); X.disc.rotation.z = elA.w; X.disc.position.set(-elA.a * elA.e * Math.cos(elA.w), -elA.a * elA.e * Math.sin(elA.w), 0); }
+    wedges3();
+    // paths
+    const con = (mesh, el, r, dash) => {
+      const key = [el.p, el.e, el.w, k, r].join();
+      if (mesh.key !== key) { mesh.key = key; tube3(mesh, conicPts(el, R).map((p) => [p[0] * k, p[1] * k]), r, null, dash); }
+    };
+    X.tcA.visible = X.tcB.visible = X.ttA.visible = X.ttB.visible = false;
+    if (S.layers.conic) { con(X.tcA, elA, 0.0022); if (S.B) con(X.tcB, elements(S.B), 0.0026, 0.03); }
+    if (S.layers.trail) { trail3(X.ttA, A, SPACE.neg); if (S.B) trail3(X.ttB, S.B, SPACE.pos); }
+    // foci, axis, apsides
+    const fo = S.layers.foci && !elA.radial && elA.e > 1e-4, c = Math.cos(elA.w), s = Math.sin(elA.w), mk = 0.012;
+    X.axis.visible = X.focus.visible = X.ctr.visible = X.dq.visible = X.dQ.visible = false;
+    if (fo) {
+      const q = [elA.q * c, elA.q * s];
+      X.dq.visible = true; X.dq.position.set(q[0] * k, q[1] * k, 0); X.dq.scale.setScalar(mk * 0.55);
+      if (elA.bound) {
+        const Q = [-elA.Q * c, -elA.Q * s], ae = elA.a * elA.e;
+        fill3(X.axis, [q, Q]);
+        X.focus.visible = X.ctr.visible = X.dQ.visible = true;
+        X.focus.position.set(-2 * ae * c * k, -2 * ae * s * k, 0); X.focus.scale.setScalar(mk);
+        X.ctr.position.set(-ae * c * k, -ae * s * k, 0); X.ctr.scale.setScalar(mk); X.ctr.rotation.z = elA.w;
+        X.dQ.position.set(Q[0] * k, Q[1] * k, 0); X.dQ.scale.setScalar(mk * 0.55);
+      } else fill3(X.axis, [[0, 0], [-4 * q[0], -4 * q[1]]]);
+      X.axis.material.dashSize = 0.03 * R; X.axis.material.gapSize = 0.025 * R;
+    }
+    // star and planets: drawn far larger than to scale (the star grows a little with M, as in the flat view)
+    let sr = 0.055 * (7 + 3 * Math.log10(S.M * 10)) / 10;
+    if (elA.q > 0) sr = Math.min(sr, Math.max(0.012, 0.5 * elA.q * k));
+    X.star.scale.setScalar(sr);
+    const pr = Math.min(0.03, Math.max(0.011, 0.85 * sr)), w = 0.0052;
+    const body = (b, mesh, arr) => {
+      mesh.visible = true; mesh.position.set(b.x * k, b.y * k, 0); mesh.scale.setScalar(pr);
+      const gl = b === A ? X.gA : X.gB; gl.visible = true; gl.position.copy(mesh.position); gl.scale.setScalar(pr * 5);
+      arr.visible = false;
+      if (S.layers.vel && S.t > 0 && !b.done) setArrow(arr, new THREE.Vector3(b.x * k, b.y * k, 0), new THREE.Vector3((b.x + b.vx * S.kw) * k, (b.y + b.vy * S.kw) * k, 0), w * 0.8);
+    };
+    body(A, X.pA, X.vA); X.pB.visible = X.vB.visible = X.gB.visible = false; if (S.B) body(S.B, X.pB, X.vB);
+    // the launch: speed circles, the arrow, its tip and the hollow launch marker
+    X.circ.visible = X.esc.visible = S.layers.circ;
+    X.circ.position.set(L.x, L.y, 0); X.circ.scale.setScalar(elL.vcirc * S.kw);
+    X.esc.position.set(L.x, L.y, 0); X.esc.scale.setScalar(elL.vesc * S.kw);
+    X.circ.material.dashSize = X.esc.material.dashSize = 0.04; X.circ.material.gapSize = X.esc.material.gapSize = 0.03;
+    const lp = new THREE.Vector3(L.x * k, L.y * k, 0), tp = new THREE.Vector3((L.x + L.vx * S.kw) * k, (L.y + L.vy * S.kw) * k, 0);
+    setArrow(X.launch, lp, tp, w * 1.25);
+    const hot = drag && drag.type === 'vel' ? 1.35 : 1;
+    X.tip.position.copy(tp); X.tip.scale.setScalar(0.017 * hot / Math.sqrt(o.zoom)); X.tipIn.position.copy(tp).setZ(0.0005); X.tipIn.scale.copy(X.tip.scale);
+    X.mark.position.copy(lp); X.mark.scale.setScalar(0.02 * (drag && drag.type === 'pos' ? 1.35 : 1) / Math.sqrt(o.zoom));
+    S3.r.setClearColor('#04060b'); S3.render();
+    labels3D(elA, elL);
+  }
+  // the words on the 3D picture, drawn on the orbit canvas over it (as the flat view draws them)
+  function labels3D(elA, elL) {
+    const T = Object.assign(tokens(), SPACE), ps = T.ps, ctx = vctx, A = S.A, L = S.launch, k = T3.k;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0); ctx.clearRect(0, 0, W, H);
+    const fs = 11 * ps, inView = (p) => p[2] < 1 && p[0] > -40 && p[0] < W + 40 && p[1] > -40 && p[1] < H + 40;
+    const s0 = P3(0, 0), pxPerAU = Math.abs(P3(1 / k * 0.1, 0)[0] - s0[0]) * 10 * k;
+    // wedge areas, inside completed wedges that are large enough on the picture
+    if (S.layers.wedge && A.cur) for (const wd of A.wedges) {
+      const pp = [s0].concat(wd.pts.filter((_, i) => i % 3 === 0 || i === wd.pts.length - 1).map((p) => P3(p[0], p[1])));
+      let a2 = 0; for (let i = 0; i < pp.length; i++) { const p = pp[i], q = pp[(i + 1) % pp.length]; a2 += p[0] * q[1] - q[0] * p[1]; }
+      if (Math.abs(a2) / 2 < 2600 * ps * ps) continue;
+      const mid = wd.pts[Math.floor(wd.pts.length / 2)], m = P3(mid[0] * 0.62, mid[1] * 0.62);
+      if (!inView(m) || Math.hypot(m[0] - s0[0], m[1] - s0[1]) < 40 * ps) continue;
+      text(ctx, T, Math.abs(wd.area).toPrecision(3), m[0], m[1], 'center', 'middle', T.ink, 10 * ps, 600);
+    }
+    // foci, axis, apsides
+    let aBox = null, perLab = null;
+    if (S.layers.foci && !elA.radial && elA.e > 1e-4) {
+      const c = Math.cos(elA.w), s = Math.sin(elA.w), q = P3(elA.q * c, elA.q * s);
+      if (elA.bound) {
+        const ae = elA.a * elA.e, Q = P3(-elA.Q * c, -elA.Q * s), C = P3(-ae * c, -ae * s), F = P3(-2 * ae * c, -2 * ae * s);
+        if (!S.blind && Math.hypot(Q[0] - C[0], Q[1] - C[1]) > 50 * ps) {
+          const ax = (C[0] + Q[0]) / 2, ay = (C[1] + Q[1]) / 2 - 16 * ps, aTxt = 'a = ' + sig(elA.a, 3) + ' AU';
+          text(ctx, T, aTxt, ax, ay, 'center', 'middle', T.ink, fs, 600, true);
+          ctx.font = `600 ${fs}px ${T.mono}`; const hw = ctx.measureText(aTxt).width / 2 + 6 * ps; aBox = { x0: ax - hw, x1: ax + hw, y: ay };
+        }
+        const fClash = aBox && Math.abs(aBox.y - (F[1] + 15 * ps)) < 20 * ps && F[0] + 45 * ps > aBox.x0 && F[0] - 45 * ps < aBox.x1;
+        if (!fClash && W >= 560 * ps && Math.hypot(F[0] - s0[0], F[1] - s0[1]) > 30 * ps && Math.hypot(F[0] - Q[0], F[1] - Q[1]) > 90 * ps) text(ctx, T, 'empty focus', F[0], F[1] + 15 * ps, 'center', 'middle', T.muted, fs, 400);
+        text(ctx, T, S.blind ? 'aphelion' : 'aphelion ' + sig(elA.Q, 3) + ' AU', Q[0], Q[1] + 16 * ps, 'center', 'middle', T.muted, fs, 400);
+      }
+      const lab = S.blind ? 'perihelion' : 'perihelion ' + sig(elA.q, 3) + ' AU', right = q[0] >= s0[0];
+      perLab = [lab, q[0] + (right ? 10 : -10) * ps, q[1], right ? 'left' : 'right'];
+    }
+    // the star's label above it, or below when the semi major axis label is in the way
+    const sTxt = 'star ' + S.M.toFixed(2) + ' M☉', srPx = Math.max(6, T3.X.star.scale.x / k * pxPerAU);
+    ctx.font = `600 ${fs}px ${T.mono}`; const sw = ctx.measureText(sTxt).width / 2;
+    const clash = aBox && aBox.x1 > s0[0] - sw && aBox.x0 < s0[0] + sw && Math.abs(aBox.y - (s0[1] - srPx - 15 * ps)) < 20 * ps;
+    if (clash) text(ctx, T, sTxt, s0[0], s0[1] + srPx + 10 * ps, 'center', 'top', T.ink, fs, 600);
+    else text(ctx, T, sTxt, s0[0], s0[1] - srPx - 10 * ps, 'center', 'bottom', T.ink, fs, 600);
+    /* the perihelion label under its dot, or over it when the star's label sits under the star at the same height */
+    if (perLab) text(ctx, T, perLab[0], perLab[1], perLab[2] + (clash && Math.abs(perLab[2] - s0[1]) < 30 * ps ? -16 : 16) * ps, perLab[3], 'middle', T.muted, fs, 400);
+    // speed circle values where each circle comes nearest the viewer, and the launch speed at the arrow tip
+    if (S.layers.circ) {
+      const dx = Math.cos(T3.o.th), dy = Math.sin(T3.o.th), r1 = elL.vcirc * S.kw, r2 = elL.vesc * S.kw;
+      const p1 = P3(L.x + dx * r1, L.y + dy * r1), p2 = P3(L.x + dx * r2, L.y + dy * r2);
+      text(ctx, T, 'circular ' + sig(elL.vcirc * KMS, 3), p1[0], p1[1] + 9 * ps, 'center', 'middle', T.equi, 10 * ps, 600);
+      text(ctx, T, 'escape ' + sig(elL.vesc * KMS, 3) + ' km/s', p2[0], p2[1] + 9 * ps, 'center', 'middle', T.pos, 10 * ps, 600);
+    }
+    const tp = P3(L.x + L.vx * S.kw, L.y + L.vy * S.kw);
+    text(ctx, T, 'v₀ ' + sig(elL.v * KMS, 3) + ' km/s', tp[0] + 12 * ps, tp[1] - 10 * ps, 'left', 'bottom', T.accent, fs, 700);
+    // ruler points on the plane, the line between them and its length
+    if (S.ruler.on) {
+      const PP = S.ruler.pts.map((q) => (q ? P3(q.x, q.y) : null));
+      if (PP[0] && PP[1]) {
+        ctx.strokeStyle = T.ink; ctx.lineWidth = 1.4 * ps; ctx.setLineDash([6 * ps, 4 * ps]);
+        ctx.beginPath(); ctx.moveTo(PP[0][0], PP[0][1]); ctx.lineTo(PP[1][0], PP[1][1]); ctx.stroke(); ctx.setLineDash([]);
+        text(ctx, T, rulerVals().d12 + ' AU', 0.25 * PP[0][0] + 0.75 * PP[1][0], 0.25 * PP[0][1] + 0.75 * PP[1][1] - 14 * ps, 'center', 'middle', T.ink, fs, 700, true);
+      }
+      PP.forEach((q, i) => {
+        if (!q) return;
+        const hot = S.keyMode === 'ruler' && S.ruler.active === i, r = 9 * ps;
+        ctx.strokeStyle = hot ? T.accent : T.ink; ctx.lineWidth = (hot ? 2 : 1.4) * ps;
+        ctx.beginPath(); ctx.moveTo(q[0] - r, q[1]); ctx.lineTo(q[0] + r, q[1]); ctx.moveTo(q[0], q[1] - r); ctx.lineTo(q[0], q[1] + r); ctx.stroke();
+        ctx.beginPath(); ctx.arc(q[0], q[1], 4 * ps, 0, TAU); ctx.stroke();
+        text(ctx, T, String(i + 1), q[0] + 8 * ps, q[1] - 8 * ps, 'left', 'bottom', hot ? T.accent : T.ink, fs, 700);
+      });
+    }
+    // where a planet has left the picture
+    for (const [b, col] of [[S.B, T.pos], [A, T.neg]]) {
+      if (!b) continue; const p = P3(b.x, b.y);
+      if (inView(p) && p[0] > 0 && p[0] < W && p[1] > 0 && p[1] < H) continue;
+      const cx = W / 2, cy = H / 2, dx = (p[2] < 1 ? 1 : -1) * (p[0] - cx), dy = (p[2] < 1 ? 1 : -1) * (p[1] - cy), m = 16 * ps;
+      const kk = Math.min((W / 2 - m) / Math.abs(dx || 1e-9), (H / 2 - m) / Math.abs(dy || 1e-9)), ix = cx + dx * kk, iy = cy + dy * kk, ang = Math.atan2(dy, dx);
+      ctx.fillStyle = col; arrowHead(ctx, ix, iy, ang, 10 * ps);
+      text(ctx, T, sig(Math.hypot(b.x, b.y), 3) + ' AU', ix - Math.cos(ang) * 26 * ps, iy - Math.sin(ang) * 18 * ps, 'center', 'middle', col, 10 * ps);
+    }
+    const y0 = clockY();
+    text(ctx, T, 't = ' + fmtT(S.t), 12 * ps, y0, 'left', 'top', T.ink, 13 * ps, 700);
+    text(ctx, T, statusText(A, elA), 12 * ps, y0 + 18 * ps, 'left', 'top', T.muted, 11 * ps, 600);
+    const g = S.layers.grid ? 'Grid squares ' + sig(niceStep(2.6 / k, W < 600 ? 6 : 10), 2) + ' AU.' : '';
+    const notes = W < 560 * ps ? [g, 'Star and planets far larger than to scale.', 'Drag the arrow tip to launch; drag elsewhere to turn.']
+      : [(g ? g + ' ' : '') + 'Star and planets drawn far larger than to scale.', 'Drag the arrow tip to launch; drag elsewhere to turn.'];
+    notes.filter(Boolean).reverse().forEach((l, i) => text(ctx, T, l, 12 * ps, H - (12 + 16 * i) * ps, 'left', 'bottom', T.muted, (W < 400 ? 9 : 10) * ps, 400));
+  }
+  // dragging on the 3D picture: the arrow tip, the launch marker or a ruler point; anything else turns the view (VD3.orbit)
+  const evPx3 = (e) => { const r = T3.S.el.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+  function hitTest3(px, py, touch) {
+    const ps = tokens().ps, L = S.launch, f = touch ? 1.5 : 1;
+    const tp = P3(L.x + L.vx * S.kw, L.y + L.vy * S.kw), lp = P3(L.x, L.y);
+    const dT = Math.hypot(px - tp[0], py - tp[1]), dL = Math.hypot(px - lp[0], py - lp[1]);
+    if (dT < 18 * ps * f && dT <= dL) return 'vel';
+    if (dL < 14 * ps * f) return 'pos';
+    return null;
+  }
+  function grab3(e) {
+    if (!T3.on) return false;
+    const [px, py] = evPx3(e), touch = e.pointerType === 'touch';
+    if (S.ruler.on) {
+      const w = toW3(px, py); if (!w) return false;
+      const tol = (touch ? 24 : 12) * tokens().ps;
+      let i = -1;
+      S.ruler.pts.forEach((q, j) => { if (q) { const p = P3(q.x, q.y); if (Math.hypot(p[0] - px, p[1] - py) < tol && (i < 0 || j === S.ruler.active)) i = j; } });
+      if (i < 0) { i = S.ruler.pts[0] ? (S.ruler.pts[1] ? S.ruler.next || 0 : 1) : 0; S.ruler.next = 1 - i; }
+      S.ruler.pts[i] = w; S.ruler.active = i; drag = { type: 'ruler', i, three: true };
+    } else {
+      const h = hitTest3(px, py, touch);
+      if (!h) return false;
+      wasPlaying = S.playing; drag = { type: h, three: true };
+      setPresetUI(null); S.hintFrom = null; $('presetHint').textContent = h === 'vel'
+        ? 'Custom launch. Watch the orbit path reshape as you drag; release to launch.'
+        : 'Custom launch. Moving the launch point keeps the speed ratio to circular, so the orbit keeps its shape and scales with distance.';
+    }
+    view.focus({ preventScroll: true });
+    try { T3.S.el.setPointerCapture(e.pointerId); } catch (_) {}
+    schedule(); return true;
+  }
+  function move3(e) {
+    if (!T3.on) return;
+    const [px, py] = evPx3(e);
+    if (!drag || !drag.three) { if (e.pointerType === 'mouse' && !e.buttons) T3.S.el.style.cursor = S.ruler.on ? 'crosshair' : hitTest3(px, py) ? 'pointer' : 'grab'; return; }
+    const w = toW3(px, py); if (!w) return;
+    if (drag.type === 'ruler') S.ruler.pts[drag.i] = w;
+    else {
+      if (drag.type === 'vel') setVel((w.x - S.launch.x) / S.kw, (w.y - S.launch.y) / S.kw, e.shiftKey); else setPosWorld(w);
+      relaunch();
+    }
+    schedule();
+  }
+  // keys on the orbit view in 3D: with View chosen the arrow keys turn it; plus and minus zoom; comma and period turn
+  view.addEventListener('keydown', (e) => {
+    if (!T3.on || !T3.S) return;
+    const o = T3.o, k = e.key, dirs = { ArrowLeft: [-1, 0], ArrowRight: [1, 0], ArrowUp: [0, 1], ArrowDown: [0, -1] };
+    if (dirs[k] && S.keyMode === 'pan') { const st = e.shiftKey ? 0.03 : 0.12; o.th += dirs[k][0] * st; o.ph = clamp3(o.ph - dirs[k][1] * st, 0.02, 1.42); }
+    else if (k === '+' || k === '=') o.zoom = clamp3(o.zoom * 1.15, 0.4, 6);
+    else if (k === '-' || k === '_') o.zoom = clamp3(o.zoom / 1.15, 0.4, 6);
+    else if (k === ',' || k === '.') o.th += k === ',' ? 0.12 : -0.12;
+    else { if (k === 'f' || k === 'F') o.zoom = 1; return; }
+    e.preventDefault(); e.stopImmediatePropagation(); schedule();
+  }, true);
+  $('fit').addEventListener('click', () => { T3.o.zoom = 1; schedule(); });
+
   // ---------- boot ----------
   buildAreas();
   loadPreset('mercury');
@@ -1701,9 +2140,18 @@ kbd { font-family: var(--font-mono); font-size: 0.78rem; border: 1px solid var(-
   resize();
   fitView(true, true);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(schedule);
+  /* the 3D | Flat switch: opens 3D (the arrow tip, the launch point and the ruler drag on the orbit plane there too); ?view=flat opens flat */
+  const view3 = VD3K.view({
+    seg: '#viewSeg', init: init3D,
+    status: (m) => { const n = $('v3note'); n.textContent = m; n.hidden = false; setTimeout(() => { n.hidden = true; }, 6000); },
+    change: (on) => {
+      T3.on = on; if (T3.S) T3.S.el.style.display = on ? '' : 'none';
+      mainPane.classList.toggle('space', on); T3.E = null; schedule();
+    }
+  });
 
   // exposed for testing
-  window.__kepler = { S, elements, makeBody, advance, presetState, relaunch, loadPreset, mu, capture, csvText, fitSpec, setBlind, setReduce, setKeyMode, setRuler, get rows() { return rows; }, get V() { return V; }, toPx, chartData };
+  window.__kepler = { S, elements, makeBody, advance, presetState, relaunch, loadPreset, mu, capture, csvText, fitSpec, setBlind, setReduce, setKeyMode, setRuler, get rows() { return rows; }, get V() { return V; }, toPx, chartData, T3, view3 };
 })();
 </script>
 </body>
