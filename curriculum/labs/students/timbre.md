@@ -64,11 +64,11 @@ Use a comfortable listening level with real speakers or headphones. High volume 
 
 **Compare spectra.** Set $$f_1 = 220\ \text{Hz}$$. Compare **Sawtooth wave**, **Square wave** and **Triangle wave**. Record the amplitudes, frequencies and levels of harmonics 1 to 6. Note missing harmonics. Read the rms value and compare the waveforms.
 
-**Change the harmonics.** Use **Missing fundamental**, then remove harmonic 2 as well. Record the repetition period. Next use **Pure tone** and set only harmonics 2, 4, 6 and 8 to equal heights. Record the new period and compare it with the first case.
+**Change the harmonics.** Use **Missing fundamental**, then remove harmonic 2 as well. Record the repetition period. Next use **Pure tone**, set harmonics 2, 4, 6 and 8 to equal heights and turn harmonic 1 down to zero, so only those four sound. Record the new period and compare it with the first case.
 
 **Change phase.** Return to Sawtooth. Record the rms and peak/rms ratio, then use **Randomize phases** three times. Record what changes in the waveform and spectrum. If listening, describe the sound separately from the numerical results.
 
-**Detune a partial.** In the Inharmonic partials section, set **Detune harmonic** to 3 and **by Δf** to +1.5 Hz, and watch the shape drift. Then select **Back to exact harmonics** and compare stiffness $$B = 0$$, 0.005, 0.010 and 0.020. Record the first, third and fifth partial frequencies.
+**Detune a partial.** Return to Sawtooth. In the Inharmonic partials section, set **Detune harmonic** to 3 and **by Δf** to +1.5 Hz, and watch the shape drift. Then select **Back to exact harmonics** and compare stiffness $$B = 0$$, 0.005, 0.010 and 0.020. Record the first, third and fifth partial frequencies.
 
 **Using the virtual apparatus.** Adjust amplitudes with the harmonic bars and phases with the dials. Read frequencies and relative levels in **Strongest partials**, which lists the six strongest harmonics. Use **Waveform repeats every**, **RMS (bar units)** and **Peak / RMS** for the comparisons. **Record harmonics 1 to 6** records the six harmonics of the tone on screen as six rows. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Keep $$f_1$$, $$B$$ and $$\Delta f$$ written beside each run. **Detune harmonic** and **Stiffness B** are in the folded Inharmonic partials section.
 
@@ -85,7 +85,7 @@ Use rows for all requested harmonics and phase comparisons. State which partial 
 ## Analysis
 
 1. Compare amplitudes with $$1/n$$ for Sawtooth and odd only Square, and with $$1/n^2$$ for the odd harmonics of Triangle. Calculate two relative dB levels yourself.
-2. Calculate rms from the amplitudes and compare with the display.
+2. Calculate rms from the amplitudes and compare with the display. The presets hold 16 harmonics, following the formulas in Analysis 1, while the table lists only the first six.
 3. Explain each missing fundamental period using the common factor of the harmonic numbers present.
 4. Calculate the frequency of the detuned third partial and the relative phase drift time $$1/\lvert\Delta f\rvert$$.
 5. Compare the stiffness results with

@@ -51,7 +51,7 @@ Diagnostic ultrasound is safe at the low intensities scanners use, but a real tr
 
 ## Procedure
 
-**Part 1: speed of sound in water.** Measure the echo time from the air pocket under a tank of water at six or more water depths from 2 to 15 cm. Put the cursor on the middle (the peak) of each echo.
+**Part 1: speed of sound in water.** Measure the echo time from the air pocket under a tank of water at six or more water depths from 2 to 14 cm. Put the cursor on the middle (the peak) of each echo.
 
 **Part 2: fat, muscle and bone.** Measure the time of each echo from the layers under the skin. Note which echoes are strong, which are weak and which come back upside down (zoom in to see the trace).
 
@@ -59,9 +59,9 @@ Diagnostic ultrasound is safe at the low intensities scanners use, but a real tr
 
 **Part 4: a thin layer.** A 1.0 mm layer of fat lies in muscle. Find the lowest transducer frequency at which its two echoes appear as separate peaks, and record the two echo times at that frequency.
 
-**Part 5: blood flow.** With the beam on an artery at 5 MHz and the blood moving at 0.50 m/s, all at one speed, measure the Doppler shift at three or more angles between 30° and 75°. Then measure the shift of the mystery flow at three or more angles; keep the same mystery flow for the whole scan.
+**Part 5: blood flow.** With the beam on an artery at 5 MHz and the blood moving at 0.50 m/s, all at one speed, measure the Doppler shift at three or more angles between 30° and 75°. Then measure the shift of the mystery flow at three or more angles; keep the same mystery flow for the whole scan. If its peak is off the right of the spectrum, widen the spectrum's range.
 
-**Using the virtual apparatus.** Once you have started the scanner yourself, the Set up card is hidden while it runs: stop the scanner to change the setup. Record each reading, and send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** Hide the depths, speeds and predictions before you measure. Once you have started the scanner yourself, the Set up card is hidden while it runs: stop the scanner to change the setup. Record each reading, and send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
 ## Data
 

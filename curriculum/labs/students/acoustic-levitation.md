@@ -14,7 +14,7 @@ Student laboratory · Acoustics
 - Controls: **Drive voltage (peak to peak)**, 0 to 20 V in 0.1 V steps; **Top bowl phase Δφ**, −720° to 720° in 1° steps, with **Sweep the phase** (which reads **Stop the sweep** while the sweep runs) and **Phase to 0**; the bead material chips **Foam polystyrene, 30 kg/m³**, **Water, 998 kg/m³** and **Steel, 7850 kg/m³**; **Bead radius a**, 0.20 to 2.50 mm in 0.05 mm steps; **Fill the traps**, **Add a bead** and **Clear**. Dragging a trap ring on the picture up or down also moves the traps (it sets the phase), clicking a ring drops a bead in it, and the gold microphone can be dragged. In the single emitter setup the phase controls are disabled.
 - Readouts under Trapping: the wavelength λ, the plane wave node spacing λ/2, the trap spacing at the center, the largest \|p\| on the axis, **Largest upward push F<sub>max</sub>**, **Weight less buoyancy W**, **F<sub>max</sub> / W**, **Holds above** (the drive at which this bead would hold) and **Beads held / fallen**, with a table of the traps on the axis near the center: position z, the offset trap − node and the depth ΔU. The status line above the picture says whether the bead holds or falls.
 - **Record this setup** stores one row: setup and material, bead radius, drive, phase (left blank for one emitter, which has no phase control), the tracked trap, F<sub>max</sub>/W and holds or falls, with the traps near the center in the notes. The tracked trap is the one nearest the center on the first record, then the one nearest the last recorded position, so it follows one trap as the phase moves it.
-- **Export to worksheet** fills the Data table's seven columns in order: setup and material, radius, drive, phase, tracked trap z, F<sub>max</sub>/W, notes. Read the weight from the readouts.
+- **Export to worksheet** fills the Data table's first seven columns in order: setup and material, radius, drive, phase, tracked trap z, F<sub>max</sub>/W, notes. The last column, the drive squared, is yours. Read the weight from the readouts.
 
 **What the demo models.**
 
@@ -71,23 +71,23 @@ For a real levitator, follow the department's drive and exposure limits. Keep fi
 
 **Compare geometry.** Use one emitter and a reflector if available. Compare its trap spacing and required drive with the two bowls. Check whether changing source phase moves its standing wave pattern.
 
-**Using the virtual apparatus.** Use **Slice**, **Pressure \|p\|**, **Potential U** and the trap table to read positions. After choosing each setup, set **Bead radius a** to 0.30 mm. Use **Stack of beads** for spacing and **Move with phase** for manual phase settings: press **Stop the sweep**, then set **Top bowl phase Δφ**. For materials use **Hold a bead**, **Water droplet** and **Too heavy: steel falls**. Record **Largest upward push Fmax**, weight and $$F_{\rm max}/W$$ from the readouts. **Single emitter and reflector** supplies the last comparison; it has no phase control. **Record this setup** records one row; send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
+**Using the virtual apparatus.** Use **Slice**, **Pressure \|p\|**, **Potential U** and the trap table to read positions. After choosing each setup, set **Bead radius a** to 0.30 mm. Use **Stack of beads** for spacing and **Move with phase** for manual phase settings: press **Stop the sweep**, then set **Top bowl phase Δφ**. For materials use **Hold a bead**, **Water droplet** and **Too heavy: steel falls**. Record **Largest upward push Fmax**, weight and $$F_{\rm max}/W$$ from the readouts. **Single emitter and reflector** supplies the last comparison; it has no phase control. **Record this setup** records one row; send each part to the worksheet before clearing, so each part gets its own copy of the Data table. In the drive and material part, send each material (both radii) as its own copy, so each material gets its own graph.
 
 ## Data
 
-| Setup / material | Radius (mm) | Drive (Vpp) | Phase (degrees) | Tracked trap $$z$$ (mm) | $$F_{\rm max}/W$$ | Holds or falls / notes |
-|---|---|---|---|---|---|---|
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
+| Setup / material | Radius (mm) | Drive (Vpp) | Phase (degrees) | Tracked trap $$z$$ (mm) | $$F_{\rm max}/W$$ | Holds or falls / notes | Drive squared $$V^2$$ (V²) |
+|---|---|---|---|---|---|---|---|
+| | | | | | | | |
+| | | | | | | | |
+| | | | | | | | |
 
-Add rows for each phase, drive and material. Record adjacent trap positions and pressure node positions in the notes where needed.
+Add rows for each phase, drive and material. Record adjacent trap positions and pressure node positions in the notes where needed. Fill in the drive squared yourself for the drive and material rows.
 
 ## Analysis
 
 1. Calculate the mean near center spacing and compare with the plane wave prediction.
-2. Plot displacement of the tracked trap against phase in radians. Find $$k_{\rm axis}$$ from the slope, then compare $$\pi/k_{\rm axis}$$ with your measured spacing.
-3. Plot $$F_{\rm max}/W$$ against drive voltage squared for each material. Use the graph to estimate the threshold where the ratio reaches 1, and compare with the observed hold/fall bracket.
+2. Plot the tracked trap position against phase. Convert the slope from millimeters per degree to millimeters per radian, find $$k_{\rm axis}$$ from it, then compare $$\pi/k_{\rm axis}$$ with your measured spacing.
+3. For each material, plot $$F_{\rm max}/W$$ against the drive squared. Use the fitted line to estimate the drive at which the ratio reaches 1, and compare with the observed hold/fall bracket.
 4. Compare the two bead radii. Does the modeled ratio of force to weight change?
 5. Compare how far foam and water sit below the nearest pressure node. Explain the difference using force balance.
 

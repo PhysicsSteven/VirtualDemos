@@ -41,7 +41,7 @@ On a real two speaker setup, keep levels moderate (below about 85 dB at the list
 
 ## Procedure
 
-**Part 1: one frequency.** At 686 Hz and 20 °C, with the speakers 1.00 m apart and in phase, walk the microphone along a line 4.0 m from the wall. Then find and record each quiet spot and each loud spot along that line, as precisely as the meter allows. Check what happens to the quiet spots with speaker 2 switched off.
+**Part 1: one frequency.** At 686 Hz and 20 °C, with the speakers 1.00 m apart and in phase, walk the microphone along a line 4.0 m from the wall. Find and record each quiet spot and each loud spot along that line, as precisely as the meter allows. Then switch speaker 2 off and record the level at each quiet spot again.
 
 **Part 2: the speed of sound.** With the speakers 1.50 m apart and the walk line 3.0 m from the wall, find the quiet spots along the line at three or more frequencies between 400 and 1200 Hz.
 
@@ -53,23 +53,23 @@ On a real two speaker setup, keep levels moderate (below about 85 dB at the list
 
 ## Data
 
-| Trial | $$x$$ (m) | $$y$$ (m) | $$r_1$$ (m) | $$r_2$$ (m) | Level (dB) | Loud or quiet |
-|---|---|---|---|---|---|---|
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
-| | | | | | | |
+| Trial | $$x$$ (m) | $$y$$ (m) | $$r_1$$ (m) | $$r_2$$ (m) | Level (dB) | Loud or quiet | Path difference $$\Delta r$$ (m) | Order $$n$$ |
+|---|---|---|---|---|---|---|---|---|
+| | | | | | | | | |
+| | | | | | | | | |
+| | | | | | | | | |
+| | | | | | | | | |
+| | | | | | | | | |
 
-For each spot, work out $$\Delta r = r_2 - r_1$$ and the order $$m$$.
+Fill the last three columns yourself. For each spot, write loud or quiet, work out $$\Delta r = r_2 - r_1$$, and give its order $$n$$, the number of wavelengths in $$\Delta r$$ that the spot should have: $$n = m$$ at a loud spot and $$n = m + \tfrac12$$ at a quiet one when the speakers are in phase (so $$n = \ldots, -1, -\tfrac12, 0, \tfrac12, 1, \ldots$$). A graph of $$\Delta r$$ against $$n$$ is a straight line of slope $$\lambda$$.
 
 ## Analysis
 
-1. For Part 1, list $$\Delta r$$ for every loud and quiet spot. Show that the quiet spots are at $$(m + \frac12)\lambda$$ and the loud ones at $$m\lambda$$, and find $$\lambda$$ from your quiet spots. Compare with $$v/f$$.
+1. For Part 1, list $$\Delta r$$ for every loud and quiet spot. Show that the quiet spots are at $$(m + \frac12)\lambda$$ and the loud ones at $$m\lambda$$, and find $$\lambda$$ from your quiet spots. Compare with $$v/f$$. On the graph of $$\Delta r$$ against $$n$$, which spots lie off the line, and why?
 2. Explain what happened when speaker 2 was switched off.
-3. For Part 2, find $$\lambda$$ at each frequency from the quiet spots, then $$v = f\lambda$$ at each. Find the mean speed of sound and compare it with $$v = 331.3\ \mathrm{m/s}\,\sqrt{1 + t_{\rm C}/273.15}$$. If you plot $$\lambda$$ against $$1/f$$, the slope is $$v$$.
-4. For Part 3, compare the quiet spots with Part 1 and explain the change.
-5. For Part 4, find the mystery wavelength and frequency.
+3. For Part 2, find $$\lambda$$ at each frequency from the slope of $$\Delta r$$ against $$n$$ for its quiet spots, then $$v = f\lambda$$ at each. Find the mean speed of sound and compare it with $$v = 331.3\ \mathrm{m/s}\,\sqrt{1 + t_{\rm C}/273.15}$$.
+4. For Part 3, compare the quiet spots with Part 1 and explain the change. With speaker 2 wired backwards, which orders $$n$$ do the quiet spots have?
+5. For Part 4, find the mystery wavelength from the slope of $$\Delta r$$ against $$n$$, and the frequency from it.
 
 ## Uncertainty
 
@@ -84,4 +84,4 @@ The level changes slowly near a loud spot and very quickly near a quiet one, so 
 
 ## What to hand in
 
-Prelab answers, a Data table copy for each part and frequency, your path differences and orders, your values of $$\lambda$$, $$v$$ and the mystery frequency with uncertainties, and answers to the questions. Identify simulated data.
+Prelab answers, a Data table copy for each part and frequency, the graphs of $$\Delta r$$ against $$n$$ with fits, your values of $$\lambda$$, $$v$$ and the mystery frequency with uncertainties, and answers to the questions. Identify simulated data.

@@ -238,7 +238,7 @@
   const roomWalls = (r) => (r.walls === 'panels' ? `${r.panels_n} ${r.panel_material} panels` : r.walls === 'wedges' ? `wedges ${r.wedge_depth_m} m deep` : 'hard walls')
     + (r.floor && r.floor !== 'wedges' ? `, ${r.floor} floor` : '');
   Object.assign(FROM_DEMO, {
-    resonators: { demo: 'Resonators', cols: ['f_Hz', 'k', null, null, 'L_read_cm', 'spacing_cm'] },
+    resonators: { demo: 'Resonators', cols: ['f_Hz', 'k', null, null, 'L_read_cm', 'spacing_cm', 'x_(2k-1)/4f_ms'] },
     timbre: { demo: 'Timbre and Harmonics', cols: [(r) => `run ${r.run}, ${r.preset}`, 'n', 'f_Hz', 'rel_amplitude', 'level_dB', 'phase_deg', 'notes'] },
     'acoustic-levitation': { demo: 'Acoustic Levitation', cols: ['setup_material', 'radius_mm', 'drive_Vpp', 'phase_deg', 'tracked_trap_z_mm', 'Fmax_over_W', 'notes'] },
     /* Scan | Shape | Material | Thickness h (mm) | Mode/pattern | Frequency f (Hz) | Nodal sketch or description */

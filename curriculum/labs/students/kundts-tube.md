@@ -55,7 +55,7 @@ On a real Kundt's tube, stroke the rod with a cloth or chamois dusted with rosin
 
 **Part 3: clamped at L/4.** Repeat Part 1 in air with the steel rod clamped a quarter of its length from one end.
 
-**Part 4: unknown rod.** With an unknown rod 1.00 m long, clamped at its middle, in air at 20 °C, find the heap spacing and the frequency.
+**Part 4: unknown rod.** With an unknown rod 1.00 m long, clamped at its middle, in air at 20 °C, tune the plunger as in Part 1, then record the center of every heap and the counter frequency. Keep the same unknown rod for the whole part: choosing a new one changes the rod.
 
 **Using the virtual apparatus.** Changing the gas spreads the dust out again; after a change of rod, clamp or temperature the old heaps stay where they are until the tube is loud again (spread the dust yourself before you tune), and the counter shows $$f$$ only while the rod rings. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table.
 
@@ -70,7 +70,7 @@ On a real Kundt's tube, stroke the rod with a cloth or chamois dusted with rosin
 | | | | | | | | |
 | | | | | | | | |
 
-Record where the plunger was when the heaps formed.
+For each part, write in that copy's notes where the plunger was when the heaps formed.
 
 ## Analysis
 

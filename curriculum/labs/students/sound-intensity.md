@@ -51,7 +51,7 @@ On a real sound level meter bench, keep levels moderate (below about 85 dB at an
 
 **Part 3: background noise.** With the 10 mW source and a 55 dB background, measure the level at the seven distances of Part 1.
 
-**Part 4: mystery source.** Measure the level of the mystery source at five or more distances and find its power. Keep the same mystery source for the whole part.
+**Part 4: mystery source.** Measure the level of the mystery source at five or more distances and find its power. Keep the same mystery source for the whole part: choosing Mystery source again picks a new one.
 
 **Using the virtual apparatus.** Record each reading, and send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Fill the last two columns yourself: $$\log_2 r$$, and the intensity worked out from the level.
 

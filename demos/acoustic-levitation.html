@@ -1445,12 +1445,13 @@ table.traps tr.held td { color: var(--accent); font-weight: 600; }
   let recRows = [], lastZ = null, lastCfg = null, wsSeries = Date.now();
   const capStatus = (m) => { $('capStatus').textContent = m; };
   $('recSetup').addEventListener('click', () => {
+    if (!S.sweep && S.ph !== S.phT) { S.ph = S.phT; dirty.phys = dirty.slice = true; }   /* a phase still gliding to its slider value is recorded at that value */
     physics(); if (!PH) return;   /* the readings of the setup as it is now, not of the last drawn frame */
     const traps = PH.traps.filter((t) => t.z >= C.win[0] && t.z <= C.win[1]), ref = lastCfg === C.name && lastZ !== null ? lastZ : 0;
     const tr = traps.length ? traps.reduce((b, t) => (Math.abs(t.z - ref) < Math.abs(b.z - ref) ? t : b)) : null;
     const near = traps.slice().sort((p, q) => Math.abs(p.z) - Math.abs(q.z)).slice(0, 5).map((t) => t.z).sort((p, q) => p - q);
     const holds = PH.traps.length > 0;
-    recRows.push({ setup: `${C.name === 'lev' ? 'two bowls' : 'single emitter and reflector'} / ${MATS[S.mat].name}`, a: S.a.toFixed(2), V: S.V.toFixed(1), ph: C.name === 'lev' ? String(S.ph) : '',
+    recRows.push({ setup: `${C.name === 'lev' ? 'two bowls' : 'single emitter and reflector'} / ${MATS[S.mat].name}`, a: S.a.toFixed(2), V: S.V.toFixed(1), ph: C.name === 'lev' ? String(Math.round(S.ph * 10) / 10) : '',
       z: tr ? (tr.z * 1000).toFixed(2) : '', ratio: PH.Vpa === 0 ? '0' : String(+PH.ratio.toPrecision(4)),
       notes: [holds ? 'holds' : 'falls', near.length ? `traps near the center at ${near.map((z) => (z * 1000).toFixed(2)).join(' ')} mm` : ''].filter(Boolean).join('; ') });
     lastZ = tr ? tr.z : lastZ; lastCfg = C.name;

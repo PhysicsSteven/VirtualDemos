@@ -45,7 +45,7 @@ On a real string vibrator, keep fingers away from the driver while it runs, secu
 
 **Part 2: frequency.** Same string, mass and length, at $$A = 1.00$$ mm. Measure the power at six frequencies from 10 to 60 Hz.
 
-**Part 3: a mismatched end.** At 20 Hz and 1.00 mm, measure the power with the absorber too soft at five lengths from 1.20 to 1.40 m. Repeat the same lengths with the matched absorber.
+**Part 3: a mismatched end.** At 20 Hz and 1.00 mm, measure the power with the absorber too soft at five lengths from 1.20 to 1.40 m. Repeat the same lengths with the matched absorber. Keep both scans in one copy of the table, and type the length and the absorber in the Observation column of each row (the export does not include them).
 
 **Part 4: tension.** At 20 Hz and 1.00 mm with the matched absorber, measure the power with at least five hanging masses from 50 g to 800 g.
 

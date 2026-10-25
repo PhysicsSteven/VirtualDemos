@@ -12,7 +12,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §17.3. The wedge cutoff follow
 
 **Using the demo.** A 3D view of a room (Plan switches to the view from above), with a loudspeaker and a microphone on its center line, 1.5 m up; drag the microphone along the center line in either view. Under it is a graph of the sound level against distance. The room's size, its walls (hard, with panels, or lined with wedges), the wedge depth, the floor and the microphone distance are on the Set up card (the arrow keys move the microphone in steps of 0.1 m, 1 m with Shift; the slider moves it in 0.05 m steps). Measure chooses Level against distance (this worksheet) or Reverberation time (the Reverberation Time worksheet), and the octave band from 125 Hz to 4 kHz. Blind hides the free field line, the predictions and the wedge cutoff; the level meter stays.
 
-**What the demo models.** A steady 10 mW source, the same in every direction, playing noise in the chosen band. Ray tracing gives the reflected sound: each surface keeps a fraction $$\alpha$$ of a ray's energy and sends the rest off in a random direction, and energies add, so there is no interference. The direct sound is exact, $$I = P/(4\pi r^2)$$. The wedges absorb all but a pressure fraction $$R = 0.1\,(f_c/f)^2$$ (at most 0.9) of the sound, with $$f_c = c/(4d)$$; the form of $$R$$ is this demo's stated model, not measured data. Air absorbs nothing, $$c = 343$$ m/s and $$\rho = 1.204\ \mathrm{kg/m^3}$$. The meter reads to 0.1 dB, with no noise. Simulated data.
+**What the demo models.** A steady 10 mW source, the same in every direction, playing noise in the chosen band. Ray tracing gives the reflected sound: each surface keeps a fraction $$\alpha$$ of a ray's energy and sends the rest off in a random direction, and energies add, so there is no interference. The direct sound is exact, $$I = P/(4\pi r^2)$$. The wedges absorb all but a pressure fraction $$R = 0.1\,(f_c/f)^2$$ (at most 0.9) of the sound, with $$f_c = c/(4d)$$; the form of $$R$$ is this demo's stated model, not measured data. Air absorbs nothing, $$c = 343.2$$ m/s and $$\rho = 1.204\ \mathrm{kg/m^3}$$. The meter reads to 0.1 dB, with no noise. Simulated data.
 
 </details>
 
@@ -55,7 +55,7 @@ A real anechoic chamber is very quiet and can be disorienting: do not work alone
 
 **Part 4: an ordinary room.** In the 9 m × 7 m × 3 m room with hard walls and a concrete floor, at 500 Hz, measure the level at eight distances from 0.5 to 7 m.
 
-**Using the virtual apparatus.** Choose Level against distance before you start. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Fill the $$\log_2 r$$ column yourself.
+**Using the virtual apparatus.** Measure Level against distance in every part. Choosing the bare room for Part 4 switches the measurement back to Reverberation time, so choose Level against distance again after setting up the room. Send each part to the worksheet before clearing, so each part gets its own copy of the Data table. Fill the $$\log_2 r$$ column yourself.
 
 ## Data
 

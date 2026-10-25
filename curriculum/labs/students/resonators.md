@@ -16,7 +16,7 @@ Textbook: OpenStax *University Physics*, Vol. 1, §§17.2 and 17.4. Access for f
 - Controls on the card under the picture: **Source frequency f**, 250 to 1000 Hz in 1 Hz steps, with tuning fork chips at 256, 320, 384, 440 and 512 Hz; **Water surface below the top**, 2 to 98 cm in 1 mm steps (drag the water surface on the picture, or use the up and down arrows, Shift for 1 cm); **Tube inner diameter**, 2.0 to 6.0 cm; **Tube quality factor Q**, 10 to 80; and **Air temperature**, −10 to 40 °C in 0.5 °C steps.
 - Readouts: **Speed of sound c** and the wavelength at the note under Air; under Resonance tube, the **Level in the tube** in dB, the **Nearest resonance** (its k and position), the **End correction 0.61a** and the **Spacing λ/2**.
 - **Capture reading** (or Enter on the picture) stores the frequency, the water position as read on the scale, the temperature, the diameter and the seed, and numbers the reading k from the top at that frequency; k and L can be edited in the table, which also shows the spacing to the reading with the next lower k. The plot below the table is L against (2k − 1)/4f with a least squares line, and the fit readouts give c from the spacings, the slope c, the intercept −ΔL and ΔL/a, with their standard errors.
-- **Export to worksheet** sends f, k, the read L and the spacing to the Data table's f, k, Captured/read L and Spacing columns; the bracket columns are yours to fill. **Export CSV** saves every column, including x = (2k − 1)/4f in milliseconds. The **Reading seed** (press **New** for another) fixes the reading scatter.
+- **Export to worksheet** sends f, k, the read L, the spacing and x = (2k − 1)/4f in milliseconds to the Data table's f, k, Captured/read L, Spacing and x columns; the bracket columns are yours to fill. **Export CSV** saves every column, including x = (2k − 1)/4f in milliseconds. The **Reading seed** (press **New** for another) fixes the reading scatter.
 - **Blind** hides the computed response, the true resonance positions, the nearest resonance, the spacing λ/2 and the expected c and ΔL under the fit, and leaves the level, the trace, the readings and the fit.
 
 **What the demo models.**
@@ -70,33 +70,33 @@ With real equipment, secure the glass tube and adjust the water slowly. Keep wat
 4. Repeat the placements, typing the mode number $$k$$ for each repeated reading, then use a second source frequency without changing temperature or tube diameter.
 5. Repeat two of the resonances at a second temperature, and compare how the peak width changes when the damping is changed.
 
-**Using the virtual apparatus.** Choose **Resonance tube, find c**, set 20 °C, diameter 3.2 cm and 512 Hz, record the **Reading seed** and select **Blind**. Clear the readings. Move **Water surface below the top** to each maximum and press **Capture reading**. Correct the editable $$k$$ column if needed. Send the 512 Hz readings to the worksheet before clearing, then repeat at 640 Hz using **Source frequency f** and send those, so each frequency gets its own copy of the Data table. The captured length includes a small simulated meniscus reading error. Use the swept level trace as a visual guide if sound is unavailable.
+**Using the virtual apparatus.** Choose **Resonance tube, find c**, set 20 °C, diameter 3.2 cm and 512 Hz, record the **Reading seed** and select **Blind**. Clear the readings. Move **Water surface below the top** to each maximum and press **Capture reading**. Correct the editable $$k$$ column if needed. Send the 512 Hz readings to the worksheet before clearing, then repeat at 640 Hz using **Source frequency f** and send those, so each frequency gets its own copy of the Data table. Then return to 512 Hz, set 30 °C, capture the first two resonances and send them as a third copy. At 20 °C, compare the width of the first resonance at **Tube quality factor Q** 15 and 60 using the level readout. The captured length includes a small simulated meniscus reading error. Use the swept level trace as a visual guide if sound is unavailable.
 
 ## Data
 
-| $$f$$ (Hz) | Resonance $$k$$ | Lower bracket $$L$$ (cm) | Upper bracket $$L$$ (cm) | Captured/read $$L$$ (cm) | Spacing (cm) |
-|---|---|---|---|---|---|
-| | 1 | | | | |
-| | 2 | | | | |
-| | 3 | | | | |
-| | | | | | |
+| $$f$$ (Hz) | Resonance $$k$$ | Lower bracket $$L$$ (cm) | Upper bracket $$L$$ (cm) | Captured/read $$L$$ (cm) | Spacing (cm) | $$x$$ (ms) |
+|---|---|---|---|---|---|---|
+| | 1 | | | | | |
+| | 2 | | | | | |
+| | 3 | | | | | |
+| | | | | | | |
 
-Record temperature, tube diameter and seed above the table. Use a separate copy when temperature changes.
+Here $$x = (2k - 1)/(4f)$$. Record temperature, tube diameter and seed above the table. Use a separate copy when temperature changes.
 
 ## Analysis
 
 1. Calculate $$c$$ from each neighboring spacing. If you skipped an order, divide by the number of order steps between the two readings.
-2. Convert lengths to meters. Plot $$L$$ against $$x = (2k - 1)/(4f)$$, with $$x$$ in seconds. Fit a line and find $$c$$ and $$\Delta L$$. The CSV gives $$x$$ in milliseconds, so convert that column before interpreting the slope.
+2. Plot $$L$$ against $$x = (2k - 1)/(4f)$$ for each frequency at 20 °C. Fit a line and find $$c$$ and $$\Delta L$$. With $$L$$ in centimeters and $$x$$ in milliseconds the slope is in cm/ms, and 1 cm/ms = 10 m/s.
 3. Compare $$\Delta L$$ with $$0.6133a$$, where $$a$$ is the tube's inner radius.
 4. Compare your speed with the dry air prediction after finishing the measurement:
 
    $$c=331.3\sqrt{1+\frac{t_{\rm C}}{273.15}}\ \mathrm{m/s}.$$
 
-5. For a temperature comparison, explain whether the positions and spacing moved in the expected direction.
+5. For the temperature comparison, explain whether the positions and spacing moved in the expected direction. Describe how the width of the resonance changed with Q.
 
 ## Uncertainty
 
-Use your position brackets, repeated placements and the scatter of the fit to estimate uncertainty. Include the source frequency and temperature uncertainties if available. A common error in the ruler's zero cancels from spacing, but changes the fitted end correction. This is one reason the end correction is often less precise than the speed. Discuss whether broad resonance peaks made the center hard to locate.
+Use your position brackets, repeated placements and the scatter of the fit to estimate uncertainty. Include the source frequency and temperature uncertainties if available. A common error in the scale's zero cancels from spacing, but changes the fitted end correction. This is one reason the end correction is often less precise than the speed. Discuss whether broad resonance peaks made the center hard to locate.
 
 ## Questions
 
@@ -107,4 +107,4 @@ Use your position brackets, repeated placements and the scatter of the fit to es
 
 ## What to hand in
 
-Prelab answers, the data table and CSV, spacing calculations, the fitted graph and residuals, $$c$$ and $$\Delta L$$ with uncertainty, the temperature comparison if taken, and answers to the questions. Identify simulated data and give the seed.
+Prelab answers, the data table and CSV, spacing calculations, the fitted graph and residuals, $$c$$ and $$\Delta L$$ with uncertainty, the temperature and damping comparison, and answers to the questions. Identify simulated data and give the seed.
