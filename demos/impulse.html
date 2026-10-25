@@ -567,6 +567,8 @@ table.rows input:focus { border-color: var(--accent); }
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   /* the measuring tools: a stopwatch on the simulated clock */
+  /* How this works: a 22 s video of one stiff spring collision recorded at 10 kHz (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/impulse.mp4', poster: 'media/how-this-works/impulse.jpg' });
   VD.tools({ el: can, float: 'top: 10px; right: 10px', time: () => S.t });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   /* vd-knobs: every range input inside .instr gets a knob, and its readout takes a typed value (demos/lib/vd.js) */

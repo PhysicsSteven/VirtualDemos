@@ -526,6 +526,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
   VD.projector({ onChange: resize });
   /* the measuring tools: a stopwatch on the simulated clock */
+  /* How this works: a 21 s video of one reading of two masses on the plate (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/center-of-mass.mp4', poster: 'media/how-this-works/center-of-mass.jpg' });
   VD.tools({ el: can, strip: '#runBar', time: () => (S.mode === 'plate' ? null : S.t) });
   $('rmToggle').checked = reduce; $('rmToggle').addEventListener('change', (e) => { reduce = e.target.checked; });
   tokens(); new ResizeObserver(resize).observe(stage); init(); resize();

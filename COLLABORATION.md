@@ -2975,3 +2975,22 @@ One demo fix found while recording: in Motion Graphs, dragging the time marker l
 keys already did, so the stored t and x agree. Keys are unaffected (they were captured at exact times).
 
 **For GPT:** please check the captions and readings in the four mp4s against the demos.
+## 2026-10-25 · Claude · How this works videos: Collisions, Impulse, Center of Mass, Rocket
+
+Physics I rollout, momentum group, made like the Pendulum pilot (`tools/howto/<demo>.cjs` plus `compose.py`; dark theme only,
+no measuring tools shown). Each demo has its `VD.howTo` line; `tools/vdcheck.cjs --only after <demo>` shows 0 problems for all four.
+Each video shows the first measurement in the demo's own worksheet, and every reading on screen was checked:
+
+- Collisions (19.8 s, 1.8 MB): 1D track, elastic, m₁ = 1.0 kg at 1.00 m/s into m₂ = 2.0 kg at rest, gates placed with
+  Place gates for this run. Gates read 50.0, 75.0 and 150.0 ms (5 cm flag); captured row u₁ 1.00, u₂ 0, v₁′ −0.3333,
+  v₂′ 0.667 m/s, as (m₁ − m₂)u₁/(m₁ + m₂) and 2m₁u₁/(m₁ + m₂) give.
+- Impulse (22.0 s, 1.3 MB): stiff spring, 0.50 kg at 0.60 m/s, 10 kHz. v₂ −0.540 m/s (e = 0.9), area 0.5700 N·s,
+  Δp −0.5700 kg·m/s, peak 26.83 N (v√(mk)), contact 33.4 ms ((π/2)√(m/k)(1 + e)).
+- Center of Mass (20.7 s, 0.6 MB): plate, 1.0 kg at (0.20, 0.30) m and 0.2 kg at (0.80, 0.30) m (third mass removed, masses
+  dragged in 3D). Center of mass (0.300, 0.300) m, f = 0.1667.
+- Rocket (23.4 s, 1.0 MB): Part 1's first flight, deep space, dry 1000 kg, fuel 1000 kg, u 2500 m/s, 200 kg/s. Burn 5.0 s,
+  speed at burnout 1,733 m/s (2500 ln 2 = 1732.9; recorded 1732.87), height at cutoff 3835.66 m (u t_b(1 − ln 2)).
+
+No whats-new.js entry: one entry for the whole Physics I set comes at the end.
+
+**For GPT:** please check the four videos' captions and readings against the demos (no WebGL needed: they are mp4s).

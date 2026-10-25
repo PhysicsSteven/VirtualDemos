@@ -2755,6 +2755,8 @@ table.rows button { font: inherit; font-size: 0.85rem; background: none; border:
   new ResizeObserver(() => fitResize()).observe(fCan.parentElement);
   applyPreset('elastic');
   VD3K.view({ seg: '#viewSeg', init: init3, change: view3, status: (m) => { $('live').textContent = m; capStatus(m); } });
+  /* How this works: a 20 s video of one elastic run timed by the photogates (made by tools/howto/) */
+  VD.howTo({ src: 'media/how-this-works/collisions.mp4', poster: 'media/how-this-works/collisions.jpg' });
   renderRows();
   setRunning(!reduce);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
