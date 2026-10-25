@@ -7,6 +7,7 @@
 <link rel="stylesheet" href="lib/vd.css">
 <script src="lib/vd.js"></script>
 <script src="lib/vd3.js"></script>
+<script src="lib/vd3kit.js"></script>
 <style>
 /* projector on a short screen: the units line gives way so the lede fits on one or two lines */
 </style>
@@ -132,7 +133,7 @@ input[type="range"] { width: 100%; accent-color: var(--accent); margin: 0; }
           <button type="button" id="vBench" aria-pressed="true">Polarizer bench</button>
           <button type="button" id="vRefl" aria-pressed="false">Reflection</button>
         </div>
-        <div class="seg" role="group" aria-label="Perspective" id="viewSeg"><button type="button" data-view="flat" aria-pressed="true">Flat</button><button type="button" data-view="3d" aria-pressed="false">3D</button></div>
+        <div class="seg" role="group" aria-label="Perspective" id="viewSeg"><button type="button" data-view="3d" aria-pressed="false">3D</button><button type="button" data-view="flat" aria-pressed="true">Flat</button></div>
         <button type="button" class="btn" id="play">Pause</button>
         <button type="button" class="btn" id="reset">Reset</button>
         <span class="count mono" id="count" aria-live="polite"></span>
@@ -485,7 +486,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   // ---------- layout ----------
   let LY = null;
   /* the 3D view of the bench (three.js through demos/lib/vd3.js), set up further down */
-  const G3 = { on: false, ok: false, tried: false, loading: false, key: '', bkey: '', w: 0, h: 0, o: { th: -1.05, ph: 1.22, zoom: 1 } };
+  const G3 = { on: false, ok: false, tried: false, loading: false, key: '', bkey: '', w: 0, h: 0, o: { th: -0.92, ph: 1.08, zoom: 1 } };
   let g3 = null;
   function layout() {
     const ps = pscale();
@@ -501,7 +502,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const rows = [slots.slice(0, perRow)];
     for (let i = perRow; i < slots.length; i += perRow - 1) rows.push(slots.slice(i, i + perRow - 1));
     // the bench takes the top part; the two plots share the rest
-    const bh = Math.round(Hh * (wide ? 0.47 : (rows.length > 1 ? 0.56 : 0.42)));
+    const bh = Math.round(Hh * (wide ? (G3.on ? 0.55 : 0.47) : (rows.length > 1 ? 0.56 : 0.42)));
     const bench = { x: 0, y: 0, w: W, h: bh };
     let malus, nplot;
     if (wide) { const mw = Math.round(W * 0.58); malus = { x: 0, y: bh, w: mw, h: Hh - bh }; nplot = { x: mw, y: bh, w: W - mw, h: Hh - bh }; }
@@ -547,6 +548,19 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawBench() {
     const c = ctx, ps = pscale(), L = LY, b = L.bench;
     c.save(); c.beginPath(); c.rect(b.x, b.y, b.w, b.h); c.clip();
+    const VG = window.VDGear, dk = VD3.dark();
+    if (VG) VG.backdrop(c, W, b.h, { horizon: 0.86 });
+    // the optical rail under each row, and a post and carrier under each mount (scenery)
+    const railY = (ri) => Math.min(L.top + ri * L.rowH + L.rowH * 0.93 + 4 * ps, b.h - 6 * ps);
+    for (let ri = 0; ri < L.rows; ri++) {
+      const y = railY(ri), g = c.createLinearGradient(0, y - 4 * ps, 0, y + 4 * ps);
+      g.addColorStop(0, dk ? '#8a949f' : '#d5dbe1'); g.addColorStop(0.45, dk ? '#5f6873' : '#a7b0ba'); g.addColorStop(1, dk ? '#2f363e' : '#6d7782');
+      if (VG) VG.shadow(c, W / 2, y + 5 * ps, W * 0.48, 3 * ps, 0.8);
+      c.fillStyle = g; c.fillRect(6 * ps, y - 4 * ps, W - 12 * ps, 8 * ps);
+      c.fillStyle = dk ? 'rgba(255,255,255,0.25)' : 'rgba(30,36,44,0.35)'; for (let x = 10 * ps; x < W - 10 * ps; x += 8 * ps) c.fillRect(x, y - 4 * ps, 1, 2.5 * ps);
+    }
+    const post = (x, y0, y1) => { if (!VG || y1 - y0 < 6 * ps) return; VG.rod(c, x, y0, x, y1 - 4 * ps, 2.6 * ps, { color: dk ? '#8d97a2' : '#b4bcc6' }); VG.box(c, x - 11 * ps, y1 - 9 * ps, 22 * ps, 10 * ps, { r: 2 * ps, shadow: false }); };
+    for (const p of L.pos) if (p.kind === 'el') post(p.x, p.y + L.re, railY(p.row));
     c.fillStyle = T.muted; c.font = `${10.5 * ps}px ${T.ui}`; c.textAlign = 'left'; c.textBaseline = 'top';
     const note = 'Light travels left to right. Disks and fields are drawn as seen facing the oncoming beam.';
     c.fillText(c.measureText(note).width < W - 24 * ps ? note : 'Drawn as seen facing the oncoming beam.', 12 * ps, 7 * ps);
@@ -572,6 +586,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     const last = P[P.length - 1];
     if (last.row === L.rows - 1) { const Il = segI(states.length - 1); band(last.x, last.y, W - 4 * ps, last.y, Il); }
+    // the lamp at the start of the beam and the detector at its end, where there is room
+    if (VG && first.x - L.rs - 40 * ps > 0) {
+      post(18 * ps, first.y + 12 * ps, railY(0));
+      VG.box(c, 4 * ps, first.y - 13 * ps, 26 * ps, 26 * ps, { r: 4 * ps, shadow: false });
+      c.fillStyle = '#2a3038'; c.fillRect(30 * ps, first.y - 6 * ps, 7 * ps, 12 * ps);
+      c.fillStyle = '#fff3cf'; c.fillRect(36 * ps, first.y - 4.5 * ps, 2 * ps, 9 * ps);
+    }
+    if (VG && last.row === L.rows - 1 && W - (last.x + L.rs) > 46 * ps) {
+      post(W - 18 * ps, last.y + 12 * ps, railY(L.rows - 1));
+      VG.box(c, W - 32 * ps, last.y - 12 * ps, 28 * ps, 24 * ps, { r: 4 * ps, shadow: false });
+      c.fillStyle = '#0d1014'; c.beginPath(); c.arc(W - 30 * ps, last.y, 6 * ps, -Math.PI / 2, Math.PI / 2, true); c.fill();
+    }
     // slots
     for (const p of P) { if (p.kind === 'el') drawDisk(p); else drawStateSlot(p); }
     c.restore();
@@ -589,9 +615,18 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const sel = S.sel === p.i, hot = (drag && drag.id === 'e' + p.i) || (!drag && hoverId === 'e' + p.i);
     const col = elColor(el.type), [ux, uy] = axis(el.ang), sx = ux, sy = -uy;    // screen direction of the axis
     c.save();
-    c.fillStyle = col; c.globalAlpha = el.type === 'pol' ? 0.13 : 0.18; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1;
+    // the mount: an anodized ring (degree ticks every 10°, longer every 30° on the upper half the axis is read from) round the glass
+    const ri = r * (r > 24 * ps ? 0.86 : 0.9);
+    c.fillStyle = '#262c33'; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.arc(x, y, ri, 0, 2 * Math.PI, true); c.fill('evenodd');
+    c.strokeStyle = 'rgba(232,238,244,0.8)'; c.lineWidth = Math.max(1, 0.9 * ps); c.beginPath();
+    for (let a = -180; a < 180; a += 10) { const up = Math.abs(a) <= 90, l = (r - ri) * (up ? (a % 30 === 0 ? 0.75 : 0.45) : (a % 30 === 0 ? 0.4 : 0)); if (!l) continue; const sn = Math.sin(a * D2R), cs = Math.cos(a * D2R); c.moveTo(x - sn * (r - 1), y - cs * (r - 1)); c.lineTo(x - sn * (r - 1 - l), y - cs * (r - 1 - l)); }
+    c.stroke();
+    const gl = c.createRadialGradient(x - ri * 0.4, y - ri * 0.4, ri * 0.1, x, y, ri);
+    const tint = el.type === 'pol' ? '#7d858e' : el.type === 'qwp' ? T.equi : T.bo;
+    c.fillStyle = tint; c.globalAlpha = el.type === 'pol' ? 0.3 : 0.3; c.beginPath(); c.arc(x, y, ri, 0, 2 * Math.PI); c.fill(); c.globalAlpha = 1;
+    gl.addColorStop(0, 'rgba(255,255,255,0.45)'); gl.addColorStop(0.5, 'rgba(255,255,255,0.08)'); gl.addColorStop(1, 'rgba(0,0,0,0.12)'); c.fillStyle = gl; c.fill();
     // polarizer: lines parallel to the transmission axis
-    c.save(); c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.clip();
+    c.save(); c.beginPath(); c.arc(x, y, ri, 0, 2 * Math.PI); c.clip();
     if (el.type === 'pol') {
       c.strokeStyle = T.muted; c.globalAlpha = 0.35; c.lineWidth = 1 * ps; c.beginPath();
       const step = Math.max(4 * ps, r / 4.5);
@@ -602,7 +637,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     // vertical reference tick at the top
     c.strokeStyle = T.gridStrong; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(x, y - r - 4 * ps); c.lineTo(x, y - r + 3 * ps); c.stroke();
     // rim
-    c.strokeStyle = sel ? T.accent : col; c.lineWidth = (sel ? 2.4 : 1.4) * ps * (hot ? 1.3 : 1);
+    c.strokeStyle = sel ? T.accent : '#14181d'; c.lineWidth = (sel ? 2.4 : 1.4) * ps * (hot ? 1.3 : 1);
     c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.stroke();
     if (hot) { c.strokeStyle = T.accent; c.globalAlpha = 0.25; c.lineWidth = 7 * ps; c.beginPath(); c.arc(x, y, r, 0, 2 * Math.PI); c.stroke(); c.globalAlpha = 1; }
     // axis
@@ -808,11 +843,30 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   function drawRefl() {
     const c = ctx, g = reflGeom(), s = g.s, ps = g.ps, n1 = S.n1, n2 = S.n2, ti = S.thi * D2R, F = fresnel(n1, n2, ti);
     c.save(); c.beginPath(); c.rect(s.x, s.y, s.w, s.h); c.clip();
-    // media
-    const tint = (n) => Math.min(0.32, (n - 1) * 0.28);
-    c.fillStyle = T.neg; c.globalAlpha = tint(n1); c.fillRect(s.x, s.y, s.w, g.cy - s.y);
-    c.globalAlpha = tint(n2); c.fillRect(s.x, g.cy, s.w, s.y + s.h - g.cy); c.globalAlpha = 1;
-    c.strokeStyle = T.gridStrong; c.lineWidth = 1.5 * ps; c.beginPath(); c.moveTo(s.x, g.cy); c.lineTo(s.x + s.w, g.cy); c.stroke();
+    // media: air is the room behind; glass is a polished block and water a tank, both tinted more deeply the higher the index
+    const VG = window.VDGear, dk = VD3.dark();
+    const medium = (y0, y1, n, below) => {
+      if (Math.abs(n - 1) < 0.005) { if (VG) { c.save(); c.translate(s.x, y0); VG.backdrop(c, s.w, y1 - y0, { horizon: 0.9 }); c.restore(); } else { c.fillStyle = T.canvas; c.fillRect(s.x, y0, s.w, y1 - y0); } return; }
+      const water = Math.abs(n - 1.33) < 0.005, k = Math.min(1, (n - 1) / 0.9), gr = c.createLinearGradient(0, y0, 0, y1);
+      const a = water ? (dk ? '#173a5c' : '#bcd9ef') : (dk ? '#1c3d43' : '#d3ebee'), z = water ? (dk ? '#0f2740' : '#8fbfe0') : (dk ? '#12292e' : '#a8d2d8');
+      gr.addColorStop(below ? 0 : 1, a); gr.addColorStop(below ? 1 : 0, z); c.fillStyle = gr; c.fillRect(s.x, y0, s.w, y1 - y0);
+      c.fillStyle = dk ? '#000000' : '#0b3a4a'; c.globalAlpha = 0.18 * k; c.fillRect(s.x, y0, s.w, y1 - y0); c.globalAlpha = 1;
+      // glass: faint internal reflections; water: a few soft ripples near the surface
+      c.save(); c.beginPath(); c.rect(s.x, y0, s.w, y1 - y0); c.clip(); c.strokeStyle = '#ffffff';
+      if (water) { c.globalAlpha = dk ? 0.07 : 0.3; c.lineWidth = 1.2 * ps; for (let j = 1; j < 5; j++) { const yy = below ? y0 + j * 9 * ps : y1 - j * 9 * ps; c.beginPath(); for (let xx = s.x; xx <= s.x + s.w; xx += 6) c.lineTo(xx, yy + Math.sin(xx * 0.035 + j * 1.3) * 1.5 * ps); c.stroke(); } }
+      else { c.globalAlpha = dk ? 0.04 : 0.16; c.lineWidth = 10 * ps; for (const f of [0.18, 0.72]) { c.beginPath(); c.moveTo(s.x + s.w * f, y0); c.lineTo(s.x + s.w * f + (y1 - y0) * 0.6, y1); c.stroke(); } }
+      c.restore(); c.globalAlpha = 1;
+    };
+    medium(s.y, g.cy, n1, false); medium(g.cy, s.y + s.h, n2, true);
+    c.strokeStyle = dk ? 'rgba(220,235,245,0.55)' : 'rgba(255,255,255,0.95)'; c.lineWidth = 2 * ps; c.beginPath(); c.moveTo(s.x, g.cy - 1 * ps); c.lineTo(s.x + s.w, g.cy - 1 * ps); c.stroke();
+    c.strokeStyle = dk ? 'rgba(0,0,0,0.6)' : 'rgba(40,70,85,0.45)'; c.lineWidth = 1.2 * ps; c.beginPath(); c.moveTo(s.x, g.cy + 0.6 * ps); c.lineTo(s.x + s.w, g.cy + 0.6 * ps); c.stroke();
+    // a clear protractor centered where the light meets the surface: 0° along the normal, 90° along the surface, every 5°
+    { const R = Math.min(g.Lr * 0.74, 150 * ps), R0 = R * 0.84;
+      c.fillStyle = dk ? 'rgba(200,215,235,0.06)' : 'rgba(255,255,255,0.3)'; c.beginPath(); c.arc(g.cx, g.cy, R, 0, 2 * Math.PI); c.arc(g.cx, g.cy, R0, 0, 2 * Math.PI, true); c.fill('evenodd');
+      c.strokeStyle = dk ? 'rgba(200,215,235,0.45)' : 'rgba(40,52,66,0.45)'; c.lineWidth = 1 * ps; c.beginPath(); c.arc(g.cx, g.cy, R, 0, 2 * Math.PI); c.stroke();
+      c.beginPath(); for (let a = 0; a < 360; a += 5) { const l = a % 30 === 0 ? 9 : a % 10 === 0 ? 6 : 3.5, t = a * D2R; c.moveTo(g.cx + R * Math.sin(t), g.cy - R * Math.cos(t)); c.lineTo(g.cx + (R - l * ps) * Math.sin(t), g.cy - (R - l * ps) * Math.cos(t)); } c.stroke();
+      c.fillStyle = dk ? 'rgba(200,215,235,0.7)' : 'rgba(40,52,66,0.7)'; c.font = `${8.5 * ps}px ${T.mono}`; c.textAlign = 'center'; c.textBaseline = 'middle';
+      if (R > 70 * ps) for (let a = 0; a < 360; a += 30) { const t = a * D2R, v = [0, 30, 60, 90, 60, 30][(a / 30) % 6]; c.fillText(String(v), g.cx + (R - 16 * ps) * Math.sin(t), g.cy - (R - 16 * ps) * Math.cos(t)); } }
     const mname = (n) => (Math.abs(n - 1) < 0.005 ? 'air' : Math.abs(n - 1.33) < 0.005 ? 'water' : Math.abs(n - 1.5) < 0.005 ? 'glass' : 'medium');
     label(c, `n₁ = ${n1.toFixed(2)} (${mname(n1)})`, s.x + 12 * ps, s.y + 16 * ps, T.ink, 'left', 'middle');
     label(c, `n₂ = ${n2.toFixed(2)} (${mname(n2)})`, s.x + 12 * ps, s.y + s.h - 16 * ps, T.ink, 'left', 'middle');
@@ -822,7 +876,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     const Is = S.rpol === 'p' ? 0 : S.rpol === 's' ? 1 : 0.5, Ip = S.rpol === 's' ? 0 : S.rpol === 'p' ? 1 : 0.5;
     const L = g.Lr, si = Math.sin(ti), ci = Math.cos(ti);
     const A = [g.cx - L * si, g.cy - L * ci], Rr = [g.cx + L * si, g.cy - L * ci];
-    const ray = (x0, y0, x1, y1, I) => { c.strokeStyle = T.beam; c.globalAlpha = 0.18 + 0.75 * Math.sqrt(Math.min(1, I)); c.lineWidth = (2 + 5 * Math.sqrt(Math.min(1, I))) * ps; c.lineCap = 'round'; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); c.lineCap = 'butt'; c.globalAlpha = 1; };
+    const ray = (x0, y0, x1, y1, I) => { c.strokeStyle = T.beam; c.globalAlpha = 0.18 * Math.sqrt(Math.min(1, I)); c.lineWidth = (8 + 10 * Math.sqrt(Math.min(1, I))) * ps; c.lineCap = 'round'; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); c.globalAlpha = 0.18 + 0.75 * Math.sqrt(Math.min(1, I)); c.lineWidth = (2 + 5 * Math.sqrt(Math.min(1, I))) * ps; c.lineCap = 'round'; c.beginPath(); c.moveTo(x0, y0); c.lineTo(x1, y1); c.stroke(); c.lineCap = 'butt'; c.globalAlpha = 1; };
     const lens = S.glasses ? 0.6 : 2;
     ray(A[0], A[1], g.cx, g.cy, Is + Ip);
     if (S.glasses) { const m = [g.cx + (Rr[0] - g.cx) * lens, g.cy + (Rr[1] - g.cy) * lens]; ray(g.cx, g.cy, m[0], m[1], Is * F.Rs + Ip * F.Rp); ray(m[0], m[1], Rr[0], Rr[1], Ip * F.Rp); }
@@ -1086,6 +1140,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     dragFrame = false;
     if (!drag || !dragQ) return;
     const [x, y] = dragQ; dragQ = null;
+    if (drag.three) { const q = g3 && ang3(x, y, drag.i); if (q && q.r > q.ro * 0.1) setAng(drag.i, normAng(q.a - drag.off)); return; }
     const h = dragHandles().find((k) => k.id === drag.id); if (!h) return;
     if (h.kind === 'disk') setAng(h.i, normAng(angAt(h, x, y) - drag.off));
     else if (h.kind === 'plotx') {
@@ -1099,14 +1154,26 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
   }
   can.addEventListener('pointermove', (ev) => {
-    if (G3.on && !drag && inBench3(ev)) return;
+    if (G3.on && !drag && inBench3(ev)) {
+      const h = hit3(ev), id = h ? (h.i < 0 ? 'in' : 'e' + h.i) : null;
+      if (id !== hoverId) { hoverId = id; if (!playing) drawAll(); }
+      if (!ev.buttons) can.style.cursor = h ? 'grab' : 'move'; return;
+    }
     if (drag) { dragQ = ptr(ev); if (!dragFrame) { dragFrame = true; requestAnimationFrame(applyDrag); } return; }
     const h = handleAt(ev), id = h ? h.id : null;
     if (id !== hoverId) { hoverId = id; if (!playing) drawAll(); }
     can.style.cursor = h ? h.cursor : 'default';
   });
   can.addEventListener('pointerdown', (ev) => {
-    if (G3.on && inBench3(ev)) return;
+    if (G3.on && inBench3(ev)) {   /* 3D: a press on a mount turns it, following the pointer round the mount in its own plane */
+      const q = hit3(ev); if (!q) return;
+      const cur = q.i === -1 ? S.input.ang : S.els[q.i].ang;
+      drag = { id: q.i < 0 ? 'in' : 'e' + q.i, i: q.i, three: true, off: normAng(q.a - cur) }; hoverId = drag.id;
+      if (q.i >= 0 && S.sel !== q.i) select(q.i);
+      if (q.i === -1 && S.sel !== -1) { S.sel = -1; recompute(); readouts(); }
+      can.style.cursor = 'grabbing'; try { can.setPointerCapture(ev.pointerId); } catch (_) {}
+      ev.preventDefault(); if (!playing) drawAll(); return;
+    }
     const h = handleAt(ev); if (!h) return;
     const [x, y] = ptr(ev);
     drag = { id: h.id, off: 0 }; hoverId = h.id;
@@ -1164,111 +1231,225 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   try { matchMedia('(prefers-color-scheme: dark)').addEventListener('change', retheme); } catch (_) {}
   new MutationObserver(retheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
-  // ---------- 3D view of the bench: the beam runs left to right through the elements, and the electric field is drawn along it ----------
-  // The field along the beam is E(z, t) = Re[E e^{i(kz − ωt)}] for the Jones vector E of each stretch, so a wave plate turns a flat wave
-  // into a helix where it stands. The wavelength is drawn hugely magnified (real light: about 0.5 µm). Unpolarized light is drawn as a field that
-  // wanders at random, as in the flat view. Drag the bench to turn the view; turn the elements with their sliders or in the flat view.
-  const SP = 1, RD = 0.36, AMP = 0.3, LAMD = 0.5;
+  // ---------- 3D view of the bench (three.js through demos/lib/vd3.js and vd3kit.js) ----------
+  // An optical rail on a lab bench: the lamp at the left end, each element in a rotating mount whose fixed ring carries a degree
+  // scale (read facing the oncoming beam, as in the flat view; the red index on the turning ring points at the axis), and a light
+  // meter at the far end whose LCD reads I/I₀ after the last element, from the same states as the readouts. The field along the
+  // beam is E(z, t) = Re[E e^{i(kz − ωt)}] for the Jones vector E of each stretch, drawn as a trail of arrows, so a wave plate turns
+  // a flat wave into a helix where it stands. Not to scale: the wavelength and the field are drawn hugely magnified (real light:
+  // about 0.5 µm). Unpolarized light is drawn as a field that wanders at random, as in the flat view. Drag a mount to turn it (the
+  // pointer is followed round the mount in its own plane); drag elsewhere to turn the view. Sizes in meters, z up.
+  const SP = 0.2, ZB = 0.17, RO = 0.05, RI = 0.034, AMP = 0.026, LAMD = 0.06, RAILZ = 0.03;
   const inBench3 = (ev) => { const r = can.getBoundingClientRect(); return LY && ev.clientY - r.top < LY.bench.h; };
   function init3D() {
     G3.tried = true;
-    const r = VD3.renderer(); if (!r) return false;
-    const el = r.domElement; el.setAttribute('aria-hidden', 'true'); el.hidden = true; pane.insertBefore(el, can);
-    const scene = new THREE.Scene(), cam = new THREE.PerspectiveCamera(30, 1, 0.05, 100);
-    const hemi = new THREE.HemisphereLight(0xffffff, 0x888888, 0.8), sun = new THREE.DirectionalLight(0xffffff, 0.75); sun.position.set(1, -1.5, 2);
-    scene.add(hemi, sun);
-    const M = (o) => new THREE.MeshStandardMaterial(o);
-    const railM = M({ roughness: 0.35, metalness: 0.55 }), postM = M({ roughness: 0.3, metalness: 0.6 }), rimM = M({ roughness: 0.4, metalness: 0.5 });
-    const beamM = new THREE.MeshBasicMaterial({ transparent: true, depthWrite: false }), fieldM = new THREE.LineBasicMaterial(), stalkM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.45 });
-    const NS = 64, NSEG = 5;
+    const st = VD3K.stage(pane, { before: can, fov: 28, near: 0.02, far: 30, shadow: 0.85 }); if (!st) return false;
+    const K = VD3K, scene = st.scene, mat = (o, c) => K.material(st, o, c), M = (o) => new THREE.MeshStandardMaterial(o);
+    st.el.hidden = true; st.sun.shadow.bias = -0.0006;
+    // the room: a floor, a painted wall with a skirting board, and a lab bench (worktop on a cabinet) under the rail
+    const FLOOR = -0.88, mesh = (geo, m, cast, recv) => { const x = new THREE.Mesh(geo, m); x.castShadow = !!cast; x.receiveShadow = !!recv; return x; };
+    const floor = mesh(new THREE.PlaneGeometry(14, 14), mat({ roughness: 0.95 }, ['#cfd5dc', '#161c24']), false, true); floor.position.z = FLOOR;
+    // the wall is painted, not lit: a soft vertical wash, lighter towards the bench
+    const wallCv = document.createElement('canvas'); wallCv.width = 16; wallCv.height = 256; const wallTex = new THREE.CanvasTexture(wallCv);
+    const wall = new THREE.Mesh(new THREE.PlaneGeometry(14, 4), new THREE.MeshBasicMaterial({ map: wallTex })); wall.rotation.x = Math.PI / 2; wall.position.set(0.4, 0.62, FLOOR + 2);
+    st.onTheme((dk) => { const c = wallCv.getContext('2d'), gr = c.createLinearGradient(0, 0, 0, 256); gr.addColorStop(0, dk ? '#10161d' : '#d5dce4'); gr.addColorStop(0.6, dk ? '#18202a' : '#e8ecf1'); gr.addColorStop(1, dk ? '#141b24' : '#e1e6ec'); c.fillStyle = gr; c.fillRect(0, 0, 16, 256); c.fillStyle = dk ? '#232c38' : '#c3cbd5'; c.fillRect(0, 170, 16, 4); c.fillStyle = dk ? 'rgba(255,255,255,0.04)' : 'rgba(255,255,255,0.6)'; c.fillRect(0, 169, 16, 1); wallTex.needsUpdate = true; });
+    const skirt = K.box(14, 0.02, 0.1, mat({ roughness: 0.7 }, ['#b9c0c8', '#252e39']), 0.4, 0.61, FLOOR);
+    const topM = mat({ roughness: 0.78 }, ['#d4c2a2', '#3b3229']), edgeM = mat({ roughness: 0.7 }, ['#a88b64', '#4a3d2e']);
+    const top = mesh(new THREE.BoxGeometry(3.2, 0.95, 0.04), [edgeM, edgeM, edgeM, edgeM, topM, edgeM], true, true); top.position.set(0.45, 0.12, -0.02);
+    const cabM = mat({ roughness: 0.6, metalness: 0.15 }, ['#68747f', '#2f3843']), handM = mat({ roughness: 0.3, metalness: 0.7 }, ['#d9dee4', '#8d97a3']);
+    const cab = K.box(3.1, 0.85, -0.04 - FLOOR - 0.08, cabM, 0.45, 0.13, FLOOR + 0.08), plinth = K.box(3.0, 0.8, 0.08, mat({ roughness: 0.8 }, ['#3b434d', '#12171d']), 0.45, 0.14, FLOOR);
+    scene.add(floor, wall, skirt, top, cab, plinth);
+    for (const x of [-0.65, -0.1, 0.45, 1.0, 1.55]) scene.add(K.box(0.53, 0.008, 0.66, cabM, x, -0.297, -0.82), K.box(0.012, 0.016, 0.12, handM, x + 0.2, -0.305, -0.3));
+    // shared materials: anodized black for the mounts, steel for posts, the rail's aluminum, the field and the beam
+    const blackM = M({ color: 0x22272e, roughness: 0.42, metalness: 0.35 }), steelM = mat({ roughness: 0.28, metalness: 0.75 }, ['#c3cad2', '#8d97a2']);
+    const railM = mat({ roughness: 0.35, metalness: 0.6 }, ['#a7b0ba', '#6c7682']), redM = M({ color: 0xd23a2a, roughness: 0.4, emissive: 0x3a0804 });
+    const fieldM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.95 }), stalkM = new THREE.LineBasicMaterial({ transparent: true, opacity: 0.5 });
+    const headM = new THREE.MeshBasicMaterial(), haloM = new THREE.MeshBasicMaterial({ transparent: true, opacity: 0.9, depthWrite: false });
+    const NS = 64, NSEG = 5, NH = NSEG * NS / 4;
     const tipG = new THREE.BufferGeometry(); tipG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NSEG * (NS + 1) * 3 * 2), 3));
     const stG = new THREE.BufferGeometry(); stG.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NSEG * NS * 2 * 3), 3));
     const tip = new THREE.LineSegments(tipG, fieldM), stalks = new THREE.LineSegments(stG, stalkM); tip.frustumCulled = stalks.frustumCulled = false;
-    const bench = new THREE.Group(); scene.add(bench, tip, stalks);
-    g3 = { r, el, scene, cam, hemi, sun, railM, postM, rimM, beamM, fieldM, stalkM, tipG, stG, NS, NSEG, bench, beams: [], disks: [] };
+    const heads = new THREE.InstancedMesh(new THREE.ConeGeometry(0.0034, 0.009, 12).translate(0, -0.0045, 0), headM, NH); heads.count = 0; heads.frustumCulled = false;
+    const bench = new THREE.Group(); scene.add(bench, tip, stalks, heads);
+    const meter = K.meter(st, { w: 0.13, h: 0.078, label: 'LIGHT METER', sub: 'I/I₀ after the last element', text: '1.000' }), meterG = new THREE.Group(); meterG.add(meter); scene.add(meterG);
+    g3 = { st, r: st.r, el: st.el, scene, K, M, mat, mesh, blackM, steelM, railM, redM, fieldM, stalkM, headM, haloM, tipG, stG, heads, NS, NSEG, NH, bench, meter, meterG,
+      beams: [], glows: [], mounts: [], lens: null, ray: new THREE.Raycaster(), v2: new THREE.Vector2(), m4: new THREE.Matrix4(), q: new THREE.Quaternion(), up: new THREE.Vector3(0, 1, 0), dir: new THREE.Vector3(), one: new THREE.Vector3(1, 1, 1), pos: new THREE.Vector3() };
+    { const x0 = -0.27, x1 = 5 * SP + 0.14;
+    // the rail: an aluminum beam with a centimeter scale along its front edge, on two feet
+    g3.scene.add(K.box(x1 - x0, 0.07, RAILZ, g3.railM, (x0 + x1) / 2, 0, 0));
+    g3.scene.add(K.box(x1 - x0 + 0.002, 0.012, 0.006, g3.blackM, (x0 + x1) / 2, 0.012, RAILZ - 0.004));
+    for (const x of [x0 + 0.04, x1 - 0.04]) g3.scene.add(K.box(0.05, 0.13, 0.008, g3.blackM, x, 0, 0));
+    const rule = K.ruler(g3.st, { len: x1 - x0 - 0.02, from: 0, to: Math.round((x1 - x0 - 0.02) * 100), unit: 'cm', step: 1, w: 0.016 });
+    rule.position.set(x0 + 0.01 + (x1 - x0 - 0.02) / 2, -0.025, RAILZ + 0.0002); g3.scene.add(rule);
+    // the lamp: a vented housing on a pillar, a lens tube, and its cord to the back of the bench
+    g3.lampM = mat({ roughness: 0.45, metalness: 0.25 }, ['#3d4753', '#36404b']);
+    g3.scene.add(K.box(0.07, 0.07, ZB - 0.055 - RAILZ, g3.blackM, -0.12, 0, RAILZ), K.box(0.18, 0.1, 0.11, g3.lampM, -0.12, 0, ZB - 0.055));
+    for (let k = 0; k < 5; k++) g3.scene.add(K.box(0.1, 0.006, 0.003, g3.blackM, -0.12, -0.03 + k * 0.015, ZB + 0.055));
+    g3.scene.add(K.rod([-0.03, 0, ZB], [0.0, 0, ZB], 0.024, g3.blackM), K.rod([-0.212, 0.02, ZB - 0.03], [-0.23, 0.02, ZB - 0.03], 0.006, g3.blackM));
+    const lens = new THREE.Mesh(faceX(new THREE.CircleGeometry(0.019, 40)), new THREE.MeshBasicMaterial({ color: 0xfff1c4 })); lens.position.x = 0.0005; g3.scene.add(lens);
+    g3.scene.add(K.cable([-0.23, 0.02, ZB - 0.03], [-0.75, 0.45, 0.004], { via: [[-0.27, 0.04, 0.004], [-0.4, 0.2, 0.004], [-0.55, 0.38, 0.004]], rad: 0.003 }));
+    }
+    st.onTheme(() => {
+      fieldM.color = col3(T.pos, '#c23f2c'); stalkM.color = fieldM.color; headM.color = fieldM.color; haloM.color = col3(T.accent, '#2b60b5');
+      for (const b of g3.beams) b.material.color = col3(T.beam, '#e0a92a'); for (const b of g3.glows) b.material.color = col3(T.beam, '#e0a92a');
+    });
     can.addEventListener('wheel', (e) => { if (!G3.on || !inBench3(e)) e.stopImmediatePropagation(); }, { passive: true });
-    VD3.orbit(can, G3.o, () => { if (!playing) drawAll(); }, { grab: (e) => !G3.on || !inBench3(e), phMin: 0.3, phMax: 1.6, zMin: 0.6, zMax: 2.4, keys: false });
+    VD3.orbit(can, G3.o, () => { if (!playing) drawAll(); }, { grab: (e) => !G3.on || !inBench3(e) || !!hit3(e), phMin: 0.35, phMax: 1.5, zMin: 0.6, zMax: 2.6, keys: false });
     can.addEventListener('pointerup', () => { if (!G3.on) can.style.cursor = 'default'; });
     return true;
   }
   const col3 = (s, fb) => { try { return new THREE.Color(s || fb); } catch (_) { return new THREE.Color(fb); } };
-  function theme3() {
-    const g = g3, d = VD3.dark();
-    g.scene.background = col3(T.canvas, '#fbfcfd'); g.hemi.intensity = d ? 1.05 : 0.8; g.sun.intensity = d ? 0.95 : 0.75;
-    g.railM.color = col3(T.muted, '#6b7787'); g.postM.color = col3(T.gridStrong, '#c9d1db'); g.rimM.color = col3(T.ink, '#1d252f').lerp(col3(T.muted, '#6b7787'), 0.5);
-    g.beamM.color = col3(T.beam, '#e0a92a'); g.fieldM.color = g.stalkM.color = col3(T.pos, '#b0452f');
-    G3.bkey = '';
-  }
-  // the polarizer's glass: fine lines along its transmission axis, which is local z (canvas across, after the disk faces along x)
-  function glassTex(type) {
-    const cv = document.createElement('canvas'); cv.width = cv.height = 256; const c = cv.getContext('2d');
-    c.fillStyle = elColor(type); c.fillRect(0, 0, 256, 256);
-    if (type === 'pol') { c.strokeStyle = T.ink; c.globalAlpha = 0.45; c.lineWidth = 2; c.beginPath(); for (let y = 6; y < 256; y += 14) { c.moveTo(0, y); c.lineTo(256, y); } c.stroke(); }
-    return new THREE.CanvasTexture(cv);
-  }
-  // rebuilds the rail, posts, holders and beam when the elements or the theme change
-  function build3() {
-    const g = g3, n = S.els.length, len = (n + 1) * SP;
-    for (const o of g.bench.children.slice()) { g.bench.remove(o); o.traverse((x) => { if (x.geometry) x.geometry.dispose(); if (x.material && x.material.map) x.material.map.dispose(); }); }
-    const rail = new THREE.Mesh(new THREE.BoxGeometry(len + 0.3, 0.14, 0.05), g.railM); rail.position.set(len / 2, 0, -0.78); g.bench.add(rail);
-    const postG = new THREE.CylinderGeometry(0.022, 0.022, 0.78 - RD - 0.03, 16).rotateX(Math.PI / 2), footG = new THREE.BoxGeometry(0.12, 0.16, 0.04);
-    const holder = (x) => { const p = new THREE.Mesh(postG, g.postM); p.position.set(x, 0, -(0.78 + RD + 0.03) / 2); const f = new THREE.Mesh(footG, g.railM); f.position.set(x, 0, -0.74); g.bench.add(p, f); };
-    // the lamp at the left end
-    const lamp = new THREE.Mesh(new THREE.CylinderGeometry(0.11, 0.13, 0.26, 32).rotateZ(Math.PI / 2), g.rimM); lamp.position.set(-0.13, 0, 0); g.bench.add(lamp); holder(-0.13);
-    g.beams = []; g.disks = [];
-    for (let j = 0; j <= n; j++) {
-      const b = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, SP, 16).rotateZ(Math.PI / 2), g.beamM.clone()); b.position.x = (j + 0.5) * SP; g.bench.add(b); g.beams.push(b);
-    }
-    S.els.forEach((e, i) => {
-      const x = (i + 1) * SP, grp = new THREE.Group(); grp.position.x = x;
-      const rim = new THREE.Mesh(new THREE.TorusGeometry(RD, 0.03, 12, 64).rotateY(Math.PI / 2), g.rimM);
-      const turn = new THREE.Group();
-      const glass = new THREE.Mesh(new THREE.CircleGeometry(RD, 64).rotateY(Math.PI / 2), new THREE.MeshStandardMaterial({ map: glassTex(e.type), transparent: true, opacity: e.type === 'pol' ? 0.5 : 0.35, side: THREE.DoubleSide, depthWrite: false, roughness: 0.2 }));
-      const axisC = e.type === 'pol' ? col3(T.ink, '#1d252f') : col3(elColor(e.type), '#7a45c0');
-      const bar = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.025, 2 * RD), new THREE.MeshStandardMaterial({ color: axisC, roughness: 0.5 })); turn.add(glass, bar);
-      if (e.type !== 'pol') { const slow = new THREE.Mesh(new THREE.BoxGeometry(0.015, 1.6 * RD, 0.012), new THREE.MeshStandardMaterial({ color: axisC, roughness: 0.5, transparent: true, opacity: 0.5 })); turn.add(slow); }
-      const tick = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.02, 0.07), g.railM); tick.position.z = RD + 0.07;   // the vertical reference, as in the flat view
-      grp.add(rim, turn, tick); g.bench.add(grp); holder(x); g.disks.push(turn);
+  // a canvas texture drawn as seen from downstream (facing the oncoming beam): canvas right is the viewer's right, canvas up is up
+  function tex3(draw) { const cv = document.createElement('canvas'); cv.width = cv.height = 512; draw(cv.getContext('2d'), 256); const t = new THREE.CanvasTexture(cv); t.anisotropy = g3.r.capabilities.getMaxAnisotropy(); return t; }
+  const faceX = (geo) => geo.rotateZ(Math.PI / 2).rotateY(Math.PI / 2);   /* an xy plane shape turned to face +x, its canvas upright for a viewer at +x */
+  // the fixed ring's face: engraved ticks every 2° (10° longer) on the upper half, which the index reads, numbered every 30° from −90° to 90°
+  function scaleTex(rin) {
+    return tex3((c, R) => {
+      c.fillStyle = '#1e2329'; c.fillRect(0, 0, 2 * R, 2 * R);
+      c.strokeStyle = '#eef2f6'; c.fillStyle = '#eef2f6'; c.lineCap = 'round';
+      for (let a = -180; a < 180; a += 2) {
+        const up = Math.abs(a) <= 90, big = a % 10 === 0, l = up ? (a % 30 === 0 ? 34 : big ? 24 : 13) : (a % 30 === 0 ? 20 : 0); if (!l) continue;
+        const s = Math.sin(a * D2R), k = Math.cos(a * D2R), r0 = R - 6, r1 = R - 6 - l;
+        c.lineWidth = a % 30 === 0 ? 4 : big ? 3 : 2; c.beginPath(); c.moveTo(R - r0 * s, R - r0 * k); c.lineTo(R - r1 * s, R - r1 * k); c.stroke();
+      }
+      c.font = '600 27px "JetBrains Mono", monospace'; c.textAlign = 'center'; c.textBaseline = 'middle';
+      const rt = R - 64; for (let a = -90; a <= 90; a += 30) { const s = Math.sin(a * D2R), k = Math.cos(a * D2R); c.save(); c.translate(R - rt * s, R - rt * k); c.rotate(-a * D2R); c.fillText(a < 0 ? '−' + -a : String(a), 0, 0); c.restore(); }
+      c.fillStyle = '#0b0d10'; c.beginPath(); c.arc(R, R, R * rin, 0, 2 * Math.PI); c.fill();
     });
   }
+  // the turning glass: a polarizer is gray film with fine lines along its transmission axis; a wave plate is tinted crystal
+  function glassTex3(type) {
+    return tex3((c, R) => {
+      if (type === 'pol') {
+        c.fillStyle = '#5d646c'; c.fillRect(0, 0, 2 * R, 2 * R); c.strokeStyle = 'rgba(20,24,28,0.55)'; c.lineWidth = 3;
+        c.beginPath(); for (let x = 8; x < 2 * R; x += 18) { c.moveTo(x, 0); c.lineTo(x, 2 * R); } c.stroke();
+      } else {
+        const g = c.createRadialGradient(R * 0.7, R * 0.6, 0, R, R, R); g.addColorStop(0, type === 'qwp' ? '#f6dc9a' : '#d9c3f5'); g.addColorStop(1, type === 'qwp' ? '#c99a2e' : '#8a5cc8');
+        c.fillStyle = g; c.fillRect(0, 0, 2 * R, 2 * R);
+      }
+      const h = c.createLinearGradient(0, 0, 2 * R, 2 * R); h.addColorStop(0.2, 'rgba(255,255,255,0.28)'); h.addColorStop(0.45, 'rgba(255,255,255,0)'); c.fillStyle = h; c.fillRect(0, 0, 2 * R, 2 * R);
+    });
+  }
+  // a post in a holder on a carrier that clamps to the rail at x, up to height z
+  function stand3(x, z, w) {
+    const g = g3, K = g.K;
+    g.bench.add(K.box(w || 0.05, 0.07, 0.022, g.blackM, x, 0.008, RAILZ), K.rod([x, -0.031, RAILZ + 0.011], [x, -0.05, RAILZ + 0.011], 0.0045, g.steelM));
+    g.bench.add(K.box(0.026, 0.026, 0.05, g.blackM, x, 0.008, RAILZ + 0.022), K.rod([x, 0.008, RAILZ + 0.06], [x, 0.008, z], 0.0062, g.steelM));
+    g.bench.add(K.rod([x, -0.006, RAILZ + 0.06], [x, -0.016, RAILZ + 0.06], 0.004, g.steelM));
+  }
+  // a rotating mount at x: the fixed ring with its scale, the turning ring with the glass, its axis line, the red index and a knob
+  function mount3(e, x, i, small) {
+    const g = g3, ro = small ? RO * 0.72 : RO, ri = small ? RI * 0.7 : RI, grp = new THREE.Group(); grp.position.set(x, 0, ZB);
+    const sh = new THREE.Shape(); sh.absarc(0, 0, ro, 0, 2 * Math.PI, false); const hole = new THREE.Path(); hole.absarc(0, 0, ri * 1.16, 0, 2 * Math.PI, true); sh.holes.push(hole);
+    const ring = g.mesh(new THREE.ExtrudeGeometry(sh, { depth: 0.014, bevelEnabled: true, bevelThickness: 0.0015, bevelSize: 0.0015, bevelSegments: 2, curveSegments: 72 }).translate(0, 0, -0.007).rotateY(Math.PI / 2), g.blackM, true);
+    const face = new THREE.Mesh(faceX(new THREE.RingGeometry(ri * 1.16, ro, 96)), new THREE.MeshStandardMaterial({ map: scaleTex(ri * 1.16 / ro), roughness: 0.5, metalness: 0.2 })); face.position.x = 0.0087;
+    const halo = new THREE.Mesh(new THREE.TorusGeometry(ro + 0.004, 0.0016, 8, 96).rotateY(Math.PI / 2), g.haloM); halo.visible = false;
+    const turn = new THREE.Group();
+    const glass = new THREE.Mesh(faceX(new THREE.CircleGeometry(ri * 1.17, 72)), new THREE.MeshStandardMaterial({ map: glassTex3(e.type), transparent: true, opacity: e.type === 'pol' ? 0.62 : 0.72, side: THREE.DoubleSide, depthWrite: false, roughness: 0.15, metalness: 0.1 }));
+    const bezel = g.mesh(new THREE.TorusGeometry(ri * 1.18, 0.0036, 10, 72).rotateY(Math.PI / 2), g.steelM, true);
+    const axC = e.type === 'pol' ? 0x15191e : e.type === 'qwp' ? 0x8a5a00 : 0x5a2a9a;
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(0.0012, 0.0022, 2 * ri * 1.12), M3(axC)); bar.position.x = 0.0015;
+    const index = g.mesh(new THREE.ConeGeometry(0.0042, 0.011, 3).rotateX(Math.PI / 2), g.redM); index.position.set(0.0095, 0, ri * 1.16 + 0.006);
+    const knob = g.mesh(new THREE.CylinderGeometry(0.0055, 0.0055, 0.014, 18).rotateZ(Math.PI / 2), g.steelM, true); knob.position.set(0.012, 0, -ri * 1.2);
+    turn.add(glass, bezel, bar, index, knob);
+    if (e.type !== 'pol') { const slow = new THREE.Mesh(new THREE.BoxGeometry(0.001, 2 * ri * 0.9, 0.0016), M3(axC, 0.45)); slow.position.x = 0.0015; turn.add(slow); }
+    glass.renderOrder = 2; grp.add(ring, face, halo, turn); g.bench.add(grp);
+    stand3(x, ZB - ro + 0.003);
+    g.mounts.push({ i, x, ro, turn, halo });
+  }
+  const M3 = (c, op) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.5, transparent: op != null, opacity: op == null ? 1 : op });
+  // rebuilds the rail, lamp, mounts, detector and beam when the elements or the kind of light in change
+  function build3() {
+    const g = g3, K = g.K, n = S.els.length, xD = (n + 1) * SP;
+    for (const o of g.bench.children.slice()) { g.bench.remove(o); o.traverse((x) => { if (x.geometry) x.geometry.dispose(); if (x.material && x.material.map) x.material.map.dispose(); }); }
+    g.mounts = []; g.beams = []; g.glows = [];
+    // the elements, and a polarizer on the lamp's nose when the light in is linear
+    if (S.input.kind === 'lin') mount3({ type: 'pol' }, 0.05, -1, true);
+    S.els.forEach((e, i) => mount3(e, (i + 1) * SP, i));
+    // the detector head at the far end, cabled to the meter on the bench in front
+    const head = g.mesh(new THREE.CylinderGeometry(0.026, 0.026, 0.05, 40).rotateZ(Math.PI / 2), g.lampM, true); head.position.set(xD + 0.025, 0, ZB);
+    const ap = new THREE.Mesh(faceX(new THREE.RingGeometry(0.012, 0.03, 40)), g.blackM), sensor = new THREE.Mesh(faceX(new THREE.CircleGeometry(0.012, 32)), M3(0x111418));
+    ap.rotation.z = Math.PI; sensor.rotation.z = Math.PI; ap.position.set(xD - 0.0005, 0, ZB); sensor.position.set(xD - 0.0003, 0, ZB); g.bench.add(head, ap, sensor);
+    stand3(xD + 0.025, ZB - 0.024);
+    g.meterG.position.set(xD + 0.02, 0.3, 0.09); g.meterG.rotation.z = 0.55; g.bench.add(K.box(0.2, 0.13, 0.09, g.lampM, xD + 0.02, 0.31, 0));
+    g.bench.add(K.cable([xD + 0.05, 0, ZB], [xD - 0.03, 0.244, 0.05], { via: [[xD + 0.072, 0.0, ZB - 0.035], [xD + 0.07, 0.07, 0.004], [xD + 0.0, 0.2, 0.004], [xD - 0.03, 0.235, 0.03]], rad: 0.0025 }));
+    // the beam: a bright core in a soft glow, one piece for each stretch so each can show its own intensity
+    for (let j = 0; j <= n; j++) {
+      const len = SP - (j === n ? 0.001 : 0), xm = j * SP + len / 2;
+      const b = new THREE.Mesh(new THREE.CylinderGeometry(0.0032, 0.0032, len, 12).rotateZ(Math.PI / 2), new THREE.MeshBasicMaterial({ color: col3(T.beam, '#e0a92a'), transparent: true, depthWrite: false }));
+      const gl = new THREE.Mesh(new THREE.CylinderGeometry(0.009, 0.009, len, 16).rotateZ(Math.PI / 2), new THREE.MeshBasicMaterial({ color: col3(T.beam, '#e0a92a'), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending }));
+      b.position.set(xm, 0, ZB); gl.position.set(xm, 0, ZB); g.bench.add(b, gl); g.beams.push(b); g.glows.push(gl);
+    }
+    const cx = xD / 2; g.st.sun.target.position.set(cx, 0, 0); g.st.sun.position.set(cx - 0.6, -0.9, 2.4);
+  }
+  // pointer at (x, y) on the picture: where its ray meets mount i's plane, as an angle from the vertical (counterclockwise facing the beam)
+  function ang3(x, y, i) {
+    const g = g3, m = g.mounts.find((k) => k.i === i); if (!m || !LY) return null;
+    g.v2.set(x / W * 2 - 1, 1 - y / LY.bench.h * 2); g.ray.setFromCamera(g.v2, g.st.cam);
+    const o = g.ray.ray.origin, d = g.ray.ray.direction; if (Math.abs(d.x) < 1e-4) return null;
+    const t = (m.x - o.x) / d.x; if (t <= 0) return null;
+    const Y = o.y + t * d.y, Z = o.z + t * d.z - ZB;
+    return { t, r: Math.hypot(Y, Z), a: Math.atan2(-Y, Z) / D2R, ro: m.ro };
+  }
+  function hit3(ev) {
+    if (!g3 || !G3.on || !LY || S.view !== 'bench') return null;
+    const [x, y] = ptr(ev); if (y >= LY.bench.h) return null;
+    let best = null;
+    for (const m of g3.mounts) { const q = ang3(x, y, m.i); if (q && q.r <= q.ro * (ev.pointerType === 'touch' ? 1.5 : 1.25) && (!best || q.t < best.t)) best = { ...q, i: m.i }; }
+    return best;
+  }
   function bench3() {
-    const g = g3, b = LY.bench, h = b.h, n = S.els.length, ps = pscale();
-    if (G3.w !== W || G3.h !== h) { G3.w = W; G3.h = h; g.r.setSize(W, Math.max(1, h)); g.cam.aspect = W / Math.max(1, h); g.cam.updateProjectionMatrix(); }
-    const key = [T.canvas, T.pos, T.beam, T.ink].join(); if (G3.key !== key) { G3.key = key; theme3(); }
-    const bkey = S.els.map((e) => e.type).join(); if (G3.bkey !== bkey) { G3.bkey = bkey; build3(); }
-    const I0 = states[0].S[0], len = (n + 1) * SP;
-    S.els.forEach((e, i) => { g.disks[i].rotation.x = e.ang * D2R; });
-    states.forEach((st, j) => { const m = g.beams[j].material; m.opacity = 0.1 + 0.5 * Math.sqrt(Math.max(0, st.S[0] / I0)); });
-    // the field along each stretch: tips joined into a curve, with stalks from the beam
+    const g = g3, st = g.st, b = LY.bench, h = b.h, n = S.els.length, ps = pscale();
+    st.size(W, h);
+    const bkey = S.input.kind + '|' + S.els.map((e) => e.type).join(); if (G3.bkey !== bkey) { G3.bkey = bkey; build3(); }
+    const I0 = states[0].S[0], xD = (n + 1) * SP;
+    for (const m of g.mounts) {
+      m.turn.rotation.x = (m.i < 0 ? S.input.ang : S.els[m.i].ang) * D2R;
+      const id = m.i < 0 ? 'in' : 'e' + m.i; m.halo.visible = (drag && drag.id === id) || (!drag && hoverId === id) || (m.i >= 0 && S.sel === m.i) || (m.i < 0 && S.sel === -1 && S.input.kind === 'lin');
+    }
+    states.forEach((s, j) => { const f = Math.sqrt(Math.max(0, s.S[0] / I0)); if (g.beams[j]) { g.beams[j].material.opacity = 0.12 + 0.75 * f; g.glows[j].material.opacity = 0.05 + 0.3 * f; } });
+    // the field along each stretch: tips joined into a curve, stalks from the beam, and an arrowhead on every fourth stalk
     const tp = g.tipG.attributes.position, sp = g.stG.attributes.position, k = 2 * Math.PI / LAMD, sc = AMP / Math.sqrt(I0);
-    let nt = 0, ns = 0;
-    states.forEach((st, j) => {
-      if (st.S[0] / I0 < 1e-9 || j >= g.NSEG) return;
+    let nt = 0, ns = 0, nh = 0;
+    states.forEach((s, j) => {
+      if (s.S[0] / I0 < 1e-9 || j >= g.NSEG) return;
       let prev = null;
       for (let q = 0; q <= g.NS; q++) {
         const x = (j + q / g.NS) * SP, ph = phase - k * x;
-        let E = st.E;
+        let E = s.E;
         if (!E) { E = randomJones(ph / OMEGA * 0.9, 0.7); for (let m = 0; m < j; m++) E = jApply(jOf(S.els[m]), E); }
         const f = fieldAt(E, ph), Y = f[0] * sc, Z = f[1] * sc;
-        if (prev) { tp.setXYZ(nt++, ...prev); tp.setXYZ(nt++, x, Y, Z); }
-        prev = [x, Y, Z];
-        if (q < g.NS && q % 2 === 0) { sp.setXYZ(ns++, x, 0, 0); sp.setXYZ(ns++, x, Y, Z); }
+        if (prev) { tp.setXYZ(nt++, ...prev); tp.setXYZ(nt++, x, Y, ZB + Z); }
+        prev = [x, Y, ZB + Z];
+        if (q < g.NS && q % 2 === 0) { sp.setXYZ(ns++, x, 0, ZB); sp.setXYZ(ns++, x, Y, ZB + Z); }
+        const L = Math.hypot(Y, Z);
+        if (q < g.NS && q % 4 === 2 && L > 0.004 && nh < g.NH) {
+          g.dir.set(0, Y / L, Z / L); g.q.setFromUnitVectors(g.up, g.dir); g.pos.set(x, Y, ZB + Z);
+          g.m4.compose(g.pos, g.q, g.one); g.heads.setMatrixAt(nh++, g.m4);
+        }
       }
     });
     tp.needsUpdate = true; sp.needsUpdate = true; g.tipG.setDrawRange(0, nt); g.stG.setDrawRange(0, ns);
-    VD3.place(g.cam, G3.o, new THREE.Vector3(len / 2, 0, -0.2), 0.75 * len + 1.6);
-    g.r.render(g.scene, g.cam);
-    const tmp = new THREE.Vector3(), Q = (x, y, z) => { tmp.set(x, y, z).project(g.cam); return [(tmp.x + 1) / 2 * W, (1 - tmp.y) / 2 * h]; };
+    g.heads.count = nh; g.heads.instanceMatrix.needsUpdate = true;
+    const Iout = states[states.length - 1].S[0] / I0;
+    g.meter.set(fmtI(Iout));
+    st.place(G3.o, [xD / 2 + 0.07, 0, ZB - 0.05], st.fit(0.42 * xD + 0.5, 2.6));
+    st.render();
     // this canvas keeps the names, angles and intensities on top of the 3D picture
     ctx.clearRect(b.x, b.y, b.w, b.h);
+    const P3 = (x, y, z) => st.project([x, y, z]);
+    const narrow = W < 560;
     S.els.forEach((e, i) => {
-      const [x, y] = Q((i + 1) * SP, 0, RD + 0.2), sel = S.sel === i;
+      const [x, y] = P3((i + 1) * SP, 0, ZB + RO + 0.022), sel = S.sel === i;
+      if (narrow) { label(ctx, `${i + 1} ${SHORT[e.type]} ${fmtDeg(e.ang, 0)}`, x, y - 4 * ps, sel ? T.accent : T.ink, 'center', 'middle', true, 10); return; }
       label(ctx, `${i + 1} · ${ELNAME[e.type]}`, x, y - 8 * ps, sel ? T.accent : T.ink, 'center', 'middle', true);
-      label(ctx, `${e.type === 'pol' ? 'axis' : 'fast'} ${fmtDeg(e.ang, 0)}`, x, y + 6 * ps, sel ? T.accent : T.muted, 'center', 'middle');
+      label(ctx, `${e.type === 'pol' ? 'axis' : 'fast'} ${fmtDeg(e.ang, 0)}`, x, y + 7 * ps, sel ? T.accent : T.muted, 'center', 'middle');
     });
-    states.forEach((st, j) => { const [x, y] = Q((j + 0.5) * SP, 0, -0.5); if (y < h - 30 * ps) label(ctx, j === 0 ? 'I₀' : `${fmtI(st.S[0] / I0)} I₀`, x, y, T.ink, 'center', 'middle', true); });
-    ctx.fillStyle = T.muted; ctx.font = `${10.5 * ps}px ${T.ui}`; ctx.textAlign = 'left'; ctx.textBaseline = 'bottom';
-    ctx.fillText(W > 560 ? 'Electric field along the beam, wavelength hugely magnified · drag to turn the view' : 'Field along the beam · drag to turn', 12 * ps, h - 7 * ps);
+    states.forEach((s, j) => { const [x, y] = P3((j + 0.5) * SP, 0, ZB - 0.062); if (y < h - 30 * ps) label(ctx, j === 0 ? 'I₀' : `${fmtI(s.S[0] / I0)} I₀`, x, y, T.ink, 'center', 'middle', true, narrow ? 10 : 11); });
+    if (!narrow) { const [x, y] = P3(-0.12, -0.05, RAILZ + 0.07), d = describe(states[0].S); label(ctx, S.input.kind === 'lin' ? `Lamp, polarizer ${fmtDeg(S.input.ang, 0)}` : `Lamp: ${shortDesc(d)}`, x, y, S.sel === -1 && S.input.kind === 'lin' ? T.accent : T.ink, 'center', 'middle', true); }
+    ctx.font = `${10.5 * ps}px ${T.mono}`;
+    const cap = 'Not to scale: the field and its wavelength are drawn hugely magnified (light: about 0.5 µm). Drag a mount to turn it, drag elsewhere to turn the view.';
+    label(ctx, fitText([cap, 'Not to scale: field and wavelength hugely magnified. Drag a mount to turn it.', 'Not to scale · drag a mount to turn it'], W - 24 * ps, 10, false), 12 * ps, h - 12 * ps, T.muted, 'left', 'middle', false, 10);
   }
   function setView3(v) {
     if (v === '3d' && !G3.ok) {
@@ -1294,7 +1475,7 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
     }
     requestAnimationFrame(loop);
   }
-  window.__pol = { get frameMs() { return frameMs; }, get S() { return S; }, get states() { return states; }, handles() { return dragHandles().map((h) => ({ ...h, g: undefined })); }, setPlaying, applyPreset };
+  window.__pol = { get frameMs() { return frameMs; }, get S() { return S; }, get states() { return states; }, handles() { return dragHandles().map((h) => ({ ...h, g: undefined })); }, setPlaying, applyPreset, get g3() { return g3; }, hit3: (x, y) => { const r = can.getBoundingClientRect(); const q = hit3({ clientX: r.left + x, clientY: r.top + y }); return q && { i: q.i, a: q.a }; } };
 
   tokens();
   applyPreset('malus');
@@ -1323,7 +1504,8 @@ window.vdReadings=function(){return rows.length;};window.vdRows=function(){retur
   ro.observe(pane);
   resize();
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => drawAll());
-  if (new URLSearchParams(location.search).get('view') === '3d') setView3('3d');
+  /* the bench opens in 3D, where the mounts turn by dragging as the flat disks do; ?view=flat, a low power device or no WebGL keep it flat */
+  { const q = new URLSearchParams(location.search).get('view'); if (q === '3d' || (q !== 'flat' && window.VD3 && window.VD3K && !VD3.lowPower())) setView3('3d'); }
   requestAnimationFrame(loop);
 })();
 </script>
